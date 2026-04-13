@@ -2,7 +2,7 @@ module: a2-059
 level: A2
 sequence: 59
 slug: preferences-and-choices
-version: 1.0.1
+version: 1.0.2
 title: Я обираю, я вважаю
 subtitle: Висловлення вподобань, думок та вибору
 focus: communication
@@ -10,56 +10,75 @@ pedagogy: TBL
 phase: A2.8 [Refinement and Graduation]
 word_target: 2000
 objectives:
-- Learner can express preferences using comparative constructions (Мені більше подобається... ніж...; Я волію...).
-- Learner can give opinions with justification using complex sentences (Я вважаю, що... тому що...; На мою думку...).
-- Learner can agree and disagree politely in a discussion (Ви маєте рацію, але...; Я не зовсім згоден/згодна...).
-- Learner can participate in a structured opinion exchange about everyday topics (food, travel, hobbies, lifestyle choices).
+- Learner can express preferences using comparative constructions (Мені більше 
+  подобається... ніж...; Я волію...).
+- Learner can give opinions with justification using complex sentences (Я 
+  вважаю, що... тому що...; На мою думку...).
+- Learner can agree and disagree politely in a discussion (Ви маєте рацію, 
+  але...; Я не зовсім згоден/згодна...).
+- Learner can participate in a structured opinion exchange about everyday topics
+  (food, travel, hobbies, lifestyle choices).
 dialogue_situations:
-- setting: 'Debate at a book club — comparing two novels: Мені більше подобається цей роман (m, novel). На мою думку, авторка
-    (f) пише краще. Я не згоден — ця повість (f, novella) цікавіша!'
+- setting: 'Debate at a book club — comparing two novels: Мені більше подобається
+    цей роман (m, novel). На мою думку, авторка (f) пише краще. Я не згоден — ця повість
+    (f, novella) цікавіша!'
   speakers:
   - Члени книжкового клубу
-  motivation: 'Opinions: подобається, на мою думку, згоден/не згоден with роман(m), повість(f)'
+  motivation: 'Opinions: подобається, на мою думку, згоден/не згоден with роман(m),
+    повість(f)'
 content_outline:
 - section: Що тобі більше подобається? (What Do You Prefer?)
   words: 500
   points:
-  - 'Expressing preferences with comparison: Мені більше подобається кава, ніж чай. Я волію читати, а не дивитися телевізор.
-    Краще поїхати влітку, ніж взимку.'
-  - 'Key verbs: подобатися (to like), воліти (to prefer), обирати (to choose), вирішити (to decide). Verb government: подобатися
-    + Dat., обирати + Acc.'
-  - 'Dialogue: two friends discuss weekend plans — comparing options, expressing what they prefer and why.'
+  - 'Expressing preferences with comparison: Мені більше подобається кава, ніж чай.
+    Я волію читати, а не дивитися телевізор. Краще поїхати влітку, ніж взимку.'
+  - 'Key verbs: подобатися (to like), воліти (to prefer), обирати (to choose), вирішити
+    (to decide). Verb government: подобатися + Dat., обирати + Acc.'
+  - 'Dialogue: two friends discuss weekend plans — comparing options, expressing what
+    they prefer and why.'
 - section: На мою думку... (In My Opinion...)
   words: 550
   points:
-  - 'Opinion phrases: Я вважаю, що... (I think that...), На мою думку... (In my opinion...), Мені здається, що... (It seems
-    to me that...), Я переконаний/переконана, що... (I am convinced that...).'
-  - 'Giving reasons: тому що (because), бо (because, informal), адже (since, after all), оскільки (since, as).'
-  - 'Complex sentence practice: Я вважаю, що українська кухня дуже смачна, тому що вона використовує свіжі продукти.'
+  - 'Opinion phrases: Я вважаю, що... (I think that...), На мою думку... (In my opinion...),
+    Мені здається, що... (It seems to me that...), Я переконаний/переконана, що...
+    (I am convinced that...).'
+  - 'Giving reasons: тому що (because), бо (because, informal), адже (since, after
+    all), оскільки (since, as).'
+  - 'Complex sentence practice: Я вважаю, що українська кухня дуже смачна, тому що
+    вона використовує свіжі продукти.'
   - 'Register awareness: вважаю (formal) vs. думаю (neutral) vs. мені здається (soft/tentative).'
 - section: Згоден чи ні? (Agree or Disagree?)
   words: 500
   points:
   - 'Agreeing: Так, я згоден/згодна. Ви маєте рацію. Безумовно! Саме так! Цілком погоджуюся.'
-  - 'Disagreeing politely: Я не зовсім згоден/згодна. Можливо, але... Я думаю інакше. Дозвольте не погодитися. Навпаки, я
-    вважаю...'
-  - 'Partial agreement: З одного боку... з іншого боку... (On one hand... on the other hand...). Це правда, але...'
-  - 'Dialogue: a friendly debate about the best Ukrainian city to live in — each person argues for their choice, agrees and
-    disagrees with the other.'
+  - 'Disagreeing politely: Я не зовсім згоден/згодна. Можливо, але... Я думаю інакше.
+    Дозвольте не погодитися. Навпаки, я вважаю...'
+  - 'Partial agreement: З одного боку... з іншого боку... (On one hand... on the other
+    hand...). Це правда, але...'
+  - 'Dialogue: a friendly debate about the best Ukrainian city to live in — each person
+    argues for their choice, agrees and disagrees with the other.'
 - section: 'Обговорення: що краще? (Discussion: What Is Better?)'
   words: 450
   points:
-  - 'Task-based scenario: learners discuss lifestyle choices using all the tools from this module. Topics: city vs. village
-    life, cooking at home vs. eating out, summer vs. winter vacation.'
-  - 'Reading practice: a forum thread where Ukrainians discuss their preferences — authentic internet register with opinion
-    expressions.'
-  - 'Useful connectors for structured arguments: по-перше (firstly), по-друге (secondly), крім того (moreover), на завершення
-    (in conclusion).'
+  - 'Task-based scenario: learners discuss lifestyle choices using all the tools from
+    this module. Topics: city vs. village life, cooking at home vs. eating out, summer
+    vs. winter vacation.'
+  - 'Reading practice: a forum thread where Ukrainians discuss their preferences —
+    authentic internet register with opinion expressions.'
+  - 'Useful connectors for structured arguments: по-перше (firstly), по-друге (secondly),
+    крім того (moreover), на завершення (in conclusion).'
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - "Expressing preferences and opinions uses structures like 'Мені більше подобається...
+    ніж...'. Opinion phrases vary by register: 'вважаю' (formal), 'думаю' (neutral),
+    'мені здається' (tentative). Self-check: What's the difference between 'вважаю'
+    and 'мені здається'? Express your preference between tea and coffee using 'ніж'."
+  - "Agreeing and disagreeing politely uses phrases like 'Ви маєте рацію' (agreement)
+    and 'Я не зовсім згоден/згодна' (disagreement). Structuring arguments uses connectors:
+    по-перше, по-друге, тому що. Self-check: Politely disagree with the statement
+    'Winter is better than summer'. Provide 2 reasons for your opinion using 'по-перше'
+    and 'по-друге'."
 vocabulary_hints:
   required:
   - вважати (to think, to consider)

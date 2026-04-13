@@ -2,26 +2,29 @@ module: a2-045
 level: A2
 sequence: 45
 slug: telling-stories-and-travel
-version: 1.0.1
+version: 1.0.2
 title: Розповіді та подорожі
-subtitle: Розповідаємо про минуле з видом дієслова та плануємо подорожі з дієсловами руху
+subtitle: Розповідаємо про минуле з видом дієслова та плануємо подорожі з 
+  дієсловами руху
 focus: communication
 pedagogy: TBL
 phase: A2.6 [Aspect, Tenses, and Motion]
 word_target: 2000
 objectives:
-- Learner can narrate a past event as a coherent story, correctly alternating between imperfective (background, process) and
-  perfective (completed actions, plot events) past tense verbs.
-- Learner can describe travel plans using motion verbs (іти/ходити, їхати/їздити, летіти/літати) with appropriate prepositions
-  and cases for origin, destination, and route.
-- Learner can participate in a dialogue about a past trip — answering questions about where they went, how they traveled,
-  what they did, and what happened.
-- Learner can write a short narrative (8-10 sentences) about a real or imagined journey, integrating past tense aspect, motion
-  verbs, and time expressions.
+- Learner can narrate a past event as a coherent story, correctly alternating 
+  between imperfective (background, process) and perfective (completed actions, 
+  plot events) past tense verbs.
+- Learner can describe travel plans using motion verbs (іти/ходити, 
+  їхати/їздити, летіти/літати) with appropriate prepositions and cases for 
+  origin, destination, and route.
+- Learner can participate in a dialogue about a past trip — answering questions 
+  about where they went, how they traveled, what they did, and what happened.
+- Learner can write a short narrative (8-10 sentences) about a real or imagined 
+  journey, integrating past tense aspect, motion verbs, and time expressions.
 dialogue_situations:
-- setting: 'Scenario 1: A funny thing happened at the вокзал (m, train station) yesterday. Scenario 2: Planning a trip to
-    Карпати (pl) — booking хатинка (f, cabin). Scenario 3: Showing vacation photos from Одеса — пляж (m), море (n), ресторан
-    (m).'
+- setting: 'Scenario 1: A funny thing happened at the вокзал (m, train station) yesterday.
+    Scenario 2: Planning a trip to Карпати (pl) — booking хатинка (f, cabin). Scenario
+    3: Showing vacation photos from Одеса — пляж (m), море (n), ресторан (m).'
   speakers:
   - Друзі (sharing stories)
   motivation: 'Past + future + travel: вокзал(m), хатинка(f), пляж(m), море(n)'
@@ -29,50 +32,70 @@ content_outline:
 - section: 'Сценарій 1: Що вчора трапилось? (Scenario 1: What Happened Yesterday?)'
   words: 550
   points:
-  - 'Story-telling structure: setting the scene (imperfective) → events (perfective) → reactions (both aspects). Example:
-    Був теплий вечір. Я сидів на балконі і читав книгу (background — impf.). Раптом подзвонив друг (event — pf.) і запросив
-    мене на вечерю (event — pf.).'
-  - 'Time connectors for narratives: спочатку (at first), потім (then), після цього (after that), нарешті (finally), тим часом
-    (meanwhile), раптом (suddenly), у цей момент (at that moment).'
-  - 'Practice: learner reads a short story with mixed aspects, identifies which verbs are background (impf.) and which are
-    plot events (pf.).'
-  - 'Guided storytelling: given a sequence of pictures or prompts, learner tells what happened using correct aspect choices.'
+  - 'Story-telling structure: setting the scene (imperfective) → events (perfective)
+    → reactions (both aspects). Example: Був теплий вечір. Я сидів на балконі і читав
+    книгу (background — impf.). Раптом подзвонив друг (event — pf.) і запросив мене
+    на вечерю (event — pf.).'
+  - 'Time connectors for narratives: спочатку (at first), потім (then), після цього
+    (after that), нарешті (finally), тим часом (meanwhile), раптом (suddenly), у цей
+    момент (at that moment).'
+  - 'Practice: learner reads a short story with mixed aspects, identifies which verbs
+    are background (impf.) and which are plot events (pf.).'
+  - 'Guided storytelling: given a sequence of pictures or prompts, learner tells what
+    happened using correct aspect choices.'
 - section: 'Сценарій 2: Плануємо подорож (Scenario 2: Planning a Trip)'
   words: 500
   points:
-  - 'Dialogue: two friends planning a trip to Lviv. Куди поїдемо? (pf. — specific trip) Як доберемося? Поїдемо потягом чи
-    полетимо? Де зупинимося? (pf. — specific result) Що будемо робити? (impf. — general activities).'
-  - 'Travel vocabulary: подорож (trip), квиток (ticket), потяг (train), літак (airplane), автобус (bus), вокзал (station),
-    аеропорт (airport), готель (hotel), зупинитися (to stay/stop).'
-  - 'Motion verbs in context: Ми поїдемо потягом до Львова (pf. — specific trip). Зазвичай ми їздимо туди влітку (impf. —
-    habitual). Літак летить дві години (unidirectional — in progress).'
-  - 'Preposition patterns: поїхати до + Gen. (to a city/person), поїхати на + Acc. (to an event/area — на море, на фестиваль),
-    прилетіти з + Gen. (from a place).'
+  - 'Dialogue: two friends planning a trip to Lviv. Куди поїдемо? (pf. — specific
+    trip) Як доберемося? Поїдемо потягом чи полетимо? Де зупинимося? (pf. — specific
+    result) Що будемо робити? (impf. — general activities).'
+  - 'Travel vocabulary: подорож (trip), квиток (ticket), потяг (train), літак (airplane),
+    автобус (bus), вокзал (station), аеропорт (airport), готель (hotel), зупинитися
+    (to stay/stop).'
+  - 'Motion verbs in context: Ми поїдемо потягом до Львова (pf. — specific trip).
+    Зазвичай ми їздимо туди влітку (impf. — habitual). Літак летить дві години (unidirectional
+    — in progress).'
+  - 'Preposition patterns: поїхати до + Gen. (to a city/person), поїхати на + Acc.
+    (to an event/area — на море, на фестиваль), прилетіти з + Gen. (from a place).'
 - section: 'Сценарій 3: Розкажи про поїздку! (Scenario 3: Tell Me About Your Trip!)'
   words: 550
   points:
-  - 'Dialogue: one friend asks about another''s recent trip. Де ти був? Куди їздив? Як доїхав? Що бачив? Що найбільше сподобалось?
-    — All answered using past tense with correct aspect.'
-  - 'Sample narrative: Минулого тижня я їздив до Одеси (impf. — round trip). Ми поїхали потягом (pf. — departed). Доїхали
-    за десять годин (pf. — completed). Там ми ходили по місту (impf. — walked around), відвідали музей (pf. — specific event),
-    купили сувеніри (pf.) і з''їли найсмачніший борщ (pf.).'
-  - 'Expressing impressions: Мені дуже сподобалось (I really liked it). Було чудово / цікаво / весело (It was wonderful /
-    interesting / fun). Я хочу поїхати ще раз (I want to go again).'
-  - 'Contrast: їздив (was there, round-trip completed) vs. поїхав (departed, left). Я їздив до Києва (I went to Kyiv and came
-    back) vs. Він поїхав до Києва (He left for Kyiv — may still be there).'
+  - 'Dialogue: one friend asks about another''s recent trip. Де ти був? Куди їздив?
+    Як доїхав? Що бачив? Що найбільше сподобалось? — All answered using past tense
+    with correct aspect.'
+  - 'Sample narrative: Минулого тижня я їздив до Одеси (impf. — round trip). Ми поїхали
+    потягом (pf. — departed). Доїхали за десять годин (pf. — completed). Там ми ходили
+    по місту (impf. — walked around), відвідали музей (pf. — specific event), купили
+    сувеніри (pf.) і з''їли найсмачніший борщ (pf.).'
+  - 'Expressing impressions: Мені дуже сподобалось (I really liked it). Було чудово
+    / цікаво / весело (It was wonderful / interesting / fun). Я хочу поїхати ще раз
+    (I want to go again).'
+  - 'Contrast: їздив (was there, round-trip completed) vs. поїхав (departed, left).
+    Я їздив до Києва (I went to Kyiv and came back) vs. Він поїхав до Києва (He left
+    for Kyiv — may still be there).'
 - section: 'Мовленнєве завдання: Моя подорож (Speaking Task: My Journey)'
   words: 400
   points:
-  - 'Guided writing task: write 8-10 sentences about a real or imagined trip. Include: where you went (motion verb + destination),
-    how you traveled (vehicle — Instr.), what you did (perfective events), what was happening around you (imperfective background).'
-  - 'Checklist: Did you use at least 2 motion verbs? Did you alternate aspects? Did you use time connectors? Did you describe
-    impressions?'
+  - 'Guided writing task: write 8-10 sentences about a real or imagined trip. Include:
+    where you went (motion verb + destination), how you traveled (vehicle — Instr.),
+    what you did (perfective events), what was happening around you (imperfective
+    background).'
+  - 'Checklist: Did you use at least 2 motion verbs? Did you alternate aspects? Did
+    you use time connectors? Did you describe impressions?'
   - Model answer for comparison, annotated with aspect labels.
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - 'Storytelling in the past tense alternates verb aspects: use imperfective verbs
+    for background scenes or ongoing processes (читав книгу), and perfective verbs
+    for sudden or completed plot events (раптом подзвонив). Self-check: Describe what
+    you were doing yesterday when something suddenly happened, using both aspects
+    and the word "раптом".'
+  - 'Travel planning and narrating requires motion verbs and specific prepositions:
+    destination uses до + Genitive (до Львова) or на + Accusative (на море), while
+    the mode of transport uses the Instrumental case (потягом, автобусом). Self-check:
+    What is the difference between "Я їздив до Києва" and "Він поїхав до Києва"? Narrate
+    a short trip using at least 3 travel vocabulary words.'
 vocabulary_hints:
   required:
   - подорож (trip, journey)
@@ -93,14 +116,16 @@ vocabulary_hints:
   - сувенір (souvenir)
 activity_hints:
 - type: fill-in
-  focus: Complete a travel narrative by choosing the correct verb form (aspect and motion verb type) for each blank
+  focus: Complete a travel narrative by choosing the correct verb form (aspect 
+    and motion verb type) for each blank
   items: 8
 - type: quiz
-  focus: Read a past trip description and answer comprehension questions about what happened, in what order, and how the person
-    traveled
+  focus: Read a past trip description and answer comprehension questions about 
+    what happened, in what order, and how the person traveled
   items: 8
 - type: match-up
-  focus: Match travel situations with the correct motion verb and preposition combination (їхати до + Gen., летіти на + Acc.)
+  focus: Match travel situations with the correct motion verb and preposition 
+    combination (їхати до + Gen., летіти на + Acc.)
   items: 8
 - type: error-correction
   focus: Find and correct grammar errors in sentences

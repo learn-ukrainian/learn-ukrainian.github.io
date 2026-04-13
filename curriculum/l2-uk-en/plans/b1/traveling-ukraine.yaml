@@ -2,7 +2,7 @@ module: b1-039
 level: B1
 sequence: 39
 slug: traveling-ukraine
-version: 3.0.1
+version: 3.0.2
 title: Подорож Україною
 subtitle: Подорожні розповіді — транспорт, маршрути, пам'ятки
 focus: communication
@@ -10,76 +10,102 @@ pedagogy: PPP
 phase: B1.3 [Motion Verb Universe]
 word_target: 4000
 objectives:
-- Learner can plan and describe a trip across Ukraine using prefixed motion verbs, spatial prepositions, and transport vocabulary
-- 'Learner can navigate real travel situations: buying tickets, asking directions, checking schedules, crossing borders'
-- Learner can narrate a travel experience in connected discourse using a variety of motion verbs with all 10 prefixes
-- Learner can use the instrumental case with country/region names for travel routes (Подорож Україною, їхати Закарпаттям)
+- Learner can plan and describe a trip across Ukraine using prefixed motion 
+  verbs, spatial prepositions, and transport vocabulary
+- 'Learner can navigate real travel situations: buying tickets, asking directions,
+  checking schedules, crossing borders'
+- Learner can narrate a travel experience in connected discourse using a variety
+  of motion verbs with all 10 prefixes
+- Learner can use the instrumental case with country/region names for travel 
+  routes (Подорож Україною, їхати Закарпаттям)
 dialogue_situations:
-- setting: 'Planning a two-week road trip across Ukraine — from Львів through Карпати to Одеса, then Київ and Харків: Спочатку
-    поїдемо до Львова. Потім заїдемо в Карпати. Доїдемо до Одеси за два дні. Перелетимо до Харкова.'
+- setting: 'Planning a two-week road trip across Ukraine — from Львів through Карпати
+    to Одеса, then Київ and Харків: Спочатку поїдемо до Львова. Потім заїдемо в Карпати.
+    Доїдемо до Одеси за два дні. Перелетимо до Харкова.'
   speakers:
   - Пара мандрівників (traveling couple)
-  motivation: 'Travel synthesis: all motion prefixes with real Ukrainian cities and routes'
+  motivation: 'Travel synthesis: all motion prefixes with real Ukrainian cities and
+    routes'
 content_outline:
 - section: 'Подорож починається: планування та транспорт'
   words: 750
   points:
-  - 'Bridge from M27-M35: this module is the communicative capstone of the Motion Verb Universe. Learners apply ALL motion
-    verb knowledge — base pairs, 10 prefixes, figurative uses — to real travel scenarios in Ukraine.'
-  - 'Transport vocabulary: потяг/поїзд (train), автобус (bus), маршрутка (minibus), літак (plane), пором (ferry), таксі (taxi),
-    метро (metro), тролейбус, трамвай. Купе, плацкарт, сидячий вагон. Квиток, зворотний квиток (return ticket), разовий квиток.
-    Розклад руху (schedule), платформа/перон, зал очікування.'
-  - 'Instrumental case with geography — the Ukrainian way: подорож Україною (traveling through Ukraine — Ор.в.), їхати Закарпаттям
-    (traveling through Zakarpattia), мандрувати Карпатами (hiking the Carpathians). This is a distinctive Ukrainian construction:
-    the instrumental expresses the route/area of travel. From Кравцова Grade 3 p.83: dialogue at the bus station about buying
-    tickets — natural model for travel communication.'
+  - 'Bridge from M27-M35: this module is the communicative capstone of the Motion
+    Verb Universe. Learners apply ALL motion verb knowledge — base pairs, 10 prefixes,
+    figurative uses — to real travel scenarios in Ukraine.'
+  - 'Transport vocabulary: потяг/поїзд (train), автобус (bus), маршрутка (minibus),
+    літак (plane), пором (ferry), таксі (taxi), метро (metro), тролейбус, трамвай.
+    Купе, плацкарт, сидячий вагон. Квиток, зворотний квиток (return ticket), разовий
+    квиток. Розклад руху (schedule), платформа/перон, зал очікування.'
+  - 'Instrumental case with geography — the Ukrainian way: подорож Україною (traveling
+    through Ukraine — Ор.в.), їхати Закарпаттям (traveling through Zakarpattia), мандрувати
+    Карпатами (hiking the Carpathians). This is a distinctive Ukrainian construction:
+    the instrumental expresses the route/area of travel. From Кравцова Grade 3 p.83:
+    dialogue at the bus station about buying tickets — natural model for travel communication.'
 - section: На вокзалі та в аеропорту
   words: 800
   points:
-  - 'Train station dialogue: Buying a ticket: ''Скільки коштує квиток до Львова?'' ''Один квиток у купейний вагон, будь ласка.''
-    ''О котрій відходить поїзд?'' ''Поїзд відходить о двадцять першій.'' ''З якої платформи?'' ''З третьої платформи.'' Learners
-    practice with 8-10 exchanges.'
-  - 'Airport dialogue: ''Де реєстрація на рейс до Відня?'' ''Ваші речі для здачі в багаж?'' ''О котрій посадка?'' ''Посадка
-    починається о чотирнадцятій тридцять.'' ''Рейс затримується на годину.'' Motion verbs in context: виліт (departure), приліт
+  - 'Train station dialogue: Buying a ticket: ''Скільки коштує квиток до Львова?''
+    ''Один квиток у купейний вагон, будь ласка.'' ''О котрій відходить поїзд?'' ''Поїзд
+    відходить о двадцять першій.'' ''З якої платформи?'' ''З третьої платформи.''
+    Learners practice with 8-10 exchanges.'
+  - 'Airport dialogue: ''Де реєстрація на рейс до Відня?'' ''Ваші речі для здачі в
+    багаж?'' ''О котрій посадка?'' ''Посадка починається о чотирнадцятій тридцять.''
+    ''Рейс затримується на годину.'' Motion verbs in context: виліт (departure), приліт
     (arrival), вилетіти, прилетіти, пересісти (transfer).'
-  - 'Decolonization note: use відходити/відправлятися for trains carefully — native Ukrainian prefers відходити or виїжджати.
-    Автобус виїжджає (NOT *відправляється).'
+  - 'Decolonization note: use відходити/відправлятися for trains carefully — native
+    Ukrainian prefers відходити or виїжджати. Автобус виїжджає (NOT *відправляється).'
 - section: 'Маршрут: від Києва до Карпат'
   words: 900
   points:
-  - 'Model travel narrative (250-300 words): a journey from Kyiv to the Carpathians by train and bus, using all prefix groups:
-    Виїхали з Києва ввечері (ви-). Поїзд відійшов від перону (від-). Проїхали Вінницю, Хмельницький (про-). Переїхали через
-    міст (пере-). Приїхали до Iвано-Франківська вранці (при-). Пересіли на автобус. Доїхали до Яремче (до-). Зайшли до готелю
-    (за-). Вийшли на прогулянку (ви-). Обійшли центр містечка (об-). Підійшли до водоспаду Пробій (під-).'
-  - 'Ukrainian landmarks as travel destinations: Київ (Хрещатик, Софійський собор, Лавра). Львів (площа Ринок, Високий Замок,
-    кав''ярні). Одеса (Потьомкінські сходи, Дерибасівська, море). Карпати (Говерла, Яремче, Буковель). Чернігів, Кам''янець-Подільський,
+  - 'Model travel narrative (250-300 words): a journey from Kyiv to the Carpathians
+    by train and bus, using all prefix groups: Виїхали з Києва ввечері (ви-). Поїзд
+    відійшов від перону (від-). Проїхали Вінницю, Хмельницький (про-). Переїхали через
+    міст (пере-). Приїхали до Iвано-Франківська вранці (при-). Пересіли на автобус.
+    Доїхали до Яремче (до-). Зайшли до готелю (за-). Вийшли на прогулянку (ви-). Обійшли
+    центр містечка (об-). Підійшли до водоспаду Пробій (під-).'
+  - 'Ukrainian landmarks as travel destinations: Київ (Хрещатик, Софійський собор,
+    Лавра). Львів (площа Ринок, Високий Замок, кав''ярні). Одеса (Потьомкінські сходи,
+    Дерибасівська, море). Карпати (Говерла, Яремче, Буковель). Чернігів, Кам''янець-Подільський,
     Ужгород.'
-  - Learners see how motion verbs + spatial prepositions + landmarks create vivid Ukrainian travel narratives. 8-10 sentences
-    modeling different routes.
+  - Learners see how motion verbs + spatial prepositions + landmarks create 
+    vivid Ukrainian travel narratives. 8-10 sentences modeling different routes.
 - section: 'Орієнтування в місті: як дістатися?'
   words: 750
   points:
-  - 'Asking for directions: ''Як дістатися до центру?'' ''Як доїхати до вокзалу?'' ''Де найближча зупинка метро?'' ''Скільки
-    їхати до аеропорту?'' Giving directions: ''Пройдіть прямо, поверніть ліворуч, перейдіть дорогу, i побачите музей навпроти.'''
-  - 'Navigation vocabulary: прямо (straight), ліворуч (left), праворуч (right), на розі (at the corner), на перехресті (at
-    the intersection), повернути (to turn), зупинка (stop), станція (station), квартал (block), провулок (lane/alley).'
-  - 'Practice: learners give directions from one landmark to another using motion verbs and spatial prepositions from M27.
-    6-8 direction-giving exchanges.'
+  - 'Asking for directions: ''Як дістатися до центру?'' ''Як доїхати до вокзалу?''
+    ''Де найближча зупинка метро?'' ''Скільки їхати до аеропорту?'' Giving directions:
+    ''Пройдіть прямо, поверніть ліворуч, перейдіть дорогу, i побачите музей навпроти.'''
+  - 'Navigation vocabulary: прямо (straight), ліворуч (left), праворуч (right), на
+    розі (at the corner), на перехресті (at the intersection), повернути (to turn),
+    зупинка (stop), станція (station), квартал (block), провулок (lane/alley).'
+  - 'Practice: learners give directions from one landmark to another using motion
+    verbs and spatial prepositions from M27. 6-8 direction-giving exchanges.'
 - section: 'Подорожні історії: розповідь про поїздку'
   words: 800
   points:
-  - 'Connected discourse model: a complete travel story (200-250 words) using past tense, motion verbs with prefixes, spatial
-    prepositions, and transport vocabulary. Multiple paragraphs showing text coherence.'
-  - 'Story structure: Paragraph 1: Planning (куди, як, коли). Paragraph 2: Journey (виїхали, проїхали, доїхали). Paragraph
-    3: Destination (прийшли, обійшли, зайшли). Paragraph 4: Return (поїхали назад, повернулися). Learners see how motion verbs
+  - 'Connected discourse model: a complete travel story (200-250 words) using past
+    tense, motion verbs with prefixes, spatial prepositions, and transport vocabulary.
+    Multiple paragraphs showing text coherence.'
+  - 'Story structure: Paragraph 1: Planning (куди, як, коли). Paragraph 2: Journey
+    (виїхали, проїхали, доїхали). Paragraph 3: Destination (прийшли, обійшли, зайшли).
+    Paragraph 4: Return (поїхали назад, повернулися). Learners see how motion verbs
     create narrative structure.'
-  - 'Production task: learners write their own travel story about a real or imagined trip in Ukraine, using at least 10 different
-    motion verbs with prefixes, 5 spatial prepositions, and 5 transport terms.'
+  - 'Production task: learners write their own travel story about a real or imagined
+    trip in Ukraine, using at least 10 different motion verbs with prefixes, 5 spatial
+    prepositions, and 5 transport terms.'
 - section: Підсумок — Summary
   words: 300
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - 'Mastery of the Motion Verb Universe: narrate complex journeys using all 10 prefixes,
+    transport vocabulary, and express travel routes natively using the instrumental
+    case (подорож Україною, мандрувати Карпатами).'
+  - "Self-check: What is the difference between 'квиток' and 'зворотний квиток'? Describe
+    a short trip from the train station to your hotel using at least 4 different prefixed
+    motion verbs."
+  - "Self-check: How do you ask 'How do I get to the center?' Give directions using
+    'прямо', 'ліворуч', and 'на розі'. Why should you use 'виїжджає' instead of 'відправляється'
+    for a bus?"
 vocabulary_hints:
   required:
   - подорож (journey/trip)
@@ -122,10 +148,12 @@ activity_hints:
   focus: 'Sort transport vocabulary: залізничний / автомобільний / повітряний / водний'
   items: 12
 - type: error-correction
-  focus: Fix Russicisms and calques in travel sentences (відправлятися → виїжджати)
+  focus: Fix Russicisms and calques in travel sentences (відправлятися → 
+    виїжджати)
   items: 12
 - type: free-write
-  focus: Write a travel narrative about a trip to a Ukrainian city using 10+ motion verbs
+  focus: Write a travel narrative about a trip to a Ukrainian city using 10+ 
+    motion verbs
   items: 12
 connects_to:
 - b1-027 (prepositions-spatial-review — spatial prepositions in navigation)

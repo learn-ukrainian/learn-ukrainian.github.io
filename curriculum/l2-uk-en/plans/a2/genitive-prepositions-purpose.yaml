@@ -2,7 +2,7 @@ module: a2-010
 level: A2
 sequence: 10
 slug: genitive-prepositions-purpose
-version: 1.1.1
+version: 1.1.2
 title: Для кого? Без чого? Біля чого?
 subtitle: Прийменники для, без, біля, навпроти, коло з родовим відмінком
 focus: grammar
@@ -12,11 +12,14 @@ word_target: 2000
 objectives:
 - Learner can use для + Genitive to express purpose or intended recipient.
 - Learner can use без + Genitive to express absence or lack of something.
-- Learner can use біля, навпроти, and коло + Genitive to describe location near a reference point.
-- Learner can form the Genitive correctly for hard-stem, soft-stem, and mixed-group nouns after these prepositions.
+- Learner can use біля, навпроти, and коло + Genitive to describe location near 
+  a reference point.
+- Learner can form the Genitive correctly for hard-stem, soft-stem, and 
+  mixed-group nouns after these prepositions.
 dialogue_situations:
-- setting: 'Packing for a camping trip — deciding what''s needed: Для кого ця ковдра (f, blanket)? Для Олени. Без ліхтарика
-    (m, flashlight) — ніяк! Біля річки (f, river) поставимо намет (m, tent).'
+- setting: 'Packing for a camping trip — deciding what''s needed: Для кого ця ковдра
+    (f, blanket)? Для Олени. Без ліхтарика (m, flashlight) — ніяк! Біля річки (f,
+    river) поставимо намет (m, tent).'
   speakers:
   - Ігор
   - Марта
@@ -25,35 +28,47 @@ content_outline:
 - section: Для кого це? Для + родовий (Who Is It For? Для + Genitive)
   words: 600
   points:
-  - 'Purpose: для здоров''я (for health), для роботи (for work), для навчання (for studying).'
+  - 'Purpose: для здоров''я (for health), для роботи (for work), для навчання (for
+    studying).'
   - 'Recipient: для мами (for mom), для друга (for a friend), для дітей (for children).'
-  - 'Practice with all genders: для брата (hard masc.), для вчителя (soft masc. -тель group), для сестри (hard fem.), для
-    Марії (-ія fem.), для щастя (-тя neuter).'
+  - 'Practice with all genders: для брата (hard masc.), для вчителя (soft masc. -тель
+    group), для сестри (hard fem.), для Марії (-ія fem.), для щастя (-тя neuter).'
   - 'Common phrases: подарунок для тебе, час для відпочинку, це важливо для мене.'
 - section: Без чого? Без + родовий (Without What? Без + Genitive)
   words: 600
   points:
-  - 'Core meaning: кава без цукру (coffee without sugar), чай без молока (tea without milk), день без дощу (a day without
-    rain).'
-  - 'Abstract uses: без сумніву (without doubt), без проблем (no problem), без допомоги (without help).'
-  - 'Hard vs. soft stems after без: без хліба (hard masc.), без олівця (soft masc.), без води (hard fem.), без солі (soft
-    fem.), без вікна (hard neuter), без моря (soft neuter).'
-  - 'Everyday phrases: я не можу без кави, вона прийшла без парасольки, ми поїхали без нього.'
-- section: Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive)
+  - 'Core meaning: кава без цукру (coffee without sugar), чай без молока (tea without
+    milk), день без дощу (a day without rain).'
+  - 'Abstract uses: без сумніву (without doubt), без проблем (no problem), без допомоги
+    (without help).'
+  - 'Hard vs. soft stems after без: без хліба (hard masc.), без олівця (soft masc.),
+    без води (hard fem.), без солі (soft fem.), без вікна (hard neuter), без моря
+    (soft neuter).'
+  - 'Everyday phrases: я не можу без кави, вона прийшла без парасольки, ми поїхали
+    без нього.'
+- section: Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, 
+    коло + Genitive)
   words: 800
   points:
-  - 'Біля (near, next to): біля школи, біля будинку, біля річки. The most common ''near'' preposition.'
-  - 'Навпроти (opposite, across from): навпроти парку, навпроти вокзалу, навпроти церкви. Used for objects facing each other.'
-  - 'Коло (near, by — slightly literary): коло хати, коло дороги. Less common in spoken Ukrainian than біля, but appears in
-    literature and songs.'
-  - 'Practice with location descriptions: Аптека біля ринку. Кафе навпроти бібліотеки. Зупинка біля станції метро.'
-  - 'Mixed group and -ія nouns in location context: біля станції (soft fem. -ія), біля площі (soft fem.), навпроти лікарні
-    (soft fem.).'
+  - 'Біля (near, next to): біля школи, біля будинку, біля річки. The most common ''near''
+    preposition.'
+  - 'Навпроти (opposite, across from): навпроти парку, навпроти вокзалу, навпроти
+    церкви. Used for objects facing each other.'
+  - 'Коло (near, by — slightly literary): коло хати, коло дороги. Less common in spoken
+    Ukrainian than біля, but appears in literature and songs.'
+  - 'Practice with location descriptions: Аптека біля ринку. Кафе навпроти бібліотеки.
+    Зупинка біля станції метро.'
+  - 'Mixed group and -ія nouns in location context: біля станції (soft fem. -ія),
+    біля площі (soft fem.), навпроти лікарні (soft fem.).'
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - 'The prepositions для (for), без (without), біля (near), навпроти (opposite),
+    and коло (by) all require the Genitive case. Hard-stem: для брата, без води, навпроти
+    парку. Soft-stem: для вчителя, без солі, біля станції.'
+  - 'Self-check: What is the difference between біля and навпроти? (Біля is near/next
+    to, навпроти is opposite/facing) Describe how you take your coffee or tea using
+    без. Name 3 places located near your home using біля or навпроти.'
 vocabulary_hints:
   required:
   - призначення (purpose, destination)
@@ -73,7 +88,8 @@ vocabulary_hints:
   - річка (river)
 activity_hints:
 - type: fill-in
-  focus: Complete location descriptions with біля/навпроти/коло + correct Genitive form
+  focus: Complete location descriptions with біля/навпроти/коло + correct 
+    Genitive form
   items: 8
 - type: quiz
   focus: Choose для, без, or біля to complete everyday sentences
@@ -82,7 +98,8 @@ activity_hints:
   focus: Match Ukrainian prepositional phrases to their English equivalents
   items: 8
 - type: true-false
-  focus: Judge whether preposition + noun form combinations are grammatically correct
+  focus: Judge whether preposition + noun form combinations are grammatically 
+    correct
   items: 8
 references:
 - title: Заболотний Grade 5, §31

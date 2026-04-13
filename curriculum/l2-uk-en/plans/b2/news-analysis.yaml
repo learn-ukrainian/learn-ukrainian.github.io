@@ -2,7 +2,7 @@ module: b2-084
 level: B2
 sequence: 84
 slug: news-analysis
-version: 1.0.1
+version: 1.0.2
 title: 'Аналіз новин: від структури до критичного мислення'
 subtitle: 'Аналіз новин: від структури до критичного мислення'
 focus: professional
@@ -39,14 +39,15 @@ listening_situations:
   motivation: Тренування сприйняття медійного мовлення.
 writing_tasks:
 - task_type: аналітична записка
-  prompt: Порівняйте висвітлення однієї події двома різними українськими медіа. Визначте маніпулятивні прийоми та упередженість
-    кожного.
+  prompt: Порівняйте висвітлення однієї події двома різними українськими медіа. 
+    Визначте маніпулятивні прийоми та упередженість кожного.
   requirements:
   - мінімум 300 слів
   - конкретні приклади з обох текстів
   - визначення фреймінгу та евфемізмів
   motivation: Перевірка навичок критичного аналізу медіа.
-  model_answer: Записка має містити порівняльний аналіз із цитатами з обох джерел та висновком про об'єктивність кожного.
+  model_answer: Записка має містити порівняльний аналіз із цитатами з обох 
+    джерел та висновком про об'єктивність кожного.
 discussion_topics:
 - context: Фейкові новини та відповідальність споживача контенту.
   questions:
@@ -110,8 +111,18 @@ content_outline:
 - section: Підсумок — Summary
   words: 300
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - 'Ukrainian news reporting relies on the inverted pyramid structure (заголовок,
+    лід, корпус) and specific media vocabulary, including abbreviations and active
+    verbs. Self-check: Describe the 3 main parts of a news report in Ukrainian. What
+    is the difference between замітка and репортаж?'
+  - 'Media influence and manipulation are often achieved through framing, narrative
+    shaping, and evaluative vocabulary (оцінна лексика). Self-check: What is the difference
+    between дезінформація and місінформація? How do euphemisms (евфемізми) change
+    the perception of a news event?'
+  - "Journalistic ethics demand rigorous fact-checking and avoiding manipulation like
+    клікбейт or джинса (hidden advertising). Self-check: Explain the term 'джинса'
+    in the context of Ukrainian media. Name 3 classical propaganda techniques to watch
+    out for."
 vocabulary_hints:
 - word: новина
   translation: news
@@ -171,14 +182,17 @@ activities:
   total_min_items: 25
 activity_hints:
 - type: reading
-  focus: Прочитайте текст про анатомія новини та інформаційні жанри і дайте відповіді на запитання щодо ключових понять.
+  focus: Прочитайте текст про анатомія новини та інформаційні жанри і дайте 
+    відповіді на запитання щодо ключових понять.
 - type: essay-response
-  focus: Напишіть короткий текст (100-150 слів) про механізми медіа-впливу, використовуючи нову лексику модуля.
+  focus: Напишіть короткий текст (100-150 слів) про механізми медіа-впливу, 
+    використовуючи нову лексику модуля.
 - type: critical-analysis
-  focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Анатомія новини та інформаційні жанри». Обґрунтуйте свою позицію
-    прикладами з тексту.
+  focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Анатомія новини та
+    інформаційні жанри». Обґрунтуйте свою позицію прикладами з тексту.
 - type: error-correction
-  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему анатомія новини та інформаційні жанри.
+  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему 
+    анатомія новини та інформаційні жанри.
 references:
 - source: Авраменко, 11 клас (2019)
   pages: Стилістика

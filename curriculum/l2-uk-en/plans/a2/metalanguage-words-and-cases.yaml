@@ -2,7 +2,7 @@ module: a2-061
 level: A2
 sequence: 61
 slug: metalanguage-words-and-cases
-version: 1.1.1
+version: 1.1.2
 title: Слова і відмінки
 subtitle: Частини мови, відмінки та граматичні терміни українською
 focus: bridge
@@ -10,15 +10,19 @@ pedagogy: Bridge
 phase: A2.9 [Metalanguage Bridge & Foundation]
 word_target: 2000
 objectives:
-- Learner can name all major parts of speech in Ukrainian (іменник, прикметник, дієслово, займенник, числівник, прислівник,
-  прийменник, сполучник) and identify them in sentences.
-- Learner can recite all seven Ukrainian case names with their question pairs (Називний — хто? що?, Родовий — кого? чого?,
-  etc.).
-- Learner can use Ukrainian grammatical gender and number terms (чоловічий, жіночий, середній рід; однина, множина).
-- Learner can follow grammar explanations given entirely in Ukrainian metalanguage.
+- Learner can name all major parts of speech in Ukrainian (іменник, прикметник, 
+  дієслово, займенник, числівник, прислівник, прийменник, сполучник) and 
+  identify them in sentences.
+- Learner can recite all seven Ukrainian case names with their question pairs 
+  (Називний — хто? що?, Родовий — кого? чого?, etc.).
+- Learner can use Ukrainian grammatical gender and number terms (чоловічий, 
+  жіночий, середній рід; однина, множина).
+- Learner can follow grammar explanations given entirely in Ukrainian 
+  metalanguage.
 dialogue_situations:
-- situation: A student asking the teacher to identify the part of speech of a tricky word — Це прислівник чи прикметник? А
-    'мій' — це займенник? Teacher explains with examples
+- situation: A student asking the teacher to identify the part of speech of a 
+    tricky word — Це прислівник чи прикметник? А 'мій' — це займенник? Teacher 
+    explains with examples
   functions:
   - classifying words
   - asking about parts of speech
@@ -28,8 +32,9 @@ dialogue_situations:
   - прикметник
   - займенник
   - частина мови
-- situation: A student practicing case identification with a study partner — one reads a sentence, the other names the відмінок
-    of each noun using the question method
+- situation: A student practicing case identification with a study partner — one
+    reads a sentence, the other names the відмінок of each noun using the 
+    question method
   functions:
   - identifying cases
   - applying question method
@@ -44,46 +49,62 @@ content_outline:
 - section: 'Частини мови: що це за слово? (Parts of Speech: What Kind of Word Is This?)'
   words: 600
   points:
-  - 'Re-labeling known concepts: the learner already uses nouns, verbs, adjectives — now they learn what Ukrainian teachers
-    call them. Method: Grade 3-4 textbook excerpts showing how Ukrainian children learn these terms.'
-  - 'Іменник (noun) — назва предмета: хто? що? — мама, стіл, радість. Прикметник (adjective) — ознака предмета: який? яка?
-    яке? — великий, гарна, синє. Дієслово (verb) — дія предмета: що робити? що зробити? — читати, написати.'
-  - 'Займенник (pronoun) — замість іменника: хто? що? — я, ти, він, хтось. Числівник (numeral) — кількість або порядок: скільки?
-    який? — п''ять, третій.'
-  - 'Прислівник (adverb) — ознака дії: як? де? коли? — швидко, тут, завтра. Прийменник (preposition) — зв''язок слів: у, на,
-    з, до. Сполучник (conjunction) — з''єднує слова/речення: і, але, що, бо.'
+  - 'Re-labeling known concepts: the learner already uses nouns, verbs, adjectives
+    — now they learn what Ukrainian teachers call them. Method: Grade 3-4 textbook
+    excerpts showing how Ukrainian children learn these terms.'
+  - 'Іменник (noun) — назва предмета: хто? що? — мама, стіл, радість. Прикметник (adjective)
+    — ознака предмета: який? яка? яке? — великий, гарна, синє. Дієслово (verb) — дія
+    предмета: що робити? що зробити? — читати, написати.'
+  - 'Займенник (pronoun) — замість іменника: хто? що? — я, ти, він, хтось. Числівник
+    (numeral) — кількість або порядок: скільки? який? — п''ять, третій.'
+  - 'Прислівник (adverb) — ознака дії: як? де? коли? — швидко, тут, завтра. Прийменник
+    (preposition) — зв''язок слів: у, на, з, до. Сполучник (conjunction) — з''єднує
+    слова/речення: і, але, що, бо.'
 - section: 'Сім відмінків: питання та назви (Seven Cases: Questions and Names)'
   words: 550
   points:
-  - 'The complete case system with Ukrainian names and questions: Називний (Nominative) — хто? що? Родовий (Genitive) — кого?
-    чого? Давальний (Dative) — кому? чому? Знахідний (Accusative) — кого? що? Орудний (Instrumental) — ким? чим? Місцевий
-    (Locative) — на кому? на чому? Кличний (Vocative) — direct address.'
-  - 'Mnemonic strategy: Ukrainian schoolchildren learn "Не Роби Дурниць, Знай, Орудуй Місцем, Кличний!" — or the learner can
-    create their own.'
-  - 'Practice: given a sentence, identify which відмінок each noun is in, using the question method (задати питання).'
-  - 'Grade 3-4 textbook excerpt: how Ukrainian teachers explain the case system to their students, with simplified examples.'
+  - 'The complete case system with Ukrainian names and questions: Називний (Nominative)
+    — хто? що? Родовий (Genitive) — кого? чого? Давальний (Dative) — кому? чому? Знахідний
+    (Accusative) — кого? що? Орудний (Instrumental) — ким? чим? Місцевий (Locative)
+    — на кому? на чому? Кличний (Vocative) — direct address.'
+  - 'Mnemonic strategy: Ukrainian schoolchildren learn "Не Роби Дурниць, Знай, Орудуй
+    Місцем, Кличний!" — or the learner can create their own.'
+  - 'Practice: given a sentence, identify which відмінок each noun is in, using the
+    question method (задати питання).'
+  - 'Grade 3-4 textbook excerpt: how Ukrainian teachers explain the case system to
+    their students, with simplified examples.'
 - section: 'Рід і число: чоловічий, жіночий, середній (Gender and Number)'
   words: 450
   points:
-  - 'Three genders: чоловічий рід (masculine), жіночий рід (feminine), середній рід (neuter). How to determine gender by ending:
-    consonant → ч.р., -а/-я → ж.р., -о/-е → с.р.'
-  - 'Two numbers: однина (singular), множина (plural). How textbooks teach this: Один — однина. Багато — множина.'
-  - 'Combining terms: identify a word fully — іменник, жіночий рід, множина, родовий відмінок (e.g., книг = noun, feminine,
-    plural, genitive).'
-  - 'Practice: label 10 words from previous modules with their full grammatical description in Ukrainian terms.'
+  - 'Three genders: чоловічий рід (masculine), жіночий рід (feminine), середній рід
+    (neuter). How to determine gender by ending: consonant → ч.р., -а/-я → ж.р., -о/-е
+    → с.р.'
+  - 'Two numbers: однина (singular), множина (plural). How textbooks teach this: Один
+    — однина. Багато — множина.'
+  - 'Combining terms: identify a word fully — іменник, жіночий рід, множина, родовий
+    відмінок (e.g., книг = noun, feminine, plural, genitive).'
+  - 'Practice: label 10 words from previous modules with their full grammatical description
+    in Ukrainian terms.'
 - section: Читаємо граматику українською (Reading Grammar in Ukrainian)
   words: 400
   points:
-  - 'Reading exercise: a Grade 4 textbook page explaining a simple grammar rule entirely in Ukrainian. Learner answers comprehension
-    questions about the rule.'
-  - 'Building confidence: the learner realizes they can already understand Ukrainian grammar explanations. This is the bridge
-    to B1, where grammar will increasingly be taught in Ukrainian.'
-  - 'Quick reference card: all terms introduced in this module, organized as a study aid the learner can return to.'
+  - 'Reading exercise: a Grade 4 textbook page explaining a simple grammar rule entirely
+    in Ukrainian. Learner answers comprehension questions about the rule.'
+  - 'Building confidence: the learner realizes they can already understand Ukrainian
+    grammar explanations. This is the bridge to B1, where grammar will increasingly
+    be taught in Ukrainian.'
+  - 'Quick reference card: all terms introduced in this module, organized as a study
+    aid the learner can return to.'
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - 'Ukrainian grammar metalanguage covers parts of speech (іменник, прикметник, дієслово,
+    etc.) and core attributes like рід (gender) and число (number). Self-check: What
+    is the difference between однина and множина? Name 3 parts of speech in Ukrainian.'
+  - "The seven cases (відмінки) are identified by their question pairs, starting with
+    Називний (хто? що?) and Родовий (кого? чого?). Self-check: Can you recite all
+    7 cases in order with their questions? Describe the word 'книг' using full Ukrainian
+    grammatical terms."
 vocabulary_hints:
   required:
   - іменник (noun)

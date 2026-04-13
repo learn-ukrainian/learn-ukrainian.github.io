@@ -2,7 +2,7 @@ module: a2-028
 level: A2
 sequence: 28
 slug: instrumental-prepositions
-version: 1.1.1
+version: 1.1.2
 title: Над, під, між
 subtitle: Просторові та часові прийменники з орудним відмінком
 focus: grammar
@@ -10,13 +10,18 @@ pedagogy: PPP
 phase: A2.4 [Instrumental Case]
 word_target: 2000
 objectives:
-- Learner can use spatial prepositions над, під, перед, за, між with the Instrumental case to describe location.
-- Learner can use перед + Instrumental for temporal meaning (перед обідом, перед заняттям).
-- Learner can answer the question Де? using preposition + Instrumental phrases for location.
-- Learner can distinguish за + Instrumental (behind) from за + Accusative (for/in favor of) in context.
+- Learner can use spatial prepositions над, під, перед, за, між with the 
+  Instrumental case to describe location.
+- Learner can use перед + Instrumental for temporal meaning (перед обідом, перед
+  заняттям).
+- Learner can answer the question Де? using preposition + Instrumental phrases 
+  for location.
+- Learner can distinguish за + Instrumental (behind) from за + Accusative 
+  (for/in favor of) in context.
 dialogue_situations:
-- setting: 'Giving directions inside a museum — spatial prepositions: Картина (f, painting) над каміном (m, fireplace). Скульптура
-    (f) між вікнами (pl). Лавка (f, bench) під деревом (n, tree). Кафе за музеєм (m).'
+- setting: 'Giving directions inside a museum — spatial prepositions: Картина (f,
+    painting) над каміном (m, fireplace). Скульптура (f) між вікнами (pl). Лавка (f,
+    bench) під деревом (n, tree). Кафе за музеєм (m).'
   speakers:
   - Гід музею
   - Відвідувачі
@@ -25,47 +30,63 @@ content_outline:
 - section: 'Просторові прийменники: Де це? (Spatial Prepositions: Where Is It?)'
   words: 600
   points:
-  - 'Five key spatial prepositions that take the Instrumental case: над (above/over), під (under/below), перед (in front of),
-    за (behind/beyond), між (between).'
+  - 'Five key spatial prepositions that take the Instrumental case: над (above/over),
+    під (under/below), перед (in front of), за (behind/beyond), між (between).'
   - 'над + Ор.в.: Лампа висить над столом. Птах летить над містом. Хмари над горами.'
   - 'під + Ор.в.: Кіт сидить під столом. Книга лежить під ліжком. Підвал під будинком.'
-  - 'перед + Ор.в.: Дерево росте перед будинком. Машина стоїть перед гаражем. Фонтан перед театром.'
+  - 'перед + Ор.в.: Дерево росте перед будинком. Машина стоїть перед гаражем. Фонтан
+    перед театром.'
   - 'за + Ор.в.: Сад за будинком. Ліс за річкою. Хтось стоїть за дверима.'
-  - 'між + Ор.в.: Парк між школою і бібліотекою. Стілець між столом і стіною. Місто між горами.'
+  - 'між + Ор.в.: Парк між школою і бібліотекою. Стілець між столом і стіною. Місто
+    між горами.'
 - section: Описуємо кімнату (Describing a Room)
   words: 500
   points:
-  - 'Practical application: describing where objects are in a room — Картина висить над ліжком. Килим лежить під столом. Шафа
-    стоїть між вікном і дверима.'
-  - 'Question-answer pattern: Де лампа? — Лампа над столом. Де кіт? — Під ліжком. Де ваза? — Між книгами.'
-  - 'Dialogue: Two roommates arranging furniture. One asks where to put things, the other gives directions using preposition
-    + Instrumental.'
-  - 'Building vocabulary for room description: стіна, підлога, стеля, кут, шафа, полиця, килим, картина.'
-- section: 'Перед обідом, за розкладом: Часове значення (Before Lunch, On Schedule: Temporal Meaning)'
+  - 'Practical application: describing where objects are in a room — Картина висить
+    над ліжком. Килим лежить під столом. Шафа стоїть між вікном і дверима.'
+  - 'Question-answer pattern: Де лампа? — Лампа над столом. Де кіт? — Під ліжком.
+    Де ваза? — Між книгами.'
+  - 'Dialogue: Two roommates arranging furniture. One asks where to put things, the
+    other gives directions using preposition + Instrumental.'
+  - 'Building vocabulary for room description: стіна, підлога, стеля, кут, шафа, полиця,
+    килим, картина.'
+- section: 'Перед обідом, за розкладом: Часове значення (Before Lunch, On Schedule:
+    Temporal Meaning)'
   words: 450
   points:
-  - 'перед + Ор.в. for "before" in time: перед обідом (before lunch), перед уроком (before class), перед сном (before sleep),
-    перед відпусткою (before vacation).'
-  - 'за + Ор.в. for fixed temporal expressions: за розкладом (according to schedule), за планом (according to plan).'
-  - 'Contrast with spatial meaning: перед будинком (in front of — spatial) vs. перед обідом (before — temporal). Same case,
-    different meaning.'
+  - 'перед + Ор.в. for "before" in time: перед обідом (before lunch), перед уроком
+    (before class), перед сном (before sleep), перед відпусткою (before vacation).'
+  - 'за + Ор.в. for fixed temporal expressions: за розкладом (according to schedule),
+    за планом (according to plan).'
+  - 'Contrast with spatial meaning: перед будинком (in front of — spatial) vs. перед
+    обідом (before — temporal). Same case, different meaning.'
   - 'Common daily routine expressions: перед сніданком, перед роботою, перед заняттям.'
 - section: 'Практика: Де? Коли? (Practice: Where? When?)'
   words: 450
   points:
-  - 'Picture description exercise: look at a scene and describe locations using над, під, перед, за, між.'
+  - 'Picture description exercise: look at a scene and describe locations using над,
+    під, перед, за, між.'
   - 'Daily schedule exercise: Що ти робиш перед сніданком? Перед роботою? Перед сном?'
-  - 'Contrastive pairs: за + Instrumental (behind — location) vs. за + Accusative (for — purpose). За будинком (behind the
-    house) vs. Дякую за допомогу (thank you for help).'
-  - 'Mini-dialogue: Describing a neighborhood — where the shop is, where the park is, what is between buildings.'
-  - 'Accusative vs. Instrumental with під, над, між: location (де?) uses Instrumental — Кіт сидить під столом. Direction/motion
-    (куди?) uses Accusative — Кіт заліз під стіл. Compare: Лампа висить над столом (location, Instr.) vs. Повісь лампу над
-    стіл (direction, Acc.). Між follows the same pattern but Accusative is rare in everyday speech.'
+  - 'Contrastive pairs: за + Instrumental (behind — location) vs. за + Accusative
+    (for — purpose). За будинком (behind the house) vs. Дякую за допомогу (thank you
+    for help).'
+  - 'Mini-dialogue: Describing a neighborhood — where the shop is, where the park
+    is, what is between buildings.'
+  - 'Accusative vs. Instrumental with під, над, між: location (де?) uses Instrumental
+    — Кіт сидить під столом. Direction/motion (куди?) uses Accusative — Кіт заліз
+    під стіл. Compare: Лампа висить над столом (location, Instr.) vs. Повісь лампу
+    над стіл (direction, Acc.). Між follows the same pattern but Accusative is rare
+    in everyday speech.'
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - 'Spatial prepositions (над, під, перед, за, між) use the Instrumental case to
+    describe location (Де?): Кіт під столом, лампа над ліжком.'
+  - "The preposition перед + Instrumental is also used for temporal 'before' (Коли?):
+    перед обідом, перед сном, перед заняттям."
+  - "Self-check: Describe where 3 objects are in your room using над, під, перед,
+    за, or між. What is the difference between 'Кіт сидить під столом' and 'Кіт заліз
+    під стіл'?"
 vocabulary_hints:
   required:
   - над (above, over)
@@ -86,10 +107,12 @@ vocabulary_hints:
   - сон (sleep, dream)
 activity_hints:
 - type: fill-in
-  focus: Complete location sentences with correct preposition + Instrumental noun form
+  focus: Complete location sentences with correct preposition + Instrumental 
+    noun form
   items: 8
 - type: match-up
-  focus: Match prepositions (над, під, перед, за, між) to pictures showing spatial relationships
+  focus: Match prepositions (над, під, перед, за, між) to pictures showing 
+    spatial relationships
   items: 8
 - type: quiz
   focus: Distinguish spatial vs. temporal meaning of перед and за
@@ -99,7 +122,8 @@ activity_hints:
   items: 8
 references:
 - title: Захарійчук Grade 4, с. 63
-  notes: Instrumental case nouns with prepositions з, за, із, над, під, між, перед — explicit list from textbook rule box
+  notes: Instrumental case nouns with prepositions з, за, із, над, під, між, 
+    перед — explicit list from textbook rule box
 - title: Заболотний Grade 5, §23
   notes: Spatial prepositions with Instrumental case, room description exercises
 - title: 'ULP: Ukrainian Prepositions'

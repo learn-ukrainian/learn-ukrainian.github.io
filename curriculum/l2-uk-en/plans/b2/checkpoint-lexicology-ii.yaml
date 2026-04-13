@@ -2,7 +2,7 @@ module: b2-078
 level: B2
 sequence: 78
 slug: checkpoint-lexicology-ii
-version: 1.0.1
+version: 1.0.2
 title: 'Контрольний модуль: Лексикологія II (ідіоми, неологізми та динаміка)'
 subtitle: 'Підсумковий контроль: ідіоми, неологізми та лексична динаміка'
 focus: checkpoint
@@ -16,7 +16,8 @@ objectives:
 - Продемонструвати комплексні навички лексичного аналізу.
 reading_situations:
 - source_type: публіцистичний текст
-  topic: 'Мовна колонка в українському ЗМІ: аналіз вживання ідіом та неологізмів у журналістському тексті.'
+  topic: 'Мовна колонка в українському ЗМІ: аналіз вживання ідіом та неологізмів у
+    журналістському тексті.'
   key_elements:
   - ідіоми в контексті
   - неологізми
@@ -32,14 +33,16 @@ listening_situations:
   motivation: Перевірка сприйняття складної лексики.
 writing_tasks:
 - task_type: есе
-  prompt: 'Напишіть розгорнуту відповідь: ''Як сучасна лексика відображає трансформації в українському суспільстві?'''
+  prompt: 'Напишіть розгорнуту відповідь: ''Як сучасна лексика відображає трансформації
+    в українському суспільстві?'''
   requirements:
   - мінімум 350 слів
   - щонайменше 5 ідіом та 5 неологізмів
   - академічний стиль
   motivation: Синтез знань з різних тем лексикології.
-  model_answer: Текст має поєднувати аналіз нових запозичень (у військовій та технологічній сферах) з аналізом стабільного
-    фразеологічного фонду як культурного якоря.
+  model_answer: Текст має поєднувати аналіз нових запозичень (у військовій та 
+    технологічній сферах) з аналізом стабільного фразеологічного фонду як 
+    культурного якоря.
 discussion_topics:
 - context: Чи загрожують англіцизми українській мові?
   questions:
@@ -94,8 +97,14 @@ content_outline:
 - section: Підсумок — Summary
   words: 300
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - "Ukrainian idioms draw heavily from somatic (голова, руки), zoomorphic (animals),
+    and natural (вода, вогонь) imagery. Vocabulary dynamically updates through neologisms
+    and borrowings. Self-check: Name 3 somatic idioms and explain their meanings.
+    What's the difference between an archaism and a historism?"
+  - 'Lexical precision requires navigating polysemy, mastering word combinability,
+    and distinguishing paronyms to prevent errors. A comprehensive lexical analysis
+    actively edits out calques and Russianisms. Self-check: What is the difference
+    between polysemy and paronymy? Identify and correct one common lexical calque.'
 vocabulary_hints:
 - word: лексикологія
   translation: lexicology
@@ -152,15 +161,17 @@ activities:
   total_min_items: 25
 activity_hints:
 - type: reading
-  focus: 'Прочитайте текст про ідіоми: систематизація та вживання і дайте відповіді на запитання щодо ключових понять.'
+  focus: 'Прочитайте текст про ідіоми: систематизація та вживання і дайте відповіді
+    на запитання щодо ключових понять.'
 - type: essay-response
-  focus: 'Напишіть короткий текст (100-150 слів) про динамічні процеси: неологізми та запозичення, використовуючи нову лексику
-    модуля.'
+  focus: 'Напишіть короткий текст (100-150 слів) про динамічні процеси: неологізми
+    та запозичення, використовуючи нову лексику модуля.'
 - type: critical-analysis
-  focus: 'Проаналізуйте взаємозв''язок між поняттями у розділі «Ідіоми: систематизація та вживання». Обґрунтуйте свою позицію
-    прикладами з тексту.'
+  focus: 'Проаналізуйте взаємозв''язок між поняттями у розділі «Ідіоми: систематизація
+    та вживання». Обґрунтуйте свою позицію прикладами з тексту.'
 - type: error-correction
-  focus: 'Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему ідіоми: систематизація та вживання.'
+  focus: 'Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему ідіоми:
+    систематизація та вживання.'
 references:
 - source: Караман, 10 клас (2018)
   pages: §35–45

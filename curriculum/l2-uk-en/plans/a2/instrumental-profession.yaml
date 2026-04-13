@@ -2,7 +2,7 @@ module: a2-026
 level: A2
 sequence: 26
 slug: instrumental-profession
-version: 1.0.1
+version: 1.0.2
 title: Я буду вчителькою
 subtitle: Орудний відмінок для професії та стану; дієслова з орудним відмінком
 focus: grammar
@@ -10,66 +10,79 @@ pedagogy: PPP
 phase: A2.4 [Instrumental Case]
 word_target: 2000
 objectives:
-- Learner can use the Instrumental case to express profession or status after бути, стати, працювати (бути лікарем, стати
-  вчителькою, працювати інженером).
-- Learner can conjugate and use verbs that require the Instrumental case (захоплюватися, цікавитися, пишатися, займатися).
-- Learner can distinguish Nominative predicate (Я вчитель) from Instrumental predicate (Я буду вчителем) and understand when
-  each is appropriate.
-- Learner can ask and answer questions about professions using Ким? and Хто ти за фахом?
+- Learner can use the Instrumental case to express profession or status after 
+  бути, стати, працювати (бути лікарем, стати вчителькою, працювати інженером).
+- Learner can conjugate and use verbs that require the Instrumental case 
+  (захоплюватися, цікавитися, пишатися, займатися).
+- Learner can distinguish Nominative predicate (Я вчитель) from Instrumental 
+  predicate (Я буду вчителем) and understand when each is appropriate.
+- Learner can ask and answer questions about professions using Ким? and Хто ти 
+  за фахом?
 dialogue_situations:
-- setting: 'High school reunion — catching up on careers: Я стала лікаркою (f). Він працює інженером (m). Вона хоче бути журналісткою
-    (f). А ти?'
+- setting: 'High school reunion — catching up on careers: Я стала лікаркою (f). Він
+    працює інженером (m). Вона хоче бути журналісткою (f). А ти?'
   speakers:
   - Колишні однокласники (former classmates)
   motivation: 'Бути + instrumental: лікарка→лікаркою, інженер→інженером'
 content_outline:
-- section: Бути ким? Професія в орудному відмінку (To Be Whom? Profession in the Instrumental)
+- section: Бути ким? Професія в орудному відмінку (To Be Whom? Profession in the
+    Instrumental)
   words: 550
   points:
-  - 'After бути (past/future), стати, працювати, the profession noun goes into Instrumental: Вона була вчителькою. Він стане
-    лікарем. Я працюю інженером.'
-  - 'Present tense exception: Я вчитель / Вона вчителька (Nominative, no є). But past and future use Instrumental: Він був
-    лікарем. Вона буде програмісткою.'
-  - 'Feminine profession nouns in Instrumental: вчителька → вчителькою, лікарка → лікаркою, програмістка → програмісткою,
-    журналістка → журналісткою.'
-  - 'Masculine profession nouns in Instrumental: лікар → лікарем, кухар → кухарем, інженер → інженером, програміст → програмістом,
-    музикант → музикантом.'
-  - 'Ukrainian forms both masculine and feminine profession nouns naturally — this is standard, not innovation: лікар/лікарка,
-    вчитель/вчителька, кухар/кухарка.'
+  - 'After бути (past/future), стати, працювати, the profession noun goes into Instrumental:
+    Вона була вчителькою. Він стане лікарем. Я працюю інженером.'
+  - 'Present tense exception: Я вчитель / Вона вчителька (Nominative, no є). But past
+    and future use Instrumental: Він був лікарем. Вона буде програмісткою.'
+  - 'Feminine profession nouns in Instrumental: вчителька → вчителькою, лікарка →
+    лікаркою, програмістка → програмісткою, журналістка → журналісткою.'
+  - 'Masculine profession nouns in Instrumental: лікар → лікарем, кухар → кухарем,
+    інженер → інженером, програміст → програмістом, музикант → музикантом.'
+  - 'Ukrainian forms both masculine and feminine profession nouns naturally — this
+    is standard, not innovation: лікар/лікарка, вчитель/вчителька, кухар/кухарка.'
 - section: Дієслова з орудним відмінком (Verbs That Take the Instrumental)
   words: 550
   points:
-  - 'Verbs of interest and passion: захоплюватися (to be passionate about) — захоплюватися музикою, спортом, мистецтвом; цікавитися
-    (to be interested in) — цікавитися історією, наукою.'
-  - 'Verbs of pride and admiration: пишатися (to be proud of) — Я пишаюся Україною, сином; милуватися (to admire) — милуватися
-    природою.'
-  - 'Verbs of activity: займатися (to be engaged in) — займатися спортом, йогою, бізнесом; володіти (to master/possess) —
-    володіти мовою.'
-  - 'Conjugation focus: захоплюватися (1st conjugation: захоплююся, захоплюєшся...), цікавитися (2nd conjugation: цікавлюся,
-    цікавишся...).'
+  - 'Verbs of interest and passion: захоплюватися (to be passionate about) — захоплюватися
+    музикою, спортом, мистецтвом; цікавитися (to be interested in) — цікавитися історією,
+    наукою.'
+  - 'Verbs of pride and admiration: пишатися (to be proud of) — Я пишаюся Україною,
+    сином; милуватися (to admire) — милуватися природою.'
+  - 'Verbs of activity: займатися (to be engaged in) — займатися спортом, йогою, бізнесом;
+    володіти (to master/possess) — володіти мовою.'
+  - 'Conjugation focus: захоплюватися (1st conjugation: захоплююся, захоплюєшся...),
+    цікавитися (2nd conjugation: цікавлюся, цікавишся...).'
   - Practice sentences combining profession and interest vocabulary.
 - section: Хто ти за фахом? (What Is Your Profession?)
   words: 500
   points:
-  - 'Key question patterns: Ким ти працюєш? Ким ти хочеш стати? Хто ти за фахом? Чим ти захоплюєшся?'
-  - 'Dialogue: Two people at a party introducing themselves — discussing their jobs, what they studied, and what they are
-    passionate about.'
-  - 'Common professions for practice: вчитель/вчителька, лікар/лікарка, інженер/ інженерка, програміст/програмістка, кухар/кухарка,
-    перукар/перукарка, журналіст/журналістка, музикант/музикантка.'
-  - 'Useful phrases: працювати за фахом (to work in one''s field), мріяти стати... (to dream of becoming...).'
+  - 'Key question patterns: Ким ти працюєш? Ким ти хочеш стати? Хто ти за фахом? Чим
+    ти захоплюєшся?'
+  - 'Dialogue: Two people at a party introducing themselves — discussing their jobs,
+    what they studied, and what they are passionate about.'
+  - 'Common professions for practice: вчитель/вчителька, лікар/лікарка, інженер/ інженерка,
+    програміст/програмістка, кухар/кухарка, перукар/перукарка, журналіст/журналістка,
+    музикант/музикантка.'
+  - 'Useful phrases: працювати за фахом (to work in one''s field), мріяти стати...
+    (to dream of becoming...).'
 - section: 'Практика: Ким бути? (Practice: Who to Be?)'
   words: 400
   points:
   - 'Transformation drill: Він лікар. → Він працює лікарем. → Він буде лікарем.'
-  - 'Sentence building with verb + Instrumental: Мій брат займається програмуванням. Моя сестра цікавиться медициною. Я пишаюся
-    своєю родиною.'
-  - 'Mini-dialogue: A child telling a parent about future career dreams (Я хочу стати ветеринаром! — Чому? — Бо я захоплююся
-    тваринами).'
+  - 'Sentence building with verb + Instrumental: Мій брат займається програмуванням.
+    Моя сестра цікавиться медициною. Я пишаюся своєю родиною.'
+  - 'Mini-dialogue: A child telling a parent about future career dreams (Я хочу стати
+    ветеринаром! — Чому? — Бо я захоплююся тваринами).'
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - "Use the Nominative case for present tense professions (Я лікар), but switch to
+    the Instrumental case after бути, стати, and працювати (Він був лікарем, Вона
+    працює вчителькою). Self-check: How do you say 'I am a programmer' versus 'I will
+    be a programmer'? List 3 professions in their masculine and feminine forms."
+  - "Verbs of interest, pride, and activity (захоплюватися, цікавитися, пишатися,
+    займатися) always take the Instrumental case. Self-check: Ask a friend 'What are
+    you interested in?' (Чим ти цікавишся?). What is the difference between 'Хто ти
+    за фахом?' and 'Ким ти працюєш?'"
 vocabulary_hints:
   required:
   - професія (profession)
@@ -95,20 +108,23 @@ activity_hints:
   focus: Put profession nouns into Instrumental after бути/стати/працювати
   items: 8
 - type: match-up
-  focus: Match verbs (захоплюватися, цікавитися, пишатися) to correct Instrumental complements
+  focus: Match verbs (захоплюватися, цікавитися, пишатися) to correct 
+    Instrumental complements
   items: 8
 - type: quiz
-  focus: Choose Nominative or Instrumental for the profession noun based on tense
+  focus: Choose Nominative or Instrumental for the profession noun based on 
+    tense
   items: 8
 - type: fill-in
   focus: Answer questions about professions using full Instrumental sentences
   items: 8
 references:
 - title: Кравцова Grade 4, с. 58
-  notes: 'Exercise 159 — "Ким ти мрієш стати?" with profession nouns in Instrumental: перукар, кухар, пекар, шахтар, архітектор,
-    маляр, шофер'
+  notes: 'Exercise 159 — "Ким ти мрієш стати?" with profession nouns in Instrumental:
+    перукар, кухар, пекар, шахтар, архітектор, маляр, шофер'
 - title: Заболотний Grade 10, с. 153
-  notes: Instrumental singular formation for profession nouns (ювіляр, гончар, столяр, кулінар, кобзар, редактор)
+  notes: Instrumental singular formation for profession nouns (ювіляр, гончар, 
+    столяр, кулінар, кобзар, редактор)
 - title: 'ULP: Professions in Ukrainian'
   url: https://www.ukrainianlessons.com/season2-lesson18/
   notes: Profession vocabulary and Instrumental usage patterns

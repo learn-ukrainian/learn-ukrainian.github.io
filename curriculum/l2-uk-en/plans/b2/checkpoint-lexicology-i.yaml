@@ -2,7 +2,7 @@ module: b2-073
 level: B2
 sequence: 73
 slug: checkpoint-lexicology-i
-version: 1.0.1
+version: 1.0.2
 title: 'Контрольний модуль: Лексикологія I (синонімія та пареміологія)'
 subtitle: 'Підсумковий контроль: синонімія, прислів''я та сталі вирази'
 focus: checkpoint
@@ -16,7 +16,8 @@ objectives:
 - Продемонструвати вміння вживати фразеологізми в контексті.
 reading_situations:
 - source_type: публіцистичний текст
-  topic: 'Стаття з багатою синоніміко-фразеологічною тканиною: аналіз добору слів та ідіом.'
+  topic: 'Стаття з багатою синоніміко-фразеологічною тканиною: аналіз добору слів
+    та ідіом.'
   key_elements:
   - синонімічні ряди
   - прислів'я в контексті
@@ -32,14 +33,15 @@ listening_situations:
   motivation: Перевірка розуміння фразеології в живому мовленні.
 writing_tasks:
 - task_type: есе
-  prompt: Напишіть текст на тему 'Мудрість поколінь у прислів'ях'. Використайте щонайменше 5 прислів'їв та 5 точних синонімів.
+  prompt: Напишіть текст на тему 'Мудрість поколінь у прислів'ях'. Використайте 
+    щонайменше 5 прислів'їв та 5 точних синонімів.
   requirements:
   - мінімум 300 слів
   - використання прислів'їв у контексті, а не списком
   - синонімічна різноманітність
   motivation: Демонстрація лексичного багатства.
-  model_answer: 'Текст має органічно вплітати прислів''я: ''Як кажуть, без труда нема плода. Ця народна мудрість нагадує,
-    що наполеглива (= завзята, невтомна) праця...'''
+  model_answer: 'Текст має органічно вплітати прислів''я: ''Як кажуть, без труда нема
+    плода. Ця народна мудрість нагадує, що наполеглива (= завзята, невтомна) праця...'''
 discussion_topics:
 - context: Чи актуальні народні прислів'я в XXI столітті?
   questions:
@@ -94,8 +96,14 @@ content_outline:
 - section: Підсумок — Summary
   words: 300
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - 'Synonyms form synonymous rows built around a neutral dominant word, categorized
+    into absolute, ideographic, and stylistic types. Self-check: What is the difference
+    between a stylistic and a contextual synonym? Build a synonymous row for a common
+    emotion and identify its dominant.'
+  - "Proverbs (пареміологія) and idioms (фразеологізми) act as cultural codes and
+    rhetorical tools, requiring precise usage to avoid calques. Self-check: Describe
+    a colleague's work ethic using 2 distinct Ukrainian proverbs. What is the difference
+    between a phraseological fusion and a unity?"
 vocabulary_hints:
 - word: синонім
   translation: synonym
@@ -152,14 +160,17 @@ activities:
   total_min_items: 25
 activity_hints:
 - type: reading
-  focus: 'Прочитайте текст про синонімія: типи та точність добору і дайте відповіді на запитання щодо ключових понять.'
+  focus: 'Прочитайте текст про синонімія: типи та точність добору і дайте відповіді
+    на запитання щодо ключових понять.'
 - type: essay-response
-  focus: Напишіть короткий текст (100-150 слів) про прислів'я, приказки та їхня функція, використовуючи нову лексику модуля.
+  focus: Напишіть короткий текст (100-150 слів) про прислів'я, приказки та їхня 
+    функція, використовуючи нову лексику модуля.
 - type: critical-analysis
-  focus: 'Проаналізуйте взаємозв''язок між поняттями у розділі «Синонімія: типи та точність добору». Обґрунтуйте свою позицію
-    прикладами з тексту.'
+  focus: 'Проаналізуйте взаємозв''язок між поняттями у розділі «Синонімія: типи та
+    точність добору». Обґрунтуйте свою позицію прикладами з тексту.'
 - type: error-correction
-  focus: 'Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему синонімія: типи та точність добору.'
+  focus: 'Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему синонімія:
+    типи та точність добору.'
 references:
 - source: Караман, 10 клас (2018)
   pages: §35–45

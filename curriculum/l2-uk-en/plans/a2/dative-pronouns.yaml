@@ -2,7 +2,7 @@ module: a2-017
 level: A2
 sequence: 17
 slug: dative-pronouns
-version: 1.0.1
+version: 1.0.2
 title: Мені, тобі, йому...
 subtitle: Давальний відмінок особових займенників та безособові конструкції
 focus: grammar
@@ -10,14 +10,18 @@ pedagogy: PPP
 phase: A2.3 [Dative Case]
 word_target: 2000
 objectives:
-- Learner can produce all dative personal pronoun forms (мені, тобі, йому/їй, нам, вам, їм) from memory when given the nominative
-  form.
-- Learner can use dative pronouns as indirect objects in sentences with verbs like давати, говорити, писати.
-- Learner can form impersonal sentences with dative pronoun + adverb (мені холодно, тобі потрібно, їй цікаво).
-- Learner can distinguish between accusative (бачу тебе) and dative (кажу тобі) pronoun forms in context.
+- Learner can produce all dative personal pronoun forms (мені, тобі, йому/їй, 
+  нам, вам, їм) from memory when given the nominative form.
+- Learner can use dative pronouns as indirect objects in sentences with verbs 
+  like давати, говорити, писати.
+- Learner can form impersonal sentences with dative pronoun + adverb (мені 
+  холодно, тобі потрібно, їй цікаво).
+- Learner can distinguish between accusative (бачу тебе) and dative (кажу тобі) 
+  pronoun forms in context.
 dialogue_situations:
-- setting: 'Distributing birthday gifts at a family gathering — who gets what: Мені — книгу. Тобі — шоколад. Йому — шарф (m,
-    scarf). Їй — квіти (pl, flowers). Нам — торт!'
+- setting: 'Distributing birthday gifts at a family gathering — who gets what: Мені
+    — книгу. Тобі — шоколад. Йому — шарф (m, scarf). Їй — квіти (pl, flowers). Нам
+    — торт!'
   speakers:
   - Іменинник
   - Родина
@@ -26,37 +30,57 @@ content_outline:
 - section: 'Давальний відмінок: Кому? (The Dative Case: To Whom?)'
   words: 500
   points:
-  - Introducing the Dative case (Давальний відмінок) as the case that answers Кому? Чому?
-  - 'Core meaning: the recipient — the person who receives something, is told something, or for whom something is done.'
-  - Compare with Genitive (Кого? Чого?) and Accusative (Кого? Що?) — each case has its own question and function.
-  - Simple examples showing the dative in action with familiar verbs (давати, казати).
-- section: Особові займенники у давальному відмінку (Personal Pronouns in the Dative)
+  - Introducing the Dative case (Давальний відмінок) as the case that answers 
+    Кому? Чому?
+  - 'Core meaning: the recipient — the person who receives something, is told something,
+    or for whom something is done.'
+  - Compare with Genitive (Кого? Чого?) and Accusative (Кого? Що?) — each case 
+    has its own question and function.
+  - Simple examples showing the dative in action with familiar verbs (давати, 
+    казати).
+- section: Особові займенники у давальному відмінку (Personal Pronouns in the 
+    Dative)
   words: 700
   points:
-  - 'Full paradigm: я→мені, ти→тобі, він→йому, вона→їй, воно→йому, ми→нам, ви→вам, вони→їм.'
-  - 'Key pattern: 1st/2nd person forms (мені, тобі, нам, вам) are unique — must be memorized as a set.'
-  - '3rd person: йому (masc/neut), їй (fem), їм (plural). After prepositions these gain initial н-: до нього, але йому.'
-  - 'Practice with common verbs: Дай мені книгу. Скажи їй правду. Покажи нам фото. Напиши їм листа.'
+  - 'Full paradigm: я→мені, ти→тобі, він→йому, вона→їй, воно→йому, ми→нам, ви→вам,
+    вони→їм.'
+  - 'Key pattern: 1st/2nd person forms (мені, тобі, нам, вам) are unique — must be
+    memorized as a set.'
+  - '3rd person: йому (masc/neut), їй (fem), їм (plural). After prepositions these
+    gain initial н-: до нього, але йому.'
+  - 'Practice with common verbs: Дай мені книгу. Скажи їй правду. Покажи нам фото.
+    Напиши їм листа.'
   - Contrast accusative vs. dative forms in pairs to build discrimination.
 - section: 'Мені холодно: Безособові конструкції (Impersonal Constructions with Dative)'
   words: 500
   points:
-  - 'Pattern: Dative pronoun + adverb/predicate to express states and feelings without a subject — мені холодно, тобі сумно,
-    їй весело.'
-  - 'Common predicates: холодно, тепло, важко, легко, весело, сумно, приємно, цікаво, нудно, потрібно, можна.'
-  - 'Compare with nominative subject sentences: Я втомлена vs. Мені важко — different structure, different nuance.'
-  - Dialogue practice where characters describe how they feel using impersonal dative.
+  - 'Pattern: Dative pronoun + adverb/predicate to express states and feelings without
+    a subject — мені холодно, тобі сумно, їй весело.'
+  - 'Common predicates: холодно, тепло, важко, легко, весело, сумно, приємно, цікаво,
+    нудно, потрібно, можна.'
+  - 'Compare with nominative subject sentences: Я втомлена vs. Мені важко — different
+    structure, different nuance.'
+  - Dialogue practice where characters describe how they feel using impersonal 
+    dative.
 - section: Давальний чи знахідний? (Dative or Accusative?)
   words: 300
   points:
-  - 'Minimal pairs: Я бачу тебе (Acc.) vs. Я кажу тобі (Dat.). Він знає її (Acc.) vs. Він дзвонить їй (Dat.).'
-  - 'Decision strategy: Who receives the action? → Dative. Who is directly affected? → Accusative.'
-  - Practice distinguishing case usage with two-object verbs (давати щось комусь).
+  - 'Minimal pairs: Я бачу тебе (Acc.) vs. Я кажу тобі (Dat.). Він знає її (Acc.)
+    vs. Він дзвонить їй (Dat.).'
+  - 'Decision strategy: Who receives the action? → Dative. Who is directly affected?
+    → Accusative.'
+  - Practice distinguishing case usage with two-object verbs (давати щось 
+    комусь).
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - "The Dative case (Кому?) is used for the recipient of an action. Key pronoun forms:
+    я→мені, ти→тобі, він/воно→йому, вона→їй, ми→нам, ви→вам, вони→їм. Self-check:
+    What is the difference between 'Я бачу тебе' (Accusative) and 'Я кажу тобі' (Dative)?"
+  - "Impersonal constructions use a Dative pronoun + adverb to express states and
+    feelings (мені холодно, тобі потрібно). Self-check: Describe how you feel right
+    now using an impersonal construction. How do you say 'It is interesting for us'
+    in Ukrainian?"
 vocabulary_hints:
   required:
   - давальний відмінок (dative case)
@@ -85,11 +109,13 @@ activity_hints:
   focus: Choose dative or accusative pronoun form in context (тобі vs. тебе)
   items: 8
 - type: true-false
-  focus: Judge whether impersonal dative sentences (мені холодно, мені бачу) are correct
+  focus: Judge whether impersonal dative sentences (мені холодно, мені бачу) are
+    correct
   items: 8
 references:
 - title: Захарійчук Grade 4, §281
-  notes: Full declension table of personal pronouns 1st/2nd person with dative forms
+  notes: Full declension table of personal pronouns 1st/2nd person with dative 
+    forms
 - title: Заболотний Grade 10, §157
   notes: Dative endings for masculine nouns with parallel forms -ові/-у
 - title: 'ULP: Dative Case in Ukrainian'

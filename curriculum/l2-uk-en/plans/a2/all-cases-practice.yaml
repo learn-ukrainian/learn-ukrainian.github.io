@@ -2,7 +2,7 @@ module: a2-037
 level: A2
 sequence: 37
 slug: all-cases-practice
-version: 1.0.1
+version: 1.0.2
 title: Все разом
 subtitle: Розширені діалоги з усіма сімома відмінками в однині та множині
 focus: grammar
@@ -10,59 +10,80 @@ pedagogy: PPP
 phase: A2.5 [Case Synthesis and Plurals]
 word_target: 2000
 objectives:
-- Learner can follow an extended dialogue that naturally uses all 7 cases in both singular and plural, identifying which case
-  is used and why.
-- Learner can produce correct case forms across all 7 cases when completing gaps in a dialogue or short text.
-- Learner can self-correct case errors by applying the verb/preposition decision process from M31.
-- Learner can sustain a short conversation (8-10 exchanges) on an everyday topic, using at least 5 different cases correctly.
+- Learner can follow an extended dialogue that naturally uses all 7 cases in 
+  both singular and plural, identifying which case is used and why.
+- Learner can produce correct case forms across all 7 cases when completing gaps
+  in a dialogue or short text.
+- Learner can self-correct case errors by applying the verb/preposition decision
+  process from M31.
+- Learner can sustain a short conversation (8-10 exchanges) on an everyday 
+  topic, using at least 5 different cases correctly.
 dialogue_situations:
-- setting: 'Dialogue 1: Organizing a surprise birthday party at a ресторан (m) — calling, ordering торт (m), buying подарунок
-    (m) для подруги (f). Dialogue 2: At a лікарня (f) — describing symptoms to лікар (m). Dialogue 3: Planning a trip across
-    Ukraine — Львів, Одеса, Карпати.'
+- setting: 'Dialogue 1: Organizing a surprise birthday party at a ресторан (m) — calling,
+    ordering торт (m), buying подарунок (m) для подруги (f). Dialogue 2: At a лікарня
+    (f) — describing symptoms to лікар (m). Dialogue 3: Planning a trip across Ukraine
+    — Львів, Одеса, Карпати.'
   speakers:
   - Various speakers per dialogue
   motivation: 'All cases in real scenarios: restaurant, hospital, travel'
 content_outline:
-- section: 'Діалог 1: Організовуємо день народження (Dialogue 1: Organizing a Birthday Party)'
+- section: 'Діалог 1: Організовуємо день народження (Dialogue 1: Organizing a Birthday
+    Party)'
   words: 550
   points:
-  - 'Extended dialogue (12-15 exchanges) between two friends planning a birthday party. Naturally includes: Nom. (subjects
-    — хто прийде?), Gen. (немає торта, багато гостей), Dat. (подарунок Олені, написати друзям), Acc. (купити торт, запросити
-    друзів), Instr. (з друзями, прикрасити кулями), Loc. (у кафе, на вечірці), Voc. (Оксано! Андрію!).'
-  - 'After each dialogue section: case identification exercise — learner marks which case each highlighted noun is in and
-    explains the trigger.'
-  - 'Cultural note: Ukrainian birthday traditions — the birthday person treats guests (не гості дарують вечірку, а іменинник
-    частує).'
+  - 'Extended dialogue (12-15 exchanges) between two friends planning a birthday party.
+    Naturally includes: Nom. (subjects — хто прийде?), Gen. (немає торта, багато гостей),
+    Dat. (подарунок Олені, написати друзям), Acc. (купити торт, запросити друзів),
+    Instr. (з друзями, прикрасити кулями), Loc. (у кафе, на вечірці), Voc. (Оксано!
+    Андрію!).'
+  - 'After each dialogue section: case identification exercise — learner marks which
+    case each highlighted noun is in and explains the trigger.'
+  - 'Cultural note: Ukrainian birthday traditions — the birthday person treats guests
+    (не гості дарують вечірку, а іменинник частує).'
 - section: 'Діалог 2: У лікарні (Dialogue 2: At the Hospital)'
   words: 550
   points:
-  - 'Extended dialogue between a patient and a doctor. Cases used: Nom. (Що вас турбує?), Gen. (немає температури, біля лікарні),
-    Dat. (лікарю, пацієнтові), Acc. (приймати ліки, на огляд), Instr. (з кашлем, за рецептом), Loc. (у лікарні, на прийомі),
+  - 'Extended dialogue between a patient and a doctor. Cases used: Nom. (Що вас турбує?),
+    Gen. (немає температури, біля лікарні), Dat. (лікарю, пацієнтові), Acc. (приймати
+    ліки, на огляд), Instr. (з кашлем, за рецептом), Loc. (у лікарні, на прийомі),
     Voc. (Лікарю! Пане докторе!).'
-  - 'Vocabulary for body and health integrated naturally: голова, горло, температура, ліки, рецепт, здоров''я.'
-  - 'After dialogue: learner rewrites selected sentences changing singular to plural (один пацієнт → багато пацієнтів, одні
-    ліки → different quantity expressions).'
+  - 'Vocabulary for body and health integrated naturally: голова, горло, температура,
+    ліки, рецепт, здоров''я.'
+  - 'After dialogue: learner rewrites selected sentences changing singular to plural
+    (один пацієнт → багато пацієнтів, одні ліки → different quantity expressions).'
 - section: 'Діалог 3: Подорож Україною (Dialogue 3: Traveling Across Ukraine)'
   words: 550
   points:
-  - 'Extended dialogue between travelers discussing a road trip. Cases: Nom. (Київ — гарне місто), Gen. (з Києва, до Львова,
-    багато визначних місць), Dat. (друзям у Львові, нам треба), Acc. (відвідати Одесу, у четвер, через Умань), Instr. (поїхати
-    потягом, з подругою, милуватися Карпатами), Loc. (у Львові, по Хрещатику, у 2024 році), Voc. (Тарасе! Друже!).'
-  - 'Geography vocabulary: міста, гори, річки, вулиці — all declined in multiple cases throughout the dialogue.'
+  - 'Extended dialogue between travelers discussing a road trip. Cases: Nom. (Київ
+    — гарне місто), Gen. (з Києва, до Львова, багато визначних місць), Dat. (друзям
+    у Львові, нам треба), Acc. (відвідати Одесу, у четвер, через Умань), Instr. (поїхати
+    потягом, з подругою, милуватися Карпатами), Loc. (у Львові, по Хрещатику, у 2024
+    році), Voc. (Тарасе! Друже!).'
+  - 'Geography vocabulary: міста, гори, річки, вулиці — all declined in multiple cases
+    throughout the dialogue.'
   - 'Planning expressions: Давай поїдемо... Може, спочатку... А потім можна...'
 - section: 'Самоперевірка: Знайди помилку (Self-Check: Find the Error)'
   words: 350
   points:
-  - Short texts (3-4 sentences each) containing deliberate case errors. Learner identifies and corrects each error.
-  - 'Error types include: wrong case after preposition, animate/inanimate confusion in Acc.Pl., wrong Gen.Pl. ending, Dat./Loc.
-    confusion.'
-  - 'Summary: quick reference of all 7 cases with their key question words, most common prepositions, and typical verb triggers
-    — a "case cheat sheet" the learner can return to.'
+  - Short texts (3-4 sentences each) containing deliberate case errors. Learner 
+    identifies and corrects each error.
+  - 'Error types include: wrong case after preposition, animate/inanimate confusion
+    in Acc.Pl., wrong Gen.Pl. ending, Dat./Loc. confusion.'
+  - 'Summary: quick reference of all 7 cases with their key question words, most common
+    prepositions, and typical verb triggers — a "case cheat sheet" the learner can
+    return to.'
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - Review all 7 cases and their triggers (verbs and prepositions) using the 
+    summary cheat sheet, paying special attention to Accusative Plural (animate 
+    vs. inanimate) and Genitive Plural endings.
+  - "Self-check: Analyze the sentence 'Я їду до Львова з друзями' — identify the case
+    of each noun and the rule that triggers it. How do you form the Vocative case
+    to address a doctor or a friend (лікарю, Оксано)?"
+  - 'Self-check: Describe a recent event (like a birthday party or a road trip) in
+    4-5 sentences, ensuring you naturally use at least 5 different cases. What is
+    the difference between animate and inanimate nouns in the Accusative Plural?'
 vocabulary_hints:
   required:
   - вечірка (party)
@@ -83,19 +104,24 @@ vocabulary_hints:
   - частувати (to treat (with food))
 activity_hints:
 - type: fill-in
-  focus: Complete gaps in a dialogue with the correct case form — all 7 cases represented, both singular and plural
+  focus: Complete gaps in a dialogue with the correct case form — all 7 cases 
+    represented, both singular and plural
   items: 8
 - type: quiz
-  focus: Identify which case a highlighted noun is in and explain why (verb or preposition trigger)
+  focus: Identify which case a highlighted noun is in and explain why (verb or 
+    preposition trigger)
   items: 8
 - type: match-up
-  focus: Match sentence halves so that the case form in the first half agrees with the preposition/verb in the second half
+  focus: Match sentence halves so that the case form in the first half agrees 
+    with the preposition/verb in the second half
   items: 8
 - type: error-correction
-  focus: Find and fix wrong case endings across all 7 cases (e.g., *допомагаю сестру → сестрі, *багато студенти → студентів)
+  focus: Find and fix wrong case endings across all 7 cases (e.g., *допомагаю 
+    сестру → сестрі, *багато студенти → студентів)
   items: 6
 references:
 - title: Заболотний Grade 6, §§59-70
   notes: Full case paradigm with exercises combining all cases
 - title: Варзацька Grade 4, с. 38
-  notes: Complete відмінювання table — all cases singular and plural side by side
+  notes: Complete відмінювання table — all cases singular and plural side by 
+    side

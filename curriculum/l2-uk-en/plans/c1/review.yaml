@@ -2,7 +2,7 @@ module: c1-051
 level: C1
 sequence: 51
 slug: review
-version: 1.1.1
+version: 1.1.2
 title: Підсумкове повторення та узагальнення
 subtitle: Фінальний огляд і синтез
 focus: review
@@ -30,7 +30,8 @@ reading_situations:
   motivation: Узагальнення знань про функціональні стилі мови.
 listening_situations:
 - media_type: лекція
-  setting: Публічна лекція про вплив української діаспори на збереження мовної ідентичності.
+  setting: Публічна лекція про вплив української діаспори на збереження мовної 
+    ідентичності.
   focus_points:
   - історичні етапи еміграції
   - мовні особливості діаспорного мовлення
@@ -38,20 +39,23 @@ listening_situations:
   motivation: Розвиток навичок синтезу інформації з тривалого аудіопотоку.
 writing_tasks:
 - task_type: власне висловлення
-  prompt: 'Висловіть свою думку щодо тези: ''Мова — це не лише засіб спілкування, а й інструмент формування світогляду''.'
+  prompt: 'Висловіть свою думку щодо тези: ''Мова — це не лише засіб спілкування,
+    а й інструмент формування світогляду''.'
   requirements:
   - мінімум 250 слів
   - використання тез, аргументів та прикладів з літератури
   - логічність та послідовність
   motivation: Підготовка до формату іспитів та закріплення навичок аргументації.
-  model_answer: Твір має містити чітку тезу, два аргументи, приклад з української історії або літератури (наприклад, роль
-    Василя Стуса) та висновок.
+  model_answer: Твір має містити чітку тезу, два аргументи, приклад з 
+    української історії або літератури (наприклад, роль Василя Стуса) та 
+    висновок.
 discussion_topics:
 - context: Дискусія про майбутнє паперових книг в епоху тотальної цифровізації.
   questions:
   - Чи зникне друковане слово як матеріальний об'єкт?
   - Як зміниться процес сприйняття тексту при читанні з екрана?
-  motivation: Практика спонтанного мовлення з використанням вивчених модальних конструкцій.
+  motivation: Практика спонтанного мовлення з використанням вивчених модальних 
+    конструкцій.
 content_outline:
 - section: Систематизація морфологічних норм
   words: 1000
@@ -96,8 +100,15 @@ content_outline:
 - section: Підсумок — Summary
   words: 300
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - Review and systematize complex morphological paradigms (noun and numeral 
+    declension) and syntactic coherence (punctuation for inserted constructions 
+    and quotes), focusing on eliminating surzhyk, paronym confusion, and calques
+    from academic writing.
+  - 'Self-check: What is the difference between a paronym and a homonym? Provide an
+    example of how their confusion can lead to stylistic errors in professional speech.'
+  - 'Self-check: Transform a simple sentence into a complex one using an inserted
+    construction. Identify 3 unjustified borrowings or Russian calques in your writing
+    and replace them with normative Ukrainian lexemes.'
 vocabulary:
   required:
   - узагальнення
@@ -116,17 +127,20 @@ vocabulary:
   - синтез
 activity_hints:
 - type: reading
-  focus: Прочитайте текст про систематизація морфологічних норм і дайте відповіді на запитання щодо ключових понять.
+  focus: Прочитайте текст про систематизація морфологічних норм і дайте 
+    відповіді на запитання щодо ключових понять.
 - type: essay-response
-  focus: Напишіть короткий текст (100-150 слів) про синтаксичний практикум, використовуючи нову лексику модуля.
+  focus: Напишіть короткий текст (100-150 слів) про синтаксичний практикум, 
+    використовуючи нову лексику модуля.
 - type: critical-analysis
-  focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Систематизація морфологічних норм». Обґрунтуйте свою позицію
-    прикладами з тексту.
+  focus: Проаналізуйте взаємозв'язок між поняттями у розділі «Систематизація 
+    морфологічних норм». Обґрунтуйте свою позицію прикладами з тексту.
 - type: error-correction
-  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему систематизація морфологічних норм.
+  focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему 
+    систематизація морфологічних норм.
 - type: comparative-study
-  focus: 'Порівняйте різні підходи до систематизація морфологічних норм: Складні випадки відмінювання іменників та числівників.
-    Визначте спільне та відмінне.'
+  focus: 'Порівняйте різні підходи до систематизація морфологічних норм: Складні випадки
+    відмінювання іменників та числівників. Визначте спільне та відмінне.'
 activities:
   types_required:
   - error-correction

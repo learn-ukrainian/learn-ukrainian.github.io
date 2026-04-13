@@ -2,7 +2,7 @@ module: a2-057
 level: A2
 sequence: 57
 slug: indefinite-negative-pronouns
-version: 1.0.1
+version: 1.0.2
 title: Хтось, ніхто
 subtitle: Неозначені та заперечні займенники і прислівники
 focus: grammar
@@ -10,60 +10,76 @@ pedagogy: PPP
 phase: A2.8 [Refinement and Graduation]
 word_target: 2000
 objectives:
-- Learner can form and use indefinite pronouns with the suffixes -сь/-небудь and prefixes де-/будь-/аби- (хтось, щось, дехто,
-  будь-хто, абихто).
-- Learner can form and use negative pronouns and adverbs with the prefix ні- (ніхто, ніщо, ніде, ніколи, ніяк).
-- Learner can distinguish between the different indefinite series (-сь for unknown specific, -небудь for any at all, де- for
-  some among many, будь- for any whatsoever).
-- Learner can use double negation correctly in Ukrainian (Ніхто не прийшов. Я нічого не бачу.).
+- Learner can form and use indefinite pronouns with the suffixes -сь/-небудь and
+  prefixes де-/будь-/аби- (хтось, щось, дехто, будь-хто, абихто).
+- Learner can form and use negative pronouns and adverbs with the prefix ні- 
+  (ніхто, ніщо, ніде, ніколи, ніяк).
+- Learner can distinguish between the different indefinite series (-сь for 
+  unknown specific, -небудь for any at all, де- for some among many, будь- for 
+  any whatsoever).
+- Learner can use double negation correctly in Ukrainian (Ніхто не прийшов. Я 
+  нічого не бачу.).
 dialogue_situations:
-- setting: 'Mystery party game — who did it and who saw what: Хтось з''їв торт (m)! Ніхто не бачив! Щось впало на кухні (f)!
-    Дехто підозрює Олега. Будь-хто міг це зробити.'
+- setting: 'Mystery party game — who did it and who saw what: Хтось з''їв торт (m)!
+    Ніхто не бачив! Щось впало на кухні (f)! Дехто підозрює Олега. Будь-хто міг це
+    зробити.'
   speakers:
   - Гості на вечірці
   motivation: Хтось, ніхто, щось, дехто, будь-хто with торт(m), кухня(f)
 content_outline:
-- section: 'Хтось, щось: невідоме, але конкретне (Someone, Something: Unknown but Specific)'
+- section: 'Хтось, щось: невідоме, але конкретне (Someone, Something: Unknown but
+    Specific)'
   words: 500
   points:
-  - 'The -сь series: хтось (someone specific), щось (something specific), десь (somewhere specific), колись (sometime, once),
-    якось (somehow). Used when the speaker knows the entity exists but not who/what exactly.'
-  - 'Examples in context: Хтось постукав у двері. Я щось забув. Десь тут була моя книга.'
+  - 'The -сь series: хтось (someone specific), щось (something specific), десь (somewhere
+    specific), колись (sometime, once), якось (somehow). Used when the speaker knows
+    the entity exists but not who/what exactly.'
+  - 'Examples in context: Хтось постукав у двері. Я щось забув. Десь тут була моя
+    книга.'
   - 'Declension: хтось and щось decline like хто and що — хтось, когось, комусь, кимось.'
-- section: 'Будь-хто, дехто, абихто: різні відтінки (Anyone, Some, Just Anyone: Shades of Meaning)'
+- section: 'Будь-хто, дехто, абихто: різні відтінки (Anyone, Some, Just Anyone: Shades
+    of Meaning)'
   words: 500
   points:
-  - 'The -небудь series: хто-небудь (anyone at all), що-небудь (anything), де-небудь (anywhere). Used in questions and hypothetical
-    situations: Хто-небудь бачив мої ключі?'
-  - 'The де- series: дехто (some people), дещо (some things), деколи (sometimes), деякий (some, certain). Refers to an unspecified
-    part of a group: Дехто вважає, що...'
-  - 'The будь- series: будь-хто (anyone whatsoever), будь-що (anything at all), будь-де (anywhere). Emphasizes complete lack
-    of restriction: Будь-хто може це зробити.'
-  - 'The аби- series (colloquial/low quality): абихто (just anyone), абияк (carelessly). Carries a dismissive nuance: Не можна
-    робити абияк.'
+  - 'The -небудь series: хто-небудь (anyone at all), що-небудь (anything), де-небудь
+    (anywhere). Used in questions and hypothetical situations: Хто-небудь бачив мої
+    ключі?'
+  - 'The де- series: дехто (some people), дещо (some things), деколи (sometimes),
+    деякий (some, certain). Refers to an unspecified part of a group: Дехто вважає,
+    що...'
+  - 'The будь- series: будь-хто (anyone whatsoever), будь-що (anything at all), будь-де
+    (anywhere). Emphasizes complete lack of restriction: Будь-хто може це зробити.'
+  - 'The аби- series (colloquial/low quality): абихто (just anyone), абияк (carelessly).
+    Carries a dismissive nuance: Не можна робити абияк.'
 - section: 'Ніхто, ніщо, ніколи: заперечення (Nobody, Nothing, Never: Negation)'
   words: 550
   points:
-  - 'The ні- series: ніхто (nobody), ніщо (nothing), ніде (nowhere), ніколи (never), ніяк (no way), ніякий (no kind of), нічий
-    (nobody''s).'
-  - 'Ukrainian requires double negation — always ні- pronoun + не + verb: Ніхто не знає. Я нічого не бачив. Ми ніколи не були
-    в Одесі. This is NOT an error — it is mandatory grammar.'
-  - 'Declension of ніхто, ніщо: нікого, нічого, нікому, нічому, etc. With prepositions, ні- separates: ні до кого, ні з ким,
-    ні про що.'
-  - 'Contrast: ніколи (never) vs. колись (once, ever). ніде (nowhere) vs. десь (somewhere). ніхто (nobody) vs. хтось (someone).'
+  - 'The ні- series: ніхто (nobody), ніщо (nothing), ніде (nowhere), ніколи (never),
+    ніяк (no way), ніякий (no kind of), нічий (nobody''s).'
+  - 'Ukrainian requires double negation — always ні- pronoun + не + verb: Ніхто не
+    знає. Я нічого не бачив. Ми ніколи не були в Одесі. This is NOT an error — it
+    is mandatory grammar.'
+  - 'Declension of ніхто, ніщо: нікого, нічого, нікому, нічому, etc. With prepositions,
+    ні- separates: ні до кого, ні з ким, ні про що.'
+  - 'Contrast: ніколи (never) vs. колись (once, ever). ніде (nowhere) vs. десь (somewhere).
+    ніхто (nobody) vs. хтось (someone).'
 - section: 'Практика: хтось чи ніхто? (Practice: Someone or Nobody?)'
   words: 450
   points:
-  - 'Dialogue: a mystery scenario — someone heard something, nobody saw anything, someone must have been somewhere. Uses all
-    pronoun types naturally.'
+  - 'Dialogue: a mystery scenario — someone heard something, nobody saw anything,
+    someone must have been somewhere. Uses all pronoun types naturally.'
   - 'Reading practice: a short anecdote using indefinite and negative pronouns throughout.'
-  - 'Common mistakes: using ні- without не (*Ніхто прийшов → Ніхто не прийшов), confusing -сь and -небудь, failing to split
-    ні- with prepositions (*нідокого → ні до кого).'
+  - 'Common mistakes: using ні- without не (*Ніхто прийшов → Ніхто не прийшов), confusing
+    -сь and -небудь, failing to split ні- with prepositions (*нідокого → ні до кого).'
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - "Indefinite pronouns use affixes for nuance: -сь (specific but unknown, хтось),
+    -небудь (anyone at all, хто-небудь), де- (some, дехто), and будь- (anyone whatsoever,
+    будь-хто). Self-check: What's the difference between хтось and будь-хто?"
+  - "Negative pronouns (ніхто, ніщо) require mandatory double negation (Ніхто не прийшов).
+    With prepositions, the prefix splits: ні до кого, ні з ким. Self-check: Translate
+    'I saw nothing' and 'I spoke with nobody' into Ukrainian."
 vocabulary_hints:
   required:
   - хтось (someone)
@@ -86,7 +102,8 @@ activity_hints:
   focus: Choose the correct indefinite or negative pronoun for the context
   items: 8
 - type: fill-in
-  focus: Complete sentences with the appropriate -сь, -небудь, де-, будь-, or ні- form
+  focus: Complete sentences with the appropriate -сь, -небудь, де-, будь-, or 
+    ні- form
   items: 8
 - type: group-sort
   focus: Sort pronouns by series (-сь, -небудь, де-, будь-, ні-)

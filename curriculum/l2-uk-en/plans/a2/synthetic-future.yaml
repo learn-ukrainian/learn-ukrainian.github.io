@@ -2,77 +2,93 @@ module: a2-041
 level: A2
 sequence: 41
 slug: synthetic-future
-version: 1.0.1
+version: 1.0.2
 title: Я напишу!
-subtitle: Простий майбутній час доконаного виду та складений майбутній недоконаного
+subtitle: Простий майбутній час доконаного виду та складений майбутній 
+  недоконаного
 focus: grammar
 pedagogy: PPP
 phase: A2.6 [Aspect, Tenses, and Motion]
 word_target: 2000
 objectives:
-- Learner can form and use the synthetic (simple) future of perfective verbs (скажу, напишу, зроблю, прочитаю) — recognizing
-  that perfective present-tense forms automatically carry future meaning.
-- Learner can form and use the analytical (compound) future of imperfective verbs using буду + infinitive (буду говорити,
-  буду читати, буду писати).
-- Learner can explain why perfective verbs have no true present tense and why imperfective verbs need the auxiliary буду for
-  future meaning.
-- Learner can choose between synthetic and analytical future based on whether the action is a single completed result (perfective)
-  or an ongoing/repeated process (imperfective).
+- Learner can form and use the synthetic (simple) future of perfective verbs 
+  (скажу, напишу, зроблю, прочитаю) — recognizing that perfective present-tense 
+  forms automatically carry future meaning.
+- Learner can form and use the analytical (compound) future of imperfective 
+  verbs using буду + infinitive (буду говорити, буду читати, буду писати).
+- Learner can explain why perfective verbs have no true present tense and why 
+  imperfective verbs need the auxiliary буду for future meaning.
+- Learner can choose between synthetic and analytical future based on whether 
+  the action is a single completed result (perfective) or an ongoing/repeated 
+  process (imperfective).
 dialogue_situations:
-- setting: Making New Year's resolutions with friends — Я напишу книгу (f)! Я вивчу іспанську (f)! Він прочитає 50 книг! Вона
-    складе іспит (m, exam)!
+- setting: Making New Year's resolutions with friends — Я напишу книгу (f)! Я 
+    вивчу іспанську (f)! Він прочитає 50 книг! Вона складе іспит (m, exam)!
   speakers:
   - Група друзів на Новий рік
-  motivation: 'Perfective future: написати→напишу, вивчити→вивчу, скласти→складу. Note: Ukrainian says складати/скласти іспит
-    (not the Russianism "здавати іспит").'
+  motivation: 'Perfective future: написати→напишу, вивчити→вивчу, скласти→складу.
+    Note: Ukrainian says складати/скласти іспит (not the Russianism "здавати іспит").'
 content_outline:
 - section: Два майбутніх часи (Two Futures in Ukrainian)
   words: 450
   points:
-  - Ukrainian has two ways to talk about the future, and the choice depends on aspect — not on formality or style.
-  - 'Perfective future (простий майбутній час): use the conjugated present-tense forms of perfective verbs. Since perfective
-    verbs cannot describe an action happening right now, their present forms point to the future: скажу = I will say, напишу
+  - Ukrainian has two ways to talk about the future, and the choice depends on 
+    aspect — not on formality or style.
+  - 'Perfective future (простий майбутній час): use the conjugated present-tense forms
+    of perfective verbs. Since perfective verbs cannot describe an action happening
+    right now, their present forms point to the future: скажу = I will say, напишу
     = I will write, зроблю = I will do.'
-  - 'Imperfective future (складений майбутній час): буду + imperfective infinitive. Буду говорити = I will be speaking, буду
-    читати = I will be reading.'
-  - 'Key insight: English has one future (will + verb). Ukrainian has two — and the choice carries meaning about how the action
-    unfolds.'
+  - 'Imperfective future (складений майбутній час): буду + imperfective infinitive.
+    Буду говорити = I will be speaking, буду читати = I will be reading.'
+  - 'Key insight: English has one future (will + verb). Ukrainian has two — and the
+    choice carries meaning about how the action unfolds.'
 - section: Простий майбутній час (Perfective/Synthetic Future)
   words: 550
   points:
-  - 'Formation: conjugate the perfective verb exactly like a present tense verb. The forms look like present tense but mean
-    future: я скажу, ти скажеш, він/вона скаже, ми скажемо, ви скажете, вони скажуть.'
-  - 'More examples: написати → напишу, напишеш, напише...; зробити → зроблю, зробиш, зробить...; прочитати → прочитаю, прочитаєш,
-    прочитає...'
-  - 'When to use: a single, completed action in the future. Я напишу листа (I will write the letter — and finish it). Він
-    прочитає книгу (He will read the book — all of it).'
-  - 'Common perfective futures in daily life: подзвоню (I will call), куплю (I will buy), приїду (I will arrive), скажу (I
-    will say/tell).'
+  - 'Formation: conjugate the perfective verb exactly like a present tense verb. The
+    forms look like present tense but mean future: я скажу, ти скажеш, він/вона скаже,
+    ми скажемо, ви скажете, вони скажуть.'
+  - 'More examples: написати → напишу, напишеш, напише...; зробити → зроблю, зробиш,
+    зробить...; прочитати → прочитаю, прочитаєш, прочитає...'
+  - 'When to use: a single, completed action in the future. Я напишу листа (I will
+    write the letter — and finish it). Він прочитає книгу (He will read the book —
+    all of it).'
+  - 'Common perfective futures in daily life: подзвоню (I will call), куплю (I will
+    buy), приїду (I will arrive), скажу (I will say/tell).'
 - section: Складений майбутній час (Imperfective/Analytical Future)
   words: 550
   points:
-  - 'Formation: conjugate буду (я буду, ти будеш, він/вона буде, ми будемо, ви будете, вони будуть) + imperfective infinitive.'
-  - 'Examples: Я буду читати (I will be reading). Ми будемо працювати (We will be working). Вони будуть вивчати українську
-    (They will be studying Ukrainian).'
-  - 'When to use: an ongoing, repeated, or general action in the future. Завтра я буду працювати весь день (Tomorrow I will
-    be working all day). Влітку вони будуть подорожувати (In summer they will be traveling).'
-  - 'Contrast with perfective: Я напишу листа (I will write it — done) vs. Я буду писати листа (I will be writing it — process,
-    maybe not finished).'
+  - 'Formation: conjugate буду (я буду, ти будеш, він/вона буде, ми будемо, ви будете,
+    вони будуть) + imperfective infinitive.'
+  - 'Examples: Я буду читати (I will be reading). Ми будемо працювати (We will be
+    working). Вони будуть вивчати українську (They will be studying Ukrainian).'
+  - 'When to use: an ongoing, repeated, or general action in the future. Завтра я
+    буду працювати весь день (Tomorrow I will be working all day). Влітку вони будуть
+    подорожувати (In summer they will be traveling).'
+  - 'Contrast with perfective: Я напишу листа (I will write it — done) vs. Я буду
+    писати листа (I will be writing it — process, maybe not finished).'
 - section: Як обрати вид для майбутнього (Choosing Aspect for the Future)
   words: 450
   points:
-  - 'Decision guide: Will the action be completed with a result? → Perfective (synthetic). Will it be ongoing, repeated, or
-    is duration important? → Imperfective (analytical).'
-  - 'Contrastive examples: Я подзвоню тобі ввечері (I will call you — single call) vs. Я буду дзвонити тобі щодня (I will
-    call you every day — repeated). Він прочитає статтю (He will read the article — finish it) vs. Він буде читати статтю
-    (He will be reading the article — process).'
-  - 'Practical dialogues: making plans, promises, predictions — all require choosing aspect. Що ти будеш робити завтра? —
-    Я прибиратиму квартиру, а потім приготую вечерю.'
+  - 'Decision guide: Will the action be completed with a result? → Perfective (synthetic).
+    Will it be ongoing, repeated, or is duration important? → Imperfective (analytical).'
+  - 'Contrastive examples: Я подзвоню тобі ввечері (I will call you — single call)
+    vs. Я буду дзвонити тобі щодня (I will call you every day — repeated). Він прочитає
+    статтю (He will read the article — finish it) vs. Він буде читати статтю (He will
+    be reading the article — process).'
+  - 'Practical dialogues: making plans, promises, predictions — all require choosing
+    aspect. Що ти будеш робити завтра? — Я прибиратиму квартиру, а потім приготую
+    вечерю.'
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - 'Future tense formation depends on aspect: Perfective verbs use synthetic forms
+    for completed actions (напишу, зроблю, скажу). Imperfective verbs use analytical
+    forms (буду + infinitive) for ongoing or repeated processes (буду писати, буду
+    робити, буду говорити).'
+  - "Self-check: What is the difference in meaning between 'я прочитаю книгу' and
+    'я буду читати книгу'? Why do perfective verbs not have a present tense? Describe
+    3 things you plan to do tomorrow, using both future forms."
 vocabulary_hints:
   required:
   - майбутній час (future tense)
@@ -92,16 +108,20 @@ vocabulary_hints:
   - прибирати / прибрати (to clean up — impf./pf.)
 activity_hints:
 - type: fill-in
-  focus: Complete sentences with the correct future form (synthetic perfective or analytical imperfective) based on context
+  focus: Complete sentences with the correct future form (synthetic perfective 
+    or analytical imperfective) based on context
   items: 8
 - type: quiz
-  focus: Identify whether a future sentence uses synthetic or analytical future and explain the aspect choice
+  focus: Identify whether a future sentence uses synthetic or analytical future 
+    and explain the aspect choice
   items: 8
 - type: group-sort
-  focus: Sort verb forms into two groups — synthetic future (perfective) and analytical future (imperfective)
+  focus: Sort verb forms into two groups — synthetic future (perfective) and 
+    analytical future (imperfective)
   items: 8
 - type: unjumble
-  focus: Reorder words to form correct future tense sentences using both synthetic (напишу) and analytical (буду писати) forms
+  focus: Reorder words to form correct future tense sentences using both 
+    synthetic (напишу) and analytical (буду писати) forms
   items: 6
 references:
 - title: Заболотний Grade 6, §47-48

@@ -2,7 +2,7 @@ module: a2-003
 level: A2
 sequence: 3
 slug: aspect-in-vocabulary
-version: 1.1.1
+version: 1.1.2
 title: Дієслова ходять парами
 subtitle: Як утворюються та вивчаються видові пари
 focus: grammar
@@ -10,55 +10,72 @@ pedagogy: PPP
 phase: A2.1 [Foundation and Aspect Introduction]
 word_target: 2000
 objectives:
-- Learner can recognize that most Ukrainian verbs exist in aspectual pairs and understand the importance of learning them
-  together.
-- 'Learner can identify the three main patterns of aspect pair formation: prefixation, suffix/root vowel change, and suppletion.'
-- Learner can list and use approximately 20 essential A2-level aspectual pairs in simple sentences.
+- Learner can recognize that most Ukrainian verbs exist in aspectual pairs and 
+  understand the importance of learning them together.
+- 'Learner can identify the three main patterns of aspect pair formation: prefixation,
+  suffix/root vowel change, and suppletion.'
+- Learner can list and use approximately 20 essential A2-level aspectual pairs 
+  in simple sentences.
 - Given one verb from a common pair, the learner can name its aspectual partner.
 dialogue_situations:
-- setting: 'Cooking varenyky together — one person reads the recipe step by step: Ліпи (impf, keep forming) вареники. Зліпи
-    (pf, form one). Вари (impf) 10 хвилин. Звари (pf) до готовності.'
+- setting: 'Cooking varenyky together — one person reads the recipe step by step:
+    Ліпи (impf, keep forming) вареники. Зліпи (pf, form one). Вари (impf) 10 хвилин.
+    Звари (pf) до готовності.'
   speakers:
   - Бабуся (teaching recipe)
   - Онучка (cooking)
   motivation: 'Aspect pairs in cooking: ліпити/зліпити, варити/зварити'
 content_outline:
-- section: Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in Pairs)
+- section: Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in 
+    Pairs)
   words: 400
   points:
-  - Reinforce the idea that aspect is fundamental. Learning a verb without its partner is like learning only half a word.
+  - Reinforce the idea that aspect is fundamental. Learning a verb without its 
+    partner is like learning only half a word.
   - 'Introduce the standard notation: imperfective / perfective (e.g., робити / зробити).'
   - 'Using a dictionary: how to find aspectual pairs in online or paper dictionaries.'
 - section: 'Спосіб 1: Додавання префікса (Method 1: Adding a Prefix)'
   words: 600
   points:
-  - 'The most common way to form a perfective verb: add a prefix to the imperfective base. The prefix often adds a specific
-    meaning, but for now, we focus on its role in creating a perfective verb.'
-  - 'Core examples: писати / **на**писати; читати / **про**читати; робити / **з**робити; бачити / **по**бачити; готувати /
-    **при**готувати.'
-  - 'Practice: given an imperfective verb, learner adds the correct prefix to make it perfective.'
-- section: 'Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or Suffix)'
+  - 'The most common way to form a perfective verb: add a prefix to the imperfective
+    base. The prefix often adds a specific meaning, but for now, we focus on its role
+    in creating a perfective verb.'
+  - 'Core examples: писати / **на**писати; читати / **про**читати; робити / **з**робити;
+    бачити / **по**бачити; готувати / **при**готувати.'
+  - 'Practice: given an imperfective verb, learner adds the correct prefix to make
+    it perfective.'
+- section: 'Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or
+    Suffix)'
   words: 600
   points:
-  - 'The ''imperfectivization'' pattern: a complex perfective verb (often with a prefix) gets an ''-ува-'' or ''-юва-'' suffix
-    to become imperfective.'
-  - 'This is a more advanced concept, so we introduce it with simple pairs: відповідати / відповісти; вирішувати / вирішити;
-    запитувати / запитати.'
-  - 'Show the vowel change that often accompanies this: ''о'' -> ''а'' (допомогти / допомагати).'
-- section: 'Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different Words - Suppletion)'
+  - 'The ''imperfectivization'' pattern: a complex perfective verb (often with a prefix)
+    gets an ''-ува-'' or ''-юва-'' suffix to become imperfective.'
+  - 'This is a more advanced concept, so we introduce it with simple pairs: відповідати
+    / відповісти; вирішувати / вирішити; запитувати / запитати.'
+  - 'Show the vowel change that often accompanies this: ''о'' -> ''а'' (допомогти
+    / допомагати).'
+- section: 'Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different
+    Words - Suppletion)'
   words: 400
   points:
   - Some of the most common verbs have suppletive pairs that must be memorized.
-  - 'Essential pairs: брати / взяти (to take); говорити / сказати (to say/tell); ловити / піймати (to catch); класти / покласти
-    (to put).'
-  - 'Note: шукати (to search) and знайти (to find) are often presented together, but they are different actions, not a true
-    aspect pair. The perfective of шукати is пошукати or відшукати.'
-  - Present a list of the 20 most important aspectual pairs for A2 learners to memorize, covering all three formation types.
+  - 'Essential pairs: брати / взяти (to take); говорити / сказати (to say/tell); ловити
+    / піймати (to catch); класти / покласти (to put).'
+  - 'Note: шукати (to search) and знайти (to find) are often presented together, but
+    they are different actions, not a true aspect pair. The perfective of шукати is
+    пошукати or відшукати.'
+  - Present a list of the 20 most important aspectual pairs for A2 learners to 
+    memorize, covering all three formation types.
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - Ukrainian verbs must be learned in aspectual pairs (imperfective / 
+    perfective). The three main ways to form them are adding a prefix (писати / 
+    написати), changing a suffix/root vowel (відповідати / відповісти), or using
+    completely different words (брати / взяти).
+  - 'Self-check: What is the perfective partner for говорити? What is the difference
+    between шукати and знайти? Name 3 verb pairs that use a prefix to form the perfective
+    aspect.'
 vocabulary_hints:
   required:
   - пара (pair)

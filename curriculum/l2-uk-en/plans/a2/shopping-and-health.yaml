@@ -2,7 +2,7 @@ module: a2-015
 level: A2
 sequence: 15
 slug: shopping-and-health
-version: 1.0.1
+version: 1.0.2
 title: На ринку та у лікаря
 subtitle: Родовий відмінок у реальних ситуаціях — покупки та здоров'я
 focus: communication
@@ -59,8 +59,15 @@ content_outline:
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - 'Master expressing quantities using the Genitive case in market settings, such as `кілограм яблук` (a kilogram of apples),
+    `пів кіло сиру` (half a kilo of cheese), and `пляшка води` (a bottle of water). This includes practicing natural dialogue
+    for asking what''s fresh, requesting specific amounts, and inquiring about prices. Self-check: How would you ask for "a
+    dozen eggs" and "how much does this cost" in Ukrainian?'
+  - 'Learn to describe symptoms and health complaints using the Genitive case. Key patterns include negation like `немає температури`
+    (no fever) or `немає апетиту` (no appetite), and indicating cause with phrases like `болить від холоду` (hurts from the
+    cold) or `кашель від алергії` (cough from allergy). Additionally, practice pharmacy interactions, asking for medicines
+    (`Що ви порадите від...?`). Self-check: How do you tell a doctor, "I have no energy" or ask for "something for a headache"
+    in Ukrainian?'
 vocabulary_hints:
   required:
   - ринок (market)

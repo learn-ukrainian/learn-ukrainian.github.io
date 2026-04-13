@@ -1012,7 +1012,7 @@ def step_check(level: str, module_num: int, slug: str) -> bool:
 
     # 1. Summary section required
     has_summary = any(
-        "Summary" in s.get("section", "") or "Підсумок" in s.get("section", "")
+        "summary" in s.get("section", "").lower() or "підсумок" in s.get("section", "").lower()
         for s in outline if isinstance(s, dict)
     )
     if not has_summary:

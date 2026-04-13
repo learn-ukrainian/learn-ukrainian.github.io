@@ -2,7 +2,7 @@ module: b1-093
 level: B1
 sequence: 93
 slug: practice-exam
-version: 1.0.1
+version: 1.0.2
 title: Пробний екзамен B1
 subtitle: 'Інтегрований екзамен: читання, слухання, письмо, говоріння'
 focus: exam
@@ -10,12 +10,16 @@ pedagogy: PPP
 phase: B1.9 [Synthesis & Graduation]
 word_target: 4000
 objectives:
-- Learner can demonstrate B1-level reading comprehension on texts of various genres (news, literary, formal, informal)
-- Learner can demonstrate B1-level listening comprehension by answering questions on audio/text-based simulations
-- 'Learner can produce B1-level written texts: informal leaf, formal letter, narrative paragraph, opinion paragraph'
-- Learner can demonstrate B1-level speaking by describing images, role-playing situations, and expressing opinions on familiar
-  topics
-- Learner can complete exam-format tasks (multiple choice, true/false, fill-in, matching, open writing) within time constraints
+- Learner can demonstrate B1-level reading comprehension on texts of various 
+  genres (news, literary, formal, informal)
+- Learner can demonstrate B1-level listening comprehension by answering 
+  questions on audio/text-based simulations
+- 'Learner can produce B1-level written texts: informal leaf, formal letter, narrative
+  paragraph, opinion paragraph'
+- Learner can demonstrate B1-level speaking by describing images, role-playing 
+  situations, and expressing opinions on familiar topics
+- Learner can complete exam-format tasks (multiple choice, true/false, fill-in, 
+  matching, open writing) within time constraints
 content_outline:
 - section: 'Частина 1: Читання і розуміння'
   words: 1000
@@ -46,21 +50,30 @@ content_outline:
 - section: Підсумок — Summary
   words: 300
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - 'Review key B1 competencies across all four domains: reading comprehension of
+    diverse genres, listening to broadcasts, producing structured formal and informal
+    writing, and spontaneous speaking in varied scenarios.'
+  - "Self-check: Describe a picture from your phone for 1 minute using B1 vocabulary.
+    What's the difference in tone and vocabulary between an informal message to a
+    friend and a formal complaint letter?"
 activity_hints:
 - type: reading
-  focus: 'Прочитайте текст про частина 1: читання і розуміння і дайте відповіді на запитання.'
+  focus: 'Прочитайте текст про частина 1: читання і розуміння і дайте відповіді на
+    запитання.'
 - type: essay-response
-  focus: 'Напишіть 5 речень, використовуючи нову лексику з розділу «Частина 2: Слухання і розуміння».'
+  focus: 'Напишіть 5 речень, використовуючи нову лексику з розділу «Частина 2: Слухання
+    і розуміння».'
 - type: fill-in
-  focus: 'Вставте правильну граматичну форму у реченнях на тему частина 1: читання і розуміння.'
+  focus: 'Вставте правильну граматичну форму у реченнях на тему частина 1: читання
+    і розуміння.'
 - type: error-correction
   focus: 'Знайдіть і виправте помилки у реченнях на тему частина 2: слухання і розуміння.'
 - type: quiz
-  focus: 'Оберіть правильний варіант: лексика та граматика з розділу «Частина 1: Читання і розуміння».'
+  focus: 'Оберіть правильний варіант: лексика та граматика з розділу «Частина 1: Читання
+    і розуміння».'
 - type: match-up
-  focus: 'З''єднайте терміни з розділу «Частина 2: Слухання і розуміння» з їхніми визначеннями.'
+  focus: 'З''єднайте терміни з розділу «Частина 2: Слухання і розуміння» з їхніми
+    визначеннями.'
 references:
 - ЗНО format (Зовнішнє незалежне оцінювання)
 - CEFR B1 exam descriptors

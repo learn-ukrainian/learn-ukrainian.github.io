@@ -2,7 +2,7 @@ module: a2-032
 level: A2
 sequence: 32
 slug: plural-nominative-accusative
-version: 1.0.1
+version: 1.0.2
 title: Багато людей, багато речей
 subtitle: Множина називного та знахідного відмінків для всіх відмін
 focus: grammar
@@ -10,14 +10,19 @@ pedagogy: PPP
 phase: A2.5 [Case Synthesis and Plurals]
 word_target: 2000
 objectives:
-- Learner can form the Nominative plural for nouns of all four declension classes (I-IV відміна).
-- Learner can form the Accusative plural, applying the animate/inanimate distinction correctly (animate = Genitive plural
-  form, inanimate = Nominative plural form).
-- Learner can identify when a plural noun is in Nominative vs. Accusative by its syntactic role (subject vs. direct object).
-- Learner can produce correct plural Nom/Acc forms in short sentences describing groups of people and collections of objects.
+- Learner can form the Nominative plural for nouns of all four declension 
+  classes (I-IV відміна).
+- Learner can form the Accusative plural, applying the animate/inanimate 
+  distinction correctly (animate = Genitive plural form, inanimate = Nominative 
+  plural form).
+- Learner can identify when a plural noun is in Nominative vs. Accusative by its
+  syntactic role (subject vs. direct object).
+- Learner can produce correct plural Nom/Acc forms in short sentences describing
+  groups of people and collections of objects.
 dialogue_situations:
-- setting: 'At a zoo — identifying animals and their groups: Дивись — леви (m, lions)! Бачиш тих жирафів (m, giraffes)? А
-    ось мавпи (f, monkeys)! Діти люблять пінгвінів (m, penguins).'
+- setting: 'At a zoo — identifying animals and their groups: Дивись — леви (m, lions)!
+    Бачиш тих жирафів (m, giraffes)? А ось мавпи (f, monkeys)! Діти люблять пінгвінів
+    (m, penguins).'
   speakers:
   - Батько/Мати
   - Діти
@@ -26,36 +31,47 @@ content_outline:
 - section: Множина називного відмінка (Nominative Plural)
   words: 650
   points:
-  - 'I відміна (feminine/masculine -а/-я): сестра → сестри, земля → землі, суддя → судді. Hard stems: -и; soft stems: -і.'
-  - 'II відміна (masculine consonant, neuter -о/-е/-я): стіл → столи, місто → міста, поле → поля, море → моря. Consonant alternations:
-    друг → друзі, рік → роки.'
+  - 'I відміна (feminine/masculine -а/-я): сестра → сестри, земля → землі, суддя →
+    судді. Hard stems: -и; soft stems: -і.'
+  - 'II відміна (masculine consonant, neuter -о/-е/-я): стіл → столи, місто → міста,
+    поле → поля, море → моря. Consonant alternations: друг → друзі, рік → роки.'
   - 'III відміна (feminine consonant): ніч → ночі, сіль → солі, мати → матері.'
   - 'IV відміна (neuter -а/-ят-): курча → курчата, теля → телята.'
   - 'Common irregulars: людина → люди, дитина → діти, око → очі, вухо → вуха.'
-- section: 'Знахідний відмінок множини: Живе чи неживе? (Accusative Plural: Animate vs. Inanimate)'
+- section: 'Знахідний відмінок множини: Живе чи неживе? (Accusative Plural: Animate
+    vs. Inanimate)'
   words: 650
   points:
-  - 'The key rule: inanimate Acc.Pl. = Nom.Pl. (Я бачу столи, книги, міста). Animate Acc.Pl. = Gen.Pl. (Я бачу братів, сестер,
-    дітей).'
-  - 'How this differs from singular: masculine singular already has this split (бачу стіл vs. бачу брата), but in plural ALL
-    genders follow it.'
-  - 'Practice with mixed animate/inanimate: Я бачу студентів і підручники. Ми зустріли друзів і знайшли ключі.'
-  - 'Verbs that take Accusative: бачити, знати, любити, зустрічати, шукати — practice forming correct plural objects.'
-- section: Називний чи знахідний? Визначаємо за контекстом (Nominative or Accusative? Reading the Context)
+  - 'The key rule: inanimate Acc.Pl. = Nom.Pl. (Я бачу столи, книги, міста). Animate
+    Acc.Pl. = Gen.Pl. (Я бачу братів, сестер, дітей).'
+  - 'How this differs from singular: masculine singular already has this split (бачу
+    стіл vs. бачу брата), but in plural ALL genders follow it.'
+  - 'Practice with mixed animate/inanimate: Я бачу студентів і підручники. Ми зустріли
+    друзів і знайшли ключі.'
+  - 'Verbs that take Accusative: бачити, знати, любити, зустрічати, шукати — practice
+    forming correct plural objects.'
+- section: Називний чи знахідний? Визначаємо за контекстом (Nominative or 
+    Accusative? Reading the Context)
   words: 700
   points:
-  - 'Subject test: Who/what does the action? = Nominative. Студенти читають (Nom). Я бачу студентів (Acc).'
-  - 'Inanimate nouns look identical in Nom/Acc plural — only syntax tells them apart: Книги лежать на столі (Nom) vs. Я купив
-    книги (Acc).'
-  - 'Practice: short paragraphs where learner identifies Nom vs. Acc plural by role in sentence. Dialogues about shopping,
-    meeting friends, describing groups.'
-  - 'Integration: combine with prepositions that take Accusative (через, на (direction), у/в (direction), про) to reinforce
-    recognition.'
+  - 'Subject test: Who/what does the action? = Nominative. Студенти читають (Nom).
+    Я бачу студентів (Acc).'
+  - 'Inanimate nouns look identical in Nom/Acc plural — only syntax tells them apart:
+    Книги лежать на столі (Nom) vs. Я купив книги (Acc).'
+  - 'Practice: short paragraphs where learner identifies Nom vs. Acc plural by role
+    in sentence. Dialogues about shopping, meeting friends, describing groups.'
+  - 'Integration: combine with prepositions that take Accusative (через, на (direction),
+    у/в (direction), про) to reinforce recognition.'
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - 'Nominative plural forms depend on declension and stem type (hard: столи, сестри;
+    soft: землі). Accusative plural follows the animate/inanimate rule for all genders:
+    inanimate = Nominative plural (бачу міста), animate = Genitive plural (бачу сестер).'
+  - "Self-check: What is the plural of людина and дитина? (люди, діти) Translate 'I
+    see friends and books'. Describe 3 objects and 3 people you see every day using
+    the Accusative plural. How do you distinguish between Nominative and Accusative
+    for inanimate plural nouns?"
 vocabulary_hints:
   required:
   - множина (plural)
@@ -75,20 +91,24 @@ vocabulary_hints:
   - група (group)
 activity_hints:
 - type: fill-in
-  focus: Form the Nominative plural from given singular nouns across all declension classes
+  focus: Form the Nominative plural from given singular nouns across all 
+    declension classes
   items: 8
 - type: group-sort
-  focus: Sort plural nouns into animate vs. inanimate, then predict their Accusative form
+  focus: Sort plural nouns into animate vs. inanimate, then predict their 
+    Accusative form
   items: 8
 - type: quiz
-  focus: Choose the correct Accusative plural form (animate = Gen.Pl., inanimate = Nom.Pl.) in sentences
+  focus: Choose the correct Accusative plural form (animate = Gen.Pl., inanimate
+    = Nom.Pl.) in sentences
   items: 8
 - type: error-correction
-  focus: Find and fix wrong plural noun endings in Nominative and Accusative (e.g., *дітей грають → діти грають, *бачу студенти
-    → студентів)
+  focus: Find and fix wrong plural noun endings in Nominative and Accusative 
+    (e.g., *дітей грають → діти грають, *бачу студенти → студентів)
   items: 6
 references:
 - title: Заболотний Grade 6, §§59-61
-  notes: Nominative and Accusative plural formation, animate/inanimate distinction
+  notes: Nominative and Accusative plural formation, animate/inanimate 
+    distinction
 - title: Літвінова Grade 6, с. 157-162
   notes: Plural declension tables for all відміни with exercises

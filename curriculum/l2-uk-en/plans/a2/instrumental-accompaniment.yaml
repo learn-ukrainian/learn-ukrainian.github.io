@@ -2,7 +2,7 @@ module: a2-024
 level: A2
 sequence: 24
 slug: instrumental-accompaniment
-version: 1.0.1
+version: 1.0.2
 title: З другом
 subtitle: Прийменники з/із/зі з орудним відмінком для супроводу та ознаки
 focus: grammar
@@ -10,13 +10,17 @@ pedagogy: PPP
 phase: A2.4 [Instrumental Case]
 word_target: 2000
 objectives:
-- Learner can form the Instrumental singular of masculine, feminine, and neuter nouns after the preposition з/із/зі.
-- Learner can use з + Instrumental to express accompaniment (з другом, з сестрою, з дитиною).
-- Learner can use з + Instrumental to express an attribute or ingredient (чай з лимоном, хліб з маслом, кава з молоком).
+- Learner can form the Instrumental singular of masculine, feminine, and neuter 
+  nouns after the preposition з/із/зі.
+- Learner can use з + Instrumental to express accompaniment (з другом, з 
+  сестрою, з дитиною).
+- Learner can use з + Instrumental to express an attribute or ingredient (чай з 
+  лимоном, хліб з маслом, кава з молоком).
 - Learner can choose the correct variant (з/із/зі) based on phonetic context.
 dialogue_situations:
-- setting: 'Planning a picnic — who''s coming with whom and bringing what: Я іду з Олегом (m). Вона прийде з подругою (f,
-    girlfriend). Візьмемо каву з молоком (n, milk). Бутерброди з шинкою (f, ham).'
+- setting: 'Planning a picnic — who''s coming with whom and bringing what: Я іду з
+    Олегом (m). Вона прийде з подругою (f, girlfriend). Візьмемо каву з молоком (n,
+    milk). Бутерброди з шинкою (f, ham).'
   speakers:
   - Організатор пікніку
   - Друзі
@@ -25,46 +29,61 @@ content_outline:
 - section: 'Орудний відмінок: Знайомство (The Instrumental Case: Introduction)'
   words: 450
   points:
-  - Introducing the Instrumental case (Орудний відмінок), answering the questions 'Ким? Чим?' — the seventh Ukrainian case
-    in our curriculum journey.
-  - 'Its core meaning: the "tool" or "companion" of an action. Today we focus on companionship — doing something WITH someone
-    or something.'
-  - Quick overview of all Instrumental functions (accompaniment, tool, profession, spatial) — to be covered across M21-M25.
-  - Connection to cases already learned (Nominative, Accusative, Genitive, Dative) and how Instrumental completes the picture
-    of noun relationships.
+  - Introducing the Instrumental case (Орудний відмінок), answering the 
+    questions 'Ким? Чим?' — the seventh Ukrainian case in our curriculum 
+    journey.
+  - 'Its core meaning: the "tool" or "companion" of an action. Today we focus on companionship
+    — doing something WITH someone or something.'
+  - Quick overview of all Instrumental functions (accompaniment, tool, 
+    profession, spatial) — to be covered across M21-M25.
+  - Connection to cases already learned (Nominative, Accusative, Genitive, 
+    Dative) and how Instrumental completes the picture of noun relationships.
 - section: Закінчення орудного відмінка однини (Instrumental Singular Endings)
   words: 600
   points:
-  - 'Masculine nouns: -ом for hard stems (другом, столом, братом), -ем for soft stems and sibilants (вчителем, ножем, товаришем),
-    -єм for stems in [й] (чаєм, трамваєм).'
-  - 'Feminine nouns: -ою for hard stems (сестрою, мамою, книгою), -ею for soft stems and sibilants (землею, душею), -єю for
-    stems in [й] (мрією, надією).'
-  - 'Neuter nouns: -ом for -о stems (вікном, молоком, маслом), -ем/-ям for -е/-я stems (морем, ім''ям).'
-  - Clear comparison chart with Nominative and Instrumental side by side for each gender. Textbook pattern from Захарійчук
-    Grade 4 and Пономарьова Grade 4.
+  - 'Masculine nouns: -ом for hard stems (другом, столом, братом), -ем for soft stems
+    and sibilants (вчителем, ножем, товаришем), -єм for stems in [й] (чаєм, трамваєм).'
+  - 'Feminine nouns: -ою for hard stems (сестрою, мамою, книгою), -ею for soft stems
+    and sibilants (землею, душею), -єю for stems in [й] (мрією, надією).'
+  - 'Neuter nouns: -ом for -о stems (вікном, молоком, маслом), -ем/-ям for -е/-я stems
+    (морем, ім''ям).'
+  - Clear comparison chart with Nominative and Instrumental side by side for 
+    each gender. Textbook pattern from Захарійчук Grade 4 and Пономарьова Grade 
+    4.
 - section: З/із/зі + орудний відмінок (Z/iz/zi + Instrumental)
   words: 500
   points:
-  - 'The preposition з (with) + Instrumental expresses two meanings: (1) accompaniment — Я гуляю з другом, Вона живе з батьками;
-    (2) attribute — чай з лимоном, хліб з маслом, борщ зі сметаною.'
-  - 'Phonetic variants: з before vowels and most consonants (з другом, з молоком), із before consonant clusters (із сестрою),
-    зі before з-, с-, ш- initial words (зі мною, зі сметаною).'
-  - 'Common collocations: каша з маслом, кава з молоком, піца з грибами, салат з овочами — food descriptions that learners
-    can use immediately.'
-  - Dialogue practice in a cafe setting where friends order food and describe dishes.
+  - 'The preposition з (with) + Instrumental expresses two meanings: (1) accompaniment
+    — Я гуляю з другом, Вона живе з батьками; (2) attribute — чай з лимоном, хліб
+    з маслом, борщ зі сметаною.'
+  - 'Phonetic variants: з before vowels and most consonants (з другом, з молоком),
+    із before consonant clusters (із сестрою), зі before з-, с-, ш- initial words
+    (зі мною, зі сметаною).'
+  - 'Common collocations: каша з маслом, кава з молоком, піца з грибами, салат з овочами
+    — food descriptions that learners can use immediately.'
+  - Dialogue practice in a cafe setting where friends order food and describe 
+    dishes.
 - section: 'Практика: З ким? З чим? (Practice: With Whom? With What?)'
   words: 450
   points:
-  - 'Practice answering questions: З ким ти живеш? — Я живу з мамою. З ким ти ходиш у кіно? — З другом. Чай з чим? — З лимоном.'
-  - 'Dialogue: Two friends meeting at a cafe, ordering drinks and snacks, describing what they want (Мені, будь ласка, каву
-    з молоком. А мені чай з медом).'
+  - 'Practice answering questions: З ким ти живеш? — Я живу з мамою. З ким ти ходиш
+    у кіно? — З другом. Чай з чим? — З лимоном.'
+  - 'Dialogue: Two friends meeting at a cafe, ordering drinks and snacks, describing
+    what they want (Мені, будь ласка, каву з молоком. А мені чай з медом).'
   - Transformation drill from Nominative to Instrumental in context sentences.
   - 'Common expressions: розмовляти з кимось, зустрітися з другом, погодитися з думкою.'
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - 'Instrumental singular endings for accompaniment and ingredients: Masculine/Neuter
+    take -ом for hard-stems (другом, маслом) and -ем/-єм for soft-stems (вчителем,
+    чаєм). Feminine takes -ою for hard-stems (сестрою) and -ею/-єю for soft-stems
+    (землею, мрією).'
+  - "The preposition 'with' adapts to phonetics: use з generally (з другом), із for
+    consonant clusters (із сестрою), and зі before з-, с-, ш- sounds (зі сметаною).
+    Self-check: How do you order 'coffee with milk' and 'tea with lemon'? (кава з
+    молоком, чай з лимоном) Answer the question: З ким ти живеш? Describe 3 food combinations
+    using 'з/із/зі'. When exactly must you use 'зі'?"
 vocabulary_hints:
   required:
   - орудний відмінок (instrumental case)
@@ -98,9 +117,11 @@ activity_hints:
   items: 8
 references:
 - title: Захарійчук Grade 4, с. 62-63
-  notes: Instrumental endings for masculine nouns (-ом, -ем, -єм) with prepositions з, за, із, над, під, між, перед
+  notes: Instrumental endings for masculine nouns (-ом, -ем, -єм) with 
+    prepositions з, за, із, над, під, між, перед
 - title: Пономарьова Grade 4, с. 53-56
-  notes: Instrumental endings for feminine (-ою, -ею, -єю) and masculine (-ом, -ем, -єм) nouns with discovery exercises
+  notes: Instrumental endings for feminine (-ою, -ею, -єю) and masculine (-ом, 
+    -ем, -єм) nouns with discovery exercises
 - title: 'ULP: Ukrainian Cases — Instrumental'
   url: https://www.ukrainianlessons.com/instrumental-case/
   notes: Overview of Instrumental case functions for L2 learners

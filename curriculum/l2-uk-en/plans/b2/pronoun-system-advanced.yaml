@@ -2,17 +2,21 @@ module: b2-052
 level: B2
 sequence: 52
 slug: pronoun-system-advanced
-version: 1.0.1
+version: 1.0.2
 title: Складна система займенників
 subtitle: 'Складна система займенників: зворотні, взаємні, означальні'
 focus: grammar
 pedagogy: PPP
 word_target: 4000
 objectives:
-- Learner can correctly use the reflexive pronoun 'себе' in all cases and distinguish it from reflexive verbs (-ся).
-- Learner can apply the reciprocal pronoun construction 'один одного' to express mutual actions.
-- 'Learner can distinguish and use definitive pronouns (означальні займенники): сам, самий, весь, кожний, всякий, інший.'
-- Learner can understand semantic nuances created by different pronoun choices in complex texts.
+- Learner can correctly use the reflexive pronoun 'себе' in all cases and 
+  distinguish it from reflexive verbs (-ся).
+- Learner can apply the reciprocal pronoun construction 'один одного' to express
+  mutual actions.
+- 'Learner can distinguish and use definitive pronouns (означальні займенники): сам,
+  самий, весь, кожний, всякий, інший.'
+- Learner can understand semantic nuances created by different pronoun choices 
+  in complex texts.
 reading_situations:
 - source_type: стаття з психології
   topic: Пізнання себе та взаємини з іншими
@@ -20,23 +24,26 @@ reading_situations:
   - взаємні дії
   - рефлексія
   - означальні займенники
-  motivation: Reading about self-reflection provides natural, dense usage of 'себе' and 'один одного'.
+  motivation: Reading about self-reflection provides natural, dense usage of 
+    'себе' and 'один одного'.
 writing_tasks:
 - task_type: есе-рефлексія
-  prompt: Напишіть коротке есе на тему 'Як важливо розуміти самого себе та підтримувати одне одного', використовуючи зворотні
-    та взаємні займенники.
+  prompt: Напишіть коротке есе на тему 'Як важливо розуміти самого себе та 
+    підтримувати одне одного', використовуючи зворотні та взаємні займенники.
   requirements:
   - мінімум 200 слів
   - вживання 'себе' у різних відмінках
   - вживання 'сам/самий'
-  motivation: Practice using advanced pronouns to express abstract, introspective thoughts.
+  motivation: Practice using advanced pronouns to express abstract, 
+    introspective thoughts.
 listening_situations:
 - media_type: подкаст
   setting: Інтерв'ю з психологом про стосунки в колективі.
   focus_points:
   - ідентифікація займенників
   - розуміння контексту
-  motivation: Listening for semantic nuances introduced by definitive pronouns (кожний vs всякий).
+  motivation: Listening for semantic nuances introduced by definitive pronouns 
+    (кожний vs всякий).
 discussion_topics:
 - context: Обговорення лідерства та відповідальності.
   questions:
@@ -49,15 +56,18 @@ content_outline:
   points:
   - The reflexive pronoun 'себе' has no nominative case, gender, or number.
   - 'Declension paradigms: себе (Gen/Acc), собі (Dat/Loc), собою (Inst).'
-  - 'Semantic difference between using ''себе'' and a reflexive verb (-ся): ''мити себе'' vs ''вмиватися''.'
+  - 'Semantic difference between using ''себе'' and a reflexive verb (-ся): ''мити
+    себе'' vs ''вмиватися''.'
   - 'Idiomatic uses: ''прийти в себе'', ''брати на себе''.'
 - section: 'Взаємний займенник: ''один одного'''
   words: 1000
   points:
   - Structure and declension of 'один одного' (only the second part declines).
   - 'Usage with prepositions: ''один з одним'', ''один на одного''.'
-  - 'Gender and number variations: ''одна одну'', ''одні одних'' (though ''один одного'' is often used universally).'
-  - Comparison with reflexive verbs for reciprocal actions (зустрічатися vs бачити один одного).
+  - 'Gender and number variations: ''одна одну'', ''одні одних'' (though ''один одного''
+    is often used universally).'
+  - Comparison with reflexive verbs for reciprocal actions (зустрічатися vs 
+    бачити один одного).
 - section: 'Означальні займенники: сам, самий, весь, кожний'
   words: 1000
   points:
@@ -75,8 +85,13 @@ content_outline:
 - section: Підсумок — Summary
   words: 300
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - "The reflexive pronoun 'себе' has no nominative form (себе, собі, собою) and differs
+    semantically from reflexive verbs. For reciprocal actions, use 'один одного',
+    where only the second word declines (один з одним). Definitive pronouns have distinct
+    meanings: 'сам' (myself) vs. 'самий' (the same)."
+  - "Self-check: What is the semantic difference between 'мити себе' and 'вмиватися'?
+    Translate 'We look at each other' using 'один на одного'. What's the difference
+    in nuance between 'кожний' and 'всякий'?"
 vocabulary_hints:
   required:
   - себе

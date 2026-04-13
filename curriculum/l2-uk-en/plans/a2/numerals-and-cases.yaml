@@ -2,7 +2,7 @@ module: a2-055
 level: A2
 sequence: 55
 slug: numerals-and-cases
-version: 1.0.1
+version: 1.0.2
 title: Числа у відмінках
 subtitle: Порядкові числівники та узгодження числівників з іменниками
 focus: grammar
@@ -10,13 +10,18 @@ pedagogy: PPP
 phase: A2.8 [Refinement and Graduation]
 word_target: 2000
 objectives:
-- Learner can decline ordinal numerals in all cases, distinguishing -ий ordinals (п'ятий/п'ятого) from -ій ordinals (третій/третього).
-- Learner can decline один/одна/одне in all cases and genders (одного, одній, одним).
-- 'Learner can apply numeral-noun agreement rules: 2-4 + Nominative plural, 5-20 + Genitive plural, 21 restarts the cycle.'
-- Learner can use numerals in practical contexts such as dates, prices, ages, and addresses.
+- Learner can decline ordinal numerals in all cases, distinguishing -ий ordinals
+  (п'ятий/п'ятого) from -ій ordinals (третій/третього).
+- Learner can decline один/одна/одне in all cases and genders (одного, одній, 
+  одним).
+- 'Learner can apply numeral-noun agreement rules: 2-4 + Nominative plural, 5-20 +
+  Genitive plural, 21 restarts the cycle.'
+- Learner can use numerals in practical contexts such as dates, prices, ages, 
+  and addresses.
 dialogue_situations:
-- setting: 'Organizing a school sports day — counting teams, equipment, prizes: Перша (f) команда — десять учнів. Другий (m)
-    забіг о десятій. Одного м''яча (m) не вистачає. П''ять медалей (f, medals) для переможців.'
+- setting: 'Organizing a school sports day — counting teams, equipment, prizes: Перша
+    (f) команда — десять учнів. Другий (m) забіг о десятій. Одного м''яча (m) не вистачає.
+    П''ять медалей (f, medals) для переможців.'
   speakers:
   - Вчитель фізкультури
   - Учні
@@ -25,38 +30,53 @@ content_outline:
 - section: 'Порядкові числівники: -ий та -ій (Ordinal Numerals: -ий and -ій)'
   words: 550
   points:
-  - 'Two patterns: -ий ordinals decline like hard adjectives (п''ятий → п''ятого, п''ятому, п''ятим). -ій ordinals decline
-    like soft adjectives (третій → третього, третьому, третім).'
-  - 'Which ordinals use -ій: третій (3rd) — the main one. Also перший (1st) has mixed pattern. All others use -ий.'
-  - 'Practice with dates: двадцять першого березня, другого квітня, п''ятнадцятого серпня. Ordinals in the Genitive for dates.'
-  - 'Ordinals agree in gender, number, and case with their noun: перший день (m.), перша зустріч (f.), перше враження (n.).'
+  - 'Two patterns: -ий ordinals decline like hard adjectives (п''ятий → п''ятого,
+    п''ятому, п''ятим). -ій ordinals decline like soft adjectives (третій → третього,
+    третьому, третім).'
+  - 'Which ordinals use -ій: третій (3rd) — the main one. Also перший (1st) has mixed
+    pattern. All others use -ий.'
+  - 'Practice with dates: двадцять першого березня, другого квітня, п''ятнадцятого
+    серпня. Ordinals in the Genitive for dates.'
+  - 'Ordinals agree in gender, number, and case with their noun: перший день (m.),
+    перша зустріч (f.), перше враження (n.).'
 - section: Один/одна/одне у відмінках (One in All Cases)
   words: 400
   points:
-  - 'Full declension of один (m.), одна (f.), одне (n.) in all seven cases. Key forms: одного, одному, одним (m./n.); однієї/одної,
-    одній, однією (f.).'
-  - 'Usage beyond counting: один means "a certain" (один чоловік сказав...), "alone" (я один/одна), "the same" (ми з одного
-    міста).'
+  - 'Full declension of один (m.), одна (f.), одне (n.) in all seven cases. Key forms:
+    одного, одному, одним (m./n.); однієї/одної, одній, однією (f.).'
+  - 'Usage beyond counting: один means "a certain" (один чоловік сказав...), "alone"
+    (я один/одна), "the same" (ми з одного міста).'
   - Practice sentences using один in different cases and meanings.
-- section: Скільки чого? Числівник + іменник (How Many? Numeral + Noun Agreement)
+- section: Скільки чого? Числівник + іменник (How Many? Numeral + Noun 
+    Agreement)
   words: 600
   points:
-  - 'The agreement cycle: 1 + Nom.Sg. (один студент, одна книга), 2-4 + Nom.Pl. (два студенти, три книги), 5-20 + Gen.Pl.
-    (п''ять студентів, десять книг).'
-  - 'After 20, the cycle restarts based on the last digit: 21 студент, 22 студенти, 25 студентів.'
+  - 'The agreement cycle: 1 + Nom.Sg. (один студент, одна книга), 2-4 + Nom.Pl. (два
+    студенти, три книги), 5-20 + Gen.Pl. (п''ять студентів, десять книг).'
+  - 'After 20, the cycle restarts based on the last digit: 21 студент, 22 студенти,
+    25 студентів.'
   - 'Gender matters for два/дві and обидва/обидві: два брати but дві сестри.'
-  - 'Common quantity expressions: кілька, декілька, багато, мало, скільки — all take Gen.Pl.'
+  - 'Common quantity expressions: кілька, декілька, багато, мало, скільки — all take
+    Gen.Pl.'
 - section: Числа навколо нас (Numbers Around Us)
   words: 450
   points:
-  - 'Dialogue: at the market — asking prices, discussing quantities, bargaining (Скільки коштує? Дайте, будь ласка, три кілограми).'
-  - 'Reading practice: a short text about Ukrainian holidays with dates, ages of historical figures, distances between cities.'
+  - 'Dialogue: at the market — asking prices, discussing quantities, bargaining (Скільки
+    коштує? Дайте, будь ласка, три кілограми).'
+  - 'Reading practice: a short text about Ukrainian holidays with dates, ages of historical
+    figures, distances between cities.'
   - 'Address format: вулиця Хрещатик, будинок 22, квартира 5.'
 - section: Підсумок — Summary
   words: 200
   points:
-  - Review key concepts from this module
-  - Self-check questions for the learner
+  - "Ordinal numerals follow hard or soft adjective patterns: -ий (п'ятий, п'ятого)
+    vs. -ій (третій, третього). The word 'один' has its own full declension across
+    all cases. Self-check: What is the difference between declining п'ятий and третій?
+    How do you translate 'the third of April'?"
+  - "Numeral-noun agreement depends on the number and gender: 1 + Nom.Sg., 2-4 + Nom.Pl.,
+    5-20 + Gen.Pl. The cycle restarts at 21. Self-check: Why is it 'два брати' but
+    'дві сестри'? Write down your address and describe the quantities of 3 items in
+    your room using numbers 3, 5, and 22."
 vocabulary_hints:
   required:
   - числівник (numeral)
@@ -82,7 +102,8 @@ activity_hints:
   focus: Choose the correct noun form after a numeral (Nom.Pl. vs Gen.Pl.)
   items: 8
 - type: group-sort
-  focus: Sort numerals by which noun case they require (Nom.Sg., Nom.Pl., Gen.Pl.)
+  focus: Sort numerals by which noun case they require (Nom.Sg., Nom.Pl., 
+    Gen.Pl.)
   items: 8
 - type: match-up
   focus: Match numeral expressions to their correct Ukrainian form
