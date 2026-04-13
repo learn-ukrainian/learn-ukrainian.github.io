@@ -2,7 +2,7 @@ module: a2-035
 level: A2
 sequence: 35
 slug: dozvillia-i-khobi
-version: '1.0'
+version: 1.0.1
 title: Чим ти захоплюєшся? Дозвілля та хобі
 subtitle: Вільний час, спорт, розваги та плани на вихідні — з відмінками
 focus: communication
@@ -10,130 +10,107 @@ pedagogy: PPP
 phase: A2.5 [Case Synthesis and Plurals]
 word_target: 2000
 objectives:
-  - Learner can talk about hobbies and free-time activities using
-    захоплюватися + instrumental and займатися + instrumental.
-  - Learner can describe leisure activities using appropriate case forms —
-    accusative for destinations (йти на виставку), locative for locations
-    (бути на виставці).
-  - Learner can make plans for leisure using future tense and invitation
-    phrases (Ходімо в кіно! Може, підемо на прогулянку?).
-  - Learner can discuss preferences and frequency of hobbies (Я часто
-    плаваю. Іноді ходжу в театр. Рідко дивлюся телевізор.).
+- Learner can talk about hobbies and free-time activities using захоплюватися + instrumental and займатися + instrumental.
+- Learner can describe leisure activities using appropriate case forms — accusative for destinations (йти на виставку), locative
+  for locations (бути на виставці).
+- Learner can make plans for leisure using future tense and invitation phrases (Ходімо в кіно! Може, підемо на прогулянку?).
+- Learner can discuss preferences and frequency of hobbies (Я часто плаваю. Іноді ходжу в театр. Рідко дивлюся телевізор.).
 dialogue_situations:
-  - setting: 'Two colleagues at lunch discussing weekend plans: Що робитимеш
-      на вихідних? — Я захоплююся плаванням, тож піду в басейн у суботу. А
-      в неділю — на виставку з подругою. А ти? — Може, пограю у футбол.
-      Ходімо разом у парк!'
-    speakers:
-      - Колега 1
-      - Колега 2
-    motivation: 'Hobbies with instrumental (плаванням), destination with
-      accusative (у басейн, на виставку), location with locative (у парку)'
-  - setting: 'At a language exchange meetup — introducing yourself and your
-      interests: Привіт, я Софія. Я займаюся малюванням і люблю ходити в
-      театр. А ти чим захоплюєшся? — Я люблю музику й спорт. Граю на
-      гітарі та бігаю щоранку.'
-    speakers:
-      - Софія
-      - Новий знайомий
-    motivation: 'Self-introduction through hobbies: займатися + instrumental
-      (малюванням), грати на + locative (гітарі), fixed expressions'
+- setting: 'Two colleagues at lunch discussing weekend plans: Що робитимеш на вихідних? — Я захоплююся плаванням, тож піду
+    в басейн у суботу. А в неділю — на виставку з подругою. А ти? — Може, пограю у футбол. Ходімо разом у парк!'
+  speakers:
+  - Колега 1
+  - Колега 2
+  motivation: Hobbies with instrumental (плаванням), destination with accusative (у басейн, на виставку), location with locative
+    (у парку)
+- setting: 'At a language exchange meetup — introducing yourself and your interests: Привіт, я Софія. Я займаюся малюванням
+    і люблю ходити в театр. А ти чим захоплюєшся? — Я люблю музику й спорт. Граю на гітарі та бігаю щоранку.'
+  speakers:
+  - Софія
+  - Новий знайомий
+  motivation: 'Self-introduction through hobbies: займатися + instrumental (малюванням), грати на + locative (гітарі), fixed
+    expressions'
 content_outline:
-  - section: 'Хобі та вподобання (Hobbies and Preferences)'
-    words: 550
-    points:
-      - 'Key verbs: захоплюватися + instrumental (to be passionate about),
-        займатися + instrumental (to engage in, do), любити + infinitive
-        (to love doing), цікавитися + instrumental (to be interested in).'
-      - 'Hobby vocabulary: плавання, малювання, читання, танці, фотографія,
-        кулінарія, садівництво, програмування, вишивання.'
-      - 'Sports: футбол, баскетбол, теніс, волейбол, біг, плавання, йога.
-        Грати в/у + accusative (грати у футбол). Займатися + instrumental
-        (займатися йогою).'
-      - 'Frequency expressions: завжди, часто, іноді, рідко, ніколи.
-        Щодня (every day), щовихідних (every weekend), раз на тиждень
-        (once a week).'
-  - section: 'Куди йдемо? Де ми? (Where Are We Going? Where Are We?)'
-    words: 550
-    points:
-      - 'Case practice through leisure: going TO = accusative (йти в кіно,
-        на виставку, у басейн, на стадіон). Being AT = locative (бути в
-        кіно, на виставці, у басейні, на стадіоні).'
-      - 'Verbs of leisure movement: ходити (regularly), піти (one-time, pf),
-        йти (going now). Ходити в театр (I go to the theater regularly) vs.
-        Піду в театр (I''ll go to the theater).'
-      - 'Practice pairs: Ми йдемо на прогулянку → Ми на прогулянці. Вона
-        їде на змагання → Вона на змаганні.'
-      - 'Entertainment venues: кіно/кінотеатр, театр, музей, стадіон,
-        басейн, парк, виставка, концерт.'
-  - section: 'Плани на вихідні (Weekend Plans)'
-    words: 550
-    points:
-      - 'Making suggestions: Ходімо в кіно! Може, підемо на прогулянку? Хочеш
-        піти на концерт? Давай пограємо в теніс!'
-      - 'Accepting: З задоволенням! Чудова ідея! Так, давай! Я — за!'
-      - 'Declining politely: На жаль, не можу. Я зайнятий/зайнята. Може,
-        іншим разом? У мене вже є плани.'
-      - 'Discussing timing: О котрій? — О п''ятій. Де зустрінемося? — Біля
-        входу. Як дістатися? — Метро до станції Хрещатик.'
-      - 'Practice: planning a full weekend outing with a friend — choosing
-        activity, agreeing on time and place.'
-  - section: 'Що мені подобається найбільше (What I Like Most)'
-    words: 350
-    points:
-      - 'Expressing preferences: Мені подобається (I like), мені найбільше
-        подобається (I like most), я обожнюю (I adore), мені не подобається
-        (I don''t like).'
-      - 'Combining: Я захоплююся малюванням, але найбільше люблю ходити в
-        гори. У вільний час я зазвичай читаю або граю на гітарі.'
-      - 'Cultural note: popular Ukrainian leisure — going to the Carpathians,
-        visiting castles, attending folk festivals, berry picking (збирати
-        ягоди), mushroom hunting (збирати гриби).'
+- section: Хобі та вподобання (Hobbies and Preferences)
+  words: 550
+  points:
+  - 'Key verbs: захоплюватися + instrumental (to be passionate about), займатися + instrumental (to engage in, do), любити
+    + infinitive (to love doing), цікавитися + instrumental (to be interested in).'
+  - 'Hobby vocabulary: плавання, малювання, читання, танці, фотографія, кулінарія, садівництво, програмування, вишивання.'
+  - 'Sports: футбол, баскетбол, теніс, волейбол, біг, плавання, йога. Грати в/у + accusative (грати у футбол). Займатися +
+    instrumental (займатися йогою).'
+  - 'Frequency expressions: завжди, часто, іноді, рідко, ніколи. Щодня (every day), щовихідних (every weekend), раз на тиждень
+    (once a week).'
+- section: Куди йдемо? Де ми? (Where Are We Going? Where Are We?)
+  words: 550
+  points:
+  - 'Case practice through leisure: going TO = accusative (йти в кіно, на виставку, у басейн, на стадіон). Being AT = locative
+    (бути в кіно, на виставці, у басейні, на стадіоні).'
+  - 'Verbs of leisure movement: ходити (regularly), піти (one-time, pf), йти (going now). Ходити в театр (I go to the theater
+    regularly) vs. Піду в театр (I''ll go to the theater).'
+  - 'Practice pairs: Ми йдемо на прогулянку → Ми на прогулянці. Вона їде на змагання → Вона на змаганні.'
+  - 'Entertainment venues: кіно/кінотеатр, театр, музей, стадіон, басейн, парк, виставка, концерт.'
+- section: Плани на вихідні (Weekend Plans)
+  words: 550
+  points:
+  - 'Making suggestions: Ходімо в кіно! Може, підемо на прогулянку? Хочеш піти на концерт? Давай пограємо в теніс!'
+  - 'Accepting: З задоволенням! Чудова ідея! Так, давай! Я — за!'
+  - 'Declining politely: На жаль, не можу. Я зайнятий/зайнята. Може, іншим разом? У мене вже є плани.'
+  - 'Discussing timing: О котрій? — О п''ятій. Де зустрінемося? — Біля входу. Як дістатися? — Метро до станції Хрещатик.'
+  - 'Practice: planning a full weekend outing with a friend — choosing activity, agreeing on time and place.'
+- section: Що мені подобається найбільше (What I Like Most)
+  words: 350
+  points:
+  - 'Expressing preferences: Мені подобається (I like), мені найбільше подобається (I like most), я обожнюю (I adore), мені
+    не подобається (I don''t like).'
+  - 'Combining: Я захоплююся малюванням, але найбільше люблю ходити в гори. У вільний час я зазвичай читаю або граю на гітарі.'
+  - 'Cultural note: popular Ukrainian leisure — going to the Carpathians, visiting castles, attending folk festivals, berry
+    picking (збирати ягоди), mushroom hunting (збирати гриби).'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - Review key concepts from this module
+  - Self-check questions for the learner
 vocabulary_hints:
   required:
-    - дозвілля (leisure, free time)
-    - хобі (hobby)
-    - захоплюватися (to be passionate about)
-    - займатися (to engage in, to do)
-    - спорт (sport)
-    - розвага (entertainment)
-    - вільний (free)
-    - плавання (swimming)
-    - музика (music)
-    - виставка (exhibition)
+  - дозвілля (leisure, free time)
+  - хобі (hobby)
+  - захоплюватися (to be passionate about)
+  - займатися (to engage in, to do)
+  - спорт (sport)
+  - розвага (entertainment)
+  - вільний (free)
+  - плавання (swimming)
+  - музика (music)
+  - виставка (exhibition)
   recommended:
-    - вподобання (preferences, interests)
-    - прогулянка (walk, stroll)
-    - змагання (competition)
-    - малювання (drawing, painting)
-    - кіно (cinema, movies)
+  - вподобання (preferences, interests)
+  - прогулянка (walk, stroll)
+  - змагання (competition)
+  - малювання (drawing, painting)
+  - кіно (cinema, movies)
 activity_hints:
-  - type: fill-in
-    focus: Complete sentences about hobbies with the correct case form
-      (Я захоплююся ___ (плавання). Ми йдемо в/на ___)
-    items: 8
-  - type: quiz
-    focus: 'Choose accusative (going to) vs. locative (being at) for leisure
-      venues'
-    items: 8
-  - type: match-up
-    focus: Match hobby verbs with their correct case government
-      (захоплюватися + inst., грати в + acc., ходити на + acc.)
-    items: 8
-  - type: group-sort
-    focus: Sort leisure activities into categories (спорт, мистецтво,
-      на природі, у місті)
-    items: 8
-  - type: error-correction
-    focus: 'Fix case errors in leisure sentences (e.g., *захоплююся
-      плавання → плаванням, *ходжу в кіно → locative needed? No —
-      accusative is correct for direction)'
-    items: 6
+- type: fill-in
+  focus: Complete sentences about hobbies with the correct case form (Я захоплююся ___ (плавання). Ми йдемо в/на ___)
+  items: 8
+- type: quiz
+  focus: Choose accusative (going to) vs. locative (being at) for leisure venues
+  items: 8
+- type: match-up
+  focus: Match hobby verbs with their correct case government (захоплюватися + inst., грати в + acc., ходити на + acc.)
+  items: 8
+- type: group-sort
+  focus: Sort leisure activities into categories (спорт, мистецтво, на природі, у місті)
+  items: 8
+- type: error-correction
+  focus: Fix case errors in leisure sentences (e.g., *захоплююся плавання → плаванням, *ходжу в кіно → locative needed? No
+    — accusative is correct for direction)
+  items: 6
 references:
-  - title: Заболотний Grade 5, §40-42
-    notes: Тема «Дозвілля», лексика вільного часу та розваг
-  - title: Большакова Grade 2, §22-24
-    notes: Мої захоплення, хобі, улюблені заняття
-  - title: 'ULP: Ukrainian Hobbies Vocabulary'
-    url: https://www.ukrainianlessons.com/hobbies/
-    notes: Hobby vocabulary and expressions
+- title: Заболотний Grade 5, §40-42
+  notes: Тема «Дозвілля», лексика вільного часу та розваг
+- title: Большакова Grade 2, §22-24
+  notes: Мої захоплення, хобі, улюблені заняття
+- title: 'ULP: Ukrainian Hobbies Vocabulary'
+  url: https://www.ukrainianlessons.com/hobbies/
+  notes: Hobby vocabulary and expressions

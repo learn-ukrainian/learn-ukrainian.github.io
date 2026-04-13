@@ -2,7 +2,7 @@ module: a2-034
 level: A2
 sequence: 34
 slug: plural-other-cases
-version: '1.0'
+version: 1.0.1
 title: З друзями, для дітей
 subtitle: Давальний, орудний та місцевий відмінки множини
 focus: grammar
@@ -12,13 +12,12 @@ word_target: 2000
 objectives:
 - Learner can form the Dative plural for nouns of all declension classes using the endings -ам/-ям.
 - Learner can form the Instrumental plural using -ами/-ями and recognize the common alternation pattern.
-- Learner can form the Locative plural using -ах/-ях and use it correctly with prepositions (у/в, на,
-  по).
-- Learner can use all three plural cases in practical sentences about doing things with friends, giving
-  things to people, and describing locations.
+- Learner can form the Locative plural using -ах/-ях and use it correctly with prepositions (у/в, на, по).
+- Learner can use all three plural cases in practical sentences about doing things with friends, giving things to people,
+  and describing locations.
 dialogue_situations:
-- setting: 'Organizing a school trip — all cases in plural: Розкажіть дітям (dat pl) план. Їдемо автобусами
-    (inst pl). Зупинимося в готелях (loc pl). Купимо подарунки для батьків (gen pl).'
+- setting: 'Organizing a school trip — all cases in plural: Розкажіть дітям (dat pl) план. Їдемо автобусами (inst pl). Зупинимося
+    в готелях (loc pl). Купимо подарунки для батьків (gen pl).'
   speakers:
   - Вчитель
   - Учні
@@ -27,19 +26,16 @@ content_outline:
 - section: 'Давальний множини: Кому? (Dative Plural: To Whom?)'
   words: 550
   points:
-  - 'Universal pattern: all nouns take -ам (hard) or -ям (soft) in Dat.Pl. студентам, друзям, дітям, містам,
-    ночам.'
-  - This is the most regular plural case — ONE rule covers almost everything. Compare with the complexity
-    of Gen.Pl.
+  - 'Universal pattern: all nouns take -ам (hard) or -ям (soft) in Dat.Pl. студентам, друзям, дітям, містам, ночам.'
+  - This is the most regular plural case — ONE rule covers almost everything. Compare with the complexity of Gen.Pl.
   - 'Common verbs requiring Dative: давати, допомагати, пояснювати, телефонувати, дякувати, радити.'
   - 'Practice: Я даю подарунки друзям. Вчитель пояснює правила студентам. Батьки допомагають дітям.'
 - section: 'Орудний множини: З ким? Чим? (Instrumental Plural: With Whom? With What?)'
   words: 600
   points:
-  - 'Universal pattern: -ами (hard) or -ями (soft). студентами, друзями, дітьми (irregular), містами,
-    ночами.'
-  - 'Key irregular forms: діти → дітьми, люди → людьми, коні → кіньми, гості → гістьми (or гостями). These
-    are high-frequency — learn them.'
+  - 'Universal pattern: -ами (hard) or -ями (soft). студентами, друзями, дітьми (irregular), містами, ночами.'
+  - 'Key irregular forms: діти → дітьми, люди → людьми, коні → кіньми, гості → гістьми (or гостями). These are high-frequency
+    — learn them.'
   - 'Preposition з/із + Instr.Pl.: Я зустрівся з друзями. Ми розмовляли з учителями. Вона прийшла з дітьми.'
   - 'Instrumental without preposition (means/tool): писати олівцями, їсти паличками, прикрасити квітами.'
   - 'Practice dialogues: planning activities with friends, describing how things are done.'
@@ -48,18 +44,21 @@ content_outline:
   points:
   - 'Universal pattern: -ах (hard) or -ях (soft). у містах, на столах, у книжках, на заняттях, у ночах.'
   - 'Prepositions: у/в + Loc.Pl. (location), на + Loc.Pl. (surface/event), по + Loc.Pl. (distribution/across).'
-  - 'Examples: Діти грають у парках. Книжки лежать на полицях. По вулицях ходять люди. На заняттях ми
-    багато говоримо.'
-  - 'Compare Dat. and Loc. plural — same stems, different endings: друзям (Dat.) vs. на друзях (Loc. —
-    rare but demonstrates the pattern).'
+  - 'Examples: Діти грають у парках. Книжки лежать на полицях. По вулицях ходять люди. На заняттях ми багато говоримо.'
+  - 'Compare Dat. and Loc. plural — same stems, different endings: друзям (Dat.) vs. на друзях (Loc. — rare but demonstrates
+    the pattern).'
 - section: 'Три відмінки разом: Практика (All Three Together: Practice)'
   words: 350
   points:
-  - 'Combined sentences using Dat., Instr., and Loc. plurals: Ми подарували квіти вчителям (Dat.) і сфотографувалися
-    з ними (Instr.) у класах (Loc.).'
+  - 'Combined sentences using Dat., Instr., and Loc. plurals: Ми подарували квіти вчителям (Dat.) і сфотографувалися з ними
+    (Instr.) у класах (Loc.).'
   - 'Short dialogue: organizing a trip — who to invite (Dat.), what to bring (Instr.), where to go (Loc.).'
-  - 'Summary table: Dat. -ам/-ям, Instr. -ами/-ями, Loc. -ах/-ях — the most regular set of plural endings
-    in Ukrainian.'
+  - 'Summary table: Dat. -ам/-ям, Instr. -ами/-ями, Loc. -ах/-ях — the most regular set of plural endings in Ukrainian.'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - Review key concepts from this module
+  - Self-check questions for the learner
 vocabulary_hints:
   required:
   - давальний відмінок (dative case)
@@ -79,8 +78,7 @@ vocabulary_hints:
   - прикрашати (to decorate)
 activity_hints:
 - type: fill-in
-  focus: Put the noun into the correct plural case (Dat., Instr., or Loc.) based on the preposition or
-    verb in the sentence
+  focus: Put the noun into the correct plural case (Dat., Instr., or Loc.) based on the preposition or verb in the sentence
   items: 8
 - type: match-up
   focus: Match plural noun forms with the correct case label (Dat., Instr., Loc.)

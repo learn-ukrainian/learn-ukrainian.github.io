@@ -2,7 +2,7 @@ module: a2-055
 level: A2
 sequence: 55
 slug: numerals-and-cases
-version: '1.0'
+version: 1.0.1
 title: Числа у відмінках
 subtitle: Порядкові числівники та узгодження числівників з іменниками
 focus: grammar
@@ -10,94 +10,85 @@ pedagogy: PPP
 phase: A2.8 [Refinement and Graduation]
 word_target: 2000
 objectives:
-  - "Learner can decline ordinal numerals in all cases, distinguishing -ий ordinals
-    (п'ятий/п'ятого) from -ій ordinals (третій/третього)."
-  - Learner can decline один/одна/одне in all cases and genders (одного, одній, 
-    одним).
-  - "Learner can apply numeral-noun agreement rules: 2-4 + Nominative plural, 5-20
-    + Genitive plural, 21 restarts the cycle."
-  - Learner can use numerals in practical contexts such as dates, prices, ages, 
-    and addresses.
+- Learner can decline ordinal numerals in all cases, distinguishing -ий ordinals (п'ятий/п'ятого) from -ій ordinals (третій/третього).
+- Learner can decline один/одна/одне in all cases and genders (одного, одній, одним).
+- 'Learner can apply numeral-noun agreement rules: 2-4 + Nominative plural, 5-20 + Genitive plural, 21 restarts the cycle.'
+- Learner can use numerals in practical contexts such as dates, prices, ages, and addresses.
 dialogue_situations:
-  - setting: 'Organizing a school sports day — counting teams, equipment, prizes:
-      Перша (f) команда — десять учнів. Другий (m) забіг о десятій. Одного м''яча
-      (m) не вистачає. П''ять медалей (f, medals) для переможців.'
-    speakers:
-      - Вчитель фізкультури
-      - Учні
-    motivation: 'Ordinals + cases: перша, другий, одного м''яча, п''ять медалей'
+- setting: 'Organizing a school sports day — counting teams, equipment, prizes: Перша (f) команда — десять учнів. Другий (m)
+    забіг о десятій. Одного м''яча (m) не вистачає. П''ять медалей (f, medals) для переможців.'
+  speakers:
+  - Вчитель фізкультури
+  - Учні
+  motivation: 'Ordinals + cases: перша, другий, одного м''яча, п''ять медалей'
 content_outline:
-  - section: 'Порядкові числівники: -ий та -ій (Ordinal Numerals: -ий and -ій)'
-    words: 550
-    points:
-      - 'Two patterns: -ий ordinals decline like hard adjectives (п''ятий → п''ятого,
-        п''ятому, п''ятим). -ій ordinals decline like soft adjectives (третій → третього,
-        третьому, третім).'
-      - 'Which ordinals use -ій: третій (3rd) — the main one. Also перший (1st) has
-        mixed pattern. All others use -ий.'
-      - 'Practice with dates: двадцять першого березня, другого квітня, п''ятнадцятого
-        серпня. Ordinals in the Genitive for dates.'
-      - 'Ordinals agree in gender, number, and case with their noun: перший день (m.),
-        перша зустріч (f.), перше враження (n.).'
-  - section: 'Один/одна/одне у відмінках (One in All Cases)'
-    words: 400
-    points:
-      - 'Full declension of один (m.), одна (f.), одне (n.) in all seven cases. Key
-        forms: одного, одному, одним (m./n.); однієї/одної, одній, однією (f.).'
-      - 'Usage beyond counting: один means "a certain" (один чоловік сказав...), "alone"
-        (я один/одна), "the same" (ми з одного міста).'
-      - 'Practice sentences using один in different cases and meanings.'
-  - section: 'Скільки чого? Числівник + іменник (How Many? Numeral + Noun Agreement)'
-    words: 600
-    points:
-      - 'The agreement cycle: 1 + Nom.Sg. (один студент, одна книга), 2-4 + Nom.Pl.
-        (два студенти, три книги), 5-20 + Gen.Pl. (п''ять студентів, десять книг).'
-      - 'After 20, the cycle restarts based on the last digit: 21 студент, 22 студенти,
-        25 студентів.'
-      - 'Gender matters for два/дві and обидва/обидві: два брати but дві сестри.'
-      - 'Common quantity expressions: кілька, декілька, багато, мало, скільки — all
-        take Gen.Pl.'
-  - section: 'Числа навколо нас (Numbers Around Us)'
-    words: 450
-    points:
-      - 'Dialogue: at the market — asking prices, discussing quantities, bargaining
-        (Скільки коштує? Дайте, будь ласка, три кілограми).'
-      - 'Reading practice: a short text about Ukrainian holidays with dates, ages
-        of historical figures, distances between cities.'
-      - 'Address format: вулиця Хрещатик, будинок 22, квартира 5.'
+- section: 'Порядкові числівники: -ий та -ій (Ordinal Numerals: -ий and -ій)'
+  words: 550
+  points:
+  - 'Two patterns: -ий ordinals decline like hard adjectives (п''ятий → п''ятого, п''ятому, п''ятим). -ій ordinals decline
+    like soft adjectives (третій → третього, третьому, третім).'
+  - 'Which ordinals use -ій: третій (3rd) — the main one. Also перший (1st) has mixed pattern. All others use -ий.'
+  - 'Practice with dates: двадцять першого березня, другого квітня, п''ятнадцятого серпня. Ordinals in the Genitive for dates.'
+  - 'Ordinals agree in gender, number, and case with their noun: перший день (m.), перша зустріч (f.), перше враження (n.).'
+- section: Один/одна/одне у відмінках (One in All Cases)
+  words: 400
+  points:
+  - 'Full declension of один (m.), одна (f.), одне (n.) in all seven cases. Key forms: одного, одному, одним (m./n.); однієї/одної,
+    одній, однією (f.).'
+  - 'Usage beyond counting: один means "a certain" (один чоловік сказав...), "alone" (я один/одна), "the same" (ми з одного
+    міста).'
+  - Practice sentences using один in different cases and meanings.
+- section: Скільки чого? Числівник + іменник (How Many? Numeral + Noun Agreement)
+  words: 600
+  points:
+  - 'The agreement cycle: 1 + Nom.Sg. (один студент, одна книга), 2-4 + Nom.Pl. (два студенти, три книги), 5-20 + Gen.Pl.
+    (п''ять студентів, десять книг).'
+  - 'After 20, the cycle restarts based on the last digit: 21 студент, 22 студенти, 25 студентів.'
+  - 'Gender matters for два/дві and обидва/обидві: два брати but дві сестри.'
+  - 'Common quantity expressions: кілька, декілька, багато, мало, скільки — all take Gen.Pl.'
+- section: Числа навколо нас (Numbers Around Us)
+  words: 450
+  points:
+  - 'Dialogue: at the market — asking prices, discussing quantities, bargaining (Скільки коштує? Дайте, будь ласка, три кілограми).'
+  - 'Reading practice: a short text about Ukrainian holidays with dates, ages of historical figures, distances between cities.'
+  - 'Address format: вулиця Хрещатик, будинок 22, квартира 5.'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - Review key concepts from this module
+  - Self-check questions for the learner
 vocabulary_hints:
   required:
-    - числівник (numeral)
-    - порядковий (ordinal)
-    - кількісний (cardinal)
-    - перший (first)
-    - третій (third)
-    - один (one)
-    - скільки (how many)
-    - кілограм (kilogram)
-    - коштувати (to cost)
-    - вік (age)
+  - числівник (numeral)
+  - порядковий (ordinal)
+  - кількісний (cardinal)
+  - перший (first)
+  - третій (third)
+  - один (one)
+  - скільки (how many)
+  - кілограм (kilogram)
+  - коштувати (to cost)
+  - вік (age)
   recommended:
-    - обидва (both, m.)
-    - обидві (both, f.)
-    - десяток (a ten, a dozen)
-    - пів (half)
+  - обидва (both, m.)
+  - обидві (both, f.)
+  - десяток (a ten, a dozen)
+  - пів (half)
 activity_hints:
-  - type: fill-in
-    focus: Decline ordinal numerals in context (dates, addresses)
-    items: 8
-  - type: quiz
-    focus: Choose the correct noun form after a numeral (Nom.Pl. vs Gen.Pl.)
-    items: 8
-  - type: group-sort
-    focus: Sort numerals by which noun case they require (Nom.Sg., Nom.Pl., 
-      Gen.Pl.)
-    items: 8
-  - type: match-up
-    focus: Match numeral expressions to their correct Ukrainian form
-    items: 8
+- type: fill-in
+  focus: Decline ordinal numerals in context (dates, addresses)
+  items: 8
+- type: quiz
+  focus: Choose the correct noun form after a numeral (Nom.Pl. vs Gen.Pl.)
+  items: 8
+- type: group-sort
+  focus: Sort numerals by which noun case they require (Nom.Sg., Nom.Pl., Gen.Pl.)
+  items: 8
+- type: match-up
+  focus: Match numeral expressions to their correct Ukrainian form
+  items: 8
 references:
-  - title: Заболотний Grade 6, Числівник
-    notes: Full chapter on numeral declension and agreement rules
-  - title: Авраменко Grade 6, Числівник як частина мови
-    notes: Ordinal vs cardinal distinction with declension tables
+- title: Заболотний Grade 6, Числівник
+  notes: Full chapter on numeral declension and agreement rules
+- title: Авраменко Grade 6, Числівник як частина мови
+  notes: Ordinal vs cardinal distinction with declension tables

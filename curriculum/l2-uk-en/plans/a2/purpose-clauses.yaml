@@ -2,7 +2,7 @@ module: a2-048
 level: A2
 sequence: 48
 slug: purpose-clauses
-version: '1.0'
+version: 1.0.1
 title: Щоб зрозуміти...
 subtitle: Підрядні речення мети та базова непряма мова
 focus: grammar
@@ -10,105 +10,93 @@ pedagogy: PPP
 phase: A2.7 [Complex Sentences and Conditionals]
 word_target: 2000
 objectives:
-  - Learner can construct purpose clauses using щоб + infinitive to express 
-    goals and intentions.
-  - Learner can distinguish between щоб + infinitive (same subject) and щоб + 
-    past tense form (different subjects).
-  - Learner can report what someone said using він сказав, що... / вона сказала,
-    що... with correct word order.
-  - Learner can use purpose and reported speech structures in everyday 
-    communication scenarios (explaining reasons, relaying messages).
+- Learner can construct purpose clauses using щоб + infinitive to express goals and intentions.
+- Learner can distinguish between щоб + infinitive (same subject) and щоб + past tense form (different subjects).
+- Learner can report what someone said using він сказав, що... / вона сказала, що... with correct word order.
+- Learner can use purpose and reported speech structures in everyday communication scenarios (explaining reasons, relaying
+  messages).
 dialogue_situations:
-  - setting: 'Parent explaining to a child why things are done: Ми йдемо в магазин,
-      щоб купити хліб (m). Вчителька сказала, що завтра екскурсія (f). Тато попросив,
-      щоб ти прибрав кімнату (f).'
-    speakers:
-      - Мама
-      - Дитина
-    motivation: Щоб + infinitive, що (reported speech) with хліб(m), 
-      екскурсія(f)
+- setting: 'Parent explaining to a child why things are done: Ми йдемо в магазин, щоб купити хліб (m). Вчителька сказала,
+    що завтра екскурсія (f). Тато попросив, щоб ти прибрав кімнату (f).'
+  speakers:
+  - Мама
+  - Дитина
+  motivation: Щоб + infinitive, що (reported speech) with хліб(m), екскурсія(f)
 content_outline:
-  - section: 'Щоб + інфінітив: для чого? (In Order To: What For?)'
-    words: 700
-    points:
-      - 'Introducing purpose clauses: the question Для чого? Навіщо? (What for?) and
-        the answer щоб + infinitive. Я вчу українську, щоб розуміти друзів.'
-      - 'Same-subject rule: when the subject of both clauses is the same, use щоб
-        + infinitive. Він прийшов, щоб допомогти. Ми поїхали в Київ, щоб побачити
-        місто.'
-      - 'Different-subject construction: when subjects differ, use щоб + past tense
-        form (looks like past tense but functions as subjunctive). Я зателефонував,
-        щоб вона знала. Вчитель пояснив, щоб учні зрозуміли.'
-      - 'Contrast with тому що: тому що answers Чому? (looking back at the cause),
-        щоб answers Для чого? (looking forward at the purpose). Я вчу, бо хочу розуміти
-        vs. Я вчу, щоб розуміти.'
-  - section: 'Базова непряма мова: він сказав, що... (Basic Reported Speech: He Said
-      That...)'
-    words: 700
-    points:
-      - 'A2 scope: basic reported speech with що and чи only. Sequence of tenses,
-        якби-constructions, and complex transformations are B1. Here we learn the
-        high-frequency relay pattern: він сказав, що...'
-      - 'Introducing reported speech with що: transforming direct speech into indirect.
-        "Я прийду завтра" -> Він сказав, що прийде завтра.'
-      - 'Reporting verbs: сказати, відповісти, пояснити, запитати, додати. Each takes
-        що + reported clause. Вона пояснила, що не може прийти.'
-      - 'Reported questions with чи: "Ти будеш?" -> Він запитав, чи я буду. No question
-        mark in indirect questions.'
-      - 'Practical relay scenarios: passing a message from a friend, explaining what
-        someone told you, retelling a phone conversation. Natural context, not mechanical
-        transformation drills.'
-  - section: 'Мета і повідомлення в житті (Purpose and Messages in Daily Life)'
-    words: 600
-    points:
-      - 'Combining purpose and reported speech in real situations: Мама зателефонувала,
-        щоб я купив хліб. Колега сказав, що зустріч перенесли.'
-      - 'Writing short messages and notes using щоб and що: SMS, voice messages, notes
-        on the fridge. "Зателефонуй мамі, вона сказала, що чекає."'
-      - 'Common conversational patterns: Мені сказали, що... / Я чув, що... / Вони
-        попросили, щоб... — high-frequency frames for everyday communication.'
-      - 'Consolidation: distinguish Чому? (тому що/бо from M42) from Для чого? (щоб)
-        from Що сказали? (непряма мова з що) — three different uses of subordination.'
+- section: 'Щоб + інфінітив: для чого? (In Order To: What For?)'
+  words: 700
+  points:
+  - 'Introducing purpose clauses: the question Для чого? Навіщо? (What for?) and the answer щоб + infinitive. Я вчу українську,
+    щоб розуміти друзів.'
+  - 'Same-subject rule: when the subject of both clauses is the same, use щоб + infinitive. Він прийшов, щоб допомогти. Ми
+    поїхали в Київ, щоб побачити місто.'
+  - 'Different-subject construction: when subjects differ, use щоб + past tense form (looks like past tense but functions
+    as subjunctive). Я зателефонував, щоб вона знала. Вчитель пояснив, щоб учні зрозуміли.'
+  - 'Contrast with тому що: тому що answers Чому? (looking back at the cause), щоб answers Для чого? (looking forward at the
+    purpose). Я вчу, бо хочу розуміти vs. Я вчу, щоб розуміти.'
+- section: 'Базова непряма мова: він сказав, що... (Basic Reported Speech: He Said That...)'
+  words: 700
+  points:
+  - 'A2 scope: basic reported speech with що and чи only. Sequence of tenses, якби-constructions, and complex transformations
+    are B1. Here we learn the high-frequency relay pattern: він сказав, що...'
+  - 'Introducing reported speech with що: transforming direct speech into indirect. "Я прийду завтра" -> Він сказав, що прийде
+    завтра.'
+  - 'Reporting verbs: сказати, відповісти, пояснити, запитати, додати. Each takes що + reported clause. Вона пояснила, що
+    не може прийти.'
+  - 'Reported questions with чи: "Ти будеш?" -> Він запитав, чи я буду. No question mark in indirect questions.'
+  - 'Practical relay scenarios: passing a message from a friend, explaining what someone told you, retelling a phone conversation.
+    Natural context, not mechanical transformation drills.'
+- section: Мета і повідомлення в житті (Purpose and Messages in Daily Life)
+  words: 600
+  points:
+  - 'Combining purpose and reported speech in real situations: Мама зателефонувала, щоб я купив хліб. Колега сказав, що зустріч
+    перенесли.'
+  - 'Writing short messages and notes using щоб and що: SMS, voice messages, notes on the fridge. "Зателефонуй мамі, вона
+    сказала, що чекає."'
+  - 'Common conversational patterns: Мені сказали, що... / Я чув, що... / Вони попросили, щоб... — high-frequency frames for
+    everyday communication.'
+  - 'Consolidation: distinguish Чому? (тому що/бо from M42) from Для чого? (щоб) from Що сказали? (непряма мова з що) — three
+    different uses of subordination.'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - Review key concepts from this module
+  - Self-check questions for the learner
 vocabulary_hints:
   required:
-    - щоб (in order to, so that)
-    - мета (goal, purpose)
-    - сказати (to say, to tell)
-    - відповісти (to answer, to reply)
-    - пояснити (to explain)
-    - запитати (to ask)
-    - повідомлення (message)
-    - зрозуміти (to understand)
-    - непряма мова (indirect/reported speech)
-    - додати (to add)
+  - щоб (in order to, so that)
+  - мета (goal, purpose)
+  - сказати (to say, to tell)
+  - відповісти (to answer, to reply)
+  - пояснити (to explain)
+  - запитати (to ask)
+  - повідомлення (message)
+  - зрозуміти (to understand)
+  - непряма мова (indirect/reported speech)
+  - додати (to add)
   recommended:
-    - навіщо (what for, why)
-    - передати (to pass on, to relay)
-    - попросити (to ask, to request)
-    - пряма мова (direct speech)
+  - навіщо (what for, why)
+  - передати (to pass on, to relay)
+  - попросити (to ask, to request)
+  - пряма мова (direct speech)
 activity_hints:
-  - type: fill-in
-    focus: Complete purpose clauses with the correct form after щоб (infinitive 
-      vs. past tense form depending on subject)
-    items: 8
-  - type: quiz
-    focus: Choose тому що or щоб to complete sentences — distinguish cause from 
-      purpose
-    items: 8
-  - type: match-up
-    focus: Transform direct speech into reported speech — match the original 
-      quote to its indirect version
-    items: 8
-  - type: unjumble
-    focus: Reorder words to form correct щоб purpose clauses (both infinitive 
-      and different-subject constructions)
-    items: 6
+- type: fill-in
+  focus: Complete purpose clauses with the correct form after щоб (infinitive vs. past tense form depending on subject)
+  items: 8
+- type: quiz
+  focus: Choose тому що or щоб to complete sentences — distinguish cause from purpose
+  items: 8
+- type: match-up
+  focus: Transform direct speech into reported speech — match the original quote to its indirect version
+  items: 8
+- type: unjumble
+  focus: Reorder words to form correct щоб purpose clauses (both infinitive and different-subject constructions)
+  items: 6
 references:
-  - title: Заболотний Grade 5, §28
-    notes: Складнопідрядні речення з підрядними частинами мети, умови, допусту —
-      with examples from Ukrainian literature
-  - title: Заболотний Grade 6
-    notes: Purpose clauses with щоб — examples and exercises
-  - title: 'ULP: How to Say "In Order To" in Ukrainian'
-    url: https://www.ukrainianlessons.com/щоб/
-    notes: Purpose constructions with natural examples
+- title: Заболотний Grade 5, §28
+  notes: Складнопідрядні речення з підрядними частинами мети, умови, допусту — with examples from Ukrainian literature
+- title: Заболотний Grade 6
+  notes: Purpose clauses with щоб — examples and exercises
+- title: 'ULP: How to Say "In Order To" in Ukrainian'
+  url: https://www.ukrainianlessons.com/щоб/
+  notes: Purpose constructions with natural examples

@@ -2,7 +2,7 @@ module: a2-051
 level: A2
 sequence: 51
 slug: real-conditionals
-version: '1.1'
+version: 1.1.1
 title: Якщо... то...
 subtitle: Реальна умова — теперішній і майбутній час
 focus: grammar
@@ -10,16 +10,13 @@ pedagogy: PPP
 phase: A2.7 [Complex Sentences and Conditionals]
 word_target: 2000
 objectives:
-- Learner can form real conditional sentences using якщо + present or future tense to describe likely
-  or possible situations.
+- Learner can form real conditional sentences using якщо + present or future tense to describe likely or possible situations.
 - Learner can use the якщо... то... frame to clearly connect condition and result.
-- Learner can distinguish real conditions (якщо — A2) from unreal/hypothetical conditions (якби — B1,
-  not taught here).
+- Learner can distinguish real conditions (якщо — A2) from unreal/hypothetical conditions (якби — B1, not taught here).
 - Learner can apply real conditionals in practical everyday scenarios (planning, advice, warnings, promises).
 dialogue_situations:
-- setting: 'Planning a garden — if/then decisions about planting: Якщо буде сонце (n, sun), посадимо помідори
-    (pl). Якщо не буде дощу (m, rain), доведеться полити ввечері. Якщо ти купиш насіння (n, seeds), я підготую грядку
-    (f, garden bed).'
+- setting: 'Planning a garden — if/then decisions about planting: Якщо буде сонце (n, sun), посадимо помідори (pl). Якщо не
+    буде дощу (m, rain), доведеться полити ввечері. Якщо ти купиш насіння (n, seeds), я підготую грядку (f, garden bed).'
   speakers:
   - Подружжя (на дачі)
   motivation: 'Якщо + future: сонце(n), дощ(m), насіння(n), грядка(f)'
@@ -27,43 +24,42 @@ content_outline:
 - section: Якщо + теперішній/майбутній час (If + Present/Future)
   words: 700
   points:
-  - 'Introducing real conditionals: якщо expresses a condition that is possible or likely. Якщо буде гарна
-    погода, ми підемо гуляти. Якщо ти хочеш, я допоможу.'
-  - 'Tense in real conditionals: якщо-clause uses present or future tense. The result clause uses future
-    or imperative. No special mood — just regular verb forms.'
-  - 'The якщо... то... frame: то is optional but very common in Ukrainian. It marks the beginning of the
-    result clause. Якщо дощитиме, то ми залишимося вдома.'
-  - 'Comma placement: comma before якщо when it comes second; comma after the якщо-clause when it comes
-    first.'
-  - 'Explicit scope note: this module covers ONLY real conditions (реальна умова) with якщо. Unreal/hypothetical
-    conditions with якби (нереальна умова) are a B1 topic and are NOT covered here.'
+  - 'Introducing real conditionals: якщо expresses a condition that is possible or likely. Якщо буде гарна погода, ми підемо
+    гуляти. Якщо ти хочеш, я допоможу.'
+  - 'Tense in real conditionals: якщо-clause uses present or future tense. The result clause uses future or imperative. No
+    special mood — just regular verb forms.'
+  - 'The якщо... то... frame: то is optional but very common in Ukrainian. It marks the beginning of the result clause. Якщо
+    дощитиме, то ми залишимося вдома.'
+  - 'Comma placement: comma before якщо when it comes second; comma after the якщо-clause when it comes first.'
+  - 'Explicit scope note: this module covers ONLY real conditions (реальна умова) with якщо. Unreal/hypothetical conditions
+    with якби (нереальна умова) are a B1 topic and are NOT covered here.'
 - section: Умова в повсякденному житті (Conditions in Everyday Life)
   words: 700
   points:
-  - 'Planning and decisions: Якщо завтра буде вільний час, я піду в спортзал. Якщо у магазині є свіжий
-    хліб, купи, будь ласка.'
-  - 'Advice and recommendations: Якщо болить голова, випий таблетку. Якщо хочеш вивчити мову, практикуй
-    щодня.'
+  - 'Planning and decisions: Якщо завтра буде вільний час, я піду в спортзал. Якщо у магазині є свіжий хліб, купи, будь ласка.'
+  - 'Advice and recommendations: Якщо болить голова, випий таблетку. Якщо хочеш вивчити мову, практикуй щодня.'
   - 'Warnings: Якщо не поспішиш, запізнишся. Якщо не візьмеш парасольку, змокнеш.'
-  - 'Promises and agreements: Якщо ти допоможеш мені, я допоможу тобі. Якщо все буде добре, ми поїдемо
-    у відпустку.'
-  - 'Natural dialogues: two friends making weekend plans, a parent giving advice to a child, colleagues
-    discussing a project deadline — all using real conditionals.'
+  - 'Promises and agreements: Якщо ти допоможеш мені, я допоможу тобі. Якщо все буде добре, ми поїдемо у відпустку.'
+  - 'Natural dialogues: two friends making weekend plans, a parent giving advice to a child, colleagues discussing a project
+    deadline — all using real conditionals.'
 - section: Якщо чи якби? Тільки реальна умова (Якщо or якби? Real Conditions Only)
   words: 600
   points:
-  - 'Preview of the difference: якщо = real, possible condition (if it rains, we will stay home). якби
-    = unreal, hypothetical condition (if I were a bird, I would fly). At A2, learners use only якщо.'
-  - 'Recognition only for якби: learners may encounter якби in songs, proverbs, or conversation. They
-    should recognize it means "if (hypothetically)" but not produce it yet. Якби я знав — if only I knew
-    (but I do not).'
-  - 'Consolidation of all complex sentence types from A2.7: причина (тому що, бо), допуст (хоча), мета
-    (щоб), означальне (який, де), умова (якщо). Building paragraphs that use multiple types.'
-  - 'Self-check: can I explain why (тому що), despite what (хоча), for what purpose (щоб), which one (який),
-    and under what condition (якщо)?'
-  - 'Intonation of conditional sentences: the якщо-clause carries a rising tone (↗), signaling that the
-    condition is incomplete and the result is coming. The main clause (result) carries a falling tone
-    (↘). Example: Якщо буде сонце↗, ми підемо гуляти↘.'
+  - 'Preview of the difference: якщо = real, possible condition (if it rains, we will stay home). якби = unreal, hypothetical
+    condition (if I were a bird, I would fly). At A2, learners use only якщо.'
+  - 'Recognition only for якби: learners may encounter якби in songs, proverbs, or conversation. They should recognize it
+    means "if (hypothetically)" but not produce it yet. Якби я знав — if only I knew (but I do not).'
+  - 'Consolidation of all complex sentence types from A2.7: причина (тому що, бо), допуст (хоча), мета (щоб), означальне (який,
+    де), умова (якщо). Building paragraphs that use multiple types.'
+  - 'Self-check: can I explain why (тому що), despite what (хоча), for what purpose (щоб), which one (який), and under what
+    condition (якщо)?'
+  - 'Intonation of conditional sentences: the якщо-clause carries a rising tone (↗), signaling that the condition is incomplete
+    and the result is coming. The main clause (result) carries a falling tone (↘). Example: Якщо буде сонце↗, ми підемо гуляти↘.'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - Review key concepts from this module
+  - Self-check questions for the learner
 vocabulary_hints:
   required:
   - якщо (if — real condition)

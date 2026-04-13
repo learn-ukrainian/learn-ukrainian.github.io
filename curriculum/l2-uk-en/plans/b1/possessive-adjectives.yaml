@@ -2,173 +2,153 @@ module: b1-049
 level: B1
 sequence: 49
 slug: possessive-adjectives
-version: '1.0'
-title: "Присвійні прикметники"
-subtitle: "Батьків дім, материна мова, Шевченкова поезія — творення і вживання"
+version: 1.0.1
+title: Присвійні прикметники
+subtitle: Батьків дім, материна мова, Шевченкова поезія — творення і вживання
 focus: grammar
 pedagogy: TTT
-phase: "B1.4 [Comparison & Word Formation]"
+phase: B1.4 [Comparison & Word Formation]
 word_target: 4000
 objectives:
-  - "Learner can form присвійні прикметники from masculine nouns (II відміна) using
-    suffixes -ів/-їв: батьків, братів, Шевченків, Петрів, Олексіїв"
-  - "Learner can form присвійні прикметники from feminine nouns (I відміна) using
-    suffixes -ин/-ін (-їн): материн, сестрин, бабусин, Лесин, Маріїн"
-  - "Learner can decline присвійні прикметники correctly, noting the special mixed
-    declension pattern (short forms in nominative, full adjective forms in oblique cases)"
-  - "Learner can distinguish присвійні from відносні прикметники and understand when
-    Ukrainian uses присвійний прикметник where English uses a genitive phrase (батьків
-    дім = father's house)"
+- 'Learner can form присвійні прикметники from masculine nouns (II відміна) using suffixes -ів/-їв: батьків, братів, Шевченків,
+  Петрів, Олексіїв'
+- 'Learner can form присвійні прикметники from feminine nouns (I відміна) using suffixes -ин/-ін (-їн): материн, сестрин,
+  бабусин, Лесин, Маріїн'
+- Learner can decline присвійні прикметники correctly, noting the special mixed declension pattern (short forms in nominative,
+  full adjective forms in oblique cases)
+- Learner can distinguish присвійні from відносні прикметники and understand when Ukrainian uses присвійний прикметник where
+  English uses a genitive phrase (батьків дім = father's house)
 dialogue_situations:
-  - setting: 'Family gathering — discussing whose things are whose: Це батьків годинник
-      (m) чи дідусів? — Дідусів. А ця хустка (f) — бабусина чи материна? — Бабусина,
-      ще з війни.'
-    speakers:
-      - Онука
-      - Мама
-    motivation: 'Possessive adjectives in natural family context: батьків/дідусів
-      (masc -ів), бабусина/материна (fem -ин). Agreement with the possessed noun.'
+- setting: 'Family gathering — discussing whose things are whose: Це батьків годинник (m) чи дідусів? — Дідусів. А ця хустка
+    (f) — бабусина чи материна? — Бабусина, ще з війни.'
+  speakers:
+  - Онука
+  - Мама
+  motivation: 'Possessive adjectives in natural family context: батьків/дідусів (masc -ів), бабусина/материна (fem -ин). Agreement
+    with the possessed noun.'
 content_outline:
-  - section: "Присвійні прикметники: що це і навіщо"
-    words: 1000
-    points:
-      - "Definition (Заболотний Grade 6 p.147): Присвійні прикметники вказують на
-        належність предмета певній особі або тварині і відповідають на питання чий?
-        чия? чиє? чиї? Приклади: батьків дім (whose house? — father's), сестрина
-        книжка (whose book? — sister's), Шевченкова поезія (whose poetry? — Shevchenko's)."
-      - "Three groups of adjectives by meaning (Заболотний Grade 6 p.147 table):
-        Якісні — describe quality (великий, розумний). Відносні — describe material,
-        origin (дерев'яний, міський). Присвійні — express belonging (батьків, Лесин).
-        Key distinction: присвійні answer ЧИЙ?, not ЯКИЙ?"
-      - "Why Ukrainian uses присвійні прикметники: Ukrainian naturally says батьків дім,
-        not *дім батька (though the genitive phrase exists too). Шевченкова поезія is
-        more natural than поезія Шевченка in many contexts. This is a productive,
-        living category in Ukrainian — unlike English, where possessive adjectives are
-        limited to a few pronouns (my, your, his)."
-      - "Contrast with English and common learner errors: English speakers tend to
-        overuse genitive phrases (дім батька) where Ukrainian prefers the adjective
-        (батьків дім). Also: присвійні прикметники are NOT possessive pronouns (мій,
-        твій, наш) — those are a separate category (присвійні займенники)."
-  - section: "Творення від II відміни: суфікси -ів/-їв"
-    words: 1000
-    points:
-      - "Formation from masculine nouns (II відміна — Литвінова Grade 6 p.193): Base
-        form: батько → батьків, брат → братів, дід → дідів, друг → другів, тренер →
-        тренерів, директор → директорів. The suffix -ів is added to the noun stem."
-      - "Nouns ending in -й (soft stem, II відміна): Андрій → Андріїв, Олексій →
-        Олексіїв, Сергій → Сергіїв. The suffix becomes -їв after -й stems. Rule:
-        stem ending in голосний + й → drop -й, add -їв."
-      - "Consonant alternations in formation (Авраменко Grade 6 p.137): Some stems
-        undergo changes: Олег → Олежів? No — Олегів (no alternation in -ів forms).
-        Шевченко → Шевченків (treat as II відміна). Франко → Франків. Note: these are
-        straightforward — the alternations г→ж, к→ч happen in -ин forms, not -ів."
-      - "Practice: learners form присвійні прикметники from 10 masculine names and
-        common nouns, then use them in sentences: [Тарас] зошит → Тарасів зошит.
-        [Учитель] стіл → учителів стіл. [Петро] ідея → Петрова ідея (feminine form!)."
-  - section: "Творення від I відміни: суфікси -ин/-ін (-їн)"
-    words: 1000
-    points:
-      - "Formation from feminine nouns (I відміна — Голуб Grade 6 p.124): мати → материн,
-        сестра → сестрин, бабуся → бабусин, тітка → тітчин (к→ч alternation!), Леся
-        → Лесин, подруга → подружин (г→ж alternation!)."
-      - "Consonant alternations in -ин forms (Авраменко Grade 6 p.137): г → ж: подруга
-        → подружин, Ольга → Ольжин. к → ч: тітка → тітчин, Оленка → Оленчин, Даринка
-        → Даринчин. х → ш: Солоха → Солошин, сваха → свашин. These alternations are
-        consistent and predictable."
-      - "Nouns with stem ending in -й (or -і): Марія → Маріїн, Софія → Софіїн, Наталія
-        → Наталіїн. The suffix becomes -їн. But from short forms: Наталка → Наталчин
-        (к→ч!), Марійка → Марійчин (к→ч!). Learners must know WHICH name form they
-        are deriving from."
-      - "Practice: learners form присвійні прикметники from feminine names and nouns.
-        Тітка → тітчин. Бабуся → бабусин. Марія → Маріїн. Then sentences: [Мати]
-        порада → материна порада. [Сестра] кімната → сестрина кімната."
-  - section: "Відмінювання і вживання"
-    words: 1000
-    points:
-      - "Mixed declension pattern (Литвінова Grade 6 p.193): Номінатив: коротка форма
-        — батьків (m), батькова (f), батькове (n), батькові (pl). Непрямі відмінки:
-        повна форма — батькового (gen m/n), батьковій (dat f), батьковим (instr m/n).
-        This mixed pattern is unique to присвійні прикметники."
-      - "Declension table for -ін type: материн (m nom), материна (f nom), материне
-        (n nom), материні (pl nom). Oblique: материного (gen m/n), материній (dat f),
-        материним (instr m/n). Parallel to the -ів type but with different base."
-      - "Usage patterns and stylistic notes: батьків дім (natural, common) = дім батька
-        (also correct, slightly more formal/neutral). Шевченкова поезія (elevated,
-        literary) = поезія Шевченка (standard). In modern Ukrainian, присвійні
-        прикметники are fully productive for names and family terms: Тарасів, Олексіїв,
-        Маріїн. Capitalization: Шевченкові вірші (lowercase ш? No — Шевченкові is
-        from a proper name, so uppercase: Шевченкові вірші)."
-      - "Самоперевірка: 1. Утворіть присвійні прикметники: Андрій, Олексій, мати,
-        тітка, Леся, Марія, директор, бабуся. 2. Провідміняйте батьків дім у всіх
-        відмінках. 3. Яка різниця між батьків дім і дім батька? 4. Чому тітка → тітчин,
-        а не *тіткин? Поясніть чергування."
+- section: 'Присвійні прикметники: що це і навіщо'
+  words: 1000
+  points:
+  - 'Definition (Заболотний Grade 6 p.147): Присвійні прикметники вказують на належність предмета певній особі або тварині
+    і відповідають на питання чий? чия? чиє? чиї? Приклади: батьків дім (whose house? — father''s), сестрина книжка (whose
+    book? — sister''s), Шевченкова поезія (whose poetry? — Shevchenko''s).'
+  - 'Three groups of adjectives by meaning (Заболотний Grade 6 p.147 table): Якісні — describe quality (великий, розумний).
+    Відносні — describe material, origin (дерев''яний, міський). Присвійні — express belonging (батьків, Лесин). Key distinction:
+    присвійні answer ЧИЙ?, not ЯКИЙ?'
+  - 'Why Ukrainian uses присвійні прикметники: Ukrainian naturally says батьків дім, not *дім батька (though the genitive
+    phrase exists too). Шевченкова поезія is more natural than поезія Шевченка in many contexts. This is a productive, living
+    category in Ukrainian — unlike English, where possessive adjectives are limited to a few pronouns (my, your, his).'
+  - 'Contrast with English and common learner errors: English speakers tend to overuse genitive phrases (дім батька) where
+    Ukrainian prefers the adjective (батьків дім). Also: присвійні прикметники are NOT possessive pronouns (мій, твій, наш)
+    — those are a separate category (присвійні займенники).'
+- section: 'Творення від II відміни: суфікси -ів/-їв'
+  words: 1000
+  points:
+  - 'Formation from masculine nouns (II відміна — Литвінова Grade 6 p.193): Base form: батько → батьків, брат → братів, дід
+    → дідів, друг → другів, тренер → тренерів, директор → директорів. The suffix -ів is added to the noun stem.'
+  - 'Nouns ending in -й (soft stem, II відміна): Андрій → Андріїв, Олексій → Олексіїв, Сергій → Сергіїв. The suffix becomes
+    -їв after -й stems. Rule: stem ending in голосний + й → drop -й, add -їв.'
+  - 'Consonant alternations in formation (Авраменко Grade 6 p.137): Some stems undergo changes: Олег → Олежів? No — Олегів
+    (no alternation in -ів forms). Шевченко → Шевченків (treat as II відміна). Франко → Франків. Note: these are straightforward
+    — the alternations г→ж, к→ч happen in -ин forms, not -ів.'
+  - 'Practice: learners form присвійні прикметники from 10 masculine names and common nouns, then use them in sentences: [Тарас]
+    зошит → Тарасів зошит. [Учитель] стіл → учителів стіл. [Петро] ідея → Петрова ідея (feminine form!).'
+- section: 'Творення від I відміни: суфікси -ин/-ін (-їн)'
+  words: 1000
+  points:
+  - 'Formation from feminine nouns (I відміна — Голуб Grade 6 p.124): мати → материн, сестра → сестрин, бабуся → бабусин,
+    тітка → тітчин (к→ч alternation!), Леся → Лесин, подруга → подружин (г→ж alternation!).'
+  - 'Consonant alternations in -ин forms (Авраменко Grade 6 p.137): г → ж: подруга → подружин, Ольга → Ольжин. к → ч: тітка
+    → тітчин, Оленка → Оленчин, Даринка → Даринчин. х → ш: Солоха → Солошин, сваха → свашин. These alternations are consistent
+    and predictable.'
+  - 'Nouns with stem ending in -й (or -і): Марія → Маріїн, Софія → Софіїн, Наталія → Наталіїн. The suffix becomes -їн. But
+    from short forms: Наталка → Наталчин (к→ч!), Марійка → Марійчин (к→ч!). Learners must know WHICH name form they are deriving
+    from.'
+  - 'Practice: learners form присвійні прикметники from feminine names and nouns. Тітка → тітчин. Бабуся → бабусин. Марія
+    → Маріїн. Then sentences: [Мати] порада → материна порада. [Сестра] кімната → сестрина кімната.'
+- section: Відмінювання і вживання
+  words: 1000
+  points:
+  - 'Mixed declension pattern (Литвінова Grade 6 p.193): Номінатив: коротка форма — батьків (m), батькова (f), батькове (n),
+    батькові (pl). Непрямі відмінки: повна форма — батькового (gen m/n), батьковій (dat f), батьковим (instr m/n). This mixed
+    pattern is unique to присвійні прикметники.'
+  - 'Declension table for -ін type: материн (m nom), материна (f nom), материне (n nom), материні (pl nom). Oblique: материного
+    (gen m/n), материній (dat f), материним (instr m/n). Parallel to the -ів type but with different base.'
+  - 'Usage patterns and stylistic notes: батьків дім (natural, common) = дім батька (also correct, slightly more formal/neutral).
+    Шевченкова поезія (elevated, literary) = поезія Шевченка (standard). In modern Ukrainian, присвійні прикметники are fully
+    productive for names and family terms: Тарасів, Олексіїв, Маріїн. Capitalization: Шевченкові вірші (lowercase ш? No —
+    Шевченкові is from a proper name, so uppercase: Шевченкові вірші).'
+  - 'Самоперевірка: 1. Утворіть присвійні прикметники: Андрій, Олексій, мати, тітка, Леся, Марія, директор, бабуся. 2. Провідміняйте
+    батьків дім у всіх відмінках. 3. Яка різниця між батьків дім і дім батька? 4. Чому тітка → тітчин, а не *тіткин? Поясніть
+    чергування.'
+- section: Підсумок — Summary
+  words: 300
+  points:
+  - Review key concepts from this module
+  - Self-check questions for the learner
 vocabulary_hints:
   required:
-    - "присвійний (possessive — adjective expressing belonging)"
-    - "належність (belonging/ownership — what присвійні прикметники express)"
-    - "батьків (father's — присвійний прикметник from батько)"
-    - "материн (mother's — присвійний прикметник from мати)"
-    - "сестрин (sister's — присвійний прикметник from сестра)"
-    - "бабусин (grandmother's — присвійний прикметник from бабуся)"
-    - "дідусів (grandfather's — присвійний прикметник from дідусь)"
-    - "Шевченків (Shevchenko's — присвійний прикметник from Шевченко)"
-    - "Лесин (Lesya's — присвійний прикметник from Леся)"
-    - "Франків (Franko's — присвійний прикметник from Франко)"
-    - "чергування (alternation — consonant changes in word formation: г→ж, к→ч, х→ш)"
-    - "відміна (declension class — I or II, determines suffix choice)"
-    - "спадщина (heritage/legacy — батьківська спадщина)"
-    - "творчість (creative work/oeuvre — Шевченкова творчість)"
-    - "поезія (poetry — Франкова поезія)"
+  - присвійний (possessive — adjective expressing belonging)
+  - належність (belonging/ownership — what присвійні прикметники express)
+  - батьків (father's — присвійний прикметник from батько)
+  - материн (mother's — присвійний прикметник from мати)
+  - сестрин (sister's — присвійний прикметник from сестра)
+  - бабусин (grandmother's — присвійний прикметник from бабуся)
+  - дідусів (grandfather's — присвійний прикметник from дідусь)
+  - Шевченків (Shevchenko's — присвійний прикметник from Шевченко)
+  - Лесин (Lesya's — присвійний прикметник from Леся)
+  - Франків (Franko's — присвійний прикметник from Франко)
+  - 'чергування (alternation — consonant changes in word formation: г→ж, к→ч, х→ш)'
+  - відміна (declension class — I or II, determines suffix choice)
+  - спадщина (heritage/legacy — батьківська спадщина)
+  - творчість (creative work/oeuvre — Шевченкова творчість)
+  - поезія (poetry — Франкова поезія)
   recommended:
-    - "братів (brother's — from брат)"
-    - "учителів (teacher's — from учитель)"
-    - "Петрів (Petro's — from Петро)"
-    - "Маріїн (Mariya's — from Марія, -їн after -й stem)"
-    - "Олексіїв (Oleksiy's — from Олексій, -їв after -й stem)"
-    - "непрямий відмінок (oblique case — where full adjective forms appear)"
-    - "коротка форма (short form — nominative of присвійні прикметники)"
+  - братів (brother's — from брат)
+  - учителів (teacher's — from учитель)
+  - Петрів (Petro's — from Петро)
+  - Маріїн (Mariya's — from Марія, -їн after -й stem)
+  - Олексіїв (Oleksiy's — from Олексій, -їв after -й stem)
+  - непрямий відмінок (oblique case — where full adjective forms appear)
+  - коротка форма (short form — nominative of присвійні прикметники)
 activity_hints:
-  - type: reading
-    focus: "Прочитайте текст про присвійні прикметники: що це і навіщо і дайте відповіді на запитання."
-  - type: essay-response
-    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Творення від II відміни: суфікси -ів/-їв»."
-  - type: fill-in
-    focus: "Вставте правильну граматичну форму у реченнях на тему присвійні прикметники: що це і навіщо."
-  - type: error-correction
-    focus: "Знайдіть і виправте помилки у реченнях на тему творення від ii відміни: суфікси -ів/-їв."
-  - type: quiz
-    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Присвійні прикметники: що це і навіщо»."
-  - type: match-up
-    focus: "З'єднайте терміни з розділу «Творення від II відміни: суфікси -ів/-їв» з їхніми визначеннями."
+- type: reading
+  focus: 'Прочитайте текст про присвійні прикметники: що це і навіщо і дайте відповіді на запитання.'
+- type: essay-response
+  focus: 'Напишіть 5 речень, використовуючи нову лексику з розділу «Творення від II відміни: суфікси -ів/-їв».'
+- type: fill-in
+  focus: 'Вставте правильну граматичну форму у реченнях на тему присвійні прикметники: що це і навіщо.'
+- type: error-correction
+  focus: 'Знайдіть і виправте помилки у реченнях на тему творення від ii відміни: суфікси -ів/-їв.'
+- type: quiz
+  focus: 'Оберіть правильний варіант: лексика та граматика з розділу «Присвійні прикметники: що це і навіщо».'
+- type: match-up
+  focus: 'З''єднайте терміни з розділу «Творення від II відміни: суфікси -ів/-їв» з їхніми визначеннями.'
 connects_to:
-  - "b1-047 (word-formation-adjectives — adjective formation, broader context)"
-  - "b1-044 (adjectives-comparative — adjective system, degrees of comparison)"
-  - "b1-003 (people-and-relationships — family vocabulary, genitive vs possessive adj)"
-  - "b1-051 (checkpoint-comparison — checkpoint testing adjective forms)"
+- b1-047 (word-formation-adjectives — adjective formation, broader context)
+- b1-044 (adjectives-comparative — adjective system, degrees of comparison)
+- b1-003 (people-and-relationships — family vocabulary, genitive vs possessive adj)
+- b1-051 (checkpoint-comparison — checkpoint testing adjective forms)
 prerequisites:
-  - "A2 completion (basic adjective agreement, noun declension classes)"
-  - "b1-013 through b1-018 (noun subclasses and consonant alternations)"
-  - "b1-044 through b1-048 (adjective comparison and word formation foundations)"
+- A2 completion (basic adjective agreement, noun declension classes)
+- b1-013 through b1-018 (noun subclasses and consonant alternations)
+- b1-044 through b1-048 (adjective comparison and word formation foundations)
 grammar:
-  - "Творення присвійних прикметників: -ів/-їв від II відміни, -ин/-ін/-їн від I відміни"
-  - "Чергування приголосних у -ин формах: г→ж, к→ч, х→ш"
-  - "Змішане відмінювання: коротка форма в називному, повна в непрямих відмінках"
-  - "Розрізнення присвійних і відносних прикметників: чий? vs який?"
-  - "Стилістичний вибір: батьків дім vs дім батька"
+- 'Творення присвійних прикметників: -ів/-їв від II відміни, -ин/-ін/-їн від I відміни'
+- 'Чергування приголосних у -ин формах: г→ж, к→ч, х→ш'
+- 'Змішане відмінювання: коротка форма в називному, повна в непрямих відмінках'
+- 'Розрізнення присвійних і відносних прикметників: чий? vs який?'
+- 'Стилістичний вибір: батьків дім vs дім батька'
 register: науково-навчальний / розмовний
 references:
-  - title: "Заболотний Grade 6, p.147"
-    notes: "Групи прикметників за значенням: якісні, відносні, присвійні — визначення,
-      таблиця суфіксів, вправи на розрізнення."
-  - title: "Литвінова Grade 6, p.193"
-    notes: "Присвійні прикметники: творення від I і II відміни, суфікси -ів/-їв та
-      -ин/-ін, повна парадигма відмінювання."
-  - title: "Голуб Grade 6, p.124"
-    notes: "Правопис суфіксів -ин та -ін (-їн) у присвійних прикметниках, правило
-      розподілу."
-  - title: "Авраменко Grade 6, p.137"
-    notes: "Творення прикметників: чергування приголосних г→ж, к→ч, х→ш при додаванні
-      суфікса -ин."
-  - title: "Литвінова Grade 6, p.193 (вправа 384)"
-    notes: "Написання великої/малої літери у присвійних прикметниках від власних назв:
-      Шевченкові твори vs шевченківські дні."
+- title: Заболотний Grade 6, p.147
+  notes: 'Групи прикметників за значенням: якісні, відносні, присвійні — визначення, таблиця суфіксів, вправи на розрізнення.'
+- title: Литвінова Grade 6, p.193
+  notes: 'Присвійні прикметники: творення від I і II відміни, суфікси -ів/-їв та -ин/-ін, повна парадигма відмінювання.'
+- title: Голуб Grade 6, p.124
+  notes: Правопис суфіксів -ин та -ін (-їн) у присвійних прикметниках, правило розподілу.
+- title: Авраменко Grade 6, p.137
+  notes: 'Творення прикметників: чергування приголосних г→ж, к→ч, х→ш при додаванні суфікса -ин.'
+- title: Литвінова Grade 6, p.193 (вправа 384)
+  notes: 'Написання великої/малої літери у присвійних прикметниках від власних назв: Шевченкові твори vs шевченківські дні.'

@@ -30,14 +30,23 @@ import yaml
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from audit.config import get_word_target
 
-# Tolerance for word_target mismatch (e.g., 5% variance allowed)
-WORD_TARGET_TOLERANCE = 0.05
+# Tolerance for word_target mismatch
+# Under-target: 5% (plans should not be significantly under)
+# Over-target: 15% (outline budgets intentionally overshoot for writer flexibility)
+WORD_TARGET_UNDER_TOLERANCE = 0.05
+WORD_TARGET_OVER_TOLERANCE = 0.15
 
 
-def get_config_target(level: str, sequence: int = 1, focus: str | None = None) -> int:
-    """Get the authoritative word target from config.py."""
+def get_config_target(level: str, sequence: int = 1, focus: str | None = None,
+                      slug: str = "") -> int:
+    """Get the authoritative word target from config.py.
+
+    Checks subtype-specific keys first (e.g., A2-checkpoint=1500),
+    then falls back to the base level key (e.g., A2=2000).
+    """
+    from audit.config import LEVEL_CONFIG
+
     # Map plan level names to LEVEL_CONFIG keys
-    # Note: LEVEL_CONFIG uses 'istorio' not 'ISTORIO'
     level_map = {
         'a1': 'A1', 'a2': 'A2', 'b1': 'B1', 'b2': 'B2',
         'c1': 'C1', 'c2': 'C2',
@@ -46,8 +55,26 @@ def get_config_target(level: str, sequence: int = 1, focus: str | None = None) -
     }
     level_code = level_map.get(level.lower(), level.upper())
 
-    # For seminar tracks with specific config keys, get directly from LEVEL_CONFIG
-    from audit.config import LEVEL_CONFIG
+    # Detect subtype from slug name
+    # Priority: most specific match first
+    subtype_patterns = [
+        ('checkpoint', 'checkpoint'),
+        ('capstone', 'capstone'),
+        ('bridge', 'capstone'),
+        ('finale', 'checkpoint'),
+        ('practice-exam', 'checkpoint'),
+        ('comprehensive-review', 'checkpoint'),
+        ('practice', 'checkpoint'),
+        ('review', 'checkpoint'),
+    ]
+    for pattern, subtype in subtype_patterns:
+        if pattern in slug:
+            subtype_key = f"{level_code}-{subtype}"
+            if subtype_key in LEVEL_CONFIG:
+                return LEVEL_CONFIG[subtype_key].get('target_words', 2000)
+            break
+
+    # Fall back to base level or focus-specific key
     if level_code in LEVEL_CONFIG:
         return LEVEL_CONFIG[level_code].get('target_words', 2000)
 
@@ -71,12 +98,13 @@ def validate_plan(plan_path: Path, level: str) -> list:
     plan_target = plan.get('word_target', 0)
     sequence = plan.get('sequence', 1)
     focus = plan.get('focus')
-    config_target = get_config_target(level, sequence, focus)
+    slug = plan.get('slug', plan_path.stem)
+    config_target = get_config_target(level, sequence, focus, slug=slug)
 
     # Check word_target matches config
     if plan_target == 0:
         errors.append(f"Missing word_target (config expects {config_target})")
-    elif plan_target < config_target * (1 - WORD_TARGET_TOLERANCE):
+    elif plan_target < config_target * (1 - WORD_TARGET_UNDER_TOLERANCE):
         # Only flag if plan is UNDER config target (over is allowed - more content is fine)
         errors.append(f"word_target under config: plan={plan_target}, config={config_target}")
 
@@ -88,8 +116,10 @@ def validate_plan(plan_path: Path, level: str) -> list:
         outline_sum = sum(s.get('words', 0) for s in outline)
         if outline_sum == 0:
             errors.append("content_outline has no word budgets")
-        elif abs(outline_sum - plan_target) > plan_target * WORD_TARGET_TOLERANCE:
-            errors.append(f"content_outline sum ({outline_sum}) doesn't match word_target ({plan_target})")
+        elif outline_sum < plan_target * (1 - WORD_TARGET_UNDER_TOLERANCE):
+            errors.append(f"content_outline sum ({outline_sum}) under word_target ({plan_target})")
+        elif outline_sum > plan_target * (1 + WORD_TARGET_OVER_TOLERANCE):
+            errors.append(f"content_outline sum ({outline_sum}) over word_target ({plan_target})")
 
     # Check required fields
     required_fields = ['module', 'level', 'title', 'objectives']

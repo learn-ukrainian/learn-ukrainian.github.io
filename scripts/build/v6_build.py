@@ -1006,6 +1006,36 @@ def step_check(level: str, module_num: int, slug: str) -> bool:
     data = yaml.safe_load(manifest.read_text())
     all_slugs = data.get("levels", {}).get(level, {}).get("modules", [])
 
+    # --- Pre-build readiness gate (Phase 3 of recovery plan, 2026-04-13) ---
+    plan_data = yaml.safe_load(plan_path.read_text("utf-8"))
+    outline = plan_data.get("content_outline", [])
+
+    # 1. Summary section required
+    has_summary = any(
+        "Summary" in s.get("section", "") or "Підсумок" in s.get("section", "")
+        for s in outline if isinstance(s, dict)
+    )
+    if not has_summary:
+        _log("  ❌ PRE-BUILD GATE: Plan missing Summary/Підсумок section in content_outline")
+        _log("     Fix: .venv/bin/python scripts/tools/fix_plans_phase1.py " + level)
+        return False
+
+    # 2. Vocabulary baseline required
+    has_vocab = bool(plan_data.get("vocabulary_hints") or plan_data.get("vocabulary"))
+    if not has_vocab:
+        _log("  ⚠️  PRE-BUILD GATE: No vocabulary_hints or vocabulary in plan (non-blocking)")
+
+    # 3. Word target sanity (vs config.py)
+    from validate.validate_plan_config import get_config_target
+    plan_wt = plan_data.get("word_target", 0)
+    config_wt = get_config_target(level, plan_data.get("sequence", 1),
+                                   plan_data.get("focus"), slug=slug)
+    if plan_wt and plan_wt < config_wt * 0.95:
+        _log(f"  ❌ PRE-BUILD GATE: word_target ({plan_wt}) below config minimum ({config_wt})")
+        return False
+
+    _log("  ✅ Pre-build readiness gate passed")
+
     issues = check_plan(plan_path, all_slugs)
 
     # --- Auto-fix: Russicisms ---

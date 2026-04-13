@@ -2,7 +2,7 @@ module: a2-033
 level: A2
 sequence: 33
 slug: plural-genitive
-version: '1.0'
+version: 1.0.1
 title: Скільки?
 subtitle: Родовий відмінок множини — найскладніший відмінок
 focus: grammar
@@ -10,101 +10,89 @@ pedagogy: PPP
 phase: A2.5 [Case Synthesis and Plurals]
 word_target: 2000
 objectives:
-  - Learner can form the Genitive plural for I відміна nouns, applying the zero 
-    ending correctly and inserting fleeting vowels where needed (сестер, 
-    книжок).
-  - Learner can form the Genitive plural for II відміна nouns using the correct 
-    ending (-ів/-їв for most masculine, zero ending for most neuter, -ей for 
-    soft-stem masculine).
-  - Learner can use quantity expressions (скільки, багато, мало, кілька, 
-    декілька, numerals 5+) with the Genitive plural correctly.
-  - Learner can produce short utterances about quantities in everyday contexts 
-    (shopping, describing a room, talking about family).
+- Learner can form the Genitive plural for I відміна nouns, applying the zero ending correctly and inserting fleeting vowels
+  where needed (сестер, книжок).
+- Learner can form the Genitive plural for II відміна nouns using the correct ending (-ів/-їв for most masculine, zero ending
+  for most neuter, -ей for soft-stem masculine).
+- Learner can use quantity expressions (скільки, багато, мало, кілька, декілька, numerals 5+) with the Genitive plural correctly.
+- Learner can produce short utterances about quantities in everyday contexts (shopping, describing a room, talking about family).
 dialogue_situations:
-  - setting: 'School cafeteria inventory — counting remaining items: Скільки тарілок
-      (f, plates)? Двадцять. Виделок (f, forks)? П''ятнадцять. Ложок (f, spoons)?
-      Десять. Склянок (f, glasses)? Немає склянок!'
-    speakers:
-      - Завідувач їдальні (cafeteria manager)
-      - Помічник
-    motivation: 'Genitive plural: тарілка→тарілок, виделка→виделок, склянка→склянок'
+- setting: 'School cafeteria inventory — counting remaining items: Скільки тарілок (f, plates)? Двадцять. Виделок (f, forks)?
+    П''ятнадцять. Ложок (f, spoons)? Десять. Склянок (f, glasses)? Немає склянок!'
+  speakers:
+  - Завідувач їдальні (cafeteria manager)
+  - Помічник
+  motivation: 'Genitive plural: тарілка→тарілок, виделка→виделок, склянка→склянок'
 content_outline:
-  - section: 'Чому родовий множини такий складний? (Why Is the Genitive Plural So
-      Hard?)'
-    words: 400
-    points:
-      - 'Overview: Gen.Pl. has THREE possible endings — zero (нульове закінчення),
-        -ів/-їв, -ей — plus fleeting vowels. No single rule covers all nouns.'
-      - 'Why it matters: Gen.Pl. appears after numbers 5+, after багато/мало/кілька/скільки,
-        and in many prepositional phrases. It is the most common plural case.'
-      - 'Strategy: learn by відміна and gender, with the most frequent words first.'
-  - section: 'I відміна: нульове закінчення (First Declension: Zero Ending)'
-    words: 500
-    points:
-      - 'Most I відміна nouns (feminine -а/-я) take zero ending: книга → книг, зірка
-        → зірок, вишня → вишень.'
-      - 'Fleeting vowels appear when consonant clusters form: сестра → сестер, земля
-        → земель, пісня → пісень, казка → казок.'
-      - 'Exceptions with -ів or -ей: суддя → суддів, сім''я → сімей, стаття → статей.'
-      - 'Drill: form Gen.Pl. for common I відміна nouns with and without fleeting
-        vowels.'
-  - section: 'II відміна: -ів, нульове, -ей (Second Declension: Three Patterns)'
-    words: 600
-    points:
-      - 'Masculine hard stems: -ів (столів, братів, учнів, днів).'
-      - 'Masculine soft stems: -ів or -ей (учителів, but гостей, коней).'
-      - 'Neuter -о: zero ending, often with fleeting vowels (вікон, слів, but міст
-        — no fleeting vowel).'
-      - 'Neuter -е/-я: -ів/-їв (морів, подвір''їв) or zero (сердець, яєць).'
-      - 'The -ин/-їн suffix disappears: громадянин → громадян, киянин → киян.'
-  - section: 'Скільки чого? Кількість у житті (How Much of What? Quantity in Daily
-      Life)'
-    words: 500
-    points:
-      - 'Pattern: скільки/багато/мало/кілька/декілька + Gen.Pl. — Скільки студентів?
-        Багато книжок. Мало грошей. Кілька друзів.'
-      - 'Numbers 5+ take Gen.Pl.: п''ять яблук, десять студентів, двадцять гривень.'
-      - 'Contrast with 2-4 (Nom.Pl.): два студенти vs. п''ять студентів; три книжки
-        vs. сім книжок.'
-      - 'Dialogues: at a store asking for quantities, describing what is in a room,
-        talking about family members.'
+- section: Чому родовий множини такий складний? (Why Is the Genitive Plural So Hard?)
+  words: 400
+  points:
+  - 'Overview: Gen.Pl. has THREE possible endings — zero (нульове закінчення), -ів/-їв, -ей — plus fleeting vowels. No single
+    rule covers all nouns.'
+  - 'Why it matters: Gen.Pl. appears after numbers 5+, after багато/мало/кілька/скільки, and in many prepositional phrases.
+    It is the most common plural case.'
+  - 'Strategy: learn by відміна and gender, with the most frequent words first.'
+- section: 'I відміна: нульове закінчення (First Declension: Zero Ending)'
+  words: 500
+  points:
+  - 'Most I відміна nouns (feminine -а/-я) take zero ending: книга → книг, зірка → зірок, вишня → вишень.'
+  - 'Fleeting vowels appear when consonant clusters form: сестра → сестер, земля → земель, пісня → пісень, казка → казок.'
+  - 'Exceptions with -ів or -ей: суддя → суддів, сім''я → сімей, стаття → статей.'
+  - 'Drill: form Gen.Pl. for common I відміна nouns with and without fleeting vowels.'
+- section: 'II відміна: -ів, нульове, -ей (Second Declension: Three Patterns)'
+  words: 600
+  points:
+  - 'Masculine hard stems: -ів (столів, братів, учнів, днів).'
+  - 'Masculine soft stems: -ів or -ей (учителів, but гостей, коней).'
+  - 'Neuter -о: zero ending, often with fleeting vowels (вікон, слів, but міст — no fleeting vowel).'
+  - 'Neuter -е/-я: -ів/-їв (морів, подвір''їв) or zero (сердець, яєць).'
+  - 'The -ин/-їн suffix disappears: громадянин → громадян, киянин → киян.'
+- section: Скільки чого? Кількість у житті (How Much of What? Quantity in Daily Life)
+  words: 500
+  points:
+  - 'Pattern: скільки/багато/мало/кілька/декілька + Gen.Pl. — Скільки студентів? Багато книжок. Мало грошей. Кілька друзів.'
+  - 'Numbers 5+ take Gen.Pl.: п''ять яблук, десять студентів, двадцять гривень.'
+  - 'Contrast with 2-4 (Nom.Pl.): два студенти vs. п''ять студентів; три книжки vs. сім книжок.'
+  - 'Dialogues: at a store asking for quantities, describing what is in a room, talking about family members.'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - Review key concepts from this module
+  - Self-check questions for the learner
 vocabulary_hints:
   required:
-    - родовий відмінок (genitive case)
-    - нульове закінчення (zero ending)
-    - кількість (quantity, amount)
-    - багато (a lot, many)
-    - мало (few, little)
-    - кілька (a few, several)
-    - декілька (a few, several)
-    - скільки (how many, how much)
-    - гроші (money)
-    - гривня (hryvnia)
+  - родовий відмінок (genitive case)
+  - нульове закінчення (zero ending)
+  - кількість (quantity, amount)
+  - багато (a lot, many)
+  - мало (few, little)
+  - кілька (a few, several)
+  - декілька (a few, several)
+  - скільки (how many, how much)
+  - гроші (money)
+  - гривня (hryvnia)
   recommended:
-    - вставний голосний (fleeting vowel)
-    - виняток (exception)
-    - десяток (a dozen, ten-unit)
+  - вставний голосний (fleeting vowel)
+  - виняток (exception)
+  - десяток (a dozen, ten-unit)
 activity_hints:
-  - type: fill-in
-    focus: Form the Genitive plural from given nouns (mixed відміни), inserting 
-      fleeting vowels where needed
-    items: 8
-  - type: quiz
-    focus: Choose the correct Gen.Pl. form in quantity expressions (багато ___, 
-      п'ять ___)
-    items: 8
-  - type: match-up
-    focus: Match singular nouns with their correct Genitive plural forms
-    items: 8
-  - type: true-false
-    focus: Judge whether a given Gen.Pl. form is correct or incorrect (common 
-      errors like книгів instead of книг)
-    items: 8
+- type: fill-in
+  focus: Form the Genitive plural from given nouns (mixed відміни), inserting fleeting vowels where needed
+  items: 8
+- type: quiz
+  focus: Choose the correct Gen.Pl. form in quantity expressions (багато ___, п'ять ___)
+  items: 8
+- type: match-up
+  focus: Match singular nouns with their correct Genitive plural forms
+  items: 8
+- type: true-false
+  focus: Judge whether a given Gen.Pl. form is correct or incorrect (common errors like книгів instead of книг)
+  items: 8
 references:
-  - title: Літвінова Grade 6, с. 160
-    notes: Gen.Pl. endings for II відміна with full table and exercises
-  - title: Заболотний Grade 6, §62
-    notes: Gen.Pl. of I відміна — zero ending, fleeting vowels, exceptions
-  - title: "ULP: Genitive Plural"
-    url: "https://www.ukrainianlessons.com/genitive-case/"
-    notes: Practical examples of Gen.Pl. in everyday speech
+- title: Літвінова Grade 6, с. 160
+  notes: Gen.Pl. endings for II відміна with full table and exercises
+- title: Заболотний Grade 6, §62
+  notes: Gen.Pl. of I відміна — zero ending, fleeting vowels, exceptions
+- title: 'ULP: Genitive Plural'
+  url: https://www.ukrainianlessons.com/genitive-case/
+  notes: Practical examples of Gen.Pl. in everyday speech

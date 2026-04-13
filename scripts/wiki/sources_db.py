@@ -274,9 +274,9 @@ def search_synonyms(word: str, limit: int = 20) -> list[dict]:
     return [dict(r) for r in rows]
 
 
-def query_cefr_level(word: str) -> list[dict]:
+def query_cefr_level(word: str, limit: int = 5) -> list[dict]:
     """Look up CEFR level for a word in PULS vocabulary."""
-    return _dict_lookup("puls_cefr", word, limit=5)
+    return _dict_lookup("puls_cefr", word, limit=limit)
 
 
 def search_style_guide(word: str, limit: int = 5) -> list[dict]:

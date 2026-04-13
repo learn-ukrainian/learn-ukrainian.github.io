@@ -2,111 +2,108 @@ module: a2-046
 level: A2
 sequence: 46
 slug: checkpoint-verbs
-version: '1.1'
+version: 1.1.1
 title: 'Контрольна точка: Вид, час і рух'
-subtitle: 'Перевірка знань: видові пари, майбутній час, дієслова руху та наказовий
-  спосіб'
+subtitle: 'Перевірка знань: видові пари, майбутній час, дієслова руху та наказовий спосіб'
 focus: review
 pedagogy: Review
 phase: A2.6 [Aspect, Tenses, and Motion]
 word_target: 1500
 objectives:
-  - Learner can correctly choose between imperfective and perfective aspect in 
-    past and future tense across varied contexts (process vs. result, habit vs. 
-    single event, background vs. foreground).
-  - Learner can form synthetic future (perfective) and analytical future 
-    (imperfective) for common verb pairs and explain why each form is used.
-  - Learner can use motion verbs (іти/ходити, їхати/їздити) with correct 
-    prepositions and cases, and form their perfective partners with по-.
-  - Learner can produce imperatives for all persons (2nd, 3rd with хай, 1st 
-    plural with -мо), including Vocative + imperative + Instrumental wish 
-    constructions.
+- Learner can correctly choose between imperfective and perfective aspect in past and future tense across varied contexts
+  (process vs. result, habit vs. single event, background vs. foreground).
+- Learner can form synthetic future (perfective) and analytical future (imperfective) for common verb pairs and explain why
+  each form is used.
+- Learner can use motion verbs (іти/ходити, їхати/їздити) with correct prepositions and cases, and form their perfective partners
+  with по-.
+- Learner can produce imperatives for all persons (2nd, 3rd with хай, 1st plural with -мо), including Vocative + imperative
+  + Instrumental wish constructions.
 dialogue_situations:
-  - situation: "A teacher conducting an oral review — asking a student to retell their
-      weekend using correct aspect, motion verbs, and imperatives"
-    functions: ["narrating past events", "choosing aspect", "using motion verbs"]
-    key_vocabulary: ["вид дієслова", "дієслова руху", "наказовий спосіб"]
-  - situation: "Two friends planning a hiking trip — one gives directions using motion
-      verbs, the other suggests what to bring using imperatives"
-    functions: ["giving directions", "making suggestions", "planning activities"]
-    key_vocabulary: ["іти", "їхати", "візьми", "ходімо"]
+- situation: A teacher conducting an oral review — asking a student to retell their weekend using correct aspect, motion verbs,
+    and imperatives
+  functions:
+  - narrating past events
+  - choosing aspect
+  - using motion verbs
+  key_vocabulary:
+  - вид дієслова
+  - дієслова руху
+  - наказовий спосіб
+- situation: Two friends planning a hiking trip — one gives directions using motion verbs, the other suggests what to bring
+    using imperatives
+  functions:
+  - giving directions
+  - making suggestions
+  - planning activities
+  key_vocabulary:
+  - іти
+  - їхати
+  - візьми
+  - ходімо
 content_outline:
-  - section: 'Частина 1: Вид дієслова — минулий і майбутній час (Part 1: Aspect in
-      Past and Future)'
-    words: 450
-    points:
-      - 'Exercise 1: Aspect identification — read 8 sentences in past tense, identify
-        the aspect of each underlined verb and explain the choice (process, result,
-        habit, single event, background, sequence).'
-      - 'Exercise 2: Aspect choice — fill in the blank with the correct aspect form
-        (imperfective or perfective) in past and future tense sentences. Mixed contexts:
-        Вона довго ___ (готувати/приготувати) обід. Він вже ___ (писати/написати)
-        листа.'
-      - 'Exercise 3: Future tense formation — given 8 infinitives (mixed aspects),
-        form the correct future: perfective → synthetic (напишу), imperfective → analytical
-        (буду писати).'
-  - section: 'Частина 2: Дієслова руху та наказовий спосіб (Part 2: Motion Verbs and
-      Imperatives)'
-    words: 450
-    points:
-      - 'Exercise 4: Motion verb choice — complete 6 sentences by choosing between
-        unidirectional and multidirectional motion verbs. Зараз я ___ (іти/ходити)
-        додому. Щодня він ___ (їхати/їздити) на роботу.'
-      - 'Exercise 5: Motion + prepositions — match motion verbs with destinations
-        using the correct preposition and case: ___ школи (з + Gen. — from), ___ Львова
-        (до + Gen. — to), ___ роботу (на + Acc. — to).'
-      - 'Exercise 6: Imperative formation — form imperatives for all persons from
-        given infinitives. 2nd person: читай/читайте. 3rd person: хай читає. 1st plural:
-        читаймо. Include aspect choice.'
-  - section: 'Частина 3: Комплексні завдання (Part 3: Integrated Tasks)'
-    words: 600
-    points:
-      - 'Exercise 7: Error correction — 8 sentences with verb errors (wrong aspect,
-        wrong motion verb, wrong imperative form, wrong future type). Learner identifies
-        and corrects each. E.g., *Він щодня зробив вправи → робив; *Ми їдемо туди
-        кожного літа → їздимо.'
-      - 'Exercise 8: Story completion — a short narrative with 8 blanks. Learner fills
-        in correct forms using all skills from M35-40: aspect in past, future tense,
-        motion verbs, imperatives.'
-      - 'Exercise 9: Guided production — write 8-10 sentences narrating a weekend
-        trip. Must include: past tense aspect (both), motion verbs (at least 2 pairs),
-        one imperative (suggestion to a friend), one wish (Vocative + imperative +
-        Instrumental).'
-      - 'Self-assessment: Can I choose aspect confidently? Can I form both futures?
-        Do I know when to use іти vs. ходити? Can I make wishes with Vocative + будь
-        + Instrumental? Ready for A2.7?'
+- section: 'Частина 1: Вид дієслова — минулий і майбутній час (Part 1: Aspect in Past and Future)'
+  words: 450
+  points:
+  - 'Exercise 1: Aspect identification — read 8 sentences in past tense, identify the aspect of each underlined verb and explain
+    the choice (process, result, habit, single event, background, sequence).'
+  - 'Exercise 2: Aspect choice — fill in the blank with the correct aspect form (imperfective or perfective) in past and future
+    tense sentences. Mixed contexts: Вона довго ___ (готувати/приготувати) обід. Він вже ___ (писати/написати) листа.'
+  - 'Exercise 3: Future tense formation — given 8 infinitives (mixed aspects), form the correct future: perfective → synthetic
+    (напишу), imperfective → analytical (буду писати).'
+- section: 'Частина 2: Дієслова руху та наказовий спосіб (Part 2: Motion Verbs and Imperatives)'
+  words: 450
+  points:
+  - 'Exercise 4: Motion verb choice — complete 6 sentences by choosing between unidirectional and multidirectional motion
+    verbs. Зараз я ___ (іти/ходити) додому. Щодня він ___ (їхати/їздити) на роботу.'
+  - 'Exercise 5: Motion + prepositions — match motion verbs with destinations using the correct preposition and case: ___
+    школи (з + Gen. — from), ___ Львова (до + Gen. — to), ___ роботу (на + Acc. — to).'
+  - 'Exercise 6: Imperative formation — form imperatives for all persons from given infinitives. 2nd person: читай/читайте.
+    3rd person: хай читає. 1st plural: читаймо. Include aspect choice.'
+- section: 'Частина 3: Комплексні завдання (Part 3: Integrated Tasks)'
+  words: 600
+  points:
+  - 'Exercise 7: Error correction — 8 sentences with verb errors (wrong aspect, wrong motion verb, wrong imperative form,
+    wrong future type). Learner identifies and corrects each. E.g., *Він щодня зробив вправи → робив; *Ми їдемо туди кожного
+    літа → їздимо.'
+  - 'Exercise 8: Story completion — a short narrative with 8 blanks. Learner fills in correct forms using all skills from
+    M35-40: aspect in past, future tense, motion verbs, imperatives.'
+  - 'Exercise 9: Guided production — write 8-10 sentences narrating a weekend trip. Must include: past tense aspect (both),
+    motion verbs (at least 2 pairs), one imperative (suggestion to a friend), one wish (Vocative + imperative + Instrumental).'
+  - 'Self-assessment: Can I choose aspect confidently? Can I form both futures? Do I know when to use іти vs. ходити? Can
+    I make wishes with Vocative + будь + Instrumental? Ready for A2.7?'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - Review key concepts from this module
+  - Self-check questions for the learner
 vocabulary_hints:
   required:
-    - контрольна точка (checkpoint)
-    - перевірка (review, check)
-    - завдання (task, exercise)
-    - помилка (error, mistake)
-    - виправити (to correct)
-    - вид дієслова (verb aspect)
-    - дієслова руху (motion verbs)
-    - наказовий спосіб (imperative mood)
+  - контрольна точка (checkpoint)
+  - перевірка (review, check)
+  - завдання (task, exercise)
+  - помилка (error, mistake)
+  - виправити (to correct)
+  - вид дієслова (verb aspect)
+  - дієслова руху (motion verbs)
+  - наказовий спосіб (imperative mood)
   recommended:
-    - впевнено (confidently)
-    - самоперевірка (self-check)
-    - обрати (to choose — pf.)
+  - впевнено (confidently)
+  - самоперевірка (self-check)
+  - обрати (to choose — pf.)
 activity_hints:
-  - type: fill-in
-    focus: Mixed drill — complete sentences requiring aspect choice, motion verb
-      selection, and imperative formation across all M35-40 topics
-    items: 8
-  - type: quiz
-    focus: Error correction — identify and fix verb errors (wrong aspect, motion
-      type, imperative form, or future formation)
-    items: 8
-  - type: group-sort
-    focus: Sort verb forms into categories — imperfective past, perfective past,
-      synthetic future, analytical future, imperative
-    items: 8
-  - type: error-correction
-    focus: Find and fix verb form errors — wrong aspect, wrong motion verb type,
-      wrong imperative form, wrong future tense construction
-    items: 6
+- type: fill-in
+  focus: Mixed drill — complete sentences requiring aspect choice, motion verb selection, and imperative formation across
+    all M35-40 topics
+  items: 8
+- type: quiz
+  focus: Error correction — identify and fix verb errors (wrong aspect, motion type, imperative form, or future formation)
+  items: 8
+- type: group-sort
+  focus: Sort verb forms into categories — imperfective past, perfective past, synthetic future, analytical future, imperative
+  items: 8
+- type: error-correction
+  focus: Find and fix verb form errors — wrong aspect, wrong motion verb type, wrong imperative form, wrong future tense construction
+  items: 6
 references:
-  - title: Заболотний Grade 6, §45-55
-    notes: Comprehensive verb chapter covering aspect, tenses, motion, and 
-      imperative mood
+- title: Заболотний Grade 6, §45-55
+  notes: Comprehensive verb chapter covering aspect, tenses, motion, and imperative mood

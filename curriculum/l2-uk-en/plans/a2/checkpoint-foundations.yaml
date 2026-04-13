@@ -2,7 +2,7 @@ module: a2-008
 level: A2
 sequence: 8
 slug: checkpoint-foundations
-version: '1.1'
+version: 1.1.1
 title: 'Контрольна точка: Основи А2'
 subtitle: 'Перевірка знань: вид дієслова та родовий відмінок'
 focus: review
@@ -10,78 +10,72 @@ pedagogy: Review
 phase: A2.1 [Foundation and Aspect Introduction]
 word_target: 1500
 objectives:
-  - Learner can reliably distinguish between perfective and imperfective verbs 
-    in a given text.
-  - Learner can accurately produce Genitive singular and plural endings for 
-    nouns after `немає` and quantity words.
-  - Learner can select the appropriate aspect (imperfective or perfective) to 
-    correctly complete a sentence based on context.
-  - Learner can synthesize the new grammar in a short paragraph describing plans
-    or past events.
+- Learner can reliably distinguish between perfective and imperfective verbs in a given text.
+- Learner can accurately produce Genitive singular and plural endings for nouns after `немає` and quantity words.
+- Learner can select the appropriate aspect (imperfective or perfective) to correctly complete a sentence based on context.
+- Learner can synthesize the new grammar in a short paragraph describing plans or past events.
 dialogue_situations:
-  - setting: 'Friends studying together before a Ukrainian class — quizzing each
-      other from notes, one struggles with genitive plural, the other explains.
-      Скільки у тебе братів? Двох братів... ні, два брати! Ох, я завжди плутаю.'
-    speakers:
-      - Олена (студентка)
-      - Марко (студент)
-    motivation: 'Natural peer study scenario — genitive and aspect review through
-      friendly conversation, not interrogation'
+- setting: Friends studying together before a Ukrainian class — quizzing each other from notes, one struggles with genitive
+    plural, the other explains. Скільки у тебе братів? Двох братів... ні, два брати! Ох, я завжди плутаю.
+  speakers:
+  - Олена (студентка)
+  - Марко (студент)
+  motivation: Natural peer study scenario — genitive and aspect review through friendly conversation, not interrogation
 content_outline:
-  - section: 'Частина 1: Вправи на розпізнавання (Part 1: Recognition Exercises)'
-    words: 400
-    points:
-      - 'Exercise 1: A short text is provided. Learner must highlight all perfective
-        verbs in one color and all imperfective verbs in another.'
-      - 'Exercise 2: A list of sentences with a noun in parentheses. Learner must
-        rewrite the sentence, putting the noun in the correct Genitive form (e.g.,
-        ''У мене немає (брат)'' -> ''У мене немає брата'').'
-      - 'Exercise 3: Match the imperfective verbs with their perfective partners.'
-  - section: 'Частина 2: Вправи на вибір (Part 2: Choice Exercises)'
-    words: 500
-    points:
-      - 'Exercise 4: Multiple-choice sentences where the learner must choose between
-        the perfective and imperfective form of a verb (e.g., ''Вчора я (читав / прочитав)
-        цю книгу три години'').'
-      - 'Exercise 5: Fill-in-the-blanks with the correct quantity word or numeral,
-        ensuring noun agreement (e.g., ''У класі ___ (5) студентів'').'
-  - section: 'Частина 3: Практичне застосування (Part 3: Production Exercises)'
-    words: 600
-    points:
-      - 'Exercise 6: Answer open-ended questions that require the Genitive case or
-        a specific aspect (e.g., ''Скільки у вас братів і сестер?'', ''Що ви зробили
-        вчора?'', ''Коли у вас день народження?'').'
-      - 'Exercise 7: A short writing prompt (5-7 sentences). ''Напишіть про свої плани
-        на вихідні. Що ви будете робити? Що ви хочете зробити?'' (Write about your
-        plans for the weekend. What will you be doing? What do you want to get done?).'
+- section: 'Частина 1: Вправи на розпізнавання (Part 1: Recognition Exercises)'
+  words: 400
+  points:
+  - 'Exercise 1: A short text is provided. Learner must highlight all perfective verbs in one color and all imperfective verbs
+    in another.'
+  - 'Exercise 2: A list of sentences with a noun in parentheses. Learner must rewrite the sentence, putting the noun in the
+    correct Genitive form (e.g., ''У мене немає (брат)'' -> ''У мене немає брата'').'
+  - 'Exercise 3: Match the imperfective verbs with their perfective partners.'
+- section: 'Частина 2: Вправи на вибір (Part 2: Choice Exercises)'
+  words: 500
+  points:
+  - 'Exercise 4: Multiple-choice sentences where the learner must choose between the perfective and imperfective form of a
+    verb (e.g., ''Вчора я (читав / прочитав) цю книгу три години'').'
+  - 'Exercise 5: Fill-in-the-blanks with the correct quantity word or numeral, ensuring noun agreement (e.g., ''У класі ___
+    (5) студентів'').'
+- section: 'Частина 3: Практичне застосування (Part 3: Production Exercises)'
+  words: 600
+  points:
+  - 'Exercise 6: Answer open-ended questions that require the Genitive case or a specific aspect (e.g., ''Скільки у вас братів
+    і сестер?'', ''Що ви зробили вчора?'', ''Коли у вас день народження?'').'
+  - 'Exercise 7: A short writing prompt (5-7 sentences). ''Напишіть про свої плани на вихідні. Що ви будете робити? Що ви
+    хочете зробити?'' (Write about your plans for the weekend. What will you be doing? What do you want to get done?).'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - Review key concepts from this module
+  - Self-check questions for the learner
 vocabulary_hints:
   required:
-    - вправа (exercise)
-    - перевірка (check, test)
-    - контрольна точка (checkpoint)
-    - завдання (task)
-    - текст (text)
-    - речення (sentence)
-    - відповідь (answer)
+  - вправа (exercise)
+  - перевірка (check, test)
+  - контрольна точка (checkpoint)
+  - завдання (task)
+  - текст (text)
+  - речення (sentence)
+  - відповідь (answer)
   recommended:
-    - правильний (correct)
-    - варіант (option, variant)
-    - обрати (to choose)
-    - написати (to write)
+  - правильний (correct)
+  - варіант (option, variant)
+  - обрати (to choose)
+  - написати (to write)
 activity_hints:
-  - type: quiz
-    focus: Mixed Grammar Quiz
-    items: 8
-  - type: fill-in
-    focus: Sentence Transformation Drill
-    items: 8
-  - type: fill-in
-    focus: Short written responses using genitive and aspect
-    items: 6
-  - type: error-correction
-    focus: Find and fix mixed grammar errors — wrong aspect choice, wrong 
-      genitive endings, agreement mistakes
-    items: 6
+- type: quiz
+  focus: Mixed Grammar Quiz
+  items: 8
+- type: fill-in
+  focus: Sentence Transformation Drill
+  items: 8
+- type: fill-in
+  focus: Short written responses using genitive and aspect
+  items: 6
+- type: error-correction
+  focus: Find and fix mixed grammar errors — wrong aspect choice, wrong genitive endings, agreement mistakes
+  items: 6
 references:
-  - title: Заболотний Grade 5-6
-    notes: Повторення вивченого
+- title: Заболотний Grade 5-6
+  notes: Повторення вивченого

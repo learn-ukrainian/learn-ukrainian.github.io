@@ -2,7 +2,7 @@ module: a2-039
 level: A2
 sequence: 39
 slug: checkpoint-cases
-version: '1.0'
+version: 1.0.1
 title: 'Контрольна точка: Відмінки та множина'
 subtitle: 'Перевірка знань: усі відмінки в однині та множині'
 focus: review
@@ -10,89 +10,83 @@ pedagogy: Review
 phase: A2.5 [Case Synthesis and Plurals]
 word_target: 1500
 objectives:
-  - Learner can correctly form plural nouns in all 7 cases, including the 
-    difficult Genitive plural with zero endings and fleeting vowels.
-  - Learner can select the appropriate case based on verb government, 
-    preposition, or context (time, characteristic, path) across mixed exercises.
-  - Learner can identify and correct case errors in short texts, demonstrating 
-    conscious control over the case system.
-  - Learner can produce a short coherent text (8-10 sentences) that naturally 
-    uses at least 5 different cases in both singular and plural.
+- Learner can correctly form plural nouns in all 7 cases, including the difficult Genitive plural with zero endings and fleeting
+  vowels.
+- Learner can select the appropriate case based on verb government, preposition, or context (time, characteristic, path) across
+  mixed exercises.
+- Learner can identify and correct case errors in short texts, demonstrating conscious control over the case system.
+- Learner can produce a short coherent text (8-10 sentences) that naturally uses at least 5 different cases in both singular
+  and plural.
 dialogue_situations:
-  - setting: 'Planning a wedding — every case appears naturally: Запрошення для гостей
-      (gen). Подарунок нареченій (dat). Бачу наречену (acc). Фото з молодятами (inst).
-      На весіллі (loc). Олено! (voc)'
-    speakers:
-      - Наречена
-      - Подруга
-    motivation: 'All 7 cases in wedding planning: gen, dat, acc, inst, loc, voc'
+- setting: 'Planning a wedding — every case appears naturally: Запрошення для гостей (gen). Подарунок нареченій (dat). Бачу
+    наречену (acc). Фото з молодятами (inst). На весіллі (loc). Олено! (voc)'
+  speakers:
+  - Наречена
+  - Подруга
+  motivation: 'All 7 cases in wedding planning: gen, dat, acc, inst, loc, voc'
 content_outline:
-  - section: 'Частина 1: Форми множини (Part 1: Plural Forms)'
-    words: 450
-    points:
-      - 'Exercise 1: Form the Nominative plural from 10 singular nouns across all
-        відміни (mixed genders, including irregulars like дитина, людина, око).'
-      - 'Exercise 2: Form the Genitive plural — the hardest forms. Given 10 nouns,
-        learner produces Gen.Pl. (книга → книг, студент → студентів, місто → міст,
-        ніч → ночей, теля → телят).'
-      - 'Exercise 3: Complete quantity expressions with the correct Gen.Pl. form (п''ять
-        ___, багато ___, скільки ___?).'
-  - section: 'Частина 2: Який відмінок? (Part 2: Which Case?)'
-    words: 500
-    points:
-      - 'Exercise 4: Multiple-choice — given a sentence with a blank, choose the correct
-        case form. Includes all triggers: verbs (допомагати + Dat., бачити + Acc.,
-        користуватися + Instr.), prepositions (у + Loc./Acc., з + Gen./Instr., по
-        + Loc.), special uses (у четвер, у 2014 році, хлопець у светрі).'
-      - 'Exercise 5: Case identification — a short text (8-10 sentences) with underlined
-        nouns. Learner identifies the case of each underlined noun and the trigger
-        (verb, preposition, or construction).'
-      - 'Exercise 6: Error correction — 6 sentences with case errors. Learner finds
-        and corrects each error (e.g., *Я допомагаю сестру → сестрі; *багато студенти
-        → студентів).'
-  - section: 'Частина 3: Вільне мовлення (Part 3: Free Production)'
-    words: 550
-    points:
-      - 'Exercise 7: Guided writing — "Опишіть свій ідеальний вихідний день" (Describe
-        your ideal day off). Must include: where you go (Acc./Loc.), who you meet
-        (Acc./Dat.), what you do (Acc./Instr.), what you eat (Gen. for quantities,
-        Acc. for items).'
-      - 'Exercise 8: Dialogue completion — a dialogue with missing noun forms. Learner
-        fills in 8-10 blanks using the correct case, both singular and plural.'
-      - 'Self-assessment checklist: Can I form plurals confidently? Do I know which
-        case each preposition takes? Can I use the case compass from M31? Ready for
-        A2.6?'
+- section: 'Частина 1: Форми множини (Part 1: Plural Forms)'
+  words: 450
+  points:
+  - 'Exercise 1: Form the Nominative plural from 10 singular nouns across all відміни (mixed genders, including irregulars
+    like дитина, людина, око).'
+  - 'Exercise 2: Form the Genitive plural — the hardest forms. Given 10 nouns, learner produces Gen.Pl. (книга → книг, студент
+    → студентів, місто → міст, ніч → ночей, теля → телят).'
+  - 'Exercise 3: Complete quantity expressions with the correct Gen.Pl. form (п''ять ___, багато ___, скільки ___?).'
+- section: 'Частина 2: Який відмінок? (Part 2: Which Case?)'
+  words: 500
+  points:
+  - 'Exercise 4: Multiple-choice — given a sentence with a blank, choose the correct case form. Includes all triggers: verbs
+    (допомагати + Dat., бачити + Acc., користуватися + Instr.), prepositions (у + Loc./Acc., з + Gen./Instr., по + Loc.),
+    special uses (у четвер, у 2014 році, хлопець у светрі).'
+  - 'Exercise 5: Case identification — a short text (8-10 sentences) with underlined nouns. Learner identifies the case of
+    each underlined noun and the trigger (verb, preposition, or construction).'
+  - 'Exercise 6: Error correction — 6 sentences with case errors. Learner finds and corrects each error (e.g., *Я допомагаю
+    сестру → сестрі; *багато студенти → студентів).'
+- section: 'Частина 3: Вільне мовлення (Part 3: Free Production)'
+  words: 550
+  points:
+  - 'Exercise 7: Guided writing — "Опишіть свій ідеальний вихідний день" (Describe your ideal day off). Must include: where
+    you go (Acc./Loc.), who you meet (Acc./Dat.), what you do (Acc./Instr.), what you eat (Gen. for quantities, Acc. for items).'
+  - 'Exercise 8: Dialogue completion — a dialogue with missing noun forms. Learner fills in 8-10 blanks using the correct
+    case, both singular and plural.'
+  - 'Self-assessment checklist: Can I form plurals confidently? Do I know which case each preposition takes? Can I use the
+    case compass from M31? Ready for A2.6?'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - Review key concepts from this module
+  - Self-check questions for the learner
 vocabulary_hints:
   required:
-    - перевірка (check, review)
-    - контрольна точка (checkpoint)
-    - завдання (task, exercise)
-    - помилка (error, mistake)
-    - виправити (to correct)
-    - відмінок (grammatical case)
-    - множина (plural)
-    - однина (singular)
+  - перевірка (check, review)
+  - контрольна точка (checkpoint)
+  - завдання (task, exercise)
+  - помилка (error, mistake)
+  - виправити (to correct)
+  - відмінок (grammatical case)
+  - множина (plural)
+  - однина (singular)
   recommended:
-    - самоперевірка (self-check)
-    - впевнено (confidently)
-    - вихідний день (day off)
+  - самоперевірка (self-check)
+  - впевнено (confidently)
+  - вихідний день (day off)
 activity_hints:
-  - type: fill-in
-    focus: Mixed case drill — complete sentences requiring all 7 cases, singular
-      and plural
-    items: 8
-  - type: quiz
-    focus: Error correction — identify and fix case errors in sentences
-    items: 8
-  - type: group-sort
-    focus: Sort noun forms by case (Nom., Gen., Dat., Acc., Instr., Loc., Voc.)
-    items: 8
-  - type: error-correction
-    focus: Find and fix mixed case errors in sentences — wrong endings after 
-      prepositions, animate/inanimate confusion, Gen.Pl. mistakes
-    items: 6
+- type: fill-in
+  focus: Mixed case drill — complete sentences requiring all 7 cases, singular and plural
+  items: 8
+- type: quiz
+  focus: Error correction — identify and fix case errors in sentences
+  items: 8
+- type: group-sort
+  focus: Sort noun forms by case (Nom., Gen., Dat., Acc., Instr., Loc., Voc.)
+  items: 8
+- type: error-correction
+  focus: Find and fix mixed case errors in sentences — wrong endings after prepositions, animate/inanimate confusion, Gen.Pl.
+    mistakes
+  items: 6
 references:
-  - title: Заболотний Grade 6, Повторення вивченого
-    notes: End-of-chapter review exercises covering all cases
-  - title: Варзацька Grade 4, с. 38
-    notes: Full declension table — all cases, singular and plural, as reference
+- title: Заболотний Grade 6, Повторення вивченого
+  notes: End-of-chapter review exercises covering all cases
+- title: Варзацька Grade 4, с. 38
+  notes: Full declension table — all cases, singular and plural, as reference

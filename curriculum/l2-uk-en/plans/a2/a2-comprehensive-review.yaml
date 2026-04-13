@@ -2,7 +2,7 @@ module: a2-067
 level: A2
 sequence: 67
 slug: a2-comprehensive-review
-version: '1.2'
+version: 1.2.1
 title: Повна картина
 subtitle: Повторення всієї граматики рівня A2
 focus: review
@@ -10,17 +10,14 @@ pedagogy: Review
 phase: A2.10 [Refinement and Graduation]
 word_target: 2000
 objectives:
-- Learner can correctly use all seven cases in singular and plural with nouns, adjectives, and pronouns
-  in mixed exercises.
-- Learner can distinguish and use perfective and imperfective aspect appropriately in past, present, and
-  future contexts.
-- Learner can form and use comparative and superlative adjectives, including suppletive forms, in connected
-  speech.
-- Learner can construct complex sentences using subordinate conjunctions (що, тому що, коли, щоб, якщо)
-  and express opinions with justification.
+- Learner can correctly use all seven cases in singular and plural with nouns, adjectives, and pronouns in mixed exercises.
+- Learner can distinguish and use perfective and imperfective aspect appropriately in past, present, and future contexts.
+- Learner can form and use comparative and superlative adjectives, including suppletive forms, in connected speech.
+- Learner can construct complex sentences using subordinate conjunctions (що, тому що, коли, щоб, якщо) and express opinions
+  with justification.
 dialogue_situations:
-- situation: Two friends reviewing for a B1 placement test — quizzing each other on cases, aspect, and
-    conjunctions using mixed everyday examples
+- situation: Two friends reviewing for a B1 placement test — quizzing each other on cases, aspect, and conjunctions using
+    mixed everyday examples
   functions:
   - testing grammatical knowledge
   - self-assessing readiness
@@ -29,8 +26,8 @@ dialogue_situations:
   - дієслово
   - сполучник
   - впевнено
-- situation: A student explaining to a new classmate what they learned at A2 level — summarizing grammar
-    topics and giving example sentences
+- situation: A student explaining to a new classmate what they learned at A2 level — summarizing grammar topics and giving
+    example sentences
   functions:
   - summarizing knowledge
   - giving examples
@@ -44,53 +41,53 @@ content_outline:
 - section: 'Відмінки: від називного до кличного (Cases: From Nominative to Vocative)'
   words: 500
   points:
-  - 'Systematic review of all seven cases: when each is used, key prepositions, and typical verb government.
-    Quick reference chart with the most important triggers for each case.'
-  - 'Genitive and instrumental deep dive — the two cases learners confuse most at A2. Contrastive pairs:
-    без + Gen vs з + Instr, preposition overlap.'
-  - 'Mixed exercise: sentences requiring the learner to choose the correct case based on context — verbs,
-    prepositions, and constructions from across A2.'
-  - 'Error correction: sentences with deliberate case mistakes for the learner to find and fix — common
-    A2 errors from Заболотний Grade 6 review section.'
+  - 'Systematic review of all seven cases: when each is used, key prepositions, and typical verb government. Quick reference
+    chart with the most important triggers for each case.'
+  - 'Genitive and instrumental deep dive — the two cases learners confuse most at A2. Contrastive pairs: без + Gen vs з +
+    Instr, preposition overlap.'
+  - 'Mixed exercise: sentences requiring the learner to choose the correct case based on context — verbs, prepositions, and
+    constructions from across A2.'
+  - 'Error correction: sentences with deliberate case mistakes for the learner to find and fix — common A2 errors from Заболотний
+    Grade 6 review section.'
 - section: 'Дієслово: вид, час, спосіб (The Verb: Aspect, Tense, Mood)'
   words: 450
   points:
-  - Review of aspect pairs and their usage in context. When to use imperfective (process, repetition,
-    general) vs. perfective (result, completion, single event).
-  - 'Tense review: past, present, future — including compound future (буду + infinitive) and synthetic
-    future (-му). When each form is preferred.'
-  - 'Imperative and conditional: quick review of commands and wishes (Прочитай! Якщо б я мав час, я б
-    поїхав).'
-  - 'Motion verbs review: base pairs (іти/ходити, їхати/їздити) and key prefixed forms (прийти, поїхати,
-    вийти) from A2 motion module.'
+  - Review of aspect pairs and their usage in context. When to use imperfective (process, repetition, general) vs. perfective
+    (result, completion, single event).
+  - 'Tense review: past, present, future — including compound future (буду + infinitive) and synthetic future (-му). When
+    each form is preferred.'
+  - 'Imperative and conditional: quick review of commands and wishes (Прочитай! Якщо б я мав час, я б поїхав).'
+  - 'Motion verbs review: base pairs (іти/ходити, їхати/їздити) and key prefixed forms (прийти, поїхати, вийти) from A2 motion
+    module.'
 - section: Прикметники, порівняння, займенники (Adjectives, Comparison, Pronouns)
   words: 400
   points:
-  - 'Adjective declension review: hard and soft stems across all cases. Comparative and superlative forms,
-    including irregular (кращий, більший, гірший).'
-  - 'Pronoun system review: personal, possessive (including свій), demonstrative, interrogative, indefinite
-    (хтось, щось), negative (ніхто, ніщо), reflexive (себе).'
+  - 'Adjective declension review: hard and soft stems across all cases. Comparative and superlative forms, including irregular
+    (кращий, більший, гірший).'
+  - 'Pronoun system review: personal, possessive (including свій), demonstrative, interrogative, indefinite (хтось, щось),
+    negative (ніхто, ніщо), reflexive (себе).'
   - 'Practice: fill in the correct pronoun or adjective form in connected text.'
-  - 'Numerals and case agreement review: cardinal numerals 1-100 with case rules (один зошит, два зошити,
-    п''ять зошитів).'
+  - 'Numerals and case agreement review: cardinal numerals 1-100 with case rules (один зошит, два зошити, п''ять зошитів).'
 - section: 'Складне речення: з''єднуємо думки (Complex Sentences: Connecting Ideas)'
   words: 350
   points:
-  - 'Review of conjunctions and their usage: що (that), тому що (because), бо (because), коли (when),
-    якщо (if), щоб (in order to), хоча (although).'
-  - 'Register distinction: бо (informal) vs тому що (neutral) vs через те що (formal). When to use which
-    in writing vs speech.'
-  - 'Practice: combine simple sentences into complex ones using the appropriate conjunction. Transform
-    between register levels.'
+  - 'Review of conjunctions and their usage: що (that), тому що (because), бо (because), коли (when), якщо (if), щоб (in order
+    to), хоча (although).'
+  - 'Register distinction: бо (informal) vs тому що (neutral) vs через те що (formal). When to use which in writing vs speech.'
+  - 'Practice: combine simple sentences into complex ones using the appropriate conjunction. Transform between register levels.'
 - section: Самооцінка і перехід до B1 (Self-Assessment and B1 Transition)
   words: 300
   points:
-  - 'Self-assessment checklist: rate your confidence in each grammar area (cases, aspect, comparison,
-    syntax, metalanguage). Identify weakest areas.'
-  - 'What B1 expects: preview of Ukrainian-language grammar instruction, metalanguage vocabulary readiness
-    check (from A2 metalanguage modules M55-M60).'
-  - 'Personal study plan: based on self-assessment results, which A2 modules to revisit before starting
-    B1.'
+  - 'Self-assessment checklist: rate your confidence in each grammar area (cases, aspect, comparison, syntax, metalanguage).
+    Identify weakest areas.'
+  - 'What B1 expects: preview of Ukrainian-language grammar instruction, metalanguage vocabulary readiness check (from A2
+    metalanguage modules M55-M60).'
+  - 'Personal study plan: based on self-assessment results, which A2 modules to revisit before starting B1.'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - Review key concepts from this module
+  - Self-check questions for the learner
 vocabulary_hints:
   required:
   - повторення (review, revision)

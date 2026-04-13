@@ -2,7 +2,7 @@ module: a2-023
 level: A2
 sequence: 23
 slug: checkpoint-dative
-version: '1.1'
+version: 1.1.1
 title: Контрольна робота — давальний відмінок
 subtitle: Перевірка засвоєння давального відмінка (М15-М19)
 focus: review
@@ -13,11 +13,10 @@ objectives:
 - Learner can produce all dative pronoun forms and use them in impersonal constructions (М15 recall).
 - Learner can form dative noun endings for all genders with correct consonant alternations (М16 recall).
 - Learner can build fully agreeing dative noun phrases with adjectives and possessives (М17 recall).
-- Learner can use dative-governing verbs, подобатися, and age constructions correctly in context (М18
-  recall).
+- Learner can use dative-governing verbs, подобатися, and age constructions correctly in context (М18 recall).
 dialogue_situations:
-- setting: 'Secret Santa at the office — matching gifts to people: Що подарувати Олексієві (m)? Книгу!
-    А Наталці (f)? Шоколад! Новому колезі (m) — чашку (f, cup). Шефу (m) — вино.'
+- setting: 'Secret Santa at the office — matching gifts to people: Що подарувати Олексієві (m)? Книгу! А Наталці (f)? Шоколад!
+    Новому колезі (m) — чашку (f, cup). Шефу (m) — вино.'
   speakers:
   - Організатор
   - Колеги
@@ -26,16 +25,14 @@ content_outline:
 - section: 'Частина 1: Розпізнавання (Part 1: Recognition)'
   words: 400
   points:
-  - Identify dative forms in context — distinguish dative from genitive, accusative, and locative case
-    forms.
+  - Identify dative forms in context — distinguish dative from genitive, accusative, and locative case forms.
   - Recognize impersonal dative constructions (мені холодно) vs. nominative subject sentences (я замерзла).
   - Match dative pronoun forms to their nominative counterparts.
   - Identify the dative experiencer in подобатися sentences.
 - section: 'Частина 2: Вибір форми (Part 2: Choosing the Correct Form)'
   words: 500
   points:
-  - Choose correct dative noun endings across all genders — masculine -ові/-у, feminine -і with alternations,
-    neuter -у/-ю.
+  - Choose correct dative noun endings across all genders — masculine -ові/-у, feminine -і with alternations, neuter -у/-ю.
   - Select correct dative adjective and possessive pronoun forms (-ому/-ій/-им).
   - Choose between dative and accusative case based on the verb (допомагати кому vs. бачити кого).
   - Fill in correct forms in post office and service dialogues from М19.
@@ -49,10 +46,14 @@ content_outline:
 - section: Огляд помилок та порівняння відмінків (Error Review and Case Comparison)
   words: 200
   points:
-  - Common dative errors and how to avoid them — mixing -ому/-ій, forgetting consonant alternations, wrong
-    case after дякувати/допомагати.
+  - Common dative errors and how to avoid them — mixing -ому/-ій, forgetting consonant alternations, wrong case after дякувати/допомагати.
   - Summary comparison chart of Nominative, Genitive, Dative endings for nouns, adjectives, and pronouns.
   - Self-assessment checklist for dative case mastery.
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - Review key concepts from this module
+  - Self-check questions for the learner
 vocabulary_hints:
   required:
   - давальний відмінок (dative case)
