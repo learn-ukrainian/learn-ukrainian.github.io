@@ -282,6 +282,26 @@ Useful flags:
 - `--resume` reuses saved progress
 - `--no-skeleton` and `--no-chunk` alter generation behavior
 
+#### Build monitoring with Claude Code `Monitor` tool
+
+v6_build.py emits JSONL events on stdout (`module_start`, `phase_done`, `review_score`, `module_done`, `module_failed`, `batch_done`). Use the Claude Code `Monitor` tool to stream these as notifications:
+
+```
+Monitor(
+    command=".venv/bin/python -u scripts/build/v6_build.py a1 1 --range 55 --resume 2>&1 | grep --line-buffered '^{\"event\"'",
+    description="A1 build events",
+    persistent=True,
+    timeout_ms=3600000
+)
+```
+
+For state queries without builds, use the Monitor API (`docs/MONITOR-API.md`):
+```bash
+curl -s http://localhost:8765/api/state/track-health/a1   # Full track health
+curl -s http://localhost:8765/api/state/failing?track=a2   # Failing modules
+curl -s http://localhost:8765/api/state/build-status        # All tracks build progress
+```
+
 ### Validation flow for existing modules
 
 ```bash

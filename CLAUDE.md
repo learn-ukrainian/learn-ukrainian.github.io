@@ -72,6 +72,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 | Feature | How | When |
 |---------|-----|------|
+| `Monitor` tool | Stream stdout events as notifications | **Build monitoring.** NEVER poll manually — use Monitor with `grep --line-buffered` to filter v6_build.py JSONL events. See below. |
 | `/effort` | Set model effort dynamically mid-session | `low`: config/typo fixes. `medium`: code fixes (default). `high`: content review, plan review, module building, linguistic analysis |
 | Transcript search | `Ctrl+O` then `/` to search, `n`/`N` to navigate | Finding previous discussions in long sessions |
 | `--bare` flag | `claude -p "..." --bare` | Scripted calls (agent bridge) — skips hooks/LSP/plugins for speed |
@@ -80,3 +81,23 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 | `FileChanged` hook | Auto-runs when `curriculum/**/*.md` changes | Triggers audit on module file edits |
 | `effort: high` on skills | Frontmatter in review skills | `content-review`, `plan-review`, `plan-review-seminar`, `batch-review`, `prompt-review` |
 | `paths:` scoping on rules | Frontmatter in rule files | `ukrainian-linguistics.md` only active for curriculum/orchestration work |
+
+### Build Monitoring (MANDATORY)
+
+**NEVER poll builds with ScheduleWakeup or manual loops.** Use the `Monitor` tool:
+
+```
+Monitor(
+    command=".venv/bin/python -u scripts/build/v6_build.py {level} {start} --range {end} --resume 2>&1 | grep --line-buffered '^{\"event\"'",
+    description="{level} build events",
+    persistent=True,
+    timeout_ms=3600000
+)
+```
+
+v6_build.py emits JSONL events: `module_start`, `phase_done`, `review_score`, `module_done`, `module_failed`, `batch_done`. Each line becomes a notification — zero polling overhead.
+
+For state queries without running builds, use the Monitor API (`docs/MONITOR-API.md`):
+- Track health: `curl -s http://localhost:8765/api/state/track-health/a1`
+- Failing modules: `curl -s http://localhost:8765/api/state/failing?track=a2`
+- Build status: `curl -s http://localhost:8765/api/state/build-status/a1`
