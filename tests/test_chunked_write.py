@@ -6,8 +6,10 @@ without requiring LLM calls or filesystem state.
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 # Ensure scripts/ is importable
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -43,6 +45,28 @@ MINIMAL_SKELETON = """\
 ## Only One Section (~500 words total)
 
 - P1 (~500 words): Everything.
+"""
+
+
+TWO_SECTION_SKELETON = """\
+## First Section (~120 words total)
+
+- P1 (~120 words): Original first section.
+
+## Second Section (~140 words total)
+
+- P1 (~140 words): Original second section.
+"""
+
+
+UPDATED_TWO_SECTION_SKELETON = """\
+## First Section Revised (~120 words total)
+
+- P1 (~120 words): Revised first section.
+
+## Second Section Revised (~140 words total)
+
+- P1 (~140 words): Revised second section.
 """
 
 
@@ -215,3 +239,68 @@ class TestChunkingGate:
             and len(sections) >= 2
         )
         assert should_chunk is False
+
+
+class TestChunkCacheInvalidation:
+    """Tests for chunk cache invalidation when skeleton content changes."""
+
+    def test_chunked_write_discards_stale_chunks_after_skeleton_change(self, tmp_path, monkeypatch):
+        from build import v6_build
+
+        curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+        phases_dir = tmp_path / "scripts" / "build" / "phases"
+        level = "b1"
+        slug = "test-module"
+
+        plan_path = curriculum_root / "plans" / level / f"{slug}.yaml"
+        plan_path.parent.mkdir(parents=True, exist_ok=True)
+        plan_path.write_text(
+            "title: Test Module\nphase: 2\nword_target: 4000\ncontent_outline: []\n",
+            "utf-8",
+        )
+
+        packet_path = curriculum_root / level / "research" / f"{slug}-knowledge-packet.md"
+        packet_path.parent.mkdir(parents=True, exist_ok=True)
+        packet_path.write_text("Knowledge packet", "utf-8")
+
+        phases_dir.mkdir(parents=True, exist_ok=True)
+        (phases_dir / "v6-write.md").write_text("Chunk template placeholder", "utf-8")
+
+        orch_dir = curriculum_root / level / "orchestration" / slug
+        orch_dir.mkdir(parents=True, exist_ok=True)
+        (orch_dir / "chunk-01.md").write_text("## Old Section 1\nstale cached content", "utf-8")
+        (orch_dir / "chunk-02.md").write_text("## Old Section 2\nstale cached content", "utf-8")
+        (orch_dir / "chunk-cache-meta.json").write_text(
+            json.dumps({"skeleton_hash": v6_build._hash_skeleton(TWO_SECTION_SKELETON)}),
+            "utf-8",
+        )
+
+        monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+        monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
+
+        dispatch_phases: list[str] = []
+
+        def fake_dispatch(prompt: str, **kwargs):
+            dispatch_phases.append(kwargs["phase"])
+            chunk_num = len(dispatch_phases)
+            return True, f"## Fresh Section {chunk_num}\nnew chunk content {chunk_num}"
+
+        with patch("build.dispatch.dispatch_agent", side_effect=fake_dispatch):
+            output_path = v6_build.step_write_chunked(
+                level=level,
+                module_num=1,
+                slug=slug,
+                packet_path=packet_path,
+                writer="gemini",
+                skeleton=UPDATED_TWO_SECTION_SKELETON,
+            )
+
+        assert output_path == curriculum_root / level / f"{slug}.md"
+        assert dispatch_phases == ["write-chunk-01", "write-chunk-02"]
+        assert "Fresh Section 1" in output_path.read_text("utf-8")
+        assert "Old Section" not in output_path.read_text("utf-8")
+        assert (orch_dir / "chunk-01.md").read_text("utf-8").startswith("## Fresh Section 1")
+        assert (orch_dir / "chunk-02.md").read_text("utf-8").startswith("## Fresh Section 2")
+
+        meta = json.loads((orch_dir / "chunk-cache-meta.json").read_text("utf-8"))
+        assert meta["skeleton_hash"] == v6_build._hash_skeleton(UPDATED_TWO_SECTION_SKELETON)
