@@ -1064,6 +1064,7 @@ def mark_delivery_delivered(
     delivery_id: str,
     reply_message_id: str,
     *,
+    expected_attempt_count: int,
     now: str | None = None,
 ) -> None:
     """Mark a claimed delivery as terminally delivered."""
@@ -1094,9 +1095,9 @@ def mark_delivery_delivered(
                 lease_until=NULL,
                 retry_after=NULL,
                 last_error_kind=NULL
-            WHERE delivery_id=?
+            WHERE delivery_id=? AND attempt_count=?
             """,
-            (now, delivery_id),
+            (now, delivery_id, expected_attempt_count),
         )
         conn.commit()
     except Exception:
@@ -1111,6 +1112,7 @@ def mark_delivery_failed(
     error_kind: str,
     error_text: str,
     *,
+    expected_attempt_count: int,
     reschedule_after: str | None = None,
     now: str | None = None,
 ) -> None:
@@ -1145,9 +1147,9 @@ def mark_delivery_failed(
                     lease_until=NULL,
                     retry_after=NULL,
                     last_error_kind=?
-                WHERE delivery_id=?
+                WHERE delivery_id=? AND attempt_count=?
                 """,
-                (error_text, error_kind, delivery_id),
+                (error_text, error_kind, delivery_id, expected_attempt_count),
             )
         else:
             conn.execute(
@@ -1158,9 +1160,9 @@ def mark_delivery_failed(
                     lease_until=NULL,
                     retry_after=?,
                     last_error_kind=?
-                WHERE delivery_id=? AND status='processing'
+                WHERE delivery_id=? AND status='processing' AND attempt_count=?
                 """,
-                (error_text, retry_after, error_kind, delivery_id),
+                (error_text, retry_after, error_kind, delivery_id, expected_attempt_count),
             )
         conn.commit()
     except Exception:

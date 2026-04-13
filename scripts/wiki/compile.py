@@ -964,6 +964,9 @@ def _parse_wiki_fixes(fixes_text: str) -> list[tuple[str, str]]:
             _flush()
             current = None
             continue
+        if stripped.upper().startswith("INSERT AFTER:"):
+            current = None
+            continue
         if stripped.startswith("old:"):
             if old_lines and new_lines:
                 _flush()  # New pair starting — flush previous
