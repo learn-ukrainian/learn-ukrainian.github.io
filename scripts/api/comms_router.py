@@ -762,7 +762,7 @@ async def live_activity(minutes: int = Query(15, ge=1, le=120)):
     """What's being built RIGHT NOW — module-level live feed.
 
     Returns:
-      - in_progress: modules with recently updated state-v3.json
+      - in_progress: modules with recently updated orchestration state
       - recent_completions: research files created in last hour
       - recent_messages: last N broker dispatches
     """

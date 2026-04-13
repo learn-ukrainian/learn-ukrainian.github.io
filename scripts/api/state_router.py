@@ -1,10 +1,10 @@
-"""State API router -- v3/v4/v5 pipeline state, research/review coverage, weak points, issues.
+"""State API router -- v6 pipeline state, research/review coverage, weak points, issues.
 
 Mounted at /api/state/ in main.py.
 
 Endpoints:
   GET /api/state/summary              Full project snapshot
-  GET /api/state/pipeline/{track}     Per-module v3/v4/v5 phase state for one track
+  GET /api/state/pipeline/{track}     Per-module pipeline state for one track
   GET /api/state/ready-to-build       Phase A done, Phase B not started
   GET /api/state/weak-points          Modules with quality issues
   GET /api/state/build-status/{track}  Compact live build progress (one call)
@@ -94,7 +94,7 @@ async def state_summary():
 
 @router.get("/pipeline/{track_id}")
 async def pipeline_track(track_id: str):
-    """Per-module v5/v4/v3 phase state for one track."""
+    """Per-module pipeline state for one track."""
     level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
     if not level_cfg:
         return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})

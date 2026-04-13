@@ -113,7 +113,7 @@ a:hover { text-decoration: underline; }
   <div class="stat-card"><div class="value" style="color:var(--purple)" id="total-reviewed">—</div><div class="label">Reviewed</div></div>
   <div class="stat-card"><div class="value" style="color:#58a6ff" id="total-final-review">—</div><div class="label">Final QA</div></div>
   <div class="stat-card"><div class="value" style="color:var(--cyan)" id="total-v6">—</div><div class="label">V6 Pipeline</div></div>
-  <div class="stat-card"><div class="value" style="color:var(--gray)" id="total-v5">—</div><div class="label">V5 Pipeline</div></div>
+  <div class="stat-card"><div class="value" style="color:var(--gray)" id="total-rebuild">—</div><div class="label">Needs Rebuild</div></div>
 </div>
 
 <div class="container">
@@ -166,9 +166,8 @@ function isDone(phase) {
 
 function chipClass(mod) {
   const phases = mod.phases || {};
-  // V6 is current; legacy phases may still appear on older modules until rebuilt.
-  if (isDone(phases.publish) || isDone(phases.mdx) || isDone(phases.review)) return 'chip-pass';
-  if (isDone(phases.verify) || isDone(phases.validate)) return 'chip-audit';
+  if (mod.audit === 'pass') return 'chip-pass';
+  if (isDone(phases.audit) || isDone(phases.publish) || isDone(phases.verify) || isDone(phases.validate)) return 'chip-audit';
   if (isDone(phases.write) || isDone(phases.content)) return 'chip-content';
   if (isDone(phases.research)) return 'chip-research';
   return 'chip-none';
@@ -176,8 +175,8 @@ function chipClass(mod) {
 
 function chipLabel(mod) {
   const phases = mod.phases || {};
-  if (isDone(phases.publish) || isDone(phases.mdx) || isDone(phases.review)) return '✓';
-  if (isDone(phases.verify) || isDone(phases.validate)) return 'Va';
+  if (mod.audit === 'pass') return '✓';
+  if (isDone(phases.audit) || isDone(phases.publish) || isDone(phases.verify) || isDone(phases.validate)) return 'A';
   if (isDone(phases.write) || isDone(phases.content)) return 'C';
   if (isDone(phases.research)) return 'R';
   return '·';
@@ -276,9 +275,9 @@ async function load() {
     document.getElementById('total-reviewed').textContent = t.reviewed || 0;
     document.getElementById('total-final-review').textContent = t.final_review_done;
     document.getElementById('total-v6').textContent = `${pv.counts?.v6 || 0}`;
-    document.getElementById('total-v5').textContent = `${pv.counts?.v5 || 0}`;
+    document.getElementById('total-rebuild').textContent = `${pv.needs_rebuild || 0}`;
     document.getElementById('topbar-subtitle').textContent =
-      `Pipeline state across all tracks — ${pv.counts?.v6 || 0} v6, ${pv.pct_built || 0}% built`;
+      `Pipeline state across all tracks — ${pv.counts?.v6 || 0} v6, ${pv.needs_rebuild || 0} rebuild needed`;
 
     const container = document.getElementById('tracks-container');
     const trackEntries = Object.entries(data.tracks)
