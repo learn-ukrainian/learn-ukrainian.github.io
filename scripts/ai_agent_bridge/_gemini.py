@@ -341,8 +341,8 @@ def _run_gemini_attempt(msg, message_id, model, prompt, timeout_val, stdout_only
     except RateLimitedError as exc:
         # Rate-limited: treat as retryable per legacy behavior
         print(f"\n⏳ Gemini rate limited: {exc}")
-        if attempt < max_retries:
-            delay = base_delay * (2 ** (attempt - 1))
+        if attempt < max_retries - 1:
+            delay = base_delay * (2 ** attempt)
             print(f"⏳ Backing off for {delay}s...")
             time.sleep(delay)
             return None

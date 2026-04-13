@@ -1064,7 +1064,7 @@ def mark_delivery_delivered(
     delivery_id: str,
     reply_message_id: str,
     *,
-    expected_attempt_count: int,
+    expected_attempt_count: int | None = None,
     now: str | None = None,
 ) -> None:
     """Mark a claimed delivery as terminally delivered."""
@@ -1073,7 +1073,7 @@ def mark_delivery_delivered(
     try:
         conn.execute("BEGIN IMMEDIATE")
         row = conn.execute(
-            "SELECT status FROM deliveries WHERE delivery_id = ?",
+            "SELECT status, attempt_count FROM deliveries WHERE delivery_id = ?",
             (delivery_id,),
         ).fetchone()
         if not row:
@@ -1081,6 +1081,9 @@ def mark_delivery_delivered(
         if row["status"] in {"delivered", "failed"}:
             conn.commit()
             return
+
+        if expected_attempt_count is None:
+            expected_attempt_count = row["attempt_count"]
 
         # reply_message_id is part of the worker API contract for the
         # next phase, but the current deliveries schema does not yet
@@ -1112,7 +1115,7 @@ def mark_delivery_failed(
     error_kind: str,
     error_text: str,
     *,
-    expected_attempt_count: int,
+    expected_attempt_count: int | None = None,
     reschedule_after: str | None = None,
     now: str | None = None,
 ) -> None:
@@ -1132,6 +1135,9 @@ def mark_delivery_failed(
         if row["status"] in {"delivered", "failed"}:
             conn.commit()
             return
+
+        if expected_attempt_count is None:
+            expected_attempt_count = row["attempt_count"]
 
         retry_after = reschedule_after
         if error_kind == "rate_limited" and retry_after is None:
