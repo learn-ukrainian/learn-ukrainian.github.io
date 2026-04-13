@@ -153,6 +153,11 @@ def register_channel_commands(subparsers: Any) -> None:
         "--no-snapshot", action="store_true",
         help="Skip context/monitor snapshot (tests and system posts)",
     )
+    post_parser.add_argument(
+        "--mode", default="read-only",
+        choices=["read-only", "workspace-write", "danger"],
+        help="Execution mode for inbox worker (default: read-only)",
+    )
 
     # ── top-level: p (shortcut) ───────────────────────────────────
     p_parser = subparsers.add_parser(
@@ -680,6 +685,7 @@ def _handle_post(args) -> int:
     # Default recipients = channel subscribers
     to_agents = _parse_csv(args.to) if args.to else ch["subscribers"]
 
+    mode = getattr(args, "mode", "read-only")
     try:
         result = _channels.post(
             args.channel,
@@ -689,6 +695,7 @@ def _handle_post(args) -> int:
             parent_id=args.parent,
             correlation_id=args.corr,
             auto_snapshot=not args.no_snapshot,
+            mode=mode,
         )
     except ValueError as e:
         print(f"❌ {e}", file=sys.stderr)

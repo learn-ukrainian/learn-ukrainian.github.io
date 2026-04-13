@@ -674,6 +674,7 @@ def post(
     monitor_state_snapshot: dict[str, Any] | None = None,
     auto_snapshot: bool = True,
     pre_delivered: bool = False,
+    mode: str = "read-only",
 ) -> dict[str, Any]:
     """Create a new channel_messages row + N deliveries rows atomically.
 
@@ -819,10 +820,10 @@ def post(
                 conn.execute(
                     """
                     INSERT INTO deliveries (
-                        delivery_id, message_id, to_agent, status
-                    ) VALUES (?, ?, ?, 'pending')
+                        delivery_id, message_id, to_agent, status, mode
+                    ) VALUES (?, ?, ?, 'pending', ?)
                     """,
-                    (dlv_id, message_id, agent),
+                    (dlv_id, message_id, agent, mode),
                 )
 
         conn.commit()

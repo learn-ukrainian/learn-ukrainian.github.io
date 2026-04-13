@@ -93,6 +93,7 @@ class _ClaimedDelivery:
     body: str
     round_index: int
     created_at: str
+    mode: str = "read-only"
 
 
 @dataclass(frozen=True)
@@ -259,6 +260,7 @@ def _claim_next_thread(
         rows = conn.execute(
             """
             SELECT d.delivery_id, d.message_id, d.to_agent, d.to_model,
+                   d.mode,
                    cm.thread_id, cm.channel, cm.from_agent, cm.body,
                    cm.round_index, cm.created_at
             FROM deliveries d
@@ -290,6 +292,7 @@ def _claim_next_thread(
             body=str(row["body"]),
             round_index=int(row["round_index"]),
             created_at=str(row["created_at"]),
+            mode=str(row["mode"]) if row["mode"] else "read-only",
         )
         for row in rows
     )
@@ -441,6 +444,20 @@ def _resolve_model(claimed: _ClaimedThread) -> str | None:
     return next(iter(models), None)
 
 
+def _resolve_mode(claimed: _ClaimedThread) -> str:
+    """Resolve execution mode from delivery metadata.
+
+    If any delivery in the thread requests a write mode, use the most
+    permissive one. Priority: danger > workspace-write > read-only.
+    """
+    modes = {delivery.mode for delivery in claimed.deliveries if delivery.mode}
+    if "danger" in modes:
+        return "danger"
+    if "workspace-write" in modes:
+        return "workspace-write"
+    return "read-only"
+
+
 def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
     task_id = _thread_session_key(claimed.channel, claimed.thread_id)
     existing_session = _get_session_id(task_id, agent) if agent == "claude" else None
@@ -460,7 +477,7 @@ def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
     result = runtime_invoke(
         agent,
         prompt,
-        mode="read-only",
+        mode=_resolve_mode(claimed),
         cwd=REPO_ROOT,
         model=_resolve_model(claimed),
         task_id=task_id,
