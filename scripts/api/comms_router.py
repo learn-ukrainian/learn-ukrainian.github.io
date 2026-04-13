@@ -647,12 +647,12 @@ async def batch_progress_track(track: str):
 
 
 def _scan_live_activity(minutes: int = 15) -> list[dict]:
-    """Scan state-v3.json files and recent broker messages for live module-level activity."""
+    """Scan legacy and v6 state files for live module-level activity."""
     now = time.time()
     cutoff = now - (minutes * 60)
     activities = []
 
-    # 1. Scan all state-v3.json files modified recently
+    # 1. Scan all orchestration state files modified recently
     for track_dir in CURRICULUM_ROOT.iterdir():
         if not track_dir.is_dir():
             continue
@@ -663,15 +663,25 @@ def _scan_live_activity(minutes: int = 15) -> list[dict]:
         for module_dir in orch_dir.iterdir():
             if not module_dir.is_dir():
                 continue
-            state_file = module_dir / "state-v3.json"
-            if not state_file.exists():
-                continue
-            mtime = state_file.stat().st_mtime
-            if mtime < cutoff:
+            state_files = [
+                module_dir / "state.json",
+                module_dir / "state-v3.json",
+            ]
+            recent_state_file = None
+            recent_mtime = 0.0
+            for state_file in state_files:
+                if not state_file.exists():
+                    continue
+                mtime = state_file.stat().st_mtime
+                if mtime < cutoff or mtime <= recent_mtime:
+                    continue
+                recent_state_file = state_file
+                recent_mtime = mtime
+            if recent_state_file is None:
                 continue
 
             try:
-                state = json.loads(state_file.read_text())
+                state = json.loads(recent_state_file.read_text())
             except (json.JSONDecodeError, OSError):
                 continue
 
@@ -706,7 +716,7 @@ def _scan_live_activity(minutes: int = 15) -> list[dict]:
                 "phase": latest_phase.replace("v3-", "Phase "),
                 "phase_status": phase_status,
                 "timestamp": latest_ts,
-                "seconds_ago": int(now - mtime),
+                "seconds_ago": int(now - recent_mtime),
                 "task_id": phase_data.get("task_id", ""),
                 "mode": phase_data.get("mode", ""),
                 "recent_files": recent_files,

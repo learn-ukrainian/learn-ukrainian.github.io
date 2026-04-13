@@ -151,6 +151,18 @@ tr:hover td { background: var(--bg3); }
 </div><!-- /container -->
 
 <script>
+async function fetchJson(url, options) {
+  const res = await fetch(url, options);
+  let data = null;
+  try {
+    data = await res.json();
+  } catch (e) {}
+  if (!res.ok) {
+    throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
+  }
+  return data;
+}
+
 // ---- Tab switching ----
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -185,8 +197,7 @@ function qualityBar(q, total) {
 // ---- RESEARCH ----
 async function loadResearch() {
   try {
-    const res = await fetch('/api/state/research-coverage');
-    const data = await res.json();
+    const data = await fetchJson('/api/state/research-coverage');
     const tracks = Object.entries(data.tracks).filter(([, v]) => v.total_modules > 0);
 
     const rows = tracks.map(([id, t]) => `
@@ -223,8 +234,7 @@ async function loadResearch() {
 // ---- REVIEWS ----
 async function loadReviews() {
   try {
-    const res = await fetch('/api/state/review-coverage');
-    const data = await res.json();
+    const data = await fetchJson('/api/state/review-coverage');
     const tracks = Object.entries(data.tracks).filter(([, v]) => v.total_built > 0);
 
     const rows = tracks.map(([id, t]) => {
@@ -275,8 +285,7 @@ const PAGE_SIZE = 50;
 
 async function loadIssues() {
   try {
-    const res = await fetch('/api/state/issues');
-    const data = await res.json();
+    const data = await fetchJson('/api/state/issues');
     allIssues = data.issues || [];
     issueTracksSet = new Set(allIssues.map(i => i.track));
 
@@ -361,8 +370,7 @@ let weakTracksSet = new Set();
 
 async function loadWeak() {
   try {
-    const res = await fetch('/api/state/weak-points?limit=500');
-    const data = await res.json();
+    const data = await fetchJson('/api/state/weak-points?limit=500');
     allWeak = data.modules || [];
     weakTracksSet = new Set(allWeak.map(m => m.track));
 
@@ -411,18 +419,19 @@ function filterWeak() {
       if (issue.startsWith('low_words')) return `<span class="issue-tag tag-words">${issue.replace('low_words_', 'words: ')}</span>`;
       return `<span class="issue-tag">${issue}</span>`;
     }).join('');
-    if (m.pipeline_version && m.pipeline_version !== 'v5') {
+    if (m.pipeline_version && m.pipeline_version !== 'v6') {
       tags += `<span class="issue-tag tag-legacy">${m.pipeline_version}</span>`;
     }
     const rsStr = m.research_score !== null ? `${m.research_score}/10` : '—';
     const rsCls = scoreClass(m.research_score);
-    const wordsStr = m.word_target > 0 ? `${m.words}/${m.word_target}` : `${m.words}`;
+    const wordCount = m.word_count || 0;
+    const wordsStr = m.word_target > 0 ? `${wordCount}/${m.word_target}` : `${wordCount}`;
     return `<tr>
       <td style="font-weight:600">${m.track}</td>
       <td style="color:var(--text2)">${m.num}</td>
       <td>${m.slug}</td>
       <td><span class="score-cell ${rsCls}">${rsStr}</span></td>
-      <td style="color:${m.words < m.word_target * 0.8 && m.word_target > 0 ? 'var(--red)' : 'var(--text2)'}">${wordsStr}</td>
+      <td style="color:${wordCount < m.word_target * 0.8 && m.word_target > 0 ? 'var(--red)' : 'var(--text2)'}">${wordsStr}</td>
       <td>${tags}</td>
     </tr>`;
   }).join('');

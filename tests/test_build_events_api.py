@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -110,8 +111,13 @@ def test_scan_hard_cap(tmp_path, monkeypatch):
     _write_meta(tmp_path, "a2", "one", "01-write-meta.json", now - timedelta(minutes=3))
     _write_meta(tmp_path, "a2", "two", "01-write-meta.json", now - timedelta(minutes=2))
     _write_meta(tmp_path, "a2", "three", "01-write-meta.json", now - timedelta(minutes=1))
+    os.utime(tmp_path / "a2" / "orchestration" / "one" / "dispatch" / "01-write-meta.json", (now.timestamp() - 180, now.timestamp() - 180))
+    os.utime(tmp_path / "a2" / "orchestration" / "two" / "dispatch" / "01-write-meta.json", (now.timestamp() - 120, now.timestamp() - 120))
+    os.utime(tmp_path / "a2" / "orchestration" / "three" / "dispatch" / "01-write-meta.json", (now.timestamp() - 60, now.timestamp() - 60))
 
     response = client.get("/api/build/events/recent?limit=10")
 
     assert response.status_code == 200
-    assert len(response.json()["events"]) == 2
+    events = response.json()["events"]
+    assert len(events) == 2
+    assert [event["slug"] for event in events] == ["three", "two"]

@@ -17,7 +17,18 @@ from .state_helpers import (
     is_review_stale,
     read_v2_state,
     read_v3_state,
+    read_v4_state,
 )
+
+try:
+    from scripts.build.v6_build import PHASES as V6_PHASES
+except ImportError:
+    V6_PHASES = [
+        "check", "research", "skeleton", "pre-verify", "write",
+        "exercises", "activities", "repair", "verify-exercises",
+        "annotate", "vocab", "enrich", "verify", "review", "stress",
+        "publish", "audit",
+    ]
 
 CRITICAL_KEYWORDS = frozenset({
     "factual error", "factual mistake", "incorrect", "wrong",
@@ -30,6 +41,22 @@ ISSUE_PATTERN_KEYWORDS = [
     "PRONUNCIATION", "MISLEADING", "COLONIAL", "WORD COUNT",
     "MISSING", "RUSSICISM",
 ]
+
+
+def _is_ready_for_final_review(orch_dir, version: str) -> bool:
+    """Return True when pipeline state indicates final review can run."""
+    if version == "v6":
+        phases = read_v2_state(orch_dir).get("phases", {})
+        terminal_phase = V6_PHASES[-1] if V6_PHASES else "audit"
+        return phases.get(terminal_phase, {}).get("status") == "complete"
+    if version == "v5":
+        phases = read_v2_state(orch_dir).get("phases", {})
+        return phases.get("validate", {}).get("status") == "complete"
+    if version == "v4":
+        phases = read_v4_state(orch_dir).get("phases", {})
+        return phases.get("v4-validate", {}).get("status") == "complete"
+    phases = read_v3_state(orch_dir).get("phases", {})
+    return phases.get("v3-audit", {}).get("status") == "complete"
 
 
 def compute_final_reviews(track_id: str, level_cfg: dict) -> dict:
@@ -47,13 +74,7 @@ def compute_final_reviews(track_id: str, level_cfg: dict) -> dict:
         if info is None:
             orch_dir = track_dir / "orchestration" / slug
             version = detect_pipeline_version(orch_dir)
-            if version == "v5":
-                phases = read_v2_state(orch_dir).get("phases", {})
-                audit_status = phases.get("validate", {}).get("status")
-            else:
-                phases = read_v3_state(orch_dir).get("phases", {})
-                audit_status = phases.get("v3-audit", {}).get("status")
-            if audit_status == "complete":
+            if _is_ready_for_final_review(orch_dir, version):
                 pending.append({"num": num, "slug": slug})
             continue
 

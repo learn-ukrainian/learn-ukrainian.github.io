@@ -170,6 +170,18 @@ const TRACKS = ['a1','a2','b1','b2','b2-pro','c1','c1-pro','c2','b2-hist','c1-hi
 let currentTrack = null;
 let overviewData = null;
 
+async function fetchJson(url, options) {
+  const res = await fetch(url, options);
+  let data = null;
+  try {
+    data = await res.json();
+  } catch (e) {}
+  if (!res.ok) {
+    throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
+  }
+  return data;
+}
+
 function pct(v, t) { return t > 0 ? Math.round(v / t * 100) : 0; }
 
 function barColor(pct) {
@@ -194,8 +206,8 @@ async function loadOverview() {
   el.innerHTML = '<div class="loading">Loading all tracks...</div>';
   try {
     const [buildRes, enrichRes] = await Promise.all([
-      fetch('/api/state/build-status').then(r => r.json()),
-      fetch('/api/state/enrichment-status').then(r => r.json()),
+      fetchJson('/api/state/build-status'),
+      fetchJson('/api/state/enrichment-status'),
     ]);
     overviewData = { build: buildRes.tracks, enrich: enrichRes.tracks };
 
@@ -257,15 +269,15 @@ async function selectTrack(trackId) {
 
   try {
     const [health, buildStatus, pv] = await Promise.all([
-      fetch(`/api/state/track-health/${trackId}`).then(r => r.json()),
-      fetch(`/api/state/build-status/${trackId}`).then(r => r.json()),
-      fetch(`/api/state/pipeline-versions?track=${trackId}`).then(r => r.json()).catch(() => ({})),
+      fetchJson(`/api/state/track-health/${trackId}`),
+      fetchJson(`/api/state/build-status/${trackId}`),
+      fetchJson(`/api/state/pipeline-versions?track=${trackId}`).catch(() => ({})),
     ]);
 
     const h = health;
     const bs = buildStatus;
-    const v5Pct = pv.pct_v5 || 0;
-    const v5Count = pv.counts?.v5 || 0;
+    const v6Pct = pv.pct_v6 || 0;
+    const v6Count = pv.counts?.v6 || 0;
 
     // Health cards
     let cards = '';
@@ -273,7 +285,7 @@ async function selectTrack(trackId) {
     const ship = h.shippable || {count: 0, pct: 0};
     cards += healthCard('Shippable', `${ship.pct}%`, `${ship.count}/${h.total} ready to deploy`, ship.pct);
     cards += healthCard('Audit Passing', `${h.audit.pct}%`, `${h.audit.passing} pass, ${h.audit.failing} fail`, h.audit.pct, 'var(--cyan)');
-    cards += healthCard('V5 Pipeline', `${v5Pct}%`, `${v5Count}/${h.total} modules on v5`, v5Pct, 'var(--gray)');
+    cards += healthCard('V6 Pipeline', `${v6Pct}%`, `${v6Count}/${h.total} modules on v6`, v6Pct, 'var(--gray)');
     cards += healthCard('Word Quality', h.words.avg_ratio, 'avg words vs target', null, 'var(--cyan)');
     cards += `<div class="health-card eta-card">
       <div class="label">ETA (remaining)</div>
@@ -395,16 +407,14 @@ async function inspectModule(trackId, num) {
 
   try {
     // Step 1: fetch module detail (we need the slug for comms)
-    const modRes = await fetch(`/api/state/module/${trackId}/${num}`);
-    const mod = await modRes.json();
+    const mod = await fetchJson(`/api/state/module/${trackId}/${num}`);
     inspectorTitle.textContent = `#${num} — ${mod.slug || 'unknown'}`;
 
     // Step 2: fetch comms using slug
     let commsData = { groups: [] };
     if (mod.slug) {
       try {
-        const commsRes = await fetch(`/api/comms/by-module/${trackId}/${mod.slug}`);
-        if (commsRes.ok) commsData = await commsRes.json();
+        commsData = await fetchJson(`/api/comms/by-module/${trackId}/${mod.slug}`);
       } catch(e) { /* comms endpoint may not exist or have no data */ }
     }
 
@@ -415,8 +425,31 @@ async function inspectModule(trackId, num) {
 }
 
 function renderInspector(mod, extraComms) {
-  const PHASES = ['research', 'discover', 'content', 'validate', 'review', 'activities', 'mdx'];
-  const phaseLabels = { research: 'Research', discover: 'Discover', content: 'Content', validate: 'Validate', review: 'Review', activities: 'Activities', mdx: 'MDX' };
+  const PHASES = [
+    'check', 'research', 'skeleton', 'pre-verify', 'write',
+    'exercises', 'activities', 'repair', 'verify-exercises',
+    'annotate', 'vocab', 'enrich', 'verify', 'review', 'stress',
+    'publish', 'audit',
+  ];
+  const phaseLabels = {
+    check: 'Plan check',
+    research: 'Research',
+    skeleton: 'Skeleton',
+    'pre-verify': 'Pre-verify',
+    write: 'Write',
+    exercises: 'Exercises',
+    activities: 'Activities',
+    repair: 'Repair',
+    'verify-exercises': 'Verify ex',
+    annotate: 'Annotate',
+    vocab: 'Vocab',
+    enrich: 'Enrich',
+    verify: 'Verify',
+    review: 'Review',
+    stress: 'Stress',
+    publish: 'Publish',
+    audit: 'Audit',
+  };
   const phases = mod.phases || {};
 
   // Phase timeline
@@ -470,7 +503,7 @@ function renderInspector(mod, extraComms) {
   ];
   const infoHtml = info.map(([k, v]) => {
     let style = '';
-    if (k === 'Pipeline') style = v === 'v5' ? 'color:var(--green);font-weight:600' : 'color:var(--text3)';
+    if (k === 'Pipeline') style = v === 'v6' ? 'color:var(--green);font-weight:600' : 'color:var(--text3)';
     if (k === 'Audit') style = v === 'pass' ? 'color:var(--green)' : v === 'fail' ? 'color:var(--red)' : '';
     if (k === 'Review') style = reviewData.score >= 8.0 ? 'color:var(--green)' : reviewData.score != null ? 'color:var(--yellow)' : '';
     if (k === 'Shippable') style = v === 'YES' ? 'color:var(--green);font-weight:700' : 'color:var(--red);font-weight:700';
@@ -579,7 +612,7 @@ function renderInspector(mod, extraComms) {
 
   inspectorBody.innerHTML = `
     <div class="insp-section">
-      <div class="insp-section-title">Pipeline Phases <span style="font-size:10px;color:${mod.pipeline_version === 'v5' ? 'var(--green)' : 'var(--text3)'};font-weight:400">(${mod.pipeline_version || 'unknown'})</span></div>
+      <div class="insp-section-title">Pipeline Phases <span style="font-size:10px;color:${mod.pipeline_version === 'v6' ? 'var(--green)' : 'var(--text3)'};font-weight:400">(${mod.pipeline_version || 'unknown'})</span></div>
       <div class="phase-timeline">${timeline}</div>
     </div>
     <div class="insp-section">

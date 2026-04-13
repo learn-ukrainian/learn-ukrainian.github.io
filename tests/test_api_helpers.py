@@ -564,6 +564,48 @@ class TestGetFinalReviewInfo:
         assert result["verdict"] is None
 
 
+# ==================== state_coverage ====================
+
+
+class TestComputePipelineTrack:
+    """compute_pipeline_track exposes canonical v6 phase shape."""
+
+    def test_v6_phase_order_and_labels(self):
+        from scripts.api.state_coverage import compute_pipeline_track
+        from scripts.build.v6_build import PHASE_LABELS, PHASES
+
+        level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
+        plan_slugs = [(1, "test-slug")]
+        state = {
+            "mode": "v6",
+            "phases": {
+                "check": {"status": "complete"},
+                "review": {"status": "running"},
+            },
+        }
+
+        with (
+            patch("scripts.api.state_coverage.get_plan_slugs", return_value=plan_slugs),
+            patch("scripts.api.state_coverage.detect_pipeline_version", return_value="v6"),
+            patch("scripts.api.state_coverage.load_module_state", return_value=state),
+            patch(
+                "scripts.api.state_coverage.get_audit_status",
+                return_value={"status": "pass", "word_count": 1234, "word_target": 1500},
+            ),
+            patch("scripts.api.state_coverage.get_research_score", return_value=8),
+        ):
+            result = compute_pipeline_track("a1", level_cfg)
+
+        module = result["modules"][0]
+        assert result["phase_order"] == PHASES
+        assert result["phase_labels"]["review"] == PHASE_LABELS["review"]
+        assert list(module["phases"]) == PHASES
+        assert module["phases"]["check"]["status"] == "complete"
+        assert module["phases"]["review"]["status"] == "running"
+        assert module["phases"]["audit"]["status"] == "pending"
+        assert module["needs_rebuild"] is False
+
+
 # ==================== state_compute ====================
 
 
@@ -675,6 +717,22 @@ class TestComputeETA:
 class TestScanModulePhases:
     """scan_module_phases reads pipeline progress."""
 
+    def test_v6_uses_full_phase_order(self, tmp_path):
+        from scripts.api.state_build import scan_module_phases
+
+        (tmp_path / "state.json").write_text(json.dumps({
+            "mode": "v6",
+            "phases": {
+                "check": {"status": "complete", "ts": "t1"},
+                "review": {"status": "complete", "ts": "t2"},
+                "audit": {"status": "running", "ts": "t3"},
+            },
+        }))
+        furthest, running, _latest_ts, audit_status = scan_module_phases(tmp_path, "v6")
+        assert furthest == "review"
+        assert running == "audit"
+        assert audit_status == "running"
+
     def test_v5_complete_phases(self, tmp_path):
         from scripts.api.state_build import scan_module_phases
 
@@ -718,6 +776,20 @@ class TestScanModulePhases:
         assert furthest == "A"
         assert running == "B(FAIL)"
 
+    def test_v4_reads_state_v4(self, tmp_path):
+        from scripts.api.state_build import scan_module_phases
+
+        (tmp_path / "state-v4.json").write_text(json.dumps({
+            "phases": {
+                "v4-research": {"status": "complete"},
+                "v4-validate": {"status": "complete"},
+            },
+        }))
+        furthest, running, _latest_ts, audit_status = scan_module_phases(tmp_path, "v4")
+        assert furthest == "validate"
+        assert running is None
+        assert audit_status == "complete"
+
     def test_empty_phases(self, tmp_path):
         from scripts.api.state_build import scan_module_phases
 
@@ -747,6 +819,16 @@ class TestCheckBuildPhase:
         built, ts = _check_build_phase(tmp_path)
         assert built == 0
         assert ts is None
+
+    def test_v4_complete(self, tmp_path):
+        from scripts.api.state_build import _check_build_phase
+
+        (tmp_path / "state-v4.json").write_text(json.dumps({
+            "phases": {"v4-content": {"status": "complete", "ts": "2026-01-02"}},
+        }))
+        built, ts = _check_build_phase(tmp_path)
+        assert built == 1
+        assert ts == "2026-01-02"
 
 
 class TestCheckAuditHealth:
@@ -1376,3 +1458,32 @@ class TestComputeFinalReviewsV5:
             result = compute_final_reviews("a1", level_cfg)
 
         assert result["pending_review"] == 0
+
+
+class TestComputeFinalReviewsV6:
+    """compute_final_reviews detects v6 modules pending review."""
+
+    def test_v6_audit_complete_is_pending(self, tmp_path):
+        from scripts.api.state_issues import compute_final_reviews
+
+        track_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1"
+        orch_dir = track_dir / "orchestration" / "test-slug"
+        orch_dir.mkdir(parents=True)
+        (track_dir / "review").mkdir(parents=True)
+        (orch_dir / "state.json").write_text(json.dumps({
+            "mode": "v6",
+            "phases": {"audit": {"status": "complete"}},
+        }))
+
+        plan_slugs = [(1, "test-slug")]
+        level_cfg = {"id": "a1", "path": "l2-uk-en/a1"}
+
+        with (
+            patch("scripts.api.state_issues.CURRICULUM_ROOT", tmp_path / "curriculum"),
+            patch("scripts.api.state_issues.get_plan_slugs", return_value=plan_slugs),
+            patch("scripts.api.state_issues.get_final_review_info", return_value=None),
+        ):
+            result = compute_final_reviews("a1", level_cfg)
+
+        assert result["pending_review"] == 1
+        assert result["pending_modules"][0]["slug"] == "test-slug"

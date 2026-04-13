@@ -11,6 +11,7 @@ from .config import CURRICULUM_ROOT, LEVELS
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
     PLANS_ROOT,
+    V4_PHASE_ORDER,
     V5_PHASE_ORDER,
     detect_pipeline_version,
     get_audit_status,
@@ -18,7 +19,18 @@ from .state_helpers import (
     get_plan_slugs,
     read_v2_state,
     read_v3_state,
+    read_v4_state,
 )
+
+try:
+    from scripts.build.v6_build import PHASES as V6_PHASE_ORDER
+except ImportError:
+    V6_PHASE_ORDER = [
+        "check", "research", "skeleton", "pre-verify", "write",
+        "exercises", "activities", "repair", "verify-exercises",
+        "annotate", "vocab", "enrich", "verify", "review", "stress",
+        "publish", "audit",
+    ]
 
 
 def compute_build_status_track(track_id: str, level_cfg: dict) -> dict:
@@ -65,10 +77,6 @@ def compute_build_status_track(track_id: str, level_cfg: dict) -> dict:
         "generated_at": datetime.now(UTC).isoformat(),
     }
 
-
-V6_PHASE_ORDER = ["check", "research", "write", "exercises", "annotate", "verify", "publish"]
-
-
 def scan_module_phases(orch_dir, version):
     """Scan pipeline phases for a module. Returns (furthest, running, latest_ts, audit_status)."""
     furthest = running_phase = latest_ts = audit_status = None
@@ -76,11 +84,15 @@ def scan_module_phases(orch_dir, version):
     if version == "v6":
         phases = read_v2_state(orch_dir).get("phases", {})
         phase_names = V6_PHASE_ORDER
-        audit_key = "verify"
+        audit_key = "audit"
     elif version == "v5":
         phases = read_v2_state(orch_dir).get("phases", {})
         phase_names = V5_PHASE_ORDER
         audit_key = "validate"
+    elif version == "v4":
+        phases = read_v4_state(orch_dir).get("phases", {})
+        phase_names = [f"v4-{name}" for name in V4_PHASE_ORDER]
+        audit_key = "v4-validate"
     else:
         # BACKWARD-COMPAT: v3/v4 modules still use old phase naming
         phases = read_v3_state(orch_dir).get("phases", {})
@@ -90,7 +102,11 @@ def scan_module_phases(orch_dir, version):
     for pid in phase_names:
         p = phases.get(pid, {})
         status = p.get("status")
-        display = pid.replace("v3-", "") if pid.startswith("v3-") else pid
+        display = pid
+        if pid.startswith("v3-"):
+            display = pid.replace("v3-", "")
+        elif pid.startswith("v4-"):
+            display = pid.replace("v4-", "")
         if status == "complete":
             furthest = display
             if p.get("ts"):
@@ -212,8 +228,11 @@ def _check_build_phase(orch_dir):
     elif version == "v5":
         phases = read_v2_state(orch_dir).get("phases", {})
         content_phase = phases.get("content", {})
+    elif version == "v4":
+        phases = read_v4_state(orch_dir).get("phases", {})
+        content_phase = phases.get("v4-content", {})
     else:
-        # BACKWARD-COMPAT: v3/v4 content phase was "v3-B"
+        # BACKWARD-COMPAT: v3 content phase was "v3-B"
         phases = read_v3_state(orch_dir).get("phases", {})
         content_phase = phases.get("v3-B", {})
     if content_phase.get("status") == "complete":

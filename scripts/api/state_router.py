@@ -137,19 +137,13 @@ async def pipeline_versions(track: str | None = Query(None)):
             per_track[track_id] = track_counts
 
         total = sum(counts.values())
-        if track:
-            # Backward-compat for the track-scoped endpoint contract used by
-            # existing tests and dashboards: `total` reflects the legacy +
-            # unbuilt generations for the requested track, while the current
-            # generation still remains visible in `counts` / `per_track`.
-            total = counts["v5"] + counts["v4"] + counts["v3"] + counts["unbuilt"]
         built = counts["v6"] + counts["v5"] + counts["v4"]
         return {
             "total": total, "counts": counts,
             "pct_v6": round(counts["v6"] / total * 100) if total else 0,
             "pct_v5": round(counts["v5"] / total * 100) if total else 0,
             "pct_built": round(built / total * 100) if total else 0,
-            "needs_rebuild": counts["v3"] + counts["unbuilt"],
+            "needs_rebuild": counts["v5"] + counts["v4"] + counts["v3"] + counts["unbuilt"],
             "per_track": per_track,
             "v6_modules": by_version["v6"],
             "v5_modules": by_version["v5"],
@@ -219,7 +213,7 @@ async def weak_points(
                 if audit["status"] == "fail":
                     issues.append("audit_fail")
 
-                research_score = get_research_score(track_dir, slug, track_id) if track else None
+                research_score = get_research_score(track_dir, slug, track_id)
                 if research_score is not None and research_score < min_score:
                     issues.append(f"research_score_{research_score}")
 

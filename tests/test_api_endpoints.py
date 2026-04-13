@@ -15,6 +15,7 @@ Validates:
 
 import json
 import subprocess
+from pathlib import Path
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
@@ -370,6 +371,77 @@ class TestGetOrchestrationInfo:
         (orch / "phase-1.json").write_text("{}")
         info = _get_orchestration_info(orch)
         assert info["friction_count"] == 2
+
+    def test_v6_not_needs_rebuild(self, tmp_path):
+        from scripts.api.dashboard_helpers import get_orchestration_info as _get_orchestration_info
+
+        orch = tmp_path / "orch"
+        orch.mkdir()
+        (orch / "state.json").write_text('{"mode":"v6","phases":{}}')
+        info = _get_orchestration_info(orch)
+        assert info["pipeline_version"] == "v6"
+        assert info["needs_rebuild"] is False
+
+
+class TestBuildModuleInfo:
+    """build_module_info keeps only v6 as current."""
+
+    def test_v5_marks_needs_rebuild(self, tmp_path):
+        from scripts.api.dashboard_helpers import build_module_info
+
+        track_dir = tmp_path / "track"
+        plans_dir = tmp_path / "plans"
+        orch_dir = track_dir / "orchestration" / "test-slug"
+        orch_dir.mkdir(parents=True)
+        plans_dir.mkdir()
+
+        with (
+            patch("scripts.api.dashboard_helpers.get_source_paths", return_value={}),
+            patch("scripts.api.dashboard_helpers.find_research_path", return_value=None),
+            patch(
+                "scripts.api.dashboard_helpers.extract_review_info",
+                return_value={
+                    "has_review": False,
+                    "has_final_review": False,
+                    "review_score": None,
+                    "review_verdict": None,
+                    "has_plan_review": False,
+                    "plan_review_verdict": None,
+                },
+            ),
+            patch("scripts.api.dashboard_helpers.detect_pipeline_version", return_value="v5"),
+        ):
+            result = build_module_info(track_dir, plans_dir, "a1", "test-slug", 0)
+
+        assert result["pipeline_version"] == "v5"
+        assert result["needs_rebuild"] is True
+
+
+class TestWeakPointsEndpoint:
+    """Weak points should compute research scores even for all-tracks queries."""
+
+    def test_all_tracks_includes_research_scores(self, monkeypatch):
+        import scripts.api.state_router as state_router
+
+        monkeypatch.setattr(state_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}])
+        monkeypatch.setattr(state_router, "CURRICULUM_ROOT", Path("/tmp/curriculum"))
+        monkeypatch.setattr(state_router, "get_plan_slugs", lambda track_id: [(1, "test-slug")])
+        monkeypatch.setattr(
+            state_router,
+            "get_audit_status",
+            lambda _track_dir, _slug: {"status": "pass", "word_count": 100, "word_target": 200, "blocking_issues": []},
+        )
+        monkeypatch.setattr(state_router, "get_research_score", lambda *_args, **_kwargs: 6)
+        monkeypatch.setattr(state_router, "get_word_target_from_plan", lambda *_args, **_kwargs: 200)
+        monkeypatch.setattr(state_router, "detect_pipeline_version", lambda *_args, **_kwargs: "v6")
+
+        response = client.get("/api/state/weak-points?limit=10")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["count"] == 1
+        assert data["modules"][0]["research_score"] == 6
+        assert "research_score_6" in data["modules"][0]["issues"]
 
 
 class TestClassifyModuleQueue:

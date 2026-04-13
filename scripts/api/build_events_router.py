@@ -37,12 +37,12 @@ def _scan_dispatch_meta_files(level: str | None = None, slug: str | None = None)
     level_part = level or "*"
     slug_part = slug or "*"
     pattern = f"{level_part}/orchestration/{slug_part}/dispatch/*-meta.json"
-    paths: list[Path] = []
-    for idx, path in enumerate(CURRICULUM_ROOT.glob(pattern)):
-        if idx >= BUILD_EVENTS_SCAN_CAP:
-            break
-        paths.append(path)
-    return paths
+    paths = sorted(
+        CURRICULUM_ROOT.glob(pattern),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    return list(paths[:BUILD_EVENTS_SCAN_CAP])
 
 
 def _read_json(path: Path) -> dict[str, Any] | None:

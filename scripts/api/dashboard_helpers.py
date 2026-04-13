@@ -193,7 +193,7 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
 
     return {
         "slug": slug, "num": num, "pipeline_version": pipeline_version,
-        "needs_rebuild": pipeline_version != "v4",
+        "needs_rebuild": pipeline_version != "v6",
         "status": overall_status, "word_count": word_count, "word_target": word_target,
         "deferred_count": deferred_count, "gates": gates,
         "shippable": is_shippable,
@@ -265,7 +265,7 @@ def get_orchestration_info(orch_dir: Path) -> dict:
     info: dict = {
         "orchestration": phases,
         "friction_count": sum(1 for _ in orch_dir.glob("*friction*")),
-        "pipeline_version": version, "needs_rebuild": version != "v5",
+        "pipeline_version": version, "needs_rebuild": version != "v6",
     }
     if version == "v5":
         v5 = read_v2_state(orch_dir)

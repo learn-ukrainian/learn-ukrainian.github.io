@@ -592,13 +592,13 @@ class TestGenerateMdxFrontmatter:
 class TestNeedsRebuild:
     """needs_rebuild flag in _compute_pipeline_track."""
 
-    def test_v4_not_needs_rebuild(self, tmp_path):
+    def test_v4_needs_rebuild(self, tmp_path):
         from scripts.api.state_router import _detect_pipeline_version
 
         (tmp_path / "state-v4.json").write_text('{"mode": "v4", "phases": {}}')
         version = _detect_pipeline_version(tmp_path)
         assert version == "v4"
-        assert (version != "v4") is False  # needs_rebuild logic
+        assert (version != "v6") is True  # only v6 is current
 
     def test_v3_needs_rebuild(self, tmp_path):
         from scripts.api.state_router import _detect_pipeline_version
@@ -606,14 +606,14 @@ class TestNeedsRebuild:
         (tmp_path / "state-v3.json").write_text('{"phases": {}}')
         version = _detect_pipeline_version(tmp_path)
         assert version == "v3"
-        assert (version != "v4") is True  # needs_rebuild logic
+        assert (version != "v6") is True  # needs_rebuild logic
 
     def test_unbuilt_needs_rebuild(self, tmp_path):
         from scripts.api.state_router import _detect_pipeline_version
 
         version = _detect_pipeline_version(tmp_path)
         assert version == "unbuilt"
-        assert (version != "v4") is True  # needs_rebuild logic
+        assert (version != "v6") is True  # needs_rebuild logic
 
 
 # ==================== pipeline-versions endpoint ====================
@@ -654,4 +654,4 @@ class TestPipelineVersionsEndpoint:
         assert "a1" in data["per_track"]
         # total should match sum of all a1 pipeline versions
         a1 = data["per_track"]["a1"]
-        assert data["total"] == a1.get("v5", 0) + a1.get("v4", 0) + a1.get("v3", 0) + a1.get("unbuilt", 0)
+        assert data["total"] == sum(a1.values())

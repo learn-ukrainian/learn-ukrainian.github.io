@@ -191,6 +191,18 @@ tr:hover td { background: var(--bg2); }
 const API = '/api/consultation';
 let currentDetail = null;
 
+async function fetchJson(url, options) {
+  const res = await fetch(url, options);
+  let data = null;
+  try {
+    data = await res.json();
+  } catch (e) {}
+  if (!res.ok) {
+    throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
+  }
+  return data;
+}
+
 // Tab switching
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -205,7 +217,7 @@ document.querySelectorAll('.tab').forEach(tab => {
 
 async function loadQueue() {
   try {
-    const data = await fetch(`${API}/queue`).then(r => r.json());
+    const data = await fetchJson(`${API}/queue`);
     const items = data.pending || [];
 
     document.getElementById('queue-stats').innerHTML = `
@@ -240,7 +252,7 @@ async function loadQueue() {
 
 async function loadDetail(filename) {
   try {
-    const data = await fetch(`${API}/queue/${filename}`).then(r => r.json());
+    const data = await fetchJson(`${API}/queue/${filename}`);
     currentDetail = { filename, data };
 
     const changes = data.proposed_changes || [];
@@ -310,12 +322,7 @@ async function executeAction() {
   btn.innerHTML = action === 'approve' ? 'Applying...' : 'Rejecting...';
 
   try {
-    const resp = await fetch(`${API}/queue/${filename}/${action}?confirm=true`, { method: 'POST' });
-    const data = await resp.json();
-    if (!resp.ok) {
-      alert(`Error: ${data.error || 'Unknown error'}\n${JSON.stringify(data.mismatches || [], null, 2)}`);
-      return;
-    }
+    await fetchJson(`${API}/queue/${filename}/${action}?confirm=true`, { method: 'POST' });
     closeConfirm();
     closeModal();
     loadQueue();
@@ -336,7 +343,7 @@ async function loadHistory() {
   if (outcome) url += `&outcome=${outcome}`;
 
   try {
-    const data = await fetch(url).then(r => r.json());
+    const data = await fetchJson(url);
     const items = data.consultations || [];
 
     if (items.length === 0) {
@@ -369,7 +376,7 @@ async function loadHistory() {
 // Populate track filter
 async function loadTrackFilter() {
   try {
-    const config = await fetch('/api/config').then(r => r.json());
+    const config = await fetchJson('/api/config');
     const select = document.getElementById('filter-track');
     (config.levels || []).forEach(l => {
       const opt = document.createElement('option');
@@ -387,7 +394,7 @@ document.getElementById('filter-outcome').addEventListener('change', loadHistory
 
 async function loadMetrics() {
   try {
-    const data = await fetch(`${API}/metrics`).then(r => r.json());
+    const data = await fetchJson(`${API}/metrics`);
 
     const outcomes = data.by_outcome || {};
     document.getElementById('metrics-stats').innerHTML = `

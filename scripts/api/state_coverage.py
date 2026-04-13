@@ -30,9 +30,16 @@ from .review_parsing import count_review_issues, extract_plan_verdict, extract_r
 
 # Import canonical phase list from pipeline
 try:
-    from pipeline_v5 import PHASES as _PIPELINE_PHASES
+    from scripts.build.v6_build import PHASE_LABELS as V6_PHASE_LABELS
+    from scripts.build.v6_build import PHASES as V6_PHASES
 except ImportError:
-    _PIPELINE_PHASES = ["research", "discover", "content", "validate", "review", "activities", "mdx"]
+    V6_PHASES = [
+        "check", "research", "skeleton", "pre-verify", "write",
+        "exercises", "activities", "repair", "verify-exercises",
+        "annotate", "vocab", "enrich", "verify", "review", "stress",
+        "publish", "audit",
+    ]
+    V6_PHASE_LABELS = {}
 
 
 def compute_summary() -> dict:
@@ -123,22 +130,29 @@ def compute_pipeline_track(track_id: str, level_cfg: dict) -> dict:
 
         phases = {
             name: parse_phase_status_from_state(state, name)
-            for name in _PIPELINE_PHASES
+            for name in V6_PHASES
         }
 
         modules.append({
             "num": num, "slug": slug,
             "pipeline_version": version,
-            "needs_rebuild": version not in ("v5", "v4"),
+            "needs_rebuild": version != "v6",
             "phases": phases,
             "audit": audit["status"],
+            "word_count": word_count,
             "words": word_count, "word_target": word_target,
             "research_score": research_score,
             "prompt_review": (track_dir / "audit" / f"{slug}-prompt-review.md").exists(),
             "content_review": (track_dir / "audit" / f"{slug}-content-review.md").exists(),
         })
 
-    return {"track": track_id, "total": len(modules), "modules": modules}
+    return {
+        "track": track_id,
+        "total": len(modules),
+        "phase_order": V6_PHASES,
+        "phase_labels": {name: V6_PHASE_LABELS.get(name, name) for name in V6_PHASES},
+        "modules": modules,
+    }
 
 
 def compute_research_coverage() -> dict:

@@ -664,6 +664,26 @@ class TestCommsLiveActivity:
         data = r.json()
         assert len(data["in_progress"]) >= 1
 
+    def test_live_activity_with_v6_state_file(self, comms_client, mock_project_root):
+        orch_dir = mock_project_root / "curriculum" / "l2-uk-en" / "hist" / "orchestration" / "v6-module"
+        orch_dir.mkdir(parents=True)
+        state = {
+            "mode": "v6",
+            "slug": "v6-module",
+            "phases": {
+                "write": {
+                    "status": "running",
+                    "ts": datetime.now(UTC).isoformat(),
+                    "task_id": "task-v6",
+                    "mode": "build",
+                },
+            },
+        }
+        (orch_dir / "state.json").write_text(json.dumps(state))
+        r = comms_client.get("/api/comms/live-activity", params={"minutes": 120})
+        data = r.json()
+        assert any(item["slug"] == "v6-module" and item["phase"] == "write" for item in data["in_progress"])
+
     def test_live_activity_with_research_completions(self, comms_client, mock_project_root):
         research_dir = mock_project_root / "curriculum" / "l2-uk-en" / "hist" / "research"
         research_dir.mkdir(parents=True)

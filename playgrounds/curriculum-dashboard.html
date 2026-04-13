@@ -57,7 +57,7 @@ a:hover { text-decoration: underline; }
 .module-table .rq-score.stub { color: var(--red); }
 .module-table .rq-coverage { color: var(--text3); font-size: 11px; }
 .module-table .ver-label { font-size: 10px; font-weight: 600; padding: 1px 4px; border-radius: 3px; }
-.module-table .ver-v5 { background: rgba(63,185,80,0.15); color: var(--green); }
+.module-table .ver-v6 { background: rgba(63,185,80,0.15); color: var(--green); }
 .module-table .ver-unbuilt { background: rgba(72,79,88,0.2); color: var(--text3); }
 
 /* Unbuilt modules */
@@ -126,6 +126,18 @@ let overviewData = null;
 let selectedTrack = null;
 let trackDetailCache = {};
 
+async function fetchJson(url, options) {
+  const res = await fetch(url, options);
+  let data = null;
+  try {
+    data = await res.json();
+  } catch (e) {}
+  if (!res.ok) {
+    throw new Error(data?.detail || data?.error || `HTTP ${res.status}`);
+  }
+  return data;
+}
+
 function pctColor(pct) {
   if (pct >= 80) return 'rgba(63,185,80,0.5)';
   if (pct >= 50) return 'rgba(210,153,34,0.5)';
@@ -134,8 +146,7 @@ function pctColor(pct) {
 }
 
 async function fetchOverview() {
-  const res = await fetch(`${API}/overview`);
-  overviewData = await res.json();
+  overviewData = await fetchJson(`${API}/overview`);
   renderTreemap(overviewData.tracks);
   document.getElementById('refresh-info').textContent = `Last refresh: ${new Date().toLocaleTimeString()}`;
 }
@@ -181,8 +192,7 @@ async function loadTrackDetail(trackId) {
 
   let data = trackDetailCache[trackId];
   if (!data) {
-    const res = await fetch(`${API}/track/${trackId}`);
-    data = await res.json();
+    data = await fetchJson(`${API}/track/${trackId}`);
     trackDetailCache[trackId] = data;
   }
 
@@ -221,9 +231,9 @@ async function loadTrackDetail(trackId) {
         ${data.modules.map(m => {
           const cls = m.status === 'content-complete' ? 'content-complete' : m.status;
           const ver = m.pipeline_version || 'unbuilt';
-          const isV5 = ver === 'v5';
-          const obsolete = isV5 ? '' : ' obsolete';
-          const verCls = isV5 ? 'ver-v5' : 'ver-unbuilt';
+          const isV6 = ver === 'v6';
+          const obsolete = isV6 ? '' : ' obsolete';
+          const verCls = isV6 ? 'ver-v6' : 'ver-unbuilt';
           const wordPct = m.word_target > 0 ? Math.min(m.word_count / m.word_target * 100, 100) : 0;
           const r = m.research || {};
           let rCol;
@@ -258,8 +268,7 @@ async function loadModuleDetail(trackId, slug) {
   const panel = document.getElementById('right-panel');
   panel.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
 
-  const res = await fetch(`${API}/module/${trackId}/${slug}`);
-  const m = await res.json();
+  const m = await fetchJson(`${API}/module/${trackId}/${slug}`);
 
   let planHtml = '<div class="empty">No plan</div>';
   if (m.plan) {
@@ -385,7 +394,7 @@ async function loadModuleDetail(trackId, slug) {
         : '');
 
   const pipelineVer = m.pipeline_version || 'unknown';
-  const verColor = pipelineVer === 'v5' ? 'var(--green)' : 'var(--text3)';
+  const verColor = pipelineVer === 'v6' ? 'var(--green)' : 'var(--text3)';
 
   panel.innerHTML = `
     <h2 style="font-size:16px;margin-bottom:4px;">${slug}</h2>
