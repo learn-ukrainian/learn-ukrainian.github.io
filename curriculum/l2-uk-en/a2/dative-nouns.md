@@ -1,224 +1,190 @@
-## Вступ: Кому ми даруємо радість?
+## Давальний відмінок іменників чоловічого роду (~700 words total)
 
-Welcome to the Dative case, known in Ukrainian as **давальний відмінок**. As the name suggests, this is the "giving" case. We use it to show the recipient, the beneficiary, or the target of an action. It answers the critical questions **кому?** (to whom?) for people and animals, and **чому?** (to what?) for objects and concepts.
+Welcome to the "давальний відмінок" (Dative case), which designates the recipient of an action. It answers the questions "to whom?" or "to what?". Use it whenever you **подарувати** (to give as a gift) or **показати** (to show) something to someone.
 
-Коли ми робимо приємний сюрприз, ми завжди використовуємо давальний відмінок. Наприклад, я даю цікаву книгу кому? Я даю книгу сестрі. Це означає, що сестра є одержувачем моєї дії.
+> — **Олена:** Привіт! Ти маєш новий телефон? *(Hi! Do you have a new phone?)*
+> — **Максим:** Так, я щойно купив його. *(Yes, I just bought it.)*
+> — **Олена:** Можеш показати його студентові? *(Can you show it to the student?)*
+> — **Максим:** Звичайно, я покажу цей екран студентові. *(Of course, I will show this screen to the student.)*
+> — **Олена:** Дякую! Він дуже любить техніку. *(Thanks! He really loves technology.)*
+> — **Максим:** Я знаю. Я часто допомагаю цьому студентові. *(I know. I often help this student.)*
 
-> *When we make a pleasant surprise, we always use the Dative case. For example, I give an interesting book to whom? I give a book to a sister. This means that the sister is the recipient of my action.*
+For masculine nouns, Ukrainian offers parallel endings: "-ові/-еві/-єві" and "-у/-ю". Both options are perfectly correct. However, native speakers strongly prefer the extended "-ові" forms when talking about living beings.
 
-Давайте подивимося, як це працює на пошті, коли ми відправляємо різні речі.
+В українській мові ми дуже любимо використовувати довгі закінчення для людей. Це звучить природно і традиційно. Якщо ви хочете дати книгу другові, форма на «-ові» показує вашу повагу. Мій дідусь завжди каже «синові» або «братові». Він вважає, що це справжня українська мова. Я також завжди посміхаюся своєму другові. Ця маленька деталь робить нашу мову унікальною.
 
-> *Let's see how this works at the post office when we send various things.*
+> *In the Ukrainian language, we really love using the long endings for people. It sounds natural and traditional. If you want to give a book to a friend, the "-ові" form shows your respect. My grandfather always says "to the son" or "to the brother". He thinks that this is true Ukrainian language. I also always smile at my friend. This small detail makes our language unique.*
 
-> — **Працівник пошти:** Добрий день! Кому ви відправляєте ці посилки? *(Good day! To whom are you sending these packages?)*
-> — **Відправник:** Добрий день! Цей великий підручник я відправляю студентові Петренку. *(Good day! I am sending this large textbook to the student Petrenko.)*
-> — **Працівник пошти:** Добре. А ця гарна листівка кому? *(Good. And to whom is this beautiful postcard?)*
-> — **Відправник:** Ця листівка — моїй старшій сестрі Олені. *(This postcard is for my older sister Olena.)*
-> — **Працівник пошти:** Зрозуміло. І залишилася маленька коробка. *(Understood. And a small box is left.)*
-> — **Відправник:** Так, там м'яка іграшка. Я відправляю її маленькій дитині. *(Yes, there is a soft toy in there. I am sending it to a small child.)*
+To choose the correct **закінчення** (ending (grammar)), look at the final consonant. Hard stems take "-ові", giving us "**студентові**" (to the student (dat.)) and "**другові**" (to the friend (dat.)). Soft stems and sibilants take "-еві" (вчителеві, товаришеві), while vowel stems take "-єві" (Андрієві).
 
-:::tip
-**Spot the endings!** Notice how the word *студент* changes to **студентові**, *сестра* becomes **сестрі**, and *дитина* changes to **дитині** to show who is receiving the items. These are the characteristic gender endings we will explore in this module.
-:::
+Мій брат зараз працює в університеті. Сьогодні він має написати важливий лист своєму студентові. Потім він планує зателефонувати старому товаришеві. А ввечері він купить квитки в кіно своєму братові. Завтра він також хоче надіслати повідомлення Андрієві. Його робота вимагає багато спілкування. Він завжди відповідає кожному вчителеві дуже швидко.
 
-## Давальний відмінок іменників чоловічого роду
+> *My brother works at the university now. Today he needs to write an important letter to his student. Then he plans to call an old comrade. And in the evening he will buy movie tickets for his brother. Tomorrow he also wants to send a message to Andriy. His work requires a lot of communication. He always answers every teacher very quickly.*
 
-Masculine nouns belonging to the second declension have a unique and beautiful feature in the Dative case: parallel endings. When forming this case, you can choose between two sets of endings. You can use either **-ові**, **-еві**, or **-єві** depending on the stem, or you can use the shorter **-у** or **-ю**. Both options are grammatically correct, meaning you will encounter both in everyday life, but they carry slightly different stylistic weights in modern Ukrainian.
-
-Українська мова пропонує нам вибір, і це дуже зручно. Ми можемо сказати «братові» або «брату», і обидва варіанти будуть правильними. Але закінчення на «-ові», «-еві» та «-єві» звучать більш природно та традиційно. Вони роблять нашу мову багатою і підкреслюють її унікальний характер.
-
-> *The Ukrainian language offers us a choice, and this is very convenient. We can say "братові" or "брату", and both options will be correct. But the endings in "-ові", "-еві", and "-єві" sound more natural and traditional. They make our language rich and emphasize its unique character.*
-
-Let us start with hard stems, which are the most common. For these nouns, the parallel endings are **-ові** and **-у**. The longer **-ові** ending is a deeply authentic Ukrainian feature. While **-у** is perfectly fine to use, **-ові** is highly preferred when you are talking about people, animals, or any living beings.
-
-Коли ми даємо щось людині, ми зазвичай використовуємо закінчення «-ові». Наприклад, студент стає «студентові», а брат перетворюється на «братові». Це показує нашу повагу до людини. Ми також часто кажемо «батькові» замість «батьку», коли говоримо про тата.
-
-> *When we give something to a person, we usually use the ending "-ові". For example, a student becomes "студентові", and a brother turns into "братові". This shows our respect for the person. We also often say "батькові" instead of "батьку" when we talk about a dad.*
+The shorter "-у/-ю" endings apply based on the same stems: "-у" for hard and sibilant stems (студенту), and "-ю" for soft stems (лікарю). While valid when you **розповісти** (to tell, to narrate) a story, the "-ові" group sounds much more authentic.
 
 :::info
-**Parallel endings for hard stems:**
-- студент → студент**ові** (or студент**у**)
-- брат → брат**ові** (or брат**у**)
-- пан → пан**ові** (or пан**у**)
-- батько → батьк**ові** (or батьк**у**)
+**Grammar box** — Ukrainian loves melody. Parallel endings let you choose the form that flows best.
 :::
 
-Now let us look at soft stems and stems ending in sibilant consonants like **ж**, **ч**, **ш**, or **щ**. Because these sounds require a softer transition, the ending changes from **-ові** to **-еві**. The alternative short ending here is **-ю** (or sometimes **-у** after sibilants). Just like with hard stems, the longer **-еві** ending is the gold standard when referring to people.
+Ви можете сказати «я допомагаю студенту» або «я допомагаю студентові». Обидва варіанти правильні і зрозумілі. Але другий варіант робить вашу мову багатшою. Українці часто вибирають довге закінчення для живих істот. Це гарна звичка для всіх студентів. Спробуйте використовувати довгі форми кожного дня. Ви швидко помітите, як гарно це звучить.
 
-Учитель завжди допомагає учням, тому ми часто кажемо: «Я даю зошит учителеві». Лікар лікує пацієнтів, тому ми можемо подякувати «лікареві». Якщо ваш товариш має день народження, ви купуєте подарунок «товаришеві». А коли ми говоримо про молодого хлопця, ми використовуємо форму «хлопцеві».
+When you need to **пояснити** (to explain) something using two consecutive masculine Dative nouns (like a title and name), alternate the endings. If the first takes "-ові", the second takes "-у" (e.g., директорові Олександру).
 
-> *A teacher always helps students, so we often say: "I give the notebook to the teacher." A doctor treats patients, so we can thank the "лікареві" (doctor). If your comrade has a birthday, you buy a gift for your "товаришеві" (comrade). And when we talk about a young boy, we use the form "хлопцеві".*
+> — **Секретар:** Кому мені передати ці документи? *(To whom should I hand over these documents?)*
+> — **Менеджер:** Передай їх директорові Олександру. *(Hand them over to director Oleksandr.)*
+> — **Секретар:** А цей лист кому? *(And this letter to whom?)*
+> — **Менеджер:** Цей лист треба відправити лікарю Максимові. *(This letter needs to be sent to doctor Maksym.)*
+> — **Секретар:** Зрозуміло. Я завжди чергую закінчення. *(Understood. I always alternate the endings.)*
+> — **Менеджер:** Так, це дуже правильний підхід. *(Yes, that is a very correct approach.)*
 
-:::tip
-**Soft stems and sibilants:**
-- вчитель → учител**еві** (or учител**ю**)
-- лікар → лікар**еві** (or лікар**ю**)
-- товариш → товариш**еві** (or товариш**у**)
-- хлопець → хлопц**еві** (or хлопц**ю**)
-Notice how the letter **е** smoothly connects the soft consonant to the rest of the ending.
+Common masculine nouns ending in "-о" (Дмитро, батько, тато) reliably take the "-ові" ending when you **відповісти** (to answer, to reply) to them. This matches the pattern for living masculine beings (Дмитрові).
+
+Наш тато дуже любить читати нові книги. Кожного вечора ми даємо нову газету татові. А коли мій брат Дмитро приходить у гості, мама завжди готує смачну вечерю Дмитрові. Дідусь також любить розповідати цікаві історії батькові. Наша родина проводить багато часу разом. Ми завжди допомагаємо нашому татові в саду.
+
+> *Our dad really loves to read new books. Every evening we give a new newspaper to dad. And when my brother Dmytro comes to visit, mom always prepares a tasty dinner for Dmytro. Grandfather also loves to tell interesting stories to father. Our family spends a lot of time together. We always help our dad in the garden.*
+
+Notice how the Dative case marks the recipient when you need to **написати** (to write) to someone.
+
+> — **Марія:** Ти вже купила подарунок братові? *(Have you already bought a gift for the brother?)*
+> — **Анна:** Так, я купила йому цікаву книгу. *(Yes, I bought him an interesting book.)*
+> — **Марія:** А що ти подаруєш своєму вчителеві? *(And what will you give to your teacher?)*
+> — **Анна:** Я хочу написати вчителеві гарну листівку. *(I want to write a beautiful postcard to the teacher.)*
+> — **Марія:** Це чудова ідея! А своєму другові Андрієві? *(That is a great idea! And to your friend Andriy?)*
+> — **Анна:** Другові я подарую новий м'яч. *(To the friend I will give a new ball.)*
+> — **Марія:** Ти завжди робиш найкращі подарунки! *(You always make the best gifts!)*
+> — **Анна:** Дякую! Я люблю робити сюрпризи другові. *(Thank you! I love making surprises for a friend.)*
+
+
+## Підсумок — Summary
+
+У цьому модулі ми погли́били зна́ння про дава́льний відмі́нок (Dative case) в однині́. Ви навчи́лися прави́льно формува́ти закінчення для іме́нників чолові́чого ро́ду, обира́ючи між -ові/-еві/-єві та -у/-ю, напри́клад, *бра́тові* або *дру́гові*. Для жіно́чого ро́ду ми дослі́дили закінчення -і/-ї, а та́кож змі́ни при́голосних після веля́рних, як-от *сестрі́* від *сестра́* чи *дити́ні* від *дити́на*. Іме́нники се́реднього ро́ду отри́мують закінчення -у/-ю, напри́клад, *мі́сту*.
+
+Ми розгляда́ли, як дава́льний відмі́нок використо́вується для позна́чення непрямо́го до́датка (indirect object) з дієсло́вами, що вказу́ють на переда́чу або зверта́ння, як-от *подарува́ти*, *показа́ти*, *розповісти́* чи *написа́ти*. Напри́клад: *Хло́пець хо́че да́ти своєму́ бра́тові нови́й мобі́льний телефо́н*. Важливо́ було́ зрозумі́ти відмі́нності мі́ж дава́льним та родови́м відмі́нками, осо́бливо у ви́падках запере́чення або володі́ння. Та́кож ми застосува́ли дава́льний відмі́нок у безособо́вих констру́кціях для ви́раження потре́би чи ста́ну: *Студе́нтові тре́ба бага́то вчи́тися* або *Мале́нькій дити́ні ча́сто бува́є су́мно*.
+
+**Самоперевірка:**
+1.  Як відрізни́ти вжива́ння дава́льного відмі́нка від родово́го в ре́ченнях типу *Я пишу́ дру́гу* та *У ме́не нема́є дру́га*?
+2.  Які особли́вості утво́рення дава́льного відмі́нка для іме́нників жіно́чого ро́ду після шипля́чих або веля́рних при́голосних? Наведі́ть при́клад.
+3.  Сформулю́йте ре́чення, використо́вуючи безособо́ву констру́кцію з дава́льним відмі́нком та одним з дієслів: *здава́тися*, *хоті́тися*.
+
+<!-- INJECT_ACTIVITY: fill-in-dative-masculine -->
+
+## Давальний відмінок іменників жіночого роду (~550 words total)
+
+Feminine nouns belonging to the first declension are incredibly consistent in the Dative case. Whether the stem is hard or soft, they almost always take the "-і" ending. For example, "мама" becomes "мамі", "сестра" becomes **сестрі** (to the sister (dat.)), "земля" becomes "землі", and "пісня" becomes "пісні". If a noun ends in "-ія", it takes the "-ії" ending, so "станція" becomes "станції" and "надія" becomes "надії".
+
+Моя бабуся часто співає українські пісні моїй мамі та сестрі. Ми завжди уважно слухаємо ці старі пісні. Вони дають багато надії нашій родині.
+
+> *My grandmother often sings Ukrainian songs to my mom and sister. We always listen carefully to these old songs. They give a lot of hope to our family.*
+
+There is a crucial phonetic rule you must remember when forming the Dative case for some feminine nouns. In Ukrainian, certain consonants change their sound when they appear right before the "-і" **закінчення** (ending (grammar)). Specifically, the consonants "г", "к", and "х" transform into "з", "ц", and "с". This is not a random exception, but a natural and predictable phonetic shift that makes the language flow smoothly.
+
+Цей фонетичний процес називається чергуванням приголосних. Він дуже давній і є важливою частиною української мови. Коли ви говорите швидко, ці звуки змінюються автоматично для милозвучності.
+
+> *This phonetic process is called consonant alternation. It is very ancient and is an important part of the Ukrainian language. When you speak quickly, these sounds change automatically for euphony.*
+
+Let us look at clear examples of each alternation. When the stem ends in "г", it changes to "з", so "подруга" becomes "подрузі" and "книга" becomes "книзі". When the stem ends in "к", it changes to "ц", making "рука" become "руці" and "доріжка" become "доріжці". Finally, when the stem ends in "х", it changes to "с", meaning "муха" becomes "мусі" and "свекруха" becomes "свекрусі".
+
+:::info
+**Grammar box** — The alternation rule (г→з, к→ц, х→с) is one of the most distinctive features of Ukrainian pronunciation. It applies consistently in the Dative case for first-declension nouns.
 :::
 
-The third variant of our parallel endings applies to masculine nouns that end in the letter **й** or a vowel. Because we need to maintain a smooth sound flow, the ending becomes **-єві**. The short alternative remains **-ю**. You will often see this pattern with traditional Ukrainian names and certain descriptive nouns.
+Вчителька дала нове завдання своїй найкращій учениці. Після уроку дівчина допомогла своїй новій подрузі зрозуміти це правило. Вони разом читали текст у великій книзі.
 
-Мій друг Сергій живе в Києві. Я часто пишу повідомлення Сергієві. Вчора я також телефонував Андрієві. У книгах ми часто читаємо про героїв. Наприклад, президент дає нагороду героєві. 
+> *The teacher gave a new task to her best student. After the lesson, the girl helped her new friend understand this rule. They read the text together in a large book.*
 
-> *My friend Serhii lives in Kyiv. I often write messages to Serhii. Yesterday I also called Andrii. In books, we often read about heroes. For example, the president gives an award to the hero.*
+It is extremely important to apply these consonant alternations correctly. The form "подрузі" is the only correct Ukrainian form. You might sometimes hear people making errors like "подругі" due to Russian language interference, where this natural alternation was lost. In Ukrainian, failing to change the consonant before the "-і" ending sounds unnatural and incorrect.
 
-Having parallel endings is not just a grammar quirk; it is a powerful tool for style and rhythm. Ukrainian grammar values harmony and tries to avoid repetitive sounds, a concept called avoidance of monotony. When you have two masculine dative nouns side by side — such as a title and a name, or a first name and a last name — you should alternate the endings. You use the long ending for one word and the short ending for the other.
+Кожна людина робить помилки під час навчання, і це нормально. Але важливо знати справжні українські правила і поважати їх. Ми завжди кажемо «подрузі» та «книзі».
 
-Це правило робить українську мову дуже мелодійною. Ми не кажемо «панові директорові», бо це звучить важко. Краще сказати «пану директорові» або «панові директору». Якщо ми знаємо ім'я людини, ми робимо так само. Ми можемо подякувати «сусідові Данилу» за допомогу. 
+> *Every person makes mistakes during learning, and that is normal. But it is important to know the real Ukrainian rules and respect them. We always say "podruzi" and "knyzi".*
 
-> *This rule makes the Ukrainian language very melodic. We do not say "панові директорові" because it sounds heavy. It is better to say "пану директорові" or "панові директору". If we know a person's name, we do the same. We can thank "сусідові Данилу" (neighbor Danylo) for his help.*
+There is another group of feminine nouns that belong to the third declension. These are feminine nouns that end in a consonant in their dictionary form. Fortunately, they also take the "-і" ending in the Dative case without any complex changes. For example, "ніч" becomes "ночі", "мати" becomes "матері", "любов" becomes "любові", and "радість" becomes "радості".
 
-Finally, we must mention a small but important group of masculine nouns that do not belong to the second declension. Words like **Микола**, **Ілля**, or **староста** belong to the first declension because they end in **-а** or **-я**. Even though they represent men, their grammar follows the feminine pattern. Therefore, they take the ending **-і** in the Dative case.
+Учні завжди бажають спокійної ночі своїй матері. У їхньому серці багато любові та великої радості.
 
-Микола любить читати, тому я даю цікаву книгу Миколі. Мій брат Ілля багато працює, і я часто допомагаю Іллі. Вони мають чоловічий рід, але їхні закінчення працюють інакше. Це дуже важливо пам'ятати, коли ви пишете їм повідомлення.
+> *The students always wish a peaceful night to their mother. In their heart there is a lot of love and great joy.*
 
-> *Mykola loves to read, so I give an interesting book to Mykola. My brother Illia works a lot, and I often help Illia. They have masculine gender, but their endings work differently. This is very important to remember when you write them a message.*
+Now let us see these feminine indirect objects in natural contexts with common verbs. You will often use the Dative case when you want **подарувати** (to give as a gift) something to someone, when you need to **написати** (to write) a message, or when you want to **розповісти** (to tell, to narrate) an interesting event.
 
-<!-- INJECT_ACTIVITY: fill-in, Put the masculine noun in brackets into the dative case using the preferred -ові/-еві ending, 8 items -->
+Я хочу подарувати красиві червоні квіти своїй мамі. Вчора вона написала довгого листа своїй шкільній подрузі. А ввечері мій старший брат розповів дуже цікаву історію нашій маленькій сестрі.
 
-## Давальний відмінок іменників жіночого роду
-
-Now let's look at feminine nouns. The good news is that the Dative case for most feminine nouns is very predictable. If a feminine noun ends in **-а** or **-я** (the first declension), its Dative ending is usually **-і**. 
-
-Для іменників жіночого роду з твердою основою ми просто змінюємо закінчення «-а» на «-і». Це правило працює для багатьох звичайних слів, які не мають складних звуків перед закінченням. Наприклад, слово «мама» стає «мамі», а «сестра» стає «сестрі». Ми часто використовуємо ці слова, коли говоримо про нашу родину. 
-
-> *For feminine nouns with a hard stem, we simply change the ending "-а" to "-і". This rule works for many common words that do not have complex sounds before the ending. For example, the word "мама" becomes "мамі", and "сестра" becomes "сестрі". We often use these words when talking about our family.*
-
-Я хочу купити подарунок сестрі. Завтра я зателефоную мамі. Моя сусідка Олена любить квіти, тому я подарую Олені гарний букет.
-
-> *I want to buy a gift for my sister. Tomorrow I will call my mom. My neighbor Olena loves flowers, so I will give Olena a beautiful bouquet.*
-
-If the feminine noun has a soft stem ending in **-я** (like **земля** or **пісня**), the ending is still **-і**. 
-
-Для слів із м'якою основою правило залишається таким самим. Ми замінюємо літеру «-я» на «-і». Слово «земля» змінюється на «землі», а «пісня» — на «пісні». Але якщо слово закінчується на «-ія», ми маємо писати закінчення «-ії». Це важливо для таких слів, як «надія» (надії) або імена «Марія» (Марії) та «Юлія» (Юлії).
-
-> *For words with a soft stem, the rule remains the same. We replace the letter "-я" with "-і". The word "земля" changes to "землі", and "пісня" — to "пісні". But if the word ends in "-ія", we must write the ending "-ії". This is important for words like "надія" (надії) or names "Марія" (Марії) and "Юлія" (Юлії).*
-
-Вчитель дає зошит Юлії. Ми допомагаємо нашій армії. Я хочу подякувати цій землі за врожай.
-
-> *The teacher gives the notebook to Yuliia. We help our army. I want to thank this land for the harvest.*
-
-:::note
-**Quick tip** — When a feminine noun ends in **-ія** (like станція or Марія), the Dative ending is always **-ії**. You just replace the final **-я** with **-ї**.
-:::
-
-Now we reach a very special feature of the Ukrainian language. When a feminine noun ends in **-га**, **-ка**, or **-ха**, we cannot simply add **-і**. The sounds **[г]**, **[к]**, and **[х]** are called velar consonants, and they are pronounced deep in the throat. Historically, Ukrainians found it difficult to say these sounds right before the vowel **-і**. So, the consonants change to **[з']**, **[ц']**, and **[с']**. 
-
-В українській мові приголосні звуки перед закінченням «-і» обов'язково змінюються. Літера «г» стає літерою «з», літера «к» перетворюється на «ц», а літера «х» стає літерою «с». Це правило називається чергуванням приголосних, і воно робить нашу мову мелодійною. Тому ми кажемо «книзі», а не «книгі», і «руці», а не «рукі». 
-
-> *In the Ukrainian language, consonant sounds before the ending "-і" necessarily change. The letter "г" becomes the letter "з", the letter "к" turns into "ц", and the letter "х" becomes the letter "с". This rule is called consonant alternation, and it makes our language melodic. Therefore, we say "книзі", not "книгі", and "руці", not "рукі".*
-
-This change affects many common words. For example:
-- **подруга** → **подрузі** *(friend)*
-- **книга** → **книзі** *(book)*
-- **рука** → **руці** *(hand)*
-- **донька** → **доньці** *(daughter)*
-- **муха** → **мусі** *(fly)*
-- **свекруха** → **свекрусі** *(mother-in-law)*
-
-Я часто допомагаю своїй подрузі з домашнім завданням. Бабуся читає цікаву казку маленькій онуці. Студент не вірить цій старій книзі. 
-
-> *I often help my friend with her homework. The grandmother reads an interesting fairy tale to the little granddaughter. The student does not believe this old book.*
-
-> — **Марко:** Що ти купив своїй подрузі на свято? *(What did you buy for your friend for the holiday?)*
-> — **Олег:** Я подарував Оксані нову сумку. А ти? *(I gave Oksana a new bag. And you?)*
-> — **Марко:** А я подарував квіти мамі і гарну листівку сестрі. *(And I gave flowers to my mom and a nice postcard to my sister.)*
-
-Finally, there is a smaller group of feminine nouns that do not end in **-а** or **-я**. These are the nouns of the third declension, which end in a consonant, such as **ніч**, **любов**, **радість**, and **подорож**. The word **мати** (mother) also belongs to this group. Their Dative ending is always **-і**.
-
-Іменники третьої відміни завжди отримують закінчення «-і» в давальному відмінку. Слово «ніч» змінюється на «ночі», а слово «радість» стає «радості». Слово «мати» є особливим, тому що в ньому з'являється додатковий суфікс «-ер-». Ми кажемо «матері», коли даємо їй щось або допомагаємо. 
-
-> *Nouns of the third declension always receive the ending "-і" in the Dative case. The word "ніч" changes to "ночі", and the word "радість" becomes "радості". The word "мати" is special because an additional suffix "-ер-" appears in it. We say "матері" when we give her something or help.*
-
-Діти подарували красиві квіти своїй матері. Ми дуже радіємо цій новій подорожі. Вона завжди радіє кожній тихій ночі.
-
-> *The children gave beautiful flowers to their mother. We are very happy about this new trip. She always rejoices at every quiet night.*
+> *I want to give beautiful red flowers to my mom as a gift. Yesterday she wrote a long letter to her school friend. And in the evening my older brother told a very interesting story to our little sister.*
 
 <!-- INJECT_ACTIVITY: quiz-feminine-alternation -->
 
-## Давальний відмінок іменників середнього роду
+## Давальний відмінок іменників середнього роду (~400 words total)
 
-Neuter nouns of the second declension have two possible endings in the Dative case. Hard stem neuter nouns, which usually end in **-о** in their dictionary form, take the ending **-у**. 
+Neuter nouns of the second declension also have simple rules for the Dative case. When the stem ends in a hard consonant, the noun takes the **-у** **закінчення** (ending (grammar)). This is the exact same ending we saw as an option for hard masculine nouns, which makes it easy to remember. For example, «місто» (city) becomes «місту», «слово» (word) becomes «слову», «вікно» (window) becomes «вікну», and «село» (village) becomes «селу».
 
-Іменники середнього роду твердої групи отримують закінчення «-у». Слово «місто» змінюється на «місту», а слово «село» стає «селу». Ми також часто використовуємо слова «вікно» та «слово», які в давальному відмінку звучать як «вікну» і «слову». Цей новий мер хоче дати іншу назву своєму рідному місту. Студенти уважно слухають і вірять кожному написаному слову. Наш дідусь завжди радіє своєму тихому селу.
+:::info
+**Grammar box** — The Dative ending **-у** for hard neuter nouns like «місто» is identical to one of the parallel endings for masculine nouns (like «брату»). This consistency makes the second declension patterns much easier to memorize.
+:::
 
-> *Neuter nouns of the hard group receive the ending "-у". The word "місто" changes to "місту", and the word "село" becomes "селу". We also often use the words "вікно" and "слово", which in the Dative case sound like "вікну" and "слову". This new mayor wants to give a different name to his hometown. Students listen carefully and believe every written word. Our grandfather always rejoices at his quiet village.*
+Мер хоче дати нову назву цьому великому місту. Вони вирішили **подарувати** (to give as a gift) красивий новий парк своєму рідному селу. Вчителька наказала учням уважно придивитися до кожного нового слова. Дівчина підійшла до відчиненого вікна, щоб краще почути спів пташок.
 
-Soft stem neuter nouns, which end in **-е** or **-я**, take the ending **-ю**. They mirror the soft masculine endings perfectly.
+> *The mayor wants to give a new name to this large city. They decided to give a beautiful new park as a gift to their native village. The teacher ordered the students to look closely at every new word. The girl approached the open window to better hear the singing of the birds.*
 
-Якщо іменник середнього роду належить до м'якої групи, він отримує закінчення «-ю». Наприклад, слово «море» змінюється на «морю», а «серце» стає «серцю». Іменники з подовженим приголосним, такі як «обличчя» та «знання», також мають закінчення «-ю». Ми дуже радіємо теплому морю і яскравому весняному сонцю. Ця дешева косметика шкодить твоєму гарному обличчю. Вчитель дає високу оцінку цьому новому знанню.
+If the neuter noun has a soft stem, it takes the **-ю** ending in the Dative case. This pattern applies to words like «море» (sea) which changes to «морю», and «серце» (heart) which becomes «серцю». If the neuter noun has a mixed stem ending in a hissing consonant, it takes the **-у** ending, just like the hard stems. For instance, «плече» (shoulder) becomes «плечу».
 
-> *If a neuter noun belongs to the soft group, it receives the ending "-ю". For example, the word "море" changes to "морю", and "серце" becomes "серцю". Nouns with a doubled consonant, such as "обличчя" and "знання", also have the ending "-ю". We are very happy about the warm sea and the bright spring sun. This cheap cosmetics harms your beautiful face. The teacher gives a high mark to this new knowledge.*
+Діти дуже зраділи теплому морю під час літніх канікул. Ми завжди довіряємо нашому щирому серцю, коли приймаємо важливі рішення. Лікар порадив дати більше спокою хворому правому плечу. Нам важко **пояснити** (to explain) цю велику любов до української природи.
+
+> *The children were very happy with the warm sea during the summer holidays. We always trust our sincere heart when making important decisions. The doctor advised to give more rest to the sick right shoulder. It is hard for us to explain this great love for Ukrainian nature.*
+
+There is a special group of neuter nouns belonging to the fourth declension. These are usually words that denote babies or young animals, and they contain the suffixes **-ат-** or **-ят-** when they decline. In the Dative case, these nouns take the endings **-аті** or **-яті**. For example, «немовля» (baby) becomes «немовляті», and «курча» (chick) becomes «курчаті». Additionally, the word «ім'я» (name) is also in this group and transforms into «імені».
+
+Батьки купили яскраву іграшку і поспішили **показати** (to show) її маленькому немовляті. Бабуся дуже любить **розповісти** (to tell, to narrate) цікаву казку цьому ж немовляті. Дівчинка кинула трохи свіжого зерна жовтому курчаті. Важко **відповісти** (to answer, to reply), чому вони надали перевагу такому довгому імені.
+
+> *The parents bought a bright toy and hurried to show it to the little baby. The grandmother really loves to tell an interesting fairy tale to this same baby. The girl threw some fresh grain to the yellow chick. It is difficult to answer why they gave preference to such a long name.*
+
+Unlike giving a book **студентові** (to the student (dat.)), **сестрі** (to the sister (dat.)), or **другові** (to the friend (dat.)), neuter nouns are frequently used in abstract contexts or locational assignments. You will often see them with verbs that express giving a trait, dedicating time, or reacting to nature. 
+
+Депутати вирішили повернути історичну назву нашому старому місту. Ми звикли щиро радіти весняному сонцю після довгої зими. Мерія міста вирішила **написати** (to write) офіційного листа сусідньому селу. Туристи завжди дуже дивуються цьому глибокому і чистому озеру.
+
+> *The deputies decided to return the historical name to our old city. We are used to sincerely rejoicing at the spring sun after a long winter. The city mayor's office decided to write an official letter to the neighboring village. Tourists are always very amazed by this deep and clear lake.*
+
+<!-- INJECT_ACTIVITY: group-sort-dative-gender -->
+
+## Давальний відмінок у реченні (~550 words total)
+
+When you construct sentences with verbs of giving, showing, or telling, you often need two objects to express a complete thought. The direct object, which is the actual thing being given or shown, takes the Accusative case. The indirect object, which is the recipient or the person benefiting from the action, takes the Dative case. This grammatical pattern is extremely common in everyday communication. The typical word order in Ukrainian is: Subject + Verb + Dative (recipient) + Accusative (thing). While word order can be flexible, placing the recipient before the object is the most natural rhythm.
+
+Тетяна подарувала своєму братові цікаву книгу на день народження. Новий вчитель показав студентам велику карту України. Дівчина віддала своїй сестрі чистий зошит для нотаток. Ми з радістю вирішили зробити сюрприз нашому старому другові.
+
+> *Tetiana gave an interesting book as a gift to her brother for his birthday. The new teacher showed a large map of Ukraine to the students. The girl gave her clean notebook for notes to her sister. We happily decided to make a surprise for our old friend.*
+
+Several common verbs frequently require the Dative case to indicate the recipient of an action. These include **подарувати** (to give as a gift), **показати** (to show), and **написати** (to write).
+
+You will also use the Dative case heavily with spoken communication verbs. Some of the most important ones are **розповісти** (to tell, to narrate), **пояснити** (to explain), and **відповісти** (to answer, to reply). 
+
+When learning these verbs, it is helpful to remember that the recipient noun must have a specific **закінчення** (ending (grammar)) such as -ові, -і, or -у. It is a good practice to learn these verbs as complete phrases, imagining a real person receiving the action.
+
+Imagine a practical situation where you need to use the Dative case to direct items to different people. A dialogue at a post office is a perfect example of assigning packages to various recipients.
+
+> — **Відправник:** Доброго дня. Я хочу відправити ці пакунки моїй родині. *(Good day. I want to send these packages to my family.)*
+> — **Працівник пошти:** Доброго дня. Скажіть, будь ласка, кому вони? *(Good day. Tell me, please, who are they for?)*
+> — **Відправник:** Студентові Петренку — цей товстий підручник. *(To the student Petrenko — this thick textbook.)*
+> — **Працівник пошти:** Зрозуміло. А цей маленький конверт? *(Understood. And this small envelope?)*
+> — **Відправник:** Сестрі Олені — красива поштова листівка зі Львова. *(To my sister Olena — a beautiful postcard from Lviv.)*
+> — **Працівник пошти:** Добре. А ця велика коробка? *(Good. And this big box?)*
+> — **Відправник:** А маленькій дитині — нова м'яка іграшка. *(And to the little child — a new soft toy.)*
+
+It is critically important to contrast the Dative case with the Genitive case to prevent structural confusion in your sentences. Both cases can sometimes share similar-looking endings, but their grammatical functions are completely different. The Dative case points to a destination or a recipient, answering the question "to whom?". The Genitive case, on the other hand, often indicates absence, possession, or the object of a negative verb, answering "of whom?" or "of what?".
+
+Хлопець хоче дати своєму братові новий мобільний телефон. Сьогодні вдома немає старшого брата. Вона уважно пише повідомлення своєму шкільному другові. Вона приїхала на велике свято без свого друга.
+
+> *The boy wants to give a new mobile phone to his brother. Today the older brother is not at home. She is carefully writing a message to her school friend. She arrived at the big holiday without her friend.*
 
 :::info
 **Grammar box**
-Neuter nouns of the second declension share the **-у** and **-ю** endings with masculine nouns. If you know how to decline a masculine noun like **студенту** or **лікарю**, you already know how to handle **місту** and **морю**!
+Always double-check the case ending when dealing with negation. A positive sentence like "I write to my friend" requires the Dative case, but a negative statement like "I do not have a friend" triggers the Genitive case.
 :::
 
-The fourth declension contains neuter nouns that denote young animals and human babies. These words end in **-а** or **-я**, but a hidden suffix (**-ат-** or **-ят-**) appears when they change cases. Their Dative ending is always **-і**.
+You can also connect this new grammar to earlier knowledge by using impersonal constructions. You can apply the exact same logical structure to nouns like **студентові** (to the student (dat.)), **сестрі** (to the sister (dat.)), or **другові** (to the friend (dat.)). Just as you use pronouns to express feelings or age, you can use these noun forms in the identical way.
 
-Іменники четвертої відміни означають маленьких дітей або тварин. У давальному відмінку в них з'являється суфікс «-ат-» або «-ят-», а закінчення завжди буде «-і». Тому слово «немовля» змінюється на «немовляті». Слово «курча» стає «курчаті», «теля» — «теляті», а «кошеня» — «кошеняті». Малі діти дали тепле молоко голодному кошеняті. Старий фермер приніс свіжу воду курчаті і маленькому теляті.
+Студентові треба багато вчитися перед важливим екзаменом. Нашій мамі сьогодні дуже холодно на зимовій вулиці. Моєму найкращому другові двадцять п'ять років. Маленькій дитині часто буває сумно без улюбленої іграшки.
 
-> *Nouns of the fourth declension denote small children or animals. In the Dative case, the suffix "-ат-" or "-ят-" appears in them, and the ending will always be "-і". Therefore, the word "немовля" changes to "немовляті". The word "курча" becomes "курчаті", "теля" — "теляті", and "кошеня" — "кошеняті". Small children gave warm milk to the hungry kitten. The old farmer brought fresh water to the chick and the little calf.*
+> *The student needs to study a lot before the important exam. Our mom is very cold on the winter street today. My best friend is twenty-five years old. A little child is often sad without a favorite toy.*
 
-> — **Олена:** Що ти дав тому маленькому кошеняті? *(What did you give to that little kitten?)*
-> — **Ігор:** Я дав йому трохи свіжого м'яса. А ти що дала своєму цуценяті? *(I gave it some fresh meat. And what did you give to your puppy?)*
-> — **Олена:** Я купила спеціальний сухий корм цьому малому песику. *(I bought special dry food for this little dog.)*
-> — **Ігор:** Моя бабуся зараз дає тепле молоко немовляті. *(My grandmother is giving warm milk to the baby now.)*
-> — **Олена:** Це чудово, вони потребують нашої уваги. *(That's wonderful, they need our attention.)*
-
-<!-- INJECT_ACTIVITY: group-sort-genders -->
-
-## Давальний відмінок у реченні
-
-The Dative case shows the indirect object—the recipient. The typical word order is Subject, Verb, Dative noun, and Accusative noun. 
-
-Українське речення має чітку структуру. Спочатку ми називаємо того, хто робить дію, а потім ставимо дієслово. Після цього ми кажемо, кому призначена ця дія, використовуючи давальний відмінок. Наприкінці ми додаємо предмет у знахідному відмінку. Тетяна подарувала братові книгу. Наш новий вчитель показав студентам велику карту.
-
-> *A Ukrainian sentence has a clear structure. First, we name the one who performs the action, and then we place the verb. After that, we say who this action is intended for, using the dative case. At the end, we add the object in the accusative case. Tetiana gave her brother a book. Our new teacher showed the students a large map.*
-
-Verbs of giving, telling, and showing naturally attract the Dative case. Always ask "to whom?" and apply the correct **закінчення** (ending).
-
-Дієслова дарування — це «давати» та «подарувати». Мама щодня дає дитині свіже яблуко. Дієслова повідомлення — це «розповісти», «сказати», «написати», «пояснити» та «відповісти». Дідусь розповів онукові цікаву казку. Викладач детально пояснив студентам нове правило. Письменник написав листа своєму видавцеві. Студент швидко відповів професорові. До дієслів показу належить слово «показати». Екскурсовод показав туристам старе місто.
-
-> *Verbs of giving are "давати" (to give) and "подарувати" (to gift). Mom gives the child a fresh apple every day. Verbs of telling are "розповісти" (to tell), "сказати" (to say), "написати" (to write), "пояснити" (to explain), and "відповісти" (to answer). Grandpa told his grandson an interesting fairytale. The instructor explained the new rule to the students in detail. The writer wrote a letter to his publisher. The student quickly answered the professor. Verbs of showing include the word "показати" (to show). The tour guide showed the tourists the old city.*
-
-In Ukrainian, the Dative case works alone, without prepositions. Do not confuse the direct recipient (Dative) with the purpose of an action (Genitive with «для»).
-
-Якщо ви даєте річ прямо людині, використовуйте давальний відмінок. Я даю теплий чай хворому братові. Але якщо ви робите щось заради людини, використовуйте прийменник «для» та родовий відмінок. Я купив цей лікувальний чай для брата. Ми готуємо приємний сюрприз для мами, і потім ми подаруємо його мамі.
-
-> *If you give an item directly to a person, use the dative case. I give warm tea to my sick brother. But if you do something for the sake of a person, use the preposition "для" and the genitive case. I bought this medicinal tea for my brother. We are preparing a pleasant surprise for mom, and then we will gift it to mom.*
-
-:::info
-**Grammar box**
-Verbs like **допомагати** (to help) and **дякувати** (to thank) also require the Dative case in Ukrainian! Always say **допомогти сестрі** (to help the sister) and **подякувати другові** (to thank the friend).
-**Я завжди допомагаю мамі. Вона щиро дякує мені.**
-:::
-
-Notice how native speakers combine pronouns and Dative noun phrases in conversation.
-
-> — **Анна:** Що ти порадиш мені? Ми завтра йдемо на день народження. *(What do you advise me? We are going to a birthday party tomorrow.)*
-> — **Марко:** А що ти хочеш подарувати сестрі Олені? *(And what do you want to gift to your sister Olena?)*
-> — **Анна:** Я думаю купити гарні квіти. Але я також хочу дати їй цікаву книгу. *(I am thinking of buying beautiful flowers. But I also want to give her an interesting book.)*
-> — **Марко:** Це чудова ідея. Якраз учора я написав повідомлення другові Андрію про нові книги. *(That is a great idea. Just yesterday I wrote a message to my friend Andriy about new books.)*
-> — **Анна:** Можеш показати мені його відповідь? *(Can you show me his reply?)*
-> — **Марко:** Звісно. Він детально пояснив мені сюжет одного роману. Ми зателефонуємо Андрію ввечері. *(Sure. He explained the plot of one novel to me in detail. We will call Andriy in the evening.)*
-
-<!-- INJECT_ACTIVITY: match-up-dative-verbs -->
+<!-- INJECT_ACTIVITY: match-up-verb-phrases -->
 <!-- INJECT_ACTIVITY: unjumble-dative-syntax -->
-
-## Підсумок
-
-Давальний відмінок відповідає на питання «кому? чому?». Іменники чоловічого роду мають паралельні закінчення -ові або -у. Іменники жіночого роду мають закінчення -і, але завжди пам’ятайте про чергування приголосних перед ним. Іменники середнього роду отримують закінчення -у або -ю, а слова типу «немовля» — закінчення -аті.
-
-> *The Dative case answers the questions "to whom? to what?". Masculine nouns have the parallel endings -ові or -у. Feminine nouns take the -і ending, but always remember the consonant alternations before it. Neuter nouns receive the -у or -ю ending, and words like "немовля" (infant) take the -аті ending.*
-
-Перевірте себе та дайте відповіді на ці три запитання. 1. Які паралельні закінчення мають іменники чоловічого роду? 2. Як змінюється слово «подруга» в давальному відмінку? 3. Яке закінчення мають іменники середнього роду типу «немовля»?
-
-> *Test yourself and answer these three questions. 1. What parallel endings do masculine nouns have? 2. How does the word "подруга" change in the dative case? 3. What ending do neuter nouns like "немовля" have?*
-
-Правильні відповіді: 1. -ові та -у. 2. Подрузі. 3. -аті. Ви чудово попрацювали сьогодні. Тепер ви можете впевнено дарувати подарунки та розповідати цікаві історії українською мовою!
-
-> *Correct answers: 1. -ові and -у. 2. Подрузі. 3. -аті. You did a great job today. Now you can confidently give gifts and tell interesting stories in Ukrainian!*

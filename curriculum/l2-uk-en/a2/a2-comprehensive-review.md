@@ -1,97 +1,162 @@
 ## Відмінки: від називного до кличного (~550 words total)
 
-Ми закінчуємо рівень А2. Українська граматика будується на відмінках. The word **відмінок** means case. Він показує роль слова в реченні. Іменники, прикметники та займенники змінюють закінчення.
-В українській мові є сім відмінків. **Називний відмінок** is the nominative case. Це базова форма. Це прямий відмінок. Він називає предмет або особу. Слово в називному відмінку часто є підметом.
-Усі інші шість відмінків — це **непрямі відмінки**. These are the oblique cases. Вони показують зв'язок між словами. Непрямий відмінок може означати об'єкт, інструмент, місце або напрямок. Давайте згадаємо їхні головні ролі.
+Вітаємо на фінальному етапі рівня А2! Сьогодні ми робимо велике **повторення** (review), щоб систематизувати ваші знання. Головна тема — це український **відмінок** (grammatical case). Кожен відмінок має своє місце і функцію, що дозволяє нам будувати правильне **речення** (sentence). Ми розрізняємо прямий відмінок (Називний) та шість непрямих відмінків. Ця **граматика** (grammar) є фундаментом для вашого майбутнього переходу на рівень В1. Ви вже знаєте багато форм, але зараз ми поєднаємо їх у повну картину.
 
-**Родовий відмінок** is the genitive case. Він означає відсутність чогось. Після слова «немає» завжди стоїть родовий відмінок. Ми кажемо «немає **часу**». This means "no time". Він також показує належність. Ми кажемо «книга **вчителя**». This means "the teacher's book". Ми використовуємо його для частини від цілого. Наприклад, «трохи **води**». This translates to "a little water".
-**Знахідний відмінок** is the accusative case. Він вказує на прямий об'єкт дії. Якщо дія переходить на предмет, ми кажемо «я бачу **книгу**». This means "I see a book". Для істот чоловічого роду він має форму родового відмінка. Ми кажемо «я бачу **вчителя**». This means "I see a teacher".
+> *Welcome to the final stage of level A2! Today we are doing a major review to systematize your knowledge. The main topic is the Ukrainian grammatical case. Each case has its place and function, which allows us to build a correct sentence. We distinguish between the direct case (Nominative) and six oblique cases. This grammar is the foundation for your future transition to level B1. You already know many forms, but now we will combine them into a complete picture.*
 
-**Давальний відмінок** is the dative case. Він показує адресата дії. Коли ми щось даємо, ми використовуємо цей відмінок. Ми кажемо «я даю **мамі**». This means "I give to mom". Цей відмінок також описує стан. Наприклад, «**мені** подобається». This translates to "I like".
-**Орудний відмінок** is the instrumental case. Він вказує на інструмент дії. Наприклад, «я пишу **ручкою**». This means "I write with a pen". Ми використовуємо прийменник «з» та орудний відмінок для сумісної дії. Наприклад, «кава з **молоком**». This is "coffee with milk". Якщо ми не маємо чогось, ми використовуємо прийменник «без» та родовий відмінок. Наприклад, «кава без **молока**». This is "coffee without milk".
+Родовий відмінок (Genitive) — один із найскладніших для вивчення, бо він має багато функцій. Ви використовуєте його для позначення належності, наприклад, «дім сусіда». Також він незамінний при запереченні: ми кажемо «я не маю грошей» або «немає квитків». Важливо не плутати його зі Знахідним відмінком. Знахідний відмінок позначає прямий об'єкт дії, коли **дієслово** (verb) спрямоване на предмет. Для неістот він часто схожий на Називний, а для людей і тварин — на Родовий.
 
-**Місцевий відмінок** is the locative case. Він завжди вживається з прийменниками «у», «в» та «на». Він показує місце дії. Наприклад, «ми вчимося у **школі**». This means "we study at school".
-**Кличний відмінок** is the vocative case. Ми використовуємо його виключно для звертання. Наприклад, ми кажемо «**Друже**!». This means "Friend!". Також кажемо «**Оксано**!» або «**Пане**!». These mean "Oksana!" and "Sir!".
-The vocative case is a living, essential feature of the Ukrainian language. Це не архаїзм. Використання називного відмінка замість кличного — це поширена помилка. Українська мова завжди вимагає кличного відмінка при звертанні.
+While the Genitive deals with possession and lack, the Dative and Instrumental cases focus on interaction and tools. The Dative marks the recipient of an action or a person's state, while the Instrumental shows how an action is performed.
 
-Давайте розглянемо типові помилки на рівні А2. Не забувайте про літеру «н» у займенниках третьої особи. Після прийменників ми завжди додаємо цю літеру. Правильно казати «про **нього**». This means "about him". Неправильно казати «про його».
-Пам'ятайте про родовий відмінок після заперечення. Ми кажемо «я не маю **часу**».
-Зверніть увагу на чергування приголосних у місцевому та давальному відмінках. Приголосні «г», «к», «х» змінюються на «з», «ц», «с» перед закінченням «-і». Правильно казати «у **руці**». This means "in the hand". Також правильно «на **дорозі**». This means "on the road".
+Давальний відмінок вказує на людину, яка отримує щось. Ми кажемо «я пишу листа другу». Також він потрібен для вираження стану: «мені весело» або «мамі холодно». Орудний відмінок — це ваш інструмент. Кожен **прикметник** (adjective) та іменник у цій формі показує, як саме ми діємо. Наприклад, ми подорожуємо «потягом» або «літаком». Порівняйте: ми п'ємо каву «з молоком» (Орудний), але чай «без лимона» (Родовий). Це базове розрізнення є дуже важливим для щоденного спілкування.
 
-<!-- INJECT_ACTIVITY: fill-in-mixed-cases -->
+Місцевий відмінок унікальний тим, що ніколи не вживається самостійно. Він завжди працює з прийменниками «у» або «на», щоб показати локацію. Ми кажемо «жити в Одесі» або «працювати на фірмі». На завершення системи ми маємо Кличний відмінок. Це форма для звертання, яка робить вашу мову природною та ввічливою. Використовуйте форми «сестро!», «Михайле!» або «друже!». В українській мові це не просто граматичне правило, а вияв поваги до співрозмовника.
 
-В українській мові числівники вимагають різних відмінків. The word **один** means "one". Він змінюється як прикметник. Він має однаковий рід та відмінок з іменником. Наприклад, «один **зошит**» або «одна **книга**» у називному відмінку. These mean "one notebook" and "one book".
-Після числівників 2, 3 та 4 ми використовуємо називний відмінок множини. Наприклад, «три **зошити**». This translates to "three notebooks".
-Після числівників від 5 і більше ми використовуємо родовий відмінок множини. Наприклад, «п'ять **зошитів**». This means "five notebooks". Також «десять **книг**». This translates to "ten books".
+> *The Locative case is unique because it is never used alone. It always works with the prepositions "u" or "na" to show location. We say "to live in Odesa" or "to work at a company." At the end of the system, we have the Vocative case. This is the form for address, which makes your speech natural and polite. Use the forms "sister!", "Mykhailo!" or "friend!". In Ukrainian, this is not just a grammatical rule, but an expression of respect for the interlocutor.*
 
-## Дієслово: вид, час, спосіб
-> — **Олена:** Максиме, ти готовий до тесту на рівень B1? *(Are you ready for the B1 level test?)*
-> — **Максим:** Майже готовий. *(I am almost ready.)* Але я хочу повторити **дієслово**. *(But I want to review the verb.)*
-> — **Олена:** Добре. *(Good.)* Давай згадаємо **вид**. *(Let's remember the aspect.)* Що таке **доконаний** і **недоконаний** вид? *(What are perfective and imperfective aspects?)*
-> — **Максим:** Недоконаний вид — це тривалий процес. *(Imperfective aspect is a continuous process.)* Доконаний вид — це результат. *(Perfective aspect is a result.)*
-> — **Олена:** Правильно. *(Correct.)* Кожне дієслово зазвичай має пару. *(Every verb usually has a pair.)* Це видова **пара**. *(This is an aspectual pair.)*
-> — **Максим:** А як щодо дієслів руху? *(What about verbs of motion?)* Префікси змінюють їхнє значення. *(Prefixes change their meaning.)*
-> — **Олена:** Так, префікси дуже важливі. *(Yes, prefixes are very important.)* П'ємо каву і продовжуємо нашу розмову. *(Let's drink coffee and continue.)*
+:::info
+**Grammar box**
+In Ukrainian, nouns change their endings front and center. Remember: the Vocative case is mandatory for people, while the Locative case is your primary tool for answering "where?" (де?).
+:::
 
-В українській мові категорія виду дуже важлива. The category of aspect is very important. Недоконаний вид означає тривалий процес або регулярну дію. It means a continuous process or regular action. Використовуйте його, коли дія постійно повторюється. Use it when the action repeats. Наприклад, ми кажемо «я щодня **купував** хліб». This means "I bought bread every day". Доконаний вид означає конкретний результат або завершену дію. It means a specific result or a completed action. Наприклад, ми кажемо «я **купив** хліб». This means "I bought bread". Дієслова часто утворюють видові пари. Verbs often form aspectual pairs. Зазвичай ми додаємо префікс. Usually we add a prefix. Наприклад, «робити» і «зробити». These mean "to do" and "to make". Іноді ми змінюємо суфікс. Sometimes we change the suffix. Наприклад, «купувати» і «купити». These mean "to buy". А іноді слова в парі зовсім різні. Sometimes words in a pair are completely different. Наприклад, «говорити» і «сказати». These mean "to speak" and "to say". Ви повинні запам'ятати обидва слова. You must memorize both words.
+Наприкінці рівня А2 важливо знати, де зазвичай трапляється **помилка** (error). Часто студенти забувають додавати літеру «н», коли використовують третій **займенник** (pronoun) з прийменником. Правильно казати «його», але «до нього» або «біля неї». Ще одна складність — це зміна звуків у корені. Коли іменник жіночого роду стоїть у Давальному або Місцевому відмінку, приголосні змінюються. Запам'ятайте ці пари: г стає з, к стає ц, х стає с. Наприклад: «нога — на нозі».
 
-Ми маємо три способи сказати про майбутнє. We have three ways to talk about the future. Перший спосіб — це доконаний вид. The first way is the perfective aspect. Дієслово змінюється як у теперішньому часі, але означає майбутнє. The verb changes like in the present tense, but means the future. Наприклад, ми кажемо «я **прочитаю** книгу». This means "I will read the book completely". Це означає, що я точно закінчу цю дію. This means I will finish the action. Другий спосіб — це складений майбутній час. The second way is the compound future tense. Ми використовуємо допоміжне слово «буду» та інфінітив. We use the auxiliary word "буду" and the infinitive. Наприклад, ми кажемо «я **буду читати**». This means "I will be reading". Це означає процес у майбутньому. This means a process in the future. Третій спосіб — це ще одна форма. The third way is another form. Ми додаємо закінчення прямо до інфінітива. We add an ending directly to the infinitive. Наприклад, ми кажемо «я **читатиму**». This translates to "I will be reading". Другий і третій способи абсолютно однакові за значенням. The second and third ways are identical in meaning. 
+> *At the end of level A2, it is important to know where a mistake usually occurs. Students often forget to add the letter "n" when using the third-person pronoun with a preposition. It is correct to say "yoho" (his/him), but "do nioho" (to him) or "bilia nei" (near her). Another difficulty is the change of sounds in the root. When a feminine noun is in the Dative or Locative case, the consonants change. Remember these pairs: g becomes z, k becomes ts, kh becomes s. For example: "noha" (leg) — "na nozi" (on the leg).*
 
-Ми також використовуємо умовний і наказовий спосіб. We also use the conditional and imperative moods. Умовний спосіб допомагає нам говорити про мрії або бажання. The conditional mood helps us talk about dreams or wishes. Ми використовуємо слово «якби» та частку «б» або «би». We use the word "якби" and the particle "б" or "би". Наприклад, ми кажемо «**якби** я мав час, я **б** поїхав у гори». This means "if I had time, I would go to the mountains". Наказовий спосіб потрібен для прохань або наказів. The imperative mood is needed for requests or commands. Його форма завжди залежить від ситуації спілкування. Its form depends on the communication situation. Ввічлива форма або форма для багатьох людей має закінчення «-те». The polite or plural form has the ending "-те". Наприклад, ми кажемо «**читайте** цей текст». This translates to "read this text". Дружня форма для однієї людини зазвичай коротша. The friendly form for one person is shorter. Наприклад, ми кажемо «**прочитай** цю статтю». This means "read this article completely".
 
-Давайте коротко згадаємо дієслова руху. Let's briefly remember verbs of motion. Вони традиційно бувають двох типів. They are traditionally of two types. Дієслова «іти» та «їхати» означають рух в один бік. The verbs "іти" and "їхати" mean movement in one direction. Дієслова «ходити» та «їздити» означають регулярний рух туди і назад. The verbs "ходити" and "їздити" mean regular movement back and forth. Різні префікси додають цим дієсловам новий просторовий зміст. Different prefixes add new spatial meaning to these verbs. Префікс «при-» завжди означає прибуття до мети. The prefix "при-" means arrival at a destination. Наприклад, ми кажемо «він **прийшов**». This translates to "he arrived". Префікс «ви-» означає рух назовні з приміщення. The prefix "ви-" means movement outward from a room. Наприклад, ми кажемо «вона **виїхала**». This translates to "she drove out". Префікс «по-» означає початок руху або відправлення. The prefix "по-" means the start of movement or departure. Наприклад, ми кажемо «поїзд **поїхав**». This means "the train departed".
+## Підсумок — Summary
 
-<!-- INJECT_ACTIVITY: quiz-aspect-choice -->
+Вітаємо! Ви успішно завершили подорож по рівню A2. За цей час ваша грамáтика української мóви значно зміцніла. Ви навчúлися впевнено викорúстовувати всі сім відмі́нків (singular та plural) для іменникíв, прикметникíв та займенникíв. Тепер ви мо́жете ві́льно розповідáти про минýле, теперíшнє та майбýтнє, то́чно передаючи нюанси за допомогою докóнаного й недокóнаного видів дієслóв.
 
-## Прикметники, порівняння, займенники
+Крім того, ви осво́їли утво́рення та використáння порівня́льних і найви́щих сту́пенів прикметникíв, включно з винятка́ми. Ви вмі́єте будувáти скла́дні рече́ння, поєднуючи дýмки за допомогою сполýчників, як-от «що», «тому́ що», «коли́», «щоб», «якщо́», і обґрунтовувати свою́ дýмку.
 
-Прикметники завжди узгоджуються з іменниками. Adjectives always agree with nouns. Вони мають однаковий рід, число та відмінок. They have the same gender, number, and case. Наприклад, ми кажемо «**новий** стіл». For example, we say "**new** table". Але ми кажемо «**нового** стола» у родовому відмінку. But we say "**of the new** table" in the genitive case. Українські прикметники мають тверду і м'яку групи. Ukrainian adjectives have a hard and a soft group. Тверда група має закінчення «-ий». The hard group has the ending "-ий". Наприклад, слово «новий». For example, the word "new". М'яка група має закінчення «-ій». The soft group has the ending "-ій". Наприклад, слово «**синій**». For example, the word "**dark blue**". У непрямих відмінках вони мають різні букви перед закінченням. In oblique cases, they have different letters before the ending. 
+Перевірте себе:
+*   У чому́ різни́ця між «з Ки́єва» та «від Олéни»?
+*   Опишіть три ре́чі у своє́му щоде́нному житті́, використóвуючи приймéнник «після́».
+*   Коли́ ви використóвуєте «зі» замість «з»?
 
-Ми часто порівнюємо різні предмети. We often compare different objects. Для цього ми використовуємо **вищий** та **найвищий** ступені порівняння. For this, we use the **comparative** and **superlative** degrees of comparison. Ми додаємо суфікси «-іш-» або «-ш-». We add the suffixes "-іш-" or "-ш-". Наприклад, «**теплий**» стає «**тепліший**». For example, "**warm**" becomes "**warmer**". Деякі слова змінюють корінь. Some words change the root. Слово «**добрий**» стає «**кращий**». The word "**good**" becomes "**better**". Щоб зробити найвищий ступінь, ми додаємо префікс «най-». To make the superlative degree, we add the prefix "най-". Наприклад, «**найкращий**». For example, "**the best**". Ніколи не кажіть «більш кращий». Never say "more better". Це граматично неправильно. This is grammatically incorrect. Для порівняння ми використовуємо слова «**ніж**» або «**за**». For comparison, we use the words "**than**" or "**than**". Наприклад, «він вищий **за** мене». For example, "he is taller **than** me".
+Ваш наступний крок — це рівень B1, де мова стане вашим справжнім інструментом. Успіхів!
 
-Займенники замінюють іменники в реченні. Pronouns replace nouns in a sentence. Особові займенники також змінюються за відмінками. Personal pronouns also change by cases. Ми кажемо «**я**», але «**мене**» у родовому відмінку. We say "**I**", but "**me**" in the genitive case. Після прийменників ми додаємо букву «н» до займенників третьої особи. After prepositions, we add the letter "n" to third-person pronouns. Ми кажемо «з **ним**», а не «з їм». We say "with **him**", not "with him" (without 'n'). Дуже важливо правильно використовувати зворотний займенник «**свій**». It is very important to correctly use the reflexive pronoun "**one's own**". Він показує, що предмет належить підмету. It shows that the object belongs to the subject. Якщо ви скажете «він читає **його** книгу», це чужа книга. If you say "he reads **his** book", it is someone else's book. Правильно казати «він читає **свою** книгу». It is correct to say "he reads **his own** book".
+<!-- INJECT_ACTIVITY: fill-in, Mixed case drill — all seven cases in one exercise -->
 
-Іноді ми не знаємо точно особу чи предмет. Sometimes we do not know the person or object exactly. Тоді ми використовуємо неозначені займенники. Then we use indefinite pronouns. Це слова «**хтось**» або «**щось**». These are the words "**someone**" or "**something**". Якщо предмета немає, ми використовуємо заперечні займенники. If the object is absent, we take negative pronouns. Це слова «**ніхто**» і «**ніщо**». These are the words "**no one**" and "**nothing**". В українській мові ми обов'язково використовуємо подвійне заперечення. In the Ukrainian language, we obligatorily use a double negative. Ми завжди додаємо частку «**не**» перед дієсловом. We always add the particle "**not**" before the verb. Наприклад, ми кажемо «**ніхто не знає**». For example, we say "**no one knows**".
+Остання важлива деталь — це узгодження іменників із числами. Коли ми рахуємо від одного до ста, форма слова змінюється. Числівник «один» вимагає форми однини. Числа «два», «три» та «чотири» вимагають називного відмінка множини. Проте, коли ви бачите число «п'ять» або більше, ви повинні вживати родовий відмінок множини. Наприклад, ми кажемо «чотири дні», але «десять днів». Постійна практика таких конструкцій зробить вашу мову значно впевненішою.
 
-В українській мові ми зазвичай використовуємо повні форми прикметників. In the Ukrainian language, we usually use full forms of adjectives. Іноді в літературі чи спеціальних виразах бувають короткі форми. Sometimes in literature or special expressions there are short forms. Наприклад, ми кажемо «**повен**» замість «повний». For example, we say "**full**" instead of "full" (long form). Також завжди звертайте увагу на правильний наголос. Also, always pay attention to the correct stress. Правильно ставте наголос у формах «**велика**» та «**великі**». Correctly place the stress in the forms "**big**" (feminine) and "**big**" (plural). Це робить вашу мову природною. This makes your language natural.
+## Дієслово: вид, час, спосіб (~500 words total)
+
+> — **Олена:** Максиме, ти готовий до тесту на рівень B1? *(Maksym, are you ready for the B1 level test?)*
+> — **Максим:** Майже. Наше **повторення** (review) сьогодні дуже допомагає мені. *(Almost. Our review today is helping me a lot.)*
+> — **Олена:** Давай перевіримо твій список. Яке **дієслово** (verb) має пару до слова «купувати»? *(Let's check your list. Which verb has a pair for the word "to buy"?)*
+> — **Максим:** Це легко! Пара — «купити». Це доконаний вид. *(That's easy! The pair is "to buy". It is the perfective aspect.)*
+> — **Олена:** Правильно. Краще назвати іменник, ніж просто використовувати **займенник** (pronoun). *(Correct. It is better to name the noun than just to use a pronoun.)*
+> — **Максим:** Згоден. Давай замовимо ще одну каву і продовжимо. *(I agree. Let's order one more coffee and continue.)*
+> — **Олена:** Чудово. Твоя **граматика** (grammar) стає значно впевненішою. *(Great. Your grammar is becoming much more confident.)*
+
+Коли ми вчимо українське **дієслово**, ми завжди шукаємо його вид. Недоконаний вид описує тривалий процес або дії, які повторюються щодня. Ми кажемо: «Я довго говорив по телефону». Доконаний вид показує конкретний результат або завершену дію. Наприклад: «Я нарешті сказав правду». Такі видові пари, як «робити» та «зробити», є основою мови. Без них важко передати точний зміст вашої думки. 
+
+> *When we learn a Ukrainian verb, we always look for its aspect. The imperfective aspect describes a long process or actions that repeat every day. We say: "I talked on the phone for a long time." The perfective aspect shows a specific result or a completed action. For example: "I finally said the truth." Aspect pairs like "to do" and "to have done" are the foundation of the language. Without them, it's hard to convey the exact meaning of your thought.*
+
+The future tense in Ukrainian offers three distinct paths for learners to navigate. If you want to emphasize a completed result, you use the perfective future. It looks like a single word: «я прочитаю». This simply means the action will be finished. However, for ongoing processes, you have two imperfective options. The compound future uses the verb «бути» and an infinitive, like «я буду читати». It is very common in spoken speech. The third way is the synthetic future, which has endings like «-му». You might hear «читатиму» in songs or read it in books.
+
+:::info
+**Grammar box**
+Remember that the **відмінок** (grammatical case) of the object depends on the verb aspect. Both aspects usually take the same case, but the meaning of the sentence changes from "doing" to "done".
+:::
+
+На рівні А2 ми також вивчаємо різні способи вираження бажань та прохань. Умовний спосіб допомагає нам мріяти про майбутнє. Кожне **речення** (sentence) з часткою «б» звучить дуже м'яко. Наприклад: «Якби я мав час, я б поїхав у гори». Наказовий спосіб потрібен для команд або ввічливих порад. Ми розрізняємо дружнє прохання «прочитай» та офіційне звертання «читайте». Пам'ятайте, що в українській мові ці форми дуже важливі для етикету.
+
+> *At level A2, we also study different ways of expressing wishes and requests. The conditional mood helps us dream about the future. Every sentence with the particle "b" sounds very soft. For example: "If I had time, I would go to the mountains." The imperative mood is needed for commands or polite advice. We distinguish between a friendly request "read" and a formal address "read (plural/polite)". Remember that in the Ukrainian language, these forms are very important for etiquette.*
+
+Motion verbs can be tricky, but the logic is consistent. Unidirectional verbs like «іти» describe movement in one direction right now. Multidirectional verbs like «ходити» are for regular trips or movement without a specific goal. Prefixes add new layers of meaning to these bases. When someone «прийшов», they are already here. If a friend «виїхав», he has left his home. Finally, «поїхати» marks the very beginning of a journey. Use these forms carefully to avoid a **помилка** (error) in your directions.
+
+<!-- INJECT_ACTIVITY: quiz, Choose perfective or imperfective aspect for the context -->
+
+## Прикметники, порівняння, займенники (~450 words total)
+
+Adjectives and pronouns are the elements that add detail and ownership to your thoughts. Without them, your descriptions would be flat, and your stories would lack clarity. At this stage, we refine how these words adapt to the nouns they describe.
+
+Кожен **прикметник** (adjective) в українській мові має свою родину — іменник. Вони завжди тримаються разом і мають однаковий рід, число та **відмінок** (grammatical case). Більшість слів належать до твердої групи і мають закінчення «-ий». Проте існують і м'які форми, як-от «синій» або «літній». Коли ми змінюємо форму іменника, закінчення прикметника також змінюється автоматично. Це правило допомагає нам будувати гарні та правильні речення.
+
+> *Every adjective in the Ukrainian language has its family — the noun. They always stay together and have the same gender, number, and case. Most words belong to the hard group and have the "-ий" ending. However, soft forms also exist, such as "blue" or "summer." When we change the form of the noun, the adjective ending also changes automatically. This rule helps us build beautiful and correct sentences.*
+
+Comparison is not just about grammar; it is about making choices and expressing preferences. Whether you are comparing prices or weather, you need to use the right structures to be understood correctly.
+
+Ступені порівняння дозволяють нам описувати світ навколо цікавіше. Вищий ступінь ми утворюємо за допомогою суфіксів, тому «теплий» стає «теплішим». Деякі слова мають особливі форми, наприклад, «гарний» перетворюється на «кращий». Найвищий ступінь — це вершина якості, яку ми маркуємо префіксом «най-». Дуже часто студенти роблять помилку, коли поєднують дві форми порівняння в одну. Пам'ятайте, що не можна казати «більш кращий» — це порушує логіку мови.
+
+> *Degrees of comparison allow us to describe the world around us more interestingly. We form the comparative degree using suffixes, so "warm" becomes "warmer." Some words have special forms; for example, "good" turns into "better." The superlative degree is the peak of quality, which we mark with the prefix "nai-." Very often students make a mistake when they combine two forms of comparison into one. Remember that you cannot say "more better" — it violates the logic of the language.*
+
+:::info
+**Grammar box**
+Use the reflexive pronoun **свій** when the object belongs to the subject of the sentence. For example: «Він любить **свою** роботу» (He loves his own work). Using «його» here might imply he loves someone else's work!
+:::
+
+Будь-яка **граматика** (grammar) неможлива без займенників, бо вони замінюють довгі назви. Особовий **займенник** (pronoun) змінює свою форму залежно від ролі в реченні. Ми кажемо «я бачу тебе», але «ти даєш мені книгу». Особливе місце займає зворотний займенник «свій». Він вказує на приналежність предмета самому автору дії. Якщо я кажу «я люблю свою машину», це означає, що машина моя. Якщо я скажу «я люблю його машину», то машина належить іншій людині.
+
+> *Any grammar is impossible without pronouns because they replace long names. A personal pronoun changes its form depending on its role in the sentence. We say "I see you," but "you give me a book." The reflexive pronoun "sviy" occupies a special place. It indicates the ownership of an object by the subject of the action itself. If I say "I love my (own) car," it means the car is mine. If I say "I love his car," then the car belongs to another person.*
+
+When things are uncertain or completely absent, Ukrainian uses specific markers. The way we handle negative concepts is a unique feature of the language that requires consistency.
+
+Неозначені та заперечні займенники допомагають нам говорити про невідоме або відсутнє. Слова «хтось» або «щось» вказують на те, що ми не знаємо точно. Для заперечення ми використовуємо форми «ніхто» та «ніщо». Головна ознака української мови — це обов'язкове подвійне заперечення. Якщо в реченні є слово «ніхто», то дієслово обов'язково повинно мати частку «не». Типове **речення** (sentence) звучить так: «Ніхто нічого не знає».
+
+> *Indefinite and negative pronouns help us talk about the unknown or the absent. The words "someone" or "something" indicate that we do not know for sure. For negation, we use the forms "no one" and "nothing." The main feature of the Ukrainian language is the mandatory double negative. If there is the word "no one" in a sentence, then the verb must necessarily have the particle "ne." A typical sentence sounds like this: "No one knows anything."*
+
+Наголос у формах прикметників може змінювати сенс або вказувати на кількість. У називному відмінку жіночого роду наголос падає на основу, як у слові «велика». Проте у множині він часто переміщується на закінчення — «великі». Також варто пам'ятати про короткі форми прикметників, які ми зустрічаємо в особливих виразах. Хоча вони рідкісні на рівні А2, вони додають мовленню особливого колориту. Правильне використання цих нюансів усуває кожну дрібну **помилку** (error) та робить вашу мову природною.
+
+> *Stress in adjective forms can change the meaning or indicate quantity. In the nominative case of the feminine gender, the stress falls on the stem, as in the word "velýka" (large). However, in the plural, it often shifts to the ending — "velykí." It is also worth remembering the short forms of adjectives, which we encounter in special expressions. Although they are rare at the A2 level, they add a special flavor to speech. Correct use of these nuances eliminates every small error and makes your language natural.*
 
 <!-- INJECT_ACTIVITY: group-sort-grammar-categories -->
 
-## Складне речення: з'єднуємо думки
+## Складне речення: з'єднуємо думки (~400 words total)
 
-На рівні А2 ми вчимося будувати складні речення. At the A2 level, we learn to build complex sentences. Це наш міст до рівня В1. This is our bridge to the B1 level. Головні помічники для цього — **сполучники**. The main helpers for this are **conjunctions**. Найчастіше ми використовуємо «**що**». Most often we use "**that**". Наприклад, «я знаю, **що** ти тут». For example, "I know **that** you are here". Інший важливий сполучник — «**тому що**». Another important conjunction is "**because**". Він пояснює причину. It explains the reason. Наприклад, «я вчу українську, **тому що** люблю Україну». For example, "I study Ukrainian **because** I love Ukraine". Перед цими сполучниками ми завжди ставимо кому. Before these conjunctions, we always put a comma. 
+Ми вже знаємо багато слів. Тепер ми вчимося з’єднувати їх у складні думки. Складне **речення** (sentence) допомагає нам пояснити причину або деталі. Найчастіше ми використовуємо **сполучник** (conjunction) «що» або «тому що». Це базовий рівень для переходу на B1. Кожне таке речення містить **займенник** (pronoun) або **прикметник** (adjective). Ми кажемо: «Я знаю, що українська мова гарна». Або: «Я вчуся, тому що хочу розуміти друзів».
 
-В українській мові є різні стилі спілкування. In the Ukrainian language, there are different styles of communication. У розмові з друзями ми часто кажемо «**бо**». In conversation with friends, we often say "**because/for**". Це коротке і зручне слово. This is a short and convenient word. Наприклад: «Я не прийшов, **бо** захворів». For example: "I didn't come **because** I got sick". Сполучник «**тому що**» є нейтральним. The conjunction "**because**" is neutral. В офіційних текстах ми використовуємо «**через те що**». In official texts, we use "**due to the fact that**". Наприклад: «Рейс скасували **через те що** почалася буря». For example: "The flight was canceled **due to the fact that** a storm started". Вибір залежить від ситуації. The choice depends on the situation.
+> *We already know many words. Now we are learning to connect them into complex thoughts. A complex sentence helps us explain reasons or details. Most often, we use the conjunction "shcho" (that) or "tomu shcho" (because). This is the basic level for moving to B1. Every such sentence contains a pronoun or an adjective. We say: "I know that the Ukrainian language is beautiful." Or: "I am studying because I want to understand my friends."*
 
-Для умови ми беремо сполучник «**якщо**». For a condition, we take the conjunction "**if**". Він показує залежність однієї дії від іншої. It shows the dependence of one action on another. Наприклад: «**Якщо** буде сонце, ми підемо гуляти». For example: "**If** there is sun, we will go for a walk". Щоб показати мету, ми використовуємо «**щоб**». To show a goal, we use "**in order to**". Після нього ми ставимо дієслово в інфінітиві або в минулому часі. After it, we put the verb in the infinitive or in the past tense. Наприклад: «Я читаю, **щоб** знати більше». For example: "I read **in order to** know more". Або: «Я хочу, **щоб** ти прийшов». Or: "I want you to come" (literally: that you came). Минулий час тут означає бажання, а не минуле. The past tense here means a wish, not the past.
+В українській мові є різні слова для пояснення причини. Слово «бо» — це короткий варіант для розмови з друзями. Ми часто чуємо його вдома або на вулиці. Наприклад: «Я не прийшов, бо захворів». Для офіційного листа краще обрати варіант «тому що». Це нейтральне слово, яке підходить для будь-якої ситуації. Найбільш формальний варіант — це «через те що». Він вказує на логічний наслідок у текстах або новинах. Це важливо знати, щоб не зробити **помилку** (mistake) у стилі.
 
-Давайте послухаємо, як студент розповідає про свій прогрес. Let's listen to how a student talks about their progress.
-> — **Вчителька:** Марку, як твої успіхи? *(Mark, how is your progress?)*
-> — **Марко:** Я вже говорю краще, **хоча** роблю **помилки**. *(I speak better already, **although** I make **mistakes**.)*
-> — **Вчителька:** Це нормально! *(That's normal!)*
-> — **Марко:** **Коли** я починав, я знав тільки прості слова. *(**When** I started, I knew only simple words.)*
-> — **Вчителька:** А зараз ти знаєш багато правил **граматики**. *(And now you know many rules of **grammar**.)*
-> — **Марко:** Так, я вчуся, **щоб** перейти на рівень В1. *(Yes, I study **in order to** move to the B1 level.)*
-> — **Вчителька:** **Якщо** ти будеш так вчитися, у тебе все вийде! *(**If** you study like this, you will succeed!)*
-> — **Марко:** Дякую! Я впевнений, **що** це можливо. *(Thank you! I am confident **that** it is possible.)*
+:::info
+**Grammar box**
+Always put a comma before conjunctions like **тому що** (because), **бо** (because), **що** (that), and **якщо** (if) in Ukrainian. This punctuation marks the boundary between two parts of a complex sentence.
+:::
 
-<!-- INJECT_ACTIVITY: error-correction -->
+Коли ми маємо мету або умову, ми використовуємо «щоб» та «якщо». Слово «якщо» допомагає будувати плани на майбутнє. Ми кажемо: «Якщо я буду в Києві, я піду в музей». Слово «щоб» вказує на нашу ціль. Після нього ми часто використовуємо інфінітив. Наприклад: «Я читаю, щоб більше знати». Це робить наше мовлення багатшим і допомагає з’єднувати частини речення.
 
-## Самооцінка і перехід до B1
+> *When we have a goal or a condition, we use "shchob" (in order to) and "yakshcho" (if). The word "yakshcho" helps build plans for the future. We say: "If I am in Kyiv, I will go to a museum." The word "shchob" indicates our goal. After it, we often use an infinitive. For example: "I read in order to know more." This makes our speech richer and helps connect parts of the sentence.*
 
-Час зробити паузу і подивитися на свої результати. Time to take a pause and look at your results. Давайте проведемо невелику самооцінку. Let's do a small self-assessment. Оцініть свою **впевненість** (confidence) від одного до п'яти за такими пунктами. Rate your confidence from one to five on these points.
+<!-- INJECT_ACTIVITY: fill-in, complex-sentences-conjunctions -->
 
-1. Використання всіх семи відмінків без таблиці. Using all seven cases without a table.
-2. Розуміння різниці між дієсловами «писати» і «написати». Understanding the difference between the verbs "to write" and "to have written".
-3. Природне порівняння різних речей. Natural comparison of different things.
-4. Правильне використання займенника «свій». Correct use of the pronoun "one's own".
-5. Розуміння українських граматичних термінів. Understanding of Ukrainian grammatical terms.
+> — **Вчитель:** Як пройшло твоє **повторення** (review)? *(How did your review go?)*
+> — **Учень:** Добре, хоча **граматика** (grammar) іноді важка. *(Good, although grammar is sometimes difficult.)*
+> — **Вчитель:** Що було найскладнішим для тебе? *(What was the most difficult for you?)*
+> — **Учень:** Я довго вчив кожен **відмінок** (case) і кожне **дієслово** (verb). *(I spent a long time learning every case and every verb.)*
+> — **Вчитель:** Чи ти вже готовий до рівня B1? *(Are you ready for the B1 level yet?)*
+> — **Учень:** Думаю, що так, якщо я буду вчити нові слова щодня. *(I think so, if I study new words every day.)*
+> — **Вчитель:** Який твій план на майбутнє? *(What is your plan for the future?)*
+> — **Учень:** Я хочу вчитися, щоб вільно говорити про культуру. *(I want to study in order to speak fluently about culture.)*
+> — **Вчитель:** Це чудовий план, успіхів тобі! *(That is a great plan, good luck to you!)*
 
-Якщо ваша оцінка висока — це чудовий результат. If your score is high — this is an excellent result. Якщо ні, варто зробити **повторення** (review) конкретних модулів А2: наприклад, модуль 51 для відмінків або модуль 63 для складнопідрядних речень. If not, it is worth doing a review.
+<!-- INJECT_ACTIVITY: error-correction, review-sentence-logic -->
 
-Перехід від рівня А2 до В1 — це великий крок. The transition from level A2 to B1 is a big step. Що зміниться? What changes? Головне — це занурення в мову. The main thing is immersion in the language. На рівні В1 інструкції до вправ будуть лише українською. At level B1, instructions for exercises will be only in Ukrainian. Також ми почнемо вивчати нову термінологію. Also, we will start learning new terminology. Ви дізнаєтеся, що таке **дієвідміна** (conjugation). You will learn what a conjugation is. Ми детально розглянемо кожну **відміну** (declension) іменників. We will examine in detail each declension of nouns. Ви також зрозумієте українське **чергування** (alternation) звуків. You will also understand the Ukrainian alternation of sounds. Це зробить вашу мову ще природнішою. This will make your speech even more natural.
+## Самооцінка і перехід до B1 (~350 words total)
 
-**Підсумок** (Summary).
-Ви завершили велику подорож рівнем А2. You have completed a great journey through level A2. Тепер ви можете говорити про минуле, теперішнє і майбутнє. Now you can talk about the past, present, and future. Ви знаєте, як показати процес або результат дії. You know how to show the process or result of an action. Ви вмієте орієнтуватися в системі семи відмінків. You know how to navigate the seven-case system. Ваші речення стали довшими. Your sentences have become longer. Ви можете будувати логічні аргументи через сполучники. You can build logical arguments through conjunctions.
+Зараз час перевірити свої сили перед початком нового рівня. Оцініть свою впевненість від 1 до 5 балів за кожним пунктом. Чи можете ви правильно використовувати кожен **відмінок** (grammatical case) без таблиці? Чи ви розумієте різницю між словами «писати» та «написати»? Чи ви завжди вживаєте **займенник** (pronoun) «свій» у правильних ситуаціях? Чи ви можете вільно порівнювати речі? Нарешті, чи зрозуміла вам українська **граматика** (grammar) та її основні правила? Якщо ви маєте високі бали, ви готові йти далі.
 
-Наступний крок — рівень В1. The next step is level B1. Там мова буде не просто предметом вивчення, а засобом спілкування. There the language will not be just a subject of study, but a medium of communication. Продовжуйте практикуватися щодня. Continue to practice every day. Дякую за вашу працю і до зустрічі! Thank you for your work and see you!
+> *Now it is time to test your strength before starting a new level. Rate your confidence from 1 to 5 points for each item. Can you correctly use every grammatical case without a table? Do you understand the difference between the words "pysaty" and "napysaty"? Do you always use the pronoun "svii" in the correct situations? Can you freely compare things? Finally, is Ukrainian grammar and its basic rules clear to you? If you have high scores, *
+
+На рівні B1 ваше навчання значно зміниться. Ми переходимо до повного занурення в українську мову. Це означає, що англійські інструкції та пояснення поступово зникнуть. Ви будете читати правила та завдання лише українською. Для цього вам потрібно знати спеціальні терміни. Ви вивчите, що таке **дієвідміна** (conjugation) та **відміна** (declension group). Ви зрозумієте, як працює **чергування** (alternation) звуків у коренях слів. Кожне нове речення стане можливістю думати як українець.
+
+> *At the B1 level, your learning will change significantly. We are moving to full immersion in the Ukrainian language. This means that English instructions and explanations will gradually disappear. You will read rules and tasks only in Ukrainian. For this, you need to know special terms. You will learn what "diyevidmina" and "vidmina" are. You will understand how the alternation of sounds in word roots works. Every new sentence will become an opportunity to think like a Ukrainian.*
+
+:::info
+**Grammar box**
+На рівні B1 ми аналізуємо кожне **дієслово** (verb) через його категорію виду. Це допомагає точно описувати процеси та результати ваших дій у минулому чи майбутньому.
+:::
+
+<!-- INJECT_ACTIVITY: error-correction-final-review -->
+
+Вітаємо! Ви успішно завершили довгий шлях рівня A2. Тепер ви можете вільно розповідати про минуле, теперішнє та майбутнє з різними нюансами. Ви впевнено знаєте, як працює система семи відмінків. Ви вмієте будувати складні логічні думки за допомогою сполучників. Ваша **граматика** (grammar) стала набагато міцнішою. Ви більше не робите випадкові **помилки** (mistakes) у базових формах слів.
+
+> *Congratulations!  Now you can freely talk about the past, present, and future with various nuances. You confidently know how the seven-case system works. You know how to build complex logical thoughts using conjunctions. Your grammar has become much stronger. You no longer make random mistakes in basic word forms.*
+
+Ваш наступний крок — це рівень B1. Тут мова стане не просто предметом вивчення, а вашим інструментом для життя. Ви будете читати новини, дивитися фільми та обговорювати історію України. Кожен новий **прикметник** (adjective) та кожне **дієслово** (verb) допоможуть вам краще виразити свій характер. Це час для справжнього занурення в українську культуру. Ваше фінальне **повторення** (review) закінчилося, і починається нова цікава подорож.
+
+> *Your next step is the B1 level. Here, language will become not just a subject of study, but your tool for life. You will read news, watch movies, and discuss the history of Ukraine. Every new adjective and every verb will help you better express your character. This is the time for true immersion in Ukrainian culture. Your final review has ended, and a new interesting journey begins.*

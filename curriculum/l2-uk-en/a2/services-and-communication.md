@@ -1,111 +1,159 @@
-## На пошті: Базова лексика
+## На пошті: Базова лексика (~450 words)
 
-В Україні головна поштова служба — це **Укрпошта** (Ukrposhta, the national postal service). Кожна локальна філія називається **відділення** (branch, post office). На вулицях ви часто можете побачити жовті металеві коробки. Це **поштові скриньки** (postboxes), куди люди кидають свої листи. У відділенні завжди є клієнти, які хочуть надіслати або отримати щось важливе. Там працюють люди за спеціальними вікнами. The atmosphere is usually busy, especially during the morning hours. Understanding the basic vocabulary will help you navigate this environment confidently. When you enter, you need to find the correct window.
+У кожному українському місті чи селі є пошта. Національний оператор поштового зв'язку називається «Укрпошта». Люди часто ходять туди, щоб спілкуватися або вирішувати свої справи. На пошті можна відправити важливі документи, подарунки або просто теплі слова рідним. Ми надсилаємо речі як по Україні, так і за кордон. Хоча сьогодні ми маємо інтернет, звичайна пошта залишається дуже важливою частиною нашого життя.
 
-Якщо ви хочете написати комусь текст на папері, вам потрібен **лист** (letter). Щоб відправити лист, ви маєте купити спеціальний паперовий пакет. Це **конверт** (envelope). На конверт обов'язково треба наклеїти маленьку картинку. Це **марка** (postage stamp). Без марки ваш лист не поїде до адресата. Якщо ви хочете надіслати гарне фото з коротким текстом, купіть інший предмет. Це **листівка** (postcard). Листівки часто відправляють без конверта, але марка все одно потрібна. Sometimes, local kiosks or souvenir shops also sell stamps and postcards for your convenience.
+> *In every Ukrainian city or village, there is a post office. The national postal service operator is called "Ukrposhta". People often go there to communicate or handle their business. At the post office, you can dispatch important documents, gifts, or simply warm words to relatives. We send things both within Ukraine and abroad. Although today we have the internet, the regular post office remains a very important part of our lives.*
 
-Люди часто надсилають не тільки листи, але й великі речі. Якщо ви хочете надіслати одяг або іграшки, це **посилка** (parcel). Ви можете принести свої речі, і на пошті вам дадуть коробку. Якщо річ трохи менша і вже загорнута в папір, ми часто кажемо **пакунок** (package). Для книг, журналів або документів є спеціальне слово. Це **бандероль** (small parcel, book-post). Бандероль легша за посилку і коштує дешевше. It is useful to know these distinctions when you explain what you are sending. The price often depends on whether it is a document or a heavy object.
+When you need to send a simple message, you look for a post office branch. The basic vocabulary for this task is very practical. 
 
-На пошті працюють різні спеціалісти. Людина, яка сидить за вікном і допомагає вам, — це **оператор** (postal clerk) або **працівник пошти** (postal worker). Людина, яка приносить пошту до вашого дому, — це **листоноша** (mail carrier). Коли ви щось надсилаєте, у цьому процесі є дві головні ролі. Той, хто надсилає річ, — це **відправник** (sender). Той, хто має забрати цю річ, — це **одержувач** (recipient). Ці слова дуже важливі. You will see these terms on every envelope and parcel form. It is crucial not to mix them up to ensure your package arrives correctly.
+Коли ви хочете написати родичам, ви берете паперовий лист. Ви кладете цей лист у білий конверт. Потім ви купуєте на пошті марку і клеїте її на конверт. На конверті також обов'язково треба написати правильну адресу та поштовий індекс. Після цього ви кидаєте конверт у жовту поштову скриньку, яка висить на стіні відділення.
 
-Які дії ми найчастіше робимо на пошті? Якщо ви віддаєте лист оператору, ви хочете його **надіслати** (to send) або **відправити** (to send, to dispatch). Коли приходить посилка, ви йдете у відділення. Ви хочете її **отримати** (to receive) або **забрати** (to pick up). Щоб надіслати річ, вам часто потрібно написати інформацію на спеціальному папері. Це означає **заповнити бланк** (to fill out a form). Після цього оператор просить вас поставити підпис. Це означає **підписати квитанцію** (to sign a receipt). These action verbs are typically used in their perfective forms because they describe completed actions.
+> *When you want to write to relatives, you take a paper letter. You put this letter into a white envelope. Then you buy a stamp at the post office and stick it on the envelope. On the envelope, you also absolutely must write the correct address and postal code. After this, you drop the envelope into the yellow postbox, which hangs on the wall of the branch.*
 
-## Надіслати листа: Діалоги на пошті
+:::note
+**Quick tip**
+Be careful with the word **адреса** (address). It refers to a physical location (street, city, building). There is a similar-sounding false friend **адрес**, but it means a formal written greeting, usually given for a jubilee or anniversary. Always use **адреса** when writing on an envelope.
+:::
 
-Ми часто приходимо до відділення, щоб купити прості речі. Іноді нам треба надіслати важливі документи або короткі повідомлення. Давайте подивимося, як правильно почати розмову з оператором на пошті.
+For larger items, we use different words depending on the size and type of the object you are mailing. 
 
-> — **Клієнт:** Добрий день! Дайте **мені**, будь ласка, два **конверти** *(envelopes)* і дві **марки** *(stamps)* по Україні.
-> — **Оператор:** Добрий день! Звичайно, ось ваші конверти. Вам потрібні стандартні марки?
-> — **Клієнт:** Так, стандартні. Я хочу надіслати ці листи сьогодні ввечері. Скільки це коштує?
-> — **Оператор:** Це коштує сорок гривень.
-> — **Клієнт:** Дякую вам. Ось гроші.
-> — **Оператор:** Дякую. Ваша **решта** *(change)* і квитанція. До побачення!
+Якщо ви надсилаєте книги або журнали, це бандероль. Якщо ви хочете надіслати великий подарунок або одяг, вам потрібна посилка. В Україні люди також дуже часто використовують гарне слово пакунок. Ви віддаєте свій пакунок працівнику пошти. Після оплати ви обов'язково отримуєте чек або квитанцію. Ця квитанція має спеціальний номер для пошуку вашої речі.
 
-У цьому простому діалозі клієнт просить оператора: «Дайте мені». Це дуже популярна і ввічлива фраза у сфері послуг. Вона допомагає швидко отримати те, що вам потрібно.
+> *If you are sending books or magazines, it is a book post (small parcel). If you want to send a large gift or clothes, you need a parcel. In Ukraine, people also very often use the beautiful word package. You give your package to the postal worker. After payment, you must receive a receipt or a ticket. This receipt has a special number for tracking your item.*
 
-In Ukrainian, when we give, sell, send, or explain something to someone, we must use the Dative case (`давальний відмінок`). This grammatical case specifically answers the question **«Кому?»** *(To whom?)*. It functions to show the indirect object of your sentence. We use it frequently with service verbs like **дати** *(to give)*, **продати** *(to sell)*, **показати** *(to show)*, and **допомогти** *(to help)*. For example, when you ask a postal worker to give you an envelope, you say «дайте мені». The pronoun «я» *(I)* changes entirely to «мені» *(to me)* in the Dative case. Other common examples include «дати **листоноші**» *(to give to the mail carrier)* or «продати **клієнту**» *(to sell to the customer)*. The action is always directed toward a specific recipient.
+There are two main verb pairs for sending: **надсилати / надіслати** (to send mail or messages) and **відправляти / відправити** (to dispatch physical goods or transport). We also have the essential pair **отримувати / отримати** (to receive). The post office involves three specific roles: you are the sender, your friend is the recipient, and the worker who delivers it is the mail carrier.
 
-Тепер давайте уявимо іншу ситуацію. Ви хочете надіслати велику і важку річ родичам.
+Головні люди тут — це відправник, одержувач і листоноша. Відправник хоче надіслати листа або відправити посилку. Одержувач чекає на цей пакунок. Листоноша приносить пошту до вашого дому. У відділенні ви зазвичай кажете: «Я хочу надіслати листівку» або «Я хочу забрати посилку». Кожна людина радіє, коли може отримати сюрприз.
 
-> — **Клієнт:** Добрий день! Я хочу надіслати цю **посилку** *(parcel)* моєму **братові** *(to my brother)*.
-> — **Оператор:** Добрий день! Що всередині? Це важливо знати.
-> — **Клієнт:** Там старі книги, зошити та теплий зимовий одяг.
-> — **Оператор:** Добре. Кому саме ви відправляєте посилку? У яке місто?
-> — **Клієнт:** Я відправляю її братові у місто Львів.
-> — **Оператор:** Будь ласка, заповніть цей **бланк** *(form)*. Напишіть адресу та номер телефону.
-> — **Клієнт:** Допоможіть мені, будь ласка. Де треба писати номер телефону одержувача?
-> — **Оператор:** Пишіть номер телефону ось тут, унизу спеціального бланка.
-> — **Клієнт:** Дякую. Підкажіть мені, скільки часу йде посилка до Львова?
-> — **Оператор:** Зазвичай посилка їде два або три дні.
+> *The main people here are the sender, the recipient, and the mail carrier. The sender wants to send a letter or dispatch a parcel. The recipient is waiting for this package. The mail carrier brings the mail to your home. In the branch, you usually say: "I want to send a postcard" or "I want to pick up a parcel". Every person is happy when they can receive a surprise.*
 
-У цій ситуації клієнт чітко пояснює, кому він надсилає свої речі, та дізнається про час доставки.
+## Надіслати листа: Діалоги на пошті (~600 words)
 
-How do we correctly form the Dative case for nouns? For masculine nouns denoting people, the most common and natural endings are **-ові** and **-еві** (or **-єві**). For example, the word «брат» *(brother)* becomes **братові** *(to the brother)*. The word «друг» *(friend)* becomes **другові**. For feminine nouns, the typical and regular ending is **-і**. The word «сестра» *(sister)* becomes **сестрі** *(to the sister)*. The word «мама» *(mother)* becomes **мамі**. Note that consonant mutation frequently occurs in feminine nouns before this ending. For instance, «подруга» *(female friend)* becomes **подрузі**. These specific endings clearly show who is receiving the physical item or the result of the action. They are essential for clear communication at the post office.
+У поштовому відділенні клієнти часто просять працівників дати їм потрібні речі. Це типова ситуація, коли ви хочете написати комусь повідомлення або надіслати важливі документи. Працівник пошти за віконцем завжди підкаже, що саме треба зробити. Подивімося на типову розмову.
 
-На пошті ми часто говоримо про наші конкретні плани та наміри. Для цього ми найчастіше використовуємо просту конструкцію «Я хочу» плюс дієслово. Наприклад: «Я хочу **надіслати** важливий лист» або «Я хочу **забрати** важку посилку». Якщо ми зовсім не знаємо, де щось зробити, ми запитуємо «Де можна» плюс дієслово. Ви можете підійти до вікна і запитати оператора: «Де можна надіслати гарну **листівку** *(postcard)*?». Або ви можете запитати на вулиці: «Де можна швидко купити марку?». Ці фрази дуже допомагають отримати інформацію. Дієслова у цих фразах завжди стоять у формі інфінітива. Вони показують результат тієї дії, яку ви плануєте зробити.
+> *In the post office branch, customers often ask the workers to give them the necessary things. This is a typical situation when you want to write a message to someone or send important documents. The postal worker behind the window will always tell you exactly what needs to be done. Let's look at a typical conversation.*
 
-Коли ми надсилаємо лист або невелику бандероль, ми завжди маємо писати адресу. На кожному конверті обов'язково є два важливі поля для заповнення. Перше поле — це **«Кому»** *(To whom / Recipient)*. Тут ми завжди використовуємо давальний відмінок. Друге поле — це **«Від кого»** *(From whom / Sender)*. Тут ми завжди використовуємо родовий відмінок *(Genitive case)*. Від того, наскільки правильно написана адреса, залежить швидка доставка. Спочатку ви пишете: «Від кого: від Івана Петренка». Потім ви пишете внизу: «Кому: Оксані Коваленко». Далі ви уважно пишете місто, вулицю, номер будинку, номер квартири та **індекс** *(postal code)*.
+> — **Клієнт:** Добрий день! Дайте мені, будь ласка, два конверти і марки. *(Good day! Please give me two envelopes and stamps.)*
+> — **Працівник пошти:** Добрий день! Які конверти вам потрібні? Великі чи малі? *(Good day! What envelopes do you need? Large or small?)*
+> — **Клієнт:** Малі. Я хочу надіслати листа в Київ. *(Small. I want to send a letter to Kyiv.)*
+> — **Працівник пошти:** Ось ваші конверти і марки. Заповніть бланк, будь ласка, і напишіть адресу. *(Here are your envelopes and stamps. Fill out the form, please, and write the address.)*
+> — **Клієнт:** Де можна це зробити? *(Where can I do this?)*
+> — **Працівник пошти:** Он там є вільний стіл. *(There is a free table over there.)*
+> — **Клієнт:** Дякую вам! *(Thank you!)*
 
-<!-- INJECT_ACTIVITY: fill-in-complete-post-office-dialogue-lines-with-correct-dative-forms -->
+Notice how the customer clearly states their intention using the phrase **я хочу** (I want) followed by a perfective infinitive verb. You say **я хочу надіслати листа** (I want to send a letter) because it is a one-time, completed action. You can also use this formula to ask for a parcel using the verb **отримати** (to receive).
 
-## Просити, дякувати, допомагати: Давальний у сфері послуг
+Ще одна корисна фраза в цьому діалозі — це питання «де можна?». Коли ви не знаєте, куди йти, ви завжди можете запитати працівника. Наприклад, ви кажете «Де можна надіслати листівку?». Після цієї фрази ми також використовуємо дієслово доконаного виду.
 
-У поштовому відділенні ми часто просимо про допомогу. Коли ви не знаєте, як заповнити документ, вам потрібне дієслово **допомагати** *(to help)*. When you ask for assistance, the person who receives the help is the indirect object. This means the verb «допомагати» always takes the Dative case. Ви можете сказати оператору: «**Допоможіть мені** *(help me)* заповнити цей бланк». The pronoun «я» changes to the Dative form «мені». Інший корисний приклад — це прохання показати щось. Ви можете запитати: «**Покажіть мені** *(show me)*, де писати адресу». Або ви можете сказати: «Покажіть клієнту, де стоїть скринька». Ці фрази роблять ваше спілкування ввічливим та ефективним. Оператор завжди готовий допомогти вам.
+> *Another useful phrase in this dialogue is the question "where can I?". When you do not know where to go, you can always ask the worker. For example, you say "Where can I send a postcard?". After this phrase, we also use a perfective verb.*
 
-Після того, як ви отримали допомогу, важливо подякувати. У сфері послуг ми використовуємо дієслово **дякувати** *(to thank)*. This is a critical point where many learners make a mistake. In Ukrainian, you do not thank a person; you give thanks to a person. The question is always «дякувати кому?». Тому ми кажемо «**Дякую вам** *(thank you)*», а не «дякую вас». Інші правильні приклади: «Дякую **листоноші** *(to the mail carrier)* за лист». Також ми кажемо: «Дякуємо оператору за швидку роботу». Якщо ви розмовляєте з другом, ви кажете «Дякую **тобі** *(to you)*». Завжди пам'ятайте про давальний відмінок після цього дієслова. Це звучить дуже природно українською мовою.
+:::info
+**Grammar box**
+Use perfective aspect verbs like **надіслати** (to send mail) and **відправити** (to dispatch a parcel) for single, complete actions at the post office.
+:::
 
-Працівники пошти також можуть давати корисні рекомендації. Для цього вони використовують дієслово **радити** *(to advise / to suggest)*. This verb also governs the Dative case because you are offering advice to someone. Наприклад, досвідчений оператор може сказати: «**Раджу вам** *(I advise you)* надіслати це **авіапоштою** *(by airmail)*». Так посилка приїде набагато швидше. Якщо посилка дуже важлива, він скаже: «Раджу клієнту обрати надійну доставку». У неформальній ситуації ви можете дати пораду другу. Ви кажете: «**Раджу тобі** *(I advise you)* уважно перевірити **індекс** *(postal code)* перед відправленням». Ці фрази дуже часто звучать у різних сервісних центрах. Вони показують увагу до деталей та турботу про результат.
+Іноді нам потрібно відправити більші речі, наприклад, книги або подарунки. Для цього ми використовуємо бандеролі або посилки. Процес відправлення трохи складніший, бо треба заповнити спеціальні документи.
 
-Коли ми спілкуємося на пошті, ми часто використовуємо ввічливий наказовий спосіб. Polite commands direct an action toward someone, so they naturally pair with the Dative case. Ми вже добре знаємо корисні фрази «допоможіть мені» та «покажіть мені». Є й інші дуже популярні та важливі слова. Ви можете ввічливо запитати: «**Скажіть мені** *(tell me)*, скільки сьогодні коштує марка». Якщо ви прийшли на пошту з родиною, ви скажете щось інше. Ви кажете: «**Поясніть нам** *(explain to us)* ці нові правила відправлення». Працівник пошти може попросити свого колегу: «**Принесіть їй** *(bring her)* ще один великий конверт». Всі ці наказові форми роблять діалог чітким та зрозумілим. Ви прямо вказуєте, кому потрібна конкретна інформація або річ.
+> *Sometimes we need to dispatch larger things, for example, books or gifts. For this, we use small parcels or packages. The dispatching process is a bit more complicated because you have to fill out special documents.*
 
-Давайте розглянемо життєву ситуацію перед походом на пошту. Ви хочете надіслати подарунок, але не вмієте гарно його **загорнути** *(to wrap)*. Ви йдете до сусідки і просите її про допомогу.
-> — **Ви:** Олено, привіт! Це подарунок **моїй бабусі** *(to my grandmother)*.
-> — **Олена:** Привіт! Дуже гарна річ. Чим я можу допомогти?
-> — **Ви:** Допоможи мені загорнути його, будь ласка.
-> — **Олена:** Звичайно, дай мені папір і ножиці.
-> — **Ви:** Тримай. Раджу тобі використовувати цю стрічку.
-> — **Олена:** Готово. Тепер ти можеш нести посилку на пошту.
-> — **Ви:** Дякую тобі за допомогу!
+> — **Відправник:** Добрий день. Допоможіть мені, будь ласка. Це бандероль для сестри в Канаду. *(Good day. Help me, please. This is a small parcel for my sister in Canada.)*
+> — **Працівник пошти:** Добре. Що всередині? *(Okay. What is inside?)*
+> — **Відправник:** Там дві українські книги. Скільки коштує відправити це до Торонто? *(There are two Ukrainian books there. How much does it cost to dispatch this to Toronto?)*
+> — **Працівник пошти:** Це коштує п'ятсот гривень. Але спочатку заповніть цей бланк. *(This costs five hundred hryvnias. But first, fill out this form.)*
+> — **Відправник:** Підкажіть мені, де писати мою адресу? *(Tell me, where should I write my address?)*
+> — **Працівник пошти:** Ось тут. Пам'ятайте: кому — це одержувач, а від кого — це відправник. *(Right here. Remember: "to whom" is the recipient, and "from whom" is the sender.)*
+> — **Відправник:** Дякую. А коли сестра зможе отримати цю бандероль? *(Thank you. And when will my sister be able to receive this small parcel?)*
+> — **Працівник пошти:** Приблизно через три тижні. *(In about three weeks.)*
 
-Тут ми яскраво бачимо, як давальний відмінок працює у реальній розмові. 
+In the second dialogue, the customer uses polite request forms that naturally govern the Dative case. When you ask a service worker for assistance, you are asking them to direct their action *to* you. This is why you hear phrases like **допоможіть мені** (help me) and **підкажіть мені** (tell me). The pronoun **мені** is the Dative form of «я», functioning as the indirect object. 
 
-Як ви вже помітили, короткі особові займенники часто стоять у давальному відмінку. It is essential to memorize their Dative forms for fluent communication in service situations. Use **мені** *(to me)*, **нам** *(to us)*, or the formal **вам** *(to you)* for yourself. When you direct the action at someone else, use the other forms. These are **тобі** *(to you)*, **йому** *(to him/it)*, **їй** *(to her)*, or **їм** *(to them)*. Завжди використовуйте ці займенники разом із дієсловами «давати», «показувати» та «допомагати». Також вони чудово працюють зі словами «радити» та «дякувати». Тоді ваша щоденна українська мова буде граматично правильною та дуже ввічливою. Тепер ви повністю готові до будь-якої розмови на пошті або в іншому місці.
+Давальний відмінок часто звучить у сфері послуг. Ви даєте речі працівнику, а він дає квитанцію вам. Тому ми кажемо «дайте мені» або «покажіть йому». Дієслово «дякувати» також завжди вимагає давального відмінка. Ми кажемо «дякую вам» або «дякую листоноші».
 
-<!-- INJECT_ACTIVITY: match-up-service-requests -->
+> *The Dative case often sounds in the service sector. You give things to the worker, and he gives a receipt to you. Therefore, we say "give me" or "show him". The verb "to thank" also always requires the Dative case. We say "thank you" or "thank the mail carrier".*
 
-<!-- INJECT_ACTIVITY: group-sort-dative-functions -->
+The postal form also uses Dative question words. The field marked **Кому** (To whom) requires the recipient's details in the Dative case. We will explore how to change names into this case in the next section.
 
-## Написати адресу: Давальний у листуванні
 
-Від того, наскільки правильно написана **адреса** *(address)*, залежить своєчасна доставка вашого листа. Кожна країна має свої специфічні правила для пошти. В Україні поштову адресу потрібно писати в чіткій послідовності. Спочатку ми завжди пишемо ім'я та прізвище **одержувача** *(recipient)* у правильному відмінку. Далі йде точна назва вулиці, номер будинку та номер квартири, якщо вона є. Наприклад, ми пишемо: вулиця Тараса Шевченка, будинок п'ять, квартира вісім. Після цього ми вказуємо повну назву міста або села. Якщо це маленьке село, ми також пишемо назву області. Останній важливий елемент — це поштовий **індекс** *(postal code)*. Цей короткий номер допомагає пошті швидко знайти правильне відділення. Якщо ви напишете всі дані правильно, ваш лист швидко знайде свого господаря.
+## Підсу́мок — Summary
 
-Коли ми заповнюємо поле «Кому» на конверті, ми обов'язково використовуємо давальний відмінок. Це граматичне правило стосується всіх слів у цьому рядку. Nouns, adjectives, and possessive pronouns must all agree in the Dative case. Ми рідко просто сухо пишемо ім'я людини. Ми часто додаємо теплі слова або слова поваги. Наприклад, ми пишемо: «**моєму дорогому братові** *(to my dear brother)* Михайлові». Тут займенник «моєму», прикметник «дорогому» та іменник «братові» стоять у давальному відмінку чоловічого роду. Якщо ви пишете близькій жінці, ви скажете: «**любій бабусі** *(to dear grandmother)* Олені». Зверніть увагу на типові закінчення жіночого роду в давальному відмінку. Вони закінчуються на «-ій» або «-і». Правильне узгодження показує вашу високу повагу до людини, яка отримає лист.
+Віта́ємо! У цьому́ модулі «На по́шті» ми загли́бились у сві́т української мо́ви, щоб впевне́но взаємоді́яти на по́шті. Ключови́м інструме́нтом став дава́льний відмі́нок, який допомага́є виража́ти напря́мок дії чи отриму́вача. Ми навчи́лись проси́ти про допо́могу (`Допоможі́ть мені́, будь ла́ска!`), дя́кувати (`Щи́ро дя́кую вам!`) і, зві́сно, надсила́ти листи́ та поси́лки.
 
-The way you address an envelope depends heavily on your relationship with the recipient. Коли ми пишемо офіційний лист у компанію, ми використовуємо формальний стиль. Наприклад, ми солідно пишемо: «**Шановному професорові** *(to the respected professor)* Петренку». Тут ми чітко бачимо типове закінчення «-ові» для чоловічого роду в давальному відмінку. Це закінчення додає вашому тексту необхідної офіційності та поваги. Якщо ми пишемо близькій людині або старому другу, ми обираємо неформальний стиль. На святковому конверті ми тепло напишемо: «**Дорогій подрузі** *(to dear friend)* Марії». Тут ми використовуємо жіночий рід і набагато більш емоційні слова. Вибір правильного стилю адресації дуже важливий для гарного враження. Завжди добре думайте про те, кому саме ви надсилаєте ваш лист чи посилку.
+Пам’ята́єте, як пра́вильно зверну́тись до адреса́та? Усі слова́, що опи́сують отриму́вача, мають узгоджу́ватися в дава́льному відмі́нку. Напри́клад, щоб надісла́ти листа́ своє́му бра́тові Миха́йлові, ми ка́жемо: «моє́му дорого́му бра́тові Миха́йлові». Особли́ву ува́гу ми приділи́ли типо́вим закін́ченням `-ові`, `-еві`, `-єві` для чолові́чих іме́н та іменників, які додаю́ть ва́шій мо́ві автенти́чності та шано́бливості (напр., `бра́тові`, `Петро́ві`, `ліка́реві`). Ми також́ дізна́лись, як писа́ти коро́ткі, серде́чні повідо́млення, почина́ючи їх зі зверта́ння в дава́льному відмі́нку, як-от «Дорогі́й подру́зі! Пишу́ тобі́ з Ки́єва». Ці фра́зи дозволя́ють нам вира́зити свої́ почуття́ та думки́ безпосере́дньо до отриму́вача, ро́блячи спілкува́ння те́плим та приє́мним.
 
-Часто ми не просто надсилаємо різні речі, а й додаємо коротке приємне повідомлення. На звичайній поштовій листівці досить мало вільного місця, тому текст має бути лаконічним. Ви можете почати своє повідомлення так: «**Дорогій подрузі!** *(To dear friend!)* Пишу тобі з Києва». Далі ви можете коротко пояснити мету вашого повідомлення або посилки. Наприклад, ви можете написати: «**Посилаю тобі** *(I am sending you)* цей маленький подарунок на добру згадку». Або ви можете пояснити: «**Надсилаю тобі** *(I am sending you)* нову рідкісну марку для твоєї колекції». Наприкінці повідомлення ми часто тепло вітаємо людину зі святом. Найпопулярніша фраза — це: «**Вітаю тебе** *(I congratulate you)* з великим святом». Такі короткі фрази роблять ваше повідомлення дуже приємним.
+**Переві́рте себе́:**
+1.  Як сказа́ти українською: «Я хочу́ надісла́ти листа́ дру́гові»?
+2.  Напиші́ть коро́тку адре́сну етике́тку для «дорога́ бабу́ся Оле́на», використо́вуючи дава́льний відмі́нок.
+3.  Яка́ різни́ця між слова́ми `відпра́вник` та `оде́ржувач`?
 
-Let's practice writing the "Кому" field for different people to reinforce the Dative agreement rules. Уявіть, що ви зараз надсилаєте лист своєму шкільному другу Сергію. Ви повинні уважно написати: «**Моєму найкращому другові** *(to my best friend)* Сергієві». Усі слова в цій фразі стоять у правильному давальному відмінку чоловічого роду. Тепер уявіть, що ваша посилка летить до вашої улюбленої тітки. Ви з любов'ю напишете: «**Моїй улюбленій тітці** *(to my favorite aunt)* Наталі». Тут чудово працюють граматичні правила для жіночого роду. А якщо ви надсилаєте офіційні документи своєму старому вчителю? Тоді ви повинні написати формально: «**Шановному вчителю** *(to the respected teacher)* Іванові Івановичу». Українська мова вимагає точного узгодження кожного слова в іменній групі. Регулярна практика допоможе вам писати ці форми автоматично.
+<!-- INJECT_ACTIVITY: fill-in-dialogue-dative -->
 
-<!-- INJECT_ACTIVITY: quiz-address-agreement -->
+## Просити, дякувати, допомагати: Давальний у сфері послуг (~600 words)
 
-## Підсумок
+When you are at the post office, you often need assistance to navigate the services. To ask for help politely, you will use specific verbs that direct the action to you or someone else. In Ukrainian, verbs like **допомагати** (to help), **показувати** (to show), and **пояснювати** (to explain) always require the Dative case for the person receiving the action. Think of these verbs as transferring something — whether it is physical help, visual information, or knowledge — from one person to another. You are not just helping "me" as a direct object; you are giving help *to* me.
 
-Час перевірити ваші нові знання! Дайте відповіді на ці короткі запитання, щоб добре закріпити матеріал. This is a great way to review the most important rules.
+Коли ви на пошті, працівники часто пояснюють вам нові правила. Вони також показують важливі форми. Якщо ви не розумієте текст, ви кажете: «Допоможіть мені заповнити цей бланк». Якщо ви шукаєте конверт, ви питаєте: «Покажіть мені, де тут каса». Ваш друг не знає, як працює пошта в Україні? Ви просите працівника: «Поясніть йому, як надіслати посилку». Коли ви отримуєте лист, ви показуєте працівнику свій паспорт. Тоді вони дають вам вашу пошту.
 
-Як перекласти фразу «I want to send a parcel to my friend» українською мовою?
-Правильна відповідь: «Я хочу **надіслати** *(to send)* **посилку** *(parcel)* моєму **другові** *(friend)*». Тут ми обов'язково використовуємо давальний відмінок для іменника «друг».
+> *When you are at the post office, workers often explain new rules to you. They also show important forms. If you do not understand the text, you say: "Help me fill out this form". If you are looking for an envelope, you ask: "Show me where the checkout is here". Your friend does not know how the post office works in Ukraine? You ask the worker: "Explain to him how to send a parcel". When you receive a letter, you show the worker your passport. Then they give you your mail.*
 
-Який відмінок ми використовуємо після дієслова «**дякувати**» *(to thank)*?
-Ми завжди використовуємо **давальний відмінок** *(Dative case)*. Ми кажемо: «Дякую вам», а не «дякую вас». This is a very common mistake, so pay close attention to it.
+Another crucial verb that governs the Dative case is **дякувати** (to thank). This is a very common mistake for learners, because in English we thank someone directly. In Ukrainian, you express gratitude *to* someone. You must always use the Dative case after this verb to sound natural. When you give advice, you also direct that advice to a person using the Dative. The verb **радити** (to advise) works the exact same way.
 
-Як правильно підписати **листівку** *(postcard)* для бабусі Олени?
-Ми тепло напишемо: «**Любій** *(dear)* бабусі Олені». Обидва слова мають правильні закінчення давального відмінка жіночого роду.
+:::info
+**Grammar box**
+The verb for thanking always takes the Dative case. Never use the Accusative case for the person you are thanking. When you send something by mail, use the Instrumental case to show the means: **поштою** (by mail) or **бандероллю** (as a small parcel). We do not use a preposition for this.
+:::
 
-Хто приносить листи додому?
-Це робить **листоноша** *(mail carrier)*.
+Вам потрібно знати, як правильно дякувати людям у сфері послуг. Після того, як ви відправили свій лист, ви кажете: «Дякую вам за допомогу». Ви також можете сказати: «Дякую листоноші за роботу». Якщо ви надсилаєте велику книгу, працівник може порадити: «Раджу вам надіслати це бандероллю, так значно дешевше». А ваша подруга може сказати: «Раджу тобі перевірити адресу ще один раз».
 
-Де ми пишемо **індекс** *(postal code)* і адресу?
-Ми уважно пишемо їх на **конверті** *(envelope)* або на офіційному **бланку** *(form)*.
+> *You need to know how to properly thank people in the service sector. After you have dispatched your letter, you say: "Thank you for the help". You can also say: "Thank the mail carrier for the work". If you are sending a large book, the worker might advise: "I advise you to dispatch this as a small parcel, it is significantly cheaper that way". And your friend might say: "I advise you to check the address one more time".*
 
-Ви чудово попрацювали сьогодні. You now know how to navigate a Ukrainian post office with confidence and respect. Тепер ви можете вільно надіслати лист або посилку своїм близьким людям!
+<!-- INJECT_ACTIVITY: group-sort-service-phrases -->
+
+Let's look at an extended everyday scenario. Imagine you need to prepare a package at home, but you are not sure how to pack it correctly. You might ask a neighbor or a friend for assistance. In this conversation, you will use the Dative case not only to ask for help, but also to explain who the item is intended for.
+
+> — **Сусідка:** Привіт! Що ти робиш? *(Hi! What are you doing?)*
+> — **Ви:** Добрий день! Я хочу надіслати посилку. Це подарунок моїй бабусі. *(Good day! I want to send a parcel. This is a gift for my grandmother.)*
+> — **Сусідка:** О, це чудово. Твоїй бабусі дуже сподобається. *(Oh, that is wonderful. Your grandmother will really like it.)*
+> — **Ви:** Але я не вмію це правильно пакувати. Допоможи мені закрити цю коробку. *(But I do not know how to pack this correctly. Help me close this box.)*
+> — **Сусідка:** Звичайно. Дай мені ножиці. І покажи мені, що там всередині. *(Of course. Give me the scissors. And show me what is inside there.)*
+> — **Ви:** Там теплий шарф і смачні солодощі. *(There is a warm scarf and tasty sweets there.)*
+> — **Сусідка:** Не забудь наклеїти марку на коробку. *(Do not forget to stick a stamp on the box.)*
+> — **Ви:** Так, дякую. Тепер нам треба написати адресу. *(Yes, thank you. Now we need to write the address.)*
+> — **Сусідка:** Давай я продиктую, а ти пиши. *(Let me dictate, and you write.)*
+> — **Ви:** Дуже дякую тобі за допомогу! *(Thank you very much for the help!)*
+
+Notice how naturally the imperative forms blend with Dative pronouns in these service interactions. You learned the imperative, which covers commands and requests, earlier in your journey. Now, you are combining those direct requests with the specific target of the action. This creates the exact phrases you will use every time you need a service, whether at the post office, a bank, or a local store. Mastering these short pairs will give you immense confidence in any public situation.
+
+Використовуйте імператив і давальний відмінок разом. Так ваше мовлення звучить ввічливо і природно. Якщо вам потрібна квитанція, ви кажете працівнику: «Дайте мені квитанцію». Якщо вам треба побачити нові ціни, ви кажете: «Покажіть нам каталог». Якщо ваша сестра забула свій індекс, ви просите працівника: «Скажіть їй правильний індекс». Такі фрази роблять ваше життя в Україні набагато легшим. Ви завжди зможете швидко отримати допомогу.
+
+> *Use the imperative and the Dative case together. This way your speech sounds polite and natural. If you need a receipt, you say to the worker: "Give me the receipt". If you need to see the new prices, you say: "Show us the catalog". If your sister forgot her postal code, you ask the worker: "Tell her the correct postal code". Such phrases make your life in Ukraine much easier. You will always be able to quickly get help.*
+
+<!-- INJECT_ACTIVITY: match-up-requests-responses -->
+
+## Написати адресу: Давальний у листуванні (~550 words)
+
+Sending physical mail requires knowing how to write an address correctly so your items reach their destination. In Ukrainian, when you want to send something to a specific location, you use the preposition "за" combined with the Instrumental case. You say "надіслати за адресою" (to send to the address). It is a very common mistake to say "по адресу" under the influence of other languages, but this is strictly incorrect in Ukrainian. A standard Ukrainian address includes several components in a specific order to help postal workers. You usually need to write the postal code, city, street, building number, and apartment number.
+
+Від того, наскільки правильно написана адреса, залежить швидкість доставки. Спочатку ви пишете індекс і місто. Потім вам треба вказати вулицю, будинок і квартиру. Коли ви хочете відправити посилку або лист, працівник пошти завжди перевіряє ці дані. Щоб надіслати бандероль за адресою швидко, пишіть розбірливо.
+
+> *The speed of delivery depends on how correctly the address is written. First you write the postal code and the city. Then you need to indicate the street, building, and apartment. When you want to send a parcel or a letter, the post office worker always checks this data. To send a small parcel to the address quickly, write legibly.*
+
+Besides the physical location, you must specify the recipient. This is where the Dative case shines in correspondence. On an envelope or a postal form, you use the Dative to indicate "кому" (to whom) the item is going. This applies whether you are addressing someone formally or informally. Both the adjectives and the nouns must change to their Dative forms to match. For example, you write "дорогому другові Андрію" for a friend, or "шановному професорові Петренку" for a formal contact.
+
+На кожному конверті ми пишемо ім'я одержувача. Якщо це ваша родина, ви пишете: любій бабусі Олені або дорогій сестрі Марії. Для офіційних листів ми використовуємо інші слова. Наприклад: шановному директорові або головному менеджеру. Листоноша має точно знати, кому віддати цей конверт.
+
+> *On every envelope we write the name of the recipient. If this is your family, you write: to dear grandmother Olena or to dear sister Mariia. For official letters we use other words. For example: to the respected director or to the main manager. The mail carrier must know exactly to whom to give this envelope.*
+
+Notice that the entire chain of words describing the recipient must agree in the Dative case. This rule applies to possessive pronouns, adjectives, nouns, and proper names all together. If you are sending a special gift to your brother, every single word in that description changes to match: "моєму дорогому братові Михайлові." Also, remember that for masculine nouns and names denoting people, Ukrainian strongly prefers the endings "-ові", "-еві", or "-єві" in the Dative case. Using these endings makes your writing sound much more natural, authentic, and respectful.
+
+:::note
+**Grammar tip**
+When addressing a man in the Dative case, prefer the **-ові** / **-еві** / **-єві** endings for both his title or relation and his name (e.g., братові, Петрові, лікарєві). This is a hallmark of authentic Ukrainian.
+:::
+
+<!-- INJECT_ACTIVITY: quiz, Choose the correct dative address form (дорогому/дорогій/дорогим + name) -->
+
+Once the envelope is perfectly addressed, you might want to include a short, handwritten message inside. The Dative case is frequently used for standard greetings in postcards and brief letters. When you start your message, you address the person directly using the Dative form. Then, as you describe your actions—like writing a letter to them, sending a surprise, or wishing them well—the Dative case continues to act as the target of your action. It connects your thoughts directly to the reader.
+
+Коли ви купуєте марку і хочете отримати гарний настрій, напишіть коротке повідомлення. Ви можете почати так: «Дорогій подрузі! Пишу тобі з Києва». Або написати: «Посилаю тобі маленький подарунок». Ці прості слова роблять спілкування дуже теплим. Ваша пошта завжди приносить радість.
+
+> *When you buy a stamp and want to receive a good mood, write a short message. You can start like this: "To a dear friend! I am writing to you from Kyiv". Or write: "I am sending you a small gift". These simple words make communication very warm. Your mail always brings joy.*

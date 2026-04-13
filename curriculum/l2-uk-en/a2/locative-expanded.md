@@ -1,153 +1,172 @@
-## Місцевий з абстрактними іменниками (Locative with Abstract Nouns)
+## Місцевий з абстрактними іменниками (Locative with Abstract Nouns) (~600 words total)
 
-In your previous lessons, you learned to use the Locative case to talk about physical places and locations. You used it to answer the question "where" for buildings, cities, and rooms, such as being at the university, in the kitchen, or in the center of the city. Now, we are expanding this grammatical concept to include abstract places, fields of activity, and broad life contexts. The mechanism remains exactly the same, but the meaning shifts from a literal location to a conceptual space.
+> — **Марія:** Привіт, Ігоре! Ми так давно не бачилися. Що нового у твоєму житті? *(Hi, Ihor! We haven't seen each other for so long. What is new in your life?)*
+> — **Ігор:** Привіт, Маріє! Радий тебе бачити. У минулому місяці я змінив роботу. Тепер працюю в освіті. А ти? *(Hi, Mariia! Glad to see you. Last month I changed my job. Now I work in education. And you?)*
+> — **Марія:** Я навчаюся на новому курсі. Вчора ми розмовляли по телефону з мамою, вона дуже хвилюється за мене. *(I am studying on a new course. Yesterday we talked on the phone with mom, she is very worried about me.)*
+> — **Ігор:** Не думай про це. Наша зустріч піднімає настрій. *(Do not think about it. Our meeting lifts the mood.)*
 
-Раніше ми багато говорили про конкретні місця, де ми знаходимося фізично. Наприклад, ми казали, що студенти зараз в університеті, а їхня нова викладачка працює у великій аудиторії. Тепер ми будемо використовувати місцевий відмінок для абсолютно нових абстрактних сфер. Людина може працювати не тільки в університеті, але й загалом в освіті.
+In your previous modules, you learned to use the **місцевий** (locative (case)) to describe physical locations. You already know how to say that someone is in the city, on the street, or at the university. However, this grammatical case is not limited to physical spaces. It also describes states, professional contexts, and an **абстрактний** (abstract) domain. Understanding this transition is key to sounding natural in Ukrainian.
 
-> *Earlier we talked a lot about concrete places where we are located physically. For example, we said that the students are currently at the university, and their new teacher works in a large lecture hall. Now we will use the locative case for absolutely new abstract spheres. A person can work not only at the university, but in education in general.*
+Ми часто використовуємо цей відмінок, коли говоримо про нематеріальні речі. Це може бути сфера діяльності або якийсь етап. Наприклад, ми говоримо про життя або про професію.
 
-> — **Марія:** Привіт, Ігорю! Як твої справи? Що нового у твоєму житті? *(Hi, Ihor! How are you? What is new in your life?)*
-> — **Ігор:** Привіт, Маріє! У минулому місяці я змінив роботу. Тепер працюю в освіті. А ти? *(Hi, Maria! Last month I changed jobs. Now I work in education. And you?)*
-> — **Марія:** Я навчаюся на новому курсі. Вчора ввечері розмовляла по телефону з мамою — вона дуже хвилюється за мене. *(I am studying on a new course. Yesterday evening I talked on the phone with my mom — she is very worried about me.)*
-> — **Ігор:** Розумію. У політиці зараз багато проблем, в економіці також, тому всі постійно хвилюються. *(I understand. There are many problems in politics right now, in economics too, so everyone is constantly worried.)*
+> *We often use this case when we talk about intangible things. This can be a field of activity or some stage. For example, we talk about life or about a profession.*
 
-When we talk about a profession, a broad field of activity, or an academic discipline, we almost always use the prepositions **у** or **в** together with the Locative case. This grammatical pattern creates the meaning of being "in the domain" or "in the field" of something. These are not physical places you can walk into through a door, but rather professional or abstract spheres where people spend their time and energy.
+When you want to say that something happens "in the field of" or "in the domain of", you use the prepositions **у** or **в** with the noun in the locative case. This pattern is essential for daily and professional conversations, such as during a **зустріч** (meeting, encounter) with colleagues or on the **телефон** (phone, telephone). You will use this constantly to describe careers and interests.
 
-Мій старший брат уже десять років успішно працює в економіці. Його дружина ніколи не цікавилася фінансами, бо вона завжди була у мистецтві. Наша мама часто каже, що у сучасній науці працювати дуже важко, але надзвичайно цікаво. Мій новий знайомий хоче зробити велику кар'єру у політиці.
+Моя сестра працює в медицині, а мій брат будує кар'єру в політиці. Багато людей успішно працюють у мистецтві або в науці. У моєму житті зараз відбувається багато приємних змін.
 
-> *My older brother has been successfully working in economics for ten years already. His wife was never interested in finance, because she was always in art. Our mom often says that working in modern science is very difficult, but extremely interesting. My new acquaintance wants to make a big career in politics.*
+> *My sister works in medicine, and my brother is building a career in politics. Many people work successfully in art or in science. In my life, many pleasant changes are happening right now.*
 
-These abstract nouns follow the exact same ending rules as the concrete nouns you already know in the Locative case. You simply need to apply the familiar patterns to new vocabulary. Remember that feminine nouns ending in **-ка** will still have the mandatory consonant mutation where the letter **к** changes to **ц**. Neuter nouns ending in **-я** consistently keep the **-і** ending.
+While most abstract domains use the prepositions **у** or **в**, there are fixed expressions that require **на**. The most common exception is the word for work. You must always use **на** with it, just as you do for public events or a **подорож** (journey, trip). It is helpful to memorize this phrase as a single block.
 
-Слово «політика» змінюється абсолютно так само, як і слово «аптека». Тому ми завжди кажемо «у політиці», а також «в економіці» та «у науці». Слова середнього роду «життя» та «навчання» мають стандартне закінчення «-і», тому ми отримуємо такі фрази, як «у житті» та «у навчанні».
+:::info
+**Grammar box** — The word **робота** (work) always takes the preposition **на** in the locative case: **на роботі** (at work). Never say *у роботі* when referring to your workplace.
+:::
 
-> *The word "politics" changes absolutely the same way as the word "pharmacy". That is why we always say "in politics", and also "in economics" and "in science". Neuter words "life" and "studies" have the standard "-i" ending, so we get phrases like "in life" and "in studies".*
+Сьогодні я весь день на роботі, тому не можу відповісти. Мій чоловік також зараз на роботі. Але в економіці ми бачимо складну ситуацію.
 
-While most abstract domains use **у** or **в**, the word for work is a very important and frequent exception to this pattern. We never say that we are physically "in" work. Instead, we conceptualize work as an ongoing event or an active process rather than an enclosed container or a broad field.
+> *Today I am at work all day, so I cannot answer. My husband is also at work right now. But in the economy, we see a difficult situation.*
+
+When forming the locative case for feminine nouns ending in **-а** or **-я**, remember the mandatory consonant alternations. If the noun stem ends in **-к**, it changes to **-ц** before the **-і** ending. For example, **наука** (science) becomes **у науці**. Expressing a **думка** (thought, opinion) or discussing a **проблема** (problem) often requires you to apply this spelling rule.
+
+Кожна нова ідея в науці має велике значення для нас. Зараз вона активно працює в політиці. Ця ситуація існує в сучасній культурі.
+
+> *Every new idea in science has great meaning for us. Right now she works actively in politics. This situation exists in modern culture.*
+
+Notice how the case endings shift the meaning from a simple physical location to a broader abstract sphere. It shows that you are deeply involved in a subject over a **місяць** (month) or even a **тиждень** (week). The **минулий** (past, previous) context is also frequently expressed with locative phrases.
+
+У минулому році він працював у бізнесі, а тепер він у політиці. У сучасному мистецтві є багато цікавих напрямків. Ми часто обговорюємо це в нашому суспільстві.
+
+> *In the previous year he worked in business, and now he is in politics. In modern art, there are many interesting directions. We often discuss this in our society.*
+
+
+## Підсумок — Summary
+
+Вітаємо! У цьому модулі ваше розуміння місцевого відмінка значно поглибилося. Тепер ви можете використовувати його не лише для позначення фізичного місця, але й для вираження абстрактних сфер та часових періодів. Ми дізналися, як казати `у житті`, `в освіті` або `на роботі`, розширюючи можливості вашого спілкування. Також ви навчилися будувати фрази про час, такі як `у січні`, `на цьому тижні` та `у дитинстві`, що дозволяє точно описувати події.
+
+Особливу увагу ми приділили прийменнику `по`, який у поєднанні з місцевим відмінком допомагає вказати засіб або канал зв'язку. Тепер ви легко скажете `по телефону` або `по радіо`. Пам'ятайте, що правильний вибір прийменника — ключ до відмінка!
+
+Настав час перевірити себе:
+1.  Як сказати українською "at work in January"?
+2.  Який прийменник ми використовуємо зі словом "тиждень" у місцевому відмінку?
+3.  Поясніть різницю між висловами "говорити по телефону" та "говорити про телефон".
+
+Продовжуйте практикуватися, і українська мова стане для вас ще більш відкритою та виразною!
+
+<!-- INJECT_ACTIVITY: quiz, Identify the function of locative in each sentence (physical location, abstract domain, temporal, or means) -->
+
+## Часовий місцевий відмінок (Temporal Locative) (~650 words total)
+
+> — **Студент:** Добрий день! На цьому тижні у мене три заняття. *(Good day! This week I have three classes.)*
+> — **Викладач:** Чудово. А що ви робите у вільний час? *(Great. And what do you do in your free time?)*
+> — **Студент:** Я читаю про Україну. Зараз я читаю цікаву статтю у підручнику з історії. *(I read about Ukraine. Right now I am reading an interesting article in a history textbook.)*
+> — **Викладач:** Це дуже корисно. Ви цікавилися цим раніше? *(That is very useful. Were you interested in this before?)*
+> — **Студент:** Ні, в дитинстві я мало знав про українську культуру. *(No, in my childhood I knew little about Ukrainian culture.)*
+
+The locative case is not just for physical places or abstract concepts; it is also essential for talking about time. When you want to specify in which month an event happens, you use the prepositions **у** or **в** followed by the locative case of the month's name. This is a very common pattern you will hear in everyday conversation.
+
+Минулого року ми були в Карпатах у серпні. Мій день народження завжди у жовтні, а її свято у грудні. Зазвичай у січні дуже холодно, але у лютому погода тепліша.
+
+> *Last year we were in the Carpathians in August. My birthday is always in October, and her holiday is in December. Usually in January it is very cold, but in February the weather is warmer.*
+
+:::info
+**Grammar box** — Most Ukrainian months are masculine nouns ending in **-ень**. When forming the locative, the **е** drops out: **січень** becomes **у січні**, **березень** becomes **у березні**. Always watch out for this vowel drop.
+:::
+
+You will frequently talk about broader periods using the word **місяць** (month). When you combine it with adjectives like **минулий** (past, previous) or next, both the adjective and the noun must agree in the locative case. The ending for masculine adjectives in the locative is typically **-ому** or **-ім**, and for the noun it is **-і**. This allows you to smoothly transition between discussing past events and future plans.
+
+У минулому місяці я багато працював і мало відпочивав. У цьому місяці я читаю нову книгу про мистецтво. А у наступному місяці ми плануємо велику зустріч із друзями.
+
+> *In the previous month I worked a lot and rested little. In this month I am reading a new book about art. And in the next month we are planning a big meeting with friends.*
+
+While months comfortably use **у** or **в**, the word **тиждень** (week) has its own special rule. It strictly requires the preposition **на**. This is a fixed combination you must memorize to sound natural. The endings follow the same pattern: the adjective takes the locative ending, and the noun **тиждень** becomes **тижні** (notice the vowel drop from the nominative form).
+
+На минулому тижні вона була у відрядженні. На цьому тижні у нас багато справ і нових проектів. На наступному тижні я нарешті поїду в гості до батьків.
+
+> *In the past week she was on a business trip. In this week we have many tasks and new projects. In the next week I will finally go visit my parents.*
+
+:::note
+**Quick tip** — Never say *у тижні* when indicating when something happens. It is always **на тижні** (на цьому тижні, на минулому тижні).
+:::
+
+Beyond specific weeks and months, you can also use the locative case to describe broad periods of life or general timeframes. These expressions function exactly like physical locations, showing the "place in time" where an event or habit occurs. Understanding this makes your storytelling much richer. Common phrases include **у дитинстві** (in childhood) and **у молодості** (in youth).
+
+У дитинстві я часто грав на вулиці з братом. У молодості він багато подорожував Європою. У минулому люди не мали таких технологій. У майбутньому ми побачимо ще більше змін.
+
+> *In childhood I often played outside with my brother. In youth he traveled a lot around Europe. In the past people did not have such technologies. In the future we will see even more changes.*
+
+As you build more complex sentences, it is important to contrast this temporal locative with the accusative case. You use the locative to answer the question "Коли?" (When?), pointing out a specific month, week, or life period. However, if you are answering "Як довго?" (How long?) to indicate duration, or if you are specifying a day of the week, you must use the accusative case. Keeping these two functions separate is key to accurate timing.
+
+Він працював там цілий рік і багато чому навчився. У понеділок ми почали новий курс. Але у минулому місяці ми вивчали зовсім іншу тему.
+
+> *He worked there for a whole year and learned a lot. On Monday we started a new course. But in the previous month we studied a completely different topic.*
+
+## По телефону, по радіо: місцевий із прийменником «по» (Locative with "po") (~550 words total)
+
+We have seen how the **місцевий** (locative) case indicates physical location and time. Another essential function is describing the means, channel of communication, or path of movement. In English, we say "on the phone," "by mail," or "on the radio." In Ukrainian, we use the preposition **по** followed by the locative case to express this exact idea. This pattern is very common when talking about how information travels, how messages are sent, or the physical route of a **подорож** (journey). The word **телефон** (phone) becomes "по телефону," while "радіо" remains unchanged because it is an indeclinable foreign word. You will also frequently hear phrases like "по телевізору" (on TV), "по пошті" (by mail), and "по дорозі" (on the way).
+
+Ми часто спілкуємося з родичами та друзями по телефону. Моя бабуся слухає ранкові новини по радіо на кухні. Вони швидко надіслали всі важливі документи по пошті. По дорозі на роботу я завжди слухаю музику або цікаві подкасти. Ця коротка подорож дуже цікава.
+
+> *We often communicate with relatives and friends by phone. My grandmother listens to the morning news on the radio in the kitchen. They quickly sent all the important documents by mail. On the way to work I always listen to music or interesting podcasts. This short journey is very interesting.*
+
+It is crucial to understand the grammatical distinction between the medium of communication and the topic of your conversation. This is a very common area of confusion for learners. When the phone is the instrument or channel you are using to talk to someone, you must use **по** with the locative case: "говорити по телефону." However, if the phone is the actual subject you are discussing—for example, if you are planning to buy a new device and sharing your **думка** (thought, opinion) about its features—you use the preposition **про** with the accusative case: "говорити про телефон." The first structure describes *how* you are communicating, while the second describes exactly *what* you are talking about. Mixing these two patterns up can cause a real **проблема** (problem) in understanding.
+
+Учора ввечері ми довго розмовляли по телефону про наші плани на вихідні. Сьогодні на роботі ми говорили про новий телефон мого колеги, який він щойно купив. Якщо у вас є серйозна проблема, краще подзвонити по телефону.
+
+> *Yesterday evening we talked for a long time on the phone about our plans for the weekend. Today at work we talked about my colleague's new phone, which he just bought. If you have a serious problem, it is better to call by phone.*
+
+Let's look at more examples of how this communication structure works in daily life. Notice how the preposition **по** transforms the noun into a pathway or a transmitting channel. Whether it is a physical path like a street, a digital channel like the internet, or an invisible channel like radio waves, the grammatical rule remains exactly the same. Even a casual **зустріч** (meeting) on the street uses this logic. You use the locative endings you already know, such as **-у** or **-і**, depending on the noun's gender and stem.
+
+Я обов'язково подзвоню тобі по телефону ввечері, коли повернуся додому з офісу. Ми почули ці несподівані новини по радіо в автомобілі. Наш викладач надіслав усі матеріали для нового курсу по електронній пошті. Ми випадково зустрілися по дорозі в університет, і це була дуже приємна зустріч.
+
+> *I will definitely call you on the phone in the evening when I return home from the office. We heard these unexpected news on the radio in the car. Our teacher sent all the materials for the new course by email. We accidentally met on the way to the university, and it was a very pleasant meeting.*
 
 :::info
 **Grammar box**
-Always use the preposition **на** with the word **робота**. You must say **на роботі** (at work), never «у роботі». However, you can still use **в/у** for the physical location of your job, like **в офісі** (at the office) or the general field, like **у бізнесі** (in business).
+The combination of **по** with the locative case is the traditional and authentic Ukrainian pattern for indicating a medium, a communication channel, or a path of movement. You might occasionally hear native speakers use **по** with the dative case for distribution, such as "дати дітям по яблуку" (to give the children an apple each). However, when discussing the means of communication or the route someone takes, the locative case is the absolute standard. Always stick to established phrases like "по телефону", "по телевізору", and "по дорозі" to ensure your Ukrainian sounds natural, confident, and grammatically correct.
 :::
 
-Моя сестра цілий день була на роботі і дуже втомилася. Вони випадково познайомилися на новій роботі минулого року. Мій офіс знаходиться в центрі міста, але саме зараз я не на роботі.
+To summarize, the locative case is incredibly versatile and powerful. It moves far beyond just pointing out a static physical location on a map or indicating a specific month in the calendar. With the simple addition of the preposition **по**, it actively describes the instrument, the channel, or the path through which an action happens. Mastering this small but vital grammatical word unlocks a much more natural and expressive way to describe your daily interactions, your travel routes, and the way you share information with the world.
 
-> *My sister was at work all day and got very tired. They accidentally met at a new job last year. My office is located in the center of the city, but right now I am not at work.*
-
-<!-- INJECT_ACTIVITY: quiz-locative-function -->
-
-## Часовий місцевий відмінок (Temporal Locative)
-
-When you want to answer the question "When?" using months of the year, you will always use the Locative case combined with the prepositions **у** or **в**. Every single month in Ukrainian requires this construction to indicate the time when an event happens. For most months, you simply add the standard Locative endings you already know. However, pay special attention to masculine months that end in **-ень**, such as **січень**, **травень**, and **серпень**. When these words change to the Locative case, the vowel **е** drops out, and they take the soft ending **-і**. This creates the forms **у січні**, **у травні**, and **у серпні**. Other months follow regular patterns, giving us standard forms like **у жовтні** or **у листопаді**.
-
-У січні ми завжди святкуємо Новий рік та Різдво з родиною. Мій найкращий друг народився у березні, тому ми часто робимо вечірку навесні. У травні погода зазвичай дуже тепла, і ми багато гуляємо в парку. Наш новий університетський семестр починається у вересні, а закінчується у грудні.
-
-> *In January, we always celebrate the New Year and Christmas with family. My best friend was born in March, so we often throw a party in the spring. In May, the weather is usually very warm, and we walk a lot in the park. Our new university semester begins in September and ends in December.*
-
-While months exclusively use the preposition **у** or **в**, the Ukrainian word for "week" uses a different pattern. When we talk about events happening during a specific week, we must use the preposition **на**. To say "this week," you use **на цьому тижні**. For past events, you say **на минулому тижні**, and for future plans, you use **на наступному тижні**. The word **тиждень** is a masculine noun that requires this specific preposition for time points, behaving exactly like the exception **на роботі** that we learned earlier.
-
-На минулому тижні я був у довгому відрядженні і дуже втомився. На цьому тижні у нас є багато важливої роботи в офісі. А на наступному тижні ми нарешті їдемо на море і будемо відпочивати.
-
-> *Last week I was on a long business trip and got very tired. This week we have a lot of important work in the office. And next week we are finally going to the sea and will be resting.*
-
-:::info
-**Grammar box**
-Remember the strict divide: months take **у/в** (у січні, у жовтні), but weeks take **на** (на цьому тижні). Never say "у тижні" or "на січні". Mixing these prepositions is a very common mistake for learners, so memorize them as fixed phrases.
-:::
-
-The Locative case is also essential when talking about broader periods of your life or general historical eras. Just like with months, these life stages use the preposition **у** or **в** to pinpoint when an experience occurred. You can talk about your past using phrases like **у дитинстві**, **у молодості**, or **у старості**. You can also extend this logic to talk about time itself in a general sense, using expressions such as **у минулому** and **у майбутньому**.
-
-У дитинстві я жив у маленькому селі і дуже часто грався на вулиці. У молодості мій дідусь багато подорожував і працював у різних країнах. Я впевнений, що у майбутньому ми будемо жити краще і матимемо менше проблем.
-
-> *In childhood, I lived in a small village and played outside very often. In his youth, my grandfather traveled a lot and worked in different countries. I am sure that in the future we will live better and have fewer problems.*
-
-Let us look at a conversation where a student and a tutor discuss learning and schedules. Notice how naturally the temporal expressions blend with the abstract domains we learned in the previous section.
-
-> — **Студент:** Добрий день! На цьому тижні у мене три заняття з української мови. *(Good day! This week I have three Ukrainian language classes.)*
-> — **Викладач:** Це дуже добре. А що ви зазвичай робите у вільний час? *(That is very good. And what do you usually do in your free time?)*
-> — **Студент:** У вільний час я читаю про Україну. Зараз я читаю цікавий текст у підручнику з історії. *(In my free time I read about Ukraine. Right now I am reading an interesting text in a history textbook.)*
-> — **Викладач:** Це чудово. Ви раніше цікавилися нашою історією? *(That is wonderful. Were you interested in our history before?)*
-> — **Студент:** Ні, в дитинстві я мало знав про українську культуру. *(No, in childhood I knew little about Ukrainian culture.)*
-
-A critical distinction you must master is the difference between a specific point in time and the duration of an event. The Locative phrases we just learned, like **у січні** or **у минулому місяці**, answer the specific question of when an event occurred. However, if you want to express how long an action lasted, you must use the Accusative case without any preposition. This is a very common area of confusion for learners. For example, if an event happened at a specific moment during a month, use the Locative. If an action took up the entire month, use the Accusative.
-
-Ми вперше зустрілися у травні на концерті. Ми готували цей проект увесь травень. Важлива конференція була у січні. Мій брат відпочивав удома весь січень.
-
-> *We first met in May at a concert. We prepared this project all May. An important conference was in January. My brother rested at home all January.*
-
-<!-- INJECT_ACTIVITY: fill-in-temporal-locative -->
-
-## По телефону, по радіо: місцевий із прийменником «по»
-
-The Locative case has another practical function: describing the medium or channel of communication. To say that you heard something on the radio or spoke on the phone, use the preposition **по** followed by the Locative case. This pattern is essential for talking about how information travels from one person to another. Instead of focusing on the physical location inside a device, this structure highlights the method of transmission. Notice that the masculine noun for a telephone takes the **-у** ending in this context.
-
-Моя мама часто говорить по телефону. Дідусь слухає новини по радіо. Ми рідко дивимося фільми по телевізору. Я отримав цей лист по пошті. Мій керівник завжди відповідає по телефону.
-
-> *My mom often talks on the phone. Grandpa listens to the news on the radio. We rarely watch movies on TV. I received this letter by mail. My manager always answers on the phone.*
-
-:::info
-**Grammar box**
-The preposition **по** has many meanings in Ukrainian. When paired with communication devices in the Locative case, it usually translates to "by" or "on" in English. Remember that the radio and TV are the channels of communication, not physical locations inside the devices.
-:::
-
-Another frequent expression that uses this preposition with the Locative case is the phrase for "on the way." You will use this set phrase whenever you want to describe an action that happens while you are traveling to a specific destination. It perfectly combines the idea of a physical path with the context of a journey. Whether you are walking, driving, or taking public transport, this phrase is the most natural way to say that an event interrupted or accompanied your trip.
-
-Я зустрів старого друга по дорозі додому. Ми купили гарячу каву по дорозі на роботу. По дорозі в магазин почався сильний дощ. Вони слухають музику по дорозі в університет. По дорозі в кіно ми зустріли сестру.
-
-> *I met an old friend on the way home. We bought hot coffee on the way to work. It started raining heavily on the way to the store. They listen to music on the way to the university. On the way to the cinema we met my sister.*
-
-As you expand your vocabulary, you must clearly distinguish between the channel of communication and the topic of conversation. This is where the Locative and Accusative cases contrast directly. Using the Locative case describes the tool you use to speak, like a telephone or an application. However, if you want to talk about the object itself, you must use the preposition **про** with the Accusative case. The rule remains consistent: the topic of your thought or conversation always requires the Accusative, regardless of how the conversation happens.
-
-Сьогодні ми говорили по телефону про нову роботу. Я думаю про тебе, коли слухаю пісню по радіо. Журналісти багато говорять про новий телевізор. Ми спілкувалися по скайпу про наші плани.
-
-> *Today we talked on the phone about the new job. I think about you when I listen to a song on the radio. Journalists talk a lot about the new TV. We communicated on Skype about our plans.*
-
-Let us look at a short conversation that highlights this difference:
-
-> — **Анна:** Ти вчора говорив по телефону з братом? *(Did you talk on the phone with your brother yesterday?)*
-> — **Марко:** Так, ми говорили про його нову машину. *(Yes, we talked about his new car.)*
-> — **Анна:** А я дізналася про це по радіо. *(And I found out about it on the radio.)*
-
-In modern Ukrainian, you might sometimes hear native speakers use the Instrumental case without a preposition to express the means of communication. While this is grammatically correct and often seen in formal writing, the construction using the Locative case remains the most natural standard for everyday conversations. As a learner, you should actively use this pattern because it easily adapts to modern technology. You can seamlessly apply it to digital platforms, new loanwords, and social media. It is a highly productive grammar rule that will serve you well in any communicative situation.
-
-Завтра я відправлю тобі документи по імейлу. Мої батьки часто дзвонять мені по скайпу. Ми знайшли цю корисну інформацію по інтернету. Студенти отримали результати тесту по електронній пошті.
-
-> *Tomorrow I will send you the documents by email. My parents often call me on Skype. We found this useful information on the internet. The students received the test results by email.*
-
-:::tip
-**Quick tip**
-When using modern loanwords like **імейл** or **скайп**, treat them as standard masculine nouns. In the Locative case after the preposition **по**, they take the **-у** ending.
-:::
-
-<!-- INJECT_ACTIVITY: match-up-locative-types -->
+<!-- INJECT_ACTIVITY: fill-in-locative-forms -->
 <!-- INJECT_ACTIVITY: error-correction-prepositions -->
 
-## Підсумок — Місцевий відмінок: від місця до сенсу (Summary — Locative Case)
+## Місцевий відмінок: від місця до сенсу (From Place to Meaning) (~390 words total)
 
-You have come a long way with the Locative case. In the beginning, you used it only to locate physical objects, like a book on a table or a person in a city. Now, you can use it to describe abstract periods of your life, professional spheres, and even the modern tools you use to communicate. It is no longer just about geography; it is about context.
+Тепер ви знаєте, що цей відмінок — це не тільки про місце на карті. Він відповідає на питання «де?», «коли?» та «як?». Цей відмінок допомагає нам описати **абстрактний** (abstract) простір, де відбувається подія. Наприклад, ваша **думка** (thought, opinion) або серйозна **проблема** (problem) існують у певному контексті.
 
-Ми починали з простих речень про фізичне місце. Тепер ми знаємо, що місцевий відмінок працює у дуже різних ситуаціях. Ми говоримо про наш досвід у дитинстві та про кар'єру в науці чи в політиці. Ми також розповідаємо, як ми спілкуємося по телефону або по інтернету. Цей відмінок допомагає нам пояснити контекст нашого життя.
+> *Now you know that this case is not just about a place on a map. It answers the questions "where?", "when?", and "how?". This case helps us describe the abstract space where an event happens. For example, your thought or a serious problem exist in a certain context.*
 
-> *We started with simple sentences about physical location. Now we know that the Locative case works in very different situations. We talk about our experience in childhood and about a career in science or in politics. We also tell how we communicate by phone or by the internet. This case helps us explain the context of our life.*
+Давайте подивимося на таблицю, яка об'єднує всі чотири функції. Ви побачите, що фізичне місце, абстрактна сфера, час та засіб комунікації використовують однакові закінчення.
 
-To help you remember these different roles, here is a consolidation matrix. It shows the four main functions of the Locative case, the prepositions they require, and practical examples for each category.
+> *Let's look at the table that combines all four functions. You will see that physical location, abstract sphere, time, and means of communication use the same endings.*
 
-| Функція (Function) | Прийменник (Preposition) | Приклад (Example) |
+| Функція (Function) | Питання (Question) | Приклад (Example) |
 | :--- | :--- | :--- |
-| Місце (Physical Location) | в/у, на | у місті, на столі |
-| Час (Time and Periods) | в/у, на | у січні, на цьому тижні, у дитинстві |
-| Сфера (Abstract Domains) | в/у, на | у житті, в освіті, на роботі |
-| Засіб (Means of Communication) | по | по телефону, по радіо, по скайпу |
+| Фізичне місце (Physical Location) | Де? (Where?) | у місті (in the city) |
+| Абстрактна сфера (Abstract Domain) | У чому? (In what?) | у житті (in life) |
+| Часовий простір (Temporal Space) | Коли? (When?) | у січні (in January) |
+| Засіб (Means / Channel) | Як? (How?) | по радіо (on the radio) |
 
-Let us do a quick final check before you finish this module. Remember that the Locative case is unique because it always requires a preposition. You cannot use it alone. The core prepositions are «у», «в», «на», «по», and «при».
+Ви можете будувати складні речення, поєднуючи кілька різних функцій. Це робить вашу українську мову дуже природною. Уявіть, що у вас була цікава **подорож** (journey, trip) або довгоочікувана **зустріч** (meeting, encounter). Ви можете описати всі деталі, якщо правильно використаєте **місцевий** (locative (case)) відмінок.
 
-:::info
-**Grammar check**
-Do you remember the difference between weeks and months? We use the preposition «у» for months, like in the phrase «у минулому місяці». However, we must use «на» for weeks, giving us «на цьому тижні». Also, pay attention to feminine abstract nouns ending in «-а». The word «політика» changes to «у політиці», just like «наука» becomes «у науці».
+> *You can build complex sentences by combining several different functions. This makes your Ukrainian language very natural. Imagine you had an interesting journey or a long-awaited meeting. You can describe all the details if you correctly use the locative case.*
+
+**Минулий** (past, previous) **місяць** (month) був дуже активним. Я купив новий **телефон** (phone, telephone) і часто дзвонив друзям.
+
+> *The past month was very active. I bought a new phone and often called friends.*
+
+Кожен новий **тиждень** (week) приносить цікаві події. Учора я розмовляв по телефону з колегою у Києві.
+
+> *Every new week brings interesting events. Yesterday I talked on the phone with a colleague in Kyiv.*
+
+:::tip
+**Did you know?** — The locative case is unique because it never appears without a preposition. Whether you use «в/у», «на» or «по», the preposition is the key that unlocks the specific meaning of the ending.
 :::
 
-Your final challenge is to build complex sentences that combine two or three of these functions at the same time. This shows true mastery of the case in everyday conversations.
+Ваше розуміння цього відмінка значно еволюціонувало. Він став універсальним інструментом для вираження складних нюансів. Тепер ви можете вільно говорити про свої плани, ділитися новинами та описувати свій досвід.
 
-У минулому місяці я працював на новій роботі і часто говорив по телефону. На цьому тижні ми слухали новини по радіо у машині. У дитинстві мій брат мріяв про кар'єру в музиці.
+> *Your understanding of this case has evolved significantly. It has become a versatile tool for expressing complex nuances. Now you can freely talk about your plans, share news, and describe your experience.*
 
-> *Last month I worked at a new job and often talked on the phone. This week we listened to the news on the radio in the car. In childhood, my brother dreamed of a career in music.*
+<!-- INJECT_ACTIVITY: quiz-locative-functions -->
+<!-- INJECT_ACTIVITY: match-up-expressions -->

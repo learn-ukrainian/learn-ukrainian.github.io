@@ -1,183 +1,179 @@
 ## Сценарій 1: Плануємо вечірку (Scenario 1: Planning a Party)
 
-Welcome to your first steps in the A2 level! You are now moving from simply memorizing basic phrases to engaging in realistic, dynamic communication. Imagine you are organizing a large housewarming party, which we call **новосілля** in Ukrainian. Planning such an important event requires a significant shift in how you talk about actions. You will need to learn how to discuss ongoing future plans, figure out exactly what is missing from your apartment, and confidently confirm concrete results when your tasks are finally finished. Let us look at how two friends handle this complex process.
+Organizing a successful **вечірка** (party) requires clear communication about what needs to be done, who is doing what, and what is still missing. Let's imagine you and your friend are organizing a housewarming celebration and expecting many guests. We will look at how to effectively discuss these future plans and confirm completed tasks.
 
-> — **Максим:** Привіт, Олено! Давай планувати наше новосілля. *(Hi Olena! Let's plan our housewarming party.)*
-> — **Олена:** Привіт! Звісно. Ми будемо обговорювати меню сьогодні ввечері? *(Hi! Sure. Are we going to discuss the menu tonight?)*
-> — **Максим:** Так, нам обов'язково треба скласти довгий список. Що ми будемо готувати для друзів? *(Yes, we definitely need to make a long list. What are we going to cook for the friends?)*
-> — **Олена:** Я буду готувати великий святковий салат і запікати м'ясо. *(I will be cooking a big festive salad and roasting meat.)*
-> — **Максим:** Дуже добре, а я буду купувати всі необхідні напої та солодкі десерти. *(Very good, and I will be buying all the necessary drinks and sweet desserts.)*
-> — **Олена:** Чудово! А хто буде запрошувати наших гостей? *(Great! And who is going to invite our guests?)*
-> — **Максим:** Я думаю, ми будемо робити це разом у п'ятницю після роботи. *(I think we will be doing this together on Friday after work.)*
+> — **Оксана:** Привіт, Тарасе! Завтра наша **вечірка**. Треба все **планувати** дуже уважно. *(Hi, Taras! Our party is tomorrow. We need to plan everything very carefully.)*
+> — **Тарас:** Привіт! Так, я пам'ятаю. У нас буде десять гостей. Що ми будемо **купувати** сьогодні? *(Hi! Yes, I remember. We will have ten guests. What will we be buying today?)*
+> — **Оксана:** Я буду **готувати** салати та м'ясо, тому мені потрібні свіжі овочі. *(I will be preparing salads and meat, so I need fresh vegetables.)*
+> — **Тарас:** Добре. А я піду в супермаркет. Треба купити великий торт і напої. *(Good. And I will go to the supermarket. We need to buy a large cake and drinks.)*
+> — **Оксана:** Ой, у нас зовсім немає серветок! Купи, будь ласка, паперові серветки. *(Oh, we have absolutely no napkins! Buy paper napkins, please.)*
+> — **Тарас:** Без проблем, я все зроблю. Ти вже приготувала список? *(No problem, I will do everything. Have you already prepared a list?)*
+> — **Оксана:** Так, я вже все написала і надіслала тобі. *(Yes, I have already written everything and sent it to you.)*
 
-When Ukrainians discuss the continuous process of planning or an ongoing future action, they use the imperfective future tense. This compound tense is formed by combining the correct conjugated form of the verb **бути** (to be) with the infinitive of an imperfective verb. 
+When discussing tasks in progress or general plans for the future, Ukrainian uses the imperfective aspect. To form the future tense for a continuous process or repeated action, we combine the conjugated future forms of the verb «бути» (to be) with the imperfective infinitive. 
 
-Ми часто використовуємо недоконаний вид дієслова, коли дія є довгою, регулярною або рутинною. Якщо ми говоримо про успішний результат або швидку одноразову подію, ми завжди обираємо доконаний вид.
+Ми будемо купувати напої та свіжі фрукти. Ти будеш готувати велику вечерю, а я буду прибирати кімнату. Вони будуть планувати свято цілий вечір.
 
-> *We often use the imperfective aspect of a verb when an action is long, regular, or routine. If we are talking about a successful result or a quick one-time event, we always choose the perfective aspect.*
+> *We will be buying drinks and fresh fruits. You will be preparing a big dinner, and I will be cleaning the room. They will be planning the holiday all evening.*
 
-The aspect pair **готувати** (to be cooking) and **приготувати** (to finish cooking) perfectly highlights this difference in focus. The same logic applies when choosing between the verbs for planning as an ongoing process versus successfully completing a plan.
-
-As you carefully check your party list, you will inevitably find that some crucial things are missing. To express absence or lack in Ukrainian, we rely on the word **немає** (there is no). This word is a powerful trigger for the Genitive case.
-
-Коли ми кажемо «немає», наступне слово завжди стоїть у родовому відмінку. Це суворе граматичне правило чудово працює для живих людей, фізичних предметів та абстрактних понять.
-
-> *When we say "немає", the next word is always in the Genitive case. This strict grammatical rule works perfectly for living people, physical objects, and abstract concepts.*
-
-You can use this structure to complain about an empty new apartment or missing items:
-**У нас немає музики.** — *We have no music.*
-**Немає торта.** — *There is no cake.*
-**Немає великого столу.** — *There is no big table.*
-
-The Genitive case is also absolutely essential when you are talking about quantities for your event. Words like **багато** (many) and **мало** (few) strictly require the noun that follows them to take the Genitive form. For countable party items, this is usually the Genitive plural.
-
-Для гарної вечірки господарям треба купити багато свіжих фруктів і багато холодних напоїв. Якщо у вас дуже мало паперових серветок, гості будуть незадоволені.
-
-> *For a good party, the hosts need to buy a lot of fresh fruits and a lot of cold drinks. If you have very few paper napkins, the guests will be unsatisfied.*
-
-Remembering these specific plural endings will help you accurately describe the exact scale of your exciting preparations.
-
-Let us rejoin our friends a few days later to see their actual progress. Now, they are completely focusing on their completed results, which requires switching to the perfective past tense.
-
-> — **Максим:** Олено, як наші справи? Ти вже приготувала салат? *(Olena, how are our things? Have you already prepared the salad?)*
-> — **Олена:** Так, я все успішно зробила. А ти купив напої? *(Yes, I successfully did everything. And did you buy the drinks?)*
-> — **Максим:** Я вже купив торт і газовану воду, але зовсім забув про яблучний сік. *(I already bought the cake and sparkling water, but I completely forgot about the apple juice.)*
-> — **Олена:** Нічого страшного, ми замовили велику піцу, а кур'єр може привезти сік. *(No worries, we ordered a big pizza, and the courier can bring juice.)*
-> — **Максим:** Чудово! Я також успішно запланував музику для нашого вечора. *(Great! I also successfully planned the music for our evening.)*
-
-:::tip
-**Did you know?**
-Ukrainians absolutely love using diminutive suffixes in everyday speech, especially when talking about delicious food and warm hospitality. Calling a standard cake a **тортик** instead of «торт» or a fresh salad a **салатик** instead of «салат» makes the invitation sound much warmer and more welcoming. You might even hear informal slang like **винишко** or the more traditional Ukrainian diminutive **винце** for wine among very close friends. These small changes in word endings actively show deep affection and help create a beautifully cozy, relaxed atmosphere for your happy guests.
-:::
-
-<!-- INJECT_ACTIVITY: quiz-party-aspect -->
-
-## Сценарій 2: На ринку (Scenario 2: At the Market)
-
-To truly experience everyday Ukrainian life, you must visit a bustling local farmers market. A lively «ринок» like the famous Bessarabskyi or the authentic Lukianivskyi in Kyiv offers much more than just fresh seasonal food. It is a vibrant social hub where people negotiate, share community news, and build lasting relationships with their favorite vendors. For a language learner, the market is the ultimate practice ground for the Genitive case. You will constantly hear people asking for specific quantities, discussing prices, and navigating what is currently available or completely sold out. Let us listen to a typical conversation at a colorful produce stall.
-
-> — **Покупець:** Добрий день! Скільки коштує кілограм меду? *(Good day! How much does a kilogram of honey cost?)*
-> — **Продавець:** Добрий день! Цей свіжий мед коштує триста гривень. *(Good day! This fresh honey costs three hundred hryvnias.)*
-> — **Покупець:** Добре. А у вас є домашній сир? *(Good. And do you have cottage cheese?)*
-> — **Продавець:** Так, звичайно. Скільки вам потрібно? *(Yes, of course. How much do you need?)*
-> — **Покупець:** Дайте мені, будь ласка, один кілограм сиру і пів кілограма масла. *(Give me, please, one kilogram of cheese and half a kilogram of butter.)*
-> — **Продавець:** Ось, тримайте. Щось ще? *(Here, take it. Anything else?)*
-> — **Покупець:** Ще дайте мені дві дині і п'ять лимонів. *(Also give me two melons and five lemons.)*
-
-When buying items by the piece or by weight, you must pay close attention to the numbers you use. Ukrainian grammar has a very specific rule for combining numbers with nouns, which we often call the "1, 2-4, 5+" rule.
-
-Після числа «один» ми завжди використовуємо називний відмінок однини. Після чисел «два», «три» та «чотири» іменник чоловічого роду має форму називного відмінка множини. А після числа «п'ять» і більше ми завжди використовуємо родовий відмінок множини.
-
-> *After the number "one", we always use the nominative case singular. After the numbers "two", "three", and "four", a masculine noun takes the form of the nominative case plural. And after the number "five" and more, we always use the genitive case plural.*
-
-For example, if you want to buy lemons, you would say **один лимон** (one lemon), **три лимони** (three lemons), but **шість лимонів** (six lemons). This pattern applies to the word **кілограм** as well. You ask for **один кілограм**, but **два кілограми** or **п'ять кілограмів**.
-
-The market is also the perfect place to practice the Genitive of negation and absence. When a vendor runs out of a product, they will use the word **немає**, which strictly requires the Genitive case. 
-
-Вибачте, сьогодні у мене немає домашнього сиру, але є дуже смачне молоко. Я бачу жовті яблука, але я зовсім не бачу червоних помідорів на вашому столі.
-
-> *Excuse me, today I do not have cottage cheese, but there is very tasty milk. I see yellow apples, but I absolutely do not see red tomatoes on your table.*
-
-Notice how the shopper contrasts their statements. When they state what they see affirmatively, they use the simple Accusative case: **Я бачу жовті яблука.** But the moment they introduce a negative verb like **не бачу** (do not see) or express absence with **немає**, the object must immediately switch to the Genitive case.
-
-You must also differentiate between uncountable goods and individual items when dealing with feminine nouns. When you buy vegetables in bulk, you usually treat them as a single mass.
-
-Дайте мені, будь ласка, один кілограм картоплі і один кілограм моркви. Але я також хочу купити один кілограм солодких яблук і кілограм груш.
-
-> *Give me, please, one kilogram of potatoes and one kilogram of carrots. But I also want to buy one kilogram of sweet apples and a kilogram of pears.*
-
-Words like **картопля** (potatoes) and **морква** (carrots) remain in the Genitive singular because they are treated as an uncountable mass. However, items you can easily count individually, like **яблука** (apples) or **груші** (pears), take the Genitive plural ending after the word **кілограм**.
-
-:::tip
-**Did you know?**
-At a Ukrainian market, you will hear a wonderful variety of diminutive suffixes. Vendors use these affectionate word forms to build rapport, show the high quality of their goods, and create a welcoming atmosphere.
-:::
-
-Продавці дуже часто пропонують покупцям свіжу картопельку, солодку морквочку або смачні ягідки. Якщо ви також використовуєте ці теплі слова, продавець може дати вам хорошу знижку.
-
-> *Vendors very often offer buyers fresh little potatoes, sweet little carrots, or tasty little berries. If you also use these warm words, the vendor might give you a good discount.*
-
-Using forms like **картопелька** instead of **картопля**, or **морквочка** instead of **морква**, demonstrates that you appreciate the local culture. It changes the interaction from a simple commercial transaction into a friendly conversation between neighbors.
-
-Before you grab your reusable bag and head to the stalls, let us review the essential market verbs. You will frequently need the imperfective verb **коштувати** (to cost) to ask about prices. When you are looking at the produce, you need time to **вибирати** (to choose, process), but eventually, you must **вибрати** (to choose, result) the best items. The vendor will then **важити** (to weigh) your purchases on the scale. Finally, after you hand over your cash, always remember to wait for your **решта** (change).
-
-<!-- INJECT_ACTIVITY: fill-in-market-genitive -->
-
-## Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?)
-
-Welcome to the biggest challenge and the most expressive tool in Ukrainian grammar: the aspect of the verb in the past tense. When you tell a story about your day, it is no longer enough to simply say "I was there" or "I worked." You must choose between describing the process of your action or the concrete result of your effort. Mastering this choice allows you to paint a vivid picture of your past experiences and answer the essential difference between "що робив?" (what were you doing?) and "що зробив?" (what did you get done?).
-
-Опанування видів дієслова — це ваш головний ключ до вільного спілкування. Українці рідко використовують складні часові конструкції у розмовах. Але ми завжди звертаємо увагу на характер дії. Нам важливо знати процес і результат. Дія тривала довго, чи вона вже повністю завершена? Це робить нашу мову дуже точною та динамічною.
-
-> *Mastering verb aspects is your main key to fluent communication. Ukrainians rarely use complex tense structures in conversations. But we always pay attention to the character of the action. It is important for us to know the process and the result. Did the action last a long time, or is it already completely finished? This makes our language very precise and dynamic.*
-
-Let us listen to two colleagues, Олена and Максим, talking at the end of the workday. Notice how Олена describes her day as a continuous, exhausting flow of activities, while Максим lists his achievements as clear milestones.
-
-> — **Олена:** Привіт, Максиме. Як пройшов твій день? *(Hi, Maksym. How was your day?)*
-> — **Максим:** Привіт! Дуже добре. Я написав три листи і провів важливу зустріч. А ти? *(Hi! Very good. I wrote three letters and held an important meeting. And you?)*
-> — **Олена:** Ох, а я цілий день писала звіти і читала довгі документи. Я так втомилася! *(Oh, and I was writing reports and reading long documents all day. I am so tired!)*
-> — **Максим:** Але ти закінчила ту презентацію? *(But did you finish that presentation?)*
-> — **Олена:** Ні, я ще не закінчила. Я буду працювати завтра. *(No, I haven't finished yet. I will work tomorrow.)*
-> — **Максим:** Розумію. Тоді ходімо пити каву, ти заслужила відпочинок. *(I understand. Then let's go drink coffee, you earned a rest.)*
-
-When you describe an action that took a long time, was repeated, or served as the background to your day, you must use the imperfective aspect. This form focuses entirely on the process itself, ignoring whether the task was ever finished. You will often see it paired with words that signal duration, such as **довго** (long), **цілий день** (all day), or **часто** (often).
-
-Я вчора дуже довго читав цікаву книгу. Ми весь вечір уважно дивилися цей фільм, але так і не побачили фінал. Моя старша сестра часто купувала свіжі яблука на цьому ринку. Коли вона жила в Києві, вона щодня гуляла в парку.
-
-> *Yesterday I read an interesting book for a very long time. We carefully watched this movie all evening, but we never saw the finale. My older sister often bought fresh apples at this market. When she lived in Kyiv, she walked in the park every day.*
+This compound future tense is somewhat similar to the English continuous tense ("will be doing"). It emphasizes the duration or the fact that the action will take place, without focusing on its final result. It simply states that the process will occupy some time in the future.
 
 :::info
-**Grammar box**
-Use the imperfective past tense to answer the question «що робив?» (what were you doing?). It acts like a continuous video recording, showing the action as it unfolds without a definitive end point.
+**Future tense construction**
+To talk about future processes, use the conjugated forms of **бути** (буду, будеш, буде, будемо, будете, будуть) plus the **imperfective infinitive**.
+Example: *Я буду готувати* (I will be cooking).
 :::
 
-In contrast, the perfective aspect is used to state a clear result or a completed action. It answers the question "що зробив?" (what did you get done?). When you narrate a sequence of completed events, you are creating a chain of results. You build these perfective verbs by adding specific prefixes to the imperfective stem, such as **по-**, **при-**, or **з-**. For example, the process of doing is **робити**, while the result is **зробити**.
+As you finalize the shopping list, you inevitably notice what is missing. In Ukrainian, expressing the absence of something always requires the Genitive case. The word «немає» (there is no / we don't have) is a powerful trigger for this case, forcing the noun that follows it to change its form.
 
-Спочатку я поснідав і швидко одягнувся. Потім я відразу пішов на роботу. На роботі я успішно зробив усі завдання і написав звіт. Увечері я повернувся додому і приготував вечерю. Я нарешті добре відпочив після важкого дня.
+На жаль, у нас немає музики. У магазині немає свіжих серветок і солодкого соку. Я бачу, що вдома немає торта.
 
-> *First I had breakfast and quickly got dressed. Then I immediately went to work. At work, I successfully did all the tasks and wrote a report. In the evening I returned home and cooked dinner. I finally rested well after a hard day.*
+> *Unfortunately, we have no music. The store has no fresh napkins and sweet juice. I see that there is no cake at home.*
 
-One of the most elegant ways to use verb aspects is the interruption pattern. You can create a rich narrative by combining both aspects in a single sentence: use the imperfective to set the ongoing background scene, and the perfective to introduce a sudden, completed event that interrupts it. Think of the imperfective verb as a continuous movie playing, while the perfective verb is a sudden snapshot.
+Similarly, when you talk about quantities or volumes, you must use the Genitive case. Words indicating a large or small amount, or exact numbers (five and above), govern the Genitive plural. This is essential when planning a feast for multiple guests.
 
-Я спокійно готував смачну вечерю, коли ти несподівано подзвонив. Ми йшли додому через парк, коли почався сильний дощ. Вона читала цікаву книгу, коли в кімнату швидко зайшов її брат.
+Нам треба купити багато фруктів і кілька пляшок води. На столі лежить десять яблук. Ми купили мало овочів.
 
-> *I was calmly cooking a tasty dinner when you unexpectedly called. We were walking home through the park when a heavy rain started. She was reading an interesting book when her brother quickly entered the room.*
+> *We need to buy a lot of fruits and several bottles of water. There are ten apples lying on the table. We bought few vegetables.*
 
-As you talk about your past experiences, especially related to education or work, you must be careful with the verbs for taking exams. A very common error among learners is translating "to take an exam" literally as "здавати іспит". This is a calque from Russian. In proper Ukrainian, the verb **здавати** means to hand something over, like an apartment key. To express the process of taking an academic test, you must use the verb **складати**.
+Finally, as the party approaches, you need to check if the planned tasks are actually completed. For this, we switch to the perfective aspect in the past tense. The perfective past acts much like the English present perfect — it states a current result achieved by a past action. 
 
-Мій молодший брат зараз навчається в університеті і складає складний іспит з історії. Я впевнений, що він складе його дуже добре.
+Я вже приготувала салат, тому ми можемо сідати за стіл. Ми купили два торти і всі необхідні напої. Тарас запланував цікаві ігри.
 
-> *My younger brother is currently studying at the university and is taking a difficult history exam. I am sure that he will pass it very well.*
+> *I have already prepared the salad, so we can sit at the table. We bought two cakes and all the necessary drinks. Taras has planned interesting games.*
 
-:::note
-**Quick tip**
-Remember: **складати іспит** (imperfective) is the stressful process of taking the test, while **скласти іспит** (perfective) is the joyful result of successfully passing it.
+Compare the process «купувати» (to be buying) with the result «купити» (to have bought). You use the imperfective to describe the shopping trip itself, but the perfective to proudly announce that the items are now in your kitchen.
+
+
+## Підсу́мок — Summary
+
+Цей модуль заглиби́вся у дві фундамента́льні ко́нцепції украї́нської грама́тики: **вид дієсло́ва** (Aspect) та **Родови́й відмі́нок** (Genitive case). Ми навчи́лися відрізня́ти незаве́ршену ді́ю (Imperfective), яка́ фокусу́ється на проце́сі, від заве́ршеної ді́ї (Perfective), яка́ наголо́шує на результа́ті. Напри́клад, у рече́нні «Я прибира́в свою́ кімна́ту» ми ба́чимо проце́с прибира́ння, тоді́ як «Я приготува́в обі́д» вказу́є на заве́ршену ді́ю з резу́льтатом. Зрозу́міти це розрі́знення є ключови́м для то́чного вираже́ння думо́к украї́нською.
+
+Тако́ж ми досліди́ли Родови́й відмі́нок, який́ є незамі́нним для вираже́ння відсу́тності («У мене́ немає бана́нів»), прямо́го запере́чення («Я не ба́чу бра́та») та позна́чення кілько́сті предме́тів. Пам'ята́йте про пра́вила узго́дження: «оди́н огіро́к», але́ «два огірки́» та «п'ять огіркі́в».
+
+Самопереві́рка:
+1.  Яка́ різни́ця між пита́ннями «Що ти роби́в?» та «Що ти зроби́в?»?
+2.  Як сказа́ти украї́нською: «I was writing a letter when you called»?
+3.  Перекладі́ть: «I don't have lemons». Як ви ска́жете: «Я купи́в три я́блука і п'ять помідо́рів на ри́нку»?
+
+<!-- INJECT_ACTIVITY: quiz, Role-play: Planning a Party (aspect in future tense), 8 items -->
+
+## Сценарій 2: На ринку (Scenario 2: At the Market) (~650 words)
+
+Уявіть, що ви прийшли на київський **ринок** (market). Це найкраще місце, щоб **купувати** (to buy) свіжі продукти з села. Тут ви можете чудово практикувати числа, ціни та родовий відмінок у реальних ситуаціях.
+
+> *Imagine that you have come to a Kyiv market. This is the best place to buy fresh produce from the village. Here you can perfectly practice numbers, prices, and the Genitive case in real situations.*
+
+> — **Продавець:** Добрий день! Що ви бажаєте **купити** (to buy)? *(Good day! What do you want to buy?)*
+> — **Покупець:** Добрий день. Мені потрібен мед. Скільки **коштує** (to cost) один **кілограм** (kilogram) меду? *(Good day. I need honey. How much does one kilogram of honey cost?)*
+> — **Продавець:** Триста гривень. Дуже смачний! *(Three hundred hryvnias. Very tasty!)*
+> — **Покупець:** Дайте мені, будь ласка, один кілограм. Також я хочу дві дині і п'ять лимонів. *(Give me one kilogram, please. Also, I want two melons and five lemons.)*
+> — **Продавець:** Вибачте, у мене немає лимонів. *(Sorry, I don't have lemons.)*
+> — **Покупець:** Шкода. Я не бачу помідорів. У вас є помідори? *(It's a pity. I don't see tomatoes. Do you have tomatoes?)*
+> — **Продавець:** Так, є дуже гарні. Вам зважити? *(Yes, there are very nice ones. Should I weigh them for you?)*
+> — **Покупець:** Ні, дякую. Дайте ще сир і ягоди. *(No, thank you. Give me also cheese and berries.)*
+
+When you buy items by weight or quantity at the market, you must navigate the Ukrainian rules for counting. Numbers actively change the case of the noun that follows them, which might feel unusual at first. The word for kilogram acts like a container measurement, requiring the Genitive plural for whatever it holds, similar to saying "a box of apples" in English. For exact numbers, the grammar rule splits into three distinct groups. The number one acts like an adjective and agrees with the noun in gender and case. Numbers two, three, and four require the Nominative plural for inanimate objects. However, numbers five and above demand the Genitive plural, reflecting a larger, collective quantity.
+
+Продавець дає покупцю один кілограм яблук. Жінка купує дві дині та чотири персики на десерт. Чоловік просить продати йому п'ять лимонів і десять яблук.
+
+> *The vendor gives the shopper one kilogram of apples. The woman buys two melons and four peaches for dessert. The man asks to sell him five lemons and ten apples.*
+
+Another essential use of the Genitive case happens when you talk about things that are absent, missing, or simply not there. If an action verb is negated with the particle "не" (not), its direct object frequently takes the Genitive case instead of the usual Accusative case. This grammatical shift is known as the Genitive of negation, and it strongly emphasizes the complete lack or absence of the object in question. You will hear this constantly when a store is sold out of a specific product or when you cannot locate what you need.
+
+Вибачте, у мене немає лимонів на продаж. Я не бачу червоних помідорів на цьому столі. Ми сьогодні не купували свіжого молока.
+
+> *Sorry, I don't have lemons for sale. I don't see red tomatoes on this table. We did not buy fresh milk today.*
+
+:::info
+**Genitive of Negation**
+When you state a positive fact, you use the Accusative case for the direct object. But when the verb is negated, it often triggers the Genitive case. This shift is especially common with verbs of perception, possession, and existence.
+
+**Я бачу помідори.** — *I see tomatoes.*
+**Я не бачу помідорів.** — *I do not see tomatoes.*
 :::
 
-Let us expand your daily routine vocabulary with some essential aspect pairs. Many professional verbs form their perfective partner simply by adding the prefix **про-** or **об-**, such as **аналізувати** (to analyze) becoming **проаналізувати**. However, some verbs undergo an internal stem change. For instance, the verb **замовляти** (to order, process) loses the letter "л" to become **замовити** (to order, result).
+If you listen closely to the vendors as you walk between the colorful stalls, you will notice that they rarely use standard, dry dictionary words. Market vendors frequently add diminutive suffixes to their nouns to sound friendly, hospitable, and persuasive. This feature is a core part of Ukrainian "милозвучність" (euphony or melodic sound), effortlessly turning ordinary words into warm, emotional expressions. It is a genuine cultural marker of the language and a sign of good service, so do not mistake it for baby talk or something unserious.
 
-Сьогодні ми довго обговорювали новий проєкт. Потім ми ретельно проаналізували всі важливі фінансові дані. Після цієї зустрічі ми вирішили замовити смачну піцу в офіс. Я часто замовляю тут їжу, тому що вони готують дуже швидко.
+Візьміть до борщику зелений пучечок, цибульку і часничок. У нас є дуже смачні мандаринки. Їжте на здоров'ячко!
 
-> *Today we discussed the new project for a long time. Then we carefully analyzed all the important financial data. After this meeting, we decided to order a tasty pizza to the office. I often order food here because they cook very quickly.*
+> *Take a green bunch, a little onion, and a little garlic for your borsch. We have very tasty little mandarins. Eat for your good health!*
 
-Choosing the right aspect is what makes your Ukrainian sound natural and decolonized. Instead of translating a sequence of English verbs ending in "-ed", you must pause and think about the nature of the action. Was it a background process, or was it a completed step that moved the story forward? When you master this rhythm, you stop translating and start truly thinking in Ukrainian.
+:::tip
+**Avoiding Calques**
+When agreeing with a vendor, always use the Ukrainian word **так** (yes). Never use the Russian «да», which is a common and unwanted calque (borrowing) in casual speech. Keeping your vocabulary authentic helps you sound much more natural and respectful of the local culture.
+:::
 
-Я дуже довго вивчав українську граматику. Я читав складні правила і робив різні письмові вправи. Але саме сьогодні я нарешті добре зрозумів цю важливу тему. Тепер я можу вільно розповідати цікаві історії про своє життя.
+<!-- INJECT_ACTIVITY: fill-in-shopping-groceries -->
 
-> *I studied Ukrainian grammar for a very long time. I read difficult rules and did various written exercises. But exactly today I finally understood this important topic well. Now I can freely tell interesting stories about my life.*
+## Сценарій 3: Як пройшов твій день? (Scenario 3: How Was Your Day?) (~900 words)
+
+Welcome to our final scenario. Today, you will learn how to describe your **день** (day) perfectly to your friends. We will explore how to **обговорювати** (to discuss) everything from daily chores to weekend events. 
+
+You will see how to seamlessly **планувати / запланувати** (to plan) a large **вечірка** (party) using the correct verbal aspects. This conversation highlights the core narrative difference in Ukrainian between describing an ongoing process and reporting a completed result.
+
+The aspect pairs we use today cover common tasks. For example, you will learn how to talk about going to the **ринок** (market) to **купувати / купити** (to buy) fresh ingredients. 
+
+You will also practice explaining how much items **коштувати** (to cost) per **кілограм** (kilogram). Finally, we will look at how you describe your efforts to **готувати / приготувати** (to cook, prepare) a delicious dinner.
+
+> — **Максим:** Привіт, Юлю! Як пройшов твій день? *(Hi, Yulia! How was your day?)*
+> — **Юлія:** Привіт! День був дуже довгий. Вранці я довго планувала наш бюджет. *(Hi! The day was very long. In the morning I was planning our budget for a long time.)*
+> — **Максим:** О, це чудово. А я сьогодні ходив на ринок. *(Oh, that is great. And I went to the market today.)*
+> — **Юлія:** Що ти там купував? Ти зміг купити свіжі овочі? *(What were you buying there? Were you able to buy fresh vegetables?)*
+> — **Максим:** Так, я купив один кілограм помідорів і сир. Я не знав, скільки коштує сир, але він був дешевий. А вчора я довго готував український борщ. *(Yes, I bought one kilogram of tomatoes and cheese. I didn't know how much the cheese cost, but it was cheap. And yesterday I was cooking Ukrainian borsch for a long time.)*
+> — **Юлія:** Клас! А ми сьогодні обговорювали новий проєкт на роботі. Ми не могли знайти рішення вранці, але ввечері нарешті знайшли його. *(Class! And today we were discussing a new project at work. We couldn't find a solution in the morning, but in the evening we finally found it.)*
+> — **Максим:** Ви вирішили замовити піцу, щоб відсвяткувати? Наша вечірка завтра! *(Did you decide to order pizza to celebrate? Our party is tomorrow!)*
+> — **Юлія:** Так, ми замовили дві великі піци. Я вже все запланувала на завтра! *(Yes, we ordered two large pizzas. I already planned everything for tomorrow!)*
+
+When you tell a story about the past, you need to set the scene. You want to describe what was happening around you or what you were busy doing for a period of time. This is where the imperfective aspect shines. Imperfective verbs focus entirely on the duration, the effort, and the process of an action, completely ignoring whether it ever reached an endpoint.
+
+Учора ввечері йшов дощ, а я сидів удома. Я вчора довго читав цікаву книгу і пив гарячий чай. Мій брат грав на гітарі, а мама готувала смачну вечерю. Ми відпочивали і нікуди не поспішали.
+
+> *It was raining yesterday evening, and I was sitting at home. Yesterday I was reading an interesting book for a long time and drinking hot tea. My brother was playing the guitar, and mom was cooking a tasty dinner. We were resting and not hurrying anywhere.*
+
+Notice how none of these actions have a clear conclusion. The reading, drinking, playing, and cooking are presented as continuous states. They paint a background picture for the listener. You use the imperfective aspect when the time spent doing the activity is more important than the final result.
+
+Once the scene is set, a story needs action to move forward. To push a narrative along, you use the perfective aspect. Perfective verbs present actions as a chain of completed results, where one finished event neatly follows another. They answer the question of what was actually accomplished.
+
+Спочатку я поснідав, потім пішов на роботу, а ввечері подивився фільм. Я швидко написав звіт, надіслав його директору і закрив комп'ютер. Після цього я замовив таксі та поїхав на зустріч із друзями.
+
+> *First I had breakfast, then I went to work, and in the evening I watched a movie. I quickly wrote the report, sent it to the director, and closed the computer. After that, I ordered a taxi and went to a meeting with friends.*
+
+In this sequence, every single verb represents a closed chapter. The breakfast was finished before the person left for work. The report was fully written before it was sent. Perfective verbs act as stepping stones, advancing the plot step by step without focusing on the time it took to complete each task.
+
+One of the most powerful ways to use verbal aspects in Ukrainian is to contrast them within a single sentence. You can brilliantly illustrate how an ongoing, continuous action provides the background for a sudden, completed event. The imperfective verb creates the prolonged setting, while the perfective verb interrupts it.
+
+Я писав листа, коли ти подзвонив. Ми спокійно обговорювали наші плани, коли раптом почався сильний дощ. Вона готувала обід, коли її чоловік купив новий телевізор і приніс його додому.
+
+> *I was writing a letter when you called. We were calmly discussing our plans when suddenly heavy rain started. She was cooking lunch when her husband bought a new television and brought it home.*
+
+This grammatical structure is incredibly common in everyday storytelling. The background action was already in progress and might have continued afterward, but the interrupting event happened once and was finished immediately.
+
+:::info
+**The Power of "Коли"**
+The word **коли** (when) often acts as the crucial bridge in these sentences. It beautifully connects an imperfective background action with a sudden perfective interruption, creating dynamic and natural narratives.
+:::
+
+To master past tense storytelling, you must understand the difference between two critical questions. When someone asks about the process, they use the imperfective question. When they demand a result, they use the perfective question.
+
+Що ти робив учора ввечері? Я читав нову книгу про історію України. А що ти зробив сьогодні вранці? Я прочитав дві статті і написав важливий лист.
+
+> *What were you doing yesterday evening? I was reading a new book about the history of Ukraine. And what did you get done this morning? I read two articles and wrote an important letter.*
+
+A very common mistake for English speakers is to use the imperfective aspect for all past actions, translating the simple past directly. If you finished reading a book, you cannot use the imperfective verb «Я читав книгу». That only means you spent time reading it, leaving the listener wondering if you ever finished. You must use the perfective verb «Я прочитав книгу» to announce the completed accomplishment.
+
+:::tip
+**The Process Trap**
+Do not let your English brain trick you into using imperfective verbs just because the action happened in the past. If there is a clear, completed result, force yourself to use the perfective partner! Always ask yourself whether you are describing your time or your achievements.
+:::
+
+### Читаємо українською (Reading Practice)
+
+Let us look at a complete narrative that brings all these rules together. Notice how the aspects shift to paint a rich, dynamic picture of a busy day.
+
+Учора був дуже довгий день. Вранці я прибирав свою кімнату і слухав улюблену музику. Потім я вирішив приготувати смачний обід. Я готував суп майже годину. Коли я нарешті приготував обід, зателефонувала моя сестра. Вона сказала, що хоче організувати свято. Ми довго обговорювали різні ідеї по телефону. Спочатку ми запланували меню, а потім я пішов у магазин. Я вибирав фрукти дуже довго, бо шукав найсвіжіші. Зрештою, я купив банани та яблука. Увечері я просто відпочивав і дивився телевізор.
+
+> *Yesterday was a very long day. In the morning I was cleaning my room and listening to favorite music. Then I decided to cook a tasty lunch. I was cooking the soup for almost an hour. When I finally cooked the lunch, my sister called. She said that she wants to organize a holiday. We were discussing various ideas on the phone for a long time. First we planned the menu, and then I went to the store. I was choosing fruits for a very long time because I was looking for the freshest ones. Eventually, I bought bananas and apples. In the evening I was just resting and watching television.*
 
 <!-- INJECT_ACTIVITY: match-up-story-aspect -->
-<!-- INJECT_ACTIVITY: match-up-narrative-check -->
-
-## Підсумок — Summary
-
-This module introduced the foundation of the A2 level. Before moving forward, take a moment to test your new skills.
-
-Спробуйте відповісти на кілька запитань. Чи можете ви назвати три речі, які ви запланували, використовуючи слово «буду»? Як ви попросите п'ять кілограмів яблук на ринку? Яка різниця між реченнями «Я писав» і «Я написав»? Пам'ятайте головне: вид дієслова показує різницю між процесом і результатом. Водночас родовий відмінок допомагає говорити про кількість та слово «немає».
-
-> *Try to answer a few questions. Can you name three things you planned using the word "буду"? How do you ask for five kilograms of apples at the market? What is the difference between the sentences "Я писав" and "Я написав"? Remember the main point: the aspect of a verb shows the difference between a process and a result. At the same time, the Genitive case helps to talk about quantity and the word "немає".*
-
-:::note
-**Quick tip**
-Mastering verb aspects takes practice. Do not try to memorize every pair immediately; focus on the verbs you use most often in your daily life.
-:::
+<!-- INJECT_ACTIVITY: match-up-narrative-questions -->

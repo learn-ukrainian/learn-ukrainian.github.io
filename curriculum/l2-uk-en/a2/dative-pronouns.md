@@ -1,151 +1,178 @@
-## Давальний відмінок: Кому? (The Dative Case: To Whom?)
+## Давальний відмінок: Кому? (The Dative Case: To Whom?) (~550 words total)
 
-Welcome to a new grammatical case! The Dative case, or Давальний відмінок in Ukrainian, is one of the most intuitive and useful cases to learn at this level. Its grammatical name comes directly from the verb **давати** (to give). This name perfectly illustrates its primary function in a sentence: it always points to the recipient or the beneficiary of an action.
+Welcome to one of the most useful and rewarding cases in Ukrainian grammar: the **давальний відмінок** (dative case). The name itself gives away its primary function. It comes from the verb «давати» (to give). When you give something, you always give it to someone. This case answers the questions «кому?» (to whom?) and «чому?» (to what?).
 
-Давальний відмінок завжди відповідає на питання «кому?» або «чому?». Коли ми говоримо про людей або тварин, ми постійно запитуємо «кому?». Коли ж наша дія спрямована на предмети або абстрактні ідеї, ми використовуємо питання «чому?». Цей відмінок дуже важливий для щоденного спілкування.
+The core meaning of the dative case is the recipient of an action. It indicates the person who receives a physical object, the person who is told a piece of information, or the person for whom a specific action is performed. 
 
-> *The Dative case always answers the questions "to whom?" or "to what?". When we talk about people or animals, we constantly ask "to whom?". When our action is directed at objects or abstract ideas, we use the question "to what?". This case is very important for daily communication.*
+Давальний відмінок — це відмінок отримувача. Коли ми щось даруємо, ми даруємо це комусь. Коли ми розповідаємо історію, ми розповідаємо її комусь. Цей відмінок дуже часто працює з людьми та тваринами. Вони зазвичай отримують речі або нову інформацію.
 
-Think of the Dative case as the specific grammatical marker for the indirect object. To truly understand its role, let us contrast it with the cases you already know. The Nominative case marks the main doer of the action, the primary subject of the sentence. The Accusative case marks the direct object, which is the person or thing directly affected by the action. The Dative case, however, marks the person who benefits from the action or receives a physical object.
+> *The Dative case is the case of the recipient. When we gift something, we gift it to someone. When we tell a story, we tell it to someone. This case very often works with people and animals. They usually receive things or new information.*
 
-Я сьогодні даю нову книгу тобі. У цьому простому реченні займенник «я» стоїть у називному відмінку, бо це активний суб'єкт. Слово «книгу» стоїть у знахідному відмінку, бо це прямий об'єкт моєї дії. А займенник «тобі» показує фінального отримувача у давальному відмінку.
+To understand the dative case perfectly, it helps to contrast it with the cases you already know. Remember the Genitive case, which answers «кого?» and «чого?». We use it to show possession or absence. Then there is the Accusative case, answering «кого?» and «що?». The accusative marks the direct object—the thing or person directly experiencing the action.
 
-> *Today I give a new book to you. In this simple sentence, the pronoun "I" is in the nominative case because it is the active subject. The word "book" is in the accusative case because it is the direct object of my action. And the pronoun "to you" shows the final recipient in the dative case.*
+The dative case is different. It marks the indirect object. If you write a letter to your friend, the letter is the direct object (Accusative) because it is being written, but your friend is the indirect object (Dative) because they are receiving the final result. Every case has its own distinct job in a Ukrainian sentence.
 
-To start using the Dative case naturally and confidently, you need a solid starter kit of verbs that frequently trigger it. These are high-frequency transaction verbs that you already use every day. The most essential ones include **давати** (to give), **дарувати** (to gift), and **допомагати** (to help).
+Я маю подарунок для брата. Подарунок — це знахідний відмінок, бо я його маю. Але коли я даю цей подарунок братові, мій брат стає отримувачем. Тепер він стоїть у давальному відмінку. Кожен відмінок має свою особливу роль.
 
-You will also need verbs related to sharing information. These include **казати** (to say), **говорити** (to tell), and **писати** (to write). Whenever you use any of these verbs, the person receiving the physical item, hearing the message, or accepting the help must be placed in the Dative case.
+> *I have a gift for my brother. The gift is the accusative case because I have it. But when I give this gift to my brother, my brother becomes the recipient. Now he stands in the dative case. Every case has its own special role.*
 
-Я часто пишу тобі довгі електронні листи. Моя старша сестра завжди допомагає мені робити домашнє завдання. Мій друг завжди каже мені правду. Ми з радістю даруємо їй красиві квіти на свято. Вони дають йому гарячий чай.
+:::note
+**Quick tip** — Unlike the genitive or locative cases, the dative case is very often used *without* any prepositions. The case ending itself contains the meaning of the English word "to" or "for".
+:::
 
-> *I often write long emails to you. My older sister always helps me do homework. My friend always tells me the truth. We joyfully gift her beautiful flowers for the holiday. They give him hot tea.*
+Let's look at the dative case in action with some familiar, everyday verbs. The most classic structure you will use is «давати щось комусь» (to give something to someone). Another extremely common verb is «казати» (to say or to tell). 
+
+Мама дає синові яблуко. Батько каже доньці правду. Вчитель пояснює студентам нове правило. У кожному реченні є хтось, хто робить дію. Також є той, хто отримує результат.
+
+> *A mother gives her son an apple. A father tells his daughter the truth. A teacher explains a new rule to the students. In every sentence, there is someone doing the action. There is also someone who receives the result.*
+
+Imagine a lively family gathering. It is someone's birthday, and the relatives have brought a big pile of presents. The host is distributing the gifts to everyone in the room. Let's see how they use the dative pronouns: **мені** (to me), **тобі** (to you (informal)), **йому** (to him, to it), **їй** (to her), **нам** (to us), **вам** (to you (formal/plural)), and **їм** (to them).
+
+> — **Іменинник:** Так, давайте подивимося, що тут є. О, ця велика книга! Вона **мені**. *(Yes, let's see what is here. Oh, this big book! It is for me.)*
+> — **Мама:** А ця коробка шоколаду — **тобі**, сину. *(And this box of chocolate is for you, son.)*
+> — **Іменинник:** Дякую! А де дідусь? Цей теплий шарф — **йому**. *(Thank you! And where is grandpa? This warm scarf is for him.)*
+> — **Сестра:** А ці красиві квіти — **їй**, нашій бабусі. *(And these beautiful flowers are for her, our grandma.)*
+> — **Батько:** А цей великий і солодкий торт — **нам** усім! *(And this big and sweet cake is for all of us!)*
+> — **Іменинник:** Смачного **вам**! *(Bon appetit to you!)*
+
+In the dialogue above, notice how naturally the dative pronouns flow. The host did not need to use a preposition like "for" or "to" before the pronouns. The forms themselves instantly communicate the idea of a recipient. 
+
+This is the beauty and efficiency of the Ukrainian case system. By changing the pronoun, you immediately know who is getting the book, the scarf, or the flowers. We also saw that the dative case often appears when we want to wish someone well, like saying "смачного" (enjoy your meal) to a group of people.
+
+Займенники у давальному відмінку короткі та дуже зручні. Вони допомагають нам швидко сказати, хто є головним адресатом. Завтра ми будемо детально вивчати всі ці форми. А поки що, спробуйте просто запам'ятати їхнє звучання.
+
+> *Pronouns in the dative case are short and very convenient. They help us quickly say who the main addressee is. Tomorrow we will study all these forms in detail. For now, try to just remember how they sound.*
+
+## Особові займенники у давальному відмінку (Personal Pronouns in the Dative) (~770 words total)
+
+Now let's look at how personal pronouns change when they become the recipient of an action. In the **давальний відмінок** (dative case), the first and second person pronouns completely change their stems. You cannot simply add an ending to the basic forms. Instead, you must memorize these new, short words as a dedicated set because they look quite different from their dictionary counterparts. The pronoun "я" becomes **мені** (to me), and "ти" becomes **тобі** (to you (informal)).
+
+Для множини ми також маємо абсолютно нові форми. Займенник «ми» змінюється на **нам** (to us). Займенник «ви» перетворюється на **вам** (to you (formal/plural)). Ці короткі слова дуже зручні у щоденному спілкуванні з колегами та друзями.
+
+> *For the plural, we also have absolutely new forms. The pronoun "we" changes to "nam" (to us). The pronoun "you" turns into "vam" (to you). These short words are very convenient in daily communication with colleagues and friends.*
 
 :::info
-**Grammatical direction**
-Notice a beautiful feature of Ukrainian grammar: we usually do not need extra prepositions like "to" or "for" when indicating the recipient. The Dative case ending itself acts as the built-in direction marker. You simply say «я даю тобі» instead of inserting an unnecessary preposition. This makes sentences highly efficient.
+**Grammar box** — The core conversational forms to memorize first are **мені** and **тобі**. You will use them constantly to talk about what is **потрібно** (necessary, needed), what you like, or what you want to tell someone.
 :::
 
-Let us look at a typical family scene where various gifts are being happily distributed at a birthday gathering. Notice how the Dative pronouns are used repeatedly in a natural way to indicate exactly who receives each specific item.
+The third-person pronouns follow a slightly different pattern. Their endings often remind learners of the endings we see on adjectives in the dative case. The masculine pronoun "він" and the neuter pronoun "воно" both become **йому** (to him, to it). The feminine pronoun "вона" becomes **їй** (to her). Finally, the plural pronoun "вони" changes to **їм** (to them). While these might seem similar to other cases, their core conversational function is entirely focused on receiving.
 
-> — **Іменинник:** Що ви мені подаруєте сьогодні на свято? *(What will you gift to me today for the holiday?)*
-> — **Родина:** Ми маємо дуже багато чудових подарунків! *(We have very many wonderful gifts!)*
-> — **Іменинник:** Чудово! Кому ми даємо ці корисні речі? *(Great! To whom do we give these useful things?)*
-> — **Родина:** Мені — нову цікаву книгу. *(To me — a new interesting book.)*
-> — **Іменинник:** А тобі — солодкий шоколад. *(And to you — sweet chocolate.)*
-> — **Родина:** Йому ми даємо теплий зимовий шарф. *(To him we give a warm winter scarf.)*
-> — **Іменинник:** Їй — дуже красиві весняні квіти. *(To her — very beautiful spring flowers.)*
-> — **Родина:** А нам усім — неймовірно смачний торт! *(And to all of us — an incredibly tasty cake!)*
+Коли ми говоримо про третю особу, ці займенники допомагають нам швидко вказати на адресата нашої дії. Наприклад, ми часто кажемо «скажи йому» або «дай їй». Це робить мову швидкою, лаконічною та дуже природною.
 
-<!-- INJECT_ACTIVITY: match-up, Match Nominative pronoun to its Dative form (я→мені, ти→тобі, ми→нам, ви→вам, він→йому, вона→їй, воно→йому, вони→їм), 8 items -->
+> *When we talk about the third person, these pronouns help us quickly point to the addressee of our action. For example, we often say "tell him" or "give her". This makes the language fast, concise, and very natural.*
 
-## Особові займенники у давальному відмінку (Personal Pronouns in the Dative)
+There is a very important phonetic rule for the third-person pronouns in Ukrainian that you should be aware of. When you use pronouns like "його" or "її" with a preposition in other cases, they usually gain an extra "н-" at the beginning, becoming forms like "до нього" or "біля неї". However, the dative case is almost always used *without* prepositions. Because there is no preposition to trigger that phonetic change, the dative forms without prepositions remain simple: **йому**, **їй**, and **їм**.
 
-When we talk about giving a physical gift, telling an interesting story, or offering necessary help, we use personal pronouns in the Dative case to indicate the exact recipient. The forms for the first and second person singular ("I" and "you") change completely from their Nominative base. This linguistic phenomenon is called suppletion, meaning the root of the new word is entirely different from the original pronoun. For the pronoun **я** (I), the Dative form becomes **мені**. For the pronoun **ти** (you informal), the form becomes **тобі**. Because we talk about ourselves and the person we are speaking to so frequently in daily life, these are the most common Dative forms you will encounter in conversational Ukrainian. You must memorize these forms as an inseparable pair. A very common mistake for English speakers is to translate the English sentence structure literally and say something incorrect like "дай я книгу" (give I a book). Ukrainian strictly requires the Dative case to show who receives the action, so you must always use the proper form to sound natural and be understood.
+Українці дуже рідко використовують прийменники з давальним відмінком. Саме тому ці особові займенники завжди звучать м'яко і починаються з голосного або звука «й». Вам зовсім не потрібно думати про додаткові приголосні літери під час розмови.
 
-Я часто кажу тобі правду, тому що ти мій найкращий друг. Тобі дуже пасує ця нова біла сорочка. Моя мама завжди каже мені, що треба тепло одягатися взимку. Будь ласка, покажи мені свої нові фотографії з відпустки. Я даю тобі цей цікавий журнал, щоб ти міг читати ввечері після роботи.
+> *Ukrainians very rarely use prepositions with the dative case. That is exactly why these personal pronouns always sound soft and begin with a vowel or the sound "й". You do not need to think about extra consonant letters at all during a conversation.*
 
-> *I often tell you the truth because you are my best friend. This new white shirt suits you very well. My mom always tells me that it is necessary to dress warmly in winter. Please, show me your new photos from vacation. I give you this interesting magazine so you can read in the evening after work.*
+Let's practice these specific forms with the most common verbs of giving and communicating. The typical sentence structure in these situations places the verb first, followed by the dative recipient, and then the accusative object. This word order is highly predictable and sounds very natural and polite to native speakers.
+
+Дай мені нову книгу, будь ласка. Скажи їй усю правду зараз. Покажи нам ваші старі фотографії. Напиши їм довгого листа сьогодні ввечері.
+
+> *Give me the new book, please. Tell her the whole truth now. Show us your old photographs. Write them a long letter tonight.*
+
+It is absolutely crucial to distinguish the dative forms from the accusative forms when you are building sentences. The accusative case answers the question "who is directly affected?", while the dative case answers "to whom?". A severe and very common error for English speakers is confusing these two distinct functions, or even worse, using the base dictionary form instead of a declined pronoun.
+
+Наприклад, казати «Дай я книгу» — це дуже велика граматична помилка. Слово «я» — це суб'єкт, а тут нам обов'язково потрібен отримувач. Правильно говорити «Дай мені книгу». Також носіям мови важко слухати, коли іноземці плутають форми «мене» та «мені» або «тебе» та «тобі». Ми кажемо «Я бачу тебе», але «Я даю тобі».
+
+> *For example, saying "Give I a book" is a very big grammatical mistake. The word "I" is the subject, but here we absolutely need a recipient. It is correct to say "Give me a book". It is also hard for native speakers to listen when foreigners confuse the forms "mene" and "meni" or "tebe" and "tobi". We say "I see you" (accusative), but "I give to you" (dative).*
+
+
+## Підсумок — Summary
+
+Вітаємо! У цьо́му мо́дулі ми дослі́дили дава́льний відмі́нок (Кому́? Чому́?) та його́ ключову́ роль у мо́ві. Ви навчи́лися будува́ти ре́чення, де хтось є отримувачем ді́ї. Ми ви́вчили форми́ дава́льного відмі́нка для особо́вих займе́нників: **я → мені́**, **ти → тобі́**, **він/воно́ → йому́**, **вона́ → їй**, **ми → нам**, **ви → вам**, **вони́ → їм**.
+
+Ми також з’ясува́ли, що дава́льний відмі́нок незамі́нний у безособо́вих констру́кціях, які виража́ють ста́ни чи почуття́, напри́клад: "**мені́ холо́дно**" або "**тобі́ потрі́бно**". Пам'ята́йте, що тут знахі́дний відмі́нок ніко́ли не використо́вується!
+
+Головне́ розрі́знення, яке ми засво́їли, це різниця́ між знахі́дним (Кого́? Що́?) і дава́льним відмі́нками. Наприклад, у ре́ченні "Я ба́чу **тебе́** (Acc.) на ву́лиці" ви́користовуємо знахі́дний, оскі́льки "тебе́" — це прями́й об'є́кт ді́ї. А ось у "Я кажу́ **тобі́** (Dat.) пра́вду", "тобі́" — це отримувач інформа́ції, тому́ ми ви́користовуємо дава́льний.
+
+**Переві́рте себе́:**
+1.  Як ви ска́жете украї́нською "It is interesting for us"?
+2.  Який відмі́нок ви б ви́користали у ре́ченні "Вчитель пояснює нове правило..." і чому́?
+3.  Сформулю́йте ре́чення, використо́вуючи дава́льний відмі́нок, щоб ви́словити своє́ пото́чне почуття́.
+
+<!-- INJECT_ACTIVITY: match-up, Match nominative pronoun to its dative form (я→мені, ти→тобі, etc.), 8 items -->
+
+Let's look at a few more examples of these pronouns in everyday contexts. Notice how frequently these short, efficient words pop up whenever people interact, share things, or describe their physical state, like being **холодно** (cold (impersonal state)). They are the glue that holds conversational Ukrainian together. Master these forms early, and your speaking will immediately sound much more authentic.
+
+> — **Олег:** Привіт! Ти можеш допомогти мені? *(Hi! Can you help me?)*
+> — **Анна:** Так, звичайно. Що тобі потрібно? *(Yes, of course. What do you need?)*
+> — **Олег:** Дай мені твій словник, будь ласка. *(Give me your dictionary, please.)*
+> — **Анна:** Добре, я дам тобі словник. А де Петро? Я маю передати йому зошит. *(Okay, I will give you the dictionary. And where is Petro? I have to pass the notebook to him.)*
+> — **Олег:** Він удома. Подзвони йому. *(He is at home. Call him.)*
+
+Завдяки цим коротким словам щоденні діалоги звучать дуже динамічно. Ми постійно щось даємо, кажемо, пояснюємо або показуємо іншим людям навколо нас.
+
+> *Thanks to these short words, daily dialogues sound very dynamic. We are constantly giving, telling, explaining, or showing something to other people around us.*
+
+<!-- INJECT_ACTIVITY: fill-in, Complete sentences with the correct dative pronoun based on context, 8 items -->
+
+## Мені холодно: Безособові конструкції (Impersonal Constructions with Dative) (~550 words total)
+
+One of the most frequent and natural ways to use the **давальний відмінок** (dative case) in Ukrainian is to talk about your physical state, feelings, or daily needs. We do this using what we call impersonal constructions («безособові конструкції»). In English, you typically use a subject and an active verb to describe how you feel, like "I am cold" or "She is sad." In Ukrainian, we flip this grammatical structure entirely. We use a dative pronoun like **мені** (to me) or **тобі** (to you (informal)) followed by a special adverb, and there is no grammatical subject at all. The literal translation is closer to "To me it is cold" or "To her it is sad." This pattern is absolutely essential for daily communication, as it is the most authentic way to describe your internal experiences.
+
+Коли настає зима, мені часто дуже холодно. Моєму братові завжди тепло на вулиці. Нам треба купити новий теплий одяг. Їм також зараз дуже холодно.
+
+> *When winter comes, I am often very cold. My brother is always warm outside. We need to buy new warm clothes. They are also very cold right now.*
+
+You will encounter dozens of words that pair perfectly with the dative case to express how someone experiences the world around them. These predicates fall into three main categories. First, we have physical states like **холодно** (cold (impersonal state)) and «тепло». Second, we express emotional feelings such as «весело», «сумно», «приємно», «цікаво», and «нудно». Finally, we communicate assessments, rules, or obligations using words like «важко», «легко», **потрібно** (necessary, needed), «можна», «треба», and «варто». Memorizing these short combinations is the fastest way to sound fluent and natural.
+
+Сьогодні їй дуже весело, бо вона читає смішну книгу. Тобі сумно дивитися цей старий фільм? Нам цікаво слухати цю історію. Мені потрібно працювати завтра вранці. Вам варто відпочити після довгого дня.
+
+> *Today she is having a lot of fun because she is reading a funny book. Are you sad watching this old movie? We are interested in listening to this story. I need to work tomorrow morning. You should rest after a long day.*
 
 :::info
-**Pronunciation direction**
-Pay close attention to the vowels when you say these essential words out loud. The stress falls clearly on the final syllable: мені, тобі. This specific stress pattern makes them sound distinct and clear, ensuring the listener knows exactly who is receiving the action or object in your sentence.
+**Grammar box**
+Notice that modal words never take a nominative subject. You must use dative pronouns. Instead of «ми треба», you must say **нам** (to us) «треба». The same rule applies when using **вам** (to you (formal/plural)) and **їм** (to them).
 :::
 
-For the third person singular, the forms are slightly more predictable but still require careful attention to detail. The masculine and neuter pronouns share the exact same Dative form. The masculine pronoun **він** (he) and the neuter pronoun **воно** (it) both transform into **йому**. The feminine pronoun **вона** (she), however, has its own distinct and very short form, which is **їй**. Notice that the feminine form consists of just two letters and starts with the unique Ukrainian vowel 'ї'. These third-person forms are used constantly when we are gossiping, sharing daily news about other people, or explaining what we do for our colleagues and family members. 
+It is critical to distinguish between sentences where you are the active subject and sentences where you are simply the experiencer of a state. When you use the nominative case, you are the one performing a state of being. For instance, the phrase «Я втомлена» uses the nominative subject «Я» and means "I am tired." But if you want to say "It is hard for him," you must use the impersonal dative construction with **йому** (to him, to it) and say «Йому важко». Similarly, you would use **їй** (to her) to describe a woman's feelings. A very common mistake for English speakers is trying to directly translate phrases like "I need." In Ukrainian, you cannot ever say «Я треба». You must shift your perspective to "To me it is necessary" and say «Мені треба» or «Мені потрібно».
 
-Я телефоную йому щовечора після роботи, щоб запитати про його день. Ми завжди даруємо їй красиві червоні квіти на день народження. Вона часто допомагає йому робити складне домашнє завдання з математики. Наш новий директор пише їй довгі електронні листи кожного ранку.
+Я дуже втомлена сьогодні. Мені важко працювати так багато годин. Він хворий і лежить у ліжку. Йому потрібно пити гарячий чай. Ми готові до нового тесту. Нам легко читати цей текст.
 
-> *I call him every evening after work to ask about his day. We always gift her beautiful red flowers for her birthday. She often helps him do complex math homework. Our new director writes her long emails every morning.*
+> *I am very tired today. It is hard for me to work so many hours. He is sick and lying in bed. He needs to drink hot tea. We are ready for the new test. It is easy for us to read this text.*
 
-The plural forms of the personal pronouns are generally much easier for language learners to remember and use confidently. This is because they feel significantly more symmetrical and logical compared to the highly irregular singular forms. The pronoun **ми** (we) becomes **нам**, the formal or plural pronoun **ви** (you) becomes **вам**, and the pronoun **вони** (they) becomes **їм**. If you look closely at these three specific words, you will notice a clear visual and phonetic pattern: they all end in the letter 'м'. This consistent ending makes it incredibly simple to recognize them as plural recipients whenever you hear them spoken in a sentence.
+Let's see how these impersonal constructions flow in a natural conversation. Notice how the speakers constantly use dative pronouns to ask about feelings and express their own needs. In Ukrainian culture, asking someone if they are cold or if they need something is a very common way to show care and politeness.
 
-Наш розумний вчитель пояснює нам складне граматичне правило дуже просто. Я щиро дякую вам за вашу велику допомогу вчора у школі. Мої старі друзі зараз живуть у Києві, тому потрібно їм зателефонувати сьогодні ввечері. Ми готуємо їм смачну українську вечерю на вихідних.
-
-> *Our smart teacher explains the complex grammar rule to us very simply. I sincerely thank you for your great help yesterday at school. My old friends live in Kyiv now, so it is necessary to call them tonight. We are preparing a tasty Ukrainian dinner for them on the weekend.*
-
-:::tip
-**The missing letter "н"**
-Unlike the Genitive case (where "he" becomes "нього" after a preposition like "до"), the Dative case behaves quite differently. Because the Dative case inherently implies direction toward a recipient, it rarely requires prepositions. Even when it does occur with a preposition (such as "завдяки" — thanks to), the third-person pronouns **do not** gain an initial 'н'. They strictly remain **йому**, **їй**, and **їм**. Do not over-generalize the "initial н" rule from the Genitive case when using the Dative!
-:::
-
-Let us see how these pronouns work together dynamically in a real, everyday conversation. In this dialogue, two friends are organizing a surprise party and deciding who gets to know the secret plan. Notice how the speakers shift naturally between different Dative pronouns, demonstrating how fluid and efficient the language becomes once you master these short forms.
-
-> — **Олена:** Я маю великий секрет про наше майбутнє свято! *(I have a big secret about our future holiday!)*
-> — **Марко:** Дуже цікаво! Кому ти розкажеш цей секрет сьогодні? *(Very interesting! To whom will you tell this secret today?)*
-> — **Олена:** Я скажу йому секрет зараз, бо він мій старший брат. *(I will tell him the secret now, because he is my older brother.)*
-> — **Марко:** А нам ти скажеш? Ми теж хочемо знати всі важливі деталі! *(And will you tell us? We also want to know all the important details!)*
-> — **Олена:** Вам я скажу трохи пізніше, коли ми будемо вдома самі. *(To you I will tell a little later, when we are at home alone.)*
-> — **Марко:** Зрозуміло. А що робити з нашими спільними друзями? *(Understood. And what to do with our mutual friends?)*
-> — **Олена:** А їм ми скажемо тільки завтра вранці, щоб це був справжній сюрприз. *(And to them we will tell only tomorrow morning, so it is a real surprise.)*
-
-<!-- INJECT_ACTIVITY: fill-in-dative-pronouns -->
-
-## Мені холодно: Безособові конструкції (Impersonal Constructions)
-
-In English, we usually describe our physical or emotional states using the verb "to be" and an adjective, making ourselves the grammatical subject: "I am cold" or "She is sad." In Ukrainian, this works differently. We use impersonal constructions where the person experiencing the feeling is the logical subject, placed in the Dative case, while the feeling itself is expressed by an adverb. Instead of saying "I am cold," Ukrainians literally say "To me it is cold." This highlights that the environment is acting upon you, rather than you possessing the quality of coldness.
-
-Коли ми описуємо свій характер або постійний фізичний стан, ми завжди використовуємо називний відмінок. Наприклад, ми кажемо: «Я щаслива людина» або «Він дуже серйозний студент». Але коли ми говоримо про наші емоції чи відчуття саме в цей момент, ми використовуємо давальний відмінок. Тому ми кажемо: «Мені сьогодні дуже весело» або «Йому зараз некомфортно».
-
-> *When we describe our character or a permanent physical state, we always use the Nominative case. For example, we say: "I am a happy person" or "He is a very serious student." But when we talk about our emotions or feelings exactly at this moment, we use the Dative case. Therefore, we say: "I am having a lot of fun today" or "He is uncomfortable right now."*
-
-:::tip
-**Logical subjects** — Think of these sentences not as actions you are doing, but as states that are happening *to* you. The Dative case perfectly captures this sense of receiving a temporary experience from your environment.
-:::
-
-To build these sentences, you simply combine a Dative pronoun with a state adverb. These adverbs almost always end in the letter «-о», giving them a distinctly neutral and impersonal feel. Unlike adjectives, these adverbs do not change their endings depending on your gender or the number of people. Whether a man, a woman, or a group of people is speaking, the word for "cold" remains exactly the same.
-
-Найчастіше ми використовуємо такі короткі слова: холодно, тепло, сумно, весело, приємно та цікаво. Взимку на вулиці мені часто буває дуже холодно. А тобі цікаво читати цю нову українську книгу про історію? Моїй молодшій сестрі зараз сумно, тому що надворі йде сильний дощ. Нам дуже приємно бачити вас у нашому новому домі.
-
-> *Most often we use such short words: cold, warm, sad, fun, pleasant, and interesting. In winter on the street, I am often very cold. And is it interesting for you to read this new Ukrainian book about history? My younger sister is sad right now because it is raining heavily outside. It is very pleasant for us to see you in our new home.*
-
-This exact same impersonal structure is also used to express necessity, permission, or advice. Instead of using active verbs like "must" or "should," Ukrainian relies on modal adverbs such as «треба» or «потрібно» (need/necessary), «можна» (allowed/possible), and «варто» (should/worthwhile). When you want to say "I need to go," the literal translation is "To me it is necessary to go." This is a fundamental pattern you will hear constantly in everyday life.
-
-Зараз уже пізно, тому мені негайно треба йти додому. Чи можна вам тут сидіти і так голосно розмовляти під час лекції? Йому варто більше відпочити після такого важкого робочого тижня в офісі. Їм потрібно купити квитки на ранковий поїзд заздалегідь. Нам можна взяти ці смачні червоні яблука зі столу?
-
-> *It is already late now, so I immediately need to go home. Are you allowed to sit here and talk so loudly during the lecture? He should rest more after such a hard work week in the office. They need to buy tickets for the morning train in advance. Can we take these tasty red apples from the table?*
-
-Let's see how these impersonal expressions naturally flow in a real conversation. Notice how often the speakers use the Dative pronouns to check in on each other's physical comfort and to express their own immediate desires. This makes the dialogue sound authentically Ukrainian.
-
-> — **Остап:** Привіт! Тобі тут тепло біля великого вікна? *(Hi! Are you warm here by the large window?)*
-> — **Ганна:** Так, дуже дякую. Мені приємно тут сидіти і спокійно дивитися на вулицю. *(Yes, thank you very much. It is pleasant for me to sit here and calmly look at the street.)*
-> — **Остап:** Мені цікаво, що ти замовиш сьогодні на обід. *(I wonder what you will order today for lunch.)*
-> — **Ганна:** Мені потрібно випити чашку гарячої чорної кави. *(I need to drink a cup of hot black coffee.)*
-> — **Остап:** Чому саме кави? *(Why specifically coffee?)*
-> — **Ганна:** Бо мені трохи сумно без неї зранку, я ще хочу спати. *(Because I am a little sad without it in the morning, I still want to sleep.)*
-> — **Остап:** Зрозуміло. Тоді нам усім варто покликати нашого офіціанта. *(Understood. Then we all should call our waiter.)*
+> — **Марко:** Привіт, Олено! Тобі не холодно тут стояти? *(Hi, Olena! Are you not cold standing here?)*
+> — **Олена:** Привіт! Ні, мені тепло. Але мені трохи нудно чекати автобус. *(Hi! No, I am warm. But I am a bit bored waiting for the bus.)*
+> — **Марко:** Мені теж нудно. Нам варто піти в кафе. *(I am bored too. We should go to a cafe.)*
+> — **Олена:** Це гарна ідея! Мені дуже хочеться пити каву. *(That is a good idea! I really want to drink coffee.)*
+> — **Марко:** А що робити Сергію? Йому потрібно працювати сьогодні? *(And what should Serhiy do? Does he need to work today?)*
+> — **Олена:** Ні, йому сьогодні легко. Йому можна відпочивати. *(No, it is easy for him today. He is allowed to rest.)*
+> — **Марко:** Чудово. Тоді нам усім буде весело разом. *(Great. Then we will all have fun together.)*
 
 <!-- INJECT_ACTIVITY: true-false-impersonal -->
 
 ## Давальний чи знахідний? (Dative or Accusative?)
 
-One of the biggest challenges for learners is choosing between the Dative and Accusative pronoun forms in everyday conversation. Because these pronoun forms can look similar, you need to rely strictly on the logic of the verb. You cannot simply guess based on how the English translation sounds.
+How do we know when to use the dative case instead of the accusative case? Both cases deal with objects of an action, which can easily confuse learners. The rule of thumb is simple. Ask yourself: who is directly affected by the action, and who is the recipient? If a person is the direct target, use the accusative case. If the person receives something, use the dative case.
 
-Часто ми маємо два дуже схожі речення, де змінюється тільки один відмінок. Наприклад, ми говоримо: «Я бачу тебе», але «Я кажу тобі». У першому випадку людина є прямим об'єктом дії. У другому випадку людина просто отримує нову інформацію. Так само ми говоримо: «Він добре знає її», але «Він часто дзвонить їй».
+Студенти часто запитують, коли треба використовувати знахідний, а коли **давальний відмінок** (dative case). Хто є прямим об'єктом дії? Це знахідний відмінок. Хто отримує щось від вас? Це давальний.
 
-> *Often we have two very similar sentences where only one case changes. For example, we say: "I see you" (Accusative), but "I tell you" (Dative). In the first case, the person is the direct object of the action. In the second case, the person simply receives new information. Similarly we say: "He knows her well" (Accusative), but "He often calls her" (Dative).*
+> *Students often ask when to use the accusative and when to use the dative case. Who is the direct object of the action? That is the accusative case. Who receives something from you? That is the dative.*
 
-The choice depends entirely on the verb's specific interaction with the object. If you can logically ask "to whom?" about the action, you need the Dative case. If you naturally ask "whom?" or "what?", you need the Accusative case.
+Let's look at minimal pairs to solidify this distinction. When you see someone, they are the direct object of your vision, which means you need the accusative case. When you tell someone a story, they receive your words, which triggers the dative case.
 
-A reliable strategy for learners is to visualize the direction of the action. If the action is a transfer directed *at* the person, like passing a physical message, sending a short email, or giving a nice gift, you must use the Dative case. If the action entirely "consumes," "sees," or "holds" the person as a direct target, you use the Accusative case.
+Я бачу тебе на вулиці. Тут ми використовуємо знахідний відмінок. Але я кажу **тобі** (to you (informal)) правду. Він знає її дуже добре. Але він дзвонить **їй** (to her) щодня. Ви показуєте цю фотографію **мені** (to me).
+
+> *I see you on the street. Here we use the accusative case. But I tell you the truth. He knows her very well. But he calls her every day. You show this photograph to me.*
+
+Sometimes, a single sentence uses both cases at the same time. Two-object verbs like giving, showing, or writing often trigger this pattern. The thing being given is the direct object, and the person receiving it is the indirect object.
+
+Я даю цікаву книгу **йому** (to him, to it). Книга — це прямий об'єкт, а він є отримувачем. Вчитель пояснює нове правило **нам** (to us). Вона відправляє лист **їм** (to them).
+
+> *I give an interesting book to him. The book is the direct object, and he is the receiver. The teacher explains the new rule to us. She sends a letter to them.*
 
 :::info
-**Watch out for English logic!**
-Some verbs in Ukrainian do not match their English equivalents. The most common "false friend" is the verb «допомагати» (to help). In English, you "help someone" as a direct object. In Ukrainian, you "give help TO someone" as an indirect object. You must always use the Dative case: «Я допомагаю тобі», never «Я допомагаю тебе».
+**Grammar box**
+Remember that impersonal states follow their own strict pattern. You cannot use the accusative case to express feelings or needs. You must stick to the dative forms we learned earlier.
 :::
 
-Завжди звертайте увагу на дієслова, які вимагають давального відмінка. Ми часто кажемо: «Я допомагаю йому робити домашнє завдання», або «Вона заважає мені спокійно працювати». Але ми використовуємо знахідний відмінок для інших дій: «Я розумію його дуже добре», або «Він щиро любить її». Важливо пам'ятати цю граматичну різницю.
+Якщо **вам** (to you (formal/plural)) зараз **холодно** (cold (impersonal state)), випийте гарячого чаю. Знахідний відмінок тут не працює. Завжди **потрібно** (necessary, needed) використовувати тільки давальні форми для таких станів.
 
-> *Always pay attention to verbs that require the dative case. We often say: "I help him do homework," or "She hinders me from working calmly." But we use the accusative case for other actions: "I understand him very well," or "He sincerely loves her." It is important to remember this grammatical difference.*
+> *If you are cold right now, drink some hot tea. The accusative case does not work here. It is always necessary to use only dative forms for such states.*
 
-<!-- INJECT_ACTIVITY: quiz-case-choice -->
-
-## Підсумок
-
-У давальному відмінку особові займенники мають нові форми. Я — це мені, а ти — це тобі. Він і воно мають форму йому, а вона — їй. Ми — це нам, ви — вам, а вони — їм. Ми найчастіше використовуємо ці слова у двох ситуаціях. Перша ситуація — коли людина є отримувачем дії. Наприклад: «Дай мені книгу». Друга ситуація — коли ми описуємо стан. Наприклад: «Мені зараз холодно».
-
-> *In the dative case, personal pronouns have new forms. "I" is "to me", and "you" is "to you". "He" and "it" have the form "to him/it", and "she" is "to her". "We" is "to us", "you" is "to you", and "they" is "to them". We most often use these words in two situations. The first situation is when a person is the recipient of an action. For example: "Give me the book." The second situation is when we describe a state. For example: "I am cold right now."*
-
-:::tip
-**Self-Check!**
-Can you recall the forms without looking at the table? How do you say "To her it is interesting"? You should instantly think of «Їй цікаво». Do you remember the dative form of the pronoun «ми»? It is «нам». Practice these small combinations daily, and soon you will use them without any hesitation!
-:::
+<!-- INJECT_ACTIVITY: quiz-dative-vs-accusative -->

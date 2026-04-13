@@ -1,94 +1,144 @@
-## Вступ та Діалог 1
+## Тема і рема: що відоме, що нове? (Theme and Rheme)
 
-В українській мові порядок слів називають **вільним** *(free)*. Але це не означає, що слова стоять хаотично. Порядок слів — це важливий інструмент. В англійській мові граматика диктує, де стоїть підмет, а де присудок. В українській мові ми використовуємо **порядок слів** *(word order)*, щоб передати зміст та емоції. Слово, яке стоїть на початку або в кінці речення, має найбільше значення.
+Have you ever heard that Ukrainian has a "free" word order? The Ukrainian word for order is **порядок** (order). While it is true that grammar does not strictly dictate where a specific word must go, the arrangement is far from random. Instead of rigid grammatical rules dictating position, word placement is driven by the flow of information and the speaker's intent. Every statement can be logically divided into two distinct parts: what is already known to the listener, and what is new. The known information, which sets the context, is called the theme, or **тема** (theme). The new, important information that you are adding to the conversation is the rheme, or **рема** (rheme). Understanding how to organize these two parts is the absolute key to speaking naturally.
 
-Оленка та Марійка — **сусідки по кімнаті** *(roommates)*. Вони ділять домашні обов'язки. Зверніть увагу, як змінюється порядок слів, коли вони говорять про нову інформацію.
+В українській мові існує природний порядок слів. Він допомагає слухачу зрозуміти головну думку. У нейтральному контексті тема завжди стоїть на початку, а рема — наприкінці. Нова інформація, яку ви хочете повідомити, повинна знаходитися в кінці фрази. Саме це останнє слово отримує логічний наголос. Наприклад, візьмемо фразу «Тарас купив нову книгу». Тут ми вже знаємо про Тараса. Але новина полягає в тому, що він купив книгу. Якщо ви поставите нове слово на початок, слухач може вас не зрозуміти.
+
+> *In the Ukrainian language, there is a natural word order. It helps the listener understand the main idea. In a neutral context, the theme always stands at the beginning, and the rheme is at the end. The new information you want to communicate must be located at the end of the phrase. It is this last word that receives the logical stress. For example, let's take the phrase "Taras bought a new book." Here we already know about Taras. But the news is that he bought a book. If you put the new word at the beginning, the listener might not understand you.*
+
+Every sentence, or **речення** (sentence), has a specific flow. To know what goes at the beginning of it, you can simply ask the imaginary question that the statement answers. The Ukrainian word for beginning is **початок** (beginning). The part that directly answers the question is your core new information, so it naturally moves to the back. This is where you place the logical stress, or **наголос** (stress). Let's look at a quick dialogue to see this dynamic in action:
+
+> — **Оксана:** Хто купив книгу? *(Who bought the book?)*
+> — **Степан:** Книгу купив Тарас. *(Taras bought the book.)*
+
+In this example, the existence of the book is the known information (the theme), and Taras is the answer to "who" (the rheme). Because Taras is the new information, his name is placed last. If we change the conversational context, the word order changes too:
+
+> — **Оксана:** Що купив Тарас? *(What did Taras buy?)*
+> — **Степан:** Тарас купив книгу. *(Taras bought the book.)*
+
+:::info
+**The question test** — To find the rheme and know what to emphasize, imagine the question your statement is answering. The Ukrainian word for "to emphasize" is **підкреслювати** (to emphasize). The exact word that provides the answer belongs at the very end.
+:::
+
+Англійська мова має фіксовану структуру, яка не дозволяє словам вільно переміщатися. Підмет завжди стоїть перед присудком, а додаток — після нього. Щоб підкреслити важливе слово англійською, ви просто змінюєте інтонацію голосу. Українська мова працює інакше, бо використовує відмінки. Закінчення слів чітко показують, хто виконує дію. Тому слова можуть вільно рухатися в реченні. Фрази «Мама любить доньку» та «Доньку любить мама» мають однаковий граматичний зміст. Але вони мають різний комунікативний фокус. У першому випадку ми говоримо про маму і що вона робить. У другому випадку ми говоримо про доньку. Ми підкреслюємо, що її любить саме мама.
+
+> *The English language has a fixed structure that does not allow words to move freely. The subject always stands before the predicate, and the object is after it. To emphasize an important word in English, you simply change your voice intonation. The Ukrainian language works differently because it uses cases. Word endings clearly show who is performing the action. Therefore, words can move freely in the sentence. The phrases "The mother loves the daughter" and "The daughter, the mother loves" have the exact same grammatical meaning. But they have a different communicative focus. In the first case, we are talking about the mother and what she does. In the second case, we are talking about the daughter. We emphasize that it is the mother who loves her.*
+
+Mastering Ukrainian communication means learning to place the communicative focus naturally. You will eventually learn how to use expressive techniques like inversion, or **інверсія** (inversion), to shift the subject and create a strong contrast, or **контраст** (contrast), between ideas. For now, remember the golden rule: start with what is known, and let the end of the phrase deliver the punchline with what is new. The Ukrainian word for end is **кінець** (end). By placing the most important information last, you will sound much more like a native speaker.
+
+
+## Підсумок — Summary
+
+Цей модуль зану́рив вас у дивови́жний світ українського поря́дку слів, який є значно гнучкі́шим, ніж в багатьо́х інших мо́вах. Ви дізна́лися, що хоч базовий поря́док слів часто є **SVO** (підмет-присудок-додаток), насправді важли́ву роль гра́ють **те́ма** (відома інформа́ція) та **ре́ма** (нова́ інформа́ція). Пам'ята́йте, те́ма зазвичай іде на поча́тку рече́ння, а ре́ма — в кінці́, де на неї припада́є логі́чний **на́голос**.
+
+Ми дослі́дили, як зміна поря́дку слів, напри́клад, через **інве́рсію** чи **фро́нтинг** (переміщення слова на поча́ток рече́ння), дозволяє нам створювати **на́голос** або **контра́ст**. Якщо ви хочете підкре́слити, що «са́ме ка́ву я купив», ви ска́жете: «Ка́ву купи́в я». Це дає змо́гу виділи́ти найважли́вішу части́ну вашого повідомлення, але бу́дьте ува́жні, щоб не використовувати такий поря́док слів ненавми́сне, адже тоді він звучи́ть незвича́йно.
+
+**Са́моперевірка:**
+1.  Яка різни́ця у фо́кусі між рече́ннями «Тара́с купи́в кни́гу» і «Кни́гу купи́в Тара́с»?
+2.  Як би ви ска́зали українською, щоб підкре́слити, що ви **са́ме вчора́** ходили в кіно́, а не іншого дня? (Використайте «Вчо́ра ми ходи́ли в кіно́»).
+3.  Чому́ відповідь «Ка́ву купи́в я» на запита́ння «Що ти купив?» може звуча́ти ди́вно для носія́ мо́ви?
+
+<!-- INJECT_ACTIVITY: quiz-identify-rheme -->
+
+## Прямий порядок слів (Neutral Word Order) (~550 words total)
+
+When you read a news article or the beginning of a story, you will encounter the most basic sentence structure. The Ukrainian term for direct order is **прямий порядок** (direct order). It is the default, emotionally neutral arrangement of words used for reporting facts. The core structure is Subject + Predicate + Object (SVO).
+
+Прямий порядок слів — це нейтральна базова структура. Ми використовуємо цей порядок, коли просто повідомляємо факти або починаємо розповідь. Підмет завжди стоїть перед присудком, а додаток іде після присудка. Наприклад, ми кажемо: «Студент читає книгу» або «Молоде покоління прагне свободи».
+
+> *Direct word order is a neutral base structure. We use this order when we simply report facts or start a story. The subject always stands before the predicate, and the object goes after the predicate. For example, we say: "The student is reading a book" or "The young generation desires freedom."*
+
+Within this neutral framework, describing words also have their natural positions. Adjectives sit right before the noun they modify, just as they do in English. Adverbs of manner, which describe how an action is performed, are a bit more flexible. They typically sit very close to the verb, either immediately before or after it.
+
+В українській мові прикметник завжди стоїть перед іменником. Ми кажемо «нова книга» або «тихий світанок». Це найприродніший порядок для означення. Прислівники мають більше свободи. Вони часто стоять біля дієслова. Ви можете сказати «він добре працює» або «він працює добре». Обидва варіанти звучать абсолютно нейтрально.
+
+Here is a critical area where English speakers often make mistakes. The Ukrainian word for sentence is **речення** (sentence). In English, moving an adjective after a noun sounds poetic, but in Ukrainian, swapping the adjective and the noun changes the entire grammatical structure.
+
+Якщо ви поставите прикметник після іменника, ви зміните граматичну структуру. Фраза «тихий світанок» — це просто іменник з означенням. Але фраза «світанок тихий» — це вже повне речення. Тут слово «тихий» стає частиною присудка.
+
+> *If you put an adjective after a noun, you change the grammatical structure. The phrase "a quiet dawn" is simply a noun with a modifier. But the phrase "the dawn is quiet" is already a full sentence. Here the word "quiet" becomes part of the predicate.*
+
+:::info
+**Adjective or Predicate?** — Remember that **тихий світанок** translates to "a quiet dawn" (a noun phrase), while **світанок тихий** translates to "the dawn is quiet" (a complete sentence with a nominal predicate).
+:::
+
+Time and place expressions, known as adverbial modifiers, help set the scene. In a neutral sentence, these details usually sit at the very beginning to establish the context for the action. However, if the time or place is the actual answer to a question, it will move to the end.
+
+Слова, які вказують на час або місце, часто стоять на початку. Це допомагає створити контекст. Наприклад, ми кажемо: «Вчора ми ходили в кіно». Але якщо час є головною новою інформацією, ми ставимо це слово в кінець. На питання про час ви відповісте: «Ми ходили в кіно вчора».
+
+> *Words that indicate time or place often stand at the beginning. This helps create context. For example, we say: "Yesterday we went to the cinema." But if the time is the main new information, we put this word at the end. To a question about time, you will answer: "We went to the cinema yesterday."*
+
+Direct word order provides a reliable foundation for your Ukrainian. It is the structure you will use most often when writing essays or stating simple facts. However, relying on it entirely in casual conversation will make you sound a bit robotic.
+
+Прямий порядок слів — це надійна база. Ви будете часто використовувати цю структуру на письмі. Але якщо ви завжди говоритимете тільки так, ваша мова звучатиме трохи штучно. Носії мови постійно змінюють порядок слів, щоб показати емоції. Коли ви краще засвоїте відмінки, ви теж почнете говорити більш природно.
+
+<!-- INJECT_ACTIVITY: group-sort-neutral-emphatic -->
+
+## Інверсія для контрасту (Fronting for Contrast) (~650 words total)
+
+We have discussed the rules for neutral word **порядок** (order). While this structure is perfect for simple facts, Ukrainian speakers often change it to highlight specific information. This intentional change is called indirect word order, or **інверсія** (inversion). By moving a word away from its usual place, we create **контраст** (contrast) or add emotional weight. The most common technique is fronting — moving an element directly to the **початок** (beginning) of the **речення** (sentence) to force the listener to pay attention.
+
+Прямий порядок слів передає інформацію спокійно і нейтрально. Але коли ми хочемо емоційно виділити щось важливе, ми змінюємо цю знайому структуру. Слово, яке стоїть на незвичному місці, одразу привертає увагу вашого співрозмовника. Найчастіше ми переносимо найважливіше слово на перше місце. Це автоматично створює дуже сильний наголос на цій новій інформації.
+
+> *Direct word order conveys information calmly and neutrally. But when we want to emotionally highlight something important, we change this familiar structure. A word that stands in an unusual place immediately attracts your conversation partner's attention. Most often, we move the most important word to the first place. This automatically creates a very strong emphasis on this new information.*
+
+Let's look at a conversation between two friends. They are talking about modern Ukrainian cinema and disagreeing about who directed a specific film. Notice how they arrange the words to argue their points effectively.
+
+> — **Максим:** Цей фільм зняв Сенцов. *(Sentsov directed this movie.)*
+> — **Олег:** Ні, цей фільм зняв не Сенцов, а Лозниця. *(No, not Sentsov directed this movie, but Loznytsia.)*
+> — **Максим:** А от «Номери» — це точно Сенцов зняв. *(But as for "Numbers" — Sentsov definitely directed that.)*
+
+Let's analyze the first line of the dialogue. The neutral phrasing would be "Сенцов зняв цей фільм" (Sentsov directed this movie), with the subject first and the object last. However, Maksym deliberately says "Цей фільм зняв Сенцов." He moves the object right to the front. By doing this, he makes the movie the **тема** (theme) — the known topic they are discussing. He pushes the subject "Сенцов" to the very **кінець** (end) of the phrase.
+
+Коли ми переносимо додаток на перше місце, ми робимо його головною темою розмови. Тоді підмет переміщується в самий кінець нашого висловлювання. Слово в кінці речення стає новою інформацією, або ремою. Ми ніби відповідаємо на приховане питання «Хто саме зняв цей фільм?». Це дуже природний спосіб змінити фокус.
+
+> *When we move the object to the first place, we make it the main topic of the conversation. Then the subject moves to the very end of our utterance. The word at the end of the sentence becomes the new information, or the rheme. It is as if we are answering the hidden question "Who exactly directed this movie?". This is a very natural way to change the focus.*
+
+You can also bring the verb all the way to the front. Putting the action before the subject creates a very strong **наголос** (stress, emphasis). The word at the end becomes the **рема** (rheme), but the fronted verb serves to **підкреслювати** (to emphasize) the action itself. If someone doubts that you finished a long novel, you might exclaim "Прочитав я цю книгу!" (I DID read this book!). This sounds much more expressive than the neutral alternative.
+
+Інверсія дієслова робить нашу мову дуже живою та емоційною. Дієслово перед підметом завжди підкреслює дію. Ми також часто використовуємо цю структуру, щоб почати нову історію або казку. Наприклад, класичний початок розповіді звучить так: «Прийшла весна» або «Почалася злива». Це звучить набагато цікавіше, ніж звичайний прямий порядок слів.
+
+> *Inverting the verb makes our speech very lively and emotional. A verb before the subject always emphasizes the action. We also often use this structure to start a new story or fairy tale. For example, a classic beginning of a narrative sounds like this: "Spring has come" or "A downpour began." This sounds much more interesting than the usual direct word order.*
+
+:::info
+**Narrative Openers** — Putting the verb first is the standard way to introduce a new event or start a story in Ukrainian. Sentences like **Прийшла весна** (Spring arrived) or **Настав вечір** (Evening fell) are not just poetic variations. They are actually the most natural and expected way to set the scene for a listener.
+:::
+
+When we point out that someone has the wrong information, we use a highly specific pattern for corrective contrast. We bring the corrected element to the absolute front of the phrase and use the negative construction "не... а". If someone mistakenly thinks Taras broke a cup, but you know it was actually Oleh, you want to fix that specific detail immediately.
+
+Коли ми виправляємо чужу помилку, ми виносимо правильну інформацію наперед. Для цього ми використовуємо слова «не» та «а». Ми впевнено кажемо: «Не Тарас це зробив, а Олег». Це прямий і чіткий спосіб показати яскравий контраст і швидко виправити нашого співрозмовника.
+
+Finally, there is a way to explicitly highlight the rheme right at the start of your sentence. You can use the demonstrative word "Це" (This / It is) immediately followed by a noun. This acts like an English cleft sentence ("It was X who did Y"). It immediately tells the listener what the most important new information is.
+
+Ви можете одразу показати головну нову інформацію на самому початку фрази. Для цього треба використати коротке слово «це» перед іменником. Наприклад, ви можете сказати: «Це Тарас мені сьогодні допоміг». Ви одразу показуєте, хто саме зробив цю важливу дію.
+
+<!-- INJECT_ACTIVITY: fill-in-reorder-emphasis -->
+
+## Порядок слів у реальному мовленні (Word Order in Real Speech) (~400 words total)
+
+In everyday speech, the **порядок** (order) of words constantly adapts to the situation. Every new **речення** (sentence) builds upon what we already know from the context. Imagine two roommates dividing their household chores.
 
 > — **Оленка:** Хто помив посуд? *(Who washed the dishes?)*
 > — **Марійка:** Посуд помив Тарас. А підлогу? *(Taras washed the dishes. And the floor?)*
-> — **Оленка:** Підлогу ще ніхто не помив. Добре, підлогу помию я. *(No one has washed the floor yet. Okay, I will wash the floor.)*
+> — **Оленка:** Підлогу ще ніхто не помив. *(No one has washed the floor yet.)*
+> — **Марійка:** Добре, підлогу помию я. *(Okay, I will wash the floor.)*
 
-Оленка запитує про посуд. Для Марійки посуд — це вже відома інформація, тобто **тема** *(theme)*. Тому слово «посуд» стоїть на початку речення. А слово «Тарас» — це нова інформація, або **рема** *(rheme)*. Тому це слово стоїть у кінці речення. Так само працює слово «підлога».
+У цій розмові ми бачимо, як слова природно змінюють свої місця. Коли Оленка запитує про посуд, це слово стає відомою інформацією. Тому у відповіді Марійки воно переходить на перше місце. Нова інформація іде на останнє місце. Ім'я Тарас отримує логічний акцент. Те саме відбувається зі словом «підлога». Це вже відома річ, тому вона стоїть попереду, а нова інформація стоїть у кінці.
 
-## Тема і рема: що відоме, що нове?
+> *In this conversation, we see how words naturally change their places. When Olenka asks about the dishes, this word becomes known information. Therefore, in Mariika's answer, it moves to the first place. The new information goes to the last place. The name Taras receives the logical accent. The same thing happens with the word "floor". It is already a known thing, so it stands at the front, while the new information stands at the end.*
 
-Кожне речення має дві частини. Це те, про що ми говоримо, і що повідомляємо. У лінгвістиці їх називають **тема** *(theme)* і **рема** *(rheme)*. Тема — це відома інформація, яку співрозмовник уже знає. Рема — це нова інформація, або **фокус повідомлення** *(focus of the message)*. Українське речення зазвичай рухається від відомого до нового. Ми починаємо зі знайомих фактів і закінчуємо головною новиною.
+When Olenka asks about the dishes, they become the known information, or the **тема** (theme) of the discussion. So in Mariika's answer, it moves to the **початок** (beginning) of the phrase. The new information, Taras, is the **рема** (rheme). It naturally goes to the end of the phrase because it answers the core question.
 
-This creates an important linguistic principle called "end focus". У нейтральному мовленні найважливіша інформація стоїть у кінці речення. Саме там знаходиться рема. Порівняйте два варіанти. Перший: «Тарас купив книгу». Тут фокус падає на слово «книгу». Співрозмовник знає Тараса, але не знає, що він купив. Другий: «Книгу купив Тарас». Тут рема — це слово «Тарас». Співрозмовник знає про покупку книги, але не знає покупця. The word at the very end of the sentence naturally carries the main communicative weight.
+Питання завжди визначає структуру вашої відповіді. Якщо вас питають «Що ти купив?», ви використовуєте прямий порядок слів: «Я купив каву». Кава тут — це нова інформація. Але якщо вас питають «Хто це купив?», ви вже знаєте про предмет. Тому ви ставите об'єкт на перше місце, а себе в кінець: «Це купив я». Так ви можете показати, хто саме виконав дію.
 
-You can easily identify the rheme by asking a simple question. Українська відповідь завжди ставить нову інформацію в кінець. Уявіть питання: «Хто купив книгу?». Слово «книга» вже прозвучало, тому це тема. Нова інформація — це людина. Тому правильна відповідь: «Книгу купив Тарас». Тепер уявіть інше питання: «Що купив Тарас?». Тут відома інформація — це Тарас. Тому відповідь буде іншою: «Тарас купив книгу». Слова змінюють позиції залежно від питання.
+> *The question always determines the structure of your answer. If you are asked "What did you buy?", you use the direct word order: "I bought coffee". Coffee here is the new information. But if you are asked "Who bought this?", you already know about the object. Therefore, you put the object in the first place, and yourself at the end: "I bought this" (literally: This bought I). This way you can show exactly who performed the action.*
 
-Why can Ukrainian do this so effortlessly? Відповідь ховається у відмінках. In English, strict word order tells you exactly who is the subject and who is the object. В українській мові граматичну роль показують **закінчення** *(endings)*. Слово «книгу» має закінчення знахідного відмінка **-у**. Це слово завжди буде додатком. Нам не важливо, де воно стоїть. Саме відмінки дозволяють нам вільно переставляти слова.
+To highlight this new information effectively, you apply **інверсія** (inversion). Putting yourself at the **кінець** (end) of the phrase allows you to **підкреслювати** (to emphasize) the subject and ensure the listener catches the most critical detail.
 
-There is also a psychological reason for this order. Люди інтуїтивно ставлять нові або довгі поняття в кінець речення. Це допомагає співрозмовнику легше сприймати інформацію. Спочатку людина чує знайомі слова, які готують ґрунт. Потім вона отримує свіжий **акцент** *(accent)*. Такий **порядок слів** *(word order)* робить українське мовлення виразним інструментом.
+:::tip
+**Be careful with mechanical translation!**
+This shift places the logical **наголос** (stress) exactly where it belongs, creating a strong **контраст** (contrast) compared to a neutral sentence. However, do not use a marked order unintentionally. If you answer the simple question "What did you buy?" with the inverted phrase "Каву купив я", it sounds bizarre to a native speaker. It feels as if you are grandly declaring, "It was I who bought the coffee!" when the person only wanted to know what was in the bag. Always let the natural flow of conversation guide your word placement.
+:::
 
-<!-- INJECT_ACTIVITY: quiz-identify-rheme --> [quiz, Identify the rheme (new information) based on the context/question, 8 items]
-
-## Прямий порядок слів
-
-Українська мова має базовий, або **прямий порядок слів** *(direct word order)*. Це нейтральна схема: **підмет** *(subject)*, **присудок** *(predicate)*, **додаток** *(object)*. Ми використовуємо прямий порядок слів для констатації фактів. Він часто звучить у новинах, наукових текстах або офіційних повідомленнях. Наприклад: «Студент читає текст». «Мама готує вечерю». Тут немає жодних емоцій. Це просто інформація. When you want to state a simple fact without emphasizing any specific part, use this SVO structure. It is the safest choice for beginners.
-
-Де стоїть **означення** *(attribute/adjective)*? У нейтральному реченні прикметник завжди стоїть перед іменником. Ми кажемо: «цікава книга», «велике місто», «холодний вітер». Це звичайна характеристика предмета. Але будьте обережні, коли змінюєте порядок. Якщо ви поставите прикметник після іменника, він стане присудком. Порівняйте: «Це велике місто» *(This is a big city)*. Але: «Місто — велике» *(The city IS big)*. У другому випадку ми робимо акцент на розмірі міста. The position of the adjective completely changes the grammatical structure of the sentence.
-
-Тепер поговоримо про **обставини** *(adverbial modifiers)*. Вони показують, як саме відбувається дія. В українській мові прислівник може стояти перед дієсловом або після нього. Обидва варіанти правильні. Ви можете сказати: «Він добре працює» або «Він працює добре». Є невелика різниця. Коли прислівник стоїть у кінці, він має трохи більше ваги. Це знову правило реми. Moving the adverb to the very end of the sentence naturally makes it the focus of your statement.
-
-Слова, які позначають час або місце, дуже рухливі. Їхня позиція залежить від вашої мети. Часто вони стоять на початку речення. Це створює контекст для всієї ситуації. Наприклад: «Вчора я був удома» *(Yesterday I was at home)*. «У Києві йде дощ» *(It is raining in Kyiv)*. Це нейтральний початок розповіді. Але якщо ви поставите час або місце в кінець, вони стануть ремою. «Я був удома вчора» *(I was at home YESTERDAY)*. Це означає, що ви наголошуєте саме на вчорашньому дні, а не сьогоднішньому.
-
-Є один дуже цікавий і специфічний випадок. Це порядок слів із числівниками. Коли ви називаєте точну кількість, числівник стоїть перед іменником. Наприклад: «До центру п’ять кілометрів» *(It is five kilometers to the center)*. Це точний факт. Але якщо ви поміняєте їх місцями, значення зміниться. «До центру кілометрів п’ять» *(It is ABOUT five kilometers to the center)*. Ця **інверсія** *(inversion)* автоматично робить число приблизним. Ukrainian uses this simple word-swap trick instead of adding extra words like "about" or "approximately".
-
-<!-- INJECT_ACTIVITY: match-question-answer --> [match-up, Match questions with the correctly word-ordered answers, 8 items]
-
-<!-- INJECT_ACTIVITY: group-sort-neutral-marked --> [group-sort, Sort sentences into neutral word order vs. marked/emphatic order, 8 items]
-
-## Діалог 2 та Інверсія для контрасту
-
-> — **Друг 1:** Ти дивився кіно вчора? Цей фільм зняв Сенцов.
-> — **Друг 2:** Ні, цей фільм зняв не Сенцов, а Лозниця.
-> — **Друг 1:** А, зрозумів. А от «Номери» — це точно Сенцов зняв!
-
-У цьому діалозі друзі обговорюють режисерів. Зверніть увагу на їхні слова. Вони використовують **інверсію** *(inversion)*. Це навмисна зміна порядку слів для **контрасту** *(contrast)*.
-
-In Ukrainian, you can freely move the object to the front of the sentence. Ми називаємо це винесенням додатка на **початок** *(beginning)*. Наприклад, ви можете сказати: «Книгу я вже прочитав». Тут ви протиставляєте цю книгу іншим речам. As for the book, I have already read it (maybe I haven't watched the movie yet). Це дуже популярна конструкція. Ви робите книгу головною темою вашої розмови.
-
-Іноді ми ставимо дієслово на найперше місце в реченні. Це інверсія присудка. Наприклад: «Прочитав я цю книгу!». What does this specific order mean? Putting the verb first shows strong emotion, frustration, or absolute certainty. Це показує ваші сильні емоції або логічну завершеність дії. Ви хочете підкреслити, що дія точно відбулася.
-
-Порядок слів також чудово допомагає швидко виправити помилку співрозмовника. Для цього ми використовуємо конструкцію «не..., а...» *(not..., but...)*. If someone assumes you walked in the park, but you actually walked in the forest, you change the word order to highlight the truth. Ви кажете: «Не в парку ми гуляли, а в лісі». You put the corrected information right at the front for maximum emphasis.
-
-Як ще можна зробити сильний **наголос** *(emphasis)* на одному слові? Ми часто використовуємо просту частку «це» *(this/it)*. Порівняйте два варіанти: «Тарас мені допоміг» та «Це Тарас мені допоміг». The second sentence works exactly like a cleft sentence in English: "It was Taras who helped me." Ви чітко показуєте, хто саме виконав цю важливу дію.
-
-Багато студентів дуже бояться самостійно змінювати порядок слів. Вони думають, що будуть звучати дивно, як майстер Йода з кінофільму «Зоряні війни». Але це міф. Речення «Книгу я бачив» — це абсолютно правильна і красива українська мова. У правильному контексті це звучить стовідсотково природно. Не бійтеся ставити слова у новий порядок у **кінець** *(end)* або на початок речення!
-
-<!-- INJECT_ACTIVITY: fill-in-reorder-words-to-create-the-correct-emphasis-for-a-given-context -->
-
-## Порядок слів у реальному мовленні
-
-Уявіть звичайну розмову. Ми постійно передаємо нову інформацію. Як це працює на практиці? Дуже часто рема одного речення стає темою для наступного. Це наче ланцюжок. This chain structure helps speakers track what is already known and what is new. Подивіться на цей короткий діалог:
-> — **Максим:** Де ти був сьогодні?
-> — **Андрій:** Я був у парку.
-
-У відповіді Андрія слово «парку» — це нова інформація, тобто рема. Воно стоїть у кінці речення. А тепер Максим запитує далі:
-> — **Максим:** А в парку ти що робив?
-
-Тепер «парк» — це вже відома інформація. Це тема. Тому Максим ставить ці слова на початок свого питання. А нова інформація (що саме Андрій там робив) буде в кінці. Ця ланцюжкова структура робить розмову дуже логічною.
-
-Let's do a quick reading practice to see this in action. Read this short text: «На вулиці йшов дощ. Цей дощ не припинявся весь день. Раптом у двері постукали. Увійшов незнайомець». Why did the author choose this specific word order? «На вулиці йшов дощ» uses inversion to set the scene. «Цей дощ» moves to the front in the next sentence because it's now the theme (known info). «У двері постукали» puts the verb last to emphasize the sudden action. And «Увійшов незнайомець» uses verb-first inversion to introduce a brand new character. Analyzing these choices helps you understand the flow of the language!
-
-Коли ми говоримо, ми використовуємо не тільки порядок слів. Ми також використовуємо голос. Це називається **логічний наголос** *(logical stress)*. Ми робимо голос сильнішим на найважливішому слові. Usually, logical stress naturally falls on the rheme at the end of the sentence. But when we use inversion, we combine both tools. Ми змінюємо порядок слів і додаємо інтонацію. Наприклад, ви хочете підкреслити свою довіру до конкретної людини. Ви кажете: «Тобі я вірю». Слово «тобі» стоїть на початку. І ви також виділяєте його голосом. By moving the object to the front and stressing it with your voice, you create a powerful contrast. Цей подвійний **акцент** *(emphasis)* робить ваші емоції дуже зрозумілими. Українці постійно використовують цей прийом у щоденному спілкуванні.
-
-Є ще один дуже важливий **шаблон** *(template)*. Уявіть, що ви розповідаєте історію. Вам потрібно представити нового героя або нову подію. Як ви це зробите? In English, you would use "There is..." or just Subject + Verb ("A teacher entered"). В українській мові ми використовуємо інверсію. Ми ставимо дієслово перед підметом. Ми кажемо: «Увійшов старий вчитель» *(An old teacher entered)*. Чому ми не кажемо «Старий вчитель увійшов»? Тому що поява вчителя — це головна новина. When introducing a brand new subject into the narrative, the subject itself is the rheme, so it goes last. Ви часто почуєте такі фрази: «Прийшла весна» *(Spring came)*, «Почалася злива» *(A downpour started)*, «Настала ніч» *(Night fell)*. Це не просто художній стиль. Це найприродніший спосіб повідомити співрозмовнику про щось нове і раптове. Тепер ви знаєте, як зробити свою розповідь справді українською!
-
-<!-- INJECT_ACTIVITY: error-correction-fix-sentences-where-word-order-creates-unintended-emphasis -->
-
-## Підсумок
-
-Let's review what we have learned today in this module. Порядок слів в українській мові — це дуже потужний інструмент. Це не просто граматична структура. Це спосіб показати ваші емоції, ваші наміри та ваші акценти. Кожен елемент має своє місце, але це місце може змінюватися. When you change the word order, you change the focus of your entire message.
-
-First, you must understand the difference between theme and rheme. Чи розумієте ви різницю між темою та ремою? Тема — це вже відома інформація. Рема — це зовсім нова інформація. Куди зазвичай ставиться нова інформація в нейтральному реченні? In neutral speech, the most important new information always goes to the end. Якщо ви відповідаєте на запитання, ваша головна відповідь має стояти саме в кінці речення.
-
-Second, adjectives and nouns have a strict relationship. Що трапиться, якщо прикметник поставити після іменника? It is no longer just a simple modifier. Він відразу стане присудком. Наприклад, фраза «Холодний вітер» означає просто "a cold wind." Але речення «Вітер холодний» означає "The wind is cold." Це вже повна і самостійна думка.
-
-Third, fronting is your tool for contrast. Для чого виносити додаток на початок речення? We do this to create focus or a strong contrast. Коли ви кажете «Каву я вже пив», ви виділяєте саме слово «кава». You show that you drank the coffee, not the tea or juice.
-
-Finally, word order helps with numbers. Як виразити приблизну кількість за допомогою порядку слів? Якщо ви ставите числівник перед іменником, ви називаєте абсолютно точну кількість. Наприклад, «П'ять кілометрів» — це рівно п'ять. Але якщо ви ставите іменник перед числівником, ви говорите про приблизну кількість. Фраза «Кілометрів п'ять» означає "about five kilometers."
-
-Українська мова дає вам велику свободу у спілкуванні. You do not need to speak with a fixed subject-verb-object structure all the time. Ви можете вільно змінювати порядок слів у щоденній розмові. Це допоможе вашій мові звучати природно, емоційно та по-справжньому українською. Уважно слухайте, як розмовляють українці на вулиці чи у фільмах. Звертайте увагу на те, яке слово стоїть першим, а яке — останнім. Не бійтеся експериментувати з інверсією. Читайте українські тексти та аналізуйте логічний наголос. З часом ви відчуєте справжню красу та гнучкість українського синтаксису!
+<!-- INJECT_ACTIVITY: match-up-questions-answers -->
+<!-- INJECT_ACTIVITY: error-correction-unintended-emphasis -->

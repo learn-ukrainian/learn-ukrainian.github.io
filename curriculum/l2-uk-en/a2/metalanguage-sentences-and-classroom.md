@@ -1,96 +1,145 @@
-## Члени речення: хто що робить?
+## Члени речення: хто що робить? (~550 words total)
 
-Кожне речення в українській мові має свою основу. (Every sentence in the Ukrainian language has its foundation.) У школі діти вивчають, що це **граматична основа** (grammatical foundation). Вона складається з двох головних частин. Це головні **члени речення** (sentence members). Вони показують, про кого або про що йде мова, і що ця людина чи предмет робить у цей момент. (They show who or what is being discussed, and what this person or object is doing at this moment.) Ця основа — це фундамент, на якому будується весь зміст нашої розмови. (This foundation is the base on which the entire meaning of our conversation is built.) Без граматичної основи речення просто не може існувати як закінчена думка. (Without a grammatical foundation, a sentence simply cannot exist as a complete thought.) Українська граматика вимагає чіткої структури. (Ukrainian grammar requires clear structure.)
+When Ukrainian children begin learning grammar in school, they are introduced to the grammatical foundation. Every complete thought forms a **речення** (sentence), and at its core lies a vital pair of words. This foundation is built on the interaction between two main members: the **підмет** (subject) and the **присудок** (predicate). These two parts work together to establish who is performing an action and what exactly is happening. Understanding this core is the first step in mastering how Ukrainian sentences are analyzed in a classroom.
 
-Перший головний член речення — це **підмет** (subject). Він завжди відповідає на питання «хто?» (who?) або «що?» (what?). Підмет — це головний герой нашої історії. (The subject is the main character of our story.) Зазвичай це іменник або займенник у називному відмінку. (Usually, this is a noun or pronoun in the nominative case.) У школі на уроках граматики діти підкреслюють підмет однією прямою лінією. (At school in grammar lessons, children underline the subject with one straight line.) Кожен учень знає це просте правило. (Every student knows this simple rule.)
-Розглянемо приклади:
-«Сонце сходить». (The sun rises.) Що? — сонце. Це підмет, який виконує дію. (This is the subject that performs the action.)
-«Вчитель пояснює нове правило». (The teacher explains the new rule.) Хто? — вчитель. Це також наш підмет у цьому реченні. (This is also our subject in this sentence.)
+Головний член речення, який означає особу або предмет, називається підмет. Він завжди відповідає на питання «хто?» або «що?». Зазвичай це іменник або займенник у називному відмінку. На уроці української мови вчителі просять учнів підкреслювати підмет однією суцільною лінією. Наприклад, у фразі «Сонце сходить» слово «сонце» відповідає на питання «що?» і є підметом. У фразі «Вчитель пояснює правило» слово «вчитель» відповідає на питання «хто?» і виконує дію.
 
-Другий головний член речення — це **присудок** (predicate). Присудок розказує, що саме робить підмет. (The predicate tells exactly what the subject does.) Він відповідає на питання «що робить?», «що зробив?», «що буде робити?» або «який він є?». Присудок — це дія або стан нашого головного героя. (The predicate is the action or state of our main character.) Найчастіше присудок виражений дієсловом. (Most often, the predicate is expressed by a verb.) За правилом української граматики присудок завжди підкреслюють двома прямими лініями. (According to the rule of Ukrainian grammar, the predicate is always underlined with two straight lines.)
-Подивимося на приклади:
-«Річка дихала». (The river breathed.) Що робила річка? — дихала. Це присудок.
-«Вечір є дуже тихий». (The evening is very quiet.) Який є вечір? — тихий. У цьому реченні присудок описує стан. (In this sentence, the predicate describes a state.)
+> *The main sentence member that denotes a person or an object is called the subject. It always answers the questions "who?" or "what?". Usually, it is a noun or a pronoun in the nominative case. In a Ukrainian language lesson, teachers ask students to underline the subject with one solid line. For example, in the phrase "The sun rises," the word "sun" answers the question "what?" and is the subject. In the phrase "The teacher explains the rule," the word "teacher" answers the question "who?" and performs the action.*
 
-Інші слова в реченні — це **другорядні члени речення** (secondary sentence members). Вони додають важливі деталі до нашої розповіді. (They add important details to our story.) Їх є три основні види.
-Перший вид — це **додаток** (object). Він відповідає на питання непрямих відмінків: «кого?», «що?», «кому?», «ким?», «чим?».
-Другий вид — це **означення** (attribute). Означення описує предмет і відповідає на питання «який?», «яка?», «яке?», «чиє?».
-Третій вид — це **обставина** (adverbial modifier). Обставина показує місце, час, причину або спосіб дії. (The adverbial modifier shows the place, time, reason, or manner of action.) Вона відповідає на питання «де?», «коли?», «як?», «куди?».
-Проаналізуємо велике речення:
-«Моя подруга читає цікаву книгу ввечері». (My friend reads an interesting book in the evening.)
-Хто? — подруга (підмет). Подруга чия? — моя (означення). Що робить подруга? — читає (присудок). Читає що? — книгу (додаток). Книгу яку? — цікаву (означення). Читає коли? — ввечері (обставина). Тепер ви бачите всі члени речення. (Now you see all the sentence members.)
+Другий головний член речення називається присудок. Він описує дію або стан підмета. Присудок відповідає на питання «що робить?», «що зробив?» або «який він є?». У школі діти завжди підкреслюють присудок двома суцільними лініями. Наприклад, візьмемо речення «Річка дихала парою». Слово «дихала» відповідає на питання «що робила?» і є присудком. У реченні «Вечір тихий» слово «тихий» відповідає на питання «який є?». Воно також є присудком.
 
-Речення бувають різні за своєю будовою. (Sentences can be different by their structure.) Якщо речення має тільки одну граматичну основу, це **просте речення** (simple sentence). Якщо воно має дві або більше граматичних основ, це **складне речення** (compound sentence).
-Також просте речення може бути коротким або довгим. (Also, a simple sentence can be short or long.) Якщо в реченні є тільки підмет і присудок, це непоширене речення. (If a sentence has only a subject and a predicate, it is an unextended sentence.) Наприклад: «Ідуть дощі». (Rains are falling.) Тут є лише основа. (Here is only the foundation.)
-Але коли ми додаємо другорядні члени речення, воно стає набагато ширшим. (But when we add secondary sentence members, it becomes much broader.) **Поширене речення** (extended sentence) має багато деталей. Наприклад: «Сьогодні в лісі ідуть теплі дощі». (Today warm rains are falling in the forest.) Тут є обставини часу і місця («сьогодні», «в лісі») та означення («теплі»).
+> *The second main sentence member is called the predicate. It describes the action or state of the subject. The predicate answers the questions "what does it do?", "what did it do?", or "what is it like?". In school, children always underline the predicate with two solid lines. For example, let's take the sentence "The river breathed steam." The word "breathed" answers the question "what did it do?" and is the predicate. In the sentence "The evening is quiet," the word "quiet" answers the question "what is it like?". It is also the predicate.*
 
-> — **Марко:** Вибачте, пане вчителю. Як визначити підмет у цьому довгому реченні? *(Excuse me, Mr. Teacher. How to determine the subject in this long sentence?)*
-> — **Вчитель:** Це не дуже складно. Спочатку постав питання «хто?» або «що?». *(It is not very difficult. First, ask the question "who?" or "what?".)*
-> — **Марко:** Я розумію це правило. А далі що мені робити? *(I understand this rule. And then what should I do?)*
-> — **Вчитель:** Далі шукай іменник або займенник у називному відмінку. *(Next, look for a noun or pronoun in the nominative case.)*
-> — **Марко:** А якщо це слово відповідає на питання «як»? Це також підмет? *(And if this word answers the question "how"? Is it also a subject?)*
-> — **Вчитель:** Ні, Марку. Слово, яке відповідає на питання «де?», «коли?», або «як?», — це обставина. *(No, Marko. A word that answers the questions "where?", "when?", or "how?" is an adverbial modifier.)*
-> — **Марко:** Дуже дякую вам! Тепер я можу правильно підкреслити всі слова. *(Thank you very much! Now I can correctly underline all the words.)*
+Sentences often contain secondary members that add crucial details. The first is the **додаток** (object), which answers the questions of the indirect cases, such as «кого?» or «чим?». The next is the **означення** (attribute), which describes the qualities of a noun and answers questions like «який?» or «чия?». Finally, there is the **обставина** (adverbial modifier), which provides the context of the action by answering questions such as «де?» or «коли?». By identifying these parts, learners can break down complex ideas into simple components.
 
-<!-- INJECT_ACTIVITY: match-up -->
+:::info
+**Grammar box**
+When analyzing a sentence like «Моя подруга читає цікаву книгу ввечері», you ask questions from the main members to the secondary ones:
+- Подруга (чия?) ➔ моя (attribute)
+- Читає (що?) ➔ книгу (object)
+- Книгу (яку?) ➔ цікаву (attribute)
+- Читає (коли?) ➔ ввечері (adverbial modifier)
+:::
 
-## Будова слова: корінь, префікс, суфікс
+Understanding these roles allows us to classify sentences. A simple sentence contains only one grammatical foundation, meaning it has one core subject and predicate pair. If a sentence has two or more independent foundations, it is called a compound sentence. Simple sentences also vary in detail. A sentence like «Ідуть дощі» is considered unextended because it consists solely of the main members. However, when we add secondary members to provide more context, it becomes an extended sentence. For instance, «Сьогодні ідуть теплі дощі» is extended because it includes an attribute and an adverbial modifier.
 
-Українські слова дуже схожі на дитячий конструктор або пазл. (Ukrainian words are very similar to a children's constructor or a puzzle.) Вони гармонійно складаються з кількох маленьких частин. (They harmoniously consist of several small parts.) Ці важливі будівельні блоки називаються морфемами. (These important building blocks are called morphemes.) Головна та найважливіша частина кожного слова — це **корінь** (root). Корінь завжди має основне лексичне значення. (The root always has the main lexical meaning.) Уявіть собі звичайне слово «ліс» (forest). Ми можемо легко створити нові слова від цього ж кореня. (We can easily create new words from this same root.) Наприклад: невеликий лісок (small forest), зелений лісовий (forest adjective), старий лісник (forester). Усі ці прекрасні слова мають спільний корінь **-ліс-**. (All these beautiful words have the common root -lis-.) Тому вони називаються **спорідненими словами** (cognate words). Споріднені слова — це одна велика лінгвістична сім'я. (Cognate words are one big linguistic family.) Вони завжди мають схоже значення і обов'язково спільний корінь. (They always have a similar meaning and obligatorily a common root.)
+> — **Студент:** Як визначити підмет у цьому реченні? *(How do I determine the subject in this sentence?)*
+> — **Вчитель:** Знайдіть дію і поставте питання «хто?» або «що?». Шукайте іменник у називному відмінку. *(Find the action and ask the question "who?" or "what?". Look for a noun in the nominative case.)*
+> — **Студент:** А що робити з іншими словами? Підкресліть їх також? *(And what to do with the other words? Underline them too?)*
+> — **Вчитель:** Так. Запишіть питання і визначте всі частини. Якщо слово відповідає на питання «де?» або «коли?», то це обставина. *(Yes. Write down the questions and determine all parts. If a word answers the question "where?" or "when?", then it is an adverbial modifier.)*
+> — **Студент:** Дякую! Тепер я бачу всі члени речення. *(Thank you! Now I see all the sentence members.)*
 
-Друга дуже важлива частина слова — це **префікс** (prefix). Ця коротка морфема завжди стоїть прямо перед коренем. (This short morpheme always stands right before the root.) Він активно створює нові слова і швидко змінює їхнє значення. (It actively creates new words and quickly changes their meaning.) Префікси дуже часто ілюструють напрямок фізичного руху. (Prefixes very often illustrate the direction of physical movement.) Візьмемо для прикладу просте дієслово «ходити» (to walk). Додамо різні цікаві префікси до цього базового кореня. (Let's add various interesting prefixes to this base root.) Якщо ми швидко йдемо всередину кімнати, це **за**ходити (to enter). Якщо ми повільно йдемо назовні, це **ви**ходити (to exit). Якщо ми успішно йдемо до своєї мети, це **при**ходити (to arrive). Якщо ми обережно йдемо через широку вулицю, це **пере**ходити (to cross). Корінь залишається повністю однаковий, але префікси роблять слова абсолютно різними. (The root remains completely the same, but prefixes make the words absolutely different.)
+<!-- INJECT_ACTIVITY: match-up, Match sentence member terms to their question words (хто? що?, де? коли?, який? чия?, кого? кому?) -->
 
-Ще одна надзвичайно корисна частина слова — це **суфікс** (suffix). Ця морфема завжди стоїть одразу після кореня. (This morpheme always stands right after the root.) Суфікси можуть професійно робити дві дуже важливі речі. (Suffixes can professionally do two very important things.) По-перше, вони легко створюють нові самостійні частини мови. (First, they easily create new independent parts of speech.) Наприклад, звичайний іменник «рука» (hand) стає прикметником «ручний» (manual). (For example, the regular noun "hand" becomes the adjective "manual".) Це відбувається саме завдяки маленькому суфіксу **-н-**. (This happens exactly thanks to the small suffix -n-.) По-друге, суфікси чудово додають яскравих емоцій до слова. (Second, suffixes wonderfully add bright emotions to the word.) Ви вже добре знаєте цю тему з попередніх модулів. (You already know this topic well from previous modules.) Вони швидко роблять слова зовсім маленькими або дуже милими. (They quickly make words completely small or very cute.) Слово «рука» може миттєво стати ласкавим словом «рученька» (little hand). Тут активно працює наш улюблений емоційний суфікс **-еньк-**. (Our favorite emotional suffix -enk- actively works here.)
+## Будова слова: корінь, префікс, суфікс (~500 words total)
 
-Остання важлива, але дуже змінна частина слова — це **закінчення** (ending). Ця специфічна морфема стоїть у самому кінці нашого слова. (This specific morpheme stands at the very end of our word.) Важливо пам'ятати, що воно ніколи не створює нові слова. (It is important to remember that it never creates new words.) Закінчення лише регулярно змінює форму слова для правильної граматики. (The ending only regularly changes the word form for correct grammar.) Воно чітко показує нам потрібний відмінок, рід або число. (It clearly shows us the needed case, gender, or number.) Подивіться на цей приклад: лежить цікава книга, немає старої книги, читаю нову книгу. Корінь тут завжди **-книг-** (або іноді -книж-). Він абсолютно не змінює своє базове лексичне значення. (It absolutely does not change its base lexical meaning.) А ось закінчення (-а, -и, -у) постійно і динамічно змінюються. (But the endings (-a, -y, -u) change constantly and dynamically.) Частина слова без цього змінного закінчення називається **основа** (stem). Основа слова «книга» — це просто частина «книг». (The stem of the word "knyha" is simply the part "knyg".)
+Ukrainian words are like puzzles made of smaller, interchangeable pieces called morphemes. By understanding how these pieces fit together, you can easily guess the meaning of new vocabulary and build your mental dictionary much faster. The most important piece of any word is the **корінь** (root). The root holds the core, original meaning of the word and serves as the foundation. Words that share the exact same root are called cognate words, or word families.
 
-У школі всі українські діти обов'язково роблять **розбір слова за будовою** (word analysis by structure). Вони охайно малюють спеціальні графічні символи прямо над кожним словом. (They neatly draw special graphic symbols right above each word.) Це дуже добре допомагає візуалізувати всі приховані морфеми. (This helps very well to visualize all hidden morphemes.) Корінь завжди позначають простою дугою ⁀ зверху. (The root is always marked with a simple arch ⁀ on top.) Змінне закінчення студенти беруть у маленький рівний квадрат □. (Students put the changeable ending in a small even square □.) Префікс традиційно позначають прямим кутом ￢. (The prefix is traditionally marked with a right angle ￢.) А суфікс зазвичай позначають гострим «дашком» ∧. (And the suffix is usually marked with a sharp "hat" ∧.) Завдяки цьому простому аналізу ми чітко бачимо внутрішню структуру. (Thanks to this simple analysis we clearly see the internal structure.) Слова «ліс» та «лісовий» — це зовсім різні частини мови. (The words "forest" and "forest" (adj) are completely different parts of speech.) Але вони мають один спільний корінь і є близькими родичами. (But they have one common root and are close relatives.)
+В українській мові такі слова називають спорідненими. Вони завжди мають спільний корінь і дуже схоже базове значення. Наприклад, візьмемо простий корінь «-ліс-». Від цього кореня можна легко утворити нові слова: «лісок», «лісовий» або «лісник». Усі ці слова логічно пов’язані з лісом, але кожне з них має свій унікальний відтінок значення.
+
+> *In the Ukrainian language, such words are called cognates. They always have a common root and a very similar basic meaning. For example, let's take the simple root "-lis-". From this root, you can easily form new words: "lisok" (small forest), "lisovyi" (forest adjective), or "lisnyk" (forester). All these words are logically connected to the forest, but each of them has its own unique nuance of meaning.*
+
+Before the root, you will often find a **префікс** (prefix). A prefix modifies the original meaning of the word, often changing its direction, intensity, or adding a specific conceptual nuance. This is especially common and important with verbs of motion. By changing just one small part at the very beginning of the word, you can create an entirely new action.
+
+Подивіться уважно на дієслово «ходити». Це наш базовий і найпростіший рух. Якщо ми додамо префікс «за-», то ми отримаємо нове слово «заходити». Префікс «ви-» одразу створює протилежну дію — «виходити». Ми також можемо «приходити» в гості до друзів або обережно «переходити» широку вулицю. Корінь залишається абсолютно незмінним, але префікс повністю змінює напрямок нашого фізичного руху.
+
+> *Look closely at the verb "khodyty" (to walk/go). This is our basic and simplest movement. If we add the prefix "za-", we get the new word "zakhodyty" (to enter). The prefix "vy-" immediately creates the opposite action — "vykhodyty" (to exit). We can also "prykhodyty" (to arrive) as guests to friends or carefully "perekhodyty" (to cross) a wide street. The root remains absolutely unchanged, but the prefix completely changes the direction of our physical movement.*
+
+Directly after the root comes the **суфікс** (suffix). Suffixes are incredibly powerful tools because they can completely change the part of speech—turning a noun into an adjective or a verb into a noun. They can also add strong emotional color to your speech. As you saw when studying diminutives, suffixes make words sound smaller, cuter, or more affectionate.
+
+Розглянемо звичайний український іменник «рука». Якщо ми додамо суфікс «-н-», то ми швидко отримаємо прикметник «ручний». А якщо ми хочемо сказати це слово дуже лагідно, ми просто використовуємо суфікс «-еньк-» і кажемо «рученька». Суфікси активно допомагають нам виражати власні емоції та самостійно створювати нові граматичні форми.
+
+At the very end of a word, you will find the **закінчення** (ending). While the prefix, root, and suffix work together to create the actual meaning of the word, the ending exists purely for grammatical reasons. It changes to show the case, gender, or number of the word in a sentence. Everything in the word except the ending is collectively called the **основа** (stem).
+
+Основа слова ніколи не змінюється при відмінюванні. Наприклад, у слові «книга» корінь і основа — це спільна частина «книг-», а літера «-а» — це лише закінчення. Коли ми кажемо «книги» або «книгою», основа залишається стабільною. Змінюється лише закінчення, щоб правильно показати відмінок іменника у нашому реченні.
+
+:::info
+**Grammar box**
+When analyzing a word's structure (розбір слова за будовою) in a Ukrainian school, students use specific symbols. They draw an arch over the root, a square around the ending, a corner for the prefix, and a little "hat" for the suffix. This visual method helps to quickly see why words like «ліс» and «лісок» belong to the same family but act differently in a sentence.
+:::
 
 <!-- INJECT_ACTIVITY: fill-in-morphemes -->
 <!-- INJECT_ACTIVITY: group-sort-roots -->
 
-## Мова класу: накази вчителя
+## Мова класу: накази вчителя (~550 words total)
 
-У школі вчителі щодня використовують спеціальні дієслова. (In school, teachers use special verbs every day.) Це наказовий спосіб, який спонукає учнів до дії. (This is the imperative mood, which prompts students to action.) Ви вже добре знаєте цю граматичну тему. (You already know this grammar topic well.) Але зараз ми детально розберемо саме мову класу. (But now we will analyze exactly the classroom language.) Українські викладачі зазвичай звертаються до студентів на формальне «Ви». (Ukrainian teachers usually address students as formal "You".) Тому всі офіційні накази мають типові закінчення **-іть** або **-йте**. (Therefore all official commands have typical endings -іть or -йте.) Вчитель просто бере основу слова і додає це закінчення. (The teacher simply takes the word stem and adds this ending.) Ось найважливіші дієслова для уроку: **прочитайте** (read) та **запишіть** (write down). (Here are the most important verbs for a lesson: read and write down.) Коли є багато варіантів, вчитель каже: **виберіть** (choose). (When there are many options, the teacher says: choose.) Якщо треба звернути увагу на текст, ви почуєте: **подивіться** (look). (If you need to pay attention to the text, you will hear: look.)
+As you progress toward an intermediate level, your Ukrainian lessons will shift closer to full immersion. Your teacher and textbooks will guide you using the formal imperative form. These commands are typically built using the "ви" form, ending in **-іть** or **-йте**.
 
-Тепер перейдемо до письмових завдань та вправ. (Now let's move to written tasks and exercises.) У підручниках ви побачите багато нових інструкцій українською мовою. (In textbooks you will see many new instructions in the Ukrainian language.) Дуже часто там пишуть: **вставте** (insert) пропущені букви. (Very often they write there: insert missing letters.) Це означає, що слово неповне, і вам треба додати літеру. (This means that the word is incomplete, and you need to add a letter.) Інше популярне завдання з граматики: **підкресліть** (underline) головні члени. (Another popular grammar task: underline main members.) Ви берете ручку і малюєте лінію під словом. (You take a pen and draw a line under the word.) Згадайте, як ми підкреслюємо підмет однією лінією, а присудок — двома. (Remember how we underline the subject with one line, and the predicate with two.) Іноді автори підручника спеціально роблять помилку в тексті. (Sometimes textbook authors purposefully make an error in the text.) Тоді ви бачите інструкцію: **знайдіть** (find) помилку. (Then you see the instruction: find the error.) Такі завдання чудово тренують вашу увагу до деталей. (Such tasks wonderfully train your attention to details.) Ви вчитеся бачити текст як справжній редактор. (You learn to see the text like a real editor.)
+Ваш вчитель часто використовує формальні накази. Коли починається нова тема, викладач каже: «Подивіться на дошку» або «**Прочитайте** (read — imperative) цей текст». Якщо ви вивчаєте нові слова, вчитель просить: «**Запишіть** (write down — imperative) ці приклади». Під час тесту ви часто бачите просту інструкцію: «Виберіть правильний варіант».
 
-На уроках ми не тільки читаємо, але й багато аналізуємо. (In lessons we not only read, but also analyze a lot.) Для цього існують серйозні аналітичні дієслова. (For this there exist serious analytical verbs.) Найголовніше слово в українській граматиці — це **визначте** (determine). (The most important word in Ukrainian grammar is determine.) Кожна друга вправа просить вас: визначте відмінок. (Every second exercise asks you: determine the case.) Також вчитель може попросити: **порівняйте** (compare) ці два речення. (Also the teacher can ask: compare these two sentences.) Ви дивитеся на структуру і шукаєте різницю. (You look at the structure and look for the difference.) Якщо речення не закінчене, інструкція каже: **доповніть** (complete). (If the sentence is not finished, the instruction says: complete.) Це означає, що ви повинні додати свої власні слова. (This means that you must add your own words.) Наприкінці вправи вчитель завжди ставить запитання. (At the end of the exercise the teacher always asks a question.) Тоді він використовує фразу: **дайте відповідь** (give an answer). (Then he uses the phrase: give an answer.) Ця команда вимагає вашої активної реакції на матеріал. (This command requires your active reaction to the material.)
+> *Your teacher often uses formal commands. When a new topic begins, the instructor says: "Look at the board" or "Read this text". If you are studying new words, the teacher asks: "Write down these examples". During a test, you often see a simple instruction: "Choose the correct option".*
 
-Для успішного навчання вам потрібна спеціальна лексика. (For successful learning you need special vocabulary.) Ми використовуємо ці слова щодня в аудиторії та онлайн. (We use these words every day in the classroom and online.) Ваш головний інструмент — це **підручник** (textbook). (Your main tool is the textbook.) У ньому є кожна **сторінка** (page), яку ви відкриваєте на уроці. (In it is every page that you open in the lesson.) На сторінках розташована кожна практична **вправа** (exercise). (On the pages is located every practical exercise.) Вчитель може дати вам складне домашнє **завдання** (task). (The teacher can give you a complex homework task.) А якщо ви працюєте в інтернеті, вам надсилають **посилання** (link). (And if you work on the internet, they send you a link.) Ви натискаєте на посилання і бачите нову тему. (You click on the link and see a new topic.) Знати ці слова дуже корисно для спілкування. (Knowing these words is very useful for communication.)
+Decoding written instructions is just as important as understanding spoken commands. In your grammar exercises, you will encounter standardized phrases. For instance, when analyzing a sentence, you might be asked to find a **додаток** (object), an **означення** (attribute), or an **обставина** (adverbial modifier). Knowing these formulas allows you to focus on the problem itself.
 
-> — **Олена:** Максиме, ти розумієш цю вправу? *(Maksym, do you understand this exercise?)*
-> — **Максим:** Так, дивись сюди. Прочитай завдання. *(Yes, look here. Read the task.)*
-> — **Олена:** «Вставте пропущені букви». А що далі? *("Insert the missing letters". And what next?)*
-> — **Максим:** Тут треба виділити закінчення у кожному слові. *(Here it is necessary to highlight the ending in every word.)*
-> — **Олена:** Добре, я вже все написала. *(Good, I already wrote everything.)*
-> — **Максим:** Чудово. Порівняймо наші відповіді! *(Excellent. Let's compare our answers!)*
-> — **Олена:** У мене в першому реченні закінчення «-у». *(I have the ending "-u" in the first sentence.)*
-> — **Максим:** Правильно, у мене теж так. *(Correct, I also have it like that.)*
+У підручнику граматики ви бачите типові завдання. Дуже часто автори просять: «**Вставте** (insert — imperative) пропущені букви». Якщо ви аналізуєте речення, інструкція звучить так: «**Підкресліть** (underline — imperative) головні члени». Іноді текст має спеціальні дефекти. Тоді вам потрібно виконати іншу дію: «Знайдіть помилку». Ці стандартні фрази роблять ваше навчання логічним.
 
-<!-- INJECT_ACTIVITY: quiz-classroom-instructions -->
+:::note
+**Quick tip**
+The verb **підкресліть** literally means "draw a line under". In Ukrainian schools, students traditionally underline the **підмет** (subject) with one line and the **присудок** (predicate) with two lines.
+:::
 
-## Усе разом: аналізуємо текст
+As you learn more complex structures, the instructions demand deeper analysis. You will be asked to identify specific categories and relationships between words. These analytical verbs form the core of intermediate grammar drills.
 
-Тепер ми можемо проаналізувати справжній текст. (Now we can analyze a real text.) Уявіть, що ви відкриваєте підручник. (Imagine that you are opening a textbook.) Прочитайте цей короткий текст про школу: (Read this short text about school:)
+Найчастіший наказ на уроках — це слово «**визначте**» (determine — imperative). Вчитель може сказати: «Визначте відмінок іменника». Після цього підручник дає таку інструкцію: «Порівняйте ці два речення». Якщо речення неповне, ви бачите прохання: «Доповніть цей діалог». А коли викладач ставить питання, ви маєте відреагувати: «Дайте відповідь».
 
-> Сьогодні школярі писали тест. Вони уважно слухали вчителя. Зранку йшов дощ. У класі було тепло. Дівчинка швидко закінчила завдання. Урок закінчився вчасно.
-> *(Today the schoolchildren wrote a test. They listened to the teacher attentively. In the morning it rained. In the classroom it was warm. The girl quickly finished the task. The lesson finished on time.)*
+> *The most frequent command in lessons is the word "determine" (identify). The teacher might say: "Determine the case of the noun". After this, the textbook gives the following instruction: "Compare these two sentences". If a sentence is incomplete, you see the request: "Complete this dialogue". And when the instructor asks a question, you must react: "Give an answer".*
 
-Зробімо міні-аудит цього тексту. (Let's do a mini-audit of this text.) Знайдіть перше речення. (Find the first sentence.) Хто? (Who?) Школярі. (Schoolchildren.) Це наш підмет. (This is our subject.) Що вони робили? (What did they do?) Писали. (Wrote.) Це присудок. (This is the predicate.) Тепер знайдіть третє речення. (Now find the third sentence.) Коли йшов дощ? (When did it rain?) Зранку. (In the morning.) Це обставина. (This is the adverbial modifier.) А тепер подивіться на дієслово «закінчила». (And now look at the verb "finished".) Корінь тут «-кін-». (The root here is "-kin-".) Яка частина слова стоїть перед коренем? (What part of the word stands before the root?) Це префікс «за-». (This is the prefix "za-".)
+Beyond the action verbs, you must also be familiar with your study materials. Knowing the terminology for your learning tools helps you navigate smoothly. A physical course relies heavily on your **підручник** (textbook).
 
-На рівні B1 ви будете читати правила українською мовою. (At the B1 level you will read rules in the Ukrainian language.) Це називається **зануренням** (immersion). Спробуйте зрозуміти це пояснення без перекладу: (Try to understand this explanation without translation:)
+Вчитель завжди називає цифру на початку уроку. Він каже: «Відкрийте свій підручник, це двадцята **сторінка** (page)». На цій сторінці зазвичай знаходиться ваша нова граматична **вправа** (exercise). Ви уважно читаєте інструкцію і починаєте працювати.
 
-> Ця частина слова завжди стоїть після кореня. Вона допомагає утворювати нові слова. Наприклад, від слова «ліс» ми утворюємо слово «лісок». Ця частина може робити слово пестливим.
-> *(This part of the word always stands after the root. It helps to form new words. For example, from the word "forest" we form the word "little forest". This part can make the word affectionate.)*
+If your class incorporates digital elements, the teacher will direct you to online resources to complete a specific **завдання** (task) or click a shared **посилання** (link).
 
-Про що цей текст? (What is this text about?) Звичайно, він про суфікс. (Of course, it is about the suffix.) Ви вже знаєте ці терміни. (You already know these terms.) Тому ви можете розуміти такі інструкції. (Therefore you can understand such instructions.)
+Якщо ви працюєте онлайн, викладач надсилає вам домашнє завдання у загальний чат. Він також може сказати: «Ось нове посилання на онлайн-тест, перейдіть за ним».
+
+> — **Марко:** Ти вже розумієш, що нам потрібно тут зробити? *(Do you already understand what we need to do here?)*
+> — **Олена:** Так, спочатку прочитай завдання. *(Yes, first read the task.)*
+> — **Марко:** Добре. Тут написано: «визначте будову слова». *(Okay. It says here: "determine the word structure".)*
+> — **Олена:** Точно. Тут треба виділити префікс, корінь, суфікс і закінчення. *(Exactly. Here we need to highlight the prefix, the root, the suffix, and the ending.)*
+> — **Марко:** Я думаю, що це слово не має префікса. *(I think this word doesn't have a prefix.)*
+> — **Олена:** Можливо. Порівняймо наші відповіді з правилом. *(Maybe. Let's compare our answers with the rule.)*
+> — **Марко:** Це гарна ідея, подивімося на п'яту сторінку. *(That's a good idea, let's look at page five.)*
+
+<!-- INJECT_ACTIVITY: quiz, Read a classroom instruction in Ukrainian and identify the correct action to take -->
+
+## Усе разом: аналізуємо текст (~400 words total)
+
+Ось невеликий текст про звичайний шкільний день. Осінній ранок почався рано. Учні швидко зайшли у клас. Вчителька привітно усміхнулася дітям. Вона відкрила новий журнал. Сьогодні ми вивчаємо цікаву тему. Діти уважно слухають пояснення. Урок минає дуже швидко.
+
+> *Here is a short text about a normal school day. The autumn morning started early. The students quickly entered the classroom. The teacher smiled warmly at the children. She opened a new register. Today we are studying an interesting topic. The children listen carefully to the explanation. The lesson passes very quickly.*
+
+Let's analyze the grammar of this text. Take the second **речення** (sentence): «Учні швидко зайшли у клас». The word «учні» is the **підмет** (subject), answering the question "who?". The verb «зайшли» is the **присудок** (predicate), which describes the main action. 
+
+The word «швидко» tells us how they entered, making it an **обставина** (adverbial modifier). In the next sentence, «дітям» receives the action of the smile, so it is a **додаток** (object). In the phrase «цікаву тему», the word «цікаву» describes the noun, which makes it an **означення** (attribute).
+
+Now let's look at word anatomy. Take the verb «зайшли». The core meaning is in the **корінь** (root) «-йш-». The **префікс** (prefix) «за-» changes the direction of the movement to "in". 
+
+The **закінчення** (ending) «-и» shows that the verb is plural. Finally, look at the noun «вчителька». The **суфікс** (suffix) «-к-» turns the generic profession into a specifically female teacher.
+
+:::info
+**Grammar box**
+When you know how to identify the root and the prefix, you can often guess the meaning of new words without looking them up in a dictionary. This is a crucial skill for reading intermediate texts.
+:::
+
+Now, let's step into the B1 mindset. In the text below, you will see common instructions like **прочитайте** (read — imperative) and **запишіть** (write down — imperative). This is a grammar explanation written entirely in Ukrainian, exactly as you will find in intermediate textbooks.
+
+Уважно прочитайте це правило. Потім запишіть головну ідею. Українське дієслово має два види: доконаний і недоконаний. Недоконаний вид означає процес або дію, яка повторюється. Доконаний вид означає результат або дію, яка вже завершилася. Порівняйте: я читав книгу і я прочитав книгу.
+
+> *Carefully read this rule. Then write down the main idea. The Ukrainian verb has two aspects: perfective and imperfective. The imperfective aspect means a process or an action that repeats. The perfective aspect means a result or an action that has already finished. Compare: I was reading a book and I have read a book.*
+
+You can already understand this completely. You recognized the instructional commands, and you understood the grammatical concepts being explained in the target language.
+
+<!-- INJECT_ACTIVITY: group-sort, Sort words into groups by shared root families -->
 
 ## Підсумок
 
-Час перевірити свої знання. (Time to check your knowledge.) Дайте відповідь на ці запитання: (Give an answer to these questions:)
+This module has given you the foundational metalanguage for your future studies. Let's do a quick self-check to confirm your knowledge.
 
-* Як називається головний член речення, що відповідає на питання «хто? що?» (What is the name of the main sentence member that answers the questions "who? what?") Це підмет. (This is the subject.)
-* Як називається частина слова, що стоїть перед коренем? (What is the name of the part of the word that stands before the root?) Це префікс. (This is the prefix.)
-* Що означає команда «Підкресліть»? (What does the command "Underline" mean?) Вона означає: намалюйте лінію під словом. (It means: draw a line under the word.)
-* Яка різниця між простим і складним реченням? (What is the difference between a simple and a complex sentence?) Просте речення має одну граматичну основу. (A simple sentence has one grammatical foundation.) Складне речення має дві або більше. (A complex sentence has two or more.)
+*   Як називається головний член речення, що відповідає на питання «хто?» або «що?» — Підмет.
+*   Як називається частина слова, що стоїть перед коренем? — Префікс.
+*   Що означає команда «Підкресліть»? — Underline.
+*   Яка різниця між простим і складним реченням? — Кількість граматичних основ.
+
+You now have the linguistic toolbox to understand instructions in Ukrainian. You can name the parts of a sentence like a Ukrainian student and break words down to their roots to guess new meanings. You are ready for the immersion of Level B1.
+
+<!-- INJECT_ACTIVITY: match-up, Match sentence member terms to their question words -->

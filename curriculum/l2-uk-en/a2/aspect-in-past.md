@@ -1,133 +1,195 @@
-## Два питання — два види
+## Два питання — два види (~550 words)
 
-В українській мові є дві різні перспективи для дій у минулому часі. Це не просто граматичне правило. Це різниця між процесом і результатом.
-When you talk about the past in Ukrainian, you must choose between two different ways of seeing the action.
-Перше питання — це «що ти **робив**?» *(what were you doing?)*.
-Друге питання — це «що ти **зробив**?» *(what did you get done?)*.
-The choice between the **недоконаний вид** *(imperfective aspect)* and the **доконаний вид** *(perfective aspect)* is like choosing between shooting a video and taking a photo.
-Коли ми використовуємо недоконаний вид, ми описуємо процес або факт дії.
-The camera is rolling, the action takes time, and we do not care if it finished.
-Коли ми використовуємо доконаний вид, ми показуємо конкретний результат.
-The camera takes a snapshot of a completed action. The action has a clear endpoint, and it produced a visible outcome. This is a very real difference in how Ukrainians think about their actions.
+У неділю ввечері Оля і Тарас розмовляли по телефону. Вони порівнювали свої вихідні. Хоча вони робили схожі речі, вони використовували різні слова, щоб описати свій день.
 
-Сьогодні понеділок. Оля і Тарас говорять про свої вихідні дні. Вони обговорюють, що вони робили і що зробили.
-> — **Тарас:** Привіт, Олю! Як пройшла твоя неділя? Що ти робила вчора?
-> — **Оля:** Привіт! Я добре відпочивала. Я **читала** *(was reading)* цікаву книгу майже весь день. А ти?
-> — **Тарас:** А я багато працював. Але я **прочитав** *(read/finished)* цілий новий роман!
-> — **Оля:** Ого! Ти дуже швидко читаєш. А що ти робив увечері?
-> — **Тарас:** Я **готував** *(was cooking)* обід і вечерю дві години. Це було довго.
-> — **Оля:** Це справді довго. А я теж не сиділа без діла. Я швидко **приготувала** *(cooked/finished cooking)* дуже смачну вечерю для своєї родини.
+> **Оля:** Привіт, Тарасе! Що ти робив сьогодні? Я читала весь день. А ти? *(Hi, Taras! What were you doing today? I was reading all day. And you?)*
+> **Тарас:** Привіт! А я прочитав новий роман! Дуже цікава історія. *(Hi! And I finished reading a new novel! A very interesting story.)*
+> **Оля:** Це чудово. Потім я готувала обід. *(That's great. Then I was cooking lunch.)*
+> **Тарас:** А я вже приготував смачний борщ. Приходь у гості! *(And I already cooked delicious borsch. Come visit!)*
 
-Дієслова недоконаного виду описують дію, яка довго тривала в часі.
-These verbs answer the fundamental question «що робив?».
-Утворювати ці граматичні форми дуже просто і зрозуміло.
-You already know this perfectly from the basic past tense rules.
-Ми просто беремо основу дієслова і додаємо standard suffixes минулого часу.
-Для чоловічого роду ми завжди додаємо суфікс «-в».
-Для жіночого роду ми додаємо суфікс «-ла».
-Для середнього роду ми використовуємо «-ло», а для множини — «-ли».
-Наприклад: він робив, вона **робила** *(was doing)*, воно робило, вони робили.
-Він **писав** *(was writing)*, вона писала, вони писали лист.
-Він **вчив** *(was studying)* нові слова, вона вчила, вони вчили.
-Він читав журнал, вона читала, вони читали.
-Ці дієслова показують нам сам факт дії в минулому, але вони нічого не кажуть про її успішний кінець або результат.
+In Ukrainian, when we talk about the past tense (**минулий час**), we do not just state what happened. We must choose a perspective. We always ask ourselves one of two fundamental questions: "Що ти робив?" or "Що ти зробив?". This is not just a grammar trick. It is a fundamental difference in how Ukrainians think about and categorize actions. The first question asks about the **процес** (process), while the second question demands a **результат** (result). This choice between two aspects—the imperfective and the perfective—shapes almost every sentence you will build about the past.
 
-Дієслова доконаного виду показують, що дія успішно закінчилася і ми маємо результат.
-These verbs always answer the specific question «що зробив?».
-В українській мові більшість дієслів існують у парах.
-These are called aspectual pairs, and learning them together is essential. Ось базові пари: **робити / зробити** *(to do — impf./pf.)*, **писати / написати** *(to write — impf./pf.)*, **читати / прочитати** *(to read — impf./pf.)*, **готувати / приготувати** *(to cook/prepare — impf./pf.)*.
-Найчастіше доконаний вид утворюється дуже логічно — за допомогою префіксів.
-Ми просто додаємо префікс до дієслова недоконаного виду.
-Найбільш популярні префікси — це «з-», «по-», «на-» або «про-».
-Наприклад, процес читав стає результатом **прочитав** *(read completely)*.
-Процес писав стає результатом **написав** *(wrote)*.
-Тривалий процес робив стає завершеним результатом **зробив** *(did/finished)*.
-There is a special spelling rule for the prefix «з-» that you must remember.
-Before the voiceless consonants к, п, т, ф, х (you can remember the mnemonic phrase "Кафе Птах"), the prefix always changes to «с-» for easier pronunciation.
-Тому дієслово **казав** *(was saying)* отримує префікс «с-» і стає **сказав** *(said)*.
-Складне дієслово **фотографував** *(was photographing)* стає **сфотографував** *(took a photo)*.
+Недоконаний вид дієслова схожий на відеокамеру, яка записує дію. Коли ти кажеш «я читав книгу», ти показуєш сам процес. Фокус залишається на дії, її тривалості або на самому факті, що вона відбувалася. Ми не знаємо, чи ти закінчив цю дію. Дієслова **робити**, **читати**, **готувати**, **вчити**, **писати** — це недоконаний вид. Вони відповідають на питання «що робив?». Якщо ти робив щось **довго**, ти обов'язково використовуєш цю форму. Ти просто описуєш, чим був зайнятий твій час.
 
-<!-- INJECT_ACTIVITY: quiz-aspect-id -->
+> *The imperfective aspect of a verb is like a video camera recording an action. When you say "я читав книгу" (I was reading a book), you show the process itself. The focus remains on the action, its duration, or the mere fact that it happened. We do not know if you finished this action. The verbs **робити** (to do), **читати** (to read), **готувати** (to cook), **вчити** (to study), **писати** (to write) are imperfective. They answer the question "what were you doing?". If you were doing something **довго** (for a long time), you must use this form. You are simply describing how your time was occupied.*
 
-## Коли вживати недоконаний вид
+Доконаний вид дієслова нагадує фотографію, яка фіксує результат. Коли ти кажеш «я прочитав книгу», дія вже повністю закінчилася. Ти маєш конкретний результат своєї роботи. Якщо щось сталося **раптом**, ми також використовуємо доконаний вид для цієї короткої події. Дієслова **зробити**, **прочитати**, **приготувати**, **вивчити**, **написати** — це доконаний вид. Вони відповідають на питання «що зробив?». Важливо пам'ятати, що дієслова доконаного виду не можуть мати форми теперішнього часу. Завершена дія не може відбуватися прямо зараз.
 
-Ми дуже часто говоримо про час у нашому житті. We often talk about how long we were doing something. Ми використовуємо недоконаний вид, коли хочемо показати процес або тривалість дії. We use the imperfective aspect when an action takes time, and our focus is on that time spent. The action stretched over a period, and we are not talking about its end or its result. У таких реченнях ми часто бачимо спеціальні слова. These signal words tell us that the process was long and continuous. Це такі слова: **довго** *(for a long time)*, **весь день** *(all day)*, **дві години** *(two hours)*, **цілий рік** *(a whole year)*. Ці слова показують довгий процес. Therefore, you must use the imperfective aspect. Наприклад, подивіться на це речення.
+> *The perfective aspect of a verb resembles a photograph that captures the result. When you say "я прочитав книгу" (I read/finished the book), the action has completely ended. You have a concrete result of your work. If something happened **раптом** (suddenly), we also use the perfective aspect for this short event. The verbs **зробити** (to get done), **прочитати** (to finish reading), **приготувати** (to finish cooking), **вивчити** (to learn completely), **написати** (to finish writing) are perfective. They answer the question "what did you get done?". It is important to remember that perfective verbs cannot have a present tense form. A completed action cannot be happening right now.*
 
-> — **Тарас:** Я довго **писав** *(was writing)* листа.
+:::info
+**Grammar box**  
+Every time you want to use a verb in the past tense, pause and ask yourself: "Am I describing the camera rolling, or am I showing the final photograph?" Your answer determines the aspect.
+:::
 
-The writing was a journey, a process that took time. Ми не знаємо, чи Тарас закінчив цього листа. Можливо, він ще лежить на столі у кімнаті. Головне те, що він витратив багато часу на цю дію. Ось ще один приклад тривалої дії.
+The good news is that the mechanics of forming the past tense remain exactly the same for both aspects. You already know how to match the verb ending to the gender and number of the subject. The imperfective verb **робити** (to do) conjugates as usual.
 
-> — **Оля:** Ми весь день **гуляли** *(were walking)* у великому парку.
+* **Він робив.** — *He was doing.*
+* **Вона робила.** — *She was doing.*
+* **Воно робило.** — *It was doing.*
+* **Вони робили.** — *They were doing.*
 
-We do not focus on a destination or a result here. We only care that the walking lasted all day. Це тривалий процес, тому ми використовуємо недоконаний вид.
+Its perfective partner **зробити** (to get done) uses the exact same endings.
 
-Друга важлива ситуація — це регулярне повторення дії. The second use case for the imperfective aspect is repetition and habits. Repeated actions in the past are always imperfective. It does not matter if the action was successfully "completed" each individual time it happened. If it happened regularly, it is a habit, and habits always require the imperfective aspect. Ми використовуємо інші сигнальні слова для таких ситуацій. Це слова: **завжди** *(always)*, **часто** *(often)*, **щодня** *(every day)*, **зазвичай** *(usually)*, **кожного ранку** *(every morning)*. Коли дія постійно повторюється, вона стає частиною рутини. Наприклад, подивіться на цю типову ситуацію.
+* **Він зробив.** — *He got done.*
+* **Вона зробила.** — *She got done.*
+* **Воно зробило.** — *It got done.*
+* **Вони зробили.** — *They got done.*
 
-> — **Мама:** Вона щодня **готувала** *(used to cook)* смачний сніданок.
+Another common pair is **читати / прочитати** (to read). It follows the exact same logic. You simply need to pick the right aspect before you apply your familiar past tense endings.
 
-This describes a daily routine, not one single isolated event. Even if the breakfast was successfully finished every single morning, the repetition makes it imperfective.
 
-> — **Тарас:** Я дуже часто **читав** *(used to read)* цей популярний журнал.
+## Підсумок — Summary
 
-He read it many times in the past, so it is a habit. Якщо ви бачите слово **завжди**, сміливо використовуйте недоконаний вид.
+У цьому модулі ми занурились у важливу тему української граматики: дієслова минулого часу, а саме – розрізнення доконаного та недоконаного виду. Ви навчилися відповідати на запитання «що роби́в?» (що трива́ло, повто́рювалося, або бу́ло фо́ном) та «що зроби́в?» (що бу́ло завершено та мало конкре́тний результа́т). Ми розглянули, як обрати пра́вильний вид, аналізуючи контекст, наявність результа́ту або ж регулярність дії. Зга́дували, що форми ми́нулого часу узгоджуються за ро́дом та число́м, наприклад, `він роби́в`, `вона́ роби́ла`, `вони́ роби́ли` або `він зроби́в`, `вона́ зроби́ла`, `вони́ зроби́ли`. Приклади, такі як `писа́ти` (недоконаний) проти `написа́ти` (доконаний), допомогли зрозумі́ти, як фокусува́тися на проце́сі чи на фінальному результа́ті.
 
-> — **Оля:** Ми завжди **купували** *(used to buy)* свіжий хліб у цьому магазині.
+### Перевірте себе:
+1.  Яка́ різниця́ між фра́зами «я чита́в кни́гу» та «я прочита́в кни́гу»?
+2.  Опиші́ть три дії, які ви заверши́ли вчора́, використо́вуючи дієсло́ва докона́ного виду в ми́нулому часі.
 
-The repetition over time makes the process the main focus of the sentence.
+<!-- INJECT_ACTIVITY: quiz-aspect-identification -->
 
-Третя ситуація — це фон для іншої важливої події. The third use case is setting the scene or describing background actions. When narrating a story, the "long" background action must be imperfective. This is the action that was already happening when something else suddenly occurred. Для цього ми дуже часто використовуємо популярне слово **коли** *(when)*. The long background action sets the stage, and then a short, sudden action interrupts it. Подивіться на цей класичний і дуже зрозумілий приклад.
+## Коли вживати недоконаний вид (~550 words)
 
-> — **Тарас:** Коли я **снідав** *(was having breakfast)*, **раптом** *(suddenly)* подзвонив мій друг.
+The imperfective aspect in the **минулий час** (past tense) often describes a continuous action. When an activity occupies our time, we focus on the **процес** (process) rather than the final **результат** (result). We see this clearly with verb pairs like **писати / написати** (to write — impf./pf.) and **вчити / вивчити** (to study/learn — impf./pf.).
 
-Тут **снідав** — це дуже довгий процес, наш загальний фон. The breakfast was already in progress when the phone rang. The friend's call was the short, completed action that interrupted the process. Тому ми завжди використовуємо недоконаний вид для такого фону. Ось ще один дуже хороший приклад для цієї ситуації.
+Уяви, що ти хочеш розповісти другові про свій вечір. Ти просто кажеш, що довго писав листа. Ми не знаємо, чи цей лист готовий. Головне тут — це тривалість дії. Дієслово «писати» показує цей неперервний процес.
 
-> — **Оля:** Коли ми повільно **йшли** *(were walking)* додому, почався сильний дощ.
+> *Imagine you want to tell a friend about your evening. You simply say that you were writing a letter for a long time. We do not know if this letter is ready. The main thing here is the duration of the action. The verb "to write" shows this continuous process.*
 
-Walking is the continuous background process that takes time. The start of the rain is the sudden, unexpected event. Завжди використовуйте недоконаний вид для дії, яка створює атмосферу або фон у вашій історії. Це робить вашу розповідь дуже природною і цікавою.
+**Я довго писав листа.** — *I was writing a letter for a long time.*
 
-<!-- INJECT_ACTIVITY: match-signal-words -->
+Another major function of the imperfective aspect is describing repeated actions or habits. If something happened more than once, it is treated as a routine. This rule applies to everyday pairs like **готувати / приготувати** (to cook/prepare — impf./pf.) or **читати / прочитати** (to read — impf./pf.).
 
-## Коли вживати доконаний вид
+Кожна регулярна подія в минулому вимагає недоконаного виду. Наприклад, вона щодня готувала сніданок. Кожен окремий сніданок був готовий, але ми описуємо звичку, яка повторювалася. Тому ми завжди використовуємо недоконаний вид, коли говоримо про щоденну рутину.
 
-Ми вже знаємо, як говорити про довгий процес. Але що робити, коли дія успішно закінчилася? Тепер ми поговоримо про доконаний вид дієслова. The most important use case for the perfective aspect is a completed result. When the action reaches its endpoint and produces a visible or logical outcome, we must use the perfective aspect. It tells us that the goal of the action was successfully achieved. Подивіться на цей чіткий приклад.
-> — **Тарас:** Учора ввечері я **написав** *(wrote)* листа.
+> *Every regular event in the past requires the imperfective aspect. For example, she made breakfast every day. Each individual breakfast was finished, but we are describing a habit that repeated. Therefore, we always use the imperfective aspect when we talk about daily routine.*
 
-The letter is now completely finished and ready to send. Це конкретний результат його роботи. Ми можемо взяти цей лист у руки або відправити його поштою. Якщо ми використаємо форму «я писав», це означає лише процес. У такому випадку лист може бути ще не готовий. Доконаний вид показує нам фінал дії, її логічний кінець. Ось ще один дуже гарний приклад.
-> — **Оля:** Вона нарешті **вивчила** *(learned)* ці нові слова.
+**Вона щодня готувала сніданок.** — *She made breakfast every day.*
 
-The process of studying is over. She knows the words now, and she can use them in a conversation. The knowledge in her head is the direct result of her action. Отже, коли ви маєте готовий результат, завжди обирайте дієслово доконаного виду.
+The imperfective past also sets the scene. It acts as the ongoing background against which another event takes place. The background action is in progress when something else interrupts it. Pairs like **робити / зробити** (to do — impf./pf.) often appear here. 
 
-Друга важлива ситуація — це історія про кілька подій. The second use case for the perfective aspect is a sequence of actions. When you tell a story, you often list a chain of completed steps. Each step follows the previous one in strict chronological order. Для таких кроків ми завжди використовуємо дієслова доконаного виду. Уявіть, що ви ставите маленькі галочки у вашому списку завдань. Кожне дієслово доконаного виду — це одна нова галочка. Прочитайте цю коротку розповідь про звичайний вечір.
-> — **Тарас:** Він **прийшов** *(came)* додому, **відчинив** *(opened)* вікно і **сів** *(sat down)* за стіл.
+Недоконаний вид чудово створює фон для інших подій. Коли я снідав, подзвонив друг. Твій сніданок — це довгий процес. А дзвінок друга — це подія, яка сталася раптом на тлі цього процесу. Перша дія має недоконаний вид, а друга є доконаною.
 
-Тут ми маємо три окремі дії, які йдуть одна за одною. First he arrived, then he opened the window, and finally he sat down. One action completely finishes, and only then the next one begins. Це класичний ланцюжок подій у розповіді. Якби ми використали тут недоконаний вид, це мало б дивний сенс. Це означало б, що він робив усі три дії одночасно. Доконаний вид допомагає нам дуже чітко організувати всі події в часі.
+> *The imperfective aspect perfectly creates a background for other events. While I was having breakfast, a friend called. Your breakfast is a long process. And the friend's call is an event that happened suddenly against the background of this process. The first action has the imperfective aspect, and the second is perfective.*
 
-Третя ситуація — це раптові або дуже швидкі події. The third use case for the perfective aspect is sudden, punctual, or single events. These are actions that happen in a brief instant, without a long continuous process. Для цього ми також маємо спеціальні сигнальні слова, які допомагають нам зробити правильний вибір. Це слова: **раптом** *(suddenly)*, **одного разу** *(one time)*, **нарешті** *(finally)*. Якщо ви бачите ці слова в реченні, дія зазвичай має доконаний вид. Подивіться на цей яскравий приклад раптової події.
-> — **Оля:** Раптом хтось гучно **стукнув** *(knocked)* у двері.
+**Коли я снідав, подзвонив друг.** — *While I was having breakfast, a friend called.*
 
-The knock was a single, quick, and unexpected sound. Це одноразова і дуже коротка подія, яка перервала тишу. Порівняйте це з дієсловом недоконаного виду **стукати** *(to knock)*. Слово «стукав» описує тривалий шум у минулому. Але «стукнув» — це лише один швидкий удар, який дає миттєвий результат. Також ми використовуємо доконаний вид для унікальних, одиничних подій у нашому минулому.
-> — **Тарас:** Одного разу я **побачив** *(saw)* відомого актора на нашій вулиці.
+To make choosing the right aspect easier, use specific signal words. A marker like **довго** (for a long time) or **раптом** (suddenly) can immediately tell you which form to pick.
 
-This specific event happened exactly once in a specific moment. It was definitely not a habit and not a long process. Отже, ми сміливо обираємо форму доконаного виду для таких унікальних життєвих ситуацій.
+У нашій мові є спеціальні слова-маркери. Для процесу ми використовуємо слово «довго». Для рутини ми кажемо «часто», «завжди», «щодня» або «зазвичай». А для фонової дії ідеальним маркером є слово «коли». Якщо ти бачиш ці слова, обирай недоконаний вид.
+
+> *In our language, there are special signal words. For a process, we use the word "for a long time". For a routine, we say "often", "always", "every day", or "usually". And for a background action, the ideal marker is the word "when". If you see these words, choose the imperfective aspect.*
+
+**Я часто читав казки.** — *I often read fairy tales.*
+
+**Він довго готував вечерю.** — *He was cooking dinner for a long time.*
+
+:::info
+**Grammar box**
+Signal words like **довго** or **часто** conceptually stretch an action out over time. This makes a focus on a single completed outcome impossible, requiring the imperfective aspect.
+:::
+
+## Коли вживати доконаний вид (~550 words)
+
+Let's talk about the perfective past. When an action reaches its logical endpoint and produces a visible or tangible **результат** (result), we use the perfective aspect. You are not talking about the **процес** (process) anymore; you are presenting a finished product.
+
+Коли ми бачимо готовий результат, ми завжди використовуємо доконаний вид. Дія вже повністю закінчилася, і ми маємо незаперечний факт її завершення. Це ніби чітка фотографія після тривалої роботи. Наприклад, ти дуже довго працював, а тепер у тебе є готовий документ.
+
+> *When we see a ready result, we always use the perfective aspect. The action has already completely finished, and we have the undeniable fact of its completion. It is like a clear photograph after long work. For example, you were working for a very long time, and now you have a ready document.*
+
+For instance, look at the verb pairs **писати / написати** (to write — impf./pf.), **читати / прочитати** (to read — impf./pf.), and **вчити / вивчити** (to study/learn — impf./pf.).
+
+**Я написав листа.** — *I wrote the letter.*
+
+The letter is done, sealed, and ready to be sent. The same rule applies to the other verbs when the action is fully completed.
+
+Він прочитав цікаву книгу про історію України. Вона добре вивчила нові українські слова. У цих реченнях ми бачимо чіткий результат дії. Книга вже лежить на полиці, а слова є у пам'яті.
+
+> *He read an interesting book about the history of Ukraine. She learned new Ukrainian words well. In these sentences, we see a clear result of the action. The book already lies on the shelf, and the words are in memory.*
+
+The perfective aspect is also essential when you want to move a story forward. When you recount a series of events in the **минулий час** (past tense), each completed step pushes the narrative to the next one.
+
+Для розповіді про події ми використовуємо послідовний ланцюжок дієслів доконаного виду. Кожна дія успішно закінчується, і відразу починається нова подія. Це створює природну динаміку і показує рух часу вперед.
+
+> *To tell a story about events, we use a sequential chain of perfective verbs. Each action successfully finishes, and a new event immediately begins. This creates natural dynamics and shows the movement of time forward.*
+
+For example, imagine you are describing your evening routine after work.
+
+**Я прийшов додому, пообідав і подзвонив мамі.** — *I came home, had lunch, and called Mom.*
+
+Each verb here marks a distinct, finished action. First you arrived, then you ate, and finally, you made the call. You cannot use the imperfective aspect here, because that would mean all these actions were happening at the exact same time as a continuous process. Instead, you are listing completed steps.
+
+Another important function of the perfective aspect is describing a sudden action. A single, punctual event often interrupts a background action that was already in progress.
+
+Коротка і несподівана подія завжди вимагає дієслова доконаного виду. Ця подія дуже часто перериває довгий фон. Уяви, що ти спокійно сидиш у тиші, і щось стається дуже швидко.
+
+> *A short and unexpected event always requires a perfective verb. This event very often interrupts a long background. Imagine that you are calmly sitting in silence, and something happens very fast.*
+
+**Раптом хтось постукав у двері.** — *Suddenly someone knocked on the door.*
+
+The knocking is a brief, completed event that stands out against whatever else was going on. Think back to the pair **готувати / приготувати** (to cook/prepare — impf./pf.) and **робити / зробити** (to do — impf./pf.). If you were doing something and a sudden event happened, the interruption is perfective.
+
+Коли я готував смачну вечерю, раптом погасло світло. Я швидко знайшов свічку і запалив її. Моя вечеря була довгим процесом, але світло зникло миттєво.
+
+> *While I was cooking a tasty dinner, suddenly the lights went out. I quickly found a candle and lit it. My dinner was a long process, but the light disappeared instantly.*
+
+Just like the imperfective aspect has markers, the perfective past has its own signal words. Words like **вже** (already), **нарешті** (finally, at last), and **раптом** (suddenly) clearly indicate a single completed event.
+
+Unlike words like **щодня** (every day) that indicate habits, these perfective markers emphasize that the action is done. The perfective aspect completely ignores the **тривалість** (duration) of an event.
+
+Instead, it focuses entirely on the outcome. Another useful phrase for a single event is **одного разу** (one time, once). You will also notice that markers of process like **довго** (for a long time) are absent here.
+
+Слова-маркери дуже допомагають швидко вибрати правильний вид дієслова у розмові. Якщо дія має конкретний результат, ми часто кажемо «вже» або «нарешті». Якщо подія абсолютно несподівана, ми обов'язково використовуємо слово «раптом».
+
+> *Signal words help a lot to quickly choose the correct verb aspect in conversation. If an action has a specific result, we often say "already" or "finally". If an event is absolutely unexpected, we obligatorily use the word "suddenly".*
+
+**Я вже прочитав уранішню газету.** — *I have already read the morning newspaper.*
+
+**Нарешті вона зробила складне домашнє завдання.** — *Finally she did the difficult homework.*
+
+:::info
+**Grammar box**
+While English relies on perfect tenses (like "I have done") to show a completed result, Ukrainian simply uses the perfective aspect in the past tense to achieve the exact same meaning. The focus is entirely on the fact that the action is complete.
+:::
+
+<!-- INJECT_ACTIVITY: match-up, Match signal words (довго, раптом, щодня, нарешті) with the correct aspect and example sentence, 8 items -->
+
+## Практика вибору виду (~550 words)
+
+Now that you know the rules, let's look at how these verb pairs work in real life. In the **минулий час** (past tense), the choice between aspects completely changes the meaning of the sentence. The difference is always between focusing on the **процес** (process) or focusing on the **результат** (result). 
+
+Let's compare the everyday pairs **читати / прочитати** (to read — impf./pf.) and **вчити / вивчити** (to study/learn — impf./pf.). We will see how they behave when we talk about actions in the past. Context is everything when making this choice.
+
+Вчора він цілий вечір читав газету, але не дочитав її. А сьогодні вранці він нарешті прочитав газету до кінця. Студентка довго вчила нові слова перед іспитом. Вона успішно вивчила всі слова і склала іспит на відмінно.
+
+> *Yesterday he was reading the newspaper all evening, but didn't finish it. And this morning he finally read the newspaper to the end. The student was studying new words for a long time before the exam. She successfully learned all the words and passed the exam perfectly.*
+
+In natural storytelling, you will constantly mix both aspects. The imperfective aspect sets the scene and describes the background process. Then, the perfective aspect introduces a sudden event, often marked by the word **раптом** (suddenly), or a sequence of completed actions. 
+
+Notice how the verbs **готувати / приготувати** (to cook/prepare — impf./pf.) and **робити / зробити** (to do — impf./pf.) work together in a narrative. The background action is interrupted by a fast, unexpected event. This is a very typical pattern in Ukrainian storytelling.
+
+Коли я готував смачну вечерю, раптом погасло світло. Я не знав, що робити далі. Я швидко знайшов свічку, запалив її і зробив собі простий бутерброд. Я так і не приготував ту складну страву.
+
+> *While I was cooking a delicious dinner, suddenly the lights went out. I didn't know what to do next. I quickly found a candle, lit it, and made myself a simple sandwich. I never did prepare that complicated dish.*
+
+English speakers often make predictable mistakes because English relies on different tense structures instead of aspect pairs. A very common error is using the imperfective aspect when an action lasted **довго** (for a long time), but you actually want to emphasize that it is finished. You must choose the aspect based on your goal, not just the duration.
+
+For example, if you say that you were writing a letter, it sounds ambiguous to a Ukrainian speaker without more context. Let's look at the pair **писати / написати** (to write — impf./pf.) to understand this problem. We want to know if the letter is actually ready to be sent.
+
+Студент каже, що він писав листа вчора. Процес тривав довго, але ми не знаємо фіналу. Якщо лист вже готовий, вибирайте доконаний вид. Інша типова проблема стосується регулярних дій. Для регулярних дій завжди потрібен недоконаний вид. Тому правильно казати, що він щодня робив вправи.
+
+> *A student says that he was writing a letter yesterday. The process lasted for a long time, but we don't know the finale. If the letter is already ready, choose the perfective aspect. Another typical problem concerns regular actions. For regular actions, the imperfective aspect is always needed. Therefore, it is correct to say that he did the exercises every day.*
+
+To choose the correct verb form, you can use a simple mental flowchart. This checklist will help you decide which aspect fits your sentence perfectly. Just ask yourself two basic questions about the action.
+
+Якщо у вас є конкретний результат або одна завершена дія, завжди вибирайте доконаний вид. Ви відповідаєте на питання «що зробити?». Якщо це довгий процес або регулярна звичка, вибирайте недоконаний вид. Недоконаний вид також описує фон для іншої події. Ви відповідаєте на питання «що робити?».
+
+> *If you have a specific result or a single completed action, always choose the perfective aspect. You answer the question "what to have done?". If it is a long process or a regular habit, choose the imperfective aspect. The imperfective aspect also describes the background for another event. You answer the question "what to be doing?".*
+
+:::tip
+**Quick tip** — When in doubt, ask yourself: "Am I painting a picture of an action in progress, or am I taking a snapshot of a completed result?" The picture is imperfective, and the snapshot is perfective.
+:::
 
 <!-- INJECT_ACTIVITY: fill-in-aspect-choice -->
-
-## Практика вибору виду
-
-Тепер давайте подивимося на дуже особливі видові пари в українській мові. Now let's look at some very special aspectual pairs in the Ukrainian language. Деякі дієслова змінюються повністю, коли ми хочемо показати фінальний результат дії. Some verbs change completely when we want to show the final result of an action. Це дуже незвичайні пари, які треба просто запам'ятати. These are very unusual pairs that you just need to memorize. Найкращий приклад — це пара **говорити** *(to speak)* та **сказати** *(to say)*. Ми часто кажемо: «Він довго і дуже емоційно **говорив** *(was speaking)* про свою нову роботу». Це був довгий процес, і ми звертаємо увагу саме на його тривалість. This was a long process, and we pay attention exactly to its duration. Але ми ніколи не можемо сказати фразу: «Він довго сказав про роботу». But we can never say the phrase: "He said about the work for a long time." Чому це звучить так неправильно? Why does this sound so wrong? Тому що дієслово «сказати» — це завжди коротка, одноразова дія, яка має швидкий результат. Because the verb "сказати" is always a short, one-time action that has a quick result. Ми можемо радісно сказати: «Він нарешті **сказав** *(said)* усім щиру правду». Інша дуже важлива пара — це **брати** *(to take)* та **взяти** *(to finish taking)*. Якщо ви повільно берете велику книгу зі столу, це зрозумілий процес. If you are slowly taking a large book from the table, it is a clear process. Ви використовуєте дієслово недоконаного виду. You use a verb of the imperfective aspect. Але якщо ця книга вже лежить у ваших руках, ви її остаточно взяли. But if this book is already lying in your hands, you finally took it. Це вже логічний результат вашої дії, який ми можемо побачити. This is already the logical result of your action that we can see.
-
-Давайте уважно подивимося, як ці два різні види чудово працюють разом у текстах. Let's look carefully at how these two different aspects work perfectly together in texts. Ми дуже часто використовуємо їх поруч в одній цікавій історії. We very often use them next to each other in one interesting story. Недоконаний вид зазвичай створює загальний фон, а доконаний вид яскраво показує конкретні нові події. The imperfective aspect usually creates the general background, and the perfective aspect brightly shows specific new events. Прочитайте цю маленьку, але типову розповідь про звичайний вечір.
-> — **Тарас:** Був пізній вечір, і я спокійно **читав** *(was reading)* надзвичайно цікаву книгу. Раптом я **побачив** *(saw)*, що це остання сторінка. Я швидко **прочитав** *(finished reading)* її і **згорнув** *(closed)* книгу.
-Перше дієслово «читав» чітко показує нам довгий процес читання. The first verb "читав" clearly shows us the long process of reading. Воно відповідає на базове питання «що робив?». It answers the basic question "what was he doing?". Це спокійний фон для всієї нашої історії, ніби декорації в театрі. This is a calm background for our whole story, like scenery in a theater. Потім на цьому фоні раптово відбуваються швидкі, повністю завершені дії. Then, against this background, quick, completely finished actions suddenly happen. Він побачив кінець, прочитав текст і згорнув книгу. He saw the end, finished reading the text, and closed the book. Ці три дієслова доконаного виду дають нам ідеальний ланцюжок результатів. These three perfective verbs give us a perfect chain of results. Таке гарне поєднання робить історію дуже живою, динамічною і об'ємною. Such a nice combination makes the story very lively, dynamic, and three-dimensional.
-
-Англомовні студенти дуже часто роблять типові помилки з цими дієсловами у минулому часі. English-speaking students very often make typical mistakes with these verbs in the past tense. Чому так часто буває під час розмови? Why does this happen so often during a conversation? В англійській мові просто немає такої логічної системи видів. In English, there is simply no such logical system of aspects. Ви використовуєте різні граматичні часи для контексту, а не різні слова. You use different grammatical tenses for context, not different words. For example, the short English phrase "I did" does not always translate to the perfective aspect in Ukrainian. Ви могли робити щось дуже довго і не закінчити справу. You could be doing something for a very long time and not finish the task. Тоді це завжди буде дієслово недоконаного виду. Then it will always be a verb of the imperfective aspect. Українці часто описують таку ситуацію в житті. Ukrainians often describe such a situation in life. «Я **робив** *(was doing)* це завдання дві години, але **не зробив** *(didn't finish)* його». Перше дієслово «робив» гарно показує вашу довгу і важку спробу. The first verb "робив" nicely shows your long and hard attempt. Друге дієслово «зробив» з часткою «не» показує нам, що бажаного результату просто немає. The second verb "зробив" with the particle "не" shows us that there is simply no desired result. Тому завжди уважно запитуйте себе перед початком розмови. Therefore, always ask yourself carefully before starting a conversation. «Тут є конкретний результат, чи це тільки довгий процес?». "Is there a specific result here, or is it only a long process?". Ваша правильна відповідь на це питання допоможе обрати правильне дієслово. Your correct answer to this question will help choose the correct verb.
-
 <!-- INJECT_ACTIVITY: error-correction-aspect -->
-
-## Підсумок
-
-Отже, час підсумувати найголовніше правило про **минулий час** *(past tense)*. The choice between imperfective and perfective verbs is not just grammar, but a completely different way of thinking. Ви завжди повинні розуміти свій фокус перед початком фрази. Are you describing the long process of an action, or do you want to show the final result? Ця різниця є абсолютно ключовою для правильного і природного спілкування. To make the right choice quickly, always use our simple strategy and a self-check list. Коли ви хочете розповісти про минуле, поставте собі такі питання:
-
-*   **Чи є результат?** *(Is there a result?)* Якщо дія закінчилася і ми маємо фінал, це **доконаний вид** *(perfective aspect)*. Ми запитуємо: «Що **зробив**?» *(What did you get done?)*.
-*   **Це процес чи повторення?** *(Is it a process or repetition?)* Якщо дія була довгою або регулярною, це **недоконаний вид** *(imperfective aspect)*. Ми запитуємо: «Що **робив**?» *(What were you doing?)*.
-*   **Які слова-маркери тут є?** *(What are the signal words here?)* Слова **довго** *(for a long time)*, **часто** *(often)* і **щодня** *(every day)* завжди люблять процес. А слова **вже** *(already)*, **нарешті** *(finally)* і **раптом** *(suddenly)* вимагають тільки конкретного результату.

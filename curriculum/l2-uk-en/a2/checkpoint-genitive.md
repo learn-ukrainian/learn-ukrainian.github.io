@@ -1,144 +1,130 @@
 ## Частина 1: Впізнавання форм (Part 1: Recognizing Forms)
 
-Welcome to your first major checkpoint! Over the past few modules, you have explored the **родовий відмінок** (genitive case) from multiple angles. This module is a comprehensive **перевірка** (check/review) to ensure your foundations are solid. We will consolidate how this case interacts with prepositions, adjectives, and plurals. 
+When you explore a new city, you constantly need to describe where things are, where you are going, and what you need. Let us listen to a typical conversation during a walking tour in the center of Kyiv.
 
-One of the most frequent uses of the **родовий відмінок** is expressing physical location. When you describe where something is located in relation to something else, you use specific prepositions. The **прийменник** (preposition) **біля** means "near" or "by", **коло** is a synonym for "near" or "around", and **навпроти** means "opposite" or "across from". The preposition **до** indicates direction "to" a specific point. All of these require the noun that follows to take the genitive ending.
+> **Гід:** Добрий день! Ми стоїмо біля Софійського собору. *(Good day! We are standing near St. Sophia's Cathedral.)*
+> **Турист 1:** Чи можна туди зайти? *(Can we go inside?)*
+> **Гід:** Так, але без квитка туди не можна. *(Yes, but without a ticket you cannot go there.)*
+> **Турист 2:** Скільки коштує квиток для групи з десяти людей? *(How much does a ticket cost for a group of ten people?)*
+> **Гід:** Для групи — сто гривень. *(For a group — one hundred hryvnias.)*
+> **Турист 1:** А потім куди йдемо? *(And then where do we go?)*
+> **Гід:** Від собору ми йдемо до Хрещатика. Туди п'ять хвилин! *(From the cathedral we are walking to Khreshchatyk. It is five minutes there!)*
 
-> **Читаємо українською:**
-> Ми стоїмо **біля старого собору**. (We are standing near the old cathedral.)
-> Новий ресторан знаходиться **навпроти театру**. (The new restaurant is located opposite the theater.)
-> Діти граються **коло школи**. (The children are playing near the school.)
-> Цей автобус їде **до станції** метро. (This bus is going to the subway station.)
+The dialogue above shows many situations where we need the **родовий відмінок** (genitive case). Notice the words like **біля** (near), **без** (without), **для** (for), **від** (from), and **до** (to). Each of these is a **прийменник** (preposition) that controls the case of the following noun. They force the noun phrase to change its **закінчення** (ending). This happens naturally when we speak about location, absence, purpose, or direction. Let's do a quick **перевірка** (check) of these basic patterns.
+*   **Ми стоїмо біля собору.** *(We are standing near the cathedral.)*
+*   **Це квиток для групи.** *(This is a ticket for the group.)*
+*   **Ми йдемо до Хрещатика.** *(We are walking to Khreshchatyk.)*
 
-Next, let's review prepositions that indicate source, origin, and time. The preposition **від** translates to "from" or "away from", often referring to a person or a specific point. The preposition **з** (along with its variants **із** and **зі**) means "from" or "out of" a place. For sequence in time, we use **після**, which means "after". These prepositions are essential for discussing your schedule and daily movements.
+We use the genitive case to describe where something is physically located or where it is moving. The prepositions **біля** (near), **навпроти** (opposite), and **коло** (around/near) describe a static location. The prepositions **до** (to/towards) and **з** / **із** / **зі** (from) describe direction and origin. The variant **зі** is used for easier pronunciation before consonant clusters.
+*   **Я живу біля парку.** *(I live near the park.)*
+*   **Аптека стоїть навпроти школи.** *(The pharmacy stands opposite the school.)*
+*   **Ми чекаємо коло дому.** *(We are waiting near the house.)*
+*   **Студенти йдуть до університету.** *(The students are walking to the university.)*
+*   **Вона приїхала з Києва.** *(She arrived from Kyiv.)*
 
-> **Читаємо українською:**
-> Я отримав цікавий лист **від мами**. (I received an interesting letter from mom.)
-> Мій друг щойно повернувся **зі Львова**. (My friend just returned from Lviv.)
-> **Після обіду** ми йдемо гуляти. (After lunch, we are going for a walk.)
-> Вона приїхала **з України** вчора. (She arrived from Ukraine yesterday.)
+:::note
+Remember that **з**, **із**, and **зі** all mean the exact same thing (from / out of). We use **зі** before words that start with multiple consonants to make speaking easier: **зі школи** *(from school)*, **зі Львова** *(from Lviv)*.
+:::
 
-Two more critical prepositions are **для** (for) and **без** (without). We use **для** to indicate purpose or the intended recipient of an action or object. We use **без** to indicate the lack or absence of something, which perfectly aligns with the core function of the genitive case. These prepositions are highly common in everyday situations like shopping or ordering food.
+The genitive case is also essential for providing context like timeframes, purpose, and absence. We use **після** (after) and **від** (since/from) for time. We use **для** (for) to show purpose or the intended recipient. We use **без** (without) to express absence.
+*   **Ми зустрінемося після роботи.** *(We will meet after work.)*
+*   **Я працюю від вівторка.** *(I am working since Tuesday.)*
+*   **Це гарний подарунок для сестри.** *(This is a nice gift for a sister.)*
+*   **Я п'ю каву без молока і без цукру.** *(I drink coffee without milk and without sugar.)*
 
-> **Читаємо українською:**
-> Я купив цей подарунок **для сестри**. (I bought this gift for my sister.)
-> Мені потрібна чорна кава **без цукру**. (I need black coffee without sugar.)
-> Цей квиток **для студента** коштує менше. (This ticket for a student costs less.)
-> Я не можу жити **без музики**. (I cannot live without music.)
+It is highly important to **впізнати** (to recognize) the correct forms when you hear them in conversation. A common **помилка** (mistake) is using the basic nominative case after these prepositions. For example, saying *до магазин* is incorrect; the correct grammatical form is **до магазину**. Saying *без цукор* is incorrect; you must say **без цукру**. Remember the logic for masculine nouns: concrete objects and places usually take the `-а` or `-я` ending. Abstract concepts, materials, and institutions usually take `-у` or `-ю`. You must be able to recognize these differences to speak accurately.
+*   **Він стоїть біля стола.** *(He is standing near the table.)* — concrete object.
+*   **Я йду до університету.** *(I am walking to the university.)* — institution.
+*   **Вона п'є чай без цукру.** *(She drinks tea without sugar.)* — material.
+*   **У мене немає часу.** *(I do not have time.)* — abstract concept.
 
-Recognizing the function of each **прийменник** will help you accurately construct your sentences. When you see **до**, ask yourself if it shows direction. When you see **біля**, recognize it as location. When you see **від**, know it marks a source. To verify you are using the correct case, you can always ask the grammatical questions **кого? чого?** (whom? what?). If a word answers these questions after a preposition, it must be in the genitive case.
-
-> **Читаємо українською:**
-> Ми йдемо до (кого?) **лікаря**. (We are going to the doctor.)
-> Машина стоїть біля (чого?) **будинку**. (The car is parked near the house.)
-> Я чекаю листа від (кого?) **брата**. (I am waiting for a letter from my brother.)
-
-<!-- INJECT_ACTIVITY: quiz-genitive-prepositions -->
+<!-- INJECT_ACTIVITY: quiz-preposition-identification -->
 
 ## Частина 2: Вибір правильної форми (Part 2: Choosing the Correct Form)
 
-When you use the genitive case, it is not just the noun that changes. You must also apply **узгодження** (agreement) to any adjectives or possessive pronouns modifying that noun. For masculine and neuter words in the singular, the adjective ending is **-ого** (e.g., нового, мого, цього). For feminine words in the singular, the ending is **-ої** or **-еї** (e.g., нової, моєї, цієї).
+When you use a noun in the genitive case, the adjectives and pronouns attached to it must also change. This is called **узгодження** (agreement). For masculine and neuter words in the **однина** (singular), use the ending **-ого**. For feminine words, use **-ої** or **-еї**. In the plural, all genders take the ending **-их**.
+*   **У мене немає мого нового друга.** *(I do not have my new friend.)*
+*   **Ми відпочиваємо біля цього синього моря.** *(We are resting near this blue sea.)*
+*   **Вона читає сторінки моєї старої книги.** *(She is reading the pages of my old book.)*
+*   **Я не розумію цієї цікавої статті.** *(I do not understand this interesting article.)*
+*   **Я чекаю моїх нових друзів.** *(I am waiting for my new friends.)*
 
-> **Читаємо українською:**
-> Я не бачив **мого нового друга**. (I haven't seen my new friend.)
-> Це зошит **твоєї старшої сестри**? (Is this your older sister's notebook?)
-> Біля **цього старого стола** стоїть зручний стілець. (A comfortable chair stands near this old table.)
-> Я чекаю важливого дзвінка від **нашого головного менеджера**. (I am waiting for an important call from our main manager.)
+The genitive case in the **множина** (plural) has several patterns. Many feminine and neuter nouns take a zero ending, which means they drop their final vowel. Often, an inserted vowel (**о** or **е**) appears inside the word to break up a difficult cluster of consonants, making the word easier to say.
+*   **На вулиці багато машин.** *(There are many cars on the street.)*
+*   **У нього є п'ять сестер.** *(He has five sisters.)*
+*   **У цій кімнаті немає вікон.** *(There are no windows in this room.)*
+*   **Я знаю кілька гарних пісень.** *(I know a few beautiful songs.)*
 
-Forming the **множина** (plural) in the genitive case presents a unique challenge because the **закінчення** (ending) varies by gender and word type. Masculine nouns and some neuter nouns often take the ending **-ів** or **-їв** (друзів, трамваїв, почуттів). Most feminine and neuter nouns take a zero ending, meaning the final vowel simply drops off (книжок, місць, шкіл). Finally, there is the special ending **-ей** for specific nouns across genders (людей, ночей, грошей).
+Other nouns take specific suffixes in the plural genitive. Most masculine nouns take **-ів** or **-їв**. Nouns of the third declension (feminine words ending in a consonant) and some irregular nouns take the ending **-ей**.
+*   **У мене немає братів.** *(I don't have brothers.)*
+*   **У кімнаті стоїть п'ять столів.** *(Five tables stand in the room.)*
+*   **На вулиці багато трамваїв.** *(There are many trams on the street.)*
+*   **Він працює багато ночей.** *(He works many nights.)*
+*   **У них зараз немає грошей.** *(They do not have money right now.)*
+*   **У парку гуляє багато дітей і людей.** *(Many children and people are walking in the park.)*
+*   **Вона написала п'ять статей.** *(She wrote five articles.)*
 
-> **Читаємо українською:**
-> На вечірку прийшло **десять друзів**. (Ten friends came to the party.)
-> На полиці лежить **п'ять нових книжок**. (Five new books are lying on the shelf.)
-> На вулиці сьогодні дуже **багато людей**. (There are very many people on the street today.)
-> Я не спав уже **кілька ночей**. (I haven't slept for several nights already.)
+Sometimes you need to **вибрати** (to choose) between prepositions that seem similar but have different nuances. We use **з** (out of) for leaving a place, but **від** (away from) for moving away from a person. Compare these two situations: **Я йду з кімнати.** *(I am walking out of the room.)* versus **Я йду від лікаря.** *(I am walking away from the doctor.)*. You must also compare **біля** (near the side of) and **навпроти** (directly opposite facing). **Стілець стоїть біля стола.** *(The chair stands near the table.)* versus **Стілець стоїть навпроти вікна.** *(The chair stands opposite the window.)*. Finally, compare **до** (up to a point in time) and **після** (after a point in time). **Я працюю до вечора.** *(I work until the evening.)* versus **Я відпочиваю після обіду.** *(I rest after lunch.)*.
 
-One of the most nuanced areas of Ukrainian grammar is the **однина** (singular) masculine endings for inanimate objects. You must choose between **-а/-я** and **-у/-ю**. The logic is based on whether the noun is a specific, concrete object or a more abstract or collective concept. Concrete objects and defined spaces take **-а/-я**. Abstract concepts, materials, and natural phenomena take **-у/-ю**.
+English speakers often translate English phrases directly, which leads to structural errors. You must **виправити** (to correct) these habits. Do not say *Я потребую допомогу*; the verb requires the genitive case, so say **Я потребую допомоги** (I need help). After the negative word **немає**, never use the nominative. Do not say *У мене немає сестра*; you must say **У мене немає сестри** (I have no sister). Finally, remember that numbers from five and up require the plural genitive: do not say *п'ять книга*, but rather **п'ять книжок** (five books).
+*   **❌ Я потребую допомогу. → ✅ Я потребую допомоги.** *(I need help.)*
+*   **❌ У мене немає сестра. → ✅ У мене немає сестри.** *(I do not have a sister.)*
+*   **❌ Я купив п'ять книга. → ✅ Я купив п'ять книжок.** *(I bought five books.)*
 
-> **Читаємо українською:**
-> Я чекаю **автобуса** на зупинці. (I am waiting for the bus at the stop. — Concrete)
-> У мене сьогодні зовсім немає **часу**. (I have absolutely no time today. — Abstract)
-> Біля **магазина** стоїть червона машина. (A red car is parked near the store. — Concrete)
-> У цій каві забагато солодкого **цукру**. (There is too much sweet sugar in this coffee. — Material)
-
-<!-- INJECT_ACTIVITY: fill-in-genitive-forms -->
-
-Let's examine some preposition minimal pairs to refine your usage. Both **з** and **від** can mean "from", but **від** is usually for a person as a source, while **з** is for a place or origin. Similarly, **біля** means simply "near" or "by", whereas **навпроти** specifies "facing" or "directly opposite". Finally, the prepositions **до** and **після** express a clear sequence in time: "until/before" versus "after". Notice that **з** changes to **зі** before double consonants for phonetic ease.
-
-> **Читаємо українською:**
-> Я взяв цікаву книгу **від друга**. (I took an interesting book from a friend. — Person as source)
-> Я привіз цю красиву чашку **зі Львова**. (I brought this beautiful cup from Lviv. — Place of origin)
-> Мій дім знаходиться **біля парку**. (My house is located near the park. — Proximity)
-> Наш офіс знаходиться **навпроти парку**. (Our office is located opposite the park. — Facing)
-> Я маю вільний час **до обіду**. (I have free time until lunch. — Before a point in time)
-> Ми зустрінемося **після обіду**. (We will meet after lunch. — Following a point in time)
-
-A very common **помилка** (mistake/error) for English speakers is leaving the noun in the nominative case after the word **немає** or after prepositions. Another frequent error is using the accusative case with verbs that strictly require the genitive. For example, the verb **потребувати** (to need/require) governs the genitive case.
-
-:::caution Типова помилка
-English speakers often say "Я потребую допомогу" (Accusative), directly translating "I need help." This is incorrect. The verb requires the genitive, so you must say: "Я потребую **допомоги**."
+:::caution
+Pay special attention to the negative word **немає** *(there is no)*. It *always* forces the next noun into the genitive case. Never use the nominative case after it!
 :::
 
-> **Читаємо українською:**
-> ❌ У мене немає брат. → ✅ У мене немає **брата**.
-> ❌ Ми стояли біля театр. → ✅ Ми стояли біля **театру**.
-> ❌ Вона потребує підтримку. → ✅ Вона потребує **підтримки**.
+<!-- INJECT_ACTIVITY: fill-in-genitive-agreement -->
 
-<!-- INJECT_ACTIVITY: error-correction-genitive-checks -->
+<!-- INJECT_ACTIVITY: error-correction-genitive -->
 
 ## Частина 3: Вільне вживання (Part 3: Free Production)
 
-Let's see how the genitive case operates in real-world scenarios. When you are at the market or the pharmacy, you constantly use the genitive to express quantity or the purpose of an item. Whenever you specify an amount using numbers five and above, or when you use a measuring word like "bottle" or "kilogram," the following noun must be in the genitive case.
+Let's see how these rules apply in a real market situation. Shopping frequently requires you to express specific quantities or talk about things that are absent from the store.
 
-> **(На ринку та в аптеці)**
-> **Покупець:** Добрий день! Мені потрібно **два кілограми яблук**. (Good day! I need two kilograms of apples.)
-> **Продавець:** Ось, будь ласка. Щось ще? (Here you go. Anything else?)
-> **Покупець:** Так, ще одна **пляшка води**. (Yes, one more bottle of water.)
-> **Продавець:** Звичайно. (Of course.)
-> **Покупець:** А де аптека? Мені потрібні **таблетки від болю** і **крем для рук**. (And where is the pharmacy? I need pills for pain and hand cream.)
-> **Продавець:** Аптека знаходиться **навпроти супермаркету**. (The pharmacy is located opposite the supermarket.)
+> **Покупець:** Добрий день! Мені потрібні яблука. *(Good day! I need apples.)*
+> **Продавець:** Скільки вам? *(How much for you?)*
+> **Покупець:** Дайте, будь ласка, два кілограми яблук. І ще свіжий хліб. *(Please give two kilograms of apples. And also fresh bread.)*
+> **Продавець:** Вибачте, сьогодні немає свіжого хліба. *(Sorry, there is no fresh bread today.)*
+> **Покупець:** Зрозуміло. Скільки з мене за яблука? *(Understood. How much from me for the apples?)*
+> **Продавець:** Сто гривень. *(One hundred hryvnias.)*
+> **Покупець:** Добре. А де я можу випити каву без цукру? *(Good. And where can I drink coffee without sugar?)*
 
-Another excellent scenario for practicing these forms is giving tours or asking for directions. A tour guide will constantly describe where things are located relative to each other, using prepositions that trigger the genitive case.
+At the clinic or pharmacy, you will use the genitive case to describe symptoms or ask for remedies. We use the preposition **від** (from/against) for medicines, showing what ailment you want to move away from.
 
-> **(Екскурсія Києвом)**
-> **Гід:** Добрий день! Ми стоїмо **біля Софійського собору**. Це дуже давня пам'ятка. (Good day! We are standing near St. Sophia's Cathedral. This is a very ancient monument.)
-> **Турист:** А скільки йти **до Хрещатика**? (And how long is the walk to Khreshchatyk?)
-> **Гід:** **До Хрещатика** йти лише п'ять хвилин. Але пам'ятайте, всередину собору **без квитка** не можна. (It's only a five-minute walk to Khreshchatyk. But remember, you cannot go inside the cathedral without a ticket.)
-> **Турист:** Ця екскурсія **для групи з десяти людей**? (Is this tour for a group of ten people?)
-> **Гід:** Так, це ідеальний розмір. Ми також пройдемо повз пам'ятник Богдану Хмельницькому. (Yes, this is the ideal size. We will also walk past the monument to Bohdan Khmelnytsky.)
+> **Пацієнт:** Добрий день. Мені потрібні ліки від болю. *(Good day. I need medicine for pain.)*
+> **Аптекар:** У вас болить голова? *(Do you have a headache?)*
+> **Пацієнт:** Так. І ще дайте сироп від кашлю. У мене зовсім немає сил. *(Yes. And also give a syrup for cough. I have no strength at all.)*
+> **Аптекар:** Розумію. У вас також немає настрою? *(I understand. Do you also have no mood?)*
+> **Пацієнт:** Так, я дуже втомився після операції. *(Yes, I am very tired after the surgery.)*
+> **Аптекар:** Ось ваші ліки. *(Here is your medicine.)*
 
-When translating from English, you must remember that English often uses an apostrophe-S ('s) or the preposition "of" to show possession or relationship. Ukrainian relies entirely on the genitive case for this. You cannot simply place two nouns next to each other. The second noun must change its ending.
+When navigating the city, the genitive case is your best friend. It helps you ask for directions, navigate between landmarks, and understand business hours.
 
-> **Читаємо українською:**
-> Це **машина мого брата**. (This is my brother's car.)
-> Ми гуляли біля красивого **центру міста**. (We walked near the beautiful city center.)
-> Я не знаю **номера телефону** цього нового лікаря. (I don't know this new doctor's phone number.)
-> Де лежить зелений **зошит моєї сестри**? (Where is my sister's green notebook lying?)
+> **Перехожий:** Вибачте, як дійти до станції метро? *(Excuse me, how to reach the metro station?)*
+> **Місцевий:** Ідіть прямо до великого перехрестя. Аптека знаходиться навпроти банку, а метро — біля неї. *(Walk straight to the big intersection. The pharmacy is located opposite the bank, and the metro is near it.)*
+> **Перехожий:** А вона працює до вечора? *(And does it work until the evening?)*
+> **Місцевий:** Так, вона працює від ранку до ночі. *(Yes, it works from morning to night.)*
+> **Перехожий:** Дуже дякую! *(Thank you very much!)*
 
-Finally, let's review words that express an indefinite quantity. Words like **багато** (many/a lot), **мало** (few/a little), and **кілька** (several) always take the noun in the genitive case. If the noun is countable, you use the genitive plural. If the noun is a mass noun or uncountable, you use the genitive singular.
+To build full sentences naturally in conversations, practice with question-and-answer pairs. The preposition in the question will often be the exact same preposition in the answer, making it easy to construct your reply. Listen for the preposition, and reuse it with the correct genitive ending. Let's look at some examples of this strategy:
+*   **Звідки ви?** — **Я з України.** *(Where are you from? — I am from Ukraine.)*
+*   **Для кого цей подарунок?** — **Це для моєї мами.** *(Who is this gift for? — This is for my mom.)*
+*   **До якого часу ви працюєте?** — **Я працюю до вечора.** *(Until what time do you work? — I work until the evening.)*
 
-> **Читаємо українською:**
-> На великій площі зібралося **багато людей**. (Many people gathered on the large square.)
-> Для цього простого рецепту потрібно **мало води**. (For this simple recipe, a little water is needed.)
-> На лекцію прийшло **кілька студентів**. (Several students came to the lecture.)
-> У мене сьогодні дуже **багато часу**. (I have a lot of time today.)
+:::tip
+When answering a question, listen closely to the preposition! The best strategy is to reuse the exact same preposition from the question in your answer.
+*   **Від кого цей лист?** *(From whom is this letter?)* → **Від друга.** *(From a friend.)*
+:::
 
-<!-- INJECT_ACTIVITY: match-up-genitive-situational -->
-
-Mastering the genitive case is a significant milestone in your language journey. It is one of the most frequently used cases in Ukrainian, and feeling confident with it allows you to communicate with far greater precision. When you can seamlessly attach the correct adjective ending, confidently choose between **-а** and **-у** for a masculine noun, and form the plural without hesitation, your speech becomes much more natural.
-
-If you ever feel unsure, you can always **виправити** (to correct) yourself. Native speakers appreciate the effort it takes to learn these grammatical structures. Continue to practice asking the questions "кого? чого?" when you encounter prepositions of location, source, or purpose. You will soon find that you can **впізнати** (to recognize) the correct form instinctively, without needing to pause and think about the rules. Being able to **вибрати** (to choose) the right ending is a true sign of A2 proficiency.
+<!-- INJECT_ACTIVITY: match-up-situations -->
 
 ## Підсумок
 
-This checkpoint serves to consolidate everything you have learned about the genitive case across multiple modules. Reviewing these structures ensures that your grammatical foundation is strong enough to support more complex sentences and richer vocabulary in the future. 
+Let's review what we have learned across these modules. Use this self-assessment checklist to measure your progress:
+*   **Can I use all nine prepositions with the correct case?** Test yourself with this sentence: **Я йду від дому до парку.** *(I am walking from the house to the park.)* You should know how to properly use **з**, **від**, **після**, **для**, **без**, **біля**, **навпроти**, **коло**, and **до**.
+*   **Can I form the genitive plural for all genders?** Try converting these nouns in your head: **стіл** *(table)* becomes **столів**; **книга** *(book)* becomes **книжок**; **море** *(sea)* becomes **морів**; **ніч** *(night)* becomes **ночей**.
+*   **Can I agree adjectives and pronouns?** Try translating a phrase like "my new phone" in the genitive case: it becomes **мого нового телефону**. Or "this old street": **цієї старої вулиці**.
 
-Use this self-assessment checklist to evaluate your comfort level. If you can confidently answer "yes" to these questions, 
-
-* Чи можу я використати прийменники **до**, **біля**, **від**, **для** без помилок?
-* Чи правильно я утворюю множину (**друзів**, **книжок**, **людей**)?
-* Чи вмію я узгоджувати прикметники (**мого нового**) з іменниками?
-* Чи розумію я різницю між закінченнями **автобуса** та **часу**?
-* Чи можу я пояснити напрямок або рецепт, використовуючи родовий відмінок?
-
-Review the sections where you feel less confident, and trust that with consistent practice, these patterns will become second nature.
+If you can confidently produce these patterns,  Keep practicing these structures in daily situations until they feel completely natural.

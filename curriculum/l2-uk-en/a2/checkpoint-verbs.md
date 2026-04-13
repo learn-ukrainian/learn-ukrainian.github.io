@@ -1,114 +1,108 @@
 ## Частина 1: Вид дієслова — минулий і майбутній час (Part 1: Aspect in Past and Future)
 
-У цій **контрольній точці** (checkpoint) ми об'єднаємо три ключові теми граматики: **вид дієслова** (verb aspect), часи та **дієслова руху** (motion verbs). Ми повторимо, як один префікс може змінити значення всього речення з процесу на результат. Ви вже знаєте, що українські дієслова працюють у парах. The **недоконаний вид** (imperfective aspect) describes the action itself, while the **доконаний вид** (perfective aspect) describes the finish line. Let's see how this works in practice.
+Ми вже вивчили багато важливих тем. Тепер настала **контрольна точка** (checkpoint). Наша головна мета сьогодні — це комплексна **перевірка** (review, check) ваших знань про українські дієслова. Ми детально згадаємо **вид дієслова** (verb aspect), щоб ви могли правильно описувати минулий та майбутній час. Також ми обов'язково повторимо **дієслова руху** (motion verbs) та **наказовий спосіб** (imperative mood). Ці теми дуже важливі для вільного, природного спілкування. Коли ви говорите про свої плани, подорожі або даєте поради друзям, ви завжди використовуєте ці граматичні конструкції. Уявіть таку життєву ситуацію: вчитель та студент розмовляють на уроці. Це типове усне **завдання** (task, exercise) для перевірки знань. Вчитель запитує студента про його минулі вихідні та розпитує про плани на майбутнє. Зверніть увагу на те, які дієслова вони обирають.
 
-In the past tense, aspect is a choice between a process (or habit) and a result. Use the **недоконаний вид** when you want to emphasize *that* you did something, or *how long* it took. Use the **доконаний вид** when you want to emphasize the final product.
+> **Вчитель:** Добрий день, Максиме! Розкажи, будь ласка, що ти робив на вихідних? *(Tell me, please, what did you do on the weekend?)*
+> **Студент:** Добрий день! У суботу я був удома. Я дуже довго готував обід для родини. *(I cooked lunch for my family for a very long time.)*
+> **Вчитель:** Це дуже цікаво. І що саме ти приготував? *(And what exactly did you cook [finish cooking]?)*
+> **Студент:** Я приготував велику каструлю смачного борщу. *(I cooked a large pot of delicious borscht.)*
+> **Вчитель:** Чудово! А що ти будеш робити завтра ввечері, після університету? *(And what will you be doing tomorrow evening?)*
+> **Студент:** Завтра я буду читати нову книгу про історію України. *(Tomorrow I will be reading a new book.)*
+> **Вчитель:** Як ти думаєш, ти прочитаєш її до кінця тижня? *(Will you read it [finish it] by the end of the week?)*
+> **Студент:** Так, я прочитаю її дуже швидко, бо вона цікава. *(Yes, I will read it very quickly.)*
 
-*   **Вчора я довго писав статтю.** (Yesterday I wrote the article for a long time.) — This is a process. We focus on the time spent: **довго** (for a long time). The verb is **писати** (to write — impf).
-*   **Вчора я нарешті написав статтю.** (Yesterday I finally wrote/finished the article.) — This is a result. The article is done. We use the prefix **на-** to form **написати** (to write — pf).
-*   **Вона щовечора читала книгу.** (She read a book every evening.) — This is a habit (**щовечора** — every evening). We must use the imperfective **читати** (to read).
-*   **Вона прочитала книгу за ніч.** (She read the book in one night.) — This is a single, completed event. We use the perfective **прочитати** (to read — pf).
+In Ukrainian, understanding the past tense relies heavily on the **вид дієслова**. This is the foundation of Ukrainian storytelling. We use the imperfective aspect (**недоконаний вид**) when we want to focus on a continuous process, a regular habit, or a background action in the past. For example, `Він довго писав листа` *(He was writing a letter for a long time)* describes a continuous process. We do not know if the letter is finished; we only see the action happening over time.
 
-The future tense also forces you to choose between process and result. Ukrainian has two ways to talk about the future, depending on the aspect. The analytical future (складена форма) uses **бути** + infinitive, and it always requires the **недоконаний вид**. The simple future (проста форма) uses the **доконаний вид** with personal endings.
+Conversely, we use the perfective aspect (**доконаний вид**) when we focus on the final result, a specific sequence of events, or a single, completed action. For example, `Він швидко написав листа` *(He wrote / finished writing a letter quickly)* tells us the action is completely finished and the result (the letter) exists now.
 
-*   **Завтра о п'ятій я буду працювати.** (Tomorrow at five I will be working.) — This describes a process in the future. You are in the middle of doing it.
-*   **Я зроблю цю роботу до вечора.** (I will do this work by evening.) — This guarantees a result. By evening, the work will be finished. We use the perfective **зробити**.
-*   **Ми будемо готувати обід разом.** (We will be preparing lunch together.) — The focus is on the activity of cooking.
-*   **Ми приготуємо обід дуже швидко.** (We will prepare lunch very quickly.) — The focus is on the finished lunch.
+Look at these common aspectual pairs (**видова пара**):
+*   `робити` (to do/make - process) — `зробити` (to do/make - result)
+*   `читати` (to read - process) — `прочитати` (to read - result)
+*   `готувати` (to cook - process) — `приготувати` (to cook - result)
 
-Ukrainian has a unique, rhythmic alternative to the "буду + infinitive" future tense: the synthetic future (**складна форма**). This form is used only for the **недоконаний вид** (process/intent). It adds the endings **-му, -меш, -ме, -мемо, -мете, -муть** directly to the infinitive (without the final -ти). Historically, this comes from the infinitive plus an old form of the verb **мати** (to have). It sounds very authentic and is widely used in modern Ukrainian.
+When you speak, always ask yourself: is this a process (`що робив?`) or a result (`що зробив?`). If you say `Я читав книгу`, your friend might naturally ask: `Ти прочитав її?` *(Did you finish it?)*.
 
-*   **Завтра я працюватиму вдома.** (Tomorrow I will be working at home.) — This is exactly the same meaning as "я буду працювати".
-*   **Ти знатимеш усі правила.** (You will know all the rules.) — Same as "ти будеш знати".
-*   **Ми читатимемо цю статтю на уроці.** (We will be reading this article in class.)
-*   **Вони житимуть у Києві.** (They will live in Kyiv.)
+The future tense also strictly depends on the **вид дієслова**. If you want to describe a planned process, a continuous action, or a regular habit in the future, you must use the imperfective aspect. We form this analytical future using the auxiliary verb `бути` (to be) and the infinitive of the main verb: `я буду читати` *(I will be reading)*, `ти будеш працювати` *(you will be working)*. This form focuses entirely on the activity itself.
 
-<!-- INJECT_ACTIVITY: group-sort -->
+If you want to express a planned result or a single, completed action in the future, you use the perfective aspect. This is the simple synthetic future form. It is created by adding present-tense endings to a perfective verb base, often with a prefix: `я прочитаю` *(I will read completely)*, `я напишу` *(I will write completely)*.
+
+:::caution
+A very common **помилка** (error, mistake) among learners is mixing these two forms. You can NEVER use the auxiliary verb `буду` with a perfective infinitive. For example, saying `буду прочитати` or `буду написати` is strictly incorrect in Ukrainian grammar. You must choose either the continuous process (`я буду читати`) or the completed result (`я прочитаю`).
+:::
 
 ## Частина 2: Дієслова руху та наказовий спосіб (Part 2: Motion Verbs and Imperatives)
 
-**Дієслова руху** (motion verbs) in Ukrainian require you to think about *how* and *where* you are going. English uses "to go" for everything. Ukrainian splits "to go" into two pairs: **іти/ходити** (by foot) and **їхати/їздити** (by transport). Inside each pair, we contrast unidirectional motion (a specific trip right now) with multidirectional motion (a regular habit or general movement).
+Now we will move forward and review another essential topic: **дієслова руху** (motion verbs) and how to give commands or suggestions. Giving correct directions, discussing your daily commute, and making active plans with friends is a key part of everyday life. In Ukrainian, verbs of motion have special rules that differ significantly from English. Let's look at a new real-life situation. Two friends, Oksana and Taras, are planning a hiking trip to the Carpathian Mountains. They need to discuss their logistics, choose the right transport, and give each other instructions. Pay attention to how they talk about their movement and how they make suggestions using the **наказовий спосіб**.
 
-*   **Я зараз іду додому.** (I am going home right now.) — Unidirectional, by foot. A specific trip happening at this moment.
-*   **Я щодня ходжу до парку.** (I go to the park every day.) — Multidirectional/habitual, by foot. A regular action (**щодня** — every day).
-*   **Сьогодні ми їдемо на роботу машиною.** (Today we are going to work by car.) — Unidirectional, by transport. One specific trip.
-*   **Ми часто їздимо в Карпати.** (We often go to the Carpathians.) — Multidirectional/habitual, by transport. A repeating event.
+> **Оксана:** Тарасе, ми їдемо в Карпати у п'ятницю? *(Taras, are we going to the Carpathians on Friday?)*
+> **Тарас:** Так! Ми поїдемо на поїзді ввечері після роботи. *(We will go by train in the evening after work.)*
+> **Оксана:** Дуже добре. Що мені взяти з собою? *(What should I take with me?)*
+> **Тарас:** Візьми теплий одяг і зручні черевики для гір. *(Take warm clothes and comfortable boots for the mountains.)*
+> **Оксана:** Зрозуміла. А коли ми підемо в гори? *(Understood. And when will we go to the mountains?)*
+> **Тарас:** У суботу вранці. Ходімо купувати квитки просто зараз! *(Let's go buy tickets right now!)*
+> **Оксана:** Погоджуюсь, ходімо! *(I agree, let's go!)*
 
-When you use **дієслова руху**, you must use the correct prepositions to show directionality. The preposition changes the case of the noun.
+In Ukrainian, **дієслова руху** require you to make a clear distinction between moving on foot and moving by transport. This is fundamentally different from the English verb "to go".
 
-*   **До + Родовий відмінок** (Genitive) shows destination: **Ми їдемо до Львова.** (We are going to Lviv.) **Він іде до школи.** (He is going to school.)
-*   **З/Зі + Родовий відмінок** (Genitive) shows origin/movement from: **Ми їдемо зі Львова.** (We are going from Lviv.) **Він іде зі школи.** (He is coming from school.)
-*   **На + Знахідний відмінок** (Accusative) shows movement to an event, an open space, or a specific activity: **Я йду на роботу.** (I am going to work.) **Вона їде на концерт.** (She is going to a concert.)
-*   **В/У + Знахідний відмінок** (Accusative) shows movement *into* an enclosed space: **Я йду в магазин.** (I am going into the store.)
+*   **On foot:** `іти` (unidirectional) / `ходити` (multidirectional)
+*   **By transport:** `їхати` (unidirectional) / `їздити` (multidirectional)
 
-The **наказовий спосіб** (imperative mood) is how we give commands, advice, or suggestions. For the 2nd person singular ("you" informal), the ending is usually **-и** or zero ending. For the plural/formal, add **-те** or **-іть**. For the 1st person plural ("let's"), add **-мо** or **-імо**. Stress is very important here: it changes the grammatical meaning.
+Unidirectional verbs describe a specific, single trip in one direction at a given moment (for example, `Я йду до школи` — *I am walking to school right now*). Multidirectional verbs describe your habits, regular round trips, or moving around without a specific direction (for example, `Я ходжу до школи щодня` — *I walk to school every day*).
 
-*   **Читай цей текст!** (Read this text!) — 2nd person singular.
-*   **Читайте цей текст!** (Read this text!) — 2nd person plural/formal.
-*   **Читаймо цей текст!** (Let's read this text!) — 1st person plural.
-*   **Пиши!** (Write!) / **Пишіть!** (Write!) / **Пишімо!** (Let's write!)
-*   **Ти рОбиш** (You do/are doing — present tense) vs. **ЗробИ!** (Do it! — imperative).
+To talk about future plans or completed trips, we add prefixes to these verbs. The prefix `по-` indicates the start of a trip or a future plan (`Я поїду до Львова` — *I will go to Lviv by transport*). The prefix `при-` indicates arrival at the destination (`Він приїде завтра` — *He will arrive tomorrow*).
 
-Sometimes we need to give a command or express a wish indirectly to a 3rd person ("let him/her/them"). For this, we use the particles **хай** or **нехай** plus the present/future tense verb. We also have a special construction for personal wishes: **Vocative case + будь/будьте + Instrumental case**.
+Remember to use the correct prepositions with motion verbs: use `з` + Genitive case for moving "from" a place (`з Києва`), `до` + Genitive case for moving "to" a place (`до Львова`), and `на` + Accusative case for moving "to" an event or an open surface (`на концерт`, `на роботу`).
 
-*   **Хай він читає цей текст.** (Let him read this text.)
-*   **Нехай вони знають правду.** (Let them know the truth.)
-*   **Маріє, будь щасливою!** (Maria, be happy!) — The name is in the Vocative, the adjective is in the Instrumental.
-*   **Друже, будь обережним!** (Friend, be careful!)
+The **наказовий спосіб** is the grammatical tool we use to give commands, advice, or suggestions to other people. We form it differently depending on who we are addressing:
 
-<!-- INJECT_ACTIVITY: fill-in -->
+*   **2nd person singular/plural:** We use the endings `-и` / `-іть` or `-й` / `-йте`. For example: `роби` / `робіть` *(do!)*, `читай` / `читайте` *(read!)*. You must also choose the correct aspect. `Пиши` means "write!" (process), while `Напиши` means "finish writing!".
+*   **3rd person:** We use the particle `хай` or `нехай` plus the standard present or future tense form of the verb. For example: `хай читає` *(let him/her read)*, `хай знає` *(let him/her know)*.
+*   **1st person plural (suggestions):** When you want to say "let's do something", we use the ending `-імо` or `-ймо`. For example: `робімо` *(let's do)*, `читаймо` *(let's read)*, `ходімо` *(let's go)*.
+
+:::tip
+A very common Russian calque is using the word "давай" plus a verb to make suggestions (for example, saying `давай поговоримо`). In natural, correct Ukrainian, you should avoid this. Always use the proper 1st person plural imperative form. Say `поговорімо` замість цього (instead of this).
+:::
+
+<!-- INJECT_ACTIVITY: group-sort-verb-forms -->
 
 ## Частина 3: Комплексні завдання (Part 3: Integrated Tasks)
 
-Let's look at how all these elements work together in a real situation. Here is an oral review where a teacher asks a student to retell his weekend.
+In real-life conversations, you never use grammar rules in complete isolation. You must combine them dynamically. Choosing the correct aspect, selecting the right motion verb, and using the proper mood simultaneously is absolutely essential for natural, fluent Ukrainian storytelling. When you tell a story about your life or a recent trip, you build a complex narrative sequence. You will use imperfective verbs to set the background scene or describe your regular habits. Then, you will use perfective verbs to show the main events, actions, and concrete results. You will also use verbs of motion to explain exactly how you traveled there, and you might quote a conversation using the imperative mood to give advice. Let's see how these different grammatical elements interact in practice.
 
-> **Пані Олена:** Марку, розкажи, що ти робив у вихідні? *(Marko, tell me, what did you do on the weekend?)*
-> **Марко:** У суботу я довго спав. Потім я ходив у магазин. *(On Saturday I slept for a long time. Then I went to the store.)*
-> **Пані Олена:** Добре. А що ти купив? *(Good. And what did you buy?)*
-> **Марко:** Я купив хліб і молоко. У неділю я поїхав до брата. Я нарешті написав есе для університету. *(I bought bread and milk. On Sunday I went to my brother's. I finally wrote the essay for the university.)*
-> **Пані Олена:** Чудово! *(Excellent!)*
-> **Марко:** Пані Олено, давай підемо на перерву? *(Ms. Olena, let's go on break?)*
-> **Пані Олена:** Марку, правильно казати: "Ходімо на перерву". *(Marko, it is correct to say: "Let's go on break".)*
+<!-- INJECT_ACTIVITY: fill-in-mixed-drill -->
 
-Marko correctly used the imperfective **спав** for a long process, the multidirectional **ходив** for a round trip to the store, and the perfective **поїхав** and **написав** for completed results. However, his teacher corrected a very common error at the end.
+Read this short narrative text carefully. It models the upcoming exercise. It clearly contrasts multidirectional habits with a unidirectional future plan, and it mixes different verb aspects to build a complete story.
 
-:::caution
-English speakers often struggle with Ukrainian verbs because English relies on the single verb "to go" and has a completely different tense structure. Another major issue is the influence of Russian calques.
+> Моя сім'я дуже любить гори. Кожного літа ми **їздимо** (multidirectional habit - by transport) в Карпати на два тижні. Там ми багато гуляємо лісом і **робимо** (imperfective process) красиві фотографії. Але цього року ми **поїдемо** (unidirectional future perfective) до моря. Ми вже купили квитки на поїзд. Завтра ми **зробимо** (perfective result) всі важливі покупки для відпочинку. Мама суворо каже мені: "**Візьми** (imperative perfective) теплий светр!"
 
-1.  **"Я іду на роботу на автобусі."** — ❌ Error. You cannot use **іти** (by foot) with transport. Correct: **Я їду на роботу автобусом.**
-2.  **"Завтра я буду прочитати книгу."** — ❌ Error. You cannot use **буду** with a perfective verb (**прочитати**). Correct: **Завтра я прочитаю книгу.** (I will read/finish the book tomorrow) OR **Завтра я буду читати книгу.** (I will be reading the book tomorrow).
-3.  **"Давай підемо!"** — ❌ Error. The construction "давай + verb" is a Russian calque. Authentic Ukrainian uses the 1st person plural imperative ending **-мо / -імо**. Correct: **Ходімо!** (Let's go!) or **Зробімо!** (Let's do it!).
-:::
+Notice how `їздимо` shows a repeated action every summer, while `поїдемо` shows a specific, planned trip. Similarly, `робимо` is a continuous process of taking photos, but `зробимо покупки` is a finished task. In the exercises below, you will need to fill in similar blanks and choose the correct forms for many different situations.
 
-Now let's listen to two friends planning a hike in the Carpathian mountains. Notice how they use motion verbs for giving directions and imperatives for making suggestions.
+<!-- INJECT_ACTIVITY: quiz-error-correction -->
 
-> **Андрій:** Ірино, ми поїдемо в Карпати у п'ятницю. *(Iryna, we will go to the Carpathians on Friday.)*
-> **Ірина:** Супер! Як ми будемо їхати? *(Super! How will we be traveling?)*
-> **Андрій:** Ми поїдемо потягом до Франківська. Потім треба їхати автобусом. *(We will go by train to Frankivsk. Then we need to go by bus.)*
-> **Ірина:** Добре. Що мені взяти? *(Good. What should I take?)*
-> **Андрій:** Обов'язково візьми карту і теплий одяг. Купи воду. *(Definitely take a map and warm clothes. Buy water.)*
-> **Ірина:** Зрозуміла. Ідіть до лісу обережно. Друзі, будьмо готові! *(Understood. Go to the forest carefully. Friends, let's be ready!)*
+Before you take the final test, let's systematically review some typical mistakes so you can successfully and швидко **виправити** (to correct) them. Look at these examples and understand why they are wrong:
 
-Andriy uses the perfective future **поїдемо** for the planned trip, while Iryna uses the analytical imperfective future **будемо їхати** to ask about the process of travel. Andriy gives direct commands: **візьми** (take — pf) and **купи** (buy — pf). Iryna finishes with a beautiful wish: **будьмо готові** (let's be ready).
+1.  *`Він щодня зробив вправи.`* This is a critical **помилка**. The time marker `щодня` (every day) clearly indicates a regular habit. A habit always requires the imperfective aspect. The correct form is: `Він щодня робив вправи.`
+2.  *`Я буду поїхати до Києва у вівторок.`* As we learned, you absolutely cannot combine the auxiliary verb `буду` with a perfective verb like `поїхати`. For a planned result or a complete trip, you must use the simple future tense: `Я поїду до Києва у вівторок.`
+3.  *`Ми ідемо туди кожного літа відпочивати.`* The phrase `кожного літа` (every summer) means this is a recurring, round-trip journey. The unidirectional verb `ідемо` (which also means on foot!) is incorrect here. We need the multidirectional verb for transport: `Ми їздимо туди кожного літа відпочивати.`
 
-Let's integrate all these skills into a short narrative. Imagine a traveler visiting Kyiv for the first time.
+<!-- INJECT_ACTIVITY: error-correction-verb-forms -->
 
-**Влітку мій друг приїхав до Києва. Він ніколи раніше не був в Україні. У перший день він просто йшов вулицями і дивився на архітектуру. Він часто заходив у кав'ярні, пив каву і слухав людей. Увечері він сказав мені: "Завтра я піду в музеї. Я оглядатиму місто цілий день. Ходімо разом!" Я відповів: "Звичайно, я покажу тобі найкращі місця". Ми чудово провели час.** (In the summer my friend arrived in Kyiv. He had never been to Ukraine before. On the first day he just walked the streets and looked at the architecture. He often went into cafes, drank coffee and listened to people. In the evening he told me: "Tomorrow I will go to the museums. I will be viewing the city all day. Let's go together!" I answered: "Of course, I will show you the best places." We had a wonderful time.)
+Now it is time for your final **завдання** (task, exercise) in this checkpoint module. You will write a short, cohesive text. Write 8-10 complete sentences narrating a weekend trip. You must follow these specific grammatical requirements:
 
-Notice how the prefixes **по-** and **при-** interact with aspect and motion. The imperfective verb **ішов** (was walking) describes the process of movement through the streets. But when we add **при-** to form **приїхав** (arrived by transport), it becomes a perfective result — the arrival is complete. When the traveler plans his next day, he says **піду** (I will go/set off). The prefix **по-** adds the meaning of starting a journey, creating a perfective future verb. He then contrasts this with **оглядатиму** (I will be viewing) — the synthetic future describing the continuous process of exploring the city.
+1.  Include past tense aspect pairs: use at least one imperfective verb to describe a background process or habit, and one perfective verb to show a completed result.
+2.  Use at least two different motion verbs with their corresponding prepositions (for example, `поїхав до`, `ходив по`). Make sure you distinguish between foot and transport!
+3.  Include one direct speech sentence giving a clear suggestion to a friend using the imperative mood (for example, `ходімо в кіно` or `візьми квитки`).
+4.  Include one friendly wish using the Vocative case, the verb `бути` in the imperative, and the Instrumental case (for example, `Олено, будь щасливою!` or `Тарасе, будь здоровим!`).
 
-<!-- INJECT_ACTIVITY: quiz -->
-
-<!-- INJECT_ACTIVITY: error-correction -->
+Complete this task **впевнено** (confidently) and завжди робіть **самоперевірка** (self-check) to verify your forms before submitting!
 
 ## Підсумок
 
-Ця **перевірка** (review, check) охоплює основні механізми українських дієслів. Час для **самоперевірки** (self-check). Ask yourself the following questions. If you can answer "так" (yes) to all of them, 
+Це була дуже важлива **контрольна точка**. Давайте зробимо підсумок ваших знань. Дайте відповідь на ці запитання, щоб **обрати** (to choose) свій наступний крок:
 
-*   Чи можу я обрати правильний вид дієслова у минулому часі? (Do I know when to use the imperfective for a process or habit, and the perfective for a result?)
-*   Чи розрізняю я "буду читати" та "прочитаю"? (Can I form both the analytical future for process and the simple future for result?)
-*   Чи знаю я, коли використовувати "іти", а коли "ходити"? (Can I correctly choose between unidirectional and multidirectional motion verbs by foot and by transport?)
-*   Чи вмію я утворювати наказовий спосіб для всіх осіб? (Can I form commands for "you", "let's", and use "хай" for 3rd person without using Russian calques?)
-*   Чи можу я побажати комусь чогось (Vocative + будь + Instrumental)?
+*   Can I confidently choose between the imperfective and perfective aspect in the past and future tenses? Do I clearly understand the difference between `читав` (process) and `прочитав` (result), or `буду читати` and `прочитаю`?
+*   Do I know exactly when to use unidirectional motion verbs (like `іти`, `їхати`) versus multidirectional ones (like `ходити`, `їздити`)? Can I correctly use the prefixes `по-` and `при-`?
+*   Can I form imperatives for all persons, especially avoiding the `давай` calque? Can I correctly say `ходімо` and `хай знає`?
+*   Can I make warm wishes using the Vocative case and the Instrumental case (for example, `будь здоровим`)?
 
-Якщо ви **впевнено** (confidently) відповіли «так» на ці питання, ви добре засвоїли матеріал. Якщо є якась **помилка** (error), ви завжди можете повернутися до попередніх уроків і **виправити** (to correct) свої знання.
+If you answered "yes" to these questions,  You are fully ready to advance to module A2.7!

@@ -1,187 +1,124 @@
 ## Частина 1: Розпізнавання (Part 1: Recognition)
 
-У модулях 15–19 ми детально вивчали **давальний відмінок** (the dative case). Головна функція цього відмінка — показувати адресата або отримувача дії. Він відповідає на питання **кому?** (to whom?) та **чому?** (to what?). Ми розглянули різні форми слів та безособові конструкції. Цей модуль допоможе вам повторити та закріпити всі правила.
+> **Організатор:** Що подарувати Олексієві? Книгу! *(What should we gift to Oleksii? A book!)*
+> **Колеги:** А Наталці? Шоколад! *(And to Natalka? Chocolate!)*
+> **Організатор:** Новому колезі — чашку. Шефу — вино. *(To the new colleague — a cup. To the boss — wine.)*
+> **Колеги:** Добре, так і зробимо. *(Good, we will do exactly that.)*
 
-In this checkpoint, we consolidate your knowledge of the dative case. The dative case identifies the recipient of an action, the person experiencing a state, or the object of specific verbs.
+When giving gifts, directing actions, or addressing people, Ukrainian uses the **давальний відмінок** (dative case). The core function of this grammatical case is to indicate the recipient or addressee of an action. Whenever someone gives, sends, writes, or says something to another person, that person is grammatically placed in the dative case. 
 
-Почнемо з найважливішого: особових займенників у давальному відмінку. Щоб вільно спілкуватися, ви повинні миттєво впізнавати ці маленькі слова: **мені** (to me), **тобі** (to you), **йому** (to him/it), **їй** (to her), **нам** (to us), **вам** (to you all/formal), та **їм** (to them). Дуже важливо не плутати їх із називним відмінком або знахідним відмінком. 
+To identify the dative case in a sentence, ask the questions **кому?** (to whom?) or **чому?** (to what?). Contrast this strictly with the Locative case. The Locative case always uses prepositions (like **на**, **у**, **в**) and answers the questions **на/у кому?** (on/in whom?) or **на/у чому?** (on/in what?). Similarly, the Genitive case answers **кого? чого?** and often indicates possession or absence. Look at this comparison:
+*   Ми дали **білочці** горішки. *(We gave the squirrel some nuts.)* — Here, **білочці** answers the question **кому?** (to whom did we give them?). This is the dative case.
+*   Руда шубка на **білочці**. *(A red fur coat is on the squirrel.)* — Here, **на білочці** answers the question **на кому?** (on whom is the coat?). This is the Locative case.
+*   У парку немає **білочки**. *(There is no squirrel in the park.)* — Here, **білочки** answers the question **кого?** (who is missing?). This is the Genitive case.
 
-* **Він бачив мене.** (He saw me.)
-* **Він дав мені книгу.** (He gave a book to me.)
+The dative case also creates impersonal constructions that describe a person's physical or emotional state. In these sentences, the person experiencing the state is not an active subject (Nominative), but rather a passive recipient (Dative). Contrast a state like **мені холодно** (cold (impersonal state) to me) with an active action like **я замерзла** (I froze). The same applies to needs: **мені потрібно** (necessary, needed to me) versus **я хочу** (I want). Map the Nominative personal pronouns to their Dative counterparts:
+*   **я** (I) → **мені** (to me)
+*   **ти** (you) → **тобі** (to you)
+*   **він** / **воно** (he / it) → **йому** (to him / to it)
+*   **вона** (she) → **їй** (to her)
+*   **ми** (we) → **нам** (to us)
+*   **ви** (you, formal/plural) → **вам** (to you)
+*   **вони** (they) → **їм** (to them)
 
-Notice the difference in the logical roles. The accusative case identifies the direct object of the action, while the dative case identifies the recipient.
-
-Займенники у давальному відмінку також відіграють головну роль у безособових реченнях. У таких конструкціях немає активного суб'єкта, а є людина, яка відчуває певний стан.
-
-* **Я замерзла.** (I am frozen.)
-* **Мені холодно.** (It is cold to me. / I am cold.)
-
-Інші приклади станів:
-* **Тобі сумно?** (Are you sad?)
-* **Нам треба йти.** (We need to go.)
-* **Йому дуже тепло.** (He is very warm.)
-
-Impersonal constructions describe a physical or emotional state without assigning direct action to a subject. The person experiencing the state must be in the dative case.
-
-Ще одна важлива конструкція — це дієслово **подобатися** (to be pleasing to / to like). В українській мові людина, якій щось подобається, стоїть у давальному відмінку.
-
-* **Студентові подобається мова.** (The student likes the language.)
-* **Дівчині подобаються квіти.** (The girl likes flowers.)
-* **Моїй мамі подобається ця кава.** (My mom likes this coffee.)
-* **Чи подобаються тобі нові фільми?** (Do you like new movies?)
-
-The verb "подобатися" agrees with the object that is liked, which is the subject in the nominative case. It does not agree with the person who likes it, because the experiencer is in the dative case.
+The verb **подобатися** (to be pleasing to, to like) uses a specific syntax inversion. The person who likes something is the *experiencer* in the dative case, while the object being liked is the grammatical subject in the Nominative case. The verb agrees with the object, not the person.
+*   **Мені** подобається планшет. *(The tablet is pleasing to me / I like the tablet.)*
+*   **Їй** подобаються квіти. *(The flowers are pleasing to her / She likes the flowers.)*
+*   **Тобі** подобається музика? *(Is the music pleasing to you? / Do you like the music?)*
 
 <!-- INJECT_ACTIVITY: quiz-dative-recognition -->
 
 ## Частина 2: Вибір форми (Part 2: Choosing the Correct Form)
 
-Для іменників чоловічого роду ми маємо дві правильні форми для **закінчення** (ending (grammar)): **-ові** та **-у**, або **-еві** / **-єві** та **-ю**. Обидві форми є абсолютно нормативними.
+Masculine nouns have parallel Dative endings: **-ові** / **-еві** / **-єві** and **-у** / **-ю**. Both variants are grammatically correct, but the forms ending in **-ові** / **-еві** / **-єві** are distinctively Ukrainian and highly natural for animate nouns (people and animals). Neuter nouns take only **-у** or **-ю**.
+*   мій батько → **батькові** або **батьку** *(to the father)*
+*   наш учитель → **учителеві** або **учителю** *(to the teacher)*
+*   мій брат Андрій → **Андрієві** або **Андрію** *(to Andriy)*
+*   маленьке село → **селу** *(to the village)*
+*   глибоке море → **морю** *(to the sea)*
 
-* **братові** або **брату** (to a brother)
-* **директорові** або **директору** (to a director)
-* **учителеві** або **учителю** (to a teacher)
+Feminine nouns take the **закінчення** (ending (grammar)) **-і**. For feminine nouns in the hard group, mandatory **чергування** (alternation (grammar)) of consonants occurs before this ending. The consonants **г**, **к**, and **х** change to soft **з'**, **ц'**, and **с'**. This is a strict phonetic rule that must be applied.
+*   подру**г**а → подр**уз**і *(to the female friend)*
+*   рі**к**а → рі**ц**і *(to the river)*
+*   му**х**а → му**с**і *(to the fly)*
+*   Олен**к**а → Олен**ц**і *(to Olenka)*
 
-Якщо ми використовуємо два слова чоловічого роду разом, працює правило уникнення одноманітності. Ми чергуємо ці закінчення, щоб слова звучали гарно.
+Adjectives and possessive pronouns also change to show **узгодження** (agreement (grammar)) with the noun they modify. For Masculine and Neuter nouns, adjectives and possessives take the ending **-ому**. For Feminine nouns, they take **-ій**. In the Plural (for all genders), the ending is **-им**.
+*   Masculine/Neuter: моє**му** нов**ому** колезі *(to my new colleague)*
+*   Feminine: мо**їй** старш**ій** сестрі *(to my older sister)*
+*   Plural: наш**им** добр**им** друзям *(to our good friends)*
 
-* **панові директору** (to Mr. Director)
-* **другові Василю** (to friend Vasyl)
+English speakers often use direct objects (Accusative case) where Ukrainian requires an indirect object (Dative case). Contrast the phrases **допомагати мамі** (to help the mother [Dat.]) and **бачити маму** (to see the mother [Acc.]). You must memorize verbs that govern the dative case. High-frequency dative verbs include:
+*   **давати** (to give)
+*   **подарувати** (to give as a gift)
+*   **допомагати** (to help)
+*   **дякувати** (to thank)
+*   **радити** (to advise)
 
-Іменники середнього роду завжди мають закінчення **-у** або **-ю**.
-* **місту** (to the city)
-* **морю** (to the sea)
-* **обличчю** (to the face)
-
-Ukrainian uses these parallel masculine endings to avoid repetitive sounds, which adds a natural melody to the language.
-
-:::note
-The parallel endings **-ові**, **-еві** / **-єві** for masculine nouns are a unique and beautiful feature of the Ukrainian language. They make sentences flow better and sound more poetic.
+:::tip
+To avoid repetition when addressing someone with multiple words (like a title and a name), Ukrainian allows mixing the parallel masculine endings. For example, instead of saying `панові директорові`, you can say `панові директору`.
 :::
 
-Для іменників жіночого роду твердої групи в однині типовим закінченням є **-і**. Але найважливіше правило тут — це **чергування** (alternation (grammar)) приголосних. Перед закінченням **-і** звуки **г, к, х** завжди змінюються на **з, ц, с**.
+> **(На пошті / At the post office)**
+> **Працівник:** Добрий день. Кому ви хочете надіслати пакунок? *(Good day. To whom do you want to send the package?)*
+> **Клієнт:** Своєму братові в Київ. Ось адреса. *(To my brother in Kyiv. Here is the address.)*
+> **Працівник:** Добре. А цей малий лист? *(Good. And this small letter?)*
+> **Клієнт:** Моїй бабусі. *(To my grandmother.)*
 
-* **г** → **з**: **дорога** (road) → **назустріч дорозі** (towards the road).
-* **к** → **ц**: **рука** (hand) → **дати руці** (to give to the hand).
-* **х** → **с**: **муха** (fly) → **мусі** (to the fly).
-
-Іменники м'якої групи просто отримують закінчення **-і** або **-ї**.
-* **земля** (earth) → **землі** (to the earth)
-* **мрія** (dream) → **мрії** (to the dream)
-
-This phonetic shift is mandatory and happens automatically whenever a hard velar consonant meets the soft vowel 'і'.
-
-Коли ми додаємо прикметники або присвійні займенники до іменника, ми повинні пам'ятати про **узгодження** (agreement (grammar)). Вони також повинні стояти в давальному відмінку. Прикметники чоловічого та середнього роду мають закінчення **-ому**. Прикметники жіночого роду мають закінчення **-ій**. Для множини всіх родів ми використовуємо закінчення **-им**.
-
-* **новому колезі** (to the new colleague)
-* **моєму брату** (to my brother)
-* **старій подрузі** (to the old friend)
-* **синьому морю** (to the blue sea)
-* **нашим новим друзям** (to our new friends)
-
-Це особливо важливо, коли ви приходите на пошту або користуєтеся службами доставки.
-
-* **Я хочу надіслати посилку моєму старому другові.** (I want to send a package to my old friend.)
-
-> **Працівник пошти:** Кому ви хочете надіслати цю посилку?
-> **Клієнт:** **Моєму старому другові**.
-> **Працівник пошти:** Добре. А цей лист **новій колезі**?
-> **Клієнт:** Так.
-
-Adjectives and possessives must always agree with the noun they modify in gender, number, and case.
-
-Подивімося, як давальний відмінок працює в реальному житті. Уявіть ситуацію в офісі напередодні свят. Колеги обговорюють подарунки для гри "Таємний Санта".
-
-> **Організатор:** Колеги, скоро свято! Що ми вирішили **подарувати** (to give as a gift) **Олексієві**? *(Colleagues, the holiday is soon! What did we decide to give to Oleksiy?)*
-> **Колега 1:** Я дам цю нову книгу **Наталці**. А **Олексієві** — смачну каву. *(I will give this new book to Natalka. And to Oleksiy — delicious coffee.)*
-> **Організатор:** Добре. А що **потрібно** (necessary, needed) купити **новому колезі**? *(Good. And what is necessary to buy for the new colleague?)*
-> **Колега 2:** **Новому колезі** — красиву чашку. *(To the new colleague — a beautiful mug.)*
-> **Організатор:** А **нашому шефу**? *(And to our boss?)*
-> **Колега 1:** Ми вирішили подякувати **нашому шефу** і подарувати **йому** гарне вино! *(We decided to thank our boss and give him good wine!)*
-
-У цьому діалозі всі виділені слова позначають отримувачів дії, тому вони стоять у давальному відмінку.
+In this natural scenario, the customer uses full noun phrase agreement. The verb **надіслати** (to send) directs the action to the recipients: **своєму братові** and **моїй бабусі**.
 
 <!-- INJECT_ACTIVITY: fill-in-dative-endings -->
+<!-- INJECT_ACTIVITY: match-up-dative-verbs -->
 
 ## Частина 3: Продукування (Part 3: Production)
 
-Деякі українські дієслова завжди вимагають після себе давального відмінка. Найпоширеніші з них — це **дякувати** (to thank) та **допомагати** (to help). 
+When building complete sentences with verbs that govern the dative case, follow the natural Ukrainian word order: Subject + Verb + Dative Recipient + Accusative Object. The recipient (who gets the item) comes right after the verb, followed by the object (what is given).
+*   Я дарую своєму другові цікаву книгу. *(I am giving my friend an interesting book.)*
+*   Ми надіслали бабусі лист. *(We sent grandmother a letter.)*
+*   Вчитель дає студентам завдання. *(The teacher gives the students a task.)*
+*   Мама купила синові новий телефон. *(Mom bought her son a new phone.)*
 
-* **Я дякую вчителеві за урок.** (I thank the teacher for the lesson.)
-* **Вона завжди допомагає мамі вдома.** (She always helps mom at home.)
-* **Ми щиро дякуємо вам.** (We sincerely thank you.)
+To produce complex sentences with **подобатися**, apply the full noun phrase agreement. The verb must agree in number (singular or plural) with the Nominative subject. The experiencer phrase remains entirely in the Dative case.
+*   Моєму старшому братові подобаються нові автомобілі. *(My older brother likes new cars.)* — **автомобілі** is plural, so the verb is **подобаються**.
+*   Моїй мамі подобається ця пісня. *(My mom likes this song.)* — **пісня** is singular, so the verb is **подобається**.
+*   Нашим новим сусідам подобається наше місто. *(Our new neighbors like our city.)*
 
-Також сюди належать слова **подарувати** та **надіслати** (to send).
-* **Я дарую червоні квіти моїй сестрі.** (I gift red flowers to my sister.)
-* **Він надіслав довгий лист своєму другові.** (He sent a long letter to his friend.)
+To express age, Ukrainian uses the dative case for the person, followed by the number of years. This applies to both pronouns and full noun phrases. 
+*   Скільки років вашій сестрі? *(How old is your sister?)*
+*   Моєму синові десять років. *(My son is ten years old.)*
+*   Йому двадцять років. *(He is twenty years old.)*
+*   Моїй подрузі двадцять п'ять років. *(My friend is twenty-five years old.)*
 
-In English, verbs like "to thank" and "to help" take a direct object in the accusative case. In Ukrainian, these actions are directed toward a recipient, so they strictly require the dative case.
-
-Давальний відмінок також використовується для того, щоб сказати про свій вік. Конструкція складається з людини у давальному відмінку, числа, та слова рік, роки або років.
-
-* **Моєму синові три роки.** (My son is three years old.)
-* **Наталії двадцять один рік.** (Nataliya is twenty-one years old.)
-* **Скільки років вашому дідусеві?** (How old is your grandfather?)
-* **Моїй молодшій сестрі тільки вісім років.** (My younger sister is only eight years old.)
-
-Age is expressed as a state that happens to someone, similar to impersonal constructions. Therefore, the person whose age is being stated takes the dative case.
-
-Побудова повних і правильних іменникових фраз — це ознака гарного володіння мовою. Ви повинні вміти узгоджувати всі частини фрази.
-
-* **Я пишу лист моїй найкращій подрузі.** (I am writing a letter to my best friend.)
-
-Тут слово **подрузі** має закінчення **-і** з чергуванням. Займенник **моїй** та прикметник **найкращій** мають жіноче закінчення **-ій**.
-
-* **Ми надіслали подарунок нашому старому вчителеві.** (We sent a gift to our old teacher.)
-
-Тут слово **вчителеві** має закінчення **-еві**. Займенник **нашому** та прикметник **старому** мають чоловіче закінчення **-ому**.
-
-Коли ви підписуєте конверт, вітальну листівку або подарунок, ви використовуєте повні фрази в давальному відмінку. 
-
-* **Любій мамі** (To dear mom)
-* **Шановному панові Івану** (To respected Mr. Ivan)
-* **Дорогому другові** (To a dear friend)
-
-Addressing an envelope correctly ensures the package reaches the intended recipient, which is the core meaning of the dative case.
-
-<!-- INJECT_ACTIVITY: match-verbs-to-case -->
-
-<!-- INJECT_ACTIVITY: error-correction-dative -->
+When writing a short address on an envelope or a formal greeting in a letter, use full dative noun phrases. The formula is possessive/adjective + noun. Explicitly warn against using the Genitive case for dedications or addressing.
+*   Шановному пану директору *(To the respected Mr. Director)*
+*   Дорогій Олені *(To dear Olena)*
+*   Моєму любому брату *(To my dear brother)*
+*   Це пам'ятник Шевченкові. *(This is a monument to Shevchenko.)* — Incorrect: пам'ятник Шевченка (Genitive).
 
 ## Огляд помилок та порівняння відмінків (Error Review and Case Comparison)
 
-Тепер розглянемо типові помилки, яких припускаються студенти, та навчимося їх уникати. Одна з найчастіших помилок — це використання знахідного відмінка після дієслова **дякувати**. Правильно казати **Дякую вам**, а не "Дякую вас". Інша поширена проблема — забування про чергування приголосних у жіночому роді: правильно **моїй подрузі**, а не "моїй подругі". Крім того, студенти часто плутають давальний відмінок із місцевим через однакові закінчення.
+The dative case has specific pitfalls for language learners. A common error is mixing adjective endings between genders, for example incorrectly saying `моєму сестрі` instead of the correct feminine form **моїй сестрі**. Another frequent mistake is forgetting the mandatory `г/к/х` alternation for feminine nouns: saying `подругі` is incorrect; you must say **подрузі**. Finally, avoid the direct translation trap with the verb **дякувати**. English uses a direct object ("thank you"), but Ukrainian requires the dative case. Saying `Дякую вас` is a severe error; the correct phrase is **Дякую вам**.
 
-* **в книзі** (in the book) — місцевий відмінок (Locative).
-* **дати книзі** (to give to the book) — давальний відмінок (Dative).
+Let's review the summary comparison chart formatting Nominative, Genitive, and Dative endings for full phrases:
 
-For successful mastery, review this comparison chart and complete the self-assessment list. Pay attention to the questions each case answers.
+| Називний (Nominative) | Родовий (Genitive) | Давальний (Dative) |
+| :--- | :--- | :--- |
+| мій новий дім | мого нового дому | **моєму новому дому / домові** |
+| моя старша сестра | моєї старшої сестри | **моїй старшій сестрі** |
+| наш добрий друг | нашого доброго друга | **нашому доброму другу / другові** |
+| велике синє море | великого синього моря | **великому синьому морю** |
 
-| Відмінок (Case) | Питання | Приклад іменника | Приклад прикметника | Займенник |
-| :--- | :--- | :--- | :--- | :--- |
-| **Називний** (Nom.) | Хто? Що? | студент, сестра | новий, стара | він, вона |
-| **Родовий** (Gen.) | Кого? Чого? | студента, сестри | нового, старої | його, її |
-| **Давальний** (Dat.) | Кому? Чому? | студенту, сестрі | новому, старій | йому, їй |
+<!-- INJECT_ACTIVITY: error-correction-dative -->
 
-**Список для самоперевірки (Self-check list):**
-1. Can I say "I am 25 years old" in Ukrainian? (**Мені двадцять п'ять років.**)
-2. Do I remember to change **г** to **з** in **подрузі**?
-3. Do I use **дякую** with the dative case? (**Дякую вам**, not "Дякую вас")
-4. Can I correctly use **мені подобається**? (**Мені подобається музика.**)
-
-Якщо ви відповіли "Так" на всі запитання — ви готові рухатися далі!
-
-:::caution
-Never translate English "I am cold" literally into Ukrainian as "Я холодний" (which means your body is physically cold to the touch). Always use the dative case: **Мені холодно** (It is cold to me).
-:::
+Review this self-assessment checklist to ensure you understand the core concepts:
+*   Чи можете ви утворити давальний відмінок від свого імені?
+*   Чи знаєте ви, як сказати про свій вік та вік друзів?
+*   Чи пам'ятаєте ви три дієслова, які завжди вимагають давального відмінка?
 
 ## Підсумок
 
-Ця контрольна робота охоплює всі базові функції давального відмінка. Ви повторили, як використовувати цей відмінок для позначення адресата або отримувача дії. Ви також пригадали безособові конструкції для вираження стану та віку.
+The dative case is the grammatical foundation for interacting with other people in Ukrainian. It allows you to address others, give gifts, offer help, and express gratitude. You use it every time you answer the questions **кому?** (to whom?) and **чому?** (to what?).
 
-Особливу увагу ми приділили правилам побудови форм: чергуванню приголосних, паралельним закінченням для чоловічого роду та узгодженню прикметників. Розуміння того, що такі дієслова як **дякувати** та **допомагати** завжди вимагають давального відмінка, допоможе вам звучати природно та уникати поширених помилок.
+Remember that Ukrainian state and age constructions center around the dative case. When expressing your age or physical feelings like **мені холодно**, you act as the recipient of that state rather than the active subject. The verb **подобатися** follows this same logical pattern: the object pleases the person, placing the experiencer firmly in the dative case.
 
-Продовжуйте практикувати ці форми у щоденному спілкуванні, звертайте увагу на те, кому ви адресуєте свої дії, і давальний відмінок стане для вас легким та звичним інструментом!
-
-:::tip
-Always ask "кому?" (to whom?) or "чому?" (to what?) when constructing a sentence to instantly recognize if you need the dative case.
-:::
+Mastering the distinct masculine endings **-ові** / **-еві** and the feminine consonant alternations (such as **рука** → **руці**) will make your speech sound highly authentic. Always pair dative nouns with their matching adjectives and possessive pronouns, ensuring full agreement across the entire phrase.

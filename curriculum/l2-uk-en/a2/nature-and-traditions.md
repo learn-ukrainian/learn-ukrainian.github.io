@@ -1,82 +1,156 @@
-## Чотири пори року (The Four Seasons)
+## Чотири пори року (The Four Seasons) (~550 words total)
 
-Українська природа дуже красива та різноманітна. В Україні є чотири різні **пори року** *(seasons)*. Це зелена **весна** *(spring)*, тепле **літо** *(summer)*, золота **осінь** *(autumn)* і сніжна **зима** *(winter)*. Вони завжди йдуть одна за одною. Кожна пора року має свій характер. Ми часто хочемо сказати «in summer» або «in winter». Але ми не використовуємо прийменники «у» або «в» з іменником. Це дуже поширена граматична помилка. Українці кажуть інакше: **навесні** *(in spring)*, **влітку** *(in summer)*, **восени** *(in autumn)* та **взимку** *(in winter)*. Наприклад, ми говоримо: «Я дуже люблю відпочивати влітку». Ніколи не кажіть «у літі», тому що це звучить неприродно. Запам'ятайте ці чотири важливі слова, щоб розмовляти правильно.
+In Ukraine, the year is clearly divided into four distinct parts, and the weather changes dramatically from one to the next. Every **пора року** (season) has its own unique character, traditions, and even its own specific grammar rules when you want to talk about it. Understanding these changes helps you appreciate the rhythm of Ukrainian life.
 
-Після довгої та холодної зими завжди приходить весна. Навесні природа повільно прокидається. Світить яскраве сонце, і на вулиці з кожним днем **стає тепліше** *(it gets warmer)*. У парках і лісах **все розквітає** *(everything blossoms)*: зелені дерева, великі кущі та перші квіти. З теплих країв **птахи повертаються** *(birds return)* додому. Після весни починається літо. Влітку часто буває дуже **спекотно** *(hot)*. Це улюблений час для багатьох українців. Літо — це найкращий **час відпочивати** *(time to rest)*. Люди часто їдуть на природу, до річки або до моря. Там вони можуть засмагати на сонці та **купатися** *(to swim)* у теплій воді. Літня погода буває різна. День може бути **сонячний** *(sunny)*, іноді — **хмарний** *(cloudy)* або навіть **вітряний** *(windy)*. Але зазвичай влітку завжди тепло і дуже приємно.
+Кожна пора року приносить свої зміни в природу та наше щоденне життя. Ми маємо чотири пори року: це прекрасна **весна** (spring), спекотне **літо** (summer), золота **осінь** (autumn) та сніжна **зима** (winter). Коли ми говоримо про час, коли щось відбувається, ми використовуємо спеціальні слова. Наприклад, ми кажемо «взимку», «навесні», «влітку» та «восени».
 
-Після спекотного літа настає красива золота осінь. Восени дні стають коротшими, а ночі — довшими. На вулиці вже досить **прохолодно** *(chilly)*. Жовте, червоне та коричневе **листя падає** *(leaves fall)* з дерев на мокру землю. Восени небо часто буває сіре, і **часто дощить** *(it rains often)*. Тому люди одягають теплі куртки, пальта та беруть парасольки. Після осені приходить біла зима. Взимку вся природа спить. Часто **йде сніг** *(it snows)*, і вся земля стає **біла** *(white)* і чиста. На вулиці справжній **мороз** *(frost)*. У таку погоду ми часто кажемо: «Сьогодні **на вулиці морозно** *(it is frosty outside)*». Або ми просто кажемо: «**Мені холодно** *(I am cold)*». Але взимку також дуже весело. Діти можуть грати в сніжки або безпечно кататися на ковзанці.
+> *Every season brings its own changes to nature and our daily life. We have four seasons: this is beautiful spring, hot summer, golden autumn, and snowy winter. When we talk about the time when something happens, we use special words. For example, we say "in winter," "in spring," "in summer," and "in autumn."*
 
-Усі пори року дуже різні, і ми можемо їх легко порівнювати. Для цього ми використовуємо українські прикметники вищого ступеня. Наприклад, ми знаємо, що **літо тепліше за весну** *(summer is warmer than spring)*. Осінь холодніша за літо, але це ідеальна пора для гарячого чаю. **Зима — найхолодніша пора року** *(winter is the coldest season of the year)*. Якщо ми говоримо про українську погоду, ми також бачимо велику різницю. **Восени більше дощів, ніж влітку** *(in autumn there is more rain than in summer)*. Сонце світить набагато менше. **Взимку дні коротші** *(in winter the days are shorter)*, а ночі стають найдовшими у році. Але кожна людина має свою власну улюблену пору року.
+:::note
+**Quick tip**
+Never translate the English phrase "in the summer" literally as «в літі» or "in the spring" as «в весні». Ukrainian uses dedicated adverbs for seasons. You must say «влітку» (in summer), «взимку» (in winter), «навесні» (in spring), and «восени» (in autumn).
+:::
 
-Послухаймо коротку розмову двох друзів про їхні улюблені сезони. Вони використовують фрази «мені подобається» та «тому що».
+After a long, cold period, the arrival of warmer days is always a joyful event. Nature begins to wake up, and people spend more time outdoors enjoying the fresh air and the bright sun.
 
-> — **Олена:** Привіт, Максиме! Скажи, яка твоя улюблена пора року? *(Hi, Maksym! Tell me, what is your favorite season?)*
-> — **Максим:** Привіт, Олено! Я обожнюю літо, тому що можна поїхати до моря. *(Hi, Olena! I adore summer because one can go to the sea.)*
-> — **Олена:** А мені найбільше подобається золота осінь. *(And I like golden autumn the most.)*
-> — **Максим:** Цікаво. А чому ти так любиш осінь? *(Interesting. And why do you like autumn so much?)*
-> — **Олена:** Тому що я люблю гуляти в парку, коли тихо падає жовте листя. *(Because I like to walk in the park when yellow leaves fall quietly.)*
+Навесні все навколо розквітає, а птахи повертаються додому після довгої зими. З кожним днем стає значно тепліше і сонячніше. Потім приходить літо — найтепліша пора року. Влітку часто буває дуже спекотно, тому люди люблять купатися в річці або в морі. Це ідеальний час, щоб відпочивати на природі.
 
-<!-- INJECT_ACTIVITY: match-up-seasons-match-seasonal-vocabulary-and-activities -->
+> *In spring, everything around blossoms, and the birds return home after a long winter. With each passing day, it gets significantly warmer and sunnier. Then comes summer — the warmest season. In summer, it is often very hot, so people like to swim in the river or in the sea. This is the perfect time to relax in nature.*
+
+The **погода** (weather) during these months is usually very pleasant and invites you to go outside. You will often hear people describe the days using adjectives like сонячний, вітряний, or хмарний.
+
+As the year progresses, the hot days fade away, and the landscape changes its colors completely. The temperature drops, and people prepare their warm clothes for the cold months ahead.
+
+Восени дні стають коротшими, а жовте листя падає з дерев. Надворі вже прохолодно і дуже часто дощить. Зима приносить багато снігу та сильний мороз. Земля стає повністю білою, і діти радісно граються на вулиці. Взимку нам часто буває холодно, але ми все одно любимо цю пору.
+
+> *In autumn, the days become shorter, and the yellow leaves fall from the trees. Outside, it is already chilly, and it rains very often. Winter brings a lot of snow and severe frost. The ground becomes completely white, and children joyfully play in the street. In winter, we are often cold, but we still love this season.*
+
+When you want to express your preferences, you can use the comparative and superlative forms of adjectives you already know. This allows you to explain exactly why one part of the year appeals to you more than another.
+
+Літо завжди тепліше за весну, а зима — це найхолодніша пора року в Україні. Восени випадає більше дощів, ніж влітку, тому ми частіше сидимо вдома і читаємо книги. Взимку дні набагато коротші, але довгі вечори бувають дуже затишні. Кожна людина має свою улюблену пору року.
+
+> *Summer is always warmer than spring, and winter is the coldest season in Ukraine. In autumn, more rain falls than in summer, so we sit at home more often and read books. In winter, the days are much shorter, but the long evenings are often very cozy. Every person has their own favorite season.*
+
+Let's see how two friends talk about their preferences. Notice how they use phrases like «мені подобається» and «тому що» to explain their choices naturally.
+
+> — **Олена:** Яка твоя улюблена пора року? *(What is your favorite season?)*
+> — **Марко:** Я обожнюю літо, тому що можна поїхати до моря. *(I adore summer because one can go to the sea.)*
+> — **Олена:** А мені найбільше подобається зима. *(And I like winter the most.)*
+> — **Марко:** Чому ти так сильно любиш зиму? *(Why do you like winter so much?)*
+> — **Олена:** Тому що я люблю, коли йде сніг і на вулиці морозно. *(Because I love it when it snows and it's frosty outside.)*
+
+<!-- INJECT_ACTIVITY: match-up-seasons -->
 
 ## Українські свята: від Різдва до Купала (Ukrainian Holidays)
 
-Українці дуже люблять свої національні традиції. Зимові свята — це особливий і магічний час для кожної української родини. Раніше багато українців святкували **Різдво** *(Christmas)* сьомого січня. Але зараз ми повертаємося до своїх справжніх історичних традицій. Тому сучасна Україна святкує Різдво разом з усім вільним світом — двадцять п'ятого грудня. Це дуже важливий крок для нашої культури. Велике свято починається ввечері двадцять четвертого грудня. Цей тихий сімейний вечір називається **Святий Вечір** *(Holy Supper)*. Уся родина сідає за стіл, коли на темному небі з'являється перша зірка. На святковому столі обов'язково є **дванадцять страв** *(12 dishes)*. Головна страва — це солодка **кутя** *(kutia - sweet grain dish)*. У кімнаті також стоїть **дідух** *(didukh - wheat sheaf)*. Це традиційний сніп пшениці, який символізує предків та хороший майбутній урожай. Дідух — це наш давній український символ. Але зима — це не тільки Різдво. Шостого грудня до українських дітей приходить **Святий Миколай** *(Saint Nicholas)*. Він приносить слухняним дітям довгоочікувані подарунки. А першого січня ми всі весело святкуємо Новий рік.
+Ukrainian traditions are deeply connected to the changing seasons and the agricultural calendar. The winter cycle begins early and is filled with warm family gatherings, ancient carols, and unique rituals that blend pre-Christian beliefs with modern faith. Recently, Ukraine has made a significant cultural shift to align its celebrations with Europe and distance itself from older calendars, firmly establishing new dates for its most cherished holidays.
 
-Навесні вся природа прокидається, і приходить велике весняне свято — **Великдень** *(Easter)*. Це найголовніше християнське свято в Україні. За тиждень до цього ми святкуємо Вербну неділю. Традиційно **на Великдень** *(for Easter)* українці йдуть до церкви. Там вони святять спеціальні продукти у великому святковому кошику. Головний символ цього весняного свята — це красиві **писанки** *(decorated eggs)*. Писанки мають дуже складні, цікаві та унікальні візерунки. Кожен регіон України має свої особливі кольори та символи для писанок. Також українські жінки печуть солодкий традиційний хліб, який називається **паска** *(Easter bread)*. На Великдень люди не кажуть одне одному звичайне «Добрий день». Вони вітаються спеціальними словами: «Христос воскрес!» *(Christ is risen!)*. А інші люди радісно відповідають: «Воістину воскрес!» *(Truly He is risen!)*. Це дуже світле, тепле і радісне свято для всіх людей.
+Кожна **пора року** (season) має свої особливі дні. Коли приходить **зима** (winter), українці святкують **Різдво** (Christmas) двадцять п'ятого грудня. Раніше це свято відзначали в січні, але зараз нова традиція об'єднує нас з Європою. Зимовий цикл починається шостого грудня, коли Святий Миколай приносить дітям подарунки. Найважливіший день — Святий Вечір. Родина збирається за столом, де стоять дванадцять пісних страв, а головною є солодка кутя. У кімнаті українці ставлять дідух — сніп пшениці, який символізує предків.
 
-Влітку українці також мають багато цікавих і давніх традицій. Найвідоміше літнє народне свято — це **Івана Купала** *(Ivan Kupala Day)*. Ми святкуємо його в теплу ніч на двадцять четверте червня. Це дуже старе свято, яке тісно пов'язане з природою, водою та магічним вогнем. Молоді дівчата йдуть у поле і плетуть красивий **вінок** *(wreath)* з літніх квітів. Потім вони пускають ці зелені вінки на воду в річку. Ввечері українська молодь збирається разом, співає народні пісні та стрибає через велике **вогнище** *(bonfire)*. Люди здавна вірять, що вогонь очищає людину. Також існує популярна легенда про **цвіт папороті** *(fern flower)*. Кажуть, що ця магічна квітка цвіте тільки одну коротку ніч у році. Хто її знайде, той завжди буде багатий і щасливий. Наприкінці літа ми маємо важливі державні свята. Двадцять восьмого червня ми відзначаємо День Конституції. А двадцять четвертого серпня ми гордо святкуємо **День Незалежності** *(Independence Day)* України.
+> *Every season has its special days. When winter comes, Ukrainians celebrate Christmas on December 25th. Previously, this holiday was observed in January, but now a new tradition unites us with Europe. The winter cycle begins on December 6th, when Saint Nicholas brings children presents. The most important day is Holy Supper. The family gathers at the table, where there are twelve Lenten dishes, and the main one is sweet kutia. In the room, Ukrainians place a didukh — a wheat sheaf that symbolizes ancestors.*
 
-Восени ми також маємо дуже важливі національні дати. Першого жовтня Україна святкує **День захисників і захисниць України** *(Day of Defenders of Ukraine)*. У цей осінній день ми щиро дякуємо всім сміливим героям, які захищають нашу рідну країну. Ця дата обрана зовсім не випадково. Історично першого жовтня українські козаки завжди святкували велике свято — **Покрова** *(Intercession)*. Козаки глибоко вірили, що Свята Покрова надійно захищає їх у важкому бою. Сьогодні ми з гордістю продовжуємо цю славну традицію. Для нас надзвичайно важливо **шанувати традиції** *(to honor traditions)* наших мудрих предків. Українці дуже люблять збиратися разом у такі дні. Ми завжди намагаємося **святкувати разом** *(to celebrate together)*, тому що це робить нашу націю сильнішою. Кожне свято — це важлива частина нашої великої історії.
+As the cold winter fades, spring brings the most important religious celebration of the year. This holiday represents rebirth and renewal in both nature and faith. The season is marked by vibrant colors, special foods, and ancient symbols that have been passed down through generations.
 
-Щоб правильно говорити про всі ці свята, нам треба знати, як українці називають дати. Це дуже просте і логічне граматичне правило. Ми використовуємо порядковий числівник у середньому роді та назву місяця. Назва місяця завжди стоїть у родовому відмінку *(Genitive case)*. Наприклад, ми правильно кажемо «перше вересня», «двадцять п'яте грудня», «сьоме січня». Зверніть увагу: ми обов'язково кажемо «двадцять п'яте», а не «двадцять п'ять». Якщо ми хочемо відповісти на питання «коли?», ми змінюємо перше слово. Ми ставимо всю фразу в родовий відмінок. Прийменник тут зовсім не потрібен. Наприклад: «Коли День Незалежності? — Двадцять четвертого серпня». «Коли Покрова? — Першого жовтня». «Коли приходить Святий Миколай? — Шостого грудня». Запам'ятайте цю дуже просту формулу: Порядковий числівник (Родовий відмінок) + Місяць (Родовий відмінок). Це нове правило допоможе вам правильно говорити про свої дні народження та ваші улюблені свята.
+Коли настає **весна** (spring), ми святкуємо **Великдень** (Easter). На Великдень люди йдуть до церкви, а потім вітають одне одного словами «Христос воскрес!». У кожній родині є кошик із їжею. Там лежить солодка паска та красиві **писанки** (decorated Easter eggs). Українці люблять розмальовувати яйця різними кольорами, тому що писанка — це давній символ нового життя.
 
-Послухаймо, як українська родина розповідає іноземному гостю про свої свята:
+> *When spring arrives, we celebrate Easter. On Easter, people go to church, and then greet each other with the words "Christ is risen!". Every family has a basket with food. There lies sweet paska and beautiful decorated Easter eggs. Ukrainians like to paint eggs with different colors, because the pysanka is an ancient symbol of new life.*
 
-> — **Гість:** Які ваші найулюбленіші українські свята?
-> — **Мама:** Ми дуже любимо Різдво. Взимку ми співаємо колядки, а на столі завжди стоїть солодка кутя.
-> — **Тато:** Навесні у нас Великдень. Ми розмальовуємо писанки і печемо смачні паски.
-> — **Донька:** А влітку ми святкуємо Івана Купала! Ми плетемо зелений вінок, шукаємо магічний цвіт папороті та високо стрибаємо через вогнище.
-> — **Гість:** Це звучить неймовірно! Я б дуже хотів побачити це вогнище.
+Summer brings mystical folk celebrations and important national milestones. One of the most famous events is a midsummer night dedicated to youth, nature, and magic. The traditions involve weaving wreaths, jumping over a large bonfire to purify the spirit, and bravely searching the dark forest for the legendary fern flower.
 
-<!-- INJECT_ACTIVITY: quiz-holiday-traditions -->
+Тепле **літо** (summer) приносить магічні дні. Сьомого липня настає Івана Купала. У цей день дівчата плетуть **вінок** (wreath) і пускають його на воду. Увечері молодь стрибає через велике **вогнище** (bonfire). За легендою, у Купальську ніч у лісі розквітає цвіт папороті, який приносить щастя. Також влітку ми відзначаємо День Незалежності. Це головне державне свято двадцять четвертого серпня.
 
-## Що ми робимо у кожну пору року? (Seasonal Activities)
+Autumn transitions from joyful harvest festivals to solemn days of remembrance and profound gratitude. Historically, this season was significant for the Ukrainian Cossacks, and today it holds special meaning as the nation honors its modern defenders with deep respect.
 
-Кожна пора року має свої особливі і дуже цікаві заняття. Навесні українська природа швидко прокидається після довгої зими, і люди проводять багато часу на вулиці. Українці дуже люблять **садити квіти** *(to plant flowers)* та **працювати в саду** *(to work in the garden)* біля свого дому. Це ідеальний час, щоб зробити свій двір красивим і зеленим. Влітку в Україні зазвичай дуже тепло і сонячно кожного дня. Це найкращий сезон, щоб **подорожувати** *(to travel)* або їздити на Чорне море. Багато людей люблять плавати в чистій воді і **засмагати** *(to sunbathe)* на гарячому пляжі. Восени світлі дні стають набагато коротшими, а погода часто буває прохолодною. Але українці мають дуже популярне осіннє хобі. Ми дуже любимо **збирати гриби та ягоди** *(to pick mushrooms and berries)*. На вихідних ми часто їдемо в ліс, щоб збирати гриби разом із сім'єю. Це неймовірно цікаво і дуже корисно для нашого здоров'я.
+Золота **осінь** (autumn) має важливі дати. Навіть коли **погода** (weather) стає холодною, нас гріють спогади. Першого жовтня Україна відзначає День захисників і захисниць. Цей день пов'язаний зі святом Покрови, яке шанували козаки. Сьогодні ми знову активно шануємо давні **традиції** (traditions). Ми завжди дякуємо тим сміливим людям, які захищають нашу країну.
 
-Взимку українська природа спокійно відпочиває під холодним білим снігом. Але зимові місяці також пропонують нам багато чудових активностей. Українці дуже люблять **кататися на лижах** *(to ski)* у високих Карпатських горах. У великому місті діти і дорослі часто хочуть **піти на ковзанку** *(to go to the ice rink)* на вихідних. Це завжди дуже веселе та енергійне заняття для всієї родини. Але взимку часто буває дуже холодно і вітряно. **Коли** *(when)* на вулиці сильний **мороз** *(frost)*, люди значно менше гуляють у парках. Коли на вулиці мороз, я люблю пити теплий чай вдома. У такі дні ми читаємо цікаві книги, дивимося старі фільми та проводимо час із сім'єю. Цей приємний контраст між активним літом і дуже спокійною зимою робить наш рік по-справжньому гармонійним.
+When talking about these celebrations, you need to know how to state dates correctly in Ukrainian. You do this by combining a neuter ordinal numeral with the month in the Genitive case. This structure is essential for discussing birthdays, historical events, and national holidays.
 
-Щоб розповідати про ці пори року та наші свята, нам потрібні види дієслова. Це **недоконаний вид** *(Imperfective aspect)* і **доконаний вид** *(Perfective aspect)*. Ми завжди використовуємо недоконаний вид для довгих і регулярних процесів. Наприклад, ми кажемо: «**Сніг падав** *(Snow was falling)* цілий день». Це довга дія в минулому, яка ще не має фінального результату. Але коли ми говоримо про конкретний результат дії, ми беремо доконаний вид. Ми кажемо: «Сніг нарешті **розтанув** *(melted)*». Ми часто використовуємо ці дві важливі форми, коли описуємо нашу підготовку до великих свят. Порівняйте ці дві прості фрази. «Ми **готували** *(were preparing)* кутю три години» — це дуже довгий процес напередодні Різдва. А фраза «Ми **приготували** *(have prepared)* смачну вечерю» показує фінальний результат нашої важкої роботи.
+:::info
+**Grammar box**
+Use the formula: **Ordinal Numeral (Neuter) + Month (Genitive)**.
+For example, to say "December 25th", you use "двадцять п'яте грудня". "September 1st" is "перше вересня".
+:::
 
-Тепер поєднаймо різну погоду і наші регулярні дії в одному реченні. Ми можемо легко використовувати слова **тому що** *(because)*, щоб логічно пояснити причину. Наприклад: «Минулого літа ми часто ходили до річки, тому що було дуже спекотно». Або ми плануємо майбутнє: «Цієї зими я планую багато відпочивати». Щоб розповісти про свої регулярні дії, ми беремо спеціальні слова. Це корисні прислівники **зазвичай** *(usually)*, **завжди** *(always)* та **іноді** *(sometimes)*. Взимку ми зазвичай святкуємо Різдво вдома з рідними людьми. Навесні ми іноді їздимо в гори, щоб дихати свіжим повітрям. Влітку ми завжди відпочиваємо біля води і багато плаваємо. А восени ми зазвичай збираємо багатий врожай у своєму саду. Такі короткі слова дуже допомагають нам говорити природно, красиво і граматично правильно. 
+To answer the question «коли?» (when did an event happen on a specific date?), you put the entire date phrase into the Genitive case without adding any preposition.
+
+Ми святкуємо Різдво двадцять п'ятого грудня. Раніше багато людей святкували сьомого січня. День захисників і захисниць ми відзначаємо першого жовтня. Історично це **свято** (holiday) було чотирнадцятого жовтня. День Незалежності — двадцять четвертого серпня.
+
+<!-- INJECT_ACTIVITY: quiz, Identify which holiday a tradition belongs to -->
+
+## Що ми робимо у кожну пора року? (Seasonal Activities) (~450 words total)
+
+Every season offers unique ways to connect with nature and enjoy the outdoors. Ukrainians love to spend their weekends actively, changing their hobbies as the weather shifts throughout the year. Nature plays a huge role in local culture, so people try to spend as much time outside as possible when the climate allows it.
+
+Навесні люди починають працювати в саду та садити квіти. Ми радіємо, коли бачимо перші зелені дерева. Влітку всі люблять подорожувати, плавати в річці або просто засмагати на сонці. Восени українці часто їдуть у ліс, щоб збирати гриби та ягоди. Це дуже популярне хобі для всієї родини.
+
+> *In spring, people start working in the garden and planting flowers. We rejoice when we see the first green trees. In summer, everyone likes to travel, swim in the river, or simply sunbathe in the sun. In autumn, Ukrainians often go to the forest to pick mushrooms and berries. This is a very popular hobby for the whole family.*
+
+Winter brings a completely different rhythm of life, balancing active outdoor sports with cozy, quiet evenings at home. While the days become much shorter, the snow creates perfect conditions for special seasonal entertainment. People dress warmly and find joy in the frosty air.
+
+Взимку діти і дорослі люблять кататися на лижах. На вихідних ми часто плануємо піти на ковзанку з друзями. Ми беремо гарячу каву і весело проводимо час. Але коли на вулиці сильний мороз, я люблю пити теплий чай удома. Зимові вечори дуже затишні та спокійні.
+
+> *In winter, children and adults like to ski. On weekends, we often plan to go to the ice rink with friends. We take hot coffee and have a fun time. But when there is a severe frost outside, I like to drink warm tea at home. Winter evenings are very cozy and peaceful.*
+
+When narrating these seasonal activities, choosing the correct verb aspect is crucial. Aspect helps you paint a clear picture of whether an action was an ongoing routine or a finished event. Use the imperfective aspect to describe ongoing weather conditions or the continuous process of preparing for a celebration. Switch to the perfective aspect to announce a completed action or a final, successful result.
+
+:::info
+**Grammar box**
+Use imperfective verbs for background descriptions or long processes: **Сніг падав цілий день** (The snow was falling all day). Use perfective verbs for single, completed events or results: **Сніг нарешті розтанув** (The snow finally melted).
+:::
+
+Перед святами ми завжди багато працюємо. Наприклад, учора ми готували кутю три години. Ми довго прибирали наш дім. Це був довгий процес. Але сьогодні ми нарешті приготували смачну вечерю і все закінчили. Тепер ми можемо відпочивати і радісно святкувати.
+
+You can easily build richer stories by linking your typical activities to specific weather conditions. Using adverbs of frequency helps you explain your seasonal routines naturally. This is a great way to talk about what you usually do, what you sometimes change, and what you always avoid during different months of the year.
+
+Минулого літа ми часто ходили до річки, тому що було дуже спекотно. Зазвичай ми беремо із собою смачну їжу. Іноді погода швидко змінюється. Якщо починається сильний дощ, ми завжди швидко повертаємося додому. Ми ніколи не гуляємо, коли на вулиці погана погода.
 
 <!-- INJECT_ACTIVITY: fill-in-grammar-seasons -->
 
-## Мої традиції (My Traditions)
+## Мої традиції (My Traditions) (~400 words total)
 
-Тепер прочитаймо цікаву історію. Це розповідь українського підлітка про його сімейне свято.
+Привіт! Мене звати Тарас, і я хочу розповісти про мої улюблені зимові свята. Найбільше наша родина любить Різдво. Це дуже важлива традиція для нас. Спочатку ми готуємо велику вечерю. Моя мама завжди робить дванадцять страв. Найголовніша страва — це солодка кутя з медом. Потім ми сідаємо за стіл, коли на небі з'являється перша зірка. Наша родина читає молитву, і ми починаємо їсти. Після вечері ми співаємо веселі колядки. Ми бажаємо всім здоров'я та щастя. Пізно ввечері ми відкриваємо подарунки. Це завжди дуже радісний і теплий момент.
 
-«Моє найулюбленіше зимове свято — це **Різдво** *(Christmas)*. Ми завжди святкуємо його вдома. Наша велика родина збирається разом кожного року. **Спочатку** *(First)* ми довго **готуємо вечерю** *(prepare dinner)*. Моя мама і бабуся роблять дванадцять різних страв. Найголовніша страва на нашому столі — це солодка кутя з медом. **Потім** *(Then)* ми чекаємо, коли на небі з'явиться перша зірка. Вона показує, що свято вже почалося. Коли зірка вже світить, ми нарешті починаємо вечеряти. Але перед вечерею у нас завжди є традиційна **молитва** *(prayer)*. Ми всі дякуємо за цей рік і просимо миру. Після смачної вечері починається найкращий час для нас, дітей. Ми **співаємо колядки** *(sing carols)* і радіємо цьому світлому святу. Наші батьки дають нам чудові **подарунки** *(gifts)*. Ця тепла **родинна вечеря** *(family dinner)* завжди дарує мені багато радості і спокою. Я просто обожнюю цю магічну зимову атмосферу».
+> *Hi! My name is Taras, and I want to tell you about my favorite winter holidays. Most of all, our family loves Christmas. This is a very important tradition for us. First, we prepare a large dinner. My mother always makes twelve dishes. The most important dish is sweet kutia with honey. Then we sit at the table when the first star appears in the sky. Our family reads a prayer, and we start eating. After dinner, we sing cheerful carols. We wish everyone health and happiness. Late in the evening, we open presents. This is always a very joyful and warm moment.*
 
-А як ви святкуєте ваші свята? У кожної людини є свої улюблені традиції. Щоб розказати про них, ми можемо використовувати такі фрази: «**У моїй країні ми святкуємо** *(In my country we celebrate)*...» або «**Моя улюблена традиція — це** *(My favorite tradition is)*...». Наприклад, ви можете сказати: «У моїй країні ми святкуємо Новий рік на вулиці». Або ви можете розповісти: «Моя улюблена традиція — це робити великий **подарунок для сестри** *(gift for sister)*». Коли ми говоримо про компанію людей, ми використовуємо орудний відмінок. Наприклад, дуже весело **святкувати з друзями** *(to celebrate with friends)* або вечеряти з батьками. Деякі люди люблять гучні вечірки, а інші обирають тихий вечір. Які традиції має ваша сім'я? Ви зазвичай готуєте багато їжі чи замовляєте піцу? Ви любите танцювати всю ніч чи спати? Розкажіть про це своїм друзям.
+When you talk about your own celebrations, you can use phrases like «У моїй країні ми святкуємо...» (In my country we celebrate...). Notice how you need different cases to describe the details. Use the Instrumental case to say who you celebrate with, and the Genitive case to talk about gifts.
 
-Українські свята мають дуже глибокий сенс. Вони показують багату історію і культуру народу. Ці давні традиції об'єднують людей різних поколінь. Коли українці співають старі пісні, вони відчувають свій міцний зв'язок з минулим. Це допомагає їм краще розуміти себе. Щоб сказати про свої бажання або мрії, ми використовуємо слова **б** або **би** *(would)*. Це спеціальні форми умовного способу. Наприклад, ви можете сказати: «**Я хотів би** *(I would like)* побачити, як люди **плетуть вінки** *(weave wreaths)* на Купала». Якщо говорить жінка, вона скаже: «**Я хотіла б** *(I would like)* почути українські колядки на Різдво». А **які українські традиції ви хотіли б спробувати** *(what Ukrainian traditions would you like to try)*? Ви хотіли б зробити писанку на Великдень? Або ви б хотіли стрибати через велике вогнище? Кожна традиція — це унікальний досвід.
+У моїй країні ми святкуємо багато різних свят. Але моя улюблена традиція — це святкувати Новий рік з друзями. Ми завжди купуємо цікаві подарунки один для одного. Наприклад, учора я шукав подарунок для сестри, а сьогодні купую сюрприз для брата. Навесні ми також маємо гарні традиції. Коли приходить Великдень, ми розмальовуємо писанки всією родиною. Це дуже творчий процес. Ми любимо проводити цей час разом.
+
+> *In my country, we celebrate many different holidays. But my favorite tradition is celebrating the New Year with friends. We always buy interesting presents for each other. For example, yesterday I was looking for a present for my sister, and today I am buying a surprise for my brother. In the spring, we also have beautiful traditions. When Easter comes, we paint pysankas with the whole family. This is a very creative process. We love spending this time together.*
+
+:::note
+**Quick tip**
+When you talk about buying or making something **for** someone, use the preposition **для** with the Genitive case: **подарунок для сестри** (a present for a sister).
+:::
+
+Traditions connect people and help them remember their history. In Ukrainian culture, holidays are closely tied to nature. We celebrate when flowers start to **розквітати** (to blossom), and we have special rituals when severe **мороз** (frost) arrives. When you want to say what you *would like* to do, use the conditional particles **б** or **би** with the past tense verb.
+
+Українські традиції дуже багаті та цікаві. Кожна пора року має свої унікальні свята. Вони показують, як люди жили раніше і у що вони вірили. Навіть коли надворі погана погода, свято дарує радість. Я дуже люблю читати про старі українські свята. Наприклад, я хотів би побачити, як дівчата плетуть вінки на свято Івана Купала. Це дуже романтично. А мій друг хотів би спробувати справжню кутю на Різдво. Які українські традиції ви хотіли б спробувати? Що вам подобається найбільше?
+
+> *Ukrainian traditions are very rich and interesting. Each season has its own unique holidays. They show how people lived before and what they believed in. Even when the weather is bad outside, a holiday brings joy. I really like reading about old Ukrainian holidays. For example, I would like to see how girls weave wreaths on the holiday of Ivan Kupala. It is very romantic. And my friend would like to try real kutia for Christmas. Which Ukrainian traditions would you like to try? What do you like the most?*
 
 <!-- INJECT_ACTIVITY: true-false-culture -->
 
-## Підсумок
+## Підсумок (~150 words)
 
-Ось і все! Сьогодні ми вивчили багато нових і важливих слів. Тепер ви знаєте назви всіх чотирьох пір року. Це **зима** *(winter)*, **весна** *(spring)*, **літо** *(summer)* та **осінь** *(autumn)*. Ви також пам'ятаєте всі дванадцять місяців.
+Ви тепер знаєте, як описувати кожну пору року та розповідати, яка сьогодні погода. 
 
-Ми навчилися правильно говорити про час. Пам'ятайте важливу різницю. Слово **зима** — це іменник. А слово **взимку** *(in winter)* — це прислівник. Щоб сказати «in spring», ми кажемо **навесні** *(in spring)*, а не «у весні».
+> *You now know how to describe every season and talk about what the weather is like today.*
 
-Тепер ви вмієте правильно називати дати. Наприклад: «Сьогодні **перше вересня** *(September first)*». Але якщо це день події: «Свято буде **першого вересня** *(on September first)*». 
+Коли ми називаємо сезон, ми використовуємо іменники: зима, весна, літо та осінь. Але щоб сказати, коли щось відбувається, потрібні прислівники. Ми кажемо «взимку», а не «в зимі».
 
-Ми також говорили про головні українські свята. Ви знаєте про магічне **Різдво** *(Christmas)* та світлий **Великдень** *(Easter)*. Ви також читали про літнє свято **Івана Купала** *(Ivan Kupala Day)*.
+> *When we name a season, we use nouns: winter, spring, summer, and autumn. But to say when something happens, adverbs are needed. We say "in winter" (взимку), not "в зимі".*
 
-Час перевірити ваші знання. Спробуйте відповісти на ці три питання:
-1. Як сказати "in spring" українською мовою?
-2. Коли ми святкуємо **День Незалежності** *(Independence Day)*?
-3. Що таке **писанка** *(decorated Easter egg)* і коли ми її робимо?
+:::info
+**Grammar box**
+Remember the date format! "September 1st" is **перше вересня**. "On September 1st" uses the Genitive case: **першого вересня**.
+:::
 
-Ви чудово попрацювали сьогодні. До зустрічі у наступному модулі!
+Ми також обговорили кожне велике свято. Зимова традиція — це Різдво. Навесні українці святкують Великдень, де головним символом є писанка. Влітку ми стрибаємо через вогонь на Івана Купала.
+
+> *We also discussed every major holiday. A winter tradition is Christmas. In spring, Ukrainians celebrate Easter, where the main symbol is the decorated Easter egg. In summer, we jump over the fire for Ivan Kupala.*
+
+Перевірте себе:
+1. Як сказати "in spring"?
+2. Коли ми святкуємо День Незалежності?
+3. Що таке писанка?

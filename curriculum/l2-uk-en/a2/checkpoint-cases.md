@@ -1,118 +1,95 @@
-## Вступ: Весільний квест та компас відмінків
-
-Ласкаво просимо до фінального випробування рівня A2! Ця **контрольна точка** (checkpoint) — час перевірити, як добре ви орієнтуєтеся у світі відмінків та множини. Це ваша головна **перевірка** (review). Ви вже знаєте, як іменники змінюють свої закінчення залежно від їхньої ролі в реченні. Ваш **компас відмінків** (case compass) з модуля 31 залишається головним інструментом навігації. Ми синтезуємо все, що ви знаєте про такі категорії, як **однина** (singular) та **множина** (plural). 
-
-> **Наречена:** **Олено!** Ти маєш хвилину? *(Olena! Do you have a minute?)*
-> **Подруга:** Привіт! Так, звичайно. Що сталося? *(Hi! Yes, of course. What happened?)*
-> **Наречена:** Я планую весілля. Це такий стрес! Я пишу **запрошення для гостей**. *(I am planning a wedding. It is such stress! I am writing invitations for the guests.)*
-> **Подруга:** О, це чудово! Я вже маю **подарунок нареченій**. *(Oh, that is wonderful! I already have a gift for the bride.)*
-> **Наречена:** Дякую! Я так хочу, щоб усе було ідеально. Коли я **бачу наречену** в кіно, вона завжди спокійна. *(Thank you! I want everything to be perfect so much. When I see a bride in a movie, she is always calm.)*
-> **Подруга:** Ти теж будеш спокійною. Уяви: красивий ресторан, музика, ти танцюєш **з молодятами**... Ой, тобто зі своїм чоловіком! *(You will be calm too. Imagine: a beautiful restaurant, music, you are dancing with the newlyweds... Oh, I mean with your husband!)*
-> **Наречена:** Так, **на весіллі** всі будуть танцювати. *(Yes, at the wedding everyone will dance.)*
-
-This dialogue naturally uses all seven Ukrainian cases. We see the Vocative (**Олено**), Nominative (**весілля**), Genitive (**для гостей**), Dative (**нареченій**), Accusative (**наречену**), Instrumental (**з молодятами**), and Locative (**на весіллі**). Every noun adapts to its specific environment.
-
 ## Частина 1: Форми множини (Part 1: Plural Forms)
 
-First, consider the Nominative plural — the dictionary form for multiple items. The ending depends on the noun's gender and whether its stem ends in a hard or soft consonant. For the hard group, masculine and feminine nouns take **-и**: **столи** (tables), **книжки** (books). Soft group nouns take **-і** or **-ї**: **дні** (days), **землі** (lands). Neuter nouns change completely, taking **-а** or **-я**: **вікна** (windows), **моря** (seas). Remember these irregular plurals: **друг** (friend) becomes **друзі**, **людина** (person) becomes **люди**, **дитина** (child) becomes **діти**, and **око** (eye) becomes **очі**.
-- Тут живуть мої **друзі**. (My friends live here.)
-- Це нові **столи** та **книжки**. (These are new tables and books.)
-- У кімнаті великі **вікна**. (There are big windows in the room.)
-- Мої **батьки** дуже добрі. (My parents are very kind.)
+Ця велика **контрольна точка** (checkpoint) допоможе вам зрозуміти, як ефективно працює граматична система української мови. Ця детальна **перевірка** (check/review) знань фокусується на всіх формах: як **однина** (singular) змінюється на множину в різних життєвих ситуаціях. Коли ми вивчаємо мову, дуже важливо пам'ятати, що **множина** (plural) впливає на всі відмінки, а не тільки на перший словниковий відмінок. Чому це так важливо для щоденного спілкування? Тому що ми постійно говоримо про великі групи людей, розповідаємо про наші регулярні щоденні звички, плануємо майбутні покупки та рахуємо різні речі. Наприклад, ми купуємо свіжі продукти в магазині, рахуємо наші фінанси або із великою радістю запрошуємо найкращих друзів у гості. Для всіх цих звичайних ситуацій нам завжди потрібні правильні форми множини.
 
-The Genitive plural is the "wall" that many learners hit. It is the hardest form, but also the most common. For feminine and neuter nouns, the ending simply disappears — this is the zero ending. **Книга** (book) becomes **книг**, and **місто** (city) becomes **міст**. Most masculine nouns take the **-ів** ending: **студент** (student) becomes **студентів**. Sometimes, dropping the ending creates a difficult consonant cluster. To fix this, Ukrainian inserts a "fleeting vowel" (**вставний голосний**). **Земля** (land) becomes **земель**, **вікно** (window) becomes **вікон**, and **дошка** (board) becomes **дощок**.
-- У мене немає **книг**. (I do not have books.)
-- У групі багато **студентів**. (There are many students in the group.)
-- Я бачу п'ять **вікон**. (I see five windows.)
-- На столі немає **тарілок**. (There are no plates on the table.)
+Згадаємо, як ми утворюємо називний відмінок для багатьох предметів. Більшість слів отримують дуже прості та регулярні закінчення: **-и**, **-і** / **-ї**, або **-а** / **-я**. Наприклад, стіл стає **столи** (tables), а вулиця перетворюється на **вулиці** (streets). Але в українській мові є популярні слова, які мають зовсім інші форми. Їх треба просто запам'ятати:
+- один **друг** (friend) → мої вірні **друзі** (friends)
+- одна **людина** (person) → добрі **люди** (people)
+- одна **дитина** (child) → веселі **діти** (children)
+- одне **око** (eye) → гарні блакитні **очі** (eyes)
 
-Some nouns have a fixed number. They are either Pluralia Tantum (plural only) or Singularia Tantum (singular only). Everyday items that consist of two parts are often plural-only: **гроші** (money), **окуляри** (glasses), **штани** (pants), **двері** (doors). Geographical names like **Карпати** (Carpathians) are also plural-only. Remember that verbs and adjectives must agree with them in the plural: "Гроші **були** на столі" (The money was on the table — literally "they were"). Some nouns are collective singulars, like **молодь** (youth) or **людство** (humanity).
-- Мої нові **штани** дуже зручні. (My new pants are very comfortable.)
-- **Гроші** лежать у сумці. (The money lies in the bag.)
-- Сучасна **молодь** любить технології. (Modern youth loves technology.)
-- Вона відчиняє великі **двері**. (She opens the big doors.)
+:::note
+**Нерегулярна множина (Irregular Plural)**
+Слова "друг", "людина", "дитина" та "око" змінюються не за загальними граматичними правилами. Ви просто повинні вивчити їх напам'ять, як таблицю множення, оскільки ви будете використовувати ці важливі слова майже кожного дня у живій розмові.
+:::
 
-A few nouns use special suffixal plurals. Baby animals and some abstract concepts belong to the fourth declension and add **-ат-** / **-ят-** or **-ен-** in the plural. **Курча** (chick) becomes **курчата**, **кошеня** (kitten) becomes **кошенята**, and **ім'я** (name) becomes **імена**. Ukrainian also preserves remnants of the ancient dual number. "Double body parts" take the unique **-има** ending in the Instrumental case: **очима** (with eyes), **плечима** (with shoulders).
-- У дворі граються **кошенята**. (Kittens are playing in the yard.)
-- Я бачу це своїми **очима**. (I see this with my own eyes.)
-- Які ваші **імена**? (What are your names?)
+Це базове та необхідне **завдання** (task/exercise) для кожного іноземного студента. Зараз ваше перше практичне завдання: вам потрібно перетворити список з десяти іменників різних родів у правильну форму називного відмінка множини. Будьте дуже уважні до наших нерегулярних форм!
 
-The good news is that the Dative, Instrumental, and Locative plural endings are highly consistent across all genders. They are much easier to memorize than the Genitive plural. Dative takes **-ам** / **-ям**, Instrumental takes **-ами** / **-ями**, and Locative takes **-ах** / **-ях**.
-- Я даю їжу **кошенятам**. (I give food to the kittens.)
-- Ми гуляємо з **друзями**. (We are walking with friends.)
-- Книги лежать на **столах**. (The books lie on the tables.)
+Наступна складна граматична частина — це родовий відмінок множини. Він має багато різних та унікальних варіантів закінчень. Деякі слова отримують "нульове закінчення", коли остання буква просто зникає наприкінці слова: **книга** (book) → на полиці немає **книг** (of books), **місто** (city) → він відвідав багато **міст** (of cities). Іноді всередині слова з'являється новий голосний звук, щоб слово було набагато легше вимовляти: **земля** (earth/land) → краса рідних **земель** (of lands). Інші слова отримують дуже популярне закінчення **-ів**: багато нових **студентів** (of students), вода теплих **морів** (of seas). А деякі слова отримують закінчення **-ей**: п'ять довгих **ночей** (of nights). Ваше друге завдання — самостійно утворити родовий відмінок множини для десяти складних іменників. 
 
-<!-- INJECT_ACTIVITY: nominative-plural-forms -->
-<!-- INJECT_ACTIVITY: genitive-plural-challenge -->
-<!-- INJECT_ACTIVITY: quantity-genitive-pl -->
+Родовий відмінок множини необхідний, коли ми говоримо про кількість предметів чи людей. Після таких слів як "багато", "мало", "кілька" або "скільки" ми завжди використовуємо тільки цю форму. Те ж саме правило діє для всіх чисел від п'яти і далі: пройшло **п'ять років** (five years), на площі стояло **багато людей** (many people), запитайте в магазині, **скільки коштує** (how much does it cost) ця нова річ. Також є особливі іменники, які існують тільки у множині. Це такі звичайні повсякденні речі, як **гроші** (money), модні **окуляри** (glasses), теплі **штани** (pants). Для них ми теж використовуємо форму родового відмінка: "У мене сьогодні немає **грошей**" (I don't have money today). Ваше третє завдання: доповніть короткі фрази про кількість правильною формою родового відмінка множини.
 
 ## Частина 2: Який відмінок? (Part 2: Which Case?)
 
-Choosing the right **відмінок** (case) depends heavily on verb government. Every verb demands a specific case from its object. The verb **допомагати** (to help) requires the Dative case: "Я допомагаю **мамі**" (I help my mom). The verb **бачити** (to see) requires the Accusative case: "Я бачу **маму**" (I see my mom). **Користуватися** (to use) triggers the Instrumental case: "Я користуюся **телефоном**" (I use a phone). Always remember the contrast between a direct object (Accusative) and absence or quantity (Genitive). "Я маю **плани**" (I have plans - Accusative direct object). But negated: "Я не маю **планів**" (I do not have plans - Genitive of negation).
-- Ми часто дякуємо **батькам**. (We often thank our parents.)
-- Вони бачать високі **дерева**. (They see tall trees.)
-- Він користується новим **ноутбуком**. (He uses a new laptop.)
-- Вона дарує квіти **вчителю**. (She gives flowers to the teacher.)
+В українській мові кожен **відмінок** (grammatical case) має свою чітку, конкретну комунікативну функцію. Дуже часто головне дієслово повністю "командує", який відмінок ми маємо використати у нашому реченні. Це важливе граматичне правило називається керування. Наприклад, подивіться на ці типові життєві ситуації:
+- Я завжди хочу **допомагати сестрі** (to help the sister). Дієслово "допомагати" завжди вимагає після себе виключно давального відмінка.
+- Я дуже радий **бачити людей** (to see people). Дієслово "бачити" прямо вимагає використання знахідного відмінка.
+- Він постійно любить **користуватися словником** (to use a dictionary). Дієслово "користуватися" завжди працює разом з орудним відмінком.
 
-Prepositions are your next major navigation tool. Double-case prepositions change their meaning based on the case. **У** or **в** with the Locative case means static location: "Я живу в **місті**" (I live in the city). With the Accusative case, it means direction: "Я їду в **місто**" (I am going into the city). The preposition **на** works the exact same way. The preposition **з** means origin when used with the Genitive: "Я з **України**" (I am from Ukraine). But it means company when used with the Instrumental: "Я йду з **братом**" (I am walking with my brother). The preposition **по** is used for movement along a surface in the Locative: "йти по **вулицях**" (to walk along the streets).
-- Книги лежать на **полиці**. (The books lie on the shelf.)
-- Ми кладемо книги на **полицю**. (We are putting the books onto the shelf.)
-- Вона п'є каву з **молоком**. (She drinks coffee with milk.)
-- Вони гуляють по **парку**. (They walk through the park.)
+:::tip
+**Керування дієслів (Verb Government)**
+Щоб набагато легше запам'ятати правильні відмінки, вивчайте нові дієслова одразу з їхніми відповідними запитаннями. Наприклад, не вчіть просто слово "допомагати", вчіть одразу цілу фразу "допомагати кому?". Це швидко підкаже вам, що тут потрібен давальний відмінок.
+:::
 
-Special constructions also trigger specific cases. Time expressions often use the Accusative or Locative. Days of the week take the Accusative: **у четвер** (on Thursday). Years and hours take the Locative: **у 2014 році** (in 2014), **о п'ятій годині** (at five o'clock). When describing appearance or characteristics, use the Locative or Instrumental: **хлопець у светрі** (the boy in the sweater), **дівчина з карими очима** (the girl with brown eyes). For path and means of transport, use the Instrumental without a preposition: **летіти літаком** (to fly by plane), **йти лісом** (to walk through the forest).
-- Ми зустрінемося **у п'ятницю**. (We will meet on Friday.)
-- Це **чоловік у капелюсі**. (This is the man in the hat.)
-- Вони подорожують **поїздом**. (They travel by train.)
+Вам не потрібно глибоко аналізувати логіку кожного разу — вам потрібно просто запам'ятати ці поширені дієслова разом з їхніми відповідними відмінками.
 
-Error analysis is a crucial skill. You must distinguish between similar endings. For inanimate nouns, the Nominative and Accusative plural look identical: "Дерев'яні **столи** стоять тут" (Wooden tables stand here - Nominative subject). "Я бачу дерев'яні **столи**" (I see wooden tables - Accusative object). For animate nouns, the Accusative plural looks exactly like the Genitive plural: "Я бачу **друзів**" (I see friends). Watch out for direct translations that use the wrong case. In Ukrainian, **чекати** (to wait) takes the Genitive or Accusative, never the Dative. **Дякувати** (to thank) takes the Dative, never the Accusative.
-- Я бачу нові **будинки**. (I see new buildings.)
-- Вона любить своїх **котів**. (She loves her cats.)
-- Ми чекаємо **автобуса**. (We are waiting for the bus.)
+Різноманітні прийменники також мають свої суворі правила щоденного використання. Вони можуть кардинально змінювати своє значення залежно від того, з яким відмінком вони стоять поруч. Порівняйте ці два дуже схожі випадки:
+- Для місцезнаходження (де ми є?): Ми використовуємо **у** або **в** плюс місцевий відмінок. Я зараз чудово відпочиваю **у Чернівцях** (in Chernivtsi).
+- Для напрямку руху (куди ми йдемо?): Ми використовуємо **у** або **в** плюс знахідний відмінок. Я кожного робочого ранку йду **в школу** (to school).
+Так само прийменник **з** (with/from) працює у двох різних напрямках:
+- Походження (звідки?): **з** плюс родовий відмінок. Вона щойно приїхала **з міста** (from the city).
+- Компанія людей (з ким?): **з** плюс орудний відмінок. Він радісно йде гуляти **з друзями** (with friends).
 
-Read this short text about a trip to identify cases in context:
-"Минулого року ми їздили в **Карпати** (Accusative - direction). У **Карпатах** (Locative - location) дуже красиво. Ми гуляли зеленими **лісами** (Instrumental - path) і пили воду з гірських **річок** (Genitive - origin). Наші **друзі** (Nominative - subject) робили багато **фотографій** (Genitive - quantity). Ми розповідали **людям** (Dative - recipient) про нашу подорож."
-Notice how "у Карпатах" shows location, while "в Карпати" shows direction. Every noun form has a specific trigger.
+<!-- INJECT_ACTIVITY: group-sort-cases -->
 
-<!-- INJECT_ACTIVITY: case-trigger-quiz -->
-<!-- INJECT_ACTIVITY: group-sort-noun-cases -->
-<!-- INJECT_ACTIVITY: mixed-error-hunt -->
+Також існують дуже спеціальні конструкції для використання певних відмінків. Наприклад, коли ми говоримо про час події, ми часто використовуємо місцевий відмінок: ми зустрінемося **у четвер** (on Thursday), цей сучасний будинок збудували **у 2014 році** (in the year 2014). Коли ми описуємо зовнішній вигляд або яскраві характеристики іншої людини, ми знову беремо місцевий відмінок: високий **хлопець у светрі** (the guy in the sweater). 
+
+Не забувайте і про кличний відмінок — це жива, прекрасна та обов'язкова форма, коли ми звертаємося до реальних людей: **Мамо**, швидко іди сюди! (Mom, come here!), **Друзі**, я щиро вітаю вас! (Friends, greetings!). 
+
+:::caution
+**Правильне звертання (Proper Address)**
+Ніколи не ігноруйте правильний кличний відмінок! Багато недосвідчених людей іноді використовують звичайний називний відмінок при прямому звертанні. Використання правильного кличного відмінка в українській мові — це ознака вашої високої мовної культури та справжньої глибокої поваги до співрозмовника.
+:::
+
+Ваше п'яте практичне завдання: уважно прочитайте короткий текст та самостійно визначте, який відмінок мають усі підкреслені іменники.
+
+<!-- INJECT_ACTIVITY: fill-in-mixed-cases -->
+
+Коли ми активно вивчаємо нову іноземну мову, кожна маленька **помилка** (error/mistake) — це нормальна, дуже природна частина навчального процесу. Англомовні студенти часто роблять типові лексичні та граматичні помилки при роботі з українськими відмінками. Наприклад, найчастіше виникає величезна плутанина між істотами та неістотами у знахідному відмінку для форми множини. Ми правильно кажемо "Я бачу великі **столи**" (I see tables — inanimate), але ми обов'язково повинні казати "Я бачу розумних **студентів**" (I see students — animate). Інша дуже часта проблема — це використання неправильних відмінкових закінчень безпосередньо після прийменників, коли студент просто забуває змінити початкову форму слова.
+
+Навчимося сьогодні швидко **виправити** (to correct) ці поширені мовні неточності. Ось три найпопулярніші неправильні форми у щоденному мовленні студентів:
+1. Використання називного відмінка замість правильного родового відмінка після числівників. Неправильно: у класі сидять п'ять студенти. Правильно: у класі сидять п'ять **студентів** (five students).
+2. Ігнорування старих історичних форм для парних частин тіла в орудному відмінку. Неправильно: я дивлюся на світ моїми очами (зі стандартним закінченням множини). Правильно: я дивлюся на світ моїми **очима** (with my eyes — dual remnant).
+3. Помилки з дієсловами при іменниках, що означають множину. Неправильно: нові книги лежить на столі. Правильно: нові книги **лежать** на столі (books lie on the table). 
+
+Ваше шосте завдання — знайти та самостійно виправити такі граматичні помилки.
+
+<!-- INJECT_ACTIVITY: quiz-error-correction -->
+<!-- INJECT_ACTIVITY: error-correction-mixed -->
 
 ## Частина 3: Вільне мовлення (Part 3: Free Production)
 
-Guided writing requires strategy. Ваше **завдання** (task) — "Опишіть свій ідеальний **вихідний день**" (Describe your ideal day off). Building a coherent narrative requires using the full case spectrum. Start with your destination using the Accusative: "У суботу я їду в **центр**" (On Saturday I go to the center). Mention your company using the Instrumental: "Я гуляю з **друзями**" (I walk with friends). Describe your activities using the Accusative or Instrumental: "Я бачу красиві **будівлі**" (I see beautiful buildings), "Я малюю **олівцем**" (I draw with a pencil). Finally, mention what you eat using the Genitive for quantities or Accusative for specific items: "Я купую багато **яблук**" (I buy many apples), "Я їм смачну **піцу**" (I eat a tasty pizza).
-- Мій ідеальний **вихідний день** починається пізно. (My ideal day off starts late.)
-- У неділю я читаю **книгу**. (On Sunday I read a book.)
-- Ми йдемо в **парк**. (We go to the park.)
+Час говорити вільно. Наша головна мета сьогодні — навчитися максимально ефективно використовувати всі ці теоретичні правила у звичайній, повсякденній розмові. В реальному житті українці постійно поєднують всі сім відмінків, і часто ми навіть не думаємо про правильні закінчення під час розмови. Коли ви захоплено говорите про свої особисті плани на вихідні або активно організовуєте велику подію, відмінки самі швидко знаходять своє правильне місце у ваших довгих реченнях. Будь ласка, ніколи не бійтеся експериментувати з мовою та впевнено поєднувати однину і множину у своєму повсякденному вільному мовленні.
 
-Dialogue completion requires strict logical agreement. When answering a question, you must provide a natural short answer that respects the case of the question word. The question "Кого?" (Whom? - Accusative/Genitive animate) requires an Accusative or Genitive response. "Кому?" (To whom? - Dative) requires a Dative response.
-> **Максим:** З ким ти розмовляв? *(With whom were you talking?)*
-> **Анна:** З **батьками**. *(With parents.)*
-> **Максим:** Про що ви говорили? *(About what were you talking?)*
-> **Анна:** Про **плани** на вихідні. *(About plans for the weekend.)*
-> **Максим:** Кому ви будете дзвонити завтра? *(To whom will you call tomorrow?)*
-> **Анна:** Нашим **родичам**. *(To our relatives.)*
+Подивимося детальніше, як саме цей цікавий процес працює в живому, дуже природному діалозі. Дві найкращі подруги радісно планують майбутнє весілля. Зверніть свою увагу на те, скільки різних граматичних відмінків вони активно використовують в одній дуже короткій розмові:
 
-A critical focus is the living Vocative case (**Кличний відмінок**). It is not an archaic relic; it is a vital part of modern Ukrainian communication. Whenever you address someone directly, you must use it. For singular names and nouns, use endings like -о, -е, or -ю: **Мамо** (Mom!), **Оксано** (Oksana!), **пане** (sir!). For plural, the Vocative usually matches the Nominative: **Друзі!** (Friends!), **Колеги!** (Colleagues!). Using the Vocative is a sign of cultured, natural Ukrainian speech.
-- **Брате**, допоможи мені, будь ласка. (Brother, help me, please.)
-- Добрий день, **пане** Іване! (Good day, Mr. Ivan!)
-- Шановні **колеги**, почнемо нашу зустріч. (Respected colleagues, let's begin our meeting.)
-- **Сергію**, де ти був? (Serhiy, where were you?)
+> **Наречена:** **Олено!** Дивись, ось лежать мої красиві **запрошення для гостей**. *(Olena! Look, here are my beautiful invitations for the guests.)*
+> **Подруга:** Вони просто прекрасні. А я вже маю великий сюрприз — **подарунок нареченій**! *(They are simply beautiful. And I already have a big surprise — a gift for the bride!)*
+> **Наречена:** Ти така добра. Я вже уявляю, як я бачу тебе на нашому гучному **весіллі**. *(You are so incredibly kind. I can already imagine seeing you at our loud wedding.)*
+> **Подруга:** Так! Я вже бачу щасливу **наречену** у білій сукні. Ми точно будемо робити дуже багато яскравих фотографій з **молодятами**. *(Yes! I already see the happy bride in a white dress. We will definitely take very many bright photos with the newlyweds.)*
 
-A letter to a friend synthesizes everything. This models how to connect thoughts across sentences while maintaining case agreement and logical flow.
-"Привіт, **Олено**! Як твої **справи**? Я зараз у **Львові**. Це чудове **місто** з красивими **вулицями**. Учора я гуляла з **друзями** по **центру**. Ми бачили багато старих **будівель** і пили каву в затишному **кафе**. Я купила **сувеніри** для **батьків**. Завтра ми їдемо в **гори**. Я чекаю твого **листа**!"
-Notice how every noun seamlessly connects to its verb or preposition. This is the goal of your free production practice.
+У цьому короткому, але дуже інформативному діалозі ми бачимо майже всі відмінки української мови: прекрасне звертання "Олено!" (це жива форма кличного відмінка), фраза "для гостей" (де ми чітко бачимо родовий), слова "подарунок нареченій" (це типовий давальний відмінок для адресата), вираз "на весіллі" (місцевий відмінок з прийменником для місця), "бачу наречену" (прямий знахідний відмінок для об'єкта) та щасливі люди "з молодятами" (орудний відмінок для компанії). Це чудово показує, наскільки багатою, мелодійною та дуже гнучкою насправді є сучасна українська мова. Ваше восьме практичне завдання — це самостійна робота з текстом цього діалогу. Ви отримаєте цікаву розмову з пропущеними ключовими іменниками. Вам потрібно буде дуже акуратно та вдумливо заповнити 8-10 пропусків, обов'язково використовуючи правильний відмінок для однини та множини.
 
-<!-- INJECT_ACTIVITY: writing-ideal-day -->
-<!-- INJECT_ACTIVITY: dialogue-gap-fill -->
+Наше сьоме творче завдання — це написання вашого власного невеликого тексту. Тема цього цікавого тексту: "Мій ідеальний **вихідний день** (day off)". Уважно опишіть, куди ви зазвичай ходите відпочивати у свій вільний час (використовуйте знахідний або місцевий відмінок: я часто ходжу у кіно, гуляю в парку). Напишіть дуже детально, з ким ви найбільше любите зустрічатися на вихідних (знахідний або давальний відмінок: я бачу своїх друзів, радісно допомагаю рідній мамі). Розкажіть, що саме ви робите (знахідний або орудний відмінок: я довго читаю нову книгу, малюю кольоровими олівцями). І обов'язково додайте цікаву інформацію про улюблену їжу та її кількість (родовий відмінок: п'ю одну чашку кави, їм дуже багато солодких фруктів).
 
 ## Підсумок
 
-You have reached the end of the A2 case checkpoint. Take a moment for **самоперевірка** (self-check) to ensure you can use these forms **впевнено** (confidently). Ask yourself these questions:
-- Чи можу я **впевнено** утворити Родовий відмінок множини (**книг**, **столів**)? (Can I confidently form the Genitive plural?)
-- Чи пам'ятаю я нерегулярні форми (**люди**, **діти**, **друзі**)? (Do I remember the irregular forms?)
-- Чи знаю я, які відмінки вимагають прийменники "на", "в", "з", "по"? (Do I know which cases the prepositions require?)
-- Чи використовую я Кличний відмінок під час звертання? (Do I use the Vocative case during direct address?)
+Ви успішно пройшли величезний та важливий шлях! Ця детальна **самоперевірка** (self-check) обов'язково допоможе вам завжди відчувати себе максимально **впевнено** (confidently) у живій повсякденній розмові. Перед тим, як сміливо рухатися далі до нових складних тем, дайте чесну та відверту відповідь на ці критично важливі питання:
 
-Якщо ви бачите **помилку** (error), ви знаєте, як її **виправити** (to correct). You have now mastered the skeleton of the Ukrainian language. The case system is the foundation. Ready for A2.6 to add the flesh of adjectives and verbs of motion to this strong structure!
-```
+- Чи можу я зараз легко та швидко утворювати форми множини, особливо дуже складний родовий відмінок?
+- Чи знаю я чітко і без сумнівів, який саме відмінок вимагає кожен новий прийменник, наприклад, "з" або "у / в"?
+- Чи пам'ятаю я усі особливі слова та їхні нерегулярні форми, такі як "діти", "люди", "друзі"?
+- Чи використовую я традиційний кличний відмінок кожного разу, коли особисто звертаюся до іншої людини?
+- Чи справді готовий я перейти до наступного рівня A2.6?
+
+Якщо ви радісно відповіли "так" на ці запитання, ви чудово засвоїли весь граматичний матеріал! Граматичні відмінки більше ніколи не будуть серйозною проблемою для вашого плавного та вільного повсякденного мовлення.

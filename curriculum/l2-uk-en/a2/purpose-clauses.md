@@ -1,161 +1,162 @@
-## Щоб + інфінітив: для чого?
+## Щоб + інфінітив: для чого? (In Order To: What For?) (~750 words)
 
-Кожного дня ми щось робимо і завжди маємо певну мету. *(Every day we do something and always have a certain goal.)* У нашому житті є багато причин і багато результатів. Коли ми запитуємо **«Чому?»** *(Why?)*, ми шукаємо причину в минулому. Ми хочемо знати, що сталося до нашої дії. Але коли ми запитуємо **«Для чого?»** *(For what?)* або **«Навіщо?»** *(What for?)*, ми дивимося в майбутнє. Ми шукаємо нашу мету. Ми хочемо знати результат.
+> — **Мама:** Ми йдемо в магазин, щоб купити хліб. *(We are going to the store in order to buy bread.)*
+> — **Дитина:** А навіщо зараз? *(And what for right now?)*
+> — **Мама:** Вчителька сказала, що завтра екскурсія, і нам потрібні бутерброди. *(The teacher said that tomorrow is an excursion, and we need sandwiches.)*
+> — **Дитина:** Зрозуміло. *(Understood.)*
+> — **Мама:** До речі, тато попросив, щоб ти прибрав кімнату після сніданку. *(By the way, dad asked that you clean the room after breakfast.)*
 
-In English, you often use the infinitive "to" or the phrase "in order to" to express a goal or an intention. В українській мові ми маємо для цього спеціальний інструмент. Ми використовуємо маленьке, але дуже важливе слово — **щоб** *(in order to / so that)*. Це слово допомагає нам пояснити, навіщо ми робимо певну дію. Ми використовуємо його кожного дня.
+In our daily lives, we constantly explain the reasons and goals behind our actions to other people. Whether you are at work or at home, communicating your intentions clearly is a key part of speaking a language naturally. When you want to ask about the purpose of an action, you use the question words **для чого?** (what for?) or **навіщо?** (why? / what for?). To answer these questions and express your **мета** (goal, purpose), Ukrainian uses a very specific conjunction: **щоб** (in order to, so that). The most basic way to use this conjunction is by combining **щоб** directly with an infinitive verb.
 
-Найпростіша і найпопулярніша конструкція — це слово **щоб** плюс **інфінітив** *(infinitive)*. Ми використовуємо цю форму, коли тільки одна людина робить дію і має мету. The person performing the main action and the person who wants to achieve the goal are the exact same subject. There is no change in actor between the two parts of the sentence.
+Я вчу українську мову, щоб розуміти своїх друзів. Я читаю тексти, щоб знати нові слова. Ми працюємо, щоб мати гроші.
 
-Подивіться на цей короткий діалог:
-> — **Анна:** Навіщо ти так часто читаєш новини? *(Why do you read the news so often?)*
-> — **Марк:** Я читаю новини, **щоб** знати ситуацію у світі. *(I read the news in order to know the situation in the world.)*
+> *I study the Ukrainian language in order to understand my friends. I read texts in order to know new words. We work in order to have money.*
 
-У цьому реченні Марк читає новини, і саме Марк хоче знати ситуацію. Суб'єкт один — це «я». Ми просто додаємо «щоб» і дієслово в початковій формі. Ось ще кілька корисних прикладів з одним суб'єктом:
-* Мій брат прийшов, **щоб** допомогти мені з ремонтом. *(My brother came to help me with the renovation.)*
-* Влітку ми поїхали в Київ, **щоб** побачити це чудове місто. *(In summer we went to Kyiv to see this wonderful city.)*
-* Треба багато працювати кожного дня, **щоб** жити добре і комфортно. *(One needs to work a lot every day in order to live well and comfortably.)*
-* Я купив новий словник, **щоб** вивчати нові слова швидше. *(I bought a new dictionary to learn new words faster.)*
+This brings us to what we call the "same-subject rule." You must use the structure **щоб** plus an infinitive when the person performing the main action and the person performing the goal action are exactly the same individual. For example, in the sentence "I work in order to have money", the subject "I" does the working, and the exact same "I" will have the money. In Ukrainian, this is the easiest and most direct way to state your personal intentions. You do not need to worry about complex grammar or changing the verb forms, because the infinitive does all the heavy lifting for you.
 
-Але що робити, коли суб'єкти різні? What if one person does the main action, but the goal or intention involves someone else doing something? In this case, we cannot use the infinitive anymore. Ми використовуємо слово **щоб** і дієслово у формі **минулого часу** *(past tense)*.
+Він прийшов додому, щоб допомогти брату. Ми поїхали в Київ, щоб побачити місто. Студенти слухають аудіо, щоб краще розуміти мову.
 
-This rule might seem very strange at first. However, after the word "щоб", the past tense form does not actually mean the action happened in the past. Here, it functions as a subjunctive mood. It expresses a wish, a request, or an instruction for someone else. The verb must strictly agree in gender and number with the new subject of the second part of the sentence.
+> *He came home in order to help his brother. We went to Kyiv in order to see the city. Students listen to audio in order to better understand the language.*
 
-If I do something so that my friend can do something else, we have two different actors. The first actor does the action. The second actor is the focus of the goal. Подивіться на цей діалог між друзями:
-> — **Ірина:** Навіщо ти купив два квитки в кіно? *(Why did you buy two tickets to the cinema?)*
-> — **Антон:** Я купив їх, **щоб** ти пішла зі мною. *(I bought them so that you would go with me.)*
+:::info
+**Grammar box**
+Notice that the second verb is always in the infinitive form (ending in **-ти**). You do not conjugate the verb after **щоб** if the subject is the same for both actions.
+:::
 
-У цьому діалозі Антон купує квитки. Це його дія. Але він має мету для Ірини. Він хоче, щоб Ірина пішла з ним. Суб'єкти різні. Тому він використовує слово «щоб» і дієслово «пішла» у формі минулого часу. Це жіночий рід, тому що суб'єкт тут — Ірина.
+However, human communication is rarely that simple. Often, our actions are meant to influence someone else or create a result for another person. What happens when the subject of the first action is completely different from the subject of the goal action? For example, consider the phrase "I called so that SHE would know." When the subjects differ across the two clauses, you cannot use the infinitive anymore. Instead, Ukrainian requires a special "different-subject construction". For this, you must use **щоб** followed immediately by the verb in its past tense form.
 
-Зверніть увагу на ці приклади з різними суб'єктами:
-* Я зателефонував вчора, **щоб** вона знала про нашу зустріч. *(I called yesterday so that she would know about our meeting.)*
-* Вчитель довго пояснював нове правило, **щоб** учні зрозуміли граматику. *(The teacher explained the new rule for a long time so that the students would understand the grammar.)*
-* Мама дала синові гроші, **щоб** він купив свіжий хліб. *(Mom gave her son money so that he would buy fresh bread.)*
-* Ми відкрили вікно, **щоб** кіт міг вийти на вулицю. *(We opened the window so that the cat could go outside.)*
+Я зателефонував вчора, щоб вона знала новини. Вчитель довго пояснював правило, щоб учні все добре зрозуміли. Мама купила квитки, щоб діти поїхали на море.
 
-Ця конструкція з минулим часом дуже часто використовується з дієсловом **хотіти** *(to want)*. Ми використовуємо її, коли говоримо про наші бажання щодо інших людей. In English, you comfortably use the structure "I want you to do something". В українській мові ми так ніколи не говоримо. Ми не можемо просто перекласти слова і сказати «Я хочу тебе допомогти». Це буде велика граматична помилка!
+> *I called yesterday so that she would know the news. The teacher explained the rule for a long time so that the students would understand everything well. Mom bought tickets so that the children would go to the sea.*
 
-Замість цього ми завжди використовуємо слово **щоб** і форму минулого часу. Literally, you say "I want that you did something". Це звучить незвично для англомовних людей, але це природна українська граматика. Let's look at a typical conversation between a mother and her son:
-> — **Мама:** Олег, я хочу, **щоб** ти зробив домашнє завдання. *(Oleh, I want you to do your homework.)*
-> — **Олег:** Але я хочу, **щоб** ми пішли в парк! *(But I want us to go to the park!)*
-> — **Мама:** Спочатку уроки. Вчителька хоче, **щоб** усі діти добре знали математику. *(Lessons first. The teacher wants all children to know math well.)*
+It is absolutely crucial to understand that this past tense form does not describe an action that happened in the past. After the conjunction **щоб**, the past tense form functions as a subjunctive mood. It expresses an intent, a desire, or a hypothetical goal that has not necessarily happened yet. The verb after **щоб** simply agrees in gender and number with the new subject of that specific clause, just like a regular past tense verb would.
 
-У цьому тексті мама говорить про свої бажання. Вона використовує слово «щоб» і дієслово «зробив». Це чоловічий рід, тому що суб'єкт — її син Олег.
+This different-subject construction is absolutely essential for expressing desires, requests, and indirect commands in everyday life. The most frequent phrase you will use in this context is **я хочу, щоб...** (I want you to...). This structure contrasts heavily with English grammar. English uses the infinitive for desires involving others, as in "I want you TO come". Ukrainian strictly forbids this literal translation. You must use **щоб** and the past tense verb agreeing with the new subject. This is a fundamental rule that will make your Ukrainian sound much more natural and polite.
 
-* Я дуже хочу, **щоб** ти був щасливий кожного дня. *(I really want you to be happy every day.)* (Speaking to a male).
-* Ми всі хочемо, **щоб** війна в Україні закінчилася якнайшвидше. *(We all want the war in Ukraine to end as soon as possible.)*
-* Мій тато хоче, **щоб** я прибрала свою кімнату сьогодні. *(My dad wants me to clean my room today.)* (The speaker is female).
-* Вона хоче, **щоб** ми прийшли в гості на вихідних. *(She wants us to come visit on the weekend.)*
-* Керівник хоче, **щоб** ви зробили цей проєкт завтра. *(The manager wants you to do this project tomorrow.)*
+Я хочу, щоб ти прийшов сьогодні ввечері. Ми хочемо, щоб війна закінчилася швидко. Вона просить, щоб я допоміг їй з роботою.
 
-Пам'ятайте це важливе правило: після конструкції «хочу, щоб» ніколи не буває теперішнього або майбутнього часу. Там завжди стоїть тільки дієслово у формі минулого часу.
+> *I want you to come tonight. We want the war to end quickly. She asks that I help her with work.*
 
-Дуже важливо розуміти різницю між словами **тому що / бо** *(because)* та словом **щоб** *(in order to / so that)*. Вони відповідають на абсолютно різні запитання і мають різну логіку в реченні.
+:::tip
+**Did you know?**
+A very common mistake for English speakers is saying «Я хочу тебе прийти». This sounds very unnatural in Ukrainian. Always remember to build a new clause with **щоб** and the past tense form when you want someone else to do something.
+:::
 
-Слово «бо» або «тому що» показує нам причину. It explains why something is already happening based on a fact, a feeling, or a past event. Слово «щоб» показує нам мету або результат. It looks forward to what you want to achieve or what you want someone else to do.
+Finally, let's contrast **щоб** with another important conjunction you already know from previous lessons: **тому що** (because) or its shorter synonym **бо**. Both of these words connect ideas, but they look in opposite directions. The conjunction **тому що** answers the question **чому?** (why?), looking backward at the cause or the fundamental reason for an action. On the other hand, the conjunction **щоб** answers the question **для чого?** (what for?), looking forward at the future purpose or the intended result of an action.
 
-Порівняйте ці два дуже схожі речення:
-* Я зараз вчу українську мову, **бо** мені дуже цікаво. *(I am studying the Ukrainian language now because it is very interesting to me.)* Це ваша причина. Ви маєте інтерес.
-* Я зараз вчу українську мову, **щоб** добре знати її. *(I am studying the Ukrainian language now in order to know it well.)* Це ваша мета на майбутнє.
+Я вчу українську мову, бо я хочу розуміти друзів. Я вчу українську мову, щоб розуміти друзів. Він п'є воду, тому що хоче пити. Він іде на кухню, щоб випити води.
 
-Подивіться на інші приклади з життя:
-* Він зараз п'є воду, **тому що** він хоче пити. *(He is drinking water now because he is thirsty.)* Це факт і причина дії.
-* Він взяв пляшку води, **щоб** пити її в дорозі. *(He took a bottle of water to drink it on the way.)* Це його план і мета.
-* Вона не пішла гуляти, **бо** на вулиці йде дощ. *(She didn't go for a walk because it is raining outside.)*
-* Вона взяла велику парасольку, **щоб** не бути мокрою. *(She took a large umbrella so as not to be wet.)*
+> *I study the Ukrainian language because I want to understand my friends. I study the Ukrainian language in order to understand my friends. He drinks water because he is thirsty. He goes to the kitchen to drink water.*
 
-<!-- INJECT_ACTIVITY: fill-in-purpose-clauses-with-correct-form-after -->
-<!-- INJECT_ACTIVITY: quiz-distinguish-cause-from-purpose-using-or -->
+:::note
+**Quick tip**
+Another frequent L2 error is trying to translate "for to buy" literally using the preposition **для**. Never say «я йду для купити». The only correct way to express this forward-looking purpose is using **щоб купити**.
+:::
 
-## Базова непряма мова: він сказав, що...
 
-У житті ми дуже часто передаємо інформацію іншим людям. *(In life, we very often pass information to other people.)* Це працює як естафета. Хтось сказав вам цікаву новину, а ви говорите її своєму другу або колезі. Це називається **непряма мова** *(indirect speech)*. Нам обов'язково потрібно знати, як правильно сказати слова іншої людини. We use indirect speech to relay messages from friends, report news from television, or tell a story about a conversation you had yesterday. At this level, we will focus on the most basic and common pattern: reporting what someone said using the connector **що** *(that)*. Це дуже корисна граматична структура для щоденного спілкування. *(This is a very useful grammatical structure for daily communication.)* Ви будете використовувати її майже кожного дня на роботі або вдома. *(You will use it almost every day at work or at home.)*
+## Підсумок — Summary
 
-Коли ми передаємо факт або звичайну новину, ми використовуємо дієслово **сказати** *(to say / to tell)* і слово «що». The most important rule in Ukrainian reported speech is that we always keep the original tense of the verb. There is absolutely no "backshifting" of tenses like there is in English grammar. Якщо людина зараз говорить у майбутньому часі, ми також використовуємо майбутній час. *(If a person speaks in the future tense now, we also use the future tense.)* Ми змінюємо тільки особу і займенники. Let's look at exactly how to transform **пряма мова** *(direct speech)* into indirect speech.
-*   Пряма мова: «Я прийду завтра на роботу». *(Direct speech: "I will come to work tomorrow.")*
-*   Непряма мова: Він сказав, **що** прийде завтра на роботу. *(Indirect speech: He said that he would come to work tomorrow.)*
+Вітаємо! У цьому модулі ми детально розглянули, як правильно висловлювати причини та цілі, а також передавати чужі слова. Пам'ятайте головне: «тому що» або «бо» відповідає на питання «Чому?» і вказує на вже існуючу причину. Наприклад: «Я вчу українську мову, бо хочу жити в Києві.» Це пояснює причину вашої дії.
 
-Notice how the pronoun «я» logically changes to «він». However, the verb «прийду» (future) simply becomes «прийде» (future) to match the new pronoun. The time remains the future.
-*   «Ми тут у ресторані». -> Вони сказали, **що** вони тут у ресторані. *("We are here in the restaurant." -> They said that they were here in the restaurant.)*
-*   «Я дуже хочу їсти». -> Вона сказала, **що** дуже хоче їсти. *("I really want to eat." -> She said that she really wanted to eat.)*
-*   «Я не знаю цю людину». -> Він сказав, **що** він не знає цю людину. *("I don't know this person." -> He said that he didn't know this person.)*
+Натомість, «щоб» відповідає на питання «Для чого?» і показує вашу мету чи бажаний майбутній результат. Ми вивчили два випадки використання «щоб»:
 
-Звісно, ми можемо використовувати багато інших дієслів, а не тільки слово «сказати». У звичайній розмові ми часто використовуємо дієслова **відповісти** *(to answer / to reply)*, **пояснити** *(to explain)* та **додати** *(to add)*. Ці слова роблять нашу мову значно багатшою і цікавішою. *(These words make our language significantly richer and more interesting.)* They all follow the exact same grammatical structure. We put the reporting verb, then a comma, then the word «що», and finally the reported clause.
-*   Вона **пояснила**, що не може прийти на зустріч. *(She explained that she could not come to the meeting.)*
-*   Він **додав**, що буде пізно ввечері. *(He added that he would be late in the evening.)*
-*   Я **відповів**, що все чудово розумію. *(I answered that I understood everything perfectly.)*
-*   Новий вчитель **пояснив**, що це нове граматичне правило. *(The new teacher explained that this was a new grammatical rule.)*
-*   Директор **додав**, що цей проєкт дуже важливий для нас. *(The director added that this project was very important for us.)*
-*   Ми **відповіли**, що вже готові працювати. *(We replied that we were already ready to work.)*
+*   **Коли суб'єкт дії один і той самий**, використовуємо «щоб» + інфінітив: «Я вчу українську мову, щоб вільно говорити з друзями.» (Я вчу, і я ж буду говорити).
+*   **Коли суб'єкт дії різний**, використовуємо «щоб» + форму минулого часу: «Я зателефонував, щоб вона знала.» (Я зателефонував, але знає вона).
 
-Ці нові дієслова допомагають нам точно передати ситуацію та емоції. *(These new verbs help us accurately convey the situation and emotions.)*
+Також ми навчилися передавати пряму мову. Для повідомлення фактів використовуйте «що». Наприклад: «Мій друг сказав, що я вже добре говорю українською.» Це просто констатація факту.
 
-Але як правильно передати питання від іншої людини? *(But how do we correctly convey a question from another person?)* Якщо питання не має спеціального питального слова (як-от хто, що, де, коли), ми використовуємо цікаве слово **чи** *(if / whether)*. Це звичайне питання, на яке ви можете відповісти тільки «так» або «ні». *(This is a normal question to which you can answer only "yes" or "no".)* When reporting a yes/no question to someone else, we must use the verb **запитати** *(to ask)*. Then we introduce the reported question using the word «чи». Ми ніколи не ставимо знак питання в кінці такого речення. *(We never put a question mark at the end of such a sentence.)*
-*   Пряма мова: «Ти будеш пити каву?» *(Direct speech: "Will you drink coffee?")*
-*   Непряма мова: Він запитав, **чи** я буду пити каву. *(Indirect speech: He asked if I would drink coffee.)*
+**Перевірте себе:**
+*   У чому ключова різниця між «тому що» і «щоб»? Поясніть, для чого ви вивчаєте українську, використовуючи «щоб».
+*   Ваша подруга Анна сказала: «Я не можу прийти.» Як ви передасте її слова іншій особі?
+*   Передайте повідомлення від колеги, який сказав: «Зустріч перенесли.»
+```
 
-Зверніть увагу на структуру. *(Pay attention to the structure.)* Ми просто додаємо слово «чи» перед фактом.
-*   «Ви знаєте це гарне місто?» -> Вона запитала, **чи** ми знаємо це гарне місто. *("Do you know this beautiful city?" -> She asked if we knew this beautiful city.)*
-*   «Ти маєш вільний час?» -> Мій брат запитав, **чи** я маю вільний час. *("Do you have free time?" -> My brother asked if I had free time.)*
-*   «Він працює сьогодні в офісі?» -> Я запитав, **чи** він працює сьогодні в офісі. *("Is he working in the office today?" -> I asked whether he was working in the office today.)*
+<!-- INJECT_ACTIVITY: fill-in-schob-forms -->
+<!-- INJECT_ACTIVITY: quiz-tomuscho-vs-schob -->
+<!-- INJECT_ACTIVITY: unjumble-schob-clauses -->
 
-Тепер ми підходимо до дуже важливого і складного моменту. *(Now we come to a very important and difficult point.)* Ми маємо чітко розуміти різницю між фактами та проханнями або наказами. *(We must clearly understand the difference between facts and requests or orders.)* This is a tricky area where many students make a mistake because the English language uses completely different structures for these two things. В українській мові ми використовуємо слово «що» тільки для фактів, новин та інформації. Але ми обов'язково використовуємо слово «щоб» для наказів, прохань або строгих інструкцій. One small letter totally changes the entire meaning of your sentence from "He said that..." to "He said to...".
+## Базова непряма мова: він сказав, що... (Basic Reported Speech: He Said That...) (~750 words)
 
-Подивіться дуже уважно на ці два речення. Вони дуже схожі, але вони мають абсолютно різний зміст:
-1.  Він сказав, **що** я прийшов. *(He said that I came.)*
-Це просто факт. *(This is simply a fact.)* Він розповів комусь про мій прихід додому. He is reporting the objective news of my arrival.
-2.  Він сказав, **щоб** я прийшов. *(He told me to come.)*
-Це прохання або строгий наказ. *(This is a request or a strict order.)* Він хоче бачити мене зараз. He is giving an instruction for me to arrive.
+In everyday conversations, we constantly need to tell someone what another person said. This grammatical concept is called **непряма мова** (indirect/reported speech). At the A2 level, you do not need to worry about complex sequences of tenses or complicated structural transformations like you might find in English grammar books. Instead, our focus is on mastering the most frequent and practical relay pattern. To report a basic statement, you simply use the conjunction **що** to connect the speaker to their original message. The most common phrase you will hear and use is «він сказав, що...» or «вона сказала, що...». This simple structure allows you to pass on information smoothly, whether you are chatting with friends or speaking to colleagues at work.
 
-Пам'ятайте важливе правило з попередньої частини нашого уроку. Після слова «щоб» ми завжди ставимо дієслово у формі минулого часу.
-*   Мама сказала, **що** вона купила свіжий хліб. *(Mom said that she bought fresh bread.)* - Fact.
-*   Мама сказала, **щоб** я купив свіжий хліб. *(Mom said to buy fresh bread.)* - Instruction.
-*   Мій колега написав, **що** ми маємо важливу зустріч. *(My colleague wrote that we have an important meeting.)* - Fact.
-*   Мій колега написав, **щоб** я підготував усі документи. *(My colleague wrote that I should prepare all the documents.)* - Instruction.
-*   Лікар сказав, **що** я п'ю мало води. *(The doctor said that I drink little water.)* - Fact.
-*   Лікар сказав, **щоб** я пив більше води кожного дня. *(The doctor told me to drink more water every day.)* - Instruction.
+When you transform a direct quote into a reported statement, you perform a basic mechanical shift using **що**. The most important change happens to the pronouns and the verb conjugation. If the original speaker used the pronoun **я** (I), you must change it to **він** (he) or **вона** (she) to match the person you are talking about. Naturally, the verb must also change its ending to agree with this new subject. However, unlike English, the tense of the verb usually remains exactly the same as it was in the original quote. If the speaker used the future tense, you keep the future tense. If they used the past tense, you keep the past tense. This makes Ukrainian reported speech surprisingly straightforward once you grasp the pronoun shift. 
 
-Будьте дуже уважні з цими маленькими словами. *(Be very careful with these small words.)* Вони роблять ваше щоденне спілкування правильним і точним. *(They make your daily communication correct and accurate.)*
+Віктор каже: «Я прийду завтра ввечері». Коли ми передаємо ці слова, ми говоримо: Віктор сказав, що він прийде завтра. Ми змінюємо особу з першої на третю, але час залишається майбутнім. Зазвичай нам не треба змінювати час дієслова при передачі інформації.
 
-<!-- INJECT_ACTIVITY: match-up-transform-direct-speech-into-reported-speech-match-the-original-quote-to-its-indirect-version -->
+> *Viktor says: "I will come tomorrow evening". When we relay these words, we say: Viktor said that he will come tomorrow. We change the person from first to third, but the tense remains future. Usually, we do not need to change the tense of the verb when passing on information.*
 
-## Мета і повідомлення в житті
+While **сказати** (to say, to tell) is the most common verb for passing on information, your vocabulary will sound much richer if you use other reporting verbs. You can use **відповісти** (to answer, to reply) when someone reacts to a question in a conversation. If someone clarifies a difficult concept so that others can **зрозуміти** (to understand), you will need a specific verb for that.
 
-> — **Син:** Мама, тато телефонував десять хвилин тому. *(Mom, dad called ten minutes ago.)* Він сказав, щоб ти зателефонувала бабусі. *(He said that you should call grandma.)*
-> — **Мама:** Добре, я зателефоную їй трохи пізніше. *(Okay, I will call her a bit later.)* Я хочу зателефонувати, щоб запитати про її здоров'я. *(I want to call to ask about her health.)* Бабуся була в лікарні минулого тижня. *(Grandma was in the hospital last week.)*
-> — **Син:** Тато також сказав, що він сьогодні затримається на роботі. *(Dad also said that he will be late at work today.)* У них там важлива зустріч. *(They have an important meeting there.)*
-> — **Мама:** Я **зрозуміла** *(understood)*. Я приготую вечерю зараз, щоб він міг з'їсти щось гаряче вдома. *(I will prepare dinner now so that he can eat something hot at home.)*
-> — **Син:** А тато ще просив, щоб я прибрав у своїй кімнаті. *(And dad also asked that I clean in my room.)*
-> — **Мама:** Тоді йди прибирати, щоб у нас було чисто. *(Then go clean so that it is clean here.)* Бабуся вчора говорила, що хоче приїхати в гості на вихідних. *(Grandma said yesterday that she wants to come visit on the weekend.)*
-> — **Син:** Ура! *(Hooray!)* Я швидко приберу всі іграшки, щоб вона дуже зраділа. *(I will quickly clean all the toys so that she is very happy.)*
+For clarifications, you use **пояснити** (to explain). Sometimes a person gives extra information at the end of a discussion, so you can use **додати** (to add). All of these verbs seamlessly introduce a new clause starting with **що** to report a statement. 
 
-У реальному житті ми постійно передаємо інформацію. *(In real life, we constantly pass on information.)* Ми пишемо короткі **повідомлення** *(messages)* у месенджерах або просто залишаємо записки на холодильнику. *(We write short messages in messengers or simply leave notes on the fridge.)* У таких текстах дуже часто використовуються слова «що» та «щоб». *(In such texts, the words "that" and "so that" are used very often.)* Коли ви залишаєте записку, ви можете написати факт або пряму інструкцію. *(When you leave a note, you can write a fact or a direct instruction.)* Наприклад, ви можете написати сусіду: «Зателефонуй мамі, вона сказала, що чекає дзвінка». *("Call mom, she said that she is waiting for a call.")* Тут ми бачимо факт через **непряму мову** *(indirect speech)*. Або ви можете залишити таку записку: «Купи молоко, щоб ми могли випити кави вранці». *("Buy milk so that we could drink coffee in the morning.")* Це вже чітка **мета** *(purpose)* нашої дії. *(This is already a clear purpose of our action.)* Також ми часто пишемо про плани: «Він написав, що прийде пізніше після роботи». *("He wrote that he will come later after work.")* Такі прості речення роблять наше щоденне спілкування ефективним і зрозумілим. *(Such simple sentences make our daily communication effective and understandable.)* Звертайте увагу на ці важливі слова, коли читаєте українські тексти. *(Pay attention to these important words when you read Ukrainian texts.)*
+Секретарка відповіла, що директор зараз на важливій зустрічі. Лікар пояснив, що цей сироп треба пити тільки вранці. В кінці нашої розмови менеджер додав, що завтра офіс не працює. Всі ці слова допомагають нам точно передати важливу інформацію.
 
-Ці конструкції — це ідеальні фрази для початку розмови. *(These constructions are ideal phrases to start a conversation.)* Коли ми хочемо обговорити новини з друзями, ми часто використовуємо стандартні формули. *(When we want to discuss news with friends, we often use standard formulas.)* Наприклад, ви можете почати діалог так: «Мені сказали, що завтра буде сильний дощ». *("I was told that there will be heavy rain tomorrow.")* Це дуже природний спосіб поділитися інформацією, яку ви отримали від когось іншого. *(This is a very natural way to share information that you received from someone else.)* Інша дуже популярна фраза: «Я чув, що в центрі відкрився новий ресторан». *("I heard that a new restaurant opened in the center.")* Жінки зазвичай кажуть: «Я чула, що...». *("I heard that...")* Це чудова базова фраза, щоб почати обговорювати цікаві події навколо вас. *(This is a wonderful basic phrase to start discussing interesting events around you.)* А якщо ви хочете передати прохання, ви скажете: «Вони попросили, щоб ми прийшли трохи раніше». *("They asked that we come a bit earlier.")* Використовуйте ці готові фрази з дієсловами мовлення: **сказати** *(to say)*, **відповісти** *(to answer)*, **пояснити** *(to explain)*, **запитати** *(to ask)*, та **додати** *(to add)*. Вони допоможуть вам звучати впевнено як справжній носій мови. *(They will help you sound confidently like a true native speaker.)*
+> *The secretary answered that the director is currently at an important meeting. The doctor explained that this syrup should be taken only in the morning. At the end of our conversation, the manager added that the office is not working tomorrow. All these words help us to accurately relay important information.*
 
-Тепер ви знаєте три головні слова для поєднання ваших думок. *(Now you know three main words for combining your thoughts.)* Давайте подивимося на них ще раз, щоб ви ніколи їх не плутали. *(Let's look at them once more so that you never confuse them.)*
+Reporting a question requires a slightly different approach than reporting a standard statement. When you want to report a yes/no question, you cannot use **що**. Instead, you must use the particle **чи** (if/whether). For example, if the direct question is «Ти будеш на роботі?», you report it using the verb **запитати** (to ask): «Він запитав, чи я буду на роботі». Notice that the reported question is no longer a real question, so it ends with a period, not a question mark. If the original question already contains a question word like «де», «коли», or «чому», you simply reuse that same word to connect the clauses. 
 
-First, we use «що» strictly for facts and objective statements. It directly answers the question "What did they say?". Наприклад: «Я знаю, що він сьогодні працює в офісі». *(For example: "I know that he is working in the office today.")* 
+Новий колега запитав, чи я маю вільний час на каву. Я відповів, що зараз дуже зайнятий новим проєктом. Потім він запитав, коли я буду вільний. Я сказав, що закінчу роботу о шостій годині вечора.
 
-Second, we use «щоб» to express a specific purpose, wishes, or direct commands. It answers the question "What for?" or "To do what?". Наприклад: «Я працюю, щоб мати гроші на подорожі». *(For example: "I work to have money for travels.")* Або коли це різні люди: «Він хоче, щоб я працював швидше». *(Or when these are different people: "He wants me to work faster.")*
+> *A new colleague asked if I had free time for coffee. I answered that I am very busy with a new project right now. Then he asked when I would be free. I said that I will finish work at six o'clock in the evening.*
 
-Third, we use «тому що» or «бо» to explain the cause or reason of an action. It answers the simple question "Why?". Наприклад: «Я працюю, тому що мені потрібні гроші». *(For example: "I work because I need money.")* 
+:::info
+**Grammar box**
+Remember that indirect questions are statements about a question, not actual questions. Therefore, sentences like «Вона запитала, де працює мій брат.» always end with a period. You never use a question mark at the end of a reported speech sentence.
+:::
 
-Notice the crucial logical difference: «тому що» always looks back at the reason, while «щоб» always looks forward to the future goal. Якщо ви розумієте цю різницю, ви можете вільно будувати дуже гарні українські речення. *(If you understand this difference, you can freely build very beautiful Ukrainian sentences.)*
+Reported speech is not just an academic exercise; it is a vital tool for everyday, practical relay scenarios. You use it constantly when you need to pass a **повідомлення** (message) from a friend to your family, or when you are explaining what someone told you on the phone. The main **мета** (goal, purpose) is to create a natural communicative context. You are summarizing real conversations to keep people informed about plans, schedule changes, or personal news. This is how native speakers manage their daily logistics and share updates with their social circle.
 
-<!-- INJECT_ACTIVITY: unjumble-purpose-clauses -->
+Олена телефонувала п'ять хвилин тому і залишила повідомлення. Вона сказала, що запізниться на вечерю через великі затори. Вона також пояснила, що забула купити яблучний сік. Я відповів, що це не проблема для нас.
 
-## Підсумок
+> *Olena called five minutes ago and left a message. She said that she will be late for dinner because of big traffic jams. She also explained that she forgot to buy apple juice. I answered that it is not a problem for us.*
 
-Давайте згадаємо головні правила цього модуля. *(Let's recall the main rules of this module.)*
+Finally, it is critical to contrast how we report simple facts versus how we report commands or strong requests. This ties reported speech directly back to the subjunctive concept we discussed in the previous section. If you want to report a factual statement, you use **що**. For example, «Він сказав, що я прийшов» means "He said THAT I came" (he is simply confirming the fact of my arrival). However, if you are reporting a command, you must use **щоб** (in order to, so that) followed by the past tense verb. The sentence «Він сказав, щоб я прийшов» means "He said that I SHOULD come". This one small difference changes the entire meaning of the sentence from a factual report to an indirect command.
 
-Використовуйте **щоб** *(in order to)* плюс інфінітив, якщо суб'єкт один: «Я йду, щоб купити хліб». *(Use "щоб" plus infinitive if the subject is the same: "I am going to buy bread.")*
+Мама сказала, що мій старший брат купив свіже молоко. Це просто констатація факту. Але тато сказав, щоб брат купив свіже молоко. Це вже чіткий наказ або прохання. Різниця між цими двома реченнями дуже велика.
 
-Використовуйте **щоб** плюс минулий час, якщо суб'єкти різні: «Я хочу, щоб ти купив хліб». *(Use "щоб" plus past tense if the subjects are different: "I want you to buy bread.")*
+> *Mom said that my older brother bought fresh milk. This is just a statement of fact. But dad said that brother should buy fresh milk. This is already a clear command or a request. The difference between these two sentences is very big.*
 
-**Непряма мова** *(indirect speech)* зі словом **що** *(that)* передає факти: «Він сказав, що прийде». *(Indirect speech with "що" conveys facts: "He said that he will come.")*
+:::note
+**Quick tip**
+A common mistake is using **що** when reporting a request. Always ask yourself: "Am I reporting a fact, or am I reporting what someone wants another person to do?" If it involves an action someone else must perform, use **щоб** and the past tense verb.
+:::
 
-Непряма мова зі словом **щоб** передає **прохання** *(request)*: «Він сказав, щоб я прийшов». *(Indirect speech with "щоб" conveys a request: "He said that I should come.")*
+<!-- INJECT_ACTIVITY: match-up-reported-speech -->
 
-Питання в непрямій мові використовують слово **чи** *(if/whether)*: «Він запитав, чи я буду там». *(Questions in indirect speech use "чи": "He asked if I will be there.")*
+## Мета і повідомлення в житті (Purpose and Messages in Daily Life) (~650 words)
 
-Ці правила роблять ваші українські речення дуже природними. *(These rules make your Ukrainian sentences very natural.)*
+In daily life, purpose clauses and reported speech often interlock in a single, fluid thought. You use them constantly when you need to **пояснити** (to explain) a complex situation or **відповісти** (to answer, to reply) to a sudden scheduling conflict. Sometimes you also need to **запитати** (to ask) a friend about their personal plans while simultaneously relaying what someone else mentioned. Combining these two grammatical structures makes your spoken Ukrainian sound highly natural and sophisticated. You are no longer just making simple statements; you are connecting intentions with real-world events. This is exactly how native speakers organize their daily logistics.
+
+Мама зателефонувала, щоб я купив свіжий хліб. Мій колега сказав, що зустріч перенесли. Це зробили, щоб ми мали більше часу. Я зателефонував брату, щоб дізнатися про його нову роботу. Він відповів, що зараз дуже зайнятий.
+
+> *Mom called so that I would buy fresh bread. My colleague said that the meeting was rescheduled. They did this so that we would have more time. I called my brother to find out about his new job. He answered that he is very busy right now.*
+
+These grammar tools are absolutely essential for written communication as well. When you leave a short sticky note on the kitchen counter or send a quick text **повідомлення** (message) from your phone, you rely heavily on both factual reports and indirect commands. The main **мета** (goal, purpose) of such notes is to be as brief and clear as possible. Often, you just want to **додати** (to add) a small, important detail to a previous face-to-face conversation. Because you are not speaking directly to the person at that exact moment, you must use «що» and «щоб» to set the context and give instructions clearly.
+
+Я залишив гроші на столі, щоб ти купив молоко. Зателефонуй бабусі сьогодні ввечері. Вона сказала, що чекає на тебе. Я прочитав твоє коротке повідомлення. Я забув сказати, що повернуся дуже пізно. Я написав це, щоб ти не хвилювалася.
+
+> *I left money on the table so that you would buy milk. Call grandma tonight. She said that she is waiting for you. I read your short message. I forgot to say that I will return very late. I wrote this so that you would not worry.*
+
+In spoken Ukrainian, you will frequently hear high-frequency framing patterns that share news or pass on requests smoothly. This is the practical magic of **непряма мова** (indirect/reported speech). You can use these common phrases to **сказати** (to say, to tell) what you heard without taking direct responsibility for the original source of the information. It is a polite and natural way to spread news or give directions that come from a boss, a teacher, or a family member. Ultimately, memorizing these conversational chunks will help you **зрозуміти** (to understand) native speakers much faster when they tell stories.
+
+Мені сказали, що завтра буде сильний дощ. Я чув, що наш новий сусід працює в банку. Вони попросили, щоб ми прийшли трохи раніше. Наш директор наказав, щоб усі здали звіти сьогодні. Це дуже зручні та корисні фрази. Ми використовуємо їх кожного дня.
+
+> *I was told that there will be heavy rain tomorrow. I heard that our new neighbor works in a bank. They asked that we arrive a little earlier. Our director ordered that everyone submit their reports today. These are very convenient and useful phrases. We use them every day.*
+
+Now, let us consolidate the three main uses of subordination you have learned so far. It is critically important to distinguish them clearly in your mind. First, we use the conjunctions «тому що» or «бо» to answer the question «Чому?» (Why?). This shows the cause of an action. Second, we use the word **щоб** (in order to, so that) to answer the question «Для чого?» (What for?). This shows the intended future result. Third, we use «що» simply to report factual statements and connect them to the person who spoke. 
+
+Я вчу українську мову, бо хочу жити в Києві. Це причина моєї дії. Я вчу українську мову, щоб вільно говорити з друзями. Це моя головна мета. Мій друг сказав, що я вже добре говорю українською. Це просто констатація факту.
+
+> *I am learning the Ukrainian language because I want to live in Kyiv. This is the reason for my action. I am learning the Ukrainian language in order to speak fluently with friends. This is my main goal. My friend said that I already speak Ukrainian well. This is simply a statement of fact.*
+
+:::info
+**Grammar box**
+Notice how the boundaries between these concepts are strict. «Тому що» looks backward at the cause of an action. «Щоб» looks forward at the intended result. «Що» simply connects a reported fact to the speaker who said it. Keeping these three functions separate will prevent the most common sentence-building mistakes.
+:::
+
+As you continue your learning journey, try to listen specifically for «що» and «щоб» in native speech, podcasts, and media. These small connective words are the essential glue that holds the Ukrainian language together. They connect ideas, relay intentions, and allow you to navigate the complex social logistics of daily life.
+
+Слухайте уважно, як говорять носії мови. Звертайте увагу на ці маленькі слова. Вони роблять вашу мову природною.
+
+<!-- INJECT_ACTIVITY: unjumble-reorder-words-to-form-correct-purpose-clauses-and-reported-speech-sentences -->
+<!-- INJECT_ACTIVITY: quiz-choose-between-and-to-complete-sentences -->

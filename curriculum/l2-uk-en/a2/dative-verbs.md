@@ -1,146 +1,187 @@
-## Дієслова з давальним відмінком (Verbs That Take the Dative)
+## Дієслова з давальним відмінком (Verbs That Take the Dative) (~650 words)
 
-Ці дієслова вимагають особливої уваги. *(These verbs require special attention.)*
-In English, when you help someone, thank someone, or call someone, the person is usually the direct object. You simply say "I help him" or "She thanks the teacher."
-В українській мові граматична логіка цих дієслів зовсім інша. *(In the Ukrainian language, the grammatical logic of these verbs is completely different.)*
-Ці дієслова показують дію, яка має конкретного отримувача. *(These verbs show an action that has a specific recipient.)*
-Because the action is indirect, the person receiving the help or thanks must be in the Dative case (**давальний відмінок**).
-Ми завжди ставимо питання: **кому?** *(to whom?)* або **чому?** *(to what?)*.
-Ви даєте вашу допомогу або ваші слова іншій людині. *(You give your help or your words to another person.)*
+Сьогодні у нашому місті день волонтера. Ми працюємо разом і робимо багато корисних справ. Я допомагаю різним людям вирішувати їхні проблеми. Це дуже цікаво і важливо.
 
-Давайте детально розглянемо дієслово **допомагати** *(to help)*.
-Я дуже часто допомагаю своїй великій родині. *(I very often help my large family.)*
-When we use this verb, the family members receiving the help must take Dative endings.
-Наприклад, я щодня допомагаю **мамі** *(mom)* та молодшій **сестрі** *(sister)*.
-Моя донька допомагає **бабусі** готувати вечерю. *(My daughter helps grandma cook dinner.)*
-For masculine nouns, we strongly prefer the endings **-ові** or **-еві** when talking about people. This makes it instantly clear that the person is the recipient in the Dative case.
-Я з радістю допомагаю **татові** *(dad)*.
-Мій малий син допомагає старшому **братові** *(brother)* робити уроки.
-Він завжди допомагає своєму найкращому **другові** *(friend)*.
-Ці закінчення роблять вашу українську мову дуже природною і правильною. *(These endings make your Ukrainian language very natural and correct.)*
+> *Today is volunteer day in our city. We are working together and doing many useful things. I am helping various people solve their problems. It is very interesting and important.*
 
-Тепер поговоримо про дієслово **дякувати** *(to thank)*.
-Це надзвичайно важливе слово для ввічливого спілкування. *(This is an extremely important word for polite communication.)*
-Граматика тут дуже специфічна. *(The grammar here is very specific.)*
-A common mistake for learners familiar with Russian is to use the Accusative case (like the Russian word «благодарить»). The phrase «дякую вас» is completely incorrect in Ukrainian; it is a direct grammatical translation from Russian.
-В українській мові ми завжди кажемо «дякую **вам**» *(thank you [plural/formal])* або «дякую **тобі**» *(thank you [singular/informal])*.
-Ми щиро дякуємо головному **лікарю** *(the doctor)*.
-Я дуже дякую **вчителеві** *(the teacher)* за його щоденну допомогу.
-Ми голосно дякуємо **друзям** *(friends)* за чудовий подарунок.
-Завжди пам'ятайте це просте правило. *(Always remember this simple rule.)*
+> — **Волонтер:** Добрий день! Я допомагаю бабусі нести ці важкі сумки. *(Good day! I am helping a grandma carry these heavy bags.)*
+> — **Перехожий:** О, це чудово! Ви також знаєте, як знайти лікаря? *(Oh, that is great! Do you also know how to find a doctor?)*
+> — **Волонтер:** Так, я якраз дзвоню другові. Він працює в лікарні. *(Yes, I am just calling a friend. He works at the hospital.)*
+> — **Перехожий:** Дякую вам! Ви дуже допомагаєте нашій громаді. *(Thank you! You are helping our community a lot.)*
+> — **Волонтер:** Нема за що. Я часто раджу сусідці доброго лікаря. Мені подобається допомагати! *(You're welcome. I often advise a good doctor to my neighbor. I like helping!)*
 
-Ще два дуже важливі дієслова щоденного вжитку — це **дзвонити** *(to call)* та **телефонувати** *(to phone)*.
-Ці дієслова також показують прямий напрямок дії до конкретної людини. *(These verbs also show a direct direction of action to a specific person.)*
-Я дуже часто дзвоню моїй найкращій **подрузі** *(female friend)* Марії.
-Він майже щодня телефонує **Андрієві** *(Andriy)*.
-In English, you might say "I make a call to someone," using a preposition. In Ukrainian, you do not use the preposition **до** *(to)* with these verbs for people.
-Моя мама щовечора дзвонить старшому **синові** *(son)*.
-Подзвони **їй** *(her)* завтра вранці, будь ласка.
-Давальний відмінок сам показує напрямок вашого дзвінка. *(The Dative case itself shows the direction of your call.)*
+In English, when you help someone or thank someone, you use a direct object. You direct the action straight at the person. In Ukrainian, the logic is slightly different. We view these actions as being directed *to* or *toward* the recipient. Because of this, certain common verbs require the Dative case, answering the questions «кому?» (to whom?) or «чому?» (to what?).
 
-Є ще кілька дуже корисних дієслів, які працюють саме за цим правилом: **радити** *(to advise)*, **заважати** *(to bother, to disturb)*, та **відповідати** *(to answer)*.
-Я **раджу тобі** *(I advise you)* обов'язково подивитися цей новий фільм.
-Вибачте, я зараз не **заважаю вам** *(am I bothering you)*?
-Хороший учень завжди правильно **відповідає вчителеві** *(answers the teacher)*.
-Ми часто використовуємо ці дієслова для ввічливих прохань. *(We often use these verbs for polite requests.)*
-Будь ласка, не **заважай мені** *(do not bother me)* працювати над проектом.
-Завжди швидко **відповідай мамі** *(answer mom)*, коли вона щось питає.
-Інші корисні дієслова з давальним відмінком: **довіряти** *(to trust)*, **вибачати** *(to forgive)*, **посміхатися** *(to smile)*, **співчувати** *(to sympathize)*, та **заздрити** *(to envy)*. Я **довіряю другові** *(I trust my friend)*. Вона щиро **посміхається дитині** *(she smiles at the child)*.
+Here are the most important verbs that take the Dative case:
+*   **допомагати** (to help)
+*   **дякувати** (to thank)
+*   **дзвонити** (to call, to phone) 
+*   **радити** (to advise)
+*   **заважати** (to bother, to disturb)
+*   **відповідати** (to answer (someone))
+
+When you use these verbs, you must put the person receiving the help, thanks, or phone call into the Dative case. You cannot use the Accusative case here. This is a very common mistake for English speakers, so pay close attention to this group.
+
+:::note
+**Quick tip** — Think of **дякувати** not as "to thank someone," but rather as "to give thanks *to* someone." This mindset will naturally lead you to use the Dative case.
+:::
+
+Найчастіше ми використовуємо ці дієслова з особовими займенниками. Це дуже зручно в повсякденному спілкуванні. Форми давального відмінка для займенників потрібно просто запам'ятати. Вони звучать так: мені, тобі, йому, їй, нам, вам, їм.
+
+> *Most often, we use these verbs with personal pronouns. This is very convenient in everyday communication. The dative case forms for pronouns just need to be memorized. They sound like this: to me, to you, to him, to her, to us, to you (plural/formal), to them.*
+
+Notice how these pronouns work with our core verbs in practice. The pronoun form completely changes from the dictionary form to show who is receiving the action.
+
+Я часто допомагаю їй робити домашнє завдання. Він завжди дякує тобі за смачну вечерю. Ми дзвонимо їм кожного тижня у неділю. Чому ти не відповідаєш мені на повідомлення? Вони ніколи не заважають нам працювати. Я раджу йому прочитати цю нову книгу.
+
+> *I often help her do homework. He always thanks you for a delicious dinner. We call them every week on Sunday. Why are you not answering me to the message? They never bother us while working. I advise him to read this new book.*
+
+When you direct these actions to specific people rather than using pronouns, you need to change the noun endings. As a quick review, masculine nouns usually take the endings **-ові** or **-еві** (sometimes **-у** or **-ю**). Feminine nouns take the ending **-і**. 
+
+:::info
+**Grammar box** — Remember that feminine nouns ending in **-га**, **-ка**, or **-ха** undergo consonant alternations before the **-і** ending. The consonants change: **г** → **з**, **к** → **ц**, **х** → **с**. For example, подруга becomes подрузі.
+:::
+
+Я щодня дзвоню моєму найкращому другові. Моя сестра часто допомагає нашому братові. Ми щиро дякуємо новій подрузі за допомогу. Я раджу мамі подивитися цей цікавий фільм. Цей гучний шум дуже заважає вчительці. Директор зараз відповідає своєму колезі на важливий лист.
+
+> *I call my best friend every day. My sister often helps our brother. We sincerely thank the new friend (female) for the help. I advise mom to watch this interesting movie. This loud noise really bothers the teacher (female). The director is answering his colleague to an important letter right now.*
+
+These dative verbs are extremely common in negative sentences and commands (the imperative mood). When you tell someone to do or not do something, the Dative case rule still applies perfectly. 
+
+Не заважай мені, будь ласка, я зараз читаю. Не дзвони їй так пізно ввечері. Допоможи мені приготувати обід для нашої родини. Обов'язково відповідай йому, коли він тебе питає. Завжди дякуйте батькам за їхню велику любов. Порадь нам гарний ресторан у центрі міста.
+
+> *Do not bother me, please, I am reading right now. Do not call her so late in the evening. Help me prepare lunch for our family. Be sure to answer him when he asks you. Always thank your parents for their great love. Advise us a good restaurant in the city center.*
 
 
-Прочитайте цей короткий текст про допомогу. *(Read this short text about helping.)*
-Сьогодні важливий День волонтера в нашому місті. *(Today is an important Volunteer Day in our city.)*
+## Підсумок — Summary
 
-> — **Волонтер:** Олено, я зараз **допомагаю сусідці** *(I help the neighbor)* прибирати великий парк. Тобі потрібна допомога?
-> — **Олена:** Ні, я вже все зробила. Але я **раджу тобі** *(I advise you)* трохи відпочити.
-> — **Волонтер:** Добре, тоді я **дзвоню другові** *(I call the friend)* Івану. Він має принести воду.
-> — **Іван:** Привіт! Я вже тут. Тримай свіжу воду та смачну їжу.
-> — **Волонтер:** Я щиро **дякую тобі** *(I thank you)* за цю велику допомогу!
+Вітаємо! У цьому модулі ми погли́били на́ші зна́ння про дава́льний відмі́нок в украї́нській мо́ві. Ви дізна́лися, що дава́льний відмі́нок ви́користовується для позна́чення отримувача або того, хто відчуває дію. Зокрема, ми зосередилися на дієсло́вах, які керу́ють цим відмінком, таки́х як **допомага́ти**, **дя́кувати**, **дзвони́ти**, **ра́дити**, **заважа́ти**, та **відповіда́ти**. Пам'ятаєте приклад: **Студе́нт відповіда́є вчи́телеві**? Тут **вчи́телеві** стоїть у дава́льному відмі́нку.
 
-<!-- INJECT_ACTIVITY: fill-in-focus-completing-sentences-with-correct-dative-noun-pronoun-forms-after-help-thank-call -->
+Ми також опанували важливі конструкції для вираження ві́ку (наприклад, **Мені́ два́дцять п'ять ро́ків** або **Діду́севі ві́сімдесят ро́ків**) та для ви́словлення си́мпатії за допомогою дієсло́ва **подо́батися**. Зверніть увагу, що у ре́ченнях типу **Мені́ подо́бається ця кни́жка** суб'єкт і об'єкт ні́бито «міня́ються місця́ми»: те, що подобається, є підме́том, а той, кому подобається, стоїть у дава́льному відмі́нку. Не забува́йте про відмі́нності мі́ж **любити** та **подо́батися**!
 
-## Мені подобається: Давальний відмінок особи (The Experiencer Dative with подобатися)
+Нарешті, ми розглянули дієслова, які можуть приймати два об'єкти одноча́сно, напри́клад, **дава́ти**, **розповіда́ти**, **пока́зувати** та **дарува́ти**. У таких випадках осо́ба, якій щось дають чи розповіда́ють, стоїть у дава́льному відмі́нку, а предмет — у знахі́дному (наприклад, **Я даю́ друго́ві но́ву ціка́ву кни́гу**). Важливо запам'ятати, що вибір мі́ж знахі́дним та дава́льним відмінками цілко́м зале́жить від конкре́тного дієсло́ва.
 
-Зараз ми вивчимо одне з найпопулярніших слів. *(Now we will learn one of the most popular words.)* Це дієслово **подобатися** *(to like, to be pleasing)*. Ця граматична конструкція працює не так, як в англійській мові. In English, when you say "I like the book", the word "I" is the active subject, and the book is the direct object. In Ukrainian, the logic is completely reversed. Ми кажемо «Мені подобається книжка». У цьому реченні слово «книжка» — це головний підмет у називному відмінку. *(In this sentence, the word "book" is the main subject in the nominative case.)* А слово «мені» стоїть у давальному відмінку. *(And the word "to me" is in the dative case.)* Literally, this Ukrainian sentence means "The book is pleasing to me." Дія йде від предмета до людини. *(The action goes from the object to the person.)* Тому людина завжди має форму давального відмінка. *(That is why the person always takes the form of the dative case.)*
+**Самоперевірка:**
+1.  Як ви запитаєте: «Скільки тобі років?» українською мовою? Розкажіть про вік трьох членів вашої родини, використовуючи давальний відмінок.
+2.  У чому полягає принципова відмінність між **любити** та **подобатися** з точки зору відмінків? Перелічіть три речі, які вам подобаються, використовуючи «подобається» або «подобаються».
 
-Форма дієслова залежить тільки від предмета. *(The form of the verb depends only on the object.)* Вона не залежить від людини, якій подобається цей предмет. *(It does not depend on the person who likes this object.)* Якщо предмет один, ми використовуємо форму однини **подобається**. Мені подобається цей гарячий **чай** *(tea)*. Тобі подобається нова **квартира** *(apartment)*. Якщо предметів багато, ми беремо форму множини **подобаються**. Мені подобаються ці красиві **квіти** *(flowers)*. Йому подобаються старі **фільми** *(movies)*. The English translation remains "I like" or "you like", but the Ukrainian verb ending physically changes to match the plural subjects «квіти» or «фільми». Це дуже важливе правило. *(This is a very important rule.)*
+<!-- INJECT_ACTIVITY: fill-in, Complete sentences with the correct dative form after dative-governing verbs, 8 items -->
 
-Ми дуже часто використовуємо різні особові займенники з цим дієсловом. *(We very often use various personal pronouns with this verb.)* Ви вже знаєте форму «мені подобається» *(I like)*. Якщо ви запитуєте друга, ви кажете «**тобі** подобається» *(you like [singular/informal])* або «тобі подобаються». Для третьої особи ми кажемо «**йому** подобається» *(he likes)* та «**їй** подобається» *(she likes)*. У множині ми маємо форму «**нам** подобається» *(we like)*. Якщо ви говорите з учителем або групою людей, використовуйте форму «**вам** подобається» *(you like [plural/formal])*. Для інших людей є форма «**їм** подобається» *(they like)*. Їм подобається гуляти в парку. *(They like to walk in the park.)* Нам подобаються ці смачні яблука. *(We like these tasty apples.)*
+## Мені подобається: Давальний відмінок досвідника (The Experiencer Dative with подобатися) (~550 words)
 
-У минулому часі правило працює так само. *(In the past tense, the rule works the same way.)* Дієслово змінює свою форму і показує рід предмета, який стоїть у називному відмінку. *(The verb changes its form and shows the gender of the object, which is in the nominative case.)* Якщо предмет чоловічого роду, ми кажемо «мені **подобався**». Мені подобався цей довгий фільм. *(I liked this long movie.)* Для жіночого роду потрібна форма «мені **подобалася**». Тобі подобалася ця чорна **кава** *(coffee)*. Якщо підмет середнього роду, використовуйте закінчення «-о»: «мені **подобалося**». Йому подобалося солодке **морозиво** *(ice cream)*. У множині форма завжди однакова: «мені **подобалися**». Нам подобалися ті цікаві книги. *(We liked those interesting books.)* The verb strictly mirrors the gender of the thing being liked, never the experiencer.
+One of the most common ways to express that you like something in Ukrainian is using the verb **подобатися** (to be pleasing to). However, the sentence structure is completely reversed compared to English. In English, you say "I like summer," where "I" is the subject doing the action. In Ukrainian, the logic is closer to "Summer is pleasing to me." The person who experiences the feeling must be in the Dative case. Meanwhile, the thing being liked is the actual grammatical subject of the sentence and takes the Nominative case.
 
-Якщо ви хочете зробити заперечення, просто поставте частку **не** *(not)* перед дієсловом. *(If you want to make a negation, just put the particle "не" before the verb.)* Мені не подобається ця гучна музика. *(I do not like this loud music.)* Їй не подобався той старий ресторан. *(She did not like that old restaurant.)* Запитувати про смаки також дуже просто. *(Asking about tastes is also very simple.)* Тобі не подобається ця нова пісня? *(Do you not like this new song?)* Що вам подобається в Україні? *(What do you like in Ukraine?)* Мені дуже подобається вивчати українську мову. *(I really like studying the Ukrainian language.)* А що подобається тобі? *(And what do you like?)*
+Моїй сестрі дуже подобається нова школа. Мені подобається тепле літо і холодна зима. Тобі подобається ця українська пісня? Нашому другові не подобається працювати ввечері.
 
-<!-- INJECT_ACTIVITY: match-up-focus-matching-ukrainian-sentences-to-english-i-like-equivalents-to-cement-the-subject-object-shift -->
+> *My sister really likes the new school. I like warm summer and cold winter. Do you like this Ukrainian song? Our friend does not like working in the evening.*
 
-## Скільки тобі років? Вік у давальному відмінку (Age in the Dative)
+Because the thing you like is the grammatical subject of the sentence, the verb **подобатися** must agree with it, not with the person. In the present tense, you will mostly use two forms: the singular **подобається** and the plural **подобаються**. If you like one thing or an action, use the singular form. If you like multiple things, use the plural form. The Dative pronoun or noun at the beginning of the sentence does not change the verb ending at all.
 
-Говорити про свій **вік** *(age)* українською мовою дуже легко, якщо ви пам'ятаєте попереднє правило. *(Talking about your age in Ukrainian is very easy if you remember the previous rule.)* In English, you "are" a certain age, using the verb "to be" with the subject. В українській мові ми використовуємо іншу логіку. *(In the Ukrainian language, we use a different logic.)* Age is treated as a fact or an experience that happens *to* someone. Тому людина завжди стоїть у давальному відмінку. *(That is why the person always stands in the dative case.)* The pattern is simple and strict: [Person in Dative] + [Number] + [Word for "year"]. Наприклад, ми кажемо: «Мені двадцять років». *(For example, we say: "To me twenty years".)* Дідусеві вісімдесят років. *(Grandpa is eighty years old.)* The verb "to be" is completely omitted in the present tense, making the structure very concise and direct.
+:::info
+**Grammar box** — Think of подобається as "it appeals" and подобаються as "they appeal." This mental translation helps you remember why the verb changes when the object is plural.
+:::
 
-The most complex part of stating your age is choosing the correct form for the word "year". В українській мові є три різні форми цього слова. *(In the Ukrainian language, there are three different forms of this word.)* The choice depends entirely on the last digit of the number you are using.
+Мені подобається ця цікава книжка. Тобі подобаються ці нові фільми. Їй подобається велике місто, але йому подобаються маленькі села. Нам дуже подобається читати і писати українською мовою. Їм не подобаються ці старі фотографії.
 
-1. Форма **рік** *(year)* використовується для чисел, які закінчуються на 1, але не 11.
-2. Форма **роки** *(years)* потрібна для чисел, які закінчуються на 2, 3, або 4, але не 12, 13, 14.
-3. Форма **років** *(years [Genitive plural])* використовується для всіх інших чисел: 5, 6, 7, 8, 9, 0, а також для групи від 11 до 19.
+> *I like this interesting book. You like these new movies. She likes the big city, but he likes small villages. We really like reading and writing in the Ukrainian language. They do not like these old photos.*
 
-| Число (Number) | Форма (Form) | Приклад (Example) |
-| :--- | :--- | :--- |
-| 1, 21, 31... | рік | Моєму братові двадцять один рік. *(My brother is 21 years old.)* |
-| 2, 3, 4, 22, 23, 24... | роки | Моїй сестрі двадцять два роки. *(My sister is 22 years old.)* |
-| 5-20, 25-30, 35-40... | років | Моїй мамі п'ятдесят років. *(My mom is 50 years old.)* |
+This reversed grammatical logic continues when you speak in the past tense. Since the verb agrees with the Nominative subject, it must take the gender and number of that specific noun. The past tense forms are подобався for masculine subjects and подобалася for feminine subjects. You also use подобалося for neuter subjects and подобалися for plural subjects. Once again, it does not matter who is doing the liking; it only matters what object or person is being liked.
 
-Щоб запитати про вік, ми використовуємо слово **скільки** *(how many)*. *(To ask about age, we use the word "how many".)* Після слова «скільки» іменник завжди стоїть у родовому відмінку множини. *(After the word "how many", the noun always stands in the genitive case plural.)* That is why the question always uses the form «років», regardless of what the actual age might be. Людина, про яку ми запитуємо, залишається в давальному відмінку. *(The person about whom we are asking remains in the dative case.)* Скільки тобі років? *(How old are you?)* Скільки йому років? *(How old is he?)* Скільки років вашому синові? *(How old is your son?)* The structure of the question perfectly mirrors the structure of the answer you expect.
+У дитинстві мені подобалася ця народна казка. Моєму братові дуже подобався цей старий фільм. Нам подобалося жити біля великого лісу. Їм подобалися ті смачні яблука з нашого саду. Тобі подобався той високий хлопець?
 
-Подивімося, як люди говорять про вік у реальному житті. *(Let's see how people talk about age in real life.)*
+> *In childhood, I liked this folk tale. My brother really liked this old movie. We liked living near the big forest. They liked those delicious apples from our garden. Did you like that tall guy?*
 
-> — **Олена:** Привіт, Антоне! Скільки років твоєму татові? *(Hi, Anton! How old is your dad?)*
-> — **Антон:** Йому п'ятдесят два роки. А твоїй мамі? *(He is fifty-two years old. And your mom?)*
-> — **Олена:** Їй сорок дев'ять років. *(She is forty-nine years old.)*
-> — **Антон:** А скільки років твоїй бабусі? *(And how old is your grandma?)*
-> — **Олена:** Моїй бабусі сімдесят один рік. *(My grandma is seventy-one years old.)*
+When you want to ask someone about their preferences, you must choose your question words carefully. Put the question word in the Nominative case if you are asking about the object being liked, or use the Dative case if you are asking about the person who feels the liking. Use the word «що» (what) or «хто» (who) for the grammatical subject, and «кому» (to whom) for the experiencer.
 
-Як бачите, ми часто запитуємо про вік родичів або друзів. *(As you can see, we often ask about the age of relatives or friends.)* Головне — пам'ятати про правильний відмінок для людини та правильну форму слова. *(The main thing is to remember about the correct case for the person and the correct form of the word.)*
+> — **Анна:** Що тобі подобається робити на вихідних? *(What do you like doing on the weekends?)*
+> — **Марко:** Мені дуже подобається спати і читати. *(I really like sleeping and reading.)*
+> — **Анна:** Чи подобається їм Київ? *(Do they like Kyiv?)*
+> — **Марко:** Так, їм подобається це місто. *(Yes, they like this city.)*
+> — **Анна:** Кому подобається ця гучна музика? *(Who likes this loud music?)*
+> — **Марко:** Вона подобається моєму сусідові! *(My neighbor likes it!)*
 
-<!-- INJECT_ACTIVITY: true-false-focus-judging-the-correctness-of-age-expressions-dative-form-correct-year-noun-agreement -->
+<!-- INJECT_ACTIVITY: match-up, Match подобатися sentences to their English equivalents (reversed subject mapping), 8 items -->
 
-## Давальний чи знахідний? Порівняння (Dative vs. Accusative with Verbs)
+## Скільки тобі років? Вік у давальному відмінку (Age in the Dative) (~500 words)
 
-Ми вже добре знаємо два важливі відмінки: знахідний і давальний. *(We already know well two important cases: accusative and dative.)* Коли саме ми використовуємо кожен з них? *(When exactly do we use each of them?)* It all depends on the internal logic of the action and the specific verb you choose. Знахідний відмінок завжди показує пряму дію на об'єкт. *(The accusative case always shows a direct action on an object.)* Think of it as a direct hit on a target. Ви бачите людину, ви добре знаєте мову, ви любите музику. *(You see a person, you know a language well, you love music.)* Наприклад, ми кажемо «я бачу маму». *(For example, we say "I see mom".)* Давальний відмінок має зовсім іншу логіку. *(The dative case has a completely different logic.)* Він показує отримувача дії. *(It shows the recipient of the action.)* Think of it as a hand-off, a transfer, or a delivery. Ви даєте щось людині, ви допомагаєте комусь. *(You give something to a person, you help someone.)* Наприклад, ми говоримо «я допомагаю мамі» або «я дякую вчителеві». *(For example, we say "I help mom" or "I thank the teacher".)* Дія йде до людини, а не прямо на неї. *(The action goes to the person, and not directly on them.)*
+When expressing age in Ukrainian, the grammatical structure is quite different from what you are used to in English. Instead of saying "I am twenty" using the verb "to be," you use the Dative case to indicate the person experiencing the age. This is followed by the number and the word for "years." The literal translation of this construction would be something like "to me there are twenty years." This experiencer pattern is very common in Ukrainian, similar to how we use the verb for liking something. The person whose age we are discussing is always the indirect object in the sentence.
 
-Уважно подивімося на ці відмінки разом. *(Let's look carefully at these cases together.)* Пряме порівняння допомагає зрозуміти різницю набагато краще. *(A direct comparison helps to understand the difference much better.)* Завжди звертайте увагу на закінчення слів. *(Always pay attention to the endings of words.)*
-«Я люблю маму». *(I love mom.)* Це знахідний відмінок, пряма дія. *(This is the accusative case, direct action.)*
-«Я допомагаю мамі». *(I help mom.)* Це давальний відмінок, дія йде до людини. *(This is the dative case, the action goes to the person.)*
-Ви бачите, як змінюється слово «мама»? *(Do you see how the word "mom" changes?)* Вона має закінчення «-у» у знахідному відмінку, і «-і» у давальному. *(It has the ending "-u" in the accusative case, and "-i" in the dative.)*
-Ось ще кілька корисних прикладів. *(Here are a few more useful examples.)*
-«Я бачу друга». *(I see a friend.)* Це знахідний відмінок. *(This is the accusative case.)*
-«Я дзвоню другові». *(I call a friend.)* Це вже давальний відмінок. *(This is already the dative case.)*
-«Ми чекаємо подругу». *(We wait for a friend.)* Знахідний відмінок. *(Accusative case.)*
-«Ми дякуємо подрузі». *(We thank the friend.)* Давальний відмінок. *(Dative case.)*
+Щоб сказати свій вік українською мовою, ми використовуємо давальний відмінок. Спочатку ми ставимо особовий займенник або іменник у давальному відмінку. Потім ми кажемо правильну цифру. В кінці ми додаємо слово «рік» у потрібній формі. Мені двадцять п'ять років, а моєму дідусеві вісімдесят років. Нашій бабусі сімдесят один рік.
 
-Деякі дієслова можуть використовувати обидва відмінки одночасно. *(Some verbs can use both cases simultaneously.)* Найкращі приклади — це слова **давати** *(to give)* та **розповідати** *(to tell)*. *(The best examples are the words "to give" and "to tell".)* Структура таких речень є дуже логічною. *(The structure of such sentences is very logical.)* Спочатку йде дієслово, потім людина у давальному відмінку, а потім річ у знахідному. *(First goes the verb, then the person in the dative case, and then the thing in the accusative.)* Формула така: дієслово + кому? + що? *(The formula is this: verb + to whom? + what?)*
-Я даю мамі квіти. *(I give mom flowers.)* Кому я даю? Мамі. *(To whom do I give? To mom.)* Що я даю? Квіти. *(What do I give? Flowers.)*
-Він розповідає нам історію. *(He tells us a story.)* Кому він розповідає? Нам. *(To whom does he tell? To us.)* Що він розповідає? Історію. *(What does he tell? A story.)*
-Вони купують синові подарунок. *(They buy a present for the son.)* Такі речення дають багато інформації одразу. *(Such sentences give a lot of information at once.)*
+> *To state your age in the Ukrainian language, we use the dative case. First, we put the personal pronoun or noun in the dative case. Then we say the correct number. At the end, we add the word "year" in the required form. I am twenty-five years old, and my grandfather is eighty years old. Our grandmother is seventy-one years old.*
 
-Як обрати правильний відмінок під час розмови? *(How to choose the correct case during a conversation?)* There is a simple strategic rule. Якщо людина є отримувачем вашої дії, використовуйте давальний відмінок. *(If the person is the recipient of your action, use the dative case.)* Communication, help, or gifts always travel to a destination. Якщо людина є об'єктом дії, використовуйте знахідний відмінок. *(If the person is the object of the action, use the accusative case.)* Seeing, liking, or waiting are direct actions on an object.
-Цікавий приклад — це дієслова зі значенням «кликати». *(An interesting example is verbs with the meaning 'to call/summon'.)*
-Слово **дзвонити** *(to call by phone)* вимагає давального відмінка. *(The word "to call by phone" requires the dative case.)* Я дзвоню братові. *(I call my brother.)* Це комунікація, яка йде до нього. *(This is communication that goes to him.)*
-Але слово **кликати** *(to call/summon)* вимагає знахідного відмінка. *(But the word "to call/summon" requires the accusative case.)* Я кличу брата. *(I call my brother.)* Це пряма дія безпосередньо на нього. *(This is a direct action directly on him.)*
+The word for "year" changes its grammatical form depending on the specific number that precedes it. This is a fundamental rule of Ukrainian numbers that applies to counting any objects, but it is especially important when stating your age. If the age ends in the number 1 (except for the number 11), you must use the Nominative singular form **рік** (year). For ages ending in 2, 3, or 4 (except 12, 13, and 14), you must use the Nominative plural form **роки** (years (2-4)). For all other numbers, including 5 through 20 and decades like 30 or 40, you must use the Genitive plural form **років** (years (5+)). It is crucial to memorize these three distinct groups to speak naturally.
 
-<!-- INJECT_ACTIVITY: quiz-focus-choosing-between-dative-and-accusative-for-the-noun-pronoun-after-specific-verbs-e-g -->
+Моїй маленькій дитині зараз один рік. Моєму старшому братові двадцять три роки. Моїй молодшій сестрі п'ять років, а моєму найкращому другові дванадцять років. Ми завжди змінюємо закінчення цього слова після різних цифр. Це дуже важливе правило для кожного студента.
 
-## Підсумок
+> *My small child is one year old now. My older brother is twenty-three years old. My younger sister is five years old, and my best friend is twelve years old. We always change the ending of this word after different numbers. This is a very important rule for every student.*
 
-Ми вивчили дуже важливу тему сьогодні. *(We learned a very important topic today.)* Давальний відмінок має три головні ролі у таких реченнях. *(The dative case has three main roles in such sentences.)*
+:::info
+**Grammar box** — The counting rules for 1, 2-4, and 5+ always apply to the *last digit* of a compound number. Therefore, 21 uses **рік** (двадцять один рік) and 32 uses **роки** (тридцять два роки). However, the "teen" numbers 11, 12, 13, and 14 belong to the 5+ group and always use **років** (одинадцять років).
+:::
 
-По-перше, дієслова **допомагати** *(to help)*, **дякувати** *(to thank)* та **дзвонити** *(to call)* вимагають форми «кому?». *(First, the verbs "to help", "to thank", and "to call" require the "to whom?" form.)* Дія йде до людини. *(The action goes to the person.)*
+To ask someone about their age, you must also use the Dative case for the person you are asking about. The question word is «скільки» (how much/how many), which always requires the Genitive plural form «років». The conversational pattern is always structured as "how many years to someone." You do not change the question word itself, but you must carefully choose the correct Dative pronoun, such as «тобі» або «йому», or the correct Dative noun ending for the person.
 
-По-друге, дієслово **подобатися** *(to like)* має зворотну структуру. *(Second, the verb "to like" has a reverse structure.)* Людина стоїть у давальному відмінку, а річ — у називному. *(The person is in the dative case, and the thing is in the nominative.)*
+Скільки тобі років? Скільки їй років? Скільки років твоєму братові або твоїй сестрі? Коли ми хочемо знати вік нової людини, ми завжди питаємо саме так. Це дуже просте, але дуже корисне і важливе питання для знайомства з людьми. Вчителеві сорок років, а студентам двадцять років.
 
-По-третє, ми використовуємо давальний відмінок для віку. *(Third, we use the dative case for age.)*
+> *How old are you? How old is she? How old is your brother or your sister? When we want to know the age of a new person, we always ask exactly like this. This is a very simple, but very useful and important question for getting to know people. The teacher is forty years old, and the students are twenty years old.*
 
-Перевірте свої знання: *(Check your knowledge:)*
+This short conversation between two people asking and answering questions about the ages of different family members reinforces the combination of Dative nouns, Dative pronouns, and numbers with the correct word for "year."
 
-- Як правильно сказати: «дякую тебе» чи «дякую тобі»? *(How to say it correctly: "thank you [acc.]" or "thank you [dat.]"?)* Правильно: «дякую тобі». *(Correct: "thank you [dat.]".)*
-- Яку форму має дієслово «подобатися», якщо мені подобаються книги? *(What form does the verb "to like" have if I like books?)* Множина: «подобаються». *(Plural: "they are pleasing".)*
-- Яку форму слова **рік** *(year)* ми вживаємо для числа 22? *(Which form of the word "year" do we use for the number 22?)* Форма: «двадцять два роки». *(Form: "twenty-two years".)*
+> — **Марко:** Привіт! Скільки тобі років? *(Hi! How old are you?)*
+> — **Анна:** Мені двадцять чотири роки. А тобі? *(I am twenty-four years old. And you?)*
+> — **Марко:** Мені двадцять вісім років. Скільки років твоїй молодшій сестрі? *(I am twenty-eight years old. How old is your younger sister?)*
+> — **Анна:** Моїй сестрі тільки один рік. А твоєму братові? *(My sister is only one year old. And your brother?)*
+> — **Марко:** Моєму старшому братові тридцять два роки. *(My older brother is thirty-two years old.)*
+
+<!-- INJECT_ACTIVITY: true-false-age, Judge whether age expressions use correct dative forms and number agreement, 8 items -->
+
+## Давальний чи знахідний? Порівняння (Dative vs. Accusative with Verbs) (~500 words)
+
+The Accusative case is reserved for direct objects. It answers the questions "who?" or "what?" is directly acted upon in a sentence. The Dative case is used for indirect objects, recipients, or experiencers. It answers the question "to whom?" or "for whom?" the action is being done. You must always look closely at the verb to decide which case is appropriate.
+
+Згадаймо детально дієслова, які завжди вимагають знахідного відмінка. Це такі популярні дієслова як бачити, знати, любити та чекати. Вони завжди відповідають на питання «кого?» або «що?». Наприклад, я бачу маму на вулиці. Він дуже любить старшого брата. Ми чекаємо молодшу сестру біля школи. У цих реченнях дія прямо переходить на людину або предмет.
+
+> *Recall in detail the verbs that always require the accusative case. These are such popular verbs as to see, to know, to love, and to wait for. They always answer the questions "who?" or "what?". For example, I see mom on the street. He really loves his older brother. We are waiting for our younger sister near the school. In these sentences, the action passes directly to the person or object.*
+
+Compare these direct actions with the Dative verbs we learned earlier. To master Ukrainian, you must memorize the core verbs that require the Dative case. These include **допомагати** (to help), **дякувати** (to thank), and **дзвонити** (to call, to phone). Notice how the noun ending changes in these pairs:
+
+*Accusative:*
+**Я бачу маму.** — *I see mom.*
+
+*Dative:*
+**Я допомагаю мамі.** — *I help mom.*
+
+*Accusative:*
+**Ми любимо подругу.** — *We love our friend.*
+
+*Dative:*
+**Ми дзвонимо подрузі.** — *We call our friend.*
+
+You also need to use the Dative case with verbs of communication and disruption. Always use this case with **радити** (to advise), **заважати** (to bother, to disturb), and **відповідати** (to answer (someone)). These verbs describe actions directed toward a specific recipient.
+
+*Accusative:*
+**Він знає брата.** — *He knows his brother.*
+
+*Dative:*
+**Він радить братові.** — *He advises his brother.*
+
+*Accusative:*
+**Студент слухає вчителя.** — *The student listens to the teacher.*
+
+*Dative:*
+**Студент відповідає вчителеві.** — *The student answers the teacher.*
+
+:::info
+**Grammar box** — The choice between the Accusative and Dative cases depends entirely on the specific verb you use. You cannot simply guess the correct case based on English grammar, because English often uses direct objects where Ukrainian requires the Dative case. You must learn the case requirement together with every new Ukrainian verb you study.
+:::
+
+We use the Dative case for experiencers. Remember the special syntax for **подобатися** (to be pleasing to, to like (reversed syntax)) when talking about things you enjoy. The thing you like is actually the grammatical subject of the sentence.
+
+You also use the Dative case when stating someone's age. Remember the number agreement rules for **рік** (year). You must use **роки** (years (2-4)) after the numbers two, three, and four. Finally, you use **років** (years (5+)) after five and all higher numbers.
+
+Існують також дієслова, які можуть приймати два об'єкти одночасно. Це дієслова давати, розповідати, показувати та дарувати. У таких реченнях ми використовуємо давальний відмінок для особи, а знахідний відмінок для предмета. Я даю другові нову цікаву книгу. Вона розповідає нам довгу історію. Вчитель показує новим студентам світлий клас. Ми даруємо мамі дуже гарні квіти. Це надзвичайно популярна і корисна граматична конструкція в українській мові.
+
+> *There are also verbs that can take two objects simultaneously. These are the verbs to give, to tell, to show, and to gift. In such sentences, we use the dative case for the person, and the accusative case for the object. I give a friend a new interesting book. She tells us a long story. The teacher shows the new students the bright classroom. We gift mom very beautiful flowers. This is an extremely popular and useful grammar construction in the Ukrainian language.*
+
+<!-- INJECT_ACTIVITY: quiz-dative-vs-accusative -->

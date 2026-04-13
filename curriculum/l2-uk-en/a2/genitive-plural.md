@@ -1,190 +1,228 @@
-## Чоловічий рід: -ів та нульове закінчення
+## Чоловічий рід: -ів та нульове закінчення (~720 words)
 
-Уявіть, що ви вже знаєте всі відмінки української мови. Але родовий відмінок множини — це справжній фінальний бос для студентів. Коли ми рахуємо предмети і кажемо «скільки», слова змінюються зовсім не так, як у називному відмінку множини.
+Welcome to the most complex and fascinating case in the Ukrainian language. The word for plural is **множина** (plural). While the Genitive plural has many forms, its rules are highly logical and rooted in history. You already know that the Genitive case is used to show possession, absence, and origin. However, the plural form has one massive, everyday function: counting. Whenever you use numbers from five upwards, or words that denote quantity, you must use the Genitive plural. It is an essential building block for daily communication.
 
-> *Imagine that you already know all the cases of the Ukrainian language. But the Genitive plural is a true final boss for students. When we count objects and say "how many", the words change completely differently than in the Nominative plural.*
+Сьогодні ми вивчаємо родовий відмінок множини. Ця форма потрібна, коли ми рахуємо предмети або людей. Ми використовуємо її кожного дня в магазині, на роботі та вдома.
 
-> — **Продавець:** Нам треба перевірити товар. Скільки у нас пляшок води? *(We need to check the goods. How many bottles of water do we have?)*
-> — **Помічник:** Я бачу тільки п'ять пляшок. *(I see only five bottles.)*
-> — **Продавець:** Добре. А скільки банок меду залишилося на полиці? *(Good. And how many jars of honey are left on the shelf?)*
-> — **Помічник:** Там стоять три банки. *(There are three jars standing there.)*
-> — **Продавець:** А свіжих булок багато? *(And are there many fresh buns?)*
-> — **Помічник:** Немає булок! Усе розпродали ще вранці. *(There are no buns! Everything was sold out in the morning.)*
+> *Today we are studying the Genitive case plural. This form is needed when we count objects or people. We use it every day in the store, at work, and at home.*
 
-When we say "three jars", we use the Nominative plural form `банки`. But when we ask "how many bottles" or say "five bottles" and "no buns", the words change to `пляшок` and `булок`. This shows that saying "five" or "many" requires a completely different grammar rule.
+The rule is strict: after the numbers `п'ять` (five) and higher, the noun changes to the Genitive plural. This applies to numbers like `шість` (six), `десять` (ten), and beyond. 
 
-Основне правило дуже просте, але його треба запам'ятати назавжди. Числівники два, три та чотири вимагають називного відмінка множини. Але числівники від п'яти і більше завжди вимагають родового відмінка множини.
+You must also use this case after quantity words. These include **багато** (a lot, many), **мало** (a little, few), and **кілька** (a few, several). 
 
-> *The main rule is very simple, but you must remember it forever. The numerals two, three, and four require the Nominative plural. But numerals from five and up always require the Genitive plural.*
+It is also required after the question word **скільки** (how many).
 
-This exact rule applies to indefinite quantity words. Words like «багато» (a lot), «мало» (a little), «кілька» (a few), and the question word «скільки» (how many) all trigger the Genitive plural.
+Скільки тут студентів? Тут є п'ять студентів. У цій кімнаті багато столів, але мало стільців. Ми маємо кілька цікавих ідей.
 
-Для більшості іменників чоловічого роду з твердою основою правило дуже передбачуване. Ми просто додаємо закінчення «-ів» до початкової форми слова.
+> *How many students are here? There are five students here. In this room there are many tables, but few chairs. We have a few interesting ideas.*
 
-> *For most masculine nouns with a hard stem, the rule is very predictable. We simply add the ending "-ів" to the initial form of the word.*
+The most common and dominant pattern for masculine nouns is the **-ів** ending. If a masculine noun ends in a hard consonant, you simply add **-ів** to form the Genitive plural. This ending is highly productive and is one of the most recognizable sounds in spoken Ukrainian. It applies to almost all hard-stem masculine nouns.
 
-`стіл` → `столів`
-`будинок` → `будинків`
-`підручник` → `підручників`
-`студент` → `студентів`
-`брат` → `братів`
+У нашому місті є багато парків і нових будинків. Мій брат має п'ять підручників з історії. Ми купили десять столів для офісу. 
 
-У мого друга є п'ять великих столів. На цій вулиці побудували кілька нових будинків. У бібліотеці є багато підручників. Ми бачимо десять студентів.
+> *In our city there are many parks and new buildings. My brother has five history textbooks. We bought ten tables for the office.*
 
-> *My friend has five large tables. They built several new houses on this street. The library has many textbooks. We see ten students.*
+Notice how `стіл` becomes `столів`, `брат` becomes `братів`, `студент` becomes `студентів`, `будинок` becomes `будинків`, and `підручник` becomes `підручників`. This single ending will cover the vast majority of masculine nouns you encounter in daily life.
 
-Іменники чоловічого роду з м'якою основою також найчастіше отримують закінчення «-ів». Але тут треба бути уважними, бо іноді зникають голосні «е» або «о».
-
-> *Masculine nouns with a soft stem also most often receive the ending "-ів". But here you need to be careful, because sometimes the vowels "е" or "о" disappear.*
-
-`учитель` → `учителів`
-`олівець` → `олівців`
-`хлопець` → `хлопців`
-`день` → `днів`
-
-У школі працює багато хороших учителів. Я купив кілька кольорових олівців. У нашому класі вчиться вісім хлопців. Я чекав тебе п'ять днів.
-
-> *Many good teachers work at the school. I bought several colored pencils. Eight boys study in our class. I waited for you for five days.*
-
-Якщо основа слова закінчується на голосний звук або має апостроф, ми використовуємо закінчення «-їв» замість «-ів».
-
-> *If the stem of the word ends in a vowel sound or has an apostrophe, we use the ending "-їв" instead of "-ів".*
-
-`герой` → `героїв`
-`трамвай` → `трамваїв`
-`подвір'я` → `подвір'їв`
-`відкриття` → `відкриттів`
-
-У цьому фільмі є кілька головних героїв. На зупинці стоїть багато трамваїв. Учені зробили багато нових відкриттів.
-
-> *There are several main heroes in this film. There are many trams standing at the stop. Scientists have made many new discoveries.*
+> — **Оксана:** Скільки столів у новому офісі? *(How many tables are in the new office?)*
+> — **Тарас:** У нас є десять столів і багато стільців. *(We have ten tables and a lot of chairs.)*
+> — **Оксана:** А скільки комп'ютерів ви купили? *(And how many computers did you buy?)*
+> — **Тарас:** Ми купили п'ять комп'ютерів для нових працівників. *(We bought five computers for the new employees.)*
 
 :::info
 **Grammar box**
-Notice that words like `подвір'я` and `відкриття` are neuter nouns. Most neuter nouns have a zero ending in the plural, but these borrow the `-їв` ending.
+Always look at the last number in a complex numeral. If it ends in 5, 6, 7, 8, 9, or 0, use the Genitive plural. For example, twenty-five students is `двадцять п'ять студентів`.
 :::
 
-Деякі іменники чоловічого роду втрачають свій суфікс у множині і мають нульове закінчення. Це слова, які означають національність або соціальну групу і закінчуються на «-ин» або «-їн».
+Soft-stem masculine nouns also predominantly take the **-ів** ending. Unlike some other Slavic languages where soft stems often trigger entirely different endings, Ukrainian prefers the consistency of **-ів**. This is a key feature that distinguishes Ukrainian and makes the masculine Genitive plural surprisingly regular once you spot the pattern. 
 
-> *Some masculine nouns lose their suffix in the plural and have a zero ending. These are words that denote nationality or social group and end in "-ин" or "-їн".*
+Школа шукає нових учителів для старших класів. На столі лежить кілька олівців. У лікарні працює багато лікарів.
 
-`громадянин` → `громадян`
-`селянин` → `селян`
-`болгарин` → `болгар`
-`татарин` → `татар`
+> *The school is looking for new teachers for the high school classes. Several pencils are lying on the table. Many doctors work in the hospital.*
 
-На площі зібралося багато громадян. У цьому селі живе кілька працьовитих селян. Я знаю п'ять болгар.
+Here, `учитель` becomes `учителів`, `олівець` becomes `олівців`, and `лікар` becomes `лікарів`. Even though the stem ends in a soft consonant, the ending remains the familiar **-ів**.
 
-> *Many citizens gathered on the square. Several hardworking peasants live in this village. I know five Bulgarians.*
+But what about the **-їв** variant? You will often see it, but true **-їв** appears only after stems ending in a vowel, a short *й*, or an apostrophe. This includes some masculine words and several common neuter words that share this plural pattern. Most soft masculine nouns take **-ів**, not **-їв**. 
 
-Існує одне дуже важливе слово з особливим правилом. Це слово «чоловік», яке означає «людина» або «мужчина».
+Біля нових будинків є багато гарних подвір'їв. Цей рік приніс нам кілька великих відкриттів. У центрі міста немає трамваїв. Ми пам'ятаємо імена наших героїв.
 
-> *There is one very important word with a special rule. This is the word "чоловік", which means "person" or "man".*
+> *Near the new buildings there are many beautiful courtyards. This year brought us several great discoveries. There are no trams in the city center. We remember the names of our heroes.*
 
-When we count people generally as a unit, we use the zero ending form: `п'ять чоловік` (five people). When talking about men specifically, the regular form `багато чоловіків` (many men) is used.
+As you can see, the neuter noun `подвір'я` becomes `подвір'їв`, and `відкриття` becomes `відкриттів`. The masculine noun `герой` becomes `героїв`, and `трамвай` becomes `трамваїв`.
 
-<!-- INJECT_ACTIVITY: match-up-masc-genitive --> [match-up, Match Nominative singular nouns to their Genitive plural forms, 8 items]
+:::note
+**Quick tip**
+The letter **ї** is essentially **й** + **і**. When a word already ends in a vowel sound or an apostrophe, Ukrainian uses **ї** to maintain the clear **-ів** pronunciation.
+:::
 
-## Жіночий рід: нульове закінчення
+When adding the **-ів** ending, watch out for fleeting vowels. Many masculine nouns have an **о** or **е** in their final syllable. When you add a new ending like **-ів**, this vowel often drops out or "flees" from the word. This happens because the stress or syllable structure shifts. It is a natural phonetic process that makes the words easier to pronounce.
 
-For most nouns of the **жіночий рід** (feminine gender) that end in the vowel "-а" in the Nominative singular, forming the Genitive plural is straightforward. We simply drop the final "-а", leaving the word with what is called a **нульове закінчення** (zero ending). This means the word now ends in a consonant. In some cases, if dropping the vowel leaves an "о" or "е" in a closed syllable, it changes to an "і" to make the word easier to say. We saw this earlier with the word **школа** (school), which becomes **шкіл**. Other common words follow the simple dropping rule. Let's look at some everyday examples of this pattern in action.
+Ми працювали там кілька днів. У дворі грає п'ять хлопців. Я купив багато нових олівців. 
 
-У нашій великій бібліотеці є багато цікавих книг. На стоянці біля офісу стоїть кілька нових машин. У цьому районі міста побудували п'ять сучасних шкіл. Ми прочитали десять старих книг цього тижня. На цих вулицях немає великих машин.
+> *We worked there for a few days. Five boys are playing in the yard. I bought a lot of new pencils.*
 
-> *There are many interesting books in our large library. Several new cars are parked in the parking lot near the office. They built five modern schools in this area of the city. We read ten old books this week. There are no big cars on these streets.*
+The word `день` loses its **е** and becomes `днів`. The word `хлопець` loses its **е** and becomes `хлопців`. This is the same fleeting vowel you saw in the Genitive singular (`хлопця`, `дня`), so the stem change should already feel familiar to you.
 
-Very often, when you drop the final "-а" from a feminine noun, you are left with a cluster of two consonants at the end of the stem. In Ukrainian, having two hard consonants at the very end of a word can be difficult to pronounce naturally. To fix this awkward sound, the language uses an **вставний голосний** (inserted vowel) between those two final consonants. For many feminine nouns, especially those ending in "-ка", we insert the vowel "о". This acts as a bridge, making the word flow smoothly. For example, **жінка** (woman) becomes **жінок**, and **сумка** (bag) becomes **сумок**. Notice how this small change keeps the rhythm of the language intact.
+Finally, there is a rare but important **нульове закінчення** (zero ending) for certain masculine nouns. If a masculine noun ends in the suffixes **-ин** or **-їн** to denote nationality or origin, it loses this suffix in the plural. The Genitive plural for these specific words simply has no ending at all. Additionally, the word for "person" or "husband" has a special parallel form.
 
-На міжнародну конференцію приїхало багато відомих жінок. У нашому магазині продається кілька шкіряних сумок. На першому курсі цього університету вчиться двадцять розумних студенток. У мого старшого брата є двоє маленьких доньок. Ми бачимо багато красивих жінок на площі.
+На конференцію приїхало багато киян і селян. У залі сидить п'ять болгар. На вулиці стоїть кілька чоловік. 
 
-> *Many famous women came to the international conference. Several leather bags are sold in our store. Twenty smart female students study in the first year of this university. My older brother has two little daughters. We see many beautiful women on the square.*
+> *Many Kyivans and villagers came to the conference. Five Bulgarians are sitting in the hall. Several men are standing on the street.*
+
+The noun `громадянин` becomes `громадян`. The word `селянин` becomes `селян`, and `болгарин` becomes `болгар`. The word `чоловік` is unique: when counting men, you can use the zero ending `чоловік`, though the regular form `чоловіків` also exists. 
+
+However, remember that for the general concept of people, the word is **люди** (people), which comes from the singular **людина** (person), and its Genitive plural is `людей`.
+
+
+## Підсумок — Summary
+
+Ви успішно подолали один з найскладніших аспектів української граматики — Родовий відмінок множини! Як ви вже могли переконатися, його форми є найрізноманітнішими серед усіх відмінків, і це вимагає уважного підходу до вивчення та запам'ятовування. Це не просто набір правил, а скоріше система закономірностей та винятків, які збагачують мову. Ключ до майстерності тут — це практика та поступове звикання до цих форм.
+
+Ми розглянули, як формується Родовий відмінок множини для іменників усіх трьох родів, акцентуючи увагу на основних закономірностях та найважливіших відхиленнях.
+
+**Іменники чоловічого роду**
+Для переважної більшості іменників чоловічого роду в Родовому відмінку множини ми використовуємо закінчення **-ів**. Це найпоширеніша модель, наприклад: *студент* → *студентів*, *день* → *днів*, *місяць* → *місяців*. Однак, існує невелика, але важлива група іменників чоловічого роду, які мають нульове закінчення. Часто це стосується слів із суфіксами **-ин** або **-їн**, але таких прикладів значно менше, ніж тих, що закінчуються на -ів. Наприклад, *громадянин* → *громадян*. Варто також згадати про такі унікальні випадки, як *гість*, який утворює форму *гостей*, та *кінь* — *коней*. Ці слова належать до тієї ж невеликої групи винятків, що мають закінчення **-ей**, і їх краще запам'ятовувати окремо, оскільки вони відрізняються від загальної тенденції.
+
+**Іменники жіночого роду**
+Іменники жіночого роду демонструють велику схильність до нульового закінчення в Родовому відмінку множини. Дуже часто для збереження вимови та ритму слова відбувається вставлення голосного (найчастіше *о, е, і*) або м'якого знака. Давайте поглянемо на приклади:
+*   *книга* → *книг* (нульове закінчення, голосна *а* випала)
+*   *сестра* → *сестер* (вставлення *е*)
+*   *земля* → *земель* (вставлення *е*, м'який знак)
+*   *стаття* → *статей* (зверніть увагу на закінчення **-ей**, що трапляється тут, це один з рідкісних випадків для жіночого роду)
+*   *пісня* → *пісень* (вставлення *е*, м'який знак)
+Особливий випадок — іменник *людина*, який у Родовому відмінку множини набуває форми *людей*. Це надзвичайно поширене слово, тому його слід запам'ятати обов'язково.
+
+**Іменники середнього роду**
+Для іменників середнього роду також характерне використання нульового закінчення, часто супроводжуване вставленням голосної, щоб уникнути збігу приголосних:
+*   *вікно* → *вікон* (вставлення *о*)
+*   *слово* → *слів* (вставлення *і*)
+*   *місто* → *міст* (нульове закінчення)
+Однак, не всі іменники середнього роду дотримуються цієї моделі. Деякі з них, особливо ті, що закінчуються на *–е* або *–я* (і не належать до групи на *–тя*), приймають закінчення **-ів**:
+*   *море* → *морів*
+*   *поле* → *полів*
+Особливістю є іменники середнього роду на *–тя*, що позначають одушевлені предмети або абстрактні поняття, які зазнають зміни основи:
+*   *ім'я* → *імен*
+*   *теля* → *телят*
+І, звичайно, наш особливий виняток *око*, що в множині Родового відмінка перетворюється на *очей*, приєднуючись до "гостей" та "коней" у невеликій групі іменників з **-ей**.
+
+**Використання з кількісними словами та числівниками**
+Одне з найважливіших практичних застосувань Родового відмінка множини — це його використання після кількісних слів: **багато** (a lot, many), **кілька** (a few, several), **мало** (few, little) та **скільки** (how many). Коли ви вживаєте ці слова, іменник, до якого вони відносяться, завжди стоїть у Родовому відмінку множини, незалежно від його роду. Це правило також застосовується до числівників, починаючи з п'яти та вище (5, 6, 7...):
+*   Ми чекаємо *багато гостей* сьогодні.
+*   На полі пасеться *кілька коней*.
+*   У неї дуже красивий колір *очей*.
+*   Я прочитав *кілька цікавих статей*.
+*   На столі лежить *декілька книг*.
+*   У нас залишилося *мало днів* до відпустки.
+*   *Скільки людей* живе у цьому місті?
+
+Оволодіння Родовим відмінком множини вимагає не лише знання правил, але й активної практики. Не намагайтеся запам'ятати всі правила та винятки відразу. Зосередьтеся на найпоширеніших моделях, активно використовуйте їх у мовленні та читанні. З часом ви помітите, що правильні форми будуть приходити до вас інтуїтивно, і ви зможете використовувати їх без вагань. Продовжуйте практикуватися, і ви успішно інтегруєте цей складний, але дуже важливий граматичний елемент у свою українську мову.
+
+**Перевірте себе:**
+1.  Перетворіть наступні іменники у Родовий відмінок множини: "учень", "ніч", "відповідь", "вухо", "курча".
+2.  Виберіть правильну форму іменника в дужках: "Я бачу багато (дерево / дерев)" та "Скільки (рік / років) тобі?".
+3.  Які три іменники, що ми розглянули в цьому модулі, є особливими винятками і мають закінчення **-ей** у Родовому відмінку множини?
+
+<!-- INJECT_ACTIVITY: match-up-masculine -->
+
+## Жіночий рід: нульове закінчення (~770 words)
+
+> — **Продавець:** Нам треба перевірити товар. **Скільки** (how many) у нас є води? *(We need to check the goods. How much water do we have?)*
+> — **Помічник:** Я бачу **кілька** (a few, several) упаковок. Усього п'ять пляшок води. *(I see a few packages. A total of five bottles of water.)*
+> — **Продавець:** Добре. А скільки банок меду ти там бачиш? *(Good. And how many jars of honey do you see there?)*
+> — **Помічник:** На полиці стоїть три банки меду. А також є **багато** (a lot, many) коробок чаю. *(There are three jars of honey on the shelf. And there are also a lot of boxes of tea.)*
+> — **Продавець:** А як щодо хліба? У нас є булки? *(And what about bread? Do we have buns?)*
+> — **Помічник:** Ні, на жаль, зовсім немає булок! Треба замовити ще. *(No, unfortunately, there are no buns at all! We need to order more.)*
+> — **Продавець:** Зрозумів. Запиши це як важливе **завдання** (task, assignment) на завтра. *(Understood. Write this down as an important task for tomorrow.)*
+
+In the dialogue above, you might have noticed words like «пляшок», «банок», «коробок», and «булок». These are feminine nouns in the Genitive case **множина** (plural). The main rule for feminine nouns ending in **-а** in the Nominative singular is beautifully simple: they drop the final vowel. We call this the **нульове закінчення** (zero ending). You simply remove the **-а** and leave the stem as it is. 
+
+Книга стає книг. Фабрика стає фабрик. Робота стає робіт. У бібліотеці є багато книг. Ми бачили кілька нових фабрик. У мене зараз немає робіт.
+
+> *A book becomes books. A factory becomes factories. Work becomes works. There are many books in the library. We saw a few new factories. I have no works right now.*
+
+This pattern creates a neat, concise form that tells you immediately that you are dealing with a plural quantity.
+
+However, dropping the final vowel sometimes leaves a difficult cluster of consonants. Ukrainian naturally avoids unpronounceable combinations. To fix this, the language inserts a "fleeting vowel" — usually **о** after hard consonants or **е** after soft and hissing consonants — between the last two consonants of the stem.
+
+Студентка стає студенток. Зупинка стає зупинок. Жінка стає жінок. На вулиці стоїть багато студенток. Ми проїхали кілька зупинок. У залі було багато жінок.
+
+> *A female student becomes female students. A stop becomes stops. A woman becomes women. Many female students are standing on the street. We passed a few stops. There were many women in the hall.*
+
+:::note
+**Quick tip** — When a feminine noun ends in a consonant + **-ка** (like «сумка» or «ручка»), you can almost always expect an **о** to appear in the Genitive plural: «сумок», «ручок».
+:::
+
+Feminine nouns with soft stems (ending in **-я**) also use the **нульове закінчення** (zero ending). Because they lose their final vowel, they add a soft sign (**ь**) at the end to show that their stem is still soft. If dropping the vowel creates a consonant cluster, an **е** is often inserted.
+
+Пісня стає пісень. Вишня стає вишень. Земля стає земель. Хор співає багато пісень. У саду росте кілька вишень. Вони купили багато земель.
+
+> *A song becomes songs. A cherry becomes cherries. Land becomes lands. The choir sings many songs. A few cherries grow in the garden. They bought a lot of lands.*
+
+For words ending in **-ія**, the **-я** drops, and the remaining **-і-** takes a **-й** to close the syllable: «станція» becomes «станцій», «лекція» becomes «лекцій».
+
+The mixed group consists of feminine nouns whose stems end in hissing consonants: **ж**, **ч**, **ш**, or **щ** (like «площа» or «задача»). These nouns take a zero ending in the Genitive plural. Because hissing consonants in Ukrainian are historically hard, they do not take a soft sign at the end.
+
+Площа стає площ. Задача стає задач. Межа стає меж. У центрі міста є кілька площ. Студенти вирішили багато задач. Ми не бачимо меж на карті.
+
+> *A square becomes squares. A problem becomes problems. A border becomes borders. There are several squares in the city center. The students solved many problems. We do not see borders on the map.*
+
+Just drop the final **-а** and you have the correct form, with no extra letters or soft signs.
+
+Finally, a small, closed group of feminine nouns ending in **-я** take the ending **-ей** instead of a zero ending. These are important exceptions, such as the word **стаття** (article).
+
+Стаття стає статей. Сім'я стає сімей. Миша стає мишей. Журналіст написав багато статей. У будинку живе кілька сімей. Кіт зловив багато мишей.
+
+> *An article becomes articles. A family becomes families. A mouse becomes mice. The journalist wrote many articles. Several families live in the building. The cat caught many mice.*
 
 :::info
-**Grammar box**
-When dropping the vowel ending leaves a hard-to-pronounce consonant cluster (like `-нк` or `-тк`), Ukrainian adds an **вставний голосний** (inserted vowel) `о` or `е` to make the word flow better. Think of it as a phonetic bridge.
+**Grammar box** — The word «стаття» has a double consonant in the singular. In the Genitive plural («статей»), the double consonant disappears to simplify the spelling.
 :::
 
-In other situations, usually when the noun has a soft stem ending in "-я" or certain other specific consonant combinations, we use the **вставний голосний** (inserted vowel) "е" instead of "о". This creates a softer, more delicate sound. If the original word had a soft sign "ь" in its plural form, it will often appear at the very end after the inserted vowel to maintain the softness of the final consonant. For instance, **сестра** (sister) becomes **сестер**, and **земля** (land) becomes **земель**. The word **пісня** (song) changes to **пісень**, keeping the soft "н" sound at the end.
+When speaking with other **люди** (people), every native **людина** (person) uses these forms naturally. 
 
-У мого хорошого друга немає рідних сестер. Місцеві фермери купили кілька нових земель для роботи. У нашому старому саду росте багато солодких вишень. На святковому концерті ми почули десять народних пісень. Дідусь посадив п'ять молодих вишень біля будинку.
+If someone asks you a **питання** (question) like «Скільки пісень?» or if you state there are **мало** (a little, few) сестер, mastering this case is essential.
 
-> *My good friend has no native sisters. Local farmers bought several new lands for work. Many sweet cherries grow in our old garden. At the festive concert, we heard ten folk songs. Grandpa planted five young cherry trees near the house.*
+<!-- INJECT_ACTIVITY: quiz-genitive-endings -->
 
-Feminine nouns that end in "-ія", or those ending in "-я" right after another vowel, form a special and very consistent group. When these words take a zero ending in the Genitive plural, the final vowel sound is completely dropped. This leaves the underlying "й" sound at the end of the word. So, **станція** (station) becomes **станцій**, and **лекція** (lecture) becomes **лекцій**. The word **мрія** (dream) changes to **мрій**. This pattern is very common for academic words and borrowed terms.
+## Середній рід та узагальнення (~700 words)
 
-Нове міське метро має кілька глибоких підземних станцій. Сьогодні у нас немає довгих і нудних лекцій. У цієї молодої людини є багато великих мрій. Студенти уважно записали розклад нових лекцій. Ми пройшли повз п'ять великих станцій.
+Neuter nouns with hard stems ending in **-о** behave very similarly to feminine hard-stem nouns. They drop the final **-о** and take a **нульове закінчення** (zero ending). Just like with feminine words, if dropping the vowel leaves a difficult consonant cluster at the end of the word, an **-о-** or **-е-** is inserted to make the pronunciation easier and more fluid.
 
-> *The new city subway has several deep underground stations. Today we have no long and boring lectures. This young person has many big dreams. The students carefully wrote down the schedule of new lectures. We walked past five large stations.*
+Слово стає слів. Вікно стає вікон. Місто стає міст. У цьому тексті є багато нових слів. У великій кімнаті немає вікон. Ми відвідали кілька красивих міст.
 
-While the zero ending is the standard for feminine nouns, there is a small but vital **виняток** (exception) group that does not follow this rule. Instead of a **нульове закінчення** (zero ending), these nouns take the ending "-ей". This group includes some words ending in a double consonant plus "-я" (like **стаття** → **статей**), words with an apostrophe (like **сім'я** → **сімей**), and a few specific nouns (like **миша** → **мишей**). Additionally, feminine nouns of the third declension that end in a consonant, such as **ніч** (night), also take this ending, becoming **ночей**.
+> *A word becomes words. A window becomes windows. A city becomes cities. There are many new words in this text. There are no windows in the large room. We visited several beautiful cities.*
 
-Відомий журналіст написав кілька цікавих наукових статей. У цьому сучасному місті живе багато молодих сімей. У підвалі старого будинку ми знайшли п'ять мишей. Я дуже втомився, бо працював кілька довгих ночей. Вони не бачили цих статей.
+For neuter nouns with soft stems ending in **-е**, the pattern changes. Surprisingly, these nouns do not take a zero ending. Instead, they take the **-ів** ending, which is usually associated with masculine nouns. However, neuter nouns ending in **-ння**, such as a **завдання** (task, assignment), follow a different logic. They drop their final **-я**, lose their double consonant, and take a zero ending with a soft sign (**-ь**).
 
-> *The famous journalist wrote several interesting scientific articles. Many young families live in this modern city. In the basement of the old house, we found five mice. I am very tired because I worked for several long nights. They did not see these articles.*
+Море стає морів. Поле стає полів. Завдання стає завдань. Питання стає питань. На Землі є багато морів. Студенти мають кілька складних завдань. У мене немає питань.
 
-Finally, we have feminine nouns whose stems end in the shibilant consonants "ж", "ч", "ш", or "щ". These words belong to the mixed group. When forming the Genitive plural, they take a clean zero ending without any inserted vowels, even if it looks like there might be a cluster. For example, **площа** (square) becomes **площ**, and **задача** (task) becomes **задач**. Note that the word **тиша** (silence) grammatically becomes **тиш**, though it is rarely used in the plural in everyday speech.
+> *A sea becomes seas. A field becomes fields. A task becomes tasks. A question becomes questions. There are many seas on Earth. The students have several difficult tasks. I have no questions.*
 
-У центрі європейського міста є кілька старовинних площ. На математичному іспиті студенти вирішили п'ять складних задач. У цьому районі немає великих площ. Діти не зрозуміли цих важких задач.
+You will also encounter neuter nouns ending in **-тя** and words for young animals (which belong to the fourth declension). These nouns have special stem changes in the plural before taking their Genitive ending. When they are pluralized, a suffix like **-ат-**, **-ят-**, or **-ен-** appears in the stem, and then they take a zero ending.
 
-> *In the center of the European city, there are several ancient squares. At the math exam, the students solved five difficult tasks. There are no large squares in this area. The children did not understand these hard tasks.*
+Ім'я стає імен. Теля стає телят. Лоша стає лошат. Ми не знаємо їхніх імен. На фермі є багато телят. У дворі грається кілька лошат.
 
-Now that we have seen the different patterns for the **жіночий рід** (feminine gender), let's put them together in context. You will soon compare these to the **чоловічий рід** (masculine gender) and the **середній рід** (neuter gender). The Genitive plural is most frequently used after quantity words like **кілька** (a few, several), **багато** (many), **мало** (few, a little), and the question word **скільки** (how many). Using these words naturally requires you to instantly recall the correct plural form of the noun. Practice reading these sentences aloud to get used to the sound of these combinations.
+> *A name becomes names. A calf becomes calves. A foal becomes foals. We do not know their names. There are many calves on the farm. A few foals are playing in the yard.*
 
-Скільки українських народних пісень ти вже знаєш? У центральній бібліотеці є кілька рідкісних книг. На головній площі міста завжди багато красивих жінок. У нього мало вільних хвилин для відпочинку. Скільки цікавих статей ви сьогодні прочитали? На вулиці зараз багато різних людей. У мене є кілька важливих питань і нових завдань.
+To summarize the Genitive **множина** (plural) patterns: masculine nouns predominantly take **-ів** (with a rare zero ending), feminine nouns mostly take a zero ending with possible vowel insertion or a soft sign, and neuter nouns take either a zero ending or **-ів**. However, there is also a very small, closed group of masculine and neuter nouns that take a true **-ей** ending, which you simply have to memorize.
 
-> *How many Ukrainian folk songs do you already know? There are several rare books in the central library. There are always many beautiful women on the main square of the city. He has few free minutes for rest. How many interesting articles did you read today? There are many different people on the street now. I have several important questions and new tasks.*
+Гість стає гостей. Кінь стає коней. Око стає очей. Ми чекаємо багато гостей сьогодні. На полі пасеться кілька коней. У неї дуже красивий колір очей.
 
-<!-- INJECT_ACTIVITY: fill-in-genitive-plural -->
-<!-- INJECT_ACTIVITY: quiz-ending-choice -->
+> *A guest becomes guests. A horse becomes horses. An eye becomes eyes. We are expecting many guests today. Several horses are grazing in the field. She has a very beautiful eye color.*
 
-## Середній рід та узагальнення
-
-We have looked at masculine and feminine nouns. Now let us turn to the neuter gender. The main pattern for neuter nouns ending in **-о** is similar to hard-stem feminine nouns. They drop the **-о** and take a zero ending. If the root vowel is an "о" or "е" in an open syllable, it often changes to "і" when the ending is dropped.
-
-Українська мова має багато красивих міст. Вчителька написала на дошці десять нових слів. Мій дідусь знає історії п'ятьох різних сіл. Скільки нових слів ти вивчив сьогодні?
-
-> *The Ukrainian language has many beautiful cities. The teacher wrote ten new words on the board. My grandfather knows the stories of five different villages. How many new words did you learn today?*
-
-Just like feminine nouns, neuter stems ending in a consonant cluster often insert a vowel when forming the Genitive plural. This makes the word easier to pronounce. The inserted vowel is usually **о** or **е**.
-
-У цьому старому замку немає великих і світлих вікон. Художник показав на виставці кілька нових полотен. Для цього пароля потрібно використати п'ять різних чисел. Скільки відомих полотен є у цьому музеї?
-
-> *In this old castle, there are no large and bright windows. The artist showed several new canvases at the exhibition. For this password, you need to use five different numbers. How many famous canvases are in this museum?*
-
-While the zero ending is common, some neuter nouns ending in **-е** take the masculine-style **-ів** ending instead. This is a small group, but it includes very common words related to nature. Note that while the form «піль» exists, «полів» is the standard form you will hear.
-
-На нашій планеті є багато глибоких і солоних морів. Українські фермери мають кілька великих пшеничних полів. Ми ніколи не бачили таких холодних морів. Скільки жовтих полів ви проїхали сьогодні?
-
-> *On our planet, there are many deep and salty seas. Ukrainian farmers have several large wheat fields. We have never seen such cold seas. How many yellow fields did you pass today?*
-
-Many neuter nouns represent abstract concepts or collections and end in a double consonant plus **-я** (like **завдання** or **питання**). To form the Genitive plural, the double consonant reduces to a single consonant. These words then take a soft sign (**-ь**) or a zero ending.
-
-Сьогодні студенти мають багато домашніх завдань. Журналісти поставили президенту кілька складних питань. У великому натовпі я бачив п'ять знайомих облич. Скільки важливих питань ми ще не обговорили?
-
-> *Today, the students have many homework tasks. The journalists asked the president several difficult questions. In the large crowd, I saw five familiar faces. How many important questions have we not yet discussed?*
-
-There is a special group of neuter nouns that includes names and young animals. These words belong to the fourth declension. When forming the Genitive plural, their stems change. They insert the suffixes **-ен-** or **-ат-** / **-ят-** before taking a zero ending.
-
-Я зовсім не пам'ятаю імен цих нових студентів. На фермі мого дідуся є п'ять маленьких телят. У степу ми бачили кілька дуже швидких лошат. Скільки цікавих імен ти знаєш?
-
-> *I completely do not remember the names of these new students. On my grandfather's farm, there are five little calves. In the steppe, we saw several very fast foals. How many interesting names do you know?*
-
-Finally, let us look at words for paired body parts. These neuter nouns have unique forms in the Genitive plural. They often use the **-ей** ending or a zero ending with a vowel change. The word **вухо** (ear) is regular and simply takes a zero ending: **вух**.
-
-У цієї маленької кішки кілька різних кольорів очей. Після важкого тренування в мене болять м'язи плечей. У цих собак немає великих вух. Я ніколи не бачив таких яскравих очей.
-
-> *This little cat has several different colors of eyes. After a heavy workout, the muscles of my shoulders hurt. These dogs do not have large ears. I have never seen such bright eyes.*
-
-Let us summarize the complexity of the Genitive plural. This case has the most variation in Ukrainian, so recognizing the patterns is your goal right now. For masculine nouns, you will mostly see the **-ів** ending, with a very rare zero ending. For feminine nouns, expect mostly a zero ending, but watch out for vowel insertion. For neuter nouns, it is mostly a zero ending, though some soft stems take **-ів**.
-
-You will constantly need these forms after key quantity words: **багато** (many), **мало** (few), **кілька** (several), and **скільки** (how many). 
-
-:::tip
-**Strategic learning** — Do not try to memorize every single exception at once. The best strategy is to memorize high-frequency forms directly as vocabulary items. Words like **людей** (people), **грошей** (money), and **років** (years) appear constantly in daily conversation.
+:::info
+**Grammar box** — The ending **-ей** is very rare in masculine and neuter nouns. Always treat words like «гість», «кінь», and «око» as special exceptions.
 :::
 
-Родовий відмінок множини — це найскладніша форма в українській мові. Чоловічий рід часто використовує закінчення «-ів». Жіночий і середній роди зазвичай мають нульове закінчення. Ця форма завжди потрібна після слів «багато», «мало», «кілька» та «скільки».
+Now let's bring everything together with quantity expressions. Whenever you want to talk about quantities, you will use words like **багато** (a lot, many) or **кілька** (a few, several).
 
-> *The Genitive plural case is the most complex form in the Ukrainian language. The masculine gender often uses the "-ів" ending. Feminine and neuter genders usually have a zero ending. This form is always needed after the words "many", "few", "several", and "how many".*
+When you need to ask a question about quantity, use **скільки** (how many). This rule applies equally whether you are talking about inanimate objects or living beings. When speaking about multiple people, the Genitive plural form is «людей».
 
-<!-- INJECT_ACTIVITY: group-sort-genitive -->
+Скільки людей живе у цьому місті? Я прочитав кілька цікавих статей. На столі лежить декілька книг. У нас залишилося мало днів до відпустки.
+
+> *How many people live in this city? I read several interesting articles. There are a few books lying on the table. We have a few days left until vacation.*
+
+As you can see, the Genitive plural has the most variation of any case in Ukrainian. While the rules provide a strong foundation, the key to mastering this case is learning the main patterns and accepting the exceptions naturally as part of the language's richness. Memorize the forms of common words, practice them in context, and you will soon use them without hesitation.
+
+<!-- INJECT_ACTIVITY: group-sort-endings -->
+<!-- INJECT_ACTIVITY: fill-in-all-genders -->

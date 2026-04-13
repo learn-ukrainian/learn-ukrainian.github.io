@@ -1,157 +1,174 @@
-## Хобі та вподобання
+## Хобі та вподобання (~600 words total)
 
-У кожної людини є **вільний час** (free time) або **дозвілля** (leisure). Після довгої роботи чи навчання ми всі хочемо приємно відпочивати. Хтось любить активний спорт, а хтось любить спокійне мистецтво чи відпочинок на природі. Коли ми знайомимося з новими людьми, ми часто запитуємо: «**Що ти любиш робити у вільний час?**» (What do you like to do in your free time?). Це дуже важливе та корисне питання. Воно допомагає краще зрозуміти людину, її характер та її світ. Ваші інтереси та **хобі** (hobbies) — це велика частина вашого життя. Сьогодні ми детально навчимося розповідати про свої улюблені заняття. Ми поговоримо про те, що ми любимо робити вдома чи на вулиці.
+When you meet someone new in Ukraine, you eventually want to learn about their interests. The concept of **дозвілля** (leisure, free time) or a person's **хобі** (hobby) is central to making friends and building relationships. The most common question you will hear is «Що ти любиш робити у вільний час?». A **вільний** (free) evening or weekend is the perfect time for relaxation.
 
-The simplest way to talk about your hobbies is to use the verb **любити** (to love / to like) followed by an infinitive verb. You already know this structure from previous lessons. It is very versatile and easy to use. You can describe almost any activity this way without changing endings. Ось кілька дуже корисних прикладів:
+Кожна людина має свої інтереси та улюблені заняття. Ми часто запитуємо нових знайомих про їхнє життя поза роботою. Це допомагає знайти спільні теми для цікавої розмови. Зазвичай ми відпочиваємо ввечері або на вихідних.
 
-* Я **люблю читати книги** (I love to read books) пізно ввечері.
-* Мій старший брат **любить плавати в басейні** (loves to swim in the pool) у вихідні.
-* Ми з друзями **любимо подорожувати** (love to travel) влітку.
-* Після важкої роботи я **люблю дивитися серіали** (love to watch TV series).
-* У неділю моя мама **любить готувати** (loves to cook) нові смачні страви.
+> *Every person has their own interests and favorite activities. We often ask new acquaintances about their life outside of work. This helps to find common topics for an interesting conversation. Usually, we relax in the evening or on the weekend.*
 
-Такі речення дуже прості, але вони чудово описують ваше щоденне дозвілля.
+The easiest way to talk about your preferences is to use the verb «любити» followed by an action in the infinitive. You do not need to worry about complex grammar cases here. You simply state what action you love to do.
 
-If you want to sound more advanced and natural, use specific verbs that require the Instrumental case. The most common verbs for hobbies are **займатися** (to engage in / to do), **захоплюватися** (to be passionate about), and **цікавитися** (to be interested in). These verbs cannot take an infinitive action. They must be followed by a noun in the Instrumental case. Давайте уважно подивимося на закінчення іменників в орудному відмінку:
+Я дуже люблю читати книги ввечері. Мій брат любить плавати в басейні на вихідних. Мої батьки люблять подорожувати Європою влітку. Моя подруга любить дивитися серіали після роботи. А мій чоловік любить готувати смачну вечерю для нас.
 
-* Чоловічий рід (Masculine) зазвичай отримує закінчення **-ом**: Я активно займаюся **спортом** (sport), мій друг дуже захоплюється **футболом** (football).
-* Жіночий рід (Feminine) отримує закінчення **-ою**: Моя сестра займається класичною **музикою** (music), я захоплююся **йогою** (yoga), а бабуся цікавиться **кулінарією** (cooking).
-* Середній рід (Neuter) може закінчуватися на **-ом** або **-ям**: Дідусь займається **садівництвом** (gardening), ми захоплюємося **плаванням** (swimming), а мій брат цікавиться **програмуванням** (programming).
+> *I really love to read books in the evening. My brother loves to swim in the pool on the weekend. My parents love to travel around Europe in the summer. My friend loves to watch series after work. And my husband loves to cook a delicious dinner for us.*
 
-Ці слова допомагають гарно розказати про ваші глибокі та серйозні інтереси.
+To sound more natural, Ukrainians use specific verbs to describe how they spend their time. The verbs **займатися** (to engage in, to do) and **захоплюватися** (to be passionate about) are extremely common in everyday speech. You might engage in **спорт** (sport) or be passionate about something else. These verbs require the noun that follows them to be in the Instrumental case. 
 
-To give more detail about your daily routine, you can use adverbs of frequency and time expressions. These words clearly tell others how often you do your favorite leisure activities. Ви можете використовувати такі корисні слова:
+Українці часто використовують орудний відмінок, коли говорять про свої хобі. Для чоловічого роду ми додаємо закінчення «-ом». Наприклад, мій брат захоплюється футболом і займається спортом. Для жіночого роду ми використовуємо закінчення «-ою». Моя сестра займається йогою, а я захоплююся музикою. Слова середнього роду на «-ння» мають закінчення «-ям». Ми займаємося плаванням та малюванням.
 
-* **завжди** (always): Я завжди читаю цікаві книги перед сном. Моє улюблене хобі — **читання** (reading).
-* **часто** (often): Ми часто гуляємо в зеленому парку біля дому.
-* **іноді** (sometimes): Іноді я дивлюся старі європейські фільми.
-* **рідко** (rarely): Взимку я дуже рідко граю в настільний теніс.
-* **ніколи** (never): Я ніколи не займаюся професійним боксом.
+:::info
+**Grammar box**
+When using «займатися» or «захоплюватися», remember the Instrumental endings: masculine takes **-ом** (спортом), feminine nouns like **музика** (music) take **-ою** (музикою), and neuter verbal nouns like **плавання** (swimming) take **-ям** (плаванням).
+:::
 
-Також вам буде корисно знати фрази про регулярність:
+Ми завжди знаходимо час для улюблених справ. Я часто читаю цікаві статті вранці. Іноді ми граємо у волейбол у парку. Мої друзі рідко дивляться телевізор удома. Ми ніколи не працюємо на вихідних. Я роблю зарядку щодня, а в басейн ходжу раз на тиждень.
 
-* **щодня** (every day): Вона плаває щодня вранці.
-* **щовихідних** (every weekend): Ми граємо у футбол щовихідних.
-* **раз на тиждень** (once a week): Я ходжу в спортзал раз на тиждень.
+> *We always find time for favorite activities. I often read interesting articles in the morning. Sometimes we play volleyball in the park. My friends rarely watch TV at home. We never work on the weekend. I do morning exercises every day, and I go to the pool once a week.*
 
-Ці маленькі слова роблять вашу розповідь набагато точнішою та живою.
+To describe how often you do your hobbies, use adverbs of frequency. Words like «завжди» (always), «часто» (often), «іноді» (sometimes), «рідко» (rarely), and «ніколи» (never) go before the verb. You can also use periodic phrases like «щодня» (every day) and «раз на тиждень» (once a week).
 
-Давайте подивимося, як люди говорять про своє дозвілля в реальному житті. Двоє колег обідають разом у кафе і говорять про плани на вихідні.
+Let's see how these phrases sound in a real conversation. Two colleagues are at lunch discussing their upcoming weekend plans. They talk about their active hobbies and places they want to visit for **розвага** (entertainment), like a modern **виставка** (exhibition) in the city center.
 
-> — **Колега 1:** Що ти робитимеш у вихідні? Маєш уже якісь плани?
-> — **Колега 2:** Я дуже захоплююся **плаванням** (swimming), тож у суботу піду **у басейн** (to the pool). А ти?
-> — **Колега 1:** А я люблю сучасне мистецтво. У неділю я йду **на виставку** (to an exhibition) з подругою.
-> — **Колега 2:** Це чудово! Я також іноді люблю ходити в різні музеї.
-> — **Колега 1:** Може, наступного тижня ми підемо кудись разом?
-> — **Колега 2:** Із задоволенням! Але спочатку я хочу пограти у футбол з моїми друзями.
+> — **Колега 1:** Що ти будеш робити на вихідних? *(What will you do on the weekend?)*
+> — **Колега 2:** Я дуже захоплююся плаванням. *(I am very passionate about swimming.)*
+> — **Колега 2:** Тому я піду у басейн у суботу вранці. *(Therefore, I will go to the pool on Saturday morning.)*
+> — **Колега 1:** Класно! А в неділю що плануєш робити? *(Cool! And on Sunday, what are you planning to do?)*
+> — **Колега 2:** У неділю я піду на виставку з подругою. А ти? *(On Sunday I will go to an exhibition with a friend. And you?)*
+> — **Колега 1:** Може, я пограю у футбол зі своїми друзями. *(Maybe I will play football with my friends.)*
+> — **Колега 2:** Ходімо разом у парк після обіду! *(Let's go together to the park after lunch!)*
+> — **Колега 1:** З задоволенням! Це чудова ідея. *(With pleasure! That is a great idea.)*
 
 <!-- INJECT_ACTIVITY: group-sort-categories -->
+<!-- INJECT_ACTIVITY: fill-in-hobbies-cases -->
 
-## Куди йдемо? Де ми?
+## Куди йдемо? Де ми? (~600 words total)
 
-Коли ми плануємо вільний час, важливо розуміти різницю між напрямком руху та місцем. 
-To express direction (going TO a place), Ukrainian uses the Accusative case. 
-To express location (being AT a place), we use the Locative case. 
-Давайте порівняємо ці дві ситуації на дуже популярних прикладах. 
-Коли ви йдете дивитися виставу, ви кажете: «Я **йду в театр**» (am going to the theater). 
-Але коли ви вже дивитеся виставу, ви кажете: «Я **в театрі**» (am in the theater). 
-Якщо ви любите картини, ви кажете: «Ми **йдемо на виставку**» (are going to an exhibition). 
-Коли ви вже там, ви кажете: «Ми **на виставці**» (are at the exhibition). 
-Для спорту ми говоримо: «Він **йде на стадіон**» (is going to the stadium). 
-А коли матч уже триває, він каже: «Він **на стадіоні**» (is at the stadium).
- Або зі словом змагання: «Вона **їде на змагання**» (is going to a competition) → «Вона **на змаганні**» (is at the competition). Ще один корисний приклад: «Ми **йдемо на прогулянку**» (are going for a walk) → «Ми **на прогулянці**» (are on a walk). 
-This pattern is essential for
- talking about your weekend plans accurately.
+When we have **вільний** (free) time for our **дозвілля** (leisure), we often talk about going to different places for **розвага** (entertainment). It is crucial to distinguish between moving toward a destination and being located there. For destination or direction, we use the Accusative case. For a static location, we use the Locative case. Notice how the endings change depending on the verb we use.
 
-Для регулярних занять і хобі ми часто використовуємо дієслова руху. 
-The most common verb for regular visits to a place is **ходити** (to go regularly). 
-Наприклад, ви можете сказати: «Я **ходжу в басейн** (go to the pool) щовівторка». 
-Це означає, що плавання — це ваше постійне хобі. 
-When you want to talk about a one-time event or a specific future plan, you use the perfective verb **піти** (to go once). 
-Наприклад, ви кажете: «Завтра я **піду в басейн**» (will go to the pool). 
-Ось інший приклад: «Ми часто **ходимо в кіно** (go to the movies), але сьогодні ми **підемо в театр** (will go to the theater)». 
-Ці два дієслова допомагають дуже точно описувати ваші звички та плани.
+Коли ми плануємо вільний час, важливо правильно використовувати відмінки. Якщо ми тільки йдемо кудись, ми використовуємо знахідний відмінок. Якщо ми вже там, нам потрібен місцевий відмінок. Ми кажемо: «Я йду в театр», але «Я зараз у театрі». Моя подруга йде на виставку, а я вже на виставці. Завтра ми підемо на стадіон. Ми будемо на стадіоні весь вечір.
 
-Дуже популярне хобі — це ігри та музика. 
-Для цього ми використовуємо дієслово **грати** (to play), але воно має дві різні конструкції. 
-When you talk about sports or games, you must use "грати в" or "грати у" followed by the Accusative case. 
-Наприклад: мій брат любить **грати у футбол** (to play football), а я люблю **грати в теніс** (to play tennis). 
-Увечері ми можемо **грати в шахи** (to play chess) з батьком. 
-When you talk about playing musical instruments, you must use "грати на" followed by the Locative case. 
-Наприклад: моя подруга чудово вміє **грати на гітарі** (to play the guitar). 
-Її сестра любить **грати на піаніно** (to play the piano), а їхній брат вчиться **грати на скрипці** (to play the violin). 
-Ця різниця дуже важлива для правильного українського спілкування.
+> *When we plan our free time, it is important to use cases correctly. If we are just going somewhere, we use the Accusative case. If we are already there, we need the Locative case. We say: "I am going to the theater," but "I am in the theater now." My friend is going to an exhibition, and I am already at the exhibition. Tomorrow we will go to the stadium. We will be at the stadium all evening.*
 
-Ще один активний вид дозвілля — це катання. 
-For activities that involve riding something, Ukrainian uses the construction **кататися на** (to ride / to roll on) followed by the Locative case. 
-Цей вид відпочинку дуже залежить від сезону. 
-Влітку або навесні люди люблять **кататися на велосипеді** (to ride a bicycle) у парку. 
-Також влітку можна поїхати на озеро і **кататися на човні** (to ride a boat). 
-Взимку українці обирають інші активні розваги. 
-Коли падає сніг, діти і дорослі йдуть **кататися на лижах** (to ski) у гори. 
-А у місті дуже популярно **кататися на ковзанах** (to ice skate) на великих ковзанках. 
-Запам'ятайте цю конструкцію, вона дуже часто звучить у розмовах про зимовий чи літній відпочинок.
+In Ukrainian, the choice of verb also depends on how often you engage in your **хобі** (hobby), like **плавання** (swimming). If you visit a location regularly as a habit, you use the multidirectional verb «ходити» (to go). If you are talking about a specific, one-time trip in the future, you use the perfective verb «піти» (to go).
 
-Давайте послухаємо розмову двох людей, які щойно познайомилися. Вони розповідають про свої хобі. 
-> — **Софія:** Привіт! Мене звати Софія. Я дуже **захоплююся малюванням** (am passionate about drawing).
-> — **Новий знайомий:** Привіт, Софіє! Дуже приємно. А я більше люблю спорт. Я часто граю у футбол.
-> — **Софія:** Це цікаво! А ти любиш музику?
-> — **Новий знайомий:** Так, звичайно. У вільний час я люблю грати на гітарі. А ти граєш на чомусь?
-> — **Софія:** Ні, але я іноді **ходжу на концерти** (go to concerts).
+Я дуже люблю спорт і плавання. Я ходжу в басейн щовівторка та щочетверга. Мій брат також ходить у басейн регулярно. Але завтра я маю багато роботи. Тому я не піду в басейн завтра. Я піду в басейн у суботу. Ми часто ходимо в кіно на вихідних. Наступного тижня ми підемо на новий фільм.
 
-Цей короткий діалог — чудовий приклад того, як можна легко розповісти про себе.
+:::info
+**Grammar box**
+Use the verb **ходити** for regular, repeated trips to a place. Use **піти** for a specific plan or a one-time trip in the future. Both verbs take the Accusative case for the destination.
+:::
+
+If you prefer to **займатися** (to engage in) a **спорт** (sport), you need to know how to use the verb «грати» (to play). This verb is unique because it uses two different prepositions and cases. For sports and games, we use «в» or «у» followed by the Accusative case. For musical instruments, we use «на» followed by the Locative case to play beautiful **музика** (music).
+
+Мої друзі ведуть активний спосіб життя. Вони часто грають у футбол або у волейбол на стадіоні. Я не люблю спорт, тому я граю в шахи. Моя сестра обожнює музику. Вона професійно грає на скрипці. Увечері я також граю на гітарі, а мій тато грає на піаніно. Ми можемо грати на інструментах годинами.
+
+> *My friends lead an active lifestyle. They often play football or volleyball at the stadium. I do not like sports, so I play chess. My sister adores music. She plays the violin professionally. In the evening, I also play the guitar, and my dad plays the piano. We can play instruments for hours.*
+
+Another common group of activities involves riding. You might **захоплюватися** (to be passionate about) cycling or skiing. We use the verb «кататися» (to ride) with the preposition «на» and the Locative case. This applies to vehicles, winter sports equipment, and boats. Sometimes, this is more fun than going to a **виставка** (exhibition)!
+
+Українці люблять проводити час на природі. Навесні та влітку ми часто катаємося на велосипеді в парку. Деякі люди люблять кататися на човні на річці. Взимку ми їдемо в гори. Там ми катаємося на лижах або на сноуборді. У місті діти дуже люблять кататися на ковзанах. Це чудова зимова розвага для всієї родини.
+
+> *Ukrainians love to spend time in nature. In the spring and summer, we often ride a bicycle in the park. Some people like to ride a boat on the river. In the winter, we go to the mountains. There we ski or snowboard. In the city, children really love to ice skate. This is wonderful winter entertainment for the whole family.*
+
+Let's see how people discuss their interests when they meet for the first time. At a language exchange meetup, two people introduce themselves and talk about their hobbies.
+
+> — **Софія:** Привіт! Мене звати Софія. Я дуже рада бути тут. *(Hi! My name is Sofia. I am very glad to be here.)*
+> — **Новий знайомий:** Привіт, Софійо! А я Дмитро. Чим ти захоплюєшся у вільний час? *(Hi, Sofia! And I am Dmytro. What are you passionate about in your free time?)*
+> — **Софія:** Я займаюся малюванням і люблю ходити в театр. А ти? *(I do painting and love to go to the theater. And you?)*
+> — **Новий знайомий:** Я люблю музику й спорт. Я граю на гітарі та бігаю щоранку. *(I love music and sport. I play the guitar and run every morning.)*
+> — **Софія:** Як цікаво! А в які спортивні ігри ти граєш? *(How interesting! And what sports games do you play?)*
+> — **Новий знайомий:** Я часто граю в теніс із друзями на вихідних. *(I often play tennis with friends on the weekend.)*
 
 <!-- INJECT_ACTIVITY: quiz-acc-loc -->
 <!-- INJECT_ACTIVITY: match-up-verb-govt -->
-<!-- INJECT_ACTIVITY: fill-in-hobbies-cases -->
 
-## Плани на вихідні
+## Плани на вихідні (~600 words total)
 
-Коли ми маємо вільний час, ми часто хочемо провести його з друзями. When you want to suggest an activity, Ukrainian has several natural phrases. Найпростіший спосіб — це сказати **«Ходімо!»** (Let's go!). Наприклад, ви можете запропонувати другу: «Ходімо в кіно!» або «Ходімо на стадіон!». Якщо ви не дуже впевнені і хочете запропонувати варіант, використовуйте фразу **«Може, підемо...?»** (Maybe we'll go...?). Наприклад: «Може, підемо на прогулянку?». Для спорту та ігор ми часто кажемо **«Пограймо!»** (Let's play!). Наприклад: «Пограймо в теніс!». Якщо ви хочете запитати про бажання іншої людини, використовуйте конструкцію **«Хочеш піти на...?»** (Do you want to go to...?). Наприклад: «Хочеш піти на виставку?». Ці фрази допомагають легко планувати спільний відпочинок. Їх дуже корисно знати для щоденного спілкування.
+When the weekend approaches, it is time to make plans with friends and family. To suggest an activity, you can use several common phrases depending on your mood. The most direct way is to use the word **ходімо** (let's go), followed by the destination in the Accusative case. If you want to sound a bit more tentative, you can ask a question using **може** (maybe) and the future tense verb **підемо** (we will go). For activities like sports or games, the phrase **давай пограємо** (let's play) is very popular. You can also simply ask if someone wants to go somewhere.
 
-Коли друзі пропонують вам щось цікаве, важливо вміти радісно погодитися. Accepting an invitation with enthusiasm makes communication much warmer. Якщо вам дуже подобається пропозиція, скажіть **«Із задоволенням!»** (With pleasure!). Це звучить дуже ввічливо і позитивно. Інша популярна фраза — це **«Чудова ідея!»** (Great idea!). Наприклад, якщо друг каже: «Ходімо в парк!», ви можете відповісти: «Чудова ідея!». Коли хтось щось пропонує, ви можете просто відповісти **«Так, давай!»** (Yes, let's!) або **«Так, згода!»** (Agreed!). А в неформальній розмові серед друзів дуже часто звучить коротка фраза **«Я — за!»** (I'm in!).
- Вона означає, що ви повністю підтримуєте план. Використовуйте ці емоційні відповіді, щоб показати, що ви раді провести час разом. Вони роблять вашу українську мову більш живою та природною.
+У п'ятницю ввечері ми часто плануємо наші вихідні. Я дзвоню другу і кажу: «Ходімо в кіно!» або «Може, підемо на прогулянку в парк?». Якщо погода гарна, мій брат пропонує: «Давай пограємо у футбол на стадіоні!». А іноді колеги запитують мене: «Хочеш піти на концерт у суботу?». Це дуже прості фрази для запрошення на будь-яку **розвагу** (entertainment).
 
-Але іноді ми не маємо часу або просто не хочемо кудись іти. Declining an invitation politely is just as important as accepting one. Найкращий спосіб відмовити — це почати з фрази **«На жаль, не можу»** (Unfortunately, I can't). Це показує, що ви б хотіли піти, але обставини не дозволяють. Потім варто пояснити причину. Чоловік скаже **«Я сьогодні зайнятий»** (I'm busy today), а жінка — **«Я сьогодні зайнята»**. Ви також можете сказати **«У мене вже є плани»** (I already have plans). Це універсальна відмова, коли ви не хочете розповідати деталі. Щоб зберегти хороші стосунки і показати, що ви хочете зустрітися пізніше, запитайте: **«Може, іншим разом?»** (Maybe another time?). Така відповідь є дуже дружньою. Навіть коли ви відмовляєте, важливо залишатися ввічливим.
+> *On Friday evening, we often plan our weekends. I call a friend and say, "Let's go to the cinema!" or "Maybe we'll go for a walk in the park?". If the weather is nice, my brother suggests, "Let's play football at the stadium!". And sometimes colleagues ask me, "Do you want to go to a concert on Saturday?". These are very simple phrases for an invitation to any entertainment.*
 
-Коли ви вже домовилися про зустріч, треба обговорити важливі деталі. Discussing logistics like time and place involves specific question words and cases. Щоб запитати про час, ми використовуємо фразу **«О котрій?»** (At what time?). Відповідь завжди буде з прийменником «о» або «об» та порядковим числівником. Наприклад: **«О п'ятій»** (At five) або «О сьомій» (At seven). Щоб домовитися про місце, запитайте **«Де зустрінемося?»** (Where will we meet?). Часто ми зустрічаємося біля якихось об'єктів. Для цього ми використовуємо прийменник **«біля»** (near) та іменник у родовому відмінку (Genitive case). Наприклад, ви можете сказати: **«Біля входу»** (Near the entrance), «Біля метро» (Near the subway), або «Біля парку» (Near the park). Також запитайте **«Як дістатися?»** (How to get there?), і вам дадуть швидку відповідь: **«Метро до станції Хрещатик»** (Subway to Khreshchatyk station). Ці короткі запитання і відповіді роблять планування дуже швидким та ефективним.
+If you like the suggestion, you will want to accept it with enthusiasm. Ukrainians use several cheerful expressions to say yes when they have **вільний** (free) time. The phrase **з задоволенням** (with pleasure) is polite and very common in both formal and informal situations. You can also compliment the suggestion by calling it a **чудова ідея** (great idea). For a more casual and energetic agreement with close friends, simply say **так, давай** (yes, let's) or declare your support with **я — за** (I'm in).
 
-Давайте прочитаємо коротку історію про те, як двоє друзів планують свої вихідні. Вони обирають між концертом, музеєм та прогулянкою.
+Коли друзі пропонують цікаву розвагу, я майже завжди погоджуюся. Якщо мене кличуть у театр, я чемно відповідаю: «З задоволенням!». Коли брат хоче грати в теніс, я радісно кажу: «Чудова ідея!». А якщо колега пропонує піти в кафе після роботи, я відповідаю: «Так, давай! Я — за!». Це показує, що я маю вільний час і гарний настрій для відпочинку.
 
-> — **Марко:** Привіт, Тарасе! Які маєш плани на неділю? Хочеш піти на концерт? *(Hi, Taras! What plans do you have for Sunday? Do you want to go to a concert?)*
-> — **Тарас:** Привіт! На жаль, не можу. У мене вже є плани на ранок. А що ти робиш після обіду? *(Hi! Unfortunately, I can't. I already have plans for the morning. And what are you doing in the afternoon?)*
-> — **Марко:** Після обіду я вільний. Може, підемо в музей? *(In the afternoon I am free. Maybe we'll go to the museum?)*
-> — **Тарас:** Музей — це цікаво, але погода дуже гарна. Ходімо краще в парк! *(A museum is interesting, but the weather is very nice. Let's go to the park instead!)*
-> — **Марко:** Чудова ідея! Я — за! Де зустрінемося? *(Great idea! I'm in! Where will we meet?)*
-> — **Тарас:** Зустріньмося біля входу в парк. О котрій? *(Let's meet near the entrance to the park. At what time?)*
-> — **Марко:** О п'ятій годині. *(At five o'clock.)*
-> — **Тарас:** Домовилися! До неділі! *(Agreed! Until Sunday!)*
+> *When friends suggest interesting entertainment, I almost always agree. If they invite me to the theater, I politely answer, "With pleasure!". When my brother wants to play tennis, I joyfully say, "Great idea!". And if a colleague suggests going to a cafe after work, I answer, "Yes, let's! I'm in!". This shows that I have free time and a good mood for rest.*
 
-Цей діалог показує, як легко комбінувати пропозиції, відмови та деталі логістики.
+Of course, you cannot always accept every invitation. To decline politely, start with **на жаль** (unfortunately) followed by **не можу** (I cannot). It is customary to provide a brief reason so the person understands you are not simply ignoring them. You can state that you are busy. Men say **я зайнятий**, and women say **я зайнята**. You can also explain that you already have plans. Finally, soften the rejection by suggesting you meet another time.
+
+Але іноді я маю багато роботи або інші важливі справи. Тоді я прямо кажу: «На жаль, не можу. Я сьогодні дуже зайнятий». Моя сестра часто відповідає інакше: «Вибач, але у мене вже є плани на вечір». Щоб не образити друга, ми завжди додаємо оптимістичну фразу: «Може, іншим разом?». Це дуже ввічлива відмова, яка залишає можливість для нової зустрічі.
+
+> *But sometimes I have a lot of work or other important things to do. Then I say directly, "Unfortunately, I can't. I am very busy today." My sister often answers differently, "Sorry, but I already have plans for the evening." Not to offend a friend, we always add an optimistic phrase, "Maybe another time?". This is a very polite refusal that leaves the possibility for a new meeting.*
+
+Once you have agreed on an activity, you need to sort out the logistics. The two most important questions are about time and place. To ask "at what time?", use the phrase **о котрій?**. The answer will use the preposition **о** (or **об**) and an ordinal number, like **о п'ятій** (at five). To ask "where will we meet?", use the verb **зустрінемося**. A very common meeting point is near the entrance of a building or a park.
+
+Коли ми вибрали місце для відпочинку, треба домовитися про важливі деталі. Я запитую друга по телефону: «О котрій годині ми йдемо?». Він швидко відповідає: «Давай о п'ятій». Потім я питаю: «А де зустрінемося?». Найчастіше ми зустрічаємося біля входу в кінотеатр або біля центральної станції метро. Це дуже зручно, коли на вулиці багато людей.
+
+> *When we have chosen a place for rest, we need to agree on important details. I ask my friend on the phone, "At what time are we going?". He quickly answers, "Let's make it at five." Then I ask, "And where will we meet?". Most often, we meet near the entrance to the cinema or near the central metro station. It is very convenient when there are many people on the street.*
+
+:::info
+**Grammar box**
+When saying "near the entrance" (**біля входу**), the preposition **біля** (near/by) requires the Genitive case. That is why **вхід** changes to **входу**. You will use this pattern often when deciding where to meet!
+:::
+
+Let's see how all these pieces come together in a real conversation. In this short dialogue, two friends are figuring out what to do on Sunday afternoon. They consider a few different options, practice declining politely, and eventually make a final decision, setting a specific time and place for their meeting.
+
+> — **Анна:** Привіт, Максиме! Маєш плани на неділю? *(Hi, Maksym! Do you have plans for Sunday?)*
+> — **Максим:** Привіт! Ні, я абсолютно вільний. *(Hi! No, I am completely free.)*
+> — **Анна:** Чудово! Хочеш піти на **виставку** (exhibition) сучасного мистецтва? *(Great! Do you want to go to an exhibition of modern art?)*
+> — **Максим:** На жаль, не можу. Я не дуже люблю мистецтво. Може, підемо в парк? *(Unfortunately, I can't. I don't really like art. Maybe we'll go to the park?)*
+> — **Анна:** З задоволенням! Я — за. Погода буде дуже гарна. *(With pleasure! I'm in. The weather will be very nice.)*
+> — **Максим:** Де зустрінемося і о котрій годині? *(Where will we meet and at what time?)*
+> — **Анна:** Давай о другій годині біля входу в парк. *(Let's make it at two o'clock near the entrance to the park.)*
+> — **Максим:** Домовилися! До неділі. *(Agreed! Until Sunday.)*
 
 <!-- INJECT_ACTIVITY: error-correction-cases -->
 
-## Що мені подобається найбільше
+## Що мені подобається найбільше (~400 words total)
 
-Коли ми плануємо вихідні, ми обираємо те, що любимо. Іноді нам подобається багато різних речей, але одна є улюбленою. To express strong preferences and rank your interests, Ukrainian has several useful phrases that go beyond basic likes. Базова фраза — це **«мені подобається»** (I like). Наприклад: «Мені подобається сучасна музика». Але якщо ви дуже любите певне заняття, скажіть **«мені найбільше подобається»** (I like most). Це показує ваш головний пріоритет серед інших справ. А для максимальної емоції ми маємо дієслово **«обожнювати»** (to adore). The phrase "я обожнюю" is a fantastic way to show true passion for an activity. Ми часто комбінуємо різні хобі в одному реченні, щоб показати контраст. Ви можете сказати: **«Я люблю читати, але найбільше обожнюю малювати»** (I love to read, but most of all I adore drawing). Або інший приклад: «Мені подобається спорт, але я обожнюю ходити в гори».
+When we talk about our interests, we often want to emphasize what we love doing the most. You already know the simple phrase **мені подобається** (I like). To express a stronger preference, use **мені найбільше подобається** (I like most) or the expressive verb **обожнювати** (to adore). These phrases help you rank your favorite pastimes and show true enthusiasm.
 
-А як українці проводять свій вільний час? Звичайно, ми любимо ходити в кіно, театри та займатися спортом. Але відпочинок на природі має особливе місце в нашій культурі. Nature holds a very special place in Ukrainian leisure activities. Дуже популярно їздити в **Карпати** (the Carpathians). Там люди гуляють у лісі, дихають свіжим повітрям і просто відпочивають. Exploring ancient castles and attending folk festivals (відвідувати народні фестивалі) in Western Ukraine is another favorite weekend trip for many families. Там можна побачити багато цікавої історії та традицій. Також українці мають традиційні сезонні хобі.
- Восени багато людей їдуть у ліс **збирати гриби** (to hunt mushrooms). Це заняття часто називають тихим полюванням. А влітку дуже популярно **збирати ягоди** (to pick berries). Ці традиції допомагають забути про стрес і швидкий міський шум. Якщо ви скажете українцям: «Я обожнюю збирати гриби», ви одразу знайдете нових друзів!
+Let's look at how people combine different activities in conversation. They might talk about a new **хобі** (hobby) they just discovered, or a favorite **спорт** (sport) they do regularly. Combining different verbs makes your speech sound much more natural and fluent.
 
-Наш вільний час показує, які ми насправді люди. Our leisure time often defines our personality and helps us connect with others. Тепер ви знаєте достатньо слів, щоб цікаво розповісти про себе. You have the vocabulary and grammar tools to describe your unique lifestyle to new Ukrainian friends. Не забувайте активно використовувати чотири головні дієслова з цього уроку. Ви можете **«займатися»** (to engage in) спортом, танцями або йогою. Ви можете сильно **«захоплюватися»** (to be passionate about) музикою чи фотографією. Ви можете **«грати в»** (to play) теніс або **«грати на»** (to play an instrument) гітарі. І, звичайно, ви можете **«ходити в»** (to go to) кіно, музей або на стадіон. Практикуйте ці конструкції, комбінуйте їх і розповідайте про свої хобі впевнено. Розкажіть світу, чим ви захоплюєтеся!
+Кожна людина має своє улюблене хобі. Мені подобається спорт і **плавання** (swimming), але найбільше я обожнюю малювати. Мій брат **захоплюється** (to be passionate about) історією, тому він часто ходить на **виставку** (exhibition). У свій вільний час я зазвичай читаю або граю на гітарі. Моя подруга слухає музику, але найбільше їй подобається танцювати.
 
-## Підсумок
+> *Every person has their favorite hobby. I like sport and swimming, but most of all I adore drawing. My brother is passionate about history, so he often goes to an exhibition. In my free time, I usually read or play the guitar. My friend listens to music, but most of all she likes to dance.*
 
-Сьогодні ми вивчили, як говорити про **дозвілля** *(leisure)* та хобі. Ви вже знаєте, які дієслова використовувати для різних занять. Головне правило — це пам'ятати про правильний відмінок. The main rule is to remember the correct case after the verb.
+Leisure time in Ukraine often involves spending time outdoors, especially during the warmer months. Our **вільний** (free) time is precious, and traditional outdoor activities blend beautifully with modern urban pastimes. For many people, whether it is listening to **музика** (music) in a local park or exploring nature trails, getting outside is the perfect way to relax.
 
-Коли ви говорите про ігри, використовуйте конструкцію «грати в» плюс знахідний відмінок. Наприклад: я граю в теніс. For musical instruments, use the structure "грати на" plus the locative case. Наприклад: вона грає на гітарі.
+Українці дуже люблять активне **дозвілля** (leisure, free time) на природі. Влітку та восени багато людей їздять у Карпати. Там можна гуляти в горах, збирати гриби та збирати ягоди. Це популярна **розвага** (entertainment) для всієї родини. Також ми любимо відвідувати старовинні замки на заході України або просто відпочивати біля річки.
 
-Якщо ви маєте серйозне хобі, використовуйте дієслово «захоплюватися». Після нього завжди йде орудний відмінок. Наприклад: він захоплюється малюванням. For leisure destinations, use "ходити на" or "ходити в" with the accusative case. Наприклад: ми ходимо на концерт.
+> *Ukrainians really love active leisure in nature. In summer and autumn, many people go to the Carpathians. There you can walk in the mountains, pick mushrooms, and pick berries. This is a popular entertainment for the whole family. Also, we love visiting ancient castles in the west of Ukraine or simply resting near a river.*
 
-Тепер перевірте себе. Now test yourself. Спробуйте відповісти на три запитання:
+:::tip
+**Did you know?**
+Foraging for wild mushrooms (**збирати гриби**) and berries (**збирати ягоди**) is a deeply rooted cultural tradition in Ukraine. It is considered a relaxing weekend activity that connects people with nature.
+:::
+
+How we spend our time says a lot about our personality and values. Now that you know the core verbs for hobbies,  You can use verbs like **займатися** (to engage in, to do) to describe your daily activities and find common ground with new friends. Asking about someone's interests is the best icebreaker.
+
+Коли ви зустрічаєте нових друзів в Україні, розкажіть їм про свої інтереси. Розкажіть про свої улюблені заняття. Поясніть, чим ви найбільше захоплюєтеся. Також скажіть, куди ви любите ходити. Це найкращий спосіб знайти спільні теми.
+
+> *When you meet new friends in Ukraine, tell them about your interests. Tell them about your favorite activities. Explain what you are most passionate about. Also, say where you like to go. This is the best way to find common topics.*
+
+<!-- INJECT_ACTIVITY: group-sort, leisure categories -->
+
+## Підсумок (~150 words)
+
+ Let's review the core verbs and the cases they require.
+
+Розваги та дозвілля — це важлива частина нашого життя. Ми використовуємо різні відмінки для наших хобі. Дієслово «захоплюватися» завжди вимагає орудного відмінка. Наприклад, ми кажемо «захоплюватися малюванням» або «займатися спортом». Якщо ми говоримо про ігри, ми вживаємо «грати в» і знахідний відмінок. Але для музики ми використовуємо «грати на» і місцевий відмінок. Наприклад, ви можете грати в теніс, але грати на гітарі. Коли ми плануємо вільний час, ми кажемо «ходити на концерт» або «йти на виставку».
+
+> *Entertainment and leisure are an important part of our life. We use different cases for our hobbies. The verb "to be passionate about" always requires the instrumental case. For example, we say "to be passionate about drawing" or "to do sports". If we talk about games, we use "to play in" and the accusative case. But for music, we use "to play on" and the locative case. For example, you can play tennis, but play the guitar. When we plan free time, we say "to go to a concert" or "to go to an exhibition".*
+
+Take a moment to test your memory with these three questions before moving on to the activities.
+
+:::info
+**Self-check questions**
 
 1. Яка різниця між «граю в...» та «граю на...»?
 2. Як сказати "I am interested in photography"?
 3. Як запросити друга в кіно?
-
-Якщо ви знаєте ці відповіді, ви чудово засвоїли нову тему! If you know the answers, you have mastered this topic perfectly!
+:::

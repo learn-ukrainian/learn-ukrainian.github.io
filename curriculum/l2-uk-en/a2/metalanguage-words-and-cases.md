@@ -1,165 +1,161 @@
-## Частини мови: що це за слово?
+## Частини мови: що це за слово? (~650 words total)
 
-Ви вже багато знаєте і вмієте говорити українською. You already use nouns, verbs, and adjectives every day. Але тепер ми починаємо говорити про саму мову. From now on, you will read and hear grammar instructions in Ukrainian. Щоб розуміти ці правила, нам потрібні спеціальні слова. Це як робота механіка. A mechanic knows how to fix a car, but they also need to know the names of their tools. Наші інструменти — це **частини мови** *(parts of speech)*. У кожної частини мови є своє ім'я і своя робота в реченні.
+You have been building Ukrainian sentences for months, using nouns, verbs, and adjectives naturally. Now, as you approach the B1 level, you need to know what Ukrainian teachers actually call these building blocks. Think of it like a mechanic learning the formal names of their tools after already knowing how to use them. When you know the Ukrainian term for a specific word type, you can follow grammar explanations entirely in Ukrainian. These grammatical categories are called **частини мови** (parts of speech). Let's look at how they work in context.
 
-Уявіть урок української мови. A student is asking the teacher about some tricky words.
-> — **Студент:** Скажіть, будь ласка, слово «мій» — це яка частина мови? *(Tell me please, the word "my" — what part of speech is it?)*
-> — **Вчитель:** Слово «мій» — це **займенник** *(pronoun)*.
-> — **Студент:** Чому воно так називається? *(Why is it called that?)*
-> — **Вчитель:** Тому що воно стоїть замість імені. *(Because it stands instead of a name.)* Воно не називає предмет. Воно тільки вказує на нього. *(It only points to it.)*
-> — **Студент:** А слово «швидко»? *(And the word "quickly"?)*
-> — **Вчитель:** Це **прислівник** *(adverb)*. Воно показує, як саме ми робимо дію. *(It shows exactly how we do an action.)*
+> — **Студент:** Вибачте, слово «мій» — це яка частина мови? *(Excuse me, what part of speech is the word "my"?)*
+> — **Вчитель:** Це **займенник** (pronoun). Він стоїть у реченні замість імені. *(It is a pronoun. It stands in a sentence instead of a name.)*
+> — **Студент:** Зрозуміло. А слово «швидко»? Це теж дієслово? *(Understood. And the word "quickly"? Is that also a verb?)*
+> — **Вчитель:** Ні, це **прислівник** (adverb). Він показує, як саме ми робимо дію. *(No, it is an adverb. It shows exactly how we do an action.)*
 
-Перша і найголовніша частина мови — це **іменник** *(noun)*. Українські школярі вчать, що іменник — це **назва предмета** *(name of an object)*. Слово «іменник» походить від слова «ім'я». Усі іменники відповідають на два головні питання. Якщо це жива людина або тварина, ми завжди питаємо **«хто?»** *(who?)*. Якщо це звичайний неживий предмет, явище природи або ідея, ми питаємо **«що?»** *(what?)*.
-Подивіться на ці приклади:
-* Хто? — **мама** *(mom)*, **собака** *(dog)*, **студент** *(student)*, **лікар** *(doctor)*.
-* Що? — **стіл** *(table)*, **радість** *(joy)*, **місто** *(city)*, **сонце** *(sun)*.
-Іменники відіграють дуже важливу роль у реченні. Вони бувають чоловічого, жіночого та середнього роду. Вони також мають однину і множину.
+Кожне слово належить до певної групи, і найголовніша з них — це **іменник** (noun). Іменник називає предмет, людину, тварину або абстрактне поняття. Ця частина мови завжди відповідає на питання «хто?» або «що?». Прикладами іменників є слова мама, собака, стіл та радість. У словнику ви завжди бачите іменник у формі, яка називається **називний відмінок** (nominative case). Крім того, кожен іменник має свій **рід** (gender, grammatical), який не змінюється.
 
-Друга важлива частина мови — це **прикметник** *(adjective)*. Прикметник завжди показує **ознаку предмета** *(characteristic of an object)*. Колір, розмір, вік, характер — усе це прикметники. Ця частина мови ніби «приклеюється» до іменника і детально описує його. Прикметники відповідають на питання «який?», «яка?», «яке?» або «які?». Прикметник — дуже слухняне слово. Він завжди має такий самий рід, число і відмінок, як і його іменник.
-Подивіться на узгодження:
-* який стіл? — **великий стіл** *(big table)*.
-* яка мама? — **гарна мама** *(beautiful mom)*.
-* яке небо? — **синє небо** *(blue sky)*.
-* які дні? — **теплі дні** *(warm days)*.
-Без прикметників наша мова була б дуже бідною.
+> *Every word belongs to a certain group, and the most important of them is the noun. A noun names an object, person, animal, or abstract concept. This part of speech always answers the questions "who?" or "what?". Examples of nouns are the words mom, dog, table, and joy. In a dictionary, you always see a noun in a form called the nominative case. Additionally, every noun has its grammatical gender, which does not change.*
 
-Третя велика категорія слів — це **дієслово** *(verb)*. Назва цієї частини мови говорить сама за себе. Дієслово означає слово, яке показує дію. Українські підручники пишуть, що дієслово — це **дія предмета** *(action of an object)*. Усі дієслова в початковій формі відповідають на питання «що робити?» або «що зробити?».
-Наприклад:
-* що робити? — **читати** *(to read)*, **писати** *(to write)*, **бігати** *(to run)*.
-* що зробити? — **прочитати** *(to have read)*, **написати** *(to have written)*.
-Дієслова — це мотор нашого речення. Вони постійно змінюються. Дієслова змінюють свою форму за особами та за часами. Вони також мають доконаний та недоконаний вид.
+Наступна важлива група слів — це **прикметник** (adjective). Він описує ознаку предмета і відповідає на питання «який?», «яка?» або «яке?». Прикметник завжди прилипає до іменника і дає нам більше інформації про нього. Наприклад, ми кажемо великий стіл, гарна мама або синє небо. Коли іменник змінює свою форму, прикметник змінюється разом із ним.
 
-<!-- INJECT_ACTIVITY: match-up-match-ukrainian-grammar-terms-to-their-english-equivalents -->
+> *The next important group of words is the adjective. It describes a characteristic of an object and answers the questions "which?" or "what kind?". The adjective always sticks to the noun and gives us more information about it. For example, we say a large table, a beautiful mom, or a blue sky. When a noun changes its form, the adjective changes along with it.*
 
-Крім цих трьох гігантів, в українській мові є інші частини мови.
-**Займенник** *(pronoun)*. Він працює як заміна для іменника або прикметника. Приклади: **я** *(I)*, **ти** *(you)*, **ми** *(we)*, **цей** *(this)*.
-**Числівник** *(numeral)*. Він показує точну кількість або порядок предметів при лічбі. Він відповідає на питання «скільки?» або «який?». Приклади: **один** *(one)*, **другий** *(second)*, **п'ять** *(five)*.
-Також є незмінні слова. Вони ніколи не змінюють своїх закінчень.
-**Прислівник** *(adverb)*. Він описує дію або іншу ознаку. Він відповідає на питання «як?», «де?», «коли?». Приклади: **тут** *(here)*, **завтра** *(tomorrow)*, **швидко** *(quickly)*.
-Є також службові слова, які допомагають будувати речення.
-**Прийменник** *(preposition)*. Він стоїть перед іменником. Приклади: **у** *(in)*, **на** *(on)*, **з** *(with)*, **до** *(to)*.
-**Сполучник** *(conjunction)*. Він з'єднує слова або частини речення між собою. Приклади: **і** *(and)*, **але** *(but)*, **бо** *(because)*.
+:::note
+**Quick tip** — When a **прикметник** (adjective) describes a noun, it must perfectly match that noun in gender, number, and case. If the noun is in **однина** (singular), the adjective must be singular too.
+:::
 
-<!-- INJECT_ACTIVITY: group-sort-sort-words-into-parts-of-speech-imennyk-prykmetnyk-diieslovo-etc -->
+Коли ми хочемо описати дію предмета, ми використовуємо **дієслово** (verb). У початковій формі воно відповідає на питання «що робити?» або «що зробити?». Типові приклади дієслів: читати, писати, бігати. У звичайному реченні дієслово постійно змінюється. Його форма залежить від часу та від особи, яка виконує дію. Без дієслова дуже важко побудувати повноцінне речення.
 
-## Сім відмінків: питання та назви
+> *When we want to describe an action of an object, we use a verb. In its initial form, it answers the questions "what to do?" or "what to get done?". Typical examples of verbs: to read, to write, to run. In a normal sentence, the verb constantly changes. Its form depends on the time and on the person performing the action. Without a verb, it is very difficult to build a complete sentence.*
 
-Ми знаємо, що слова в реченні працюють разом. *(We know that words in a sentence work together.)* Щоб показати свою роль, іменники, прикметники та займенники змінюють закінчення. *(To show their role, nouns, adjectives, and pronouns change endings.)* Цей процес називається **відмінювання** *(declension)*. Українська мова має систему відмінків. **Відмінок** *(case)* — це граматичний статус слова в реченні. *(Case is the grammatical status of a word in a sentence.)* Відмінок показує, що саме робить слово. *(The case shows exactly what the word does.)* Воно є головним героєм чи об'єктом дії? *(Is it the main character or the object of the action?)* Це інструмент чи місце? *(Is it an instrument or a place?)* В англійській мові ви використовуєте прийменники або порядок слів. *(In English, you use prepositions or word order.)* В українській мові ми змінюємо закінчення слова. *(In Ukrainian, we change the ending of the word.)* Це дуже важливий механізм. *(This is a very important mechanism.)*
+<!-- INJECT_ACTIVITY: match-up-grammar-terms -->
 
-Давайте послухаємо, як студенти тренуються визначати відмінки. *(Let's listen to how students practice identifying cases.)*
-> — **Марко:** Наступне речення: «Я бачу кота». *(Next sentence: "I see a cat".)*
-> — **Анна:** Добре, шукаємо іменник. Це слово «кота». *(Good, we look for the noun. It is the word "cat".)*
-> — **Марко:** Який це відмінок? *(Which case is this?)*
-> — **Анна:** Треба поставити питання від дієслова. Бачу кого? — Кота. *(We need to ask a question from the verb. See whom? — A cat.)*
-> — **Марко:** Питання «кого?» має **Знахідний відмінок** *(Accusative case)*. *(The question "whom?" has the Accusative case.)*
-> — **Анна:** Правильно! А слово «я» — це **Називний відмінок** *(Nominative case)*. *(Correct! And the word "I" is the Nominative case.)*
-> — **Марко:** Так, бо це головний герой. Хто? — Я. *(Yes, because it is the main character. Who? — I.)*
+Besides the main categories, sentences rely on several other parts of speech to function properly. A **займенник** (pronoun) replaces a noun entirely, giving us words like «я» (I), «ти» (you), and «ми» (we). When we need to count things, a **числівник** (numeral) indicates quantity or order, such as «один» (one) or «другий» (second). 
 
-В українській мові є сім відмінків. *(There are seven cases in the Ukrainian language.)* Кожен відмінок має назву та спеціальні питання. *(Each case has a name and special questions.)* Ми завжди ставимо два питання: для істот і для неістот. *(We always ask two questions: for animate and inanimate objects.)* Ось повний список: *(Here is the full list:)*
-1. **Називний** *(Nominative)* — хто? що? *(who? what?)*
-2. **Родовий** *(Genitive)* — кого? чого? *(of whom? of what?)*
-3. **Давальний** *(Dative)* — кому? чому? *(to whom? to what?)*
-4. **Знахідний** *(Accusative)* — кого? що? *(whom? what?)*
-5. **Орудний** *(Instrumental)* — ким? чим? *(by whom? with what?)*
-6. **Місцевий** *(Locative)* — на кому? на чому? *(on whom? on what?)*
-7. **Кличний** *(Vocative)* — це форма для звертання *(this is the form for address)*. Він не має питань. *(It does not have questions.)*
+There are also invariable words that never change their endings. A **прислівник** (adverb) describes how, when, or where an action happens, giving us words like «тут» (here) or «завтра» (tomorrow). Finally, we use small connecting words to glue everything together: a **прийменник** (preposition) like «у» (in), «на» (on), or «з» (with) helps show relationships. Sometimes you need a noun in the **родовий відмінок** (genitive case) right after a preposition. We also use a **сполучник** (conjunction) like «і» (and), «але» (but), or «бо» (because) to connect phrases and structure our thoughts.
 
-Ці сім відмінків — база української граматики. *(These seven cases are the base of Ukrainian grammar.)*
+<!-- INJECT_ACTIVITY: group-sort-parts-of-speech -->
 
-Як запам'ятати всі ці назви по порядку? *(How to remember all these names in order?)* Українські школярі мають один секрет. *(Ukrainian schoolchildren have one secret.)* Вони вчать спеціальну фразу: «**Не Роби Дурниць, Знай, Орудуй Місцем, Кличний!**» *(Don't do silly things, know, operate with place, vocative!)*. Перша літера кожного слова — це перша літера назви відмінка. *(The first letter of each word is the first letter of the case name.)*
-* Н — Називний
-* Р — Родовий
-* Д — Давальний
-* З — Знахідний
-* О — Орудний
-* М — Місцевий
-* К — Кличний
+## Сім відмінків: питання та назви (~600 words total)
 
-Це дуже зручний і веселий метод. *(This is a very convenient and fun method.)* Ви можете придумати власну фразу! *(You can invent your own phrase!)*
+Коли слова об'єднуються в речення, вони починають взаємодіяти між собою. Щоб показати свою роль у реченні, іменник змінює своє закінчення. Цей процес називається відмінюванням. Відмінок — це граматичний статус слова, який показує, що саме воно робить прямо зараз. Називний відмінок — це базова форма, але в інших ситуаціях слово має працювати інакше.
 
-Головний секрет відмінків — це метод питань. *(The main secret of cases is the question method.)* Не треба відразу вчити всі закінчення. *(You don't need to learn all endings right away.)* Спочатку треба навчитися **ставити питання** *(to ask a question)*. *(First, you need to learn to ask a question.)* Ми завжди ставимо питання від дієслова до іменника. *(We always ask the question from the verb to the noun.)* Наприклад, у нас є таке речення: «Я даю подарунок братові». *(For example, we have such a sentence: "I give a gift to my brother".)* Як знайти відмінок слова «братові»? *(How to find the case of the word "brother"?)* Ми беремо дієслово «даю» і питаємо: даю кому? — братові. *(We take the verb "give" and ask: give to whom? — to brother.)* Питання «кому?» — це завжди Давальний відмінок. *(The question "to whom?" is always the Dative case.)* Цей метод чудово працює. *(This method works wonderfully.)*
+> *When words combine into a sentence, they start interacting with each other. To show its role in a sentence, a noun changes its ending. This process is called declension. A case is the grammatical status of a word, which shows exactly what it is doing right now. The nominative case is the base form, but in other situations, the word has to work differently.*
 
-<!-- INJECT_ACTIVITY: fill-in-complete-case-questions-rodovyi -->
+> — **Студент А:** Давай тренувати відмінки. Я кажу речення: «Я бачу кота». *(Let's practice cases. I say a sentence: "I see a cat".)*
+> — **Студент Б:** Добре. Я бачу кого? Кота. *(Okay. I see who? A cat.)*
+> — **Студент А:** Правильно. Який це відмінок? *(Right. Which case is this?)*
+> — **Студент Б:** Це знахідний відмінок, бо він відповідає на питання «кого?». *(This is the accusative case because it answers the question "whom?".)*
+> — **Студент А:** А якщо я скажу: «У мене немає кота»? *(And if I say: "I don't have a cat"?)*
+> — **Студент Б:** У мене немає кого? Кота. Це родовий відмінок. *(I don't have whom? A cat. This is the genitive case.)*
 
-Українські підручники для початкової школи дуже просто пояснюють цю тему. *(Ukrainian primary school textbooks explain this topic very simply.)* Наприклад, підручник автора Вашуленка пише цікаву річ. *(For example, Vashulenko's textbook writes an interesting thing.)* Там сказано, що відмінки допомагають словам «дружити» між собою. *(It is said there that cases help words "make friends" with each other.)* Це створює **зв'язок слів у реченні** *(connection of words in a sentence)*. Без відмінків ми мали б просто випадковий список слів. *(Without cases, we would just have a random list of words.)* Відмінки — це клей, який тримає речення разом. *(Cases are the glue that holds the sentence together.)* Тому їх так важливо розуміти. *(That is why it is so important to understand them.)*
+В українській мові є сім відмінків, і кожен має свою назву та пару обов'язкових питань. Називний відмінок відповідає на питання «хто?» або «що?». Родовий відмінок відповідає на питання «кого?» або «чого?». Давальний відмінок потрібен для отримувача: «кому?» або «чому?». Знахідний відмінок маркує прямий об'єкт: «кого?» або «що?». Орудний відмінок показує інструмент або компанію: «ким?» або «чим?». Місцевий відмінок завжди потребує прийменника і відповідає на питання «на кому?» або «на чому?». Кличний відмінок не має питань, бо він використовується тільки для звертання.
 
-## Рід і число: чоловічий, жіночий, середній
+> *In Ukrainian, there are seven cases, and each has its name and a pair of mandatory questions. The nominative case answers the questions "who?" or "what?". The genitive case answers the questions "of whom?" or "of what?". The dative case is needed for the receiver: "to whom?" or "to what?". The accusative case marks the direct object: "whom?" or "what?". The instrumental case shows the instrument or company: "with whom?" or "with what?". The locative case always needs a preposition and answers the questions "on whom?" or "on what?". The vocative case has no questions because it is used only for addressing.*
 
-В українській мові кожен **іменник** *(noun)* має свій **граматичний рід** *(grammatical gender)*. *(In the Ukrainian language, every noun has its own grammatical gender.)* Ми маємо три роди. *(We have three genders.)* Перший — це **чоловічий рід** *(masculine gender)*, або скорочено **ч.р.** *(First is masculine gender, or abbreviated ч.р.)* Другий — це **жіночий рід** *(feminine gender)*, або **ж.р.** *(Second is feminine gender, or ж.р.)* Третій — це **середній рід** *(neuter gender)*, або **с.р.** *(Third is neuter gender, or с.р.)* Рід іменника — це постійна ознака. *(The gender of a noun is a permanent feature.)* Це означає, що слово не може змінити свій рід. *(This means that a word cannot change its gender.)* Наприклад, слово «стіл» — це завжди чоловічий рід. *(For example, the word "table" is always masculine gender.)* Ми повинні знати рід, щоб правильно використовувати **прикметник** *(adjective)*. *(We must know the gender to correctly use an adjective.)* Без роду ми не знаємо, яке закінчення вибрати. *(Without gender, we don't know which ending to choose.)*
+Українські школярі часто використовують спеціальну фразу, щоб легко запам'ятати порядок відмінків. Ця весела фраза звучить так: «Нашого Ромчика Дивує Зебра — Оця Маленька Красуня». Перша літера кожного слова відповідає першій літері назви відмінка. Слово «Нашого» — це Називний, «Ромчика» — Родовий, «Дивує» — Давальний, «Зебра» — Знахідний, «Оця» — Орудний, «Маленька» — Місцевий, «Красуня» — Кличний. Це дуже простий і ефективний метод для запам'ятовування.
 
-Як дізнатися рід слова? *(How to find out the gender of a word?)* Ми дивимося на останню літеру. *(We look at the last letter.)* Якщо слово закінчується на приголосний звук, це чоловічий рід. *(If a word ends in a consonant sound, this is masculine gender.)* Наприклад, слова «**брат**» *(brother)*, «дім», «парк». *(For example, the words "brother", "house", "park".)* Якщо слово закінчується на «-а» або «-я», це жіночий рід. *(If a word ends in "-a" or "-ya", this is feminine gender.)* Наприклад, слова «**сестра**» *(sister)*, «родина». *(For example, the words "sister", "family".)* Якщо слово закінчується на «-о», «-е», це середній рід. *(If a word ends in "-o", "-e", this is neuter gender.)* Наприклад, слова «**вікно**» *(window)*, «море». *(For example, the words "window", "sea".)* Коли ви шукаєте нове слово у словнику, ви завжди бачите його рід. *(When you look for a new word in a dictionary, you always see its gender.)* Словник пише короткі літери: ч., ж., або с. *(The dictionary writes short letters: ч., ж., or с.)* Це допомагає вам запам'ятати слово правильно. *(This helps you remember the word correctly.)*
+The absolute secret to mastering Ukrainian cases is not memorizing tables of endings first. The secret is learning to ask the right question relative to the action. Ukrainian teachers call this method **задати питання** (to ask a question). When you have a **дієслово** (verb), you ask a specific question to find the right ending for the noun. For example, if you use the verb "to give", you ask «даю кому?» (I give to whom?). The question «кому?» automatically points you to the dative case. If you say "I write with a pen", you ask «пишу чим?» (I write with what?), which leads you directly to the instrumental case.
 
-Інша важлива категорія — це **число** *(number)*. *(Another important category is number.)* В українській мові є два числа. *(In the Ukrainian language, there are two numbers.)* Перше число — це **однина** *(singular)*. *(The first number is singular.)* Друге число — це **множина** *(plural)*. *(The second number is plural.)* Українські підручники вчать дітей дуже простому правилу. *(Ukrainian textbooks teach children a very simple rule.)* Вони кажуть: «Один — це однина, багато — множина». *(They say: "One is singular, many is plural".)* Коли ми змінюємо число, ми змінюємо закінчення слова. *(When we change the number, we change the ending of the word.)* Наприклад, ми маємо один стіл — це однина. *(For example, we have one table — this is singular.)* Але якщо їх багато, ми кажемо столи — це множина. *(But if there are many of them, we say tables — this is plural.)* Число може змінюватися, на відміну від роду. *(Number can change, unlike gender.)* Ви можете легко зробити з однини множину. *(You can easily make plural from singular.)*
+:::note
+**Quick tip** — Always memorize the case questions as a pair for animate and inanimate objects, like «кого? / чого?». This habit will save you from many mistakes later.
+:::
 
-На рівні А2 ми вчимося робити повний аналіз слова. *(At the A2 level, we learn to do a full analysis of a word.)* Як це виглядає на практиці? *(How does this look in practice?)* Уявіть, що у нас є речення: «На столі немає книг». *(Imagine that we have a sentence: "There are no books on the table".)* Ми беремо слово «**книг**» *(books)*. *(We take the word "books".)* Як український вчитель опише це слово? *(How will a Ukrainian teacher describe this word?)* Вчитель скаже: «Книг» — це іменник, жіночий рід, множина, родовий відмінок. *(The teacher will say: "Knyh" is a noun, feminine gender, plural, genitive case.)* Це звучить як код, але це дуже логічно. *(It sounds like a code, but it is very logical.)* Ми визначили частину мови, постійну ознаку і змінні ознаки. *(We determined the part of speech, the permanent feature, and variable features.)* Цей аналіз допомагає вам бачити систему мови. *(This analysis helps you see the system of the language.)* Ви не просто вгадуєте закінчення. *(You are not just guessing the ending.)* Ви точно знаєте, чому слово має таку форму. *(You know exactly why the word has such a form.)* Це ваша головна мета на цьому етапі. *(This is your main goal at this stage.)*
+<!-- INJECT_ACTIVITY: fill-in, Complete the case name and its question pair (e.g., Родовий — ___? ___?), 8 items -->
 
-Давайте попрактикуємось аналізувати слова з попередніх модулів:
-1. **брат** *(brother)* — іменник, чоловічий рід, однина, називний відмінок.
-2. **(для) сестри** *(for sister)* — іменник, жіночий рід, однина, родовий відмінок.
-3. **(у) місті** *(in the city)* — іменник, середній рід, однина, місцевий відмінок.
-4. **новий** *(new)* — прикметник, чоловічий рід, однина, називний відмінок.
-5. **великі** *(big)* — прикметник, множина, називний відмінок.
-6. **студентом** *(by a student)* — іменник, чоловічий рід, однина, орудний відмінок.
-7. **(до) Києва** *(to Kyiv)* — іменник, чоловічий рід, однина, родовий відмінок.
-8. **я** *(I)* — займенник, однина, називний відмінок.
-9. **працювати** *(to work)* — дієслово, початкова форма (інфінітив).
-10. **смачну (каву)** *(tasty coffee)* — прикметник, жіночий рід, однина, знахідний відмінок.
+У підручнику для початкових класів автори пояснюють цей процес дуже просто. Вони пишуть, що слова в реченні мають «дружити» між собою. Зміна закінчень допомагає встановити правильний зв’язок слів у реченні. Без відмінків слова були б просто окремими цеглинами. Відмінки роблять із цих цеглин міцний і гарний будинок. Ти можеш думати про відмінки як про граматичний клей, який тримає все речення разом.
 
-<!-- INJECT_ACTIVITY: quiz-identify-the-part-of-speech-of-underlined-words-in-ukrainian-sentences -->
+## Рід і число: чоловічий, жіночий, середній (~500 words total)
 
-## Читаємо граматику українською
+Every noun in Ukrainian belongs to one of three categories. This category is called grammatical gender. In Ukrainian grammar, we use the word **рід** (gender, grammatical). This is a permanent feature of the word, not something you can change. If a word is masculine, it will always be masculine. The three categories are **чоловічий рід** (masculine gender), **жіночий рід** (feminine gender), and **середній рід** (neuter gender).
 
-Тепер ми маємо дуже цікаве і корисне завдання. *(Now we have a very interesting and useful task.)* Ви вже знаєте багато слів і можете читати довгі речення. *(You already know many words and can read long sentences.)* Ви також добре знаєте базові українські граматичні терміни. *(You also know basic Ukrainian grammatical terms well.)* Давайте прочитаємо короткий текст із реального українського підручника. *(Let's read a short text from a real Ukrainian textbook.)* Цей підручник читають діти у четвертому класі на уроках української мови. *(Children in the fourth grade read this textbook in Ukrainian language lessons.)* Текст розповідає про **знахідний відмінок** *(accusative case)*. *(The text tells about the accusative case.)* Ми навмисно не даємо переклад цього граматичного тексту. *(We intentionally do not give a translation of this grammatical text.)* Ваше завдання — спробувати зрозуміти його логіку самостійно! *(Your task is to try to understand its logic yourself!)* Перед читанням подивіться на нові специфічні слова у цій таблиці. *(Before reading, look at the new specific words in this table.)*
+В українській мові іменник завжди має свій рід. Ця характеристика є постійною. Ти не можеш змінити рід слова. Якщо слово «стіл» — це чоловічий рід, воно завжди буде таким. Рід допомагає правильно будувати фрази.
 
-| Український термін | English meaning |
-| :--- | :--- |
-| **істота** | animate noun (living being) |
-| **неістота** | inanimate noun |
-| **збігатися** | to coincide, to match |
-| **об'єкт дії** | object of an action |
+> *In the Ukrainian language, a noun always has its gender. This characteristic is permanent. You cannot change the gender of a word. If the word "table" is masculine gender, it will always be like that. Gender helps to build phrases correctly.*
 
-Ось текст із шкільного підручника: *(Here is the text from the school textbook:)*
+You can usually identify the gender of an **іменник** (noun) by looking at its final letter in the dictionary form. Words that end in a consonant or zero ending are usually чоловічий рід. Examples include words like «брат» or «стіл». Words that end in «-а» or «-я» belong to the жіночий рід category, such as «сестра» or «кава». Finally, words ending in «-о» or «-е» represent the середній рід, like «вікно» or «море».
 
-«Іменники в знахідному відмінку відповідають на питання *кого?* або *що?* Питання *кого?* ми ставимо до іменників, які називають істот. Наприклад: я бачу (кого?) друга, маму, вчителя, собаку. Питання *що?* ми ставимо до іменників, які називають неістот. Наприклад: я купив (що?) олівець, стіл, зошит, телефон. Форма знахідного відмінка для неістот часто збігається з формою називного відмінка. А форма знахідного відмінка для істот чоловічого роду збігається з формою родового відмінка. Знахідний відмінок показує прямий об'єкт дії.»
+:::note
+**Quick tip** — When you look up a noun in a Ukrainian dictionary, you will often see abbreviations next to it. You will see «ч.» for чоловічий рід, «ж.» for жіночий рід, and «с.» for середній рід.
+:::
 
-Чи ви зрозуміли цей оригінальний текст? *(Did you understand this original text?)* Це абсолютно нормально, якщо ви читали його повільно. *(It is absolutely normal if you read it slowly.)* Читати граматику іноземною мовою завжди складно. *(Reading grammar in a foreign language is always difficult.)* Давайте разом перевіримо ваше розуміння прочитаного матеріалу. *(Let's check your understanding of the read material together.)* Я буду ставити питання українською мовою. *(I will ask questions in the Ukrainian language.)* Спробуйте знайти відповідь у тексті та сказати її вголос. *(Try to find the answer in the text and say it out loud.)*
+Друга важлива категорія — це число. В українській мові є **однина** (singular) та **множина** (plural). У шкільному підручнику є просте правило для дітей. Воно звучить так: «Один — це однина, багато — множина».
 
-Про яку частину мови розповідає цей шкільний текст? *(What part of speech does this school text talk about?)* Цей текст розповідає про іменник. *(This text talks about the noun.)*
-Про який саме відмінок ідеться у правилі? *(Exactly which case is being discussed in the rule?)* Йдеться про знахідний відмінок. *(The accusative case is being discussed.)*
-На які два питання відповідає іменник у знахідному відмінку? *(What two questions does a noun in the accusative case answer?)* Він відповідає на питання *кого?* або *що?* *(It answers the questions whom? or what?)*
-Яке питання ми ставимо до назв істот? *(What question do we ask for names of animate beings?)* Ми ставимо питання *кого?* *(We ask the question whom?)*
-Яке питання ми ставимо до назв неістот? *(What question do we ask for names of inanimate objects?)* Ми ставимо питання *що?* *(We ask the question what?)*
-З яким відмінком збігається форма знахідного відмінка для істот чоловічого роду? *(Which case does the accusative form for masculine animates coincide with?)* Вона збігається з родовим відмінком. *(It coincides with the genitive case.)*
-Українські вчителі використовують дуже зрозумілу мову для своїх учнів. *(Ukrainian teachers use very clear language for their students.)*
+> *The second important category is number. In the Ukrainian language, there is singular and plural. In the school textbook, there is a simple rule for children. It sounds like this: "One is singular, many is plural."*
 
-Ви щойно успішно прочитали справжню сторінку з українського підручника. *(You just successfully read a real page from a Ukrainian textbook.)* Ви самостійно зрозуміли нове граматичне правило без перекладу! *(You independently understood a new grammar rule without translation!)* Це ваш великий і важливий крок уперед. *(This is your big and important step forward.)* Це ваш міст до рівня B1. *(This is your bridge to the B1 level.)* На наступному етапі ви будете читати граматику тільки українською мовою. *(At the next stage, you will read grammar only in the Ukrainian language.)* Ви вже повністю готові до цього нового виклику. *(You are already fully ready for this new challenge.)* Ви знаєте всі необхідні терміни. *(You know all the necessary terms.)*
+Unlike gender, number is not a permanent feature for most words. You can change a noun from singular to plural depending on how many items you are talking about. When a word changes its number, its ending changes as well. For example, the masculine word «стіл» is singular. When you have several tables, it becomes «столи», which is plural.
 
-## Підсумок
+Now that you know the Ukrainian terms for parts of speech, cases, gender, and number, you can analyze words like a real Ukrainian teacher. This complete breakdown is called morphological analysis. Your goal at this stage is to be able to look at a word in a sentence and fully describe its grammatical properties using Ukrainian terminology.
 
-Ось ваш короткий граматичний довідник. *(Here is your short grammar reference guide.)* Збережіть цю інформацію для наступних уроків. *(Save this information for the next lessons.)* Ви будете часто використовувати ці терміни. *(You will use these terms often.)*
+Подивимося на слово «книг» у реченні «У мене немає книг». Спочатку ми кажемо, що це іменник. Далі ми визначаємо, що це жіночий рід. Після цього ми бачимо, що це множина. Нарешті, ми знаємо, що це **родовий відмінок** (genitive case).
 
-*   **Частини мови** *(Parts of speech)*:
-    *   **іменник** *(noun)* — стіл, радість
-    *   **прикметник** *(adjective)* — великий, гарна
-    *   **дієслово** *(verb)* — читати, знати
-    *   **займенник** *(pronoun)* — я, він, хтось
-    *   **числівник** *(numeral)* — п'ять, перший
-    *   **прислівник** *(adverb)* — швидко, завтра
-    *   **прийменник** *(preposition)* — у, на, біля
-    *   **сполучник** *(conjunction)* — і, але, бо
+> *Let's look at the word "books" in the sentence "I don't have books". First, we say that it is a noun. Next, we determine that it is feminine gender. After that, we see that it is plural. Finally, we know that it is the genitive case.*
 
-*   **Відмінки** *(Cases)*:
-    *   **Н.** (Називний) — хто? що?
-    *   **Р.** (Родовий) — кого? чого?
-    *   **Д.** (Давальний) — кому? чому?
-    *   **Зн.** (Знахідний) — кого? що?
-    *   **Ор.** (Орудний) — ким? чим?
-    *   **М.** (Місцевий) — на кому? на чому?
-    *   **Кл.** (Кличний) — звертання *(direct address)*
+Being able to say «Це іменник, жіночий рід, множина, родовий відмінок» shows that you truly understand how the language works. It gives you the precise metalanguage you need to ask questions, read grammar books, and discuss your mistakes with native speakers. This is the solid foundation you will use for all advanced grammar topics.
 
-*   **Граматичні категорії** *(Grammatical categories)*:
-    *   **рід** *(gender)*: чоловічий рід (ч.р.), жіночий рід (ж.р.), середній рід (с.р.)
-    *   **число** *(number)*: однина *(singular)*, множина *(plural)*
+<!-- INJECT_ACTIVITY: quiz, Identify the part of speech and case of underlined words in simple sentences, 8 items -->
 
-**Самоперевірка** *(Self-check)*: Чи можу я назвати свою професію та три предмети у своїй кімнаті, використовуючи українські терміни **іменник** та **прикметник**? *(Can I name my own profession and 3 objects in my room using the labels noun and adjective?)* Якщо так, ви чудово попрацювали сьогодні! *(If so, you did a great job today!)*
+## Читаємо граматику українською (~450 words total)
+
+You have worked hard to learn the Ukrainian names for the parts of speech, the seven cases, gender, and number. You are now ready for an exciting challenge. Below is a short grammar lesson adapted from a real Ukrainian school textbook for the fourth grade. It explains how to use the accusative case. Read the text slowly and carefully. Do not try to translate every single word into English. Instead, focus on recognizing familiar terms, such as **іменник** (noun), **називний відмінок** (nominative case), and **родовий відмінок** (genitive case). Use the vocabulary box below the passage to help you understand the academic words.
+
+«Іменники в знахідному відмінку найчастіше є в реченні другорядними членами. Вони означають предмет, на який спрямована дія. Іменники в цьому відмінку завжди відповідають на питання кого? або що? Питання кого? ми ставимо до іменників, які є назвами істот. Наприклад: дівчинка малює маму, тато годує кошеня. Питання що? ми ставимо до іменників, які є назвами неістот. Наприклад: я читаю книгу, мій брат будує дім. Зверніть увагу на іменники чоловічого роду. Форма знахідного відмінка для неістот чоловічого роду часто збігається з формою називного відмінка. А для істот чоловічого роду вона збігається з формою родового відмінка.»
+
+:::info
+**Словничок (Vocabulary)**
+- **другорядний член** — secondary member of a sentence (object)
+- **спрямована дія** — directed action
+- **істота** — animate being (people and animals)
+- **неістота** — inanimate object (things and concepts)
+- **збігатися** — to coincide, to match exactly
+:::
+
+Now it is time to check your reading comprehension. You must think like a student in a Ukrainian classroom.
+
+Спробуйте дати відповіді на ці запитання повністю українською мовою. Не використовуйте англійську мову. Про яку частину мови цей текст? На які питання відповідає іменник у знахідному відмінку? Яке питання ми ставимо для істот, а яке для неістот? Наведіть один приклад істоти і один приклад неістоти з тексту. З яким відмінком збігається форма слова для істот чоловічого роду? З яким відмінком збігається форма слова для неістот чоловічого роду? Якщо ви можете відповісти на всі ці запитання, ви добре зрозуміли правило.
+
+> *Try to answer these questions entirely in the Ukrainian language. Do not use the English language. What part of speech is this text about? What questions does a noun in the accusative case answer? Which question do we ask for animate beings, and which for inanimate objects? Provide one example of an animate being and one example of an inanimate object from the text. Which case does the word form for animate masculine nouns coincide with? Which case does the word form for inanimate masculine nouns coincide with? If you can answer all these questions, you understood the rule well.*
+
+Take a moment to appreciate what you have just achieved. You successfully read, analyzed, and understood a grammar explanation from a real Ukrainian school textbook. You did this entirely in Ukrainian, without relying on English translations to explain the mechanics. This is exactly how native Ukrainian children learn to analyze their language. You now have a solid metalanguage foundation. This is your essential bridge to the intermediate level. From now on, you will be able to read authentic materials and learn advanced grammar directly in Ukrainian!
+
+:::note
+**Шпаргалка (Quick Reference Card)**
+Here are the essential grammar terms you learned in this module. Keep this list handy for future lessons!
+- **Частини мови** (Parts of speech): **іменник** (noun), **прикметник** (adjective), **дієслово** (verb), **займенник** (pronoun), **числівник** (numeral), **прислівник** (adverb), **прийменник** (preposition), **сполучник** (conjunction).
+- **Відмінки** (Cases): **називний відмінок** (nominative case), **родовий відмінок** (genitive case), and the other five cases.
+- **Категорії** (Categories): **рід** (grammatical gender), **однина** (singular), and **множина** (plural).
+:::
+
+<!-- INJECT_ACTIVITY: match-up, Match Ukrainian grammar terms to their English equivalents, 8 items -->
+
+## Підсумок (~150 words)
+
+Тепер ви маєте міцний фундамент для подальшого навчання. Ви можете самостійно читати граматичні правила українською мовою. Це допоможе вам думати як носій мови.
+
+> *Now you have a solid foundation for further learning. You can independently read grammar rules in the Ukrainian language. This will help you think like a native speaker.*
+
+:::note
+**Граматичний довідник**
+Take a screenshot of this complete summary list for your future studies.
+
+**Частини мови**
+*   **іменник** (noun) — хто? що?
+*   **прикметник** (adjective) — який? яка? яке?
+*   **дієслово** (verb) — що робити? що зробити?
+*   **займенник** (pronoun) — хто? що? (я, ти, він)
+*   **числівник** (numeral) — скільки? який?
+*   **прислівник** (adverb) — як? де? коли?
+*   **прийменник** (preposition) — у, на, до
+*   **сполучник** (conjunction) — і, але, що
+
+**Відмінки**
+*   **називний відмінок** (nominative case) — Н. (хто? що?)
+*   **родовий відмінок** (genitive case) — Р. (кого? чого?)
+*   Давальний — Д. (кому? чому?)
+*   Знахідний — Зн. (кого? що?)
+*   Орудний — Ор. (ким? чим?)
+*   Місцевий — М. (на кому? на чому?)
+*   Кличний — Кл. (звертання)
+
+**Граматичні категорії**
+*   **рід** (gender, grammatical) — ч.р., ж.р., с.р.
+*   **однина** (singular) — один
+*   множина (plural) — багато
+:::
+
+Self-check time! Can you name your own profession and three objects in your room using the labels **іменник** and **прикметник**? If you can confidently categorize the words in your daily life, you are absolutely ready for the intermediate level.

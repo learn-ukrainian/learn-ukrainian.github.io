@@ -1,86 +1,151 @@
-## Множина називного відмінка (Nominative Plural)
+## Множина називного відмінка (Nominative Plural) (~750 words)
 
-Сьогодні теплий вихідний день, і велика сім’я гуляє в зоопарку. Вони дивляться на різних тварин і птахів.
-> — **Мама:** Діти, подивіться туди! Там спокійно сплять великі **леви** *(lions)*.
-> — **Син:** Ого, які вони красиві та сильні! А хто там швидко стрибає?
-> — **Тато:** Це веселі **мавпи** *(monkeys)*. Вони дуже люблять активно гратися.
-> — **Донька:** Я бачу високі зелені дерева. А біля дерев стоять **жирафи** *(giraffes)*.
-> — **Мама:** Так, це справжні жирафи. Вони зараз їдять свіже листя.
-> — **Син:** А де живуть птахи? Я дуже люблю **пінгвінів** *(penguins)*! Хочу їх побачити.
-> — **Тато:** Пінгвіни живуть там, де холодна вода. Ми зараз ідемо саме до них.
-> — **Донька:** Чудово! Я дуже хочу побачити маленьких і смішних пінгвінів.
+> — **Мати:** Дивись, он там леви! Вони сплять на сонці. *(Look, over there are lions! They are sleeping in the sun.)*
+> — **Син:** Я бачу! А бачиш тих жирафів біля дерева? *(I see them! And do you see those giraffes near the tree?)*
+> — **Мати:** Так, вони дуже високі. А ось і мавпи стрибають! *(Yes, they are very tall. And here are monkeys jumping!)*
+> — **Син:** Мамо, а де пінгвіни? Діти люблять пінгвінів. *(Mom, and where are the penguins? Children love penguins.)*
+> — **Мати:** Пінгвіни у великому басейні. Ходімо туди. *(The penguins are in the large pool. Let's go there.)*
 
-Ми часто говоримо про предмети або людей у множині. In Ukrainian, changing a noun from singular to plural depends heavily on its gender and its declension class, known as **відміна** *(declension)*. Усі українські іменники мають чотири відміни. You already know that these four classes group nouns by their endings and genders. To form the Nominative plural correctly, we use this system as our roadmap. Кожна відміна має свої правила та закінчення. The endings will also change depending on whether the final consonant of the stem is hard, soft, or mixed. Давайте подивимося на правила для кожної відміни.
+Сьогодні ми вивчаємо, як утворюється **множина** (plural) в українській мові. Це дуже важлива тема, адже ми часто говоримо про групи предметів або людей. Щоб правильно змінити слово, нам потрібно знати його відміну. У цьому уроці ми розглянемо **називний відмінок** (nominative case) для всіх чотирьох відмін. Також ми трохи згадаємо **знахідний відмінок** (accusative case).
 
-Перша відміна — це слова жіночого, чоловічого або спільного роду. Вони завжди закінчуються на «-а» або «-я». The plural endings for this class are very straightforward and depend on the stem. Якщо слово має тверду основу, ми додаємо закінчення «-и». For example, **сестра** *(sister)* becomes **сестри** *(sisters)*, **мама** *(mom)* becomes **мами** *(moms)*, and **книжка** *(book)* becomes **книжки** *(books)*. Якщо слово має м'яку або мішану основу, ми використовуємо закінчення «-і» або «-ї». This makes pronunciation much smoother. Так, **земля** *(land)* becomes **землі** *(lands)*, **суддя** *(judge)* becomes **судді** *(judges)*, and **пісня** *(song)* becomes **пісні** *(songs)*.
+> *Today we are learning how the plural is formed in the Ukrainian language. This is a very important topic because we often talk about groups of objects or people. To correctly change a word, we need to know its declension class. In this lesson, we will look at the nominative case for all four declensions. We will also briefly mention the accusative case.*
 
-Друга відміна є найбільшою. Сюди належить багато слів чоловічого та середнього роду. Let's look at the masculine nouns first. Для слів чоловічого роду з твердою основою стандартне закінчення множини — це «-и». Наприклад, **стіл** *(table)* is **столи** *(tables)*, **завод** *(factory)* is **заводи** *(factories)*, and **телефон** *(phone)* is **телефони** *(phones)*. Якщо основа м'яка або мішана, закінчення змінюється на «-і» або «-ї». Тому **кінь** *(horse)* changes to **коні** *(horses)*, **плащ** *(cloak)* changes to **плащі** *(cloaks)*, and **герой** *(hero)* becomes **герої** *(heroes)*. A very important feature of this group is consonant alternation. Деякі популярні слова змінюють останній приголосний перед закінченням «-і». The most common example you must know is **друг** *(friend)*, which changes to **друзі** *(friends)* in the plural. Another common one is **рік** *(year)*, which becomes **роки** *(years)*.
+In Ukrainian, forming the plural is not as simple as just adding an "s" to the end of a word. The correct **закінчення** (ending (grammar)) depends on the noun's gender and its declension class, known as a відміна. There are four declension classes in Ukrainian, and we will walk through each of them to see exactly how they change from singular to plural. 
 
-Тепер подивимося на слова середнього роду другої відміни. Neuter nouns form their plurals differently than masculine nouns in the same class. Замість закінчень «-и» та «-і», слова середнього роду зазвичай отримують закінчення «-а» або «-я». Якщо слово в однині закінчується на «-о», у множині воно матиме закінчення «-а». Наприклад, велике **місто** *(city)* changes to **міста** *(cities)*, **село** *(village)* becomes **села** *(villages)*, and **вікно** *(window)* is **вікна** *(windows)*. If the neuter noun ends in «-е» or «-я» in the singular, it takes the plural ending «-я». Тому **поле** *(field)* becomes **поля** *(fields)*, **море** *(sea)* becomes **моря** *(seas)*, and **обличчя** *(face)* is simply **обличчя** *(faces)* in plural as well.
+Перша відміна — це слова жіночого, чоловічого та спільного роду. Вони закінчуються на -а або -я. Якщо основа слова тверда, у множині ми додаємо закінчення -и. Наприклад, сестра стає сестри, а мама стає мами. Слово книжка перетворюється на книжки. Якщо основа м'яка або мішана, закінчення змінюється на -і. Тому земля стає землі, а суддя — судді. Слово пісня має форму пісні.
 
-Третя відміна — це слова жіночого роду, які закінчуються на приголосний звук, а також слово «мати». This class is very consistent and easy to remember. Усі ці слова в називному відмінку множини мають закінчення «-і». Наприклад, темна **ніч** *(night)* becomes **ночі** *(nights)*, **річ** *(thing)* becomes **речі** *(things)*, **подорож** *(journey)* is **подорожі** *(journeys)*, and **сіль** *(salt)* is **солі** *(salts)*. Слово **мати** *(mother)* має особливу форму множини — **матері** *(mothers)*.
+> *The first declension consists of feminine, masculine, and common gender words. They end in -а or -я. If the stem of the word is hard, we add the ending -и in the plural. For example, "sister" becomes "sisters", and "mom" becomes "moms". The word "book" transforms into "books". If the stem is soft or mixed, the ending changes to -і. Therefore, "earth" becomes "lands", and "judge" — "judges". The word "song" has the form "songs".*
 
-Четверта відміна також дуже цікава. Вона об’єднує слова середнього роду, які часто позначають малих тварин або дітей. When forming the plural, these nouns reveal a hidden suffix «-ат-» or «-ят-» before the ending «-а». Наприклад, маленьке **курча** *(chick)* becomes **курчата** *(chicks)*. Так само **теля** *(calf)* changes to **телята** *(calves)*, **кошеня** *(kitten)* becomes **кошенята** *(kittens)*, and **лоша** *(foal)* is **лошата** *(foals)*. Ці слова часто можна почути в селі або в зоопарку.
+The second declension is the largest and most diverse group, including masculine and neuter nouns. For masculine nouns ending in a hard consonant, the plural ending is **-и**. Thus, the word **стіл** (table) becomes **столи**, the word **завод** (factory) becomes **заводи**, and **телефон** (phone) becomes **телефони**. If the masculine noun ends in a soft consonant, a "й", or a hissing sound, the ending will be **-і** or **-ї**. For example, the animal **кінь** (horse) becomes **коні**, a piece of clothing like **плащ** (cloak) becomes **плащі**, and **герой** (hero) becomes **герої**.
 
-Деякі українські іменники мають унікальні форми множини. These are common irregular forms that you must memorize as complete lexical units, because they do not follow the standard declension rules. Найважливіші слова — це **людина** *(person)* та **дитина** *(child)*. У множині вони повністю змінюють форму: «людина» стає **люди** *(people)*, а «дитина» стає **діти** *(children)*. Також є слова, які позначають парні частини тіла. Вони зберегли стародавні форми множини. Наприклад, **око** *(eye)* стає **очі** *(eyes)*, **вухо** *(ear)* стає **вуха** *(ears)*, а **плече** *(shoulder)* стає **плечі** *(shoulders)*. Це дуже важливі слова для щоденного спілкування.
+У цій відміні також буває чергування приголосних. Це означає, що остання літера основи може змінитися перед закінченням множини. Найвідоміший приклад — це слово друг, яке у множині стає друзі. Ще один частий приклад: рік стає роки.
 
-<!-- INJECT_ACTIVITY: fill-in-nom-plural -->
+> *There can also be consonant alternations in this declension. This means that the last letter of the stem might change before the plural ending. The most famous example is the word "friend", which in the plural becomes "friends" (друг → друзі). Another frequent example: "year" becomes "years" (рік → роки).*
 
-## Знахідний відмінок множини: Живе чи неживе? (Accusative Plural: Animate vs. Inanimate)
+Neuter nouns in the second declension also follow highly consistent patterns, making them relatively easy to learn. If a neuter noun ends in **-о** in the singular, it changes its ending to **-а** in the plural form. For instance, **місто** (city) becomes **міста**, **село** (village) becomes **села**, and **вікно** (window) becomes **вікна**. If the neuter noun ends in **-е** or **-я**, the plural ending is simply **-я**. This means that **поле** (field) becomes **поля**, **море** (sea) becomes **моря**, and a word like **обличчя** (face) remains exactly **обличчя** in its spelling, although the spoken stress often shifts to a different syllable.
 
-Тепер ми знаємо, як утворювати називний відмінок множини. Це базова форма для підмета. Але що робити, коли ці слова є прямим додатком у реченні? Ми використовуємо знахідний відмінок дуже часто. Цей відмінок показує об'єкт дії. The Accusative plural has a golden rule that you must memorize. Its form depends entirely on whether the noun is animate, like people and animals, or inanimate, like objects and concepts. For all inanimate nouns, the Accusative plural is exactly the same as the Nominative plural. For all animate nouns, the Accusative plural is exactly the same as the Genitive plural. In the singular, this animate and inanimate split only applied to masculine nouns. In the plural, this rule is absolute and applies to all nouns across all genders and declension classes.
+Третя відміна — це слова жіночого роду, які закінчуються на приголосний звук. У множині ці слова завжди мають закінчення -і. Наприклад, ніч стає ночі, а подорож — подорожі. Слово сіль перетворюється на солі. До цієї групи також належить важливе слово мати. У множині воно має форму матері. Ви часто будете бачити ці **речі** (things) у текстах.
 
-Почнемо з простих неживих предметів. У цьому випадку граматика працює на вас. Якщо предмет неживий, вам не потрібно вчити нове закінчення. Ви просто використовуєте форму називного відмінка множини. Я бачу нові **столи** *(tables)* у цій кімнаті. Вона часто купує цікаві **книжки** *(books)*. Ми дуже любимо ці великі **міста** *(cities)*. Вони будують сучасні **заводи** *(factories)* біля річки. Наші студенти читають довгі **тексти** *(texts)* на уроці. Зверніть увагу, як ці слова діють як прямий додаток у реченні. Це дуже просте і зручне правило для повсякденного спілкування. Because these nouns are not alive, their Accusative form is perfectly identical to their Nominative form.
+> *The third declension consists of feminine words that end in a consonant sound. In the plural, these words always have the ending -і. For example, "night" becomes "nights", and "journey" — "journeys". The word "salt" transforms into "salts". This group also includes the important word "mother". In the plural it has the form "mothers". You will often see these things in texts.*
 
-А тепер поговоримо про живих істот. Це всі люди, тварини, птахи та риби. When the direct object is animate, the Accusative plural borrows its entire form from the Genitive plural. This means you will see completely different endings compared to the subject form. For many masculine nouns, you will add the ending «-ів» or «-їв». For many feminine and neuter nouns, you will often use a zero-ending, which sometimes causes a new vowel to appear inside the word. Я щодня бачу **студентів** *(students)* біля нашого університету. Ми вчора зустріли моїх **сестер** *(sisters)* у центральному парку. Він кожного ранку годує **птахів** *(birds)* біля дому. Олег добре знає цих **лікарів** *(doctors)*. Моя сусідка дуже любить своїх **котів** *(cats)*. Слово «студентів» має типове закінчення «-ів» для чоловічого роду. Слово «сестер» має нульове закінчення, де з'явилася літера «е».
+The fourth declension is a very special and narrowly defined group of neuter nouns. These nouns mostly represent young animals, human babies, or small creatures. When forming the plural, these words are unique because they take specific recognizable suffixes before the final vowel: **-ата** or **-ята**. For example, a baby chicken, known as **курча**, becomes **курчата** in the plural. A young calf, **теля**, becomes **телята**. A little kitten, **кошеня**, becomes **кошенята**, and a young foal, **лоша**, becomes **лошата**. Recognizing these suffixes instantly tells you that you are looking at a group of young animals.
 
-This grammatical rule creates a very common trap for English speakers. In English, we say "I see the tables" and "I see the students" using the exact same plural pattern. Because of this structural similarity, it is highly tempting to say «*Я бачу студенти» in Ukrainian. Це дуже типова помилка. You must actively split the concepts of living and non-living things in your mind. Because "students" are alive, they require the Genitive-matching form. You must say «Я бачу студентів». Ця різниця є дуже важливим маркером природної української мови. Завжди пам'ятайте про це правило, коли говорите про людей!
+Деякі дуже поширені слова мають особливі форми множини. Їх потрібно просто запам'ятати. Слово людина у множині — це **люди** (people). Слово дитина стає словом **діти** (children). Парні частини тіла також мають унікальні форми. Око перетворюється на **очі** (eyes), а вухо стає вуха. Слово плече має форму плечі.
 
-Давайте уважно подивимося на українські дієслова, які часто вимагають знахідного відмінка. Є спеціальні перехідні дієслова, які ми використовуємо кожного дня. Вони автоматично вимагають цього правила для знахідного відмінка. Вам варто активно практикувати ці популярні дієслова:
+> *Some very common words have special plural forms. They simply need to be memorized. The word "person" in the plural is "people" (люди). The word "child" becomes the word "children" (діти). Paired body parts also have unique forms. "Eye" turns into "eyes" (очі), and "ear" becomes "ears" (вуха). The word "shoulder" has the form "shoulders" (плечі).*
 
-* Дієслово **бачити** *(to see)*: Я бачу високі дерева і маленьких птахів.
-* Дієслово **знати** *(to know)*: Вона добре знає ці правила і цих людей.
-* Дієслово **любити** *(to love)*: Ми любимо гори і своїх розумних собак.
-* Дієслово **зустрічати** *(to meet)*: Вони часто зустрічають своїх колег біля метро.
-* Дієслово **шукати** *(to look for)*: Він зараз шукає свої ключі та старих друзів.
+:::info
+**Grammar box**
+Always learn the irregular plural forms like **люди** and **діти** as entirely new vocabulary items. Trying to apply standard declension rules to them will result in errors!
+:::
 
-Найкращий спосіб тренуватися — це будувати змішані контрастні речення. Вони чітко показують різницю між підметом і додатком. На столі лежать нові **підручники** *(textbooks)*. Тут слово «підручники» є підметом у реченні. Але я бачу в аудиторії тільки студентів. Тут слово «студентів» є прямим додатком. Старі **книги** *(books)* стоять на високій полиці. Я беру ці старі книги і йду читати. Мої найкращі **друзі** *(friends)* чекають мене на вулиці. Я дуже радий сьогодні бачити своїх друзів. In these paired examples, you can clearly see how inanimate nouns stay the exact same whether they perform the action or receive the action. However, the animate nouns change their form completely.
+<!-- INJECT_ACTIVITY: fill-in, focus: Form the Nominative plural from given singular nouns across all declension classes, 8 items -->
+
+## Знахідний відмінок множини: Живе чи неживе? (Accusative Plural: Animate vs. Inanimate) (~650 words)
+
+Now that you know how to form the **множина** (plural), we need to talk about the **знахідний відмінок** (accusative case). You use this case for the direct object of your sentence. Whenever you read books, buy apples, or see buildings, those items are in the accusative case. For inanimate objects, the accusative plural perfectly matches the **називний відмінок** (nominative case). The golden rule of the plural depends entirely on whether the noun is animate or inanimate. Unlike the singular forms, where this split mostly affects only masculine nouns, this plural rule applies to all genders.
+
+The accusative case for a **неживий** (inanimate) object is very simple. You already know these forms because they do not change. 
+
+Знахідний відмінок для неживих предметів дуже простий. Ви вже знаєте ці форми. Якщо предмет неживий, форма не змінюється. Наприклад, ми кажемо: «Я бачу великі столи». Вона купує нові книжки в магазині. Ми дуже любимо ці старі міста. Вони читають цікаві листи. Усі ці слова мають таку саму форму, як і в називному відмінку. Це правило працює для всіх відмін. Ви просто берете звичайну форму множини.
+
+> *The accusative case for inanimate objects is very simple. You already know these forms. If the object is inanimate, the form does not change. For example, we say: "I see big tables." She buys new books in the store. We really love these old cities. They are reading interesting letters. All these words have the exact same form as in the nominative case. This rule works for all declensions. You simply take the regular plural form.*
+
+However, things change dramatically when we talk about a **живий** (animate) being. For animate nouns, the accusative plural perfectly matches the genitive plural. You will often see the **закінчення** (ending) -ів for masculine nouns. For feminine and neuter nouns, you will frequently see a zero ending, which means the final vowel is simply dropped. Let us look at some examples.
+
+Я бачу розумних студентів в аудиторії. Ми вчора зустріли наших сестер. Він щодня годує маленьких птахів. Учитель знає всіх учнів у школі. Я люблю своїх братів. Ви бачите, що всі ці слова змінили закінчення. Це правило працює для чоловіків, жінок і тварин.
+
+> *I see smart students in the classroom. We met our sisters yesterday. He feeds the small birds every day. The teacher knows all the students in the school. I love my brothers. You can see that all these words have changed their endings. This rule works for men, women, and animals.*
+
+This creates a very common trap for English speakers. In English, sentences like "I see the tables" and "I see the students" use the exact same plural logic. But in Ukrainian, you cannot simply say "Я бачу студенти." Because students are living beings, you must use the genitive-matching form: «Я бачу студентів». The same logic applies to all animals and people. If it breathes, it takes the animate ending in the accusative case.
+
+:::info
+**Grammar box**
+Remember that the words **люди** (people) and **діти** (children) are animate. Their accusative plural forms are «людей» and «дітей».
+:::
+
+You already know many verbs that naturally take a direct object. When you use these common action verbs with plural nouns, you must always remember to apply the animate or inanimate rules. Let us see how these verbs work in context without a translation block. Try to understand the meaning from the words you already know.
+
+Найпопулярніші дієслова — це «бачити», «знати», «любити», «зустрічати» та «шукати». Наприклад, я шукаю старі ключі. Вона шукає своїх друзів. Ми часто зустрічаємо іноземних туристів на вулиці. Мама завжди зустрічає дітей після школи. Вони знають ці правила дуже добре.
+
+In natural conversation, you will often use both animate and inanimate plural nouns in the exact same sentence. You will also frequently use common plural-only words like **речі** (things) and **очі** (eyes). This is the moment where you really need to pay attention to the difference in forms. Notice how the endings change based on what is alive.
+
+На столі лежать нові підручники, але я бачу тільки студентів. Ми купили квитки і чекаємо наших друзів. Вона любить красиві речі, але вона більше любить свою родину. Я бачу ваші очі, коли ви дивитесь на ці картини.
+
+> *There are new textbooks lying on the table, but I only see the students. We bought tickets and are waiting for our friends. She loves beautiful things, but she loves her family more. I see your eyes when you look at these paintings.*
 
 <!-- INJECT_ACTIVITY: sort-animate-inanimate -->
 <!-- INJECT_ACTIVITY: quiz-acc-plural-choice -->
 
-## Називний чи знахідний? Визначаємо за контекстом (Nominative or Accusative?)
+## Називний чи знахідний? Визначаємо за контекстом (Nominative or Accusative?) (~750 words)
 
-Українська мова має дуже логічну та прозору структуру для кожного речення. Коли ми говоримо про різні речі або людей, ми обов'язково повинні розуміти їхню роль. Who or what is performing the action in the sentence? This is your subject, and it always takes the Nominative case without any exceptions. It answers the basic questions «хто?» or «що?». Але дуже часто наші предмети або люди отримують дію від іншого суб'єкта. What is being seen, read, bought, or built? This is your direct object, and it always takes the Accusative case. It directly answers the questions «кого?» or «що?». Ми успішно використовуємо цей граматичний тест кожного дня у розмовах. Він чудово допомагає нам швидко зрозуміти, який саме відмінок потрібен у конкретному реченні. Якщо розумні **студенти** *(students)* уважно читають текст, слово «студенти» — це називний відмінок. Якщо ми бачимо цих студентів в аудиторії, слово «студентів» — це вже знахідний відмінок.
+Now that you know how to form the plural endings, you need to know exactly when to use which case. The most reliable tool you have is the "who or what" test. You must look at the role of the noun within the sentence. If the noun is the active subject, meaning it is the one doing the action, it is always in the **називний відмінок** (nominative case). However, if the noun is the direct object, meaning the action is being done to it, you must use the **знахідний відмінок** (accusative case). This is the fundamental difference between the two cases.
 
-Тут ми з вами маємо одну надзвичайно цікаву граматичну загадку. Багато українських слів виглядають однаково у називному та знахідному відмінках множини. Це правило стосується всіх неживих предметів. The only way to tell the difference is by carefully looking at the word order and analyzing the core meaning of the verb. Let's look at the simple word **машини** *(cars)*. Якщо ми кажемо «Машини стоять біля нашого будинку», слово «машини» самостійно виконує дію. Тому це чистий називний відмінок. Якщо ми кажемо «Я щоранку бачу нові машини», дія переходить безпосередньо на предмети. Це вже знахідний відмінок, хоча візуальна форма слова зовсім не змінилася. Це правило чудово працює для слів типу **книжки** *(books)*, **телефони** *(phones)* або широкі **поля** *(fields)*. Контекст речення — це завжди наша найкраща граматична підказка.
+Називний відмінок завжди показує головний суб'єкт дії. Цей суб'єкт активно робить щось у реченні. Знахідний відмінок показує пасивний об'єкт дії. Дія переходить на цей об'єкт від іншої особи. Це дуже важливе правило для правильного розуміння граматики.
 
-Давайте уважно подивимося, як ці два відмінки працюють разом у реальному повсякденному житті. Візьмемо для прикладу дуже просте і зрозуміле речення: «Студенти читають нові книжки». Тут живі люди активно виконують дію, а неживі предмети її отримують. Слово «студенти» стоїть у називному відмінку множини. Слово «книжки» логічно стоїть у знахідному відмінку. Це класична і дуже правильна українська структура. Але українська мова дозволяє нам вільно грати зі словами. We can completely swap the semantic roles in the sentence to see how the meaning and the grammar change. Уявіть таке метафоричне речення: «Книжки вчать цих студентів». Тепер наші предмети стали головними суб'єктами дії. Тому слово «книжки» перейшло у називний відмінок. А от слово «студентів» тепер пасивно отримує цю дію. It is an animate noun, so its Accusative form must match the Genitive case exactly.
+> *The nominative case always shows the main subject of the action. This subject actively does something in the sentence. The accusative case shows the passive object of the action. The action transfers to this object from another person. This is a very important rule for the correct understanding of grammar.*
 
-Найкраще тренувати ці граматичні правила у жвавих місцях, де завжди є багато людей і предметів. Звичайний український міський ринок ідеально підходить для такої розмовної практики.
-> — **Олена:** Дивись, який сьогодні шумний ринок! Тут працюють хороші **продавці** *(sellers)*.
-> — **Максим:** Так, і тут постійно ходять різні **покупці** *(buyers)*. Я якраз бачу знайомих продавців біля входу.
-> — **Олена:** Вони зараз продають свіжі **овочі** *(vegetables)* та солодкі **фрукти** *(fruits)*.
-> — **Максим:** Я хочу купити ці красиві овочі на вечерю. Але тут досить високі **ціни** *(prices)*.
-> — **Олена:** Ціни завжди швидко ростуть восени. Давай запитаємо тих людей про фрукти.
-> — **Максим:** Добре, я знаю цих людей, вони часто роблять приємні знижки.
+This functional distinction becomes tricky when we talk about **неживий** (inanimate) nouns like books, cars, or fields. For inanimate objects, the plural forms of the nominative and accusative cases look exactly the same. Because the word itself does not change its **закінчення** (ending), you cannot rely on morphology alone. You can only understand its grammatical role by analyzing the word order and the verb's meaning. The context is your only clue to distinguish the active subject from the passive object.
 
-У цьому діалозі ми бачимо, як називний і знахідний відмінки множини природно змінюють один одного.
+На вулиці стоять нові машини. Тут слово «машини» — це називний відмінок, бо вони самі виконують дію. Я бачу нові машини на вулиці. У цьому реченні я — це головний суб'єкт, а «машини» — це об'єкт. Тому тут потрібен знахідний відмінок. Форма слова однакова, але граматична роль різна. Такі звичайні **речі** (things) часто плутають іноземних студентів.
 
-Знахідний відмінок у множині також дуже часто працює разом зі спеціальними прийменниками. Certain prepositions always strictly demand the Accusative case when they indicate a direction, a duration of time, or the specific topic of a conversation. Прийменник **через** *(through, across)* показує активний рух: «Ми довго їдемо через високі **гори** *(mountains)*». Прийменник **на** *(onto, for)* часто показує час: «Вони планують поїздку на наступні **вихідні** *(weekend)*». Прийменник **про** *(about)* показує головну тему розмови: «Мої друзі говорять про нові українські **фільми** *(movies)*». You must constantly remember that after these specific prepositions, the plural noun is always in the Accusative case. Навіть для живих людей ми кажемо: «Ми сьогодні читаємо статтю про молодих українських студентів».
+> *New cars stand on the street. Here the word "cars" is in the nominative case, because they perform the action themselves. I see new cars on the street. In this sentence, I am the main subject, and the "cars" are the object. Therefore, the accusative case is needed here. The word form is the same, but the grammatical role is different. Such ordinary things often confuse foreign students.*
 
-Зараз ми разом прочитаємо невеликий текст про звичайний день у нашому університеті. Під час читання спробуйте самостійно знайти всі іменники у множині. Світлі просторі **аудиторії** *(classrooms)* щоранку чекають на студентів. Молоді амбітні **викладачі** *(teachers)* ретельно готують складні **завдання** *(tasks)*. Вони акуратно кладуть нові **маркери** *(markers)* на великі дерев'яні столи. Студенти швидко відкривають свої чисті **зошити** *(notebooks)* і уважно пишуть довгі **речення** *(sentences)*. Викладачі бачать розумних студентів і щиро радіють. У цьому тексті слова «аудиторії» та «викладачі» є головними підметами у чистому називному відмінку. Вони самі виконують дію. Слова «маркери» та «зошити» — це прямі додатки у знахідному відмінку, хоча їхня форма нагадує називний. Слово «студентів» тут чудово показує нам класичний знахідний відмінок для живих істот.
+Let us look at a complete sentence that uses both cases together. When a single sentence contains both a subject and a direct object, the contrast between the cases becomes clear. Let us analyze the roles in an everyday situation.
+
+Студенти читають цікаві книжки в університетській бібліотеці. Тут студенти — це суб'єкт, тому ми використовуємо називний відмінок. Вони самі роблять цю дію. Книжки — це пасивний об'єкт дії. Тому це знахідний відмінок для неживих предметів. А тепер змінимо ролі. Цікаві книжки вчать молодих студентів. Тепер книжки — це підмет, а студенти — об'єкт дії. Тому слово «студентів» має форму знахідного відмінка, бо це **живий** (animate) об'єкт.
+
+> *Students read interesting books in the university library. Here the students are the subject, so we use the nominative case. They perform this action themselves. The books are the passive object of the action. Therefore, it is the accusative case for inanimate objects. And now let us change the roles. Interesting books teach young students. Now the books are the subject, and the students are the object of the action. Therefore, the word "students" takes the form of the accusative case, because it is an animate object.*
+
+Let us see how this works in a fast-paced conversation. When you visit a busy market, you will hear people identifying groups of people and various objects. Pay attention to how the speakers switch between the nominative and accusative cases depending on what they are observing and buying.
+
+> — **Олена:** Дивись, які гарні овочі та фрукти сьогодні продають! *(Look what beautiful vegetables and fruits they are selling today!)*
+> — **Максим:** Так, я бачу ці яскраві овочі. *(Yes, I see these bright vegetables.)*
+> — **Олена:** А там стоять місцеві продавці. *(And over there stand the local sellers.)*
+> — **Максим:** Я знаю тих продавців, вони завжди продають смачні яблука. *(I know those sellers, they always sell delicious apples.)*
+> — **Олена:** Покупці швидко купують свіжі продукти. *(The buyers quickly buy the fresh produce.)*
+> — **Максим:** Я теж хочу купити такі продукти. *(I also want to buy such produce.)*
+> — **Олена:** Але тут дуже високі ціни! *(But the prices here are very high!)*
+> — **Максим:** Я не люблю високі ціни. *(I do not love high prices.)*
+> — **Олена:** Давай знайдемо інших продавців. *(Let us find other sellers.)*
+
+Beyond recognizing direct objects, the accusative case is also triggered by specific prepositions. When you talk about movement, direction, or the subject of a story, you will need to use the accusative **множина** (plural) after certain prepositions. The most common ones are «через» (through), «на» (onto or for a period of time), and «про» (about).
+
+Туристи їдуть через високі гори. Ми купуємо продукти на наступні вихідні. Студенти часто говорять про нові фільми. Маленькі **діти** (children) читають казки про лісових тварин. У всіх цих реченнях після прийменника йде знахідний відмінок. Ви повинні завжди звертати увагу на ці прийменники, коли будуєте речення.
+
+> *Tourists drive through the high mountains. We buy groceries for the next weekend. Students often talk about new films. Small children read fairy tales about forest animals. In all these sentences, the preposition is followed by the accusative case. You must always pay attention to these prepositions when you build sentences.*
+
+:::info
+**Grammar box**
+Remember that the prepositions «в» and «на» can take either the locative case (for location) or the accusative case (for direction). When you are going *to* a place or doing something *for* a period of time (e.g., «на вихідні»), use the accusative.
+:::
+
+Now it is time to practice reading these distinct cases in context. Read the following paragraph describing a typical scene. Try to identify which plural nouns act as the subjects of the sentences and which ones act as the direct objects based on the narrative logic.
+
+У великій аудиторії сидять розумні студенти. Вони уважно слухають лекцію про комп'ютерні технології. Досвідчені викладачі пояснюють складні правила та показують різні приклади. Студенти записують ці правила у зошити. На столах лежать ручки, олівці та телефони. Викладач дивиться у їхні **очі** (eyes) і розуміє їхні запитання. Після лекції друзі йдуть у кафе. Вони купують солодкі десерти та п'ють гарячу каву. Усі **люди** (people) відпочивають і обговорюють свої плани на вихідні.
+
+> *Smart students sit in a large classroom. They attentively listen to a lecture about computer technologies. Experienced instructors explain complex rules and show various examples. The students write these rules down in notebooks. Pens, pencils, and phones lie on the tables. The instructor looks into their eyes and understands their questions. After the lecture, the friends go to a cafe. They buy sweet desserts and drink hot coffee. All the people relax and discuss their plans for the weekend.*
 
 <!-- INJECT_ACTIVITY: error-correction-plural -->
 
-## Підсумок
+## Підсумок (~150 words)
 
-Сьогодні ми зробили великий крок уперед. Ми вивчили, як працює **множина** *(plural)* для різних слів. Тепер ви можете вільно говорити про багато предметів. Ви також вмієте описувати великі **групи** *(groups)* людей. Давайте швидко перевіримо ваші знання. Дайте відповіді на ці короткі **запитання** *(questions)*.
+Ось наша остання тема — **множина** (plural). Яке **закінчення** (ending) мають іменники першої відміни? Згадайте правила, коли це **називний відмінок** (nominative case). Вони мають закінчення -и або -і.
 
-- Яке **закінчення** *(ending)* мають іменники першої відміни в називному відмінку множини? Вони зазвичай мають закінчення «-и» після твердих приголосних або «-і» після м'яких.
-- Яка головна **різниця** *(difference)* між знахідним відмінком для живих істот і неістот? Для живих істот форма завжди збігається з родовим відмінком. А для неістот ця форма повністю збігається з називним відмінком.
-- Як правильно перекласти англійську фразу "I see children"? Ми кажемо: «Я бачу дітей». Це наш прямий **додаток** *(object)* у реченні.
-- Чи змінюються назви неживих предметів у знахідному відмінку множини порівняно з називним? Ні, ці форми завжди залишаються однаковими.
-- Назвіть правильну множину для слів «людина», «дитина», «око». Це дуже важливі **винятки** *(exceptions)*: «люди», «діти», «очі».
+> *Here is our last topic — the plural. What ending do first declension nouns have? Remember the rules when it is the nominative case. They have the endings -и or -і.*
 
-Ви чудово попрацювали сьогодні. Ці граматичні правила дуже часто зустрічаються в реальному житті. Тому продовжуйте активно практикувати їх щодня.
+Як працює **знахідний відмінок** (accusative case) у множині? Тут є велика різниця. Якщо це **живий** (animate) об'єкт, ми використовуємо форму родового відмінка. Якщо це **неживий** (inanimate) об'єкт, ми використовуємо форму називного.
+
+> *How does the accusative case work in the plural? There is a big difference here. If it is an animate object, we use the genitive case form. If it is an inanimate object, we use the nominative form.*
+
+Як ви перекладете англійську фразу "I see children"? Правильна відповідь — я бачу дітей. Чи змінюються різні **речі** (things) у знахідному відмінку множини? Ні, їхня форма завжди залишається незмінною.
+
+> *How will you translate the English phrase "I see children"? The correct answer is — I see children. Do various things change in the accusative plural? No, their form always remains unchanged.*
+
+Також існують спеціальні слова. Назвіть форму множини для слів «людина», «дитина» та «око». Це слова **люди** (people), **діти** (children) та **очі** (eyes). Ви повинні добре знати ці слова.
+
+> *There are also special words. Name the plural form for the words "person", "child", and "eye". These are the words people, children, and eyes. You must know these words well.*
+
+:::tip
+**Did you know?** — The animate/inanimate distinction in the plural is one of the most prominent features of Ukrainian grammar. Mastering it will make your Ukrainian sound very natural!
+:::

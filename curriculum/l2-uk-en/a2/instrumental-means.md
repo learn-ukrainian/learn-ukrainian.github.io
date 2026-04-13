@@ -1,147 +1,179 @@
-## Чим? Знаряддя дії (With What? The Tool of an Action)
+## Чим? Знаряддя дії (With What? The Tool of an Action) (~600 words total)
 
-В українській мові ми використовуємо орудний відмінок кожного дня. *(In the Ukrainian language, we use the instrumental case every day.)* Цей відмінок показує інструмент або знаряддя дії. *(This case shows the instrument or tool of an action.)*
+Орудний відмінок має дуже важливу функцію в українській мові. Він показує інструмент, яким ми робимо дію. Цей відмінок відповідає на питання «ким?» або «чим?». Наприклад, коли ми пишемо, ми використовуємо спеціальний предмет. Тому ми говоримо: «Я пишу ручкою» або «Я малюю олівцем».
 
-We use this case to explain exactly what object we are using to complete a task. The case answers two core questions: **«Ким?»** *(By whom?)* and **«Чим?»** *(With what?)*.
+> *The Instrumental case has a very important function in the Ukrainian language. It shows the instrument with which we perform an action. This case answers the questions "by whom?" or "with what?". For example, when we write, we use a special object. Therefore, we say: "I write with a pen" or "I draw with a pencil."*
 
-Діти в українських школах вчать це правило дуже рано. *(Children in Ukrainian schools learn this rule very early.)* Вчителі зазвичай дають прості приклади з уроків. *(Teachers usually give simple examples from lessons.)*
+In English, you almost always need the preposition "with" to express the tool of an action. You write *with* a **ручка** (pen), draw *with* an **олівець** (pencil), or eat *with* a spoon. Ukrainian is much more efficient. The Instrumental case ending itself carries the meaning of "with." You do not need any extra words. The noun just changes its ending to show that it is the tool you are using.
 
-Я пишу синьою **ручкою** *(I write with a blue pen)*.
-Мій брат малює **олівцем** *(My brother draws with a pencil)*.
+Для чоловічого роду ми маємо два основні закінчення в орудному відмінку: **-ом** та **-ем**. Якщо слово закінчується на твердий приголосний, ми додаємо закінчення **-ом**. Наприклад, слово «автобус» стає «автобусом». Слова, які закінчуються на м'який знак, отримують закінчення **-ем**.
 
-The grammatical ending of the noun alone carries the meaning of the tool. Let us look at the regular endings for singular nouns.
+> *For the masculine gender, we have two main endings in the instrumental case: **-ом** and **-ем**. If the word ends in a hard consonant, we add the ending **-ом**. For example, the word "bus" becomes "by bus". Words that end in a soft sign receive the ending **-ем**.*
 
-Для іменників чоловічого роду є три основні закінчення. *(For masculine nouns, there are three main endings.)*
+If the masculine noun ends in a soft consonant, it takes the ending **-ем**. A classic example is the word **олівець** (pencil). The soft "ц" means the instrumental form becomes **олівцем**. But there is a special group of consonants you must remember. These are the hissing sounds: **ж**, **ч**, **ш**, and **щ**. Even though they often sound hard, nouns ending in these letters also take the **-ем** ending. For instance, the word **ніж** (knife) becomes **ножем**.
 
-First, we use the ending **-ом** when the stem of the noun ends in a hard consonant.
+We also use the Instrumental case to describe your means of transport. The same rules apply perfectly. For example, **автобус** (bus) becomes **автобусом**, and **потяг** (train) becomes **потягом**. You will learn more about travel later in this module.
 
-Вчитель пише на дошці червоним **маркером** *(The teacher writes on the board with a red marker)*.
+Іменники жіночого роду також мають свої правила. Слова на твердий приголосний плюс «а» отримують закінчення **-ою**. Наприклад, «ручка» стає «ручкою», а «фарба» стає «фарбою». Слова на м'який приголосний мають закінчення **-ею**. Наприклад, «земля» стає «землею».
 
-Second, we use the ending **-ем** when the stem ends in a soft consonant.
+> *Feminine nouns also have their own rules. Words ending in a hard consonant plus "a" receive the ending **-ою**. For example, "pen" becomes "with a pen", and "paint" becomes "with paint". Words ending in a soft consonant have the ending **-ею**. For example, "earth" becomes "with earth".*
 
-Художник малює красиву картину **пензлем** *(The artist paints a beautiful picture with a brush)*.
-Ось синій **олівець** *(Here is a blue pencil)*. Учень малює лінію синім **олівцем** *(The student draws a line with a blue pencil)*.
+There is also a unique group of feminine nouns that end in a consonant, known as the third declension. Words like **сіль** (salt) or **ніч** (night) follow a different pattern. In the Instrumental case, the final consonant often doubles, and they take the ending **-ю**. So, if you want to say "to sprinkle with salt," you use the form **сіллю**.
 
-Crucially, Ukrainian also uses the **-ем** ending for stems that end in sibilant consonants, like «ж», «ч», «ш», or «щ».
+The regular feminine endings apply to everyday items you use to get things done. You will use these endings constantly, like when you measure with a **лінійка** (ruler), eat soup with a **ложка** (spoon), or paint a picture using **фарба** (paint).
 
-Це гострий **ніж** *(This is a sharp knife)*. Кухар швидко ріже м'ясо гострим **ножем** *(The cook quickly cuts meat with a sharp knife)*.
-Він відкриває старі двері **ключем** *(He opens the old door with a key)*.
+Іменники середнього роду дуже схожі на чоловічий рід. Слова, які закінчуються на **-о**, мають тверду основу і отримують закінчення **-ом**. Наприклад, слово «вікно» стає «вікном», а «мило» стає «милом». Слова на **-е** або **-я** мають м'яку основу і отримують закінчення **-ем** або **-ям**.
 
-If the noun ends in «й», the ending becomes **-єм**.
+> *Neuter nouns are very similar to the masculine gender. Words that end in **-o** have a hard stem and receive the ending **-ом**. For example, the word "window" becomes "with a window", and "soap" becomes "with soap". Words ending in **-e** or **-я** have a soft stem and receive the ending **-ем** or **-ям**.*
 
-Іменники жіночого роду також мають чіткі правила. *(Feminine nouns also have clear rules.)*
+For example, the word **обличчя** (face) becomes **обличчям**, and **знання** (knowledge) becomes **знанням**. While you might not often use a face or a window as a direct tool, the grammar rule applies exactly the same way to materials or means. You might wash your hands with soap, or clean the glass with a mirror. The endings for neuter nouns mirror the masculine rules almost perfectly, making them easier to remember.
 
-For standard feminine nouns that end in «-а», we always use the hard ending **-ою**.
+Коли студенти вивчають орудний відмінок, вони часто роблять одну типову помилку. Вони додають прийменник «з» перед інструментом. Це неправильно. В українській мові ми використовуємо орудний відмінок без прийменника, щоб показати засіб дії.
 
-Студентка швидко пише чорною **ручкою** *(The student writes quickly with a black pen)*.
-Ось дерев'яна **лінійка** *(Here is a wooden ruler)*. Дівчина вимірює папір дерев'яною **лінійкою** *(The girl measures the paper with a wooden ruler)*.
-Це велика **ложка** *(This is a large spoon)*. Я їм смачний суп великою **ложкою** *(I eat delicious soup with a large spoon)*.
+> *When students learn the instrumental case, they often make one typical mistake. They add the preposition "with" before the instrument. This is incorrect. In the Ukrainian language, we use the instrumental case without a preposition to show the means of an action.*
 
-When a feminine noun ends in «-я», it takes the soft ending **-ею**.
+It is crucial to understand that the Ukrainian preposition **з** means "accompanied by," not "using a tool." If you say "Я пишу з ручкою," a Ukrainian speaker hears "I am writing, and a pen is keeping me company." The pen is your friend, sitting next to you while you write. To say "I write using a pen," you must drop the preposition entirely and rely solely on the case ending to express the **засіб** (means, tool).
 
-Садівник засипає коріння дерева м'якою **землею** *(The gardener covers the tree roots with soft earth)*.
+:::note
+**Grammar box** — Never use the preposition **з** for tools or instruments. The case ending itself translates to the English word "with."
+:::
 
-Feminine nouns of the third declension are special because they end in a consonant. For these nouns, we simply add the ending **-ю**. Often, the final consonant doubles in this form.
+<!-- INJECT_ACTIVITY: fill-in, Put the noun in Instrumental singular to express the tool of an action -->
 
-Мама посипає салат дрібною **сіллю** *(Mom sprinkles the salad with fine salt)*.
+## Їхати автобусом: Засіб пересування (Travel by Bus: Means of Transport) (~550 words total)
 
-Тепер ми можемо розглянути іменники середнього роду. *(Now we can look at neuter nouns.)*
+The Instrumental case also expresses your **засіб** (means) of transport. When asking someone how they travel, use the question "Чим ти їдеш?" (By what means are you going?). You will frequently use words like **автобус** (bus) and **потяг** (train) to answer this. 
 
-These nouns follow patterns that are almost identical to masculine nouns. When a neuter noun ends in a hard «-о», it takes the ending **-ом**.
+Коли ми подорожуємо, ми використовуємо транспорт як великий інструмент. Тому ми часто запитуємо: «Чим ти їдеш?». Відповідь завжди буде в орудному відмінку без прийменника. Якщо це чоловічий рід, ми додаємо закінчення **-ом** або **-ем**. Наприклад, автобус стає автобусом, а потяг стає потягом. Жіночий рід отримує закінчення **-ою**, тому машина стає машиною.
 
-Жінка миє руки запашним **милом** *(The woman washes her hands with fragrant soap)*.
-Майстер відбиває світло великим **дзеркалом** *(The craftsman reflects light with a large mirror)*.
+> *When we travel, we use transport as a large tool. Therefore, we often ask: "By what means are you going?". The answer will always be in the instrumental case without a preposition. If it is masculine, we add the ending **-ом** or **-ем**. For example, a bus becomes by bus, and a train becomes by train. The feminine gender gets the ending **-ою**, so a car becomes by car.*
 
-When the neuter noun ends in a soft «-е», it takes the ending **-ем**.
+Learners often confuse the Instrumental case of transport with the Locative case. Whether you take a **літак** (airplane) or a **трамвай** (tram), distinguish between where you are and how you travel. If someone asks where you are right now, use the Locative case with a preposition. If they ask how you get to work, use the bare Instrumental case.
 
-Ми насолоджуємося теплим **морем** *(We enjoy the warm sea)*.
+Порівняйте дві різні ситуації. Якщо ви хочете сказати про місце, ви використовуєте місцевий відмінок з прийменником. Ви кажете: «Я зараз сиджу в автобусі». Це означає, що ви знаходитеся всередині. Але якщо ви говорите про спосіб подорожі, ви використовуєте орудний відмінок. Ви кажете: «Я їду на роботу автобусом».
 
-Finally, when the neuter noun ends in «-я», it takes the ending **-ям**.
+> *Compare two different situations. If you want to talk about a place, you use the locative case with a preposition. You say: "I am currently sitting in the bus". This means you are located inside. But if you talk about the method of travel, you use the instrumental case. You say: "I am going to work by bus".*
 
-Старий професор ділиться своїм **знанням** *(The old professor shares his knowledge)*.
+:::info
+**Grammar box** — Use **в/у + Locative** to describe your physical location inside a vehicle (Where are you?). Use the bare **Instrumental** to describe the vehicle as a method of travel (How are you getting there?).
+:::
 
-Although neuter nouns act as tools less frequently than other genders, the grammatical system works exactly the same way.
+Some foreign words for transport in Ukrainian do not change their endings. Words like **метро** (subway) and **таксі** (taxi) are indeclinable. They still act as the Instrumental case in the sentence, but their form remains exactly the same. Notice how they are used in this conversation between two colleagues.
 
-Студенти часто роблять одну типову помилку. *(Students often make one typical mistake.)*
+> — **Олена:** Привіт! Чим ти зазвичай їдеш на роботу? *(Hi! How do you usually get to work?)*
+> — **Максим:** Я їду на роботу автобусом, а потім метро. А ти? *(I go to work by bus, and then by subway. And you?)*
+> — **Олена:** А я зазвичай їду власною машиною, або беру таксі. *(And I usually go by my own car, or take a taxi.)*
+> — **Максим:** Таксі — це дуже зручно, але дорого. *(A taxi is very convenient, but expensive.)*
 
-In English, you always use the preposition "with" to introduce a tool. Because of this, English speakers instinctively want to use the Ukrainian preposition **«з»** *(with)*. This is a critical grammatical error.
+Є один важливий виняток із цього правила. Коли ми не використовуємо транспорт, ми йдемо своїми ногами. Українською мовою ми кажемо «іти пішки». Хоча це слово відповідає на питання «як?», воно є прислівником, а не іменником. Тому воно не має закінчення орудного відмінка.
 
-In Ukrainian, the instrumental case already contains the meaning of "with a tool". We use the preposition **«з»** only when we talk about accompaniment or a companion.
+> *There is one important exception to this rule. When we do not use transport, we walk with our own legs. In Ukrainian, we say "to go on foot" (іти пішки). Even though this word answers the question "how?", it is an adverb, not a noun. Therefore, it does not have an instrumental case ending.*
 
-Я пишу **з ручкою** *(I am writing accompanied by a pen)*. This sounds like the pen is sitting next to you on a chair while you write.
-Я пишу **ручкою** *(I write with a pen)*. This is the correct way to express the tool of your action.
+You cannot put the word for "legs" in the Instrumental case to mean walking. You must always use the special adverb. 
 
-The case ending does all the heavy lifting. You must trust the ending and drop the preposition when you describe an instrument.
+**Він їде потягом, а я йду пішки.** — *He goes by train, and I go on foot.*
 
-<!-- INJECT_ACTIVITY: fill-in-tool-singular -->
+When talking about transport schedules, learners sometimes use the Russian-influenced word "відправлятися". This does not sound natural in Ukrainian. Instead, Ukrainian has specific, authentic verbs for when a vehicle starts its journey.
 
-## Їхати автобусом: Засіб пересування (Travel by Bus: Means of Transport)
+Ми використовуємо гарні українські дієслова для різних ситуацій. Якщо автобус їде за розкладом, ми кажемо: «Автобус відбуває». Коли транспорт починає рухатися прямо зараз, ми говоримо: «Поїзд рушає». А коли ми говоримо про наш власний старт подорожі, ми кажемо: «Ми вирушаємо». Ви можете поєднати ці слова з транспортом: «Ми вирушаємо літаком о восьмій».
 
-Часто ми використовуємо Орудний відмінок, коли говоримо про подорожі. *(Often we use the Instrumental case when we talk about traveling.)* The Instrumental case is the perfect tool for expressing your means of transportation. When you want to ask someone how they are traveling, you use the standard question: «**Чим ти їдеш?**» *(How/By what means are you going?)*. This question asks about the instrument of your travel. You do not need a preposition here. The case ending alone tells us that the vehicle is the means of your movement. Ось базові слова, які вам потрібні. *(Here are the basic words you need.)* Ми подорожуємо **автобусом** *(by bus)*. Люди часто їздять **потягом** *(by train)* або **трамваєм** *(by tram)*. Моя сестра летить **літаком** *(by airplane)*. Мої батьки люблять подорожувати **машиною** *(by car)*.
+> *We use beautiful Ukrainian verbs for different situations. If a bus leaves according to a schedule, we say: "The bus departs". When transport starts moving right now, we say: "The train starts moving". And when we talk about our own start of a journey, we say: "We are setting off". You can combine these words with transport: "We are setting off by airplane at eight."*
 
-Студенти часто плутають два відмінки. *(Students often confuse two cases.)* It is very important to understand the conceptual difference between the Locative case and the Instrumental case when talking about transport. The Locative case describes location or position. For example, «**в автобусі**» *(in the bus)* means you are physically sitting or standing inside the vehicle. The Instrumental case describes the method of your travel. «Автобусом» means the bus is the tool that moves you from place to place. Порівняйте ці два речення. *(Compare these two sentences.)* Я сиджу в автобусі і читаю книгу *(I am sitting in the bus and reading a book)*. Я їду на роботу автобусом *(I travel to work by bus)*. У першому реченні важливе місце. *(In the first sentence, the place is important.)* У другому реченні важливий метод подорожі. *(In the second sentence, the method of travel is important.)*
+:::tip
+**Did you know?** — The verb **рушати** literally means to start making a movement, while **вирушати** means to set off on a journey. Both are excellent, natural alternatives to Russian-influenced vocabulary.
+:::
 
-Послухайте розмову двох колег. *(Listen to a conversation between two colleagues.)* Вони обговорюють свій ранковий маршрут. *(They are discussing their morning route.)*
-> — **Олена:** Привіт! Чим ти їдеш на роботу? *(Hi! How do you travel to work?)*
-> — **Марко:** Я їду на роботу автобусом, а потім **метро** *(subway)*. *(I travel to work by bus, and then by subway.)*
-> — **Олена:** А я зазвичай їду власною машиною. *(And I usually travel by my own car.)*
-> — **Марко:** Ти ніколи не береш **таксі** *(taxi)*? *(Do you never take a taxi?)*
-> — **Олена:** Ні, це занадто дорого. *(No, it is too expensive.)*
+<!-- INJECT_ACTIVITY: match-up, Match transport nouns to their Instrumental forms -->
 
-Notice the words «метро» and «таксі» in the dialogue. These borrowed words are indeclinable in Ukrainian. Вони ніколи не змінюють своє закінчення. *(They never change their ending.)* However, grammatically, they still function exactly like nouns in the Instrumental case here.
+## Орудний відмінок множини (Instrumental Plural) (~550 words total)
 
-Є один важливий виняток із цього правила. *(There is one important exception to this rule.)* When you travel on foot, you are using your own body, not an external tool or vehicle. Because of this, Ukrainian uses a specific adverb instead of a noun in the Instrumental case. Ми говоримо «**іти пішки**» *(to go on foot)*. The word «пішки» is an adverb, so it never changes its form. Він їде потягом, а я йду пішки *(He travels by train, and I walk on foot)*. Вони їдуть трамваєм, а ми йдемо пішки *(They travel by tram, and we walk on foot)*.
+You already know how to use the Instrumental case in the singular to describe a **засіб** (means, tool) or transport. Now it is time to look at the plural forms. The good news is that the plural is much simpler to remember than the singular. 
 
-Як правильно сказати, що транспорт починає рух? *(How to correctly say that transport starts moving?)* Many learners use the Russianism «відправлятися» *(to depart)*. Це лексична помилка в українській мові. *(This is a lexical error in the Ukrainian language.)* Instead, you should use authentic Ukrainian verbs to describe departure. Автобус **відбуває** *(departs)* з Києва вранці. Поїзд **рушає** *(starts moving)* дуже швидко. Ми **вирушаємо** *(set off)* літаком о восьмій годині. These verbs sound natural and pair perfectly with the transport nouns in the Instrumental case. Ми вирушаємо машиною на вихідних *(We set off by car on the weekend)*. Потяг рушає, а ми махаємо руками *(The train starts moving, and we wave our hands)*.
+В орудному відмінку множини всі іменники мають однакові закінчення, незалежно від їхнього роду. Якщо основа слова закінчується на твердий приголосний, ми додаємо закінчення **-ами**. Наприклад, слова «стіл», «автобус» та «потяг» отримують форму «столами», «автобусами» та «потягами». Якщо основа слова м'яка, ми використовуємо закінчення **-ями**. Тому слова «трамвай» та «олівець» змінюються на «трамваями» та «олівцями». Слово «літак» має тверду основу, тому ми кажемо «літаками».
 
-<!-- INJECT_ACTIVITY: match-up-transport -->
+> *In the instrumental plural, all nouns have the same endings, regardless of their gender. If the word stem ends in a hard consonant, we add the ending **-ами**. For example, the words "table", **автобус** (bus), and **потяг** (train) take the form "столами", "автобусами", and "потягами". If the word stem is soft, we use the ending **-ями**. Therefore, the words **трамвай** (tram) and **олівець** (pencil) change to "трамваями" and "олівцями". The word **літак** (airplane) has a hard stem, so we say "літаками".*
 
-## Орудний відмінок множини (Instrumental Plural)
+Now we can use these new forms in practice. When we talk about instruments or tools in the plural, we simply put them in the Instrumental case.
 
-Ми вже знаємо, як використовувати Орудний відмінок в однині. *(We already know how to use the Instrumental case in singular.)* Тепер час вивчити множину. *(Now it is time to learn the plural.)* The plural form of the Instrumental case is much simpler than the singular. Чому це так? *(Why is it so?)* Тому що всі три роди мають однакові закінчення. *(Because all three genders have the same endings.)* You do not need to memorize separate rules for masculine, feminine, and neuter nouns. Є тільки два основні варіанти: закінчення «**-ами**» та «**-ями**». *(There are only two main options: the endings "-ами" and "-ями".)* We use the ending «-ами» for hard stems. Наприклад, ми кажемо **руками** *(with hands)*, **столами** *(with tables)*, або **автобусами** *(by buses)*. We use the ending «-ями» for soft stems. Наприклад, ми говоримо **олівцями** *(with pencils)*, **морями** *(by seas)*, або **друзями** *(with friends)*. 
+На уроці мистецтва діти часто малюють **фарбами**. Вони креслять рівні лінії **лінійками** та пишуть тексти синіми **ручками**. На кухні кухарі щодня ріжуть овочі гострими **ножами**. В азійських ресторанах люди зазвичай їдять дерев'яними паличками, а не металевими **ложками**. Фізична праця означає, що людина багато працює власними руками.
 
-Як ми використовуємо ці форми на практиці? *(How do we use these forms in practice?)* Ми часто вживаємо Орудний відмінок множини, коли говоримо про інструменти. *(We often use the Instrumental plural when we talk about tools.)* Many actions naturally require plural tools. Діти люблять **малювати фарбами** *(to paint with paints)*. В Азії люди традиційно **їдять паличками** *(eat with chopsticks)*. Це дуже зручно. *(It is very convenient.)* Фермери часто **працюють руками** *(work with hands)*. Це важка фізична праця. *(This is hard physical work.)* На уроці студенти **пишуть олівцями** *(write with pencils)*. Усі ці слова показують засіб дії. *(All these words show the means of action.)*
+> *In art class, children often paint with **фарба** (paint). They draw straight lines with **лінійка** (ruler) and write texts with blue **ручка** (pen). In the kitchen, chefs cut vegetables with sharp **ніж** (knife) every day. In Asian restaurants, people usually eat with wooden chopsticks, not with metal **ложка** (spoon). Physical labor means that a person works a lot with their own hands.*
 
-What happens with nouns ending in sibilant consonants? У множині вони також використовують ці стандартні закінчення. *(In the plural, they also use these standard endings.)* The spelling remains consistent with the hard sibilant rules in Ukrainian. Слово «**ніч**» *(night)* має форму «**ночами**» *(by nights)*. Ми часто працюємо ночами *(We often work by nights)*. Слово «**миша**» *(mouse)* також має твердий шиплячий звук. *(The word "mouse" also has a hard sibilant sound.)* Тому ми говоримо «**мишами**» *(with mice)*. Кіт бігає за мишами *(The cat runs after mice)*. Як бачите, після шиплячих звуків ми завжди пишемо літеру «а». *(As you can see, after sibilant sounds we always write the letter "a".)* Це робить вимову набагато легшою. *(This makes the pronunciation much easier.)* 
+There is a special spelling rule for words whose stems end in sibilant consonants (ж, ч, ш, щ). Even though these words might belong to the soft or mixed groups, they always take the hard plural ending **-ами**.
 
-Деякі слова в українській мові існують тільки у множині. *(Some words in the Ukrainian language exist only in the plural.)* We call them pluralia tantum. Найкращий приклад — це «**ножиці**» *(scissors)*. Ми ріжемо папір **ножицями** *(with scissors)*. There are also some common words that have parallel forms in the Instrumental plural. Обидві форми є абсолютно правильними. *(Both forms are absolutely correct.)* Ви можете сказати «**дверима**» *(with doors)* або «**дверми**». Також правильно казати «**грошима**» *(with money)* або «**грішми**». Ви можете зустріти «**конями**» *(with horses)* або «**коньми**». Перший варіант зазвичай звучить частіше у сучасній мові. *(The first option usually sounds more often in modern language.)* 
+Слова на шиплячі приголосні завжди мають закінчення **-ами** в орудному відмінку множини. Ми кажемо «ночами», коли говоримо про дії, які відбуваються щоночі. Слово «миша» також має шиплячий звук, тому ми пишемо «мишами». Якщо основа закінчується на інший м'який приголосний, ми використовуємо **-ями**. Наприклад, ми кажемо «тінями» або «солями».
 
-Прикметники також змінюють свою форму. *(Adjectives also change their form.)* They must agree with the noun in the Instrumental plural. Українські прикметники у множині мають закінчення «**-ими**» або «**-іми**». *(Ukrainian adjectives in the plural have the endings "-ими" or "-іми".)* We use «-ими» for hard stems, and «-іми» for soft stems. Зверніть увагу на ці приклади. *(Pay attention to these examples.)* Я завжди малюю **новими фарбами** *(with new paints)*. Туристи подорожують **великими автобусами** *(by big buses)*. Мій брат пише **синіми олівцями** *(with blue pencils)*. Усі ці слова працюють разом як одна команда. *(All these words work together as one team.)* The adjective and the noun both show the tool or the means of transport.
+> *Words ending in sibilant consonants always have the ending **-ами** in the instrumental plural. We say "ночами" (by night) when we talk about actions that happen every night. The word "mouse" (миша) also has a sibilant sound, so we write "мишами" (with mice). If the stem ends in another soft consonant, we use **-ями**. For example, we say "тінями" (with shadows) or "солями" (with salts).*
+
+Some common words in Ukrainian exist only in the plural. A vital tool in everyday life is «ножиці» (scissors), which naturally takes the plural ending. 
+
+Деякі українські слова мають цікаві паралельні форми. Наприклад, ви можете сказати «дверми» або «дверима», коли зачиняєте кімнату. Слово «гроші» має форми «грішми» та «грошима». А слово «коні» стає «коньми» або «конями». Обидва варіанти є абсолютно правильними, але довші форми звучать сучасніше. Для роботи з папером ми завжди користуємося ножицями.
+
+> *Some Ukrainian words have interesting parallel forms. For example, you can say "дверми" or "дверима" (with doors) when you close a room. The word "money" (гроші) has the forms "грішми" and "грошима" (with money). And the word "horses" (коні) becomes "коньми" or "конями" (with horses). Both options are absolutely correct, but the longer forms sound more modern. For working with paper, we always use scissors (ножицями).*
+
+:::info
+**Grammar box** — The parallel plural forms **дверима / дверми** and **грошима / грішми** are a unique feature of Ukrainian morphology. While both are perfectly valid, the endings with **-има** are more common in modern conversational speech.
+:::
+
+Finally, when you describe tools with adjectives, the adjectives must also agree in the Instrumental plural. Hard adjectives take the ending **-ими**, while soft adjectives take **-іми**.
+
+Прикметники завжди працюють разом з іменниками. Тверді прикметники отримують закінчення **-ими**. Тому ми кажемо «великими автобусами» або «новими фарбами». М'які прикметники мають закінчення **-іми**, як у фразі «синіми олівцями». Ви можете легко поєднувати ці слова. Я малюю картину новими синіми фарбами. Це робить вашу розповідь багатою та детальною.
+
+> *Adjectives always work together with nouns. Hard adjectives take the ending **-ими**, so we say "великими автобусами" (by big buses) or "новими фарбами" (with new paints). Soft adjectives have the ending **-іми**, as in the phrase "синіми олівцями" (with blue pencils). You can easily combine these words. I am painting a picture with new blue paints. This makes your story rich and detailed.*
 
 <!-- INJECT_ACTIVITY: unjumble-plural-phrases -->
 
-## Практика: Знаряддя чи супутник? (Practice: Tool or Companion?)
+## Практика: Знаряддя чи супутник? (Practice: Tool or Companion?) (~500 words total)
 
-Англомовні студенти часто роблять одну типову помилку. *(English-speaking students often make one typical mistake.)* In English, you use the preposition "with" for both tools and companions. В українській мові це дві різні граматичні ситуації. *(In the Ukrainian language, these are two different grammatical situations.)* Коли ми використовуємо предмет як інструмент, ми беремо Орудний відмінок без прийменника. *(When we use an object as a tool, we take the Instrumental case without a preposition.)* Наприклад, ми говоримо: «**Я пишу ручкою**» *(I am writing with a pen)*. The pen is the tool you are using to perform the action. Але прийменник «**з**» *(with)* має інше значення. *(But the preposition "з" has another meaning.)* It indicates accompaniment or being together. Якщо ви скажете «**Я йду з ручкою**» *(I am walking with a pen)*, це означає, що ви просто тримаєте ручку. *(If you say "I am walking with a pen", it means you are just holding a pen.)* The pen is your companion, not your tool. Уявіть, що ви гуляєте, і ручка гуляє разом із вами. *(Imagine that you are walking, and the pen is walking together with you.)* Це дуже важлива різниця. *(This is a very important difference.)*
+One of the most common mistakes English speakers make is using the preposition **з** (with) when talking about tools or means. In English, you write "with a pen" and go "with a friend." In Ukrainian, these are two completely different grammar structures. If an object is a tool or a means to do something, we use the Instrumental case without any prepositions. If someone or something is your companion, you must use **з** plus the Instrumental case.
 
-Ця ж логіка працює для транспорту. *(This same logic works for transport.)* When you travel by a vehicle, the vehicle is the means of your action. Тому ми кажемо: «**Він їде автобусом**» *(He is travelling by bus)*. Тут автобус — це засіб пересування. *(Here the bus is the means of transport.)* Але якщо ви їдете разом із людиною, ця людина є вашим супутником. *(But if you are travelling together with a person, this person is your companion.)* Тоді ми говоримо: «**Він їде з другом**» *(He is travelling with a friend)*. What happens if you mix them up? Якщо ви скажете «**Я їду з автобусом**» *(I am travelling with a bus)*, це звучить кумедно. *(If you say "I am travelling with a bus", it sounds funny.)* It sounds like you are travelling alongside a bus, perhaps in a car next to it, rather than being inside it. Транспорт — це засіб, а люди — це супутники. *(Transport is a means, and people are companions.)*
+Я пишу синьою ручкою, а суп їм ложкою. Ручка та ложка — це мої інструменти. Але фраза «я йду до школи з ручкою» означає зовсім інше. Це означає, що я маю ручку в кишені. Вона — мій супутник, а не інструмент. Тому ми ніколи не кажемо «я пишу з ручкою». Ми також не кажемо «я ріжу з ножем».
 
-В українській мові є особливі дієслова. *(In the Ukrainian language, there are special verbs.)* Вони завжди вимагають Орудного відмінка без прийменника. *(They always require the Instrumental case without a preposition.)* These verbs often express the "means" or "manner" of a state. Чудовий приклад — це дієслово «**пахнути**» *(to smell of)*. Навесні парк **пахне квітами** *(In spring, the park smells of flowers)*. The flowers are the source or the means of the smell. Інший приклад — дієслово «**займатися**» *(to be engaged in, to do)*. Мій брат **займається спортом** *(My brother does sports)*. Студенти часто **цікавляться історією** *(Students are often interested in history)*. У цих фразах ми ніколи не використовуємо прийменник «з». *(In these phrases, we never use the preposition "з".)* The objects act as the logical instruments of your interest or activity. Запам'ятайте ці корисні вирази. *(Remember these useful expressions.)* Вони роблять вашу мову дуже природною. *(They make your language very natural.)*
+> *I write with a blue pen (ручкою), and I eat soup with a spoon (ложкою). The pen and the spoon are my tools. But the phrase "I am going to school with a pen" (з ручкою) means something completely different. It means that I have a pen in my pocket. It is my companion, not a tool. That is why we never say "I write with a pen" (я пишу з ручкою). We also do not say "I cut with a knife" (я ріжу з ножем).*
 
-Подивімося, як це працює на практиці. *(Let's see how this works in practice.)* Прочитайте цей діалог у художній школі. *(Read this dialogue in an art school.)* Студенти обговорюють свої інструменти. *(The students are discussing their tools.)*
+:::info
+**Grammar box** — The preposition **з** always implies accompaniment (together with). If you use it with a tool or a vehicle, it sounds like that object is walking right next to you holding your hand!
+:::
 
-> — **Вчитель:** Добрий день! Чим ви сьогодні малюєте? *(Good day! What are you drawing with today?)*
-> — **Марко:** Я малюю цим м'яким олівцем. *(I am drawing with this soft pencil.)* А також я креслю довгою лінійкою. *(And also I am drafting with a long ruler.)*
-> — **Ганна:** А я працюю фарбами та широким пензлем. *(And I am working with paints and a wide brush.)*
-> — **Вчитель:** Дуже добре. А чим ви приїхали на урок? *(Very well. And how did you arrive to the lesson?)*
-> — **Ганна:** Я приїхала швидким трамваєм. *(I arrived by a fast tram.)*
-> — **Марко:** А я прийшов пішки з великою лінійкою і з новим другом! *(And I came on foot with a big ruler and with a new friend!)*
-> — **Вчитель:** Це чудово, що ви цікавитеся мистецтвом. *(It is wonderful that you are interested in art.)*
+This logic applies perfectly to transport and people. When a vehicle is the means of transport, you use the bare Instrumental case. When a person travels alongside you, they are your companion, so you use the preposition **з**.
 
-Як бачите, Марко використовує прийменник «з» для лінійки і друга. *(As you can see, Marko uses the preposition "з" for the ruler and the friend.)* He brought them as companions, he didn't use them as tools or transport. Але Ганна використовує трамвай як засіб. *(But Hanna uses the tram as a means.)*
+Мій брат їде на роботу автобусом, а сестра летить літаком. Автобус і літак — це їхній засіб пересування. Але мій брат їде туди з другом. Друг — це людина, яка сидить поруч. Фраза «я їду з автобусом» звучить дуже дивно. Українці подумають, що ви біжите поруч із великою машиною. Тому ми кажемо «їхати трамваєм», але «їхати з братом».
 
-<!-- INJECT_ACTIVITY: quiz-companion-choice -->
-<!-- INJECT_ACTIVITY: group-sort-categories -->
+> *My brother goes to work by bus (автобусом), and my sister flies by airplane (літаком). The bus and the airplane are their means of transport (засіб). But my brother is going there with a friend (з другом). The friend is the person who sits next to him. The phrase "I am traveling with a bus" (з автобусом) sounds very strange. Ukrainians will think that you are running next to a big machine. That is why we say "to travel by tram" (їхати трамваєм), but "to travel with a brother" (їхати з братом).*
 
-## Підсумок
+Beyond tools and transport, Ukrainian uses the bare Instrumental case in several common fixed expressions. These verbs naturally take the Instrumental to indicate the means, manner, or focus of an action without needing any prepositions.
 
-Час повторити головні правила цього уроку. *(It is time to review the main rules of this lesson.)* Запам'ятайте ці важливі пункти про Орудний відмінок. *(Remember these important points about the Instrumental case.)*
+Мій дідусь любить цікавитися історією. Моя сестра обожнює займатися спортом щоранку. Навесні наш сад починає пахнути квітами. У цих фразах ми завжди використовуємо орудний відмінок без прийменника. Ви не можете сказати «займатися зі спортом». Ви також не можете сказати «пахнути з квітами».
 
-*   Орудний відмінок без прийменника позначає **знаряддя** *(tool)* або **засіб пересування** *(means of transport)*. Наприклад: писати ручкою, їхати автобусом. *(For example: to write with a pen, to travel by bus.)*
-*   Чоловічий та середній рід мають закінчення **-ом** для твердої основи. *(Masculine and neuter genders have the ending -ом for a hard stem.)* М'яка чи шипляча основа має закінчення **-ем**. *(A soft or sibilant stem has the ending -ем.)*
-*   Жіночий рід з твердою основою має закінчення **-ою**. *(The feminine gender with a hard stem has the ending -ою.)*
-*   У множині всі роди мають закінчення **-ами** *(hard)* або **-ями** *(soft)*.
-*   Ніколи не використовуйте прийменник «з» для інструментів чи транспорту! *(Never use the preposition "з" for tools or transport!)* Він позначає тільки супутників. *(It indicates only companions.)*
-*   Виняток: ми говоримо «**іти пішки**» *(to go on foot)* замість Орудного відмінка. *(...instead of the Instrumental case.)*
+> *My grandfather likes to be interested in history (цікавитися історією). My sister loves to do sports (займатися спортом) every morning. In the spring, our garden begins to smell of flowers (пахнути квітами). In these phrases, we always use the instrumental case without a preposition. You cannot say "to do with sports". You also cannot say "to smell with flowers".*
 
-Тепер ви можете впевнено розповідати про свої інструменти та щоденні подорожі! *(Now you can confidently talk about your tools and daily travels!)*
+Let's see how these rules play out in a real conversation. In this dialogue, an art teacher is asking students about their tools and how they arrived at the studio. Pay attention to how they use the bare Instrumental for both their art supplies and their transport.
+
+> — **Вчителька:** Діти, чим ви сьогодні працюєте? *(Children, what are you working with today?)*
+> — **Олена:** Я малюю цим м'яким олівцем. *(I am drawing with this soft pencil.)*
+> — **Марко:** А я працюю фарбами та пензлем. *(And I am working with paints and a brush.)*
+> — **Вчителька:** Дуже добре! А як ви сьогодні дісталися до школи? *(Very good! And how did you get to school today?)*
+> — **Олена:** Я приїхала трамваєм, а Марко прийшов пішки з великою лінійкою. *(I arrived by tram, and Marko came on foot with a big ruler.)*
+> — **Вчителька:** Марку, ти прийшов пішки чи приїхав автобусом? *(Marko, did you come on foot or arrive by bus?)*
+> — **Марко:** Пішки! Але мій старший брат приїхав потягом. *(On foot! But my older brother arrived by train.)*
+
+<!-- INJECT_ACTIVITY: quiz, Choose between з + Instrumental (companion) and bare Instrumental (tool) -->
+<!-- INJECT_ACTIVITY: group-sort, Sort sentences into Tool/Means vs. Accompaniment categories -->
+
+## Підсумок (~150 words)
+
+Let us review the main rules for using the Instrumental case without a preposition.
+
+*   **Writing tools:** Use the bare Instrumental case to show the tool you use. For example, you might write with a **ручка** (pen) or an **олівець** (pencil).
+*   **Art and measuring:** You can also create art with a **фарба** (paint) or measure distances with a **лінійка** (ruler). 
+*   **Kitchen tools:** In the kitchen, you might cut food with a **ніж** (knife) and eat soup with a **ложка** (spoon).
+*   **Transport:** Use the bare Instrumental to show your **засіб** (means, tool) of transport. You might travel by **автобус** (bus).
+*   **Other vehicles:** Similarly, you can take a **потяг** (train), fly by **літак** (airplane), or ride a **трамвай** (tram).
+*   **Endings:** Use **-ом** for hard masculine and neuter stems. Use **-ем** for soft or sibilant stems. Use **-ою** for hard feminine stems.
+*   **Plural Endings:** Plural forms are simple. Use **-ами** for hard stems and **-ями** for soft stems across all genders.
+*   **No Prepositions:** NEVER use the preposition "з" for tools or transport. It is only used when you are literally accompanied by someone.
+*   **Exception:** The phrase **іти пішки** (to go on foot) is an exception and is used instead of an Instrumental noun.
+
+:::info
+**Grammar box** — Remember that the Instrumental case ending replaces the need for a preposition. The ending itself carries the meaning of "by means of" or "using".
+:::
