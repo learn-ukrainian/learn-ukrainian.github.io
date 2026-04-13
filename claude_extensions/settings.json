@@ -708,11 +708,8 @@
       "starlight/src/",
       "claude_extensions/",
       ".claude/",
-      "*.md",
-      "*.yaml",
-      "*.yml",
-      "*.json",
-      "*.py"
+      "memory/",
+      "activities/"
     ]
   },
   "plansDirectory": "docs/plans",
@@ -720,5 +717,9 @@
   "language": "auto",
   "agent": "curriculum-maintainer",
   "acceptEdits": true,
-  "yolo": true
+  "yolo": true,
+  "effortLevel": "high",
+  "env": {
+    "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": "1"
+  }
 }
