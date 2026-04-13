@@ -59,6 +59,29 @@ def _single_module_tree(tmp_path: Path, level: str = "a2", slug: str = "a2-bridg
     level_dir = curriculum_root / level
     (level_dir / "orchestration").mkdir(parents=True, exist_ok=True)
     level_dir.mkdir(parents=True, exist_ok=True)
+    plan_path = curriculum_root / "plans" / level / f"{slug}.yaml"
+    plan_path.parent.mkdir(parents=True, exist_ok=True)
+    plan_path.write_text(
+        yaml.safe_dump(
+            {
+                "module": 1,
+                "slug": slug,
+                "level": level,
+                "sequence": 1,
+                "title": slug.replace("-", " ").title(),
+                "word_target": 2200,
+                "phase": f"{level.upper()}.1",
+                "content_outline": [
+                    {"section": "Intro", "words": 1700},
+                    {"section": "Summary", "words": 500},
+                ],
+                "vocabulary_hints": {"required": ["місто (city)"]},
+            },
+            sort_keys=False,
+            allow_unicode=True,
+        ),
+        "utf-8",
+    )
     return curriculum_root
 
 
@@ -226,6 +249,76 @@ def test_main_emits_module_done_after_publish(
     assert module_done["slug"] == "a2-bridge"
     assert module_done["final_score"] == 9.6
     assert module_done["ok"] is True
+
+
+@pytest.mark.parametrize("step_name", ["write", "review", "publish"])
+def test_main_blocks_plan_consuming_single_steps_on_pre_build_gate(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    step_name: str,
+) -> None:
+    curriculum_root = _single_module_tree(tmp_path)
+    plan_path = curriculum_root / "plans" / "a2" / "a2-bridge.yaml"
+    plan_path.parent.mkdir(parents=True, exist_ok=True)
+    plan_path.write_text(
+        yaml.safe_dump(
+            {
+                "module": 1,
+                "slug": "a2-bridge",
+                "level": "a2",
+                "sequence": 1,
+                "title": "A2 Bridge",
+                "word_target": 1200,
+                "phase": "A2.1",
+                "content_outline": [{"section": "Intro", "words": 1200}],
+                "vocabulary_hints": {"required": ["місто (city)"]},
+            },
+            sort_keys=False,
+            allow_unicode=True,
+        ),
+        "utf-8",
+    )
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
+
+    called_steps: list[str] = []
+
+    monkeypatch.setattr(
+        v6_build,
+        "step_write_with_retry",
+        lambda *args, **kwargs: called_steps.append("write"),
+    )
+    monkeypatch.setattr(
+        v6_build,
+        "step_review",
+        lambda *args, **kwargs: called_steps.append("review"),
+    )
+    monkeypatch.setattr(
+        v6_build,
+        "step_publish",
+        lambda *args, **kwargs: called_steps.append("publish"),
+    )
+    monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["v6_build.py", "a2", "1", "--step", step_name, "--writer", "gemini"],
+    )
+
+    with pytest.raises(SystemExit) as exc:
+        v6_build.main()
+
+    assert exc.value.code == 1
+    assert called_steps == []
+
+    events = _event_lines(capsys.readouterr().out)
+    assert events[0]["event"] == "module_start"
+    assert events[-1]["event"] == "module_failed"
+    assert events[-1]["phase"] == "check"
+    assert events[-1]["error"] == "Build FAILED at Step 2 (plan check)"
 
 
 def test_main_returns_false_and_releases_lock_when_review_halts(

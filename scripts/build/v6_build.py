@@ -695,6 +695,17 @@ PHASE_LABELS: dict[str, str] = {
     "audit": "Audit",
 }
 
+_PRE_BUILD_GATE_STEPS = {
+    "all",
+    "research",
+    "pre-verify",
+    "skeleton",
+    "write",
+    "activities",
+    "review",
+    "publish",
+}
+
 
 def _invalidate_phases(level: str, slug: str, phases_to_clear: list[str]) -> None:
     """Mark downstream phases as incomplete so --resume re-runs them.
@@ -741,6 +752,48 @@ def _all_phases_complete(level: str, slug: str) -> bool:
     """Check if all pipeline phases are complete for a module."""
     completed = _load_completed_phases(level, slug)
     return all(p in completed for p in _ALL_PHASES)
+
+
+def _run_pre_build_gate(level: str, slug: str) -> bool:
+    """Validate plan readiness before any step that consumes plan data."""
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    if not plan_path.exists():
+        _log(f"  ❌ Plan not found: {plan_path}")
+        return False
+
+    plan_data = yaml.safe_load(plan_path.read_text("utf-8")) or {}
+    outline = plan_data.get("content_outline") or []
+
+    # 1. Summary section required
+    has_summary = any(
+        "summary" in s.get("section", "").lower() or "підсумок" in s.get("section", "").lower()
+        for s in outline if isinstance(s, dict)
+    )
+    if not has_summary:
+        _log("  ❌ PRE-BUILD GATE: Plan missing Summary/Підсумок section in content_outline")
+        _log("     Fix: .venv/bin/python scripts/tools/fix_plans_phase1.py " + level)
+        return False
+
+    # 2. Vocabulary baseline required
+    has_vocab = bool(plan_data.get("vocabulary_hints") or plan_data.get("vocabulary"))
+    if not has_vocab:
+        _log("  ⚠️  PRE-BUILD GATE: No vocabulary_hints or vocabulary in plan (non-blocking)")
+
+    # 3. Word target sanity (vs config.py)
+    from validate.validate_plan_config import get_config_target
+    plan_wt = plan_data.get("word_target", 0)
+    config_wt = get_config_target(
+        level,
+        plan_data.get("sequence", 1),
+        plan_data.get("focus"),
+        slug=slug,
+    )
+    if plan_wt and plan_wt < config_wt * 0.95:
+        _log(f"  ❌ PRE-BUILD GATE: word_target ({plan_wt}) below config minimum ({config_wt})")
+        return False
+
+    _log("  ✅ Pre-build readiness gate passed")
+    return True
 
 
 def _parse_review_result(review_text: str) -> ReviewParseResult:
@@ -1004,34 +1057,8 @@ def step_check(level: str, module_num: int, slug: str) -> bool:
     all_slugs = data.get("levels", {}).get(level, {}).get("modules", [])
 
     # --- Pre-build readiness gate (Phase 3 of recovery plan, 2026-04-13) ---
-    plan_data = yaml.safe_load(plan_path.read_text("utf-8"))
-    outline = plan_data.get("content_outline", [])
-
-    # 1. Summary section required
-    has_summary = any(
-        "summary" in s.get("section", "").lower() or "підсумок" in s.get("section", "").lower()
-        for s in outline if isinstance(s, dict)
-    )
-    if not has_summary:
-        _log("  ❌ PRE-BUILD GATE: Plan missing Summary/Підсумок section in content_outline")
-        _log("     Fix: .venv/bin/python scripts/tools/fix_plans_phase1.py " + level)
+    if not _run_pre_build_gate(level, slug):
         return False
-
-    # 2. Vocabulary baseline required
-    has_vocab = bool(plan_data.get("vocabulary_hints") or plan_data.get("vocabulary"))
-    if not has_vocab:
-        _log("  ⚠️  PRE-BUILD GATE: No vocabulary_hints or vocabulary in plan (non-blocking)")
-
-    # 3. Word target sanity (vs config.py)
-    from validate.validate_plan_config import get_config_target
-    plan_wt = plan_data.get("word_target", 0)
-    config_wt = get_config_target(level, plan_data.get("sequence", 1),
-                                   plan_data.get("focus"), slug=slug)
-    if plan_wt and plan_wt < config_wt * 0.95:
-        _log(f"  ❌ PRE-BUILD GATE: word_target ({plan_wt}) below config minimum ({config_wt})")
-        return False
-
-    _log("  ✅ Pre-build readiness gate passed")
 
     issues = check_plan(plan_path, all_slugs)
 
@@ -6034,6 +6061,20 @@ def main():
                 if _c.exists():
                     content_path = _c
                     _log(f"   Restored: content_path ({_c.name})")
+
+        # Single-step and resumed builds can jump straight into plan-consuming
+        # phases without re-running step_check(). Enforce the readiness gate
+        # here so write/review/publish never bypass it.
+        should_run_pre_build_gate = (
+            steps in _PRE_BUILD_GATE_STEPS
+            and not (steps == "all" and "check" not in completed_phases)
+        )
+        if should_run_pre_build_gate:
+            _log("\n  Pre-flight: validating pre-build readiness gate")
+            if not _run_pre_build_gate(args.level, slug):
+                _log("\n❌ Build FAILED at pre-build readiness gate")
+                _emit_module_failed("check", "Build FAILED at Step 2 (plan check)")
+                sys.exit(1)
 
         # Step 2: CHECK
         if steps in ("all", "check") and "check" not in completed_phases:

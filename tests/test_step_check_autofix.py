@@ -50,7 +50,10 @@ def _make_plan(plans_dir: Path, slug: str = "test-slug", **overrides) -> Path:
         "title": "Test Module",
         "word_target": 1200,
         "phase": "A1.1",
-        "content_outline": [{"section": "Intro", "words": 1200}],
+        "content_outline": [
+            {"section": "Intro", "words": 900},
+            {"section": "Summary", "words": 300},
+        ],
         "vocabulary_hints": {"required": ["дім (house)", "кіт (cat)"]},
         **overrides,
     }
