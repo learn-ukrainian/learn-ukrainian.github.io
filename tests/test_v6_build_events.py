@@ -228,6 +228,48 @@ def test_main_emits_module_done_after_publish(
     assert module_done["ok"] is True
 
 
+def test_main_returns_false_and_releases_lock_when_review_halts(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    curriculum_root = _single_module_tree(tmp_path)
+    content_path = curriculum_root / "a2" / "a2-bridge.md"
+    content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
+
+    releases: list[str] = []
+
+    def track_release(self) -> None:
+        releases.append("released")
+
+    reviews = iter([
+        (False, 6.5, "Verdict: FAIL\n"),
+        (False, 6.0, "Verdict: FAIL\n"),
+    ])
+
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "release", track_release)
+    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(reviews))
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
+    monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: True)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["v6_build.py", "a2", "1", "--step", "review", "--writer", "gemini"],
+    )
+
+    result = v6_build.main()
+
+    assert result is False
+    assert releases == ["released"]
+    events = _event_lines(capsys.readouterr().out)
+    assert events[0]["event"] == "module_start"
+    assert events[-1]["event"] == "module_failed"
+    assert events[-1]["phase"] == "review"
+
+
 def test_subprocess_event_stream_is_line_buffered(tmp_path: Path) -> None:
     curriculum_root = _single_module_tree(tmp_path)
     helper_path = tmp_path / "run_v6_check.py"
