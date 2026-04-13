@@ -4026,9 +4026,6 @@ def step_activities(
                     if act.get("type") not in _DETERMINISTIC_TYPES
                 ]
 
-        # Re-dump after stripping deterministic types
-        clean = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
-
         # Auto-fix missing 'title' field — LLMs often skip it but include 'instruction'.
         # Schema requires 'title' on all activity types.
         for section in ("inline", "workbook"):
@@ -4059,7 +4056,6 @@ def step_activities(
                         hint_strip_count += 1
         if hint_strip_count:
             _log(f"  🔧 Stripped {hint_strip_count} parenthetical hints from fill-in sentences")
-            clean = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
         # Validate against JSON Schema
         validator = jsonschema.Draft7Validator(schema)
@@ -4090,7 +4086,6 @@ def step_activities(
                     if removed:
                         _log(f"  🔧 Stripped {removed} forbidden activity type(s) from {section} (A1.1 level restriction)")
             # Re-dump after stripping
-            clean = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
         # Additional semantic checks (inline id uniqueness + existence)
         semantic_errors = _check_activity_semantics(data)
@@ -4105,7 +4100,8 @@ def step_activities(
         activities_dir = CURRICULUM_ROOT / level / "activities"
         activities_dir.mkdir(parents=True, exist_ok=True)
         output_path = activities_dir / f"{slug}.yaml"
-        output_path.write_text(clean, "utf-8")
+        serialized = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        output_path.write_text(serialized, "utf-8")
 
         inline_count = len(data.get("inline", []))
         workbook_count = len(data.get("workbook", []))
