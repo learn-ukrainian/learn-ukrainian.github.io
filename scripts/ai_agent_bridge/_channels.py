@@ -1148,7 +1148,7 @@ def mark_delivery_failed(
                     lease_until=NULL,
                     retry_after=?,
                     last_error_kind=?
-                WHERE delivery_id=?
+                WHERE delivery_id=? AND status='processing'
                 """,
                 (error_text, retry_after, error_kind, delivery_id),
             )

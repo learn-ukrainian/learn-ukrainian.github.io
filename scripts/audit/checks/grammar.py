@@ -82,12 +82,16 @@ def check_grammar_violations(text: str, level_code: str, module_num: int) -> lis
         # Dative pronouns (мені, тобі) appear naturally in commands/requests.
         # Formal teaching happens at A2, but incidental exposure is fine.
         for pattern in CASE_PATTERNS['dative']:
-            matches = re.findall(pattern, text, re.IGNORECASE)
+            matches = list(re.finditer(pattern, text, re.IGNORECASE))
             if matches:
-                for match in matches[:3]:
+                for m in matches[:3]:
+                    match = m.group()
                     if match.lower() in NOMINATIVE_PLURAL_EXCLUSIONS:
                         continue
-                    if is_fixed_phrase(match, text, FIXED_PHRASES_DATIVE):
+                    start = max(0, m.start() - 50)
+                    end = min(len(text), m.end() + 50)
+                    local_text = text[start:end]
+                    if is_fixed_phrase(match, local_text, FIXED_PHRASES_DATIVE):
                         continue
                     violations.append({
                         'type': 'INFO',
