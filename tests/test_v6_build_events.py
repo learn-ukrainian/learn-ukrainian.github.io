@@ -321,6 +321,94 @@ def test_main_persists_skipped_optional_phases_as_satisfied(
     assert v6_build._all_phases_complete("a2", "a2-bridge") is True
 
 
+@pytest.mark.parametrize(
+    ("level", "slug", "verify_result", "stress_result", "phase_name", "expected_status"),
+    [
+        ("a2", "a2-bridge", "degraded", "skipped", "verify", "degraded"),
+        ("a1", "a1-bridge", "complete", "degraded", "stress", "degraded"),
+    ],
+)
+def test_main_persists_only_successful_verify_and_stress_phases_as_complete(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    level: str,
+    slug: str,
+    verify_result: str,
+    stress_result: str,
+    phase_name: str,
+    expected_status: str,
+) -> None:
+    curriculum_root = _single_module_tree(tmp_path, level=level, slug=slug)
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
+    monkeypatch.setattr(v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True)
+    monkeypatch.setattr(v6_build, "_inject_abetka_activities", lambda *args, **kwargs: None)
+    monkeypatch.setattr(v6_build, "_post_process_content", lambda *args, **kwargs: 0)
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
+    monkeypatch.setattr(v6_build, "_get_failing_audit_gates", lambda *args, **kwargs: ("pass", []))
+    monkeypatch.setattr(v6_build, "step_check", lambda *args, **kwargs: True)
+
+    def fake_research(level: str, module_num: int, slug: str) -> Path:
+        packet_path = curriculum_root / level / "research" / f"{slug}-knowledge-packet.md"
+        packet_path.parent.mkdir(parents=True, exist_ok=True)
+        packet_path.write_text("# Packet\n", "utf-8")
+        return packet_path
+
+    def fake_write(level: str, module_num: int, slug: str, packet_path: Path | None, **kwargs) -> Path:
+        content_path = curriculum_root / level / f"{slug}.md"
+        content_path.parent.mkdir(parents=True, exist_ok=True)
+        content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+        return content_path
+
+    def fake_activities(content_path: Path, level: str, module_num: int, slug: str, **kwargs) -> Path:
+        activity_path = curriculum_root / level / "activities" / f"{slug}.yaml"
+        activity_path.parent.mkdir(parents=True, exist_ok=True)
+        activity_path.write_text("- type: quiz\n", "utf-8")
+        return activity_path
+
+    def fake_vocab(content_path: Path, level: str, module_num: int, slug: str, **kwargs) -> Path:
+        vocab_path = curriculum_root / level / "vocabulary" / f"{slug}.yaml"
+        vocab_path.parent.mkdir(parents=True, exist_ok=True)
+        vocab_path.write_text("- term: місто\n", "utf-8")
+        return vocab_path
+
+    monkeypatch.setattr(v6_build, "step_research", fake_research)
+    monkeypatch.setattr(v6_build, "step_write_with_retry", fake_write)
+    monkeypatch.setattr(v6_build, "step_activities", fake_activities)
+    monkeypatch.setattr(v6_build, "step_repair", lambda *args, **kwargs: (True, False))
+    monkeypatch.setattr(v6_build, "step_verify_exercises", lambda *args, **kwargs: True)
+    monkeypatch.setattr(v6_build, "step_vocab", fake_vocab)
+    monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: verify_result)
+    monkeypatch.setattr(v6_build, "step_annotate", lambda *args, **kwargs: stress_result)
+    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: (True, 9.6, "Verdict: PASS\n"))
+    monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: True)
+    monkeypatch.setattr(v6_build, "step_audit", lambda *args, **kwargs: True)
+    monkeypatch.setattr(quick_verify, "_check_toxic_tokens", lambda text: [])
+    monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["v6_build.py", level, "1", "--step", "all", "--writer", "gemini", "--no-skeleton"],
+    )
+
+    assert v6_build.main() is True
+
+    state_path = curriculum_root / level / "orchestration" / slug / "state.json"
+    state = json.loads(state_path.read_text("utf-8"))
+    assert state["phases"][phase_name]["status"] == expected_status
+    assert v6_build._all_phases_complete(level, slug) is False
+
+    phase_events = [
+        event for event in _event_lines(capsys.readouterr().out)
+        if event["event"] == "phase_done" and event["phase"] == phase_name
+    ]
+    assert phase_events[-1]["status"] == expected_status
+    assert phase_events[-1]["ok"] is False
+
+
 def test_step_audit_rejects_status_file_without_mtime_advance(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

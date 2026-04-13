@@ -49,6 +49,7 @@ import sys
 import time
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Literal
 
 import yaml
 
@@ -80,6 +81,8 @@ logger = logging.getLogger(__name__)
 # Rate limit backoff — shared by all retry loops
 _RATE_LIMIT_BACKOFF_S = 300  # 5 min — long enough for Gemini quota to recover
 REVIEW_TARGET_SCORE = 9.0
+V6_PHASE_STATUS = Literal["complete", "skipped", "failed", "degraded"]
+_VALID_V6_PHASE_STATUSES = {"complete", "skipped", "failed", "degraded"}
 
 
 def _handle_rate_limit_backoff(raw: str, attempt: int, max_attempts: int, phase: str) -> bool:
@@ -631,9 +634,12 @@ def emit_event(event: str, **fields):
     print(line, flush=True)
 
 
-def _save_v6_state(level: str, slug: str, step: str, status: str = "complete"):
+def _save_v6_state(level: str, slug: str, step: str, status: V6_PHASE_STATUS = "complete"):
     """Write V6 pipeline state in V5-compatible format."""
     from datetime import datetime
+
+    if status not in _VALID_V6_PHASE_STATUSES:
+        raise ValueError(f"Invalid phase status for {level}/{slug} {step}: {status!r}")
 
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
@@ -662,6 +668,17 @@ def _save_v6_state(level: str, slug: str, step: str, status: str = "complete"):
     state["phases"] = phases
 
     state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False))
+
+
+def _normalize_v6_phase_status(result: object, *, phase: str) -> V6_PHASE_STATUS:
+    """Coerce legacy bool step results into explicit v6 phase statuses."""
+    if isinstance(result, str) and result in _VALID_V6_PHASE_STATUSES:
+        return result
+    if result is True:
+        return "complete"
+    if result is False or result is None:
+        return "failed"
+    raise ValueError(f"Invalid result for phase {phase}: {result!r}")
 
 
 # All phases in pipeline order (used by --resume).
@@ -3243,7 +3260,7 @@ def step_audit(content_path: Path, level: str, slug: str) -> bool:
         return False
 
 
-def step_annotate(content_path: Path) -> bool:
+def step_annotate(content_path: Path) -> V6_PHASE_STATUS:
     """Step 8b: Add stress marks (after review, before publish).
 
     NOTE: Does NOT call _post_process_content — that runs earlier (step 6).
@@ -3256,18 +3273,19 @@ def step_annotate(content_path: Path) -> bool:
 
     if not content_path or not content_path.exists():
         _log("  ❌ No content file")
-        return False
+        return "failed"
 
     try:
         from pipeline.stress_annotator import annotate_file
         count = annotate_file(content_path)
         _log(f"  ✅ Added stress marks to {count} words")
+        return "complete"
     except ImportError:
         _log("  ⚠️  Stress annotator not available")
+        return "degraded"
     except Exception as e:
         _log(f"  ⚠️  Stress annotation failed: {e}")
-
-    return True
+        return "degraded"
 
 
 def step_vocab(content_path: Path, level: str, module_num: int,
@@ -4262,7 +4280,7 @@ def step_enrich(content_path: Path, level: str, slug: str) -> bool:
     return True
 
 
-def step_verify(content_path: Path, level: str, module_num: int) -> bool:
+def step_verify(content_path: Path, level: str, module_num: int) -> V6_PHASE_STATUS:
     """Step 7: VESUM verification + grammar scope check + VERIFY flag resolution.
 
     VERIFY flags (<!-- VERIFY: ... -->) are writer-signaled uncertainties.
@@ -4276,10 +4294,11 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
 
     if not content_path or not content_path.exists():
         _log("  ❌ No content file")
-        return False
+        return "failed"
 
     text = content_path.read_text("utf-8")
     issues = []
+    degraded = False
 
     # --- VERIFY flag resolution (#1018) ---
     # Extract before any other checks. These are non-blocking.
@@ -4348,6 +4367,7 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
             _log(f"  ℹ️  {whitelisted_count} word(s) skipped via whitelist")
     except Exception as e:
         _log(f"  ⚠️  VESUM check skipped: {e}")
+        degraded = True
     _log(f"  ⏱ VESUM verify: {time.monotonic() - t0:.1f}s")
 
     # Russicism scan (regex-based on content text)
@@ -4367,6 +4387,7 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
             _log("  ✅ No Russicisms detected")
     except Exception as e:
         _log(f"  ⚠️  Russicism scan failed: {e}")
+        degraded = True
     _log(f"  ⏱ Russicism scan: {time.monotonic() - t0:.1f}s")
 
     # IPA check (skip for phonetics M01-M03)
@@ -4382,14 +4403,19 @@ def step_verify(content_path: Path, level: str, module_num: int) -> bool:
                 _log("  ✅ No IPA/Latin transliteration")
         except Exception as e:
             _log(f"  ⚠️  IPA check failed: {e}")
+            degraded = True
         _log(f"  ⏱ IPA check: {time.monotonic() - t0:.1f}s")
 
     if issues:
         _log(f"\n  ⚠️  Verification found {len(issues)} issue(s) — review recommended")
-    else:
-        _log("\n  ✅ Verification PASSED — all clean")
+        return "failed"
 
-    return len(issues) == 0
+    if degraded:
+        _log("\n  ⚠️  Verification completed with skipped checks — downstream phases may continue")
+        return "degraded"
+
+    _log("\n  ✅ Verification PASSED — all clean")
+    return "complete"
 
 
 def _build_vesum_report(content: str, level: str = "", slug: str = "") -> str:
@@ -6044,14 +6070,19 @@ def main():
     slug = slugs[args.module - 1]
     emit_event("module_start", level=args.level, slug=slug)
 
-    def _emit_phase_done(phase: str, started_at: float):
+    def _emit_phase_done(
+        phase: str,
+        started_at: float,
+        status: V6_PHASE_STATUS = "complete",
+    ):
         emit_event(
             "phase_done",
             level=args.level,
             slug=slug,
             phase=phase,
             duration_s=round(time.monotonic() - started_at, 3),
-            ok=True,
+            ok=status in _PHASE_SATISFIED_STATUSES,
+            status=status,
         )
 
     def _emit_module_failed(phase: str, error: object):
@@ -6461,9 +6492,12 @@ def main():
         # Step 7: VERIFY
         if steps in ("all", "verify") and "verify" not in completed_phases:
             _phase_start = time.monotonic()
-            step_verify(content_path, args.level, args.module)
-            _save_v6_state(args.level, slug, "verify")
-            _emit_phase_done("verify", _phase_start)
+            verify_status = _normalize_v6_phase_status(
+                step_verify(content_path, args.level, args.module),
+                phase="verify",
+            )
+            _save_v6_state(args.level, slug, "verify", status=verify_status)
+            _emit_phase_done("verify", _phase_start, status=verify_status)
 
         # Step 8: REVIEW + deterministic fix
         # If REVISE: reviewer outputs <fixes> with exact find/replace pairs.
@@ -6597,11 +6631,15 @@ def main():
             if _skip_annotate:
                 reason = "seminar track" if args.level.lower() not in _SKIP_ANNOTATE_LEVELS else f"{args.level.upper()} — stress in словník only"
                 _log(f"\n  ⏭️  Skipping stress marks ({reason})")
+                stress_status: V6_PHASE_STATUS = "skipped"
             else:
                 _phase_start = time.monotonic()
-                step_annotate(content_path)
-                _emit_phase_done("stress", _phase_start)
-            _save_v6_state(args.level, slug, "stress")
+                stress_status = _normalize_v6_phase_status(
+                    step_annotate(content_path),
+                    phase="stress",
+                )
+                _emit_phase_done("stress", _phase_start, status=stress_status)
+            _save_v6_state(args.level, slug, "stress", status=stress_status)
 
         # Step 9: PRE-PUBLISH AUDIT — detect issues before publishing MDX (#1185)
         # The proactive repair step earlier catches structural bugs, but the
