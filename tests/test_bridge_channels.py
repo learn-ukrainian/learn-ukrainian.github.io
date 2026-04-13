@@ -776,6 +776,7 @@ class TestDeliveryLeasing:
             delivery_id,
             "unavailable",
             "try later",
+            expected_attempt_count=first["attempt_count"],
             reschedule_after=_iso_at(1),
             now=_iso_at(0),
         )
@@ -786,6 +787,7 @@ class TestDeliveryLeasing:
             delivery_id,
             "unavailable",
             "try later",
+            expected_attempt_count=second["attempt_count"],
             reschedule_after=_iso_at(2),
             now=_iso_at(1),
         )
@@ -796,6 +798,7 @@ class TestDeliveryLeasing:
             delivery_id,
             "timeout",
             "final timeout",
+            expected_attempt_count=third["attempt_count"],
             reschedule_after=_iso_at(3),
             now=_iso_at(2),
         )
@@ -815,6 +818,7 @@ class TestDeliveryLeasing:
         _channels.mark_delivery_delivered(
             delivery_id,
             "reply-1",
+            expected_attempt_count=claimed["attempt_count"],
             now=_iso_at(5),
         )
 
@@ -835,6 +839,7 @@ class TestDeliveryLeasing:
             delivery_id,
             "tool_error",
             "tool exploded",
+            expected_attempt_count=claimed["attempt_count"],
             now=_iso_at(5),
         )
 
@@ -856,6 +861,7 @@ class TestDeliveryLeasing:
             delivery_id,
             "unavailable",
             "busy",
+            expected_attempt_count=claimed["attempt_count"],
             reschedule_after=_iso_at(60),
             now=_iso_at(0),
         )
@@ -881,6 +887,7 @@ class TestDeliveryLeasing:
             delivery_id,
             "rate_limited",
             "rate limited",
+            expected_attempt_count=claimed["attempt_count"],
             now=_iso_at(0),
         )
 
@@ -945,6 +952,7 @@ class TestDeliveryLeasing:
             delivery_id,
             "unavailable",
             "retry",
+            expected_attempt_count=first["attempt_count"],
             reschedule_after=_iso_at(1),
             now=_iso_at(0),
         )
@@ -952,3 +960,5 @@ class TestDeliveryLeasing:
         second = _channels.claim_next_delivery("claude", now=_iso_at(1))
         assert second is not None
         assert _delivery_row(delivery_id)["attempt_count"] == 2
+
+

@@ -215,6 +215,7 @@ def _row_to_pending_delivery(row) -> dict[str, Any]:
         "to_agent": row["to_agent"],
         "to_model": row["to_model"],
         "status": row["status"],
+        "attempt_count": row["attempt_count"],
         "dispatched_at": row["dispatched_at"],
         "delivered_at": row["delivered_at"],
         "error": row["error"],
@@ -1064,7 +1065,7 @@ def mark_delivery_delivered(
     delivery_id: str,
     reply_message_id: str,
     *,
-    expected_attempt_count: int | None = None,
+    expected_attempt_count: int,
     now: str | None = None,
 ) -> None:
     """Mark a claimed delivery as terminally delivered."""
@@ -1082,9 +1083,6 @@ def mark_delivery_delivered(
             conn.commit()
             return
 
-        if expected_attempt_count is None:
-            expected_attempt_count = row["attempt_count"]
-
         # reply_message_id is part of the worker API contract for the
         # next phase, but the current deliveries schema does not yet
         # persist reply linkage separately.
@@ -1098,7 +1096,7 @@ def mark_delivery_delivered(
                 lease_until=NULL,
                 retry_after=NULL,
                 last_error_kind=NULL
-            WHERE delivery_id=? AND attempt_count=?
+            WHERE delivery_id=? AND status='processing' AND attempt_count=?
             """,
             (now, delivery_id, expected_attempt_count),
         )
@@ -1115,7 +1113,7 @@ def mark_delivery_failed(
     error_kind: str,
     error_text: str,
     *,
-    expected_attempt_count: int | None = None,
+    expected_attempt_count: int,
     reschedule_after: str | None = None,
     now: str | None = None,
 ) -> None:
@@ -1136,9 +1134,6 @@ def mark_delivery_failed(
             conn.commit()
             return
 
-        if expected_attempt_count is None:
-            expected_attempt_count = row["attempt_count"]
-
         retry_after = reschedule_after
         if error_kind == "rate_limited" and retry_after is None:
             retry_after = _iso_after(now, seconds=DEFAULT_RATE_LIMIT_RETRY_SECONDS)
@@ -1153,7 +1148,7 @@ def mark_delivery_failed(
                     lease_until=NULL,
                     retry_after=NULL,
                     last_error_kind=?
-                WHERE delivery_id=? AND attempt_count=?
+                WHERE delivery_id=? AND status='processing' AND attempt_count=?
                 """,
                 (error_text, error_kind, delivery_id, expected_attempt_count),
             )
