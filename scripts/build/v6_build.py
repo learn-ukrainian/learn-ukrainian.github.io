@@ -272,6 +272,15 @@ class ReviewParseResult:
     passed: bool
 
 
+@dataclass(frozen=True)
+class ResumeInvalidationPlan:
+    """Shared decision for batch skipping and --resume phase invalidation."""
+
+    should_skip: bool
+    reason: str
+    invalidate_phases: tuple[str, ...]
+
+
 CLAUDE_FAMILY = ModelFamily(
     name="claude",
     thinking="claude-opus-4-6",
@@ -734,6 +743,27 @@ def _invalidate_phases(level: str, slug: str, phases_to_clear: list[str]) -> Non
         state_path.write_text(json.dumps(state, indent=2, ensure_ascii=False))
 
 
+def _ordered_invalidation_phases(phases: set[str], completed_phases: set[str]) -> tuple[str, ...]:
+    """Return invalidation phases in pipeline order, limited to completed phases."""
+    return tuple(
+        phase
+        for phase in _ALL_PHASES
+        if phase in phases and phase in completed_phases
+    )
+
+
+def _resume_invalidation_plan_for_step(step: str, completed_phases: set[str]) -> list[str]:
+    """Return completed phases that must be cleared to re-run a step under --resume."""
+    start_phase = "stress" if step == "annotate" else step
+    if start_phase == "all":
+        return []
+    try:
+        start_idx = _ALL_PHASES.index(start_phase)
+    except ValueError:
+        return []
+    return [phase for phase in _ALL_PHASES[start_idx:] if phase in completed_phases]
+
+
 def _load_completed_phases(level: str, slug: str) -> set[str]:
     """Read state.json and return phase names satisfied for resume/skip logic."""
     import json
@@ -960,6 +990,113 @@ def _is_status_stale(status_path: Path, content_path: Path) -> tuple[bool, str]:
     return False, ""
 
 
+def _build_resume_invalidation_plan(
+    level: str,
+    slug: str,
+    step: str,
+    review_threshold: float,
+    completed_phases: set[str] | None = None,
+) -> ResumeInvalidationPlan:
+    """Build the shared skip/invalidation decision for a module."""
+    if completed_phases is None:
+        completed_phases = _load_completed_phases(level, slug)
+
+    invalidation = set(_resume_invalidation_plan_for_step(step, completed_phases))
+
+    if step == "review":
+        if "review" not in completed_phases:
+            return ResumeInvalidationPlan(
+                should_skip=False,
+                reason="review not complete yet",
+                invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+            )
+    elif not all(phase in completed_phases for phase in _ALL_PHASES):
+        return ResumeInvalidationPlan(
+            should_skip=False,
+            reason="module incomplete",
+            invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+        )
+
+    status_path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
+    content_path = CURRICULUM_ROOT / level / f"{slug}.md"
+    audit_tail = {"audit", "publish"}
+    review_tail = {"review", "stress", "publish", "audit"}
+
+    stale, stale_reason = _is_status_stale(status_path, content_path)
+    if stale:
+        invalidation.update(audit_tail)
+        return ResumeInvalidationPlan(
+            should_skip=False,
+            reason=f"audit cache stale ({stale_reason})",
+            invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+        )
+
+    try:
+        status = json.loads(status_path.read_text("utf-8"))
+    except Exception as exc:
+        invalidation.update(audit_tail)
+        return ResumeInvalidationPlan(
+            should_skip=False,
+            reason=f"audit status unreadable: {exc}",
+            invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+        )
+
+    overall = status.get("overall", {}).get("status", "unknown")
+    if overall != "pass":
+        failed_gates = [
+            gate_name
+            for gate_name, gate_data in (status.get("gates") or {}).items()
+            if isinstance(gate_data, dict) and gate_data.get("status") == "fail"
+        ]
+        invalidation.update(audit_tail)
+        reason = f"audit {overall}"
+        if failed_gates:
+            reason += f" (failed: {', '.join(failed_gates)})"
+        return ResumeInvalidationPlan(
+            should_skip=False,
+            reason=reason,
+            invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+        )
+
+    unverified_gates = [
+        gate_name
+        for gate_name, gate_data in (status.get("gates") or {}).items()
+        if isinstance(gate_data, dict) and gate_data.get("status") not in ("pass",)
+    ]
+    if unverified_gates:
+        invalidation.update(audit_tail)
+        return ResumeInvalidationPlan(
+            should_skip=False,
+            reason=f"unverified gates: {', '.join(unverified_gates)}",
+            invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+        )
+
+    latest_review = _load_latest_review_result(level, slug)
+    if latest_review is None:
+        invalidation.update(review_tail)
+        return ResumeInvalidationPlan(
+            should_skip=False,
+            reason="no saved review found",
+            invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+        )
+    if latest_review.score < review_threshold:
+        invalidation.update(review_tail)
+        return ResumeInvalidationPlan(
+            should_skip=False,
+            reason=f"latest review {latest_review.score}/10 < {review_threshold:.1f}",
+            invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+        )
+
+    return ResumeInvalidationPlan(
+        should_skip=True,
+        reason=(
+            f"phases complete + audit pass + all gates pass + "
+            f"review {latest_review.score}/10 >= {review_threshold:.1f}"
+        ),
+        invalidate_phases=(),
+    )
+
+
 def _should_skip_batch_module(level: str, slug: str, step: str,
                               review_threshold: float) -> tuple[bool, str]:
     """Decide whether batch mode should skip a module for the requested step.
@@ -985,67 +1122,8 @@ def _should_skip_batch_module(level: str, slug: str, step: str,
     their old review still scored 9+. The audit-gate check is now
     enforced for every step, including review.
     """
-    if step == "review":
-        completed = _load_completed_phases(level, slug)
-        if "review" not in completed:
-            return False, "review not complete yet"
-    elif not _all_phases_complete(level, slug):
-        return False, "module incomplete"
-
-    status_path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
-    content_path = CURRICULUM_ROOT / level / f"{slug}.md"
-
-    # Staleness check — stale cache = untrustworthy, force re-run.
-    stale, stale_reason = _is_status_stale(status_path, content_path)
-    if stale:
-        return False, f"audit cache stale ({stale_reason})"
-
-    # Parse the (fresh) status file
-    try:
-        import json
-        status = json.loads(status_path.read_text("utf-8"))
-    except Exception as e:
-        return False, f"audit status unreadable: {e}"
-
-    overall = status.get("overall", {}).get("status", "unknown")
-
-    # Strict pass requirement: only `pass` counts. "content-complete" has
-    # deferred gates BY DESIGN, which means something is not done yet —
-    # so it's not skippable. User rule: never skip unless audit is truly
-    # passing.
-    if overall != "pass":
-        failed_gates = [
-            k for k, v in (status.get("gates") or {}).items()
-            if isinstance(v, dict) and v.get("status") == "fail"
-        ]
-        reason = f"audit {overall}"
-        if failed_gates:
-            reason += f" (failed: {', '.join(failed_gates)})"
-        return False, reason
-
-    # Even when overall == "pass", any gate that isn't strictly "pass"
-    # (e.g. "info"/"pending"/"deferred") is unverified and should force
-    # a re-run. Naturalness="info" was the specific bug — it left the
-    # overall at pass even though naturalness had never been scored.
-    gates_dict = status.get("gates") or {}
-    unverified_gates = [
-        k for k, v in gates_dict.items()
-        if isinstance(v, dict) and v.get("status") not in ("pass",)
-    ]
-    if unverified_gates:
-        return False, f"unverified gates: {', '.join(unverified_gates)}"
-
-    # Review score must meet the hard threshold.
-    latest_review = _load_latest_review_result(level, slug)
-    if latest_review is None:
-        return False, "no saved review found"
-    if latest_review.score < review_threshold:
-        return False, f"latest review {latest_review.score}/10 < {review_threshold:.1f}"
-
-    return True, (
-        f"phases complete + audit pass + all gates pass + "
-        f"review {latest_review.score}/10 >= {review_threshold:.1f}"
-    )
+    plan = _build_resume_invalidation_plan(level, slug, step, review_threshold)
+    return plan.should_skip, plan.reason
 
 
 def step_check(level: str, module_num: int, slug: str) -> bool:
@@ -5865,6 +5943,8 @@ def main():
                         help="Disable section-by-section chunked generation (always single-call)")
     parser.add_argument("--resume", action="store_true",
                         help="Resume from last completed phase (reads state.json, skips completed phases)")
+    parser.add_argument("--invalidate-phase", action="append", default=[],
+                        help=argparse.SUPPRESS)
     parser.add_argument("--review-threshold", type=float, default=REVIEW_TARGET_SCORE,
                         help="Batch review skip threshold: rerun review when latest score is below this value")
     parser.add_argument("--force-publish", action="store_true",
@@ -5891,13 +5971,18 @@ def main():
         for n in range(start, end + 1):
             # Auto-resume: resolve slug and check if fully complete
             _range_slugs = data.get("levels", {}).get(args.level, {}).get("modules", [])
+            _range_plan: ResumeInvalidationPlan | None = None
             if n <= len(_range_slugs):
                 _range_slug = _range_slugs[n - 1]
-                skip_module, skip_reason = _should_skip_batch_module(
-                    args.level, _range_slug, args.step, args.review_threshold,
+                _range_plan = _build_resume_invalidation_plan(
+                    args.level,
+                    _range_slug,
+                    args.step,
+                    args.review_threshold,
+                    _load_completed_phases(args.level, _range_slug),
                 )
-                if skip_module:
-                    _log(f"\n  ⏭️  M{n:02d} ({_range_slug}) — {skip_reason}, skipping")
+                if _range_plan.should_skip:
+                    _log(f"\n  ⏭️  M{n:02d} ({_range_slug}) — {_range_plan.reason}, skipping")
                     skipped.append(n)
                     continue
 
@@ -5905,6 +5990,9 @@ def main():
             _log(f"  [{n - start + 1}/{end - start + 1}] Building M{n:02d}...")
             _log(f"{'─'*60}")
             try:
+                _child_invalidation_plan: list[str] = []
+                if args.resume and _range_plan is not None:
+                    _child_invalidation_plan = list(_range_plan.invalidate_phases)
                 result = _subprocess.run(
                     [str(PROJECT_ROOT / ".venv" / "bin" / "python"), __file__, args.level, str(n),
                      "--writer", args.writer,
@@ -5912,6 +6000,11 @@ def main():
                      "--review-threshold", str(args.review_threshold),
                      *(["--force-publish"] if args.force_publish else []),
                      *(["--resume"] if args.resume else []),
+                     *[
+                         item
+                         for phase in _child_invalidation_plan
+                         for item in ("--invalidate-phase", phase)
+                     ],
                      *(["--reviewer", args.reviewer] if args.reviewer else []),
                      *(["--skeleton"] if getattr(args, "skeleton", False) else []),
                      *(["--no-skeleton"] if getattr(args, "no_skeleton", False) else []),
@@ -5989,55 +6082,44 @@ def main():
 
         # --resume: load completed phases and restore dependency variables
         completed_phases: set[str] = set()
+        resume_invalidation_applied: set[str] = set()
         # Resume mode loads completed phases + restores dependency state.
         # Note: even single-step invocations (--step audit, --step publish, etc.)
         # need phases loaded so restoration + heal paths have context to work with.
         if args.resume:
             completed_phases = _load_completed_phases(args.level, slug)
             if completed_phases:
-                # If the last audit says this module is failing, auto-invalidate
-                # the self-heal tail (audit + repair + publish + review) so the
-                # pipeline actually re-runs those phases. Without this, --resume
-                # on a failing module does nothing because every phase block is
-                # guarded by "X not in completed_phases".
-                _status_path = CURRICULUM_ROOT / args.level / "status" / f"{slug}.json"
-                if _status_path.exists():
-                    try:
-                        import json as _json
-                        _status_data = _json.loads(_status_path.read_text("utf-8"))
-                        _overall = _status_data.get("overall", {}).get("status", "unknown")
-                        if _overall not in ("pass", "content-complete"):
-                            _failed_gates = [
-                                k for k, v in (_status_data.get("gates") or {}).items()
-                                if isinstance(v, dict) and v.get("status") == "fail"
-                            ]
-                            _log(
-                                f"   🩹 Status shows {_overall} "
-                                f"(failed gates: {', '.join(_failed_gates) or 'unknown'})"
-                            )
-                            _log("      Invalidating audit/repair/publish/review phases for retry")
-                            _invalidate_phases(
-                                args.level, slug,
-                                ["audit", "repair", "publish", "review"],
-                            )
-                            for _p in ("audit", "repair", "publish", "review"):
-                                completed_phases.discard(_p)
-
-                        # Also invalidate review when score is below threshold
-                        # (even if audit is passing — audit pass != review pass)
-                        if "review" in completed_phases and steps in ("review", "all"):
-                            _latest = _load_latest_review_result(args.level, slug)
-                            _threshold = getattr(args, "review_threshold", REVIEW_TARGET_SCORE)
-                            if _latest and _latest.score < _threshold:
-                                _log(
-                                    f"   🩹 Review score {_latest.score:.1f} < {_threshold:.1f} threshold"
-                                )
-                                _log("      Invalidating review phase for re-review")
-                                _invalidate_phases(args.level, slug, ["review"])
-                                completed_phases.discard("review")
-
-                    except Exception as _e:
-                        _log(f"   ⚠️  Could not inspect status for auto-invalidation: {_e}")
+                shared_plan = _build_resume_invalidation_plan(
+                    args.level,
+                    slug,
+                    steps,
+                    getattr(args, "review_threshold", REVIEW_TARGET_SCORE),
+                    completed_phases,
+                )
+                explicit_invalidation = {
+                    phase for phase in dict.fromkeys(args.invalidate_phase)
+                    if phase in completed_phases
+                }
+                planned_invalidation = set(shared_plan.invalidate_phases)
+                planned_invalidation.update(explicit_invalidation)
+                ordered_invalidation = _ordered_invalidation_phases(
+                    planned_invalidation,
+                    completed_phases,
+                )
+                if ordered_invalidation:
+                    _log(
+                        "   🩹 Applying shared invalidation plan: "
+                        + ", ".join(ordered_invalidation)
+                    )
+                    if not shared_plan.should_skip and shared_plan.reason not in {
+                        "module incomplete",
+                        "review not complete yet",
+                    }:
+                        _log(f"      Reason: {shared_plan.reason}")
+                    _invalidate_phases(args.level, slug, list(ordered_invalidation))
+                    resume_invalidation_applied.update(ordered_invalidation)
+                    for phase in ordered_invalidation:
+                        completed_phases.discard(phase)
 
                 _log(f"   Resuming — {len(completed_phases)} phase(s) already complete:")
                 for p in _ALL_PHASES:
@@ -6391,7 +6473,10 @@ def main():
         # If REVISE: reviewer outputs <fixes> with exact find/replace pairs.
         # We apply them deterministically — no LLM regeneration, no rewriting.
         # Then re-review to verify. No re-enrich needed (#1124).
-        if steps in ("all", "review") and "review" not in completed_phases:
+        if (
+            steps in ("all", "review")
+            or "review" in resume_invalidation_applied
+        ) and "review" not in completed_phases:
             _phase_start = time.monotonic()
             passed, score, review_text = step_review(
                 content_path, args.level, args.module, slug,
@@ -6509,7 +6594,10 @@ def main():
             or args.level.lower().startswith("lit-")
             or args.level.lower() in _SKIP_ANNOTATE_LEVELS
         )
-        if steps in ("all", "review", "publish", "annotate") and "stress" not in completed_phases:
+        if (
+            steps in ("all", "review", "publish", "annotate")
+            or "stress" in resume_invalidation_applied
+        ) and "stress" not in completed_phases:
             if _skip_annotate:
                 reason = "seminar track" if args.level.lower() not in _SKIP_ANNOTATE_LEVELS else f"{args.level.upper()} — stress in словník only"
                 _log(f"\n  ⏭️  Skipping stress marks ({reason})")
@@ -6530,7 +6618,10 @@ def main():
         # "audit and fix what you can" — gating on "audit not in completed_phases"
         # made the pipeline a no-op on already-built-but-failing modules.
         _pre_audit_ran = False
-        if steps in ("all", "publish", "audit"):
+        if (
+            steps in ("all", "publish", "audit")
+            or "audit" in resume_invalidation_applied
+        ):
             _phase_start = time.monotonic()
             step_audit(content_path, args.level, slug)
             _pre_audit_ran = True
@@ -6796,7 +6887,10 @@ def main():
         # Step 10: PUBLISH — now runs AFTER audit + heal so MDX reflects final state
         # Re-publishes if audit just ran, even if publish was marked complete —
         # because the heal block may have modified activities.
-        if steps in ("all", "review", "publish") and (_pre_audit_ran or "publish" not in completed_phases):
+        if (
+            steps in ("all", "review", "publish")
+            or "publish" in resume_invalidation_applied
+        ) and (_pre_audit_ran or "publish" not in completed_phases):
             _phase_start = time.monotonic()
             step_publish(content_path, args.level, slug)
             _save_v6_state(args.level, slug, "publish")
