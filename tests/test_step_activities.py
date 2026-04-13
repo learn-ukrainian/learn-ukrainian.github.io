@@ -415,6 +415,29 @@ class TestStepActivitiesIntegration:
         data = yaml.safe_load(result.read_text())
         assert data["version"] == "1.0"
 
+    def test_step_writes_final_mutated_yaml(self, tmp_module):
+        """Persist the post-mutation structure, not the pre-mutation YAML string."""
+        tp = tmp_module["tmp_path"]
+
+        with (
+            patch("build.v6_build.CURRICULUM_ROOT", tp / "curriculum" / "l2-uk-en"),
+            patch("build.v6_build.PROJECT_ROOT", tp),
+            patch("build.v6_build.PHASES_DIR", tp / "scripts" / "build" / "phases"),
+            patch("build.dispatch.dispatch_agent", return_value=(True, VALID_YAML)),
+        ):
+            result = step_activities(
+                tmp_module["content_path"],
+                tmp_module["level"],
+                8,
+                tmp_module["slug"],
+                writer="gemini-tools",
+            )
+
+        assert result is not None
+        data = yaml.safe_load(result.read_text())
+        assert data["inline"][0]["title"] == data["inline"][0]["instruction"][:80]
+        assert data["workbook"][0]["title"] == data["workbook"][0]["instruction"][:80]
+
     def test_step_returns_none_after_max_retries(self, tmp_module):
         """step_activities returns None after exhausting retries."""
         tp = tmp_module["tmp_path"]

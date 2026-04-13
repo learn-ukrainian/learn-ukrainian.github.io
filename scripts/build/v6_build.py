@@ -670,6 +670,7 @@ _ALL_PHASES = [
     "vocab", "enrich", "verify", "review", "stress", "publish", "audit",
 ]
 PHASES = _ALL_PHASES
+_PHASE_SATISFIED_STATUSES = {"complete", "skipped"}
 
 # Human-friendly labels for the v6 phases. Exposed alongside ``PHASES``
 # for API consumers that want to render a phase name in a UI. Keys match
@@ -734,7 +735,7 @@ def _invalidate_phases(level: str, slug: str, phases_to_clear: list[str]) -> Non
 
 
 def _load_completed_phases(level: str, slug: str) -> set[str]:
-    """Read state.json and return set of completed phase names."""
+    """Read state.json and return phase names satisfied for resume/skip logic."""
     import json
 
     state_path = CURRICULUM_ROOT / level / "orchestration" / slug / "state.json"
@@ -745,7 +746,10 @@ def _load_completed_phases(level: str, slug: str) -> set[str]:
     except Exception:
         return set()
     phases = state.get("phases", {})
-    return {name for name, info in phases.items() if info.get("status") == "complete"}
+    return {
+        name for name, info in phases.items()
+        if info.get("status") in _PHASE_SATISFIED_STATUSES
+    }
 
 
 def _all_phases_complete(level: str, slug: str) -> bool:
@@ -6110,26 +6114,26 @@ def main():
                 packet_path = _p
 
         # Step 4: SKELETON (always on, use --no-skeleton to skip)
-        plan_path = CURRICULUM_ROOT / "plans" / args.level / f"{slug}.yaml"
-        word_target = yaml.safe_load(plan_path.read_text("utf-8")).get("word_target", 1200) if plan_path.exists() else 1200
-
         # Always use skeleton — matures the skeleton→flesh flow for B1+,
         # and improves structure even at A1/A2 word counts.
         # Use --no-skeleton to opt out.
         use_skeleton = not args.no_skeleton
 
-        if steps in ("all", "skeleton") and use_skeleton and "skeleton" not in completed_phases:
-            _phase_start = time.monotonic()
-            skeleton_text = step_skeleton(
-                args.level, args.module, slug, packet_path,
-                writer=args.writer,
-            ) or ""
-            if not skeleton_text and steps == "skeleton":
-                _log("\n  SKELETON step returned empty — continuing without skeleton")
-            if skeleton_text or steps == "skeleton":
-                _emit_phase_done("skeleton", _phase_start)
-        elif steps == "skeleton" and "skeleton" not in completed_phases:
-            _log(f"\n  ℹ️  Skeleton skipped (word_target={word_target} < 3000, use --skeleton to force)")
+        if steps in ("all", "skeleton") and "skeleton" not in completed_phases:
+            if use_skeleton:
+                _phase_start = time.monotonic()
+                skeleton_text = step_skeleton(
+                    args.level, args.module, slug, packet_path,
+                    writer=args.writer,
+                ) or ""
+                if not skeleton_text and steps == "skeleton":
+                    _log("\n  SKELETON step returned empty — continuing without skeleton")
+                if skeleton_text or steps == "skeleton":
+                    _emit_phase_done("skeleton", _phase_start)
+            else:
+                _log("\n  ⏭️  Skeleton skipped (--no-skeleton)")
+                _save_v6_state(args.level, slug, "skeleton", status="skipped")
+                completed_phases.add("skeleton")
 
         if use_skeleton and skeleton_text:
             _log(f"\n  📐 Skeleton active ({len(skeleton_text.split())} words) — will constrain writer")
@@ -6180,7 +6184,9 @@ def main():
                 ) or ""
                 _emit_phase_done("pre-verify", _phase_start)
             else:
-                _log("\n  ℹ️  Pre-verify skipped (writer has no tools — use --writer claude-tools)")
+                _log("\n  ⏭️  Pre-verify skipped (writer has no tools — use --writer claude-tools)")
+                _save_v6_state(args.level, slug, "pre-verify", status="skipped")
+                completed_phases.add("pre-verify")
 
         # Try to load existing pre-verify from disk if running single step
         if steps == "write" and not verification_text:
