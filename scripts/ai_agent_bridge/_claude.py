@@ -201,6 +201,7 @@ def _run_claude_sync_via_runtime(
             from_model="claude-bridge-not-found",
         )
         _response_sent = True
+        acknowledge(message_id)  # Must ack incoming msg to prevent stuck queue
         acknowledge(err_id)
     finally:
         if not _response_sent:

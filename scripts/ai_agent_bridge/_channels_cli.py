@@ -876,12 +876,15 @@ def _handle_discuss(args) -> int:
         return 1
 
     # ── post the root question ────────────────────────────────────
+    # NOTE: do NOT pass to_agents here — discuss handles fanout itself
+    # via runtime_invoke. Passing to_agents would create pending delivery
+    # rows that the inbox worker would process redundantly.
     try:
         root = _channels.post(
             args.channel,
             "user",
             body,
-            to_agents=with_agents,
+            to_agents=None,
             auto_snapshot=True,
         )
     except ValueError as e:
