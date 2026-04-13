@@ -185,7 +185,7 @@ torchvision==0.25.0
 tqdm==4.67.2
 transformers==4.57.6
 trec-car-tools==2.6
-typer-slim==0.21.1
+typer-slim==0.24.0
 typing-inspection==0.4.2
 typing_extensions==4.15.0
 tzlocal==5.3.1
