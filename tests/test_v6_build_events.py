@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import importlib
 import json
+import os
 import subprocess
 import sys
 import textwrap
+import types
 from datetime import datetime
 from pathlib import Path
 
@@ -317,6 +319,82 @@ def test_main_persists_skipped_optional_phases_as_satisfied(
     assert state["phases"]["skeleton"]["status"] == "skipped"
     assert state["phases"]["pre-verify"]["status"] == "skipped"
     assert v6_build._all_phases_complete("a2", "a2-bridge") is True
+
+
+def test_step_audit_rejects_status_file_without_mtime_advance(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    curriculum_root = _single_module_tree(tmp_path)
+    content_path = curriculum_root / "a2" / "a2-bridge.md"
+    content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+
+    status_path = curriculum_root / "a2" / "status" / "a2-bridge.json"
+    status_path.parent.mkdir(parents=True, exist_ok=True)
+    status_path.write_text(
+        json.dumps({"overall": {"status": "pass"}, "gates": {}}),
+        "utf-8",
+    )
+    original_mtime = 1_700_000_000
+    os.utime(status_path, (original_mtime, original_mtime))
+
+    def fake_audit_module(*args, **kwargs) -> bool:
+        status_path.write_text(
+            json.dumps({"overall": {"status": "pass"}, "gates": {}}),
+            "utf-8",
+        )
+        os.utime(status_path, (original_mtime, original_mtime))
+        return True
+
+    fake_audit_core = types.ModuleType("audit.core")
+    fake_audit_core.audit_module = fake_audit_module
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setitem(sys.modules, "audit.core", fake_audit_core)
+
+    assert v6_build.step_audit(content_path, "a2", "a2-bridge") is False
+    assert not status_path.exists()
+
+
+def test_main_blocks_publish_when_audit_crashes_with_stale_passing_status(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    curriculum_root = _single_module_tree(tmp_path)
+    content_path = curriculum_root / "a2" / "a2-bridge.md"
+    content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+
+    status_path = curriculum_root / "a2" / "status" / "a2-bridge.json"
+    status_path.parent.mkdir(parents=True, exist_ok=True)
+    status_path.write_text(
+        json.dumps({"overall": {"status": "pass"}, "gates": {}}),
+        "utf-8",
+    )
+
+    published: list[str] = []
+
+    def fake_audit_module(*args, **kwargs) -> bool:
+        raise RuntimeError("audit crashed")
+
+    fake_audit_core = types.ModuleType("audit.core")
+    fake_audit_core.audit_module = fake_audit_module
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
+    monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: published.append("publish") or True)
+    monkeypatch.setattr(v6_build, "step_repair", lambda *args, **kwargs: (True, False))
+    monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
+    monkeypatch.setitem(sys.modules, "audit.core", fake_audit_core)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["v6_build.py", "a2", "1", "--step", "publish", "--writer", "gemini"],
+    )
+
+    assert v6_build.main() is False
+    assert published == []
+    assert not status_path.exists()
 
 
 @pytest.mark.parametrize(

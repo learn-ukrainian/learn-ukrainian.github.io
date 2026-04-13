@@ -3103,6 +3103,20 @@ def step_audit(content_path: Path, level: str, slug: str) -> bool:
         _log("  ❌ No content file")
         return False
 
+    status_path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
+    previous_status_mtime: float | None = None
+    if status_path.exists():
+        try:
+            previous_status_mtime = status_path.stat().st_mtime
+        except OSError:
+            previous_status_mtime = None
+        try:
+            status_path.unlink()
+            _log(f"  🧹 Cleared stale status cache before audit: {status_path.name}")
+        except OSError as exc:
+            _log(f"  ⚠️  Could not clear stale status cache: {exc}")
+            return False
+
     try:
         # Import lazily — audit has heavy deps (morphological analysis, etc.)
         from audit.core import audit_module as run_audit
@@ -3112,8 +3126,21 @@ def step_audit(content_path: Path, level: str, slug: str) -> bool:
         # We don't halt on failure — just record the result in the status file.
         run_audit(str(content_path), skip_activities=False, skip_review=False)
 
-        status_path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
         if status_path.exists():
+            try:
+                status_mtime = status_path.stat().st_mtime
+            except OSError as exc:
+                _log(f"  ⚠️  Audit wrote unreadable status file: {exc}")
+                return False
+
+            if previous_status_mtime is not None and status_mtime <= previous_status_mtime:
+                _log("  ⚠️  Audit did not produce a fresh status file (mtime did not advance)")
+                try:
+                    status_path.unlink()
+                except OSError:
+                    pass
+                return False
+
             _log(f"  ✅ Status written: {status_path.name}")
             # Report overall status from the file
             try:
@@ -3130,13 +3157,12 @@ def step_audit(content_path: Path, level: str, slug: str) -> bool:
                 _log(f"  ⚠️  Could not parse status file: {e}")
         else:
             _log("  ⚠️  Audit ran but no status file was written")
+            return False
 
-        # Return True unconditionally — audit is reporting, not gating
         return True
     except Exception as e:
         _log(f"  ⚠️  Audit failed with exception: {e}")
-        # Don't halt the build on audit exceptions — log and continue
-        return True
+        return False
 
 
 def step_annotate(content_path: Path) -> bool:
