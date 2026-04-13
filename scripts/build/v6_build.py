@@ -6428,6 +6428,7 @@ def main():
             )
             if score == 0.0 and not review_text:
                 _log("\n❌ Build FAILED at Step 8 (review — no output from reviewer)")
+                _save_v6_state(args.level, slug, "review", status="failed")
                 _emit_module_failed("review", "Build FAILED at Step 8 (review — no output from reviewer)")
                 sys.exit(1)
             # NOTE: review state is saved AFTER acceptance decision, not here.

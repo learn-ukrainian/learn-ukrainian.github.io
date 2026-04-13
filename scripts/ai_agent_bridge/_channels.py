@@ -768,11 +768,17 @@ def post(
         # self-reference (Gemini's correction — avoids NULL edge cases).
         if parent_id:
             parent = conn.execute(
-                "SELECT thread_id, round_index FROM channel_messages WHERE message_id = ?",
+                "SELECT channel, thread_id, round_index FROM channel_messages WHERE message_id = ?",
                 (parent_id,),
             ).fetchone()
             if not parent:
                 raise ValueError(f"parent message '{parent_id}' not found")
+            # Enforce same-channel threading — cross-channel threads break reads/drains
+            if parent["channel"] != channel:
+                raise ValueError(
+                    f"parent message '{parent_id}' belongs to channel '{parent['channel']}', "
+                    f"not '{channel}' — cross-channel threading is not allowed"
+                )
             thread_id = parent["thread_id"]
             round_index = parent["round_index"] + 1
         else:

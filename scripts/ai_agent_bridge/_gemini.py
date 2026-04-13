@@ -216,8 +216,10 @@ def _launch_gemini_background(msg: dict, message_id: int, model: str, prompt: st
     print("   Bridge will capture Gemini's response and route it when done.")
 
     try:
+        # Use .venv/bin/python explicitly to avoid wrong interpreter
+        venv_python = str(Path(__file__).parents[2] / ".venv" / "bin" / "python")
         bridge_cmd = [
-            sys.executable, str(Path(__file__).parent / "__main__.py"),
+            venv_python, str(Path(__file__).parent / "__main__.py"),
             "process", str(message_id),
             "--model", model,
             "--no-timeout"
@@ -436,19 +438,23 @@ def _route_gemini_response(msg, message_id, model, response, stdout_only, output
         if not stdout_only:
             print("   (no broker message — file output mode)")
     elif stdout_only:
+        # Route reply back to the actual sender, not always to claude
+        reply_to = msg.get("from", "claude")
         summary = f"[stdout-only] Gemini finished. {len(response)} chars output to stdout."
         reply_id = send_message(
             content=summary, task_id=msg['task_id'], msg_type="response",
-            from_llm="gemini", to_llm="claude", from_model=model, to_model=None,
+            from_llm="gemini", to_llm=reply_to, from_model=model, to_model=None,
             quiet=stdout_only
         )
         acknowledge(reply_id, quiet=stdout_only)
         if not stdout_only:
             print(f"   Auto-acknowledged reply #{reply_id} (stdout delivery — no inbox accumulation)")
     else:
+        # Route reply back to the actual sender, not always to claude
+        reply_to = msg.get("from", "claude")
         reply_id = send_message(
             content=response, task_id=msg['task_id'], msg_type="response",
-            from_llm="gemini", to_llm="claude", from_model=model, to_model=None
+            from_llm="gemini", to_llm=reply_to, from_model=model, to_model=None
         )
         acknowledge(reply_id)
         print(f"   Auto-acknowledged reply #{reply_id} (stdout delivery — no inbox accumulation)")
@@ -459,10 +465,12 @@ def _route_gemini_response(msg, message_id, model, response, stdout_only, output
 def _send_gemini_error(msg, message_id):
     """Send error message when Gemini process fails without sending a response."""
     try:
+        # Route error back to the actual sender, not always to claude
+        reply_to = msg.get("from", "claude")
         err_id = send_message(
             content=f"[Bridge Error] Gemini process failed for message #{message_id}. Check logs.",
             task_id=msg['task_id'], msg_type="error",
-            from_llm="gemini", to_llm="claude", from_model="gemini-bridge-error"
+            from_llm="gemini", to_llm=reply_to, from_model="gemini-bridge-error"
         )
         acknowledge(message_id)
         acknowledge(err_id)

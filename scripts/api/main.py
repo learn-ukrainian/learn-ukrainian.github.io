@@ -468,7 +468,8 @@ async def run_dispatcher_scan():
         str(PROJECT_ROOT / "scripts" / "batch_dispatcher.py"),
         "scan",
     ]
-    result = subprocess.run(cmd, cwd=PROJECT_ROOT)
+    # Use asyncio.to_thread to avoid blocking the event loop
+    result = await asyncio.to_thread(subprocess.run, cmd, cwd=PROJECT_ROOT)
     if result.returncode != 0:
         raise HTTPException(status_code=500, detail="Dispatcher scan failed")
     return {"status": "ok"}
