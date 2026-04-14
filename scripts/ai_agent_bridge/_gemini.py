@@ -10,6 +10,7 @@ usage logging uniformly across agents.
 
 import atexit
 import contextlib
+import json
 import subprocess
 import sys
 import time
@@ -22,7 +23,7 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 from agent_runtime.runner import invoke as runtime_invoke
-from batch_gemini_config import FLASH_LITE_MODEL, FLASH_MODEL, PRO_MODEL
+from batch_gemini_config import FALLBACK_MODEL, PRO_MODEL
 
 from ._broker import (
     _git_status_snapshot,
@@ -39,6 +40,7 @@ from ._config import (
     GEMINI_DEFAULT_MODEL,
     REPO_ROOT,
 )
+from ._db import get_db
 from ._github import _post_review_to_github
 from ._messaging import (
     _extract_issue_number,
@@ -50,8 +52,6 @@ from ._messaging import (
 )
 from ._model import _detect_model_error
 from ._prompts import build_gemini_prompt
-
-_GEMINI_MODEL_CASCADE = (PRO_MODEL, FLASH_MODEL, FLASH_LITE_MODEL)
 
 
 def converse_gemini(content: str, task_id: str, model: str = "gemini-3.1-pro-preview",
@@ -274,19 +274,25 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
     })
     atexit.register(_remove_pid_file, "gemini", task_key)
 
-    max_retries = len(_gemini_cascade_sequence(model)) if _uses_gemini_capacity_cascade(model) else 5
+    max_retries = 5
     base_delay = 30
     _response_sent = False
     requested_model = model
     current_model = model
+    rate_limit_state = {
+        "retried_same_model_429": False,
+        "used_fallback_429": model == FALLBACK_MODEL,
+    }
 
     try:
         for attempt in range(max_retries):
             result = _run_gemini_attempt(msg, message_id, current_model, requested_model, prompt,
                                          timeout_val, stdout_only, output_path, skip_github,
-                                         attempt, max_retries, base_delay)
+                                         attempt, max_retries, base_delay, rate_limit_state)
             if isinstance(result, dict) and result.get("action") == "fallback":
                 current_model = str(result["model"])
+                continue
+            if isinstance(result, dict) and result.get("action") == "retry_same_model":
                 continue
             if result is None:
                 continue  # Retry (rate limited)
@@ -304,7 +310,7 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
 
 def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout_val,
                         stdout_only, output_path, skip_github, attempt, max_retries,
-                        base_delay):
+                        base_delay, rate_limit_state):
     """Run a single Gemini CLI attempt via agent_runtime.
 
     Returns None to retry, False to stop, or (response, sent).
@@ -348,14 +354,9 @@ def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout
             stall_timeout=min(600, timeout_val or 600),
         )
     except RateLimitedError as exc:
-        next_model = _next_gemini_model(model)
-        if next_model is not None:
-            print(f"\n⏳ Gemini capacity unavailable on {model}: {exc}")
-            print(f"↪️  Retrying immediately with {next_model}...")
-            return {"action": "fallback", "model": next_model}
-        if _uses_gemini_capacity_cascade(model):
-            print(f"\n❌ Gemini capacity unavailable on {model} and no fallback remains.")
-            return False
+        detail = exc.reason or str(exc)
+        if _is_gemini_429_error(detail):
+            return _handle_gemini_429(message_id, model, detail, rate_limit_state)
         # Rate-limited: treat as retryable per legacy behavior
         print(f"\n⏳ Gemini rate limited: {exc}")
         if attempt < max_retries - 1:
@@ -378,13 +379,8 @@ def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout
         # Runtime returned a structured failure. Decide retry vs stop based
         # on stderr signal (legacy _handle_gemini_error).
         stderr_text = result.stderr_excerpt or ""
-        if _uses_gemini_capacity_cascade(model) and _is_gemini_capacity_error(stderr_text):
-            next_model = _next_gemini_model(model)
-            if next_model is not None:
-                print(f"\n⏳ Gemini capacity unavailable on {model}. Retrying immediately with {next_model}...")
-                return {"action": "fallback", "model": next_model}
-            print(f"\n❌ Gemini capacity unavailable on {model} and no fallback remains.")
-            return False
+        if _is_gemini_429_error(stderr_text):
+            return _handle_gemini_429(message_id, model, stderr_text, rate_limit_state)
         retry_result = _handle_gemini_error(stderr_text, model, attempt, max_retries, base_delay)
         if retry_result == "retry":
             return None
@@ -449,37 +445,72 @@ def _handle_gemini_error(stderr, model, attempt, max_retries, base_delay):
     return "continue"
 
 
-def _gemini_cascade_sequence(model: str) -> tuple[str, ...]:
-    """Return the configured fallback chain starting at ``model`` when applicable."""
-    if model in _GEMINI_MODEL_CASCADE:
-        start = _GEMINI_MODEL_CASCADE.index(model)
-        return _GEMINI_MODEL_CASCADE[start:]
-    return (model,)
+def _record_gemini_delivery_model(message_id: int, model: str) -> None:
+    """Persist the currently targeted Gemini model on the legacy message row."""
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT data FROM messages WHERE id = ?",
+            (message_id,),
+        ).fetchone()
+        if row is None:
+            return
+
+        raw_data = row[0]
+        metadata: dict[str, object]
+        if raw_data:
+            try:
+                parsed = json.loads(raw_data)
+                metadata = parsed if isinstance(parsed, dict) else {"raw": raw_data}
+            except (TypeError, ValueError, json.JSONDecodeError):
+                metadata = {"raw": raw_data}
+        else:
+            metadata = {}
+
+        metadata["to_model"] = model
+        conn.execute(
+            "UPDATE messages SET data = ? WHERE id = ?",
+            (json.dumps(metadata), message_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
 
 
-def _uses_gemini_capacity_cascade(model: str) -> bool:
-    """Whether ``model`` participates in the explicit Pro→Flash→Flash-Lite cascade."""
-    return model in _GEMINI_MODEL_CASCADE
+def _handle_gemini_429(
+    message_id: int,
+    model: str,
+    detail: str,
+    rate_limit_state: dict[str, bool],
+) -> dict[str, str]:
+    """Apply bridge-specific 429 policy: one retry, then one hop to ``auto``."""
+    print(f"\n⏳ Gemini 429 on {model}: {detail}")
+
+    if model != FALLBACK_MODEL and not rate_limit_state["retried_same_model_429"]:
+        rate_limit_state["retried_same_model_429"] = True
+        print(f"↪️  Retrying {model} once before fallback...")
+        return {"action": "retry_same_model", "model": model}
+
+    if model != FALLBACK_MODEL and not rate_limit_state["used_fallback_429"]:
+        rate_limit_state["used_fallback_429"] = True
+        print(f"[bridge] 429 on {model}, falling back to {FALLBACK_MODEL}")
+        _record_gemini_delivery_model(message_id, FALLBACK_MODEL)
+        return {"action": "fallback", "model": FALLBACK_MODEL}
+
+    print(f"\n❌ Gemini 429 on {model} with no fallback remaining.")
+    raise RateLimitedError("gemini", model, detail)
 
 
-def _next_gemini_model(model: str) -> str | None:
-    """Return the next Gemini fallback model, or ``None`` when the cascade is exhausted."""
-    sequence = _gemini_cascade_sequence(model)
-    if len(sequence) < 2:
-        return None
-    return sequence[1]
-
-
-def _is_gemini_capacity_error(stderr: str) -> bool:
-    """Detect transient Gemini capacity failures that should trigger a model fallback."""
+def _is_gemini_429_error(stderr: str) -> bool:
+    """Detect Gemini 429/capacity errors that should trigger bridge fallback."""
     lowered = stderr.lower()
     return (
         "429" in stderr
         or "too many requests" in lowered
         or "rate limit" in lowered
         or "rate_limit" in lowered
-        or "exhausted your capacity" in lowered
-        or "quota" in lowered
+        or "capacity unavailable" in lowered
+        or "no capacity available" in lowered
     )
 
 
