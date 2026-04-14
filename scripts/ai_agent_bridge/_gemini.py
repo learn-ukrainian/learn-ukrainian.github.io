@@ -22,6 +22,7 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 from agent_runtime.runner import invoke as runtime_invoke
+from batch_gemini_config import FLASH_LITE_MODEL, FLASH_MODEL, PRO_MODEL
 
 from ._broker import (
     _git_status_snapshot,
@@ -49,6 +50,8 @@ from ._messaging import (
 )
 from ._model import _detect_model_error
 from ._prompts import build_gemini_prompt
+
+_GEMINI_MODEL_CASCADE = (PRO_MODEL, FLASH_MODEL, FLASH_LITE_MODEL)
 
 
 def converse_gemini(content: str, task_id: str, model: str = "gemini-3.1-pro-preview",
@@ -271,15 +274,20 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
     })
     atexit.register(_remove_pid_file, "gemini", task_key)
 
-    max_retries = 5
+    max_retries = len(_gemini_cascade_sequence(model)) if _uses_gemini_capacity_cascade(model) else 5
     base_delay = 30
     _response_sent = False
+    requested_model = model
+    current_model = model
 
     try:
         for attempt in range(max_retries):
-            result = _run_gemini_attempt(msg, message_id, model, prompt, timeout_val,
-                                         stdout_only, output_path, skip_github, attempt,
-                                         max_retries, base_delay)
+            result = _run_gemini_attempt(msg, message_id, current_model, requested_model, prompt,
+                                         timeout_val, stdout_only, output_path, skip_github,
+                                         attempt, max_retries, base_delay)
+            if isinstance(result, dict) and result.get("action") == "fallback":
+                current_model = str(result["model"])
+                continue
             if result is None:
                 continue  # Retry (rate limited)
             if result is False:
@@ -294,8 +302,9 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
         _remove_pid_file("gemini", task_key)
 
 
-def _run_gemini_attempt(msg, message_id, model, prompt, timeout_val, stdout_only,
-                        output_path, skip_github, attempt, max_retries, base_delay):
+def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout_val,
+                        stdout_only, output_path, skip_github, attempt, max_retries,
+                        base_delay):
     """Run a single Gemini CLI attempt via agent_runtime.
 
     Returns None to retry, False to stop, or (response, sent).
@@ -339,6 +348,14 @@ def _run_gemini_attempt(msg, message_id, model, prompt, timeout_val, stdout_only
             stall_timeout=min(600, timeout_val or 600),
         )
     except RateLimitedError as exc:
+        next_model = _next_gemini_model(model)
+        if next_model is not None:
+            print(f"\n⏳ Gemini capacity unavailable on {model}: {exc}")
+            print(f"↪️  Retrying immediately with {next_model}...")
+            return {"action": "fallback", "model": next_model}
+        if _uses_gemini_capacity_cascade(model):
+            print(f"\n❌ Gemini capacity unavailable on {model} and no fallback remains.")
+            return False
         # Rate-limited: treat as retryable per legacy behavior
         print(f"\n⏳ Gemini rate limited: {exc}")
         if attempt < max_retries - 1:
@@ -361,6 +378,13 @@ def _run_gemini_attempt(msg, message_id, model, prompt, timeout_val, stdout_only
         # Runtime returned a structured failure. Decide retry vs stop based
         # on stderr signal (legacy _handle_gemini_error).
         stderr_text = result.stderr_excerpt or ""
+        if _uses_gemini_capacity_cascade(model) and _is_gemini_capacity_error(stderr_text):
+            next_model = _next_gemini_model(model)
+            if next_model is not None:
+                print(f"\n⏳ Gemini capacity unavailable on {model}. Retrying immediately with {next_model}...")
+                return {"action": "fallback", "model": next_model}
+            print(f"\n❌ Gemini capacity unavailable on {model} and no fallback remains.")
+            return False
         retry_result = _handle_gemini_error(stderr_text, model, attempt, max_retries, base_delay)
         if retry_result == "retry":
             return None
@@ -370,7 +394,11 @@ def _run_gemini_attempt(msg, message_id, model, prompt, timeout_val, stdout_only
         if not result.response or len(result.response.strip()) < 50:
             return False
 
-    response = result.response.strip()
+    response = _prefix_gemini_response(
+        result.response.strip(),
+        requested_model=requested_model,
+        final_model=model,
+    )
 
     # Post-validation for file writes (preserved from legacy path)
     if output_path and pre_snapshot is not None:
@@ -419,6 +447,47 @@ def _handle_gemini_error(stderr, model, attempt, max_retries, base_delay):
     print(f"\n❌ Gemini CLI error (exit code): {stderr[:500]}")
     sys.stdout.flush()
     return "continue"
+
+
+def _gemini_cascade_sequence(model: str) -> tuple[str, ...]:
+    """Return the configured fallback chain starting at ``model`` when applicable."""
+    if model in _GEMINI_MODEL_CASCADE:
+        start = _GEMINI_MODEL_CASCADE.index(model)
+        return _GEMINI_MODEL_CASCADE[start:]
+    return (model,)
+
+
+def _uses_gemini_capacity_cascade(model: str) -> bool:
+    """Whether ``model`` participates in the explicit Pro→Flash→Flash-Lite cascade."""
+    return model in _GEMINI_MODEL_CASCADE
+
+
+def _next_gemini_model(model: str) -> str | None:
+    """Return the next Gemini fallback model, or ``None`` when the cascade is exhausted."""
+    sequence = _gemini_cascade_sequence(model)
+    if len(sequence) < 2:
+        return None
+    return sequence[1]
+
+
+def _is_gemini_capacity_error(stderr: str) -> bool:
+    """Detect transient Gemini capacity failures that should trigger a model fallback."""
+    lowered = stderr.lower()
+    return (
+        "429" in stderr
+        or "too many requests" in lowered
+        or "rate limit" in lowered
+        or "rate_limit" in lowered
+        or "exhausted your capacity" in lowered
+        or "quota" in lowered
+    )
+
+
+def _prefix_gemini_response(response: str, *, requested_model: str | None, final_model: str) -> str:
+    """Annotate replies when a Pro request fell back to a lower-capacity model."""
+    if requested_model == PRO_MODEL and final_model != PRO_MODEL:
+        return f"[model={final_model}, pro-capacity-unavailable]\n\n{response}"
+    return response
 
 
 def _print_completion_status(output_path, response):

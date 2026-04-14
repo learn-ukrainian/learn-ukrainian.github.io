@@ -14,9 +14,11 @@ import sys
 import threading
 import time
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime, timedelta
 from typing import Any
+
+from batch_gemini_config import PRO_MODEL
 
 try:
     from agent_runtime.errors import (
@@ -25,6 +27,7 @@ try:
         AgentUnavailableError,
         RateLimitedError,
     )
+    from agent_runtime.result import Result
     from agent_runtime.runner import invoke as runtime_invoke
 
     _HAS_RUNTIME = True
@@ -46,6 +49,7 @@ except ImportError:
 
 
     runtime_invoke = None
+    Result = Any
     _HAS_RUNTIME = False
 
 from . import _channels
@@ -58,6 +62,12 @@ from ._channels_watch import (
 )
 from ._config import CLAUDE_CMD, REPO_ROOT
 from ._db import get_db
+from ._gemini import (
+    _is_gemini_capacity_error,
+    _next_gemini_model,
+    _prefix_gemini_response,
+    _uses_gemini_capacity_cascade,
+)
 from ._orphan_recovery import RecoveryCandidate, RecoveryResult, recover_orphan_commit
 
 _DEFAULT_HARD_TIMEOUT_SECONDS = 900
@@ -320,13 +330,19 @@ def _update_claimed_status(
     error_kind: str | None = None,
     retry_after: str | None = None,
     delivered_at: str | None = None,
+    to_model: str | None = None,
 ) -> None:
     delivery_ids = [delivery.delivery_id for delivery in claimed.deliveries]
     placeholders = ", ".join("?" for _ in delivery_ids)
+    to_model_sql = ", to_model = ?" if to_model is not None else ""
     conn = get_db()
     try:
         conn.execute("BEGIN IMMEDIATE")
         if status == "delivered":
+            params: list[Any] = [delivered_at or _now_iso(), error_text]
+            if to_model is not None:
+                params.append(to_model)
+            params.extend(delivery_ids)
             conn.execute(
                 f"""
                 UPDATE deliveries
@@ -336,11 +352,16 @@ def _update_claimed_status(
                     lease_until = NULL,
                     retry_after = NULL,
                     last_error_kind = NULL
+                    {to_model_sql}
                 WHERE delivery_id IN ({placeholders})
                 """,
-                (delivered_at or _now_iso(), error_text, *delivery_ids),
+                params,
             )
         elif status == "failed":
+            params = [error_text or "", error_kind]
+            if to_model is not None:
+                params.append(to_model)
+            params.extend(delivery_ids)
             conn.execute(
                 f"""
                 UPDATE deliveries
@@ -349,11 +370,16 @@ def _update_claimed_status(
                     lease_until = NULL,
                     retry_after = NULL,
                     last_error_kind = ?
+                    {to_model_sql}
                 WHERE delivery_id IN ({placeholders})
                 """,
-                (error_text or "", error_kind, *delivery_ids),
+                params,
             )
         else:
+            params = [error_text or "", retry_after, error_kind]
+            if to_model is not None:
+                params.append(to_model)
+            params.extend(delivery_ids)
             conn.execute(
                 f"""
                 UPDATE deliveries
@@ -362,9 +388,10 @@ def _update_claimed_status(
                     lease_until = NULL,
                     retry_after = ?,
                     last_error_kind = ?
+                    {to_model_sql}
                 WHERE delivery_id IN ({placeholders})
                 """,
-                (error_text or "", retry_after, error_kind, *delivery_ids),
+                params,
             )
         conn.commit()
     except Exception:
@@ -504,6 +531,8 @@ def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
     session_to_store: str | None = None
     tool_config: dict[str, object] | None = None
     requested_model = _resolve_model(claimed)
+    if agent == "gemini" and requested_model is None:
+        requested_model = PRO_MODEL
 
     if agent == "claude":
         tool_config = {"cmd_prefix": CLAUDE_CMD, "is_new_session": False}
@@ -536,19 +565,27 @@ def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
     )
     heartbeat_thread.start()
     try:
-        result = runtime_invoke(
-            agent,
-            prompt,
-            mode=_resolve_mode(claimed),
-            cwd=REPO_ROOT,
-            model=requested_model,
-            task_id=task_id,
-            session_id=session_id if agent == "claude" else None,
-            tool_config=tool_config,
-            entrypoint="bridge",
-            hard_timeout=_DEFAULT_HARD_TIMEOUT_SECONDS,
-            stall_timeout=_DEFAULT_STALL_TIMEOUT_SECONDS,
-        )
+        if agent == "gemini":
+            result = _invoke_gemini_thread_with_fallback(
+                claimed,
+                prompt=prompt,
+                requested_model=requested_model,
+                task_id=task_id,
+            )
+        else:
+            result = runtime_invoke(
+                agent,
+                prompt,
+                mode=_resolve_mode(claimed),
+                cwd=REPO_ROOT,
+                model=requested_model,
+                task_id=task_id,
+                session_id=session_id if agent == "claude" else None,
+                tool_config=tool_config,
+                entrypoint="bridge",
+                hard_timeout=_DEFAULT_HARD_TIMEOUT_SECONDS,
+                stall_timeout=_DEFAULT_STALL_TIMEOUT_SECONDS,
+            )
     finally:
         stop_heartbeats.set()
         heartbeat_thread.join(timeout=1.0)
@@ -559,6 +596,72 @@ def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
             _set_session_id(task_id, agent, persisted_session)
 
     return result
+
+
+def _invoke_gemini_thread_with_fallback(
+    claimed: _ClaimedThread,
+    *,
+    prompt: str,
+    requested_model: str | None,
+    task_id: str,
+) -> Result:
+    mode = _resolve_mode(claimed)
+    effective_requested_model = requested_model or PRO_MODEL
+    current_model = effective_requested_model
+
+    while True:
+        try:
+            result = runtime_invoke(
+                "gemini",
+                prompt,
+                mode=mode,
+                cwd=REPO_ROOT,
+                model=current_model,
+                task_id=task_id,
+                session_id=None,
+                tool_config=None,
+                entrypoint="bridge",
+                hard_timeout=_DEFAULT_HARD_TIMEOUT_SECONDS,
+                stall_timeout=_DEFAULT_STALL_TIMEOUT_SECONDS,
+            )
+        except RateLimitedError as exc:
+            next_model = _next_gemini_model(current_model)
+            if next_model is not None:
+                current_model = next_model
+                continue
+            return Result(
+                ok=False,
+                agent="gemini",
+                model=current_model,
+                mode=mode,
+                response="",
+                stderr_excerpt=str(exc),
+                duration_s=0.0,
+                session_id=None,
+                rate_limited=True,
+                stalled=False,
+                returncode=None,
+                usage_record={},
+            )
+
+        if not result.ok and _uses_gemini_capacity_cascade(current_model):
+            next_model = (
+                _next_gemini_model(current_model)
+                if _is_gemini_capacity_error(result.stderr_excerpt or "")
+                else None
+            )
+            if next_model is not None:
+                current_model = next_model
+                continue
+
+        if result.ok:
+            response = _prefix_gemini_response(
+                result.response.strip(),
+                requested_model=effective_requested_model,
+                final_model=result.model,
+            )
+            return replace(result, response=response, model=result.model)
+        return result
 
 
 def run_inbox(
@@ -745,6 +848,7 @@ def run_inbox(
                 status="failed",
                 error_text=result.stderr_excerpt or "agent returned no reply",
                 error_kind="parse_error",
+                to_model=result.model,
             )
             for delivery in claimed.deliveries:
                 emit_delivery_failed(
@@ -806,6 +910,7 @@ def run_inbox(
                 else None
             ),
             delivered_at=_now_iso(),
+            to_model=result.model,
         )
         for delivery in claimed.deliveries:
             emit_delivery_delivered(
