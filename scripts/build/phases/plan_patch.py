@@ -19,6 +19,7 @@ from typing import Any
 
 import yaml
 from batch_gemini_config import PRO_MODEL
+from build.v6_build import _format_prompt_literal_block, _strip_prompt_control_tags
 from gemini_output import extract_delimited
 from tools.plan_autofix import _bump_version
 
@@ -26,6 +27,14 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPTS_DIR = REPO_ROOT / "scripts"
 VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 PLAN_PATCH_TAG = "PLAN_PATCH"
+PLAN_PATCH_ALLOWED_ROOTS = frozenset(
+    {
+        "content_outline",
+        "dialogue_situations",
+        "activity_hints",
+        "vocabulary_hints",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -170,6 +179,7 @@ def build_plan_patch_prompt(
     contract_violations: list[dict],
 ) -> str:
     """Build the Gemini prompt for a minimal structured plan patch."""
+    complaint_summary = summarize_complaints(complaints)
     complaint_lines = []
     for complaint in complaints:
         rounds = ", ".join(str(r) for r in complaint.get("rounds") or [])
@@ -190,6 +200,24 @@ def build_plan_patch_prompt(
             f"- [{violation.get('type', 'CONTRACT')}] {violation.get('message', '')}"
         )
 
+    safe_complaint_summary = _format_prompt_literal_block(
+        "Recurring complaint summary",
+        _strip_prompt_control_tags(complaint_summary) or "- (none)",
+    )
+    safe_complaint_lines = _format_prompt_literal_block(
+        "Recurring complaints",
+        _strip_prompt_control_tags(chr(10).join(complaint_lines) if complaint_lines else "- (none)"),
+    )
+    safe_contract_lines = _format_prompt_literal_block(
+        "Current contract violations at plateau",
+        _strip_prompt_control_tags(chr(10).join(contract_lines) if contract_lines else "- (none)"),
+    )
+    safe_plan_text = _format_prompt_literal_block(
+        "Current plan YAML",
+        _strip_prompt_control_tags(plan_text),
+        language="yaml",
+    )
+
     return (
         "You are patching a curriculum plan after the content review loop plateaued.\n\n"
         "Task: propose the MINIMAL plan diff that removes an unreachable constraint or "
@@ -204,14 +232,14 @@ def build_plan_patch_prompt(
         "- If the plan is already correct and the plateau is purely prose-level, return decision: noop.\n\n"
         f"Module: {level}/{slug}\n"
         f"Score history: {', '.join(f'{score:.1f}' for score in score_history)}\n\n"
+        "Recurring complaint summary:\n"
+        f"{safe_complaint_summary}\n\n"
         "Recurring complaints:\n"
-        f"{chr(10).join(complaint_lines) if complaint_lines else '- (none)'}\n\n"
+        f"{safe_complaint_lines}\n\n"
         "Current contract violations at plateau:\n"
-        f"{chr(10).join(contract_lines) if contract_lines else '- (none)'}\n\n"
+        f"{safe_contract_lines}\n\n"
         "Current plan YAML:\n"
-        "```yaml\n"
-        f"{plan_text.strip()}\n"
-        "```\n\n"
+        f"{safe_plan_text}\n\n"
         "Allowed patch operations:\n"
         "- action: replace   path: nested.path[0].field   value: <scalar/list/dict>\n"
         "- action: append    path: nested.list            value: <item>\n"
@@ -339,6 +367,13 @@ def _set_path(root: Any, path: str, *, action: str, value: Any = None) -> None:
         raise ValueError(f"Unsupported action: {action}")
 
 
+def _get_path_root(path: str) -> str | int:
+    tokens = _parse_path(path)
+    if not tokens:
+        raise ValueError("Patch path cannot be empty")
+    return tokens[0]
+
+
 def _change_summary(change: dict) -> str:
     action = str(change.get("action") or "replace")
     path = str(change.get("path") or "")
@@ -355,7 +390,13 @@ def apply_plan_patch_response(
     *,
     complaint_summary: str,
 ) -> PlanPatchResult:
-    """Apply the structured plan patch and persist versioned YAML."""
+    """Apply a structured plan patch with protected-field enforcement.
+
+    Only `content_outline`, `dialogue_situations`, `activity_hints`, and
+    `vocabulary_hints` may be patched. Protected top-level fields include
+    `slug`, `level`, `word_target`, `version`, `track`, `num`, `references`,
+    and any other non-allowlisted root.
+    """
     if not plan_path.exists():
         return PlanPatchResult(
             applied=False,
@@ -389,6 +430,7 @@ def apply_plan_patch_response(
 
     updated = copy.deepcopy(plan)
     summaries: list[str] = []
+    rejected_changes: list[dict[str, str]] = []
     for raw_change in changes:
         if not isinstance(raw_change, dict):
             return PlanPatchResult(
@@ -404,6 +446,23 @@ def apply_plan_patch_response(
                 reason=f"Unsupported structured change: {raw_change}",
                 complaint_summary=str(response.get("complaint_summary") or complaint_summary),
             )
+        try:
+            root = _get_path_root(path)
+        except ValueError as exc:
+            return PlanPatchResult(
+                applied=False,
+                reason=f"Could not apply change '{path}': {exc}",
+                complaint_summary=str(response.get("complaint_summary") or complaint_summary),
+            )
+        if not isinstance(root, str) or root not in PLAN_PATCH_ALLOWED_ROOTS:
+            rejected_changes.append(
+                {
+                    "path": path,
+                    "action": action,
+                    "reason": "protected_field_violation",
+                }
+            )
+            continue
         try:
             _set_path(updated, path, action=action, value=raw_change.get("value"))
         except (IndexError, KeyError, TypeError, ValueError) as exc:
@@ -424,6 +483,8 @@ def apply_plan_patch_response(
         "trigger": str(response.get("complaint_summary") or complaint_summary),
         "changes": summaries,
     }
+    if rejected_changes:
+        fix_entry["rejections"] = rejected_changes
     if "plan_fixes" not in updated or not isinstance(updated.get("plan_fixes"), list):
         updated["plan_fixes"] = []
     updated["plan_fixes"].append(fix_entry)

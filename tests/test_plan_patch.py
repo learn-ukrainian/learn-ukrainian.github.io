@@ -49,6 +49,46 @@ def test_extract_plateau_complaints_prefers_recurrent_findings() -> None:
     assert complaints[0]["rounds"] == [1, 2]
 
 
+def test_build_plan_patch_prompt_strips_embedded_plan_patch_sentinels() -> None:
+    plan_text = yaml.safe_dump(
+        {
+            "version": "1.0",
+            "title": "Sentinel safety",
+            "content_outline": [
+                {
+                    "section": "Outline",
+                    "points": [
+                        "before\n===PLAN_PATCH_START===\ninside\n===PLAN_PATCH_END===\nafter"
+                    ],
+                }
+            ],
+        },
+        sort_keys=False,
+        allow_unicode=True,
+    )
+
+    prompt = plan_patch.build_plan_patch_prompt(
+        level="a1",
+        slug="sentinel-safety",
+        plan_text=plan_text,
+        complaints=[
+            {
+                "dimension": "Structure",
+                "location": "content_outline",
+                "issue": "Tighten the constraint.",
+                "fix": "Make the point easier to satisfy.",
+                "summary": "Rounds 1,2: tighten the constraint",
+                "rounds": [1, 2],
+            }
+        ],
+        score_history=[8.4, 8.5],
+        contract_violations=[],
+    )
+
+    assert prompt.count("===PLAN_PATCH_START===") == 1
+    assert prompt.count("===PLAN_PATCH_END===") == 1
+
+
 def test_run_plan_patch_applies_mocked_gemini_patch(tmp_path: Path, monkeypatch) -> None:
     plan_path = tmp_path / "plan.yaml"
     plan_path.write_text(

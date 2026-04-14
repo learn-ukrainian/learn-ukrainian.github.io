@@ -208,6 +208,9 @@ _PROMPT_CONTROL_LINE_RE = re.compile(
 _PROMPT_CONTROL_PHRASE_RE = re.compile(
     r"(?i)\b(?:ignore|disregard|forget)\s+(?:all\s+)?previous\s+instructions?\b"
 )
+_PROMPT_DELIMITER_LINE_RE = re.compile(
+    r"(?im)^\s*===[A-Z0-9]+(?:_[A-Z0-9]+)*_(?:START|END)===\s*$"
+)
 
 
 def _strip_prompt_control_tags(text: str) -> str:
@@ -222,6 +225,7 @@ def _strip_prompt_control_tags(text: str) -> str:
     cleaned = _PROMPT_LITERAL_MARKER_RE.sub("", cleaned)
     cleaned = _PROMPT_CONTROL_LINE_RE.sub("", cleaned)
     cleaned = _PROMPT_CONTROL_PHRASE_RE.sub("", cleaned)
+    cleaned = _PROMPT_DELIMITER_LINE_RE.sub("", cleaned)
     return re.sub(r"\n{3,}", "\n\n", cleaned)
 
 
