@@ -1,6 +1,7 @@
 import React from 'react';
 import type { ReactNode } from 'react';
 import styles from './LevelLanding.module.css';
+import LiveStatus from './LiveStatus';
 
 type ModuleItem = {
   num: number;
@@ -72,7 +73,11 @@ function ModuleCard({ mod, level, color }: { mod: ModuleItem; level: string; col
         <div className={styles.moduleTitle}>{mod.title}</div>
         {mod.sub && <div className={styles.moduleSub}>{mod.sub}</div>}
       </div>
-      <div className={styles.moduleStatus}>{statusIcons[mod.status]}</div>
+      <div className={styles.moduleStatus}>
+        {level.toLowerCase() === 'a1' && (mod.status === 'done' || mod.status === 'active')
+          ? <LiveStatus track={level.toLowerCase()} num={mod.num} fallback={mod.status} />
+          : statusIcons[mod.status]}
+      </div>
     </div>
   );
 
