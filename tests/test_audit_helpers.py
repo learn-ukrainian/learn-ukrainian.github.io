@@ -69,12 +69,12 @@ class TestLintActivityStructure:
 
 class TestLintLinePatterns:
     def test_old_answer_format(self):
-        lines = ["**Answer:** something"]
+        lines = ["## Activities", "**Answer:** something"]
         errors = _lint_line_patterns(lines, 1)
         assert any("Old format" in e for e in errors)
 
     def test_old_option_format(self):
-        lines = ["**Option:** something"]
+        lines = ["## Activities", "**Option:** something"]
         errors = _lint_line_patterns(lines, 1)
         assert any("Old format" in e for e in errors)
 
@@ -225,25 +225,25 @@ class TestDetectFocus:
         focus = detect_focus("", "B1", 20)
         assert focus == "grammar"
 
-    def test_b1_vocab_range(self):
+    def test_b1_mid_course_stays_grammar(self):
         focus = detect_focus("", "B1", 60)
-        assert focus == "vocab"
+        assert focus == "grammar"
 
-    def test_b1_culture_range(self):
+    def test_b1_late_course_stays_grammar(self):
         focus = detect_focus("", "B1", 75)
-        assert focus == "culture"
+        assert focus == "grammar"
 
-    def test_b1_skills_range(self):
+    def test_b1_capstone_range(self):
         focus = detect_focus("", "B1", 90)
-        assert focus == "skills"
+        assert focus == "capstone"
 
     def test_b2_grammar_range(self):
         focus = detect_focus("", "B2", 20)
         assert focus == "grammar"
 
-    def test_b2_history_range(self):
+    def test_b2_capstone_range(self):
         focus = detect_focus("", "B2", 100)
-        assert focus == "history"
+        assert focus == "capstone"
 
 
 # =============================================================================
@@ -1082,20 +1082,20 @@ class TestFilterActivities:
             {'type': 'quiz', 'title': 'Q1'},
             {'type': 'fill-in', 'title': 'F1'},
         ]
-        kept, removed, msgs = _filter_activities(activities, {'quiz'}, 'LIT')
+        kept, removed, _msgs = _filter_activities(activities, {'quiz'}, 'LIT')
         assert removed == 1
         assert len(kept) == 1
         assert kept[0]['type'] == 'fill-in'
 
     def test_keeps_all_when_none_forbidden(self):
         activities = [{'type': 'quiz', 'title': 'Q1'}]
-        kept, removed, msgs = _filter_activities(activities, set(), 'A1')
+        kept, removed, _msgs = _filter_activities(activities, set(), 'A1')
         assert removed == 0
         assert len(kept) == 1
 
     def test_non_dict_kept(self):
         activities = ["not a dict", {'type': 'quiz', 'title': 'Q1'}]
-        kept, removed, msgs = _filter_activities(activities, {'quiz'}, 'LIT')
+        kept, removed, _msgs = _filter_activities(activities, {'quiz'}, 'LIT')
         assert len(kept) == 1  # "not a dict" is kept, quiz removed
         assert removed == 1
 

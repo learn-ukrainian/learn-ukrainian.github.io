@@ -44,10 +44,26 @@ VESUM_MIN_WORD_LENGTH = 3
 AUDIT_THRESHOLDS = {
     "word_count_fail_pct": 12,            # FAIL if more than this % below target
     "immersion_tolerance_pct": 3,        # ±% tolerance before FAIL
-    "naturalness_min_score": 8,          # Minimum review score for PASS
+    "naturalness_min_score": {           # Minimum review score for PASS by level family
+        "A1": 9.0,
+        "A2": 9.0,
+        "B1": 9.0,
+        "B2": 8.0,
+        "C1": 8.0,
+        "default": 8.0,
+    },
     "severity_update": 40,               # Severity score boundary: PASS → UPDATE
     "severity_rewrite": 75,              # Severity score boundary: UPDATE → REWRITE
 }
+
+
+def get_naturalness_min_score(level_code: str | None) -> float:
+    """Return the review-score threshold for the given level family."""
+    thresholds = AUDIT_THRESHOLDS["naturalness_min_score"]
+    if not level_code:
+        return thresholds["default"]
+    level_prefix = level_code.upper().split("-", 1)[0]
+    return thresholds.get(level_prefix, thresholds["default"])
 
 # Grammar constraints by level (what's ALLOWED at each level)
 GRAMMAR_CONSTRAINTS = {

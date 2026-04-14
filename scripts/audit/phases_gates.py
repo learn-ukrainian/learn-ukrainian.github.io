@@ -347,7 +347,7 @@ def evaluate_grammar_and_naturalness(ctx: AuditContext, state: AuditState) -> No
             nat_score = int(nat_val)
             nat_status = 'PASS' if nat_score >= 7 else 'FAIL'
 
-    state.results['naturalness'] = evaluate_naturalness(nat_score, nat_status)
+    state.results['naturalness'] = evaluate_naturalness(nat_score, nat_status, ctx.level_code)
     if state.results['naturalness'].status == 'FAIL':
         state.has_critical_failure = True
 

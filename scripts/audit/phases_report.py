@@ -14,6 +14,7 @@ from slug_utils import to_bare_slug
 
 from .checks.review_gaming import check_review_gaming
 from .checks.review_validation import check_review_validity
+from .config import get_naturalness_min_score
 from .gates import compute_recommendation
 from .parsing import AuditContext, AuditState
 from .report import (
@@ -171,12 +172,16 @@ def validate_review_and_finalize(ctx: AuditContext, state: AuditState) -> bool:
 
                     scores = [d.get("score", 0) for d in review_data.get("scores", [])]
                     if scores:
+                        review_min_score = get_naturalness_min_score(ctx.level_code)
                         avg_score = sum(scores) / len(scores)
-                        if avg_score >= 8.0:
+                        if avg_score >= review_min_score:
                             review_gate_status = "pass"
                             print(f"  ℹ️  V6 module — review gate passed (score: {avg_score:.1f})")
                         else:
-                            msg = f"Latest review {latest_review.name} score is {avg_score:.1f} < 8.0"
+                            msg = (
+                                f"Latest review {latest_review.name} score is "
+                                f"{avg_score:.1f} < {review_min_score:.1f}"
+                            )
                             print(f"     \u274c [REVIEW] {msg}")
                             state.critical_failure_reasons.append(msg)
                             state.has_critical_failure = True

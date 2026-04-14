@@ -53,7 +53,7 @@ class TestEvaluateWordCount:
         assert '50 short' in result.msg
 
     def test_fail_far_below(self):
-        result = evaluate_word_count(2800, 3000)
+        result = evaluate_word_count(2600, 3000)
         assert result.status == 'FAIL'
 
     def test_raw_words_displayed(self):
@@ -294,16 +294,26 @@ class TestEvaluateImmersion:
 # =============================================================================
 
 class TestEvaluateNaturalness:
-    def test_pass_high_score(self):
-        result = evaluate_naturalness(9, 'PASS')
+    def test_pass_high_score_for_b1(self):
+        result = evaluate_naturalness(9, 'PASS', 'B1')
         assert result.status == 'PASS'
         assert '9/10' in result.msg
 
-    def test_fail_score_7(self):
-        """Score 7 with PASS status still fails (below 8 target)."""
-        result = evaluate_naturalness(7, 'PASS')
+    def test_fail_score_8_for_a2(self):
+        """A2 now requires 9/10 to pass the naturalness gate."""
+        result = evaluate_naturalness(8, 'PASS', 'A2')
         assert result.status == 'FAIL'
-        assert 'below 8/10' in result.msg
+        assert 'below 9.0/10' in result.msg
+
+    def test_b2_keeps_existing_threshold(self):
+        result = evaluate_naturalness(8, 'PASS', 'B2')
+        assert result.status == 'PASS'
+
+    def test_fail_score_7(self):
+        """Score 7 with PASS status still fails below the configured target."""
+        result = evaluate_naturalness(7, 'PASS', 'B2')
+        assert result.status == 'FAIL'
+        assert 'below 8.0/10' in result.msg
 
     def test_info_pending(self):
         result = evaluate_naturalness(0, 'PENDING')
@@ -379,7 +389,7 @@ class TestComputeRecommendation:
 
     def test_update_minor_violations(self):
         violations = [{'type': 'GRAMMAR'} for _ in range(2)]
-        rec, reasons, severity = compute_recommendation(
+        rec, _reasons, severity = compute_recommendation(
             pedagogical_violations=violations,
             lint_errors=[],
             results={},
@@ -395,7 +405,7 @@ class TestComputeRecommendation:
         """Many violations + immersion deviation + structure failure = REWRITE."""
         violations = [{'type': 'GRAMMAR'} for _ in range(15)]
         structure = GateResult('FAIL', '❌', 'Missing Summary')
-        rec, reasons, severity = compute_recommendation(
+        rec, _reasons, severity = compute_recommendation(
             pedagogical_violations=violations,
             lint_errors=['e'] * 10,
             results={'structure': structure, 'activities': GateResult('FAIL', '❌', '0/6')},
@@ -410,7 +420,7 @@ class TestComputeRecommendation:
     def test_severity_clamped_at_100(self):
         """Severity cannot exceed 100."""
         violations = [{'type': 'GRAMMAR'} for _ in range(50)]
-        rec, reasons, severity = compute_recommendation(
+        _rec, _reasons, severity = compute_recommendation(
             pedagogical_violations=violations,
             lint_errors=['e'] * 20,
             results={

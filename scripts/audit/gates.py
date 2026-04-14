@@ -7,7 +7,7 @@ and computes recommendations based on violations.
 
 from dataclasses import dataclass
 
-from .config import AUDIT_THRESHOLDS
+from .config import AUDIT_THRESHOLDS, get_naturalness_min_score
 
 
 @dataclass
@@ -207,10 +207,10 @@ def evaluate_immersion(
     return GateResult('PASS', '🇺🇦', f"{score:.1f}%{phase_label}")
 
 
-def evaluate_naturalness(score: int | None, status: str | None) -> GateResult:
+def evaluate_naturalness(score: int | None, status: str | None, level_code: str | None = None) -> GateResult:
     """Evaluate naturalness score gate.
 
-    Target: 8/10 for content modules.
+    Target varies by level family: A1/A2/B1 require 9/10, B2/C1 keep 8/10.
     PENDING status is informational (not blocking) — review sets the real score.
     """
     # Guard against None values (YAML null parses as None)
@@ -224,7 +224,7 @@ def evaluate_naturalness(score: int | None, status: str | None) -> GateResult:
             return GateResult('INFO', 'ℹ️', f"{score}/10 (PENDING — awaiting review)")
         return GateResult('INFO', 'ℹ️', "PENDING — awaiting review")
 
-    nat_min = AUDIT_THRESHOLDS["naturalness_min_score"]
+    nat_min = get_naturalness_min_score(level_code)
     if status == 'PASS' and score >= nat_min:
         return GateResult('PASS', '✅', f"{score}/10 (High)")
     elif status == 'PASS' and score >= nat_min - 1:
