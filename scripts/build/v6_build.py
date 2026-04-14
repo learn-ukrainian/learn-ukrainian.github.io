@@ -3617,6 +3617,7 @@ def _resolve_verify_flags(flags: list[dict]) -> list[dict]:
     # Pattern to find Ukrainian words in a claim
     uk_word_pattern = re.compile(r"[а-яіїєґА-ЯІЇЄҐ][а-яіїєґ'ʼ]+")
 
+    db = None
     try:
         db = sqlite3.connect(str(vesum_db))
         for flag in flags:
@@ -3649,9 +3650,11 @@ def _resolve_verify_flags(flags: list[dict]) -> list[dict]:
                             f"VESUM confirms lemma: {row[0]}, POS: {row[1]}"
                         )
                         break
-        db.close()
     except Exception as e:
         _log(f"  ⚠️  VESUM resolution failed: {e}")
+    finally:
+        if db is not None:
+            db.close()
 
     return flags
 

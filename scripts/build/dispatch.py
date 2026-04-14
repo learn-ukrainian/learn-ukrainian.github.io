@@ -16,18 +16,9 @@ from __future__ import annotations
 import json
 import os
 import re
-import subprocess
-import tempfile
 import time
 from datetime import datetime
 from pathlib import Path
-
-from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
-
-# Command prefix for invoking Claude Code in print mode from this dispatcher.
-# Passed to utils.claude_version so the version probe targets the exact
-# binary this dispatcher will execute.
-_CLAUDE_CMD_PREFIX: tuple[str, ...] = ("npx", "@anthropic-ai/claude-code@latest")
 
 # ---------------------------------------------------------------------------
 # Rate limit detection + pacing
@@ -249,11 +240,13 @@ def _save_dispatch_log(
     log_dir.mkdir(parents=True, exist_ok=True)
 
     seq = _PHASE_SEQ.get(phase, "99")
-    ts = datetime.now().strftime("%Y%m%d-%H%M%S")
-    base = f"{seq}-{phase}-{ts}"
+    now = datetime.now()
+    ts = now.strftime("%Y%m%d-%H%M%S-%f")
+    suffix = f"{time.monotonic_ns() % 1_000_000_000:09d}"
+    base = f"{seq}-{phase}-{ts}-{suffix}"
 
     log_entry = {
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": now.isoformat(),
         "phase": phase,
         "agent": agent,
         "model": model,
@@ -392,101 +385,7 @@ def dispatch_agent(
             model=model,
             agent_label=agent_label,
         )
-
-    # ---------- Unreachable ----------
-    if False:  # pragma: no cover
-        pass
-    else:
-        mcp_config = str(PROJECT_ROOT / ".mcp.json")
-        cmd = [
-            *_CLAUDE_CMD_PREFIX, "-p",
-            "--model", model,
-            "--output-format", "text",
-        ]
-        if supports_exclude_dynamic_system_prompt_sections(_CLAUDE_CMD_PREFIX):
-            cmd.append("--exclude-dynamic-system-prompt-sections")
-        if mcp_tools and allowed_tools:
-            cmd.extend(["--mcp-config", mcp_config, "--allowedTools", allowed_tools])
-
-    # Execute with timing + Gemini fallback
-    # Set LEARN_UKRAINIAN_PIPELINE to skip SessionStart/UserPromptSubmit hooks
-    env = {**os.environ, "LEARN_UKRAINIAN_PIPELINE": "1"}
-
-    def _run_cmd(run_cmd, run_label, run_timeout):
-        t0 = time.monotonic()
-        call_start = datetime.now().astimezone()
-        output_path: str | None = None
-        if is_codex:
-            with tempfile.NamedTemporaryFile(
-                prefix="codex-dispatch-", suffix=".txt", delete=False
-            ) as tmp:
-                output_path = tmp.name
-            if run_cmd and run_cmd[-1] == "-":
-                run_cmd = [*run_cmd[:-1], "-o", output_path, "-"]
-            else:
-                run_cmd = [*run_cmd, "-o", output_path]
-        try:
-            result = subprocess.run(
-                run_cmd,
-                input=prompt,
-                capture_output=True,
-                text=True,
-                timeout=run_timeout,
-                cwd=str(PROJECT_ROOT),
-                env=env,
-            )
-            elapsed = time.monotonic() - t0
-            ok = result.returncode == 0
-            raw = result.stdout if ok else ""
-            stderr = result.stderr or ""
-            if is_codex:
-                file_output = Path(output_path).read_text("utf-8") if output_path and Path(output_path).exists() else ""
-                raw = file_output if ok else ""
-                if not ok and file_output.strip():
-                    stderr = "\n".join(part for part in (stderr.strip(), "[codex output file]", file_output.strip()) if part)
-                stderr = "\n".join(part for part in ((result.stdout or "").strip(), stderr.strip()) if part)
-
-            if not ok:
-                _log(f"  ❌ {run_label} returned error (rc={result.returncode}): {stderr[:200]}")
-
-            _save_dispatch_log(
-                orch_dir, phase, run_label,
-                model=model,
-                prompt_chars=len(prompt),
-                response_chars=len(raw),
-                stderr=stderr,
-                returncode=result.returncode,
-                duration_s=elapsed,
-                ok=ok,
-                prompt=prompt,
-                response=raw,
-                call_start_time=call_start,
-            )
-            return ok, raw
-
-        except subprocess.TimeoutExpired as e:
-            elapsed = time.monotonic() - t0
-            _log(f"  ❌ {run_label} timed out ({run_timeout}s)")
-            partial_stderr = e.stderr.decode("utf-8") if isinstance(e.stderr, bytes) else (e.stderr or "")
-            partial_stdout = e.stdout.decode("utf-8") if isinstance(e.stdout, bytes) else (e.stdout or "")
-            _save_dispatch_log(
-                orch_dir, phase, run_label,
-                model=model,
-                prompt_chars=len(prompt),
-                response_chars=len(partial_stdout),
-                stderr=partial_stderr,
-                duration_s=elapsed,
-                ok=False,
-                prompt=prompt,
-                response=partial_stdout,
-            )
-            return False, ""
-        finally:
-            if output_path:
-                Path(output_path).unlink(missing_ok=True)
-
-    ok, raw = _run_cmd(cmd, agent_label, timeout)
-    return ok, raw
+    return False, ""
 
 
 def _dispatch_claude_via_runtime(
