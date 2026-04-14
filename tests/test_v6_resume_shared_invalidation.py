@@ -59,6 +59,55 @@ def _write_review_text(curriculum_root: Path, slug: str, review_text: str) -> No
     (review_dir / f"{slug}-review.md").write_text(review_text, "utf-8")
 
 
+def _write_plan(curriculum_root: Path, slug: str) -> None:
+    plan_path = curriculum_root / "plans" / "b1" / f"{slug}.yaml"
+    plan_path.parent.mkdir(parents=True, exist_ok=True)
+    plan_path.write_text(
+        "module: 1\n"
+        f"slug: {slug}\n"
+        "level: b1\n"
+        "sequence: 1\n"
+        "title: Single Module\n"
+        "word_target: 2200\n"
+        "phase: B1.1\n"
+        "content_outline:\n"
+        "  - section: Intro\n"
+        "    words: 7\n"
+        "    points:\n"
+        "      - місто\n"
+        "      - classroom\n"
+        "  - section: Summary\n"
+        "    words: 6\n"
+        "    points:\n"
+        "      - Учень\n"
+        "      - summary\n"
+        "dialogue_situations:\n"
+        "  - setting: classroom\n"
+        "    speakers:\n"
+        "      - Вчитель\n"
+        "      - Учень\n"
+        "    motivation: basic greeting\n"
+        "vocabulary_hints:\n"
+        "  required:\n"
+        "    - місто\n"
+        "activity_hints:\n"
+        "  - id: quiz-intro\n"
+        "    type: quiz\n"
+        "    focus: intro\n",
+        "utf-8",
+    )
+
+
+def _compliant_content() -> str:
+    return (
+        "## Intro\n"
+        "місто classroom Вчитель Учень greeting.\n"
+        "<!-- INJECT_ACTIVITY: quiz-intro -->\n\n"
+        "## Summary\n"
+        "місто classroom Учень summary.\n"
+    )
+
+
 def _write_passing_status(curriculum_root: Path, slug: str) -> None:
     status_dir = curriculum_root / "b1" / "status"
     status_dir.mkdir(parents=True, exist_ok=True)
@@ -80,7 +129,7 @@ def _write_passing_status(curriculum_root: Path, slug: str) -> None:
     )
     module_dir = curriculum_root / "b1"
     module_dir.mkdir(parents=True, exist_ok=True)
-    (module_dir / f"{slug}.md").write_text("# Content\n", "utf-8")
+    (module_dir / f"{slug}.md").write_text(_compliant_content(), "utf-8")
 
     import os
     import time
@@ -94,6 +143,7 @@ def test_resume_publish_reruns_review_when_saved_review_is_below_threshold(tmp_p
     slug = "single-module"
     _write_manifest(curriculum_root, [slug])
     _write_state(curriculum_root, slug)
+    _write_plan(curriculum_root, slug)
     _write_review(curriculum_root, slug, 8)
     _write_passing_status(curriculum_root, slug)
 
@@ -102,6 +152,7 @@ def test_resume_publish_reruns_review_when_saved_review_is_below_threshold(tmp_p
     monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
     monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
     monkeypatch.setattr(v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True, raising=False)
+    monkeypatch.setattr(v6_build, "detect_plan_hash_drift", lambda *args, **kwargs: None)
     monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
 
     review_calls: list[tuple] = []
@@ -128,7 +179,7 @@ def test_resume_publish_reruns_review_when_saved_review_is_below_threshold(tmp_p
     monkeypatch.setattr(
         sys,
         "argv",
-        ["v6_build.py", "b1", "1", "--step", "publish", "--resume"],
+        ["v6_build.py", "b1", "1", "--step", "publish", "--resume", "--writer", "gemini"],
     )
 
     v6_build.main()

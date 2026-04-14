@@ -80,6 +80,55 @@ def _write_review_with_dimension_scores(
     (review_dir / f"{slug}-review.md").write_text(review_text, "utf-8")
 
 
+def _write_plan(curriculum_root: Path, slug: str) -> None:
+    plan_path = curriculum_root / "plans" / "b1" / f"{slug}.yaml"
+    plan_path.parent.mkdir(parents=True, exist_ok=True)
+    plan_path.write_text(
+        "module: 1\n"
+        f"slug: {slug}\n"
+        "level: b1\n"
+        "sequence: 1\n"
+        "title: Single Module\n"
+        "word_target: 2200\n"
+        "phase: B1.1\n"
+        "content_outline:\n"
+        "  - section: Intro\n"
+        "    words: 7\n"
+        "    points:\n"
+        "      - місто\n"
+        "      - classroom\n"
+        "  - section: Summary\n"
+        "    words: 6\n"
+        "    points:\n"
+        "      - Учень\n"
+        "      - summary\n"
+        "dialogue_situations:\n"
+        "  - setting: classroom\n"
+        "    speakers:\n"
+        "      - Вчитель\n"
+        "      - Учень\n"
+        "    motivation: basic greeting\n"
+        "vocabulary_hints:\n"
+        "  required:\n"
+        "    - місто\n"
+        "activity_hints:\n"
+        "  - id: quiz-intro\n"
+        "    type: quiz\n"
+        "    focus: intro\n",
+        "utf-8",
+    )
+
+
+def _compliant_content() -> str:
+    return (
+        "## Intro\n"
+        "місто classroom Вчитель Учень greeting.\n"
+        "<!-- INJECT_ACTIVITY: quiz-intro -->\n\n"
+        "## Summary\n"
+        "місто classroom Учень summary.\n"
+    )
+
+
 def _write_passing_status(curriculum_root: Path, slug: str) -> None:
     status_dir = curriculum_root / "b1" / "status"
     status_dir.mkdir(parents=True, exist_ok=True)
@@ -101,7 +150,7 @@ def _write_passing_status(curriculum_root: Path, slug: str) -> None:
     )
 
     (curriculum_root / "b1").mkdir(parents=True, exist_ok=True)
-    (curriculum_root / "b1" / f"{slug}.md").write_text("# Content\n", "utf-8")
+    (curriculum_root / "b1" / f"{slug}.md").write_text(_compliant_content(), "utf-8")
 
     import os
     import time
@@ -444,15 +493,16 @@ class TestBatchReviewSkip:
         curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
         _write_manifest(curriculum_root, ["single-module"])
         _write_state(curriculum_root, "single-module", review_complete=True)
+        _write_plan(curriculum_root, "single-module")
         (curriculum_root / "b1").mkdir(parents=True, exist_ok=True)
-        (curriculum_root / "b1" / "single-module.md").write_text("# Content\n", "utf-8")
+        (curriculum_root / "b1" / "single-module.md").write_text(_compliant_content(), "utf-8")
 
         monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
         monkeypatch.setattr(v6_build, "PROJECT_ROOT", tmp_path)
         monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
         monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
         monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: (True, 9.0, "## Verdict: PASS\n"))
-        monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: None)
+        monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: True)
         monkeypatch.setattr(
             v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True, raising=False,
         )
@@ -468,7 +518,7 @@ class TestBatchReviewSkip:
         monkeypatch.setattr(
             sys,
             "argv",
-            ["v6_build.py", "b1", "1", "--step", "review"],
+            ["v6_build.py", "b1", "1", "--step", "review", "--writer", "gemini"],
         )
 
         v6_build.main()
@@ -479,6 +529,7 @@ class TestBatchReviewSkip:
         curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
         _write_manifest(curriculum_root, ["single-module"])
         _write_state(curriculum_root, "single-module", review_complete=True, all_complete=True)
+        _write_plan(curriculum_root, "single-module")
         status_dir = curriculum_root / "b1" / "status"
         status_dir.mkdir(parents=True, exist_ok=True)
         status_path = status_dir / "single-module.json"
@@ -498,7 +549,7 @@ class TestBatchReviewSkip:
             "utf-8",
         )
         (curriculum_root / "b1").mkdir(parents=True, exist_ok=True)
-        (curriculum_root / "b1" / "single-module.md").write_text("# Content\n", "utf-8")
+        (curriculum_root / "b1" / "single-module.md").write_text(_compliant_content(), "utf-8")
 
         import os
         import time
@@ -513,6 +564,7 @@ class TestBatchReviewSkip:
         monkeypatch.setattr(
             v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True, raising=False,
         )
+        monkeypatch.setattr(v6_build, "detect_plan_hash_drift", lambda *args, **kwargs: None)
         monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
 
         review_calls: list[tuple] = []
@@ -538,7 +590,7 @@ class TestBatchReviewSkip:
             sys,
             "argv",
             [
-                "v6_build.py", "b1", "1", "--step", "review", "--resume",
+                "v6_build.py", "b1", "1", "--step", "review", "--resume", "--writer", "gemini",
                 "--invalidate-phase", "review",
                 "--invalidate-phase", "stress",
                 "--invalidate-phase", "publish",
@@ -556,6 +608,7 @@ class TestBatchReviewSkip:
         curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
         _write_manifest(curriculum_root, ["single-module"])
         _write_state(curriculum_root, "single-module", review_complete=True, all_complete=True)
+        _write_plan(curriculum_root, "single-module")
         _write_review(curriculum_root, "single-module", 8)
 
         status_dir = curriculum_root / "b1" / "status"
@@ -577,7 +630,7 @@ class TestBatchReviewSkip:
             "utf-8",
         )
         (curriculum_root / "b1").mkdir(parents=True, exist_ok=True)
-        (curriculum_root / "b1" / "single-module.md").write_text("# Content\n", "utf-8")
+        (curriculum_root / "b1" / "single-module.md").write_text(_compliant_content(), "utf-8")
 
         import os
         import time
@@ -592,6 +645,7 @@ class TestBatchReviewSkip:
         monkeypatch.setattr(
             v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True, raising=False,
         )
+        monkeypatch.setattr(v6_build, "detect_plan_hash_drift", lambda *args, **kwargs: None)
         monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
 
         review_calls: list[tuple] = []
@@ -618,7 +672,7 @@ class TestBatchReviewSkip:
         monkeypatch.setattr(
             sys,
             "argv",
-            ["v6_build.py", "b1", "1", "--step", "publish", "--resume"],
+            ["v6_build.py", "b1", "1", "--step", "publish", "--resume", "--writer", "gemini"],
         )
 
         v6_build.main()

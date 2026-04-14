@@ -32,7 +32,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 ## 9 Hard Rules
 
 1. **IMMERSION TARGET: {IMMERSION_TARGET_SHORT}** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
-2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. `dialogue_situations` settings and required nouns are hard constraints, not suggestions. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
+2. **EVERY contract item MUST appear in your output.** The shared contract lists required section beats, vocabulary, dialogue situations, activity obligations, and factual anchors. You MUST cover ALL of them — every textbook reference, every notation, every required example. If the contract says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping contract items is the #1 reason modules get rejected.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
 4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
@@ -50,7 +50,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ### How It Works
 
-1. Read the plan's `activity_hints` — each entry has an `id`, `type`, and `focus`
+1. Read the contract's `activity_obligations` — each entry has an `id`, `type`, and `focus`
 2. After the relevant teaching section, place an injection marker
 3. The ACTIVITIES step reads your prose + the plan hints and generates complete exercises
 
@@ -70,7 +70,7 @@ Rules:
 
 ### Example
 
-If the plan says:
+If the contract says:
 ```yaml
 activity_hints:
   - id: quiz-sounds-vs-letters
@@ -100,21 +100,19 @@ Your prose should contain (after the relevant sections):
 
 ---
 
-## Plan
+## Shared Module Contract
 
-<plan_content>
-{PLAN_CONTENT}
-</plan_content>
+{CONTRACT_YAML}
 
 ---
 
 {PRE_VERIFIED_FACTS}
 
-## Wiki Teaching Brief — Your Authoritative Source
+## Section-Mapped Wiki Teaching Brief
 
-**This is your primary teaching material.** The wiki article below was compiled from real Ukrainian school textbooks, literary sources, and verified references. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
+**This is your primary teaching material.** The excerpt packet below was compressed from the project wiki into section-mapped facts with citations. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**How to use the wiki article:**
+**How to use the excerpt packet:**
 1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
 2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
 3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
@@ -122,9 +120,7 @@ Your prose should contain (after the relevant sections):
 5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
 6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
 
-<knowledge_packet>
-{KNOWLEDGE_PACKET}
-</knowledge_packet>
+{SECTION_WIKI_EXCERPTS}
 
 ---
 

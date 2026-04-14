@@ -196,6 +196,9 @@ _PROMPT_CONTROL_LINE_RE = re.compile(
     r"|follow\b.*\b(?:system|developer|assistant|user)\s+instructions?\b"
     r")(?:['\"])?\s*$"
 )
+_PROMPT_CONTROL_PHRASE_RE = re.compile(
+    r"(?i)\b(?:ignore|disregard|forget)\s+(?:all\s+)?previous\s+instructions?\b"
+)
 
 
 def _strip_prompt_control_tags(text: str) -> str:
@@ -209,6 +212,7 @@ def _strip_prompt_control_tags(text: str) -> str:
     cleaned = _PROMPT_CONTROL_TAG_RE.sub("", text)
     cleaned = _PROMPT_LITERAL_MARKER_RE.sub("", cleaned)
     cleaned = _PROMPT_CONTROL_LINE_RE.sub("", cleaned)
+    cleaned = _PROMPT_CONTROL_PHRASE_RE.sub("", cleaned)
     return re.sub(r"\n{3,}", "\n\n", cleaned)
 
 
@@ -1644,6 +1648,142 @@ def _build_wiki_packet(level: str, slug: str) -> str:
     return "\n".join(lines)
 
 
+def _contract_path(level: str, slug: str) -> Path:
+    return CURRICULUM_ROOT / level / "orchestration" / slug / "contract.yaml"
+
+
+def _wiki_excerpts_path(level: str, slug: str) -> Path:
+    return CURRICULUM_ROOT / level / "orchestration" / slug / "wiki-excerpts.yaml"
+
+
+def _load_yaml_artifact(path: Path) -> dict:
+    data = yaml.safe_load(path.read_text("utf-8"))
+    return data if isinstance(data, dict) else {}
+
+
+def _save_yaml_artifact(path: Path, data: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        yaml.safe_dump(data, sort_keys=False, allow_unicode=True),
+        "utf-8",
+    )
+
+
+def _ensure_contract_artifacts(
+    level: str,
+    module_num: int,
+    slug: str,
+    packet_path: Path | None = None,
+    *,
+    log_creation: bool = False,
+) -> tuple[dict, dict]:
+    """Load or build contract + wiki excerpt artifacts for a module."""
+    contract_path = _contract_path(level, slug)
+    excerpts_path = _wiki_excerpts_path(level, slug)
+    if contract_path.exists() and excerpts_path.exists():
+        return _load_yaml_artifact(contract_path), _load_yaml_artifact(excerpts_path)
+
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    if not plan_path.exists():
+        raise FileNotFoundError(f"Plan not found for contract stage: {plan_path}")
+
+    wiki_packet = ""
+    if packet_path and packet_path.exists():
+        wiki_packet = packet_path.read_text("utf-8")
+    else:
+        research_path = CURRICULUM_ROOT / level / "research" / f"{slug}-knowledge-packet.md"
+        if research_path.exists():
+            wiki_packet = research_path.read_text("utf-8")
+
+    from build.phases.plan_contract import build_contract
+
+    plan = yaml.safe_load(plan_path.read_text("utf-8")) or {}
+    contract, excerpts = build_contract(
+        plan,
+        wiki_packet,
+        level=level,
+        slug=slug,
+        module_num=module_num,
+    )
+    _save_yaml_artifact(contract_path, contract)
+    _save_yaml_artifact(excerpts_path, excerpts)
+
+    if log_creation:
+        _log(f"  ✅ Contract saved → {contract_path.name}")
+        _log(f"  ✅ Wiki excerpts saved → {excerpts_path.name}")
+
+    return contract, excerpts
+
+
+def _format_contract_prompt_artifacts(
+    contract: dict,
+    excerpts: dict,
+    *,
+    section_title: str | None = None,
+) -> tuple[str, str]:
+    """Return literal-wrapped prompt artifacts for contract + wiki excerpts."""
+
+    def _sanitize_prompt_data(value: object) -> object:
+        if isinstance(value, str):
+            return _strip_prompt_control_tags(value)
+        if isinstance(value, list):
+            return [_sanitize_prompt_data(item) for item in value]
+        if isinstance(value, dict):
+            return {
+                key: _sanitize_prompt_data(item)
+                for key, item in value.items()
+            }
+        return value
+
+    contract_literal = _format_prompt_literal_block(
+        "Module Contract",
+        yaml.safe_dump(_sanitize_prompt_data(contract), sort_keys=False, allow_unicode=True),
+        language="yaml",
+    )
+
+    section_map = excerpts.get("sections") or {}
+    excerpt_payload: dict
+    if section_title is None:
+        excerpt_payload = excerpts
+    else:
+        excerpt_payload = {
+            "section": section_title,
+            "items": section_map.get(section_title, []),
+            "factual_anchors": [
+                anchor
+                for anchor in (excerpts.get("factual_anchors") or [])
+                if anchor.get("section") == section_title
+            ],
+        }
+    excerpt_literal = _format_prompt_literal_block(
+        "Section Wiki Excerpts",
+        yaml.safe_dump(_sanitize_prompt_data(excerpt_payload), sort_keys=False, allow_unicode=True),
+        language="yaml",
+    )
+    return contract_literal, excerpt_literal
+
+
+def _save_contract_compliance(
+    level: str,
+    slug: str,
+    attempt: int,
+    violations: list[dict],
+    *,
+    label: str,
+) -> None:
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    out_path = orch_dir / f"contract-compliance-{label}-r{attempt}.yaml"
+    out_path.write_text(
+        yaml.safe_dump(
+            {"attempt": attempt, "label": label, "violations": violations},
+            sort_keys=False,
+            allow_unicode=True,
+        ),
+        "utf-8",
+    )
+
+
 def step_pre_verify(level: str, module_num: int, slug: str,
                     writer: str = "claude-tools") -> str | None:
     """Step 3b: Pre-write verification — force MCP tool calls before writing.
@@ -1894,17 +2034,9 @@ def step_skeleton(level: str, module_num: int, slug: str,
     return skeleton_text
 
 
-def _parse_skeleton_sections(skeleton: str) -> list[dict]:
-    """Parse skeleton text into H2 sections with word budgets.
-
-    Each section dict has:
-      - title: str (the H2 heading text, e.g. "Мене звати... (My name is...)")
-      - body: str (the full skeleton text for that section)
-      - words: int (word budget from the (~XXX words total) annotation, or 0)
-
-    Returns empty list if skeleton has fewer than 2 H2 sections.
-    """
-    lines = skeleton.split("\n")
+def _parse_h2_sections(markdown: str) -> list[dict]:
+    """Parse H2 markdown sections preserving order and body text."""
+    lines = markdown.split("\n")
     sections: list[dict] = []
     current_title = ""
     current_lines: list[str] = []
@@ -1916,7 +2048,6 @@ def _parse_skeleton_sections(skeleton: str) -> list[dict]:
                 sections.append({
                     "title": current_title,
                     "body": "\n".join(current_lines).strip(),
-                    "words": _extract_word_budget(current_title),
                 })
             current_title = line[3:].strip()
             current_lines = [line]
@@ -1928,10 +2059,28 @@ def _parse_skeleton_sections(skeleton: str) -> list[dict]:
         sections.append({
             "title": current_title,
             "body": "\n".join(current_lines).strip(),
-            "words": _extract_word_budget(current_title),
         })
 
     return sections
+
+
+def _parse_skeleton_sections(skeleton: str) -> list[dict]:
+    """Parse skeleton text into H2 sections with word budgets.
+
+    Each section dict has:
+      - title: str (the H2 heading text, e.g. "Мене звати... (My name is...)")
+      - body: str (the full skeleton text for that section)
+      - words: int (word budget from the (~XXX words total) annotation, or 0)
+
+    Returns empty list if skeleton has fewer than 2 H2 sections.
+    """
+    return [
+        {
+            **section,
+            "words": _extract_word_budget(section["title"]),
+        }
+        for section in _parse_h2_sections(skeleton)
+    ]
 
 
 def _extract_word_budget(title: str) -> int:
@@ -2029,8 +2178,8 @@ def _build_chunk_prompt(
     section_index: int,
     total_sections: int,
     previous_summary: str,
-    plan_content: str,
-    packet: str,
+    contract_content: str,
+    section_excerpts: str,
     level: str,
     module_num: int,
     plan: dict,
@@ -2084,7 +2233,7 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 ---
 """
 
-    # Add plan for reference (trimmed to content_outline for this section)
+    # Add contract and excerpt context for reference
     # Resolve language-salad phase placeholders (#1185)
     _salad_vars = _build_salad_phase_placeholders(level, module_num)
     _salad_phase_num = _salad_vars["{SALAD_PHASE_NUMBER}"]
@@ -2094,15 +2243,15 @@ Continue naturally from where the previous section ended. Do not re-introduce co
     _salad_max_sent = _salad_vars["{SALAD_MAX_SENTENCES}"]
     _salad_xlat_pct = _salad_vars["{SALAD_TRANSLATION_PCT}"]
 
-    section_prompt += f"""## Full Plan (for reference)
+    section_prompt += f"""## Shared Module Contract
 
-{plan_content}
+{contract_content}
 
 ---
 
-## Knowledge Packet
+## Section-Mapped Wiki Excerpts
 
-{packet}
+{section_excerpts}
 
 ---
 
@@ -2259,16 +2408,10 @@ def step_write_chunked(
     plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
     plan_content_raw = plan_path.read_text("utf-8")
     plan = yaml.safe_load(plan_content_raw)
-    plan_content = _format_prompt_literal_block(
-        "Plan Content", plan_content_raw, language="yaml",
+    contract, excerpts = _ensure_contract_artifacts(
+        level, module_num, slug, packet_path, log_creation=False,
     )
-
-    packet = ""
-    if packet_path and packet_path.exists():
-        packet = packet_path.read_text("utf-8")
-        if len(packet) > 30_000:
-            packet = packet[:30_000] + "\n\n... (truncated for context window)"
-    packet = _format_prompt_literal_block("Knowledge Packet", packet, language="markdown")
+    contract_content, _ = _format_contract_prompt_artifacts(contract, excerpts)
 
     # Load write template for reference (used to pull content rules)
     is_seminar = _is_seminar_track(level)
@@ -2308,8 +2451,10 @@ def step_write_chunked(
             section_index=i,
             total_sections=len(sections),
             previous_summary=previous_summary,
-            plan_content=plan_content,
-            packet=packet,
+            contract_content=contract_content,
+            section_excerpts=_format_contract_prompt_artifacts(
+                contract, excerpts, section_title=section["title"],
+            )[1],
             level=level,
             module_num=module_num,
             plan=plan,
@@ -2431,17 +2576,10 @@ def step_write(level: str, module_num: int, slug: str,
     plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
     plan_content_raw = plan_path.read_text("utf-8")
     plan = yaml.safe_load(plan_content_raw)
-    plan_content = _format_prompt_literal_block(
-        "Plan Content", plan_content_raw, language="yaml",
+    contract, excerpts = _ensure_contract_artifacts(
+        level, module_num, slug, packet_path, log_creation=True,
     )
-
-    # Load knowledge packet (wiki-compiled articles — authoritative teaching content)
-    packet = packet_path.read_text("utf-8") if packet_path and packet_path.exists() else ""
-    # Wiki articles are 25-30K chars of compiled pedagogy.  Gemini's 1M context
-    # handles this easily.  Truncation loses curated teaching content.
-    if len(packet) > 30_000:
-        packet = packet[:30_000] + "\n\n... (truncated for context window)"
-    packet = _format_prompt_literal_block("Knowledge Packet", packet, language="markdown")
+    contract_content, excerpt_content = _format_contract_prompt_artifacts(contract, excerpts)
 
     # Build section titles
     sections = plan.get("content_outline", [])
@@ -2530,8 +2668,10 @@ def step_write(level: str, module_num: int, slug: str,
         "{PHASE}": phase,
         "{WORD_TARGET}": str(word_target),
         "{WORD_CEILING}": str(int(word_target * 1.5)),
-        "{PLAN_CONTENT}": plan_content,
-        "{KNOWLEDGE_PACKET}": packet,
+        "{CONTRACT_YAML}": contract_content,
+        "{SECTION_WIKI_EXCERPTS}": excerpt_content,
+        "{PLAN_CONTENT}": contract_content,
+        "{KNOWLEDGE_PACKET}": excerpt_content,
         "{EXACT_SECTION_TITLES}": "\n".join(section_titles),
         "{IMMERSION_RULE}": get_immersion_rule(level, module_num),
         "{IMMERSION_TARGET_SHORT}": _get_immersion_target_short(level, module_num),
@@ -2908,6 +3048,11 @@ def step_write_with_retry(
     - On exhaustion: return output + flag for human review
     - Do NOT include failed output in retry (prevents anchoring)
     """
+    from audit.checks.contract_compliance import (
+        build_contract_correction_directive,
+        check_contract_compliance,
+        has_blocking_violations,
+    )
     from build.quick_verify import (
         build_correction_directive,
         format_results,
@@ -2972,7 +3117,24 @@ def step_write_with_retry(
         # Persist quick verify results for API access (AC10)
         _save_quick_verify(level, slug, results, attempt)
 
-        if not has_errors(results):
+        contract, _ = _ensure_contract_artifacts(
+            level, module_num, slug, packet_path, log_creation=False,
+        )
+        contract_violations = check_contract_compliance(content, contract)
+        _save_contract_compliance(level, slug, attempt, contract_violations, label="write")
+        if contract_violations:
+            blocking = sum(1 for item in contract_violations if item.get("severity") == "ERROR")
+            _log(
+                f"  {'❌' if blocking else '⚠️'} Contract compliance "
+                f"{'FAILED' if blocking else 'reported warnings'} — "
+                f"{len(contract_violations)} violation(s)"
+            )
+            for violation in contract_violations[:5]:
+                _log(f"    [{violation.get('type')}] {violation.get('message')}")
+        else:
+            _log("  ✅ Contract compliance PASSED")
+
+        if not has_errors(results) and not has_blocking_violations(contract_violations):
             _log(f"  ✅ Quick verify PASSED on attempt {attempt}")
             _log_stats(stats_path, slug, "PASS", attempt, current_writer, True)
             return output
@@ -3008,7 +3170,13 @@ def step_write_with_retry(
             return output  # Return the output anyway (human can fix)
 
         # Build correction directive for next attempt — injected into prompt
-        current_directive = build_correction_directive(results)
+        current_directive = "\n\n".join(
+            part for part in (
+                build_correction_directive(results),
+                build_contract_correction_directive(contract_violations),
+            )
+            if part
+        )
         # Append friction hints from past builds (post-error auto-query)
         if friction_hints:
             current_directive += (
@@ -4793,10 +4961,16 @@ def step_review(content_path: Path, level: str, module_num: int,
     plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
     plan_content_raw = plan_path.read_text("utf-8") if plan_path.exists() else ""
     plan = yaml.safe_load(plan_content_raw) if plan_content_raw else {}
-    plan_content = _format_prompt_literal_block(
-        "Plan Content", plan_content_raw, language="yaml",
-    )
     raw_content = content_path.read_text("utf-8")
+    research_path = CURRICULUM_ROOT / level / "research" / f"{slug}-knowledge-packet.md"
+    contract, excerpts = _ensure_contract_artifacts(
+        level,
+        module_num,
+        slug,
+        research_path if research_path.exists() else None,
+        log_creation=True,
+    )
+    contract_content, excerpt_content = _format_contract_prompt_artifacts(contract, excerpts)
 
     # .md files now contain ONLY prose (no TAB markers, no enrichment artifacts).
     # Strip any legacy TAB markers if still present (backward compat during migration).
@@ -4829,7 +5003,10 @@ def step_review(content_path: Path, level: str, module_num: int,
         "{WORD_TARGET}": str(plan.get("word_target", 1200)),
         "{WORD_CEILING}": str(int(plan.get("word_target", 1200) * 1.5)),
         "{WORD_COUNT}": str(prose_words),
-        "{PLAN_CONTENT}": plan_content,
+        "{CONTRACT_YAML}": contract_content,
+        "{SECTION_WIKI_EXCERPTS}": excerpt_content,
+        "{PLAN_CONTENT}": contract_content,
+        "{KNOWLEDGE_PACKET}": excerpt_content,
         "{GENERATED_CONTENT}": generated_content_literal,
     }
     for key, value in replacements.items():
@@ -5095,6 +5272,26 @@ def _parse_review_fixes(review_text: str) -> list[dict]:
     return []
 
 
+def _parse_rewrite_blocks(review_text: str) -> list[dict]:
+    """Parse reviewer `<rewrite-block section="...">...</rewrite-block>` directives."""
+    text = review_text
+    if text.strip().startswith("```"):
+        text = re.sub(r"^```\w*\n?", "", text.strip())
+        text = re.sub(r"\n?```\s*$", "", text)
+
+    blocks: list[dict] = []
+    pattern = re.compile(
+        r"<rewrite-block\s+section=\"([^\"]+)\"\s*>(.*?)</rewrite-block>",
+        re.DOTALL | re.IGNORECASE,
+    )
+    for match in pattern.finditer(text):
+        section = match.group(1).strip()
+        directive = _strip_prompt_control_tags(match.group(2)).strip()
+        if section and directive:
+            blocks.append({"section": section, "directive": directive})
+    return blocks
+
+
 def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int]:
     """Apply <fixes> find/replace pairs from reviewer to content.
 
@@ -5232,6 +5429,170 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
         content_path.write_text(content, "utf-8")
         _log(f"  📝 {applied}/{len(fixes)} fixes applied to content")
 
+    return applied > 0, applied
+
+
+def _resolve_section_title(section_name: str, sections: list[dict]) -> str | None:
+    target = section_name.strip().removeprefix("## ").strip().lower()
+    for section in sections:
+        title = section["title"].strip()
+        normalized = title.lower()
+        if normalized == target or target in normalized or normalized in target:
+            return title
+    return None
+
+
+def _section_spans(content: str) -> list[dict]:
+    matches = list(re.finditer(r"^##\s+(.+)$", content, re.MULTILINE))
+    spans: list[dict] = []
+    for index, match in enumerate(matches):
+        start = match.start()
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(content)
+        spans.append({
+            "title": match.group(1).strip(),
+            "start": start,
+            "end": end,
+            "body": content[start:end].strip(),
+        })
+    return spans
+
+
+def _dispatch_rewrite_prompt(prompt: str, writer: str, phase: str, orch_dir: Path) -> tuple[bool, str]:
+    """Dispatch a rewrite prompt through the same writer family used for build."""
+    from build.dispatch import CLAUDE_WRITER_TOOLS, dispatch_agent
+
+    use_tools = writer.endswith("-tools")
+    if writer == "gemini":
+        return dispatch_agent(prompt, agent="gemini", phase=phase, orch_dir=orch_dir, timeout=TIMEOUT_WRITE_NO_TOOLS)
+    if writer == "gemini-tools":
+        return dispatch_agent(prompt, agent="gemini-tools", phase=phase, orch_dir=orch_dir, timeout=TIMEOUT_WRITE, mcp_tools=True)
+    if writer in ("claude", "claude-tools"):
+        return dispatch_agent(
+            prompt,
+            agent=writer,
+            phase=phase,
+            orch_dir=orch_dir,
+            timeout=TIMEOUT_WRITE if use_tools else TIMEOUT_WRITE_NO_TOOLS,
+            mcp_tools=use_tools,
+            allowed_tools=CLAUDE_WRITER_TOOLS if use_tools else None,
+        )
+    if writer in ("codex", "codex-tools"):
+        return dispatch_agent(
+            prompt,
+            agent="codex-tools" if use_tools else "codex",
+            phase=phase,
+            orch_dir=orch_dir,
+            timeout=TIMEOUT_WRITE,
+        )
+    return False, ""
+
+
+def _rewrite_block_section(
+    content_path: Path,
+    *,
+    level: str,
+    module_num: int,
+    slug: str,
+    writer: str,
+    section_name: str,
+    directive: str,
+) -> bool:
+    """Regenerate one H2 section under contract control."""
+    content = content_path.read_text("utf-8")
+    spans = _section_spans(content)
+    resolved_title = _resolve_section_title(section_name, spans)
+    if resolved_title is None:
+        _log(f"  ⚠️  Rewrite block section not found: {section_name}")
+        return False
+
+    target_index = next(i for i, span in enumerate(spans) if span["title"] == resolved_title)
+    current_section = spans[target_index]
+    previous_summary = _build_section_summary([span["body"] for span in spans[:target_index]])
+
+    contract, excerpts = _ensure_contract_artifacts(level, module_num, slug, log_creation=False)
+    contract_literal, excerpt_literal = _format_contract_prompt_artifacts(
+        contract, excerpts, section_title=resolved_title,
+    )
+
+    skeleton_path = CURRICULUM_ROOT / level / "orchestration" / slug / "skeleton.md"
+    skeleton_sections = _parse_skeleton_sections(skeleton_path.read_text("utf-8")) if skeleton_path.exists() else []
+    skeleton_section = next(
+        (section for section in skeleton_sections if section["title"] == resolved_title),
+        {"title": resolved_title, "body": f"## {resolved_title}", "words": 0},
+    )
+
+    prompt = (
+        "# Rewrite One Module Section\n\n"
+        f"Rewrite ONLY the section `## {resolved_title}`.\n"
+        "Return ONLY the rewritten section, beginning with the exact same H2 heading.\n"
+        "Do not output any other sections, commentary, or code fences.\n\n"
+        "## Rewrite Directive\n\n"
+        f"{directive}\n\n"
+        "## Shared Module Contract\n\n"
+        f"{contract_literal}\n\n"
+        "## Section-Mapped Wiki Excerpts\n\n"
+        f"{excerpt_literal}\n\n"
+        "## Previous Sections For Continuity\n\n"
+        f"{_format_prompt_literal_block('Previous Sections Context', previous_summary, language='markdown')}\n\n"
+        "## Current Section To Replace\n\n"
+        f"{_format_prompt_literal_block('Current Section', current_section['body'], language='markdown')}\n\n"
+        "## Skeleton For This Section\n\n"
+        f"{_format_prompt_literal_block('Section Skeleton', skeleton_section['body'], language='markdown')}\n"
+    )
+
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    prompt_path = orch_dir / f"rewrite-block-{target_index + 1:02d}-prompt.md"
+    prompt_path.write_text(prompt, "utf-8")
+    ok, raw = _dispatch_rewrite_prompt(prompt, writer, f"rewrite-block-{target_index + 1:02d}", orch_dir)
+    if not ok or not raw:
+        _log(f"  ❌ Rewrite block failed for section: {resolved_title}")
+        return False
+
+    lines = raw.splitlines()
+    start = next((i for i, line in enumerate(lines) if line.startswith("## ")), -1)
+    rewritten = raw if start < 0 else "\n".join(lines[start:]).strip()
+    rewritten_sections = _parse_h2_sections(rewritten)
+    if len(rewritten_sections) != 1 or rewritten_sections[0]["title"] != resolved_title:
+        _log(f"  ❌ Rewrite block rejected for {resolved_title} — invalid H2 structure")
+        return False
+
+    original_words = max(1, len(current_section["body"].split()))
+    rewritten_words = len(rewritten.split())
+    min_rewrite_words = min(original_words, max(8, int(original_words * 0.6)))
+    if rewritten_words < min_rewrite_words:
+        _log(f"  ❌ Rewrite block rejected for {resolved_title} — too short ({rewritten_words} words)")
+        return False
+
+    new_content = content[:current_section["start"]] + rewritten + "\n\n" + content[current_section["end"]:].lstrip()
+    content_path.write_text(new_content.rstrip() + "\n", "utf-8")
+    _log(f"  ✅ Rewrite block applied: {resolved_title}")
+    return True
+
+
+def _apply_review_rewrite_blocks(
+    review_text: str,
+    content_path: Path,
+    *,
+    level: str,
+    module_num: int,
+    slug: str,
+    writer: str,
+) -> tuple[bool, int]:
+    blocks = _parse_rewrite_blocks(review_text)
+    if not blocks:
+        return False, 0
+    applied = 0
+    for block in blocks:
+        if _rewrite_block_section(
+            content_path,
+            level=level,
+            module_num=module_num,
+            slug=slug,
+            writer=writer,
+            section_name=block["section"],
+            directive=block["directive"],
+        ):
+            applied += 1
     return applied > 0, applied
 
 def _strip_dsl_blocks(text: str) -> tuple[str, int]:
@@ -6404,6 +6765,19 @@ def main():
                 verification_text = existing_verify.read_text("utf-8")
                 _log(f"  🔍 Loaded existing pre-verify ({len(verification_text)} chars)")
 
+        if steps in ("all", "write", "review"):
+            try:
+                _log(f"\n{'='*60}")
+                _log("  Step 4b: CONTRACT — Plan + wiki compression")
+                _log(f"{'='*60}")
+                _ensure_contract_artifacts(
+                    args.level, args.module, slug, packet_path, log_creation=True,
+                )
+            except Exception as exc:
+                _log(f"\n❌ Build FAILED at contract stage: {exc}")
+                _emit_module_failed("write", f"Build FAILED at contract stage: {exc}")
+                return False
+
         # Step 5: WRITE + QUICK VERIFY + RETRY
         if steps in ("all", "write") and "write" not in completed_phases:
             _phase_start = time.monotonic()
@@ -6591,80 +6965,110 @@ def main():
             steps in ("all", "review")
             or "review" in resume_invalidation_applied
         ) and "review" not in completed_phases:
-            _phase_start = time.monotonic()
-            passed, score, review_text = step_review(
-                content_path, args.level, args.module, slug,
-                writer=args.writer, reviewer_override=args.reviewer,
+            from audit.checks.contract_compliance import (
+                check_contract_compliance,
+                has_blocking_violations,
             )
-            if score == 0.0 and not review_text:
-                _log("\n❌ Build FAILED at Step 8 (review — no output from reviewer)")
-                _save_v6_state(args.level, slug, "review", status="failed")
-                _emit_module_failed("review", "Build FAILED at Step 8 (review — no output from reviewer)")
-                sys.exit(1)
-            # NOTE: review state is saved AFTER acceptance decision, not here.
-            # See _save_v6_state call below the acceptance block.
-            final_score = score
 
-            # Fix strategy:
-            # 1. If PASSED → apply any <fixes> anyway (minor improvements), done.
-            # 2. If score ≥ target → apply <fixes>, done (no re-review, avoids degradation).
-            # 3. If score < target → apply <fixes>, re-review. If still failing, section rewrite + re-review.
-            # 4. GUARANTEE: before leaving this block, ALWAYS apply the latest review's <fixes>.
-            #    No review fix is ever left unapplied.
-
-
-            # Apply deterministic fixes from R1.  NEVER fall back to LLM section
-            # rewrite — evidence shows rewrites introduce new errors and degrade
-            # scores (8.2→7.8 on a2-bridge, 2026-04-07).  Apply what matches,
-            # skip what doesn't.
-            r1_score = score
-            fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
-            if fixes_applied:
-                _log(f"\n🔧 Applied {fix_count} deterministic fix(es) from R1")
-                step_verify(content_path, args.level, args.module)
-
-            # R2 only if R1 is below the target threshold.
-            if r1_score < REVIEW_TARGET_SCORE:
-                _log(
-                    f"\n🔄 R1 score {r1_score}/10 < {REVIEW_TARGET_SCORE:.1f} — running R2 to measure improvement"
-                )
+            _phase_start = time.monotonic()
+            review_round_results: list[tuple[bool, float, str]] = []
+            final_contract_violations: list[dict] = []
+            for round_index in range(1, 3):
                 passed, score, review_text = step_review(
                     content_path, args.level, args.module, slug,
                     writer=args.writer, reviewer_override=args.reviewer,
                 )
-                # NOTE: review state saved after acceptance decision, not here.
+                if score == 0.0 and not review_text:
+                    _log("\n❌ Build FAILED at Step 8 (review — no output from reviewer)")
+                    _save_v6_state(args.level, slug, "review", status="failed")
+                    _emit_module_failed("review", "Build FAILED at Step 8 (review — no output from reviewer)")
+                    sys.exit(1)
+                review_round_results.append((passed, score, review_text))
 
-                # Apply R2 fixes
-                r2_applied, r2_count = _apply_review_fixes(review_text, content_path)
-                if r2_applied:
-                    _log(f"\n🔧 Applied {r2_count} fix(es) from R2")
+                fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
+                rewrite_applied, rewrite_count = _apply_review_rewrite_blocks(
+                    review_text,
+                    content_path,
+                    level=args.level,
+                    module_num=args.module,
+                    slug=slug,
+                    writer=args.writer,
+                )
+                if fixes_applied:
+                    _log(f"\n🔧 Applied {fix_count} deterministic fix(es) from R{round_index}")
+                if rewrite_applied:
+                    _log(f"\n✍️ Applied {rewrite_count} block rewrite(s) from R{round_index}")
+                if fixes_applied or rewrite_applied:
                     step_verify(content_path, args.level, args.module)
 
-                delta = score - r1_score
-                delta_str = f"+{delta:.1f}" if delta >= 0 else f"{delta:.1f}"
-                _log(f"\n📊 R1: {r1_score}/10 → R2: {score}/10 ({delta_str})")
-
-                if passed:
-                    _log(f"\n✅ Review PASSED ({score}/10)")
-                elif score >= 8.0:
-                    _log(f"\n✅ Score {score}/10 ≥ 8.0 — accepting")
-                elif score >= 7.0:
-                    _log(f"\n⚠️  Score {score}/10 — accepting with warnings (2 rounds done)")
-                else:
-                    _log(f"\n❌ Score {score}/10 < 7.0 — HALTING. Module has critical issues.")
-                    _log("   Fix the plan or content manually, then re-run with --resume")
-                    _save_v6_state(args.level, slug, "review", status="failed")
-                    _emit_module_failed("review", f"Score {score}/10 < 7.0 — HALTING. Module has critical issues.")
-                    return False  # Do not proceed to publish
-            else:
-                _log(
-                    f"\n✅ R1 score {r1_score}/10 ≥ {REVIEW_TARGET_SCORE:.1f} — accepting with {fix_count} fix(es)"
+                contract, _ = _ensure_contract_artifacts(
+                    args.level, args.module, slug, packet_path, log_creation=False,
                 )
+                final_contract_violations = check_contract_compliance(
+                    content_path.read_text("utf-8"),
+                    contract,
+                )
+                _save_contract_compliance(
+                    args.level,
+                    slug,
+                    round_index,
+                    final_contract_violations,
+                    label="review",
+                )
+                if not has_blocking_violations(final_contract_violations) and passed:
+                    break
+                if round_index == 1:
+                    _log(
+                        f"\n🔄 R1 incomplete — review pass={passed}, "
+                        f"contract blockers={has_blocking_violations(final_contract_violations)}. Running R2."
+                    )
 
-            # Review accepted — NOW save state as complete.
-            # Deferred from initial review call to avoid marking failed reviews
-            # as complete (which would cause --resume to skip them).
+            passed, score, review_text = review_round_results[-1]
+            final_score = score
+            if len(review_round_results) == 2:
+                delta = review_round_results[-1][1] - review_round_results[0][1]
+                delta_str = f"+{delta:.1f}" if delta >= 0 else f"{delta:.1f}"
+                _log(f"\n📊 R1: {review_round_results[0][1]}/10 → R2: {score}/10 ({delta_str})")
+
+            if has_blocking_violations(final_contract_violations) or not passed:
+                orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
+                needs_review_path = orch_dir / "needs-human-review.yaml"
+                needs_review_path.write_text(
+                    yaml.safe_dump(
+                        {
+                            "slug": slug,
+                            "review_rounds": len(review_round_results),
+                            "final_score": score,
+                            "contract_violations": final_contract_violations,
+                            "latest_review_excerpt": review_text[:2000],
+                        },
+                        sort_keys=False,
+                        allow_unicode=True,
+                    ),
+                    "utf-8",
+                )
+                if _v6_state_path(args.level, slug).exists():
+                    state = _read_v6_state(args.level, slug)
+                else:
+                    state = {"mode": "v6", "track": args.level, "slug": slug, "phases": {}}
+                state["needs_human_review"] = {
+                    "status": True,
+                    "ts": datetime.now(tz=UTC).isoformat(),
+                    "reason": "review or contract still failing after 2 rounds",
+                    "violations_path": str(needs_review_path.relative_to(CURRICULUM_ROOT / args.level / "orchestration" / slug)),
+                }
+                _write_v6_state_atomic(_v6_state_path(args.level, slug), state)
+                _save_v6_state(args.level, slug, "review", status="failed")
+                _log("\n❌ Review halted after 2 rounds — marked needs_human_review")
+                _emit_module_failed("review", "Review/contract still failing after 2 rounds — needs_human_review")
+                return False
+
             _save_v6_state(args.level, slug, "review")
+            if _v6_state_path(args.level, slug).exists():
+                state = _read_v6_state(args.level, slug)
+                if "needs_human_review" in state:
+                    state.pop("needs_human_review", None)
+                    _write_v6_state_atomic(_v6_state_path(args.level, slug), state)
 
             # Run deterministic style cleanup if engagement is weak
             engagement_match = re.search(
@@ -6677,15 +7081,6 @@ def main():
                     style_fixes = _post_process_content(content_path)
                     if style_fixes > 0:
                         _log(f"  Applied {style_fixes} deterministic style fixes")
-            # Apply any remaining fixes from the final review (even PASS verdicts
-            # may have minor style suggestions worth applying).
-            if passed:
-                latest_fixes = _parse_review_fixes(review_text)
-                if latest_fixes:
-                    final_applied, final_count = _apply_review_fixes(review_text, content_path)
-                    if final_applied:
-                        _log(f"\n🔧 Post-PASS fix pass: applied {final_count}/{len(latest_fixes)} minor fix(es)")
-
             # 2. Check for remaining known issues (Russianisms, calques)
             if content_path.exists():
                 from build.quick_verify import _check_toxic_tokens
@@ -6695,13 +7090,7 @@ def main():
                     for t in remaining_toxins[:5]:
                         _log(f"    {t}")
 
-            # Log final status
-            if passed:
-                _log(f"\n✅ Review PASSED ({score}/10)")
-            elif score >= REVIEW_TARGET_SCORE:
-                _log(f"\n✅ Score {score}/10 ≥ {REVIEW_TARGET_SCORE:.1f} — accepting")
-            else:
-                _log(f"\n⚠️  Score {score}/10 — accepting as final (fix rounds exhausted)")
+            _log(f"\n✅ Review PASSED ({score}/10)")
             final_score = score
             _emit_phase_done("review", _phase_start)
 

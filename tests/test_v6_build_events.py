@@ -74,10 +74,18 @@ def _single_module_tree(tmp_path: Path, level: str = "a2", slug: str = "a2-bridg
                 "word_target": 2200,
                 "phase": f"{level.upper()}.1",
                 "content_outline": [
-                    {"section": "Intro", "words": 1700},
-                    {"section": "Summary", "words": 500},
+                    {"section": "Intro", "words": 7, "points": ["місто", "classroom"]},
+                    {"section": "Summary", "words": 6, "points": ["Учень", "summary"]},
                 ],
-                "vocabulary_hints": {"required": ["місто (city)"]},
+                "dialogue_situations": [
+                    {
+                        "setting": "classroom",
+                        "speakers": ["Вчитель", "Учень"],
+                        "motivation": "basic greeting",
+                    }
+                ],
+                "vocabulary_hints": {"required": ["місто"]},
+                "activity_hints": [{"id": "quiz-intro", "type": "quiz", "focus": "intro"}],
             },
             sort_keys=False,
             allow_unicode=True,
@@ -85,6 +93,16 @@ def _single_module_tree(tmp_path: Path, level: str = "a2", slug: str = "a2-bridg
         "utf-8",
     )
     return curriculum_root
+
+
+def _compliant_module_content() -> str:
+    return (
+        "## Intro\n"
+        "місто classroom Вчитель Учень greeting.\n"
+        "<!-- INJECT_ACTIVITY: quiz-intro -->\n\n"
+        "## Summary\n"
+        "місто classroom Учень summary.\n"
+    )
 
 
 def test_emit_event_writes_json_line(capsys: pytest.CaptureFixture[str]) -> None:
@@ -120,11 +138,39 @@ def test_step_review_emits_review_score_event(
     slug = "a2-bridge"
     curriculum_root = _single_module_tree(tmp_path, level=level, slug=slug)
     content_path = curriculum_root / level / f"{slug}.md"
-    content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+    content_path.write_text(_compliant_module_content(), "utf-8")
 
     plan_path = curriculum_root / "plans" / level / f"{slug}.yaml"
     plan_path.parent.mkdir(parents=True, exist_ok=True)
-    plan_path.write_text("title: A2 Bridge\nword_target: 1200\n", "utf-8")
+    plan_path.write_text(
+        yaml.safe_dump(
+            {
+                "module": 1,
+                "slug": slug,
+                "level": level,
+                "sequence": 1,
+                "title": "A2 Bridge",
+                "word_target": 1200,
+                "phase": "A2.1",
+                "content_outline": [
+                    {"section": "Intro", "words": 7, "points": ["місто", "classroom"]},
+                    {"section": "Summary", "words": 6, "points": ["Учень", "summary"]},
+                ],
+                "dialogue_situations": [
+                    {
+                        "setting": "classroom",
+                        "speakers": ["Вчитель", "Учень"],
+                        "motivation": "basic greeting",
+                    }
+                ],
+                "vocabulary_hints": {"required": ["місто"]},
+                "activity_hints": [{"id": "quiz-intro", "type": "quiz", "focus": "intro"}],
+            },
+            sort_keys=False,
+            allow_unicode=True,
+        ),
+        "utf-8",
+    )
 
     phases_dir = tmp_path / "scripts" / "build" / "phases"
     phases_dir.mkdir(parents=True, exist_ok=True)
@@ -276,7 +322,7 @@ def test_main_emits_module_done_after_publish(
 ) -> None:
     curriculum_root = _single_module_tree(tmp_path)
     content_path = curriculum_root / "a2" / "a2-bridge.md"
-    content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+    content_path.write_text(_compliant_module_content(), "utf-8")
 
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
     monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
@@ -328,7 +374,7 @@ def test_main_persists_skipped_optional_phases_as_satisfied(
     def fake_write(level: str, module_num: int, slug: str, packet_path: Path | None, **kwargs) -> Path:
         content_path = curriculum_root / level / f"{slug}.md"
         content_path.parent.mkdir(parents=True, exist_ok=True)
-        content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+        content_path.write_text(_compliant_module_content(), "utf-8")
         return content_path
 
     def fake_activities(content_path: Path, level: str, module_num: int, slug: str, **kwargs) -> Path:
@@ -410,7 +456,7 @@ def test_main_persists_only_successful_verify_and_stress_phases_as_complete(
     def fake_write(level: str, module_num: int, slug: str, packet_path: Path | None, **kwargs) -> Path:
         content_path = curriculum_root / level / f"{slug}.md"
         content_path.parent.mkdir(parents=True, exist_ok=True)
-        content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+        content_path.write_text(_compliant_module_content(), "utf-8")
         return content_path
 
     def fake_activities(content_path: Path, level: str, module_num: int, slug: str, **kwargs) -> Path:
@@ -465,7 +511,7 @@ def test_step_audit_rejects_status_file_without_mtime_advance(
 ) -> None:
     curriculum_root = _single_module_tree(tmp_path)
     content_path = curriculum_root / "a2" / "a2-bridge.md"
-    content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+    content_path.write_text(_compliant_module_content(), "utf-8")
 
     status_path = curriculum_root / "a2" / "status" / "a2-bridge.json"
     status_path.parent.mkdir(parents=True, exist_ok=True)
@@ -500,7 +546,7 @@ def test_main_blocks_publish_when_audit_crashes_with_stale_passing_status(
 ) -> None:
     curriculum_root = _single_module_tree(tmp_path)
     content_path = curriculum_root / "a2" / "a2-bridge.md"
-    content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+    content_path.write_text(_compliant_module_content(), "utf-8")
 
     status_path = curriculum_root / "a2" / "status" / "a2-bridge.json"
     status_path.parent.mkdir(parents=True, exist_ok=True)
@@ -787,7 +833,7 @@ def test_main_releases_lock_when_publish_raises(
 ) -> None:
     curriculum_root = _single_module_tree(tmp_path)
     content_path = curriculum_root / "a2" / "a2-bridge.md"
-    content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
+    content_path.write_text(_compliant_module_content(), "utf-8")
 
     releases: list[str] = []
 
