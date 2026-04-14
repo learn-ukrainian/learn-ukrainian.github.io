@@ -11,7 +11,56 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.result import Result
-from ai_agent_bridge import _channels, _cli, _db
+from ai_agent_bridge import _channels, _channels_cli, _cli, _db
+
+
+def test_post_preflight_warns_for_large_body():
+    warning = _channels_cli._post_preflight_warning(body="x" * 8001, mode="workspace-write")
+
+    assert warning == (
+        "[PREFLIGHT] Brief looks large (8001 chars, 0 files, 0 multi-step markers). "
+        "Consider --deadline 1800 or splitting into smaller tasks."
+    )
+
+
+def test_post_preflight_warns_for_many_file_mentions():
+    body = "\n".join(
+        [
+            "scripts/a.py",
+            "tests/test_a.py",
+            "docs/plan.md",
+            "curriculum/l2-uk-en/a1/topic.md",
+            "plans/a1/topic.yaml",
+        ]
+    )
+
+    warning = _channels_cli._post_preflight_warning(body=body, mode="workspace-write")
+
+    assert warning == (
+        "[PREFLIGHT] Brief looks large (93 chars, 5 files, 0 multi-step markers). "
+        "Consider --deadline 1800 or splitting into smaller tasks."
+    )
+
+
+def test_post_preflight_warns_for_multi_step_markers():
+    warning = _channels_cli._post_preflight_warning(
+        body="Fix this and then add that. Also update docs. Additionally add tests.",
+        mode="workspace-write",
+    )
+
+    assert warning == (
+        "[PREFLIGHT] Brief looks large (69 chars, 0 files, 3 multi-step markers). "
+        "Consider --deadline 1800 or splitting into smaller tasks."
+    )
+
+
+def test_post_preflight_skips_non_workspace_write_mode():
+    warning = _channels_cli._post_preflight_warning(
+        body="scripts/a.py\ntests/test_a.py\ncurriculum/x.md\ndocs/y.md\nplans/z.yaml",
+        mode="read-only",
+    )
+
+    assert warning is None
 
 
 @pytest.fixture(autouse=True)
@@ -286,6 +335,30 @@ def test_post_model_flag_round_trips_to_gemini_invocation(mock_invoke, capsys):
     assert mock_invoke.call_args.kwargs["model"] == "gemini-3-flash-preview"
 
 
+def test_post_workspace_write_preflight_warns_to_stderr_and_still_posts(capsys):
+    _channels.create_channel("topic")
+    body = "\n".join(
+        [
+            "scripts/a.py",
+            "tests/test_a.py",
+            "docs/plan.md",
+            "curriculum/l2-uk-en/a1/topic.md",
+            "plans/a1/topic.yaml",
+        ]
+    )
+
+    exit_code = _run_cli(["post", "topic", body, "--mode", "workspace-write", "--no-snapshot"])
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "✅ posted to #topic" in captured.out
+    assert (
+        "[PREFLIGHT] Brief looks large (93 chars, 5 files, 0 multi-step markers). "
+        "Consider --deadline 1800 or splitting into smaller tasks."
+    ) in captured.err
+    assert _channels.read("topic")[0]["body"] == body
+
+
 @patch("ai_agent_bridge._inbox.runtime_invoke")
 def test_inbox_run_deadline_flag_overrides_worker_timeout(mock_invoke, capsys):
     _make_thread("claude", count=1)
@@ -326,6 +399,15 @@ def test_post_deadline_flag_stores_delivery_override_and_worker_uses_it(mock_inv
     delivery = _channels.deliveries_for_message(str(message["message_id"]))[0]
     assert delivery["deadline_seconds"] == 1200
     assert mock_invoke.call_args.kwargs["hard_timeout"] == 1200
+
+
+def test_invalid_deadline_value_is_rejected_with_helpful_error(capsys):
+    exit_code = _run_cli(["post", "topic", "hello", "--deadline", "61"])
+
+    assert exit_code == 2
+    captured = capsys.readouterr()
+    assert "usage:" in captured.err
+    assert "deadline must be one of: 60, 300, 600, 900, 1200, 1800, 2400, 3000, 3600" in captured.err
 
 
 def test_help_includes_model_and_deadline_flags(capsys):

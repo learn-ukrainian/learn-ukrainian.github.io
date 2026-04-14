@@ -34,8 +34,10 @@ commands handle the agent-calling side.
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
+import re
 import shlex
 import subprocess
 import sys
@@ -46,15 +48,51 @@ from typing import Any
 from . import _channels
 from ._channels_watch import watch_channel_events
 
+_ALLOWED_DEADLINE_SECONDS = (60, 300, 600, 900, 1200, 1800, 2400, 3000, 3600)
+_PREFLIGHT_FILE_PATH_RE = re.compile(
+    r"\b(?:scripts|tests|docs|curriculum|plans)/[A-Za-z0-9._/-]+"
+)
+_PREFLIGHT_MULTI_STEP_RE = re.compile(
+    r"\b(?:and then|also|additionally)\b",
+    re.IGNORECASE,
+)
+
 
 def _deadline_seconds_arg(raw_value: str) -> int:
     try:
         seconds = int(raw_value)
     except ValueError as exc:
-        raise ValueError("deadline must be an integer number of seconds") from exc
-    if not 60 <= seconds <= 3600:
-        raise ValueError("deadline must be between 60 and 3600 seconds")
+        raise argparse.ArgumentTypeError(
+            "deadline must be an integer number of seconds"
+        ) from exc
+    if seconds not in _ALLOWED_DEADLINE_SECONDS:
+        allowed = ", ".join(str(value) for value in _ALLOWED_DEADLINE_SECONDS)
+        raise argparse.ArgumentTypeError(
+            f"deadline must be one of: {allowed}"
+        )
     return seconds
+
+
+def _post_preflight_warning(*, body: str, mode: str) -> str | None:
+    if mode != "workspace-write":
+        return None
+
+    char_count = len(body)
+    file_count = len(set(_PREFLIGHT_FILE_PATH_RE.findall(body)))
+    multi_step_count = len(_PREFLIGHT_MULTI_STEP_RE.findall(body))
+    looks_large = (
+        char_count > 8000
+        or file_count >= 5
+        or multi_step_count > 0
+    )
+    if not looks_large:
+        return None
+
+    return (
+        "[PREFLIGHT] Brief looks large "
+        f"({char_count} chars, {file_count} files, {multi_step_count} multi-step markers). "
+        "Consider --deadline 1800 or splitting into smaller tasks."
+    )
 
 
 # ── argparse registration ────────────────────────────────────────────
@@ -776,6 +814,9 @@ def _handle_post(args) -> int:
             return 1
 
     mode = getattr(args, "mode", "read-only")
+    warning = _post_preflight_warning(body=body, mode=mode)
+    if warning is not None:
+        print(warning, file=sys.stderr)
     try:
         result = _channels.post(
             args.channel,
