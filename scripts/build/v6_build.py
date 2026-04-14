@@ -48,7 +48,6 @@ import os
 import re
 import sqlite3
 import sys
-import tempfile
 import time
 from contextlib import suppress
 from datetime import UTC, datetime
@@ -79,6 +78,7 @@ from batch_gemini_config import (
     TIMEOUT_WRITE,
     TIMEOUT_WRITE_NO_TOOLS,
 )
+from build.io_utils import write_json_atomic
 from build.plan_tracking import (
     PLAN_DRIFT_GUARD_STEPS,
     PLAN_HASH_PHASES,
@@ -136,21 +136,7 @@ def _read_v6_state(level: str, slug: str) -> dict:
 
 def _write_v6_state_atomic(state_path: Path, state: dict) -> None:
     """Write state.json atomically via temp file + os.replace()."""
-    state_path.parent.mkdir(parents=True, exist_ok=True)
-    fd, tmp_path = tempfile.mkstemp(
-        dir=state_path.parent,
-        prefix=f".{state_path.stem}-",
-        suffix=".tmp",
-    )
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            json.dump(state, handle, indent=2, ensure_ascii=False)
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(tmp_path, state_path)
-    except Exception:
-        Path(tmp_path).unlink(missing_ok=True)
-        raise
+    write_json_atomic(state_path, state, indent=2, ensure_ascii=False)
 
 
 def _handle_rate_limit_backoff(raw: str, attempt: int, max_attempts: int, phase: str) -> bool:

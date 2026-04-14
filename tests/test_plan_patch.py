@@ -6,11 +6,13 @@ import importlib
 import sys
 from pathlib import Path
 
+import pytest
 import yaml
 
 SCRIPTS_DIR = Path(__file__).resolve().parent.parent / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
 
+io_utils = importlib.import_module("build.io_utils")
 plan_patch = importlib.import_module("build.phases.plan_patch")
 
 
@@ -240,3 +242,83 @@ def test_run_plan_patch_noop_does_not_modify_plan(tmp_path: Path, monkeypatch) -
     assert result.applied is False
     assert plan_path.read_text("utf-8") == original
     assert not plan_path.with_suffix(".yaml.bak").exists()
+
+
+def test_apply_plan_patch_response_keeps_plan_yaml_whole_on_replace_failure(
+    tmp_path: Path, monkeypatch
+) -> None:
+    plan_path = tmp_path / "plan.yaml"
+    original = yaml.safe_dump(
+        {
+            "version": "2.0",
+            "title": "Requests",
+            "dialogue_situations": [
+                {
+                    "setting": "generic greeting",
+                    "speakers": ["Customer", "Clerk"],
+                    "motivation": "practice polite requests",
+                }
+            ],
+        },
+        sort_keys=False,
+        allow_unicode=True,
+    )
+    plan_path.write_text(original, "utf-8")
+
+    response = {
+        "decision": "patch",
+        "complaint_summary": "dialogue situation not grounded in the plan",
+        "changes": [
+            {
+                "path": "dialogue_situations[0].setting",
+                "action": "replace",
+                "value": "bus-station ticket window",
+                "reason": "Adds a concrete place that naturally supports polite requests.",
+            }
+        ],
+    }
+    expected_new = yaml.safe_dump(
+        {
+            "version": "2.0.1",
+            "title": "Requests",
+            "dialogue_situations": [
+                {
+                    "setting": "bus-station ticket window",
+                    "speakers": ["Customer", "Clerk"],
+                    "motivation": "practice polite requests",
+                }
+            ],
+            "plan_fixes": [
+                {
+                    "version": "2.0.1",
+                    "date": "2026-04-14",
+                    "trigger": "dialogue situation not grounded in the plan",
+                    "changes": [
+                        "replace dialogue_situations[0].setting — Adds a concrete place that naturally supports polite requests."
+                    ],
+                }
+            ],
+        },
+        sort_keys=False,
+        allow_unicode=True,
+    )
+
+    real_replace = io_utils.os.replace
+
+    def fail_plan_replace(src: str | bytes, dst: str | bytes) -> None:
+        if Path(dst) == plan_path:
+            raise OSError("simulated replace failure")
+        real_replace(src, dst)
+
+    monkeypatch.setattr(io_utils.os, "replace", fail_plan_replace)
+
+    with pytest.raises(OSError, match="simulated replace failure"):
+        plan_patch.apply_plan_patch_response(
+            plan_path,
+            response,
+            complaint_summary="dialogue situation not grounded in the plan",
+        )
+
+    on_disk = plan_path.read_text("utf-8")
+    assert on_disk in {original, expected_new}
+    assert on_disk == original

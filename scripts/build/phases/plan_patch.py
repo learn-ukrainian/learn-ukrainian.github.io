@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import copy
 import re
-import shutil
 import subprocess
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -19,6 +18,7 @@ from typing import Any
 
 import yaml
 from batch_gemini_config import PRO_MODEL
+from build.io_utils import write_text_atomic
 from build.v6_build import _format_prompt_literal_block, _strip_prompt_control_tags
 from gemini_output import extract_delimited
 from tools.plan_autofix import _bump_version
@@ -420,7 +420,8 @@ def apply_plan_patch_response(
             complaint_summary=str(response.get("complaint_summary") or complaint_summary),
         )
 
-    plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    original_plan_text = plan_path.read_text("utf-8")
+    plan = yaml.safe_load(original_plan_text)
     if not isinstance(plan, dict):
         return PlanPatchResult(
             applied=False,
@@ -490,10 +491,11 @@ def apply_plan_patch_response(
     updated["plan_fixes"].append(fix_entry)
 
     backup_path = plan_path.with_suffix(".yaml.bak")
-    shutil.copy2(plan_path, backup_path)
-    plan_path.write_text(
+    write_text_atomic(backup_path, original_plan_text, encoding="utf-8")
+    write_text_atomic(
+        plan_path,
         yaml.safe_dump(updated, allow_unicode=True, sort_keys=False),
-        "utf-8",
+        encoding="utf-8",
     )
 
     return PlanPatchResult(
@@ -539,13 +541,17 @@ def run_plan_patch(
         contract_violations=contract_violations,
     )
     orch_dir.mkdir(parents=True, exist_ok=True)
-    (orch_dir / "v6-plan-patch-prompt.md").write_text(prompt, "utf-8")
+    write_text_atomic(orch_dir / "v6-plan-patch-prompt.md", prompt, encoding="utf-8")
 
     ok, raw_output = _dispatch_gemini_plan_patch(
         prompt,
         task_id=f"plan-patch-{level}-{slug}",
     )
-    (orch_dir / "v6-plan-patch-output.md").write_text(raw_output or "", "utf-8")
+    write_text_atomic(
+        orch_dir / "v6-plan-patch-output.md",
+        raw_output or "",
+        encoding="utf-8",
+    )
     if not ok:
         return PlanPatchResult(
             applied=False,
@@ -562,9 +568,10 @@ def run_plan_patch(
         )
 
     parsed_path = orch_dir / "v6-plan-patch-response.yaml"
-    parsed_path.write_text(
+    write_text_atomic(
+        parsed_path,
         yaml.safe_dump(response, allow_unicode=True, sort_keys=False),
-        "utf-8",
+        encoding="utf-8",
     )
     return apply_plan_patch_response(
         plan_path,
