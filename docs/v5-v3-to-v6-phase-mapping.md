@@ -1,10 +1,47 @@
 # v5/v3 to v6 Phase Mapping
 
+> **STATUS — SHELVED (2026-04-14).** This migration was superseded by
+> the "archive research-only seminar tracks" decision (#1229 closed).
+> Every track the migration would have touched had zero shipped
+> `.md` lesson content, so the metadata port was busywork; the tracks
+> were moved to `curriculum/l2-uk-en/_archive/` instead.
+>
+> The script is kept for potential future one-off use. Before running
+> `--apply`, the two Gemini conditions below must be addressed.
+
 This document records the metadata-only migration used by
 [`scripts/tools/migrate_legacy_state_to_v6.py`](../scripts/tools/migrate_legacy_state_to_v6.py).
 
 The migration rewrites orchestration state files to the v6 schema only. It does
 not touch lesson prose, plans, activities, vocabulary, research, or wiki files.
+
+## Gemini review (#1229, thread `fd490a47a3674d72`) — APPROVE WITH CONDITIONS
+
+Both blocking conditions are implemented in the script:
+
+1. **Status coercion** — `_select_status()` maps legacy status strings
+   (`"PASS@8.5"`, `"success"`, `"reject…"`, `"revise…"`, `"degraded"`, …)
+   onto the v6 vocabulary `{"complete", "skipped", "failed"}` that the
+   v6 runtime (`scripts/build/v6_build.py::_PHASE_SATISFIED_STATUSES`)
+   and the track-health dashboard accept.
+2. **API round-trip diff** — `_verify_dry_run()` calls
+   `GET /api/state/module/{track}/{num}` before and after applying the
+   migrated state to a temp location, then diffs `shippable`,
+   `audit_status`, and `review`. Mismatches raise `AssertionError`.
+
+Gaps a future `--apply` campaign should tighten:
+
+* `_verify_dry_run` derives module number via
+  `int(slug.split("-")[0])` and silently no-ops on non-numeric-prefix
+  slugs (which is most of them). Replace with a curriculum-manifest
+  lookup before any non-trivial run.
+* The diff currently checks `shippable`, `audit_status`, `review`.
+  Gemini also asked for `phases.*.status` parity — add it.
+
+Other review checks were clean: precedence logic correct,
+`migrated_from` key safe under the v6 parser, `__preserved_as_legacy__`
+is only a warning string and is never silently inserted as a phase,
+atomic write via `os.replace` is POSIX-safe.
 
 ## Discovery Snapshot
 

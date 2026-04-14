@@ -1,5 +1,37 @@
 #!/usr/bin/env python3
-"""Migrate legacy v5/v3 orchestration state files to the v6 schema."""
+"""Migrate legacy v5/v3 orchestration state files to the v6 schema.
+
+SHELVED AS OF 2026-04-14 (#1229 closed). Live seminar tracks with zero
+shipped ``.md`` content were archived under
+``curriculum/l2-uk-en/_archive/`` instead of migrated. This script is
+kept only for any future one-off need (e.g. resurrecting a single
+archived track).
+
+Gemini adversarial review (channel thread ``fd490a47a3674d72``)
+verdict: APPROVE WITH CONDITIONS. Both conditions are addressed in
+this implementation:
+
+* ``_select_status()`` coerces legacy status strings into the
+  ``{"complete", "skipped", "failed"}`` vocabulary that
+  ``scripts/build/v6_build.py::_PHASE_SATISFIED_STATUSES`` and the
+  track-health dashboard expect.
+* ``_verify_dry_run()`` round-trips the migrated state through
+  ``GET /api/state/module/{track}/{num}`` and diffs ``shippable``,
+  ``audit_status``, and ``review`` between the original and migrated
+  payloads.
+
+Two known limitations a future ``--apply`` run should still tighten:
+
+1. ``_verify_dry_run`` derives module ``num`` from
+   ``int(slug.split("-")[0])`` and silently skips slugs that don't
+   start with a numeric prefix (most slugs don't). Tighten by reading
+   the curriculum manifest to look up the slug → num mapping.
+2. The diff only compares ``shippable``, ``audit_status`` and
+   ``review``. Gemini also asked for ``phases.*.status`` parity. Add
+   it before the first non-trivial ``--apply``.
+
+Full rationale in ``docs/v5-v3-to-v6-phase-mapping.md``.
+"""
 
 from __future__ import annotations
 
@@ -269,7 +301,15 @@ def _normalize_legacy_state(candidate: Candidate) -> dict[str, Any]:
 
 def _select_status(legacy_phase: dict[str, Any]) -> str:
     status = legacy_phase.get("status")
-    return status if isinstance(status, str) and status else "complete"
+    if not isinstance(status, str) or not status:
+        return "complete"
+
+    status_lower = status.lower()
+    if status_lower in ("complete", "success", "skipped", "pass") or status_lower.startswith("pass@"):
+        return "complete"
+    if status_lower in ("failed", "error", "rejected", "revise", "degraded") or status_lower.startswith("reject") or status_lower.startswith("revise"):
+        return "failed"
+    return "failed"
 
 
 def _apply_phase_rules(
@@ -411,6 +451,45 @@ def _verify_dry_run(report: MigrationReport) -> None:
         orch_dir.mkdir(parents=True, exist_ok=True)
         _atomic_write_json(orch_dir / "state.json", report.v6_state)
         verify_v6_state(report.candidate.track, report.candidate.slug, orch_dir, report.v6_state)
+
+    from api.main import app
+    from fastapi.testclient import TestClient
+
+    client = TestClient(app)
+    track = report.candidate.track
+    slug = report.candidate.slug
+    try:
+        num = int(slug.split("-")[0])
+    except ValueError:
+        return
+
+    resp_before = client.get(f"/api/state/module/{track}/{num}")
+    if resp_before.status_code != 200:
+        return
+    json_before = resp_before.json()
+
+    real_orch_dir = report.candidate.orch_dir
+    real_state_path = real_orch_dir / "state.json"
+
+    original_content = None
+    if real_state_path.exists():
+        original_content = real_state_path.read_bytes()
+
+    try:
+        _atomic_write_json(real_state_path, report.v6_state)
+        resp_after = client.get(f"/api/state/module/{track}/{num}")
+        if resp_after.status_code != 200:
+            raise AssertionError(f"API request failed after override: {resp_after.status_code}")
+        json_after = resp_after.json()
+
+        for key in ["shippable", "audit_status", "review"]:
+            if json_before.get(key) != json_after.get(key):
+                raise AssertionError(f"Round-trip derivative mismatch for {key} in {track}/{slug}")
+    finally:
+        if original_content is not None:
+            real_state_path.write_bytes(original_content)
+        else:
+            real_state_path.unlink(missing_ok=True)
 
 
 def format_report(report: MigrationReport, dry_run: bool) -> str:
