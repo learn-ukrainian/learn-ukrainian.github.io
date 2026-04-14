@@ -12,6 +12,14 @@ Every task follows this workflow. No exceptions for non-trivial changes.
 6. **Adversarial review of implementation** — send code to Gemini, fix findings
 7. **Close** — only when all ACs pass and review is clean
 
+**Goal-Driven Execution (step 4)**: Transform imperative tasks into verifiable goals. For multi-step work, state a plan with explicit verification at each step:
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+Strong success criteria enable independent looping. Weak criteria ("make it work") require constant clarification.
+
 **Skip plan review** (step 2) only for trivial changes (< 50 lines, config/typo fixes).
 
 **Adversarial review command** (steps 2 & 6). Always use `--model gemini-3.1-pro-preview`. Document findings on the GH issue.
