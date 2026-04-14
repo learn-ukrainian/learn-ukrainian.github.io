@@ -52,6 +52,56 @@ _RUSSICISMS = {
     "луна": "місяць (moon)",
 }
 
+_DIALOGUE_SECTION_RE = re.compile(
+    r"(діалог|діалоги|розмов|conversation|dialogue|role-?play|scenario|сценар)",
+    re.IGNORECASE,
+)
+_DIALOGUE_TOKEN_RE = re.compile(r"[a-zа-яґєії'-]+", re.IGNORECASE)
+_DIALOGUE_STOPWORDS = {
+    "a", "an", "and", "at", "for", "from", "in", "of", "on", "the", "to", "with",
+    "а", "але", "бо", "в", "ви", "вона", "вони", "воно", "все", "до", "є", "за",
+    "з", "і", "й", "на", "не", "по", "про", "та", "ти", "у", "це", "цей", "ця",
+    "ці", "що", "як",
+}
+_DIALOGUE_DOMAIN_KEYWORDS = {
+    "pet_shop": {
+        "акваріум", "animal", "animals", "cat", "dog", "fish", "hamster", "kitten",
+        "parrot", "pet", "pets", "petshop", "pet-shop", "shop", "turtle",
+        "кіт", "кішка", "кошеня", "кошка", "папуга", "пес", "пташка", "рибка",
+        "собака", "тварина", "тварини", "хом'як", "хомяк", "черепаха",
+    },
+    "room_furniture": {
+        "armchair", "bag", "bed", "chair", "desk", "furniture", "lamp", "mirror",
+        "photo", "room", "table", "wall", "window", "зошит", "кімната", "книга",
+        "крісло", "лампа", "ліжко", "ручка", "стілець", "стіна", "стіл", "сумка",
+        "телефон", "фото", "шафа", "дзеркало", "вікно",
+    },
+    "school_classroom": {
+        "backpack", "book", "classroom", "notebook", "pen", "pencil", "school",
+        "student", "teacher", "вчитель", "дошка", "зошит", "карта", "клас",
+        "класна", "олівець", "парта", "підручник", "ручка", "учень", "школа",
+    },
+    "market_shopping": {
+        "bakery", "bread", "buy", "market", "money", "price", "prices", "shopper",
+        "store", "булочка", "гривня", "гроші", "квиток", "купити", "магазин",
+        "пекар", "покупець", "ринок", "скільки", "супермаркет", "торт", "ціна",
+        "ярмарок",
+    },
+    "cafe_food": {
+        "borshch", "cafe", "coffee", "cook", "croissant", "drink", "eat", "juice",
+        "menu", "pastry", "recipe", "tea", "борщ", "вода", "готувати", "їжа",
+        "кава", "кафе", "круасан", "кухня", "меню", "обід", "рецепт", "сік",
+        "сметана", "тістечко", "чай",
+    },
+    "city_travel": {
+        "airport", "bank", "bus", "city", "guide", "hotel", "map", "metro", "museum",
+        "park", "pharmacy", "square", "station", "street", "taxi", "theatre", "tour",
+        "tourist", "train", "travel", "автобус", "аптека", "банк", "вулиця", "готель",
+        "замок", "карта", "кафе", "метро", "місто", "музей", "парк", "площа",
+        "пошта", "таксі", "театр", "турист", "потяг", "зупинка",
+    },
+}
+
 
 class PlanIssue:
     """A single issue found in a plan."""
@@ -68,6 +118,114 @@ class PlanIssue:
         if self.fix:
             s += f"\n     FIX: {self.fix}"
         return s
+
+
+def _flatten_strings(value) -> list[str]:
+    """Collect nested string values from YAML data."""
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, list):
+        result = []
+        for item in value:
+            result.extend(_flatten_strings(item))
+        return result
+    if isinstance(value, dict):
+        result = []
+        for item in value.values():
+            result.extend(_flatten_strings(item))
+        return result
+    return []
+
+
+def _dialogue_tokens(texts: list[str]) -> set[str]:
+    """Tokenize dialogue-related text into normalized content words."""
+    tokens: set[str] = set()
+    for text in texts:
+        for token in _DIALOGUE_TOKEN_RE.findall(text.lower()):
+            normalized = token.strip("-'")
+            if len(normalized) < 3 or normalized in _DIALOGUE_STOPWORDS:
+                continue
+            tokens.add(normalized)
+    return tokens
+
+
+def _dialogue_domains(tokens: set[str]) -> set[str]:
+    """Map dialogue tokens onto coarse scene domains."""
+    hits = set()
+    for domain, keywords in _DIALOGUE_DOMAIN_KEYWORDS.items():
+        if tokens & keywords:
+            hits.add(domain)
+    return hits
+
+
+def _dialogue_outline_texts(plan: dict) -> list[str]:
+    """Extract only the content_outline fragments that describe dialogues."""
+    outline = plan.get("content_outline")
+    if not isinstance(outline, list):
+        return []
+
+    collected: list[str] = []
+    for section in outline:
+        if not isinstance(section, dict):
+            continue
+
+        section_texts = []
+        section_title = str(section.get("section", ""))
+        if section_title:
+            section_texts.append(section_title)
+
+        for key in ("points", "subsections", "key_concepts", "notes", "examples"):
+            section_texts.extend(_flatten_strings(section.get(key)))
+
+        joined = "\n".join(section_texts)
+        if joined and _DIALOGUE_SECTION_RE.search(joined):
+            collected.extend(section_texts)
+
+    return collected
+
+
+def check_plan_internal_consistency(plan: dict) -> list[PlanIssue]:
+    """Check that dialogue_situations agree with dialogue bullets in content_outline."""
+    situations = plan.get("dialogue_situations")
+    if not isinstance(situations, list) or not situations:
+        return []
+
+    outline_texts = _dialogue_outline_texts(plan)
+    if not outline_texts:
+        return []
+
+    situation_texts = []
+    for situation in situations:
+        if not isinstance(situation, dict):
+            continue
+        situation_texts.extend(
+            [
+                str(situation.get("setting", "")),
+                str(situation.get("motivation", "")),
+                *[str(s) for s in situation.get("speakers", []) if isinstance(s, str)],
+            ]
+        )
+
+    situation_tokens = _dialogue_tokens(situation_texts)
+    outline_tokens = _dialogue_tokens(outline_texts)
+    if not situation_tokens or not outline_tokens:
+        return []
+
+    situation_domains = _dialogue_domains(situation_tokens)
+    outline_domains = _dialogue_domains(outline_tokens)
+    shared_tokens = situation_tokens & outline_tokens
+
+    if situation_domains and outline_domains and not (situation_domains & outline_domains) and not shared_tokens:
+        return [
+            PlanIssue(
+                "plan_internal_consistency",
+                "ERROR",
+                "dialogue_situations and dialogue-related content_outline bullets describe different scenes",
+                "Rewrite the dialogue bullets in content_outline so they use the same setting, objects, and grammar motivation as dialogue_situations.",
+            )
+        ]
+
+    return []
 
 
 def check_required_fields(plan: dict) -> list[PlanIssue]:
@@ -360,6 +518,7 @@ def check_plan(plan_path: Path, all_slugs: list[str] | None = None) -> list[Plan
     issues.extend(check_apostrophes(plan))
     issues.extend(check_phase_alignment(plan))
     issues.extend(check_grammar_scope(plan))
+    issues.extend(check_plan_internal_consistency(plan))
     issues.extend(check_prerequisites(plan, all_slugs or []))
     issues.extend(check_yaml_safety(plan))
     issues.extend(check_vesum_vocabulary(plan))

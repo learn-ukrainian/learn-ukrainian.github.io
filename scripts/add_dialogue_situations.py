@@ -13,12 +13,17 @@ Issue: #1102
 from __future__ import annotations
 
 import argparse
+import re
 from pathlib import Path
 
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PLANS_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans"
+_DIALOGUE_SECTION_RE = re.compile(
+    r"(діалог|діалоги|розмов|conversation|dialogue|role-?play|scenario|сценар)",
+    re.IGNORECASE,
+)
 
 # ────────────────────────────────────────────────
 # A1 dialogue situations — hand-curated per module
@@ -1444,6 +1449,66 @@ B1_SITUATIONS: dict[str, list[dict]] = {
 }
 
 
+def _rewrite_dialogue_outline(plan: dict, situations: list[dict]) -> bool:
+    """Rewrite dialogue bullets so they match the inserted dialogue_situations."""
+    outline = plan.get("content_outline")
+    if not isinstance(outline, list):
+        return False
+
+    rewritten = False
+    replacement_points = []
+    for i, situation in enumerate(situations, start=1):
+        setting = str(situation.get("setting", "")).strip()
+        speakers = [str(s).strip() for s in situation.get("speakers", []) if str(s).strip()]
+        motivation = str(situation.get("motivation", "")).strip()
+
+        line = f"Dialogue {i} — {setting}"
+        if speakers:
+            line += f" Speakers: {', '.join(speakers)}."
+        if motivation:
+            line += f" Grammar focus: {motivation}."
+        replacement_points.append(line)
+
+    if not replacement_points:
+        return False
+
+    for section in outline:
+        if not isinstance(section, dict):
+            continue
+
+        section_text = "\n".join(
+            [
+                str(section.get("section", "")),
+                *[str(item) for item in section.get("points", []) if isinstance(item, str)],
+                *[str(item) for item in section.get("subsections", []) if isinstance(item, str)],
+            ]
+        )
+        if not _DIALOGUE_SECTION_RE.search(section_text):
+            continue
+
+        section["points"] = replacement_points
+        rewritten = True
+
+    return rewritten
+
+
+def _plan_with_dialogue_situations(plan: dict, situations: list[dict]) -> dict:
+    """Insert dialogue_situations before content_outline and sync dialogue bullets."""
+    rewritten_plan: dict = {}
+    inserted = False
+    for key, value in plan.items():
+        if key == "content_outline" and not inserted:
+            rewritten_plan["dialogue_situations"] = situations
+            inserted = True
+        rewritten_plan[key] = value
+
+    if not inserted:
+        rewritten_plan["dialogue_situations"] = situations
+
+    _rewrite_dialogue_outline(rewritten_plan, situations)
+    return rewritten_plan
+
+
 def add_situations_to_plan(plan_path: Path, situations: list[dict], dry_run: bool = True) -> bool:
     """Add dialogue_situations to a plan file."""
     text = plan_path.read_text("utf-8")
@@ -1466,31 +1531,18 @@ def add_situations_to_plan(plan_path: Path, situations: list[dict], dry_run: boo
         print("  ⏭️  No dialogue/scenario section")
         return False
 
-    # Build YAML block
-    sits_yaml = yaml.dump(
-        {"dialogue_situations": situations},
-        allow_unicode=True,
-        default_flow_style=False,
-        sort_keys=False,
-    ).strip()
-
-    # Insert before content_outline
-    insert_point = text.find("content_outline:")
-    if insert_point == -1:
-        insert_point = text.find("activity_hints:")
-    if insert_point == -1:
-        print("  ❌ Can't find insertion point")
-        return False
-
-    new_text = text[:insert_point] + sits_yaml + "\n" + text[insert_point:]
+    updated_plan = _plan_with_dialogue_situations(plan, situations)
 
     if dry_run:
-        print(f"  📝 Would add {len(situations)} situation(s)")
+        print(f"  📝 Would add {len(situations)} situation(s) and rewrite dialogue outline bullets")
         for s in situations:
             print(f"     → {s['setting']}")
     else:
-        plan_path.write_text(new_text, "utf-8")
-        print(f"  ✅ Added {len(situations)} situation(s)")
+        plan_path.write_text(
+            yaml.safe_dump(updated_plan, allow_unicode=True, sort_keys=False),
+            "utf-8",
+        )
+        print(f"  ✅ Added {len(situations)} situation(s) and synchronized dialogue outline bullets")
 
     return True
 
