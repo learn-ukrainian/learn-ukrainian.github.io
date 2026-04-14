@@ -322,3 +322,83 @@ def test_apply_plan_patch_response_keeps_plan_yaml_whole_on_replace_failure(
     on_disk = plan_path.read_text("utf-8")
     assert on_disk in {original, expected_new}
     assert on_disk == original
+
+
+def test_apply_plan_patch_rejects_protected_fields_but_applies_legal_changes(
+    tmp_path: Path,
+) -> None:
+    plan_path = tmp_path / "plan.yaml"
+    plan_path.write_text(
+        yaml.safe_dump(
+            {
+                "version": "2.0",
+                "word_target": 450,
+                "dialogue_situations": [
+                    {
+                        "setting": "generic greeting",
+                        "speakers": ["Customer", "Clerk"],
+                        "motivation": "practice polite requests",
+                    }
+                ],
+                "content_outline": [
+                    {
+                        "section": "Dialogue",
+                        "words": 200,
+                        "points": ["Use a vague greeting exchange."],
+                    }
+                ],
+            },
+            sort_keys=False,
+            allow_unicode=True,
+        ),
+        "utf-8",
+    )
+
+    response = {
+        "decision": "patch",
+        "complaint_summary": "dialogue situation not grounded in the plan",
+        "changes": [
+            {
+                "path": "word_target",
+                "action": "replace",
+                "value": 100,
+                "reason": "Should not be allowed.",
+            },
+            {
+                "path": "content_outline[0].points[0]",
+                "action": "replace",
+                "value": "Use a ticket-window exchange to practice polite requests.",
+                "reason": "Aligns the outline with a reachable task.",
+            },
+        ],
+    }
+
+    result = plan_patch.apply_plan_patch_response(
+        plan_path,
+        response,
+        complaint_summary="dialogue situation not grounded in the plan",
+    )
+
+    assert result.applied is True
+    assert result.new_version == "2.0.1"
+    assert result.change_count == 1
+
+    updated = yaml.safe_load(plan_path.read_text("utf-8"))
+    assert updated["version"] == "2.0.1"
+    assert updated["word_target"] == 450
+    assert (
+        updated["content_outline"][0]["points"][0]
+        == "Use a ticket-window exchange to practice polite requests."
+    )
+
+    fix_entry = updated["plan_fixes"][-1]
+    assert fix_entry["changes"] == [
+        "replace content_outline[0].points[0] — Aligns the outline with a reachable task."
+    ]
+    assert fix_entry["rejections"] == [
+        {
+            "path": "word_target",
+            "action": "replace",
+            "reason": "protected_field_violation",
+        }
+    ]
