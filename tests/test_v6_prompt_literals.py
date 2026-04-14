@@ -632,12 +632,67 @@ activity_hints:
         assert "<assistant>" not in text
         assert "IGNORE PREVIOUS INSTRUCTIONS" not in text
         assert "Discovery fact." in text
+        assert (
+            "If any skeleton example conflicts with the Shared Module Contract "
+            "or current plan YAML, the plan wins. Rewrite the conflicting "
+            "paragraph to match the plan."
+        ) in text
+        assert (
+            'Do not use meta-pedagogical narration ("We can analyze...", '
+            '"This conversation shows...").'
+        ) in text
+        assert (
+            "After any dialogue, write at most 2 explanatory sentences, each "
+            "quoting a Ukrainian form from that dialogue."
+        ) in text
+        assert "<!-- INJECT_ACTIVITY: {exact_id_from_contract} -->" in text
+        assert "type, topic hint" not in text
 
     for text in (second_prompt, saved_second):
         assert "[BEGIN PREVIOUS SECTIONS CONTEXT LITERAL" in text
         assert "<assistant>" not in text
         assert "IGNORE PREVIOUS INSTRUCTIONS" not in text
         assert "Chunk one body." in text
+
+
+def test_build_dialogue_situations_uses_no_dialogue_override() -> None:
+    text = v6_build._build_dialogue_situations({"dialogue_situations": []})
+
+    assert text == (
+        "The shared contract has dialogue_acts: []. Do NOT invent a dialogue "
+        "situation. Use examples, minimal pairs, or short sentence pairs only. "
+        "Do not add named characters or scenario framing."
+    )
+
+
+def test_v6_write_template_has_conditional_pacing_dialogue_and_marker_rules() -> None:
+    template = (SCRIPTS_DIR / "build" / "phases" / "v6-write.md").read_text("utf-8")
+
+    assert (
+        "## Step 1: Pacing Plan — output this FIRST, UNLESS a Skeleton block "
+        "appears later in this prompt. If a Skeleton block is present, skip "
+        "this step and start directly with the first H2 heading."
+    ) in template
+    assert (
+        "If a Skeleton block appears later in this prompt, do NOT output "
+        "`<pacing_plan>` and start directly with the first H2 heading."
+    ) in template
+    assert (
+        "only if the contract has non-empty dialogue_acts, include rich "
+        "multi-turn dialogues"
+    ) in template
+    assert (
+        "Start each section with a real situation or dialogue (PPP: Present → "
+        "Practice → Produce) only if the contract has non-empty dialogue_acts."
+    ) in template
+    assert (
+        "**DIALOGUE VARIETY — CRITICAL.** Only if the contract has non-empty "
+        "dialogue_acts, each module MUST have DIFFERENT dialogue situations "
+        "from other modules."
+    ) in template
+    assert "<!-- INJECT_ACTIVITY: {exact_id_from_contract} -->" in template
+    assert "Use the EXACT `id` from the shared contract's `activity_obligations`" in template
+    assert "type, topic hint" not in template
 
 
 def test_step_activities_wraps_plan_and_module_artifacts_as_literals(

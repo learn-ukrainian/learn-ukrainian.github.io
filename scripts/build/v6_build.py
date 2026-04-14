@@ -694,7 +694,11 @@ def _build_dialogue_situations(plan: dict) -> str:
     """Build dialogue situation hints from plan's dialogue_situations field."""
     situations = plan.get("dialogue_situations", [])
     if not situations:
-        return "(No specific dialogue situations in plan — pick a unique real-world setting that motivates the grammar.)"
+        return (
+            "The shared contract has dialogue_acts: []. Do NOT invent a dialogue "
+            "situation. Use examples, minimal pairs, or short sentence pairs only. "
+            "Do not add named characters or scenario framing."
+        )
 
     lines = ["**Module-specific dialogue settings (from plan):**"]
     for i, sit in enumerate(situations, 1):
@@ -2564,6 +2568,10 @@ You are {persona_desc}, writing ONE SECTION of a Ukrainian language module. Writ
 
 ## Section Skeleton (follow this exactly)
 
+If any skeleton example conflicts with the Shared Module Contract or current plan YAML, the plan wins. Rewrite the conflicting paragraph to match the plan.
+Do not use meta-pedagogical narration ("We can analyze...", "This conversation shows...").
+After any dialogue, write at most 2 explanatory sentences, each quoting a Ukrainian form from that dialogue.
+
 {_format_prompt_literal_block("Section Skeleton", section["body"], language="markdown")}
 
 ---
@@ -2701,7 +2709,7 @@ in this paragraph the same language?" If no, fix it.
   any of them.
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
-- **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
+- **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: {{exact_id_from_contract}} -->` where the skeleton places exercises. Use the exact `id` from the shared contract's `activity_obligations`; do NOT substitute a type label or topic hint. Do NOT write :::quiz or :::fill-in DSL directly.
 - **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
 - **NO stress marks** — a deterministic tool adds them later.

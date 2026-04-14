@@ -11,9 +11,9 @@ Write the full prose content for module **{MODULE_NUM}: {TOPIC_TITLE}** ({LEVEL}
 
 ---
 
-## Step 1: Pacing Plan (output this FIRST)
+## Step 1: Pacing Plan — output this FIRST, UNLESS a Skeleton block appears later in this prompt. If a Skeleton block is present, skip this step and start directly with the first H2 heading.
 
-Before writing any content, output a `<pacing_plan>` block. Evaluate each section from the plan and commit to a word budget. This prevents frontloading early sections and rushing later ones.
+Before writing any content, output a `<pacing_plan>` block only if no Skeleton block appears later in this prompt. Evaluate each section from the plan and commit to a word budget. This prevents frontloading early sections and rushing later ones.
 
 ```
 <pacing_plan>
@@ -25,7 +25,7 @@ Total: {WORD_TARGET}+ words
 </pacing_plan>
 ```
 
-Then begin writing the module content. Follow your own pacing plan — each section must hit its word budget (±10%).
+Then begin writing the module content. Follow your own pacing plan — each section must hit its word budget (±10%). If a Skeleton block appears later in this prompt, do NOT output `<pacing_plan>` and start directly with the first H2 heading.
 
 ---
 
@@ -36,9 +36,9 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
 4. **You are a warm, encouraging teacher.** Natural teacher phrasing ("Let us look at...", "Have you noticed...") is fine. What to AVOID: self-congratulatory openers ("Welcome to A2! Congratulations!"), gamified language ("You have unlocked...", "You now possess..."), and empty filler sentences that add words but zero information. Every sentence should teach something specific to Ukrainian.
 5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
-6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {id} -->` markers where exercises should appear. A separate pipeline step generates the actual exercises from the plan's activity_hints.
+6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {exact_id_from_contract} -->` markers where exercises should appear. The `id` must match the shared contract's `activity_obligations` exactly. A separate pipeline step generates the actual exercises from the plan's activity_hints.
 7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
-8. **Hit the word target** — you MUST write {WORD_TARGET}–{WORD_CEILING} words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
+8. **Hit the word target** — you MUST write {WORD_TARGET}–{WORD_CEILING} words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and, only if the contract has non-empty dialogue_acts, include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
 10. **EVERY module MUST end with `## {SUMMARY_HEADING}`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
@@ -56,23 +56,23 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ### Marker Format
 
-Place markers after key teaching sections. Each marker corresponds to ONE `activity_hints` entry from the plan:
+Place markers after key teaching sections. Each marker corresponds to ONE `activity_obligations` entry from the shared contract:
 
 ```
-<!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->
+<!-- INJECT_ACTIVITY: {exact_id_from_contract} -->
 ```
 
 Rules:
-- Use the EXACT `id` from the plan's `activity_hints` — do not invent new IDs
+- Use the EXACT `id` from the shared contract's `activity_obligations` — do not invent new IDs
 - Place the marker right after the prose that teaches the concept the exercise tests
 - Spread markers evenly throughout the module — never cluster them
-- If the plan has 4 activity hints, you should place 4 markers in your prose
+- If the shared contract has 4 activity obligations, you should place 4 markers in your prose
 
 ### Example
 
-If the contract says:
+If the shared contract says:
 ```yaml
-activity_hints:
+activity_obligations:
   - id: quiz-sounds-vs-letters
     type: quiz
     focus: "Distinguish звук from літера"
@@ -96,7 +96,7 @@ Your prose should contain (after the relevant sections):
 
 - Do NOT write `:::quiz`, `:::fill-in`, `:::match-up`, or any DSL exercise blocks
 - Do NOT write exercise questions, answers, or options — the ACTIVITIES step handles all of this
-- Do NOT invent marker IDs — use only IDs from the plan's `activity_hints`
+- Do NOT invent marker IDs — use only IDs from the shared contract's `activity_obligations`
 
 ---
 
@@ -145,7 +145,7 @@ Each section should follow the word budget specified. The total must reach {WORD
 {LEVEL_CONSTRAINTS}
 
 ### Pedagogy
-- Start each section with a real situation or dialogue (PPP: Present → Practice → Produce)
+- Start each section with a real situation or dialogue (PPP: Present → Practice → Produce) only if the contract has non-empty dialogue_acts.
 - Every grammar rule needs 3+ Ukrainian examples with English translations
 - Teach through PATTERNS, not rules: show examples first, then name the pattern
 - Cultural context where relevant — this is Ukrainian, not generic L2
@@ -218,7 +218,7 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
   GOOD (real reaction): "Дивись, який великий дуб! — Так, старий. А під ним — коза! — Смішна коза."
 
   Use the knowledge packet's textbook excerpts for dialogue patterns. Adapt real situations, don't invent drills.
-- **DIALOGUE VARIETY — CRITICAL.** Each module MUST have DIFFERENT dialogue situations from other modules. Before writing any dialogue, check: have previous modules used this setting? If yes, pick a different one.
+- **DIALOGUE VARIETY — CRITICAL.** Only if the contract has non-empty dialogue_acts, each module MUST have DIFFERENT dialogue situations from other modules. Before writing any dialogue, check: have previous modules used this setting? If yes, pick a different one.
 
   BANNED recurring settings (already used in M01-M09): describing a room (кімната), looking at a table/bed/lamp, generic greetings with no context, labeling objects.
 
@@ -266,7 +266,7 @@ Write in Markdown. Use:
 - `**bold**` for Ukrainian words being taught. For **A1 and A2** levels, provide an English translation on first use (e.g. `**стіл** (table)`) because learners lack the vocabulary to infer meaning. For **B1 and above**, do NOT provide inline translations for standard vocabulary — the learner will use the module's словник (vocabulary table). You may provide ONE parenthetical English translation ONLY for highly abstract grammar/linguistic terms on first use (e.g. `**видова пара** (aspectual pair)`).
 - Tables for paradigms (conjugation, declension)
 - `:::tip` / `:::caution` / `:::note` for callout boxes
-- `<!-- INJECT_ACTIVITY: {id} -->` for exercise placement (markers only — do NOT write exercise content)
+- `<!-- INJECT_ACTIVITY: {exact_id_from_contract} -->` for exercise placement (markers only — do NOT write exercise content)
 
 Do NOT write MDX component syntax, JSON, or DSL exercise blocks (:::quiz, etc.). Plain Markdown with injection markers.
 
