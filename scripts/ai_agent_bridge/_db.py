@@ -125,6 +125,18 @@ CREATE INDEX IF NOT EXISTS idx_deliveries_agent_queue
     ON deliveries(to_agent, status, dispatched_at);
 CREATE INDEX IF NOT EXISTS idx_deliveries_claim
     ON deliveries(to_agent, status, retry_after, lease_until);
+
+CREATE TABLE IF NOT EXISTS channel_events (
+    event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    delivery_id TEXT,                     -- nullable for thread-level events
+    thread_id TEXT NOT NULL,
+    event TEXT NOT NULL,
+    payload_json TEXT,                    -- event-specific JSON payload
+    ts TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_channel_events_thread_event
+    ON channel_events(thread_id, event_id);
 """
 
 
@@ -239,6 +251,34 @@ def get_db():
                         """
                         CREATE INDEX IF NOT EXISTS idx_deliveries_claim
                         ON deliveries(to_agent, status, retry_after, lease_until)
+                        """
+                    )
+
+                cursor.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name='channel_events'"
+                )
+                if not cursor.fetchone():
+                    conn.execute(
+                        """
+                        CREATE TABLE IF NOT EXISTS channel_events (
+                            event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            delivery_id TEXT,
+                            thread_id TEXT NOT NULL,
+                            event TEXT NOT NULL,
+                            payload_json TEXT,
+                            ts TEXT NOT NULL
+                        )
+                        """
+                    )
+
+                cursor.execute(
+                    "SELECT name FROM sqlite_master WHERE type='index' AND name='idx_channel_events_thread_event'"
+                )
+                if not cursor.fetchone():
+                    conn.execute(
+                        """
+                        CREATE INDEX IF NOT EXISTS idx_channel_events_thread_event
+                        ON channel_events(thread_id, event_id)
                         """
                     )
 

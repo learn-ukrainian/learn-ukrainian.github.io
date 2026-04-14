@@ -11,6 +11,7 @@ that thread on the next wake. See #1192.
 from __future__ import annotations
 
 import sys
+import threading
 import time
 import uuid
 from dataclasses import dataclass
@@ -48,6 +49,13 @@ except ImportError:
     _HAS_RUNTIME = False
 
 from . import _channels
+from ._channels_watch import (
+    emit_delivery_delivered,
+    emit_delivery_failed,
+    emit_heartbeat,
+    emit_reply_complete,
+    emit_reply_started,
+)
 from ._config import CLAUDE_CMD, REPO_ROOT
 from ._db import get_db
 from ._orphan_recovery import RecoveryCandidate, RecoveryResult, recover_orphan_commit
@@ -55,6 +63,7 @@ from ._orphan_recovery import RecoveryCandidate, RecoveryResult, recover_orphan_
 _DEFAULT_HARD_TIMEOUT_SECONDS = 900
 _DEFAULT_STALL_TIMEOUT_SECONDS = 600
 _DEFAULT_GLOBAL_RETRY_SECONDS = 120
+_HEARTBEAT_INTERVAL_SECONDS = 60
 _SESSION_COLUMNS = {
     "claude": "claude_session_id",
     "gemini": "gemini_session_id",
@@ -494,6 +503,7 @@ def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
     session_id = existing_session
     session_to_store: str | None = None
     tool_config: dict[str, object] | None = None
+    requested_model = _resolve_model(claimed)
 
     if agent == "claude":
         tool_config = {"cmd_prefix": CLAUDE_CMD, "is_new_session": False}
@@ -502,19 +512,46 @@ def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
             session_to_store = session_id
             tool_config["is_new_session"] = True
 
-    result = runtime_invoke(
-        agent,
-        prompt,
-        mode=_resolve_mode(claimed),
-        cwd=REPO_ROOT,
-        model=_resolve_model(claimed),
-        task_id=task_id,
-        session_id=session_id if agent == "claude" else None,
-        tool_config=tool_config,
-        entrypoint="bridge",
-        hard_timeout=_DEFAULT_HARD_TIMEOUT_SECONDS,
-        stall_timeout=_DEFAULT_STALL_TIMEOUT_SECONDS,
+    emit_reply_started(claimed.thread_id, agent=agent, model=requested_model)
+    stop_heartbeats = threading.Event()
+    heartbeat_start = time.perf_counter()
+    heartbeat_delivery_ids = tuple(
+        delivery.delivery_id for delivery in claimed.deliveries
     )
+
+    def _heartbeat_loop() -> None:
+        while not stop_heartbeats.wait(_HEARTBEAT_INTERVAL_SECONDS):
+            elapsed_s = int(time.perf_counter() - heartbeat_start)
+            for delivery_id in heartbeat_delivery_ids:
+                emit_heartbeat(
+                    claimed.thread_id,
+                    delivery_id=delivery_id,
+                    elapsed_s=elapsed_s,
+                )
+
+    heartbeat_thread = threading.Thread(
+        target=_heartbeat_loop,
+        name=f"ab-heartbeat-{claimed.thread_id[:8]}",
+        daemon=True,
+    )
+    heartbeat_thread.start()
+    try:
+        result = runtime_invoke(
+            agent,
+            prompt,
+            mode=_resolve_mode(claimed),
+            cwd=REPO_ROOT,
+            model=requested_model,
+            task_id=task_id,
+            session_id=session_id if agent == "claude" else None,
+            tool_config=tool_config,
+            entrypoint="bridge",
+            hard_timeout=_DEFAULT_HARD_TIMEOUT_SECONDS,
+            stall_timeout=_DEFAULT_STALL_TIMEOUT_SECONDS,
+        )
+    finally:
+        stop_heartbeats.set()
+        heartbeat_thread.join(timeout=1.0)
 
     if agent == "claude" and result.ok:
         persisted_session = result.session_id or session_to_store or existing_session
@@ -615,6 +652,12 @@ def run_inbox(
                     seconds=_channels.DEFAULT_RATE_LIMIT_RETRY_SECONDS,
                 ),
             )
+            for delivery in claimed.deliveries:
+                emit_delivery_failed(
+                    claimed.thread_id,
+                    delivery_id=delivery.delivery_id,
+                    error_kind="rate_limited",
+                )
             released_total += len(claimed.deliveries)
             abort_reason = str(exc)
             break
@@ -627,6 +670,11 @@ def run_inbox(
                     error_text=f"timeout-recovered:{recovery.commit_sha}",
                     delivered_at=_now_iso(),
                 )
+                for delivery in claimed.deliveries:
+                    emit_delivery_delivered(
+                        claimed.thread_id,
+                        delivery_id=delivery.delivery_id,
+                    )
                 delivered_total += len(claimed.deliveries)
                 threads_total += 1
                 if not until_idle:
@@ -642,6 +690,12 @@ def run_inbox(
                     seconds=_DEFAULT_GLOBAL_RETRY_SECONDS,
                 ),
             )
+            for delivery in claimed.deliveries:
+                emit_delivery_failed(
+                    claimed.thread_id,
+                    delivery_id=delivery.delivery_id,
+                    error_kind="timeout",
+                )
             released_total += len(claimed.deliveries)
             abort_reason = str(exc)
             break
@@ -656,6 +710,12 @@ def run_inbox(
                     seconds=_DEFAULT_GLOBAL_RETRY_SECONDS,
                 ),
             )
+            for delivery in claimed.deliveries:
+                emit_delivery_failed(
+                    claimed.thread_id,
+                    delivery_id=delivery.delivery_id,
+                    error_kind="unavailable",
+                )
             released_total += len(claimed.deliveries)
             abort_reason = str(exc)
             break
@@ -666,6 +726,12 @@ def run_inbox(
                 error_text=f"{type(exc).__name__}: {exc}",
                 error_kind="tool_error",
             )
+            for delivery in claimed.deliveries:
+                emit_delivery_failed(
+                    claimed.thread_id,
+                    delivery_id=delivery.delivery_id,
+                    error_kind="tool_error",
+                )
             failed_total += len(claimed.deliveries)
             threads_total += 1
             if not until_idle:
@@ -680,6 +746,12 @@ def run_inbox(
                 error_text=result.stderr_excerpt or "agent returned no reply",
                 error_kind="parse_error",
             )
+            for delivery in claimed.deliveries:
+                emit_delivery_failed(
+                    claimed.thread_id,
+                    delivery_id=delivery.delivery_id,
+                    error_kind="parse_error",
+                )
             failed_total += len(claimed.deliveries)
             threads_total += 1
             if not until_idle:
@@ -706,6 +778,12 @@ def run_inbox(
                 error_text=f"reply post failed: {type(exc).__name__}: {exc}",
                 error_kind="tool_error",
             )
+            for delivery in claimed.deliveries:
+                emit_delivery_failed(
+                    claimed.thread_id,
+                    delivery_id=delivery.delivery_id,
+                    error_kind="tool_error",
+                )
             failed_total += len(claimed.deliveries)
             threads_total += 1
             if not until_idle:
@@ -714,6 +792,11 @@ def run_inbox(
 
         # Reply linkage lives in channel_messages.parent_id, not in the
         # deliveries table — no separate linkage step needed here.
+        emit_reply_complete(
+            claimed.thread_id,
+            agent=agent,
+            chars=len(reply_body),
+        )
         _update_claimed_status(
             claimed,
             status="delivered",
@@ -724,6 +807,11 @@ def run_inbox(
             ),
             delivered_at=_now_iso(),
         )
+        for delivery in claimed.deliveries:
+            emit_delivery_delivered(
+                claimed.thread_id,
+                delivery_id=delivery.delivery_id,
+            )
         delivered_total += len(claimed.deliveries)
         replies_total += 1
         threads_total += 1

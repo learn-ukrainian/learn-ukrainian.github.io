@@ -67,8 +67,9 @@ class StaleClaimError(Exception):
 
 # ── Constants ──────────────────────────────────────────────────────────
 
-VALID_AGENTS = ("claude", "gemini", "codex", "user")
-VALID_RECIPIENT_AGENTS = tuple(agent for agent in VALID_AGENTS if agent != "user")
+VALID_AGENTS = ("claude", "gemini", "codex")
+VALID_POST_AGENTS = (*VALID_AGENTS, "user")
+VALID_RECIPIENT_AGENTS = VALID_AGENTS
 VALID_KINDS = ("post", "reply", "system", "fanout_start", "fanout_end")
 VALID_DELIVERY_STATUSES = (
     "pending",
@@ -168,6 +169,13 @@ def _validate_agent(agent: str) -> None:
     if agent not in VALID_AGENTS:
         raise ValueError(
             f"Unknown agent '{agent}'. Expected one of {VALID_AGENTS}."
+        )
+
+
+def _validate_post_agent(agent: str) -> None:
+    if agent not in VALID_POST_AGENTS:
+        raise ValueError(
+            f"Unknown agent '{agent}'. Expected one of {VALID_POST_AGENTS}."
         )
 
 
@@ -714,7 +722,7 @@ def post(
     (tests, synthetic posts, system announcements) can pass explicit
     values or set ``auto_snapshot=False``.
     """
-    _validate_agent(from_agent)
+    _validate_post_agent(from_agent)
     _validate_kind(kind)
     for agent in to_agents or []:
         _validate_recipient_agent(agent)
