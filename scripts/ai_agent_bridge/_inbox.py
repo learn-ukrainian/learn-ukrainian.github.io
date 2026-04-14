@@ -68,6 +68,11 @@ from ._gemini import (
     _prefix_gemini_response,
     _uses_gemini_capacity_cascade,
 )
+from ._gemini_session_link import (
+    GeminiSessionRecovery,
+    find_session_recovery,
+    format_recovered_reply,
+)
 from ._orphan_recovery import RecoveryCandidate, RecoveryResult, recover_orphan_commit
 
 _DEFAULT_HARD_TIMEOUT_SECONDS = 900
@@ -522,6 +527,97 @@ def _maybe_recover_orphan_commit(
     return recovery
 
 
+def _thread_has_agent_reply_after_claimed_message(
+    claimed: _ClaimedThread,
+    *,
+    agent: str,
+) -> bool:
+    """Avoid double-posting a recovered reply into an already-answered thread."""
+    thread_messages = _channels.read(claimed.channel, thread_id=claimed.thread_id)
+    after_claimed = False
+    latest_claimed_id = claimed.deliveries[-1].message_id
+    for message in thread_messages:
+        if after_claimed and message["from_agent"] == agent:
+            return True
+        if message["message_id"] == latest_claimed_id:
+            after_claimed = True
+    return False
+
+
+def _link_gemini_session(
+    claimed: _ClaimedThread,
+    *,
+    started_at: datetime | None,
+) -> GeminiSessionRecovery | None:
+    if started_at is None:
+        return None
+    task_id = _thread_session_key(claimed.channel, claimed.thread_id)
+    recovery = find_session_recovery(
+        delivery_brief=claimed.deliveries[-1].body,
+        started_at=started_at,
+        session_id=_get_session_id(task_id, "gemini"),
+        project_name=REPO_ROOT.name,
+    )
+    if recovery and recovery.session_id:
+        _set_session_id(task_id, "gemini", recovery.session_id)
+    return recovery
+
+
+def _maybe_post_recovered_gemini_reply(
+    claimed: _ClaimedThread,
+    *,
+    started_at: datetime | None,
+    fallback_model: str,
+    recovery: GeminiSessionRecovery | None = None,
+) -> tuple[str, str] | None:
+    recovery = recovery or _link_gemini_session(claimed, started_at=started_at)
+    if recovery is None:
+        return None
+    if _thread_has_agent_reply_after_claimed_message(claimed, agent="gemini"):
+        return None
+
+    reply_body = format_recovered_reply(recovery, fallback_model=fallback_model)
+    try:
+        _channels.post(
+            claimed.channel,
+            "gemini",
+            reply_body,
+            parent_id=claimed.deliveries[-1].message_id,
+            from_model=recovery.model or fallback_model,
+            auto_snapshot=False,
+        )
+    except Exception:
+        return None
+    return reply_body, (recovery.model or fallback_model)
+
+
+def _mark_claimed_delivered(
+    claimed: _ClaimedThread,
+    *,
+    agent: str,
+    reply_body: str,
+    model: str,
+    error_text: str | None = None,
+) -> None:
+    emit_reply_complete(
+        claimed.thread_id,
+        agent=agent,
+        chars=len(reply_body),
+    )
+    _update_claimed_status(
+        claimed,
+        status="delivered",
+        error_text=error_text,
+        delivered_at=_now_iso(),
+        to_model=model,
+    )
+    for delivery in claimed.deliveries:
+        emit_delivery_delivered(
+            claimed.thread_id,
+            delivery_id=delivery.delivery_id,
+        )
+
+
 def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
     task_id = _thread_session_key(claimed.channel, claimed.thread_id)
     existing_session = _get_session_id(task_id, agent) if agent == "claude" else None
@@ -733,6 +829,8 @@ def run_inbox(
             break
 
         claimed_total += len(claimed.deliveries)
+        gemini_started_at = datetime.now(UTC) if agent == "gemini" else None
+        fallback_model = _resolve_model(claimed) or PRO_MODEL
         try:
             result = _invoke_thread(agent, claimed)
         # Note: transient global failures (rate limit, timeout, unavailable)
@@ -745,6 +843,28 @@ def run_inbox(
         # (Gemini issue-1192-c2-review r1 BLOCKER caught the original
         # decrement_attempts=True path which net-zero'd attempts.)
         except RateLimitedError as exc:
+            recovered = None
+            if agent == "gemini":
+                recovered = _maybe_post_recovered_gemini_reply(
+                    claimed,
+                    started_at=gemini_started_at,
+                    fallback_model=fallback_model,
+                )
+            if recovered is not None:
+                reply_body, recovered_model = recovered
+                _mark_claimed_delivered(
+                    claimed,
+                    agent=agent,
+                    reply_body=reply_body,
+                    model=recovered_model,
+                    error_text="session-recovery",
+                )
+                delivered_total += len(claimed.deliveries)
+                replies_total += 1
+                threads_total += 1
+                if not until_idle:
+                    break
+                continue
             _update_claimed_status(
                 claimed,
                 status="pending",
@@ -765,6 +885,28 @@ def run_inbox(
             abort_reason = str(exc)
             break
         except (AgentStalledError, AgentTimeoutError) as exc:
+            recovered = None
+            if agent == "gemini":
+                recovered = _maybe_post_recovered_gemini_reply(
+                    claimed,
+                    started_at=gemini_started_at,
+                    fallback_model=fallback_model,
+                )
+            if recovered is not None:
+                reply_body, recovered_model = recovered
+                _mark_claimed_delivered(
+                    claimed,
+                    agent=agent,
+                    reply_body=reply_body,
+                    model=recovered_model,
+                    error_text="session-recovery",
+                )
+                delivered_total += len(claimed.deliveries)
+                replies_total += 1
+                threads_total += 1
+                if not until_idle:
+                    break
+                continue
             recovery = _maybe_recover_orphan_commit(agent, claimed)
             if recovery.commit_sha:
                 _update_claimed_status(
@@ -841,8 +983,57 @@ def run_inbox(
                 break
             continue
 
+        linked_recovery = (
+            _link_gemini_session(claimed, started_at=gemini_started_at)
+            if agent == "gemini"
+            else None
+        )
         reply_body = result.response.strip()
         if not result.ok or not reply_body:
+            recovered = None
+            if agent == "gemini":
+                recovered = _maybe_post_recovered_gemini_reply(
+                    claimed,
+                    started_at=gemini_started_at,
+                    fallback_model=fallback_model,
+                    recovery=linked_recovery,
+                )
+            if recovered is not None:
+                reply_body, recovered_model = recovered
+                _mark_claimed_delivered(
+                    claimed,
+                    agent=agent,
+                    reply_body=reply_body,
+                    model=recovered_model,
+                    error_text="session-recovery",
+                )
+                delivered_total += len(claimed.deliveries)
+                replies_total += 1
+                threads_total += 1
+                if not until_idle:
+                    break
+                continue
+            if agent == "gemini" and result.rate_limited:
+                _update_claimed_status(
+                    claimed,
+                    status="pending",
+                    error_text=result.stderr_excerpt or "rate limited",
+                    error_kind="rate_limited",
+                    retry_after=_iso_after(
+                        _now_iso(),
+                        seconds=_channels.DEFAULT_RATE_LIMIT_RETRY_SECONDS,
+                    ),
+                    to_model=result.model,
+                )
+                for delivery in claimed.deliveries:
+                    emit_delivery_failed(
+                        claimed.thread_id,
+                        delivery_id=delivery.delivery_id,
+                        error_kind="rate_limited",
+                    )
+                released_total += len(claimed.deliveries)
+                abort_reason = result.stderr_excerpt or "rate limited"
+                break
             _update_claimed_status(
                 claimed,
                 status="failed",
@@ -896,27 +1087,17 @@ def run_inbox(
 
         # Reply linkage lives in channel_messages.parent_id, not in the
         # deliveries table — no separate linkage step needed here.
-        emit_reply_complete(
-            claimed.thread_id,
-            agent=agent,
-            chars=len(reply_body),
-        )
-        _update_claimed_status(
+        _mark_claimed_delivered(
             claimed,
-            status="delivered",
+            agent=agent,
+            reply_body=reply_body,
+            model=result.model,
             error_text=(
                 f"timeout-recovered:{recovery.commit_sha}"
                 if recovery.commit_sha
                 else None
             ),
-            delivered_at=_now_iso(),
-            to_model=result.model,
         )
-        for delivery in claimed.deliveries:
-            emit_delivery_delivered(
-                claimed.thread_id,
-                delivery_id=delivery.delivery_id,
-            )
         delivered_total += len(claimed.deliveries)
         replies_total += 1
         threads_total += 1
