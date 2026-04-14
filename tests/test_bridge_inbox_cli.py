@@ -19,8 +19,8 @@ def test_post_preflight_warns_for_large_body():
     warning = _channels_cli._post_preflight_warning(body="x" * 8001, mode="workspace-write")
 
     assert warning == (
-        "[PREFLIGHT] Brief looks large (8001 chars, 0 files, 0 multi-step markers). "
-        "Consider --deadline 1800 or splitting into smaller tasks."
+        "[PREFLIGHT] brief looks large (8001 chars, 0 files mentioned). "
+        "Consider --deadline 1800 or splitting."
     )
 
 
@@ -29,35 +29,33 @@ def test_post_preflight_warns_for_many_file_mentions():
         [
             "scripts/a.py",
             "tests/test_a.py",
-            "docs/plan.md",
-            "curriculum/l2-uk-en/a1/topic.md",
-            "plans/a1/topic.yaml",
+            "pkg/worker.py",
+            "app/api/router.py",
+            "foo/bar.py",
         ]
     )
 
     warning = _channels_cli._post_preflight_warning(body=body, mode="workspace-write")
 
     assert warning == (
-        "[PREFLIGHT] Brief looks large (93 chars, 5 files, 0 multi-step markers). "
-        "Consider --deadline 1800 or splitting into smaller tasks."
+        f"[PREFLIGHT] brief looks large ({len(body)} chars, 5 files mentioned). "
+        "Consider --deadline 1800 or splitting."
     )
 
 
 def test_post_preflight_warns_for_multi_step_markers():
-    warning = _channels_cli._post_preflight_warning(
-        body="Fix this and then add that. Also update docs. Additionally add tests.",
-        mode="workspace-write",
-    )
+    body = "Fix this and then update that."
+    warning = _channels_cli._post_preflight_warning(body=body, mode="workspace-write")
 
     assert warning == (
-        "[PREFLIGHT] Brief looks large (69 chars, 0 files, 3 multi-step markers). "
-        "Consider --deadline 1800 or splitting into smaller tasks."
+        f"[PREFLIGHT] brief looks large ({len(body)} chars, 0 files mentioned). "
+        "Consider --deadline 1800 or splitting."
     )
 
 
 def test_post_preflight_skips_non_workspace_write_mode():
     warning = _channels_cli._post_preflight_warning(
-        body="scripts/a.py\ntests/test_a.py\ncurriculum/x.md\ndocs/y.md\nplans/z.yaml",
+        body="scripts/a.py\ntests/test_a.py\npkg/worker.py\napp/api/router.py\nfoo/bar.py",
         mode="read-only",
     )
 
@@ -415,17 +413,9 @@ def test_post_model_flag_applies_to_default_channel_subscribers(capsys):
     assert delivery["to_model"] == "gemini-3-pro-preview"
 
 
-def test_post_workspace_write_preflight_warns_to_stderr_and_still_posts(capsys):
+def test_post_workspace_write_large_body_preflight_warns_to_stderr_and_still_posts(capsys):
     _channels.create_channel("topic")
-    body = "\n".join(
-        [
-            "scripts/a.py",
-            "tests/test_a.py",
-            "docs/plan.md",
-            "curriculum/l2-uk-en/a1/topic.md",
-            "plans/a1/topic.yaml",
-        ]
-    )
+    body = "x" * 8001
 
     exit_code = _run_cli(["post", "topic", body, "--mode", "workspace-write", "--no-snapshot"])
 
@@ -433,8 +423,8 @@ def test_post_workspace_write_preflight_warns_to_stderr_and_still_posts(capsys):
     captured = capsys.readouterr()
     assert "✅ posted to #topic" in captured.out
     assert (
-        "[PREFLIGHT] Brief looks large (93 chars, 5 files, 0 multi-step markers). "
-        "Consider --deadline 1800 or splitting into smaller tasks."
+        "[PREFLIGHT] brief looks large (8001 chars, 0 files mentioned). "
+        "Consider --deadline 1800 or splitting."
     ) in captured.err
     assert _channels.read("topic")[0]["body"] == body
 
@@ -516,11 +506,11 @@ def test_post_deadline_flag_stores_delivery_override_and_worker_uses_it(monkeypa
     assert captured_run["hard_timeout"] == 1200
 
 
-def test_deadline_range_accepts_non_whitelisted_values(capsys):
+def test_deadline_whitelist_accepts_1800(capsys):
     _channels.create_channel("topic")
 
     exit_code = _run_cli(
-        ["post", "topic", "hello", "--to", "claude", "--deadline", "61", "--no-snapshot"]
+        ["post", "topic", "hello", "--to", "claude", "--deadline", "1800", "--no-snapshot"]
     )
 
     assert exit_code == 0
@@ -528,16 +518,16 @@ def test_deadline_range_accepts_non_whitelisted_values(capsys):
     assert captured.err == ""
     message = _channels.read("topic")[0]
     delivery = _channels.deliveries_for_message(str(message["message_id"]))[0]
-    assert delivery["deadline_seconds"] == 61
+    assert delivery["deadline_seconds"] == 1800
 
 
 def test_invalid_deadline_value_is_rejected_with_helpful_error(capsys):
-    exit_code = _run_cli(["post", "topic", "hello", "--deadline", "59"])
+    exit_code = _run_cli(["post", "topic", "hello", "--deadline", "999"])
 
     assert exit_code == 2
     captured = capsys.readouterr()
     assert "usage:" in captured.err
-    assert "deadline must be between 60 and 3600 seconds" in captured.err
+    assert "deadline must be one of: 300, 600, 900, 1200, 1800, 2400, 3000" in captured.err
 
 
 def test_help_includes_model_and_deadline_flags(capsys):

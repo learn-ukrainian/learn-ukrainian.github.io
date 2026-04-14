@@ -48,15 +48,12 @@ from typing import Any
 from . import _channels
 from ._channels_watch import watch_channel_events
 
-_PREFLIGHT_FILE_PATH_RE = re.compile(
-    r"\b(?:scripts|tests|docs|curriculum|plans)/[A-Za-z0-9._/-]+"
-)
+_PREFLIGHT_FILE_PATH_RE = re.compile(r"[\w/-]+\.py\b")
 _PREFLIGHT_MULTI_STEP_RE = re.compile(
-    r"\b(?:and then|also|additionally)\b",
+    r"\b(?:and then|also fix|then also)\b",
     re.IGNORECASE,
 )
-_MIN_DEADLINE_SECONDS = 60
-_MAX_DEADLINE_SECONDS = 3600
+_ALLOWED_DEADLINE_SECONDS = (300, 600, 900, 1200, 1800, 2400, 3000)
 
 
 def _deadline_seconds_arg(raw_value: str) -> int:
@@ -66,10 +63,10 @@ def _deadline_seconds_arg(raw_value: str) -> int:
         raise argparse.ArgumentTypeError(
             "deadline must be an integer number of seconds"
         ) from exc
-    if not _MIN_DEADLINE_SECONDS <= seconds <= _MAX_DEADLINE_SECONDS:
+    if seconds not in _ALLOWED_DEADLINE_SECONDS:
         raise argparse.ArgumentTypeError(
-            "deadline must be between "
-            f"{_MIN_DEADLINE_SECONDS} and {_MAX_DEADLINE_SECONDS} seconds"
+            "deadline must be one of: "
+            + ", ".join(str(value) for value in _ALLOWED_DEADLINE_SECONDS)
         )
     return seconds
 
@@ -79,20 +76,19 @@ def _post_preflight_warning(*, body: str, mode: str) -> str | None:
         return None
 
     char_count = len(body)
-    file_count = len(set(_PREFLIGHT_FILE_PATH_RE.findall(body)))
-    multi_step_count = len(_PREFLIGHT_MULTI_STEP_RE.findall(body))
+    file_count = len(_PREFLIGHT_FILE_PATH_RE.findall(body))
     looks_large = (
         char_count > 8000
         or file_count >= 5
-        or multi_step_count > 0
+        or _PREFLIGHT_MULTI_STEP_RE.search(body) is not None
     )
     if not looks_large:
         return None
 
     return (
-        "[PREFLIGHT] Brief looks large "
-        f"({char_count} chars, {file_count} files, {multi_step_count} multi-step markers). "
-        "Consider --deadline 1800 or splitting into smaller tasks."
+        "[PREFLIGHT] brief looks large "
+        f"({char_count} chars, {file_count} files mentioned). "
+        "Consider --deadline 1800 or splitting."
     )
 
 
@@ -237,7 +233,7 @@ def register_channel_commands(subparsers: Any) -> None:
         "--deadline",
         type=_deadline_seconds_arg,
         default=None,
-        help="Per-delivery hard-timeout override in seconds (60-3600)",
+        help="Per-delivery hard-timeout override in seconds (300, 600, 900, 1200, 1800, 2400, 3000)",
     )
 
     # ── top-level: p (shortcut) ───────────────────────────────────
@@ -307,7 +303,7 @@ def register_channel_commands(subparsers: Any) -> None:
             "--deadline",
             type=_deadline_seconds_arg,
             default=None,
-            help="Worker hard-timeout override in seconds (60-3600)",
+            help="Worker hard-timeout override in seconds (300, 600, 900, 1200, 1800, 2400, 3000)",
         )
 
         inbox_show = inbox_sub.add_parser(
