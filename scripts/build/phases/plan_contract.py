@@ -71,7 +71,9 @@ def build_contract(
 ) -> tuple[dict, dict]:
     """Build `contract.yaml` plus section-mapped wiki excerpts."""
     outline = _require_non_empty(plan, "content_outline")
-    dialogue_situations = _require_non_empty(plan, "dialogue_situations")
+    # dialogue_situations is optional — phonetics/skills modules legitimately have none.
+    # An empty list produces dialogue_acts: [] in the contract, which is valid.
+    dialogue_situations = plan.get("dialogue_situations") or []
     activity_hints = _require_non_empty(plan, "activity_hints")
     word_target = plan.get("word_target")
     if isinstance(word_target, bool) or not isinstance(word_target, (int, float)) or word_target <= 0:

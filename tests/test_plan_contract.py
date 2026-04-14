@@ -38,7 +38,7 @@ def test_real_plan_and_wiki_pairs_produce_contract(level: str, slug: str) -> Non
 
     assert contract["module"]["slug"] == slug
     assert contract["teaching_beats"]["section_order"]
-    assert contract["dialogue_acts"]
+    assert "dialogue_acts" in contract  # may be [] for phonetics/skills modules
     assert contract["activity_obligations"]
     assert contract["section_word_budgets"]
     assert excerpts["sections"]
@@ -50,10 +50,11 @@ def test_real_plan_and_wiki_pairs_produce_contract(level: str, slug: str) -> Non
 
 
 def test_contract_builder_fails_fast_without_required_plan_fields() -> None:
-    with pytest.raises(Exception, match="dialogue_situations"):
+    # content_outline is required
+    with pytest.raises(Exception, match="content_outline"):
         build_contract(
             {
-                "content_outline": [{"section": "Intro", "words": 100, "points": []}],
+                "dialogue_situations": [],
                 "activity_hints": [{"id": "quiz", "type": "quiz", "focus": "x"}],
                 "word_target": 100,
             },
@@ -62,4 +63,23 @@ def test_contract_builder_fails_fast_without_required_plan_fields() -> None:
             slug="broken",
             module_num=1,
         )
+
+
+def test_contract_builder_accepts_plan_without_dialogue_situations() -> None:
+    """Phonetics/skills modules legitimately have no dialogue situations.
+    The contract should produce dialogue_acts: [] rather than failing.
+    """
+    contract, _ = build_contract(
+        {
+            "content_outline": [{"section": "Syllables", "words": 200, "points": ["Count vowels."]}],
+            "activity_hints": [{"id": "quiz", "type": "quiz", "focus": "syllable count"}],
+            "word_target": 200,
+        },
+        "",
+        level="a1",
+        slug="reading-ukrainian",
+        module_num=2,
+    )
+    assert contract["dialogue_acts"] == []
+    assert contract["module"]["slug"] == "reading-ukrainian"
 
