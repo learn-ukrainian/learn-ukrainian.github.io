@@ -147,6 +147,42 @@ def test_build_plan_patch_prompt_strips_embedded_plan_patch_sentinels() -> None:
     assert prompt.count("===PLAN_PATCH_END===") == 1
 
 
+def test_dispatch_gemini_plan_patch_prefers_output_file_over_bridge_logs(
+    tmp_path: Path, monkeypatch
+) -> None:
+    output_path = tmp_path / "plan-patch-output.md"
+    response_text = (
+        "===PLAN_PATCH_START===\n"
+        "decision: noop\n"
+        "complaint_summary: prose-only issue\n"
+        "changes: []\n"
+        "===PLAN_PATCH_END===\n"
+    )
+
+    def fake_run(*args, **kwargs):
+        output_path.write_text(response_text, "utf-8")
+        return type(
+            "Completed",
+            (),
+            {
+                "returncode": 0,
+                "stdout": "  [gemini] attempt 1/3, model=gemini-3.1-pro-preview\n",
+                "stderr": "",
+            },
+        )()
+
+    monkeypatch.setattr(plan_patch.subprocess, "run", fake_run)
+
+    ok, raw_output = plan_patch._dispatch_gemini_plan_patch(
+        "prompt",
+        task_id="plan-patch-a1-demo",
+        output_path=output_path,
+    )
+
+    assert ok is True
+    assert raw_output == response_text
+
+
 def test_run_plan_patch_applies_mocked_gemini_patch(tmp_path: Path, monkeypatch) -> None:
     plan_path = tmp_path / "plan.yaml"
     plan_path.write_text(

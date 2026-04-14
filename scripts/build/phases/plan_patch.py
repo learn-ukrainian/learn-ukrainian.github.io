@@ -284,7 +284,13 @@ def build_plan_patch_prompt(
     )
 
 
-def _dispatch_gemini_plan_patch(prompt: str, *, task_id: str, model: str = PRO_MODEL) -> tuple[bool, str]:
+def _dispatch_gemini_plan_patch(
+    prompt: str,
+    *,
+    task_id: str,
+    model: str = PRO_MODEL,
+    output_path: Path | None = None,
+) -> tuple[bool, str]:
     """Dispatch the plan-patch prompt through ai_agent_bridge/Gemini."""
     cmd = [
         str(VENV_PYTHON),
@@ -298,6 +304,8 @@ def _dispatch_gemini_plan_patch(prompt: str, *, task_id: str, model: str = PRO_M
         "--stdout-only",
         "--no-github",
     ]
+    if output_path is not None:
+        cmd.extend(["--output-path", str(output_path)])
     try:
         result = subprocess.run(
             cmd,
@@ -310,9 +318,15 @@ def _dispatch_gemini_plan_patch(prompt: str, *, task_id: str, model: str = PRO_M
     except subprocess.TimeoutExpired:
         return False, ""
 
+    response_text = ""
+    if output_path is not None and output_path.exists():
+        response_text = output_path.read_text("utf-8")
+    if not response_text:
+        response_text = result.stdout
+
     if result.returncode != 0:
-        return False, result.stdout + result.stderr
-    return True, result.stdout
+        return False, response_text + result.stderr
+    return True, response_text
 
 
 def parse_plan_patch_response(raw_output: str) -> dict | None:
@@ -578,15 +592,13 @@ def run_plan_patch(
     orch_dir.mkdir(parents=True, exist_ok=True)
     write_text_atomic(orch_dir / "v6-plan-patch-prompt.md", prompt, encoding="utf-8")
 
+    output_path = orch_dir / "v6-plan-patch-output.md"
     ok, raw_output = _dispatch_gemini_plan_patch(
         prompt,
         task_id=f"plan-patch-{level}-{slug}",
+        output_path=output_path,
     )
-    write_text_atomic(
-        orch_dir / "v6-plan-patch-output.md",
-        raw_output or "",
-        encoding="utf-8",
-    )
+    write_text_atomic(output_path, raw_output or "", encoding="utf-8")
     if not ok:
         return PlanPatchResult(
             applied=False,

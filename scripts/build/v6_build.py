@@ -5830,6 +5830,63 @@ def _parse_review_fixes(review_text: str) -> list[dict]:
     return []
 
 
+def _contract_activity_types(level: str | None, slug: str | None) -> set[str]:
+    """Load allowlisted activity types from the module contract."""
+    if not level or not slug:
+        return set()
+
+    contract_path = _contract_path(level, slug)
+    if not contract_path.exists():
+        return set()
+
+    try:
+        contract = yaml.safe_load(contract_path.read_text("utf-8"))
+    except Exception:
+        return set()
+    if not isinstance(contract, dict):
+        return set()
+
+    allowed: set[str] = set()
+    for item in contract.get("activity_obligations") or []:
+        if not isinstance(item, dict):
+            continue
+        activity_type = str(item.get("type") or "").strip()
+        if activity_type:
+            allowed.add(activity_type)
+    return allowed
+
+
+def _extract_injected_activity_candidates(text: str) -> list[str]:
+    """Extract the first marker token from each INJECT_ACTIVITY comment."""
+    candidates: list[str] = []
+    for raw_marker in re.findall(r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->", text, re.DOTALL):
+        head = raw_marker.split(",", 1)[0].splitlines()[0].strip()
+        if head:
+            candidates.append(head)
+    return candidates
+
+
+def _activity_marker_type_allowed(candidate: str, allowed_types: set[str]) -> bool:
+    """Return True when a marker token resolves to a contracted activity type."""
+    if not candidate or not allowed_types:
+        return True
+    for activity_type in sorted(allowed_types, key=len, reverse=True):
+        if candidate == activity_type or candidate.startswith(f"{activity_type}-"):
+            return True
+    return False
+
+
+def _invalid_injected_activity_types(text: str, allowed_types: set[str]) -> list[str]:
+    """Return off-contract activity marker tokens found in text."""
+    if not allowed_types:
+        return []
+    return [
+        candidate
+        for candidate in _extract_injected_activity_candidates(text)
+        if not _activity_marker_type_allowed(candidate, allowed_types)
+    ]
+
+
 def _parse_rewrite_blocks(review_text: str) -> list[dict]:
     """Parse reviewer `<rewrite-block section="...">...</rewrite-block>` directives."""
     text = review_text
@@ -5850,7 +5907,13 @@ def _parse_rewrite_blocks(review_text: str) -> list[dict]:
     return blocks
 
 
-def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int]:
+def _apply_review_fixes(
+    review_text: str,
+    content_path: Path,
+    *,
+    level: str | None = None,
+    slug: str | None = None,
+) -> tuple[bool, int]:
     """Apply <fixes> find/replace pairs from reviewer to content.
 
     Returns (success, count_of_fixes_applied).
@@ -5872,6 +5935,7 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
 
     content = content_path.read_text("utf-8")
     applied = 0
+    allowed_activity_types = _contract_activity_types(level, slug)
 
     for fix in fixes:
         # Handle `insert_after: <anchor>` / `text: <payload>` directives
@@ -5882,6 +5946,13 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
             anchor = str(fix.get("insert_after") or "")
             payload = str(fix.get("text") or "")
             if not anchor or not payload:
+                continue
+            invalid_types = _invalid_injected_activity_types(payload, allowed_activity_types)
+            if invalid_types:
+                _log(
+                    "  ⚠️  Fix skipped (off-contract activity type): "
+                    + ", ".join(sorted(set(invalid_types)))
+                )
                 continue
             anchor_unstressed = anchor.replace(STRESS_MARK, "")
             content_unstressed_tmp = content.replace(STRESS_MARK, "")
@@ -5908,6 +5979,13 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
         find_str = fix.get("find", "")
         replace_str = fix.get("replace", "")
         if not find_str or find_str == replace_str:
+            continue
+        invalid_types = _invalid_injected_activity_types(replace_str, allowed_activity_types)
+        if invalid_types:
+            _log(
+                "  ⚠️  Fix skipped (off-contract activity type): "
+                + ", ".join(sorted(set(invalid_types)))
+            )
             continue
 
         # Strip stress marks from find_str too — reviewer might include them
@@ -6152,6 +6230,21 @@ def _rewrite_block_section(
         _log(f"  ❌ Rewrite block rejected for {resolved_title} — too short ({rewritten_words} words)")
         return False
 
+    invalid_types = _invalid_injected_activity_types(
+        rewritten,
+        {
+            str(item.get("type") or "").strip()
+            for item in contract.get("activity_obligations") or []
+            if isinstance(item, dict) and str(item.get("type") or "").strip()
+        },
+    )
+    if invalid_types:
+        _log(
+            f"  ❌ Rewrite block rejected for {resolved_title} — off-contract activity type(s): "
+            + ", ".join(sorted(set(invalid_types)))
+        )
+        return False
+
     new_content = content[:current_section["start"]] + rewritten + "\n\n" + content[current_section["end"]:].lstrip()
     content_path.write_text(new_content.rstrip() + "\n", "utf-8")
     _log(f"  ✅ Rewrite block applied: {resolved_title}")
@@ -6213,7 +6306,12 @@ def _run_review_heal_loop(
         if score == 0.0 and not review_text:
             return ReviewLoopRunResult(outcome="error", rounds=tuple(rounds))
 
-        fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
+        fixes_applied, fix_count = _apply_review_fixes(
+            review_text,
+            content_path,
+            level=level,
+            slug=slug,
+        )
         rewrite_applied, rewrite_count = _apply_review_rewrite_blocks(
             review_text,
             content_path,
