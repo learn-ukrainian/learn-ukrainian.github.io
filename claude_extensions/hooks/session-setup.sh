@@ -124,12 +124,32 @@ $ISSUE_LIST")
   fi
 fi
 
+# 12. Session handoff — load docs/session-state/current.md if present.
+# This is the zero-touch rehydrate: the previous session's context-monitor.sh
+# (or user-written handoff) landed in that file. Pull it in verbatim so
+# Claude never has to be told "read current.md first."
+HANDOFF_FILE="$PROJECT_DIR/docs/session-state/current.md"
+HANDOFF_CONTENT=""
+if [ -f "$HANDOFF_FILE" ]; then
+  # Cap at 200 lines — handoff should be compact; truncate if it sprawls.
+  HANDOFF_CONTENT=$(head -200 "$HANDOFF_FILE" 2>/dev/null)
+fi
+
 # Build output
-if [ ${#ISSUES[@]} -eq 0 ] && [ ${#INFO[@]} -eq 0 ]; then
+if [ ${#ISSUES[@]} -eq 0 ] && [ ${#INFO[@]} -eq 0 ] && [ -z "$HANDOFF_CONTENT" ]; then
   exit 0
 fi
 
-CONTEXT="SESSION SETUP CHECK:"
+CONTEXT=""
+if [ -n "$HANDOFF_CONTENT" ]; then
+  CONTEXT="PREVIOUS-SESSION HANDOFF (from docs/session-state/current.md — read this FIRST before anything else):
+
+$HANDOFF_CONTENT
+
+---
+"
+fi
+CONTEXT="${CONTEXT}SESSION SETUP CHECK:"
 
 if [ ${#ISSUES[@]} -gt 0 ]; then
   CONTEXT="$CONTEXT
