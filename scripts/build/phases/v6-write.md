@@ -160,6 +160,22 @@ Each section should follow the word budget specified. The total must reach {WORD
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
 
+## Ukrainian politeness-formula register (CRITICAL)
+
+Do not interchange these fixed phrases. They are context-locked:
+- «На здоров'я» — ONLY for food/drink ("enjoy your meal/drink"). NEVER use as a generic response to «Дякую».
+- «Будь ласка» / «Прошу» — the general response to «Дякую» ("you're welcome").
+- «На все добре» — farewell, not a response to thanks.
+- «Ласкаво просимо» — formal "welcome" on arrival. NOT a response to a question.
+- «Смачного» — said BEFORE eating, by host to guest. Not «На здоров'я».
+- «Дай Бог» — religious register. Avoid in neutral A1-A2 dialogue.
+
+When a character responds to thanks in a non-food/drink context, use «Будь ласка» or «Прошу».
+
+## Do not invent grammar restrictions
+
+Do not write rules like "X is strictly used only for Y" unless the rule appears explicitly in the plan YAML or in Ukrainian grammar authorities (Правопис 2019, Антоненко-Давидович, VESUM). If uncertain, state the usage as common/typical, not strict.
+
 ### FORBIDDEN WORDS — never write these (#1189)
 
 The following Russian words have leaked into past builds and broken modules. They are **hard-banned** — the post-write toxic-token scanner will fail your build the moment it sees one. Use the Ukrainian alternative every time, even in dialogues, even in casual prose, even when quoting a learner's mistake (use a `<!-- VERIFY -->` placeholder instead of typing the Russian form):
