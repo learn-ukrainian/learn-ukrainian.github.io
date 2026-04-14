@@ -1084,6 +1084,8 @@ def mark_delivery_delivered(
         if not row:
             raise ValueError(f"delivery '{delivery_id}' not found")
         if row["status"] in {"delivered", "failed"}:
+            if row["attempt_count"] != expected_attempt_count:
+                raise StaleClaimError(f"Stale claim for delivery {delivery_id}: expected attempt {expected_attempt_count}")
             conn.commit()
             return
 
@@ -1137,6 +1139,8 @@ def mark_delivery_failed(
         if not row:
             raise ValueError(f"delivery '{delivery_id}' not found")
         if row["status"] in {"delivered", "failed"}:
+            if row["attempt_count"] != expected_attempt_count:
+                raise StaleClaimError(f"Stale claim for delivery {delivery_id}: expected attempt {expected_attempt_count}")
             conn.commit()
             return
 

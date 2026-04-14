@@ -847,6 +847,76 @@ class TestDeliveryLeasing:
         row = _delivery_row(delivery_id)
         assert row["status"] == "processing"
 
+    def test_mark_delivered_stale_claim_after_reclaim(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        # Worker A claims, gets attempt 1
+        worker_a_claim = _channels.claim_next_delivery("claude", now=_iso_at(0))
+        assert worker_a_claim is not None
+        assert worker_a_claim["attempt_count"] == 1
+
+        # Lease expires, gets reclaimed
+        reclaimed = _channels.release_expired_leases(now=_iso_at(601))
+        assert reclaimed == 1
+
+        # Worker B claims, gets attempt 2, finishes
+        worker_b_claim = _channels.claim_next_delivery("claude", now=_iso_at(602))
+        assert worker_b_claim is not None
+        assert worker_b_claim["attempt_count"] == 2
+        _channels.mark_delivery_delivered(
+            delivery_id,
+            "reply-1",
+            expected_attempt_count=worker_b_claim["attempt_count"],
+            now=_iso_at(605),
+        )
+
+        # Worker A finally finishes, tries to mark delivered with expected_attempt=1
+        with pytest.raises(_channels.StaleClaimError, match="expected attempt 1"):
+            _channels.mark_delivery_delivered(
+                delivery_id,
+                "reply-2",
+                expected_attempt_count=worker_a_claim["attempt_count"],
+                now=_iso_at(610),
+            )
+
+    def test_mark_failed_stale_claim_after_reclaim(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        # Worker A claims, gets attempt 1
+        worker_a_claim = _channels.claim_next_delivery("claude", now=_iso_at(0))
+        assert worker_a_claim is not None
+        assert worker_a_claim["attempt_count"] == 1
+
+        # Lease expires, gets reclaimed
+        reclaimed = _channels.release_expired_leases(now=_iso_at(601))
+        assert reclaimed == 1
+
+        # Worker B claims, gets attempt 2, fails
+        worker_b_claim = _channels.claim_next_delivery("claude", now=_iso_at(602))
+        assert worker_b_claim is not None
+        assert worker_b_claim["attempt_count"] == 2
+        _channels.mark_delivery_failed(
+            delivery_id,
+            "tool_error",
+            "error by B",
+            expected_attempt_count=worker_b_claim["attempt_count"],
+            now=_iso_at(605),
+        )
+
+        # Worker A finally finishes, tries to mark failed with expected_attempt=1
+        with pytest.raises(_channels.StaleClaimError, match="expected attempt 1"):
+            _channels.mark_delivery_failed(
+                delivery_id,
+                "tool_error",
+                "error by A",
+                expected_attempt_count=worker_a_claim["attempt_count"],
+                now=_iso_at(610),
+            )
+
     def test_mark_failed_stale_claim(self):
         _channels.create_channel("topic")
         res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
