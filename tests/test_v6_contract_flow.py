@@ -184,18 +184,24 @@ def test_main_marks_needs_human_review_after_two_rounds(tmp_path: Path, monkeypa
     )
     (orch_dir / "wiki-excerpts.yaml").write_text("sections: {}\nfactual_anchors: []\n", "utf-8")
 
+    review_calls = {"count": 0}
     reviews = iter(
         [
             (False, 8.4, "## Verdict: REVISE\n<fixes></fixes>\n"),
+            (False, 8.5, "## Verdict: REVISE\n<fixes></fixes>\n"),
             (False, 8.6, "## Verdict: REVISE\n<fixes></fixes>\n"),
         ]
     )
+
+    def fake_review(*args, **kwargs):
+        review_calls["count"] += 1
+        return next(reviews)
 
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
     monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
     monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
     monkeypatch.setattr(v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True)
-    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(reviews))
+    monkeypatch.setattr(v6_build, "step_review", fake_review)
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
     monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
     monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: "complete")
@@ -204,6 +210,9 @@ def test_main_marks_needs_human_review_after_two_rounds(tmp_path: Path, monkeypa
     result = v6_build.main()
 
     state = json.loads((orch_dir / "state.json").read_text("utf-8"))
+    needs_human_review = yaml.safe_load((orch_dir / "needs-human-review.yaml").read_text("utf-8"))
     assert result is False
+    assert review_calls["count"] == 3
     assert state["needs_human_review"]["status"] is True
+    assert needs_human_review["review_rounds"] == 3
     assert (orch_dir / "needs-human-review.yaml").exists()
