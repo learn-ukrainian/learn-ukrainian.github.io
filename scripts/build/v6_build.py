@@ -704,7 +704,9 @@ def _build_dialogue_situations(plan: dict) -> str:
             lines.append(f"     Speakers: {', '.join(speakers)}")
         if motivation:
             lines.append(f"     Why: {motivation}")
-    lines.append("\n  These settings are hard constraints. Use the named setting and required nouns; do NOT merge, substitute, or collapse them into a room description or generic greeting.")
+    lines.append(
+        "\n  Use these settings. If the skeleton, examples, or any earlier prompt text conflicts with the current plan YAML, the plan wins. Rewrite the conflicting paragraph to match the plan."
+    )
     return "\n".join(lines)
 
 def _clean_build_artifacts(level: str, slug: str) -> None:
@@ -2958,8 +2960,8 @@ def step_write(level: str, module_num: int, slug: str,
             "- Write every paragraph listed, in the order listed\n"
             "- Hit each paragraph's word budget (+-10%)\n"
             "- Place exercises exactly where the skeleton says\n"
-            "- Use the specific examples named in the skeleton\n"
-            "- Do NOT skip paragraphs, reorder sections, or add unplanned content\n\n"
+            "- Follow skeleton paragraph slots and budgets, but if any skeleton example conflicts with the current plan YAML, replace the example with a plan-aligned one.\n"
+            "- No meta-pedagogical narration (We can analyze..., This conversation shows...). After any dialogue, max 2 explanatory sentences, each quoting a Ukrainian form from the dialogue.\n\n"
             "The skeleton replaces Step 1 (Pacing Plan) — do NOT output a "
             "<pacing_plan> block. Start writing immediately from the first section.\n\n"
             + _format_prompt_literal_block("Skeleton", skeleton, language="markdown")
@@ -3048,8 +3050,8 @@ def step_write(level: str, module_num: int, slug: str,
             "- Write every paragraph listed, in the order listed\n"
             "- Hit each paragraph's word budget (+-10%)\n"
             "- Place exercises exactly where the skeleton says\n"
-            "- Use the specific examples named in the skeleton\n"
-            "- Do NOT skip paragraphs, reorder sections, or add unplanned content\n\n"
+            "- Follow skeleton paragraph slots and budgets, but if any skeleton example conflicts with the current plan YAML, replace the example with a plan-aligned one.\n"
+            "- No meta-pedagogical narration (We can analyze..., This conversation shows...). After any dialogue, max 2 explanatory sentences, each quoting a Ukrainian form from the dialogue.\n\n"
             "The skeleton replaces Step 1 (Pacing Plan) — do NOT output a "
             "<pacing_plan> block. Start writing immediately from the first section.\n\n"
             + _format_prompt_literal_block("Skeleton", skeleton, language="markdown")

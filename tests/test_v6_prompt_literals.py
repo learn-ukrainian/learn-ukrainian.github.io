@@ -155,7 +155,8 @@ def test_step_write_wraps_prompt_artifacts_in_literal_blocks(
     phases_dir.mkdir(parents=True, exist_ok=True)
     (phases_dir / "v6-write.md").write_text(
         "Plan\n{PLAN_CONTENT}\n\nFacts\n{PRE_VERIFIED_FACTS}\n\n"
-        "Packet\n{KNOWLEDGE_PACKET}\n\n{SKELETON_SECTION}\n## Output Format\n",
+        "Settings\n{DIALOGUE_SITUATIONS}\n\nPacket\n{KNOWLEDGE_PACKET}\n\n"
+        "{SKELETON_SECTION}\n## Output Format\n",
         "utf-8",
     )
 
@@ -194,6 +195,24 @@ def test_step_write_wraps_prompt_artifacts_in_literal_blocks(
         assert "<skeleton>" not in text
         assert "Actual brief." in text
         assert "fact block" in text
+        assert (
+            "Use these settings. If the skeleton, examples, or any earlier prompt text "
+            "conflicts with the current plan YAML, the plan wins. Rewrite the conflicting "
+            "paragraph to match the plan."
+        ) in text
+        assert (
+            "Follow skeleton paragraph slots and budgets, but if any skeleton example "
+            "conflicts with the current plan YAML, replace the example with a "
+            "plan-aligned one."
+        ) in text
+        assert (
+            "No meta-pedagogical narration (We can analyze..., This conversation shows...). "
+            "After any dialogue, max 2 explanatory sentences, each quoting a Ukrainian "
+            "form from the dialogue."
+        ) in text
+        assert "room description or generic greeting" not in text
+        assert "Use the specific examples named in the skeleton" not in text
+        assert "Do NOT skip paragraphs, reorder sections, or add unplanned content" not in text
 
 
 def test_step_review_wraps_generated_content_and_reports_as_literals(
