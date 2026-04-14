@@ -5,7 +5,6 @@ Endpoints: overview, track detail, module deep-dive, pipeline status, activity c
 comms monitoring.
 """
 
-import json
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -37,7 +36,7 @@ from .dashboard_helpers import (
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from audit.status_cache import get_source_paths
+from audit.status_cache import get_source_paths, read_status
 from research_quality import assess_research_compat, find_research_path
 
 router = APIRouter(tags=["dashboard"])
@@ -175,17 +174,11 @@ async def module_detail(track_id: str, slug: str):
     result["plan"] = read_yaml_file(CURRICULUM_ROOT / "plans" / track_id / f"{slug}.yaml")
     result["meta"] = read_yaml_file(track_dir / "meta" / f"{slug}.yaml")
 
-    status_file = track_dir / "status" / f"{slug}.json"
-    if status_file.exists():
-        try:
-            with open(status_file) as f:
-                result["status"] = json.load(f)
-        except Exception:
-            result["status"] = None
-    else:
-        result["status"] = None
-
     sp = get_source_paths(track_dir, slug)
+    status_result = read_status(track_dir / "status" / f"{slug}.json", source_paths=sp)
+    result["status"] = status_result.data if status_result else None
+    result["status_is_fresh"] = status_result.is_fresh if status_result else None
+    result["status_stale_sources"] = status_result.stale_sources if status_result else []
     md_path = sp.get("md")
     if md_path and md_path.exists():
         content = md_path.read_text()

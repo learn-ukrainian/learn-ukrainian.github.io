@@ -14,13 +14,16 @@ Issue: #970 AC5-AC6
 
 import argparse
 import contextlib
-import json
 import re
 import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from audit.status_cache import get_source_paths, read_status
 
 
 def _load_curriculum_order(level: str) -> list[str]:
@@ -35,15 +38,11 @@ def _load_curriculum_order(level: str) -> list[str]:
     return [m.strip() for m in modules if isinstance(m, str) and m.strip()]
 
 
-def _load_status(level: str, slug: str) -> dict | None:
-    """Load status JSON for a module."""
+def _load_status(level: str, slug: str):
+    """Load status JSON for a module via the shared freshness-aware reader."""
     path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
-    if not path.exists():
-        return None
-    try:
-        return json.loads(path.read_text())
-    except Exception:
-        return None
+    source_paths = get_source_paths(CURRICULUM_ROOT / level, slug)
+    return read_status(path, source_paths=source_paths)
 
 
 def _extract_review_score(level: str, slug: str) -> str | None:
@@ -114,8 +113,11 @@ def dashboard(level: str, failing_only: bool = False, first_n: int = 0) -> int:
         active_frictions, resolved_frictions = _count_frictions(level, slug)
 
         if status:
-            audit_status = status.get("overall", {}).get("status", "?").upper()
-            blocking = _get_blocking_issues(status)
+            audit_status = status.status.upper()
+            blocking = _get_blocking_issues(status.data)
+            if not status.is_fresh:
+                audit_status = f"STALE {audit_status}"
+                blocking.insert(0, f"stale status: {', '.join(status.stale_sources)}")
         else:
             audit_status = "NO DATA"
             blocking = []

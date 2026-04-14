@@ -26,7 +26,14 @@ Usage:
 import argparse
 import re
 import sqlite3
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from wiki.compile import _get_domain
+from wiki.config import ALL_TRACKS
+from wiki.sources import list_discovery_slugs_readonly
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 WIKI_DIR = PROJECT_ROOT / "wiki"
@@ -70,29 +77,16 @@ AI_NOISE_PATTERNS = [
 ]
 _AI_NOISE_RE = re.compile("|".join(AI_NOISE_PATTERNS), re.MULTILINE)
 
-# Track → wiki directory mapping (resolved once)
-TRACK_DIRS = {
-    "a1": WIKI_DIR / "pedagogy" / "a1",
-    "a2": WIKI_DIR / "grammar" / "a2",
-    "b1": WIKI_DIR / "grammar" / "b1",
-    "b2": WIKI_DIR / "grammar" / "b2",
-    "c1": WIKI_DIR / "academic" / "c1",
-    "c2": WIKI_DIR / "mastery" / "c2",
-}
-# Add seminar tracks with explicit paths (no glob)
-for _t, _subdir in [
-    ("folk", "folk"), ("hist", "hist"), ("bio", "bio"),
-    ("istorio", "istorio"), ("lit", "lit"), ("oes", "oes"), ("ruth", "ruth"),
-]:
-    # Seminar wiki dirs can be under various parent dirs
-    for _parent in (WIKI_DIR, WIKI_DIR / "seminar"):
-        _candidate = _parent / _subdir
-        if _candidate.is_dir():
-            TRACK_DIRS[_t] = _candidate
-            break
 
-ALL_TRACKS = ["a1", "a2", "b1", "b2", "c1", "c2",
-              "folk", "hist", "bio", "istorio", "lit", "oes", "ruth"]
+def _iter_track_articles(track: str):
+    """Yield compiled article paths owned by a single track."""
+    seen: set[Path] = set()
+    for slug in list_discovery_slugs_readonly(track):
+        article_path = WIKI_DIR / _get_domain(track, slug) / f"{slug}.md"
+        if not article_path.exists() or article_path in seen:
+            continue
+        seen.add(article_path)
+        yield article_path
 
 
 def check_article(path: Path, track: str) -> list[str]:
@@ -139,14 +133,8 @@ def check_article(path: Path, track: str) -> list[str]:
 
 def scan_track(track: str) -> dict[str, list[str]]:
     """Scan all articles for a track. Returns {path_relative: [issues]}."""
-    wiki_dir = TRACK_DIRS.get(track)
-    if not wiki_dir or not wiki_dir.exists():
-        return {}
-
     results = {}
-    for md in sorted(wiki_dir.rglob("*.md")):
-        if md.name == "index.md":
-            continue
+    for md in sorted(_iter_track_articles(track)):
         # Use relative path as key to avoid slug collisions across tracks
         rel_key = str(md.relative_to(WIKI_DIR))
         issues = check_article(md, track)

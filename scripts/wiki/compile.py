@@ -65,6 +65,7 @@ from wiki.enrichment import enrich_sources
 from wiki.sources import (
     gather_discovery_sources,
     list_discovery_slugs,
+    list_discovery_slugs_readonly,
     list_literary_sources,
 )
 from wiki.state import log_event, read_log
@@ -987,21 +988,7 @@ def _parse_wiki_fixes(fixes_text: str) -> list[tuple[str, str]]:
 def cmd_review_existing(track: str, *, slug: str | None = None,
                         limit: int | None = None) -> None:
     """Review already-compiled wiki articles without recompiling."""
-    from wiki.config import WIKI_DIR
-
-    # Find articles for this track
-    domains = TRACK_DOMAINS.get(track, [])
-    articles = []
-    for domain in domains:
-        domain_dir = WIKI_DIR / domain
-        if not domain_dir.exists():
-            continue
-        for md_file in sorted(domain_dir.rglob("*.md")):
-            if md_file.name == "index.md":
-                continue
-            if slug and md_file.stem != slug:
-                continue
-            articles.append(md_file)
+    articles = _existing_article_paths(track, slug=slug)
 
     if not articles:
         print(f"No compiled articles found for {track}")
@@ -1092,6 +1079,22 @@ def _get_domain(track: str, slug: str) -> str:
         "ruth": "linguistics/ruthenian",
     }
     return domain_map.get(track, track)
+
+
+def _existing_article_paths(track: str, *, slug: str | None = None) -> list[Path]:
+    """Return compiled article paths owned by one track."""
+    from wiki.config import WIKI_DIR
+
+    seen: set[Path] = set()
+    articles = []
+    slugs = [slug] if slug else list_discovery_slugs_readonly(track)
+    for article_slug in slugs:
+        article_path = WIKI_DIR / _get_domain(track, article_slug) / f"{article_slug}.md"
+        if not article_path.exists() or article_path in seen:
+            continue
+        seen.add(article_path)
+        articles.append(article_path)
+    return sorted(articles)
 
 
 def _slug_to_topic(slug: str, track: str, sources_info: dict | None = None) -> str:
