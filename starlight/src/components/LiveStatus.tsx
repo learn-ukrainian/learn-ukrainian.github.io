@@ -42,6 +42,17 @@ const STATUS_ICONS: Record<LiveStatusKind, string> = {
   building: '\u23F3',
 };
 
+const STATUS_LABELS: Record<LiveStatusKind, string> = {
+  done: 'Module done',
+  active: 'Module in progress',
+  todo: 'Module not started',
+  locked: 'Module locked',
+  passing: 'Module passing audit',
+  failing: 'Module failing audit',
+  stale: 'Module audit stale',
+  building: 'Module building',
+};
+
 export function deriveLiveStatus(
   data: ModuleStateResponse,
   fallback: FallbackStatus,
@@ -49,15 +60,19 @@ export function deriveLiveStatus(
   const audit = data.audit ?? {};
   const blockingIssues = Array.isArray(audit.blocking_issues) ? audit.blocking_issues : [];
 
+  // Order matters: real failures > staleness > deploy-in-progress > green states.
+  // Gemini review #1228: `shippable` must NOT shadow a failed/incomplete publish
+  // phase, and `audit.status === 'pass'` should surface as green even when
+  // the module is not yet flagged shippable by the pipeline.
   let kind: LiveStatusKind = fallback;
-  if (data.shippable === true) {
-    kind = 'passing';
-  } else if (audit.status === 'fail' || blockingIssues.length > 0) {
+  if (audit.status === 'fail' || blockingIssues.length > 0) {
     kind = 'failing';
   } else if (audit.status === 'stale') {
     kind = 'stale';
   } else if (data.phases?.publish?.status !== 'complete') {
     kind = 'building';
+  } else if (data.shippable === true || audit.status === 'pass') {
+    kind = 'passing';
   }
 
   const wordCount = typeof audit.word_count === 'number' ? audit.word_count : 0;
@@ -69,9 +84,15 @@ export function deriveLiveStatus(
   };
 }
 
-function getMonitorApiBase(): string {
+function getMonitorApiBase(): string | null {
   const configuredBase = import.meta.env.PUBLIC_MONITOR_API_BASE;
-  return (configuredBase || DEFAULT_MONITOR_API_BASE).replace(/\/+$/, '');
+  if (configuredBase) return String(configuredBase).replace(/\/+$/, '');
+  // Dev-only fallback: never hit localhost from a production bundle,
+  // which would trigger mixed-content blocks (HTTPS→HTTP) and CORS noise
+  // in every visitor's console. In prod without config, disable the fetch
+  // and let the frontmatter-derived fallback stay visible.
+  if (import.meta.env.DEV) return DEFAULT_MONITOR_API_BASE;
+  return null;
 }
 
 export default function LiveStatus({
@@ -82,12 +103,19 @@ export default function LiveStatus({
   const [resolvedStatus, setResolvedStatus] = useState<ResolvedStatus>({ kind: fallback });
 
   useEffect(() => {
+    const base = getMonitorApiBase();
+    // Prod without PUBLIC_MONITOR_API_BASE: keep the frontmatter fallback,
+    // don't fire a cross-origin request to localhost (mixed-content / CORS).
+    if (base === null) {
+      return;
+    }
+
     const controller = new AbortController();
 
     void (async () => {
       try {
         const response = await fetch(
-          `${getMonitorApiBase()}/api/state/module/${track}/${num}`,
+          `${base}/api/state/module/${track}/${num}`,
           { signal: controller.signal },
         );
 
@@ -96,6 +124,12 @@ export default function LiveStatus({
         }
 
         const payload = await response.json() as ModuleStateResponse;
+        // Guard against setState-after-unmount: json() can resolve after
+        // the effect's cleanup fires, and AbortError is only raised by
+        // fetch(), not by response.json().
+        if (controller.signal.aborted) {
+          return;
+        }
         setResolvedStatus(deriveLiveStatus(payload, fallback));
       } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
@@ -109,5 +143,13 @@ export default function LiveStatus({
     };
   }, [fallback, num, track]);
 
-  return <span title={resolvedStatus.title}>{STATUS_ICONS[resolvedStatus.kind]}</span>;
+  return (
+    <span
+      role="img"
+      aria-label={STATUS_LABELS[resolvedStatus.kind]}
+      title={resolvedStatus.title}
+    >
+      {STATUS_ICONS[resolvedStatus.kind]}
+    </span>
+  );
 }
