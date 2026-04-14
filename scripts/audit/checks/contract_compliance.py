@@ -47,6 +47,21 @@ def _normalize_marker(marker: str) -> str:
     return token
 
 
+def _activity_marker_matches(expected: dict, marker: str) -> bool:
+    """Match a content activity marker against a contract obligation entry.
+
+    Contract entries may pin the activity by `id` (exact match required) or
+    only by `type` (bare kind like "fill-in"). Writers emit descriptive full
+    markers such as "fill-in-khotity-conjugation", so bare types match when
+    the content marker equals the type or begins with ``f"{type}-"``.
+    """
+    exp_id = expected.get("id") or ""
+    if exp_id and marker == exp_id:
+        return True
+    exp_type = expected.get("type") or ""
+    return bool(exp_type) and (marker == exp_type or marker.startswith(exp_type + "-"))
+
+
 def _missing_terms(text: str, terms: list[str]) -> list[str]:
     lowered = text.lower()
     required = [term.strip() for term in terms if str(term).strip()]
@@ -126,18 +141,33 @@ def check_contract_compliance(content: str, contract: dict) -> list[dict]:
 
     activity_obligations = contract.get("activity_obligations") or []
     markers = [_normalize_marker(marker) for marker in _ACTIVITY_RE.findall(content)]
-    expected_markers = [
-        str(item.get("id") or item.get("type") or "").lower()
+    # Contract may specify an activity by `id` (exact full marker like
+    # "fill-in-khotity-conjugation") or by `type` (bare kind like "fill-in"),
+    # while writers emit descriptive full IDs. Match IDs exactly, and bare
+    # types against the marker prefix so e.g. `type: fill-in` satisfies
+    # `<!-- INJECT_ACTIVITY: fill-in-khotity-conjugation -->`.
+    expected_entries = [
+        {
+            "id": str(item.get("id") or "").strip().lower(),
+            "type": str(item.get("type") or "").strip().lower(),
+        }
         for item in activity_obligations
         if item.get("id") or item.get("type")
     ]
-    if expected_markers and markers[:len(expected_markers)] != expected_markers:
-        violations.append({
-            "type": "ACTIVITY_ORDER",
-            "severity": "ERROR",
-            "section": "(whole module)",
-            "message": f"Expected activity order {expected_markers}, found {markers}",
-        })
+    if expected_entries:
+        actual_prefix = markers[: len(expected_entries)]
+        ordered = len(actual_prefix) == len(expected_entries) and all(
+            _activity_marker_matches(exp, got)
+            for exp, got in zip(expected_entries, actual_prefix, strict=False)
+        )
+        if not ordered:
+            expected_display = [entry["id"] or entry["type"] for entry in expected_entries]
+            violations.append({
+                "type": "ACTIVITY_ORDER",
+                "severity": "ERROR",
+                "section": "(whole module)",
+                "message": f"Expected activity order {expected_display}, found {markers}",
+            })
 
     dialogue_acts = contract.get("dialogue_acts") or []
     for item in dialogue_acts:

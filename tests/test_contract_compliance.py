@@ -102,6 +102,82 @@ def test_contract_compliance_requires_all_dialogue_and_anchor_terms() -> None:
     assert any("літера" in v["message"] for v in violations if v["type"] == "FACTUAL_ANCHOR")
 
 
+def test_activity_order_accepts_descriptive_markers_for_bare_type_contract() -> None:
+    """Writer emits full IDs like `fill-in-khotity-conjugation`; contract pins
+    only the bare type `fill-in`. The prefix match must accept this so the
+    heal loop does not spin on an unsatisfiable comparison (#1251)."""
+    contract = {
+        "teaching_beats": {"section_order": [], "sections": []},
+        "activity_obligations": [
+            {"type": "fill-in"},
+            {"type": "quiz"},
+            {"type": "fill-in"},
+            {"type": "quiz"},
+        ],
+    }
+    content = """
+<!-- INJECT_ACTIVITY: fill-in-khotity-conjugation -->
+<!-- INJECT_ACTIVITY: quiz-verb-patterns -->
+<!-- INJECT_ACTIVITY: fill-in-modal-logic -->
+<!-- INJECT_ACTIVITY: quiz-modal-choice -->
+"""
+    violations = check_contract_compliance(content, contract)
+    assert not any(v["type"] == "ACTIVITY_ORDER" for v in violations)
+
+
+def test_activity_order_flags_actual_swap_even_with_descriptive_markers() -> None:
+    """Ensure the prefix-match fix does not lose its ability to detect genuine
+    order mismatches — positions 3 and 4 are swapped here (F,Q,Q,F vs F,Q,F,Q)."""
+    contract = {
+        "teaching_beats": {"section_order": [], "sections": []},
+        "activity_obligations": [
+            {"type": "fill-in"},
+            {"type": "quiz"},
+            {"type": "fill-in"},
+            {"type": "quiz"},
+        ],
+    }
+    content = """
+<!-- INJECT_ACTIVITY: fill-in-khotity-conjugation -->
+<!-- INJECT_ACTIVITY: quiz-verb-patterns -->
+<!-- INJECT_ACTIVITY: quiz-modal-choice -->
+<!-- INJECT_ACTIVITY: fill-in-modal-logic -->
+"""
+    violations = check_contract_compliance(content, contract)
+    order_violations = [v for v in violations if v["type"] == "ACTIVITY_ORDER"]
+    assert len(order_violations) == 1
+    assert "fill-in" in order_violations[0]["message"]
+
+
+def test_activity_order_still_honors_exact_id_match() -> None:
+    """When contract pins an exact `id`, the content marker must equal it —
+    a bare-type prefix is insufficient."""
+    contract = {
+        "teaching_beats": {"section_order": [], "sections": []},
+        "activity_obligations": [
+            {"id": "quiz-intro", "type": "quiz"},
+        ],
+    }
+    # Exact id match — passes.
+    ok_content = "<!-- INJECT_ACTIVITY: quiz-intro -->"
+    assert not any(
+        v["type"] == "ACTIVITY_ORDER"
+        for v in check_contract_compliance(ok_content, contract)
+    )
+    # Same bare type, different id — still passes because `type` also matches.
+    other_content = "<!-- INJECT_ACTIVITY: quiz-other -->"
+    assert not any(
+        v["type"] == "ACTIVITY_ORDER"
+        for v in check_contract_compliance(other_content, contract)
+    )
+    # Wrong kind entirely — fails.
+    wrong_content = "<!-- INJECT_ACTIVITY: fill-in-something -->"
+    assert any(
+        v["type"] == "ACTIVITY_ORDER"
+        for v in check_contract_compliance(wrong_content, contract)
+    )
+
+
 def test_contract_correction_directive_lists_violations() -> None:
     directive = build_contract_correction_directive(
         [{"section": "Intro", "message": "Missing factual anchor"}]
