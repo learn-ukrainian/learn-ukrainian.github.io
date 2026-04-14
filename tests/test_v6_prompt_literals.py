@@ -371,6 +371,18 @@ def test_step_review_marks_dialogue_dimension_na_when_contract_has_no_dialogue_a
         assert "N/A — module contract has no dialogue_acts." in text
 
 
+def test_v6_review_prompt_includes_marker_only_dimension_five_rules() -> None:
+    prompt_path = SCRIPTS_DIR / "build" / "phases" / "v6-review.md"
+    text = prompt_path.read_text("utf-8")
+
+    assert "do markers appear in the SAME ORDER as `activity_obligations`?" in text
+    assert "Verify each marker leading token matches the contracted type exactly" in text
+    assert "Order violation or type mismatch = deduct in Dimension 5." in text
+    assert "If the module contains only INJECT_ACTIVITY markers (no inline DSL exercises)" in text
+    assert "marker count matches activity_obligations count" in text
+    assert "Do NOT evaluate distractors, answer positions, or item difficulty for marker-only modules." in text
+
+
 def test_step_review_style_wraps_generated_content_as_literals(
     tmp_path: Path,
     monkeypatch,
