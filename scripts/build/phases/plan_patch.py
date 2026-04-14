@@ -61,6 +61,22 @@ def _normalize_text(text: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9а-яіїєґ]+", " ", text.lower())).strip()
 
 
+def _contract_has_no_dialogue_acts(contract: dict | None) -> bool:
+    if not isinstance(contract, dict):
+        return False
+    dialogue_acts = contract.get("dialogue_acts")
+    return isinstance(dialogue_acts, list) and not dialogue_acts
+
+
+def _is_dialogue_dimension(value: Any) -> bool:
+    if isinstance(value, bool):
+        return False
+    if isinstance(value, int):
+        return value == 9
+    text = _normalize_text(str(value or ""))
+    return "dialogue" in text
+
+
 def load_structured_review_rounds(orch_dir: Path) -> list[dict]:
     """Load structured review round YAML artifacts saved by v6_build."""
     rounds: list[dict] = []
@@ -79,9 +95,11 @@ def extract_plateau_complaints(
     *,
     review_target_score: float = 9.0,
     max_items: int = 6,
+    contract: dict | None = None,
 ) -> list[dict]:
     """Aggregate the recurring complaints that caused the review plateau."""
     complaints: dict[str, dict[str, Any]] = {}
+    skip_dialogue_dimension = _contract_has_no_dialogue_acts(contract)
 
     for fallback_round_num, round_data in enumerate(structured_rounds, start=1):
         round_num = int(round_data.get("round") or fallback_round_num)
@@ -93,6 +111,8 @@ def extract_plateau_complaints(
             if not issue:
                 continue
             dimension = str(finding.get("dimension") or "").strip()
+            if skip_dialogue_dimension and _is_dialogue_dimension(dimension):
+                continue
             location = str(finding.get("location") or "").strip()
             fix = str(finding.get("fix") or "").strip()
             key = "finding|" + "|".join(
@@ -122,7 +142,13 @@ def extract_plateau_complaints(
             evidence = str(score.get("evidence") or "").strip()
             if score_value >= review_target_score or not evidence:
                 continue
-            dimension = str(score.get("name") or score.get("dimension") or "").strip()
+            dimension_value = score.get("name") or score.get("dimension") or ""
+            if skip_dialogue_dimension and (
+                _is_dialogue_dimension(score.get("dimension"))
+                or _is_dialogue_dimension(dimension_value)
+            ):
+                continue
+            dimension = str(dimension_value).strip()
             key = "score|" + "|".join(_normalize_text(part) for part in (dimension, evidence))
             entry = complaints.setdefault(
                 key,
@@ -522,7 +548,16 @@ def run_plan_patch(
     structured_rounds = load_structured_review_rounds(orch_dir)
     if round_window:
         structured_rounds = structured_rounds[-round_window:]
-    complaints = extract_plateau_complaints(structured_rounds)
+    contract: dict | None = None
+    contract_path = orch_dir / "contract.yaml"
+    if contract_path.exists():
+        try:
+            loaded = yaml.safe_load(contract_path.read_text("utf-8"))
+        except Exception:
+            loaded = None
+        if isinstance(loaded, dict):
+            contract = loaded
+    complaints = extract_plateau_complaints(structured_rounds, contract=contract)
     complaint_summary = summarize_complaints(complaints)
     if not complaints:
         return PlanPatchResult(

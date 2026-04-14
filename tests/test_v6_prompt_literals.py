@@ -261,6 +261,97 @@ def test_step_review_wraps_generated_content_and_reports_as_literals(
         assert "check claim" in text
 
 
+def test_step_review_marks_dialogue_dimension_na_when_contract_has_no_dialogue_acts(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    level = "a1"
+    slug = "phonetics-review"
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    orch_dir = curriculum_root / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+
+    plan_path = curriculum_root / "plans" / level / f"{slug}.yaml"
+    plan_path.parent.mkdir(parents=True, exist_ok=True)
+    plan_path.write_text(
+        yaml.safe_dump(
+            {
+                "module": 1,
+                "slug": slug,
+                "level": level,
+                "sequence": 1,
+                "title": "Reading Ukrainian",
+                "word_target": 1200,
+                "phase": "A1.1",
+                "content_outline": [
+                    {"section": "Intro", "words": 900, "points": ["vowels", "syllables"]},
+                ],
+                "dialogue_situations": [],
+                "vocabulary_hints": {"required": ["мама"]},
+                "activity_hints": [{"id": "quiz-intro", "type": "quiz", "focus": "intro"}],
+            },
+            sort_keys=False,
+            allow_unicode=True,
+        ),
+        "utf-8",
+    )
+
+    (orch_dir / "contract.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "teaching_beats": {"section_order": ["Intro"]},
+                "section_word_budgets": {"Intro": {"min": 1, "max": 1200}},
+                "vocab_grammar_targets": {"must_introduce": ["мама"]},
+                "activity_obligations": [],
+                "dialogue_acts": [],
+                "factual_anchors": [],
+            },
+            sort_keys=False,
+            allow_unicode=True,
+        ),
+        "utf-8",
+    )
+    (orch_dir / "wiki-excerpts.yaml").write_text(
+        yaml.safe_dump({"sections": {}, "factual_anchors": []}, sort_keys=False, allow_unicode=True),
+        "utf-8",
+    )
+
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    content_path.write_text("## Intro\nМама. Ма-мо. Ми читаємо склади.\n", "utf-8")
+
+    phases_dir = tmp_path / "phases"
+    phases_dir.mkdir(parents=True, exist_ok=True)
+    (phases_dir / "v6-review.md").write_text(
+        "Contract\n{CONTRACT_YAML}\n\nContent\n{GENERATED_CONTENT}\n\n### Step 3: Score on 9 dimensions\n",
+        "utf-8",
+    )
+
+    captured: dict[str, str] = {}
+
+    def fake_dispatch(prompt: str, *args, **kwargs):
+        captured["prompt"] = prompt
+        return True, REVIEW_RAW
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
+    monkeypatch.setattr(v6_build, "_build_vesum_report", lambda *args, **kwargs: "")
+    monkeypatch.setattr(v6_build, "_save_structured_findings", lambda *args, **kwargs: None)
+    monkeypatch.setattr(dispatch, "dispatch_agent", fake_dispatch)
+
+    passed, score, _raw = v6_build.step_review(content_path, level, 1, slug, writer="claude")
+
+    assert passed is True
+    assert score == 9.0
+
+    prompt_text = captured["prompt"]
+    saved_prompt = (orch_dir / "v6-review-prompt.md").read_text("utf-8")
+    for text in (prompt_text, saved_prompt):
+        assert "The shared contract explicitly has `dialogue_acts: []` for this module." in text
+        assert "Dimension 9 (**Dialogue & conversation quality**) MUST be scored as `10/10`." in text
+        assert "N/A — module contract has no dialogue_acts." in text
+
+
 def test_step_review_style_wraps_generated_content_as_literals(
     tmp_path: Path,
     monkeypatch,

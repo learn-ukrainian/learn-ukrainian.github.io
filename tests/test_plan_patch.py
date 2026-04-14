@@ -51,6 +51,62 @@ def test_extract_plateau_complaints_prefers_recurrent_findings() -> None:
     assert complaints[0]["rounds"] == [1, 2]
 
 
+def test_extract_plateau_complaints_skips_dialogue_dimension_without_dialogue_acts() -> None:
+    complaints = plan_patch.extract_plateau_complaints(
+        [
+            {
+                "round": 1,
+                "findings": [
+                    {
+                        "dimension": "Dialogue & conversation quality",
+                        "location": "Vocabulary examples",
+                        "issue": "Dialogues are stiff.",
+                        "fix": "Make them more natural.",
+                    },
+                    {
+                        "dimension": "Pedagogical quality",
+                        "location": "Intro",
+                        "issue": "Examples stop after a single contrast pair.",
+                        "fix": "Add two more modeled examples before the exercise.",
+                    },
+                ],
+                "scores": [],
+            },
+            {
+                "round": 2,
+                "findings": [
+                    {
+                        "dimension": "Dialogue & conversation quality",
+                        "location": "Vocabulary examples",
+                        "issue": "Dialogues are stiff.",
+                        "fix": "Make them more natural.",
+                    },
+                    {
+                        "dimension": "Pedagogical quality",
+                        "location": "Intro",
+                        "issue": "Examples stop after a single contrast pair.",
+                        "fix": "Add two more modeled examples before the exercise.",
+                    },
+                ],
+                "scores": [],
+            },
+        ],
+        contract={"dialogue_acts": []},
+    )
+
+    assert complaints == [
+        {
+            "source": "finding",
+            "dimension": "Pedagogical quality",
+            "location": "Intro",
+            "issue": "Examples stop after a single contrast pair.",
+            "fix": "Add two more modeled examples before the exercise.",
+            "summary": "Examples stop after a single contrast pair.",
+            "rounds": [1, 2],
+        }
+    ]
+
+
 def test_build_plan_patch_prompt_strips_embedded_plan_patch_sentinels() -> None:
     plan_text = yaml.safe_dump(
         {

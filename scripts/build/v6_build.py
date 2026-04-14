@@ -1978,6 +1978,12 @@ def _format_contract_prompt_artifacts(
     return contract_literal, excerpt_literal
 
 
+def _contract_has_no_dialogue_acts(contract: dict) -> bool:
+    """Whether the contract explicitly marks dialogue review as non-applicable."""
+    dialogue_acts = contract.get("dialogue_acts")
+    return isinstance(dialogue_acts, list) and not dialogue_acts
+
+
 def _load_golden_dialogue_anchors(level: str, *, max_examples: int = 4) -> str:
     """Load native-dialogue few-shot anchors for the given level."""
     dialogues_dir = _golden_dialogues_dir(level)
@@ -5506,6 +5512,24 @@ def step_review(content_path: Path, level: str, module_num: int,
     }
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)
+
+    if _contract_has_no_dialogue_acts(contract):
+        dialogue_override = (
+            "### Non-Applicable Dimension Override\n\n"
+            "The shared contract explicitly has `dialogue_acts: []` for this module. "
+            "This module has no planned dialogue scene, so Dimension 9 is not applicable.\n\n"
+            "- Dimension 9 (**Dialogue & conversation quality**) MUST be scored as `10/10`.\n"
+            "- In the evidence cell, write exactly: `N/A — module contract has no dialogue_acts.`\n"
+            "- Do NOT criticize short vocabulary examples, sentence pairs, or call-and-response prompts as "
+            "\"stiff dialogue\" for this module.\n"
+            "- Do NOT include Dimension 9 complaints in Findings, `<fixes>`, or `<rewrite-block>` output "
+            "unless the writer introduced an unplanned dialogue and that dialogue itself is broken.\n"
+        )
+        step3_marker = "### Step 3: Score on 9 dimensions"
+        if step3_marker in prompt:
+            prompt = prompt.replace(step3_marker, f"{dialogue_override}\n{step3_marker}", 1)
+        else:
+            prompt += f"\n\n{dialogue_override}"
 
     # Inject VESUM verification data so the reviewer has facts, not guesses
     vesum_report = _build_vesum_report(generated_content, level=level, slug=slug)
