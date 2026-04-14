@@ -13,6 +13,7 @@ Validates:
      _classify_module_queue, _fetch_broker_messages, _default_research_info
 """
 
+import asyncio
 import json
 import subprocess
 from pathlib import Path
@@ -381,6 +382,7 @@ class TestGetOrchestrationInfo:
         info = _get_orchestration_info(orch)
         assert info["pipeline_version"] == "v6"
         assert info["needs_rebuild"] is False
+        assert "v4_phases" not in info
 
 
 class TestBuildModuleInfo:
@@ -415,6 +417,42 @@ class TestBuildModuleInfo:
 
         assert result["pipeline_version"] == "v5"
         assert result["needs_rebuild"] is True
+
+
+class TestDashboardModuleDetail:
+    """module_detail should expose freshness-aware status metadata."""
+
+    def test_status_uses_read_status(self, tmp_path, monkeypatch):
+        import scripts.api.dashboard_router as dashboard_router
+
+        track_dir = tmp_path / "curriculum" / "a1"
+        status_dir = track_dir / "status"
+        meta_dir = track_dir / "meta"
+        status_dir.mkdir(parents=True)
+        meta_dir.mkdir(parents=True)
+        (status_dir / "test-slug.json").write_text(json.dumps({"overall": {"status": "pass"}}))
+        (meta_dir / "test-slug.yaml").write_text("title: Test\n")
+
+        monkeypatch.setattr(dashboard_router, "LEVELS", [{"id": "a1", "path": "a1"}])
+        monkeypatch.setattr(dashboard_router, "CURRICULUM_ROOT", tmp_path / "curriculum")
+        monkeypatch.setattr(dashboard_router, "read_yaml_file", lambda _path: None)
+        monkeypatch.setattr(dashboard_router, "find_research_path", lambda _track_dir, _slug: None)
+        monkeypatch.setattr(dashboard_router, "default_research_info", lambda _track: {"exists": False})
+        monkeypatch.setattr(
+            dashboard_router,
+            "extract_review_info",
+            lambda _track_dir, _slug: {
+                "review_score": None,
+                "review_verdict": None,
+                "plan_review_verdict": None,
+            },
+        )
+        monkeypatch.setattr(dashboard_router, "get_orchestration_info", lambda _orch_dir: {})
+
+        result = asyncio.run(dashboard_router.module_detail("a1", "test-slug"))
+        assert result["status"] == {"overall": {"status": "pass"}}
+        assert result["status_is_fresh"] is False
+        assert result["status_stale_sources"] == ["meta"]
 
 
 class TestWeakPointsEndpoint:

@@ -949,3 +949,31 @@ class TestBuildLog:
 
         with patch("wiki.state.WIKI_STATE_DIR", tmp_path):
             assert read_log() == []
+
+
+class TestReviewExisting:
+    def test_reviews_only_track_owned_articles(self, tmp_path):
+        from unittest.mock import patch
+
+        from wiki.compile import cmd_review_existing
+
+        wiki_dir = tmp_path / "wiki"
+        periods = wiki_dir / "periods"
+        figures = wiki_dir / "figures"
+        periods.mkdir(parents=True)
+        figures.mkdir(parents=True)
+        target = periods / "kyivan-rus.md"
+        other = figures / "shevchenko.md"
+        target.write_text("# Kyivan Rus\n", encoding="utf-8")
+        other.write_text("# Shevchenko\n", encoding="utf-8")
+
+        reviewed = []
+        with (
+            patch("wiki.compile.list_discovery_slugs_readonly", return_value=["kyivan-rus"]),
+            patch("wiki.config.WIKI_DIR", wiki_dir),
+            patch("wiki.compile._get_domain", side_effect=lambda track, slug: "periods" if slug == "kyivan-rus" else "figures"),
+            patch("wiki.compile._review_article", side_effect=lambda path, track, slug: reviewed.append(path)),
+        ):
+            cmd_review_existing("hist")
+
+        assert reviewed == [target]

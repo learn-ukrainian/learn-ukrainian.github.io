@@ -119,6 +119,15 @@ class TestSaveDispatchLog:
         assert data["duration_s"] == 120.5
         assert "timestamp" in data
 
+    def test_log_filenames_do_not_collide(self, tmp_path):
+        orch_dir = tmp_path / "orch"
+        _save_dispatch_log(orch_dir, "write", "gemini", ok=True)
+        _save_dispatch_log(orch_dir, "write", "gemini", ok=True)
+
+        meta_files = sorted((orch_dir / "dispatch").glob("*-meta.json"))
+        assert len(meta_files) == 2
+        assert meta_files[0].name != meta_files[1].name
+
     def test_sequence_prefix(self, tmp_path):
         orch_dir = tmp_path / "orch"
         _save_dispatch_log(orch_dir, "skeleton", "gemini", ok=True)

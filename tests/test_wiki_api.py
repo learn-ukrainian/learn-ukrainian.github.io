@@ -134,6 +134,25 @@ def test_quality_gate_aggregates_tracks(monkeypatch):
     }
 
 
+def test_quality_gate_scans_shared_seminar_domains_by_track(tmp_path, monkeypatch):
+    from wiki.quality_gate import scan_track
+
+    wiki_dir = tmp_path / "wiki"
+    periods = wiki_dir / "periods"
+    figures = wiki_dir / "figures"
+    periods.mkdir(parents=True)
+    figures.mkdir(parents=True)
+    (periods / "kyivan-rus.md").write_text("# Kyivan Rus\nshort text\n", encoding="utf-8")
+    (figures / "shevchenko.md").write_text("# Shevchenko\nshort text\n", encoding="utf-8")
+
+    monkeypatch.setattr("wiki.quality_gate.WIKI_DIR", wiki_dir)
+    monkeypatch.setattr("wiki.quality_gate.list_discovery_slugs_readonly", lambda track: ["kyivan-rus"] if track == "hist" else [])
+    monkeypatch.setattr("wiki.quality_gate._get_domain", lambda track, slug: "periods" if slug == "kyivan-rus" else "figures")
+
+    issues = scan_track("hist")
+    assert list(issues) == ["periods/kyivan-rus.md"]
+
+
 def test_build_log_respects_limit_param(monkeypatch):
     monkeypatch.setattr(
         "wiki.state.read_log",

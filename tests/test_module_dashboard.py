@@ -84,10 +84,20 @@ def level_tree(tmp_path, monkeypatch):
 class TestLoadStatus:
     def test_existing(self, level_tree):
         status = _load_status("a1", "mod-pass")
-        assert status["overall"]["status"] == "pass"
+        assert status.data["overall"]["status"] == "pass"
+        assert status.is_fresh is True
 
     def test_missing(self, level_tree):
         assert _load_status("a1", "mod-nodata") is None
+
+    def test_stale_when_content_is_newer(self, level_tree):
+        lesson_path = level_tree / "a1" / "01-mod-pass.md"
+        lesson_path.write_text("# Lesson\n\nnewer content\n")
+
+        status = _load_status("a1", "mod-pass")
+        assert status is not None
+        assert status.is_fresh is False
+        assert "md" in status.stale_sources
 
 
 class TestExtractReviewScore:
@@ -162,3 +172,14 @@ class TestDashboard:
         out = capsys.readouterr().out
         # mod-fail has review 5.8 — should show as blocking
         assert "5.8/10 (need" in out
+
+    def test_stale_status_is_blocking(self, level_tree, capsys):
+        lesson_path = level_tree / "a1" / "01-mod-pass.md"
+        lesson_path.write_text("# Lesson\n\nnewer content\n")
+
+        ret = dashboard("a1", failing_only=True)
+        out = capsys.readouterr().out
+
+        assert ret == 1
+        assert "mod-pass" in out
+        assert "stale status: md" in out
