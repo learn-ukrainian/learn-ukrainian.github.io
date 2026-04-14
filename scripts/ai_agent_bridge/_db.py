@@ -116,6 +116,7 @@ CREATE TABLE IF NOT EXISTS deliveries (
     retry_after TEXT,
     last_error_kind TEXT,
     mode TEXT DEFAULT 'read-only',        -- read-only/workspace-write/danger
+    deadline_seconds INTEGER,             -- optional hard-timeout override
     FOREIGN KEY (message_id) REFERENCES channel_messages(message_id)
 );
 
@@ -241,6 +242,10 @@ def get_db():
                 if "last_error_kind" not in delivery_columns:
                     conn.execute(
                         "ALTER TABLE deliveries ADD COLUMN last_error_kind TEXT"
+                    )
+                if "deadline_seconds" not in delivery_columns:
+                    conn.execute(
+                        "ALTER TABLE deliveries ADD COLUMN deadline_seconds INTEGER"
                     )
 
                 cursor.execute(

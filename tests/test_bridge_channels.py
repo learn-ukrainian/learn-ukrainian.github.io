@@ -154,6 +154,14 @@ def test_post_with_monitor_snapshot_roundtrip():
     msg = _channels.read("topic")[0]
     assert msg["monitor_state_snapshot"] == snap
 
+
+def test_post_with_from_model_roundtrip():
+    """Verify agent-authored posts preserve the sender model metadata."""
+    _channels.create_channel("topic")
+    _channels.post("topic", "gemini", "hello", from_model="gemini-3-flash-preview")
+    assert _channels.read("topic")[0]["from_model"] == "gemini-3-flash-preview"
+
+
 def test_post_creates_delivery_row_per_recipient():
     """Verify posting creates one delivery row per specified recipient."""
     _channels.create_channel("topic")
@@ -1069,5 +1077,4 @@ class TestDeliveryLeasing:
         second = _channels.claim_next_delivery("claude", now=_iso_at(1))
         assert second is not None
         assert _delivery_row(delivery_id)["attempt_count"] == 2
-
 

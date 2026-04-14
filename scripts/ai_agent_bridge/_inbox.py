@@ -79,6 +79,8 @@ _DEFAULT_HARD_TIMEOUT_SECONDS = 900
 _DEFAULT_STALL_TIMEOUT_SECONDS = 600
 _DEFAULT_GLOBAL_RETRY_SECONDS = 120
 _HEARTBEAT_INTERVAL_SECONDS = 60
+_MIN_HARD_TIMEOUT_SECONDS = 60
+_MAX_HARD_TIMEOUT_SECONDS = 3600
 _SESSION_COLUMNS = {
     "claude": "claude_session_id",
     "gemini": "gemini_session_id",
@@ -115,6 +117,7 @@ class _ClaimedDelivery:
     channel: str
     to_agent: str
     to_model: str | None
+    deadline_seconds: int | None
     from_agent: str
     body: str
     round_index: int
@@ -141,6 +144,14 @@ def _validate_agent(agent: str) -> None:
     if agent not in _channels.VALID_AGENTS:
         raise ValueError(
             f"Unknown agent '{agent}'. Expected one of {_channels.VALID_AGENTS}."
+        )
+
+
+def _validate_hard_timeout_seconds(value: int, *, field_name: str) -> None:
+    if not _MIN_HARD_TIMEOUT_SECONDS <= value <= _MAX_HARD_TIMEOUT_SECONDS:
+        raise ValueError(
+            f"{field_name} must be between "
+            f"{_MIN_HARD_TIMEOUT_SECONDS} and {_MAX_HARD_TIMEOUT_SECONDS} seconds"
         )
 
 
@@ -286,6 +297,7 @@ def _claim_next_thread(
         rows = conn.execute(
             """
             SELECT d.delivery_id, d.message_id, d.to_agent, d.to_model,
+                   d.deadline_seconds,
                    d.mode,
                    cm.thread_id, cm.channel, cm.from_agent, cm.body,
                    cm.round_index, cm.created_at
@@ -314,6 +326,7 @@ def _claim_next_thread(
             channel=str(row["channel"]),
             to_agent=str(row["to_agent"]),
             to_model=str(row["to_model"]) if row["to_model"] else None,
+            deadline_seconds=int(row["deadline_seconds"]) if row["deadline_seconds"] else None,
             from_agent=str(row["from_agent"]),
             body=str(row["body"]),
             round_index=int(row["round_index"]),
@@ -501,6 +514,15 @@ def _resolve_mode(claimed: _ClaimedThread) -> str:
     return "read-only"
 
 
+def _resolve_hard_timeout(claimed: _ClaimedThread, *, worker_hard_timeout: int) -> int:
+    deadlines = [
+        delivery.deadline_seconds
+        for delivery in claimed.deliveries
+        if delivery.deadline_seconds is not None
+    ]
+    return max(worker_hard_timeout, *(deadlines or [0]))
+
+
 def _maybe_recover_orphan_commit(
     agent: str,
     claimed: _ClaimedThread,
@@ -618,7 +640,12 @@ def _mark_claimed_delivered(
         )
 
 
-def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
+def _invoke_thread(
+    agent: str,
+    claimed: _ClaimedThread,
+    *,
+    worker_hard_timeout: int,
+) -> Any:
     task_id = _thread_session_key(claimed.channel, claimed.thread_id)
     existing_session = _get_session_id(task_id, agent) if agent == "claude" else None
     has_session = existing_session is not None
@@ -636,6 +663,11 @@ def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
             session_id = str(uuid.uuid4())
             session_to_store = session_id
             tool_config["is_new_session"] = True
+
+    hard_timeout = _resolve_hard_timeout(
+        claimed,
+        worker_hard_timeout=worker_hard_timeout,
+    )
 
     emit_reply_started(claimed.thread_id, agent=agent, model=requested_model)
     stop_heartbeats = threading.Event()
@@ -667,6 +699,7 @@ def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
                 prompt=prompt,
                 requested_model=requested_model,
                 task_id=task_id,
+                hard_timeout=hard_timeout,
             )
         else:
             result = runtime_invoke(
@@ -679,7 +712,7 @@ def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
                 session_id=session_id if agent == "claude" else None,
                 tool_config=tool_config,
                 entrypoint="bridge",
-                hard_timeout=_DEFAULT_HARD_TIMEOUT_SECONDS,
+                hard_timeout=hard_timeout,
                 stall_timeout=_DEFAULT_STALL_TIMEOUT_SECONDS,
             )
     finally:
@@ -700,6 +733,7 @@ def _invoke_gemini_thread_with_fallback(
     prompt: str,
     requested_model: str | None,
     task_id: str,
+    hard_timeout: int,
 ) -> Result:
     mode = _resolve_mode(claimed)
     effective_requested_model = requested_model or PRO_MODEL
@@ -717,7 +751,7 @@ def _invoke_gemini_thread_with_fallback(
                 session_id=None,
                 tool_config=None,
                 entrypoint="bridge",
-                hard_timeout=_DEFAULT_HARD_TIMEOUT_SECONDS,
+                hard_timeout=hard_timeout,
                 stall_timeout=_DEFAULT_STALL_TIMEOUT_SECONDS,
             )
         except RateLimitedError as exc:
@@ -766,6 +800,7 @@ def run_inbox(
     max_messages: int | None = None,
     until_idle: bool = True,
     stop_after_seconds: int | None = None,
+    hard_timeout: int = _DEFAULT_HARD_TIMEOUT_SECONDS,
 ) -> InboxRunSummary:
     """Drain one agent inbox without splitting a live thread across calls.
 
@@ -786,6 +821,7 @@ def run_inbox(
         raise ValueError("max_messages must be > 0 when provided")
     if stop_after_seconds is not None and stop_after_seconds <= 0:
         raise ValueError("stop_after_seconds must be > 0 when provided")
+    _validate_hard_timeout_seconds(hard_timeout, field_name="hard_timeout")
 
     claimed_total = 0
     delivered_total = 0
@@ -832,7 +868,11 @@ def run_inbox(
         gemini_started_at = datetime.now(UTC) if agent == "gemini" else None
         fallback_model = _resolve_model(claimed) or PRO_MODEL
         try:
-            result = _invoke_thread(agent, claimed)
+            result = _invoke_thread(
+                agent,
+                claimed,
+                worker_hard_timeout=hard_timeout,
+            )
         # Note: transient global failures (rate limit, timeout, unavailable)
         # release the lease back to pending with a retry_after, but DO NOT
         # decrement attempt_count. The agent WAS attempted (it just hit a

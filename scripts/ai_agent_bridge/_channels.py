@@ -226,6 +226,7 @@ def _row_to_pending_delivery(row) -> dict[str, Any]:
         "message_id": row["message_id"],
         "to_agent": row["to_agent"],
         "to_model": row["to_model"],
+        "deadline_seconds": row["deadline_seconds"],
         "status": row["status"],
         "attempt_count": row["attempt_count"],
         "dispatched_at": row["dispatched_at"],
@@ -247,6 +248,7 @@ def _delivery_queue_row(
         SELECT d.delivery_id, d.message_id, d.to_agent, d.to_model,
                d.status, d.dispatched_at, d.delivered_at, d.error,
                d.lease_until, d.attempt_count, d.retry_after, d.last_error_kind,
+               d.deadline_seconds,
                cm.body, cm.from_agent AS cm_from_agent,
                cm.channel AS cm_channel, cm.created_at AS cm_created_at
         FROM deliveries d
@@ -690,6 +692,7 @@ def post(
     correlation_id: str | None = None,
     kind: str = "post",
     from_model: str | None = None,
+    to_model: str | None = None,
     attachments: list[dict[str, Any]] | None = None,
     context_rev_shared: str | None = None,
     context_rev_channel: str | None = None,
@@ -697,6 +700,7 @@ def post(
     auto_snapshot: bool = True,
     pre_delivered: bool = False,
     mode: str = "read-only",
+    deadline_seconds: int | None = None,
 ) -> dict[str, Any]:
     """Create a new channel_messages row + N deliveries rows atomically.
 
@@ -833,19 +837,35 @@ def post(
                 conn.execute(
                     """
                     INSERT INTO deliveries (
-                        delivery_id, message_id, to_agent, status, delivered_at
-                    ) VALUES (?, ?, ?, 'delivered', ?)
+                        delivery_id, message_id, to_agent, to_model, status,
+                        delivered_at, deadline_seconds
+                    ) VALUES (?, ?, ?, ?, 'delivered', ?, ?)
                     """,
-                    (dlv_id, message_id, agent, created_at),
+                    (
+                        dlv_id,
+                        message_id,
+                        agent,
+                        to_model,
+                        created_at,
+                        deadline_seconds,
+                    ),
                 )
             else:
                 conn.execute(
                     """
                     INSERT INTO deliveries (
-                        delivery_id, message_id, to_agent, status, mode
-                    ) VALUES (?, ?, ?, 'pending', ?)
+                        delivery_id, message_id, to_agent, to_model, status, mode,
+                        deadline_seconds
+                    ) VALUES (?, ?, ?, ?, 'pending', ?, ?)
                     """,
-                    (dlv_id, message_id, agent, mode),
+                    (
+                        dlv_id,
+                        message_id,
+                        agent,
+                        to_model,
+                        mode,
+                        deadline_seconds,
+                    ),
                 )
 
         conn.commit()
@@ -1227,7 +1247,8 @@ def deliveries_for_message(message_id: str) -> list[dict[str, Any]]:
             """
             SELECT delivery_id, message_id, to_agent, to_model, status,
                    dispatched_at, delivered_at, error,
-                   lease_until, attempt_count, retry_after, last_error_kind
+                   lease_until, attempt_count, retry_after, last_error_kind,
+                   deadline_seconds
             FROM deliveries
             WHERE message_id = ?
             ORDER BY delivery_id
@@ -1248,6 +1269,7 @@ def deliveries_for_message(message_id: str) -> list[dict[str, Any]]:
                 "attempt_count": r["attempt_count"],
                 "retry_after": r["retry_after"],
                 "last_error_kind": r["last_error_kind"],
+                "deadline_seconds": r["deadline_seconds"],
             }
             for r in rows
         ]
@@ -1269,6 +1291,7 @@ def pending_deliveries_for(agent: str) -> list[dict[str, Any]]:
             SELECT d.delivery_id, d.message_id, d.to_agent, d.to_model,
                    d.status, d.dispatched_at, d.delivered_at, d.error,
                    d.lease_until, d.attempt_count, d.retry_after, d.last_error_kind,
+                   d.deadline_seconds,
                    cm.body, cm.from_agent AS cm_from_agent,
                    cm.channel AS cm_channel, cm.created_at AS cm_created_at
             FROM deliveries d

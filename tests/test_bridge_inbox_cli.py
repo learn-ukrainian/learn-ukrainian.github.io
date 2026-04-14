@@ -255,3 +255,89 @@ def test_backlog_banner_does_not_trigger_for_fresh_pending_delivery(monkeypatch,
     assert exit_code == 0
     captured = capsys.readouterr()
     assert captured.err == ""
+
+
+@patch("ai_agent_bridge._inbox.runtime_invoke")
+def test_post_model_flag_round_trips_to_gemini_invocation(mock_invoke, capsys):
+    _channels.create_channel("topic")
+    mock_invoke.return_value = _ok_result("gemini")
+
+    post_exit = _run_cli(
+        [
+            "post",
+            "topic",
+            "hello gemini",
+            "--to",
+            "gemini",
+            "--model",
+            "gemini-3-flash-preview",
+            "--no-snapshot",
+        ]
+    )
+    message = _channels.read("topic")[0]
+    delivery = _channels.deliveries_for_message(str(message["message_id"]))[0]
+    run_exit = _run_cli(["inbox", "run", "gemini", "--once"])
+
+    assert post_exit == 0
+    assert run_exit == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert delivery["to_model"] == "gemini-3-flash-preview"
+    assert mock_invoke.call_args.kwargs["model"] == "gemini-3-flash-preview"
+
+
+@patch("ai_agent_bridge._inbox.runtime_invoke")
+def test_inbox_run_deadline_flag_overrides_worker_timeout(mock_invoke, capsys):
+    _make_thread("claude", count=1)
+    mock_invoke.return_value = _ok_result("claude")
+
+    exit_code = _run_cli(["inbox", "run", "claude", "--once", "--deadline", "1800"])
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert mock_invoke.call_args.kwargs["hard_timeout"] == 1800
+
+
+@patch("ai_agent_bridge._inbox.runtime_invoke")
+def test_post_deadline_flag_stores_delivery_override_and_worker_uses_it(mock_invoke, capsys):
+    _channels.create_channel("topic")
+    mock_invoke.return_value = _ok_result("codex")
+
+    post_exit = _run_cli(
+        [
+            "post",
+            "topic",
+            "hello codex",
+            "--to",
+            "codex",
+            "--deadline",
+            "1200",
+            "--no-snapshot",
+        ]
+    )
+    run_exit = _run_cli(["inbox", "run", "codex", "--once"])
+
+    assert post_exit == 0
+    assert run_exit == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    message = _channels.read("topic")[0]
+    delivery = _channels.deliveries_for_message(str(message["message_id"]))[0]
+    assert delivery["deadline_seconds"] == 1200
+    assert mock_invoke.call_args.kwargs["hard_timeout"] == 1200
+
+
+def test_help_includes_model_and_deadline_flags(capsys):
+    parser = _cli._build_parser()
+
+    with pytest.raises(SystemExit):
+        parser.parse_args(["post", "--help"])
+    post_help = capsys.readouterr()
+    assert "--model" in post_help.out
+    assert "--deadline" in post_help.out
+
+    with pytest.raises(SystemExit):
+        parser.parse_args(["inbox", "run", "--help"])
+    inbox_help = capsys.readouterr()
+    assert "--deadline" in inbox_help.out

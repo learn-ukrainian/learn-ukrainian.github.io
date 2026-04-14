@@ -16,10 +16,10 @@ ab channel context <name> [--edit] [--show]
 ab channel tail <name> [--n N] [--thread TID]
 ab channel watch <thread_id> [--follow] [--event-stream]
 
-ab post <channel> <body> [--to A,...] [--parent ID] [--corr ID]
+ab post <channel> <body> [--to A,...] [--parent ID] [--corr ID] [--model MODEL]
 ab p <channel> <agent> <body>                    # shorthand
 
-ab inbox run <agent> [--once] [--max-messages N] [--stop-after-seconds N]
+ab inbox run <agent> [--once] [--max-messages N] [--stop-after-seconds N] [--deadline SECONDS]
 ab inbox show <agent>
 ab sync <agent> | ab sync --all
 
@@ -44,6 +44,17 @@ from typing import Any
 
 from . import _channels
 from ._channels_watch import watch_channel_events
+
+
+def _deadline_seconds_arg(raw_value: str) -> int:
+    try:
+        seconds = int(raw_value)
+    except ValueError as exc:
+        raise ValueError("deadline must be an integer number of seconds") from exc
+    if not 60 <= seconds <= 3600:
+        raise ValueError("deadline must be between 60 and 3600 seconds")
+    return seconds
+
 
 # ── argparse registration ────────────────────────────────────────────
 
@@ -177,6 +188,17 @@ def register_channel_commands(subparsers: Any) -> None:
         choices=["read-only", "workspace-write", "danger"],
         help="Execution mode for inbox worker (default: read-only)",
     )
+    post_parser.add_argument(
+        "--model",
+        default=None,
+        help="Recipient model when using --to; otherwise sender model for agent-authored posts",
+    )
+    post_parser.add_argument(
+        "--deadline",
+        type=_deadline_seconds_arg,
+        default=None,
+        help="Per-delivery hard-timeout override in seconds (60-3600)",
+    )
 
     # ── top-level: p (shortcut) ───────────────────────────────────
     p_parser = subparsers.add_parser(
@@ -230,6 +252,12 @@ def register_channel_commands(subparsers: Any) -> None:
             type=int,
             default=None,
             help="Stop after this many seconds between thread claims",
+        )
+        inbox_run.add_argument(
+            "--deadline",
+            type=_deadline_seconds_arg,
+            default=None,
+            help="Worker hard-timeout override in seconds (60-3600)",
         )
 
         inbox_show = inbox_sub.add_parser(
@@ -717,6 +745,22 @@ def _handle_post(args) -> int:
 
     # Default recipients = channel subscribers
     to_agents = _parse_csv(args.to) if args.to else ch["subscribers"]
+    model = getattr(args, "model", None)
+    deadline = getattr(args, "deadline", None)
+
+    from_model: str | None = None
+    to_model: str | None = None
+    if model:
+        if args.to:
+            to_model = model
+        elif args.from_agent != "user":
+            from_model = model
+        else:
+            print(
+                "❌ --model requires either --to or an agent sender via --from-agent",
+                file=sys.stderr,
+            )
+            return 1
 
     mode = getattr(args, "mode", "read-only")
     try:
@@ -727,8 +771,11 @@ def _handle_post(args) -> int:
             to_agents=to_agents,
             parent_id=args.parent,
             correlation_id=args.corr,
+            from_model=from_model,
+            to_model=to_model,
             auto_snapshot=not args.no_snapshot,
             mode=mode,
+            deadline_seconds=deadline,
         )
     except ValueError as e:
         print(f"❌ {e}", file=sys.stderr)
@@ -753,6 +800,8 @@ def _handle_p(args) -> int:
         corr = None
         from_agent = "user"
         no_snapshot = False
+        model = None
+        deadline = None
 
     return _handle_post(_Args())
 
@@ -772,6 +821,7 @@ def _handle_inbox_run(args) -> int:
             max_messages=args.max_messages,
             until_idle=until_idle,
             stop_after_seconds=args.stop_after_seconds,
+            hard_timeout=args.deadline or 900,
         )
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
@@ -825,6 +875,7 @@ def _handle_sync(args) -> int:
             until_idle = True
             max_messages = None
             stop_after_seconds = None
+            deadline = None
 
             def __init__(self, agent_name: str) -> None:
                 self.agent = agent_name
