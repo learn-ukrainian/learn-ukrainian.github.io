@@ -70,12 +70,25 @@ describe('deriveLiveStatus', () => {
     });
   });
 
-  it('treats unknown publish state as building (API returned sparse payload)', () => {
-    // When the API responds with no phase info, we can't confirm a completed
-    // deploy — surface that as "building" rather than the stale fallback.
+  it('keeps the frontmatter fallback when the payload is sparse', () => {
+    // Empty payload (no phases, no audit) must not clobber the fallback
+    // status — `building` would be wrong here because we don't actually
+    // know the publish phase failed. (Gemini review #1228.)
     expect(deriveLiveStatus({}, 'active')).toEqual({
-      kind: 'building',
+      kind: 'active',
       title: '0/0 words',
+    });
+  });
+
+  it('treats audit=pass + missing phases as passing, not building', () => {
+    // Regression guard for the `data.phases` undefined shadow bug. If a
+    // module passed audit but the publish phase hasn't been recorded yet,
+    // surface the audit result instead of falsely flagging "building".
+    expect(deriveLiveStatus({
+      audit: { status: 'pass', word_count: 140, word_target: 150, blocking_issues: [] },
+    }, 'done')).toEqual({
+      kind: 'passing',
+      title: '140/150 words',
     });
   });
 });

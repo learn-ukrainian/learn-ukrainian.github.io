@@ -69,7 +69,11 @@ export function deriveLiveStatus(
     kind = 'failing';
   } else if (audit.status === 'stale') {
     kind = 'stale';
-  } else if (data.phases?.publish?.status !== 'complete') {
+  } else if (data.phases?.publish && data.phases.publish.status !== 'complete') {
+    // Only assert "building" when the payload actually includes a publish
+    // phase. Otherwise a sparse response (no `phases` key at all) would
+    // shadow the audit.pass / shippable checks below and mis-render a
+    // freshly-audited module as "building". (Gemini review #1228.)
     kind = 'building';
   } else if (data.shippable === true || audit.status === 'pass') {
     kind = 'passing';
