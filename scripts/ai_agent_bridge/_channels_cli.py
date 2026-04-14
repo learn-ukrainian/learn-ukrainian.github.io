@@ -21,6 +21,7 @@ ab p <channel> <agent> <body>                    # shorthand
 
 ab inbox run <agent> [--once] [--max-messages N] [--stop-after-seconds N] [--deadline SECONDS]
 ab inbox show <agent>
+ab reconcile [--dry-run]
 ab sync <agent> | ab sync --all
 
 ab discuss <channel> <body> --with A,B [--max-rounds N]   # B.4, stub for now
@@ -213,6 +214,16 @@ def register_channel_commands(subparsers: Any) -> None:
     )
     p_parser.add_argument("body", help="Message body (use '-' for stdin)")
 
+    reconcile_parser = subparsers.add_parser(
+        "reconcile",
+        help="Normalize stuck delivery state",
+    )
+    reconcile_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show reconciliation changes without applying them",
+    )
+
     # ── top-level: inbox extensions on the legacy parser ──────────
     inbox_parser = subparsers.choices.get("inbox")
     if inbox_parser is not None:
@@ -323,6 +334,8 @@ def dispatch_channel_command(args) -> int:
         return _handle_post(args)
     if command == "p":
         return _handle_p(args)
+    if command == "reconcile":
+        return _handle_reconcile(args)
     if command == "sync":
         return _handle_sync(args)
     if command == "discuss":
@@ -855,6 +868,24 @@ def _handle_inbox_show(args) -> int:
         f"    [{preview['channel']}/{preview['thread_id'][:5]}] "
         f"{preview['from_agent']} → \"{preview['body']}\""
     )
+    return 0
+
+
+def _handle_reconcile(args) -> int:
+    from ._reconcile import reconcile_deliveries
+
+    changes = reconcile_deliveries(dry_run=args.dry_run)
+    prefix = "would reconcile" if args.dry_run else "reconciled"
+    if not changes:
+        print(f"{prefix}: 0 deliveries")
+        return 0
+
+    print(f"{prefix}: {len(changes)} deliveries")
+    for change in changes:
+        print(
+            f"  {change.delivery_id}: {change.from_status} -> "
+            f"{change.to_status} ({change.error})"
+        )
     return 0
 
 

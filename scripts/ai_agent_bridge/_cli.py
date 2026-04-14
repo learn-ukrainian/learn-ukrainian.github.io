@@ -578,7 +578,7 @@ def _dispatch_command(args):
         bridge_status()
     elif args.command == "interactive":
         interactive_mode()
-    elif args.command in ("channel", "post", "p", "sync", "discuss"):
+    elif args.command in ("channel", "post", "p", "reconcile", "sync", "discuss"):
         # Channel bridge commands (#1190)
         from ._channels_cli import dispatch_channel_command
         rc = dispatch_channel_command(args)

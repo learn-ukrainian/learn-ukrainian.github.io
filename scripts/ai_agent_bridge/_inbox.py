@@ -74,6 +74,7 @@ from ._gemini_session_link import (
     format_recovered_reply,
 )
 from ._orphan_recovery import RecoveryCandidate, RecoveryResult, recover_orphan_commit
+from ._reconcile import reconcile_deliveries
 
 _DEFAULT_HARD_TIMEOUT_SECONDS = 900
 _DEFAULT_STALL_TIMEOUT_SECONDS = 600
@@ -1144,6 +1145,8 @@ def run_inbox(
 
         if not until_idle:
             break
+
+    reconcile_deliveries()
 
     return InboxRunSummary(
         agent=agent,
