@@ -37,6 +37,13 @@ def _write_state(curriculum_root: Path, slug: str) -> None:
     )
 
 
+def _mark_phase_incomplete(curriculum_root: Path, slug: str, phase: str) -> None:
+    state_path = curriculum_root / "b1" / "orchestration" / slug / "state.json"
+    state = json.loads(state_path.read_text("utf-8"))
+    state["phases"].pop(phase, None)
+    state_path.write_text(json.dumps(state, indent=2), "utf-8")
+
+
 def _write_review(curriculum_root: Path, slug: str, score: float) -> None:
     review_dir = curriculum_root / "b1" / "review"
     review_dir.mkdir(parents=True, exist_ok=True)
@@ -286,3 +293,21 @@ def test_resume_plan_reruns_when_latest_review_hits_dimension_floor(tmp_path, mo
     assert plan.should_skip is False
     assert plan.reason == "latest review dimension floor fail"
     assert plan.invalidate_phases == ("review", "review-style", "stress", "publish", "audit")
+
+
+def test_incomplete_module_still_reruns_weak_saved_review(tmp_path, monkeypatch):
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    slug = "single-module"
+    _write_manifest(curriculum_root, [slug])
+    _write_state(curriculum_root, slug)
+    _mark_phase_incomplete(curriculum_root, slug, "review-style")
+    _write_review(curriculum_root, slug, 8)
+    _write_passing_status(curriculum_root, slug)
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+
+    plan = v6_build._build_resume_invalidation_plan("b1", slug, "all", 9.0)
+
+    assert plan.should_skip is False
+    assert plan.reason == "latest review 8.0/10 < 9.0"
+    assert plan.invalidate_phases == ("review", "stress", "publish", "audit")

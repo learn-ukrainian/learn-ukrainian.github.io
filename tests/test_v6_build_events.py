@@ -853,6 +853,8 @@ def test_main_returns_false_and_releases_lock_when_review_halts(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
+    plan_patch = importlib.import_module("build.phases.plan_patch")
+
     curriculum_root = _single_module_tree(tmp_path)
     content_path = curriculum_root / "a2" / "a2-bridge.md"
     content_path.write_text("# Lesson\n\nУкраїнський текст.\n", "utf-8")
@@ -868,12 +870,22 @@ def test_main_returns_false_and_releases_lock_when_review_halts(
     reviews = iter([
         (False, 6.5, "Verdict: FAIL\n"),
         (False, 6.0, "Verdict: FAIL\n"),
+        (False, 5.9, "Verdict: FAIL\n"),
     ])
 
     monkeypatch.setattr(v6_build.ModuleBuildLock, "release", track_release)
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(reviews))
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
     monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: True)
+    monkeypatch.setattr(
+        plan_patch,
+        "run_plan_patch",
+        lambda **kwargs: plan_patch.PlanPatchResult(
+            applied=False,
+            reason="Gemini declined to patch the plan",
+            complaint_summary="test plateau",
+        ),
+    )
     monkeypatch.setattr(
         sys,
         "argv",

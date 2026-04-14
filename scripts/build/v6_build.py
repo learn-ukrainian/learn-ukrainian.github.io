@@ -41,6 +41,7 @@ import argparse
 import fcntl
 import hashlib
 import io
+import itertools
 import json
 import logging
 import os
@@ -433,6 +434,39 @@ class ResumeInvalidationPlan:
     should_skip: bool
     reason: str
     invalidate_phases: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class ReviewRoundState:
+    """One review/heal iteration, including post-fix contract state."""
+
+    round_num: int
+    passed: bool
+    score: float
+    review_text: str
+    contract_violations: tuple[dict, ...]
+
+    @property
+    def contract_blocking(self) -> bool:
+        return any(item.get("severity") == "ERROR" for item in self.contract_violations)
+
+
+@dataclass(frozen=True)
+class ReviewLoopDecision:
+    """Whether the review loop should continue, pass, or plateau."""
+
+    outcome: Literal["continue", "pass", "plateau"]
+    reason: str | None
+    last_delta: float | None
+    consecutive_small_deltas: int
+
+
+@dataclass(frozen=True)
+class ReviewLoopRunResult:
+    """Result of one review/heal cycle."""
+
+    outcome: Literal["pass", "plateau", "error"]
+    rounds: tuple[ReviewRoundState, ...]
 
 
 CLAUDE_FAMILY = ModelFamily(
@@ -1126,6 +1160,68 @@ def _parse_review_result(review_text: str) -> ReviewParseResult:
     )
 
 
+def _score_delta(previous: float, current: float) -> float:
+    """Round score movement to the same one-decimal granularity as reviews."""
+    return round(current - previous, 1)
+
+
+def _review_loop_decision(
+    rounds: list[ReviewRoundState],
+    *,
+    min_delta: float = 0.2,
+    max_rounds: int = 6,
+) -> ReviewLoopDecision:
+    """Decide whether the review-heal loop should continue or plateau."""
+    if not rounds:
+        return ReviewLoopDecision(
+            outcome="continue",
+            reason=None,
+            last_delta=None,
+            consecutive_small_deltas=0,
+        )
+
+    latest = rounds[-1]
+    if latest.passed and not latest.contract_blocking:
+        return ReviewLoopDecision(
+            outcome="pass",
+            reason="passed",
+            last_delta=None if len(rounds) < 2 else _score_delta(rounds[-2].score, latest.score),
+            consecutive_small_deltas=0,
+        )
+
+    consecutive_small_deltas = 0
+    last_delta: float | None = None
+    for previous, current in itertools.pairwise(rounds):
+        last_delta = _score_delta(previous.score, current.score)
+        if last_delta < min_delta:
+            consecutive_small_deltas += 1
+        else:
+            consecutive_small_deltas = 0
+
+    if consecutive_small_deltas >= 2:
+        return ReviewLoopDecision(
+            outcome="plateau",
+            reason="two_small_deltas",
+            last_delta=last_delta,
+            consecutive_small_deltas=consecutive_small_deltas,
+        )
+
+    if len(rounds) >= max_rounds:
+        return ReviewLoopDecision(
+            outcome="plateau",
+            reason="max_rounds",
+            last_delta=last_delta,
+            consecutive_small_deltas=consecutive_small_deltas,
+        )
+
+    return ReviewLoopDecision(
+        outcome="continue",
+        reason=None,
+        last_delta=last_delta,
+        consecutive_small_deltas=consecutive_small_deltas,
+    )
+
+
 def _load_latest_review_result(level: str, slug: str) -> ReviewParseResult | None:
     """Parse the latest saved review for a module, if present."""
     review_dir = CURRICULUM_ROOT / level / "review"
@@ -1265,6 +1361,8 @@ def _build_resume_invalidation_plan(
         completed_phases = _load_completed_phases(level, slug)
 
     invalidation = set(_resume_invalidation_plan_for_step(step, completed_phases))
+    audit_tail = {"audit", "publish"}
+    review_tail = {"review", "review-style", "stress", "publish", "audit"}
     if step in PLAN_DRIFT_GUARD_STEPS:
         drift = detect_plan_hash_drift(raw_state, _current_plan_hash(level, slug))
         if drift is not None:
@@ -1293,6 +1391,43 @@ def _build_resume_invalidation_plan(
                 invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
             )
     elif not all(phase in completed_phases for phase in _ALL_PHASES):
+        if "review" in completed_phases:
+            latest_review = _load_latest_review_result(level, slug)
+            if latest_review is None:
+                invalidation.update(review_tail)
+                return ResumeInvalidationPlan(
+                    should_skip=False,
+                    reason="no saved review found",
+                    invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+                )
+            review_failure_reason = _resume_review_failure_reason(latest_review, review_threshold)
+            if review_failure_reason is not None:
+                invalidation.update(review_tail)
+                return ResumeInvalidationPlan(
+                    should_skip=False,
+                    reason=review_failure_reason,
+                    invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+                )
+        if "review-style" in completed_phases:
+            latest_style_review = _load_latest_style_review_result(level, slug)
+            if latest_style_review is None:
+                invalidation.update(review_tail)
+                return ResumeInvalidationPlan(
+                    should_skip=False,
+                    reason="no saved style review found",
+                    invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+                )
+            style_review_failure_reason = _resume_style_review_failure_reason(
+                latest_style_review,
+                review_threshold,
+            )
+            if style_review_failure_reason is not None:
+                invalidation.update(review_tail)
+                return ResumeInvalidationPlan(
+                    should_skip=False,
+                    reason=style_review_failure_reason,
+                    invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+                )
         return ResumeInvalidationPlan(
             should_skip=False,
             reason="module incomplete",
@@ -1301,8 +1436,6 @@ def _build_resume_invalidation_plan(
 
     status_path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
     content_path = CURRICULUM_ROOT / level / f"{slug}.md"
-    audit_tail = {"audit", "publish"}
-    review_tail = {"review", "review-style", "stress", "publish", "audit"}
 
     # Audit-derived failures must re-run the audit/publish tail even when the
     # requested step is `review`. Review-derived failures must similarly force
@@ -1736,6 +1869,12 @@ def _contract_path(level: str, slug: str) -> Path:
 
 def _wiki_excerpts_path(level: str, slug: str) -> Path:
     return CURRICULUM_ROOT / level / "orchestration" / slug / "wiki-excerpts.yaml"
+
+
+def _clear_contract_artifacts(level: str, slug: str) -> None:
+    """Force the contract + wiki excerpts to rebuild from the latest plan."""
+    for path in (_contract_path(level, slug), _wiki_excerpts_path(level, slug)):
+        path.unlink(missing_ok=True)
 
 
 def _golden_dialogues_dir(level: str) -> Path:
@@ -5663,7 +5802,13 @@ def _parse_review_fixes(review_text: str) -> list[dict]:
                     continue
                 if "content" in fix and "replace" not in fix:
                     fix["replace"] = fix.pop("content")
-                if "find" in fix and "replace" in fix:
+                # Accept both find/replace and insert_after/text directives.
+                # The review prompt (v6-review.md) instructs the reviewer
+                # to use `insert_after` for word-count issues, so dropping
+                # them silently caused under-target modules to plateau.
+                has_findreplace = "find" in fix and "replace" in fix
+                has_insert = "insert_after" in fix and "text" in fix
+                if has_findreplace or has_insert:
                     valid.append(fix)
             return valid
     except Exception:
@@ -5715,6 +5860,37 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
     applied = 0
 
     for fix in fixes:
+        # Handle `insert_after: <anchor>` / `text: <payload>` directives
+        # used by the reviewer for word-count shortfalls (v6-review.md:163).
+        # Insert the payload immediately after the first occurrence of the
+        # anchor string, stress-mark-tolerant.
+        if "insert_after" in fix and "text" in fix:
+            anchor = str(fix.get("insert_after") or "")
+            payload = str(fix.get("text") or "")
+            if not anchor or not payload:
+                continue
+            anchor_unstressed = anchor.replace(STRESS_MARK, "")
+            content_unstressed_tmp = content.replace(STRESS_MARK, "")
+            if anchor_unstressed not in content_unstressed_tmp:
+                _log(f"  ⚠️  insert_after anchor not matched: '{anchor_unstressed[:60]}...'")
+                continue
+            # Map unstressed anchor end to stressed-content position.
+            pos_unstressed_end = content_unstressed_tmp.index(anchor_unstressed) + len(anchor_unstressed)
+            stressed_idx = 0
+            unstressed_idx = 0
+            while unstressed_idx < pos_unstressed_end and stressed_idx < len(content):
+                if content[stressed_idx] != STRESS_MARK:
+                    unstressed_idx += 1
+                stressed_idx += 1
+            # Consume trailing stress mark attached to the last anchor char.
+            if stressed_idx < len(content) and content[stressed_idx] == STRESS_MARK:
+                stressed_idx += 1
+            insertion = payload if payload.startswith(("\n", " ")) else " " + payload
+            content = content[:stressed_idx] + insertion + content[stressed_idx:]
+            applied += 1
+            _log(f"  ✅ Fix applied (insert_after): '{anchor_unstressed[:50]}...'")
+            continue
+
         find_str = fix.get("find", "")
         replace_str = fix.get("replace", "")
         if not find_str or find_str == replace_str:
@@ -5993,6 +6169,181 @@ def _apply_review_rewrite_blocks(
         ):
             applied += 1
     return applied > 0, applied
+
+
+def _run_review_heal_loop(
+    content_path: Path,
+    *,
+    level: str,
+    module_num: int,
+    slug: str,
+    writer: str,
+    reviewer_override: str | None,
+    max_rounds: int = 6,
+) -> ReviewLoopRunResult:
+    """Run review + deterministic healing until pass or plateau."""
+    from audit.checks.contract_compliance import check_contract_compliance
+
+    packet_path = CURRICULUM_ROOT / level / "research" / f"{slug}-knowledge-packet.md"
+    rounds: list[ReviewRoundState] = []
+
+    for round_index in range(1, max_rounds + 1):
+        passed, score, review_text = step_review(
+            content_path,
+            level,
+            module_num,
+            slug,
+            writer=writer,
+            reviewer_override=reviewer_override,
+        )
+        if score == 0.0 and not review_text:
+            return ReviewLoopRunResult(outcome="error", rounds=tuple(rounds))
+
+        fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
+        rewrite_applied, rewrite_count = _apply_review_rewrite_blocks(
+            review_text,
+            content_path,
+            level=level,
+            module_num=module_num,
+            slug=slug,
+            writer=writer,
+        )
+        if fixes_applied:
+            _log(f"\n🔧 Applied {fix_count} deterministic fix(es) from R{round_index}")
+        if rewrite_applied:
+            _log(f"\n✍️ Applied {rewrite_count} block rewrite(s) from R{round_index}")
+        if fixes_applied or rewrite_applied:
+            step_verify(content_path, level, module_num)
+
+        contract, _ = _ensure_contract_artifacts(
+            level,
+            module_num,
+            slug,
+            packet_path if packet_path.exists() else None,
+            log_creation=False,
+        )
+        final_contract_violations = check_contract_compliance(
+            content_path.read_text("utf-8"),
+            contract,
+        )
+        _save_contract_compliance(
+            level,
+            slug,
+            round_index,
+            final_contract_violations,
+            label="review",
+        )
+
+        round_state = ReviewRoundState(
+            round_num=round_index,
+            passed=passed,
+            score=score,
+            review_text=review_text,
+            contract_violations=tuple(final_contract_violations),
+        )
+        rounds.append(round_state)
+
+        if len(rounds) >= 2:
+            delta = _score_delta(rounds[-2].score, rounds[-1].score)
+            delta_str = f"+{delta:.1f}" if delta >= 0 else f"{delta:.1f}"
+            _log(f"\n📊 R{rounds[-2].round_num}: {rounds[-2].score}/10 → R{round_index}: {score}/10 ({delta_str})")
+
+        decision = _review_loop_decision(rounds, max_rounds=max_rounds)
+        if decision.outcome == "pass":
+            return ReviewLoopRunResult(outcome="pass", rounds=tuple(rounds))
+
+        if decision.outcome == "plateau":
+            if decision.reason == "two_small_deltas":
+                _log(
+                    "\n⏸️ Review plateau detected — two consecutive rounds improved by less than 0.2."
+                )
+            else:
+                _log(f"\n⏸️ Review plateau detected — reached the {max_rounds}-round ceiling.")
+            return ReviewLoopRunResult(outcome="plateau", rounds=tuple(rounds))
+
+        _log(
+            f"\n🔄 R{round_index} incomplete — review pass={passed}, "
+            f"contract blockers={round_state.contract_blocking}. Running R{round_index + 1}."
+        )
+
+    return ReviewLoopRunResult(outcome="plateau", rounds=tuple(rounds))
+
+
+def _rerun_write_after_plan_patch(
+    *,
+    level: str,
+    module_num: int,
+    slug: str,
+    packet_path: Path | None,
+    writer: str,
+    verification_text: str,
+) -> Path | None:
+    """Rebuild contract artifacts and rerun WRITE once after a plan patch."""
+    _clear_contract_artifacts(level, slug)
+    _log("  🔁 Contract invalidated — rerunning WRITE once against the patched plan")
+    content_path = step_write_with_retry(
+        level,
+        module_num,
+        slug,
+        packet_path,
+        writer=writer,
+        max_retries=4,
+        skeleton="",
+        verification_text=verification_text,
+    )
+    if content_path is not None:
+        _post_process_content(content_path)
+        _save_v6_state(level, slug, "write")
+        _save_v6_state(level, slug, "annotate")
+    return content_path
+
+
+def _refresh_post_patch_sidecars(
+    content_path: Path,
+    *,
+    level: str,
+    module_num: int,
+    slug: str,
+    writer: str,
+) -> bool:
+    """Refresh content-derived sidecars after a full post-plateau rewrite."""
+    _log("\n♻️ Refreshing content-derived sidecars after plan patch rewrite")
+    _post_process_content(content_path)
+    _save_v6_state(level, slug, "annotate")
+
+    activity_path = step_activities(content_path, level, module_num, slug, writer=writer)
+    if not activity_path:
+        return False
+    _inject_abetka_activities(activity_path, level, slug)
+    _save_v6_state(level, slug, "activities")
+
+    repair_ok, needs_regen = step_repair(level, module_num, slug)
+    if not repair_ok:
+        return False
+    if needs_regen:
+        _log("  🔄 Activity count below minimum after plan patch — regenerating once")
+        activity_path = step_activities(content_path, level, module_num, slug, writer=writer)
+        if not activity_path:
+            return False
+        _inject_abetka_activities(activity_path, level, slug)
+        repair_ok, _needs_regen = step_repair(level, module_num, slug)
+        if not repair_ok:
+            return False
+        if _needs_regen:
+            _log("  ⚠️  Activities still below minimum after regen — continuing to audit")
+    _save_v6_state(level, slug, "repair")
+
+    verify_status = _normalize_v6_phase_status(
+        step_verify(content_path, level, module_num),
+        phase="verify",
+    )
+    _save_v6_state(level, slug, "verify", status=verify_status)
+    vex_ok = step_verify_exercises(content_path, level, slug)
+    _save_v6_state(level, slug, "verify-exercises", status="complete" if vex_ok else "failed")
+    if not step_vocab(content_path, level, module_num, slug, writer=writer):
+        return False
+    _save_v6_state(level, slug, "vocab")
+    return True
 
 def _strip_dsl_blocks(text: str) -> tuple[str, int]:
     """Strip legacy DSL exercise blocks (:::quiz, :::fill-in, etc.) from content.
@@ -7364,82 +7715,110 @@ def main():
             steps in ("all", "review")
             or "review" in resume_invalidation_applied
         ) and "review" not in completed_phases:
-            from audit.checks.contract_compliance import (
-                check_contract_compliance,
-                has_blocking_violations,
-            )
+            from build.phases.plan_patch import run_plan_patch
 
             _phase_start = time.monotonic()
-            review_round_results: list[tuple[bool, float, str]] = []
-            final_contract_violations: list[dict] = []
-            for round_index in range(1, 3):
-                passed, score, review_text = step_review(
-                    content_path, args.level, args.module, slug,
-                    writer=args.writer, reviewer_override=args.reviewer,
-                )
-                if score == 0.0 and not review_text:
-                    _log("\n❌ Build FAILED at Step 8 (review — no output from reviewer)")
-                    _save_v6_state(args.level, slug, "review", status="failed")
-                    _emit_module_failed("review", "Build FAILED at Step 8 (review — no output from reviewer)")
-                    sys.exit(1)
-                review_round_results.append((passed, score, review_text))
+            orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
+            plan_path = _plan_path(args.level, slug)
+            content_rebuilt_after_plan_patch = False
+            plan_patch_result = None
 
-                fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
-                rewrite_applied, rewrite_count = _apply_review_rewrite_blocks(
-                    review_text,
-                    content_path,
+            review_result = _run_review_heal_loop(
+                content_path,
+                level=args.level,
+                module_num=args.module,
+                slug=slug,
+                writer=args.writer,
+                reviewer_override=args.reviewer,
+            )
+            if review_result.outcome == "error":
+                _log("\n❌ Build FAILED at Step 8 (review — no output from reviewer)")
+                _save_v6_state(args.level, slug, "review", status="failed")
+                _emit_module_failed("review", "Build FAILED at Step 8 (review — no output from reviewer)")
+                sys.exit(1)
+
+            if review_result.outcome == "plateau" and plan_path is not None:
+                latest_round = review_result.rounds[-1]
+                plan_patch_result = run_plan_patch(
                     level=args.level,
-                    module_num=args.module,
                     slug=slug,
-                    writer=args.writer,
+                    plan_path=plan_path,
+                    orch_dir=orch_dir,
+                    score_history=[round_state.score for round_state in review_result.rounds],
+                    contract_violations=list(latest_round.contract_violations),
+                    round_window=len(review_result.rounds),
                 )
-                if fixes_applied:
-                    _log(f"\n🔧 Applied {fix_count} deterministic fix(es) from R{round_index}")
-                if rewrite_applied:
-                    _log(f"\n✍️ Applied {rewrite_count} block rewrite(s) from R{round_index}")
-                if fixes_applied or rewrite_applied:
-                    step_verify(content_path, args.level, args.module)
-
-                contract, _ = _ensure_contract_artifacts(
-                    args.level, args.module, slug, packet_path, log_creation=False,
-                )
-                final_contract_violations = check_contract_compliance(
-                    content_path.read_text("utf-8"),
-                    contract,
-                )
-                _save_contract_compliance(
-                    args.level,
-                    slug,
-                    round_index,
-                    final_contract_violations,
-                    label="review",
-                )
-                if not has_blocking_violations(final_contract_violations) and passed:
-                    break
-                if round_index == 1:
+                if plan_patch_result.applied:
+                    content_rebuilt_after_plan_patch = True
                     _log(
-                        f"\n🔄 R1 incomplete — review pass={passed}, "
-                        f"contract blockers={has_blocking_violations(final_contract_violations)}. Running R2."
+                        f"\n🩹 Plan patch applied ({plan_patch_result.change_count} change(s)) — "
+                        f"version bumped to {plan_patch_result.new_version}"
                     )
+                    _log(f"  Trigger: {plan_patch_result.complaint_summary}")
+                    for entry in plan_patch_result.changes[:5]:
+                        _log(f"    {entry}")
+                    content_path = _rerun_write_after_plan_patch(
+                        level=args.level,
+                        module_num=args.module,
+                        slug=slug,
+                        packet_path=packet_path,
+                        writer=args.writer,
+                        verification_text=verification_text,
+                    )
+                    if not content_path:
+                        _log("\n❌ Build FAILED at Step 8 (plan patch write retry exhausted)")
+                        _save_v6_state(args.level, slug, "review", status="failed")
+                        _emit_module_failed(
+                            "review",
+                            "Build FAILED at Step 8 (plan patch write retry exhausted)",
+                        )
+                        return False
+                    review_result = _run_review_heal_loop(
+                        content_path,
+                        level=args.level,
+                        module_num=args.module,
+                        slug=slug,
+                        writer=args.writer,
+                        reviewer_override=args.reviewer,
+                    )
+                    if review_result.outcome == "error":
+                        _log("\n❌ Build FAILED at Step 8 (review — no output from reviewer)")
+                        _save_v6_state(args.level, slug, "review", status="failed")
+                        _emit_module_failed("review", "Build FAILED at Step 8 (review — no output from reviewer)")
+                        sys.exit(1)
 
-            passed, score, review_text = review_round_results[-1]
+            final_round = review_result.rounds[-1]
+            score = final_round.score
+            review_text = final_round.review_text
             final_score = score
-            if len(review_round_results) == 2:
-                delta = review_round_results[-1][1] - review_round_results[0][1]
-                delta_str = f"+{delta:.1f}" if delta >= 0 else f"{delta:.1f}"
-                _log(f"\n📊 R1: {review_round_results[0][1]}/10 → R2: {score}/10 ({delta_str})")
+            final_contract_violations = list(final_round.contract_violations)
 
-            if has_blocking_violations(final_contract_violations) or not passed:
-                orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
+            if review_result.outcome != "pass":
+                if content_rebuilt_after_plan_patch:
+                    escalation_reason = "review plateaued again after plan patch retry"
+                elif plan_patch_result is not None:
+                    escalation_reason = f"review plateaued and plan patch was not applied: {plan_patch_result.reason}"
+                else:
+                    escalation_reason = "review plateaued and no valid plan patch could be produced"
+
                 needs_review_path = orch_dir / "needs-human-review.yaml"
                 needs_review_path.write_text(
                     yaml.safe_dump(
                         {
                             "slug": slug,
-                            "review_rounds": len(review_round_results),
+                            "review_rounds": len(review_result.rounds),
                             "final_score": score,
+                            "score_history": [round_state.score for round_state in review_result.rounds],
                             "contract_violations": final_contract_violations,
                             "latest_review_excerpt": review_text[:2000],
+                            "reason": escalation_reason,
+                            "plan_patch": None if plan_patch_result is None else {
+                                "applied": plan_patch_result.applied,
+                                "reason": plan_patch_result.reason,
+                                "complaint_summary": plan_patch_result.complaint_summary,
+                                "new_version": plan_patch_result.new_version,
+                                "changes": list(plan_patch_result.changes),
+                            },
                         },
                         sort_keys=False,
                         allow_unicode=True,
@@ -7453,13 +7832,13 @@ def main():
                 state["needs_human_review"] = {
                     "status": True,
                     "ts": datetime.now(tz=UTC).isoformat(),
-                    "reason": "review or contract still failing after 2 rounds",
-                    "violations_path": str(needs_review_path.relative_to(CURRICULUM_ROOT / args.level / "orchestration" / slug)),
+                    "reason": escalation_reason,
+                    "violations_path": str(needs_review_path.relative_to(orch_dir)),
                 }
                 _write_v6_state_atomic(_v6_state_path(args.level, slug), state)
                 _save_v6_state(args.level, slug, "review", status="failed")
-                _log("\n❌ Review halted after 2 rounds — marked needs_human_review")
-                _emit_module_failed("review", "Review/contract still failing after 2 rounds — needs_human_review")
+                _log("\n❌ Review plateau persisted after automated recovery — marked needs_human_review")
+                _emit_module_failed("review", f"{escalation_reason} — needs_human_review")
                 return False
 
             if _v6_state_path(args.level, slug).exists():
@@ -7467,6 +7846,21 @@ def main():
                 if "needs_human_review" in state:
                     state.pop("needs_human_review", None)
                     _write_v6_state_atomic(_v6_state_path(args.level, slug), state)
+
+            if content_rebuilt_after_plan_patch and not _refresh_post_patch_sidecars(
+                content_path,
+                level=args.level,
+                module_num=args.module,
+                slug=slug,
+                writer=args.writer,
+            ):
+                _log("\n❌ Build FAILED at Step 8 (post-plan-patch sidecar refresh)")
+                _save_v6_state(args.level, slug, "review", status="failed")
+                _emit_module_failed(
+                    "review",
+                    "Build FAILED at Step 8 (post-plan-patch sidecar refresh)",
+                )
+                return False
 
             # Run deterministic style cleanup if engagement is weak
             engagement_match = re.search(
