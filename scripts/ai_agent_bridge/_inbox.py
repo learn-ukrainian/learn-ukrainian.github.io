@@ -10,6 +10,7 @@ that thread on the next wake. See #1192.
 
 from __future__ import annotations
 
+import sys
 import time
 import uuid
 from dataclasses import dataclass
@@ -49,6 +50,7 @@ except ImportError:
 from . import _channels
 from ._config import CLAUDE_CMD, REPO_ROOT
 from ._db import get_db
+from ._orphan_recovery import RecoveryCandidate, RecoveryResult, recover_orphan_commit
 
 _DEFAULT_HARD_TIMEOUT_SECONDS = 900
 _DEFAULT_STALL_TIMEOUT_SECONDS = 600
@@ -321,13 +323,13 @@ def _update_claimed_status(
                 UPDATE deliveries
                 SET status = 'delivered',
                     delivered_at = ?,
-                    error = NULL,
+                    error = ?,
                     lease_until = NULL,
                     retry_after = NULL,
                     last_error_kind = NULL
                 WHERE delivery_id IN ({placeholders})
                 """,
-                (delivered_at or _now_iso(), *delivery_ids),
+                (delivered_at or _now_iso(), error_text, *delivery_ids),
             )
         elif status == "failed":
             conn.execute(
@@ -456,6 +458,32 @@ def _resolve_mode(claimed: _ClaimedThread) -> str:
     if "workspace-write" in modes:
         return "workspace-write"
     return "read-only"
+
+
+def _maybe_recover_orphan_commit(
+    agent: str,
+    claimed: _ClaimedThread,
+) -> RecoveryResult:
+    if agent != "codex" or _resolve_mode(claimed) != "workspace-write":
+        return RecoveryResult(commit_sha=None, reason="not-eligible")
+
+    thread_messages = _channels.read(claimed.channel, thread_id=claimed.thread_id)
+    recovery = recover_orphan_commit(
+        RecoveryCandidate(
+            delivery_id=claimed.deliveries[-1].delivery_id,
+            thread_id=claimed.thread_id,
+            latest_message_body=claimed.deliveries[-1].body,
+            thread_bodies=tuple(str(message["body"]) for message in thread_messages),
+        )
+    )
+    if recovery.reason not in {None, "clean-tree"}:
+        print(
+            "orphan recovery skipped "
+            f"for delivery {claimed.deliveries[-1].delivery_id}: "
+            f"{recovery.reason} ({', '.join(recovery.changed_files)})",
+            file=sys.stderr,
+        )
+    return recovery
 
 
 def _invoke_thread(agent: str, claimed: _ClaimedThread) -> Any:
@@ -591,6 +619,19 @@ def run_inbox(
             abort_reason = str(exc)
             break
         except (AgentStalledError, AgentTimeoutError) as exc:
+            recovery = _maybe_recover_orphan_commit(agent, claimed)
+            if recovery.commit_sha:
+                _update_claimed_status(
+                    claimed,
+                    status="delivered",
+                    error_text=f"timeout-recovered:{recovery.commit_sha}",
+                    delivered_at=_now_iso(),
+                )
+                delivered_total += len(claimed.deliveries)
+                threads_total += 1
+                if not until_idle:
+                    break
+                continue
             _update_claimed_status(
                 claimed,
                 status="pending",
@@ -645,6 +686,8 @@ def run_inbox(
                 break
             continue
 
+        recovery = _maybe_recover_orphan_commit(agent, claimed)
+
         try:
             # Reply linkage lives in channel_messages.parent_id, not the
             # deliveries table — we don't need the returned message_id.
@@ -674,6 +717,11 @@ def run_inbox(
         _update_claimed_status(
             claimed,
             status="delivered",
+            error_text=(
+                f"timeout-recovered:{recovery.commit_sha}"
+                if recovery.commit_sha
+                else None
+            ),
             delivered_at=_now_iso(),
         )
         delivered_total += len(claimed.deliveries)
