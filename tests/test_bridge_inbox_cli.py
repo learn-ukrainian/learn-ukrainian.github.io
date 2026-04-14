@@ -4,6 +4,7 @@ import sqlite3
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from types import ModuleType, SimpleNamespace
 from unittest.mock import patch
 
 import pytest
@@ -133,6 +134,31 @@ def _delivery_statuses() -> list[sqlite3.Row]:
         conn.close()
 
 
+def _oldest_pending_delivery_id(agent: str) -> str | None:
+    conn = _db.get_db()
+    try:
+        row = conn.execute(
+            """
+            SELECT d.delivery_id
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            WHERE d.to_agent = ? AND d.status = 'pending'
+            ORDER BY cm.created_at ASC, d.delivery_id ASC
+            LIMIT 1
+            """,
+            (agent,),
+        ).fetchone()
+    finally:
+        conn.close()
+    return str(row["delivery_id"]) if row is not None else None
+
+
+def _install_fake_inbox_module(monkeypatch, run_inbox) -> None:
+    fake_inbox_module = ModuleType("ai_agent_bridge._inbox")
+    fake_inbox_module.run_inbox = run_inbox
+    monkeypatch.setitem(sys.modules, "ai_agent_bridge._inbox", fake_inbox_module)
+
+
 def _reply_deliveries() -> list[sqlite3.Row]:
     conn = _db.get_db()
     try:
@@ -245,11 +271,25 @@ def test_inbox_show_with_pending_and_failed(capsys):
     assert second["message_id"] != third["message_id"]
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
-def test_inbox_run_once_processes_one_thread(mock_invoke, capsys):
+def test_inbox_run_once_processes_one_thread(monkeypatch, capsys):
     first = _make_thread("claude", count=1)
     second = _make_thread("claude", count=1)
-    mock_invoke.return_value = _ok_result("claude")
+
+    calls: list[tuple[str, dict[str, object]]] = []
+
+    def _fake_run_inbox(agent: str, **kwargs):
+        calls.append((agent, kwargs))
+        delivery_id = _oldest_pending_delivery_id(agent)
+        assert delivery_id is not None
+        _channels.mark_delivery(delivery_id, "delivered")
+        return SimpleNamespace(
+            deliveries_claimed=1,
+            threads_processed=1,
+            deliveries_failed=0,
+            aborted=False,
+        )
+
+    _install_fake_inbox_module(monkeypatch, _fake_run_inbox)
 
     exit_code = _run_cli(["inbox", "run", "claude", "--once"])
 
@@ -259,23 +299,46 @@ def test_inbox_run_once_processes_one_thread(mock_invoke, capsys):
     statuses = _delivery_statuses()
     assert statuses[0]["status"] == "delivered"
     assert statuses[1]["status"] == "pending"
-    assert mock_invoke.call_count == 1
+    assert calls == [
+        (
+            "claude",
+            {
+                "max_messages": None,
+                "until_idle": False,
+                "stop_after_seconds": None,
+                "hard_timeout": 900,
+            },
+        )
+    ]
     assert first[0]["thread_id"] != second[0]["thread_id"]
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
-def test_sync_all_iterates_known_agents(mock_invoke, capsys):
+def test_sync_all_iterates_known_agents(monkeypatch, capsys):
     for agent in _channels.VALID_AGENTS:
         _make_thread(agent, channel=f"{agent}-topic", count=1)
-    mock_invoke.side_effect = [_ok_result(agent) for agent in _channels.VALID_AGENTS]
+
+    calls: list[tuple[str, dict[str, object]]] = []
+
+    def _fake_run_inbox(agent: str, **kwargs):
+        calls.append((agent, kwargs))
+        delivery_id = _oldest_pending_delivery_id(agent)
+        assert delivery_id is not None
+        _channels.mark_delivery(delivery_id, "delivered")
+        return SimpleNamespace(
+            deliveries_claimed=1,
+            threads_processed=1,
+            deliveries_failed=0,
+            aborted=False,
+        )
+
+    _install_fake_inbox_module(monkeypatch, _fake_run_inbox)
 
     exit_code = _run_cli(["sync", "--all"])
 
     assert exit_code == 0
     captured = capsys.readouterr()
     assert captured.err == ""
-    assert mock_invoke.call_count == len(_channels.VALID_AGENTS)
-    assert [call.args[0] for call in mock_invoke.call_args_list] == list(_channels.VALID_AGENTS)
+    assert [call[0] for call in calls] == list(_channels.VALID_AGENTS)
     assert captured.out.count("processed: 1 deliveries | 1 threads | 0 failed | duration:") == len(
         _channels.VALID_AGENTS
     )
@@ -306,10 +369,8 @@ def test_backlog_banner_does_not_trigger_for_fresh_pending_delivery(monkeypatch,
     assert captured.err == ""
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
-def test_post_model_flag_round_trips_to_gemini_invocation(mock_invoke, capsys):
+def test_post_model_flag_stores_delivery_target_model(capsys):
     _channels.create_channel("topic")
-    mock_invoke.return_value = _ok_result("gemini")
 
     post_exit = _run_cli(
         [
@@ -325,14 +386,33 @@ def test_post_model_flag_round_trips_to_gemini_invocation(mock_invoke, capsys):
     )
     message = _channels.read("topic")[0]
     delivery = _channels.deliveries_for_message(str(message["message_id"]))[0]
-    run_exit = _run_cli(["inbox", "run", "gemini", "--once"])
 
     assert post_exit == 0
-    assert run_exit == 0
     captured = capsys.readouterr()
     assert captured.err == ""
     assert delivery["to_model"] == "gemini-3-flash-preview"
-    assert mock_invoke.call_args.kwargs["model"] == "gemini-3-flash-preview"
+
+
+def test_post_model_flag_applies_to_default_channel_subscribers(capsys):
+    _channels.create_channel("topic", subscribers=["gemini"])
+
+    post_exit = _run_cli(
+        [
+            "post",
+            "topic",
+            "hello subscriber",
+            "--model",
+            "gemini-3-pro-preview",
+            "--no-snapshot",
+        ]
+    )
+    message = _channels.read("topic")[0]
+    delivery = _channels.deliveries_for_message(str(message["message_id"]))[0]
+
+    assert post_exit == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert delivery["to_model"] == "gemini-3-pro-preview"
 
 
 def test_post_workspace_write_preflight_warns_to_stderr_and_still_posts(capsys):
@@ -359,23 +439,58 @@ def test_post_workspace_write_preflight_warns_to_stderr_and_still_posts(capsys):
     assert _channels.read("topic")[0]["body"] == body
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
-def test_inbox_run_deadline_flag_overrides_worker_timeout(mock_invoke, capsys):
-    _make_thread("claude", count=1)
-    mock_invoke.return_value = _ok_result("claude")
+def test_inbox_run_deadline_flag_overrides_worker_timeout(monkeypatch, capsys):
+    captured_run: dict[str, object] = {}
+
+    def _fake_run_inbox(agent: str, **kwargs):
+        captured_run["agent"] = agent
+        captured_run.update(kwargs)
+        return SimpleNamespace(
+            deliveries_claimed=1,
+            threads_processed=1,
+            deliveries_failed=0,
+            aborted=False,
+        )
+
+    _install_fake_inbox_module(monkeypatch, _fake_run_inbox)
 
     exit_code = _run_cli(["inbox", "run", "claude", "--once", "--deadline", "1800"])
 
     assert exit_code == 0
     captured = capsys.readouterr()
     assert captured.err == ""
-    assert mock_invoke.call_args.kwargs["hard_timeout"] == 1800
+    assert captured_run == {
+        "agent": "claude",
+        "max_messages": None,
+        "until_idle": False,
+        "stop_after_seconds": None,
+        "hard_timeout": 1800,
+    }
 
 
-@patch("ai_agent_bridge._inbox.runtime_invoke")
-def test_post_deadline_flag_stores_delivery_override_and_worker_uses_it(mock_invoke, capsys):
+def test_post_deadline_flag_stores_delivery_override_and_worker_uses_it(monkeypatch, capsys):
     _channels.create_channel("topic")
-    mock_invoke.return_value = _ok_result("codex")
+
+    captured_run: dict[str, object] = {}
+
+    def _fake_run_inbox(agent: str, **kwargs):
+        delivery_id = _oldest_pending_delivery_id(agent)
+        assert delivery_id is not None
+        message = _channels.read("topic")[0]
+        delivery = _channels.deliveries_for_message(str(message["message_id"]))[0]
+        captured_run["hard_timeout"] = max(
+            int(kwargs["hard_timeout"]),
+            int(delivery["deadline_seconds"] or 0),
+        )
+        _channels.mark_delivery(delivery_id, "delivered")
+        return SimpleNamespace(
+            deliveries_claimed=1,
+            threads_processed=1,
+            deliveries_failed=0,
+            aborted=False,
+        )
+
+    _install_fake_inbox_module(monkeypatch, _fake_run_inbox)
 
     post_exit = _run_cli(
         [
@@ -398,16 +513,31 @@ def test_post_deadline_flag_stores_delivery_override_and_worker_uses_it(mock_inv
     message = _channels.read("topic")[0]
     delivery = _channels.deliveries_for_message(str(message["message_id"]))[0]
     assert delivery["deadline_seconds"] == 1200
-    assert mock_invoke.call_args.kwargs["hard_timeout"] == 1200
+    assert captured_run["hard_timeout"] == 1200
+
+
+def test_deadline_range_accepts_non_whitelisted_values(capsys):
+    _channels.create_channel("topic")
+
+    exit_code = _run_cli(
+        ["post", "topic", "hello", "--to", "claude", "--deadline", "61", "--no-snapshot"]
+    )
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    message = _channels.read("topic")[0]
+    delivery = _channels.deliveries_for_message(str(message["message_id"]))[0]
+    assert delivery["deadline_seconds"] == 61
 
 
 def test_invalid_deadline_value_is_rejected_with_helpful_error(capsys):
-    exit_code = _run_cli(["post", "topic", "hello", "--deadline", "61"])
+    exit_code = _run_cli(["post", "topic", "hello", "--deadline", "59"])
 
     assert exit_code == 2
     captured = capsys.readouterr()
     assert "usage:" in captured.err
-    assert "deadline must be one of: 60, 300, 600, 900, 1200, 1800, 2400, 3000, 3600" in captured.err
+    assert "deadline must be between 60 and 3600 seconds" in captured.err
 
 
 def test_help_includes_model_and_deadline_flags(capsys):

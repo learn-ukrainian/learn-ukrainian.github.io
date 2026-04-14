@@ -48,7 +48,6 @@ from typing import Any
 from . import _channels
 from ._channels_watch import watch_channel_events
 
-_ALLOWED_DEADLINE_SECONDS = (60, 300, 600, 900, 1200, 1800, 2400, 3000, 3600)
 _PREFLIGHT_FILE_PATH_RE = re.compile(
     r"\b(?:scripts|tests|docs|curriculum|plans)/[A-Za-z0-9._/-]+"
 )
@@ -56,6 +55,8 @@ _PREFLIGHT_MULTI_STEP_RE = re.compile(
     r"\b(?:and then|also|additionally)\b",
     re.IGNORECASE,
 )
+_MIN_DEADLINE_SECONDS = 60
+_MAX_DEADLINE_SECONDS = 3600
 
 
 def _deadline_seconds_arg(raw_value: str) -> int:
@@ -65,10 +66,10 @@ def _deadline_seconds_arg(raw_value: str) -> int:
         raise argparse.ArgumentTypeError(
             "deadline must be an integer number of seconds"
         ) from exc
-    if seconds not in _ALLOWED_DEADLINE_SECONDS:
-        allowed = ", ".join(str(value) for value in _ALLOWED_DEADLINE_SECONDS)
+    if not _MIN_DEADLINE_SECONDS <= seconds <= _MAX_DEADLINE_SECONDS:
         raise argparse.ArgumentTypeError(
-            f"deadline must be one of: {allowed}"
+            "deadline must be between "
+            f"{_MIN_DEADLINE_SECONDS} and {_MAX_DEADLINE_SECONDS} seconds"
         )
     return seconds
 
@@ -230,7 +231,7 @@ def register_channel_commands(subparsers: Any) -> None:
     post_parser.add_argument(
         "--model",
         default=None,
-        help="Recipient model when using --to; otherwise sender model for agent-authored posts",
+        help="Recipient model for generated delivery rows",
     )
     post_parser.add_argument(
         "--deadline",
@@ -802,16 +803,13 @@ def _handle_post(args) -> int:
     from_model: str | None = None
     to_model: str | None = None
     if model:
-        if args.to:
-            to_model = model
-        elif args.from_agent != "user":
-            from_model = model
-        else:
+        if not to_agents:
             print(
-                "❌ --model requires either --to or an agent sender via --from-agent",
+                "❌ --model requires at least one recipient delivery",
                 file=sys.stderr,
             )
             return 1
+        to_model = model
 
     mode = getattr(args, "mode", "read-only")
     warning = _post_preflight_warning(body=body, mode=mode)
