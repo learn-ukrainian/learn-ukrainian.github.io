@@ -12,7 +12,6 @@ from pathlib import Path
 from .config import CURRICULUM_ROOT
 from .state_helpers import (
     PLANS_ROOT,
-    V4_PHASE_ORDER,
     V5_PHASE_ORDER,
     detect_pipeline_version,
     find_content_file,
@@ -23,13 +22,11 @@ from .state_helpers import (
     get_research_score,
     get_word_target_from_plan,
     has_research_file,
-    # BACKWARD-COMPAT: v3/v4/v2 parsers needed for ~100+ modules not yet rebuilt on v5
+    # BACKWARD-COMPAT: v3/v2 parsers needed for modules not yet rebuilt on v6
     parse_v3_phase_status,
-    parse_v4_phase_status,
     parse_v5_phase_status,
     read_v2_state,
     read_v3_state,
-    read_v4_state,
 )
 
 
@@ -285,9 +282,6 @@ def get_phases_for_version(orch_dir, version, *, state_data: dict | None = None)
     elif version == "v5":
         v5 = state_data if state_data is not None else read_v2_state(orch_dir)
         return {name: parse_v5_phase_status(v5, name) for name in V5_PHASE_ORDER}
-    elif version == "v4":
-        v4 = read_v4_state(orch_dir)
-        return {name: parse_v4_phase_status(v4, name) for name in V4_PHASE_ORDER}
     else:
         v3 = read_v3_state(orch_dir)
         return {pid: parse_v3_phase_status(v3, f"v3-{pid}") for pid in ["A", "B", "C", "audit", "D", "E", "F"]}

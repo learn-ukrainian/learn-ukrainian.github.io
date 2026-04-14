@@ -21,7 +21,7 @@ from audit.status_cache import get_source_paths, read_status
 from research_quality import assess_research_compat, find_research_path, get_rubric
 
 from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict
-from .state_helpers import V4_PHASE_ORDER, detect_pipeline_version, parse_v4_phase_status, read_v2_state, read_v4_state
+from .state_helpers import detect_pipeline_version, read_v2_state
 
 # Simple TTL cache for scan_track results
 _track_cache: dict[str, tuple[float, dict]] = {}
@@ -270,9 +270,6 @@ def get_orchestration_info(orch_dir: Path) -> dict:
     if version == "v5":
         v5 = read_v2_state(orch_dir)
         info["v5_phases"] = v5.get("phases", {})
-    elif version == "v4":
-        v4 = read_v4_state(orch_dir)
-        info["v4_phases"] = {name: parse_v4_phase_status(v4, name) for name in V4_PHASE_ORDER}
     return info
 
 

@@ -167,11 +167,11 @@ class TestDetectPipelineVersionHelpers:
         (tmp_path / "state.json").write_text('{"mode": "v5", "phases": {}}')
         assert detect_pipeline_version(tmp_path) == "v5"
 
-    def test_v4_from_state_v4(self, tmp_path):
+    def test_state_v4_is_ignored(self, tmp_path):
         from scripts.api.state_helpers import detect_pipeline_version
 
         (tmp_path / "state-v4.json").write_text('{"mode": "v4"}')
-        assert detect_pipeline_version(tmp_path) == "v4"
+        assert detect_pipeline_version(tmp_path) == "unbuilt"
 
     def test_v3_from_state_v3(self, tmp_path):
         from scripts.api.state_helpers import detect_pipeline_version
@@ -191,11 +191,11 @@ class TestDetectPipelineVersionHelpers:
         (tmp_path / "state-v4.json").write_text('{"mode": "v4"}')
         assert detect_pipeline_version(tmp_path) == "v5"
 
-    def test_v4_mode_in_state_json(self, tmp_path):
+    def test_v4_mode_in_state_json_is_ignored(self, tmp_path):
         from scripts.api.state_helpers import detect_pipeline_version
 
         (tmp_path / "state.json").write_text('{"mode": "v4"}')
-        assert detect_pipeline_version(tmp_path) == "v4"
+        assert detect_pipeline_version(tmp_path) == "unbuilt"
 
     def test_invalid_json_returns_unbuilt(self, tmp_path):
         from scripts.api.state_helpers import detect_pipeline_version
@@ -205,25 +205,7 @@ class TestDetectPipelineVersionHelpers:
 
 
 class TestReadStateFiles:
-    """read_v4_state, read_v3_state, read_v2_state."""
-
-    def test_read_v4_state_valid(self, tmp_path):
-        from scripts.api.state_helpers import read_v4_state
-
-        data = {"phases": {"v4-research": {"status": "complete"}}}
-        (tmp_path / "state-v4.json").write_text(json.dumps(data))
-        assert read_v4_state(tmp_path) == data
-
-    def test_read_v4_state_missing(self, tmp_path):
-        from scripts.api.state_helpers import read_v4_state
-
-        assert read_v4_state(tmp_path) == {}
-
-    def test_read_v4_state_invalid(self, tmp_path):
-        from scripts.api.state_helpers import read_v4_state
-
-        (tmp_path / "state-v4.json").write_text("broken")
-        assert read_v4_state(tmp_path) == {}
+    """read_v3_state and read_v2_state."""
 
     def test_read_v3_state_valid(self, tmp_path):
         from scripts.api.state_helpers import read_v3_state
@@ -252,19 +234,6 @@ class TestReadStateFiles:
 
 class TestParsePhaseStatus:
     """Phase status parsing functions."""
-
-    def test_v4_complete(self):
-        from scripts.api.state_helpers import parse_v4_phase_status
-
-        v4 = {"phases": {"v4-content": {"status": "complete", "ts": "2026-01-01"}}}
-        result = parse_v4_phase_status(v4, "content")
-        assert result["status"] == "complete"
-        assert result["ts"] == "2026-01-01"
-
-    def test_v4_missing(self):
-        from scripts.api.state_helpers import parse_v4_phase_status
-
-        assert parse_v4_phase_status({}, "content")["status"] == "pending"
 
     def test_v5_complete(self):
         from scripts.api.state_helpers import parse_v5_phase_status
@@ -652,14 +621,15 @@ class TestGetPhasesForVersion:
         assert phases["research"]["status"] == "complete"
         assert phases["content"]["status"] == "running"
 
-    def test_v4_phases(self, tmp_path):
+    def test_unknown_version_falls_back_to_pending_v3_shape(self, tmp_path):
         from scripts.api.state_compute import get_phases_for_version
 
         (tmp_path / "state-v4.json").write_text(json.dumps({
             "phases": {"v4-research": {"status": "complete"}},
         }))
         phases = get_phases_for_version(tmp_path, "v4")
-        assert phases["research"]["status"] == "complete"
+        assert set(phases) == {"A", "B", "C", "audit", "D", "E", "F"}
+        assert all(phase["status"] == "pending" for phase in phases.values())
 
     def test_v3_phases(self, tmp_path):
         from scripts.api.state_compute import get_phases_for_version
@@ -776,7 +746,7 @@ class TestScanModulePhases:
         assert furthest == "A"
         assert running == "B(FAIL)"
 
-    def test_v4_reads_state_v4(self, tmp_path):
+    def test_unknown_version_is_ignored(self, tmp_path):
         from scripts.api.state_build import scan_module_phases
 
         (tmp_path / "state-v4.json").write_text(json.dumps({
@@ -786,9 +756,9 @@ class TestScanModulePhases:
             },
         }))
         furthest, running, _latest_ts, audit_status = scan_module_phases(tmp_path, "v4")
-        assert furthest == "validate"
+        assert furthest is None
         assert running is None
-        assert audit_status == "complete"
+        assert audit_status is None
 
     def test_empty_phases(self, tmp_path):
         from scripts.api.state_build import scan_module_phases
@@ -820,15 +790,15 @@ class TestCheckBuildPhase:
         assert built == 0
         assert ts is None
 
-    def test_v4_complete(self, tmp_path):
+    def test_v4_no_longer_counts_as_built(self, tmp_path):
         from scripts.api.state_build import _check_build_phase
 
         (tmp_path / "state-v4.json").write_text(json.dumps({
             "phases": {"v4-content": {"status": "complete", "ts": "2026-01-02"}},
         }))
         built, ts = _check_build_phase(tmp_path)
-        assert built == 1
-        assert ts == "2026-01-02"
+        assert built == 0
+        assert ts is None
 
 
 class TestCheckAuditHealth:

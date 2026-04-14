@@ -11,7 +11,6 @@ from .config import CURRICULUM_ROOT, LEVELS
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
     PLANS_ROOT,
-    V4_PHASE_ORDER,
     V5_PHASE_ORDER,
     detect_pipeline_version,
     get_audit_status,
@@ -19,7 +18,6 @@ from .state_helpers import (
     get_plan_slugs,
     read_v2_state,
     read_v3_state,
-    read_v4_state,
 )
 
 try:
@@ -89,15 +87,15 @@ def scan_module_phases(orch_dir, version):
         phases = read_v2_state(orch_dir).get("phases", {})
         phase_names = V5_PHASE_ORDER
         audit_key = "validate"
-    elif version == "v4":
-        phases = read_v4_state(orch_dir).get("phases", {})
-        phase_names = [f"v4-{name}" for name in V4_PHASE_ORDER]
-        audit_key = "v4-validate"
-    else:
-        # BACKWARD-COMPAT: v3/v4 modules still use old phase naming
+    elif version == "v3":
+        # BACKWARD-COMPAT: v3 modules still use old phase naming
         phases = read_v3_state(orch_dir).get("phases", {})
         phase_names = ["v3-A", "v3-B", "v3-C", "v3-audit", "v3-D", "v3-E", "v3-F"]
         audit_key = "v3-audit"
+    else:
+        phases = {}
+        phase_names = []
+        audit_key = ""
 
     for pid in phase_names:
         p = phases.get(pid, {})
@@ -105,8 +103,6 @@ def scan_module_phases(orch_dir, version):
         display = pid
         if pid.startswith("v3-"):
             display = pid.replace("v3-", "")
-        elif pid.startswith("v4-"):
-            display = pid.replace("v4-", "")
         if status == "complete":
             furthest = display
             if p.get("ts"):
@@ -116,7 +112,7 @@ def scan_module_phases(orch_dir, version):
         elif status == "failed":
             running_phase = display + "(FAIL)"
 
-    audit_status = phases.get(audit_key, {}).get("status")
+    audit_status = phases.get(audit_key, {}).get("status") if audit_key else None
     return furthest, running_phase, latest_ts, audit_status
 
 
@@ -228,13 +224,12 @@ def _check_build_phase(orch_dir):
     elif version == "v5":
         phases = read_v2_state(orch_dir).get("phases", {})
         content_phase = phases.get("content", {})
-    elif version == "v4":
-        phases = read_v4_state(orch_dir).get("phases", {})
-        content_phase = phases.get("v4-content", {})
-    else:
+    elif version == "v3":
         # BACKWARD-COMPAT: v3 content phase was "v3-B"
         phases = read_v3_state(orch_dir).get("phases", {})
         content_phase = phases.get("v3-B", {})
+    else:
+        content_phase = {}
     if content_phase.get("status") == "complete":
         return 1, content_phase.get("ts")
     return 0, None

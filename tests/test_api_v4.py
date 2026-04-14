@@ -1,16 +1,12 @@
 """
-Tests for v4 pipeline support in the API and MDX generator.
+Tests for retired v4 pipeline behavior and remaining legacy compatibility.
 
 Validates:
-  1. _detect_pipeline_version() returns correct version
-  2. _read_v4_state() reads state-v4.json
-  3. _parse_v4_phase_status() extracts phase info
-  4. _is_research_done / _is_content_done with v4 state
-  5. _compute_pipeline_track returns v4 phases for v4 modules
-  6. /failing endpoint includes pipeline_version
-  7. dashboard module_detail includes pipeline_version + v4_phases
-  8. generate_mdx frontmatter includes pipeline/build_status
-  9. detect_pipeline_info() helper in generate_mdx
+  1. API helpers no longer surface v4 as an active pipeline version
+  2. _is_research_done / _is_content_done still work with unified state data
+  3. generate_mdx detects v3/v5/v6 state correctly
+  4. generate_mdx frontmatter still emits the expected pipeline/build metadata
+  5. pipeline-versions responses no longer expose v4 groupings
 """
 
 import contextlib
@@ -23,11 +19,11 @@ from pathlib import Path
 class TestDetectPipelineVersion:
     """_detect_pipeline_version picks the right version."""
 
-    def test_v4_when_state_v4_exists(self, tmp_path):
+    def test_state_v4_is_ignored(self, tmp_path):
         from scripts.api.state_router import _detect_pipeline_version
 
         (tmp_path / "state-v4.json").write_text('{"mode": "v4"}')
-        assert _detect_pipeline_version(tmp_path) == "v4"
+        assert _detect_pipeline_version(tmp_path) == "unbuilt"
 
     def test_v3_when_state_v3_exists(self, tmp_path):
         from scripts.api.state_router import _detect_pipeline_version
@@ -35,11 +31,11 @@ class TestDetectPipelineVersion:
         (tmp_path / "state-v3.json").write_text('{"phases": {}}')
         assert _detect_pipeline_version(tmp_path) == "v3"
 
-    def test_v4_from_state_json_mode(self, tmp_path):
+    def test_v4_from_state_json_mode_is_ignored(self, tmp_path):
         from scripts.api.state_router import _detect_pipeline_version
 
         (tmp_path / "state.json").write_text('{"mode": "v4"}')
-        assert _detect_pipeline_version(tmp_path) == "v4"
+        assert _detect_pipeline_version(tmp_path) == "unbuilt"
 
     def test_v3_from_state_json_without_mode(self, tmp_path):
         from scripts.api.state_router import _detect_pipeline_version
@@ -52,60 +48,12 @@ class TestDetectPipelineVersion:
 
         assert _detect_pipeline_version(tmp_path) == "unbuilt"
 
-    def test_v4_takes_priority_over_v3(self, tmp_path):
+    def test_v3_takes_priority_over_stale_state_v4(self, tmp_path):
         from scripts.api.state_router import _detect_pipeline_version
 
         (tmp_path / "state-v4.json").write_text('{"mode": "v4"}')
         (tmp_path / "state-v3.json").write_text('{"phases": {}}')
-        assert _detect_pipeline_version(tmp_path) == "v4"
-
-
-class TestReadV4State:
-    """_read_v4_state reads state-v4.json correctly."""
-
-    def test_reads_valid_json(self, tmp_path):
-        from scripts.api.state_router import _read_v4_state
-
-        data = {"mode": "v4", "phases": {"v4-research": {"status": "complete"}}}
-        (tmp_path / "state-v4.json").write_text(json.dumps(data))
-        result = _read_v4_state(tmp_path)
-        assert result["phases"]["v4-research"]["status"] == "complete"
-
-    def test_returns_empty_when_missing(self, tmp_path):
-        from scripts.api.state_router import _read_v4_state
-
-        assert _read_v4_state(tmp_path) == {}
-
-    def test_returns_empty_on_invalid_json(self, tmp_path):
-        from scripts.api.state_router import _read_v4_state
-
-        (tmp_path / "state-v4.json").write_text("not valid json{{{")
-        assert _read_v4_state(tmp_path) == {}
-
-
-class TestParseV4PhaseStatus:
-    """_parse_v4_phase_status extracts info from v4 state."""
-
-    def test_complete_phase(self):
-        from scripts.api.state_router import _parse_v4_phase_status
-
-        v4 = {"phases": {"v4-content": {"status": "complete", "ts": "2026-03-02T20:12:36Z"}}}
-        result = _parse_v4_phase_status(v4, "content")
-        assert result["status"] == "complete"
-        assert result["ts"] == "2026-03-02T20:12:36Z"
-
-    def test_missing_phase_returns_pending(self):
-        from scripts.api.state_router import _parse_v4_phase_status
-
-        v4 = {"phases": {}}
-        result = _parse_v4_phase_status(v4, "review")
-        assert result["status"] == "pending"
-
-    def test_empty_state_returns_pending(self):
-        from scripts.api.state_router import _parse_v4_phase_status
-
-        result = _parse_v4_phase_status({}, "research")
-        assert result["status"] == "pending"
+        assert _detect_pipeline_version(tmp_path) == "v3"
 
 
 class TestIsResearchDone:
@@ -168,7 +116,7 @@ class TestPipelinePhaseOrder:
             "activities", "review", "mdx",
         ]
 
-    def test_v4_phase_order_no_sandbox(self):
+    def test_phase_order_has_no_sandbox_aliases(self):
         from scripts.api.state_helpers import V5_PHASE_ORDER
 
         assert "sandbox" not in V5_PHASE_ORDER
@@ -364,7 +312,20 @@ class TestClaudeContentDispatch:
 class TestDetectPipelineInfo:
     """detect_pipeline_info() from generate_mdx."""
 
-    def test_v4_with_review_complete(self, tmp_path):
+    def test_state_v4_returns_none(self, tmp_path):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        from generate_mdx import detect_pipeline_info
+
+        orch = tmp_path / "orchestration" / "test-mod"
+        orch.mkdir(parents=True)
+        state = {"mode": "v4", "phases": {"v4-review": {"status": "complete"}}}
+        (orch / "state-v4.json").write_text(json.dumps(state))
+        version, status = detect_pipeline_info(tmp_path, "test-mod")
+        assert version is None
+        assert status is None
+
+    def test_v6_reviewed(self, tmp_path):
         import sys
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
         from generate_mdx import detect_pipeline_info
@@ -372,20 +333,18 @@ class TestDetectPipelineInfo:
         orch = tmp_path / "orchestration" / "test-mod"
         orch.mkdir(parents=True)
         state = {
-            "mode": "v4",
+            "mode": "v6",
             "phases": {
-                "v4-research": {"status": "complete"},
-                "v4-content": {"status": "complete"},
-                "v4-validate": {"status": "complete"},
-                "v4-review": {"status": "complete"},
+                "verify": {"status": "complete"},
+                "review": {"status": "complete"},
             },
         }
-        (orch / "state-v4.json").write_text(json.dumps(state))
+        (orch / "state.json").write_text(json.dumps(state))
         version, status = detect_pipeline_info(tmp_path, "test-mod")
-        assert version == "v4"
+        assert version == "v6"
         assert status == "reviewed"
 
-    def test_v4_validated_not_reviewed(self, tmp_path):
+    def test_v6_validated_not_reviewed(self, tmp_path):
         import sys
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
         from generate_mdx import detect_pipeline_info
@@ -393,36 +352,15 @@ class TestDetectPipelineInfo:
         orch = tmp_path / "orchestration" / "test-mod"
         orch.mkdir(parents=True)
         state = {
-            "mode": "v4",
+            "mode": "v6",
             "phases": {
-                "v4-research": {"status": "complete"},
-                "v4-content": {"status": "complete"},
-                "v4-validate": {"status": "complete"},
+                "verify": {"status": "complete"},
             },
         }
-        (orch / "state-v4.json").write_text(json.dumps(state))
+        (orch / "state.json").write_text(json.dumps(state))
         version, status = detect_pipeline_info(tmp_path, "test-mod")
-        assert version == "v4"
+        assert version == "v6"
         assert status == "validated"
-
-    def test_v4_draft(self, tmp_path):
-        import sys
-        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-        from generate_mdx import detect_pipeline_info
-
-        orch = tmp_path / "orchestration" / "test-mod"
-        orch.mkdir(parents=True)
-        state = {
-            "mode": "v4",
-            "phases": {
-                "v4-research": {"status": "complete"},
-                "v4-content": {"status": "complete"},
-            },
-        }
-        (orch / "state-v4.json").write_text(json.dumps(state))
-        version, status = detect_pipeline_info(tmp_path, "test-mod")
-        assert version == "v4"
-        assert status == "draft"
 
     def test_v3_reviewed(self, tmp_path):
         import sys
@@ -519,14 +457,14 @@ class TestGenerateMdxFrontmatter:
     def _make_minimal_md(self):
         return "---\ntitle: Test\nsubtitle: Sub\n---\n# Test\n\nContent here.\n"
 
-    def test_v4_frontmatter(self):
+    def test_v6_frontmatter(self):
         import sys
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
         from generate_mdx import generate_mdx
 
         md = self._make_minimal_md()
-        result = generate_mdx(md, 1, pipeline_version="v4", build_status="validated")
-        assert "pipeline: v4" in result
+        result = generate_mdx(md, 1, pipeline_version="v6", build_status="validated")
+        assert "pipeline: v6" in result
         assert "build_status: validated" in result
 
     def test_no_pipeline_no_extra_frontmatter(self):
@@ -557,13 +495,13 @@ class TestGenerateMdxFrontmatter:
         result = generate_mdx(md, 1, pipeline_version="v3", build_status="validated")
         assert "draft: true" in result
 
-    def test_v4_has_no_draft(self):
+    def test_v6_has_no_draft(self):
         import sys
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
         from generate_mdx import generate_mdx
 
         md = self._make_minimal_md()
-        result = generate_mdx(md, 1, pipeline_version="v4", build_status="validated")
+        result = generate_mdx(md, 1, pipeline_version="v6", build_status="validated")
         assert "draft: true" not in result
 
     def test_v5_frontmatter(self):
@@ -592,12 +530,12 @@ class TestGenerateMdxFrontmatter:
 class TestNeedsRebuild:
     """needs_rebuild flag in _compute_pipeline_track."""
 
-    def test_v4_needs_rebuild(self, tmp_path):
+    def test_retired_v4_is_treated_as_unbuilt(self, tmp_path):
         from scripts.api.state_router import _detect_pipeline_version
 
         (tmp_path / "state-v4.json").write_text('{"mode": "v4", "phases": {}}')
         version = _detect_pipeline_version(tmp_path)
-        assert version == "v4"
+        assert version == "unbuilt"
         assert (version != "v6") is True  # only v6 is current
 
     def test_v3_needs_rebuild(self, tmp_path):
@@ -632,14 +570,14 @@ class TestPipelineVersionsEndpoint:
         assert r.status_code == 200
         data = r.json()
         assert "counts" in data
-        assert "v4" in data["counts"]
+        assert "v4" not in data["counts"]
         assert "v3" in data["counts"]
         assert "unbuilt" in data["counts"]
         assert "total" in data
-        assert "pct_v5" in data or "pct_v4" in data or "pct_built" in data
+        assert "pct_v5" in data or "pct_built" in data
         assert "needs_rebuild" in data
         assert "per_track" in data
-        assert "v4_modules" in data
+        assert "v4_modules" not in data
 
     def test_track_filter(self):
         from fastapi.testclient import TestClient

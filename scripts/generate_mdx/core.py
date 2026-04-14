@@ -47,27 +47,19 @@ def detect_pipeline_info(level_dir: Path, slug: str) -> tuple[str | None, str | 
     """Detect pipeline version and build status from orchestration dir.
 
     Returns (pipeline_version, build_status) where:
-      pipeline_version: "v4", "v3", or None (unbuilt)
+      pipeline_version: "v6", "v5", "v3", or None (unbuilt)
       build_status: "draft", "validated", "reviewed", or None
     """
     orch_dir = level_dir / "orchestration" / slug
 
     # Detect version
-    v4_file = orch_dir / "state-v4.json"
     v3_file = orch_dir / "state-v3.json"
     v2_file = orch_dir / "state.json"
 
     version = None
     phases = {}
 
-    if v4_file.exists():
-        version = "v4"
-        try:
-            data = json.loads(v4_file.read_text()) or {}
-            phases = data.get("phases", {})
-        except Exception:
-            pass
-    elif v3_file.exists():
+    if v3_file.exists():
         version = "v3"
         try:
             data = json.loads(v3_file.read_text()) or {}
@@ -78,10 +70,12 @@ def detect_pipeline_info(level_dir: Path, slug: str) -> tuple[str | None, str | 
         try:
             data = json.loads(v2_file.read_text()) or {}
             mode = data.get("mode", "")
-            if mode == "v5":
+            if mode == "v6":
+                version = "v6"
+            elif mode == "v5":
                 version = "v5"
-            elif mode == "v4":
-                version = "v4"
+            elif mode and mode != "v3":
+                return None, None
             elif data:
                 version = "v3"
             phases = data.get("phases", {})
@@ -93,15 +87,15 @@ def detect_pipeline_info(level_dir: Path, slug: str) -> tuple[str | None, str | 
 
     # Determine build_status from phase completion
     build_status = "draft"
-    if version == "v5":
+    if version == "v6":
+        if phases.get("review", {}).get("status") == "complete":
+            build_status = "reviewed"
+        elif phases.get("verify", {}).get("status") == "complete":
+            build_status = "validated"
+    elif version == "v5":
         if phases.get("review", {}).get("status") == "complete":
             build_status = "reviewed"
         elif phases.get("validate", {}).get("status") == "complete":
-            build_status = "validated"
-    elif version == "v4":
-        if phases.get("v4-review", {}).get("status") == "complete":
-            build_status = "reviewed"
-        elif phases.get("v4-validate", {}).get("status") == "complete":
             build_status = "validated"
     else:
         # v3: D = review, audit = validated
@@ -179,7 +173,7 @@ def generate_mdx(
         vocab_items: Optional vocab list from YAML
         external_resources: Optional external resources dict (injected from YAML)
         level: Current level (used for specialized formatting like LIT)
-        pipeline_version: Optional pipeline version ("v3" or "v4")
+        pipeline_version: Optional pipeline version ("v3", "v5", or "v6")
         build_status: Optional build status ("draft", "validated", "reviewed")
     """
     if meta_data:
@@ -252,7 +246,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';"""
         extra_fm_lines += f"\npipeline: {pipeline_version}"
     if build_status:
         extra_fm_lines += f"\nbuild_status: {build_status}"
-    if pipeline_version and pipeline_version not in ("v4", "v5"):
+    if pipeline_version and pipeline_version not in ("v5", "v6"):
         extra_fm_lines += "\ndraft: true"
     frontmatter = f'''---
 title: "{escape_jsx(fm.get('title', 'Untitled'))}"

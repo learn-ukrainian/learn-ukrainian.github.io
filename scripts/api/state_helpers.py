@@ -86,7 +86,6 @@ PROFILE_MAP = {
 
 # Legacy phase orders kept for parsing historical state files only.
 # Prefer ``V6_PHASE_ORDER`` for any new code.
-V4_PHASE_ORDER = ["research", "discover", "content", "activities", "validate", "review", "mdx"]
 V5_PHASE_ORDER = _V5_PHASES
 V6_PHASE_ORDER = _V6_PHASES
 
@@ -179,7 +178,7 @@ class StateCtx:
 def load_module_state(track: str, slug: str, orch_dir: Path) -> dict:
     """Load unified pipeline state for a module.
 
-    Handles V6 state directly (mode='v6'), delegates V5/V4/V3 to pipeline.state.
+    Handles V6 state directly (mode='v6'), delegates older legacy states to pipeline.state.
     """
     # V6 state: read directly (pipeline.state only knows v5)
     state_file = orch_dir / "state.json"
@@ -201,27 +200,26 @@ def load_module_state(track: str, slug: str, orch_dir: Path) -> dict:
 def detect_pipeline_version(orch_dir: Path) -> str:
     """Detect pipeline version for a module.
 
-    Priority: state.json mode=v6/v5 > state-v4.json > state-v3.json > state.json['mode'] > 'unbuilt'.
+    Priority: state.json mode=v6/v5 > state-v3.json > legacy state.json > 'unbuilt'.
     """
     state_file = orch_dir / "state.json"
     if state_file.exists():
         try:
             data = json.loads(state_file.read_text())
-            if data.get("mode") == "v6":
+            mode = data.get("mode")
+            if mode == "v6":
                 return "v6"
-            if data.get("mode") == "v5":
+            if mode == "v5":
                 return "v5"
+            if mode and mode != "v3":
+                return "unbuilt"
         except Exception:
             pass
-    if (orch_dir / "state-v4.json").exists():
-        return "v4"
     if (orch_dir / "state-v3.json").exists():
         return "v3"
     if state_file.exists():
         try:
             data = json.loads(state_file.read_text())
-            if data.get("mode") == "v4":
-                return "v4"
             if data:
                 return "v3"
         except Exception:
@@ -230,17 +228,6 @@ def detect_pipeline_version(orch_dir: Path) -> str:
 
 
 # ==================== BACKWARD-COMPAT STATE READERS ====================
-
-def read_v4_state(orch_dir: Path) -> dict:
-    """Read state-v4.json, return {} if missing or invalid."""
-    state_file = orch_dir / "state-v4.json"
-    if not state_file.exists():
-        return {}
-    try:
-        return json.loads(state_file.read_text()) or {}
-    except Exception:
-        return {}
-
 
 def read_v3_state(orch_dir: Path) -> dict:
     """Read state-v3.json, return {} if missing or invalid."""
@@ -265,14 +252,6 @@ def read_v2_state(orch_dir: Path) -> dict:
 
 
 # ==================== PHASE STATUS PARSING ====================
-
-def parse_v4_phase_status(v4_state: dict, phase_name: str) -> dict:
-    """Extract status info for a v4 phase (e.g. 'research', 'content')."""
-    phase = v4_state.get("phases", {}).get(f"v4-{phase_name}", {})
-    if not phase:
-        return {"status": "pending"}
-    return {"status": phase.get("status", "pending"), "ts": phase.get("ts")}
-
 
 def parse_v5_phase_status(v5_state: dict, phase_name: str) -> dict:
     """Extract status info for a v5 phase. V5 uses plain keys (no prefix)."""
@@ -537,4 +516,3 @@ def get_final_review_info(track_dir: Path, slug: str) -> dict | None:
         }
     except Exception:
         return None
-

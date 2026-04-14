@@ -58,10 +58,8 @@ from .state_helpers import (
     is_content_done,
     is_research_done,
     load_module_state,
-    parse_v4_phase_status,
     read_v2_state,
     read_v3_state,
-    read_v4_state,
 )
 from .state_issues import (
     compute_final_reviews,
@@ -70,8 +68,6 @@ from .state_issues import (
 
 # Re-export symbols used by dashboard_router and tests (backward compat)
 _detect_pipeline_version = detect_pipeline_version
-_parse_v4_phase_status = parse_v4_phase_status
-_read_v4_state = read_v4_state
 _is_research_done = is_research_done
 _is_content_done = is_content_done
 
@@ -112,8 +108,8 @@ async def pipeline_track(track_id: str):
 async def pipeline_versions(track: str | None = Query(None)):
     """All modules grouped by pipeline version."""
     def _compute():
-        counts = {"v6": 0, "v5": 0, "v4": 0, "v3": 0, "unbuilt": 0}
-        by_version: dict[str, list] = {"v6": [], "v5": [], "v4": [], "v3": [], "unbuilt": []}
+        counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
+        by_version: dict[str, list] = {"v6": [], "v5": [], "v3": [], "unbuilt": []}
         per_track: dict[str, dict] = {}
 
         level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
@@ -125,11 +121,13 @@ async def pipeline_versions(track: str | None = Query(None)):
                 continue
 
             track_dir = CURRICULUM_ROOT / level_cfg["path"]
-            track_counts = {"v6": 0, "v5": 0, "v4": 0, "v3": 0, "unbuilt": 0}
+            track_counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
 
             for num, slug in plan_slugs:
                 orch_dir = track_dir / "orchestration" / slug
                 version = detect_pipeline_version(orch_dir)
+                if version not in counts:
+                    version = "unbuilt"
                 counts[version] += 1
                 track_counts[version] += 1
                 by_version[version].append({"track": track_id, "num": num, "slug": slug})
@@ -137,17 +135,16 @@ async def pipeline_versions(track: str | None = Query(None)):
             per_track[track_id] = track_counts
 
         total = sum(counts.values())
-        built = counts["v6"] + counts["v5"] + counts["v4"]
+        built = counts["v6"] + counts["v5"]
         return {
             "total": total, "counts": counts,
             "pct_v6": round(counts["v6"] / total * 100) if total else 0,
             "pct_v5": round(counts["v5"] / total * 100) if total else 0,
             "pct_built": round(built / total * 100) if total else 0,
-            "needs_rebuild": counts["v5"] + counts["v4"] + counts["v3"] + counts["unbuilt"],
+            "needs_rebuild": counts["v5"] + counts["v3"] + counts["unbuilt"],
             "per_track": per_track,
             "v6_modules": by_version["v6"],
             "v5_modules": by_version["v5"],
-            "v4_modules": by_version["v4"],
             "generated_at": datetime.now(UTC).isoformat(),
         }
 
@@ -264,20 +261,15 @@ async def failing_modules(track: str | None = Query(None)):
                         k for k, v in phases.items()
                         if isinstance(v, dict) and v.get("status") == "failed"
                     ]
-                elif version == "v4":
-                    v4 = read_v4_state(orch_dir)
-                    phases = v4.get("phases", {})
-                    failed_phases = [
-                        k.replace("v4-", "") for k, v in phases.items()
-                        if isinstance(v, dict) and v.get("status") == "failed"
-                    ]
-                else:
+                elif version == "v3":
                     v3 = read_v3_state(orch_dir)
                     phases = v3.get("phases", {})
                     failed_phases = [
                         k.replace("v3-", "") for k, v in phases.items()
                         if isinstance(v, dict) and v.get("status") == "failed"
                     ]
+                else:
+                    failed_phases = []
 
                 if audit["status"] == "fail" or failed_phases:
                     failing.append({

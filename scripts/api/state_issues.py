@@ -17,7 +17,6 @@ from .state_helpers import (
     is_review_stale,
     read_v2_state,
     read_v3_state,
-    read_v4_state,
 )
 
 try:
@@ -52,11 +51,10 @@ def _is_ready_for_final_review(orch_dir, version: str) -> bool:
     if version == "v5":
         phases = read_v2_state(orch_dir).get("phases", {})
         return phases.get("validate", {}).get("status") == "complete"
-    if version == "v4":
-        phases = read_v4_state(orch_dir).get("phases", {})
-        return phases.get("v4-validate", {}).get("status") == "complete"
-    phases = read_v3_state(orch_dir).get("phases", {})
-    return phases.get("v3-audit", {}).get("status") == "complete"
+    if version == "v3":
+        phases = read_v3_state(orch_dir).get("phases", {})
+        return phases.get("v3-audit", {}).get("status") == "complete"
+    return False
 
 
 def compute_final_reviews(track_id: str, level_cfg: dict) -> dict:
