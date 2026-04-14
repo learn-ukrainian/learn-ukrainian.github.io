@@ -1060,15 +1060,14 @@ def _run_pre_build_gate(level: str, slug: str) -> bool:
         _log(f"  ❌ PRE-BUILD GATE: word_target ({plan_wt}) below config minimum ({config_wt})")
         return False
 
-    from audit.check_plan import check_plan_internal_consistency
+    from build.phases.plan_validator import validate_plan_consistency
 
-    consistency_issues = check_plan_internal_consistency(plan_data)
-    if consistency_issues:
+    consistency_messages = validate_plan_consistency(plan_data, slug)
+    if consistency_messages:
+        _log("  ⚠️  PRE-BUILD GATE WARN: plan_internal_consistency detected contradictions")
+        for message in consistency_messages:
+            _log(f"     WARN: {message}")
         _log("  ❌ PRE-BUILD GATE: plan_internal_consistency failed")
-        for issue in consistency_issues:
-            _log(f"     {issue.message}")
-            if issue.fix:
-                _log(f"     Fix: {issue.fix}")
         return False
 
     _log("  ✅ Pre-build readiness gate passed")

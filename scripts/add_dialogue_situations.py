@@ -1472,22 +1472,33 @@ def _rewrite_dialogue_outline(plan: dict, situations: list[dict]) -> bool:
     if not replacement_points:
         return False
 
+    replacement_index = 0
     for section in outline:
         if not isinstance(section, dict):
+            continue
+
+        points = section.get("points")
+        if not isinstance(points, list):
             continue
 
         section_text = "\n".join(
             [
                 str(section.get("section", "")),
-                *[str(item) for item in section.get("points", []) if isinstance(item, str)],
+                *[str(item) for item in points if isinstance(item, str)],
                 *[str(item) for item in section.get("subsections", []) if isinstance(item, str)],
             ]
         )
         if not _DIALOGUE_SECTION_RE.search(section_text):
             continue
 
-        section["points"] = replacement_points
-        rewritten = True
+        for point_index, point in enumerate(points):
+            if replacement_index >= len(replacement_points):
+                return rewritten
+            if not isinstance(point, str) or not _DIALOGUE_SECTION_RE.search(point):
+                continue
+            points[point_index] = replacement_points[replacement_index]
+            replacement_index += 1
+            rewritten = True
 
     return rewritten
 
