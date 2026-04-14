@@ -647,6 +647,17 @@
         ]
       }
     ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/context-monitor.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "hooks": [
@@ -713,6 +724,7 @@
     ]
   },
   "plansDirectory": "docs/plans",
+  "autoCompactWindow": 1000000,
   "respectGitignore": true,
   "language": "auto",
   "agent": "curriculum-maintainer",
