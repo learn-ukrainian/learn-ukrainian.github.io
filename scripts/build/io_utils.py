@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import tempfile
@@ -41,3 +42,8 @@ def write_json_atomic(
         json.dumps(data, **dump_kwargs),
         encoding=encoding,
     )
+
+
+def plan_hash(plan_path: Path) -> str:
+    """Return the SHA256 hex digest of a plan YAML file."""
+    return hashlib.sha256(plan_path.read_bytes()).hexdigest()

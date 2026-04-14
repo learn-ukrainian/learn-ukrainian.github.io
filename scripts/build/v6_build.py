@@ -78,7 +78,7 @@ from batch_gemini_config import (
     TIMEOUT_WRITE,
     TIMEOUT_WRITE_NO_TOOLS,
 )
-from build.io_utils import write_json_atomic
+from build.io_utils import plan_hash, write_json_atomic
 from build.plan_tracking import (
     PLAN_DRIFT_GUARD_STEPS,
     PLAN_HASH_PHASES,
@@ -87,6 +87,8 @@ from build.plan_tracking import (
     ordered_phases_from,
     plan_path_for,
 )
+
+_LEGACY_PLAN_HASH_DRIFT_DETECTOR = detect_plan_hash_drift
 
 logger = logging.getLogger(__name__)
 
@@ -792,7 +794,10 @@ def _plan_path(level: str, slug: str) -> Path | None:
 
 def _current_plan_hash(level: str, slug: str) -> str | None:
     """Return the SHA256 hash for the current plan YAML."""
-    return current_plan_hash_for(CURRICULUM_ROOT, level, slug)
+    plan_path = _plan_path(level, slug)
+    if not plan_path or not plan_path.exists():
+        return current_plan_hash_for(CURRICULUM_ROOT, level, slug)
+    return plan_hash(plan_path)
 
 
 def _phase_state_payload(level: str, slug: str, step: str, status: V6_PHASE_STATUS) -> dict:
@@ -859,6 +864,25 @@ _ALL_PHASES = [
 ]
 PHASES = _ALL_PHASES
 _PHASE_SATISFIED_STATUSES = {"complete", "skipped"}
+_PLAN_HASH_STALE_PHASES = tuple(phase for phase in PLAN_HASH_PHASES if phase in {
+    "skeleton",
+    "write",
+    "exercises",
+    "annotate",
+    "verify",
+})
+_PLAN_HASH_STALE_START_PHASE = "skeleton"
+_PLAN_HASH_DRIFT_REASON = (
+    "plan hash drift: "
+    f"{_PLAN_HASH_STALE_START_PHASE} -> {', '.join(_PLAN_HASH_STALE_PHASES)}"
+)
+_PLAN_HASH_WARN_MESSAGE = (
+    "WARN: Plan version changed since write phase — marking "
+    "skeleton/write/exercises/annotate/verify as stale"
+)
+_PLAN_HASH_ABORT_MESSAGE = (
+    "Plan changed since last write — re-run from skeleton to rebuild with updated plan"
+)
 
 # Human-friendly labels for the v6 phases. Exposed alongside ``PHASES``
 # for API consumers that want to render a phase name in a UI. Keys match
@@ -884,6 +908,58 @@ PHASE_LABELS: dict[str, str] = {
     "publish": "Publish MDX",
     "audit": "Audit",
 }
+
+
+def _phase_names_with_status(
+    state: dict,
+    status: str,
+    *,
+    phase_order: list[str] | tuple[str, ...] | None = None,
+) -> tuple[str, ...]:
+    """Return matching phase names in pipeline order."""
+    phases = state.get("phases", {})
+    if not isinstance(phases, dict):
+        return ()
+    ordered = _ALL_PHASES if phase_order is None else phase_order
+    return tuple(
+        phase
+        for phase in ordered
+        if isinstance(phases.get(phase), dict) and phases[phase].get("status") == status
+    )
+
+
+def _write_phase_plan_hash_drifted(state: dict, current_plan_hash: str | None) -> bool:
+    """Return True when the saved write-phase hash is missing or outdated."""
+    if not current_plan_hash:
+        return False
+    phases = state.get("phases", {})
+    if not isinstance(phases, dict):
+        return False
+    write_info = phases.get("write")
+    if not isinstance(write_info, dict):
+        return False
+    allowed_statuses = _PHASE_SATISFIED_STATUSES | {"stale"}
+    if write_info.get("status") not in allowed_statuses:
+        return False
+    return write_info.get("plan_hash") != current_plan_hash
+
+
+def _mark_plan_hash_stale(level: str, slug: str, current_plan_hash: str | None) -> None:
+    """Mark plan-derived writer phases stale after a write-hash mismatch."""
+    _mark_phases_stale(
+        level,
+        slug,
+        list(_PLAN_HASH_STALE_PHASES),
+        reason=_PLAN_HASH_DRIFT_REASON,
+        current_plan_hash=current_plan_hash,
+    )
+
+
+def _plan_hash_guard_triggered(state: dict, current_plan_hash: str | None) -> bool:
+    """Return True when plan-derived phases already stale or write hash drifted."""
+    return bool(_phase_names_with_status(state, "stale", phase_order=_PLAN_HASH_STALE_PHASES)) or (
+        _write_phase_plan_hash_drifted(state, current_plan_hash)
+    )
 
 _PRE_BUILD_GATE_STEPS = {
     "all",
@@ -1354,16 +1430,29 @@ def _build_resume_invalidation_plan(
     invalidation = set(_resume_invalidation_plan_for_step(step, completed_phases))
     audit_tail = {"audit", "publish"}
     review_tail = {"review", "review-style", "stress", "publish", "audit"}
+    stale_phases = _phase_names_with_status(raw_state, "stale")
+    if stale_phases:
+        invalidation.update(
+            ordered_phases_from(_ALL_PHASES, stale_phases[0], raw_state.get("phases", {}))
+        )
+        return ResumeInvalidationPlan(
+            should_skip=False,
+            reason=f"stale phases present: {', '.join(stale_phases)}",
+            invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+        )
     if step in PLAN_DRIFT_GUARD_STEPS:
-        drift = detect_plan_hash_drift(raw_state, _current_plan_hash(level, slug))
-        if drift is not None:
-            invalidation.update(ordered_phases_from(_ALL_PHASES, drift.stale_start_phase, raw_state.get("phases", {})))
+        current_plan_hash = _current_plan_hash(level, slug)
+        if _write_phase_plan_hash_drifted(raw_state, current_plan_hash):
+            invalidation.update(
+                ordered_phases_from(
+                    _ALL_PHASES,
+                    _PLAN_HASH_STALE_START_PHASE,
+                    raw_state.get("phases", {}),
+                )
+            )
             return ResumeInvalidationPlan(
                 should_skip=False,
-                reason=(
-                    "plan hash drift: "
-                    f"{drift.stale_start_phase} -> {', '.join(drift.mismatched_phases)}"
-                ),
+                reason=_PLAN_HASH_DRIFT_REASON,
                 invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
             )
 
@@ -7361,96 +7450,94 @@ def main():
         # --resume: load completed phases and restore dependency variables
         completed_phases: set[str] = set()
         resume_invalidation_applied: set[str] = set()
+        state_path = _v6_state_path(args.level, slug)
+        raw_state = _read_v6_state(args.level, slug) if state_path.exists() else {}
         # Resume mode loads completed phases + restores dependency state.
         # Note: even single-step invocations (--step audit, --step publish, etc.)
         # need phases loaded so restoration + heal paths have context to work with.
         if args.resume:
             completed_phases = _load_completed_phases(args.level, slug)
-            if completed_phases:
-                shared_plan = _build_resume_invalidation_plan(
-                    args.level,
-                    slug,
-                    steps,
-                    getattr(args, "review_threshold", REVIEW_TARGET_SCORE),
-                    completed_phases,
+            shared_plan = _build_resume_invalidation_plan(
+                args.level,
+                slug,
+                steps,
+                getattr(args, "review_threshold", REVIEW_TARGET_SCORE),
+                completed_phases,
+            )
+            explicit_invalidation = {
+                phase for phase in dict.fromkeys(args.invalidate_phase)
+                if phase in completed_phases
+            }
+            planned_invalidation = set(shared_plan.invalidate_phases)
+            planned_invalidation.update(explicit_invalidation)
+            ordered_invalidation = _ordered_invalidation_phases(
+                planned_invalidation,
+                completed_phases,
+            )
+            earliest_stale_phase = next(
+                iter(_phase_names_with_status(raw_state, "stale")),
+                None,
+            )
+            earliest_rerun_phase = earliest_stale_phase
+
+            if ordered_invalidation:
+                _log(
+                    "   🩹 Applying shared invalidation plan: "
+                    + ", ".join(ordered_invalidation)
                 )
-                explicit_invalidation = {
-                    phase for phase in dict.fromkeys(args.invalidate_phase)
-                    if phase in completed_phases
-                }
-                planned_invalidation = set(shared_plan.invalidate_phases)
-                planned_invalidation.update(explicit_invalidation)
-                ordered_invalidation = _ordered_invalidation_phases(
-                    planned_invalidation,
-                    completed_phases,
-                )
-                if ordered_invalidation:
+                if not shared_plan.should_skip and shared_plan.reason not in {
+                    "module incomplete",
+                    "review not complete yet",
+                }:
+                    _log(f"      Reason: {shared_plan.reason}")
+                if shared_plan.reason == _PLAN_HASH_DRIFT_REASON:
+                    _mark_plan_hash_stale(
+                        args.level,
+                        slug,
+                        _current_plan_hash(args.level, slug),
+                    )
+                    raw_state = _read_v6_state(args.level, slug)
+                    earliest_rerun_phase = _PLAN_HASH_STALE_START_PHASE
+                else:
+                    _invalidate_phases(args.level, slug, list(ordered_invalidation))
+                    raw_state = _read_v6_state(args.level, slug) if state_path.exists() else {}
+                resume_invalidation_applied.update(ordered_invalidation)
+                for phase in ordered_invalidation:
+                    completed_phases.discard(phase)
+
+            if earliest_rerun_phase is None and ordered_invalidation:
+                earliest_rerun_phase = ordered_invalidation[0]
+            if (
+                earliest_rerun_phase is not None
+                and _ALL_PHASES.index(earliest_rerun_phase) < _ALL_PHASES.index("review")
+            ):
+                if steps != "all":
                     _log(
-                        "   🩹 Applying shared invalidation plan: "
-                        + ", ".join(ordered_invalidation)
+                        "      Earliest stale phase is before review — "
+                        "expanding this resume run to the full pipeline."
                     )
-                    if not shared_plan.should_skip and shared_plan.reason not in {
-                        "module incomplete",
-                        "review not complete yet",
-                    }:
-                        _log(f"      Reason: {shared_plan.reason}")
-                    if shared_plan.reason.startswith("plan hash drift:"):
-                        _mark_phases_stale(
-                            args.level,
-                            slug,
-                            list(ordered_invalidation),
-                            reason=shared_plan.reason,
-                            current_plan_hash=_current_plan_hash(args.level, slug),
-                        )
-                    else:
-                        _invalidate_phases(args.level, slug, list(ordered_invalidation))
-                    resume_invalidation_applied.update(ordered_invalidation)
-                    for phase in ordered_invalidation:
-                        completed_phases.discard(phase)
+                steps = "all"
 
-                    earliest_invalidated_idx = min(
-                        _ALL_PHASES.index(phase) for phase in ordered_invalidation
-                    )
-                    if earliest_invalidated_idx < _ALL_PHASES.index("review"):
-                        if steps != "all":
-                            _log(
-                                "      Earliest stale phase is before review — "
-                                "expanding this resume run to the full pipeline."
-                            )
-                        steps = "all"
-
+            if completed_phases:
                 _log(f"   Resuming — {len(completed_phases)} phase(s) already complete:")
                 for p in _ALL_PHASES:
                     if p in completed_phases:
                         _log(f"     ⏭️  {p}")
+            elif earliest_rerun_phase is not None:
+                _log(
+                    "   Resume requested — stale state requires rebuild from "
+                    f"{earliest_rerun_phase}"
+                )
             else:
                 _log("   Resume requested but no completed phases found — starting fresh")
 
         if not args.resume and steps in PLAN_DRIFT_GUARD_STEPS:
-            state_path = _v6_state_path(args.level, slug)
-            raw_state = _read_v6_state(args.level, slug) if state_path.exists() else {}
-            drift = detect_plan_hash_drift(raw_state, _current_plan_hash(args.level, slug))
-            if drift is not None:
-                stale_phases = ordered_phases_from(
-                    _ALL_PHASES,
-                    drift.stale_start_phase,
-                    raw_state.get("phases", {}),
-                )
-                reason = (
-                    "plan hash drift: "
-                    f"{drift.stale_start_phase} -> {', '.join(drift.mismatched_phases)}"
-                )
-                _mark_phases_stale(
-                    args.level,
-                    slug,
-                    list(stale_phases),
-                    reason=reason,
-                    current_plan_hash=drift.current_plan_hash,
-                )
-                _log("\n❌ Plan drift detected before downstream phases")
-                _log(f"   {reason}")
-                _log("   Downstream phases were marked stale in state.json.")
-                _log("   Re-run with --resume to rebuild from the oldest stale phase.")
+            current_plan_hash = _current_plan_hash(args.level, slug)
+            if _plan_hash_guard_triggered(raw_state, current_plan_hash):
+                if _write_phase_plan_hash_drifted(raw_state, current_plan_hash):
+                    _mark_plan_hash_stale(args.level, slug, current_plan_hash)
+                _log(f"\n{_PLAN_HASH_WARN_MESSAGE}")
+                _log(_PLAN_HASH_ABORT_MESSAGE)
                 return False
 
         # Pre-flight: check MCP server is running (VESUM, dictionaries, textbooks via SQLite)
