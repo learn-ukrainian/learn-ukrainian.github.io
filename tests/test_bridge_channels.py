@@ -828,6 +828,45 @@ class TestDeliveryLeasing:
         assert row["lease_until"] is None
         assert _channels.claim_next_delivery("claude", now=_iso_at(6)) is None
 
+    def test_mark_delivered_stale_claim(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        claimed = _channels.claim_next_delivery("claude", now=_iso_at(0))
+        assert claimed is not None
+
+        with pytest.raises(_channels.StaleClaimError, match="expected attempt 99"):
+            _channels.mark_delivery_delivered(
+                delivery_id,
+                "reply-1",
+                expected_attempt_count=99,
+                now=_iso_at(5),
+            )
+
+        row = _delivery_row(delivery_id)
+        assert row["status"] == "processing"
+
+    def test_mark_failed_stale_claim(self):
+        _channels.create_channel("topic")
+        res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])
+        delivery_id = res["delivery_ids"][0]
+
+        claimed = _channels.claim_next_delivery("claude", now=_iso_at(0))
+        assert claimed is not None
+
+        with pytest.raises(_channels.StaleClaimError, match="expected attempt 99"):
+            _channels.mark_delivery_failed(
+                delivery_id,
+                "tool_error",
+                "tool exploded",
+                expected_attempt_count=99,
+                now=_iso_at(5),
+            )
+
+        row = _delivery_row(delivery_id)
+        assert row["status"] == "processing"
+
     def test_mark_failed_terminal(self):
         _channels.create_channel("topic")
         res = _channels.post("topic", "gemini", "hello", to_agents=["claude"])

@@ -61,6 +61,10 @@ from typing import Any
 from ._config import REPO_ROOT
 from ._db import get_db
 
+
+class StaleClaimError(Exception):
+    """Raised when updating a delivery fails due to mismatched attempt count or status."""
+
 # ── Constants ──────────────────────────────────────────────────────────
 
 VALID_AGENTS = ("claude", "gemini", "codex", "user")
@@ -1087,7 +1091,7 @@ def mark_delivery_delivered(
         # next phase, but the current deliveries schema does not yet
         # persist reply linkage separately.
         _ = reply_message_id
-        conn.execute(
+        cursor = conn.execute(
             """
             UPDATE deliveries
             SET status='delivered',
@@ -1100,6 +1104,8 @@ def mark_delivery_delivered(
             """,
             (now, delivery_id, expected_attempt_count),
         )
+        if cursor.rowcount == 0:
+            raise StaleClaimError(f"Stale claim for delivery {delivery_id}: expected attempt {expected_attempt_count}")
         conn.commit()
     except Exception:
         conn.rollback()
@@ -1140,7 +1146,7 @@ def mark_delivery_failed(
 
         exhausted = row["attempt_count"] >= DEFAULT_MAX_DELIVERY_ATTEMPTS
         if retry_after is None or exhausted:
-            conn.execute(
+            cursor = conn.execute(
                 """
                 UPDATE deliveries
                 SET status='failed',
@@ -1153,7 +1159,7 @@ def mark_delivery_failed(
                 (error_text, error_kind, delivery_id, expected_attempt_count),
             )
         else:
-            conn.execute(
+            cursor = conn.execute(
                 """
                 UPDATE deliveries
                 SET status='pending',
@@ -1165,6 +1171,9 @@ def mark_delivery_failed(
                 """,
                 (error_text, retry_after, error_kind, delivery_id, expected_attempt_count),
             )
+
+        if cursor.rowcount == 0:
+            raise StaleClaimError(f"Stale claim for delivery {delivery_id}: expected attempt {expected_attempt_count}")
         conn.commit()
     except Exception:
         conn.rollback()
