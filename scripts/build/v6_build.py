@@ -92,6 +92,14 @@ logger = logging.getLogger(__name__)
 # Rate limit backoff — shared by all retry loops
 _RATE_LIMIT_BACKOFF_S = 300  # 5 min — long enough for Gemini quota to recover
 REVIEW_TARGET_SCORE = 9.0
+STYLE_REVIEW_TARGET_SCORE = 9.0
+STYLE_REVIEW_DIMENSION_FLOOR = 8.5
+STYLE_REVIEW_DIMENSION_LABELS = {
+    "pragmatic_authenticity": "Pragmatic authenticity",
+    "stylistic_consistency": "Stylistic consistency",
+    "culture_and_register": "Culture + register",
+    "naturalness": "Naturalness",
+}
 V6_PHASE_STATUS = Literal["complete", "skipped", "failed", "degraded", "stale"]
 _VALID_V6_PHASE_STATUSES = {"complete", "skipped", "failed", "degraded", "stale"}
 
@@ -405,6 +413,16 @@ class ReviewParseResult:
     raw_scores: list[int]
     parsed_scores: list[dict]
     dim_floor_fail: bool
+    passed: bool
+
+
+@dataclass(frozen=True)
+class StyleReviewParseResult:
+    """Deterministic parse of a structured style review."""
+
+    score: float
+    dimension_scores: dict[str, float]
+    verdict: str
     passed: bool
 
 
@@ -811,7 +829,7 @@ def _normalize_v6_phase_status(result: object, *, phase: str) -> V6_PHASE_STATUS
 _ALL_PHASES = [
     "check", "research", "skeleton", "pre-verify", "write",
     "exercises", "activities", "repair", "verify-exercises", "annotate",
-    "vocab", "enrich", "verify", "review", "stress", "publish", "audit",
+    "vocab", "enrich", "verify", "review", "review-style", "stress", "publish", "audit",
 ]
 PHASES = _ALL_PHASES
 _PHASE_SATISFIED_STATUSES = {"complete", "skipped"}
@@ -835,6 +853,7 @@ PHASE_LABELS: dict[str, str] = {
     "enrich": "Enrich",
     "verify": "Verify content",
     "review": "Review",
+    "review-style": "Style review",
     "stress": "Stress marks",
     "publish": "Publish MDX",
     "audit": "Audit",
@@ -848,6 +867,7 @@ _PRE_BUILD_GATE_STEPS = {
     "write",
     "activities",
     "review",
+    "review-style",
     "publish",
 }
 
@@ -1122,6 +1142,20 @@ def _load_latest_review_result(level: str, slug: str) -> ReviewParseResult | Non
         return None
 
 
+def _load_latest_style_review_result(level: str, slug: str) -> StyleReviewParseResult | None:
+    """Parse the latest saved structured style review for a module, if present."""
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    if not orch_dir.exists():
+        return None
+    review_paths = sorted(orch_dir.glob("review-structured-style-r*.yaml"))
+    if not review_paths:
+        return None
+    try:
+        return _parse_style_review_result(review_paths[-1].read_text("utf-8"))
+    except Exception:
+        return None
+
+
 def _resume_review_failure_reason(
     latest_review: ReviewParseResult,
     review_threshold: float,
@@ -1135,6 +1169,26 @@ def _resume_review_failure_reason(
         return "latest review dimension floor fail"
     if not latest_review.passed:
         return "latest review did not pass deterministic gates"
+    return None
+
+
+def _resume_style_review_failure_reason(
+    latest_review: StyleReviewParseResult,
+    review_threshold: float,
+) -> str | None:
+    """Explain why a saved style review is not strong enough to skip work."""
+    if latest_review.score < review_threshold:
+        return f"latest style review {latest_review.score}/10 < {review_threshold:.1f}"
+    failing_dims = [
+        name for name, score in latest_review.dimension_scores.items()
+        if score < STYLE_REVIEW_DIMENSION_FLOOR
+    ]
+    if failing_dims:
+        return "latest style review dimension floor fail"
+    if latest_review.verdict != "PASS":
+        return f"latest style review verdict {latest_review.verdict}"
+    if not latest_review.passed:
+        return "latest style review did not pass deterministic gates"
     return None
 
 
@@ -1225,10 +1279,17 @@ def _build_resume_invalidation_plan(
             )
 
     if step == "review":
-        if "review" not in completed_phases:
+        if not {"review", "review-style"}.issubset(completed_phases):
             return ResumeInvalidationPlan(
                 should_skip=False,
                 reason="review not complete yet",
+                invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+            )
+    elif step == "review-style":
+        if "review-style" not in completed_phases:
+            return ResumeInvalidationPlan(
+                should_skip=False,
+                reason="review-style not complete yet",
                 invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
             )
     elif not all(phase in completed_phases for phase in _ALL_PHASES):
@@ -1241,7 +1302,7 @@ def _build_resume_invalidation_plan(
     status_path = CURRICULUM_ROOT / level / "status" / f"{slug}.json"
     content_path = CURRICULUM_ROOT / level / f"{slug}.md"
     audit_tail = {"audit", "publish"}
-    review_tail = {"review", "stress", "publish", "audit"}
+    review_tail = {"review", "review-style", "stress", "publish", "audit"}
 
     # Audit-derived failures must re-run the audit/publish tail even when the
     # requested step is `review`. Review-derived failures must similarly force
@@ -1312,11 +1373,32 @@ def _build_resume_invalidation_plan(
             invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
         )
 
+    latest_style_review = _load_latest_style_review_result(level, slug)
+    if latest_style_review is None:
+        invalidation.update(review_tail)
+        return ResumeInvalidationPlan(
+            should_skip=False,
+            reason="no saved style review found",
+            invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+        )
+    style_review_failure_reason = _resume_style_review_failure_reason(
+        latest_style_review,
+        review_threshold,
+    )
+    if style_review_failure_reason is not None:
+        invalidation.update(review_tail)
+        return ResumeInvalidationPlan(
+            should_skip=False,
+            reason=style_review_failure_reason,
+            invalidate_phases=_ordered_invalidation_phases(invalidation, completed_phases),
+        )
+
     return ResumeInvalidationPlan(
         should_skip=True,
         reason=(
             f"phases complete + audit pass + all gates pass + "
-            f"review PASS {latest_review.score}/10 >= {review_threshold:.1f}"
+            f"review PASS {latest_review.score}/10 >= {review_threshold:.1f} + "
+            f"style PASS {latest_style_review.score}/10"
         ),
         invalidate_phases=(),
     )
@@ -1656,6 +1738,10 @@ def _wiki_excerpts_path(level: str, slug: str) -> Path:
     return CURRICULUM_ROOT / level / "orchestration" / slug / "wiki-excerpts.yaml"
 
 
+def _golden_dialogues_dir(level: str) -> Path:
+    return PHASES_DIR / "golden_dialogues" / level.lower()
+
+
 def _load_yaml_artifact(path: Path) -> dict:
     data = yaml.safe_load(path.read_text("utf-8"))
     return data if isinstance(data, dict) else {}
@@ -1761,6 +1847,41 @@ def _format_contract_prompt_artifacts(
         language="yaml",
     )
     return contract_literal, excerpt_literal
+
+
+def _load_golden_dialogue_anchors(level: str, *, max_examples: int = 4) -> str:
+    """Load native-dialogue few-shot anchors for the given level."""
+    dialogues_dir = _golden_dialogues_dir(level)
+    if not dialogues_dir.exists():
+        return ""
+
+    dialogue_files = sorted(
+        path for path in dialogues_dir.glob("*.md") if path.is_file()
+    )[:max_examples]
+    if not dialogue_files:
+        return ""
+
+    examples: list[str] = []
+    for dialogue_path in dialogue_files:
+        content = dialogue_path.read_text("utf-8").strip()
+        if not content:
+            continue
+        examples.append(f"### {dialogue_path.name}\n\n{content}")
+
+    if not examples:
+        return ""
+
+    return (
+        "## Golden Native-Dialogue Anchors\n\n"
+        "Use these as salience anchors for natural turn-taking, register, and phrasing. "
+        "Keep the same brevity and native feel, but do not copy lines verbatim.\n\n"
+        + _format_prompt_literal_block(
+            "Golden Native Dialogue Anchors",
+            "\n\n---\n\n".join(examples),
+            language="markdown",
+        )
+        + "\n"
+    )
 
 
 def _save_contract_compliance(
@@ -2580,6 +2701,7 @@ def step_write(level: str, module_num: int, slug: str,
         level, module_num, slug, packet_path, log_creation=True,
     )
     contract_content, excerpt_content = _format_contract_prompt_artifacts(contract, excerpts)
+    golden_dialogue_anchors = _load_golden_dialogue_anchors(level)
 
     # Build section titles
     sections = plan.get("content_outline", [])
@@ -2670,6 +2792,7 @@ def step_write(level: str, module_num: int, slug: str,
         "{WORD_CEILING}": str(int(word_target * 1.5)),
         "{CONTRACT_YAML}": contract_content,
         "{SECTION_WIKI_EXCERPTS}": excerpt_content,
+        "{GOLDEN_DIALOGUE_ANCHORS}": golden_dialogue_anchors,
         "{PLAN_CONTENT}": contract_content,
         "{KNOWLEDGE_PACKET}": excerpt_content,
         "{EXACT_SECTION_TITLES}": "\n".join(section_titles),
@@ -2712,6 +2835,9 @@ def step_write(level: str, module_num: int, slug: str,
 
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)
+
+    if golden_dialogue_anchors:
+        _log(f"  💬 Golden dialogue anchors injected ({level.upper()})")
 
     # Inject persona/voice — from plan or shared _PERSONAS fallback
     voice, role = _resolve_persona(level, plan)
@@ -3321,6 +3447,246 @@ def _save_structured_findings(review_text: str, orch_dir: Path, round_num: int):
             yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False),
             "utf-8",
         )
+
+
+def _determine_reviewer(
+    writer: str,
+    reviewer_override: str | None,
+) -> tuple[str, str]:
+    """Resolve the reviewer family and agent id for review passes."""
+    if reviewer_override:
+        if "claude" in reviewer_override:
+            return "claude", reviewer_override
+        if "codex" in reviewer_override:
+            return "codex", reviewer_override
+        return "gemini", reviewer_override
+
+    if writer in ("claude", "claude-tools"):
+        return "gemini", "gemini-tools"
+    if writer in ("gemini", "gemini-tools"):
+        return "codex", "codex-tools"
+    return "gemini", "gemini-tools"
+
+
+def _build_review_tools_section(reviewer: str) -> str:
+    """Build verification-tool instructions for review prompts."""
+    if reviewer == "codex":
+        return _build_tool_instructions("codex-tools")
+
+    p = get_family(reviewer).tool_prefix
+    return (
+        "\n\n## Verification Tools (MCP)\n\n"
+        "You have MCP tools to VERIFY claims in the content. Use them to cite evidence:\n\n"
+        "**Core Verification:**\n"
+        f"- `{p}verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)\n"
+        f"- `{p}verify_lemma` — full declension/conjugation for a lemma\n"
+        f"- `{p}search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)\n"
+        f"- `{p}query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.\n"
+        f"- `{p}query_pravopys` — verify orthography rules (Правопис 2019)\n\n"
+        "**Content Quality:**\n"
+        f"- `{p}query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)\n"
+        f"- `{p}search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)\n"
+        f"- `{p}search_etymology` — historical forms, etymology (Грінченко, 67K entries)\n"
+        f"- `{p}search_idioms` — verify idioms are authentic Ukrainian (25K entries)\n"
+        f"- `{p}search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)\n"
+        f"- `{p}query_grac` — check collocations and frequency in GRAC corpus (2B tokens)\n\n"
+        "**Reference:**\n"
+        f"- `{p}search_text` — check how textbooks teach the topic (Grades 1-11)\n"
+        f"- `{p}search_literary` — verify literary references against primary sources\n"
+        f"- `{p}query_wikipedia` — fact-check historical/cultural claims\n\n"
+        "**Evidence standard:** A review that says \"this might be a Russicism\" is WEAK. "
+        "A review that says \"`search_style_guide` confirms 'приймати участь' is a calque — "
+        "correct form: 'брати участь'\" is STRONG. Cite tool results.\n"
+    )
+
+
+def _dispatch_review_prompt(
+    prompt: str,
+    *,
+    reviewer: str,
+    reviewer_agent: str,
+    orch_dir: Path,
+    phase: str,
+) -> tuple[bool, str]:
+    """Dispatch a review-phase prompt to the resolved reviewer agent."""
+    from build.dispatch import CLAUDE_REVIEWER_TOOLS
+    from build.dispatch import dispatch_agent as _dispatch
+
+    _log(f"  Reviewer: {reviewer_agent}")
+
+    if reviewer == "gemini":
+        from batch_gemini_config import GEMINI_REVIEW_MODEL
+
+        ok, raw = _dispatch(
+            prompt,
+            agent=reviewer_agent,
+            phase=phase,
+            orch_dir=orch_dir,
+            timeout=900,
+            mcp_tools=True,
+            model=GEMINI_REVIEW_MODEL,
+        )
+        if not ok or not raw:
+            _log(f"  ❌ Gemini {phase} failed — single attempt, no retry")
+        return ok, raw
+
+    if reviewer == "codex":
+        ok, raw = _dispatch(
+            prompt,
+            agent=reviewer_agent,
+            phase=phase,
+            orch_dir=orch_dir,
+            timeout=900,
+            mcp_tools=False,
+        )
+        if not ok or not raw:
+            _log(f"  ❌ Codex {phase} failed — single attempt, no retry")
+        return ok, raw
+
+    from batch_gemini_config import CLAUDE_MODEL_FINAL_REVIEW
+
+    return _dispatch(
+        prompt,
+        agent=reviewer_agent,
+        phase=phase,
+        orch_dir=orch_dir,
+        timeout=TIMEOUT_REVIEW_CLAUDE,
+        mcp_tools=True,
+        allowed_tools=CLAUDE_REVIEWER_TOOLS,
+        model=CLAUDE_MODEL_FINAL_REVIEW,
+    )
+
+
+def _strip_outer_code_fence(text: str) -> str:
+    """Remove a single outer markdown code fence if present."""
+    stripped = text.strip()
+    if not stripped.startswith("```"):
+        return stripped
+
+    lines = stripped.splitlines()
+    if len(lines) >= 2 and lines[-1].strip() == "```":
+        return "\n".join(lines[1:-1]).strip()
+    return stripped
+
+
+def _normalize_style_review_key(value: str) -> str:
+    """Normalize style-review dimension keys to stable snake_case ids."""
+    normalized = value.strip().lower()
+    normalized = normalized.replace("&", "and").replace("+", "and")
+    normalized = re.sub(r"[^a-z0-9]+", "_", normalized)
+    normalized = re.sub(r"_+", "_", normalized).strip("_")
+    aliases = {
+        "pragmatic_authenticity": "pragmatic_authenticity",
+        "stylistic_consistency": "stylistic_consistency",
+        "culture_and_register": "culture_and_register",
+        "culture_register": "culture_and_register",
+        "naturalness": "naturalness",
+    }
+    return aliases.get(normalized, normalized)
+
+
+def _parse_style_review_result(review_text: str) -> StyleReviewParseResult:
+    """Parse the YAML output of the dedicated style review."""
+    parsed = yaml.safe_load(_strip_outer_code_fence(review_text))
+    if not isinstance(parsed, dict):
+        raise ValueError("style review output is not a YAML mapping")
+
+    scores_raw = parsed.get("scores")
+    if not isinstance(scores_raw, list):
+        raise ValueError("style review is missing scores list")
+
+    dimension_scores: dict[str, float] = {}
+    for item in scores_raw:
+        if not isinstance(item, dict):
+            continue
+        raw_key = item.get("key") or item.get("label") or item.get("name")
+        if not raw_key:
+            continue
+        key = _normalize_style_review_key(str(raw_key))
+        if key not in STYLE_REVIEW_DIMENSION_LABELS:
+            continue
+        try:
+            score = float(item.get("score"))
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"invalid style-review score for {key}") from exc
+        dimension_scores[key] = round(score, 1)
+
+    missing = [
+        key for key in STYLE_REVIEW_DIMENSION_LABELS
+        if key not in dimension_scores
+    ]
+    if missing:
+        raise ValueError(
+            "style review missing required dimensions: " + ", ".join(missing)
+        )
+
+    overall_score_raw = parsed.get("overall_score")
+    if overall_score_raw is None:
+        score = round(
+            sum(dimension_scores.values()) / len(dimension_scores),
+            1,
+        )
+    else:
+        try:
+            score = round(float(overall_score_raw), 1)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("invalid style-review overall_score") from exc
+
+    verdict = str(parsed.get("verdict", "UNKNOWN")).upper()
+    passed = (
+        score >= STYLE_REVIEW_TARGET_SCORE
+        and all(
+            dim_score >= STYLE_REVIEW_DIMENSION_FLOOR
+            for dim_score in dimension_scores.values()
+        )
+        and verdict == "PASS"
+    )
+    return StyleReviewParseResult(
+        score=score,
+        dimension_scores=dimension_scores,
+        verdict=verdict,
+        passed=passed,
+    )
+
+
+def _save_structured_style_review(review_text: str, orch_dir: Path, round_num: int) -> StyleReviewParseResult:
+    """Persist the YAML style review in normalized structured form."""
+    parsed = _parse_style_review_result(review_text)
+    raw_data = yaml.safe_load(_strip_outer_code_fence(review_text))
+    if not isinstance(raw_data, dict):
+        raise ValueError("style review output is not a YAML mapping")
+
+    raw_data["round"] = round_num
+    raw_data["overall_score"] = parsed.score
+    raw_data["verdict"] = parsed.verdict
+    raw_data["pass"] = parsed.passed
+
+    normalized_scores = []
+    for key, label in STYLE_REVIEW_DIMENSION_LABELS.items():
+        raw_item = next(
+            (
+                item for item in raw_data.get("scores", [])
+                if isinstance(item, dict)
+                and _normalize_style_review_key(str(item.get("key") or item.get("label") or item.get("name") or "")) == key
+            ),
+            {},
+        )
+        normalized_scores.append(
+            {
+                "key": key,
+                "label": label,
+                "score": parsed.dimension_scores[key],
+                "rationale": str(raw_item.get("rationale", "")).strip(),
+            }
+        )
+    raw_data["scores"] = normalized_scores
+
+    out_path = orch_dir / f"review-structured-style-r{round_num}.yaml"
+    out_path.write_text(
+        yaml.safe_dump(raw_data, sort_keys=False, allow_unicode=True),
+        "utf-8",
+    )
+    return parsed
 
 
 def _generate_friction(level: str, slug: str, results: list,
@@ -5058,58 +5424,8 @@ def step_review(content_path: Path, level: str, module_num: int,
         except Exception:
             pass  # Non-blocking
 
-    # Determine reviewer BEFORE building tool instructions (bug fix: tool prefix
-    # must match the actual reviewer, not the cross-agent default)
-    if reviewer_override:
-        if "claude" in reviewer_override:
-            reviewer = "claude"
-        elif "codex" in reviewer_override:
-            reviewer = "codex"
-        else:
-            reviewer = "gemini"
-    else:
-        # Cross-agent review: writer → opposite family reviews.
-        # Gemini writes → Codex reviews (per user directive: Claude is for coding, not batch reviewing).
-        # Claude writes → Gemini reviews.
-        # Codex writes → Gemini reviews.
-        if writer in ("claude", "claude-tools"):
-            reviewer = "gemini"
-        elif writer in ("gemini", "gemini-tools"):
-            reviewer = "codex"
-        else:
-            reviewer = "gemini"
-
-    # Build tool instructions for the reviewer.
-    # Codex uses shell-out commands; Claude/Gemini use MCP tool references.
-    if "codex" in reviewer:
-        review_tools = _build_tool_instructions("codex-tools")
-    else:
-        p = get_family(reviewer).tool_prefix
-        review_tools = (
-            "\n\n## Verification Tools (MCP)\n\n"
-            "You have MCP tools to VERIFY claims in the content. Use them to cite evidence:\n\n"
-            "**Core Verification:**\n"
-            f"- `{p}verify_words` — batch-verify Ukrainian words against VESUM (409K lemmas)\n"
-            f"- `{p}verify_lemma` — full declension/conjugation for a lemma\n"
-            f"- `{p}search_style_guide` — **HIGH PRIORITY.** Check for calques/Russianisms (Антоненко-Давидович)\n"
-            f"- `{p}query_r2u` — Russian→Ukrainian equivalents. Confirm Russicism alternatives.\n"
-            f"- `{p}query_pravopys` — verify orthography rules (Правопис 2019)\n\n"
-            "**Content Quality:**\n"
-            f"- `{p}query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)\n"
-            f"- `{p}search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)\n"
-            f"- `{p}search_etymology` — historical forms, etymology (Грінченко, 67K entries)\n"
-            f"- `{p}search_idioms` — verify idioms are authentic Ukrainian (25K entries)\n"
-            f"- `{p}search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)\n"
-            f"- `{p}query_grac` — check collocations and frequency in GRAC corpus (2B tokens)\n\n"
-            "**Reference:**\n"
-        f"- `{p}search_text` — check how textbooks teach the topic (Grades 1-11)\n"
-        f"- `{p}search_literary` — verify literary references against primary sources\n"
-        f"- `{p}query_wikipedia` — fact-check historical/cultural claims\n\n"
-        "**Evidence standard:** A review that says \"this might be a Russicism\" is WEAK. "
-        "A review that says \"`search_style_guide` confirms 'приймати участь' is a calque — "
-        "correct form: 'брати участь'\" is STRONG. Cite tool results.\n"
-    )
-    prompt = prompt + review_tools
+    reviewer, reviewer_agent = _determine_reviewer(writer, reviewer_override)
+    prompt = prompt + _build_review_tools_section(reviewer)
 
     # Save review prompt
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
@@ -5117,52 +5433,13 @@ def step_review(content_path: Path, level: str, module_num: int,
     review_prompt_path = orch_dir / "v6-review-prompt.md"
     review_prompt_path.write_text(prompt, "utf-8")
 
-    # Dispatch to reviewer (cross-agent: writer's opposite)
-    from build.dispatch import CLAUDE_REVIEWER_TOOLS
-    from build.dispatch import dispatch_agent as _dispatch
-
-    # reviewer already determined above (for tool prefix). Set reviewer_agent.
-    if reviewer_override:
-        reviewer_agent = reviewer_override
-    elif reviewer == "gemini":
-        reviewer_agent = "gemini-tools"
-    elif reviewer == "codex":
-        reviewer_agent = "codex-tools"
-    else:
-        reviewer_agent = "claude-tools"
-    _log(f"  Reviewer: {reviewer_agent} (writer was {writer})")
-
-    # Dispatch review — single call, no probe, no retry loop.
-    if reviewer == "gemini":
-        from batch_gemini_config import GEMINI_REVIEW_MODEL
-
-        review_timeout = 900  # 15 min — generous for a ~30K prompt
-        ok, raw = _dispatch(
-            prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
-            timeout=review_timeout, mcp_tools=True,
-            model=GEMINI_REVIEW_MODEL,
-        )
-        if not ok or not raw:
-            _log("  ❌ Gemini review failed — single attempt, no retry")
-    elif reviewer == "codex":
-        # Codex reviews via shell-out tools, not MCP. The tool instructions
-        # were already injected into the prompt above. Dispatch without
-        # mcp_tools so the codex adapter runs in workspace-write mode
-        # (needed for shell-out tool access).
-        review_timeout = 900
-        ok, raw = _dispatch(
-            prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
-            timeout=review_timeout, mcp_tools=False,
-        )
-        if not ok or not raw:
-            _log("  ❌ Codex review failed — single attempt, no retry")
-    else:
-        from batch_gemini_config import CLAUDE_MODEL_FINAL_REVIEW
-        ok, raw = _dispatch(
-            prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
-            timeout=TIMEOUT_REVIEW_CLAUDE, mcp_tools=True, allowed_tools=CLAUDE_REVIEWER_TOOLS,
-            model=CLAUDE_MODEL_FINAL_REVIEW,
-        )
+    ok, raw = _dispatch_review_prompt(
+        prompt,
+        reviewer=reviewer,
+        reviewer_agent=reviewer_agent,
+        orch_dir=orch_dir,
+        phase="review",
+    )
 
     if not ok or not raw:
         _log("  ❌ Reviewer returned no output")
@@ -5231,6 +5508,128 @@ def step_review(content_path: Path, level: str, module_num: int,
     emit_event("review_score", level=level, slug=slug, round=round_num, score=score)
 
     return passed, score, raw
+
+
+def step_review_style(
+    content_path: Path,
+    level: str,
+    module_num: int,
+    slug: str,
+    *,
+    writer: str = "claude",
+    reviewer_override: str | None = None,
+) -> tuple[bool, float, str]:
+    """Step 8b: Dedicated pragmatic/style review after the main review."""
+    _log(f"\n{'='*60}")
+    _log("  Step 8b: REVIEW-STYLE — Pragmatic & stylistic critic")
+    _log(f"{'='*60}")
+
+    if not content_path or not content_path.exists():
+        _log("  ❌ No content file")
+        return False, 0.0, ""
+
+    template_path = PHASES_DIR / "v6-review-style.md"
+    if not template_path.exists():
+        _log(f"  ❌ Style review template not found: {template_path}")
+        return False, 0.0, ""
+
+    template = template_path.read_text("utf-8")
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    plan_content_raw = plan_path.read_text("utf-8") if plan_path.exists() else ""
+    plan = yaml.safe_load(plan_content_raw) if plan_content_raw else {}
+    raw_content = content_path.read_text("utf-8")
+    research_path = CURRICULUM_ROOT / level / "research" / f"{slug}-knowledge-packet.md"
+    contract, excerpts = _ensure_contract_artifacts(
+        level,
+        module_num,
+        slug,
+        research_path if research_path.exists() else None,
+        log_creation=True,
+    )
+    contract_content, excerpt_content = _format_contract_prompt_artifacts(contract, excerpts)
+
+    generated_content = raw_content
+    if "<!-- TAB:Словник -->" in generated_content:
+        generated_content = generated_content[:generated_content.index("<!-- TAB:Словник -->")].strip()
+    generated_content = generated_content.replace("<!-- TAB:Урок -->", "").strip()
+    generated_content = re.sub(r"\n{3,}", "\n\n", generated_content).strip()
+
+    if "claude" in writer:
+        writer_model = "Claude"
+    elif "codex" in writer:
+        writer_model = "Codex"
+    else:
+        writer_model = "Gemini"
+
+    generated_content_literal = _format_prompt_literal_block(
+        "Generated Module Content", generated_content, language="markdown",
+    )
+    prompt = template
+    replacements = {
+        "{MODULE_NUM}": str(module_num),
+        "{TOPIC_TITLE}": plan.get("title", slug),
+        "{LEVEL}": level.upper(),
+        "{PHASE}": plan.get("phase", ""),
+        "{WRITER_MODEL}": writer_model,
+        "{WORD_TARGET}": str(plan.get("word_target", 1200)),
+        "{CONTRACT_YAML}": contract_content,
+        "{SECTION_WIKI_EXCERPTS}": excerpt_content,
+        "{GENERATED_CONTENT}": generated_content_literal,
+    }
+    for key, value in replacements.items():
+        prompt = prompt.replace(key, value)
+
+    reviewer, reviewer_agent = _determine_reviewer(writer, reviewer_override)
+    prompt = prompt + _build_review_tools_section(reviewer)
+
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    prompt_path = orch_dir / "v6-review-style-prompt.md"
+    prompt_path.write_text(prompt, "utf-8")
+
+    ok, raw = _dispatch_review_prompt(
+        prompt,
+        reviewer=reviewer,
+        reviewer_agent=reviewer_agent,
+        orch_dir=orch_dir,
+        phase="review-style",
+    )
+    if not ok or not raw:
+        _log("  ❌ Reviewer returned no output")
+        return False, 0.0, ""
+
+    existing = sorted(orch_dir.glob("review-structured-style-r*.yaml"))
+    round_num = len(existing) + 1
+    raw_path = orch_dir / f"review-style-r{round_num}.yaml"
+    raw_path.write_text(_strip_outer_code_fence(raw), "utf-8")
+
+    try:
+        parsed = _save_structured_style_review(raw, orch_dir, round_num)
+    except Exception as exc:
+        _log(f"  ❌ Could not parse style review YAML: {exc}")
+        return False, 0.0, raw
+
+    low_dims = [
+        f"{STYLE_REVIEW_DIMENSION_LABELS[key]}={score:.1f}/10"
+        for key, score in parsed.dimension_scores.items()
+        if score < STYLE_REVIEW_DIMENSION_FLOOR
+    ]
+    if low_dims:
+        _log("  ⚠️  Style dimension floor: " + ", ".join(low_dims))
+
+    _log(
+        f"  {'✅' if parsed.passed else '❌'} Style review: {parsed.score}/10 "
+        f"(threshold {STYLE_REVIEW_TARGET_SCORE:.1f}, floor {STYLE_REVIEW_DIMENSION_FLOOR:.1f}) — "
+        f"{parsed.verdict}"
+    )
+    emit_event(
+        "review_style_score",
+        level=level,
+        slug=slug,
+        round=round_num,
+        score=parsed.score,
+    )
+    return parsed.passed, parsed.score, raw
 
 
 def _parse_review_fixes(review_text: str) -> list[dict]:
@@ -6342,7 +6741,7 @@ def main():
                         help="Default: gemini-tools. *-tools = with verification access during writing (MCP for Claude/Gemini, shell commands for Codex)")
     parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools", "codex", "codex-tools"], default=None,
                         help="Override reviewer. Default: cross-agent (opposite of writer)")
-    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "exercises", "activities", "repair", "verify-exercises", "annotate", "enrich", "verify", "review", "publish", "audit", "all"],
+    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "exercises", "activities", "repair", "verify-exercises", "annotate", "enrich", "verify", "review", "review-style", "publish", "audit", "all"],
                         default="all")
     skeleton_group = parser.add_mutually_exclusive_group()
     skeleton_group.add_argument("--skeleton", action="store_true", default=None,
@@ -6765,7 +7164,7 @@ def main():
                 verification_text = existing_verify.read_text("utf-8")
                 _log(f"  🔍 Loaded existing pre-verify ({len(verification_text)} chars)")
 
-        if steps in ("all", "write", "review"):
+        if steps in ("all", "write", "review", "review-style"):
             try:
                 _log(f"\n{'='*60}")
                 _log("  Step 4b: CONTRACT — Plan + wiki compression")
@@ -7063,7 +7462,6 @@ def main():
                 _emit_module_failed("review", "Review/contract still failing after 2 rounds — needs_human_review")
                 return False
 
-            _save_v6_state(args.level, slug, "review")
             if _v6_state_path(args.level, slug).exists():
                 state = _read_v6_state(args.level, slug)
                 if "needs_human_review" in state:
@@ -7092,9 +7490,77 @@ def main():
 
             _log(f"\n✅ Review PASSED ({score}/10)")
             final_score = score
+            _save_v6_state(args.level, slug, "review")
             _emit_phase_done("review", _phase_start)
 
-        # Step 8b: ANNOTATE (stress marks — after review, before publish)
+        if (
+            steps in ("all", "review", "review-style")
+            or "review-style" in resume_invalidation_applied
+        ) and "review-style" not in completed_phases:
+            _phase_start = time.monotonic()
+            style_passed, style_score, style_review_text = step_review_style(
+                content_path,
+                args.level,
+                args.module,
+                slug,
+                writer=args.writer,
+                reviewer_override=args.reviewer,
+            )
+            if style_score == 0.0 and not style_review_text:
+                _log("\n❌ Build FAILED at Step 8b (review-style — no output from reviewer)")
+                _save_v6_state(args.level, slug, "review-style", status="failed")
+                _emit_module_failed(
+                    "review-style",
+                    "Build FAILED at Step 8b (review-style — no output from reviewer)",
+                )
+                sys.exit(1)
+            if not style_passed:
+                orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
+                needs_review_path = orch_dir / "needs-human-review.yaml"
+                needs_review_path.write_text(
+                    yaml.safe_dump(
+                        {
+                            "slug": slug,
+                            "style_review_score": style_score,
+                            "style_review_excerpt": style_review_text[:2000],
+                            "reason": "style review failed dedicated pragmatic/style gate",
+                        },
+                        sort_keys=False,
+                        allow_unicode=True,
+                    ),
+                    "utf-8",
+                )
+                state = _read_v6_state(args.level, slug) if _v6_state_path(args.level, slug).exists() else {
+                    "mode": "v6",
+                    "track": args.level,
+                    "slug": slug,
+                    "phases": {},
+                }
+                state["needs_human_review"] = {
+                    "status": True,
+                    "ts": datetime.now(tz=UTC).isoformat(),
+                    "reason": "style review failed dedicated pragmatic/style gate",
+                    "violations_path": str(needs_review_path.relative_to(orch_dir)),
+                }
+                _write_v6_state_atomic(_v6_state_path(args.level, slug), state)
+                _save_v6_state(args.level, slug, "review-style", status="failed")
+                _log("\n❌ Style review halted the pipeline — marked needs_human_review")
+                _emit_module_failed(
+                    "review-style",
+                    "Style review failed dedicated pragmatic/style gate — needs_human_review",
+                )
+                return False
+
+            _save_v6_state(args.level, slug, "review-style")
+            if _v6_state_path(args.level, slug).exists():
+                state = _read_v6_state(args.level, slug)
+                if "needs_human_review" in state:
+                    state.pop("needs_human_review", None)
+                    _write_v6_state_atomic(_v6_state_path(args.level, slug), state)
+            _log(f"\n✅ Style review PASSED ({style_score}/10)")
+            _emit_phase_done("review-style", _phase_start)
+
+        # Step 8c: ANNOTATE (stress marks — after review, before publish)
         # Skip for: seminar tracks (B2+ immersion), A1/A2 (stress in словník only,
         # not in prose — annotator heteronym bugs cause more harm than good at
         # beginner levels where every word is new).

@@ -124,6 +124,8 @@ Your prose should contain (after the relevant sections):
 
 ---
 
+{GOLDEN_DIALOGUE_ANCHORS}
+
 ## Section Structure
 
 Write these sections as H2 headings, in this **exact** order:

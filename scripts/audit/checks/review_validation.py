@@ -18,14 +18,17 @@ Detection heuristics:
   - Fabricated citations (quoted text not found in source .md)
 """
 
+import contextlib
 import re
 import sys
 from pathlib import Path
 
+import yaml
+
 # Ensure scripts/ is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
-import contextlib
 
+from audit.config import get_naturalness_min_score
 from slug_utils import review_path as _review_path
 from slug_utils import to_bare_slug
 
@@ -523,6 +526,160 @@ def _check_praise_only_citations(content: str, citations: list[str], fix_prompt:
             f"to show both strengths AND weaknesses. {fix_prompt}"
         )
     }]
+
+
+_STYLE_REVIEW_DIMENSION_FLOOR = 8.5
+_STYLE_REVIEW_DIMENSIONS = {
+    'pragmatic_authenticity': 'Pragmatic authenticity',
+    'stylistic_consistency': 'Stylistic consistency',
+    'culture_and_register': 'Culture + register',
+    'naturalness': 'Naturalness',
+}
+
+
+def _normalize_style_review_key(value: str) -> str:
+    """Normalize style-review dimension identifiers."""
+    normalized = value.strip().lower().replace('&', 'and').replace('+', 'and')
+    normalized = re.sub(r'[^a-z0-9]+', '_', normalized)
+    normalized = re.sub(r'_+', '_', normalized).strip('_')
+    aliases = {
+        'culture_register': 'culture_and_register',
+    }
+    return aliases.get(normalized, normalized)
+
+
+def _load_latest_yaml(orch_dir: Path, pattern: str) -> tuple[Path | None, dict | None, str | None]:
+    """Load the latest matching YAML file from orchestration dir."""
+    matches = sorted(orch_dir.glob(pattern))
+    if not matches:
+        return None, None, None
+
+    latest = matches[-1]
+    try:
+        data = yaml.safe_load(latest.read_text(encoding='utf-8'))
+    except Exception as exc:
+        return latest, None, str(exc)
+    if not isinstance(data, dict):
+        return latest, None, 'YAML root is not a mapping'
+    return latest, data, None
+
+
+def check_v6_review_validity(file_path: str, level_code: str, module_slug: str) -> list[dict]:
+    """Validate the structured linguistic + style review gate for v6 modules."""
+    orch_dir = Path(file_path).parent / 'orchestration' / module_slug
+    threshold = get_naturalness_min_score(level_code)
+    violations = []
+
+    review_path, review_data, review_error = _load_latest_yaml(orch_dir, 'review-structured-r*.yaml')
+    if review_path is None:
+        return [{
+            'type': 'MISSING_STRUCTURED_REVIEW',
+            'severity': 'critical',
+            'message': 'No review-structured-r*.yaml found in orchestration dir',
+        }]
+    if review_error is not None:
+        return [{
+            'type': 'STRUCTURED_REVIEW_PARSE_ERROR',
+            'severity': 'critical',
+            'message': f'Failed to parse {review_path.name}: {review_error}',
+        }]
+
+    scores = [d.get('score', 0) for d in review_data.get('scores', []) if isinstance(d, dict)]
+    if not scores:
+        violations.append({
+            'type': 'STRUCTURED_REVIEW_NO_SCORES',
+            'severity': 'critical',
+            'message': f'No scores found in {review_path.name}',
+        })
+    else:
+        avg_score = sum(scores) / len(scores)
+        if avg_score < threshold:
+            violations.append({
+                'type': 'STRUCTURED_REVIEW_BELOW_THRESHOLD',
+                'severity': 'critical',
+                'message': (
+                    f'Latest review {review_path.name} score is {avg_score:.1f} < {threshold:.1f}'
+                ),
+            })
+
+    style_path, style_data, style_error = _load_latest_yaml(orch_dir, 'review-structured-style-r*.yaml')
+    if style_path is None:
+        violations.append({
+            'type': 'MISSING_STYLE_REVIEW',
+            'severity': 'critical',
+            'message': 'No review-structured-style-r*.yaml found in orchestration dir',
+        })
+        return violations
+    if style_error is not None:
+        violations.append({
+            'type': 'STYLE_REVIEW_PARSE_ERROR',
+            'severity': 'critical',
+            'message': f'Failed to parse {style_path.name}: {style_error}',
+        })
+        return violations
+
+    style_scores = {}
+    for item in style_data.get('scores', []):
+        if not isinstance(item, dict):
+            continue
+        key = _normalize_style_review_key(str(item.get('key') or item.get('label') or item.get('name') or ''))
+        if key not in _STYLE_REVIEW_DIMENSIONS:
+            continue
+        try:
+            style_scores[key] = float(item.get('score'))
+        except (TypeError, ValueError):
+            violations.append({
+                'type': 'STYLE_REVIEW_PARSE_ERROR',
+                'severity': 'critical',
+                'message': f'Invalid style-review score in {style_path.name} for {key}',
+            })
+            return violations
+
+    missing_dimensions = [
+        key for key in _STYLE_REVIEW_DIMENSIONS
+        if key not in style_scores
+    ]
+    if missing_dimensions:
+        violations.append({
+            'type': 'STYLE_REVIEW_MISSING_DIMENSIONS',
+            'severity': 'critical',
+            'message': (
+                f'{style_path.name} missing required dimensions: '
+                + ', '.join(missing_dimensions)
+            ),
+        })
+        return violations
+
+    try:
+        overall_score = float(style_data.get('overall_score'))
+    except (TypeError, ValueError):
+        overall_score = sum(style_scores.values()) / len(style_scores)
+
+    if overall_score < threshold:
+        violations.append({
+            'type': 'STYLE_REVIEW_BELOW_THRESHOLD',
+            'severity': 'critical',
+            'message': (
+                f'Latest style review {style_path.name} score is {overall_score:.1f} < {threshold:.1f}'
+            ),
+        })
+
+    low_dimensions = [
+        f'{_STYLE_REVIEW_DIMENSIONS[key]}={score:.1f}'
+        for key, score in style_scores.items()
+        if score < _STYLE_REVIEW_DIMENSION_FLOOR
+    ]
+    if low_dimensions:
+        violations.append({
+            'type': 'STYLE_REVIEW_DIMENSION_FLOOR',
+            'severity': 'critical',
+            'message': (
+                f'Latest style review {style_path.name} has dimension(s) below '
+                f'{_STYLE_REVIEW_DIMENSION_FLOOR:.1f}: ' + ', '.join(low_dimensions)
+            ),
+        })
+
+    return violations
 
 
 def check_review_validity(file_path: str, level_code: str, module_slug: str) -> list[dict]:

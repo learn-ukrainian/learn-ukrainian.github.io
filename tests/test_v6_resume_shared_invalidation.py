@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -51,12 +52,48 @@ def _write_review(curriculum_root: Path, slug: str, score: float) -> None:
         "## Verdict: PASS\n",
         "utf-8",
     )
+    orch_dir = curriculum_root / "b1" / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    (orch_dir / "review-structured-r1.yaml").write_text(
+        f"scores:\n  - score: {score}\n",
+        "utf-8",
+    )
+    (orch_dir / "review-structured-style-r1.yaml").write_text(
+        "phase: review-style\n"
+        "verdict: PASS\n"
+        "pass: true\n"
+        f"overall_score: {score:.1f}\n"
+        "scores:\n"
+        f"  - key: pragmatic_authenticity\n    score: {score:.1f}\n"
+        f"  - key: stylistic_consistency\n    score: {score:.1f}\n"
+        f"  - key: culture_and_register\n    score: {score:.1f}\n"
+        f"  - key: naturalness\n    score: {score:.1f}\n",
+        "utf-8",
+    )
 
 
 def _write_review_text(curriculum_root: Path, slug: str, review_text: str) -> None:
     review_dir = curriculum_root / "b1" / "review"
     review_dir.mkdir(parents=True, exist_ok=True)
     (review_dir / f"{slug}-review.md").write_text(review_text, "utf-8")
+    orch_dir = curriculum_root / "b1" / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    score_matches = [int(score) for score in re.findall(r"\|\s*\d+\.\s*[^|]+\|\s*(\d+)/10\s*\|", review_text)]
+    if score_matches:
+        score_yaml = "scores:\n" + "".join(f"  - score: {score}\n" for score in score_matches)
+        (orch_dir / "review-structured-r1.yaml").write_text(score_yaml, "utf-8")
+    (orch_dir / "review-structured-style-r1.yaml").write_text(
+        "phase: review-style\n"
+        "verdict: PASS\n"
+        "pass: true\n"
+        "overall_score: 9.2\n"
+        "scores:\n"
+        "  - key: pragmatic_authenticity\n    score: 9.2\n"
+        "  - key: stylistic_consistency\n    score: 9.2\n"
+        "  - key: culture_and_register\n    score: 9.2\n"
+        "  - key: naturalness\n    score: 9.2\n",
+        "utf-8",
+    )
 
 
 def _write_plan(curriculum_root: Path, slug: str) -> None:
@@ -172,6 +209,7 @@ def test_resume_publish_reruns_review_when_saved_review_is_below_threshold(tmp_p
         return True
 
     monkeypatch.setattr(v6_build, "step_review", track_step_review)
+    monkeypatch.setattr(v6_build, "step_review_style", lambda *args, **kwargs: (True, 9.2, "phase: review-style\n"))
     monkeypatch.setattr(v6_build, "step_audit", track_step_audit)
     monkeypatch.setattr(v6_build, "step_publish", track_step_publish)
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
@@ -216,7 +254,7 @@ def test_resume_plan_reruns_when_latest_review_verdict_is_revise(tmp_path, monke
 
     assert plan.should_skip is False
     assert plan.reason == "latest review verdict REVISE"
-    assert plan.invalidate_phases == ("review", "stress", "publish", "audit")
+    assert plan.invalidate_phases == ("review", "review-style", "stress", "publish", "audit")
 
 
 def test_resume_plan_reruns_when_latest_review_hits_dimension_floor(tmp_path, monkeypatch):
@@ -247,4 +285,4 @@ def test_resume_plan_reruns_when_latest_review_hits_dimension_floor(tmp_path, mo
 
     assert plan.should_skip is False
     assert plan.reason == "latest review dimension floor fail"
-    assert plan.invalidate_phases == ("review", "stress", "publish", "audit")
+    assert plan.invalidate_phases == ("review", "review-style", "stress", "publish", "audit")

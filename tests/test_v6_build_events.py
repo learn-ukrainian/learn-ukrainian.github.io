@@ -204,6 +204,64 @@ def test_step_review_emits_review_score_event(
     assert review_events[0]["score"] == 9.0
 
 
+def test_step_review_style_emits_review_style_score_event(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    level = "a2"
+    slug = "a2-style"
+    curriculum_root = _single_module_tree(tmp_path, level=level, slug=slug)
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.write_text(_compliant_module_content(), "utf-8")
+
+    phases_dir = tmp_path / "scripts" / "build" / "phases"
+    phases_dir.mkdir(parents=True, exist_ok=True)
+    (phases_dir / "v6-review-style.md").write_text(
+        "Review {TOPIC_TITLE}\n\n{GENERATED_CONTENT}\n",
+        "utf-8",
+    )
+
+    import build.dispatch as dispatch
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
+    monkeypatch.setattr(
+        dispatch,
+        "dispatch_agent",
+        lambda *args, **kwargs: (
+            True,
+            "phase: review-style\n"
+            "verdict: PASS\n"
+            "pass: true\n"
+            "overall_score: 9.1\n"
+            "scores:\n"
+            "  - key: pragmatic_authenticity\n    score: 9.1\n"
+            "  - key: stylistic_consistency\n    score: 9.0\n"
+            "  - key: culture_and_register\n    score: 9.2\n"
+            "  - key: naturalness\n    score: 9.1\n"
+            "blocking_issues: []\n"
+            "tool_evidence: []\n"
+            "summary: clear\n"
+        ),
+    )
+
+    passed, score, _raw = v6_build.step_review_style(content_path, level, 1, slug, writer="claude")
+
+    assert passed is True
+    assert score == 9.1
+
+    review_events = [
+        event for event in _event_lines(capsys.readouterr().out)
+        if event["event"] == "review_style_score"
+    ]
+    assert len(review_events) == 1
+    assert review_events[0]["level"] == level
+    assert review_events[0]["slug"] == slug
+    assert review_events[0]["round"] == 1
+    assert review_events[0]["score"] == 9.1
+
+
 def test_main_emits_batch_events(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -328,6 +386,7 @@ def test_main_emits_module_done_after_publish(
     monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
     monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: (True, 9.6, "Verdict: PASS\n"))
+    monkeypatch.setattr(v6_build, "step_review_style", lambda *args, **kwargs: (True, 9.4, "phase: review-style\n"))
     monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: True)
     monkeypatch.setattr(quick_verify, "_check_toxic_tokens", lambda text: [])
     monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
@@ -397,6 +456,7 @@ def test_main_persists_skipped_optional_phases_as_satisfied(
     monkeypatch.setattr(v6_build, "step_vocab", fake_vocab)
     monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: True)
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: (True, 9.6, "Verdict: PASS\n"))
+    monkeypatch.setattr(v6_build, "step_review_style", lambda *args, **kwargs: (True, 9.4, "phase: review-style\n"))
     monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: True)
     monkeypatch.setattr(v6_build, "step_audit", lambda *args, **kwargs: True)
     monkeypatch.setattr(quick_verify, "_check_toxic_tokens", lambda text: [])
@@ -480,6 +540,7 @@ def test_main_persists_only_successful_verify_and_stress_phases_as_complete(
     monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: verify_result)
     monkeypatch.setattr(v6_build, "step_annotate", lambda *args, **kwargs: stress_result)
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: (True, 9.6, "Verdict: PASS\n"))
+    monkeypatch.setattr(v6_build, "step_review_style", lambda *args, **kwargs: (True, 9.4, "phase: review-style\n"))
     monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: True)
     monkeypatch.setattr(v6_build, "step_audit", lambda *args, **kwargs: True)
     monkeypatch.setattr(quick_verify, "_check_toxic_tokens", lambda text: [])
@@ -759,6 +820,11 @@ def test_main_blocks_plan_consuming_single_steps_on_pre_build_gate(
     )
     monkeypatch.setattr(
         v6_build,
+        "step_review_style",
+        lambda *args, **kwargs: called_steps.append("review-style"),
+    )
+    monkeypatch.setattr(
+        v6_build,
         "step_publish",
         lambda *args, **kwargs: called_steps.append("publish"),
     )
@@ -841,6 +907,7 @@ def test_main_releases_lock_when_publish_raises(
     monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
     monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: releases.append("released"))
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: (True, 9.6, "Verdict: PASS\n"))
+    monkeypatch.setattr(v6_build, "step_review_style", lambda *args, **kwargs: (True, 9.4, "phase: review-style\n"))
     monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("boom")))
     monkeypatch.setattr(quick_verify, "_check_toxic_tokens", lambda text: [])
     monkeypatch.setattr(

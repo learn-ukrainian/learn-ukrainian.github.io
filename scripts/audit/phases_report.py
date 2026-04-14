@@ -13,8 +13,7 @@ from calculate_richness import calculate_richness_score, detect_dryness_flags
 from slug_utils import to_bare_slug
 
 from .checks.review_gaming import check_review_gaming
-from .checks.review_validation import check_review_validity
-from .config import get_naturalness_min_score
+from .checks.review_validation import check_review_validity, check_v6_review_validity
 from .gates import compute_recommendation
 from .parsing import AuditContext, AuditState
 from .report import (
@@ -157,54 +156,27 @@ def validate_review_and_finalize(ctx: AuditContext, state: AuditState) -> bool:
     if ctx.skip_activities or ctx.skip_review:
         review_gate_status = "deferred"
     elif ctx.plan_data:
-        import yaml
         module_slug_for_review = Path(ctx.file_path).stem
-        orch_dir = Path(ctx.file_path).parent / "orchestration" / module_slug_for_review
-
-        review_gate_status = "fail"
-        if orch_dir.is_dir():
-            review_files = sorted(orch_dir.glob("review-structured-r*.yaml"))
-            if review_files:
-                latest_review = review_files[-1]
-                try:
-                    with open(latest_review, encoding="utf-8") as f:
-                        review_data = yaml.safe_load(f)
-
-                    scores = [d.get("score", 0) for d in review_data.get("scores", [])]
-                    if scores:
-                        review_min_score = get_naturalness_min_score(ctx.level_code)
-                        avg_score = sum(scores) / len(scores)
-                        if avg_score >= review_min_score:
-                            review_gate_status = "pass"
-                            print(f"  ℹ️  V6 module — review gate passed (score: {avg_score:.1f})")
-                        else:
-                            msg = (
-                                f"Latest review {latest_review.name} score is "
-                                f"{avg_score:.1f} < {review_min_score:.1f}"
-                            )
-                            print(f"     \u274c [REVIEW] {msg}")
-                            state.critical_failure_reasons.append(msg)
-                            state.has_critical_failure = True
-                    else:
-                        msg = f"No scores found in {latest_review.name}"
-                        print(f"     \u274c [REVIEW] {msg}")
-                        state.critical_failure_reasons.append(msg)
-                        state.has_critical_failure = True
-                except Exception as e:
-                    msg = f"Failed to parse {latest_review.name}: {e}"
-                    print(f"     \u274c [REVIEW] {msg}")
-                    state.critical_failure_reasons.append(msg)
-                    state.has_critical_failure = True
-            else:
-                msg = "No review-structured-r*.yaml found in orchestration dir"
-                print(f"     \u274c [REVIEW] {msg}")
-                state.critical_failure_reasons.append(msg)
+        review_violations = check_v6_review_validity(
+            ctx.file_path,
+            ctx.level_code,
+            module_slug_for_review,
+        )
+        if review_violations:
+            criticals = [v for v in review_violations if v['severity'] == 'critical']
+            warnings = [v for v in review_violations if v['severity'] == 'warning']
+            print(f"  \U0001f575\ufe0f  V6 Review Validation: {len(criticals)} critical, {len(warnings)} warnings")
+            for v in criticals:
+                print(f"     \u274c [REVIEW] {v['message']}")
+                state.critical_failure_reasons.append(v['message'])
+            for v in warnings:
+                print(f"     \u26a0\ufe0f  [REVIEW] {v['message']}")
+            review_gate_status = "fail" if criticals else "pass"
+            if criticals:
                 state.has_critical_failure = True
         else:
-            msg = "Orchestration directory missing for V6 module review check"
-            print(f"     \u274c [REVIEW] {msg}")
-            state.critical_failure_reasons.append(msg)
-            state.has_critical_failure = True
+            review_gate_status = "pass"
+            print("  ℹ️  V6 module — review gate passed (linguistic + style)")
     elif not state.has_critical_failure:
         module_slug_for_review = Path(ctx.file_path).stem
         review_violations = check_review_validity(ctx.file_path, ctx.level_code, module_slug_for_review)

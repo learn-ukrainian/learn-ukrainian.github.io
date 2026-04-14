@@ -46,7 +46,15 @@ def _write_plan(curriculum_root: Path, slug: str, *, title: str = "Plan Hash Tes
                     {"section": "Intro", "words": 600, "points": ["Dialogue about the plan."]},
                     {"section": "Підсумок", "words": 600},
                 ],
+                "dialogue_situations": [
+                    {
+                        "setting": "classroom",
+                        "speakers": ["Викладач", "Студент"],
+                        "motivation": "plan discussion",
+                    }
+                ],
                 "vocabulary_hints": {"required": ["план"]},
+                "activity_hints": [{"id": "plan-check", "type": "quiz", "focus": "intro"}],
             },
             sort_keys=False,
             allow_unicode=True,
@@ -85,6 +93,24 @@ def _write_review_and_status(curriculum_root: Path, slug: str) -> None:
         "| Dimension | Score | Evidence |\n"
         "|-----------|-------|----------|\n"
         f"{rows}\n\n## Verdict: PASS\n",
+        "utf-8",
+    )
+    orch_dir = curriculum_root / "b1" / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    (orch_dir / "review-structured-r1.yaml").write_text(
+        "scores:\n" + "".join("  - score: 10\n" for _ in range(9)),
+        "utf-8",
+    )
+    (orch_dir / "review-structured-style-r1.yaml").write_text(
+        "phase: review-style\n"
+        "verdict: PASS\n"
+        "pass: true\n"
+        "overall_score: 9.5\n"
+        "scores:\n"
+        "  - key: pragmatic_authenticity\n    score: 9.5\n"
+        "  - key: stylistic_consistency\n    score: 9.5\n"
+        "  - key: culture_and_register\n    score: 9.5\n"
+        "  - key: naturalness\n    score: 9.5\n",
         "utf-8",
     )
 
@@ -140,6 +166,7 @@ def test_resume_plan_detects_plan_hash_drift_and_invalidates_from_earliest_write
         "enrich",
         "verify",
         "review",
+        "review-style",
         "stress",
         "publish",
         "audit",
@@ -210,10 +237,13 @@ def test_resume_publish_expands_to_full_pipeline_when_writer_phase_is_stale(
     monkeypatch.setattr(v6_build, "step_vocab", fake_vocab)
     monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: True)
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: (True, 9.5, "## Verdict: PASS\n"))
+    monkeypatch.setattr(v6_build, "step_review_style", lambda *args, **kwargs: (True, 9.4, "phase: review-style\n"))
     monkeypatch.setattr(v6_build, "step_annotate", lambda *args, **kwargs: True)
     monkeypatch.setattr(v6_build, "step_audit", lambda *args, **kwargs: True)
     monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: True)
     monkeypatch.setattr(v6_build, "_inject_abetka_activities", lambda *args, **kwargs: None)
+    monkeypatch.setattr("audit.checks.contract_compliance.check_contract_compliance", lambda *args, **kwargs: [])
+    monkeypatch.setattr("audit.checks.contract_compliance.has_blocking_violations", lambda *args, **kwargs: False)
     monkeypatch.setattr(
         sys,
         "argv",

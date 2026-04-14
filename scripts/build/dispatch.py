@@ -209,6 +209,7 @@ _PHASE_SEQ = {
     "vocab": "03",
     "enrich": "04",
     "review": "05",
+    "review-style": "05b",
 }
 
 

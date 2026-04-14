@@ -35,6 +35,7 @@ def _write_state(curriculum_root: Path, slug: str, *, review_complete: bool, all
             phases[phase] = {"status": "complete", "ts": "2026-04-10T00:00:00+00:00"}
     elif review_complete:
         phases["review"] = {"status": "complete", "ts": "2026-04-10T00:00:00+00:00"}
+        phases["review-style"] = {"status": "complete", "ts": "2026-04-10T00:00:00+00:00"}
 
     orch_dir = curriculum_root / "b1" / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
@@ -60,6 +61,47 @@ def _write_review(curriculum_root: Path, slug: str, score: float, verdict: str =
     )
     (review_dir / f"{slug}-review.md").write_text(review_text, "utf-8")
 
+    orch_dir = curriculum_root / "b1" / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    (orch_dir / "review-structured-r1.yaml").write_text(
+        f"scores:\n  - score: {score}\n",
+        "utf-8",
+    )
+    _write_style_review(curriculum_root, slug, score)
+
+
+def _write_style_review(
+    curriculum_root: Path,
+    slug: str,
+    overall_score: float,
+    *,
+    dimension_score: float | None = None,
+    dimension_scores: dict[str, float] | None = None,
+) -> None:
+    if dimension_scores is None:
+        score = overall_score if dimension_score is None else dimension_score
+        dimension_scores = {
+            "pragmatic_authenticity": score,
+            "stylistic_consistency": score,
+            "culture_and_register": score,
+            "naturalness": score,
+        }
+
+    orch_dir = curriculum_root / "b1" / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    (orch_dir / "review-structured-style-r1.yaml").write_text(
+        "phase: review-style\n"
+        "verdict: PASS\n"
+        "pass: true\n"
+        f"overall_score: {overall_score:.1f}\n"
+        "scores:\n"
+        + "".join(
+            f"  - key: {key}\n    score: {score:.1f}\n"
+            for key, score in dimension_scores.items()
+        ),
+        "utf-8",
+    )
+
 
 def _write_review_with_dimension_scores(
     curriculum_root: Path, slug: str, scores: list[int], verdict: str = "PASS",
@@ -78,6 +120,11 @@ def _write_review_with_dimension_scores(
         f"## Verdict: {verdict}\n"
     )
     (review_dir / f"{slug}-review.md").write_text(review_text, "utf-8")
+    orch_dir = curriculum_root / "b1" / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    score_yaml = "scores:\n" + "".join(f"  - score: {score}\n" for score in scores)
+    (orch_dir / "review-structured-r1.yaml").write_text(score_yaml, "utf-8")
+    _write_style_review(curriculum_root, slug, 9.0)
 
 
 def _write_plan(curriculum_root: Path, slug: str) -> None:
@@ -228,7 +275,7 @@ class TestBatchReviewSkip:
             for idx, token in enumerate(calls[0])
             if token == "--invalidate-phase"
         ]
-        assert invalidate_pairs == ["review", "stress", "publish", "audit"]
+        assert invalidate_pairs == ["review", "review-style", "stress", "publish", "audit"]
 
     def test_batch_review_uses_custom_threshold_for_skip(self, tmp_path, monkeypatch):
         curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
@@ -502,6 +549,7 @@ class TestBatchReviewSkip:
         monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
         monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
         monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: (True, 9.0, "## Verdict: PASS\n"))
+        monkeypatch.setattr(v6_build, "step_review_style", lambda *args, **kwargs: (True, 9.1, "phase: review-style\n"))
         monkeypatch.setattr(v6_build, "step_publish", lambda *args, **kwargs: True)
         monkeypatch.setattr(
             v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True, raising=False,
@@ -515,6 +563,7 @@ class TestBatchReviewSkip:
             return True, 9.0, "## Verdict: PASS\n"
 
         monkeypatch.setattr(v6_build, "step_review", track_step_review)
+        monkeypatch.setattr(v6_build, "step_review_style", lambda *args, **kwargs: (True, 9.1, "phase: review-style\n"))
         monkeypatch.setattr(
             sys,
             "argv",
@@ -584,6 +633,7 @@ class TestBatchReviewSkip:
             return True
 
         monkeypatch.setattr(v6_build, "step_review", track_step_review)
+        monkeypatch.setattr(v6_build, "step_review_style", lambda *args, **kwargs: (True, 9.1, "phase: review-style\n"))
         monkeypatch.setattr(v6_build, "step_audit", track_step_audit)
         monkeypatch.setattr(v6_build, "step_publish", track_step_publish)
         monkeypatch.setattr(
@@ -665,6 +715,7 @@ class TestBatchReviewSkip:
             return True
 
         monkeypatch.setattr(v6_build, "step_review", track_step_review)
+        monkeypatch.setattr(v6_build, "step_review_style", lambda *args, **kwargs: (True, 9.2, "phase: review-style\n"))
         monkeypatch.setattr(v6_build, "step_audit", track_step_audit)
         monkeypatch.setattr(v6_build, "step_publish", track_step_publish)
         monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
