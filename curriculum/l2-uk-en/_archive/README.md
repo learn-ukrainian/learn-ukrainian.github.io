@@ -27,6 +27,39 @@ for a2-bridge and 40+ other files; see `memory/MEMORY.md` "BATCH COMMANDS"
 entry). A1 on `main` is now healthy at 54/55 modules on v6, so the backup
 has served its purpose. Kept here for one release cycle as insurance.
 
+### Seminar research-only tracks (archived 2026-04-14, #1229)
+
+Twelve tracks whose v5/v3 orchestration produced only research + discovery
+metadata — no shipped lesson content anywhere in the repo. Going forward,
+seminar modules are built by the **wiki-to-module pipeline** (#1136), which
+reads the wiki article as its knowledge source instead of re-running the
+legacy research phase. `folk` stayed live because it was the first
+wiki-based build test and has real content.
+
+| Dir | Modules orchestrated | Legacy pipeline |
+|---|---|---|
+| `bio/` | 180 | v5 |
+| `istorio/` | 136 | v5 |
+| `lit/` | 232 | v5 |
+| `ruth/` | 115 | v5 |
+| `oes/` | 102 | v5 |
+| `lit-essay/` | 63 | v5 |
+| `lit-youth/` | 32 | v5 |
+| `lit-war/` | 30 | mixed v5/v3 |
+| `lit-hist-fic/` | 23 | v5 |
+| `lit-fantastika/` | 27 | v3 |
+| `lit-humor/` | 14 | v3 |
+| `lit-drama/` | 12 | v3 |
+
+Plans for these tracks (`plans/{track}/*.yaml`) stay live in the top-level
+`plans/` tree — they remain the curriculum source-of-truth. When the
+wiki-to-module pipeline ships seminar builds, v6 will read those plans and
+produce fresh `curriculum/l2-uk-en/{track}/` directories with real content.
+
+The archived research artifacts may still be useful as priors / fact-checks
+for the wiki compiler if a track is ever resurrected, which is why we
+archive rather than delete.
+
 ## Restoration
 
 To restore any directory to live status:
