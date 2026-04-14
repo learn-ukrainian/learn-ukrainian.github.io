@@ -184,3 +184,63 @@ def test_contract_correction_directive_lists_violations() -> None:
     )
     assert "Intro" in directive
     assert "Missing factual anchor" in directive
+
+
+def test_activity_order_reports_single_position_mismatch() -> None:
+    contract = {
+        "activity_obligations": [
+            {"type": "fill-in"},
+            {"type": "quiz"},
+        ],
+    }
+    content = """
+<!-- INJECT_ACTIVITY: fill-in-khotity -->
+<!-- INJECT_ACTIVITY: match-up -->
+"""
+    violations = check_contract_compliance(content, contract)
+    order_violations = [v for v in violations if v["type"] == "ACTIVITY_ORDER"]
+    assert len(order_violations) == 1
+    assert order_violations[0]["message"] == "Activity order mismatch at position 2 (expected type 'quiz', found 'match-up')"
+
+
+def test_activity_order_reports_multi_position_mismatch_ignoring_passed() -> None:
+    contract = {
+        "activity_obligations": [
+            {"type": "fill-in"},
+            {"type": "quiz"},
+            {"type": "fill-in"},
+            {"type": "quiz"},
+        ],
+    }
+    content = """
+<!-- INJECT_ACTIVITY: fill-in-khotity -->
+<!-- INJECT_ACTIVITY: quiz-conjugation-pattern -->
+<!-- INJECT_ACTIVITY: quiz-modal-choice -->
+<!-- INJECT_ACTIVITY: fill-in-combo -->
+"""
+    violations = check_contract_compliance(content, contract)
+    order_violations = [v for v in violations if v["type"] == "ACTIVITY_ORDER"]
+    assert len(order_violations) == 1
+    assert "position 3 (expected type 'fill-in', found 'quiz-modal-choice')" in order_violations[0]["message"]
+    assert "position 4 (expected type 'quiz', found 'fill-in-combo')" in order_violations[0]["message"]
+    assert "position 1" not in order_violations[0]["message"]
+    assert "position 2" not in order_violations[0]["message"]
+
+
+def test_activity_order_reports_length_shortfall() -> None:
+    contract = {
+        "activity_obligations": [
+            {"type": "fill-in"},
+            {"type": "quiz"},
+            {"type": "fill-in"},
+            {"type": "quiz"},
+        ],
+    }
+    content = """
+<!-- INJECT_ACTIVITY: fill-in-khotity -->
+<!-- INJECT_ACTIVITY: quiz-conjugation-pattern -->
+"""
+    violations = check_contract_compliance(content, contract)
+    order_violations = [v for v in violations if v["type"] == "ACTIVITY_ORDER"]
+    assert len(order_violations) == 1
+    assert order_violations[0]["message"] == "Only 2 activity markers found; contract requires 4"

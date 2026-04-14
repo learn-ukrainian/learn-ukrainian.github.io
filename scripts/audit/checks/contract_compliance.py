@@ -155,19 +155,31 @@ def check_contract_compliance(content: str, contract: dict) -> list[dict]:
         if item.get("id") or item.get("type")
     ]
     if expected_entries:
-        actual_prefix = markers[: len(expected_entries)]
-        ordered = len(actual_prefix) == len(expected_entries) and all(
-            _activity_marker_matches(exp, got)
-            for exp, got in zip(expected_entries, actual_prefix, strict=False)
-        )
-        if not ordered:
-            expected_display = [entry["id"] or entry["type"] for entry in expected_entries]
+        if len(markers) < len(expected_entries):
             violations.append({
                 "type": "ACTIVITY_ORDER",
                 "severity": "ERROR",
                 "section": "(whole module)",
-                "message": f"Expected activity order {expected_display}, found {markers}",
+                "message": f"Only {len(markers)} activity markers found; contract requires {len(expected_entries)}",
             })
+        else:
+            actual_prefix = markers[: len(expected_entries)]
+            failed_positions = [
+                (i + 1, exp, got)
+                for i, (exp, got) in enumerate(zip(expected_entries, actual_prefix, strict=False))
+                if not _activity_marker_matches(exp, got)
+            ]
+            if failed_positions:
+                mismatches = [
+                    f"position {idx} (expected type '{exp.get('id') or exp.get('type')}', found '{got}')"
+                    for idx, exp, got in failed_positions
+                ]
+                violations.append({
+                    "type": "ACTIVITY_ORDER",
+                    "severity": "ERROR",
+                    "section": "(whole module)",
+                    "message": f"Activity order mismatch at {' and '.join(mismatches)}",
+                })
 
     dialogue_acts = contract.get("dialogue_acts") or []
     for item in dialogue_acts:
