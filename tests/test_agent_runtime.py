@@ -68,7 +68,7 @@ def _clear_state():
 # ---------------------------------------------------------------------------
 
 def test_registry_has_four_agents():
-    assert set(AGENTS.keys()) == {"codex", "claude", "gemini", "grok"}
+    assert set(AGENTS.keys()) == {"codex", "claude", "gemini", "gemma-local", "grok"}
 
 
 def test_codex_entry_has_never_resume_policy():
@@ -96,6 +96,15 @@ def test_load_adapter_grok_stub_unavailable():
         _load_adapter("grok")
 
 
+def test_load_adapter_gemma_local():
+    adapter = _load_adapter("gemma-local")
+    assert adapter.__class__.__name__ == "GemmaLocalAdapter"
+    assert adapter.default_model == "mlx-community/gemma-4-e4b-it-4bit"
+    assert adapter.supported_modes == frozenset(
+        {"read-only", "workspace-write", "danger"}
+    )
+
+
 def test_load_adapter_cached():
     first = _load_adapter("codex")
     second = _load_adapter("codex")
@@ -109,6 +118,9 @@ def test_load_adapter_cached():
 def test_resume_policy_never_rejects_session_id():
     with pytest.raises(ValueError, match="resume_policy='never'"):
         _enforce_resume_policy("codex", session_id="some-uuid", entrypoint="bridge")
+
+    with pytest.raises(ValueError, match="resume_policy='never'"):
+        _enforce_resume_policy("gemma-local", session_id="some-uuid", entrypoint="bridge")
 
 
 def test_resume_policy_never_allows_none():

@@ -258,6 +258,40 @@ class TestDispatchAgent:
         assert call_kwargs["tool_config"] is None  # mcp_tools=False by default
 
     @patch("agent_runtime.runner.invoke")
+    def test_gemma_local_dispatch(self, mock_invoke, tmp_path):
+        from agent_runtime.result import Result
+
+        mock_invoke.return_value = Result(
+            ok=True,
+            agent="gemma-local",
+            model="mlx-community/gemma-4-e4b-it-4bit",
+            mode="workspace-write",
+            response="Локальний тестовий результат",
+            stderr_excerpt=None,
+            duration_s=0.8,
+            session_id=None,
+            rate_limited=False,
+            stalled=False,
+            returncode=0,
+            usage_record={},
+        )
+        ok, raw = dispatch_agent(
+            "test prompt",
+            agent="gemma-local",
+            phase="write",
+            orch_dir=tmp_path,
+            timeout=300,
+            model="mlx-community/gemma-4-e4b-it-4bit",
+        )
+        assert ok is True
+        assert "тестовий" in raw
+        call_kwargs = mock_invoke.call_args.kwargs
+        assert call_kwargs["mode"] == "workspace-write"
+        assert call_kwargs["model"] == "mlx-community/gemma-4-e4b-it-4bit"
+        assert call_kwargs["entrypoint"] == "dispatch"
+        assert call_kwargs["tool_config"] is None
+
+    @patch("agent_runtime.runner.invoke")
     def test_claude_tools_dispatch(self, mock_invoke, tmp_path):
         """Post Phase 5: Claude routes through runtime. MCP tool config
         travels via tool_config dict, not argv assertions."""

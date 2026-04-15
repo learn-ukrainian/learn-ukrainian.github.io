@@ -73,6 +73,17 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": True,
         "resume_policy": "bridge_only",
     },
+    "gemma-local": {
+        "adapter": "scripts.agent_runtime.adapters.gemma_local:GemmaLocalAdapter",
+        "default_model": "mlx-community/gemma-4-e4b-it-4bit",
+        "cost_tier": "low",
+        "capabilities": frozenset({
+            "smoke_writing",
+            "prompt_testing",
+        }),
+        "cli_available": True,
+        "resume_policy": "never",
+    },
     "grok": {
         "adapter": "scripts.agent_runtime.adapters.grok:GrokAdapter",
         "default_model": None,
