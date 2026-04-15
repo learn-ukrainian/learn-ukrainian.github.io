@@ -275,6 +275,62 @@ def test_rewrite_block_prompt_audit_rejects_forbidden_auxiliary_literals(
     assert any("forbidden literal" in failure for failure in manifest["audit"]["failures"])
 
 
+def test_rewrite_block_section_allows_shorter_summary_meta_cleanup(
+    tmp_path: Path, monkeypatch
+) -> None:
+    level = "a1"
+    slug = "rewrite-summary-meta"
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    orch_dir = curriculum_root / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    original_summary = " ".join(["пояснення"] * 320)
+    content_path.write_text(
+        f"## Підсумок — Summary\n{original_summary}\n",
+        "utf-8",
+    )
+
+    rewritten_summary = " ".join(["речення"] * 134)
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(
+        v6_build,
+        "_ensure_contract_artifacts",
+        lambda *args, **kwargs: (
+            {"activity_obligations": []},
+            {"sections": {"Підсумок — Summary": []}, "factual_anchors": []},
+        ),
+    )
+    monkeypatch.setattr(
+        v6_build,
+        "_dispatch_rewrite_prompt",
+        lambda *args, **kwargs: (
+            True,
+            f"## Підсумок — Summary\n{rewritten_summary}\n",
+        ),
+    )
+
+    ok = v6_build._rewrite_block_section(
+        content_path,
+        level=level,
+        module_num=18,
+        slug=slug,
+        writer="gemini",
+        section_name="Підсумок — Summary",
+        directive=(
+            "Style review blocking issues to fix in this section:\n"
+            "- Issue type: META_PEDAGOGICAL_NARRATION\n"
+            "- Required fix: Remove meta-commentary and present the examples directly."
+        ),
+    )
+
+    assert ok is True
+    updated = content_path.read_text("utf-8")
+    assert rewritten_summary in updated
+    assert original_summary not in updated
+
+
 def test_main_marks_needs_human_review_after_two_rounds(tmp_path: Path, monkeypatch) -> None:
     level = "a1"
     slug = "needs-human"
@@ -566,6 +622,8 @@ blocking_issues:
     assert "Lecture-style explanation is allowed" in summary_directive
     assert "Forbidden meta phrasing" in summary_directive
     assert "In summary sections, use direct Ukrainian instructional prose" in summary_directive
+    assert "delete meta-teaching lead-ins entirely instead of paraphrasing them" in summary_directive
+    assert "Start the summary immediately with Ukrainian recap content" in summary_directive
     assert "short natural recap with everyday examples" in summary_directive
     dialogue_directive = calls["Діалоги (Dialogues)"]
     assert "In dialogue sections, start with the dialogue" in dialogue_directive

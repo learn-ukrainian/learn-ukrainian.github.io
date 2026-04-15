@@ -6683,9 +6683,22 @@ def _rewrite_block_section(
         _log(f"  ❌ Rewrite block rejected for {resolved_title} — invalid H2 structure")
         return False
 
+    directive_issue_types = {
+        match.group(1).strip()
+        for match in re.finditer(r"- Issue type:\s*([A-Z0-9_]+)", directive)
+    }
     original_words = max(1, len(current_section["body"].split()))
     rewritten_words = len(rewritten.split())
-    min_rewrite_words = min(original_words, max(8, int(original_words * 0.6)))
+    min_word_ratio = 0.6
+    if (
+        ("summary" in resolved_title.lower() or "підсумок" in resolved_title.lower())
+        and "META_PEDAGOGICAL_NARRATION" in directive_issue_types
+    ):
+        # Summary cleanup sometimes needs to delete long English/meta lead-ins.
+        # Requiring 60% of the original length prevents a cleaner rewrite from
+        # landing when the reviewer explicitly asked for subtraction.
+        min_word_ratio = 0.30
+    min_rewrite_words = min(original_words, max(8, int(original_words * min_word_ratio)))
     if rewritten_words < min_rewrite_words:
         _log(f"  ❌ Rewrite block rejected for {resolved_title} — too short ({rewritten_words} words)")
         return False
@@ -6888,6 +6901,13 @@ def _style_rewrite_guardrails(
         guardrails.append(
             "- Build the summary around 3-4 concrete everyday Ukrainian sentences, not abstract recap prose about what the verbs express."
         )
+        if "META_PEDAGOGICAL_NARRATION" in issue_types:
+            guardrails.append(
+                "- In summary sections, delete meta-teaching lead-ins entirely instead of paraphrasing them. Remove lines such as `To fully understand ...`, `Review this short text ...`, or motivational claims about what the lesson will help the learner do."
+            )
+            guardrails.append(
+                "- Start the summary immediately with Ukrainian recap content or a short plain Ukrainian label like `Короткий текст.`. Do not keep any English framing sentence before the examples or reading passage."
+            )
         if "REGISTER_DRIFT" in issue_types:
             guardrails.append(
                 "- In summary sections, prefer a short natural recap with everyday examples instead of a list of classroom commands."
