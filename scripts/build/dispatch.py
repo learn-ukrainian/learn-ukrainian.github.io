@@ -318,6 +318,7 @@ def dispatch_agent(
     mcp_tools: bool = False,
     allowed_tools: str | None = None,
     model: str | None = None,
+    cascade_per_call_max_s: int | None = None,
 ) -> tuple[bool, str]:
     """Unified dispatcher for Gemini and Claude subprocess calls.
 
@@ -373,6 +374,7 @@ def dispatch_agent(
             model=model,
             agent_label=agent_label,
             is_gemini=is_gemini,
+            cascade_per_call_max_s=cascade_per_call_max_s,
         )
     if is_claude:
         return _dispatch_claude_via_runtime(
@@ -502,6 +504,7 @@ def _dispatch_via_runtime(
     model: str,
     agent_label: str,
     is_gemini: bool,
+    cascade_per_call_max_s: int | None,
 ) -> tuple[bool, str]:
     """Route Codex + Gemini dispatch through scripts.agent_runtime.runner.invoke().
 
@@ -624,7 +627,8 @@ def _dispatch_via_runtime(
     # they don't have a fallback chain to preserve budget for.
     if is_gemini:
         from batch_gemini_config import CASCADE_PER_CALL_MAX_S
-        first_call_timeout = min(CASCADE_PER_CALL_MAX_S, timeout)
+        per_call_cap = cascade_per_call_max_s or CASCADE_PER_CALL_MAX_S
+        first_call_timeout = min(per_call_cap, timeout)
     else:
         first_call_timeout = timeout
 
@@ -646,6 +650,7 @@ def _dispatch_via_runtime(
     if is_gemini:
         from batch_gemini_config import CASCADE_PER_CALL_MAX_S
         _MIN_ATTEMPT_S = 30
+        per_call_cap = cascade_per_call_max_s or CASCADE_PER_CALL_MAX_S
         elapsed_total = elapsed1
         for fallback_model in _get_gemini_fallback_chain(model):
             remaining_total = int(timeout - elapsed_total)
@@ -655,7 +660,7 @@ def _dispatch_via_runtime(
                     f"(elapsed: {elapsed_total:.0f}s of {timeout}s)"
                 )
                 break
-            step_timeout = min(CASCADE_PER_CALL_MAX_S, remaining_total)
+            step_timeout = min(per_call_cap, remaining_total)
             _pace_gemini_calls()
             fallback_label = f"{agent} ({fallback_model})"
             _log(

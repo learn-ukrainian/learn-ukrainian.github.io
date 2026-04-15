@@ -12,7 +12,7 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from rag.rag_batch_verify import extract_words_from_yaml
+from rag.rag_batch_verify import extract_words_from_yaml, tokenize_all_ukrainian
 
 
 @pytest.fixture
@@ -97,6 +97,39 @@ class TestFormulaFiltering:
         assert "ні" in words
         assert "це" in words
         assert "не" in words
+
+    def test_apostrophe_variants_normalized(self):
+        """Curly apostrophes should stay inside one Ukrainian token."""
+        tokens = tokenize_all_ukrainian("Це обов’язок і зобовʼязання.")
+        clean_forms = [clean for _, clean in tokens]
+        assert "обов'язок" in clean_forms
+        assert "зобов'язання" in clean_forms
+
+    def test_false_true_false_statement_skipped_but_explanation_kept(self, yaml_file):
+        """Intentionally wrong true/false statements should not poison VESUM verify."""
+        data = [
+            {
+                "type": "true-false",
+                "title": "Перевірка",
+                "items": [
+                    {
+                        "statement": "Ти мушиш спати.",
+                        "correct": False,
+                        "explanation": "Правильно: ти мусиш спати.",
+                    },
+                    {
+                        "statement": "Я мушу працювати.",
+                        "correct": True,
+                        "explanation": "Це правильна форма.",
+                    },
+                ],
+            }
+        ]
+        path = yaml_file(data)
+        words = extract_words_from_yaml(path, is_vocab=False)
+        assert "мушиш" not in words
+        assert "мусиш" in words
+        assert "мушу" in words
 
     def test_vocab_file_unaffected(self, yaml_file):
         """Vocab extraction (is_vocab=True) is unaffected by formula filter."""

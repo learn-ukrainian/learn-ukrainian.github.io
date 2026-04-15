@@ -44,6 +44,13 @@ _COMBINING_MARKS = {
     "\u0300",  # combining grave accent
     "\u030B",  # combining double acute
 }
+_APOSTROPHE_TRANSLATION = str.maketrans({
+    "\u2019": "'",
+    "\u2018": "'",
+    "\u02BC": "'",
+    "`": "'",
+})
+_TRAILING_JOINERS = "-'\u2019\u2018\u02BCʼ`"
 
 
 def strip_stress(text: str) -> str:
@@ -57,11 +64,18 @@ def strip_stress(text: str) -> str:
     return unicodedata.normalize("NFC", cleaned)
 
 
+def normalize_apostrophes(text: str) -> str:
+    """Normalize apostrophe-like characters to ASCII apostrophe."""
+    return text.translate(_APOSTROPHE_TRANSLATION)
+
+
 # ---------------------------------------------------------------------------
 # Tokenizer (custom — NOT reusing tokenize_ukrainian from auto_vocab_extract)
 # ---------------------------------------------------------------------------
 # Require at least 2 characters to avoid single-letter noise (abbreviations, etc.)
-_UKRAINIAN_WORD_RE = re.compile(r"[а-яіїєґА-ЯІЇЄҐ][а-яіїєґА-ЯІЇЄҐ'ʼ\u0027\u02BC-]+")
+_UKRAINIAN_WORD_RE = re.compile(
+    r"[а-яіїєґА-ЯІЇЄҐ][а-яіїєґА-ЯІЇЄҐ'\u2019\u2018ʼ\u0027\u02BC-]+"
+)
 
 
 def tokenize_all_ukrainian(text: str) -> list[tuple[str, str]]:
@@ -82,10 +96,10 @@ def tokenize_all_ukrainian(text: str) -> list[tuple[str, str]]:
     tokens = []
     for match in _UKRAINIAN_WORD_RE.finditer(stripped_text):
         original = match.group()
-        clean = original.lower()
+        clean = normalize_apostrophes(original.lower())
         # Strip trailing hyphens/apostrophes that regex may capture
-        clean = clean.rstrip("-'ʼ\u0027\u02BC")  # noqa: B005 — stripping individual chars
-        original = original.rstrip("-'ʼ\u0027\u02BC")  # noqa: B005
+        clean = clean.rstrip(_TRAILING_JOINERS)
+        original = original.rstrip(_TRAILING_JOINERS)
         if clean:
             tokens.append((original, clean))
     return tokens
@@ -257,8 +271,21 @@ def _extract_activity_words(data, words: dict[str, str]) -> None:
                 _extract_safe(val, in_safe_context)
 
     for activity in activity_list:
-        if isinstance(activity, dict):
-            _extract_safe(activity)
+        if not isinstance(activity, dict):
+            continue
+        if activity.get("type") == "true-false":
+            for key, val in activity.items():
+                if key == "items":
+                    continue
+                _extract_safe(val)
+            for item in activity.get("items", []) or []:
+                if not isinstance(item, dict):
+                    continue
+                if item.get("correct") is not False:
+                    _extract_safe(item.get("statement", ""))
+                _extract_safe(item.get("explanation", ""))
+            continue
+        _extract_safe(activity)
 
     return words
 
@@ -314,7 +341,7 @@ def _word_boundary_match(word: str, text: str) -> bool:
     word_lower = word.lower()
     text_lower = text.lower()
     start = 0
-    cyrillic_chars = set("абвгґдеєжзиіїйклмнопрстуфхцчшщьюяʼ'\u0027\u02BC")
+    cyrillic_chars = set("абвгґдеєжзиіїйклмнопрстуфхцчшщьюяʼ'\u0027\u02BC\u2019\u2018")
 
     while True:
         idx = text_lower.find(word_lower, start)

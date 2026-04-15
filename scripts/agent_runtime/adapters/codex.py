@@ -26,6 +26,7 @@ Issue: #1184
 """
 from __future__ import annotations
 
+import json as _json
 import re
 import shutil
 import tempfile
@@ -508,8 +509,6 @@ class CodexAdapter:
         """
         _ = call_start_time  # reserved; currently using snapshot-based binding
         _ = plan  # plan.task_id could be used for tighter matching in future
-        import json as _json
-
         try:
             # 1. The snapshot was taken at build_invocation time (see
             #    _reset_per_invocation_state). If somehow it's missing
@@ -522,7 +521,7 @@ class CodexAdapter:
             # 2. If we already bound a specific rollout for this
             #    invocation, reuse it.
             bound: Path | None = getattr(self, "_bound_rollout", None)
-            if bound is not None and bound.exists():
+            if bound is not None and bound.exists() and self._rollout_matches_plan(bound, plan):
                 rollout_to_scan = bound
             else:
                 # 3. Find new rollout files (not in snapshot)
@@ -535,10 +534,15 @@ class CodexAdapter:
                 new_candidates = [p for p in all_candidates if p not in snapshot]
                 if not new_candidates:
                     return ""
-                # Newest of the NEW ones is ours
-                rollout_to_scan = max(
-                    new_candidates, key=lambda p: p.stat().st_mtime,
-                )
+                rollout_to_scan = None
+                for candidate in sorted(
+                    new_candidates, key=lambda p: p.stat().st_mtime, reverse=True,
+                ):
+                    if self._rollout_matches_plan(candidate, plan):
+                        rollout_to_scan = candidate
+                        break
+                if rollout_to_scan is None:
+                    return ""
                 self._bound_rollout = rollout_to_scan
 
             # 4. Scan our bound rollout for task_complete
@@ -567,6 +571,59 @@ class CodexAdapter:
             # bubble out of parse_response. Swallow everything and
             # fall back to the primary code path.
             return ""
+
+    def _rollout_matches_plan(self, rollout_path: Path, plan: InvocationPlan) -> bool:
+        """Return True when a rollout's user prompt matches this invocation.
+
+        Snapshot-based binding alone is insufficient when multiple Codex exec
+        calls start after build_invocation and write new rollouts concurrently.
+        Validate against the actual stdin payload so we never recover unrelated
+        durable output from another task in the same repo.
+        """
+        expected = (plan.stdin_payload or "").rstrip()
+        if not expected:
+            return True
+
+        try:
+            with open(rollout_path, encoding="utf-8", errors="replace") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        event = _json.loads(line)
+                    except _json.JSONDecodeError:
+                        continue
+
+                    payload = event.get("payload") or {}
+                    if not isinstance(payload, dict):
+                        continue
+
+                    if (
+                        event.get("type") == "event_msg"
+                        and payload.get("type") == "user_message"
+                        and isinstance(payload.get("message"), str)
+                    ):
+                        return payload["message"].rstrip() == expected
+
+                    if (
+                        event.get("type") == "response_item"
+                        and payload.get("type") == "message"
+                        and payload.get("role") == "user"
+                    ):
+                        content = payload.get("content")
+                        if isinstance(content, list):
+                            parts: list[str] = []
+                            for item in content:
+                                if isinstance(item, dict):
+                                    text = item.get("text")
+                                    if isinstance(text, str):
+                                        parts.append(text)
+                            if parts:
+                                return "\n".join(parts).rstrip() == expected
+            return False
+        except Exception:
+            return False
 
     def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
         """Return paths the runner should poll for mtime changes.

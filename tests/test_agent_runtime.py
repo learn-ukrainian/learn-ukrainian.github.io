@@ -452,13 +452,26 @@ def test_codex_check_early_reap_fires_when_task_complete_present(
     # rollout file AFTER the subprocess started. It must appear in
     # check_early_reap as a non-snapshotted candidate.
     rollout = sessions_today / "rollout-new-after-build.jsonl"
-    rollout.write_text(_json.dumps({
-        "type": "event_msg",
-        "payload": {
-            "type": "task_complete",
-            "last_agent_message": "Here is the full audit...",
-        },
-    }) + "\n")
+    rollout.write_text(
+        "\n".join(
+            [
+                _json.dumps({
+                    "type": "event_msg",
+                    "payload": {
+                        "type": "user_message",
+                        "message": "x",
+                    },
+                }),
+                _json.dumps({
+                    "type": "event_msg",
+                    "payload": {
+                        "type": "task_complete",
+                        "last_agent_message": "Here is the full audit...",
+                    },
+                }),
+            ]
+        ) + "\n"
+    )
 
     # call_start_time 10s in the past so the "has been running long
     # enough" guard doesn't short-circuit.
@@ -644,6 +657,8 @@ def test_codex_parse_response_recovers_from_rollout_task_complete(
     events = [
         {"timestamp": "2026-04-10T21:35:21Z", "type": "event_msg",
          "payload": {"type": "session_start"}},
+        {"timestamp": "2026-04-10T21:35:22Z", "type": "event_msg",
+         "payload": {"type": "user_message", "message": "Write a BST"}},
         {"timestamp": "2026-04-10T21:36:00Z", "type": "response_item",
          "payload": {"type": "reasoning_delta"}},
         {"timestamp": "2026-04-10T21:40:02Z", "type": "event_msg",
@@ -727,6 +742,82 @@ def test_codex_parse_response_rollout_recovery_skipped_on_happy_path(
     assert result.ok is True
     assert result.response == "Fresh -o file response"
     assert "STALE" not in result.response
+
+
+def test_codex_parse_response_ignores_unrelated_new_rollout(
+    tmp_path, monkeypatch
+):
+    """Do not recover durable output from a new rollout whose prompt does not
+    match this invocation.
+
+    Regression for #1267: snapshot-based "newest rollout wins" binding is not
+    sufficient when another Codex exec run starts after ours and writes a newer
+    rollout in the same day directory. Recovery must validate that the rollout
+    belongs to the current stdin payload before accepting task_complete output.
+    """
+    import json as _json
+    from datetime import UTC, datetime
+
+    adapter = CodexAdapter()
+
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setenv("HOME", str(fake_home))
+
+    today = datetime.now(UTC)
+    sessions_today = (
+        fake_home / ".codex" / "sessions"
+        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
+    )
+    sessions_today.mkdir(parents=True)
+
+    output_file = tmp_path / "codex-out.txt"
+    output_file.write_text("")
+
+    plan = adapter.build_invocation(
+        prompt="Review style issues for i-want-i-can",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="style-review",
+        session_id=None,
+        tool_config=None,
+    )
+
+    unrelated_rollout = sessions_today / "rollout-unrelated.jsonl"
+    unrelated_rollout.write_text(
+        "\n".join(
+            [
+                _json.dumps({
+                    "type": "event_msg",
+                    "payload": {
+                        "type": "user_message",
+                        "message": "Completely different task in another repo",
+                    },
+                }),
+                _json.dumps({
+                    "type": "event_msg",
+                    "payload": {
+                        "type": "task_complete",
+                        "last_agent_message": "UNRELATED durable output",
+                    },
+                }),
+            ]
+        ) + "\n",
+        "utf-8",
+    )
+
+    result = adapter.parse_response(
+        stdout="",
+        stderr="",
+        returncode=-9,
+        output_file=output_file,
+        plan=plan,
+    )
+
+    assert result.ok is False
+    assert result.response == ""
+    assert "UNRELATED durable output" not in (result.stderr_excerpt or "")
 
 
 def test_codex_parse_response_nested_divider_in_prompt_not_rate_limit(tmp_path):

@@ -97,6 +97,8 @@ _RATE_LIMIT_BACKOFF_S = 300  # 5 min — long enough for Gemini quota to recover
 REVIEW_TARGET_SCORE = 9.0
 STYLE_REVIEW_TARGET_SCORE = 9.0
 STYLE_REVIEW_DIMENSION_FLOOR = 8.5
+REWRITE_BLOCK_TIMEOUT_S = 420
+REWRITE_BLOCK_GEMINI_CALL_CAP_S = 120
 STYLE_REVIEW_DIMENSION_LABELS = {
     "pragmatic_authenticity": "Pragmatic authenticity",
     "stylistic_consistency": "Stylistic consistency",
@@ -473,6 +475,25 @@ class ReviewLoopRunResult:
 
     outcome: Literal["pass", "plateau", "error"]
     rounds: tuple[ReviewRoundState, ...]
+
+
+@dataclass(frozen=True)
+class StyleReviewRoundState:
+    """One style-review/heal iteration."""
+
+    round_num: int
+    passed: bool
+    score: float
+    review_text: str
+    blocking_issues: tuple[dict, ...]
+
+
+@dataclass(frozen=True)
+class StyleReviewLoopRunResult:
+    """Result of one style-review/heal cycle."""
+
+    outcome: Literal["pass", "plateau", "error"]
+    rounds: tuple[StyleReviewRoundState, ...]
 
 
 CLAUDE_FAMILY = ModelFamily(
@@ -6242,17 +6263,35 @@ def _dispatch_rewrite_prompt(prompt: str, writer: str, phase: str, orch_dir: Pat
     from build.dispatch import CLAUDE_WRITER_TOOLS, dispatch_agent
 
     use_tools = writer.endswith("-tools")
-    if writer == "gemini":
-        return dispatch_agent(prompt, agent="gemini", phase=phase, orch_dir=orch_dir, timeout=TIMEOUT_WRITE_NO_TOOLS)
-    if writer == "gemini-tools":
-        return dispatch_agent(prompt, agent="gemini-tools", phase=phase, orch_dir=orch_dir, timeout=TIMEOUT_WRITE, mcp_tools=True)
+    if writer in ("gemini", "gemini-tools"):
+        ok, raw = dispatch_agent(
+            prompt,
+            agent="gemini",
+            phase=phase,
+            orch_dir=orch_dir,
+            timeout=REWRITE_BLOCK_TIMEOUT_S,
+            cascade_per_call_max_s=REWRITE_BLOCK_GEMINI_CALL_CAP_S,
+        )
+        if ok and raw:
+            return ok, raw
+        # Rewrite-block prompts already inline the section contract, wiki
+        # excerpts, current content, and skeleton. If Gemini exhausts its
+        # own cascade without output, give the bounded section rewrite one
+        # Codex fallback before failing the block outright.
+        return dispatch_agent(
+            prompt,
+            agent="codex",
+            phase=phase,
+            orch_dir=orch_dir,
+            timeout=REWRITE_BLOCK_TIMEOUT_S,
+        )
     if writer in ("claude", "claude-tools"):
         return dispatch_agent(
             prompt,
             agent=writer,
             phase=phase,
             orch_dir=orch_dir,
-            timeout=TIMEOUT_WRITE if use_tools else TIMEOUT_WRITE_NO_TOOLS,
+            timeout=REWRITE_BLOCK_TIMEOUT_S if use_tools else TIMEOUT_WRITE_NO_TOOLS,
             mcp_tools=use_tools,
             allowed_tools=CLAUDE_WRITER_TOOLS if use_tools else None,
         )
@@ -6262,7 +6301,7 @@ def _dispatch_rewrite_prompt(prompt: str, writer: str, phase: str, orch_dir: Pat
             agent="codex-tools" if use_tools else "codex",
             phase=phase,
             orch_dir=orch_dir,
-            timeout=TIMEOUT_WRITE,
+            timeout=REWRITE_BLOCK_TIMEOUT_S,
         )
     return False, ""
 
@@ -6391,6 +6430,301 @@ def _apply_review_rewrite_blocks(
     return applied > 0, applied
 
 
+def _parse_style_review_payload(review_text: str) -> dict | None:
+    """Parse the YAML payload from a style review response."""
+    try:
+        parsed = yaml.safe_load(_strip_outer_code_fence(review_text))
+    except Exception:
+        return None
+    return parsed if isinstance(parsed, dict) else None
+
+
+def _extract_style_review_blocking_issues(review_text: str) -> list[dict]:
+    """Return normalized blocking issues from a style review YAML response."""
+    parsed = _parse_style_review_payload(review_text)
+    if parsed is None:
+        return []
+
+    raw_issues = parsed.get("blocking_issues")
+    if not isinstance(raw_issues, list):
+        return []
+
+    issues: list[dict] = []
+    for item in raw_issues:
+        if isinstance(item, dict):
+            issues.append(item)
+    return issues
+
+
+def _style_section_aliases(title: str) -> set[str]:
+    """Return normalized aliases that can identify a section title."""
+    aliases = {title.strip().lower()}
+
+    no_parens = re.sub(r"\s*\([^)]*\)", "", title).strip().lower()
+    if no_parens:
+        aliases.add(no_parens)
+
+    for separator in ("—", "-", ":"):
+        if separator in title:
+            left, _, right = title.partition(separator)
+            if left.strip():
+                aliases.add(left.strip().lower())
+            if right.strip():
+                aliases.add(right.strip().lower())
+
+    return {alias for alias in aliases if alias}
+
+
+def _style_issue_section_names(location: str, sections: list[dict]) -> list[str]:
+    """Map a style-review location string onto one or more real H2 sections."""
+    raw_location = location.strip()
+    if not raw_location:
+        return []
+
+    titles = [section["title"] for section in sections]
+    normalized_location = raw_location.lower()
+    if any(
+        marker in normalized_location
+        for marker in (
+            "whole module",
+            "whole lesson",
+            "outside the example sentences",
+        )
+    ):
+        return titles
+
+    resolved: list[str] = []
+    dialogue_title = next(
+        (
+            title for title in titles
+            if any(alias in {"діалоги", "dialogues"} for alias in _style_section_aliases(title))
+        ),
+        None,
+    )
+
+    fragments = [fragment.strip() for fragment in raw_location.split(";") if fragment.strip()]
+    for fragment in fragments:
+        cleaned = re.sub(r"^\s*Section:\s*", "", fragment, flags=re.IGNORECASE)
+        cleaned_lower = cleaned.lower()
+        matched_title = None
+        for title in titles:
+            aliases = _style_section_aliases(title)
+            if any(alias in cleaned_lower or cleaned_lower in alias for alias in aliases):
+                matched_title = title
+                break
+        if matched_title is None and dialogue_title is not None and "dialogue" in cleaned_lower:
+            matched_title = dialogue_title
+        if matched_title and matched_title not in resolved:
+            resolved.append(matched_title)
+
+    return resolved
+
+
+def _style_rewrite_guardrails(
+    level: str,
+    module_num: int,
+    section_name: str,
+    issue_types: set[str],
+) -> list[str]:
+    """Return section-aware rewrite guardrails for automated style healing."""
+    guardrails = [
+        (
+            "- Keep the rewrite within the live immersion target for this module: "
+            f"{_get_immersion_target_short(level, module_num)}"
+        ),
+    ]
+    if level not in {"a1", "a2"}:
+        return guardrails
+
+    section_lower = section_name.lower()
+    guardrails.append(
+        "- Lecture-style explanation is allowed, but do not comment on the lesson artifact itself."
+    )
+    guardrails.append(
+        "- Teach directly. Do not describe what the text, dialogue, or module demonstrates."
+    )
+    if "META_PEDAGOGICAL_NARRATION" in issue_types:
+        guardrails.append(
+            "- Forbidden meta phrasing: `in this dialogue`, `this text demonstrates`, "
+            "`here X adds`, `in this module`, `the following conversation`."
+        )
+    if issue_types.intersection(
+        {
+            "EXPLANATION_TONE_MISMATCH",
+            "STYLE_REGISTER_MISMATCH",
+            "REGISTER_DRIFT",
+            "OVERSTATED_USAGE_EXPLANATION",
+            "STYLE_DRIFT",
+        }
+    ):
+        guardrails.append(
+            "- Keep paragraph voice Ukrainian-first. English may appear only as brief "
+            "parenthetical glosses or line-level translations, never as the main explanatory paragraph voice."
+        )
+    if "summary" in section_lower or "підсумок" in section_lower:
+        guardrails.append(
+            "- In summary sections, use direct Ukrainian instructional prose and short reading-task cues."
+        )
+        guardrails.append(
+            "- Do not open or close the summary with English overview paragraphs about the lesson or the verbs."
+        )
+        if "REGISTER_DRIFT" in issue_types:
+            guardrails.append(
+                "- In summary sections, prefer a short natural recap with everyday examples instead of a list of classroom commands."
+            )
+    if (
+        "dialog" in section_lower
+        or "діалог" in section_lower
+        or issue_types.intersection(
+            {
+                "TRANSLATIONESE",
+                "TRANSLATED_DIALOGUE_RHYTHM",
+                "SERVICE_REGISTER_STIFFNESS",
+                "UNNATURAL_COLLOCATION",
+                "UNNATURAL_SERVICE_DIALOGUE",
+                "UNNATURAL_SERVICE_PHRASE",
+            }
+        )
+    ):
+        guardrails.append(
+            "- In dialogue sections, start with the dialogue or a very short direct Ukrainian setup."
+        )
+        guardrails.append(
+            "- Do not announce the scene beforehand, and avoid translated or stiff reactions."
+        )
+        if issue_types.intersection(
+            {
+                "TRANSLATED_DIALOGUE_RHYTHM",
+                "PRAGMATIC_MISFRAMING",
+                "UNNATURAL_SERVICE_DIALOGUE",
+                "UNNATURAL_SERVICE_PHRASE",
+            }
+        ):
+            guardrails.append(
+                "- Give each speaker one natural communicative goal per turn; avoid stacking target grammar into a single line just to display forms."
+            )
+            guardrails.append(
+                "- When explaining markers like `шкода`, say they express regret and can soften a refusal; do not define them as the refusal itself or as an absolute etiquette rule."
+            )
+        if issue_types.intersection(
+            {
+                "SERVICE_REGISTER_STIFFNESS",
+                "UNNATURAL_SERVICE_DIALOGUE",
+                "UNNATURAL_SERVICE_PHRASE",
+            }
+        ):
+            guardrails.append(
+                "- In service scenes, prefer short request-based ordering and plain staff responses over staged recommendation language."
+            )
+        if issue_types.intersection(
+            {
+                "TRANSLATED_DIALOGUE_RHYTHM",
+                "SERVICE_REGISTER_STIFFNESS",
+                "UNNATURAL_SERVICE_DIALOGUE",
+                "UNNATURAL_SERVICE_PHRASE",
+            }
+        ):
+            guardrails.append(
+                "- In café or shop scenes, do not use blunt `Я хочу [noun]` as the direct order. Keep `хотіти` in peer-to-peer desire lines or nearby chatter if needed, but phrase the actual order as a native request such as `Мені, будь ласка...` or `Можна...`."
+            )
+    if "UNNATURAL_COLLOCATION" in issue_types:
+        guardrails.append(
+            "- Prefer idiomatic everyday collocations, especially with food, drink, and desire verbs; avoid literal model phrases that sound translated."
+        )
+    if "NON_IDIOMATIC_MODEL_EXAMPLE" in issue_types:
+        guardrails.append(
+            "- Replace model sentences that are merely grammatical with beginner exemplars a native speaker would plausibly say in daily life."
+        )
+    if issue_types.intersection(
+        {
+            "EXPLANATION_TONE_MISMATCH",
+            "STYLE_REGISTER_MISMATCH",
+            "REGISTER_DRIFT",
+            "OVERSTATED_USAGE_EXPLANATION",
+            "CLUMSY_EXPLANATION",
+            "MIXED_EXPLANATORY_VOICE",
+            "OVERPRESCRIPTIVE_TONE",
+        }
+    ):
+        guardrails.append(
+            "- In grammar explanations, do not write traps like `частка не завжди ...`, `частка не обов'язково ...`, or `частка не тільки ...`. Use unambiguous frames such as `Завжди ставте частку не перед ...` or `У заперечних реченнях частка не стоїть перед ...`."
+        )
+    if issue_types.intersection({"OVERSTATED_USAGE_EXPLANATION", "PRAGMATIC_EQUIVALENCE"}):
+        guardrails.append(
+            "- When contrasting everyday meanings, state the literal meaning of the target phrase first, then mention common Ukrainian alternatives. Do not present one target construction as the only default equivalent if Ukrainian also uses another ordinary everyday form."
+        )
+    return guardrails
+
+
+def _apply_style_review_rewrite_blocks(
+    review_text: str,
+    content_path: Path,
+    *,
+    level: str,
+    module_num: int,
+    slug: str,
+    writer: str,
+) -> tuple[bool, int]:
+    """Translate style-review blockers into targeted section rewrite directives."""
+    blocking_issues = _extract_style_review_blocking_issues(review_text)
+    if not blocking_issues:
+        return False, 0
+
+    sections = _section_spans(content_path.read_text("utf-8"))
+    grouped_directives: dict[str, list[str]] = {}
+    grouped_issue_types: dict[str, set[str]] = {}
+    for issue in blocking_issues:
+        location = str(issue.get("location") or "").strip()
+        fix = str(issue.get("fix") or "").strip()
+        evidence = str(issue.get("evidence") or "").strip()
+        issue_type = str(issue.get("type") or "STYLE_ISSUE").strip()
+        section_names = _style_issue_section_names(location, sections)
+        if not section_names or not fix:
+            continue
+        directive = "\n".join(
+            line for line in (
+                f"- Issue type: {issue_type}",
+                f"- Location detail: {location}" if location else "",
+                f"- Evidence: {evidence}" if evidence else "",
+                f"- Required fix: {fix}",
+                "- Keep the section aligned with the current plan and contract.",
+                "- Remove only the stylistic / pragmatic problem; keep valid teaching content.",
+            )
+            if line
+        )
+        for section_name in section_names:
+            grouped_directives.setdefault(section_name, []).append(directive)
+            grouped_issue_types.setdefault(section_name, set()).add(issue_type)
+
+    if not grouped_directives:
+        return False, 0
+
+    applied = 0
+    for section_name, directives in grouped_directives.items():
+        guardrails = _style_rewrite_guardrails(
+            level,
+            module_num,
+            section_name,
+            grouped_issue_types.get(section_name, set()),
+        )
+        directive_parts = ["Style review blocking issues to fix in this section:"]
+        if guardrails:
+            directive_parts.append("\n".join(guardrails))
+        directive_parts.append("\n\n".join(directives))
+        directive = "\n\n".join(part for part in directive_parts if part)
+        if _rewrite_block_section(
+            content_path,
+            level=level,
+            module_num=module_num,
+            slug=slug,
+            writer=writer,
+            section_name=section_name,
+            directive=directive,
+        ):
+            applied += 1
+    return applied > 0, applied
+
+
 def _run_review_heal_loop(
     content_path: Path,
     *,
@@ -6492,6 +6826,92 @@ def _run_review_heal_loop(
         )
 
     return ReviewLoopRunResult(outcome="plateau", rounds=tuple(rounds))
+
+
+def _run_style_review_heal_loop(
+    content_path: Path,
+    *,
+    level: str,
+    module_num: int,
+    slug: str,
+    writer: str,
+    reviewer_override: str | None,
+    max_rounds: int = 4,
+) -> StyleReviewLoopRunResult:
+    """Run style review + targeted rewrites until pass or plateau."""
+    rounds: list[StyleReviewRoundState] = []
+
+    for round_index in range(1, max_rounds + 1):
+        passed, score, review_text = step_review_style(
+            content_path,
+            level,
+            module_num,
+            slug,
+            writer=writer,
+            reviewer_override=reviewer_override,
+        )
+        if score == 0.0 and not review_text:
+            return StyleReviewLoopRunResult(outcome="error", rounds=tuple(rounds))
+
+        blocking_issues = tuple(_extract_style_review_blocking_issues(review_text))
+        round_state = StyleReviewRoundState(
+            round_num=round_index,
+            passed=passed,
+            score=score,
+            review_text=review_text,
+            blocking_issues=blocking_issues,
+        )
+        rounds.append(round_state)
+
+        if len(rounds) >= 2:
+            delta = _score_delta(rounds[-2].score, rounds[-1].score)
+            delta_str = f"+{delta:.1f}" if delta >= 0 else f"{delta:.1f}"
+            _log(
+                f"\n📊 Style R{rounds[-2].round_num}: {rounds[-2].score}/10 → "
+                f"R{round_index}: {score}/10 ({delta_str})"
+            )
+
+        if passed:
+            return StyleReviewLoopRunResult(outcome="pass", rounds=tuple(rounds))
+
+        rewrites_applied, rewrite_count = _apply_style_review_rewrite_blocks(
+            review_text,
+            content_path,
+            level=level,
+            module_num=module_num,
+            slug=slug,
+            writer=writer,
+        )
+        if rewrites_applied:
+            _log(f"\n🎨 Applied {rewrite_count} style-driven block rewrite(s) from style R{round_index}")
+            step_verify(content_path, level, module_num)
+        else:
+            _log("\n⏸️ Style review plateau detected — no actionable section rewrites could be applied.")
+            return StyleReviewLoopRunResult(outcome="plateau", rounds=tuple(rounds))
+
+        deltas = [
+            _score_delta(previous.score, current.score)
+            for previous, current in itertools.pairwise(rounds)
+        ]
+        consecutive_small_deltas = 0
+        for delta in deltas:
+            if delta < 0.2:
+                consecutive_small_deltas += 1
+            else:
+                consecutive_small_deltas = 0
+        if consecutive_small_deltas >= 2:
+            _log("\n⏸️ Style review plateau detected — two consecutive rounds improved by less than 0.2.")
+            return StyleReviewLoopRunResult(outcome="plateau", rounds=tuple(rounds))
+        if len(rounds) >= max_rounds:
+            _log(f"\n⏸️ Style review plateau detected — reached the {max_rounds}-round ceiling.")
+            return StyleReviewLoopRunResult(outcome="plateau", rounds=tuple(rounds))
+
+        _log(
+            f"\n🔄 Style R{round_index} incomplete — score={score}/10, "
+            f"blocking issues={len(blocking_issues)}. Running style R{round_index + 1}."
+        )
+
+    return StyleReviewLoopRunResult(outcome="plateau", rounds=tuple(rounds))
 
 
 def _rerun_write_after_plan_patch(
@@ -8115,15 +8535,15 @@ def main():
             or "review-style" in resume_invalidation_applied
         ) and "review-style" not in completed_phases:
             _phase_start = time.monotonic()
-            style_passed, style_score, style_review_text = step_review_style(
+            style_review_result = _run_style_review_heal_loop(
                 content_path,
-                args.level,
-                args.module,
-                slug,
+                level=args.level,
+                module_num=args.module,
+                slug=slug,
                 writer=args.writer,
                 reviewer_override=args.reviewer,
             )
-            if style_score == 0.0 and not style_review_text:
+            if style_review_result.outcome == "error":
                 _log("\n❌ Build FAILED at Step 8b (review-style — no output from reviewer)")
                 _save_v6_state(args.level, slug, "review-style", status="failed")
                 _emit_module_failed(
@@ -8131,16 +8551,24 @@ def main():
                     "Build FAILED at Step 8b (review-style — no output from reviewer)",
                 )
                 sys.exit(1)
-            if not style_passed:
+            final_style_round = style_review_result.rounds[-1]
+            style_score = final_style_round.score
+            style_review_text = final_style_round.review_text
+            if style_review_result.outcome != "pass":
                 orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
                 needs_review_path = orch_dir / "needs-human-review.yaml"
                 needs_review_path.write_text(
                     yaml.safe_dump(
                         {
                             "slug": slug,
+                            "style_review_rounds": len(style_review_result.rounds),
                             "style_review_score": style_score,
+                            "style_score_history": [
+                                round_state.score for round_state in style_review_result.rounds
+                            ],
+                            "style_blocking_issues": list(final_style_round.blocking_issues),
                             "style_review_excerpt": style_review_text[:2000],
-                            "reason": "style review failed dedicated pragmatic/style gate",
+                            "reason": "style review plateaued after automated recovery",
                         },
                         sort_keys=False,
                         allow_unicode=True,
@@ -8156,15 +8584,15 @@ def main():
                 state["needs_human_review"] = {
                     "status": True,
                     "ts": datetime.now(tz=UTC).isoformat(),
-                    "reason": "style review failed dedicated pragmatic/style gate",
+                    "reason": "style review plateaued after automated recovery",
                     "violations_path": str(needs_review_path.relative_to(orch_dir)),
                 }
                 _write_v6_state_atomic(_v6_state_path(args.level, slug), state)
                 _save_v6_state(args.level, slug, "review-style", status="failed")
-                _log("\n❌ Style review halted the pipeline — marked needs_human_review")
+                _log("\n❌ Style review plateau persisted after automated recovery — marked needs_human_review")
                 _emit_module_failed(
                     "review-style",
-                    "Style review failed dedicated pragmatic/style gate — needs_human_review",
+                    "Style review plateaued after automated recovery — needs_human_review",
                 )
                 return False
 

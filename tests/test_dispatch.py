@@ -363,6 +363,48 @@ class TestDispatchAgent:
             assert data["ok"] is False
 
     @patch("agent_runtime.runner.invoke")
+    def test_gemini_dispatch_honors_custom_per_call_cap(self, mock_invoke, tmp_path):
+        """A custom Gemini per-call cap should bound both the first attempt and fallback."""
+        from agent_runtime.errors import AgentTimeoutError
+        from agent_runtime.result import Result
+
+        mock_invoke.side_effect = [
+            AgentTimeoutError("gemini", 120),
+            Result(
+                ok=True,
+                agent="gemini",
+                model="auto",
+                mode="workspace-write",
+                response="rewritten section",
+                stderr_excerpt=None,
+                duration_s=1.0,
+                session_id=None,
+                rate_limited=False,
+                stalled=False,
+                returncode=0,
+                usage_record={},
+            ),
+        ]
+
+        ok, raw = dispatch_agent(
+            "rewrite prompt",
+            agent="gemini-tools",
+            phase="rewrite-block-01",
+            orch_dir=tmp_path,
+            timeout=420,
+            model="gemini-3.1-pro-preview",
+            mcp_tools=True,
+            cascade_per_call_max_s=120,
+        )
+
+        assert ok is True
+        assert raw == "rewritten section"
+        first_call = mock_invoke.call_args_list[0].kwargs
+        second_call = mock_invoke.call_args_list[1].kwargs
+        assert first_call["hard_timeout"] == 120
+        assert second_call["hard_timeout"] == 120
+
+    @patch("agent_runtime.runner.invoke")
     def test_failure_logged(self, mock_invoke, tmp_path):
         """Post Phase 5: Claude routes through runtime. Runtime returns
         Result(ok=False) with stderr_excerpt; dispatch writes it to log."""
