@@ -31,23 +31,26 @@ mkdir -p "$LOGS_DIR" "$PIDS_DIR"
 # Bridge defaults for learn-ukrainian. Other projects can set AB_* explicitly.
 export AB_MONITOR_URL="${AB_MONITOR_URL:-http://localhost:8765/api/state/summary}"
 
-# Service definitions: name -> command, port, log file
-declare -A SVC_CMD SVC_PORT SVC_LOG SVC_DESC
+# Service definitions: name -> command, port, log file, health check
+declare -A SVC_CMD SVC_PORT SVC_LOG SVC_DESC SVC_HEALTH
 
 SVC_CMD[sources]="$VENV/python .mcp/servers/sources/server.py --standalone"
 SVC_PORT[sources]=8766
 SVC_LOG[sources]="$LOGS_DIR/mcp-sources.log"
 SVC_DESC[sources]="MCP Sources Server (SQLite FTS5 — textbooks, dicts, literary, Wikipedia)"
+SVC_HEALTH[sources]="http://localhost:8766/health"
 
 SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765"
 SVC_PORT[api]=8765
 SVC_LOG[api]="$LOGS_DIR/api.log"
 SVC_DESC[api]="API Dashboard Server (FastAPI)"
+SVC_HEALTH[api]="http://localhost:8765/api/health"
 
 SVC_CMD[starlight]="npm run dev --prefix starlight -- --force"
 SVC_PORT[starlight]=4321
 SVC_LOG[starlight]="$LOGS_DIR/starlight.log"
 SVC_DESC[starlight]="Starlight Dev Server (Astro)"
+SVC_HEALTH[starlight]="http://localhost:4321/"
 
 ALL_SERVICES="sources api starlight"
 
@@ -67,6 +70,48 @@ _rewrite_legacy_alias() {
 
 _pid_file() { echo "$PIDS_DIR/$1.pid"; }
 
+_pid_on_port() {
+    local name="$1"
+    local port="${SVC_PORT[$name]}"
+    if command -v lsof >/dev/null 2>&1; then
+        lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null | head -n 1
+    fi
+}
+
+_health_check() {
+    local name="$1"
+    local url="${SVC_HEALTH[$name]-}"
+
+    if [[ -z "$url" ]]; then
+        return 1
+    fi
+
+    if ! command -v curl >/dev/null 2>&1; then
+        return 1
+    fi
+
+    if [[ "$name" == "starlight" ]]; then
+        curl -fsSI --max-time 2 "$url" >/dev/null 2>&1
+    else
+        curl -fsS --max-time 2 "$url" >/dev/null 2>&1
+    fi
+}
+
+_service_state() {
+    local name="$1"
+    if _health_check "$name"; then
+        echo "running"
+        return 0
+    fi
+
+    if _is_running "$name"; then
+        echo "degraded"
+        return 0
+    fi
+
+    echo "stopped"
+}
+
 _is_running() {
     local pidfile
     pidfile="$(_pid_file "$1")"
@@ -79,13 +124,29 @@ _is_running() {
         # Stale PID file
         rm -f "$pidfile"
     fi
+
+    # Reconcile services started outside this wrapper or after a stale-pid cleanup.
+    # If the expected port is already listening, trust that process and refresh the pidfile.
+    local port_pid
+    port_pid="$(_pid_on_port "$1")"
+    if [[ -n "$port_pid" ]]; then
+        echo "$port_pid" > "$pidfile"
+        return 0
+    fi
+
     return 1
 }
 
 _start_service() {
     local name="$1"
-    if _is_running "$name"; then
-        echo "  $name is already running (PID $(cat "$(_pid_file "$name")"))"
+    local state
+    state="$(_service_state "$name")"
+    if [[ "$state" == "running" ]]; then
+        echo "  $name is already healthy (PID $(cat "$(_pid_file "$name")"))"
+        return 0
+    fi
+    if [[ "$state" == "degraded" ]]; then
+        echo "  $name process exists but is unhealthy (PID $(cat "$(_pid_file "$name")")); restart it instead"
         return 0
     fi
 
@@ -157,13 +218,24 @@ _status() {
     printf "%-12s %-8s %-8s %s\n" "SERVICE" "STATUS" "PID" "PORT"
     printf "%-12s %-8s %-8s %s\n" "-------" "------" "---" "----"
     for name in $ALL_SERVICES; do
-        if _is_running "$name"; then
-            local pid
+        local state pid
+        state="$(_service_state "$name")"
+        pid="-"
+        if [[ -f "$(_pid_file "$name")" ]]; then
             pid=$(cat "$(_pid_file "$name")")
-            printf "%-12s \033[32m%-8s\033[0m %-8s %s\n" "$name" "running" "$pid" "${SVC_PORT[$name]}"
-        else
-            printf "%-12s \033[31m%-8s\033[0m %-8s %s\n" "$name" "stopped" "-" "${SVC_PORT[$name]}"
         fi
+
+        case "$state" in
+            running)
+                printf "%-12s \033[32m%-8s\033[0m %-8s %s\n" "$name" "$state" "$pid" "${SVC_PORT[$name]}"
+                ;;
+            degraded)
+                printf "%-12s \033[33m%-8s\033[0m %-8s %s\n" "$name" "$state" "$pid" "${SVC_PORT[$name]}"
+                ;;
+            *)
+                printf "%-12s \033[31m%-8s\033[0m %-8s %s\n" "$name" "$state" "$pid" "${SVC_PORT[$name]}"
+                ;;
+        esac
     done
 }
 
