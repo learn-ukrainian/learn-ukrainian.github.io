@@ -157,6 +157,14 @@ def test_vocabulary_missing():
     assert "2/4" in vocab_errors[0].message
 
 
+def test_vocabulary_accepts_simple_inflected_required_form():
+    plan = _make_plan(required_vocab=["кава (coffee, f)"])
+    content = _make_content(extra="Можна мені, будь ласка, каву?")
+    results = quick_verify(content, plan)
+    vocab_errors = [r for r in results if r.check == "VOCABULARY"]
+    assert len(vocab_errors) == 0
+
+
 # --- Integration ---
 
 

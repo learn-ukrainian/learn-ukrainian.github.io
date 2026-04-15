@@ -4,6 +4,8 @@ Given a track and slug, finds and returns relevant wiki articles as formatted
 context for injection into build prompts (all tracks — core and seminar).
 """
 
+import re
+import unicodedata
 from pathlib import Path
 
 from .config import TRACK_DOMAINS, WIKI_DIR
@@ -12,9 +14,41 @@ from .config import TRACK_DOMAINS, WIKI_DIR
 # The seminar write prompt is already ~5K + plan ~3K + knowledge packet ~8K.
 # Wiki context should be substantial but not dominate.
 WIKI_CONTEXT_BUDGET = 30_000
+_TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яІіЇїЄєҐґ'][A-Za-zА-Яа-яІіЇїЄєҐґ'’-]{1,}")
+_STOPWORDS = {
+    "and",
+    "for",
+    "from",
+    "into",
+    "that",
+    "the",
+    "their",
+    "these",
+    "this",
+    "those",
+    "when",
+    "where",
+    "with",
+    "але",
+    "або",
+    "вже",
+    "вона",
+    "вони",
+    "для",
+    "його",
+    "про",
+    "при",
+    "після",
+    "перед",
+    "саме",
+    "та",
+    "тому",
+    "що",
+    "як",
+}
 
 
-def get_wiki_context(track: str, slug: str) -> str:
+def get_wiki_context(track: str, slug: str, *, plan: dict | None = None) -> str:
     """Get formatted wiki context for a module build.
 
     Finds wiki articles relevant to the track/slug and returns them
@@ -46,7 +80,7 @@ def get_wiki_context(track: str, slug: str) -> str:
             if md_file.name == "index.md":
                 continue
             # Score by slug match
-            score = _relevance_score(md_file, slug, track)
+            score = _relevance_score(md_file, slug, track, plan=plan)
             candidate_articles.append((md_file, score))
 
     if not candidate_articles:
@@ -91,7 +125,54 @@ def get_wiki_context(track: str, slug: str) -> str:
     )
 
 
-def _relevance_score(md_path: Path, slug: str, track: str) -> int:
+def _normalize_text(text: str) -> str:
+    normalized = unicodedata.normalize("NFKD", text or "")
+    stripped = "".join(ch for ch in normalized if not unicodedata.combining(ch))
+    return re.sub(r"[-_/.:]+", " ", stripped)
+
+
+def _tokenize(text: str) -> set[str]:
+    return {
+        token.lower()
+        for token in _TOKEN_RE.findall(_normalize_text(text))
+        if len(token) > 2 and token.lower() not in _STOPWORDS
+    }
+
+
+def _plan_query_tokens(plan: dict | None) -> tuple[set[str], set[str]]:
+    if not plan:
+        return set(), set()
+
+    general_parts: list[str] = []
+    scenario_parts: list[str] = []
+
+    for field in ("title", "subtitle", "focus", "register"):
+        value = plan.get(field)
+        if value:
+            general_parts.append(str(value))
+
+    general_parts.extend(str(item) for item in (plan.get("objectives") or []))
+    general_parts.extend(str(item) for item in (plan.get("grammar") or []))
+
+    for section in plan.get("content_outline") or []:
+        general_parts.append(str(section.get("section", "")))
+        general_parts.extend(str(point) for point in (section.get("points") or [])[:5])
+
+    for situation in plan.get("dialogue_situations") or []:
+        setting = str(situation.get("setting", ""))
+        motivation = str(situation.get("motivation", ""))
+        speakers = " ".join(str(s) for s in (situation.get("speakers") or []))
+        if setting:
+            scenario_parts.append(setting)
+        if motivation:
+            scenario_parts.append(motivation)
+        if speakers:
+            scenario_parts.append(speakers)
+
+    return _tokenize(" ".join(general_parts)), _tokenize(" ".join(scenario_parts))
+
+
+def _relevance_score(md_path: Path, slug: str, track: str, *, plan: dict | None = None) -> int:
     """Score how relevant a wiki article is to a given module slug.
 
     Higher = more relevant. Scoring:
@@ -99,6 +180,8 @@ def _relevance_score(md_path: Path, slug: str, track: str) -> int:
     - Slug words in filename: +10 each
     - Same subdomain as slug's domain mapping: +5
     - Any article in track domain: +1 (baseline)
+    - Plan/query overlap in path: +4 each
+    - Dialogue-situation overlap in path: +14 each
     """
     score = 1  # baseline — it's in a relevant domain
     stem = md_path.stem.lower()
@@ -109,8 +192,8 @@ def _relevance_score(md_path: Path, slug: str, track: str) -> int:
         score += 100
 
     # Slug word overlap
-    slug_words = set(slug_lower.replace("-", " ").split())
-    stem_words = set(stem.replace("-", " ").split())
+    slug_words = _tokenize(slug_lower.replace("-", " "))
+    stem_words = _tokenize(stem.replace("-", " "))
     overlap = slug_words & stem_words
     score += len(overlap) * 10
 
@@ -118,6 +201,11 @@ def _relevance_score(md_path: Path, slug: str, track: str) -> int:
     for sw in slug_words:
         if len(sw) > 3 and sw in stem:
             score += 5
+
+    general_tokens, scenario_tokens = _plan_query_tokens(plan)
+    path_tokens = _tokenize(md_path.as_posix())
+    score += len(general_tokens & path_tokens) * 4
+    score += len(scenario_tokens & path_tokens) * 14
 
     return score
 

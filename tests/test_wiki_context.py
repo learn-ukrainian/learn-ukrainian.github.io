@@ -93,6 +93,27 @@ class TestRelevanceScore:
         score = _relevance_score(path, "dumy-nevilnytski", "folk")
         assert score > 10  # "dumy" word overlap + partial match
 
+    def test_plan_dialogue_situation_can_boost_scenario_article(self, tmp_path):
+        from wiki.context import _relevance_score
+
+        path = tmp_path / "wiki" / "pedagogy" / "a1" / "at-the-cafe.md"
+        path.parent.mkdir(parents=True)
+        path.write_text("# At the Cafe\n", encoding="utf-8")
+
+        plan = {
+            "title": "I Want, I Can",
+            "dialogue_situations": [
+                {
+                    "setting": "Ordering at a café",
+                    "speakers": ["Клієнт", "Офіціантка"],
+                    "motivation": "order coffee politely",
+                }
+            ],
+        }
+
+        score = _relevance_score(path, "i-want-i-can", "a1", plan=plan)
+        assert score > 10
+
 
 # ── Tests: _strip_meta ───────────────────────────────────────────
 
@@ -220,3 +241,40 @@ class TestGetWikiContext:
         with patch("wiki.context.WIKI_DIR", wiki_dir):
             ctx = get_wiki_context("hist", "kozatska-doba")
         assert "Козацька доба" in ctx
+
+    def test_plan_aware_scoring_surfaces_scenario_article(self, tmp_path):
+        from wiki.context import get_wiki_context
+
+        wiki_dir = tmp_path / "wiki"
+        pedagogy_dir = wiki_dir / "pedagogy" / "a1"
+        pedagogy_dir.mkdir(parents=True)
+        (pedagogy_dir / "i-want-i-can.md").write_text(
+            "# I Want, I Can\n\nGeneral modal overview.\n",
+            encoding="utf-8",
+        )
+        (pedagogy_dir / "at-the-cafe.md").write_text(
+            "# At The Cafe\n\nМожна мені, будь ласка, каву?\n",
+            encoding="utf-8",
+        )
+
+        plan = {
+            "title": "I Want, I Can",
+            "content_outline": [
+                {
+                    "section": "Діалоги (Dialogues)",
+                    "points": ["Build a short natural service exchange."],
+                }
+            ],
+            "dialogue_situations": [
+                {
+                    "setting": "Ordering at a café",
+                    "speakers": ["Клієнт", "Офіціантка"],
+                    "motivation": "order coffee politely",
+                }
+            ],
+        }
+
+        with patch("wiki.context.WIKI_DIR", wiki_dir):
+            ctx = get_wiki_context("a1", "i-want-i-can", plan=plan)
+        assert "I Want, I Can" in ctx
+        assert "At The Cafe" in ctx

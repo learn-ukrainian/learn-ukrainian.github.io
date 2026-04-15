@@ -2,7 +2,7 @@ module: a1-018
 level: A1
 sequence: 18
 slug: i-want-i-can
-version: 1.1.1
+version: 1.1.3
 title: I Want, I Can
 subtitle: Хочу, можу, мушу — expressing wants and abilities
 focus: grammar
@@ -20,17 +20,25 @@ dialogue_situations:
   - Оля
   - Денис
   motivation: 'Хочу/можу/мушу + infinitive: Хочу піти в кіно, Не можу, мушу працювати'
+- setting: Ordering at a café
+  speakers:
+  - Клієнт
+  - Офіціантка
+  motivation: 'A1 service exchange: order a drink politely, ask for a simple recommendation, and accept it naturally'
 content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
   - 'Dialogue: Olya and Denys decide on an evening plan (cinema or walk). Use "Я хочу
     піти...", "Я не можу...", "Я мушу...". Focus on natural speech, not abstract descriptions.'
-  - 'Dialogue 2 — At a café (preview for A1.6): — Я хочу каву. — Велику чи маленьку?
-    — Велику. І ще я хочу їсти. Що ви можете порекомендувати? — Можу порекомендувати
-    борщ! Хотіти + noun (no infinitive needed).'
+  - 'Dialogue 2 — At a café (preview for A1.6): build a short natural service exchange.
+    The customer orders coffee politely, asks for a simple recommendation, and accepts
+    it naturally. Prefer A1 service formulas such as "Можна мені, будь ласка, каву?",
+    "Що можете порадити?", "Тоді ще борщ, будь ласка." Show хотіти + noun nearby
+    in learner-facing prose or peer-style lines, but do not force blunt "Я хочу
+    [noun]" as the direct café order.'
 - section: Хотіти (To Want)
-  words: 280
+  words: 300
   points:
   - 'Хотіти is irregular (Group I): я хочу, ти хочеш, він хоче, ми хочемо, ви хочете,
     вони хочуть. Note the т→ч change and the specific ending for each person. Uses:
@@ -62,7 +70,7 @@ vocabulary_hints:
   - шкода (pity, unfortunately)
   - допомогти (to help)
   - борщ (borscht, m)
-  - порекомендувати (to recommend)
+  - порадити (to recommend / advise)
   - треба (need to — impersonal, preview)
 activity_hints:
 - type: fill-in
@@ -93,6 +101,24 @@ references:
 - title: Літвінова Grade 7, p.55
   notes: 'Exceptions: хотіти, гудіти, ревіти, іржати — Group I despite -іти.'
 plan_fixes:
+- version: 1.1.3
+  date: '2026-04-15'
+  trigger: The 1.1.2 source-of-truth rewrite left section budgets 20 words short
+    of the module word_target, which fails the deterministic plan gate.
+  changes:
+  - replace content_outline[1].words — Restores the Хотіти section to 300 words
+    so section budgets sum cleanly to the 1200-word target.
+- version: 1.1.2
+  date: '2026-04-15'
+  trigger: Hardcoded café dialogue in the plan kept seeding translated service
+    rhythm and weak recommendation phrasing into the live contract.
+  changes:
+  - add dialogue_situations[1] — Adds the café scene as its own scenario instead
+    of leaving it implicit inside one section point.
+  - replace content_outline[0].points[1] — Replaces literal weak café lines with
+    communicative goals and stronger native A1 service formulas.
+  - replace vocabulary_hints.recommended[3] — Swaps the stiffer `порекомендувати`
+    prompt-word for `порадити` as the preferred A1 recommendation verb.
 - version: 1.1.1
   date: '2026-04-15'
   trigger: Expository filler prose and abstract coaching, combined with factually

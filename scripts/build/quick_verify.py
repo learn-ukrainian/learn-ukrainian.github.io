@@ -62,6 +62,19 @@ LATIN_IN_CYRILLIC = re.compile(
 )
 
 
+def _surface_variants(term: str) -> list[str]:
+    """Return simple acceptable surface forms for a required lemma."""
+    base = re.split(r"\s*\(", str(term))[0].strip().lower()
+    if not base:
+        return []
+    variants = [base]
+    if base.endswith("а") and len(base) > 1:
+        variants.append(base[:-1] + "у")
+    elif base.endswith("я") and len(base) > 1:
+        variants.append(base[:-1] + "ю")
+    return variants
+
+
 def _check_structure(content: str, plan: dict) -> list[QuickVerifyError]:
     """Check that all H2 headers from the plan are present in content."""
     errors = []
@@ -221,7 +234,12 @@ def _check_vocabulary(content: str, plan: dict) -> list[QuickVerifyError]:
         word = re.split(r"\s*\(", word_str)[0].strip().lower()
         # For multi-word items like "він, вона, воно", check each
         parts = [p.strip() for p in word.split(",")]
-        found = any(p in content_lower for p in parts if len(p) > 1)
+        variants: list[str] = []
+        for part in parts:
+            if len(part) <= 1:
+                continue
+            variants.extend(_surface_variants(part))
+        found = any(variant in content_lower for variant in variants)
         if not found and len(word) > 1:
             missing.append(item)
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 from collections import defaultdict
 
 _TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яІіЇїЄєҐґ'][A-Za-zА-Яа-яІіЇїЄєҐґ'’-]{1,}")
@@ -46,9 +47,12 @@ _STOPWORDS = {
 
 
 def _tokenize(text: str) -> set[str]:
+    normalized = unicodedata.normalize("NFKD", text or "")
+    text = "".join(ch for ch in normalized if not unicodedata.combining(ch))
+    text = re.sub(r"[-_/.:]+", " ", text)
     return {
         token.lower()
-        for token in _TOKEN_RE.findall(text or "")
+        for token in _TOKEN_RE.findall(text)
         if len(token) > 2 and token.lower() not in _STOPWORDS
     }
 
@@ -96,7 +100,7 @@ def _split_article_blocks(path: str, body: str) -> list[dict]:
             "heading": heading,
             "citation": f"{path} :: {heading}",
             "text": text,
-            "tokens": _tokenize(f"{heading}\n{text}"),
+            "tokens": _tokenize(f"{path}\n{heading}\n{text}"),
         })
 
     for line in lines:
@@ -160,14 +164,29 @@ def compress_wiki_packet(
         return result
 
     all_blocks = [block for article in articles for block in article["blocks"]]
+    situation_text = " ".join(
+        " ".join(
+            [
+                str(item.get("setting", "")),
+                str(item.get("motivation", "")),
+                " ".join(str(s) for s in (item.get("speakers") or [])),
+            ]
+        )
+        for item in (plan.get("dialogue_situations") or [])
+    )
+    dialogue_keywords = {"dialogues", "dialogue", "діалоги", "діалог", "service", "exchange"}
     for section in sections:
         name = str(section.get("section", "")).strip()
         if not name:
             continue
-        query = " ".join(
+        query_parts = (
             [name]
             + [str(point) for point in (section.get("points") or [])[:5]]
         )
+        section_tokens = _tokenize(" ".join(query_parts))
+        if section_tokens & dialogue_keywords and situation_text:
+            query_parts.append(situation_text)
+        query = " ".join(query_parts)
         query_tokens = _tokenize(query)
         ranked: list[tuple[int, list[str], dict]] = []
         for block in all_blocks:

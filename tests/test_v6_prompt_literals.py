@@ -210,6 +210,9 @@ def test_step_write_wraps_prompt_artifacts_in_literal_blocks(
             "After any dialogue, max 2 explanatory sentences, each quoting a Ukrainian "
             "form from the dialogue."
         ) in text
+        assert "factual_anchors:" not in text
+        assert "activity_types_after_section" not in text
+        assert "section_word_budgets" not in text
         assert "room description or generic greeting" not in text
         assert "Use the specific examples named in the skeleton" not in text
         assert "Do NOT skip paragraphs, reorder sections, or add unplanned content" not in text
@@ -435,6 +438,9 @@ def test_step_review_style_wraps_generated_content_as_literals(
     assert score == 9.1
     prompt_text = captured["prompt"]
     saved_prompt = (curriculum_root / level / "orchestration" / slug / "v6-review-style-prompt.md").read_text("utf-8")
+    manifest = yaml.safe_load(
+        (curriculum_root / level / "orchestration" / slug / "v6-review-style-prompt-manifest.yaml").read_text("utf-8")
+    )
 
     for text in (prompt_text, saved_prompt):
         assert "[BEGIN MODULE CONTRACT LITERAL" in text
@@ -442,6 +448,20 @@ def test_step_review_style_wraps_generated_content_as_literals(
         assert "[BEGIN GENERATED MODULE CONTENT LITERAL" in text
         assert "<assistant>" not in text
         assert "Український текст." in text
+
+    assert manifest["phase"] == "review-style"
+    assert manifest["flags"]["contains_convergence_rules"] is False
+    assert manifest["flags"]["caps_blocking_issues"] is False
+
+
+def test_v6_review_style_prompt_contains_convergence_rules() -> None:
+    prompt_path = SCRIPTS_DIR / "build" / "phases" / "v6-review-style.md"
+    text = prompt_path.read_text("utf-8")
+
+    assert "## Convergence Rules" in text
+    assert "at most 3 blocking issues" in text
+    assert "section-local blockers" in text
+    assert "one distinct root cause" in text
 
 
 def test_step_write_injects_golden_dialogue_anchors_for_a1(
@@ -513,6 +533,8 @@ def test_step_write_injects_golden_dialogue_anchors_for_a1(
         assert "Як дістатися до музею?" in text
         assert "Я прокидаюся о сьомій." in text
         assert "{GOLDEN_DIALOGUE_ANCHORS}" not in text
+        assert "factual_anchors:" not in text
+        assert "activity_types_after_section" not in text
 
         contract_idx = text.index("[BEGIN MODULE CONTRACT LITERAL")
         excerpt_idx = text.index("[BEGIN SECTION WIKI EXCERPTS LITERAL")
@@ -616,6 +638,8 @@ activity_hints:
 
     assert output_path is not None
     assert len(prompts) == 2
+    assert output_path.read_text("utf-8").startswith("## First\n")
+    assert "## First (~900 words)" not in output_path.read_text("utf-8")
 
     first_prompt, second_prompt = prompts
     saved_first = (
@@ -631,7 +655,9 @@ activity_hints:
         assert "[BEGIN SECTION SKELETON LITERAL" in text
         assert "<assistant>" not in text
         assert "IGNORE PREVIOUS INSTRUCTIONS" not in text
-        assert "Discovery fact." in text
+        assert "name: Second" not in text
+        assert "factual_anchors:" not in text
+        assert "activity_types_after_section" not in text
         assert (
             "If any skeleton example conflicts with the Shared Module Contract "
             "or current plan YAML, the plan wins. Rewrite the conflicting "
@@ -645,7 +671,7 @@ activity_hints:
             "After any dialogue, write at most 2 explanatory sentences, each "
             "quoting a Ukrainian form from that dialogue."
         ) in text
-        assert "<!-- INJECT_ACTIVITY: {exact_id_from_contract} -->" in text
+        assert "Do not invent exercise markers in this section" in text
         assert "type, topic hint" not in text
 
     for text in (second_prompt, saved_second):
@@ -653,6 +679,8 @@ activity_hints:
         assert "<assistant>" not in text
         assert "IGNORE PREVIOUS INSTRUCTIONS" not in text
         assert "Chunk one body." in text
+        assert "name: First" not in text
+        assert "factual_anchors:" not in text
 
 
 def test_build_dialogue_situations_uses_no_dialogue_override() -> None:

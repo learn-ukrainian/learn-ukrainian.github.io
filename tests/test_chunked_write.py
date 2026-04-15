@@ -120,6 +120,20 @@ class TestExtractWordBudget:
         assert _extract_word_budget("Section (~150 words)") == 150
 
 
+class TestCanonicalSectionName:
+    """Tests for stripping skeleton budget annotations from section titles."""
+
+    def test_strips_words_total_suffix(self):
+        from build.v6_build import _canonical_section_name
+
+        assert _canonical_section_name("Діалоги (Dialogues) (~330 words total)") == "Діалоги (Dialogues)"
+
+    def test_leaves_plain_title_unchanged(self):
+        from build.v6_build import _canonical_section_name
+
+        assert _canonical_section_name("Підсумок — Summary") == "Підсумок — Summary"
+
+
 class TestBuildSectionSummary:
     """Tests for _build_section_summary()."""
 
@@ -152,66 +166,50 @@ class TestChunkingGate:
     The gate triggers when:
     1. skeleton is provided
     2. no_chunk is False
-    3. word_target >= 2000
-    4. skeleton has >= 2 H2 sections
+    3. word_target >= 2000, or
+    4. word_target >= 1200 with >= 4 H2 sections
     """
 
     def test_gate_triggers_for_large_module_with_sections(self):
         """word_target=4000, 4 sections -> should chunk."""
-        from build.v6_build import _parse_skeleton_sections
+        from build.v6_build import _parse_skeleton_sections, _should_chunk_write
 
         sections = _parse_skeleton_sections(SAMPLE_SKELETON)
-        word_target = 4000
-        no_chunk = False
+        assert _should_chunk_write(4000, sections, False) is True
 
-        should_chunk = (
-            not no_chunk
-            and word_target >= 2000
-            and len(sections) >= 2
-        )
-        assert should_chunk is True
-
-    def test_gate_skips_for_small_module(self):
-        """word_target=1200 -> should NOT chunk even with sections."""
-        from build.v6_build import _parse_skeleton_sections
+    def test_gate_triggers_for_medium_four_section_module(self):
+        """word_target=1200, 4 sections -> chunk to avoid oversized monolithic prompts."""
+        from build.v6_build import _parse_skeleton_sections, _should_chunk_write
 
         sections = _parse_skeleton_sections(SAMPLE_SKELETON)
-        word_target = 1200
-        no_chunk = False
+        assert _should_chunk_write(1200, sections, False) is True
 
-        should_chunk = (
-            not no_chunk
-            and word_target >= 2000
-            and len(sections) >= 2
-        )
-        assert should_chunk is False
+    def test_gate_skips_for_small_two_section_module(self):
+        """word_target=1200, 2 sections -> stay single-call."""
+        from build.v6_build import _parse_skeleton_sections, _should_chunk_write
+
+        two_section_skeleton = """\
+## First (~600 words total)
+
+- P1 (~300 words): first
+
+## Second (~600 words total)
+
+- P1 (~300 words): second
+"""
+        sections = _parse_skeleton_sections(two_section_skeleton)
+        assert _should_chunk_write(1200, sections, False) is False
 
     def test_gate_skips_when_no_chunk_flag(self):
         """--no-chunk flag disables chunking."""
-        from build.v6_build import _parse_skeleton_sections
+        from build.v6_build import _parse_skeleton_sections, _should_chunk_write
 
         sections = _parse_skeleton_sections(SAMPLE_SKELETON)
-        word_target = 4000
-        no_chunk = True
-
-        should_chunk = (
-            not no_chunk
-            and word_target >= 2000
-            and len(sections) >= 2
-        )
-        assert should_chunk is False
+        assert _should_chunk_write(4000, sections, True) is False
 
     def test_gate_skips_for_single_section(self):
         """Only 1 section -> should NOT chunk."""
-        from build.v6_build import _parse_skeleton_sections
+        from build.v6_build import _parse_skeleton_sections, _should_chunk_write
 
         sections = _parse_skeleton_sections(MINIMAL_SKELETON)
-        word_target = 4000
-        no_chunk = False
-
-        should_chunk = (
-            not no_chunk
-            and word_target >= 2000
-            and len(sections) >= 2
-        )
-        assert should_chunk is False
+        assert _should_chunk_write(4000, sections, False) is False

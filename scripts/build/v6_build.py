@@ -99,6 +99,12 @@ STYLE_REVIEW_TARGET_SCORE = 9.0
 STYLE_REVIEW_DIMENSION_FLOOR = 8.5
 REWRITE_BLOCK_TIMEOUT_S = 420
 REWRITE_BLOCK_GEMINI_CALL_CAP_S = 120
+REWRITE_BLOCK_PROMPT_MAX_CHARS = 18_000
+REWRITE_BLOCK_FORBIDDEN_HEADINGS = (
+    "## Shared Module Contract",
+    "## Previous Sections For Continuity",
+    "## Skeleton For This Section",
+)
 STYLE_REVIEW_DIMENSION_LABELS = {
     "pragmatic_authenticity": "Pragmatic authenticity",
     "stylistic_consistency": "Stylistic consistency",
@@ -650,6 +656,7 @@ _ENRICH_FILTER_KEYWORDS = (
     "словник", "slovnyk", "vocabulary table", "vocab tab",
     "enrich", "video", "youtube", "resource", "ресурси",
 )
+_SLOW_WRITER_RETRY_WAIT_S = 60
 
 
 def _get_immersion_target_short(level: str, module_num: int) -> str:
@@ -1917,7 +1924,7 @@ def _build_wiki_packet(level: str, slug: str) -> str:
     wiki_content = ""
     try:
         from wiki.context import get_wiki_context
-        wiki_content = get_wiki_context(level, slug)
+        wiki_content = get_wiki_context(level, slug, plan=plan)
     except Exception as exc:
         _log(f"  ⚠️  Wiki unavailable: {exc}")
 
@@ -2065,6 +2072,8 @@ def _format_contract_prompt_artifacts(
     excerpts: dict,
     *,
     section_title: str | None = None,
+    mode: str = "full",
+    activity_ids: list[str] | None = None,
 ) -> tuple[str, str]:
     """Return literal-wrapped prompt artifacts for contract + wiki excerpts."""
 
@@ -2080,32 +2089,94 @@ def _format_contract_prompt_artifacts(
             }
         return value
 
+    if mode == "write":
+        teaching_sections = []
+        for section in ((contract.get("teaching_beats") or {}).get("sections") or []):
+            teaching_sections.append({
+                "order": section.get("order"),
+                "name": section.get("name"),
+                "word_budget": section.get("word_budget"),
+                "teaching_beats": section.get("teaching_beats") or [],
+                "required_terms": section.get("required_terms") or [],
+            })
+        contract_payload = {
+            "module": contract.get("module") or {},
+            "teaching_beats": {
+                "section_order": ((contract.get("teaching_beats") or {}).get("section_order") or []),
+                "sections": teaching_sections,
+            },
+            "dialogue_acts": contract.get("dialogue_acts") or [],
+            "vocab_grammar_targets": contract.get("vocab_grammar_targets") or {},
+            "activity_obligations": contract.get("activity_obligations") or [],
+            "banned_error_patterns": contract.get("banned_error_patterns") or [],
+        }
+    elif mode == "chunk":
+        all_sections = ((contract.get("teaching_beats") or {}).get("sections") or [])
+        target_section = next(
+            (section for section in all_sections if section.get("name") == section_title),
+            None,
+        )
+        dialogue_title = (section_title or "").lower()
+        include_dialogue_acts = any(token in dialogue_title for token in ("dialogue", "діалог"))
+        obligations = contract.get("activity_obligations") or []
+        if activity_ids is not None:
+            wanted = set(activity_ids)
+            obligations = [item for item in obligations if item.get("id") in wanted]
+        contract_payload = {
+            "current_section": {
+                "order": target_section.get("order") if target_section else None,
+                "name": target_section.get("name") if target_section else section_title,
+                "word_budget": (target_section or {}).get("word_budget") if target_section else None,
+                "teaching_beats": (target_section or {}).get("teaching_beats") or [],
+                "required_terms": (target_section or {}).get("required_terms") or [],
+            },
+            "dialogue_acts": (contract.get("dialogue_acts") or []) if include_dialogue_acts else [],
+            "activity_obligations": obligations,
+        }
+    else:
+        contract_payload = contract
+
     contract_literal = _format_prompt_literal_block(
         "Module Contract",
-        yaml.safe_dump(_sanitize_prompt_data(contract), sort_keys=False, allow_unicode=True),
+        yaml.safe_dump(_sanitize_prompt_data(contract_payload), sort_keys=False, allow_unicode=True),
         language="yaml",
     )
 
     section_map = excerpts.get("sections") or {}
     excerpt_payload: dict
     if section_title is None:
-        excerpt_payload = excerpts
+        excerpt_payload = (
+            {"sections": section_map}
+            if mode == "write"
+            else excerpts
+        )
     else:
         excerpt_payload = {
             "section": section_title,
             "items": section_map.get(section_title, []),
-            "factual_anchors": [
+        }
+        if mode not in {"write", "chunk"}:
+            excerpt_payload["factual_anchors"] = [
                 anchor
                 for anchor in (excerpts.get("factual_anchors") or [])
                 if anchor.get("section") == section_title
-            ],
-        }
+            ]
     excerpt_literal = _format_prompt_literal_block(
         "Section Wiki Excerpts",
         yaml.safe_dump(_sanitize_prompt_data(excerpt_payload), sort_keys=False, allow_unicode=True),
         language="yaml",
     )
     return contract_literal, excerpt_literal
+
+
+def _extract_activity_ids_from_skeleton_section(section_body: str) -> list[str]:
+    """Return ordered INJECT_ACTIVITY ids mentioned in one skeleton section."""
+    ids: list[str] = []
+    for match in re.finditer(r"<!--\s*INJECT_ACTIVITY:\s*([a-z0-9][a-z0-9-]*)\s*-->", section_body):
+        activity_id = match.group(1)
+        if activity_id not in ids:
+            ids.append(activity_id)
+    return ids
 
 
 def _contract_has_no_dialogue_acts(contract: dict) -> bool:
@@ -2469,10 +2540,29 @@ def _parse_skeleton_sections(skeleton: str) -> list[dict]:
     ]
 
 
+def _should_chunk_write(word_target: int, skeleton_sections: list[dict], no_chunk: bool) -> bool:
+    """Decide whether a module should use section-by-section chunked writing.
+
+    Large modules have always chunked. We also chunk medium modules when the
+    skeleton clearly spans a multi-section lesson, because the monolithic write
+    prompt becomes too large and stalls more often than focused section calls.
+    """
+    if no_chunk or len(skeleton_sections) < 2:
+        return False
+    if word_target >= 2000:
+        return True
+    return word_target >= 1200 and len(skeleton_sections) >= 4
+
+
 def _extract_word_budget(title: str) -> int:
     """Extract word budget from skeleton heading like '## Title (~275 words total)'."""
     m = re.search(r"~(\d+)\s*words", title)
     return int(m.group(1)) if m else 0
+
+
+def _canonical_section_name(title: str) -> str:
+    """Strip skeleton budget annotations from a section title."""
+    return re.sub(r"\s*\(~\d+\s*words(?:\s*total)?\)\s*$", "", title).strip()
 
 
 def _build_section_summary(sections_so_far: list[str], max_words: int = 500) -> str:
@@ -2493,6 +2583,63 @@ def _build_section_summary(sections_so_far: list[str], max_words: int = 500) -> 
     return f"[...previous sections truncated...]\n\n{truncated}"
 
 
+def _chunk_level_rule_summary(level: str) -> str:
+    """Short grammar/register summary for section-sized write prompts."""
+    base = level.split("-")[0]
+    if base == "a1":
+        return (
+            "A1 grammar envelope: keep Ukrainian sentences short, one clause, "
+            "and avoid advanced case-heavy constructions unless the current section "
+            "explicitly teaches them."
+        )
+    if base == "a2":
+        return (
+            "A2 grammar envelope: short connected prose, at most two clauses per "
+            "Ukrainian sentence, and no advanced literary syntax."
+        )
+    if base == "b1":
+        return "B1 grammar envelope: natural connected prose, but stay concrete and teachable."
+    return "Match the module's target level and keep the section teachable, concrete, and idiomatic."
+
+
+def _chunk_paragraph_language_rule(level: str, module_num: int) -> str:
+    """Compact paragraph-language rule for section-sized prompts."""
+    target = _get_immersion_target_short(level, module_num)
+    return (
+        "## Paragraph Language Rule\n\n"
+        f"- Section must fit the module immersion target: {target}\n"
+        "- Every prose paragraph is monolingual: all English or all Ukrainian.\n"
+        "- Never alternate English and Ukrainian sentences inside one paragraph.\n"
+        "- If you write a Ukrainian paragraph for A1/A2 support, translate the whole paragraph in one English blockquote when needed; do not translate sentence by sentence.\n"
+        "- Dialogues are exempt: per-turn inline English translations are allowed.\n"
+    )
+
+
+def _chunk_other_rules(level: str, module_num: int, section_activity_ids: list[str]) -> str:
+    """Compact rule block for section-sized prompts."""
+    activity_line = (
+        "- Use only these exercise markers in this section: "
+        + ", ".join(f"`{activity_id}`" for activity_id in section_activity_ids)
+        if section_activity_ids
+        else "- Do not invent exercise markers in this section unless the skeleton explicitly contains one."
+    )
+    return (
+        "## Section Rules\n\n"
+        f"- {_chunk_level_rule_summary(level)}\n"
+        "- Cover only the current section's obligations from the shared contract; do not pre-teach later sections.\n"
+        "- Include at least one callout box (`:::note`, `:::tip`, or `:::info`) in this section.\n"
+        "- No meta-pedagogical narration. No vocabulary tables. No word-count notes.\n"
+        "- Zero Russian, zero Surzhyk, zero calques. No stress marks.\n"
+        "- Use Ukrainian quotes «...» for Ukrainian text.\n"
+        f"{activity_line}\n"
+    )
+
+
+def _should_throttle_writer_retries(writer: str) -> bool:
+    """Return True when retries should be spaced out for a slower writer lane."""
+    return writer.startswith("gemini")
+
+
 # --- B1 friction fixes (#1189) ---------------------------------------------
 # These constants/helpers feed _build_chunk_prompt() with the late-prompt
 # vocab checklist + Russianism blocklist that were missing from the chunked
@@ -2501,16 +2648,27 @@ def _build_section_summary(sections_so_far: list[str], max_words: int = 500) -> 
 
 _CHUNK_FORBIDDEN_WORDS_BLOCK = """## FORBIDDEN WORDS — never produce (#1189)
 
-Never write any of these even once. Even in dialogues. Even in quoted examples. Even when illustrating a learner's mistake (use a `<!-- VERIFY -->` placeholder instead). The post-write toxic-token scanner halts the build the moment it sees one:
-
-❌ хорошо ❌ конечно ❌ спасибо ❌ пожалуйста ❌ ничего ❌ сейчас ❌ тоже ❌ здесь ❌ кот ❌ кон
-
-Use: добре · звичайно · дякую · будь ласка · нічого · зараз · теж · тут · кіт · кін
-
-No ы, э, ё, ъ characters anywhere."""
+Never emit these Russian/Russianized forms: `хорошо`, `конечно`, `спасибо`, `пожалуйста`, `ничего`, `сейчас`, `тоже`, `здесь`, `кот`, `кон`.
+Use `добре`, `звичайно`, `дякую`, `будь ласка`, `нічого`, `зараз`, `теж`, `тут`, `кіт`, `кін`. Never output `ы`, `э`, `ё`, or `ъ`."""
 
 
-def _chunk_required_vocab_block(plan: dict, section_index: int, total_sections: int) -> str:
+def _required_vocab_words(plan: dict) -> list[str]:
+    """Return ordered module-required vocabulary words from the plan."""
+    raw = plan.get("vocabulary_hints") or plan.get("vocabulary") or {}
+    if isinstance(raw, list):
+        return [v.get("word", str(v)) if isinstance(v, dict) else str(v) for v in raw]
+    if isinstance(raw, dict):
+        return [str(w) for w in (raw.get("required") or [])]
+    return []
+
+
+def _chunk_required_vocab_block(
+    *,
+    section_required_terms: list[str],
+    all_required_words: list[str],
+    section_index: int,
+    total_sections: int,
+) -> str:
     """Render the required-vocab checklist for a chunked section prompt.
 
     Pattern B (#1189) — writers were dropping abstract grammatical metalanguage
@@ -2521,37 +2679,26 @@ def _chunk_required_vocab_block(plan: dict, section_index: int, total_sections: 
     where Gemini's attention is highest, and on the FINAL section we add a
     sweep-up reminder so any vocab that didn't fit earlier gets included.
     """
-    raw = plan.get("vocabulary_hints") or plan.get("vocabulary") or {}
-    words: list[str] = []
-    if isinstance(raw, list):
-        words = [v.get("word", str(v)) if isinstance(v, dict) else str(v) for v in raw]
-    elif isinstance(raw, dict):
-        words = [str(w) for w in (raw.get("required") or [])]
+    words = section_required_terms
+    is_final = section_index + 1 >= total_sections
+    if is_final:
+        words = all_required_words or words
     if not words:
         return ""
 
     checklist = "\n".join(f"- [ ] {w}" for w in words)
-    is_final = section_index + 1 >= total_sections
     if is_final:
         instruction = (
             f"**This is the FINAL section ({total_sections}/{total_sections}).** "
             "Before you stop writing, review the prose you've written across "
-            "this whole module. EVERY word in the checklist below MUST appear "
-            "at least once with a bold Ukrainian form and English translation "
-            "in a natural sentence. Sweep up any words that earlier sections "
-            "did not include — even if it means adding a sentence or short "
-            "paragraph that defines the term. Abstract grammatical metalanguage "
-            "(видова пара, дієвідміна, особове закінчення, etc.) is the most "
-            "frequently dropped category and the build hard-fails for it."
+            "this whole module. Sweep up any required words that earlier sections "
+            "did not naturally cover."
         )
     else:
         instruction = (
-            "**Required module vocabulary** — every word below MUST appear "
-            "somewhere in the module before it ends. If a word fits naturally "
-            "in this section, include it now (bold + English translation). "
-            "Otherwise leave it for a later section. The FINAL section will "
-            "sweep up any unused words, but the more you place naturally now "
-            "the better the prose flows."
+            "**Current-section vocabulary focus** — include these words naturally "
+            "in this section if they fit the teaching beats. Later sections will "
+            "handle the rest of the module vocabulary."
         )
 
     return f"## REQUIRED VOCABULARY CHECKLIST (#1189)\n\n{instruction}\n\n{checklist}"
@@ -2570,6 +2717,8 @@ def _build_chunk_prompt(
     module_num: int,
     plan: dict,
     slug: str,
+    section_required_terms: list[str],
+    all_required_words: list[str],
 ) -> str:
     """Build prompt for a single section chunk.
 
@@ -2577,14 +2726,10 @@ def _build_chunk_prompt(
     sections, and the research packet. Uses a streamlined prompt that
     focuses the writer on one section at a time.
     """
-    from pipeline.config_tables import (
-        get_immersion_rule,
-        get_level_constraints,
-        get_pedagogical_constraints,
-    )
-
     word_target = section["words"] or 300  # fallback if no budget in skeleton
     phase = plan.get("phase", "")
+    section_activity_ids = _extract_activity_ids_from_skeleton_section(section["body"])
+    section_name = _canonical_section_name(section["title"])
 
     # Resolve persona from the SAME source as the single-call path (get_persona)
     persona_desc = _get_persona_description(level, plan)
@@ -2597,8 +2742,8 @@ def _build_chunk_prompt(
 You are {persona_desc}, writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.{lang_directive}
 
 **Module:** {module_num}: {plan.get("title", slug)} ({level.upper()}, {phase})
-**Section to write:** {section["title"]}
-**Word target for this section:** {word_target} words (aim for {int(word_target * 1.1)} to account for undershoot)
+**Section to write:** {section_name}
+**Word target for this section:** about {word_target} words. Hitting the minimum matters more than staying short; do not undershoot this section.
 
 ---
 
@@ -2624,15 +2769,6 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 """
 
     # Add contract and excerpt context for reference
-    # Resolve language-salad phase placeholders (#1185)
-    _salad_vars = _build_salad_phase_placeholders(level, module_num)
-    _salad_phase_num = _salad_vars["{SALAD_PHASE_NUMBER}"]
-    _salad_phase_name = _salad_vars["{SALAD_PHASE_NAME}"]
-    _salad_uk_allowed = _salad_vars["{SALAD_UK_PARAGRAPHS_ALLOWED}"]
-    _salad_min_sent = _salad_vars["{SALAD_MIN_SENTENCES}"]
-    _salad_max_sent = _salad_vars["{SALAD_MAX_SENTENCES}"]
-    _salad_xlat_pct = _salad_vars["{SALAD_TRANSLATION_PCT}"]
-
     section_prompt += f"""## Shared Module Contract
 
 {contract_content}
@@ -2647,120 +2783,31 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 
 {{WIKI_CHUNK_CONTEXT}}
 
-## CRITICAL: PARAGRAPH LANGUAGE RULE (#1185 — hard gate, audited automatically)
-
-**You are in PHASE {_salad_phase_num}: {_salad_phase_name}**
-- Ukrainian prose paragraphs: {_salad_uk_allowed}
-- Paragraph length: {_salad_min_sent}–{_salad_max_sent} sentences
-- Frequency of Ukrainian paragraphs that get an English translation block: {_salad_xlat_pct}%
-
-**THE RULE (hard, non-negotiable):**
-
-Each prose paragraph is MONOLINGUAL. A paragraph is either entirely English
-OR entirely Ukrainian. NEVER mix English and Ukrainian sentences inside the
-same paragraph. NEVER write sentence-by-sentence translation inside a paragraph.
-
-A Ukrainian paragraph may be followed by its **full** English translation
-in a blockquote + italics:
-
-```
-Називний відмінок — це основна форма слова, яка відповідає на питання
-«хто?» або «що?». Ти завжди вчиш нове слово саме в цій формі.
-
-> *The Nominative case is the dictionary form, which answers the questions
-> "who?" or "what?". You always learn a new word in this form.*
-```
-
-The blockquote translates the WHOLE Ukrainian paragraph, not individual
-sentences.
-
-**FORBIDDEN patterns — the audit will REJECT the module for any of these:**
-
-1. English prose with inline bolded UK terms + parenthetical translations:
-   ❌ `The **Називний відмінок** (Nominative case) is the dictionary form. It answers **хто?** (who?) and **що?** (what?).`
-   (This is the "inline-gloss salad" pattern. It violates monolingual paragraphs.)
-
-2. More than 3 bolded vocabulary glosses `**term** (gloss)` in a single paragraph.
-
-3. Sentence-by-sentence mixing:
-   ❌ `Я читаю книгу. I am reading a book. Вона п'є каву. She is drinking coffee.`
-
-4. Writing the whole module in English with Ukrainian only appearing as
-   inline examples (at A1 M15+, A2, B1+ you MUST write Ukrainian prose
-   paragraphs — {_salad_xlat_pct}% with translation blocks, the rest bare).
-
-**ALLOWED patterns:**
-
-- Isolated Ukrainian example sentences with tight gloss (grammar illustration):
-  ✅ `For masculine nouns, use the **-ий** ending.`
-     `**Гарний хлопчик.** — *A handsome boy.*`
-
-- Inline bolded vocabulary tooltips (up to 3 per paragraph):
-  ✅ `The word for cat is **кіт** (cat).`
-
-- Dialogs with per-speaker-turn inline translations (dialogs are EXEMPT from
-  the monolingual rule — see the dialog format below).
-
-**How to structure a section when Ukrainian paragraphs are allowed:**
-
-1. Open with an English explanation paragraph introducing the concept
-2. Write a Ukrainian paragraph demonstrating the concept in use
-3. Follow with a blockquote `> *English translation of the whole paragraph*`
-4. Write another English explanation or analysis
-5. Write another Ukrainian paragraph (translated or bare per the frequency target)
-
-Before submitting, re-read each paragraph and verify: "Is every sentence
-in this paragraph the same language?" If no, fix it.
+{_chunk_paragraph_language_rule(level, module_num)}
 
 ---
 
-## Other Rules
+{_chunk_other_rules(level, module_num, section_activity_ids)}
 
-{get_immersion_rule(level, module_num)}
+## Dialogue formatting
 
-{get_level_constraints(level, plan)}
-
-{get_pedagogical_constraints(level, module_num, plan)}
-
-- **Engagement callouts are REQUIRED.** Every section MUST contain at
-  least one callout box. The module as a whole MUST have ≥3 callouts,
-  so with 4-5 sections you're naturally covered. Use the supported
-  markers:
-  ```
-  :::note
-  **Quick tip** — short explanation or memory aid (1-3 sentences).
-  :::
-
-  :::tip
-  **Did you know?** — cultural or linguistic insight.
-  :::
-
-  :::info
-  **Grammar box** — a focused explanation of one rule.
-  :::
-  ```
-  Callouts are NOT optional decoration — the audit hard-fails the
-  module if it has fewer than 3 across the whole file. Pick the flavor
-  (note/tip/info) that matches what you're saying; the audit counts
-  any of them.
-- **NO IPA, NO Latin transliteration** — describe sounds by comparison.
-- **Ukrainian quotes: «...»** for Ukrainian text.
-- **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: {{exact_id_from_contract}} -->` where the skeleton places exercises. Use the exact `id` from the shared contract's `activity_obligations`; do NOT substitute a type label or topic hint. Do NOT write :::quiz or :::fill-in DSL directly.
-- **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
-- **Zero Russian, zero Surzhyk, zero calques.**
-- **NO stress marks** — a deterministic tool adds them later.
 - **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
-{_chunk_required_vocab_block(plan, section_index, total_sections)}
+{_chunk_required_vocab_block(
+    section_required_terms=section_required_terms,
+    all_required_words=all_required_words,
+    section_index=section_index,
+    total_sections=total_sections,
+)}
 
 {_CHUNK_FORBIDDEN_WORDS_BLOCK}
 
 ## Output
 
-Write the section starting with the H2 heading **`## {section["title"]}`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.
+Write the section starting with the H2 heading **`## {section_name}`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.
 """
     # Wiki context is now in the knowledge packet (step_research handles it).
     # No separate chunk injection needed.
@@ -2798,10 +2845,10 @@ def step_write_chunked(
     plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
     plan_content_raw = plan_path.read_text("utf-8")
     plan = yaml.safe_load(plan_content_raw)
+    all_required_words = _required_vocab_words(plan)
     contract, excerpts = _ensure_contract_artifacts(
         level, module_num, slug, packet_path, log_creation=False,
     )
-    contract_content, _ = _format_contract_prompt_artifacts(contract, excerpts)
 
     # Load write template for reference (used to pull content rules)
     is_seminar = _is_seminar_track(level)
@@ -2822,6 +2869,7 @@ def step_write_chunked(
 
     for i, section in enumerate(sections):
         chunk_file = orch_dir / f"chunk-{i + 1:02d}.md"
+        section_name = _canonical_section_name(section["title"])
         # Only load from cache if this is the first attempt (no correction directive)
         if not correction_directive and chunk_file.exists():
             chunk_content = chunk_file.read_text("utf-8")
@@ -2834,6 +2882,19 @@ def step_write_chunked(
         _log(f"\n  --- Chunk {i + 1}/{len(sections)}: {section['title']} ---")
 
         previous_summary = _build_section_summary(written_sections)
+        section_activity_ids = _extract_activity_ids_from_skeleton_section(section["body"])
+        contract_sections = ((contract.get("teaching_beats") or {}).get("sections") or [])
+        target_section = next(
+            (item for item in contract_sections if item.get("name") == section_name),
+            {},
+        )
+        contract_content, section_excerpts = _format_contract_prompt_artifacts(
+            contract,
+            excerpts,
+            section_title=section_name,
+            mode="chunk",
+            activity_ids=section_activity_ids,
+        )
 
         prompt = _build_chunk_prompt(
             template=template,
@@ -2842,13 +2903,13 @@ def step_write_chunked(
             total_sections=len(sections),
             previous_summary=previous_summary,
             contract_content=contract_content,
-            section_excerpts=_format_contract_prompt_artifacts(
-                contract, excerpts, section_title=section["title"],
-            )[1],
+            section_excerpts=section_excerpts,
             level=level,
             module_num=module_num,
             plan=plan,
             slug=slug,
+            section_required_terms=[str(t) for t in (target_section.get("required_terms") or [])],
+            all_required_words=all_required_words,
         )
 
         # Inject correction directive on first chunk only
@@ -2867,6 +2928,9 @@ def step_write_chunked(
         for attempt in range(1, chunk_retries + 1):
             if attempt > 1:
                 _log(f"  🔄 Chunk {i + 1} retry attempt {attempt}/{chunk_retries}...")
+                if _should_throttle_writer_retries(writer):
+                    _log(f"  ⏳ Waiting {_SLOW_WRITER_RETRY_WAIT_S}s before next {writer} chunk call...")
+                    time.sleep(_SLOW_WRITER_RETRY_WAIT_S)
             ok, raw = _dispatch(
                 prompt, agent=writer, phase=f"write-chunk-{i + 1:02d}",
                 orch_dir=orch_dir, timeout=TIMEOUT_WRITE if use_tools else TIMEOUT_WRITE_NO_TOOLS,
@@ -2892,6 +2956,10 @@ def step_write_chunked(
                 break
 
         chunk_content = "\n".join(lines[content_start:]) if content_start >= 0 else raw
+        if chunk_content.startswith("## "):
+            split = chunk_content.split("\n", 1)
+            rest = split[1] if len(split) > 1 else ""
+            chunk_content = f"## {section_name}\n{rest}".rstrip() + "\n"
         chunk_words = len(chunk_content.split())
         _log(f"  ✅ Chunk {i + 1}: {chunk_words} words")
 
@@ -2939,7 +3007,7 @@ def step_write(level: str, module_num: int, slug: str,
         if plan_path_tmp.exists():
             wt = yaml.safe_load(plan_path_tmp.read_text("utf-8")).get("word_target", 0)
             skeleton_sections = _parse_skeleton_sections(skeleton)
-            if wt >= 2000 and len(skeleton_sections) >= 2:
+            if _should_chunk_write(wt, skeleton_sections, no_chunk):
                 _log(f"  Chunking enabled: word_target={wt}, sections={len(skeleton_sections)}")
                 result = step_write_chunked(
                     level, module_num, slug, packet_path,
@@ -2969,7 +3037,11 @@ def step_write(level: str, module_num: int, slug: str,
     contract, excerpts = _ensure_contract_artifacts(
         level, module_num, slug, packet_path, log_creation=True,
     )
-    contract_content, excerpt_content = _format_contract_prompt_artifacts(contract, excerpts)
+    contract_content, excerpt_content = _format_contract_prompt_artifacts(
+        contract,
+        excerpts,
+        mode="write",
+    )
     golden_dialogue_anchors = _load_golden_dialogue_anchors(level)
 
     # Build section titles
@@ -3466,6 +3538,9 @@ def step_write_with_retry(
     for attempt in range(1, max_retries + 2):  # +2 because range is exclusive
         current_writer = writer
         _log(f"\n  📝 Write attempt {attempt}/{max_retries + 1} (writer: {current_writer})")
+        if attempt > 1 and _should_throttle_writer_retries(current_writer):
+            _log(f"  ⏳ Waiting {_SLOW_WRITER_RETRY_WAIT_S}s before next {current_writer} write attempt...")
+            time.sleep(_SLOW_WRITER_RETRY_WAIT_S)
 
         if attempt == 1:
             output = step_write(
@@ -3505,6 +3580,14 @@ def step_write_with_retry(
             _log_stats(stats_path, slug, "STUB_RESPONSE", attempt, current_writer, False)
             continue  # retry WITHOUT correction directive
 
+        contract, _ = _ensure_contract_artifacts(
+            level, module_num, slug, packet_path, log_creation=False,
+        )
+        normalized_content = _normalize_activity_markers_to_contract(content, contract)
+        if normalized_content != content:
+            output.write_text(normalized_content, "utf-8")
+            content = normalized_content
+
         # Quick verify
         results = quick_verify(content, plan)
         _log(format_results(results))
@@ -3512,9 +3595,6 @@ def step_write_with_retry(
         # Persist quick verify results for API access (AC10)
         _save_quick_verify(level, slug, results, attempt)
 
-        contract, _ = _ensure_contract_artifacts(
-            level, module_num, slug, packet_path, log_creation=False,
-        )
         contract_violations = check_contract_compliance(content, contract)
         _save_contract_compliance(level, slug, attempt, contract_violations, label="write")
         if contract_violations:
@@ -5872,7 +5952,33 @@ def step_review_style(
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
     prompt_path = orch_dir / "v6-review-style-prompt.md"
+    prompt_manifest_path = orch_dir / "v6-review-style-prompt-manifest.yaml"
     prompt_path.write_text(prompt, "utf-8")
+    prompt_manifest = {
+        "phase": "review-style",
+        "module": {"level": level, "module_num": module_num, "slug": slug},
+        "reviewer": {"writer_model": writer_model, "reviewer": reviewer},
+        "components": [
+            "shared_module_contract",
+            "section_mapped_wiki_excerpts",
+            "generated_content",
+            "review_tools_section",
+        ],
+        "metrics": {
+            "prompt_chars": len(prompt),
+            "contract_chars": len(contract_content),
+            "section_excerpt_chars": len(excerpt_content),
+            "generated_content_chars": len(generated_content_literal),
+        },
+        "flags": {
+            "contains_convergence_rules": "## Convergence Rules" in prompt,
+            "caps_blocking_issues": "at most 3 blocking issues" in prompt,
+        },
+    }
+    prompt_manifest_path.write_text(
+        yaml.safe_dump(prompt_manifest, sort_keys=False, allow_unicode=True),
+        "utf-8",
+    )
 
     ok, raw = _dispatch_review_prompt(
         prompt,
@@ -6000,6 +6106,14 @@ def _extract_injected_activity_candidates(text: str) -> list[str]:
     return candidates
 
 
+def _normalize_activity_marker_token(marker: str) -> str:
+    """Normalize a raw INJECT_ACTIVITY token to the leading marker id/type."""
+    token = marker.strip().lower()
+    if "," in token:
+        token = token.split(",", 1)[0].strip()
+    return token
+
+
 def _activity_marker_type_allowed(candidate: str, allowed_types: set[str]) -> bool:
     """Return True when a marker token resolves to a contracted activity type."""
     if not candidate or not allowed_types:
@@ -6019,6 +6133,71 @@ def _invalid_injected_activity_types(text: str, allowed_types: set[str]) -> list
         for candidate in _extract_injected_activity_candidates(text)
         if not _activity_marker_type_allowed(candidate, allowed_types)
     ]
+
+
+def _normalize_activity_markers_to_contract(content: str, contract: dict) -> str:
+    """Normalize and reorder activity markers to satisfy contract order."""
+    activity_obligations = contract.get("activity_obligations") or []
+    expected_entries = [
+        {
+            "id": str(item.get("id") or "").strip().lower(),
+            "type": str(item.get("type") or "").strip().lower(),
+        }
+        for item in activity_obligations
+        if isinstance(item, dict) and (item.get("id") or item.get("type"))
+    ]
+    if not expected_entries:
+        return content
+
+    pattern = re.compile(r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->")
+    matches = list(pattern.finditer(content))
+    if not matches:
+        return content
+
+    candidates = [_normalize_activity_marker_token(match.group(1)) for match in matches]
+    if len(candidates) < len(expected_entries):
+        return content
+
+    remaining = candidates.copy()
+    normalized_tokens: list[str] = []
+    for expected in expected_entries:
+        exp_id = expected.get("id") or ""
+        exp_type = expected.get("type") or ""
+        if exp_id:
+            chosen = exp_id
+            if chosen in remaining:
+                remaining.remove(chosen)
+            normalized_tokens.append(chosen)
+            continue
+
+        match_idx = next(
+            (
+                idx for idx, token in enumerate(remaining)
+                if exp_type and (token == exp_type or token.startswith(f"{exp_type}-"))
+            ),
+            None,
+        )
+        if match_idx is None:
+            normalized_tokens.append(exp_type)
+            continue
+        normalized_tokens.append(remaining.pop(match_idx))
+
+    if len(matches) > len(expected_entries):
+        normalized_tokens.extend(candidates[len(expected_entries):])
+
+    rebuilt: list[str] = []
+    cursor = 0
+    for index, match in enumerate(matches):
+        rebuilt.append(content[cursor:match.start()])
+        token = (
+            normalized_tokens[index]
+            if index < len(normalized_tokens)
+            else _normalize_activity_marker_token(match.group(1))
+        )
+        rebuilt.append(f"<!-- INJECT_ACTIVITY: {token} -->")
+        cursor = match.end()
+    rebuilt.append(content[cursor:])
+    return "".join(rebuilt)
 
 
 def _parse_rewrite_blocks(review_text: str) -> list[dict]:
@@ -6274,9 +6453,8 @@ def _dispatch_rewrite_prompt(prompt: str, writer: str, phase: str, orch_dir: Pat
         )
         if ok and raw:
             return ok, raw
-        # Rewrite-block prompts already inline the section contract, wiki
-        # excerpts, current content, and skeleton. If Gemini exhausts its
-        # own cascade without output, give the bounded section rewrite one
+        # Rewrite-block prompts are intentionally surgical. If Gemini exhausts
+        # its own cascade without output, give the bounded section rewrite one
         # Codex fallback before failing the block outright.
         return dispatch_agent(
             prompt,
@@ -6306,6 +6484,120 @@ def _dispatch_rewrite_prompt(prompt: str, writer: str, phase: str, orch_dir: Pat
     return False, ""
 
 
+def _rewrite_block_guardrails(current_section: str) -> str:
+    """Return a narrow guard block for surgical section rewrites."""
+    guardrails = [
+        "- Preserve the exact same H2 heading.",
+        "- Do not add any new H2/H3 headings, intro commentary, or closing notes.",
+        "- Keep existing `<!-- INJECT_ACTIVITY: ... -->` markers exactly as written.",
+        "- Rewrite only the prose/dialogue needed to satisfy the directive; keep valid teaching content intact.",
+    ]
+    if "<!-- INJECT_ACTIVITY:" not in current_section:
+        guardrails = [line for line in guardrails if "INJECT_ACTIVITY" not in line]
+    return "\n".join(guardrails)
+
+
+def _extract_rewrite_block_auxiliary_forbidden_literals(directive: str) -> list[str]:
+    """Derive evidence phrases that must not leak into auxiliary rewrite context."""
+    literals: list[str] = []
+    for raw_line in directive.splitlines():
+        if "Evidence:" not in raw_line:
+            continue
+        evidence = raw_line.split("Evidence:", 1)[1].strip()
+        quoted = [
+            match
+            for groups in re.findall(r"`([^`]{4,})`|\"([^\"]{4,})\"|“([^”]{4,})”", evidence)
+            for match in groups
+            if match
+        ]
+        if quoted:
+            literals.extend(quoted)
+            continue
+        for part in (chunk.strip() for chunk in evidence.split(";")):
+            if len(part) >= 4:
+                literals.append(part)
+    # Preserve order but deduplicate.
+    return list(dict.fromkeys(literals))
+
+
+def _rewrite_block_prompt_manifest(
+    *,
+    section_title: str,
+    prompt: str,
+    directive: str,
+    guardrails: str,
+    excerpt_literal: str,
+    current_section_literal: str,
+) -> dict:
+    """Build machine-readable rewrite prompt metadata for deterministic audit."""
+    derived_forbidden_literals = _extract_rewrite_block_auxiliary_forbidden_literals(directive)
+    auxiliary_text = "\n".join(
+        part for part in (guardrails, excerpt_literal) if part.strip()
+    )
+    forbidden_aux_literals = [
+        literal
+        for literal in derived_forbidden_literals
+        if literal in auxiliary_text
+    ]
+    return {
+        "phase": "rewrite-block",
+        "section": section_title,
+        "components": [
+            "rewrite_directive",
+            "rewrite_guardrails",
+            "section_mapped_wiki_excerpts",
+            "current_section",
+        ],
+        "metrics": {
+            "prompt_chars": len(prompt),
+            "prompt_words": len(prompt.split()),
+            "directive_chars": len(directive),
+            "guardrails_chars": len(guardrails),
+            "section_excerpt_chars": len(excerpt_literal),
+            "current_section_chars": len(current_section_literal),
+        },
+        "flags": {
+            "includes_shared_contract": "## Shared Module Contract" in prompt,
+            "includes_previous_sections": "## Previous Sections For Continuity" in prompt,
+            "includes_skeleton": "## Skeleton For This Section" in prompt,
+        },
+        "audit": {
+            "forbidden_headings_present": [
+                heading for heading in REWRITE_BLOCK_FORBIDDEN_HEADINGS if heading in prompt
+            ],
+            "derived_auxiliary_forbidden_literals": derived_forbidden_literals,
+            "auxiliary_forbidden_literals": forbidden_aux_literals,
+        },
+    }
+
+
+def _audit_rewrite_block_prompt(manifest: dict) -> list[str]:
+    """Return deterministic audit failures for a rewrite-block prompt manifest."""
+    failures: list[str] = []
+    metrics = manifest.get("metrics") or {}
+    audit = manifest.get("audit") or {}
+
+    if metrics.get("prompt_chars", 0) > REWRITE_BLOCK_PROMPT_MAX_CHARS:
+        failures.append(
+            f"prompt exceeds max chars ({metrics.get('prompt_chars')} > {REWRITE_BLOCK_PROMPT_MAX_CHARS})"
+        )
+
+    forbidden_headings = audit.get("forbidden_headings_present") or []
+    if forbidden_headings:
+        failures.append(
+            "prompt contains forbidden heading(s): " + ", ".join(forbidden_headings)
+        )
+
+    forbidden_literals = audit.get("auxiliary_forbidden_literals") or []
+    if forbidden_literals:
+        failures.append(
+            "auxiliary prompt context contains forbidden literal(s): "
+            + ", ".join(forbidden_literals)
+        )
+
+    return failures
+
+
 def _rewrite_block_section(
     content_path: Path,
     *,
@@ -6326,19 +6618,15 @@ def _rewrite_block_section(
 
     target_index = next(i for i, span in enumerate(spans) if span["title"] == resolved_title)
     current_section = spans[target_index]
-    previous_summary = _build_section_summary([span["body"] for span in spans[:target_index]])
 
     contract, excerpts = _ensure_contract_artifacts(level, module_num, slug, log_creation=False)
-    contract_literal, excerpt_literal = _format_contract_prompt_artifacts(
+    _, excerpt_literal = _format_contract_prompt_artifacts(
         contract, excerpts, section_title=resolved_title,
     )
-
-    skeleton_path = CURRICULUM_ROOT / level / "orchestration" / slug / "skeleton.md"
-    skeleton_sections = _parse_skeleton_sections(skeleton_path.read_text("utf-8")) if skeleton_path.exists() else []
-    skeleton_section = next(
-        (section for section in skeleton_sections if section["title"] == resolved_title),
-        {"title": resolved_title, "body": f"## {resolved_title}", "words": 0},
+    current_section_literal = _format_prompt_literal_block(
+        "Current Section", current_section["body"], language="markdown",
     )
+    guardrails = _rewrite_block_guardrails(current_section["body"])
 
     prompt = (
         "# Rewrite One Module Section\n\n"
@@ -6347,21 +6635,39 @@ def _rewrite_block_section(
         "Do not output any other sections, commentary, or code fences.\n\n"
         "## Rewrite Directive\n\n"
         f"{directive}\n\n"
-        "## Shared Module Contract\n\n"
-        f"{contract_literal}\n\n"
+        "## Rewrite Guardrails\n\n"
+        f"{guardrails}\n\n"
         "## Section-Mapped Wiki Excerpts\n\n"
         f"{excerpt_literal}\n\n"
-        "## Previous Sections For Continuity\n\n"
-        f"{_format_prompt_literal_block('Previous Sections Context', previous_summary, language='markdown')}\n\n"
         "## Current Section To Replace\n\n"
-        f"{_format_prompt_literal_block('Current Section', current_section['body'], language='markdown')}\n\n"
-        "## Skeleton For This Section\n\n"
-        f"{_format_prompt_literal_block('Section Skeleton', skeleton_section['body'], language='markdown')}\n"
+        f"{current_section_literal}\n"
     )
 
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     prompt_path = orch_dir / f"rewrite-block-{target_index + 1:02d}-prompt.md"
+    manifest_path = orch_dir / f"rewrite-block-{target_index + 1:02d}-prompt-manifest.yaml"
+    manifest = _rewrite_block_prompt_manifest(
+        section_title=resolved_title,
+        prompt=prompt,
+        directive=directive,
+        guardrails=guardrails,
+        excerpt_literal=excerpt_literal,
+        current_section_literal=current_section_literal,
+    )
+    failures = _audit_rewrite_block_prompt(manifest)
+    manifest["audit"]["passed"] = not failures
+    manifest["audit"]["failures"] = failures
     prompt_path.write_text(prompt, "utf-8")
+    manifest_path.write_text(
+        yaml.safe_dump(manifest, sort_keys=False, allow_unicode=True),
+        "utf-8",
+    )
+    if failures:
+        _log(
+            f"  ❌ Rewrite block prompt rejected for {resolved_title} — "
+            + "; ".join(failures)
+        )
+        return False
     ok, raw = _dispatch_rewrite_prompt(prompt, writer, f"rewrite-block-{target_index + 1:02d}", orch_dir)
     if not ok or not raw:
         _log(f"  ❌ Rewrite block failed for section: {resolved_title}")
@@ -6552,14 +6858,23 @@ def _style_rewrite_guardrails(
         {
             "EXPLANATION_TONE_MISMATCH",
             "STYLE_REGISTER_MISMATCH",
+            "REGISTER_MISMATCH",
             "REGISTER_DRIFT",
             "OVERSTATED_USAGE_EXPLANATION",
             "STYLE_DRIFT",
+            "TRANSLATIONESE_EXPLANATION",
+            "MIXED_EXPLANATORY_VOICE",
         }
     ):
         guardrails.append(
             "- Keep paragraph voice Ukrainian-first. English may appear only as brief "
             "parenthetical glosses or line-level translations, never as the main explanatory paragraph voice."
+        )
+        guardrails.append(
+            "- Rewrite any full English lecture-style explanation paragraph in this section into direct Ukrainian teaching prose. If English support is needed, keep it to a short gloss or a full-line translation after the Ukrainian sentence, not a separate explanatory paragraph."
+        )
+        guardrails.append(
+            "- Avoid sentence stems like `The verb ...`, `The phrase ...`, `This means ...`, or other English-first grammar lecture framing inside the prose body."
         )
     if "summary" in section_lower or "підсумок" in section_lower:
         guardrails.append(
@@ -6568,9 +6883,20 @@ def _style_rewrite_guardrails(
         guardrails.append(
             "- Do not open or close the summary with English overview paragraphs about the lesson or the verbs."
         )
+        guardrails.append(
+            "- Build the summary around 3-4 concrete everyday Ukrainian sentences, not abstract recap prose about what the verbs express."
+        )
         if "REGISTER_DRIFT" in issue_types:
             guardrails.append(
                 "- In summary sections, prefer a short natural recap with everyday examples instead of a list of classroom commands."
+            )
+        if "FORMULAIC_SECTION_OPENERS" in issue_types:
+            guardrails.append(
+                "- In summary sections, do not use worksheet commands like `Запам'ятайте`, `Прочитайте й повторіть`, or `Прочитайте й відчуйте різницю` as opener lines. Begin with plain Ukrainian recap prose instead."
+            )
+        if "ABSTRACT_SUMMARY_REGISTER" in issue_types:
+            guardrails.append(
+                "- In summary sections, avoid abstract lecture lines like `These verbs express...` or `These verbs frequently pair with...`. State the contrast through concrete daily-life examples first, then add at most one short usage note."
             )
     if (
         "dialog" in section_lower
@@ -6579,6 +6905,7 @@ def _style_rewrite_guardrails(
             {
                 "TRANSLATIONESE",
                 "TRANSLATED_DIALOGUE_RHYTHM",
+                "WORKSHEET_DIALOGUE_RHYTHM",
                 "SERVICE_REGISTER_STIFFNESS",
                 "UNNATURAL_COLLOCATION",
                 "UNNATURAL_SERVICE_DIALOGUE",
@@ -6595,6 +6922,7 @@ def _style_rewrite_guardrails(
         if issue_types.intersection(
             {
                 "TRANSLATED_DIALOGUE_RHYTHM",
+                "WORKSHEET_DIALOGUE_RHYTHM",
                 "PRAGMATIC_MISFRAMING",
                 "UNNATURAL_SERVICE_DIALOGUE",
                 "UNNATURAL_SERVICE_PHRASE",
@@ -6602,6 +6930,9 @@ def _style_rewrite_guardrails(
         ):
             guardrails.append(
                 "- Give each speaker one natural communicative goal per turn; avoid stacking target grammar into a single line just to display forms."
+            )
+            guardrails.append(
+                "- In café or shop scenes, let the exchange breathe: request -> clarifying question or recommendation -> acceptance/refusal -> natural close. Avoid clipped slot-filling turns with no reaction."
             )
             guardrails.append(
                 "- When explaining markers like `шкода`, say they express regret and can soften a refusal; do not define them as the refusal itself or as an absolute etiquette rule."
@@ -6630,6 +6961,10 @@ def _style_rewrite_guardrails(
     if "UNNATURAL_COLLOCATION" in issue_types:
         guardrails.append(
             "- Prefer idiomatic everyday collocations, especially with food, drink, and desire verbs; avoid literal model phrases that sound translated."
+        )
+    if "UNIDIOMATIC_COLLOCATION" in issue_types:
+        guardrails.append(
+            "- Prefer the more idiomatic everyday collocation when two grammatical options exist; avoid phrasing that sounds like a direct meaning-map from English."
         )
     if "NON_IDIOMATIC_MODEL_EXAMPLE" in issue_types:
         guardrails.append(

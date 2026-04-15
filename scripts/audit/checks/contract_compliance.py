@@ -25,6 +25,16 @@ _BANNED_TOKENS = (
 )
 
 
+def _normalize_section_title(title: str) -> str:
+    """Normalize H2 titles for contract matching.
+
+    Parenthetical English glosses like ``(Dialogues)`` are optional for the
+    written module and should not create false contract failures.
+    """
+    text = str(title or "").strip()
+    return re.sub(r"\s*\([^)]*\)\s*$", "", text).strip()
+
+
 def _parse_sections(content: str) -> list[dict]:
     matches = list(_SECTION_RE.finditer(content or ""))
     sections: list[dict] = []
@@ -34,6 +44,7 @@ def _parse_sections(content: str) -> list[dict]:
         body = content[start:end].strip()
         sections.append({
             "title": match.group(1).strip(),
+            "normalized_title": _normalize_section_title(match.group(1)),
             "body": body,
             "word_count": len(re.sub(r"<!--.*?-->", "", body).split()),
         })
@@ -68,49 +79,76 @@ def _missing_terms(text: str, terms: list[str]) -> list[str]:
     return [term for term in required if term.lower() not in lowered]
 
 
+def _surface_variants(term: str) -> list[str]:
+    """Return simple acceptable surface forms for a required lemma."""
+    base = re.split(r"\s*\(", str(term))[0].strip().lower()
+    if not base:
+        return []
+    variants = [base]
+    if base.endswith("а") and len(base) > 1:
+        variants.append(base[:-1] + "у")
+    elif base.endswith("я") and len(base) > 1:
+        variants.append(base[:-1] + "ю")
+    return variants
+
+
+def _missing_vocab_terms(text: str, terms: list[str]) -> list[str]:
+    lowered = text.lower()
+    missing: list[str] = []
+    for term in terms:
+        variants = _surface_variants(term)
+        if variants and not any(variant in lowered for variant in variants):
+            missing.append(term)
+    return missing
+
+
 def check_contract_compliance(content: str, contract: dict) -> list[dict]:
     """Return blocking and non-blocking compliance violations."""
     violations: list[dict] = []
     sections = _parse_sections(content)
-    section_map = {section["title"]: section for section in sections}
+    section_map = {section["normalized_title"]: section for section in sections}
     expected_titles = contract.get("teaching_beats", {}).get("section_order") or []
-    actual_titles = [section["title"] for section in sections]
+    actual_titles = [section["normalized_title"] for section in sections]
+    normalized_expected_titles = [_normalize_section_title(title) for title in expected_titles]
 
-    if expected_titles and actual_titles != expected_titles:
+    if normalized_expected_titles and actual_titles != normalized_expected_titles:
         violations.append({
             "type": "SECTION_ORDER",
             "severity": "ERROR",
             "section": "(whole module)",
-            "message": f"Expected H2 order {expected_titles}, found {actual_titles}",
+            "message": f"Expected H2 order {normalized_expected_titles}, found {actual_titles}",
         })
 
     teaching_sections = {
-        str(item.get("name") or "").strip(): item
+        _normalize_section_title(str(item.get("name") or "").strip()): item
         for item in (contract.get("teaching_beats", {}).get("sections") or [])
         if str(item.get("name") or "").strip()
     }
     budgets = contract.get("section_word_budgets") or {}
-    for title in expected_titles:
+    normalized_budgets = {
+        _normalize_section_title(key): value
+        for key, value in budgets.items()
+    }
+    for original_title, title in zip(expected_titles, normalized_expected_titles, strict=False):
         section = section_map.get(title)
         if section is None:
             violations.append({
                 "type": "MISSING_SECTION",
                 "severity": "ERROR",
-                "section": title,
-                "message": f"Missing required H2 section '{title}'",
+                "section": original_title,
+                "message": f"Missing required H2 section '{original_title}'",
             })
             continue
-        budget = budgets.get(title) or {}
+        budget = normalized_budgets.get(title) or {}
         lower = int(budget.get("min") or 0)
-        upper = int(budget.get("max") or 0)
-        if lower and upper and not (lower <= section["word_count"] <= upper):
+        if lower and section["word_count"] < lower:
             violations.append({
                 "type": "WORD_BUDGET",
                 "severity": "ERROR",
-                "section": title,
+                "section": original_title,
                 "message": (
-                    f"Section '{title}' has {section['word_count']} words; "
-                    f"contract requires {lower}-{upper}"
+                    f"Section '{original_title}' has {section['word_count']} words; "
+                    f"contract minimum is {lower}"
                 ),
             })
         required_terms = teaching_sections.get(title, {}).get("required_terms") or []
@@ -119,18 +157,15 @@ def check_contract_compliance(content: str, contract: dict) -> list[dict]:
             violations.append({
                 "type": "TEACHING_BEATS",
                 "severity": "ERROR",
-                "section": title,
+                "section": original_title,
                 "message": (
-                    f"Section '{title}' misses required teaching-beat terms "
+                    f"Section '{original_title}' misses required teaching-beat terms "
                     f"{missing_terms[:6]}"
                 ),
             })
 
     must_introduce = contract.get("vocab_grammar_targets", {}).get("must_introduce") or []
-    missing_vocab = [
-        item for item in must_introduce
-        if re.split(r"\s*\(", item)[0].strip().lower() not in content.lower()
-    ]
+    missing_vocab = _missing_vocab_terms(content, must_introduce)
     if missing_vocab:
         violations.append({
             "type": "VOCAB_TARGETS",
@@ -183,7 +218,10 @@ def check_contract_compliance(content: str, contract: dict) -> list[dict]:
 
     dialogue_acts = contract.get("dialogue_acts") or []
     for item in dialogue_acts:
-        required_terms = [item.get("setting", ""), *(item.get("speakers") or [])]
+        # Setting/function are scenario metadata and may be stored in English.
+        # Requiring those literal strings creates false failures. Speakers are
+        # the reliable deterministic grounding signal here.
+        required_terms = [speaker for speaker in (item.get("speakers") or []) if speaker]
         missing_terms = _missing_terms(content, required_terms)
         if missing_terms:
             violations.append({

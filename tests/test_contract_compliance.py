@@ -85,6 +85,80 @@ def test_contract_compliance_flags_missing_teaching_beat_terms() -> None:
     assert any("літера" in v["message"] for v in violations if v["type"] == "TEACHING_BEATS")
 
 
+def test_contract_compliance_treats_budget_as_minimum_only() -> None:
+    contract = _sample_contract()
+    contract["section_word_budgets"] = {
+        "Intro": {"min": 5, "max": 10},
+        "Practice": {"min": 5, "max": 10},
+    }
+    content = """## Intro
+У classroom Вчитель і Учень пояснюють, що звук і літера не те саме. Привіт і добре тут. Ще кілька слів зверху.
+<!-- INJECT_ACTIVITY: quiz-intro -->
+
+## Practice
+Учень каже привіт і добре ще раз у practice section. Додаємо ще трохи тексту, щоб перевищити стару стелю.
+<!-- INJECT_ACTIVITY: match-practice -->
+"""
+    violations = check_contract_compliance(content, contract)
+    assert not any(v["type"] == "WORD_BUDGET" for v in violations)
+
+
+def test_contract_compliance_accepts_simple_inflected_required_vocab() -> None:
+    contract = {
+        "teaching_beats": {"section_order": [], "sections": []},
+        "vocab_grammar_targets": {"must_introduce": ["кава (coffee, f)"]},
+        "activity_obligations": [],
+    }
+    content = "## Діалоги\nМожна мені, будь ласка, каву?\n"
+    violations = check_contract_compliance(content, contract)
+    assert not any(v["type"] == "VOCAB_TARGETS" for v in violations)
+
+
+def test_contract_compliance_accepts_titles_without_parenthetical_gloss() -> None:
+    contract = {
+        "teaching_beats": {
+            "section_order": ["Діалоги (Dialogues)", "Підсумок — Summary"],
+            "sections": [
+                {"name": "Діалоги (Dialogues)", "required_terms": []},
+                {"name": "Підсумок — Summary", "required_terms": []},
+            ],
+        },
+        "section_word_budgets": {
+            "Діалоги (Dialogues)": {"min": 1, "max": 50},
+            "Підсумок — Summary": {"min": 1, "max": 50},
+        },
+        "activity_obligations": [],
+    }
+    content = """## Діалоги
+Короткий текст.
+
+## Підсумок — Summary
+Ще трохи тексту.
+"""
+    violations = check_contract_compliance(content, contract)
+    assert not any(v["type"] in {"SECTION_ORDER", "MISSING_SECTION"} for v in violations)
+
+
+def test_contract_compliance_dialogue_grounding_uses_speakers_not_english_setting() -> None:
+    contract = {
+        "teaching_beats": {"section_order": [], "sections": []},
+        "dialogue_acts": [
+            {
+                "setting": "Ordering at a café",
+                "speakers": ["Клієнт", "Офіціантка"],
+                "function": "A1 service exchange",
+            }
+        ],
+        "activity_obligations": [],
+    }
+    content = """## Діалоги
+> — **Клієнт:** Добрий день!
+> — **Офіціантка:** Добрий день!
+"""
+    violations = check_contract_compliance(content, contract)
+    assert not any(v["type"] == "DIALOGUE_ACT" for v in violations)
+
+
 def test_contract_compliance_requires_all_dialogue_and_anchor_terms() -> None:
     content = """## Intro
 У classroom Вчитель пояснює, що звук не те саме. Привіт і добре тут.

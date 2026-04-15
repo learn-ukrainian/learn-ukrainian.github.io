@@ -84,6 +84,21 @@ Any of the following is an automatic blocking issue:
 
 If an auto-fail trigger appears, you must record it as a critical blocking issue and the pass verdict cannot be `PASS`.
 
+## Convergence Rules
+
+Your review must help an automated rewrite loop converge quickly.
+
+- Report **at most 3 blocking issues**.
+- Prefer **section-local blockers** over broad global complaints.
+- Each blocking issue must describe **one distinct root cause**. Do not duplicate the same problem under two labels.
+- If one problem appears in multiple places, choose the **smallest actionable rewrite scope** and name a primary section/location instead of writing vague locations like `Across sections 1-4`.
+- Only use a cross-section location when the same fix truly must be applied in multiple sections. Even then, make the fix concrete enough that a rewrite tool can act on it.
+- Do **not** emit overlapping blockers like:
+  - one issue for "mixed explanatory voice"
+  - another issue for "style register split"
+  if both are based on the same evidence and need the same fix
+- Prefer blockers that can be solved by rewriting one section at a time.
+
 ## Tool Use
 
 Use verification tools selectively but concretely:
@@ -118,6 +133,7 @@ Output exactly one YAML document and nothing else.
 - No prose before or after the YAML
 - Keep `blocking_issues` empty only if there are truly no blocking issues
 - Keep rationales short and specific
+- Keep `location`, `evidence`, and `fix` concrete enough for a section rewrite tool to act on them without guessing
 
 Use this exact schema:
 

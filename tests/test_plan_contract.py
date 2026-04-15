@@ -12,6 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from build.phases.plan_contract import build_contract
+from build.phases.wiki_compressor import compress_wiki_packet
 from build.v6_build import _build_wiki_packet
 
 
@@ -83,3 +84,34 @@ def test_contract_builder_accepts_plan_without_dialogue_situations() -> None:
     assert contract["dialogue_acts"] == []
     assert contract["module"]["slug"] == "reading-ukrainian"
 
+
+def test_wiki_compressor_uses_dialogue_situations_for_dialogue_sections() -> None:
+    plan = {
+        "content_outline": [
+            {
+                "section": "Діалоги (Dialogues)",
+                "points": ["Build a short natural service exchange."],
+            }
+        ],
+        "dialogue_situations": [
+            {
+                "setting": "Ordering at a café",
+                "speakers": ["Клієнт", "Офіціантка"],
+                "motivation": "order coffee politely",
+            }
+        ],
+    }
+    wiki_packet = (
+        "### Вікі: pedagogy/a1/i-want-i-can.md\n\n"
+        "## Overview\n\n"
+        "хотіти, могти, мушу. General modal overview.\n\n"
+        "### Вікі: pedagogy/a1/at-the-cafe.md\n\n"
+        "## Overview\n\n"
+        "Можна мені, будь ласка, каву? Що можете порадити?\n"
+    )
+
+    compression = compress_wiki_packet(plan, wiki_packet)
+    excerpts = compression["section_excerpts"]["Діалоги (Dialogues)"]
+
+    assert excerpts
+    assert excerpts[0]["source_path"] == "pedagogy/a1/at-the-cafe.md"

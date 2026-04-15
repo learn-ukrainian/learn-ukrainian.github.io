@@ -154,6 +154,127 @@ def test_apply_review_rewrite_blocks_rewrites_only_target_section(tmp_path: Path
     assert "Old practice." not in updated
 
 
+def test_rewrite_block_section_emits_slim_prompt_manifest(tmp_path: Path, monkeypatch) -> None:
+    level = "a1"
+    slug = "rewrite-prompt-audit"
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    orch_dir = curriculum_root / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    _write_plan(curriculum_root, level, slug)
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    content_path.write_text(
+        "## Intro\nOld intro.\n\n## Practice\nOld practice.\n",
+        "utf-8",
+    )
+    packet_path = tmp_path / "packet.md"
+    packet_path.write_text(
+        "### Вікі: pedagogy/a1/rewrite-prompt-audit.md\n\n## Practice\n\nДобре. Учень читає.\n",
+        "utf-8",
+    )
+
+    captured: dict[str, str] = {}
+
+    def fake_dispatch(prompt: str, writer: str, phase: str, orch_dir_arg: Path):
+        captured["prompt"] = prompt
+        return True, "## Practice\nRewritten practice with Учень.\n"
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    v6_build._ensure_contract_artifacts(level, 1, slug, packet_path, log_creation=False)
+    monkeypatch.setattr(v6_build, "_dispatch_rewrite_prompt", fake_dispatch)
+
+    ok = v6_build._rewrite_block_section(
+        content_path,
+        level=level,
+        module_num=1,
+        slug=slug,
+        writer="gemini",
+        section_name="Practice",
+        directive="Fix the dialogue rhythm.",
+    )
+
+    manifest_path = orch_dir / "rewrite-block-02-prompt-manifest.yaml"
+    manifest = yaml.safe_load(manifest_path.read_text("utf-8"))
+
+    assert ok is True
+    assert "## Rewrite Guardrails" in captured["prompt"]
+    assert "## Section-Mapped Wiki Excerpts" in captured["prompt"]
+    assert "## Current Section To Replace" in captured["prompt"]
+    assert "## Shared Module Contract" not in captured["prompt"]
+    assert "## Previous Sections For Continuity" not in captured["prompt"]
+    assert "## Skeleton For This Section" not in captured["prompt"]
+    assert manifest["audit"]["passed"] is True
+    assert manifest["components"] == [
+        "rewrite_directive",
+        "rewrite_guardrails",
+        "section_mapped_wiki_excerpts",
+        "current_section",
+    ]
+    assert manifest["flags"]["includes_shared_contract"] is False
+    assert manifest["flags"]["includes_previous_sections"] is False
+    assert manifest["flags"]["includes_skeleton"] is False
+
+
+def test_rewrite_block_prompt_audit_rejects_forbidden_auxiliary_literals(
+    tmp_path: Path, monkeypatch
+) -> None:
+    level = "a1"
+    slug = "rewrite-prompt-poison"
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    orch_dir = curriculum_root / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    content_path.write_text(
+        "## Practice\nOld practice.\n",
+        "utf-8",
+    )
+
+    dispatch_called = {"value": False}
+
+    def fake_dispatch(*args, **kwargs):
+        dispatch_called["value"] = True
+        return True, "## Practice\nRewritten practice.\n"
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build, "_dispatch_rewrite_prompt", fake_dispatch)
+    monkeypatch.setattr(
+        v6_build,
+        "_ensure_contract_artifacts",
+        lambda *args, **kwargs: (
+            {"activity_obligations": []},
+            {
+                "sections": {
+                    "Practice": [
+                        {"source": "plan", "excerpt": "Що ви можете порекомендувати?"},
+                    ]
+                },
+                "factual_anchors": [],
+            },
+        ),
+    )
+
+    ok = v6_build._rewrite_block_section(
+        content_path,
+        level=level,
+        module_num=1,
+        slug=slug,
+        writer="gemini",
+        section_name="Practice",
+        directive='- Evidence: "Що ви можете порекомендувати?"\n- Required fix: Use a simpler service question.',
+    )
+
+    manifest_path = orch_dir / "rewrite-block-01-prompt-manifest.yaml"
+    manifest = yaml.safe_load(manifest_path.read_text("utf-8"))
+
+    assert ok is False
+    assert dispatch_called["value"] is False
+    assert manifest["audit"]["passed"] is False
+    assert "Що ви можете порекомендувати?" in manifest["audit"]["derived_auxiliary_forbidden_literals"]
+    assert "Що ви можете порекомендувати?" in manifest["audit"]["auxiliary_forbidden_literals"]
+    assert any("forbidden literal" in failure for failure in manifest["audit"]["failures"])
+
+
 def test_main_marks_needs_human_review_after_two_rounds(tmp_path: Path, monkeypatch) -> None:
     level = "a1"
     slug = "needs-human"
@@ -375,14 +496,34 @@ blocking_issues:
     location: "Хотіти (To Want), opening explanation"
     evidence: "The verb хотіти is essential..."
     fix: "Keep exposition in one coherent Ukrainian pedagogical register."
+  - type: REGISTER_MISMATCH
+    location: "Діалоги (Dialogues), café exchange closing"
+    evidence: "Чудово, давайте борщ."
+    fix: "Use a more natural ordering formula."
   - type: MIXED_EXPLANATORY_VOICE
     location: "Хотіти (To Want); Могти і мусити (Can and Must)"
     evidence: "dense inline glosses"
     fix: "Keep one concise Ukrainian pedagogical voice."
+  - type: TRANSLATIONESE_EXPLANATION
+    location: "Хотіти (To Want); Підсумок — Summary"
+    evidence: "у своїй базовій словниковій формі"
+    fix: "Rewrite into plainer Ukrainian pedagogical prose."
+  - type: FORMULAIC_SECTION_OPENERS
+    location: "Підсумок — Summary, opening and cue lines"
+    evidence: "Запам'ятайте: / Прочитайте й повторіть:"
+    fix: "Replace worksheet-style commands with plain recap prose."
+  - type: WORKSHEET_DIALOGUE_RHYTHM
+    location: "Діалоги (Dialogues), café exchange"
+    evidence: "Велику. І можна ще борщ?"
+    fix: "Turn this into a fuller service exchange with a reactive recommendation turn and a natural close."
   - type: REGISTER_DRIFT
     location: "Підсумок — Summary, opening and mid-section"
     evidence: "Порівняйте ці речення... Запам'ятайте..."
     fix: "Turn the summary into a short natural recap."
+  - type: ABSTRACT_SUMMARY_REGISTER
+    location: "Підсумок — Summary, opening and closing prose"
+    evidence: "These verbs express desires, abilities, and obligations"
+    fix: "Replace abstract recap with concrete everyday examples."
   - type: UNNATURAL_COLLOCATION
     location: "Хотіти (To Want), examples"
     evidence: "Він хоче великий чай."
@@ -407,6 +548,10 @@ blocking_issues:
     location: "Діалоги (Dialogues), café explanation paragraph"
     evidence: "The phrase я хочу їсти is the standard, everyday way to say I am hungry."
     fix: "State the literal meaning first and mention everyday alternatives."
+  - type: UNIDIOMATIC_COLLOCATION
+    location: "Підсумок — Summary, evening-plans paragraph"
+    evidence: "вона хоче пити смачну каву"
+    fix: "Prefer a more idiomatic collocation."
 """,
         content_path,
         level=level,
@@ -431,10 +576,16 @@ blocking_issues:
     assert "do not use blunt `Я хочу [noun]` as the direct order" in dialogue_directive
     assert "state the literal meaning of the target phrase first" in dialogue_directive
     want_directive = calls["Хотіти (To Want)"]
+    dialogue_directive = calls["Діалоги (Dialogues)"]
     assert "English may appear only as brief parenthetical glosses" in want_directive
+    assert "Rewrite any full English lecture-style explanation paragraph" in want_directive
+    assert "let the exchange breathe: request -> clarifying question or recommendation" in dialogue_directive
     assert "Prefer idiomatic everyday collocations" in want_directive
+    assert "Prefer the more idiomatic everyday collocation" in summary_directive
     assert "do not write traps like `частка не завжди ...`" in want_directive
     assert "Replace model sentences that are merely grammatical" in summary_directive
+    assert "do not use worksheet commands like `Запам'ятайте`" in summary_directive
+    assert "avoid abstract lecture lines like `These verbs express...`" in summary_directive
     assert "do not write traps like `частка не завжди ...`" in summary_directive
 
 
@@ -613,3 +764,26 @@ def test_main_marks_needs_human_review_after_style_plateau(tmp_path: Path, monke
     assert state["needs_human_review"]["status"] is True
     assert needs_human_review["style_review_rounds"] == 2
     assert needs_human_review["style_score_history"] == [8.4, 8.5]
+
+
+def test_normalize_activity_markers_to_contract_reorders_type_only_slots() -> None:
+    content = """## Intro
+<!-- INJECT_ACTIVITY: fill-in-khotity-conjugation -->
+<!-- INJECT_ACTIVITY: quiz-regular-irregular -->
+<!-- INJECT_ACTIVITY: quiz-choose-modal -->
+<!-- INJECT_ACTIVITY: fill-in-modal-story -->
+"""
+    contract = {
+        "activity_obligations": [
+            {"type": "fill-in"},
+            {"type": "quiz"},
+            {"type": "fill-in"},
+            {"type": "quiz"},
+        ]
+    }
+    normalized = v6_build._normalize_activity_markers_to_contract(content, contract)
+    assert "<!-- INJECT_ACTIVITY: fill-in-khotity-conjugation -->" in normalized
+    assert "<!-- INJECT_ACTIVITY: quiz-regular-irregular -->" in normalized
+    assert "<!-- INJECT_ACTIVITY: fill-in-modal-story -->" in normalized
+    assert "<!-- INJECT_ACTIVITY: quiz-choose-modal -->" in normalized
+    assert normalized.index("fill-in-modal-story") < normalized.index("quiz-choose-modal")
