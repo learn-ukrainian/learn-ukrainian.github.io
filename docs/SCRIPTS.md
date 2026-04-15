@@ -21,12 +21,15 @@ Project-local wrappers for interactive agent sessions:
 
 - interactive Codex in dangerous bypass mode
 - `CODEX_SESSION=1` so repo scripts can detect an interactive Codex session
+- default target `worktree`, with `--main` or `CODEX_TARGET=main` available when Codex must work directly in the primary main checkout
 - repo subprocess defaults unchanged unless you explicitly override env vars
 
 Override before launch if needed:
 
 ```bash
 CODEX_DISPATCH_MODE=workspace-write CODEX_BRIDGE_MODE=safe ./start-codex.sh
+./start-codex.sh --main
+CODEX_TARGET=main ./start-codex.sh
 ```
 
 ---
