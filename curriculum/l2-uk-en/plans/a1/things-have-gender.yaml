@@ -2,7 +2,7 @@ module: a1-008
 level: A1
 sequence: 8
 slug: things-have-gender
-version: '1.1'
+version: '1.1.1'
 title: Things Have Gender
 subtitle: він, вона, воно — every noun has a gender
 focus: grammar
@@ -15,10 +15,10 @@ objectives:
 - Name 20+ common objects with correct gender
 - Use У мене є with objects (extending from M06 family)
 dialogue_situations:
-- setting: At home or on a video call showing your room. Learners point to everyday
+- setting: 'At home or on a video call showing your room. Learners point to everyday
     objects and say він/вона/воно with them: стіл (m), книга (f), вікно (n), лампа
     (f), ліжко (n), телефон (m), plus a few familiar pet or home items like кіт
-    (m) and дзеркало (n).
+    (m) and дзеркало (n).'
   speakers:
   - Марія
   - Оленка
