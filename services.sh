@@ -31,26 +31,32 @@ mkdir -p "$LOGS_DIR" "$PIDS_DIR"
 # Bridge defaults for learn-ukrainian. Other projects can set AB_* explicitly.
 export AB_MONITOR_URL="${AB_MONITOR_URL:-http://localhost:8765/api/state/summary}"
 
-# Service definitions: name -> command, port, log file, health check
-declare -A SVC_CMD SVC_PORT SVC_LOG SVC_DESC SVC_HEALTH
+# Service definitions: name -> command, port, log file, health checks, process match
+declare -A SVC_CMD SVC_PORT SVC_LOG SVC_DESC SVC_HEALTH SVC_HEALTH_ALT SVC_MATCH
 
 SVC_CMD[sources]="$VENV/python .mcp/servers/sources/server.py --standalone"
 SVC_PORT[sources]=8766
 SVC_LOG[sources]="$LOGS_DIR/mcp-sources.log"
 SVC_DESC[sources]="MCP Sources Server (SQLite FTS5 — textbooks, dicts, literary, Wikipedia)"
-SVC_HEALTH[sources]="http://localhost:8766/health"
+SVC_HEALTH[sources]="http://127.0.0.1:8766/health"
+SVC_HEALTH_ALT[sources]="http://localhost:8766/health"
+SVC_MATCH[sources]=".mcp/servers/sources/server.py --standalone"
 
 SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765"
 SVC_PORT[api]=8765
 SVC_LOG[api]="$LOGS_DIR/api.log"
 SVC_DESC[api]="API Dashboard Server (FastAPI)"
-SVC_HEALTH[api]="http://localhost:8765/api/health"
+SVC_HEALTH[api]="http://127.0.0.1:8765/api/health"
+SVC_HEALTH_ALT[api]="http://localhost:8765/api/health"
+SVC_MATCH[api]="scripts.api.main:app --host 0.0.0.0 --port 8765"
 
 SVC_CMD[starlight]="npm run dev --prefix starlight -- --force"
 SVC_PORT[starlight]=4321
 SVC_LOG[starlight]="$LOGS_DIR/starlight.log"
 SVC_DESC[starlight]="Starlight Dev Server (Astro)"
 SVC_HEALTH[starlight]="http://localhost:4321/"
+SVC_HEALTH_ALT[starlight]="http://127.0.0.1:4321/"
+SVC_MATCH[starlight]="astro dev --force"
 
 ALL_SERVICES="sources api starlight"
 
@@ -78,9 +84,38 @@ _pid_on_port() {
     fi
 }
 
-_health_check() {
+_cmdline_for_pid() {
+    local pid="$1"
+    ps -p "$pid" -o args= 2>/dev/null
+}
+
+_pid_matches_service() {
     local name="$1"
-    local url="${SVC_HEALTH[$name]-}"
+    local pid="$2"
+    local match="${SVC_MATCH[$name]-}"
+    local cmdline
+
+    if [[ -z "$match" ]]; then
+        return 1
+    fi
+
+    cmdline="$(_cmdline_for_pid "$pid")"
+    [[ -n "$cmdline" && "$cmdline" == *"$match"* ]]
+}
+
+_verified_port_pid() {
+    local name="$1"
+    local port_pid
+
+    port_pid="$(_pid_on_port "$name")"
+    if [[ -n "$port_pid" ]] && _pid_matches_service "$name" "$port_pid"; then
+        printf '%s\n' "$port_pid"
+    fi
+}
+
+_health_probe() {
+    local name="$1"
+    local url="$2"
 
     if [[ -z "$url" ]]; then
         return 1
@@ -97,6 +132,55 @@ _health_check() {
     fi
 }
 
+_health_check() {
+    local name="$1"
+    local primary="${SVC_HEALTH[$name]-}"
+    local alt="${SVC_HEALTH_ALT[$name]-}"
+
+    if _health_probe "$name" "$primary"; then
+        return 0
+    fi
+
+    if [[ -n "$alt" ]]; then
+        _health_probe "$name" "$alt"
+    else
+        return 1
+    fi
+}
+
+_known_service_pid() {
+    local name="$1"
+    local pidfile pid verified_pid
+
+    pidfile="$(_pid_file "$name")"
+    if [[ -f "$pidfile" ]]; then
+        pid=$(cat "$pidfile" 2>/dev/null || true)
+        if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null && _pid_matches_service "$name" "$pid"; then
+            printf '%s\n' "$pid"
+            return 0
+        fi
+    fi
+
+    verified_pid="$(_verified_port_pid "$name")"
+    if [[ -n "$verified_pid" ]]; then
+        printf '%s\n' "$verified_pid"
+        return 0
+    fi
+
+    return 1
+}
+
+_sync_pidfile() {
+    local name="$1"
+    local pid="$2"
+    local pidfile
+
+    pidfile="$(_pid_file "$name")"
+    if [[ -n "$pid" ]]; then
+        printf '%s\n' "$pid" > "$pidfile" 2>/dev/null || true
+    fi
+}
+
 _service_state() {
     local name="$1"
     if _health_check "$name"; then
@@ -104,7 +188,7 @@ _service_state() {
         return 0
     fi
 
-    if _is_running "$name"; then
+    if _known_service_pid "$name" >/dev/null; then
         echo "degraded"
         return 0
     fi
@@ -113,24 +197,7 @@ _service_state() {
 }
 
 _is_running() {
-    local pidfile
-    pidfile="$(_pid_file "$1")"
-    if [[ -f "$pidfile" ]]; then
-        local pid
-        pid=$(cat "$pidfile")
-        if kill -0 "$pid" 2>/dev/null; then
-            return 0
-        fi
-        # Stale PID file
-        rm -f "$pidfile"
-    fi
-
-    # Reconcile services started outside this wrapper or after a stale-pid cleanup.
-    # If the expected port is already listening, trust that process and refresh the pidfile.
-    local port_pid
-    port_pid="$(_pid_on_port "$1")"
-    if [[ -n "$port_pid" ]]; then
-        echo "$port_pid" > "$pidfile"
+    if _known_service_pid "$1" >/dev/null; then
         return 0
     fi
 
@@ -142,11 +209,16 @@ _start_service() {
     local state
     state="$(_service_state "$name")"
     if [[ "$state" == "running" ]]; then
-        echo "  $name is already healthy (PID $(cat "$(_pid_file "$name")"))"
+        local pid
+        pid="$(_known_service_pid "$name" || true)"
+        _sync_pidfile "$name" "$pid"
+        echo "  $name is already healthy (PID ${pid:-unknown})"
         return 0
     fi
     if [[ "$state" == "degraded" ]]; then
-        echo "  $name process exists but is unhealthy (PID $(cat "$(_pid_file "$name")")); restart it instead"
+        local pid
+        pid="$(_known_service_pid "$name" || true)"
+        echo "  $name process exists but is unhealthy (PID ${pid:-unknown}); restart it instead"
         return 0
     fi
 
@@ -166,15 +238,14 @@ _stop_service() {
     local pidfile
     pidfile="$(_pid_file "$name")"
 
-    if ! _is_running "$name"; then
+    local pid
+    pid="$(_known_service_pid "$name" || true)"
+    if [[ -z "$pid" ]]; then
         echo "  $name is not running"
-        # Clean up stale PID file if it exists
         rm -f "$pidfile"
         return 0
     fi
 
-    local pid
-    pid=$(cat "$pidfile")
     echo "  Stopping $name (PID $pid)..."
     kill "$pid" 2>/dev/null || true
 
@@ -220,9 +291,9 @@ _status() {
     for name in $ALL_SERVICES; do
         local state pid
         state="$(_service_state "$name")"
-        pid="-"
-        if [[ -f "$(_pid_file "$name")" ]]; then
-            pid=$(cat "$(_pid_file "$name")")
+        pid="$(_known_service_pid "$name" || true)"
+        if [[ -z "$pid" ]]; then
+            pid="-"
         fi
 
         case "$state" in
