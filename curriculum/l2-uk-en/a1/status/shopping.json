@@ -2,10 +2,10 @@
   "module": "shopping",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-13T21:18:03.756028Z",
+  "last_audit": "2026-04-14T12:51:21.091731Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-13T21:17:52.341525Z",
+    "md": "2026-04-14T12:51:09.272078Z",
     "meta": null,
     "activities": "2026-04-13T00:56:42.286440Z",
     "vocabulary": "2026-04-13T00:57:32.419146Z",

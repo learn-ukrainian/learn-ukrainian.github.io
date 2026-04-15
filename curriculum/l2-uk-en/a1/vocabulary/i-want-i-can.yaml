@@ -1,30 +1,6 @@
 vocabulary:
-- word: хоті́ти
-  translation: to want
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: могти́
-  translation: to be able, can
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: му́сити
-  translation: must, to have to
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: тре́ба
-  translation: need to, it is necessary
-  expression: false
-  pos: ''
-  gender: ''
-  verified: true
 - word: шко́да́
-  translation: pity, unfortunately
+  translation: a pity
   expression: false
   pos: ''
   gender: ''
@@ -41,6 +17,30 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
+- word: тре́ба
+  translation: need to
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: хоті́ти
+  translation: to want
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: могти́
+  translation: can
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: му́сити
+  translation: must
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
 - word: ка́ва
   translation: coffee
   expression: false
@@ -53,20 +53,80 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
+- word: роби́ти
+  translation: to do
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сього́дні
+  translation: today
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
 - word: гуля́ти
-  translation: to walk, to stroll
+  translation: to walk
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: працюва́ти
-  translation: to work
+- word: за́втра
+  translation: tomorrow
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ві́льний
+  translation: free
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: піти
+  translation: to go
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кіно́
+  translation: cinema
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: домо́вилися
+  translation: deal
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: пи́ти
-  translation: to drink
+- word: будь ласка
+  translation: you're welcome
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: добрий день
+  translation: good day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вели́кий
+  translation: large
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: мале́нький
+  translation: small
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: прошу
+  translation: you're welcome
   expression: false
   pos: дієсл.
   gender: ''
@@ -77,74 +137,50 @@ vocabulary:
   pos: дієсл.
   gender: ''
   verified: true
+- word: чай
+  translation: tea
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: говори́ти
+  translation: to speak
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: украї́нською
+  translation: Ukrainian
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вчи́ти
+  translation: to learn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сло́во
+  translation: word
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
 - word: спа́ти
   translation: to sleep
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: вчи́ти
-  translation: to learn, to study
+- word: але́
+  translation: but
   expression: false
-  pos: дієсл.
+  pos: спол.
   gender: ''
   verified: true
-- word: слова́
-  translation: words
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
-- word: сік
-  translation: juice
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вода́
-  translation: water
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: кни́га
-  translation: book
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: офіціа́нт
-  translation: waiter
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: відві́дувач
-  translation: visitor, customer
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: вели́кий
-  translation: large, big
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: мале́нький
-  translation: small, little
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: Що ти хочеш робити?
-  translation: What do you want to do?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Я хочу каву.
-  translation: I want coffee.
+- word: складений дієслівний присудок
+  translation: compound verbal predicate
   expression: true
   pos: ''
   gender: ''

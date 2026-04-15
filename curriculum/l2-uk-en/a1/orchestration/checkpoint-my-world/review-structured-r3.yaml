@@ -1,0 +1,55 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 5
+  evidence: 'The section order is correct, but four section budgets are outside the
+    contract bands by more than 10% on direct count: `Що ми зна́ємо?` is about 309
+    words vs 180-220, `Чита́ння` about 193 vs 225-275,'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, or wrong Ukrainian forms found. Verified
+    forms include `вишиванка`, `глечик`, `намисто`, `писанка`, `ярмарок`, `двісті`,
+    `п'ятдесят`, `синє`, `гривень`, `коштує`.
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: 'The module often explains the checkpoint in abstract English instead
+    of moving straight into learner action: `You have reached the checkpoint for the
+    "My World" phase...` and `This conversation seamle'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 6
+  evidence: '`Чита́ння` includes `моя`, `кімната`, `Мій`, `стіл`, `великий`, `новий`,
+    but not the required `лампа` or `біла`. `Діало́г` includes `Добрий`, `день`, `червона`,
+    `синя`, `Скільки`, but not the required'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'The module includes all four expected activity slots and the marker types
+    align with the contract focus areas: review sort, gender/agreement quiz, singular/plural
+    quiz, and shopping-dialogue fill-in.'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The market setting with `вишиванка`, `глечик`, `намисто`, and `писанки`
+    gives the module specific Ukrainian texture, and the teacher voice stays mostly
+    classroom-appropriate.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: All five H2 sections are present and in order, but the pipeline note says
+    the module is `1199 words`, one word below the `1200` minimum.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'The module treats Ukrainian culture on its own terms and uses grounded
+    objects and settings: `ярмарок`, `вишиванка`, `глечик`, `писанки`.'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: 'The section says `A tourist named Іва́нко and a local friend named Катя́...`,
+    but after `Іванко: До́брий день! Скі́льки вона коштує?` the friend answers stall
+    prices, so roles blur and the exchange re'
+findings: []

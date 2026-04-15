@@ -1,0 +1,23 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "weather",
+  "phases": {
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-13T21:19:22.029210+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-13T21:19:26.374538+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-13T21:19:27.757958+00:00"
+    },
+    "audit": {
+      "status": "complete",
+      "ts": "2026-04-14T10:47:35.137726+00:00"
+    }
+  }
+}

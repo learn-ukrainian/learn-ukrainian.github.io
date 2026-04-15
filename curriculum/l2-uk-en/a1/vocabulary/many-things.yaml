@@ -66,63 +66,15 @@ vocabulary:
   gender: ч.
   verified: true
 - word: мої́
-  translation: my
+  translation: my (plural)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: які́
-  translation: what kind
+  translation: what kind (plural)
   expression: false
   pos: прикм.
-  gender: ''
-  verified: true
-- word: Вчи́тель
-  translation: teacher
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Доброго ранку!
-  translation: Good morning!
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Що тут є?
-  translation: What is here?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: У́чні
-  translation: students
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Студе́нт
-  translation: student
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Продаве́ць
-  translation: shop assistant
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: Скі́льки
-  translation: How many?
-  expression: false
-  pos: присл.
-  gender: ''
-  verified: true
-- word: Ось, будь ласка.
-  translation: Here you go.
-  expression: true
-  pos: ''
   gender: ''
   verified: true
 - word: один предмет
@@ -138,16 +90,22 @@ vocabulary:
   gender: ''
   verified: true
 - word: телефо́ни
-  translation: phones
+  translation: telephones
   expression: false
   pos: ім.
   gender: ''
   verified: true
-- word: дні
-  translation: days
+- word: коти́
+  translation: cats
   expression: false
   pos: ім.
-  gender: ч.
+  gender: ''
+  verified: true
+- word: ша́фи
+  translation: wardrobes
+  expression: false
+  pos: ім.
+  gender: ж.
   verified: true
 - word: лі́жка
   translation: beds
@@ -155,62 +113,38 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: сті́ни
-  translation: walls
+- word: две́рі
+  translation: doors
   expression: false
   pos: ім.
-  gender: ж.
+  gender: ''
   verified: true
 - word: вели́кі
-  translation: big
+  translation: big (plural)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: нові́
-  translation: new
+  translation: new (plural)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: старі́
-  translation: old
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: чи́сті
-  translation: clean
+  translation: old (plural)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: весе́лі
-  translation: cheerful
+  translation: cheerful (plural)
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: черво́ні
-  translation: red
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: си́ні
-  translation: blue
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: бі́лі
-  translation: white
-  expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: чо́рні
-  translation: black
+- word: чи́сті
+  translation: clean (plural)
   expression: false
   pos: прикм.
   gender: ''

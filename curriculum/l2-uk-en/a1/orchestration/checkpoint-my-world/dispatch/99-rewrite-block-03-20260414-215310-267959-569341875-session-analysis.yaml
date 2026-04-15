@@ -1,0 +1,36 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-14T19-52-6d158113.json
+phase: rewrite-block-03
+prompt_chars: 18814
+response_chars: 1597
+prompt_words: 2453
+response_words: 219
+sections:
+- name: preamble
+  start: 0
+  length: 14100
+  fraction: 0.7494
+- name: prior_summary
+  start: 14100
+  length: 4515
+  fraction: 0.24
+- name: skeleton
+  start: 18615
+  length: 199
+  fraction: 0.0106
+large_sections:
+- preamble
+directives_total: 3
+directives_covered: 0
+directives_missed:
+- kind: inject_activity
+  text: group-sort-vocabulary
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-gender-agreement
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-singular-plural
+  covered: false
+  coverage_note: marker missing

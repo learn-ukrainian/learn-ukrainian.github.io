@@ -1,0 +1,49 @@
+round: 9
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Core beats are covered well: `Що ти хочеш робити?... Я не можу, я мушу
+    працювати`, the café preview includes `Я хочу каву` and `Що ви можете порекомендувати?`,
+    and the summary uses `Я хочу гуляти, але'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Most Ukrainian is solid, but `Never place it before the infinitive verb.`
+    teaches an absolute rule the module cannot safely defend.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The module usually gives examples after rules, but the negation explanation
+    is over-absolute and the summary would be stronger with one more concrete `хочу
+    + noun` vs `хочу + infinitive` practice turn
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required core items appear naturally in prose: `хочеш`, `робити`, `хочу`,
+    `гуляти`, `можу`, `мушу`, `працювати`, `Шкода`, `каву`, `їсти`.'
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: 'Marker count/order is correct, but both generated quizzes are mechanically
+    guessable because every item has `correct: 0`.'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Teacherly and calm, with no gamified or self-congratulatory nonsense.
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: All four H2 headings are present and ordered correctly, but the pipeline
+    word count is 1176, below target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No Russian-centered framing, no cultural distortions, no bad comparative
+    framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Named speakers, multi-turn exchanges, and real situations. The café dialogue
+    is a bit scripted, but still usable.
+findings: []

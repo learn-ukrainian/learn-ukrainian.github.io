@@ -1,0 +1,92 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-14T18-33-814972f3.json
+phase: write
+prompt_chars: 59326
+response_chars: 8623
+prompt_words: 8717
+response_words: 1351
+sections:
+- name: preamble
+  start: 0
+  length: 34260
+  fraction: 0.5775
+- name: rules
+  start: 34260
+  length: 11326
+  fraction: 0.1909
+- name: skeleton
+  start: 45586
+  length: 3930
+  fraction: 0.0662
+- name: output_spec
+  start: 49516
+  length: 9810
+  fraction: 0.1654
+large_sections:
+- preamble
+directives_total: 48
+directives_covered: 33
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: Every exercise marker from the skeleton is placed
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: Follow your own pacing plan — each section must hit its word budget (±10%).
+  covered: false
+  coverage_note: 4/12 keywords (33%)
+- kind: must
+  text: For A1 early modules, the learner cannot read Cyrillic — English must dominate.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 3/13 keywords (23%)
+- kind: must
+  text: '**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim**
+    as an `## H2` line.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: Use the named setting and required nouns; do NOT merge, substitute, or collapse
+    them into a room description or generic greeting.
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: must
+  text: '- **The Wall of Text:** 3+ paragraphs of English theory without a single
+    Ukrainian example — every concept must be anchored in immediate Ukrainian examples.'
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

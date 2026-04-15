@@ -1,7 +1,7 @@
 # Audit Report: M13 — many-things.md
 **Level:** A1 | **Module:** M13 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-13 21:28:20
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-14 12:45:09
 
 ## Configuration
 **Type:** A1-grammar
@@ -34,8 +34,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INFO]** Dative case used at A1: 'вам' (taught formally at A2)
-  - FIX: No action needed — incidental dative exposure is acceptable.
 - **[LEVEL_RESTRICTION]** Activity 'anagram' should be phased out after A1 M10 (current: M13)
   - FIX: Anagram is for Cyrillic scaffolding only. Use unjumble for word-ordering practice.
 - **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
@@ -44,22 +42,22 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1067/1200 (raw: 1104) (133 short)
+- **Words:** ✅ 1730/1200 (raw: 1767)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 2/0
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 36/1
+- **Vocab:** ✅ 25/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.7% (target 10-38% (M13))
+- **Immersion:** ⚠️ 9.8% (target 10-38%, within tolerance (M13))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -67,7 +65,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 337 | Included in Core |
-| **Один → бага́то (Singular → Plural)** | ✅ | 255 | Included in Core |
-| **Прикме́тники у множині́ (Adjectives in Plural)** | ✅ | 216 | Included in Core |
-| **Підсумок — Summary** | ✅ | 259 | Included in Core |
+| **Intro/Narrative** | ✅ | 402 | Included in Core |
+| **Оди́н → бага́то (Singular → Plural)** | ✅ | 554 | Included in Core |
+| **Прикме́тники у множині́ (Adjectives in Plural)** | ✅ | 484 | Included in Core |
+| **Підсумок — Summary** | ✅ | 290 | Included in Core |

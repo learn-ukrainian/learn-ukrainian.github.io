@@ -2,10 +2,10 @@
   "module": "days-and-months",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T16:42:09.053378Z",
+  "last_audit": "2026-04-14T12:47:22.892724Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T11:55:20.655272Z",
+    "md": "2026-04-14T12:47:11.146622Z",
     "meta": null,
     "activities": "2026-04-09T06:42:50.071892Z",
     "vocabulary": "2026-04-09T06:44:26.814506Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "pass",
+      "status": "warn",
       "violations": 0,
-      "message": "1221/1200 (raw: 1293)"
+      "message": "1091/1200 (raw: 1163) (109 short)"
     },
     "activities": {
       "status": "pass",
@@ -36,11 +36,11 @@
     "vocab_progression": {
       "status": "warn",
       "violations": 0,
-      "message": "\u0394 +16 | premature=0 | gaps=8 | well-paced=12",
-      "delta": 16,
+      "message": "\u0394 +6 | premature=0 | gaps=8 | well-paced=7",
+      "delta": 6,
       "premature": 0,
       "gaps": 8,
-      "well_paced": 12
+      "well_paced": 7
     },
     "naturalness": {
       "status": "info",
@@ -61,7 +61,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 6,
+    "pass_count": 5,
     "fail_count": 0,
     "deferred_count": 0
   }

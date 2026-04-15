@@ -1,0 +1,51 @@
+attempt: 1
+label: write
+violations:
+- type: WORD_BUDGET
+  severity: ERROR
+  section: Діалоги (Dialogues)
+  message: Section 'Діалоги (Dialogues)' has 436 words; contract requires 270-330
+- type: WORD_BUDGET
+  severity: ERROR
+  section: Хотіти (To Want)
+  message: Section 'Хотіти (To Want)' has 513 words; contract requires 252-308
+- type: WORD_BUDGET
+  severity: ERROR
+  section: Могти і мусити (Can and Must)
+  message: Section 'Могти і мусити (Can and Must)' has 551 words; contract requires
+    270-330
+- type: WORD_BUDGET
+  severity: ERROR
+  section: Підсумок — Summary
+  message: Section 'Підсумок — Summary' has 422 words; contract requires 270-330
+- type: ACTIVITY_ORDER
+  severity: ERROR
+  section: (whole module)
+  message: Activity order mismatch at position 1 (expected type 'fill-in', found '')
+    and position 2 (expected type 'quiz', found '') and position 3 (expected type
+    'fill-in', found '') and position 4 (expected type 'quiz', found '')
+- type: DIALOGUE_ACT
+  severity: ERROR
+  section: (whole module)
+  message: Dialogue situation not grounded in content; missing ['Deciding which movie
+    to watch or where to walk']
+- type: FACTUAL_ANCHOR
+  severity: ERROR
+  section: Діалоги (Dialogues)
+  message: 'Section ''Діалоги (Dialogues)'' misses factual anchor terms [''abstract'']
+    from pedagogy/a1/i-want-i-can.md :: Overview'
+- type: FACTUAL_ANCHOR
+  severity: ERROR
+  section: Діалоги (Dialogues)
+  message: 'Section ''Діалоги (Dialogues)'' misses factual anchor terms [''focus'']
+    from pedagogy/a1/i-eat-i-drink.md :: Overview'
+- type: FACTUAL_ANCHOR
+  severity: ERROR
+  section: Хотіти (To Want)
+  message: 'Section ''Хотіти (To Want)'' misses factual anchor terms [''avoid''] from
+    pedagogy/a1/i-want-i-can.md :: Overview'
+- type: FACTUAL_ANCHOR
+  severity: ERROR
+  section: Хотіти (To Want)
+  message: 'Section ''Хотіти (To Want)'' misses factual anchor terms [''avoid''] from
+    pedagogy/a1/i-eat-i-drink.md :: Overview'

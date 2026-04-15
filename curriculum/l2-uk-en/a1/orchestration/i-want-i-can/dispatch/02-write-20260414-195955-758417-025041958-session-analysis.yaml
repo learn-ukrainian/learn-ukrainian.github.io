@@ -1,0 +1,75 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-14T17-56-9d517526.json
+phase: write
+prompt_chars: 60578
+response_chars: 11054
+prompt_words: 8893
+response_words: 1808
+sections:
+- name: preamble
+  start: 0
+  length: 34260
+  fraction: 0.5656
+- name: rules
+  start: 34260
+  length: 11326
+  fraction: 0.187
+- name: skeleton
+  start: 45586
+  length: 5182
+  fraction: 0.0855
+- name: output_spec
+  start: 50768
+  length: 9810
+  fraction: 0.1619
+large_sections:
+- preamble
+directives_total: 47
+directives_covered: 36
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 4/13 keywords (31%)
+- kind: must
+  text: '**Hard rule (#1189):** Every heading above MUST appear in your output **verbatim**
+    as an `## H2` line.'
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: must
+  text: Use the named setting and required nouns; do NOT merge, substitute, or collapse
+    them into a room description or generic greeting.
+  covered: false
+  coverage_note: 4/15 keywords (27%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 2/9 keywords (22%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

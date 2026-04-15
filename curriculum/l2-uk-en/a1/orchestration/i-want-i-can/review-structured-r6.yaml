@@ -1,0 +1,54 @@
+round: 6
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All required H2 sections are present and the section budgets are on target
+    (`Діалоги` 294, `Хотіти` 325, `Могти і мусити` 289, `Підсумок` 313), but the module
+    breaks the contract’s irregular-pattern t
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: '`Могти і мусити` and `Підсумок` both teach the wrong stem behavior for
+    `могти`: the text says `вони можуть` returns to `г`, but the taught present-tense
+    form is still `мож-`.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The opening of `Діалоги` spends too long in abstract English theory (`People
+    constantly negotiate their time and actions...`) before giving learners the target
+    Ukrainian, and the wrong `могти` explana
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Core contract vocabulary is used naturally in prose and examples: `хочеш`,
+    `робити`, `хочу`, `гуляти`, `можу`, `мушу`, `працювати`, `Шкода`, `каву`, `їсти`.'
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The module has the required four markers in the correct type order, but
+    three are stacked after `Могти і мусити` and none follows `Діалоги`, so practice
+    is not distributed well across the lesson.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: Several sentences are generic filler rather than substantive teacher talk,
+    e.g. `People constantly negotiate their time and actions` and `Another practical
+    application occurs every time you visit a re
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All four required H2 headings are present, in order, with clean markdown,
+    and the pipeline word count is 1350, above the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: The module stays in ordinary Ukrainian everyday contexts and avoids Russia-centered
+    framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: The first dialogue is functional, but the section is padded with exposition
+    and the café exchange is stiff (`І ще я хочу їсти. Що ви можете порекомендувати?`)
+    instead of sounding like a natural A1 int
+findings: []

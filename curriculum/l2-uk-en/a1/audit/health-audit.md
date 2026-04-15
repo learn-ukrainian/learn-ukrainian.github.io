@@ -1,7 +1,7 @@
 # Audit Report: M53 — health.md
 **Level:** A1 | **Module:** M53 | **Phase:** A1.8 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-13 21:21:45
+**Generated:** 2026-04-14 12:55:00
 
 ## Configuration
 **Type:** A1-vocab
@@ -35,6 +35,8 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[INFO]** Dative case used at A1: 'Мені' (taught formally at A2)
+  - FIX: No action needed — incidental dative exposure is acceptable.
 - **[LEVEL_RESTRICTION]** Activity 'anagram' should be phased out after A1 M10 (current: M53)
   - FIX: Anagram is for Cyrillic scaffolding only. Use unjumble for word-ordering practice.
 - **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
@@ -43,7 +45,7 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1260/1200 (raw: 1290)

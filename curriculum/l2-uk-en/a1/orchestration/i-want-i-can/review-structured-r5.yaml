@@ -1,0 +1,54 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Core beats are covered in prose and dialogue, including `Що ти хочеш робити
+    сьогодні?`, `Я хочу каву`, and `Можу порекомендувати борщ!`, but `Хотіти` omits
+    the contract beat on negative forms and poli
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Ukrainian forms such as `хочу/хочеш/хочуть`, `можу/можеш/можуть`, and
+    `мушу/мусиш/мусять` are correct and verified; no Russian letters or obvious Russianisms/calques
+    appear in the Ukrainian text.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The module gives tables and examples, but `Хотіти` skips the planned negative-pattern
+    teaching (`Я не хочу. Ти не хочеш? Вона не хоче.`) and the activity sequence asks
+    for modal choice before all thre
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required vocabulary appears naturally in context: `хочеш`, `робити`,
+    `гуляти`, `можу`, `мушу`, `працювати`, `Шкода`, `каву`, `їсти`, `борщ`.'
+- dimension: 5
+  name: Exercise quality
+  score: 5
+  evidence: 'All 4 markers are present, but the second marker is misplaced: the contract’s
+    modal-choice quiz is triggered before `можу` and `мушу` are taught.'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: The tone stays instructional and clear, but some framing is abstract rather
+    than classroom-driven, e.g. `People constantly negotiate their time and actions`
+    and `Mastering these verbs provides the gra
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: All required H2 headings are present and ordered correctly, and the pipeline
+    word count is 1286, but `## Могти і мусити (Can and Must)` falls below its section
+    minimum.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: No Russian-centering or cultural distortion; the planning and café examples
+    are ordinary, appropriate Ukrainian-life contexts.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The weekend dialogue is natural and functional, and the café dialogue
+    works, but the module leans more on explanatory narration around the dialogues
+    than on lively conversational development.
+findings: []

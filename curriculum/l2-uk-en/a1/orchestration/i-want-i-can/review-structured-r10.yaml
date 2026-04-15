@@ -1,0 +1,54 @@
+round: 10
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module covers the contract’s core beats with both dialogues, the `хочу
+    + noun` vs `хочу + infinitive` contrast, and the anchor sentence `Я хочу гуляти,
+    але не можу — мушу працювати.` The miss is s
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'Ukrainian forms and grammar claims are clean: `я хочу / ти хочеш / вони
+    хочуть`, `я можу / ти можеш / вони можуть`, `я мушу / ти мусиш / вони мусять`;
+    accusative example `кава → каву` is correct.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'The flow is sound: dialogue first, then `Хотіти`, then `Могти і мусити`,
+    then recap. Each grammar point gets multiple examples such as `Я хочу читати`,
+    `Я можу говорити українською`, `Я мушу працювати'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'Required vocabulary is integrated naturally in prose and dialogue: `хочеш`,
+    `робити`, `гуляти`, `можу`, `мушу`, `працювати`, `каву`, `їсти`, `можете`, `можуть`.'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All four required markers are present in the correct type order `fill-in,
+    quiz, fill-in, quiz`, and each sits after the material it is meant to test.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'The tone stays teacherly and concrete, with useful prompts like `Then
+    ask a partner: Що ти хочеш робити сьогодні?` and no gamified or congratulatory
+    filler.'
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Headings are correct and ordered, marker syntax is clean, and total word
+    count is above target at 1233. The issue is that `## Підсумок — Summary` falls
+    short of its section minimum.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module presents Ukrainian on its own terms, uses Ukrainian grammatical
+    terminology (`складений дієслівний присудок`), and avoids Russian-centric framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'The first dialogue is natural and multi-turn: `Що ти хочеш робити сьогодні?
+    ... Я не можу, я мушу працювати. ... Завтра я вільна.` The café exchange is functional
+    and aligned with the plan.'
+findings: []

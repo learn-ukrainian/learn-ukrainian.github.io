@@ -1,0 +1,55 @@
+round: 13
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'All four required H2 sections are present and ordered correctly, both
+    required dialogues are covered, and the section word counts are within budget:
+    Dialogues `293`, Хотіти `321`, Могти і мусити `294`'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'No Russianisms, Surzhyk, calques, bad case forms, or wrong conjugation
+    claims found. The core paradigms used in the module match VESUM-verified forms:
+    `хочу/хочеш/хоче`, `можу/можеш/може`, `мушу/мусиш'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The module generally follows a good dialogue → pattern → practice flow,
+    but the explanation `placing **кава** (coffee) in the accusative case` blurs the
+    actual surface form `каву`, and the long Summar
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'The required vocabulary appears naturally in prose and examples: `хочу`,
+    `робити`, `гуляти`, `можу`, `мушу`, `працювати`, `каву`, `їсти`, `борщ`.'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All four required markers are present in the required type sequence,
+    and each appears after material that can support it: conjugation after `Хотіти`,
+    modal-choice/fill-in after `Могти і мусити`, recap'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The teacher voice stays mostly concrete and classroom-usable, especially
+    in prompts like `Now turn the pattern into your own sentences.` It avoids gamified
+    fluff.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'The structure is complete and the pipeline word count is safely above
+    target at `1297`, but the Summary contains a stray indented bullet: ` * Build
+    two more model sentences aloud...`, which is a forma'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module presents Ukrainian on its own terms, with no Russia-centered
+    framing and no dubious cultural claims.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'The weekend-planning dialogue is natural and multi-turn (`Що ти хочеш
+    робити сьогодні?... Я не можу, я мушу працювати.`). The café dialogue is useful
+    and serviceable, if slightly more functional than '
+findings: []

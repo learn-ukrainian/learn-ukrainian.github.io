@@ -1,0 +1,52 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 5
+  evidence: The contract asks for a newcomer-neighbor wayfinding dialogue with `аптека`,
+    `банк`, `пошта`, `кафе`, `лікарня`, `парк`, but the prose gives only `Де зараз
+    Олена?` and `Де ти живеш?... В офісі, на дру
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: The tip `Ukrainian uses **у** instead of **в** before words starting with
+    consonants ... and **в** after vowels` teaches an inaccurate rule for `у/в` alternation.
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: The module often explains grammar in long English blocks, e.g. `There
+    is a historical linguistic reason for this difference...`, and there is no practice
+    immediately after the opening dialogues.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 6
+  evidence: Core chunks like `школа → в школі` and `робота → на роботі` are present,
+    but prose searches returned `аптека=0`, `пошта=0`, `лікарня=0`, and `місто` appears
+    only as `у/в місті`, not as the required no
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: All four markers exist, but they are bunched after sections 2 and 3, with
+    no activity after `Діало́ги` or `Підсумок`, so practice is not evenly distributed.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'The tone is teacherly and mostly substantive: `Memorize it to build your
+    intuition!` and `Can you answer these simple questions in Ukrainian?` keep the
+    voice instructional without gamified filler.'
+- dimension: 7
+  name: Structural integrity
+  score: 5
+  evidence: 'All H2s are present, but the pipeline total is 1162, below the 1200 target,
+    and the pacing is visibly uneven: `В чи на?` is much longer than the thin summary.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: 'The `в Україні` note is culturally aligned and decolonized: `Using **в
+    Україні** affirms Ukraine''s status as an independent state`.'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: 'Speakers are named, but the required search-for-places scenario is missing,
+    and much of the first dialogue is checklist Q&A: `А Тарас? ... А діти? ... А кішка?`'
+findings: []

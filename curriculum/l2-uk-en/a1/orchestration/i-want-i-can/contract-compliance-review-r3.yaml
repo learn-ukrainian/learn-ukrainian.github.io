@@ -1,0 +1,21 @@
+attempt: 3
+label: review
+violations:
+- type: WORD_BUDGET
+  severity: ERROR
+  section: Хотіти (To Want)
+  message: Section 'Хотіти (To Want)' has 334 words; contract requires 270-330
+- type: DIALOGUE_ACT
+  severity: ERROR
+  section: (whole module)
+  message: Dialogue situation not grounded in content; missing ['Planning a weekend
+    — negotiating what to do']
+- type: FACTUAL_ANCHOR
+  severity: ERROR
+  section: Хотіти (To Want)
+  message: 'Section ''Хотіти (To Want)'' misses factual anchor terms [''ending'']
+    from pedagogy/a1/i-eat-i-drink.md :: Overview'
+- type: META_NARRATION
+  severity: WARNING
+  section: (whole module)
+  message: 'Formulaic meta-narration present: In this module'

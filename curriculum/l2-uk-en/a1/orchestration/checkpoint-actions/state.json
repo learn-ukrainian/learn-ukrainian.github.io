@@ -3,9 +3,13 @@
   "track": "a1",
   "slug": "checkpoint-actions",
   "phases": {
-    "review": {
+    "check": {
       "status": "complete",
-      "ts": "2026-04-13T20:43:01.202299+00:00"
+      "ts": "2026-04-15T08:30:06.570288+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-15T08:30:06.576888+00:00"
     }
   }
 }

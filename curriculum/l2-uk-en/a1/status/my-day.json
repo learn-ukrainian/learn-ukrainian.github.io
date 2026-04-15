@@ -2,10 +2,10 @@
   "module": "my-day",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T16:44:36.460611Z",
+  "last_audit": "2026-04-14T12:47:47.748410Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T11:55:48.607349Z",
+    "md": "2026-04-14T12:47:35.901728Z",
     "meta": null,
     "activities": "2026-04-09T07:11:09.733989Z",
     "vocabulary": "2026-04-09T07:13:24.207165Z",
@@ -36,11 +36,11 @@
     "vocab_progression": {
       "status": "warn",
       "violations": 0,
-      "message": "\u0394 -18 | premature=4 | gaps=0 | well-paced=1",
-      "delta": -18,
+      "message": "\u0394 -20 | premature=4 | gaps=0 | well-paced=0",
+      "delta": -20,
       "premature": 4,
       "gaps": 0,
-      "well_paced": 1
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",

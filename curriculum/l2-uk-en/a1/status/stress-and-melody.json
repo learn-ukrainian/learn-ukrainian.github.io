@@ -2,10 +2,10 @@
   "module": "stress-and-melody",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-13T10:56:22.828442Z",
+  "last_audit": "2026-04-14T12:42:56.841730Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-13T10:56:11.895528Z",
+    "md": "2026-04-14T12:42:43.843548Z",
     "meta": null,
     "activities": "2026-04-12T19:58:30.735914Z",
     "vocabulary": "2026-04-12T19:59:55.894600Z",
@@ -36,11 +36,11 @@
     "vocab_progression": {
       "status": "warn",
       "violations": 0,
-      "message": "\u0394 -40 | premature=7 | gaps=9 | well-paced=2",
-      "delta": -40,
+      "message": "\u0394 -38 | premature=7 | gaps=9 | well-paced=3",
+      "delta": -38,
       "premature": 7,
       "gaps": 9,
-      "well_paced": 2
+      "well_paced": 3
     },
     "naturalness": {
       "status": "info",

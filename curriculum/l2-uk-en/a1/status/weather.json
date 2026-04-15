@@ -2,10 +2,10 @@
   "module": "weather",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-11T16:47:32.958475Z",
+  "last_audit": "2026-04-14T12:47:35.136752Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-11T11:55:34.449639Z",
+    "md": "2026-04-14T12:47:23.196598Z",
     "meta": null,
     "activities": "2026-04-09T06:58:26.925775Z",
     "vocabulary": "2026-04-09T06:58:56.905141Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1320/1200 (raw: 1353)"
+      "message": "1310/1200 (raw: 1339)"
     },
     "activities": {
       "status": "pass",
@@ -36,11 +36,11 @@
     "vocab_progression": {
       "status": "warn",
       "violations": 0,
-      "message": "\u0394 -24 | premature=6 | gaps=0 | well-paced=3",
-      "delta": -24,
+      "message": "\u0394 -30 | premature=6 | gaps=0 | well-paced=0",
+      "delta": -30,
       "premature": 6,
       "gaps": 0,
-      "well_paced": 3
+      "well_paced": 0
     },
     "naturalness": {
       "status": "info",

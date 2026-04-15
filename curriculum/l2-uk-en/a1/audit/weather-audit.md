@@ -1,7 +1,7 @@
 # Audit Report: M24 — weather.md
 **Level:** A1 | **Module:** M24 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 16:47:32
+**Generated:** 2026-04-14 12:47:35
 
 ## Configuration
 **Type:** A1-vocab
@@ -36,16 +36,14 @@
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'тобі' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (3 occurrences): (This is warm), (It is sunny), (Today it is warm) — breaks immersion target
-  - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1320/1200 (raw: 1353)
+- **Words:** ✅ 1310/1200 (raw: 1339)
 - **Activities:** ✅ 6/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
@@ -57,7 +55,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 18.0% (target 15-35% (M24))
+- **Immersion:** 🇺🇦 18.5% (target 15-35% (M24))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -66,6 +64,6 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 351 | Included in Core |
-| **Яка погода? (What's the Weather?)** | ✅ | 380 | Included in Core |
+| **Яка погода? (What's the Weather?)** | ✅ | 370 | Included in Core |
 | **Погода і по́ри року (Weather and Seasons)** | ✅ | 367 | Included in Core |
 | **Підсумок — Summary** | ✅ | 222 | Included in Core |

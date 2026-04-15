@@ -1,7 +1,7 @@
 # Audit Report: M31 — where-to.md
 **Level:** A1 | **Module:** M31 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-13 21:15:47
+**Generated:** 2026-04-14 12:49:18
 
 ## Configuration
 **Type:** A1-grammar

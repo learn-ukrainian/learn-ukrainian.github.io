@@ -1,7 +1,7 @@
 # Audit Report: M06 — my-family.md
 **Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-13 10:56:55
+**Generated:** 2026-04-14 12:43:35
 
 ## Configuration
 **Type:** A1-vocab

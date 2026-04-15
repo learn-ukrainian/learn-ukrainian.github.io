@@ -1,7 +1,7 @@
 # Audit Report: M03 — special-signs.md
 **Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-13 10:56:07
+**Generated:** 2026-04-14 12:42:37
 
 ## Configuration
 **Type:** A1

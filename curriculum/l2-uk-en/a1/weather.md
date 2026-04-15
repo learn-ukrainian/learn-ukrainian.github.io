@@ -39,14 +39,14 @@ The core vocabulary for discussing temperature consists of four essential adverb
 
 The word **вчора** means "yesterday". When talking about the past, you must add the neuter past-tense verb **було** (it was) before the adverb.
 
-Ukrainian personifies precipitation, treating it as an active participant. Instead of saying "it is raining", you say that the rain or snow "goes" or "walks". The verb **іти́** (to go on foot) describes this action. This creates fixed, highly idiomatic paradigms.
+For rain and snow, Ukrainian usually uses the fixed weather patterns **іде́ дощ** and **іде сніг**. Learn these as whole phrases: you do not need an extra subject like English **it**.
 
 *   **Іде́ дощ.** — It is raining (literally "rain goes").
 *   **Іде сніг.** — It is snowing (literally "snow goes").
 
 While the single verb **дощи́ть** (it rains) exists in the dictionary, the phrase **іде дощ** is the natural conversational form you will hear on the street. Other weather events use different verbs: **світи́ть со́нце** (the sun is shining) and **дме ві́тер** (the wind is blowing).
 
-<!-- INJECT_ACTIVITY: fill-in-weather-dialogue -->
+
 
 ## Погода і по́ри року (Weather and Seasons)
 

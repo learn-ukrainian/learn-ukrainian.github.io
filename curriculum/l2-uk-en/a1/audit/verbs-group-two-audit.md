@@ -1,7 +1,7 @@
 # Audit Report: M17 — verbs-group-two.md
 **Level:** A1 | **Module:** M17 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 16:47:23
+**Generated:** 2026-04-14 12:46:10
 
 ## Configuration
 **Type:** A1-grammar
@@ -47,7 +47,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1387/1200 (raw: 1471)
+- **Words:** ✅ 1355/1200 (raw: 1439)
 - **Activities:** ✅ 12/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
@@ -59,7 +59,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 16.7% (target 15-35% (M17))
+- **Immersion:** 🇺🇦 17.9% (target 15-35% (M17))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -67,7 +67,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 304 | Included in Core |
-| **Друга дієвідміна (Group II Verbs)** | ✅ | 373 | Included in Core |
-| **Гру́па I чи II? (Which Group?)** | ✅ | 358 | Included in Core |
-| **Підсумок — Summary** | ✅ | 352 | Included in Core |
+| **Intro/Narrative** | ✅ | 256 | Included in Core |
+| **Друга дієвідміна (Group II Verbs)** | ✅ | 404 | Included in Core |
+| **Гру́па I чи II? (Which Group?)** | ✅ | 344 | Included in Core |
+| **Підсумок — Summary** | ✅ | 351 | Included in Core |

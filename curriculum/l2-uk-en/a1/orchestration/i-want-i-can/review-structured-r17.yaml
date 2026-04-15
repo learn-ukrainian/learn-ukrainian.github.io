@@ -1,0 +1,55 @@
+round: 17
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All four contracted H2 sections are present and correctly ordered. The
+    required beats are covered directly through `Що ти хочеш робити сьогодні?`, `Я
+    хочу каву`, `Я можу говорити українською`, `Я мушу
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, or forbidden Russian
+    letters appear. VESUM spot checks support the paradigms `хочу / хочеш / хоче`,
+    `можу / можеш / можуть`, and `мушу / мусиш / мусят
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'The module follows a clear situation → pattern → practice flow: dialogues
+    first, then conjugation and usage, then synthesis. Each core point gets multiple
+    examples, such as `Я хочу іти в кіно`, `Він х'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'Required vocabulary is integrated naturally in prose and dialogue rather
+    than dumped as lists: `хочеш`, `робити`, `гуляти`, `можу`, `мушу`, `працювати`,
+    `Шкода`, `каву`, `їсти`, `борщ`. The contract’s'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'Marker-only evaluation passes cleanly: count matches the four obligations,
+    order matches exactly, and each marker type matches the contract exactly.'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone stays teacherly and useful without hype. Prompts like `Now turn
+    the pattern into your own sentences` and the partner questions keep the learner
+    active while staying anchored in the target for
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, correct H2 structure, well-formed activity markers, and
+    the pipeline word count is 1288, which clears the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian is presented on its own terms through `складений дієслівний
+    присудок`, accusative practice, and everyday Ukrainian situations. There is no
+    Russian-centered framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Both dialogues are multi-turn and functional. The weekend-planning exchange
+    between `Оля` and `Денис` is natural, and the café dialogue supports the contracted
+    `хотіти + noun` pattern with usable serv
+findings: []

@@ -2,7 +2,7 @@ module: a1-018
 level: A1
 sequence: 18
 slug: i-want-i-can
-version: '1.1'
+version: 1.1.1
 title: I Want, I Can
 subtitle: Хочу, можу, мушу — expressing wants and abilities
 focus: grammar
@@ -15,7 +15,7 @@ objectives:
 - Handle irregular conjugation of хотіти and могти
 - Build practical sentences for everyday needs
 dialogue_situations:
-- setting: Planning a weekend — negotiating what to do
+- setting: Deciding which movie to watch or where to walk
   speakers:
   - Оля
   - Денис
@@ -24,38 +24,33 @@ content_outline:
 - section: Діалоги (Dialogues)
   words: 300
   points:
-  - 'Dialogue 1 — Making plans: — Що ти хочеш робити? — Я хочу гуляти. А ти? — Я не
-    можу, я мушу працювати. — Шкода! All three modals in one natural exchange.'
+  - 'Dialogue: Olya and Denys decide on an evening plan (cinema or walk). Use "Я хочу
+    піти...", "Я не можу...", "Я мушу...". Focus on natural speech, not abstract descriptions.'
   - 'Dialogue 2 — At a café (preview for A1.6): — Я хочу каву. — Велику чи маленьку?
     — Велику. І ще я хочу їсти. Що ви можете порекомендувати? — Можу порекомендувати
     борщ! Хотіти + noun (no infinitive needed).'
 - section: Хотіти (To Want)
-  words: 300
+  words: 280
   points:
-  - 'Хотіти is irregular — it belongs to Group I despite -іти ending: я хочу, ти хочеш,
-    він/вона хоче, ми хочемо, ви хочете, вони хочуть. Note: хот- → хоч- (т→ч change
-    in all forms). Two uses: хочу + infinitive (Я хочу читати) or хочу + noun (Я хочу
-    каву).'
-  - 'Negative: Я не хочу. Ти не хочеш? Вона не хоче. Polite requests use хотів/хотіла
-    би (conditional) — but that''s later. For now: Я хочу... is the direct way to
-    express a want.'
+  - 'Хотіти is irregular (Group I): я хочу, ти хочеш, він хоче, ми хочемо, ви хочете,
+    вони хочуть. Note the т→ч change and the specific ending for each person. Uses:
+    + infinitive or + noun in Accusative (e.g., хочу каву).'
+  - 'Negation: Я не хочу їсти. Note that "не" typically precedes the modal, but avoid
+    teaching absolute "never" rules as placement can vary for emphasis.'
 - section: Могти і мусити (Can and Must)
   words: 300
   points:
-  - 'Могти (can/able to) — also irregular: я можу, ти можеш, він/вона може, ми можемо,
-    ви можете, вони можуть. Note: мог- → мож- (г→ж change). Я можу говорити українською.
-    Ти можеш допомогти?'
-  - 'Мусити (must/have to) — regular Group II: я мушу, ти мусиш, він/вона мусить,
-    ми мусимо, ви мусите, вони мусять. Note: с→ш only in я-form (мушу), rest is regular.
-    Я мушу працювати. Ти мусиш вчити слова. Мусити = obligation, not choice. Stronger
-    than ''треба'' (impersonal, later).'
+  - 'Могти (can/able to) is irregular (Group I): я можу, ти можеш, ми можемо, вони
+    можуть (г→ж change). It expresses ability, possibility, or permission (e.g., skills
+    or requests).'
+  - Мусити (must/have to) is Group II. It expresses obligation or necessity. Clarify
+    that it denotes a requirement but not necessarily an "immediate" urgency.
 - section: Підсумок — Summary
   words: 300
   points:
-  - 'Three modals + infinitive: Хочу + inf. = I want to (desire) Можу + inf. = I can
-    (ability) Мушу + inf. = I must (obligation) All three: Я хочу гуляти, але не можу
-    — мушу працювати. Self-check: Say what you want to do today. Say what you can
-    do in Ukrainian. Say what you must do tomorrow.'
+  - 'Summary: Compare desire, ability, and obligation with three simple sentences
+    from a daily routine. Avoid abstract coaching and meta-narration like "In this
+    module".'
 vocabulary_hints:
   required:
   - хотіти (to want — irregular!)
@@ -97,3 +92,25 @@ references:
   notes: Хотіти listed as Group I exception (despite -іти infinitive).
 - title: Літвінова Grade 7, p.55
   notes: 'Exceptions: хотіти, гудіти, ревіти, іржати — Group I despite -іти.'
+plan_fixes:
+- version: 1.1.1
+  date: '2026-04-15'
+  trigger: Expository filler prose and abstract coaching, combined with factually
+    narrow or incorrect modal definitions.
+  changes:
+  - replace dialogue_situations[0].setting — Replaces the vague 'negotiating' phrasing
+    that the reviewer identified as sounding generated.
+  - replace content_outline[0].points[0] — Forces a concrete scenario to improve tone
+    and satisfy the [DIALOGUE_ACT] requirement.
+  - replace content_outline[1].words — Tightens the budget to fix the [WORD_BUDGET]
+    violation and force the removal of 'filler' grandiosity.
+  - replace content_outline[1].points[0] — Fixes [FACTUAL_ANCHOR] 'ending' and clarifies
+    case usage to prevent linguistic errors.
+  - replace content_outline[1].points[1] — Directly corrects the teaching of an incorrect
+    absolute rule regarding negation.
+  - replace content_outline[2].points[0] — Broadens the definition to correct the
+    'strictly physical' error in the prose.
+  - replace content_outline[2].points[1] — Corrects the linguistic error identifying
+    'мусити' solely with immediate action.
+  - replace content_outline[3].points[0] — Removes the summary filler and fixes the
+    [META_NARRATION] violation.

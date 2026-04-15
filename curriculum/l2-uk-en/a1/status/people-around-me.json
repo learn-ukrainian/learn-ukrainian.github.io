@@ -2,10 +2,10 @@
   "module": "people-around-me",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-13T21:18:20.818882Z",
+  "last_audit": "2026-04-14T12:51:39.624859Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-13T21:18:09.251745Z",
+    "md": "2026-04-14T12:51:25.615416Z",
     "meta": null,
     "activities": "2026-04-13T01:21:41.102075Z",
     "vocabulary": "2026-04-13T01:22:30.686033Z",

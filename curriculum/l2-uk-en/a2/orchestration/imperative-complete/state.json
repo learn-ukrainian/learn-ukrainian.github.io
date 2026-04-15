@@ -12,56 +12,121 @@
       "ts": "2026-04-12T21:41:01.397350+00:00"
     },
     "skeleton": {
-      "status": "complete",
-      "ts": "2026-04-12T21:41:51.932598+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T21:41:51.932598+00:00",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     },
     "pre-verify": {
-      "status": "complete",
-      "ts": "2026-04-12T21:43:37.970391+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T21:43:37.970391+00:00",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     },
     "write": {
-      "status": "complete",
-      "ts": "2026-04-12T21:47:54.994532+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T21:47:54.994532+00:00",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     },
     "exercises": {
-      "status": "complete",
-      "ts": "2026-04-12T21:47:54.994691+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T21:47:54.994691+00:00",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     },
     "activities": {
-      "status": "complete",
-      "ts": "2026-04-12T21:49:44.985619+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T21:49:44.985619+00:00",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     },
     "repair": {
-      "status": "complete",
-      "ts": "2026-04-12T21:49:45.027180+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T21:49:45.027180+00:00",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     },
     "verify-exercises": {
-      "status": "complete",
-      "ts": "2026-04-12T21:49:45.102484+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T21:49:45.102484+00:00",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     },
     "annotate": {
-      "status": "complete",
-      "ts": "2026-04-12T21:49:45.109574+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T21:49:45.109574+00:00",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     },
     "vocab": {
-      "status": "complete",
-      "ts": "2026-04-12T21:50:44.686474+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T21:50:44.686474+00:00",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     },
     "enrich": {
-      "status": "complete",
-      "ts": "2026-04-12T21:50:44.686636+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T21:50:44.686636+00:00",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     },
     "verify": {
-      "status": "complete",
-      "ts": "2026-04-12T21:50:44.889118+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T21:50:44.889118+00:00",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     },
     "review": {
-      "status": "complete",
-      "ts": "2026-04-12T22:04:01.070141+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T22:04:01.070141+00:00",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     },
     "stress": {
-      "status": "complete",
-      "ts": "2026-04-12T22:04:01.298665+00:00"
+      "status": "stale",
+      "ts": "2026-04-12T22:04:01.298665+00:00",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929345+00:00",
+      "current_plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d",
+      "plan_hash": "13499d7f82c3376ae2afb94f0834a96e56d3df4e2777f01ba5661fdb49f4251d"
     }
   }
 }

@@ -1,7 +1,7 @@
 # Audit Report: M37 — i-eat-i-drink.md
 **Level:** A1 | **Module:** M37 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-13 21:17:29
+**Generated:** 2026-04-14 12:50:52
 
 ## Configuration
 **Type:** A1-grammar

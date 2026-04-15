@@ -1,6 +1,6 @@
 # Build Summary: when-and-where (A1)
 
-Generated: 2026-04-13 21:19
+Generated: 2026-04-14 12:52
 
 ## Pipeline Phases
 
@@ -21,8 +21,8 @@ Generated: 2026-04-13 21:19
 | verify | complete | 2026-04-13 01:20:20 |
 | review | complete | 2026-04-13 01:38:22 |
 | stress | complete | 2026-04-13 01:38:24 |
-| publish | complete | 2026-04-13 19:19:43 |
-| audit | complete | 2026-04-13 19:19:43 |
+| audit | complete | 2026-04-14 10:52:55 |
+| publish | complete | 2026-04-14 10:52:59 |
 
 ## Reviews
 

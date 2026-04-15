@@ -17,16 +17,31 @@
       "ts": "2026-04-03T23:20:13.288241+00:00"
     },
     "skeleton": {
-      "status": "complete",
-      "ts": "2026-04-03T23:20:52.568747+00:00"
+      "status": "stale",
+      "ts": "2026-04-03T23:20:52.568747+00:00",
+      "plan_hash": "a94531be88804ef43e70b1758ae47e15c1ce58a776289f7779a5488617977745",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.936656+00:00",
+      "current_plan_hash": "a94531be88804ef43e70b1758ae47e15c1ce58a776289f7779a5488617977745"
     },
     "stress": {
-      "status": "complete",
-      "ts": "2026-04-04T07:04:15.706037+00:00"
+      "status": "stale",
+      "ts": "2026-04-04T07:04:15.706037+00:00",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.936656+00:00",
+      "current_plan_hash": "a94531be88804ef43e70b1758ae47e15c1ce58a776289f7779a5488617977745",
+      "plan_hash": "a94531be88804ef43e70b1758ae47e15c1ce58a776289f7779a5488617977745"
     },
     "publish": {
-      "status": "complete",
-      "ts": "2026-04-04T07:04:16.496768+00:00"
+      "status": "stale",
+      "ts": "2026-04-04T07:04:16.496768+00:00",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.936656+00:00",
+      "current_plan_hash": "a94531be88804ef43e70b1758ae47e15c1ce58a776289f7779a5488617977745",
+      "plan_hash": "a94531be88804ef43e70b1758ae47e15c1ce58a776289f7779a5488617977745"
     }
   }
 }

@@ -1,7 +1,7 @@
 # Audit Report: M22 — what-time.md
 **Level:** A1 | **Module:** M22 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 16:48:13
+**Generated:** 2026-04-14 12:47:10
 
 ## Configuration
 **Type:** A1-vocab
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## Gates
-- **Words:** ✅ 1335/1200 (raw: 1436)
+- **Words:** ✅ 1298/1200 (raw: 1399)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
@@ -46,7 +46,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 14.9% (target 15-35%, within tolerance (M22))
+- **Immersion:** 🇺🇦 17.8% (target 15-35% (M22))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -54,7 +54,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 344 | Included in Core |
+| **Intro/Narrative** | ✅ | 300 | Included in Core |
 | **Котра година?** | ✅ | 366 | Included in Core |
-| **О котрій?** | ✅ | 364 | Included in Core |
-| **Підсумок — Summary** | ✅ | 261 | Included in Core |
+| **О котрій?** | ✅ | 374 | Included in Core |
+| **Підсумок — Summary** | ✅ | 258 | Included in Core |

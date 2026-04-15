@@ -13,7 +13,8 @@
     },
     "skeleton": {
       "status": "complete",
-      "ts": "2026-04-12T18:03:03.694519+00:00"
+      "ts": "2026-04-12T18:03:03.694519+00:00",
+      "plan_hash": "3ee0c6fc387e0c0f0d1367949bc3ee6d42c6a8f4a5de6a24b1d4bdc2b0e2d4ed"
     },
     "pre-verify": {
       "status": "complete",
@@ -21,11 +22,13 @@
     },
     "write": {
       "status": "complete",
-      "ts": "2026-04-12T18:06:15.516844+00:00"
+      "ts": "2026-04-12T18:06:15.516844+00:00",
+      "plan_hash": "3ee0c6fc387e0c0f0d1367949bc3ee6d42c6a8f4a5de6a24b1d4bdc2b0e2d4ed"
     },
     "exercises": {
       "status": "complete",
-      "ts": "2026-04-12T18:06:15.516994+00:00"
+      "ts": "2026-04-12T18:06:15.516994+00:00",
+      "plan_hash": "3ee0c6fc387e0c0f0d1367949bc3ee6d42c6a8f4a5de6a24b1d4bdc2b0e2d4ed"
     },
     "activities": {
       "status": "complete",
@@ -41,7 +44,8 @@
     },
     "annotate": {
       "status": "complete",
-      "ts": "2026-04-12T18:08:11.513843+00:00"
+      "ts": "2026-04-12T18:08:11.513843+00:00",
+      "plan_hash": "3ee0c6fc387e0c0f0d1367949bc3ee6d42c6a8f4a5de6a24b1d4bdc2b0e2d4ed"
     },
     "vocab": {
       "status": "complete",
@@ -53,7 +57,8 @@
     },
     "verify": {
       "status": "complete",
-      "ts": "2026-04-12T18:08:55.854536+00:00"
+      "ts": "2026-04-12T18:08:55.854536+00:00",
+      "plan_hash": "3ee0c6fc387e0c0f0d1367949bc3ee6d42c6a8f4a5de6a24b1d4bdc2b0e2d4ed"
     },
     "review": {
       "status": "complete",
@@ -63,13 +68,13 @@
       "status": "complete",
       "ts": "2026-04-12T18:24:59.757171+00:00"
     },
-    "publish": {
-      "status": "complete",
-      "ts": "2026-04-13T19:14:23.383984+00:00"
-    },
     "audit": {
       "status": "complete",
-      "ts": "2026-04-13T19:14:23.384186+00:00"
+      "ts": "2026-04-14T10:47:59.746080+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-14T10:48:04.136562+00:00"
     }
   }
 }

@@ -1,7 +1,7 @@
 # Audit Report: M15 — what-i-like.md
 **Level:** A1 | **Module:** M15 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-13 00:51:50
+**Generated:** 2026-04-14 12:45:34
 
 ## Configuration
 **Type:** A1-grammar
@@ -33,15 +33,19 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[INFO]** Dative case used at A1: 'мені' (taught formally at A2)
+  - FIX: No action needed — incidental dative exposure is acceptable.
+- **[INFO]** Dative case used at A1: 'тобі' (taught formally at A2)
+  - FIX: No action needed — incidental dative exposure is acceptable.
 - **[LEVEL_RESTRICTION]** Activity 'anagram' should be phased out after A1 M10 (current: M15)
   - FIX: Anagram is for Cyrillic scaffolding only. Use unjumble for word-ordering practice.
 - **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
   - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 2 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 1231/1200 (raw: 1259)

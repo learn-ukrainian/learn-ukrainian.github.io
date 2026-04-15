@@ -2,10 +2,10 @@
   "module": "around-the-city",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-13T21:16:21.648400Z",
+  "last_audit": "2026-04-14T12:49:46.387311Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-13T21:16:08.382987Z",
+    "md": "2026-04-14T12:49:34.956455Z",
     "meta": null,
     "activities": "2026-04-12T22:32:07.803963Z",
     "vocabulary": "2026-04-12T22:33:12.560720Z",

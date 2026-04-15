@@ -1,0 +1,91 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-14T09-28-01ece33f.json
+phase: write
+prompt_chars: 64955
+response_chars: 11226
+prompt_words: 9585
+response_words: 1761
+sections:
+- name: preamble
+  start: 0
+  length: 6402
+  fraction: 0.0986
+- name: plan
+  start: 6402
+  length: 7537
+  fraction: 0.116
+- name: wiki
+  start: 13001
+  length: 25915
+  fraction: 0.399
+- name: rules
+  start: 39854
+  length: 10570
+  fraction: 0.1627
+- name: skeleton
+  start: 50424
+  length: 4604
+  fraction: 0.0709
+- name: output_spec
+  start: 55028
+  length: 9927
+  fraction: 0.1528
+large_sections: []
+directives_total: 58
+directives_covered: 45
+directives_missed:
+- kind: checklist
+  text: No 'Let us...', 'In this section...', or formulaic openers
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: checklist
+  text: Every exercise marker from the skeleton is placed
+  covered: false
+  coverage_note: 2/6 keywords (33%)
+- kind: must
+  text: Your output must be original teaching prose at the correct CEFR level, not
+    a rephrased version of the article.
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: must
+  text: '**MANDATORY:** Teaching Ukrainian plurals requires a strict decolonization
+    framework to avoid common pedagogical pitfalls that center or rely on Russian.'
+  covered: false
+  coverage_note: 4/16 keywords (25%)
+- kind: must
+  text: '**Avoid Surzhyk and Russianisms:** The writer must be vigilant in using vocabulary.'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: Every heading from "Section Structure" above MUST appear as an `## H2` in
+    your output, in order, **including the closing `Підсумок:` / `Підсумок та перехід
+    до M.
+  covered: false
+  coverage_note: 5/15 keywords (33%)
+- kind: must
+  text: translation blockquotes are REQUIRED at A1 and ALLOWED at A2-early).
+  covered: false
+  coverage_note: 1/6 keywords (17%)
+- kind: must
+  text: '- **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).'
+  covered: false
+  coverage_note: 1/9 keywords (11%)
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-false-friends
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: '{id}'
+  covered: false
+  coverage_note: marker missing

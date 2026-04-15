@@ -1,0 +1,58 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-14T09-30-a343ff8f.json
+phase: vocab
+prompt_chars: 13127
+response_chars: 1881
+prompt_words: 2072
+response_words: 204
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0608
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0175
+- name: plan
+  start: 1028
+  length: 12099
+  fraction: 0.9217
+large_sections:
+- plan
+directives_total: 8
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: When the teacher asks them to describe these objects, the adjectives must
+    change too.
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: must
+  text: When you describe multiple objects in a sentence, the adjectives attached
+    to those objects must also change to reflect the plural form.
+  covered: false
+  coverage_note: 2/15 keywords (13%)
+- kind: must
+  text: Remember that adjectives must always agree in number with the noun they describe.
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: must
+  text: A phrase like "новий книги" is incorrect; both words must show plurality.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: inject_activity
+  text: group-sort-singular-plural
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-make-it-plural
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-choose-correct-plural
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-adjective-agreement
+  covered: false
+  coverage_note: marker missing

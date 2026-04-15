@@ -1,0 +1,55 @@
+round: 14
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All four contract sections are present and correctly ordered. Section
+    pacing is on target: `Діалоги` 295 words, `Хотіти` 318, `Могти і мусити` 288,
+    `Підсумок` 308. Core contract beats are covered, inc'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russian characters found. VESUM/tool spot checks support forms used
+    in the module, including `Шкода`, `вільна`, `домовилися`, `порекомендувати`, and
+    `прошу`. I found no definite Russianisms, Surzhy
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'The module has a solid situation→pattern→practice flow, but one explanation
+    spends too much space repeating the same point: `It communicates a strong, unavoidable
+    personal obligation. It signifies a s'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Required contract vocabulary is well covered in prose, including `хочеш`,
+    `робити`, `гуляти`, `можу`, `мушу`, `працювати`, `Шкода`, `іти`, `каву`, `їсти`,
+    `можете`, and `можуть`.
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: 'The module has the right number of markers, but the IDs are duplicated:
+    `<!-- INJECT_ACTIVITY: fill-in -->` appears twice and `<!-- INJECT_ACTIVITY: quiz
+    -->` appears twice. That makes the four distin'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is mostly teacherly and controlled. Dialogues are concrete and
+    useful, and the prose avoids corporate/gamified nonsense.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All required H2 headings are present, ordered correctly, and the pipeline
+    word count is 1300, which clears the 1200 minimum. No stray formatting artifacts
+    beyond the expected activity markers.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module treats Ukrainian on its own terms and avoids Russian-comparison
+    framing or cultural distortion.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The weekend-planning dialogue is natural and multi-turn, and the café
+    exchange closely follows the contract scenario. The café dialogue is somewhat
+    transactional, but still usable and not robotic.
+findings: []

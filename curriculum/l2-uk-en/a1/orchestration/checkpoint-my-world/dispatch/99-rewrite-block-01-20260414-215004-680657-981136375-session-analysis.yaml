@@ -1,0 +1,24 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-14T19-49-c40f5bcc.json
+phase: rewrite-block-01
+prompt_chars: 16595
+response_chars: 1454
+prompt_words: 2103
+response_words: 218
+sections:
+- name: preamble
+  start: 0
+  length: 14157
+  fraction: 0.8531
+- name: prior_summary
+  start: 14157
+  length: 2234
+  fraction: 0.1346
+- name: skeleton
+  start: 16391
+  length: 204
+  fraction: 0.0123
+large_sections:
+- preamble
+directives_total: 2
+directives_covered: 2
+directives_missed: []

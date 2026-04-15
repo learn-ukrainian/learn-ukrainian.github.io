@@ -12,8 +12,13 @@
       "ts": "2026-04-13T07:41:24.905556+00:00"
     },
     "skeleton": {
-      "status": "complete",
-      "ts": "2026-04-13T07:42:15.154595+00:00"
+      "status": "stale",
+      "ts": "2026-04-13T07:42:15.154595+00:00",
+      "plan_hash": "88a09452f5440f552b0bb6edc415236d457acc5989d7ec19291c378e465c970b",
+      "previous_status": "complete",
+      "stale_reason": "plan modified after skeleton ran",
+      "stale_detected_at": "2026-04-14T13:44:40.929789+00:00",
+      "current_plan_hash": "88a09452f5440f552b0bb6edc415236d457acc5989d7ec19291c378e465c970b"
     }
   }
 }

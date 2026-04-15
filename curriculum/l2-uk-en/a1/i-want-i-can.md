@@ -1,100 +1,162 @@
-## Діало́ги — Making Plans
+## Діалоги (Dialogues)
 
-To express your weekend plans, daily intentions, or obligations, you need to navigate between what you desire, what is actually possible, and what is required. When two friends negotiate their free time, they are constantly weighing these three factors to find an activity that works for both of them. Consider a typical conversation about making plans between **Оля** (Olya) and **Дени́с** (Denys). They are trying to figure out their weekend schedule.
+Communication often revolves around our desires, abilities, and obligations. In Ukrainian, expressing what you want to do, what you are able to do, or what you must do forms the foundation of daily conversation. When you string two verbs together, such as "want to eat" or "must work," you create a grammatical structure known as a **складений дієслівний присудок** (compound verbal predicate). The first verb changes to match the person speaking, while the second verb remains in its dictionary form, the infinitive.
 
-> **Оля:** Що ти хо́чеш роби́ти? *(What do you want to do?)*
-> **Денис:** Я хо́чу гуля́ти. А ти? *(I want to walk. And you?)*
-> **Оля:** Я не мо́жу, я му́шу працюва́ти. *(I can't, I must work.)*
-> **Денис:** Шкода! *(Pity!)*
+Olya and Denys are trying to decide on an evening plan. They use these verbs to express what they want to do versus what they actually have to do.
 
-In another common situation, such as ordering at a café or asking a waiter for advice, expressing a clear desire for an object is essential.
+> **Оля:** Денисе, привіт! Що ти робиш сьогодні ввечері? Я **хочу піти** в кіно. *(Denys, hi! What are you doing tonight? I want to go to the cinema.)*
+> **Денис:** Привіт, Олю! **Шкода**, але я не **можу**. Я **мушу** працювати. *(Hi, Olya! It's a pity, but I cannot. I must work.)*
+> **Оля:** Працювати ввечері? Це погано. А завтра? *(Work in the evening? That is bad. And tomorrow?)*
+> **Денис:** Завтра я можу! Ми можемо піти гуляти. *(Tomorrow I can! We can go for a walk.)*
+> **Оля:** Добре, я хочу гуляти. До завтра! *(Good, I want to walk. Until tomorrow!)*
 
-> **Відві́дувач:** Я хочу ка́ву. *(I want coffee.)*
-> **Офіціа́нт:** Велику чи мале́ньку? *(Large or small?)*
-> **Відвідувач:** Велику. І ще я хочу ї́сти. Що ви мо́жете порекомендува́ти? *(Large. And also I want to eat. What can you recommend?)*
-> **Офіціант:** Можу порекомендувати борщ! *(I can recommend borscht!)*
+Notice how Denys responds. He cannot accept the invitation because of a prior obligation. He uses **шкода** (pity / unfortunately) to express regret before explaining his situation. The verb **піти** (to go) stays in the infinitive form after the main conjugated verbs. 
 
-Breaking down the key phrases from these dialogues reveals how Ukrainian structures them. The exclamation **шкода** means "pity" or "unfortunately," and it is a very natural and highly common reaction when someone cannot join your plans. More importantly, notice how the verb "to want" behaves differently depending on what exactly follows it. You can pair it directly with a physical object, as in **я хочу каву** (I want coffee). Here, the original dictionary noun **ка́ва** (coffee) changes its ending to **каву** because it is the grammatical object of the desire. Alternatively, you can pair the verb "to want" with another action entirely, as in **я хочу їсти** (I want to eat) or **я хочу гуляти** (I want to walk), demonstrating your intention to perform a specific activity.
+The next conversation takes place at a café. This introduces a slightly different pattern. When ordering food or drinks, you do not always need a second verb. You can simply state your desire followed directly by the item you want.
 
-## Хоті́ти (To Want)
+> **Офіціант:** Добрий день! Що ви хочете? *(Good day! What do you want?)*
+> **Клієнт:** Добрий день! Я хочу **каву**. *(Good day! I want coffee.)*
+> **Офіціант:** Велику чи маленьку? *(Large or small?)*
+> **Клієнт:** Велику. І ще я хочу **їсти**. Що ви можете **порекомендувати**? *(Large. And I also want to eat. What can you recommend?)*
+> **Офіціант:** Можу порекомендувати **борщ**! Він дуже смачний. *(I can recommend borscht! It is very tasty.)*
+> **Клієнт:** Дякую! Я хочу борщ і каву. *(Thanks! I want borscht and coffee.)*
 
-The verb **хотіти** (to want) is irregular. Although it ends in **-іти́**, it conjugates as Group I. This matches the plan references: **Карама́н** (Grade 10, p.179) and **Літвінова** (Grade 7, p.55) both treat **хотіти** as a Group I exception. 
+Here, the customer switches seamlessly between wanting an object and wanting an action. They ask for a recommendation using **порекомендувати** (to recommend), and the waiter responds confidently. We also see adjectives adapting to match the noun they describe. These dialogues give us a clear blueprint for navigating both social invitations and simple transactions.
 
-In the present tense, the stem changes from **хот-** to **хоч-** in every form.
+<!-- INJECT_ACTIVITY: -->
 
-*   **я хочу** (I want)
-*   **ти хочеш** (you want)
-*   **він/вона́ хо́че** (he/she wants)
-*   **ми хо́чемо** (we want)
-*   **ви хо́чете** (you want - formal/plural)
-*   **вони́ хо́чуть** (they want)
+## Хотіти (To Want)
 
-When you express a direct desire for a physical object, you use **хотіти** followed immediately by a noun. This noun must take the Accusative case because it directly receives the action of wanting. For feminine nouns ending in **-а**, the ending changes to **-у**. Thus, **вода́** (water) becomes **воду́**, and **кава** (coffee) becomes **каву**. For masculine inanimate nouns, the form remains exactly the same as the dictionary form, requiring no visible change at all.
+The verb **хотіти** (to want) is one of the most frequently used words in the Ukrainian language. It belongs to the First Conjugation group, but it is highly irregular. When we conjugate this verb, a consonant mutation occurs in the stem: the letter `т` changes to `ч`. This mutation happens across all persons in the present tense. Understanding this pattern is essential for expressing your desires smoothly.
 
-*   **Я хочу воду.** (I want water.)
-*   **Він хоче каву.** (He wants coffee.)
-*   **Я хочу сік.** (I want juice.)
-*   **Вона хоче борщ.** (She wants borscht.)
+Here is the complete present tense conjugation for **хотіти**:
 
-To talk about an action, use **хотіти + infinitive**: **Я хочу чита́ти**, **Ти не хочеш гуляти?** For negation, put **не** before the verb: **Я не хочу спа́ти**. Conditional requests like **хоті́в би / хоті́ла би** come later.
+| Pronoun | Verb Form | English Translation |
+|---------|-----------|---------------------|
+| я | **хочу** | I want |
+| ти | **хочеш** | you want (informal) |
+| він / вона / воно | **хоче** | he / she / it wants |
+| ми | **хочемо** | we want |
+| ви | **хочете** | you want (formal/plural) |
+| вони | **хочуть** | they want |
 
-*   **Я хочу чита́ти.** (I want to read.)
-*   **Я не хочу спа́ти.** (I do not want to sleep.)
-*   **Ти не хочеш гуляти?** (Do you not want to walk?)
+Notice how the `ч` sound remains consistent throughout the entire paradigm. Once you memorize this stem change, the personal endings perfectly follow the standard First Conjugation rules. 
 
-<!-- INJECT_ACTIVITY: fill-in-khotity-conjugation -->
+You can use **хотіти** in two primary ways. The first method is combining it with an infinitive verb to describe an action you wish to perform. The main verb expresses the desire, and the infinitive specifies the action.
 
-## Могти́ і му́сити (Can and Must)
+* **Я хочу спати.** — I want to sleep.
+* **Він хоче читати.** — He wants to read.
+* **Ми хочемо гуляти.** — We want to walk.
+* **Вона хоче працювати.** — She wants to work.
+* **Ви хочете їсти.** — You want to eat.
 
-The verb **могти** (can, to be able) is also irregular. In the present tense, the stem changes from **мог-** to **мож-**.
+The second method is using **хотіти** directly with a noun. When you want a specific object, that object becomes the target of your desire. In Ukrainian grammar, the direct object of a sentence takes the Accusative case. If you want food or a drink, the word must reflect this grammatical role. 
 
-*   **я можу** (I can)
-*   **ти мо́жеш** (you can)
-*   **він/вона мо́же** (he/she can)
-*   **ми мо́жемо** (we can)
-*   **ви можете** (you can - formal/plural)
-*   **вони мо́жуть** (they can)
+Feminine nouns ending in `-а` or `-я` change their endings to `-у` or `-ю`. Masculine inanimate objects, however, do not change their form in the Accusative case.
 
-Use **могти + infinitive** for ability or possibility: **Я можу говори́ти украї́нською**, **Ти можеш допомогти́?**, **Він не може працювати**.
+* **Я хочу каву.** — I want coffee. (from **кава**)
+* **Ти хочеш воду.** — You want water. (from **вода**)
+* **Він хоче борщ.** — He wants borscht. (no change for inanimate masculine)
+* **Ми хочемо чай.** — We want tea. (no change for inanimate masculine)
+* **Вони хочуть хліб.** — They want bread. (no change for inanimate masculine)
 
-*   **Я можу говори́ти украї́нською.** (I can speak Ukrainian.)
-*   **Ти можеш допомогти́?** (Can you help?)
-*   **Він не може працювати.** (He cannot work.)
+When expressing a lack of desire, you simply place the negative particle **не** directly before the conjugated verb. The negative particle generally precedes the modal verb, setting the tone for the entire phrase immediately.
 
-**Мусити** expresses obligation. It follows Group II endings, with one key stem change in the **я** form: **я мушу**, but **ти му́сиш, він/вона му́сить, ми му́симо, ви му́сите, вони му́сять**. It is stronger and more personal than impersonal **тре́ба**.
+* **Я не хочу їсти.** — I do not want to eat.
+* **Ти не хочеш працювати.** — You do not want to work.
+* **Ми не хочемо читати.** — We do not want to read.
+* **Вони не хочуть каву.** — They do not want coffee.
 
-*   **я мушу** (I must)
-*   **ти му́сиш** (you must)
-*   **він/вона му́сить** (he/she must)
-*   **ми му́симо** (we must)
-*   **ви му́сите** (you must - formal/plural)
-*   **вони му́сять** (they must)
+While **не** typically sits right in front of the verb, its placement can sometimes shift slightly for special emphasis in more complex sentences. However, keeping it immediately before the verb is the standard and most reliable structure.
 
-*   **Я мушу працювати.** (I must work.)
-*   **Ти мусиш вчи́ти слова́.** (You must learn the words.)
+<!-- INJECT_ACTIVITY: -->
 
-Together, these verbs let you compare desire, ability, and obligation: **я хочу гуляти, але́ не можу — я мушу працювати**.
+## Могти і мусити (Can and Must)
 
-:::tip
-For a softer impersonal meaning, Ukrainian often uses **треба**. It does not change by person.
-:::
+Beyond expressing desires, we frequently need to communicate our abilities, possibilities, and obligations. Two essential verbs serve these functions: **могти** (to be able / can) and **мусити** (must / have to). Both verbs act as foundations for compound verbal predicates, pairing smoothly with other verbs in the infinitive form.
 
-*   **Я хочу читати кни́гу.** (I want to read a book.)
-*   **Але я не можу читати.** (But I cannot read.)
-*   **Я мушу спати.** (I must sleep.)
+The verb **могти** is irregular and belongs to the First Conjugation group. Similar to the mutation we saw previously, the stem undergoes a consonant shift. The letter `г` in the infinitive changes to `ж` when conjugated in the present tense. 
 
-<!-- INJECT_ACTIVITY: quiz-modal-choice -->
-<!-- INJECT_ACTIVITY: fill-in-modal-logic -->
-<!-- INJECT_ACTIVITY: quiz-verb-patterns -->
+Here is the full paradigm for **могти**:
+
+| Pronoun | Verb Form | English Translation |
+|---------|-----------|---------------------|
+| я | **можу** | I can / I am able |
+| ти | **можеш** | you can (informal) |
+| він / вона / воно | **може** | he / she / it can |
+| ми | **можемо** | we can |
+| ви | **можете** | you can (formal/plural) |
+| вони | **можуть** | they can |
+
+This verb is highly versatile. You use it to express physical ability, a learned skill, permission, or a general possibility. 
+
+* **Я можу допомогти.** — I can help.
+* **Вона може читати.** — She can read.
+* **Ти можеш працювати тут.** — You can work here.
+* **Вони можуть піти в кіно.** — They can go to the cinema.
+* **Ми не можемо спати.** — We cannot sleep.
+
+To express obligation or a strong requirement, Ukrainian uses the verb **мусити**. Unlike our previous verbs, **мусити** belongs to the Second Conjugation group. This verb has a more stable stem, but it features a distinct consonant mutation specifically in the first person singular form: the `с` changes to `ш` only for the pronoun **я**.
+
+Here is how you conjugate **мусити**:
+
+| Pronoun | Verb Form | English Translation |
+|---------|-----------|---------------------|
+| я | **мушу** | I must |
+| ти | **мусиш** | you must (informal) |
+| він / вона / воно | **мусить** | he / she / it must |
+| ми | **мусимо** | we must |
+| ви | **мусите** | you must (formal/plural) |
+| вони | **мусять** | they must |
+
+The verb **мусити** denotes a necessity or a rule that must be followed. It implies that an action is required, though it does not always carry the sense of a frantic, immediate emergency. It is simply a strong obligation. 
+
+* **Я мушу працювати.** — I must work.
+* **Він мусить писати.** — He must write.
+* **Вона мусить читати книгу.** — She must read the book.
+* **Ви мусите знати це.** — You must know this.
+
+While **мусити** is used for strong personal obligations tied to a specific subject, you will also frequently encounter the word **треба** (need to / it is necessary). This is an impersonal word. It does not conjugate to match a subject pronoun. Instead, it sits directly in front of an infinitive verb to state a general necessity. 
+
+* **Треба працювати.** — It is necessary to work. / One needs to work.
+* **Треба їсти.** — It is necessary to eat.
+
+Using **могти**, **мусити**, and **треба** gives you the linguistic tools to explain exactly what you are capable of doing and what your daily responsibilities dictate.
+
+<!-- INJECT_ACTIVITY: -->
 
 ## Підсумок — Summary
 
-Remember the three core patterns: **хочу + infinitive** for desire, **можу + infinitive** for ability, and **мушу + infinitive** for obligation. The irregular stems are **хот- → хоч-** and **мог- → мож-**. **Мусити** is regular except for **я мушу**.
+Mastering the verbs for desire, ability, and obligation transforms how you speak. Instead of merely naming objects or stating simple actions, you can now negotiate plans, express your limitations, and explain your responsibilities. The compound verbal predicate gives your sentences depth and flexibility, allowing you to pair a conjugated modal verb with any infinitive action.
 
-**Хотіти** can also take a noun: **Я хочу каву**. **Могти** and **мусити** usually need an infinitive: **Я можу працювати**, **Я мушу працювати**. To negate them, put **не** before the modal verb: **я не хочу**, **ми не можемо**.
+To fully understand how these three core concepts contrast with one another, we can look at a standard daily routine. Applying the same action across our three primary verbs highlights the precise meaning each word carries. Consider a scenario involving a basic task like working or resting. 
 
-Now answer these questions out loud using full sentences and the patterns from this module:
-*   Can you say exactly what you want to do right now using a full, grammatically correct sentence? (For example, **Я хочу пи́ти чай**).
-*   Can you list three distinct things you can confidently do in Ukrainian, focusing heavily on your current abilities? (For example, **Я можу читати**, **я можу говорити українською**).
-*   Can you express a mandatory duty you have scheduled for tomorrow? (For example, **Я мушу працювати**).
-*   Can you quickly conjugate the irregular verb **хотіти** for all grammatical persons out loud from memory, entirely without checking the reference table provided earlier in the module?
+First, we express a simple desire. This is what you internally wish to do, regardless of the external circumstances.
+
+* **Я хочу спати.** — I want to sleep.
+* **Я хочу відпочивати.** — I want to rest.
+
+Next, we evaluate our actual capabilities or the possibilities available to us at that moment. Desire does not always align with ability.
+
+* **Я не можу спати.** — I cannot sleep.
+* **Я не можу гуляти.** — I cannot walk.
+
+Finally, we state our hard obligations. This is the requirement that overrides our desires and dictates our actions for the day.
+
+* **Я мушу працювати.** — I must work.
+* **Я мушу читати.** — I must read.
+
+By combining these verbs, you can create natural, complex explanations for your behavior. If a friend invites you out for coffee, you can provide a polite refusal that clearly outlines your situation.
+
+* **Я хочу пити каву, але я не можу. Я мушу працювати.** — I want to drink coffee, but I cannot. I must work.
+
+### Reading Practice
+
+Review this short text to see desire, ability, and obligation working together in context:
+
+**Я студент. Я дуже хочу спати. Але я не можу спати. Я мушу читати книгу. Мій друг теж не може спати. Він мусить працювати. Ми хочемо відпочивати. Завтра ми можемо гуляти і пити каву.**
+*(I am a student. I want to sleep very much. But I cannot sleep. I must read a book. My friend also cannot sleep. He must work. We want to rest. Tomorrow we can walk and drink coffee.)*
+
+This structure is the backbone of daily communication. Whether you are dealing with a waiter at a restaurant, coordinating weekend plans with a friend, or explaining your schedule, these verbs empower you to share your actual reality. The consonant mutations in **хотіти**, **могти**, and **мусити** become second nature with practice, paving the way for fluent, confident speech.
+
+<!-- INJECT_ACTIVITY: -->

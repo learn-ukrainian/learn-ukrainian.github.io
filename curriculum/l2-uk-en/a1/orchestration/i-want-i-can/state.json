@@ -3,17 +3,72 @@
   "track": "a1",
   "slug": "i-want-i-can",
   "phases": {
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-14T17:56:30.098457+00:00"
+    },
     "review": {
-      "status": "complete",
-      "ts": "2026-04-13T19:55:07.737884+00:00"
+      "status": "failed",
+      "ts": "2026-04-15T09:08:02.724875+00:00"
     },
-    "stress": {
+    "check": {
       "status": "complete",
-      "ts": "2026-04-13T19:55:11.811558+00:00"
+      "ts": "2026-04-14T18:32:42.262297+00:00"
     },
-    "publish": {
+    "research": {
       "status": "complete",
-      "ts": "2026-04-13T19:55:13.156188+00:00"
+      "ts": "2026-04-14T18:32:42.268126+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-14T18:33:47.961412+00:00",
+      "plan_hash": "51b5488498d4971718fa336801f2c129870b326ce5d3827d450fc74dbd5d01e6"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-14T18:37:45.121526+00:00",
+      "plan_hash": "51b5488498d4971718fa336801f2c129870b326ce5d3827d450fc74dbd5d01e6"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-14T18:37:45.122078+00:00",
+      "plan_hash": "51b5488498d4971718fa336801f2c129870b326ce5d3827d450fc74dbd5d01e6"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-14T18:40:16.496274+00:00"
+    },
+    "repair": {
+      "status": "complete",
+      "ts": "2026-04-14T18:40:16.517670+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-14T18:40:16.577115+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-14T18:40:16.581799+00:00",
+      "plan_hash": "51b5488498d4971718fa336801f2c129870b326ce5d3827d450fc74dbd5d01e6"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-14T18:42:55.848419+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-14T18:42:55.848739+00:00"
+    },
+    "verify": {
+      "status": "failed",
+      "ts": "2026-04-15T08:30:06.608864+00:00",
+      "plan_hash": "51b5488498d4971718fa336801f2c129870b326ce5d3827d450fc74dbd5d01e6"
     }
+  },
+  "needs_human_review": {
+    "status": true,
+    "ts": "2026-04-14T19:55:51.844228+00:00",
+    "reason": "review plateaued and plan patch was not applied: Gemini returned no parseable plan-patch payload",
+    "violations_path": "needs-human-review.yaml"
   }
 }

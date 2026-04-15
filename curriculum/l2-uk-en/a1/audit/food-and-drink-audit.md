@@ -1,7 +1,7 @@
 # Audit Report: M36 — food-and-drink.md
 **Level:** A1 | **Module:** M36 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-13 21:17:12
+**Generated:** 2026-04-14 12:50:36
 
 ## Configuration
 **Type:** A1-vocab

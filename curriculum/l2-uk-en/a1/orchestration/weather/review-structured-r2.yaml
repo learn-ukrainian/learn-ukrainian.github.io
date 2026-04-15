@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: All four planned H2 sections are present, and *Заболотний Grade 8, p.126*
+    is cited in `Яка погода?`, but the module never teaches weather with months despite
+    the objective `Combine weather with season
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No confirmed Ukrainian form errors found; the key forms that might have
+    been doubtful were verified locally, including `дощить`, `безособовий`, and the
+    seasonal adverbs.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: The module has clear dialogues and multiple examples, but the paragraph
+    starting `Ukrainian personifies precipitation...` is too abstract for A1 and teaches
+    a metaphor instead of directly drilling the
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All required plan vocabulary appears naturally in prose: `погода`, `холодно`,
+    `тепло`, `дощ`, `сніг`, `сонце`, `сьогодні`, `завтра`; all recommended items also
+    appear, including `спекотно`, `прохолодн'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The module includes the expected 3 exercise slots, and each marker is
+    placed after the content it is meant to test.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is teacherly and specific rather than gamified; examples are
+    concrete and tied to daily weather talk.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, all planned H2 headings present and ordered, and the deterministic
+    pipeline word count is 1303, which is above the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module explains Ukrainian on its own terms and avoids Russia-centered
+    framing or dubious cultural claims.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Both dialogues use named speakers, real situations, and multi-turn exchanges:
+    checking weather for a hike and discussing favorite seasons.'
+findings: []

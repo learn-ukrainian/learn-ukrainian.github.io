@@ -2,444 +2,434 @@ version: '1.0'
 module: i-want-i-can
 level: a1
 inline:
-- id: fill-in-khotity-conjugation
+- id: fill-in
   type: fill-in
-  instruction: Fill in the correct form of **хотіти**.
+  instruction: Fill in the correct form of the verb **хотіти** (to want).
   items:
-  - sentence: Я ___ каву.
+  - sentence: Я ____ гуляти.
     answer: хочу
     options:
-    - хочу
-    - хочеш
     - хоче
+    - хочу
     - хочемо
-  - sentence: Ти ___ спати?
+  - sentence: Ти ____ каву?
     answer: хочеш
     options:
-    - хочу
-    - хочеш
     - хочете
+    - хочеш
     - хочуть
-  - sentence: Вона ___ читати.
+  - sentence: Він ____ їсти.
     answer: хоче
     options:
+    - хочу
+    - хочеш
     - хоче
-    - хочемо
-    - хочете
-    - хочуть
-  - sentence: Ми ___ їсти.
+  - sentence: Ми ____ читати.
     answer: хочемо
     options:
-    - хочу
-    - хоче
-    - хочемо
     - хочете
-  - sentence: Ви ___ чай?
+    - хочемо
+    - хочуть
+  - sentence: Ви ____ борщ?
     answer: хочете
     options:
-    - хочу
-    - хочеш
-    - хочемо
+    - хоче
     - хочете
-  - sentence: Вони ___ воду.
+    - хочеш
+  - sentence: Вони ____ працювати.
     answer: хочуть
     options:
-    - хоче
     - хочемо
-    - хочете
     - хочуть
-  - sentence: Він ___ сік.
+    - хоче
+  - sentence: Оля не ____ чай.
     answer: хоче
     options:
     - хочу
     - хочеш
     - хоче
+  - sentence: Я не ____ спати.
+    answer: хочу
+    options:
+    - хоче
+    - хочу
+    - хочеш
+  - sentence: Що ти ____ робити?
+    answer: хочеш
+    options:
+    - хоче
+    - хочеш
+    - хочете
+  title: Fill in the correct form of the verb **хотіти** (to want).
+- id: quiz
+  type: quiz
+  instruction: 'Choose the correct modal verb for the situation: **хочу** (desire),
+    **можу** (ability), or **мушу** (obligation).'
+  items:
+  - question: Завтра я вільна. Я ____ піти в кіно.
+    options:
+    - можу
+    - мушу
+    - хочу
+    correct: 0
+  - question: Добрий день! Що ви ____?
+    options:
+    - хочете
+    - можете
+    - мусите
+    correct: 0
+  - question: Я не можу, я ____ працювати.
+    options:
+    - мушу
+    - можу
+    - хочу
+    correct: 0
+  - question: Що ви ____ порекомендувати?
+    options:
+    - можете
+    - мусите
+    - хочете
+    correct: 0
+  - question: Вона дуже любить чай. Вона ____ чай.
+    options:
+    - хоче
+    - може
+    - мусить
+    correct: 0
+  - question: Ти знаєш українські слова. Ти ____ читати.
+    options:
+    - можеш
+    - хочеш
+    - мусиш
+    correct: 0
+  - question: Завтра тест. Я ____ вчити слова.
+    options:
+    - мушу
+    - можу
+    - хочу
+    correct: 0
+  - question: Сьогодні ми вільні. Ми ____ гуляти.
+    options:
+    - можемо
+    - мусимо
     - хочемо
-  - sentence: Я не ___ спати.
+    correct: 0
+  title: 'Choose the correct modal verb for the situation: **хочу** (desire), **можу**
+    (ab'
+- id: fill-in
+  type: fill-in
+  instruction: Complete the sentences combining desires, abilities, and obligations.
+  items:
+  - sentence: Я ____ гуляти, але не можу — мушу працювати.
     answer: хочу
     options:
     - хочу
     - хочеш
     - хоче
-    - хочуть
-  - sentence: Ти не ___ гуляти?
-    answer: хочеш
-    options:
-    - хочу
-    - хочеш
-    - хочемо
-    - хочете
-- id: quiz-verb-patterns
-  type: quiz
-  instruction: Identify the verb pattern. Choose the correct statement.
-  items:
-  - question: How does the root of **хотіти** change?
-    options:
-    - '''т'' changes to ''ч'' in all forms'
-    - It is completely regular
-    - '''г'' changes to ''ж'''
-    - '''с'' changes to ''ш'''
-    correct: 0
-  - question: Which statement is true about **могти**?
-    options:
-    - It is a regular verb
-    - '''г'' changes to ''ж'' in most forms'
-    - '''с'' changes to ''ш'''
-    - It ends in -іти
-    correct: 1
-  - question: When does **мусити** have a consonant shift?
-    options:
-    - Only in 'я мушу'
-    - In all forms
-    - Only in 'вони мусять'
-    - Never
-    correct: 0
-  - question: What is the 'they' form of **могти**?
-    options:
-    - вони можуть
-    - вони можать
-    - вони мусять
-    - вони хочуть
-    correct: 0
-  - question: Which verb belongs to Group II?
-    options:
-    - мусити
-    - хотіти
-    - могти
-    - гуляти
-    correct: 0
-  - question: What is the 'I' form of **хотіти**?
-    options:
-    - я хочу
-    - я хотю
-    - я хочю
-    - я хоту
-    correct: 0
-- id: quiz-modal-choice
-  type: quiz
-  instruction: 'Choose the correct modal verb: **хочу**, **можу**, or **мушу**.'
-  items:
-  - question: 'In a café: ''Я ___ каву.'''
-    options:
-    - хочу
-    - можу
-    - мушу
-    - можеш
-    correct: 0
-  - question: 'Asking for help: ''Ти ___ допомогти?'''
+  - sentence: Ти хочеш гуляти, але не ____ — мусиш працювати.
+    answer: можеш
     options:
     - можеш
-    - мусиш
-    - хочу
     - може
-    correct: 0
-  - question: 'No choice: ''Я ___ працювати.'''
-    options:
-    - мушу
-    - хочу
     - можу
-    - хочеш
-    correct: 0
-  - question: 'A physical ability: ''Я ___ читати українською.'''
-    options:
-    - можу
-    - мушу
-    - хоче
-    - можемо
-    correct: 0
-  - question: 'Asking a friend: ''Що ти ___ робити?'''
-    options:
-    - хочеш
-    - можеш
-    - мусиш
-    - хочете
-    correct: 0
-  - question: 'Strong desire: ''Вона ___ їсти борщ.'''
-    options:
-    - хоче
-    - може
-    - мусить
-    - хочу
-    correct: 0
-  - question: 'Obligation: ''Ми ___ вчити слова.'''
-    options:
-    - мусимо
-    - можемо
-    - хочемо
-    - мусять
-    correct: 0
-  - question: 'Physical inability: ''Я не ___ спати.'''
-    options:
-    - можу
-    - хочу
-    - мушу
-    - можеш
-    correct: 0
-- id: fill-in-modal-logic
-  type: fill-in
-  instruction: Complete the logical sentences with the correct verb.
-  items:
-  - sentence: Я хочу гуляти, але не ___.
-    answer: можу
-    options:
-    - можу
-    - мушу
-    - хочу
-    - можеш
-  - sentence: Я не можу гуляти — я ___ працювати.
-    answer: мушу
-    options:
-    - мушу
-    - можу
-    - хочу
-    - мусить
-  - sentence: Вона хоче спати, але не ___.
-    answer: може
-    options:
-    - може
-    - мусить
-    - хоче
-    - можуть
-  - sentence: Він не може читати — він ___ працювати.
+  - sentence: Він хоче їсти, але не може — ____ працювати.
     answer: мусить
     options:
     - мусить
-    - може
-    - хоче
+    - мушу
     - мусять
-  - sentence: Ми хочемо каву, але не ___.
+  - sentence: Ми хочемо читати, але не ____ — мусимо йти.
     answer: можемо
     options:
     - можемо
-    - мусимо
-    - хочемо
     - можуть
-  - sentence: Ти не можеш гуляти — ти ___ вчити слова.
-    answer: мусиш
-    options:
-    - мусиш
-    - можеш
-    - хочеш
-    - мусите
-workbook:
-- id: match-pronoun-verb
-  type: match-up
-  instruction: Match the pronoun to the correct verb form.
-  pairs:
-  - left: я
-    right: хочу
-  - left: ти
-    right: можеш
-  - left: він
-    right: мусить
-  - left: ми
-    right: можемо
-  - left: ви
-    right: хочете
-  - left: вони
-    right: мусять
-- id: error-correction-verbs
-  type: error-correction
-  instruction: Find and correct the wrong verb form.
-  items:
-  - sentence: Я хочеш каву.
-    error: хочеш
-    correction: хочу
-    error_type: word
-    options:
-    - хочу
-    - хоче
-    - хочемо
-    explanation: For 'я', the correct form is 'хочу'.
-  - sentence: Ти може допомогти?
-    error: може
-    correction: можеш
-    error_type: word
-    options:
-    - можеш
-    - можу
     - можете
-    explanation: For 'ти', the correct form is 'можеш'.
-  - sentence: Ми мусять працювати.
-    error: мусять
-    correction: мусимо
-    error_type: word
+  - sentence: Ви хочете каву, але не можете — ви ____ працювати.
+    answer: мусите
     options:
-    - мусимо
-    - мушу
     - мусите
-    explanation: For 'ми', the correct form is 'мусимо'.
-  - sentence: Він хочу їсти.
-    error: хочу
-    correction: хоче
-    error_type: word
+    - мусимо
+    - мусять
+  - sentence: Вони ____ спати, але не можуть — мусять працювати.
+    answer: хочуть
     options:
-    - хоче
-    - хочеш
     - хочуть
-    explanation: For 'він', the correct form is 'хоче'.
-  - sentence: Вони можеш читати.
-    error: можеш
-    correction: можуть
-    error_type: word
+    - хочу
+    - хочемо
+  title: Complete the sentences combining desires, abilities, and obligations.
+- id: quiz
+  type: quiz
+  instruction: Identify the correct conjugation pattern for the verbs.
+  items:
+  - question: 'Choose the correct forms of **хотіти** (to want):'
     options:
-    - можуть
+    - я хочу, ти хочеш
+    - я хочю, ти хочеш
+    - я хоту, ти хотиш
+    correct: 0
+  - question: 'Choose the correct forms of **могти** (can):'
+    options:
+    - я можу, ти можеш
+    - я могу, ти могиш
+    - я можю, ти можиш
+    correct: 0
+  - question: 'Choose the correct forms of **мусити** (must):'
+    options:
+    - я мушу, ти мусиш
+    - я мусу, ти мусиш
+    - я мушу, ти мушиш
+    correct: 0
+  - question: Which sentence is grammatically correct?
+    options:
+    - Він хоче їсти.
+    - Він хотить їсти.
+    - Він хочу їсти.
+    correct: 0
+  - question: Which sentence is grammatically correct?
+    options:
+    - Ми можемо допомогти.
+    - Ми могем допомогти.
+    - Ми можимо допомогти.
+    correct: 0
+  - question: Which sentence is grammatically correct?
+    options:
+    - Вони мусять працювати.
+    - Вони мушать працювати.
+    - Вони мусять працювать.
+    correct: 0
+  title: Identify the correct conjugation pattern for the verbs.
+workbook:
+- id: match-up-vocab
+  type: match-up
+  instruction: Match the Ukrainian verbs with their English meaning.
+  pairs:
+  - left: хотіти
+    right: to want
+  - left: могти
+    right: can / to be able to
+  - left: мусити
+    right: must / have to
+  - left: їсти
+    right: to eat
+  - left: працювати
+    right: to work
+  - left: допомогти
+    right: to help
+  - left: гуляти
+    right: to walk
+  title: Match the Ukrainian verbs with their English meaning.
+- id: group-sort-modals
+  type: group-sort
+  instruction: Sort the verb forms by their dictionary form (infinitive).
+  groups:
+  - label: хотіти
+    items:
+    - хочу
+    - хочеш
+    - хоче
+    - хочемо
+  - label: могти
+    items:
+    - можу
+    - можеш
     - може
     - можемо
-    explanation: For 'вони', the correct form is 'можуть'.
-  - sentence: Ви мусить спати.
-    error: мусить
-    correction: мусите
-    error_type: word
-    options:
-    - мусите
+  - label: мусити
+    items:
+    - мушу
     - мусиш
+    - мусить
     - мусимо
-    explanation: For 'ви', the correct form is 'мусите'.
+  title: Sort the verb forms by their dictionary form (infinitive).
 - id: unjumble-sentences
   type: unjumble
-  instruction: Put the words in the correct order to make a sentence.
+  instruction: Put the words in the correct order to form a sentence.
   items:
   - words:
-    - каву.
     - хочу
     - Я
+    - каву.
     correct_order:
     - Я
     - хочу
     - каву.
   - words:
-    - допомогти?
-    - можеш
-    - Ти
-    correct_order:
-    - Ти
-    - можеш
-    - допомогти?
-  - words:
-    - порекомендувати?
     - ви
     - Що
-    - можете
+    - хочете?
     correct_order:
     - Що
     - ви
-    - можете
-    - порекомендувати?
+    - хочете?
   - words:
-    - працювати.
-    - мушу
-    - Я
-    correct_order:
-    - Я
-    - мушу
-    - працювати.
-  - words:
-    - спати.
-    - не
     - Вона
-    - хоче
+    - працювати.
+    - мусить
     correct_order:
     - Вона
-    - не
-    - хоче
-    - спати.
+    - мусить
+    - працювати.
   - words:
-    - можуть
+    - не
     - Вони
-    - українською.
-    - говорити
+    - спати.
+    - хочуть
     correct_order:
     - Вони
-    - можуть
-    - говорити
-    - українською.
-- id: divide-words-syllables
-  type: divide-words
-  instruction: Divide the words into syllables.
+    - не
+    - хочуть
+    - спати.
+  - words:
+    - Ти
+    - допомогти?
+    - можеш
+    correct_order:
+    - Ти
+    - можеш
+    - допомогти?
+  - words:
+    - можу
+    - Я
+    - порекомендувати
+    - борщ.
+    correct_order:
+    - Я
+    - можу
+    - порекомендувати
+    - борщ.
+  title: Put the words in the correct order to form a sentence.
+- id: true-false-modals
+  type: true-false
+  instruction: Is the sentence grammatically correct?
   items:
-  - word: кава
-    answer: ка-ва
-  - word: вода
-    answer: во-да
-  - word: шкода
-    answer: шко-да
-  - word: гуляти
-    answer: гу-ля-ти
-  - word: мусити
-    answer: му-си-ти
-  - word: робити
-    answer: ро-би-ти
-  - word: читати
-    answer: чи-та-ти
+  - statement: Я мушу працювати.
+    correct: true
+    explanation: 'This is perfectly correct: «я мушу» + infinitive.'
+  - statement: Він хочу каву.
+    correct: false
+    explanation: «Він» takes the form «хоче».
+  - statement: Ми можемо допомогти.
+    correct: true
+    explanation: 'This is correct: «ми можемо» + infinitive.'
+  - statement: Ти мушиш спати.
+    correct: false
+    explanation: 'The consonant shift only happens in the ''я'' form: «ти мусиш».'
+  - statement: Я не хочу гуляти.
+    correct: true
+    explanation: 'This is correct: the negative particle «не» goes before the modal
+      verb.'
+  - statement: Вони могти читати.
+    correct: false
+    explanation: 'You must conjugate the modal verb: «Вони можуть читати».'
+  title: Is the sentence grammatically correct?
+- id: anagram-vocab
+  type: anagram
+  instruction: Unscramble the letters to form vocabulary words.
+  items:
+  - letters:
+    - м
+    - у
+    - с
+    - и
+    - т
+    - и
+    answer: мусити
+    hint: to must / have to
+  - letters:
+    - м
+    - о
+    - г
+    - т
+    - и
+    answer: могти
+    hint: can / to be able to
+  - letters:
+    - х
+    - о
+    - т
+    - і
+    - т
+    - и
+    answer: хотіти
+    hint: to want
+  - letters:
+    - к
+    - а
+    - в
+    - а
+    answer: кава
+    hint: coffee
+  - letters:
+    - б
+    - о
+    - р
+    - щ
+    answer: борщ
+    hint: borscht
+  - letters:
+    - ш
+    - к
+    - о
+    - д
+    - а
+    answer: шкода
+    hint: pity, unfortunately
+  title: Unscramble the letters to form vocabulary words.
 - id: count-syllables-vocab
   type: count-syllables
   instruction: How many syllables are in each word?
   items:
-  - word: кава
+  - word: працювати
+    correct: 4
+  - word: хотіти
+    correct: 3
+  - word: могти
     correct: 2
-  - word: чай
-    correct: 1
   - word: борщ
     correct: 1
-  - word: вода
+  - word: кава
     correct: 2
-  - word: сік
-    correct: 1
   - word: допомогти
     correct: 4
-  - word: треба
-    correct: 2
-- id: odd-one-out-syllables
+  title: How many syllables are in each word?
+- id: odd-one-out-modals
   type: odd-one-out
-  instruction: Find the word with a different number of syllables.
+  instruction: Find the word that does not belong.
   items:
-  - words:
-    - чай
-    - борщ
-    - кава
-    correct: 2
-    explanation: '**кава** has 2 syllables, the others have 1.'
-  - words:
-    - могти
-    - спати
-    - працювати
-    correct: 2
-    explanation: '**працювати** has 4 syllables, the others have 2.'
-  - words:
-    - сік
-    - чай
-    - вода
-    correct: 2
-    explanation: '**вода** has 2 syllables, the others have 1.'
   - words:
     - хочу
-    - їсти
+    - можу
+    - каву
+    correct: 2
+    explanation: «Каву» is a noun, the others are verbs.
+  - words:
     - читати
-    correct: 2
-    explanation: '**читати** has 3 syllables, the others have 2.'
-  - words:
-    - я
-    - він
-    - вона
-    correct: 2
-    explanation: '**вона** has 2 syllables, the others have 1.'
-  - words:
+    - борщ
     - гуляти
-    - мусити
-    - могти
+    correct: 1
+    explanation: «Борщ» is a noun, the others are infinitive verbs.
+  - words:
+    - мушу
+    - мусить
+    - може
     correct: 2
-    explanation: '**могти** has 2 syllables, the others have 3.'
-- id: order-dialogue
-  type: order
-  instruction: Put the dialogue lines in the correct order.
-  items:
-  - — Що ти хочеш робити?
-  - — Я хочу гуляти. А ти?
-  - — Я не можу, я мушу працювати.
-  - — Шкода!
-  correct_order:
-  - 0
-  - 1
-  - 2
-  - 3
+    explanation: «Може» is from the verb «могти», the others are from «мусити».
+  - words:
+    - можемо
+    - хочемо
+    - мусять
+    correct: 2
+    explanation: «Мусять» is 'they' (вони), the others are 'we' (ми).
+  - words:
+    - сьогодні
+    - завтра
+    - шкода
+    correct: 2
+    explanation: «Шкода» means 'a pity', the others are time words (today, tomorrow).
+  - words:
+    - чай
+    - кава
+    - кіно
+    correct: 2
+    explanation: «Кіно» is a place/event, the others are drinks.
+  title: Find the word that does not belong.

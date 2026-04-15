@@ -1,0 +1,33 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-14T19-49-c40f5bcc.json
+phase: rewrite-block-01
+prompt_chars: 14724
+response_chars: 2140
+prompt_words: 2087
+response_words: 342
+sections:
+- name: preamble
+  start: 0
+  length: 12643
+  fraction: 0.8587
+- name: prior_summary
+  start: 12643
+  length: 1890
+  fraction: 0.1284
+- name: skeleton
+  start: 14533
+  length: 191
+  fraction: 0.013
+large_sections:
+- preamble
+directives_total: 2
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: А кішка? — Вона на дивані!`), but make the second dialogue the required newcomer-neighbor
+    wayfinding scene from the contract.
+  covered: false
+  coverage_note: 3/14 keywords (21%)
+- kind: inject_activity
+  text: fill-in-answer-where
+  covered: false
+  coverage_note: marker missing

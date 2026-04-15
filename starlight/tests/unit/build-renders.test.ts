@@ -15,10 +15,10 @@
 
 import { describe, it, expect } from 'vitest';
 import { execSync } from 'child_process';
-import { readdirSync, existsSync } from 'fs';
+import { readdirSync, existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-const STARLIGHT_DIR = join(__dirname, '..');
+const STARLIGHT_DIR = join(__dirname, '..', '..');
 
 describe('Astro build renders all pages', () => {
   let buildOutput: string;
@@ -93,5 +93,16 @@ describe('Astro build renders all pages', () => {
       const matches = buildOutput.match(pattern);
       expect(matches, `Build output contains: ${pattern}`).toBeNull();
     }
+  });
+
+  it('renders Starlight tabs for module pages instead of raw tab markers', () => {
+    const weatherPage = join(STARLIGHT_DIR, 'dist', 'a1', 'weather', 'index.html');
+    expect(existsSync(weatherPage)).toBe(true);
+
+    const html = readFileSync(weatherPage, 'utf-8');
+
+    expect(html).not.toContain('starlight-tab-item');
+    expect((html.match(/role="tab"/g) || []).length).toBeGreaterThan(0);
+    expect((html.match(/role="tabpanel"/g) || []).length).toBeGreaterThan(0);
   });
 });

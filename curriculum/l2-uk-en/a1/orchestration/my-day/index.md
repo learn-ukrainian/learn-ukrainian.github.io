@@ -1,27 +1,12 @@
 # Build Summary: my-day (A1)
 
-Generated: 2026-04-11 11:56
+Generated: 2026-04-14 12:47
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-04-09 05:00:34 |
-| research | complete | 2026-04-09 05:00:34 |
-| skeleton | complete | 2026-04-09 05:01:23 |
-| pre-verify | complete | 2026-04-09 05:05:47 |
-| write | complete | 2026-04-09 05:10:13 |
-| exercises | complete | 2026-04-09 05:10:13 |
-| activities | complete | 2026-04-09 05:11:09 |
-| verify-exercises | complete | 2026-04-09 05:11:09 |
-| annotate | complete | 2026-04-09 05:11:09 |
-| vocab | complete | 2026-04-09 05:13:24 |
-| enrich | complete | 2026-04-09 05:13:24 |
-| verify | complete | 2026-04-09 05:13:24 |
-| review | complete | 2026-04-09 05:19:58 |
-| stress | complete | 2026-04-09 05:20:00 |
-| publish | complete | 2026-04-11 09:56:05 |
-| audit | complete | 2026-04-11 09:56:05 |
+| audit | complete | 2026-04-14 10:47:47 |
 
 ## Reviews
 

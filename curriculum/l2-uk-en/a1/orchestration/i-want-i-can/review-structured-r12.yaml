@@ -1,0 +1,52 @@
+round: 12
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Core beats are covered well: `Що ти хочеш робити сьогодні?`, café `Я
+    хочу каву... Що ви можете порекомендувати?`, full paradigms for `хотіти / могти
+    / мусити`, and the anchor `Я хочу гуляти, але не мо'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym misuse, bad case endings, or
+    false grammar claims surfaced in the Ukrainian text.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'The module follows a solid teach-then-practice flow: dialogue context,
+    paradigm explanation, then guided production with examples like `Я хочу каву.`,
+    `Я можу говорити українською.`, `Я мушу працювати'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'Required vocabulary is integrated naturally in prose: `хочеш`, `робити`,
+    `гуляти`, `можу`, `мушу`, `працювати`, `Шкода`, `каву`, `їсти`.'
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: 'Marker placement is fine, but both quiz blocks in `activities/i-want-i-can.yaml`
+    use `correct: 0` for every item, and the first quiz title is truncated to `(ab''`,
+    which makes the exercise set look mec'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone stays teacherly and concrete, especially in the weekend-planning
+    and café scenarios and the contrast `Я хочу каву` vs `Я хочу їсти`.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Headings are correct and ordered, marker syntax is clean, and the pipeline
+    total is 1241 words, but `## Підсумок — Summary` underfills its section budget.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No Russia-centering, no fabricated cultural claims, and no misleading
+    “like Russian” framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The main dialogue is multi-turn and functional rather than interrogative,
+    with named speakers and natural planning turns like `Я не можу, я мушу працювати.
+    — Шкода! А завтра?`
+findings: []

@@ -1,0 +1,57 @@
+round: 16
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'All four required H2s appear in the correct order, and each section stays
+    within budget: `Діалоги` 295, `Хотіти` 321, `Могти і мусити` 282, `Підсумок` 311.
+    Contract beats are covered directly through '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'No Russianisms, Surzhyk, calques, paronym errors, or forbidden Russian
+    letters appear. The paradigms `я хочу / ти хочеш / він/вона хоче`, `я можу / ти
+    можеш / він/вона може`, and `я мушу / ти мусиш / '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'The module follows a clear teach sequence: dialogue context first, then
+    `Хотіти`, then `Могти і мусити`, then synthesis. Grammar rules are consistently
+    paired with examples: `Я хочу іти в кіно`, `Він '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'Required vocabulary is present naturally in prose, not dumped as a list:
+    `хочеш`, `робити`, `гуляти`, `можу`, `мушу`, `працювати`, `Шкода`, `каву`, `їсти`,
+    `борщ`. The contrast `Я хочу каву` vs `Я хоч'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'Marker-only evaluation passes cleanly: there are 4 markers for 4 obligations,
+    the order matches exactly, and each marker type matches the contracted type prefix
+    exactly.'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The voice stays teacherly and substantive rather than gamified or self-congratulatory.
+    Phrases like `Now turn the pattern into your own sentences` and the partner prompt
+    keep the section active withou
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, correct H2 structure, no stray artifacts beyond expected
+    `INJECT_ACTIVITY` markers, and the pipeline word count is 1288, which is above
+    the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian is presented on its own terms through `складений дієслівний
+    присудок`, the accusative example `кава → каву`, and Ukrainian everyday situations.
+    There is no Russian-centered framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Both dialogues are named-speaker, multi-turn, and situationally real:
+    weekend planning (`Оля`, `Денис`) and a café exchange (`Офіціант`, `Клієнтка`).
+    The first dialogue especially feels natural throug'
+findings: []

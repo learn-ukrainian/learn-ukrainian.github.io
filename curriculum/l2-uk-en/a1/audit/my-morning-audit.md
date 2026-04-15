@@ -1,7 +1,7 @@
 # Audit Report: M20 — my-morning.md
 **Level:** A1 | **Module:** M20 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-11 16:52:01
+**Generated:** 2026-04-14 12:46:45
 
 ## Configuration
 **Type:** A1-grammar
@@ -35,7 +35,7 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[INFO]** Dative case used at A1: 'пові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: дієслово, займенник
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: займенник, дієслово
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
@@ -44,7 +44,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1471/1200 (raw: 1620)
+- **Words:** ✅ 1383/1200 (raw: 1532)
 - **Activities:** ✅ 7/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 13.3% (target 15-35%, within tolerance (M20))
+- **Immersion:** 🇺🇦 18.4% (target 15-35% (M20))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -64,7 +64,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 388 | Included in Core |
-| **Дієслова́ на -ся — Reflexive Verbs** | ✅ | 401 | Included in Core |
-| **Мій ра́нок — My Morning** | ✅ | 364 | Included in Core |
-| **Підсумок — Summary** | ✅ | 318 | Included in Core |
+| **Intro/Narrative** | ✅ | 338 | Included in Core |
+| **Дієслова́ на -ся — Reflexive Verbs** | ✅ | 370 | Included in Core |
+| **Мій ра́нок — My Morning** | ✅ | 400 | Included in Core |
+| **Підсумок — Summary** | ✅ | 275 | Included in Core |

@@ -1,7 +1,7 @@
 # Audit Report: M16 — verbs-group-one.md
 **Level:** A1 | **Module:** M16 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-13 21:28:31
+**Generated:** 2026-04-14 12:45:52
 
 ## Configuration
 **Type:** A1-grammar

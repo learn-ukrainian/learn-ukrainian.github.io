@@ -1,0 +1,50 @@
+round: 6
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covered all points in `content_outline` and integrated all `vocabulary_hints`
+    smoothly into the text.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'CRITICAL ERROR: The text claims that "**зошит**" takes the "**-і** ending"
+    to become "**зошити**", completely contradicting the spelling of the word (which
+    takes the standard hard-stem -и ending). Thi'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Clear progression from singular to plural, with solid contextual examples
+    and a good PPP structure.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required (столи, книги, вікна, стільці, ці, ті, мої, які) and recommended
+    vocabulary successfully integrated naturally into the prose without relying on
+    bare lists.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 activity hints from the plan have corresponding `INJECT_ACTIVITY`
+    markers placed correctly after the relevant grammar sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Friendly, descriptive tone ("Imagine a bright classroom in Kyiv on a crisp
+    morning") that sets up the context well.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 1679 (above the 1200 target). Headings exactly match the
+    plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate descriptions, appropriate context for a classroom and university
+    stationery shop.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Natural dialogues in both the classroom setting and the stationery shop
+    that showcase the grammar organically.
+findings: []

@@ -1,0 +1,37 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-14T18-23-9964bfd2.json
+phase: rewrite-block-01
+prompt_chars: 17256
+response_chars: 1954
+prompt_words: 2425
+response_words: 327
+sections:
+- name: preamble
+  start: 0
+  length: 14910
+  fraction: 0.864
+- name: prior_summary
+  start: 14910
+  length: 2156
+  fraction: 0.1249
+- name: skeleton
+  start: 17066
+  length: 190
+  fraction: 0.011
+large_sections:
+- preamble
+directives_total: 6
+directives_covered: 3
+directives_missed:
+- kind: must
+  text: Open directly with the two required dialogues instead of generic English exposition.
+  covered: false
+  coverage_note: 3/9 keywords (33%)
+- kind: must
+  text: When planning a weekend — negotiating what to do, you must balance personal
+    desires against daily obligations.
+  covered: false
+  coverage_note: 5/13 keywords (38%)
+- kind: inject_activity
+  text: quiz
+  covered: false
+  coverage_note: marker missing

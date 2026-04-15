@@ -1,0 +1,54 @@
+round: 8
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The module covers the contract’s core beats well, including both dialogues,
+    `хотіти + noun` vs `хотіти + infinitive`, and the `могти/мусити` contrast. However,
+    the summary section is far below its 270
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The Ukrainian examples themselves are clean, but the explanation `This
+    verb strictly denotes physical capability, availability, or receiving permission`
+    is factually too narrow for `могти`, which also
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The module mostly follows dialogue -> explanation -> examples, but the
+    summary spends too much space on generic English coaching (`Active practice is
+    required...`, `Building these sentences out loud..
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required vocabulary is well integrated in context: `хочеш`, `робити`,
+    `гуляти`, `можу`, `мушу`, `працювати`, `каву`, `борщ`, `їсти`.'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 planned markers are present, in the right type order, and placed
+    after relevant teaching content. No visible logic defects can be established from
+    the markers themselves.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: The actual examples are useful, but some prose sounds generated and expository,
+    especially `Olya and Denys are planning a weekend — negotiating what to do` and
+    the abstract summary coaching.
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: Headings are clean and ordered, but the pipeline note gives a total of
+    1186 words, below target, and the summary section is notably thinner than the
+    other three sections.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: 'No Russia-centered framing or dubious cultural claims. Situations are
+    ordinary and appropriate: weekend plans and a café order.'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogues are named, multi-turn, and functional. `Що ти хочеш робити
+    сьогодні? ... Я не можу, я мушу працювати.` is a natural A1 planning exchange.
+findings: []

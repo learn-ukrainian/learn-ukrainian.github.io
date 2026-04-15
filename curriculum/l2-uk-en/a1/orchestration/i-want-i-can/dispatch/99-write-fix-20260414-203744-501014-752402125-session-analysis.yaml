@@ -1,0 +1,32 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-14T18-35-e949e29c.json
+phase: write-fix
+prompt_chars: 9844
+response_chars: 7818
+prompt_words: 1523
+response_words: 1246
+sections:
+- name: unknown
+  start: 0
+  length: 9844
+  fraction: 1.0
+large_sections:
+- unknown
+directives_total: 16
+directives_covered: 12
+directives_missed:
+- kind: inject_activity
+  text: fill-in-khotity
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-conjugation-pattern
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-modal-choice
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-combo
+  covered: false
+  coverage_note: marker missing
