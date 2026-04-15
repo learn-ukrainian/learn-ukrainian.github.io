@@ -535,6 +535,7 @@ _STYLE_REVIEW_DIMENSIONS = {
     'culture_and_register': 'Culture + register',
     'naturalness': 'Naturalness',
 }
+_VERSIONED_ROUND_RE = re.compile(r'-r(\d+)(?=\.[^.]+$)')
 
 
 def _normalize_style_review_key(value: str) -> str:
@@ -548,13 +549,19 @@ def _normalize_style_review_key(value: str) -> str:
     return aliases.get(normalized, normalized)
 
 
+def _versioned_round_number(path: Path) -> int:
+    """Extract the numeric review round from a versioned artifact filename."""
+    match = _VERSIONED_ROUND_RE.search(path.name)
+    return int(match.group(1)) if match else -1
+
+
 def _load_latest_yaml(orch_dir: Path, pattern: str) -> tuple[Path | None, dict | None, str | None]:
     """Load the latest matching YAML file from orchestration dir."""
-    matches = sorted(orch_dir.glob(pattern))
+    matches = list(orch_dir.glob(pattern))
     if not matches:
         return None, None, None
 
-    latest = matches[-1]
+    latest = max(matches, key=lambda path: (_versioned_round_number(path), path.name))
     try:
         data = yaml.safe_load(latest.read_text(encoding='utf-8'))
     except Exception as exc:

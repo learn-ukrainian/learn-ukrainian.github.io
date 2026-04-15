@@ -199,6 +199,7 @@ _PROMPT_CONTROL_PHRASE_RE = re.compile(
 _PROMPT_DELIMITER_LINE_RE = re.compile(
     r"(?im)^\s*===[A-Z0-9]+(?:_[A-Z0-9]+)*_(?:START|END)===\s*$"
 )
+_VERSIONED_ROUND_RE = re.compile(r"-r(\d+)(?=\.[^.]+$)")
 
 
 def _strip_prompt_control_tags(text: str) -> str:
@@ -215,6 +216,19 @@ def _strip_prompt_control_tags(text: str) -> str:
     cleaned = _PROMPT_CONTROL_PHRASE_RE.sub("", cleaned)
     cleaned = _PROMPT_DELIMITER_LINE_RE.sub("", cleaned)
     return re.sub(r"\n{3,}", "\n\n", cleaned)
+
+
+def _versioned_round_number(path: Path) -> int:
+    """Extract the numeric review round from a versioned artifact filename."""
+    match = _VERSIONED_ROUND_RE.search(path.name)
+    return int(match.group(1)) if match else -1
+
+
+def _latest_versioned_path(paths: list[Path]) -> Path | None:
+    """Return the highest numeric review round from a list of versioned paths."""
+    if not paths:
+        return None
+    return max(paths, key=lambda path: (_versioned_round_number(path), path.name))
 
 
 def _format_prompt_literal_block(label: str, text: str, *, language: str = "text") -> str:
@@ -1298,9 +1312,10 @@ def _load_latest_review_result(level: str, slug: str) -> ReviewParseResult | Non
     review_dir = CURRICULUM_ROOT / level / "review"
     review_path = review_dir / f"{slug}-review.md"
     if not review_path.exists() and review_dir.exists():
-        versioned = sorted(review_dir.glob(f"{slug}-review-r*.md"))
-        if versioned:
-            review_path = versioned[-1]
+        versioned = list(review_dir.glob(f"{slug}-review-r*.md"))
+        latest_versioned = _latest_versioned_path(versioned)
+        if latest_versioned is not None:
+            review_path = latest_versioned
     if not review_path.exists():
         return None
     try:
@@ -1314,11 +1329,11 @@ def _load_latest_style_review_result(level: str, slug: str) -> StyleReviewParseR
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     if not orch_dir.exists():
         return None
-    review_paths = sorted(orch_dir.glob("review-structured-style-r*.yaml"))
-    if not review_paths:
+    latest_path = _latest_versioned_path(list(orch_dir.glob("review-structured-style-r*.yaml")))
+    if latest_path is None:
         return None
     try:
-        return _parse_style_review_result(review_paths[-1].read_text("utf-8"))
+        return _parse_style_review_result(latest_path.read_text("utf-8"))
     except Exception:
         return None
 
