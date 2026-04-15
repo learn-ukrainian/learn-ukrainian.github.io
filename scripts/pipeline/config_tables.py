@@ -8,6 +8,9 @@ from __future__ import annotations
 
 import textwrap
 
+from config import IMMERSION_POLICIES
+from config import get_immersion_rule as shared_get_immersion_rule
+
 # ============================================================================
 # 1. Config Tables (data only, no logic)
 # ============================================================================
@@ -72,232 +75,9 @@ TRACK_SKILLS["b1-early"] = ("full-rebuild-core-a", *TRACK_PERSONAS["b1"])
 TRACK_SKILLS["b1-late"] = ("full-rebuild-core-b", *TRACK_PERSONAS["b1"])
 
 IMMERSION_RULES: dict[str, str] = {
-    "a1-m01-06": (
-        "TARGET: 5-15% Ukrainian.\n"
-        "LANGUAGE ROLES:\n"
-        "- THEORY & EXPLANATION: Mostly English with Ukrainian words bolded inline.\n"
-        "- UKRAINIAN CONTENT: Words and short phrases inline: \"The letter **Н** looks like H but sounds like N.\"\n"
-        "- DIALOGUES & READING PRACTICE: Short Ukrainian sentences in blockquotes are encouraged.\n"
-        "- TABLES: Simple letter-sound or word-meaning tables.\n"
-        "Ukrainian sentences max 10 words."
-    ),
-    "a1-m07-14": (
-        "TARGET: 10-20% Ukrainian.\n"
-        "LANGUAGE ROLES:\n"
-        "- THEORY & EXPLANATION: English prose. Introduce Ukrainian grammar terms bolded with translation on first use.\n"
-        "- UKRAINIAN CONTENT: Words and short phrases bolded inline: \"The word **книга** (book) is feminine.\"\n"
-        "- TABLES: Vocabulary tables, word families, simple paradigm tables.\n"
-        "- STRUCTURAL RULE: Every paragraph is English. Ukrainian words/phrases appear inline bolded. "
-        "Full Ukrainian sentences (3+ words with a verb) go in tables or bulleted example lists with English gloss.\n"
-        "Ukrainian sentences max 10 words."
-    ),
-    "a1-m15-24": (
-        "TARGET: 15-25% Ukrainian.\n"
-        "LANGUAGE ROLES:\n"
-        "- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.\n"
-        "- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.\n"
-        "- TABLES: Paradigm tables, gender sorting, vocabulary groups — all cells Ukrainian.\n"
-        "- PATTERN BOXES: Show transformations and rules: `книга → книги` (singular → plural).\n"
-        "- INLINE: Ukrainian words/phrases bolded in English prose.\n"
-        "- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. "
-        "Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes — never in flowing prose.\n"
-        "Ukrainian sentences max 10 words. Mix container types."
-    ),
-    "a1-m25-34": (
-        "TARGET: 15-30% Ukrainian.\n"
-        "LANGUAGE ROLES:\n"
-        "- THEORY & EXPLANATION: English prose — explain the grammar concept once, clearly.\n"
-        "- EXAMPLES: Ukrainian sentences in bulleted lists (each line: Ukrainian — English gloss). Max 2-4 per rule.\n"
-        "- TABLES: Paradigm tables, case endings, vocabulary groups — all cells Ukrainian.\n"
-        "- PATTERN BOXES: Show transformations: `книга → книгу` (nominative → accusative).\n"
-        "- INLINE: Ukrainian words/phrases bolded in English prose.\n"
-        "- STRUCTURAL RULE: Paragraphs are English with inline bold Ukrainian. "
-        "Full Ukrainian sentences go in tables, bulleted lists, or pattern boxes.\n"
-        "Ukrainian sentences max 10 words. Mix container types."
-    ),
-    "a1-m35-54": (
-        "TARGET: 20-35% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 20%.\n"
-        "LANGUAGE ROLES:\n"
-        "- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. "
-        "No long expository paragraphs. Explain once, then show Ukrainian.\n"
-        "- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 1 per section.** "
-        "A 3-6 sentence Ukrainian paragraph demonstrating the concept in use, "
-        "followed IMMEDIATELY by a `> *English translation*` blockquote. "
-        "This is the PRIMARY driver of hitting the immersion target. "
-        "Without these paragraphs you cannot reach 20%.\n"
-        "- PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.\n"
-        "- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.\n"
-        "- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.\n"
-        "- PATTERN BOXES: Show transformations: `читати → читай → читайте`.\n"
-        "- INLINE: Ukrainian words/phrases bolded in English prose.\n"
-        "- STRUCTURAL RULE: Every section MUST contain a Ukrainian narrative paragraph "
-        "(3-6 sentences, translated in blockquote) PLUS supporting "
-        "tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M35+.\n"
-        "Ukrainian sentences max 12 words. Mix container types."
-    ),
-    "a1-m55+": (
-        "TARGET: 25-40% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 25%.\n"
-        "LANGUAGE ROLES:\n"
-        "- THEORY & EXPLANATION: English prose — brief, 2-3 sentences per concept. "
-        "Explain once, then show Ukrainian.\n"
-        "- UKRAINIAN NARRATIVE PARAGRAPHS: **REQUIRED — minimum 2 per section.** "
-        "A 4-8 sentence Ukrainian paragraph demonstrating the concept in use, "
-        "followed IMMEDIATELY by a `> *English translation*` blockquote. "
-        "This is the PRIMARY driver of hitting the immersion target.\n"
-        "- PARADIGM TABLES: Conjugation/declension tables with all cells Ukrainian.\n"
-        "- EXAMPLE LISTS: Ukrainian sentences in bulleted lists (each: Ukrainian — English gloss). Minimum 5 per rule.\n"
-        "- DIALOGUES: Mini-dialogues in blockquotes with English gloss per line. At least 1 dialogue per module.\n"
-        "- PATTERN BOXES: Show transformations: `читати → читай → читайте`.\n"
-        "- INLINE: Ukrainian words/phrases bolded in English prose.\n"
-        "- STRUCTURAL RULE: Every section MUST contain at least 2 Ukrainian narrative paragraphs "
-        "(4-8 sentences each, translated in blockquote) PLUS supporting "
-        "tables/lists/dialogues/pattern boxes. Pure-English sections are FORBIDDEN at M55+.\n"
-        "Ukrainian sentences max 14 words. Mix container types."
-    ),
-    "a2-bridge": (
-        "TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).\n"
-        "LANGUAGE ROLES:\n"
-        "- THEORY: English prose for grammar review and metalanguage introduction.\n"
-        "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, pattern boxes.\n"
-        "- HEADERS: Ukrainian with English in parentheses.\n"
-        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.\n"
-        "These are review/bridge modules. English theory is expected. Ukrainian content comes from "
-        "dialogues, example sentences, paradigm tables, and pattern boxes.\n"
-        "A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. "
-        "Ukrainian sentences max 15 words. Max 2 clauses. "
-        "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
-    ),
-    "a2-ramp": (
-        "TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.\n"
-        "LANGUAGE ROLES:\n"
-        "- THEORY: English prose for grammar explanations — keep SHORT (2-3 sentences per concept, then IMMEDIATELY show Ukrainian examples).\n"
-        "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
-        "- HEADERS: Ukrainian with English in parentheses.\n"
-        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.\n"
-        "⚠️ CRITICAL: You MUST write at least 30% Ukrainian text or the module will be REJECTED.\n"
-        "HOW TO REACH 30-50% UKRAINIAN:\n"
-        "1. Include 2-3 multi-turn dialogues (8+ lines each) spread through the module — these are your biggest Ukrainian contributors.\n"
-        "2. After EVERY grammar explanation (max 2-3 English sentences), IMMEDIATELY show 5+ Ukrainian example sentences with translations.\n"
-        "3. Add a '### Читаємо українською (Reading Practice)' block in EACH section — 5-8 connected Ukrainian sentences forming a mini-narrative.\n"
-        "4. Use :::tip callouts with Ukrainian mnemonic phrases and cultural notes.\n"
-        "5. Paradigm tables with Ukrainian content (not just endings but full phrases).\n"
-        "SELF-CHECK: Before finishing, count Ukrainian text. If it feels like less than 1/3 of the module, add more Ukrainian dialogues and reading practice blocks.\n"
-        "A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. "
-        "Ukrainian sentences max 15 words. Max 2 clauses. "
-        "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
-    ),
-    "a2-m01-20": (
-        "TARGET: 45-65% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules below 45%.\n"
-        "LANGUAGE ROLES:\n"
-        "- THEORY: English prose for grammar explanations — keep these SHORT (2-3 sentences max per concept).\n"
-        "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
-        "- HEADERS: Ukrainian with English in parentheses.\n"
-        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix languages within a sentence.\n"
-        "HOW TO REACH 45-65% UKRAINIAN (mandatory techniques):\n"
-        "1. After EVERY grammar explanation, add a «Читаємо українською» block: 4-6 full Ukrainian sentences "
-        "demonstrating the concept just explained. These are comprehensible input, not exercises.\n"
-        "2. Include 3-4 multi-turn dialogues (6+ lines each) spread through the module. "
-        "Dialogues are the fastest way to boost Ukrainian content.\n"
-        "3. Pattern boxes showing Ukrainian transformations: «стіл → стола → на столі».\n"
-        "4. Section introductions can be 1-2 Ukrainian sentences before the English theory.\n"
-        "5. :::tip and :::note callout boxes should contain Ukrainian mnemonic phrases.\n"
-        "If your module has long English paragraphs without Ukrainian blocks between them, "
-        "you are below target. Every English paragraph should be followed by Ukrainian content.\n"
-        "A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. No abstract nouns. "
-        "Ukrainian sentences max 15 words. Max 2 clauses. "
-        "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
-    ),
-    "a2-m21-50": (
-        "TARGET: 55-75% Ukrainian.\n"
-        "LANGUAGE ROLES:\n"
-        "- PRIMARY: Ukrainian for all content — dialogues, examples, section intros, cultural context.\n"
-        "- ENGLISH: Only for abstract grammar concepts that need explicit explanation.\n"
-        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. "
-        "Dialogues, examples, section intros all stay Ukrainian-only.\n"
-        "A2 register. Concrete everyday vocabulary. No literary language, no metaphors. "
-        "Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. "
-        "Simple subordinate clauses only. Aspect pairs introduced. No participles."
-    ),
-    "a2-m51-70": (
-        "TARGET: 70-90% Ukrainian. THIS IS A HARD GATE — the audit REJECTS modules outside this range.\n"
-        "\n"
-        "LANGUAGE ROLES:\n"
-        "- PRIMARY: Ukrainian for narrative, dialogues, examples, section intros, cultural notes, "
-        "Reading Practice blocks, learning callouts.\n"
-        "- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English "
-        "translation on FIRST use only, e.g. `**доконаний вид** (perfective aspect)`. Subsequent uses must be Ukrainian only.\n"
-        "- VOCABULARY TABLE: English glosses live here, not in prose.\n"
-        "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English. Never mix mid-sentence.\n"
-        "\n"
-        "⚠️ HARD STRUCTURAL RULES — READ THIS TWICE:\n"
-        "- FORBIDDEN: long English narrative paragraphs explaining grammar. If a concept needs more "
-        "than ONE sentence of English scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in "
-        "the main prose.\n"
-        "- FORBIDDEN: mirroring a Ukrainian paragraph with an English translation paragraph. Write "
-        "ONE paragraph in Ukrainian, move on.\n"
-        "- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian dialogues. They were "
-        "required at A1 but they cap immersion below 50% — at A2-late they MUST be removed.\n"
-        "\n"
-        "ESCAPE HATCH (the 'Dual Ladder'):\n"
-        "For genuinely abstract grammar concepts, you may use ONE `:::info` or `:::tip` callout "
-        "written in English per section to clarify the concept. Because callouts are stripped from "
-        "the immersion metric, this serves as on-demand scaffolding for struggling learners without "
-        "penalising the immersion score. Do NOT abuse this — at most one English callout per major section.\n"
-        "\n"
-        "A2 register. Concrete everyday vocabulary. No literary language, no metaphors. "
-        "Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate "
-        "clauses only (який/що/коли). Full aspect pairs. No participles.\n"
-        "\n"
-        "CHECKLIST (re-read before writing each section):\n"
-        "- [ ] Every narrative paragraph in Ukrainian?\n"
-        "- [ ] Zero `> *English translation*` blockquotes after dialogues?\n"
-        "- [ ] At most ONE English `:::info` callout per major section?\n"
-        "- [ ] Metalanguage terms parenthetically translated on first use only (max 2 per section)?\n"
-        "- [ ] Reading Practice / Читаємо українською block in EVERY major section?\n"
-    ),
-    "b1-core": (
-        "TARGET: 90-100% Ukrainian.\n"
-        "\n"
-        "LANGUAGE ROLES:\n"
-        "- THEORY & EXPLANATION: Ukrainian prose. Explain grammar IN Ukrainian "
-        "using Ukrainian linguistic terms (дієслово, відмінок, недоконаний вид).\n"
-        "- EXAMPLES & NARRATIVE: 100% Ukrainian.\n"
-        "- DIALOGUES: 100% Ukrainian. NO inline English glosses `*(English)*`.\n"
-        "- METALANGUAGE: For abstract grammar terms, you may provide ONE "
-        "parenthetical English translation on FIRST use only, e.g. "
-        "`**видова пара** (aspectual pair)`. Subsequent uses must be Ukrainian "
-        "only. Concrete vocabulary goes in the словник, not inline.\n"
-        "\n"
-        "⚠️ HARD STRUCTURAL RULE — READ THIS TWICE:\n"
-        "- FORBIDDEN: `> *English translation*` blockquotes after Ukrainian "
-        "paragraphs. Every occurrence is an immediate audit failure. This "
-        "pattern destroyed B1 immersion on 35 modules and must never appear.\n"
-        "- FORBIDDEN: mirroring a Ukrainian paragraph with an English paragraph "
-        "translation. Write ONE paragraph in Ukrainian, move on.\n"
-        "- FORBIDDEN: English narrative paragraphs. If a concept needs English "
-        "scaffolding, it goes in a `:::info` or `:::tip` callout, NOT in the "
-        "main prose. (Callouts are stripped by the immersion calculator, so "
-        "this is the sanctioned escape hatch.)\n"
-        "\n"
-        "ESCAPE HATCH (the 'Dual Ladder'):\n"
-        "For highly abstract grammar concepts only, you may use ONE `:::info` "
-        "or `:::tip` callout written in English per section to clarify the "
-        "concept. Because callouts are stripped from the immersion metric, "
-        "this serves as on-demand scaffolding for struggling learners without "
-        "penalising the immersion score.\n"
-        "\n"
-        "Ukrainian sentences: max 30 words, natural textbook register.\n"
-        "\n"
-        "CHECKLIST (re-read before writing each section):\n"
-        "- [ ] Every narrative paragraph in Ukrainian?\n"
-        "- [ ] Zero `> *English translation*` blockquotes?\n"
-        "- [ ] Zero `*(English)*` inline dialogue glosses?\n"
-        "- [ ] At most 2 metalanguage terms parenthetically translated per section?\n"
-        "- [ ] If English scaffolding needed, is it in a `:::info` callout?\n"
-    ),
-    "b2+": (
-        "Full Ukrainian immersion. No English except technical terminology. Sentences max 35 words."
-    ),
+    band["key"]: str(band["rule"])
+    for bands in IMMERSION_POLICIES.values()
+    for band in bands
 }
 
 # Golden fragments — level-appropriate tone/style examples injected into writing prompts.
@@ -1440,36 +1220,8 @@ def get_track_skill(track: str, module_num: int) -> tuple[str, str, str]:
 
 
 def get_immersion_rule(track: str, module_num: int) -> str:
-    """Compute immersion rule from track + module number."""
-    base = track.split("-")[0] if track not in ("hist", "bio", "istorio", "b2-pro", "c1-pro") else track
-    if base == "a1":
-        if module_num <= 6:
-            return IMMERSION_RULES["a1-m01-06"]
-        elif module_num <= 14:
-            return IMMERSION_RULES["a1-m07-14"]
-        elif module_num <= 24:
-            return IMMERSION_RULES["a1-m15-24"]
-        elif module_num <= 34:
-            return IMMERSION_RULES["a1-m25-34"]
-        elif module_num <= 54:
-            return IMMERSION_RULES["a1-m35-54"]
-        else:
-            return IMMERSION_RULES["a1-m55+"]
-    elif base == "a2":
-        if module_num <= 3:
-            return IMMERSION_RULES["a2-bridge"]
-        elif module_num <= 7:
-            return IMMERSION_RULES["a2-ramp"]
-        elif module_num <= 20:
-            return IMMERSION_RULES["a2-m01-20"]
-        elif module_num <= 50:
-            return IMMERSION_RULES["a2-m21-50"]
-        else:
-            return IMMERSION_RULES["a2-m51-70"]
-    elif base == "b1":
-        return IMMERSION_RULES["b1-core"]
-    else:
-        return IMMERSION_RULES["b2+"]
+    """Return writer-facing immersion rule from the shared config authority."""
+    return shared_get_immersion_rule(track, module_num)
 
 
 def get_golden_fragment(track: str, module_num: int) -> str:

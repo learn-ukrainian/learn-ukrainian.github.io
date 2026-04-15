@@ -5,6 +5,8 @@ Contains grammar constraints, case patterns, level configurations,
 and activity requirements for each CEFR level.
 """
 
+from config import get_immersion_range as shared_get_immersion_range
+
 # Proper names and abbreviations whitelisted from VESUM verification.
 # These are valid Ukrainian words that VESUM may not contain (names, acronyms, etc.).
 PROPER_NAME_WHITELIST: set[str] = {
@@ -1558,72 +1560,18 @@ AI_CONTAMINATION_PATTERNS = [
 def get_a1_immersion_range(
     module_num: int,
 ) -> tuple[int, int]:
-    """Returns (min%, max%) for A1 based on module number.
-
-    Note: Immersion includes Activities + Summary (full learner experience).
-    Ranges calibrated for this comprehensive calculation.
-    """
-    # Recalibrated 2026-04-03 from actual A1 content data.
-    # Dialogue examples naturally push Ukrainian % higher — that's GOOD pedagogy.
-    # Ranges raised to accommodate dialogue-rich modules without penalizing them.
-    if module_num <= 3:
-        return (5, 25)    # M1-M3: Phonetics — letters, sounds, minimal pairs
-    elif module_num <= 6:
-        return (8, 30)    # M4-M6: Stress, identity, family — dialogues start here
-    elif module_num <= 14:
-        return (10, 38)   # M7-M14: Gender, adjectives, numbers — grammar examples + dialogues
-    elif module_num <= 24:
-        return (15, 35)   # M15-M24: Sentence Building — verbs, questions, rich dialogues
-    elif module_num <= 34:
-        return (15, 40)   # M25-M34: Cases — applied grammar with many dialogue examples
-    elif module_num <= 54:
-        return (20, 40)   # M35-M54: Daily Life + Communication — dialogue-heavy
-    else:
-        return (25, 48)   # M55+: Independence — practical skills, finale
+    """Return the shared A1 immersion range for audit gates."""
+    return shared_get_immersion_range("a1", module_num)
 
 
 def get_a2_immersion_range(module_num: int) -> tuple[int, int]:
-    """Returns (min%, max%) for A2 based on module number.
-
-    5-band graduated immersion — recalibrated 2026-04-03:
-    A1 ends at 25-48% (M55+, actual max ~45%). A2 bridge continues from there.
-    Dialogue-rich content naturally raises immersion — upper bounds set generously.
-
-    - Bridge (M01-03): 20-48% — A1→A2 transition, overlaps with A1 finale range
-    - Ramp (M04-07): 30-55% — genitive intro, dialogues increasing
-    - Band 1 (M08-20): 40-70% — applied grammar, communicative situations
-    - Band 2 (M21-50): 50-80% — all cases, longer Ukrainian passages
-    - Band 3 (M51-63): 65-90% — near-full immersion, B1 prep
-    """
-    if module_num <= 3:
-        return (20, 48)   # Bridge: overlaps with A1 finale (25-48%)
-    elif module_num <= 7:
-        return (30, 55)   # Ramp: theory+application, dialogues growing
-    elif module_num <= 20:
-        return (40, 70)   # Band 1: applied grammar, dialogue-rich
-    elif module_num <= 50:
-        return (50, 80)   # Band 2: all cases, longer Ukrainian passages
-    else:
-        return (65, 90)   # Band 3: near-full immersion, B1 prep
+    """Return the shared A2 immersion range for audit gates."""
+    return shared_get_immersion_range("a2", module_num)
 
 
 def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
-    """Returns (min%, max%) for B1 based on module number.
-
-    B1 Immersion Philosophy:
-    No bridge in B1 — metalanguage prep moved to end of A2 (2026-04-03).
-    A2 ends at 65-90% (Band 3). B1 continues from there.
-
-    - M01-05 (B1.1 Baselines): 75-100% — first B1 modules, grammar in Ukrainian
-      with minimal English scaffolding. Continues from A2 finale (65-90%).
-    - M06+ (B1.1+): 85-100% — fully immersed, grammar explained IN Ukrainian
-    """
-    if module_num <= 5:
-        # Baseline modules: continues from A2 finale range (65-90%)
-        return (75, 100)
-
-    # All other B1 modules: fully immersed
-    return (85, 100)
+    """Return the shared B1 immersion range for audit gates."""
+    return shared_get_immersion_range("b1", module_num)
 
 
 def get_level_config(level_code: str, module_focus: str | None = None) -> dict:
