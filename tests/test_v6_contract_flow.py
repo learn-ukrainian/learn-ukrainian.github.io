@@ -766,6 +766,41 @@ def test_main_marks_needs_human_review_after_style_plateau(tmp_path: Path, monke
     assert needs_human_review["style_score_history"] == [8.4, 8.5]
 
 
+def test_run_style_review_heal_loop_treats_malformed_yaml_as_error(
+    tmp_path: Path, monkeypatch
+) -> None:
+    level = "a1"
+    slug = "style-malformed"
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    _write_manifest(curriculum_root, level, slug)
+    _write_plan(curriculum_root, level, slug)
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    content_path.write_text(
+        "## Intro\nпривіт добре classroom\n\n## Practice\nУчень.\n",
+        "utf-8",
+    )
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(
+        v6_build,
+        "step_review_style",
+        lambda *args, **kwargs: (False, -1.0, "scores: ["),
+    )
+
+    result = v6_build._run_style_review_heal_loop(
+        content_path,
+        level=level,
+        module_num=1,
+        slug=slug,
+        writer="gemini",
+        reviewer_override=None,
+    )
+
+    assert result.outcome == "error"
+    assert result.rounds == ()
+
+
 def test_normalize_activity_markers_to_contract_reorders_type_only_slots() -> None:
     content = """## Intro
 <!-- INJECT_ACTIVITY: fill-in-khotity-conjugation -->

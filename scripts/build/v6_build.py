@@ -6000,7 +6000,9 @@ def step_review_style(
         parsed = _save_structured_style_review(raw, orch_dir, round_num)
     except Exception as exc:
         _log(f"  ❌ Could not parse style review YAML: {exc}")
-        return False, 0.0, raw
+        parse_error_path = orch_dir / f"review-style-r{round_num}-parse-error.txt"
+        parse_error_path.write_text(f"{exc}\n", "utf-8")
+        return False, -1.0, raw
 
     low_dims = [
         f"{STYLE_REVIEW_DIMENSION_LABELS[key]}={score:.1f}/10"
@@ -7185,6 +7187,8 @@ def _run_style_review_heal_loop(
             writer=writer,
             reviewer_override=reviewer_override,
         )
+        if score < 0.0:
+            return StyleReviewLoopRunResult(outcome="error", rounds=tuple(rounds))
         if score == 0.0 and not review_text:
             return StyleReviewLoopRunResult(outcome="error", rounds=tuple(rounds))
 
@@ -8879,11 +8883,11 @@ def main():
                 reviewer_override=args.reviewer,
             )
             if style_review_result.outcome == "error":
-                _log("\n❌ Build FAILED at Step 8b (review-style — no output from reviewer)")
+                _log("\n❌ Build FAILED at Step 8b (review-style — reviewer output was missing or malformed)")
                 _save_v6_state(args.level, slug, "review-style", status="failed")
                 _emit_module_failed(
                     "review-style",
-                    "Build FAILED at Step 8b (review-style — no output from reviewer)",
+                    "Build FAILED at Step 8b (review-style — reviewer output was missing or malformed)",
                 )
                 sys.exit(1)
             final_style_round = style_review_result.rounds[-1]
