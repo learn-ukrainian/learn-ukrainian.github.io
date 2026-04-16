@@ -26,6 +26,7 @@ from . import runtime_router as runtime_api
 from . import state_router as state_api
 from . import wiki_router as wiki_api
 from .admin_router import router as admin_router
+from .agent_router import router as agent_router
 from .blue_router import router as blue_router
 from .build_events_router import router as build_events_router
 from .comms_router import router as comms_router
@@ -74,6 +75,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 # Mount team routers — each team owns their own file
 app.include_router(admin_router, prefix="/api/admin")
+app.include_router(agent_router, prefix="/api/agent", tags=["agent"])
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
 app.include_router(consultation_router, prefix="/api/consultation")

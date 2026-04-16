@@ -63,10 +63,8 @@ from ._channels_watch import (
 from ._config import CLAUDE_CMD, REPO_ROOT
 from ._db import get_db
 from ._gemini import (
-    _is_gemini_capacity_error,
-    _next_gemini_model,
+    _is_gemini_429_error,
     _prefix_gemini_response,
-    _uses_gemini_capacity_cascade,
 )
 from ._gemini_session_link import (
     GeminiSessionRecovery,

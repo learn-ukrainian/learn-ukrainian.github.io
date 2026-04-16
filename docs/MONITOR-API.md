@@ -1079,3 +1079,24 @@ Practical rule: read `stdout` line-by-line, parse only lines that begin with `{`
 - `module_failed` includes `level`, `slug`, `phase`, and `error`. Error strings are truncated to 200 characters.
 - `batch_start` includes `level` and `total`.
 - `batch_done` includes `level`, `total`, `succeeded`, and `failed`.
+
+---
+
+## Local Agent Deterministic State — `/api/agent/`
+
+Read-only deterministic endpoints for agent coordination and deep debugging. Used to avoid repeated shell polling (e.g., `rg`, `ps`, `git status`).
+
+### `GET /api/agent/module/{level}/{slug}`
+Returns current phase/status, audit status, and key paths for a given module.
+
+### `GET /api/agent/orchestration/{level}/{slug}`
+Returns latest prompt files, review rounds, recent dispatch logs, and whether `needs_human_review` is set.
+
+### `GET /api/agent/prompt-summary/{level}/{slug}`
+Returns prompt manifest metrics (prompt chars, component sizes) from rewrite-block prompt manifests.
+
+### `GET /api/agent/runtime`
+Returns active local build/reviewer/writer processes relevant to the repo in a deterministic shape (`pid`, `state`, `command`).
+
+### `GET /api/agent/worktree`
+Returns git status, distinguishing source-code changes from generated artifact churn (e.g., orchestration, status jsons, audit files).
