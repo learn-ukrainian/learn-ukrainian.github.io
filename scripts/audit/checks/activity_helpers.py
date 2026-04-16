@@ -7,6 +7,50 @@ Also includes error-correction placeholder detection utilities.
 """
 
 
+def flatten_activities(raw) -> list[dict]:
+    """Normalise any known activities-YAML top-level shape to a flat list of
+    activity dicts.
+
+    Three shapes exist in the codebase (#1294):
+
+    1. Legacy: bare list at the top level
+         ``- id: ...\\n  type: ...``
+    2. V6 canonical (``scripts/build/activity_schema.py``): dict with
+       ``inline:`` (render inline next to prose) and ``workbook:`` (render
+       in the Зошит tab) buckets, plus metadata (``version``, ``module``,
+       ``level``)
+    3. Older dict wrapper: ``{"activities": [...]}``
+
+    Callers that used ``isinstance(raw, list)`` silently skipped every V6
+    module (always a dict), which is why the pre-review structural gate
+    never caught phased-out anagrams or item-level hints before publish.
+    Route all activities-YAML readers through this helper to avoid that
+    class of bug.
+
+    ``None`` / unexpected types produce an empty list. Non-dict entries
+    inside a bucket are dropped rather than raised, because the downstream
+    checks all assume dicts.
+    """
+    if raw is None:
+        return []
+    if isinstance(raw, list):
+        return [item for item in raw if isinstance(item, dict)]
+    if isinstance(raw, dict):
+        collected: list[dict] = []
+        # V6 canonical shape
+        for bucket_key in ("inline", "workbook"):
+            bucket = raw.get(bucket_key)
+            if isinstance(bucket, list):
+                collected.extend(item for item in bucket if isinstance(item, dict))
+        # Older wrapper shape — only honour if we didn't already find V6 buckets
+        if not collected:
+            wrapped = raw.get("activities")
+            if isinstance(wrapped, list):
+                collected.extend(item for item in wrapped if isinstance(item, dict))
+        return collected
+    return []
+
+
 def get_title(activity) -> str:
     """Get title from an activity object or dict."""
     title = getattr(activity, 'title', None)
