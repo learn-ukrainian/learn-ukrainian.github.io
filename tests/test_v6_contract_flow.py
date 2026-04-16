@@ -395,6 +395,91 @@ def test_main_marks_needs_human_review_after_two_rounds(tmp_path: Path, monkeypa
     assert (orch_dir / "needs-human-review.yaml").exists()
 
 
+def test_main_clears_stale_needs_human_review_after_review_pass(
+    tmp_path: Path, monkeypatch
+) -> None:
+    level = "a1"
+    slug = "review-clears-needs-human"
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    _write_manifest(curriculum_root, level, slug)
+    _write_plan(curriculum_root, level, slug)
+    (curriculum_root / level).mkdir(parents=True, exist_ok=True)
+    (curriculum_root / level / f"{slug}.md").write_text(
+        "## Intro\nпривіт добре classroom\n\n## Practice\nУчень.\n",
+        "utf-8",
+    )
+    orch_dir = curriculum_root / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    (orch_dir / "contract.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "teaching_beats": {"section_order": ["Intro", "Practice"]},
+                "section_word_budgets": {"Intro": {"min": 1, "max": 200}, "Practice": {"min": 1, "max": 200}},
+                "vocab_grammar_targets": {"must_introduce": ["привіт", "добре"]},
+                "activity_obligations": [],
+                "dialogue_acts": [],
+                "factual_anchors": [],
+            },
+            sort_keys=False,
+            allow_unicode=True,
+        ),
+        "utf-8",
+    )
+    (orch_dir / "wiki-excerpts.yaml").write_text("sections: {}\nfactual_anchors: []\n", "utf-8")
+    (orch_dir / "needs-human-review.yaml").write_text("stale: true\n", "utf-8")
+    state_path = orch_dir / "state.json"
+    state_path.write_text(
+        json.dumps(
+            {
+                "mode": "v6",
+                "track": level,
+                "slug": slug,
+                "phases": {},
+                "needs_human_review": {"status": True, "reason": "stale"},
+            }
+        ),
+        "utf-8",
+    )
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
+    monkeypatch.setattr(v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True)
+    monkeypatch.setattr(
+        v6_build,
+        "step_review",
+        lambda *args, **kwargs: (
+            True,
+            9.2,
+            "## Verdict: PASS\n| 1. Plan adherence | 9/10 | ok |\n",
+        ),
+    )
+    monkeypatch.setattr(
+        v6_build,
+        "_run_style_review_heal_loop",
+        lambda *args, **kwargs: v6_build.StyleReviewLoopRunResult(
+            outcome="pass",
+            rounds=(
+                v6_build.StyleReviewRoundState(
+                    round_num=1,
+                    passed=True,
+                    score=9.3,
+                    review_text="phase: review-style\nverdict: PASS\n",
+                    blocking_issues=(),
+                ),
+            ),
+        ),
+    )
+    monkeypatch.setattr(sys, "argv", ["v6_build.py", level, "1", "--step", "review", "--writer", "gemini"])
+
+    result = v6_build.main()
+
+    state = json.loads(state_path.read_text("utf-8"))
+    assert result is True
+    assert "needs_human_review" not in state
+    assert (orch_dir / "needs-human-review.yaml").exists() is False
+
+
 def test_apply_style_review_rewrite_blocks_groups_by_section(tmp_path: Path, monkeypatch) -> None:
     level = "a1"
     slug = "style-rewrite-flow"
@@ -822,6 +907,66 @@ def test_main_marks_needs_human_review_after_style_plateau(tmp_path: Path, monke
     assert state["needs_human_review"]["status"] is True
     assert needs_human_review["style_review_rounds"] == 2
     assert needs_human_review["style_score_history"] == [8.4, 8.5]
+
+
+def test_main_clears_stale_needs_human_review_after_style_pass(
+    tmp_path: Path, monkeypatch
+) -> None:
+    level = "a1"
+    slug = "style-clears-needs-human"
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    _write_manifest(curriculum_root, level, slug)
+    _write_plan(curriculum_root, level, slug)
+    (curriculum_root / level).mkdir(parents=True, exist_ok=True)
+    (curriculum_root / level / f"{slug}.md").write_text(
+        "## Intro\nпривіт добре classroom\n\n## Practice\nУчень.\n",
+        "utf-8",
+    )
+    orch_dir = curriculum_root / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    (orch_dir / "needs-human-review.yaml").write_text("stale: true\n", "utf-8")
+    state_path = orch_dir / "state.json"
+    state_path.write_text(
+        json.dumps(
+            {
+                "mode": "v6",
+                "track": level,
+                "slug": slug,
+                "phases": {},
+                "needs_human_review": {"status": True, "reason": "stale"},
+            }
+        ),
+        "utf-8",
+    )
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
+    monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
+    monkeypatch.setattr(v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True)
+    monkeypatch.setattr(
+        v6_build,
+        "_run_style_review_heal_loop",
+        lambda *args, **kwargs: v6_build.StyleReviewLoopRunResult(
+            outcome="pass",
+            rounds=(
+                v6_build.StyleReviewRoundState(
+                    round_num=1,
+                    passed=True,
+                    score=9.2,
+                    review_text="phase: review-style\nverdict: PASS\n",
+                    blocking_issues=(),
+                ),
+            ),
+        ),
+    )
+    monkeypatch.setattr(sys, "argv", ["v6_build.py", level, "1", "--step", "review-style", "--writer", "gemini"])
+
+    result = v6_build.main()
+
+    state = json.loads(state_path.read_text("utf-8"))
+    assert result is True
+    assert "needs_human_review" not in state
+    assert (orch_dir / "needs-human-review.yaml").exists() is False
 
 
 def test_run_style_review_heal_loop_treats_malformed_yaml_as_error(

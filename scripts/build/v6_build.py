@@ -1062,6 +1062,20 @@ def _mark_phases_stale(
         _write_v6_state_atomic(state_path, state)
 
 
+def _clear_needs_human_review_marker(level: str, slug: str) -> None:
+    """Remove stale needs-human-review state and orchestration artifact."""
+    state_path = _v6_state_path(level, slug)
+    if state_path.exists():
+        state = _read_v6_state(level, slug)
+        if "needs_human_review" in state:
+            state.pop("needs_human_review", None)
+            _write_v6_state_atomic(state_path, state)
+
+    needs_review_path = CURRICULUM_ROOT / level / "orchestration" / slug / "needs-human-review.yaml"
+    if needs_review_path.exists():
+        needs_review_path.unlink()
+
+
 def _invalidate_phases(level: str, slug: str, phases_to_clear: list[str]) -> None:
     """Mark downstream phases as incomplete so --resume re-runs them.
 
@@ -8843,11 +8857,7 @@ def main():
                 _emit_module_failed("review", f"{escalation_reason} — needs_human_review")
                 return False
 
-            if _v6_state_path(args.level, slug).exists():
-                state = _read_v6_state(args.level, slug)
-                if "needs_human_review" in state:
-                    state.pop("needs_human_review", None)
-                    _write_v6_state_atomic(_v6_state_path(args.level, slug), state)
+            _clear_needs_human_review_marker(args.level, slug)
 
             if content_rebuilt_after_plan_patch and not _refresh_post_patch_sidecars(
                 content_path,
@@ -8956,11 +8966,7 @@ def main():
                 return False
 
             _save_v6_state(args.level, slug, "review-style")
-            if _v6_state_path(args.level, slug).exists():
-                state = _read_v6_state(args.level, slug)
-                if "needs_human_review" in state:
-                    state.pop("needs_human_review", None)
-                    _write_v6_state_atomic(_v6_state_path(args.level, slug), state)
+            _clear_needs_human_review_marker(args.level, slug)
             _log(f"\n✅ Style review PASSED ({style_score}/10)")
             _emit_phase_done("review-style", _phase_start)
 
