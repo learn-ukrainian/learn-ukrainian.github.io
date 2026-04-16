@@ -247,7 +247,7 @@ At `scripts/audit/checks/`:
 .venv/bin/python scripts/delegate.py dispatch --agent {codex|gemini|claude} --task-id <id> --prompt-file <file>
 ```
 
-Fire-and-forget execution with status polling and completion artifacts.
+Fire-and-forget **execution** with status polling and completion artifacts. This is the right tool when you need another agent to write code, run commands, and commit — not to hold a conversation. For discussion, reviews, or Q&A see [Inter-Agent Communication](#inter-agent-communication) below (`ab` channel bridge, `ask-*`).
 
 ---
 
@@ -688,51 +688,130 @@ This is also called by `session-setup.sh`.
 
 ## Inter-Agent Communication
 
-SQLite-backed message broker and CLI bridge for Claude, Gemini, and Codex.
+Claude, Gemini, and Codex coordinate through three distinct primitives. Pick the right one for the job.
 
-### Bridge CLI
+> **Authoritative sources:**
+> - [`docs/best-practices/agent-bridge.md`](best-practices/agent-bridge.md) — channel bridge mechanics, pinned context, include chains, `ab discuss`
+> - [`docs/best-practices/agent-cooperation.md`](best-practices/agent-cooperation.md) — agent roles, Green Team protocol, review discipline
+>
+> This section is a quick-reference index. For anything more than the examples below, read the authoritative docs.
 
-All bridge commands route through the runtime at `scripts/agent_runtime/`.
+### When to use which tool
+
+| Need | Tool | Write access? |
+|---|---|---|
+| Sustained topic-scoped discussion, multi-turn, pinned context | **`ab post` / `ab discuss`** (channel bridge) | No (Q&A only) |
+| One-off drive-by question to another agent | **`ask-claude` / `ask-gemini` / `ask-codex`** | No by default; opt-in via `--allow-write` |
+| Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
+| Watch a long-running process (builds, reviews) emit events — **Claude only** | **`Monitor` tool** (Claude Code built-in) | N/A |
+| Watch a long-running process — **Gemini / Codex** | Shell-poll the Monitor API | N/A |
+| Read project state (track health, failing modules, build status) | **Monitor API** — `http://localhost:8765` | N/A |
+
+**Rules of thumb:**
+- Channel-first for anything >1 turn. The pinned `context.md` eliminates re-pasting project setup on every round.
+- `ask-*` is not deprecated — use it for genuine one-shots.
+- `ai_agent_bridge` is for **communication**. `delegate.py dispatch` is for **execution**. Don't confuse them.
+- Never run a polling loop to check a background task — use `Monitor` or the bash `run_in_background` completion notification.
+
+### Channel bridge — preferred for multi-turn
+
+Channels are topic-scoped threads with auto-prepended pinned context and a Monitor API state snapshot on every post. Full docs in [`agent-bridge.md`](best-practices/agent-bridge.md).
+
+Seeded channels: `shared`, `pipeline`, `content`, `architecture`, `reviews`. `shared` is included by all others.
+
+Set up the `ab` shorthand once (the bridge ships no wrapper, and system `/usr/sbin/ab` is Apache Bench):
 
 ```bash
-# Inbox and reads
-.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox
-.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for codex
-.venv/bin/python scripts/ai_agent_bridge/__main__.py read <message_id>
-.venv/bin/python scripts/ai_agent_bridge/__main__.py conversation <task_id>
+alias ab='.venv/bin/python scripts/ai_agent_bridge/__main__.py'
+```
 
-# Send and process
-.venv/bin/python scripts/ai_agent_bridge/__main__.py send "Your message" --type query --task-id my-task
-.venv/bin/python scripts/ai_agent_bridge/__main__.py process <message_id> --model gemini-3-pro-preview
-.venv/bin/python scripts/ai_agent_bridge/__main__.py interactive
+Then:
 
-# Dispatch with full execution access
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
-  "Activate skill final-review. ..." \
-  --task-id fr-{slug} \
-  --allow-write \
-  --delimiters FINAL_REVIEW,FRICTION \
-  --model gemini-3-pro-preview
+```bash
+# Inspect
+ab channel list
+ab channel info pipeline
+ab channel tail reviews -n 20
+ab channel tail reviews --thread THREAD_ID
 
-# Quick Codex question
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \
-  "Review posted on #1177. Please read and respond." \
+# Create a new topic-scoped channel
+ab channel new mytopic --include shared --agents claude,gemini,codex
+
+# Post — short form (one recipient)
+ab p reviews gemini "Review the v6 heal-loop changes in scripts/build/v6_build.py"
+
+# Post — long form (multi-recipient, threading)
+ab post reviews "Adversarial review of #1299 docs patch" --to gemini,codex --parent MSG_ID
+
+# Multi-agent bounded discussion (parallel rounds, short-circuits on [AGREE])
+ab discuss architecture "Should we extract the V6 god object?" \
+    --with claude,gemini,codex --max-rounds 2
+
+# Drain incoming channel deliveries (REQUIRED for headless Gemini/Codex;
+# Claude Code drains automatically via OS-level watchers)
+ab sync gemini
+ab sync --all
+```
+
+**Reading messages — critical distinction:**
+
+- `ab sync <agent>` drains the **channel deliveries queue** — this is how Gemini and Codex actually receive channel posts when running headless.
+- `ab inbox` (in the Legacy broker section below) reads the **old 1:1 message queue ONLY**. It does NOT show channel messages. If you expected channel posts and `ab inbox` is empty, run `ab sync` instead.
+
+Web dashboard at `http://localhost:8765/channels.html` (localhost-only, read + post).
+
+### One-off `ask-*`
+
+Fire a single query at one agent. Each recipient has its own model flag and defaults — do not assume they are interchangeable.
+
+| Recipient | Flag | Recommended value |
+|---|---|---|
+| Gemini | `--model` | `gemini-3.1-pro-preview` (always — never `gemini-2.0-flash-exp`) |
+| Codex | `--model` | omit unless overriding (defaults to `gpt-5.4` via runtime config) |
+| Claude | `--to-model` | omit (auto-selects per active session); override only when routing to a specific Opus/Sonnet tier |
+
+```bash
+# Gemini — adversarial review
+ab ask-gemini "Adversarial review for #NNN. Read {path}." \
+  --task-id issue-NNN --model gemini-3.1-pro-preview
+
+# Codex — quick question
+ab ask-codex "Review posted on #1177. Please read and respond." \
   --task-id issue-1177
 
-# Recent Codex bridge/dispatch/delegate usage summary
-.venv/bin/python scripts/ai_agent_bridge/__main__.py codex-usage --window 5h
-.venv/bin/python scripts/ai_agent_bridge/__main__.py codex-usage --window 24h --entrypoint bridge --json
+# Claude — routed from Gemini/Codex or a script
+ab ask-claude "Please verify the stress marks in curriculum/l2-uk-en/a1/hello.md" \
+  --task-id stress-verify-hello --from gemini
 
-# Threaded Gemini conversation
-.venv/bin/python scripts/ai_agent_bridge/__main__.py converse \
-  "Let's plan the A1/1 build" \
-  --task-id a1-1-planning \
+# Gemini with skill activation + write access
+ab ask-gemini "Activate skill final-review. ..." \
+  --task-id fr-{slug} --allow-write \
+  --delimiters FINAL_REVIEW,FRICTION \
   --model gemini-3.1-pro-preview
 ```
 
-`codex-usage` reads recent `batch_state/api_usage/usage_codex-*.jsonl` records,
-groups them by outcome and entrypoint, lists recent rate-limit events, and
-reports whether `gpt-5.4` currently has bridge headroom.
+> **Note.** You rarely call `ask-claude` from inside a Claude session — you already *are* Claude. It's the return path for Gemini/Codex or for scripts routing work to Claude.
+
+### Execution via `delegate.py dispatch`
+
+For write-access work (implement, commit, push). See [Delegate to background workers](#delegate-to-background-workers) above for the full command. **Not** a comms tool — use `ab` or `ask-*` to discuss, `delegate.py` to have the work done.
+
+### Monitoring
+
+Two event surfaces, split by agent:
+
+- **Claude Code** has a built-in `Monitor` tool that streams stdout events as notifications with ~zero context cost. Use it to watch `v6_build.py` JSONL events, `ab channel watch --event-stream`, or any long-running command. Invoke the tool directly — do **not** wrap it in a shell poll loop.
+- **Gemini / Codex** (headless) do not have `Monitor`. Poll the Monitor API via `curl` when they need to check state.
+
+State queries (all agents):
+
+```bash
+curl -s http://localhost:8765/api/state/track-health/a1
+curl -s http://localhost:8765/api/state/failing?track=a2
+curl -s http://localhost:8765/api/state/build-status/a1
+```
+
+Full Monitor API reference: [`docs/MONITOR-API.md`](MONITOR-API.md).
 
 ### Codex sandbox control
 
@@ -748,18 +827,34 @@ Defaults:
 - `dispatch.py` defaults to `safe` for `codex` and `workspace-write` for `codex-tools`
 - `danger` maps to bypass mode
 
-### Helper tools
+### Usage telemetry
 
 ```bash
-.venv/bin/python scripts/tools/signal_claude.py "Your message here"
-.venv/bin/python scripts/tools/message_viewer.py
+ab codex-usage --window 5h
+ab codex-usage --window 24h --entrypoint bridge --json
 ```
 
-`message_viewer.py` serves the archive viewer on `http://localhost:5055`.
+Reads recent `batch_state/api_usage/usage_codex-*.jsonl` records, groups by outcome and entrypoint, lists recent rate-limit events, and reports whether `gpt-5.4` currently has bridge headroom.
 
-### Message types
+### Legacy message broker
 
-| Type | Purpose |
+The original 1:1 broker (separate from channels) is still available for low-level inspection and legacy flows. Prefer channels for new work.
+
+> **Do not confuse with channel draining.** `ab inbox` reads **only** the legacy 1:1 queue. Channel deliveries require `ab sync <agent>` (see Channel bridge above). An empty `ab inbox` does NOT mean you have no channel messages.
+
+```bash
+ab inbox
+ab inbox --for codex
+ab read <message_id>
+ab conversation <task_id>
+ab send "Your message" --type query --task-id my-task
+ab process <message_id> --model gemini-3.1-pro-preview
+ab interactive
+ab converse "Let's plan the A1/1 build" --task-id a1-1-planning \
+  --model gemini-3.1-pro-preview
+```
+
+| Message type | Purpose |
 |---|---|
 | `query` | Ask another agent a question |
 | `response` | Return an answer |
@@ -767,6 +862,13 @@ Defaults:
 | `handoff` | Transfer a task with context |
 | `context` | Share state or findings |
 | `feedback` | Review or comment |
+
+### Helper tools
+
+```bash
+.venv/bin/python scripts/tools/signal_claude.py "Your message here"
+.venv/bin/python scripts/tools/message_viewer.py   # archive viewer on http://localhost:5055
+```
 
 ---
 
