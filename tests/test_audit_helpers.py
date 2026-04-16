@@ -500,10 +500,18 @@ class TestGetItems:
         result = get_items(obj)
         assert result == []
 
-    def test_from_dict_fallback(self):
-        """get_items on dict with 'items' key returns dict.items method due to getattr.
-        The function is designed primarily for Activity objects, not plain dicts."""
-        # For actual Activity objects, items attribute works correctly
+    def test_from_dict_returns_items_list(self):
+        """get_items on a plain dict returns the 'items' list, NOT the
+        dict.items() built-in method.  Regression for #1294."""
+        activity_dict = {"type": "quiz", "items": [1, 2, 3]}
+        assert get_items(activity_dict) == [1, 2, 3]
+
+    def test_from_dict_missing_items_key(self):
+        """Dict without 'items' key returns empty list."""
+        assert get_items({"type": "quiz"}) == []
+
+    def test_from_object_with_items_attribute(self):
+        """Object with items attribute works correctly."""
         obj = MagicMock(spec=['items'])
         obj.items = [1, 2, 3]
         assert get_items(obj) == [1, 2, 3]

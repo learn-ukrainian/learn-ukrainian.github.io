@@ -68,10 +68,15 @@ def get_field(activity, field: str, default='') -> str:
 
 
 def get_items(activity) -> list:
-    """Get items list from an activity object or dict."""
+    """Get items list from an activity object or dict.
+
+    Important: dicts have a built-in `.items()` method, so `getattr(dict, 'items')`
+    returns a bound method — not the list we want.  Check `isinstance(dict)` first
+    to avoid that trap (#1294).
+    """
+    if isinstance(activity, dict):
+        return activity.get('items', []) or []
     items = getattr(activity, 'items', None)
-    if not items and isinstance(activity, dict):
-        items = activity.get('items', [])
     return items or []
 
 

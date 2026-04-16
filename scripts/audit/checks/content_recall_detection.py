@@ -375,9 +375,8 @@ def check_yaml_fill_in_year_answers(
             continue
 
         title = getattr(activity, 'title', 'Fill-in')
-        items = getattr(activity, 'items', [])
-        if not items and isinstance(activity, dict):
-            items = activity.get('items', [])
+        # Avoid dict.items() built-in method confusion (#1294)
+        items = activity.get('items', []) if isinstance(activity, dict) else getattr(activity, 'items', [])
 
         year_count = 0
         for item in items:
