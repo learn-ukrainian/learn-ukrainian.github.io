@@ -128,7 +128,13 @@ class TestValidatePlan:
         }
         path = self._write_plan(tmp_path, plan)
         errors = validate_plan(path, 'b1')
-        assert any("doesn't match" in e for e in errors)
+        # validate_plan's current phrasing is "content_outline sum (X)
+        # under word_target (Y)" / "over word_target (Y)". The earlier
+        # "doesn't match" wording was superseded when the over/under
+        # split was introduced to tolerate content overshoot.
+        assert any("content_outline sum" in e and ("under" in e or "over" in e) for e in errors), (
+            f"expected an outline-sum-mismatch error, got: {errors}"
+        )
 
     def test_empty_plan(self, tmp_path):
         plan_path = tmp_path / "empty.yaml"

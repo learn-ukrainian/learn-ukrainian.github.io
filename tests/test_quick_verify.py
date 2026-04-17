@@ -459,7 +459,10 @@ def test_exhausted_retries_flags_human(tmp_path, monkeypatch):
     level_dir = curriculum_root / level
     level_dir.mkdir(parents=True)
 
-    # Write a minimal plan
+    # Write a minimal plan. ``activity_hints`` / ``vocabulary_hints``
+    # are required by the v6 contract stage (plan_contract.build_contract)
+    # — without them _ensure_contract_artifacts raises before the retry
+    # loop finishes and the test can't verify the exhaustion path.
     plan_content = {
         "title": "Test Module",
         "word_target": 1200,
@@ -467,6 +470,8 @@ def test_exhausted_retries_flags_human(tmp_path, monkeypatch):
             {"section": "Section A", "words": 600},
             {"section": "Section B", "words": 600},
         ],
+        "vocabulary_hints": {"required": ["слово"]},
+        "activity_hints": [{"id": "intro-quiz", "type": "quiz", "focus": "intro"}],
     }
     import yaml as _yaml
     (plan_dir / f"{slug}.yaml").write_text(
@@ -489,6 +494,22 @@ def test_exhausted_retries_flags_human(tmp_path, monkeypatch):
         return content_path
 
     monkeypatch.setattr(v6_mod, "step_write", fake_step_write)
+
+    def fake_step_fix_output(level, module_num, slug, *, content,
+                             correction_directive="", writer="gemini", **kwargs):
+        """Retry attempts go through step_fix_output; keep returning the
+        same bad content so the test actually exhausts retries instead
+        of hitting a live Gemini dispatch and timing out on 429s.
+        """
+        content_path.write_text(bad_md, "utf-8")
+        return content_path
+
+    monkeypatch.setattr(v6_mod, "step_fix_output", fake_step_fix_output)
+
+    # Skip the inter-attempt throttle: the real writer-retry backoff waits
+    # 60 s per attempt for slow writers. Patching ``time.sleep`` to a
+    # no-op keeps the test under a second.
+    monkeypatch.setattr(v6_mod.time, "sleep", lambda _: None)
 
     # Run with max_retries=1 (2 total attempts)
     result = v6_mod.step_write_with_retry(

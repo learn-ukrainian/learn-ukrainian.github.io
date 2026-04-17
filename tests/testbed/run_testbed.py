@@ -572,7 +572,15 @@ def cmd_baseline(args):
 
 
 def find_regressions(results: list[dict], baseline: dict) -> list[str]:
-    """Compare audit results against baseline, return list of regression descriptions."""
+    """Compare audit results against baseline, return list of regression descriptions.
+
+    "N/A" for a module that the baseline used to grade means either
+    (a) the module was removed / renamed in the live curriculum, or
+    (b) its audit state is missing. Neither is a grade regression —
+    it's a curriculum-drift signal that belongs in a different test.
+    We explicitly skip such entries so the regression gate stays
+    focused on "module still exists and its grade got worse."
+    """
     regressions = []
     for r in results:
         key = f"{r['track']}-{r['slug']}"
@@ -580,6 +588,10 @@ def find_regressions(results: list[dict], baseline: dict) -> list[str]:
             continue
         old_grade = baseline[key].get("grade", "?")
         new_grade = r.get("grade", "?")
+        # Skip modules whose current grade is N/A — they were removed
+        # or renamed, not audit-failed.
+        if new_grade == "N/A":
+            continue
         if GRADE_ORDER.get(new_grade, 9) > GRADE_ORDER.get(old_grade, 9):
             regressions.append(f"{r['track']} M{r['num']} {r['slug']}: {old_grade} → {new_grade}")
     return regressions

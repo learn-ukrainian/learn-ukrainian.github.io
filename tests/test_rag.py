@@ -636,7 +636,7 @@ class TestScrollAndRetrieval:
 
     def test_scroll_text_collection(self, qdrant_client, test_text_collection):
         """Scroll through text collection returns all points."""
-        results, next_offset = qdrant_client.scroll(
+        results, _ = qdrant_client.scroll(
             test_text_collection, limit=100, with_payload=True
         )
         assert len(results) > 0
@@ -946,9 +946,15 @@ class TestEncoders:
 
 @pytest.mark.slow
 class TestMCPSearchFunctions:
-    """Test the high-level search functions used by the MCP server."""
+    """Test the high-level search functions used by the MCP server.
 
-    def test_search_text_returns_results(self):
+    These tests talk to a live Qdrant via ``scripts.rag.query``. They
+    take the ``qdrant_client`` fixture as an argument so pytest auto-
+    skips them when Qdrant isn't running on localhost. Without this
+    they fail with a gRPC connection error instead of skipping.
+    """
+
+    def test_search_text_returns_results(self, qdrant_client):
         from scripts.rag.query import search_text
         hits = search_text("голосні звуки", limit=3)
         assert len(hits) > 0
@@ -956,26 +962,26 @@ class TestMCPSearchFunctions:
         assert "chunk_id" in hits[0]
         assert "score" in hits[0]
 
-    def test_search_text_with_grade_filter(self):
+    def test_search_text_with_grade_filter(self, qdrant_client):
         from scripts.rag.query import search_text
         hits = search_text("буква А", grade=1, limit=5)
         for hit in hits:
             assert hit["grade"] == 1
 
-    def test_search_text_with_subject_filter(self):
+    def test_search_text_with_subject_filter(self, qdrant_client):
         from scripts.rag.query import search_text
         hits = search_text("дієслово", subject="ukrainska-mova", limit=5)
         # All results should be from the filtered subject
         # (some may be empty if no matches)
 
-    def test_search_images_returns_results(self):
+    def test_search_images_returns_results(self, qdrant_client):
         from scripts.rag.query import search_images
         hits = search_images("яблуко", limit=3)
         assert len(hits) > 0
         assert "image_path" in hits[0]
         assert "score" in hits[0]
 
-    def test_search_images_with_grade_filter(self):
+    def test_search_images_with_grade_filter(self, qdrant_client):
         from scripts.rag.query import search_images
         hits = search_images("букви", grade=1, limit=5)
         for hit in hits:
@@ -1434,7 +1440,13 @@ class TestLiteraryProductionData:
         # Wave 0: 11 (Slovo) + 55 (PVL) + 111 (Samovydets) = 177
         assert info.points_count >= 177
 
-    def test_search_literary_returns_results(self):
+    # The remaining tests talk to a live Qdrant via scripts.rag.query.
+    # They take ``qdrant_client`` as a fixture argument so pytest skips
+    # them cleanly when Qdrant isn't running on localhost — otherwise
+    # they fail with a gRPC connection error that looks like a real
+    # test regression.
+
+    def test_search_literary_returns_results(self, qdrant_client):
         from scripts.rag.query import search_literary
         hits = search_literary("хрещення Русі Володимир", limit=3)
         assert len(hits) > 0
@@ -1442,27 +1454,33 @@ class TestLiteraryProductionData:
         assert "work" in hits[0]
         assert "score" in hits[0]
 
-    def test_search_literary_genre_filter(self):
+    def test_search_literary_genre_filter(self, qdrant_client):
         from scripts.rag.query import search_literary
         hits = search_literary("козацьке повстання", genre="chronicle", limit=5)
         for hit in hits:
             assert hit["genre"] == "chronicle"
 
-    def test_search_literary_period_filter(self):
+    def test_search_literary_period_filter(self, qdrant_client):
         from scripts.rag.query import search_literary
         hits = search_literary("битва", period="middle_ukrainian", limit=5)
         for hit in hits:
             assert hit["language_period"] == "middle_ukrainian"
 
-    def test_pvl_has_original_text(self):
+    def test_pvl_has_original_text(self, qdrant_client):
         from scripts.rag.query import search_literary
         hits = search_literary("Повість врем'яних літ",
                               work="Повість временних літ (переклад Яременка)", limit=1)
         assert len(hits) > 0
         assert hits[0].get("original_text"), "PVL parallel text should include original_text"
 
-    def test_collection_stats_includes_literary(self):
+    def test_collection_stats_includes_literary(self, qdrant_client):
         from scripts.rag.query import collection_stats
         stats = collection_stats()
         assert "literary_texts" in stats
-        assert stats["literary_texts"]["points_count"] >= 177
+        # The collection_stats shape returns either {"points_count": N}
+        # (legacy) or {"vectors_count": N} (newer Qdrant client). Accept
+        # whichever the live server reports — both represent "how many
+        # rows in this collection".
+        lit = stats["literary_texts"]
+        count = lit.get("points_count", lit.get("vectors_count", 0))
+        assert count >= 177, f"literary_texts has {count} items, expected ≥177 (Wave 0)"

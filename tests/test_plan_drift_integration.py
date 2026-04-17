@@ -94,6 +94,15 @@ def _write_state(
         "utf-8",
     )
     (orch_dir / "pre-verify-results.md").write_text("Verified facts.\n", "utf-8")
+    # Create a minimal review artifact so the ``review_complete_no_artifact``
+    # state-drift detector doesn't fire before the plan-hash detector —
+    # these tests target the plan-hash path. Without this, every test
+    # here asserts on the wrong drift reason.
+    review_dir = curriculum_root / level / "review"
+    review_dir.mkdir(parents=True, exist_ok=True)
+    (review_dir / f"{slug}-review.md").write_text(
+        "## Verdict: PASS\nscore 9.0/10\n", "utf-8",
+    )
     return state_path
 
 

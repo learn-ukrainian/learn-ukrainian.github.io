@@ -70,6 +70,8 @@ REVIEW_RAW_REVISE_WITH_FINDING = """\
 
 Verdict: REVISE
 
+## Findings
+
 ```
 [Pedagogical quality] [MAJOR]
 Location: Summary

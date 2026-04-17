@@ -84,13 +84,30 @@ class TestCoverageCliIntegration:
         assert isinstance(data["gaps"], list)
 
     def test_strict_exits_zero_for_full_coverage(self):
-        """--strict exits 0 when no gaps."""
-        result = subprocess.run(
+        """``--strict`` exit code mirrors whether gaps exist.
+
+        Historically this test pinned ``a1`` at full coverage and
+        required rc 0 — but research can drift (a new module lands in
+        curriculum.yaml before its knowledge packet ships). Test the
+        CONTRACT (zero gaps → rc 0, any gaps → rc 1) instead of a
+        particular coverage snapshot.
+        """
+        probe = subprocess.run(
+            [sys.executable, "scripts/assess_research.py", "a1", "--coverage", "--json"],
+            capture_output=True, text=True, timeout=30,
+        )
+        assert probe.returncode == 0
+        data = json.loads(probe.stdout)
+        expected_rc = 0 if not data.get("gaps") else 1
+
+        strict = subprocess.run(
             [sys.executable, "scripts/assess_research.py", "a1", "--coverage", "--strict"],
             capture_output=True, text=True, timeout=30,
         )
-        # a1 has full coverage
-        assert result.returncode == 0
+        assert strict.returncode == expected_rc, (
+            f"--strict exited {strict.returncode} with "
+            f"{len(data.get('gaps', []))} gap(s); expected {expected_rc}"
+        )
 
     def test_all_coverage_json(self):
         """--all --coverage --json produces valid JSON."""

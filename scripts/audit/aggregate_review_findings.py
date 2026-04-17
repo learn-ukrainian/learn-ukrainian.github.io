@@ -64,11 +64,25 @@ def normalize_dimension(raw: str) -> str:
 
     Handles numbered prefixes like "1. Plan adherence", "DIM 2: Linguistic accuracy",
     "DIMENSION 6: ENGAGEMENT", and slash-separated compound names.
+
+    When the raw input is a bare placeholder like ``DIMENSION 2``
+    (number only, no human-readable name) — produced by some real
+    reviews — preserve the original uppercased form rather than
+    returning an empty string. Downstream aggregation and dedup rely
+    on a truthy dimension key; empty strings collapse unrelated
+    findings into a single bucket.
     """
-    key = raw.strip()
+    original = raw.strip()
+    key = original
     # Strip numbered prefixes: "1. ", "DIM 2: ", "DIMENSION 6: "
     key = re.sub(r"^(?:DIM(?:ENSION)?\s*\d+[:\s]*|\d+\.\s*)", "", key, flags=re.IGNORECASE)
     key = key.strip().lower()
+    if not key:
+        # Nothing left after the prefix strip — the raw was a bare
+        # "DIMENSION N" / "1." placeholder. Fall back to the original
+        # string (uppercased) so the finding still has a non-empty
+        # grouping key.
+        return original.upper() or "UNKNOWN"
     if key in DIMENSION_ALIASES:
         return DIMENSION_ALIASES[key]
     # Try matching each part of slash-separated names (e.g. "plan adherence / structural integrity")

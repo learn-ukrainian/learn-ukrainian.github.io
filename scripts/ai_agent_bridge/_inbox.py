@@ -18,7 +18,38 @@ from dataclasses import dataclass, replace
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from batch_gemini_config import PRO_MODEL
+from batch_gemini_config import FLASH_LITE_MODEL, FLASH_MODEL, PRO_MODEL
+
+# Gemini capacity cascade: Pro → Flash → Flash-Lite. When a 429 /
+# capacity error comes back for one model, we retry the same prompt on
+# the next-smaller one before giving up. See #1231 / #1234 for the
+# original cascade design. This mapping is authoritative for
+# ``_invoke_gemini_thread_with_fallback`` — edit both sides if you
+# extend the cascade.
+_GEMINI_CAPACITY_CASCADE: dict[str, str] = {
+    PRO_MODEL: FLASH_MODEL,
+    FLASH_MODEL: FLASH_LITE_MODEL,
+}
+
+
+def _uses_gemini_capacity_cascade(model: str) -> bool:
+    """Return True when *model* has a documented fallback target."""
+    return model in _GEMINI_CAPACITY_CASCADE
+
+
+def _next_gemini_model(model: str) -> str | None:
+    """Return the next model in the cascade, or None when exhausted."""
+    return _GEMINI_CAPACITY_CASCADE.get(model)
+
+
+def _is_gemini_capacity_error(stderr: str) -> bool:
+    """Gemini-capacity / 429 signal — same detector as the CLI path.
+
+    Thin wrapper around :func:`_is_gemini_429_error` to give the
+    inbox-side call sites a name that reads clearly at the use site
+    (``if _is_gemini_capacity_error(result.stderr_excerpt or ""): …``).
+    """
+    return _is_gemini_429_error(stderr)
 
 try:
     from agent_runtime.errors import (

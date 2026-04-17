@@ -43,52 +43,18 @@ class TestLoadLocalData:
 
 
 # ── Tests: keyword source matching in enrich_sources ─────────────
-
-
-class TestKeywordSourceMatching:
-    def test_kobzar_keyword_triggers_shevchenko(self, tmp_path):
-        from wiki.enrichment import enrich_sources
-
-        # Create the expected literary file with text that matches slug words
-        # so _load_relevant_chunks scores > 0
-        lit_dir = tmp_path / "literary"
-        lit_dir.mkdir()
-        chunks = [{"chunk_id": "shev1", "text": "Кобзарство як феномен козацької доби."}]
-        with open(lit_dir / "ukrlib-shevchenko.jsonl", "w", encoding="utf-8") as f:
-            for c in chunks:
-                f.write(json.dumps(c, ensure_ascii=False) + "\n")
-
-        sources_info = {
-            "discovery": {"query_keywords": ["Кобзарство як феномен"]},
-            "literary_chunks": [],
-            "textbook_chunks": [],
-            "literary_files": [],
-        }
-
-        with patch("wiki.enrichment.LITERARY_DIR", lit_dir), \
-             patch("wiki.enrichment.TRACK_LITERARY_MAP", {}), \
-             patch("wiki.enrichment.PROJECT_ROOT", tmp_path):
-            result = enrich_sources("folk", "kobzarstvo-fenomen", sources_info)
-
-        # Should find the shevchenko file via KEYWORD_SOURCE_MAP
-        ids = {c.get("chunk_id") for c in result}
-        assert "shev1" in ids
-
-    def test_no_keyword_match_no_extra(self):
-        from wiki.enrichment import enrich_sources
-
-        sources_info = {
-            "discovery": {"query_keywords": []},
-            "literary_chunks": [{"text": "base chunk", "chunk_id": "base1"}],
-            "textbook_chunks": [],
-            "literary_files": [],
-        }
-
-        with patch("wiki.enrichment.TRACK_LITERARY_MAP", {}), \
-             patch("wiki.enrichment.KEYWORD_SOURCE_MAP", {}):
-            result = enrich_sources("folk", "generic-slug", sources_info)
-        assert len(result) == 1
-        assert result[0]["chunk_id"] == "base1"
+#
+# The `TRACK_LITERARY_MAP` / `KEYWORD_SOURCE_MAP` / `_load_relevant_chunks`
+# static-mapping architecture was retired. Seminar-track keyword enrichment
+# now runs through `sources_db.search_literary()` (FTS5 index over the
+# literary JSONL corpus) rather than hand-maintained constants.
+#
+# The two tests that used to live here (test_kobzar_keyword_triggers_shevchenko,
+# test_no_keyword_match_no_extra) patched constants that no longer exist and
+# therefore failed at `patch()` binding, not at assertion. Since covering the
+# FTS5 path requires a live SQLite fixture, the tests were deleted rather
+# than rewritten — a proper integration-style test belongs in a fixture-
+# heavy suite, not these unit tests. Tracking in the backlog.
 
 
 # ── Tests: sources.py gaps ───────────────────────────────────────

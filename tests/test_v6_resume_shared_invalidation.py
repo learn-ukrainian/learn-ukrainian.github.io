@@ -197,6 +197,14 @@ def test_resume_publish_reruns_review_when_saved_review_is_below_threshold(tmp_p
     monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
     monkeypatch.setattr(v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True, raising=False)
     monkeypatch.setattr(v6_build, "detect_plan_hash_drift", lambda *args, **kwargs: None)
+    # Also suppress the secondary write-phase plan-hash detector so the
+    # fixture's state.json (no ``write.plan_hash`` pinned) doesn't
+    # trigger a full-pipeline invalidation — this test targets the
+    # resume-publish re-review path, not plan-hash drift.
+    monkeypatch.setattr(
+        v6_build, "_write_phase_plan_hash_drifted",
+        lambda *args, **kwargs: False,
+    )
     monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
 
     review_calls: list[tuple] = []

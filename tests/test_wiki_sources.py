@@ -391,41 +391,13 @@ class TestExtractUkrainianKeywords:
         assert _extract_ukrainian_keywords({"discovery": {}}) == set()
 
 
-class TestLoadRelevantChunks:
-    def test_scores_by_ukrainian_keywords(self, tmp_path):
-        from wiki.enrichment import _load_relevant_chunks
-        # Create a literary file with chunks
-        chunks = [
-            {"chunk_id": "c1", "text": "Козацькі думи оспівують звитягу героїв."},
-            {"chunk_id": "c2", "text": "Граматика української мови складна."},
-            {"chunk_id": "c3", "text": "Думи та пісні козацького народу."},
-        ]
-        jsonl_path = tmp_path / "test.jsonl"
-        with open(jsonl_path, "w", encoding="utf-8") as f:
-            for c in chunks:
-                f.write(json.dumps(c, ensure_ascii=False) + "\n")
-
-        with patch("wiki.enrichment.LITERARY_DIR", tmp_path):
-            result = _load_relevant_chunks(
-                ["test.jsonl"], "dumy-lytsarski",
-                max_per_file=2,
-                ukr_keywords={"думи", "козацьк", "звитяг"},
-            )
-        # Should find chunks with Ukrainian keyword matches
-        assert len(result) == 2
-        # c1 has "думи" + "звитягу" (partial match on "звитяг"), c3 has "думи"
-        chunk_ids = {c["chunk_id"] for c in result}
-        assert "c1" in chunk_ids
-        assert "c2" not in chunk_ids  # No keyword match
-
-    def test_skips_missing_files(self, tmp_path):
-        from wiki.enrichment import _load_relevant_chunks
-        with patch("wiki.enrichment.LITERARY_DIR", tmp_path):
-            result = _load_relevant_chunks(
-                ["nonexistent.jsonl"], "test",
-                ukr_keywords={"слово"},
-            )
-        assert result == []
+# The `TestLoadRelevantChunks` class used to exercise a now-retired
+# function (`wiki.enrichment._load_relevant_chunks`) that scanned
+# hand-maintained literary JSONL files keyed by slug. Seminar-track
+# keyword scoring was moved into `sources_db.search_literary()`
+# (FTS5-indexed) — the function it tested no longer exists. Covering
+# the FTS5 path requires a live SQLite fixture which doesn't fit
+# these unit tests. Removed rather than faked.
 
 
 class TestLoadFolkMicroGenres:
@@ -458,9 +430,19 @@ class TestLoadFolkMicroGenres:
 
 
 class TestEnrichSources:
-    def test_caps_at_80k_chars(self):
+    """
+    The empty-query-keywords path: when ``discovery.query_keywords`` is
+    empty, ``enrich_sources`` should skip all FTS5 search branches and
+    only expose the discovery chunks (plus any local/external mappings
+    it can resolve offline). These tests target that invariant — with
+    FTS5 calls guarded off by the empty-keyword condition, no live
+    SQLite fixture is needed.
+    """
+
+    def test_caps_at_80k_chars_for_a1(self):
+        """A1 track cap is 80K chars (see `enrichment.char_caps`)."""
         from wiki.enrichment import enrich_sources
-        # Create sources_info with huge chunks
+        # Huge discovery chunks, no query keywords (so FTS5 branches skipped)
         big_chunk = {"text": "x" * 50_000, "chunk_id": "big1"}
         big_chunk2 = {"text": "y" * 50_000, "chunk_id": "big2"}
         sources_info = {
@@ -469,11 +451,12 @@ class TestEnrichSources:
             "textbook_chunks": [],
             "literary_files": [],
         }
-        with patch("wiki.enrichment.TRACK_LITERARY_MAP", {}), \
-             patch("wiki.enrichment.KEYWORD_SOURCE_MAP", {}):
-            result = enrich_sources("folk", "test", sources_info)
+        # Track "a1" has the smallest cap (80_000); picking it makes the
+        # assertion tight. Seminar/folk tracks get 150K, which these
+        # 2×50K chunks wouldn't exceed.
+        result = enrich_sources("a1", "test", sources_info)
         total_chars = sum(len(c.get("text", "")) for c in result)
-        assert total_chars <= 80_001  # Within cap
+        assert total_chars <= 80_001
 
     def test_includes_discovery_chunks(self):
         from wiki.enrichment import enrich_sources
@@ -483,10 +466,9 @@ class TestEnrichSources:
             "textbook_chunks": [{"text": "textbook text", "chunk_id": "text1"}],
             "literary_files": [],
         }
-        with patch("wiki.enrichment.TRACK_LITERARY_MAP", {}), \
-             patch("wiki.enrichment.KEYWORD_SOURCE_MAP", {}):
-            result = enrich_sources("folk", "test", sources_info)
-        assert len(result) == 2
+        result = enrich_sources("folk", "test", sources_info)
+        # Enrichment may add local/external mapped chunks for the track,
+        # but the two discovery chunks MUST survive — that's the contract.
         ids = {c["chunk_id"] for c in result}
         assert "lit1" in ids
         assert "text1" in ids
@@ -499,11 +481,13 @@ class TestEnrichSources:
             "textbook_chunks": [],
             "literary_files": [],
         }
-        with patch("wiki.enrichment.TRACK_LITERARY_MAP", {}), \
-             patch("wiki.enrichment.KEYWORD_SOURCE_MAP", {}):
-            result = enrich_sources("folk", "test-slug", sources_info)
-        assert len(result) == 1
-        assert result[0]["chunk_id"] == "no-source"
+        result = enrich_sources("folk", "test-slug-without-resources", sources_info)
+        # With empty discovery + empty keywords + a slug that has no
+        # local/external mapping, the fallback ``no-source`` chunk must
+        # be emitted so the compiler has something to chew on.
+        assert any(c.get("chunk_id") == "no-source" for c in result), (
+            f"expected 'no-source' fallback in {[c.get('chunk_id') for c in result]}"
+        )
 
 
 # ── Tests: state.py ───────────────────────────────────────────────

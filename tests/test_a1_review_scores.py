@@ -76,15 +76,54 @@ class TestA1ReviewScores:
             assert module_dir.is_dir(), f"Missing orchestration dir: {slug}"
 
     def test_all_modules_have_review_files(self):
+        """Every A1.1 module must have at least one review artifact.
+
+        The v5 pipeline wrote ``review-correction-*.md`` and
+        ``review-fixes-*.yaml`` files in the orchestration dir. The v6
+        pipeline writes ``review-structured-r*.yaml`` (orchestration)
+        and ``{slug}-review[-r*].md`` (level review dir). Accept either
+        shape so this test tracks the live artifact layout rather than
+        the retired one.
+        """
+        import json as _json
+
+        review_dir = ORCHESTRATION_ROOT.parent / "review"
         for slug in A1_1_MODULES:
             module_dir = ORCHESTRATION_ROOT / slug
             if not module_dir.is_dir():
                 pytest.skip(f"Orchestration dir not found for {slug}")
+
+            # Skip modules whose pipeline hasn't reached the review
+            # phase yet (fresh rebuilds reset state.json to just the
+            # earliest phases). ``review-style``-phase entry is the
+            # first moment review artifacts are guaranteed.
+            state_path = module_dir / "state.json"
+            if state_path.is_file():
+                try:
+                    state = _json.loads(state_path.read_text(encoding="utf-8"))
+                    phases = state.get("phases", {})
+                    review_status = phases.get("review", {}).get("status")
+                    if review_status not in ("complete", "failed"):
+                        continue  # module is pre-review — no artifacts expected
+                except (_json.JSONDecodeError, OSError):
+                    pass  # fall through to artifact check
+
+            # v6 artifacts
+            structured = list(module_dir.glob("review-structured-r*.yaml"))
+            round_reviews = list(review_dir.glob(f"{slug}-review-r*.md"))
+            final_review = (review_dir / f"{slug}-review.md").is_file()
+
+            # v5 artifacts (kept for archival tolerance)
             corrections = list(module_dir.glob("review-correction-*.md"))
             fixes = list(module_dir.glob("review-fixes-*.yaml"))
-            has_review = len(corrections) > 0 or len(fixes) > 0
+
+            has_review = bool(
+                structured or round_reviews or final_review or corrections or fixes
+            )
             assert has_review, (
-                f"Module {slug} has no review files (no review-correction-*.md or review-fixes-*.yaml)"
+                f"Module {slug} has no review artifacts "
+                f"(no review-structured-r*.yaml / {slug}-review*.md / "
+                "review-correction-*.md / review-fixes-*.yaml)"
             )
 
     def test_review_files_contain_score_pattern(self):

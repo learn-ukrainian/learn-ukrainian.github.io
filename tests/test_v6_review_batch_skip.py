@@ -696,6 +696,15 @@ class TestBatchReviewSkip:
             v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True, raising=False,
         )
         monkeypatch.setattr(v6_build, "detect_plan_hash_drift", lambda *args, **kwargs: None)
+        # Also suppress the secondary write-phase plan-hash drift detector
+        # (_write_phase_plan_hash_drifted); the fixture's state.json does
+        # not pin write.plan_hash, so the detector fires in anger and
+        # invalidates the whole pipeline. This test is about the review-
+        # threshold re-run path, not plan-hash drift.
+        monkeypatch.setattr(
+            v6_build, "_write_phase_plan_hash_drifted",
+            lambda *args, **kwargs: False,
+        )
         monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
 
         review_calls: list[tuple] = []

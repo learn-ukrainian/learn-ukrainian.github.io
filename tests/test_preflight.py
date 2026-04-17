@@ -170,11 +170,10 @@ class TestSkipPreflight:
 class TestTemplateLineCounts:
     """Verify prompt templates meet AC1 line count limits."""
 
-    def test_beginner_content_under_150_lines(self):
-        from pipeline_lib import PHASES_DIR
-        path = PHASES_DIR / "beginner-content.md"
-        lines = path.read_text("utf-8").splitlines()
-        assert len(lines) < 200, f"beginner-content.md has {len(lines)} lines (max 200)"
+    # beginner-content.md was retired — see the retired-template note
+    # on TestNewPlaceholders. No line-count check replaces it; the
+    # beginner-full-rag / beginner-checkpoint templates have their own
+    # size governance.
 
     def test_core_content_under_250_lines(self):
         from pipeline_lib import PHASES_DIR
@@ -196,15 +195,9 @@ class TestTemplateLineCounts:
 class TestNewPlaceholders:
     """Verify new placeholders appear in the right templates."""
 
-    def test_beginner_content_has_quality_dimensions(self):
-        from pipeline_lib import PHASES_DIR
-        content = (PHASES_DIR / "beginner-content.md").read_text("utf-8")
-        assert "{QUALITY_DIMENSIONS}" in content
-
-    def test_beginner_content_has_preflight(self):
-        from pipeline_lib import PHASES_DIR
-        content = (PHASES_DIR / "beginner-content.md").read_text("utf-8")
-        assert "{PREFLIGHT_INSTRUCTIONS}" in content
+    # beginner-content.md was retired — see the retired-template note
+    # at the bottom of this class. core-content.md and content.md tests
+    # cover the live templates.
 
     def test_core_content_has_quality_dimensions(self):
         from pipeline_lib import PHASES_DIR
@@ -226,11 +219,13 @@ class TestNewPlaceholders:
         content = (PHASES_DIR / "content.md").read_text("utf-8")
         assert "{PREFLIGHT_INSTRUCTIONS}" in content
 
-    def test_beginner_content_no_shared_content_rules(self):
-        """New beginner template should NOT reference old SHARED_CONTENT_RULES."""
-        from pipeline_lib import PHASES_DIR
-        content = (PHASES_DIR / "beginner-content.md").read_text("utf-8")
-        assert "{SHARED_CONTENT_RULES}" not in content
+    # Beginner-content template-placeholder assertions were retired:
+    # the ``beginner-content.md`` file was replaced by ``beginner-full-rag.md``
+    # + ``beginner-checkpoint.md``, and both of those DO still use
+    # ``{SHARED_CONTENT_RULES}`` / ``{SELF_AUDIT_SNIPPET}`` by design
+    # (the pipeline in scripts/pipeline/core.py:840-860 still substitutes
+    # both placeholders at render time). The "new templates must not use
+    # old placeholders" intent never landed for beginner templates.
 
     def test_core_content_no_shared_content_rules(self):
         """New core template should NOT reference old SHARED_CONTENT_RULES."""
@@ -243,9 +238,3 @@ class TestNewPlaceholders:
         from pipeline_lib import PHASES_DIR
         content = (PHASES_DIR / "content.md").read_text("utf-8")
         assert "{SHARED_CONTENT_RULES}" not in content
-
-    def test_beginner_content_no_self_audit(self):
-        """New beginner template should NOT reference old SELF_AUDIT_SNIPPET."""
-        from pipeline_lib import PHASES_DIR
-        content = (PHASES_DIR / "beginner-content.md").read_text("utf-8")
-        assert "{SELF_AUDIT_SNIPPET}" not in content
