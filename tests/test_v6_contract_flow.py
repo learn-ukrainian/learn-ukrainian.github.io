@@ -955,6 +955,220 @@ def test_run_style_review_heal_loop_treats_malformed_yaml_as_error(
     assert result.rounds == ()
 
 
+def test_extract_structured_findings_handles_bare_plain_markdown() -> None:
+    """Bug #1316 Bug A regression.
+
+    Real reviewer output (A1/M01 review r9) uses bare plain-markdown finding
+    blocks under ``## Findings`` — not fenced code blocks. The previous
+    extractor only matched fenced blocks, so real findings were silently
+    dropped and ``review-structured-r*.yaml`` reported ``findings: []``,
+    which in turn tricked the plateau/heal loop into giving up on modules
+    that actually had actionable fixes.
+    """
+    review = (
+        "## Findings\n"
+        "[PLAN ADHERENCE] [SEVERITY: major]\n"
+        "Location: `## Звуки і літери` — the alphabet section.\n"
+        "Issue: The draft never shows the 33 letters in order.\n"
+        "Fix: List all 33 letters in contracted order.\n"
+        "\n"
+        "## Verdict: REVISE\n"
+    )
+    findings = v6_build._extract_structured_findings(review)
+    assert len(findings) == 1
+    assert findings[0]["dimension"] == "PLAN ADHERENCE"
+    assert findings[0]["severity"] == "major"
+    assert "33 letters" in findings[0]["issue"]
+
+
+def test_extract_structured_findings_handles_bold_prefix() -> None:
+    """Bold-prefix shape used by some reviewers: ``**[DIM] [SEV]**``."""
+    review = (
+        "## Findings\n"
+        "**[LINGUISTIC ACCURACY] [minor]**\n"
+        "Location: Section 2\n"
+        "Issue: Small wording issue.\n"
+        "Fix: Adjust the phrase.\n"
+        "\n"
+        "**[PLAN ADHERENCE] [major]**\n"
+        "Location: Section 3\n"
+        "Issue: Missing beat.\n"
+        "Fix: Add the beat.\n"
+        "\n"
+        "## Verdict: REVISE\n"
+    )
+    findings = v6_build._extract_structured_findings(review)
+    assert len(findings) == 2
+    severities = [f["severity"] for f in findings]
+    assert severities == ["minor", "major"]
+
+
+def test_extract_structured_findings_mixed_fenced_and_bare() -> None:
+    """Bug #1316 Bug A — adversarial case from Codex review.
+
+    A review may contain both a fenced finding AND bare findings. The
+    previous fallback-only design returned after the first parser matched,
+    silently dropping the rest. Both must be collected.
+    """
+    review = (
+        "## Findings\n"
+        "```\n"
+        "[LINGUISTIC] [critical]\n"
+        "Location: Section A\n"
+        "Issue: Fenced issue.\n"
+        "Fix: Fenced fix.\n"
+        "```\n"
+        "\n"
+        "[PEDAGOGICAL] [minor]\n"
+        "Location: Section B\n"
+        "Issue: Bare issue.\n"
+        "Fix: Bare fix.\n"
+        "\n"
+        "## Verdict: REVISE\n"
+    )
+    findings = v6_build._extract_structured_findings(review)
+    assert len(findings) == 2
+    dims = {f["dimension"] for f in findings}
+    assert dims == {"LINGUISTIC", "PEDAGOGICAL"}
+
+
+def test_extract_structured_findings_back_to_back_no_blank_line() -> None:
+    """Two findings separated by only a newline (no blank line) must both parse."""
+    review = (
+        "## Findings\n"
+        "[A] [minor]\n"
+        "Location: L1\n"
+        "Issue: I1\n"
+        "Fix: F1\n"
+        "[B] [major]\n"
+        "Location: L2\n"
+        "Issue: I2\n"
+        "Fix: F2\n"
+        "\n"
+        "## Verdict: REVISE\n"
+    )
+    findings = v6_build._extract_structured_findings(review)
+    assert len(findings) == 2
+    assert [f["dimension"] for f in findings] == ["A", "B"]
+
+
+def test_extract_structured_findings_malformed_fails_closed() -> None:
+    """A Findings section that is prose or missing the Fix: field must not
+    return a partial finding. Fail closed rather than producing garbage."""
+    prose_only = (
+        "## Findings\n"
+        "This is prose, not structured.\n"
+        "No bracket markers at all.\n"
+        "\n"
+        "## Verdict: REVISE\n"
+    )
+    assert v6_build._extract_structured_findings(prose_only) == []
+
+    missing_fix = (
+        "## Findings\n"
+        "[SOMETHING] [minor]\n"
+        "Location: here\n"
+        "Issue: wrong\n"
+        "\n"
+        "## Verdict: REVISE\n"
+    )
+    assert v6_build._extract_structured_findings(missing_fix) == []
+
+
+def test_extract_structured_findings_bold_then_bare_no_blank_line() -> None:
+    """Bug #1316 Bug A — Codex re-review: bold finding immediately followed
+    by a bare finding with no blank line separator.
+
+    The bold terminator must include ``\\n(?=\\[)`` so the bare finding's
+    header does not get absorbed into the bold finding's Fix field. The
+    canonical parser in ``aggregate_review_findings.py`` has the same bug;
+    fixing it there is out of scope for this issue.
+    """
+    review = (
+        "## Findings\n"
+        "**[LINGUISTIC ACCURACY] [minor]**\n"
+        "Location: Section 2\n"
+        "Issue: Bold issue.\n"
+        "Fix: Bold fix.\n"
+        "[PLAN ADHERENCE] [major]\n"
+        "Location: Section 3\n"
+        "Issue: Bare issue.\n"
+        "Fix: Bare fix.\n"
+        "\n"
+        "## Verdict: REVISE\n"
+    )
+    findings = v6_build._extract_structured_findings(review)
+    assert len(findings) == 2, f"expected 2, got {len(findings)}: {findings}"
+    assert [f["dimension"] for f in findings] == ["LINGUISTIC ACCURACY", "PLAN ADHERENCE"]
+    # Verify the bold finding's Fix field did NOT absorb the bare header:
+    assert "PLAN ADHERENCE" not in findings[0]["fix"]
+
+
+def test_extract_structured_findings_all_three_shapes_in_one_section() -> None:
+    """A single ``## Findings`` section containing fenced + bold + bare
+    findings must return all three, regardless of ordering."""
+    review = (
+        "## Findings\n"
+        "```\n"
+        "[LINGUISTIC] [critical]\n"
+        "Location: Section A\n"
+        "Issue: Fenced issue.\n"
+        "Fix: Fenced fix.\n"
+        "```\n"
+        "\n"
+        "**[PEDAGOGICAL] [major]**\n"
+        "Location: Section B\n"
+        "Issue: Bold issue.\n"
+        "Fix: Bold fix.\n"
+        "\n"
+        "[PLAN ADHERENCE] [minor]\n"
+        "Location: Section C\n"
+        "Issue: Bare issue.\n"
+        "Fix: Bare fix.\n"
+        "\n"
+        "## Verdict: REVISE\n"
+    )
+    findings = v6_build._extract_structured_findings(review)
+    assert len(findings) == 3
+    dims = {f["dimension"] for f in findings}
+    assert dims == {"LINGUISTIC", "PEDAGOGICAL", "PLAN ADHERENCE"}
+
+
+def test_extract_structured_findings_warns_on_unparseable_section(caplog, capsys) -> None:
+    """Bug #1316 Bug A — Codex re-review #4.
+
+    When ``## Findings`` exists with prose content but nothing parses, the
+    extractor must emit a visible warning so grammar drift cannot silently
+    masquerade as ``findings: []`` again.
+    """
+    prose_only = (
+        "## Findings\n"
+        "This reviewer wrote prose instead of structured findings.\n"
+        "\n"
+        "## Verdict: REVISE\n"
+    )
+    result = v6_build._extract_structured_findings(prose_only)
+    captured = capsys.readouterr()
+    combined_output = captured.out + captured.err
+    assert result == []
+    assert "Bug #1316" in combined_output or "grammar may have drifted" in combined_output, (
+        f"expected grammar-drift warning, got stdout={captured.out!r} stderr={captured.err!r}"
+    )
+
+
+def test_extract_structured_findings_no_findings_section_returns_empty() -> None:
+    """A review with a PASS verdict and no Findings section must return []
+    with no warning logged."""
+    clean = (
+        "## Scores\n"
+        "| 1. X | 10/10 | all good |\n"
+        "\n"
+        "## Verdict: PASS\n"
+    )
+    assert v6_build._extract_structured_findings(clean) == []
+    assert v6_build._extract_structured_findings("") == []
+
+
 def test_normalize_activity_markers_to_contract_reorders_type_only_slots() -> None:
     content = """## Intro
 <!-- INJECT_ACTIVITY: fill-in-khotity-conjugation -->

@@ -4275,24 +4275,101 @@ def _query_friction_for_errors(level: str, slug: str, results: list) -> list[str
     return hints[:10]  # cap at 10 to avoid bloating the prompt
 
 
+_FINDINGS_SECTION_RE = re.compile(
+    r"^##\s+Findings\s*\n(.*?)(?=^##\s+\w|\Z)",
+    re.MULTILINE | re.DOTALL,
+)
+
+_FINDING_FENCED_RE = re.compile(
+    r"```\s*\n"
+    r"\[(?P<dim>[^\]]+)\]\s*\[(?:SEVERITY\s*:\s*)?(?P<sev>[^\]]+?)\]\s*\n"
+    r"Location:\s*(?P<loc>.*?)\n"
+    r"Issue:\s*(?P<issue>.*?)\n"
+    r"Fix:\s*(?P<fix>.*?)\n"
+    r"```",
+    re.DOTALL,
+)
+
+_FINDING_BOLD_RE = re.compile(
+    r"\*\*\[(?P<dim>[^\]]+)\]\s*\[(?:SEVERITY\s*:\s*)?(?P<sev>[^\]]+?)\]\*\*\s*\n"
+    r"Location:\s*(?P<loc>.*?)\n"
+    r"Issue:\s*(?P<issue>.*?)\n"
+    # NOTE: must terminate on next bare ``\\n(?=\\[)`` as well as next bold.
+    # ``scripts/audit/aggregate_review_findings.py`` has the identical
+    # canonical parser and is missing this alternation, so a bold finding
+    # directly followed by a bare one (no blank line) currently swallows the
+    # bare finding's body into its own Fix field. Bug #1316 Bug A extends the
+    # terminator set here; the audit copy should be fixed similarly later.
+    r"Fix:\s*(?P<fix>.*?)(?:\n\s*\n|\n(?=\*\*\[)|\n(?=\[)|\n(?=##)|\Z)",
+    re.DOTALL,
+)
+
+_FINDING_BARE_RE = re.compile(
+    r"^\[(?P<dim>[^\]]+)\]\s*\[(?:SEVERITY\s*:\s*)?(?P<sev>[^\]]+?)\]\s*\n"
+    r"Location:\s*(?P<loc>.*?)\n"
+    r"Issue:\s*(?P<issue>.*?)\n"
+    r"Fix:\s*(?P<fix>.*?)(?:\n\s*\n|\n(?=\[)|\n(?=##)|\Z)",
+    re.DOTALL | re.MULTILINE,
+)
+
+
 def _extract_structured_findings(review_text: str) -> list[dict]:
-    """Extract structured review findings from fenced review markdown blocks."""
-    findings = []
-    pattern = re.compile(
-        r"```\s*\n\[(\w[\w\s&]*?)\]\s*\[(\w+)\]\s*\n"
-        r"Location:\s*(.*?)\n"
-        r"Issue:\s*(.*?)\n"
-        r"Fix:\s*(.*?)\n```",
-        re.DOTALL,
-    )
-    for m in pattern.finditer(review_text):
-        findings.append({
-            "dimension": m.group(1).strip(),
-            "severity": m.group(2).strip(),
-            "location": m.group(3).strip(),
-            "issue": m.group(4).strip(),
-            "fix": m.group(5).strip(),
-        })
+    """Extract structured review findings from review markdown.
+
+    Recognizes three finding shapes, all of which appear in real reviews and
+    are already handled by ``scripts/audit/aggregate_review_findings.py``:
+
+      1. Fenced code block:  ``` [DIM] [SEV] ... ``` ``
+      2. Bold prefix:        ``**[DIM] [SEV]**`` followed by Location/Issue/Fix
+      3. Bare:               ``[DIM] [SEV]`` at start of line
+
+    Each shape accepts severity in either bare (``[minor]``) or labelled
+    (``[SEVERITY: minor]``) form.
+
+    Bug #1316: the previous implementation only recognized format (1), so
+    real findings emitted in formats (2) and (3) were silently dropped into
+    ``findings: []`` in the structured YAML. This tricked the downstream
+    plateau / needs-human-review logic into thinking the reviewer had no
+    complaints. The grammar here is deliberately kept in sync with the
+    canonical parser in ``aggregate_review_findings.py`` so a review that
+    round-trips through both paths yields the same count.
+
+    Mixed-format reviews are handled by running each parser in sequence and
+    subtracting already-consumed text, so a review containing (e.g.) one
+    fenced block plus two bare findings returns three findings, not one.
+
+    When a ``## Findings`` section exists but nothing parses, a warning is
+    logged so grammar drift does not recur silently as a
+    ``findings: []`` regression.
+    """
+    findings_section_match = _FINDINGS_SECTION_RE.search(review_text)
+    if not findings_section_match:
+        # No Findings section at all — nothing to parse, nothing to warn.
+        return []
+
+    remaining = findings_section_match.group(1)
+    findings: list[dict] = []
+
+    for pattern in (_FINDING_FENCED_RE, _FINDING_BOLD_RE, _FINDING_BARE_RE):
+        for m in pattern.finditer(remaining):
+            findings.append({
+                "dimension": m.group("dim").strip(),
+                "severity": m.group("sev").strip(),
+                "location": m.group("loc").strip(),
+                "issue": m.group("issue").strip(),
+                "fix": m.group("fix").strip(),
+            })
+        remaining = pattern.sub("", remaining)
+
+    # If the Findings section had real content but our grammar failed to
+    # parse anything, warn loudly rather than returning an empty list that
+    # looks indistinguishable from a truly clean review.
+    if not findings and findings_section_match.group(1).strip():
+        _log(
+            "⚠️  review Findings section present but no findings parsed — "
+            "grammar may have drifted (Bug #1316)."
+        )
+
     return findings
 
 
