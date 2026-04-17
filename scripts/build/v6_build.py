@@ -820,6 +820,29 @@ def _clean_build_artifacts(level: str, slug: str) -> None:
         _log(f"  🧹 Cleaned {removed} previous build artifact(s)")
 
 
+def _force_reset_module(level: str, slug: str) -> None:
+    """Delete all generated artifacts for a module, preserving source of truth.
+
+    Preserves: plan YAML (``plans/{level}/{slug}.yaml``), code, config.
+    Removes: lesson .md, activities, vocabulary, reviews, audit, status,
+    knowledge packet, ALL orchestration artifacts (state, prompts, dispatch,
+    skeleton, chunks, wiki-excerpts, contract, needs-human-review), and
+    published MDX.
+
+    This is the implementation of ``--force`` (issue #1296).
+    """
+    # Delegate to the existing artifact cleaner (handles content, review,
+    # audit, status, research, orchestration).
+    _clean_build_artifacts(level, slug)
+
+    # Additionally remove published MDX — _clean_build_artifacts doesn't
+    # touch the starlight output directory.
+    mdx = PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / level / f"{slug}.mdx"
+    if mdx.exists():
+        mdx.unlink()
+        _log(f"  🧹 Removed published MDX: {mdx.name}")
+
+
 def _log(msg: str):
     print(msg, flush=True)
 
@@ -8266,6 +8289,11 @@ def main():
                         help="Batch review skip threshold: rerun review when latest score is below this value")
     parser.add_argument("--force-publish", action="store_true",
                         help="Publish even if audit gates still fail after heal (not recommended)")
+    parser.add_argument("--force", action="store_true",
+                        help="Delete all generated artifacts and rebuild from source of truth (plan + config). "
+                             "Preserves plan YAML, discovery materials, code/config. "
+                             "Removes lesson .md, activities, vocabulary, reviews, audit, status, "
+                             "orchestration state/prompts/dispatch, knowledge packet, published MDX.")
     args = parser.parse_args()
 
     # --range: build multiple modules sequentially
@@ -8298,7 +8326,7 @@ def main():
                     args.review_threshold,
                     _load_completed_phases(args.level, _range_slug),
                 )
-                if _range_plan.should_skip:
+                if _range_plan.should_skip and not args.force:
                     _log(f"\n  ⏭️  M{n:02d} ({_range_slug}) — {_range_plan.reason}, skipping")
                     skipped.append(n)
                     continue
@@ -8316,6 +8344,7 @@ def main():
                      "--step", args.step,
                      "--review-threshold", str(args.review_threshold),
                      *(["--force-publish"] if args.force_publish else []),
+                     *(["--force"] if args.force else []),
                      *(["--resume"] if args.resume else []),
                      *[
                          item
@@ -8399,6 +8428,15 @@ def main():
 
         _log(f"\n🔨 V6 Build: {args.level.upper()} M{args.module:02d} ({slug})")
         _log(f"   Writer: {args.writer}")
+
+        # --force: delete all generated artifacts and start from scratch.
+        # Runs before resume logic — after reset there are no phases to resume.
+        if args.force:
+            _log("   🔄 --force: resetting module to source of truth...")
+            _force_reset_module(args.level, slug)
+            # --force implies a full rebuild from the beginning.
+            if args.resume:
+                _log("   ℹ️  --force overrides --resume: starting fresh")
 
         steps = args.step
 
