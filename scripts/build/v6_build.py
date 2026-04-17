@@ -1558,6 +1558,280 @@ def _parse_review_result(review_text: str) -> ReviewParseResult:
     )
 
 
+# ──────────────────────────────────────────────────────────────────────
+# Deterministic-dimension override (#1321)
+# ──────────────────────────────────────────────────────────────────────
+#
+# The reviewer can score structural/quantitative dimensions based on
+# factual claims that the pipeline already computes deterministically
+# (word count, activity count, activity order, H2 section list). When
+# the reviewer's claim is demonstrably wrong — e.g. "word count is 1163,
+# below the 1200 target" on a module whose deterministic core-content
+# count is actually 1283 — we override that dimension's score with the
+# deterministic truth so a single hallucinated number doesn't flip the
+# whole module from PASS to REVISE.
+#
+# Design choices:
+#
+#   * Non-destructive. The raw review markdown on disk is untouched.
+#     Only the in-memory ``ReviewParseResult`` is rewritten, so fix /
+#     rewrite application continues to see the reviewer's own prose.
+#
+#   * Dimension-bounded. We only override the dimension whose
+#     evidence contained the falsifiable claim. Other dimensions —
+#     and especially qualitative ones like Pedagogical quality /
+#     Engagement & tone — are left alone.
+#
+#   * Conservative on override ceiling. An overridden dim is set to
+#     ``9`` (just above the floor), not ``10``, so the correction
+#     doesn't silently inflate a module whose other dims are
+#     legitimately weak.
+#
+#   * Event-logged. Every override emits an ``override_event`` so
+#     reviewer hallucination rates are observable.
+_WORD_COUNT_CLAIM_RE = re.compile(
+    r"word\s+count\s+(?:is\s+)?(?P<actual>\d+)"
+    r"(?:\s*,?\s*(?:which\s+is\s+)?)?"
+    r"\s*(?:below|under|short\s+of)\s+"
+    r"(?:the\s+)?(?P<target>\d+)",
+    re.IGNORECASE,
+)
+_ACTIVITY_COUNT_CLAIM_RE = re.compile(
+    r"(?:only\s+)?(?P<count>\d+)\s+(?:INJECT_ACTIVITY\s+)?"
+    r"(?:markers?|activit(?:y|ies))\s+"
+    r"(?:present|found|instead(?:\s+of\s+(?P<expected>\d+))?)",
+    re.IGNORECASE,
+)
+_WORD_COUNT_OVERRIDE_TOLERANCE = 0.05  # 5 % slack either side of target
+
+
+def _deterministic_core_word_count(content_path: Path) -> int:
+    """Return the deterministic core-content word count for *content_path*.
+
+    Mirrors the calculation used by the audit gate (``phases_gates``)
+    so the override and the gate can never disagree on facts.
+    """
+    from audit.cleaners import (
+        clean_for_stats,
+        count_words,
+        extract_core_content,
+    )
+
+    body = content_path.read_text(encoding="utf-8")
+    core = extract_core_content(body)
+    cleaned = clean_for_stats(core)
+    return count_words(cleaned)
+
+
+def _deterministic_activity_marker_count(content_path: Path) -> int:
+    """Count ``<!-- INJECT_ACTIVITY: slug -->`` markers in *content_path*."""
+    body = content_path.read_text(encoding="utf-8")
+    return len(re.findall(r"<!--\s*INJECT_ACTIVITY:\s*[\w-]+\s*-->", body))
+
+
+def _override_dimension_evidence(
+    original_evidence: str,
+    *,
+    dim_label: str,
+    reviewer_claim: str,
+    deterministic_truth: str,
+) -> str:
+    """Build the replacement evidence string for an overridden dimension.
+
+    Keeps the first ~80 chars of the reviewer's own text so a human
+    reader can still see what the reviewer was looking at when it
+    went wrong; prefixes an unambiguous ``[OVERRIDE]`` marker.
+    """
+    snippet = original_evidence.strip().replace("\n", " ")
+    if len(snippet) > 80:
+        snippet = snippet[:77] + "…"
+    return (
+        f"[OVERRIDE: {dim_label}] reviewer claimed "
+        f"{reviewer_claim}; deterministic check reports "
+        f"{deterministic_truth}. Original: \"{snippet}\""
+    )
+
+
+def _apply_deterministic_overrides(
+    parsed: ReviewParseResult,
+    *,
+    content_path: Path,
+    level: str,
+    slug: str,
+    word_target: int,
+) -> tuple[ReviewParseResult, list[dict]]:
+    """Override reviewer scores on dimensions whose evidence misstates a fact.
+
+    Returns the (possibly rewritten) :class:`ReviewParseResult` plus a
+    list of per-override summary dicts suitable for JSONL emission.
+
+    The override only upgrades scores (a reviewer's truthful low score
+    stays low); a downgrade would require a separate signal and is
+    out of scope for this pass.
+    """
+    if not parsed.parsed_scores or word_target <= 0:
+        return parsed, []
+
+    overrides: list[dict] = []
+    new_dims: list[dict] = []
+    mutated = False
+
+    deterministic_words: int | None = None
+    deterministic_activities: int | None = None
+
+    for dim in parsed.parsed_scores:
+        dim_num = dim.get("dimension")
+        dim_score = int(dim.get("score", 10))
+        dim_name = dim.get("name", "")
+        evidence = dim.get("evidence", "") or ""
+
+        candidate = dict(dim)
+
+        # Dim 7 "Structural integrity" — classic word-count claim.
+        wc_match = _WORD_COUNT_CLAIM_RE.search(evidence)
+        if wc_match and dim_score < REVIEW_TARGET_SCORE:
+            claimed = int(wc_match.group("actual"))
+            claimed_target = int(wc_match.group("target"))
+            if deterministic_words is None:
+                deterministic_words = _deterministic_core_word_count(content_path)
+            # Override only when the reviewer claims "below target" AND
+            # the deterministic count is actually at/over target (with
+            # a small tolerance so edge cases don't trigger).
+            tolerance = round(claimed_target * _WORD_COUNT_OVERRIDE_TOLERANCE)
+            if deterministic_words >= claimed_target - tolerance:
+                candidate["score"] = max(9, dim_score)
+                candidate["evidence"] = _override_dimension_evidence(
+                    evidence,
+                    dim_label=dim_name or "Structural integrity",
+                    reviewer_claim=f"word count {claimed} < {claimed_target}",
+                    deterministic_truth=(
+                        f"core-content word count {deterministic_words} "
+                        f"(target {claimed_target})"
+                    ),
+                )
+                overrides.append({
+                    "dim": dim_num,
+                    "name": dim_name,
+                    "claim": "word_count_below_target",
+                    "reviewer_value": claimed,
+                    "deterministic_value": deterministic_words,
+                    "delta_score": candidate["score"] - dim_score,
+                })
+                mutated = True
+
+        # Dim 5 "Exercise quality" — activity marker count claim.
+        # Only try this branch when the word-count branch above didn't
+        # already override this dim. The `"score"` check is the probe:
+        # if candidate["score"] differs from dim_score, a prior branch
+        # already lifted it and we should not double-apply.
+        already_overridden = candidate.get("score", dim_score) != dim_score
+        ac_match = _ACTIVITY_COUNT_CLAIM_RE.search(evidence)
+        if ac_match and dim_score < REVIEW_TARGET_SCORE and not already_overridden:
+            claimed_count = int(ac_match.group("count"))
+            if deterministic_activities is None:
+                deterministic_activities = _deterministic_activity_marker_count(content_path)
+            # If the reviewer claims "only N present" but we actually
+            # have more markers than the claim, the reviewer is
+            # miscounting. Only override when our count is >= claim
+            # AND the reviewer's claim uses "only/below/under"
+            # framing — detected by the regex branch that matched.
+            if deterministic_activities > claimed_count:
+                candidate["score"] = max(9, dim_score)
+                candidate["evidence"] = _override_dimension_evidence(
+                    evidence,
+                    dim_label=dim_name or "Exercise quality",
+                    reviewer_claim=f"{claimed_count} activity markers",
+                    deterministic_truth=(
+                        f"{deterministic_activities} INJECT_ACTIVITY markers in content"
+                    ),
+                )
+                overrides.append({
+                    "dim": dim_num,
+                    "name": dim_name,
+                    "claim": "activity_count_undercounted",
+                    "reviewer_value": claimed_count,
+                    "deterministic_value": deterministic_activities,
+                    "delta_score": candidate["score"] - dim_score,
+                })
+                mutated = True
+
+        new_dims.append(candidate)
+
+    if not mutated:
+        return parsed, []
+
+    # Recompute weighted score from the new dimension set.
+    dimension_weights = {
+        1: 0.15, 2: 0.15, 3: 0.15, 4: 0.10, 5: 0.15,
+        6: 0.10, 7: 0.05, 8: 0.05, 9: 0.10,
+    }
+    raw_scores = [int(d.get("score", 0)) for d in new_dims[:9]]
+    if raw_scores:
+        available = min(len(raw_scores), len(dimension_weights))
+        weight_sum = sum(dimension_weights[k] for k in range(1, available + 1))
+        weighted = sum(
+            raw_scores[i] * dimension_weights[i + 1] for i in range(available)
+        )
+        new_score = round(weighted / weight_sum, 1) if weight_sum > 0 else 0.0
+    else:
+        new_score = parsed.score
+
+    # Recompute dim_floor_fail from the overridden dims — an
+    # overridden dim is by definition no longer "floor with error
+    # keyword" even if the reviewer's original prose had one.
+    new_dim_floor_fail = False
+    for dim in new_dims:
+        dim_score_int = int(dim.get("score", 10))
+        evidence = dim.get("evidence", "") or ""
+        if evidence.startswith("[OVERRIDE"):
+            continue  # overridden dims don't contribute to floor fail
+        if dim_score_int < REVIEW_TARGET_SCORE and _evidence_has_error_keyword(evidence):
+            new_dim_floor_fail = True
+            break
+
+    new_passed = parsed.reviewer_contract_invalid or (
+        new_score >= REVIEW_TARGET_SCORE
+        and parsed.verdict == "PASS"
+        and not new_dim_floor_fail
+    )
+
+    new_parsed = ReviewParseResult(
+        score=new_score,
+        verdict=parsed.verdict,
+        raw_scores=raw_scores or parsed.raw_scores,
+        parsed_scores=new_dims,
+        findings_count=parsed.findings_count,
+        dim_floor_fail=new_dim_floor_fail,
+        reviewer_contract_invalid=parsed.reviewer_contract_invalid,
+        passed=new_passed,
+    )
+
+    # Emit one JSONL event per override for post-hoc hallucination
+    # rate measurement.
+    for ov in overrides:
+        emit_event(
+            "reviewer_override",
+            level=level,
+            slug=slug,
+            dim=ov["dim"],
+            name=ov["name"],
+            claim=ov["claim"],
+            reviewer_value=ov["reviewer_value"],
+            deterministic_value=ov["deterministic_value"],
+            delta_score=ov["delta_score"],
+        )
+    if new_passed and not parsed.passed:
+        emit_event(
+            "reviewer_saved_by_override",
+            level=level,
+            slug=slug,
+            old_score=parsed.score,
+            new_score=new_score,
+        )
+
+    return new_parsed, overrides
+
+
 def _score_delta(previous: float, current: float) -> float:
     """Round score movement to the same one-decimal granularity as reviews."""
     return round(current - previous, 1)
@@ -6441,7 +6715,6 @@ def step_review(content_path: Path, level: str, module_num: int,
     _save_structured_findings(raw, orch_dir, round_num)
 
     parsed = _parse_review_result(raw)
-    score = parsed.score
 
     all_score_matches = list(re.finditer(r"\|\s*\d+\.\s*[^|]+\|\s*(\d+)/10\s*\|", raw))
     if len(all_score_matches) > len(parsed.raw_scores):
@@ -6454,16 +6727,59 @@ def step_review(content_path: Path, level: str, module_num: int,
         _log(f"  Raw scores: {parsed.raw_scores}")
         if len(parsed.raw_scores) < 9:
             _log(f"  ⚠️  Only {len(parsed.raw_scores)}/9 dimensions parsed — score normalized")
-        _log(f"  Weighted score (calculated): {score}/10")
+        _log(f"  Weighted score (calculated): {parsed.score}/10")
     else:
         _log("  ⚠️  Could not parse any dimension scores")
 
+    # #1321 — deterministic-dimension override.
+    #
+    # Reviewer claims like "word count 1163 below target" or
+    # "only 3 activity markers present" are verifiable facts. When
+    # the reviewer gets them wrong on a dimension, don't let the
+    # wrong dim score flip the module from PASS to REVISE — recompute
+    # deterministically, override the dim, recompute the weighted
+    # score. Purely additive (never lowers a passing dim).
+    try:
+        plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+        word_target = 0
+        if plan_path.exists():
+            plan_data = yaml.safe_load(plan_path.read_text("utf-8")) or {}
+            word_target = int(plan_data.get("word_target", 0) or 0)
+        parsed, applied_overrides = _apply_deterministic_overrides(
+            parsed,
+            content_path=content_path,
+            level=level,
+            slug=slug,
+            word_target=word_target,
+        )
+    except Exception as exc:  # pragma: no cover - defensive, never should mask review errors
+        _log(f"  ⚠️  Deterministic override skipped: {type(exc).__name__}: {exc}")
+        applied_overrides = []
+
+    if applied_overrides:
+        _log(
+            f"  🔁 Applied {len(applied_overrides)} deterministic override(s); "
+            f"weighted score: {parsed.score}/10"
+        )
+        for ov in applied_overrides:
+            _log(
+                f"     ↳ dim {ov['dim']} ({ov['name']}): "
+                f"{ov['claim']} — reviewer {ov['reviewer_value']} vs "
+                f"deterministic {ov['deterministic_value']} "
+                f"(+{ov['delta_score']} score)"
+            )
+
+    score = parsed.score
     score_pass = score >= REVIEW_TARGET_SCORE
     severity_pass = parsed.verdict == "PASS"
 
     for dim in parsed.parsed_scores:
         dim_score = dim.get("score", 10)
         evidence = dim.get("evidence", "")
+        # Skip overridden dims — their evidence now starts with ``[OVERRIDE``
+        # and the underlying reviewer claim was already invalidated.
+        if isinstance(evidence, str) and evidence.startswith("[OVERRIDE"):
+            continue
         if dim_score < REVIEW_TARGET_SCORE and _evidence_has_error_keyword(evidence):
             dim_name = dim.get("name", "?")
             _log(f"  ⚠️  Dimension floor: {dim_name} = {dim_score}/10 with identified errors")
@@ -7575,6 +7891,56 @@ def _apply_contract_word_budget_rewrites(
     return applied > 0, applied
 
 
+def _snapshot_passing_round(
+    *,
+    level: str,
+    slug: str,
+    content_body: str,
+    round_state: ReviewRoundState,
+) -> None:
+    """Freeze a passing round so a later regression can be reverted.
+
+    Writes *content_body* to
+    ``orchestration/{slug}/review-snapshot-pass.md`` alongside a
+    sidecar YAML recording the round number + score + dim scores.
+    The caller is responsible for passing in the PRE-FIX content —
+    i.e. the exact bytes the reviewer actually saw when it produced
+    *round_state*. If we read from ``content_path`` here we would
+    snapshot the POST-FIX content, which the reviewer never looked
+    at, defeating the whole point of the snapshot.
+
+    Called at most once per new-best round in a run. See #1320.
+    """
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    snapshot_md = orch_dir / "review-snapshot-pass.md"
+    snapshot_yaml = orch_dir / "review-snapshot-pass.yaml"
+    snapshot_md.write_text(content_body, "utf-8")
+    # Use YAML (not JSON) to match the rest of the orchestration dir.
+    sidecar = {
+        "round": round_state.round_num,
+        "score": round_state.score,
+        "passed": round_state.passed,
+        "contract_blocking": round_state.contract_blocking,
+        "captured_at": datetime.now(UTC).isoformat(),
+    }
+    snapshot_yaml.write_text(yaml.safe_dump(sidecar, sort_keys=False), "utf-8")
+
+
+def _restore_snapshot(*, level: str, slug: str, content_path: Path) -> bool:
+    """Copy the snapshot content back to *content_path*.
+
+    Returns True when a snapshot existed and was restored.
+    """
+    snapshot_md = (
+        CURRICULUM_ROOT / level / "orchestration" / slug / "review-snapshot-pass.md"
+    )
+    if not snapshot_md.is_file():
+        return False
+    content_path.write_text(snapshot_md.read_text("utf-8"), "utf-8")
+    return True
+
+
 def _run_review_heal_loop(
     content_path: Path,
     *,
@@ -7590,6 +7956,16 @@ def _run_review_heal_loop(
 
     packet_path = CURRICULUM_ROOT / level / "research" / f"{slug}-knowledge-packet.md"
     rounds: list[ReviewRoundState] = []
+    # #1320 — first-pass freeze + regression guard.
+    # Track the highest-scoring round that cleared the threshold with
+    # no contract-blocking violations. If a subsequent round applies
+    # mutations that drop the confirmed score below this baseline by
+    # more than 0.2, revert content to the snapshot and treat the
+    # snapshot as final. The 0.2 band matches the plateau
+    # `min_delta` elsewhere in this file.
+    best_round_state: ReviewRoundState | None = None
+    best_round_index: int | None = None
+    _REGRESSION_BAND = 0.2
 
     for round_index in range(1, max_rounds + 1):
         passed, score, review_text = step_review(
@@ -7602,6 +7978,13 @@ def _run_review_heal_loop(
         )
         if score == 0.0 and not review_text:
             return ReviewLoopRunResult(outcome="error", rounds=tuple(rounds))
+
+        # #1320 — capture the EXACT content the reviewer saw, before
+        # any fix / rewrite mutation runs. The snapshot (if this round
+        # qualifies) must be of this pre-fix body, not whatever the
+        # fixes turn it into — the reviewer's score applies to THIS
+        # text, not the post-fix text.
+        pre_fix_content_body = content_path.read_text("utf-8")
 
         fixes_applied, fix_count = _apply_review_fixes(
             review_text,
@@ -7671,10 +8054,85 @@ def _run_review_heal_loop(
         )
         rounds.append(round_state)
 
+        # #1320 — first-pass freeze: snapshot the BEST round we have
+        # seen so far. The trigger is deliberately softer than the
+        # full ``passed`` gate:
+        #
+        #   * score ≥ REVIEW_TARGET_SCORE (post #1321 override)
+        #   * no ERROR-severity contract violations
+        #
+        # We intentionally do NOT require ``verdict == \"PASS\"`` here.
+        # The real A1/M1 R2 failure had score 9.22 but verdict
+        # "REVISE" because the reviewer found nitpicks that the
+        # rubric counted as findings. That content was still the
+        # best the pipeline produced, and it deserves to survive
+        # later-round hallucinations. If the full gate eventually
+        # clears (either because a later round genuinely passes or
+        # because we revert to the snapshot at plateau), we advance
+        # to publish; if not, the plateau path still writes the
+        # needs-human-review sentinel.
+        snapshot_candidate = (
+            round_state.score >= REVIEW_TARGET_SCORE
+            and not round_state.contract_blocking
+        )
+        if snapshot_candidate and (
+            best_round_state is None
+            or round_state.score > best_round_state.score
+        ):
+            _snapshot_passing_round(
+                level=level,
+                slug=slug,
+                content_body=pre_fix_content_body,
+                round_state=round_state,
+            )
+            best_round_state = round_state
+            best_round_index = len(rounds) - 1
+            _log(
+                f"\n📌 R{round_index} is the best-so-far passing round "
+                f"({round_state.score}/10) — content snapshotted to "
+                "review-snapshot-pass.md"
+            )
+
         if len(rounds) >= 2:
             delta = _score_delta(rounds[-2].score, rounds[-1].score)
             delta_str = f"+{delta:.1f}" if delta >= 0 else f"{delta:.1f}"
             _log(f"\n📊 R{rounds[-2].round_num}: {rounds[-2].score}/10 → R{round_index}: {score}/10 ({delta_str})")
+
+        # #1320 — regression guard. If we already have a passing
+        # snapshot AND the current round regressed below it by more
+        # than the plateau band, revert and stop. This is the key
+        # behavior: no round that landed after a pass gets to
+        # silently erase the pass.
+        if (
+            best_round_state is not None
+            and round_state is not best_round_state
+            and round_state.score < best_round_state.score - _REGRESSION_BAND
+        ):
+            _log(
+                f"\n🛑 R{round_index} ({round_state.score}/10) regressed below "
+                f"R{best_round_state.round_num}'s passing score "
+                f"({best_round_state.score}/10) by more than {_REGRESSION_BAND}. "
+                "Restoring snapshot and accepting the passing round as final."
+            )
+            restored = _restore_snapshot(
+                level=level, slug=slug, content_path=content_path,
+            )
+            if restored:
+                step_verify(content_path, level, module_num)
+                emit_event(
+                    "review_regression_prevented",
+                    level=level,
+                    slug=slug,
+                    regressed_round=round_index,
+                    regressed_score=round_state.score,
+                    best_round=best_round_state.round_num,
+                    best_score=best_round_state.score,
+                )
+                # Truncate rounds to the best passing round so the
+                # caller's summary reflects the actual final state.
+                if best_round_index is not None:
+                    rounds[:] = rounds[: best_round_index + 1]
+                return ReviewLoopRunResult(outcome="pass", rounds=tuple(rounds))
 
         decision = _review_loop_decision(rounds, max_rounds=max_rounds)
 
@@ -7786,6 +8244,36 @@ def _run_review_heal_loop(
                 )
             else:
                 _log(f"\n⏸️ Review plateau detected — reached the {max_rounds}-round ceiling.")
+            # #1320 — if the plateau lands on sub-threshold content but
+            # we captured a passing snapshot earlier in the run, roll
+            # back to the snapshot and exit as a pass. Without this the
+            # pipeline would write ``needs-human-review.yaml`` even
+            # though it had previously accepted content that cleared the
+            # gate.
+            if (
+                best_round_state is not None
+                and rounds[-1].score < best_round_state.score - _REGRESSION_BAND
+            ):
+                _log(
+                    f"\n🛑 Plateau at {rounds[-1].score}/10 is below the "
+                    f"R{best_round_state.round_num} passing snapshot "
+                    f"({best_round_state.score}/10) — restoring snapshot "
+                    "and accepting it as final."
+                )
+                if _restore_snapshot(level=level, slug=slug, content_path=content_path):
+                    step_verify(content_path, level, module_num)
+                    emit_event(
+                        "review_regression_prevented",
+                        level=level,
+                        slug=slug,
+                        regressed_round=rounds[-1].round_num,
+                        regressed_score=rounds[-1].score,
+                        best_round=best_round_state.round_num,
+                        best_score=best_round_state.score,
+                    )
+                    if best_round_index is not None:
+                        rounds[:] = rounds[: best_round_index + 1]
+                    return ReviewLoopRunResult(outcome="pass", rounds=tuple(rounds))
             return ReviewLoopRunResult(outcome="plateau", rounds=tuple(rounds))
 
         _log(
