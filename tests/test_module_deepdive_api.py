@@ -225,6 +225,51 @@ def test_review_snapshot_no_flag_when_low_score_or_findings(tmp_path, monkeypatc
     assert body["main_review"]["empty_findings_flag"] is False
 
 
+def test_review_snapshot_does_not_pick_final_review_as_main(tmp_path, monkeypatch):
+    """Codex BLOCKER on #1312 pre-merge: when both main-review and
+    final-review files exist, main_review must be the content review
+    (different format + parser), never the final-review verdict file.
+    """
+    proj = tmp_path
+    base = proj / "curriculum" / "l2-uk-en" / "a1"
+    (base / "review").mkdir(parents=True, exist_ok=True)
+
+    # Main review (older)
+    main = base / "review" / "mix-review-r1.md"
+    main.write_text(
+        "# Issue #1\n**Overall Score:** 8.8/10\n**Status:** PASS\n",
+        encoding="utf-8",
+    )
+    # Final review (NEWER — would have been picked under the old bug)
+    final = base / "review" / "mix-final-review.md"
+    final.write_text(
+        "# Phase F\n**Status:** PASS\nShipping decision.\n",
+        encoding="utf-8",
+    )
+    import os
+    os.utime(main, (1_000_000, 1_000_000))
+    os.utime(final, (2_000_000, 2_000_000))
+
+    monkeypatch.setattr(
+        artifacts_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}],
+    )
+    monkeypatch.setattr(artifacts_router, "CURRICULUM_ROOT", proj / "curriculum")
+    monkeypatch.setattr(artifacts_router, "PROJECT_ROOT", proj)
+    # get_final_review_info is called to populate final_review field.
+    monkeypatch.setattr(
+        artifacts_router, "get_final_review_info",
+        lambda *_a, **_kw: {"exists": True, "verdict": "PASS"},
+    )
+
+    body = client.get("/api/artifacts/a1/mix/review-snapshot").json()
+    assert body["main_review"] is not None
+    assert body["main_review"]["path"].endswith("mix-review-r1.md"), (
+        f"main_review picked the wrong file: {body['main_review']['path']}"
+    )
+    # Final review exposed separately so the endpoint still surfaces it.
+    assert body["final_review"]["verdict"] == "PASS"
+
+
 def test_review_snapshot_handles_missing_files(tmp_path, monkeypatch):
     proj = tmp_path
     (proj / "curriculum" / "l2-uk-en" / "a1").mkdir(parents=True, exist_ok=True)

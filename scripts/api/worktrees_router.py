@@ -181,16 +181,32 @@ async def list_worktrees():
             }
 
         parsed = _parse_worktree_list(stdout)
-        project_root_str = str(PROJECT_ROOT.resolve())
+        try:
+            project_root_str = str(PROJECT_ROOT.resolve())
+        except OSError:
+            # Permission or symlink-loop edge case on the primary
+            # worktree. Fall back to the non-resolved path so the
+            # whole response doesn't die for one bad mount.
+            project_root_str = str(PROJECT_ROOT)
+
         enriched: list[dict[str, Any]] = []
         for record in parsed:
             path_str = record.get("path")
             if not path_str:
                 continue
             wt_path = Path(path_str)
-            record["is_primary"] = (
-                wt_path.resolve().as_posix() == Path(project_root_str).as_posix()
-            )
+            # Guard ``resolve()`` so one malformed entry can't take
+            # down the response. Reviewer Codex-CONCERN on #1312
+            # pre-merge: symlink loops + permission errors on a
+            # single entry used to bubble out as a 500.
+            try:
+                resolved = wt_path.resolve().as_posix()
+            except OSError as exc:
+                record["is_primary"] = False
+                record["resolve_error"] = f"{type(exc).__name__}: {exc}"
+                enriched.append(record)
+                continue
+            record["is_primary"] = (resolved == project_root_str)
             record.update(_wt_status(wt_path))
             enriched.append(record)
 

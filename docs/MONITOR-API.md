@@ -1418,6 +1418,16 @@ overnight batch runs.
 }
 ```
 
+`blocker` is derived on the server from the module's state:
+
+| Value | Meaning |
+|---|---|
+| `"failed:<phase>"` | a phase status is `"failed"` in state.json |
+| `"audit_fail"` | audit verdict is `"fail"` but no failed phase |
+| `"gate:<name>"` | audit has `blocking_issues` and the first names a gate |
+| `"audit_issue"` | audit has `blocking_issues` but no specific gate |
+| `null` | nothing known to be blocking |
+
 ### Worktree registry — `GET /api/worktrees`
 
 Every active git worktree with branch, dirty/clean, change-type
@@ -1437,7 +1447,7 @@ never 500.
 
 ### Force-preview — `GET /api/artifacts/{track}/{slug}/force-preview`
 
-Exact list of files `v6_build.py --force {slug}` would delete,
+Exact list of files `v6_build.py {track} {num} --force` would delete,
 classified by category. **Never** deletes anything.
 
 ```json
@@ -1508,10 +1518,19 @@ management stops being manual. Categories:
 
 ### Runtime auth snapshot — `GET /api/runtime/auth`
 
-Per-agent auth mode. For Gemini: `auto` / `subscription` / `api` +
-whether a key is present in env + whether `~/.gemini/oauth_creds.json`
-exists. For Claude / Codex: which env var provides the key (if any).
-**Never echoes the key value itself** — only presence/absence.
+Per-agent auth mode. For Gemini: resolved `auto` / `subscription` /
+`api` mode + `auth_mode_raw_valid` (did `GEMINI_AUTH_MODE` hold one
+of the accepted values?) + `auth_mode_raw_length` (length only) +
+whether `GEMINI_API_KEY` / `GOOGLE_API_KEY` is set + whether
+`~/.gemini/oauth_creds.json` exists. For Claude / Codex: which env
+var would provide the key (if any).
+
+**Never echoes env-var values** — only presence booleans, source env
+name, and the resolved enum. A test pins this contract so a future
+change can't accidentally leak a value through the raw passthrough
+that used to exist here (the `auth_mode_raw` string from an earlier
+revision of this endpoint was removed per reviewer BLOCKER on
+#1312 pre-merge).
 
 ---
 

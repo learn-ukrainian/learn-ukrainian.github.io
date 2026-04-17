@@ -51,7 +51,8 @@ def test_range_status_slices_and_flattens(monkeypatch):
                     },
                     "audit": "fail", "review": {"score": None},
                     "words": 800, "word_target": 1200,
-                    "blocker": "word_budget", "pipeline_version": "v6", "needs_rebuild": False,
+                    # No upstream ``blocker`` key — derived from audit status.
+                    "pipeline_version": "v6", "needs_rebuild": False,
                 },
                 {
                     "num": 3, "slug": "three",
@@ -77,13 +78,55 @@ def test_range_status_slices_and_flattens(monkeypatch):
     # Module 2: current phase = last complete (write), audit fail, blocker set
     assert rows[1]["slug"] == "two"
     assert rows[1]["phase"] == "write"
-    assert rows[1]["blocker"] == "word_budget"
+    # Blocker is DERIVED from audit=fail now (see derivation block).
+    assert rows[1]["blocker"] == "audit_fail"
 
 
 def test_range_status_404_on_unknown_track(monkeypatch):
     monkeypatch.setattr(state_router, "LEVELS", [{"id": "a1", "path": "l2-uk-en/a1"}])
     resp = client.get("/api/state/range/does-not-exist")
     assert resp.status_code == 404
+
+
+def test_range_status_emits_blocker_from_failed_phase_and_audit(monkeypatch):
+    """Codex BLOCKER on #1312 pre-merge: the doc promised `blocker`
+    would identify blocked modules, but the old code only read a
+    never-set key. Derive it from failed phases + audit status +
+    blocking_issues so the compact dashboard actually answers the
+    question.
+    """
+    fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
+    monkeypatch.setattr(state_router, "LEVELS", fake_levels)
+    modules = [
+        # 1: write phase failed — blocker = failed:write
+        {"num": 1, "slug": "a",
+         "phases": {"write": {"status": "failed"}},
+         "audit": None, "review": {}},
+        # 2: audit returned "fail" — blocker = audit_fail
+        {"num": 2, "slug": "b",
+         "phases": {"write": {"status": "complete"}},
+         "audit": "fail", "review": {"score": 6.0}},
+        # 3: blocking_issues carries a specific gate — blocker = gate:lesson
+        {"num": 3, "slug": "c",
+         "phases": {"write": {"status": "complete"}},
+         "audit": None, "review": {},
+         "blocking_issues": [{"gate": "lesson", "message": "short"}]},
+        # 4: nothing wrong — blocker = null
+        {"num": 4, "slug": "d",
+         "phases": {"write": {"status": "complete"}},
+         "audit": "pass", "review": {"score": 9.3}},
+    ]
+    monkeypatch.setattr(
+        state_router, "compute_pipeline_track",
+        lambda *_a, **_kw: {"modules": modules},
+    )
+
+    rows = client.get("/api/state/range/a1").json()["modules"]
+    by_num = {r["num"]: r for r in rows}
+    assert by_num[1]["blocker"] == "failed:write"
+    assert by_num[2]["blocker"] == "audit_fail"
+    assert by_num[3]["blocker"] == "gate:lesson"
+    assert by_num[4]["blocker"] is None
 
 
 def test_range_status_open_ended(monkeypatch):

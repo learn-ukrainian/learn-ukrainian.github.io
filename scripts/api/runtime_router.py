@@ -289,9 +289,21 @@ async def runtime_auth():
     env = os.environ
     home = _Path.home()
 
+    # Sanitize GEMINI_AUTH_MODE rather than echo it raw. Reviewer
+    # Codex BLOCKER on #1312 pre-merge: this endpoint's contract says
+    # "never echoes key values". If an operator accidentally pastes a
+    # key fragment into GEMINI_AUTH_MODE (typo in their shell
+    # profile), echoing the raw value leaks it. We still surface
+    # WHETHER the raw value was recognized via a ``raw_valid`` flag +
+    # its LENGTH — enough to debug an invalid config without exposing
+    # content.
+    _AUTH_MODE_VALID = {"auto", "subscription", "api"}
+    raw_mode = (env.get("GEMINI_AUTH_MODE") or "").strip()
+    raw_valid = raw_mode.lower() in _AUTH_MODE_VALID
     gemini = {
         "auth_mode": resolve_gemini_auth_mode(),
-        "auth_mode_raw": env.get("GEMINI_AUTH_MODE") or "",
+        "auth_mode_raw_valid": raw_valid,
+        "auth_mode_raw_length": len(raw_mode),
         "api_key_present": bool(env.get("GEMINI_API_KEY")),
         "google_key_present": bool(env.get("GOOGLE_API_KEY")),
         "google_oauth_cred": (home / ".gemini" / "oauth_creds.json").is_file(),

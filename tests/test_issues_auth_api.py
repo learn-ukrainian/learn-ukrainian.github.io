@@ -62,6 +62,23 @@ def test_issues_map_buckets_by_category(monkeypatch):
     assert cats["other"][0]["number"] == 1100
 
 
+def test_issues_map_extracts_supersedes_variant(monkeypatch):
+    """Codex CONCERN: ``Supersedes #N`` wording was missed by the old regex."""
+    fake = (
+        '[{"number": 1184, "title": "Old plumbing",'
+        ' "labels": [{"name": "pipeline"}],'
+        ' "body": "Supersedes #1100\\nLanded in PR #1200",'
+        ' "createdAt": null, "updatedAt": null, "assignees": [], "url": ""}]'
+    )
+    monkeypatch.setattr(
+        issues_router, "_run_gh", lambda *_a, **_kw: (0, fake, ""),
+    )
+    body = client.get("/api/issues/map").json()
+    item = body["categories"]["pipeline"][0]
+    assert item["superseded_by"] == 1100
+    assert item["merged_in_pr"] == 1200
+
+
 def test_issues_map_extracts_supersede_and_merged_in(monkeypatch):
     monkeypatch.setattr(
         issues_router, "_run_gh",
@@ -121,7 +138,8 @@ def test_runtime_auth_reports_subscription_mode(monkeypatch, tmp_path):
 
     body = client.get("/api/runtime/auth").json()
     assert body["gemini"]["auth_mode"] == "subscription"
-    assert body["gemini"]["auth_mode_raw"] == "subscription"
+    assert body["gemini"]["auth_mode_raw_valid"] is True
+    assert body["gemini"]["auth_mode_raw_length"] == len("subscription")
     assert body["gemini"]["api_key_present"] is False
     assert body["gemini"]["google_key_present"] is False
     assert body["gemini"]["google_oauth_cred"] is True
@@ -161,5 +179,27 @@ def test_runtime_auth_invalid_mode_defaults_to_auto(monkeypatch, tmp_path):
     body = client.get("/api/runtime/auth").json()
     # resolve_gemini_auth_mode normalizes unknown values to "auto".
     assert body["gemini"]["auth_mode"] == "auto"
-    # Raw env preserved so operators can see why auto was chosen.
-    assert body["gemini"]["auth_mode_raw"] == "bogus-value"
+    # Raw is NOT echoed — just flagged as invalid with a length.
+    assert body["gemini"]["auth_mode_raw_valid"] is False
+    assert body["gemini"]["auth_mode_raw_length"] == len("bogus-value")
+
+
+def test_runtime_auth_never_echoes_raw_env_value(monkeypatch, tmp_path):
+    """Regression for Codex BLOCKER on #1312 pre-merge: a secret
+    accidentally pasted into GEMINI_AUTH_MODE must NEVER appear in
+    the response body.
+    """
+    accidentally_pasted_secret = "sk-ultra-secret-0123456789abcdef"
+    monkeypatch.setenv("GEMINI_AUTH_MODE", accidentally_pasted_secret)
+    fake_home = tmp_path
+    monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: fake_home))
+
+    resp = client.get("/api/runtime/auth")
+    assert resp.status_code == 200
+    assert accidentally_pasted_secret not in resp.text, (
+        "runtime/auth must never echo the raw GEMINI_AUTH_MODE value"
+    )
+    body = resp.json()
+    # The invalid flag + length still give operators enough to debug.
+    assert body["gemini"]["auth_mode_raw_valid"] is False
+    assert body["gemini"]["auth_mode_raw_length"] == len(accidentally_pasted_secret)

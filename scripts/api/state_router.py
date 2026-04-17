@@ -592,6 +592,7 @@ async def range_status(
             # compact view actionable without a separate call.
             current = None
             last_complete = None
+            failed_phase = None
             for name, data in phases.items():
                 if not isinstance(data, dict):
                     continue
@@ -600,10 +601,33 @@ async def range_status(
                     current = name
                 if status == "complete":
                     last_complete = name
-            phase_now = current or last_complete or "pending"
+                if status == "failed":
+                    failed_phase = name
+            phase_now = current or failed_phase or last_complete or "pending"
 
             review = m.get("review") or {}
             audit = m.get("audit")
+
+            # ``compute_pipeline_track`` does NOT emit a ``blocker``
+            # field (reviewer Codex BLOCKER on #1312 pre-merge:
+            # previously this was always null and documented as
+            # "whether a module is blocked"). Derive it here so the
+            # compact dashboard actually answers the stated question:
+            #   - a failed phase name — the pipeline gave up at that step
+            #   - "audit_fail" — audit ran but produced a fail verdict
+            #   - first blocking_issues[*].gate name — specific gate
+            #   - null — nothing known to be blocking
+            blocker: str | None = None
+            if failed_phase:
+                blocker = f"failed:{failed_phase}"
+            elif isinstance(audit, str) and audit.lower() == "fail":
+                blocker = "audit_fail"
+            blocking_issues = m.get("blocking_issues") or []
+            if blocker is None and blocking_issues:
+                first = blocking_issues[0]
+                if isinstance(first, dict):
+                    gate = first.get("gate") or first.get("type")
+                    blocker = f"gate:{gate}" if gate else "audit_issue"
 
             compact.append({
                 "num": m["num"],
@@ -625,7 +649,7 @@ async def range_status(
                 ),
                 "words": m.get("words"),
                 "word_target": m.get("word_target"),
-                "blocker": m.get("blocker"),
+                "blocker": blocker,
                 "pipeline_version": m.get("pipeline_version"),
                 "needs_rebuild": m.get("needs_rebuild"),
             })

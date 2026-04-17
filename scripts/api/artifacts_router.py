@@ -571,16 +571,31 @@ def _review_snapshot(track: str, slug: str) -> dict[str, Any]:
     base: Path = CURRICULUM_ROOT / cfg["path"]
     review_dir = base / "review"
 
-    # Main review — the canonical per-module review file. Pipeline
-    # writes several naming variants over time; pick the newest match.
+    # Main review = per-module content review. Final review has a
+    # DIFFERENT file format (Phase F verdict) parsed by
+    # ``get_final_review_info`` elsewhere; mixing it into main review
+    # candidates would silently return the wrong file with null /
+    # misleading score+verdict. Reviewer Codex BLOCKER on #1312
+    # pre-merge: keep main / final / style cleanly separated.
     main_candidates: list[Path] = []
     if review_dir.is_dir():
-        for pattern in (f"{slug}-review*.md", f"{slug}-final-review*.md"):
-            main_candidates.extend(review_dir.glob(pattern))
+        for p in review_dir.glob(f"{slug}-review*.md"):
+            # Belt-and-suspenders: some pipeline versions wrote
+            # ``{slug}-review-final-r1.md``; exclude anything whose
+            # name signals a final-review file so the glob stays
+            # strictly main-review.
+            if "final" in p.name.lower():
+                continue
+            main_candidates.append(p)
     main_candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
     main_review = (
         _read_review_file(main_candidates[0]) if main_candidates else None
     )
+
+    # Final review — Phase F approved/revise verdict, separate parser.
+    # Surface the parsed summary directly rather than re-parsing the
+    # file here.
+    final_review_summary = get_final_review_info(base, slug)
 
     # Style review — separate file, same directory. Empty if absent.
     style_candidates = (
@@ -595,6 +610,7 @@ def _review_snapshot(track: str, slug: str) -> dict[str, Any]:
         "track": track,
         "slug": slug,
         "main_review": main_review,
+        "final_review": final_review_summary,
         "style_review": style_review,
         "any_empty_findings_flag": bool(
             (main_review and main_review.get("empty_findings_flag"))

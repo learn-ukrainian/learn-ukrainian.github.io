@@ -45,7 +45,12 @@ _CATEGORY_ORDER: tuple[str, ...] = (
 )
 
 _SUPERSEDED_RE = re.compile(
-    r"(?:superseded[- ]?by|closes|replaces)\s*:?\s*#(\d+)",
+    # ``superseded-by`` / ``supersedes`` / ``closes`` / ``replaces`` /
+    # ``obsoletes``. Catches both the "this issue is-superseded-by X"
+    # and "this issue supersedes X" phrasings (the latter flagged by
+    # Codex on #1312 pre-merge as a regex gap).
+    r"(?:superseded[- ]?by|supersedes|closes|replaces|obsoletes)"
+    r"\s*:?\s*(?:standalone\s+)?#(\d+)",
     re.IGNORECASE,
 )
 _MERGED_IN_RE = re.compile(
