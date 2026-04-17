@@ -15,7 +15,13 @@ from pathlib import Path
 import pytest
 import yaml
 
-SCRIPTS_DIR = Path(__file__).resolve().parent.parent / "scripts"
+WORKTREE_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = WORKTREE_ROOT
+if not (REPO_ROOT / ".venv" / "bin" / "python").exists() and WORKTREE_ROOT.parent.name == ".worktrees":
+    REPO_ROOT = WORKTREE_ROOT.parent.parent
+VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
+
+SCRIPTS_DIR = WORKTREE_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 orch_index = importlib.import_module("build.orch_index")
@@ -35,6 +41,41 @@ REVIEW_RAW = """\
 | 9. Dialogue & conversation quality | 9/10 | natural |
 
 Verdict: PASS
+"""
+
+REVIEW_RAW_REVISE_NO_FINDINGS = """\
+| 1. Plan adherence | 8/10 | grounded |
+| 2. Linguistic accuracy | 8/10 | accurate |
+| 3. Pedagogical quality | 8/10 | clear |
+| 4. Vocabulary coverage | 8/10 | on target |
+| 5. Exercise quality | 8/10 | aligned |
+| 6. Engagement & tone | 8/10 | engaging |
+| 7. Structural integrity | 8/10 | solid |
+| 8. Cultural accuracy | 8/10 | appropriate |
+| 9. Dialogue & conversation quality | 8/10 | natural |
+
+Verdict: REVISE
+"""
+
+REVIEW_RAW_REVISE_WITH_FINDING = """\
+| 1. Plan adherence | 8/10 | grounded |
+| 2. Linguistic accuracy | 8/10 | accurate |
+| 3. Pedagogical quality | 8/10 | clear |
+| 4. Vocabulary coverage | 8/10 | on target |
+| 5. Exercise quality | 8/10 | aligned |
+| 6. Engagement & tone | 8/10 | engaging |
+| 7. Structural integrity | 8/10 | solid |
+| 8. Cultural accuracy | 8/10 | appropriate |
+| 9. Dialogue & conversation quality | 8/10 | natural |
+
+Verdict: REVISE
+
+```
+[Pedagogical quality] [MAJOR]
+Location: Summary
+Issue: The summary does not reinforce the target contrast clearly enough.
+Fix: Add a concrete recap sentence that contrasts хотіти and могти.
+```
 """
 
 
@@ -202,6 +243,71 @@ def test_step_review_emits_review_score_event(
     assert review_events[0]["slug"] == slug
     assert review_events[0]["round"] == 1
     assert review_events[0]["score"] == 9.0
+
+
+def test_step_review_treats_subthreshold_empty_findings_as_non_blocking(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    level = "a2"
+    slug = "a2-review-contract-invalid"
+    curriculum_root = _single_module_tree(tmp_path, level=level, slug=slug)
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.write_text(_compliant_module_content(), "utf-8")
+
+    phases_dir = tmp_path / "scripts" / "build" / "phases"
+    phases_dir.mkdir(parents=True, exist_ok=True)
+    (phases_dir / "v6-review.md").write_text(
+        "Review {TOPIC_TITLE}\n\n{GENERATED_CONTENT}\n",
+        "utf-8",
+    )
+
+    import build.dispatch as dispatch
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
+    monkeypatch.setattr(v6_build, "_build_vesum_report", lambda *args, **kwargs: "")
+    monkeypatch.setattr(dispatch, "dispatch_agent", lambda *args, **kwargs: (True, REVIEW_RAW_REVISE_NO_FINDINGS))
+
+    passed, score, raw = v6_build.step_review(content_path, level, 1, slug, writer="claude")
+
+    output = capsys.readouterr().out
+    assert passed is True
+    assert score == 8.0
+    assert raw == REVIEW_RAW_REVISE_NO_FINDINGS
+    assert "Reviewer contract invalid" in output
+
+
+def test_step_review_still_blocks_subthreshold_review_with_actionable_findings(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    level = "a2"
+    slug = "a2-review-revise-with-findings"
+    curriculum_root = _single_module_tree(tmp_path, level=level, slug=slug)
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.write_text(_compliant_module_content(), "utf-8")
+
+    phases_dir = tmp_path / "scripts" / "build" / "phases"
+    phases_dir.mkdir(parents=True, exist_ok=True)
+    (phases_dir / "v6-review.md").write_text(
+        "Review {TOPIC_TITLE}\n\n{GENERATED_CONTENT}\n",
+        "utf-8",
+    )
+
+    import build.dispatch as dispatch
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
+    monkeypatch.setattr(v6_build, "_build_vesum_report", lambda *args, **kwargs: "")
+    monkeypatch.setattr(dispatch, "dispatch_agent", lambda *args, **kwargs: (True, REVIEW_RAW_REVISE_WITH_FINDING))
+
+    passed, score, raw = v6_build.step_review(content_path, level, 1, slug, writer="claude")
+
+    assert passed is False
+    assert score == 8.0
+    assert raw == REVIEW_RAW_REVISE_WITH_FINDING
 
 
 def test_step_review_style_emits_review_style_score_event(
@@ -974,7 +1080,7 @@ def test_subprocess_event_stream_is_line_buffered(tmp_path: Path) -> None:
     )
 
     proc = subprocess.Popen(
-        [str(v6_build.PROJECT_ROOT / ".venv" / "bin" / "python"), str(helper_path), str(curriculum_root)],
+        [str(VENV_PYTHON), str(helper_path), str(curriculum_root)],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
