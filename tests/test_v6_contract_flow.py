@@ -764,330 +764,6 @@ def test_run_review_heal_loop_triggers_word_budget_autoheal(tmp_path: Path, monk
     assert verify_calls["count"] == 1
 
 
-def test_apply_style_review_rewrite_blocks_groups_by_section(tmp_path: Path, monkeypatch) -> None:
-    level = "a1"
-    slug = "style-rewrite-flow"
-    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
-    content_path = curriculum_root / level / f"{slug}.md"
-    content_path.parent.mkdir(parents=True, exist_ok=True)
-    content_path.write_text("## Intro\nOld intro.\n\n## Practice\nOld practice.\n", "utf-8")
-
-    calls: list[tuple[str, str]] = []
-
-    def fake_rewrite(*args, **kwargs):
-        calls.append((kwargs["section_name"], kwargs["directive"]))
-        return True
-
-    monkeypatch.setattr(v6_build, "_rewrite_block_section", fake_rewrite)
-
-    ok, count = v6_build._apply_style_review_rewrite_blocks(
-        """phase: review-style
-verdict: REVISE
-pass: false
-overall_score: 8.4
-scores: []
-blocking_issues:
-  - type: META_PEDAGOGICAL_NARRATION
-    location: "Section: Intro, paragraph 1"
-    evidence: "In this dialogue..."
-    fix: "Teach the point directly."
-  - type: REGISTER_MISMATCH
-    location: "Practice, dialogue"
-    evidence: "Що ви хочете?"
-    fix: "Use a more polite service opener."
-  - type: META_PEDAGOGICAL_NARRATION
-    location: "Section: Intro, closing"
-    evidence: "Here ..."
-    fix: "Remove local meta-commentary."
-""",
-        content_path,
-        level=level,
-        module_num=1,
-        slug=slug,
-        writer="gemini",
-    )
-
-    assert ok is True
-    assert count == 2
-    assert calls[0][0] == "Intro"
-    assert "Teach the point directly." in calls[0][1]
-    assert "Remove local meta-commentary." in calls[0][1]
-    assert calls[1][0] == "Practice"
-    assert "Use a more polite service opener." in calls[1][1]
-
-
-def test_apply_style_review_rewrite_blocks_maps_dialogue_and_whole_module_locations(
-    tmp_path: Path, monkeypatch
-) -> None:
-    level = "a1"
-    slug = "style-location-flow"
-    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
-    content_path = curriculum_root / level / f"{slug}.md"
-    content_path.parent.mkdir(parents=True, exist_ok=True)
-    content_path.write_text(
-        "## Діалоги (Dialogues)\nOld dialogue.\n\n"
-        "## Хотіти (To Want)\nOld want.\n\n"
-        "## Підсумок — Summary\nOld summary.\n",
-        "utf-8",
-    )
-
-    calls: list[str] = []
-
-    def fake_rewrite(*args, **kwargs):
-        calls.append(kwargs["section_name"])
-        return True
-
-    monkeypatch.setattr(v6_build, "_rewrite_block_section", fake_rewrite)
-
-    ok, count = v6_build._apply_style_review_rewrite_blocks(
-        """phase: review-style
-verdict: REVISE
-pass: false
-overall_score: 5.8
-scores: []
-blocking_issues:
-  - type: META_PEDAGOGICAL_NARRATION
-    location: "Діалоги opening prose and commentary, lines 3-5; Підсумок, lines 20-30"
-    evidence: "Notice how..."
-    fix: "Replace the meta-teaching narration."
-  - type: EXPLANATION_TONE_MISMATCH
-    location: "Whole module prose outside the example sentences"
-    evidence: "Communication often revolves..."
-    fix: "Rewrite the explanatory layer in concise Ukrainian educational prose."
-  - type: TRANSLATED_DIALOGUE_RHYTHM
-    location: "First dialogue, lines 9-11"
-    evidence: "Це погано. А завтра?"
-    fix: "Use a more idiomatic reaction."
-  - type: SERVICE_REGISTER_STIFFNESS
-    location: "Café dialogue, line 17"
-    evidence: "Що ви хочете?"
-    fix: "Use a more natural service opener."
-""",
-        content_path,
-        level=level,
-        module_num=1,
-        slug=slug,
-        writer="gemini",
-    )
-
-    assert ok is True
-    assert count == 3
-    assert calls.count("Діалоги (Dialogues)") == 1
-    assert calls.count("Хотіти (To Want)") == 1
-    assert calls.count("Підсумок — Summary") == 1
-
-
-def test_apply_style_review_rewrite_blocks_adds_a1_guardrails(tmp_path: Path, monkeypatch) -> None:
-    level = "a1"
-    slug = "style-guardrails"
-    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
-    content_path = curriculum_root / level / f"{slug}.md"
-    content_path.parent.mkdir(parents=True, exist_ok=True)
-    content_path.write_text(
-        "## Діалоги (Dialogues)\nOld dialogue.\n\n"
-        "## Хотіти (To Want)\nOld want.\n\n"
-        "## Підсумок — Summary\nOld summary.\n",
-        "utf-8",
-    )
-
-    calls: dict[str, str] = {}
-
-    def fake_rewrite(*args, **kwargs):
-        calls[kwargs["section_name"]] = kwargs["directive"]
-        return True
-
-    monkeypatch.setattr(v6_build, "_rewrite_block_section", fake_rewrite)
-
-    ok, count = v6_build._apply_style_review_rewrite_blocks(
-        """phase: review-style
-verdict: REVISE
-pass: false
-overall_score: 7.3
-scores: []
-blocking_issues:
-  - type: META_PEDAGOGICAL_NARRATION
-    location: "Підсумок — Summary, opening"
-    evidence: "This text demonstrates..."
-    fix: "Replace with a direct reading cue."
-  - type: TRANSLATIONESE
-    location: "Діалоги (Dialogues), explanatory framing"
-    evidence: "Наступна розмова відбувається в кафе."
-    fix: "Cut the scene-announcing narration."
-  - type: PRAGMATIC_MISFRAMING
-    location: "Діалоги (Dialogues), note after dialogue"
-    evidence: "Шкода is a polite refusal."
-    fix: "Explain that шкода expresses regret and can soften a refusal."
-  - type: STYLE_REGISTER_MISMATCH
-    location: "Хотіти (To Want), opening explanation"
-    evidence: "The verb хотіти is essential..."
-    fix: "Keep exposition in one coherent Ukrainian pedagogical register."
-  - type: REGISTER_MISMATCH
-    location: "Діалоги (Dialogues), café exchange closing"
-    evidence: "Чудово, давайте борщ."
-    fix: "Use a more natural ordering formula."
-  - type: MIXED_EXPLANATORY_VOICE
-    location: "Хотіти (To Want); Могти і мусити (Can and Must)"
-    evidence: "dense inline glosses"
-    fix: "Keep one concise Ukrainian pedagogical voice."
-  - type: TRANSLATIONESE_EXPLANATION
-    location: "Хотіти (To Want); Підсумок — Summary"
-    evidence: "у своїй базовій словниковій формі"
-    fix: "Rewrite into plainer Ukrainian pedagogical prose."
-  - type: FORMULAIC_SECTION_OPENERS
-    location: "Підсумок — Summary, opening and cue lines"
-    evidence: "Запам'ятайте: / Прочитайте й повторіть:"
-    fix: "Replace worksheet-style commands with plain recap prose."
-  - type: WORKSHEET_DIALOGUE_RHYTHM
-    location: "Діалоги (Dialogues), café exchange"
-    evidence: "Велику. І можна ще борщ?"
-    fix: "Turn this into a fuller service exchange with a reactive recommendation turn and a natural close."
-  - type: REGISTER_DRIFT
-    location: "Підсумок — Summary, opening and mid-section"
-    evidence: "Порівняйте ці речення... Запам'ятайте..."
-    fix: "Turn the summary into a short natural recap."
-  - type: ABSTRACT_SUMMARY_REGISTER
-    location: "Підсумок — Summary, opening and closing prose"
-    evidence: "These verbs express desires, abilities, and obligations"
-    fix: "Replace abstract recap with concrete everyday examples."
-  - type: UNNATURAL_COLLOCATION
-    location: "Хотіти (To Want), examples"
-    evidence: "Він хоче великий чай."
-    fix: "Use idiomatic everyday collocations."
-  - type: UNNATURAL_SERVICE_DIALOGUE
-    location: "Діалоги (Dialogues), café dialogue"
-    evidence: "Можу порекомендувати український борщ."
-    fix: "Use plainer native service speech."
-  - type: UNNATURAL_SERVICE_PHRASE
-    location: "Діалоги (Dialogues), café dialogue final turn"
-    evidence: "Чудово, давайте борщ."
-    fix: "Use a more idiomatic final order."
-  - type: NON_IDIOMATIC_MODEL_EXAMPLE
-    location: "Підсумок — Summary, accusative examples"
-    evidence: "Він хоче великий чай."
-    fix: "Use a more idiomatic beginner model."
-  - type: OVERSTATED_USAGE_EXPLANATION
-    location: "Діалоги (Dialogues), explanation after café dialogue"
-    evidence: "Я хочу їсти is the standard everyday way to say I am hungry."
-    fix: "Present it as one common colloquial option and mention голодний/голодна."
-  - type: PRAGMATIC_EQUIVALENCE
-    location: "Діалоги (Dialogues), café explanation paragraph"
-    evidence: "The phrase я хочу їсти is the standard, everyday way to say I am hungry."
-    fix: "State the literal meaning first and mention everyday alternatives."
-  - type: UNIDIOMATIC_COLLOCATION
-    location: "Підсумок — Summary, evening-plans paragraph"
-    evidence: "вона хоче пити смачну каву"
-    fix: "Prefer a more idiomatic collocation."
-""",
-        content_path,
-        level=level,
-        module_num=18,
-        slug=slug,
-        writer="gemini",
-    )
-
-    assert ok is True
-    assert count == 3
-    summary_directive = calls["Підсумок — Summary"]
-    assert "Lecture-style explanation is allowed" in summary_directive
-    assert "Forbidden meta phrasing" in summary_directive
-    assert "In summary sections, use direct Ukrainian instructional prose" in summary_directive
-    assert "delete meta-teaching lead-ins entirely instead of paraphrasing them" in summary_directive
-    assert "Start the summary immediately with Ukrainian recap content" in summary_directive
-    assert "short natural recap with everyday examples" in summary_directive
-    dialogue_directive = calls["Діалоги (Dialogues)"]
-    assert "In dialogue sections, start with the dialogue" in dialogue_directive
-    assert "Do not announce the scene beforehand" in dialogue_directive
-    assert "one natural communicative goal per turn" in dialogue_directive
-    assert "express regret and can soften a refusal" in dialogue_directive
-    assert "prefer short request-based ordering and plain staff responses" in dialogue_directive
-    assert "do not use blunt `Я хочу [noun]` as the direct order" in dialogue_directive
-    assert "state the literal meaning of the target phrase first" in dialogue_directive
-    want_directive = calls["Хотіти (To Want)"]
-    dialogue_directive = calls["Діалоги (Dialogues)"]
-    assert "English may appear only as brief parenthetical glosses" in want_directive
-    assert "Rewrite any full English lecture-style explanation paragraph" in want_directive
-    assert "let the exchange breathe: request -> clarifying question or recommendation" in dialogue_directive
-    assert "Prefer idiomatic everyday collocations" in want_directive
-    assert "Prefer the more idiomatic everyday collocation" in summary_directive
-    assert "do not write traps like `частка не завжди ...`" in want_directive
-    assert "Replace model sentences that are merely grammatical" in summary_directive
-    assert "do not use worksheet commands like `Запам'ятайте`" in summary_directive
-    assert "avoid abstract lecture lines like `These verbs express...`" in summary_directive
-    assert "do not write traps like `частка не завжди ...`" in summary_directive
-
-
-def test_run_style_review_heal_loop_rewrites_then_passes(tmp_path: Path, monkeypatch) -> None:
-    level = "a1"
-    slug = "style-heal-flow"
-    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
-    content_path = curriculum_root / level / f"{slug}.md"
-    content_path.parent.mkdir(parents=True, exist_ok=True)
-    content_path.write_text("## Intro\nOld intro.\n\n## Practice\nOld practice.\n", "utf-8")
-
-    reviews = iter(
-        [
-            (
-                False,
-                8.4,
-                """phase: review-style
-verdict: REVISE
-pass: false
-overall_score: 8.4
-scores:
-  - key: pragmatic_authenticity
-    score: 9.0
-  - key: stylistic_consistency
-    score: 8.2
-  - key: culture_and_register
-    score: 9.0
-  - key: naturalness
-    score: 8.4
-blocking_issues:
-  - type: META_PEDAGOGICAL_NARRATION
-    location: "Section: Intro, paragraph 1"
-    evidence: "In this dialogue..."
-    fix: "Teach the point directly."
-""",
-            ),
-            (
-                True,
-                9.2,
-                """phase: review-style
-verdict: PASS
-pass: true
-overall_score: 9.2
-scores:
-  - key: pragmatic_authenticity
-    score: 9.2
-  - key: stylistic_consistency
-    score: 9.0
-  - key: culture_and_register
-    score: 9.3
-  - key: naturalness
-    score: 9.1
-blocking_issues: []
-""",
-            ),
-        ]
-    )
-
-    monkeypatch.setattr(v6_build, "step_review_style", lambda *args, **kwargs: next(reviews))
-    monkeypatch.setattr(v6_build, "_apply_style_review_rewrite_blocks", lambda *args, **kwargs: (True, 1))
-    monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: "complete")
-
-    result = v6_build._run_style_review_heal_loop(
-        content_path,
-        level=level,
-        module_num=1,
-        slug=slug,
-        writer="gemini",
-        reviewer_override=None,
-    )
-
-    assert result.outcome == "pass"
-    assert [round_state.score for round_state in result.rounds] == [8.4, 9.2]
-
-
 def test_dispatch_rewrite_prompt_uses_shorter_gemini_budget(tmp_path: Path, monkeypatch) -> None:
     captured: dict[str, object] = {}
 
@@ -1140,9 +816,9 @@ def test_dispatch_rewrite_prompt_falls_back_to_codex_after_gemini_failure(
     assert "cascade_per_call_max_s" not in calls[1]
 
 
-def test_main_marks_needs_human_review_after_style_plateau(tmp_path: Path, monkeypatch) -> None:
+def test_main_continues_after_style_advisory_pass(tmp_path: Path, monkeypatch) -> None:
     level = "a1"
-    slug = "style-needs-human"
+    slug = "style-advisory"
     curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
     _write_manifest(curriculum_root, level, slug)
     _write_plan(curriculum_root, level, slug)
@@ -1162,19 +838,12 @@ def test_main_marks_needs_human_review_after_style_plateau(tmp_path: Path, monke
         v6_build,
         "_run_style_review_heal_loop",
         lambda *args, **kwargs: v6_build.StyleReviewLoopRunResult(
-            outcome="plateau",
+            outcome="pass",
             rounds=(
                 v6_build.StyleReviewRoundState(
                     round_num=1,
                     passed=False,
                     score=8.4,
-                    review_text="phase: review-style\nverdict: REVISE\n",
-                    blocking_issues=({"type": "META_PEDAGOGICAL_NARRATION"},),
-                ),
-                v6_build.StyleReviewRoundState(
-                    round_num=2,
-                    passed=False,
-                    score=8.5,
                     review_text="phase: review-style\nverdict: REVISE\n",
                     blocking_issues=({"type": "META_PEDAGOGICAL_NARRATION"},),
                 ),
@@ -1186,11 +855,9 @@ def test_main_marks_needs_human_review_after_style_plateau(tmp_path: Path, monke
     result = v6_build.main()
 
     state = json.loads((orch_dir / "state.json").read_text("utf-8"))
-    needs_human_review = yaml.safe_load((orch_dir / "needs-human-review.yaml").read_text("utf-8"))
-    assert result is False
-    assert state["needs_human_review"]["status"] is True
-    assert needs_human_review["style_review_rounds"] == 2
-    assert needs_human_review["style_score_history"] == [8.4, 8.5]
+    assert result is True
+    # Should NOT have needs_human_review because it's advisory pass
+    assert "needs_human_review" not in state
 
 
 def test_main_clears_stale_needs_human_review_after_style_pass(
