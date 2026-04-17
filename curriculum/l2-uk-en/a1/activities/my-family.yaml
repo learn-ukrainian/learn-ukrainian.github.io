@@ -217,21 +217,18 @@ workbook:
     - м
     - а
     answer: мама
-    hint: mother
   - letters:
     - т
     - а
     - т
     - о
     answer: тато
-    hint: father
   - letters:
     - б
     - р
     - а
     - т
     answer: брат
-    hint: brother
   - letters:
     - с
     - і
@@ -239,7 +236,6 @@ workbook:
     - ''''
     - я
     answer: сім'я
-    hint: family
   - letters:
     - т
     - і
@@ -247,7 +243,6 @@ workbook:
     - к
     - а
     answer: тітка
-    hint: aunt
   - letters:
     - д
     - і
@@ -256,7 +251,6 @@ workbook:
     - с
     - ь
     answer: дідусь
-    hint: grandfather
   title: Rearrange the letters to form family vocabulary words.
 - id: odd-one-out-family
   type: odd-one-out

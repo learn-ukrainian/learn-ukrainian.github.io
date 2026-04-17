@@ -322,59 +322,6 @@ workbook:
     correct: false
     explanation: 'You must conjugate the modal verb: «Вони можуть читати».'
   title: Is the sentence grammatically correct?
-- id: anagram-vocab
-  type: anagram
-  instruction: Unscramble the letters to form vocabulary words.
-  items:
-  - letters:
-    - м
-    - у
-    - с
-    - и
-    - т
-    - и
-    answer: мусити
-    hint: to must / have to
-  - letters:
-    - м
-    - о
-    - г
-    - т
-    - и
-    answer: могти
-    hint: can / to be able to
-  - letters:
-    - х
-    - о
-    - т
-    - і
-    - т
-    - и
-    answer: хотіти
-    hint: to want
-  - letters:
-    - к
-    - а
-    - в
-    - а
-    answer: кава
-    hint: coffee
-  - letters:
-    - б
-    - о
-    - р
-    - щ
-    answer: борщ
-    hint: borscht
-  - letters:
-    - ш
-    - к
-    - о
-    - д
-    - а
-    answer: шкода
-    hint: pity, unfortunately
-  title: Unscramble the letters to form vocabulary words.
 - id: count-syllables-vocab
   type: count-syllables
   instruction: How many syllables are in each word?

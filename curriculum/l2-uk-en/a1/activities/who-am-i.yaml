@@ -231,7 +231,6 @@ workbook:
     - н
     - т
     answer: студент
-    hint: male student
   - letters:
     - л
     - і
@@ -239,14 +238,12 @@ workbook:
     - а
     - р
     answer: лікар
-    hint: male doctor
   - letters:
     - к
     - а
     - в
     - а
     answer: кава
-    hint: coffee
   - letters:
     - з
     - в
@@ -254,14 +251,12 @@ workbook:
     - т
     - и
     answer: звати
-    hint: as in 'мене...'
   - letters:
     - д
     - р
     - у
     - г
     answer: друг
-    hint: friend
   - letters:
     - з
     - в
@@ -270,7 +265,6 @@ workbook:
     - к
     - и
     answer: звідки
-    hint: where from
   title: Unscramble the letters to make the correct word
 - id: odd-one-out-gender
   type: odd-one-out
