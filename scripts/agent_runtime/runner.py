@@ -405,6 +405,8 @@ def invoke(
     # os.environ itself — this keeps the parent process clean and prevents
     # leakage to other adapters running concurrently.
     env = {**os.environ, **plan.env_overrides}
+    # Apply unsets after overrides so an adapter can force a clean child
+    # environment for one invocation (unset wins if both mention the key).
     for key in plan.env_unsets:
         env.pop(key, None)
 

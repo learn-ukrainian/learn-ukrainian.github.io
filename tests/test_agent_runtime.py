@@ -1580,6 +1580,21 @@ def test_gemini_adapter_api_mode_preserves_api_key_env(tmp_path):
     assert plan.env_unsets == ()
 
 
+@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "auto"}, clear=True)
+def test_gemini_adapter_auto_mode_preserves_existing_env_behavior(tmp_path):
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="gemini-3.1-pro-preview",
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert plan.env_unsets == ()
+
+
 @patch.dict("os.environ", {"GEMINI_AUTH_MODE": "bogus"}, clear=True)
 def test_resolve_gemini_auth_mode_invalid_value_falls_back_to_auto():
     assert resolve_gemini_auth_mode() == "auto"
