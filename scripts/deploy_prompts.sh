@@ -37,7 +37,11 @@ fi
 # Code's task scheduler — it must never be deleted by the deploy
 # script or in-flight scheduled tasks get orphaned.
 ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees"
-ORPHAN_PATHS_AGENT="wake"
+# wake/  — scheduled-task state written by the Claude Code wake scheduler.
+# cache/ — Monitor API client disk cache (see scripts/ai_agent_bridge/_monitor_cache.py),
+#          stores rules.body/session.body + ETag metadata so cold-start is ~780 B instead of 75 KB.
+#          Runtime-only; NOT source-tracked. rsync --delete must preserve both.
+ORPHAN_PATHS_AGENT="wake cache"
 ORPHAN_PATHS_GEMINI="docs/"
 
 # Build rsync --exclude arguments from a space-separated path list.
