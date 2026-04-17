@@ -376,6 +376,120 @@ async def module_detail(track_id: str, num: int):
     return result
 
 
+@router.get("/module/{track_id}/slug/{slug}")
+async def module_detail_by_slug(
+    track_id: str,
+    slug: str,
+    verbose: bool = Query(
+        False,
+        description="True = full compute_module_detail payload. Default returns a compact view.",
+    ),
+):
+    """Slug-keyed module state (#1313 / Codex-1).
+
+    Same data as ``/api/state/module/{track_id}/{num}`` but keyed by
+    slug (the stable identifier agents actually use) and returning a
+    compact default shape so cold-start / "what's the state of this
+    module right now" calls don't pay for the full dump.
+
+    Pass ``?verbose=true`` to get the original rich payload.
+
+    Compact shape::
+        {
+          "track": "a1", "slug": "...", "num": 3,
+          "phase":            "review",   # current or last-complete phase name
+          "last_successful":  "review",   # last phase whose status was complete
+          "pipeline_version": "v6",
+          "needs_rebuild":    false,
+          "audit":  {"status": "pass", "word_count": ..., "word_target": ...},
+          "review": {"score": 9.4, "verdict": "PASS"},
+          "final_review": {"exists": true, "verdict": "PASS"} | null,
+          "shippable":        true,
+          "blocking_issues":  [...],
+          "retry_count":      0,
+          "worker":           "gemini"
+        }
+    """
+    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
+    if not level_cfg:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"Track '{track_id}' not found"},
+        )
+
+    plan_slugs = get_plan_slugs(track_id)
+    match = next(((n, s) for n, s in plan_slugs if s == slug), None)
+    if not match:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"Module '{slug}' not found in track '{track_id}'"},
+        )
+    num, _ = match
+
+    full = await asyncio.to_thread(compute_module_detail, track_id, num, level_cfg)
+    if "error" in full:
+        return JSONResponse(status_code=404, content=full)
+
+    if verbose:
+        return full
+
+    # --- compact projection -------------------------------------------
+    phases = full.get("phases") or {}
+    current_phase = None
+    last_successful = None
+    retry_count = 0
+    current_worker = None
+    for name, data in phases.items():
+        if not isinstance(data, dict):
+            continue
+        status = data.get("status")
+        if status == "in_progress":
+            current_phase = name
+        if status == "complete":
+            last_successful = name
+        # attempts / retry_count key varies by pipeline version; surface
+        # whatever the phase payload carries so consumers don't have to.
+        for key in ("retries", "retry_count", "attempts"):
+            val = data.get(key)
+            if isinstance(val, int):
+                retry_count = max(retry_count, val)
+        if status == "in_progress":
+            exec_ = data.get("executor") if isinstance(data.get("executor"), dict) else {}
+            current_worker = exec_.get("agent")
+
+    audit = full.get("audit") or {}
+    review = full.get("review") or {}
+    final_review = full.get("final_review")
+
+    return {
+        "track": track_id,
+        "slug": slug,
+        "num": num,
+        "phase": current_phase or last_successful or "pending",
+        "last_successful": last_successful,
+        "pipeline_version": full.get("pipeline_version"),
+        "needs_rebuild": full.get("needs_rebuild"),
+        "audit": {
+            "status": audit.get("status"),
+            "word_count": audit.get("word_count"),
+            "word_target": audit.get("word_target"),
+        },
+        "review": {
+            "score": review.get("score") if isinstance(review, dict) else None,
+            "verdict": review.get("verdict") if isinstance(review, dict) else None,
+        },
+        "final_review": (
+            {"exists": final_review.get("exists"), "verdict": final_review.get("verdict")}
+            if isinstance(final_review, dict) and final_review.get("exists")
+            else None
+        ),
+        "shippable": bool(full.get("shippable")),
+        "blocking_issues": audit.get("blocking_issues") or [],
+        "retry_count": retry_count,
+        "worker": current_worker,
+    }
+
+
 @router.get("/final-reviews/{track_id}")
 async def final_reviews_track(track_id: str):
     """Phase F results aggregated per track: verdicts, issue counts, common patterns."""
