@@ -163,3 +163,20 @@ class TestSplitSentences:
         assert any("Київській обл." in s for s in result), (
             f"'обл.' must stay attached, got: {result}"
         )
+
+    def test_currency_abbreviation_sentence_final(self):
+        """Numeric-unit `грн.` should allow a real sentence break."""
+        result = split_sentences("Це коштує 500 грн. Уряд відзвітував.")
+        assert len(result) == 2
+        assert result[0] == "Це коштує 500 грн."
+        assert result[1] == "Уряд відзвітував."
+
+    def test_page_count_abbreviation_sentence_final(self):
+        """Bibliography/page-count `с.` after a number should allow a split."""
+        result = split_sentences(
+            "Іванюк С. Нарис з історії. — К. : Наук. думка, 2009. — 508 с. "
+            "Наступна праця виходила пізніше."
+        )
+        assert len(result) == 2
+        assert result[0].endswith("508 с.")
+        assert result[1] == "Наступна праця виходила пізніше."

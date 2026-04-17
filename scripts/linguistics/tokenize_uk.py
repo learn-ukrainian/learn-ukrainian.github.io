@@ -108,6 +108,55 @@ ABBRS = """
 акад.
 """.strip().split()
 
+# Some Ukrainian abbreviations are ambiguous: they can be mid-sentence
+# abbreviations (`у с. Вишневе`, `у 2024 р. відбулися`) or genuine
+# sentence-final unit/page markers (`500 грн. Уряд`, `508 с. Наступна`).
+# For these, suppressing *every* uppercase-following boundary is too blunt.
+#
+# The rule below allows a split when:
+#   1. the abbreviation is in this context-sensitive set,
+#   2. the previous token is numeric-like (digits or Roman numerals), and
+#   3. the next token starts with an uppercase letter.
+#
+# That preserves:
+#   - `у с. Вишневе`      (prev token = `у`, no split)
+#   - `У 2024 р. ...`     (next token lowercase, no split)
+# while fixing:
+#   - `500 грн. Уряд...`
+#   - `508 с. Наступна...`
+_CONTEXT_SENSITIVE_ABBRS = {
+    "грн.",
+    "коп.",
+    "км.",
+    "р.",
+    "рр.",
+    "с.",
+    "ст.",
+    "тис.",
+}
+
+_NUMERIC_CONTEXT_RE = re.compile(
+    r"^(?:[+-]?[0-9][0-9,.-]*|[IVXLCDM]+|[IVXLCDM]+[–-][IVXLCDM]+)$",
+    re.IGNORECASE,
+)
+
+
+def _is_numeric_context_token(token: str) -> bool:
+    """Return True when *token* looks like a numeric/unit context."""
+    return bool(_NUMERIC_CONTEXT_RE.match(token.strip("()[]{}«»\"'“”‘’")))
+
+
+def _blocks_sentence_break(tok_key: str, prev_tok: str, next_tok: str, tok1: str, tok: str) -> bool:
+    """Return True when an abbreviation should suppress a sentence break."""
+    if tok[-1] != "." or tok1[0] == "(" or tok_key not in ABBRS:
+        return False
+    return not (
+        tok_key in _CONTEXT_SENSITIVE_ABBRS
+        and next_tok
+        and next_tok[0].isupper()
+        and _is_numeric_context_token(prev_tok)
+    )
+
 
 def tokenize_words(string: str) -> list[str]:
     """Tokenize input text to words.
@@ -130,7 +179,9 @@ def tokenize_sents(string: str) -> list[str]:
       ``вул. Б. Хмельницького`` stays attached — single-letter initials
       protection), OR
     - the character before the terminator is ``(``, OR
-    - the terminator is ``.`` and the token is in :data:`ABBRS`.
+    - the terminator is ``.`` and the token is in :data:`ABBRS`,
+      except for context-sensitive numeric/unit abbreviations like
+      ``грн.`` / ``с.`` / ``ст.`` when they are sentence-final.
     """
     string = str(string)
     spans = list(re.finditer(r"[^\s]+", string))
@@ -155,6 +206,7 @@ def tokenize_sents(string: str) -> list[str]:
             if term_match is None:  # Unreachable given tok[-1] check.
                 continue
             tok1 = tok[term_match.start() - 1]
+            prev_tok = string[spans[i - 1].start():spans[i - 1].end()] if i > 0 else ""
             next_tok = string[spans[i + 1].start():spans[i + 1].end()]
             # Case-insensitive ABBRS check: sentence-initial tokens like
             # 'Проф.' or 'Напр.' should match the lowercase ABBRS entries.
@@ -163,7 +215,7 @@ def tokenize_sents(string: str) -> list[str]:
             if (
                 next_tok[0].isupper()
                 and not tok1.isupper()
-                and not (tok[-1] != "." or tok1[0] == "(" or tok_key in ABBRS)
+                and not _blocks_sentence_break(tok_key, prev_tok, next_tok, tok1, tok)
             ):
                 result.append(string[offset:span.end()])
                 offset = spans[i + 1].start()
