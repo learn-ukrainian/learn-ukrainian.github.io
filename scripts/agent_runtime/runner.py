@@ -29,6 +29,7 @@ from __future__ import annotations
 import contextlib
 import importlib
 import os
+import signal
 import subprocess
 import time
 from datetime import UTC, datetime
@@ -60,6 +61,68 @@ _POLL_INTERVAL_S = 1.0
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
 _ADAPTER_CACHE: dict[str, AgentAdapter] = {}
+
+
+def _kill_process_tree(proc: subprocess.Popen) -> None:
+    """Kill a subprocess and all its descendants via process-group SIGKILL.
+
+    When the subprocess was started with ``start_new_session=True`` (which
+    calls ``os.setsid()``, putting the child in its own process group), this
+    sends SIGKILL to the entire group — ensuring no orphaned children survive.
+
+    If the process wasn't started with ``start_new_session=True`` (shouldn't
+    happen, but defensive), falls back to ``proc.kill()`` on the PID alone.
+
+    Issue: #1286 — Codex ``exec`` spawns child processes (sandboxed workloads,
+    runtime daemons) that survive when only the parent PID is killed, leading
+    to accumulating stale reviewer subprocesses.
+    """
+    try:
+        pgid = os.getpgid(proc.pid)
+    except (OSError, ProcessLookupError):
+        # Process already gone.
+        return
+
+    if pgid == proc.pid:
+        # Process IS a process-group leader (started with start_new_session).
+        # Kill the entire group.
+        with contextlib.suppress(OSError, ProcessLookupError):
+            os.killpg(pgid, signal.SIGKILL)
+    else:
+        # Fallback: not a group leader, just kill the PID.
+        with contextlib.suppress(OSError, ProcessLookupError):
+            proc.kill()
+
+    # Reap the direct child to prevent zombies. Children in the group are
+    # re-parented to init/PID 1 on parent exit; os.killpg already sent them
+    # SIGKILL, so init will reap them.
+    try:
+        proc.wait(timeout=10.0)
+    except subprocess.TimeoutExpired:
+        # Last resort — non-blocking waitpid to avoid blocking forever.
+        with contextlib.suppress(ChildProcessError, OSError):
+            os.waitpid(proc.pid, os.WNOHANG)
+
+
+def _is_temp_file(path: Path) -> bool:
+    """Check if a file is in a system temp directory (safe to auto-delete).
+
+    The old guard ``str(path).startswith("/tmp/")`` is Linux-only. On macOS,
+    ``tempfile.mkdtemp()`` returns ``/var/folders/.../T/...``, so the guard
+    never matched and temp files accumulated.  Issue: #1286.
+    """
+    import tempfile as _tempfile
+
+    s = str(path)
+    # Fast path: covers Linux and explicit /tmp/ usage.
+    if s.startswith("/tmp/") or s.startswith("/private/tmp/"):
+        return True
+    # Cross-platform: check if the file is under the system temp dir.
+    try:
+        tmpdir = _tempfile.gettempdir()
+        return s.startswith(tmpdir + "/")
+    except Exception:
+        return False
 
 
 def _load_adapter(name: str) -> AgentAdapter:
@@ -367,6 +430,13 @@ def invoke(
                 # buffering the streamer sees nothing for the whole run and
                 # the watchdog falsely stalls. (Fixed 2026-04-10.)
                 bufsize=1,
+                # start_new_session=True calls os.setsid(), placing the child
+                # in its own process group. This lets _kill_process_tree() send
+                # SIGKILL to the entire group, killing all descendants (e.g.
+                # Codex's sandboxed runtime workers). Without this, only the
+                # direct child is killed and its children become orphans that
+                # accumulate as stale processes. Issue: #1286.
+                start_new_session=True,
             )
         except (FileNotFoundError, PermissionError, OSError) as exc:
             # Popen failed at spawn time — most commonly because the
@@ -450,9 +520,7 @@ def invoke(
                             kill_reason = None
                             break
                         kill_reason = "early_reap"
-                        proc.kill()
-                        with contextlib.suppress(subprocess.TimeoutExpired):
-                            proc.wait(timeout=5.0)
+                        _kill_process_tree(proc)
                         break
                 except Exception:
                     # An adapter bug in check_early_reap must never
@@ -471,9 +539,7 @@ def invoke(
                 if returncode is not None:
                     kill_reason = None
                     break
-                proc.kill()
-                with contextlib.suppress(subprocess.TimeoutExpired):
-                    proc.wait(timeout=5.0)
+                _kill_process_tree(proc)
                 break
             time.sleep(_POLL_INTERVAL_S)
 
@@ -631,10 +697,10 @@ def invoke(
         # Cleanup ordering matters (Gemini 2026-04-10 review finding):
         #
         # 1. If proc is still alive (e.g. a KeyboardInterrupt or unexpected
-        #    exception fired mid-poll), we MUST kill it before closing
-        #    stdout. Closing stdout on an alive proc gives the child
-        #    SIGPIPE on its next write, and more importantly leaks an
-        #    orphan if we never explicitly kill.
+        #    exception fired mid-poll), we MUST kill it AND its entire
+        #    process group before closing stdout. Closing stdout on an alive
+        #    proc gives the child SIGPIPE on its next write, and more
+        #    importantly leaks an orphan if we never explicitly kill.
         #
         # 2. Only after proc has exited do we call stop_watchdog(proc=proc),
         #    which closes proc.stdout to unblock the streamer thread.
@@ -642,22 +708,49 @@ def invoke(
         # proc may be None if Popen itself raised — skip the kill.
         if proc is not None and proc.poll() is None:
             with contextlib.suppress(Exception):
-                proc.kill()
-            with contextlib.suppress(subprocess.TimeoutExpired):
-                proc.wait(timeout=5.0)
+                _kill_process_tree(proc)
 
         if watchdog_state is not None:
             stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
-        # Clean up the output file if the adapter created one and parse
-        # succeeded — callers get the content in Result.response, no need
-        # to keep the tempfile. On error, leave it for debugging.
+        # Clean up the output file.
+        #
+        # Old policy: only delete on returncode==0, leave on error "for
+        # debugging". In practice this accumulated hundreds of empty 0-byte
+        # temp files from killed Codex processes (returncode=-9 on early
+        # reap or hard timeout). An empty file has zero debugging value.
+        #
+        # New policy (Issue #1286): delete the output file whenever it
+        # exists in a temp directory AND either (a) the response was
+        # successfully parsed (content is in Result.response) or (b) the
+        # file is empty. Non-empty files from genuinely failed calls are
+        # still preserved.
         if (
             plan is not None  # type: ignore[possibly-undefined]
             and plan.output_file is not None
-            and proc is not None
-            and proc.returncode == 0
             and plan.output_file.exists()
-            and str(plan.output_file).startswith("/tmp/")
+            and _is_temp_file(plan.output_file)
         ):
-            with contextlib.suppress(OSError):
-                plan.output_file.unlink()
+            should_delete = False
+            try:
+                file_size = plan.output_file.stat().st_size
+            except OSError:
+                file_size = -1
+
+            if file_size == 0:
+                # Empty file — no debugging value.
+                should_delete = True
+            elif proc is not None and proc.returncode == 0:
+                # Normal exit, content is in Result.response.
+                should_delete = True
+            elif (
+                proc is not None
+                and proc.returncode is not None
+                and proc.returncode < 0
+                # Killed process — output file is usually empty or
+                # redundant (content recovered from rollout).
+            ):
+                should_delete = True
+
+            if should_delete:
+                with contextlib.suppress(OSError):
+                    plan.output_file.unlink()
