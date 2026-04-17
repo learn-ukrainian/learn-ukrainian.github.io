@@ -8,7 +8,7 @@ Use the Monitor API instead of reading files. One-shot bootstrap:
 
 ```python
 # Python one-liner equivalent — see scripts/monitor_client.py
-from monitor_client import MonitorClient
+from ai_agent_bridge.monitor_client import MonitorClient
 boot = MonitorClient().bootstrap()
 # boot["rules"].body    — condensed rules markdown
 # boot["session"].body  — condensed session summary

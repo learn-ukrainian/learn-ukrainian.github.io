@@ -14,14 +14,14 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-# Ensure ``scripts/`` is on the path so ``monitor_client`` imports
-# ``ai_agent_bridge._monitor_cache`` with the same namespace the
-# real runtime uses.
+# Ensure ``scripts/`` is on sys.path for direct ``ai_agent_bridge``
+# imports (conftest.py does this for the suite; we add it here too
+# so running this file standalone still works).
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
-import monitor_client
 from ai_agent_bridge import _monitor_cache as cache
+from ai_agent_bridge import monitor_client
 
 import scripts.api.main as api_main
 import scripts.api.rules_router as rules_router

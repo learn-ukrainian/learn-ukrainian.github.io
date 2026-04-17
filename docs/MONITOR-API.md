@@ -639,7 +639,7 @@ curl -s "http://localhost:8765/api/comms/inbox?agent=claude"
 Python agents use the SDK (caching + ETag round-trip built in):
 
 ```python
-from monitor_client import MonitorClient
+from ai_agent_bridge.monitor_client import MonitorClient
 boot = MonitorClient().bootstrap()
 # boot["rules"].body   — ready to drop into a system prompt
 # boot["session"].body — current-task summary
@@ -1246,13 +1246,12 @@ cache.put("rules", body, body_hash="...", url="/api/rules?format=markdown")
 For most callers, **use the SDK**: `scripts/monitor_client.py`.
 
 ```python
-# If you're running a script from the repo root, add scripts/ to
-# sys.path (or run via ``python -m`` with PYTHONPATH set). Tests
-# do this automatically via ``tests/conftest.py``; scripts should
-# do it at the top:
+# Requires ``scripts/`` on sys.path. Tests + any caller launched via
+# ``.venv/bin/python`` from the repo root already have it (see
+# tests/conftest.py). Standalone scripts should add it at the top:
 #     import sys; from pathlib import Path
 #     sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
-from monitor_client import MonitorClient
+from ai_agent_bridge.monitor_client import MonitorClient
 
 client = MonitorClient()  # defaults to http://localhost:8765
 boot = client.bootstrap()

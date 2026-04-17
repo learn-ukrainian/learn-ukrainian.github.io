@@ -29,7 +29,7 @@ import urllib.request
 from dataclasses import dataclass
 from typing import Any
 
-from ai_agent_bridge import _monitor_cache as cache
+from . import _monitor_cache as cache
 
 DEFAULT_BASE_URL = "http://localhost:8765"
 DEFAULT_TIMEOUT_S = 3.0

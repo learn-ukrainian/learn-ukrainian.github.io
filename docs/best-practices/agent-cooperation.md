@@ -152,7 +152,7 @@ Agents running Python should use the SDK instead — one call, caching
 built in:
 
 ```python
-from monitor_client import MonitorClient
+from ai_agent_bridge.monitor_client import MonitorClient
 boot = MonitorClient().bootstrap()
 rules_md = boot["rules"].body
 session_md = boot["session"].body

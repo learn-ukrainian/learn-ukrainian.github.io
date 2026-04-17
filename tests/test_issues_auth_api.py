@@ -185,21 +185,26 @@ def test_runtime_auth_invalid_mode_defaults_to_auto(monkeypatch, tmp_path):
 
 
 def test_runtime_auth_never_echoes_raw_env_value(monkeypatch, tmp_path):
-    """Regression for Codex BLOCKER on #1312 pre-merge: a secret
-    accidentally pasted into GEMINI_AUTH_MODE must NEVER appear in
-    the response body.
+    """Regression for Codex BLOCKER on #1312 pre-merge: if a secret
+    is accidentally pasted into GEMINI_AUTH_MODE (typo in a shell
+    profile, for example), it must NEVER appear in the response.
+
+    The fixture value below is a high-entropy marker string, NOT a
+    real key — it exists only so we can assert its absence in the
+    response text. Kept alphanumeric and without the common
+    ``sk-``/``api-`` prefixes so secret scanners don't flag it.
     """
-    accidentally_pasted_secret = "sk-ultra-secret-0123456789abcdef"
-    monkeypatch.setenv("GEMINI_AUTH_MODE", accidentally_pasted_secret)
+    high_entropy_marker = "MARKERzzz9h7k3Q2xN5pW8vR4tY6uIaSdFgHjKlMn"
+    monkeypatch.setenv("GEMINI_AUTH_MODE", high_entropy_marker)
     fake_home = tmp_path
     monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: fake_home))
 
     resp = client.get("/api/runtime/auth")
     assert resp.status_code == 200
-    assert accidentally_pasted_secret not in resp.text, (
+    assert high_entropy_marker not in resp.text, (
         "runtime/auth must never echo the raw GEMINI_AUTH_MODE value"
     )
     body = resp.json()
     # The invalid flag + length still give operators enough to debug.
     assert body["gemini"]["auth_mode_raw_valid"] is False
-    assert body["gemini"]["auth_mode_raw_length"] == len(accidentally_pasted_secret)
+    assert body["gemini"]["auth_mode_raw_length"] == len(high_entropy_marker)
