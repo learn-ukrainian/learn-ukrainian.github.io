@@ -279,3 +279,88 @@ def test_deployments_returns_parsed_runs(monkeypatch):
 
     body = client.get("/api/site/deployments?limit=1").json()
     assert body["runs"][0]["conclusion"] == "success"
+
+
+# ---------------------------------------------------------------------
+# Post-review regression tests (GH #1309 final review pass)
+# ---------------------------------------------------------------------
+
+
+def test_site_run_swallows_timeout_expired(monkeypatch):
+    """site_router._run must catch subprocess.TimeoutExpired.
+
+    Regression for the #1309 final-review BLOCKER: both reviewers
+    flagged that a hung `git ls-remote` or `gh run list` would leak
+    ``TimeoutExpired`` into FastAPI and return HTTP 500, violating
+    the file's "every field degrades to an error string" contract.
+    """
+    import subprocess
+
+    def raises_timeout(*_a, **_kw):
+        raise subprocess.TimeoutExpired(cmd=["gh"], timeout=3.0)
+
+    monkeypatch.setattr(site_router.subprocess, "run", raises_timeout)
+
+    proc = site_router._run(["gh", "run", "list"], timeout_s=3.0)
+    assert proc.returncode == 124
+    assert "TimeoutExpired" in proc.stderr
+
+
+def test_site_run_swallows_missing_binary(monkeypatch):
+    """site_router._run must catch FileNotFoundError when gh / git isn't on PATH.
+
+    Regression for #1309 final review: a fresh machine without the
+    gh CLI installed would 500 on /api/site/deployments.
+    """
+    def raises_not_found(*_a, **_kw):
+        raise FileNotFoundError("gh not in PATH")
+
+    monkeypatch.setattr(site_router.subprocess, "run", raises_not_found)
+
+    proc = site_router._run(["gh", "run", "list"], timeout_s=3.0)
+    assert proc.returncode == 127
+    assert "FileNotFoundError" in proc.stderr
+
+
+def test_site_deployments_200_when_gh_times_out(monkeypatch):
+    """End-to-end: /api/site/deployments must stay 200 on timeout."""
+    import subprocess
+
+    def raises_timeout(*_a, **_kw):
+        raise subprocess.TimeoutExpired(cmd=["gh"], timeout=5.0)
+
+    monkeypatch.setattr(site_router.subprocess, "run", raises_timeout)
+
+    resp = client.get("/api/site/deployments")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["runs"] == []
+    assert "TimeoutExpired" in body["error"]
+
+
+def test_module_artifact_404_on_unknown_slug(tmp_path, monkeypatch):
+    """Unknown slug on a valid track must 404, not 200-with-all-gates-false.
+
+    Reviewer CONCERN Codex-1 / #1309: typo detection was impossible
+    because an unknown module looked identical to a known-but-
+    unshippable one.
+    """
+    _set_env(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        artifacts_router, "find_content_file", lambda *_a, **_kw: None,
+    )
+    resp = client.get("/api/artifacts/a1/does-not-exist")
+    assert resp.status_code == 404
+    assert "unknown module" in resp.json()["error"]
+
+
+def test_ship_ready_404_on_unknown_track(monkeypatch):
+    """Unknown track on ship-ready must 404, mirroring /{track}/{slug}.
+
+    Reviewer CONCERN Codex-2 / #1309: previously silently returned
+    an empty scan.
+    """
+    fake_levels = [{"id": "a1", "path": "l2-uk-en/a1"}]
+    monkeypatch.setattr(artifacts_router, "LEVELS", fake_levels)
+    resp = client.get("/api/artifacts/ship-ready?track=does-not-exist")
+    assert resp.status_code == 404

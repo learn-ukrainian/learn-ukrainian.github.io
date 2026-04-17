@@ -1246,6 +1246,12 @@ cache.put("rules", body, body_hash="...", url="/api/rules?format=markdown")
 For most callers, **use the SDK**: `scripts/monitor_client.py`.
 
 ```python
+# If you're running a script from the repo root, add scripts/ to
+# sys.path (or run via ``python -m`` with PYTHONPATH set). Tests
+# do this automatically via ``tests/conftest.py``; scripts should
+# do it at the top:
+#     import sys; from pathlib import Path
+#     sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from monitor_client import MonitorClient
 
 client = MonitorClient()  # defaults to http://localhost:8765

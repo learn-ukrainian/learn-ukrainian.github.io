@@ -90,6 +90,16 @@ def _final_review_approved(final_review: dict | None) -> bool:
 
 
 def _word_target_met(audit: dict, word_target: int) -> bool:
+    """True if the module meets its required word count.
+
+    Explicitly returns ``False`` when ``word_target == 0`` — per
+    project rule "word targets are MINIMUMS" (see
+    ``claude_extensions/rules/non-negotiable-rules.md``), a module
+    with no resolvable target is a plan bug, not a pass. Shipping
+    it would hide that the plan is incomplete. Reviewer CONCERN
+    Gemini-B / #1309: this is intentional; the plan-review step
+    is where a missing ``word_target`` gets caught, not here.
+    """
     wc = int(audit.get("word_count") or 0)
     return bool(word_target) and wc >= word_target
 
@@ -133,6 +143,14 @@ def _compute_artifact_snapshot(track: str, slug: str) -> dict[str, Any]:
     track_dir: Path = CURRICULUM_ROOT / cfg["path"]
     content_path = find_content_file(track_dir, slug)
     plan_path = PLANS_ROOT / track / f"{slug}.yaml"
+
+    # If neither the content file nor the plan exists, the slug is
+    # unknown on this track. Return an error sentinel so the HTTP
+    # wrapper can 404 — otherwise a typo looks like "all gates
+    # false" which is indistinguishable from a known module that's
+    # legitimately unshippable (reviewer CONCERN Codex-1 / #1309).
+    if not (content_path and content_path.is_file()) and not plan_path.is_file():
+        return {"error": f"unknown module: {track}/{slug}"}
 
     audit = get_audit_status(track_dir, slug)
     review = _get_review_score(track_dir, slug)
@@ -209,7 +227,7 @@ def _list_ship_ready(track_filter: str | None) -> dict[str, Any]:
         if track_filter and cfg["id"] != track_filter:
             continue
         tracks_scanned.append(cfg["id"])
-        for _num, slug in get_plan_slugs(cfg["id"]):
+        for _, slug in get_plan_slugs(cfg["id"]):
             inspected += 1
             snap = _compute_artifact_snapshot(cfg["id"], slug)
             if snap.get("ship_ready"):
@@ -236,5 +254,15 @@ async def ship_ready(
         description="Narrow the scan to one track id (e.g. 'a1'). Omit to scan all.",
     ),
 ):
-    """Modules that pass EVERY artifact gate — safe to deploy."""
+    """Modules that pass EVERY artifact gate — safe to deploy.
+
+    Unknown ``track`` → 404 (consistent with
+    ``/api/artifacts/{track}/{slug}``, which also 404s on unknown
+    tracks — reviewer CONCERN Codex-2 / #1309).
+    """
+    if track is not None and _level_cfg(track) is None:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"unknown track: {track}"},
+        )
     return await asyncio.to_thread(_list_ship_ready, track)

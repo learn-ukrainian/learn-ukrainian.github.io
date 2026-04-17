@@ -80,14 +80,51 @@ def _head(url: str, timeout_s: float = 2.0) -> dict[str, Any]:
 
 
 def _run(cmd: list[str], timeout_s: float = 3.0) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        cmd,
-        cwd=PROJECT_ROOT,
-        capture_output=True,
-        text=True,
-        timeout=timeout_s,
-        check=False,
-    )
+    """Run a subprocess with a bounded timeout. Never raises.
+
+    The file contract says "every field degrades to an error string,
+    not a 500". ``subprocess.run`` can raise two unrelated exceptions
+    that would otherwise break that contract:
+
+    - ``subprocess.TimeoutExpired`` when the command wall-clocks past
+      ``timeout_s`` (common with a hung ``git ls-remote`` to an
+      unreachable origin or a wedged ``gh run list``).
+    - ``FileNotFoundError`` when the binary isn't on ``PATH`` — e.g.
+      ``gh`` on a machine where it hasn't been installed.
+
+    We catch both (and any other ``OSError``) and return a
+    ``CompletedProcess`` with a non-zero ``returncode`` and a
+    descriptive ``stderr``. Downstream collectors already branch on
+    ``returncode != 0`` to surface the error in their own field, so
+    this degrades naturally.
+
+    Both Codex and Gemini flagged this as the single BLOCKER in the
+    final pre-PR review (#1309) — fixing it here means the three
+    site-health helpers all inherit the safety net for free.
+    """
+    try:
+        return subprocess.run(
+            cmd,
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=timeout_s,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return subprocess.CompletedProcess(
+            args=cmd,
+            returncode=124,  # conventional shell exit for timeout
+            stdout="",
+            stderr=f"TimeoutExpired after {exc.timeout}s",
+        )
+    except (FileNotFoundError, PermissionError, OSError) as exc:
+        return subprocess.CompletedProcess(
+            args=cmd,
+            returncode=127,  # conventional "command not found"
+            stdout="",
+            stderr=f"{type(exc).__name__}: {exc}",
+        )
 
 
 # ---------------------------------------------------------------------

@@ -199,3 +199,68 @@ def test_comms_live_activity_carries_deprecation_header():
     # response so clients see it either way.
     assert resp.headers.get("X-Deprecated") == "true"
     assert resp.headers.get("X-Deprecated-Use") == "/api/state/build-status"
+
+
+# ---------------------------------------------------------------------
+# Post-review regression tests (GH #1309 final review pass)
+# ---------------------------------------------------------------------
+
+
+def test_manifest_hash_matches_rules_etag_and_header(stub_rules):
+    """Codex final-review coverage gap: assert the three hashes match.
+
+    /api/state/manifest's ``rules.hash`` must equal the ETag on
+    /api/rules AND the X-Rules-Hash header. They all derive from the
+    same sha256 by design, but tests never asserted it — which means
+    the contract could silently drift.
+    """
+    manifest = client.get("/api/state/manifest").json()
+    manifest_hash = manifest["rules"]["hash"]
+    assert manifest_hash, "manifest.rules.hash must be set"
+
+    resp = client.get("/api/rules")
+    etag = resp.headers["etag"].strip('"')
+    x_hash = resp.headers["x-rules-hash"]
+
+    assert etag == manifest_hash == x_hash
+
+
+def test_manifest_hash_matches_session_etag_and_header(stub_session):
+    manifest = client.get("/api/state/manifest").json()
+    manifest_hash = manifest["session"]["hash"]
+    assert manifest_hash
+
+    resp = client.get("/api/session/current")
+    etag = resp.headers["etag"].strip('"')
+    x_hash = resp.headers["x-session-hash"]
+
+    assert etag == manifest_hash == x_hash
+
+
+def test_sdk_survives_session_404(monkeypatch, tmp_path):
+    """bootstrap() must not crash when current.md is missing.
+
+    Reviewer CONCERN Gemini-A / #1309: ``urllib.urlopen`` raises
+    ``HTTPError`` on any non-2xx response. A fresh checkout without
+    ``docs/session-state/current.md`` 404s on /api/session/current,
+    which previously crashed the SDK at cold-start.
+    """
+    # Point session router at a docs/ tree with NO current.md.
+    empty_docs = tmp_path / "empty-repo"
+    (empty_docs / "docs" / "session-state").mkdir(parents=True)
+    monkeypatch.setattr(session_router, "PROJECT_ROOT", empty_docs)
+
+    monkeypatch.setenv("MONITOR_CACHE_DIR", str(tmp_path / "cache"))
+    cache.invalidate()
+
+    sdk_client = monitor_client.MonitorClient(base_url="http://testserver")
+    monkeypatch.setattr(sdk_client, "_get", _TestClientAdapter(client))
+
+    # Should NOT raise. The session component returns an error sentinel
+    # but the SDK still hands back a ComponentResult.
+    result = sdk_client.session()
+    assert result.source.startswith("error:"), (
+        f"expected error sentinel, got source={result.source!r}"
+    )
+    assert result.body == ""
+    assert result.hash == ""

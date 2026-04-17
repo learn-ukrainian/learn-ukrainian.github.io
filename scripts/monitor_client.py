@@ -66,6 +66,22 @@ class MonitorClient:
     def _get(
         self, path: str, *, headers: dict[str, str] | None = None
     ) -> tuple[int, str, dict[str, str]]:
+        """Low-level GET. Never raises for ordinary HTTP status codes.
+
+        The SDK runs during agent cold-start — an uncaught exception
+        here prevents the agent from booting. We surface ALL HTTP
+        status codes (2xx, 3xx, 4xx, 5xx) as a status + body + headers
+        tuple so the caller can decide whether to degrade gracefully
+        (e.g. fall back to reading a local file when the API has
+        nothing useful to return). Only transport-level failures
+        (socket, DNS, refused connection) still raise — those mean
+        the API server is unreachable, which a caller wants to
+        distinguish from "server up but resource missing".
+
+        Reviewer CONCERN Gemini-A / #1309: previously a 404 from
+        ``/api/session/current`` on a fresh checkout crashed
+        ``bootstrap()`` with an unhandled ``HTTPError``.
+        """
         url = self.base_url + path
         req = urllib.request.Request(url, headers=headers or {})
         try:
@@ -74,14 +90,19 @@ class MonitorClient:
                 resp_headers = {k.lower(): v for k, v in resp.headers.items()}
                 return resp.status, body, resp_headers
         except urllib.error.HTTPError as exc:
-            # 304 Not Modified is the happy ETag path — surface it
-            # with an empty body so the caller can reuse the cache.
-            if exc.code == 304:
-                resp_headers = {
-                    k.lower(): v for k, v in (exc.headers or {}).items()
-                }
-                return 304, "", resp_headers
-            raise
+            # 304 / 404 / 500 all come through here. Surface the
+            # status + body so the caller can make a call.
+            resp_headers = {
+                k.lower(): v for k, v in (exc.headers or {}).items()
+            }
+            body = ""
+            try:
+                raw = exc.read()
+                if raw:
+                    body = raw.decode("utf-8", errors="replace")
+            except Exception:
+                pass
+            return exc.code, body, resp_headers
 
     # -- high-level API --------------------------------------------
 
@@ -150,6 +171,16 @@ class MonitorClient:
             # but if it does, fall through to a fresh GET without
             # If-None-Match so we don't end up in a loop.
             status, body, resp_headers = self._get(url)
+
+        if status >= 400 or not body:
+            # Server reported a failure (404 on fresh checkout where
+            # current.md is missing; 500 if collectors died). Return
+            # an empty component rather than poisoning the cache with
+            # an error payload — the caller can notice via
+            # ``ComponentResult.source == "error"`` and degrade.
+            return ComponentResult(
+                key=key, body="", hash="", source=f"error:{status}"
+            )
 
         etag = (resp_headers.get("etag") or "").strip('"') or expected_hash
         cache.put(key, body, body_hash=etag, url=url)
