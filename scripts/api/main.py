@@ -29,6 +29,7 @@ from . import state_router as state_api
 from . import wiki_router as wiki_api
 from .admin_router import router as admin_router
 from .agent_router import router as agent_router
+from .artifacts_router import router as artifacts_router
 from .blue_router import router as blue_router
 from .build_events_router import router as build_events_router
 from .comms_router import router as comms_router
@@ -51,6 +52,7 @@ from .rag_router import router as rag_router
 from .rules_router import router as rules_router
 from .runtime_router import router as runtime_router
 from .session_router import router as session_router
+from .site_router import router as site_router
 from .state_helpers import cache_get, cache_invalidate, cache_set
 from .state_router import router as state_router
 from .wiki_router import router as wiki_router
@@ -81,6 +83,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 # Mount team routers — each team owns their own file
 app.include_router(admin_router, prefix="/api/admin")
 app.include_router(agent_router, prefix="/api/agent", tags=["agent"])
+app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"])
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
 app.include_router(consultation_router, prefix="/api/consultation")
@@ -95,6 +98,7 @@ app.include_router(rag_router, prefix="/api/rag")
 app.include_router(rules_router, prefix="/api/rules", tags=["rules"])
 app.include_router(runtime_router, prefix="/api/runtime")
 app.include_router(session_router, prefix="/api/session", tags=["session"])
+app.include_router(site_router, prefix="/api/site", tags=["site"])
 app.include_router(state_router, prefix="/api/state")
 app.include_router(wiki_router, prefix="/api/wiki", tags=["wiki"])
 

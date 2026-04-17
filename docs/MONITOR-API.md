@@ -1229,6 +1229,95 @@ or alternate checkouts.
 
 ---
 
+## Content-Delivery-to-Production — `/api/artifacts/*`, `/api/site/*` (#1309)
+
+Two routers with an **explicit boundary**:
+
+- `/api/artifacts/*` answers "are the internal artifacts ready to
+  ship?" — MDX exists, frontmatter valid, word target met, audit
+  passes, final review approved, plan not changed after build.
+- `/api/site/*` answers "is the public site actually up?" —
+  reachability, freshness, recent GH Pages deploys.
+
+Codex flagged in review that mixing these would muddy the contract;
+the split keeps each router's purpose obvious.
+
+### `GET /api/artifacts/{track}/{slug}`
+
+Per-module gate snapshot. Returns `ship_ready` (bool — true iff every
+named gate is green) plus the individual gates so clients can surface
+exactly which check failed.
+
+```json
+{
+  "track": "a1", "slug": "hello-who-are-you",
+  "gates": {
+    "content_exists":    true,
+    "frontmatter_valid": true,
+    "word_target_met":   true,
+    "audit_pass":        true,
+    "final_review_pass": true,
+    "plan_fresh":        true
+  },
+  "ship_ready": true,
+  "legacy_shippable": true,
+  "audit": {"status": "pass", "word_count": 1230, "word_target": 1200, ...},
+  "review": {"score": 9.4, "verdict": "PASS"},
+  "final_review": {"exists": true, "verdict": "PASS", ...}
+}
+```
+
+`legacy_shippable` is the older audit+review combined check (still
+used by existing dashboards). `ship_ready` is the strict new check
+that also covers frontmatter + final review + plan freshness.
+
+### `GET /api/artifacts/ship-ready[?track=a1]`
+
+Aggregate list — walks every plan and returns the modules whose
+every gate is green. Narrow to one track with `?track=`.
+
+```json
+{
+  "tracks_scanned": ["a1", "a2", "b1"],
+  "modules_inspected": 155,
+  "ship_ready_count": 27,
+  "ship_ready": [
+    {"track": "a1", "slug": "hello-who-are-you", "review_score": 9.4,
+     "word_count": 1230, "word_target": 1200}
+  ]
+}
+```
+
+### `GET /api/site/health`
+
+Public-site reachability + freshness. Every field degrades gracefully
+— if the network is down or `gh` isn't available, the response still
+returns 200 with per-field `error` strings rather than failing the
+whole check.
+
+```json
+{
+  "public_url": "https://learn-ukrainian.github.io/",
+  "reachable": true,
+  "canaries": [{"url": ".../", "status": 200, "elapsed_ms": 42}],
+  "last_astro_build": {"built": true, "last_build_at": "...", "age_seconds": 3600},
+  "last_deploy_commit": {"sha": "abc123", "committed_at": "..."},
+  "sitemap": {"exists": true, "age_seconds": 3650}
+}
+```
+
+Override the target URL with `LEARN_UK_SITE_URL=<url>` for preview
+deployments.
+
+### `GET /api/site/deployments[?limit=5]`
+
+Recent `pages-build-deployment` workflow runs via `gh run list`.
+Returns `{runs: [...], error?: "..."}`. An empty `runs` list with
+an `error` string means the CLI call failed (not authenticated, not
+installed, etc.) — check the string and retry, don't retry blindly.
+
+---
+
 ## UI Pages
 
 | Page | URL | Data source |
