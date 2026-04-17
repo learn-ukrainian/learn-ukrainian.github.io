@@ -24,10 +24,11 @@ from __future__ import annotations
 import hashlib
 from typing import Literal
 
-from fastapi import APIRouter, HTTPException, Query
-from fastapi.responses import PlainTextResponse
+from fastapi import APIRouter, HTTPException, Query, Request, Response
+from fastapi.responses import JSONResponse, PlainTextResponse
 
 from .config import PROJECT_ROOT
+from .rules_router import _matches_etag  # shared ETag parser
 
 router = APIRouter(tags=["session"])
 
@@ -106,26 +107,42 @@ def _assemble_session() -> tuple[str, dict, str]:
 
 @router.get("/current")
 def session_current(
+    request: Request,
     format: Literal["markdown", "json"] = Query(
         "markdown",
         description="'markdown' returns text/markdown; 'json' wraps with hash + section map.",
     ),
 ):
-    """Condensed session summary for agent cold-start."""
+    """Condensed session summary for agent cold-start.
+
+    Supports ``If-None-Match: "<hash>"`` — a matching hash responds
+    ``304 Not Modified`` with no body, so an SDK with a valid local
+    cache pays only the TCP round-trip.
+    """
     markdown, sections, digest = _assemble_session()
+    etag = f'"{digest}"'
+
+    if _matches_etag(request.headers.get("If-None-Match"), digest):
+        return Response(
+            status_code=304,
+            headers={"ETag": etag, "X-Session-Hash": digest},
+        )
 
     if format == "json":
-        return {
-            "hash": digest,
-            "bytes": len(markdown.encode("utf-8")),
-            "sections": sections,
-            "markdown": markdown,
-        }
+        return JSONResponse(
+            content={
+                "hash": digest,
+                "bytes": len(markdown.encode("utf-8")),
+                "sections": sections,
+                "markdown": markdown,
+            },
+            headers={"ETag": etag, "X-Session-Hash": digest},
+        )
 
     return PlainTextResponse(
         content=markdown,
         media_type="text/markdown; charset=utf-8",
-        headers={"X-Session-Hash": digest},
+        headers={"ETag": etag, "X-Session-Hash": digest},
     )
 
 

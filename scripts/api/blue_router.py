@@ -12,7 +12,7 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 
 from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
 
@@ -32,13 +32,28 @@ async def health():
     }
 
 
-@router.get("/live-status")
-async def live_status():
+@router.get("/live-status", deprecated=True)
+async def live_status(response: Response):
     """Ground truth: scan filesystem for actual module files per track.
+
+    DEPRECATED (GH #1309): use ``/api/state/build-status`` (all tracks)
+    or ``/api/state/build-status/{track}`` (single track) instead.
+    The state endpoints have a stricter contract, are covered by
+    tests, and carry per-section freshness metadata. This handler
+    remains for backwards compatibility but will be removed.
+
+    Responses carry ``X-Deprecated: true`` and ``X-Deprecated-Use``
+    so clients can log a warning without parsing the JSON body.
 
     Uses #561 status cache (read_status + get_source_paths) for staleness detection.
     This is the real picture — checks what files exist on disk.
     """
+    response.headers["X-Deprecated"] = "true"
+    response.headers["X-Deprecated-Use"] = "/api/state/build-status"
+    response.headers["Warning"] = (
+        '299 - "This endpoint is deprecated; migrate to /api/state/build-status (#1309)"'
+    )
+
     results = {}
     for level_cfg in LEVELS:
         track = level_cfg["id"]

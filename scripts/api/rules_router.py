@@ -25,11 +25,33 @@ from __future__ import annotations
 import hashlib
 from typing import Literal
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Request, Response
 
 from .config import PROJECT_ROOT
 
 router = APIRouter(tags=["rules"])
+
+
+def _matches_etag(if_none_match: str | None, digest: str) -> bool:
+    """True if the client already has the bytes addressed by ``digest``.
+
+    Honours both weak and strong ETags. The manifest exposes the raw
+    hex digest so the client is permitted to send ``"<digest>"`` or
+    ``W/"<digest>"``; both match. A literal ``*`` always matches.
+    """
+    if not if_none_match:
+        return False
+    tokens = [tok.strip() for tok in if_none_match.split(",")]
+    for tok in tokens:
+        if tok == "*":
+            return True
+        # Strip optional W/ prefix then the surrounding quotes.
+        if tok.startswith("W/"):
+            tok = tok[2:]
+        tok = tok.strip('"')
+        if tok == digest:
+            return True
+    return False
 
 # Order matters: critical rules first, then hard-limit non-negotiables,
 # then the mandatory workflow. Changing this order is a user-visible
@@ -89,6 +111,7 @@ def _assemble_rules() -> tuple[str, list[str], str]:
 
 @router.get("")
 def get_rules(
+    request: Request,
     format: Literal["markdown", "json"] = Query(
         "markdown",
         description="'markdown' returns the raw Markdown blob; 'json' wraps it with hash + metadata.",
@@ -101,16 +124,23 @@ def get_rules(
     ``format=json`` returns ``{hash, bytes, sources, markdown}`` so an
     agent SDK can skip the payload entirely when the manifest hash
     matches its last-seen value.
+
+    Supports ``If-None-Match: "<hash>"``. If the hash matches what the
+    endpoint would return, responds ``304 Not Modified`` with an empty
+    body — the client should reuse its cache. This makes the SDK's
+    cache-hit path one small HTTP round-trip with zero payload.
     """
     markdown, sources, digest = _assemble_rules()
+    etag = f'"{digest}"'
+
+    if _matches_etag(request.headers.get("If-None-Match"), digest):
+        return Response(
+            status_code=304,
+            headers={"ETag": etag, "X-Rules-Hash": digest},
+        )
 
     if format == "json":
-        return {
-            "hash": digest,
-            "bytes": len(markdown.encode("utf-8")),
-            "sources": sources,
-            "markdown": markdown,
-        }
+        return _rules_json_response(markdown, sources, digest, etag)
 
     # Raw Markdown path. FastAPI's default str response is
     # application/json, which would JSON-encode the whole blob — wrong
@@ -120,7 +150,21 @@ def get_rules(
     return PlainTextResponse(
         content=markdown,
         media_type="text/markdown; charset=utf-8",
-        headers={"X-Rules-Hash": digest},
+        headers={"ETag": etag, "X-Rules-Hash": digest},
+    )
+
+
+def _rules_json_response(markdown: str, sources, digest: str, etag: str):
+    from fastapi.responses import JSONResponse
+
+    return JSONResponse(
+        content={
+            "hash": digest,
+            "bytes": len(markdown.encode("utf-8")),
+            "sources": sources,
+            "markdown": markdown,
+        },
+        headers={"ETag": etag, "X-Rules-Hash": digest},
     )
 
 

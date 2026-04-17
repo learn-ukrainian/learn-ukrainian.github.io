@@ -23,7 +23,7 @@ import sqlite3
 import time
 from datetime import UTC, datetime
 
-from fastapi import APIRouter, Query, Request
+from fastapi import APIRouter, Query, Request, Response
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -757,15 +757,33 @@ def _scan_recent_completions(minutes: int = 60) -> list[dict]:
     return completions
 
 
-@router.get("/live-activity")
-async def live_activity(minutes: int = Query(15, ge=1, le=120)):
+@router.get("/live-activity", deprecated=True)
+async def live_activity(
+    response: Response,
+    minutes: int = Query(15, ge=1, le=120),
+):
     """What's being built RIGHT NOW — module-level live feed.
+
+    DEPRECATED (GH #1309): use ``/api/state/build-status`` for a
+    typed, tested view of what each track is doing, and consume the
+    ``build_events_router`` stream for live module-level events. This
+    handler remains for backwards compatibility but will be removed.
+
+    Responses carry ``X-Deprecated: true`` and ``X-Deprecated-Use``
+    so clients can log a warning without parsing the JSON body.
 
     Returns:
       - in_progress: modules with recently updated orchestration state
       - recent_completions: research files created in last hour
       - recent_messages: last N broker dispatches
     """
+    response.headers["X-Deprecated"] = "true"
+    response.headers["X-Deprecated-Use"] = "/api/state/build-status"
+    response.headers["Warning"] = (
+        '299 - "This endpoint is deprecated; migrate to /api/state/build-status '
+        '+ /api/build/events (#1309)"'
+    )
+
     import asyncio
 
     acts, completions = await asyncio.gather(

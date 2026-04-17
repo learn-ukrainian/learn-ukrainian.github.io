@@ -1203,29 +1203,72 @@ provenance (channel, from_agent, dispatched_at, attempt_count).
 To actually drain messages, use `ai_agent_bridge` CLI as usual; this
 endpoint is for "do I have work waiting?" checks during cold-start.
 
-### Agent-side cache
+### Agent-side cache + SDK (P3)
 
 `scripts/ai_agent_bridge/_monitor_cache.py` — small, pure-stdlib
-on-disk cache under `.agent/cache/monitor/`. Round-trip:
+on-disk cache under `.agent/cache/monitor/`. Low-level API for
+callers that want fine-grained control:
 
 ```python
 from scripts.ai_agent_bridge import _monitor_cache as cache
 
-manifest = httpx.get("http://localhost:8765/api/state/manifest").json()
-rules = cache.get("rules", expected_hash=manifest["rules"]["hash"])
-if rules is None:
-    body = httpx.get("http://localhost:8765" + manifest["rules"]["url"]).text
-    cache.put(
-        "rules", body,
-        body_hash=manifest["rules"]["hash"],
-        url=manifest["rules"]["url"],
-    )
-    rules = body
-# `rules` is the condensed rule markdown, either cached or fresh.
+body = cache.get("rules", expected_hash="...")
+# ... fetch if None ...
+cache.put("rules", body, body_hash="...", url="/api/rules?format=markdown")
 ```
+
+For most callers, **use the SDK**: `scripts/monitor_client.py`.
+
+```python
+from monitor_client import MonitorClient
+
+client = MonitorClient()  # defaults to http://localhost:8765
+boot = client.bootstrap()
+
+rules_md = boot["rules"].body       # ready to drop into a system prompt
+session_md = boot["session"].body   # current-task summary
+
+# boot[...].source tells you why you have these bytes:
+#   "cache"         — no network call; local hash matched
+#   "not-modified"  — server replied 304, reused cached body
+#   "network"       — first fetch or new ETag, body downloaded
+```
+
+The SDK handles:
+
+- Fetching `/api/state/manifest` once.
+- Checking the local cache against the manifest's content hash.
+- Sending `If-None-Match` on cache-miss so the server can return
+  `304 Not Modified` (empty body, reuse cache).
+- Storing the fresh body + ETag on 200.
+
+### ETag support on cachable endpoints
+
+Both `/api/rules` and `/api/session/current` honour
+`If-None-Match: "<hash>"`. A matching hash returns `304 Not Modified`
+with no body — the SDK skips a multi-KB download in that case.
+Also accepts `W/"<hash>"` (weak ETag) and `*`. The ETag value is the
+same sha256 advertised in the manifest, so the manifest hash IS the
+If-None-Match token.
 
 Override the cache directory with `MONITOR_CACHE_DIR=...` for tests
 or alternate checkouts.
+
+### Deprecated endpoints (P3)
+
+These keep working but carry `X-Deprecated: true` + `X-Deprecated-Use`
++ `Warning: 299` response headers. Migrate to the canonical endpoints
+noted in the header; the deprecated handlers will be removed in a
+future cleanup.
+
+| Deprecated | Replacement |
+|---|---|
+| `GET /api/blue/live-status` | `GET /api/state/build-status` |
+| `GET /api/comms/live-activity` | `GET /api/state/build-status` + `GET /api/build/events` stream |
+
+The deprecated routes still work for existing dashboards and scripts
+that haven't been updated — the contract is "log a warning and
+migrate", not "break suddenly".
 
 ---
 
