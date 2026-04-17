@@ -7677,6 +7677,105 @@ def _run_review_heal_loop(
             _log(f"\n📊 R{rounds[-2].round_num}: {rounds[-2].score}/10 → R{round_index}: {score}/10 ({delta_str})")
 
         decision = _review_loop_decision(rounds, max_rounds=max_rounds)
+
+        # Bug #1316 Bug B — post-mutation confirmation review.
+        #
+        # The loop records the reviewer's ``passed`` / ``score`` from the
+        # review that ran BEFORE fixes / rewrites / word-budget rewrites
+        # were applied. If the loop now wants to plateau (either because of
+        # two small deltas or because we hit the round ceiling), that
+        # decision is based on a stale score that doesn't reflect the
+        # mutations this round. When mutations happened, run one
+        # confirmation review on the now-current content and replace the
+        # last round's state with that fresh read before accepting plateau.
+        #
+        # We do NOT apply fixes from the confirmation review. Its only job
+        # is to confirm whether the current round's mutations already
+        # resolved the reviewer's complaints. If the confirmation review
+        # passes, the plateau becomes a pass; otherwise the plateau still
+        # fires, but at least on honest data.
+        mutated_this_round = (
+            fixes_applied or rewrite_applied or word_budget_rewrite_applied
+        )
+        if decision.outcome == "plateau" and mutated_this_round:
+            _log(
+                f"\n🔁 Running post-mutation confirmation review on R{round_index}'s "
+                f"repaired content before accepting plateau..."
+            )
+            conf_passed, conf_score, conf_review_text = step_review(
+                content_path,
+                level,
+                module_num,
+                slug,
+                writer=writer,
+                reviewer_override=reviewer_override,
+            )
+            # Only accept the confirmation review if its text parses as a
+            # recognizable reviewer response. Specifically it must
+            # contain:
+            #
+            #   1. A FULL 9-dimension scored table. A truncated output
+            #      with 1-8 rows is rejected — partial tables carry no
+            #      meaningful weighted score and could come from a
+            #      mid-stream timeout that happened to emit a dimension
+            #      row before the connection dropped.
+            #   2. An explicit PASS / REVISE / REJECT verdict. Bare
+            #      scores with no verdict keyword are ambiguous; the
+            #      verdict is what the pass gate ultimately checks.
+            #
+            # Anything weaker — verdict-only, partial table, error blob —
+            # would let malformed reviewer output silently overwrite a
+            # stale-but-real round state with score=0.0 junk. That is
+            # exactly the failure mode Bug B is trying to prevent, so
+            # the guard on the way back in has to be at least as strict
+            # as the signal it is correcting.
+            conf_parsed = _parse_review_result(conf_review_text)
+            # Require all nine unique dimension IDs (1..9), not just nine
+            # regex score-row matches. ``raw_scores`` is the first 9 matches
+            # of the row pattern, which can include duplicates — and
+            # Gemini is known to emit the score table twice in some
+            # runs (see the comment at line 1493). ``parsed_scores`` is
+            # deduplicated by dimension number, so counting unique IDs
+            # is the real "full table present" signal.
+            conf_unique_dims = {
+                int(dim.get("dimension", 0))
+                for dim in conf_parsed.parsed_scores
+                if dim.get("dimension")
+            }
+            conf_is_valid = (
+                conf_unique_dims == {1, 2, 3, 4, 5, 6, 7, 8, 9}
+                and conf_parsed.verdict in ("PASS", "REVISE", "REJECT")
+            )
+            if conf_is_valid:
+                # Contract compliance was already checked on the mutated
+                # content above, so reuse ``final_contract_violations``.
+                confirmation_state = ReviewRoundState(
+                    round_num=round_index,
+                    passed=conf_passed,
+                    score=conf_score,
+                    review_text=conf_review_text,
+                    contract_violations=tuple(final_contract_violations),
+                )
+                rounds[-1] = confirmation_state
+                if len(rounds) >= 2:
+                    delta = _score_delta(rounds[-2].score, rounds[-1].score)
+                    delta_str = f"+{delta:.1f}" if delta >= 0 else f"{delta:.1f}"
+                    _log(
+                        f"\n📊 R{rounds[-2].round_num}: {rounds[-2].score}/10 → "
+                        f"R{round_index} (post-fix): {conf_score}/10 ({delta_str})"
+                    )
+                else:
+                    _log(f"\n📊 R{round_index} (post-fix): {conf_score}/10")
+                decision = _review_loop_decision(rounds, max_rounds=max_rounds)
+            else:
+                _log(
+                    "\n⚠️  Confirmation review returned malformed output "
+                    "(missing full 9-dimension table or recognized verdict; "
+                    "could be truncated, duplicate-dim, or error-blob); "
+                    "keeping stale round state and accepting the original "
+                    "plateau decision."
+                )
+
         if decision.outcome == "pass":
             return ReviewLoopRunResult(outcome="pass", rounds=tuple(rounds))
 

@@ -764,6 +764,569 @@ def test_run_review_heal_loop_triggers_word_budget_autoheal(tmp_path: Path, monk
     assert verify_calls["count"] == 1
 
 
+_HEAL_LOOP_DIMENSIONS = (
+    "Plan adherence",
+    "Linguistic accuracy",
+    "Pedagogical quality",
+    "Vocabulary coverage",
+    "Exercise quality",
+    "Engagement & tone",
+    "Structural integrity",
+    "Cultural accuracy",
+    "Dialogue & conversation quality",
+)
+
+
+def _fake_review_text(per_dim_score: int, verdict: str, fixes_body: str = "") -> str:
+    """Build a minimal-but-realistic review markdown body.
+
+    Bug #1316 Bug B confirmation-review validity guard re-parses the text
+    with ``_parse_review_result`` and requires ``raw_scores`` to be
+    non-empty before accepting the confirmation — which means the text
+    must contain a scored dimension table, not just a ``Verdict:`` line.
+    This helper produces such a table so the fake review survives the
+    guard instead of getting rejected as malformed.
+
+    The outer ``(passed, score, text)`` returned by the step_review mock
+    is independently hardcoded by each test; the table here exists only
+    so the guard recognizes the text as a real review.
+    """
+    lines = ["## Scores", "| Dimension | Score | Evidence |", "|-----------|-------|----------|"]
+    for i, dim in enumerate(_HEAL_LOOP_DIMENSIONS, 1):
+        lines.append(f"| {i}. {dim} | {per_dim_score}/10 | ok |")
+    if fixes_body:
+        lines.append(f"\n<fixes>{fixes_body}</fixes>")
+    lines.append(f"\n## Verdict: {verdict}\n")
+    return "\n".join(lines)
+
+
+def _setup_heal_loop_fixture(tmp_path: Path, monkeypatch, slug: str) -> Path:
+    """Shared scaffold for the Bug B (confirmation-review) tests.
+
+    Creates a minimal tmp curriculum tree, stubs the contract/verify/save
+    calls that aren't under test, and returns the content path. Each test
+    is responsible for installing its own ``step_review`` and fix-applier
+    stubs to drive the specific scenario it wants to exercise.
+    """
+    level = "a1"
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    content_path.write_text("## Intro\nStart.\n", "utf-8")
+    packet_path = curriculum_root / level / "research" / f"{slug}-knowledge-packet.md"
+    packet_path.parent.mkdir(parents=True, exist_ok=True)
+    packet_path.write_text("packet", "utf-8")
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: "complete")
+    monkeypatch.setattr(
+        v6_build,
+        "_ensure_contract_artifacts",
+        lambda *args, **kwargs: ({"section_word_budgets": {}}, {}),
+    )
+    monkeypatch.setattr(
+        "audit.checks.contract_compliance.check_contract_compliance",
+        lambda *args, **kwargs: [],
+    )
+    monkeypatch.setattr(
+        v6_build,
+        "_apply_contract_word_budget_rewrites",
+        lambda *args, **kwargs: (False, 0),
+    )
+    monkeypatch.setattr(v6_build, "_save_contract_compliance", lambda *args, **kwargs: None)
+    return content_path
+
+
+def test_review_loop_runs_confirmation_review_when_mutations_happened(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Bug #1316 Bug B — the stale-score plateau case.
+
+    When the loop reaches max_rounds with a pre-fix REVISE score but the
+    round applied fixes/rewrites that actually resolved the reviewer's
+    complaints, a confirmation review on the now-current content should
+    run and convert the plateau into a pass. This is the A1/M01 case.
+    """
+    content_path = _setup_heal_loop_fixture(tmp_path, monkeypatch, slug="conf-pass")
+
+    review_calls: list[str] = []
+    review_rounds = iter(
+        [
+            # R1: reviewer sees un-repaired content, says REVISE at 9.2 with a fix.
+            (False, 9.2, "## Verdict: REVISE\n<fixes>apply me</fixes>\n"),
+            # R2: reviewer still sees stale issue (we simulate a hardcoded REVISE),
+            # but a fix was applied, triggering confirmation review.
+            (False, 9.2, "## Verdict: REVISE\n<fixes>apply me too</fixes>\n"),
+            # Confirmation review on the fixed content: PASS. Must include a
+            # scored dimension table so the validity guard accepts it.
+            (True, 9.6, _fake_review_text(10, "PASS")),
+        ]
+    )
+
+    def fake_step_review(*args, **kwargs):
+        review_calls.append("review")
+        return next(review_rounds)
+
+    monkeypatch.setattr(v6_build, "step_review", fake_step_review)
+    # Simulate a fix applier that actually mutates content in both rounds.
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
+    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
+
+    result = v6_build._run_review_heal_loop(
+        content_path,
+        level="a1",
+        module_num=1,
+        slug="conf-pass",
+        writer="gemini",
+        reviewer_override="codex-tools",
+        max_rounds=2,
+    )
+
+    assert result.outcome == "pass", (
+        "confirmation review with PASS should convert plateau to pass"
+    )
+    # Two rounds + one confirmation review = 3 step_review calls.
+    assert len(review_calls) == 3
+    # The last round should carry the CONFIRMATION score (9.6), not the
+    # stale pre-fix score (9.2).
+    assert result.rounds[-1].score == 9.6
+    assert result.rounds[-1].passed is True
+
+
+def test_review_loop_confirmation_review_keeps_plateau_when_still_failing(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Bug #1316 Bug B — confirmation review cannot false-positive.
+
+    If mutations happened but the post-fix content is still failing review
+    (e.g. the reviewer finds a new or persistent issue), the confirmation
+    review must still plateau. This prevents silent "pass on plateau" of
+    genuinely broken content.
+    """
+    content_path = _setup_heal_loop_fixture(tmp_path, monkeypatch, slug="conf-still-fail")
+
+    review_rounds = iter(
+        [
+            (False, 8.5, "## Verdict: REVISE\n<fixes>1</fixes>\n"),
+            (False, 8.6, "## Verdict: REVISE\n<fixes>2</fixes>\n"),
+            # Confirmation review: still REVISE. Include a scored dimension
+            # table so the validity guard accepts it (otherwise it would be
+            # rejected as malformed and plateau would still fire for the
+            # wrong reason).
+            (False, 8.7, _fake_review_text(8, "REVISE", fixes_body="still broken")),
+        ]
+    )
+    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
+    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
+
+    result = v6_build._run_review_heal_loop(
+        content_path,
+        level="a1",
+        module_num=1,
+        slug="conf-still-fail",
+        writer="gemini",
+        reviewer_override="codex-tools",
+        max_rounds=2,
+    )
+
+    assert result.outcome == "plateau"
+    # Confirmation score lands on the last round — not a false pass.
+    assert result.rounds[-1].score == 8.7
+    assert result.rounds[-1].passed is False
+
+
+def test_review_loop_ignores_malformed_confirmation_review(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Bug #1316 Bug B — Codex re-review defect: a rate-limit error blob or
+    truncated text must NOT overwrite the stale round state. If the
+    confirmation review text has no scored dimension table and no explicit
+    PASS/REVISE/REJECT verdict, preserve the original round state and
+    accept the original plateau decision.
+    """
+    content_path = _setup_heal_loop_fixture(tmp_path, monkeypatch, slug="conf-malformed")
+
+    review_rounds = iter(
+        [
+            (False, 9.0, "## Verdict: REVISE\n<fixes>1</fixes>\n"),
+            (False, 9.1, "## Verdict: REVISE\n<fixes>2</fixes>\n"),
+            # Confirmation review: malformed — no scores table, no verdict.
+            # Looks like a rate-limit error blob or truncated output.
+            (False, 0.0, "Error: rate limit exceeded. Please try again later."),
+        ]
+    )
+    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
+    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
+
+    result = v6_build._run_review_heal_loop(
+        content_path,
+        level="a1",
+        module_num=1,
+        slug="conf-malformed",
+        writer="gemini",
+        reviewer_override="codex-tools",
+        max_rounds=2,
+    )
+
+    # Plateau preserved; stale-but-real R2 score kept, not overwritten by 0.0.
+    assert result.outcome == "plateau"
+    assert result.rounds[-1].score == 9.1, (
+        "malformed confirmation must not replace real R2 score"
+    )
+
+
+def test_review_loop_rejects_verdict_only_confirmation(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Bug #1316 Bug B — Codex re-review-2 defect: a truncated reviewer
+    output that contains only ``## Verdict: PASS`` but no scored
+    dimension table must NOT be accepted by the confirmation-review
+    validity guard. Such text could come from a rate-limit error blob
+    that happens to include the word 'Verdict:', and accepting it would
+    overwrite the stale round state with score=0.0 junk.
+
+    The guard requires ``raw_scores`` to be non-empty.
+    """
+    content_path = _setup_heal_loop_fixture(tmp_path, monkeypatch, slug="conf-verdict-only")
+
+    review_rounds = iter(
+        [
+            (False, 9.1, "## Verdict: REVISE\n<fixes>1</fixes>\n"),
+            (False, 9.2, "## Verdict: REVISE\n<fixes>2</fixes>\n"),
+            # Confirmation review: bare verdict, no score table.
+            # Could be a truncated output or a rate-limit error blob that
+            # happens to include 'Verdict: PASS' in its body.
+            (False, 0.0, "## Verdict: PASS\n"),
+        ]
+    )
+    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
+    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
+
+    result = v6_build._run_review_heal_loop(
+        content_path,
+        level="a1",
+        module_num=1,
+        slug="conf-verdict-only",
+        writer="gemini",
+        reviewer_override="codex-tools",
+        max_rounds=2,
+    )
+
+    # Verdict-only confirmation rejected → original plateau decision stands.
+    assert result.outcome == "plateau"
+    assert result.rounds[-1].score == 9.2, (
+        "verdict-only confirmation must not overwrite real R2 score with 0.0"
+    )
+
+
+def test_review_loop_rejects_truncated_score_table(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Bug #1316 Bug B — Codex re-review-3 defect: a truncated reviewer
+    output with only part of the 9-dimension score table must be
+    rejected. Could come from a mid-stream timeout where the reviewer
+    had emitted e.g. 5 of 9 rows before the connection dropped. Partial
+    tables carry no meaningful weighted score and must not overwrite
+    the stale round state.
+
+    The guard requires ``len(raw_scores) == 9`` AND a recognized
+    verdict.
+    """
+    content_path = _setup_heal_loop_fixture(tmp_path, monkeypatch, slug="conf-truncated")
+
+    # Build a review body with only the first 5 dimensions scored plus
+    # a Verdict line — mimics a mid-stream truncation.
+    partial_dims = list(_HEAL_LOOP_DIMENSIONS[:5])
+    partial_body_lines = [
+        "## Scores",
+        "| Dimension | Score | Evidence |",
+        "|-----------|-------|----------|",
+    ]
+    for i, dim in enumerate(partial_dims, 1):
+        partial_body_lines.append(f"| {i}. {dim} | 10/10 | ok |")
+    partial_body_lines.append("\n## Verdict: PASS\n")
+    partial_body = "\n".join(partial_body_lines)
+
+    review_rounds = iter(
+        [
+            (False, 9.0, "## Verdict: REVISE\n<fixes>1</fixes>\n"),
+            (False, 9.1, "## Verdict: REVISE\n<fixes>2</fixes>\n"),
+            # Confirmation: partial (5/9) score table plus PASS verdict.
+            # Must be REJECTED by the validity guard.
+            (True, 5.5, partial_body),
+        ]
+    )
+    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
+    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
+
+    result = v6_build._run_review_heal_loop(
+        content_path,
+        level="a1",
+        module_num=1,
+        slug="conf-truncated",
+        writer="gemini",
+        reviewer_override="codex-tools",
+        max_rounds=2,
+    )
+
+    # Partial table rejected → plateau preserved, stale score kept.
+    assert result.outcome == "plateau"
+    assert result.rounds[-1].score == 9.1, (
+        "truncated confirmation table must not overwrite real R2 score"
+    )
+
+
+def test_review_loop_rejects_duplicated_dimension_table(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Bug #1316 Bug B — Codex re-review-4: a confirmation review with 9
+    score rows that share duplicate dimension numbers (e.g. reviewer
+    emitted dim 1 nine times) must be rejected. The guard must require
+    all 9 unique dimension IDs, not just 9 regex matches.
+
+    Gemini is known to occasionally emit the score table twice or with
+    broken numbering — the existing score-pattern comment at
+    scripts/build/v6_build.py:1493 acknowledges this. Without the
+    unique-dim check, a malformed 9-match-but-same-dim table would
+    slip through and overwrite the stale round state.
+    """
+    content_path = _setup_heal_loop_fixture(tmp_path, monkeypatch, slug="conf-dup-dim")
+
+    # Build a review body with 9 rows all numbered "1. Plan adherence".
+    # This parses to raw_scores of length 9 (first 9 regex matches) but
+    # parsed_scores dedupes by dim number, giving a unique-dim set of {1}.
+    dup_lines = [
+        "## Scores",
+        "| Dimension | Score | Evidence |",
+        "|-----------|-------|----------|",
+    ]
+    for _ in range(9):
+        dup_lines.append("| 1. Plan adherence | 10/10 | ok |")
+    dup_lines.append("\n## Verdict: PASS\n")
+    dup_body = "\n".join(dup_lines)
+
+    review_rounds = iter(
+        [
+            (False, 9.0, "## Verdict: REVISE\n<fixes>1</fixes>\n"),
+            (False, 9.1, "## Verdict: REVISE\n<fixes>2</fixes>\n"),
+            # Confirmation: 9 rows of dim 1, verdict PASS. Must be REJECTED.
+            (True, 10.0, dup_body),
+        ]
+    )
+    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
+    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
+
+    result = v6_build._run_review_heal_loop(
+        content_path,
+        level="a1",
+        module_num=1,
+        slug="conf-dup-dim",
+        writer="gemini",
+        reviewer_override="codex-tools",
+        max_rounds=2,
+    )
+
+    # Duplicate-dim confirmation rejected → plateau preserved.
+    assert result.outcome == "plateau"
+    assert result.rounds[-1].score == 9.1, (
+        "confirmation with duplicate dim numbers must not overwrite R2"
+    )
+
+
+def test_review_loop_confirmation_triggers_on_two_small_deltas_plateau(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Bug #1316 Bug B — confirmation must also trigger on the
+    ``two_small_deltas`` plateau path, not only on ``max_rounds``.
+
+    When two consecutive rounds improve by less than 0.2, the loop
+    declares plateau with reason ``two_small_deltas``. If mutations
+    happened in that last round, a confirmation review must still run.
+    """
+    content_path = _setup_heal_loop_fixture(tmp_path, monkeypatch, slug="conf-two-small")
+
+    # Three rounds with small deltas: 9.0 -> 9.1 -> 9.2 (both deltas < 0.2)
+    # trigger the two_small_deltas plateau at round 3. Mutations happened,
+    # so confirmation must run and see the post-fix content score of 9.7.
+    review_rounds = iter(
+        [
+            (False, 9.0, "## Verdict: REVISE\n<fixes>1</fixes>\n"),
+            (False, 9.1, "## Verdict: REVISE\n<fixes>2</fixes>\n"),
+            (False, 9.2, "## Verdict: REVISE\n<fixes>3</fixes>\n"),
+            (True, 9.7, _fake_review_text(10, "PASS")),  # confirmation
+        ]
+    )
+    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
+    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
+
+    result = v6_build._run_review_heal_loop(
+        content_path,
+        level="a1",
+        module_num=1,
+        slug="conf-two-small",
+        writer="gemini",
+        reviewer_override="codex-tools",
+        max_rounds=6,  # well above 3 — plateau must come from small deltas.
+    )
+
+    assert result.outcome == "pass"
+    assert result.rounds[-1].score == 9.7
+
+
+def test_review_loop_confirmation_triggers_on_word_budget_rewrite_only(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Bug #1316 Bug B — word_budget_rewrite alone must trigger confirmation.
+
+    The three mutation paths are independent: main fixes, rewrite blocks,
+    and word-budget rewrites. A round where ONLY the word-budget rewrite
+    applied still changes content and still invalidates the pre-fix
+    review score, so confirmation must run.
+    """
+    content_path = _setup_heal_loop_fixture(tmp_path, monkeypatch, slug="conf-word-budget")
+
+    review_rounds = iter(
+        [
+            (False, 9.0, "## Verdict: REVISE\n"),
+            (False, 9.1, "## Verdict: REVISE\n"),
+            (True, 9.5, _fake_review_text(10, "PASS")),  # confirmation
+        ]
+    )
+    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
+    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
+    # Only word-budget rewrite applies a mutation.
+    monkeypatch.setattr(
+        v6_build,
+        "_apply_contract_word_budget_rewrites",
+        lambda *args, **kwargs: (True, 1),
+    )
+
+    result = v6_build._run_review_heal_loop(
+        content_path,
+        level="a1",
+        module_num=1,
+        slug="conf-word-budget",
+        writer="gemini",
+        reviewer_override="codex-tools",
+        max_rounds=2,
+    )
+
+    assert result.outcome == "pass"
+    assert result.rounds[-1].score == 9.5
+
+
+def test_review_loop_confirmation_pass_blocked_by_contract_errors(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Bug #1316 Bug B — confirmation PASS must not override blocking
+    contract ERROR violations.
+
+    The plateau decision uses ``latest.passed and not latest.contract_blocking``
+    to detect a pass. Even if the confirmation review says PASS, an
+    ERROR-severity contract violation on the same content must keep the
+    outcome as plateau.
+    """
+    content_path = _setup_heal_loop_fixture(tmp_path, monkeypatch, slug="conf-contract-err")
+
+    # Contract check returns a blocking ERROR violation (overrides the
+    # default no-op setup fixture).
+    monkeypatch.setattr(
+        "audit.checks.contract_compliance.check_contract_compliance",
+        lambda *args, **kwargs: [
+            {
+                "type": "MISSING_SECTION",
+                "severity": "ERROR",
+                "section": "(whole module)",
+                "message": "Missing required H2 section",
+            }
+        ],
+    )
+
+    review_rounds = iter(
+        [
+            (False, 9.0, "## Verdict: REVISE\n<fixes>1</fixes>\n"),
+            (False, 9.1, "## Verdict: REVISE\n<fixes>2</fixes>\n"),
+            # Confirmation says PASS but contract still has ERROR —
+            # plateau must stand.
+            (True, 9.7, _fake_review_text(10, "PASS")),
+        ]
+    )
+    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
+    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
+
+    result = v6_build._run_review_heal_loop(
+        content_path,
+        level="a1",
+        module_num=1,
+        slug="conf-contract-err",
+        writer="gemini",
+        reviewer_override="codex-tools",
+        max_rounds=2,
+    )
+
+    assert result.outcome == "plateau", (
+        "confirmation PASS must not bypass blocking contract ERROR violations"
+    )
+    # Confirmation score still lands on the round (for observability),
+    # but the contract_blocking flag keeps _review_loop_decision from
+    # choosing the pass branch.
+    assert result.rounds[-1].score == 9.7
+    assert result.rounds[-1].contract_blocking is True
+
+
+def test_review_loop_skips_confirmation_when_no_mutations(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Bug #1316 Bug B — efficiency check.
+
+    If the final round did not apply any fixes/rewrites/word-budget
+    rewrites, the pre-fix score is NOT stale and no confirmation review
+    is needed. This avoids a spurious extra LLM call on genuinely stuck
+    modules where the reviewer keeps complaining without the pipeline
+    making any changes.
+    """
+    content_path = _setup_heal_loop_fixture(tmp_path, monkeypatch, slug="no-mutation")
+
+    review_rounds = iter(
+        [
+            (False, 7.0, "## Verdict: REVISE\n"),
+            (False, 7.0, "## Verdict: REVISE\n"),
+        ]
+    )
+    call_count = {"n": 0}
+
+    def counting_step_review(*args, **kwargs):
+        call_count["n"] += 1
+        return next(review_rounds)
+
+    monkeypatch.setattr(v6_build, "step_review", counting_step_review)
+    # No mutations in any round.
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
+    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
+
+    result = v6_build._run_review_heal_loop(
+        content_path,
+        level="a1",
+        module_num=1,
+        slug="no-mutation",
+        writer="gemini",
+        reviewer_override="codex-tools",
+        max_rounds=2,
+    )
+
+    assert result.outcome == "plateau"
+    # Exactly 2 reviews — no confirmation call because nothing was mutated.
+    assert call_count["n"] == 2
+
+
 def test_dispatch_rewrite_prompt_uses_shorter_gemini_budget(tmp_path: Path, monkeypatch) -> None:
     captured: dict[str, object] = {}
 
