@@ -1,5 +1,28 @@
 # Workflow & Agent Cooperation
 
+## Cold-start: call the Monitor API, don't read files
+
+The Monitor API at `http://localhost:8765` serves consolidated
+cold-start context. Use it instead of reading `GEMINI.md` + rule
+files + session-state handoffs individually.
+
+```bash
+# Tiny index of per-component hashes — decide what to fetch.
+curl -s http://localhost:8765/api/state/manifest
+
+# Fetch only what changed since last session.
+curl -s http://localhost:8765/api/rules?format=markdown        # Core rules
+curl -s http://localhost:8765/api/session/current              # Current task
+curl -s http://localhost:8765/api/orient                       # Fresh project state
+curl -s 'http://localhost:8765/api/comms/inbox?agent=gemini'   # Unread messages
+```
+
+Both `/api/rules` and `/api/session/current` support
+`If-None-Match: "<hash>"` — a matching hash responds `304 Not Modified`
+with no body, so repeat checks cost one TCP round-trip.
+
+Only fall back to direct file reads if the API server is unreachable.
+
 ## Roles
 - **Gemini (Yellow Team)**: The content builder. You research, write content, and create activities. Excellent at advanced immersed Ukrainian, native code/content review, creative ideas, and seminar content.
 - **Claude (Blue Team)**: Architecture, code, infrastructure, and A1 content writing. Cross-agent review of Gemini's content.

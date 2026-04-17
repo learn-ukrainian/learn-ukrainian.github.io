@@ -64,3 +64,43 @@ This is the live reproduction of the review BLOCKER:
 - File reads eliminated by P1 endpoints: rules (3 files → `/api/rules`), session (1 → `/api/session/current`), at least 4 of 8 total.
 
 ---
+
+## post-onboarding — 2026-04-17 (P0+P1+P2+P3 + agent rules updated, #1309)
+
+Measured via in-process FastAPI ``TestClient`` so the numbers reflect
+the shipped code, not whatever happens to be running on localhost.
+
+### Fresh-boot (no local cache yet)
+
+| URL | Status | Bytes | Notes |
+|---|---|---|---|
+| `GET /api/state/manifest` | 200 | 778 | < 2 KB target ✓ |
+| `GET /api/rules?format=markdown` | 200 | 14,305 | 3 rule files merged, ETag set |
+| `GET /api/session/current` | 200 | 7,404 | current.md + 3 recent handoffs, ETag set |
+| **Total API bytes** | | **22,487** | |
+
+### Warm-cache re-entry (rules + session unchanged)
+
+| URL | Status | Bytes | Notes |
+|---|---|---|---|
+| `GET /api/state/manifest` | 200 | 778 | always fetched — this IS the staleness check |
+| `GET /api/rules?format=markdown` + `If-None-Match` | **304** | **0** | client reuses `.agent/cache/monitor/rules.body` |
+| `GET /api/session/current` + `If-None-Match` | **304** | **0** | client reuses `.agent/cache/monitor/session.body` |
+| **Total API bytes** | | **778** | |
+
+### Delta vs. the first-measurement baseline
+
+- **Tool calls**: 9 (1 API + 8 files, pre-P0) → 3 API (manifest + rules + session), no rule/session file reads required.
+- **Payload bytes**: ~75,107 file bytes + 1 hung API call (pre-P0) → 22,487 API bytes fresh / **778 warm-cache**.
+- **Input-token estimate (bytes/4)**: ~18,776 → ~5,620 fresh, ~195 warm-cache.
+- **Reliability**: wedged `/api/orient` (pre-P0) → bounded by per-section hard timeout + failure isolation + `?fresh=true` bypass (P0).
+
+The residual file reads per `MANUAL_FILE_READS` in
+`scripts/measure_cold_start.py` are `CLAUDE.md` (loaded automatically
+by the Claude harness; not a cold-start cost the harness can skip)
+and `docs/WORKSTREAMS.md` (read on demand, not every session).
+Onboarding docs now direct all three agents (Claude, Gemini, Codex)
+to call the API first and only fall back to direct file reads when
+the API server is unreachable.
+
+---

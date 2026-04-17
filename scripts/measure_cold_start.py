@@ -46,27 +46,39 @@ BASELINE_DOC = PROJECT_ROOT / "docs" / "monitor-api" / "cold-start-baseline.md"
 
 # Endpoints a fresh agent should hit to get oriented. This list is the
 # contract — changes to it represent changes to what "cold-start" means.
+#
+# After P1+P3 (GH #1309) the canonical path is manifest + the small
+# per-component endpoints. We measure all of them so the baseline doc
+# reflects the true cold-start byte budget.
 ORIENT_ENDPOINTS: list[str] = [
+    "http://localhost:8765/api/state/manifest",
+    "http://localhost:8765/api/rules?format=markdown",
+    "http://localhost:8765/api/session/current",
     "http://localhost:8765/api/orient",
 ]
 
-# Files an agent currently reads on cold-start that are NOT covered by the
-# API. Each file read is a separate tool call + context cost. Shrinking this
-# list is the real cold-start win — an API endpoint can replace 5+ file
-# reads with one call.
-#
-# Paths use the source of truth where possible. `.claude/rules/*` is deployed
-# from `claude_extensions/rules/*` via `npm run claude:deploy`; the content
-# is identical but the source path is present in every checkout (including
-# fresh worktrees), so we measure there.
+# Files an agent MIGHT read on cold-start but shouldn't have to.
+# After onboarding (#1309), rules + current.md + MONITOR-API.md + the
+# cooperation doc are served by the API; they stay on this list only
+# as a "what-if the API is unreachable" fallback cost. CLAUDE.md and
+# WORKSTREAMS.md are the residual reads still needed — CLAUDE.md is
+# loaded automatically by the Claude harness, and WORKSTREAMS.md is
+# read on demand, not every session.
 MANUAL_FILE_READS: list[str] = [
     "CLAUDE.md",
+    "docs/WORKSTREAMS.md",
+]
+
+# Files that USED to be read on every cold-start but are now served
+# by the API (and therefore only read as a fallback when the API is
+# down). Kept in the JSON so the delta in the baseline doc is
+# visible — the list should trend to zero.
+FALLBACK_FILE_READS: list[str] = [
     "claude_extensions/rules/critical-rules.md",
     "claude_extensions/rules/non-negotiable-rules.md",
     "claude_extensions/rules/workflow.md",
     "docs/best-practices/agent-cooperation.md",
     "docs/session-state/current.md",
-    "docs/WORKSTREAMS.md",
     "docs/MONITOR-API.md",
 ]
 

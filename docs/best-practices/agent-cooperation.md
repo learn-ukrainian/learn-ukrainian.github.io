@@ -128,7 +128,44 @@ mcp__message-broker__send_message(
 
 ## Session Start Checklist
 
-At the start of every session:
+**Canonical path (GH #1309):** call the Monitor API. Do not open
+rule files, session-state handoffs, or CLAUDE.md directly — they
+are what the API serves.
+
+```bash
+# 1. Tiny index of per-component hashes. ~1 KB.
+curl -s http://localhost:8765/api/state/manifest
+
+# 2. Only fetch components whose hash changed since last session.
+curl -s http://localhost:8765/api/rules?format=markdown
+curl -s http://localhost:8765/api/session/current
+
+# 3. Always-fresh: git state, pipeline, runtime, wiki, health, hints.
+curl -s http://localhost:8765/api/orient
+
+# 4. Do I have unread channel deliveries?
+curl -s "http://localhost:8765/api/comms/inbox?agent=claude"
+# (agent=gemini / agent=codex for the other workers)
+```
+
+Agents running Python should use the SDK instead — one call, caching
+built in:
+
+```python
+from monitor_client import MonitorClient
+boot = MonitorClient().bootstrap()
+rules_md = boot["rules"].body
+session_md = boot["session"].body
+# boot[...].source tells you why ("cache" / "not-modified" / "network").
+```
+
+Both `/api/rules` and `/api/session/current` support
+`If-None-Match: "<hash>"` and return `304 Not Modified` when the hash
+matches. The on-disk cache under `.agent/cache/monitor/` persists
+across sessions so repeat cold-starts pay near-zero bytes for the
+rule + session payloads.
+
+Legacy steps that remain useful if the API is unreachable:
 
 1. **Load memory** — what was in progress last session:
    ```python
@@ -142,11 +179,6 @@ At the start of every session:
    ```
 
 3. **Read unread messages** — respond on GitHub if substantive
-
-4. **Check monitoring API** — what's building right now:
-   ```bash
-   curl -s http://localhost:8765/api/batch/active
-   ```
 
 At session end: save progress summary to memory.
 

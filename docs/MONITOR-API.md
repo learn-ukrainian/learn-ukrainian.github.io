@@ -618,27 +618,53 @@ Log: `logs/watchdog.log`.
 
 ## As an Agent: Session Start Checklist
 
-Run these at the start of each session to orient yourself:
+**Canonical path (P1+P3 since #1309).** One manifest call + only the
+components whose hash changed:
 
 ```bash
-# 1. Full project state (one call)
-curl -s http://localhost:8765/api/state/summary | python3 -m json.tool
+# 1. Index of hashes. Tiny.
+curl -s http://localhost:8765/api/state/manifest
 
-# 2. What's building right now
-curl -s http://localhost:8765/api/batch/active
+# 2. Core context. Only fetch if manifest hash differs from local cache.
+curl -s http://localhost:8765/api/rules?format=markdown
+curl -s http://localhost:8765/api/session/current
 
-# 3. What's ready to build next (Phase A done, B not started)
-curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
+# 3. Fresh project state.
+curl -s http://localhost:8765/api/orient
 
-# 4. Critical issues to fix
-curl -s "http://localhost:8765/api/state/issues?severity=critical" | python3 -m json.tool
+# 4. Unread messages for this agent.
+curl -s "http://localhost:8765/api/comms/inbox?agent=claude"
+```
 
-# 5. Check Gemini messages
-curl -s http://localhost:8765/api/dashboard/comms | python3 -c "
-import json,sys; d=json.load(sys.stdin)
-print('Unread:', d['stats']['unread'])
-for m in d['recent_messages'][:5]:
-    print(f\"  [{m['from']} → {m['to']}] {m['content_preview'][:80]}\")"
+Python agents use the SDK (caching + ETag round-trip built in):
+
+```python
+from monitor_client import MonitorClient
+boot = MonitorClient().bootstrap()
+# boot["rules"].body   — ready to drop into a system prompt
+# boot["session"].body — current-task summary
+# boot[...].source     — "cache" | "not-modified" | "network"
+```
+
+Both `/api/rules` and `/api/session/current` honour
+`If-None-Match: "<hash>"` and reply `304 Not Modified` when the hash
+matches — repeat cold-starts with an up-to-date local cache pay
+near-zero bytes for these payloads.
+
+### Deep-dive queries (run as needed, not on every boot)
+
+```bash
+# Ship-ready modules across every track.
+curl -s http://localhost:8765/api/artifacts/ship-ready | python3 -m json.tool
+
+# Public site reachability + freshness.
+curl -s http://localhost:8765/api/site/health | python3 -m json.tool
+
+# What's ready to build next (Phase A done, B not started)
+curl -s http://localhost:8765/api/state/ready-to-build
+
+# Critical issues to fix
+curl -s "http://localhost:8765/api/state/issues?severity=critical"
 ```
 
 ---

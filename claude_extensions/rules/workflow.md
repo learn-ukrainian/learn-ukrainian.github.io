@@ -2,6 +2,41 @@
 
 <critical>
 
+## Cold-start sequence (do this first every session)
+
+Use the Monitor API instead of reading files. One-shot bootstrap:
+
+```python
+# Python one-liner equivalent — see scripts/monitor_client.py
+from monitor_client import MonitorClient
+boot = MonitorClient().bootstrap()
+# boot["rules"].body    — condensed rules markdown
+# boot["session"].body  — condensed session summary
+```
+
+Shell equivalent:
+
+```bash
+curl -s http://localhost:8765/api/state/manifest         # ~1 KB index
+curl -s http://localhost:8765/api/rules?format=markdown  # only if hash changed
+curl -s http://localhost:8765/api/session/current        # only if hash changed
+curl -s http://localhost:8765/api/orient                 # always-fresh, has meta
+curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'  # unread messages
+```
+
+**Do NOT read `CLAUDE.md`, `claude_extensions/rules/*.md`, or
+`docs/session-state/current.md` directly on cold start.** Those are
+the source of truth the endpoints above serve. Reading them separately
+costs 5+ tool calls and ignores the hash-based cache. If an endpoint
+is unreachable (API server down), THEN fall back to files.
+
+After a write that needs to be immediately visible (just-committed
+change, just-filed issue), pass `?fresh=true` to `/api/orient`.
+
+---
+
+## Mandatory task workflow
+
 Every task follows this workflow. No exceptions for non-trivial changes.
 
 1. **Create GH issue** — describe the problem, draft a plan
