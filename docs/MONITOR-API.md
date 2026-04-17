@@ -1393,6 +1393,128 @@ installed, etc.) — check the string and retry, don't retry blindly.
 
 ---
 
+## Codex-Requested Follow-ups (#1313)
+
+After the P0-P3 work shipped, Codex asked for ten deterministic
+scoped views. Nine of those ten landed as follow-up commits on the
+same PR (#10 agent_help was already covered by P1 manifest + rules
++ session). All follow below under their final URLs.
+
+### Range status — `GET /api/state/range/{track}?start=N&end=M`
+
+Compact per-module table for one slice. One call replaces N
+``/api/state/pipeline`` reads plus cross-referencing. Ideal for
+overnight batch runs.
+
+```json
+{
+  "track": "a1", "start": 1, "end": 5, "count": 5,
+  "modules": [
+    {"num": 1, "slug": "hello", "phase": "review", "phase_status": "in_progress",
+     "worker": "claude", "audit": "pass", "review_score": 9.4,
+     "words": 1300, "word_target": 1200, "blocker": null,
+     "pipeline_version": "v6", "needs_rebuild": false}
+  ]
+}
+```
+
+### Worktree registry — `GET /api/worktrees`
+
+Every active git worktree with branch, dirty/clean, change-type
+summary, last commit. All subprocesses bounded at 2 s and wrapped to
+never 500.
+
+```json
+{
+  "count": 2,
+  "worktrees": [
+    {"path": "/.../learn-ukrainian", "branch": "main", "head": "abc1234",
+     "is_primary": true, "dirty": false, "change_types": [],
+     "last_commit": {"sha": "abc1234", "committed_at": "...", "subject": "..."}}
+  ]
+}
+```
+
+### Force-preview — `GET /api/artifacts/{track}/{slug}/force-preview`
+
+Exact list of files `v6_build.py --force {slug}` would delete,
+classified by category. **Never** deletes anything.
+
+```json
+{
+  "track": "a1", "slug": "hello",
+  "count": 12, "total_bytes": 234567,
+  "would_remove": [
+    {"path": "curriculum/l2-uk-en/a1/hello.md", "category": "content",
+     "is_dir": false, "size_bytes": 8432, "reason": "module markdown"}
+  ],
+  "preserved": ["plans/a1/hello.yaml",
+                "curriculum/l2-uk-en/a1/orchestration/hello/index.md",
+                "curriculum/l2-uk-en/a1/orchestration/hello/friction.yaml"]
+}
+```
+
+Categories: `content` / `activities` / `vocabulary` / `review` /
+`audit` / `status` / `research` / `orchestration` / `published`.
+
+### Slug-keyed module state — `GET /api/state/module/{track}/slug/{slug}`
+
+Slug-keyed compact alias of `/api/state/module/{track}/{num}`. Default
+response omits the verbose `phases` dict; pass `?verbose=true` for the
+full payload.
+
+```json
+{
+  "track": "a1", "slug": "hello", "num": 1,
+  "phase": "review", "last_successful": "write",
+  "pipeline_version": "v6", "needs_rebuild": false,
+  "audit": {"status": "pass", "word_count": 1300, "word_target": 1200},
+  "review": {"score": 9.4, "verdict": "PASS"},
+  "final_review": {"exists": true, "verdict": "PASS"},
+  "shippable": true, "blocking_issues": [],
+  "retry_count": 0, "worker": "claude"
+}
+```
+
+### Classified file manifest — `GET /api/artifacts/{track}/{slug}/files`
+
+Four buckets: `source_of_truth`, `generated`, `published`, `stale`.
+An artifact lands in `stale` when its mtime predates the plan YAML —
+source has moved on, rebuild recommended. Complements `force-preview`
+(destructive) with the read-only classification view.
+
+### Review snapshot — `GET /api/artifacts/{track}/{slug}/review-snapshot`
+
+Main review + style review + per-file `empty_findings_flag` (high
+score with zero findings — the reviewer-gaming pattern). Also an
+`any_empty_findings_flag` at the top level for batch filtering.
+
+### Drift check — `GET /api/artifacts/{track}/{slug}/drift`
+
+Cross-checks `state.json`, audit status, final-review verdict, content
+file on disk, published MDX on disk. Reports named `drift` kinds:
+`publish_mdx_missing`, `mdx_without_state`,
+`audit_passes_without_content`, `final_review_without_content`,
+`content_without_audit`, `state_unreadable`. Returns `in_sync: true`
+when everything agrees.
+
+### Issues map — `GET /api/issues/map?limit=50`
+
+Open issues grouped by label category. Extracts `superseded-by: #N`
+and `merged-in: PR #N` references from issue bodies so queue
+management stops being manual. Categories:
+`infrastructure` / `pipeline` / `content` / `wiki` / `agent` /
+`priority:high` / `other`.
+
+### Runtime auth snapshot — `GET /api/runtime/auth`
+
+Per-agent auth mode. For Gemini: `auto` / `subscription` / `api` +
+whether a key is present in env + whether `~/.gemini/oauth_creds.json`
+exists. For Claude / Codex: which env var provides the key (if any).
+**Never echoes the key value itself** — only presence/absence.
+
+---
+
 ## UI Pages
 
 | Page | URL | Data source |

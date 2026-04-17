@@ -48,6 +48,7 @@ from .decisions_router import router as decisions_router
 from .delegate_router import router as delegate_router
 from .gold_router import router as gold_router
 from .images_router import router as images_router
+from .issues_router import router as issues_router
 from .rag_router import router as rag_router
 from .rules_router import router as rules_router
 from .runtime_router import router as runtime_router
@@ -95,6 +96,7 @@ app.include_router(delegate_router, prefix="/api/delegate")
 app.include_router(gold_router, prefix="/api/gold")
 app.include_router(build_events_router, prefix="/api/build/events")
 app.include_router(images_router, prefix="/api/images")
+app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
 app.include_router(rag_router, prefix="/api/rag")
 app.include_router(rules_router, prefix="/api/rules", tags=["rules"])
 app.include_router(runtime_router, prefix="/api/runtime")
