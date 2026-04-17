@@ -1017,9 +1017,60 @@ One-call agent orientation: git, issues, pipeline, runtime, delegate, wiki, heal
   "git": {"branch": "main", "head": "cb5f47d19"},
   "issues": [{"number": 1186, "title": "feat(api): refresh monitor API..."}],
   "runtime": {"agents": ["claude", "gemini", "codex"]},
-  "health": {"api": true, "mcp_rag": false}
+  "health": {"api": true, "mcp_rag": false},
+  "meta": {
+    "git": {"generated_at": "2026-04-11T00:15:00Z", "stale_after_s": 30, "source": "git", "cache": "miss"},
+    "issues": {"generated_at": "2026-04-11T00:14:10Z", "stale_after_s": 120, "source": "gh", "cache": "hit"}
+  }
 }
 ```
+
+#### Per-section caching + freshness metadata (#1309)
+
+Each section is computed by an independent collector with its own TTL
+cache. A repeat call within the TTL window skips the underlying shellout
+(`git`, `gh issue list`) or filesystem scan and returns the cached
+value. Errors are **not** cached — a transient failure retries on the
+next call.
+
+| Section | TTL (s) | Source | Notes |
+|---|---:|---|---|
+| `git` | 30 | `git` | branch, head, ahead_of_origin, recent_commits |
+| `issues` | 120 | `gh` | top 10 open issues; slow API, rare updates |
+| `pipeline` | 60 | `fs` | wraps `/api/state/summary` (also cached 60 s) |
+| `runtime` | 60 | `fs` | agent registry + headroom + recent outcomes |
+| `delegate` | 30 | `fs` | active delegate/codex tasks |
+| `wiki` | 120 | `fs` | per-track wiki compilation coverage |
+| `health` | 15 | `probe` | API/DB/MCP port + file readability |
+| `session_hints` | 60 | `fs` | recent `docs/session-state/*.md` entries |
+
+Every section is mirrored under `response.meta.<section>` with:
+
+- `generated_at` — ISO timestamp of the underlying collector run (useful
+  when `cache: "hit"`: the value may be up to `stale_after_s` old).
+- `stale_after_s` — TTL window, so clients know when to refetch.
+- `source` — origin class (`git` / `gh` / `fs` / `probe`) for quick
+  provenance decisions.
+- `cache` — `"hit"` or `"miss"` on this specific call.
+- `error` — present only when the collector raised or timed out; value
+  is the richer `"TypeName: msg"` form. (The section payload itself
+  keeps the bare `str(exc)` error string for backwards compatibility.)
+
+#### Failure isolation
+
+Each section runs inside `asyncio.wait_for(..., timeout=5 s)`. This
+properly cancels hung **async** coroutines (the `pipeline` collector).
+For **sync** collectors (git, gh, filesystem) the real protection is
+the 2 s `subprocess.run(..., timeout=)` inside `_run_command` — Python
+threads aren't cancellable once running, so `wait_for` on a sync path
+is belt-and-suspenders only. See comment near `ORIENT_SECTION_TTLS`
+in `scripts/api/main.py` for the constraint.
+
+If a section fails or times out, its own payload degrades to a
+fallback (e.g. `git: {"error": "..."}`) while every other section
+still populates. A single wedged collector never takes down the
+whole response — this fixed the incident logged in the first entry
+of `docs/monitor-api/cold-start-baseline.md`.
 
 ---
 
