@@ -268,36 +268,46 @@ def test_snapshot_tracks_highest_passing_score(tmp_path, monkeypatch):
 # ── 5. Monotonic-score invariant ────────────────────────────────────────
 
 
-def test_a1_m1_shape_snapshot_with_nonpass_verdict(tmp_path, monkeypatch):
-    """The actual A1/M1 shape: R2 scores 9.22 but ``passed=False``
-    (verdict != "PASS"). The looser snapshot trigger must still
-    capture it so later-round regressions can be reverted.
+def test_nonpass_high_score_round_does_not_snapshot(tmp_path, monkeypatch):
+    """Codex-review follow-up: a round with score ≥ threshold but
+    ``passed=False`` (verdict REVISE, floor fail, or contract-blocking
+    violation) must NOT be snapshotted.
+
+    Previously the snapshot trigger was loosened to ignore
+    ``round_state.passed``, which let the regression guard restore
+    REVISE content and emit ``outcome="pass"`` downstream — a silent
+    quality regression. The correct fix for the A1/M1 R2 case is the
+    #1321 deterministic override, which promotes ``passed`` to True
+    when all overridden dims clear the threshold. If the override
+    DOESN'T promote (because the REVISE was grounded in a real defect,
+    not a hallucinated count), snapshot-eligibility correctly fails.
     """
-    curriculum_root, content_path = _setup_tree(tmp_path, "a1", "a1m1-shape")
+    curriculum_root, content_path = _setup_tree(tmp_path, "a1", "nonpass-9.2")
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
     _patch_noop_side_effects(monkeypatch)
 
     def fake_fixes(review_text, content_path_, *, level, slug):
         if "fix-into-r2" in review_text:
-            content_path_.write_text(
-                "R2 body — high-scoring but verdict is REVISE", encoding="utf-8",
-            )
+            content_path_.write_text("R2 body", encoding="utf-8")
             return True, 1
         if "fix-into-r3-bad" in review_text:
-            content_path_.write_text(
-                "R3 body — regressed", encoding="utf-8",
-            )
+            content_path_.write_text("R3 body — regressed", encoding="utf-8")
             return True, 1
         return False, 0
 
     monkeypatch.setattr(v6_build, "_apply_review_fixes", fake_fixes)
-    # R1: 8.4 fail, R2: 9.2 score but passed=False, R3: 8.3 regressed
+    # R1: 8.4 fail, R2: 9.2 score but passed=False (real defect, not
+    # hallucinated count), R3: 8.3 regressed. With the tightened
+    # snapshot trigger, R2 is NOT snapshotted → R3 cannot be
+    # "saved-by-revert" and the loop plateaus normally.
     monkeypatch.setattr(
         v6_build, "step_review",
         _scripted_reviews([
             (False, 8.4, "fix-into-r2 review"),
-            (False, 9.2, "fix-into-r3-bad review"),  # score OK, passed=False
+            (False, 9.2, "fix-into-r3-bad review"),
             (False, 8.3, "r3 review"),
+            # Hit plateau at round 4 once two sub-0.2 deltas accumulate.
+            (False, 8.3, "r4 plateau"),
         ]),
     )
 
@@ -305,19 +315,65 @@ def test_a1_m1_shape_snapshot_with_nonpass_verdict(tmp_path, monkeypatch):
         content_path,
         level="a1",
         module_num=1,
-        slug="a1m1-shape",
+        slug="nonpass-9.2",
         writer="gemini",
         reviewer_override=None,
         max_rounds=6,
     )
 
-    # The regression guard should fire at R3, restore the R2 snapshot,
-    # and exit as pass.
+    # No snapshot → no revert → honest plateau. Caller writes
+    # needs-human-review.yaml downstream.
+    assert result.outcome == "plateau"
+    orch = curriculum_root / "a1" / "orchestration" / "nonpass-9.2"
+    assert not (orch / "review-snapshot-pass.md").is_file()
+
+
+def test_restore_only_fires_when_snapshot_was_genuine_pass(tmp_path, monkeypatch):
+    """End-to-end contract: ``outcome == "pass"`` always implies the
+    final round of ``result.rounds`` had ``passed=True``.
+
+    This is the invariant Codex pushed back on — no restored REVISE
+    round should look like a pipeline success. Exercises the full
+    snapshot + regression path to confirm the invariant holds even
+    when the guard fires.
+    """
+    curriculum_root, content_path = _setup_tree(tmp_path, "a1", "invariant")
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    _patch_noop_side_effects(monkeypatch)
+
+    def fake_fixes(review_text, content_path_, *, level, slug):
+        if "fix-into-r2" in review_text:
+            content_path_.write_text("R2 good", encoding="utf-8")
+            return True, 1
+        if "fix-into-r3-bad" in review_text:
+            content_path_.write_text("R3 bad", encoding="utf-8")
+            return True, 1
+        return False, 0
+
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", fake_fixes)
+    # R1 fail → R2 genuine PASS (snapshot) → R3 regression → revert.
+    monkeypatch.setattr(
+        v6_build, "step_review",
+        _scripted_reviews([
+            (False, 7.5, "fix-into-r2 review"),
+            (True, 9.3, "r2 pass\n## Verdict: PASS\n"),
+            (False, 7.8, "fix-into-r3-bad review"),
+        ]),
+    )
+
+    result = v6_build._run_review_heal_loop(
+        content_path,
+        level="a1",
+        module_num=1,
+        slug="invariant",
+        writer="gemini",
+        reviewer_override=None,
+        max_rounds=6,
+    )
+
     assert result.outcome == "pass"
-    assert content_path.read_text() == "R2 body — high-scoring but verdict is REVISE"
-    # Snapshot file present
-    orch = curriculum_root / "a1" / "orchestration" / "a1m1-shape"
-    assert (orch / "review-snapshot-pass.md").is_file()
+    # Key invariant: if outcome is pass, the final accepted round passed.
+    assert result.rounds[-1].passed is True
 
 
 def test_monotonic_score_invariant(tmp_path, monkeypatch):

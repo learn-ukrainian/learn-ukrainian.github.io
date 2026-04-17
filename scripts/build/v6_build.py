@@ -1589,27 +1589,101 @@ def _parse_review_result(review_text: str) -> ReviewParseResult:
 #
 #   * Event-logged. Every override emits an ``override_event`` so
 #     reviewer hallucination rates are observable.
+# Matches reviewer claims that the module is under its word target. The
+# regex accepts every phrasing observed in real reviews under
+# ``curriculum/l2-uk-en/*/review/*.md`` (see the #1321 Codex-review
+# follow-up on GitHub for the corpus). Concretely this has to catch:
+#
+#   "word count is 1163, below the 1200 target"
+#   "pipeline word count is `1165`, below the `1200` floor"
+#   "pipeline word count is 1095, below the required 1200"
+#   "deterministic pipeline count is 1112 words, below the 1200 target"
+#   "pipeline note gives a total of 1186 words, below target"
+#   "the pipeline word count is 1124, below the 1200-word target"
+#
+# Things it MUST NOT catch (these carry truthful over-target claims
+# or non-word-count numerics):
+#
+#   "word count is 1246, above the 1200 minimum"
+#   "word count met (1201 > 1200 target)"
 _WORD_COUNT_CLAIM_RE = re.compile(
-    r"word\s+count\s+(?:is\s+)?(?P<actual>\d+)"
-    r"(?:\s*,?\s*(?:which\s+is\s+)?)?"
-    r"\s*(?:below|under|short\s+of)\s+"
-    r"(?:the\s+)?(?P<target>\d+)",
+    r"(?:"
+    r"(?:deterministic\s+)?(?:pipeline\s+)?word\s+count"
+    r"|(?:deterministic\s+)?pipeline\s+count"
+    r"|pipeline\s+note\s+(?:gives|states|has)\s*(?:a\s+)?(?:total\s+of)?"
+    r"|total\s+of"
+    r")"
+    r"[^\n0-9]{0,80}?`?(?P<actual>\d{3,5})`?"
+    r"[^\n0-9]{0,80}?\b(?:below|under|short\s+of|under[- ]target|below[- ]target)\b"
+    # Target number is OPTIONAL — phrasings like "below target" (without
+    # the explicit number) are common in real reviews. When the target
+    # is elided, we fall back to the injected ``word_target`` parameter.
+    r"(?:[^\n0-9]{0,40}?`?(?P<target>\d{3,5})`?)?",
     re.IGNORECASE,
 )
+
+# Matches reviewer claims of activity-marker undercount. Anchored on
+# "only N" to distinguish undercount claims from neutral "N markers
+# present" statements:
+#
+#   "only 3 markers present instead of 4"
+#   "only 3 INJECT_ACTIVITY markers found"
+#   "there are only 3 inject markers, and the inline block is pre-solved"
+#   "only 3 activities are present"
 _ACTIVITY_COUNT_CLAIM_RE = re.compile(
-    r"(?:only\s+)?(?P<count>\d+)\s+(?:INJECT_ACTIVITY\s+)?"
-    r"(?:markers?|activit(?:y|ies))\s+"
-    r"(?:present|found|instead(?:\s+of\s+(?P<expected>\d+))?)",
+    r"(?:there\s+are\s+)?only\s+(?P<count>\d+)\s+"
+    r"(?:INJECT_ACTIVITY\s+|inject\s+)?"
+    r"(?:markers?|activit(?:y|ies))",
     re.IGNORECASE,
 )
+
+# Words indicating a SECOND, independent defect mentioned in the same
+# evidence cell. If one of these appears outside the matched span of
+# the quantitative claim, the override is skipped — a reviewer who
+# flags both "only 3 markers" AND "pre-solved block" has two findings,
+# and auto-lifting the dim would silently erase the second one.
+_SECONDARY_DEFECT_KEYWORDS = (
+    "pre-solved", "pre solved", "presolved",
+    "misplaced", "mis-placed",
+    "missing", "absent", "omitted",
+    "not functioning", "does not function",
+    "back-loaded", "back loaded", "backloaded",
+    "clustered", "dumped",
+    "wrong", "incorrect",
+    "no matching", "no corresponding",
+    "duplicate", "duplicated",
+    "empty", "blank",
+    "out of order", "out-of-order",
+)
+
 _WORD_COUNT_OVERRIDE_TOLERANCE = 0.05  # 5 % slack either side of target
 
 
-def _deterministic_core_word_count(content_path: Path) -> int:
-    """Return the deterministic core-content word count for *content_path*.
+def _evidence_has_secondary_defect(evidence: str, matched_span: tuple[int, int]) -> bool:
+    """Return True when *evidence* signals a second defect outside *matched_span*.
+
+    The quantitative claim the override is about to correct lives inside
+    ``matched_span``. If the remainder of the cell (before + after) still
+    contains any defect keyword from :data:`_SECONDARY_DEFECT_KEYWORDS`,
+    we refuse to override — doing so would wipe that second defect from
+    the reviewer's evidence while the override-only-the-count contract
+    applies to the first one.
+    """
+    if not evidence:
+        return False
+    start, end = matched_span
+    remainder = (evidence[:start] + " " + evidence[end:]).lower()
+    return any(keyword in remainder for keyword in _SECONDARY_DEFECT_KEYWORDS)
+
+
+def _compute_core_word_count_for_text(body: str) -> int:
+    """Return the deterministic core-content word count for *body* text.
 
     Mirrors the calculation used by the audit gate (``phases_gates``)
-    so the override and the gate can never disagree on facts.
+    so the review prompt, the deterministic override, and the final
+    audit gate can never disagree on facts. This is the single source
+    of truth for "what counts as a word in a shipped module" — change
+    this, change everything downstream.
     """
     from audit.cleaners import (
         clean_for_stats,
@@ -1617,10 +1691,14 @@ def _deterministic_core_word_count(content_path: Path) -> int:
         extract_core_content,
     )
 
-    body = content_path.read_text(encoding="utf-8")
     core = extract_core_content(body)
     cleaned = clean_for_stats(core)
     return count_words(cleaned)
+
+
+def _deterministic_core_word_count(content_path: Path) -> int:
+    """File-path wrapper around :func:`_compute_core_word_count_for_text`."""
+    return _compute_core_word_count_for_text(content_path.read_text(encoding="utf-8"))
 
 
 def _deterministic_activity_marker_count(content_path: Path) -> int:
@@ -1689,9 +1767,17 @@ def _apply_deterministic_overrides(
 
         # Dim 7 "Structural integrity" — classic word-count claim.
         wc_match = _WORD_COUNT_CLAIM_RE.search(evidence)
-        if wc_match and dim_score < REVIEW_TARGET_SCORE:
+        if (
+            wc_match
+            and dim_score < REVIEW_TARGET_SCORE
+            and not _evidence_has_secondary_defect(evidence, wc_match.span())
+        ):
             claimed = int(wc_match.group("actual"))
-            claimed_target = int(wc_match.group("target"))
+            # The target group is optional — phrasings like "below
+            # target" elide the number. Fall back to the injected
+            # ``word_target`` when the regex didn't capture one.
+            target_group = wc_match.group("target")
+            claimed_target = int(target_group) if target_group else word_target
             if deterministic_words is None:
                 deterministic_words = _deterministic_core_word_count(content_path)
             # Override only when the reviewer claims "below target" AND
@@ -1726,7 +1812,12 @@ def _apply_deterministic_overrides(
         # already lifted it and we should not double-apply.
         already_overridden = candidate.get("score", dim_score) != dim_score
         ac_match = _ACTIVITY_COUNT_CLAIM_RE.search(evidence)
-        if ac_match and dim_score < REVIEW_TARGET_SCORE and not already_overridden:
+        if (
+            ac_match
+            and dim_score < REVIEW_TARGET_SCORE
+            and not already_overridden
+            and not _evidence_has_secondary_defect(evidence, ac_match.span())
+        ):
             claimed_count = int(ac_match.group("count"))
             if deterministic_activities is None:
                 deterministic_activities = _deterministic_activity_marker_count(content_path)
@@ -1789,9 +1880,20 @@ def _apply_deterministic_overrides(
             new_dim_floor_fail = True
             break
 
+    # After override, if every dim clears the threshold, the review's
+    # dim-level signal agrees with PASS even when the reviewer's verdict
+    # string still says REVISE. The override exists to correct the
+    # quantitative hallucination that originally drove the REVISE, so
+    # promoting ``passed`` in that case is the whole point. If ANY dim
+    # still sits below threshold, the REVISE verdict stands and
+    # ``passed`` stays False.
+    all_dims_clear_after_override = bool(new_dims) and all(
+        int(d.get("score", 10)) >= REVIEW_TARGET_SCORE for d in new_dims
+    )
+    verdict_agrees = parsed.verdict == "PASS" or all_dims_clear_after_override
     new_passed = parsed.reviewer_contract_invalid or (
         new_score >= REVIEW_TARGET_SCORE
-        and parsed.verdict == "PASS"
+        and verdict_agrees
         and not new_dim_floor_fail
     )
 
@@ -4675,6 +4777,58 @@ def _save_structured_findings(review_text: str, orch_dir: Path, round_num: int):
         )
 
 
+def _save_structured_findings_from_parsed(
+    review_text: str,
+    parsed: ReviewParseResult,
+    applied_overrides: list[dict],
+    orch_dir: Path,
+    round_num: int,
+) -> None:
+    """Post-override variant of :func:`_save_structured_findings`.
+
+    Writes the structured YAML that the audit gate
+    (``audit/checks/review_validation.py``) later re-reads. Must reflect
+    the POST-override scores, so the live review gate and the audit
+    gate can never disagree about the same round. The findings section
+    is still extracted from the raw review markdown because overrides
+    only touch dim scores, not the ``## Findings`` prose.
+
+    When ``parsed.parsed_scores`` is empty (parser failed) we fall
+    through to the legacy :func:`_save_structured_findings` so audit
+    still sees SOMETHING — better a pre-override row than no row.
+    """
+    if not parsed.parsed_scores:
+        _save_structured_findings(review_text, orch_dir, round_num)
+        return
+
+    scores = [
+        {
+            "dimension": int(dim.get("dimension", 0) or 0),
+            "name": str(dim.get("name", "")).strip(),
+            "score": int(dim.get("score", 0) or 0),
+            "evidence": str(dim.get("evidence", ""))[:200],
+        }
+        for dim in parsed.parsed_scores
+    ]
+    findings = _extract_structured_findings(review_text)
+    data: dict = {
+        "round": round_num,
+        "scores": scores,
+        "findings": findings,
+        "overall_score": parsed.score,
+        "verdict": parsed.verdict,
+        "passed": parsed.passed,
+    }
+    if applied_overrides:
+        data["deterministic_overrides"] = applied_overrides
+
+    out_path = orch_dir / f"review-structured-r{round_num}.yaml"
+    out_path.write_text(
+        yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False),
+        "utf-8",
+    )
+
+
 def _determine_reviewer(
     writer: str,
     reviewer_override: str | None,
@@ -6572,8 +6726,13 @@ def step_review(content_path: Path, level: str, module_num: int,
     generated_content = generated_content.replace("<!-- TAB:Урок -->", "").strip()
     generated_content = re.sub(r'\n{3,}', '\n\n', generated_content).strip()
 
-    # Calculate deterministic word count — injected OUTSIDE content block
-    prose_words = len(re.sub(r":::.*?:::", "", generated_content, flags=re.DOTALL).split())
+    # Calculate deterministic word count — injected OUTSIDE content block.
+    # #1321 follow-up: reuse the exact audit-core counter that the override
+    # gate uses, so the reviewer prompt, the deterministic override, and
+    # the final audit gate all see the same number. Mismatches between
+    # the reviewer's prompt value and the override's deterministic value
+    # previously let a truthful reviewer look like a hallucinator.
+    prose_words = _compute_core_word_count_for_text(generated_content)
 
     # Build review prompt
     if "claude" in writer:
@@ -6709,11 +6868,11 @@ def step_review(content_path: Path, level: str, module_num: int,
     review_path.write_text(raw, "utf-8")
     _log(f"  Review saved → {versioned_path.name} (round {round_num})")
 
-    # Save structured findings to orchestration for aggregation (#1027)
-    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
-    orch_dir.mkdir(parents=True, exist_ok=True)
-    _save_structured_findings(raw, orch_dir, round_num)
-
+    # Note: structured-findings YAML is written AFTER override application
+    # (#1321 follow-up). Saving the pre-override scores here would let
+    # ``audit/checks/review_validation.py`` re-read raw reviewer claims
+    # that the live gate has already rejected, so live gating and audit
+    # would disagree. See `_save_structured_findings_from_parsed` below.
     parsed = _parse_review_result(raw)
 
     all_score_matches = list(re.finditer(r"\|\s*\d+\.\s*[^|]+\|\s*(\d+)/10\s*\|", raw))
@@ -6768,6 +6927,15 @@ def step_review(content_path: Path, level: str, module_num: int,
                 f"deterministic {ov['deterministic_value']} "
                 f"(+{ov['delta_score']} score)"
             )
+
+    # #1321 follow-up: persist the POST-OVERRIDE structured YAML so the
+    # audit gate (review_validation.py) sees the same scores the live
+    # review gate just enforced. Without this, a successful override
+    # would clear the live gate but leave the pre-override sub-target
+    # dim score on disk, where audit would re-flag it later.
+    _save_structured_findings_from_parsed(
+        raw, parsed, applied_overrides, orch_dir, round_num,
+    )
 
     score = parsed.score
     score_pass = score >= REVIEW_TARGET_SCORE
@@ -8061,18 +8229,19 @@ def _run_review_heal_loop(
         #   * score ≥ REVIEW_TARGET_SCORE (post #1321 override)
         #   * no ERROR-severity contract violations
         #
-        # We intentionally do NOT require ``verdict == \"PASS\"`` here.
-        # The real A1/M1 R2 failure had score 9.22 but verdict
-        # "REVISE" because the reviewer found nitpicks that the
-        # rubric counted as findings. That content was still the
-        # best the pipeline produced, and it deserves to survive
-        # later-round hallucinations. If the full gate eventually
-        # clears (either because a later round genuinely passes or
-        # because we revert to the snapshot at plateau), we advance
-        # to publish; if not, the plateau path still writes the
-        # needs-human-review sentinel.
+        # #1320 follow-up (Codex review): require a full PASS — score
+        # ≥ threshold AND verdict == "PASS" AND no contract blockers AND
+        # no dim floor failure. Earlier iterations skipped the verdict
+        # check to "save" A1/M1 R2 (which had score 9.22 + verdict
+        # REVISE because of a hallucinated dim 7 finding), but that
+        # let us restore REVISE content and emit ``outcome="pass"``
+        # downstream. The correct fix for A1/M1 R2 is #1321 — the
+        # deterministic override now promotes ``round_state.passed``
+        # to True when all overridden dims clear the threshold, so
+        # the real failure case becomes a genuine pass here.
         snapshot_candidate = (
-            round_state.score >= REVIEW_TARGET_SCORE
+            round_state.passed
+            and round_state.score >= REVIEW_TARGET_SCORE
             and not round_state.contract_blocking
         )
         if snapshot_candidate and (
@@ -8088,8 +8257,9 @@ def _run_review_heal_loop(
             best_round_state = round_state
             best_round_index = len(rounds) - 1
             _log(
-                f"\n📌 R{round_index} is the best-so-far passing round "
-                f"({round_state.score}/10) — content snapshotted to "
+                f"\n📌 R{round_index} is a genuine pass "
+                f"(score={round_state.score}/10, verdict=PASS, no contract blockers) "
+                f"and the best so far — content snapshotted to "
                 "review-snapshot-pass.md"
             )
 

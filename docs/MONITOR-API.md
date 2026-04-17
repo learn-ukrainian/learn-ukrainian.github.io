@@ -1589,6 +1589,9 @@ Practical rule: read `stdout` line-by-line, parse only lines that begin with `{`
 - `module_failed` includes `level`, `slug`, `phase`, and `error`. Error strings are truncated to 200 characters.
 - `batch_start` includes `level` and `total`.
 - `batch_done` includes `level`, `total`, `succeeded`, and `failed`.
+- `reviewer_override` (#1321) fires once per deterministic-dimension override applied during a review round. Includes `level`, `slug`, `dim` (int), `name`, `claim` (one of `word_count_below_target`, `activity_count_undercounted`), `reviewer_value` (what the reviewer claimed), `deterministic_value` (what the pipeline measured), and `delta_score` (points added to that dim).
+- `reviewer_saved_by_override` (#1321) fires at most once per review round, only when the cumulative override(s) lifted the module from `passed=False` to `passed=True`. Includes `level`, `slug`, `old_score`, `new_score`.
+- `review_regression_prevented` (#1320) fires when the review-heal loop detects that a post-pass round dropped below the snapshotted score by more than `_REGRESSION_BAND` (0.2) and reverts to the snapshot. Includes `level`, `slug`, `regressed_round`, `regressed_score`, `best_round`, `best_score`.
 
 ---
 

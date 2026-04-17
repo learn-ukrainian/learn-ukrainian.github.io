@@ -13,6 +13,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
@@ -309,3 +311,268 @@ def test_word_target_zero_is_noop(tmp_path):
     )
     assert overrides == []
     assert new_parsed is parsed
+
+
+# ── 5. Regex coverage for real-world reviewer phrasings ──────────────────
+
+
+@pytest.mark.parametrize(
+    "evidence",
+    [
+        # sounds-letters-and-hello R3 — backticks around numbers + "floor"
+        "All H2 headings are present and ordered correctly, but the pipeline word count is `1165`, below the `1200` floor.",
+        # checkpoint-time-nature R2 — "required 1200"
+        "All planned H2 headings are present and ordered correctly, but the pipeline word count is 1095, below the required 1200.",
+        # where-is-it R1 — "1200-word target" hyphenated
+        "Section order is clean, but the pipeline word count is 1124, below the 1200-word target.",
+        # my-family — "deterministic pipeline count"
+        "The H2 structure is clean and ordered correctly, but the deterministic pipeline count is 1112 words, below the 1200 target.",
+        # i-want-i-can R8 — "pipeline note gives a total"
+        "Headings are clean and ordered, but the pipeline note gives a total of 1186 words, below target.",
+        # many-things R5 — "Word count: N words ... below the required N"
+        "The H2 structure is clean and complete, but the pipeline note states `Word count: 1012 words`, which is below the required `1200`.",
+    ],
+)
+def test_real_review_phrasings_trigger_override(tmp_path, evidence):
+    """Every phrasing observed in real A1 reviewer output must match."""
+    body = "## Section\n\n" + ("слово " * 1400)
+    content_path = _write_content(tmp_path, body)
+
+    dims = [
+        {"dimension": i, "name": f"Dim{i}", "score": 10, "evidence": "ok"}
+        for i in range(1, 10)
+    ]
+    dims[6] = {
+        "dimension": 7,
+        "name": "Structural integrity",
+        "score": 7,
+        "evidence": evidence,
+    }
+    parsed = _make_parsed(score=8.85, dims=dims)
+
+    _, overrides = v6_build._apply_deterministic_overrides(
+        parsed,
+        content_path=content_path,
+        level="a1",
+        slug="x",
+        word_target=1200,
+    )
+
+    assert len(overrides) == 1, f"Regex failed to match: {evidence!r}"
+    assert overrides[0]["claim"] == "word_count_below_target"
+
+
+def test_activity_phrasing_there_are_only(tmp_path):
+    """"There are only 3 inject markers" — a real phrasing from
+    ``checkpoint-food-shopping-review.md`` — must match.
+    """
+    # File needs > 3 markers for the override to trigger, and NO
+    # secondary-defect keyword so the mixed-evidence guard doesn't
+    # fire.
+    body = (
+        "## A\n<!-- INJECT_ACTIVITY: a1 -->\n## B\n<!-- INJECT_ACTIVITY: a2 -->\n"
+        "## C\n<!-- INJECT_ACTIVITY: a3 -->\n## D\n<!-- INJECT_ACTIVITY: a4 -->\n"
+    )
+    content_path = _write_content(tmp_path, body)
+
+    dims = [
+        {"dimension": i, "name": f"Dim{i}", "score": 10, "evidence": "ok"}
+        for i in range(1, 10)
+    ]
+    dims[4] = {
+        "dimension": 5,
+        "name": "Exercise quality",
+        "score": 7,
+        # Real phrasing, MINUS the "pre-solved" clause (that would
+        # correctly trigger the secondary-defect skip — see the next
+        # test).
+        "evidence": "There are only 3 inject markers in the module body.",
+    }
+    parsed = _make_parsed(score=8.85, dims=dims)
+
+    _, overrides = v6_build._apply_deterministic_overrides(
+        parsed,
+        content_path=content_path,
+        level="a1",
+        slug="x",
+        word_target=1200,
+    )
+
+    assert len(overrides) == 1
+    assert overrides[0]["claim"] == "activity_count_undercounted"
+
+
+# ── 6. Mixed-evidence guard: don't wipe a second defect ──────────────────
+
+
+def test_mixed_evidence_with_second_defect_skips_override(tmp_path):
+    """Codex-review pushback: the real
+    ``checkpoint-food-shopping-review.md`` cell reads:
+    "There are only 3 inject markers, and the inline `Швидке
+    сортування` block is pre-solved...". Auto-lifting the dim would
+    erase the "pre-solved" finding, which is an independent defect.
+    The mixed-evidence guard must skip override in this case.
+    """
+    body = (
+        "## A\n<!-- INJECT_ACTIVITY: a1 -->\n## B\n<!-- INJECT_ACTIVITY: a2 -->\n"
+        "## C\n<!-- INJECT_ACTIVITY: a3 -->\n## D\n<!-- INJECT_ACTIVITY: a4 -->\n"
+    )
+    content_path = _write_content(tmp_path, body)
+
+    dims = [
+        {"dimension": i, "name": f"Dim{i}", "score": 10, "evidence": "ok"}
+        for i in range(1, 10)
+    ]
+    dims[4] = {
+        "dimension": 5,
+        "name": "Exercise quality",
+        "score": 7,
+        "evidence": (
+            "There are only 3 inject markers, and the inline sorting block "
+            "is pre-solved, so one of the four planned activities is not "
+            "functioning as an exercise."
+        ),
+    }
+    parsed = _make_parsed(score=8.85, dims=dims)
+
+    _, overrides = v6_build._apply_deterministic_overrides(
+        parsed,
+        content_path=content_path,
+        level="a1",
+        slug="x",
+        word_target=1200,
+    )
+
+    # Secondary defect ("pre-solved", "not functioning") must suppress
+    # the override even though the count claim is technically wrong.
+    assert overrides == []
+
+
+def test_word_count_with_secondary_defect_skips_override(tmp_path):
+    """Same mixed-evidence rule applied to dim 7 word-count claims."""
+    body = "## Section\n\n" + ("слово " * 1400)
+    content_path = _write_content(tmp_path, body)
+
+    dims = [
+        {"dimension": i, "name": f"Dim{i}", "score": 10, "evidence": "ok"}
+        for i in range(1, 10)
+    ]
+    dims[6] = {
+        "dimension": 7,
+        "name": "Structural integrity",
+        "score": 7,
+        "evidence": (
+            "Word count is 1163, below the 1200 target, AND the "
+            "consonant section is missing its closing paragraph."
+        ),
+    }
+    parsed = _make_parsed(score=8.85, dims=dims)
+
+    _, overrides = v6_build._apply_deterministic_overrides(
+        parsed,
+        content_path=content_path,
+        level="a1",
+        slug="x",
+        word_target=1200,
+    )
+
+    assert overrides == []
+
+
+# ── 7. Override promotes passed=True when all dims clear ─────────────────
+
+
+def test_override_promotes_passed_even_when_verdict_revise(tmp_path):
+    """The actual A1/M1 R2 case: verdict REVISE + all dims ≥9 except
+    the hallucinated dim 7. After override, every dim ≥9, score ≥9,
+    no floor fail — the review's dim-level signal now agrees with
+    PASS. ``passed`` must flip to True so the snapshot trigger can
+    fire and the pipeline can ship the content.
+    """
+    body = "## Section\n\n" + ("слово " * 1400)
+    content_path = _write_content(tmp_path, body)
+
+    dims = [
+        {"dimension": i, "name": f"Dim{i}", "score": 9, "evidence": "ok"}
+        for i in range(1, 10)
+    ]
+    dims[6] = {
+        "dimension": 7,
+        "name": "Structural integrity",
+        "score": 7,
+        "evidence": "pipeline word count is 1163, below the 1200 target",
+    }
+    # Verdict REVISE, passed=False before override.
+    parsed = _make_parsed(score=8.7, verdict="REVISE", dims=dims)
+    assert parsed.passed is False
+
+    new_parsed, overrides = v6_build._apply_deterministic_overrides(
+        parsed,
+        content_path=content_path,
+        level="a1",
+        slug="x",
+        word_target=1200,
+    )
+
+    assert overrides  # override applied
+    # All dims now ≥9 → passed promoted regardless of verdict string.
+    assert new_parsed.passed is True
+
+
+def test_override_does_not_promote_when_another_dim_below_target(tmp_path):
+    """Guard on the promotion: if ANY dim is still <9 after override
+    (because it had an unrelated legitimate defect), ``passed`` stays
+    False. The hallucination fix does not erase genuine concerns.
+    """
+    body = "## Section\n\n" + ("слово " * 1400)
+    content_path = _write_content(tmp_path, body)
+
+    dims = [
+        {"dimension": i, "name": f"Dim{i}", "score": 9, "evidence": "ok"}
+        for i in range(1, 10)
+    ]
+    dims[2] = {  # dim 3 Pedagogical quality — genuinely weak
+        "dimension": 3,
+        "name": "Pedagogical quality",
+        "score": 6,
+        "evidence": "learner never performs the transformation themselves",
+    }
+    dims[6] = {
+        "dimension": 7,
+        "name": "Structural integrity",
+        "score": 7,
+        "evidence": "word count is 1163, below the 1200 target",
+    }
+    parsed = _make_parsed(score=8.4, verdict="REVISE", dims=dims)
+
+    new_parsed, overrides = v6_build._apply_deterministic_overrides(
+        parsed,
+        content_path=content_path,
+        level="a1",
+        slug="x",
+        word_target=1200,
+    )
+
+    assert overrides  # dim 7 still overridden
+    # dim 3 still at 6 → passed stays False.
+    assert new_parsed.passed is False
+
+
+# ── 8. Counting-basis alignment (reviewer prompt vs override) ───────────
+
+
+def test_override_counting_basis_matches_audit_cleaner(tmp_path):
+    """The override and the reviewer-prompt injection must use the
+    same counting basis. Concrete check: calling the shared helper
+    on the SAME string produces the SAME number the override uses
+    internally.
+    """
+    body = "## Section\n\nслово " * 1300
+    content_path = _write_content(tmp_path, body)
+
+    via_path = v6_build._deterministic_core_word_count(content_path)
+    via_text = v6_build._compute_core_word_count_for_text(body)
+
+    assert via_path == via_text
+    # Both routes return a positive count on real content.
+    assert via_path > 0
