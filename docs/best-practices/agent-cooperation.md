@@ -165,6 +165,29 @@ matches. The on-disk cache under `.agent/cache/monitor/` persists
 across sessions so repeat cold-starts pay near-zero bytes for the
 rule + session payloads.
 
+### Scoped queries during work
+
+Once bootstrapped, prefer these deterministic endpoints over
+filesystem spelunking:
+
+| Question | Endpoint |
+|---|---|
+| What's module `{slug}` doing right now? | `GET /api/state/module/{track}/slug/{slug}` |
+| Per-module dashboard for N..M on {track} | `GET /api/state/range/{track}?start=N&end=M` |
+| Which files would `--force` delete? | `GET /api/artifacts/{track}/{slug}/force-preview` |
+| Classified file manifest (source/generated/published/stale) | `GET /api/artifacts/{track}/{slug}/files` |
+| Main + style review + empty-findings flag | `GET /api/artifacts/{track}/{slug}/review-snapshot` |
+| state.json vs reality cross-check | `GET /api/artifacts/{track}/{slug}/drift` |
+| Ship-ready snapshot for one module | `GET /api/artifacts/{track}/{slug}` |
+| Aggregate ship-ready list | `GET /api/artifacts/ship-ready[?track=...]` |
+| Public site reachability + freshness | `GET /api/site/health` |
+| Recent GH Pages deployments | `GET /api/site/deployments` |
+| Active worktrees | `GET /api/worktrees` |
+| Open issues grouped + supersede metadata | `GET /api/issues/map` |
+| Per-agent auth mode | `GET /api/runtime/auth` |
+
+Full endpoint reference: [`docs/MONITOR-API.md`](../MONITOR-API.md).
+
 Legacy steps that remain useful if the API is unreachable:
 
 1. **Load memory** — what was in progress last session:

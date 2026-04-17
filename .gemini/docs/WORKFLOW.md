@@ -23,6 +23,27 @@ with no body, so repeat checks cost one TCP round-trip.
 
 Only fall back to direct file reads if the API server is unreachable.
 
+### Scoped queries — call the API, don't grep the filesystem
+
+| Question | Endpoint |
+|---|---|
+| What's module `{slug}` doing right now? | `GET /api/state/module/{track}/slug/{slug}` |
+| Dashboard for modules N..M on {track} | `GET /api/state/range/{track}?start=N&end=M` |
+| Which files would `--force` delete? | `GET /api/artifacts/{track}/{slug}/force-preview` |
+| Classified file manifest | `GET /api/artifacts/{track}/{slug}/files` |
+| Main + style review + reviewer-gaming flag | `GET /api/artifacts/{track}/{slug}/review-snapshot` |
+| state.json vs audit / reviews / MDX drift | `GET /api/artifacts/{track}/{slug}/drift` |
+| Ship-ready gate snapshot | `GET /api/artifacts/{track}/{slug}` |
+| Public-site reachability | `GET /api/site/health` |
+| Recent deployments | `GET /api/site/deployments` |
+| Active worktrees + branch/dirty/last-commit | `GET /api/worktrees` |
+| Open issues grouped + superseded_by / merged_in_pr | `GET /api/issues/map` |
+| Per-agent auth mode | `GET /api/runtime/auth` |
+
+If you're about to shell-out to read files under `curriculum/` /
+`orchestration/` / `review/` / `status/`, check this table first.
+Full docs: `docs/MONITOR-API.md`.
+
 ## Roles
 - **Gemini (Yellow Team)**: The content builder. You research, write content, and create activities. Excellent at advanced immersed Ukrainian, native code/content review, creative ideas, and seminar content.
 - **Claude (Blue Team)**: Architecture, code, infrastructure, and A1 content writing. Cross-agent review of Gemini's content.
