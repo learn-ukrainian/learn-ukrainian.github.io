@@ -427,7 +427,9 @@ class ReviewParseResult:
     verdict: str
     raw_scores: list[int]
     parsed_scores: list[dict]
+    findings_count: int
     dim_floor_fail: bool
+    reviewer_contract_invalid: bool
     passed: bool
 
 
@@ -1299,13 +1301,23 @@ def _parse_review_result(review_text: str) -> ReviewParseResult:
                 dim_floor_fail = True
                 break
 
-    passed = score >= 8.0 and verdict == "PASS" and not dim_floor_fail
+    findings_count = len(_extract_structured_findings(review_text))
+    reviewer_contract_invalid = (
+        bool(raw_scores)
+        and score < REVIEW_TARGET_SCORE
+        and findings_count == 0
+    )
+    passed = reviewer_contract_invalid or (
+        score >= REVIEW_TARGET_SCORE and verdict == "PASS" and not dim_floor_fail
+    )
     return ReviewParseResult(
         score=score,
         verdict=verdict,
         raw_scores=raw_scores,
         parsed_scores=parsed_scores,
+        findings_count=findings_count,
         dim_floor_fail=dim_floor_fail,
+        reviewer_contract_invalid=reviewer_contract_invalid,
         passed=passed,
     )
 
@@ -3791,14 +3803,9 @@ def _query_friction_for_errors(level: str, slug: str, results: list) -> list[str
     return hints[:10]  # cap at 10 to avoid bloating the prompt
 
 
-def _save_structured_findings(review_text: str, orch_dir: Path, round_num: int):
-    """Extract structured findings from review markdown and save as YAML.
-
-    Parses the ## Findings section for [DIMENSION] [SEVERITY] blocks.
-    Saves to orchestration for aggregation across modules (#1027, #1028).
-    """
+def _extract_structured_findings(review_text: str) -> list[dict]:
+    """Extract structured review findings from fenced review markdown blocks."""
     findings = []
-    # Match finding blocks: ```\n[DIMENSION] [SEVERITY]\n...\n```
     pattern = re.compile(
         r"```\s*\n\[(\w[\w\s&]*?)\]\s*\[(\w+)\]\s*\n"
         r"Location:\s*(.*?)\n"
@@ -3814,6 +3821,16 @@ def _save_structured_findings(review_text: str, orch_dir: Path, round_num: int):
             "issue": m.group(4).strip(),
             "fix": m.group(5).strip(),
         })
+    return findings
+
+
+def _save_structured_findings(review_text: str, orch_dir: Path, round_num: int):
+    """Extract structured findings from review markdown and save as YAML.
+
+    Parses the ## Findings section for [DIMENSION] [SEVERITY] blocks.
+    Saves to orchestration for aggregation across modules (#1027, #1028).
+    """
+    findings = _extract_structured_findings(review_text)
 
     # Also extract scores table
     score_pattern = re.compile(r"\|\s*(\d+)\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]*)\|")
@@ -5887,7 +5904,7 @@ def step_review(content_path: Path, level: str, module_num: int,
     else:
         _log("  ⚠️  Could not parse any dimension scores")
 
-    score_pass = score >= 8.0
+    score_pass = score >= REVIEW_TARGET_SCORE
     severity_pass = parsed.verdict == "PASS"
 
     for dim in parsed.parsed_scores:
@@ -5902,6 +5919,11 @@ def step_review(content_path: Path, level: str, module_num: int,
             _log(f"  ⚠️  Dimension floor: {dim_name} = {dim_score}/10 with identified errors")
 
     passed = parsed.passed
+    if parsed.reviewer_contract_invalid:
+        _log(
+            "  ⚠️  Reviewer contract invalid: sub-threshold score with zero actionable "
+            "findings — treating review output as non-blocking"
+        )
 
     icon = "✅" if passed else "❌"
     floor_msg = " (dimension floor FAIL)" if parsed.dim_floor_fail else ""
