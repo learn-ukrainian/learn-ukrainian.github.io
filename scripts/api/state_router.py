@@ -428,6 +428,105 @@ async def outstanding_issues(
     return await asyncio.to_thread(compute_issues, track, severity)
 
 
+# ==================== RANGE STATUS (#1313 / Codex-4) ====================
+
+
+@router.get("/range/{track_id}")
+async def range_status(
+    track_id: str,
+    start: int = Query(1, ge=1, description="First module number (inclusive)."),
+    end: int | None = Query(
+        None,
+        description="Last module number (inclusive). Omit to go to the end of the track.",
+    ),
+):
+    """Compact per-module table for one [start, end] slice of a track.
+
+    Designed for overnight batch runs: one call tells you exactly
+    which module is in which phase, whether it's blocked, current
+    review score, and which worker is assigned. Builds on
+    ``compute_pipeline_track`` so the data source is shared with the
+    existing ``/api/state/pipeline/{track}`` endpoint — just slice
+    + flatten (reviewer Codex-4 / #1313).
+    """
+    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
+    if not level_cfg:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"Track '{track_id}' not found"},
+        )
+
+    def _compute() -> dict:
+        full = compute_pipeline_track(track_id, level_cfg)
+        modules = full.get("modules", []) if isinstance(full, dict) else full
+        if not isinstance(modules, list):
+            return {"error": "pipeline_track returned non-list"}
+
+        sliced = [
+            m for m in modules
+            if isinstance(m, dict)
+            and isinstance(m.get("num"), int)
+            and m["num"] >= start
+            and (end is None or m["num"] <= end)
+        ]
+
+        compact = []
+        for m in sliced:
+            phases = m.get("phases") or {}
+            # "current phase" = last phase whose status is in_progress or
+            # the last completed phase (whichever is latest). Keeps the
+            # compact view actionable without a separate call.
+            current = None
+            last_complete = None
+            for name, data in phases.items():
+                if not isinstance(data, dict):
+                    continue
+                status = data.get("status")
+                if status == "in_progress":
+                    current = name
+                if status == "complete":
+                    last_complete = name
+            phase_now = current or last_complete or "pending"
+
+            review = m.get("review") or {}
+            audit = m.get("audit")
+
+            compact.append({
+                "num": m["num"],
+                "slug": m.get("slug"),
+                "phase": phase_now,
+                "phase_status": (
+                    phases.get(phase_now, {}).get("status")
+                    if isinstance(phases.get(phase_now), dict) else None
+                ),
+                "worker": (
+                    phases.get(phase_now, {}).get("executor", {}).get("agent")
+                    if isinstance(phases.get(phase_now), dict)
+                    and isinstance(phases.get(phase_now, {}).get("executor"), dict)
+                    else None
+                ),
+                "audit": audit,
+                "review_score": (
+                    review.get("score") if isinstance(review, dict) else None
+                ),
+                "words": m.get("words"),
+                "word_target": m.get("word_target"),
+                "blocker": m.get("blocker"),
+                "pipeline_version": m.get("pipeline_version"),
+                "needs_rebuild": m.get("needs_rebuild"),
+            })
+
+        return {
+            "track": track_id,
+            "start": start,
+            "end": end,
+            "count": len(compact),
+            "modules": compact,
+        }
+
+    return await asyncio.to_thread(_compute)
+
+
 # ==================== MANIFEST (#1309) ====================
 
 

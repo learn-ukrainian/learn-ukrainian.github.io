@@ -247,6 +247,142 @@ def _list_ship_ready(track_filter: str | None) -> dict[str, Any]:
     }
 
 
+# ---------------------------------------------------------------------
+# Force-preview — dry run for v6_build.py --force (#1313 / Codex-9)
+# ---------------------------------------------------------------------
+
+
+def _enumerate_force_deletions(track: str, slug: str) -> list[dict[str, Any]]:
+    """Mirror ``v6_build._force_reset_module`` — enumerate what would go.
+
+    MUST stay in sync with ``scripts/build/v6_build.py`` helpers
+    ``_clean_build_artifacts`` (lines ~797-858) and
+    ``_force_reset_module`` (lines ~860-880). A separate helper
+    — not a direct import of v6_build — is deliberate: importing
+    v6_build here would pull the whole pipeline module (gemini SDK,
+    broker, runtime) into every API startup, which is too heavy for
+    a read-only preview.
+
+    Drift risk: if ``_clean_build_artifacts`` changes, this preview
+    diverges. The test pins the exact set of paths so a v6_build
+    change that adds or removes a target will flip a test red.
+    """
+    cfg = _level_cfg(track)
+    if not cfg:
+        return []
+
+    base: Path = CURRICULUM_ROOT / cfg["path"]
+    orch = base / "orchestration" / slug
+    targets: list[dict[str, Any]] = []
+
+    def _add(path: Path, category: str, reason: str) -> None:
+        if path.exists():
+            targets.append({
+                "path": str(path.relative_to(PROJECT_ROOT)),
+                "category": category,
+                "is_dir": path.is_dir(),
+                "size_bytes": (
+                    sum(p.stat().st_size for p in path.rglob("*") if p.is_file())
+                    if path.is_dir()
+                    else path.stat().st_size
+                ),
+                "reason": reason,
+            })
+
+    # Content + activities + vocab (see _clean_build_artifacts:812-819).
+    _add(base / f"{slug}.md", "content", "module markdown")
+    _add(base / "activities" / f"{slug}.yaml", "activities", "activity YAML")
+    _add(base / "vocabulary" / f"{slug}.yaml", "vocabulary", "vocabulary YAML")
+
+    # Review files (see _clean_build_artifacts:822-826).
+    review_dir = base / "review"
+    if review_dir.is_dir():
+        for f in sorted(review_dir.glob(f"{slug}-review*")):
+            _add(f, "review", "review output")
+
+    # Audit + status (see _clean_build_artifacts:829-835).
+    _add(base / "audit" / f"{slug}-audit.md", "audit", "audit report")
+    _add(base / "status" / f"{slug}.json", "status", "status cache")
+
+    # Research (see _clean_build_artifacts:838-841).
+    _add(base / "research" / f"{slug}-knowledge-packet.md", "research", "knowledge packet")
+
+    # Orchestration artifacts — everything except index.md + friction.yaml
+    # (see _clean_build_artifacts:844-854).
+    if orch.is_dir():
+        keep = {"index.md", "friction.yaml"}
+        for f in sorted(orch.iterdir()):
+            if f.name in keep:
+                continue
+            _add(f, "orchestration", "pipeline state / prompts / dispatch")
+
+    # Published MDX (see _force_reset_module:877-879).
+    mdx = PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / track / f"{slug}.mdx"
+    _add(mdx, "published", "starlight MDX output")
+
+    return targets
+
+
+@router.get("/{track}/{slug}/force-preview")
+async def force_preview(track: str, slug: str):
+    """Dry-run preview for ``v6_build.py --force {track} {num}``.
+
+    Returns the EXACT list of files ``--force`` would delete, without
+    touching anything. Classified by category so a reviewer can spot
+    anomalies (e.g. a 50 MB orchestration dir, or a stray published
+    MDX that shouldn't exist). Reviewer Codex-9 / #1313.
+
+    Shape::
+        {
+          "track": "a1", "slug": "...",
+          "count": 12,
+          "total_bytes": 234567,
+          "would_remove": [
+            {"path": "curriculum/l2-uk-en/a1/hello.md",
+             "category": "content", "is_dir": false,
+             "size_bytes": 8432, "reason": "module markdown"},
+            ...
+          ],
+          "preserved": ["plans/a1/hello.yaml", "orchestration/hello/index.md",
+                        "orchestration/hello/friction.yaml"]
+        }
+
+    **Never** deletes anything. This is a read-only endpoint.
+    """
+    cfg = _level_cfg(track)
+    if not cfg:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"unknown track: {track}"},
+        )
+
+    targets = await asyncio.to_thread(_enumerate_force_deletions, track, slug)
+
+    base = CURRICULUM_ROOT / cfg["path"]
+    preserved: list[str] = []
+    plan = PLANS_ROOT / track / f"{slug}.yaml"
+    if plan.is_file():
+        preserved.append(str(plan.relative_to(PROJECT_ROOT)))
+    for keep_name in ("index.md", "friction.yaml"):
+        keep = base / "orchestration" / slug / keep_name
+        if keep.is_file():
+            preserved.append(str(keep.relative_to(PROJECT_ROOT)))
+
+    return {
+        "track": track,
+        "slug": slug,
+        "count": len(targets),
+        "total_bytes": sum(t.get("size_bytes", 0) for t in targets),
+        "would_remove": targets,
+        "preserved": preserved,
+    }
+
+
+# ---------------------------------------------------------------------
+# ship-ready (aggregate)
+# ---------------------------------------------------------------------
+
+
 @router.get("/ship-ready")
 async def ship_ready(
     track: str | None = Query(
