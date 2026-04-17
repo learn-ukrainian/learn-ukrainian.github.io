@@ -1589,6 +1589,27 @@ def _parse_review_result(review_text: str) -> ReviewParseResult:
 #
 #   * Event-logged. Every override emits an ``override_event`` so
 #     reviewer hallucination rates are observable.
+#
+# Scope (what's overridden vs. what isn't):
+#
+#   * COVERED: dim 7 word-count claims, dim 5 activity-marker-count
+#     claims. These two cover the hallucination surface area observed
+#     in real A1 reviews (`curriculum/l2-uk-en/a1/review/*.md`).
+#
+#   * NOT COVERED — section order (dim 7) and section-budget (dim 1):
+#     Codex's adversarial review flagged these as "partly
+#     deterministic" and in principle overrideable. A grep of every
+#     A1 review found reviewers correctly reporting section order in
+#     100 % of cases, and section-budget claims are already caught
+#     by the WORD_BUDGET contract-violation path. Adding regex
+#     machinery for a speculative failure mode we have no evidence
+#     of would be unmotivated complexity. Revisit if a real
+#     hallucination case surfaces.
+#
+#   * NOT COVERED — dim 1 plan adherence (semantic): whether required
+#     vocabulary shows up in prose, whether textbook anchors appear,
+#     etc. These need semantic judgement, not a count. Stays with
+#     the reviewer.
 # Matches reviewer claims that the module is under its word target. The
 # regex accepts every phrasing observed in real reviews under
 # ``curriculum/l2-uk-en/*/review/*.md`` (see the #1321 Codex-review
@@ -8059,6 +8080,27 @@ def _apply_contract_word_budget_rewrites(
     return applied > 0, applied
 
 
+def _atomic_write_text(path: Path, body: str) -> None:
+    """Write *body* to *path* atomically via ``os.replace``.
+
+    Writes to a sibling ``.tmp-<pid>`` file first, flushes + fsyncs,
+    then atomically renames over the target. On POSIX the rename is
+    atomic, so a reader either sees the old file or the fully-written
+    new one — never a partial write. Used by the snapshot so a crash
+    mid-write cannot leave a truncated ``review-snapshot-pass.md``
+    that ``_restore_snapshot`` would happily copy into the live
+    content path (Codex-review follow-up on #1320).
+    """
+    import os
+    tmp = path.with_suffix(path.suffix + f".tmp-{os.getpid()}")
+    tmp.write_text(body, encoding="utf-8")
+    # Force the tempfile bytes to disk before rename, so post-crash
+    # recovery sees the complete payload at the rename target.
+    with open(tmp, "rb") as fh:
+        os.fsync(fh.fileno())
+    os.replace(tmp, path)
+
+
 def _snapshot_passing_round(
     *,
     level: str,
@@ -8077,14 +8119,18 @@ def _snapshot_passing_round(
     snapshot the POST-FIX content, which the reviewer never looked
     at, defeating the whole point of the snapshot.
 
+    Write order: YAML sidecar first, MD second. ``_restore_snapshot``
+    keys off the MD file existing, so committing the content after
+    the sidecar means a crash between the two leaves an orphan
+    sidecar (harmless — no restore fires) rather than an orphan MD
+    that would look like a valid snapshot without its metadata.
+
     Called at most once per new-best round in a run. See #1320.
     """
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
     snapshot_md = orch_dir / "review-snapshot-pass.md"
     snapshot_yaml = orch_dir / "review-snapshot-pass.yaml"
-    snapshot_md.write_text(content_body, "utf-8")
-    # Use YAML (not JSON) to match the rest of the orchestration dir.
     sidecar = {
         "round": round_state.round_num,
         "score": round_state.score,
@@ -8092,7 +8138,9 @@ def _snapshot_passing_round(
         "contract_blocking": round_state.contract_blocking,
         "captured_at": datetime.now(UTC).isoformat(),
     }
-    snapshot_yaml.write_text(yaml.safe_dump(sidecar, sort_keys=False), "utf-8")
+    # Use YAML (not JSON) to match the rest of the orchestration dir.
+    _atomic_write_text(snapshot_yaml, yaml.safe_dump(sidecar, sort_keys=False))
+    _atomic_write_text(snapshot_md, content_body)
 
 
 def _restore_snapshot(*, level: str, slug: str, content_path: Path) -> bool:
@@ -8105,7 +8153,7 @@ def _restore_snapshot(*, level: str, slug: str, content_path: Path) -> bool:
     )
     if not snapshot_md.is_file():
         return False
-    content_path.write_text(snapshot_md.read_text("utf-8"), "utf-8")
+    _atomic_write_text(content_path, snapshot_md.read_text("utf-8"))
     return True
 
 
@@ -8128,12 +8176,19 @@ def _run_review_heal_loop(
     # Track the highest-scoring round that cleared the threshold with
     # no contract-blocking violations. If a subsequent round applies
     # mutations that drop the confirmed score below this baseline by
-    # more than 0.2, revert content to the snapshot and treat the
-    # snapshot as final. The 0.2 band matches the plateau
-    # `min_delta` elsewhere in this file.
+    # more than ``_REGRESSION_DROP_TOLERANCE``, revert content to the
+    # snapshot and treat the snapshot as final.
+    #
+    # Note (Codex-review follow-up on #1320): the plateau detector uses
+    # two consecutive POSITIVE deltas of less than 0.2 to call it
+    # "converged"; the regression guard uses ONE NEGATIVE drop of more
+    # than 0.2 to call it "regressed". Same magnitude, different
+    # decision. They are intentionally named differently now so future
+    # readers don't assume they move together — tuning one does not
+    # automatically tune the other.
     best_round_state: ReviewRoundState | None = None
     best_round_index: int | None = None
-    _REGRESSION_BAND = 0.2
+    _REGRESSION_DROP_TOLERANCE = 0.2
 
     for round_index in range(1, max_rounds + 1):
         passed, score, review_text = step_review(
@@ -8276,12 +8331,12 @@ def _run_review_heal_loop(
         if (
             best_round_state is not None
             and round_state is not best_round_state
-            and round_state.score < best_round_state.score - _REGRESSION_BAND
+            and round_state.score < best_round_state.score - _REGRESSION_DROP_TOLERANCE
         ):
             _log(
                 f"\n🛑 R{round_index} ({round_state.score}/10) regressed below "
                 f"R{best_round_state.round_num}'s passing score "
-                f"({best_round_state.score}/10) by more than {_REGRESSION_BAND}. "
+                f"({best_round_state.score}/10) by more than {_REGRESSION_DROP_TOLERANCE}. "
                 "Restoring snapshot and accepting the passing round as final."
             )
             restored = _restore_snapshot(
@@ -8422,7 +8477,7 @@ def _run_review_heal_loop(
             # gate.
             if (
                 best_round_state is not None
-                and rounds[-1].score < best_round_state.score - _REGRESSION_BAND
+                and rounds[-1].score < best_round_state.score - _REGRESSION_DROP_TOLERANCE
             ):
                 _log(
                     f"\n🛑 Plateau at {rounds[-1].score}/10 is below the "

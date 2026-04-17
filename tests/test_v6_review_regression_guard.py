@@ -376,6 +376,79 @@ def test_restore_only_fires_when_snapshot_was_genuine_pass(tmp_path, monkeypatch
     assert result.rounds[-1].passed is True
 
 
+def test_atomic_snapshot_write_survives_mid_write_crash(tmp_path, monkeypatch):
+    """Codex-review follow-up on #1320 (2a): snapshot writes are now
+    atomic via ``os.replace``. Verify that (a) the snapshot files
+    appear on disk after the helper returns and (b) a simulated crash
+    before the MD write leaves NO half-written snapshot — the sidecar
+    may exist but the MD does not, so ``_restore_snapshot`` correctly
+    returns False (no restore).
+    """
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    level_dir = curriculum_root / "a1"
+    orch = level_dir / "orchestration" / "atomic"
+    orch.mkdir(parents=True)
+    content_path = level_dir / "atomic.md"
+    content_path.write_text("live content", encoding="utf-8")
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+
+    round_state = v6_build.ReviewRoundState(
+        round_num=2, passed=True, score=9.4, review_text="",
+        contract_violations=(),
+    )
+
+    # Happy path: both files land atomically on disk with the right content.
+    v6_build._snapshot_passing_round(
+        level="a1",
+        slug="atomic",
+        content_body="snapshotted body",
+        round_state=round_state,
+    )
+    md = orch / "review-snapshot-pass.md"
+    yaml_path = orch / "review-snapshot-pass.yaml"
+    assert md.is_file()
+    assert yaml_path.is_file()
+    assert md.read_text() == "snapshotted body"
+    # No leftover .tmp-<pid> files (atomic rename succeeded).
+    leftovers = [p for p in orch.iterdir() if ".tmp-" in p.name]
+    assert leftovers == []
+
+    # Simulated crash: force _atomic_write_text to raise AFTER the
+    # sidecar is written but BEFORE the MD. _restore_snapshot must
+    # correctly return False — orphan sidecar alone is not a valid
+    # restore point.
+    md.unlink()
+    yaml_path.unlink()
+
+    real_atomic = v6_build._atomic_write_text
+    calls = {"n": 0}
+
+    def flaky_atomic(path, body):
+        calls["n"] += 1
+        if calls["n"] == 2:  # fail between yaml (1st) and md (2nd)
+            raise OSError("simulated disk failure mid-snapshot")
+        real_atomic(path, body)
+
+    monkeypatch.setattr(v6_build, "_atomic_write_text", flaky_atomic)
+    import contextlib
+    with contextlib.suppress(OSError):
+        v6_build._snapshot_passing_round(
+            level="a1", slug="atomic",
+            content_body="will not land",
+            round_state=round_state,
+        )
+
+    # Sidecar present (written first) but MD missing — restore refuses.
+    assert yaml_path.is_file()
+    assert not md.is_file()
+    restored = v6_build._restore_snapshot(
+        level="a1", slug="atomic", content_path=content_path,
+    )
+    assert restored is False
+    # Live content untouched.
+    assert content_path.read_text() == "live content"
+
+
 def test_monotonic_score_invariant(tmp_path, monkeypatch):
     """Property: final accepted score is never lower than any
     previously-captured passing round. With the current loop's
