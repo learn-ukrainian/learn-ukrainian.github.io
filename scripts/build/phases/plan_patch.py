@@ -331,19 +331,57 @@ def _dispatch_gemini_plan_patch(
     return True, response_text
 
 
-def parse_plan_patch_response(raw_output: str) -> dict | None:
-    """Parse the structured Gemini plan-patch payload."""
+@dataclass(frozen=True)
+class PlanPatchParseOutcome:
+    """Result of parsing plan-patch Gemini output, with explicit failure modes."""
+
+    data: dict | None
+    failure_reason: str | None
+
+    @property
+    def ok(self) -> bool:
+        return self.data is not None and self.failure_reason is None
+
+
+def parse_plan_patch_response(raw_output: str) -> PlanPatchParseOutcome:
+    """Parse the structured Gemini plan-patch payload.
+
+    Returns a ``PlanPatchParseOutcome`` with an explicit ``failure_reason``
+    when delimiters are missing, YAML is unparseable, or the payload shape
+    is unexpected.  The caller must inspect ``.ok`` before using ``.data``.
+    """
+    if not raw_output or not raw_output.strip():
+        return PlanPatchParseOutcome(data=None, failure_reason="empty_output")
+
     extracted = extract_delimited(raw_output, PLAN_PATCH_TAG)
     if extracted is None:
-        extracted = raw_output
+        return PlanPatchParseOutcome(
+            data=None,
+            failure_reason="missing_delimiters",
+        )
+
     cleaned = _strip_code_fence(extracted)
     if not cleaned:
-        return None
+        return PlanPatchParseOutcome(
+            data=None,
+            failure_reason="empty_payload_between_delimiters",
+        )
+
     try:
         data = yaml.safe_load(cleaned)
-    except yaml.YAMLError:
-        return None
-    return data if isinstance(data, dict) else None
+    except yaml.YAMLError as exc:
+        return PlanPatchParseOutcome(
+            data=None,
+            failure_reason=f"yaml_parse_error: {exc}",
+        )
+
+    if not isinstance(data, dict):
+        return PlanPatchParseOutcome(
+            data=None,
+            failure_reason=f"unexpected_payload_type: {type(data).__name__}",
+        )
+
+    return PlanPatchParseOutcome(data=data, failure_reason=None)
 
 
 def _parse_path(path: str) -> list[str | int]:
@@ -608,22 +646,37 @@ def run_plan_patch(
             complaint_summary=complaint_summary,
         )
 
-    response = parse_plan_patch_response(raw_output)
-    if response is None:
+    parse_outcome = parse_plan_patch_response(raw_output)
+    if not parse_outcome.ok:
+        # Save diagnostic artifact so operators can distinguish failure modes
+        diag_path = orch_dir / "v6-plan-patch-diagnostic.yaml"
+        write_text_atomic(
+            diag_path,
+            yaml.safe_dump(
+                {
+                    "failure_reason": parse_outcome.failure_reason,
+                    "raw_output_length": len(raw_output),
+                    "raw_output_preview": raw_output[:500] if raw_output else "",
+                },
+                allow_unicode=True,
+                sort_keys=False,
+            ),
+            encoding="utf-8",
+        )
         return PlanPatchResult(
             applied=False,
-            reason="Gemini returned no parseable plan-patch payload",
+            reason=f"plan-patch parse failed: {parse_outcome.failure_reason}",
             complaint_summary=complaint_summary,
         )
 
     parsed_path = orch_dir / "v6-plan-patch-response.yaml"
     write_text_atomic(
         parsed_path,
-        yaml.safe_dump(response, allow_unicode=True, sort_keys=False),
+        yaml.safe_dump(parse_outcome.data, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )
     return apply_plan_patch_response(
         plan_path,
-        response,
+        parse_outcome.data,
         complaint_summary=complaint_summary,
     )
