@@ -8,7 +8,34 @@ FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI)
 
 ## Agent Quick Start
 
-First call for a fresh agent session:
+**Recommended cold-start sequence (GH #1309, since P1):**
+
+```bash
+# 1. Tiny index of per-component hashes — decide what to fetch.
+curl -s http://localhost:8765/api/state/manifest
+
+# 2. Only fetch components whose hash changed since last session.
+curl -s http://localhost:8765/api/rules?format=markdown     # ~1.3 KB
+curl -s http://localhost:8765/api/session/current           # ~1-3 KB
+
+# 3. Always-fresh: git, pipeline, runtime, wiki, health, hints — with meta.
+curl -s http://localhost:8765/api/orient
+# Use ?fresh=true right after you committed or filed an issue.
+
+# 4. Optional: do I have unread channel deliveries?
+curl -s "http://localhost:8765/api/comms/inbox?agent=claude"
+```
+
+Agents should keep a small on-disk cache keyed by manifest hash
+(`.agent/cache/monitor/*.body`). When the manifest's hash matches
+what you cached, skip the payload fetch entirely — the bytes are
+still authoritative. A ready-to-use helper lives at
+``scripts/ai_agent_bridge/_monitor_cache.py``; the client SDK
+(``scripts/monitor_client.py``) will wrap this in P3.
+
+---
+
+### One-shot orient (unchanged, still useful)
 
 ```bash
 curl -s http://localhost:8765/api/orient | python3 -m json.tool
@@ -1115,6 +1142,90 @@ fallback (e.g. `git: {"error": "..."}`) while every other section
 still populates. A single wedged collector never takes down the
 whole response — this fixed the incident logged in the first entry
 of `docs/monitor-api/cold-start-baseline.md`.
+
+---
+
+## Cold-Start Consolidation — `/api/state/manifest`, `/api/rules`, `/api/session/current`, `/api/comms/inbox` (#1309)
+
+Per the Agent Quick Start above, these four endpoints are the
+P1 scaffolding for bootstrapping a fresh agent with a single small
+round-trip.
+
+### `GET /api/state/manifest`
+
+Tiny JSON index. Target size < 2 KB. An agent checks the per-component
+hashes against its local cache and only refetches what changed.
+
+```json
+{
+  "generated_at": "2026-04-17T10:15:00Z",
+  "rules":   {"hash": "abc...", "url": "/api/rules?format=markdown"},
+  "session": {"hash": "def...", "url": "/api/session/current?format=markdown"},
+  "orient":  {"url": "/api/orient", "fresh_param": "?fresh=true"},
+  "inbox":   {"url_template": "/api/comms/inbox?agent={name}"}
+}
+```
+
+- `rules.hash` / `session.hash` — sha256 of the Markdown blob each
+  endpoint would currently return. An empty string means the source
+  wasn't readable at manifest time (logged but not fatal).
+- `orient` / `inbox` don't need a manifest hash — `/api/orient`
+  already carries per-section `meta` with its own `generated_at` +
+  `cache` + `source` fields, and `/api/comms/inbox` is always
+  point-in-time.
+
+### `GET /api/rules?format={markdown,json}`
+
+Condensed rule text from `claude_extensions/rules/` (critical +
+non-negotiable + workflow, in that order). Source of truth is the
+checked-in files so a fresh clone or worktree that hasn't deployed
+to `.claude/rules/` still gets correct content.
+
+- `format=markdown` (default) → `text/markdown; charset=utf-8` with
+  an `X-Rules-Hash` header. Drop-in for a system prompt.
+- `format=json` → `{hash, bytes, sources[], markdown}`. Use this when
+  an SDK needs to reconcile the hash against its on-disk cache.
+
+### `GET /api/session/current?format={markdown,json}`
+
+`docs/session-state/current.md` plus a short list of recent handoff
+filenames (newest first). Kept intentionally small — the endpoint
+answers "what do I need to know RIGHT NOW to keep working", not
+"give me the full history".
+
+### `GET /api/comms/inbox?agent={claude,gemini,codex}&limit=10`
+
+Per-agent READ-ONLY view of unread channel deliveries (oldest first).
+Replaces the rejected `agent_view=…` param on `/api/orient`. Payload
+is compact — one entry per delivery with a 160-char body preview and
+provenance (channel, from_agent, dispatched_at, attempt_count).
+
+To actually drain messages, use `ai_agent_bridge` CLI as usual; this
+endpoint is for "do I have work waiting?" checks during cold-start.
+
+### Agent-side cache
+
+`scripts/ai_agent_bridge/_monitor_cache.py` — small, pure-stdlib
+on-disk cache under `.agent/cache/monitor/`. Round-trip:
+
+```python
+from scripts.ai_agent_bridge import _monitor_cache as cache
+
+manifest = httpx.get("http://localhost:8765/api/state/manifest").json()
+rules = cache.get("rules", expected_hash=manifest["rules"]["hash"])
+if rules is None:
+    body = httpx.get("http://localhost:8765" + manifest["rules"]["url"]).text
+    cache.put(
+        "rules", body,
+        body_hash=manifest["rules"]["hash"],
+        url=manifest["rules"]["url"],
+    )
+    rules = body
+# `rules` is the condensed rule markdown, either cached or fresh.
+```
+
+Override the cache directory with `MONITOR_CACHE_DIR=...` for tests
+or alternate checkouts.
 
 ---
 

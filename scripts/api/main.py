@@ -48,7 +48,9 @@ from .delegate_router import router as delegate_router
 from .gold_router import router as gold_router
 from .images_router import router as images_router
 from .rag_router import router as rag_router
+from .rules_router import router as rules_router
 from .runtime_router import router as runtime_router
+from .session_router import router as session_router
 from .state_helpers import cache_get, cache_invalidate, cache_set
 from .state_router import router as state_router
 from .wiki_router import router as wiki_router
@@ -90,7 +92,9 @@ app.include_router(gold_router, prefix="/api/gold")
 app.include_router(build_events_router, prefix="/api/build/events")
 app.include_router(images_router, prefix="/api/images")
 app.include_router(rag_router, prefix="/api/rag")
+app.include_router(rules_router, prefix="/api/rules", tags=["rules"])
 app.include_router(runtime_router, prefix="/api/runtime")
+app.include_router(session_router, prefix="/api/session", tags=["session"])
 app.include_router(state_router, prefix="/api/state")
 app.include_router(wiki_router, prefix="/api/wiki", tags=["wiki"])
 

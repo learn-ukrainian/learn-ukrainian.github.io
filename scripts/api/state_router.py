@@ -426,3 +426,68 @@ async def outstanding_issues(
 ):
     """Aggregated outstanding issues from review files + audit failures."""
     return await asyncio.to_thread(compute_issues, track, severity)
+
+
+# ==================== MANIFEST (#1309) ====================
+
+
+@router.get("/manifest")
+async def manifest():
+    """Tiny JSON index for agent cold-start coordination.
+
+    Target size < 2 KB. Returns a hash + URL for every consolidated
+    component an agent might need at boot. Agents keep a per-hash
+    cache (see ``scripts/ai_agent_bridge/_monitor_cache.py`` / the
+    client SDK) and only refetch components whose hash changed since
+    the last manifest they consumed.
+
+    Shape::
+        {
+          "generated_at": "2026-04-17T10:15:00Z",
+          "rules":   {"hash": "...", "url": "/api/rules?format=markdown"},
+          "session": {"hash": "...", "url": "/api/session/current?format=markdown"},
+          "orient":  {"url": "/api/orient"},
+          "inbox":   {"url_template": "/api/comms/inbox?agent={name}"}
+        }
+
+    ``rules`` and ``session`` expose a content hash so an agent can
+    skip the payload entirely when unchanged. ``orient`` and ``inbox``
+    have their own freshness machinery (TTLs, ``?fresh=true``, and
+    per-section ``meta``) so they don't need a manifest hash.
+
+    Reviewer BLOCKER #1309: without this endpoint an agent booting
+    fresh had to read 5-8 files (CLAUDE.md + three rule files +
+    current.md + recent handoffs + MONITOR-API.md) to orient — every
+    session, every compaction. The manifest collapses the steady
+    state to one tiny call.
+    """
+    from datetime import UTC
+    from datetime import datetime as _dt
+
+    from .rules_router import rules_hash
+    from .session_router import session_hash
+
+    return {
+        "generated_at": _dt.now(UTC).isoformat().replace("+00:00", "Z"),
+        "rules": {
+            "hash": rules_hash(),
+            "url": "/api/rules?format=markdown",
+            "format": "markdown",
+            "note": "Condensed critical + non-negotiable + workflow rules. Drop straight into a system prompt.",
+        },
+        "session": {
+            "hash": session_hash(),
+            "url": "/api/session/current?format=markdown",
+            "format": "markdown",
+            "note": "Current.md + recent session-state handoff filenames.",
+        },
+        "orient": {
+            "url": "/api/orient",
+            "fresh_param": "?fresh=true",
+            "note": "Per-section TTL cache + meta. Most agents only need the sections whose TTL has elapsed.",
+        },
+        "inbox": {
+            "url_template": "/api/comms/inbox?agent={name}",
+            "note": "Read-only view of unread channel deliveries for one agent.",
+        },
+    }
