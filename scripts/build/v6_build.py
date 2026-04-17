@@ -6717,6 +6717,15 @@ def _rewrite_block_section(
         # Requiring 60% of the original length prevents a cleaner rewrite from
         # landing when the reviewer explicitly asked for subtraction.
         min_word_ratio = 0.30
+    if (
+        "summary" in resolved_title.lower() or "підсумок" in resolved_title.lower()
+    ) and directive_issue_types.intersection(
+        {"REGISTER_MISMATCH", "EXPLANATION_TONE_MISMATCH", "STYLE_REGISTER_MISMATCH"}
+    ):
+        # Summary register cleanup often removes workbook commands, bilingual
+        # glosses, and abstract lecture framing. Those are valid contractions,
+        # not evidence of a broken rewrite.
+        min_word_ratio = min(min_word_ratio, 0.35)
     min_rewrite_words = min(original_words, max(8, int(original_words * min_word_ratio)))
     if rewritten_words < min_rewrite_words:
         _log(f"  ❌ Rewrite block rejected for {resolved_title} — too short ({rewritten_words} words)")

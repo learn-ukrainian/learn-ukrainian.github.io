@@ -379,6 +379,61 @@ def test_rewrite_block_section_allows_shorter_meta_narration_cleanup_outside_sum
     assert "Коротше, але зміст лишається." in updated
 
 
+def test_rewrite_block_section_allows_shorter_summary_register_cleanup(
+    tmp_path: Path, monkeypatch
+) -> None:
+    level = "a1"
+    slug = "rewrite-summary-register"
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    orch_dir = curriculum_root / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    original_summary = " ".join(["запам'ятайте"] * 320)
+    content_path.write_text(
+        f"## Підсумок — Summary\n{original_summary}\n",
+        "utf-8",
+    )
+
+    rewritten_summary = " ".join(["сьогодні", "я", "хочу", "каву"] * 28)
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(
+        v6_build,
+        "_ensure_contract_artifacts",
+        lambda *args, **kwargs: (
+            {"activity_obligations": []},
+            {"sections": {"Підсумок — Summary": []}, "factual_anchors": []},
+        ),
+    )
+    monkeypatch.setattr(
+        v6_build,
+        "_dispatch_rewrite_prompt",
+        lambda *args, **kwargs: (
+            True,
+            f"## Підсумок — Summary\n{rewritten_summary}\n",
+        ),
+    )
+
+    ok = v6_build._rewrite_block_section(
+        content_path,
+        level=level,
+        module_num=18,
+        slug=slug,
+        writer="gemini",
+        section_name="Підсумок — Summary",
+        directive=(
+            "Style review blocking issues to fix in this section:\n"
+            "- Issue type: REGISTER_MISMATCH\n"
+            "- Issue type: EXPLANATION_TONE_MISMATCH\n"
+            "- Required fix: Replace workbook commands and abstract recap with a short plain A1 recap."
+        ),
+    )
+
+    assert ok is True
+    updated = content_path.read_text("utf-8")
+    assert rewritten_summary in updated
+    assert original_summary not in updated
 def test_main_marks_needs_human_review_after_two_rounds(tmp_path: Path, monkeypatch) -> None:
     level = "a1"
     slug = "needs-human"
