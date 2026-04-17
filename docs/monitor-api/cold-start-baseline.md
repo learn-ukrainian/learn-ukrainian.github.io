@@ -3,7 +3,7 @@
 Measurement log for GH #1309. Each run appends a new entry.
 Compare successive runs to confirm each P0/P1 change reduces cost.
 
-Run: `.venv/bin/python scripts/measure_cold_start.py --label "<label>"`
+Run: `.venv/bin/python scripts/ai_agent_bridge/measure_cold_start.py --label "<label>"`
 
 What "cold start" means here: a fresh agent session hitting the API to
 orient itself, plus all repo files it has to read because the API does
@@ -96,7 +96,7 @@ the shipped code, not whatever happens to be running on localhost.
 - **Reliability**: wedged `/api/orient` (pre-P0) → bounded by per-section hard timeout + failure isolation + `?fresh=true` bypass (P0).
 
 The residual file reads per `MANUAL_FILE_READS` in
-`scripts/measure_cold_start.py` are `CLAUDE.md` (loaded automatically
+`scripts/ai_agent_bridge/measure_cold_start.py` are `CLAUDE.md` (loaded automatically
 by the Claude harness; not a cold-start cost the harness can skip)
 and `docs/WORKSTREAMS.md` (read on demand, not every session).
 Onboarding docs now direct all three agents (Claude, Gemini, Codex)

@@ -12,17 +12,17 @@ measuring the real cold-start budget".
 Usage:
     # Default — JSON to stdout, repo stays clean. Safe for ad-hoc "what
     # does this look like right now" checks and for CI.
-    .venv/bin/python scripts/measure_cold_start.py
+    .venv/bin/python scripts/ai_agent_bridge/measure_cold_start.py
 
     # Explicit append — ``--label`` says "this run is worth tracking".
     # Only labelled runs mutate the repo by appending to the baseline
     # doc. Previously the default appended on every invocation; that
     # dirtied the working tree in CI smoke tests and local scratch
     # runs (reviewer CONCERN C4 / GH #1309).
-    .venv/bin/python scripts/measure_cold_start.py --label "pre-caching"
+    .venv/bin/python scripts/ai_agent_bridge/measure_cold_start.py --label "pre-caching"
 
     # Labelled run without repo mutation (explicitly opt out).
-    .venv/bin/python scripts/measure_cold_start.py --label foo --no-append
+    .venv/bin/python scripts/ai_agent_bridge/measure_cold_start.py --label foo --no-append
 
 Output:
     JSON summary on stdout. A run with ``--label`` also appends a
@@ -41,7 +41,9 @@ from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+# File lives at scripts/ai_agent_bridge/measure_cold_start.py →
+# repo root is two levels up.
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 BASELINE_DOC = PROJECT_ROOT / "docs" / "monitor-api" / "cold-start-baseline.md"
 
 # Endpoints a fresh agent should hit to get oriented. This list is the
