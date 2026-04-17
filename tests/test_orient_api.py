@@ -195,3 +195,120 @@ def test_orient_errors_are_not_cached(monkeypatch):
     assert "error" not in second.json()["git"]
     assert second.json()["git"]["head"] == "abc123"
     assert attempts["n"] == 2
+
+
+def test_orient_issues_errors_are_not_cached(monkeypatch):
+    """Regression for GH #1309 / reviewer BLOCKER B1/C3.
+
+    The first P0 commit for #1309 swallowed collector exceptions inside
+    ``_collect_issues_orient_data`` and returned ``{"issues": [],
+    "issues_error": ...}`` as a "successful" value. That value was then
+    cached for the full 120 s TTL — a transient ``gh`` blip poisoned
+    the endpoint for two minutes.
+
+    Fix: the collector now raises and the ``_cached_orient_section``
+    error branch does not call ``cache_set``. This test asserts the
+    second call re-invokes the collector and returns a fresh payload.
+    """
+    _patch_orient_sources(monkeypatch)
+    attempts = {"n": 0}
+
+    def flaky_issues():
+        attempts["n"] += 1
+        if attempts["n"] == 1:
+            raise RuntimeError("gh rate limited")
+        return {"issues": [{"number": 1309}]}
+
+    monkeypatch.setattr(api_main, "_collect_issues_orient_data", flaky_issues)
+
+    first = client.get("/api/orient").json()
+    second = client.get("/api/orient").json()
+
+    # First call: error surfaced both top-level and in meta; payload is fallback.
+    assert first["issues"] == []
+    assert first["issues_error"] == "gh rate limited"
+    assert first["meta"]["issues"]["error"].startswith("RuntimeError:")
+
+    # Second call: collector retried, fresh payload, no leftover error.
+    assert second["issues"] == [{"number": 1309}]
+    assert "issues_error" not in second
+    assert "error" not in second["meta"]["issues"]
+    assert attempts["n"] == 2
+
+
+def test_orient_fresh_query_bypasses_cache(monkeypatch):
+    """`?fresh=true` must invalidate every orient_* cache entry.
+
+    Regression for GH #1309 / reviewer BLOCKER B3: an agent that just
+    made a commit needs a way to see its own work without waiting up
+    to 30 s for the git TTL to expire.
+    """
+    _patch_orient_sources(monkeypatch)
+    calls = {"git": 0}
+
+    def counting_git():
+        calls["git"] += 1
+        return {"branch": "main", "head": f"abc{calls['git']}"}
+
+    monkeypatch.setattr(api_main, "_collect_git_orient_data", counting_git)
+
+    client.get("/api/orient")
+    client.get("/api/orient")  # cache hit, collector not called
+    client.get("/api/orient?fresh=true")  # bypasses cache
+
+    assert calls["git"] == 2
+
+
+def test_orient_pipeline_section_skips_orient_layer_cache(monkeypatch):
+    """Pipeline must NOT be cached at the orient layer.
+
+    Regression for GH #1309 / reviewer BLOCKER B2: ``pipeline`` wraps
+    ``state_summary()`` which already has its own 60 s cache. A second
+    cache at the orient layer stacks the windows and can label up to
+    119 s old data as fresh. We avoid this by setting TTL to 0 for
+    pipeline — the collector runs on every request.
+    """
+    _patch_orient_sources(monkeypatch)
+
+    calls = {"pipeline": 0}
+
+    async def counting_pipeline():
+        calls["pipeline"] += 1
+        return {"summary": {"run": calls["pipeline"]}}
+
+    monkeypatch.setattr(api_main, "_collect_pipeline_orient_data", counting_pipeline)
+
+    client.get("/api/orient")
+    client.get("/api/orient")
+    client.get("/api/orient")
+
+    assert calls["pipeline"] == 3, (
+        "pipeline collector must run on every orient call (TTL=0)"
+    )
+    # And the meta must always say miss, never hit.
+    data = client.get("/api/orient").json()
+    assert data["meta"]["pipeline"]["cache"] == "miss"
+
+
+def test_orient_generated_at_floor_reflects_oldest_section(monkeypatch):
+    """Top-level ``generated_at`` is the oldest section's timestamp.
+
+    Regression for GH #1309 / reviewer CONCERN C1: request time was
+    misleading — a fully cached response with 90 s old data was
+    reporting ``generated_at = <now>``. Now the top-level field is
+    the floor across every section.
+    """
+    _patch_orient_sources(monkeypatch)
+
+    # Warm the cache so sections have distinct generated_at timestamps
+    # that are older than "now".
+    client.get("/api/orient")
+    time.sleep(0.05)  # ensure measurable delta on the second call
+    second = client.get("/api/orient").json()
+
+    section_timestamps = [
+        m["generated_at"] for m in second["meta"].values() if m.get("generated_at")
+    ]
+    assert section_timestamps, "every section should have generated_at"
+    # Top-level must equal the minimum — NOT be the newest "now" stamp.
+    assert second["generated_at"] == min(section_timestamps)

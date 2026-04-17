@@ -10,13 +10,24 @@ measured — per GH #1309 / reviewer BLOCKER "don't add endpoints before
 measuring the real cold-start budget".
 
 Usage:
+    # Default — JSON to stdout, repo stays clean. Safe for ad-hoc "what
+    # does this look like right now" checks and for CI.
     .venv/bin/python scripts/measure_cold_start.py
+
+    # Explicit append — ``--label`` says "this run is worth tracking".
+    # Only labelled runs mutate the repo by appending to the baseline
+    # doc. Previously the default appended on every invocation; that
+    # dirtied the working tree in CI smoke tests and local scratch
+    # runs (reviewer CONCERN C4 / GH #1309).
     .venv/bin/python scripts/measure_cold_start.py --label "pre-caching"
-    .venv/bin/python scripts/measure_cold_start.py --json-only
+
+    # Labelled run without repo mutation (explicitly opt out).
+    .venv/bin/python scripts/measure_cold_start.py --label foo --no-append
 
 Output:
-    JSON summary on stdout. Markdown report appended to
-    docs/monitor-api/cold-start-baseline.md unless --json-only is set.
+    JSON summary on stdout. A run with ``--label`` also appends a
+    Markdown block to ``docs/monitor-api/cold-start-baseline.md``
+    unless ``--no-append`` is set.
 """
 
 from __future__ import annotations
@@ -92,12 +103,20 @@ class ColdStartMeasurement:
     notes: str = ""
 
 
-def _estimate_tokens(total_bytes: int) -> int:
-    """Rough token estimate — 4 chars per token is the common heuristic.
+def _estimate_tokens_from_bytes(total_bytes: int) -> int:
+    """Very rough token estimate — ``bytes // 4``.
 
-    This is an estimate, not a precise count. For tighter numbers later,
-    swap in tiktoken against the actual model tokenizer. We keep it
-    dependency-free here because the script runs in any venv.
+    Named explicitly after the input unit (bytes) because the heuristic
+    is actually "~4 chars per token" and chars vs. bytes only coincide
+    for ASCII. A 2-byte-per-char Cyrillic payload (the common case
+    for this repo — Ukrainian curriculum content) reads as roughly
+    1.5-2× more tokens than this function reports. Treat the output
+    as a lower bound, not an accurate count.
+
+    We keep the heuristic dependency-free on purpose: the script runs
+    in any venv, no tiktoken install required. If tighter numbers
+    matter, swap this out for a tokenizer call against the real
+    model. Reviewer CONCERN C4 / GH #1309.
     """
     return total_bytes // 4
 
@@ -161,7 +180,7 @@ def measure(label: str) -> ColdStartMeasurement:
         file_reads=sum(1 for f in files if f.exists),
         file_bytes=file_bytes,
         total_bytes=total_bytes,
-        est_input_tokens=_estimate_tokens(total_bytes),
+        est_input_tokens=_estimate_tokens_from_bytes(total_bytes),
         endpoints=endpoints,
         files=files,
     )
@@ -173,7 +192,7 @@ def _render_markdown(m: ColdStartMeasurement) -> str:
         "",
         f"- **Tool calls**: {m.api_calls} API + {m.file_reads} file reads = **{m.api_calls + m.file_reads} total**",
         f"- **Bytes**: {m.api_bytes:,} API + {m.file_bytes:,} files = **{m.total_bytes:,} total**",
-        f"- **Est. input tokens**: ~{m.est_input_tokens:,} (chars/4 heuristic)",
+        f"- **Est. input tokens**: ~{m.est_input_tokens:,} (bytes/4 heuristic; Cyrillic-heavy payloads are ~1.5–2× higher)",
         f"- **API latency**: {m.api_elapsed_ms} ms across {m.api_calls} call(s)",
         "",
         "### API calls",
@@ -218,19 +237,42 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--label",
-        default="baseline",
-        help="Short label for this measurement (e.g. 'baseline', 'post-caching').",
+        default=None,
+        help=(
+            "Short label for this measurement (e.g. 'baseline', "
+            "'post-caching'). Passing a label also appends a Markdown "
+            "block to the baseline doc — that is the explicit signal "
+            "that this run is worth tracking in the repo."
+        ),
     )
+    parser.add_argument(
+        "--no-append",
+        action="store_true",
+        help=(
+            "Suppress the Markdown append even when --label is set. "
+            "Useful for CI smoke tests that want a labelled JSON "
+            "payload without mutating the working tree."
+        ),
+    )
+    # Kept for backward compatibility. The default is already JSON-only
+    # now, so this flag is a no-op. Prefer omitting --label, which is
+    # the new explicit "don't touch the repo" default.
     parser.add_argument(
         "--json-only",
         action="store_true",
-        help="Only emit JSON to stdout; skip appending markdown report.",
+        help=argparse.SUPPRESS,
     )
     args = parser.parse_args()
 
-    m = measure(args.label)
+    m = measure(args.label or "ad-hoc")
     print(json.dumps(asdict(m), indent=2))
-    if not args.json_only:
+
+    should_append = (
+        args.label is not None
+        and not args.no_append
+        and not args.json_only
+    )
+    if should_append:
         _append_markdown(m)
     return 0
 

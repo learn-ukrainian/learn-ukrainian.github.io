@@ -1027,17 +1027,17 @@ One-call agent orientation: git, issues, pipeline, runtime, delegate, wiki, heal
 
 #### Per-section caching + freshness metadata (#1309)
 
-Each section is computed by an independent collector with its own TTL
-cache. A repeat call within the TTL window skips the underlying shellout
-(`git`, `gh issue list`) or filesystem scan and returns the cached
-value. Errors are **not** cached — a transient failure retries on the
-next call.
+Each section is computed by an independent collector. Most have a
+per-section TTL cache; a repeat call within the window skips the
+underlying shellout (`git`, `gh issue list`) or filesystem scan and
+returns the cached value. Errors are **not** cached — a transient
+failure retries on the next call.
 
 | Section | TTL (s) | Source | Notes |
 |---|---:|---|---|
 | `git` | 30 | `git` | branch, head, ahead_of_origin, recent_commits |
 | `issues` | 120 | `gh` | top 10 open issues; slow API, rare updates |
-| `pipeline` | 60 | `fs` | wraps `/api/state/summary` (also cached 60 s) |
+| `pipeline` | 0 | `fs` | wraps `/api/state/summary`, which carries its **own** 60 s cache. Caching again at the orient layer would stack windows and label up-to-119 s-old data as fresh (#1309 reviewer BLOCKER B2). |
 | `runtime` | 60 | `fs` | agent registry + headroom + recent outcomes |
 | `delegate` | 30 | `fs` | active delegate/codex tasks |
 | `wiki` | 120 | `fs` | per-track wiki compilation coverage |
@@ -1048,23 +1048,67 @@ Every section is mirrored under `response.meta.<section>` with:
 
 - `generated_at` — ISO timestamp of the underlying collector run (useful
   when `cache: "hit"`: the value may be up to `stale_after_s` old).
-- `stale_after_s` — TTL window, so clients know when to refetch.
+- `stale_after_s` — TTL window, so clients know when to refetch. `0`
+  means "not cached at the orient layer" — the value is fetched on
+  every request, and downstream caching (if any) is documented in the
+  source endpoint.
 - `source` — origin class (`git` / `gh` / `fs` / `probe`) for quick
   provenance decisions.
-- `cache` — `"hit"` or `"miss"` on this specific call.
+- `cache` — `"hit"` or `"miss"` on this specific call. Sections with
+  `stale_after_s: 0` always report `"miss"`.
 - `error` — present only when the collector raised or timed out; value
   is the richer `"TypeName: msg"` form. (The section payload itself
   keeps the bare `str(exc)` error string for backwards compatibility.)
 
+The top-level `response.generated_at` is the **oldest** `generated_at`
+across sections — a fully cached response labels itself with the
+oldest piece of data the caller is looking at. (Before #1309 it was
+request time, which lied to consumers about freshness.)
+
+#### Cache bypass: `?fresh=true`
+
+Pass `?fresh=true` to invalidate every `orient_*` cache entry before
+gathering. Use it right after a write an agent wants to see
+immediately — a just-committed change, a just-filed issue — without
+waiting for the longest TTL (120 s for `issues` / `wiki`).
+
+```bash
+# Normal call — honours each section's TTL.
+curl -s http://localhost:8765/api/orient | jq .meta.git
+
+# After running `git commit` and you want the new HEAD reflected now.
+curl -s 'http://localhost:8765/api/orient?fresh=true' | jq .git.head
+```
+
+The query only clears this router's cache namespace; unrelated
+endpoints keep their caches intact.
+
 #### Failure isolation
 
-Each section runs inside `asyncio.wait_for(..., timeout=5 s)`. This
-properly cancels hung **async** coroutines (the `pipeline` collector).
-For **sync** collectors (git, gh, filesystem) the real protection is
-the 2 s `subprocess.run(..., timeout=)` inside `_run_command` — Python
-threads aren't cancellable once running, so `wait_for` on a sync path
-is belt-and-suspenders only. See comment near `ORIENT_SECTION_TTLS`
-in `scripts/api/main.py` for the constraint.
+Each section runs inside `asyncio.wait_for(..., timeout=5 s)`. That
+properly cancels hung **async** coroutines — for us, that is only the
+`pipeline` collector.
+
+For sync collectors run via `asyncio.to_thread`, the hard timeout is
+advisory: Python threads aren't cancellable once they start running.
+Real protection is collector-specific:
+
+| Collector | Inner timeout | Notes |
+|---|---|---|
+| `git` | 2 s `_run_command` subprocess timeout | hardened |
+| `issues` | 2 s `_run_command` subprocess timeout | hardened |
+| `pipeline` | async — `asyncio.wait_for` works | hardened |
+| `runtime` | none — pure Python / filesystem | fast in practice; an NFS stall could wedge a thread past the 5 s ceiling |
+| `delegate` | none — filesystem read of a small JSON | same caveat |
+| `wiki` | none — enumerates a small number of files | same caveat |
+| `health` | 0.2 s socket + fast `os.access` | hardened |
+| `session_hints` | none — `glob(...)[:10]` + short `read_text` | same caveat |
+
+The unwrapped sync collectors are cheap enough in practice that
+they've never been observed to block, but they are **not** inside a
+real timeout. If the underlying filesystem hangs, those threads will
+tie up threadpool slots past the 5 s ceiling. See the comment near
+`ORIENT_SECTION_TTLS` in `scripts/api/main.py` for the constraint.
 
 If a section fails or times out, its own payload degrades to a
 fallback (e.g. `git: {"error": "..."}`) while every other section

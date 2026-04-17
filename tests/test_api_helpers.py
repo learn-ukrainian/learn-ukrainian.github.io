@@ -295,8 +295,52 @@ class TestCacheFunctions:
     def test_cache_expired(self):
         from scripts.api.state_helpers import _ttl_cache, cache_get
 
-        _ttl_cache["test_expired"] = (time.time() - 100, "old_value")
+        # TTL timestamps use time.monotonic() (GH #1309 / reviewer
+        # BLOCKER B4 — resilience to wall-clock jumps / NTP skew), so
+        # a simulated "old" entry must also be on the monotonic clock.
+        _ttl_cache["test_expired"] = (time.monotonic() - 100, "old_value")
         assert cache_get("test_expired", ttl=10.0) is None
+
+    def test_cache_invalidate_by_prefix(self):
+        """cache_invalidate(prefix) drops matching keys only.
+
+        Used by `/api/orient?fresh=true` (BLOCKER B3 / GH #1309) to
+        bypass its own section caches without touching unrelated
+        caches in other routers.
+        """
+        from scripts.api.state_helpers import (
+            _ttl_cache,
+            cache_get,
+            cache_invalidate,
+            cache_set,
+        )
+
+        cache_set("orient_git", "g")
+        cache_set("orient_issues", "i")
+        cache_set("summary", "s")
+
+        dropped = cache_invalidate("orient_")
+
+        assert dropped == 2
+        assert cache_get("orient_git", ttl=60.0) is None
+        assert cache_get("orient_issues", ttl=60.0) is None
+        # Unrelated key must survive.
+        assert cache_get("summary", ttl=60.0) == "s"
+
+        # Cleanup — prefix="" clears everything, used by tests.
+        _ttl_cache.clear()
+
+    def test_cache_invalidate_default_clears_all(self):
+        from scripts.api.state_helpers import (
+            _ttl_cache,
+            cache_invalidate,
+            cache_set,
+        )
+
+        cache_set("a", 1)
+        cache_set("b", 2)
+        assert cache_invalidate() == 2
+        assert _ttl_cache == {}
 
 
 class TestFindContentFile:
