@@ -132,6 +132,63 @@ def test_strip_prompt_control_tags_preserves_plain_text_and_components() -> None
     assert "<!-- INJECT_ACTIVITY: quiz-intro -->" in cleaned
 
 
+def test_build_monitor_prompt_context_formats_compact_api_telemetry(monkeypatch) -> None:
+    payloads = {
+        "/api/artifacts/a1/hello": {
+            "ship_ready": False,
+            "gates": {
+                "content_exists": True,
+                "word_target_met": False,
+                "audit_pass": False,
+                "final_review_pass": False,
+                "plan_fresh": True,
+            },
+        },
+        "/api/artifacts/a1/hello/review-snapshot": {
+            "main_review": {
+                "score": 8.9,
+                "verdict": "REVISE",
+                "findings_count": 2,
+                "empty_findings_flag": False,
+            },
+            "style_review": {
+                "score": 8.3,
+                "verdict": "REVISE",
+                "findings_count": 1,
+                "empty_findings_flag": False,
+            },
+            "any_empty_findings_flag": False,
+        },
+        "/api/artifacts/a1/hello/drift": {
+            "in_sync": False,
+            "drift": [
+                {"kind": "mdx_without_state"},
+                {"kind": "review_without_audit"},
+            ],
+        },
+    }
+
+    monkeypatch.setattr(v6_build, "_monitor_api_get_json", lambda path, **kwargs: payloads.get(path))
+
+    block = v6_build._build_monitor_prompt_context("a1", "hello")
+
+    assert "## Monitor Telemetry" in block
+    assert "[BEGIN MONITOR TELEMETRY LITERAL" in block
+    assert "ship_ready: false" in block
+    assert "word_target_met: false" in block
+    assert "score: 8.9" in block
+    assert "verdict: REVISE" in block
+    assert "kinds:" in block
+    assert "mdx_without_state" in block
+    assert "Use it as operational context for retries/review." in block
+
+
+def test_build_monitor_prompt_context_degrades_cleanly_when_api_unavailable(monkeypatch) -> None:
+    monkeypatch.setattr(v6_build, "_monitor_api_get_json", lambda *args, **kwargs: None)
+
+    assert v6_build._build_monitor_prompt_context("a1", "hello") == ""
+
+
 def test_step_write_wraps_prompt_artifacts_in_literal_blocks(
     tmp_path: Path,
     monkeypatch,
@@ -169,6 +226,7 @@ def test_step_write_wraps_prompt_artifacts_in_literal_blocks(
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
     monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
     monkeypatch.setattr(v6_build, "_resolve_persona", lambda *args, **kwargs: ("", ""))
+    monkeypatch.setattr(v6_build, "_build_monitor_prompt_context", lambda *args, **kwargs: "\n\n## Monitor Telemetry\n\ntelemetry\n")
     monkeypatch.setattr(dispatch, "dispatch_agent", fake_dispatch)
 
     output_path = v6_build.step_write(
@@ -190,6 +248,7 @@ def test_step_write_wraps_prompt_artifacts_in_literal_blocks(
         assert "[BEGIN SECTION WIKI EXCERPTS LITERAL" in text
         assert "[BEGIN SKELETON LITERAL" in text
         assert "[BEGIN PRE VERIFIED FACTS LITERAL" in text
+        assert "## Monitor Telemetry" in text
         assert "<assistant>" not in text
         assert "<verification>" not in text
         assert "<skeleton>" not in text
@@ -260,6 +319,7 @@ def test_step_review_wraps_generated_content_and_reports_as_literals(
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
     monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
     monkeypatch.setattr(v6_build, "_build_vesum_report", lambda *args, **kwargs: "<vesum_verification>verified</vesum_verification>")
+    monkeypatch.setattr(v6_build, "_build_monitor_prompt_context", lambda *args, **kwargs: "\n\n## Monitor Telemetry\n\ntelemetry\n")
     monkeypatch.setattr(v6_build, "_save_structured_findings", lambda *args, **kwargs: None)
     monkeypatch.setattr(dispatch, "dispatch_agent", fake_dispatch)
 
@@ -275,6 +335,7 @@ def test_step_review_wraps_generated_content_and_reports_as_literals(
         assert "[BEGIN SECTION WIKI EXCERPTS LITERAL" in text
         assert "[BEGIN GENERATED MODULE CONTENT LITERAL" in text
         assert "[BEGIN VESUM VERIFICATION DATA LITERAL" in text
+        assert "## Monitor Telemetry" in text
         assert "<assistant>" not in text
         assert "<vesum_verification>" not in text
         assert "<fixes>" not in text
@@ -430,6 +491,7 @@ def test_step_review_style_wraps_generated_content_as_literals(
 
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
     monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
+    monkeypatch.setattr(v6_build, "_build_monitor_prompt_context", lambda *args, **kwargs: "\n\n## Monitor Telemetry\n\ntelemetry\n")
     monkeypatch.setattr(dispatch, "dispatch_agent", fake_dispatch)
 
     passed, score, _raw = v6_build.step_review_style(content_path, level, 1, slug, writer="claude")
@@ -446,6 +508,7 @@ def test_step_review_style_wraps_generated_content_as_literals(
         assert "[BEGIN MODULE CONTRACT LITERAL" in text
         assert "[BEGIN SECTION WIKI EXCERPTS LITERAL" in text
         assert "[BEGIN GENERATED MODULE CONTENT LITERAL" in text
+        assert "## Monitor Telemetry" in text
         assert "<assistant>" not in text
         assert "Український текст." in text
 
