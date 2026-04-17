@@ -14,8 +14,10 @@ import json
 import os
 import socket
 import subprocess
+from collections.abc import Awaitable, Callable
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -47,6 +49,7 @@ from .gold_router import router as gold_router
 from .images_router import router as images_router
 from .rag_router import router as rag_router
 from .runtime_router import router as runtime_router
+from .state_helpers import cache_get, cache_set
 from .state_router import router as state_router
 from .wiki_router import router as wiki_router
 
@@ -96,6 +99,47 @@ app.include_router(wiki_router, prefix="/api/wiki", tags=["wiki"])
 _SERVER_START = datetime.now(UTC)
 SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 SESSION_STATE_DIR = PROJECT_ROOT / "docs" / "session-state"
+
+# --- /api/orient caching + failure isolation (GH #1309) ----------------
+#
+# Per-section TTLs (seconds). Tuned for each collector's cost + change
+# frequency. Shared in-memory cache lives in state_helpers.cache_*; keys
+# are prefixed with "orient_" to avoid collision with other routers.
+#
+# Hard per-section timeout caps one wedged async collector. See the
+# first entry in docs/monitor-api/cold-start-baseline.md for the
+# incident that motivated this.
+#
+# Scope caveat: ``asyncio.wait_for`` cannot actually cancel a sync
+# function running inside ``asyncio.to_thread`` — Python threads
+# aren't cancellable once started. So for sync collectors (git, gh,
+# filesystem scans) the real protection is the per-subprocess
+# ``timeout`` in ``_run_command`` (2 s). The hard timeout below is
+# authoritative for the pipeline collector, which is a true
+# coroutine, and is a belt-and-suspenders backstop for the rest.
+ORIENT_SECTION_TTLS: dict[str, float] = {
+    "git": 30.0,
+    "issues": 120.0,
+    "pipeline": 60.0,
+    "runtime": 60.0,
+    "delegate": 30.0,
+    "wiki": 120.0,
+    "health": 15.0,
+    "session_hints": 60.0,
+}
+
+ORIENT_SECTION_SOURCES: dict[str, str] = {
+    "git": "git",
+    "issues": "gh",
+    "pipeline": "fs",
+    "runtime": "fs",
+    "delegate": "fs",
+    "wiki": "fs",
+    "health": "probe",
+    "session_hints": "fs",
+}
+
+ORIENT_SECTION_HARD_TIMEOUT_S = 5.0
 
 
 def _parse_iso_datetime(value: str | None) -> datetime | None:
@@ -319,48 +363,109 @@ async def health_check():
     }
 
 
+async def _cached_orient_section(
+    key: str,
+    collector: Callable[[], Any] | Callable[[], Awaitable[Any]],
+    fallback: Any,
+    *,
+    is_async: bool = False,
+) -> tuple[Any, dict]:
+    """Run one orient collector with TTL cache + hard timeout + fallback.
+
+    Returns (value, meta). Meta always includes ``generated_at``,
+    ``stale_after_s``, ``source``, and ``cache`` ("hit" / "miss"); it
+    adds ``error`` on failure so callers can tell a populated section
+    from a degraded one.
+
+    Errors are NOT cached — the next call retries. This is intentional:
+    a transient git/gh hiccup shouldn't poison a 2-minute TTL window.
+    """
+    ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
+    source = ORIENT_SECTION_SOURCES.get(key, "fs")
+    cache_key = f"orient_{key}"
+
+    cached = cache_get(cache_key, ttl=ttl)
+    if cached is not None:
+        value, generated_at = cached  # type: ignore[misc]
+        return value, {
+            "generated_at": generated_at,
+            "stale_after_s": ttl,
+            "source": source,
+            "cache": "hit",
+        }
+
+    generated_at = _isoformat_z(datetime.now(UTC))
+    meta: dict[str, Any] = {
+        "generated_at": generated_at,
+        "stale_after_s": ttl,
+        "source": source,
+        "cache": "miss",
+    }
+
+    try:
+        if is_async:
+            value = await asyncio.wait_for(
+                collector(),  # type: ignore[misc]
+                timeout=ORIENT_SECTION_HARD_TIMEOUT_S,
+            )
+        else:
+            value = await asyncio.wait_for(
+                asyncio.to_thread(collector),  # type: ignore[arg-type]
+                timeout=ORIENT_SECTION_HARD_TIMEOUT_S,
+            )
+    except TimeoutError:
+        # Short, machine-readable code in the value; richer detail in meta.
+        short_err = f"section_timeout_{ORIENT_SECTION_HARD_TIMEOUT_S}s"
+        meta["error"] = short_err
+        if isinstance(fallback, dict):
+            return {**fallback, "error": short_err}, meta
+        return fallback, meta
+    except Exception as exc:
+        # Preserve original API contract: value error = str(exc). Meta
+        # gets the richer "TypeName: msg" form for debugging.
+        short_err = str(exc)
+        meta["error"] = f"{type(exc).__name__}: {exc}"
+        if isinstance(fallback, dict):
+            return {**fallback, "error": short_err}, meta
+        return fallback, meta
+
+    cache_set(cache_key, (value, generated_at))
+    return value, meta
+
+
 @app.get("/api/orient")
 async def orient():
-    generated_at = _isoformat_z(datetime.now(UTC))
-
-    async def safe_thread(func, fallback):
-        try:
-            return await asyncio.to_thread(func)
-        except Exception as exc:
-            if isinstance(fallback, dict):
-                return {**fallback, "error": str(exc)}
-            return fallback
-
-    async def safe_async(func, fallback):
-        try:
-            return await func()
-        except Exception as exc:
-            if isinstance(fallback, dict):
-                return {**fallback, "error": str(exc)}
-            return fallback
-
     (
-        git_info,
-        issues_info,
-        pipeline_info,
-        runtime_info,
-        delegate_info,
-        wiki_info,
-        health_info,
-        session_hints,
+        (git_info, git_meta),
+        (issues_info, issues_meta),
+        (pipeline_info, pipeline_meta),
+        (runtime_info, runtime_meta),
+        (delegate_info, delegate_meta),
+        (wiki_info, wiki_meta),
+        (health_info, health_meta),
+        (session_hints, session_hints_meta),
     ) = await asyncio.gather(
-        safe_thread(_collect_git_orient_data, {}),
-        safe_thread(_collect_issues_orient_data, {"issues": []}),
-        safe_async(_collect_pipeline_orient_data, {"summary": {}}),
-        safe_thread(_collect_runtime_orient_data, {}),
-        safe_thread(_collect_delegate_orient_data, {"active_count": 0, "recent": []}),
-        safe_thread(_collect_wiki_orient_data, {"by_track": {}}),
-        safe_thread(_collect_health_orient_data, {"api": True}),
-        safe_thread(_collect_session_hints_orient_data, []),
+        _cached_orient_section("git", _collect_git_orient_data, {}),
+        _cached_orient_section("issues", _collect_issues_orient_data, {"issues": []}),
+        _cached_orient_section(
+            "pipeline",
+            _collect_pipeline_orient_data,
+            {"summary": {}},
+            is_async=True,
+        ),
+        _cached_orient_section("runtime", _collect_runtime_orient_data, {}),
+        _cached_orient_section(
+            "delegate",
+            _collect_delegate_orient_data,
+            {"active_count": 0, "recent": []},
+        ),
+        _cached_orient_section("wiki", _collect_wiki_orient_data, {"by_track": {}}),
+        _cached_orient_section("health", _collect_health_orient_data, {"api": True}),
+        _cached_orient_section("session_hints", _collect_session_hints_orient_data, []),
     )
 
     response = {
-        "generated_at": generated_at,
+        "generated_at": _isoformat_z(datetime.now(UTC)),
         "git": git_info,
         "issues": issues_info.get("issues", []) if isinstance(issues_info, dict) else [],
         "pipeline": pipeline_info,
@@ -369,6 +474,16 @@ async def orient():
         "wiki": wiki_info,
         "health": health_info,
         "session_hints": session_hints,
+        "meta": {
+            "git": git_meta,
+            "issues": issues_meta,
+            "pipeline": pipeline_meta,
+            "runtime": runtime_meta,
+            "delegate": delegate_meta,
+            "wiki": wiki_meta,
+            "health": health_meta,
+            "session_hints": session_hints_meta,
+        },
     }
     if isinstance(issues_info, dict) and issues_info.get("issues_error"):
         response["issues_error"] = issues_info["issues_error"]
