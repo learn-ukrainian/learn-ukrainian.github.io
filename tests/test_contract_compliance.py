@@ -318,3 +318,224 @@ def test_activity_order_reports_length_shortfall() -> None:
     order_violations = [v for v in violations if v["type"] == "ACTIVITY_ORDER"]
     assert len(order_violations) == 1
     assert order_violations[0]["message"] == "Only 2 activity markers found; contract requires 4"
+
+
+# ====================================================================
+# Bug #1316 Bug D — META_NARRATION opener-only scoping
+# ====================================================================
+
+
+def _opener_contract() -> dict:
+    """Minimal contract — only exercised for its META_NARRATION check path."""
+    return {
+        "teaching_beats": {"section_order": [], "sections": []},
+        "section_word_budgets": {},
+        "vocab_grammar_targets": {"must_introduce": []},
+        "activity_obligations": [],
+        "dialogue_acts": [],
+        "factual_anchors": [],
+    }
+
+
+def _meta_narration_violations(content: str) -> list[dict]:
+    return [
+        v
+        for v in check_contract_compliance(content, _opener_contract())
+        if v["type"] == "META_NARRATION"
+    ]
+
+
+def test_meta_narration_ignores_inline_let_us() -> None:
+    """The A1/M01 case. ``Let us practice`` as the third sentence of an
+    ordinary paragraph is legitimate teacher phrasing — not a formulaic
+    opener — and must not be flagged by the contract checker.
+    """
+    content = (
+        "## Голосні звуки (Vowel Sounds)\n"
+        "\n"
+        "Ukrainian primary schools use a specific visual notation for "
+        "sound models. Vowel sounds are always marked with a solid "
+        "circle [•]. Let us practice hearing these vowels in simple "
+        "words. For example, the word **мама** contains two [а] sounds.\n"
+    )
+    assert _meta_narration_violations(content) == []
+
+
+def test_meta_narration_flags_let_us_as_paragraph_opener() -> None:
+    """A paragraph that begins with ``Let us look at ...`` IS a
+    formulaic opener and must be flagged."""
+    content = (
+        "## Intro\n"
+        "\n"
+        "Let us look at the Ukrainian alphabet. The alphabet has 33 letters.\n"
+    )
+    violations = _meta_narration_violations(content)
+    assert len(violations) == 1
+    assert "Let us" in violations[0]["message"]
+    assert violations[0]["severity"] == "WARNING"
+
+
+def test_meta_narration_flags_in_this_section_opener() -> None:
+    content = (
+        "## Intro\n"
+        "\n"
+        "In this section we will explore vowels. Vowels are essential.\n"
+    )
+    violations = _meta_narration_violations(content)
+    assert len(violations) == 1
+    assert "In this section" in violations[0]["message"]
+
+
+def test_meta_narration_flags_now_lets_opener() -> None:
+    content = (
+        "## Practice\n"
+        "\n"
+        "Now let's practice. Try this word.\n"
+    )
+    violations = _meta_narration_violations(content)
+    assert len(violations) == 1
+    assert "Now let's" in violations[0]["message"]
+
+
+def test_meta_narration_flags_bold_wrapped_opener() -> None:
+    """Opening with ``**Let us see** ...`` — bold markers must be
+    stripped before the opener check, so it still fires."""
+    content = (
+        "## Section\n"
+        "\n"
+        "**Let us see** the letters. There are 33.\n"
+    )
+    violations = _meta_narration_violations(content)
+    assert len(violations) == 1
+
+
+def test_meta_narration_ignores_second_sentence_opener() -> None:
+    """Only the FIRST sentence of each paragraph is checked. A
+    forbidden phrase starting the second sentence is not a signpost —
+    it's regular teacher prose."""
+    content = (
+        "## Section\n"
+        "\n"
+        "The alphabet has 33 letters. Let us see what they are.\n"
+    )
+    assert _meta_narration_violations(content) == []
+
+
+def test_meta_narration_ignores_heading_text() -> None:
+    """A heading that happens to contain ``Let us`` is not a paragraph
+    and must not trip the opener check."""
+    content = (
+        "## Let us look at letters\n"
+        "\n"
+        "The alphabet has 33 letters.\n"
+    )
+    assert _meta_narration_violations(content) == []
+
+
+def test_meta_narration_ignores_list_item() -> None:
+    """List items are structural markdown, not prose paragraphs."""
+    content = (
+        "## Tips\n"
+        "\n"
+        "- Let us try an example\n"
+        "- Another tip\n"
+    )
+    assert _meta_narration_violations(content) == []
+
+
+def test_meta_narration_ignores_admonition_block() -> None:
+    content = (
+        "## Tip\n"
+        "\n"
+        ":::tip\n"
+        "Let us remember this\n"
+        ":::\n"
+    )
+    assert _meta_narration_violations(content) == []
+
+
+def test_meta_narration_ignores_blockquote() -> None:
+    content = (
+        "## Quote\n"
+        "\n"
+        "> Let us begin with patience.\n"
+    )
+    assert _meta_narration_violations(content) == []
+
+
+def test_meta_narration_handles_comma_variant_of_now_lets() -> None:
+    """``Now, let's begin.`` with a comma is still a formulaic opener."""
+    content = (
+        "## P\n"
+        "\n"
+        "Now, let's begin. The first letter is А.\n"
+    )
+    violations = _meta_narration_violations(content)
+    assert len(violations) == 1
+
+
+def test_meta_narration_only_reports_one_violation_per_module() -> None:
+    """Multiple formulaic openers in the same module produce a single
+    META_NARRATION violation (first-match semantics — matches the
+    pre-Bug-D behavior and avoids duplicate noise)."""
+    content = (
+        "## A\n"
+        "\n"
+        "Let us start. First point.\n"
+        "\n"
+        "## B\n"
+        "\n"
+        "Now let's continue. Second point.\n"
+    )
+    violations = _meta_narration_violations(content)
+    assert len(violations) == 1
+
+
+def test_meta_narration_flags_heading_no_blank_line_before_opener() -> None:
+    """Bug #1316 Bug D second pass (Codex finding).
+
+    The common Markdown pattern ``## Intro\\nLet us begin.`` has no
+    blank line between the heading and the opening sentence. Both
+    heading and opener belong to the same blank-line-separated
+    "paragraph" block, so the check must strip the leading heading
+    line and still flag the opener.
+    """
+    content = "## Intro\nLet us begin. First point.\n"
+    violations = _meta_narration_violations(content)
+    assert len(violations) == 1
+    assert "Let us" in violations[0]["message"]
+
+
+def test_meta_narration_flags_html_comment_no_blank_line_before_opener() -> None:
+    """An HTML comment line followed immediately by a formulaic opener
+    on the next line must still flag."""
+    content = "<!-- generated from plan -->\nLet us look at vowels. Vowels are core.\n"
+    violations = _meta_narration_violations(content)
+    assert len(violations) == 1
+
+
+def test_meta_narration_handles_crlf_line_endings() -> None:
+    """Windows CRLF must not break paragraph splitting or opener matching."""
+    content = "## Intro\r\n\r\nLet us start. First point.\r\n"
+    violations = _meta_narration_violations(content)
+    assert len(violations) == 1
+    assert "Let us" in violations[0]["message"]
+
+
+def test_meta_narration_flags_triple_emphasis_opener() -> None:
+    """Nested emphasis ``***Let us***`` is stripped down to ``Let us``
+    by the leading ``*``/``_`` strip, and still flags."""
+    content = (
+        "## Section\n"
+        "\n"
+        "***Let us***, as a class, explore the alphabet. There are 33 letters.\n"
+    )
+    violations = _meta_narration_violations(content)
+    assert len(violations) == 1
+
+
+def test_meta_narration_ignores_heading_only_block() -> None:
+    """A block that contains only a heading and nothing else must not
+    report a violation (no prose to flag)."""
+    content = "## Let us review\n\n## Next heading\n"
+    assert _meta_narration_violations(content) == []

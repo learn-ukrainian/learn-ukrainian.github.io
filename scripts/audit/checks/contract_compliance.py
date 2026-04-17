@@ -6,10 +6,41 @@ import re
 
 _SECTION_RE = re.compile(r"^##\s+(.+)$", re.MULTILINE)
 _ACTIVITY_RE = re.compile(r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->")
-_META_PATTERNS = (
-    re.compile(r"\bIn this (?:section|module|lesson)\b", re.IGNORECASE),
-    re.compile(r"\bLet us\b", re.IGNORECASE),
-    re.compile(r"\bNow let'?s\b", re.IGNORECASE),
+
+# Formulaic meta-narration openers — deliberately anchored to the START of
+# a paragraph or sentence, not matched anywhere inside arbitrary prose.
+#
+# Bug #1316 Bug D: the previous ``\bLet us\b`` regex fired on inline uses
+# like "Let us practice hearing these vowels in simple words" buried in
+# the third sentence of a paragraph, which is ordinary teacher phrasing
+# and not a meta-narration signpost. Only phrases acting as a formulaic
+# OPENER of a paragraph should count. This regex set is kept in sync with
+# the forbidden list in ``scripts/build/phases/v6-write.md`` rule 4 and
+# the Dimension 6 deduction rubric in ``scripts/build/phases/v6-review.md``.
+_META_OPENER_PATTERNS = (
+    re.compile(r"^In this (?:section|module|lesson)\b", re.IGNORECASE),
+    re.compile(r"^Let us\b", re.IGNORECASE),
+    re.compile(r"^(?:Now,?\s+)?Let'?s\b", re.IGNORECASE),
+)
+
+# Structural block lines that CONTINUE as a structural block on
+# subsequent lines of the same paragraph. If a paragraph starts with
+# any of these, the whole paragraph is skipped (the "prose" inside a
+# list / blockquote / admonition / code fence / table is not a real
+# prose paragraph that could open with a formulaic signpost).
+_BLOCK_STRUCTURAL_LINE_RE = re.compile(
+    r"^\s*(?:[-*+]\s|\d+\.\s|>\s?|:::|```|\|)",
+)
+
+# Structural SINGLE-line markers that can precede prose on the very
+# next line without a blank-line separator. Bug #1316 Bug D second
+# pass: Markdown like ``## Intro\nLet us begin.`` (no blank line after
+# the heading) or ``<!-- comment -->\nLet us begin.`` previously made
+# the opener check skip the whole paragraph because the FIRST line was
+# structural. We now strip these single-line structural prefixes from
+# the paragraph head and check the prose that follows.
+_SINGLE_LINE_STRUCTURAL_RE = re.compile(
+    r"^\s*(?:#+\s|<!--)",
 )
 _BANNED_TOKENS = (
     "пожалуйста",
@@ -261,18 +292,78 @@ def check_contract_compliance(content: str, contract: dict) -> list[dict]:
             "message": f"Banned contract patterns present: {found_banned}",
         })
 
-    for pattern in _META_PATTERNS:
-        match = pattern.search(content)
-        if match:
-            violations.append({
-                "type": "META_NARRATION",
-                "severity": "WARNING",
-                "section": "(whole module)",
-                "message": f"Formulaic meta-narration present: {match.group(0)}",
-            })
-            break
+    opener_match = _find_meta_opener(content)
+    if opener_match is not None:
+        violations.append({
+            "type": "META_NARRATION",
+            "severity": "WARNING",
+            "section": "(whole module)",
+            "message": f"Formulaic meta-narration opener: {opener_match}",
+        })
 
     return violations
+
+
+def _find_meta_opener(content: str) -> str | None:
+    """Return the offending opener snippet, or None.
+
+    Walks each prose paragraph in ``content``. A paragraph is any block
+    separated by one or more blank lines. Within each paragraph we:
+
+      1. Skip the whole paragraph if its FIRST line starts a structural
+         BLOCK (list, blockquote, admonition, code fence, table). These
+         structures continue on subsequent lines of the same paragraph,
+         so nothing inside them is a candidate prose opener.
+      2. Otherwise, strip any leading SINGLE-line structural markers
+         (headings like ``## Intro`` and HTML comments like
+         ``<!-- ... -->``) until we reach a prose line. This handles
+         the common Markdown pattern ``## Intro\\nLet us begin.`` with
+         no blank line between the heading and the opening sentence —
+         the check previously missed that case because the whole
+         paragraph was skipped.
+      3. Extract the FIRST sentence of the remaining prose — text up
+         to the first ``.``, ``?``, or ``!`` — strip leading bold /
+         italic markers, and test against the opener patterns.
+
+    Inline uses of a forbidden phrase anywhere other than the first
+    sentence of a prose paragraph are NOT flagged — that's the whole
+    point of Bug #1316 Bug D.
+    """
+    if not content:
+        return None
+
+    for raw_paragraph in re.split(r"\n\s*\n", content):
+        lines = raw_paragraph.lstrip("\n").splitlines()
+        if not lines:
+            continue
+
+        # Whole-block skip: paragraphs starting with a block-structural
+        # first line (list, blockquote, admonition, code fence, table)
+        # do not contain a formulaic prose opener.
+        if _BLOCK_STRUCTURAL_LINE_RE.match(lines[0]):
+            continue
+
+        # Strip leading single-line structural markers (heading, HTML
+        # comment) until we find the first prose line. An all-structural
+        # paragraph is skipped.
+        prose_lines: list[str] = []
+        for line in lines:
+            if _SINGLE_LINE_STRUCTURAL_RE.match(line):
+                continue
+            prose_lines.append(line)
+        prose = "\n".join(prose_lines).strip()
+        if not prose:
+            continue
+
+        # First sentence = text up to the first sentence-ending punctuation.
+        first_sentence_end = re.search(r"[.!?](?:\s|$)", prose)
+        first_sentence = prose[: first_sentence_end.start()] if first_sentence_end else prose
+        stripped = first_sentence.lstrip().lstrip("*_").lstrip()
+        for pattern in _META_OPENER_PATTERNS:
+            m = pattern.match(stripped)
+            if m:
+                return m.group(0)
+    return None
 
 
 def has_blocking_violations(violations: list[dict]) -> bool:
