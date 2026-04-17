@@ -331,6 +331,54 @@ def test_rewrite_block_section_allows_shorter_summary_meta_cleanup(
     assert original_summary not in updated
 
 
+def test_rewrite_block_section_allows_shorter_meta_narration_cleanup_outside_summary(
+    tmp_path: Path, monkeypatch
+) -> None:
+    level = "a1"
+    slug = "rewrite-meta-shortening"
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    orch_dir = curriculum_root / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    _write_plan(curriculum_root, level, slug)
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    content_path.write_text(
+        "## Intro\nOld intro.\n\n"
+        "## Practice\n" + ("Речення для пояснення. " * 70) + "\nMeta line.\n",
+        "utf-8",
+    )
+    packet_path = tmp_path / "packet.md"
+    packet_path.write_text(
+        "### Вікі: pedagogy/a1/rewrite-meta-shortening.md\n\n## Practice\n\nУчень читає.\n",
+        "utf-8",
+    )
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    v6_build._ensure_contract_artifacts(level, 1, slug, packet_path, log_creation=False)
+    monkeypatch.setattr(
+        v6_build,
+        "_dispatch_rewrite_prompt",
+        lambda *args, **kwargs: (
+            True,
+            "## Practice\n" + ("Коротше, але зміст лишається. " * 28) + "\n",
+        ),
+    )
+
+    ok = v6_build._rewrite_block_section(
+        content_path,
+        level=level,
+        module_num=1,
+        slug=slug,
+        writer="gemini",
+        section_name="Practice",
+        directive="- Issue type: META_PEDAGOGICAL_NARRATION\n- Required fix: Remove the after-dialogue narration.",
+    )
+
+    assert ok is True
+    updated = content_path.read_text("utf-8")
+    assert "Коротше, але зміст лишається." in updated
+
+
 def test_main_marks_needs_human_review_after_two_rounds(tmp_path: Path, monkeypatch) -> None:
     level = "a1"
     slug = "needs-human"

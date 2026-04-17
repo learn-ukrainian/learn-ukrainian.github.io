@@ -6704,6 +6704,11 @@ def _rewrite_block_section(
     original_words = max(1, len(current_section["body"].split()))
     rewritten_words = len(rewritten.split())
     min_word_ratio = 0.6
+    if "META_PEDAGOGICAL_NARRATION" in directive_issue_types:
+        # Meta-narration cleanup can legitimately delete an explanatory
+        # after-dialogue paragraph outside summary sections while preserving
+        # the core teaching content of the section.
+        min_word_ratio = min(min_word_ratio, 0.4)
     if (
         ("summary" in resolved_title.lower() or "підсумок" in resolved_title.lower())
         and "META_PEDAGOGICAL_NARRATION" in directive_issue_types
