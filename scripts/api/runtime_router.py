@@ -6,6 +6,7 @@ import asyncio
 import importlib
 import inspect
 import json
+import os
 import sys
 from collections import defaultdict
 from datetime import UTC, date, datetime, timedelta
@@ -243,3 +244,93 @@ async def runtime_headroom(
 @router.get("/recent")
 async def runtime_recent(limit: int = Query(50, ge=1, le=500)):
     return await asyncio.to_thread(recent_runtime_records, limit=limit)
+
+
+# ---------------------------------------------------------------------
+# Auth mode snapshot (#1313 / Codex-7)
+# ---------------------------------------------------------------------
+
+
+@router.get("/auth")
+async def runtime_auth():
+    """Per-agent auth mode snapshot.
+
+    Tells an operator — without grepping env vars — whether Gemini is
+    running in ``subscription`` (logged-in OAuth / Google account) or
+    ``api`` (GEMINI_API_KEY-based) or ``auto`` mode, and whether a
+    key is currently inherited from the environment.
+
+    Why it matters (Codex-7 / #1313): "would have saved us time
+    immediately" — the session lost hours debugging which auth path
+    Gemini actually used. This endpoint makes it deterministic.
+
+    Shape::
+        {
+          "gemini": {
+            "auth_mode":          "subscription" | "api" | "auto",
+            "auth_mode_raw":      "<env var value as given>",
+            "api_key_present":    false,
+            "google_key_present": false,
+            "google_oauth_cred":  true,   # ~/.gemini/oauth_creds.json readable
+          },
+          "claude":  {"api_key_present": true,  "source": "ANTHROPIC_API_KEY"},
+          "codex":   {"api_key_present": true,  "source": "OPENAI_API_KEY"},
+          "checked_at": "2026-04-17T..."
+        }
+
+    All information is derived from env + filesystem — no subprocess,
+    no network call. Cheap and safe to poll.
+    """
+    from datetime import UTC, datetime
+    from pathlib import Path as _Path
+
+    from agent_runtime.adapters.gemini import resolve_gemini_auth_mode
+
+    env = os.environ
+    home = _Path.home()
+
+    # Sanitize GEMINI_AUTH_MODE rather than echo it raw. Reviewer
+    # Codex BLOCKER on #1312 pre-merge: this endpoint's contract says
+    # "never echoes key values". If an operator accidentally pastes a
+    # key fragment into GEMINI_AUTH_MODE (typo in their shell
+    # profile), echoing the raw value leaks it. We still surface
+    # WHETHER the raw value was recognized via a ``raw_valid`` flag +
+    # its LENGTH — enough to debug an invalid config without exposing
+    # content.
+    _AUTH_MODE_VALID = {"auto", "subscription", "api"}
+    raw_mode = (env.get("GEMINI_AUTH_MODE") or "").strip()
+    raw_valid = raw_mode.lower() in _AUTH_MODE_VALID
+    gemini = {
+        "auth_mode": resolve_gemini_auth_mode(),
+        "auth_mode_raw_valid": raw_valid,
+        "auth_mode_raw_length": len(raw_mode),
+        "api_key_present": bool(env.get("GEMINI_API_KEY")),
+        "google_key_present": bool(env.get("GOOGLE_API_KEY")),
+        "google_oauth_cred": (home / ".gemini" / "oauth_creds.json").is_file(),
+    }
+
+    # Claude is subscription-only via the CLI; we still surface whether a
+    # key happens to be present in case someone's running the SDK too.
+    claude = {
+        "api_key_present": bool(env.get("ANTHROPIC_API_KEY")),
+        "source": (
+            "ANTHROPIC_API_KEY" if env.get("ANTHROPIC_API_KEY") else None
+        ),
+    }
+
+    # Codex uses its own key env var. Same logic.
+    codex = {
+        "api_key_present": bool(env.get("OPENAI_API_KEY") or env.get("CODEX_API_KEY")),
+        "source": (
+            "OPENAI_API_KEY" if env.get("OPENAI_API_KEY")
+            else "CODEX_API_KEY" if env.get("CODEX_API_KEY")
+            else None
+        ),
+    }
+
+    return {
+        "gemini": gemini,
+        "claude": claude,
+        "codex": codex,
+        "checked_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+    }

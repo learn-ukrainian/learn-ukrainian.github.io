@@ -376,6 +376,120 @@ async def module_detail(track_id: str, num: int):
     return result
 
 
+@router.get("/module/{track_id}/slug/{slug}")
+async def module_detail_by_slug(
+    track_id: str,
+    slug: str,
+    verbose: bool = Query(
+        False,
+        description="True = full compute_module_detail payload. Default returns a compact view.",
+    ),
+):
+    """Slug-keyed module state (#1313 / Codex-1).
+
+    Same data as ``/api/state/module/{track_id}/{num}`` but keyed by
+    slug (the stable identifier agents actually use) and returning a
+    compact default shape so cold-start / "what's the state of this
+    module right now" calls don't pay for the full dump.
+
+    Pass ``?verbose=true`` to get the original rich payload.
+
+    Compact shape::
+        {
+          "track": "a1", "slug": "...", "num": 3,
+          "phase":            "review",   # current or last-complete phase name
+          "last_successful":  "review",   # last phase whose status was complete
+          "pipeline_version": "v6",
+          "needs_rebuild":    false,
+          "audit":  {"status": "pass", "word_count": ..., "word_target": ...},
+          "review": {"score": 9.4, "verdict": "PASS"},
+          "final_review": {"exists": true, "verdict": "PASS"} | null,
+          "shippable":        true,
+          "blocking_issues":  [...],
+          "retry_count":      0,
+          "worker":           "gemini"
+        }
+    """
+    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
+    if not level_cfg:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"Track '{track_id}' not found"},
+        )
+
+    plan_slugs = get_plan_slugs(track_id)
+    match = next(((n, s) for n, s in plan_slugs if s == slug), None)
+    if not match:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"Module '{slug}' not found in track '{track_id}'"},
+        )
+    num, _ = match
+
+    full = await asyncio.to_thread(compute_module_detail, track_id, num, level_cfg)
+    if "error" in full:
+        return JSONResponse(status_code=404, content=full)
+
+    if verbose:
+        return full
+
+    # --- compact projection -------------------------------------------
+    phases = full.get("phases") or {}
+    current_phase = None
+    last_successful = None
+    retry_count = 0
+    current_worker = None
+    for name, data in phases.items():
+        if not isinstance(data, dict):
+            continue
+        status = data.get("status")
+        if status == "in_progress":
+            current_phase = name
+        if status == "complete":
+            last_successful = name
+        # attempts / retry_count key varies by pipeline version; surface
+        # whatever the phase payload carries so consumers don't have to.
+        for key in ("retries", "retry_count", "attempts"):
+            val = data.get(key)
+            if isinstance(val, int):
+                retry_count = max(retry_count, val)
+        if status == "in_progress":
+            exec_ = data.get("executor") if isinstance(data.get("executor"), dict) else {}
+            current_worker = exec_.get("agent")
+
+    audit = full.get("audit") or {}
+    review = full.get("review") or {}
+    final_review = full.get("final_review")
+
+    return {
+        "track": track_id,
+        "slug": slug,
+        "num": num,
+        "phase": current_phase or last_successful or "pending",
+        "last_successful": last_successful,
+        "pipeline_version": full.get("pipeline_version"),
+        "needs_rebuild": full.get("needs_rebuild"),
+        "audit": {
+            "status": audit.get("status"),
+            "word_count": audit.get("word_count"),
+            "word_target": audit.get("word_target"),
+        },
+        "review": {
+            "score": review.get("score") if isinstance(review, dict) else None,
+            "verdict": review.get("verdict") if isinstance(review, dict) else None,
+        },
+        "final_review": (
+            {"exists": final_review.get("exists"), "verdict": final_review.get("verdict")}
+            if isinstance(final_review, dict) and final_review.get("exists")
+            else None
+        ),
+        "shippable": bool(full.get("shippable")),
+        "blocking_issues": audit.get("blocking_issues") or [],
+        "retry_count": retry_count,
+        "worker": current_worker,
+    }
+
+
 @router.get("/final-reviews/{track_id}")
 async def final_reviews_track(track_id: str):
     """Phase F results aggregated per track: verdicts, issue counts, common patterns."""
@@ -426,3 +540,191 @@ async def outstanding_issues(
 ):
     """Aggregated outstanding issues from review files + audit failures."""
     return await asyncio.to_thread(compute_issues, track, severity)
+
+
+# ==================== RANGE STATUS (#1313 / Codex-4) ====================
+
+
+@router.get("/range/{track_id}")
+async def range_status(
+    track_id: str,
+    start: int = Query(1, ge=1, description="First module number (inclusive)."),
+    end: int | None = Query(
+        None,
+        description="Last module number (inclusive). Omit to go to the end of the track.",
+    ),
+):
+    """Compact per-module table for one [start, end] slice of a track.
+
+    Designed for overnight batch runs: one call tells you exactly
+    which module is in which phase, whether it's blocked, current
+    review score, and which worker is assigned. Builds on
+    ``compute_pipeline_track`` so the data source is shared with the
+    existing ``/api/state/pipeline/{track}`` endpoint — just slice
+    + flatten (reviewer Codex-4 / #1313).
+    """
+    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
+    if not level_cfg:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"Track '{track_id}' not found"},
+        )
+
+    def _compute() -> dict:
+        full = compute_pipeline_track(track_id, level_cfg)
+        modules = full.get("modules", []) if isinstance(full, dict) else full
+        if not isinstance(modules, list):
+            return {"error": "pipeline_track returned non-list"}
+
+        sliced = [
+            m for m in modules
+            if isinstance(m, dict)
+            and isinstance(m.get("num"), int)
+            and m["num"] >= start
+            and (end is None or m["num"] <= end)
+        ]
+
+        compact = []
+        for m in sliced:
+            phases = m.get("phases") or {}
+            # "current phase" = last phase whose status is in_progress or
+            # the last completed phase (whichever is latest). Keeps the
+            # compact view actionable without a separate call.
+            current = None
+            last_complete = None
+            failed_phase = None
+            for name, data in phases.items():
+                if not isinstance(data, dict):
+                    continue
+                status = data.get("status")
+                if status == "in_progress":
+                    current = name
+                if status == "complete":
+                    last_complete = name
+                if status == "failed":
+                    failed_phase = name
+            phase_now = current or failed_phase or last_complete or "pending"
+
+            review = m.get("review") or {}
+            audit = m.get("audit")
+
+            # ``compute_pipeline_track`` does NOT emit a ``blocker``
+            # field (reviewer Codex BLOCKER on #1312 pre-merge:
+            # previously this was always null and documented as
+            # "whether a module is blocked"). Derive it here so the
+            # compact dashboard actually answers the stated question:
+            #   - a failed phase name — the pipeline gave up at that step
+            #   - "audit_fail" — audit ran but produced a fail verdict
+            #   - first blocking_issues[*].gate name — specific gate
+            #   - null — nothing known to be blocking
+            blocker: str | None = None
+            if failed_phase:
+                blocker = f"failed:{failed_phase}"
+            elif isinstance(audit, str) and audit.lower() == "fail":
+                blocker = "audit_fail"
+            blocking_issues = m.get("blocking_issues") or []
+            if blocker is None and blocking_issues:
+                first = blocking_issues[0]
+                if isinstance(first, dict):
+                    gate = first.get("gate") or first.get("type")
+                    blocker = f"gate:{gate}" if gate else "audit_issue"
+
+            compact.append({
+                "num": m["num"],
+                "slug": m.get("slug"),
+                "phase": phase_now,
+                "phase_status": (
+                    phases.get(phase_now, {}).get("status")
+                    if isinstance(phases.get(phase_now), dict) else None
+                ),
+                "worker": (
+                    phases.get(phase_now, {}).get("executor", {}).get("agent")
+                    if isinstance(phases.get(phase_now), dict)
+                    and isinstance(phases.get(phase_now, {}).get("executor"), dict)
+                    else None
+                ),
+                "audit": audit,
+                "review_score": (
+                    review.get("score") if isinstance(review, dict) else None
+                ),
+                "words": m.get("words"),
+                "word_target": m.get("word_target"),
+                "blocker": blocker,
+                "pipeline_version": m.get("pipeline_version"),
+                "needs_rebuild": m.get("needs_rebuild"),
+            })
+
+        return {
+            "track": track_id,
+            "start": start,
+            "end": end,
+            "count": len(compact),
+            "modules": compact,
+        }
+
+    return await asyncio.to_thread(_compute)
+
+
+# ==================== MANIFEST (#1309) ====================
+
+
+@router.get("/manifest")
+async def manifest():
+    """Tiny JSON index for agent cold-start coordination.
+
+    Target size < 2 KB. Returns a hash + URL for every consolidated
+    component an agent might need at boot. Agents keep a per-hash
+    cache (see ``scripts/ai_agent_bridge/_monitor_cache.py`` / the
+    client SDK) and only refetch components whose hash changed since
+    the last manifest they consumed.
+
+    Shape::
+        {
+          "generated_at": "2026-04-17T10:15:00Z",
+          "rules":   {"hash": "...", "url": "/api/rules?format=markdown"},
+          "session": {"hash": "...", "url": "/api/session/current?format=markdown"},
+          "orient":  {"url": "/api/orient"},
+          "inbox":   {"url_template": "/api/comms/inbox?agent={name}"}
+        }
+
+    ``rules`` and ``session`` expose a content hash so an agent can
+    skip the payload entirely when unchanged. ``orient`` and ``inbox``
+    have their own freshness machinery (TTLs, ``?fresh=true``, and
+    per-section ``meta``) so they don't need a manifest hash.
+
+    Reviewer BLOCKER #1309: without this endpoint an agent booting
+    fresh had to read 5-8 files (CLAUDE.md + three rule files +
+    current.md + recent handoffs + MONITOR-API.md) to orient — every
+    session, every compaction. The manifest collapses the steady
+    state to one tiny call.
+    """
+    from datetime import UTC
+    from datetime import datetime as _dt
+
+    from .rules_router import rules_hash
+    from .session_router import session_hash
+
+    return {
+        "generated_at": _dt.now(UTC).isoformat().replace("+00:00", "Z"),
+        "rules": {
+            "hash": rules_hash(),
+            "url": "/api/rules?format=markdown",
+            "format": "markdown",
+            "note": "Condensed critical + non-negotiable + workflow rules. Drop straight into a system prompt.",
+        },
+        "session": {
+            "hash": session_hash(),
+            "url": "/api/session/current?format=markdown",
+            "format": "markdown",
+            "note": "Current.md + recent session-state handoff filenames.",
+        },
+        "orient": {
+            "url": "/api/orient",
+            "fresh_param": "?fresh=true",
+            "note": "Per-section TTL cache + meta. Most agents only need the sections whose TTL has elapsed.",
+        },
+        "inbox": {
+            "url_template": "/api/comms/inbox?agent={name}",
+            "note": "Read-only view of unread channel deliveries for one agent.",
+        },
+    }

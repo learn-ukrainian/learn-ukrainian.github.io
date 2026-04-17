@@ -14,8 +14,10 @@ import json
 import os
 import socket
 import subprocess
+from collections.abc import Awaitable, Callable
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,6 +29,7 @@ from . import state_router as state_api
 from . import wiki_router as wiki_api
 from .admin_router import router as admin_router
 from .agent_router import router as agent_router
+from .artifacts_router import router as artifacts_router
 from .blue_router import router as blue_router
 from .build_events_router import router as build_events_router
 from .comms_router import router as comms_router
@@ -45,10 +48,16 @@ from .decisions_router import router as decisions_router
 from .delegate_router import router as delegate_router
 from .gold_router import router as gold_router
 from .images_router import router as images_router
+from .issues_router import router as issues_router
 from .rag_router import router as rag_router
+from .rules_router import router as rules_router
 from .runtime_router import router as runtime_router
+from .session_router import router as session_router
+from .site_router import router as site_router
+from .state_helpers import cache_get, cache_invalidate, cache_set
 from .state_router import router as state_router
 from .wiki_router import router as wiki_router
+from .worktrees_router import router as worktrees_router
 
 app = FastAPI(
     title="Playground API",
@@ -76,6 +85,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 # Mount team routers — each team owns their own file
 app.include_router(admin_router, prefix="/api/admin")
 app.include_router(agent_router, prefix="/api/agent", tags=["agent"])
+app.include_router(artifacts_router, prefix="/api/artifacts", tags=["artifacts"])
 app.include_router(blue_router, prefix="/api/blue")
 app.include_router(comms_router, prefix="/api/comms")
 app.include_router(consultation_router, prefix="/api/consultation")
@@ -86,16 +96,79 @@ app.include_router(delegate_router, prefix="/api/delegate")
 app.include_router(gold_router, prefix="/api/gold")
 app.include_router(build_events_router, prefix="/api/build/events")
 app.include_router(images_router, prefix="/api/images")
+app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
 app.include_router(rag_router, prefix="/api/rag")
+app.include_router(rules_router, prefix="/api/rules", tags=["rules"])
 app.include_router(runtime_router, prefix="/api/runtime")
+app.include_router(session_router, prefix="/api/session", tags=["session"])
+app.include_router(site_router, prefix="/api/site", tags=["site"])
 app.include_router(state_router, prefix="/api/state")
 app.include_router(wiki_router, prefix="/api/wiki", tags=["wiki"])
+app.include_router(worktrees_router, prefix="/api/worktrees", tags=["worktrees"])
 
 
 # Server start time for uptime calculation
 _SERVER_START = datetime.now(UTC)
 SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 SESSION_STATE_DIR = PROJECT_ROOT / "docs" / "session-state"
+
+# --- /api/orient caching + failure isolation (GH #1309) ----------------
+#
+# Per-section TTLs (seconds). Tuned for each collector's cost + change
+# frequency. Shared in-memory cache lives in state_helpers.cache_*; keys
+# are prefixed with "orient_" so ``?fresh=true`` can invalidate exactly
+# this router's keys (and nothing else's).
+#
+# A TTL of ``0`` means "never cache at the orient layer" — the collector
+# is called on every request. Use it for sections that already carry
+# their own downstream cache (e.g. ``pipeline`` wraps
+# ``/api/state/summary`` which has its own 60 s TTL — an orient-layer
+# cache on top would stack the two windows and label up-to-119 s old
+# data as fresh, reviewer BLOCKER #1309).
+#
+# Hard per-section timeout caps one wedged async collector. See the
+# first entry in docs/monitor-api/cold-start-baseline.md for the
+# incident that motivated this.
+#
+# Scope caveat on the hard timeout: only the ``pipeline`` collector is
+# a true async coroutine; ``asyncio.wait_for`` properly cancels it. For
+# the sync collectors run via ``asyncio.to_thread`` the hard timeout is
+# advisory — Python threads are not cancellable once started. Real
+# protection per sync collector:
+#   - ``git``, ``issues``     — subprocess timeout 2 s (``_run_command``)
+#   - ``runtime``, ``delegate``, ``wiki``, ``health``, ``session_hints``
+#                            — pure-Python / filesystem, no inner
+#                              timeout; they rely on being cheap.
+# If a sync collector ever starts to block (e.g. a network FS hang), it
+# will tie up a threadpool slot past the hard timeout. See
+# MONITOR-API.md for the full breakdown.
+ORIENT_SECTION_TTLS: dict[str, float] = {
+    "git": 30.0,
+    "issues": 120.0,
+    # Pipeline has TTL 0 on purpose — ``_collect_pipeline_orient_data``
+    # calls ``state_summary()`` which has its own 60 s cache. Stacking
+    # caches produced staleness up to 119 s with ``generated_at``
+    # labelled fresh (reviewer BLOCKER #1309 / B2).
+    "pipeline": 0.0,
+    "runtime": 60.0,
+    "delegate": 30.0,
+    "wiki": 120.0,
+    "health": 15.0,
+    "session_hints": 60.0,
+}
+
+ORIENT_SECTION_SOURCES: dict[str, str] = {
+    "git": "git",
+    "issues": "gh",
+    "pipeline": "fs",
+    "runtime": "fs",
+    "delegate": "fs",
+    "wiki": "fs",
+    "health": "probe",
+    "session_hints": "fs",
+}
+
+ORIENT_SECTION_HARD_TIMEOUT_S = 5.0
 
 
 def _parse_iso_datetime(value: str | None) -> datetime | None:
@@ -162,32 +235,37 @@ def _collect_git_orient_data() -> dict:
 
 
 def _collect_issues_orient_data() -> dict:
-    try:
-        proc = _run_command(
-            [
-                "gh",
-                "issue",
-                "list",
-                "--state",
-                "open",
-                "--limit",
-                "10",
-                "--json",
-                "number,title,labels,createdAt",
-            ],
-            timeout=2.0,
-        )
-    except Exception as exc:
-        return {"issues": [], "issues_error": str(exc)}
+    """Fetch open GitHub issues via ``gh``.
+
+    Raises ``RuntimeError`` on any failure (subprocess error, non-zero
+    exit, malformed JSON). Raising is important — ``_cached_orient_section``
+    only caches successful returns, so a transient ``gh`` blip must
+    not poison the issues cache for the full TTL window (reviewer
+    BLOCKER, GH #1309).
+    """
+    proc = _run_command(
+        [
+            "gh",
+            "issue",
+            "list",
+            "--state",
+            "open",
+            "--limit",
+            "10",
+            "--json",
+            "number,title,labels,createdAt",
+        ],
+        timeout=2.0,
+    )
 
     if proc.returncode != 0:
         error = proc.stderr.strip() or proc.stdout.strip() or "gh issue list failed"
-        return {"issues": [], "issues_error": error}
+        raise RuntimeError(error)
 
     try:
         payload = json.loads(proc.stdout or "[]")
     except json.JSONDecodeError as exc:
-        return {"issues": [], "issues_error": f"invalid gh json: {exc}"}
+        raise RuntimeError(f"invalid gh json: {exc}") from exc
 
     now = datetime.now(UTC)
     issues = []
@@ -319,48 +397,152 @@ async def health_check():
     }
 
 
-@app.get("/api/orient")
-async def orient():
+async def _cached_orient_section(
+    key: str,
+    collector: Callable[[], Any] | Callable[[], Awaitable[Any]],
+    fallback: Any,
+    *,
+    is_async: bool = False,
+) -> tuple[Any, dict]:
+    """Run one orient collector with TTL cache + hard timeout + fallback.
+
+    Returns (value, meta). Meta always includes ``generated_at``,
+    ``stale_after_s``, ``source``, and ``cache`` ("hit" / "miss"); it
+    adds ``error`` on failure so callers can tell a populated section
+    from a degraded one.
+
+    Errors are NOT cached — the next call retries. This is intentional:
+    a transient git/gh hiccup shouldn't poison a 2-minute TTL window.
+    """
+    ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
+    source = ORIENT_SECTION_SOURCES.get(key, "fs")
+    cache_key = f"orient_{key}"
+
+    # ttl == 0 means "don't cache at the orient layer". Skip both the
+    # cache read AND the cache write paths so callers never see stale
+    # data and no zombie entries linger in the dict.
+    if ttl > 0:
+        cached = cache_get(cache_key, ttl=ttl)
+        if cached is not None:
+            value, generated_at = cached  # type: ignore[misc]
+            return value, {
+                "generated_at": generated_at,
+                "stale_after_s": ttl,
+                "source": source,
+                "cache": "hit",
+            }
+
     generated_at = _isoformat_z(datetime.now(UTC))
+    meta: dict[str, Any] = {
+        "generated_at": generated_at,
+        "stale_after_s": ttl,
+        "source": source,
+        "cache": "miss",
+    }
 
-    async def safe_thread(func, fallback):
-        try:
-            return await asyncio.to_thread(func)
-        except Exception as exc:
-            if isinstance(fallback, dict):
-                return {**fallback, "error": str(exc)}
-            return fallback
+    try:
+        if is_async:
+            value = await asyncio.wait_for(
+                collector(),  # type: ignore[misc]
+                timeout=ORIENT_SECTION_HARD_TIMEOUT_S,
+            )
+        else:
+            value = await asyncio.wait_for(
+                asyncio.to_thread(collector),  # type: ignore[arg-type]
+                timeout=ORIENT_SECTION_HARD_TIMEOUT_S,
+            )
+    except TimeoutError:
+        # Short, machine-readable code in the value; richer detail in meta.
+        short_err = f"section_timeout_{ORIENT_SECTION_HARD_TIMEOUT_S}s"
+        meta["error"] = short_err
+        if isinstance(fallback, dict):
+            return {**fallback, "error": short_err}, meta
+        return fallback, meta
+    except Exception as exc:
+        # Preserve original API contract: value error = str(exc). Meta
+        # gets the richer "TypeName: msg" form for debugging.
+        short_err = str(exc)
+        meta["error"] = f"{type(exc).__name__}: {exc}"
+        if isinstance(fallback, dict):
+            return {**fallback, "error": short_err}, meta
+        return fallback, meta
 
-    async def safe_async(func, fallback):
-        try:
-            return await func()
-        except Exception as exc:
-            if isinstance(fallback, dict):
-                return {**fallback, "error": str(exc)}
-            return fallback
+    if ttl > 0:
+        cache_set(cache_key, (value, generated_at))
+    return value, meta
+
+
+@app.get("/api/orient")
+async def orient(fresh: bool = False):
+    """One-shot agent orientation.
+
+    Query params:
+        fresh: if true, invalidate every ``orient_*`` cache entry before
+            gathering. Use it when an agent just committed, renamed a
+            file, or otherwise needs to see a change it made moments
+            ago without waiting for the longest section TTL (up to
+            120 s for ``issues``/``wiki``). Reviewer BLOCKER B3 / #1309.
+    """
+    if fresh:
+        cache_invalidate("orient_")
 
     (
-        git_info,
-        issues_info,
-        pipeline_info,
-        runtime_info,
-        delegate_info,
-        wiki_info,
-        health_info,
-        session_hints,
+        (git_info, git_meta),
+        (issues_info, issues_meta),
+        (pipeline_info, pipeline_meta),
+        (runtime_info, runtime_meta),
+        (delegate_info, delegate_meta),
+        (wiki_info, wiki_meta),
+        (health_info, health_meta),
+        (session_hints, session_hints_meta),
     ) = await asyncio.gather(
-        safe_thread(_collect_git_orient_data, {}),
-        safe_thread(_collect_issues_orient_data, {"issues": []}),
-        safe_async(_collect_pipeline_orient_data, {"summary": {}}),
-        safe_thread(_collect_runtime_orient_data, {}),
-        safe_thread(_collect_delegate_orient_data, {"active_count": 0, "recent": []}),
-        safe_thread(_collect_wiki_orient_data, {"by_track": {}}),
-        safe_thread(_collect_health_orient_data, {"api": True}),
-        safe_thread(_collect_session_hints_orient_data, []),
+        _cached_orient_section("git", _collect_git_orient_data, {}),
+        _cached_orient_section("issues", _collect_issues_orient_data, {"issues": []}),
+        _cached_orient_section(
+            "pipeline",
+            _collect_pipeline_orient_data,
+            {"summary": {}},
+            is_async=True,
+        ),
+        _cached_orient_section("runtime", _collect_runtime_orient_data, {}),
+        _cached_orient_section(
+            "delegate",
+            _collect_delegate_orient_data,
+            {"active_count": 0, "recent": []},
+        ),
+        _cached_orient_section("wiki", _collect_wiki_orient_data, {"by_track": {}}),
+        _cached_orient_section("health", _collect_health_orient_data, {"api": True}),
+        _cached_orient_section("session_hints", _collect_session_hints_orient_data, []),
     )
 
-    response = {
-        "generated_at": generated_at,
+    section_metas = {
+        "git": git_meta,
+        "issues": issues_meta,
+        "pipeline": pipeline_meta,
+        "runtime": runtime_meta,
+        "delegate": delegate_meta,
+        "wiki": wiki_meta,
+        "health": health_meta,
+        "session_hints": session_hints_meta,
+    }
+
+    # Top-level ``generated_at`` is the FLOOR across sections, not the
+    # request time. On a full cache hit it reflects the oldest piece of
+    # data the caller is looking at; on an all-miss it equals the
+    # collector timestamp (which is also "now"). Reviewer CONCERN C1 /
+    # #1309: request-time was misleading consumers into thinking a
+    # 119-s-old payload was fresh.
+    generated_candidates: list[str] = [
+        ts for m in section_metas.values()
+        if isinstance(ts := m.get("generated_at"), str)
+    ]
+    top_generated_at = (
+        min(generated_candidates) if generated_candidates
+        else _isoformat_z(datetime.now(UTC))
+    )
+
+    response: dict[str, Any] = {
+        "generated_at": top_generated_at,
         "git": git_info,
         "issues": issues_info.get("issues", []) if isinstance(issues_info, dict) else [],
         "pipeline": pipeline_info,
@@ -369,9 +551,17 @@ async def orient():
         "wiki": wiki_info,
         "health": health_info,
         "session_hints": session_hints,
+        "meta": section_metas,
     }
-    if isinstance(issues_info, dict) and issues_info.get("issues_error"):
-        response["issues_error"] = issues_info["issues_error"]
+
+    # ``_collect_issues_orient_data`` raises on failure now. The error
+    # branch of ``_cached_orient_section`` writes the short
+    # ``str(exc)`` form into the fallback payload and the richer
+    # ``TypeName: msg`` form into meta. Keep the top-level
+    # ``issues_error`` key on the short form for back-compat with
+    # clients that were reading it before per-section meta existed.
+    if isinstance(issues_info, dict) and issues_info.get("error"):
+        response["issues_error"] = issues_info["error"]
     return response
 
 

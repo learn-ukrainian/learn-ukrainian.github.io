@@ -8,7 +8,34 @@ FastAPI auto-docs: `http://localhost:8765/docs` (Swagger UI)
 
 ## Agent Quick Start
 
-First call for a fresh agent session:
+**Recommended cold-start sequence (GH #1309, since P1):**
+
+```bash
+# 1. Tiny index of per-component hashes — decide what to fetch.
+curl -s http://localhost:8765/api/state/manifest
+
+# 2. Only fetch components whose hash changed since last session.
+curl -s http://localhost:8765/api/rules?format=markdown     # ~1.3 KB
+curl -s http://localhost:8765/api/session/current           # ~1-3 KB
+
+# 3. Always-fresh: git, pipeline, runtime, wiki, health, hints — with meta.
+curl -s http://localhost:8765/api/orient
+# Use ?fresh=true right after you committed or filed an issue.
+
+# 4. Optional: do I have unread channel deliveries?
+curl -s "http://localhost:8765/api/comms/inbox?agent=claude"
+```
+
+Agents should keep a small on-disk cache keyed by manifest hash
+(`.agent/cache/monitor/*.body`). When the manifest's hash matches
+what you cached, skip the payload fetch entirely — the bytes are
+still authoritative. A ready-to-use helper lives at
+``scripts/ai_agent_bridge/_monitor_cache.py``; the client SDK
+(``scripts/monitor_client.py``) will wrap this in P3.
+
+---
+
+### One-shot orient (unchanged, still useful)
 
 ```bash
 curl -s http://localhost:8765/api/orient | python3 -m json.tool
@@ -591,27 +618,53 @@ Log: `logs/watchdog.log`.
 
 ## As an Agent: Session Start Checklist
 
-Run these at the start of each session to orient yourself:
+**Canonical path (P1+P3 since #1309).** One manifest call + only the
+components whose hash changed:
 
 ```bash
-# 1. Full project state (one call)
-curl -s http://localhost:8765/api/state/summary | python3 -m json.tool
+# 1. Index of hashes. Tiny.
+curl -s http://localhost:8765/api/state/manifest
 
-# 2. What's building right now
-curl -s http://localhost:8765/api/batch/active
+# 2. Core context. Only fetch if manifest hash differs from local cache.
+curl -s http://localhost:8765/api/rules?format=markdown
+curl -s http://localhost:8765/api/session/current
 
-# 3. What's ready to build next (Phase A done, B not started)
-curl -s http://localhost:8765/api/state/ready-to-build | python3 -m json.tool
+# 3. Fresh project state.
+curl -s http://localhost:8765/api/orient
 
-# 4. Critical issues to fix
-curl -s "http://localhost:8765/api/state/issues?severity=critical" | python3 -m json.tool
+# 4. Unread messages for this agent.
+curl -s "http://localhost:8765/api/comms/inbox?agent=claude"
+```
 
-# 5. Check Gemini messages
-curl -s http://localhost:8765/api/dashboard/comms | python3 -c "
-import json,sys; d=json.load(sys.stdin)
-print('Unread:', d['stats']['unread'])
-for m in d['recent_messages'][:5]:
-    print(f\"  [{m['from']} → {m['to']}] {m['content_preview'][:80]}\")"
+Python agents use the SDK (caching + ETag round-trip built in):
+
+```python
+from ai_agent_bridge.monitor_client import MonitorClient
+boot = MonitorClient().bootstrap()
+# boot["rules"].body   — ready to drop into a system prompt
+# boot["session"].body — current-task summary
+# boot[...].source     — "cache" | "not-modified" | "network"
+```
+
+Both `/api/rules` and `/api/session/current` honour
+`If-None-Match: "<hash>"` and reply `304 Not Modified` when the hash
+matches — repeat cold-starts with an up-to-date local cache pay
+near-zero bytes for these payloads.
+
+### Deep-dive queries (run as needed, not on every boot)
+
+```bash
+# Ship-ready modules across every track.
+curl -s http://localhost:8765/api/artifacts/ship-ready | python3 -m json.tool
+
+# Public site reachability + freshness.
+curl -s http://localhost:8765/api/site/health | python3 -m json.tool
+
+# What's ready to build next (Phase A done, B not started)
+curl -s http://localhost:8765/api/state/ready-to-build
+
+# Critical issues to fix
+curl -s "http://localhost:8765/api/state/issues?severity=critical"
 ```
 
 ---
@@ -1017,9 +1070,466 @@ One-call agent orientation: git, issues, pipeline, runtime, delegate, wiki, heal
   "git": {"branch": "main", "head": "cb5f47d19"},
   "issues": [{"number": 1186, "title": "feat(api): refresh monitor API..."}],
   "runtime": {"agents": ["claude", "gemini", "codex"]},
-  "health": {"api": true, "mcp_rag": false}
+  "health": {"api": true, "mcp_rag": false},
+  "meta": {
+    "git": {"generated_at": "2026-04-11T00:15:00Z", "stale_after_s": 30, "source": "git", "cache": "miss"},
+    "issues": {"generated_at": "2026-04-11T00:14:10Z", "stale_after_s": 120, "source": "gh", "cache": "hit"}
+  }
 }
 ```
+
+#### Per-section caching + freshness metadata (#1309)
+
+Each section is computed by an independent collector. Most have a
+per-section TTL cache; a repeat call within the window skips the
+underlying shellout (`git`, `gh issue list`) or filesystem scan and
+returns the cached value. Errors are **not** cached — a transient
+failure retries on the next call.
+
+| Section | TTL (s) | Source | Notes |
+|---|---:|---|---|
+| `git` | 30 | `git` | branch, head, ahead_of_origin, recent_commits |
+| `issues` | 120 | `gh` | top 10 open issues; slow API, rare updates |
+| `pipeline` | 0 | `fs` | wraps `/api/state/summary`, which carries its **own** 60 s cache. Caching again at the orient layer would stack windows and label up-to-119 s-old data as fresh (#1309 reviewer BLOCKER B2). |
+| `runtime` | 60 | `fs` | agent registry + headroom + recent outcomes |
+| `delegate` | 30 | `fs` | active delegate/codex tasks |
+| `wiki` | 120 | `fs` | per-track wiki compilation coverage |
+| `health` | 15 | `probe` | API/DB/MCP port + file readability |
+| `session_hints` | 60 | `fs` | recent `docs/session-state/*.md` entries |
+
+Every section is mirrored under `response.meta.<section>` with:
+
+- `generated_at` — ISO timestamp of the underlying collector run (useful
+  when `cache: "hit"`: the value may be up to `stale_after_s` old).
+- `stale_after_s` — TTL window, so clients know when to refetch. `0`
+  means "not cached at the orient layer" — the value is fetched on
+  every request, and downstream caching (if any) is documented in the
+  source endpoint.
+- `source` — origin class (`git` / `gh` / `fs` / `probe`) for quick
+  provenance decisions.
+- `cache` — `"hit"` or `"miss"` on this specific call. Sections with
+  `stale_after_s: 0` always report `"miss"`.
+- `error` — present only when the collector raised or timed out; value
+  is the richer `"TypeName: msg"` form. (The section payload itself
+  keeps the bare `str(exc)` error string for backwards compatibility.)
+
+The top-level `response.generated_at` is the **oldest** `generated_at`
+across sections — a fully cached response labels itself with the
+oldest piece of data the caller is looking at. (Before #1309 it was
+request time, which lied to consumers about freshness.)
+
+#### Cache bypass: `?fresh=true`
+
+Pass `?fresh=true` to invalidate every `orient_*` cache entry before
+gathering. Use it right after a write an agent wants to see
+immediately — a just-committed change, a just-filed issue — without
+waiting for the longest TTL (120 s for `issues` / `wiki`).
+
+```bash
+# Normal call — honours each section's TTL.
+curl -s http://localhost:8765/api/orient | jq .meta.git
+
+# After running `git commit` and you want the new HEAD reflected now.
+curl -s 'http://localhost:8765/api/orient?fresh=true' | jq .git.head
+```
+
+The query only clears this router's cache namespace; unrelated
+endpoints keep their caches intact.
+
+#### Failure isolation
+
+Each section runs inside `asyncio.wait_for(..., timeout=5 s)`. That
+properly cancels hung **async** coroutines — for us, that is only the
+`pipeline` collector.
+
+For sync collectors run via `asyncio.to_thread`, the hard timeout is
+advisory: Python threads aren't cancellable once they start running.
+Real protection is collector-specific:
+
+| Collector | Inner timeout | Notes |
+|---|---|---|
+| `git` | 2 s `_run_command` subprocess timeout | hardened |
+| `issues` | 2 s `_run_command` subprocess timeout | hardened |
+| `pipeline` | async — `asyncio.wait_for` works | hardened |
+| `runtime` | none — pure Python / filesystem | fast in practice; an NFS stall could wedge a thread past the 5 s ceiling |
+| `delegate` | none — filesystem read of a small JSON | same caveat |
+| `wiki` | none — enumerates a small number of files | same caveat |
+| `health` | 0.2 s socket + fast `os.access` | hardened |
+| `session_hints` | none — `glob(...)[:10]` + short `read_text` | same caveat |
+
+The unwrapped sync collectors are cheap enough in practice that
+they've never been observed to block, but they are **not** inside a
+real timeout. If the underlying filesystem hangs, those threads will
+tie up threadpool slots past the 5 s ceiling. See the comment near
+`ORIENT_SECTION_TTLS` in `scripts/api/main.py` for the constraint.
+
+If a section fails or times out, its own payload degrades to a
+fallback (e.g. `git: {"error": "..."}`) while every other section
+still populates. A single wedged collector never takes down the
+whole response — this fixed the incident logged in the first entry
+of `docs/monitor-api/cold-start-baseline.md`.
+
+---
+
+## Cold-Start Consolidation — `/api/state/manifest`, `/api/rules`, `/api/session/current`, `/api/comms/inbox` (#1309)
+
+Per the Agent Quick Start above, these four endpoints are the
+P1 scaffolding for bootstrapping a fresh agent with a single small
+round-trip.
+
+### `GET /api/state/manifest`
+
+Tiny JSON index. Target size < 2 KB. An agent checks the per-component
+hashes against its local cache and only refetches what changed.
+
+```json
+{
+  "generated_at": "2026-04-17T10:15:00Z",
+  "rules":   {"hash": "abc...", "url": "/api/rules?format=markdown"},
+  "session": {"hash": "def...", "url": "/api/session/current?format=markdown"},
+  "orient":  {"url": "/api/orient", "fresh_param": "?fresh=true"},
+  "inbox":   {"url_template": "/api/comms/inbox?agent={name}"}
+}
+```
+
+- `rules.hash` / `session.hash` — sha256 of the Markdown blob each
+  endpoint would currently return. An empty string means the source
+  wasn't readable at manifest time (logged but not fatal).
+- `orient` / `inbox` don't need a manifest hash — `/api/orient`
+  already carries per-section `meta` with its own `generated_at` +
+  `cache` + `source` fields, and `/api/comms/inbox` is always
+  point-in-time.
+
+### `GET /api/rules?format={markdown,json}`
+
+Condensed rule text from `claude_extensions/rules/` (critical +
+non-negotiable + workflow, in that order). Source of truth is the
+checked-in files so a fresh clone or worktree that hasn't deployed
+to `.claude/rules/` still gets correct content.
+
+- `format=markdown` (default) → `text/markdown; charset=utf-8` with
+  an `X-Rules-Hash` header. Drop-in for a system prompt.
+- `format=json` → `{hash, bytes, sources[], markdown}`. Use this when
+  an SDK needs to reconcile the hash against its on-disk cache.
+
+### `GET /api/session/current?format={markdown,json}`
+
+`docs/session-state/current.md` plus a short list of recent handoff
+filenames (newest first). Kept intentionally small — the endpoint
+answers "what do I need to know RIGHT NOW to keep working", not
+"give me the full history".
+
+### `GET /api/comms/inbox?agent={claude,gemini,codex}&limit=10`
+
+Per-agent READ-ONLY view of unread channel deliveries (oldest first).
+Replaces the rejected `agent_view=…` param on `/api/orient`. Payload
+is compact — one entry per delivery with a 160-char body preview and
+provenance (channel, from_agent, dispatched_at, attempt_count).
+
+To actually drain messages, use `ai_agent_bridge` CLI as usual; this
+endpoint is for "do I have work waiting?" checks during cold-start.
+
+### Agent-side cache + SDK (P3)
+
+`scripts/ai_agent_bridge/_monitor_cache.py` — small, pure-stdlib
+on-disk cache under `.agent/cache/monitor/`. Low-level API for
+callers that want fine-grained control:
+
+```python
+from scripts.ai_agent_bridge import _monitor_cache as cache
+
+body = cache.get("rules", expected_hash="...")
+# ... fetch if None ...
+cache.put("rules", body, body_hash="...", url="/api/rules?format=markdown")
+```
+
+For most callers, **use the SDK**: `scripts/monitor_client.py`.
+
+```python
+# Requires ``scripts/`` on sys.path. Tests + any caller launched via
+# ``.venv/bin/python`` from the repo root already have it (see
+# tests/conftest.py). Standalone scripts should add it at the top:
+#     import sys; from pathlib import Path
+#     sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+from ai_agent_bridge.monitor_client import MonitorClient
+
+client = MonitorClient()  # defaults to http://localhost:8765
+boot = client.bootstrap()
+
+rules_md = boot["rules"].body       # ready to drop into a system prompt
+session_md = boot["session"].body   # current-task summary
+
+# boot[...].source tells you why you have these bytes:
+#   "cache"         — no network call; local hash matched
+#   "not-modified"  — server replied 304, reused cached body
+#   "network"       — first fetch or new ETag, body downloaded
+```
+
+The SDK handles:
+
+- Fetching `/api/state/manifest` once.
+- Checking the local cache against the manifest's content hash.
+- Sending `If-None-Match` on cache-miss so the server can return
+  `304 Not Modified` (empty body, reuse cache).
+- Storing the fresh body + ETag on 200.
+
+### ETag support on cachable endpoints
+
+Both `/api/rules` and `/api/session/current` honour
+`If-None-Match: "<hash>"`. A matching hash returns `304 Not Modified`
+with no body — the SDK skips a multi-KB download in that case.
+Also accepts `W/"<hash>"` (weak ETag) and `*`. The ETag value is the
+same sha256 advertised in the manifest, so the manifest hash IS the
+If-None-Match token.
+
+Override the cache directory with `MONITOR_CACHE_DIR=...` for tests
+or alternate checkouts.
+
+### Deprecated endpoints (P3)
+
+These keep working but carry `X-Deprecated: true` + `X-Deprecated-Use`
++ `Warning: 299` response headers. Migrate to the canonical endpoints
+noted in the header; the deprecated handlers will be removed in a
+future cleanup.
+
+| Deprecated | Replacement |
+|---|---|
+| `GET /api/blue/live-status` | `GET /api/state/build-status` |
+| `GET /api/comms/live-activity` | `GET /api/state/build-status` + `GET /api/build/events` stream |
+
+The deprecated routes still work for existing dashboards and scripts
+that haven't been updated — the contract is "log a warning and
+migrate", not "break suddenly".
+
+---
+
+## Content-Delivery-to-Production — `/api/artifacts/*`, `/api/site/*` (#1309)
+
+Two routers with an **explicit boundary**:
+
+- `/api/artifacts/*` answers "are the internal artifacts ready to
+  ship?" — MDX exists, frontmatter valid, word target met, audit
+  passes, final review approved, plan not changed after build.
+- `/api/site/*` answers "is the public site actually up?" —
+  reachability, freshness, recent GH Pages deploys.
+
+Codex flagged in review that mixing these would muddy the contract;
+the split keeps each router's purpose obvious.
+
+### `GET /api/artifacts/{track}/{slug}`
+
+Per-module gate snapshot. Returns `ship_ready` (bool — true iff every
+named gate is green) plus the individual gates so clients can surface
+exactly which check failed.
+
+```json
+{
+  "track": "a1", "slug": "hello-who-are-you",
+  "gates": {
+    "content_exists":    true,
+    "frontmatter_valid": true,
+    "word_target_met":   true,
+    "audit_pass":        true,
+    "final_review_pass": true,
+    "plan_fresh":        true
+  },
+  "ship_ready": true,
+  "legacy_shippable": true,
+  "audit": {"status": "pass", "word_count": 1230, "word_target": 1200, ...},
+  "review": {"score": 9.4, "verdict": "PASS"},
+  "final_review": {"exists": true, "verdict": "PASS", ...}
+}
+```
+
+`legacy_shippable` is the older audit+review combined check (still
+used by existing dashboards). `ship_ready` is the strict new check
+that also covers frontmatter + final review + plan freshness.
+
+### `GET /api/artifacts/ship-ready[?track=a1]`
+
+Aggregate list — walks every plan and returns the modules whose
+every gate is green. Narrow to one track with `?track=`.
+
+```json
+{
+  "tracks_scanned": ["a1", "a2", "b1"],
+  "modules_inspected": 155,
+  "ship_ready_count": 27,
+  "ship_ready": [
+    {"track": "a1", "slug": "hello-who-are-you", "review_score": 9.4,
+     "word_count": 1230, "word_target": 1200}
+  ]
+}
+```
+
+### `GET /api/site/health`
+
+Public-site reachability + freshness. Every field degrades gracefully
+— if the network is down or `gh` isn't available, the response still
+returns 200 with per-field `error` strings rather than failing the
+whole check.
+
+```json
+{
+  "public_url": "https://learn-ukrainian.github.io/",
+  "reachable": true,
+  "canaries": [{"url": ".../", "status": 200, "elapsed_ms": 42}],
+  "last_astro_build": {"built": true, "last_build_at": "...", "age_seconds": 3600},
+  "last_deploy_commit": {"sha": "abc123", "committed_at": "..."},
+  "sitemap": {"exists": true, "age_seconds": 3650}
+}
+```
+
+Override the target URL with `LEARN_UK_SITE_URL=<url>` for preview
+deployments.
+
+### `GET /api/site/deployments[?limit=5]`
+
+Recent `pages-build-deployment` workflow runs via `gh run list`.
+Returns `{runs: [...], error?: "..."}`. An empty `runs` list with
+an `error` string means the CLI call failed (not authenticated, not
+installed, etc.) — check the string and retry, don't retry blindly.
+
+---
+
+## Codex-Requested Follow-ups (#1313)
+
+After the P0-P3 work shipped, Codex asked for ten deterministic
+scoped views. Nine of those ten landed as follow-up commits on the
+same PR (#10 agent_help was already covered by P1 manifest + rules
++ session). All follow below under their final URLs.
+
+### Range status — `GET /api/state/range/{track}?start=N&end=M`
+
+Compact per-module table for one slice. One call replaces N
+``/api/state/pipeline`` reads plus cross-referencing. Ideal for
+overnight batch runs.
+
+```json
+{
+  "track": "a1", "start": 1, "end": 5, "count": 5,
+  "modules": [
+    {"num": 1, "slug": "hello", "phase": "review", "phase_status": "in_progress",
+     "worker": "claude", "audit": "pass", "review_score": 9.4,
+     "words": 1300, "word_target": 1200, "blocker": null,
+     "pipeline_version": "v6", "needs_rebuild": false}
+  ]
+}
+```
+
+`blocker` is derived on the server from the module's state:
+
+| Value | Meaning |
+|---|---|
+| `"failed:<phase>"` | a phase status is `"failed"` in state.json |
+| `"audit_fail"` | audit verdict is `"fail"` but no failed phase |
+| `"gate:<name>"` | audit has `blocking_issues` and the first names a gate |
+| `"audit_issue"` | audit has `blocking_issues` but no specific gate |
+| `null` | nothing known to be blocking |
+
+### Worktree registry — `GET /api/worktrees`
+
+Every active git worktree with branch, dirty/clean, change-type
+summary, last commit. All subprocesses bounded at 2 s and wrapped to
+never 500.
+
+```json
+{
+  "count": 2,
+  "worktrees": [
+    {"path": "/.../learn-ukrainian", "branch": "main", "head": "abc1234",
+     "is_primary": true, "dirty": false, "change_types": [],
+     "last_commit": {"sha": "abc1234", "committed_at": "...", "subject": "..."}}
+  ]
+}
+```
+
+### Force-preview — `GET /api/artifacts/{track}/{slug}/force-preview`
+
+Exact list of files `v6_build.py {track} {num} --force` would delete,
+classified by category. **Never** deletes anything.
+
+```json
+{
+  "track": "a1", "slug": "hello",
+  "count": 12, "total_bytes": 234567,
+  "would_remove": [
+    {"path": "curriculum/l2-uk-en/a1/hello.md", "category": "content",
+     "is_dir": false, "size_bytes": 8432, "reason": "module markdown"}
+  ],
+  "preserved": ["plans/a1/hello.yaml",
+                "curriculum/l2-uk-en/a1/orchestration/hello/index.md",
+                "curriculum/l2-uk-en/a1/orchestration/hello/friction.yaml"]
+}
+```
+
+Categories: `content` / `activities` / `vocabulary` / `review` /
+`audit` / `status` / `research` / `orchestration` / `published`.
+
+### Slug-keyed module state — `GET /api/state/module/{track}/slug/{slug}`
+
+Slug-keyed compact alias of `/api/state/module/{track}/{num}`. Default
+response omits the verbose `phases` dict; pass `?verbose=true` for the
+full payload.
+
+```json
+{
+  "track": "a1", "slug": "hello", "num": 1,
+  "phase": "review", "last_successful": "write",
+  "pipeline_version": "v6", "needs_rebuild": false,
+  "audit": {"status": "pass", "word_count": 1300, "word_target": 1200},
+  "review": {"score": 9.4, "verdict": "PASS"},
+  "final_review": {"exists": true, "verdict": "PASS"},
+  "shippable": true, "blocking_issues": [],
+  "retry_count": 0, "worker": "claude"
+}
+```
+
+### Classified file manifest — `GET /api/artifacts/{track}/{slug}/files`
+
+Four buckets: `source_of_truth`, `generated`, `published`, `stale`.
+An artifact lands in `stale` when its mtime predates the plan YAML —
+source has moved on, rebuild recommended. Complements `force-preview`
+(destructive) with the read-only classification view.
+
+### Review snapshot — `GET /api/artifacts/{track}/{slug}/review-snapshot`
+
+Main review + style review + per-file `empty_findings_flag` (high
+score with zero findings — the reviewer-gaming pattern). Also an
+`any_empty_findings_flag` at the top level for batch filtering.
+
+### Drift check — `GET /api/artifacts/{track}/{slug}/drift`
+
+Cross-checks `state.json`, audit status, final-review verdict, content
+file on disk, published MDX on disk. Reports named `drift` kinds:
+`publish_mdx_missing`, `mdx_without_state`,
+`audit_passes_without_content`, `final_review_without_content`,
+`content_without_audit`, `state_unreadable`. Returns `in_sync: true`
+when everything agrees.
+
+### Issues map — `GET /api/issues/map?limit=50`
+
+Open issues grouped by label category. Extracts `superseded-by: #N`
+and `merged-in: PR #N` references from issue bodies so queue
+management stops being manual. Categories:
+`infrastructure` / `pipeline` / `content` / `wiki` / `agent` /
+`priority:high` / `other`.
+
+### Runtime auth snapshot — `GET /api/runtime/auth`
+
+Per-agent auth mode. For Gemini: resolved `auto` / `subscription` /
+`api` mode + `auth_mode_raw_valid` (did `GEMINI_AUTH_MODE` hold one
+of the accepted values?) + `auth_mode_raw_length` (length only) +
+whether `GEMINI_API_KEY` / `GOOGLE_API_KEY` is set + whether
+`~/.gemini/oauth_creds.json` exists. For Claude / Codex: which env
+var would provide the key (if any).
+
+**Never echoes env-var values** — only presence booleans, source env
+name, and the resolved enum. A test pins this contract so a future
+change can't accidentally leak a value through the raw passthrough
+that used to exist here (the `auth_mode_raw` string from an earlier
+revision of this endpoint was removed per reviewer BLOCKER on
+#1312 pre-merge).
 
 ---
 

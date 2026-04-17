@@ -2,6 +2,72 @@
 
 <critical>
 
+## Cold-start sequence (do this first every session)
+
+Use the Monitor API instead of reading files. One-shot bootstrap:
+
+```python
+# Python one-liner equivalent — see scripts/monitor_client.py
+from ai_agent_bridge.monitor_client import MonitorClient
+boot = MonitorClient().bootstrap()
+# boot["rules"].body    — condensed rules markdown
+# boot["session"].body  — condensed session summary
+```
+
+Shell equivalent:
+
+```bash
+curl -s http://localhost:8765/api/state/manifest         # ~1 KB index
+curl -s http://localhost:8765/api/rules?format=markdown  # only if hash changed
+curl -s http://localhost:8765/api/session/current        # only if hash changed
+curl -s http://localhost:8765/api/orient                 # always-fresh, has meta
+curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'  # unread messages
+```
+
+**Do NOT read `CLAUDE.md`, `claude_extensions/rules/*.md`, or
+`docs/session-state/current.md` directly on cold start.** Those are
+the source of truth the endpoints above serve. Reading them separately
+costs 5+ tool calls and ignores the hash-based cache. If an endpoint
+is unreachable (API server down), THEN fall back to files.
+
+After a write that needs to be immediately visible (just-committed
+change, just-filed issue), pass `?fresh=true` to `/api/orient`.
+
+## Scoped queries — call the API instead of filesystem spelunking
+
+When you need deterministic answers about a specific module / range /
+worktree, use these endpoints instead of grepping `orchestration/`,
+`status/`, or `review/` directly. They are the source of truth for
+agent-side reasoning.
+
+| Question | Endpoint |
+|---|---|
+| What's module `{slug}` doing right now? | `GET /api/state/module/{track}/slug/{slug}` |
+| Give me the dashboard for modules N..M on {track} | `GET /api/state/range/{track}?start=N&end=M` |
+| Which files would `--force` delete for this module? | `GET /api/artifacts/{track}/{slug}/force-preview` |
+| Classify every file tied to this module (source/generated/published/stale) | `GET /api/artifacts/{track}/{slug}/files` |
+| Latest main + style reviews + "reviewer gaming" flag | `GET /api/artifacts/{track}/{slug}/review-snapshot` |
+| Does state.json agree with audit / reviews / published MDX? | `GET /api/artifacts/{track}/{slug}/drift` |
+| Can I ship this module? (every gate green) | `GET /api/artifacts/{track}/{slug}` |
+| Aggregate list of ship-ready modules | `GET /api/artifacts/ship-ready[?track=...]` |
+| Is the public site actually reachable? | `GET /api/site/health` |
+| Recent GH Pages deployments | `GET /api/site/deployments` |
+| Which worktrees exist and which branches are they on? | `GET /api/worktrees` |
+| Open issues grouped by category, with supersede hints | `GET /api/issues/map` |
+| Per-agent auth mode (Gemini subscription vs API) | `GET /api/runtime/auth` |
+
+**Rule of thumb:** if you're about to run `ls`, `cat`, `grep`, or
+`find` against `curriculum/` / `orchestration/` / `review/` /
+`status/` / `.git/worktrees/` — check the table above first. A
+single API call almost always returns the structured answer you
+were trying to reconstruct.
+
+**Full reference:** [`docs/MONITOR-API.md`](../../docs/MONITOR-API.md).
+
+---
+
+## Mandatory task workflow
+
 Every task follows this workflow. No exceptions for non-trivial changes.
 
 1. **Create GH issue** — describe the problem, draft a plan

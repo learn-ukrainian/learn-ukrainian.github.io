@@ -91,24 +91,46 @@ V6_PHASE_ORDER = _V6_PHASES
 
 
 # ==================== TTL CACHE ====================
-
-_ttl_cache: dict[str, tuple[float, object]] = {}
-
+#
+# In-process cache shared across routers. Keys are strings chosen by
+# each caller (conventionally prefixed with the router/feature name,
+# e.g. "orient_git", "summary"). Values are whatever the caller wants
+# to cache. TTL is measured in seconds.
+#
+# Timestamps use ``time.monotonic()`` so TTL is resilient to wall-clock
+# jumps (NTP sync, DST, manual clock edits) — see GH #1309 reviewer
+# BLOCKER. Monotonic values are only valid within this process; the
+# dict is in-memory anyway, so restart clears it naturally.
 
 import time
+
+_ttl_cache: dict[str, tuple[float, object]] = {}
 
 
 def cache_get(key: str, ttl: float) -> object | None:
     """Return cached value if still within TTL, else None."""
     entry = _ttl_cache.get(key)
-    if entry and (time.time() - entry[0]) < ttl:
+    if entry and (time.monotonic() - entry[0]) < ttl:
         return entry[1]
     return None
 
 
 def cache_set(key: str, value: object) -> None:
     """Store a value in the TTL cache."""
-    _ttl_cache[key] = (time.time(), value)
+    _ttl_cache[key] = (time.monotonic(), value)
+
+
+def cache_invalidate(prefix: str = "") -> int:
+    """Drop every cache entry whose key starts with ``prefix``.
+
+    With ``prefix=""`` (default) the whole cache is cleared. Returns
+    the number of entries removed. Useful for ``?fresh=true`` bypass
+    paths and for tests that want a clean slate between cases.
+    """
+    keys = [k for k in _ttl_cache if k.startswith(prefix)]
+    for key in keys:
+        _ttl_cache.pop(key, None)
+    return len(keys)
 
 
 # ==================== CURRICULUM LOADING ====================

@@ -23,7 +23,7 @@ import sqlite3
 import time
 from datetime import UTC, datetime
 
-from fastapi import APIRouter, Query, Request
+from fastapi import APIRouter, Query, Request, Response
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -757,15 +757,33 @@ def _scan_recent_completions(minutes: int = 60) -> list[dict]:
     return completions
 
 
-@router.get("/live-activity")
-async def live_activity(minutes: int = Query(15, ge=1, le=120)):
+@router.get("/live-activity", deprecated=True)
+async def live_activity(
+    response: Response,
+    minutes: int = Query(15, ge=1, le=120),
+):
     """What's being built RIGHT NOW — module-level live feed.
+
+    DEPRECATED (GH #1309): use ``/api/state/build-status`` for a
+    typed, tested view of what each track is doing, and consume the
+    ``build_events_router`` stream for live module-level events. This
+    handler remains for backwards compatibility but will be removed.
+
+    Responses carry ``X-Deprecated: true`` and ``X-Deprecated-Use``
+    so clients can log a warning without parsing the JSON body.
 
     Returns:
       - in_progress: modules with recently updated orchestration state
       - recent_completions: research files created in last hour
       - recent_messages: last N broker dispatches
     """
+    response.headers["X-Deprecated"] = "true"
+    response.headers["X-Deprecated-Use"] = "/api/state/build-status"
+    response.headers["Warning"] = (
+        '299 - "This endpoint is deprecated; migrate to /api/state/build-status '
+        '+ /api/build/events (#1309)"'
+    )
+
     import asyncio
 
     acts, completions = await asyncio.gather(
@@ -1329,4 +1347,88 @@ async def messages_by_module(track: str, slug: str, limit: int = 30):
         "total_messages": len(messages),
         "task_groups": task_groups,
         "messages": messages,
+    }
+
+
+# ==================== INBOX (#1309) ====================
+
+
+@router.get("/inbox")
+def comms_inbox(
+    agent: str = Query(..., description="Target agent name: 'claude', 'gemini', or 'codex'."),
+    limit: int = Query(10, ge=1, le=50, description="Max deliveries to return."),
+):
+    """Per-agent unread channel deliveries, oldest first.
+
+    Replaces the rejected ``agent_view`` param on /api/orient (GH
+    #1309). Returns a compact payload so agents can check 'do I have
+    work waiting' in one cheap call during cold-start, rather than
+    reading the whole channel log.
+
+    Shape::
+        {
+          "agent": "claude",
+          "count": 3,
+          "deliveries": [
+            {
+              "delivery_id": "...",
+              "message_id": "...",
+              "channel": "reviews",
+              "from_agent": "codex",
+              "preview": "first 160 chars of body",
+              "body_length": 1240,
+              "dispatched_at": "2026-04-17T10:12:00Z",
+              "attempt_count": 1
+            },
+            ...
+          ],
+          "truncated": true  # if more deliveries exist than ``limit``
+        }
+
+    The endpoint is READ-ONLY — delivery state is not mutated. Use
+    ``ai_agent_bridge`` to actually drain messages.
+    """
+    try:
+        from scripts.ai_agent_bridge._channels import pending_deliveries_for
+    except ImportError as exc:
+        return JSONResponse(
+            status_code=500,
+            content={"error": f"channel bridge not importable: {exc}"},
+        )
+
+    try:
+        all_pending = pending_deliveries_for(agent)
+    except ValueError as exc:
+        # ``_validate_agent`` raises ValueError on unknown agent — treat
+        # as 400 so the caller can fix the query, not as 500.
+        return JSONResponse(status_code=400, content={"error": str(exc)})
+    except Exception as exc:  # pragma: no cover — defensive
+        return JSONResponse(
+            status_code=500,
+            content={"error": f"bridge query failed: {exc}"},
+        )
+
+    total = len(all_pending)
+    truncated = total > limit
+    deliveries_out = []
+    for row in all_pending[:limit]:
+        body = str(row.get("body") or "")
+        preview = body[:160] + ("..." if len(body) > 160 else "")
+        deliveries_out.append({
+            "delivery_id": row.get("delivery_id"),
+            "message_id": row.get("message_id"),
+            "channel": row.get("cm_channel"),
+            "from_agent": row.get("cm_from_agent"),
+            "preview": preview,
+            "body_length": len(body),
+            "dispatched_at": row.get("dispatched_at"),
+            "attempt_count": row.get("attempt_count"),
+        })
+
+    return {
+        "agent": agent,
+        "count": total,
+        "deliveries": deliveries_out,
+        "truncated": truncated,
+        "limit": limit,
     }
