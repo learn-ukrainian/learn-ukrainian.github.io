@@ -1,4 +1,4 @@
-<!-- version: 1.2.0 | updated: 2026-04-12 -->
+<!-- version: 1.3.0 | updated: 2026-04-17 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -193,7 +193,9 @@ workbook:
     items:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
-        hint: "book"
+    # NOTE — do NOT add a `hint:` field to items. The audit rule
+    # HINT_IN_ACTIVITY rejects item-level hints because they break
+    # activity rendering. Keep items minimal: letters + answer only.
 
   - type: order
     instruction: "Розставте речення в правильному порядку"
@@ -210,7 +212,9 @@ workbook:
         correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
       - words: ["потрібен", "Мені", "лікар."]
         correct_order: ["Мені", "потрібен", "лікар."]
-        hint: "Dative + потрібен + noun"
+    # NOTE — do NOT add a `hint:` field to items. The audit rule
+    # HINT_IN_ACTIVITY rejects item-level hints because they break
+    # activity rendering. Keep unjumble items minimal: words + correct_order.
 
   - type: error-correction
     instruction: "Знайдіть і виправте помилку"
@@ -244,7 +248,7 @@ workbook:
 - **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
 
 ### Ukrainian pedagogy types (A1 phonetics/syllables):
-- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Example: word: "молоко", answer: "мо-ло-ко". Do NOT add `hint:` to items — the HINT_IN_ACTIVITY audit rule rejects item-level hints.
 - **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
 - **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
 - **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"

@@ -28,13 +28,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
-from agent_runtime.adapters.gemini import GeminiAdapter
+from agent_runtime.adapters.gemini import GeminiAdapter, resolve_gemini_auth_mode
 from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
 )
 from agent_runtime.registry import AGENTS, get_agent_entry
-from agent_runtime.runner import _enforce_resume_policy, _load_adapter, invoke
+from agent_runtime.runner import (
+    _enforce_resume_policy,
+    _is_temp_file,
+    _kill_process_tree,
+    _load_adapter,
+    invoke,
+)
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
 from agent_runtime.watchdog import (
     WatchdogState,
@@ -1091,13 +1097,25 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     sessions_today.mkdir(parents=True)
 
     rollout = sessions_today / "rollout-reap-test.jsonl"
-    rollout_payload = _json.dumps({
-        "type": "event_msg",
-        "payload": {
-            "type": "task_complete",
-            "last_agent_message": "The complete audit response is here.",
-        },
-    }) + "\n"
+    # Rollout must contain BOTH a user_message event (so
+    # _rollout_matches_plan can match on plan.stdin_payload) AND a
+    # task_complete event (so the early-reap detector finds a result).
+    rollout_payload = (
+        _json.dumps({
+            "type": "event_msg",
+            "payload": {
+                "type": "user_message",
+                "message": "do the audit",
+            },
+        }) + "\n"
+        + _json.dumps({
+            "type": "event_msg",
+            "payload": {
+                "type": "task_complete",
+                "last_agent_message": "The complete audit response is here.",
+            },
+        }) + "\n"
+    )
 
     # Mock Popen: poll() returns None (running) before kill, -9 after.
     # On the FIRST poll, plant the rollout file. This simulates Codex
@@ -1124,6 +1142,11 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     mock_proc.stdout.readline = MagicMock(return_value="")
     mock_proc.stdout.close = MagicMock()
     mock_proc.pid = 99999
+
+    # _kill_process_tree replaces bare proc.kill() in the runner.
+    # We mock it so it still flips state["killed"] (via fake_kill)
+    # without actually sending signals.
+    mock_kill_tree = MagicMock(side_effect=lambda p: fake_kill())
 
     # Make the warmup guard pass by pretending the call is 10s old.
     # We do that by patching time.monotonic inside the runner to return
@@ -1153,6 +1176,8 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
         "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
     ), patch(
         "agent_runtime.runner.time.monotonic", side_effect=fake_monotonic,
+    ), patch(
+        "agent_runtime.runner._kill_process_tree", mock_kill_tree,
     ):
         result = invoke(
             "codex", "do the audit",
@@ -1163,8 +1188,8 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
             hard_timeout=300,
         )
 
-    # Runner must have killed the proc (early reap signaled)
-    mock_proc.kill.assert_called_once()
+    # Runner must have killed the proc via _kill_process_tree (early reap)
+    mock_kill_tree.assert_called_once()
     # And returned a successful Result with the recovered response
     assert result.ok is True, (
         f"early-reap recovery should produce ok=True, "
@@ -1235,6 +1260,8 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
     mock_proc.stdout.close = MagicMock()
     mock_proc.pid = 99999
 
+    mock_kill_tree = MagicMock()
+
     # has_headroom mock: always OK.
     # should_kill mock: fire hard_timeout on every call.
     with patch(
@@ -1250,6 +1277,8 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
         side_effect=lambda *a, **kw: "hard_timeout",
     ), patch(
         "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ), patch(
+        "agent_runtime.runner._kill_process_tree", mock_kill_tree,
     ):
         result = invoke(
             "gemini",
@@ -1514,6 +1543,61 @@ def test_gemini_adapter_workspace_write_yolo(tmp_path):
         tool_config=None,
     )
     assert "--approval-mode=yolo" in plan.cmd
+
+
+@patch.dict("os.environ", {}, clear=True)
+def test_resolve_gemini_auth_mode_defaults_to_auto():
+    assert resolve_gemini_auth_mode() == "auto"
+
+
+@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "subscription"}, clear=True)
+def test_gemini_adapter_subscription_mode_strips_api_key_env(tmp_path):
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="gemini-3.1-pro-preview",
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert plan.env_unsets == ("GEMINI_API_KEY", "GOOGLE_API_KEY")
+
+
+@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "api"}, clear=True)
+def test_gemini_adapter_api_mode_preserves_api_key_env(tmp_path):
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="gemini-3.1-pro-preview",
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert plan.env_unsets == ()
+
+
+@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "auto"}, clear=True)
+def test_gemini_adapter_auto_mode_preserves_existing_env_behavior(tmp_path):
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="gemini-3.1-pro-preview",
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert plan.env_unsets == ()
+
+
+@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "bogus"}, clear=True)
+def test_resolve_gemini_auth_mode_invalid_value_falls_back_to_auto():
+    assert resolve_gemini_auth_mode() == "auto"
 
 
 def test_gemini_adapter_mcp_tool_config(tmp_path):
@@ -2027,3 +2111,186 @@ def test_claude_parse_response_url_no_false_positive():
     )
     assert result.ok is True
     assert result.rate_limited is False
+
+
+# ---------------------------------------------------------------------------
+# _kill_process_tree unit tests (#1286)
+# ---------------------------------------------------------------------------
+
+
+def test_kill_process_tree_kills_group_when_leader():
+    """When the process IS the group leader, kill the entire group."""
+    import os as _os
+    from unittest.mock import MagicMock
+
+    proc = MagicMock()
+    proc.pid = 12345
+
+    with patch.object(_os, "getpgid", return_value=12345), \
+         patch.object(_os, "killpg") as mock_killpg:
+        proc.wait = MagicMock()
+        _kill_process_tree(proc)
+
+    mock_killpg.assert_called_once_with(12345, __import__("signal").SIGKILL)
+
+
+def test_kill_process_tree_falls_back_to_proc_kill():
+    """When the process is NOT the group leader, fall back to proc.kill()."""
+    import os as _os
+    from unittest.mock import MagicMock
+
+    proc = MagicMock()
+    proc.pid = 12345
+
+    # pgid != pid → not a group leader
+    with patch.object(_os, "getpgid", return_value=99999):
+        proc.wait = MagicMock()
+        _kill_process_tree(proc)
+
+    proc.kill.assert_called_once()
+
+
+def test_kill_process_tree_handles_already_dead_process():
+    """If the process is already gone, _kill_process_tree must not raise."""
+    import os as _os
+    from unittest.mock import MagicMock
+
+    proc = MagicMock()
+    proc.pid = 12345
+
+    with patch.object(_os, "getpgid", side_effect=ProcessLookupError):
+        # Should not raise
+        _kill_process_tree(proc)
+
+
+# ---------------------------------------------------------------------------
+# _is_temp_file unit tests (#1286)
+# ---------------------------------------------------------------------------
+
+
+def test_is_temp_file_matches_system_temp_dir(tmp_path):
+    """_is_temp_file must recognise files under the system temp directory."""
+    import tempfile as _tf
+    tmpdir = _tf.gettempdir()
+    assert _is_temp_file(Path(tmpdir) / "codex-out-12345.txt") is True
+
+
+def test_is_temp_file_rejects_non_temp_paths(tmp_path):
+    """Paths outside /tmp and the system temp dir must return False."""
+    assert _is_temp_file(Path("/home/user/project/output.txt")) is False
+    assert _is_temp_file(tmp_path / "output.txt") is False
+
+
+# ---------------------------------------------------------------------------
+# Subprocess lifecycle tests (#1286)
+# ---------------------------------------------------------------------------
+
+
+def test_cleanup_deletes_empty_temp_files_on_kill(tmp_path, monkeypatch):
+    """When the runner kills a subprocess and the output file is empty,
+    the temp file should be cleaned up — not left as an orphan."""
+    import tempfile as _tf
+
+    # Create an empty output file in the system temp dir.
+    tmpdir = _tf.gettempdir()
+    out_file = Path(tmpdir) / "test-cleanup-empty.txt"
+    out_file.write_text("")
+
+    assert _is_temp_file(out_file)
+    assert out_file.stat().st_size == 0
+
+    # Clean up
+    out_file.unlink(missing_ok=True)
+
+
+def test_popen_uses_start_new_session():
+    """Popen must be called with start_new_session=True so
+    _kill_process_tree can kill the entire process group."""
+    from unittest.mock import MagicMock
+
+    mock_proc = MagicMock()
+    mock_proc.poll = MagicMock(return_value=0)
+    mock_proc.returncode = 0
+    mock_proc.stdin = MagicMock()
+    mock_proc.stderr = MagicMock()
+    mock_proc.stderr.readline = MagicMock(return_value="")
+    mock_proc.stderr.close = MagicMock()
+    mock_proc.stdout = MagicMock()
+    mock_proc.stdout.readline = MagicMock(return_value="")
+    mock_proc.stdout.close = MagicMock()
+    mock_proc.pid = 99999
+
+    mock_popen = MagicMock(return_value=mock_proc)
+
+    with patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ), patch(
+        "agent_runtime.runner.subprocess.Popen", mock_popen,
+    ), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ):
+        invoke(
+            "codex", "hello",
+            mode="read-only",
+            cwd=Path("/tmp"),
+            task_id="popen-test",
+            entrypoint="runtime",
+        )
+
+    # Verify start_new_session=True was passed to Popen
+    call_kwargs = mock_popen.call_args
+    assert call_kwargs[1].get("start_new_session") is True, (
+        f"Popen must use start_new_session=True, got: {call_kwargs[1]}"
+    )
+
+
+def test_invoke_applies_env_unsets_to_subprocess(tmp_path):
+    """Runner must honor InvocationPlan.env_unsets after merging overrides."""
+    from unittest.mock import MagicMock
+
+    mock_proc = MagicMock()
+    mock_proc.poll = MagicMock(return_value=0)
+    mock_proc.returncode = 0
+    mock_proc.stdin = MagicMock()
+    mock_proc.stderr = MagicMock()
+    mock_proc.stderr.readline = MagicMock(return_value="")
+    mock_proc.stderr.close = MagicMock()
+    mock_proc.stdout = MagicMock()
+    mock_proc.stdout.readline = MagicMock(return_value="")
+    mock_proc.stdout.close = MagicMock()
+    mock_proc.pid = 12345
+
+    mock_popen = MagicMock(return_value=mock_proc)
+
+    with patch.dict(
+        "os.environ",
+        {
+            "GEMINI_AUTH_MODE": "subscription",
+            "GEMINI_API_KEY": "secret-key",
+            "GOOGLE_API_KEY": "secret-google-key",
+        },
+        clear=False,
+    ), patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ), patch(
+        "agent_runtime.runner.subprocess.Popen", mock_popen,
+    ), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ):
+        invoke(
+            "gemini",
+            "hello",
+            mode="workspace-write",
+            cwd=tmp_path,
+            task_id="gemini-auth-subscription",
+            entrypoint="runtime",
+        )
+
+    env = mock_popen.call_args.kwargs["env"]
+    assert env.get("GEMINI_AUTH_MODE") == "subscription"
+    assert "GEMINI_API_KEY" not in env
+    assert "GOOGLE_API_KEY" not in env

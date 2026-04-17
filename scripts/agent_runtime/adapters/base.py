@@ -58,6 +58,11 @@ class InvocationPlan:
             ``os.environ.update()``. Adapters should only set values that
             are specific to this call (e.g. Gemini auth tokens). Values set
             here leak nowhere else.
+        env_unsets: Env vars to remove from the subprocess environment
+            after ``env_overrides`` are merged. This keeps shared runner
+            plumbing generic while allowing an adapter to force a clean
+            auth mode for a single invocation (for example stripping
+            ``GEMINI_API_KEY`` in subscription mode).
         liveness_paths: Files whose mtime indicates the agent is alive.
             Used by the runner's stall detector as a fallback when stdout
             is buffered/redirected. Can be empty; if so, only stdout
@@ -68,6 +73,7 @@ class InvocationPlan:
     stdin_payload: str = ""
     output_file: Path | None = None
     env_overrides: dict[str, str] = field(default_factory=dict)
+    env_unsets: tuple[str, ...] = ()
     liveness_paths: tuple[Path, ...] = ()
 
 

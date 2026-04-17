@@ -523,38 +523,32 @@ workbook:
     - м
     - а
     answer: мама
-    hint: mother
   - letters:
     - т
     - а
     - т
     - о
     answer: тато
-    hint: father
   - letters:
     - д
     - і
     - м
     answer: дім
-    hint: house
   - letters:
     - с
     - о
     - н
     answer: сон
-    hint: dream
   - letters:
     - о
     - к
     - о
     answer: око
-    hint: eye
   - letters:
     - н
     - і
     - с
     answer: ніс
-    hint: nose
   title: Rearrange the letters to form the correct Ukrainian word.
 - id: true-false-concepts-wb
   type: true-false

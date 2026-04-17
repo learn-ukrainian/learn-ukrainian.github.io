@@ -6,6 +6,7 @@ Extracted from pipeline_lib.py for separation of concerns.
 
 from __future__ import annotations
 
+import copy
 import textwrap
 
 from config import IMMERSION_POLICIES
@@ -1287,6 +1288,65 @@ def get_level_constraints(track: str, plan: dict | None = None) -> str:
     return constraints
 
 
+# Keys whose value is a comma-separated activity-type list. Used by
+# ``_phase_out_activity_type`` to apply module-number-aware dynamic rules
+# (see ``get_activity_config``).
+_ACTIVITY_TYPE_LIST_KEYS = (
+    "INLINE_ALLOWED_TYPES",
+    "INLINE_PRIORITY_TYPES",
+    "WORKBOOK_ALLOWED_TYPES",
+    "WORKBOOK_PRIORITY_TYPES",
+    "ALLOWED_ACTIVITY_TYPES",
+    "PRIORITY_TYPES",
+)
+
+
+def _split_type_list(raw: str) -> list[str]:
+    """Parse a comma-separated activity-type list into a clean list."""
+    return [t.strip() for t in (raw or "").split(", ") if t.strip()]
+
+
+def _phase_out_activity_type(config: dict[str, str], activity_type: str) -> None:
+    """Mutate ``config`` so ``activity_type`` is forbidden, not allowed.
+
+    Removes the type from every allowed/priority key and adds it to
+    ``FORBIDDEN_ACTIVITY_TYPES``. Used to express module-number-gated
+    phase-outs (e.g. A1 anagram is scaffolding only for M01-M10 —
+    see ``ACTIVITY_RESTRICTIONS['A1']['anagram_limit']`` in
+    ``scripts/audit/config.py``).
+
+    The audit catches violations after the writer emits them; this
+    helper prevents the writer from emitting them in the first place,
+    closing the loop between the audit rule and the prompt.
+    """
+    for key in _ACTIVITY_TYPE_LIST_KEYS:
+        if key not in config:
+            continue
+        remaining = [t for t in _split_type_list(config[key]) if t != activity_type]
+        config[key] = ", ".join(remaining)
+    forbidden = _split_type_list(config.get("FORBIDDEN_ACTIVITY_TYPES", ""))
+    if activity_type not in forbidden:
+        forbidden.append(activity_type)
+    config["FORBIDDEN_ACTIVITY_TYPES"] = ", ".join(forbidden)
+
+
+def _resolve_activity_config_key(track: str, slug: str | None) -> str:
+    """Resolve the ``ACTIVITY_CONFIGS`` lookup key for a track + slug."""
+    if slug and slug.startswith("checkpoint-"):
+        checkpoint_key = f"{track}-checkpoint"
+        if checkpoint_key in ACTIVITY_CONFIGS:
+            return checkpoint_key
+    if track.startswith("lit-"):
+        return "lit"
+    if track == "b1":
+        return "b1-core"
+    if track == "c1":
+        return "c1-core"
+    if track in ACTIVITY_CONFIGS:
+        return track
+    return "b2"
+
+
 def get_activity_config(
     track: str,
     module_num: int,
@@ -1300,21 +1360,28 @@ def get_activity_config(
     modules fall back to the base ``a1`` / ``a2`` configs and emit
     ITEMS_MIN values that the audit gate immediately rejects
     (Apr 2026: caught by Gemini's a1-a2-pre-rebuild-audit).
+
+    Module-number-aware rules:
+
+    - **A1 anagram phase-out (M > 10)**: anagram is Cyrillic-scaffolding
+      only. ``ACTIVITY_RESTRICTIONS['A1']['anagram_limit'] = 10`` in
+      ``scripts/audit/config.py``. The writer is told anagram is a
+      priority type for A1, which produced LEVEL_RESTRICTION violations
+      on 26 modules (#1300). Past M10 we remove anagram from the
+      allowed/priority lists and add it to FORBIDDEN so the writer
+      never picks it.
+
+    The returned dict is a **deep copy** — callers may mutate freely
+    without leaking into the global ``ACTIVITY_CONFIGS``.
     """
-    # Checkpoint slug routing — must run BEFORE the generic track lookup.
-    if slug and slug.startswith("checkpoint-"):
-        checkpoint_key = f"{track}-checkpoint"
-        if checkpoint_key in ACTIVITY_CONFIGS:
-            return ACTIVITY_CONFIGS[checkpoint_key]
-    if track.startswith("lit-"):
-        return ACTIVITY_CONFIGS["lit"]
-    if track == "b1":
-        return ACTIVITY_CONFIGS["b1-core"]
-    if track == "c1":
-        return ACTIVITY_CONFIGS["c1-core"]
-    if track in ACTIVITY_CONFIGS:
-        return ACTIVITY_CONFIGS[track]
-    return ACTIVITY_CONFIGS["b2"]
+    key = _resolve_activity_config_key(track, slug)
+    config = copy.deepcopy(ACTIVITY_CONFIGS[key])
+
+    # Dynamic rules applied to the copy
+    if track == "a1" and module_num > 10:
+        _phase_out_activity_type(config, "anagram")
+
+    return config
 
 
 def get_item_minimums_table(track: str, module_num: int) -> str:

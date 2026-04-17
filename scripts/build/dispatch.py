@@ -364,6 +364,10 @@ def dispatch_agent(
 
     agent_label = f"{agent} ({model})"
     _log(f"  Dispatching to {agent_label}...")
+    if is_gemini:
+        from agent_runtime.adapters.gemini import resolve_gemini_auth_mode
+
+        _log(f"  Gemini auth mode: {resolve_gemini_auth_mode()}")
 
     # ---------- All three agents now routed through agent_runtime (Phase 3 + 5) ----------
     if is_codex or is_gemini or is_gemma_local:

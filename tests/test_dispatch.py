@@ -257,6 +257,33 @@ class TestDispatchAgent:
         assert call_kwargs["entrypoint"] == "dispatch"
         assert call_kwargs["tool_config"] is None  # mcp_tools=False by default
 
+    @patch.dict("os.environ", {"GEMINI_AUTH_MODE": "subscription"}, clear=False)
+    @patch("build.dispatch._log")
+    @patch("agent_runtime.runner.invoke")
+    def test_gemini_dispatch_logs_auth_mode(self, mock_invoke, mock_log, tmp_path):
+        from agent_runtime.result import Result
+
+        mock_invoke.return_value = Result(
+            ok=True, agent="gemini", model="gemini-test", mode="workspace-write",
+            response="ok", stderr_excerpt=None, duration_s=0.5,
+            session_id=None, rate_limited=False, stalled=False,
+            returncode=0, usage_record={},
+        )
+
+        ok, raw = dispatch_agent(
+            "test prompt",
+            agent="gemini-tools",
+            phase="write",
+            orch_dir=tmp_path,
+            timeout=300,
+            model="gemini-test",
+        )
+
+        assert ok is True
+        assert raw == "ok"
+        log_messages = [call.args[0] for call in mock_log.call_args_list]
+        assert any("Gemini auth mode: subscription" in message for message in log_messages)
+
     @patch("agent_runtime.runner.invoke")
     def test_gemma_local_dispatch(self, mock_invoke, tmp_path):
         from agent_runtime.result import Result

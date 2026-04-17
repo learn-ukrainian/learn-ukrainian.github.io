@@ -77,6 +77,25 @@ Core levels (A1-C2) are 100% compiled. If any are missing:
   --writer gemini-tools --reviewer gemini-tools
 ```
 
+### Gemini Auth Mode
+
+```bash
+# Auto (default): preserve current environment behavior
+.venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini-tools
+
+# Subscription / OAuth: strip GEMINI_API_KEY and GOOGLE_API_KEY for this run
+GEMINI_AUTH_MODE=subscription \
+  .venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini-tools
+
+# API key: preserve key env vars explicitly
+GEMINI_AUTH_MODE=api \
+  GEMINI_API_KEY=... \
+  .venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini-tools
+```
+
+`GEMINI_AUTH_MODE=subscription|api|auto` only affects Gemini CLI launches.
+Claude and Codex paths ignore it.
+
 ### Resume (continue from where it stopped)
 
 ```bash

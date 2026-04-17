@@ -31,6 +31,7 @@ Issue: #1184
 """
 from __future__ import annotations
 
+import os
 import re
 import shutil
 from pathlib import Path
@@ -65,6 +66,22 @@ _TRANSIENT_ERROR_PATTERNS = (
     r"rate_limit",
 )
 _TRANSIENT_ERROR_RE = re.compile("|".join(_TRANSIENT_ERROR_PATTERNS), re.IGNORECASE)
+_AUTH_MODE_VALUES = frozenset({"auto", "subscription", "api"})
+
+
+def resolve_gemini_auth_mode(env: dict[str, str] | None = None) -> str:
+    """Resolve the effective Gemini auth mode for this invocation.
+
+    ``auto`` preserves current behavior.
+    ``subscription`` strips API-key env vars so the CLI uses the logged-in
+    subscription/OAuth path instead.
+    ``api`` preserves key env vars explicitly.
+
+    Invalid values degrade to ``auto`` for backward compatibility.
+    """
+    source = os.environ if env is None else env
+    raw = (source.get("GEMINI_AUTH_MODE") or "auto").strip().lower()
+    return raw if raw in _AUTH_MODE_VALUES else "auto"
 
 
 class GeminiAdapter:
@@ -129,6 +146,10 @@ class GeminiAdapter:
         # ~/.gemini/tmp/<basename>/ project dir without reading os.getcwd().
         _ = session_id
         _ = task_id
+        auth_mode = resolve_gemini_auth_mode()
+        env_unsets: tuple[str, ...] = ()
+        if auth_mode == "subscription":
+            env_unsets = ("GEMINI_API_KEY", "GOOGLE_API_KEY")
 
         return InvocationPlan(
             cmd=cmd,
@@ -136,6 +157,7 @@ class GeminiAdapter:
             stdin_payload=prompt,
             output_file=None,  # Gemini writes to stdout only.
             env_overrides={},
+            env_unsets=env_unsets,
             liveness_paths=(),  # stdout streamer is not actually sufficient —
             # see liveness_signal_paths() docstring — but we compute the
             # real paths lazily there because they depend on cwd.

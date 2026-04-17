@@ -820,6 +820,29 @@ def _clean_build_artifacts(level: str, slug: str) -> None:
         _log(f"  🧹 Cleaned {removed} previous build artifact(s)")
 
 
+def _force_reset_module(level: str, slug: str) -> None:
+    """Delete all generated artifacts for a module, preserving source of truth.
+
+    Preserves: plan YAML (``plans/{level}/{slug}.yaml``), code, config.
+    Removes: lesson .md, activities, vocabulary, reviews, audit, status,
+    knowledge packet, ALL orchestration artifacts (state, prompts, dispatch,
+    skeleton, chunks, wiki-excerpts, contract, needs-human-review), and
+    published MDX.
+
+    This is the implementation of ``--force`` (issue #1296).
+    """
+    # Delegate to the existing artifact cleaner (handles content, review,
+    # audit, status, research, orchestration).
+    _clean_build_artifacts(level, slug)
+
+    # Additionally remove published MDX — _clean_build_artifacts doesn't
+    # touch the starlight output directory.
+    mdx = PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / level / f"{slug}.mdx"
+    if mdx.exists():
+        mdx.unlink()
+        _log(f"  🧹 Removed published MDX: {mdx.name}")
+
+
 def _log(msg: str):
     print(msg, flush=True)
 
@@ -6704,6 +6727,11 @@ def _rewrite_block_section(
     original_words = max(1, len(current_section["body"].split()))
     rewritten_words = len(rewritten.split())
     min_word_ratio = 0.6
+    if "META_PEDAGOGICAL_NARRATION" in directive_issue_types:
+        # Meta-narration cleanup can legitimately delete an explanatory
+        # after-dialogue paragraph outside summary sections while preserving
+        # the core teaching content of the section.
+        min_word_ratio = min(min_word_ratio, 0.4)
     if (
         ("summary" in resolved_title.lower() or "підсумок" in resolved_title.lower())
         and "META_PEDAGOGICAL_NARRATION" in directive_issue_types
@@ -6712,6 +6740,15 @@ def _rewrite_block_section(
         # Requiring 60% of the original length prevents a cleaner rewrite from
         # landing when the reviewer explicitly asked for subtraction.
         min_word_ratio = 0.30
+    if (
+        "summary" in resolved_title.lower() or "підсумок" in resolved_title.lower()
+    ) and directive_issue_types.intersection(
+        {"REGISTER_MISMATCH", "EXPLANATION_TONE_MISMATCH", "STYLE_REGISTER_MISMATCH"}
+    ):
+        # Summary register cleanup often removes workbook commands, bilingual
+        # glosses, and abstract lecture framing. Those are valid contractions,
+        # not evidence of a broken rewrite.
+        min_word_ratio = min(min_word_ratio, 0.35)
     min_rewrite_words = min(original_words, max(8, int(original_words * min_word_ratio)))
     if rewritten_words < min_rewrite_words:
         _log(f"  ❌ Rewrite block rejected for {resolved_title} — too short ({rewritten_words} words)")
@@ -7096,6 +7133,112 @@ def _apply_style_review_rewrite_blocks(
     return applied > 0, applied
 
 
+def _section_body_word_count(section_span: dict) -> int:
+    """Count words in a parsed H2 section body without the heading line."""
+    body = str(section_span.get("body") or "")
+    if body.startswith("## "):
+        parts = body.split("\n", 1)
+        body = parts[1] if len(parts) == 2 else ""
+    return len(re.findall(r"\b[\w’'-]+\b", body, flags=re.UNICODE))
+
+
+def _contract_budget_for_section(contract: dict, section_name: str) -> tuple[str, dict] | None:
+    """Return the resolved contract budget entry for a section, if present."""
+    budgets = contract.get("section_word_budgets") or {}
+    if not isinstance(budgets, dict) or not budgets:
+        return None
+    resolved_name = _resolve_section_title(
+        section_name,
+        [{"title": name} for name in budgets],
+    )
+    if resolved_name is None:
+        return None
+    budget = budgets.get(resolved_name)
+    if not isinstance(budget, dict):
+        return None
+    return resolved_name, budget
+
+
+def _apply_contract_word_budget_rewrites(
+    content_path: Path,
+    *,
+    level: str,
+    module_num: int,
+    slug: str,
+    writer: str,
+    contract: dict,
+    contract_violations: list[dict],
+) -> tuple[bool, int]:
+    """Auto-heal pure WORD_BUDGET blockers with targeted section rewrites."""
+    blocking = [
+        violation
+        for violation in contract_violations
+        if str(violation.get("severity") or "").upper() == "ERROR"
+    ]
+    if not blocking:
+        return False, 0
+
+    blocking_types = {str(violation.get("type") or "").strip() for violation in blocking}
+    if blocking_types != {"WORD_BUDGET"}:
+        return False, 0
+
+    spans = _section_spans(content_path.read_text("utf-8"))
+    applied = 0
+    seen_sections: set[str] = set()
+
+    for violation in blocking:
+        section_name = str(violation.get("section") or "").strip()
+        if not section_name or section_name in seen_sections:
+            continue
+
+        resolved_title = _resolve_section_title(section_name, spans)
+        if resolved_title is None:
+            continue
+        section_span = next(
+            (span for span in spans if span["title"] == resolved_title),
+            None,
+        )
+        if section_span is None:
+            continue
+
+        budget_entry = _contract_budget_for_section(contract, resolved_title)
+        if budget_entry is None:
+            continue
+        _, budget = budget_entry
+        min_words = int(budget.get("min") or 0)
+        target_words = int(budget.get("target") or min_words or 0)
+        current_words = _section_body_word_count(section_span)
+        if min_words <= 0 or current_words >= min_words:
+            continue
+
+        deficit = min_words - current_words
+        directive = "\n".join(
+            [
+                "Contract repair: this section is below its required word minimum.",
+                "- Issue type: WORD_BUDGET",
+                f"- Current section words: {current_words}",
+                f"- Contract minimum: {min_words}",
+                f"- Contract target: {target_words}",
+                f"- Add at least {deficit} words of concrete learner-facing content.",
+                "- Expand the section with natural Ukrainian teaching prose, examples, or dialogue turns that fit the existing lesson.",
+                "- Do not add filler, meta-commentary, or generic padding.",
+            ]
+        )
+        if _rewrite_block_section(
+            content_path,
+            level=level,
+            module_num=module_num,
+            slug=slug,
+            writer=writer,
+            section_name=resolved_title,
+            directive=directive,
+        ):
+            applied += 1
+            seen_sections.add(section_name)
+
+    return applied > 0, applied
+
+
 def _run_review_heal_loop(
     content_path: Path,
     *,
@@ -7156,6 +7299,25 @@ def _run_review_heal_loop(
             content_path.read_text("utf-8"),
             contract,
         )
+        word_budget_rewrite_applied, word_budget_rewrite_count = _apply_contract_word_budget_rewrites(
+            content_path,
+            level=level,
+            module_num=module_num,
+            slug=slug,
+            writer=writer,
+            contract=contract,
+            contract_violations=final_contract_violations,
+        )
+        if word_budget_rewrite_applied:
+            _log(
+                f"\n📏 Applied {word_budget_rewrite_count} contract word-budget rewrite(s) "
+                f"from R{round_index}"
+            )
+            step_verify(content_path, level, module_num)
+            final_contract_violations = check_contract_compliance(
+                content_path.read_text("utf-8"),
+                contract,
+            )
         _save_contract_compliance(
             level,
             slug,
@@ -8127,6 +8289,11 @@ def main():
                         help="Batch review skip threshold: rerun review when latest score is below this value")
     parser.add_argument("--force-publish", action="store_true",
                         help="Publish even if audit gates still fail after heal (not recommended)")
+    parser.add_argument("--force", action="store_true",
+                        help="Delete all generated artifacts and rebuild from source of truth (plan + config). "
+                             "Preserves plan YAML, discovery materials, code/config. "
+                             "Removes lesson .md, activities, vocabulary, reviews, audit, status, "
+                             "orchestration state/prompts/dispatch, knowledge packet, published MDX.")
     args = parser.parse_args()
 
     # --range: build multiple modules sequentially
@@ -8159,7 +8326,7 @@ def main():
                     args.review_threshold,
                     _load_completed_phases(args.level, _range_slug),
                 )
-                if _range_plan.should_skip:
+                if _range_plan.should_skip and not args.force:
                     _log(f"\n  ⏭️  M{n:02d} ({_range_slug}) — {_range_plan.reason}, skipping")
                     skipped.append(n)
                     continue
@@ -8177,6 +8344,7 @@ def main():
                      "--step", args.step,
                      "--review-threshold", str(args.review_threshold),
                      *(["--force-publish"] if args.force_publish else []),
+                     *(["--force"] if args.force else []),
                      *(["--resume"] if args.resume else []),
                      *[
                          item
@@ -8260,6 +8428,15 @@ def main():
 
         _log(f"\n🔨 V6 Build: {args.level.upper()} M{args.module:02d} ({slug})")
         _log(f"   Writer: {args.writer}")
+
+        # --force: delete all generated artifacts and start from scratch.
+        # Runs before resume logic — after reset there are no phases to resume.
+        if args.force:
+            _log("   🔄 --force: resetting module to source of truth...")
+            _force_reset_module(args.level, slug)
+            # --force implies a full rebuild from the beginning.
+            if args.resume:
+                _log("   ℹ️  --force overrides --resume: starting fresh")
 
         steps = args.step
 
