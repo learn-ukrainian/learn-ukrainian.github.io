@@ -7110,6 +7110,112 @@ def _apply_style_review_rewrite_blocks(
     return applied > 0, applied
 
 
+def _section_body_word_count(section_span: dict) -> int:
+    """Count words in a parsed H2 section body without the heading line."""
+    body = str(section_span.get("body") or "")
+    if body.startswith("## "):
+        parts = body.split("\n", 1)
+        body = parts[1] if len(parts) == 2 else ""
+    return len(re.findall(r"\b[\w’'-]+\b", body, flags=re.UNICODE))
+
+
+def _contract_budget_for_section(contract: dict, section_name: str) -> tuple[str, dict] | None:
+    """Return the resolved contract budget entry for a section, if present."""
+    budgets = contract.get("section_word_budgets") or {}
+    if not isinstance(budgets, dict) or not budgets:
+        return None
+    resolved_name = _resolve_section_title(
+        section_name,
+        [{"title": name} for name in budgets],
+    )
+    if resolved_name is None:
+        return None
+    budget = budgets.get(resolved_name)
+    if not isinstance(budget, dict):
+        return None
+    return resolved_name, budget
+
+
+def _apply_contract_word_budget_rewrites(
+    content_path: Path,
+    *,
+    level: str,
+    module_num: int,
+    slug: str,
+    writer: str,
+    contract: dict,
+    contract_violations: list[dict],
+) -> tuple[bool, int]:
+    """Auto-heal pure WORD_BUDGET blockers with targeted section rewrites."""
+    blocking = [
+        violation
+        for violation in contract_violations
+        if str(violation.get("severity") or "").upper() == "ERROR"
+    ]
+    if not blocking:
+        return False, 0
+
+    blocking_types = {str(violation.get("type") or "").strip() for violation in blocking}
+    if blocking_types != {"WORD_BUDGET"}:
+        return False, 0
+
+    spans = _section_spans(content_path.read_text("utf-8"))
+    applied = 0
+    seen_sections: set[str] = set()
+
+    for violation in blocking:
+        section_name = str(violation.get("section") or "").strip()
+        if not section_name or section_name in seen_sections:
+            continue
+
+        resolved_title = _resolve_section_title(section_name, spans)
+        if resolved_title is None:
+            continue
+        section_span = next(
+            (span for span in spans if span["title"] == resolved_title),
+            None,
+        )
+        if section_span is None:
+            continue
+
+        budget_entry = _contract_budget_for_section(contract, resolved_title)
+        if budget_entry is None:
+            continue
+        _, budget = budget_entry
+        min_words = int(budget.get("min") or 0)
+        target_words = int(budget.get("target") or min_words or 0)
+        current_words = _section_body_word_count(section_span)
+        if min_words <= 0 or current_words >= min_words:
+            continue
+
+        deficit = min_words - current_words
+        directive = "\n".join(
+            [
+                "Contract repair: this section is below its required word minimum.",
+                "- Issue type: WORD_BUDGET",
+                f"- Current section words: {current_words}",
+                f"- Contract minimum: {min_words}",
+                f"- Contract target: {target_words}",
+                f"- Add at least {deficit} words of concrete learner-facing content.",
+                "- Expand the section with natural Ukrainian teaching prose, examples, or dialogue turns that fit the existing lesson.",
+                "- Do not add filler, meta-commentary, or generic padding.",
+            ]
+        )
+        if _rewrite_block_section(
+            content_path,
+            level=level,
+            module_num=module_num,
+            slug=slug,
+            writer=writer,
+            section_name=resolved_title,
+            directive=directive,
+        ):
+            applied += 1
+            seen_sections.add(section_name)
+
+    return applied > 0, applied
+
+
 def _run_review_heal_loop(
     content_path: Path,
     *,
@@ -7170,6 +7276,25 @@ def _run_review_heal_loop(
             content_path.read_text("utf-8"),
             contract,
         )
+        word_budget_rewrite_applied, word_budget_rewrite_count = _apply_contract_word_budget_rewrites(
+            content_path,
+            level=level,
+            module_num=module_num,
+            slug=slug,
+            writer=writer,
+            contract=contract,
+            contract_violations=final_contract_violations,
+        )
+        if word_budget_rewrite_applied:
+            _log(
+                f"\n📏 Applied {word_budget_rewrite_count} contract word-budget rewrite(s) "
+                f"from R{round_index}"
+            )
+            step_verify(content_path, level, module_num)
+            final_contract_violations = check_contract_compliance(
+                content_path.read_text("utf-8"),
+                contract,
+            )
         _save_contract_compliance(
             level,
             slug,

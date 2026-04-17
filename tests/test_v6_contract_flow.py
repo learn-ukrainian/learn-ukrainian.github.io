@@ -154,6 +154,94 @@ def test_apply_review_rewrite_blocks_rewrites_only_target_section(tmp_path: Path
     assert "Old practice." not in updated
 
 
+def test_apply_contract_word_budget_rewrites_targets_only_budget_blockers(
+    tmp_path: Path, monkeypatch
+) -> None:
+    level = "a1"
+    slug = "word-budget-autoheal"
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    content_path.write_text(
+        "## Intro\nОдне коротке речення.\n\n"
+        "## Practice\nТут уже достатньо слів для перевірки.\n",
+        "utf-8",
+    )
+
+    calls: list[tuple[str, str]] = []
+
+    def fake_rewrite(*args, **kwargs):
+        calls.append((kwargs["section_name"], kwargs["directive"]))
+        return True
+
+    monkeypatch.setattr(v6_build, "_rewrite_block_section", fake_rewrite)
+
+    ok, count = v6_build._apply_contract_word_budget_rewrites(
+        content_path,
+        level=level,
+        module_num=1,
+        slug=slug,
+        writer="gemini",
+        contract={
+            "section_word_budgets": {
+                "Intro": {"target": 100, "min": 90, "max": 110},
+                "Practice": {"target": 100, "min": 90, "max": 110},
+            }
+        },
+        contract_violations=[
+            {
+                "type": "WORD_BUDGET",
+                "severity": "ERROR",
+                "section": "Intro",
+                "message": "Section 'Intro' has 10 words; contract minimum is 90",
+            }
+        ],
+    )
+
+    assert ok is True
+    assert count == 1
+    assert calls[0][0] == "Intro"
+    assert "Issue type: WORD_BUDGET" in calls[0][1]
+    assert "Contract minimum: 90" in calls[0][1]
+    assert "Contract target: 100" in calls[0][1]
+    assert "Add at least" in calls[0][1]
+
+
+def test_apply_contract_word_budget_rewrites_skips_mixed_violation_sets(
+    tmp_path: Path, monkeypatch
+) -> None:
+    content_path = tmp_path / "module.md"
+    content_path.write_text("## Intro\nКороткий текст.\n", "utf-8")
+
+    monkeypatch.setattr(v6_build, "_rewrite_block_section", lambda *args, **kwargs: True)
+
+    ok, count = v6_build._apply_contract_word_budget_rewrites(
+        content_path,
+        level="a1",
+        module_num=1,
+        slug="mixed-violations",
+        writer="gemini",
+        contract={"section_word_budgets": {"Intro": {"target": 100, "min": 90, "max": 110}}},
+        contract_violations=[
+            {
+                "type": "WORD_BUDGET",
+                "severity": "ERROR",
+                "section": "Intro",
+                "message": "Section 'Intro' has 10 words; contract minimum is 90",
+            },
+            {
+                "type": "ACTIVITY_MISSING",
+                "severity": "ERROR",
+                "section": "Intro",
+                "message": "Missing required activity marker.",
+            },
+        ],
+    )
+
+    assert ok is False
+    assert count == 0
+
+
 def test_rewrite_block_section_emits_slim_prompt_manifest(tmp_path: Path, monkeypatch) -> None:
     level = "a1"
     slug = "rewrite-prompt-audit"
@@ -581,6 +669,99 @@ def test_main_clears_stale_needs_human_review_after_review_pass(
     assert result is True
     assert "needs_human_review" not in state
     assert (orch_dir / "needs-human-review.yaml").exists() is False
+
+
+def test_run_review_heal_loop_triggers_word_budget_autoheal(tmp_path: Path, monkeypatch) -> None:
+    level = "a1"
+    slug = "review-word-budget"
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    content_path = curriculum_root / level / f"{slug}.md"
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    content_path.write_text(
+        "## Intro\nКороткий текст.\n\n## Practice\nДостатньо слів для другої секції.\n",
+        "utf-8",
+    )
+    packet_path = curriculum_root / level / "research" / f"{slug}-knowledge-packet.md"
+    packet_path.parent.mkdir(parents=True, exist_ok=True)
+    packet_path.write_text("packet", "utf-8")
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    review_rounds = iter(
+        [
+            (False, 9.1, "## Verdict: REVISE\n<fixes></fixes>\n"),
+            (True, 9.3, "## Verdict: PASS\n"),
+        ]
+    )
+
+    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
+    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
+    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
+
+    verify_calls = {"count": 0}
+
+    def fake_verify(*args, **kwargs):
+        verify_calls["count"] += 1
+        return "complete"
+
+    monkeypatch.setattr(v6_build, "step_verify", fake_verify)
+    monkeypatch.setattr(
+        v6_build,
+        "_ensure_contract_artifacts",
+        lambda *args, **kwargs: (
+            {
+                "section_word_budgets": {
+                    "Intro": {"target": 100, "min": 90, "max": 110},
+                    "Practice": {"target": 100, "min": 90, "max": 110},
+                }
+            },
+            {},
+        ),
+    )
+
+    review_passes = iter(
+        [
+            [
+                {
+                    "type": "WORD_BUDGET",
+                    "severity": "ERROR",
+                    "section": "Intro",
+                    "message": "Section 'Intro' has 10 words; contract minimum is 90",
+                }
+            ],
+            [],
+            [],
+        ]
+    )
+
+    monkeypatch.setattr(
+        "audit.checks.contract_compliance.check_contract_compliance",
+        lambda *args, **kwargs: next(review_passes),
+    )
+
+    autoheal_calls: list[dict] = []
+
+    def fake_word_budget_autoheal(*args, **kwargs):
+        autoheal_calls.append(kwargs)
+        return (len(autoheal_calls) == 1), (1 if len(autoheal_calls) == 1 else 0)
+
+    monkeypatch.setattr(v6_build, "_apply_contract_word_budget_rewrites", fake_word_budget_autoheal)
+    monkeypatch.setattr(v6_build, "_save_contract_compliance", lambda *args, **kwargs: None)
+
+    result = v6_build._run_review_heal_loop(
+        content_path,
+        level=level,
+        module_num=1,
+        slug=slug,
+        writer="gemini",
+        reviewer_override="codex-tools",
+        max_rounds=2,
+    )
+
+    assert result.outcome == "pass"
+    assert len(autoheal_calls) >= 1
+    assert autoheal_calls[0]["writer"] == "gemini"
+    assert autoheal_calls[0]["contract_violations"][0]["type"] == "WORD_BUDGET"
+    assert verify_calls["count"] == 1
 
 
 def test_apply_style_review_rewrite_blocks_groups_by_section(tmp_path: Path, monkeypatch) -> None:
