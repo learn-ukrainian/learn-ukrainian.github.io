@@ -1,82 +1,112 @@
 ## Linguistic Scan
-No Russianisms, Surzhyk, paronym slips, or banned Russian characters (`ы, э, ё, ъ`) found.
+No Russianisms, Surzhyk, calques, or paronym errors found.
 
-Factual issues found:
-- In `Звуки і літери`: `This means that what you see is almost always exactly what you hear... Once you learn the specific sounds that these 33 symbols represent, you will have the ability to read absolutely any Ukrainian word out loud.` This overstates Ukrainian phonetic transparency; the plan itself says `(mostly) what you hear`.
-- In `Приголосні звуки`: `This hard and soft distinction is a uniquely Slavic phonetic feature.` That cross-linguistic claim is too broad.
+One factual phonetics error:
+- In `Звуки і літери`, the sentence `There are no silent letters to trick you.` contradicts the same section’s earlier claim that `«ь» makes zero sound on its own.` That teaches an internally inconsistent rule.
 
 ## Exercise Check
-All 6 planned activity markers are present and spread through the module: `letter-grid`, `quiz-sounds-vs-letters`, `match-up-letters-to-sounds`, `group-sort-vowels-consonants`, `watch-and-repeat-alphabet`, `fill-in-greeting`.
+6 markers are present, and their contracted type/order is intact: `quiz → match-up → fill-in → group-sort → letter-grid → watch-and-repeat`.
 
-Issue found:
-- `<!-- INJECT_ACTIVITY: match-up-letters-to-sounds -->` appears right after the vowel section, but the plan says that exercise matches `А, О, У, М, К, Н` to sounds. Because `М, К, Н` are taught in the consonant section, this marker is placed before all prerequisite content.
+One placement issue:
+- `<!-- INJECT_ACTIVITY: fill-in-greetings -->` appears before `## Привіт! (Hello!)`, so it tests greeting material before that section teaches it.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 7/10 | All planned H2 sections are present and the textbook references are integrated, but the plan’s `У-ля (one [у])` example is replaced by `**око**`, and `А у тебе?` is absent from the greeting teaching even though the plan explicitly includes it. |
-| 2. Linguistic accuracy | 8/10 | No Russianisms/Surzhyk/banned letters found, but `what you see is almost always exactly what you hear` and `uniquely Slavic phonetic feature` are factual overstatements. |
-| 3. Pedagogical quality | 7/10 | The module gives examples and moves into dialogue practice, but it drops the planned `[у]` listening example and fails to teach the reciprocal chunk `А у тебе?` where learners would need it. |
-| 4. Vocabulary coverage | 9/10 | Required vocabulary is covered in prose: `звук`, `літера`, `голосний`, `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`; recommended items such as `тато`, `око`, `дім`, `ніс`, `сон`, `нормально` also appear. |
-| 5. Exercise quality | 7/10 | Marker count matches the 6 planned activities, but `match-up-letters-to-sounds` is placed before consonants are taught even though the planned item set includes `М`, `К`, `Н`. |
-| 6. Engagement & tone | 8/10 | Named speakers and classroom framing work, but phrases like `absolute foundation` and `absolutely any Ukrainian word` push the tone toward lecture-like absolutism. |
-| 7. Structural integrity | 10/10 | All planned H2 headings are present and in order; markdown is clean; pipeline word count `2086` is safely above the target. |
-| 8. Cultural accuracy | 10/10 | The module presents Ukrainian on its own terms, uses Ukrainian-school references, and avoids Russian-centered framing. |
-| 9. Dialogue & conversation quality | 8/10 | The dialogues use named speakers and plausible A1 situations, but the greeting exchange stops at `Добре, дякую!` instead of modeling the planned reciprocal `А у тебе?`. |
+| 1. Plan adherence | 8/10 | Contract beats are mostly covered, but section pacing drifts: `Приголосні звуки` counts 291 words and `Привіт!` counts 325 words from local count, both over the 275-word max. `fill-in-greetings` also appears before `## Привіт!`. |
+| 2. Linguistic accuracy | 7/10 | No Russianisms/Surzhyk found, but `There are no silent letters to trick you.` conflicts with `«ь» makes zero sound on its own; it only changes the pronunciation of the consonant directly before it.` |
+| 3. Pedagogical quality | 8/10 | Strong examples (`мА-мА`, `мО-лО-кО`, `П [п] + р [р] + и [и]...`), but `Remember that to state your name, you should never say **«Я звати»**...` spends scarce A1 space on meta-warning instead of practice. |
+| 4. Vocabulary coverage | 10/10 | Required vocabulary is all present in prose: `звук`, `літера`, `голосний`, `приголосний`, `Привіт`, `Як справи`, `Добре`, `Чудово`, `мама`, `молоко`. |
+| 5. Exercise quality | 9/10 | All 6 markers exist and the type prefixes match the contract, but `<!-- INJECT_ACTIVITY: fill-in-greetings -->` is placed before the greeting section it should reinforce. |
+| 6. Engagement & tone | 9/10 | The module is mostly concrete and teacherly, with textbook references and usable examples rather than empty hype. |
+| 7. Structural integrity | 8/10 | All H2 sections are present and ordered, and total word count is above target, but formatting artifacts remain: `**'Звуки**'`, `**'Голосні**'`, `**'Приголосні**'`, `**'голосна** **літера'**`. |
+| 8. Cultural accuracy | 10/10 | The classroom and peer-greeting scenarios are appropriate, and the module avoids Russian-centric framing. |
+| 9. Dialogue & conversation quality | 7/10 | The teacher exchange is labeled, but the hallway dialogue falls back to anonymous em dashes: `— Привіт! Як тебе звати?` / `— Привіт! Мене звати Софія. А тебе?` / `— Мене звати Марко.` |
 
 ## Findings
-[LINGUISTIC ACCURACY] [SEVERITY: critical]  
-Location: `This means that what you see is almost always exactly what you hear... Once you learn the specific sounds that these 33 symbols represent, you will have the ability to read absolutely any Ukrainian word out loud.`  
-Issue: This teaches an absolute rule about Ukrainian spelling-pronunciation correspondence. The plan says `(mostly) what you hear`; the generated prose removes that hedge and overpromises.  
-Fix: Soften the claim to “usually very close” / “relatively consistent” / “strong first reading attempt.”
+[2. Linguistic accuracy] [SEVERITY: critical]  
+Location: `Звуки і літери` — `There are no silent letters to trick you.`  
+Issue: This contradicts the same section’s earlier explanation that `«ь» makes zero sound on its own`. That is a factual phonetics error.  
+Fix: Change the sentence to say Ukrainian spelling is highly phonetic, while explicitly preserving the exception that `ь` does not represent its own sound.
 
-[LINGUISTIC ACCURACY] [SEVERITY: critical]  
-Location: `This hard and soft distinction is a uniquely Slavic phonetic feature.`  
-Issue: The cross-linguistic claim is too broad.  
-Fix: Rephrase it as a feature that is central to Ukrainian and unfamiliar to most English speakers.
+[1. Plan adherence] [SEVERITY: major]  
+Location: `## Приголосні звуки (Consonant Sounds)`  
+Issue: The section runs to 291 words, over the contract max of 275.  
+Fix: Tighten the consonant tip box; keep the voicing check, but compress it.
 
-[PLAN ADHERENCE] [SEVERITY: major]  
-Location: `Finally, listen to the word **око** (eye), which also clearly features the [о] sound prominently.`  
-Issue: The plan explicitly specifies `У-ля (one [у])`; the module repeats another `[о]` example instead of giving the planned `[у]` listening example.  
-Fix: Replace the `око` sentence with a clear `[у]` example such as `У-ля`.
+[1. Plan adherence] [SEVERITY: major]  
+Location: `## Привіт! (Hello!)` — especially `Remember that to state your name, you should never say **«Я звати»**...` through the gender explanation  
+Issue: The section runs to 325 words, far over the 275-word max, and pacing suffers.  
+Fix: Regenerate only this section to 225-275 words while preserving the required greeting chunks, gender contrast, and `Привіт` sound analysis.
 
-[PLAN ADHERENCE] [SEVERITY: major]  
-Location: `When someone asks **як справи** (how are you), the most common and polite response is **добре** (fine, good).`  
-Issue: The plan explicitly includes the reciprocal chunk `А у тебе?`, and a search confirms that exact phrase never appears in the module. `А тебе?` in the name dialogue is a different ellipsis.  
-Fix: Expand this explanation to teach `чудово`, `нормально`, and `А у тебе?`.
+[3. Pedagogical quality] [SEVERITY: major]  
+Location: `Привіт! (Hello!)` — `Remember that to state your name, you should never say **«Я звати»**...`  
+Issue: This spends beginner space on a meta warning instead of giving more modeled A1 dialogue practice.  
+Fix: Remove that warning in the rewrite and replace it with direct modeled chunks using `Як тебе звати?` and `Мене звати...`.
 
-[EXERCISE QUALITY] [SEVERITY: major]  
-Location: `<!-- INJECT_ACTIVITY: match-up-letters-to-sounds -->` immediately after the vowel section.  
-Issue: The planned match-up activity includes consonant pairs `М ↔ [м], К ↔ [к], Н ↔ [н]`, so the marker is placed before all required teaching is complete.  
-Fix: Move this marker to after the consonant section.
+[5. Exercise quality] [SEVERITY: major]  
+Location: marker block after `Приголосні звуки` — `<!-- INJECT_ACTIVITY: fill-in-greetings -->`  
+Issue: The greeting fill-in appears before the greeting section teaches that material.  
+Fix: Move `fill-in-greetings` to after `## Привіт! (Hello!)`, immediately before `watch-and-repeat-videos`.
+
+[7. Structural integrity] [SEVERITY: minor]  
+Location: `The textbook emphasizes **'Звуки**'...`, `vowels are called **'Голосні**'...`, `**'Приголосні**'...`, `Can you say **'голосна** **літера'**?`  
+Issue: Stray apostrophes from contract-term leakage create visible formatting artifacts.  
+Fix: Remove the stray apostrophes and format the Ukrainian terms normally.
+
+[9. Dialogue & conversation quality] [SEVERITY: major]  
+Location: `Привіт! (Hello!)` — `— Привіт! Як тебе звати? ...` / `— Мене звати Марко.` / `— Рада тебе бачити!`  
+Issue: The hallway dialogue uses anonymous em dashes instead of named speakers, so it reads like a worksheet stub rather than a scene.  
+Fix: Rewrite the exchange with named speakers such as `Марко:` and `Софія:`.
 
 ## Verdict: REVISE
-REVISE. The module is structurally complete and mostly strong on vocabulary coverage, but it contains two factual overstatements in phonetics and several concrete plan/exercise mismatches that need correction before shipping.
+REVISE. The module is close on coverage, but it contains one critical phonetics contradiction plus major section-pacing, marker-placement, and dialogue-format problems.
 
 <fixes>
-- find: |
-    For English speakers, a major advantage is that Ukrainian spelling is highly phonetic. This means that what you see is almost always exactly what you hear. Unlike English, where the letter "a" sounds completely different in "cat," "father," and "late," Ukrainian letters are remarkably consistent. There are no silent letters hiding in words to trick you (except for the functional role of the soft sign Ь). There are no surprise pronunciations or unpredictable spelling rules to memorize. Once you learn the specific sounds that these 33 symbols represent, you will have the ability to read absolutely any Ukrainian word out loud.
-  replace: |
-    For English speakers, a major advantage is that Ukrainian spelling is highly phonetic. This means that what you see is usually very close to what you hear. Unlike English, where the letter "a" sounds completely different in "cat," "father," and "late," Ukrainian letters are relatively consistent. There are no silent letters hiding in words to trick you (except for the functional role of the soft sign Ь). Pronunciation patterns are much more predictable than in English, so once you learn the specific sounds that these 33 symbols represent, you will usually be able to make a strong first reading attempt aloud.
-- find: |
-    This hard and soft distinction is a uniquely Slavic phonetic feature. It does not exist in English, which means you will need to train your ear to hear the difference.
-  replace: |
-    This hard and soft distinction is central to Ukrainian phonetics and unfamiliar to most English speakers, which means you will need to train your ear to hear the difference.
-- find: |
-    Finally, listen to the word **око** (eye), which also clearly features the [о] sound prominently.
-  replace: |
-    Finally, listen to the name **Уля**. It gives you a clear [у] example: У-ля.
-- find: |
-    In this short exchange, you see the formal greeting "Добрий день" used respectfully with a teacher, followed by the informal greeting **привіт** (hi). When someone asks **як справи** (how are you), the most common and polite response is **добре** (fine, good).
-  replace: |
-    In this short exchange, you see the formal greeting "Добрий день" used respectfully with a teacher, followed by the informal greeting **привіт** (hi). When someone asks **як справи** (how are you), you can answer **добре** (fine, good), **чудово** (great), or **нормально** (okay), and ask the question back with **А у тебе?** (And you?).
-- find: |
-    <!-- INJECT_ACTIVITY: match-up-letters-to-sounds -->
-  replace: ""
-- find: |
-    <!-- INJECT_ACTIVITY: group-sort-vowels-consonants -->
-  replace: |
-    <!-- INJECT_ACTIVITY: group-sort-vowels-consonants -->
-
-    <!-- INJECT_ACTIVITY: match-up-letters-to-sounds -->
+- find: |-
+    The textbook emphasizes **'Звуки**' (sounds) as physical vibrations produced by your mouth.
+  replace: |-
+    The textbook emphasizes **звуки** (sounds) as physical vibrations produced by your mouth.
+- find: |-
+    What you see on the page is what you hear. There are no silent letters to trick you. Once you learn the specific sounds, reading becomes a direct and reliable translation of symbols into speech.
+  replace: |-
+    What you see on the page is usually what you hear. Ukrainian spelling is highly phonetic, but the soft sign «**ь**» does not represent its own sound. Once you learn the specific sound-letter patterns, reading becomes a direct and reliable translation of symbols into speech.
+- find: |-
+    In Ukrainian, vowels are called **'Голосні**' (vowels).
+  replace: |-
+    In Ukrainian, vowels are called **голосні** (vowels).
+- find: |-
+    In contrast to vowels, **'Приголосні**' (consonants) are produced with a mix of voice and noise, or noise alone.
+  replace: |-
+    In contrast to vowels, **приголосні** (consonants) are produced with a mix of voice and noise, or noise alone.
+- find: |-
+    :::tip
+    You can feel the mechanics of consonants using a kinaesthetic voicing check. Place your hand firmly on your throat. When you pronounce a voiced consonant like [д], you will feel a strong vibration. When you pronounce a voiceless consonant like [т], you will only feel air.
+    :::
+  replace: |-
+    :::tip
+    Put your hand on your throat: [д] vibrates, [т] does not.
+    :::
+- find: |-
+    <!-- INJECT_ACTIVITY: match-up-letters-sounds -->
+    <!-- INJECT_ACTIVITY: fill-in-greetings -->
+    <!-- INJECT_ACTIVITY: group-sort-sounds -->
+    <!-- INJECT_ACTIVITY: letter-grid-alphabet -->
+  replace: |-
+    <!-- INJECT_ACTIVITY: match-up-letters-sounds -->
+    <!-- INJECT_ACTIVITY: group-sort-sounds -->
+    <!-- INJECT_ACTIVITY: letter-grid-alphabet -->
+- find: |-
+    <!-- INJECT_ACTIVITY: watch-and-repeat-videos -->
+  replace: |-
+    <!-- INJECT_ACTIVITY: fill-in-greetings -->
+    <!-- INJECT_ACTIVITY: watch-and-repeat-videos -->
+- find: |-
+    Can you say **'голосна** **літера'**?
+  replace: |-
+    Can you say **голосна літера**?
 </fixes>
+
+<rewrite-block section="Привіт! (Hello!)">
+Rewrite only this section. Keep the exact H2 heading. Cut it to 225-275 words. Use named speakers for both dialogues (`Вчитель`/`Учні`, `Марко`/`Софія`). Keep the required greeting vocabulary and chunks: `Привіт!`, `Добрий день!`, `Як справи?`, `Добре`, `Чудово`, `Нормально`, `А у тебе?`, `Рада/Радий тебе бачити!`. Keep the `звуковий аналіз` of `Привіт` with two `голосні` and four `приголосні`. Remove the meta warning about `«Я звати»` and avoid anonymous em-dash dialogue.
+</rewrite-block>

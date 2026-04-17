@@ -6,52 +6,52 @@ inline:
   type: quiz
   instruction: Choose the correct answer about sounds and letters.
   items:
-  - question: Що ми чуємо і вимовляємо? (What do we hear and pronounce?)
+  - question: What do we hear and pronounce?
     options:
-    - літери
-    - звуки
-    - мама
-    - тато
+    - Letters
+    - Sounds
+    - Alphabet
+    - Words
     correct: 1
-  - question: Що ми бачимо і пишемо? (What do we see and write?)
+  - question: What do we see and write?
     options:
-    - приголосні
-    - голосні
-    - літери
-    - звуки
-    correct: 2
-  - question: Скільки літер в абетці? (How many letters in the alphabet?)
+    - Letters
+    - Sounds
+    - Vibrations
+    - Voice
+    correct: 0
+  - question: How many letters are in the Ukrainian alphabet?
     options:
     - '26'
     - '32'
     - '33'
     - '38'
     correct: 2
-  - question: Скільки звуків в українській мові? (How many sounds in Ukrainian?)
+  - question: How many sounds are in the Ukrainian language?
     options:
+    - '30'
     - '33'
-    - '36'
     - '38'
-    - '42'
+    - '40'
     correct: 2
-  - question: Чи можна говорити «голосна літера»? (Can we say 'vowel letter'?)
+  - question: Is it correct to say 'a vowel letter' in Ukrainian?
     options:
-    - Yes, it is correct
-    - Ні, голосний — це звук, не літера
-    - Yes, but only for А and О
-    - No, because vowels are consonants
+    - Yes, always
+    - No, only sounds can be vowels
+    - Yes, but only for A and O
+    - No, vowels are only written
     correct: 1
-  - question: What is the role of the soft sign (Ь)?
+  - question: What represents a sound on paper?
     options:
-    - It makes a vowel sound
-    - It makes a hard consonant sound
-    - It makes the word plural
-    - It makes no sound, only softens
-    correct: 3
+    - A symbol called a letter
+    - A physical vibration
+    - An alphabet
+    - A consonant
+    correct: 0
   title: Choose the correct answer about sounds and letters.
-- id: match-up-letters-to-sounds
+- id: match-up-letters-sounds
   type: match-up
-  instruction: Match the Ukrainian letters to the sounds they represent.
+  instruction: Match the Ukrainian letter you see to the sound you hear.
   pairs:
   - left: А
     right: '[а]'
@@ -65,10 +65,10 @@ inline:
     right: '[к]'
   - left: Н
     right: '[н]'
-  title: Match the Ukrainian letters to the sounds they represent.
-- id: fill-in-greeting
+  title: Match the Ukrainian letter you see to the sound you hear.
+- id: fill-in-greetings
   type: fill-in
-  instruction: Complete the basic greeting dialogue.
+  instruction: Complete the greetings dialogue with the correct words.
   items:
   - sentence: — ____! Як справи?
     answer: Привіт
@@ -76,37 +76,43 @@ inline:
     - Привіт
     - Добре
     - Чудово
+    - Нормально
   - sentence: — Привіт! Як ____?
     answer: справи
     options:
-    - тебе
     - справи
-    - Нормально
+    - Добре
+    - тебе
+    - Чудово
   - sentence: — ____. А у тебе?
     answer: Добре
     options:
     - Добре
-    - Привіт
     - справи
-  - sentence: — Добре. А у ____?
+    - тебе
+    - Привіт
+  - sentence: — ____. Рада тебе бачити!
+    answer: Чудово
+    options:
+    - справи
+    - тебе
+    - Привіт
+    - Чудово
+  - sentence: — Привіт! Мене ____ Марко.
+    answer: звати
+    options:
+    - звати
+    - справи
+    - Добре
+    - тебе
+  - sentence: — Мене звати Софія. А ____?
     answer: тебе
     options:
     - тебе
-    - Чудово
-    - Нормально
-  - sentence: — ____.
-    answer: Чудово
-    options:
-    - Чудово
-    - Привіт
+    - звати
     - справи
-  - sentence: — ____.
-    answer: Нормально
-    options:
     - Нормально
-    - тебе
-    - справи
-  title: Complete the basic greeting dialogue.
+  title: Complete the greetings dialogue with the correct words.
 - type: letter-grid
   instruction: Голосні — Vowels
   letters:
@@ -457,65 +463,9 @@ inline:
     note: ''
   id: watch-and-repeat-13
 workbook:
-- id: match-up-vocab-wb
-  type: match-up
-  instruction: Match the Ukrainian words to their English translations.
-  pairs:
-  - left: привіт
-    right: hi
-  - left: добре
-    right: fine
-  - left: чудово
-    right: great
-  - left: мама
-    right: mother
-  - left: тато
-    right: father
-  - left: молоко
-    right: milk
-  - left: звук
-    right: sound
-  - left: літера
-    right: letter
-  title: Match the Ukrainian words to their English translations.
-- id: divide-words-wb
-  type: divide-words
-  instruction: Divide the words into syllables. Remember, every syllable must have
-    a vowel.
-  items:
-  - word: молоко
-    answer: мо-ло-ко
-  - word: мама
-    answer: ма-ма
-  - word: тато
-    answer: та-то
-  - word: літера
-    answer: лі-те-ра
-  - word: нормально
-    answer: нор-маль-но
-  - word: привіт
-    answer: при-віт
-  title: Divide the words into syllables. Remember, every syllable must have a vowel.
-- id: count-syllables-wb
-  type: count-syllables
-  instruction: Count the number of syllables in each word by counting the vowel sounds.
-  items:
-  - word: око
-    correct: 2
-  - word: дім
-    correct: 1
-  - word: ніс
-    correct: 1
-  - word: сон
-    correct: 1
-  - word: нормально
-    correct: 3
-  - word: літера
-    correct: 3
-  title: Count the number of syllables in each word by counting the vowel sounds.
-- id: anagram-vocab-wb
+- id: anagram-vocab
   type: anagram
-  instruction: Rearrange the letters to form the correct Ukrainian word.
+  instruction: Unscramble the letters to form a Ukrainian word.
   items:
   - letters:
     - м
@@ -535,11 +485,6 @@ workbook:
     - м
     answer: дім
   - letters:
-    - с
-    - о
-    - н
-    answer: сон
-  - letters:
     - о
     - к
     - о
@@ -549,70 +494,128 @@ workbook:
     - і
     - с
     answer: ніс
-  title: Rearrange the letters to form the correct Ukrainian word.
-- id: true-false-concepts-wb
+  - letters:
+    - с
+    - о
+    - н
+    answer: сон
+  title: Unscramble the letters to form a Ukrainian word.
+- id: true-false-phonetics
   type: true-false
-  instruction: Are these statements true or false?
+  instruction: Determine if the statement is true or false based on what you have
+    learned.
   items:
-  - statement: A letter is a symbol we write and see.
-    correct: true
-    explanation: Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо.
-  - statement: There are 38 letters in the Ukrainian alphabet.
+  - statement: There are exactly 33 sounds in the Ukrainian language.
     correct: false
-    explanation: There are 33 letters, but 38 distinct sounds.
-  - statement: A vowel sound is made with an obstruction in the mouth.
-    correct: false
-    explanation: Vowels are made purely with the voice, with no airflow obstruction.
-  - statement: The soft sign (Ь) makes no sound of its own.
+    explanation: There are 38 sounds, but only 33 letters.
+  - statement: The soft sign «ь» makes zero sound on its own.
     correct: true
-    explanation: Its only job is to soften the consonant that comes before it.
-  - statement: Every syllable must contain at least one consonant.
-    correct: false
-    explanation: Every syllable must contain exactly one VOWEL, but consonants are
-      not strictly required for a syllable to exist.
-  - statement: Ukrainian spelling is highly phonetic, meaning words are pronounced
-      mostly as they are written.
+    explanation: The soft sign only changes the pronunciation of the consonant directly
+      before it.
+  - statement: Vowels in Ukrainian are called «Голосні».
     correct: true
-    explanation: What you see is almost always what you hear.
-  title: Are these statements true or false?
-- id: odd-one-out-syllables-wb
+    explanation: They are produced using only your voice.
+  - statement: Every Ukrainian word has at least one vowel sound.
+    correct: true
+    explanation: Vowels act as the beating heart of every syllable.
+  - statement: «Привіт» is a formal greeting used with your teachers.
+    correct: false
+    explanation: «Привіт» is an informal greeting used with friends and peers.
+  - statement: To introduce yourself, you use the phrase «Мене звати...».
+    correct: true
+    explanation: This literally means 'They call me...' and is the standard way to
+      introduce yourself.
+  title: Determine if the statement is true or false based on what you have learned.
+- id: divide-words-syllables
+  type: divide-words
+  instruction: Divide the following words into syllables.
+  items:
+  - word: мама
+    answer: ма-ма
+  - word: молоко
+    answer: мо-ло-ко
+  - word: тато
+    answer: та-то
+  - word: око
+    answer: о-ко
+  - word: чудово
+    answer: чу-до-во
+  - word: добре
+    answer: до-бре
+  title: Divide the following words into syllables.
+- id: count-syllables-practice
+  type: count-syllables
+  instruction: Count the number of syllables in each word by counting its vowel sounds.
+  items:
+  - word: привіт
+    correct: 2
+  - word: дім
+    correct: 1
+  - word: добре
+    correct: 2
+  - word: нормально
+    correct: 3
+  - word: звук
+    correct: 1
+  - word: літера
+    correct: 3
+  title: Count the number of syllables in each word by counting its vowel sounds.
+- id: odd-one-out-vocab
   type: odd-one-out
-  instruction: Find the word that has a different number of syllables.
+  instruction: Find the word or letter that does not belong in the group.
   items:
   - words:
-    - дім
-    - сон
     - мама
-    correct: 2
-    explanation: мама has 2 syllables, the rest have 1
-  - words:
     - тато
-    - око
-    - ніс
+    - дім
     correct: 2
-    explanation: ніс has 1 syllable, the rest have 2
-  - words:
-    - молоко
-    - літера
-    - звук
-    correct: 2
-    explanation: звук has 1 syllable, the rest have 3
-  - words:
-    - чудово
-    - нормально
-    - привіт
-    correct: 2
-    explanation: привіт has 2 syllables, the rest have 3
+    explanation: «Дім» means house, while the others are family members.
   - words:
     - добре
-    - тато
-    - дім
+    - чудово
+    - літера
     correct: 2
-    explanation: дім has 1 syllable, the rest have 2
+    explanation: «Літера» means letter, while the others are positive responses to
+      'How are you?'.
   - words:
-    - око
+    - А
+    - О
+    - К
+    correct: 2
+    explanation: «К» is a consonant letter, while the others are vowels.
+  - words:
     - ніс
-    - сон
-    correct: 0
-    explanation: око has 2 syllables, the rest have 1
-  title: Find the word that has a different number of syllables.
+    - око
+    - звук
+    correct: 2
+    explanation: «Звук» means sound, while the others are body parts.
+  - words:
+    - П
+    - М
+    - У
+    correct: 2
+    explanation: «У» is a vowel letter, while the others are consonants.
+  - words:
+    - Марко
+    - Софія
+    - молоко
+    correct: 2
+    explanation: «Молоко» means milk, while the others are names.
+  title: Find the word or letter that does not belong in the group.
+- id: phrase-table-greetings
+  type: phrase-table
+  instruction: Review these essential phrases for greetings and basic introductions.
+  groups:
+  - label: Greetings and Questions
+    phrases:
+    - Привіт! (Hi!)
+    - Добрий день! (Good afternoon!)
+    - Як справи? (How are you?)
+    - Як тебе звати? (What is your name?)
+  - label: Responses
+    phrases:
+    - Добре (Fine/Good)
+    - Чудово (Great/Wonderful)
+    - Нормально (Okay)
+    - Мене звати... (My name is...)
+  title: Review these essential phrases for greetings and basic introductions.

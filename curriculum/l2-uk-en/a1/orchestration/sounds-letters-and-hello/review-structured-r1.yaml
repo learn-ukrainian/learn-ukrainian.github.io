@@ -2,54 +2,53 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 7
-  evidence: All planned H2 sections are present and the textbook references are integrated,
-    but the plan’s `У-ля (one [у])` example is replaced by `**око**`, and `А у тебе?`
-    is absent from the greeting teaching e
+  score: 8
+  evidence: 'Contract beats are mostly covered, but section pacing drifts: `Приголосні
+    звуки` counts 291 words and `Привіт!` counts 325 words from local count, both
+    over the 275-word max. `fill-in-greetings` also '
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: No Russianisms/Surzhyk/banned letters found, but `what you see is almost
-    always exactly what you hear` and `uniquely Slavic phonetic feature` are factual
-    overstatements.
+  score: 7
+  evidence: No Russianisms/Surzhyk found, but `There are no silent letters to trick
+    you.` conflicts with `«ь» makes zero sound on its own; it only changes the pronunciation
+    of the consonant directly before it.`
 - dimension: 3
   name: Pedagogical quality
-  score: 7
-  evidence: The module gives examples and moves into dialogue practice, but it drops
-    the planned `[у]` listening example and fails to teach the reciprocal chunk `А
-    у тебе?` where learners would need it.
+  score: 8
+  evidence: Strong examples (`мА-мА`, `мО-лО-кО`, `П [п] + р [р] + и [и]...`), but
+    `Remember that to state your name, you should never say **«Я звати»**...` spends
+    scarce A1 space on meta-warning instead of pract
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: 'Required vocabulary is covered in prose: `звук`, `літера`, `голосний`,
-    `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`; recommended
-    items such as `тато`, `око`, `дім`, `ніс`,'
+  score: 10
+  evidence: 'Required vocabulary is all present in prose: `звук`, `літера`, `голосний`,
+    `приголосний`, `Привіт`, `Як справи`, `Добре`, `Чудово`, `мама`, `молоко`.'
 - dimension: 5
   name: Exercise quality
-  score: 7
-  evidence: Marker count matches the 6 planned activities, but `match-up-letters-to-sounds`
-    is placed before consonants are taught even though the planned item set includes
-    `М`, `К`, `Н`.
+  score: 9
+  evidence: 'All 6 markers exist and the type prefixes match the contract, but `<!--
+    INJECT_ACTIVITY: fill-in-greetings -->` is placed before the greeting section
+    it should reinforce.'
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: Named speakers and classroom framing work, but phrases like `absolute
-    foundation` and `absolutely any Ukrainian word` push the tone toward lecture-like
-    absolutism.
+  score: 9
+  evidence: The module is mostly concrete and teacherly, with textbook references
+    and usable examples rather than empty hype.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All planned H2 headings are present and in order; markdown is clean; pipeline
-    word count `2086` is safely above the target.
+  score: 8
+  evidence: 'All H2 sections are present and ordered, and total word count is above
+    target, but formatting artifacts remain: `**''Звуки**''`, `**''Голосні**''`, `**''Приголосні**''`,
+    `**''голосна** **літера''**`.'
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: The module presents Ukrainian on its own terms, uses Ukrainian-school
-    references, and avoids Russian-centered framing.
+  evidence: The classroom and peer-greeting scenarios are appropriate, and the module
+    avoids Russian-centric framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 8
-  evidence: The dialogues use named speakers and plausible A1 situations, but the
-    greeting exchange stops at `Добре, дякую!` instead of modeling the planned reciprocal
-    `А у тебе?`.
+  score: 7
+  evidence: 'The teacher exchange is labeled, but the hallway dialogue falls back
+    to anonymous em dashes: `— Привіт! Як тебе звати?` / `— Привіт! Мене звати Софія.
+    А тебе?` / `— Мене звати Марко.`'
 findings: []

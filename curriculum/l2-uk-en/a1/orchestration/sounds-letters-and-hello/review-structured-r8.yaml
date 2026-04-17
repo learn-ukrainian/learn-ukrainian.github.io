@@ -1,0 +1,54 @@
+round: 8
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Section structure and budgets are strong: `309 / 253 / 254 / 278 / 157`
+    words, all within the allowed tolerance. But the explicit `33 letters / 38 sounds`
+    explanation says only `Я, Ю, Є, and Ї... can '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, or paronym errors found. Verified Ukrainian
+    forms such as `привіт`, `рада`, `радий`, `бачити`, `деренчать`, `шелестять`, `чудово`,
+    and `нормально` all exist in VESUM,
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The sound-vs-letter distinction and the `привіт` sound analysis are well
+    scaffolded. But the vowel-practice beat replaces the contracted progression `мА-мА
+    / мО-лО-кО / У-ля` with `мама / молоко / ніс
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All required target items appear naturally in prose: `звук`, `літера`,
+    `голосний`, `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`.'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Marker-only module. Marker count matches the 6 contracted activities,
+    order matches the contracted order, and each marker type matches exactly.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is teacherly and mostly substantive, with concrete classroom
+    framing like `Consider a short classroom exchange` and a usable sound analysis
+    of `привіт`.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All five H2 headings are present and correctly ordered. Pipeline word
+    count is `1236`, so the module clears the target. No duplicate sections or stray
+    formatting artifacts beyond expected admonitions '
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module presents Ukrainian on its own terms, uses Ukrainian pedagogical
+    references, and avoids Russian-centered comparisons.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'The module includes named speakers and a multi-turn exchange, but the
+    required reciprocal introduction chunk is not realized: the dialogue uses `А як
+    тебе звати?` instead of `А у тебе?` in the name-ex'
+findings: []

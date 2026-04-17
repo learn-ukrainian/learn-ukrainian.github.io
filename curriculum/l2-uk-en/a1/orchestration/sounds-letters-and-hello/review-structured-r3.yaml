@@ -1,0 +1,53 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The core beats are mostly covered, but section 1 stops at “The complete
+    set of these thirty-three visual symbols is the **абетка** (alphabet)” and never
+    gives the 33 letters in order, which the contra
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'No Russian-only characters appear; the Ukrainian forms are standard,
+    and the `Привіт` sound analysis is correct: “two **голосні** (vowels) and four
+    **приголосні** (consonants).”'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'The module is example-driven, but two high-value teaching moves are underdelivered:
+    the alphabet section explains the concept without showing the alphabet sequence,
+    and the first-contact material teac'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required target items appear naturally in prose, including `звук`,
+    `літера`, `голосні`, `приголосні`, `Привіт`, `Як справи?`, `Добре`, `Чудово`,
+    `мама`, and `молоко`.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Marker-only module; the marker inventory matches the 6 contracted activity
+    obligations exactly, in the correct order and with correct type prefixes.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The voice is mostly teacherly and concrete, especially in “Let’s do a
+    basic **звуковий аналіз**...” and the classroom framing.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All five H2 sections are present and ordered correctly; pipeline word
+    count is 1236, above the 1200 target; formatting is clean.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module presents Ukrainian on its own terms, grounded in Ukrainian
+    school pedagogy and not via Russian comparison.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'The `Марко`/`Софія` exchange is named and usable, but the reciprocal
+    follow-up required by the contract is missing: learners get `А тебе?` instead
+    of the contracted `А у тебе?`.'
+findings: []

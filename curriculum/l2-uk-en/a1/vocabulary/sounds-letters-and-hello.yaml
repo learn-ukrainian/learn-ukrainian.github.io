@@ -72,13 +72,13 @@ vocabulary:
   gender: ''
   verified: true
 - word: до́бре
-  translation: fine, good
+  translation: fine
   expression: false
   pos: присл.
   gender: ''
   verified: true
 - word: чудо́во
-  translation: great, wonderful
+  translation: great
   expression: false
   pos: присл.
   gender: ''
@@ -95,36 +95,54 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
+- word: чу́ємо
+  translation: we hear
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вимовля́ємо
+  translation: we pronounce
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ба́чимо
+  translation: we see
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пи́шемо
+  translation: we write
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бу́ква
+  translation: letter
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
 - word: абе́тка
   translation: alphabet
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: алфа́ві́т
-  translation: alphabet
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: тверді
+- word: тверди́й
   translation: hard
   expression: false
   pos: прикм.
   gender: ''
   verified: true
-- word: м'які́
+- word: м’яки́й
   translation: soft
   expression: false
-  pos: прикм.
-  gender: ''
-  verified: true
-- word: м'який знак
-  translation: soft sign
-  expression: true
   pos: ''
   gender: ''
-  verified: true
+  verified: false
 - word: Добрий день!
   translation: Good afternoon!
   expression: true
@@ -135,6 +153,18 @@ vocabulary:
   translation: thank you
   expression: false
   pos: дієсл.
+  gender: ''
+  verified: true
+- word: А у вас?
+  translation: And you? (formal)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А у тебе?
+  translation: And you? (informal)
+  expression: true
+  pos: ''
   gender: ''
   verified: true
 - word: Як тебе звати?
@@ -149,20 +179,14 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: А тебе?
-  translation: And you?
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
 - word: Рада тебе бачити!
-  translation: Glad to see you!
+  translation: Glad to see you! (feminine)
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: Радий тебе бачити!
-  translation: Glad to see you!
+  translation: Glad to see you! (masculine)
   expression: true
   pos: ''
   gender: ''
@@ -181,6 +205,12 @@ vocabulary:
   verified: true
 - word: у́чні
   translation: students
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: підсумок
+  translation: summary
   expression: false
   pos: ім.
   gender: ч.

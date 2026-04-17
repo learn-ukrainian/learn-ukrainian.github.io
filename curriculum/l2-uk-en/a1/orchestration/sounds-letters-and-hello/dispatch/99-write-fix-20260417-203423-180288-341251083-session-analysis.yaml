@@ -1,0 +1,16 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-17T18-33-3f612b21.json
+phase: write-fix
+prompt_chars: 9743
+response_chars: 8945
+prompt_words: 1610
+response_words: 1495
+sections:
+- name: unknown
+  start: 0
+  length: 9743
+  fraction: 1.0
+large_sections:
+- unknown
+directives_total: 7
+directives_covered: 7
+directives_missed: []

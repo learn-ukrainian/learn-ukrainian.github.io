@@ -1,19 +1,25 @@
 ## VESUM Verification
 - Confirmed: звук, літера, голосний, приголосний, привіт, як, справи, добре, чудово, мама, молоко, нормально, тато, око, дім, ніс, сон
-- Not found: 
+- Not found: none
 
 ## Grammar Rules
-- Вживання м'якого знака (Ь): Правопис §26 — Буквою ь позначаємо на письмі м’якість приголосних звуків.
-- Вживання Я, Ю, Є: Правопис §4 — Букви я, ю, є пишемо: 1. На початку слова, після голосного та після апострофа для позначення звукосполучень й + а, й + у, й + е; 2. Після букви на позначення приголосного звука для передання його м’якості.
+- Голосні та ненаголошені звуки: Правопис §1 — "Наголошені голосні е та и у вимові виразні, тому їх передаємо тими самими буквами... Ненаголошені е та и невиразні у вимові. У словах із постійним наголосом невиразний звук перевіряємо за словником." (Note: Basics of 33 letters vs 38 sounds are foundational phonetic rules established in textbooks rather than explicit orthographic chapters in Pravopys).
 
 ## Calque Warnings
+- голосна літера: OK (Not flagged as a Russian calque by Антоненко-Давидович, though textbook pedagogy specifies it is technically imprecise because "sounds are голосні/приголосні, not letters").
 - як справи: OK
-- рада бачити: OK
-- голосна літера: OK — (Note: while not a Russian calque in the style guide, textbook pedagogy strictly dictates that sounds are "голосні", while letters are just symbols. The phrase "голосна літера" is factually incorrect in Ukrainian phonetics, as emphasized in the plan).
+- добре: OK
 
 ## CEFR Check
+- мама: A1 — OK
+- дім: A1 — OK
+- добре: A1 — OK
+- око: A1 — OK
 - чудово: A1 — OK
 - нормально: A1 — OK
-- привіт: Not found — (Unlisted, but functionally A1)
-- звук: A2 — above target
-- літера: A2 — above target
+- тато: A1 — OK
+- звук: A2 — Above target
+- літера: A2 — Above target
+- голосний: A2 — Above target
+- приголосний: A2 — Above target
+- сон: A2 — Above target

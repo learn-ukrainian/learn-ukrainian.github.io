@@ -1,0 +1,23 @@
+phase: write-chunk
+section: Звуки і літери (Sounds and Letters)
+section_index: 0
+total_sections: 5
+components:
+- persona
+- section_skeleton
+- section_contract
+- section_wiki_excerpts
+- paragraph_language_rule
+- section_rules
+- required_vocab_checklist
+- forbidden_words
+metrics:
+  prompt_chars: 7777
+  prompt_words: 1148
+  contract_chars: 1560
+  excerpt_chars: 1783
+  previous_summary_chars: 0
+flags:
+  includes_dialogue_formatting: false
+  includes_vocab_checklist: true
+  includes_previous_summary: false

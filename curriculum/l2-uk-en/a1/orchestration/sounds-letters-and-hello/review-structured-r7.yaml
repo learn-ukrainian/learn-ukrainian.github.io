@@ -1,0 +1,55 @@
+round: 7
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Section budgets are on target (`304 / 253 / 256 / 238 / 157` words against
+    the contract bands), and the textbook beats are largely covered, but the required
+    hallway dialogue does not complete the cont
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, or wrong Ukrainian forms found. Spot
+    checks via local tools supported forms such as `радий`, `рада`, `привіт`, `чудово`,
+    `нормально`, `милуєшся`.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'The module teaches in a clear progression: rule (`«Звуки ми чуємо й вимовляємо...»`),
+    classification, examples (`мама`, `молоко`), then application in `звуковий аналіз`
+    of `привіт`. The explanations a'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All required target items appear in prose: `звук`, `літера`, `голосний`,
+    `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`.'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'Marker-only module, so this score is based on contract compliance only:
+    all 6 required markers are present, in the exact obligated order, with exact contracted
+    types.'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is mostly solid teacher talk with concrete classroom framing,
+    especially in lines like `Let us practice hearing these vowels in simple words`
+    and the guided `звуковий аналіз` walkthrough.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All five H2 sections are present and correctly ordered, markdown is clean,
+    and the pipeline word count is `1202`, which clears the minimum target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: 'The module is decolonized and Ukrainian-centered throughout: Ukrainian
+    textbooks, Ukrainian pedagogical terminology, and Ukrainian greeting norms are
+    foregrounded rather than filtered through Russian '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: The hallway dialogue has named speakers, but it misses the required name
+    exchange, and the classroom exchange models `> **Учні:** Привіт! Добре.` immediately
+    after stating that `Добрий день` is the fo
+findings: []

@@ -1,39 +1,40 @@
-## Звуки і літери (Sounds and Letters) (~330 words total)
-- P1 (~100 words): Introduce the fundamental distinction: sounds (звуки) vs. letters (літери). Quote Заболотний Grade 5 p.83: "Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо." Explain that sounds are spoken and heard, while letters are symbols on paper that we see and write.
-- P2 (~110 words): Explain the numbers: 33 letters (літери) but 38 sounds (звуків). Explain why they don't match: letters like Я, Ю, Є, Ї can represent two sounds depending on their position, and the soft sign (Ь) makes no sound at all—it only softens the consonant before it. Address the pedagogical question from Litvinova Grade 5 p.130: "Чи можна говорити «голосна літера»?" Emphasize the answer is an absolute no; sounds are vowels/consonants, not letters. Letters only represent sounds.
-- P3 (~120 words): Introduce the Ukrainian alphabet (абетка/алфавіт). Mention all 33 letters in order and note that each letter has a specific name. Explain the concept of phonetic spelling: what you see is mostly what you hear. Contrast this with English by highlighting that Ukrainian has no silent letters (except Ь's functional role) and no surprise pronunciations. Once you know the sounds, you can read any word.
-- <!-- INJECT_ACTIVITY: letter-grid --> [letter-grid, Interactive alphabet card grid showing all 33 Ukrainian letters, 33 items]
-- <!-- INJECT_ACTIVITY: quiz-sounds-vs-letters --> [quiz, Distinguish between sounds (звуки) and letters (літери), 6 items]
+## Звуки і літери (Sounds and Letters) (~300 words total)
+- P1 (~100 words): Explain the "Golden Rule" of Ukrainian phonetics from Заболотний: "Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо." Detail the fundamental difference: a sound (`звук`) is physical and produced by the mouth, while a letter (`літера` or `буква`) is just a written symbol representing that sound. 
+- P2 (~100 words): Explain the numbers mismatch: why Ukrainian has 33 letters but 38 sounds. Briefly introduce that some letters (the iotated Я, Ю, Є, Ї) can make two sounds, while the soft sign (Ь) makes zero sounds and only softens the consonant before it. Clarify why the phrase "голосна літера" (vowel letter) is pedagogically incorrect—only sounds can be vowels.
+- P3 (~100 words): Introduce the Ukrainian alphabet (`абетка`). Explain that Ukrainian spelling is highly phonetic—what you see is what you hear. Contrast this with English (no silent letters like the "k" in "knife" or unpredictable vowels). Once you know the sounds, reading becomes a direct translation of symbols to mouth movements.
+- <!-- INJECT_ACTIVITY: quiz-sounds-vs-letters --> [quiz, Distinguish between sounds and letters concepts, 6 items]
 
-## Голосні звуки (Vowel Sounds) (~275 words total)
-- P1 (~90 words): Define голосні звуки (vowel sounds). Quote Большакова Grade 1 p.24: "Голосні почуєш в пісні, і у темному у лісі... Легко вимовляються, весело співаються!". Explain that vowels are made with voice only, with air flowing freely through the mouth with no obstruction, which is why they can be sung or shouted.
-- P2 (~100 words): Detail the 6 vowel sounds ([а], [о], [у], [е], [и], [і]) versus the 10 vowel letters (А, О, У, Е, И, І, Я, Ю, Є, Ї). Briefly mention that the extra four (Я, Ю, Є, Ї) are "iotated" and perform "two jobs" (to be covered in depth in M02). Emphasize that every Ukrainian word has at least one vowel sound, as vowels are the heart of every syllable.
-- P3 (~85 words): Introduce the sound notation from Захарійчук Grade 1 p.13, where vowel sounds are marked with a dot [•] in sound models. Give examples of hearing vowels in simple words: мА-мА (two [а] sounds), мО-лО-кО (three [о] sounds), У-ля (one [у] sound).
-- <!-- INJECT_ACTIVITY: match-up-letters-to-sounds --> [match-up, Match Ukrainian letters to the sounds they represent, 6 items]
+## Голосні звуки (Vowel Sounds) (~260 words total)
+- P1 (~80 words): Define `голосні` (vowels). Explain that they are produced using voice only, with air flowing freely through the mouth without obstruction. Emphasize that you can sing or shout them (referencing the Grade 1 poem: "Голосні почуєш в пісні...").
+- P2 (~90 words): List the 6 vowel sounds: [а], [о], [у], [е], [и], [і], contrasting them with the 10 vowel letters (А, О, У, Е, И, І, Я, Ю, Є, Ї). Reiterate that the extra four are iotated and will be covered fully in M02. State the core rule: every Ukrainian word has at least one vowel sound, acting as the heart of a syllable.
+- P3 (~90 words): Introduce the auditory practice and textbook notation: vowel sounds are marked with a dot `[•]`. Give visual and auditory examples of identifying vowels in basic words: мА-мА (two [а] sounds), мО-лО-кО (three [о] sounds), У-ля (one [у] sound). 
 
-## Приголосні звуки (Consonant Sounds) (~275 words total)
-- P1 (~90 words): Define приголосні звуки (consonant sounds). Quote Большакова Grade 1 p.24: "Приголосні деренчать і тихенько шелестять, голосно свистять і шиплять." Explain that they are made with voice plus noise (or noise only) created by an obstruction in the mouth. Ask learners to try singing pure consonants like [к] or [п] to prove it's impossible.
-- P2 (~100 words): Explain the numbers: 32 consonant sounds derived from 22 consonant letters. Introduce the concept of consonant pairs: тверді (hard) and м'які (soft). Mention Захарійчук Grade 1 p.15 notation: hard sounds are marked with a single dash [–], and soft sounds with a double dash [=]. Note that this hard/soft distinction is uniquely Slavic and doesn't exist in English.
-- P3 (~85 words): Highlight special letters to prepare for video practice: Ґ is uniquely Ukrainian, Щ always represents two sounds [шч], and Ь (м'який знак) makes no sound but softens the preceding consonant.
-- <!-- INJECT_ACTIVITY: group-sort-vowels-consonants --> [group-sort, Sort Ukrainian sounds into Голосні (vowels) and Приголосні (consonants), 8 items]
-- <!-- INJECT_ACTIVITY: watch-and-repeat-alphabet --> [watch-and-repeat, Pronunciation practice with Anna Ohoiko videos for vowels and consonants, 11 items]
+## Приголосні звуки (Consonant Sounds) (~300 words total)
+- P1 (~90 words): Define `приголосні` (consonants). Explain that they are made with voice plus noise, or noise only, created by an obstruction (lips, teeth, tongue). Demonstrate that a pure consonant cannot be sung (ask the learner to try singing [к] or [п]).
+- P2 (~100 words): Explain that there are 32 consonant sounds produced by 22 consonant letters. Introduce the uniquely Slavic concept of hard (`тверді`, marked `[-]`) and soft (`м'які`, marked `[=]`) consonant pairs. Teach the kinaesthetic voicing check: place a hand on the throat to feel the vibration of a voiced consonant like [д] versus the voiceless [т].
+- P3 (~110 words): Highlight special consonant cases to watch out for. Introduce Ґ (a uniquely Ukrainian hard "g" sound), Щ (which always represents two sounds: [шч]), and Ь (the soft sign, which has no sound of its own but softens the preceding consonant). 
+- <!-- INJECT_ACTIVITY: watch-and-repeat-videos --> [watch-and-repeat, Pronunciation practice with Anna Ohoiko videos, 11 items]
+- <!-- INJECT_ACTIVITY: letter-grid-alphabet --> [letter-grid, Interactive alphabet card grid showing all 33 letters, 33 items]
+- <!-- INJECT_ACTIVITY: group-sort-sounds --> [group-sort, Sort Ukrainian sounds into Голосні and Приголосні, 8 items]
+- <!-- INJECT_ACTIVITY: match-up-letters-sounds --> [match-up, Match Ukrainian letters to the sounds they represent, 6 items]
 
-## Привіт! (Hello!) (~275 words total)
-- P1 (~90 words): Present a dialogue setting the scene for the first day of Ukrainian class. The Teacher (Вчитель) greets the students (Учні), and they respond, practicing the foundational conversational chunks: "Привіт!", "Добрий день!", "Як справи?", "Добре."
-- P2 (~60 words): Present a short dialogue between two new classmates (Марко and Софія) meeting in the hallway. They introduce themselves using "Привіт! Як тебе звати?" and "Мене звати...". This demonstrates the very first social application of the sounds they just learned.
-- P3 (~65 words): Explain the use of gendered forms in greetings by contrasting "Рада тебе бачити!" (female speaker) and "Радий тебе бачити!" (male speaker). Point out that this is the learner's first encounter with grammatical gender, which will become a major structural topic starting in module M08.
-- P4 (~60 words): Perform the first "звуковий аналіз" (sound analysis) on the word "Привіт": П [п] (приголосний) + р [р] (приголосний) + и [и] (голосний) + в [в] (приголосний) + і [і] (голосний) + т [т] (приголосний). Count them out: two голосні, four приголосні.
-- <!-- INJECT_ACTIVITY: fill-in-greeting --> [fill-in, Complete a basic greeting dialogue with blanks, 4 items]
+## Привіт! (Hello!) (~280 words total)
+- P1 (~90 words): Dialogue 1. The first day of Ukrainian class. The teacher greets the students: "Добрий день!" Practice the standard exchange: "Як справи?" (How are you?) with common answers: "Добре" (fine), "Чудово" (great), and "Нормально" (okay), followed by "А у тебе?" (And you?).
+- P2 (~70 words): Dialogue 2. Two new classmates, Marko and Sofia, meet in the hallway. They use the informal "Привіт!" and ask "Як тебе звати?". Explain that we must say "Мене звати..." (using the accusative "me"), explicitly warning against the direct English translation "Я звати" (I am called).
+- P3 (~60 words): Introduce gendered greetings. Compare "Рада тебе бачити!" (said by a female) and "Радий тебе бачити!" (said by a male). Note that this is the learner's first encounter with grammatical gender, which will be expanded upon in later modules.
+- P4 (~60 words): Perform a `звуковий аналіз` (sound analysis) of the word "Привіт" to tie the module together: П [п] (приголосний) + р [р] (приголосний) + и [и] (голосний) + в [в] (приголосний) + і [і] (голосний) + т [т] (приголосний). Two vowels, four consonants.
+- <!-- INJECT_ACTIVITY: fill-in-greetings --> [fill-in, Complete a basic greeting dialogue with blanks, 4 items]
 
-## Підсумок (Summary) (~165 words total)
-- P1 (~165 words): 
-  * How many letters are in the Ukrainian alphabet? (33 літери)
-  * How many sounds are there? (38 звуків)
-  * Why are the numbers different? (Because iotated letters can make two sounds, and Ь makes no sound.)
-  * What are голосні? (Vowels — sounds made only with voice, which can be sung.)
-  * What are приголосні? (Consonants — sounds made with an obstruction in the mouth, which cannot be sung.)
-  * Can you say 'голосна літера'? (No — sounds are голосні, not letters! Letters only represent sounds.)
-  * What does Привіт mean? (Hi, informal greeting.)
-  * How do you answer Як справи? (Добре, чудово, нормально.)
+## Підсумок (Summary) (~150 words total)
+- P1 (~150 words): 
+  * Self-check questions:
+  * How many letters are in the Ukrainian alphabet? (33)
+  * How many sounds are there? (38)
+  * Why is there a difference between the number of letters and sounds?
+  * What are голосні (vowels), and how are they produced?
+  * What are приголосні (consonants)?
+  * Can you say "голосна літера"? (No — sounds are голосні, not letters!)
+  * What does "Привіт" mean, and when do you use it?
+  * How do you answer "Як справи?"
 
-Grand total: ~1320 words
+Grand total: ~1290 words

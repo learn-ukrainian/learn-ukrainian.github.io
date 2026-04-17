@@ -1,7 +1,7 @@
 # Audit Report: M06 — my-family.md
 **Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-14 12:43:35
+**Generated:** 2026-04-17 22:56:34
 
 ## Configuration
 **Type:** A1-vocab
@@ -35,13 +35,15 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[INFO]** Dative case used at A1: 'чолові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[HINT_IN_ACTIVITY]** anagram activity 'Rearrange the letters to form family vocabulary words.' has item-level hint in item 1
-  - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
+- **[COMPLEXITY]** Sentence too long for A1: 27 words (max 10)
+  - FIX: Break into shorter sentences. First 5 words: 'Оля Приві́т Марку Що це...'
+- **[COMPLEXITY]** Sentence too long for A1: 18 words (max 10)
+  - FIX: Break into shorter sentences. First 5 words: 'Даша Це моя сестра Катя́...'
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1184/1200 (raw: 1223) (16 short)
@@ -59,7 +61,7 @@
 - **Immersion:** 🇺🇦 19.6% (target 8-30% (M06))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
-- **Research:** ✅ Content aligned with research
+- **Research:** ⚠️ Refresh recommended: Content predates research (research file is newer)
 
 ## Section Audit
 | Section | Status | Count | Notes |

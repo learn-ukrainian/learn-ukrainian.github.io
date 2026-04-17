@@ -1,0 +1,24 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-17T18-06-7a77051f.json
+phase: rewrite-block-04
+prompt_chars: 6032
+response_chars: 1882
+prompt_words: 854
+response_words: 279
+sections:
+- name: unknown
+  start: 0
+  length: 6032
+  fraction: 1.0
+large_sections:
+- unknown
+directives_total: 5
+directives_covered: 3
+directives_missed:
+- kind: must
+  text: To introduce yourself, you must say **«Мене звати.
+  covered: false
+  coverage_note: 2/7 keywords (29%)
+- kind: inject_activity
+  text: '...'
+  covered: false
+  coverage_note: marker missing

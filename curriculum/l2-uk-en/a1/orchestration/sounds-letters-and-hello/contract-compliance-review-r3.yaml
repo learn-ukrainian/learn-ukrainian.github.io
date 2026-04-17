@@ -1,0 +1,7 @@
+attempt: 3
+label: review
+violations:
+- type: META_NARRATION
+  severity: WARNING
+  section: (whole module)
+  message: 'Formulaic meta-narration present: Let us'

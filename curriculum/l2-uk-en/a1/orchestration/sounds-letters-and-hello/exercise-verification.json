@@ -1,55 +1,24 @@
 {
-  "total_items": 28,
-  "grounded_items": 22,
-  "ungrounded": [
-    {
-      "word": "що",
-      "exercise_type": "quiz",
-      "context": "Що ми чуємо і вимовляємо? (What do we hear and pronounce?)",
-      "role": "context"
-    },
-    {
-      "word": "скільки",
-      "exercise_type": "quiz",
-      "context": "Скільки літер в абетці? (How many letters in the alphabet?)",
-      "role": "context"
-    },
-    {
-      "word": "літер",
-      "exercise_type": "quiz",
-      "context": "Скільки літер в абетці? (How many letters in the alphabet?)",
-      "role": "context"
-    },
-    {
-      "word": "абетці",
-      "exercise_type": "quiz",
-      "context": "Скільки літер в абетці? (How many letters in the alphabet?)",
-      "role": "context"
-    },
-    {
-      "word": "українській",
-      "exercise_type": "quiz",
-      "context": "Скільки звуків в українській мові? (How many sounds in Ukrai",
-      "role": "context"
-    },
-    {
-      "word": "мові",
-      "exercise_type": "quiz",
-      "context": "Скільки звуків в українській мові? (How many sounds in Ukrai",
-      "role": "context"
-    }
-  ],
+  "total_items": 13,
+  "grounded_items": 13,
+  "ungrounded": [],
   "vocab_coverage": {
     "plan_vocab_total": 17,
-    "tested_in_exercises": 11,
+    "tested_in_exercises": 5,
     "not_tested": [
       "голосний",
       "дім",
+      "звук",
+      "літера",
+      "мама",
+      "молоко",
+      "нормально",
       "ніс",
       "око",
       "приголосний",
-      "сон"
+      "сон",
+      "тато"
     ]
   },
-  "all_grounded": false
+  "all_grounded": true
 }

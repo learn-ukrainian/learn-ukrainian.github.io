@@ -1,0 +1,92 @@
+slug: sounds-letters-and-hello
+review_rounds: 4
+final_score: 9.2
+score_history:
+- 8.4
+- 9.1
+- 9.1
+- 9.2
+contract_violations:
+- type: META_NARRATION
+  severity: WARNING
+  section: (whole module)
+  message: 'Formulaic meta-narration present: Let us'
+latest_review_excerpt: '## Linguistic Scan
+
+  No linguistic errors found.
+
+
+  ## Exercise Check
+
+  All 6 `INJECT_ACTIVITY` markers are present. Count, order, and types match the contract
+  exactly: `quiz`, `match-up`, `fill-in`, `group-sort`, `letter-grid`, `watch-and-repeat`.
+  No inline DSL exercises to evaluate.
+
+
+  ## Scores
+
+  | Dimension | Score | Evidence |
+
+  |-----------|-------|----------|
+
+  | 1. Plan adherence | 8/10 | The module covers the core 33/38 distinction and the
+  contracted phonetics scope, but section 1 only says “The Ukrainian alphabet (**абетка**
+  or алфавіт) contains exactly thirty-three letters...” and never delivers the contracted
+  beat “all 33 letters in order. Each letter has a name.” |
+
+  | 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, calques, paronym errors,
+  bad case/gender, or banned Russian characters were found in the Ukrainian text.
+  |
+
+  | 3. Pedagogical quality | 8/10 | The lesson generally moves from explanation to
+  example to practice, but the alphabet lesson tells the learner that the alphabet
+  exists without actually showing the ordered alphabet or teaching that each letter
+  has a name. |
+
+  | 4. Vocabulary coverage | 10/10 | Required vocabulary appears in context: `звук`,
+  `літера`, `голосний`, `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`,
+  `молоко`. |
+
+  | 5. Exercise quality | 10/10 | Marker-only module; all required markers are present,
+  in the contracted order, with exact contracted types. |
+
+  | 6. Engagement & tone | 9/10 | Mostly concrete and teacherly, with good classroom
+  framing and usable examples. |
+
+  | 7. Structural integrity | 10/10 | All H2 sections are present and in contract
+  order; pipeline word count is 1252, so the module is above target. |
+
+  | 8. Cultural accuracy | 10/10 | The module treats Ukrainian on its own terms and
+  avoids Russian-centric framing. |
+
+  | 9. Dialogue & conversation quality | 9/10 | Both required dialogue situations
+  are present, with named speakers, reciprocal `А у тебе?`, and correct `рада/радий`
+  gender contrast. |
+
+
+  ## Findings
+
+  [PLA'
+reason: review plateaued again after plan patch retry
+plan_patch:
+  applied: true
+  reason: patched
+  complaint_summary: Cultural overstatement of Ґ, dialogue formatting failures, and
+    beat parsing issues with single quotes.
+  new_version: 1.5.1
+  changes:
+  - replace content_outline[0].points[0] — Replace single quotes with guillemets to
+    fix teaching beats parsing.
+  - replace content_outline[0].points[1] — Remove single quotes around the pedagogical
+    question to fix parsing.
+  - replace content_outline[1].points[0] — Replace single quotes to fix 'Голосні'
+    beat parsing.
+  - replace content_outline[2].points[0] — Replace single quotes to fix 'Приголосні'
+    beat parsing.
+  - replace content_outline[2].points[2] — Remove "uniquely Ukrainian" claim for Ґ
+    to address cultural accuracy complaint.
+  - replace content_outline[4].points[0] — Replace single quotes to fix beat parsing.
+  - replace dialogue_situations[1].setting — Force writer to use named speakers instead
+    of em dashes and include the required greeting.
+  - replace dialogue_situations[1].motivation — Update motivation to explicitly include
+    the reciprocal greeting pattern.

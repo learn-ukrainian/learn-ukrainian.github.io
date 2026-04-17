@@ -1,0 +1,53 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-17T17-59-9d688c0f.json
+phase: vocab
+prompt_chars: 10498
+response_chars: 2594
+prompt_words: 1666
+response_words: 297
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.076
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0219
+- name: plan
+  start: 1028
+  length: 9470
+  fraction: 0.9021
+large_sections:
+- plan
+directives_total: 8
+directives_covered: 1
+directives_missed:
+- kind: must
+  text: You must train yourself to separate the visual symbol from the physical mouth
+    movement.
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-letters-sounds
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-greetings
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-sounds
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: letter-grid-alphabet
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: watch-and-repeat-videos
+  covered: false
+  coverage_note: marker missing

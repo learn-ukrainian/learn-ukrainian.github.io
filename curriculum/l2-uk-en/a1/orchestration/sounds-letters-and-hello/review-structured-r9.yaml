@@ -1,0 +1,50 @@
+round: 9
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The module covers the core 33/38 distinction and the contracted phonetics
+    scope, but section 1 only says “The Ukrainian alphabet (**абетка** or алфавіт)
+    contains exactly thirty-three letters...” and n
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, bad case/gender, or
+    banned Russian characters were found in the Ukrainian text.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The lesson generally moves from explanation to example to practice, but
+    the alphabet lesson tells the learner that the alphabet exists without actually
+    showing the ordered alphabet or teaching that ea
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'Required vocabulary appears in context: `звук`, `літера`, `голосний`,
+    `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`.'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Marker-only module; all required markers are present, in the contracted
+    order, with exact contracted types.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Mostly concrete and teacherly, with good classroom framing and usable
+    examples.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 sections are present and in contract order; pipeline word count
+    is 1252, so the module is above target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module treats Ukrainian on its own terms and avoids Russian-centric
+    framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Both required dialogue situations are present, with named speakers, reciprocal
+    `А у тебе?`, and correct `рада/радий` gender contrast.
+findings: []

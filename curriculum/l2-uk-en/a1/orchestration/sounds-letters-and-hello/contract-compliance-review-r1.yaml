@@ -1,0 +1,11 @@
+attempt: 1
+label: review
+violations:
+- type: TEACHING_BEATS
+  severity: ERROR
+  section: Привіт! (Hello!)
+  message: Section 'Привіт! (Hello!)' misses required teaching-beat terms ['Чудово']
+- type: META_NARRATION
+  severity: WARNING
+  section: (whole module)
+  message: 'Formulaic meta-narration present: Let us'

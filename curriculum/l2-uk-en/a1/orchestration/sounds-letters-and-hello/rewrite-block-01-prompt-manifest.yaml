@@ -1,0 +1,24 @@
+phase: rewrite-block
+section: Звуки і літери (Sounds and Letters)
+components:
+- rewrite_directive
+- rewrite_guardrails
+- section_mapped_wiki_excerpts
+- current_section
+metrics:
+  prompt_chars: 6041
+  prompt_words: 896
+  directive_chars: 345
+  guardrails_chars: 289
+  section_excerpt_chars: 2613
+  current_section_chars: 2441
+flags:
+  includes_shared_contract: false
+  includes_previous_sections: false
+  includes_skeleton: false
+audit:
+  forbidden_headings_present: []
+  derived_auxiliary_forbidden_literals: []
+  auxiliary_forbidden_literals: []
+  passed: true
+  failures: []

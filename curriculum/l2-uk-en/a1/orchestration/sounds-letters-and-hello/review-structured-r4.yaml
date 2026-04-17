@@ -1,0 +1,50 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'All five contracted H2 sections appear in order, and the prose covers
+    the required beats: `звуки` vs `букви`, 33 letters vs 38 sounds, 6 vowel sounds
+    vs 10 vowel letters, hard/soft consonants, `Привіт'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: '`Приголосні звуки`: `The letter «**ґ**» produces a uniquely Ukrainian
+    sound.` This is a factual phonetics error.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong progression from concept to example to practice: `мА-мА`, `мО-лО-кО`,
+    `У-ля`, then greeting dialogue and sound analysis. Textbook references are integrated
+    naturally.'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All must-introduce items appear in context: `звук`, `літера`, `голосний`,
+    `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`.'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Marker count matches the 6 contracted activity obligations, order matches
+    exactly, and each marker type matches the contracted type prefix.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The voice is teacherly and concrete, with classroom and hallway scenes
+    rather than gamified filler.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings are present and ordered correctly; pipeline word count
+    is 1275, above the 1200 minimum.
+- dimension: 8
+  name: Cultural accuracy
+  score: 8
+  evidence: The same `ґ` sentence overstates Ukrainianness at the level of the sound
+    rather than the letter/alphabetic feature.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Named speakers, real beginner situations, and multi-turn exchanges fit
+    the contract well.
+findings: []

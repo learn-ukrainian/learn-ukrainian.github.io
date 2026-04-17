@@ -2,50 +2,52 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 7
-  evidence: All planned H2 sections are present and the textbook references are integrated,
-    but the summary says `The numbers differ because iotated letters... while the
-    soft sign (Ь) makes absolutely no sound at
+  score: 8
+  evidence: Section order and budgets are all on target, but the `Привіт!` section
+    does not deliver the contracted introduction dialogue act `Привіт! Як тебе звати?
+    Мене звати...`; instead the hallway exchange is
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: No Russianisms/Surzhyk found, but `The letter Ґ with its little upturned
-    tail is uniquely Ukrainian` is a factual error.
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, or incorrect Ukrainian forms found.
+    Checked forms such as `нормально`, `радий`, `рада`, `бачити`, `звуковий`, and
+    `аналіз` are attested.
 - dimension: 3
   name: Pedagogical quality
-  score: 7
-  evidence: The module has examples and practice, but several sections open with long
-    English-first exposition before learner-facing examples, e.g. `When you listen
-    to someone speaking Ukrainian...` and `With the
+  score: 8
+  evidence: The phonetics sections are concrete and example-rich (`мА-мА`, `мО-лО-кО`,
+    `П [п] + р [р] + и [и]...`), but the greeting lesson spends its main dialogue
+    on `Як справи?` rather than the contracted firs
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: 'All required plan vocabulary appears naturally in prose: `звук`, `літера`,
-    `голосний`, `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`.
-    Recommended items are also used beyond'
+  score: 10
+  evidence: 'Required vocabulary is present in prose: `звук`, `літера`, `голосний`,
+    `приголосний`, `Привіт`, `Як справи`, `Добре`, `Чудово`, `мама`, `молоко`.'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 6 planned activity types are represented by markers, and each marker
-    follows the concept it is meant to practice.
+  score: 7
+  evidence: 'Marker count is correct and marker types match, but the order is wrong:
+    `group-sort-sounds` and `letter-grid-alphabet` appear before `fill-in-greetings`,
+    violating the contracted sequence.'
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: The teacher voice is energetic and concrete, especially in the dialogues
-    and sound-analysis section, without gamified/corporate filler.
+  score: 8
+  evidence: The tone is teacherly and concrete, with usable textbook examples, but
+    the conversation section is less interactive than the contract promises.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All planned headings are present and ordered correctly, markers are intact,
-    and the deterministic word count is above target (`2096`).
+  evidence: All H2 headings are present and correctly ordered, and the pipeline word
+    count is 1214, which clears the 1200 target.
 - dimension: 8
   name: Cultural accuracy
-  score: 8
-  evidence: The module treats Ukrainian on its own terms, but the claim that Ґ is
-    `uniquely Ukrainian` is culturally/factually inaccurate.
+  score: 10
+  evidence: The module stays Ukrainian-centered and uses appropriate classroom and
+    peer-greeting contexts.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: 'The module includes named, multi-turn dialogues in plausible beginner
-    contexts: classroom greeting and hallway introduction.'
+  score: 7
+  evidence: Dialogues use named speakers, but the second scene does not match its
+    planned function of two new classmates introducing themselves; the name-exchange
+    pattern never appears.
 findings: []

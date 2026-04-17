@@ -1,0 +1,52 @@
+round: 6
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: 'All five H2 sections are present and most beats are covered, but four
+    sections are over budget by more than 10%: `Звуки і літери` 382 vs target 300,
+    `Голосні звуки` 300 vs 250, `Привіт!` 337 vs 250, `'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, or incorrect Ukrainian forms found.
+    VESUM-checked forms used in the module include `вчитель`, `учні`, `привіт`, `радий`,
+    `рада`, and `нормально`.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: Textbook framing is strong, and examples like `мама`, `молоко`, and the
+    `привіт` sound analysis are useful, but the greeting `fill-in` activity marker
+    is placed before the `Привіт!` section teaches th
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'The prose naturally includes the contracted core items: `звук`, `літера`,
+    `голосний`, `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`.'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'Marker-only module: marker count matches the 6 obligations, order matches
+    the contract, and each marker type matches exactly.'
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: 'The summary uses rubric-banned journey language: `You have taken your
+    first step into the Ukrainian language...` and `Your phonetic journey has officially
+    begun.`'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All required H2 headings are present and in the contracted order, markdown
+    is clean, and the pipeline word count is 1387, which is above the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module presents Ukrainian on its own terms through Ukrainian school
+    pedagogy and textbook references, without Russian-centered framing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The Марко/Софія dialogue has named speakers and uses reciprocal `А у тебе?`,
+    but the separate contracted classroom `Вчитель/Учні` greeting exchange is missing.
+findings: []
