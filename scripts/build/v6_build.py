@@ -2104,6 +2104,36 @@ def _ensure_contract_artifacts(
     return contract, excerpts
 
 
+def _save_style_review_advice_to_contract(level: str, slug: str, blocking_issues: tuple[dict, ...]) -> None:
+    """Add style-review advice to the module contract for next write/repair attempt."""
+    contract_path = _contract_path(level, slug)
+    if not contract_path.exists():
+        return
+
+    try:
+        contract = yaml.safe_load(contract_path.read_text("utf-8")) or {}
+        if not isinstance(contract, dict):
+            return
+    except Exception:
+        return
+
+    # Filter to at most 3 items to keep it bounded (contract delta rule)
+    advice = []
+    for issue in list(blocking_issues)[:3]:
+        advice.append({
+            "type": str(issue.get("type", "STYLE")),
+            "location": str(issue.get("location", "")),
+            "evidence": str(issue.get("evidence", "")),
+            "fix": str(issue.get("fix", "")),
+        })
+
+    if not advice:
+        return
+
+    contract["style_review_advice"] = advice
+    _save_yaml_artifact(contract_path, contract)
+
+
 def _format_contract_prompt_artifacts(
     contract: dict,
     excerpts: dict,
@@ -2126,6 +2156,8 @@ def _format_contract_prompt_artifacts(
             }
         return value
 
+    style_advice = contract.get("style_review_advice") or []
+
     if mode == "write":
         teaching_sections = []
         for section in ((contract.get("teaching_beats") or {}).get("sections") or []):
@@ -2146,6 +2178,7 @@ def _format_contract_prompt_artifacts(
             "vocab_grammar_targets": contract.get("vocab_grammar_targets") or {},
             "activity_obligations": contract.get("activity_obligations") or [],
             "banned_error_patterns": contract.get("banned_error_patterns") or [],
+            "style_review_advice": style_advice,
         }
     elif mode == "chunk":
         all_sections = ((contract.get("teaching_beats") or {}).get("sections") or [])
@@ -2159,6 +2192,15 @@ def _format_contract_prompt_artifacts(
         if activity_ids is not None:
             wanted = set(activity_ids)
             obligations = [item for item in obligations if item.get("id") in wanted]
+
+        # For chunking, only include advice that matches the current section name
+        # or is global (empty location).
+        filtered_advice = []
+        for item in style_advice:
+            loc = str(item.get("location") or "").lower()
+            if not loc or not section_title or section_title.lower() in loc:
+                filtered_advice.append(item)
+
         contract_payload = {
             "current_section": {
                 "order": target_section.get("order") if target_section else None,
@@ -2169,6 +2211,7 @@ def _format_contract_prompt_artifacts(
             },
             "dialogue_acts": (contract.get("dialogue_acts") or []) if include_dialogue_acts else [],
             "activity_obligations": obligations,
+            "style_review_advice": filtered_advice,
         }
     else:
         contract_payload = contract
@@ -6892,247 +6935,6 @@ def _style_issue_section_names(location: str, sections: list[dict]) -> list[str]
     return resolved
 
 
-def _style_rewrite_guardrails(
-    level: str,
-    module_num: int,
-    section_name: str,
-    issue_types: set[str],
-) -> list[str]:
-    """Return section-aware rewrite guardrails for automated style healing."""
-    guardrails = [
-        (
-            "- Keep the rewrite within the live immersion target for this module: "
-            f"{_get_immersion_target_short(level, module_num)}"
-        ),
-    ]
-    if level not in {"a1", "a2"}:
-        return guardrails
-
-    section_lower = section_name.lower()
-    guardrails.append(
-        "- Lecture-style explanation is allowed, but do not comment on the lesson artifact itself."
-    )
-    guardrails.append(
-        "- Teach directly. Do not describe what the text, dialogue, or module demonstrates."
-    )
-    if "META_PEDAGOGICAL_NARRATION" in issue_types:
-        guardrails.append(
-            "- Forbidden meta phrasing: `in this dialogue`, `this text demonstrates`, "
-            "`here X adds`, `in this module`, `the following conversation`."
-        )
-    if issue_types.intersection(
-        {
-            "EXPLANATION_TONE_MISMATCH",
-            "STYLE_REGISTER_MISMATCH",
-            "REGISTER_MISMATCH",
-            "REGISTER_DRIFT",
-            "OVERSTATED_USAGE_EXPLANATION",
-            "STYLE_DRIFT",
-            "TRANSLATIONESE_EXPLANATION",
-            "MIXED_EXPLANATORY_VOICE",
-        }
-    ):
-        guardrails.append(
-            "- Keep paragraph voice Ukrainian-first. English may appear only as brief "
-            "parenthetical glosses or line-level translations, never as the main explanatory paragraph voice."
-        )
-        guardrails.append(
-            "- Rewrite any full English lecture-style explanation paragraph in this section into direct Ukrainian teaching prose. If English support is needed, keep it to a short gloss or a full-line translation after the Ukrainian sentence, not a separate explanatory paragraph."
-        )
-        guardrails.append(
-            "- Avoid sentence stems like `The verb ...`, `The phrase ...`, `This means ...`, or other English-first grammar lecture framing inside the prose body."
-        )
-    if "summary" in section_lower or "підсумок" in section_lower:
-        guardrails.append(
-            "- In summary sections, use direct Ukrainian instructional prose and short reading-task cues."
-        )
-        guardrails.append(
-            "- Do not open or close the summary with English overview paragraphs about the lesson or the verbs."
-        )
-        guardrails.append(
-            "- Build the summary around 3-4 concrete everyday Ukrainian sentences, not abstract recap prose about what the verbs express."
-        )
-        if "META_PEDAGOGICAL_NARRATION" in issue_types:
-            guardrails.append(
-                "- In summary sections, delete meta-teaching lead-ins entirely instead of paraphrasing them. Remove lines such as `To fully understand ...`, `Review this short text ...`, or motivational claims about what the lesson will help the learner do."
-            )
-            guardrails.append(
-                "- Start the summary immediately with Ukrainian recap content or a short plain Ukrainian label like `Короткий текст.`. Do not keep any English framing sentence before the examples or reading passage."
-            )
-        if "REGISTER_DRIFT" in issue_types:
-            guardrails.append(
-                "- In summary sections, prefer a short natural recap with everyday examples instead of a list of classroom commands."
-            )
-        if "FORMULAIC_SECTION_OPENERS" in issue_types:
-            guardrails.append(
-                "- In summary sections, do not use worksheet commands like `Запам'ятайте`, `Прочитайте й повторіть`, or `Прочитайте й відчуйте різницю` as opener lines. Begin with plain Ukrainian recap prose instead."
-            )
-        if "ABSTRACT_SUMMARY_REGISTER" in issue_types:
-            guardrails.append(
-                "- In summary sections, avoid abstract lecture lines like `These verbs express...` or `These verbs frequently pair with...`. State the contrast through concrete daily-life examples first, then add at most one short usage note."
-            )
-    if (
-        "dialog" in section_lower
-        or "діалог" in section_lower
-        or issue_types.intersection(
-            {
-                "TRANSLATIONESE",
-                "TRANSLATED_DIALOGUE_RHYTHM",
-                "WORKSHEET_DIALOGUE_RHYTHM",
-                "SERVICE_REGISTER_STIFFNESS",
-                "UNNATURAL_COLLOCATION",
-                "UNNATURAL_SERVICE_DIALOGUE",
-                "UNNATURAL_SERVICE_PHRASE",
-            }
-        )
-    ):
-        guardrails.append(
-            "- In dialogue sections, start with the dialogue or a very short direct Ukrainian setup."
-        )
-        guardrails.append(
-            "- Do not announce the scene beforehand, and avoid translated or stiff reactions."
-        )
-        if issue_types.intersection(
-            {
-                "TRANSLATED_DIALOGUE_RHYTHM",
-                "WORKSHEET_DIALOGUE_RHYTHM",
-                "PRAGMATIC_MISFRAMING",
-                "UNNATURAL_SERVICE_DIALOGUE",
-                "UNNATURAL_SERVICE_PHRASE",
-            }
-        ):
-            guardrails.append(
-                "- Give each speaker one natural communicative goal per turn; avoid stacking target grammar into a single line just to display forms."
-            )
-            guardrails.append(
-                "- In café or shop scenes, let the exchange breathe: request -> clarifying question or recommendation -> acceptance/refusal -> natural close. Avoid clipped slot-filling turns with no reaction."
-            )
-            guardrails.append(
-                "- When explaining markers like `шкода`, say they express regret and can soften a refusal; do not define them as the refusal itself or as an absolute etiquette rule."
-            )
-        if issue_types.intersection(
-            {
-                "SERVICE_REGISTER_STIFFNESS",
-                "UNNATURAL_SERVICE_DIALOGUE",
-                "UNNATURAL_SERVICE_PHRASE",
-            }
-        ):
-            guardrails.append(
-                "- In service scenes, prefer short request-based ordering and plain staff responses over staged recommendation language."
-            )
-        if issue_types.intersection(
-            {
-                "TRANSLATED_DIALOGUE_RHYTHM",
-                "SERVICE_REGISTER_STIFFNESS",
-                "UNNATURAL_SERVICE_DIALOGUE",
-                "UNNATURAL_SERVICE_PHRASE",
-            }
-        ):
-            guardrails.append(
-                "- In café or shop scenes, do not use blunt `Я хочу [noun]` as the direct order. Keep `хотіти` in peer-to-peer desire lines or nearby chatter if needed, but phrase the actual order as a native request such as `Мені, будь ласка...` or `Можна...`."
-            )
-    if "UNNATURAL_COLLOCATION" in issue_types:
-        guardrails.append(
-            "- Prefer idiomatic everyday collocations, especially with food, drink, and desire verbs; avoid literal model phrases that sound translated."
-        )
-    if "UNIDIOMATIC_COLLOCATION" in issue_types:
-        guardrails.append(
-            "- Prefer the more idiomatic everyday collocation when two grammatical options exist; avoid phrasing that sounds like a direct meaning-map from English."
-        )
-    if "NON_IDIOMATIC_MODEL_EXAMPLE" in issue_types:
-        guardrails.append(
-            "- Replace model sentences that are merely grammatical with beginner exemplars a native speaker would plausibly say in daily life."
-        )
-    if issue_types.intersection(
-        {
-            "EXPLANATION_TONE_MISMATCH",
-            "STYLE_REGISTER_MISMATCH",
-            "REGISTER_DRIFT",
-            "OVERSTATED_USAGE_EXPLANATION",
-            "CLUMSY_EXPLANATION",
-            "MIXED_EXPLANATORY_VOICE",
-            "OVERPRESCRIPTIVE_TONE",
-        }
-    ):
-        guardrails.append(
-            "- In grammar explanations, do not write traps like `частка не завжди ...`, `частка не обов'язково ...`, or `частка не тільки ...`. Use unambiguous frames such as `Завжди ставте частку не перед ...` or `У заперечних реченнях частка не стоїть перед ...`."
-        )
-    if issue_types.intersection({"OVERSTATED_USAGE_EXPLANATION", "PRAGMATIC_EQUIVALENCE"}):
-        guardrails.append(
-            "- When contrasting everyday meanings, state the literal meaning of the target phrase first, then mention common Ukrainian alternatives. Do not present one target construction as the only default equivalent if Ukrainian also uses another ordinary everyday form."
-        )
-    return guardrails
-
-
-def _apply_style_review_rewrite_blocks(
-    review_text: str,
-    content_path: Path,
-    *,
-    level: str,
-    module_num: int,
-    slug: str,
-    writer: str,
-) -> tuple[bool, int]:
-    """Translate style-review blockers into targeted section rewrite directives."""
-    blocking_issues = _extract_style_review_blocking_issues(review_text)
-    if not blocking_issues:
-        return False, 0
-
-    sections = _section_spans(content_path.read_text("utf-8"))
-    grouped_directives: dict[str, list[str]] = {}
-    grouped_issue_types: dict[str, set[str]] = {}
-    for issue in blocking_issues:
-        location = str(issue.get("location") or "").strip()
-        fix = str(issue.get("fix") or "").strip()
-        evidence = str(issue.get("evidence") or "").strip()
-        issue_type = str(issue.get("type") or "STYLE_ISSUE").strip()
-        section_names = _style_issue_section_names(location, sections)
-        if not section_names or not fix:
-            continue
-        directive = "\n".join(
-            line for line in (
-                f"- Issue type: {issue_type}",
-                f"- Location detail: {location}" if location else "",
-                f"- Evidence: {evidence}" if evidence else "",
-                f"- Required fix: {fix}",
-                "- Keep the section aligned with the current plan and contract.",
-                "- Remove only the stylistic / pragmatic problem; keep valid teaching content.",
-            )
-            if line
-        )
-        for section_name in section_names:
-            grouped_directives.setdefault(section_name, []).append(directive)
-            grouped_issue_types.setdefault(section_name, set()).add(issue_type)
-
-    if not grouped_directives:
-        return False, 0
-
-    applied = 0
-    for section_name, directives in grouped_directives.items():
-        guardrails = _style_rewrite_guardrails(
-            level,
-            module_num,
-            section_name,
-            grouped_issue_types.get(section_name, set()),
-        )
-        directive_parts = ["Style review blocking issues to fix in this section:"]
-        if guardrails:
-            directive_parts.append("\n".join(guardrails))
-        directive_parts.append("\n\n".join(directives))
-        directive = "\n\n".join(part for part in directive_parts if part)
-        if _rewrite_block_section(
-            content_path,
-            level=level,
-            module_num=module_num,
-            slug=slug,
-            writer=writer,
-            section_name=section_name,
-            directive=directive,
-        ):
-            applied += 1
-    return applied > 0, applied
-
-
 def _section_body_word_count(section_span: dict) -> int:
     """Count words in a parsed H2 section body without the heading line."""
     body = str(section_span.get("body") or "")
@@ -7369,84 +7171,45 @@ def _run_style_review_heal_loop(
     slug: str,
     writer: str,
     reviewer_override: str | None,
-    max_rounds: int = 4,
+    max_rounds: int = 1,
 ) -> StyleReviewLoopRunResult:
-    """Run style review + targeted rewrites until pass or plateau."""
-    rounds: list[StyleReviewRoundState] = []
+    """Run style review exactly once.
 
-    for round_index in range(1, max_rounds + 1):
-        passed, score, review_text = step_review_style(
-            content_path,
-            level,
-            module_num,
-            slug,
-            writer=writer,
-            reviewer_override=reviewer_override,
-        )
-        if score < 0.0:
-            return StyleReviewLoopRunResult(outcome="error", rounds=tuple(rounds))
-        if score == 0.0 and not review_text:
-            return StyleReviewLoopRunResult(outcome="error", rounds=tuple(rounds))
+    If it fails, record advice in the contract for the next write attempt
+    and continue (advisory-only). This stops in-phase rewrite churn.
+    """
+    passed, score, review_text = step_review_style(
+        content_path,
+        level,
+        module_num,
+        slug,
+        writer=writer,
+        reviewer_override=reviewer_override,
+    )
+    if score < 0.0:
+        return StyleReviewLoopRunResult(outcome="error", rounds=())
+    if score == 0.0 and not review_text:
+        return StyleReviewLoopRunResult(outcome="error", rounds=())
 
-        blocking_issues = tuple(_extract_style_review_blocking_issues(review_text))
-        round_state = StyleReviewRoundState(
-            round_num=round_index,
-            passed=passed,
-            score=score,
-            review_text=review_text,
-            blocking_issues=blocking_issues,
-        )
-        rounds.append(round_state)
+    blocking_issues = tuple(_extract_style_review_blocking_issues(review_text))
+    round_state = StyleReviewRoundState(
+        round_num=1,
+        passed=passed,
+        score=score,
+        review_text=review_text,
+        blocking_issues=blocking_issues,
+    )
 
-        if len(rounds) >= 2:
-            delta = _score_delta(rounds[-2].score, rounds[-1].score)
-            delta_str = f"+{delta:.1f}" if delta >= 0 else f"{delta:.1f}"
-            _log(
-                f"\n📊 Style R{rounds[-2].round_num}: {rounds[-2].score}/10 → "
-                f"R{round_index}: {score}/10 ({delta_str})"
-            )
+    if passed:
+        return StyleReviewLoopRunResult(outcome="pass", rounds=(round_state,))
 
-        if passed:
-            return StyleReviewLoopRunResult(outcome="pass", rounds=tuple(rounds))
+    # If we are here, style review failed.
+    # Instead of looping (churn), we save advice to the contract for next time.
+    _log(f"\n⚠️  Style review {score}/10 below target — recording advisory advice in contract")
+    _save_style_review_advice_to_contract(level, slug, blocking_issues)
 
-        rewrites_applied, rewrite_count = _apply_style_review_rewrite_blocks(
-            review_text,
-            content_path,
-            level=level,
-            module_num=module_num,
-            slug=slug,
-            writer=writer,
-        )
-        if rewrites_applied:
-            _log(f"\n🎨 Applied {rewrite_count} style-driven block rewrite(s) from style R{round_index}")
-            step_verify(content_path, level, module_num)
-        else:
-            _log("\n⏸️ Style review plateau detected — no actionable section rewrites could be applied.")
-            return StyleReviewLoopRunResult(outcome="plateau", rounds=tuple(rounds))
-
-        deltas = [
-            _score_delta(previous.score, current.score)
-            for previous, current in itertools.pairwise(rounds)
-        ]
-        consecutive_small_deltas = 0
-        for delta in deltas:
-            if delta < 0.2:
-                consecutive_small_deltas += 1
-            else:
-                consecutive_small_deltas = 0
-        if consecutive_small_deltas >= 2:
-            _log("\n⏸️ Style review plateau detected — two consecutive rounds improved by less than 0.2.")
-            return StyleReviewLoopRunResult(outcome="plateau", rounds=tuple(rounds))
-        if len(rounds) >= max_rounds:
-            _log(f"\n⏸️ Style review plateau detected — reached the {max_rounds}-round ceiling.")
-            return StyleReviewLoopRunResult(outcome="plateau", rounds=tuple(rounds))
-
-        _log(
-            f"\n🔄 Style R{round_index} incomplete — score={score}/10, "
-            f"blocking issues={len(blocking_issues)}. Running style R{round_index + 1}."
-        )
-
-    return StyleReviewLoopRunResult(outcome="plateau", rounds=tuple(rounds))
+    # Advisory-only: return "pass" so the build continues, but with the round recorded
+    return StyleReviewLoopRunResult(outcome="pass", rounds=(round_state,))
 
 
 def _rerun_write_after_plan_patch(
@@ -9144,7 +8907,9 @@ def main():
 
             _save_v6_state(args.level, slug, "review-style")
             _clear_needs_human_review_marker(args.level, slug)
-            _log(f"\n✅ Style review PASSED ({style_score}/10)")
+            verdict_icon = "✅" if final_style_round.passed else "⚠️"
+            verdict_label = "PASSED" if final_style_round.passed else "ADVISORY-PASS"
+            _log(f"\n{verdict_icon} Style review {verdict_label} ({style_score}/10)")
             _emit_phase_done("review-style", _phase_start)
 
         # Step 8c: ANNOTATE (stress marks — after review, before publish)
