@@ -724,33 +724,28 @@ def _is_header_line(line: str) -> bool:
     return bool(re.match(r'^#{1,6}\s', line.strip()))
 
 
-# Common Ukrainian abbreviations that shouldn't split sentences
-_ABBREV_PATTERN = re.compile(
-    r'\b(т|напр|м|ст|рр?|пор|див|ін|проф|акад|вул|обл)\.\s',
-    re.IGNORECASE,
-)
-
-
 def _split_sentences(text: str) -> list[str]:
-    """Split text into sentences, filtering out headers and short lines.
+    """Split text into sentences, filtering out headers and short (<=10 word) lines.
 
-    Handles Ukrainian abbreviations (т. д., напр., м. Київ) by temporarily
-    replacing their periods to prevent false sentence splits.
+    Delegates sentence segmentation to the project-wide
+    :func:`audit.cleaners.split_sentences` (vendored ``tokenize_uk``,
+    #1318) so Ukrainian abbreviations (м., вул., проф., р., с., тис.,
+    обл., …) and guillemet boundaries (») are handled identically
+    across content_gaming, language_salad, and
+    ``extract_ukrainian_sentences``.
+
+    The >10-word filter is specific to cross-module plagiarism
+    detection: short fragments produce too many false-positive
+    duplicate hashes.
     """
-    # Protect abbreviation periods from splitting
-    protected = _ABBREV_PATTERN.sub(lambda m: m.group(1) + '.\u200B', text)
+    from ..cleaners import split_sentences as _shared_split
 
-    # Split on sentence-ending punctuation
-    raw = re.split(r'(?<=[.!?])\s+', protected)
     sentences = []
-    for s in raw:
-        # Restore protected periods
-        s = s.replace('\u200B', '').strip()
-        # Skip headers, short sentences (<10 words), and empty
+    for s in _shared_split(text):
+        s = s.strip()
         if not s or _is_header_line(s):
             continue
-        words = s.split()
-        if len(words) > 10:
+        if len(s.split()) > 10:
             sentences.append(s)
     return sentences
 

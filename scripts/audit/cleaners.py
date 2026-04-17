@@ -3,9 +3,27 @@ Text cleaning utilities for audit calculations.
 
 Provides functions to clean text for word count and immersion calculations,
 removing metadata, tables, and other non-content elements.
+
+Sentence splitting uses :func:`linguistics.tokenize_uk.tokenize_sents`
+(vendored from lang-uk/tokenize-uk, MIT, #1318) which handles Ukrainian
+abbreviations (м., вул., проф., р., с., тис., обл., …) and guillemet
+sentence boundaries (»). Word counts remain on ``str.split`` — see the
+#1318 decision memo for why we did not switch word counting.
 """
 
 import re
+import sys
+from pathlib import Path
+
+# Make ``scripts/`` importable so ``linguistics.tokenize_uk`` resolves
+# regardless of whether the caller already set up sys.path. v6_build.py
+# and the pytest conftest both do this too; this guard is defensive for
+# direct `python -m audit.foo` invocations.
+_SCRIPTS_DIR = Path(__file__).resolve().parent.parent
+if str(_SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS_DIR))
+
+from linguistics.tokenize_uk import tokenize_sents as _tokenize_sents
 
 
 def clean_for_stats(text: str) -> str:
@@ -120,6 +138,32 @@ def count_words(text: str) -> int:
     return len(text.split())
 
 
+def split_sentences(text: str) -> list[str]:
+    """Split *plain* text into sentences using ``tokenize_uk``.
+
+    This is the single source of truth for sentence segmentation across
+    the audit pipeline (#1318).  It correctly handles Ukrainian
+    abbreviations (м., вул., проф., р., с., …) and guillemet sentence
+    boundaries (»), unlike the previous regex-based splitters.
+
+    Args:
+        text: Plain text (markdown should be stripped before calling).
+
+    Returns:
+        Non-empty sentence strings.
+    """
+    if not text or not text.strip():
+        return []
+    # tokenize_sents works on paragraphs (single newline = same block).
+    # Process each paragraph separately so blank-line breaks are respected.
+    sentences: list[str] = []
+    for paragraph in re.split(r'\n\s*\n', text):
+        paragraph = paragraph.strip()
+        if paragraph:
+            sentences.extend(_tokenize_sents(paragraph))
+    return [s.strip() for s in sentences if s.strip()]
+
+
 def extract_ukrainian_sentences(text: str) -> list[str]:
     """
     Extract Ukrainian sentences from text (lines with Cyrillic content).
@@ -135,8 +179,6 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
     - Grammatical pattern demonstrations (lines with X / Y / Z alternatives)
     - Word lists (comma-separated items like "при, від, на, до")
     """
-    sentences = []
-
     # Remove code blocks (```...```) before processing
     # This handles mermaid diagrams, code examples, etc.
     text = re.sub(r'```[\s\S]*?```', '', text)
@@ -188,9 +230,11 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
 
     prose_text = '\n'.join(prose_lines)
 
-    # Split by sentence-ending punctuation, em-dashes, and colons
-    # Colon added because Ukrainian instruction text often ends with ":"
-    raw_sentences = re.split(r'[.!?—:]', prose_text)
+    # Use tokenize_uk for sentence splitting (#1318) — handles abbreviations
+    # and guillemet boundaries correctly, replacing the old naive
+    # re.split(r'[.!?—:]', ...) which broke on м., вул., р., etc.
+    raw_sentences = split_sentences(prose_text)
+    sentences = []
     for sent in raw_sentences:
         cyrillic_chars = len(re.findall(r'[\u0400-\u04ff]', sent))
         if cyrillic_chars > 5:

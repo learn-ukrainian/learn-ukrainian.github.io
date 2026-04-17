@@ -141,7 +141,19 @@ def _trim_excerpt(text: str, *, max_chars: int = 520) -> str:
 
 
 def _anchor_claim(excerpt: str) -> str:
-    parts = re.split(r"(?<=[.!?])\s+", excerpt)
+    """Return the first sentence of an excerpt for scenario anchoring.
+
+    Uses :func:`linguistics.tokenize_uk.tokenize_sents` (#1318) so
+    Ukrainian abbreviations (р., ст., тис., м., вул., …) don't create
+    false sentence boundaries — the old regex ``(?<=[.!?])\\s+`` broke
+    ``1953 р. почалась...`` into two anchors.
+    """
+    # Import lazily: this module is imported during pipeline startup
+    # and we want to avoid pulling scripts/linguistics/ onto every
+    # Python startup path just for one call.
+    from linguistics.tokenize_uk import tokenize_sents
+
+    parts = tokenize_sents(excerpt)
     return parts[0].strip() if parts else excerpt.strip()
 
 

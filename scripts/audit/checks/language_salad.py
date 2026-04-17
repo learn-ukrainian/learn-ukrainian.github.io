@@ -162,7 +162,6 @@ LangClass = Literal["UK", "EN", "mixed", "empty"]
 
 _CYRILLIC_RE = re.compile(r"[\u0400-\u04FF]")
 _LATIN_RE = re.compile(r"[A-Za-z]")
-_SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+(?=[A-ZА-ЯІЇЄҐ])")
 
 # Bolded vocab glosses: **word** (translation) where word is ≤3 words.
 # These are dictionary markers and don't count as language content.
@@ -214,11 +213,16 @@ def classify_text(text: str) -> LangClass:
 
 
 def split_sentences(paragraph: str) -> list[str]:
-    """Naive sentence split on [.!?] followed by whitespace + capital letter."""
-    # First strip vocab glosses so the parens don't confuse sentence splitting
+    """Split a paragraph into sentences using ``tokenize_uk`` (#1318).
+
+    Handles Ukrainian abbreviations (м., вул., проф.) correctly,
+    unlike the previous regex ``(?<=[.!?])\\s+(?=[A-ZА-ЯІЇЄҐ])``.
+    """
+    from ..cleaners import split_sentences as _split_sents
+
+    # Strip vocab glosses so the parens don't confuse sentence splitting
     cleaned = _strip_vocab_glosses(paragraph)
-    sentences = _SENTENCE_SPLIT_RE.split(cleaned)
-    return [s.strip() for s in sentences if s.strip()]
+    return _split_sents(cleaned)
 
 
 # ---------------------------------------------------------------------------
