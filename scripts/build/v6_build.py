@@ -85,6 +85,7 @@ from build.plan_tracking import (
     current_plan_hash_for,
     detect_plan_hash_drift,
     ordered_phases_from,
+    parse_phase_timestamp,
     plan_path_for,
 )
 
@@ -113,6 +114,40 @@ STYLE_REVIEW_DIMENSION_LABELS = {
 }
 V6_PHASE_STATUS = Literal["complete", "skipped", "failed", "degraded", "stale"]
 _VALID_V6_PHASE_STATUSES = {"complete", "skipped", "failed", "degraded", "stale"}
+
+# --- dim_floor_fail keyword matching with negation awareness ---
+
+_DIM_FLOOR_ERROR_KEYWORDS = (
+    "error", "incorrect", "wrong", "mistake", "factual",
+    "помилк", "невірн", "хибн", "contradictory",
+)
+_DIM_FLOOR_NEGATION_PREFIXES = (
+    "no ", "not ", "without ", "free of ", "absent ",
+    "ні ", "без ", "жодн",
+)
+# Max characters before a keyword match to check for negation prefix
+_NEGATION_LOOKBACK = 12
+
+
+def _evidence_has_error_keyword(evidence: str) -> bool:
+    """Return True when evidence text contains an error keyword NOT preceded by negation.
+
+    Prevents false ``dim_floor_fail`` from phrases like "no incorrect forms found"
+    or "without errors".
+    """
+    lowered = evidence.lower()
+    for kw in _DIM_FLOOR_ERROR_KEYWORDS:
+        start = 0
+        while True:
+            idx = lowered.find(kw, start)
+            if idx == -1:
+                break
+            # Check the preceding context for negation prefixes
+            lookback = lowered[max(0, idx - _NEGATION_LOOKBACK):idx]
+            if not any(lookback.rstrip().endswith(neg.rstrip()) for neg in _DIM_FLOOR_NEGATION_PREFIXES):
+                return True
+            start = idx + len(kw)
+    return False
 
 
 class V6StateError(ValueError):
@@ -1095,8 +1130,119 @@ def _clear_needs_human_review_marker(level: str, slug: str) -> None:
             _write_v6_state_atomic(state_path, state)
 
     needs_review_path = CURRICULUM_ROOT / level / "orchestration" / slug / "needs-human-review.yaml"
-    if needs_review_path.exists():
-        needs_review_path.unlink()
+    try:
+        if needs_review_path.exists():
+            needs_review_path.unlink()
+    except OSError:
+        logger.warning(
+            "Could not delete %s — state cleared but artifact persists", needs_review_path
+        )
+
+
+@dataclass(frozen=True)
+class StateArtifactContradiction:
+    """One detected contradiction between state.json and on-disk artifacts."""
+
+    kind: str
+    detail: str
+
+
+def reconcile_state_artifacts(level: str, slug: str) -> list[StateArtifactContradiction]:
+    """Detect contradictions between state.json and on-disk artifacts.
+
+    Returns a list of contradictions found. An empty list means state and
+    artifacts are consistent. Operators should treat any non-empty result
+    as requiring investigation before trusting the module's status.
+
+    Checked invariants:
+
+    1. **needs_human_review consistency** — if state has ``needs_human_review``
+       set, the corresponding ``needs-human-review.yaml`` artifact must exist,
+       and vice versa.
+    2. **verify vs content mtime** — if state says ``verify: failed`` but the
+       content ``.md`` file was modified *after* the verify timestamp, the
+       verify result is stale.
+    3. **review phase vs artifact** — if state says ``review: complete`` but no
+       review artifact can be found, the state is unsupported by evidence.
+    4. **plan-hash drift on failed phases** — if a plan-hash-tracked phase is
+       ``failed`` but the plan hash has since changed, the failure may be stale.
+    """
+    state_path = _v6_state_path(level, slug)
+    if not state_path.exists():
+        return []
+
+    state = _read_v6_state(level, slug)
+    contradictions: list[StateArtifactContradiction] = []
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    phases = state.get("phases", {})
+
+    # 1. needs_human_review consistency
+    needs_review_in_state = bool(state.get("needs_human_review", {}).get("status"))
+    needs_review_yaml = orch_dir / "needs-human-review.yaml"
+    needs_review_on_disk = needs_review_yaml.exists()
+
+    if needs_review_in_state and not needs_review_on_disk:
+        contradictions.append(StateArtifactContradiction(
+            kind="needs_human_review_state_only",
+            detail="state.json has needs_human_review=True but needs-human-review.yaml is missing",
+        ))
+    elif needs_review_on_disk and not needs_review_in_state:
+        contradictions.append(StateArtifactContradiction(
+            kind="needs_human_review_artifact_only",
+            detail="needs-human-review.yaml exists but state.json has no needs_human_review flag",
+        ))
+
+    # 2. verify vs content mtime
+    verify_info = phases.get("verify")
+    if isinstance(verify_info, dict) and verify_info.get("status") == "failed":
+        content_path = CURRICULUM_ROOT / level / f"{slug}.md"
+        if content_path.exists():
+            verify_ts = parse_phase_timestamp(verify_info.get("ts"))
+            if verify_ts is not None:
+                content_mtime = datetime.fromtimestamp(content_path.stat().st_mtime, tz=UTC)
+                if content_mtime > verify_ts:
+                    contradictions.append(StateArtifactContradiction(
+                        kind="verify_stale_after_content_update",
+                        detail=(
+                            f"state says verify=failed at {verify_ts.isoformat()} "
+                            f"but content was modified at {content_mtime.isoformat()}"
+                        ),
+                    ))
+
+    # 3. review phase vs artifact
+    review_info = phases.get("review")
+    if isinstance(review_info, dict) and review_info.get("status") == "complete":
+        review_dir = CURRICULUM_ROOT / level / "review"
+        review_path = review_dir / f"{slug}-review.md"
+        has_review = review_path.exists()
+        if not has_review and review_dir.exists():
+            has_review = bool(list(review_dir.glob(f"{slug}-review-r*.md")))
+        if not has_review:
+            contradictions.append(StateArtifactContradiction(
+                kind="review_complete_no_artifact",
+                detail="state says review=complete but no review artifact found",
+            ))
+
+    # 4. plan-hash drift on failed phases
+    current_hash = _current_plan_hash(level, slug)
+    if current_hash:
+        for phase_name in PLAN_HASH_PHASES:
+            phase_info = phases.get(phase_name)
+            if not isinstance(phase_info, dict):
+                continue
+            if phase_info.get("status") != "failed":
+                continue
+            saved_hash = phase_info.get("plan_hash")
+            if saved_hash and saved_hash != current_hash:
+                contradictions.append(StateArtifactContradiction(
+                    kind="failed_phase_plan_hash_drift",
+                    detail=(
+                        f"{phase_name}=failed was recorded against plan hash "
+                        f"{saved_hash[:12]}… but current plan hash is {current_hash[:12]}…"
+                    ),
+                ))
+
+    return contradictions
 
 
 def _invalidate_phases(level: str, slug: str, phases_to_clear: list[str]) -> None:
@@ -1288,14 +1434,10 @@ def _parse_review_result(review_text: str) -> ReviewParseResult:
 
     dim_floor_fail = False
     if parsed_scores:
-        error_keywords = (
-            "error", "incorrect", "wrong", "mistake", "factual",
-            "помилк", "невірн", "хибн", "contradictory",
-        )
         for dim in parsed_scores:
             dim_score = dim.get("score", 10)
-            evidence = dim.get("evidence", "").lower()
-            if dim_score < REVIEW_TARGET_SCORE and any(kw in evidence for kw in error_keywords):
+            evidence = dim.get("evidence", "")
+            if dim_score < REVIEW_TARGET_SCORE and _evidence_has_error_keyword(evidence):
                 dim_floor_fail = True
                 break
 
@@ -1510,6 +1652,42 @@ def _build_resume_invalidation_plan(
     raw_state = _read_v6_state(level, slug) if _v6_state_path(level, slug).exists() else {}
     if completed_phases is None:
         completed_phases = _load_completed_phases(level, slug)
+
+    # State/artifact reconciliation — flag contradictions before skip decisions
+    contradictions = reconcile_state_artifacts(level, slug)
+    if contradictions:
+        contradiction_kinds = {c.kind for c in contradictions}
+        for c in contradictions:
+            logger.warning("state drift [%s/%s]: %s — %s", level, slug, c.kind, c.detail)
+
+        # Determine which phases need invalidation based on contradiction types
+        drift_invalidation: set[str] = set()
+        if "verify_stale_after_content_update" in contradiction_kinds:
+            drift_invalidation.add("verify")
+        if "review_complete_no_artifact" in contradiction_kinds:
+            drift_invalidation.update({"review", "review-style", "stress", "publish", "audit"})
+        if any(c.kind == "failed_phase_plan_hash_drift" for c in contradictions):
+            # Re-run from earliest drifted phase
+            drifted = [
+                c.detail.split("=")[0] for c in contradictions
+                if c.kind == "failed_phase_plan_hash_drift"
+            ]
+            for phase_name in _ALL_PHASES:
+                if phase_name in drifted:
+                    drift_invalidation.update(
+                        ordered_phases_from(_ALL_PHASES, phase_name, raw_state.get("phases", {}))
+                    )
+                    break
+
+        if drift_invalidation:
+            base_invalidation = set(_resume_invalidation_plan_for_step(step, completed_phases))
+            base_invalidation.update(drift_invalidation)
+            reasons = ", ".join(sorted(contradiction_kinds))
+            return ResumeInvalidationPlan(
+                should_skip=False,
+                reason=f"state/artifact drift detected: {reasons}",
+                invalidate_phases=_ordered_invalidation_phases(base_invalidation, completed_phases),
+            )
 
     invalidation = set(_resume_invalidation_plan_for_step(step, completed_phases))
     audit_tail = {"audit", "publish"}
@@ -5892,12 +6070,8 @@ def step_review(content_path: Path, level: str, module_num: int,
 
     for dim in parsed.parsed_scores:
         dim_score = dim.get("score", 10)
-        evidence = dim.get("evidence", "").lower()
-        error_keywords = (
-            "error", "incorrect", "wrong", "mistake", "factual",
-            "помилк", "невірн", "хибн", "contradictory",
-        )
-        if dim_score < REVIEW_TARGET_SCORE and any(kw in evidence for kw in error_keywords):
+        evidence = dim.get("evidence", "")
+        if dim_score < REVIEW_TARGET_SCORE and _evidence_has_error_keyword(evidence):
             dim_name = dim.get("name", "?")
             _log(f"  ⚠️  Dimension floor: {dim_name} = {dim_score}/10 with identified errors")
 
