@@ -405,6 +405,8 @@ def invoke(
     # os.environ itself — this keeps the parent process clean and prevents
     # leakage to other adapters running concurrently.
     env = {**os.environ, **plan.env_overrides}
+    for key in plan.env_unsets:
+        env.pop(key, None)
 
     # ---------- 7–9. Run the subprocess with watchdog ----------
     start_time = time.monotonic()

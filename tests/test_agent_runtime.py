@@ -28,7 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
-from agent_runtime.adapters.gemini import GeminiAdapter
+from agent_runtime.adapters.gemini import GeminiAdapter, resolve_gemini_auth_mode
 from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
@@ -1545,6 +1545,46 @@ def test_gemini_adapter_workspace_write_yolo(tmp_path):
     assert "--approval-mode=yolo" in plan.cmd
 
 
+@patch.dict("os.environ", {}, clear=True)
+def test_resolve_gemini_auth_mode_defaults_to_auto():
+    assert resolve_gemini_auth_mode() == "auto"
+
+
+@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "subscription"}, clear=True)
+def test_gemini_adapter_subscription_mode_strips_api_key_env(tmp_path):
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="gemini-3.1-pro-preview",
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert plan.env_unsets == ("GEMINI_API_KEY", "GOOGLE_API_KEY")
+
+
+@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "api"}, clear=True)
+def test_gemini_adapter_api_mode_preserves_api_key_env(tmp_path):
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="gemini-3.1-pro-preview",
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+    assert plan.env_unsets == ()
+
+
+@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "bogus"}, clear=True)
+def test_resolve_gemini_auth_mode_invalid_value_falls_back_to_auto():
+    assert resolve_gemini_auth_mode() == "auto"
+
+
 def test_gemini_adapter_mcp_tool_config(tmp_path):
     """The #1 consultation finding: tool_config for MCP restrictions must
     survive through the protocol."""
@@ -2189,3 +2229,53 @@ def test_popen_uses_start_new_session():
     assert call_kwargs[1].get("start_new_session") is True, (
         f"Popen must use start_new_session=True, got: {call_kwargs[1]}"
     )
+
+
+def test_invoke_applies_env_unsets_to_subprocess(tmp_path):
+    """Runner must honor InvocationPlan.env_unsets after merging overrides."""
+    from unittest.mock import MagicMock
+
+    mock_proc = MagicMock()
+    mock_proc.poll = MagicMock(return_value=0)
+    mock_proc.returncode = 0
+    mock_proc.stdin = MagicMock()
+    mock_proc.stderr = MagicMock()
+    mock_proc.stderr.readline = MagicMock(return_value="")
+    mock_proc.stderr.close = MagicMock()
+    mock_proc.stdout = MagicMock()
+    mock_proc.stdout.readline = MagicMock(return_value="")
+    mock_proc.stdout.close = MagicMock()
+    mock_proc.pid = 12345
+
+    mock_popen = MagicMock(return_value=mock_proc)
+
+    with patch.dict(
+        "os.environ",
+        {
+            "GEMINI_AUTH_MODE": "subscription",
+            "GEMINI_API_KEY": "secret-key",
+            "GOOGLE_API_KEY": "secret-google-key",
+        },
+        clear=False,
+    ), patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ), patch(
+        "agent_runtime.runner.subprocess.Popen", mock_popen,
+    ), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ):
+        invoke(
+            "gemini",
+            "hello",
+            mode="workspace-write",
+            cwd=tmp_path,
+            task_id="gemini-auth-subscription",
+            entrypoint="runtime",
+        )
+
+    env = mock_popen.call_args.kwargs["env"]
+    assert env.get("GEMINI_AUTH_MODE") == "subscription"
+    assert "GEMINI_API_KEY" not in env
+    assert "GOOGLE_API_KEY" not in env
