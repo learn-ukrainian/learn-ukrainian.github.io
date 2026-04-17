@@ -2728,6 +2728,18 @@ def step_skeleton(level: str, module_num: int, slug: str,
     prompt_path.write_text(prompt, "utf-8")
     _log(f"  Prompt saved → {prompt_path.name} ({len(prompt)} chars)")
 
+    # Emit prompt composition manifest
+    skeleton_manifest = _build_skeleton_prompt_manifest(
+        prompt=prompt,
+        plan_content=plan_content,
+        packet=packet,
+        word_target=word_target,
+    )
+    manifest_path = orch_dir / "v6-skeleton-manifest.yaml"
+    manifest_path.write_text(
+        yaml.safe_dump(skeleton_manifest, sort_keys=False, allow_unicode=True), "utf-8",
+    )
+
     # Dispatch to writer — skeleton is structure planning, fast model sufficient
     from build.dispatch import dispatch_agent as _dispatch
 
@@ -2974,9 +2986,17 @@ def _chunk_required_vocab_block(
     return f"## REQUIRED VOCABULARY CHECKLIST (#1189)\n\n{instruction}\n\n{checklist}"
 
 
+def _section_has_dialogue_content(section_body: str, section_name: str) -> bool:
+    """Return True when a skeleton section likely contains dialogue content."""
+    lower_name = section_name.lower()
+    if any(token in lower_name for token in ("dialogue", "діалог")):
+        return True
+    # Check skeleton body for dialogue markers (blockquote speaker turns)
+    return bool(re.search(r">\s*—?\s*\*\*\w+", section_body))
+
+
 def _build_chunk_prompt(
     *,
-    template: str,
     section: dict,
     section_index: int,
     total_sections: int,
@@ -2993,8 +3013,14 @@ def _build_chunk_prompt(
     """Build prompt for a single section chunk.
 
     Includes the section plan from skeleton, rolling summary of previous
-    sections, and the research packet. Uses a streamlined prompt that
-    focuses the writer on one section at a time.
+    sections, and the section-scoped contract + wiki excerpts.  Uses a
+    streamlined prompt that focuses the writer on one section at a time.
+
+    Context budget target: ≤12 000 chars.  The prompt carries ONLY
+    section-scoped artifacts (contract slice, wiki excerpt slice,
+    skeleton body) plus lightweight rule summaries.  Full-module context
+    (knowledge packet, full contract, write template) is intentionally
+    excluded — those belong to the skeleton and single-call write phases.
     """
     word_target = section["words"] or 300  # fallback if no budget in skeleton
     phase = plan.get("phase", "")
@@ -3051,39 +3077,142 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 
 ---
 
-{{WIKI_CHUNK_CONTEXT}}
-
 {_chunk_paragraph_language_rule(level, module_num)}
 
 ---
 
 {_chunk_other_rules(level, module_num, section_activity_ids)}
+"""
 
-## Dialogue formatting
+    # Include dialogue formatting only when the section actually contains dialogue
+    has_dialogue = _section_has_dialogue_content(section["body"], section_name)
+    if has_dialogue:
+        section_prompt += """## Dialogue formatting
 
 - **Dialogue formatting (EXEMPT from the monolingual rule):** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. Per-turn inline English translations in `*(English)*` ARE allowed for dialogs. NO blank lines between turns. Example:
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
 
-{_chunk_required_vocab_block(
-    section_required_terms=section_required_terms,
-    all_required_words=all_required_words,
-    section_index=section_index,
-    total_sections=total_sections,
-)}
+"""
 
-{_CHUNK_FORBIDDEN_WORDS_BLOCK}
+    vocab_block = _chunk_required_vocab_block(
+        section_required_terms=section_required_terms,
+        all_required_words=all_required_words,
+        section_index=section_index,
+        total_sections=total_sections,
+    )
+    if vocab_block:
+        section_prompt += vocab_block + "\n\n"
+
+    section_prompt += f"""{_CHUNK_FORBIDDEN_WORDS_BLOCK}
 
 ## Output
 
 Write the section starting with the H2 heading **`## {section_name}`** (verbatim — do not paraphrase). Output ONLY the section content — no preamble, no summary, no notes.
 """
-    # Wiki context is now in the knowledge packet (step_research handles it).
-    # No separate chunk injection needed.
-    section_prompt = section_prompt.replace("{WIKI_CHUNK_CONTEXT}", "")
 
     return section_prompt
+
+
+# ---------------------------------------------------------------------------
+# Prompt composition metadata — chunk phase
+# ---------------------------------------------------------------------------
+
+CHUNK_PROMPT_MAX_CHARS = 12_000
+
+
+def _build_chunk_prompt_manifest(
+    *,
+    section_name: str,
+    section_index: int,
+    total_sections: int,
+    prompt: str,
+    contract_content: str,
+    section_excerpts: str,
+    previous_summary: str,
+    has_dialogue: bool,
+    has_vocab_checklist: bool,
+) -> dict:
+    """Build machine-readable prompt metadata for a write-chunk call.
+
+    Mirrors ``_rewrite_block_prompt_manifest`` so every prompt phase
+    can be audited with the same tooling.
+    """
+    components = ["persona", "section_skeleton", "section_contract", "section_wiki_excerpts"]
+    if previous_summary:
+        components.append("previous_sections_summary")
+    components.extend(["paragraph_language_rule", "section_rules"])
+    if has_dialogue:
+        components.append("dialogue_formatting")
+    if has_vocab_checklist:
+        components.append("required_vocab_checklist")
+    components.append("forbidden_words")
+
+    return {
+        "phase": "write-chunk",
+        "section": section_name,
+        "section_index": section_index,
+        "total_sections": total_sections,
+        "components": components,
+        "metrics": {
+            "prompt_chars": len(prompt),
+            "prompt_words": len(prompt.split()),
+            "contract_chars": len(contract_content),
+            "excerpt_chars": len(section_excerpts),
+            "previous_summary_chars": len(previous_summary),
+        },
+        "flags": {
+            "includes_dialogue_formatting": has_dialogue,
+            "includes_vocab_checklist": has_vocab_checklist,
+            "includes_previous_summary": bool(previous_summary),
+        },
+    }
+
+
+def _audit_chunk_prompt(manifest: dict) -> list[str]:
+    """Return deterministic audit failures for a write-chunk prompt manifest."""
+    failures: list[str] = []
+    metrics = manifest.get("metrics") or {}
+
+    prompt_chars = metrics.get("prompt_chars", 0)
+    if prompt_chars > CHUNK_PROMPT_MAX_CHARS:
+        failures.append(
+            f"prompt exceeds max chars ({prompt_chars} > {CHUNK_PROMPT_MAX_CHARS})"
+        )
+
+    return failures
+
+
+# ---------------------------------------------------------------------------
+# Prompt composition metadata — skeleton phase
+# ---------------------------------------------------------------------------
+
+SKELETON_PROMPT_MAX_CHARS = 40_000
+
+
+def _build_skeleton_prompt_manifest(
+    *,
+    prompt: str,
+    plan_content: str,
+    packet: str,
+    word_target: int,
+) -> dict:
+    """Build machine-readable prompt metadata for the skeleton phase."""
+    return {
+        "phase": "skeleton",
+        "components": ["template", "plan_content", "knowledge_packet"],
+        "metrics": {
+            "prompt_chars": len(prompt),
+            "prompt_words": len(prompt.split()),
+            "plan_chars": len(plan_content),
+            "packet_chars": len(packet),
+        },
+        "flags": {
+            "packet_truncated": "truncated for context window" in packet,
+        },
+        "word_target": word_target,
+    }
 
 
 def step_write_chunked(
@@ -3119,12 +3248,6 @@ def step_write_chunked(
     contract, excerpts = _ensure_contract_artifacts(
         level, module_num, slug, packet_path, log_creation=False,
     )
-
-    # Load write template for reference (used to pull content rules)
-    is_seminar = _is_seminar_track(level)
-    template_name = "v6-write-seminar.md" if is_seminar else "v6-write.md"
-    template_path = PHASES_DIR / template_name
-    template = template_path.read_text("utf-8") if template_path.exists() else ""
 
     from build.dispatch import dispatch_agent as _dispatch
 
@@ -3166,8 +3289,8 @@ def step_write_chunked(
             activity_ids=section_activity_ids,
         )
 
+        section_required_terms = [str(t) for t in (target_section.get("required_terms") or [])]
         prompt = _build_chunk_prompt(
-            template=template,
             section=section,
             section_index=i,
             total_sections=len(sections),
@@ -3178,13 +3301,42 @@ def step_write_chunked(
             module_num=module_num,
             plan=plan,
             slug=slug,
-            section_required_terms=[str(t) for t in (target_section.get("required_terms") or [])],
+            section_required_terms=section_required_terms,
             all_required_words=all_required_words,
         )
 
         # Inject correction directive on first chunk only
         if correction_directive and i == 0:
             prompt = correction_directive + "\n\n" + prompt
+
+        # Build and save prompt composition manifest for deterministic audit
+        section_name_canon = _canonical_section_name(section["title"])
+        has_dialogue = _section_has_dialogue_content(section["body"], section_name_canon)
+        vocab_block = _chunk_required_vocab_block(
+            section_required_terms=section_required_terms,
+            all_required_words=all_required_words,
+            section_index=i,
+            total_sections=len(sections),
+        )
+        manifest = _build_chunk_prompt_manifest(
+            section_name=section_name_canon,
+            section_index=i,
+            total_sections=len(sections),
+            prompt=prompt,
+            contract_content=contract_content,
+            section_excerpts=section_excerpts,
+            previous_summary=previous_summary,
+            has_dialogue=has_dialogue,
+            has_vocab_checklist=bool(vocab_block),
+        )
+        manifest_path = orch_dir / f"v6-chunk-{i + 1:02d}-manifest.yaml"
+        manifest_path.write_text(
+            yaml.safe_dump(manifest, sort_keys=False, allow_unicode=True), "utf-8",
+        )
+
+        audit_failures = _audit_chunk_prompt(manifest)
+        if audit_failures:
+            _log(f"  ⚠️  Chunk {i + 1} prompt audit: {'; '.join(audit_failures)}")
 
         # Save chunk prompt for inspection
         chunk_prompt_path = orch_dir / f"v6-chunk-{i + 1:02d}-prompt.md"
