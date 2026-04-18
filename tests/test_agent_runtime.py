@@ -186,6 +186,7 @@ def test_codex_adapter_build_invocation_read_only(tmp_path):
     assert plan.stdin_payload == "hello"
     assert plan.output_file is not None
     assert "test-task" in plan.output_file.name
+    assert "-c" not in plan.cmd  # tool_config=None preserves prior behavior
     # Liveness paths should include the output file
     assert plan.output_file in plan.liveness_paths
 
@@ -221,6 +222,80 @@ def test_codex_adapter_build_invocation_workspace_write(tmp_path):
     )
     assert "--full-auto" in plan.cmd
     assert "gpt-5.4-mini" in plan.cmd  # model override honored
+
+
+def test_codex_adapter_mcp_tool_config(tmp_path):
+    """Codex MCP config must survive the protocol via ``-c`` overrides."""
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={
+            "mcp_servers": {
+                "sources": {"url": "http://127.0.0.1:8766/sse"},
+            },
+        },
+    )
+    assert "-c" in plan.cmd
+    idx = plan.cmd.index("-c")
+    assert plan.cmd[idx + 1] == 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"'
+
+
+def test_codex_adapter_mcp_tool_config_multiple(tmp_path):
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={
+            "mcp_servers": {
+                "sources": {"url": "http://127.0.0.1:8766/sse"},
+                "other": {"url": "http://127.0.0.1:9001/sse", "enabled": True},
+            },
+        },
+    )
+    config_values = [
+        plan.cmd[index + 1]
+        for index, token in enumerate(plan.cmd[:-1])
+        if token == "-c"
+    ]
+    assert 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"' in config_values
+    assert 'mcp_servers.other.url="http://127.0.0.1:9001/sse"' in config_values
+    assert "mcp_servers.other.enabled=true" in config_values
+
+
+def test_codex_adapter_ignores_unknown_tool_config_keys(tmp_path):
+    """Forward compatibility: unknown Codex tool_config keys stay local."""
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={
+            "mcp_servers": {
+                "sources": {"url": "http://127.0.0.1:8766/sse"},
+            },
+            "some_future_field": "value",
+        },
+    )
+    config_values = [
+        plan.cmd[index + 1]
+        for index, token in enumerate(plan.cmd[:-1])
+        if token == "-c"
+    ]
+    assert 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"' in config_values
+    cmd_str = " ".join(plan.cmd)
+    assert "some_future_field" not in cmd_str
 
 
 # ---------------------------------------------------------------------------

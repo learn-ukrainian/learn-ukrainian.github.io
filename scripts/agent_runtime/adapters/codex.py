@@ -31,6 +31,7 @@ import re
 import shutil
 import tempfile
 from pathlib import Path
+from typing import Any
 
 from ..result import ParseResult
 from .base import InvocationPlan
@@ -132,15 +133,15 @@ class CodexAdapter:
 
         Defensively ignores ``session_id`` regardless of value — Codex
         is always fresh-session (registry resume_policy="never").
-        Defensively ignores ``tool_config`` — Codex doesn't support MCP
-        tool restrictions the way Claude/Gemini do; any keys passed are
-        silently dropped.
+        Supports Codex MCP config overrides via ``tool_config``:
+            - ``{"mcp_servers": {"sources": {"url": "http://127.0.0.1:8766/sse"}}}``
+              → ``-c 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"'``
+            - Unknown top-level keys are ignored (forward-compatible).
         """
-        # Defensively drop session_id and tool_config — Codex adapter ignores
-        # both by design (see class docstring). Local `_ =` rebinds silence
-        # the "unused parameter" linter without changing semantics.
+        # Defensively drop session_id — Codex is always fresh-session by
+        # design (see class docstring). Local `_ =` rebind silences the
+        # "unused parameter" linter without changing semantics.
         _ = session_id
-        _ = tool_config
 
         # Reset per-invocation state so _read_latest_rollout_task_complete
         # uses a fresh rollout snapshot (prevents cross-contamination
@@ -171,15 +172,15 @@ class CodexAdapter:
         ) as output_fd:
             output_path = Path(output_fd.name)
 
-        cmd: list[str] = [
-            codex_bin,
-            "exec",
+        cmd: list[str] = [codex_bin, "exec"]
+        cmd.extend(self._tool_config_flags(tool_config))
+        cmd.extend([
             "--skip-git-repo-check",
             "-C", str(cwd),
             "--color", "never",
             "-o", str(output_path),
             "-m", model or self.default_model,
-        ]
+        ])
         cmd.extend(self._mode_flags(mode))
         cmd.append("-")  # Read prompt from stdin.
 
@@ -191,6 +192,44 @@ class CodexAdapter:
             env_overrides={},
             liveness_paths=(output_path,),
         )
+
+    @classmethod
+    def _tool_config_flags(cls, tool_config: dict | None) -> list[str]:
+        """Translate supported tool_config keys into ``codex exec`` flags."""
+        if not tool_config:
+            return []
+
+        mcp_servers = tool_config.get("mcp_servers")
+        if not isinstance(mcp_servers, dict):
+            return []
+
+        flags: list[str] = []
+        for key, value in cls._flatten_config_overrides("mcp_servers", mcp_servers):
+            flags.extend(["-c", f"{key}={value}"])
+        return flags
+
+    @classmethod
+    def _flatten_config_overrides(
+        cls,
+        prefix: str,
+        value: Any,
+    ) -> list[tuple[str, str]]:
+        """Flatten nested config values into dotted ``key=value`` pairs."""
+        if isinstance(value, dict):
+            flattened: list[tuple[str, str]] = []
+            for key, nested in value.items():
+                if nested is None:
+                    continue
+                flattened.extend(cls._flatten_config_overrides(f"{prefix}.{key}", nested))
+            return flattened
+        return [(prefix, cls._encode_config_value(value))]
+
+    @staticmethod
+    def _encode_config_value(value: Any) -> str:
+        """Encode a Python scalar/list into a TOML-compatible literal."""
+        if isinstance(value, tuple):
+            value = list(value)
+        return _json.dumps(value)
 
     def parse_response(
         self,
