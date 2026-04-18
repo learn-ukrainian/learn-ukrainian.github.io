@@ -21,10 +21,12 @@
 
 ### What's queued (continuing the autonomous plan below)
 
-- Dispatching Phase A (Codex wiki compile test, 9 slugs) + Phase C (Codex Google Drive backup) in parallel
-- Dispatching Gemini #1323 re-verify; Gemini #1324 review held until #1323 returns (serial per your `1cc707e17` directive)
+- ~~Dispatching Phase A (Codex wiki compile test, 9 slugs) + Phase C (Codex Google Drive backup) in parallel~~ → **dispatched** (PIDs 21883, 22474; both running)
+- ~~Dispatching Gemini #1323 re-verify~~ → **done, msg #350**: verdict `merge still blocked` because the f4c03c12d strip_meta regex's `[^<]*?` body silently fails on valid YAML containing `<` (e.g., `description: "A < B"`). The other 2 patches (49fab3ee9 hijack-guard, 74371b51e seminar registry) confirmed AGREE.
+- **Shipped commit `347686a2b`** — strip_meta switched to tempered repetition `(?:(?!<!--).)*?`; added 2 regression tests pinning down both bugs (msg #348 swallow-comment + msg #350 lt-in-yaml). All 6 strip_meta tests + the full TestStripMeta class (21 tests) pass.
+- ~~Gemini #1324 review~~ → **dispatched** (background, serial after #1323 per your `1cc707e17` directive)
 - Phase B held until Phase A health-check
-- Will append further updates here when phases complete
+- **#1323 status**: 2 of 3 patches confirmed; the 3rd (strip_meta) now patched again — needs ANOTHER re-verify if you want full Gemini sign-off. I won't fire that automatically without your call (would break the "no infinite Gemini loop" implicit boundary). Mark merge-ready or queue another re-verify on your return.
 
 ---
 
