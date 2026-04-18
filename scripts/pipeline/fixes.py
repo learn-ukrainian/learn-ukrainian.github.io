@@ -10,6 +10,7 @@ import re
 from pathlib import Path
 
 from pipeline.core import ModuleContext, log
+from shared.fix_apply import apply_fix_pair
 
 # ---------------------------------------------------------------------------
 # Module file helpers
@@ -344,45 +345,20 @@ def _apply_find_replace_fixes(file_path: Path, raw_output: str) -> int:
             skipped.append((i, "template placeholder", find_text[:60]))
             continue
 
-        if find_text in content:
-            content = content.replace(find_text, replace_text, 1)
+        # ADR-001: keep the pipeline's tolerant fallback, but centralize
+        # first-occurrence apply mechanics in a shared helper.
+        content, did_apply = apply_fix_pair(
+            content,
+            find_text,
+            replace_text,
+            tolerant_whitespace=True,
+        )
+        if did_apply:
             applied += 1
             continue
 
-        normalized_find = re.sub(r'\s+', ' ', find_text).strip()
-        normalized_content = re.sub(r'\s+', ' ', content)
-        if normalized_find in normalized_content:
-            idx = normalized_content.index(normalized_find)
-            char_count = 0
-            orig_start = 0
-            for i_ch, ch in enumerate(content):
-                if char_count >= idx:
-                    orig_start = i_ch
-                    break
-                if ch in (' ', '\t', '\n', '\r'):
-                    if i_ch == 0 or content[i_ch-1] not in (' ', '\t', '\n', '\r'):
-                        char_count += 1
-                else:
-                    char_count += 1
-            end_count = 0
-            orig_end = orig_start
-            target_len = len(normalized_find)
-            for i_ch in range(orig_start, len(content)):
-                ch = content[i_ch]
-                if ch in (' ', '\t', '\n', '\r'):
-                    if i_ch == orig_start or content[i_ch-1] not in (' ', '\t', '\n', '\r'):
-                        end_count += 1
-                else:
-                    end_count += 1
-                if end_count >= target_len:
-                    orig_end = i_ch + 1
-                    break
-
-            content = content[:orig_start] + replace_text + content[orig_end:]
-            applied += 1
-        else:
-            find_preview = find_text[:60].replace('\n', ' ')
-            skipped.append((i, "no match", find_preview))
+        find_preview = find_text[:60].replace('\n', ' ')
+        skipped.append((i, "no match", find_preview))
 
     total_pairs = len(pairs)
     parts = [f"{applied}/{total_pairs} applied"]

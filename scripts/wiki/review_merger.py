@@ -45,6 +45,8 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
+from shared.fix_apply import apply_fix_pair
+
 # Default dim priority (highest first). Factual errors most concrete and
 # user-impactful; source-grounding protects editorial integrity; register
 # catches linguistic defects; perspective framing is often subjective.
@@ -319,6 +321,6 @@ def apply_fixes(article_text: str, fixes: list[Fix]) -> str:
     """
     out = article_text
     for fix in fixes:
-        if fix.find in out:
-            out = out.replace(fix.find, fix.replace, 1)
+        # ADR-001: merger application stays strict and deterministic.
+        out, _ = apply_fix_pair(out, fix.find, fix.replace)
     return out
