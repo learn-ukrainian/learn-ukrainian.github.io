@@ -57,6 +57,8 @@ Sample response:
 
 For live agent progress from the channel bridge, Monitor can consume the event stream directly: `Monitor(command=".venv/bin/python scripts/ai_agent_bridge/__main__.py channel watch <thread_id> --follow --event-stream", ...)`. The watch command replays historical events first, then keeps streaming line-buffered JSONL for `reply_started`, `heartbeat`, `reply_complete`, and delivery outcome events as the inbox worker updates the thread.
 
+Related MCP source lookup: `mcp__sources__search_external` searches the chunked external articles corpus with channel/register/decolonization filters and optional track-aware reranking.
+
 ---
 
 ## Health & Config — `/api/`

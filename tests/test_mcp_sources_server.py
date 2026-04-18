@@ -46,7 +46,7 @@ class TestListTools:
         tool_names = {t.name for t in tools}
 
         expected = {
-            "search_text", "search_images", "search_literary",
+            "search_text", "search_images", "search_literary", "search_external",
             "get_full_text", "get_chunk_context", "collection_stats",
             "verify_word", "verify_words", "verify_lemma",
             "query_wikipedia", "query_grac", "query_ulif",

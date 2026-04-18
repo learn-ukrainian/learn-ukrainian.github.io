@@ -14,7 +14,7 @@ The Python backing package is still `scripts/rag/` for backwards compat
 with imports; rename there is a follow-up.
 
 Tools:
-    - search_text, search_literary, search_images, get_chunk_context
+    - search_text, search_literary, search_external, search_images, get_chunk_context
     - verify_word, verify_words, verify_lemma (VESUM)
     - query_wikipedia, query_pravopys, query_e2u, query_r2u, query_ulif
     - search_definitions, search_etymology, search_idioms, search_synonyms
@@ -154,6 +154,51 @@ async def list_tools() -> list[Tool]:
                     }
                 },
                 "required": ["query"]
+            },
+        ),
+        Tool(
+            name="search_external",
+            description=(
+                "Search the external articles corpus (YouTube transcripts + blogs: "
+                "Realna Istoriia, Ukrainian Lessons, Istoriia Movy, and related sources). "
+                "Supports channel/register/decolonization filters and optional "
+                "track-aware reranking for curriculum use."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "FTS5 search query in Ukrainian or English"
+                    },
+                    "track": {
+                        "type": "string",
+                        "description": "Optional curriculum track for channel-affinity reranking"
+                    },
+                    "channel": {
+                        "type": "string",
+                        "description": "Optional channel filter (e.g. 'realna_istoria')"
+                    },
+                    "register": {
+                        "type": "string",
+                        "enum": ["spoken", "scripted", "interview", "mixed"],
+                    },
+                    "decolonization": {
+                        "type": "string",
+                        "enum": ["strong", "moderate", "none", "neutral"],
+                    },
+                    "min_quality_tier": {
+                        "type": "integer",
+                        "default": 2,
+                        "description": "1=highest quality only, 3=include background corpus",
+                    },
+                    "max_results": {
+                        "type": "integer",
+                        "default": 10,
+                        "description": "Max results to return (default 10, max 20)",
+                    },
+                },
+                "required": ["query"],
             },
         ),
         Tool(
@@ -576,6 +621,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "search_text": lambda: handle_search_text(arguments),
             "search_images": lambda: handle_search_images(arguments),
             "search_literary": lambda: handle_search_literary(arguments),
+            "search_external": lambda: handle_search_external(arguments),
             "get_full_text": lambda: handle_get_full_text(arguments),
             "get_chunk_context": lambda: handle_get_chunk_context(arguments),
             "collection_stats": lambda: handle_collection_stats(arguments),
@@ -660,6 +706,50 @@ async def handle_search_literary(args: dict) -> list[TextContent]:
 
     return [TextContent(type="text", text="\n".join(lines))]
 
+
+
+async def handle_search_external(args: dict) -> list[TextContent]:
+    query = args["query"]
+    limit = min(args.get("max_results", 10), 20)
+
+    from wiki.sources_db import search_external
+
+    keywords = {w for w in query.lower().split() if len(w) >= 3}
+    hits = await asyncio.to_thread(
+        search_external,
+        keywords,
+        max_total=limit,
+        channel=args.get("channel"),
+        register=args.get("register"),
+        decolonization=args.get("decolonization"),
+        min_quality_tier=args.get("min_quality_tier", 2),
+        track=args.get("track"),
+    )
+
+    if not hits:
+        return [TextContent(type="text", text="No external results found.")]
+
+    lines: list[str] = []
+    for hit in hits:
+        lines.append(f"[Chunk {hit.get('chunk_id', '')}]")
+        lines.append(
+            "Channel: "
+            f"{hit.get('source_name', hit.get('channel_id', '?'))} | "
+            f"Speaker: {hit.get('speaker', '?')} | "
+            f"Register: {hit.get('register_tag', '?')}"
+        )
+        lines.append(
+            "Decolonization: "
+            f"{hit.get('decolonization_tag', '?')} | "
+            f"Quality: {hit.get('quality_tier', '?')} | "
+            f"Published: {hit.get('publish_date', '') or 'unknown'}"
+        )
+        lines.append(f"URL: {hit.get('url', '')}")
+        lines.append("")
+        lines.append(hit.get("text", ""))
+        lines.append("---")
+
+    return [TextContent(type="text", text="\n".join(lines))]
 
 
 async def handle_get_full_text(args: dict) -> list[TextContent]:
