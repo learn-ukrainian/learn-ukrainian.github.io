@@ -69,12 +69,20 @@ def migration_fixture(tmp_path: Path) -> dict[str, Path]:
 
     _write_jsonl(
         data_dir / "realna_istoria.jsonl",
-        [{
-            "url": "https://www.youtube.com/watch?v=abc123xyz89",
-            "title": "Козаки та історія",
-            "text": long_text,
-            "char_count": len(long_text),
-        }],
+        [
+            {
+                "url": "https://www.youtube.com/watch?v=abc123xyz89",
+                "title": "Козаки та історія",
+                "text": long_text,
+                "char_count": len(long_text),
+            },
+            {
+                "url": "https://www.youtube.com/watch?v=abc123xyz89",
+                "title": "Козаки та історія",
+                "text": long_text,
+                "char_count": len(long_text),
+            },
+        ],
     )
     _write_jsonl(
         data_dir / "ulp_blogs.jsonl",
@@ -183,6 +191,7 @@ def test_migration_is_idempotent_and_chunk_ids_are_stable(migration_fixture: dic
 
     assert stats1["rows_after"] == stats1["rows_inserted"]
     assert stats2["rows_after"] == stats2["rows_inserted"]
+    assert stats1["items_deduped"] == 1
     assert stats1["verify_results"]["козаки"]
     assert rows1 == rows2
     assert rows1[0][0].startswith("ext-realna_istoria-abc123xyz89-")

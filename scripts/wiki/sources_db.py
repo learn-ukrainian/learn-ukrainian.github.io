@@ -218,6 +218,7 @@ def search_external(
 
     skip = exclude_urls or set()
     results: list[dict] = []
+    seen_chunk_ids: set[str] = set()
     channels: dict[str, dict] = {}
     try:
         from .channels import load_channels
@@ -231,6 +232,11 @@ def search_external(
         url = str(r.get("url", "")).strip()
         if url in skip:
             continue
+        chunk_id = str(r.get("chunk_id", "")).strip()
+        if chunk_id and chunk_id in seen_chunk_ids:
+            continue
+        if chunk_id:
+            seen_chunk_ids.add(chunk_id)
 
         source_file = str(r.get("source_file", "")).strip()
         channel_meta = channels.get(source_file, {})

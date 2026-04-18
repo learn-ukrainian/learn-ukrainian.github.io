@@ -262,10 +262,12 @@ def extract_video_id(url: str) -> str:
 def _iter_jsonl_items(
     data_dir: Path,
     channels: dict[str, dict[str, Any]],
-) -> tuple[list[dict[str, Any]], list[str], int]:
+) -> tuple[list[dict[str, Any]], list[str], int, int]:
     rows: list[dict[str, Any]] = []
     failures: list[str] = []
     input_count = 0
+    deduped_count = 0
+    seen_urls: set[tuple[str, str]] = set()
 
     for jsonl_path in sorted(data_dir.glob("*.jsonl")):
         source_file = jsonl_path.stem
@@ -292,6 +294,12 @@ def _iter_jsonl_items(
                 if not url or not text:
                     failures.append(f"{jsonl_path.name}:{lineno}: missing url/text")
                     continue
+
+                dedupe_key = (source_file, normalize_url(url))
+                if dedupe_key in seen_urls:
+                    deduped_count += 1
+                    continue
+                seen_urls.add(dedupe_key)
 
                 video_id = extract_video_id(url)
                 chunks = chunk_text(
@@ -327,7 +335,7 @@ def _iter_jsonl_items(
                         "video_id": video_id,
                     })
 
-    return rows, failures, input_count
+    return rows, failures, input_count, deduped_count
 
 
 def _insert_rows(conn: sqlite3.Connection, rows: list[dict[str, Any]]) -> None:
@@ -364,7 +372,7 @@ def migrate_external_chunks(
 ) -> dict[str, Any]:
     """Re-ingest external JSONL files into chunked DB rows."""
     channels = load_channels(channels_path, reload=True)
-    rows, failures, input_count = _iter_jsonl_items(data_dir, channels)
+    rows, failures, input_count, deduped_count = _iter_jsonl_items(data_dir, channels)
     avg_chunk_size = round(sum(row["char_count"] for row in rows) / len(rows), 2) if rows else 0.0
 
     stats: dict[str, Any] = {
@@ -372,6 +380,7 @@ def migrate_external_chunks(
         "rows_inserted": len(rows),
         "avg_chunk_size": avg_chunk_size,
         "items_failed": failures,
+        "items_deduped": deduped_count,
         "preview_chunks": rows[:5],
         "schema_columns_added": [],
         "rows_before": None,
@@ -411,6 +420,7 @@ def _print_stats(stats: dict[str, Any], *, dry_run: bool) -> None:
             print(f"  - {item}")
     else:
         print(f"[{mode}] failures: none")
+    print(f"[{mode}] deduped input items: {stats['items_deduped']}")
 
     if dry_run:
         print("[DRY RUN] first 5 chunks:")
