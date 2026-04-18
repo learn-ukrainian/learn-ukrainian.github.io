@@ -2,25 +2,26 @@
 """Fetch and cache external sources for wiki enrichment.
 
 One-time ingestion: fetches ULP blog articles, YouTube subtitles, and other
-external articles. Caches to data/external_articles/ as JSONL files.
-The enrichment step reads from cache — no fetching during compilation.
+external articles. Caches to `data/external_articles/` as JSONL files.
+
+JSONL schemas:
+- Blog article caches keep the existing shape:
+  `url, title, domain, text, char_count`
+- YouTube caches write the richer channel/video shape required by #1324:
+  `video_id, channel_id, speaker, publish_date, duration_s, url, title,
+   description, subtitles`
+  and also preserve legacy compatibility fields `text` and `char_count`
+  derived from `subtitles`, so existing DB ingestion keeps working.
 
 Usage:
-    # Fetch all ULP blog articles (243 URLs)
     .venv/bin/python scripts/wiki/fetch_external_sources.py --ulp-blogs
-
-    # Fetch ALL ULP YouTube subtitles (channel scrape)
-    .venv/bin/python scripts/wiki/fetch_external_sources.py --ulp-youtube
-
-    # Fetch other external articles (Dobra Forma, etc.)
     .venv/bin/python scripts/wiki/fetch_external_sources.py --other-blogs
-
-    # Fetch everything
-    .venv/bin/python scripts/wiki/fetch_external_sources.py --all
-
-    # Check what we have cached
+    .venv/bin/python scripts/wiki/fetch_external_sources.py --channel-name realna-istoria
+    .venv/bin/python scripts/wiki/fetch_external_sources.py --channel https://www.youtube.com/@SomeChannel
     .venv/bin/python scripts/wiki/fetch_external_sources.py --status
 """
+
+from __future__ import annotations
 
 import argparse
 import html
@@ -29,9 +30,12 @@ import os
 import re
 import socket
 import subprocess
-import sys
 import time
+from collections.abc import Callable
+from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
+from typing import Any
 from urllib.parse import urlparse
 
 import requests
@@ -41,19 +45,103 @@ from bs4 import BeautifulSoup
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CACHE_DIR = PROJECT_ROOT / "data" / "external_articles"
 EXT_RESOURCES = PROJECT_ROOT / "docs" / "resources" / "external_resources.yaml"
+VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 
-# Rate limiting — YouTube is aggressive about rate limiting
-BLOG_DELAY = 1.5        # seconds between blog requests
-YOUTUBE_DELAY = 10.0    # seconds between YouTube requests
-YOUTUBE_BATCH_PAUSE = 90  # pause every N videos to avoid rate limit
-YOUTUBE_BATCH_SIZE = 10
+# Rate limiting — requested in #1151.
+BLOG_DELAY = 1.5
+YOUTUBE_DELAY = 5.0
+YOUTUBE_BATCH_PAUSE = 30.0
+YOUTUBE_BATCH_SIZE = 20
 
 # Tor proxy settings — password from env or torrc (local-only control port)
 TOR_SOCKS_PROXY = "socks5://127.0.0.1:9050"
 TOR_CONTROL_PORT = 9051
 TOR_CONTROL_PASSWORD = os.environ.get("TOR_CONTROL_PASSWORD", "")
 COOKIE_FILE = Path("/tmp/yt-cookies.txt")
-MAX_429_RETRIES = 3  # rotate circuit up to 3 times per video
+MAX_429_RETRIES = 3
+
+YOUTUBE_SUBTITLE_LANGS = ("uk", "en")
+YOUTUBE_STATUS_FILENAMES = ("ulp_blogs.jsonl", "other_blogs.jsonl")
+YOUTUBE_RECORD_FIELDS = (
+    "video_id",
+    "channel_id",
+    "speaker",
+    "publish_date",
+    "duration_s",
+    "url",
+    "title",
+    "description",
+    "subtitles",
+)
+
+
+@dataclass(frozen=True)
+class YouTubeChannel:
+    """Resolved YouTube channel scrape target."""
+
+    key: str
+    url: str
+    output_filename: str
+    speaker: str
+    description: str
+
+    @property
+    def output_path(self) -> Path:
+        return CACHE_DIR / self.output_filename
+
+    @property
+    def playlist_url(self) -> str:
+        return normalize_channel_url(self.url, videos_tab=True)
+
+
+YOUTUBE_CHANNELS: dict[str, YouTubeChannel] = {
+    "ukrainian-lessons": YouTubeChannel(
+        key="ukrainian-lessons",
+        url="https://www.youtube.com/@UkrainianLessons",
+        output_filename="ulp_youtube.jsonl",
+        speaker="Anna Ohoiko",
+        description="Ukrainian Lessons (Anna Ohoiko) — A1-B2 pedagogy, FMU, podcasts",
+    ),
+    "realna-istoria": YouTubeChannel(
+        key="realna-istoria",
+        url="https://www.youtube.com/@RealnaIstoria",
+        output_filename="realna_istoria.jsonl",
+        speaker="Akím Galímov",
+        description="Реальна Історія — HIST, BIO, ISTORIO",
+    ),
+    "imtgsh": YouTubeChannel(
+        key="imtgsh",
+        url="https://www.youtube.com/@imtgsh",
+        output_filename="imtgsh.jsonl",
+        speaker="",
+        description="imtgsh — history content",
+    ),
+    "istoria-movy": YouTubeChannel(
+        key="istoria-movy",
+        url="https://www.youtube.com/@Istoria-Movy",
+        output_filename="istoria_movy.jsonl",
+        speaker="",
+        description="Istoria-Movy — history of Ukrainian language",
+    ),
+    "speak-ukrainian": YouTubeChannel(
+        key="speak-ukrainian",
+        url="https://www.youtube.com/@SpeakUkrainian",
+        output_filename="speak_ukrainian.jsonl",
+        speaker="",
+        description="Speak Ukrainian — A1-A2 pedagogy",
+    ),
+    "red-purple": YouTubeChannel(
+        key="red-purple",
+        url="https://www.youtube.com/@RedPurpleUkrainian",
+        output_filename="red_purple.jsonl",
+        speaker="",
+        description="Red Purple Ukrainian — A1 pedagogy",
+    ),
+}
+
+LEGACY_CHANNEL_FLAGS = {
+    "ulp": "ukrainian-lessons",
+}
 
 
 def load_external_urls() -> dict[str, list[str]]:
@@ -90,12 +178,14 @@ def load_external_urls() -> dict[str, list[str]]:
 # ── Blog article fetching ─────────────────────────────────────
 
 
-def fetch_blog_article(url: str) -> dict | None:
+def fetch_blog_article(url: str) -> dict[str, Any] | None:
     """Fetch a blog article and extract clean text content."""
     try:
-        resp = requests.get(url, timeout=30, headers={
-            "User-Agent": "Mozilla/5.0 (learn-ukrainian curriculum project)"
-        })
+        resp = requests.get(
+            url,
+            timeout=30,
+            headers={"User-Agent": "Mozilla/5.0 (learn-ukrainian curriculum project)"},
+        )
         resp.raise_for_status()
     except Exception as e:
         print(f"  ❌ {url}: {e}")
@@ -103,16 +193,13 @@ def fetch_blog_article(url: str) -> dict | None:
 
     soup = BeautifulSoup(resp.text, "html.parser")
 
-    # Remove scripts, styles, nav, footer
     for tag in soup(["script", "style", "nav", "footer", "header", "aside"]):
         tag.decompose()
 
-    # Try to find article content (most blogs use <article> or main content div)
     article = soup.find("article") or soup.find("main") or soup.find("div", class_="entry-content")
     content = article if article else soup
     text = content.get_text(separator="\n", strip=True)
 
-    # Clean up: collapse blank lines, strip
     lines = [line.strip() for line in text.split("\n")]
     text = "\n".join(line for line in lines if line)
 
@@ -131,14 +218,13 @@ def fetch_blog_article(url: str) -> dict | None:
         "url": url,
         "title": title,
         "domain": domain,
-        "text": text[:10000],  # Cap at 10K chars per article
+        "text": text[:10000],
         "char_count": len(text),
     }
 
 
 def fetch_blogs(urls: list[str], output_file: Path) -> None:
     """Fetch blog articles and save as JSONL."""
-    # Load existing to skip already-fetched
     existing_urls: set[str] = set()
     if output_file.exists():
         with open(output_file, encoding="utf-8") as f:
@@ -153,12 +239,12 @@ def fetch_blogs(urls: list[str], output_file: Path) -> None:
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
     with open(output_file, "a", encoding="utf-8") as f:
-        for i, url in enumerate(urls):
+        for i, url in enumerate(urls, start=1):
             if url in existing_urls:
                 skip_count += 1
                 continue
 
-            print(f"  [{i+1}/{len(urls)}] {url[:80]}")
+            print(f"  [{i}/{len(urls)}] {url[:80]}")
             article = fetch_blog_article(url)
             if article:
                 f.write(json.dumps(article, ensure_ascii=False) + "\n")
@@ -176,33 +262,188 @@ def fetch_blogs(urls: list[str], output_file: Path) -> None:
 # ── YouTube subtitle fetching ─────────────────────────────────
 
 
-def get_channel_video_urls(channel_url: str, max_videos: int = 500) -> list[str]:
-    """Get all video URLs from a YouTube channel using yt-dlp."""
-    print(f"  📡 Scraping channel: {channel_url}")
-    try:
-        result = subprocess.run(
-            [
-                "yt-dlp", "--flat-playlist", "--print", "url",
-                "--playlist-end", str(max_videos),
-                channel_url,
-            ],
-            capture_output=True, text=True, timeout=120,
-        )
-        urls = [line.strip() for line in result.stdout.split("\n") if line.strip()]
-        print(f"  📺 Found {len(urls)} videos")
-        return urls
-    except Exception as e:
-        print(f"  ❌ Channel scrape failed: {e}")
-        return []
+class YouTubeRequestLimiter:
+    """Enforce spacing between yt-dlp requests and longer batch pauses."""
+
+    def __init__(
+        self,
+        *,
+        request_delay: float = YOUTUBE_DELAY,
+        batch_size: int = YOUTUBE_BATCH_SIZE,
+        batch_pause: float = YOUTUBE_BATCH_PAUSE,
+        sleep_fn: Callable[[float], None] = time.sleep,
+    ) -> None:
+        self.request_delay = request_delay
+        self.batch_size = batch_size
+        self.batch_pause = batch_pause
+        self.sleep_fn = sleep_fn
+        self.request_count = 0
+
+    def before_request(self, label: str) -> None:
+        """Pause between yt-dlp requests so reruns behave politely."""
+        if self.request_count > 0:
+            print(f"  ⏱️  Waiting {self.request_delay:.0f}s before {label}...")
+            self.sleep_fn(self.request_delay)
+        self.request_count += 1
+
+    def after_video(self, processed_videos: int) -> None:
+        """Pause every N processed videos and log it."""
+        if processed_videos > 0 and processed_videos % self.batch_size == 0:
+            print(
+                "  ⏳ Batch pause "
+                f"({self.batch_pause:.0f}s after {processed_videos} processed videos)..."
+            )
+            self.sleep_fn(self.batch_pause)
+
+
+def normalize_channel_url(channel_url: str, *, videos_tab: bool = False) -> str:
+    """Normalize a YouTube channel URL for matching or playlist scraping."""
+    normalized = channel_url.strip().rstrip("/")
+    if not normalized:
+        raise ValueError("Channel URL cannot be empty")
+
+    parsed = urlparse(normalized)
+    if parsed.netloc not in {"youtube.com", "www.youtube.com"}:
+        return normalized
+
+    parts = [part for part in parsed.path.split("/") if part]
+    if parts and parts[-1] == "videos":
+        return normalized
+    if videos_tab:
+        return f"{normalized}/videos"
+    return normalized
+
+
+def resolve_named_channel(channel_name: str) -> YouTubeChannel:
+    """Resolve a registry-backed channel name to a scrape target."""
+    if channel_name in YOUTUBE_CHANNELS:
+        return YOUTUBE_CHANNELS[channel_name]
+
+    known = ", ".join(sorted(YOUTUBE_CHANNELS))
+    raise ValueError(f"Unknown channel-name '{channel_name}'. Available: {known}")
+
+
+def infer_channel_output_filename(channel_url: str) -> str:
+    """Infer an output filename for an arbitrary YouTube channel URL."""
+    normalized = normalize_channel_url(channel_url)
+    for channel in YOUTUBE_CHANNELS.values():
+        if normalize_channel_url(channel.url) == normalized:
+            return channel.output_filename
+
+    parsed = urlparse(normalized)
+    parts = [part for part in parsed.path.split("/") if part]
+    candidates = [part for part in parts if part not in {"videos", "featured", "playlists", "shorts"}]
+    token = candidates[-1] if candidates else parsed.netloc
+    token = token.lstrip("@")
+    token = re.sub(r"([a-z0-9])([A-Z])", r"\1-\2", token)
+    token = re.sub(r"[^a-zA-Z0-9]+", "_", token).strip("_").lower()
+    if not token:
+        raise ValueError(f"Could not infer output filename from channel URL '{channel_url}'")
+    return f"{token}.jsonl"
+
+
+def make_ad_hoc_channel(channel_url: str, output_name: str | None) -> YouTubeChannel:
+    """Create a scrape target for `--channel` without mutating the registry."""
+    output_filename = output_name or infer_channel_output_filename(channel_url)
+    if not output_filename.endswith(".jsonl"):
+        output_filename = f"{output_filename}.jsonl"
+    key = Path(output_filename).stem.replace("_", "-")
+    return YouTubeChannel(
+        key=key,
+        url=normalize_channel_url(channel_url),
+        output_filename=output_filename,
+        speaker="",
+        description=f"Ad-hoc channel scrape: {channel_url}",
+    )
 
 
 def _extract_video_id(video_url: str) -> str:
     """Extract video ID from a YouTube URL."""
     if "v=" in video_url:
         return video_url.split("v=")[1].split("&")[0]
-    elif "youtu.be/" in video_url:
+    if "youtu.be/" in video_url:
         return video_url.split("youtu.be/")[1].split("?")[0]
     return ""
+
+
+def load_existing_video_ids(output_file: Path) -> set[str]:
+    """Read already-written video IDs so channel reruns resume instead of restart."""
+    existing_ids: set[str] = set()
+    if not output_file.exists():
+        return existing_ids
+
+    with open(output_file, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            entry = json.loads(line)
+            video_id = str(entry.get("video_id", "")).strip()
+            if video_id:
+                existing_ids.add(video_id)
+    return existing_ids
+
+
+def _yt_dlp_base_cmd(use_tor: bool) -> list[str]:
+    """Build the shared yt-dlp invocation using the repo venv explicitly."""
+    cmd = [str(VENV_PYTHON), "-m", "yt_dlp"]
+    if use_tor:
+        cookie_file = _ensure_cookie_file()
+        cmd.extend(["--proxy", TOR_SOCKS_PROXY, "--cookies", str(cookie_file)])
+    else:
+        cmd.extend(["--cookies-from-browser", "chrome"])
+    return cmd
+
+
+def _run_yt_dlp(
+    args: list[str],
+    *,
+    limiter: YouTubeRequestLimiter,
+    label: str,
+    timeout: int,
+    use_tor: bool = False,
+) -> subprocess.CompletedProcess[str]:
+    """Run yt-dlp with the shared rate limiter."""
+    limiter.before_request(label)
+    cmd = _yt_dlp_base_cmd(use_tor) + args
+    return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=False)
+
+
+def get_channel_video_urls(
+    channel_url: str,
+    *,
+    limiter: YouTubeRequestLimiter,
+    max_videos: int = 500,
+) -> list[str]:
+    """Get video URLs from a YouTube channel using yt-dlp flat-playlist mode."""
+    playlist_url = normalize_channel_url(channel_url, videos_tab=True)
+    print(f"  📡 Scraping channel: {playlist_url}")
+    try:
+        result = _run_yt_dlp(
+            [
+                "--flat-playlist",
+                "--print",
+                "url",
+                "--playlist-end",
+                str(max_videos),
+                playlist_url,
+            ],
+            limiter=limiter,
+            label="channel inventory",
+            timeout=120,
+        )
+    except Exception as e:
+        print(f"  ❌ Channel scrape failed: {e}")
+        return []
+
+    if result.returncode != 0:
+        stderr = result.stderr.strip()
+        print(f"  ❌ Channel scrape failed: {stderr or 'yt-dlp returned non-zero'}")
+        return []
+
+    urls = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+    print(f"  📺 Found {len(urls)} videos")
+    return urls
 
 
 def _tor_is_running() -> bool:
@@ -218,20 +459,13 @@ def _tor_is_running() -> bool:
 
 
 def _tor_new_circuit() -> bool:
-    """Request a new Tor circuit via the control port.
-
-    Sends SIGNAL NEWNYM to get a fresh exit node (= new IP).
-    Waits 10s for the circuit to establish.
-    """
+    """Request a new Tor circuit via the control port."""
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(5)
         sock.connect(("127.0.0.1", TOR_CONTROL_PORT))
-
-        # Read banner
         sock.recv(1024)
 
-        # Authenticate
         sock.sendall(f'AUTHENTICATE "{TOR_CONTROL_PASSWORD}"\r\n'.encode())
         resp = sock.recv(1024).decode()
         if "250 OK" not in resp:
@@ -239,7 +473,6 @@ def _tor_new_circuit() -> bool:
             sock.close()
             return False
 
-        # Request new circuit
         sock.sendall(b"SIGNAL NEWNYM\r\n")
         resp = sock.recv(1024).decode()
         sock.close()
@@ -248,30 +481,26 @@ def _tor_new_circuit() -> bool:
             print("    🔄 New Tor circuit requested, waiting 10s...")
             time.sleep(10)
             return True
-        else:
-            print(f"    ⚠️  Tor NEWNYM failed: {resp.strip()}")
-            return False
+
+        print(f"    ⚠️  Tor NEWNYM failed: {resp.strip()}")
+        return False
     except Exception as e:
         print(f"    ⚠️  Tor control error: {e}")
         return False
 
 
 def _ensure_cookie_file() -> Path:
-    """Export Chrome YouTube cookies to a Netscape cookie file for Tor use.
-
-    Cookies authenticate us as a real YouTube user when routing through Tor,
-    since Tor exit nodes are flagged by YouTube's bot detection.
-    """
+    """Export Chrome YouTube cookies to a Netscape cookie file for Tor use."""
     if COOKIE_FILE.exists():
-        # Refresh if older than 1 hour
         age = time.time() - COOKIE_FILE.stat().st_mtime
         if age < 3600:
             return COOKIE_FILE
 
     try:
         from pycookiecheat import chrome_cookies
+
         cookies = chrome_cookies("https://www.youtube.com")
-        with open(COOKIE_FILE, "w") as f:
+        with open(COOKIE_FILE, "w", encoding="utf-8") as f:
             f.write("# Netscape HTTP Cookie File\n")
             for name, value in cookies.items():
                 f.write(f".youtube.com\tTRUE\t/\tTRUE\t0\t{name}\t{value}\n")
@@ -287,181 +516,241 @@ def _parse_vtt(vtt_text: str) -> str:
     lines = []
     for line in vtt_text.split("\n"):
         line = line.strip()
-        # Skip VTT header, timestamps, empty lines, NOTE blocks, position hints
-        if not line or line.startswith("WEBVTT") or line.startswith("Kind:") \
-                or line.startswith("Language:") or line.startswith("NOTE") \
-                or re.match(r"^\d{2}:\d{2}", line) or re.match(r"^\d+$", line):
+        if (
+            not line
+            or line.startswith("WEBVTT")
+            or line.startswith("Kind:")
+            or line.startswith("Language:")
+            or line.startswith("NOTE")
+            or re.match(r"^\d{2}:\d{2}", line)
+            or re.match(r"^\d+$", line)
+        ):
             continue
-        # Strip VTT tags like <c> </c> <00:00:01.234>
         line = re.sub(r"<[^>]+>", "", line)
-        # Decode HTML entities (&gt; &amp; etc.)
         line = html.unescape(line)
-        # Strip >> speaker indicators
         line = re.sub(r"^>>+\s*", "", line)
         if line:
             lines.append(line)
 
-    # Deduplicate consecutive identical lines (VTT repeats lines across cues)
     deduped = []
     for line in lines:
         if not deduped or line != deduped[-1]:
             deduped.append(line)
 
     text = " ".join(deduped)
-    # Remove [Music], [Applause] etc.
     text = re.sub(r"\[.*?\]", "", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
 
-def _yt_dlp_fetch_sub(video_id: str, lang: str, tmpdir: str,
-                       use_tor: bool) -> subprocess.CompletedProcess:
-    """Run yt-dlp to fetch subtitles, optionally through Tor."""
-    output_template = str(Path(tmpdir) / "%(id)s.%(ext)s")
-    cmd = [
-        sys.executable, "-m", "yt_dlp",
-        "--write-sub", "--write-auto-sub",
-        "--sub-lang", lang,
-        "--sub-format", "vtt",
-        "--skip-download",
-        "--no-warnings",
-        "-o", output_template,
-        f"https://www.youtube.com/watch?v={video_id}",
-    ]
-    if use_tor:
-        cookie_file = _ensure_cookie_file()
-        cmd[3:3] = ["--proxy", TOR_SOCKS_PROXY, "--cookies", str(cookie_file)]
-    else:
-        cmd[3:3] = ["--cookies-from-browser", "chrome"]
-
-    return subprocess.run(cmd, capture_output=True, text=True, timeout=90)
-
-
-def fetch_youtube_subtitle(video_url: str) -> dict | None:
-    """Fetch Ukrainian or English subtitles for a YouTube video via yt-dlp.
-
-    Strategy:
-    1. If Tor is running → route through Tor with exported cookies.
-       On 429, rotate circuit and retry (up to MAX_429_RETRIES times).
-    2. If Tor is not running → use --cookies-from-browser chrome directly.
-    """
-    video_id = _extract_video_id(video_url)
-    if not video_id:
+def _fetch_video_metadata(
+    video_url: str,
+    *,
+    limiter: YouTubeRequestLimiter,
+    use_tor: bool,
+) -> dict[str, Any] | None:
+    """Fetch YouTube metadata needed for the cached JSONL schema."""
+    try:
+        result = _run_yt_dlp(
+            ["--dump-single-json", "--no-download", "--no-warnings", video_url],
+            limiter=limiter,
+            label="video metadata",
+            timeout=60,
+            use_tor=use_tor,
+        )
+    except Exception as e:
+        print(f"    ❌ Metadata fetch failed: {e}")
         return None
 
+    if result.returncode != 0 or not result.stdout.strip():
+        stderr = result.stderr.strip()
+        if stderr:
+            print(f"    ❌ Metadata fetch failed: {stderr}")
+        return None
+
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError as e:
+        print(f"    ❌ Metadata parse failed: {e}")
+        return None
+
+
+def _download_subtitle_text(
+    video_id: str,
+    *,
+    limiter: YouTubeRequestLimiter,
+    use_tor: bool,
+) -> str:
+    """Download subtitles via yt-dlp and return normalized plain text."""
     import tempfile
 
-    use_tor = _tor_is_running()
-
     with tempfile.TemporaryDirectory() as tmpdir:
-        # Try Ukrainian first, then English
-        for lang in ["uk", "en"]:
+        output_template = str(Path(tmpdir) / "%(id)s.%(ext)s")
+        for lang in YOUTUBE_SUBTITLE_LANGS:
             for attempt in range(MAX_429_RETRIES + 1):
                 sub_file = Path(tmpdir) / f"{video_id}.{lang}.vtt"
-                # Clean up from previous attempt
                 if sub_file.exists():
                     sub_file.unlink()
 
                 try:
-                    result = _yt_dlp_fetch_sub(video_id, lang, tmpdir, use_tor)
+                    result = _run_yt_dlp(
+                        [
+                            "--write-sub",
+                            "--write-auto-sub",
+                            "--sub-lang",
+                            lang,
+                            "--sub-format",
+                            "vtt",
+                            "--skip-download",
+                            "--no-warnings",
+                            "-o",
+                            output_template,
+                            f"https://www.youtube.com/watch?v={video_id}",
+                        ],
+                        limiter=limiter,
+                        label=f"subtitle fetch ({lang})",
+                        timeout=90,
+                        use_tor=use_tor,
+                    )
                 except subprocess.TimeoutExpired:
                     print(f"    ⏱️  Timeout fetching subs ({lang})")
-                    break  # Don't retry timeouts
+                    break
                 except Exception as e:
                     print(f"    ❌ yt-dlp error ({lang}): {e}")
                     break
 
                 if sub_file.exists():
-                    vtt_text = sub_file.read_text(encoding="utf-8")
-                    text = _parse_vtt(vtt_text)
+                    text = _parse_vtt(sub_file.read_text(encoding="utf-8"))
+                    if len(text) >= 30:
+                        return text
+                    break
 
-                    if len(text) < 30:
-                        break  # Try next language
-
-                    title = _get_video_title(video_url)
-
-                    return {
-                        "video_id": video_id,
-                        "url": f"https://www.youtube.com/watch?v={video_id}",
-                        "title": title,
-                        "language": lang,
-                        "text": text[:15000],
-                        "char_count": len(text),
-                    }
-
-                # Check if 429 — rotate circuit and retry
-                is_429 = result.stderr and "429" in result.stderr
+                is_429 = "429" in (result.stderr or "")
                 if is_429 and use_tor and attempt < MAX_429_RETRIES:
-                    print(f"    🚫 429 on {lang} (attempt {attempt + 1}/"
-                          f"{MAX_429_RETRIES})")
+                    print(f"    🚫 429 on {lang} (attempt {attempt + 1}/{MAX_429_RETRIES})")
                     _tor_new_circuit()
                     continue
 
-                # Not a 429 or can't retry — try next language
                 if is_429 and not use_tor:
-                    print("    🚫 429 — start Tor for auto-rotation: "
-                          "tor &")
+                    print("    🚫 429 — start Tor for auto-rotation: tor &")
                 break
 
-    return None
+    return ""
 
 
-def _get_video_title(video_url: str) -> str:
-    """Get video title via yt-dlp metadata."""
-    try:
-        cmd = [sys.executable, "-m", "yt_dlp", "--print", "title",
-               "--no-download"]
-        if _tor_is_running():
-            cmd += ["--proxy", TOR_SOCKS_PROXY, "--cookies", str(COOKIE_FILE)]
-        else:
-            cmd += ["--cookies-from-browser", "chrome"]
-        cmd.append(video_url)
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-        return result.stdout.strip()
-    except Exception:
+def _format_publish_date(raw_date: Any) -> str:
+    """Normalize a yt-dlp upload date to ISO 8601 date form."""
+    value = str(raw_date or "").strip()
+    if not value:
         return ""
+    try:
+        return datetime.strptime(value, "%Y%m%d").date().isoformat()
+    except ValueError:
+        return value
 
 
-def fetch_youtube_subtitles(video_urls: list[str], output_file: Path) -> None:
-    """Fetch subtitles for YouTube videos and save as JSONL."""
-    existing_ids: set[str] = set()
-    if output_file.exists():
-        with open(output_file, encoding="utf-8") as f:
-            for line in f:
-                if line.strip():
-                    entry = json.loads(line)
-                    existing_ids.add(entry.get("video_id", ""))
+def build_youtube_record(
+    *,
+    channel: YouTubeChannel,
+    video_url: str,
+    metadata: dict[str, Any],
+    subtitles: str,
+) -> dict[str, Any]:
+    """Build a cached YouTube JSONL record, including compatibility fields."""
+    video_id = str(metadata.get("id") or _extract_video_id(video_url)).strip()
+    title = str(metadata.get("title", "")).strip()
+    description = str(metadata.get("description", "") or "").strip()
+    duration = metadata.get("duration") or 0
+    try:
+        duration_s = int(duration)
+    except (TypeError, ValueError):
+        duration_s = 0
+
+    record = {
+        "video_id": video_id,
+        "channel_id": channel.key,
+        "speaker": channel.speaker,
+        "publish_date": _format_publish_date(
+            metadata.get("upload_date") or metadata.get("release_date")
+        ),
+        "duration_s": duration_s,
+        "url": str(metadata.get("webpage_url") or video_url).strip(),
+        "title": title,
+        "description": description,
+        "subtitles": subtitles,
+        "text": subtitles,
+        "char_count": len(subtitles),
+    }
+    return record
+
+
+def fetch_youtube_video(
+    video_url: str,
+    *,
+    channel: YouTubeChannel,
+    limiter: YouTubeRequestLimiter,
+) -> dict[str, Any] | None:
+    """Fetch metadata + subtitles for a single YouTube video."""
+    video_id = _extract_video_id(video_url)
+    if not video_id:
+        return None
+
+    use_tor = _tor_is_running()
+    metadata = _fetch_video_metadata(video_url, limiter=limiter, use_tor=use_tor)
+    if not metadata:
+        return None
+
+    subtitles = _download_subtitle_text(video_id, limiter=limiter, use_tor=use_tor)
+    if not subtitles:
+        return None
+
+    return build_youtube_record(
+        channel=channel,
+        video_url=video_url,
+        metadata=metadata,
+        subtitles=subtitles,
+    )
+
+
+def fetch_youtube_subtitles(
+    video_urls: list[str],
+    *,
+    channel: YouTubeChannel,
+    output_file: Path,
+    limiter: YouTubeRequestLimiter,
+    fetcher: Callable[..., dict[str, Any] | None] = fetch_youtube_video,
+) -> None:
+    """Fetch subtitles for YouTube videos and save as JSONL with resume support."""
+    existing_ids = load_existing_video_ids(output_file)
 
     new_count = 0
     skip_count = 0
     fail_count = 0
+    processed_videos = 0
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
     with open(output_file, "a", encoding="utf-8") as f:
-        for i, url in enumerate(video_urls):
-            vid = _extract_video_id(url)
-
-            if vid in existing_ids:
+        for index, url in enumerate(video_urls, start=1):
+            video_id = _extract_video_id(url)
+            if video_id in existing_ids:
                 skip_count += 1
                 continue
 
-            fetched_this_batch = (i - skip_count) % YOUTUBE_BATCH_SIZE
-            if fetched_this_batch == 0 and i > 0 and i > skip_count:
-                print(f"  ⏳ Batch pause ({YOUTUBE_BATCH_PAUSE}s to avoid rate limiting)...")
-                time.sleep(YOUTUBE_BATCH_PAUSE)
+            print(f"  [{index}/{len(video_urls)}] {url}")
+            record = fetcher(url, channel=channel, limiter=limiter)
+            processed_videos += 1
 
-            print(f"  [{i+1}/{len(video_urls)}] {url}")
-            sub = fetch_youtube_subtitle(url)
-            if sub:
-                f.write(json.dumps(sub, ensure_ascii=False) + "\n")
+            if record:
+                f.write(json.dumps(record, ensure_ascii=False) + "\n")
                 f.flush()
+                existing_ids.add(record["video_id"])
                 new_count += 1
-                print(f"    ✅ {sub['title'][:60]} ({sub['char_count']} chars, {sub['language']})")
+                print(f"    ✅ {record['title'][:60]} ({record['char_count']} chars)")
             else:
                 fail_count += 1
                 print("    ⚠️  No subtitles found")
 
-            time.sleep(YOUTUBE_DELAY)
+            limiter.after_video(processed_videos)
 
     print(f"\n  ✅ Fetched: {new_count} | ⏭️  Skipped: {skip_count} | ❌ No subs: {fail_count}")
     print(f"  📄 {output_file}")
@@ -470,90 +759,154 @@ def fetch_youtube_subtitles(video_urls: list[str], output_file: Path) -> None:
 # ── Status ────────────────────────────────────────────────────
 
 
-def show_status() -> None:
-    """Show what's cached."""
-    print("\n📊 External Sources Cache Status")
-    print(f"{'─' * 50}")
+def jsonl_inventory(path: Path) -> tuple[bool, int, int]:
+    """Return presence, size, and record count for a JSONL cache file."""
+    if not path.exists():
+        return False, 0, 0
 
-    for name in ["ulp_blogs.jsonl", "other_blogs.jsonl", "ulp_youtube.jsonl"]:
-        path = CACHE_DIR / name
-        if path.exists():
-            with open(path) as fh:
-                count = sum(1 for line in fh if line.strip())
-            size = path.stat().st_size
-            print(f"  {name}: {count} entries ({size:,} bytes)")
+    with open(path, encoding="utf-8") as fh:
+        count = sum(1 for line in fh if line.strip())
+    return True, path.stat().st_size, count
+
+
+def render_status(cache_dir: Path = CACHE_DIR) -> str:
+    """Render a human-readable inventory of cached external sources."""
+    lines = ["", "📊 External Sources Cache Status", "─" * 70]
+
+    lines.append("Blog inventories:")
+    for name in YOUTUBE_STATUS_FILENAMES:
+        present, size, count = jsonl_inventory(cache_dir / name)
+        if present:
+            lines.append(f"  {name}: present=yes | size={size:,} bytes | records={count}")
         else:
-            print(f"  {name}: not yet fetched")
+            lines.append(f"  {name}: present=no | size=0 bytes | records=0")
 
-    # Compare to what's in external_resources.yaml
+    lines.append("")
+    lines.append("Registered YouTube channels:")
+    for channel in YOUTUBE_CHANNELS.values():
+        present, size, count = jsonl_inventory(cache_dir / channel.output_filename)
+        present_flag = "yes" if present else "no"
+        lines.append(
+            "  "
+            f"{channel.key}: file={channel.output_filename} | present={present_flag} "
+            f"| size={size:,} bytes | records={count}"
+        )
+
     urls = load_external_urls()
-    print("\n  URLs in external_resources.yaml:")
-    print(f"    ULP blogs: {len(urls['ulp_blogs'])}")
-    print(f"    Other blogs: {len(urls['other_blogs'])}")
-    print(f"    YouTube (from resources): {len(urls['youtube'])}")
+    lines.append("")
+    lines.append("URLs in external_resources.yaml:")
+    lines.append(f"  ULP blogs: {len(urls['ulp_blogs'])}")
+    lines.append(f"  Other blogs: {len(urls['other_blogs'])}")
+    lines.append(f"  YouTube (from resources): {len(urls['youtube'])}")
+    return "\n".join(lines)
+
+
+def show_status() -> None:
+    """Print the cache inventory report."""
+    print(render_status())
 
 
 # ── CLI ───────────────────────────────────────────────────────
 
 
-# ── YouTube channels to ingest ────────────────────────────────
-# Each entry: (flag_name, channel_url, output_filename, description)
-# Track mapping (for wiki enrichment):
-#   ulp          → A1-C2 core tracks (pedagogy, grammar, vocabulary)
-#   realna-istoria → HIST, BIO, ISTORIO
-#   imtgsh         → HIST, BIO, ISTORIO
-#   komik-istoryk  → HIST, BIO, ISTORIO
-#   istoria-movy   → OES, RUTH (history of Ukrainian language)
-YOUTUBE_CHANNELS = [
-    ("ulp", "https://www.youtube.com/@UkrainianLessons/videos",
-     "ulp_youtube.jsonl", "Ukrainian Lessons (Anna Ohoiko) — A1-B2 pedagogy, FMU, podcasts"),
-    ("realna-istoria", "https://www.youtube.com/channel/UCdlVTngmxbh0oNE1pCwS64g/videos",
-     "realna_istoria.jsonl", "Реальна Історія — HIST, BIO, ISTORIO"),
-    ("imtgsh", "https://www.youtube.com/@imtgsh/videos",
-     "imtgsh.jsonl", "imtgsh — HIST, BIO, ISTORIO"),
-    ("istoria-movy", "https://www.youtube.com/@Istoria-Movy/videos",
-     "istoria_movy.jsonl", "Istoria-Movy — OES, RUTH (history of Ukrainian language)"),
-    ("komik-istoryk", "https://www.youtube.com/@komikistoryk/videos",
-     "komik_istoryk.jsonl", "Комік Історик — HIST, BIO, ISTORIO"),
-]
-
-
-def _fetch_channel(name: str, channel_url: str, output_file: Path,
-                   description: str) -> None:
+def _fetch_channel(channel: YouTubeChannel) -> None:
     """Scrape a single YouTube channel and fetch subtitles."""
-    print(f"\n📺 {description}")
-    video_urls = get_channel_video_urls(channel_url)
-    if video_urls:
-        print(f"  📺 {len(video_urls)} videos found")
-        fetch_youtube_subtitles(video_urls, output_file)
-    else:
-        print(f"  ❌ Channel scrape failed for {name}")
+    print(f"\n📺 {channel.description}")
+    limiter = YouTubeRequestLimiter()
+    video_urls = get_channel_video_urls(channel.playlist_url, limiter=limiter)
+    if not video_urls:
+        print(f"  ❌ Channel scrape failed for {channel.key}")
+        return
+
+    fetch_youtube_subtitles(
+        video_urls,
+        channel=channel,
+        output_file=channel.output_path,
+        limiter=limiter,
+    )
+
+
+def _selected_channels(args: argparse.Namespace) -> list[YouTubeChannel]:
+    """Resolve all YouTube channel requests from parsed CLI args."""
+    selected: list[YouTubeChannel] = []
+    seen_keys: set[str] = set()
+
+    if args.channel_name:
+        channel = resolve_named_channel(args.channel_name)
+        selected.append(channel)
+        seen_keys.add(channel.key)
+
+    if args.channel:
+        channel = make_ad_hoc_channel(args.channel, args.out)
+        if channel.key not in seen_keys:
+            selected.append(channel)
+            seen_keys.add(channel.key)
+
+    for key in YOUTUBE_CHANNELS:
+        attr = f"yt_{key.replace('-', '_')}"
+        if getattr(args, attr):
+            channel = YOUTUBE_CHANNELS[key]
+            if channel.key not in seen_keys:
+                selected.append(channel)
+                seen_keys.add(channel.key)
+
+    for legacy_flag, key in LEGACY_CHANNEL_FLAGS.items():
+        attr = f"yt_{legacy_flag.replace('-', '_')}"
+        if getattr(args, attr):
+            channel = YOUTUBE_CHANNELS[key]
+            if channel.key not in seen_keys:
+                selected.append(channel)
+                seen_keys.add(channel.key)
+
+    if args.all_youtube or args.all:
+        for channel in YOUTUBE_CHANNELS.values():
+            if channel.key not in seen_keys:
+                selected.append(channel)
+                seen_keys.add(channel.key)
+
+    return selected
 
 
 def main() -> None:
+    channel_names = "\n".join(
+        f"  {channel.key:<20s} {channel.output_filename:<24s} {channel.description}"
+        for channel in YOUTUBE_CHANNELS.values()
+    )
     parser = argparse.ArgumentParser(
         description="Fetch external sources for wiki enrichment",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=(
-            "YouTube channels:\n"
-            + "\n".join(f"  --yt-{c[0]:<20s} {c[3]}" for c in YOUTUBE_CHANNELS)
-        ),
+        epilog="Registered YouTube channels:\n" + channel_names,
     )
     parser.add_argument("--ulp-blogs", action="store_true", help="Fetch ULP blog articles")
     parser.add_argument("--other-blogs", action="store_true", help="Fetch non-ULP articles")
     parser.add_argument("--all-blogs", action="store_true", help="Fetch all blog articles")
 
-    # Add a flag per YouTube channel
-    for name, _url, _file, desc in YOUTUBE_CHANNELS:
-        parser.add_argument(f"--yt-{name}", action="store_true", help=desc)
-    parser.add_argument("--all-youtube", action="store_true", help="Fetch ALL YouTube channels")
+    parser.add_argument("--channel-name", help="Fetch a registered YouTube channel by registry key")
+    parser.add_argument("--channel", help="Fetch an arbitrary YouTube channel URL")
+    parser.add_argument("--out", help="Output filename for --channel (defaults to URL-derived name)")
+    parser.add_argument("--all-youtube", action="store_true", help="Fetch all registered YouTube channels")
 
-    parser.add_argument("--all", action="store_true", help="Fetch everything (blogs + all YouTube) + rebuild DB")
+    for key, channel in YOUTUBE_CHANNELS.items():
+        parser.add_argument(f"--yt-{key}", action="store_true", help=f"Fetch {channel.description}")
+    for legacy_flag, key in LEGACY_CHANNEL_FLAGS.items():
+        parser.add_argument(
+            f"--yt-{legacy_flag}",
+            action="store_true",
+            help=f"Legacy alias for --channel-name {key}",
+        )
+
+    parser.add_argument("--all", action="store_true", help="Fetch everything + rebuild DB")
     parser.add_argument("--build-db", action="store_true", help="Rebuild SQLite FTS5 sources database")
     parser.add_argument("--status", action="store_true", help="Show cache status")
-    parser.add_argument("--backup", action="store_true",
-                        help="Copy data/external_articles/ to Google Drive, delete local")
+    parser.add_argument(
+        "--backup",
+        action="store_true",
+        help="Copy data/external_articles/ to Google Drive, delete local",
+    )
     args = parser.parse_args()
+
+    if args.out and not args.channel:
+        parser.error("--out requires --channel")
 
     if args.status:
         show_status()
@@ -563,23 +916,33 @@ def main() -> None:
         _backup_to_gdrive()
         return
 
-    # Build DB only (no fetch)
     if args.build_db:
         from wiki.build_sources_db import build
+
         build()
         return
 
-    # Check if any fetch flag is set
-    fetch_flags = [args.ulp_blogs, args.other_blogs, args.all_blogs,
-                   args.all_youtube, args.all]
-    fetch_flags += [getattr(args, f"yt_{name.replace('-', '_')}") for name, *_ in YOUTUBE_CHANNELS]
-    if not any(fetch_flags):
+    try:
+        channels = _selected_channels(args)
+    except ValueError as e:
+        parser.error(str(e))
+
+    fetch_requested = any(
+        [
+            args.ulp_blogs,
+            args.other_blogs,
+            args.all_blogs,
+            args.all_youtube,
+            args.all,
+            bool(channels),
+        ]
+    )
+    if not fetch_requested:
         parser.error("Specify what to fetch (use --help to see options)")
 
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     urls = load_external_urls()
 
-    # Blogs
     if args.ulp_blogs or args.all_blogs or args.all:
         print(f"\n🌐 Fetching {len(urls['ulp_blogs'])} ULP blog articles...")
         fetch_blogs(urls["ulp_blogs"], CACHE_DIR / "ulp_blogs.jsonl")
@@ -588,18 +951,15 @@ def main() -> None:
         print(f"\n🌐 Fetching {len(urls['other_blogs'])} other blog articles...")
         fetch_blogs(urls["other_blogs"], CACHE_DIR / "other_blogs.jsonl")
 
-    # YouTube channels
-    for name, channel_url, output_file, description in YOUTUBE_CHANNELS:
-        flag = getattr(args, f"yt_{name.replace('-', '_')}")
-        if flag or args.all_youtube or args.all:
-            _fetch_channel(name, channel_url, CACHE_DIR / output_file, description)
+    for channel in channels:
+        _fetch_channel(channel)
 
     show_status()
 
-    # Auto-rebuild DB after --all fetch
     if args.all:
         print("\n🔨 Rebuilding sources database...")
         from wiki.build_sources_db import build
+
         build()
 
 
@@ -624,16 +984,16 @@ def _backup_to_gdrive() -> None:
     print(f"\n📦 Backing up {len(files)} files to Google Drive...")
     gdrive_target.mkdir(parents=True, exist_ok=True)
 
-    for f in files:
-        dest = gdrive_target / f.name
-        shutil.copy2(f, dest)
-        size = f.stat().st_size
-        print(f"  ✅ {f.name} ({size:,} bytes) → Google Drive")
+    for file_path in files:
+        dest = gdrive_target / file_path.name
+        shutil.copy2(file_path, dest)
+        size = file_path.stat().st_size
+        print(f"  ✅ {file_path.name} ({size:,} bytes) → Google Drive")
 
     print("\n🗑️  Deleting local copies...")
-    for f in files:
-        f.unlink()
-        print(f"  🗑️  {f.name}")
+    for file_path in files:
+        file_path.unlink()
+        print(f"  🗑️  {file_path.name}")
 
     print("\n✅ Backup complete. Files on Google Drive at:")
     print(f"   {gdrive_target}")

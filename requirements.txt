@@ -36,5 +36,8 @@ aiosqlite>=0.22
 beautifulsoup4>=4.14
 requests>=2.32
 
+# YouTube ingestion
+yt-dlp>=2026.3.17
+
 # Build utilities
 jinja2>=3.1
