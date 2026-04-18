@@ -139,6 +139,10 @@ All work happens on `main` — no feature branches. Use `git worktree` for
 isolation when needed. Read `CLAUDE.md` + `docs/best-practices/` before
 touching pipeline code.
 
+Ops runbooks live under `docs/ops/`, including
+[Google Drive DB backup setup](docs/ops/gdrive-backup.md) for the large local
+SQLite databases that are not tracked in git.
+
 ## Contributing
 
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
