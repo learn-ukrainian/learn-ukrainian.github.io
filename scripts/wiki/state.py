@@ -158,10 +158,54 @@ def mark_compiled(article_key: str, *, source_count: int = 0,
 
 
 def is_compiled(article_key: str) -> bool:
-    """Check if an article has already been compiled."""
+    """Check if an article has already been compiled AND the file still exists.
+
+    The progress DB and the on-disk article are loosely coupled — a bulk
+    delete operation (e.g. the wiki clean-slate from commit 86e84b203,
+    2026-04-17) wiped 558 ``.md`` files but didn't reset the corresponding
+    ``compiled`` rows. The next compile run then short-circuited with
+    ``Already compiled`` and the downstream review aborted with
+    ``Article missing or too short to review`` (Phase A canary,
+    2026-04-18).
+
+    Truthful contract: "is this article both recorded as compiled AND
+    actually present on disk?" If the file is missing the entry is stale —
+    purge it so the next call goes through the real compile path. The
+    extra ``Path.exists()`` is cheap (one stat) and self-heals state drift
+    without requiring a separate cleanup command.
+    """
     progress = load_progress()
     entry = progress["articles"].get(article_key)
-    return entry is not None and entry.get("status") == "compiled"
+    if entry is None or entry.get("status") != "compiled":
+        return False
+
+    article_path = WIKI_DIR / f"{article_key}.md"
+    if not article_path.exists():
+        # Self-heal: drop the stale row so future status summaries don't
+        # over-count, and the compile path stops short-circuiting.
+        _purge_stale_entry(article_key)
+        return False
+
+    return True
+
+
+def _purge_stale_entry(article_key: str) -> None:
+    """Remove a single stale ``compiled`` row from progress.db.
+
+    Used by ``is_compiled`` when it detects a recorded-but-missing article.
+    Best-effort; swallows errors so a write failure doesn't block the
+    callsite (the next call will retry).
+    """
+    import sqlite3
+    try:
+        _ensure_progress_db()
+        db = _get_progress_db()
+        conn = sqlite3.connect(str(db))
+        conn.execute("DELETE FROM compiled WHERE article_key = ?", (article_key,))
+        conn.commit()
+        conn.close()
+    except Exception:
+        pass
 
 
 def get_status_summary() -> dict:

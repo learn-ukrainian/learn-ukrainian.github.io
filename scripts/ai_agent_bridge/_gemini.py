@@ -55,7 +55,7 @@ from ._prompts import build_gemini_prompt
 
 
 def converse_gemini(content: str, task_id: str, model: str = "gemini-3.1-pro-preview",
-                    skip_github: bool = False):
+                    skip_github: bool = False, auth_mode: str | None = None):
     """Multi-turn conversation with Gemini. Includes conversation history in prompt.
 
     Each call adds to the conversation thread (via task_id) and Gemini sees
@@ -75,7 +75,7 @@ def converse_gemini(content: str, task_id: str, model: str = "gemini-3.1-pro-pre
 
     return ask_gemini(
         full_content, task_id=task_id, msg_type="query",
-        model=model, skip_github=skip_github,
+        model=model, skip_github=skip_github, auth_mode=auth_mode,
     )
 
 
@@ -85,7 +85,7 @@ def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query"
                stdout_only: bool = False, output_path: str | None = None,
                extract_tags: list | None = None, skip_model_check: bool = False,
                allow_write: bool = False, delimiters: str | None = None,
-               skip_github: bool = False):
+               skip_github: bool = False, auth_mode: str | None = None):
     """Send message to Gemini AND optionally invoke Gemini to process it."""
     # Model cache management
     if skip_model_check and model in _MODEL_CACHE:
@@ -122,7 +122,8 @@ def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query"
             print(f"\n🚀 Invoking Gemini to process message #{msg_id}...")
         response = process_and_respond(msg_id, model, stdout_only=stdout_only,
                                        output_path=output_path, allow_write=allow_write,
-                                       delimiters=delimiters, skip_github=skip_github)
+                                       delimiters=delimiters, skip_github=skip_github,
+                                       auth_mode=auth_mode)
 
         # Post-process: extract delimited content
         if extract_tags is not None and response:
@@ -183,7 +184,7 @@ def process_and_respond(message_id: int, model: str = GEMINI_DEFAULT_MODEL,
                         fire_and_forget: bool = False, no_timeout: bool = False,
                         stdout_only: bool = False, output_path: str | None = None,
                         allow_write: bool = False, delimiters: str | None = None,
-                        skip_github: bool = False):
+                        skip_github: bool = False, auth_mode: str | None = None):
     """Read message, process with Gemini CLI, send response.
 
     Runs in sync mode by default (15 min timeout). On any failure, sends an
@@ -196,13 +197,15 @@ def process_and_respond(message_id: int, model: str = GEMINI_DEFAULT_MODEL,
     prompt = build_gemini_prompt(msg, stdout_only, output_path, allow_write, delimiters)
 
     if fire_and_forget:
-        _launch_gemini_background(msg, message_id, model, prompt)
+        _launch_gemini_background(msg, message_id, model, prompt, auth_mode=auth_mode)
     else:
         return _run_gemini_sync(msg, message_id, model, prompt, no_timeout, stdout_only,
-                                output_path, allow_write, skip_github)
+                                output_path, allow_write, skip_github, auth_mode)
 
 
-def _launch_gemini_background(msg: dict, message_id: int, model: str, prompt: str):
+def _launch_gemini_background(
+    msg: dict, message_id: int, model: str, prompt: str, *, auth_mode: str | None,
+):
     """Launch the bridge itself as a background process (fire-and-forget mode)."""
     task_key = msg['task_id'] or str(message_id)
 
@@ -227,6 +230,8 @@ def _launch_gemini_background(msg: dict, message_id: int, model: str, prompt: st
             "--model", model,
             "--no-timeout"
         ]
+        if auth_mode:
+            bridge_cmd.extend(["--auth", auth_mode])
         lf = open(log_file, "w")  # noqa: SIM115 — fd passed to Popen, closed after
         proc = subprocess.Popen(
             bridge_cmd,
@@ -252,7 +257,7 @@ def _launch_gemini_background(msg: dict, message_id: int, model: str, prompt: st
 
 def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
                      no_timeout: bool, stdout_only: bool, output_path: str | None,
-                     allow_write: bool, skip_github: bool):
+                     allow_write: bool, skip_github: bool, auth_mode: str | None):
     """Run Gemini synchronously with streaming output and retry logic."""
     task_key = msg.get('task_id') or str(message_id)
     timeout_val = None if no_timeout else 1800
@@ -288,7 +293,8 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
         for attempt in range(max_retries):
             result = _run_gemini_attempt(msg, message_id, current_model, requested_model, prompt,
                                          timeout_val, stdout_only, output_path, skip_github,
-                                         attempt, max_retries, base_delay, rate_limit_state)
+                                         attempt, max_retries, base_delay, rate_limit_state,
+                                         auth_mode)
             if isinstance(result, dict) and result.get("action") == "fallback":
                 current_model = str(result["model"])
                 continue
@@ -310,7 +316,7 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
 
 def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout_val,
                         stdout_only, output_path, skip_github, attempt, max_retries,
-                        base_delay, rate_limit_state):
+                        base_delay, rate_limit_state, auth_mode):
     """Run a single Gemini CLI attempt via agent_runtime.
 
     Returns None to retry, False to stop, or (response, sent).
@@ -320,9 +326,16 @@ def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout
     classification. The retry loop stays here because it's higher-level
     policy (multiple attempts with backoff).
     """
-    prompt_preview = prompt[:200].replace('\n', ' ')
-    print(f"  [gemini] attempt {attempt+1}/{max_retries}, model={model}, "
-          f"prompt={len(prompt)} chars: {prompt_preview}...", flush=True)
+    if not stdout_only:
+        # In stdout_only mode the caller is parsing our stdout as Gemini's
+        # response (e.g., scripts/wiki/compile.py captures it for the
+        # review parser). Leaking this `[gemini] attempt N/M, prompt=...`
+        # preamble silently corrupts the parser — every score regex misses
+        # and dims default to 0.0. The wiki review pipeline regressed this
+        # way until the 2026-04-18 Phase A canary surfaced it.
+        prompt_preview = prompt[:200].replace('\n', ' ')
+        print(f"  [gemini] attempt {attempt+1}/{max_retries}, model={model}, "
+              f"prompt={len(prompt)} chars: {prompt_preview}...", flush=True)
 
     pre_snapshot = None
     if output_path:
@@ -331,6 +344,7 @@ def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout
     # Gemini bridge is always write-enabled (--approval-mode=yolo) — preserving
     # legacy behavior. Tool config is None because the bridge doesn't restrict
     # MCP tools the way dispatch.py does.
+    tool_config = {"auth_mode": auth_mode} if auth_mode else None
     try:
         result = runtime_invoke(
             "gemini",
@@ -342,7 +356,7 @@ def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout
             session_id=None,  # Gemini CLI has no --resume; bridge multi-turn
                               # is handled via conversation context injection
                               # in the prompt builder, not CLI-level resume.
-            tool_config=None,
+            tool_config=tool_config,
             entrypoint="bridge",
             hard_timeout=max(timeout_val or 1800, 300),
             # 600s matches dispatch.py. Gemini block-buffers stdout when
@@ -540,6 +554,18 @@ def _route_gemini_response(msg, message_id, model, response, stdout_only, output
         if not stdout_only:
             print("   (no broker message — file output mode)")
     elif stdout_only:
+        # `--stdout-only` semantics: the response goes to subprocess stdout
+        # (so the calling script can parse it directly) AND a thin summary
+        # is sent to the broker so the message thread stays consistent.
+        # Without the explicit print here, Gemini's actual response never
+        # leaves the bridge process — the caller captures empty stdout and
+        # any text-parsing fails silently. Discovered via the wiki review
+        # pipeline returning all 0.0 dim scores (Phase A canary 2026-04-18).
+        sys.stdout.write(response)
+        if not response.endswith("\n"):
+            sys.stdout.write("\n")
+        sys.stdout.flush()
+
         # Route reply back to the actual sender, not always to claude
         reply_to = msg.get("from", "claude")
         summary = f"[stdout-only] Gemini finished. {len(response)} chars output to stdout."

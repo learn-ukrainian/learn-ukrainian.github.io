@@ -439,7 +439,10 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_gemini_parser.add_argument("--async", dest="async_mode", action="store_true",
                                    help="Queue only, don't invoke Gemini CLI")
     ask_gemini_parser.add_argument("--stdout-only", dest="stdout_only", action="store_true",
-                                   help="Don't route full response through broker.")
+                                   help="Print Gemini's response body to stdout for the "
+                                        "caller to parse; a thin summary still goes to the "
+                                        "broker so the thread stays consistent. Suppresses "
+                                        "all bridge progress logging on stdout.")
     ask_gemini_parser.add_argument("--output-path", dest="output_path",
                                    help="Gemini writes output to this file.")
     ask_gemini_parser.add_argument("--extract", nargs="*", metavar="TAG",

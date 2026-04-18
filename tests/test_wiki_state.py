@@ -168,6 +168,11 @@ class TestStateEdgeCases:
             progress = load_progress()
             progress["articles"]["test/x"] = {"status": "failed", "word_count": 0}
             save_progress(progress)
+            # Even with the .md present, status="failed" must short-circuit
+            # to False — the file-existence check is an AND, not an OR.
+            article = tmp_path / "test" / "x.md"
+            article.parent.mkdir(parents=True, exist_ok=True)
+            article.write_text("# X\n", encoding="utf-8")
 
             assert not is_compiled("test/x")
 

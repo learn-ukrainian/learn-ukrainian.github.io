@@ -500,11 +500,36 @@ class TestState:
              patch("wiki.state.WIKI_DIR", tmp_path):
             assert not is_compiled("folk/genres/dumy")
             mark_compiled("folk/genres/dumy", source_count=5, word_count=1500, model="test")
+            # is_compiled now requires the .md to actually be on disk —
+            # writing the stub matches what a real compile would produce.
+            article_path = tmp_path / "folk" / "genres" / "dumy.md"
+            article_path.parent.mkdir(parents=True, exist_ok=True)
+            article_path.write_text("# Dumy\n\nStub.\n", encoding="utf-8")
             assert is_compiled("folk/genres/dumy")
 
             progress = load_progress()
             assert progress["articles"]["folk/genres/dumy"]["word_count"] == 1500
             assert progress["articles"]["folk/genres/dumy"]["status"] == "compiled"
+
+    def test_is_compiled_self_heals_on_missing_md(self, tmp_path):
+        """Regression for Phase A canary 2026-04-18.
+
+        Bulk-delete operations like the wiki clean-slate (commit
+        86e84b203) wiped 558 .md files but left progress.db's `compiled`
+        rows behind. is_compiled then returned True for missing files,
+        the compile path short-circuited as `Already compiled`, and the
+        downstream review aborted. is_compiled must now report False AND
+        purge the stale row when the .md is missing.
+        """
+        from wiki.state import is_compiled, load_progress, mark_compiled
+        with patch("wiki.state.WIKI_STATE_DIR", tmp_path / ".state"), \
+             patch("wiki.state.WIKI_DIR", tmp_path):
+            mark_compiled("folk/genres/missing-md", source_count=1, word_count=100)
+            # Notably: NO .md file written here.
+            assert is_compiled("folk/genres/missing-md") is False
+            # Self-heal: stale row should be gone after the lookup.
+            progress = load_progress()
+            assert "folk/genres/missing-md" not in progress["articles"]
 
     def test_status_summary(self, tmp_path):
         from wiki.state import get_status_summary, mark_compiled
