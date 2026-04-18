@@ -1,6 +1,6 @@
 # RAG Gap — Issue #1026 Status
 
-Last updated: 2026-04-11 (Wave 12 added)
+Last updated: 2026-04-18 (Wave 13 added)
 
 ## Verified state on disk
 
@@ -14,7 +14,7 @@ Last updated: 2026-04-11 (Wave 12 added)
 | Ostromir Gospel | ❌ | ❌ | ❌ Not on site |
 | Peresopnytske Gospel | ❌ | ❌ | ❌ Not on site |
 | Perestoroha (1605) | ❌ | ❌ | ❌ Not as standalone page |
-| Doroshenko «Нарис історії» | ❌ | ❌ | ❌ Not on site |
+| Doroshenko «Нарис історії» | ✅ Wave 13 | ✅ `wave13-doroshenko-narys-istoriyi-ukrayiny-t{1,2}.jsonl` | ❌ Not on site |
 | Polonska-Vasilenko «Історія України» | ❌ | ❌ | ❌ Not on site |
 
 Verification done by:
