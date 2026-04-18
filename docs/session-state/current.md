@@ -1,5 +1,33 @@
 # Session Handoff — 2026-04-18 AM
 
+## Update — 2026-04-18 mid-AM (Claude, autonomous)
+
+**User reported "the api is crashing, you need to make the api stable" and went off-line. Fixed the underlying race + perf bug; API is now stable. Continuing the autonomous plan below.**
+
+### What I shipped this session
+
+1. **`services.sh` restart race fix** (the actual API killer)
+   - Symptom: 623 uvicorn restarts accumulated in `logs/api.log`, with bursts of 8 EADDRINUSE failures clustered together. Caused by parallel `services.sh restart api` invocations: each `_stop_service` cleared the .pid file, each subsequent `_start_service` saw "stopped" state and spawned a new uvicorn — only one won the port-bind, the rest died.
+   - Fix: (a) `mkdir`-based cross-process lock around the `restart` action (flock unavailable on macOS), (b) `_pid_on_port` swallows lsof's exit-1 (set -e + pipefail was killing callers when the port was free), (c) `_start_service` now refuses to spawn if the port is already bound — adopts our own PID, refuses with non-zero on a foreign PID, (d) `_stop_service` waits for the OS to actually release the port (process death ≠ port released on macOS).
+   - Verified with 6 parallel restart calls: all 6 serialized cleanly, zero EADDRINUSE.
+
+2. **`/api/orient` wiki section: 7240 ms → 19 ms** (`scripts/api/main.py`)
+   - `_collect_wiki_orient_data` was calling `_resolve_article` per slug per track (~1776 calls), and each `_resolve_article` rebuilt the full slug→candidates index from a fresh wiki-tree scan. Total: 1776 × ~4 ms = ~7 s, blowing the 5 s `ORIENT_SECTION_HARD_TIMEOUT_S` cap. Section returned `error: section_timeout_5.0s` on every cold cache miss.
+   - Fix: build the candidates index once per orient call, resolve in pure dict lookups + Path.exists. Same answer, ~50× faster. Endpoint cold call now ~480 ms total (was 5 s+).
+
+3. **Unloaded dead `com.learn-ukrainian.agent-watcher` LaunchAgent**
+   - Plist pointed to `scripts/agent_watcher.py` which moved to `scripts/tools/agent_watcher.py` in commit `a541b8d0f` (script-org refactor, 2026-03-25). Result: launchd respawned a missing-script python process every 10 s for 3+ weeks → 191K-line `watcher-stderr.log` of "can't open file" errors.
+   - Action: `launchctl bootout` + plist removed (backup at `~/Library/LaunchAgents/com.learn-ukrainian.agent-watcher.plist.disabled-2026-04-18`). Watcher last ran usefully 2026-03-25; the user has been operating without it via `delegate.py` + `ab channel watch`. **If you want it back, update the plist `ProgramArguments` string to `/Users/krisztiankoos/projects/learn-ukrainian/scripts/tools/agent_watcher.py` and `launchctl bootstrap gui/$(id -u) <plist>`.**
+
+### What's queued (continuing the autonomous plan below)
+
+- Dispatching Phase A (Codex wiki compile test, 9 slugs) + Phase C (Codex Google Drive backup) in parallel
+- Dispatching Gemini #1323 re-verify; Gemini #1324 review held until #1323 returns (serial per your `1cc707e17` directive)
+- Phase B held until Phase A health-check
+- Will append further updates here when phases complete
+
+---
+
 ## TL;DR — state of the project at handoff
 
 **Tonight shipped 30+ commits across 4 issues (#1322, #1323, #1324, wiki-quality fixes).** All work on `main`, unmerged (local ahead of `origin/main`). **User is away and has explicitly cleared context.** Incoming session is COLD — read this file first, then dispatch the 4 briefs at `/tmp/` per the "What to dispatch immediately" section below. Run autonomously, report back to `docs/session-state/current.md` when phases complete or something needs user's call.

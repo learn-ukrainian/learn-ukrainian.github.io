@@ -314,19 +314,45 @@ def _collect_delegate_orient_data() -> dict:
 
 
 def _collect_wiki_orient_data() -> dict:
+    """Per-track compiled article counts.
+
+    The previous implementation called ``_resolve_article`` inside the per-slug
+    loop (~22 tracks × ~80 slugs = ~1776 calls). Each ``_resolve_article``
+    rebuilds the full slug→candidates index from a wiki-tree scan, so the
+    1776 calls × ~4 ms = ~7 s consistently exceeded the 5 s
+    ``ORIENT_SECTION_HARD_TIMEOUT_S`` cap and the section returned
+    ``error: section_timeout_5.0s`` on every cold cache miss.
+
+    Fix: build the candidates index once (~6 ms) and resolve in pure dict
+    lookups + Path.exists() checks. Same answer, ~50× faster.
+    """
     wiki_api.wiki_state.get_status_summary()
-    by_track = {}
+
+    candidates = wiki_api._list_article_candidates()  # one full-tree scan
+    wiki_dir = wiki_api.wiki_config.WIKI_DIR
+
+    by_track: dict[str, dict[str, Any]] = {}
     for track in wiki_api._known_tracks():
         slugs = wiki_api._track_slugs(track)
         if not slugs:
             continue
         compiled = 0
         for slug in slugs:
-            article = wiki_api._resolve_article(track, slug)
-            if not article:
+            slug_cands = candidates.get(slug)
+            if not slug_cands:
                 continue
-            article_path = wiki_api.wiki_config.WIKI_DIR / article["path"]
-            if article_path.exists():
+            # Mirror _resolve_article: prefer domain-matching candidates,
+            # fall back to any candidate. Take the lexicographically-first
+            # path within the chosen group, then check it actually exists.
+            domain_matches = [
+                c for c in slug_cands
+                if wiki_api._matches_track_domain(track, c["path"])
+            ]
+            chosen = sorted(
+                domain_matches or slug_cands,
+                key=lambda item: item["path"],
+            )[0]
+            if (wiki_dir / chosen["path"]).exists():
                 compiled += 1
         total = len(slugs)
         by_track[track] = {

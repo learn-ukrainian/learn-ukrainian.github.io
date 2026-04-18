@@ -76,11 +76,56 @@ _rewrite_legacy_alias() {
 
 _pid_file() { echo "$PIDS_DIR/$1.pid"; }
 
+# ---------------------------------------------------------------------------
+# Restart serialization (cross-process)
+# ---------------------------------------------------------------------------
+# `flock` is not in macOS base; use atomic mkdir instead.
+# Without this, parallel `services.sh restart api` invocations race: each
+# stop_service clears the .pid file, each start_service then sees state
+# "stopped", every shell spawns its own uvicorn, and only one wins the
+# port-bind — the rest die with EADDRINUSE. The 2026-04-18 incident
+# accumulated 623 wasted process spawns this way.
+_acquire_restart_lock() {
+    local lockdir="$PIDS_DIR/.restart.lock.d"
+    local waited=0
+    local max_wait=30
+    while ! mkdir "$lockdir" 2>/dev/null; do
+        # Reclaim if holder PID died without releasing.
+        if [[ -f "$lockdir/pid" ]]; then
+            local holder
+            holder=$(cat "$lockdir/pid" 2>/dev/null || true)
+            if [[ -n "$holder" ]] && ! kill -0 "$holder" 2>/dev/null; then
+                rm -rf "$lockdir" 2>/dev/null || true
+                continue
+            fi
+        fi
+        if (( waited >= max_wait )); then
+            local holder=""
+            [[ -f "$lockdir/pid" ]] && holder=$(cat "$lockdir/pid" 2>/dev/null || true)
+            echo "  Could not acquire restart lock within ${max_wait}s (held by PID ${holder:-unknown})." >&2
+            return 1
+        fi
+        sleep 1
+        waited=$((waited + 1))
+    done
+    echo $$ > "$lockdir/pid"
+    return 0
+}
+
+_release_restart_lock() {
+    local lockdir="$PIDS_DIR/.restart.lock.d"
+    rm -rf "$lockdir" 2>/dev/null || true
+}
+
 _pid_on_port() {
     local name="$1"
     local port="${SVC_PORT[$name]}"
     if command -v lsof >/dev/null 2>&1; then
-        lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null | head -n 1
+        # `|| true` because lsof exits 1 when no listener is found, and with
+        # `set -eo pipefail` upstream that bubbles up to the caller. We want
+        # an empty-stdout, exit-0 contract so callers can distinguish "no
+        # owner" from "lookup failed" purely by the captured value.
+        lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null | head -n 1 || true
     fi
 }
 
@@ -222,6 +267,26 @@ _start_service() {
         return 0
     fi
 
+    # Race-safety: even if state is "stopped", the port may still be bound by
+    # another concurrent restarter that hasn't published its health endpoint
+    # yet, OR the OS may not have released the port from a just-killed PID.
+    # Spawning a new uvicorn here would just die with EADDRINUSE.
+    # Adopt only if the owner's cmdline matches our service signature
+    # (don't accidentally claim a random foreign process bound to the same
+    # port — that would write a wrong PID into our pidfile).
+    local port_pid
+    port_pid="$(_pid_on_port "$name")"
+    if [[ -n "$port_pid" ]]; then
+        if _pid_matches_service "$name" "$port_pid"; then
+            echo "  $name port ${SVC_PORT[$name]} is already bound by PID $port_pid (concurrent start?); not spawning"
+            _sync_pidfile "$name" "$port_pid"
+            return 0
+        else
+            echo "  $name port ${SVC_PORT[$name]} is bound by foreign PID $port_pid; not spawning (free the port and retry)"
+            return 1
+        fi
+    fi
+
     echo "  Starting $name — ${SVC_DESC[$name]}..."
     cd "$PROJECT_ROOT"
 
@@ -264,6 +329,17 @@ _stop_service() {
     fi
 
     rm -f "$pidfile"
+
+    # Wait for the OS to actually release the listening socket. Process death
+    # ≠ port released — macOS holds the socket briefly in TIME_WAIT (or until
+    # all child fds close). Without this wait, an immediate _start_service
+    # would race a stale port and die with EADDRINUSE.
+    for _ in $(seq 1 10); do
+        if [[ -z "$(_pid_on_port "$name")" ]]; then
+            break
+        fi
+        sleep 0.5
+    done
 
     # Starlight: clear Astro content collection cache on stop.
     # Astro 6 doesn't reliably pick up new MDX files added while the
@@ -346,6 +422,12 @@ case "$action" in
         _status
         ;;
     restart)
+        # Serialize across all callers — see _acquire_restart_lock comment.
+        if ! _acquire_restart_lock; then
+            exit 1
+        fi
+        trap _release_restart_lock EXIT INT TERM
+
         echo "Restarting services..."
         for svc in $services; do
             if [[ -z "${SVC_CMD[$svc]+x}" ]]; then
