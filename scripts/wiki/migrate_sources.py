@@ -176,13 +176,19 @@ def migrate_article(path: Path) -> ArticleMigrationResult:
         for item in (meta.get("sources") or [])
         if normalize_source_filename(str(item))
     ]
+    existing_registry = load_sources_registry(registry_path_for(path))
+    referenced_existing_files = [
+        entry.file
+        for entry in existing_registry.sources
+        if entry.id in set(extract_short_citation_ids(original_text))
+    ]
     source_index_map = _build_source_index_map(original_text, meta_sources)
     citations = find_legacy_citations(original_text, meta_sources)
     inline_files = _ordered_inline_files(citations)
-    merged_sources = _merge_sources(inline_files, meta_sources)
-    preserved_from_meta = {source for source in meta_sources if source not in set(inline_files)}
-
-    existing_registry = load_sources_registry(registry_path_for(path))
+    merged_sources = _merge_sources(referenced_existing_files + inline_files, meta_sources)
+    preserved_from_meta = {
+        source for source in meta_sources if source not in set(referenced_existing_files + inline_files)
+    }
     registry = assign_source_ids(
         merged_sources,
         existing=existing_registry,

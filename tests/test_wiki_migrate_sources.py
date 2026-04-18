@@ -138,6 +138,42 @@ def test_render_diff_replaces_legacy_citations(tmp_path: Path, monkeypatch) -> N
     assert "(Source 50:" not in result.updated_text
 
 
+def test_rerun_preserves_existing_registry_for_short_citations(tmp_path: Path) -> None:
+    from wiki.migrate_sources import migrate_article, verify_articles
+    from wiki.sources_schema import WikiSourceEntry, WikiSourcesRegistry, registry_path_for, save_sources_registry
+
+    article_path = tmp_path / "wiki" / "periods" / "demo.md"
+    article_path.parent.mkdir(parents=True)
+    article_path.write_text(
+        "# Demo\n\n"
+        "<!-- wiki-meta\n"
+        "slug: demo\n"
+        "domain: periods\n"
+        "tracks: [hist]\n"
+        "compiled: 2026-04-18\n"
+        "-->\n\n"
+        "Факт [S1].\n",
+        encoding="utf-8",
+    )
+    save_sources_registry(
+        registry_path_for(article_path),
+        WikiSourcesRegistry(
+            sources=[
+                WikiSourceEntry(id="S1", file="ext-foo-1", type="external"),
+            ]
+        ),
+        article_path=article_path,
+    )
+
+    result = migrate_article(article_path)
+    article_path.write_text(result.updated_text, encoding="utf-8")
+    save_sources_registry(registry_path_for(article_path), result.registry, article_path=article_path)
+
+    assert [entry.id for entry in result.registry.sources] == ["S1"]
+    assert [entry.file for entry in result.registry.sources] == ["ext-foo-1"]
+    assert verify_articles([article_path]) == []
+
+
 def test_dry_run_on_real_articles_from_multiple_domains() -> None:
     from wiki.migrate_sources import migrate_article, render_diff
 
@@ -153,5 +189,5 @@ def test_dry_run_on_real_articles_from_multiple_domains() -> None:
 
     results = [migrate_article(path) for path in candidate_paths]
     diffs = [render_diff(result) for result in results]
-    assert all("[S" in diff for diff in diffs)
     assert all("(Source " not in result.updated_text for result in results)
+    assert all("[S" in result.updated_text or "[S" in diff for result, diff in zip(results, diffs, strict=True))
