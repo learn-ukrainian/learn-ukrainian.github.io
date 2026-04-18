@@ -93,12 +93,11 @@ This section helps the module writer match the correct Ukrainian register.
 - Common myths and their refutations
 - Frame: the Ukrainian perspective is the default, not the "alternative"
 
-## Джерела
-(Source references — which chunks/works were used. List by Source N.)
-
 ## Пов'язані статті
 (Cross-links to other wiki articles that relate to this topic)
 ```
+
+**Do NOT emit a `## Джерела` / sources / bibliography section at the end of the article.** The full source registry lives in the sibling `{slug}.sources.yaml` file and is managed separately. Inline `[S1]`-style citations throughout the prose are sufficient — the sidecar YAML resolves each reference to its underlying chunk_id. A prose `## Джерела` section duplicates the sidecar and is treated as a defect by downstream review.
 
 ### Quality Standards
 
@@ -176,6 +175,7 @@ Before emitting the final article, mentally verify:
 - [ ] No filler phrases: `як відомо`, `варто зазначити`, `не можна не згадати`
 - [ ] No fabricated debates — if no debate is in the sources, the Наукові дискусії section says so
 - [ ] ≥ 95% Ukrainian prose
+- [ ] **No `## Джерела` section in the output.** Sources registry lives in the sibling `.sources.yaml` only. Inline `[S#]` citations in prose are sufficient.
 
 ## Output
 
