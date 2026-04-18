@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -39,6 +40,8 @@ class ReviewObservation:
     writer_model_version: str = ""
     reviewer_model_version: str = ""
     artifacts: dict[str, str] = field(default_factory=dict)
+    input_tokens: int | None = None
+    output_tokens: int | None = None
 
 
 @dataclass(frozen=True)
@@ -258,6 +261,8 @@ def _record_round(
     writer: str,
     decision_reason: str,
     mutation: MutationSummary | None,
+    started_at: str,
+    wall_clock_s: float,
 ) -> dict[str, Any]:
     scores = {
         str(score.get("name") or score.get("dimension")): score.get("score")
@@ -288,7 +293,13 @@ def _record_round(
         "decision_reason": decision_reason,
         "artifacts": dict(observation.artifacts),
         "timestamps": {
+            "started": started_at,
             "finished": datetime.now(tz=UTC).isoformat(),
+        },
+        "cost": {
+            "input_tokens": observation.input_tokens,
+            "output_tokens": observation.output_tokens,
+            "wall_clock_s": round(wall_clock_s, 3),
         },
     }
     append_history(memory, round_record)
@@ -422,6 +433,8 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
     previous_round: dict[str, Any] | None = None
     previous_findings: tuple[dict[str, Any], ...] | None = None
 
+    attempt_started_at = datetime.now(tz=UTC).isoformat()
+    attempt_started_monotonic = time.monotonic()
     observation = context.review_round(current_writer)
     prioritized_findings = prioritize_findings(
         observation,
@@ -436,6 +449,8 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
         writer=current_writer,
         decision_reason="initial",
         mutation=None,
+        started_at=attempt_started_at,
+        wall_clock_s=time.monotonic() - attempt_started_monotonic,
     )
     round_record["prioritized_findings"] = list(prioritized_findings)
     round_record["tier"] = 0
@@ -450,6 +465,8 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
         )
 
     for escalation in range(1, context.max_escalations + 1):
+        attempt_started_at = datetime.now(tz=UTC).isoformat()
+        attempt_started_monotonic = time.monotonic()
         decision = select_strategy(
             observation=observation,
             prioritized_findings=prioritized_findings,
@@ -580,6 +597,8 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
             writer=current_writer,
             decision_reason=decision.reason,
             mutation=mutation,
+            started_at=attempt_started_at,
+            wall_clock_s=time.monotonic() - attempt_started_monotonic,
         )
         round_record["prioritized_findings"] = list(prioritized_findings)
         round_record["tier"] = decision.tier

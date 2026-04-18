@@ -327,6 +327,15 @@ def test_happy_path_populates_memory_with_one_history_entry(tmp_path: Path) -> N
     assert result.terminal == "pass"
     assert len(memory["history"]) == 1
     assert memory["constraints"] == []
+    history_entry = memory["history"][0]
+    assert history_entry["timestamps"]["started"]
+    assert history_entry["timestamps"]["finished"]
+    assert history_entry["cost"] == {
+        "input_tokens": None,
+        "output_tokens": None,
+        "wall_clock_s": history_entry["cost"]["wall_clock_s"],
+    }
+    assert isinstance(history_entry["cost"]["wall_clock_s"], float)
 
 
 def test_local_findings_patch_converges_to_pass(tmp_path: Path) -> None:
