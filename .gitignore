@@ -187,6 +187,14 @@ data/literary_texts/*.jsonl
 data/external_articles/
 .build.lock
 
+# Corpus gap audit working files — only the human-reviewed deliverables land in git
+data/corpus_audit/*
+!data/corpus_audit/coverage_map.json
+!data/corpus_audit/gap_categories.md
+!data/corpus_audit/ingestion_roadmap.md
+!data/corpus_audit/draft_tickets/
+!data/corpus_audit/draft_tickets/*.md
+
 
 # Plan backup files from scripts/tools/update_plan_activities.py (#1148)
 curriculum/l2-uk-en/plans/*/*.yaml.bak
