@@ -193,7 +193,7 @@ class TestClassifyModule:
                 "activities": {"status": "deferred", "message": "skipped"},
             }
         }
-        classification, problems = classify_module(status, full_mode=False)
+        classification, _problems = classify_module(status, full_mode=False)
         assert classification == "content-complete"
 
     def test_deferred_gates_full_mode_fails(self):

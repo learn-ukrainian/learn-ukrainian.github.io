@@ -60,6 +60,7 @@ from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
 )
+from agent_runtime.json_parse import extract_json_object
 from agent_runtime.runner import invoke
 from wiki.config import PROMPTS_DIR, WIKI_DIR
 from wiki.review_merger import (
@@ -376,33 +377,6 @@ def _infer_level_from_domain(domain: str) -> str:
 # ── Response parsing ───────────────────────────────────────────────
 
 
-_JSON_OBJECT_RE = re.compile(r"\{.*\}", re.DOTALL)
-
-
-def _extract_json_object(response: str) -> dict:
-    """Pull the JSON object out of an agent response.
-
-    Reviewers are instructed to emit bare JSON (no markdown fence, no
-    preamble). Real-world CLIs sometimes ignore that. We strip a single
-    leading fence and fall back to regex extraction.
-    """
-    text = response.strip()
-    if text.startswith("```"):
-        # Strip ```json … ``` fencing
-        text = re.sub(r"^```(?:json)?\s*", "", text)
-        text = re.sub(r"\s*```\s*$", "", text)
-
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError:
-        pass
-
-    match = _JSON_OBJECT_RE.search(response)
-    if not match:
-        raise ValueError("no JSON object found in reviewer response")
-    return json.loads(match.group(0))
-
-
 def _parse_dim_result(
     *,
     dim: str,
@@ -412,7 +386,7 @@ def _parse_dim_result(
     duration_s: float,
 ) -> DimResult:
     """Parse a reviewer's JSON response into a DimResult."""
-    payload = _extract_json_object(response)
+    payload = extract_json_object(response)
 
     # All four prompts share: dimension, findings[], fixes[], score,
     # verdict, notes. ukrainian_perspective adds strengths[] (ignored

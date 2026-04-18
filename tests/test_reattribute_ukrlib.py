@@ -9,6 +9,7 @@ Post-execution tests verify the output after reattribution + ingestion.
 import json
 import sys
 from pathlib import Path
+from typing import ClassVar
 
 import pytest
 
@@ -31,7 +32,7 @@ pre_requires_quarantine = pytest.mark.skipif(
 class TestPreQuarantinedFilesExist:
     """All 8 quarantined files must be present."""
 
-    EXPECTED_FILES = [
+    EXPECTED_FILES: ClassVar[list[str]] = [
         "ukrlib-kotlyarevsky.jsonl",
         "ukrlib-kotsyubynsky.jsonl",
         "ukrlib-kvitka.jsonl",
@@ -52,7 +53,7 @@ class TestPreQuarantinedFilesExist:
 class TestPreKnownWorksMatchRealAuthor:
     """Spot-check canonical works against expected real authors."""
 
-    CANONICAL_CHECKS = [
+    CANONICAL_CHECKS: ClassVar[list[tuple[str, str, str]]] = [
         # (quarantined file, work title substring, expected real author prefix)
         ("ukrlib-myrny.jsonl", "Енеїда", "Панас Мирний"),  # Real: Котляревський
         ("ukrlib-kvitka.jsonl", "Fata Morgana", "Григорій Квітка-Основ'яненко"),  # Real: Коцюбинський
@@ -91,7 +92,7 @@ class TestPreKnownWorksMatchRealAuthor:
 class TestPreDuplicatesAlreadyExist:
     """Correct files must exist for the 3 duplicates."""
 
-    DUPLICATE_TARGETS = [
+    DUPLICATE_TARGETS: ClassVar[list[str]] = [
         "ukrlib-shevchenko.jsonl",
         "ukrlib-skovoroda.jsonl",
         "ukrlib-karpenko_karyi.jsonl",
@@ -107,7 +108,7 @@ class TestPreDuplicatesAlreadyExist:
 class TestPreNoTargetFileCollision:
     """The 5 new filenames must not already exist in data/literary_texts/."""
 
-    NEW_FILENAMES = [
+    NEW_FILENAMES: ClassVar[list[str]] = [
         "ukrlib-kotsyubynsky.jsonl",
         "ukrlib-kotlyarevsky.jsonl",
         "ukrlib-myrny.jsonl",
@@ -127,7 +128,7 @@ class TestPreNoTargetFileCollision:
 class TestPostReattributedFilesValid:
     """Each new JSONL has correct author/work fields and valid chunk_ids."""
 
-    EXPECTED_FILES = {
+    EXPECTED_FILES: ClassVar[dict[str, str]] = {
         "ukrlib-kotsyubynsky.jsonl": "Коцюбинський М.",
         "ukrlib-kotlyarevsky.jsonl": "Котляревський І.",
         "ukrlib-myrny.jsonl": "Мирний П.",
@@ -135,7 +136,7 @@ class TestPostReattributedFilesValid:
         "ukrlib-nechuy.jsonl": "Нечуй-Левицький І.",
     }
 
-    EXPECTED_PREFIXES = {
+    EXPECTED_PREFIXES: ClassVar[dict[str, str]] = {
         "ukrlib-kotsyubynsky.jsonl": "Михайло Коцюбинський",
         "ukrlib-kotlyarevsky.jsonl": "Іван Котляревський",
         "ukrlib-myrny.jsonl": "Панас Мирний",
@@ -182,7 +183,7 @@ class TestPostNoCrossContamination:
 class TestPostSearchQuality:
     """Verify reattributed authors have chunks in Qdrant with correct metadata."""
 
-    AUTHOR_CHECKS = [
+    AUTHOR_CHECKS: ClassVar[list[tuple[str, str, int]]] = [
         ("Коцюбинський М.", "Fata Morgana", 1157),
         ("Котляревський І.", "Енеїда", 313),
         ("Мирний П.", "Хіба ревуть воли", 1281),

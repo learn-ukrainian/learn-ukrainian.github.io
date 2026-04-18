@@ -297,5 +297,5 @@ class TestEdgeCases:
         """Empty content should produce no violations and no fixes."""
         violations = check_euphony_violations("")
         assert len(violations) == 0
-        fixed, count = auto_fix_euphony("")
+        _fixed, count = auto_fix_euphony("")
         assert count == 0

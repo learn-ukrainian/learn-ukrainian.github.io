@@ -44,6 +44,12 @@ from pathlib import Path
 
 import pymupdf
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT / "scripts") not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT / "scripts"))
+
+from agent_runtime.json_parse import extract_json_object
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 TEXTBOOKS_DIR = BASE_DIR / "data" / "textbooks"
 IMAGE_DIR = BASE_DIR / "data" / "textbook_images"
@@ -145,41 +151,6 @@ def render_page(pdf_path: Path, page_num: int, output_path: Path) -> bool:
         print(f"\n  Render error: {e}")
         return False
 
-
-def extract_json_from_response(response_text: str) -> dict | None:
-    """Extract JSON object from gemini-cli response text."""
-    text = response_text.strip()
-
-    # Strip markdown code fences
-    if "```json" in text:
-        text = text.split("```json", 1)[1]
-        text = text.split("```", 1)[0].strip()
-    elif "```" in text:
-        parts = text.split("```")
-        if len(parts) >= 3:
-            text = parts[1].strip()
-            if text.startswith("json\n"):
-                text = text[5:]
-
-    # Find outermost JSON object
-    brace_start = text.find("{")
-    if brace_start < 0:
-        return None
-
-    depth = 0
-    for i in range(brace_start, len(text)):
-        if text[i] == "{":
-            depth += 1
-        elif text[i] == "}":
-            depth -= 1
-            if depth == 0:
-                try:
-                    return json.loads(text[brace_start : i + 1])
-                except json.JSONDecodeError:
-                    return None
-    return None
-
-
 def analyze_page_via_cli(record: dict, tmp_dir: Path) -> dict | None:
     """Render a page and analyze it via gemini-cli."""
     page_id = record["page_id"]
@@ -231,8 +202,9 @@ def analyze_page_via_cli(record: dict, tmp_dir: Path) -> dict | None:
                 time.sleep(RETRY_DELAY)
                 continue
 
-            data = extract_json_from_response(response_text)
-            if data is None:
+            try:
+                data = extract_json_object(response_text)
+            except ValueError:
                 print(f"\n  No JSON in response for {page_id}")
                 if attempt < MAX_RETRIES - 1:
                     time.sleep(RETRY_DELAY)

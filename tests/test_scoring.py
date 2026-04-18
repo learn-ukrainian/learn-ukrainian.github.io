@@ -91,14 +91,14 @@ class TestCountAgencyMarkers:
     def test_passive_not_counted(self):
         """Passive/state-of-being verbs should not count."""
         content = "Україна була частиною іншої держави."
-        agency, total = count_agency_markers(content)
+        _agency, total = count_agency_markers(content)
         # 'була' is a state-of-being verb, 'Україна' is a subject
         # but the agency pattern checks for active verbs
         assert total >= 1
 
     def test_non_ukrainian_subjects(self):
         content = "The empire controlled the region. Moscow ordered the attack."
-        agency, total = count_agency_markers(content)
+        agency, _total = count_agency_markers(content)
         assert agency == 0
 
     def test_sentence_counting(self):
@@ -114,7 +114,7 @@ class TestCountAgencyMarkers:
 class TestAnalyzeToponyms:
     def test_colonial_names_detected(self):
         content = "Місто Киев було столицею. Харьков на сході."
-        violations, correct = analyze_toponyms(content)
+        violations, _correct = analyze_toponyms(content)
         assert violations >= 2
 
     def test_ukrainian_names_counted(self):
@@ -272,7 +272,7 @@ class TestApplyCriticalCaps:
         metrics = {'total_myth_buster_callouts': 5, 'total_quote_callouts': 5,
                    'agency_marker_ratio': 0.2, 'total_cross_references': 3}
         scores = {'decolonization_perspective': 9.0, 'primary_source_integration': 8.0}
-        updated, results = apply_critical_caps('hist', metrics, scores)
+        updated, _results = apply_critical_caps('hist', metrics, scores)
         assert updated['decolonization_perspective'] == 9.0
 
     def test_cap_not_needed_score_already_low(self):
@@ -280,7 +280,7 @@ class TestApplyCriticalCaps:
         metrics = {'total_quote_callouts': 0, 'total_cross_references': 5,
                    'total_legacy_sections': 3}
         scores = {'source_reliability': 2.0}
-        updated, results = apply_critical_caps('bio', metrics, scores)
+        _updated, results = apply_critical_caps('bio', metrics, scores)
         # Score 2.0 is already below cap of 4.0, so cap_applied=False
         quote_cap = [r for r in results if r.cap_name == 'zero_quotes']
         assert len(quote_cap) == 1

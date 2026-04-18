@@ -286,7 +286,7 @@ class TestCheckQuality:
         assert ratio > 0.5
 
     def test_ascii_only(self):
-        is_clean, ratio = self.check_quality("This is English text only.")
+        is_clean, _ratio = self.check_quality("This is English text only.")
         assert not is_clean
 
 
@@ -318,12 +318,12 @@ class TestGetSeasonInfo:
         self.get_season_info = get_season_info
 
     def test_early_episode(self):
-        season, level, focus = self.get_season_info(1)
+        season, level, _focus = self.get_season_info(1)
         assert isinstance(season, int)
         assert level in ("A0", "A1", "A2", "B1", "B2")
 
     def test_unknown_episode(self):
-        season, level, focus = self.get_season_info(9999)
+        season, level, _focus = self.get_season_info(9999)
         assert season == 6
         assert level == "B2"
 

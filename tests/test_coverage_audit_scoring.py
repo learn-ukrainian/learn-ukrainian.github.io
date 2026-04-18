@@ -1071,7 +1071,7 @@ class TestScreenFixExtraH1:
     def test_no_extra_h1(self):
         from pipeline.screen import _fix_extra_h1
         text = "# Only Title\n\nSome text"
-        result, count = _fix_extra_h1(text)
+        _result, count = _fix_extra_h1(text)
         assert count == 0
 
     def test_h1_in_code_block(self):
@@ -1093,7 +1093,7 @@ class TestScreenFixIpaBrackets:
     def test_no_ipa(self):
         from pipeline.screen import _fix_ipa_brackets
         text = "Just normal text"
-        result, count = _fix_ipa_brackets(text)
+        _result, count = _fix_ipa_brackets(text)
         assert count == 0
 
 
@@ -1408,13 +1408,13 @@ class TestModuleDataclass:
 
 class TestColored:
     def test_known_quality(self):
-        from assess_research_helpers import _colored
+        from research.assess_research_helpers import _colored
         result = _colored("text", "exemplary")
         assert "text" in result
         assert "\033[32m" in result
 
     def test_unknown_quality(self):
-        from assess_research_helpers import _colored
+        from research.assess_research_helpers import _colored
         result = _colored("text", "unknown_qual")
         assert result == "text"
 

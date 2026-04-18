@@ -57,14 +57,14 @@ class TestParseFrontmatter:
 
 class TestDetectLevel:
     def test_b1_from_path(self):
-        level, num, track = detect_level(
+        level, num, _track = detect_level(
             '/curriculum/l2-uk-en/b1/05-test.md', 'level: B1'
         )
         assert level == 'B1'
         assert num == 5
 
     def test_bio_from_path(self):
-        level, num, track = detect_level(
+        level, _num, track = detect_level(
             '/curriculum/l2-uk-en/bio/taras-shevchenko.md', 'level: C1'
         )
         assert level == 'C1'
@@ -79,19 +79,19 @@ class TestDetectLevel:
         assert num == 1
 
     def test_lit_from_path(self):
-        level, num, track = detect_level(
+        level, _num, _track = detect_level(
             '/curriculum/l2-uk-en/lit/01-shevchenko.md', 'phase: LIT'
         )
         assert level == 'LIT'
 
     def test_module_number_extraction(self):
-        level, num, track = detect_level(
+        _level, num, _track = detect_level(
             '/curriculum/l2-uk-en/a1/12-alphabet.md', ''
         )
         assert num == 12
 
     def test_no_number_in_filename(self):
-        level, num, track = detect_level(
+        _level, num, _track = detect_level(
             '/curriculum/l2-uk-en/bio/taras-shevchenko.md', ''
         )
         assert num == 999  # Default when no number found

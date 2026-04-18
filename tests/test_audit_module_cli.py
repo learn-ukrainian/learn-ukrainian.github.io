@@ -21,7 +21,7 @@ class TestAutoFixIpa:
         md_file = tmp_path / "test-module.md"
         md_file.write_text("# Test\n\nNo IPA here.\n")
         with patch("lint_ipa.apply_fixes", return_value=("# Test\n\nNo IPA here.\n", 0)):
-            fixes, messages = auto_fix_ipa(str(md_file))
+            fixes, _messages = auto_fix_ipa(str(md_file))
         assert fixes == 0
 
 

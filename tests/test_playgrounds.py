@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 import sys
 from pathlib import Path
+from typing import ClassVar
 
 import pytest
 
@@ -114,7 +115,7 @@ class TestApiEndpoints:
     """Verify dashboard API endpoints are defined in the API server."""
 
     # All endpoints referenced in playground HTML files
-    EXPECTED_ENDPOINTS = {
+    EXPECTED_ENDPOINTS: ClassVar[set[str]] = {
         "/api/comms/batch-progress",
         "/api/comms/health",
         "/api/comms/live-activity",
@@ -187,7 +188,7 @@ class TestApiEndpoints:
 class TestDashboardInventory:
     """Verify expected dashboards exist."""
 
-    EXPECTED_DASHBOARDS = {
+    EXPECTED_DASHBOARDS: ClassVar[set[str]] = {
         "index.html",
         "progress.html",
         "quality.html",

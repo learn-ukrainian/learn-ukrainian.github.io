@@ -9,7 +9,6 @@ Usage:
     python scripts/audit/naturalness_check.py <file.md> [--force]
 """
 
-import json
 import re
 import subprocess
 import sys
@@ -19,6 +18,10 @@ from pathlib import Path
 import yaml
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
+if str(PROJECT_ROOT / "scripts") not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+
+from agent_runtime.json_parse import extract_json_object
 
 # Structured prompt that returns JSON (reliable parsing)
 NATURALNESS_PROMPT = """Evaluate the naturalness of this Ukrainian educational text.
@@ -84,6 +87,15 @@ def extract_ukrainian_content(md_file_path: str, max_chars: int = 4000) -> str:
     return result
 
 
+def _parse_naturalness_json(raw_output: str) -> dict | None:
+    """Parse structured naturalness JSON when the agent emits it."""
+    try:
+        parsed = extract_json_object(raw_output)
+    except ValueError:
+        return None
+    return parsed if "score" in parsed else None
+
+
 def call_gemini(prompt: str, task_id: str) -> tuple[str, dict]:
     """Call Gemini and return raw response + parsed JSON."""
     try:
@@ -105,24 +117,9 @@ def call_gemini(prompt: str, task_id: str) -> tuple[str, dict]:
 
         raw_output = result.stdout + result.stderr
 
-        # Extract JSON from response - handle nested brackets for arrays
-        # Find JSON block that contains "score"
-        json_match = re.search(r'\{[^{}]*"score"\s*:\s*\d+[^{}]*(?:\[[^\]]*\][^{}]*)?\}', raw_output, re.DOTALL)
-        if json_match:
-            try:
-                parsed = json.loads(json_match.group())
-                return raw_output, parsed
-            except json.JSONDecodeError:
-                pass
-
-        # Alternative: find complete JSON block between braces
-        json_block = re.search(r'\{\s*"score".*?"issues"\s*:\s*\[[^\]]*\]\s*\}', raw_output, re.DOTALL)
-        if json_block:
-            try:
-                parsed = json.loads(json_block.group())
-                return raw_output, parsed
-            except json.JSONDecodeError:
-                pass
+        parsed = _parse_naturalness_json(raw_output)
+        if parsed is not None:
+            return raw_output, parsed
 
         # Fallback: try to extract score
         score_match = re.search(r'"score"\s*:\s*(\d+)', raw_output)
@@ -169,23 +166,9 @@ def call_claude_headless(prompt: str, task_id: str) -> tuple[str, dict]:
 
         raw_output = result.stdout + result.stderr
 
-        # Extract JSON from response - same logic as Gemini
-        json_match = re.search(r'\{[^{}]*"score"\s*:\s*\d+[^{}]*(?:\[[^\]]*\][^{}]*)?\}', raw_output, re.DOTALL)
-        if json_match:
-            try:
-                parsed = json.loads(json_match.group())
-                return raw_output, parsed
-            except json.JSONDecodeError:
-                pass
-
-        # Alternative: find complete JSON block
-        json_block = re.search(r'\{\s*"score".*?"issues"\s*:\s*\[[^\]]*\]\s*\}', raw_output, re.DOTALL)
-        if json_block:
-            try:
-                parsed = json.loads(json_block.group())
-                return raw_output, parsed
-            except json.JSONDecodeError:
-                pass
+        parsed = _parse_naturalness_json(raw_output)
+        if parsed is not None:
+            return raw_output, parsed
 
         # Fallback: try to extract score from JSON-like
         score_match = re.search(r'"score"\s*:\s*(\d+)', raw_output)

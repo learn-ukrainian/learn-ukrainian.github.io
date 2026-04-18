@@ -65,7 +65,7 @@ class TestFixExtraH1:
 
     def test_already_h2_not_affected(self):
         text = "# Title\n\n## Already H2\n\nContent."
-        result, count = _fix_extra_h1(text)
+        _result, count = _fix_extra_h1(text)
         assert count == 0
 
 
@@ -88,7 +88,7 @@ class TestFixIpaBrackets:
 
     def test_preserves_non_ipa_brackets(self):
         text = "Text with [Ø] marker."
-        result, count = _fix_ipa_brackets(text)
+        _result, count = _fix_ipa_brackets(text)
         assert count == 0  # no change (this pattern doesn't match the regex)
 
 
