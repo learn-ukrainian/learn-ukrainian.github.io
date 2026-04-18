@@ -244,9 +244,28 @@ def strip_meta(content: str) -> str:
     Shared between build-side injection (get_wiki_context) and review-side
     prompt assembly (scripts/wiki/compile.py:_build_review_prompt) — the
     reviewer must not score metadata as if it were prose.
+
+    Bounded match: ``[^<]*?`` prevents the greedy ``.*?`` failure mode flagged
+    by Gemini review #348 (#1323). If the wiki-meta opening exists but the
+    closing ``-->`` is missing, the regex would cross into a later comment
+    such as ``<!-- VERIFY -->`` and silently delete all prose between them.
+    ``[^<]`` stops at the first ``<`` (which starts any subsequent comment),
+    so a malformed wiki-meta simply fails to match rather than corrupting
+    content. We additionally warn on a detected-opening-without-close so
+    callers can surface the issue during compilation.
     """
     import re
-    return re.sub(r"<!--\s*wiki-meta\b.*?-->", "", content, flags=re.DOTALL).strip()
+    import sys
+
+    pattern = re.compile(r"<!--\s*wiki-meta\b[^<]*?-->", re.DOTALL)
+    result, n = pattern.subn("", content)
+    if n == 0 and re.search(r"<!--\s*wiki-meta\b", content):
+        print(
+            "⚠️  strip_meta: found `<!-- wiki-meta` opening without a matching "
+            "`-->`; leaving content intact to prevent silent deletion.",
+            file=sys.stderr,
+        )
+    return result.strip()
 
 
 # Backwards-compat alias for any lingering internal callers.
