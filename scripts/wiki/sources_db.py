@@ -19,6 +19,8 @@ Indexed tables (dictionary headword lookup):
 import sqlite3
 from pathlib import Path
 
+from .channels import rank_external_hits
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 
@@ -76,6 +78,18 @@ def _kw_score(text: str, title: str, keywords: set[str]) -> int:
         return 0
     searchable = f" {title} {text} ".lower()
     return sum(1 for w in keywords if f" {w} " in searchable)
+
+
+def _table_columns(table: str) -> set[str]:
+    """Return the column names for a SQLite table."""
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return set()
+    return {
+        row["name"]
+        for row in conn.execute(f"PRAGMA table_info({table})").fetchall()
+    }
 
 
 # ── FTS5 search functions (prose) ───────────────────────────────
@@ -151,23 +165,104 @@ def search_external(
     ukr_keywords: set[str],
     max_total: int = 10,
     exclude_urls: set[str] | None = None,
+    *,
+    channel: str | None = None,
+    register: str | None = None,
+    decolonization: str | None = None,
+    min_quality_tier: int | None = None,
+    track: str | None = None,
 ) -> list[dict]:
     """Search external articles via FTS5."""
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return []
+
+    fts_query = _build_fts_query(ukr_keywords)
+    if not fts_query:
+        return []
+
+    columns = _table_columns("external_articles")
+    where = ["external_fts MATCH ?"]
+    params: list[object] = [fts_query]
+    if channel:
+        if "channel_id" not in columns:
+            return []
+        where.append("s.channel_id = ?")
+        params.append(channel)
+    if register:
+        if "register_tag" not in columns:
+            return []
+        where.append("s.register_tag = ?")
+        params.append(register)
+    if decolonization:
+        if "decolonization_tag" not in columns:
+            return []
+        where.append("s.decolonization_tag = ?")
+        params.append(decolonization)
+    if min_quality_tier is not None:
+        if "quality_tier" not in columns:
+            return []
+        where.append("COALESCE(s.quality_tier, 99) <= ?")
+        params.append(int(min_quality_tier))
+
+    rows = conn.execute(
+        f"""SELECT s.*, bm25(external_fts) AS rank
+            FROM external_fts
+            JOIN external_articles s ON s.id = external_fts.rowid
+            WHERE {' AND '.join(where)}
+            ORDER BY rank
+            LIMIT ?""",
+        (*params, max_total * 5),
+    ).fetchall()
+
     skip = exclude_urls or set()
-    rows = _fts_search("external_fts", "external_articles", ukr_keywords, max_total * 2)
-    results = []
-    for r in rows:
-        if len(results) >= max_total:
-            break
-        url = r.get("url", "")
+    results: list[dict] = []
+    channels: dict[str, dict] = {}
+    try:
+        from .channels import load_channels
+
+        channels = load_channels()
+    except Exception:
+        channels = {}
+
+    for row in rows:
+        r = dict(row)
+        url = str(r.get("url", "")).strip()
         if url in skip:
             continue
+
+        source_file = str(r.get("source_file", "")).strip()
+        channel_meta = channels.get(source_file, {})
+        channel_id = str(r.get("channel_id", "") or source_file).strip()
+        quality_tier = int(r.get("quality_tier", channel_meta.get("quality_tier", 2)) or 2)
+        speaker = str(r.get("speaker", "") or channel_meta.get("host", "")).strip()
+        register_tag = str(r.get("register_tag", "") or channel_meta.get("register_tag", "")).strip()
+        decolonization_tag = str(
+            r.get("decolonization_tag", "") or channel_meta.get("decolonization_tag", "")
+        ).strip()
+        channel_name = str(channel_meta.get("name", "")).strip()
+
         r["_kw_score"] = _kw_score(r.get("text", ""), r.get("title", ""), ukr_keywords)
         r["source_type"] = "external"
-        r["source_name"] = r.get("domain", r.get("source_file", ""))
+        r["channel_id"] = channel_id
+        r["speaker"] = speaker
+        r["register_tag"] = register_tag
+        r["decolonization_tag"] = decolonization_tag
+        r["quality_tier"] = quality_tier
+        r["source_name"] = channel_name or r.get("domain", r.get("source_file", ""))
         r["text"] = r.get("text", "")[:6000]
+        r["adjusted_score"] = r.get("rank", 0.0)
         results.append(r)
-    return results
+
+    if track:
+        results = rank_external_hits(
+            results,
+            track=track,
+            apply_quality_without_track=False,
+        )
+
+    return results[:max_total]
 
 
 def search_literary(ukr_keywords: set[str], max_total: int = 20) -> list[dict]:

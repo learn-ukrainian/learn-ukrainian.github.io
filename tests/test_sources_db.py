@@ -249,3 +249,128 @@ class TestSourcesDb:
         assert sdb.search_definitions("test") == []
         assert sdb.lookup_by_url("https://x.com") is None
         assert sdb.source_count() == 0
+
+
+@pytest.fixture()
+def external_search_db(tmp_path, monkeypatch):
+    import wiki.sources_db as sdb
+
+    db_path = tmp_path / "external-search.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.executescript(
+        """
+        CREATE TABLE external_articles (
+            id INTEGER PRIMARY KEY,
+            chunk_id TEXT NOT NULL DEFAULT '',
+            url TEXT NOT NULL DEFAULT '',
+            url_normalized TEXT NOT NULL DEFAULT '',
+            title TEXT NOT NULL DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            source_file TEXT NOT NULL DEFAULT '',
+            domain TEXT DEFAULT '',
+            char_count INTEGER DEFAULT 0,
+            channel_id TEXT DEFAULT '',
+            speaker TEXT DEFAULT '',
+            register_tag TEXT DEFAULT '',
+            decolonization_tag TEXT DEFAULT '',
+            quality_tier INTEGER DEFAULT 2,
+            publish_date TEXT DEFAULT '',
+            duration_s INTEGER DEFAULT 0,
+            chunk_start_ts INTEGER,
+            chunk_end_ts INTEGER,
+            video_id TEXT DEFAULT ''
+        );
+        CREATE VIRTUAL TABLE external_fts USING fts5(
+            title, text, speaker, content='external_articles', content_rowid='id', tokenize='unicode61'
+        );
+        CREATE TRIGGER external_ai AFTER INSERT ON external_articles BEGIN
+            INSERT INTO external_fts(rowid, title, text, speaker)
+            VALUES (new.id, new.title, new.text, new.speaker);
+        END;
+        """
+    )
+    rows = [
+        (
+            "ext-ulp-000", "https://example.test/ulp", "https://example.test/ulp",
+            "Козаки козаки козаки", "Козаки як навчальна тема для студентів. Козаки у простій мові.",
+            "ulp_youtube", "example.test", 68, "ulp_youtube", "Anna Ohoiko",
+            "scripted", "moderate", 1, "", 0, None, None, "ulp001",
+        ),
+        (
+            "ext-realna-000", "https://example.test/realna", "https://example.test/realna",
+            "Козаки та історія", "Козаки в історії України, деколонізація та пам'ять про козаків.",
+            "realna_istoria", "example.test", 69, "realna_istoria", "Акім Галімов",
+            "interview", "strong", 1, "", 0, None, None, "realna001",
+        ),
+        (
+            "ext-imtgsh-000", "https://example.test/imtgsh", "https://example.test/imtgsh",
+            "Козаки на пограниччі", "Козаки та історія державності. Шевченко, кордони, козаки.",
+            "imtgsh", "example.test", 63, "imtgsh", "Редакційний голос каналу",
+            "scripted", "strong", 2, "", 0, None, None, "imtgsh001",
+        ),
+        (
+            "ext-other-000", "https://example.test/other", "https://example.test/other",
+            "Козаки в блозі", "Козаки як тло для короткої нотатки.",
+            "other_blogs", "example.test", 35, "other_blogs", "Multiple authors",
+            "mixed", "neutral", 3, "", 0, None, None, "other001",
+        ),
+    ]
+    conn.executemany(
+        """INSERT INTO external_articles (
+            chunk_id, url, url_normalized, title, text, source_file, domain, char_count,
+            channel_id, speaker, register_tag, decolonization_tag, quality_tier,
+            publish_date, duration_s, chunk_start_ts, chunk_end_ts, video_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        rows,
+    )
+    conn.commit()
+    conn.close()
+
+    monkeypatch.setattr(sdb, "SOURCES_DB_PATH", db_path)
+    monkeypatch.setattr(sdb, "_conn", None)
+    return db_path
+
+
+def test_search_external_filters_and_returns_metadata(external_search_db):
+    from wiki.sources_db import search_external
+
+    results = search_external(
+        {"козаки"},
+        max_total=5,
+        channel="realna_istoria",
+        decolonization="strong",
+        min_quality_tier=1,
+    )
+
+    assert len(results) == 1
+    assert results[0]["channel_id"] == "realna_istoria"
+    assert results[0]["speaker"] == "Акім Галімов"
+    assert results[0]["register_tag"] == "interview"
+    assert results[0]["decolonization_tag"] == "strong"
+    assert results[0]["quality_tier"] == 1
+
+
+def test_search_external_register_and_quality_filters(external_search_db):
+    from wiki.sources_db import search_external
+
+    results = search_external(
+        {"козаки"},
+        max_total=5,
+        register="scripted",
+        min_quality_tier=2,
+    )
+
+    assert {row["channel_id"] for row in results} == {"ulp_youtube", "imtgsh"}
+    assert all(row["quality_tier"] <= 2 for row in results)
+
+
+def test_search_external_track_reranks_hist_sources(external_search_db):
+    from wiki.sources_db import search_external
+
+    plain = search_external({"козаки"}, max_total=4)
+    hist = search_external({"козаки"}, max_total=4, track="hist")
+
+    assert plain[0]["channel_id"] == "ulp_youtube"
+    assert hist[0]["channel_id"] in {"realna_istoria", "imtgsh"}
+    hist_positions = {row["channel_id"]: index for index, row in enumerate(hist)}
+    assert hist_positions["realna_istoria"] < hist_positions["ulp_youtube"]
