@@ -19,7 +19,7 @@ Chunk ID: `{chunk_id}`
 {text}
 ```
 
-**Every claim in your article MUST cite a specific source** using the format `(Source N: {chunk_id})` — **BOTH** the ordinal AND the chunk_id are required. `(Source 5)` alone is insufficient; `(Джерело: ...)` alone is insufficient. The chunk_id makes every claim traceable back to the primary source.
+**Every claim in your article MUST cite a specific source** using short inline citations like `[S1]`, `[S2]`. The sibling `{slug}.sources.yaml` file will map `S1` to the underlying chunk id, so keep filenames out of the prose.
 
 Do NOT invent facts — everything must come from the sources. If sources conflict, note the disagreement and cite both sides with chunk_ids.
 
@@ -58,7 +58,6 @@ Every article MUST have these sections:
 slug: {slug}
 domain: {domain}
 tracks: [{tracks}]
-sources: [{source_ids}]
 compiled: {date}
 -->
 
@@ -69,7 +68,7 @@ compiled: {date}
 (Main content — organized into 3-5 subsections with clear headings)
 
 For EACH subsection:
-- State claims with source citations: "Згідно з (Source N), ..."
+- State claims with short citations: "Згідно з даними [S1], ..."
 - Include relevant Ukrainian quotations from primary sources
 - Use tables for dates, names, and systematic comparisons
 - Break prose every 200-300 words with a subheading or example block
@@ -104,7 +103,7 @@ This section helps the module writer match the correct Ukrainian register.
 ### Quality Standards
 
 #### ABSOLUTE REQUIREMENTS:
-1. **Chunk-ID citations in every paragraph.** Format: `(Source N: chunk_id)` — both ordinal AND chunk_id, never just one. The chunk_id makes the claim traceable to the primary source.
+1. **Short source citations in every paragraph.** Format: `[S1]`, `[S2]`. Filenames belong only in the sibling registry, never in the prose.
 2. **Minimum 1,500 words** for the main content section. This is a knowledge base, not a summary.
 3. **Minimum 8 language model examples.** Source-attributed Ukrainian text with chunk_id. Prefer primary texts over Wikipedia paraphrases.
 4. **Primary sources over Wikipedia.** Historical dates, names, and events must cite the underlying primary/scholarly source, not `ext-wikipedia-*`. Wikipedia-only claims get `<!-- VERIFY -->`.
@@ -167,7 +166,7 @@ This section helps the module writer match the correct Ukrainian register.
 
 Before emitting the final article, mentally verify:
 
-- [ ] Every paragraph has at least one `(Source N: chunk_id)` citation (both ordinal AND chunk_id)
+- [ ] Every paragraph has at least one `[S1]`-style citation
 - [ ] Main content word count ≥ 1500
 - [ ] ≥ 8 language model examples, each with attribution, from primary texts (not YouTube or Wikipedia)
 - [ ] Every historical claim (date, name, event) cites a textbook or primary source — not Wikipedia

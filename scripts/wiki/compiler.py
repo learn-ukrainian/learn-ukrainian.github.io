@@ -5,12 +5,23 @@ calls Gemini, and writes the resulting markdown article to wiki/.
 """
 
 import os
+import re
 import shutil
 import subprocess
 import time
 from pathlib import Path
 
 from .config import GEMINI_MODEL, PROMPTS_DIR, TRACK_DOMAINS, WIKI_DIR
+from .sources_schema import (
+    WikiSourcesRegistry,
+    assign_source_ids,
+    extract_short_citation_ids,
+    load_sources_registry,
+    normalize_source_filename,
+    registry_path_for,
+    save_sources_registry,
+    validate_sources_registry,
+)
 from .state import is_compiled, mark_compiled
 
 # Gemini CLI path (same pattern as agent bridge)
@@ -47,23 +58,26 @@ def compile_article(
     """
     article_key = f"{domain}/{slug}"
 
+    if dry_run:
+        prompt = _build_prompt(topic=topic, slug=slug, domain=domain, sources=sources, track=track)
+        formatted_sources = _format_sources(sources)
+        print(f"\n{'═' * 60}")
+        print(f"DRY RUN: {article_key}")
+        print(f"Topic: {topic}")
+        print(f"Sources: {len(sources)} chunks, {sum(len(s.get('text', '')) for s in sources)} raw chars")
+        print(f"Formatted sources: {len(formatted_sources)} chars")
+        print(f"Prompt: {len(prompt)} chars")
+        print(f"{'═' * 60}")
+        print(prompt[:2000])
+        print("...")
+        return None
+
     if not force and is_compiled(article_key):
         print(f"  ⏭️  Already compiled: {article_key}")
         return WIKI_DIR / domain / f"{slug}.md"
 
     # Build the prompt (track selects the right template)
     prompt = _build_prompt(topic=topic, slug=slug, domain=domain, sources=sources, track=track)
-
-    if dry_run:
-        print(f"\n{'═' * 60}")
-        print(f"DRY RUN: {article_key}")
-        print(f"Topic: {topic}")
-        print(f"Sources: {len(sources)} chunks, {sum(len(s.get('text', '')) for s in sources)} chars")
-        print(f"Prompt: {len(prompt)} chars")
-        print(f"{'═' * 60}")
-        print(prompt[:2000])
-        print("...")
-        return None
 
     # Call Gemini
     print(f"  🤖 Compiling {article_key} ({len(sources)} sources)...")
@@ -73,7 +87,6 @@ def compile_article(
         return None
 
     # Strip markdown code fence wrapping (Gemini sometimes wraps: ```markdown\n...\n```)
-    import re
     fence_match = re.match(r"^```\w*\n(.*?)```\s*$", response.strip(), re.DOTALL)
     if fence_match:
         response = fence_match.group(1)
@@ -87,6 +100,7 @@ def compile_article(
     article_path = WIKI_DIR / domain / f"{slug}.md"
     article_path.parent.mkdir(parents=True, exist_ok=True)
     article_path.write_text(response.strip() + "\n", encoding="utf-8")
+    _write_sources_registry(article_path, sources, response)
 
     word_count = len(response.split())
     print(f"  ✅ Wrote {article_path.relative_to(WIKI_DIR)} ({word_count} words)")
@@ -152,7 +166,8 @@ def _build_prompt(*, topic: str, slug: str, domain: str,
 def _format_sources(sources: list[dict]) -> str:
     """Format source chunks into a readable block for the prompt.
 
-    Groups by source file/work when possible, includes metadata.
+    Groups by source/work when possible and strips duplicated metadata noise
+    from source bodies so the prompt spends budget on evidence, not wrappers.
     """
     if not sources:
         return "(No source material provided)"
@@ -160,6 +175,20 @@ def _format_sources(sources: list[dict]) -> str:
     parts = []
     for i, chunk in enumerate(sources, 1):
         header_parts = []
+        source_type = str(chunk.get("source_type", "")).strip()
+        if source_type == "wikipedia":
+            header_parts.append("Wikipedia")
+        elif source_type in {"external", "external_article"}:
+            header_parts.append("External article")
+        elif source_type == "textbook":
+            header_parts.append("Textbook")
+        elif source_type == "local":
+            header_parts.append("Local data")
+
+        if chunk.get("title"):
+            header_parts.append(f"Title: {chunk['title']}")
+        if chunk.get("source_name"):
+            header_parts.append(f"Source: {chunk['source_name']}")
         if chunk.get("work"):
             header_parts.append(f"Work: {chunk['work']}")
         if chunk.get("author"):
@@ -174,16 +203,82 @@ def _format_sources(sources: list[dict]) -> str:
             header_parts.append(f"Grade {chunk['grade']}")
         if chunk.get("section_title"):
             header_parts.append(f"Section: {chunk['section_title']}")
+        if chunk.get("url"):
+            header_parts.append(f"URL: {chunk['url']}")
 
         header = " | ".join(header_parts) if header_parts else f"Source {i}"
         chunk_id = chunk.get("chunk_id", "")
-        text = chunk.get("text", "").strip()
+        text = _clean_chunk_text(chunk)
 
         parts.append(f"### Source {i}: {header}\n"
                      f"Chunk ID: `{chunk_id}`\n\n"
                      f"{text}")
 
     return "\n\n---\n\n".join(parts)
+
+
+def _write_sources_registry(article_path: Path, sources: list[dict], article_text: str) -> None:
+    """Emit a sibling sources registry for freshly compiled articles."""
+    source_files: list[str] = []
+    seen: set[str] = set()
+    for source in sources:
+        chunk_id = normalize_source_filename(str(source.get("chunk_id", "")))
+        if not chunk_id or chunk_id in seen:
+            continue
+        source_files.append(chunk_id)
+        seen.add(chunk_id)
+
+    if not source_files:
+        return
+
+    registry_path = registry_path_for(article_path)
+    registry = assign_source_ids(source_files, existing=load_sources_registry(registry_path))
+    cited_ids = set(extract_short_citation_ids(article_text))
+    if cited_ids:
+        registry = WikiSourcesRegistry(
+            sources=[entry for entry in registry.sources if entry.id in cited_ids]
+        )
+
+    if not registry.sources:
+        return
+
+    save_sources_registry(registry_path, registry, article_path=article_path)
+    issues = validate_sources_registry(article_text, registry)
+    if issues:
+        print("  ⚠️  Sources registry validation issues:")
+        for issue in issues[:5]:
+            print(f"     - {issue}")
+
+
+def _clean_chunk_text(chunk: dict) -> str:
+    """Normalize chunk text and drop duplicated metadata wrappers."""
+    import re
+
+    text = str(chunk.get("text", "")).strip()
+    if not text:
+        return ""
+
+    lines = text.splitlines()
+    while lines:
+        head = lines[0].strip()
+        if head.startswith((
+            "External article:",
+            "External pedagogical article:",
+            "External pedagogical reference:",
+            "External video reference:",
+            "Wikipedia:",
+            "Source:",
+            "Channel:",
+            "URL:",
+            "Note:",
+        )):
+            lines.pop(0)
+            continue
+        break
+
+    cleaned = "\n".join(lines).strip()
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned
 
 
 def _recover_from_session(before_ts: float, prompt_fingerprint: str = "") -> str | None:

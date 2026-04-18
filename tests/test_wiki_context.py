@@ -28,6 +28,13 @@ def wiki_dir(tmp_path):
         "Самійло Кішка — один із головних героїв лицарських дум.\n",
         encoding="utf-8",
     )
+    (genres_dir / "dumy-lytsarski.sources.yaml").write_text(
+        "sources:\n"
+        "  - id: S1\n"
+        "    file: feaa5fa7_c0001\n"
+        "    type: literary\n",
+        encoding="utf-8",
+    )
     (genres_dir / "charivni-kazky.md").write_text(
         "# Чарівні казки\n\n"
         "Чарівні казки — жанр усної народної творчості.\n",
@@ -241,6 +248,14 @@ class TestGetWikiContext:
         with patch("wiki.context.WIKI_DIR", wiki_dir):
             ctx = get_wiki_context("hist", "kozatska-doba")
         assert "Козацька доба" in ctx
+
+    def test_can_include_sources_registry_summary(self, wiki_dir):
+        from wiki.context import get_wiki_context
+
+        with patch("wiki.context.WIKI_DIR", wiki_dir):
+            ctx = get_wiki_context("folk", "dumy-lytsarski", include_sources_registry=True)
+
+        assert "Sources: S1=feaa5fa7_c0001" in ctx
 
     def test_plan_aware_scoring_surfaces_scenario_article(self, tmp_path):
         from wiki.context import get_wiki_context

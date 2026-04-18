@@ -19,7 +19,7 @@ Chunk ID: `{chunk_id}`
 {text}
 ```
 
-**Every claim MUST cite a specific source** using the format `(Source N: {chunk_id})` — **BOTH** the ordinal AND the chunk_id are required. `(Source 5)` alone is insufficient. The chunk_id makes the claim traceable back to the exact textbook passage.
+**Every claim MUST cite a specific source** using short inline citations like `[S1]`, `[S2]`. The sibling `{slug}.sources.yaml` file will map those ids to the underlying chunk ids.
 
 If no source supports a claim, mark it `<!-- VERIFY -->`. Do NOT invent support.
 
@@ -47,12 +47,11 @@ This is NOT a lesson. It's a **methodology guide for the writer**. It tells the 
 slug: {slug}
 domain: {domain}
 tracks: [{tracks}]
-sources: [{source_ids}]
 compiled: {date}
 -->
 
 ## Методичний підхід (Methodological Approach)
-How Ukrainian Grade 1-2 teachers introduce this concept. What sequence, what exercises, what examples. **Cite specific textbooks:** "Большакова (Source N) починає з голосних: А, О, У..."
+How Ukrainian Grade 1-2 teachers introduce this concept. What sequence, what exercises, what examples. **Cite specific textbooks:** "Большакова починає з голосних: А, О, У... [S2]"
 
 ## Послідовність введення (Introduction Sequence)
 Exact order of elements. For letters: which letters first, which clusters. For grammar: which forms before which. For vocabulary: which words are appropriate.
@@ -91,10 +90,10 @@ Cross-links to other wiki articles that complement this one.
 ## Quality Standards
 
 ### ABSOLUTE REQUIREMENTS:
-1. **Chunk-ID citations in every section.** Format: `(Source N: chunk_id)` — both ordinal and chunk_id, never just one.
+1. **Short source citations in every section.** Format: `[S1]`, `[S2]`.
 2. **Minimum 5 error pairs.** ❌ → ✅ format with explanations.
 3. **Minimum 4 textbook exercise examples.** Specific, not vague. Cite the textbook + chunk_id + grade for each.
-4. **Grade-level attribution.** When describing "how schools teach this," specify the exact grade and textbook author from the sources (e.g., "Вашуленко Grade 1 introduces А, О, У first (Source 3: 1-klas-ukrmova-vashulenko-2019_s0012)").
+4. **Grade-level attribution.** When describing "how schools teach this," specify the exact grade and textbook author from the sources (e.g., "Вашуленко Grade 1 introduces А, О, У first [S3].").
 5. **Decolonization section present and substantive.**
 6. **No Russianisms.** Not even in "also acceptable" framing.
 7. **Minimum 1,000 words.**
@@ -115,7 +114,7 @@ Cross-links to other wiki articles that complement this one.
 
 ## Self-audit (run through this checklist before outputting)
 
-- [ ] Every paragraph has at least one `(Source N: chunk_id)` citation
+- [ ] Every paragraph has at least one `[S1]`-style citation
 - [ ] Total word count ≥ 1000
 - [ ] ≥ 5 L2 error pairs in ❌/✅ format
 - [ ] ≥ 4 specific textbook exercise examples (grade + author + chunk_id)

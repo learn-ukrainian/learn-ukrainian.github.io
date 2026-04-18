@@ -21,7 +21,7 @@ Chunk ID: `{chunk_id}`
 {text}
 ```
 
-**Every claim in your article MUST cite a specific source** using the format `(Source N: {chunk_id})` — **BOTH** the ordinal AND the chunk_id are required. `(Джерело 5)` alone is insufficient; `(Source 5)` alone is insufficient. The chunk_id makes claims traceable back to the exact textbook passage.
+**Every claim in your article MUST cite a specific source** using short inline citations like `[S1]`, `[S2]`. The sibling `{slug}.sources.yaml` file will map those ids back to the exact chunk ids for review.
 
 If no source supports a claim, mark it `<!-- VERIFY -->`. Do NOT invent support.
 
@@ -85,17 +85,16 @@ If the topic is `academic-style-markers` or similar register-focused content, yo
 slug: {slug}
 domain: {domain}
 tracks: [{tracks}]
-sources: [{source_ids}]
 compiled: {date}
 -->
 
 ## Академічний контекст (Academic Context)
-Where this topic fits in Ukrainian higher education. What courses cover it, what level of sophistication is expected. Cite sources: `Згідно з (Source 5: 11-klas-ukrmova-avramenko-2019_s0075), цю тему розглядають...`
+Where this topic fits in Ukrainian higher education. What courses cover it, what level of sophistication is expected. Cite sources like: `Згідно з даними [S5], цю тему розглядають...`
 
 ## Основний зміст (Main Content)
 The core reference material, organized into 3–5 subsections. For EACH subsection:
 - State the principle or rule
-- Show 3–5 Ukrainian examples from textbook sources (source-attributed with Source N AND chunk_id)
+- Show 3–5 Ukrainian examples from textbook sources (source-attributed with `[S1]`-style citations)
 - Show 1–2 contrasting pairs: ❌ помилково → ✅ правильно
 - Cite the source for each claim
 
@@ -146,7 +145,7 @@ Cross-links to other wiki articles.
 
 The article FAILS review if any of these is missing:
 
-1. **Chunk-ID citation in EVERY paragraph.** Format: `(Source N: chunk_id)`. Not `(Source N)` alone. Not `(Джерело 5)` alone. Both ordinal AND chunk_id.
+1. **Short source citation in EVERY paragraph.** Format: `[S1]`, `[S2]`.
 2. **Minimum 2,000 words.** C1–C2 topics require depth. If you can't reach 2,000 with the given sources, note the gap explicitly and stop — do not pad.
 3. **Minimum 10 advanced examples.** With full source attribution. From textbook/scholarly sources, not YouTube transcripts.
 4. **Minimum 5 L2 error pairs.** ❌ → ✅ format with explanations.
@@ -160,7 +159,7 @@ The article FAILS review if any of these is missing:
 Past failures this prompt is built to prevent:
 
 1. ❌ Dense walls of prose without examples → ✅ Break every 200 words, add example blocks
-2. ❌ `(Джерело 1)` format without chunk_id → ✅ `(Source 1: 11-klas-ukrmova-avramenko-2019_s0075)`
+2. ❌ Filename-heavy inline citations → ✅ short citations like `[S1]`
 3. ❌ Quoting a YouTube transcript as "academic style" → ✅ Cite textbook chunks for academic register; transcripts only for "attested colloquial usage"
 4. ❌ Endorsing `було встановлено` / `являти собою` / `в якості` as academic style → ✅ Teach the writer to AVOID these
 5. ❌ `"Деякі вчені вважають..."` without naming anyone → ✅ Name the scholar and cite the source, or omit the sentence
@@ -173,7 +172,7 @@ Past failures this prompt is built to prevent:
 
 Before you emit the final article, mentally verify:
 
-- [ ] Every paragraph has at least one `(Source N: chunk_id)` citation
+- [ ] Every paragraph has at least one `[S1]`-style citation
 - [ ] Total word count ≥ 2000
 - [ ] ≥ 10 advanced examples with attribution
 - [ ] ≥ 5 L2 error pairs

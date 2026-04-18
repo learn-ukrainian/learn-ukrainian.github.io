@@ -2,6 +2,7 @@
 
 import os
 import sys
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -80,6 +81,46 @@ class TestFormatSources:
         ]
         result = _format_sources(sources)
         assert "---" in result
+
+    def test_strips_duplicated_external_metadata_from_body(self):
+        from wiki.compiler import _format_sources
+
+        sources = [
+            {
+                "chunk_id": "ext1",
+                "source_type": "external_article",
+                "title": "Teaching Ukrainian Cases",
+                "source_name": "ULP",
+                "url": "https://example.test/cases",
+                "text": (
+                    "External article: Teaching Ukrainian Cases\n"
+                    "Source: ULP\n"
+                    "URL: https://example.test/cases\n\n"
+                    "Actual pedagogical content."
+                ),
+            },
+        ]
+        result = _format_sources(sources)
+        assert result.count("https://example.test/cases") == 1
+        assert "Actual pedagogical content." in result
+        assert "External article: Teaching Ukrainian Cases" not in result
+
+    def test_formats_wikipedia_as_header_metadata(self):
+        from wiki.compiler import _format_sources
+
+        sources = [
+            {
+                "chunk_id": "wiki1",
+                "source_type": "wikipedia",
+                "title": "Українська мова",
+                "url": "https://uk.wikipedia.org/wiki/example",
+                "text": "Lead paragraph from the article.",
+            },
+        ]
+        result = _format_sources(sources)
+        assert "Wikipedia" in result
+        assert "Title: Українська мова" in result
+        assert "Lead paragraph from the article." in result
 
 
 # ── Tests: _build_prompt ─────────────────────────────────────────
@@ -190,6 +231,102 @@ class TestCompileArticleSkipLogic:
                 dry_run=True,
             )
         assert result is None
+
+    def test_dry_run_ignores_compiled_skip(self, tmp_path):
+        from wiki.compiler import compile_article
+
+        prompts_dir = tmp_path / "prompts"
+        prompts_dir.mkdir()
+        (prompts_dir / "compile_article.md").write_text(
+            "Prompt: {topic} {slug} {domain} {tracks} {sources} {source_ids} {date}"
+        )
+
+        with patch("wiki.compiler.PROMPTS_DIR", prompts_dir), \
+             patch("wiki.compiler.WIKI_DIR", tmp_path / "wiki"), \
+             patch("wiki.compiler.is_compiled", return_value=True):
+            result = compile_article(
+                topic="Test",
+                slug="test",
+                domain="folk",
+                sources=[{"chunk_id": "c1", "text": "text"}],
+                dry_run=True,
+            )
+        assert result is None
+
+    def test_compile_writes_sibling_sources_registry(self, tmp_path):
+        from wiki.compiler import compile_article
+
+        prompts_dir = tmp_path / "prompts"
+        prompts_dir.mkdir()
+        (prompts_dir / "compile_article.md").write_text(
+            "Prompt: {topic} {slug} {domain} {tracks} {sources} {source_ids} {date}"
+        )
+        wiki_dir = tmp_path / "wiki"
+
+        with patch("wiki.compiler.PROMPTS_DIR", prompts_dir), \
+             patch("wiki.compiler.WIKI_DIR", wiki_dir), \
+             patch("wiki.compiler.is_compiled", return_value=False), \
+             patch("wiki.compiler.mark_compiled"), \
+             patch("wiki.compiler._call_gemini", return_value="# Title\n\nSentence [S1].\n"):
+            result = compile_article(
+                topic="Test",
+                slug="test",
+                domain="folk",
+                sources=[{"chunk_id": "ext-foo-1", "text": "text"}],
+            )
+
+        assert result == wiki_dir / "folk" / "test.md"
+        registry_text = (wiki_dir / "folk" / "test.sources.yaml").read_text(encoding="utf-8")
+        assert "id: S1" in registry_text
+        assert "file: ext-foo-1" in registry_text
+
+
+class TestCompileCommand:
+    def test_skip_does_not_log_compile_or_update_index(self):
+        from wiki.compile import cmd_compile_one
+
+        article_path = os.path.join("wiki", "pedagogy", "a1", "demo.md")
+
+        with patch("wiki.compile._get_domain", return_value="pedagogy/a1"), \
+             patch("wiki.compile.gather_discovery_sources", return_value={}), \
+             patch("wiki.compile.enrich_sources", return_value=[{"chunk_id": "c1", "text": "text"}]), \
+             patch("wiki.compile._slug_to_topic", return_value="Demo"), \
+             patch("wiki.compile.compile_article", return_value=Path(article_path)), \
+             patch("wiki.compile.update_index") as update_index, \
+             patch("wiki.compile.log_event") as log_event, \
+             patch("wiki.state.is_compiled", return_value=True):
+            ok = cmd_compile_one("a1", "demo")
+
+        assert ok is True
+        update_index.assert_not_called()
+        log_event.assert_not_called()
+
+    def test_build_review_prompt_includes_sources_registry(self, tmp_path):
+        from wiki.compile import _build_review_prompt
+
+        wiki_dir = tmp_path / "wiki"
+        article_dir = wiki_dir / "periods"
+        article_dir.mkdir(parents=True)
+        (article_dir / "kyivan-rus.sources.yaml").write_text(
+            "sources:\n"
+            "  - id: S1\n"
+            "    file: feaa5fa7_c0001\n"
+            "    type: literary\n",
+            encoding="utf-8",
+        )
+
+        with patch("wiki.compile.WIKI_DIR", wiki_dir), \
+             patch("wiki.compile._get_domain", return_value="periods"):
+            prompt = _build_review_prompt(
+                "<!-- wiki-meta\nslug: kyivan-rus\n-->\n\n# Title\n\nText [S1].",
+                "article",
+                "hist",
+                "kyivan-rus",
+                "r1",
+            )
+
+        assert "## Sources registry" in prompt
+        assert "id: S1" in prompt
 
 
 # ── Tests: update_index ──────────────────────────────────────────

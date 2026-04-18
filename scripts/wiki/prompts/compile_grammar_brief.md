@@ -19,7 +19,7 @@ Chunk ID: `{chunk_id}`
 {text}
 ```
 
-**Every claim in your article MUST cite a specific source** using the format `(Source N: {chunk_id})` — **BOTH** the ordinal AND the chunk_id are required. `(Source 5)` alone or `(Джерело: ...)` alone is insufficient. The chunk_id makes the claim traceable back to the exact textbook passage and lets the reviewer verify it.
+**Every claim in your article MUST cite a specific source** using short inline citations like `[S1]`, `[S2]`. The sibling `{slug}.sources.yaml` file will map those ids to the underlying chunk ids for review.
 
 If no source supports a claim, mark it `<!-- VERIFY -->`. Do NOT invent support.
 
@@ -47,12 +47,11 @@ This is NOT a lesson. It's a **reference guide for the writer** covering:
 slug: {slug}
 domain: {domain}
 tracks: [{tracks}]
-sources: [{source_ids}]
 compiled: {date}
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
-The Ukrainian textbook approach. What Grade introduces this? What sequence? What terminology do they use? **Cite specific textbooks:** "Заболотний (Source N) вводить цю тему в 6 класі через..."
+The Ukrainian textbook approach. What Grade introduces this? What sequence? What terminology do they use? **Cite specific textbooks:** "Заболотний вводить цю тему в 6 класі через... [S3]"
 
 ## Повна парадигма (Full Paradigm)
 Tables showing all forms. Highlight patterns (which endings are predictable, which are exceptions). Group by declension/conjugation class.
@@ -80,7 +79,7 @@ Show structural transfer from English, false analogies, missing categories (aspe
 ## Природні приклади (Natural Examples)
 **Minimum 12 natural Ukrainian sentences** using this grammar point. Requirements:
 - NOT translated from English — must sound like something a Ukrainian would say
-- Source-attributed where possible: "(Авраменко, Grade 9)" or "(Source N)"
+- Source-attributed where possible with `[S1]`-style citations
 - Include: daily life situations, textbook dialogues, common phrases, literary citations
 - Each example demonstrates ONE specific form or usage pattern
 - Group examples by pattern (2-3 examples per group, 4-5 groups)
@@ -101,7 +100,7 @@ Cross-links to other wiki articles.
 ## Quality Standards
 
 ### ABSOLUTE REQUIREMENTS:
-1. **Chunk-ID citations in every section.** Format: `(Source N: chunk_id)`. Not `(Source N)` alone, not `(Джерело 5)` alone. The chunk_id is mandatory and makes the claim traceable.
+1. **Short source citations in every section.** Format: `[S1]`, `[S2]`. Keep chunk ids out of prose; they live in the sibling registry.
 2. **Complete paradigms in tables.** Don't summarize — show ALL forms.
 3. **Formation as transformation chain**: `{infinitive} → {stem} → {+suffix} → {final}`, not just "add suffix X".
 4. **ALL restrictions stated explicitly** (intransitive-only, perfective-only, etc.) with the source that establishes each.
@@ -129,7 +128,7 @@ Cross-links to other wiki articles.
 
 Before emitting the final article, mentally verify:
 
-- [ ] Every paragraph has at least one `(Source N: chunk_id)` citation (both ordinal AND chunk_id)
+- [ ] Every paragraph has at least one `[S1]`-style citation
 - [ ] Total word count ≥ 1500
 - [ ] Formation rules shown as transformation chains, not bare prose
 - [ ] ALL restrictions stated explicitly with source attribution

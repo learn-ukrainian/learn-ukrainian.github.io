@@ -9,6 +9,7 @@ import unicodedata
 from pathlib import Path
 
 from .config import TRACK_DOMAINS, WIKI_DIR
+from .sources_schema import load_sources_registry, registry_path_for
 
 # Max chars of wiki context to inject into build prompts.
 #
@@ -62,7 +63,13 @@ _STOPWORDS = {
 }
 
 
-def get_wiki_context(track: str, slug: str, *, plan: dict | None = None) -> str:
+def get_wiki_context(
+    track: str,
+    slug: str,
+    *,
+    plan: dict | None = None,
+    include_sources_registry: bool = False,
+) -> str:
     """Get formatted wiki context for a module build.
 
     Finds wiki articles relevant to the track/slug and returns them
@@ -121,7 +128,14 @@ def get_wiki_context(track: str, slug: str, *, plan: dict | None = None) -> str:
                 break
 
         rel_path = md_path.relative_to(WIKI_DIR)
-        parts.append(f"### Вікі: {rel_path}\n\n{content}")
+        registry_note = ""
+        if include_sources_registry:
+            registry = load_sources_registry(registry_path_for(md_path))
+            if registry.sources:
+                summary = ", ".join(f"{entry.id}={entry.file}" for entry in registry.sources)
+                registry_note = f"\n\nSources: {summary}"
+
+        parts.append(f"### Вікі: {rel_path}\n\n{content}{registry_note}")
         total_chars += len(content)
 
     if not parts:

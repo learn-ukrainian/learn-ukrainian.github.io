@@ -21,6 +21,8 @@ import re
 import sqlite3
 from pathlib import Path
 
+from wiki.sources_schema import load_sources_registry, registry_path_for
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
 WIKI_DIR = PROJECT_ROOT / "wiki"
@@ -127,24 +129,16 @@ def get_textbook_links(level: str, slug: str, max_refs: int = 5) -> list[dict]:
 
     wiki_text = wiki_path.read_text("utf-8")
 
-    # Extract chunk_ids from wiki article — supports both old and new formats:
-    # Old: "Source N" → meta comment → chunk_ids
-    # New: YAML "sources: [chunk_id, ...]" header or inline "Джерело: `chunk_id`"
+    # Preferred source of truth: sibling registry.
     chunk_ids: list[str] = []
+    registry = load_sources_registry(registry_path_for(wiki_path))
+    if registry.sources:
+        chunk_ids = [entry.file for entry in registry.sources if "_s" in entry.file]
 
-    # Strategy 1: YAML sources header (new wiki format)
-    # Format: sources: [7-klas-ukrmova-litvinova-2024_s0047, ext-other_blogs-50, ...]
-    sources_match = re.search(r"^sources:\s*\[([^\]]+)\]", wiki_text, re.MULTILINE)
-    if sources_match:
-        chunk_ids = [cid.strip() for cid in sources_match.group(1).split(",")
-                     if "_s" in cid.strip()]
-
-    # Strategy 2: Inline Джерело backtick references (new wiki format)
-    # Format: (Джерело: `7-klas-ukrmova-litvinova-2024_s0047`)
+    # Legacy fallbacks for pre-migration articles.
     if not chunk_ids:
         chunk_ids = re.findall(r"Джерело:\s*`([\w-]+_s\d+)`", wiki_text)
 
-    # Strategy 3: Old format — Source N → meta comment → chunk_ids
     if not chunk_ids:
         source_nums = set(int(m.group(1)) for m in re.finditer(r"Source\s+(\d+)", wiki_text))
         if source_nums:

@@ -60,7 +60,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from wiki.compiler import compile_article, update_index
-from wiki.config import ALL_TRACKS, CURRICULUM_DIR, TRACK_DOMAINS
+from wiki.config import ALL_TRACKS, CURRICULUM_DIR, TRACK_DOMAINS, WIKI_DIR
 from wiki.context import strip_meta
 from wiki.enrichment import enrich_sources
 from wiki.sources import (
@@ -69,6 +69,7 @@ from wiki.sources import (
     list_discovery_slugs_readonly,
     list_literary_sources,
 )
+from wiki.sources_schema import registry_path_for
 from wiki.state import log_event, read_log
 
 # ── Domain mapping: how to group discovery slugs into wiki articles ──
@@ -383,6 +384,10 @@ def _build_review_prompt(article_text: str, article_type: str,
     and may flag legitimate source-filename strings as low-quality prose.
     """
     article_text = strip_meta(article_text)
+    sources_registry = ""
+    registry_path = registry_path_for(WIKI_DIR / _get_domain(track, slug) / f"{slug}.md")
+    if registry_path.exists():
+        sources_registry = f"\n\n## Sources registry\n\n{registry_path.read_text(encoding='utf-8').strip()}"
     return (
         f"You are a HARSH adversarial reviewer of a {article_type} for the Ukrainian "
         "language curriculum wiki. Your job is to find problems, not praise.\n\n"
@@ -436,7 +441,7 @@ def _build_review_prompt(article_text: str, article_type: str,
         "INSERT AFTER: anchor text in article\n"
         "NEW TEXT: content to add after the anchor\n"
         "</fixes>\n\n"
-        f"## Article to review\n\n{article_text}"
+        f"## Article to review\n\n{article_text}{sources_registry}"
     )
 
 
