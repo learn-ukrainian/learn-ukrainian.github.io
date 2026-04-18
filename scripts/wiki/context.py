@@ -245,19 +245,26 @@ def strip_meta(content: str) -> str:
     prompt assembly (scripts/wiki/compile.py:_build_review_prompt) — the
     reviewer must not score metadata as if it were prose.
 
-    Bounded match: ``[^<]*?`` prevents the greedy ``.*?`` failure mode flagged
+    Bounded match prevents the greedy ``.*?`` failure mode flagged
     by Gemini review #348 (#1323). If the wiki-meta opening exists but the
-    closing ``-->`` is missing, the regex would cross into a later comment
-    such as ``<!-- VERIFY -->`` and silently delete all prose between them.
-    ``[^<]`` stops at the first ``<`` (which starts any subsequent comment),
-    so a malformed wiki-meta simply fails to match rather than corrupting
-    content. We additionally warn on a detected-opening-without-close so
-    callers can surface the issue during compilation.
+    closing ``-->`` is missing, a naive ``.*?`` regex would cross into a
+    later comment such as ``<!-- VERIFY -->`` and silently delete all
+    prose between them.
+
+    The body uses a tempered repetition ``(?:(?!<!--).)*?`` instead of
+    ``[^<]*?``: it forbids the *start of a new HTML comment* but still
+    allows bare ``<`` characters (Gemini review msg #350 (#1323) caught
+    that ``[^<]`` would silently fail on valid YAML payloads containing
+    a single ``<``, e.g. ``description: "A < B"``). A malformed
+    wiki-meta still fails to match because there's no ``-->`` before the
+    next ``<!--``, so we still avoid corrupting content. We additionally
+    warn on a detected-opening-without-close so callers can surface the
+    issue during compilation.
     """
     import re
     import sys
 
-    pattern = re.compile(r"<!--\s*wiki-meta\b[^<]*?-->", re.DOTALL)
+    pattern = re.compile(r"<!--\s*wiki-meta\b(?:(?!<!--).)*?-->", re.DOTALL)
     result, n = pattern.subn("", content)
     if n == 0 and re.search(r"<!--\s*wiki-meta\b", content):
         print(
