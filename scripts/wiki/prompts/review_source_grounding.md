@@ -128,6 +128,7 @@ The score is **derived from the findings list**, not independently assessed. If 
 
 The `fixes` list is for **deterministic find/replace corrections**. Each fix must:
 - `find:` be an EXACT copy-paste from the article (preserve « », —, spacing, Cyrillic punctuation)
+- `find:` must be UNIQUE in the article — include enough surrounding context that the string appears exactly once. The merger refuses ambiguous fixes and records them as AMBIGUOUS conflicts; a fix whose find-string appears ≥2× WILL be dropped.
 - `replace:` be the minimal correction — hedge, add `<!-- VERIFY -->`, or delete the unsupported clause
 
 Examples of good fixes:

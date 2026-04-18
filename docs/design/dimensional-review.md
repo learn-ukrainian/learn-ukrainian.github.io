@@ -353,12 +353,11 @@ Previous versions of this section had 5 questions — 4 have been resolved by th
 
 ```
 docs/design/dimensional-review.md               # this doc
-scripts/wiki/prompts/review_factual.md
-scripts/wiki/prompts/review_source_grounding.md
-scripts/wiki/prompts/review_ukrainian_perspective.md
-scripts/wiki/prompts/review_register.md
-scripts/wiki/prompts/patcher.md
-scripts/wiki/review.py                          # orchestrator
+scripts/wiki/prompts/review_factual_accuracy.md  # dim 1 (filename matches JSON "dimension" field)
+scripts/wiki/prompts/review_source_grounding.md  # dim 2
+scripts/wiki/prompts/review_ukrainian_perspective.md  # dim 3
+scripts/wiki/prompts/review_register.md          # dim 4
+scripts/wiki/review.py                           # orchestrator (no LLM patcher — deterministic fix-merger per §6c)
 scripts/build/phases/review/plan_adherence.md
 scripts/build/phases/review/linguistic_accuracy.md
 scripts/build/phases/review/pedagogical_quality.md

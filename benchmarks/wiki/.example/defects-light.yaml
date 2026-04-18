@@ -1,0 +1,26 @@
+# Light-defect spec — 3 planted errors across 3 dims.
+# Run: scripts/wiki/benchmark_seed.py --clean clean.md --defects defects-light.yaml --out-article light/defective.md --out-truth light/ground_truth.yaml
+
+- id: d1
+  dim: factual_accuracy
+  issue_type: FACTUAL_ERROR
+  severity: major
+  find: "в XI столітті"
+  replace: "в IX столітті"
+  note: "Wrong century — graffiti date to 11th, not 9th"
+
+- id: d2
+  dim: ukrainian_perspective
+  issue_type: LIKE_RUSSIAN_BUT
+  severity: major
+  find: "Українська зберегла повноцінну парадигму кличної форми, тоді як у багатьох інших слов'янських мовах вона редукувалася або злилася з називним відмінком."
+  replace: "На відміну від російської мови, українська зберегла повноцінну парадигму кличної форми."
+  note: "Russian-centered comparison replaces Slavic-typological framing"
+
+- id: d3
+  dim: register
+  issue_type: RUSSIANISM
+  severity: major
+  find: "зберігають високий регістр"
+  replace: "приймають участь у високому регістрі"
+  note: "Russianism 'приймати участь' (should be 'брати участь'); also semantically warped"

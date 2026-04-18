@@ -281,8 +281,16 @@ def cmd_list(track: str) -> None:
 
 
 def cmd_compile_one(track: str, slug: str, *, force: bool = False,
-                    dry_run: bool = False, review: bool = False) -> bool:
-    """Compile a single wiki article from a discovery file."""
+                    dry_run: bool = False, review: bool = False,
+                    dim_review: bool = False) -> bool:
+    """Compile a single wiki article from a discovery file.
+
+    ``dim_review``: run the Phase-2 dimensional review orchestrator after
+    compile, in SHADOW MODE (logs findings to ``wiki/.reviews/``; never
+    blocks). Independent of the legacy single-call ``review``. Safe to
+    pass both during canary rollout (§8 Phase 2). See
+    ``docs/design/dimensional-review.md``.
+    """
     from wiki.state import is_compiled
 
     print(f"\n🔨 Compiling: {track}/{slug}")
@@ -321,8 +329,51 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
             log_event(track, slug, "compile", words=word_count, sources=len(all_chunks))
         if review and not dry_run:
             _review_article(result, track, slug)
+        if dim_review and not dry_run:
+            _dim_review_article(result, track, slug)
         return True
     return dry_run  # dry_run returns None but isn't a failure
+
+
+def _dim_review_article(article_path: Path, track: str, slug: str) -> None:
+    """Phase-2 dimensional review, shadow mode. See `scripts/wiki/review.py`.
+
+    Runs the 4 LLM dim reviewers + deterministic fix-merger in shadow
+    mode — the article file on disk is NOT modified by review, and no
+    non-zero exit is raised even if dims fail. The report lands in
+    ``wiki/.reviews/<domain>/<slug>.json`` for later calibration.
+
+    Failures here (agent unavailable, rate-limited, prompt errors) are
+    logged but do NOT break the compile pipeline — this is canary
+    rollout (§8 Phase 2), not a hard gate.
+    """
+    import traceback as _tb
+
+    from wiki.review import review_article, write_report
+
+    try:
+        report, _ = review_article(article_path, shadow_mode=True)
+        out = write_report(report, article_path)
+        print(
+            f"  🔬 Dim-review: {report.final_verdict} "
+            f"(failing: {report.failing_dims or 'none'}) → {out.name}"
+        )
+        log_event(
+            track, slug, "dim_review",
+            verdict=report.final_verdict,
+            failing_dims=report.failing_dims,
+            rounds=len(report.rounds),
+            report=str(out),
+            shadow=True,
+        )
+    except Exception as exc:  # defensive: shadow mode must never block
+        print(f"  ⚠️  Dim-review failed (shadow mode — non-fatal): {type(exc).__name__}: {exc}")
+        log_event(
+            track, slug, "dim_review_error",
+            error=f"{type(exc).__name__}: {exc}",
+            traceback=_tb.format_exc(),
+            shadow=True,
+        )
 
 
 def _parse_review_scores(review_text: str) -> dict[str, float]:
@@ -1059,7 +1110,7 @@ def cmd_review_existing(track: str, *, slug: str | None = None,
 
 def cmd_compile_all(track: str, *, limit: int | None = None,
                     force: bool = False, dry_run: bool = False,
-                    review: bool = False) -> None:
+                    review: bool = False, dim_review: bool = False) -> None:
     """Compile all articles for a track."""
     slugs = list_discovery_slugs(track)
     if not slugs:
@@ -1072,6 +1123,8 @@ def cmd_compile_all(track: str, *, limit: int | None = None,
     print(f"\n🔨 Compiling {len(slugs)} articles for {track.upper()}")
     if review:
         print("  📋 Review enabled — each article will be reviewed after compilation")
+    if dim_review:
+        print("  🔬 Dimensional review enabled (shadow mode — never blocks)")
     print(f"{'═' * 60}")
 
     success = 0
@@ -1080,7 +1133,11 @@ def cmd_compile_all(track: str, *, limit: int | None = None,
 
     for i, slug in enumerate(slugs, 1):
         print(f"\n[{i}/{len(slugs)}] {slug}")
-        result = cmd_compile_one(track, slug, force=force, dry_run=dry_run, review=review)
+        result = cmd_compile_one(
+            track, slug,
+            force=force, dry_run=dry_run,
+            review=review, dim_review=dim_review,
+        )
         if result:
             success += 1
         else:
@@ -1231,9 +1288,13 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true",
                         help="Print prompt without calling Gemini")
     parser.add_argument("--review", action="store_true",
-                        help="Review articles after compilation")
+                        help="Review articles after compilation (legacy single-call)")
     parser.add_argument("--review-only", action="store_true",
                         help="Review existing articles without recompiling")
+    parser.add_argument("--dim-review", action="store_true",
+                        help="Run Phase-2 dimensional review in SHADOW MODE "
+                             "after compile (logs findings, never blocks). "
+                             "See docs/design/dimensional-review.md.")
 
     args = parser.parse_args()
 
@@ -1265,7 +1326,7 @@ def main() -> None:
         success = cmd_compile_one(
             args.track, args.slug,
             force=args.force, dry_run=args.dry_run,
-            review=args.review,
+            review=args.review, dim_review=args.dim_review,
         )
         sys.exit(0 if success else 1)
 
@@ -1273,7 +1334,7 @@ def main() -> None:
         cmd_compile_all(
             args.track,
             limit=args.limit, force=args.force, dry_run=args.dry_run,
-            review=args.review,
+            review=args.review, dim_review=args.dim_review,
         )
         return
 

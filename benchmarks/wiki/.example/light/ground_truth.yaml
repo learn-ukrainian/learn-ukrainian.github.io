@@ -1,0 +1,38 @@
+# Ground truth for defective.md
+# Clean source: clean.md
+# Each entry: one planted defect. Benchmark driver scores reviewer
+# findings against (dim, issue_type, offset ± tolerance).
+defects:
+- id: d1
+  dim: factual_accuracy
+  issue_type: FACTUAL_ERROR
+  severity: major
+  find: в XI столітті
+  replace: в IX столітті
+  note: Wrong century — graffiti date to 11th, not 9th
+  offset: 717
+  length_in_defective: 13
+  applied: true
+- id: d2
+  dim: ukrainian_perspective
+  issue_type: LIKE_RUSSIAN_BUT
+  severity: major
+  find: Українська зберегла повноцінну парадигму кличної форми, тоді як у багатьох
+    інших слов'янських мовах вона редукувалася або злилася з називним відмінком.
+  replace: На відміну від російської мови, українська зберегла повноцінну парадигму
+    кличної форми.
+  note: Russian-centered comparison replaces Slavic-typological framing
+  offset: 172
+  length_in_defective: 87
+  applied: true
+- id: d3
+  dim: register
+  issue_type: RUSSIANISM
+  severity: major
+  find: зберігають високий регістр
+  replace: приймають участь у високому регістрі
+  note: Russianism 'приймати участь' (should be 'брати участь'); also semantically
+    warped
+  offset: 867
+  length_in_defective: 36
+  applied: true
