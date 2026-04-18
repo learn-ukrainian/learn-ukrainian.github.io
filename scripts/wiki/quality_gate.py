@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Wiki quality gate — check compiled articles for problems.
+"""Wiki quality gate — check compiled articles for deterministic problems.
 
 Scans wiki articles and flags:
 1. Short articles (below min word count)
@@ -9,6 +9,9 @@ Scans wiki articles and flags:
 5. Truncated (ends mid-sentence)
 6. Placeholder text (TODO, [Insert, etc.)
 7. Unclosed code blocks (odd number of ``` fences)
+8. Forbidden `## Джерела` bibliography sections in prose
+9. Citation registry mismatches between inline `[S#]` refs and sibling `.sources.yaml`
+10. Malformed sibling source registries
 
 Can auto-clear flagged articles from progress DB for recompile.
 
@@ -34,6 +37,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from wiki.compile import _get_domain
 from wiki.config import ALL_TRACKS
 from wiki.sources import list_discovery_slugs_readonly
+from wiki.sources_schema import extract_short_citation_ids, load_sources_registry, registry_path_for
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 WIKI_DIR = PROJECT_ROOT / "wiki"
@@ -76,6 +80,45 @@ AI_NOISE_PATTERNS = [
     r"^Мені потрібно ",
 ]
 _AI_NOISE_RE = re.compile("|".join(AI_NOISE_PATTERNS), re.MULTILINE)
+_SOURCES_SECTION_RE = re.compile(r"^## Джерела", re.MULTILINE)
+_SOURCES_SECTION_BLOCK_RE = re.compile(r"^## Джерела.*?(?=^## |\Z)", re.MULTILINE | re.DOTALL)
+
+
+def _citation_sort_key(citation_id: str) -> int:
+    return int(citation_id[1:])
+
+
+def _strip_sources_section(text: str) -> str:
+    """Remove forbidden bibliography blocks before parsing inline citations."""
+    return _SOURCES_SECTION_BLOCK_RE.sub("", text)
+
+
+def _check_citation_registry(path: Path, text: str) -> list[str]:
+    """Validate inline short citations against the sibling source registry."""
+    issues: list[str] = []
+    citation_ids = set(extract_short_citation_ids(_strip_sources_section(text)))
+    registry_path = registry_path_for(path)
+
+    if not registry_path.exists():
+        if citation_ids:
+            issues.append(f"MISSING_SOURCES_YAML ({registry_path.name})")
+        return issues
+
+    try:
+        registry = load_sources_registry(registry_path)
+    except Exception as exc:
+        issues.append(f"MALFORMED_SOURCES_YAML ({registry_path.name}: {exc})")
+        return issues
+
+    registry_ids = {entry.id for entry in registry.sources}
+
+    for citation_id in sorted(citation_ids - registry_ids, key=_citation_sort_key):
+        issues.append(f"ORPHAN_INLINE_REF ({citation_id})")
+
+    for source_id in sorted(registry_ids - citation_ids, key=_citation_sort_key):
+        issues.append(f"UNUSED_SOURCE ({source_id})")
+
+    return issues
 
 
 def _iter_track_articles(track: str):
@@ -127,6 +170,13 @@ def check_article(path: Path, track: str) -> list[str]:
     fence_count = len(re.findall(r"^```", text, re.MULTILINE))
     if fence_count % 2 == 1:
         issues.append("UNCLOSED_CODE_BLOCK")
+
+    # 8. Forbidden sources section in prose
+    if _SOURCES_SECTION_RE.search(text):
+        issues.append("SOURCES_SECTION_PRESENT")
+
+    # 9-10. Inline citation / registry consistency
+    issues.extend(_check_citation_registry(path, text))
 
     return issues
 
