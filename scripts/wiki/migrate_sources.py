@@ -178,10 +178,38 @@ def migrate_article(path: Path) -> ArticleMigrationResult:
         if normalize_source_filename(str(item))
     ]
     existing_registry = load_sources_registry(registry_path_for(path))
+
+    # Hijack-guard (Gemini review #348, #1323): if the `.md` already has
+    # `[SN]` short citations in prose but the sibling registry is missing
+    # their entries (e.g. the `.sources.yaml` was deleted while the prose
+    # was kept), assigning new IDs to residual legacy citations would
+    # silently re-bind the existing `[SN]` tags in prose to the wrong
+    # source. Synthesize phantom `unknown-citation-sN` entries for any
+    # `[SN]` found in prose that lacks a registry entry, so `next_id`
+    # starts beyond the max observed ordinal instead of colliding.
+    existing_ids = {entry.id for entry in existing_registry.sources}
+    prose_ids = set(extract_short_citation_ids(original_text))
+    orphan_prose_ids = sorted(
+        prose_ids - existing_ids,
+        key=lambda sid: int(sid[1:]) if sid[1:].isdigit() else 0,
+    )
+    if orphan_prose_ids:
+        phantom_entries = [
+            WikiSourceEntry(
+                id=sid,
+                file=f"unknown-citation-{sid.lower()}",
+                type="unknown",
+                preserved_from_meta=False,
+            )
+            for sid in orphan_prose_ids
+        ]
+        existing_registry = WikiSourcesRegistry(
+            sources=list(existing_registry.sources) + phantom_entries,
+        )
     referenced_existing_files = [
         entry.file
         for entry in existing_registry.sources
-        if entry.id in set(extract_short_citation_ids(original_text))
+        if entry.id in prose_ids
     ]
     source_index_map = _build_source_index_map(original_text, meta_sources)
     citations = find_legacy_citations(original_text, meta_sources)
