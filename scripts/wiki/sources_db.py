@@ -164,15 +164,8 @@ def search_external(
             continue
         r["_kw_score"] = _kw_score(r.get("text", ""), r.get("title", ""), ukr_keywords)
         r["source_type"] = "external"
-        # Format for compiler prompt
-        title = r.get("title", "")
-        domain = r.get("domain", r.get("source_file", ""))
-        r["text"] = (
-            f"External article: {title}\n"
-            f"Source: {domain}\n"
-            f"URL: {url}\n\n"
-            f"{r.get('text', '')}"
-        )[:8000]
+        r["source_name"] = r.get("domain", r.get("source_file", ""))
+        r["text"] = r.get("text", "")[:6000]
         results.append(r)
     return results
 
@@ -203,14 +196,8 @@ def search_wikipedia(ukr_keywords: set[str], max_total: int = 10) -> list[dict]:
     for r in rows:
         r["_kw_score"] = _kw_score(r.get("text", ""), r.get("title", ""), ukr_keywords)
         r["source_type"] = "wikipedia"
-        # Format for compiler prompt
-        title = r.get("title", "")
-        url = r.get("url", "")
-        r["text"] = (
-            f"Wikipedia: {title}\n"
-            f"URL: {url}\n\n"
-            f"{r.get('text', '')}"
-        )[:10000]
+        r["source_name"] = "Wikipedia"
+        r["text"] = r.get("text", "")[:5000]
     return rows
 
 

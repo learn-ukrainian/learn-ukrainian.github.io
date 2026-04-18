@@ -20,6 +20,134 @@ from .config import PROJECT_ROOT
 # All files searched — keyword relevance scoring picks the right chunks.
 CORE_TRACKS = {"a1", "a2", "b1", "b2", "c1", "c2"}
 
+SOURCE_CHAR_CAPS = {
+    "a1": 45_000,
+    "a2": 60_000,
+    "b1": 80_000,
+    "b2": 90_000,
+    "c1": 110_000,
+    "c2": 120_000,
+}
+
+_BACKGROUND_SOURCE_TYPES = {"wikipedia", "external", "external_article"}
+_SOURCE_TYPE_PRIORITY = {
+    "discovery": 120,
+    "local": 110,
+    "textbook": 100,
+    "literary": 95,
+    "external_article": 60,
+    "external": 55,
+    "wikipedia": 40,
+    "external_video": 0,
+}
+
+
+def _chunk_source_type(chunk: dict) -> str:
+    """Infer a normalized source type for budgeting and formatting."""
+    source_type = str(chunk.get("source_type", "")).strip()
+    if source_type:
+        return source_type
+    if chunk.get("grade") or chunk.get("section_title"):
+        return "textbook"
+    if chunk.get("work") or chunk.get("author"):
+        return "literary"
+    if chunk.get("genre") and str(chunk.get("chunk_id", "")).startswith("folk-micro-"):
+        return "local"
+    return "discovery"
+
+
+def _strip_prefixed_metadata(text: str) -> str:
+    """Remove verbose metadata lines duplicated in the compiler header."""
+    lines = text.splitlines()
+    while lines:
+        head = lines[0].strip()
+        if head.startswith((
+            "External article:",
+            "External pedagogical article:",
+            "External pedagogical reference:",
+            "External video reference:",
+            "Wikipedia:",
+            "Source:",
+            "Channel:",
+            "URL:",
+            "Note:",
+        )):
+            lines.pop(0)
+            continue
+        break
+    return "\n".join(lines).strip()
+
+
+def _chunk_body_length(chunk: dict) -> int:
+    """Estimate useful prompt budget consumed by a chunk body."""
+    return len(_strip_prefixed_metadata(str(chunk.get("text", "")).strip()))
+
+
+def _dedupe_chunks(chunks: list[dict]) -> list[dict]:
+    """Drop exact duplicates by chunk_id or normalized text body."""
+    seen_chunk_ids: set[str] = set()
+    seen_bodies: set[str] = set()
+    deduped: list[dict] = []
+    for chunk in chunks:
+        chunk_id = str(chunk.get("chunk_id", "")).strip()
+        body = _strip_prefixed_metadata(str(chunk.get("text", "")).strip())
+        if chunk_id:
+            if chunk_id in seen_chunk_ids:
+                continue
+            seen_chunk_ids.add(chunk_id)
+        elif body:
+            body_key = " ".join(body.split())
+            if body_key in seen_bodies:
+                continue
+            seen_bodies.add(body_key)
+        deduped.append(chunk)
+    return deduped
+
+
+def _cap_source_chunks(track: str, chunks: list[dict]) -> tuple[list[dict], int, int]:
+    """Cap useful source material with background-source guards."""
+    char_cap = SOURCE_CHAR_CAPS.get(track, 110_000)
+    background_cap = int(char_cap * 0.2)
+    background_max_chunks = 3
+
+    scored = sorted(
+        chunks,
+        key=lambda c: (
+            c.get("_kw_score", 0),
+            _SOURCE_TYPE_PRIORITY.get(_chunk_source_type(c), 50),
+        ),
+        reverse=True,
+    )
+
+    selected: list[dict] = []
+    total_chars = 0
+    background_chars = 0
+    background_count = 0
+
+    for chunk in scored:
+        body_len = _chunk_body_length(chunk)
+        if body_len <= 0:
+            continue
+
+        source_type = _chunk_source_type(chunk)
+        is_background = source_type in _BACKGROUND_SOURCE_TYPES
+        if is_background:
+            if background_count >= background_max_chunks:
+                continue
+            if background_chars + body_len > background_cap:
+                continue
+
+        if total_chars + body_len > char_cap:
+            continue
+
+        selected.append(chunk)
+        total_chars += body_len
+        if is_background:
+            background_chars += body_len
+            background_count += 1
+
+    return selected, char_cap, total_chars
+
 
 def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     """Enrich source chunks for a module with track-specific data.
@@ -42,9 +170,9 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     # give them a high base score so they survive capping.
     # Shallow-copy to avoid mutating the caller's data.
     for chunk in sources_info.get("literary_chunks", []):
-        all_chunks.append({**chunk, "_kw_score": 100})
+        all_chunks.append({**chunk, "_kw_score": 100, "source_type": _chunk_source_type(chunk)})
     for chunk in sources_info.get("textbook_chunks", []):
-        all_chunks.append({**chunk, "_kw_score": 100})
+        all_chunks.append({**chunk, "_kw_score": 100, "source_type": _chunk_source_type(chunk)})
     discovery_count = len(all_chunks)
 
     # Extract Ukrainian keywords from discovery for searching
@@ -97,10 +225,9 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
         all_chunks.extend(ext_chunks)
         # Collect URLs to avoid duplicates in keyword search
         for c in ext_chunks:
-            text = c.get("text", "")
-            for line in text.split("\n")[:5]:
-                if line.startswith("URL: "):
-                    mapped_urls.add(line[5:].strip())
+            url = str(c.get("url", "")).strip()
+            if url:
+                mapped_urls.add(url)
 
     # 8. External articles — FTS5 search (deduped against YAML-mapped URLs)
     if ukr_keywords:
@@ -116,33 +243,12 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
         print(f"  ⚠️  No source material found for {track}/{slug}")
         all_chunks = [{"text": f"Topic: {slug.replace('-', ' ')}", "chunk_id": "no-source"}]
     else:
-        # Cap total source material to fit Gemini context window.
-        # Higher levels and seminars produce longer articles from richer sources —
-        # give them more context. A1/A2 articles are 1-2K words, C2 articles are 3K+.
-        char_caps = {
-            "a1": 80_000, "a2": 100_000,
-            "b1": 120_000, "b2": 120_000,
-            "c1": 150_000, "c2": 150_000,
-        }
-        # Seminars get the same cap as C1/C2 — deep content needs deep sources
-        char_cap = char_caps.get(track, 150_000)
-
-        total_chars = sum(len(c.get("text", "")) for c in all_chunks)
-        if total_chars > char_cap:
-            # Sort by keyword score (highest first) so best content from ANY
-            # source type survives capping — not just whatever was added first.
-            # Discovery chunks have _kw_score=100 so they always survive.
-            scored = sorted(all_chunks, key=lambda c: c.get("_kw_score", 0), reverse=True)
-            capped = []
-            char_count = 0
-            for chunk in scored:
-                chunk_len = len(chunk.get("text", ""))
-                if char_count + chunk_len > char_cap:
-                    continue  # Skip large chunks, keep checking smaller ones
-                capped.append(chunk)
-                char_count += chunk_len
+        all_chunks = _dedupe_chunks(all_chunks)
+        total_chars = sum(_chunk_body_length(c) for c in all_chunks)
+        capped, char_cap, kept_chars = _cap_source_chunks(track, all_chunks)
+        if kept_chars < total_chars:
             print(f"  ✂️  Capped from {len(all_chunks)} to {len(capped)} chunks "
-                  f"({total_chars:,} → {char_count:,} chars, cap: {char_cap:,})")
+                  f"({total_chars:,} → {kept_chars:,} useful chars, cap: {char_cap:,})")
             all_chunks = capped
 
         print(f"  📊 Total: {len(all_chunks)} chunks "
@@ -226,6 +332,7 @@ def _load_external_resources(track: str, slug: str) -> list[dict]:
     from .sources_db import lookup_by_url
 
     chunks = []
+    skipped_reference_only = 0
 
     # Articles — inject full cached content when available
     for article in entry.get("articles", []):
@@ -237,44 +344,28 @@ def _load_external_resources(track: str, slug: str) -> list[dict]:
 
         cached = lookup_by_url(url)
         if cached and cached.get("text"):
-            # Full article content available
-            text = (
-                f"External pedagogical article: {cached.get('title', title)}\n"
-                f"Source: {cached.get('domain', source)}\n"
-                f"URL: {url}\n\n"
-                f"{cached['text']}"
-            )
+            text = cached["text"][:6000]
         else:
-            # Reference only (not fetched yet)
-            text = (
-                f"External pedagogical reference: {title}\n"
-                f"Source: {source} | URL: {url}\n"
-                f"Note: Study the pedagogical approach, not the specific wording."
-            )
-
-        chunks.append({
-            "text": text[:8000],  # Cap per article to leave room for others
-            "chunk_id": f"ext-article-{len(chunks)}",
-            "source_type": "external_article",
-        })
-
-    # YouTube — reference only for now (subtitles wired in later)
-    for video in entry.get("youtube", []):
-        if video.get("relevance") != "high":
+            skipped_reference_only += 1
             continue
-        title = video.get("title", "")
-        channel = video.get("channel", "")
-        url = video.get("url", "")
-        text = (
-            f"External video reference: {title}\n"
-            f"Channel: {channel}\n"
-            f"URL: {url}"
-        )
+
         chunks.append({
             "text": text,
-            "chunk_id": f"ext-video-{len(chunks)}",
-            "source_type": "external_video",
+            "chunk_id": f"ext-article-{len(chunks)}",
+            "source_type": "external_article",
+            "title": cached.get("title", title) if cached else title,
+            "url": url,
+            "source_name": cached.get("domain", source) if cached else source,
         })
+
+    # Bare YouTube references are intentionally excluded: without subtitles or
+    # transcripts they consume prompt budget but provide no citable evidence.
+    skipped_reference_only += sum(
+        1 for video in entry.get("youtube", []) if video.get("relevance") == "high"
+    )
+
+    if skipped_reference_only:
+        print(f"  ℹ️  Skipped {skipped_reference_only} external references without cached content")
 
     return chunks
 
@@ -354,6 +445,7 @@ def _load_folk_micro_genres(slug: str) -> list[dict]:
                     "text": " | ".join(text_parts),
                     "chunk_id": f"folk-micro-{genre}-{len(chunks)}",
                     "genre": genre,
+                    "source_type": "local",
                 })
 
     return chunks
