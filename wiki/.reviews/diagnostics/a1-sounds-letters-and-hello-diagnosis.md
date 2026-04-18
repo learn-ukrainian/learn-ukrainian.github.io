@@ -9,7 +9,7 @@
 retrieval_bottleneck
 
 ## Per-concept table
-| Concept | In returned 41? | In full corpus? | Sample grade(s) |
+| Concept | In returned 40? | In full corpus? | Sample grade(s) |
 |---|---|---|---|
 | syllable_count_rule | yes | yes | 2 |
 | larynx_touch_exercise | no | yes | 5 |

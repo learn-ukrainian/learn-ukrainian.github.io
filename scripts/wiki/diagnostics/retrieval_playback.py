@@ -23,7 +23,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DISCOVERY_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "a1" / "discovery" / "sounds-letters-and-hello.yaml"
 SOURCE_REGISTRY_PATH = PROJECT_ROOT / "wiki" / "pedagogy" / "a1" / "sounds-letters-and-hello.sources.yaml"
 PLAYBACK_OUTPUT_PATH = PROJECT_ROOT / "wiki" / ".reviews" / "diagnostics" / "a1-sounds-letters-playback.json"
-DIAGNOSIS_OUTPUT_PATH = PROJECT_ROOT / "wiki" / ".reviews" / "diagnostics" / "a1-sounds-letters-letters-diagnosis.md"
+DIAGNOSIS_OUTPUT_PATH = PROJECT_ROOT / "wiki" / ".reviews" / "diagnostics" / "a1-sounds-letters-and-hello-diagnosis.md"
 SUPPORTED_TRACK = "a1"
 SUPPORTED_SLUG = "sounds-letters-and-hello"
 MAX_EVIDENCE_CHARS = 200
@@ -379,7 +379,7 @@ def render_diagnosis_markdown(
         verdict,
         "",
         "## Per-concept table",
-        "| Concept | In returned 41? | In full corpus? | Sample grade(s) |",
+        f"| Concept | In returned {returned_count}? | In full corpus? | Sample grade(s) |",
         "|---|---|---|---|",
     ]
 
