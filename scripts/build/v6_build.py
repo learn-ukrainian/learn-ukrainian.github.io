@@ -80,7 +80,16 @@ from batch_gemini_config import (
     TIMEOUT_WRITE,
     TIMEOUT_WRITE_NO_TOOLS,
 )
+from build.convergence_loop import (
+    ConvergenceContext,
+    ReviewObservation,
+    run_convergence_loop,
+)
+from build.convergence_loop import (
+    MutationSummary as ConvergenceMutationSummary,
+)
 from build.io_utils import plan_hash, write_json_atomic
+from build.module_memory import compute_sources_hash, module_memory_path, reset_module_memory
 from build.plan_tracking import (
     PLAN_DRIFT_GUARD_STEPS,
     PLAN_HASH_PHASES,
@@ -90,6 +99,7 @@ from build.plan_tracking import (
     parse_phase_timestamp,
     plan_path_for,
 )
+from build.track_constraints import build_writer_constraints_section
 
 _LEGACY_PLAN_HASH_DRIFT_DETECTOR = detect_plan_hash_drift
 
@@ -118,6 +128,10 @@ STYLE_REVIEW_DIMENSION_LABELS = {
 }
 V6_PHASE_STATUS = Literal["complete", "skipped", "failed", "degraded", "stale"]
 _VALID_V6_PHASE_STATUSES = {"complete", "skipped", "failed", "degraded", "stale"}
+
+
+def _feature_flag_enabled(name: str) -> bool:
+    return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
 
 # --- dim_floor_fail keyword matching with negation awareness ---
 
@@ -888,7 +902,7 @@ def _build_dialogue_situations(plan: dict) -> str:
     )
     return "\n".join(lines)
 
-def _clean_build_artifacts(level: str, slug: str) -> None:
+def _clean_build_artifacts(level: str, slug: str, *, reset_memory: bool = False) -> None:
     """Remove previous build artifacts for a clean full rebuild.
 
     Preserves: plan YAML, orchestration/index.md, friction.yaml.
@@ -934,9 +948,11 @@ def _clean_build_artifacts(level: str, slug: str) -> None:
         research.unlink()
         removed += 1
 
-    # Orchestration artifacts (keep index.md and friction.yaml)
+    # Orchestration artifacts (keep index.md, friction.yaml, module-memory.yaml)
     if orch.exists():
         keep = {"index.md", "friction.yaml"}
+        if not reset_memory:
+            keep.add("module-memory.yaml")
         for f in orch.iterdir():
             if f.name in keep:
                 continue
@@ -951,7 +967,7 @@ def _clean_build_artifacts(level: str, slug: str) -> None:
         _log(f"  🧹 Cleaned {removed} previous build artifact(s)")
 
 
-def _force_reset_module(level: str, slug: str) -> None:
+def _force_reset_module(level: str, slug: str, *, reset_memory: bool = False) -> None:
     """Delete all generated artifacts for a module, preserving source of truth.
 
     Preserves: plan YAML (``plans/{level}/{slug}.yaml``), code, config.
@@ -964,7 +980,7 @@ def _force_reset_module(level: str, slug: str) -> None:
     """
     # Delegate to the existing artifact cleaner (handles content, review,
     # audit, status, research, orchestration).
-    _clean_build_artifacts(level, slug)
+    _clean_build_artifacts(level, slug, reset_memory=reset_memory)
 
     # Additionally remove published MDX — _clean_build_artifacts doesn't
     # touch the starlight output directory.
@@ -1216,23 +1232,64 @@ def _mark_phases_stale(
         _write_v6_state_atomic(state_path, state)
 
 
-def _clear_needs_human_review_marker(level: str, slug: str) -> None:
-    """Remove stale needs-human-review state and orchestration artifact."""
+def _terminal_artifact_path(level: str, slug: str, terminal: str) -> Path | None:
+    if terminal == "plan_revision_request":
+        return CURRICULUM_ROOT / level / "orchestration" / slug / "plan_revision_request.yaml"
+    if terminal == "budget_exhausted":
+        return CURRICULUM_ROOT / level / "orchestration" / slug / "budget_exhausted.yaml"
+    return None
+
+
+def _clear_terminal_marker(level: str, slug: str) -> None:
+    """Remove stale terminal state and human-terminal artifacts."""
     state_path = _v6_state_path(level, slug)
     if state_path.exists():
         state = _read_v6_state(level, slug)
-        if "needs_human_review" in state:
-            state.pop("needs_human_review", None)
+        terminal_state = state.get("terminal")
+        terminal_value = (
+            str(terminal_state.get("status") or "")
+            if isinstance(terminal_state, dict)
+            else ""
+        )
+        if terminal_value in {"plan_revision_request", "budget_exhausted"} or not terminal_value:
+            state.pop("terminal", None)
             _write_v6_state_atomic(state_path, state)
 
-    needs_review_path = CURRICULUM_ROOT / level / "orchestration" / slug / "needs-human-review.yaml"
-    try:
-        if needs_review_path.exists():
-            needs_review_path.unlink()
-    except OSError:
-        logger.warning(
-            "Could not delete %s — state cleared but artifact persists", needs_review_path
-        )
+    for terminal in ("plan_revision_request", "budget_exhausted"):
+        terminal_path = _terminal_artifact_path(level, slug, terminal)
+        if terminal_path is None:
+            continue
+        try:
+            if terminal_path.exists():
+                terminal_path.unlink()
+        except OSError:
+            logger.warning(
+                "Could not delete %s — state cleared but artifact persists", terminal_path
+            )
+
+
+def _set_terminal_state(level: str, slug: str, terminal: str, *, artifact_path: Path | None = None) -> None:
+    state = _read_v6_state(level, slug) if _v6_state_path(level, slug).exists() else {
+        "mode": "v6",
+        "track": level,
+        "slug": slug,
+        "phases": {},
+    }
+    state["terminal"] = {
+        "status": terminal,
+        "ts": datetime.now(tz=UTC).isoformat(),
+        **(
+            {"artifact_path": str(artifact_path.relative_to(CURRICULUM_ROOT / level / "orchestration" / slug))}
+            if artifact_path is not None
+            else {}
+        ),
+    }
+    _write_v6_state_atomic(_v6_state_path(level, slug), state)
+
+
+def _clear_needs_human_review_marker(level: str, slug: str) -> None:
+    """Backward-compatible wrapper for the terminal-state contract."""
+    _clear_terminal_marker(level, slug)
 
 
 @dataclass(frozen=True)
@@ -1252,9 +1309,8 @@ def reconcile_state_artifacts(level: str, slug: str) -> list[StateArtifactContra
 
     Checked invariants:
 
-    1. **needs_human_review consistency** — if state has ``needs_human_review``
-       set, the corresponding ``needs-human-review.yaml`` artifact must exist,
-       and vice versa.
+    1. **terminal consistency** — if state has a human terminal set, the
+       corresponding orchestration artifact must exist, and vice versa.
     2. **verify vs content mtime** — if state says ``verify: failed`` but the
        content ``.md`` file was modified *after* the verify timestamp, the
        verify result is stale.
@@ -1269,24 +1325,37 @@ def reconcile_state_artifacts(level: str, slug: str) -> list[StateArtifactContra
 
     state = _read_v6_state(level, slug)
     contradictions: list[StateArtifactContradiction] = []
-    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     phases = state.get("phases", {})
 
-    # 1. needs_human_review consistency
-    needs_review_in_state = bool(state.get("needs_human_review", {}).get("status"))
-    needs_review_yaml = orch_dir / "needs-human-review.yaml"
-    needs_review_on_disk = needs_review_yaml.exists()
-
-    if needs_review_in_state and not needs_review_on_disk:
-        contradictions.append(StateArtifactContradiction(
-            kind="needs_human_review_state_only",
-            detail="state.json has needs_human_review=True but needs-human-review.yaml is missing",
-        ))
-    elif needs_review_on_disk and not needs_review_in_state:
-        contradictions.append(StateArtifactContradiction(
-            kind="needs_human_review_artifact_only",
-            detail="needs-human-review.yaml exists but state.json has no needs_human_review flag",
-        ))
+    # 1. terminal consistency
+    terminal_state = state.get("terminal")
+    terminal_value = (
+        str(terminal_state.get("status") or "")
+        if isinstance(terminal_state, dict)
+        else ""
+    )
+    if terminal_value in {"plan_revision_request", "budget_exhausted"}:
+        expected_terminal_path = _terminal_artifact_path(level, slug, terminal_value)
+        if expected_terminal_path and not expected_terminal_path.exists():
+            contradictions.append(StateArtifactContradiction(
+                kind="terminal_state_only",
+                detail=(
+                    f"state.json has terminal={terminal_value} but "
+                    f"{expected_terminal_path.name} is missing"
+                ),
+            ))
+    for terminal_name in ("plan_revision_request", "budget_exhausted"):
+        terminal_path = _terminal_artifact_path(level, slug, terminal_name)
+        if terminal_path is None or not terminal_path.exists():
+            continue
+        if terminal_value != terminal_name:
+            contradictions.append(StateArtifactContradiction(
+                kind="terminal_artifact_only",
+                detail=(
+                    f"{terminal_path.name} exists but state.json terminal is "
+                    f"{terminal_value or 'unset'}"
+                ),
+            ))
 
     # 2. verify vs content mtime
     verify_info = phases.get("verify")
@@ -2981,6 +3050,15 @@ def _load_golden_dialogue_anchors(level: str, *, max_examples: int = 4) -> str:
     )
 
 
+def _writer_constraints_prompt_block(level: str, slug: str) -> str:
+    """Return learned writer constraints merged with track-level promotions."""
+    return build_writer_constraints_section(
+        curriculum_root=CURRICULUM_ROOT,
+        level=level,
+        slug=slug,
+    )
+
+
 def _save_contract_compliance(
     level: str,
     slug: str,
@@ -3545,6 +3623,8 @@ After any dialogue, write at most 2 explanatory sentences, each quoting a Ukrain
 ---
 """
 
+    writer_constraints = _writer_constraints_prompt_block(level, slug)
+
     if previous_summary:
         section_prompt += f"""## Previous Sections (for continuity — do NOT repeat this content)
 
@@ -3574,6 +3654,8 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 
 {_chunk_other_rules(level, module_num, section_activity_ids)}
 """
+    if writer_constraints:
+        section_prompt += f"\n---\n\n{writer_constraints}"
 
     # Include dialogue formatting only when the section actually contains dialogue
     has_dialogue = _section_has_dialogue_content(section["body"], section_name)
@@ -4138,6 +4220,11 @@ def step_write(level: str, module_num: int, slug: str,
     if monitor_context:
         prompt += monitor_context
         _log("  📡 Monitor telemetry injected")
+
+    writer_constraints = _writer_constraints_prompt_block(level, slug)
+    if writer_constraints:
+        prompt += "\n\n---\n\n" + writer_constraints
+        _log("  🧠 Learned writer constraints injected")
 
     # Inject module friction (learnings from past builds that MUST be respected)
     friction_path = CURRICULUM_ROOT / level / "orchestration" / slug / "friction.yaml"
@@ -4853,20 +4940,25 @@ def _save_structured_findings_from_parsed(
 def _determine_reviewer(
     writer: str,
     reviewer_override: str | None,
-) -> tuple[str, str]:
+) -> tuple[str, str] | None:
     """Resolve the reviewer family and agent id for review passes."""
+    writer_family = get_family(writer).name
+    matrix_enforced = _feature_flag_enabled("CONVERGENCE_MATRIX_ENFORCED")
+
+    def _validate(reviewer_agent: str) -> tuple[str, str] | None:
+        reviewer_family = get_family(reviewer_agent).name
+        if matrix_enforced and reviewer_family == writer_family:
+            return None
+        return reviewer_family, reviewer_agent
+
     if reviewer_override:
-        if "claude" in reviewer_override:
-            return "claude", reviewer_override
-        if "codex" in reviewer_override:
-            return "codex", reviewer_override
-        return "gemini", reviewer_override
+        return _validate(reviewer_override)
 
     if writer in ("claude", "claude-tools"):
-        return "gemini", "gemini-tools"
+        return _validate("gemini-tools")
     if writer in ("gemini", "gemini-tools"):
-        return "codex", "codex-tools"
-    return "gemini", "gemini-tools"
+        return _validate("codex-tools")
+    return _validate("gemini-tools")
 
 
 def _build_review_tools_section(reviewer: str) -> str:
@@ -6853,7 +6945,11 @@ def step_review(content_path: Path, level: str, module_num: int,
         except Exception:
             pass  # Non-blocking
 
-    reviewer, reviewer_agent = _determine_reviewer(writer, reviewer_override)
+    reviewer_tuple = _determine_reviewer(writer, reviewer_override)
+    if reviewer_tuple is None:
+        _log("  ❌ No allowed reviewer available under the convergence matrix")
+        return False, 0.0, ""
+    reviewer, reviewer_agent = reviewer_tuple
     prompt = prompt + _build_review_tools_section(reviewer)
 
     # Save review prompt
@@ -8157,6 +8253,267 @@ def _restore_snapshot(*, level: str, slug: str, content_path: Path) -> bool:
     return True
 
 
+def _normalized_dimension_name(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", str(name or "").strip().lower()).strip("_")
+
+
+def _content_sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _structured_dim_floor_dimensions(parsed_scores: list[dict]) -> tuple[str, ...]:
+    floor_dimensions = []
+    for dim in parsed_scores:
+        dim_score = int(dim.get("score", 10) or 10)
+        evidence = str(dim.get("evidence", ""))
+        if dim_score < REVIEW_TARGET_SCORE and _evidence_has_error_keyword(evidence):
+            floor_dimensions.append(_normalized_dimension_name(dim.get("name", "")))
+    return tuple(floor_dimensions)
+
+
+def _build_section_rewrite_directive(findings: tuple[dict[str, object], ...]) -> str:
+    lines = [
+        "Repair this section while preserving valid teaching content.",
+    ]
+    for finding in findings:
+        lines.extend(
+            [
+                f"- Issue type: {str(finding.get('error_class') or '').upper()}",
+                f"- Dimension: {finding.get('dimension')}",
+                f"- Evidence: {finding.get('issue')}",
+                f"- Requested fix: {finding.get('fix')}",
+            ]
+        )
+    return "\n".join(lines)
+
+
+def _build_full_rewrite_directive(findings: tuple[dict[str, object], ...]) -> str:
+    lines = [
+        "Full module rewrite required. Preserve the plan and contract exactly.",
+        "Prioritize these persistent findings:",
+    ]
+    for finding in findings[:3]:
+        lines.append(
+            "- "
+            + f"[{finding.get('dimension')}/{finding.get('error_class')}] "
+            + f"{finding.get('issue')} :: {finding.get('fix')}"
+        )
+    return "\n".join(lines)
+
+
+def _convergence_review_observation(
+    *,
+    content_path: Path,
+    level: str,
+    module_num: int,
+    slug: str,
+    writer: str,
+    reviewer_override: str | None,
+) -> ReviewObservation:
+    passed, score, review_text = step_review(
+        content_path,
+        level,
+        module_num,
+        slug,
+        writer=writer,
+        reviewer_override=reviewer_override,
+    )
+    if score == 0.0 and not review_text:
+        raise RuntimeError("reviewer returned no output")
+
+    parsed = _parse_review_result(review_text)
+    findings = tuple(_extract_structured_findings(review_text))
+    reviewer_tuple = _determine_reviewer(writer, reviewer_override)
+    reviewer = "" if reviewer_tuple is None else reviewer_tuple[0]
+    review_dir = CURRICULUM_ROOT / level / "review"
+    versioned_reviews = sorted(review_dir.glob(f"{slug}-review-r*.md"))
+    latest_review = versioned_reviews[-1] if versioned_reviews else review_dir / f"{slug}-review.md"
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    return ReviewObservation(
+        passed=parsed.passed or passed,
+        score=parsed.score or score,
+        review_text=review_text,
+        findings=findings,
+        dim_floor_dimensions=_structured_dim_floor_dimensions(parsed.parsed_scores),
+        content_hash=_content_sha256(content_path),
+        patch_available=bool(_parse_review_fixes(review_text)),
+        parsed_scores=tuple(parsed.parsed_scores),
+        reviewer=reviewer,
+        writer_model_version=get_family(writer).thinking,
+        reviewer_model_version=get_family(reviewer).thinking if reviewer else "",
+        artifacts={
+            "review_path": str(latest_review),
+            "prompt_path": str(orch_dir / "v6-review-prompt.md"),
+        },
+    )
+
+
+def _run_convergence_loop(
+    content_path: Path,
+    *,
+    level: str,
+    module_num: int,
+    slug: str,
+    writer: str,
+    reviewer_override: str | None,
+) -> ConvergenceRunResult:
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    packet_path = CURRICULUM_ROOT / level / "research" / f"{slug}-knowledge-packet.md"
+    skeleton_path = orch_dir / "skeleton.md"
+    verification_path = orch_dir / "pre-verify-results.md"
+
+    def _review_round(current_writer: str) -> ReviewObservation:
+        return _convergence_review_observation(
+            content_path=content_path,
+            level=level,
+            module_num=module_num,
+            slug=slug,
+            writer=current_writer,
+            reviewer_override=reviewer_override,
+        )
+
+    def _patch_round(observation: ReviewObservation) -> ConvergenceMutationSummary:
+        applied, count = _apply_review_fixes(
+            observation.review_text,
+            content_path,
+            level=level,
+            slug=slug,
+        )
+        return ConvergenceMutationSummary(
+            changed=applied,
+            mutation_count=count,
+            summary="deterministic fixes applied" if applied else "no deterministic fixes landed",
+        )
+
+    def _section_rewrite_round(
+        findings: tuple[dict[str, object], ...],
+        current_writer: str,
+    ) -> ConvergenceMutationSummary:
+        grouped: dict[str, list[dict[str, object]]] = {}
+        for finding in findings:
+            scope = finding.get("scope") or {}
+            if not isinstance(scope, dict):
+                scope = {}
+            section_title = str(scope.get("section_title") or "").strip()
+            if not section_title:
+                continue
+            grouped.setdefault(section_title, []).append(finding)
+        applied = 0
+        for section_title, section_findings in grouped.items():
+            if _rewrite_block_section(
+                content_path,
+                level=level,
+                module_num=module_num,
+                slug=slug,
+                writer=current_writer,
+                section_name=section_title,
+                directive=_build_section_rewrite_directive(tuple(section_findings)),
+            ):
+                applied += 1
+        return ConvergenceMutationSummary(
+            changed=applied > 0,
+            mutation_count=applied,
+            summary="section rewrites applied" if applied else "no section rewrites landed",
+        )
+
+    def _full_rewrite_round(
+        findings: tuple[dict[str, object], ...],
+        current_writer: str,
+    ) -> ConvergenceMutationSummary:
+        previous_hash = _content_sha256(content_path)
+        output = step_write(
+            level,
+            module_num,
+            slug,
+            packet_path if packet_path.exists() else None,
+            writer=current_writer,
+            correction_directive=_build_full_rewrite_directive(findings),
+            skeleton=skeleton_path.read_text("utf-8") if skeleton_path.exists() else "",
+            verification_text=verification_path.read_text("utf-8") if verification_path.exists() else "",
+        )
+        if output is None:
+            return ConvergenceMutationSummary(False, 0, "writer returned no rewrite output")
+        _post_process_content(output)
+        _save_v6_state(level, slug, "write")
+        new_hash = _content_sha256(output)
+        return ConvergenceMutationSummary(
+            changed=new_hash != previous_hash,
+            mutation_count=1 if new_hash != previous_hash else 0,
+            summary="full rewrite complete" if new_hash != previous_hash else "rewrite matched prior content",
+        )
+
+    def _writer_swap_round(
+        findings: tuple[dict[str, object], ...],
+        current_writer: str,
+    ) -> tuple[str | None, ConvergenceMutationSummary]:
+        writer_order = ["gemini-tools", "claude-tools", "codex-tools"]
+        current_family = get_family(current_writer).name
+        family_to_writer = {
+            "gemini": "gemini-tools",
+            "claude": "claude-tools",
+            "codex": "codex-tools",
+        }
+        ordered_families = [get_family(item).name for item in writer_order]
+        next_index = (ordered_families.index(current_family) + 1) % len(ordered_families)
+        next_writer = family_to_writer[ordered_families[next_index]]
+        if _determine_reviewer(next_writer, reviewer_override) is None:
+            return None, ConvergenceMutationSummary(False, 0, "writer swap blocked by reviewer matrix")
+        mutation = _full_rewrite_round(findings, next_writer)
+        return (next_writer if mutation.changed else current_writer), mutation
+
+    def _style_review_after_swap(current_writer: str) -> None:
+        _run_style_review_heal_loop(
+            content_path,
+            level=level,
+            module_num=module_num,
+            slug=slug,
+            writer=current_writer,
+            reviewer_override=reviewer_override,
+        )
+
+    plan_path = _plan_path(level, slug)
+    plan_data = yaml.safe_load(plan_path.read_text("utf-8")) if plan_path and plan_path.exists() else {}
+    raw_plan_version = str(plan_data.get("version") or "0")
+    plan_version = int(re.match(r"\d+", raw_plan_version).group(0)) if re.match(r"\d+", raw_plan_version) else 0
+    template_path = PHASES_DIR / ("v6-write-seminar.md" if _is_seminar_track(level) else "v6-write.md")
+    result = run_convergence_loop(
+        ConvergenceContext(
+            level=level,
+            slug=slug,
+            writer=writer,
+            review_round=_review_round,
+            patch_round=_patch_round,
+            section_rewrite_round=_section_rewrite_round,
+            full_rewrite_round=_full_rewrite_round,
+            writer_swap_round=_writer_swap_round,
+            refresh_sidecars=lambda strategy: _refresh_post_patch_sidecars(
+                content_path,
+                level=level,
+                module_num=module_num,
+                slug=slug,
+                writer=writer if strategy != "writer_swap" else get_family(writer).name + "-tools",
+            ),
+            memory_path=module_memory_path(CURRICULUM_ROOT, level, slug),
+            terminal_dir=orch_dir,
+            stuck_modules_path=CURRICULUM_ROOT / "stuck-modules.yaml",
+            plan_hash=_current_plan_hash(level, slug) or "",
+            plan_version=plan_version,
+            sources_hash=compute_sources_hash(
+                project_root=PROJECT_ROOT,
+                curriculum_root=CURRICULUM_ROOT,
+                level=level,
+                slug=slug,
+                writer_template_path=template_path,
+            ),
+            reviewer_matrix_enforced=_feature_flag_enabled("CONVERGENCE_MATRIX_ENFORCED"),
+            growth_log_path=PROJECT_ROOT / "scripts" / "build" / "finding-normalizer-growth.yaml",
+            style_review_after_swap=_style_review_after_swap,
+        )
+    )
+    return result
+
+
 def _run_review_heal_loop(
     content_path: Path,
     *,
@@ -8587,6 +8944,120 @@ def _rerun_write_after_plan_patch(
     return content_path
 
 
+def _collect_activity_types(activity_payload: object) -> set[str]:
+    if isinstance(activity_payload, list):
+        return {
+            str(item.get("type") or "").strip()
+            for item in activity_payload
+            if isinstance(item, dict) and str(item.get("type") or "").strip()
+        }
+    if not isinstance(activity_payload, dict):
+        return set()
+
+    collected: set[str] = set()
+    for key in ("inline", "workbook"):
+        bucket = activity_payload.get(key)
+        if isinstance(bucket, list):
+            collected.update(
+                str(item.get("type") or "").strip()
+                for item in bucket
+                if isinstance(item, dict) and str(item.get("type") or "").strip()
+            )
+    return {item for item in collected if item}
+
+
+def _extract_vocab_words(vocab_payload: object) -> set[str]:
+    if not isinstance(vocab_payload, dict):
+        return set()
+    words = set()
+    for item in vocab_payload.get("vocabulary") or []:
+        if not isinstance(item, dict):
+            continue
+        word = str(item.get("word") or "").strip().lower()
+        if word:
+            words.add(word.replace("́", ""))
+    return words
+
+
+def _required_vocab_terms(plan: dict) -> set[str]:
+    raw_vocab = plan.get("vocabulary_hints") or plan.get("vocabulary") or {}
+    values: list[str] = []
+    if isinstance(raw_vocab, list):
+        values = [
+            str(item.get("word") if isinstance(item, dict) else item)
+            for item in raw_vocab
+            if item
+        ]
+    elif isinstance(raw_vocab, dict):
+        values = [str(item) for item in (raw_vocab.get("required") or [])]
+    normalized = set()
+    for value in values:
+        normalized.add(
+            re.split(r"\s*\(", value, maxsplit=1)[0].strip().lower().replace("́", "")
+        )
+    return {item for item in normalized if item}
+
+
+def _validate_regenerated_sidecars(
+    *,
+    content_path: Path,
+    level: str,
+    module_num: int,
+    slug: str,
+    activity_path: Path,
+    vocab_path: Path,
+) -> None:
+    from audit.checks.contract_compliance import check_contract_compliance
+
+    plan_path = _plan_path(level, slug)
+    plan = yaml.safe_load(plan_path.read_text("utf-8")) if plan_path and plan_path.exists() else {}
+    contract, _ = _ensure_contract_artifacts(level, module_num, slug, log_creation=False)
+    violations = check_contract_compliance(content_path.read_text("utf-8"), contract)
+    blocking = [
+        item
+        for item in violations
+        if str(item.get("type") or "") in {"WORD_BUDGET", "VOCAB_TARGETS", "ACTIVITY_ORDER"}
+    ]
+    if blocking:
+        messages = "; ".join(str(item.get("message") or item.get("type")) for item in blocking)
+        raise RuntimeError(f"plan-sidecar validation failed: {messages}")
+
+    activities_payload = yaml.safe_load(activity_path.read_text("utf-8"))
+    present_activity_types = _collect_activity_types(activities_payload)
+    required_activity_types = {
+        str(item.get("type") or "").strip()
+        for item in (plan.get("activity_hints") or [])
+        if isinstance(item, dict) and str(item.get("type") or "").strip()
+    }
+    missing_activity_types = sorted(required_activity_types - present_activity_types)
+    if missing_activity_types:
+        raise RuntimeError(
+            "plan-sidecar validation failed: missing activity types "
+            + ", ".join(missing_activity_types)
+        )
+
+    vocab_payload = yaml.safe_load(vocab_path.read_text("utf-8"))
+    present_vocab = _extract_vocab_words(vocab_payload)
+    required_vocab = _required_vocab_terms(plan)
+    missing_vocab = sorted(
+        term
+        for term in required_vocab
+        if term not in present_vocab
+    )
+    if missing_vocab:
+        raise RuntimeError(
+            "plan-sidecar validation failed: missing vocabulary "
+            + ", ".join(missing_vocab[:8])
+        )
+
+
+def _should_skip_annotate(level: str) -> bool:
+    skip_tracks = {"hist", "bio", "istorio", "lit", "folk", "oes", "ruth"}
+    skip_levels = {"a2", "b1", "b2", "c1", "c2"}
+    lowered = level.lower()
+    return lowered in skip_tracks or lowered.startswith("lit-") or lowered in skip_levels
+
+
 def _refresh_post_patch_sidecars(
     content_path: Path,
     *,
@@ -8595,10 +9066,17 @@ def _refresh_post_patch_sidecars(
     slug: str,
     writer: str,
 ) -> bool:
-    """Refresh content-derived sidecars after a full post-plateau rewrite."""
-    _log("\n♻️ Refreshing content-derived sidecars after plan patch rewrite")
+    """Refresh content-derived sidecars after any prose regeneration."""
+    _log("\n♻️ Refreshing full sidecar chain after prose regeneration")
     _post_process_content(content_path)
-    _save_v6_state(level, slug, "annotate")
+    if _should_skip_annotate(level):
+        _save_v6_state(level, slug, "annotate", status="skipped")
+    else:
+        annotate_status = _normalize_v6_phase_status(
+            step_annotate(content_path),
+            phase="annotate",
+        )
+        _save_v6_state(level, slug, "annotate", status=annotate_status)
 
     activity_path = step_activities(content_path, level, module_num, slug, writer=writer)
     if not activity_path:
@@ -8629,9 +9107,18 @@ def _refresh_post_patch_sidecars(
     _save_v6_state(level, slug, "verify", status=verify_status)
     vex_ok = step_verify_exercises(content_path, level, slug)
     _save_v6_state(level, slug, "verify-exercises", status="complete" if vex_ok else "failed")
-    if not step_vocab(content_path, level, module_num, slug, writer=writer):
+    vocab_path = step_vocab(content_path, level, module_num, slug, writer=writer)
+    if not vocab_path:
         return False
     _save_v6_state(level, slug, "vocab")
+    _validate_regenerated_sidecars(
+        content_path=content_path,
+        level=level,
+        module_num=module_num,
+        slug=slug,
+        activity_path=activity_path,
+        vocab_path=vocab_path,
+    )
     return True
 
 def _strip_dsl_blocks(text: str) -> tuple[str, int]:
@@ -9403,6 +9890,8 @@ def main():
                              "Preserves plan YAML, discovery materials, code/config. "
                              "Removes lesson .md, activities, vocabulary, reviews, audit, status, "
                              "orchestration state/prompts/dispatch, knowledge packet, published MDX.")
+    parser.add_argument("--reset-memory", action="store_true",
+                        help="Also wipe orchestration/module-memory.yaml before rebuilding.")
     args = parser.parse_args()
 
     # --range: build multiple modules sequentially
@@ -9454,6 +9943,7 @@ def main():
                      "--review-threshold", str(args.review_threshold),
                      *(["--force-publish"] if args.force_publish else []),
                      *(["--force"] if args.force else []),
+                     *(["--reset-memory"] if args.reset_memory else []),
                      *(["--resume"] if args.resume else []),
                      *[
                          item
@@ -9542,10 +10032,14 @@ def main():
         # Runs before resume logic — after reset there are no phases to resume.
         if args.force:
             _log("   🔄 --force: resetting module to source of truth...")
-            _force_reset_module(args.level, slug)
+            _force_reset_module(args.level, slug, reset_memory=args.reset_memory)
             # --force implies a full rebuild from the beginning.
             if args.resume:
                 _log("   ℹ️  --force overrides --resume: starting fresh")
+        elif args.reset_memory:
+            removed_memory = reset_module_memory(module_memory_path(CURRICULUM_ROOT, args.level, slug))
+            if removed_memory:
+                _log("   🧠 Reset module memory")
 
         steps = args.step
 
@@ -9655,7 +10149,7 @@ def main():
 
         # Clean previous build artifacts for a fresh full build (skip when resuming)
         if steps == "all" and not completed_phases:
-            _clean_build_artifacts(args.level, slug)
+            _clean_build_artifacts(args.level, slug, reset_memory=args.reset_memory)
 
         # --resume: restore dependency variables from disk if their phases are complete
         # These variables are normally set by earlier phases; when resuming we load from disk
@@ -10017,148 +10511,43 @@ def main():
             steps in ("all", "review")
             or "review" in resume_invalidation_applied
         ) and "review" not in completed_phases:
-            from build.phases.plan_patch import run_plan_patch
-
             _phase_start = time.monotonic()
-            orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
-            plan_path = _plan_path(args.level, slug)
-            content_rebuilt_after_plan_patch = False
-            plan_patch_result = None
-
-            review_result = _run_review_heal_loop(
-                content_path,
-                level=args.level,
-                module_num=args.module,
-                slug=slug,
-                writer=args.writer,
-                reviewer_override=args.reviewer,
-            )
-            if review_result.outcome == "error":
+            try:
+                review_result = _run_convergence_loop(
+                    content_path,
+                    level=args.level,
+                    module_num=args.module,
+                    slug=slug,
+                    writer=args.writer,
+                    reviewer_override=args.reviewer,
+                )
+            except RuntimeError:
                 _log("\n❌ Build FAILED at Step 8 (review — no output from reviewer)")
                 _save_v6_state(args.level, slug, "review", status="failed")
                 _emit_module_failed("review", "Build FAILED at Step 8 (review — no output from reviewer)")
                 sys.exit(1)
 
-            if review_result.outcome == "plateau" and plan_path is not None:
-                latest_round = review_result.rounds[-1]
-                plan_patch_result = run_plan_patch(
-                    level=args.level,
-                    slug=slug,
-                    plan_path=plan_path,
-                    orch_dir=orch_dir,
-                    score_history=[round_state.score for round_state in review_result.rounds],
-                    contract_violations=list(latest_round.contract_violations),
-                    round_window=len(review_result.rounds),
-                )
-                if plan_patch_result.applied:
-                    content_rebuilt_after_plan_patch = True
-                    _log(
-                        f"\n🩹 Plan patch applied ({plan_patch_result.change_count} change(s)) — "
-                        f"version bumped to {plan_patch_result.new_version}"
-                    )
-                    _log(f"  Trigger: {plan_patch_result.complaint_summary}")
-                    for entry in plan_patch_result.changes[:5]:
-                        _log(f"    {entry}")
-                    content_path = _rerun_write_after_plan_patch(
-                        level=args.level,
-                        module_num=args.module,
-                        slug=slug,
-                        packet_path=packet_path,
-                        writer=args.writer,
-                        verification_text=verification_text,
-                    )
-                    if not content_path:
-                        _log("\n❌ Build FAILED at Step 8 (plan patch write retry exhausted)")
-                        _save_v6_state(args.level, slug, "review", status="failed")
-                        _emit_module_failed(
-                            "review",
-                            "Build FAILED at Step 8 (plan patch write retry exhausted)",
-                        )
-                        return False
-                    review_result = _run_review_heal_loop(
-                        content_path,
-                        level=args.level,
-                        module_num=args.module,
-                        slug=slug,
-                        writer=args.writer,
-                        reviewer_override=args.reviewer,
-                    )
-                    if review_result.outcome == "error":
-                        _log("\n❌ Build FAILED at Step 8 (review — no output from reviewer)")
-                        _save_v6_state(args.level, slug, "review", status="failed")
-                        _emit_module_failed("review", "Build FAILED at Step 8 (review — no output from reviewer)")
-                        sys.exit(1)
-
             final_round = review_result.rounds[-1]
-            score = final_round.score
-            review_text = final_round.review_text
+            score = float(final_round.get("score_overall") or 0.0)
+            review_text = ""
+            latest_review = CURRICULUM_ROOT / args.level / "review" / f"{slug}-review.md"
+            if latest_review.exists():
+                review_text = latest_review.read_text("utf-8")
             final_score = score
-            final_contract_violations = list(final_round.contract_violations)
 
-            if review_result.outcome != "pass":
-                if content_rebuilt_after_plan_patch:
-                    escalation_reason = "review plateaued again after plan patch retry"
-                elif plan_patch_result is not None:
-                    escalation_reason = f"review plateaued and plan patch was not applied: {plan_patch_result.reason}"
-                else:
-                    escalation_reason = "review plateaued and no valid plan patch could be produced"
-
-                needs_review_path = orch_dir / "needs-human-review.yaml"
-                needs_review_path.write_text(
-                    yaml.safe_dump(
-                        {
-                            "slug": slug,
-                            "review_rounds": len(review_result.rounds),
-                            "final_score": score,
-                            "score_history": [round_state.score for round_state in review_result.rounds],
-                            "contract_violations": final_contract_violations,
-                            "latest_review_excerpt": review_text[:2000],
-                            "reason": escalation_reason,
-                            "plan_patch": None if plan_patch_result is None else {
-                                "applied": plan_patch_result.applied,
-                                "reason": plan_patch_result.reason,
-                                "complaint_summary": plan_patch_result.complaint_summary,
-                                "new_version": plan_patch_result.new_version,
-                                "changes": list(plan_patch_result.changes),
-                            },
-                        },
-                        sort_keys=False,
-                        allow_unicode=True,
-                    ),
-                    "utf-8",
+            if review_result.terminal != "pass":
+                _set_terminal_state(
+                    args.level,
+                    slug,
+                    review_result.terminal,
+                    artifact_path=review_result.artifact_path,
                 )
-                if _v6_state_path(args.level, slug).exists():
-                    state = _read_v6_state(args.level, slug)
-                else:
-                    state = {"mode": "v6", "track": args.level, "slug": slug, "phases": {}}
-                state["needs_human_review"] = {
-                    "status": True,
-                    "ts": datetime.now(tz=UTC).isoformat(),
-                    "reason": escalation_reason,
-                    "violations_path": str(needs_review_path.relative_to(orch_dir)),
-                }
-                _write_v6_state_atomic(_v6_state_path(args.level, slug), state)
                 _save_v6_state(args.level, slug, "review", status="failed")
-                _log("\n❌ Review plateau persisted after automated recovery — marked needs_human_review")
-                _emit_module_failed("review", f"{escalation_reason} — needs_human_review")
+                _log(f"\n❌ Review exited via terminal: {review_result.terminal}")
+                _emit_module_failed("review", f"review terminal — {review_result.terminal}")
                 return False
 
-            _clear_needs_human_review_marker(args.level, slug)
-
-            if content_rebuilt_after_plan_patch and not _refresh_post_patch_sidecars(
-                content_path,
-                level=args.level,
-                module_num=args.module,
-                slug=slug,
-                writer=args.writer,
-            ):
-                _log("\n❌ Build FAILED at Step 8 (post-plan-patch sidecar refresh)")
-                _save_v6_state(args.level, slug, "review", status="failed")
-                _emit_module_failed(
-                    "review",
-                    "Build FAILED at Step 8 (post-plan-patch sidecar refresh)",
-                )
-                return False
+            _clear_terminal_marker(args.level, slug)
 
             # Run deterministic style cleanup if engagement is weak
             engagement_match = re.search(
@@ -10182,6 +10571,7 @@ def main():
 
             _log(f"\n✅ Review PASSED ({score}/10)")
             final_score = score
+            _set_terminal_state(args.level, slug, "pass")
             _save_v6_state(args.level, slug, "review")
             _emit_phase_done("review", _phase_start)
 
@@ -10211,8 +10601,8 @@ def main():
             style_review_text = final_style_round.review_text
             if style_review_result.outcome != "pass":
                 orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
-                needs_review_path = orch_dir / "needs-human-review.yaml"
-                needs_review_path.write_text(
+                budget_path = orch_dir / "budget_exhausted.yaml"
+                budget_path.write_text(
                     yaml.safe_dump(
                         {
                             "slug": slug,
@@ -10230,29 +10620,18 @@ def main():
                     ),
                     "utf-8",
                 )
-                state = _read_v6_state(args.level, slug) if _v6_state_path(args.level, slug).exists() else {
-                    "mode": "v6",
-                    "track": args.level,
-                    "slug": slug,
-                    "phases": {},
-                }
-                state["needs_human_review"] = {
-                    "status": True,
-                    "ts": datetime.now(tz=UTC).isoformat(),
-                    "reason": "style review plateaued after automated recovery",
-                    "violations_path": str(needs_review_path.relative_to(orch_dir)),
-                }
-                _write_v6_state_atomic(_v6_state_path(args.level, slug), state)
+                _set_terminal_state(args.level, slug, "budget_exhausted", artifact_path=budget_path)
                 _save_v6_state(args.level, slug, "review-style", status="failed")
-                _log("\n❌ Style review plateau persisted after automated recovery — marked needs_human_review")
+                _log("\n❌ Style review plateau persisted after automated recovery — marked budget_exhausted")
                 _emit_module_failed(
                     "review-style",
-                    "Style review plateaued after automated recovery — needs_human_review",
+                    "Style review plateaued after automated recovery — budget_exhausted",
                 )
                 return False
 
             _save_v6_state(args.level, slug, "review-style")
-            _clear_needs_human_review_marker(args.level, slug)
+            _clear_terminal_marker(args.level, slug)
+            _set_terminal_state(args.level, slug, "pass")
             verdict_icon = "✅" if final_style_round.passed else "⚠️"
             verdict_label = "PASSED" if final_style_round.passed else "ADVISORY-PASS"
             _log(f"\n{verdict_icon} Style review {verdict_label} ({style_score}/10)")

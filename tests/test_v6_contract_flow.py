@@ -12,6 +12,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 import build.v6_build as v6_build
+from build.convergence_loop import ConvergenceRunResult
 
 
 def _write_manifest(curriculum_root: Path, level: str, slug: str) -> None:
@@ -522,7 +523,7 @@ def test_rewrite_block_section_allows_shorter_summary_register_cleanup(
     updated = content_path.read_text("utf-8")
     assert rewritten_summary in updated
     assert original_summary not in updated
-def test_main_marks_needs_human_review_after_two_rounds(tmp_path: Path, monkeypatch) -> None:
+def test_main_marks_plan_revision_terminal(tmp_path: Path, monkeypatch) -> None:
     level = "a1"
     slug = "needs-human"
     curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
@@ -552,41 +553,34 @@ def test_main_marks_needs_human_review_after_two_rounds(tmp_path: Path, monkeypa
     )
     (orch_dir / "wiki-excerpts.yaml").write_text("sections: {}\nfactual_anchors: []\n", "utf-8")
 
-    review_calls = {"count": 0}
-    reviews = iter(
-        [
-            (False, 8.4, "## Verdict: REVISE\n<fixes></fixes>\n"),
-            (False, 8.5, "## Verdict: REVISE\n<fixes></fixes>\n"),
-            (False, 8.6, "## Verdict: REVISE\n<fixes></fixes>\n"),
-        ]
-    )
-
-    def fake_review(*args, **kwargs):
-        review_calls["count"] += 1
-        return next(reviews)
-
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
     monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
     monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
     monkeypatch.setattr(v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True)
-    monkeypatch.setattr(v6_build, "step_review", fake_review)
-    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
-    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
-    monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: "complete")
+    terminal_path = orch_dir / "plan_revision_request.yaml"
+    terminal_path.write_text("slug: needs-human\n", "utf-8")
+    monkeypatch.setattr(
+        v6_build,
+        "_run_convergence_loop",
+        lambda *args, **kwargs: ConvergenceRunResult(
+            terminal="plan_revision_request",
+            rounds=({"score_overall": 8.6},),
+            trace=({"tier": 5, "strategy": "plan_revision_request"},),
+            writer="gemini-tools",
+            artifact_path=terminal_path,
+        ),
+    )
     monkeypatch.setattr(sys, "argv", ["v6_build.py", level, "1", "--step", "review", "--writer", "gemini"])
 
     result = v6_build.main()
 
     state = json.loads((orch_dir / "state.json").read_text("utf-8"))
-    needs_human_review = yaml.safe_load((orch_dir / "needs-human-review.yaml").read_text("utf-8"))
     assert result is False
-    assert review_calls["count"] == 3
-    assert state["needs_human_review"]["status"] is True
-    assert needs_human_review["review_rounds"] == 3
-    assert (orch_dir / "needs-human-review.yaml").exists()
+    assert state["terminal"]["status"] == "plan_revision_request"
+    assert (orch_dir / "plan_revision_request.yaml").exists()
 
 
-def test_main_clears_stale_needs_human_review_after_review_pass(
+def test_main_clears_stale_terminal_after_review_pass(
     tmp_path: Path, monkeypatch
 ) -> None:
     level = "a1"
@@ -617,7 +611,7 @@ def test_main_clears_stale_needs_human_review_after_review_pass(
         "utf-8",
     )
     (orch_dir / "wiki-excerpts.yaml").write_text("sections: {}\nfactual_anchors: []\n", "utf-8")
-    (orch_dir / "needs-human-review.yaml").write_text("stale: true\n", "utf-8")
+    (orch_dir / "plan_revision_request.yaml").write_text("stale: true\n", "utf-8")
     state_path = orch_dir / "state.json"
     state_path.write_text(
         json.dumps(
@@ -626,7 +620,7 @@ def test_main_clears_stale_needs_human_review_after_review_pass(
                 "track": level,
                 "slug": slug,
                 "phases": {},
-                "needs_human_review": {"status": True, "reason": "stale"},
+                "terminal": {"status": "plan_revision_request", "reason": "stale"},
             }
         ),
         "utf-8",
@@ -638,11 +632,12 @@ def test_main_clears_stale_needs_human_review_after_review_pass(
     monkeypatch.setattr(v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True)
     monkeypatch.setattr(
         v6_build,
-        "step_review",
-        lambda *args, **kwargs: (
-            True,
-            9.2,
-            "## Verdict: PASS\n| 1. Plan adherence | 9/10 | ok |\n",
+        "_run_convergence_loop",
+        lambda *args, **kwargs: ConvergenceRunResult(
+            terminal="pass",
+            rounds=({"score_overall": 9.2},),
+            trace=(),
+            writer="gemini-tools",
         ),
     )
     monkeypatch.setattr(
@@ -667,8 +662,8 @@ def test_main_clears_stale_needs_human_review_after_review_pass(
 
     state = json.loads(state_path.read_text("utf-8"))
     assert result is True
-    assert "needs_human_review" not in state
-    assert (orch_dir / "needs-human-review.yaml").exists() is False
+    assert state["terminal"]["status"] == "pass"
+    assert (orch_dir / "plan_revision_request.yaml").exists() is False
 
 
 def test_run_review_heal_loop_triggers_word_budget_autoheal(tmp_path: Path, monkeypatch) -> None:
@@ -1419,11 +1414,10 @@ def test_main_continues_after_style_advisory_pass(tmp_path: Path, monkeypatch) -
 
     state = json.loads((orch_dir / "state.json").read_text("utf-8"))
     assert result is True
-    # Should NOT have needs_human_review because it's advisory pass
-    assert "needs_human_review" not in state
+    assert state["terminal"]["status"] == "pass"
 
 
-def test_main_clears_stale_needs_human_review_after_style_pass(
+def test_main_clears_stale_terminal_after_style_pass(
     tmp_path: Path, monkeypatch
 ) -> None:
     level = "a1"
@@ -1438,7 +1432,7 @@ def test_main_clears_stale_needs_human_review_after_style_pass(
     )
     orch_dir = curriculum_root / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
-    (orch_dir / "needs-human-review.yaml").write_text("stale: true\n", "utf-8")
+    (orch_dir / "plan_revision_request.yaml").write_text("stale: true\n", "utf-8")
     state_path = orch_dir / "state.json"
     state_path.write_text(
         json.dumps(
@@ -1447,7 +1441,7 @@ def test_main_clears_stale_needs_human_review_after_style_pass(
                 "track": level,
                 "slug": slug,
                 "phases": {},
-                "needs_human_review": {"status": True, "reason": "stale"},
+                "terminal": {"status": "plan_revision_request", "reason": "stale"},
             }
         ),
         "utf-8",
@@ -1479,8 +1473,8 @@ def test_main_clears_stale_needs_human_review_after_style_pass(
 
     state = json.loads(state_path.read_text("utf-8"))
     assert result is True
-    assert "needs_human_review" not in state
-    assert (orch_dir / "needs-human-review.yaml").exists() is False
+    assert state["terminal"]["status"] == "pass"
+    assert (orch_dir / "plan_revision_request.yaml").exists() is False
 
 
 def test_run_style_review_heal_loop_treats_malformed_yaml_as_error(

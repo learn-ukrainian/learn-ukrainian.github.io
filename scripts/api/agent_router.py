@@ -60,13 +60,17 @@ def get_orchestration(level: str, slug: str):
     if dispatch_dir.exists():
         dispatch_logs = [f.name for f in dispatch_dir.glob("*.json")]
 
-    needs_human = (orch_dir / "needs-human-review.yaml").exists()
+    terminal = None
+    for candidate in ("plan_revision_request.yaml", "budget_exhausted.yaml"):
+        if (orch_dir / candidate).exists():
+            terminal = candidate.removesuffix(".yaml")
+            break
 
     return {
         "latest_prompts": sorted(prompts),
         "review_rounds": sorted(review_rounds),
         "dispatch_logs": sorted(dispatch_logs)[-5:],
-        "needs_human_review": needs_human,
+        "terminal": terminal,
     }
 
 

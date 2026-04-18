@@ -162,7 +162,7 @@ class TestReconcileStateArtifacts:
         contradictions = v6_build.reconcile_state_artifacts("a1", "test-module")
         assert contradictions == []
 
-    def test_needs_human_review_state_only(
+    def test_terminal_state_only(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _setup_module_state(
@@ -172,15 +172,15 @@ class TestReconcileStateArtifacts:
                 "mode": "v6",
                 "track": "a1",
                 "slug": "test-module",
-                "needs_human_review": {"status": True, "ts": "2026-04-17T10:00:00+00:00"},
+                "terminal": {"status": "plan_revision_request", "ts": "2026-04-17T10:00:00+00:00"},
                 "phases": {},
             },
         )
         contradictions = v6_build.reconcile_state_artifacts("a1", "test-module")
         assert len(contradictions) == 1
-        assert contradictions[0].kind == "needs_human_review_state_only"
+        assert contradictions[0].kind == "terminal_state_only"
 
-    def test_needs_human_review_artifact_only(
+    def test_terminal_artifact_only(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _, orch_dir = _setup_module_state(
@@ -193,10 +193,10 @@ class TestReconcileStateArtifacts:
                 "phases": {},
             },
         )
-        (orch_dir / "needs-human-review.yaml").write_text("slug: test-module\n", "utf-8")
+        (orch_dir / "plan_revision_request.yaml").write_text("slug: test-module\n", "utf-8")
         contradictions = v6_build.reconcile_state_artifacts("a1", "test-module")
         assert len(contradictions) == 1
-        assert contradictions[0].kind == "needs_human_review_artifact_only"
+        assert contradictions[0].kind == "terminal_artifact_only"
 
     def test_verify_stale_after_content_update(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -269,7 +269,7 @@ class TestReconcileStateArtifacts:
         contradictions = v6_build.reconcile_state_artifacts("a1", "test-module")
         assert any(c.kind == "failed_phase_plan_hash_drift" for c in contradictions)
 
-    def test_no_contradiction_when_both_needs_review_present(
+    def test_no_contradiction_when_both_terminal_state_and_artifact_present(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _, orch_dir = _setup_module_state(
@@ -279,11 +279,10 @@ class TestReconcileStateArtifacts:
                 "mode": "v6",
                 "track": "a1",
                 "slug": "test-module",
-                "needs_human_review": {"status": True, "ts": "2026-04-17T10:00:00+00:00"},
+                "terminal": {"status": "plan_revision_request", "ts": "2026-04-17T10:00:00+00:00"},
                 "phases": {},
             },
         )
-        (orch_dir / "needs-human-review.yaml").write_text("slug: test-module\n", "utf-8")
+        (orch_dir / "plan_revision_request.yaml").write_text("slug: test-module\n", "utf-8")
         contradictions = v6_build.reconcile_state_artifacts("a1", "test-module")
-        # Both present → consistent, no contradiction
-        assert not any(c.kind.startswith("needs_human_review") for c in contradictions)
+        assert not any(c.kind.startswith("terminal_") for c in contradictions)

@@ -334,12 +334,12 @@ class TestCurriculumSync:
         """Every module in curriculum.yaml for complete tracks has a .mdx file.
 
         Modules that haven't finished the pipeline's ``publish`` phase
-        — either still in-progress or flagged as ``needs_human_review``
+        — either still in-progress or parked in a human terminal
         — legitimately have no MDX. Those are skipped so a single
         in-flight module doesn't fail the whole sync check. The gate
         is: ``orchestration/{slug}/state.json::phases.publish.status
-        == "complete"``. Plus the legacy ``needs-human-review.yaml``
-        sentinel path, which older pipeline runs wrote directly.
+        == "complete"``. Plus the convergent pipeline terminal
+        sentinels for plan revision or exhausted budget.
         """
         import json as _json
 
@@ -355,7 +355,7 @@ class TestCurriculumSync:
 
         def _is_in_progress(bare_slug: str) -> bool:
             orch = curriculum_root / "orchestration" / bare_slug
-            if (orch / "needs-human-review.yaml").is_file():
+            if (orch / "plan_revision_request.yaml").is_file() or (orch / "budget_exhausted.yaml").is_file():
                 return True
             state_path = orch / "state.json"
             if not state_path.is_file():

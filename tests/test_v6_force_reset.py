@@ -74,7 +74,7 @@ def module_tree(tmp_path, monkeypatch):
     (root / level / "research").mkdir(parents=True)
     (root / level / "research" / f"{slug}-knowledge-packet.md").write_text("Research")
 
-    # Orchestration (generated, except index.md and friction.yaml)
+    # Orchestration (generated, except index.md, friction.yaml, module-memory.yaml)
     orch = root / level / "orchestration" / slug
     orch.mkdir(parents=True)
     (orch / "state.json").write_text(json.dumps({"phases": {"check": {"status": "complete"}}}))
@@ -83,9 +83,10 @@ def module_tree(tmp_path, monkeypatch):
     (orch / "v6-review-prompt.md").write_text("Review prompt")
     (orch / "contract.yaml").write_text("contract: true\n")
     (orch / "wiki-excerpts.yaml").write_text("excerpts: []\n")
-    (orch / "needs-human-review.yaml").write_text("violations: []\n")
+    (orch / "plan_revision_request.yaml").write_text("violations: []\n")
     (orch / "index.md").write_text("Module index (preserved)")
     (orch / "friction.yaml").write_text("friction: none (preserved)")
+    (orch / "module-memory.yaml").write_text("history: []\n")
     dispatch = orch / "dispatch"
     dispatch.mkdir()
     (dispatch / "01-skeleton-meta.json").write_text("{}")
@@ -142,7 +143,7 @@ def test_force_reset_deletes_orchestration_artifacts(module_tree):
     assert not (orch / "v6-review-prompt.md").exists(), "review prompt should be deleted"
     assert not (orch / "contract.yaml").exists(), "contract should be deleted"
     assert not (orch / "wiki-excerpts.yaml").exists(), "wiki-excerpts should be deleted"
-    assert not (orch / "needs-human-review.yaml").exists(), "needs-human-review should be deleted"
+    assert not (orch / "plan_revision_request.yaml").exists(), "plan revision terminal should be deleted"
     assert not (orch / "dispatch").exists(), "dispatch dir should be deleted"
 
 
@@ -155,6 +156,7 @@ def test_force_reset_preserves_orchestration_index_and_friction(module_tree):
     orch = root / level / "orchestration" / slug
     assert (orch / "index.md").exists(), "index.md should be preserved"
     assert (orch / "friction.yaml").exists(), "friction.yaml should be preserved"
+    assert (orch / "module-memory.yaml").exists(), "module-memory.yaml should be preserved"
     assert (orch / "index.md").read_text() == "Module index (preserved)"
     assert (orch / "friction.yaml").read_text() == "friction: none (preserved)"
 
