@@ -78,20 +78,26 @@ Dispatch command:
   --mode danger --hard-timeout 1800
 ```
 
-**4. Gemini reviews (parallel with Phase A).** Re-verify #1323 3-patch block-merge resolution + adversarial review of #1324 external corpus.
+**4. Gemini reviews (SERIAL, not parallel — do not hammer Gemini).** Re-verify #1323 3-patch block-merge resolution + adversarial review of #1324 external corpus.
 
-Dispatch commands:
+**Rate discipline:** dispatch ONE Gemini review at a time. Wait for response (or timeout) before firing the next. Gemini has shown instability tonight (empty responses, `--stdout-only` flag eating output, etc.). If a dispatch fails, back off 60-120s and retry at most twice. Never re-fire more than 3x per review. Prefer a clean failure report over repeated hammering.
+
+Dispatch in this order:
 ```bash
+# First: the #1323 re-verify (short, low-stakes — tests if Gemini is responsive)
 unset GEMINI_API_KEY GOOGLE_API_KEY && .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini - \
   --task-id sources-refactor-review-1323-v2 \
   --model gemini-3.1-pro-preview --from claude < /tmp/gemini-1323-reverify-patches.md
 
+# Then, only after #1 returns cleanly: the #1324 adversarial review
 unset GEMINI_API_KEY GOOGLE_API_KEY && .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini - \
   --task-id external-corpus-review-1324 \
   --model gemini-3.1-pro-preview --from claude < /tmp/gemini-1324-review.md
 ```
 
-Both run in background; monitor task states via Bash `run_in_background=true`, plus a combined `Monitor` tool watch on the `batch_state/tasks/*.json` files and `git rev-parse HEAD` for new commits.
+Both use `run_in_background=true`; use the completion notification (not polling) to know when to fire the next. If #1 is still running after ~15 min, something is stuck — don't pile on with #2.
+
+Combined `Monitor` tool watch on `batch_state/tasks/*.json` + `git rev-parse HEAD` catches Codex task terminals + any new commits without polling.
 
 ## Open decisions awaiting user (none blocking autonomous work)
 
