@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from wiki.config import WIKI_DIR
 from wiki.sources_schema import (
+    WikiSourceEntry,
     WikiSourcesRegistry,
     assign_source_ids,
     extract_short_citation_ids,
@@ -237,13 +238,23 @@ def migrate_article(path: Path) -> ArticleMigrationResult:
         )
 
     referenced_ids = set(extract_short_citation_ids(updated_text))
-    registry = WikiSourcesRegistry(
-        sources=[
-            entry
-            for entry in registry.sources
-            if entry.id in referenced_ids or entry.preserved_from_meta
-        ]
-    )
+    kept_sources = [
+        entry
+        for entry in registry.sources
+        if entry.id in referenced_ids or entry.preserved_from_meta
+    ]
+    existing_ids = {entry.id for entry in kept_sources}
+    for citation_id in sorted(referenced_ids, key=lambda value: int(value[1:])):
+        if citation_id in existing_ids:
+            continue
+        kept_sources.append(
+            WikiSourceEntry(
+                id=citation_id,
+                file=f"unknown-citation-{citation_id.lower()}",
+                type="unknown",
+            )
+        )
+    registry = WikiSourcesRegistry(sources=kept_sources)
 
     return ArticleMigrationResult(
         article_path=path,

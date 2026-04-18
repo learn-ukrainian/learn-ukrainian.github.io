@@ -174,6 +174,37 @@ def test_rerun_preserves_existing_registry_for_short_citations(tmp_path: Path) -
     assert verify_articles([article_path]) == []
 
 
+def test_rerun_backfills_missing_short_citation_registry_entries(tmp_path: Path) -> None:
+    from wiki.migrate_sources import migrate_article, verify_articles
+
+    article_path = tmp_path / "wiki" / "periods" / "demo.md"
+    article_path.parent.mkdir(parents=True)
+    article_path.write_text(
+        "# Demo\n\n"
+        "<!-- wiki-meta\n"
+        "slug: demo\n"
+        "domain: periods\n"
+        "tracks: [hist]\n"
+        "compiled: 2026-04-18\n"
+        "-->\n\n"
+        "Факт [S1] і факт [S2].\n",
+        encoding="utf-8",
+    )
+
+    result = migrate_article(article_path)
+    article_path.write_text(result.updated_text, encoding="utf-8")
+
+    assert [entry.id for entry in result.registry.sources] == ["S1", "S2"]
+    assert [entry.file for entry in result.registry.sources] == [
+        "unknown-citation-s1",
+        "unknown-citation-s2",
+    ]
+    from wiki.sources_schema import registry_path_for, save_sources_registry
+
+    save_sources_registry(registry_path_for(article_path), result.registry, article_path=article_path)
+    assert verify_articles([article_path]) == []
+
+
 def test_dry_run_on_real_articles_from_multiple_domains() -> None:
     from wiki.migrate_sources import migrate_article, render_diff
 
