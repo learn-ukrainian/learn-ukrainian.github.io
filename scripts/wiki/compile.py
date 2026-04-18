@@ -61,6 +61,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from wiki.compiler import compile_article, update_index
 from wiki.config import ALL_TRACKS, CURRICULUM_DIR, TRACK_DOMAINS
+from wiki.context import strip_meta
 from wiki.enrichment import enrich_sources
 from wiki.sources import (
     gather_discovery_sources,
@@ -281,10 +282,14 @@ def cmd_list(track: str) -> None:
 def cmd_compile_one(track: str, slug: str, *, force: bool = False,
                     dry_run: bool = False, review: bool = False) -> bool:
     """Compile a single wiki article from a discovery file."""
+    from wiki.state import is_compiled
+
     print(f"\n🔨 Compiling: {track}/{slug}")
 
     # Get domain mapping
     domain = _get_domain(track, slug)
+    article_key = f"{domain}/{slug}"
+    already_compiled = not force and not dry_run and is_compiled(article_key)
 
     # Gather sources
     sources_info = gather_discovery_sources(track, slug)
@@ -309,9 +314,10 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
     )
 
     if result:
-        update_index()
-        word_count = len(result.read_text("utf-8").split()) if result.exists() else 0
-        log_event(track, slug, "compile", words=word_count, sources=len(all_chunks))
+        if not already_compiled and not dry_run:
+            update_index()
+            word_count = len(result.read_text("utf-8").split()) if result.exists() else 0
+            log_event(track, slug, "compile", words=word_count, sources=len(all_chunks))
         if review and not dry_run:
             _review_article(result, track, slug)
         return True
@@ -369,7 +375,14 @@ def _parse_review_scores(review_text: str) -> dict[str, float]:
 
 def _build_review_prompt(article_text: str, article_type: str,
                          track: str, slug: str, round_label: str) -> str:
-    """Build a review prompt with the CURRENT article text."""
+    """Build a review prompt with the CURRENT article text.
+
+    Strips the `<!-- wiki-meta ... -->` block before sending — reviewer should
+    only score prose content, not machine-readable metadata (slug, domain,
+    tracks, source filenames). Otherwise Gemini wastes attention on metadata
+    and may flag legitimate source-filename strings as low-quality prose.
+    """
+    article_text = strip_meta(article_text)
     return (
         f"You are a HARSH adversarial reviewer of a {article_type} for the Ukrainian "
         "language curriculum wiki. Your job is to find problems, not praise.\n\n"
@@ -615,7 +628,13 @@ def _extract_review_summary(review_text: str) -> str:
 
 def _send_review(track: str, slug: str, review_prompt: str,
                  round_label: str, project_root: str) -> str | None:
-    """Send a review prompt to Gemini via agent bridge. Returns stdout or None."""
+    """Send a review prompt to Gemini via agent bridge. Returns Gemini's response body.
+
+    Uses --stdout-only so Gemini's actual response reaches stdout. Without this
+    flag, ask-gemini only prints send confirmations ("✅ Message sent (ID: N)"),
+    and the real response stays in the bridge message store — the parser then
+    sees only the confirmation and defaults every dimension to 0.0.
+    """
     import subprocess
 
     try:
@@ -625,6 +644,7 @@ def _send_review(track: str, slug: str, review_prompt: str,
                 "ask-gemini", "-",  # Read prompt from stdin (avoids arg length limits)
                 "--task-id", f"wiki-review-{track}-{slug}-{round_label}",
                 "--model", "gemini-3.1-pro-preview",
+                "--stdout-only",  # Route Gemini's response body to subprocess stdout
             ],
             input=review_prompt,
             capture_output=True, text=True, timeout=900,

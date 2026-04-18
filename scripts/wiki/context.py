@@ -96,7 +96,7 @@ def get_wiki_context(track: str, slug: str, *, plan: dict | None = None) -> str:
     for md_path, _score in candidate_articles:
         content = md_path.read_text(encoding="utf-8")
         # Strip wiki-meta comment
-        content = _strip_meta(content)
+        content = strip_meta(content)
 
         if total_chars + len(content) > WIKI_CONTEXT_BUDGET:
             # If we haven't included anything yet, take a truncated version
@@ -210,7 +210,16 @@ def _relevance_score(md_path: Path, slug: str, track: str, *, plan: dict | None 
     return score
 
 
-def _strip_meta(content: str) -> str:
-    """Strip the <!-- wiki-meta ... --> comment from article content."""
+def strip_meta(content: str) -> str:
+    """Strip the <!-- wiki-meta ... --> comment from article content.
+
+    Shared between build-side injection (get_wiki_context) and review-side
+    prompt assembly (scripts/wiki/compile.py:_build_review_prompt) — the
+    reviewer must not score metadata as if it were prose.
+    """
     import re
     return re.sub(r"<!--\s*wiki-meta\b.*?-->", "", content, flags=re.DOTALL).strip()
+
+
+# Backwards-compat alias for any lingering internal callers.
+_strip_meta = strip_meta
