@@ -1,0 +1,45 @@
+# Source registry for wiki/folk/genres/zastavy-bohatyrski.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S11
+  file: ext-imtgsh-108
+  type: external
+  preserved_from_meta: true
+- id: S12
+  file: unknown
+  type: unknown
+  preserved_from_meta: true
+- id: S13
+  file: ext-imtgsh-33
+  type: external
+  preserved_from_meta: true
+- id: S14
+  file: ext-realna_istoria-105
+  type: external
+- id: S15
+  file: e86cf6ca_c0267
+  type: literary
+- id: S16
+  file: e06aead8_c0047
+  type: literary
+- id: S17
+  file: Богатир
+  type: unknown
+- id: S18
+  file: Wikipedia
+  type: wiki
+- id: S19
+  file: Дума
+  type: unknown
+- id: S20
+  file: ext-realna_istoria-157
+  type: external
+- id: S21
+  file: ext-imtgsh-51
+  type: external
+- id: S22
+  file: ext-ulp_youtube-19
+  type: external
+- id: S23
+  file: ext-imtgsh-88
+  type: external

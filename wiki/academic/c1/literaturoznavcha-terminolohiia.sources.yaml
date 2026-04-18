@@ -1,0 +1,116 @@
+# Source registry for wiki/academic/c1/literaturoznavcha-terminolohiia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S28
+  file: ext-istoria_movy-9
+  type: external
+  preserved_from_meta: true
+- id: S29
+  file: ext-imtgsh-40
+  type: external
+  preserved_from_meta: true
+- id: S30
+  file: 5-klas-ukrlit-zabolotnyi-2022_s0033
+  type: textbook
+  preserved_from_meta: true
+- id: S31
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0050
+  type: textbook
+  preserved_from_meta: true
+- id: S32
+  file: 5-klas-ukrlit-avramenko-2022_s0174
+  type: textbook
+  preserved_from_meta: true
+- id: S33
+  file: 8-klas-istoria-ukr-schupak-2025_s0088
+  type: textbook
+  preserved_from_meta: true
+- id: S34
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0235
+  type: textbook
+  preserved_from_meta: true
+- id: S35
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0081
+  type: textbook
+  preserved_from_meta: true
+- id: S36
+  file: uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BF%D0%B8%D1%81%D1%82%D1%8F%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%9D%D0%BE%D0%BD%D0%BD%D0%B0%20%D0%A5%D0%BE%D0%BC%D1%96%D0%B2%D0%BD%D0%B0
+  type: wiki
+- id: S37
+  file: 6-klas-ukrlit-zabolotnyi-2023_s0280
+  type: textbook
+- id: S38
+  file: 5-klas-ukrlit-avramenko-2022_s0309
+  type: textbook
+- id: S39
+  file: 5-klas-ukrlit-zabolotnyi-2022_s0118
+  type: textbook
+- id: S40
+  file: uk.wikipedia.org/wiki/%D0%94%D0%B0%D0%B2%D0%BD%D1%8F%20%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BB%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%B0
+  type: wiki
+- id: S41
+  file: uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B8%D1%81%D0%BB%D1%96%D0%B2%27%D1%8F
+  type: wiki
+- id: S42
+  file: uk.wikipedia.org/wiki/%D0%9C%D1%96%D1%84
+  type: wiki
+- id: S43
+  file: 7-klas-ukrlit-mishhenko-2015_s0427
+  type: textbook
+- id: S44
+  file: uk.wikipedia.org/wiki/%D0%A3%20%D0%BD%D0%B5%D0%B4%D1%96%D0%BB%D1%8E%20%D1%80%D0%B0%D0%BD%D0%BE%E2%80%A6
+  type: wiki
+- id: S45
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0407
+  type: textbook
+- id: S46
+  file: 7-klas-ukrlit-mishhenko-2015_s0420
+  type: textbook
+- id: S47
+  file: 10-klas-ukrmova-karaman-2018_s0420
+  type: textbook
+- id: S48
+  file: 5-klas-ukrlit-zabolotnyi-2022_s0032
+  type: textbook
+- id: S49
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0054
+  type: textbook
+- id: S50
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0056
+  type: textbook
+- id: S51
+  file: uk.wikipedia.org/wiki/%D0%94%D0%B2%D0%BE%D0%B2%D1%96%D1%80%27%D1%8F
+  type: wiki
+- id: S52
+  file: ext-realna_istoria-65
+  type: external
+- id: S53
+  file: В. Живов
+  type: unknown
+- id: S54
+  file: І. Левін
+  type: unknown
+- id: S55
+  file: Ю. Буйських
+  type: unknown
+- id: S56
+  file: Про наукові зацікавлення Н. Копистянської
+  type: unknown
+- id: S57
+  file: Про риси давньої літератури
+  type: unknown
+- id: S58
+  file: Про феміністську критику
+  type: unknown
+- id: S59
+  file: uk.wikipedia.org/wiki/%D0%A4%D0%B5%D0%BC%D1%96%D0%BD%D1%96%D1%81%D1%82%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BA%D1%80%D0%B8%D1%82%D0%B8%D0%BA%D0%B0%20%D0%97%D0%9C%D0%86
+  type: wiki
+- id: S60
+  file: Зі словника термінів
+  type: unknown
+- id: S61
+  file: Зі змісту праці Н. Копистянської
+  type: unknown
+- id: S62
+  file: uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BC%D0%BF%D1%96%D0%BB%D1%8F%D1%82%D0%BE%D1%80
+  type: wiki

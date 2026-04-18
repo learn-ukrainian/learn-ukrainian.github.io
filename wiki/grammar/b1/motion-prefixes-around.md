@@ -4,20 +4,19 @@
 slug: motion-prefixes-around-approach
 domain: grammar/b1
 tracks: [b1, b2]
-sources: [ext-other_blogs-57, ext-ulp_youtube-220, ext-ulp_youtube-219, ext-ulp_youtube-29, ext-ulp_youtube-222, ext-istoria_movy-19, ext-imtgsh-135, 5-klas-ukrmova-zabolotnyi-2023_s0107, 10-klas-ukrajinska-mova-avramenko-2018_s0163, 10-klas-ukrajinska-mova-zabolotnij-2018_s0154, 10-klas-ukrmova-zabolotnyi-2018_s0154, 6-klas-ukrmova-litvinova-2023_s0076, 6-klas-ukrmova-litvinova-2023_s0056, 5-klas-ukrmova-avramenko-2022_s0108, 3-klas-ukrainska-mova-kravtsova-2020-1_s0043, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0026, 3-klas-ukrainska-mova-kravtsova-2020-1_s0044, 5-klas-ukrmova-uhor-2022-1_s0218, 10-klas-ukrmova-glazova-2018_s0184, 5-klas-ukrmova-avramenko-2022_s0065, 5-klas-ukrmova-zabolotnyi-2023_s0056, 3-klas-ukrainska-mova-vashulenko-2020-1_s0082, 3-klas-ukrainska-mova-kravtsova-2020-1_s0040, 10-klas-ukrmova-karaman-2018_s0232, 3-klas-ukrainska-mova-ponomarova-2020-1_s0052, 5-klas-ukrmova-uhor-2022-1_s0221, 3-klas-ukrainska-mova-ponomarova-2020-1_s0057, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0025, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0027, 9-klas-ukrajinska-mova-voron-2017_s0223, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0025, 10-klas-ukrajinska-mova-zabolotnij-2018_s0155, 5-klas-ukrmova-zabolotnyi-2023_s0068, ext-imtgsh-104]
 compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
-The concept of prefixes as a word-forming tool is introduced early, around Grade 3 (Source 24, 42). Students learn that a prefix stands before the root and creates new words (Source 24: `3-klas-ukrainska-mova-kravtsova-2020-1_s0038`). At this stage, they practice forming words with various common prefixes like `по-`, `пере-`, `за-`, and `до-` (Source 24).
+The concept of prefixes as a word-forming tool is introduced early, around Grade 3 [S40][S41]. Students learn that a prefix stands before the root and creates new words [S40]. At this stage, they practice forming words with various common prefixes like `по-`, `пере-`, `за-`, and `до-` [S40].
 
-The prefixes `під-` and `об-` are formally introduced alongside other prefixes of motion and spatial relation. Textbooks for Grade 4 include `під-` and `об-` in lists of prefixes that can take an apostrophe before `я, ю, є, ї`, as in `під’їхати` and `об’єднати` (Source 34, 43). This structural rule is often taught before a deep dive into the semantic meanings of each prefix.
+The prefixes `під-` and `об-` are formally introduced alongside other prefixes of motion and spatial relation. Textbooks for Grade 4 include `під-` and `об-` in lists of prefixes that can take an apostrophe before `я, ю, є, ї`, as in `під’їхати` and `об’єднати` [S42][S43]. This structural rule is often taught before a deep dive into the semantic meanings of each prefix.
 
-By Grade 5, students are expected to understand how prefixes change a verb's meaning. Заболотний (Source 41) uses a visual diagram with the verb `бігти` to show how prefixes like `об-` and `під-` create new verbs (`оббігти`, `підбігти`). The textbook explicitly states that prefixes add new meanings to the base verb (Source 41: `5-klas-ukrmova-zabolotnyi-2023_s0056`). The curriculum explores how prefixes create new lexical meanings, not just grammatical forms (Source 30: `5-klas-ukrmova-avramenko-2022_s0064`).
+By Grade 5, students are expected to understand how prefixes change a verb's meaning. Заболотний [S44] uses a visual diagram with the verb `бігти` to show how prefixes like `об-` and `під-` create new verbs (`оббігти`, `підбігти`). The textbook explicitly states that prefixes add new meanings to the base verb [S45]. The curriculum explores how prefixes create new lexical meanings, not just grammatical forms [S46].
 
-In middle school (Grade 6), students begin to analyze antonymic prefixes, such as `від-` (away) versus `при-` (towards) (Source 12). While `об-` and `під-` are not always presented as a direct antonymic pair, their contrasting spatial meanings (around vs. up to/under) fit into this analytical framework. For example, `відійти` (step away) and `підійти` (approach) are presented as antonyms (Source 1: `ext-other_blogs-57`).
+In middle school (Grade 6), students begin to analyze antonymic prefixes, such as `від-` (away) versus `при-` (towards) [S47]. While `об-` and `під-` are not always presented as a direct antonymic pair, their contrasting spatial meanings (around vs. up to/under) fit into this analytical framework. For example, `відійти` (step away) and `підійти` (approach) are presented as antonyms [S48].
 
-The focus remains largely on orthography (spelling rules), such as the immutable nature of the final consonant in prefixes like `від-` and `під-` (Source 9: `10-klas-ukrajinska-mova-avramenko-2018_s0163`), and the use of the apostrophe.
+The focus remains largely on orthography (spelling rules), such as the immutable nature of the final consonant in prefixes like `від-` and `під-` [S49], and the use of the apostrophe.
 
 ## Повна парадигма (Full Paradigm)
 Prefixes modify verbs rather than having a paradigm themselves. Their primary function is to create a new lexical meaning, often perfectivizing an imperfective verb. Below are the main semantic categories for `об-` and `під-`.
@@ -28,13 +27,13 @@ The prefix `об-` primarily denotes movement around an object or actions that a
 
 | Значення (Meaning) | Приклад (Example) | Основа (Base Verb) | Пояснення (Explanation) | Джерело (Source) |
 | :--- | :--- | :--- | :--- | :--- |
-| **Movement around an object** | **обійти** (будинок) | іти (to go) | To go *around* the house. | (Source 3: `ext-ulp_youtube-219`) |
-| | **об'їхати** (Україну) | їхати (to drive) | To travel *around* all of Ukraine. | (Source 3: `ext-ulp_youtube-219`) |
-| **A complete, thorough action** | **обдумати** (план) | думати (to think) | To think the plan over, to think it through. | (Source 3: `ext-ulp_youtube-219`) |
-| | **обміняти** (долари) | міняти (to change) | To exchange money (a complete transaction). | (Source 3: `ext-ulp_youtube-219`) |
-| **Action causing a negative result** | **обрахувати** (в магазині) | рахувати (to count) | To overcharge someone (literally "miscount"). | (Source 3: `ext-ulp_youtube-219`) |
-| | **обважити** (на ринку) | важити (to weigh) | To give less weight than paid for. | (Source 3: `ext-ulp_youtube-219`) |
-| **Mistaken action** | **обізнатися** | знати (to know) | To make a mistake, to mistake someone for another. | (Source 3: `ext-ulp_youtube-219`) |
+| **Movement around an object** | **обійти** (будинок) | іти (to go) | To go *around* the house. | [S50] |
+| | **об'їхати** (Україну) | їхати (to drive) | To travel *around* all of Ukraine. | [S50] |
+| **A complete, thorough action** | **обдумати** (план) | думати (to think) | To think the plan over, to think it through. | [S50] |
+| | **обміняти** (долари) | міняти (to change) | To exchange money (a complete transaction). | [S50] |
+| **Action causing a negative result** | **обрахувати** (в магазині) | рахувати (to count) | To overcharge someone (literally "miscount"). | [S50] |
+| | **обважити** (на ринку) | важити (to weigh) | To give less weight than paid for. | [S50] |
+| **Mistaken action** | **обізнатися** | знати (to know) | To make a mistake, to mistake someone for another. | [S50] |
 
 ### Префікс `під-`
 
@@ -42,15 +41,15 @@ The prefix `під-` (and its allomorph `піді-` used for euphony before cert
 
 | Значення (Meaning) | Приклад (Example) | Основа (Base Verb) | Пояснення (Explanation) | Джерело (Source) |
 | :--- | :--- | :--- | :--- | :--- |
-| **Approaching something** | **підійти** (до магазину) | іти (to go) | To walk up to/approach the store. | (Source 2: `ext-ulp_youtube-220`) |
-| | **під'їхати** (до будинку) | їхати (to drive) | To drive up to the house. | (Source 2: `ext-ulp_youtube-220`) |
-| **Movement from bottom to top** | **піднятися** (на поверх) | -нятися (related to 'up') | To go up to a floor. | (Source 2: `ext-ulp_youtube-220`) |
-| | **підняти** (валізу) | -няти | To lift a suitcase. | (Source 2: `ext-ulp_youtube-220`) |
-| **Movement under something** | **підкреслити** (слово) | креслити (to draw a line) | To underline a word. The prefix `під` itself means "under". | (Source 2: `ext-ulp_youtube-220`) |
-| **Adding a small amount** | **підсолити** (суп) | солити (to salt) | To add a little more salt to the soup. | (Source 2: `ext-ulp_youtube-220`) |
-| **Secret or illicit action** | **підслухати** (розмову) | слухати (to listen) | To overhear/eavesdrop on a conversation. | (Source 2: `ext-ulp_youtube-220`) |
-| | **підробити** (документ) | робити (to do/make) | To forge/falsify a document. | (Source 2: `ext-ulp_youtube-220`) |
-| **Partial or side action** | **підробляти** (в інтернеті) | робити (to work) | To make some extra money, to have a side job. | (Source 2: `ext-ulp_youtube-220`) |
+| **Approaching something** | **підійти** (до магазину) | іти (to go) | To walk up to/approach the store. | [S51] |
+| | **під'їхати** (до будинку) | їхати (to drive) | To drive up to the house. | [S51] |
+| **Movement from bottom to top** | **піднятися** (на поверх) | -нятися (related to 'up') | To go up to a floor. | [S51] |
+| | **підняти** (валізу) | -няти | To lift a suitcase. | [S51] |
+| **Movement under something** | **підкреслити** (слово) | креслити (to draw a line) | To underline a word. The prefix `під` itself means "under". | [S51] |
+| **Adding a small amount** | **підсолити** (суп) | солити (to salt) | To add a little more salt to the soup. | [S51] |
+| **Secret or illicit action** | **підслухати** (розмову) | слухати (to listen) | To overhear/eavesdrop on a conversation. | [S51] |
+| | **підробити** (документ) | робити (to do/make) | To forge/falsify a document. | [S51] |
+| **Partial or side action** | **підробляти** (в інтернеті) | робити (to work) | To make some extra money, to have a side job. | [S51] |
 
 ## Частотність і пріоритети (Frequency & Priorities)
 For B1-B2 learners, the spatial meanings of these prefixes are the highest priority as they are fundamental to describing movement and location.
@@ -77,7 +76,7 @@ English speakers often struggle with the subtle distinctions between Ukrainian p
 | ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
 | Я **йшов навколо** будинку. | Я **обійшов** будинок. | English uses a verb + preposition (`go around`), while Ukrainian encodes this meaning directly into the verb with the prefix `об-`. The literal translation is unnatural. |
-| Я хочу **іти до** магазину. | Я хочу **підійти до** магазину. | While not strictly wrong, `іти до` just means "to go to." `Підійти до` specifically means to "approach" or "walk up to," which is often the intended meaning when asking for directions or describing the final stage of a journey. (Source 2) |
+| Я хочу **іти до** магазину. | Я хочу **підійти до** магазину. | While not strictly wrong, `іти до` just means "to go to." `Підійти до` specifically means to "approach" or "walk up to," which is often the intended meaning when asking for directions or describing the final stage of a journey. [S51] |
 | Вони **обговорили** всю Україну за місяць. | Вони **об'їхали** всю Україну за місяць. | This is a false friend error. `Обговорити` means "to discuss". The prefix `об-` can mean "around" (spatially) or "about" (thematically). The learner incorrectly applies the thematic meaning to a spatial context. The correct verb of motion is `об'їхати`. |
 | Треба **іти під** міст. | Треба **пройти під** мостом. | `Під-` as a prefix often means "under" (`підкреслити`), but when describing movement *under* something, `про-` (`пройти під...`) or another combination is more common. `Підійти до мосту` means to approach the bridge. |
 | Я **обійшов** моїх друзів у парку. | Я **зустрівся з** моїми друзями в парку. | The learner incorrectly uses `обійти` (to go around/bypass) thinking it means to visit or meet. The prefix `об-` can imply avoidance in this context. `Зустрітися` is the correct verb for meeting someone. |
@@ -87,37 +86,37 @@ It is a common pitfall for learners, especially those with prior exposure to Rus
 
 1.  **Independent Systems:** The Ukrainian prefix system, while sharing cognates with Russian, evolved independently from a common Old East Slavic root. Its semantic nuances and rules of use are unique. For example, while both languages use `під-`/`под-` for "approach," the frequency and idiomatic context of secondary meanings (like "adding a little" or "secret action") can differ.
 2.  **Pronunciation and Orthography:** The pronunciation of the prefix `під-` always retains a clear, hard /d/ sound before vowels, unlike the Russian `под-`, which can be voiced differently. The spelling rule for `об-` is consistent in Ukrainian; there is no `обо-` allomorph used in the same way as in Russian (`обойти`).
-3.  **Avoid Analogy:** Do not teach `обійти` as "like Russian `обойти`." Teach it as a Ukrainian verb with the meaning "to go around." Using Russian as the reference point reinforces a colonial linguistic hierarchy. (Source 1)
-4.  **Ukrainian-Specific Usage:** Some usages, while having Russian cognates, are deeply embedded in Ukrainian context. For example, `об'їхати всю Україну` (Source 3) is a common phrase reflecting a cultural desire to know one's own land. `Підняти настрій` (to lift one's mood) is a standard idiom in Ukrainian. (Source 2)
+3.  **Avoid Analogy:** Do not teach `обійти` as "like Russian `обойти`." Teach it as a Ukrainian verb with the meaning "to go around." Using Russian as the reference point reinforces a colonial linguistic hierarchy. [S48]
+4.  **Ukrainian-Specific Usage:** Some usages, while having Russian cognates, are deeply embedded in Ukrainian context. For example, `об'їхати всю Україну` [S50] is a common phrase reflecting a cultural desire to know one's own land. `Підняти настрій` (to lift one's mood) is a standard idiom in Ukrainian. [S51]
 5.  **Calques:** Be wary of Russian calques. For instance, while `підібрати слово` (to find the right word) is correct, overusing prefixes in ways more typical for Russian can sound unnatural. Always verify phrasing with native Ukrainian sources, not by translating from Russian.
 
 ## Природні приклади (Natural Examples)
 These examples are taken from the provided sources and demonstrate natural usage.
 
 **Група 1: `об-` для руху навколо (Movement Around)**
-*   Вам треба **обійти** цей будинок, і ви побачите його. (Source 3: `ext-ulp_youtube-219`)
-*   Вона **об'їздила** всю Україну. (Source 3: `ext-ulp_youtube-219`)
-*   А як можна **обійти** річку? Найкраще через місце, з якого вона витікає. (Source 7: `ext-imtgsh-135`)
+*   Вам треба **обійти** цей будинок, і ви побачите його. [S50]
+*   Вона **об'їздила** всю Україну. [S50]
+*   А як можна **обійти** річку? Найкраще через місце, з якого вона витікає. [S52]
 
 **Група 2: `об-` для повноти або помилки (Completeness or Mistake)**
-*   Я хочу **обміняти** долари на гривні. (Source 3: `ext-ulp_youtube-219`)
-*   Раджу вам використовувати картку, коли можливо, щоб вас не **обрахували**. (Source 3: `ext-ulp_youtube-219`)
-*   Треба добре **обдумати** план. (Source 3: `ext-ulp_youtube-219`)
+*   Я хочу **обміняти** долари на гривні. [S50]
+*   Раджу вам використовувати картку, коли можливо, щоб вас не **обрахували**. [S50]
+*   Треба добре **обдумати** план. [S50]
 
 **Група 3: `під-` для наближення (Approaching)**
-*   **Підійдіть** до магазину. (Source 2: `ext-ulp_youtube-220`)
-*   Машина **під'їхала** до будинку. (Source 2: `ext-ulp_youtube-220`)
-*   Лише **підбігши** на чималу відстань, він наважився озирнутися. (Source 12: `6-klas-ukrmova-litvinova-2023_s0076`)
+*   **Підійдіть** до магазину. [S51]
+*   Машина **під'їхала** до будинку. [S51]
+*   Лише **підбігши** на чималу відстань, він наважився озирнутися. [S47]
 
 **Група 4: `під-` для руху вгору або під щось (Upward or Underneath)**
-*   **Піднімайся** на шостий поверх. (Source 2: `ext-ulp_youtube-220`)
-*   Вона мені **підняла** настрій. (Source 2: `ext-ulp_youtube-220`)
-*   Я хочу **підкреслити** ці слова. (Source 2: `ext-ulp_youtube-220`)
+*   **Піднімайся** на шостий поверх. [S51]
+*   Вона мені **підняла** настрій. [S51]
+*   Я хочу **підкреслити** ці слова. [S51]
 
 **Група 5: `під-` для додаткової або прихованої дії (Additional or Secret Action)**
-*   Він **підробляє** в інтернеті. (To make some extra money) (Source 2: `ext-ulp_youtube-220`)
-*   Я не хочу **підслухати** їхню розмову. (Source 2: `ext-ulp_youtube-220`)
-*   Можна **підсолити** суп, якщо хочеш. (Source 2: `ext-ulp_youtube-220`)
+*   Він **підробляє** в інтернеті. (To make some extra money) [S51]
+*   Я не хочу **підслухати** їхню розмову. [S51]
+*   Можна **підсолити** суп, якщо хочеш. [S51]
 
 ## Рекомендації для вправ (Activity Concepts)
 

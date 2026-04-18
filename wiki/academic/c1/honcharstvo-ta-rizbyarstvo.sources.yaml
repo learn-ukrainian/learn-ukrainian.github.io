@@ -1,0 +1,47 @@
+# Source registry for wiki/academic/c1/honcharstvo-ta-rizbyarstvo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S9
+  file: ext-imtgsh-164
+  type: external
+  preserved_from_meta: true
+- id: S10
+  file: unknown
+  type: unknown
+  preserved_from_meta: true
+- id: S11
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0496
+  type: textbook
+  preserved_from_meta: true
+- id: S12
+  file: ext-istoria_movy-9
+  type: external
+  preserved_from_meta: true
+- id: S13
+  file: ext-istoria_movy-48
+  type: external
+  preserved_from_meta: true
+- id: S14
+  file: 8-klas-ukrlit-avramenko-2025_s0011
+  type: textbook
+- id: S15
+  file: 9-klas-istorija-ukrajini-burnejko-2017_s0149
+  type: textbook
+- id: S16
+  file: ext-other_blogs-52
+  type: external
+- id: S17
+  file: ext-imtgsh-123
+  type: external
+- id: S18
+  file: unknown_source_3
+  type: unknown
+- id: S19
+  file: 10-klas-istorija-ukrajini-sovelto-2018_s0101
+  type: textbook
+- id: S20
+  file: ext-komik_istoryk-60
+  type: external
+- id: S21
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0301
+  type: textbook

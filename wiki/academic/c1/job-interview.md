@@ -4,7 +4,6 @@
 slug: job-interview-strategies
 domain: academic/c1
 tracks: [c1, c2]
-sources: [ext-other_blogs-63, ext-realna_istoria-149, 11-klas-ukrajinska-mova-voron-2019_s0056, 8-klas-istoria-ukr-hlibovska-2025_s0188, 10-klas-ukrajinska-mova-avramenko-2018_s0308, 10-klas-ukrmova-karaman-2018_s0240, uk:wikipedia:Контент-аналіз, uk:wikipedia:Івент-аналіз, uk:wikipedia:Стилістика, uk:wikipedia:Етика, uk:wikipedia:Дилема_в'язня]
 compiled: 2026-04-07
 -->
 

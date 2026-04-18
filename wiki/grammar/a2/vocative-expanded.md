@@ -4,7 +4,6 @@
 slug: vocative-expanded
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [10-klas-ukrajinska-mova-zabolotnij-2018_s0223, 10-klas-ukrmova-zabolotnyi-2018_s0223, ext-ulp_youtube-233, 10-klas-ukrajinska-mova-avramenko-2018_s0261, 11-klas-ukrajinska-mova-glazova-2019_s0148, 10-klas-ukrmova-karaman-2018_s0268, 11-klas-ukrajinska-mova-voron-2019_s0198, ext-realna_istoria-129, 6-klas-ukrmova-litvinova-2023_s0148, 10-klas-ukrajinska-mova-avramenko-2018_s0260, 9-klas-ukrajinska-literatura-avramenko-2017_s0400, ext-ulp_youtube-16, ext-ulp_youtube-13, ext-realna_istoria-110, ext-komik_istoryk-76, 8-klas-ukrmova-zabolotnyi-2025_s0211, 9-klas-ukrajinska-mova-avramenko-2017_s0179, 6-klas-ukrmova-litvinova-2023_s0166, 8-klas-ukrmova-avramenko-2025_s0180, 6-klas-ukrmova-litvinova-2023_s0147]
 compiled: 2026-04-07
 -->
 
@@ -13,12 +12,12 @@ compiled: 2026-04-07
 The Vocative Case (Кличний відмінок) is introduced as a fundamental part of Ukrainian grammar for direct address. School textbooks introduce it early and build upon it progressively.
 
 **Initial Introduction (Grades 5-6):**
-The concept is introduced as the case used for calling out to or addressing someone or something (Source 20). Textbooks emphasize that, unlike other cases, the vocative does not answer a question and nouns in the vocative are not sentence members (Source 20, 21). Early examples focus on simple, high-frequency forms like family members and common names (`друже`, `мамо`, `пані Інно`) (Source 20, 32). The classic example `Добрий вечір тобі, пане господарю!` from a Christmas carol is often used to illustrate its function in a traditional context (Source 20).
+The concept is introduced as the case used for calling out to or addressing someone or something [S28]. Textbooks emphasize that, unlike other cases, the vocative does not answer a question and nouns in the vocative are not sentence members [S28][S29]. Early examples focus on simple, high-frequency forms like family members and common names (`друже`, `мамо`, `пані Інно`) [S28][S30]. The classic example `Добрий вечір тобі, пане господарю!` from a Christmas carol is often used to illustrate its function in a traditional context [S28].
 
 **Reinforcement and Complexity (Grades 8-10):**
-In later grades, the curriculum deepens the understanding of the vocative by introducing more complex compound address forms. The rules for combining titles, names, and patronymics are explicitly taught (Source 16, 5, 10). For example, students learn that in an `ім’я + по батькові` address, both words must be in the vocative case (e.g., `Ігорю Андрійовичу`, `Маріє Василівно`) (Source 16). They also learn the specific rules for combinations like `загальна назва + прізвище`, where only the general noun typically changes (`друже Максименку`), and `дві загальні назви`, which has variable forms (`пане лейтенанте` or `пане лейтенант`) (Source 5, 1).
+In later grades, the curriculum deepens the understanding of the vocative by introducing more complex compound address forms. The rules for combining titles, names, and patronymics are explicitly taught [S31][S32][S33]. For example, students learn that in an `ім’я + по батькові` address, both words must be in the vocative case (e.g., `Ігорю Андрійовичу`, `Маріє Василівно`) [S31]. They also learn the specific rules for combinations like `загальна назва + прізвище`, where only the general noun typically changes (`друже Максименку`), and `дві загальні назви`, which has variable forms (`пане лейтенанте` or `пане лейтенант`) [S32][S34].
 
-The distinction between formal and informal address is a key pedagogical point, often taught through examples of writing letters or emails. An informal email might start with `Привіт, моя люба Інно`, while a formal one would use `Шановний Сергію Васильовичу` or `Добрий день, пане Сергію` (Source 3). This contextualizes the vocative as essential for social and professional communication.
+The distinction between formal and informal address is a key pedagogical point, often taught through examples of writing letters or emails. An informal email might start with `Привіт, моя люба Інно`, while a formal one would use `Шановний Сергію Васильовичу` or `Добрий день, пане Сергію` [S35]. This contextualizes the vocative as essential for social and professional communication.
 
 ## Повна парадигма (Full Paradigm)
 
@@ -29,10 +28,10 @@ These are feminine (and some masculine) nouns ending in **-а, -я**.
 
 | Група (Group) | Закінчення (Ending) | Nominative (Називний) | Vocative (Кличний) | Приклади (Examples) |
 | :--- | :--- | :--- | :--- | :--- |
-| Тверда (Hard) | **-о** | панн**а**, Оксан**а**, мам**а** | панн**о**, Оксан**о**, мам**о** | `пані Оксано` (Source 9), `чорноброва` -> `чорноброва` (Source 5, adjective-noun) |
-| М’яка (Soft) | **-е** / **-є** | земл**я**, Наді**я**, Марі**я** | земл**е**, Наді**є**, Марі**є** | `Надіє` (Source 19), `Маріє` (Source 10), `пісне` (Source 21) |
-| Мішана (Mixed) | **-е** | тещ**а**, круч**а** | тещ**е**, круч**е** | `круче` (Source 10) |
-| Пестливі форми (Diminutives) | **-ю** | бабус**я**, Гал**я**, Нат**уся** | бабус**ю**, Гал**ю**, Нат**усю** | `бабусю` (Source 10), `Галю` (Source 10). **Винятки (Exceptions):** `Настя` -> `Насте`, `Катря` -> `Катре` (Source 10). |
+| Тверда (Hard) | **-о** | панн**а**, Оксан**а**, мам**а** | панн**о**, Оксан**о**, мам**о** | `пані Оксано` [S36], `чорноброва` -> `чорноброва` [S32][S37] |
+| М’яка (Soft) | **-е** / **-є** | земл**я**, Наді**я**, Марі**я** | земл**е**, Наді**є**, Марі**є** | `Надіє` [S38], `Маріє` [S33], `пісне` [S29] |
+| Мішана (Mixed) | **-е** | тещ**а**, круч**а** | тещ**е**, круч**е** | `круче` [S33] |
+| Пестливі форми (Diminutives) | **-ю** | бабус**я**, Гал**я**, Нат**уся** | бабус**ю**, Гал**ю**, Нат**усю** | `бабусю` [S33], `Галю` [S33]. **Винятки (Exceptions):** `Настя` -> `Насте`, `Катря` -> `Катре` [S33]. |
 
 ### Іменники II відміни (2nd Declension Nouns)
 This is the most complex group, primarily masculine nouns ending in a consonant or **-о**, and neuter nouns. The vocative is most relevant for the masculine nouns.
@@ -49,14 +48,14 @@ This is the most complex group, primarily masculine nouns ending in a consonant 
 | | Some common professions. | **-у** | слухач, читач, товариш | слухач**у**, читач**у**, товариш**у** |
 
 **Особливі імена (Special Names):**
-*   **Олег** has two forms: **Олегу** (standard, formal) and **Олеже** (informal, colloquial) (Source 1, 18, 35). Some sources label `Олеже` as archaic (Source 34, 35).
-*   **Ігор**: The form **Ігорю** is now strongly recommended by linguists over the older **Ігоре** (Source 4).
+*   **Олег** has two forms: **Олегу** (standard, formal) and **Олеже** (informal, colloquial) [S34][S39][S40]. Some sources label `Олеже` as archaic [S41][S40].
+*   **Ігор**: The form **Ігорю** is now strongly recommended by linguists over the older **Ігоре** [S42].
 
 ### Іменники III відміни (3rd Declension Nouns)
 These are feminine nouns ending in a consonant.
 | Закінчення (Ending) | Nominative (Називний) | Vocative (Кличний) | Приклади (Examples) |
 | :--- | :--- | :--- | :--- |
-| **-е** | любов, радість, ніч | любов**е**, радост**е**, ніч**ко** | `Любове`, `ноче`, `радосте` (Source 10). `Нічко дивна` (Source 7). |
+| **-е** | любов, радість, ніч | любов**е**, радост**е**, ніч**ко** | `Любове`, `ноче`, `радосте` [S33]. `Нічко дивна` [S43]. |
 
 ### Складні звертання (Compound Addresses)
 
@@ -79,10 +78,10 @@ For A2-B1 learners, mastery should be prioritized based on real-world frequency.
     *   **Standard Polite Address:** `пане`/`пані` + vocative of the first name (`пане Андрію`, `пані Олено`). This is the most common and versatile polite form.
     *   **Professions/Roles:** Vocative of common roles (`лікарю`, `вчителю`, `офіціанте`).
 2.  **Medium Priority (Formal/Written Use):**
-    *   **Full Formal Address:** `Ім'я + По батькові` (`Сергію Васильовичу`). Essential for formal emails and official situations (Source 3).
+    *   **Full Formal Address:** `Ім'я + По батькові` (`Сергію Васильовичу`). Essential for formal emails and official situations [S35].
     *   **Title + Surname:** `пане/пані` + surname (`пане Коваль`, `пані Шевченко`).
 3.  **Low Priority (Specific/Poetic Contexts):**
-    *   Rhetorical addresses to inanimate objects (`вітре`, `земле`, `Києве мій`). These are common in poetry and songs but less so in daily conversation (Source 10, 12, 21).
+    *   Rhetorical addresses to inanimate objects (`вітре`, `земле`, `Києве мій`). These are common in poetry and songs but less so in daily conversation [S33][S44][S29].
     *   Rare or archaic forms (`Олеже` instead of `Олегу` in a formal context).
 
 ## Типові помилки L2 (Common L2 Errors)
@@ -90,53 +89,53 @@ For A2-B1 learners, mastery should be prioritized based on real-world frequency.
 | ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
 | `Привіт, Наталя!` | `Привіт, Наталю!` | The vocative case is mandatory for direct address in Ukrainian. Using the nominative case sounds unnatural and is grammatically incorrect. This is often a direct transfer from languages without a vocative, like English or Russian. |
-| `Шановний Петро Миколайович, ...` | `Шановний Петре Миколайовичу, ...` | In a formal address consisting of a first name and patronymic, **both** nouns must be in the vocative case (Source 5, 10, 16). Forgetting to change the first name is a very common error. |
-| `Дякую, пан Коваль.` | `Дякую, пане Коваль.` | When addressing someone using a title (`пан`, `пані`, `колега`, `лікар`) and a surname, the title must be in the vocative case, while the surname remains in the nominative (Source 5, 16). |
-| `Пане лейтенант, слухаю.` | `Пане лейтенанте, слухаю.` | While using the nominative for the second of two general nouns is sometimes permissible (`пане лейтенант`), the fully correct and recommended form uses the vocative for both (`пане лейтенанте`) (Source 1, 9). Learners should default to declining both. |
+| `Шановний Петро Миколайович, ...` | `Шановний Петре Миколайовичу, ...` | In a formal address consisting of a first name and patronymic, **both** nouns must be in the vocative case [S32][S33][S31]. Forgetting to change the first name is a very common error. |
+| `Дякую, пан Коваль.` | `Дякую, пане Коваль.` | When addressing someone using a title (`пан`, `пані`, `колега`, `лікар`) and a surname, the title must be in the vocative case, while the surname remains in the nominative [S32][S31]. |
+| `Пане лейтенант, слухаю.` | `Пане лейтенанте, слухаю.` | While using the nominative for the second of two general nouns is sometimes permissible (`пане лейтенант`), the fully correct and recommended form uses the vocative for both (`пане лейтенанте`) [S34][S36]. Learners should default to declining both. |
 | `Де ти, друже мій?` | `Де ти, друже мій?` (*This is correct*)  <br> (Incorrect version:) `*Де ти, друга мій?` | Adjectives and possessive pronouns that are part of an address stay in the nominative case (`мій`, `дорогий`, `шановний`). Learners might mistakenly try to decline them along with the noun. |
-| `Ігоре, ти йдеш?` | `Ігорю, ти йдеш?` | While `Ігоре` is a historically valid form, modern linguistic norms and authoritative sources strongly recommend using `-ю` for soft-stem masculine names like Ігор, making `Ігорю` the preferred and more natural-sounding choice (Source 4). |
+| `Ігоре, ти йдеш?` | `Ігорю, ти йдеш?` | While `Ігоре` is a historically valid form, modern linguistic norms and authoritative sources strongly recommend using `-ю` for soft-stem masculine names like Ігор, making `Ігорю` the preferred and more natural-sounding choice [S42]. |
 
 ## Деколонізаційні застереження (Decolonization Notes)
 
 The vocative case is a powerful and immediate grammatical differentiator between Ukrainian and modern standard Russian. Its correct use is a mark of authentic, decolonized Ukrainian speech.
 
-1.  **Existence vs. Absence:** The most critical point is that the vocative case (`кличний відмінок`) is a living, actively used grammatical category in contemporary Ukrainian for all forms of address. Modern standard Russian **lacks a functional vocative case**, with the exception of a few fossilized, mostly religious expressions (e.g., *Боже*, *Отче*). In Russian, the nominative case is used for direct address. A historian in Source 14 explicitly states: **"...кличний відмінок є в давній українській мові є в сучасній українській мові але його немає в російській"** ("...the vocative case exists in the old Ukrainian language, it exists in the modern Ukrainian language, but it does not exist in Russian") (Source 14).
+1.  **Existence vs. Absence:** The most critical point is that the vocative case (`кличний відмінок`) is a living, actively used grammatical category in contemporary Ukrainian for all forms of address. Modern standard Russian **lacks a functional vocative case**, with the exception of a few fossilized, mostly religious expressions (e.g., *Боже*, *Отче*). In Russian, the nominative case is used for direct address. A historian in Source 14 explicitly states: **"...кличний відмінок є в давній українській мові є в сучасній українській мові але його немає в російській"** ("...the vocative case exists in the old Ukrainian language, it exists in the modern Ukrainian language, but it does not exist in Russian") [S45].
 
 2.  **Avoid False Equivalence:** Never present the Ukrainian vocative as a "quirk" or an "exception." It is a core feature of the language's grammar, inherited directly from Proto-Slavic and Old East Slavic. Using the nominative for address in Ukrainian is not an acceptable alternative; it is a grammatical error, often resulting from Russian language influence (Surzhyk).
 
 3.  **Authentic Forms:** Be mindful of forms that may appear similar but have different statuses in each language. For example, while Russian might use a shortened form of a name for informal address, Ukrainian uses a specific grammatical case with its own set of endings (`Іван` -> `Іване`, not just `Ваня`). Teaching these correct endings reinforces the distinct grammatical system of Ukrainian.
 
-4.  **Cultural Etiquette:** Forms of address like `пане/пані`, `добродію/добродійко`, `панове` were actively used in Ukrainian culture, suppressed during the Soviet era in favor of the Russian-derived `товарищ` (`товариш`), and have been enthusiastically revived since independence (Source 17, 31). Using them correctly is not just grammatically sound, but also culturally significant.
+4.  **Cultural Etiquette:** Forms of address like `пане/пані`, `добродію/добродійко`, `панове` were actively used in Ukrainian culture, suppressed during the Soviet era in favor of the Russian-derived `товарищ` (`товариш`), and have been enthusiastically revived since independence [S46][S47]. Using them correctly is not just grammatically sound, but also culturally significant.
 
 ## Природні приклади (Natural Examples)
 
 ### Група 1: Неформальні та родинні звертання (Informal and Family)
-*   `Привіт, моя люба Інно! Як у тебе справи?` (Source 3)
-*   `Олеже, ти зможеш погратися на планшеті, коли зробиш уроки.` (Source 1, 2)
-*   `Мій синку, ти би менш балакав, сам над собою менше плакав.` (Source 5)
-*   `Бабусенько! Скажи мені, де я?` (Source 5)
-*   `Устино, серденько! Оплакана годинонька твоя!..` (Source 26)
+*   `Привіт, моя люба Інно! Як у тебе справи?` [S35]
+*   `Олеже, ти зможеш погратися на планшеті, коли зробиш уроки.` [S34][S48]
+*   `Мій синку, ти би менш балакав, сам над собою менше плакав.` [S32]
+*   `Бабусенько! Скажи мені, де я?` [S32]
+*   `Устино, серденько! Оплакана годинонька твоя!..` [S49]
 
 ### Група 2: Формальні та офіційні звертання (Formal and Official)
-*   `Шановний Сергію Васильовичу, я хочу записатися до вас на прийом.` (Source 3)
-*   `Доброго ранку, пане офіцере!` (Source 16)
-*   `Пропонуємо вам, Іване Сергійовичу, відкрити рахунок у банку.` (Source 16)
-*   `Пане Віталію, скільки кілометрів київських доріг відремонтовано цього року?` (Source 21)
+*   `Шановний Сергію Васильовичу, я хочу записатися до вас на прийом.` [S35]
+*   `Доброго ранку, пане офіцере!` [S31]
+*   `Пропонуємо вам, Іване Сергійовичу, відкрити рахунок у банку.` [S31]
+*   `Пане Віталію, скільки кілометрів київських доріг відремонтовано цього року?` [S29]
 
 ### Група 3: Звертання до ролей та професій (Addressing Roles and Professions)
-*   `Добрий вечір тобі, пане господарю!` (Source 20)
-*   `Слухаю, пане полковнику!` (Source 4, 10)
-*   `Учителю! Навчайте нас життю...` (Source 1, 2)
+*   `Добрий вечір тобі, пане господарю!` [S28]
+*   `Слухаю, пане полковнику!` [S42][S33]
+*   `Учителю! Навчайте нас життю...` [S34][S48]
 
 ### Група 4: Поетичні та риторичні звертання (Poetic and Rhetorical)
-*   `О слово рідне! Орле скутий!` (Source 12)
-*   `Зоре моя вечірняя, зійди над горою...` (Source 10)
-*   `Як тебе не любити, Києве мій!` (Source 21)
+*   `О слово рідне! Орле скутий!` [S44]
+*   `Зоре моя вечірняя, зійди над горою...` [S33]
+*   `Як тебе не любити, Києве мій!` [S29]
 
 ## Рекомендації для вправ (Activity Concepts)
 
 **Phase 1: Recognition & Identification**
-*   **Drill:** Provide a text with various forms of address (like the dialogue in Source 3). Have learners highlight all nouns in the vocative case.
+*   **Drill:** Provide a text with various forms of address (like the dialogue in [S35]). Have learners highlight all nouns in the vocative case.
 *   **Drill:** Multiple choice. `(Пані / Панію / Паніо) Олено, добрий день!`
 
 **Phase 2: Form Production (Controlled Practice)**
@@ -147,7 +146,7 @@ The vocative case is a powerful and immediate grammatical differentiator between
     | Андрій | `Андрію` |
     | пан | `пане` |
     | учитель | `учителю` |
-*   **Drill:** Fill-in-the-blanks. `Доброго дня, _______ (лікар) _______ (Ярослав)!` -> `Доброго дня, лікарю Ярославе!` (Source 16).
+*   **Drill:** Fill-in-the-blanks. `Доброго дня, _______ (лікар) _______ (Ярослав)!` -> `Доброго дня, лікарю Ярославе!` [S31].
 
 **Phase 3: Communication (Freer Practice)**
 *   **Scenario:** Write a short, formal email to a professor (`Шановна пані професорко...` or `Шановний пане професоре...`) asking a question.

@@ -4,7 +4,6 @@
 slug: writing-literary-essays
 domain: mastery/c2
 tracks: [c2]
-sources: [ext-wikipedia-franko, ext-wikipedia-romanian-music, ext-wikipedia-feminist-movements, ext-wikipedia-content-analysis, ext-wikipedia-old-ukrainian-literature, ext-wikipedia-prisoners-dilemma, ext-wikipedia-fairy-tale, 11-klas-istoriya-ukr-gisem-2024_s0148, ext-wikipedia-baudrillard, ext-realna_istoria-172, ext-istoria_movy-43, 10-klas-ukrmova-karaman-2018_s0457, 10-klas-ukrmova-karaman-2018_s0433, 9-klas-ukrajinska-literatura-avramenko-2017_s0057, 11-klas-ukrajinska-mova-avramenko-2019_s0283, 11-klas-ukrajinska-mova-glazova-2019_s0052, 10-klas-ukrmova-karaman-2018_s0481, 10-klas-ukrmova-karaman-2018_s0425, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0021, 10-klas-ukrlit-borzenko-2018-prof_s0377]
 compiled: 2026-04-07
 -->
 

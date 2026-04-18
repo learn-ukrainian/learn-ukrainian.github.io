@@ -1,0 +1,97 @@
+# Source registry for wiki/mastery/c2/c2-1-review.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S27
+  file: 11-klas-ukrajinska-mova-voron-2019_s0213
+  type: textbook
+  preserved_from_meta: true
+- id: S28
+  file: 9-klas-ukrmova-zabolotnyi-2017_s0268
+  type: textbook
+  preserved_from_meta: true
+- id: S29
+  file: 10-klas-ukrmova-karaman-2018_s0073
+  type: textbook
+  preserved_from_meta: true
+- id: S30
+  file: ext-istoria_movy-69
+  type: external
+  preserved_from_meta: true
+- id: S31
+  file: ext-other_blogs-63
+  type: external
+- id: S32
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0216
+  type: textbook
+- id: S33
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0291
+  type: textbook
+- id: S34
+  file: 11-klas-ukrajinska-mova-voron-2019_s0040
+  type: textbook
+- id: S35
+  file: 10-klas-ukrmova-karaman-2018_s0408
+  type: textbook
+- id: S36
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0280
+  type: textbook
+- id: S37
+  file: 10-klas-ukrmova-karaman-2018_s0409
+  type: textbook
+- id: S38
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0268
+  type: textbook
+- id: S39
+  file: ext-ulp_youtube-127
+  type: external
+- id: S40
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0219
+  type: textbook
+- id: S41
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0281
+  type: textbook
+- id: S42
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0294
+  type: textbook
+- id: S43
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0298
+  type: textbook
+- id: S44
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0250
+  type: textbook
+- id: S45
+  file: 10-klas-ukrmova-karaman-2018_s0246
+  type: textbook
+- id: S46
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0300
+  type: textbook
+- id: S47
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0246
+  type: textbook
+- id: S48
+  file: unknown
+  type: unknown
+- id: S49
+  file: М. Рильський
+  type: unknown
+- id: S50
+  file: 10-klas-ukrmova-karaman-2018_s0105
+  type: textbook
+- id: S51
+  file: О. Забужко
+  type: unknown
+- id: S52
+  file: Б.-І. Антонич
+  type: unknown
+- id: S53
+  file: В. Кикоть
+  type: unknown
+- id: S54
+  file: З газети
+  type: unknown
+- id: S55
+  file: Анна Огойко
+  type: unknown
+- id: S56
+  file: 11-klas-ukrajinska-mova-voron-2019_s0416
+  type: textbook

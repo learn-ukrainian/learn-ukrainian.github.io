@@ -1,0 +1,86 @@
+# Source registry for wiki/academic/c1/political-system.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S14
+  file: Source 1
+  type: unknown
+  preserved_from_meta: true
+- id: S15
+  file: Source 2
+  type: unknown
+  preserved_from_meta: true
+- id: S16
+  file: 7-klas-istoria-ukr-pometun-2024_s0200
+  type: textbook
+  preserved_from_meta: true
+- id: S17
+  file: Source 6
+  type: unknown
+  preserved_from_meta: true
+- id: S18
+  file: Source 7
+  type: unknown
+  preserved_from_meta: true
+- id: S19
+  file: Source 8
+  type: unknown
+  preserved_from_meta: true
+- id: S20
+  file: ext-imtgsh-181
+  type: external
+  preserved_from_meta: true
+- id: S21
+  file: Source 16
+  type: unknown
+  preserved_from_meta: true
+- id: S22
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0008
+  type: textbook
+  preserved_from_meta: true
+- id: S23
+  file: 11-klas-istoriya-ukr-gisem-2024_s0281
+  type: textbook
+  preserved_from_meta: true
+- id: S24
+  file: 11-klas-istoriya-ukr-galimov-2024_s0336
+  type: textbook
+  preserved_from_meta: true
+- id: S25
+  file: 8-klas-istoria-ukr-galimov-2025_s0199
+  type: textbook
+- id: S26
+  file: 8-klas-istoria-ukr-hlibovska-2025_s0246
+  type: textbook
+- id: S27
+  file: 5-klas-istoriya-schupak-2022_s0105
+  type: textbook
+- id: S28
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0413
+  type: textbook
+- id: S29
+  file: ext-imtgsh-171
+  type: external
+- id: S30
+  file: 8-klas-istoriya-ukr-gisem-2021_s0268
+  type: textbook
+- id: S31
+  file: 11-klas-istoriya-ukr-gisem-2024_s0338
+  type: textbook
+- id: S32
+  file: Source 5
+  type: unknown
+- id: S33
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0436
+  type: textbook
+- id: S34
+  file: ext-imtgsh-155
+  type: external
+- id: S35
+  file: ext-realna_istoria-113
+  type: external
+- id: S36
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0008
+  type: textbook
+- id: S37
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0224
+  type: textbook

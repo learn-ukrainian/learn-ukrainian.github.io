@@ -1,0 +1,24 @@
+# Source registry for wiki/mastery/c2/literary-translation-ii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ext-imtgsh-39
+  type: external
+- id: S2
+  file: ext-imtgsh-164
+  type: external
+- id: S3
+  file: unknown
+  type: unknown
+- id: S4
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0109
+  type: textbook
+- id: S5
+  file: 10-klas-ukrmova-glazova-2018_s0303
+  type: textbook
+- id: S6
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s0153
+  type: textbook
+- id: S7
+  file: за принципами
+  type: unknown

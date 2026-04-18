@@ -4,7 +4,6 @@
 slug: home-and-daily-life
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [ext-ulp_youtube-258, ext-ulp_youtube-260, ext-realna_istoria-121, ext-ulp_youtube-253, ext-ulp_youtube-76, ext-ulp_youtube-74, ext-ulp_youtube-261, ext-realna_istoria-7, 10-klas-ukrmova-glazova-2018_s0035, ext-realna_istoria-17, 6-klas-ukrmova-betsa-2023_s0055, 8-klas-ukrmova-avramenko-2025_s0172, 7-klas-ukrlit-avramenko-2024_s0242, 8-klas-ukrmova-zabolotnyi-2025_s0294, 3-klas-ukrainska-mova-savchuk-2020-2_s0136, 6-klas-ukrmova-avramenko-2023_s0009, 4-klas-ukrmova-zaharijchuk_s0116, 5-klas-ukrlit-avramenko-2022_s0268, 7-klas-ukrmova-litvinova-2024_s0053, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0085, ext-ulp_youtube-258, ext-ulp_youtube-260, ext-ulp_youtube-76, ext-ulp_youtube-74, ext-ulp_youtube-261, ext-other_blogs-31, 6-klas-ukrmova-betsa-2023_s0054, 11-klas-ukrajinska-mova-avramenko-2019_s0057, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0085, 3-klas-ukrainska-mova-vashulenko-2020-1_s0128, 3-klas-ukrainska-mova-vashulenko-2020-1_s0129]
 compiled: 2026-04-07
 -->
 
@@ -12,11 +11,11 @@ compiled: 2026-04-07
 The topics of "My Home" and "My Day" are foundational in the A2 curriculum, integrating vocabulary with core grammatical concepts like the Locative case, noun plurals, and telling time.
 
 Ukrainian pedagogical materials, such as the *Ukrainian Lessons Podcast* and standard school textbooks, introduce these concepts contextually.
-1.  **Vocabulary First:** Lessons begin by introducing nouns for rooms (`кімната`, `кухня`, `спальня`, `вітальня`) and furniture (`стіл`, `ліжко`, `шафа`) (Джерело: `ext-ulp_youtube-261`, `ext-ulp_youtube-76`). This is often done through dialogues describing an apartment or room (Джерело: `ext-ulp_youtube-74`, `6-klas-ukrmova-betsa-2023_s0054`).
-2.  **Locative Case for Location:** The question «де?» (where?) is introduced early, prompting the use of the Locative case with prepositions `у/в` and `на`. For instance, *5 Minute Ukrainian* explicitly teaches `у квартирі`, `на кухні`, `у спальні` as direct applications of new vocabulary (Джерело: `ext-ulp_youtube-76`).
-3.  **Plural Nouns for Counting:** When listing items in a room, the concept of plural nouns (`множина`) naturally arises. Textbooks and podcasts demonstrate how to count items: `три ліжка`, `два столи`, `чотири стільці` (Джерело: `ext-ulp_youtube-261`). This includes both regular plural endings and common irregularities, which are taught as high-frequency items.
-4.  **Telling Time and Daily Routine:** The topic of "My Day" (`Мій день`) is used to teach time expressions. Textbooks for younger grades (3-4) introduce basic time-telling using ordinal numbers and the preposition `о` (`о сьомій годині`) (Джерело: `4-klas-ukrmova-zaharijchuk_s0116`). This is linked to daily routine verbs (`прокидаюсь`, `снідаю`, `обідаю`) to form descriptive sentences (Джерело: `7-klas-ukrmova-litvinova-2024_s0053`).
-5.  **Genitive Case for Absence and Quantity:** The construction `немає + Genitive` is taught to express the absence of something (e.g., `немає вітальні`) (Джерело: `ext-ulp_youtube-74`). The Genitive case is also reinforced through expressions of quantity like `склянка води` or `чашка чаю` when discussing meals (Джерело: `ext-ulp_youtube-253`).
+1.  **Vocabulary First:** Lessons begin by introducing nouns for rooms (`кімната`, `кухня`, `спальня`, `вітальня`) and furniture (`стіл`, `ліжко`, `шафа`) [S26][S27]. This is often done through dialogues describing an apartment or room [S28][S29].
+2.  **Locative Case for Location:** The question «де?» (where?) is introduced early, prompting the use of the Locative case with prepositions `у/в` and `на`. For instance, *5 Minute Ukrainian* explicitly teaches `у квартирі`, `на кухні`, `у спальні` as direct applications of new vocabulary [S27].
+3.  **Plural Nouns for Counting:** When listing items in a room, the concept of plural nouns (`множина`) naturally arises. Textbooks and podcasts demonstrate how to count items: `три ліжка`, `два столи`, `чотири стільці` [S26]. This includes both regular plural endings and common irregularities, which are taught as high-frequency items.
+4.  **Telling Time and Daily Routine:** The topic of "My Day" (`Мій день`) is used to teach time expressions. Textbooks for younger grades (3-4) introduce basic time-telling using ordinal numbers and the preposition `о` (`о сьомій годині`) [S30]. This is linked to daily routine verbs (`прокидаюсь`, `снідаю`, `обідаю`) to form descriptive sentences [S31].
+5.  **Genitive Case for Absence and Quantity:** The construction `немає + Genitive` is taught to express the absence of something (e.g., `немає вітальні`) [S28]. The Genitive case is also reinforced through expressions of quantity like `склянка води` or `чашка чаю` when discussing meals [S32].
 
 This approach is cyclical: vocabulary is introduced, a grammatical structure is applied to it, and then it is practiced through descriptive and narrative tasks related to the learner's personal environment.
 
@@ -77,54 +76,54 @@ Used to answer **Котра година?** (What time is it?) and **О котр
 
 ## Частотність і пріоритети (Frequency & Priorities)
 For an A2 learner focusing on "Home and Day," the priorities are:
-1.  **Core Vocabulary & Locative Case:** Master the names of 5-7 rooms (`кімната, кухня, ванна, спальня, вітальня, коридор, туалет`) and 10-15 furniture/object items (`стіл, стілець, ліжко, шафа, вікно, двері, лампа, диван, крісло, полиця`). The immediate priority is using them in the Locative case with `у/на` to describe where things are (Джерело: `ext-ulp_youtube-76`).
-2.  **Present Tense of Daily Verbs:** Master verbs for daily routines: `прокидатися`, `снідати`, `обідати`, `вечеряти`, `йти спати`, `працювати`, `вчитися` (Джерело: `ext-ulp_youtube-253`, `7-klas-ukrmova-litvinova-2024_s0053`).
-3.  **Basic Time-Telling:** Focus on telling time by the hour (`о сьомій годині`) and general time of day (`вранці`, `вдень`, `ввечері`) (Джерело: `ext-ulp_youtube-253`). Half-hour (`пів на...`) is the next step. Minutes can be simplified initially (`сьома тридцять`).
-4.  **Genitive with `немає`:** This is a high-frequency structure for expressing absence and is essential for basic descriptions. E.g., `У квартирі немає вітальні` (Джерело: `ext-ulp_youtube-74`).
-5.  **High-Frequency Plurals:** Prioritize plurals for items counted in a room (`столи, стільці, ліжка, вікна, двері, полиці`) and people (`друзі`, `люди`). Irregulars like `друзі` and `люди` should be memorized early due to their common usage (Джерело: `ext-ulp_youtube-260`).
+1.  **Core Vocabulary & Locative Case:** Master the names of 5-7 rooms (`кімната, кухня, ванна, спальня, вітальня, коридор, туалет`) and 10-15 furniture/object items (`стіл, стілець, ліжко, шафа, вікно, двері, лампа, диван, крісло, полиця`). The immediate priority is using them in the Locative case with `у/на` to describe where things are [S27].
+2.  **Present Tense of Daily Verbs:** Master verbs for daily routines: `прокидатися`, `снідати`, `обідати`, `вечеряти`, `йти спати`, `працювати`, `вчитися` [S32][S31].
+3.  **Basic Time-Telling:** Focus on telling time by the hour (`о сьомій годині`) and general time of day (`вранці`, `вдень`, `ввечері`) [S32]. Half-hour (`пів на...`) is the next step. Minutes can be simplified initially (`сьома тридцять`).
+4.  **Genitive with `немає`:** This is a high-frequency structure for expressing absence and is essential for basic descriptions. E.g., `У квартирі немає вітальні` [S28].
+5.  **High-Frequency Plurals:** Prioritize plurals for items counted in a room (`столи, стільці, ліжка, вікна, двері, полиці`) and people (`друзі`, `люди`). Irregulars like `друзі` and `люди` should be memorized early due to their common usage [S33].
 
 ## Типові помилки L2 (Common L2 Errors)
 | ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
 | Я живу в **квартира**. | Я живу **у квартирі**. | The preposition `в/у` for location (де?) requires the Locative case, not the Nominative. English doesn't use cases for this, leading to direct translation errors. |
-| У нас є два **стіл**. | У нас є два **столи**. | After numbers 2, 3, 4, nouns take the Nominative plural form. Learners often forget to pluralize the noun. (Джерело: `ext-ulp_youtube-261`) |
-| Це **однокімнатний** квартира. | Це **однокімнатна** квартира. | Adjectives must agree in gender with the noun they describe. `Квартира` is feminine, so the adjective must be feminine (`-а`). (Джерело: `ext-ulp_youtube-74`) |
-| У кімнаті **немає стіл**. | У кімнаті **немає стола**. | The construction `немає` (there isn't/aren't) requires the noun to be in the Genitive case. (Джерело: `ext-ulp_youtube-74`) |
-| Зараз **сім** година. | Зараз **сьома** година. | When telling time (What time is it?), Ukrainian uses ordinal numbers (сьома - seventh), not cardinal numbers (сім - seven). (Джерело: `11-klas-ukrajinska-mova-avramenko-2019_s0057`) |
-| Мої **други** хочуть знімати разом. | Мої **друзі** хочуть знімати разом. | `Друг` is an irregular noun. Its plural is `друзі` with a `г -> з` consonant mutation, not the regular `*други`. This is a common memorization error. (Джерело: `ext-ulp_youtube-260`) |
+| У нас є два **стіл**. | У нас є два **столи**. | After numbers 2, 3, 4, nouns take the Nominative plural form. Learners often forget to pluralize the noun. [S26] |
+| Це **однокімнатний** квартира. | Це **однокімнатна** квартира. | Adjectives must agree in gender with the noun they describe. `Квартира` is feminine, so the adjective must be feminine (`-а`). [S28] |
+| У кімнаті **немає стіл**. | У кімнаті **немає стола**. | The construction `немає` (there isn't/aren't) requires the noun to be in the Genitive case. [S28] |
+| Зараз **сім** година. | Зараз **сьома** година. | When telling time (What time is it?), Ukrainian uses ordinal numbers (сьома - seventh), not cardinal numbers (сім - seven). [S34] |
+| Мої **други** хочуть знімати разом. | Мої **друзі** хочуть знімати разом. | `Друг` is an irregular noun. Its plural is `друзі` with a `г -> з` consonant mutation, not the regular `*други`. This is a common memorization error. [S33] |
 
 ## Деколонізаційні застереження (Decolonization Notes)
 Teaching Ukrainian grammar requires a conscious effort to separate it from Russian, as learners often carry over assumptions.
-1.  **Vocabulary is Distinct:** Emphasize uniquely Ukrainian vocabulary for the home. For example, `вітальня` (living room) is standard Ukrainian, whereas `гостиная` is a Russianism. Similarly, `гуртожиток` (dormitory) is the correct term, not a transliteration of the Russian `общежитие` (Джерело: `ext-ulp_youtube-261`). `Помешкання` is a good word for "accommodation" (Джерело: `ext-ulp_youtube-76`).
+1.  **Vocabulary is Distinct:** Emphasize uniquely Ukrainian vocabulary for the home. For example, `вітальня` (living room) is standard Ukrainian, whereas `гостиная` is a Russianism. Similarly, `гуртожиток` (dormitory) is the correct term, not a transliteration of the Russian `общежитие` [S26]. `Помешкання` is a good word for "accommodation" [S27].
 2.  **Pronunciation of `в` and `у`:** The preposition `в/у` is not just a spelling choice but a phonetic one, determined by the preceding and following sounds to maintain melody. It's not interchangeable with the Russian `в` and should be taught as a feature of Ukrainian euphony.
-3.  **Locative Preposition `на`:** The use of `на` can differ. While both languages say `на столі`, Ukrainian very commonly uses `на кухні`, which should be presented as a standard norm, not an exception. (Джерело: `ext-ulp_youtube-76`)
+3.  **Locative Preposition `на`:** The use of `на` can differ. While both languages say `на столі`, Ukrainian very commonly uses `на кухні`, which should be presented as a standard norm, not an exception. [S27]
 4.  **False Friends:** Be aware of words that look similar but have different meanings or usage. For example, the Ukrainian `неділя` means "Sunday," while the Russian `неделя` means "week."
 5.  **Teach Ukrainian as the Default:** Never present Ukrainian grammar in terms of how it "differs from Russian." Frame all rules, paradigms, and examples from a purely Ukrainian perspective. The grammar of Ukrainian is self-contained and ancient; it is not a dialect or a deviation. For instance, the `г -> з` plural mutation (`друг -> друзі`) is an internal feature of Ukrainian phonological history.
 
 ## Природні приклади (Natural Examples)
 
 **Group 1: Describing a Place (Locative Case)**
-*   `Ми з сім’єю живемо у власному будинку, який розташований на вулиці Тараса Шевченка.` (Джерело: `6-klas-ukrmova-betsa-2023_s0054`)
-*   `Мій дім в Україні - це квартира моїх батьків у місті Полонне.` (Джерело: `ext-ulp_youtube-258`)
-*   `На кухні є газова плита, круглий стіл, чотири стільці.` (Джерело: `6-klas-ukrmova-betsa-2023_s0054`)
+*   `Ми з сім’єю живемо у власному будинку, який розташований на вулиці Тараса Шевченка.` [S29]
+*   `Мій дім в Україні - це квартира моїх батьків у місті Полонне.` [S35]
+*   `На кухні є газова плита, круглий стіл, чотири стільці.` [S29]
 
 **Group 2: Listing Items in a Room (Plurals)**
-*   `У нас в кімнаті є два ліжка, шафа, стіл, два стільці і полиця.` (Джерело: `ext-ulp_youtube-258`)
-*   `На стіні є три полиці, дві картини і багато фотографій.` (Джерело: `ext-ulp_youtube-261`)
-*   `У моїй кімнаті є нові меблі: велике ліжко, комп’ютерний стіл, зручне крісло, велика шафа-купе.` (Джерело: `6-klas-ukrmova-betsa-2023_s0055`)
+*   `У нас в кімнаті є два ліжка, шафа, стіл, два стільці і полиця.` [S35]
+*   `На стіні є три полиці, дві картини і багато фотографій.` [S26]
+*   `У моїй кімнаті є нові меблі: велике ліжко, комп’ютерний стіл, зручне крісло, велика шафа-купе.` [S36]
 
 **Group 3: Expressing Absence (Genitive with `немає`)**
-*   `Хоча трохи дивно, що в квартирі немає вітальні.` (Джерело: `ext-ulp_youtube-74`)
-*   `Зараз у нас немає домашніх тваринок.` (Джерело: `ext-ulp_youtube-258`)
+*   `Хоча трохи дивно, що в квартирі немає вітальні.` [S28]
+*   `Зараз у нас немає домашніх тваринок.` [S35]
 
 **Group 4: Daily Routine & Telling Time**
-*   `Я прокидаюсь о сьомій годині.` (Джерело: `6-klas-ukrmova-avramenko-2023_s0009`)
-*   `Зазвичай на сніданок я їм вівсянку...` (Джерело: `ext-ulp_youtube-253`)
-*   `Ми снідаємо вранці.` (Джерело: `ext-ulp_youtube-253`)
+*   `Я прокидаюсь о сьомій годині.` [S37]
+*   `Зазвичай на сніданок я їм вівсянку...` [S32]
+*   `Ми снідаємо вранці.` [S32]
 
 **Group 5: Adjective Agreement**
-*   `Спальня дуже простора і світла.` (Джерело: `ext-ulp_youtube-74`)
-*   `Кухня — одне з найсвітліших приміщень у будинку.` (Джерело: `6-klas-ukrmova-betsa-2023_s0054`)
+*   `Спальня дуже простора і світла.` [S28]
+*   `Кухня — одне з найсвітліших приміщень у будинку.` [S29]
 
 ## Рекомендації для вправ (Activity Concepts)
 
@@ -145,7 +144,7 @@ Teaching Ukrainian grammar requires a conscious effort to separate it from Russi
 *   **Builds Towards:**
     *   **Instrumental Case (B1):** Describing a room with `з` (with), e.g., `кімната з балконом`.
     *   **Verbs of Motion (B1):** Describing movement within the home (`йти на кухню`).
-    *   **More Complex Sentences (B1):** Using subordinate clauses to give more detailed descriptions (`...пиріг, який я приготувала...`) (Джерело: `ext-ulp_youtube-253`).
+    *   **More Complex Sentences (B1):** Using subordinate clauses to give more detailed descriptions (`...пиріг, який я приготувала...`) [S32].
 
 ## Пов'язані статті (Related Articles)
 *   `grammar/a1/noun-genders`

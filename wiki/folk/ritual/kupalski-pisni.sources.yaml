@@ -1,0 +1,70 @@
+# Source registry for wiki/folk/ritual/kupalski-pisni.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S10
+  file: Source 1
+  type: unknown
+  preserved_from_meta: true
+- id: S11
+  file: Source 2
+  type: unknown
+  preserved_from_meta: true
+- id: S12
+  file: Source 4
+  type: unknown
+  preserved_from_meta: true
+- id: S13
+  file: Source 5
+  type: unknown
+  preserved_from_meta: true
+- id: S14
+  file: ext-ulp_youtube-29
+  type: external
+  preserved_from_meta: true
+- id: S15
+  file: ext-realna_istoria-124
+  type: external
+  preserved_from_meta: true
+- id: S16
+  file: Source 12
+  type: unknown
+  preserved_from_meta: true
+- id: S17
+  file: ext-realna_istoria-11
+  type: external
+  preserved_from_meta: true
+- id: S18
+  file: ext-ulp_youtube-175
+  type: external
+  preserved_from_meta: true
+- id: S19
+  file: fc2291b5_c4104
+  type: literary
+  preserved_from_meta: true
+- id: S20
+  file: 68ba0555_c0062
+  type: literary
+- id: S21
+  file: 6-klas-ukrlit-zabolotnyi-2023_s0017
+  type: textbook
+- id: S22
+  file: ext-istoria_movy-18
+  type: external
+- id: S23
+  file: 4800ab33_c1105
+  type: literary
+- id: S24
+  file: 4800ab33_c1149
+  type: literary
+- id: S25
+  file: 6-klas-ukrlit-avramenko-2023_s0021
+  type: textbook
+- id: S26
+  file: Source 3
+  type: unknown
+- id: S27
+  file: fc2291b5_c4103
+  type: literary
+- id: S28
+  file: Source 11
+  type: unknown

@@ -4,7 +4,6 @@
 slug: what-time
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: [ext-ulp_youtube-236, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0083, 11-klas-ukrajinska-mova-avramenko-2019_s0057, ext-ulp_youtube-32, ext-ulp_youtube-228, 11-klas-ukrajinska-mova-avramenko-2019_s0059, 2-klas-ukrmova-vashulenko-2019-1_s0089, 6-klas-ukrmova-golub-2023_s0167, 4-klas-ukrmova-zaharijchuk_s0116, 11-klas-ukrajinska-mova-glazova-2019_s0047, 7-klas-ukrmova-litvinova-2024_s0058, ext-ulp_youtube-235, 6-klas-ukrmova-litvinova-2023_s0252, 6-klas-ukrmova-betsa-2023_s0164, 6-klas-ukrmova-avramenko-2023_s0180, 2-klas-ukrmova-kravcova-2019-1_s0124, 5-klas-ukrmova-litvinova-2022_s0197, 9-klas-ukrajinska-mova-voron-2017_s0285, 10-klas-ukrmova-karaman-2018_s0301, 6-klas-ukrmova-litvinova-2023_s0250, 11-klas-ukrajinska-mova-avramenko-2019_s0060, 4-klas-ukrmova-zaharijchuk_s0109, ext-ulp_youtube-269, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0084, 4-klas-ukrayinska-mova-varzatska-2021-1_s0097, 6-klas-ukrmova-zabolotnyi-2020_s0185, 11-klas-istoriya-ukr-hlibovska-2024_s0271, 10-klas-ukrlit-borzenko-2018-prof_s0204, 6-klas-ukrmova-avramenko-2023_s0172, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0083, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0082, 11-klas-ukrajinska-mova-avramenko-2019_s0057, ext-other_blogs-14, ext-other_blogs-67, ext-ulp_youtube-193, 3-klas-ukrainska-mova-vashulenko-2020-2_s0051, 6-klas-ukrmova-avramenko-2023_s0161, 6-klas-ukrmova-betsa-2023_s0166, 6-klas-istoriya-gisem-2023_s0207]
 compiled: 2026-04-07
 -->
 

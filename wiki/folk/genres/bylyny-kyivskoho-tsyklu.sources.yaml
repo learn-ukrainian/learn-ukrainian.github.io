@@ -1,0 +1,79 @@
+# Source registry for wiki/folk/genres/bylyny-kyivskoho-tsyklu.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S17
+  file: Source 1
+  type: unknown
+  preserved_from_meta: true
+- id: S18
+  file: Source 3
+  type: unknown
+  preserved_from_meta: true
+- id: S19
+  file: Source 5
+  type: unknown
+  preserved_from_meta: true
+- id: S20
+  file: Source 6
+  type: unknown
+  preserved_from_meta: true
+- id: S21
+  file: Source 14
+  type: unknown
+  preserved_from_meta: true
+- id: S22
+  file: Source 17
+  type: unknown
+  preserved_from_meta: true
+- id: S23
+  file: Source 21
+  type: unknown
+  preserved_from_meta: true
+- id: S24
+  file: Source 7
+  type: unknown
+- id: S25
+  file: Source 8
+  type: unknown
+- id: S26
+  file: Source 22
+  type: unknown
+- id: S27
+  file: Source 9
+  type: unknown
+- id: S28
+  file: Source 18
+  type: unknown
+- id: S29
+  file: Source 13
+  type: unknown
+- id: S30
+  file: 294b54e7_c0154
+  type: literary
+- id: S31
+  file: Source 20
+  type: unknown
+- id: S32
+  file: Source 2
+  type: unknown
+- id: S33
+  file: Source 10
+  type: unknown
+- id: S34
+  file: unknown-source-21
+  type: unknown
+- id: S35
+  file: Source 11
+  type: unknown
+- id: S36
+  file: Source 15
+  type: unknown
+- id: S37
+  file: Source 4
+  type: unknown
+- id: S38
+  file: unknown-source-23
+  type: unknown
+- id: S39
+  file: Source 12
+  type: unknown

@@ -4,23 +4,22 @@
 slug: instrumental-accompaniment
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [ext-ulp_youtube-186, ext-ulp_youtube-78, 10-klas-ukrmova-glazova-2018_s0260, 6-klas-ukrmova-zabolotnyi-2020_s0146, 6-klas-ukrmova-zabolotnyi-2020_s0101, 6-klas-ukrmova-avramenko-2023_s0101, 10-klas-ukrajinska-mova-avramenko-2018_s0261, 6-klas-ukrmova-zabolotnyi-2020_s0111, ext-ulp_youtube-67, ext-ulp_youtube-237, ext-ulp_youtube-96, 6-klas-ukrmova-avramenko-2023_s0095, 6-klas-ukrmova-litvinova-2023_s0170, 6-klas-ukrmova-zabolotnyi-2020_s0129, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0054, 6-klas-ukrmova-litvinova-2023_s0157, 6-klas-ukrmova-zabolotnyi-2020_s0105, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0057, 10-klas-ukrajinska-mova-avramenko-2018_s0248, 4-klas-ukrayinska-mova-varzatska-2021-1_s0057, 6-klas-ukrmova-zaharijchuk-2021-1_s0062, ext-other_blogs-67, 10-klas-ukrmova-glazova-2018_s0283, 6-klas-ukrmova-zabolotnyi-2020_s0112, 6-klas-ukrmova-golub-2023_s0084, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0036, 6-klas-ukrmova-betsa-2023_s0096, 4-klas-ukrmova-zaharijchuk-2021-1_s0042, 6-klas-ukrmova-avramenko-2023_s0057, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0057, 5-klas-ukrmova-zabolotnyi-2023_s0126, ext-ulp_youtube-257, ext-ulp_youtube-242, 10-klas-ukrajinska-mova-avramenko-2018_s0257, 10-klas-ukrmova-zabolotnyi-2018_s0206]
 compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
-The Instrumental case (**Орудний відмінок**) is introduced in Ukrainian schools as early as Grade 4. It answers the questions **ким?** (by whom?) and **чим?** (with what?) (Source 40). The name of the case itself comes from the verb *орудувати* (to handle, to wield a tool), so its primary meaning is that of an instrument. For example, `пишу ручкою` (I write with a pen) (Source 153).
+The Instrumental case (**Орудний відмінок**) is introduced in Ukrainian schools as early as Grade 4. It answers the questions **ким?** (by whom?) and **чим?** (with what?) [S38]. The name of the case itself comes from the verb *орудувати* (to handle, to wield a tool), so its primary meaning is that of an instrument. For example, `пишу ручкою` (I write with a pen) [S39].
 
-The second key meaning, and the focus of this brief, is **accompaniment**. This is almost always taught using the preposition **з** (with). A core example provided in Grade 6 textbooks is `іду (з ким?) з другом` (I am going with a friend) (Source 12). This distinguishes the "accompaniment" use (with a preposition) from the "instrument" use (without a preposition).
+The second key meaning, and the focus of this brief, is **accompaniment**. This is almost always taught using the preposition **з** (with). A core example provided in Grade 6 textbooks is `іду (з ким?) з другом` (I am going with a friend) [S40]. This distinguishes the "accompaniment" use (with a preposition) from the "instrument" use (without a preposition).
 
-Pedagogical materials for L2 learners, like the *Ukrainian Lessons Podcast*, explicitly connect the preposition `з` with the Instrumental case for expressing "with." In an episode about Christmas dinner, the host explains that `з` is used to list ingredients: `кутя з маком, медом, і горіхами` (kutia with poppy seeds, honey, and nuts) (Source 24). This context is highly effective for A2 learners as it's concrete and relatable.
+Pedagogical materials for L2 learners, like the *Ukrainian Lessons Podcast*, explicitly connect the preposition `з` with the Instrumental case for expressing "with." In an episode about Christmas dinner, the host explains that `з` is used to list ingredients: `кутя з маком, медом, і горіхами` (kutia with poppy seeds, honey, and nuts) [S41]. This context is highly effective for A2 learners as it's concrete and relatable.
 
 Ukrainian schools systematically teach the endings for each declension:
 1.  **Grade 4:** Introduction to the case and basic endings for masculine (`-ом`/`-ем`) and feminine (`-ою`/`-ею`) nouns (Sources 15, 44).
 2.  **Grade 6:** A deep dive into all declensions, including the complex spelling rules for the 3rd declension (`ніччю`) and the various ending patterns for 1st (`-ою, -ею, -єю`) and 2nd declensions (`-ом, -ем, -єм`) (Sources 5, 8, 15).
-3.  **Grade 10:** Review and focus on complex cases, exceptions, and parallel forms like the plural `-ми` ending (`грішми`, `кіньми`) (Source 19).
+3.  **Grade 10:** Review and focus on complex cases, exceptions, and parallel forms like the plural `-ми` ending (`грішми`, `кіньми`) [S42].
 
-The variants of the preposition `з` (`із`, `зі`, `зо`) are taught as a matter of euphony (милозвучність). The rules are based on the sounds of the following word, for example, `зі мною` (with me) or `зі Львова` (from Lviv) to avoid difficult consonant clusters (Source 43).
+The variants of the preposition `з` (`із`, `зі`, `зо`) are taught as a matter of euphony (милозвучність). The rules are based on the sounds of the following word, for example, `зі мною` (with me) or `зі Львова` (from Lviv) to avoid difficult consonant clusters [S43].
 
 ## Повна парадигма (Full Paradigm)
 
@@ -152,7 +151,7 @@ These examples are taken from textbook dialogues and real-world conversations to
 
 **Phase 1: Recognition and Form Association**
 *   **Drill 1 (Matching):** Provide two columns. Left column: nominative forms (`друг`, `кава`, `сестра`, `море`). Right column: instrumental forms (`сестрою`, `з другом`, `морем`, `з кавою`). Students draw lines to match them.
-*   **Drill 2 (Identification):** Give students a short dialogue (like from Source 1) and have them highlight all nouns in the Instrumental case.
+*   **Drill 2 (Identification):** Give students a short dialogue (like from [S44]) and have them highlight all nouns in the Instrumental case.
 
 **Phase 2: Controlled Practice**
 *   **Drill 1 (Fill-in-the-blanks):** Focus on preposition `з` + noun.

@@ -4,7 +4,6 @@
 slug: slang-youth
 domain: academic/c1
 tracks: [c1, c2]
-sources: [unknown, unknown, 11-klas-ukrajinska-literatura-avramenko-2019_s0020, unknown, unknown, unknown, unknown, ext-ulp_youtube-145, 11-klas-ukrajinska-mova-voron-2019_s0368, 10-klas-ukrmova-karaman-2018_s0382, 11-klas-ukrajinska-mova-voron-2019_s0370, unknown, unknown, unknown, ext-ulp_youtube-171, 10-klas-ukrmova-karaman-2018_s0008, 11-klas-ukrajinska-mova-avramenko-2019_s0298]
 compiled: 2026-04-07
 -->
 

@@ -1,0 +1,67 @@
+# Source registry for wiki/mastery/c2/literary-theory.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S17
+  file: ext-imtgsh-68
+  type: external
+  preserved_from_meta: true
+- id: S18
+  file: ext-ulp_youtube-24
+  type: external
+  preserved_from_meta: true
+- id: S19
+  file: ext-ulp_youtube-197
+  type: external
+  preserved_from_meta: true
+- id: S20
+  file: 11-klas-istoriya-ukr-gisem-2024_s0088
+  type: textbook
+  preserved_from_meta: true
+- id: S21
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0181
+  type: textbook
+- id: S22
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0304
+  type: textbook
+- id: S23
+  file: 11-klas-ukrajinska-mova-voron-2019_s0368
+  type: textbook
+- id: S24
+  file: 11-klas-ukrajinska-mova-voron-2019_s0367
+  type: textbook
+- id: S25
+  file: unknown
+  type: unknown
+- id: S26
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0483
+  type: textbook
+- id: S27
+  file: Соломія Павличко
+  type: unknown
+- id: S28
+  file: ext-imtgsh-69
+  type: external
+- id: S29
+  file: ext-realna_istoria-29
+  type: external
+- id: S30
+  file: ext-komik_istoryk-8
+  type: external
+- id: S31
+  file: про радянську мовну політику
+  type: unknown
+- id: S32
+  file: ext-ulp_youtube-144
+  type: external
+- id: S33
+  file: С. Павличко
+  type: unknown
+- id: S34
+  file: Ю. Лотман
+  type: unknown
+- id: S35
+  file: Аристотель
+  type: unknown
+- id: S36
+  file: Леся Українка
+  type: unknown

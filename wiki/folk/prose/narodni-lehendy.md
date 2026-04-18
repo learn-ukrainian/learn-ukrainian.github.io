@@ -4,7 +4,6 @@
 slug: narodne-khrystyianstvo-v-lehendakh
 domain: folk/prose
 tracks: [folk]
-sources: [unknown, unknown, unknown, unknown, unknown, ext-realna_istoria-11, cf05bddd_c0193, unknown, unknown, unknown, unknown, ext-imtgsh-68, a418921e_c0392, unknown, 484d0ffb_c0591, 484d0ffb_c0342, fc2291b5_c4279, 484d0ffb_c0334, 3-klas-ukrainska-mova-savchenko-2020-2_s0002, 6-klas-istoriya-gisem-2023_s0020]
 compiled: 2026-04-07
 -->
 

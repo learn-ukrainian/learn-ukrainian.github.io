@@ -1,0 +1,104 @@
+# Source registry for wiki/mastery/c2/rhythm-prosody.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S24
+  file: '{''Wikipedia'': ''Давня українська література''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S25
+  file: '{''Wikipedia'': ''Контент-аналіз''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S26
+  file: '{''Wikipedia'': ''Грецька література''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S27
+  file: '{''Wikipedia'': ''Історичний міф''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S28
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0298
+  type: textbook
+  preserved_from_meta: true
+- id: S29
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0300
+  type: textbook
+  preserved_from_meta: true
+- id: S30
+  file: 9-klas-ukrmova-zabolotnyi-2017_s0268
+  type: textbook
+  preserved_from_meta: true
+- id: S31
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0281
+  type: textbook
+  preserved_from_meta: true
+- id: S32
+  file: ext-other_blogs-63
+  type: external
+- id: S33
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0291
+  type: textbook
+- id: S34
+  file: 11-klas-ukrajinska-mova-voron-2019_s0040
+  type: textbook
+- id: S35
+  file: 7-klas-ukrlit-mishhenko-2015_s0431
+  type: textbook
+- id: S36
+  file: '{''Wikipedia'': ''Художня література''}'
+  type: wiki
+- id: S37
+  file: '{''Wikipedia'': ''Мистецтво''}'
+  type: wiki
+- id: S38
+  file: ext-realna_istoria-117
+  type: external
+- id: S39
+  file: М. Рильський
+  type: unknown
+- id: S40
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0268
+  type: textbook
+- id: S41
+  file: Б.-І. Антонич
+  type: unknown
+- id: S42
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0219
+  type: textbook
+- id: S43
+  file: 10-klas-ukrmova-karaman-2018_s0403
+  type: textbook
+- id: S44
+  file: В. Кикоть
+  type: unknown
+- id: S45
+  file: 10-klas-ukrmova-karaman-2018_s0246
+  type: textbook
+- id: S46
+  file: М. Бахтін
+  type: unknown
+- id: S47
+  file: '{''Wikipedia'': ''Румунська народна музика''}'
+  type: wiki
+- id: S48
+  file: '{''Wikipedia'': ''Танець модерн''}'
+  type: wiki
+- id: S49
+  file: З виступу
+  type: unknown
+- id: S50
+  file: М. Жулинський
+  type: unknown
+- id: S51
+  file: Т. Зарівна
+  type: unknown
+- id: S52
+  file: За П. Білоусенком
+  type: unknown
+- id: S53
+  file: '{''Wikipedia'': ''Мистецтво Удмуртії''}'
+  type: wiki
+- id: S54
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0294
+  type: textbook

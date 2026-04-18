@@ -4,7 +4,6 @@
 slug: numerals-agreement-skilky
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [ext-ulp_youtube-57, ext-istoria_movy-20, ext-ulp_youtube-165, ext-ulp_youtube-102, ext-ulp_youtube-27, ext-istoria_movy-66, ext-istoria_movy-49, ext-other_blogs-67, ext-istoria_movy-44, 6-klas-ukrmova-avramenko-2023_s0162, 6-klas-ukrmova-zabolotnyi-2020_s0102, 11-klas-ukrajinska-mova-glazova-2019_s0011, 6-klas-ukrmova-litvinova-2023_s0174, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0037, 10-klas-ukrajinska-mova-zabolotnij-2018_s0215, 10-klas-ukrmova-zabolotnyi-2018_s0215, 3-klas-ukrainska-mova-kravtsova-2020-1_s0022, 10-klas-ukrajinska-mova-avramenko-2018_s0247, 6-klas-ukrmova-betsa-2023_s0144, 4-klas-ukrayinska-mova-varzatska-2021-1_s0067, 6-klas-ukrmova-zabolotnyi-2020_s0096, 8-klas-ukrmova-zabolotnyi-2025_s0071, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0058, 29, 6-klas-ukrmova-golub-2023_s0086, 6-klas-ukrmova-golub-2023_s0094, 6-klas-ukrmova-litvinova-2023_s0123, 5-klas-ukrmova-zabolotnyi-2023_s0047, 10-klas-ukrmova-karaman-2018_s0012, 6-klas-ukrmova-zabolotnyi-2020_s0099, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0035]
 compiled: 2026-04-07
 -->
 
@@ -19,15 +18,15 @@ The approach can be broken down into three main rules:
     *   `одна книга` (feminine)
     *   `одне вікно` (neuter)
 
-2.  **The "2, 3, 4" Rule:** The numerals `два`/`дві` (two), `три` (three), and `чотири` (four) require the noun to be in the **називний відмінок множини (Nominative Plural)**. Textbooks for grades 4-6 introduce this with simple examples like `два пальці` or `чотири літаки` (Source 26).
+2.  **The "2, 3, 4" Rule:** The numerals `два`/`дві` (two), `три` (three), and `чотири` (four) require the noun to be in the **називний відмінок множини (Nominative Plural)**. Textbooks for grades 4-6 introduce this with simple examples like `два пальці` or `чотири літаки` [S34].
     *   `два стільці` (two chairs)
     *   `три сестри` (three sisters)
     *   `чотири вікна` (four windows)
-    *   A significant exception, noted in advanced grammar (Source 26), is the word `друг`, which takes the **родовий відмінок однини (Genitive Singular)**: `два друга`, `три друга`, `чотири друга`.
+    *   A significant exception, noted in advanced grammar [S34], is the word `друг`, which takes the **родовий відмінок однини (Genitive Singular)**: `два друга`, `три друга`, `чотири друга`.
 
-3.  **The "5+" Rule:** All numerals from `п'ять` (five) onwards, as well as indefinite numerals like `багато` (many), `кілька` (a few), and the question word `скільки` (how many), require the noun to be in the **родовий відмінок множини (Genitive Plural)**. This is the most complex part because forming the Genitive Plural is not always straightforward. School grammar (e.g., Source 24, 32) dedicates significant attention to the various endings (`-ів`, `-ей`, or нульове закінчення/zero ending) and the sound changes that occur. For example, `п'ять грамів` or `кілька сотень` (Source 10).
+3.  **The "5+" Rule:** All numerals from `п'ять` (five) onwards, as well as indefinite numerals like `багато` (many), `кілька` (a few), and the question word `скільки` (how many), require the noun to be in the **родовий відмінок множини (Genitive Plural)**. This is the most complex part because forming the Genitive Plural is not always straightforward. School grammar (e.g., [S35], 32) dedicates significant attention to the various endings (`-ів`, `-ей`, or нульове закінчення/zero ending) and the sound changes that occur. For example, `п'ять грамів` or `кілька сотень` [S37].
 
-4.  **Predicate Agreement:** At a more advanced stage (Grade 8), students learn that when a numeral + noun phrase is the subject, the verb (predicate) can be either singular or plural. The singular form emphasizes the quantity as a single unit, while the plural form emphasizes the individual actors performing the action (Source 22).
+4.  **Predicate Agreement:** At a more advanced stage (Grade 8), students learn that when a numeral + noun phrase is the subject, the verb (predicate) can be either singular or plural. The singular form emphasizes the quantity as a single unit, while the plural form emphasizes the individual actors performing the action [S38].
     *   `П'ятеро дітей **нудьгувало**.` (Five children **was** bored - focus on the group's state).
     *   `П'ятеро дітей **нудьгували**.` (Five children **were** bored - focus on the individuals).
 
@@ -42,46 +41,46 @@ The central challenge in answering "Скільки?" is correctly forming the **
 
 | Group | Stem Ends In | Gen. Pl. Ending | Rule/Example | Source |
 | :--- | :--- | :--- | :--- | :--- |
-| Тверда (Hard) | Hard Consonant | **-ø** (zero) | `машина` → `машин` <br> `дорога` → `доріг` (with `o`→`i` alternation) | (Source 24, 29) |
-| М'яка (Soft) | Soft Consonant | **-ь** or **-ø** | `вишня` → `вишень` (with inserted `е`) <br> `земля` → `земель` | (Source 24, 29) |
-| Мішана (Mixed) | Шиплячий (Shibilant) | **-ø** | `круча` → `круч` <br> `тиша` → `тиш` | (Source 29) |
-| Special Cases | `-я` after vowel, etc. | **-ей** | `стаття` → `статей` <br> `сім'я` → `сімей` | (Source 29) |
-| Special Cases | Masculine | **-ів** | `сусіда` → `сусідів` <br> `тесля` → `теслів` | (Source 29) |
+| Тверда (Hard) | Hard Consonant | **-ø** (zero) | `машина` → `машин` <br> `дорога` → `доріг` (with `o`→`i` alternation) | [S35][S39] |
+| М'яка (Soft) | Soft Consonant | **-ь** or **-ø** | `вишня` → `вишень` (with inserted `е`) <br> `земля` → `земель` | [S35][S39] |
+| Мішана (Mixed) | Шиплячий (Shibilant) | **-ø** | `круча` → `круч` <br> `тиша` → `тиш` | [S39] |
+| Special Cases | `-я` after vowel, etc. | **-ей** | `стаття` → `статей` <br> `сім'я` → `сімей` | [S39] |
+| Special Cases | Masculine | **-ів** | `сусіда` → `сусідів` <br> `тесля` → `теслів` | [S39] |
 
 ### ІІ Відміна (2nd Declension)
 *(Masculine nouns with zero/-о ending; neuter nouns with -о, -е, -я endings)*
 
 | Gender | Stem Type | Gen. Pl. Ending | Rule/Example | Source |
 | :--- | :--- | :--- | :--- | :--- |
-| Чоловічий (Masc.) | Most | **-ів / -їв** | `батько` → `батьків` <br> `трамвай` → `трамваїв` | (Source 18, 32) |
-| Середній (Neuter) | `-o` | **-ø** (zero) | `місто` → `міст` <br> `село` → `сіл` (with `е`→`і`) | (Source 18, 32) |
-| Середній (Neuter) | `-е` | **-ів / -їв** or **-ø** | `море` → `морів` <br> `поле` → `піль` (from *полів*) | (Source 32) |
-| Both | Irregular | **-ей** | `гість` → `гостей` <br> `кінь` → `коней` | (Source 32) |
-| Both | Paired body parts | **-ей** or **-ø** | `око` → **`очей`** / **`віч`** <br> `плече` → **`плечей`** / **`пліч`** | (Source 32) |
-| Special Case | Masc. `*-in` suffix loss | **-ø** | `киянин` → `киян` <br> `селянин` → `селян` | (Source 32) |
+| Чоловічий (Masc.) | Most | **-ів / -їв** | `батько` → `батьків` <br> `трамвай` → `трамваїв` | [S40][S36] |
+| Середній (Neuter) | `-o` | **-ø** (zero) | `місто` → `міст` <br> `село` → `сіл` (with `е`→`і`) | [S40][S36] |
+| Середній (Neuter) | `-е` | **-ів / -їв** or **-ø** | `море` → `морів` <br> `поле` → `піль` (from *полів*) | [S36] |
+| Both | Irregular | **-ей** | `гість` → `гостей` <br> `кінь` → `коней` | [S36] |
+| Both | Paired body parts | **-ей** or **-ø** | `око` → **`очей`** / **`віч`** <br> `плече` → **`плечей`** / **`пліч`** | [S36] |
+| Special Case | Masc. `*-in` suffix loss | **-ø** | `киянин` → `киян` <br> `селянин` → `селян` | [S36] |
 
 ### ІІІ Відміна (3rd Declension)
 *(Feminine nouns with zero ending, and `мати`)*
 
 | Stem Ends In | Gen. Pl. Ending | Rule/Example | Source |
 | :--- | :--- | :--- | :--- |
-| Any consonant | **-ей** | `ніч` → `ночей` (with `і`→`о`) <br> `подорож` → `подорожей` <br> `радість` → `радостей` | (Source 24) |
+| Any consonant | **-ей** | `ніч` → `ночей` (with `і`→`о`) <br> `подорож` → `подорожей` <br> `радість` → `радостей` | [S35] |
 
 ### IV Відміна (4th Declension)
 *(Neuter nouns in -а, -я with suffixes -ат-, -ят-, -ен- in declension)*
 
 | Stem Suffix | Gen. Pl. Ending | Rule/Example | Source |
 | :--- | :--- | :--- | :--- |
-| `-ат-` / `-ят-` | **-ø** (zero) | `лоша` → `лошат` <br> `кошеня` → `кошенят` | (Source 28) |
-| `-ен-` | **-ø** (zero) | `ім'я` → `імен` | (Source 28) |
+| `-ат-` / `-ят-` | **-ø** (zero) | `лоша` → `лошат` <br> `кошеня` → `кошенят` | [S41] |
+| `-ен-` | **-ø** (zero) | `ім'я` → `імен` | [S41] |
 
 ### Іменники, що мають лише форму множини (*Pluralia Tantum*)
 
 | Ending Group | Gen. Pl. Ending | Example | Source |
 | :--- | :--- | :--- | :--- |
-| Group 1 | **-ів / -їв** | `окуляри` → `окулярів` <br> `хитрощі` → `хитрощів` | (Source 30) |
-| Group 2 | **-ей** | `гроші` → `грошей` <br> `двері` → `дверей` | (Source 30) |
-| Group 3 | **-ø** (zero) | `ворота` → `воріт` <br> `Карпати` → `Карпат` | (Source 30) |
+| Group 1 | **-ів / -їв** | `окуляри` → `окулярів` <br> `хитрощі` → `хитрощів` | [S42] |
+| Group 2 | **-ей** | `гроші` → `грошей` <br> `двері` → `дверей` | [S42] |
+| Group 3 | **-ø** (zero) | `ворота` → `воріт` <br> `Карпати` → `Карпат` | [S42] |
 
 ## Частотність і пріоритети (Frequency & Priorities)
 
@@ -115,18 +114,18 @@ English speakers often struggle with the case changes required by Ukrainian nume
 | `У мене є *два брата*.` | `У мене є **два брати**.` | The learner incorrectly applies the Genitive Singular (`брата`), often due to influence from Russian grammar where this is the standard. In Ukrainian, `два` governs the Nominative Plural for most nouns. |
 | `Тут сидять *три жінки*.` | `Тут сидять **три жінки**.` | While the form is correct (`жінки` is Nominative Plural), the learner might be tempted to use the Russian-influenced Genitive Singular. The error is the *reasoning*, not always the form. A clearer error: `*три студентка*` instead of `**три студентки**`. |
 | `Я чекав *двадцять хвилина*.` | `Я чекав **двадцять хвилин**.` | A common mistake is to use the singular form of the noun after a number greater than one, or to fail to produce the correct Genitive Plural form. The correct form is `хвилин` (Gen. Pl. of `хвилина`). |
-| `Нам потрібно *троє дівчат*.` | `Нам потрібно **три дівчини**.` | Collective numerals (`двоє, троє, четверо...`) cannot be used with feminine nouns (Source 26). Learners must use the standard cardinal numeral (`три`) instead. |
+| `Нам потрібно *троє дівчат*.` | `Нам потрібно **три дівчини**.` | Collective numerals (`двоє, троє, четверо...`) cannot be used with feminine nouns [S34]. Learners must use the standard cardinal numeral (`три`) instead. |
 | `Я знаю *два слова* українською.` | `Я знаю **два слова** українською.` | This is often correct by chance. The error is when the learner applies this same logic everywhere, failing to distinguish Nom. Pl. `слова` from the Gen. Pl. `слів` required after five: `❌ п'ять слова` -> `✅ п'ять слів`. |
 
 ## Деколонізаційні застереження (Decolonization Notes)
 
 It is critical to teach Ukrainian grammar on its own terms, not as a variant of Russian. The grammar of numerals is a key area where this distinction matters.
 
-1.  **The 2, 3, 4 Rule is a Ukrainian Standard, Not an Exception:** The primary rule in modern Ukrainian is that `два, три, чотири` govern the **Nominative Plural** (`два столи`, `три хлопці`). This contrasts with modern Russian, which uses the Genitive Singular (`два стола`, `три парня`). While both languages evolved from a common Old East Slavic root where numerals behaved differently (Source 8), their modern paths have diverged. Presenting the Ukrainian rule as "different from Russian" frames Russian as the default. Instead, present the Ukrainian Nominative Plural rule as the primary standard.
+1.  **The 2, 3, 4 Rule is a Ukrainian Standard, Not an Exception:** The primary rule in modern Ukrainian is that `два, три, чотири` govern the **Nominative Plural** (`два столи`, `три хлопці`). This contrasts with modern Russian, which uses the Genitive Singular (`два стола`, `три парня`). While both languages evolved from a common Old East Slavic root where numerals behaved differently [S43], their modern paths have diverged. Presenting the Ukrainian rule as "different from Russian" frames Russian as the default. Instead, present the Ukrainian Nominative Plural rule as the primary standard.
 
-2.  **The `друг` Exception is Not "the Russian Rule":** The special case of `два друга` (Genitive Singular) in Ukrainian (Source 26) coincidentally matches the form in Russian. It should be taught as a specific, high-frequency exception within the Ukrainian system, not as an example of "following the Russian rule." It's a relic of an older grammatical system that has survived in this specific context.
+2.  **The `друг` Exception is Not "the Russian Rule":** The special case of `два друга` (Genitive Singular) in Ukrainian [S34] coincidentally matches the form in Russian. It should be taught as a specific, high-frequency exception within the Ukrainian system, not as an example of "following the Russian rule." It's a relic of an older grammatical system that has survived in this specific context.
 
-3.  **Historical Roots Are Shared, Not Borrowed:** The historical reason that numerals from 5 onwards govern the Genitive Plural is that words like `пѧть` (five) and `десѧть` (ten) were grammatically **feminine nouns** in Old East Slavic (Source 8). A phrase like `пѧть братъ` was grammatically equivalent to "a quintet of brothers." This historical reality is common to East Slavic languages and explains the "why" behind the rule. It is a shared heritage, not a Russian import.
+3.  **Historical Roots Are Shared, Not Borrowed:** The historical reason that numerals from 5 onwards govern the Genitive Plural is that words like `пѧть` (five) and `десѧть` (ten) were grammatically **feminine nouns** in Old East Slavic [S43]. A phrase like `пѧть братъ` was grammatically equivalent to "a quintet of brothers." This historical reality is common to East Slavic languages and explains the "why" behind the rule. It is a shared heritage, not a Russian import.
 
 4.  **Avoid Using Russian as a Crutch:** Do not explain Ukrainian numeral agreement by saying "it's like in Russian, except...". Teach the Ukrainian system (`1`=adj; `2,3,4`=Nom.Pl; `5+`=Gen.Pl.) as a complete and independent set of rules.
 
@@ -135,25 +134,25 @@ It is critical to teach Ukrainian grammar on its own terms, not as a variant of 
 These examples are sourced from Ukrainian textbooks and media, demonstrating natural usage.
 
 **Rule: 1 (`один, одна, одне`)**
-*   `За одну гривню можна було купити вола.` (Source 25) - For one hryvnia, you could buy an ox.
-*   `...поїхати на один навчальний рік у Сполучені Штати.` (Source 1) - ...to go for one academic year to the United States.
+*   `За одну гривню можна було купити вола.` [S44] - For one hryvnia, you could buy an ox.
+*   `...поїхати на один навчальний рік у Сполучені Штати.` [S45] - ...to go for one academic year to the United States.
 
 **Rule: 2, 3, 4 + Nominative Plural**
-*   `В Україні це переважно чотири роки навчання.` (Source 1) - In Ukraine, it's mostly four years of study.
-*   `Під одним ковпаком сімсот козаків.` (Source 19) - This is a riddle, but `три` and `чотири` follow the same pattern: `Три козаки`, `Чотири козаки`.
+*   `В Україні це переважно чотири роки навчання.` [S45] - In Ukraine, it's mostly four years of study.
+*   `Під одним ковпаком сімсот козаків.` [S46] - This is a riddle, but `три` and `чотири` follow the same pattern: `Три козаки`, `Чотири козаки`.
 *   `Мій університет... пропонує здобувати minor...` <!-- VERIFY --> This example doesn't fit. A better one: `У мого друга є три сини.` (My friend has three sons.)
 
 **Rule: 5+ & `кілька`/`багато` + Genitive Plural**
-*   `Треба приготувати 12 страв на святу вечерю.` (Source 4) - It is necessary to prepare 12 dishes for the Holy Supper.
-*   `У попередньому епізоді я давала п'ять порад для покращення української мови.` (Source 3) - In the previous episode, I gave five tips for improving the Ukrainian language.
-*   `Блокнот коштує сорок гривень.` (Source 24) - The notebook costs forty hryvnias.
-*   `Скільки відсотків голосних в українських словах?` (Source 5) - What percentage of vowels are in Ukrainian words?
-*   `...за лаштунками — мільйони непереможних.` (Source 10) - ...behind the scenes are millions of invincible people.
+*   `Треба приготувати 12 страв на святу вечерю.` [S47] - It is necessary to prepare 12 dishes for the Holy Supper.
+*   `У попередньому епізоді я давала п'ять порад для покращення української мови.` [S48] - In the previous episode, I gave five tips for improving the Ukrainian language.
+*   `Блокнот коштує сорок гривень.` [S35] - The notebook costs forty hryvnias.
+*   `Скільки відсотків голосних в українських словах?` [S49] - What percentage of vowels are in Ukrainian words?
+*   `...за лаштунками — мільйони непереможних.` [S37] - ...behind the scenes are millions of invincible people.
 
 **Predicate Agreement**
-*   `П’ятеро дітей нудьгували.` (Source 22) - Five children were bored. (Focus on the actors)
-*   `Минуло десять літ.` (Source 22) - Ten years have passed. (Singular verb for a time period)
-*   `Багато малечі поспішає на відкриття...` (based on Source 22) - Many little ones are hurrying to the opening... (Singular verb with `багато`)
+*   `П’ятеро дітей нудьгували.` [S38] - Five children were bored. (Focus on the actors)
+*   `Минуло десять літ.` [S38] - Ten years have passed. (Singular verb for a time period)
+*   `Багато малечі поспішає на відкриття...` (based on [S38]) - Many little ones are hurrying to the opening... (Singular verb with `багато`)
 
 ## Рекомендації для вправ (Activity Concepts)
 
@@ -192,7 +191,7 @@ Understanding numeral agreement is a crucial hub connecting several grammatical 
 
 *   **Prerequisites:**
     *   **Noun Declensions & Gender:** It's impossible to form the Genitive Plural without knowing the noun's declension and gender (Sources 21, 33, 41).
-    *   **Cases (Відмінки):** The student must understand the concept of the Nominative and Genitive cases (Source 14, 40).
+    *   **Cases (Відмінки):** The student must understand the concept of the Nominative and Genitive cases [S50][S51].
     *   **Nominative Plural:** To apply the "2, 3, 4" rule, the student must first know how to form the Nominative Plural.
 
 *   **Enables:**

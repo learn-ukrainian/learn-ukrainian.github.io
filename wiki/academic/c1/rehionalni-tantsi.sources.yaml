@@ -1,0 +1,73 @@
+# Source registry for wiki/academic/c1/rehionalni-tantsi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S15
+  file: ext-other_wikipedia-18
+  type: wiki
+  preserved_from_meta: true
+- id: S16
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0422
+  type: textbook
+  preserved_from_meta: true
+- id: S17
+  file: ext-other_wikipedia-17
+  type: wiki
+  preserved_from_meta: true
+- id: S18
+  file: 7-klas-ukrlit-zabolotnyi-2024_s0027
+  type: textbook
+  preserved_from_meta: true
+- id: S19
+  file: 7-klas-ukrlit-zabolotnyi-2024_s0025
+  type: textbook
+  preserved_from_meta: true
+- id: S20
+  file: 7-klas-ukrlit-mishhenko-2015_s0024
+  type: textbook
+  preserved_from_meta: true
+- id: S21
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0442
+  type: textbook
+  preserved_from_meta: true
+- id: S22
+  file: 8-klas-istoria-ukr-hlibovska-2025_s0253
+  type: textbook
+- id: S23
+  file: ext-other_wikipedia-1
+  type: wiki
+- id: S24
+  file: ext-other_wikipedia-28
+  type: wiki
+- id: S25
+  file: ext-ulp_youtube-157
+  type: external
+- id: S26
+  file: 10-klas-ukrmova-karaman-2018_s0425
+  type: textbook
+- id: S27
+  file: unknown-source-18
+  type: unknown
+- id: S28
+  file: ext-other_wikipedia-7
+  type: wiki
+- id: S29
+  file: ext-other_wikipedia-26
+  type: wiki
+- id: S30
+  file: 8-klas-istoria-ukr-hlibovska-2025_s0252
+  type: textbook
+- id: S31
+  file: 10-klas-ukrmova-karaman-2018_s0457
+  type: textbook
+- id: S32
+  file: ext-imtgsh-31
+  type: external
+- id: S33
+  file: П. Гнідич
+  type: unknown
+- id: S34
+  file: Іван Франко
+  type: unknown
+- id: S35
+  file: Коментар до поезії В. Герасим'юка
+  type: unknown

@@ -1,0 +1,77 @@
+# Source registry for wiki/academic/c1/research-article.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S15
+  file: ext-istoria_movy-43
+  type: external
+  preserved_from_meta: true
+- id: S16
+  file: 10-klas-ukrmova-karaman-2018_s0446
+  type: textbook
+  preserved_from_meta: true
+- id: S17
+  file: 10-klas-ukrmova-karaman-2018_s0455
+  type: textbook
+  preserved_from_meta: true
+- id: S18
+  file: 10-klas-ukrmova-karaman-2018_s0464
+  type: textbook
+  preserved_from_meta: true
+- id: S19
+  file: 11-klas-ukrajinska-mova-voron-2019_s0341
+  type: textbook
+  preserved_from_meta: true
+- id: S20
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0175
+  type: textbook
+  preserved_from_meta: true
+- id: S21
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0276
+  type: textbook
+  preserved_from_meta: true
+- id: S22
+  file: unknown
+  type: unknown
+  preserved_from_meta: true
+- id: S23
+  file: 10-klas-ukrmova-karaman-2018_s0429
+  type: textbook
+- id: S24
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0333
+  type: textbook
+- id: S25
+  file: ext-other_blogs-52
+  type: external
+- id: S26
+  file: 10-klas-ukrmova-karaman-2018_s0418
+  type: textbook
+- id: S27
+  file: Source 1
+  type: unknown
+- id: S28
+  file: Source 2
+  type: unknown
+- id: S29
+  file: Source 5
+  type: unknown
+- id: S30
+  file: Source 4
+  type: unknown
+- id: S31
+  file: mcp_rag_search_style_guide
+  type: unknown
+- id: S32
+  file: ext-istoria_movy-64
+  type: external
+- id: S33
+  file: ext-ulp_youtube-35
+  type: external
+- id: S34
+  file: Source 3
+  type: unknown
+- id: S35
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0182
+  type: textbook
+- id: S36
+  file: 9-klas-ukrmova-zabolotnyi-2017_s0276
+  type: textbook

@@ -1,0 +1,76 @@
+# Source registry for wiki/mastery/c2/professional-discussions.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S16
+  file: Source 2
+  type: unknown
+  preserved_from_meta: true
+- id: S17
+  file: Source 3
+  type: unknown
+  preserved_from_meta: true
+- id: S18
+  file: Source 4
+  type: unknown
+  preserved_from_meta: true
+- id: S19
+  file: Source 7
+  type: unknown
+  preserved_from_meta: true
+- id: S20
+  file: 9-klas-ukrajinska-mova-voron-2017_s0110
+  type: textbook
+  preserved_from_meta: true
+- id: S21
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0164
+  type: textbook
+  preserved_from_meta: true
+- id: S22
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0058
+  type: textbook
+  preserved_from_meta: true
+- id: S23
+  file: 11-klas-ukrajinska-mova-voron-2019_s0080
+  type: textbook
+- id: S24
+  file: 11-klas-ukrajinska-mova-voron-2019_s0078
+  type: textbook
+- id: S25
+  file: 10-klas-ukrmova-zabolotnij-2018_s0058
+  type: textbook
+- id: S26
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0058
+  type: textbook
+- id: S27
+  file: Source 15
+  type: unknown
+- id: S28
+  file: 11-klas-ukrajinska-mova-voron-2019_s0082
+  type: textbook
+- id: S29
+  file: 10-klas-ukrmova-glazova-2018_s0229
+  type: textbook
+- id: S30
+  file: 10-klas-ukrmova-karaman-2018_s0425
+  type: textbook
+- id: S31
+  file: Source 17
+  type: unknown
+- id: S32
+  file: ext-realna_istoria-161
+  type: external
+- id: S33
+  file: Source 5
+  type: unknown
+- id: S34
+  file: ext-realna_istoria-171
+  type: external
+- id: S35
+  file: ext-ulp_youtube-178
+  type: external
+- id: S36
+  file: Source 16
+  type: unknown
+- id: S37
+  file: Source 1
+  type: unknown

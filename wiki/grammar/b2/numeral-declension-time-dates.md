@@ -4,7 +4,6 @@
 slug: numeral-declension-time-dates
 domain: grammar/b2
 tracks: [b2, c1]
-sources: [ext-komik_istoryk-2, ext-istoria_movy-43, 6-klas-ukrmova-avramenko-2023_s0238, 4-klas-ukrmova-zaharijchuk_s0191, 6-klas-ukrmova-betsa-2023_s0240, 6-klas-ukrmova-betsa-2023_s0241, 6-klas-ukrmova-zabolotnyi-2020_s0034, 6-klas-ukrmova-litvinova-2023_s0239, ext-ulp_youtube-99, 6-klas-ukrmova-avramenko-2023_s0237, 6-klas-ukrmova-litvinova-2023_s0011, 6-klas-ukrmova-avramenko-2023_s0021, 6-klas-ukrmova-zabolotnyi-2020_s0261, 11-klas-ukrajinska-mova-glazova-2019_s0042, 11-klas-ukrajinska-mova-voron-2019_s0370, 10-klas-ukrmova-karaman-2018_s0309, 6-klas-ukrmova-golub-2023_s0163, 10-klas-ukrmova-karaman-2018_s0492, 6-klas-ukrmova-zabolotnyi-2020_s0174, 6-klas-ukrmova-golub-2023_s0165, ext-article-0, ext-video-1, ext-istoria_movy-37, ext-istoria_movy-20, ext-ulp_youtube-80]
 compiled: 2026-04-07
 -->
 

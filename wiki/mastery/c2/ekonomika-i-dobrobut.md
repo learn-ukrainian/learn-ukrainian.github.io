@@ -4,7 +4,6 @@
 slug: ekonomika-i-dobrobut
 domain: mastery/c2
 tracks: [c2]
-sources: [unknown, unknown, unknown, unknown, ext-imtgsh-37, ext-realna_istoria-80, unknown, unknown, 11-klas-istoriya-ukr-hlibovska-2024_s0534, unknown, unknown, ext-realna_istoria-89, ext-imtgsh-137, 8-klas-istoriya-ukr-gisem-2021_s0020, 11-klas-istoriya-ukr-hlibovska-2024_s0535, 11-klas-istoriya-ukr-hlibovska-2024_s0005, 11-klas-istoriya-ukr-gisem-2024_s0315, 11-klas-istoriya-ukr-hlibovська-2024_s0436, 11-klas-ukrajinska-mova-voron-2019_s0367]
 compiled: 2026-04-07
 -->
 

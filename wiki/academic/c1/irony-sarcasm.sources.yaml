@@ -1,0 +1,44 @@
+# Source registry for wiki/academic/c1/irony-sarcasm.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S8
+  file: ext-other_blogs-58
+  type: external
+  preserved_from_meta: true
+- id: S9
+  file: 10-klas-ukrmova-karaman-2018_s0047
+  type: textbook
+  preserved_from_meta: true
+- id: S10
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0019
+  type: textbook
+  preserved_from_meta: true
+- id: S11
+  file: 10-klas-ukrmova-karaman-2018_s0350
+  type: textbook
+  preserved_from_meta: true
+- id: S12
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0087
+  type: textbook
+  preserved_from_meta: true
+- id: S13
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0037
+  type: textbook
+- id: S14
+  file: 11-klas-ukrajinska-mova-voron-2019_s0083
+  type: textbook
+- id: S15
+  file: 10-klas-ukrmova-karaman-2018_s0115
+  type: textbook
+- id: S16
+  file: ext-realna_istoria-110
+  type: external
+- id: S17
+  file: 9-klas-ukrajinska-mova-voron-2017_s0081
+  type: textbook
+- id: S18
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0283
+  type: textbook
+- id: S19
+  file: 8-klas-ukrmova-avramenko-2025_s0049
+  type: textbook

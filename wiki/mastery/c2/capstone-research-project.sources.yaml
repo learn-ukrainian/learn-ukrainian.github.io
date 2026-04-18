@@ -1,0 +1,57 @@
+# Source registry for wiki/mastery/c2/capstone-research-project.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S15
+  file: ext-ulp_youtube-57
+  type: external
+  preserved_from_meta: true
+- id: S16
+  file: https://uk.wikipedia.org/wiki/%D0%9A%D1%83%D1%87%D1%83%D0%B3%D1%83%D1%80%D0%B0-%D0%9A%D1%83%D1%87%D0%B5%D1%80%D0%B5%D0%BD%D0%BA%D0%BE_%D0%86%D0%B2%D0%B0%D0%BD_%D0%86%D0%BE%D0%B2%D0%B8%D1%87
+  type: wiki
+  preserved_from_meta: true
+- id: S17
+  file: https://uk.wikipedia.org/wiki/%D0%94%D0%B0%D0%BB%D1%8C_%D0%92%D0%BE%D0%BB%D0%BE%D0%B4%D0%B8%D0%BC%D0%B8%D1%80_%D0%86%D0%B2%D0%B0%D0%BD%D0%BE%D0%B2%D0%B8%D1%87
+  type: wiki
+  preserved_from_meta: true
+- id: S18
+  file: https://uk.wikipedia.org/wiki/%D0%91%D1%96%D0%B1%D0%BB%D1%96%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D1%96%D1%8F
+  type: wiki
+- id: S19
+  file: ext-realna_istoria-113
+  type: external
+- id: S20
+  file: https://uk.wikipedia.org/wiki/%D0%9C%D1%83%D0%B7%D0%B8%D1%87%D0%BD%D0%B8%D0%B9_%D0%B0%D0%BD%D0%B0%D0%BB%D1%96%D0%B7
+  type: wiki
+- id: S21
+  file: https://uk.wikipedia.org/wiki/%D0%93%D0%B5%D0%BD%D0%BE%D1%86%D0%B8%D0%B4
+  type: wiki
+- id: S22
+  file: ext-other_blogs-52
+  type: external
+- id: S23
+  file: unknown-source-15
+  type: unknown
+- id: S24
+  file: https://uk.wikipedia.org/wiki/%D0%A4%D0%B5%D0%BC%D1%96%D0%BD%D1%96%D1%81%D1%82%D1%81%D1%8C%D0%BA%D1%96_%D1%80%D1%83%D1%85%D0%B8_%D1%82%D0%B0_%D1%96%D0%B4%D0%B5%D0%BE%D0%BB%D0%BE%D0%B3%D1%96%D1%97
+  type: wiki
+- id: S25
+  file: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82-%D0%B0%D0%BD%D0%B0%D0%BB%D1%96%D0%B7
+  type: wiki
+- id: S26
+  file: ext-imtgsh-51
+  type: external
+- id: S27
+  file: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0_%D0%BC%D1%83%D0%B7%D0%B8%D0%BA%D0%B0
+  type: wiki
+- id: S28
+  file: 11-klas-istoriya-ukr-gisem-2024_s0074
+  type: textbook
+- id: S29
+  file: Філіпп Сендс
+  type: unknown
+- id: S30
+  file: 9-klas-istorija-ukrajini-burnejko-2017_s0131
+  type: textbook
+- id: S31
+  file: Я. Ісаєвич
+  type: unknown

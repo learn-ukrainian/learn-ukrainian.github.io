@@ -4,7 +4,6 @@
 slug: lexical-stylistic-devices
 domain: grammar/b2
 tracks: [b2, c1]
-sources: [10-klas-ukrmova-karaman-2018_s0157, ext-other_blogs-55, 11-klas-ukrmova-zabolotnyi-2019_s0004, 10-klas-ukrmova-karaman-2018_s0420, 5-klas-ukrmova-litvinova-2022_s0038, 3-klas-ukrainska-mova-vashulenko-2020-1_s0156, 8-klas-ukrmova-avramenko-2025_s0261, ext-other_blogs-63, ext-other_blogs-65, ext-other_blogs-61, ext-ulp_youtube-14, ext-ulp_youtube-157, ext-ulp_youtube-33, 11-klas-ukrajinska-mova-avramenko-2019_s0013, 11-klas-ukrajinska-mova-avramenko-2019_s0024, 5-klas-ukrmova-zabolotnyi-2023_s0022, 11-klas-ukrmova-zabolotnyi-2019_s0005, 5-klas-ukrlit-avramenko-2022_s0132, 6-klas-ukrmova-avramenko-2023_s0063, 11-klas-ukrajinska-mova-glazova-2019_s0219, 7-klas-ukrlit-avramenko-2024_s0001, 7-klas-ukrlit-zabolotnyi-2024_s0442, 9-klas-ukrajinska-literatura-avramenko-2017_s0440, 11-klas-ukrajinska-mova-glazova-2019_s0059, 11-klas-ukrajinska-mova-avramenko-2019_s0021, ext-other_blogs-52]
 compiled: 2026-04-07
 -->
 

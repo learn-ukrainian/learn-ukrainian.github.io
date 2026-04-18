@@ -4,7 +4,6 @@
 slug: where-from
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: [ext-imtgsh-132, ext-realna_istoria-160, ext-imtgsh-23, ext-realna_istoria-40, ext-imtgsh-152, ext-imtgsh-43, ext-realna_istoria-16, ext-ulp_youtube-300, 10-klas-istorija-ukrajiny-gisem-2018_s0343, ext-realna_istoria-46, 5-klas-ukrmova-uhor-2022-1_s0009, 2-klas-ukrmova-bolshakova-2019-2_s0033, 11-klas-istoriya-ukr-galimov-2024_s0286, 9-klas-istorija-ukrajini-gisem-2017_s0042, 11-klas-ukrajinska-mova-voron-2019_s0282, 5-klas-ukrlit-avramenko-2022_s0150, 3-klas-ukrainska-mova-vashulenko-2020-1_s0105, 9-klas-ukrajinska-mova-voron-2017_s0095, 9-klas-ukrajinska-mova-voron-2017_s0094, ext-other_blogs-54, ext-video-8, 9-klas-ukrajinska-mova-zabolotnij-2017_s0135, 11-klas-ukrmova-zabolotnyi-2019_s0357, 8-klas-ukrmova-avramenko-2025_s0027, 5-klas-ukrmova-litvinova-2022_s0183, 5-klas-ukrmova-litvinova-2022_s0266, 11-klas-istoriya-ukr-hlibovska-2024_s0575, 7-klas-ukrmova-litvinova-2024_s0063]
 compiled: 2026-04-07
 -->
 
@@ -101,21 +100,21 @@ These are canonical exercise types that the writer should adapt.
 *   **Текст:** (Вірш зі списком міст: Київ, Суми, Конотоп, Харків, Львів, etc.)
 *   **Зразок відповіді:** `Місто Київ, місто Львів, місто Харків.`
 *   **Педагогічна мета:** Тренує розпізнавання власних назв (міст) та їх правильне написання з великої літери.
-*   **(Джерело: `2-klas-ukrmova-bolshakova-2019-2_s0033`)**
+*   **[S29]**
 
 **2. Створення речення за шаблоном (Patterned Sentence Creation)**
 *   **Завдання:** Складіть власне речення за зразком, розкажіть звідки ви і де ви живете.
 *   **Шаблон:** `Я з [місто/країна походження], але зараз я живу в [теперішнє місто/країна].`
 *   **Приклад:** `Я з Канади, але зараз я живу в Україні.`
 *   **Педагогічна мета:** Дозволяє учню негайно персоналізувати мову. Практикує контраст між `з` (Genitive) та `в` (Locative) у реальному контексті.
-*   **(Джерело: `ext-ulp_youtube-300`)**
+*   **[S30]**
 
 **3. Доповнення речення (Sentence Completion)**
 *   **Завдання:** Доповніть речення, використовуючи слова з довідки.
 *   **Речення:** `Я живу на ... . Ужгород — це ... центр Закарпаття.`
 *   **Довідка:** `обласний, Закарпатті.`
 *   **Педагогічна мета:** Перевіряє розуміння контексту та правильне вживання форм іменників (у даному випадку, Locative case).
-*   **(Джерело: `5-klas-ukrmova-uhor-2022-1_s0009`)**
+*   **[S31]**
 
 **4. Діалогова практика (Dialogue Practice)**
 *   **Завдання:** У парах, поставте один одному запитання та дайте відповіді за зразком.
@@ -127,7 +126,7 @@ These are canonical exercise types that the writer should adapt.
     > — Я з Луцька. А ти?
     > — Я з Нью-Йорка.
 *   **Педагогічна мета:** Вбудовує цільову фразу в природний контекст знайомства. Тренує аудіювання та говоріння.
-*   **(Джерело: Адаптовано з діалогу в `ext-ulp_youtube-300`)**
+*   **(Адаптовано з діалогу в [S30])**
 
 ## Пов'язані статті (Related Articles)
 

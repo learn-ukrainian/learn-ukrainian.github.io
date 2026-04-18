@@ -1,0 +1,40 @@
+# Source registry for wiki/mastery/c2/digital-literature.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S13
+  file: '{''Wikipedia'': ''Грецька література''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S14
+  file: '{''Wikipedia'': ''Давня українська література''}'
+  type: wiki
+- id: S15
+  file: '{''Wikipedia'': ''Контент-аналіз''}'
+  type: wiki
+- id: S16
+  file: ext-ulp_youtube-35
+  type: external
+- id: S17
+  file: '{''Wikipedia'': ''Історичний міф''}'
+  type: wiki
+- id: S18
+  file: '{''Wikipedia'': ''Міфологія''}'
+  type: wiki
+- id: S19
+  file: '{''Wikipedia'': ''Франко Іван Якович''}'
+  type: wiki
+- id: S20
+  file: ext-imtgsh-71
+  type: external
+- id: S21
+  file: ext-imtgsh-4
+  type: external
+- id: S22
+  file: ext-realna_istoria-91
+  type: external
+- id: S23
+  file: '{''Wikipedia'': "Слов''янська міфологія"}'
+  type: wiki
+- id: S25
+  file: '{''Wikipedia'': ''Всесвітня історія''}'
+  type: wiki

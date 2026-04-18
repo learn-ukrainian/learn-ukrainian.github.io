@@ -4,7 +4,6 @@
 slug: c2-2-practice-i
 domain: mastery/c2
 tracks: [c2]
-sources: [ext-franko-ivan-yakovych-uk-wikipedia-org, ext-khudozhnia-literatura-uk-wikipedia-org, ext-davnia-ukrainska-literatura-uk-wikipedia-org, ext-mystetstvo-uk-wikipedia-org, ext-hnidych-pavlo-oleksandrovych-uk-wikipedia-org, ext-rarytskyi-oleh-anatoliiovych-uk-wikipedia-org, ext-fedkovych-osyp-iurii-adalbertovych-uk-wikipedia-org, ext-kontent-analiz-uk-wikipedia-org, ext-bibliohrafiia-uk-wikipedia-org, 5-klas-ukrmova-golub-2022_s0168, 11-klas-ukrajinska-mova-glazova-2019_s0272, ext-ulp_youtube-19, ext-ulp_youtube-11, ext-ulp_youtube-166, 9-klas-ukrajinska-literatura-mishhenko-2017_s0009, 11-klas-ukrajinska-mova-glazova-2019_s0225, 6-klas-ukrmova-avramenko-2023_s0153, 11-klas-ukrajinska-mova-glazova-2019_s0294, 8-klas-ukrlit-avramenko-2025_s0124, 8-klas-ukrlit-avramenko-2025_s0003]
 compiled: 2026-04-07
 -->
 

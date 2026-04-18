@@ -1,0 +1,28 @@
+# Source registry for wiki/academic/c1/pomynalni-obriady.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S4
+  file: 6-klas-istoriia-shchupak-2023_s0071
+  type: textbook
+  preserved_from_meta: true
+- id: S5
+  file: 8-klas-ukrlit-avramenko-2025_s0013
+  type: textbook
+  preserved_from_meta: true
+- id: S6
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0089
+  type: textbook
+  preserved_from_meta: true
+- id: S7
+  file: 6-klas-ukrmova-litvinova-2023_s0144
+  type: textbook
+  preserved_from_meta: true
+- id: S8
+  file: unknown
+  type: unknown
+- id: S9
+  file: ext-ulp_youtube-102
+  type: external
+- id: S10
+  file: ext-komik_istoryk-26
+  type: external

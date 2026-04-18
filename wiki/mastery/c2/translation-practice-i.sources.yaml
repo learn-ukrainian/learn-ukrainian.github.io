@@ -1,0 +1,31 @@
+# Source registry for wiki/mastery/c2/translation-practice-i.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S10
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0438
+  type: textbook
+  preserved_from_meta: true
+- id: S11
+  file: unknown
+  type: unknown
+- id: S12
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0189
+  type: textbook
+- id: S13
+  file: 8-klas-ukrlit-avramenko-2025_s0365
+  type: textbook
+- id: S14
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0020
+  type: textbook
+- id: S15
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0028
+  type: textbook
+- id: S16
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0198
+  type: textbook
+- id: S17
+  file: 11-klas-ukrajinska-mova-voron-2019_s0168
+  type: textbook
+- id: S18
+  file: ext-realna_istoria-113
+  type: external

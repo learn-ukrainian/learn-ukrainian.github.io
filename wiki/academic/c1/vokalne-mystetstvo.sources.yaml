@@ -1,0 +1,89 @@
+# Source registry for wiki/academic/c1/vokalne-mystetstvo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S11
+  file: Source 3
+  type: unknown
+  preserved_from_meta: true
+- id: S12
+  file: Source 4
+  type: unknown
+  preserved_from_meta: true
+- id: S13
+  file: ext-ulp_youtube-178
+  type: external
+  preserved_from_meta: true
+- id: S14
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0324
+  type: textbook
+  preserved_from_meta: true
+- id: S15
+  file: Source 7
+  type: unknown
+  preserved_from_meta: true
+- id: S16
+  file: ext-komik_istoryk-73
+  type: external
+  preserved_from_meta: true
+- id: S17
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0105
+  type: textbook
+  preserved_from_meta: true
+- id: S18
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0082
+  type: textbook
+  preserved_from_meta: true
+- id: S19
+  file: 6-klas-ukrmova-golub-2023_s0227
+  type: textbook
+  preserved_from_meta: true
+- id: S20
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0334
+  type: textbook
+  preserved_from_meta: true
+- id: S21
+  file: 8-klas-istoriya-ukr-gisem-2021_s0084
+  type: textbook
+  preserved_from_meta: true
+- id: S22
+  file: 8-klas-istoria-ukr-hlibovska-2025_s0253
+  type: textbook
+  preserved_from_meta: true
+- id: S23
+  file: 5-klas-ukrlit-avramenko-2022_s0183
+  type: textbook
+  preserved_from_meta: true
+- id: S24
+  file: Source 21
+  type: unknown
+  preserved_from_meta: true
+- id: S25
+  file: Source 1
+  type: unknown
+- id: S26
+  file: Source 8
+  type: unknown
+- id: S27
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0056
+  type: textbook
+- id: S28
+  file: Source 2
+  type: unknown
+- id: S29
+  file: unknown-source-24
+  type: unknown
+- id: S30
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s0003
+  type: textbook
+- id: S31
+  file: ext-komik_istoryk-66
+  type: external
+- id: S32
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0133
+  type: textbook
+- id: S33
+  file: Source 22
+  type: unknown
+- id: S34
+  file: але ілюструє високий стиль
+  type: unknown

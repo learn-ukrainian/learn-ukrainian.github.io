@@ -1,0 +1,45 @@
+# Source registry for wiki/folk/ritual/obzhynkovi-pisni.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S11
+  file: '4'
+  type: unknown
+  preserved_from_meta: true
+- id: S12
+  file: '5'
+  type: unknown
+  preserved_from_meta: true
+- id: S13
+  file: feaa5fa7_c0599
+  type: literary
+  preserved_from_meta: true
+- id: S14
+  file: feaa5fa7_c0012
+  type: literary
+- id: S15
+  file: Source 5
+  type: unknown
+- id: S16
+  file: Source 4
+  type: unknown
+- id: S17
+  file: fc2291b5_c3071
+  type: literary
+- id: S18
+  file: 5e7696fa_c0316
+  type: literary
+- id: S19
+  file: feaa5fa7_c0649
+  type: literary
+- id: S20
+  file: 5e7696fa_c0174
+  type: literary
+- id: S21
+  file: 5e7696fa_c0223
+  type: literary
+- id: S22
+  file: 5e7696fa_c0531
+  type: literary
+- id: S23
+  file: fc2291b5_c3275
+  type: literary

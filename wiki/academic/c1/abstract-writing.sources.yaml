@@ -1,0 +1,60 @@
+# Source registry for wiki/academic/c1/abstract-writing.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S12
+  file: '{''Wikipedia'': ''Румунська народна музика''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S13
+  file: '{''Wikipedia'': ''Наукова школа''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S14
+  file: '{''Wikipedia'': "Дилема в''язня"}'
+  type: wiki
+  preserved_from_meta: true
+- id: S15
+  file: '{''Wikipedia'': ''Мінангкабау (народ)''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S16
+  file: '{''Wikipedia'': ''Етика''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S17
+  file: ext-ulp_youtube-162
+  type: external
+  preserved_from_meta: true
+- id: S18
+  file: 10-klas-ukrmova-karaman-2018_s0451
+  type: textbook
+- id: S19
+  file: 10-klas-ukrmova-karaman-2018_s0498
+  type: textbook
+- id: S20
+  file: 10-klas-ukrmova-karaman-2018_s0455
+  type: textbook
+- id: S21
+  file: ext-ulp_youtube-90
+  type: external
+- id: S22
+  file: '{''Wikipedia'': ''Контент-аналіз''}'
+  type: wiki
+- id: S23
+  file: ext-ulp_youtube-163
+  type: external
+- id: S24
+  file: '{''Wikipedia'': ''Дума''}'
+  type: wiki
+- id: S25
+  file: '{''Wikipedia'': ''Історичний міф''}'
+  type: wiki
+- id: S26
+  file: '{''Wikipedia'': ''Давня українська література''}'
+  type: wiki
+- id: S27
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0062
+  type: textbook
+- id: S28
+  file: Див. завдання 714
+  type: unknown

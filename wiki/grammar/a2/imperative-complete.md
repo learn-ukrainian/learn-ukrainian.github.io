@@ -4,7 +4,6 @@
 slug: imperative-third-person
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [ext-ulp_youtube-189, ext-istoria_movy-66, ext-istoria_movy-14, ext-ulp_youtube-16, ext-ulp_youtube-183, ext-ulp_youtube-163, 7-klas-ukrmova-litvinova-2024_s0064, ext-other_blogs-51, ext-istoria_movy-35, 11-klas-ukrajinska-mova-avramenko-2019_s0071, 7-klas-ukrmova-litvinova-2024_s0261, 7-klas-ukrmova-litvinova-2024_s0260, 6-klas-ukrmova-betsa-2023_s0214, 7-klas-ukrmova-zabolotnyi-2024_s0088, 9-klas-ukrajinska-mova-voron-2017_s0289, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0108, 6-klas-ukrmova-betsa-2023_s0217, 7-klas-ukrmova-avramenko-2024_s0093, 7-klas-ukrmova-zabolotnyi-2024_s0077, 7-klas-ukrmova-zabolotnyi-2024_s0076]
 compiled: 2026-04-07
 -->
 
@@ -50,7 +49,7 @@ compiled: 2026-04-07
 
 **Стилістична особливість:**
 В розмовній мові та фольклорі іноді форма 2-ї особи однини може передавати наказ, скерований на 3-тю особу, що надає висловлюванню фаталістичного або узагальненого характеру:
-*   «Про мене хоч вовк траву **їж**» (замість «хай вовк траву їсть») (Джерело: `ext-other_blogs-51`). Це просунутий рівень, але корисний для розуміння прислів'їв.
+*   «Про мене хоч вовк траву **їж**» (замість «хай вовк траву їсть») [S21]. Це просунутий рівень, але корисний для розуміння прислів'їв.
 
 ## Типові помилки L2 (Common L2 Errors)
 

@@ -4,7 +4,6 @@
 slug: checkpoint-food-shopping
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: [ext-realna_istoria-42, 9-klas-ukrajinska-literatura-mishhenko-2017_s0417, 11-klas-ukrlit-borzenko-2019-prof_s0015, 5-klas-ukrmova-golub-2022_s0188, ext-imtgsh-151, 10-klas-ukrmova-karaman-2018_s0421, 6-klas-ukrmova-betsa-2023_s0014, 10-klas-ukrlit-borzenko-2018-prof_s0018, 10-klas-ukrmova-glazova-2018_s0318, 10-klas-ukrajinska-mova-zabolotnij-2018_s0218, 10-klas-ukrmova-zabolotnyi-2018_s0218, 5-klas-ukrmova-golub-2022_s0150, 6-klas-ukrmova-betsa-2023_s0235, 5-klas-ukrmova-uhor-2022-1_s0015, 6-klas-ukrmova-betsa-2023_s0018, 10-klas-ukrlit-borzenko-2018-prof_s0013, 10-klas-ukrmova-karaman-2018_s0071, 10-klas-ukrmova-karaman-2018_s0044, 4-klas-ukrmova-zaharijchuk_s0194, 9-klas-ukrajinska-mova-voron-2017_s0081, 10-klas-ukrmova-glazova-2018_s0113, 7-klas-ukrlit-mishhenko-2015_s0109, 10-klas-ukrmova-karaman-2018_s0047, 9-klas-ukrajinska-mova-voron-2017_s0008, 5-klas-istoriya-schupak-2022_s0127, 10-klas-ukrmova-karaman-2018_s0397, 5-klas-ukrmova-golub-2022_s0184, ext-istoria_movy-10, ext-other_blogs-46, ext-other_blogs-58, ext-ulp_youtube-60, ext-other_blogs-43, 6-klas-istoriia-shchupak-2023_s0229, 10-klas-ukrmova-karaman-2018_s0248, 10-klas-ukrmova-karaman-2018_s0250, 2-klas-ukrmova-kravcova-2019-1_s0119, 10-klas-ukrajinska-mova-avramenko-2018_s0246, 3-klas-ukrainska-mova-vashulenko-2020-1_s0014, 5-klas-ukrmova-zabolotnyi-2023_s0238, 2-klas-ukrmova-bolshakova-2019-2_s0054, 5-klas-istoriya-schupak-2022_s0051]
 compiled: 2026-04-07
 -->
 

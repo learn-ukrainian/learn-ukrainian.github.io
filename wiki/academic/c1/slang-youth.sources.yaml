@@ -1,0 +1,39 @@
+# Source registry for wiki/academic/c1/slang-youth.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: unknown
+  type: unknown
+  preserved_from_meta: true
+- id: S2
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0020
+  type: textbook
+  preserved_from_meta: true
+- id: S3
+  file: ext-ulp_youtube-145
+  type: external
+  preserved_from_meta: true
+- id: S4
+  file: 11-klas-ukrajinska-mova-voron-2019_s0368
+  type: textbook
+  preserved_from_meta: true
+- id: S5
+  file: 10-klas-ukrmova-karaman-2018_s0382
+  type: textbook
+  preserved_from_meta: true
+- id: S6
+  file: 11-klas-ukrajinska-mova-voron-2019_s0370
+  type: textbook
+  preserved_from_meta: true
+- id: S7
+  file: ext-ulp_youtube-171
+  type: external
+  preserved_from_meta: true
+- id: S8
+  file: 10-klas-ukrmova-karaman-2018_s0008
+  type: textbook
+  preserved_from_meta: true
+- id: S9
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0298
+  type: textbook
+  preserved_from_meta: true

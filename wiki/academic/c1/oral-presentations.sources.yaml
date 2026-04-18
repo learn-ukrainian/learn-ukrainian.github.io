@@ -1,0 +1,70 @@
+# Source registry for wiki/academic/c1/oral-presentations.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S6
+  file: unknown
+  type: unknown
+  preserved_from_meta: true
+- id: S7
+  file: ext-realna_istoria-151
+  type: external
+  preserved_from_meta: true
+- id: S8
+  file: ext-komik_istoryk-48
+  type: external
+  preserved_from_meta: true
+- id: S9
+  file: 7-klas-istoria-ukr-galimov-2024_s0010
+  type: textbook
+  preserved_from_meta: true
+- id: S10
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0054
+  type: textbook
+  preserved_from_meta: true
+- id: S11
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0054
+  type: textbook
+  preserved_from_meta: true
+- id: S12
+  file: 11-klas-ukrajinska-mova-voron-2019_s0099
+  type: textbook
+  preserved_from_meta: true
+- id: S13
+  file: 8-klas-istoria-ukr-galimov-2025_s0006
+  type: textbook
+  preserved_from_meta: true
+- id: S14
+  file: 11-klas-ukrajinska-mova-voron-2019_s0320
+  type: textbook
+  preserved_from_meta: true
+- id: S15
+  file: 11-klas-istoriya-ukr-gisem-2024_s0261
+  type: textbook
+  preserved_from_meta: true
+- id: S16
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0308
+  type: textbook
+  preserved_from_meta: true
+- id: S17
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0021
+  type: textbook
+  preserved_from_meta: true
+- id: S18
+  file: 7-klas-ukrlit-zabolotnyi-2024_s0002
+  type: textbook
+  preserved_from_meta: true
+- id: S19
+  file: ext-ulp_youtube-109
+  type: external
+- id: S20
+  file: ext-imtgsh-144
+  type: external
+- id: S21
+  file: 'Wikipedia: Контент-аналіз'
+  type: wiki
+- id: S22
+  file: 'Wikipedia: Фольклор'
+  type: wiki
+- id: S23
+  file: 'Wikipedia: Компілятор'
+  type: wiki

@@ -1,0 +1,81 @@
+# Source registry for wiki/academic/c1/checkpoint-folk-culture.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S19
+  file: ext-komik_istoryk-83
+  type: external
+  preserved_from_meta: true
+- id: S20
+  file: ext-ulp_youtube-47
+  type: external
+  preserved_from_meta: true
+- id: S21
+  file: 6-klas-ukrmova-litvinova-2023_s0132
+  type: textbook
+  preserved_from_meta: true
+- id: S22
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0208
+  type: textbook
+  preserved_from_meta: true
+- id: S23
+  file: uk:Фольклор
+  type: unknown
+  preserved_from_meta: true
+- id: S24
+  file: uk:Народне християнство
+  type: unknown
+  preserved_from_meta: true
+- id: S25
+  file: ext-komik_istoryk-81
+  type: external
+- id: S26
+  file: 8-klas-istoriya-ukr-gisem-2021_s0358
+  type: textbook
+- id: S27
+  file: 10-klas-ukrmova-karaman-2018_s0440
+  type: textbook
+- id: S28
+  file: ext-komik_istoryk-32
+  type: external
+- id: S29
+  file: 7-klas-istoria-ukr-pometun-2024_s0232
+  type: textbook
+- id: S30
+  file: unknown-source-18
+  type: unknown
+- id: S31
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0511
+  type: textbook
+- id: S32
+  file: uk:Кобзар
+  type: unknown
+- id: S33
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0496
+  type: textbook
+- id: S34
+  file: uk:Слов'янська міфологія
+  type: unknown
+- id: S35
+  file: Іван Золотоустий та Августин
+  type: unknown
+- id: S36
+  file: Гнат Хоткевич про Івана Кучугуру-Кучеренка
+  type: unknown
+- id: S37
+  file: Сергій Єкельчик
+  type: unknown
+- id: S38
+  file: unknown-source-19
+  type: unknown
+- id: S39
+  file: Василь Шевчук
+  type: unknown
+- id: S40
+  file: З Закону про збереження американського фольклору
+  type: unknown
+- id: S41
+  file: uk:Кучугура-Кучеренко Іван Іович
+  type: unknown
+- id: S42
+  file: 10-klas-ukrmova-karaman-2018_s0115
+  type: textbook

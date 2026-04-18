@@ -4,7 +4,6 @@
 slug: numerals-and-cases
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [ext-ulp_youtube-143, ext-istoria_movy-20, ext-ulp_youtube-29, 6-klas-ukrmova-litvinova-2023_s0237, 10-klas-ukrmova-karaman-2018_s0308, 11-klas-ukrajinska-mova-glazova-2019_s0039, ext-ulp_youtube-142, 6-klas-ukrmova-betsa-2023_s0162, 10-klas-ukrmova-karaman-2018_s0309, ext-other_blogs-67, ext-istoria_movy-43, 6-klas-ukrmova-golub-2023_s0166, 6-klas-ukrmova-avramenko-2023_s0172, 6-klas-ukrmova-betsa-2023_s0145, 6-klas-ukrmova-zabolotnyi-2020_s0179, 11-klas-ukrajinska-mova-glazova-2019_s0037, 8-klas-ukrmova-zabolotnyi-2025_s0034, ext-other_blogs-46, ext-ulp_youtube-236, 6-klas-ukrmova-betsa-2023_s0153, 6-klas-ukrmova-zabolotnyi-2020_s0171, 6-klas-ukrmova-zabolotnyi-2020_s0174, 6-klas-ukrmova-zabolotnyi-2020_s0175, 6-klas-ukrmova-zabolotnyi-2020_s0182, 6-klas-ukrmova-betsa-2023_s0148, 6-klas-ukrmova-betsa-2023_s0151, 10-klas-ukrmova-karaman-2018_s0299, 11-klas-ukrmova-avramenko-2019_s0047, 3-klas-ukrainska-mova-kravtsova-2020-1_s0078, 6-klas-ukrmova-avramenko-2023_s0160, 6-klas-ukrmova-golub-2023_s0169, 11-klas-ukrajinska-mova-glazova-2019_s0035, 11-klas-ukrajinska-mova-glazova-2019_s0045, 6-klas-ukrmova-litvinova-2023_s0231, ext-article-0, ext-article-1, ext-video-3]
 compiled: 2026-04-07
 -->
 

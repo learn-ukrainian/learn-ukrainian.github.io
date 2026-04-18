@@ -4,7 +4,6 @@
 slug: checkpoint-places
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: [ext-realna_istoria-42, 5-klas-ukrmova-golub-2022_s0188, ext-imtgsh-151, ext-realna_istoria-46, ext-ulp_youtube-221, ext-ulp_youtube-197, 6-klas-ukrmova-betsa-2023_s0018, 8-klas-ukrmova-avramenko-2025_s0026, 5-klas-ukrmova-avramenko-2022_s0161, 10-klas-ukrajinska-mova-avramenko-2018_s0012, 6-klas-ukrlit-kovalenko-2023_s0142, 5-klas-ukrmova-litvinova-2022_s0031, 6-klas-ukrmova-zabolotnyi-2020_s0080, 5-klas-ukrmova-golub-2022_s0031, ext-other_blogs-46, 7-klas-ukrmova-litvinova-2024_s0063, 10-klas-ukrmova-karaman-2018_s0421, 9-klas-ukrmova-zabolotnyi-2017_s0135, 11-klas-ukrlit-borzenko-2019-prof_s0055, 11-klas-ukrmova-zabolotnyi-2019_s0357, 6-klas-ukrmova-betsa-2023_s0014, 4-klas-ukrayinska-mova-savchenko-2021-2_s0008, 5-klas-ukrmova-litvinova-2022_s0266, 11-klas-ukrajinska-mova-voron-2019_s0282, 4-klas-ukrmova-zaharijchuk_s0165, 2-klas-ukrmova-vashulenko-2019-2_s0095, 7-klas-ukrmova-zabolotnyi-2024_s0193, 9-klas-ukrajinska-mova-voron-2017_s0094, 9-klas-ukrmova-zabolotnyi-2017_s0116, 10-klas-ukrmova-karaman-2018_s0033, 10-klas-ukrlit-borzenko-2018-prof_s0018, 10-klas-ukrmova-glazova-2018_s0318, 10-klas-ukrmova-karaman-2018_s0289, ext-istoria_movy-57, ext-istoria_movy-10, ext-istoria_movy-25]
 compiled: 2026-04-07
 -->
 

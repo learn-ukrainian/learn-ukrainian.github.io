@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/teaching-ukrainian-i.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S11
+  file: '{''Wikipedia'': ''Танець модерн''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S12
+  file: '{''Wikipedia'': ''Компілятор''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S13
+  file: '{''Wikipedia'': ''Мистецтво Удмуртії''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S14
+  file: ext-ulp_youtube-166
+  type: external
+  preserved_from_meta: true
+- id: S15
+  file: ext-ulp_youtube-30
+  type: external
+  preserved_from_meta: true
+- id: S16
+  file: ext-ulp_youtube-60
+  type: external
+- id: S17
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0283
+  type: textbook
+- id: S18
+  file: ext-imtgsh-68
+  type: external
+- id: S19
+  file: ext-ulp_youtube-27
+  type: external
+- id: S20
+  file: '{''Wikipedia'': ''Міфологія''}'
+  type: wiki
+- id: S21
+  file: ext-ulp_youtube-157
+  type: external
+- id: S22
+  file: 11-klas-istoriya-ukr-gisem-2024_s0244
+  type: textbook
+- id: S23
+  file: ext-komik_istoryk-68
+  type: external
+- id: S24
+  file: '{''Wikipedia'': ''Художня література''}'
+  type: wiki
+- id: S25
+  file: '{''Wikipedia'': ''Франко Іван Якович''}'
+  type: wiki

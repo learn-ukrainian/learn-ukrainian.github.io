@@ -4,7 +4,6 @@
 slug: complex-subordinate-time
 domain: grammar/b1
 tracks: [b1, b2]
-sources: [ext-ulp_youtube-187, 9-klas-ukrajinska-mova-zabolotnij-2017_s0137, 9-klas-ukrmova-zabolotnyi-2017_s0137, ext-other_blogs-60, ext-ulp_youtube-121, 9-klas-ukrajinska-mova-avramenko-2017_s0111, ext-imtgsh-27, ext-ulp_youtube-90, 9-klas-ukrajinska-mova-zabolotnij-2017_s0136, 9-klas-ukrmova-zabolotnyi-2017_s0136, 9-klas-ukrajinska-mova-avramenko-2017_s0110, 11-klas-ukrajinska-mova-voron-2019_s0263, 9-klas-ukrajinska-mova-voron-2017_s0129, ext-imtgsh-1, ext-ulp_youtube-213, 11-klas-ukrajinska-mova-voron-2019_s0284, 9-klas-ukrajinska-mova-avramenko-2017_s0126, 9-klas-ukrajinska-mova-voron-2017_s0060, 11-klas-ukrajinska-mova-avramenko-2019_s0182, 9-klas-ukrajinska-mova-avramenko-2017_s0116]
 compiled: 2026-04-07
 -->
 

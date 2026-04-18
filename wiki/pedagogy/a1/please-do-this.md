@@ -4,7 +4,6 @@
 slug: please-do-this
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: [ext-ulp_youtube-90, ext-ulp_youtube-166, ext-ulp_youtube-69, ext-ulp_youtube-164, uk.wikipedia.org/wiki/Франко_Іван_Якович, ext-ulp_youtube-139, ext-ulp_youtube-168, uk.wikipedia.org/wiki/Реформація, ext-ulp_youtube-109, ext-ulp_youtube-66, 7-klas-ukrmova-litvinova-2024_s0063, 10-klas-ukrmova-karaman-2018_s0069, 7-klas-ukrmova-litvinova-2024_s0066, 7-klas-ukrmova-litvinova-2024_s0227, 6-klas-ukrmova-betsa-2023_s0020, uk.wikipedia.org/wiki/Яворницький_Дмитро_Іванович, ext-realna_istoria-101, 6-klas-ukrmova-betsa-2023_s0083, 3-klas-ukrainska-mova-vashulenko-2020-1_s0002, 7-klas-ukrmova-litvinova-2024_s0008, 11-klas-ukrajinska-mova-avramenko-2019_s0072, 6-klas-ukrmova-betsa-2023_s0080, 5-klas-ukrmova-uhor-2022-1_s0187]
 compiled: 2026-04-07
 -->
 

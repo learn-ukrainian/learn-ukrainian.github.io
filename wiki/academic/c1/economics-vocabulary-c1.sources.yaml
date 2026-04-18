@@ -1,0 +1,54 @@
+# Source registry for wiki/academic/c1/economics-vocabulary-c1.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S14
+  file: ext-realna_istoria-63
+  type: external
+  preserved_from_meta: true
+- id: S15
+  file: ext-realna_istoria-62
+  type: external
+  preserved_from_meta: true
+- id: S16
+  file: 11-klas-istoriya-ukr-gisem-2024_s0315
+  type: textbook
+  preserved_from_meta: true
+- id: S17
+  file: 11-klas-ukrajinska-mova-voron-2019_s0370
+  type: textbook
+- id: S18
+  file: unknown
+  type: unknown
+- id: S19
+  file: 11-klas-istoriya-ukr-gisem-2024_s0350
+  type: textbook
+- id: S20
+  file: 11-klas-istoriya-ukr-galimov-2024_s0342
+  type: textbook
+- id: S21
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0552
+  type: textbook
+- id: S22
+  file: ext-komik_istoryk-100
+  type: external
+- id: S23
+  file: ext-imtgsh-34
+  type: external
+- id: S24
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0425
+  type: textbook
+- id: S25
+  file: ext-imtgsh-99
+  type: external
+- id: S26
+  file: загальновідома стилістична норма
+  type: unknown
+- id: S27
+  file: 11-klas-istoriya-ukr-gisem-2024_s0548
+  type: textbook
+- id: S28
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0325
+  type: textbook
+- id: S29
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0326
+  type: textbook

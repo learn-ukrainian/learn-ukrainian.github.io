@@ -1,0 +1,25 @@
+# Source registry for wiki/mastery/c2/media-i-dezinformatsiya.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S7
+  file: ext-realna_istoria-1
+  type: external
+  preserved_from_meta: true
+- id: S8
+  file: 5-klas-istoriya-schupak-2022_s0151
+  type: textbook
+- id: S9
+  file: ext-realna_istoria-167
+  type: external
+- id: S10
+  file: ext-ulp_youtube-24
+  type: external
+- id: S11
+  file: ext-realna_istoria-160
+  type: external
+- id: S12
+  file: ext-imtgsh-144
+  type: external
+- id: S13
+  file: ext-ulp_youtube-93
+  type: external

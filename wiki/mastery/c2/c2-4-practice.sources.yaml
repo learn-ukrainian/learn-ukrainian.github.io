@@ -1,0 +1,73 @@
+# Source registry for wiki/mastery/c2/c2-4-practice.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S23
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0087
+  type: textbook
+  preserved_from_meta: true
+- id: S24
+  file: 11-klas-ukrajinska-mova-voron-2019_s0368
+  type: textbook
+- id: S25
+  file: 11-klas-ukrajinska-mova-voron-2019_s0370
+  type: textbook
+- id: S26
+  file: 11-klas-ukrajinska-mova-voron-2019_s0367
+  type: textbook
+- id: S27
+  file: 11-klas-ukrajinska-mova-voron-2019_s0056
+  type: textbook
+- id: S28
+  file: ext-wikipedia-feminist-movements
+  type: wiki
+- id: S29
+  file: ext-other_blogs-52
+  type: external
+- id: S30
+  file: ext-wikipedia-ethics
+  type: wiki
+- id: S31
+  file: ext-wikipedia-kuchuhura-kucherenko
+  type: wiki
+- id: S32
+  file: ext-wikipedia-baudrillard
+  type: wiki
+- id: S33
+  file: ext-komik_istoryk-91
+  type: external
+- id: S34
+  file: ext-komik_istoryk-43
+  type: external
+- id: S35
+  file: ext-realna_istoria-81
+  type: external
+- id: S36
+  file: ext-istoria_movy-48
+  type: external
+- id: S37
+  file: ext-wikipedia-musical-analysis
+  type: wiki
+- id: S38
+  file: Іммануїл Кант
+  type: unknown
+- id: S39
+  file: Жан Бодріяр
+  type: unknown
+- id: S40
+  file: Євген Коновалець
+  type: unknown
+- id: S41
+  file: ext-wikipedia-prisoners-dilemma
+  type: wiki
+- id: S42
+  file: ext-wikipedia-feminist-philosophy
+  type: wiki
+- id: S43
+  file: ext-wikipedia-feminist-media-criticism
+  type: wiki
+- id: S44
+  file: 10-klas-ukrmova-karaman-2018_s0481
+  type: textbook
+- id: S45
+  file: 10-klas-ukrmova-karaman-2018_s0479
+  type: textbook

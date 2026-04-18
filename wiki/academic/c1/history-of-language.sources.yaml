@@ -1,0 +1,60 @@
+# Source registry for wiki/academic/c1/history-of-language.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S12
+  file: 'Wikipedia: Костичани'
+  type: wiki
+  preserved_from_meta: true
+- id: S13
+  file: 'Wikipedia: Грецька література'
+  type: wiki
+  preserved_from_meta: true
+- id: S14
+  file: 'Wikipedia: Кучугура-Кучеренко Іван Іович'
+  type: wiki
+  preserved_from_meta: true
+- id: S15
+  file: 'Wikipedia: Міфологія'
+  type: wiki
+  preserved_from_meta: true
+- id: S16
+  file: 6-klas-istoriya-gisem-2023_s0004
+  type: textbook
+  preserved_from_meta: true
+- id: S17
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0283
+  type: textbook
+  preserved_from_meta: true
+- id: S18
+  file: 7-klas-istoria-ukr-galimov-2024_s0007
+  type: textbook
+- id: S19
+  file: 'Wikipedia: Давня українська література'
+  type: wiki
+- id: S20
+  file: ext-realna_istoria-63
+  type: external
+- id: S21
+  file: 'Wikipedia: Геноцид'
+  type: wiki
+- id: S22
+  file: ext-realna_istoria-101
+  type: external
+- id: S23
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0332
+  type: textbook
+- id: S24
+  file: ext-imtgsh-152
+  type: external
+- id: S25
+  file: 'Wikipedia: Реформація'
+  type: wiki
+- id: S26
+  file: 'Wikipedia: Всесвітня історія'
+  type: wiki
+- id: S27
+  file: 'Wikipedia: Періодизація та знаряддя'
+  type: wiki
+- id: S28
+  file: 'Wikipedia: Хрущовська відлига'
+  type: wiki

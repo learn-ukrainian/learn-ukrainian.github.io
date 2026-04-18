@@ -4,7 +4,6 @@
 slug: my-day
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: [ext-wikipedia_Марія-Луїза_Австрійська, ext-ulp_youtube-235, ext-ulp_youtube-253, ext-ulp_youtube-54, ext-ulp_youtube-163, ext-ulp_youtube-204, ext-ulp_youtube-248, ext-ulp_youtube-243, ext-wikipedia_Свято_Купала, ext-wikipedia_Борис_і_Гліб, ext-wikipedia_Весна, 7-klas-ukrlit-mishhenko-2015_s0229, 11-klas-ukrajinska-mova-avramenko-2019_s0157, 8-klas-ukrlit-avramenko-2025_s0203, 11-klas-ukrmova-zabolotnyi-2019_s0176, 9-klas-ukrajinska-mova-avramenko-2017_s0165, ext-wikipedia_На_дорогу_йду_я_в_самотині, 5-klas-ukrmova-uhor-2022-1_s0079, 5-klas-ukrmova-zabolotnyi-2023_s0176, 8-klas-ukrmova-avramenko-2025_s0160, 4-klas-ukrmova-zaharijchuk_s0150, 3-klas-ukrainska-mova-savchuk-2020-2_s0041, ext-article-0, ext-article-1, ext-video-2]
 compiled: 2026-04-07
 -->
 

@@ -4,7 +4,6 @@
 slug: noun-plurals-pluralia-tantum
 domain: grammar/b1
 tracks: [b1, b2]
-sources: [ext-istoria_movy-20, ext-istoria_movy-23, ext-istoria_movy-19, ext-other_blogs-46, ext-other_blogs-67, ext-ulp_youtube-118, ext-ulp_youtube-16, ext-ulp_youtube-29, 10-klas-ukrmova-avramenko-2018_s0244, 10-klas-ukrmova-avramenko-2018_s0245, 10-klas-ukrmova-glazova-2018_s0255, 10-klas-ukrmova-glazova-2018_s0259, 10-klas-ukrmova-karaman-2018_s0263, 10-klas-ukrmova-zabolotnyi-2018_s0201, 10-klas-ukrajinska-mova-avramenko-2018_s0245, 3-klas-ukrainska-mova-ponomarova-2020-1_s0089, 3-klas-ukrainska-mova-vashulenko-2020-1_s0114, 6-klas-ukrmova-avramenko-2023_s0093, 6-klas-ukrmova-avramenko-2023_s0101, 6-klas-ukrmova-avramenko-2023_s0115, 6-klas-ukrmova-avramenko-2023_s0116, 6-klas-ukrmova-golub-2023_s0092, 6-klas-ukrmova-litvinova-2023_s0174, 6-klas-ukrmova-zabolotnyi-2020_s0114, unknown, unknown, unknown]
 compiled: 2026-04-07
 -->
 
@@ -75,7 +74,7 @@ compiled: 2026-04-07
 | Ор. в. | окуляр**ами** | **грішми** / грош**има** | **ворітьми** / ворот**ами** |
 | М. в. | (на) окуляр**ах** | (на) грош**ах** | (на) ворот**ах** / ворот**ях** |
 | Кл. в. | окуляр**и** | грош**і** | ворот**а** |
-(Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0114`, `6-klas-ukrmova-avramenko-2023_s0115`)
+[S26][S27]
 
 ## Частотність і пріоритети
 
@@ -127,7 +126,7 @@ compiled: 2026-04-07
 4.  Без вікон, без **дверей** – повна хата людей. (Загадка, Source `6-klas-ukrmova-zabolotnyi-2020_s0114`)
 
 **Група 2: Родовий відмінок множини**
-5.  Чисельність **мінангкабау** в Індонезії... становила 6 462 713 **осіб**. (Source 1)
+5.  Чисельність **мінангкабау** в Індонезії... становила 6 462 713 **осіб**. [S28]
 6.  Він для українських **учнів**, які готуються складати тестування після школи. (Source `ext-ulp_youtube-29`)
 7.  У мене на каналі найпопулярніше відео з найбільшою кількістю **переглядів** якраз про наголоси. (Source `ext-ulp_youtube-29`)
 

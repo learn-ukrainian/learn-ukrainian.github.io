@@ -1,0 +1,92 @@
+# Source registry for wiki/mastery/c2/interpretation-advanced.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S16
+  file: Source 3
+  type: unknown
+  preserved_from_meta: true
+- id: S17
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0306
+  type: textbook
+  preserved_from_meta: true
+- id: S18
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0111
+  type: textbook
+  preserved_from_meta: true
+- id: S19
+  file: 9-klas-istorija-ukrajini-burnejko-2017_s0322
+  type: textbook
+  preserved_from_meta: true
+- id: S20
+  file: 10-klas-ukrmova-glazova-2018_s0303
+  type: textbook
+  preserved_from_meta: true
+- id: S21
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0123
+  type: textbook
+  preserved_from_meta: true
+- id: S22
+  file: 7-klas-ukrmova-litvinova-2024_s0201
+  type: textbook
+  preserved_from_meta: true
+- id: S23
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0137
+  type: textbook
+  preserved_from_meta: true
+- id: S24
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0064
+  type: textbook
+  preserved_from_meta: true
+- id: S25
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0262
+  type: textbook
+  preserved_from_meta: true
+- id: S26
+  file: 9-klas-ukrmova-zabolotnij-2017_s0396
+  type: textbook
+  preserved_from_meta: true
+- id: S27
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0109
+  type: textbook
+- id: S28
+  file: 10-klas-ukrmova-glazova-2018_s0160
+  type: textbook
+- id: S29
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0060
+  type: textbook
+- id: S30
+  file: Source 7
+  type: unknown
+- id: S31
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0312
+  type: textbook
+- id: S32
+  file: Source 2
+  type: unknown
+- id: S33
+  file: Source 4
+  type: unknown
+- id: S34
+  file: unknown-source-29
+  type: unknown
+- id: S35
+  file: ext-imtgsh-164
+  type: external
+- id: S36
+  file: ext-realna_istoria-113
+  type: external
+- id: S37
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0064
+  type: textbook
+- id: S38
+  file: Source 6
+  type: unknown
+- id: S39
+  file: Source 1
+  type: unknown
+- id: S40
+  file: ext-imtgsh-162
+  type: external
+- id: S41
+  file: Source 5
+  type: unknown

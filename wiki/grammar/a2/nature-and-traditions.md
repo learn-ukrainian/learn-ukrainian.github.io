@@ -4,7 +4,6 @@
 slug: seasons-and-holidays
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [ext-ulp_youtube-102, ext-imtgsh-119, ext-ulp_youtube-26, ext-imtgsh-196, ext-realna_istoria-11, ext-ulp_youtube-54, ext-ulp_youtube-175, ext-ulp_youtube-290, ext-ulp_youtube-242, 6-klas-ukrlit-zabolotnyi-2023_s0017, 3-klas-ukrainska-mova-savchuk-2020-2_s0019, ext-ulp_youtube-95, 5-klas-ukrmova-golub-2022_s0164, 6-klas-ukrmova-litvinova-2023_s0144, 10-klas-ukrmova-karaman-2018_s0182, 6-klas-ukrlit-avramenko-2023_s0023, 6-klas-ukrlit-avramenko-2023_s0022, 6-klas-ukrlit-avramenko-2023_s0006, 6-klas-ukrmova-litvinova-2023_s0132, 5-klas-ukrmova-golub-2022_s0251, 6-klas-ukrmova-betsa-2023_s0165, 4-klas-ukrayinska-mova-savchenko-2021-2_s0138, 3-klas-ukrainska-mova-vashulenko-2020-2_s0116, 3-klas-ukrainska-mova-savchuk-2020-2_s0017, 5-klas-ukrmova-zabolotnyi-2023_s0030, 6-klas-ukrlit-zabolotnyi-2023_s0016, 6-klas-ukrmova-litvinova-2023_s0146, 6-klas-ukrlit-zabolotnyi-2023_s0019, 6-klas-ukrmova-golub-2023_s0009, 8-klas-ukrlit-avramenko-2025_s0097, 6-klas-ukrlit-avramenko-2023_s0010, 6-klas-ukrlit-avramenko-2023_s0013, 6-klas-ukrlit-avramenko-2023_s0011, 5-klas-ukrmova-uhor-2022-1_s0020, 1-klas-bukvar-zaharijchuk-2025-2_s0035, 6-klas-ukrmova-zabolotnyi-2020_s0076, 2-klas-ukrmova-bolshakova-2019-1_s0028, 2-klas-ukrmova-kravcova-2019-2_s0084, 3-klas-ukrainska-mova-savchuk-2020-2_s0109, 5-klas-ukrmova-uhor-2022-1_s0015]
 compiled: 2026-04-07
 -->
 

@@ -4,7 +4,6 @@
 slug: things-have-gender
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: [ext-ulp_youtube-261, ext-ulp_youtube-203, ext-realna_istoria-92, ext-ulp_youtube-159, ext-istoria_movy-34, ext-realna_istoria-7, ext-realna_istoria-17, 6-klas-ukrlit-zabolotnyi-2023_s0214, 9-klas-ukrajinska-mova-avramenko-2017_s0207, ext-ulp_youtube-258, ext-ulp_youtube-304, 6-klas-ukrmova-betsa-2023_s0055, 5-klas-ukrmova-litvinova-2022_s0039, 7-klas-ukrlit-avramenko-2024_s0242, 9-klas-ukrajinska-mova-voron-2017_s0162, 6-klas-ukrmova-avramenko-2023_s0088, 5-klas-ukrlit-zabolotnyi-2022_s0232, 3-klas-ukrainska-mova-vashulenko-2020-1_s0128, 5-klas-ukrmova-uhor-2022-1_s0237, 3-klas-ukrainska-mova-kravtsova-2020-1_s0013, 4-klas-ukrmova-zaharijchuk_s0121, 3-klas-ukrainska-mova-kravtsova-2020-1_s0062, 6-klas-ukrmova-betsa-2023_s0071, 3-klas-ukrainska-mova-vashulenko-2020-1_s0129, 5-klas-ukrmova-uhor-2022-1_s0034, 10-klas-ukrajinska-mova-avramenko-2018_s0234, 10-klas-ukrmova-karaman-2018_s0170, ext-other_blogs-59]
 compiled: 2026-04-07
 -->
 
@@ -17,37 +16,37 @@ The primary method used in Ukrainian primary school is the **pronoun association
 2.  **Вона, моя** (She, my) for feminine nouns.
 3.  **Воно, моє** (It, my) for neuter nouns.
 
-This approach is explicitly detailed in materials for 3rd graders `(Джерело: 3-klas-ukrainska-mova-kravtsova-2020-1_s0062)`. By asking "Is it `мій стіл` or `моя стіл`?", the learner intuitively grasps that `стіл` (table) is a "he-word". This grounds the concept in a simple choice rather than rote memorization of endings.
+This approach is explicitly detailed in materials for 3rd graders `[S29]`. By asking "Is it `мій стіл` or `моя стіл`?", the learner intuitively grasps that `стіл` (table) is a "he-word". This grounds the concept in a simple choice rather than rote memorization of endings.
 
-Only after this associative link is formed should the formal terms (`чоловічий`, `жіночий`, `середній рід`) and typical endings be introduced `(Джерело: 6-klas-ukrmova-betsa-2023_s0071)`. Crucially, Ukrainian pedagogy establishes that gender (`рід`) is a **permanent, non-changeable grammatical characteristic** of a noun, unlike number or case, which can be modified `(Джерело: 6-klas-ukrmova-avramenko-2023_s0088)`. This prevents the common L2 error of trying to "make a noun feminine" by changing its ending, as humorously illustrated in one textbook example `(Джерело: 10-klas-ukrajinska-mova-avramenko-2018_s0234)`.
+Only after this associative link is formed should the formal terms (`чоловічий`, `жіночий`, `середній рід`) and typical endings be introduced `[S30]`. Crucially, Ukrainian pedagogy establishes that gender (`рід`) is a **permanent, non-changeable grammatical characteristic** of a noun, unlike number or case, which can be modified `[S31]`. This prevents the common L2 error of trying to "make a noun feminine" by changing its ending, as humorously illustrated in one textbook example `[S32]`.
 
-Vocabulary should begin with tangible, everyday objects that are easily identifiable in a classroom or home setting, such as `стіл, стілець, книга, вікно, ліжко, шафа` (table, chair, book, window, bed, wardrobe), as seen in numerous textbook examples and dialogues `(Джерело: ext-ulp_youtube-258, 6-klas-ukrmova-betsa-2023_s0055)`.
+Vocabulary should begin with tangible, everyday objects that are easily identifiable in a classroom or home setting, such as `стіл, стілець, книга, вікно, ліжко, шафа` (table, chair, book, window, bed, wardrobe), as seen in numerous textbook examples and dialogues `[S33][S34]`.
 
 ## Послідовність введення (Introduction Sequence)
 
 The introduction of grammatical gender must be methodical to avoid overwhelming the learner. The following sequence is based on Ukrainian pedagogical practices.
 
 **Step 1: Anchor with Pronouns (`він, вона, воно`)**
-Before even mentioning "gender," introduce the concept that in Ukrainian, every object is a "he," a "she," or an "it." Start with the personal pronouns `він` (he), `вона` (she), `воно` (it). Use pictures of a boy, a girl, and a neutral object like the sun (`сонце`). This establishes the core tripartite division `(Джерело: 4-klas-ukrmova-zaharijchuk_s0121)`.
+Before even mentioning "gender," introduce the concept that in Ukrainian, every object is a "he," a "she," or an "it." Start with the personal pronouns `він` (he), `вона` (she), `воно` (it). Use pictures of a boy, a girl, and a neutral object like the sun (`сонце`). This establishes the core tripartite division `[S35]`.
 
 **Step 2: Introduce the "My" Test (`мій, моя, моє`)**
-This is the most crucial step. Introduce the possessive pronouns `мій` (my, masc.), `моя` (my, fem.), and `моє` (my, neut.). Present learners with a noun and ask them to choose the correct "my." This is the primary tool for gender identification taught to Ukrainian children `(Джерело: 3-klas-ukrainska-mova-kravtsova-2020-1_s0062)`.
+This is the most crucial step. Introduce the possessive pronouns `мій` (my, masc.), `моя` (my, fem.), and `моє` (my, neut.). Present learners with a noun and ask them to choose the correct "my." This is the primary tool for gender identification taught to Ukrainian children `[S29]`.
 - **(Він)** `мій стіл` (my table)
 - **(Вона)** `моя книга` (my book)
 - **(Воно)** `моє вікно` (my window)
 
 **Step 3: Connect to Formal Terms and Endings**
 Once the learner is comfortable with the "My" test, introduce the formal grammatical terms and the most common endings associated with each gender.
-- **Чоловічий рід (Masculine):** Corresponds to `він/мій`. Typically ends in a **consonant** (e.g., `стіл`, `будинок`). Also includes a small but important group of words for male relatives ending in **-о** like `тато` (dad) `(Джерело: 6-klas-ukrmova-betsa-2023_s0071)`.
-- **Жіночий рід (Feminine):** Corresponds to `вона/моя`. Typically ends in **-а** or **-я** (e.g., `кімната`, `шафа`, `земля`) `(Джерело: 3-klas-ukrainska-mova-vashulenko-2020-1_s0128)`.
-- **Середній рід (Neuter):** Corresponds to `воно/моє`. Typically ends in **-о** or **-е** (e.g., `вікно`, `ліжко`, `море`) `(Джерело: 3-klas-ukrainska-mova-vashulenko-2020-1_s0128)`.
+- **Чоловічий рід (Masculine):** Corresponds to `він/мій`. Typically ends in a **consonant** (e.g., `стіл`, `будинок`). Also includes a small but important group of words for male relatives ending in **-о** like `тато` (dad) `[S30]`.
+- **Жіночий рід (Feminine):** Corresponds to `вона/моя`. Typically ends in **-а** or **-я** (e.g., `кімната`, `шафа`, `земля`) `[S36]`.
+- **Середній рід (Neuter):** Corresponds to `воно/моє`. Typically ends in **-о** or **-е** (e.g., `вікно`, `ліжко`, `море`) `[S36]`.
 
 **Step 4: Reinforce with Adjective Agreement**
-Immediately show how adjectives change their endings to "agree with" the noun's gender. This provides powerful visual and auditory reinforcement. The pattern is simple and consistent: masculine adjectives often end in `-ий/-ій`, feminine in `-а/-я`, and neuter in `-е/-є` `(Джерело: 3-klas-ukrainska-mova-vashulenko-2020-1_s0128)`.
+Immediately show how adjectives change their endings to "agree with" the noun's gender. This provides powerful visual and auditory reinforcement. The pattern is simple and consistent: masculine adjectives often end in `-ий/-ій`, feminine in `-а/-я`, and neuter in `-е/-є` `[S36]`.
 - `нов**ий** стіл` (new table)
 - `нов**а** книга` (new book)
 - `нов**е** вікно` (new window)
-This practice confirms the learner's gender identification and builds a foundational understanding of Ukrainian syntax `(Джерело: 3-klas-ukrainska-mova-vashulenko-2020-1_s0129)`.
+This practice confirms the learner's gender identification and builds a foundational understanding of Ukrainian syntax `[S37]`.
 
 ## Типові помилки L2 (Common L2 Errors)
 
@@ -55,24 +54,24 @@ English-speaking learners often struggle with grammatical gender due to interfer
 
 | ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
 | :--- | :--- | :--- |
-| *"**Воно** стіл."* (It is a table) | "**Він** стіл." (He is a table) | In English, inanimate objects are "it". In Ukrainian, every noun has a grammatical gender that must be used. `Стіл` is a masculine noun `(Джерело: 6-klas-ukrmova-betsa-2023_s0071)`. |
-| *"...вона **столиха**"* (making "стіл" feminine) | N/A | A learner might try to create a feminine form of a noun, as shown in a textbook example of a student's mistake `(Джерело: 6-klas-ukrmova-avramenko-2023_s0088)`. Gender is an **inherent, unchangeable property** of a noun. |
-| *"Це **гарний** книга."* (This is a good book) | "Це **гарна** книга." | The adjective must agree in gender with the noun it describes. Since `книга` is feminine (`вона/моя`), the adjective must also take the feminine form `гарна` `(Джерело: 3-klas-ukrainska-mova-vashulenko-2020-1_s0129)`. |
-| *"**Тато**... **вона** сказала."* (Dad... she said) | "**Тато**... **він** сказав." (Dad... he said) | The `-о` ending on `тато` can confuse learners into thinking it's neuter or feminine. However, nouns for male persons are masculine regardless of ending `(Джерело: 6-klas-ukrmova-avramenko-2023_s0088)`. |
+| *"**Воно** стіл."* (It is a table) | "**Він** стіл." (He is a table) | In English, inanimate objects are "it". In Ukrainian, every noun has a grammatical gender that must be used. `Стіл` is a masculine noun `[S30]`. |
+| *"...вона **столиха**"* (making "стіл" feminine) | N/A | A learner might try to create a feminine form of a noun, as shown in a textbook example of a student's mistake `[S31]`. Gender is an **inherent, unchangeable property** of a noun. |
+| *"Це **гарний** книга."* (This is a good book) | "Це **гарна** книга." | The adjective must agree in gender with the noun it describes. Since `книга` is feminine (`вона/моя`), the adjective must also take the feminine form `гарна` `[S37]`. |
+| *"**Тато**... **вона** сказала."* (Dad... she said) | "**Тато**... **він** сказав." (Dad... he said) | The `-о` ending on `тато` can confuse learners into thinking it's neuter or feminine. However, nouns for male persons are masculine regardless of ending `[S31]`. |
 | *"Я бачу **кімната**."* (I see room) | "Я бачу **кімнату**." | This is a case error, but it's often rooted in a misunderstanding of gender's role. Learners may not realize that gender determines how a noun declines (changes its ending) in different cases. This is an A2 topic, but the seed is planted here. |
-| *"`Ніч` (night) is masculine."* | `Ніч` is feminine. | Nouns ending in a soft sign (`-ь`) can be tricky. While many are masculine, a significant group, like `ніч` (night) and `сіль` (salt), are feminine. This is an exception to the "ends in a consonant" rule for masculine `(Джерело: 6-klas-ukrmova-betsa-2023_s0071)`. |
+| *"`Ніч` (night) is masculine."* | `Ніч` is feminine. | Nouns ending in a soft sign (`-ь`) can be tricky. While many are masculine, a significant group, like `ніч` (night) and `сіль` (salt), are feminine. This is an exception to the "ends in a consonant" rule for masculine `[S30]`. |
 
 ## Деколонізаційні застереження (Decolonization Notes)
 
 This is a mandatory section. The goal is to build a learner's understanding of Ukrainian **on its own terms**, free from the historical and pedagogical dominance of Russian.
 
-1.  **Build a Fresh Phonetic Map. No Russian Analogies.** Never teach Ukrainian sounds by comparing them to Russian. For example, do not say "Ukrainian `и` is like Russian `ы`" or "Ukrainian `і` is like Russian `и`." Teach them as unique Ukrainian phonemes `(Джерело: ext-ulp_youtube-304)`. The learner must develop Ukrainian phonetic categories from scratch. Using Russian as a reference point creates phonetic interference and reinforces a colonial linguistic hierarchy.
+1.  **Build a Fresh Phonetic Map. No Russian Analogies.** Never teach Ukrainian sounds by comparing them to Russian. For example, do not say "Ukrainian `и` is like Russian `ы`" or "Ukrainian `і` is like Russian `и`." Teach them as unique Ukrainian phonemes `[S38]`. The learner must develop Ukrainian phonetic categories from scratch. Using Russian as a reference point creates phonetic interference and reinforces a colonial linguistic hierarchy.
 
-2.  **Normalize Ukrainian Forms.** Words like `тато` (dad) with an `-о` ending are a normal feature of the Ukrainian language `(Джерело: 10-klas-ukrajinska-mova-avramenko-2018_s0234)`. They should not be presented as "strange" or as an exception relative to Russian `папа`. Likewise, emphasize distinctly Ukrainian vocabulary and phonological features, such as the `і` that resulted from the historical mutation of `[о]` and `[е]` in closed syllables (`стіл` vs. `столи`) `(Джерело: 10-klas-ukrmova-karaman-2018_s0170)`.
+2.  **Normalize Ukrainian Forms.** Words like `тато` (dad) with an `-о` ending are a normal feature of the Ukrainian language `[S32]`. They should not be presented as "strange" or as an exception relative to Russian `папа`. Likewise, emphasize distinctly Ukrainian vocabulary and phonological features, such as the `і` that resulted from the historical mutation of `[о]` and `[е]` in closed syllables (`стіл` vs. `столи`) `[S39]`.
 
-3.  **Grammar is Common Slavic, Not Russian.** Grammatical gender is a feature of the broader Slavic language family. It is not a "Russian feature" that Ukrainian also has. Frame gender and agreement as fundamental properties of Ukrainian, using Ukrainian-only examples `(Джерело: ext-other_blogs-59)`.
+3.  **Grammar is Common Slavic, Not Russian.** Grammatical gender is a feature of the broader Slavic language family. It is not a "Russian feature" that Ukrainian also has. Frame gender and agreement as fundamental properties of Ukrainian, using Ukrainian-only examples `[S40]`.
 
-4.  **Emphasize Presence of Feminatives.** Ukrainian has a productive and widely used system of feminatives for professions (e.g., `вчитель` -> `вчителька`, `лікар` -> `лікарка`, `директор` -> `директорка`). This should be introduced early and normalized, as it is a vibrant part of the modern language and a point of divergence from the more conservative norms often found in Russian `(Джерело: 6-klas-ukrmova-betsa-2023_s0071)`. This is a key feature of contemporary Ukrainian identity.
+4.  **Emphasize Presence of Feminatives.** Ukrainian has a productive and widely used system of feminatives for professions (e.g., `вчитель` -> `вчителька`, `лікар` -> `лікарка`, `директор` -> `директорка`). This should be introduced early and normalized, as it is a vibrant part of the modern language and a point of divergence from the more conservative norms often found in Russian `[S30]`. This is a key feature of contemporary Ukrainian identity.
 
 ## Словниковий мінімум (Vocabulary Boundaries)
 
@@ -117,13 +116,13 @@ The vocabulary for A1 must be high-frequency, concrete, and immediately useful. 
 The writer should model activities directly on those used in Ukrainian schools. These are proven, effective methods.
 
 **1. Activity: Sorting by Gender**
-Based on the format in `(Джерело: 6-klas-ukrmova-betsa-2023_s0071)`.
+Based on the format in `[S30]`.
 > **Завдання:** Розподіліть іменники за родами в три колонки: Чоловічий, Жіночий, Середній.
 >
 > *Бабуся, їжак, часопис, парасоля, олівець, хвилина, молоко, вікно, подруга, погода, оповідання, казка, риба, слово, сік, країна, светр.*
 
 **2. Activity: The Pronoun Test**
-Based on the format in `(Джерело: 3-klas-ukrainska-mova-kravtsova-2020-1_s0062)`.
+Based on the format in `[S29]`.
 > **Завдання:** Подивіться на малюнки. Запишіть назви предметів у потрібний рядок.
 >
 > **Він, мій:** ____________, ____________.
@@ -133,7 +132,7 @@ Based on the format in `(Джерело: 3-klas-ukrainska-mova-kravtsova-2020-1_
 > (Use images of a table, a book, a window, a chair, a lamp, a bed).
 
 **3. Activity: Adjective and Noun Agreement**
-Based on the format in `(Джерело: 5-klas-ukrmova-uhor-2022-1_s0034)`.
+Based on the format in `[S41]`.
 > **Завдання:** До кожного іменника доберіть прикметник у потрібній формі.
 >
 > **Зразок:** (новий) парк, ручка, вікно -> *Новий парк, нова ручка, нове вікно.*
@@ -143,7 +142,7 @@ Based on the format in `(Джерело: 5-klas-ukrmova-uhor-2022-1_s0034)`.
 > 3. (великий) клас, буква, слово
 
 **4. Activity: Identifying the Rule (Error Analysis)**
-Based on the dialogue in `(Джерело: 6-klas-ukrmova-avramenko-2023_s0088)`.
+Based on the dialogue in `[S31]`.
 > **Завдання:** Прочитайте діалог. Учень зробив помилку. Яке правило він не знає?
 >
 > **Вчитель:** Денисе, як змінюємо іменники?

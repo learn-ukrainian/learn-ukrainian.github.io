@@ -4,7 +4,6 @@
 slug: yesterday
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: [ext-ulp_youtube-253, 8-klas-ukrmova-avramenko-2025_s0137, ext-ulp_youtube-188, 5-klas-ukrmova-uhor-2022-1_s0079, 3-klas-ukrainska-mova-savchuk-2020-2_s0074, 7-klas-ukrlit-zabolotnyi-2024_s0366, ext-ulp_youtube-14, ext-ulp_youtube-235, ext-ulp_youtube-204, ext-ulp_youtube-149, ext-ulp_youtube-187, 4-klas-ukrmova-zaharijchuk_s0150, 10-klas-ukrajinska-mova-zabolotnij-2018_s0182, 10-klas-ukrmova-zabolotnyi-2018_s0182, 11-klas-istoriya-ukr-gisem-2024_s0166, 3-klas-ukrainska-mova-vashulenko-2020-1_s0101, 8-klas-ukrlit-avramenko-2025_s0218, 3-klas-ukrainska-mova-vashulenko-2020-2_s0027, 8-klas-ukrlit-avramenko-2025_s0272, 8-klas-ukrlit-avramenko-2025_s0224, 7-klas-ukrmova-litvinova-2024_s0071, 5-klas-ukrmova-litvinova-2022_s0182, 3-klas-ukrainska-mova-kravtsova-2020-1_s0018, 7-klas-ukrmova-zabolotnyi-2024_s0228, ext-ulp_youtube-123, 5-klas-ukrmova-uhor-2022-1_s0044, 7-klas-ukrmova-avramenko-2024_s0222, 6-klas-ukrmova-litvinova-2023_s0065, 6-klas-ukrmova-golub-2023_s0227, 6-klas-ukrmova-golub-2023_s0249, 5-klas-ukrmova-zabolotnyi-2023_s0176, 5-klas-ukrmova-uhor-2022-1_s0154, 3-klas-ukrainska-mova-kravtsova-2020-1_s0118, 5-klas-ukrmova-litvinova-2022_s0182, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0121, 2-klas-ukrmova-bolshakova-2019-2_s0029, 5-klas-ukrmova-uhor-2022-1_s0019, 1-klas-bukvar-zaharijchuk-2025-1_s0024]
 compiled: 2026-04-07
 -->
 

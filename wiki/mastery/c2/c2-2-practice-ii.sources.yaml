@@ -1,0 +1,109 @@
+# Source registry for wiki/mastery/c2/c2-2-practice-ii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S31
+  file: '5'
+  type: unknown
+  preserved_from_meta: true
+- id: S32
+  file: ext-ulp_youtube-166
+  type: external
+  preserved_from_meta: true
+- id: S33
+  file: '21'
+  type: unknown
+  preserved_from_meta: true
+- id: S34
+  file: '22'
+  type: unknown
+  preserved_from_meta: true
+- id: S35
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0389
+  type: textbook
+- id: S36
+  file: '14'
+  type: unknown
+- id: S37
+  file: '2'
+  type: unknown
+- id: S38
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0378
+  type: textbook
+- id: S39
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0111
+  type: textbook
+- id: S40
+  file: '3'
+  type: unknown
+- id: S41
+  file: ext-ulp_youtube-19
+  type: external
+- id: S42
+  file: ext-ulp_youtube-17
+  type: external
+- id: S43
+  file: ext-ulp_youtube-6
+  type: external
+- id: S44
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0222
+  type: textbook
+- id: S45
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0224
+  type: textbook
+- id: S46
+  file: '1'
+  type: unknown
+- id: S47
+  file: 6-klas-ukrmova-avramenko-2023_s0153
+  type: textbook
+- id: S48
+  file: Ямб
+  type: unknown
+- id: S49
+  file: Є. Маланюк
+  type: unknown
+- id: S50
+  file: ext-imtgsh-39
+  type: external
+- id: S51
+  file: '15'
+  type: unknown
+- id: S52
+  file: Григорій Сковорода
+  type: unknown
+- id: S53
+  file: De libertate
+  type: unknown
+- id: S54
+  file: Євген Маланюк
+  type: unknown
+- id: S55
+  file: Напис на книзі віршів
+  type: unknown
+- id: S56
+  file: Леся Українка
+  type: unknown
+- id: S57
+  file: Contra spem spero!
+  type: unknown
+- id: S58
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s0082
+  type: textbook
+- id: S59
+  file: Микола Вороний
+  type: unknown
+- id: S60
+  file: Іванові Франкові
+  type: unknown
+- id: S61
+  file: У. Самчук
+  type: unknown
+- id: S62
+  file: 10-klas-ukrmova-karaman-2018_s0318
+  type: textbook
+- id: S63
+  file: Юрій Клен
+  type: unknown
+- id: S64
+  file: '4'
+  type: unknown

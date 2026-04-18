@@ -1,0 +1,21 @@
+# Source registry for wiki/mastery/c2/professional-identity.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ext-komik_istoryk-83
+  type: external
+- id: S2
+  file: unknown
+  type: unknown
+- id: S3
+  file: ext-komik_istoryk-10
+  type: external
+- id: S4
+  file: ext-komik_istoryk-34
+  type: external
+- id: S5
+  file: ext-imtgsh-68
+  type: external
+- id: S6
+  file: ext-komik_istoryk-74
+  type: external

@@ -4,7 +4,6 @@
 slug: multi-clause-sentences
 domain: grammar/b2
 tracks: [b2, c1]
-sources: [9-klas-ukrajinska-mova-voron-2017_s0174, 11-klas-ukrajinska-mova-voron-2019_s0414, 9-klas-ukrajinska-mova-avramenko-2017_s0246, 11-klas-ukrajinska-mova-voron-2019_s0324, 9-klas-ukrajinska-mova-voron-2017_s0304, 11-klas-ukrajinska-mova-voron-2019_s0291, 9-klas-ukrajinska-mova-zabolotnij-2017_s0106, 9-klas-ukrmova-zabolotnyi-2017_s0106, 9-klas-ukrajinska-mova-avramenko-2017_s0138, 11-klas-ukrajinska-mova-voron-2019_s0298, 9-klas-ukrajinska-mova-avramenko-2017_s0141, 9-klas-ukrajinska-mova-voron-2017_s0119, 9-klas-ukrajinska-mova-zabolotnij-2017_s0133, 9-klas-ukrmova-zabolotnyi-2017_s0133, 9-klas-ukrajinska-mova-voron-2017_s0273, 11-klas-ukrajinska-mova-voron-2019_s0293, ext-ulp_youtube-90, ext-ulp_youtube-162, 9-klas-ukrajinska-mova-voron-2017_s0135, 11-klas-ukrajinska-mova-voron-2019_s0415, 9-klas-ukrajinska-mova-zabolotnij-2017_s0161, 9-klas-ukrmova-zabolotnyi-2017_s0161, 9-klas-ukrajinska-mova-voron-2017_s0180, 11-klas-ukrajinska-mova-glazova-2019_s0155]
 compiled: 2026-04-07
 -->
 

@@ -1,0 +1,59 @@
+# Source registry for wiki/mastery/c2/academic-publishing.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S13
+  file: ext-imtgsh-58
+  type: external
+  preserved_from_meta: true
+- id: S14
+  file: ext-ulp_youtube-96
+  type: external
+  preserved_from_meta: true
+- id: S15
+  file: ext-ulp_youtube-121
+  type: external
+  preserved_from_meta: true
+- id: S16
+  file: 'Wikipedia: Українська музика'
+  type: wiki
+  preserved_from_meta: true
+- id: S17
+  file: 'Wikipedia: Грецька література'
+  type: wiki
+  preserved_from_meta: true
+- id: S18
+  file: 'Wikipedia: Франко Іван Якович'
+  type: wiki
+- id: S19
+  file: 'Wikipedia: Яворницький Дмитро Іванович'
+  type: wiki
+- id: S20
+  file: 10-klas-ukrmova-karaman-2018_s0448
+  type: textbook
+- id: S21
+  file: 10-klas-ukrmova-karaman-2018_s0447
+  type: textbook
+- id: S22
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0284
+  type: textbook
+- id: S23
+  file: 'Wikipedia: Контент-аналіз'
+  type: wiki
+- id: S24
+  file: 'Wikipedia: Івент-аналіз'
+  type: wiki
+- id: S25
+  file: 'Wikipedia: Бібліографія'
+  type: wiki
+- id: S26
+  file: ext-imtgsh-4
+  type: external
+- id: S27
+  file: ext-imtgsh-19
+  type: external
+- id: S28
+  file: 'Wikipedia: Румунська народна музика'
+  type: wiki
+- id: S29
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0006
+  type: textbook

@@ -1,0 +1,34 @@
+# Source registry for wiki/academic/c1/klasychna-muzyka-1-vytoky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S10
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0086
+  type: textbook
+  preserved_from_meta: true
+- id: S11
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0063
+  type: textbook
+- id: S12
+  file: 8-klas-istoria-ukr-schupak-2025_s0312
+  type: textbook
+- id: S13
+  file: 8-klas-istoria-ukr-hlibovska-2025_s0321
+  type: textbook
+- id: S14
+  file: unknown
+  type: unknown
+- id: S15
+  file: 8-klas-istoria-ukr-galimov-2025_s0436
+  type: textbook
+- id: S16
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0483
+  type: textbook
+- id: S17
+  file: 8-klas-istoriya-ukr-gisem-2021_s0353
+  type: textbook
+- id: S18
+  file: ext-komik_istoryk-66
+  type: external
+- id: S19
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0196
+  type: textbook

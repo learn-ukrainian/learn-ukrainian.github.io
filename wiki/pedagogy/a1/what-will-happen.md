@@ -4,7 +4,6 @@
 slug: what-will-happen
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: [ext-ulp_youtube-50, ext-ulp_youtube-204, ext-ulp_youtube-198, ext-ulp_youtube-186, ext-ulp_youtube-90, ext-ulp_youtube-166, ext-ulp_youtube-276, ext-ulp_youtube-246, ext-istoria_movy-14, ext-ulp_youtube-13, 7-klas-ukrmova-litvinova-2024_s0056, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0107, 5-klas-ukrmova-uhor-2022-1_s0093, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0110, 7-klas-ukrmova-zabolotnyi-2024_s0070, 7-klas-ukrmova-avramenko-2024_s0079, 3-klas-ukrainska-mova-vashulenko-2020-1_s0150, 4-klas-ukrayinska-mova-varzatska-2021-1_s0130, 7-klas-ukrmova-avramenko-2024_s0078, 6-klas-ukrlit-kovalenko-2023_s0055, 6-klas-ukrlit-kovalenko-2023_s0214, 6-klas-ukrmova-betsa-2023_s0208, 6-klas-ukrmova-betsa-2023_s0209, 4-klas-ukrayinska-mova-varzatska-2021-1_s0129, 5-klas-ukrmova-uhor-2022-1_s0042, 4-klas-ukrayinska-mova-varzatska-2021-1_s0131, 10-klas-ukrmova-karaman-2018_s0325, 8-klas-ukrmova-avramenko-2025_s0112, 7-klas-ukrmova-litvinova-2024_s0259, 7-klas-ukrlit-avramenko-2024_s0111, 2-klas-ukrmova-bolshakova-2019-2_s0057, 9-klas-ukrajinska-literatura-avramenko-2017_s0402, 2-klas-ukrmova-vashulenko-2019-1_s0081, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0106, 6-klas-ukrlit-avramenko-2023_s0075, 5-klas-ukrmova-golub-2022_s0217, 7-klas-ukrmova-zabolotnyi-2024_s0068, 10-klas-ukrlit-borzenko-2018-prof_s0219, 5-klas-ukrmova-uhor-2022-1_s0079, 7-klas-ukrmova-avramenko-2024_s0098, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0104]
 compiled: 2026-04-07
 -->
 

@@ -1,0 +1,28 @@
+# Source registry for wiki/grammar/b1/dative-nuances.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S8
+  file: ext-ulp_youtube-166
+  type: external
+  preserved_from_meta: true
+- id: S9
+  file: ext-ulp_youtube-252
+  type: external
+- id: S10
+  file: ext-other_blogs-55
+  type: external
+- id: S11
+  file: ext-ulp_youtube-202
+  type: external
+- id: S12
+  file: ext-ulp_youtube-198
+  type: external
+- id: S13
+  file: ext-ulp_youtube-194
+  type: external
+- id: S14
+  file: 8-klas-ukrlit-avramenko-2025_s0091
+  type: textbook
+- id: S15
+  file: 8-klas-ukrlit-zabolotnyi-2025_s0280
+  type: textbook

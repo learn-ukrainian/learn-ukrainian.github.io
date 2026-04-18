@@ -1,0 +1,47 @@
+# Source registry for wiki/academic/c1/job-interview.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ext-other_blogs-63
+  type: external
+  preserved_from_meta: true
+- id: S2
+  file: ext-realna_istoria-149
+  type: external
+  preserved_from_meta: true
+- id: S3
+  file: 11-klas-ukrajinska-mova-voron-2019_s0056
+  type: textbook
+  preserved_from_meta: true
+- id: S4
+  file: 8-klas-istoria-ukr-hlibovska-2025_s0188
+  type: textbook
+  preserved_from_meta: true
+- id: S5
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0308
+  type: textbook
+  preserved_from_meta: true
+- id: S6
+  file: 10-klas-ukrmova-karaman-2018_s0240
+  type: textbook
+  preserved_from_meta: true
+- id: S7
+  file: uk:wikipedia:Контент-аналіз
+  type: wiki
+  preserved_from_meta: true
+- id: S8
+  file: uk:wikipedia:Івент-аналіз
+  type: wiki
+  preserved_from_meta: true
+- id: S9
+  file: uk:wikipedia:Стилістика
+  type: wiki
+  preserved_from_meta: true
+- id: S10
+  file: uk:wikipedia:Етика
+  type: wiki
+  preserved_from_meta: true
+- id: S11
+  file: uk:wikipedia:Дилема_в'язня
+  type: wiki
+  preserved_from_meta: true

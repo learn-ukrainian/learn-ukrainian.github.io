@@ -1,0 +1,82 @@
+# Source registry for wiki/mastery/c2/professional-portfolio-i.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S6
+  file: '{''Wikipedia'': ''Румунська народна музика''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S7
+  file: '{''Wikipedia'': ''Фольклор''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S8
+  file: '{''Wikipedia'': ''Яворницький Дмитро Іванович''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S9
+  file: '{''Wikipedia'': "Дилема в''язня"}'
+  type: wiki
+  preserved_from_meta: true
+- id: S10
+  file: '{''Wikipedia'': ''Хрущовська відлига''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S11
+  file: '{''Wikipedia'': ''Отто фон Бісмарк''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S12
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0185
+  type: textbook
+  preserved_from_meta: true
+- id: S13
+  file: 7-klas-istoria-ukr-pometun-2024_s0119
+  type: textbook
+  preserved_from_meta: true
+- id: S14
+  file: 8-klas-istoria-ukr-schupak-2025_s0237
+  type: textbook
+  preserved_from_meta: true
+- id: S15
+  file: 8-klas-ukrlit-zabolotnyi-2025_s0271
+  type: textbook
+  preserved_from_meta: true
+- id: S16
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0184
+  type: textbook
+  preserved_from_meta: true
+- id: S17
+  file: '{''Wikipedia'': ''Бібліографія''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S18
+  file: '{''Wikipedia'': ''Історичний міф''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S19
+  file: ext-other_blogs-58
+  type: external
+  preserved_from_meta: true
+- id: S20
+  file: 6-klas-ukrmova-betsa-2023_s0114
+  type: textbook
+  preserved_from_meta: true
+- id: S21
+  file: 4-klas-ukrayinska-mova-savchenko-2021-2_s0120
+  type: textbook
+  preserved_from_meta: true
+- id: S22
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0060
+  type: textbook
+- id: S23
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0060
+  type: textbook
+- id: S24
+  file: 11-klas-ukrajinska-mova-voron-2019_s0370
+  type: textbook
+- id: S25
+  file: '{''Wikipedia'': ''Контент-аналіз''}'
+  type: wiki
+- id: S26
+  file: ext-imtgsh-133
+  type: external

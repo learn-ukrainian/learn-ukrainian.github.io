@@ -4,7 +4,6 @@
 slug: emphasis-and-inversion
 domain: grammar/b2
 tracks: [b2, c1]
-sources: [11-klas-ukrajinska-mova-voron-2019_s0164, 8-klas-ukrmova-zabolotnyi-2025_s0122, 8-klas-ukrmova-avramenko-2025_s0074, 8-klas-ukrmova-zabolotnyi-2025_s0358, 8-klas-ukrmova-avramenko-2025_s0262, 8-klas-ukrmova-avramenko-2025_s0076, 10-klas-ukrmova-karaman-2018_s0123, 9-klas-ukrajinska-mova-voron-2017_s0049, 8-klas-ukrmova-avramenko-2025_s0073, 11-klas-ukrajinska-mova-avramenko-2019_s0264, ext-ulp_youtube-13, 11-klas-ukrajinska-mova-avramenko-2019_s0266, 8-klas-ukrmova-zabolotnyi-2025_s0120, 5-klas-ukrmova-zabolotnyi-2023_s0094, 11-klas-ukrajinska-mova-voron-2019_s0168, 2-klas-ukrmova-vashulenko-2019-1_s0012, 5-klas-ukrmova-litvinova-2022_s0171, 7-klas-ukrlit-mishhenko-2015_s0424, 10-klas-ukrmova-karaman-2018_s0014, 11-klas-ukrmova-zabolotnyi-2019_s0004, ext-ulp_youtube-98, ext-ulp_youtube-141, ext-ulp_youtube-90, ext-ulp_youtube-63, 5-klas-ukrmova-uhor-2022-1_s0153, 11-klas-ukrajinska-mova-avramenko-2019_s0121, 10-klas-ukrajinska-mova-zabolotnij-2018_s0117, 10-klas-ukrmova-zabolotnyi-2018_s0117, 11-klas-ukrajinska-mova-glazova-2019_s0144, 8-klas-ukrmova-avramenko-2025_s0072, 11-klas-ukrajinska-mova-avramenko-2019_s0298, 7-klas-ukrlit-mishhenko-2015_s0424, 10-klas-ukrmova-karaman-2018_s0415, 10-klas-ukrmova-karaman-2018_s0397]
 compiled: 2026-04-07
 -->
 

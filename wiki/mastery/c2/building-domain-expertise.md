@@ -4,7 +4,6 @@
 slug: building-domain-expertise
 domain: mastery/c2
 tracks: [c2]
-sources: [ext-wikipedia-yanukovych, 11-klas-istoriya-ukr-gisem-2024_s0092, 11-klas-istoriya-ukr-galimov-2024_s0329, 5-klas-istoriya-schupak-2022_s0154, 10-klas-istorija-ukrajiny-gisem-2018_s0192, 6-klas-istoriia-shchupak-2023_s0208, 11-klas-istoriya-ukr-gisem-2024_s0244, ext-wikipedia-baudrillard, ext-realna_istoria-66, ext-ulp_youtube-44, ext-imtgsh-11, ext-ulp_youtube-47, ext-imtgsh-182, ext-ulp_youtube-87, ext-imtgsh-56, 5-klas-istoriya-schupak-2022_s0123, 11-klas-istoriya-ukr-gisem-2024_s0182, 5-klas-istoriya-schupak-2022_s0149, 10-klas-istorija-ukrajiny-gisem-2018_s0233, 6-klas-istoriia-shchupak-2023_s0158, 11-klas-istoriya-ukr-galimov-2024_s0155, 9-klas-istorija-ukrajini-gisem-2017_s0222, 4-klas-ukrmova-zaharijchuk_s0173, 11-klas-istoriya-ukr-hlibovska-2024_s0288, 5-klas-istoriya-schupak-2022_s0123, 9-klas-istorija-ukrajini-gisem-2017_s0432, 8-klas-istoria-ukr-schupak-2025_s0318, 10-klas-ukrmova-karaman-2018_s0214, 11-klas-istoriya-ukr-galimov-2024_s0179, 11-klas-istoriya-ukr-gisem-2024_s0181, 9-klas-istorija-ukrajini-gisem-2017_s0304, 11-klas-istoriya-ukr-gisem-2024_s0130, 11-klas-istoriya-ukr-gisem-2024_s0225, 11-klas-ukrajinska-mova-voron-2019_s0040, 4-klas-ukrmova-zaharijchuk_s0152, 10-klas-ukrajinska-mova-avramenko-2018_s0003, 11-klas-istoriya-ukr-hlibovska-2024_s0088, 11-klas-istoriya-ukr-hlibovska-2024_s0556, 11-klas-ukrmova-zabolotnyi-2019_s0314]
 compiled: 2026-04-07
 -->
 

@@ -1,0 +1,80 @@
+# Source registry for wiki/academic/c1/traditional-clothing.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S14
+  file: ext-ulp_youtube-21
+  type: external
+  preserved_from_meta: true
+- id: S15
+  file: 8-klas-ukrlit-avramenko-2025_s0185
+  type: textbook
+  preserved_from_meta: true
+- id: S16
+  file: '{''Wikipedia'': ''Мистецтво''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S17
+  file: '{''Wikipedia'': ''Іван Підкова (поема)''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S18
+  file: '{''Wikipedia'': ''Погляди Тараса Шевченка''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S19
+  file: '{''Wikipedia'': ''Міф''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S20
+  file: '{''Wikipedia'': ''Феміністські рухи та ідеології''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S21
+  file: '{''Wikipedia'': ''Свято Купала''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S22
+  file: 'Wikipedia: Іван Підкова (поема)'
+  type: wiki
+- id: S23
+  file: Т. Шевченко
+  type: unknown
+- id: S24
+  file: ext-realna_istoria-104
+  type: external
+- id: S25
+  file: ext-realna_istoria-82
+  type: external
+- id: S26
+  file: ext-ulp_youtube-4
+  type: external
+- id: S27
+  file: 8-klas-istoria-ukr-hlibovska-2025_s0026
+  type: textbook
+- id: S28
+  file: 7-klas-istoria-ukr-galimov-2024_s0115
+  type: textbook
+- id: S29
+  file: 'Wikipedia: Свято Купала'
+  type: wiki
+- id: S30
+  file: 'Wikipedia: Погляди Тараса Шевченка'
+  type: wiki
+- id: S31
+  file: 6-klas-istoriia-shchupak-2023_s0230
+  type: textbook
+- id: S32
+  file: для порівняння
+  type: unknown
+- id: S33
+  file: 'Wikipedia: Ніоба'
+  type: wiki
+- id: S34
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0256
+  type: textbook
+- id: S35
+  file: '{''Wikipedia'': ''Ніоба''}'
+  type: wiki
+- id: S36
+  file: '{''Wikipedia'': ''Фольклор''}'
+  type: wiki

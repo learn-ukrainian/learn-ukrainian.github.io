@@ -1,0 +1,64 @@
+# Source registry for wiki/mastery/c2/relihiynyi-styl.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S8
+  file: Давня українська література (Wikipedia)
+  type: wiki
+  preserved_from_meta: true
+- id: S9
+  file: Пелешенко Юрій Володимирович (Wikipedia)
+  type: wiki
+  preserved_from_meta: true
+- id: S10
+  file: Художня література (Wikipedia)
+  type: wiki
+  preserved_from_meta: true
+- id: S11
+  file: Грецька література (Wikipedia)
+  type: wiki
+  preserved_from_meta: true
+- id: S12
+  file: Мистецтво (Wikipedia)
+  type: wiki
+  preserved_from_meta: true
+- id: S13
+  file: ext-komik_istoryk-83
+  type: external
+  preserved_from_meta: true
+- id: S14
+  file: 11-klas-ukrajinska-mova-voron-2019_s0249
+  type: textbook
+  preserved_from_meta: true
+- id: S15
+  file: Дума (Wikipedia)
+  type: wiki
+  preserved_from_meta: true
+- id: S16
+  file: 10-klas-ukrmova-karaman-2018_s0413
+  type: textbook
+  preserved_from_meta: true
+- id: S17
+  file: 10-klas-ukrmova-karaman-2018_s0047
+  type: textbook
+  preserved_from_meta: true
+- id: S18
+  file: 10-klas-ukrmova-karaman-2018_s0411
+  type: textbook
+- id: S19
+  file: ext-istoria_movy-25
+  type: external
+- id: S20
+  file: ext-realna_istoria-110
+  type: external
+- id: S21
+  file: 10-klas-ukrmova-karaman-2018_s0407
+  type: textbook
+- id: S22
+  file: Пелешенко Юрій Володимирович
+  type: unknown
+- id: S23
+  file: Wikipedia
+  type: wiki
+- id: S24
+  file: Давня українська література
+  type: unknown

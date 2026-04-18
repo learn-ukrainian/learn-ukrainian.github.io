@@ -1,0 +1,46 @@
+# Source registry for wiki/academic/c1/istoriia-ukrainskoi-literatury.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S10
+  file: ext-imtgsh-69
+  type: external
+  preserved_from_meta: true
+- id: S11
+  file: 8-klas-ukrlit-avramenko-2025_s0182
+  type: textbook
+  preserved_from_meta: true
+- id: S12
+  file: 8-klas-ukrlit-avramenko-2025_s0181
+  type: textbook
+  preserved_from_meta: true
+- id: S13
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0208
+  type: textbook
+  preserved_from_meta: true
+- id: S14
+  file: ext-imtgsh-135
+  type: external
+- id: S15
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0388
+  type: textbook
+- id: S16
+  file: ext-komik_istoryk-62
+  type: external
+- id: S17
+  file: unknown
+  type: unknown
+- id: S18
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0443
+  type: textbook
+- id: S19
+  file: ext-ulp_youtube-166
+  type: external
+- id: S20
+  file: 8-klas-ukrlit-avramenko-2025_s0370
+  type: textbook
+- id: S21
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0041
+  type: textbook
+- id: S22
+  file: 10-klas-ukrmova-karaman-2018_s0002
+  type: textbook

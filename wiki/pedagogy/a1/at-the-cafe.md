@@ -4,7 +4,6 @@
 slug: at-the-cafe
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: [6-klas-ukrmova-betsa-2023_s0109, 5-klas-ukrmova-zabolotnyi-2023_s0021, 5-klas-ukrmova-uhor-2022-1_s0018, 3-klas-ukrainska-mova-ponomarova-2020-1_s0012, 9-klas-ukrajinska-mova-zabolotnij-2017_s0088, 10-klas-ukrajinska-mova-zabolotnij-2018_s0122, 11-klas-ukrmova-zabolotnyi-2019_s0258, 6-klas-ukrmova-zabolotnyi-2020_s0116, 10-klas-ukrmova-karaman-2018_s0176, 5-klas-ukrmova-litvinova-2022_s0253, 4-klas-ukrayinska-mova-varzatska-2021-1_s0004, 6-klas-ukrmova-betsa-2023_s0085, 6-klas-ukrmova-litvinova-2023_s0178, ext-article-0, ext-article-3, ext-article-1, ext-article-2, ext-video-4, ext-video-5, ext-ulp_youtube-209, ext-ulp_youtube-116, ext-ulp_youtube-125, ext-ulp_youtube-51, ext-ulp_youtube-132, ext-ulp_youtube-83, ext-ulp_youtube-219, ext-ulp_youtube-75, ext-ulp_youtube-220]
 compiled: 2026-04-07
 -->
 
@@ -109,7 +108,7 @@ These examples demonstrate the standard, practical format for teaching this topi
     >  Какао
     >  Ескімо
     >  Тістечко безе
-    (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0116`)
+    [S29]
 
 2.  **Dialogue Completion/Role-Play: Asking for the Bill**
     This pattern from a Ukrainian Lessons podcast transcript provides the most common and polite way to ask for the bill and handle payment.
@@ -117,13 +116,13 @@ These examples demonstrate the standard, practical format for teaching this topi
     > **Learner B (Waiter):** Так, звичайно. З вас 250 гривень. Оплата карткою чи готівкою?
     > **Learner A (Customer):** Готівкою. Ось. Решти не треба.
     > **Learner B (Waiter):** Дякую. Гарного вам дня!
-    (Джерело: `ext-ulp_youtube-116`)
+    [S30]
 
 3.  **Functional Dialogue: "For Here or To Go?"**
     This is a critical micro-dialogue for any modern coffee shop interaction.
     > **Learner B (Barista):** Вам тут чи з собою?
     > **Learner A (Customer):** З собою, будь ласка.
-    (Джерело: `ext-ulp_youtube-125`)
+    [S31]
 
 4.  **Dialogue Framework: Wrong Number / Location**
     This simple, repetitive phone dialogue helps practice location names (`кав'ярня`, `ресторан`, `піцерія`) in a low-stakes, memorable format.
@@ -133,7 +132,7 @@ These examples demonstrate the standard, practical format for teaching this topi
     > — Що? **Кав’ярня**?
     > — Так, **кав’ярня**.
     > — Вибачте!
-    (Джерело: `6-klas-ukrmova-betsa-2023_s0085`, adapted from the museum/theatre example)
+    ([S32], adapted from the museum/theatre example)
 
 ## Пов'язані статті (Related Articles)
 - `[[pedagogy/a1/politeness-and-greetings]]`

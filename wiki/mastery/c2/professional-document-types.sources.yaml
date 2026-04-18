@@ -1,0 +1,45 @@
+# Source registry for wiki/mastery/c2/professional-document-types.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S11
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0054
+  type: textbook
+  preserved_from_meta: true
+- id: S12
+  file: ext-ulp_youtube-166
+  type: external
+  preserved_from_meta: true
+- id: S13
+  file: 10-klas-ukrmova-karaman-2018_s0085
+  type: textbook
+  preserved_from_meta: true
+- id: S14
+  file: 8-klas-istoria-ukr-galimov-2025_s0006
+  type: textbook
+- id: S15
+  file: unknown
+  type: unknown
+- id: S16
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0054
+  type: textbook
+- id: S17
+  file: 8-klas-ukrmova-avramenko-2025_s0261
+  type: textbook
+- id: S18
+  file: 10-klas-ukrmova-glazova-2018_s0032
+  type: textbook
+- id: S19
+  file: 11-klas-ukrajinska-mova-voron-2019_s0078
+  type: textbook
+- id: S20
+  file: ext-istoria_movy-11
+  type: external
+- id: S21
+  file: ext-imtgsh-95
+  type: external
+- id: S22
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0021
+  type: textbook
+- id: S23
+  file: ext-imtgsh-122
+  type: external

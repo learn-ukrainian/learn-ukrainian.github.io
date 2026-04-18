@@ -1,0 +1,104 @@
+# Source registry for wiki/academic/c1/operne-mystetstvo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S16
+  file: '{''Wikipedia'': ''Румунська народна музика''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S17
+  file: '{''Wikipedia'': ''Мистецтво Удмуртії''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S18
+  file: '{''Wikipedia'': ''Ой по горі роман цвіте''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S19
+  file: '{''Wikipedia'': ''Національний музей народної архітектури та побуту України''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S20
+  file: ext-komik_istoryk-13
+  type: external
+  preserved_from_meta: true
+- id: S21
+  file: 10-klas-ukrmova-karaman-2018_s0402
+  type: textbook
+  preserved_from_meta: true
+- id: S22
+  file: 10-klas-ukrmova-karaman-2018_s0453
+  type: textbook
+  preserved_from_meta: true
+- id: S23
+  file: 7-klas-istoria-ukr-galimov-2024_s0216
+  type: textbook
+  preserved_from_meta: true
+- id: S24
+  file: 8-klas-istoria-ukr-galimov-2025_s0127
+  type: textbook
+  preserved_from_meta: true
+- id: S25
+  file: '{''Wikipedia'': ''Феміністична літературна критика''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S26
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0000
+  type: textbook
+  preserved_from_meta: true
+- id: S27
+  file: 8-klas-istoria-ukr-galimov-2025_s0089
+  type: textbook
+  preserved_from_meta: true
+- id: S28
+  file: 8-klas-istoria-ukr-galimov-2025_s0132
+  type: textbook
+  preserved_from_meta: true
+- id: S29
+  file: 7-klas-istoria-ukr-galimov-2024_s0220
+  type: textbook
+  preserved_from_meta: true
+- id: S30
+  file: 11-klas-ukrajinska-mova-voron-2019_s0412
+  type: textbook
+- id: S31
+  file: '{''Wikipedia'': ''Давня українська література''}'
+  type: wiki
+- id: S32
+  file: 9-klas-ukrajinska-mova-voron-2017_s0192
+  type: textbook
+- id: S33
+  file: 5-klas-ukrlit-zabolotnyi-2022_s0019
+  type: textbook
+- id: S34
+  file: 9-klas-ukrajinska-mova-voron-2017_s0191
+  type: textbook
+- id: S35
+  file: ext-komik_istoryk-66
+  type: external
+- id: S36
+  file: '{''Wikipedia'': ''Українська музика''}'
+  type: wiki
+- id: S37
+  file: 3-klas-ukrainska-mova-savchuk-2020-2_s0031
+  type: textbook
+- id: S38
+  file: ext-realna_istoria-115
+  type: external
+- id: S39
+  file: '{''Wikipedia'': ''Мистецтво''}'
+  type: wiki
+- id: S40
+  file: про літературу
+  type: unknown
+- id: S41
+  file: зі спогадів Олександра Кошиця
+  type: unknown
+- id: S42
+  file: 9-klas-istorija-ukrajini-burnejko-2017_s0374
+  type: textbook
+- id: S43
+  file: Андрій Когут
+  type: unknown
+- id: S44
+  file: директор архіву СБУ
+  type: unknown

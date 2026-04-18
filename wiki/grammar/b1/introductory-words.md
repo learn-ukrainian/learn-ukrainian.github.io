@@ -4,7 +4,6 @@
 slug: introductory-words-homogeneous-parts
 domain: grammar/b1
 tracks: [b1, b2]
-sources: [8-klas-ukrmova-zabolotnyi-2025_s0217, ext-ulp_youtube-171, ext-ulp_youtube-25, ext-ulp_youtube-13, ext-ulp_youtube-27, ext-ulp_youtube-169, 6-klas-ukrmova-avramenko-2023_s0013, ext-realna_istoria-72, 5-klas-ukrmova-zabolotnyi-2023_s0194, 5-klas-ukrmova-avramenko-2022_s0181, 8-klas-ukrmova-avramenko-2025_s0187, 8-klas-ukrmova-zabolotnyi-2025_s0215, 5-klas-ukrmova-zabolotnyi-2023_s0185, 11-klas-ukrmova-zabolotnyi-2019_s0144, 11-klas-ukrajinska-mova-glazova-2019_s0175, 5-klas-ukrmova-avramenko-2022_s0219, 6-klas-ukrmova-zabolotnyi-2020_s0009, 5-klas-ukrmova-zabolotnyi-2023_s0184, 5-klas-ukrmova-avramenko-2022_s0180, 21-klas-ukrmova-uhor-2022-1_s0109, 8-klas-ukrmova-zabolotnyi-2025_s0216, 11-klas-ukrajinska-mova-avramenko-2019_s0150, 9-klas-ukrajinska-mova-avramenko-2017_s0017, 11-klas-ukrajinska-mova-voron-2019_s0194, 11-klas-ukrmova-zabolotnyi-2019_s0178, 5-klas-ukrmova-avramenko-2022_s0173, ext-istoria_movy-12, ext-istoria_movy-46]
 compiled: 2026-04-07
 -->
 

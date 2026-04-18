@@ -4,18 +4,17 @@
 slug: motion-prefixes-in-out
 domain: grammar/b1
 tracks: [b1, b2]
-sources: [ext-komik_istoryk-42, unknown, ext-komik_istoryk-61, 11-klas-ukrajinska-mova-avramenko-2019_s0094, 11-klas-ukrajinska-mova-avramenko-2019_s0169, unknown, unknown, ext-komik_istoryk-2, ext-ulp_youtube-188, ext-ulp_youtube-166, 10-klas-ukrmova-karaman-2018_s0323, 6-klas-ukrmova-litvinova-2023_s0090, 5-klas-ukrmova-avramenko-2022_s0048, 7-klas-ukrmova-zabolotnyi-2024_s0058, 6-klas-ukrmova-avramenko-2023_s0062, 6-klas-ukrmova-litvinova-2023_s0076, 11-klas-istoriya-ukr-gisem-2024_s0512, 11-klas-istoriya-ukr-galimov-2024_s0475, 10-klas-ukrajinska-literatura-avramenko-2018_s0464, 11-klas-ukrlit-borzenko-2019-prof_s0410]
 compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
 The concept of antonymic prefixes, including **в-/ви-** and **за-/ви-**, is introduced early and reinforced throughout Ukrainian schooling. The core idea is that prefixes can systematically create words with opposite meanings, particularly with verbs of motion.
 
-- **Early Introduction (Grade 3):** The foundation is laid in primary school. Students learn to form antonyms by adding or changing prefixes. An exercise might ask them to complete a pair like `зайти — ...` with `вийти` (Source 26). This establishes the intuitive opposition between entering and exiting.
+- **Early Introduction (Grade 3):** The foundation is laid in primary school. Students learn to form antonyms by adding or changing prefixes. An exercise might ask them to complete a pair like `зайти — ...` with `вийти` [S24]. This establishes the intuitive opposition between entering and exiting.
 
-- **Formalization (Grade 6):** The concept is formalized as "антонімічні префікси". Textbooks explicitly demonstrate how adding `в-` (or `у-`) and `ви-` to a base verb of motion like `ходити` creates a clear antonymous pair: `входити — виходити` (Source 15). The focus is on the prefix creating a word with the opposite meaning (Source 25). The distinction is made clear: `заходити` (to enter, go in) and `виходити` (to exit, go out) are a fundamental pair (Source 13).
+- **Formalization (Grade 6):** The concept is formalized as "антонімічні префікси". Textbooks explicitly demonstrate how adding `в-` (or `у-`) and `ви-` to a base verb of motion like `ходити` creates a clear antonymous pair: `входити — виходити` [S25]. The focus is on the prefix creating a word with the opposite meaning [S26]. The distinction is made clear: `заходити` (to enter, go in) and `виходити` (to exit, go out) are a fundamental pair [S27].
 
-- **Aspectual Formation (Grade 7):** By Grade 7, the focus shifts to how prefixes, including `за-` and `ви-`, are a primary tool for creating perfective verbs from imperfective ones (Source 14). While `заходити/виходити` are already imperfective, the perfective partners `зайти/вийти` are understood as the result of a historical process where a prefix was added to a simple verb of motion (`йти`). The system is presented as a set of predictable "видові пари" (aspectual pairs), like `заходити – зайти` (Source 11).
+- **Aspectual Formation (Grade 7):** By Grade 7, the focus shifts to how prefixes, including `за-` and `ви-`, are a primary tool for creating perfective verbs from imperfective ones [S28]. While `заходити/виходити` are already imperfective, the perfective partners `зайти/вийти` are understood as the result of a historical process where a prefix was added to a simple verb of motion (`йти`). The system is presented as a set of predictable "видові пари" (aspectual pairs), like `заходити – зайти` [S29].
 
 The school approach is incremental:
 1.  See `зайти`/`вийти` as simple antonyms (go in/go out).
@@ -77,7 +76,7 @@ Perfective verbs describe a completed, single action with a result. They have on
 | вони | ви́йшли | ви́йдуть |
 * **Imperative:** `ви́йди` (ти), `ви́йдіть` (ви)
 
-From the perfective `зайти`, the noun `захід` (west, decline, event) is formed via the bezafixal method (Source 12, <!-- VERIFY -->).
+From the perfective `зайти`, the noun `захід` (west, decline, event) is formed via the bezafixal method ([S30],).
 
 ## Частотність і пріоритети
 For B1/B2 learners, the priority is mastering the perfective forms to narrate sequences of events.
@@ -111,9 +110,9 @@ Teaching Ukrainian verbs of motion requires careful distinction from Russian to 
 
 2.  **Verb System Independence:** Do not present the Ukrainian system as a "variant" of the Russian one. Ukrainian has its own rich system of aspectual pairs and prefixation. For instance, the use of `піти` as the general-purpose perfective for "to go" (`зайшов і пішов`) has nuances that differ from the Russian `пойти`. The curriculum must build on Ukrainian bases like `йти/ходити` -> `піти`, `зайти`, `вийти`.
 
-3.  **Avoid Russian-centric Examples:** Use authentic Ukrainian examples. For instance, instead of focusing on constructions that are identical to Russian, highlight uniquely Ukrainian or highly common Ukrainian phrases. A phrase like `вийти на зв'язок` (to get in touch) is a natural, modern Ukrainian expression (Source 9).
+3.  **Avoid Russian-centric Examples:** Use authentic Ukrainian examples. For instance, instead of focusing on constructions that are identical to Russian, highlight uniquely Ukrainian or highly common Ukrainian phrases. A phrase like `вийти на зв'язок` (to get in touch) is a natural, modern Ukrainian expression [S32].
 
-4.  **No Calques:** Avoid Russian calques (loan translations) in teaching materials. For example, while Russian might use a particular prefixed verb for a certain context, Ukrainian might use a different prefix or an entirely different verb. For example, the concept of "to turn out" or "to result in" is often expressed with `вийти` in Ukrainian (`вийшло дуже смачно` - Source 9), a usage which is very idiomatic and should be taught as a core Ukrainian pattern.
+4.  **No Calques:** Avoid Russian calques (loan translations) in teaching materials. For example, while Russian might use a particular prefixed verb for a certain context, Ukrainian might use a different prefix or an entirely different verb. For example, the concept of "to turn out" or "to result in" is often expressed with `вийти` in Ukrainian [S33], a usage which is very idiomatic and should be taught as a core Ukrainian pattern.
 
 5.  **Grammatical Terminology:** Use Ukrainian grammatical terms (`доконаний/недоконаний вид`, `префікс`) without reference to Russian equivalents. The goal is to build a conceptual framework for Ukrainian grammar on its own terms.
 
@@ -121,24 +120,24 @@ Teaching Ukrainian verbs of motion requires careful distinction from Russian to 
 These examples are sourced from textbooks, literature, and spoken language to demonstrate natural usage.
 
 **1. Літературний вхід і вихід (Literal Entry and Exit)**
-*   `Людина зайшла ще до одного хліва, потім ще до одного... Просто зайшла — і вийшла.` (Source 20) - A perfect example of a sequence of completed actions.
-*   `Я не злодій, щоб кидатися до нього вночі, – перебив його Вітька. – Що козак Чапля зробив би своєму супернику-сотнику? І побити добряче, щоб не посмів до Галі й у двір заходити.` (Source 27) - Using the imperfective `заходити` to forbid an action in general.
+*   `Людина зайшла ще до одного хліва, потім ще до одного... Просто зайшла — і вийшла.` [S34] - A perfect example of a sequence of completed actions.
+*   `Я не злодій, щоб кидатися до нього вночі, – перебив його Вітька. – Що козак Чапля зробив би своєму супернику-сотнику? І побити добряче, щоб не посмів до Галі й у двір заходити.` [S35] - Using the imperfective `заходити` to forbid an action in general.
 *   `За дверима почулися кроки, і за хвилину до хати зайшов листоноша.` <!-- VERIFY --> - A classic narrative sentence structure.
 *   `Коли він вийшов з кабінету, на нього вже чекали журналісти.` <!-- VERIFY --> - Using the perfective `вийшов` to establish a point in time.
 
 **2. Вказівки та прохання (Directions and Requests)**
 *   `Зайдіть, будь ласка, до кабінету №5.` <!-- VERIFY --> - A standard polite command.
 *   `Вийдіть з вагона, не затримуйте поїзд.` <!-- VERIFY --> - A common public transport announcement.
-*   `Щоб потрапити на пошту, вам треба зайти в цю будівлю і піднятися на другий поверх.` (Based on Source 4)
+*   `Щоб потрапити на пошту, вам треба зайти в цю будівлю і піднятися на другий поверх.` (Based on [S36])
 
 **3. Переносне значення (Figurative Meaning)**
-*   `Народ заблудив у лісі й не може знайти стежки, щоб вийти з темряви на світло.` (Source 19) - "To emerge from darkness into light."
-*   `Дуже важливо виходити із зони комфорту, щоб розвиватися.` (Source 10) - "To get out of your comfort zone."
-*   `О котрій ти зможеш вийти на зв'язок?` (Source 9) - "When can you get in touch/online?"
-*   `Він вийшов сухим із води.` (Source 5) - Idiom: "He got away with it / emerged unscathed."
+*   `Народ заблудив у лісі й не може знайти стежки, щоб вийти з темряви на світло.` [S37] - "To emerge from darkness into light."
+*   `Дуже важливо виходити із зони комфорту, щоб розвиватися.` [S38] - "To get out of your comfort zone."
+*   `О котрій ти зможеш вийти на зв'язок?` [S32] - "When can you get in touch/online?"
+*   `Він вийшов сухим із води.` [S39] - Idiom: "He got away with it / emerged unscathed."
 
 **4. Результат дії (Result of an Action)**
-*   `Так Леся мені радила, і вийшло дуже смачно.` (Source 9) - "And it turned out very tasty." The action resulted in something.
+*   `Так Леся мені радила, і вийшло дуже смачно.` [S32] - "And it turned out very tasty." The action resulted in something.
 *   `З цієї ідеї нічого доброго не вийде.` <!-- VERIFY --> - "Nothing good will come of this idea."
 
 ## Рекомендації для вправ (Activity Concepts)

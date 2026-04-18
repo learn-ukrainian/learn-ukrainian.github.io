@@ -1,0 +1,57 @@
+# Source registry for wiki/folk/ritual/rusalni-pisni.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S11
+  file: unknown
+  type: unknown
+  preserved_from_meta: true
+- id: S12
+  file: 6-klas-ukrlit-zabolotnyi-2023_s0045
+  type: textbook
+  preserved_from_meta: true
+- id: S13
+  file: ext-imtgsh-68
+  type: external
+  preserved_from_meta: true
+- id: S14
+  file: fbf8bdff_c0527
+  type: literary
+  preserved_from_meta: true
+- id: S15
+  file: 9976239a_c0367
+  type: literary
+  preserved_from_meta: true
+- id: S16
+  file: 9976239a_c0817
+  type: literary
+  preserved_from_meta: true
+- id: S17
+  file: 'Wikipedia: Обрядові та обрядово-календарні пісні'
+  type: wiki
+- id: S18
+  file: 'Wikipedia: Слов''янська міфологія'
+  type: wiki
+- id: S19
+  file: 6-klas-ukrlit-zabolotnyi-2023_s0015
+  type: textbook
+- id: S20
+  file: ext-imtgsh-39
+  type: external
+- id: S21
+  file: fbf8bdff_c0511
+  type: literary
+- id: S22
+  file: 'Wikipedia: Гнідич Павло Олександрович'
+  type: wiki
+- id: S23
+  file: 6890007d_c0032
+  type: literary
+- id: S24
+  file: ext-ulp_youtube-175
+  type: external
+- id: S25
+  file: ext-imtgsh-69
+  type: external
+- id: S26
+  file: ext-komik_istoryk-66
+  type: external

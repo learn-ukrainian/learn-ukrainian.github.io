@@ -4,7 +4,6 @@
 slug: euphony
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: ["ext-ulp_youtube-246", "5-klas-ukrmova-litvinova-2022_s0183", "5-klas-ukrmova-litvinova-2022_s0266", "ext-ulp_youtube-237", "ext-ulp_youtube-243", "2-klas-ukrmova-bolshakova-2019-2_s0033", "7-klas-ukrmova-zabolotnyi-2024_s0241", "6-klas-ukrmova-betsa-2023_s0109", "Source 1", "ext-komik_istoryk-73", "ext-ulp_youtube-197", "8-klas-ukrmova-avramenko-2025_s0057", "4-klas-ukrmova-zaharijchuk_s0011", "8-klas-istoria-ukr-galimov-2025_s0049", "8-klas-istoria-ukr-hlibovska-2025_s0089", "8-klas-istoria-ukr-schupak-2025_s0311", "Source 12", "Source 13", "Source 14", "Source 15", "ext-realna_istoria-129", "ext-realna_istoria-121", "3-klas-ukrainska-mova-ponomarova-2020-1_s0147", "11-klas-ukrajinska-literatura-avramenko-2019_s0191", "9-klas-ukrajinska-mova-voron-2017_s0204", "2-klas-ukrmova-vashulenko-2019-1_s0051", "9-klas-ukrajinska-literatura-mishhenko-2017_s0125", "11-klas-ukrajinska-mova-glazova-2019_s0239", "7-klas-istoria-ukr-galimov-2024_s0279"]
 compiled: 2026-04-07
 -->
 

@@ -1,0 +1,109 @@
+# Source registry for wiki/academic/c1/hyperbole-litotes.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S11
+  file: Source 1
+  type: unknown
+  preserved_from_meta: true
+- id: S12
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0308
+  type: textbook
+  preserved_from_meta: true
+- id: S13
+  file: 8-klas-ukrmova-avramenko-2025_s0049
+  type: textbook
+  preserved_from_meta: true
+- id: S14
+  file: Source 5
+  type: unknown
+  preserved_from_meta: true
+- id: S15
+  file: Source 6
+  type: unknown
+  preserved_from_meta: true
+- id: S16
+  file: Source 9
+  type: unknown
+  preserved_from_meta: true
+- id: S17
+  file: ext-ulp_youtube-166
+  type: external
+  preserved_from_meta: true
+- id: S18
+  file: ext-imtgsh-104
+  type: external
+  preserved_from_meta: true
+- id: S19
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0019
+  type: textbook
+  preserved_from_meta: true
+- id: S20
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0019
+  type: textbook
+  preserved_from_meta: true
+- id: S21
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0283
+  type: textbook
+  preserved_from_meta: true
+- id: S22
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0009
+  type: textbook
+  preserved_from_meta: true
+- id: S23
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0003
+  type: textbook
+  preserved_from_meta: true
+- id: S24
+  file: unknown
+  type: unknown
+  preserved_from_meta: true
+- id: S25
+  file: ext-ulp_youtube-90
+  type: external
+  preserved_from_meta: true
+- id: S26
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0086
+  type: textbook
+  preserved_from_meta: true
+- id: S27
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0086
+  type: textbook
+  preserved_from_meta: true
+- id: S28
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0288
+  type: textbook
+  preserved_from_meta: true
+- id: S29
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  type: textbook
+  preserved_from_meta: true
+- id: S30
+  file: '1'
+  type: unknown
+- id: S31
+  file: 8-klas-ukrlit-avramenko-2025_s0038
+  type: textbook
+- id: S32
+  file: 11-klas-ukrajinska-mova-voron-2019_s0042
+  type: textbook
+- id: S33
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0010
+  type: textbook
+- id: S34
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0003
+  type: textbook
+- id: S35
+  file: Source 8
+  type: unknown
+- id: S36
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0002
+  type: textbook
+- id: S37
+  file: хоча це приклад мовної стійкості
+  type: unknown
+- id: S38
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0436
+  type: textbook
+- id: S39
+  file: Source 7
+  type: unknown

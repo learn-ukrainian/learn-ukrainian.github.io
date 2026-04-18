@@ -4,7 +4,6 @@
 slug: i-eat-i-drink
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: [5-klas-ukrmova-uhor-2022-1_s0022, 6-klas-ukrmova-betsa-2023_s0206, ext-ulp_youtube-255, 1-klas-bukvar-bolshakova-2018-1_s0072, ext-ulp_youtube-119, 5-klas-ukrmova-litvinova-2022_s0219, 11-klas-ukrajinska-mova-glazova-2019_s0120, ext-ulp_youtube-117, ext-ulp_youtube-52, 3-klas-ukrainska-mova-ponomarova-2020-1_s0008, ext-ulp_youtube-80, ext-ulp_youtube-123, 2-klas-ukrmova-bolshakova-2019-2_s0076, ext-article-0, ext-article-1, ext-article-2, ext-article-3, ext-article-4, ext-video-5]
 compiled: 2026-04-07
 -->
 

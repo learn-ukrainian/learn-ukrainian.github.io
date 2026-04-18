@@ -1,0 +1,37 @@
+# Source registry for wiki/grammar/a2/aspect-concept.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S11
+  file: ext-ulp_youtube-87
+  type: external
+  preserved_from_meta: true
+- id: S12
+  file: 7-klas-ukrmova-avramenko-2024_s0064
+  type: textbook
+- id: S13
+  file: 6-klas-ukrmova-betsa-2023_s0224
+  type: textbook
+- id: S14
+  file: ext-other_blogs-43
+  type: external
+- id: S15
+  file: ext-ulp_youtube-209
+  type: external
+- id: S16
+  file: 10-klas-ukrmova-karaman-2018_s0324
+  type: textbook
+- id: S17
+  file: ext-ulp_youtube-212
+  type: external
+- id: S18
+  file: ext-ulp_youtube-208
+  type: external
+- id: S19
+  file: ext-ulp_youtube-190
+  type: external
+- id: S20
+  file: ext-other_blogs-44
+  type: external
+- id: S21
+  file: ext-ulp_youtube-189
+  type: external

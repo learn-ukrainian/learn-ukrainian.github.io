@@ -1,0 +1,41 @@
+# Source registry for wiki/mastery/c2/corpus-linguistics.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S7
+  file: ext-ulp_youtube-28
+  type: external
+  preserved_from_meta: true
+- id: S8
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0449
+  type: textbook
+  preserved_from_meta: true
+- id: S9
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0172
+  type: textbook
+  preserved_from_meta: true
+- id: S10
+  file: 8-klas-istoria-ukr-galimov-2025_s0292
+  type: textbook
+  preserved_from_meta: true
+- id: S11
+  file: 6-klas-ukrmova-avramenko-2023_s0024
+  type: textbook
+  preserved_from_meta: true
+- id: S12
+  file: unknown
+  type: unknown
+- id: S13
+  file: 10-klas-ukrmova-karaman-2018_s0382
+  type: textbook
+- id: S14
+  file: ext-imtgsh-25
+  type: external
+- id: S15
+  file: mcp_rag_query_grac
+  type: unknown
+- id: S16
+  file: ext-realna_istoria-119
+  type: external
+- id: S17
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0008
+  type: textbook

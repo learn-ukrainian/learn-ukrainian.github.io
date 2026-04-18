@@ -1,0 +1,62 @@
+# Source registry for wiki/mastery/c2/literary-community.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: '{''Wikipedia'': ''Давня українська література''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S3
+  file: '{''Wikipedia'': ''Грецька література''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S4
+  file: '{''Wikipedia'': ''Пелешенко Юрій Володимирович''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S5
+  file: ext-realna_istoria-167
+  type: external
+  preserved_from_meta: true
+- id: S6
+  file: '{''Wikipedia'': ''Дім Химер (видавництво)''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S7
+  file: '{''Wikipedia'': ''Войтович Валерій Миколайович''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S8
+  file: '{''Wikipedia'': ''Українська музика''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S9
+  file: '{''Wikipedia'': ''Фольклор''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S10
+  file: '{''Wikipedia'': ''Холодний Яр (фестиваль)''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S11
+  file: '{''Wikipedia'': ''Мистецтво Удмуртії''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S12
+  file: ext-ulp_youtube-264
+  type: external
+  preserved_from_meta: true
+- id: S13
+  file: ext-realna_istoria-58
+  type: external
+  preserved_from_meta: true
+- id: S14
+  file: ext-realna_istoria-164
+  type: external
+  preserved_from_meta: true
+- id: S15
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0120
+  type: textbook
+  preserved_from_meta: true
+- id: S16
+  file: 11-klas-istoriya-ukr-gisem-2024_s0145
+  type: textbook

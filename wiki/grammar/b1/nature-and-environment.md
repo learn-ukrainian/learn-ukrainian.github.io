@@ -4,7 +4,6 @@
 slug: b1-grammar-nature-and-environment
 domain: grammar/b1
 tracks: [b1, b2]
-sources: [ext-ulp_youtube-175, ext-ulp_youtube-174, ext-ulp_youtube-167, ext-ulp_youtube-7, 8-klas-ukrmova-avramenko-2025_s0176, ext-istoria_movy-12, ext-ulp_youtube-32, 5-klas-ukrmova-zabolotnyi-2023_s0231, 8-klas-ukrmova-zabolotnyi-2025_s0292, 8-klas-ukrmova-avramenko-2025_s0062, 7-klas-ukrmova-zabolotnyi-2024_s0259, 5-klas-ukrmova-zabolotnyi-2023_s0174, 5-klas-ukrmova-zabolotnyi-2023_s0230, 5-klas-ukrmova-zabolotnyi-2023_s0024, ext-ulp_youtube-288, ext-ulp_youtube-69, 3-klas-ukrainska-mova-vashulenko-2020-1_s0111, 5-klas-ukrlit-avramenko-2022_s0170, 7-klas-ukrmova-zabolotnyi-2024_s0255, 8-klas-ukrmova-avramenko-2025_s0138, 6-klas-ukrmova-zabolotnyi-2020_s0249, 5-klas-ukrmova-golub-2022_s0183, 11-klas-ukrajinska-mova-glazova-2019_s0280, 9-klas-ukrajinska-mova-zabolotnij-2017_s0285, 11-klas-ukrajinska-mova-avramenko-2019_s0021, 5-klas-ukrmova-avramenko-2022_s0073, 5-klas-ukrmova-avramenko-2022_s0074, 8-klas-ukrlit-zabolotnyi-2025_s0169, 8-klas-ukrmova-avramenko-2025_s0207, 6-klas-ukrmova-betsa-2023_s0011, 7-klas-ukrlit-zabolotnyi-2024_s0339, 11-klas-ukrlit-borzenko-2019-prof_s0056, 5-klas-ukrmova-zabolotnyi-2023_s0244, 9-klas-ukrajinska-mova-zabolotnij-2017_s0340, 2-klas-ukrmova-bolshakova-2019-2_s0064, 6-klas-ukrmova-golub-2023_s0209, 3-klas-ukrainska-mova-kravtsova-2020-1_s0051, 5-klas-ukrmova-uhor-2022-1_s0024, 5-klas-ukrmova-uhor-2022-1_s0027, 3-klas-ukrainska-mova-vashulenko-2020-2_s0116]
 compiled: 2026-04-07
 -->
 

@@ -1,0 +1,61 @@
+# Source registry for wiki/academic/c1/euphemism-taboo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S11
+  file: Source 2
+  type: unknown
+  preserved_from_meta: true
+- id: S12
+  file: Source 3
+  type: unknown
+  preserved_from_meta: true
+- id: S13
+  file: Source 4
+  type: unknown
+  preserved_from_meta: true
+- id: S14
+  file: ext-istoria_movy-68
+  type: external
+  preserved_from_meta: true
+- id: S15
+  file: Source 7
+  type: unknown
+  preserved_from_meta: true
+- id: S16
+  file: ext-ulp_youtube-166
+  type: external
+  preserved_from_meta: true
+- id: S17
+  file: ext-ulp_youtube-158
+  type: external
+  preserved_from_meta: true
+- id: S18
+  file: Source 1
+  type: unknown
+- id: S19
+  file: Source 8
+  type: unknown
+- id: S20
+  file: ext-komik_istoryk-28
+  type: external
+- id: S21
+  file: ext-istoria_movy-37
+  type: external
+- id: S22
+  file: ext-ulp_youtube-2
+  type: external
+- id: S23
+  file: 5-klas-istoriya-schupak-2022_s0107
+  type: textbook
+- id: S24
+  file: ext-ulp_youtube-29
+  type: external
+- id: S25
+  file: 5-klas-ukrlit-zabolotnyi-2022_s0004
+  type: textbook
+- id: S26
+  file: 11-klas-ukrajinska-mova-voron-2019_s0346
+  type: textbook
+- id: S27
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0301
+  type: textbook

@@ -4,7 +4,6 @@
 slug: text-register-informal
 domain: grammar/b1
 tracks: [b1, b2]
-sources: [ext-ulp_youtube-171, 10-klas-ukrmova-karaman-2018_s0413, 10-klas-ukrmova-karaman-2018_s0407, 7-klas-ukrmova-avramenko-2024_s0019, ext-other_blogs-59, ext-istoria_movy-9, ext-ulp_youtube-15, ext-realna_istoria-110, 9-klas-ukrajinska-mova-voron-2017_s0131, 7-klas-ukrmova-zabolotnyi-2024_s0236, 11-klas-ukrajinska-mova-avramenko-2019_s0228, 6-klas-ukrmova-zabolotnyi-2020_s0030, 9-klas-ukrajinska-mova-avramenko-2017_s0041, 11-klas-ukrajinska-mova-glazova-2019_s0238, 10-klas-ukrmova-karaman-2018_s0180, 10-klas-ukrmova-karaman-2018_s0415, 7-klas-ukrmova-zabolotnyi-2024_s0278, 8-klas-ukrmova-zabolotnyi-2025_s0322, 10-klas-ukrmova-karaman-2018_s0210, 6-klas-ukrmova-avramenko-2023_s0033]
 compiled: 2026-04-07
 -->
 

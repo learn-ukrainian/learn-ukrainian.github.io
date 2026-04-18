@@ -1,0 +1,83 @@
+# Source registry for wiki/folk/genres/charivni-kazky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S17
+  file: Source 1
+  type: unknown
+  preserved_from_meta: true
+- id: S18
+  file: Source 9
+  type: unknown
+  preserved_from_meta: true
+- id: S19
+  file: ext-ulp_youtube-19
+  type: external
+  preserved_from_meta: true
+- id: S20
+  file: ext-imtgsh-68
+  type: external
+  preserved_from_meta: true
+- id: S21
+  file: 68ba0555_c0027
+  type: literary
+  preserved_from_meta: true
+- id: S22
+  file: 9d11296f_c0022
+  type: literary
+  preserved_from_meta: true
+- id: S23
+  file: 0570e4fe_c0001
+  type: literary
+  preserved_from_meta: true
+- id: S24
+  file: 5-klas-ukrlit-zabolotnyi-2022_s0105
+  type: textbook
+  preserved_from_meta: true
+- id: S25
+  file: fc2291b5_c5142
+  type: literary
+- id: S26
+  file: Source 6
+  type: unknown
+- id: S27
+  file: '[[slov-ianska-mifolohiia]]'
+  type: unknown
+- id: S28
+  file: Source 2
+  type: unknown
+- id: S29
+  file: 5-klas-ukrlit-avramenko-2022_s0074
+  type: textbook
+- id: S30
+  file: Source 5
+  type: unknown
+- id: S31
+  file: 5e7696fa_c0451
+  type: literary
+- id: S32
+  file: 5e7696fa_c0535
+  type: literary
+- id: S33
+  file: 5-klas-ukrlit-zabolotnyi-2022_s0073
+  type: textbook
+- id: S34
+  file: Source 7
+  type: unknown
+- id: S35
+  file: feaa5fa7_c0637
+  type: literary
+- id: S36
+  file: 5e7696fa_c0545
+  type: literary
+- id: S37
+  file: Source 8
+  type: unknown
+- id: S38
+  file: Source 4
+  type: unknown
+- id: S39
+  file: Source 3
+  type: unknown
+- id: S40
+  file: класифікація Аарне-Томпсона
+  type: unknown

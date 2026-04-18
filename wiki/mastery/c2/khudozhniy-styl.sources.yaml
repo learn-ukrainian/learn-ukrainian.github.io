@@ -1,0 +1,87 @@
+# Source registry for wiki/mastery/c2/khudozhniy-styl.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S13
+  file: '{''Wikipedia'': ''Мистецтво''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S14
+  file: '{''Wikipedia'': ''Федькович Осип-Юрій Адальбертович''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S15
+  file: '{''Wikipedia'': ''Франко Іван Якович''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S16
+  file: '{''Wikipedia'': ''Давня українська література''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S17
+  file: '{''Wikipedia'': ''Грецька література''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S18
+  file: '{''Wikipedia'': ''Дума''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S19
+  file: '{''Wikipedia'': ''Художня література''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S20
+  file: '{''Wikipedia'': ''У неділю рано…''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S21
+  file: '{''Wikipedia'': ''Танець модерн''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S22
+  file: '{''Wikipedia'': ''Література реалізму''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S23
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0294
+  type: textbook
+  preserved_from_meta: true
+- id: S24
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0293
+  type: textbook
+  preserved_from_meta: true
+- id: S25
+  file: ext-other_blogs-63
+  type: external
+- id: S26
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0291
+  type: textbook
+- id: S27
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0298
+  type: textbook
+- id: S28
+  file: 'Wikipedia: Художня література'
+  type: wiki
+- id: S29
+  file: 'Wikipedia: Мистецтво'
+  type: wiki
+- id: S30
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0219
+  type: textbook
+- id: S31
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0280
+  type: textbook
+- id: S32
+  file: 'Wikipedia: Дума'
+  type: wiki
+- id: S33
+  file: 'Wikipedia: Франко Іван Якович'
+  type: wiki
+- id: S34
+  file: 'Wikipedia: Давня українська література'
+  type: wiki
+- id: S35
+  file: 6-klas-ukrmova-golub-2023_s0130
+  type: textbook
+- id: S36
+  file: 'Wikipedia: У неділю рано…'
+  type: wiki

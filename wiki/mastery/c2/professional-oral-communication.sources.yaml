@@ -1,0 +1,77 @@
+# Source registry for wiki/mastery/c2/professional-oral-communication.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S19
+  file: Source 2
+  type: unknown
+  preserved_from_meta: true
+- id: S20
+  file: Source 4
+  type: unknown
+  preserved_from_meta: true
+- id: S21
+  file: Source 7
+  type: unknown
+  preserved_from_meta: true
+- id: S22
+  file: 5-klas-ukrmova-golub-2022_s0166
+  type: textbook
+  preserved_from_meta: true
+- id: S23
+  file: ext-imtgsh-72
+  type: external
+  preserved_from_meta: true
+- id: S24
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0060
+  type: textbook
+- id: S25
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0060
+  type: textbook
+- id: S26
+  file: Source 5
+  type: unknown
+- id: S27
+  file: Source 12
+  type: unknown
+- id: S28
+  file: Source 1
+  type: unknown
+- id: S29
+  file: Source 6
+  type: unknown
+- id: S30
+  file: 10-klas-ukrmova-glazova-2018_s0029
+  type: textbook
+- id: S31
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0212
+  type: textbook
+- id: S32
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0280
+  type: textbook
+- id: S33
+  file: ext-ulp_youtube-145
+  type: external
+- id: S34
+  file: ext-imtgsh-39
+  type: external
+- id: S35
+  file: Адаптовано з правил формального спілкування
+  type: unknown
+- id: S36
+  file: Стилістична норма
+  type: unknown
+- id: S37
+  file: Тарас Шевченко
+  type: unknown
+- id: S38
+  file: ext-imtgsh-140
+  type: external
+- id: S39
+  file: Про працю Ф. Колесси
+  type: unknown
+- id: S40
+  file: за аналогією з "дилемою в'язня
+  type: unknown
+- id: S41
+  file: Source 3
+  type: unknown

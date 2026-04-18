@@ -4,7 +4,6 @@
 slug: academic-speaking-practice
 domain: academic/c1
 tracks: [c1, c2]
-sources: [unknown, unknown, unknown, unknown, unknown, ext-imtgsh-146, ext-istoria_movy-25, ext-imtgsh-125, ext-ulp_youtube-176, 10-klas-ukrajinska-literatura-avramenko-2018_s0010, 11-klas-ukrajinska-mova-glazova-2019_s0285, 11-klas-ukrajinska-mova-glazova-2019_s0312, 10-klas-ukrmova-karaman-2018_s0449, 7-klas-ukrlit-mishhenko-2015_s0423, 10-klas-ukrmova-glazova-2018_s0030, 11-klas-ukrajinska-literatura-avramenko-2019_s0411, 5-klas-ukrmova-litvinova-2022_s0011, 10-klas-ukrmova-karaman-2018_s0384, 11-klas-ukrajinska-mova-voron-2019_s0323, 6-klas-ukrmova-golub-2023_s0012, 7-klas-istoria-ukr-galimov-2024_s0073, unknown, 6-klas-ukrmova-golub-2023_s0190, 8-klas-ukrlit-avramenko-2025_s0003, 10-klas-ukrajinska-mova-zabolotnij-2018_s0062, 10-klas-ukrmova-zabolotnyi-2018_s0062, 9-klas-ukrajinska-mova-zabolotnij-2017_s0259, 11-klas-istoriya-ukr-hlibovska-2024_s0337]
 compiled: 2026-04-07
 -->
 

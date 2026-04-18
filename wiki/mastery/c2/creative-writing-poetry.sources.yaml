@@ -1,0 +1,65 @@
+# Source registry for wiki/mastery/c2/creative-writing-poetry.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S15
+  file: ext-ulp_youtube-0
+  type: external
+  preserved_from_meta: true
+- id: S16
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0271
+  type: textbook
+  preserved_from_meta: true
+- id: S17
+  file: 10-klas-ukrmova-karaman-2018_s0397
+  type: textbook
+  preserved_from_meta: true
+- id: S18
+  file: 7-klas-ukrmova-litvinova-2024_s0140
+  type: textbook
+  preserved_from_meta: true
+- id: S19
+  file: 8-klas-ukrmova-avramenko-2025_s0004
+  type: textbook
+  preserved_from_meta: true
+- id: S20
+  file: ext-ulp_youtube-57
+  type: external
+- id: S21
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0016
+  type: textbook
+- id: S22
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0349
+  type: textbook
+- id: S23
+  file: unknown
+  type: unknown
+- id: S24
+  file: Максим Рильський
+  type: unknown
+- id: S25
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0058
+  type: textbook
+- id: S26
+  file: на прикладі удмуртської поезії
+  type: unknown
+- id: S27
+  file: 11-klas-istoriya-ukr-gisem-2024_s0148
+  type: textbook
+- id: S28
+  file: unknown-source-21
+  type: unknown
+- id: S29
+  file: ext-realna_istoria-171
+  type: external
+- id: S30
+  file: Ліна Костенко
+  type: unknown
+- id: S31
+  file: Григорій Верещагін
+  type: unknown
+- id: S32
+  file: Василь Симоненко
+  type: unknown
+- id: S33
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0330
+  type: textbook

@@ -4,7 +4,6 @@
 slug: plural-other-cases
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [ext-ulp_youtube-165, ext-ulp_youtube-16, ext-ulp_youtube-237, ext-istoria_movy-20, ext-istoria_movy-30, 3-klas-ukrainska-mova-savchenko-2020-2_s0111, ext-ulp_youtube-258, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0037, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0046, 6-klas-ukrmova-litvinova-2023_s0146, 6-klas-ukrmova-avramenko-2023_s0096, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0041, 6-klas-ukrmova-litvinova-2023_s0145, 4-klas-ukrayinska-mova-varzatska-2021-1_s0109, 6-klas-ukrmova-betsa-2023_s0230, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0079, 6-klas-ukrmova-litvinova-2023_s0170, 6-klas-ukrmova-betsa-2023_s0092, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0036, 4-klas-ukrayinska-mova-varzatska-2021-1_s0069, 6-klas-ukrmova-golub-2023_s0073, 4-klas-ukrayinska-mova-varzatska-2021-1_s0036, 6-klas-ukrmova-golub-2023_s0094, 6-klas-ukrmova-litvinova-2023_s0175, 11-klas-ukrajinska-mova-avramenko-2019_s0087, 8-klas-ukrmova-avramenko-2025_s0097, 2-klas-ukrmova-vashulenko-2019-1_s0067, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0057, 2-klas-ukrmova-kravcova-2019-2_s0057, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0044, ext-other_blogs-67, ext-other_blogs-46, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0035, 4-klas-ukrmova-zaharijchuk_s0053, 4-klas-ukrayinska-mova-varzatska-2021-1_s0047, 5-klas-ukrmova-avramenko-2022_s0158, 8-klas-ukrmova-zabolotnyi-2025_s0001, 5-klas-ukrmova-uhor-2022-1_s0080, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0046, 7-klas-ukrmova-zabolotnyi-2024_s0001, 6-klas-ukrmova-betsa-2023_s0124, 6-klas-ukrmova-betsa-2023_s0143, ext-other_blogs-0]
 compiled: 2026-04-07
 -->
 
@@ -12,15 +11,15 @@ compiled: 2026-04-07
 
 Ukrainian schools introduce noun declension (змінювання за відмінками) early, typically by Grade 3 or 4. The approach is foundational and builds iteratively.
 
-1.  **Core Concept (Grades 3-4)**: The initial introduction focuses on the concept that nouns change their endings to connect with other words in a sentence (Source 13, 32). This is taught through questions. Each of the seven cases is paired with specific questions (`хто? що?`, `кого? чого?`, etc.). Mnemonics are sometimes used to help students remember the order of the cases, such as "Нашого Ромчика Дивує Зебра — Оця Маленька Красуня" (Source 8).
+1.  **Core Concept (Grades 3-4)**: The initial introduction focuses on the concept that nouns change their endings to connect with other words in a sentence [S44][S45]. This is taught through questions. Each of the seven cases is paired with specific questions (`хто? що?`, `кого? чого?`, etc.). Mnemonics are sometimes used to help students remember the order of the cases, such as "Нашого Ромчика Дивує Зебра — Оця Маленька Красуня" [S46].
 
-2.  **Systematization (Grades 4-6)**: Instruction moves from simple question-answer pairs to systematic tables. Students learn to identify the case of a noun in a sentence by asking the correct question and observing its ending and any associated prepositions (Source 12, 19, 22). The distinction between direct (Називний) and indirect (усі інші) cases is established (Source 13, 35). Plural endings for Instrumental (`-ами`/`-ями`) and Locative (`-ах`/`-ях`) are explicitly taught (Source 20, 28).
+2.  **Systematization (Grades 4-6)**: Instruction moves from simple question-answer pairs to systematic tables. Students learn to identify the case of a noun in a sentence by asking the correct question and observing its ending and any associated prepositions [S47][S48][S49]. The distinction between direct (Називний) and indirect (усі інші) cases is established [S44][S50]. Plural endings for Instrumental (`-ами`/`-ями`) and Locative (`-ах`/`-ях`) are explicitly taught [S51][S52].
 
 3.  **Distinguishing Similar Cases (Grade 4 onwards)**: Textbooks provide specific strategies for distinguishing cases that have similar forms or questions.
-    *   **Dative vs. Locative**: Though endings can be identical in the singular (e.g., `(на) білочці`), they are differentiated by meaning and prepositions. The Dative case often indicates the recipient of an action and is usually used without a preposition, while the Locative case indicates location and *always* requires a preposition (`у`, `на`, `по`) (Source 9, 37).
-    *   **Nominative vs. Accusative**: For inanimate nouns, these cases can look identical. The key differentiator is the noun's function in the sentence: a noun in the Nominative case is the subject, whereas in the Accusative case it is a direct object (Source 30, 42).
+    *   **Dative vs. Locative**: Though endings can be identical in the singular (e.g., `(на) білочці`), they are differentiated by meaning and prepositions. The Dative case often indicates the recipient of an action and is usually used without a preposition, while the Locative case indicates location and *always* requires a preposition (`у`, `на`, `по`) [S53][S54].
+    *   **Nominative vs. Accusative**: For inanimate nouns, these cases can look identical. The key differentiator is the noun's function in the sentence: a noun in the Nominative case is the subject, whereas in the Accusative case it is a direct object [S55][S56].
 
-4.  **Complexities (Grades 6-8)**: Older grades delve into the finer points, such as the declension patterns of different noun groups (тверда, м'яка, мішана) (Source 39, 40), the complexities of the Genitive plural endings (Source 39), and the declension of nouns that only exist in the plural (*pluralia tantum*) like `Карпати`, `окуляри`, `гроші` (Source 23, 24). The concept of syntactic government (керування), where a verb or preposition dictates the case of a noun, is also formally introduced (Source 15, 25).
+4.  **Complexities (Grades 6-8)**: Older grades delve into the finer points, such as the declension patterns of different noun groups (тверда, м'яка, мішана) [S57][S58], the complexities of the Genitive plural endings [S57], and the declension of nouns that only exist in the plural (*pluralia tantum*) like `Карпати`, `окуляри`, `гроші` [S59][S60]. The concept of syntactic government (керування), where a verb or preposition dictates the case of a noun, is also formally introduced [S61][S62].
 
 The overall pedagogy is structured and consistent: introduce the concept with questions, provide clear tables, practice with sentence analysis and transformation exercises, and then address exceptions and similar-looking forms with targeted rules.
 
@@ -45,12 +44,12 @@ These tables cover the vast majority of masculine, feminine, and neuter nouns.
 *(Paradigms compiled from Sources 35, 39, 41, and 33)*
 
 **Key Observations:**
-*   **Genitive Plural (`-ів`, `-ей`, `-ок`)**: This is the most complex case. Common endings are `-ів` (for many masculine/neuter nouns like `друзів`, `морів`), `-ей` (for some like `коней`, `гостей`), or a **zero-ending** (`-ø`), often with a vowel change (`річка` -> `річок`, `нога` -> `ніг`) (Source 39).
-*   **Dative (`-ам`, `-ям`)**: Very regular. Ends in `-ам` after a hard consonant and `-ям` after a soft one (Source 39).
-*   **Accusative (Animate vs. Inanimate)**: For inanimate nouns (`річки`, `міста`), the form is identical to the Nominative. For animate nouns (`друзі`, `коні`), the form is identical to the Genitive (Source 30, 41).
-*   **Instrumental (`-ами`, `-ями`, `-ми`)**: Mostly regular with `-ами`/`-ями`. However, a small but common group of masculine nouns uses the ending `-ми` (e.g., `кіньми`, `гістьми`, `чобітьми`). The form `дверима` (doors) is also common (Source 24, 41).
-*   **Locative (`-ах`, `-ях`)**: Very regular. Always used with a preposition (`на`, `у`, `по`) (Source 28, 37).
-*   **Vocative**: In the plural, the Vocative is almost always identical to the Nominative (Source 22, 35).
+*   **Genitive Plural (`-ів`, `-ей`, `-ок`)**: This is the most complex case. Common endings are `-ів` (for many masculine/neuter nouns like `друзів`, `морів`), `-ей` (for some like `коней`, `гостей`), or a **zero-ending** (`-ø`), often with a vowel change (`річка` -> `річок`, `нога` -> `ніг`) [S57].
+*   **Dative (`-ам`, `-ям`)**: Very regular. Ends in `-ам` after a hard consonant and `-ям` after a soft one [S57].
+*   **Accusative (Animate vs. Inanimate)**: For inanimate nouns (`річки`, `міста`), the form is identical to the Nominative. For animate nouns (`друзі`, `коні`), the form is identical to the Genitive [S55][S63].
+*   **Instrumental (`-ами`, `-ями`, `-ми`)**: Mostly regular with `-ами`/`-ями`. However, a small but common group of masculine nouns uses the ending `-ми` (e.g., `кіньми`, `гістьми`, `чобітьми`). The form `дверима` (doors) is also common [S60][S63].
+*   **Locative (`-ах`, `-ях`)**: Very regular. Always used with a preposition (`на`, `у`, `по`) [S52][S54].
+*   **Vocative**: In the plural, the Vocative is almost always identical to the Nominative [S49][S50].
 
 ### Pluralia Tantum (Іменники, що мають лише форму множини)
 A number of common nouns exist only in the plural. They follow similar declension patterns.
@@ -72,8 +71,8 @@ A number of common nouns exist only in the plural. They follow similar declensio
 For A2 learners, not all cases are used with equal frequency in plural forms. The goal is communication, so focus should be on the most common patterns.
 
 1.  **Priority 1: Locative & Instrumental**
-    *   **Locative (`-ах`/`-ях`)**: Essential for talking about location. Phrases like `в Карпатах` (Source 3), `на канікулах` (Source 11), `у містах` (Source 1) are extremely common. The pattern is highly regular and provides a high return on investment.
-    *   **Instrumental (`-ами`/`-ями`)**: Crucial for expressing "with...". The phrase `з друзями` (with friends) is ubiquitous in texts about social activities (Source 1, 6). The pattern is also very regular.
+    *   **Locative (`-ах`/`-ях`)**: Essential for talking about location. Phrases like `в Карпатах` [S64], `на канікулах` [S65], `у містах` [S66] are extremely common. The pattern is highly regular and provides a high return on investment.
+    *   **Instrumental (`-ами`/`-ями`)**: Crucial for expressing "with...". The phrase `з друзями` (with friends) is ubiquitous in texts about social activities [S66][S67]. The pattern is also very regular.
 
 2.  **Priority 2: Genitive & Accusative (Animate)**
     *   **Genitive Plural (`-ів`, zero ending)**: Necessary for expressing absence (`немає друзів`, `немає проблем`), quantity (`багато друзів`, `кілька місяців`), and belonging (`свято для дітей`). The zero-ending with vowel changes (`книжка` -> `книжок`) is challenging but frequent. The `-ів` ending is very common for masculine nouns.
@@ -88,23 +87,23 @@ English speakers often struggle with cases in general. Here are specific pitfall
 
 | ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
-| Я був в **Карпати**. | Я був в **Карпатах**. | This is a direct transfer from English syntax, which does not change the noun form after a preposition like "in". The Locative case (`-ах`/`-ях`) is mandatory after prepositions of location like `в` and `на` (Source 3, 37). |
-| Я не маю **книги**. | Я не маю **книжок** / **книг**. | The Genitive plural is often a zero-ending, frequently requiring a vowel insertion (`книжка -> книжок`) for ease of pronunciation. Simply using the Genitive singular form is a common error (Source 39). |
-| Я бачу мої **друзі**. | Я бачу моїх **друзів**. | Learners forget that the Accusative case for animate nouns is identical to the Genitive case, not the Nominative. `Друзі` is "who/what" (subject), but `друзів` is "whom/what" (object) (Source 39, 41). |
-| Ми говорили **з друзі**. | Ми говорили **з друзями**. | Forgetting to apply the Instrumental case ending `-ами`/`-ями` after the preposition `з` ("with") is a typical mistake. The noun must change to show its role in the phrase (Source 1, 35). |
-| Ми їхали по **полям**. | Ми їхали по **полях**. | This is a classic Russism. In Russian, the Dative plural (`по полям`) is used after `по`. In Ukrainian, the Locative plural (`по полях`) is correct for movement across a surface (Source 20). |
+| Я був в **Карпати**. | Я був в **Карпатах**. | This is a direct transfer from English syntax, which does not change the noun form after a preposition like "in". The Locative case (`-ах`/`-ях`) is mandatory after prepositions of location like `в` and `на` [S64][S54]. |
+| Я не маю **книги**. | Я не маю **книжок** / **книг**. | The Genitive plural is often a zero-ending, frequently requiring a vowel insertion (`книжка -> книжок`) for ease of pronunciation. Simply using the Genitive singular form is a common error [S57]. |
+| Я бачу мої **друзі**. | Я бачу моїх **друзів**. | Learners forget that the Accusative case for animate nouns is identical to the Genitive case, not the Nominative. `Друзі` is "who/what" (subject), but `друзів` is "whom/what" (object) [S57][S63]. |
+| Ми говорили **з друзі**. | Ми говорили **з друзями**. | Forgetting to apply the Instrumental case ending `-ами`/`-ями` after the preposition `з` ("with") is a typical mistake. The noun must change to show its role in the phrase [S66][S50]. |
+| Ми їхали по **полям**. | Ми їхали по **полях**. | This is a classic Russism. In Russian, the Dative plural (`по полям`) is used after `по`. In Ukrainian, the Locative plural (`по полях`) is correct for movement across a surface [S51]. |
 
 ## Деколонізаційні застереження (Decolonization Notes)
 
 It is critical to teach Ukrainian grammar on its own terms, not as a variant of Russian. The two languages, while related, have followed different evolutionary paths from Proto-Slavic, resulting in significant structural differences.
 
-1.  **The `по` + Locative Rule**: The most common L2 error influenced by Russian is the use of the preposition `по`. In Ukrainian, when `по` indicates movement across a surface or distribution, it requires the **Locative** case: `ходити по магазинах`, `гуляти по полях`. In Russian, this construction uses the Dative case (`ходить по магазинам`). Explicitly teaching `по + М.в.` as the Ukrainian standard is a crucial decolonization point (Source 20).
+1.  **The `по` + Locative Rule**: The most common L2 error influenced by Russian is the use of the preposition `по`. In Ukrainian, when `по` indicates movement across a surface or distribution, it requires the **Locative** case: `ходити по магазинах`, `гуляти по полях`. In Russian, this construction uses the Dative case (`ходить по магазинам`). Explicitly teaching `по + М.в.` as the Ukrainian standard is a crucial decolonization point [S51].
 
-2.  **Instrumental Plural `-ми`**: Ukrainian has preserved an archaic Instrumental plural ending `-ми` for a specific group of nouns (mostly 2nd and 4th declension), such as `кіньми`, `гістьми`, `дверима`, `грошима`. While parallel forms with `-ами`/`-ями` (`грошима`) sometimes exist, the `-ми` form is distinctly Ukrainian and should be presented as a normal, living feature of the language, not a strange exception (Source 41, 24). In modern Russian, this ending is largely considered archaic or poetic.
+2.  **Instrumental Plural `-ми`**: Ukrainian has preserved an archaic Instrumental plural ending `-ми` for a specific group of nouns (mostly 2nd and 4th declension), such as `кіньми`, `гістьми`, `дверима`, `грошима`. While parallel forms with `-ами`/`-ями` (`грошима`) sometimes exist, the `-ми` form is distinctly Ukrainian and should be presented as a normal, living feature of the language, not a strange exception [S63][S60]. In modern Russian, this ending is largely considered archaic or poetic.
 
 3.  **Genitive Plural Variations**: The formation of the Genitive plural in Ukrainian, with its complex system of vowel alternations (`нога` -> `ніг`), inserted vowels (`земля` -> `земель`), and varied endings (`-ів`, `-ей`, zero), is a unique feature. It should not be simplified or taught using Russian models, which have their own (different) set of complexities. The Ukrainian system must be learned from Ukrainian examples.
 
-4.  **Vocabulary Choice**: Use authentically Ukrainian vocabulary in examples. Avoid words that are calques or direct loans from Russian when a native Ukrainian equivalent exists. For instance, in social contexts, use `зустрічатися з друзями` (Source 1) rather than constructions that might mirror Russian phrasing.
+4.  **Vocabulary Choice**: Use authentically Ukrainian vocabulary in examples. Avoid words that are calques or direct loans from Russian when a native Ukrainian equivalent exists. For instance, in social contexts, use `зустрічатися з друзями` [S66] rather than constructions that might mirror Russian phrasing.
 
 Presenting Ukrainian as a self-contained system with its own logic is the core of a decolonized pedagogical approach.
 
@@ -113,27 +112,27 @@ Presenting Ukrainian as a self-contained system with its own logic is the core o
 These examples are taken from authentic Ukrainian sources and demonstrate the natural use of plural cases in context.
 
 **Group 1: Locative (`-ах`/`-ях`) - Talking about location**
-*   "Взимку в Києві дуже багато [цікавих подій], наприклад, в **театрах** і **операх** є багато вистав." (In winter in Kyiv there are many [interesting events], for example, in the theaters and operas there are many shows.) (Source 1)
-*   "В українських **селах** на Різдво ставили не ялинку, а дідух." (In Ukrainian villages at Christmas, they used to put up not a Christmas tree, but a didukh.) (Source 10)
-*   "...а ще в **горах** ми збирали гриби." (...and also in the mountains we gathered mushrooms.) (Source 3)
+*   "Взимку в Києві дуже багато [цікавих подій], наприклад, в **театрах** і **операх** є багато вистав." (In winter in Kyiv there are many [interesting events], for example, in the theaters and operas there are many shows.) [S66]
+*   "В українських **селах** на Різдво ставили не ялинку, а дідух." (In Ukrainian villages at Christmas, they used to put up not a Christmas tree, but a didukh.) [S68]
+*   "...а ще в **горах** ми збирали гриби." (...and also in the mountains we gathered mushrooms.) [S64]
 
 **Group 2: Instrumental (`-ами`/`-ями`) - Doing things "with" people or things**
-*   "Зустрічайтеся частіше з **друзями**, ходіть в гості." (Meet more often with friends, visit each other.) (Source 1)
-*   "Він [дельфін] пригадав, як грався з **друзями** — дельфінами, як ми разом супроводжували кораблі." (He [the dolphin] remembered how he played with his friends—dolphins, how we accompanied ships together.) (Source 6)
-*   "Поїдь зі своїми **полками** поблизу мого полку." (Ride with your regiments near my regiment.) (Source 5)
+*   "Зустрічайтеся частіше з **друзями**, ходіть в гості." (Meet more often with friends, visit each other.) [S66]
+*   "Він [дельфін] пригадав, як грався з **друзями** — дельфінами, як ми разом супроводжували кораблі." (He [the dolphin] remembered how he played with his friends—dolphins, how we accompanied ships together.) [S67]
+*   "Поїдь зі своїми **полками** поблизу мого полку." (Ride with your regiments near my regiment.) [S69]
 
 **Group 3: Genitive (`-ів`, `-ей`, `-ø`) - Expressing quantity or absence**
-*   "Для **дітей** ти просто диво!" (For children, you are simply a miracle!) (Source 6)
-*   "Зараз у нас немає домашніх **тварин**." (Right now we don't have any pets.) (Source 7)
-*   "У нас є багато **видів** чаю." (We have many kinds of tea.) (Source 1)
+*   "Для **дітей** ти просто диво!" (For children, you are simply a miracle!) [S67]
+*   "Зараз у нас немає домашніх **тварин**." (Right now we don't have any pets.) [S70]
+*   "У нас є багато **видів** чаю." (We have many kinds of tea.) [S66]
 
 **Group 4: Accusative (Animate) - Direct objects that are alive**
-*   "Взимку ми підгодовуємо **птахів**." (In winter, we feed the birds.) (Source 30)
-*   "Я знаю, що ти зі своїми **друзями** завжди поспішаєш **людям** на допомогу." (I know that you and your friends always hurry to help people.) (Source 6) <!-- Note: Here 'людям' is Dative, but 'друзями' is Instrumental, showing case interplay -->
+*   "Взимку ми підгодовуємо **птахів**." (In winter, we feed the birds.) [S55]
+*   "Я знаю, що ти зі своїми **друзями** завжди поспішаєш **людям** на допомогу." (I know that you and your friends always hurry to help people.) [S67] <!-- Note: Here 'людям' is Dative, but 'друзями' is Instrumental, showing case interplay -->
 
 **Group 5: Dative (`-ам`/`-ям`) - Giving or helping people**
-*   "А ми, люди, чим віддячуємо **дельфінам** за їхню любов і відданість?" (And what about us, people, how do we thank the dolphins for their love and devotion?) (Source 6)
-*   "Моїм **батькам** дуже цікаво познайомитися з іноземцями." (It's very interesting for my parents to meet foreigners.) (Source 7)
+*   "А ми, люди, чим віддячуємо **дельфінам** за їхню любов і відданість?" (And what about us, people, how do we thank the dolphins for their love and devotion?) [S67]
+*   "Моїм **батькам** дуже цікаво познайомитися з іноземцями." (It's very interesting for my parents to meet foreigners.) [S70]
 
 ## Рекомендації для вправ (Activity Concepts)
 
@@ -141,7 +140,7 @@ A phased approach is best for internalizing plural cases.
 
 *   **Phase 1: Recognition & Identification (Input)**
     *   **Drill 1 (Case Matching)**: Given a list of plural nouns (`друзям`, `в горах`, `коней`, `книгами`), students match them to the correct case name and question (`Кому? Чому? -> Давальний`).
-    *   **Drill 2 (Sentence Highlighting)**: Provide a short text (like a dialogue from Source 3). Students must find and highlight all plural nouns and identify their case.
+    *   **Drill 2 (Sentence Highlighting)**: Provide a short text (like a dialogue from [S64]). Students must find and highlight all plural nouns and identify their case.
 
 *   **Phase 2: Controlled Production (Practice)**
     *   **Drill 3 (Fill-in-the-Blank)**: Provide sentences with a noun in the Nominative plural in parentheses. Students must write the correct form.

@@ -4,7 +4,6 @@
 slug: c2-certification-preparation
 domain: mastery/c2
 tracks: [c2]
-sources: [ext-wp_kontent-analiz, ext-wp_folklor, ext-wp_kompilyator, ext-wp_istorychnyy-mif, ext-wp_muzey-pyrohiv, 10-klas-ukrajinska-mova-avramenko-2018_s0308, ext-wp_dylema-vyaznya, ext-wp_naukov-shkola, ext-wp_muzychnyy-analiz, ext-wp_mif, ext-ulp_youtube-166, ext-ulp_youtube-19, ext-komik_istoryk-62, 11-klas-ukrajinska-mova-voron-2019_s0053, 11-klas-istoriya-ukr-gisem-2024_s0200, 11-klas-ukrajinska-mova-glazova-2019_s0227, 11-klas-istoriya-ukr-hlibovska-2024_s0284, 10-klas-ukrmova-karaman-2018_s0219, 8-klas-ukrlit-avramenko-2025_s0003, 11-klas-ukrajinska-mova-avramenko-2019_s0000]
 compiled: 2026-04-07
 -->
 

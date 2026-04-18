@@ -1,0 +1,32 @@
+# Source registry for wiki/academic/c1/case-studies.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S8
+  file: 7-klas-ukrmova-litvinova-2024_s0067
+  type: textbook
+  preserved_from_meta: true
+- id: S9
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0050
+  type: textbook
+  preserved_from_meta: true
+- id: S10
+  file: unknown
+  type: unknown
+- id: S11
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0065
+  type: textbook
+- id: S12
+  file: 10-klas-ukrmova-karaman-2018_s0016
+  type: textbook
+- id: S13
+  file: ext-ulp_youtube-36
+  type: external
+- id: S14
+  file: ext-imtgsh-102
+  type: external
+- id: S15
+  file: калька з "является злом
+  type: unknown
+- id: S16
+  file: ext-imtgsh-14
+  type: external

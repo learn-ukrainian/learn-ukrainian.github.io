@@ -4,7 +4,6 @@
 slug: what-happened
 domain: pedagogy/a1
 tracks: [a1, a2]
-sources: [ext-ulp_youtube-246, ext-ulp_youtube-277, ext-ulp_youtube-166, ext-ulp_youtube-30, ext-realna_istoria-164, ext-realna_istoria-29, ext-ulp_youtube-181, 6-klas-ukrlit-kovalenko-2023_s0133, ext-other_blogs-23, ext-istoria_movy-0, 5-klas-ukrmova-uhor-2022-1_s0063, 6-klas-ukrmova-betsa-2023_s0202, 8-klas-ukrmova-avramenko-2025_s0235, 4-klas-ukrmova-zaharijchuk_s0047, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0100, 3-klas-ukrainska-mova-savchenko-2020-2_s0041, 5-klas-ukrmova-uhor-2022-1_s0079, 4-klas-ukrayinska-mova-savchenko-2021-2_s0123, 7-klas-ukrmova-litvinova-2024_s0063, 3-klas-ukrainska-mova-vashulenko-2020-2_s0086, 2-klas-ukrmova-bolshakova-2019-1_s0010, 6-klas-ukrmova-betsa-2023_s0205, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0105, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0106, 5-klas-ukrmova-uhor-2022-1_s0049, 5-klas-ukrmova-uhor-2022-1_s0093, 5-klas-ukrmova-uhor-2022-1_s0012]
 compiled: 2026-04-07
 -->
 

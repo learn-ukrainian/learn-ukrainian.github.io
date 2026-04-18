@@ -1,0 +1,137 @@
+# Source registry for wiki/grammar/b1/adjectives-superlative.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S40
+  file: ext-ulp_youtube-166
+  type: external
+  preserved_from_meta: true
+- id: S41
+  file: 7-klas-ukrmova-zabolotnyi-2024_s0154
+  type: textbook
+  preserved_from_meta: true
+- id: S42
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0021
+  type: textbook
+  preserved_from_meta: true
+- id: S43
+  file: 10-klas-ukrmova-karaman-2018_s0354
+  type: textbook
+  preserved_from_meta: true
+- id: S44
+  file: 7-klas-ukrmova-avramenko-2024_s0154
+  type: textbook
+  preserved_from_meta: true
+- id: S45
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0077
+  type: textbook
+- id: S46
+  file: 6-klas-ukrmova-zabolotnyi-2020_s0139
+  type: textbook
+- id: S47
+  file: 7-klas-ukrmova-zabolotnyi-2024_s0021
+  type: textbook
+- id: S48
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0022
+  type: textbook
+- id: S49
+  file: 10-klas-ukrmova-karaman-2018_s0280
+  type: textbook
+- id: S50
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0043
+  type: textbook
+- id: S51
+  file: 6-klas-ukrmova-avramenko-2023_s0134
+  type: textbook
+- id: S52
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0025
+  type: textbook
+- id: S53
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0023
+  type: textbook
+- id: S54
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0041
+  type: textbook
+- id: S55
+  file: 6-klas-ukrmova-golub-2023_s0133
+  type: textbook
+- id: S56
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0036
+  type: textbook
+- id: S57
+  file: 6-klas-ukrmova-betsa-2023_s0121
+  type: textbook
+- id: S58
+  file: 10-klas-ukrmova-karaman-2018_s0277
+  type: textbook
+- id: S59
+  file: 6-klas-ukrmova-litvinova-2023_s0206
+  type: textbook
+- id: S60
+  file: 6-klas-ukrmova-golub-2023_s0134
+  type: textbook
+- id: S61
+  file: 6-klas-ukrmova-avramenko-2023_s0132
+  type: textbook
+- id: S62
+  file: 6-klas-ukrmova-zabolotnyi-2020_s0140
+  type: textbook
+- id: S63
+  file: 10-klas-ukrmova-karaman-2018_s0278
+  type: textbook
+- id: S64
+  file: unknown-source-36
+  type: unknown
+- id: S65
+  file: Г. Сковорода
+  type: unknown
+- id: S66
+  file: Нар. творчість
+  type: unknown
+- id: S67
+  file: unknown-source-38
+  type: unknown
+- id: S68
+  file: Сократ
+  type: unknown
+- id: S69
+  file: Л. Танюк
+  type: unknown
+- id: S70
+  file: Нар. тв.
+  type: unknown
+- id: S71
+  file: unknown-source-33
+  type: unknown
+- id: S72
+  file: але структура та сама
+  type: unknown
+- id: S73
+  file: Л. Смілянський
+  type: unknown
+- id: S74
+  file: 6-klas-ukrmova-litvinova-2023_s0205
+  type: textbook
+- id: S75
+  file: В. Ключевський
+  type: unknown
+- id: S76
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0324
+  type: textbook
+- id: S77
+  file: структура аналогічна
+  type: unknown
+- id: S78
+  file: Л. Костенко
+  type: unknown
+- id: S79
+  file: Леся Українка
+  type: unknown
+- id: S80
+  file: Д. Павличко
+  type: unknown
+- id: S82
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0045
+  type: textbook
+- id: S83
+  file: ext-ulp_youtube-199
+  type: external

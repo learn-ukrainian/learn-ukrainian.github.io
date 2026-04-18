@@ -1,0 +1,72 @@
+# Source registry for wiki/folk/tradition/kobzarstvo-fenomen.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S9
+  file: '{''Wikipedia'': ''Кобзар''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S10
+  file: '{''Wikipedia'': ''Румунська народна музика''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S11
+  file: ext-ulp_youtube-179
+  type: external
+  preserved_from_meta: true
+- id: S12
+  file: ext-imtgsh-19
+  type: external
+  preserved_from_meta: true
+- id: S13
+  file: ext-ulp_youtube-42
+  type: external
+  preserved_from_meta: true
+- id: S14
+  file: 2971c499_c0028
+  type: literary
+  preserved_from_meta: true
+- id: S15
+  file: c44f1207_c3532
+  type: literary
+  preserved_from_meta: true
+- id: S16
+  file: 4612aca8_c0016
+  type: literary
+  preserved_from_meta: true
+- id: S17
+  file: 11-klas-istoriya-ukr-galimov-2024_s0145
+  type: textbook
+  preserved_from_meta: true
+- id: S18
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0260
+  type: textbook
+  preserved_from_meta: true
+- id: S19
+  file: '{''Wikipedia'': ''Національна заслужена капела бандуристів України імені
+    Георгія Майбороди''}'
+  type: wiki
+  preserved_from_meta: true
+- id: S20
+  file: ukrainskyi-folklor
+  type: unknown
+- id: S21
+  file: '{''Wikipedia'': ''Геноцид''}'
+  type: wiki
+- id: S22
+  file: '{''Wikipedia'': ''Фольклор''}'
+  type: wiki
+- id: S23
+  file: '{''Wikipedia'': ''Кучугура-Кучеренко Іван Іович''}'
+  type: wiki
+- id: S24
+  file: a28fdbf4_c0261
+  type: literary
+- id: S25
+  file: '{''Wikipedia'': ''Історичний міф''}'
+  type: wiki
+- id: S26
+  file: ext-ulp_youtube-177
+  type: external
+- id: S27
+  file: ext-realna_istoria-168
+  type: external

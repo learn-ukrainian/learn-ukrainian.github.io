@@ -4,7 +4,6 @@
 slug: pluperfect-tense
 domain: grammar/b2
 tracks: [b2, c1]
-sources: [11-klas-ukrajinska-mova-glazova-2019_s0216, 6-klas-ukrmova-avramenko-2023_s0238, 11-klas-ukrajinska-mova-glazova-2019_s0083, 11-klas-ukrajinska-mova-glazova-2019_s0271, ext-imtgsh-125, ext-ulp_youtube-29, 11-klas-ukrajinska-mova-avramenko-2019_s0208, 8-klas-ukrmova-avramenko-2025_s0261, 11-klas-ukrajinska-mova-glazova-2019_s0265, 7-klas-ukrmova-zabolotnyi-2024_s0191, 10-klas-ukrmova-karaman-2018_s0247, 10-klas-ukrmova-glazova-2018_s0037, 11-klas-ukrajinska-mova-glazova-2019_s0227, 11-klas-ukrajinska-mova-glazova-2019_s0013, 11-klas-ukrajinska-mova-avramenko-2019_s0215, ext-other_blogs-58, ext-istoria_movy-12, ext-istoria_movy-70, ext-istoria_movy-61, 11-klas-ukrajinska-mova-glazova-2019_s0226, 10-klas-ukrajinska-mova-zabolotnij-2018_s0023, 5-klas-ukrmova-avramenko-2022_s0038, 5-klas-ukrmova-zabolotnyi-2023_s0239, 7-klas-ukrmova-avramenko-2024_s0185, 8-klas-ukrmova-zabolotnyi-2025_s0357, 10-klas-ukrmova-karaman-2018_s0327, 10-klas-ukrmova-zabolotnyi-2018_s0263, 4-klas-ukrmova-zaharijchuk_s0192, 5-klas-ukrmova-avramenko-2022_s0037, 5-klas-ukrmova-avramenko-2022_s0036, 5-klas-ukrmova-zabolotnyi-2023_s0047, 9-klas-ukrajinska-literatura-mishhenko-2017_s0004, 10-klas-ukrmova-karaman-2018_s0154, 11-klas-ukrajinska-mova-glazova-2019_s0120, 11-klas-ukrajinska-mova-glazova-2019_s0079, ext-other_blogs-48, ext-other_blogs-50]
 compiled: 2026-04-07
 -->
 
