@@ -405,6 +405,8 @@ def _build_parser() -> argparse.ArgumentParser:
                                    help="Exact sender model ID")
     ask_claude_parser.add_argument("--to-model", dest="to_model",
                                    help="Target model ID")
+    ask_claude_parser.add_argument("--review", action="store_true",
+                                   help="Prepend docs/review-protocol.md")
 
     # ask-codex
     ask_codex_parser = subparsers.add_parser("ask-codex", help="Send message AND invoke Codex (one-step; use '-' to read from stdin)")
@@ -424,6 +426,8 @@ def _build_parser() -> argparse.ArgumentParser:
                                   help="Run sync without timeout")
     ask_codex_parser.add_argument("--chain", nargs="+", metavar="ISSUE",
                                   help="Dispatch multiple GitHub issues sequentially (e.g. 1212 #1213 issue-1214)")
+    ask_codex_parser.add_argument("--review", action="store_true",
+                                  help="Prepend docs/review-protocol.md")
 
     # ask-gemini
     ask_gemini_parser = subparsers.add_parser("ask-gemini", help="Send message AND invoke Gemini (one-step)")
@@ -463,6 +467,8 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_gemini_parser.add_argument("--auth", dest="auth", default=None,
                                    choices=["auto", "subscription", "api-key", "api"],
                                    help="Gemini auth mode override for this invocation")
+    ask_gemini_parser.add_argument("--review", action="store_true",
+                                   help="Prepend docs/review-protocol.md")
 
     # converse — multi-turn conversation with Gemini
     converse_parser = subparsers.add_parser("converse", help="Multi-turn conversation with Gemini (includes history)")
@@ -604,8 +610,10 @@ def _handle_ask_claude(args):
     data = None
     if args.data:
         data = Path(args.data).read_text()
+    kwargs = {"review": True} if getattr(args, "review", False) else {}
     ask_claude(args.content, args.task_id, args.type, data,
-               args.new_session, args.from_llm, args.from_model, args.to_model)
+               args.new_session, args.from_llm, args.from_model, args.to_model,
+               **kwargs)
 
 
 def _handle_ask_codex(args):
@@ -618,17 +626,19 @@ def _handle_ask_codex(args):
         if args.task_id:
             raise SystemExit("ask-codex --chain derives issue task IDs automatically; omit --task-id")
         try:
+            kwargs = {"review": True} if getattr(args, "review", False) else {}
             ask_codex_chain(content, args.chain, args.type, data,
                             args.new_session, args.from_llm, args.from_model,
-                            args.to_model, args.no_timeout)
+                            args.to_model, args.no_timeout, **kwargs)
         except ValueError as exc:
             raise SystemExit(str(exc)) from exc
         return
     if not args.task_id:
         raise SystemExit("ask-codex requires --task-id unless --chain is used")
+    kwargs = {"review": True} if getattr(args, "review", False) else {}
     ask_codex(content, args.task_id, args.type, data,
               args.new_session, args.from_llm, args.from_model,
-              args.to_model, args.no_timeout)
+              args.to_model, args.no_timeout, **kwargs)
 
 
 def _handle_ask_gemini(args):
@@ -637,6 +647,7 @@ def _handle_ask_gemini(args):
     if args.data:
         data = Path(args.data).read_text()
     content = sys.stdin.read() if args.content == "-" else args.content
+    kwargs = {"review": True} if getattr(args, "review", False) else {}
     ask_gemini(content, args.task_id, args.type, data, args.model,
                getattr(args, 'from_model', None),
                getattr(args, 'async_mode', False),
@@ -647,7 +658,8 @@ def _handle_ask_gemini(args):
                getattr(args, 'allow_write', False),
                getattr(args, 'delimiters', None),
                getattr(args, 'no_github', False),
-               getattr(args, 'auth', None))
+               getattr(args, 'auth', None),
+               **kwargs)
 
 
 def main():

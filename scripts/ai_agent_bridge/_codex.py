@@ -89,19 +89,21 @@ def _resolve_codex_bridge_timeout(no_timeout: bool = False) -> int:
 def ask_codex(content: str, task_id: str | None = None, msg_type: str = "query",
               data: str | None = None, new_session: bool = False,
               from_llm: str = "gemini", from_model: str | None = None,
-              to_model: str | None = None, no_timeout: bool = False):
+              to_model: str | None = None, no_timeout: bool = False,
+              review: bool = False):
     """Send message to Codex AND invoke Codex to process it."""
     msg_id = send_message(content, task_id, msg_type, data, from_llm=from_llm,
                           to_llm="codex", from_model=from_model, to_model=to_model)
     print(f"\n🚀 Invoking Codex to process message #{msg_id}...")
-    process_for_codex(msg_id, new_session, no_timeout)
+    process_for_codex(msg_id, new_session, no_timeout, review=review)
     return msg_id
 
 
 def ask_codex_chain(content_template: str, issue_refs: list[str], msg_type: str = "query",
                     data: str | None = None, new_session: bool = False,
                     from_llm: str = "gemini", from_model: str | None = None,
-                    to_model: str | None = None, no_timeout: bool = False) -> list[int]:
+                    to_model: str | None = None, no_timeout: bool = False,
+                    review: bool = False) -> list[int]:
     """Dispatch a sequence of issue-targeted Codex tasks one at a time."""
     issues = _normalize_codex_chain_issues(issue_refs)
     message_ids: list[int] = []
@@ -122,6 +124,7 @@ def ask_codex_chain(content_template: str, issue_refs: list[str], msg_type: str 
             from_model,
             to_model,
             no_timeout,
+            review=review,
         )
         message_ids.append(msg_id)
 
@@ -181,7 +184,8 @@ def _render_codex_chain_content(content_template: str, issue_num: int, task_id: 
     return f"GitHub issue #{issue_num} ({task_id}).\n\n{content_template}"
 
 
-def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bool = False):
+def process_for_codex(message_id: int, new_session: bool = False,
+                      no_timeout: bool = False, review: bool = False):
     """Read message addressed to Codex, invoke via agent_runtime, send response.
 
     Phase 4: routes through scripts.agent_runtime.runner.invoke(). Resume
@@ -201,7 +205,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
         _handle_codex_rate_limited(msg, message_id, reason)
         return
 
-    prompt = build_codex_prompt(msg)
+    prompt = build_codex_prompt(msg, review)
 
     print(f"📨 Message #{msg['id']}")
     print(f"   From: {msg['from']} → To: {msg['to']}")

@@ -2,6 +2,7 @@
 
 > **Scope:** How Claude, Gemini, and Codex work together without degrading each other's output quality.
 > Full protocol: `docs/CLAUDE-GEMINI-COOPERATION.md`
+> Review evidence contract: [`docs/review-protocol.md`](../review-protocol.md)
 >
 > **Runtime layer:** All agent CLI invocations route through `scripts/agent_runtime/`.
 > If you're touching an agent subprocess, read [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md) first.

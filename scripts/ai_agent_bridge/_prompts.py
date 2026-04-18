@@ -3,6 +3,15 @@
 from ._config import REPO_ROOT
 
 
+def review_protocol_prefix() -> str:
+    """Load the canonical review protocol at call time."""
+    return (REPO_ROOT / "docs" / "review-protocol.md").read_text("utf-8").rstrip() + "\n\n"
+
+
+def _prepend_review_protocol(prompt: str, review: bool) -> str:
+    return f"{review_protocol_prefix()}{prompt}" if review else prompt
+
+
 def _load_gemini_context() -> str:
     """Load .gemini/docs/ context files and return as a single block.
 
@@ -34,7 +43,8 @@ def _load_gemini_context() -> str:
 
 
 def build_gemini_prompt(msg: dict, stdout_only: bool, output_path: str | None,
-                        allow_write: bool, delimiters: str | None) -> str:
+                        allow_write: bool, delimiters: str | None,
+                        review: bool = False) -> str:
     """Build the prompt string for a Gemini invocation.
 
     Selects one of three modes:
@@ -43,11 +53,12 @@ def build_gemini_prompt(msg: dict, stdout_only: bool, output_path: str | None,
     - STANDARD: Collaborative prompt for general communication
     """
     if allow_write:
-        return _build_full_execution_prompt(msg, delimiters)
+        prompt = _build_full_execution_prompt(msg, delimiters)
     elif stdout_only or output_path:
-        return _build_orchestrated_prompt(msg, output_path)
+        prompt = _build_orchestrated_prompt(msg, output_path)
     else:
-        return _build_standard_prompt(msg)
+        prompt = _build_standard_prompt(msg)
+    return _prepend_review_protocol(prompt, review)
 
 
 def _build_full_execution_prompt(msg: dict, delimiters: str | None) -> str:
@@ -155,14 +166,6 @@ Attached data:
     prompt += """
 ---
 
-REVIEW PROTOCOL (mandatory for all review requests):
-- You MUST read every referenced file COMPLETELY before writing your review. Use read_file or cat — do not skim.
-- For EVERY issue you report, cite the exact content from the file (quote the line, value, or field).
-- If you cannot cite evidence from the actual file, do NOT report the issue — you may be hallucinating.
-- Do NOT invent examples that are not in the files. Only critique what actually exists.
-- Before critiquing a vocabulary list, activity list, or similar: list ALL items you found in the file first, THEN review each one.
-- If a file has 25 vocabulary entries, your review must reference the actual 25 entries, not imagined ones.
-
 Please respond appropriately. If this is a request, fulfill it.
 If Claude asked for feedback, provide your honest assessment.
 Format your response clearly.
@@ -170,7 +173,7 @@ Format your response clearly.
     return prompt
 
 
-def build_claude_prompt(msg: dict) -> str:
+def build_claude_prompt(msg: dict, review: bool = False) -> str:
     """Build prompt for Claude invocation."""
     prompt = f"""You are Claude, receiving a message from {msg['from'].title()} via the message broker.
 
@@ -194,7 +197,7 @@ Respond directly to this message. Be concise and helpful.
 Your response will be automatically sent back to the sender via the message broker.
 Do NOT use MCP tools to send your response - just output your response directly.
 """
-    return prompt
+    return _prepend_review_protocol(prompt, review)
 
 
 _CODEX_STANDING_RULES = """\
@@ -233,7 +236,7 @@ Violating this rule destroys the caller's work in progress. There is no exceptio
 """
 
 
-def build_codex_prompt(msg: dict) -> str:
+def build_codex_prompt(msg: dict, review: bool = False) -> str:
     """Build prompt for Codex invocation."""
     prompt = f"""You are Codex, receiving a message from {msg['from'].title()} via the message broker.
 
@@ -259,4 +262,4 @@ Respond directly to this message. Be concise and helpful.
 This bridge is for quick questioning and short coordination, not long-running task execution.
 Do NOT use broker or MCP messaging tools to send your response - just output your response directly.
 """
-    return prompt
+    return _prepend_review_protocol(prompt, review)

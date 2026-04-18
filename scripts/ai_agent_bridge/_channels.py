@@ -60,6 +60,7 @@ from typing import Any
 
 from ._config import REPO_ROOT
 from ._db import get_db
+from ._prompts import review_protocol_prefix
 
 
 class StaleClaimError(Exception):
@@ -437,6 +438,7 @@ def build_agent_prompt(
     max_history_chars: int = DEFAULT_MAX_HISTORY_CHARS,
     max_prompt_chars: int = DEFAULT_MAX_PROMPT_CHARS,
     include_monitor_state: bool = True,
+    review: bool = False,
 ) -> dict[str, Any]:
     """Assemble the full text an agent sees for a post in this channel.
 
@@ -466,6 +468,7 @@ def build_agent_prompt(
     ValueError so the caller knows to split or shorten it.
     """
     # 1. Pinned context from this channel and its includes
+    review_text = review_protocol_prefix() if review else ""
     ctx = load_channel_context(channel)
     context_text = ctx["body"]
 
@@ -500,14 +503,27 @@ def build_agent_prompt(
     body_text = f"--- new post ({channel}) ---\n{body}\n"
 
     # Assemble and enforce the hard ceiling
-    sections = [context_text, monitor_text, history_text, body_text]
+    sections = [
+        review_text,
+        context_text,
+        monitor_text,
+        history_text,
+        body_text,
+    ]
     prompt = "\n".join(s for s in sections if s.strip())
 
     if len(prompt) > max_prompt_chars:
         # Drop history first (oldest-first already truncated above,
         # now drop all of it if needed).
         prompt_no_history = "\n".join(
-            s for s in [context_text, monitor_text, body_text] if s.strip()
+            s
+            for s in [
+                review_text,
+                context_text,
+                monitor_text,
+                body_text,
+            ]
+            if s.strip()
         )
         if len(prompt_no_history) <= max_prompt_chars:
             prompt = prompt_no_history
@@ -518,9 +534,14 @@ def build_agent_prompt(
             # state AND truncate context. If the body alone is over
             # budget, that's a caller error — raise.
             body_len = len(body_text)
-            if body_len > max_prompt_chars:
+            if body_len + len(review_text) > max_prompt_chars:
+                size_label = (
+                    "review prefix + post body"
+                    if review_text
+                    else "post body alone"
+                )
                 raise ValueError(
-                    f"post body alone is {body_len} chars, "
+                    f"{size_label} is {body_len + len(review_text)} chars, "
                     f"exceeds max_prompt_chars={max_prompt_chars}. "
                     f"Split it into smaller posts or increase the budget."
                 )
@@ -532,7 +553,7 @@ def build_agent_prompt(
             # marker length and guarantee the final prompt fits.
             marker = "\n... [context truncated to fit budget] ...\n"
             marker_len = len(marker)
-            non_body_budget = max_prompt_chars - body_len
+            non_body_budget = max_prompt_chars - body_len - len(review_text)
 
             # We need room for: marker + at least a few chars of context.
             # If non_body_budget can't even fit the marker, drop context
@@ -543,17 +564,17 @@ def build_agent_prompt(
                 remaining_for_ctx = non_body_budget - marker_len
                 if remaining_for_ctx < len(context_text):
                     truncated_ctx = context_text[:remaining_for_ctx]
-                    prompt = f"{truncated_ctx}{marker}{body_text}"
+                    prompt = f"{review_text}{truncated_ctx}{marker}{body_text}"
                 else:
                     # Context already fits without truncation
                     prompt = (
-                        f"{context_text}\n{body_text}"
+                        f"{review_text}{context_text}\n{body_text}"
                         if context_text.strip()
-                        else body_text
+                        else f"{review_text}{body_text}"
                     )
             else:
                 # No room for marker + context; body only
-                prompt = body_text
+                prompt = f"{review_text}{body_text}"
 
             dropped = len(raw_history)
             monitor_state = None  # dropped to save space

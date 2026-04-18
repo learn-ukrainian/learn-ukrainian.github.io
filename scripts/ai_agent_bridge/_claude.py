@@ -37,17 +37,18 @@ from ._prompts import build_claude_prompt
 def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query",
                data: str | None = None, new_session: bool = False,
                from_llm: str = "gemini", from_model: str | None = None,
-               to_model: str | None = None):
+               to_model: str | None = None, review: bool = False):
     """Send message to Claude AND invoke Claude to process it."""
     msg_id = send_message(content, task_id, msg_type, data, from_llm=from_llm,
                           to_llm="claude", from_model=from_model, to_model=to_model)
     print(f"\n🚀 Invoking Claude to process message #{msg_id}...")
-    process_for_claude(msg_id, new_session)
+    process_for_claude(msg_id, new_session, review=review)
     return msg_id
 
 
 def process_for_claude(message_id: int, new_session: bool = False,
-                       fire_and_forget: bool = False, no_timeout: bool = False):
+                       fire_and_forget: bool = False, no_timeout: bool = False,
+                       review: bool = False):
     """Read message addressed to Claude, invoke via agent_runtime, send response.
 
     Fire-and-forget path still spawns the bridge in background (a
@@ -67,7 +68,9 @@ def process_for_claude(message_id: int, new_session: bool = False,
     if fire_and_forget:
         _launch_claude_background(msg, message_id, new_session)
     else:
-        _run_claude_sync_via_runtime(msg, message_id, claude_session_id, no_timeout)
+        _run_claude_sync_via_runtime(
+            msg, message_id, claude_session_id, no_timeout, review
+        )
 
 
 def _run_claude_sync_via_runtime(
@@ -75,6 +78,7 @@ def _run_claude_sync_via_runtime(
     message_id: int,
     claude_session_id: str | None,
     no_timeout: bool,
+    review: bool,
 ):
     """Run Claude CLI synchronously via agent_runtime.runner.invoke().
 
@@ -127,7 +131,7 @@ def _run_claude_sync_via_runtime(
     try:
         result = runtime_invoke(
             "claude",
-            build_claude_prompt(msg),
+            build_claude_prompt(msg, review),
             mode="read-only",
             cwd=REPO_ROOT,
             model=None,  # Bridge uses Claude's default

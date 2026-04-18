@@ -85,7 +85,8 @@ def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query"
                stdout_only: bool = False, output_path: str | None = None,
                extract_tags: list | None = None, skip_model_check: bool = False,
                allow_write: bool = False, delimiters: str | None = None,
-               skip_github: bool = False, auth_mode: str | None = None):
+               skip_github: bool = False, auth_mode: str | None = None,
+               review: bool = False):
     """Send message to Gemini AND optionally invoke Gemini to process it."""
     # Model cache management
     if skip_model_check and model in _MODEL_CACHE:
@@ -123,7 +124,7 @@ def ask_gemini(content: str, task_id: str | None = None, msg_type: str = "query"
         response = process_and_respond(msg_id, model, stdout_only=stdout_only,
                                        output_path=output_path, allow_write=allow_write,
                                        delimiters=delimiters, skip_github=skip_github,
-                                       auth_mode=auth_mode)
+                                       auth_mode=auth_mode, review=review)
 
         # Post-process: extract delimited content
         if extract_tags is not None and response:
@@ -184,7 +185,8 @@ def process_and_respond(message_id: int, model: str = GEMINI_DEFAULT_MODEL,
                         fire_and_forget: bool = False, no_timeout: bool = False,
                         stdout_only: bool = False, output_path: str | None = None,
                         allow_write: bool = False, delimiters: str | None = None,
-                        skip_github: bool = False, auth_mode: str | None = None):
+                        skip_github: bool = False, auth_mode: str | None = None,
+                        review: bool = False):
     """Read message, process with Gemini CLI, send response.
 
     Runs in sync mode by default (15 min timeout). On any failure, sends an
@@ -194,7 +196,9 @@ def process_and_respond(message_id: int, model: str = GEMINI_DEFAULT_MODEL,
     if not msg:
         return
 
-    prompt = build_gemini_prompt(msg, stdout_only, output_path, allow_write, delimiters)
+    prompt = build_gemini_prompt(
+        msg, stdout_only, output_path, allow_write, delimiters, review
+    )
 
     if fire_and_forget:
         _launch_gemini_background(msg, message_id, model, prompt, auth_mode=auth_mode)

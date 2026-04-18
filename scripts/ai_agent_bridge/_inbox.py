@@ -103,6 +103,7 @@ from ._gemini_session_link import (
     format_recovered_reply,
 )
 from ._orphan_recovery import RecoveryCandidate, RecoveryResult, recover_orphan_commit
+from ._prompts import review_protocol_prefix
 from ._reconcile import reconcile_deliveries
 
 _DEFAULT_HARD_TIMEOUT_SECONDS = 900
@@ -460,6 +461,15 @@ def _render_messages(messages: list[dict[str, object]]) -> str:
     )
 
 
+def _uses_review_protocol(messages: list[dict[str, object]]) -> bool:
+    return any(
+        att.get("kind") == "review_protocol"
+        for message in messages
+        for att in (message.get("attachments") or [])
+        if isinstance(att, dict)
+    )
+
+
 def _build_thread_prompt(
     agent: str,
     claimed: _ClaimedThread,
@@ -480,8 +490,10 @@ def _build_thread_prompt(
         )
 
     latest_message = unseen[-1]
+    review_prefix = review_protocol_prefix() if _uses_review_protocol(thread_messages) else ""
     if agent == "claude" and has_session:
         sections = [
+            review_prefix,
             f"Continue the existing bridge session for channel #{claimed.channel}.",
             "Respond with one plain-text reply as the target agent.",
             "Address the latest unseen message directly.",
@@ -501,6 +513,7 @@ def _build_thread_prompt(
         if message["message_id"] not in claimed_ids
     ]
     sections = [
+        review_prefix,
         context,
         f"You are {agent} replying on the #{claimed.channel} channel bridge.",
         # Skip the root section entirely if root is also in unseen — the

@@ -236,6 +236,10 @@ def register_channel_commands(subparsers: Any) -> None:
         default=None,
         help="Per-delivery hard-timeout override in seconds (300, 600, 900, 1200, 1800, 2400, 3000)",
     )
+    post_parser.add_argument(
+        "--review", action="store_true",
+        help="Prepend docs/review-protocol.md for channel deliveries",
+    )
 
     # ── top-level: p (shortcut) ───────────────────────────────────
     p_parser = subparsers.add_parser(
@@ -249,6 +253,10 @@ def register_channel_commands(subparsers: Any) -> None:
         help="Single recipient agent",
     )
     p_parser.add_argument("body", help="Message body (use '-' for stdin)")
+    p_parser.add_argument(
+        "--review", action="store_true",
+        help="Prepend docs/review-protocol.md for channel deliveries",
+    )
 
     reconcile_parser = subparsers.add_parser(
         "reconcile",
@@ -360,6 +368,10 @@ def register_channel_commands(subparsers: Any) -> None:
     discuss_parser.add_argument(
         "--max-rounds", type=int, default=2,
         help="Maximum discussion rounds (default: 2, cap: 4)",
+    )
+    discuss_parser.add_argument(
+        "--review", action="store_true",
+        help="Prepend docs/review-protocol.md before channel context",
     )
 
 
@@ -830,6 +842,7 @@ def _handle_post(args) -> int:
             args.from_agent,
             body,
             to_agents=to_agents,
+            attachments=[{"kind": "review_protocol"}] if args.review else None,
             parent_id=args.parent,
             correlation_id=args.corr,
             from_model=from_model,
@@ -863,6 +876,7 @@ def _handle_p(args) -> int:
         no_snapshot = False
         model = None
         deadline = None
+        review = args.review
 
     return _handle_post(_Args())
 
@@ -1058,6 +1072,7 @@ def _handle_discuss(args) -> int:
             "user",
             body,
             to_agents=None,
+            attachments=[{"kind": "review_protocol"}] if args.review else None,
             auto_snapshot=True,
         )
     except ValueError as e:
@@ -1143,7 +1158,10 @@ def _handle_discuss(args) -> int:
         needed_history = 1 + len(with_agents) * max_rounds + 10
         try:
             prompt_obj = _channels.build_agent_prompt(
-                args.channel, directive, history_tail=needed_history
+                args.channel,
+                directive,
+                history_tail=needed_history,
+                review=args.review,
             )
         except ValueError as e:
             print(f"❌ prompt build failed: {e}", file=sys.stderr)
