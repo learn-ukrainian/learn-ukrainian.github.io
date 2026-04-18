@@ -263,7 +263,8 @@ def search_external(
         r["quality_tier"] = quality_tier
         r["source_name"] = channel_name or r.get("domain", r.get("source_file", ""))
         r["text"] = r.get("text", "")[:6000]
-        r["adjusted_score"] = r.get("rank", 0.0)
+        r["fts_score"] = float(r.get("rank", 0.0) or 0.0)
+        r["adjusted_score"] = r["fts_score"]
         results.append(r)
 
     if track:

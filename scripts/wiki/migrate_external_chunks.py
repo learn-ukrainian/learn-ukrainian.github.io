@@ -136,6 +136,28 @@ def ensure_external_schema(conn: sqlite3.Connection) -> list[str]:
         conn.execute(f"ALTER TABLE external_articles ADD COLUMN {column} {ddl}")
         added.append(column)
 
+    _ensure_external_fts(conn)
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_ext_url ON external_articles(url)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_ext_url_norm ON external_articles(url_normalized)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_ext_channel ON external_articles(channel_id)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_ext_quality ON external_articles(quality_tier)")
+    return added
+
+
+def _ensure_external_fts(conn: sqlite3.Connection) -> bool:
+    """Create or repair the external FTS table/trigger only when needed."""
+    fts_columns = {
+        row[1]
+        for row in conn.execute("PRAGMA table_info(external_fts)").fetchall()
+    }
+    has_expected_fts = fts_columns == {"title", "text", "speaker"}
+    has_trigger = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='trigger' AND name='external_ai'"
+    ).fetchone() is not None
+
+    if has_expected_fts and has_trigger:
+        return False
+
     conn.execute("DROP TRIGGER IF EXISTS external_ai")
     conn.execute("DROP TABLE IF EXISTS external_fts")
     conn.execute(
@@ -152,12 +174,8 @@ def ensure_external_schema(conn: sqlite3.Connection) -> list[str]:
             VALUES (new.id, new.title, new.text, new.speaker);
         END;"""
     )
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_ext_url ON external_articles(url)")
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_ext_url_norm ON external_articles(url_normalized)")
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_ext_channel ON external_articles(channel_id)")
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_ext_quality ON external_articles(quality_tier)")
     conn.execute("INSERT INTO external_fts(external_fts) VALUES ('rebuild')")
-    return added
+    return True
 
 
 def _last_boundary(regex: re.Pattern[str], text: str) -> int | None:
@@ -385,6 +403,15 @@ def _insert_rows(conn: sqlite3.Connection, rows: list[dict[str, Any]]) -> None:
     conn.executemany(sql, batch)
 
 
+def _row_tuple(row: dict[str, Any]) -> tuple[Any, ...]:
+    return tuple(row[column] for column in INSERT_COLUMNS)
+
+
+def _existing_row_tuples(conn: sqlite3.Connection) -> list[tuple[Any, ...]]:
+    sql = f"SELECT {', '.join(INSERT_COLUMNS)} FROM external_articles ORDER BY chunk_id"
+    return [tuple(row) for row in conn.execute(sql).fetchall()]
+
+
 def _verify_roundtrip(conn: sqlite3.Connection) -> dict[str, list[str]]:
     results: dict[str, list[str]] = {}
     for query in VERIFY_QUERIES:
@@ -417,7 +444,9 @@ def migrate_external_chunks(
 
     stats: dict[str, Any] = {
         "input_jsonl_count": input_count,
+        "rows_planned": len(rows),
         "rows_inserted": len(rows),
+        "rows_changed": len(rows),
         "avg_chunk_size": avg_chunk_size,
         "items_failed": failures,
         "items_deduped": deduped_count,
@@ -426,6 +455,7 @@ def migrate_external_chunks(
         "rows_before": None,
         "rows_after": None,
         "verify_results": {},
+        "noop": False,
     }
 
     if dry_run:
@@ -438,10 +468,25 @@ def migrate_external_chunks(
     # ``test_migration_bootstraps_on_fresh_clone_without_table``.
     stats["schema_columns_added"] = ensure_external_schema(conn)
     stats["rows_before"] = conn.execute("SELECT COUNT(*) FROM external_articles").fetchone()[0]
+
+    planned_rows = sorted((_row_tuple(row) for row in rows), key=lambda item: item[0])
+    existing_rows = _existing_row_tuples(conn)
+    if existing_rows == planned_rows:
+        stats["rows_inserted"] = 0
+        stats["rows_changed"] = 0
+        stats["rows_after"] = stats["rows_before"]
+        stats["noop"] = True
+        if verify:
+            stats["verify_results"] = _verify_roundtrip(conn)
+        conn.commit()
+        conn.close()
+        return stats
+
     conn.execute("DELETE FROM external_articles")
     _insert_rows(conn, rows)
     conn.execute("INSERT INTO external_fts(external_fts) VALUES ('rebuild')")
     stats["rows_after"] = conn.execute("SELECT COUNT(*) FROM external_articles").fetchone()[0]
+    stats["rows_changed"] = stats["rows_after"]
     if verify:
         stats["verify_results"] = _verify_roundtrip(conn)
     conn.commit()
@@ -452,12 +497,16 @@ def migrate_external_chunks(
 def _print_stats(stats: dict[str, Any], *, dry_run: bool) -> None:
     mode = "DRY RUN" if dry_run else "MIGRATION"
     print(f"[{mode}] input JSONL items: {stats['input_jsonl_count']}")
+    print(f"[{mode}] rows planned: {stats['rows_planned']}")
     print(f"[{mode}] rows inserted: {stats['rows_inserted']}")
+    print(f"[{mode}] rows changed: {stats['rows_changed']}")
     print(f"[{mode}] avg chunk size: {stats['avg_chunk_size']}")
     if stats["schema_columns_added"]:
         print(f"[{mode}] schema columns added: {', '.join(stats['schema_columns_added'])}")
     if stats["rows_before"] is not None:
         print(f"[{mode}] rows before/after: {stats['rows_before']} -> {stats['rows_after']}")
+    if stats["noop"]:
+        print(f"[{mode}] no-op: existing rows already match the chunk plan")
     if stats["items_failed"]:
         print(f"[{mode}] failures ({len(stats['items_failed'])}):")
         for item in stats["items_failed"]:

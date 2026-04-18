@@ -727,29 +727,31 @@ async def handle_search_external(args: dict) -> list[TextContent]:
     )
 
     if not hits:
-        return [TextContent(type="text", text="No external results found.")]
+        return [TextContent(type="text", text="[]")]
 
-    lines: list[str] = []
-    for hit in hits:
-        lines.append(f"[Chunk {hit.get('chunk_id', '')}]")
-        lines.append(
-            "Channel: "
-            f"{hit.get('source_name', hit.get('channel_id', '?'))} | "
-            f"Speaker: {hit.get('speaker', '?')} | "
-            f"Register: {hit.get('register_tag', '?')}"
-        )
-        lines.append(
-            "Decolonization: "
-            f"{hit.get('decolonization_tag', '?')} | "
-            f"Quality: {hit.get('quality_tier', '?')} | "
-            f"Published: {hit.get('publish_date', '') or 'unknown'}"
-        )
-        lines.append(f"URL: {hit.get('url', '')}")
-        lines.append("")
-        lines.append(hit.get("text", ""))
-        lines.append("---")
-
-    return [TextContent(type="text", text="\n".join(lines))]
+    payload = [
+        {
+            "chunk_id": hit.get("chunk_id", ""),
+            "title": hit.get("title", ""),
+            "text": hit.get("text", ""),
+            "url": hit.get("url", ""),
+            "channel_id": hit.get("channel_id", ""),
+            "channel_name": hit.get("source_name", hit.get("channel_id", "")),
+            "speaker": hit.get("speaker", ""),
+            "register_tag": hit.get("register_tag", ""),
+            "decolonization_tag": hit.get("decolonization_tag", ""),
+            "quality_tier": hit.get("quality_tier"),
+            "publish_date": hit.get("publish_date", ""),
+            "duration_s": hit.get("duration_s"),
+            "chunk_start_ts": hit.get("chunk_start_ts"),
+            "chunk_end_ts": hit.get("chunk_end_ts"),
+            "video_id": hit.get("video_id", ""),
+            "fts_score": hit.get("fts_score", hit.get("rank")),
+            "adjusted_score": hit.get("adjusted_score", hit.get("rank")),
+        }
+        for hit in hits
+    ]
+    return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False, indent=2))]
 
 
 async def handle_get_full_text(args: dict) -> list[TextContent]:

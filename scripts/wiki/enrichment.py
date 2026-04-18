@@ -243,18 +243,14 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     # 8. External articles — FTS5 search (deduped against YAML-mapped URLs)
     if ukr_keywords:
         from .sources_db import search_external
-        # Note: NO `track=track` here. search_external() already routes
-        # through channels.rank_external_hits when given a track, so passing
-        # it both there AND on the explicit re-rank below was squaring the
-        # affinity + tier weights. Gemini review #354 (#1324) item 14.
         ext_kw_chunks = search_external(
             ukr_keywords,
             max_total=10,
             exclude_urls=mapped_urls,
             min_quality_tier=2,
+            track=track,
         )
         if ext_kw_chunks:
-            ext_kw_chunks = rank_external_hits(ext_kw_chunks, track=track)
             print(f"  🌐 +{len(ext_kw_chunks)} external articles (keyword-matched)")
             all_chunks.extend(ext_kw_chunks)
 

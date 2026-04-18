@@ -190,9 +190,13 @@ def test_migration_is_idempotent_and_chunk_ids_are_stable(migration_fixture: dic
     conn.close()
 
     assert stats1["rows_after"] == stats1["rows_inserted"]
-    assert stats2["rows_after"] == stats2["rows_inserted"]
+    assert stats1["rows_changed"] == stats1["rows_after"]
+    assert stats2["rows_inserted"] == 0
+    assert stats2["rows_changed"] == 0
+    assert stats2["noop"] is True
     assert stats1["items_deduped"] == 1
     assert stats1["verify_results"]["козаки"]
+    assert stats2["verify_results"]["козаки"]
     assert rows1 == rows2
     assert rows1[0][0].startswith("ext-realna_istoria-abc123xyz89-")
 

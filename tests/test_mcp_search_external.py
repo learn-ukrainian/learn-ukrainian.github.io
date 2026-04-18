@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import sys
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -34,24 +35,40 @@ def test_call_tool_dispatches_search_external(server_module):
 def test_handle_search_external_formats_chunk_output(server_module):
     hits = [{
         "chunk_id": "ext-realna_istoria-demo-003",
+        "title": "Козаки та історія",
         "source_name": "Реальна Історія",
+        "channel_id": "realna_istoria",
         "speaker": "Акім Галімов",
         "register_tag": "interview",
         "decolonization_tag": "strong",
         "quality_tier": 1,
         "publish_date": "2023-08-14",
+        "duration_s": 900,
+        "chunk_start_ts": None,
+        "chunk_end_ts": None,
+        "video_id": "demo",
+        "fts_score": -4.2,
+        "adjusted_score": -4.2,
         "url": "https://youtube.com/watch?v=demo",
         "text": "Короткий фрагмент про козаків.",
     }]
     with patch("wiki.sources_db.search_external", return_value=hits):
         result = _run(server_module.handle_search_external({"query": "козаки"}))
 
-    text = result[0].text
-    assert "[Chunk ext-realna_istoria-demo-003]" in text
-    assert "Channel: Реальна Історія | Speaker: Акім Галімов | Register: interview" in text
-    assert "Decolonization: strong | Quality: 1 | Published: 2023-08-14" in text
-    assert "URL: https://youtube.com/watch?v=demo" in text
-    assert "Короткий фрагмент про козаків." in text
+    payload = json.loads(result[0].text)
+    assert payload[0]["chunk_id"] == "ext-realna_istoria-demo-003"
+    assert payload[0]["title"] == "Козаки та історія"
+    assert payload[0]["channel_id"] == "realna_istoria"
+    assert payload[0]["channel_name"] == "Реальна Історія"
+    assert payload[0]["speaker"] == "Акім Галімов"
+    assert payload[0]["register_tag"] == "interview"
+    assert payload[0]["decolonization_tag"] == "strong"
+    assert payload[0]["quality_tier"] == 1
+    assert payload[0]["publish_date"] == "2023-08-14"
+    assert payload[0]["url"] == "https://youtube.com/watch?v=demo"
+    assert payload[0]["text"] == "Короткий фрагмент про козаків."
+    assert payload[0]["fts_score"] == -4.2
+    assert payload[0]["adjusted_score"] == -4.2
 
 
 def test_handle_search_external_passes_filters(server_module):
@@ -93,8 +110,8 @@ def test_handle_search_external_track_changes_result_order(server_module):
         return hist_hits if kwargs.get("track") == "hist" else plain_hits
 
     with patch("wiki.sources_db.search_external", side_effect=_fake_search):
-        plain = _run(server_module.handle_search_external({"query": "козаки"}))[0].text
-        hist = _run(server_module.handle_search_external({"query": "козаки", "track": "hist"}))[0].text
+        plain = json.loads(_run(server_module.handle_search_external({"query": "козаки"}))[0].text)
+        hist = json.loads(_run(server_module.handle_search_external({"query": "козаки", "track": "hist"}))[0].text)
 
-    assert plain.index("[Chunk ext-ulp-001]") < plain.index("[Chunk ext-realna-001]")
-    assert hist.index("[Chunk ext-realna-001]") < hist.index("[Chunk ext-ulp-001]")
+    assert plain[0]["chunk_id"] == "ext-ulp-001"
+    assert hist[0]["chunk_id"] == "ext-realna-001"
