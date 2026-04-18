@@ -42,12 +42,42 @@
 - **#1323**: 2 of 3 original patches Gemini-confirmed (49fab3ee9, 74371b51e). The 3rd (strip_meta) was re-patched in commit `347686a2b` per Gemini's recommendation. Needs ONE more re-verify if you want full Gemini sign-off — won't auto-fire that. Spot-check the 2 regression tests in `test_wiki_context.py` and call it merge-ready, or queue another re-verify on your return.
 - **#1324**: 5 patches applied per Gemini's review. The two critical ones (fresh-clone bootstrap, 0.0-affinity exclusion) had real risk surface. The 3 regression tests prove the new behavior. **Could re-verify this round too — same call as #1323**.
 
+### Phase A returned — exposed two pipeline bugs (now fixed)
+
+**Phase A result: 0/9 passed** (`/tmp/phase-a-wiki-compile-results.md`):
+- 5 modules short-circuited as `Already compiled` with `Article missing or too short to review` — stale state from yesterday's clean-slate wipe
+- 4 modules compiled fresh (21-27 KB articles) but every Gemini review came back `0.0/10` across all dimensions
+
+Two distinct root causes, both fixed in commit `0dd764bd7`:
+
+**Bug A — `--stdout-only` bridge regression** (`scripts/ai_agent_bridge/_gemini.py`)
+The flag suppressed broker delivery as documented but **never actually printed Gemini's response to stdout**. Wiki compile.py captured empty stdout and the parser defaulted every dim to 0.0. Worse, the bridge's `[gemini] attempt N/M, prompt=...` debug preamble printed unconditionally, polluting whatever stdout the caller did capture. Fix: `sys.stdout.write(response)` in `_route_gemini_response`'s stdout-only branch + gate the preamble print behind `if not stdout_only`. Smoke-tested end-to-end: `ask-gemini --stdout-only` now returns clean response in stdout.
+
+**Bug B — `is_compiled` returned True for missing files** (`scripts/wiki/state.py`)
+Yesterday's clean-slate (commit `86e84b203`) deleted 558 .md files but left 558 `compiled` rows in `wiki/.state/progress.db`. `is_compiled` only checked the DB, so the next compile short-circuited. Fix: `is_compiled` now AND-checks the on-disk .md file; missing → returns False AND purges the stale row. Self-heals state drift forever, no separate cleanup command needed. Bulk-purged the existing 560 stale rows in this session so next compile starts clean.
+
+3 new tests pin down both bugs.
+
 ### What's left (when you're back)
 
-- Decide: merge-ready or queue another Gemini re-verify on #1323 + #1324 round-2 patches?
-- Decide: Phase B kickoff (gated on Phase A's report)?
-- User action for Phase C: `rclone config`, then install cron entries
-- 53 commits ahead of `origin/main`. Push when you're ready.
+- **Decide: re-run Phase A?** The fixes are unit-tested + bridge smoke-tested with real Gemini. A 2-slug Phase A re-run would prove they work end-to-end in the wiki compile path. I held off auto-dispatching to save Gemini quota — your call. (If you want me to do it, just say "rerun Phase A" — I'll fire 2 slugs: 1 previously-stale + 1 fresh seminar.)
+- **Decide: Phase B kickoff?** Phase B uses `v6_build.py` (the MODULE build pipeline), not the wiki compile pipeline that Phase A tests. The two share no critical code paths; the Phase A failures don't necessarily mean Phase B will fail. But the conservative call is to verify with a 2-slug Phase A re-run first. **Marked task #8 in_progress with `claude` owner as a placeholder, but not actually dispatched — needs your call.**
+- Decide: merge-ready or queue another Gemini re-verify on #1323 round-2 (strip_meta tempered repetition) + #1324 round-2 (5 patches)?
+- User action for Phase C: `rclone config`, then install cron entries from `docs/ops/gdrive-backup.md`.
+- 8 commits this session, 54 commits ahead of `origin/main`. Push when you're ready.
+
+### Session totals (8 commits)
+
+| Commit | What |
+|---|---|
+| `3d95e30d4` | API stability — services.sh restart race + 7s wiki orient → 19ms |
+| `347686a2b` | strip_meta tempered repetition (#1323 round 2) |
+| `9ba22f571` | session-state log |
+| `e44fc3711` | (Codex Phase C) gdrive backup scripts + docs |
+| `9dbdfcaf1` | Gemini #1324 patches (5 fixes + 3 regression tests) |
+| `735f05987` | session-state log |
+| `0dd764bd7` | Bridge `--stdout-only` delivery + `is_compiled` file-existence check |
+| (this) | session-state log |
 
 ---
 
