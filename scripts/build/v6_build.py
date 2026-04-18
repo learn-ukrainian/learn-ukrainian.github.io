@@ -2711,7 +2711,21 @@ def _build_wiki_packet(level: str, slug: str) -> str:
     wiki_content = ""
     try:
         from wiki.context import get_wiki_context
-        wiki_content = get_wiki_context(level, slug, plan=plan)
+        # Seminar tracks cite primary sources authoritatively; inject the
+        # sibling sources registry alongside the wiki article so writers
+        # can resolve `[SN]` tags to real filenames/scholars (Gemini review
+        # #348, #1323). Core tracks don't cite, so opaque `[SN]` tags are
+        # harmless — default stays False there to keep prompts lean.
+        _SEMINAR_TRACKS = {
+            "folk", "hist", "bio", "istorio",
+            "lit", "lit-essay", "lit-war", "lit-hist-fic", "lit-youth",
+            "lit-fantastika", "lit-humor", "lit-drama", "lit-doc", "lit-crimea",
+            "oes", "ruth",
+        }
+        wiki_content = get_wiki_context(
+            level, slug, plan=plan,
+            include_sources_registry=(level in _SEMINAR_TRACKS),
+        )
     except Exception as exc:
         _log(f"  ⚠️  Wiki unavailable: {exc}")
 
