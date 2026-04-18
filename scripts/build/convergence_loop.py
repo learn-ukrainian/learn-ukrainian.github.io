@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import time
+import traceback
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -312,6 +313,53 @@ def _record_round(
     return round_record
 
 
+def _record_exception_round(
+    *,
+    memory: dict[str, Any],
+    attempt: int,
+    strategy: str,
+    writer: str,
+    decision_reason: str,
+    prioritized_findings: tuple[dict[str, Any], ...],
+    started_at: str,
+    wall_clock_s: float,
+    exc: Exception,
+) -> dict[str, Any]:
+    round_record = {
+        "attempt": attempt,
+        "strategy": strategy,
+        "writer": writer,
+        "writer_model_version": writer,
+        "reviewer": "",
+        "reviewer_model_version": "",
+        "score_overall": None,
+        "scores_per_dimension": {},
+        "dim_floor_fail": [],
+        "verdict": "revise",
+        "content_hash": None,
+        "prompt_hash": _stable_hash(""),
+        "contract_snapshot_hash": _stable_hash({}),
+        "findings_normalized": [item["normalized_id"] for item in prioritized_findings],
+        "mutation_summary": None,
+        "decision_reason": decision_reason,
+        "exception_type": type(exc).__name__,
+        "exception_message": str(exc),
+        "exception_traceback": traceback.format_exc(),
+        "artifacts": {},
+        "timestamps": {
+            "started": started_at,
+            "finished": datetime.now(tz=UTC).isoformat(),
+        },
+        "cost": {
+            "input_tokens": None,
+            "output_tokens": None,
+            "wall_clock_s": round(wall_clock_s, 3),
+        },
+    }
+    append_history(memory, round_record)
+    return round_record
+
+
 def _constraint_from_finding(
     *,
     slug: str,
@@ -438,6 +486,7 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
     trace: list[dict[str, Any]] = []
     previous_round: dict[str, Any] | None = None
     previous_findings: tuple[dict[str, Any], ...] | None = None
+    exception_context: dict[str, Any] | None = None
 
     attempt_started_at = datetime.now(tz=UTC).isoformat()
     attempt_started_monotonic = time.monotonic()
@@ -522,54 +571,79 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
                 artifact_path=artifact_path,
             )
 
-        if decision.strategy == "patch":
-            mutation = context.patch_round(observation)
-        elif decision.strategy == "section_rewrite":
-            mutation = context.section_rewrite_round(decision.prioritized_findings, current_writer)
-            if mutation.changed and not context.refresh_sidecars(decision.strategy):
-                raise RuntimeError("sidecar refresh failed after section rewrite")
-        elif decision.strategy == "full_rewrite":
-            full_rewrite_targets.update(_top_ids(decision.prioritized_findings))
-            mutation = context.full_rewrite_round(decision.prioritized_findings, current_writer)
-            if mutation.changed and not context.refresh_sidecars(decision.strategy):
-                raise RuntimeError("sidecar refresh failed after full rewrite")
-        elif decision.strategy == "writer_swap":
-            new_writer, mutation = context.writer_swap_round(decision.prioritized_findings, current_writer)
-            if not new_writer:
-                artifact_path = context.terminal_dir / "plan_revision_request.yaml"
-                finding_payload = _persistent_finding_payload(
-                    decision.prioritized_findings,
-                    summary="writer swap unavailable under reviewer matrix",
-                )
-                payload = {
-                    "level": context.level,
-                    "slug": context.slug,
-                    "attempts": escalation,
-                    "trace": trace,
-                    **finding_payload,
-                }
-                _write_terminal_artifact(artifact_path, payload)
-                _append_stuck_module(
-                    context.stuck_modules_path,
-                    {
+        try:
+            if decision.strategy == "patch":
+                mutation = context.patch_round(observation)
+            elif decision.strategy == "section_rewrite":
+                mutation = context.section_rewrite_round(decision.prioritized_findings, current_writer)
+                if mutation.changed and not context.refresh_sidecars(decision.strategy):
+                    raise RuntimeError("sidecar refresh failed after section rewrite")
+            elif decision.strategy == "full_rewrite":
+                full_rewrite_targets.update(_top_ids(decision.prioritized_findings))
+                mutation = context.full_rewrite_round(decision.prioritized_findings, current_writer)
+                if mutation.changed and not context.refresh_sidecars(decision.strategy):
+                    raise RuntimeError("sidecar refresh failed after full rewrite")
+            elif decision.strategy == "writer_swap":
+                new_writer, mutation = context.writer_swap_round(decision.prioritized_findings, current_writer)
+                if not new_writer:
+                    artifact_path = context.terminal_dir / "plan_revision_request.yaml"
+                    finding_payload = _persistent_finding_payload(
+                        decision.prioritized_findings,
+                        summary="writer swap unavailable under reviewer matrix",
+                    )
+                    payload = {
                         "level": context.level,
                         "slug": context.slug,
-                        "terminal": "plan_revision_request",
-                        "artifact": str(artifact_path),
-                    },
-                )
-                return ConvergenceRunResult(
-                    terminal="plan_revision_request",
-                    rounds=tuple(rounds),
-                    trace=tuple(trace),
-                    writer=current_writer,
-                    artifact_path=artifact_path,
-                )
-            current_writer = new_writer
-            if mutation.changed and not context.refresh_sidecars(decision.strategy):
-                raise RuntimeError("sidecar refresh failed after writer swap")
-            if context.style_review_after_swap is not None:
-                context.style_review_after_swap(current_writer)
+                        "attempts": escalation,
+                        "trace": trace,
+                        **finding_payload,
+                    }
+                    _write_terminal_artifact(artifact_path, payload)
+                    _append_stuck_module(
+                        context.stuck_modules_path,
+                        {
+                            "level": context.level,
+                            "slug": context.slug,
+                            "terminal": "plan_revision_request",
+                            "artifact": str(artifact_path),
+                        },
+                    )
+                    return ConvergenceRunResult(
+                        terminal="plan_revision_request",
+                        rounds=tuple(rounds),
+                        trace=tuple(trace),
+                        writer=current_writer,
+                        artifact_path=artifact_path,
+                    )
+                current_writer = new_writer
+                if mutation.changed and not context.refresh_sidecars(decision.strategy):
+                    raise RuntimeError("sidecar refresh failed after writer swap")
+                if context.style_review_after_swap is not None:
+                    context.style_review_after_swap(current_writer)
+        except Exception as exc:
+            exception_context = {
+                "attempt": escalation,
+                "strategy": decision.strategy,
+                "type": type(exc).__name__,
+                "message": str(exc),
+                "traceback": traceback.format_exc(),
+            }
+            round_record = _record_exception_round(
+                memory=memory,
+                attempt=len(rounds) + 1,
+                strategy=decision.strategy,
+                writer=current_writer,
+                decision_reason="exception",
+                prioritized_findings=decision.prioritized_findings,
+                started_at=attempt_started_at,
+                wall_clock_s=time.monotonic() - attempt_started_monotonic,
+                exc=exc,
+            )
+            round_record["prioritized_findings"] = list(decision.prioritized_findings)
+            round_record["tier"] = decision.tier
+            rounds.append(round_record)
+            save_module_memory(context.memory_path, memory)
+            break
 
         previous_round = {
             "tier": decision.tier,
@@ -628,6 +702,8 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
         "history": rounds,
         "trace": trace,
     }
+    if exception_context is not None:
+        payload["exception"] = exception_context
     _write_terminal_artifact(artifact_path, payload)
     _append_stuck_module(
         context.stuck_modules_path,

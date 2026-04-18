@@ -123,6 +123,11 @@ class Harness:
         )
 
 
+class FailingSectionRewriteHarness(Harness):
+    def section_rewrite_round(self, _findings, _writer: str) -> MutationSummary:
+        raise RuntimeError("section rewrite exploded")
+
+
 def test_tier_one_patch_fires_on_local_findings(tmp_path: Path) -> None:
     harness = Harness(
         [
@@ -413,6 +418,45 @@ def test_prompt_hash_is_deterministic_for_same_prompt_across_runs(tmp_path: Path
 
     assert len(memory["history"]) == 2
     assert memory["history"][0]["prompt_hash"] == memory["history"][1]["prompt_hash"]
+
+
+def test_exception_in_mutation_emits_budget_exhausted_terminal(tmp_path: Path) -> None:
+    harness = FailingSectionRewriteHarness(
+        [
+            _observation(
+                score=8.4,
+                findings=[
+                    _finding(
+                        dimension="Pedagogical Quality",
+                        severity="major",
+                        location="## Привіт!",
+                        issue="The section teaches one register rule and models the opposite.",
+                        fix="Rewrite that section only.",
+                    )
+                ],
+                content_hash="hash-1",
+            ),
+        ],
+        tmp_path,
+    )
+    context = harness.context()
+
+    result = run_convergence_loop(context)
+    budget_payload = yaml.safe_load(result.artifact_path.read_text("utf-8"))
+    memory, _ = module_memory.load_module_memory(
+        context.memory_path,
+        expected_plan_hash="plan-hash",
+        expected_plan_version=1,
+        expected_sources_hash="sources-hash",
+    )
+
+    assert result.terminal == "budget_exhausted"
+    assert budget_payload["exception"]["type"] == "RuntimeError"
+    assert budget_payload["exception"]["message"] == "section rewrite exploded"
+    assert "section rewrite exploded" in budget_payload["exception"]["traceback"]
+    assert memory["history"][-1]["decision_reason"] == "exception"
+    assert memory["history"][-1]["exception_type"] == "RuntimeError"
+    assert memory["history"][-1]["exception_message"] == "section rewrite exploded"
 
 
 def test_end_to_end_stuck_a1_m1_uses_cached_reviews_without_budget_exhausted(tmp_path: Path) -> None:
