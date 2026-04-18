@@ -44,11 +44,13 @@ def _observation(
     passed: bool = False,
     patch_available: bool = False,
     dim_floor_dimensions: tuple[str, ...] = (),
+    review_text: str = "Verdict",
+    artifacts: dict[str, str] | None = None,
 ) -> ReviewObservation:
     return ReviewObservation(
         passed=passed,
         score=score,
-        review_text="Verdict",
+        review_text=review_text,
         findings=tuple(findings),
         dim_floor_dimensions=dim_floor_dimensions,
         content_hash=content_hash,
@@ -56,6 +58,7 @@ def _observation(
         reviewer="claude",
         writer_model_version="gemini-3.1-pro-preview",
         reviewer_model_version="claude-opus-4-6",
+        artifacts={} if artifacts is None else dict(artifacts),
     )
 
 
@@ -364,6 +367,52 @@ def test_local_findings_patch_converges_to_pass(tmp_path: Path) -> None:
 
     assert result.terminal == "pass"
     assert result.trace[0]["strategy"] == "patch"
+
+
+def test_prompt_hash_is_deterministic_for_same_prompt_across_runs(tmp_path: Path) -> None:
+    prompt_path = tmp_path / "prompt.md"
+    prompt_path.write_text("same prompt bytes", "utf-8")
+    harness = Harness(
+        [
+            _observation(
+                score=8.6,
+                findings=[
+                    _finding(
+                        dimension="Linguistic Accuracy",
+                        severity="major",
+                        location="## Intro / paragraph 1 / sentence 1",
+                        issue="The sentence mislabels [=] as a dash.",
+                        fix="Change the sentence only.",
+                    )
+                ],
+                content_hash="hash-1",
+                patch_available=True,
+                review_text="Reviewer output A",
+                artifacts={"prompt_path": str(prompt_path)},
+            ),
+            _observation(
+                score=9.1,
+                findings=[],
+                content_hash="hash-2",
+                passed=True,
+                review_text="Reviewer output B",
+                artifacts={"prompt_path": str(prompt_path)},
+            ),
+        ],
+        tmp_path,
+    )
+    context = harness.context()
+
+    run_convergence_loop(context)
+    memory, _ = module_memory.load_module_memory(
+        context.memory_path,
+        expected_plan_hash="plan-hash",
+        expected_plan_version=1,
+        expected_sources_hash="sources-hash",
+    )
+
+    assert len(memory["history"]) == 2
+    assert memory["history"][0]["prompt_hash"] == memory["history"][1]["prompt_hash"]
 
 
 def test_end_to_end_stuck_a1_m1_uses_cached_reviews_without_budget_exhausted(tmp_path: Path) -> None:

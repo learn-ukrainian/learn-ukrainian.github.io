@@ -268,6 +268,12 @@ def _record_round(
         str(score.get("name") or score.get("dimension")): score.get("score")
         for score in observation.parsed_scores
     }
+    prompt_hash = _stable_hash("")
+    prompt_path = observation.artifacts.get("prompt_path")
+    if prompt_path:
+        prompt_file = Path(prompt_path)
+        if prompt_file.exists():
+            prompt_hash = _stable_hash(prompt_file.read_text("utf-8"))
     round_record = {
         "attempt": attempt,
         "strategy": strategy,
@@ -280,7 +286,7 @@ def _record_round(
         "dim_floor_fail": list(observation.dim_floor_dimensions),
         "verdict": "pass" if observation.passed else "revise",
         "content_hash": observation.content_hash,
-        "prompt_hash": _stable_hash(observation.review_text),
+        "prompt_hash": prompt_hash,
         "contract_snapshot_hash": _stable_hash(observation.artifacts),
         "findings_normalized": [item["normalized_id"] for item in prioritized_findings],
         "mutation_summary": None
