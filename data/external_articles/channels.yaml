@@ -1,0 +1,157 @@
+channels:
+  # Template for future additions:
+  # - id: new_source
+  #   name: "Channel or corpus name"
+  #   host: "Primary host or editorial voice"
+  #   url: "https://example.com/"
+  #   source_file: new_source
+  #   register_tag: spoken
+  #   decolonization_tag: moderate
+  #   quality_tier: 2
+  #   language_purity: vetted
+  #   track_affinity:
+  #     hist: 0.8
+  #     b2: 0.4
+  #   description: "Short note on why this source belongs in the corpus."
+
+  - id: realna_istoria
+    name: "Реальна Історія"
+    host: "Акім Галімов"
+    url: "https://www.youtube.com/channel/UCdlVTngmxbh0oNE1pCwS64g"
+    source_file: realna_istoria
+    register_tag: interview
+    decolonization_tag: strong
+    quality_tier: 1
+    language_purity: vetted
+    track_affinity:  # REVIEW: initial weights are best-effort from current corpus themes
+      hist: 1.0
+      bio: 0.8
+      istorio: 1.0
+      lit-hist-fic: 0.6
+      lit-war: 0.5
+      lit: 0.2
+      lit-essay: 0.2
+      oes: 0.4
+      ruth: 0.3
+      b2: 0.2
+      c1: 0.3
+      c2: 0.3
+    description: "Decolonial Ukrainian history interviews and explainers led by a vetted native-speaker host."
+
+  - id: ulp_youtube
+    name: "Ukrainian Lessons Podcast"
+    host: "Anna Ohoiko"
+    url: "https://www.youtube.com/@UkrainianLessons"
+    source_file: ulp_youtube
+    register_tag: scripted
+    decolonization_tag: moderate
+    quality_tier: 1
+    language_purity: vetted
+    track_affinity:  # REVIEW: pedagogical weights inferred from ULP episode mix
+      a1: 1.0
+      a2: 1.0
+      b1: 0.8
+      b2: 0.5
+      c1: 0.2
+      hist: 0.2
+      bio: 0.1
+      istorio: 0.1
+    description: "Professional pedagogy and culture explainers for beginner-to-intermediate Ukrainian learners."
+
+  - id: imtgsh
+    name: "Історія України ім. Т.Г. Шевченка"
+    host: "Редакційний голос каналу"  # REVIEW: host name needs confirmation
+    url: "https://www.youtube.com/@imtgsh"
+    source_file: imtgsh
+    register_tag: scripted
+    decolonization_tag: strong
+    quality_tier: 2
+    language_purity: auto-captions  # REVIEW: subtitle quality classification needs confirmation
+    track_affinity:  # REVIEW: initial weights are best-effort from current corpus themes
+      hist: 1.0
+      bio: 0.7
+      istorio: 0.9
+      lit-hist-fic: 0.5
+      oes: 0.2
+      ruth: 0.1
+      b2: 0.1
+      c1: 0.2
+    description: "Accessible Ukrainian history explainers with strong anti-imperial framing and current-affairs tie-ins."
+
+  - id: istoria_movy
+    name: "Історія Мови"
+    host: "Редакційний голос каналу"  # REVIEW: host name needs confirmation
+    url: "https://www.youtube.com/@Istoria-Movy"
+    source_file: istoria_movy
+    register_tag: scripted
+    decolonization_tag: moderate  # REVIEW: moderate is a best-effort initial tag
+    quality_tier: 2
+    language_purity: auto-captions  # REVIEW: subtitle quality classification needs confirmation
+    track_affinity:  # REVIEW: initial weights are best-effort from current corpus themes
+      oes: 1.0
+      ruth: 1.0
+      istorio: 0.5
+      hist: 0.4
+      bio: 0.2
+      c1: 0.4
+      c2: 0.5
+    description: "Popularized history-of-language explainers most relevant to OES and Ruthenian tracks."
+
+  - id: komik_istoryk
+    name: "Комік плюс історик"
+    host: "Фелікс Редька + Євген Мурза"
+    url: "https://www.youtube.com/@komikistoryk"
+    source_file: komik_istoryk
+    register_tag: mixed
+    decolonization_tag: moderate
+    quality_tier: 2
+    language_purity: auto-captions  # REVIEW: subtitle quality classification needs confirmation
+    track_affinity:  # REVIEW: initial weights are best-effort from current corpus themes
+      hist: 0.9
+      bio: 0.7
+      istorio: 0.8
+      lit-hist-fic: 0.4
+      folk: 0.2
+      b2: 0.1
+    description: "Conversational public-history podcast pairing a comedian with a historian for accessible historical storytelling."
+
+  - id: ulp_blogs
+    name: "Ukrainian Lessons Blog"
+    host: "Anna Ohoiko"
+    url: "https://www.ukrainianlessons.com/"
+    source_file: ulp_blogs
+    register_tag: scripted
+    decolonization_tag: moderate
+    quality_tier: 1
+    language_purity: vetted
+    track_affinity:  # REVIEW: pedagogical weights inferred from article mix
+      a1: 1.0
+      a2: 1.0
+      b1: 0.8
+      b2: 0.6
+      c1: 0.3
+      c2: 0.2
+    description: "Short vetted pedagogical blog entries and phrase lists from Ukrainian Lessons."
+
+  - id: other_blogs
+    name: "Miscellaneous blogs"
+    host: "Multiple authors"  # REVIEW: aggregate corpus label
+    url: "https://opentext.ku.edu/dobraforma/"  # REVIEW: representative URL for a mixed-source file
+    source_file: other_blogs
+    register_tag: mixed
+    decolonization_tag: neutral  # REVIEW: aggregate label for a mixed-source file
+    quality_tier: 3
+    language_purity: unreviewed
+    track_affinity:  # REVIEW: initial weights are best-effort for a mixed background corpus
+      a2: 0.2
+      b1: 0.3
+      b2: 0.3
+      c1: 0.4
+      c2: 0.4
+      hist: 0.3
+      bio: 0.2
+      istorio: 0.3
+      lit: 0.1
+      oes: 0.2
+      ruth: 0.2
+    description: "Mixed background corpus spanning blogs, reference pages, and a small amount of miscellaneous web content."
