@@ -11,9 +11,23 @@ from pathlib import Path
 from .config import TRACK_DOMAINS, WIKI_DIR
 
 # Max chars of wiki context to inject into build prompts.
-# The seminar write prompt is already ~5K + plan ~3K + knowledge packet ~8K.
-# Wiki context should be substantial but not dominate.
-WIKI_CONTEXT_BUDGET = 30_000
+#
+# History: originally 30K on the principle that "wiki should not dominate
+# the prompt." That principle was wrong for seminar tracks, where the wiki
+# IS the content (HIST/BIO/LIT/OES/RUTH articles are 15-35K each and carry
+# the decolonized framing + factual backbone the writer needs). At 30K,
+# seminar modules were losing 60%+ of their knowledge corpus after the
+# first article.
+#
+# Decision 2026-04-18: raise uniformly to 100K across all tracks (core +
+# seminar). Rationale:
+#   - Gemini 3.1 Pro handles long context cleanly below the ~150K attention
+#     dilution elbow; 100K wiki → ~180K total prompt stays in the safe band.
+#   - Fits 3-4 full articles comfortably (post relevance-rank sort).
+#   - Cost delta is acceptable vs the quality floor raise.
+#   - If quality on instruction-adherence dimensions (plan adherence,
+#     vocabulary coverage) drops, back off first — not past 80K.
+WIKI_CONTEXT_BUDGET = 100_000
 _TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яІіЇїЄєҐґ'][A-Za-zА-Яа-яІіЇїЄєҐґ'’-]{1,}")
 _STOPWORDS = {
     "and",
