@@ -24,9 +24,30 @@
 - ~~Dispatching Phase A (Codex wiki compile test, 9 slugs) + Phase C (Codex Google Drive backup) in parallel~~ → **dispatched** (PIDs 21883, 22474; both running)
 - ~~Dispatching Gemini #1323 re-verify~~ → **done, msg #350**: verdict `merge still blocked` because the f4c03c12d strip_meta regex's `[^<]*?` body silently fails on valid YAML containing `<` (e.g., `description: "A < B"`). The other 2 patches (49fab3ee9 hijack-guard, 74371b51e seminar registry) confirmed AGREE.
 - **Shipped commit `347686a2b`** — strip_meta switched to tempered repetition `(?:(?!<!--).)*?`; added 2 regression tests pinning down both bugs (msg #348 swallow-comment + msg #350 lt-in-yaml). All 6 strip_meta tests + the full TestStripMeta class (21 tests) pass.
-- ~~Gemini #1324 review~~ → **dispatched** (background, serial after #1323 per your `1cc707e17` directive)
-- Phase B held until Phase A health-check
-- **#1323 status**: 2 of 3 patches confirmed; the 3rd (strip_meta) now patched again — needs ANOTHER re-verify if you want full Gemini sign-off. I won't fire that automatically without your call (would break the "no infinite Gemini loop" implicit boundary). Mark merge-ready or queue another re-verify on your return.
+- ~~Gemini #1324 review~~ → **done, msg #354** (6892 chars). Verdict: **MERGE WITH PATCHES**, 5 prioritized fixes (2 critical, 2 medium, 1 nice-to-have).
+- **Shipped commit `9dbdfcaf1`** — applied all 5 Gemini #1324 fixes:
+  - **Critical**: `migrate_external_chunks.py` — `ensure_external_schema` now CREATEs the base table before ALTERing (fresh-clone runs no longer crash); also moved `rows_before` COUNT below the bootstrap (test exposed that the count itself was the first crash on a missing table)
+  - **Critical**: `channels.py rank_external_hits` — hard-exclude channels with affinity ≤ 0.0 for the requested track (was leaking to LLM when FTS hit-set < max_results)
+  - **Medium**: `enrichment.py` — drop `track=track` from the `search_external` call to avoid double-ranking (was squaring affinity + tier weights)
+  - **Medium**: dedup by normalized URL alone (was `(source_file, url)` — Cyrillic vs Latin filenames not collapsing)
+  - **Nice-to-have**: `sources_db.py` — bumped FTS pool from `max_total * 5` to `* 15` so re-ranker sees deeper candidates
+  - 3 new regression tests (one of which exposed an additional same-bug crash that I also fixed in the same commit)
+  - All 39 wiki/channels/migration/MCP tests green
+- ~~Phase C (Codex gdrive backup)~~ → **done in 5m15s, exit 0**. Codex shipped commit `e44fc3711` (`ops(backup): daily Google Drive backup for sources.db + vesum.db`). New files: `scripts/ops/backup_dbs.sh`, `scripts/ops/prune_gdrive_backups.sh`, `docs/ops/gdrive-backup.md`, README pointer. **rclone v1.73.3 installed via brew** but no Google Drive remote configured yet — user action required: run `rclone config`, then install cron from `docs/ops/gdrive-backup.md`.
+- **Phase A** (Codex wiki compile, 9 slugs) — still running, 12 min in (this is normal — `--review` per article triggers Gemini round-trip; expect 30-60 min total).
+- Phase B held until Phase A finishes + health check.
+
+### Status of #1323 / #1324 merges
+
+- **#1323**: 2 of 3 original patches Gemini-confirmed (49fab3ee9, 74371b51e). The 3rd (strip_meta) was re-patched in commit `347686a2b` per Gemini's recommendation. Needs ONE more re-verify if you want full Gemini sign-off — won't auto-fire that. Spot-check the 2 regression tests in `test_wiki_context.py` and call it merge-ready, or queue another re-verify on your return.
+- **#1324**: 5 patches applied per Gemini's review. The two critical ones (fresh-clone bootstrap, 0.0-affinity exclusion) had real risk surface. The 3 regression tests prove the new behavior. **Could re-verify this round too — same call as #1323**.
+
+### What's left (when you're back)
+
+- Decide: merge-ready or queue another Gemini re-verify on #1323 + #1324 round-2 patches?
+- Decide: Phase B kickoff (gated on Phase A's report)?
+- User action for Phase C: `rclone config`, then install cron entries
+- 53 commits ahead of `origin/main`. Push when you're ready.
 
 ---
 
