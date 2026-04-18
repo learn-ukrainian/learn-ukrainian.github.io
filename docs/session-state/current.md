@@ -17,6 +17,7 @@ Then `curl /api/orient` for live state and `curl /api/comms/inbox?agent=claude` 
 | 2 | **Merge #1323 + #1324 round-2 patches** as-is, or queue another Gemini re-verify? | Spot-check the regression tests; Gemini-quota-sensitive. |
 | 3 | **`rclone config`** for Phase C activation. Backup scripts ready, no Drive remote yet. OAuth needs your browser. | `rclone config`, then install cron from `docs/ops/gdrive-backup.md`. |
 | 4 | **Restore the agent-watcher LaunchAgent?** Unloaded this session; backup at `~/Library/LaunchAgents/com.learn-ukrainian.agent-watcher.plist.disabled-2026-04-18`. | Leave unloaded unless you want auto-broker draining back. |
+| 5 | **Push the cold-start-handoff pattern further?** User explicitly parked these for after `/clear`. Three deltas: (a) `scripts/cold-start.sh` shell wrapper around `MonitorClient().bootstrap()` for symmetry with `scripts/ops/smoketest_bridge_stdout_only.sh`. (b) Wire the bridge smoketest into the pre-commit hook for any change touching `scripts/ai_agent_bridge/_gemini.py` or `_cli.py` so this regression class can't sneak back. (c) Audit other `docs/session-state/*.md` for the same bloat pattern (duplicating API-served state) and trim. | Pick one or all three when you resume. |
 
 ## Behavior changes future callers may trip on
 
