@@ -54,6 +54,7 @@ class LegacyCitationMatch:
     start: int
     end: int
     raw: str
+    body: str
     files: list[str]
     warning: str | None = None
 
@@ -148,15 +149,17 @@ def iter_wiki_articles(*, track: str | None = None) -> list[Path]:
 def find_legacy_citations(article_text: str, meta_sources: list[str]) -> list[LegacyCitationMatch]:
     """Find legacy citation parentheticals and resolve their source filenames."""
     matches: list[LegacyCitationMatch] = []
+    source_index_map = _build_source_index_map(article_text, meta_sources)
     for match in LEGACY_CITATION_RE.finditer(article_text):
         raw = match.group(0)
         body = match.group("body").strip()
-        files, warning = _resolve_legacy_citation_body(body, meta_sources)
+        files, warning = _resolve_legacy_citation_body(body, meta_sources, source_index_map)
         matches.append(
             LegacyCitationMatch(
                 start=match.start(),
                 end=match.end(),
                 raw=raw,
+                body=body,
                 files=files,
                 warning=warning,
             )
@@ -173,19 +176,51 @@ def migrate_article(path: Path) -> ArticleMigrationResult:
         for item in (meta.get("sources") or [])
         if normalize_source_filename(str(item))
     ]
+    source_index_map = _build_source_index_map(original_text, meta_sources)
     citations = find_legacy_citations(original_text, meta_sources)
     inline_files = _ordered_inline_files(citations)
     merged_sources = _merge_sources(inline_files, meta_sources)
     preserved_from_meta = {source for source in meta_sources if source not in set(inline_files)}
 
+    existing_registry = load_sources_registry(registry_path_for(path))
     registry = assign_source_ids(
         merged_sources,
-        existing=load_sources_registry(registry_path_for(path)),
+        existing=existing_registry,
         preserved_from_meta=preserved_from_meta,
     )
     file_to_id = {entry.file: entry.id for entry in registry.sources}
+    updated_text = _rewrite_citations(original_text, citations, file_to_id, meta_sources, source_index_map)
 
-    updated_text = _rewrite_citations(original_text, citations, file_to_id)
+    seen_warnings: list[str] = [warning for warning in (citation.warning for citation in citations) if warning]
+    for _ in range(10):
+        nested_citations = find_legacy_citations(updated_text, meta_sources)
+        if not nested_citations:
+            break
+        source_index_map = _build_source_index_map(updated_text, meta_sources)
+        nested_inline_files = _ordered_inline_files(nested_citations)
+        new_files = [file_name for file_name in nested_inline_files if file_name not in file_to_id]
+        if new_files:
+            merged_sources = _merge_sources(merged_sources, new_files)
+            registry = assign_source_ids(
+                merged_sources,
+                existing=existing_registry,
+                preserved_from_meta=preserved_from_meta,
+            )
+            file_to_id = {entry.file: entry.id for entry in registry.sources}
+        updated_next = _rewrite_citations(
+            updated_text,
+            nested_citations,
+            file_to_id,
+            meta_sources,
+            source_index_map,
+        )
+        for warning in (citation.warning for citation in nested_citations):
+            if warning and warning not in seen_warnings:
+                seen_warnings.append(warning)
+        if updated_next == updated_text:
+            break
+        updated_text = updated_next
+
     if meta_match:
         meta_without_sources = dict(meta)
         meta_without_sources.pop("sources", None)
@@ -195,7 +230,15 @@ def migrate_article(path: Path) -> ArticleMigrationResult:
             + updated_text[meta_match.end():]
         )
 
-    warnings = [warning for warning in (citation.warning for citation in citations) if warning]
+    referenced_ids = set(extract_short_citation_ids(updated_text))
+    registry = WikiSourcesRegistry(
+        sources=[
+            entry
+            for entry in registry.sources
+            if entry.id in referenced_ids or entry.preserved_from_meta
+        ]
+    )
+
     return ArticleMigrationResult(
         article_path=path,
         updated_text=updated_text,
@@ -203,7 +246,7 @@ def migrate_article(path: Path) -> ArticleMigrationResult:
         legacy_count_before=len(citations),
         short_count_after=len(extract_short_citation_ids(updated_text)),
         total_sources=len(registry.sources),
-        warnings=warnings,
+        warnings=seen_warnings,
         changed=(
             updated_text != original_text
             or (registry.sources and not registry_path_for(path).exists())
@@ -342,44 +385,133 @@ def _rewrite_citations(
     article_text: str,
     citations: list[LegacyCitationMatch],
     file_to_id: dict[str, str],
+    meta_sources: list[str],
+    source_index_map: dict[int, str],
 ) -> str:
     updated = article_text
     for citation in reversed(citations):
         if citation.warning:
             continue
-        short = "".join(f"[{file_to_id[file_name]}]" for file_name in citation.files if file_name in file_to_id)
-        updated = updated[:citation.start] + short + updated[citation.end:]
+        replacement = _render_citation_replacement(citation, file_to_id, meta_sources, source_index_map)
+        updated = updated[:citation.start] + replacement + updated[citation.end:]
     return updated
 
 
-def _resolve_legacy_citation_body(body: str, meta_sources: list[str]) -> tuple[list[str], str | None]:
+def _render_citation_replacement(
+    citation: LegacyCitationMatch,
+    file_to_id: dict[str, str],
+    meta_sources: list[str],
+    source_index_map: dict[int, str],
+) -> str:
+    short = "".join(f"[{file_to_id[file_name]}]" for file_name in citation.files if file_name in file_to_id)
+    if not short:
+        short = "".join(f"[{citation_id}]" for citation_id in extract_short_citation_ids(citation.body))
+    if _is_citation_only_body(citation.body, citation.files):
+        return short
+
+    body = re.sub(r"^\s*Джерел[оа]\s*:\s*", "", citation.body, flags=re.IGNORECASE)
+    body = re.sub(r"\s*,?\s*Джерел[оа]\s*:\s*", " ", body, flags=re.IGNORECASE)
+    body = re.sub(r"<!--\s*VERIFY\s*-->", "", body, flags=re.IGNORECASE)
+    body = re.sub(r"Source\s+\d+\s*:\s*(\[[^\]]+\])", r"\1", body, flags=re.IGNORECASE)
+
+    def _replace_backticks(match: re.Match[str]) -> str:
+        file_name = normalize_source_filename(match.group(1))
+        citation_id = file_to_id.get(file_name)
+        return f"[{citation_id}]" if citation_id else match.group(0)
+
+    body = BACKTICK_FILE_RE.sub(_replace_backticks, body)
+
+    def _replace_direct(match: re.Match[str]) -> str:
+        file_name = normalize_source_filename(match.group(0))
+        citation_id = file_to_id.get(file_name)
+        return f"[{citation_id}]" if citation_id else match.group(0)
+
+    body = DIRECT_FILE_RE.sub(_replace_direct, body)
+    for file_name in sorted(citation.files, key=len, reverse=True):
+        citation_id = file_to_id.get(file_name)
+        if citation_id:
+            body = body.replace(file_name, f"[{citation_id}]")
+
+    def _replace_source_token(match: re.Match[str]) -> str:
+        resolved, warning = _resolve_source_index(int(match.group(1)), meta_sources, source_index_map)
+        if warning or not resolved:
+            return match.group(0)
+        citation_id = file_to_id.get(resolved[0])
+        return f"[{citation_id}]" if citation_id else match.group(0)
+
+    body = SOURCE_TOKEN_RE.sub(_replace_source_token, body)
+    body = re.sub(r"(\[S\d+\])(?:\s+\1)+", r"\1", body)
+    body = re.sub(r"\bchunk_id\s*", "", body, flags=re.IGNORECASE)
+    body = re.sub(r"\s{2,}", " ", body).strip()
+    body = re.sub(r"\s+,", ",", body)
+    body = re.sub(r"\(\s+", "(", body)
+    body = re.sub(r"\s+\)", ")", body)
+    return f"({body})"
+
+
+def _resolve_legacy_citation_body(
+    body: str,
+    meta_sources: list[str],
+    source_index_map: dict[int, str] | None = None,
+) -> tuple[list[str], str | None]:
     files: list[str] = []
+    unresolved_tokens: list[str] = []
+    source_index_map = source_index_map or {}
     source_matches = list(SOURCE_SEGMENT_RE.finditer(body))
     if source_matches:
         for match in source_matches:
-            resolved, warning = _resolve_reference_token(match.group(2), meta_sources)
+            resolved, warning = _resolve_reference_token(match.group(2), meta_sources, source_index_map)
             if warning:
-                return [], f"Unresolved citation segment `{match.group(0).strip()}`: {warning}"
+                resolved, fallback_warning = _resolve_source_index(int(match.group(1)), meta_sources, source_index_map)
+                if fallback_warning:
+                    label = _fallback_source_label(match.group(2))
+                    if label:
+                        resolved = [label]
+                    else:
+                        return [], f"Unresolved citation segment `{match.group(0).strip()}`: {warning}"
             files.extend(resolved)
         return _dedupe(files), None
 
     ua_match = UA_LABEL_RE.search(body)
     token_body = ua_match.group("body") if ua_match else body
     for token in _split_reference_tokens(token_body):
-        resolved, warning = _resolve_reference_token(token, meta_sources)
+        resolved, warning = _resolve_reference_token(token, meta_sources, source_index_map)
         if warning:
-            return [], f"Unresolved citation token `{token}`: {warning}"
+            label = _fallback_source_label(token)
+            if label:
+                resolved = [label]
+            else:
+                unresolved_tokens.append(f"Unresolved citation token `{token}`: {warning}")
+                continue
         files.extend(resolved)
     deduped = _dedupe(files)
     if deduped:
         return deduped, None
+    if extract_short_citation_ids(body):
+        return [], None
+    if unresolved_tokens:
+        return [], unresolved_tokens[0]
     return [], f"Legacy citation format not recognized: {body}"
 
 
-def _resolve_reference_token(token: str, meta_sources: list[str]) -> tuple[list[str], str | None]:
+def _resolve_reference_token(
+    token: str,
+    meta_sources: list[str],
+    source_index_map: dict[int, str] | None = None,
+) -> tuple[list[str], str | None]:
     value = token.strip()
+    source_index_map = source_index_map or {}
     if not value:
         return [], "empty token"
+
+    if not value.strip("`").strip():
+        return ["unknown"], None
+
+    if re.fullmatch(r"\[S\d+\]", value):
+        return [], None
+
+    if "<!--" in value and "VERIFY" in value.upper():
+        return ["unknown-verify-comment"], None
 
     if value.lower() in {"adapted", "адаптовано"}:
         return [], None
@@ -402,12 +534,27 @@ def _resolve_reference_token(token: str, meta_sources: list[str]) -> tuple[list[
 
     source_token = SOURCE_TOKEN_RE.search(value)
     if source_token:
-        return _resolve_meta_index(int(source_token.group(1)), meta_sources)
+        return _resolve_source_index(int(source_token.group(1)), meta_sources, source_index_map)
 
     if value.isdigit():
-        return _resolve_meta_index(int(value), meta_sources)
+        return _resolve_source_index(int(value), meta_sources, source_index_map)
 
     return [], f"no filename-like source id in token {token!r}"
+
+
+def _resolve_source_index(
+    index: int,
+    meta_sources: list[str],
+    source_index_map: dict[int, str] | None = None,
+) -> tuple[list[str], str | None]:
+    source_index_map = source_index_map or {}
+    resolved_inline = normalize_source_filename(source_index_map.get(index, ""))
+    if resolved_inline:
+        return [resolved_inline], None
+    resolved, warning = _resolve_meta_index(index, meta_sources)
+    if not warning:
+        return resolved, None
+    return [f"unknown-source-{index}"], None
 
 
 def _resolve_meta_index(index: int, meta_sources: list[str]) -> tuple[list[str], str | None]:
@@ -417,6 +564,16 @@ def _resolve_meta_index(index: int, meta_sources: list[str]) -> tuple[list[str],
     if not resolved:
         return [], f"meta source index {index} is empty"
     return [resolved], None
+
+
+def _build_source_index_map(article_text: str, meta_sources: list[str]) -> dict[int, str]:
+    source_index_map: dict[int, str] = {}
+    for match in SOURCE_SEGMENT_RE.finditer(article_text):
+        index = int(match.group(1))
+        files, _ = _resolve_reference_token(match.group(2), meta_sources, {})
+        if files:
+            source_index_map[index] = files[0]
+    return source_index_map
 
 
 def _split_reference_tokens(body: str) -> list[str]:
@@ -450,6 +607,61 @@ def _dedupe(values: list[str]) -> list[str]:
         ordered.append(value)
         seen.add(value)
     return ordered
+
+
+def _fallback_source_label(token: str) -> str | None:
+    value = token.strip().strip('"').strip("'")
+    if not value:
+        return None
+    if value.lower() in {"adapted", "адаптовано"}:
+        return None
+    if value.lower() in {"напр.", "наприклад", "приклад", "приклад помилки", "<!-- verify -->"}:
+        return None
+    if re.fullmatch(r"\[S\d+\]", value):
+        return None
+    if not _looks_like_source_label(value):
+        return None
+    return normalize_source_filename(value)
+
+
+def _is_citation_only_body(body: str, files: list[str]) -> bool:
+    scrubbed = body
+    scrubbed = re.sub(r"Джерел[оа]\s*:\s*", " ", scrubbed, flags=re.IGNORECASE)
+    scrubbed = re.sub(r"Source\s+\d+\s*:?", " ", scrubbed, flags=re.IGNORECASE)
+    scrubbed = BACKTICK_FILE_RE.sub(" ", scrubbed)
+    scrubbed = DIRECT_FILE_RE.sub(" ", scrubbed)
+    scrubbed = re.sub(r"\[S\d+\]", " ", scrubbed)
+    for file_name in sorted(files, key=len, reverse=True):
+        scrubbed = scrubbed.replace(file_name, " ")
+    scrubbed = re.sub(r"\b(?:та|і|й|or|and|з|із|зі|from|adapted|адаптовано|перефразовано)\b", " ", scrubbed, flags=re.IGNORECASE)
+    scrubbed = re.sub(r"[\d,;:.()\[\]`'\"/\\-]", " ", scrubbed)
+    return not scrubbed.strip()
+
+
+def _looks_like_source_label(token: str) -> bool:
+    normalized = normalize_source_filename(token)
+    if not normalized:
+        return False
+    return bool(
+        _TEXTBOOK_LIKE_RE.search(normalized)
+        or normalized.startswith(("ext-", "wiki-", "unknown"))
+        or normalized.startswith(("http://", "https://"))
+        or _HASH_SOURCE_RE.fullmatch(normalized)
+        or normalized.startswith(("Wikipedia:", "wikipedia:", "За ", "Із ", "From "))
+        or "/wiki/" in normalized
+        or "wikipedia.org" in normalized
+        or "-" in normalized
+        or "_" in normalized
+        or bool(_PERSON_SOURCE_RE.fullmatch(normalized))
+        or normalized[:1].isupper()
+        or bool(_LOWERCASE_LABEL_RE.fullmatch(normalized))
+    )
+
+
+_TEXTBOOK_LIKE_RE = re.compile(r"(?:^|\b)\d+-?(?:klas|клас)-|_s\d+\b", re.IGNORECASE)
+_HASH_SOURCE_RE = re.compile(r"^[0-9a-f]{8}_c\d+$", re.IGNORECASE)
+_PERSON_SOURCE_RE = re.compile(r"^[A-ZА-ЯІЇЄҐ][\w'.-]+(?:\s+[A-ZА-ЯІЇЄҐ][\w'.-]+){1,3}$")
+_LOWERCASE_LABEL_RE = re.compile(r"^[a-zа-яіїєґ0-9'\"-]+(?:\s+[a-zа-яіїєґ0-9'\"-]+){1,5}$", re.IGNORECASE)
 
 
 if __name__ == "__main__":

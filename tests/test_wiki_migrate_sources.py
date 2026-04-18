@@ -40,6 +40,12 @@ sys.path.insert(0, os.path.join(_project_root, "scripts"))
             ["11-klas-ukrmova-avramenko-2019_s0014"],
         ),
         ("Адаптовано з Джерела: `5-klas-ukrmova-uhor-2022-1_s0037`", [], ["5-klas-ukrmova-uhor-2022-1_s0037"]),
+        ("Джерело: ``", [], ["unknown"]),
+        (
+            "напр., адаптований уривок з Source 5",
+            ["ext-foo-1"] * 4 + ["ext-ulp_youtube-99"],
+            ["ext-ulp_youtube-99"],
+        ),
     ],
 )
 def test_resolve_legacy_citation_body_variants(
@@ -52,6 +58,28 @@ def test_resolve_legacy_citation_body_variants(
     files, warning = _resolve_legacy_citation_body(body, meta_sources)
     assert warning is None
     assert files == expected
+
+
+def test_rewrite_mixed_parenthetical_preserves_prose() -> None:
+    from wiki.migrate_sources import LegacyCitationMatch, _render_citation_replacement
+
+    citation = LegacyCitationMatch(
+        start=0,
+        end=0,
+        raw="(напр., адаптований уривок з Source 5)",
+        body="напр., адаптований уривок з Source 5",
+        files=["ext-ulp_youtube-99"],
+        warning=None,
+    )
+
+    replacement = _render_citation_replacement(
+        citation,
+        {"ext-ulp_youtube-99": "S5"},
+        ["ext-foo-1"] * 4 + ["ext-ulp_youtube-99"],
+        {5: "ext-ulp_youtube-99"},
+    )
+
+    assert replacement == "(напр., адаптований уривок з [S5])"
 
 
 def test_migrate_then_verify_roundtrip(tmp_path: Path) -> None:
