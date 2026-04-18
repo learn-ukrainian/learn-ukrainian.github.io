@@ -16,6 +16,7 @@ from wiki.channels import (
     TRACK_CHANNEL_AFFINITY,
     get_track_affinity,
     load_channels,
+    rank_external_hits,
 )
 
 
@@ -88,6 +89,41 @@ def test_invalid_track_affinity_is_rejected(tmp_path: Path):
 
     with pytest.raises(ValueError, match=r"track_affinity\['hist'\] must be between 0.0 and 1.0"):
         load_channels(path, reload=True)
+
+
+def test_zero_affinity_channels_are_excluded_not_just_zero_weighted():
+    """Regression for Gemini review #354 (#1324) item 10.
+
+    A channel marked ``track_affinity: 0.0`` for the requested track must
+    NOT appear in ranked results — multiplying its score by 0.0 only
+    sorts it to the bottom, so it would still leak through to the LLM
+    whenever the FTS hit-set is smaller than ``max_results``.
+    """
+    load_channels(reload=True)
+
+    # ulp_youtube is registered with hist=0.2 — keep it.
+    # Use a non-zero-affinity channel to confirm normal hits survive.
+    keep_hit = {
+        "channel_id": "ulp_youtube",
+        "rank": -10.0,
+        "source_type": "external",
+        "quality_tier": 1,
+    }
+    # missing-source has 0.0 affinity (default for unknown channel) for
+    # *any* track. Must be excluded when a track is requested.
+    drop_hit = {
+        "channel_id": "missing-source",
+        "rank": -100.0,  # better BM25 than keep_hit
+        "source_type": "external",
+        "quality_tier": 1,
+    }
+
+    ranked = rank_external_hits([keep_hit, drop_hit], track="hist")
+    channel_ids = [hit.get("channel_id") for hit in ranked]
+    assert "missing-source" not in channel_ids, (
+        "0.0-affinity channel must be hard-excluded, not just sorted to bottom"
+    )
+    assert "ulp_youtube" in channel_ids
 
 
 def test_missing_required_field_is_rejected(tmp_path: Path):

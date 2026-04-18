@@ -206,6 +206,11 @@ def search_external(
         where.append("COALESCE(s.quality_tier, 99) <= ?")
         params.append(int(min_quality_tier))
 
+    # ``max_total * 15`` cushion (was * 5) so the Python-side affinity +
+    # quality re-ranker has a deeper candidate pool to work with. With * 5,
+    # high-affinity chunks with weaker BM25 scores were being truncated
+    # before reaching ``rank_external_hits``. Gemini review #354 (#1324)
+    # item 8.
     rows = conn.execute(
         f"""SELECT s.*, bm25(external_fts) AS rank
             FROM external_fts
@@ -213,7 +218,7 @@ def search_external(
             WHERE {' AND '.join(where)}
             ORDER BY rank
             LIMIT ?""",
-        (*params, max_total * 5),
+        (*params, max_total * 15),
     ).fetchall()
 
     skip = exclude_urls or set()

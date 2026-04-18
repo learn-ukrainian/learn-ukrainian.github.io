@@ -89,7 +89,41 @@ def normalize_text(text: str) -> str:
 
 
 def ensure_external_schema(conn: sqlite3.Connection) -> list[str]:
-    """Add the enriched external_articles columns and rebuild external FTS."""
+    """Add the enriched external_articles columns and rebuild external FTS.
+
+    Idempotent against three states: (a) fully-populated DB from a prior
+    migration run, (b) baseline DB with the original columns only, and
+    (c) **fresh-clone DB where the table doesn't exist at all** — Gemini
+    review #354 (#1324) flagged that the previous ``ALTER TABLE`` loop
+    would crash on (c). Mirror the canonical schema from
+    ``scripts/wiki/build_sources_db.py`` so the migration self-bootstraps.
+    """
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS external_articles (
+            id INTEGER PRIMARY KEY,
+            chunk_id TEXT NOT NULL DEFAULT '',
+            url TEXT NOT NULL DEFAULT '',
+            url_normalized TEXT NOT NULL DEFAULT '',
+            title TEXT NOT NULL DEFAULT '',
+            text TEXT NOT NULL DEFAULT '',
+            source_file TEXT NOT NULL DEFAULT '',
+            domain TEXT DEFAULT '',
+            char_count INTEGER DEFAULT 0,
+            channel_id TEXT DEFAULT '',
+            speaker TEXT DEFAULT '',
+            register_tag TEXT DEFAULT '',
+            decolonization_tag TEXT DEFAULT '',
+            quality_tier INTEGER DEFAULT 2,
+            publish_date TEXT DEFAULT '',
+            duration_s INTEGER DEFAULT 0,
+            chunk_start_ts INTEGER,
+            chunk_end_ts INTEGER,
+            video_id TEXT DEFAULT ''
+        )
+        """
+    )
+
     existing = {
         row[1]
         for row in conn.execute("PRAGMA table_info(external_articles)").fetchall()
@@ -267,7 +301,13 @@ def _iter_jsonl_items(
     failures: list[str] = []
     input_count = 0
     deduped_count = 0
-    seen_urls: set[tuple[str, str]] = set()
+    # Dedup by normalized URL only (NOT (source_file, url)). Gemini review
+    # #354 (#1324) flagged that the original tuple key let identical URLs
+    # appearing in differently-named JSONL files (e.g., the historical
+    # Latin- vs Cyrillic-named exports of the same channel) bypass
+    # deduplication. The collision risk is also low because URLs in our
+    # corpus are channel-scoped by domain.
+    seen_urls: set[str] = set()
 
     for jsonl_path in sorted(data_dir.glob("*.jsonl")):
         source_file = jsonl_path.stem
@@ -295,7 +335,7 @@ def _iter_jsonl_items(
                     failures.append(f"{jsonl_path.name}:{lineno}: missing url/text")
                     continue
 
-                dedupe_key = (source_file, normalize_url(url))
+                dedupe_key = normalize_url(url)
                 if dedupe_key in seen_urls:
                     deduped_count += 1
                     continue
@@ -392,8 +432,12 @@ def migrate_external_chunks(
         return stats
 
     conn = sqlite3.connect(str(db_path))
-    stats["rows_before"] = conn.execute("SELECT COUNT(*) FROM external_articles").fetchone()[0]
+    # Bootstrap schema FIRST — on a fresh clone the table doesn't exist yet,
+    # so the rows_before COUNT(*) below would crash. Gemini review #354
+    # (#1324) item 1 + the regression test
+    # ``test_migration_bootstraps_on_fresh_clone_without_table``.
     stats["schema_columns_added"] = ensure_external_schema(conn)
+    stats["rows_before"] = conn.execute("SELECT COUNT(*) FROM external_articles").fetchone()[0]
     conn.execute("DELETE FROM external_articles")
     _insert_rows(conn, rows)
     conn.execute("INSERT INTO external_fts(external_fts) VALUES ('rebuild')")

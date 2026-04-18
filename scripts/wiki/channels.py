@@ -178,6 +178,14 @@ def rank_external_hits(
             if not apply_quality_without_track:
                 tier_weight = 1.0
 
+        # Hard exclusion: a channel explicitly marked 0.0 affinity for this
+        # track must NOT appear in results. Multiplying by 0.0 only sorts
+        # the hit to the bottom — it would still leak through to the LLM
+        # whenever the FTS hit-set is smaller than max_results.
+        # Gemini review #354 (#1324) item 10.
+        if track and affinity <= 0.0:
+            continue
+
         adjusted_score = rank * priority * tier_weight * affinity
         ranked.append({**hit, "adjusted_score": adjusted_score})
 

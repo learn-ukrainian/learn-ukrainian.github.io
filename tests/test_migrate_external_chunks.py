@@ -197,6 +197,110 @@ def test_migration_is_idempotent_and_chunk_ids_are_stable(migration_fixture: dic
     assert rows1[0][0].startswith("ext-realna_istoria-abc123xyz89-")
 
 
+def test_migration_bootstraps_on_fresh_clone_without_table(migration_fixture: dict[str, Path], tmp_path: Path):
+    """Regression for Gemini review #354 (#1324) item 1.
+
+    On a fresh clone the ``external_articles`` table doesn't exist, so the
+    previous ``ALTER TABLE`` loop in ``ensure_external_schema`` would
+    crash. The migration must self-bootstrap by mirroring the canonical
+    schema from ``build_sources_db.py``.
+    """
+    fresh_db = tmp_path / "fresh-clone.db"
+    # Touch the file but do NOT create any tables.
+    sqlite3.connect(str(fresh_db)).close()
+
+    stats = migrate_external_chunks(
+        db_path=fresh_db,
+        data_dir=migration_fixture["data_dir"],
+        channels_path=migration_fixture["channels_path"],
+        verify=True,
+    )
+
+    assert stats["rows_after"] > 0, "fresh-DB migration must populate rows"
+
+    conn = sqlite3.connect(str(fresh_db))
+    table_names = {
+        row[0] for row in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type IN ('table', 'view')"
+        )
+    }
+    conn.close()
+    assert "external_articles" in table_names
+    assert "external_fts" in table_names
+
+
+def test_dedup_collapses_url_across_differently_named_jsonl_files(tmp_path: Path):
+    """Regression for Gemini review #354 (#1324) item 4.
+
+    Earlier dedupe key was ``(source_file, normalized_url)``, so the same
+    URL appearing in differently-named JSONL files (e.g., the historical
+    Latin- vs Cyrillic-named exports of one channel) wasn't collapsed.
+    Dedup must use the URL alone.
+    """
+    data_dir = tmp_path / "external_articles"
+    data_dir.mkdir()
+
+    duplicated_url = "https://www.youtube.com/watch?v=dupZZ12345"
+    title = "Дублікат запису"
+    text = (
+        "Перше речення дубліката для тесту дедупа. "
+        "Друге речення додає достатньо тексту для генерації чанку. "
+    ) * 5
+
+    # Two differently-named JSONL files with the SAME url.
+    for source_file in ("realna_istoria", "Реальна_Історія"):
+        _write_jsonl(
+            data_dir / f"{source_file}.jsonl",
+            [{"url": duplicated_url, "title": title, "text": text, "char_count": len(text)}],
+        )
+
+    # Channel registry covers both filenames.
+    channels = {
+        "channels": [
+            {
+                "id": sf,
+                "name": sf,
+                "host": "Test",
+                "url": "https://example.test",
+                "source_file": sf,
+                "register_tag": "interview",
+                "decolonization_tag": "strong",
+                "quality_tier": 1,
+                "language_purity": "vetted",
+                "track_affinity": {"hist": 1.0},
+                "description": "Demo dup source.",
+            }
+            for sf in ("realna_istoria", "Реальна_Історія")
+        ],
+    }
+    channels_path = data_dir / "channels.yaml"
+    channels_path.write_text(yaml.safe_dump(channels, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+    db_path = tmp_path / "sources.db"
+    _init_external_db(db_path)
+
+    stats = migrate_external_chunks(
+        db_path=db_path,
+        data_dir=data_dir,
+        channels_path=channels_path,
+    )
+
+    # Two input rows, one should be deduped — only ONE source_file's
+    # rows survive in the table for that URL.
+    assert stats["items_deduped"] == 1, (
+        f"expected 1 dedup, got {stats['items_deduped']} — same URL across "
+        "differently-named JSONL files must collapse"
+    )
+
+    conn = sqlite3.connect(str(db_path))
+    surviving = conn.execute(
+        "SELECT DISTINCT source_file FROM external_articles WHERE url = ?",
+        (duplicated_url,),
+    ).fetchall()
+    conn.close()
+    assert len(surviving) == 1
+
+
 def test_migration_preserves_ulp_blogs_as_single_chunks(migration_fixture: dict[str, Path]):
     stats = migrate_external_chunks(
         db_path=migration_fixture["db_path"],
