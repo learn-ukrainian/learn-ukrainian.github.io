@@ -42,7 +42,7 @@ SVC_HEALTH[sources]="http://127.0.0.1:8766/health"
 SVC_HEALTH_ALT[sources]="http://localhost:8766/health"
 SVC_MATCH[sources]=".mcp/servers/sources/server.py --standalone"
 
-SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765"
+SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765 --log-config scripts/api/logging.json"
 SVC_PORT[api]=8765
 SVC_LOG[api]="$LOGS_DIR/api.log"
 SVC_DESC[api]="API Dashboard Server (FastAPI)"

@@ -15,6 +15,7 @@ import os
 import socket
 import subprocess
 from collections.abc import Awaitable, Callable
+from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -27,6 +28,7 @@ from . import delegate_router as delegate_api
 from . import runtime_router as runtime_api
 from . import state_router as state_api
 from . import wiki_router as wiki_api
+from ._signal_log import install_signal_logging
 from .admin_router import router as admin_router
 from .agent_router import router as agent_router
 from .artifacts_router import router as artifacts_router
@@ -59,9 +61,22 @@ from .state_router import router as state_router
 from .wiki_router import router as wiki_router
 from .worktrees_router import router as worktrees_router
 
+
+@asynccontextmanager
+async def _lifespan(_app: FastAPI):
+    """Lifespan hook — wrap uvicorn signal handlers so we record WHO killed us.
+
+    Without this, "Shutting down" lines in logs/api.log have no provenance.
+    See scripts/api/_signal_log.py for the wrapper rationale.
+    """
+    install_signal_logging()
+    yield
+
+
 app = FastAPI(
     title="Playground API",
     version="2.0.0",
+    lifespan=_lifespan,
 )
 
 app.add_middleware(
