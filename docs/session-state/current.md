@@ -1,181 +1,150 @@
-# Session handoff — 2026-04-15 (Claude→Codex)
+# Session Handoff — 2026-04-18 AM
 
-Claude is at usage limit. Codex takes over A1 build coordination.
+## TL;DR — state of the project at handoff
 
-## HEAD: `4bfb847ab` on main
+**Tonight shipped 30+ commits across 4 issues (#1322, #1323, #1324, wiki-quality fixes).** All work on `main`, unmerged (local ahead of `origin/main`). **User is away and has explicitly cleared context.** Incoming session is COLD — read this file first, then dispatch the 4 briefs at `/tmp/` per the "What to dispatch immediately" section below. Run autonomously, report back to `docs/session-state/current.md` when phases complete or something needs user's call.
 
-## What was shipped this session (do not re-do)
+**Critical behavioral note for this cold-start session:**
+- Pragmatic review (spot-check Codex output; don't review every file)
+- Delegate liberally: Codex has 10x quota + different cost profile; use for all execution work
+- Silence from me unless something ships to main, goes sideways, or needs user's call
+- NEVER push to origin without user approval
+- NEVER flip `CONVERGENCE_MATRIX_ENFORCED` flag
+- Module builds dispatched through Codex are OK (user explicitly approved); single-module only, never `--range`
 
-19 commits landed. Key ones:
+## What shipped tonight (in order)
 
-| Commit | What |
-|---|---|
-| `4bfb847ab` | **#1260 CRITICAL**: AC3 now in chunked writer path; no-dialogue conditional for phonetics modules; pacing plan conditional; INJECT_ACTIVITY standardized |
-| `b77caa507` | **#1260 MAJOR-5/6**: Reviewer Dimension 5 scoped to marker-only; activity_obligations order+type check |
-| `4da2b1d73` | **#1260 MAJOR-7**: Plan-patch prompt states 4 allowed roots explicitly |
-| `51c0df7bd` | **#1230 AC1**: Plan-hash invalidation + stale detection + --resume stale awareness |
-| `b020a86d1` | **#1230 AC2**: Plan contradiction validator (pre-build gate) |
-| `de24cb3b5` | **#1230 AC3**: Writer prompt: plan > skeleton precedence |
-| `32fae4838` | **#1230 AC4**: Integration tests for plan drift |
-| `f10a7d8ab` | **#1234**: Gemini 429 → auto cascade in bridge |
-| `accbb4b3f` | **#1239**: Bridge preflight warnings + deadline whitelist |
-| `a3fd7c845` | **#1236**: `ab post --model` and `ab inbox run --deadline` flags |
-| `591365c84` | **#1260 precursor**: No-dialogue dimension override in reviewer |
-| `46a47e7f6` | Fix: INJECT_ACTIVITY contract validation + plan patch output capture |
-| `2a49935ed` | Fix: plan_contract makes dialogue_situations optional |
-| `f8b972e57` | Fix: plateau test mock (#1259) |
+### Wiki quality fixes (4 commits, ship-ready)
+- `35bf6bdf5` parser fix (`--stdout-only`) + meta strip before review — cured the "7.0/10 with all 0.0 subscores" false-fail
+- `75889eaae` `WIKI_CONTEXT_BUDGET` 30K → 100K uniform
+- `6099eda87` per-dim review floor ≥ 8.0 (adds specific failing-dim list to fail logs)
+- `17c6822d5` overall pass 9.0 → 8.0 (aligned with dim floor + non-negotiable-rules.md §2)
 
----
+### #1322 Convergent pipeline (8 commits, Gemini-approved w/ patches)
+- 5 impl commits (`ebd063080` → `72f2a4faf`): module_memory, finding_normalizer, finding_topology, convergence_loop, track_constraints + v6_build.py integration
+- Gemini review (msg #346): verdict "merge with patches", 12/12 spec points conformant
+- 3 patch commits (`cb7eb783b`, `a0bed1c56`, `3c91c50cb`): history audit-trail, prompt_hash bug, ladder exception guard
+- A1/M1 end-to-end test: converged to `plan_revision_request` in 2 attempts (NOT `budget_exhausted`) — design intent verified
+- 161 v6 tests + 194 convergence tests green
+- **Ready to merge, pending your approval**
 
-## Current primary task: Fix all 17 failing A1 modules
+### #1323 Wiki sources refactor (11 commits, Gemini-blocked → patched)
+- 8 Codex commits migrating 558 articles to sibling `.sources.yaml` + `[SN]` citations
+- `b09aa035d` afhanistan recovery from bridge msg #335 (3 articles lost registry mappings mid-work; only afhanistan was recoverable)
+- `86e84b203` wiki clean slate — all 558 articles deleted because user is regenerating against the improved pipeline
+- Gemini review (msg #348): verdict "block merge" — 3 critical bugs found
+- My 3 patches: `f4c03c12d` (strip_meta greedy-cross-comment), `49fab3ee9` (migration rerun hijack-guard), `74371b51e` (seminar registry injection)
+- **Pending Gemini re-review to confirm patches are sound**
 
-### Status from Monitor API
+### #1324 External corpus (8 commits, ship-ready, pending review)
+- Re-chunked 1199 whole-video blobs → 6476 chunks (avg 1942 chars, target was 2K)
+- Enriched schema: channel_id, speaker, register_tag, decolonization_tag, quality_tier, publish_date, duration_s, chunk_start_ts, chunk_end_ts, video_id
+- MCP tool `mcp__sources__search_external` exposed, with filter params
+- Per-track ranking via `channels.yaml` affinity matrix
+- 32 tests passing (15 + 17 MCP suite)
+- `data/sources.db` is gitignored — migration runs local-only; on fresh machine, re-run `scripts/wiki/migrate_external_chunks.py`
+- Channel registry has `# REVIEW` markers on imtgsh/istoria_movy/komik_istoryk/other_blogs — low-priority user validation
+- **Pending Gemini adversarial review**
+
+### Supporting commits
+- `ead892faf` convergent pipeline spec committed
+- `e0b90c65a` external corpus spec committed
+- `bc529e59a` WIP refactor (per-track `SOURCE_CHAR_CAPS`, `_SOURCE_TYPE_PRIORITY`, dedupe, prefix stripping) — this was untracked WIP from a previous session, user said "commit + focus on code", shipped
+- `86e84b203` wiki clean slate (558 articles wiped for fresh regen)
+
+## What to dispatch immediately on cold start
+
+**Briefs are pre-written at `/tmp/`; dispatch these four in the order shown, in parallel where independent.**
+
+**1. Phase A — Codex: test-run wiki compile pipeline (9 slugs).** Brief: `/tmp/codex-phase-a-wiki-compile.md`. Serial dispatch inside Codex (not 9 parallel), --review on each. Slugs: a1 sounds-letters-and-hello + reading-ukrainian + special-signs; a2 aspect-concept; b1 people-and-relationships; hist trypillian-civilization; bio knyahynia-olha; lit introduction-to-kotliarevsky; oes walls-speak-intro. Codex writes `/tmp/phase-a-wiki-compile-results.md` + one-line summary on completion.
+
+Dispatch command:
 ```bash
-curl -s "http://localhost:8765/api/state/failing?track=a1"
+.venv/bin/python scripts/delegate.py dispatch \
+  --agent codex --task-id phase-a-wiki-compile-test \
+  --prompt-file /tmp/codex-phase-a-wiki-compile.md \
+  --mode danger --hard-timeout 7200
 ```
 
-As of handoff:
-- **15 modules with `needs_human_review: true`** — `--resume` SKIPS these. Need fresh builds.
-- **1 stale module** (M18 `i-want-i-can`) — `--resume` works.
-- **M2 `reading-ukrainian`** — was building at R4 when Claude handed off. Check status first.
+**2. Phase B — Codex: module builds (GATED on Phase A health).** After Phase A completes and its report shows healthy pass/fail mix (NOT all-0.0 parser failures, NOT 9/9 failures), write brief at `/tmp/codex-phase-b-module-builds.md` and dispatch. Canary = A1 M1 sounds-letters-and-hello; if it converges to `pass` or `plan_revision_request` (NOT `budget_exhausted`), proceed with the other 8 builds in sequence (a1 1/2/3, a2 2, b1 3, hist 1, bio 1, lit 1, oes 1).
 
-### Commands to run
+**3. Phase C — Codex: Google Drive backup setup.** Brief: `/tmp/codex-phase-c-gdrive-backup.md`. Independent of Phase A/B, dispatch in parallel.
 
-Check M2 status first:
+Dispatch command:
 ```bash
-curl -s "http://localhost:8765/api/state/build-status/a1" | python3 -m json.tool | grep -A3 "reading-ukrainian"
+.venv/bin/python scripts/delegate.py dispatch \
+  --agent codex --task-id phase-c-gdrive-backup \
+  --prompt-file /tmp/codex-phase-c-gdrive-backup.md \
+  --mode danger --hard-timeout 1800
 ```
 
-Then run the failing modules. Split across two terminals for speed:
+**4. Gemini reviews (parallel with Phase A).** Re-verify #1323 3-patch block-merge resolution + adversarial review of #1324 external corpus.
 
+Dispatch commands:
 ```bash
-# Terminal 1
-for N in 7 8 9 10 11 12 19; do
-  .venv/bin/python scripts/build/v6_build.py a1 $N \
-    --writer gemini-tools --reviewer codex-tools
-done
+unset GEMINI_API_KEY GOOGLE_API_KEY && .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini - \
+  --task-id sources-refactor-review-1323-v2 \
+  --model gemini-3.1-pro-preview --from claude < /tmp/gemini-1323-reverify-patches.md
 
-# Terminal 2
-for N in 21 32 38 43 46 52 54 55; do
-  .venv/bin/python scripts/build/v6_build.py a1 $N \
-    --writer gemini-tools --reviewer codex-tools
-done
-
-# M18 separately (stale, resume ok)
-.venv/bin/python scripts/build/v6_build.py a1 18 --resume \
-  --writer gemini-tools --reviewer codex-tools
-
-# M2 — only if R4 didn't ship:
-.venv/bin/python scripts/build/v6_build.py a1 2 \
-  --writer gemini-tools --reviewer codex-tools
+unset GEMINI_API_KEY GOOGLE_API_KEY && .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini - \
+  --task-id external-corpus-review-1324 \
+  --model gemini-3.1-pro-preview --from claude < /tmp/gemini-1324-review.md
 ```
 
-### What to watch for per module
+Both run in background; monitor task states via Bash `run_in_background=true`, plus a combined `Monitor` tool watch on the `batch_state/tasks/*.json` files and `git rev-parse HEAD` for new commits.
 
-**Healthy run:**
-- R1 score ≥ 8.5
-- Scores go UP each round (never down)
-- No `<!-- INJECT_ACTIVITY: syllable-sort -->` or off-contract types
-- No invented dialogue in phonetics modules (M2, M3, M6)
+## Open decisions awaiting user (none blocking autonomous work)
 
-**Intervention needed if:**
-- Score drops round-over-round (e.g. R1: 8.8 → R2: 8.0) → read the review + fix blocks, look for wrong INJECT_ACTIVITY types or reviewer hallucinating dialogue in phonetics module
-- `needs_human_review` set after plateau → read `orchestration/{slug}/needs-human-review.yaml` for root cause
-- `plan patch failed: no parseable payload` → check `v6-plan-patch-output.md`; if empty/noise, the capture bug may have recurred
+These are quality-tuning knobs. Current defaults are reasonable; user will make calls on return.
 
-**If a new pattern of failure emerges across ≥3 modules**: stop the batch, diagnose root cause (read review files + plan_patch output), fix the pipeline, then resume.
+1. **`SOURCE_CHAR_CAPS` (enrichment.py)** — currently progressive A1=45K → C2=120K, seminar=110K default. My recommendation: keep progressive (user's "rich wiki, not rich sources" intuition confirms this direction).
+2. **Wiki word-target minimums** — currently pedagogy 1000 / grammar 1500 / seminar 1500 / academic 2000. Raising +50% is optional; testing with current floors first to see if actual output already exceeds.
+3. **`CONVERGENCE_MATRIX_ENFORCED` feature flag** — default OFF. Flip ON when Claude+Codex review capacity returns (per current MEMORY: Gemini-only self-review is accepted capacity workaround).
+4. **Merge readiness** — all work on main, unmerged. User reviews at leisure, decides merge order.
 
----
+## Cold-start reading list (if session rolls over)
 
-## How to coordinate with Gemini
+1. This file — state summary
+2. `docs/architecture/convergent-pipeline-spec.md` — #1322 spec
+3. `docs/architecture/external-corpus-spec.md` — #1324 spec
+4. `git log --oneline -40` — commit chronology
+5. `batch_state/tasks/*.json` — Codex worker states
+6. `curl -s http://localhost:8765/api/state/manifest` — live project state (Monitor API)
 
-The agent bridge handles all inter-agent communication. Use it — do NOT call `gemini` CLI directly.
+## Agents & tasks to check on return
 
-### Quick one-shot questions
-```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
-  "Your question here" \
-  --task-id task-id-here \
-  --model gemini-3.1-pro-preview
+```
+# Codex workers
+cat batch_state/tasks/phase-a-wiki-compile-test.json     # Stage 1 wiki compiles
+cat batch_state/tasks/phase-a-wiki-compile-test.result   # completion summary
+cat batch_state/tasks/phase-b-module-builds.json         # Stage 2 module builds
+cat batch_state/tasks/phase-c-gdrive-backup.json         # Google Drive backup setup
+
+# Gemini responses (via ab bridge)
+.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox show claude
 ```
 
-Result lands in `batch_state/tasks/{task-id}.result`. Also readable via:
-```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py read {MSG_ID}
-```
+## Cross-agent review matrix (established tonight)
 
-### Channel-based sustained conversation (preferred for multi-turn)
+| Work type | Owner | Reviewer |
+|---|---|---|
+| Architecture / spec | Claude | Gemini or Codex |
+| Code implementation | Codex | Claude or Gemini |
+| Content writing | Gemini | Claude or Gemini (other model) |
+| Content review | Gemini | — |
+| Pure execution (tests, migrations, scripts) | Codex | self-verify + Claude spot-check |
 
-Five channels: `shared`, `pipeline`, `content`, `architecture`, `reviews`.
+**Fallback when Gemini is unstable:** Claude ↔ Codex bidirectional cross-review (both cross-family, preserves ADR-001:35 invariant).
 
-```bash
-# Post to a channel
-ab post reviews "Your message here" --to gemini
+## Critical behavioral notes
 
-# Post with specific model and extended deadline
-ab post reviews "Long review task" --to gemini --model gemini-3.1-pro-preview --deadline 1800
+- User is a senior dev, time-poor, budget-sensitive, explicitly wants pushback over rubber-stamping
+- `Monitor` tool streams events → use it instead of polling task states
+- Codex has 10x usage quota through May 17 — delegate liberally when user is away
+- Peak window 14-20 CET = Claude doubled; offload to Codex/Gemini
+- Never run `v6_build.py --range` batch commands — only single-module test builds
+- All work on `main`; no branches; `git worktree` for isolation if needed
 
-# Read recent channel history
-ab channel tail reviews -n 20
+## Commit ahead of origin/main
 
-# Watch for Gemini's reply live
-ab channel tail reviews --follow
-
-# Multi-agent discussion (bounded rounds)
-ab discuss pipeline "Should we change X?" --with gemini,codex --max-rounds 2
-```
-
-### When to ask Gemini vs decide yourself
-
-**Ask Gemini:**
-- Content/pedagogy decisions: "Is this dialogue situation appropriate for A1 learners?"
-- Ukrainian linguistics: "Is this VESUM form correct?"
-- Review of module content: "Review this module for naturalness"
-- Architecture trade-offs you're uncertain about
-
-**Decide yourself:**
-- Pipeline code bugs (you're the code agent)
-- Test failures (read the failing test, fix it)
-- Codex dispatch for coding tasks (you can self-dispatch via `scripts/delegate.py`)
-
-### Gemini review of code changes (mandatory for non-trivial commits)
-
-After any non-trivial commit, send Gemini an adversarial review:
-```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
-  "Adversarial code review of recent commit. Read git diff HEAD~1..HEAD and check for: correctness, edge cases, test coverage gaps, prompt injection risks. Report findings." \
-  --task-id review-$(git rev-parse --short HEAD) \
-  --model gemini-3.1-pro-preview
-```
-
----
-
-## Key infrastructure
-
-| What | Where |
-|---|---|
-| Build pipeline | `.venv/bin/python scripts/build/v6_build.py {level} {num} [--step {step}] [--resume]` |
-| Monitor API | `curl -s http://localhost:8765/api/state/track-health/a1` |
-| Failing modules | `curl -s http://localhost:8765/api/state/failing?track=a1` |
-| Plan files | `curriculum/l2-uk-en/plans/a1/{slug}.yaml` |
-| Orchestration artifacts | `curriculum/l2-uk-en/a1/orchestration/{slug}/` |
-| Delegate (dispatch Codex/Gemini) | `.venv/bin/python scripts/delegate.py dispatch --agent codex ...` |
-| Agent bridge | `.venv/bin/python scripts/ai_agent_bridge/__main__.py` or `ab` alias |
-
-**Always use `.venv/bin/python`, never bare `python3`.**
-
-## Pending minor work (low priority, don't block on these)
-
-- `.bak` file collision on second plan patch (Gemini minor finding from session)
-- `insert_after` punctuation spacing (punctuation at start of payload gets rogue space)
-- `#1241` A1 regeneration wave tracking issue — update when all 17 modules ship
-
-## Non-negotiable rules (don't skip)
-
-1. `ruff check` after every file edit
-2. `pytest` on affected tests after every logical phase
-3. Gemini adversarial review after every non-trivial commit
-4. Close GH issues only when ALL acceptance criteria verified
-5. Word targets are MINIMUMS — never lower the target, expand content
-6. Never edit `.claude/` or `.agent/` directly — edit `claude_extensions/` + `npm run claude:deploy`
-7. All work on `main`. Use `git worktree` for isolation.
+36 commits local-ahead. Do NOT push to origin until user confirms — merge decision is theirs.
