@@ -2,20 +2,20 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: unknown-citation-s1
-  type: unknown
+  file: 11-klas-istoriya-ukr-galimov-2024_s0238
+  type: textbook
 - id: S2
-  file: unknown-citation-s2
-  type: unknown
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0332
+  type: textbook
 - id: S3
-  file: unknown-citation-s3
-  type: unknown
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0009
+  type: textbook
 - id: S4
-  file: unknown-citation-s4
-  type: unknown
+  file: 7-klas-ukrlit-zabolotnyi-2024_s0222
+  type: textbook
 - id: S5
-  file: unknown-citation-s5
-  type: unknown
+  file: feaa5fa7_c3124
+  type: external
 - id: S6
   file: 11-klas-ukrlit-zabolotnyi-2024_s0222
   type: textbook
