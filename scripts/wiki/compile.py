@@ -935,11 +935,28 @@ def _review_article(article_path: Path, track: str, slug: str,
     log_event(track, slug, "review_round", round=1,
               score=score, **{k: v for k, v in scores.items() if k != "overall"})
 
-    if score >= 9.0:
+    # Pass criteria: overall ≥ 9.0 AND every individual dimension ≥ 8.0.
+    # The per-dimension floor catches the "one bad dimension hidden by a
+    # strong total" failure mode (Codex's A1 macro-report finding).
+    DIMENSION_FLOOR = 8.0
+    OVERALL_PASS = 9.0
+    DIMENSIONS = ("factual", "language", "decolonization", "completeness", "actionable")
+    failing_dims = [d for d in DIMENSIONS if scores.get(d, 0) < DIMENSION_FLOOR]
+    overall_ok = score >= OVERALL_PASS
+
+    if overall_ok and not failing_dims:
         log_event(track, slug, "review_pass", score=score, rounds=1)
         print(f"  ✅ Review PASSED ({score}/10)")
         (review_dir / f"{slug}-review-final.md").write_text(review_text, "utf-8")
         return
+
+    # Build failure reason for logs + user visibility.
+    fail_reasons = []
+    if not overall_ok:
+        fail_reasons.append(f"overall {score} < {OVERALL_PASS}")
+    for d in failing_dims:
+        fail_reasons.append(f"{d} {scores.get(d, 0)} < {DIMENSION_FLOOR}")
+    fail_reason = "; ".join(fail_reasons)
 
     review_summary = _extract_review_summary(review_text)
     force_cmd = (
@@ -949,9 +966,10 @@ def _review_article(article_path: Path, track: str, slug: str,
     log_event(
         track, slug, "review_fail", score=score, rounds=1,
         article_path=str(article_path), review_summary=review_summary,
-        rerun_force_cmd=force_cmd,
+        rerun_force_cmd=force_cmd, fail_reason=fail_reason,
+        failing_dimensions=failing_dims,
     )
-    print("  ❌ Review below threshold — mark for --force recompile")
+    print(f"  ❌ Review failed: {fail_reason}")
     print(f"     path: {article_path}")
     print(f"     final score: {score}/10")
     print(f"     first review summary: {review_summary}")
