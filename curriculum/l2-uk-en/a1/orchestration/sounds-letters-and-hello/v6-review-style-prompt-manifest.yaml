@@ -1,0 +1,21 @@
+phase: review-style
+module:
+  level: a1
+  module_num: 1
+  slug: sounds-letters-and-hello
+reviewer:
+  writer_model: Gemini
+  reviewer: codex
+components:
+- shared_module_contract
+- section_mapped_wiki_excerpts
+- generated_content
+- review_tools_section
+metrics:
+  prompt_chars: 51546
+  contract_chars: 18938
+  section_excerpt_chars: 12617
+  generated_content_chars: 8482
+flags:
+  contains_convergence_rules: true
+  caps_blocking_issues: true

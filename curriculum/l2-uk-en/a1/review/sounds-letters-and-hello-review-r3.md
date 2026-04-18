@@ -1,39 +1,54 @@
 ## Linguistic Scan
-No linguistic errors found.
+No Russianisms, Surzhyk, calques, paronym errors, or banned Russian characters found.
+
+One factual phonetics error remains in the consonant section: `[=]` is described as “a double dash,” and the hard/soft contrast is called “a uniquely Slavic characteristic.” The first mislabels the notation; the second overstates the linguistics.
 
 ## Exercise Check
-Marker-only module, so I evaluated count, order, and type only. All 6 markers are present and in the contracted order: `quiz`, `match-up`, `fill-in`, `group-sort`, `letter-grid`, `watch-and-repeat`. No marker-count, order, or type-prefix issues found.
+6 `INJECT_ACTIVITY` markers found.
+
+Order matches `activity_obligations` exactly: `quiz`, `match-up`, `fill-in`, `group-sort`, `letter-grid`, `watch-and-repeat`.
+
+This is a marker-only module, so the exercise check passes on count, order, and type.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | The core beats are mostly covered, but section 1 stops at “The complete set of these thirty-three visual symbols is the **абетка** (alphabet)” and never gives the 33 letters in order, which the contract explicitly requires. Section 4 also never models the exact reciprocal chunk `А у тебе?`; the dialogue uses `А тебе?` instead. |
-| 2. Linguistic accuracy | 10/10 | No Russian-only characters appear; the Ukrainian forms are standard, and the `Привіт` sound analysis is correct: “two **голосні** (vowels) and four **приголосні** (consonants).” |
-| 3. Pedagogical quality | 8/10 | The module is example-driven, but two high-value teaching moves are underdelivered: the alphabet section explains the concept without showing the alphabet sequence, and the first-contact material teaches `Як справи?` answers without modeling the contracted reciprocal `А у тебе?`. |
-| 4. Vocabulary coverage | 10/10 | All required target items appear naturally in prose, including `звук`, `літера`, `голосні`, `приголосні`, `Привіт`, `Як справи?`, `Добре`, `Чудово`, `мама`, and `молоко`. |
-| 5. Exercise quality | 10/10 | Marker-only module; the marker inventory matches the 6 contracted activity obligations exactly, in the correct order and with correct type prefixes. |
-| 6. Engagement & tone | 9/10 | The voice is mostly teacherly and concrete, especially in “Let’s do a basic **звуковий аналіз**...” and the classroom framing. |
-| 7. Structural integrity | 10/10 | All five H2 sections are present and ordered correctly; pipeline word count is 1236, above the 1200 target; formatting is clean. |
-| 8. Cultural accuracy | 10/10 | The module presents Ukrainian on its own terms, grounded in Ukrainian school pedagogy and not via Russian comparison. |
-| 9. Dialogue & conversation quality | 8/10 | The `Марко`/`Софія` exchange is named and usable, but the reciprocal follow-up required by the contract is missing: learners get `А тебе?` instead of the contracted `А у тебе?`. |
+| 1. Plan adherence | 8/10 | Section order is correct, required vocabulary is present, and section pacing is within tolerance (`307 / 257 / 244 / 278 / 143` words by section). The miss is in the consonant beat: the prose only says `There are a few special consonant letters to recognize,` instead of delivering the contracted Anna Ohoiko consonant inventory and example-word framing. |
+| 2. Linguistic accuracy | 7/10 | Ukrainian forms are clean, but the consonant paragraph says soft sounds are `marked with a double dash [=]` and calls the hard/soft contrast `a uniquely Slavic characteristic.` |
+| 3. Pedagogical quality | 8/10 | Good textbook grounding and concrete examples (`ма-ма`, `мо-ло-ко`, `Привіт` sound analysis), but the consonant section underdelivers the planned guided inventory work and stays more explanatory than practice-oriented. |
+| 4. Vocabulary coverage | 9/10 | All required targets appear naturally in prose: `звук`, `літера`, `голосні`, `приголосні`, `Привіт`, `Як справи`, `Добре`, `Чудово`, `мама`, `молоко`. |
+| 5. Exercise quality | 10/10 | Marker-only module: 6 markers present, order matches the contract exactly, and every marker type matches the contracted type prefix. |
+| 6. Engagement & tone | 9/10 | Clear, teacherly, and concrete; the poems, classroom exchange, and `Привіт` sound analysis keep the lesson grounded in actual language. |
+| 7. Structural integrity | 6/10 | All H2 headings are present and ordered correctly, but the pipeline word count is `1165`, below the `1200` floor. |
+| 8. Cultural accuracy | 9/10 | The module treats Ukrainian on its own terms and avoids Russia-centric framing. |
+| 9. Dialogue & conversation quality | 9/10 | Both contracted situations are present, named speakers are used where required, and the second dialogue includes reciprocal `А у тебе?`. |
 
 ## Findings
-[PLAN ADHERENCE] [SEVERITY: major]  
-Location: `## Звуки і літери (Sounds and Letters)`, paragraph 3: “The complete set of these thirty-three visual symbols is the **абетка** (alphabet). Each letter has a specific name, but the real magic is how they function together.”  
-Issue: The contract requires the alphabet to be presented as all 33 letters in order. The section names the alphabet but never shows the sequence.  
-Fix: Insert the full alphabet in order in this paragraph.
+[LINGUISTIC ACCURACY] [SEVERITY: critical]  
+Location: `A consonant sound can be **тверді** (hard), marked with a single dash [–] in sound models, or **м'які** (soft), marked with a double dash [=]. This fundamental distinction between hard and soft sounds does not exist in English. It is a uniquely Slavic characteristic that gives the language its flowing rhythm.`  
+Issue: `[=]` is not a “double dash”; it is the equals-sign notation used here for soft consonants. The sentence also overstates the linguistics: this contrast is important in Ukrainian and common across Slavic languages, not “uniquely Slavic.”  
+Fix: Change `double dash [=]` to `equals sign [=]` and narrow the final claim to `It is a major feature of Ukrainian and other Slavic languages.`
 
-[DIALOGUE & CONVERSATION QUALITY] [SEVERITY: major]  
-Location: `## Привіт! (Hello!)`, dialogue line: “**Софія**: Привіт! Мене звати Софія. А тебе? (Hi! My name is Sofia. And you?)”  
-Issue: The contracted reciprocal chunk `А у тебе?` is missing from the module; search confirmed 0 occurrences, and the dialogue substitutes `А тебе?`. That weakens the first-contact pattern specified in the contract and the fill-in activity focus.  
-Fix: Replace `А тебе?` with `А у тебе?`.
+[PLAN ADHERENCE] [SEVERITY: major]  
+Location: `There are a few special consonant letters to recognize. The letter **Ґ** represents the hard [g] sound, exactly like the "g" in "go." However, the much more common letter **Г** represents a deep, pharyngeal [h] sound. Another unique letter is **Щ**, which always represents two distinct sounds spoken together: [шч].`  
+Issue: The contract’s third consonant teaching beat requires the Anna Ohoiko consonant inventory and the “see the letter / hear the sound / example words” framing. The prose only highlights Ґ, Г, and Щ, so that beat is undercovered.  
+Fix: Add one sentence naming the contracted consonant set and stating that the videos show the letter, the sound, and example words.
+
+[STRUCTURAL INTEGRITY] [SEVERITY: major]  
+Location: `PIPELINE NOTE — Word count: 1165 words`  
+Issue: The module misses the 1200-word minimum.  
+Fix: Add at least 35 words of contracted content; the consonant-video insert below is sufficient if applied.
 
 ## Verdict: REVISE
-The module is structurally solid and linguistically clean, but it has two material contract misses: the alphabet is not actually shown in order, and the required reciprocal chunk `А у тебе?` is absent. Those findings keep plan adherence, pedagogy, and dialogue quality below pass level.
+There is a critical factual error in the consonant notation/linguistics paragraph, and the module is also below the 1200-word floor.
 
 <fixes>
-- find: "The complete set of these thirty-three visual symbols is the **абетка** (alphabet). Each letter has a specific name, but the real magic is how they function together."
-  replace: "The complete set of these thirty-three visual symbols is the **абетка** (alphabet). In order, the letters are А, Б, В, Г, Ґ, Д, Е, Є, Ж, З, И, І, Ї, Й, К, Л, М, Н, О, П, Р, С, Т, У, Ф, Х, Ц, Ч, Ш, Щ, Ь, Ю, Я. Each letter has a specific name, but the real magic is how they function together."
-- find: "**Софія**: Привіт! Мене звати Софія. А тебе? (Hi! My name is Sofia. And you?)"
-  replace: "**Софія**: Привіт! Мене звати Софія. А у тебе? (Hi! My name is Sofia. And you?)"
+- find: |-
+    Ukrainian has thirty-two consonant sounds, but uses only twenty-two consonant letters to write them. This happens because many consonants come in pairs. A consonant sound can be **тверді** (hard), marked with a single dash [–] in sound models, or **м'які** (soft), marked with a double dash [=]. This fundamental distinction between hard and soft sounds does not exist in English. It is a uniquely Slavic characteristic that gives the language its flowing rhythm.
+  replace: |-
+    Ukrainian has thirty-two consonant sounds, but uses only twenty-two consonant letters to write them. This happens because many consonants come in pairs. A consonant sound can be **тверді** (hard), marked with a single dash [–] in sound models, or **м'які** (soft), marked with an equals sign [=]. This fundamental distinction between hard and soft sounds does not exist in English. It is a major feature of Ukrainian and other Slavic languages.
+- insert_after: |-
+    There are a few special consonant letters to recognize. The letter **Ґ** represents the hard [g] sound, exactly like the "g" in "go." However, the much more common letter **Г** represents a deep, pharyngeal [h] sound. Another unique letter is **Щ**, which always represents two distinct sounds spoken together: [шч].
+  content: |-
+    Anna Ohoiko's consonant videos then walk through **М, Н, С, К, Л, Р, Б, В, Д, П, Т, Г, Ґ, З, Ж, Ш, Х, Й, Ч, Щ, Ц, Ф** one by one: you see the letter, hear the sound, and meet it in example words.
 </fixes>

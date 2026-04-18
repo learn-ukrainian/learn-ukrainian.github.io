@@ -1,11 +1,16 @@
 ## Підсумок (Summary)
 
-Take a moment to answer these self-check questions. How many letters are in the Ukrainian alphabet? Thirty-three. How many sounds? Thirty-eight. Why is there a difference between the number of letters and sounds? Some letters create two sounds, while the soft sign makes no **звук** (sound) at all. 
+Review these core concepts before moving forward.
 
-What are **голосні** (vowels), and how are they produced? They are pure voice flowing freely. What are **приголосні** (consonants)? They are sounds made with an obstacle in the mouth. Can you say «голосна літера»? No! A spoken sound is a **голосний** (vowel sound) or a **приголосний** (consonant sound), but a **літера** (letter) is just a written symbol. You write **«мама»** (mother) or **«молоко»** (milk), but you hear sounds.
+* How many letters in the Ukrainian alphabet? Thirty-three letters.
+* How many sounds? Thirty-eight sounds. Every **звук** (sound) is what we hear.
+* Why are they different? Some letters represent two sounds, while the soft sign makes no sound.
+* What are **голосні**? Every **голосний** (vowel sound) is made with voice and open airflow. They are singable.
+* What are **приголосні**? Every **приголосний** (consonant sound) is made with an obstruction in the mouth.
+* Can you say «**голосна літера**»? No! Sounds are **голосні**, but a **літера** (letter) is just a written symbol.
+* What does **Привіт** mean? It means "Hi" and is strictly informal.
+* How do you answer **Як справи**? You can say **добре** (fine) or **чудово** (great).
 
-What does **«Привіт»** (hi) mean? It is an informal greeting for friends. How do you answer **«Як справи?»** (how are you)? Simply reply with **«добре»** (fine) or **«чудово»** (great).
-
-:::tip
-Mastering the alphabet takes time, but your new friends will be thrilled to hear your first greeting!
+:::info
+Simple words like **мама** (mother) and **молоко** (milk) are excellent practice for recognizing how a written **літера** matches a spoken **звук**.
 :::

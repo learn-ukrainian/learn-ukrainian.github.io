@@ -62,6 +62,16 @@ Intercepts bare `python` and `python3` shell calls and rewrites them to `.venv/b
 
 Polls the SQLite message broker for unread Gemini messages and surfaces them as additional context. It skips during pipeline runs.
 
+### Gemini bridge auth modes
+
+Gemini bridge commands now support explicit auth selection per invocation:
+
+- `--auth subscription` strips `GEMINI_API_KEY` and `GOOGLE_API_KEY` for that subprocess so Gemini uses the logged-in subscription/OAuth path
+- `--auth api-key` keeps key-based auth active for that subprocess
+- `--auth auto` preserves ambient shell behavior
+
+Use `subscription` as the default for normal bridge work. Use `api-key` only for explicit one-off calls that are meant to bypass the subscription path.
+
 ---
 
 ## Token Usage Analytics
@@ -749,7 +759,7 @@ ab discuss architecture "Should we extract the V6 god object?" \
 
 # Drain incoming channel deliveries (REQUIRED for headless Gemini/Codex;
 # Claude Code drains automatically via OS-level watchers)
-ab sync gemini
+ab sync gemini --auth subscription
 ab sync --all
 ```
 
@@ -766,14 +776,16 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 
 | Recipient | Flag | Recommended value |
 |---|---|---|
-| Gemini | `--model` | `gemini-3.1-pro-preview` (always — never `gemini-2.0-flash-exp`) |
+| Gemini | `--model`, `--auth` | `gemini-3.1-pro-preview`, `subscription` |
 | Codex | `--model` | omit unless overriding (defaults to `gpt-5.4` via runtime config) |
 | Claude | `--to-model` | omit (auto-selects per active session); override only when routing to a specific Opus/Sonnet tier |
 
 ```bash
 # Gemini — adversarial review
 ab ask-gemini "Adversarial review for #NNN. Read {path}." \
-  --task-id issue-NNN --model gemini-3.1-pro-preview
+  --task-id issue-NNN \
+  --model gemini-3.1-pro-preview \
+  --auth subscription
 
 # Codex — quick question
 ab ask-codex "Review posted on #1177. Please read and respond." \
@@ -787,7 +799,28 @@ ab ask-claude "Please verify the stress marks in curriculum/l2-uk-en/a1/hello.md
 ab ask-gemini "Activate skill final-review. ..." \
   --task-id fr-{slug} --allow-write \
   --delimiters FINAL_REVIEW,FRICTION \
-  --model gemini-3.1-pro-preview
+  --model gemini-3.1-pro-preview \
+  --auth subscription
+```
+
+Gemini auth examples:
+
+```bash
+# Default: subscription/OAuth-backed bridge call
+ab ask-gemini "Review #NNN." \
+  --task-id issue-NNN \
+  --model gemini-3.1-pro-preview \
+  --auth subscription
+
+# Explicit API-key-backed one-off
+ab ask-gemini "Quick one-off check." \
+  --task-id adhoc-gemini-check \
+  --model gemini-3.1-pro-preview \
+  --auth api-key
+
+# Drain Gemini's channel inbox explicitly via subscription auth
+ab inbox run gemini --auth subscription
+ab sync gemini --auth subscription
 ```
 
 > **Note.** You rarely call `ask-claude` from inside a Claude session — you already *are* Claude. It's the return path for Gemini/Codex or for scripts routing work to Claude.

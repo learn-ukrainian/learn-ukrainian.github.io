@@ -54,6 +54,7 @@ _PREFLIGHT_MULTI_STEP_RE = re.compile(
     re.IGNORECASE,
 )
 _ALLOWED_DEADLINE_SECONDS = (300, 600, 900, 1200, 1800, 2400, 3000)
+_GEMINI_AUTH_CHOICES = ["auto", "subscription", "api-key", "api"]
 
 
 def _deadline_seconds_arg(raw_value: str) -> int:
@@ -305,6 +306,12 @@ def register_channel_commands(subparsers: Any) -> None:
             default=None,
             help="Worker hard-timeout override in seconds (300, 600, 900, 1200, 1800, 2400, 3000)",
         )
+        inbox_run.add_argument(
+            "--auth",
+            choices=_GEMINI_AUTH_CHOICES,
+            default=None,
+            help="Gemini auth mode override for this run",
+        )
 
         inbox_show = inbox_sub.add_parser(
             "show",
@@ -331,6 +338,12 @@ def register_channel_commands(subparsers: Any) -> None:
         "--all",
         action="store_true",
         help="Drain every agent inbox in sequence",
+    )
+    sync_parser.add_argument(
+        "--auth",
+        choices=_GEMINI_AUTH_CHOICES,
+        default=None,
+        help="Gemini auth mode override for Gemini inbox runs",
     )
 
     # ── top-level: discuss (B.4 stub) ─────────────────────────────
@@ -864,13 +877,15 @@ def _handle_inbox_run(args) -> int:
 
     started_at = time.monotonic()
     try:
-        summary = run_inbox(
-            args.agent,
-            max_messages=args.max_messages,
-            until_idle=until_idle,
-            stop_after_seconds=args.stop_after_seconds,
-            hard_timeout=args.deadline or 900,
-        )
+        run_kwargs = {
+            "max_messages": args.max_messages,
+            "until_idle": until_idle,
+            "stop_after_seconds": args.stop_after_seconds,
+            "hard_timeout": args.deadline or 900,
+        }
+        if args.agent == "gemini" and args.auth is not None:
+            run_kwargs["gemini_auth_mode"] = args.auth
+        summary = run_inbox(args.agent, **run_kwargs)
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 1
@@ -945,6 +960,7 @@ def _handle_sync(args) -> int:
 
             def __init__(self, agent_name: str) -> None:
                 self.agent = agent_name
+                self.auth = args.auth if agent_name == "gemini" else None
 
         exit_code = _handle_inbox_run(_Args(agent))
         worst_exit_code = max(worst_exit_code, exit_code)

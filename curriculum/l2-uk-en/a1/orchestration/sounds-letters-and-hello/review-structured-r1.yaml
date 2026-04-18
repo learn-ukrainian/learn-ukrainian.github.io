@@ -2,53 +2,69 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 8
-  evidence: 'Contract beats are mostly covered, but section pacing drifts: `Приголосні
-    звуки` counts 291 words and `Привіт!` counts 325 words from local count, both
-    over the 275-word max. `fill-in-greetings` also '
+  score: 7
+  evidence: All five contracted H2 sections are present and ordered, and the pipeline
+    word count is 1223. But the section-1 contract explicitly requires “all 33 letters
+    in order” at [contract.yaml](/Users/kriszti
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: No Russianisms/Surzhyk found, but `There are no silent letters to trick
-    you.` conflicts with `«ь» makes zero sound on its own; it only changes the pronunciation
-    of the consonant directly before it.`
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, bad case/gender forms, or banned Russian
+    letters were found in the Ukrainian text. Core forms such as `Рада`, `радий`,
+    `нормально`, and `привіт` are standard Ukrainia
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: Strong examples (`мА-мА`, `мО-лО-кО`, `П [п] + р [р] + и [и]...`), but
-    `Remember that to state your name, you should never say **«Я звати»**...` spends
-    scarce A1 space on meta-warning instead of pract
+  score: 7
+  evidence: 'The module has solid textbook anchoring and concrete examples: `ма-ма`,
+    `мо-ло-ко`, `У-ля`, and the `Привіт` sound analysis at [sounds-letters-and-hello.md](/Users/krisztiankoos/projects/learn-ukraini'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: 'Required vocabulary is all present in prose: `звук`, `літера`, `голосний`,
-    `приголосний`, `Привіт`, `Як справи`, `Добре`, `Чудово`, `мама`, `молоко`.'
+  score: 9
+  evidence: 'Required target vocabulary appears naturally in context: `звук`, `літера`,
+    `голосні`, `приголосні`, `Привіт`, `Як справи?`, `Добре`, `Чудово`, `мама`, `молоко`.'
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: 'All 6 markers exist and the type prefixes match the contract, but `<!--
-    INJECT_ACTIVITY: fill-in-greetings -->` is placed before the greeting section
-    it should reinforce.'
+  score: 6
+  evidence: 'This is a marker-only module, so marker count/order/type are the relevant
+    checks, and those mostly pass. The major failure is placement: `fill-in-greetings`
+    is at [sounds-letters-and-hello.md](/Users/'
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: The module is mostly concrete and teacherly, with textbook references
-    and usable examples rather than empty hype.
+  score: 8
+  evidence: The tone is clear and teacherly, and the module uses concrete classroom
+    content rather than empty hype. The dialogues and sound examples keep it grounded.
 - dimension: 7
   name: Structural integrity
-  score: 8
-  evidence: 'All H2 sections are present and ordered, and total word count is above
-    target, but formatting artifacts remain: `**''Звуки**''`, `**''Голосні**''`, `**''Приголосні**''`,
-    `**''голосна** **літера''**`.'
+  score: 10
+  evidence: Clean markdown, all H2 headings present once, correct section order, and
+    pipeline word count is above the 1200 target.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: The classroom and peer-greeting scenarios are appropriate, and the module
-    avoids Russian-centric framing.
+  evidence: The module presents Ukrainian on its own terms, uses Ukrainian textbook
+    pedagogy, and avoids Russian-centered framing.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 7
-  evidence: 'The teacher exchange is labeled, but the hallway dialogue falls back
-    to anonymous em dashes: `— Привіт! Як тебе звати?` / `— Привіт! Мене звати Софія.
-    А тебе?` / `— Мене звати Марко.`'
-findings: []
+  score: 9
+  evidence: The module includes named-speaker dialogue (`Марко`, `Софія`) and uses
+    the required reciprocal `А у тебе?`, with correct `Рада/Радий` contrast.
+findings:
+- dimension: DIMENSION 1
+  severity: major
+  location: '[sounds-letters-and-hello.md](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/sounds-letters-and-hello.md:11)
+    — “The complete collection of these thirty-three letters is called the **абетка**
+    or **алфавіт** (alphabet). Each individual letter has its own specific name.”'
+  issue: The contract requires this teaching beat to show “all 33 letters in order”
+    ([contract.yaml](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/sounds-letters-and-hello/contract.yaml:33)),
+    but the prose never actually gives the alphabet sequence.
+  fix: Replace this paragraph with a concise version that includes the 33 letters
+    in order.
+- dimension: DIMENSION 5
+  severity: major
+  location: '[sounds-letters-and-hello.md](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/sounds-letters-and-hello.md:42)
+    — `<!-- INJECT_ACTIVITY: fill-in-greetings -->`'
+  issue: The greetings fill-in marker appears before `## Привіт! (Hello!)`, so it
+    tests `Привіт`, `Як справи?`, `Добре`, `Чудово`, and `А у тебе?` before those
+    chunks are taught.
+  fix: 'Move `<!-- INJECT_ACTIVITY: fill-in-greetings -->` to the end of the `## Привіт!
+    (Hello!)` section, before the watch-and-repeat marker.'

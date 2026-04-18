@@ -2,31 +2,51 @@
 No linguistic errors found.
 
 ## Exercise Check
-All 6 `INJECT_ACTIVITY` markers are present. Count, order, and types match the contract exactly: `quiz`, `match-up`, `fill-in`, `group-sort`, `letter-grid`, `watch-and-repeat`. No inline DSL exercises to evaluate.
+Markers present: `quiz-sounds-vs-letters`, `match-up-letters-sounds`, `fill-in-greetings`, `group-sort-vowels-consonants`, `letter-grid-alphabet`, `watch-and-repeat-ohoiko-videos`.
+
+Count matches the 6 contracted `activity_obligations`, the marker order matches exactly, and each marker id has the correct contracted type prefix. No inline DSL exercises to audit.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 8/10 | The module covers the core 33/38 distinction and the contracted phonetics scope, but section 1 only says “The Ukrainian alphabet (**абетка** or алфавіт) contains exactly thirty-three letters...” and never delivers the contracted beat “all 33 letters in order. Each letter has a name.” |
-| 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, calques, paronym errors, bad case/gender, or banned Russian characters were found in the Ukrainian text. |
-| 3. Pedagogical quality | 8/10 | The lesson generally moves from explanation to example to practice, but the alphabet lesson tells the learner that the alphabet exists without actually showing the ordered alphabet or teaching that each letter has a name. |
-| 4. Vocabulary coverage | 10/10 | Required vocabulary appears in context: `звук`, `літера`, `голосний`, `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`. |
-| 5. Exercise quality | 10/10 | Marker-only module; all required markers are present, in the contracted order, with exact contracted types. |
-| 6. Engagement & tone | 9/10 | Mostly concrete and teacherly, with good classroom framing and usable examples. |
-| 7. Structural integrity | 10/10 | All H2 sections are present and in contract order; pipeline word count is 1252, so the module is above target. |
-| 8. Cultural accuracy | 10/10 | The module treats Ukrainian on its own terms and avoids Russian-centric framing. |
-| 9. Dialogue & conversation quality | 9/10 | Both required dialogue situations are present, with named speakers, reciprocal `А у тебе?`, and correct `рада/радий` gender contrast. |
+| 1. Plan adherence | 7/10 | All five H2 sections are present and most contract beats are covered, but the consonant section stops at “There are a few special consonant letters to recognize...” instead of covering the contracted Anna Ohoiko consonant sequence, and the pipeline word count is 1163/1200. |
+| 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, calques, paronym errors, or wrong Ukrainian forms found in the module text. |
+| 3. Pedagogical quality | 7/10 | Strong textbook anchoring (`Заболотний`, `Большакова`, `Захарійчук`) and correct sound-model notation, but section 3 gives only `[к]/[п]` plus `Ґ/Г/Щ`, and the hello section tells learners “Use **Добрий день** with teachers or strangers” right after the teacher models `Привіт, Максиме!`. |
+| 4. Vocabulary coverage | 9/10 | Required items are present in prose: `звук`, `літера`, `голосні`, `приголосні`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`. |
+| 5. Exercise quality | 10/10 | Marker-only module: count, order, and contracted type prefixes all match exactly. |
+| 6. Engagement & tone | 7/10 | The module has useful classroom framing, but lines like “The first sound you will learn is the vowel,” “Following Anna Ohoiko's Episode 1, you can build your first conversation,” and “Review these core concepts before moving forward” read like template narration rather than a live teacher voice. |
+| 7. Structural integrity | 7/10 | Clean markdown and correct section order, but the pipeline word count is 1163, below the 1200 target. |
+| 8. Cultural accuracy | 10/10 | Ukrainian is presented on its own terms, with no Russia-centered framing or cultural distortion. |
+| 9. Dialogue & conversation quality | 8/10 | The named-speaker hallway dialogue is functional and includes `А у тебе?`, but the classroom exchange blurs formal vs informal register by having the teacher use `Привіт`. |
 
 ## Findings
-[PLAN ADHERENCE] [SEVERITY: major]  
-Location: `## Звуки і літери (Sounds and Letters)` — “The Ukrainian alphabet (**абетка** or алфавіт) contains exactly thirty-three letters...”  
-Issue: The contract requires this section to present all 33 letters in order and state that each letter has a name. The draft gives the count and the 33-vs-38 explanation, but never actually shows the alphabet or teaches letter names.  
-Fix: Replace that paragraph with a version that lists the alphabet in order and explicitly states that each letter has a name, while preserving the existing 33-vs-38 explanation.
+- [PLAN ADHERENCE] [SEVERITY: major]  
+Location: `There are a few special consonant letters to recognize. The letter **Ґ** represents the hard [g] sound... Another unique letter is **Щ**, which always represents two distinct sounds spoken together: [шч].`  
+Issue: The consonant section skips the contracted Anna Ohoiko consonant walkthrough (`М, Н, С, К, Л, Р, ...`) and jumps straight to three special letters. That leaves a contracted teaching beat uncovered and helps explain why the module is still at 1163 words instead of 1200.  
+Fix: Insert a short paragraph in this section naming the contracted consonant-video sequence and telling learners to practice those letters here.
+
+- [PEDAGOGICAL QUALITY] [SEVERITY: major]  
+Location: `**Вчитель:** Привіт, Максиме! (Hi, Maksym!)` and `The greeting **Привіт** is strictly informal. Use **Добрий день** with teachers or strangers.`  
+Issue: The module teaches one register rule and models the opposite in the same section. For A1, that is avoidable confusion.  
+Fix: Make the teacher-student exchange formal and keep `Привіт` in the peer dialogue only.
+
+- [ENGAGEMENT & TONE] [SEVERITY: minor]  
+Location: `The first sound you will learn is the vowel.` / `Following Anna Ohoiko's Episode 1, you can build your first conversation.` / `Review these core concepts before moving forward.`  
+Issue: These are formulaic section openers/meta narration. They flatten the teacher persona and sound templated.  
+Fix: Replace them with content-led, direct guidance.
 
 ## Verdict: REVISE
-REVISE because the linguistic scan is clean but section 1 misses a contracted teaching beat, which pulls dimensions 1 and 3 below 9 and requires a targeted content fix.
+The module is structurally intact and linguistically clean, so this is not a reject. It still needs revision because it misses part of the contracted consonant beat, falls short of the 1200-word target, and muddies greeting register in the exact section that teaches formal vs informal use.
 
 <fixes>
-- find: "The Ukrainian alphabet (**абетка** or алфавіт) contains exactly thirty-three letters, yet the spoken language produces thirty-eight different sounds. Why is there a mismatch? Some specific letters, such as Я, Ю, Є, and Ї, have special roles and can represent two distinct sounds at once. Hard and soft consonant pairs also increase the number of sounds beyond the number of letters. Furthermore, one letter makes no sound at all. The soft sign (Ь) is completely silent; it is only there to soften the preceding consonant. Because of this, the textbook by Litvinova for Grade 5 (page 130) asks a very important question: «Чи можна говорити \"голосна літера\"?» The answer is strictly no. Sounds are vowels or consonants, not letters. Letters only graphically represent the sounds."
-  replace: "The Ukrainian alphabet (**абетка** or алфавіт) contains exactly thirty-three letters, and it helps to meet them in order: А а, Б б, В в, Г г, Ґ ґ, Д д, Е е, Є є, Ж ж, З з, И и, І і, Ї ї, Й й, К к, Л л, М м, Н н, О о, П п, Р р, С с, Т т, У у, Ф ф, Х х, Ц ц, Ч ч, Ш ш, Щ щ, Ь ь, Ю ю, Я я. Each letter has a name, and learning that order helps with spelling, dictionary use, and sound analysis. Yet the spoken language produces thirty-eight different sounds. Why is there a mismatch? Some specific letters, such as Я, Ю, Є, and Ї, have special roles and can represent two distinct sounds at once. Hard and soft consonant pairs also increase the number of sounds beyond the number of letters. Furthermore, one letter makes no sound at all. The soft sign (Ь) is completely silent; it is only there to soften the preceding consonant. Because of this, the textbook by Litvinova for Grade 5 (page 130) asks a very important question: «Чи можна говорити \"голосна літера\"?» The answer is strictly no. Sounds are vowels or consonants, not letters. Letters only graphically represent the sounds."
+- insert_after: "Another unique letter is **Щ**, which always represents two distinct sounds spoken together: [шч]."
+  text: "Anna Ohoiko's consonant videos are the next concrete step here: listen for **М, Н, С, К, Л, Р**, then extend to **Б, В, Д, П, Т, Г, Ґ, З, Ж, Ш, Х, Й, Ч, Щ, Ц, Ф**. Each video pairs a written **літера** with a spoken **звук**, so you can hear how the alphabet turns into real pronunciation."
+- find: "**Вчитель:** Привіт, Максиме! (Hi, Maksym!)\n**Максим:** Привіт! Нормально. (Hi! Okay.)\n\nHere **Добрий день** and **Добре** form a simple classroom exchange."
+  replace: "**Вчитель:** Добрий день, Максиме! (Good day, Maksym!)\n**Максим:** Добрий день! Добре. (Good day! Fine.)\n\nHere **Добрий день** and **Добре** form a simple classroom exchange. Keep **Привіт** for the classmate dialogue below."
+- find: "The first sound you will learn is the vowel. In Ukrainian, these are called **Голосні** (vowels)."
+  replace: "Start with **Голосні** (vowels). These are the vowel sounds of Ukrainian."
+- find: "Following Anna Ohoiko's Episode 1, you can build your first conversation."
+  replace: "Anna Ohoiko's Episode 1 gives you a simple first conversation to imitate."
+- find: "Review these core concepts before moving forward."
+  replace: "Use these questions to check the core ideas from the module."
 </fixes>

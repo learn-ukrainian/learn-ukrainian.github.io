@@ -5,70 +5,72 @@
   "phases": {
     "check": {
       "status": "complete",
-      "ts": "2026-04-17T17:46:13.363088+00:00"
+      "ts": "2026-04-17T22:05:00.907074+00:00"
     },
     "research": {
       "status": "complete",
-      "ts": "2026-04-17T17:46:13.403437+00:00"
+      "ts": "2026-04-17T22:05:00.944037+00:00"
     },
     "skeleton": {
       "status": "complete",
-      "ts": "2026-04-17T17:47:10.258296+00:00",
-      "plan_hash": "ea0a25049af0f67f7cd97afa97aff5dbb878b54b67920300f12bf70ea2e67d87"
+      "ts": "2026-04-17T22:05:36.780446+00:00",
+      "plan_hash": "77bc7382d4402c47c700b794999b189da2fe7e1aa6d9ca0c8ee940bab62cb792"
     },
     "pre-verify": {
       "status": "complete",
-      "ts": "2026-04-17T17:48:00.889009+00:00"
+      "ts": "2026-04-17T22:06:16.669522+00:00"
     },
     "write": {
       "status": "complete",
-      "ts": "2026-04-17T18:34:24.625762+00:00",
+      "ts": "2026-04-17T22:09:28.795428+00:00",
       "plan_hash": "77bc7382d4402c47c700b794999b189da2fe7e1aa6d9ca0c8ee940bab62cb792"
     },
     "exercises": {
       "status": "complete",
-      "ts": "2026-04-17T17:57:59.100773+00:00",
-      "plan_hash": "ea0a25049af0f67f7cd97afa97aff5dbb878b54b67920300f12bf70ea2e67d87"
+      "ts": "2026-04-17T22:09:28.795933+00:00",
+      "plan_hash": "77bc7382d4402c47c700b794999b189da2fe7e1aa6d9ca0c8ee940bab62cb792"
     },
     "activities": {
       "status": "complete",
-      "ts": "2026-04-17T17:59:20.793706+00:00"
+      "ts": "2026-04-17T22:10:33.917295+00:00"
     },
     "repair": {
       "status": "complete",
-      "ts": "2026-04-17T17:59:20.838596+00:00"
+      "ts": "2026-04-17T22:10:33.959589+00:00"
     },
     "verify-exercises": {
       "status": "complete",
-      "ts": "2026-04-17T17:59:20.917073+00:00"
+      "ts": "2026-04-17T22:10:34.039158+00:00"
     },
     "annotate": {
       "status": "complete",
-      "ts": "2026-04-17T18:34:24.627130+00:00",
+      "ts": "2026-04-17T22:10:34.048398+00:00",
       "plan_hash": "77bc7382d4402c47c700b794999b189da2fe7e1aa6d9ca0c8ee940bab62cb792"
     },
     "vocab": {
       "status": "complete",
-      "ts": "2026-04-17T18:00:05.907958+00:00"
+      "ts": "2026-04-17T22:11:08.213161+00:00"
     },
     "enrich": {
       "status": "complete",
-      "ts": "2026-04-17T18:00:05.908241+00:00"
+      "ts": "2026-04-17T22:11:08.213473+00:00"
     },
     "verify": {
       "status": "complete",
-      "ts": "2026-04-17T18:00:05.987817+00:00",
-      "plan_hash": "ea0a25049af0f67f7cd97afa97aff5dbb878b54b67920300f12bf70ea2e67d87"
+      "ts": "2026-04-17T22:11:08.292355+00:00",
+      "plan_hash": "77bc7382d4402c47c700b794999b189da2fe7e1aa6d9ca0c8ee940bab62cb792"
     },
     "review": {
-      "status": "failed",
-      "ts": "2026-04-17T19:16:56.558445+00:00"
+      "status": "complete",
+      "ts": "2026-04-17T22:31:20.475242+00:00"
+    },
+    "review-style": {
+      "status": "complete",
+      "ts": "2026-04-17T22:33:00.643627+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-17T22:33:03.198815+00:00"
     }
-  },
-  "needs_human_review": {
-    "status": true,
-    "ts": "2026-04-17T19:16:56.557581+00:00",
-    "reason": "review plateaued again after plan patch retry",
-    "violations_path": "needs-human-review.yaml"
   }
 }

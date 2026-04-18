@@ -61,9 +61,9 @@ The writer placed these markers in the module content. Your inline activities mu
 - `<!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->`
 - `<!-- INJECT_ACTIVITY: match-up-letters-sounds -->`
 - `<!-- INJECT_ACTIVITY: fill-in-greetings -->`
-- `<!-- INJECT_ACTIVITY: group-sort-sounds -->`
+- `<!-- INJECT_ACTIVITY: group-sort-vowels-consonants -->`
 - `<!-- INJECT_ACTIVITY: letter-grid-alphabet -->`
-- `<!-- INJECT_ACTIVITY: watch-and-repeat-videos -->`
+- `<!-- INJECT_ACTIVITY: watch-and-repeat-ohoiko-videos -->`
 ```
 [END INJECTION MARKERS LITERAL]
 
@@ -156,92 +156,90 @@ required:
 ```markdown
 ## Звуки і літери (Sounds and Letters)
 
-The foundation of Ukrainian phonetics relies on a strict distinction taught to every child in Ukraine. As the classic school textbook by **Заболотний** states: «**Звуки** ми **чуємо** й **вимовляємо**, а **букви** **бачимо** й **пишемо**» (We hear and pronounce sounds, but we see and write letters). These are completely different concepts. The textbook emphasizes **'Звуки**' (sounds) as physical vibrations produced by your mouth. A letter is merely a graphical symbol drawn on paper to record that sound. You must train yourself to separate the visual symbol from the physical mouth movement.
+The most important distinction in Ukrainian phonetics is the difference between a sound and a letter. Teachers in Ukraine drill this fundamental concept into students from the very first grade to ensure complete understanding. The golden rule, established by the linguist **Заболотний** in the standard fifth-grade textbook, is perfectly clear: «**Звуки** ми **чуємо** й **вимовляємо**, а **букви** **бачимо** й **пишемо**». We hear and pronounce **звуки** (sounds), but we see and write **букви** (letters). These are definitely not the same thing. A letter is merely a graphical symbol drawn on paper. A sound is the actual physical noise that your mouth produces when you speak.
 
-This strict separation explains an interesting mathematical mismatch. The Ukrainian language uses thirty-three letters, but it actually has thirty-eight **звуки** (sounds). How does this happen? Certain special letters, such as «**я**», «**ю**», «**є**», and «**ї**», can represent two separate sounds simultaneously. Conversely, the soft sign «**ь**» makes zero sound on its own; it only changes the pronunciation of the consonant directly before it. Because of this reality, Ukrainian teachers constantly remind students that it is technically incorrect to say "a vowel letter." Only sounds can be vowels or consonants.
+If you count them, you will notice a numerical mismatch. Ukrainian has thirty-three **літери** (letters), but it features thirty-eight actual **звуки** (sounds). Why is there a difference between written symbols and spoken noises? The answer lies in how certain letters function. Specific letters like **я**, **ю**, **є**, and **ї** represent two distinct sounds in certain positions within a word. Conversely, the soft sign (**ь**) makes absolutely no sound of its own. Its only job is to soften the consonant right before it. Because of this strict separation, the textbook author Litvinova asks a critical question: is it correct to say "vowel letter"? The answer is no. Sounds can be **голосні** (vowels) or **приголосні** (consonants), but letters are just letters. They only represent those spoken sounds.
 
-The complete set of these thirty-three visual symbols is the **абетка** (alphabet). Each letter has a specific name, but the real magic is how they function together. Unlike English spelling, which is full of unpredictable rules and silent letters like the "k" in "knife," Ukrainian is highly phonetic. What you see on the page is what you hear. There are no silent letters to trick you. Once you learn the specific sounds, reading becomes a direct and reliable translation of symbols into speech.
-
-:::tip
-When learning the alphabet, do not just memorize the names of the letters. Focus entirely on the physical sounds they instruct your mouth to produce.
+:::info
+Always remember that you cannot pronounce a letter. You can only pronounce the actual sound that the letter represents.
 :::
 
+The complete collection of these thirty-three letters is called the **абетка** or **алфавіт** (alphabet). Each individual letter has its own specific name. Unlike English, Ukrainian spelling is highly phonetic. What you see on the page is almost exactly what you hear spoken aloud. There are no hidden silent letters to trip you up, except for the functional soft sign mentioned earlier, and no surprise pronunciations. Because the writing system is incredibly consistent, once you learn the sounds, you will be able to accurately read any word you encounter.
+
 <!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->
+<!-- INJECT_ACTIVITY: match-up-letters-sounds -->
 
 ## Голосні звуки (Vowel Sounds)
 
-In Ukrainian, vowels are called **'Голосні**' (vowels). These sounds are produced using only your voice. When you speak them, the air flows freely through your mouth without hitting any obstruction. Because of this, you can sing them or shout them across a field. A Grade 1 textbook by Большакова teaches children to feel these sounds through a short rhyme: «Голосні почуєш в пісні, і у темному у лісі, і коли дивуєшся, і коли милуєшся» (You will hear vowels in a song, and in a dark forest, and when you are surprised, and when you are admiring).
+The first sound you will learn is the vowel. In Ukrainian, these are called **Голосні** (vowels). When produced, air flows freely through your mouth without obstruction. The educator **Большакова** teaches this using a poem: «**Голосні** **почуєш** в **пісні**, і у **темному** у **лісі**, і **коли** **дивуєшся**, і **коли** милуєшся. Легко вимовляються, весело співаються!» This means: "You will hear vowels in a song, in a dark forest, when you are surprised, and when you admire. Easily pronounced, cheerfully sung!" You can sing vowels or shout them. They are the core of every syllable.
 
-There are exactly six pure vowel sounds in Ukrainian: [а], [о], [у], [е], [и], and [і]. However, the alphabet contains ten vowel letters: А, О, У, Е, И, І, Я, Ю, Є, and Ї. The extra four letters are "iotated" symbols that can represent two sounds at once, which we will cover fully in the next module. For now, remember the golden rule: every Ukrainian word has at least one vowel sound. They act as the beating heart of every syllable.
+There are exactly six vowel sounds in Ukrainian: [а], [о], [у], [е], [и], and [і]. However, the alphabet uses ten vowel letters to write them: А, О, У, Е, И, І, Я, Ю, Є, and Ї. The extra four (Я, Ю, Є, and Ї) are iotated vowels. They can represent two separate sounds, which we will detail in the next module. For now, remember that every Ukrainian word has at least one vowel sound. Vowels are the heart of every word.
 
-To visualize sounds, Grade 1 textbooks by authors like Захарійчук use simple symbols. A vowel sound is always marked with a dot: `[•]`. Practice hearing these vowels before trying to write them. In the word **мама** (mom), you hear two [а] sounds (мА-мА). In the word **молоко** (milk), you hear three [о] sounds (мО-лО-кО). In the name **Уля** (Ulya), you hear one [у] sound at the start (У-ля).
+To visualize sounds, Ukrainian schools use specific notation. The author Захарійчук marks vowel sounds with a dot [•] in sound models. Practice hearing these beats. The word ма-ма (mom) has two [а] sounds. The word мо-ло-ко (milk) contains three [о] sounds. The name У-ля (Ulya) has one [у] sound.
 
-:::tip
-Take a moment to watch the Anna Ohoiko video guide for each vowel letter. Watch her mouth, listen closely to the physical sound, and repeat it out loud.
+:::info
+Ukrainian vowels are always pronounced clearly and are never reduced or mumbled.
 :::
+
+To master these sounds, watch the Anna Ohoiko video for each vowel letter. Listen carefully and repeat them aloud.
 
 ## Приголосні звуки (Consonant Sounds)
 
-In contrast to vowels, **'Приголосні**' (consonants) are produced with a mix of voice and noise, or noise alone. Your lips, teeth, or tongue create a physical obstruction. You cannot sing a pure consonant. Try holding a note using only the sound [к] or [п]—it is impossible. The Grade 1 textbook by Большакова captures this perfectly on page 24: «Приголосні деренчать і тихенько шелестять, голосно свистять і шиплять» (Consonants rattle and quietly rustle, loudly whistle and hiss).
+The next category of sounds is the **Приголосні** (consonants). These sounds are produced using voice combined with noise, or sometimes only noise. When you speak a consonant, the air does not flow freely. Instead, your lips, teeth, or tongue create an obstruction. The educator **Большакова** describes this group of sounds: «**Приголосні** **деренчать** і **тихенько** **шелестять**, **голосно** **свистять** і **шиплять**» (Consonants rattle and quietly rustle, loudly whistle and hiss). Unlike vowels, you cannot sing a pure consonant. If you try to sing the sound [к] or [п], you will realize the air is blocked, making a melody impossible.
 
-Ukrainian builds thirty-two consonant sounds using twenty-two consonant letters. Many consonants exist in pairs: **тверді** (hard) and **м’які** (soft). This hard and soft distinction is a uniquely Slavic concept that does not exist in English. To help first-graders visualize this difference, author Захарійчук uses symbols on page 15 of her textbook: hard sounds are marked with a single dash `[–]`, while soft sounds are marked with a double dash `[=]`.
+Ukrainian has thirty-two consonant sounds, but uses only twenty-two consonant letters to write them. This happens because many consonants come in pairs. A consonant sound can be **тверді** (hard), marked with a single dash [–] in sound models, or **м'які** (soft), marked with a double dash [=]. This fundamental distinction between hard and soft sounds does not exist in English. It is a uniquely Slavic characteristic that gives the language its flowing rhythm.
 
-:::tip
-You can feel the mechanics of consonants using a kinaesthetic voicing check. Place your hand firmly on your throat. When you pronounce a voiced consonant like [д], you will feel a strong vibration. When you pronounce a voiceless consonant like [т], you will only feel air.
+:::info
+The soft sign **ь** makes absolutely no sound of its own. Its only purpose is to make the consonant immediately before it soft.
 :::
 
-You will learn these sounds through the Anna Ohoiko video guides for the letters М, Н, С, К, Л, Р, Б, В, Д, П, Т, Г, Ґ, З, Ж, Ш, Х, Й, Ч, Щ, Ц, and Ф. Each video demonstrates the sound and provides example words. Watch for three special cases. The letter «**ґ**» produces a uniquely Ukrainian sound. The letter «**щ**» always represents two sounds spoken together: [шч]. Finally, the letter «**ь**» is the soft sign. It makes no sound of its own; it only softens the consonant before it.
+There are a few special consonant letters to recognize. The letter **Ґ** represents the hard [g] sound, exactly like the "g" in "go." However, the much more common letter **Г** represents a deep, pharyngeal [h] sound. Another unique letter is **Щ**, which always represents two distinct sounds spoken together: [шч].
 
-<!-- INJECT_ACTIVITY: match-up-letters-sounds -->
 <!-- INJECT_ACTIVITY: fill-in-greetings -->
-<!-- INJECT_ACTIVITY: group-sort-sounds -->
+<!-- INJECT_ACTIVITY: group-sort-vowels-consonants -->
 <!-- INJECT_ACTIVITY: letter-grid-alphabet -->
 
 ## Привіт! (Hello!)
 
-Imagine the first day of Ukrainian class, following Episode 1 of the Ukrainian Lessons Podcast. The teacher greets the students:
+**Вчитель:** Добрий день! Як справи? (Good day! How are you?)
+**Учні:** Добрий день! Добре. (Good day! Fine.)
+**Вчитель:** Привіт, Максиме! (Hi, Maksym!)
+**Максим:** Привіт! Нормально. (Hi! Okay.)
 
-**Вчитель**: Добрий день! Як справи? (Good afternoon! How are you?)
-**Учні**: Добре, дякую! А у вас? (Fine, thank you! And you?)
+The greeting **Добрий день** establishes a polite tone. The students use **Добре** to state they are doing well.
 
-To answer **«Як справи?»** (How are you?), you can use **«Добре»** (fine), **«Чудово»** (great), or **«Нормально»** (okay). You then return the question with **«А у вас?»** (And you? - formal) or **«А у тебе?»** (And you? - informal).
-
-Two new classmates, Marko and Sofia, meet in the hallway. Remember that to state your name, you should never say **«Я звати»** (I am called) because Ukrainian uses the accusative pronoun for "me".
-
-— Привіт! Як тебе звати? (Hi! What is your name?)
-— Привіт! Мене звати Софія. А тебе? (Hi! My name is Sofia. And you?)
-— Мене звати Марко. (My name is Marko.)
-
-The greeting **«Привіт!»** (Hi!) is used with friends and peers. To introduce yourself, you must say **«Мене звати...»** (They call me...).
-
-As Marko and Sofia conclude their chat, Sofia says she is glad to see him. This is your first encounter with grammatical gender, which is a fundamental part of the language and will become a major topic as your vocabulary grows.
-
-— Рада тебе бачити! (Glad to see you!)
-
-If Marko were speaking, he would change the feminine **«рада»** (glad) from this sentence to the masculine **«радий»** (glad). The phrase **«тебе бачити»** (to see you) remains the same regardless of your gender.
-
-A basic **звуковий аналіз** (sound analysis) of the word **«Привіт»** (Hi) reveals its structure:
-
-**П** [п] (**приголосний** — consonant) + **р** [р] (**приголосний** — consonant) + **и** [и] (**голосний** — vowel) + **в** [в] (**приголосний** — consonant) + **і** [і] (**голосний** — vowel) + **т** [т] (**приголосний** — consonant).
-
-The word contains two **голосні** (vowels) and four **приголосні** (consonants). Every type of sound introduced earlier appears in this greeting.
+Following Anna Ohoiko from the Ukrainian Lessons Podcast Episode 1, you can build your first conversation. The word **Привіт** translates to "Hi" and is used informally with friends, family, and peers. For general situations, you use **Добрий день**. To ask someone how they are doing, use the question **Як справи?**. You can answer with **Добре** (fine), **Чудово** (great), or **Нормально** (okay). To return the question, simply ask **А у тебе?** (And you?).
 
 :::tip
-Listen closely to native speakers to pick up the natural rhythm of greetings. Even short words like **«Привіт»** (Hi) have a specific melody.
+The greeting **Привіт** is strictly informal. Always default to **Добрий день** when speaking to teachers or strangers.
 :::
 
-<!-- INJECT_ACTIVITY: watch-and-repeat-videos -->
+**Марко:** Привіт! Як тебе звати? (Hi! What is your name?)
+**Софія:** Мене звати Софія. А у тебе? (My name is Sofia. And you?)
+**Марко:** Мене звати Марко. Радий тебе бачити! (My name is Marko. Glad to see you!)
+**Софія:** Рада тебе бачити! (Glad to see you!)
+
+The phrase **Як тебе звати?** asks for a name. The reply uses **Мене звати** to answer.
+
+Ukrainian has gendered forms. A female speaker says **Рада тебе бачити**, while a male speaker says **Радий тебе бачити**. This is your first encounter with grammatical gender, which will become a major topic starting in module eight. Read the word **Привіт** letter by letter as your first **звуковий аналіз** (sound analysis): П [п] приголосний + р [р] приголосний + и [и] голосний + в [в] приголосний + і [і] голосний + т [т] приголосний. Two **голосні**, four **приголосні**. Every type of sound you learned in this module appears in this one word.
+
+<!-- INJECT_ACTIVITY: watch-and-repeat-ohoiko-videos -->
 
 ## Підсумок (Summary)
 
-Take a moment to answer these self-check questions. How many letters are in the Ukrainian alphabet? Thirty-three. How many sounds? Thirty-eight. Why is there a difference between the number of letters and sounds? Some letters create two sounds, while the soft sign makes no **звук** (sound) at all. 
+Review these core concepts before moving forward.
 
-What are **голосні** (vowels), and how are they produced? They are pure voice flowing freely. What are **приголосні** (consonants)? They are sounds made with an obstacle in the mouth. Can you say **'голосна** **літера'**? No! A spoken sound is a **голосний** (vowel sound) or a **приголосний** (consonant sound), but a **літера** (letter) is just a written symbol. You write **«мама»** (mother) or **«молоко»** (milk), but you hear sounds.
+* How many letters in the Ukrainian alphabet? Thirty-three letters.
+* How many sounds? Thirty-eight sounds. Every **звук** (sound) is what we hear.
+* Why are they different? Some letters represent two sounds, while the soft sign makes no sound.
+* What are **голосні**? Every **голосний** (vowel sound) is made with voice and open airflow. They are singable.
+* What are **приголосні**? Every **приголосний** (consonant sound) is made with an obstruction in the mouth.
+* Can you say «**голосна літера**»? No! Sounds are **голосні**, but a **літера** (letter) is just a written symbol.
+* What does **Привіт** mean? It means "Hi" and is strictly informal.
+* How do you answer **Як справи**? You can say **добре** (fine) or **чудово** (great).
 
-What does **«Привіт»** (hi) mean? It is an informal greeting for friends. How do you answer **«Як справи?»** (how are you)? Simply reply with **«добре»** (fine) or **«чудово»** (great).
-
-:::tip
-Mastering the alphabet takes time, but your new friends will be thrilled to hear your first greeting!
+:::info
+Simple words like **мама** (mother) and **молоко** (milk) are excellent practice for recognizing how a written **літера** matches a spoken **звук**.
 :::
 ```
 [END MODULE CONTENT LITERAL]

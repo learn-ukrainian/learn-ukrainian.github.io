@@ -397,3 +397,28 @@ section_word_budgets:
   Підсумок (Summary): *id015
 artifacts:
   wiki_excerpt_file: wiki-excerpts.yaml
+style_review_advice:
+- type: PRAGMATIC_FORMULA_MISMATCH
+  location: Привіт! (Hello!), Марко–Софія dialogue
+  evidence: Two new classmates meet for the first time, but they close with «Радий
+    тебе бачити! / Рада тебе бачити!», which fits reunion/seeing someone again better
+    than first introduction.
+  fix: Rewrite the closing as a first-meeting formula such as «Радий/рада знайомству»
+    or «Дуже приємно познайомитися», and keep «Рада/радий тебе бачити» for a reunion
+    scene only.
+- type: REGISTER_SCENE_MISMATCH
+  location: Привіт! (Hello!), opening classroom dialogue
+  evidence: The teacher says «Добрий день! Як справи?», the class answers «Добрий
+    день! Добре.», then Maksym repeats «Добрий день! Добре.»; the adjacency pairs
+    are unnatural and mix greeting with small-talk in a stiff way.
+  fix: 'Rewrite as a natural formal classroom exchange: greeting first («Добрий день!»
+    / «Добрий день!»), then, if needed, a separate one-to-one «Як справи? — Добре,
+    дякую» rather than a choral response.'
+- type: META_PEDAGOGICAL_NARRATION
+  location: Привіт! (Hello!), prose between the two dialogues
+  evidence: Sentences like «Here Добрий день and Добре form a simple classroom exchange.
+    Keep Привіт for the classmate dialogue below.» and «The pair Як тебе звати? /
+    Мене звати ... covers the basic name exchange.» narrate the lesson architecture
+    instead of speaking in a stable module voice.
+  fix: Replace meta-commentary with direct explanation of usage and register, without
+    referring to 'the dialogue below', 'the pair', or what the exercise is doing.

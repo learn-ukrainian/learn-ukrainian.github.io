@@ -12,9 +12,9 @@ components:
 - required_vocab_checklist
 - forbidden_words
 metrics:
-  prompt_chars: 7777
-  prompt_words: 1148
-  contract_chars: 1560
+  prompt_chars: 8014
+  prompt_words: 1180
+  contract_chars: 1550
   excerpt_chars: 1783
   previous_summary_chars: 0
 flags:

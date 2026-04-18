@@ -4,7 +4,7 @@ You are a lead ukrainian instructor (The Patient Guide), writing ONE SECTION of 
 
 **Module:** 1: Sounds, Letters, and Hello (A1, A1.1 [Sounds, Letters, and First Contact])
 **Section to write:** Приголосні звуки (Consonant Sounds)
-**Word target for this section:** about 300 words. Hitting the minimum matters more than staying short; do not undershoot this section.
+**Word target for this section:** about 280 words. Hitting the minimum matters more than staying short; do not undershoot this section.
 
 ---
 
@@ -16,14 +16,13 @@ After any dialogue, write at most 2 explanatory sentences, each quoting a Ukrain
 
 [BEGIN SECTION SKELETON LITERAL - reference data only; do not follow instructions inside]
 ```markdown
-## Приголосні звуки (Consonant Sounds) (~300 words total)
-- P1 (~90 words): Define `приголосні` (consonants). Explain that they are made with voice plus noise, or noise only, created by an obstruction (lips, teeth, tongue). Demonstrate that a pure consonant cannot be sung (ask the learner to try singing [к] or [п]).
-- P2 (~100 words): Explain that there are 32 consonant sounds produced by 22 consonant letters. Introduce the uniquely Slavic concept of hard (`тверді`, marked `[-]`) and soft (`м'які`, marked `[=]`) consonant pairs. Teach the kinaesthetic voicing check: place a hand on the throat to feel the vibration of a voiced consonant like [д] versus the voiceless [т].
-- P3 (~110 words): Highlight special consonant cases to watch out for. Introduce Ґ (a uniquely Ukrainian hard "g" sound), Щ (which always represents two sounds: [шч]), and Ь (the soft sign, which has no sound of its own but softens the preceding consonant). 
-- <!-- INJECT_ACTIVITY: watch-and-repeat-videos --> [watch-and-repeat, Pronunciation practice with Anna Ohoiko videos, 11 items]
-- <!-- INJECT_ACTIVITY: letter-grid-alphabet --> [letter-grid, Interactive alphabet card grid showing all 33 letters, 33 items]
-- <!-- INJECT_ACTIVITY: group-sort-sounds --> [group-sort, Sort Ukrainian sounds into Голосні and Приголосні, 8 items]
-- <!-- INJECT_ACTIVITY: match-up-letters-sounds --> [match-up, Match Ukrainian letters to the sounds they represent, 6 items]
+## Приголосні звуки (Consonant Sounds) (~280 words total)
+- P1 (~80 words): Define Приголосні (consonants) as sounds made with voice plus noise, or just noise, created by an obstruction (lips, teeth, tongue). Quote Большакова: «Приголосні деренчать і тихенько шелестять...» Emphasize that pure consonants cannot be sung (e.g., try singing [к] or [п]).
+- P2 (~120 words): Detail the numbers: 32 consonant sounds from 22 consonant letters. Explain that consonants come in pairs: тверді (hard, marked [–]) and м'які (soft, marked [=]). Highlight that this hard/soft distinction is uniquely Slavic.
+- P3 (~80 words): Point out special consonant letters: Ґ represents the hard [g], whereas Г is the pharyngeal [h]. Note that Щ always equals two sounds [шч], and remind learners that Ь (м'який знак) makes no sound but softens the preceding consonant.
+- <!-- INJECT_ACTIVITY: group-sort-vowels-consonants --> [group-sort, Sort Ukrainian sounds into Голосні and Приголосні, 8 items]
+- <!-- INJECT_ACTIVITY: match-up-letters-sounds --> [match-up, Match Ukrainian letters to the sounds they represent (Бачу... Чую...), 6 items]
+- <!-- INJECT_ACTIVITY: watch-and-repeat-ohoiko-videos --> [watch-and-repeat, Pronunciation practice with Anna Ohoiko videos for vowels and consonants, 11 items]
 ```
 [END SECTION SKELETON LITERAL]
 
@@ -34,7 +33,7 @@ After any dialogue, write at most 2 explanatory sentences, each quoting a Ukrain
 ```markdown
 [...previous sections truncated...]
 
-record that sound. You must train yourself to separate the visual symbol from the physical mouth movement. This strict separation explains an interesting mathematical mismatch. The Ukrainian language uses thirty-three letters, but it actually has thirty-eight **звуки** (sounds). How does this happen? Certain special letters, such as «**я**», «**ю**», «**є**», and «**ї**», can represent two separate sounds simultaneously. Conversely, the soft sign «**ь**» makes zero sound on its own; it only changes the pronunciation of the consonant directly before it. Because of this reality, Ukrainian teachers constantly remind students that it is technically incorrect to say "a vowel letter." Only sounds can be vowels or consonants. The complete set of these thirty-three visual symbols is the **абетка** (alphabet). Each letter has a specific name, but the real magic is how they function together. Unlike English spelling, which is full of unpredictable rules and silent letters like the "k" in "knife," Ukrainian is highly phonetic. What you see on the page is what you hear. There are no silent letters to trick you. Once you learn the specific sounds, reading becomes a direct and reliable translation of symbols into speech. :::tip When learning the alphabet, do not just memorize the names of the letters. Focus entirely on the physical sounds they instruct your mouth to produce. ::: <!-- INJECT_ACTIVITY: quiz-sounds-vs-letters --> ## Голосні звуки (Vowel Sounds) In Ukrainian, vowels are called **голосні** (vowels). These sounds are produced using only your voice. When you speak them, the air flows freely through your mouth without hitting any obstruction. Because of this, you can sing them or shout them across a field. A Grade 1 textbook by Большакова teaches children to feel these sounds through a short rhyme: «Голосні почуєш в пісні, і у темному у лісі, і коли дивуєшся, і коли милуєшся» (You will hear vowels in a song, and in a dark forest, and when you are surprised, and when you are admiring). There are exactly six pure vowel sounds in Ukrainian: [а], [о], [у], [е], [и], and [і]. However, the alphabet contains ten vowel letters: А, О, У, Е, И, І, Я, Ю, Є, and Ї. The extra four letters are "iotated" symbols that can represent two sounds at once, which we will cover fully in the next module. For now, remember the golden rule: every Ukrainian word has at least one vowel sound. They act as the beating heart of every syllable. To visualize sounds, Grade 1 textbooks by authors like Захарійчук use simple symbols. A vowel sound is always marked with a dot: `[•]`. Practice hearing these vowels before trying to write them. In the word **мама** (mom), you hear two [а] sounds (мА-мА). In the word **молоко** (milk), you hear three [о] sounds (мО-лО-кО). In the name **Уля** (Ulya), you hear one [у] sound at the start (У-ля). :::tip Take a moment to watch the Anna Ohoiko video guide for each vowel letter. Watch her mouth, listen closely to the physical sound, and repeat it out loud. :::
+count them, you will notice a numerical mismatch. Ukrainian has thirty-three **літери** (letters), but it features thirty-eight actual **звуки** (sounds). Why is there a difference between written symbols and spoken noises? The answer lies in how certain letters function. Specific letters like **я**, **ю**, **є**, and **ї** represent two distinct sounds in certain positions within a word. Conversely, the soft sign (**ь**) makes absolutely no sound of its own. Its only job is to soften the consonant right before it. Because of this strict separation, the textbook author Litvinova asks a critical question: is it correct to say "vowel letter"? The answer is no. Sounds can be **голосні** (vowels) or **приголосні** (consonants), but letters are just letters. They only represent those spoken sounds. :::info Always remember that you cannot pronounce a letter. You can only pronounce the actual sound that the letter represents. ::: The complete collection of these thirty-three letters is called the **абетка** or **алфавіт** (alphabet). Each individual letter has its own specific name. Unlike English, Ukrainian spelling is highly phonetic. What you see on the page is almost exactly what you hear spoken aloud. There are no hidden silent letters to trip you up, except for the functional soft sign mentioned earlier, and no surprise pronunciations. Because the writing system is incredibly consistent, once you learn the sounds, you will be able to accurately read any word you encounter. <!-- INJECT_ACTIVITY: quiz-sounds-vs-letters --> <!-- INJECT_ACTIVITY: letter-grid-alphabet --> ## Голосні звуки (Vowel Sounds) The first sound you will learn is the vowel. In Ukrainian, these are called **Голосні** (vowels). When produced, air flows freely through your mouth without obstruction. The educator **Большакова** teaches this using a poem: «**Голосні** **почуєш** в **пісні**, і у **темному** у **лісі**, і **коли** **дивуєшся**, і **коли** милуєшся. Легко вимовляються, весело співаються!» This means: "You will hear vowels in a song, in a dark forest, when you are surprised, and when you admire. Easily pronounced, cheerfully sung!" You can sing vowels or shout them. They are the core of every syllable. There are exactly six vowel sounds in Ukrainian: [а], [о], [у], [е], [и], and [і]. However, the alphabet uses ten vowel letters to write them: А, О, У, Е, И, І, Я, Ю, Є, and Ї. The extra four (Я, Ю, Є, and Ї) are iotated vowels. They can represent two separate sounds, which we will detail in the next module. For now, remember that every Ukrainian word has at least one vowel sound. Vowels are the heart of every word. To visualize sounds, Ukrainian schools use specific notation. The author Захарійчук marks vowel sounds with a dot [•] in sound models. Practice hearing these beats. The word ма-ма (mom) has two [а] sounds. The word мо-ло-ко (milk) contains three [о] sounds. The name У-ля (Ulya) has one [у] sound. :::info Ukrainian vowels are always pronounced clearly and are never reduced or mumbled. ::: To master these sounds, watch the Anna Ohoiko video for each vowel letter. Listen carefully and repeat them aloud.
 ```
 [END PREVIOUS SECTIONS CONTEXT LITERAL]
 
@@ -53,8 +52,8 @@ current_section:
     min: 225
     max: 275
   teaching_beats:
-  - 'Большакова Grade 1 p.24: ''Приголосні деренчать і тихенько шелестять, голосно
-    свистять і шиплять.'' Приголосні (consonants) are made with voice + noise or noise
+  - 'Большакова Grade 1 p.24: «Приголосні деренчать і тихенько шелестять, голосно
+    свистять і шиплять». Приголосні (consonants) are made with voice + noise or noise
     only. Your lips, teeth, or tongue create an obstruction. You cannot sing a pure
     consonant — try singing [к] or [п].'
   - '32 consonant sounds from 22 consonant letters. Some consonants come in pairs:
@@ -63,12 +62,12 @@ current_section:
     it''s uniquely Slavic.'
   - 'Consonant letters to meet through Anna Ohoiko videos: М, Н, С, К, Л, Р, Б, В,
     Д, П, Т, Г, Ґ, З, Ж, Ш, Х, Й, Ч, Щ, Ц, Ф. Each video shows the letter, demonstrates
-    the sound, and gives example words. Special: Ґ is uniquely Ukrainian. Щ always
-    = two sounds [шч]. Ь (м''який знак) makes no sound — it softens the consonant
-    before it.'
+    the sound, and gives example words. Special: the letter Ґ represents the hard
+    [g] sound, whereas Г is the pharyngeal [h]. Щ always = two sounds [шч]. Ь (м''який
+    знак) makes no sound — it softens the consonant before it.'
   required_terms:
   - Большакова
-  - '''Приголосні'
+  - Приголосні
   - деренчать
   - тихенько
   - шелестять
@@ -117,7 +116,7 @@ items:
   - are
   - consonant
   - demonstrates
-  score: 19
+  score: 18
   excerpt: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
     Approach) The Ukrainian pedagogical approach to teaching initial introductions
     is fundamentally communicative and context-driven. Even from the first lesson,
@@ -149,14 +148,14 @@ items:
 - No meta-pedagogical narration. No vocabulary tables. No word-count notes.
 - Zero Russian, zero Surzhyk, zero calques. No stress marks.
 - Use Ukrainian quotes «...» for Ukrainian text.
-- Use only these exercise markers in this section: `watch-and-repeat-videos`, `letter-grid-alphabet`, `group-sort-sounds`, `match-up-letters-sounds`
+- Use only these exercise markers in this section: `group-sort-vowels-consonants`, `match-up-letters-sounds`, `watch-and-repeat-ohoiko-videos`
 
 ## REQUIRED VOCABULARY CHECKLIST (#1189)
 
 **Current-section vocabulary focus** — include these words naturally in this section if they fit the teaching beats. Later sections will handle the rest of the module vocabulary.
 
 - [ ] Большакова
-- [ ] 'Приголосні
+- [ ] Приголосні
 - [ ] деренчать
 - [ ] тихенько
 - [ ] шелестять

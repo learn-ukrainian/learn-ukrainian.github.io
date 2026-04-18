@@ -1,0 +1,44 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-17T22-07-75d211f4.json
+phase: write-chunk-02
+prompt_chars: 9944
+response_chars: 1555
+prompt_words: 1490
+response_words: 260
+sections:
+- name: header
+  start: 0
+  length: 480
+  fraction: 0.0483
+- name: skeleton
+  start: 480
+  length: 1478
+  fraction: 0.1486
+- name: prior_summary
+  start: 1958
+  length: 7789
+  fraction: 0.7833
+- name: output_spec
+  start: 9747
+  length: 197
+  fraction: 0.0198
+large_sections:
+- prior_summary
+directives_total: 12
+directives_covered: 8
+directives_missed:
+- kind: must
+  text: '- Section must fit the module immersion target: 5-15% Ukrainian MAXIMUM.'
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: English must dominate completely.
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: letter-grid-alphabet
+  covered: false
+  coverage_note: marker missing

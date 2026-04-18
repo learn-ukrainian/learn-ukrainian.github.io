@@ -1,11 +1,13 @@
 ## Голосні звуки (Vowel Sounds)
 
-In Ukrainian, vowels are called **голосні** (vowels). These sounds are produced using only your voice. When you speak them, the air flows freely through your mouth without hitting any obstruction. Because of this, you can sing them or shout them across a field. A Grade 1 textbook by Большакова teaches children to feel these sounds through a short rhyme: «Голосні почуєш в пісні, і у темному у лісі, і коли дивуєшся, і коли милуєшся» (You will hear vowels in a song, and in a dark forest, and when you are surprised, and when you are admiring).
+The first sound you will learn is the vowel. In Ukrainian, these are called **Голосні** (vowels). When produced, air flows freely through your mouth without obstruction. The educator **Большакова** teaches this using a poem: «**Голосні** **почуєш** в **пісні**, і у **темному** у **лісі**, і **коли** **дивуєшся**, і **коли** милуєшся. Легко вимовляються, весело співаються!» This means: "You will hear vowels in a song, in a dark forest, when you are surprised, and when you admire. Easily pronounced, cheerfully sung!" You can sing vowels or shout them. They are the core of every syllable.
 
-There are exactly six pure vowel sounds in Ukrainian: [а], [о], [у], [е], [и], and [і]. However, the alphabet contains ten vowel letters: А, О, У, Е, И, І, Я, Ю, Є, and Ї. The extra four letters are "iotated" symbols that can represent two sounds at once, which we will cover fully in the next module. For now, remember the golden rule: every Ukrainian word has at least one vowel sound. They act as the beating heart of every syllable.
+There are exactly six vowel sounds in Ukrainian: [а], [о], [у], [е], [и], and [і]. However, the alphabet uses ten vowel letters to write them: А, О, У, Е, И, І, Я, Ю, Є, and Ї. The extra four (Я, Ю, Є, and Ї) are iotated vowels. They can represent two separate sounds, which we will detail in the next module. For now, remember that every Ukrainian word has at least one vowel sound. Vowels are the heart of every word.
 
-To visualize sounds, Grade 1 textbooks by authors like Захарійчук use simple symbols. A vowel sound is always marked with a dot: `[•]`. Practice hearing these vowels before trying to write them. In the word **мама** (mom), you hear two [а] sounds (мА-мА). In the word **молоко** (milk), you hear three [о] sounds (мО-лО-кО). In the name **Уля** (Ulya), you hear one [у] sound at the start (У-ля).
+To visualize sounds, Ukrainian schools use specific notation. The author Захарійчук marks vowel sounds with a dot [•] in sound models. Practice hearing these beats. The word ма-ма (mom) has two [а] sounds. The word мо-ло-ко (milk) contains three [о] sounds. The name У-ля (Ulya) has one [у] sound.
 
-:::tip
-Take a moment to watch the Anna Ohoiko video guide for each vowel letter. Watch her mouth, listen closely to the physical sound, and repeat it out loud.
+:::info
+Ukrainian vowels are always pronounced clearly and are never reduced or mumbled.
 :::
+
+To master these sounds, watch the Anna Ohoiko video for each vowel letter. Listen carefully and repeat them aloud.

@@ -1600,6 +1600,26 @@ def test_resolve_gemini_auth_mode_invalid_value_falls_back_to_auto():
     assert resolve_gemini_auth_mode() == "auto"
 
 
+@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "api-key"}, clear=True)
+def test_resolve_gemini_auth_mode_api_key_alias_maps_to_api():
+    assert resolve_gemini_auth_mode() == "api"
+
+
+@patch.dict("os.environ", {"GEMINI_AUTH_MODE": "api"}, clear=True)
+def test_gemini_adapter_tool_config_auth_mode_overrides_env(tmp_path):
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model="gemini-3.1-pro-preview",
+        task_id=None,
+        session_id=None,
+        tool_config={"auth_mode": "subscription"},
+    )
+    assert plan.env_unsets == ("GEMINI_API_KEY", "GOOGLE_API_KEY")
+
+
 def test_gemini_adapter_mcp_tool_config(tmp_path):
     """The #1 consultation finding: tool_config for MCP restrictions must
     survive through the protocol."""

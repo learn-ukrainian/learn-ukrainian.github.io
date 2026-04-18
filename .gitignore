@@ -190,3 +190,9 @@ data/external_articles/
 
 # Plan backup files from scripts/tools/update_plan_activities.py (#1148)
 curriculum/l2-uk-en/plans/*/*.yaml.bak
+
+.gemini/
+
+# SQLite WAL/SHM sidecars — same exclusion as the .db files themselves.
+data/*.db-shm
+data/*.db-wal

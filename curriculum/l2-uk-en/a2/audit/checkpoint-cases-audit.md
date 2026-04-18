@@ -1,7 +1,7 @@
 # Audit Report: M39 — checkpoint-cases.md
 **Level:** A2 | **Module:** M39 | **Phase:** A2.5 | **Pedagogy:** Review | **Target:** 1500
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-12 21:47:19
+**Generated:** 2026-04-17 23:57:31
 
 ## Configuration
 **Type:** A2
@@ -35,6 +35,8 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Ця детальна перевірка знань фокусується...'
 - **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Коли ми вивчаємо мову дуже...'
 - **[COMPLEXITY]** Sentence too long for A2: 22 words (max 15)
@@ -43,8 +45,26 @@
   - FIX: Break into shorter sentences. First 5 words: 'Наприклад ми купуємо свіжі продукти...'
 - **[COMPLEXITY]** Sentence too long for A2: 22 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Ви просто повинні вивчити їх...'
-- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'це використання неправильних відмінкових закінчень...'
+- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Зараз ваше перше практичне завдання...'
+- **[COMPLEXITY]** Sentence too long for A2: 25 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Те саме правило діє для...'
+- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Вам не потрібно глибоко аналізувати...'
+- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Наприклад коли ми говоримо про...'
+- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Коли ми описуємо зовнішній вигляд...'
+- **[COMPLEXITY]** Sentence too long for A2: 26 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Не забувайте про кличний відмінок...'
+- **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Використання правильного кличного відмінка українській...'
+- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Ваше яте практичне завдання уважно...'
+- **[COMPLEXITY]** Sentence too long for A2: 17 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Коли ми активно вивчаємо нову...'
+- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Інша дуже часта проблема це...'
 - **[COMPLEXITY]** Sentence too long for A2: 19 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'реальному житті українці постійно поєднують...'
 - **[COMPLEXITY]** Sentence too long for A2: 25 words (max 15)
@@ -53,10 +73,18 @@
   - FIX: Break into shorter sentences. First 5 words: 'Будь ласка ніколи не бійтеся...'
 - **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Зверніть свою увагу на те...'
-- **[COMPLEXITY]** Sentence too long for A2: 46 words (max 15)
-  - FIX: Break into shorter sentences. First 5 words: 'це жива форма кличного відмінка...'
+- **[COMPLEXITY]** Sentence too long for A2: 62 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'цьому короткому але дуже інформативному...'
 - **[COMPLEXITY]** Sentence too long for A2: 18 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Вам потрібно буде дуже акуратно...'
+- **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Уважно опишіть куди ви зазвичай...'
+- **[COMPLEXITY]** Sentence too long for A2: 21 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Напишіть дуже детально ким ви...'
+- **[COMPLEXITY]** Sentence too long for A2: 16 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'Розкажіть що саме ви робите...'
+- **[COMPLEXITY]** Sentence too long for A2: 21 words (max 15)
+  - FIX: Break into shorter sentences. First 5 words: 'обов язково додайте цікаву інформацію...'
 - **[COMPLEXITY]** Sentence too long for A2: 20 words (max 15)
   - FIX: Break into shorter sentences. First 5 words: 'Перед тим як сміливо рухатися...'
 - **[COMPLEXITY]** group-sort '' has 7 groups (target: 2-4)
@@ -66,7 +94,7 @@
 **📝 UPDATE** (severity 60/100)
 
 - Revision recommended (severity 60/100)
-- 13 violations (severe - consider revision)
+- 27 violations (severe - consider revision)
 - Immersion 10% off target (minor)
 
 ## Gates

@@ -1,6 +1,0 @@
-Section 1 "Звуки і літери (Sounds and Letters)": ~320 words — Introduce the fundamental distinction between sounds we hear/pronounce and letters we see/write, plus the 33 letters and 38 sounds.
-Section 2 "Голосні звуки (Vowel Sounds)": ~280 words — Explain the 6 vowel sounds, the 10 vowel letters, and the concept of voice-only sound production.
-Section 3 "Приголосні звуки (Consonant Sounds)": ~270 words — Explain the 32 consonant sounds, voice plus noise, and hard/soft distinctions.
-Section 4 "Привіт! (Hello!)": ~300 words — First social conversation, greetings, and applying sound analysis to a word.
-Section 5 "Підсумок (Summary)": ~170 words — Recap of all concepts with self-check questions.
-Total: 1340+ words

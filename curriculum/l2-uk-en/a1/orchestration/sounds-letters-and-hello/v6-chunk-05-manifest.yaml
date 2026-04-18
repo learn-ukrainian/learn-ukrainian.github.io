@@ -13,11 +13,11 @@ components:
 - required_vocab_checklist
 - forbidden_words
 metrics:
-  prompt_chars: 9901
-  prompt_words: 1488
-  contract_chars: 720
+  prompt_chars: 10088
+  prompt_words: 1495
+  contract_chars: 713
   excerpt_chars: 1776
-  previous_summary_chars: 3147
+  previous_summary_chars: 3263
 flags:
   includes_dialogue_formatting: false
   includes_vocab_checklist: true

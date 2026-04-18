@@ -1,16 +1,3 @@
 attempt: 1
 label: write
-violations:
-- type: TEACHING_BEATS
-  severity: ERROR
-  section: Підсумок (Summary)
-  message: Section 'Підсумок (Summary)' misses required teaching-beat terms ['голосні',
-    'приголосні']
-- type: DIALOGUE_ACT
-  severity: ERROR
-  section: (whole module)
-  message: Dialogue situation not grounded in content; missing ['Вчитель', 'Учні']
-- type: META_NARRATION
-  severity: WARNING
-  section: (whole module)
-  message: 'Formulaic meta-narration present: in this module'
+violations: []

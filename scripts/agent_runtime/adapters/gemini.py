@@ -69,6 +69,14 @@ _TRANSIENT_ERROR_RE = re.compile("|".join(_TRANSIENT_ERROR_PATTERNS), re.IGNOREC
 _AUTH_MODE_VALUES = frozenset({"auto", "subscription", "api"})
 
 
+def _normalize_gemini_auth_mode(raw: str | None) -> str:
+    """Normalize CLI/env auth mode strings to the canonical runtime values."""
+    value = (raw or "auto").strip().lower()
+    if value == "api-key":
+        return "api"
+    return value if value in _AUTH_MODE_VALUES else "auto"
+
+
 def resolve_gemini_auth_mode(env: dict[str, str] | None = None) -> str:
     """Resolve the effective Gemini auth mode for this invocation.
 
@@ -80,8 +88,7 @@ def resolve_gemini_auth_mode(env: dict[str, str] | None = None) -> str:
     Invalid values degrade to ``auto`` for backward compatibility.
     """
     source = os.environ if env is None else env
-    raw = (source.get("GEMINI_AUTH_MODE") or "auto").strip().lower()
-    return raw if raw in _AUTH_MODE_VALUES else "auto"
+    return _normalize_gemini_auth_mode(source.get("GEMINI_AUTH_MODE"))
 
 
 class GeminiAdapter:
@@ -146,7 +153,14 @@ class GeminiAdapter:
         # ~/.gemini/tmp/<basename>/ project dir without reading os.getcwd().
         _ = session_id
         _ = task_id
-        auth_mode = resolve_gemini_auth_mode()
+        requested_auth_mode = None
+        if tool_config:
+            requested_auth_mode = tool_config.get("auth_mode")
+        auth_mode = (
+            _normalize_gemini_auth_mode(str(requested_auth_mode))
+            if requested_auth_mode is not None
+            else resolve_gemini_auth_mode()
+        )
         env_unsets: tuple[str, ...] = ()
         if auth_mode == "subscription":
             env_unsets = ("GEMINI_API_KEY", "GOOGLE_API_KEY")

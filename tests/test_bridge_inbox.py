@@ -310,6 +310,18 @@ def test_run_inbox_gemini_429_falls_back_pro_to_flash_and_persists_model(mock_in
 
 
 @patch("ai_agent_bridge._inbox.runtime_invoke")
+def test_run_inbox_gemini_passes_auth_mode_to_runtime(mock_invoke):
+    thread = _make_thread("gemini", count=1)
+    _set_delivery_model(str(thread[0]["message_id"]), PRO_MODEL)
+    mock_invoke.return_value = _ok_result("gemini", model=PRO_MODEL, response="bridge reply")
+
+    summary = _inbox.run_inbox("gemini", gemini_auth_mode="subscription")
+
+    assert summary.deliveries_delivered == 1
+    assert mock_invoke.call_args.kwargs["tool_config"] == {"auth_mode": "subscription"}
+
+
+@patch("ai_agent_bridge._inbox.runtime_invoke")
 def test_run_inbox_gemini_429_falls_back_flash_to_flash_lite(mock_invoke):
     thread = _make_thread("gemini", count=1)
     message_id = str(thread[0]["message_id"])

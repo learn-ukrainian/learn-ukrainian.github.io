@@ -455,6 +455,14 @@ def _build_parser() -> argparse.ArgumentParser:
                                    help="Comma-separated delimiter names for --allow-write mode.")
     ask_gemini_parser.add_argument("--no-github", dest="no_github", action="store_true",
                                    help="Skip auto-posting review to GitHub issue")
+    # `--auth` mirrors the option on `inbox run` / `sync` (defined in
+    # _channels_cli.py, value space ["auto", "subscription", "api-key",
+    # "api"]). Wired through ask_gemini() → process_and_respond() →
+    # runtime_invoke() as tool_config.auth_mode. Default None lets the
+    # runtime fall back to its environment-driven detection.
+    ask_gemini_parser.add_argument("--auth", dest="auth", default=None,
+                                   choices=["auto", "subscription", "api-key", "api"],
+                                   help="Gemini auth mode override for this invocation")
 
     # converse — multi-turn conversation with Gemini
     converse_parser = subparsers.add_parser("converse", help="Multi-turn conversation with Gemini (includes history)")
@@ -638,7 +646,8 @@ def _handle_ask_gemini(args):
                getattr(args, 'skip_model_check', False),
                getattr(args, 'allow_write', False),
                getattr(args, 'delimiters', None),
-               getattr(args, 'no_github', False))
+               getattr(args, 'no_github', False),
+               getattr(args, 'auth', None))
 
 
 def main():

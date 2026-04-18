@@ -4,9 +4,9 @@ components:
 - plan_content
 - knowledge_packet
 metrics:
-  prompt_chars: 41655
-  prompt_words: 5942
-  plan_chars: 11013
+  prompt_chars: 42992
+  prompt_words: 6105
+  plan_chars: 12350
   packet_chars: 27542
 flags:
   packet_truncated: false

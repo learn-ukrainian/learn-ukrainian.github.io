@@ -3,51 +3,73 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 8
-  evidence: Section order and budgets are all on target, but the `Привіт!` section
-    does not deliver the contracted introduction dialogue act `Привіт! Як тебе звати?
-    Мене звати...`; instead the hallway exchange is
+  evidence: 'All core beats are covered, including `33 letters / 38 sounds`, `[•]`,
+    `[–]`, `[=]`, and the `Привіт` sound analysis. Required vocabulary is present.
+    Deduction: section pacing drifts past the contract'
 - dimension: 2
   name: Linguistic accuracy
   score: 10
-  evidence: No Russianisms, Surzhyk, calques, or incorrect Ukrainian forms found.
-    Checked forms such as `нормально`, `радий`, `рада`, `бачити`, `звуковий`, and
-    `аналіз` are attested.
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, or forbidden Russian
+    characters found. The Ukrainian chunks used in dialogue and examples are standard,
+    and the phonetics claims checked align with th
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: The phonetics sections are concrete and example-rich (`мА-мА`, `мО-лО-кО`,
-    `П [п] + р [р] + и [и]...`), but the greeting lesson spends its main dialogue
-    on `Як справи?` rather than the contracted firs
+  score: 9
+  evidence: 'The module teaches through concrete examples rather than bare lists:
+    `ма-ма`, `мо-ло-ко`, `У-ля`, and `П [п] ... т [т]`. Textbook references to Заболотний,
+    Большакова, and Захарійчук are integrated in'
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'Required vocabulary is present in prose: `звук`, `літера`, `голосний`,
-    `приголосний`, `Привіт`, `Як справи`, `Добре`, `Чудово`, `мама`, `молоко`.'
+  evidence: 'All required targets appear in prose: `звук`, `літера`, `голосний`, `приголосний`,
+    `Привіт`, `Як справи`, `Добре`, `Чудово`, `мама`, `молоко`.'
 - dimension: 5
   name: Exercise quality
-  score: 7
-  evidence: 'Marker count is correct and marker types match, but the order is wrong:
-    `group-sort-sounds` and `letter-grid-alphabet` appear before `fill-in-greetings`,
-    violating the contracted sequence.'
+  score: 8
+  evidence: 'Marker count matches the contract and each marker type matches exactly,
+    but the marker order does not: the module places `group-sort` and `letter-grid`
+    before `fill-in`, contrary to the contracted seq'
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: The tone is teacherly and concrete, with usable textbook examples, but
-    the conversation section is less interactive than the contract promises.
+  score: 9
+  evidence: The tone stays clear and teacherly, with concrete attention points like
+    the `Привіт` sound analysis and short classroom exchanges rather than hype or
+    gamified filler.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All H2 headings are present and correctly ordered, and the pipeline word
-    count is 1214, which clears the 1200 target.
+  evidence: All five H2 sections are present and in the contracted order. The pipeline
+    word count is 1233, so the module clears the 1200-word target, and the markdown
+    is clean.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: The module stays Ukrainian-centered and uses appropriate classroom and
-    peer-greeting contexts.
+  evidence: The module explains Ukrainian on its own terms and avoids Russian-centered
+    framing. Register guidance around `Привіт` and `Добрий день` is culturally appropriate
+    for A1.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 7
-  evidence: Dialogues use named speakers, but the second scene does not match its
-    planned function of two new classmates introducing themselves; the name-exchange
-    pattern never appears.
-findings: []
+  score: 9
+  evidence: 'The required named-speaker dialogue is present: `Марко` and `Софія` exchange
+    names and use the reciprocal `А у тебе?`. The teacher/student exchange also fits
+    the first-classroom scenario.'
+findings:
+- dimension: Plan adherence
+  severity: major
+  location: '`## Звуки і літери (Sounds and Letters)` / `## Привіт! (Hello!)` — for
+    example, “The most important distinction in Ukrainian phonetics is the difference
+    between a sound and a letter.” and “Following Anna Ohoiko from the Ukrainian Lessons
+    Podcast Episode 1, you can build your first conversation.”'
+  issue: Two sections are over their contracted budgets. File-body counts are 351
+    words for `Звуки і літери` (max 330) and 288 words for `Привіт!` (max 275).
+  fix: Trim redundant explanatory sentences in those two sections without removing
+    any contracted beats or required vocabulary.
+- dimension: Exercise quality
+  severity: major
+  location: '`<!-- INJECT_ACTIVITY: group-sort-vowels-consonants -->`, `<!-- INJECT_ACTIVITY:
+    letter-grid-alphabet -->`, `<!-- INJECT_ACTIVITY: fill-in-greetings -->`'
+  issue: Marker order violates the contracted `activity_obligations`. The third required
+    type is `fill-in`, but the module places `group-sort` and `letter-grid` before
+    it.
+  fix: Move `group-sort` and `letter-grid` so the prose marker sequence becomes `quiz
+    -> match-up -> fill-in -> group-sort -> letter-grid -> watch-and-repeat`.

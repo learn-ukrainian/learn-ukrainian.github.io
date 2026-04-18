@@ -543,3 +543,9 @@ def test_help_includes_model_and_deadline_flags(capsys):
         parser.parse_args(["inbox", "run", "--help"])
     inbox_help = capsys.readouterr()
     assert "--deadline" in inbox_help.out
+    assert "--auth" in inbox_help.out
+
+    with pytest.raises(SystemExit):
+        parser.parse_args(["ask-gemini", "--help"])
+    ask_gemini_help = capsys.readouterr()
+    assert "--auth" in ask_gemini_help.out

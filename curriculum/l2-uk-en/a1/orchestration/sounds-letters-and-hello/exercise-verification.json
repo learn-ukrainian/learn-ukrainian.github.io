@@ -1,18 +1,16 @@
 {
-  "total_items": 13,
-  "grounded_items": 13,
+  "total_items": 8,
+  "grounded_items": 8,
   "ungrounded": [],
   "vocab_coverage": {
     "plan_vocab_total": 17,
-    "tested_in_exercises": 5,
+    "tested_in_exercises": 7,
     "not_tested": [
       "голосний",
       "дім",
       "звук",
       "літера",
-      "мама",
       "молоко",
-      "нормально",
       "ніс",
       "око",
       "приголосний",

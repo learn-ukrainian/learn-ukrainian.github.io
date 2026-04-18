@@ -2,49 +2,51 @@ round: 4
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 10
-  evidence: 'All five contracted H2 sections appear in order, and the prose covers
-    the required beats: `звуки` vs `букви`, 33 letters vs 38 sounds, 6 vowel sounds
-    vs 10 vowel letters, hard/soft consonants, `Привіт'
+  score: 7
+  evidence: 'All five H2 sections are present and most contract beats are covered,
+    but the consonant section stops at “There are a few special consonant letters
+    to recognize...” instead of covering the contracted '
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: '`Приголосні звуки`: `The letter «**ґ**» produces a uniquely Ukrainian
-    sound.` This is a factual phonetics error.'
+  score: 10
+  evidence: No Russianisms, Surzhyk, calques, paronym errors, or wrong Ukrainian forms
+    found in the module text.
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: 'Strong progression from concept to example to practice: `мА-мА`, `мО-лО-кО`,
-    `У-ля`, then greeting dialogue and sound analysis. Textbook references are integrated
-    naturally.'
+  score: 7
+  evidence: Strong textbook anchoring (`Заболотний`, `Большакова`, `Захарійчук`) and
+    correct sound-model notation, but section 3 gives only `[к]/[п]` plus `Ґ/Г/Щ`,
+    and the hello section tells learners “Use **Добр
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: 'All must-introduce items appear in context: `звук`, `літера`, `голосний`,
-    `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`.'
+  score: 9
+  evidence: 'Required items are present in prose: `звук`, `літера`, `голосні`, `приголосні`,
+    `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`.'
 - dimension: 5
   name: Exercise quality
   score: 10
-  evidence: Marker count matches the 6 contracted activity obligations, order matches
-    exactly, and each marker type matches the contracted type prefix.
+  evidence: 'Marker-only module: count, order, and contracted type prefixes all match
+    exactly.'
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: The voice is teacherly and concrete, with classroom and hallway scenes
-    rather than gamified filler.
+  score: 7
+  evidence: The module has useful classroom framing, but lines like “The first sound
+    you will learn is the vowel,” “Following Anna Ohoiko's Episode 1, you can build
+    your first conversation,” and “Review these cor
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All H2 headings are present and ordered correctly; pipeline word count
-    is 1275, above the 1200 minimum.
+  score: 7
+  evidence: Clean markdown and correct section order, but the pipeline word count
+    is 1163, below the 1200 target.
 - dimension: 8
   name: Cultural accuracy
-  score: 8
-  evidence: The same `ґ` sentence overstates Ukrainianness at the level of the sound
-    rather than the letter/alphabetic feature.
+  score: 10
+  evidence: Ukrainian is presented on its own terms, with no Russia-centered framing
+    or cultural distortion.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Named speakers, real beginner situations, and multi-turn exchanges fit
-    the contract well.
+  score: 8
+  evidence: The named-speaker hallway dialogue is functional and includes `А у тебе?`,
+    but the classroom exchange blurs formal vs informal register by having the teacher
+    use `Привіт`.
 findings: []

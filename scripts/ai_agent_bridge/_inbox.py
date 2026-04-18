@@ -675,6 +675,7 @@ def _invoke_thread(
     claimed: _ClaimedThread,
     *,
     worker_hard_timeout: int,
+    gemini_auth_mode: str | None = None,
 ) -> Any:
     task_id = _thread_session_key(claimed.channel, claimed.thread_id)
     existing_session = _get_session_id(task_id, agent) if agent == "claude" else None
@@ -730,6 +731,7 @@ def _invoke_thread(
                 requested_model=requested_model,
                 task_id=task_id,
                 hard_timeout=hard_timeout,
+                auth_mode=gemini_auth_mode,
             )
         else:
             result = runtime_invoke(
@@ -764,6 +766,7 @@ def _invoke_gemini_thread_with_fallback(
     requested_model: str | None,
     task_id: str,
     hard_timeout: int,
+    auth_mode: str | None = None,
 ) -> Result:
     mode = _resolve_mode(claimed)
     effective_requested_model = requested_model or PRO_MODEL
@@ -779,7 +782,7 @@ def _invoke_gemini_thread_with_fallback(
                 model=current_model,
                 task_id=task_id,
                 session_id=None,
-                tool_config=None,
+                tool_config={"auth_mode": auth_mode} if auth_mode else None,
                 entrypoint="bridge",
                 hard_timeout=hard_timeout,
                 stall_timeout=_DEFAULT_STALL_TIMEOUT_SECONDS,
@@ -831,6 +834,7 @@ def run_inbox(
     until_idle: bool = True,
     stop_after_seconds: int | None = None,
     hard_timeout: int = _DEFAULT_HARD_TIMEOUT_SECONDS,
+    gemini_auth_mode: str | None = None,
 ) -> InboxRunSummary:
     """Drain one agent inbox without splitting a live thread across calls.
 
@@ -902,6 +906,7 @@ def run_inbox(
                 agent,
                 claimed,
                 worker_hard_timeout=hard_timeout,
+                gemini_auth_mode=gemini_auth_mode,
             )
         # Note: transient global failures (rate limit, timeout, unavailable)
         # release the lease back to pending with a retry_after, but DO NOT
