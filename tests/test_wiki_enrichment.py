@@ -42,6 +42,137 @@ class TestLoadLocalData:
         assert chunks == []
 
 
+class TestExternalResourceLoading:
+    def test_skips_reference_only_articles_and_videos(self):
+        from wiki.enrichment import _load_external_resources
+
+        resources = {
+            "a1-demo": {
+                "articles": [
+                    {
+                        "title": "Cached article",
+                        "source": "ULP",
+                        "url": "https://example.test/cached",
+                        "relevance": "high",
+                    },
+                    {
+                        "title": "Reference only",
+                        "source": "Blog",
+                        "url": "https://example.test/ref-only",
+                        "relevance": "high",
+                    },
+                ],
+                "youtube": [
+                    {
+                        "title": "Bare video ref",
+                        "url": "https://youtube.test/watch?v=1",
+                        "relevance": "high",
+                    },
+                ],
+            },
+        }
+
+        def _lookup(url: str) -> dict | None:
+            if url.endswith("/cached"):
+                return {
+                    "title": "Cached article",
+                    "domain": "ULP",
+                    "text": "Useful cached pedagogical content.",
+                }
+            return None
+
+        with patch("wiki.enrichment._get_external_resources", return_value=resources), \
+             patch("wiki.sources_db.lookup_by_url", side_effect=_lookup):
+            chunks = _load_external_resources("a1", "demo")
+
+        assert len(chunks) == 1
+        assert chunks[0]["source_type"] == "external_article"
+        assert chunks[0]["text"] == "Useful cached pedagogical content."
+
+
+class TestSourceBudgeting:
+    def test_dedupes_by_chunk_id(self):
+        from wiki.enrichment import _dedupe_chunks
+
+        chunks = [
+            {"chunk_id": "dup-1", "text": "First copy"},
+            {"chunk_id": "dup-1", "text": "Second copy"},
+            {"chunk_id": "unique", "text": "Unique"},
+        ]
+
+        deduped = _dedupe_chunks(chunks)
+        assert len(deduped) == 2
+        assert deduped[0]["text"] == "First copy"
+
+    def test_limits_background_sources_before_primary(self):
+        from wiki.enrichment import _cap_source_chunks
+
+        background_chunks = [
+            {
+                "chunk_id": f"wiki-{i}",
+                "source_type": "wikipedia",
+                "_kw_score": 90 - i,
+                "text": "W" * 4000,
+            }
+            for i in range(5)
+        ]
+        textbook_chunks = [
+            {
+                "chunk_id": f"tb-{i}",
+                "source_type": "textbook",
+                "_kw_score": 100 - i,
+                "text": "T" * 5000,
+            }
+            for i in range(4)
+        ]
+
+        kept, char_cap, total_chars = _cap_source_chunks("a1", background_chunks + textbook_chunks)
+
+        assert char_cap == 45_000
+        assert total_chars <= char_cap
+        assert sum(1 for c in kept if c.get("source_type") == "wikipedia") <= 3
+        assert sum(1 for c in kept if c.get("source_type") == "textbook") == 4
+
+    def test_mapped_external_urls_are_excluded_from_keyword_search(self):
+        from wiki.enrichment import enrich_sources
+
+        resources = {
+            "a1-demo": {
+                "articles": [
+                    {
+                        "title": "Mapped article",
+                        "source": "ULP",
+                        "url": "https://example.test/mapped",
+                        "relevance": "high",
+                    },
+                ],
+                "youtube": [],
+            },
+        }
+
+        def _lookup(url: str) -> dict | None:
+            return {
+                "title": "Mapped article",
+                "domain": "ULP",
+                "text": "Cached text.",
+            } if url.endswith("/mapped") else None
+
+        with patch("wiki.enrichment._get_external_resources", return_value=resources), \
+             patch("wiki.sources_db.lookup_by_url", side_effect=_lookup), \
+             patch("wiki.sources_db.search_textbooks", return_value=[]), \
+             patch("wiki.sources_db.search_wikipedia", return_value=[]), \
+             patch("wiki.sources_db.search_external", return_value=[]) as search_external:
+            enrich_sources(
+                "a1",
+                "demo",
+                {"discovery": {"query_keywords": ["українська мова"]}},
+            )
+
+        assert search_external.call_args.kwargs["exclude_urls"] == {"https://example.test/mapped"}
+        assert search_external.call_args.kwargs["track"] == "a1"
+        assert search_external.call_args.kwargs["min_quality_tier"] == 2
+
+
 # ── Tests: keyword source matching in enrich_sources ─────────────
 #
 # The `TRACK_LITERARY_MAP` / `KEYWORD_SOURCE_MAP` / `_load_relevant_chunks`

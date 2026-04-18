@@ -167,7 +167,12 @@ def rank_external_hits(
         tier_weight = quality_tier_weight(hit.get("quality_tier"))
         if track:
             channel_id = str(hit.get("channel_id", "")).strip()
-            affinity = get_track_affinity(channel_id, track) if channel_id else 1.0
+            if channel_id:
+                affinity = get_track_affinity(channel_id, track)
+            else:
+                affinity = 1.0
+                if source_type_priority is not None:
+                    tier_weight = 1.0
         else:
             affinity = 1.0
             if not apply_quality_without_track:

@@ -12,6 +12,7 @@ from pathlib import Path
 
 import yaml
 
+from .channels import rank_external_hits as apply_channel_ranking
 from .config import PROJECT_ROOT
 
 # ── Core track textbook source mappings ───────────────────────
@@ -115,6 +116,7 @@ def _cap_source_chunks(track: str, chunks: list[dict]) -> tuple[list[dict], int,
         key=lambda c: (
             c.get("_kw_score", 0),
             _SOURCE_TYPE_PRIORITY.get(_chunk_source_type(c), 50),
+            -float(c.get("adjusted_score", c.get("rank", 0.0)) or 0.0),
         ),
         reverse=True,
     )
@@ -147,6 +149,15 @@ def _cap_source_chunks(track: str, chunks: list[dict]) -> tuple[list[dict], int,
             background_count += 1
 
     return selected, char_cap, total_chars
+
+
+def rank_external_hits(hits: list[dict], track: str | None = None) -> list[dict]:
+    """Apply channel-aware ordering on top of source-type priority."""
+    return apply_channel_ranking(
+        hits,
+        track=track,
+        source_type_priority=_SOURCE_TYPE_PRIORITY,
+    )
 
 
 def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
@@ -233,9 +244,14 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     if ukr_keywords:
         from .sources_db import search_external
         ext_kw_chunks = search_external(
-            ukr_keywords, max_total=10, exclude_urls=mapped_urls,
+            ukr_keywords,
+            max_total=10,
+            exclude_urls=mapped_urls,
+            min_quality_tier=2,
+            track=track,
         )
         if ext_kw_chunks:
+            ext_kw_chunks = rank_external_hits(ext_kw_chunks, track=track)
             print(f"  🌐 +{len(ext_kw_chunks)} external articles (keyword-matched)")
             all_chunks.extend(ext_kw_chunks)
 
