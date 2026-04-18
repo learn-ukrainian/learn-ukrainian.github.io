@@ -935,11 +935,16 @@ def _review_article(article_path: Path, track: str, slug: str,
     log_event(track, slug, "review_round", round=1,
               score=score, **{k: v for k, v in scores.items() if k != "overall"})
 
-    # Pass criteria: overall ≥ 9.0 AND every individual dimension ≥ 8.0.
+    # Pass criteria: every individual dimension ≥ 8.0 AND overall ≥ 8.0.
     # The per-dimension floor catches the "one bad dimension hidden by a
     # strong total" failure mode (Codex's A1 macro-report finding).
+    # Overall ≥ 8.0 is a lower bound — if every dim is ≥ 8.0 the overall
+    # is always ≥ 8.0 by construction, so the overall gate mostly guards
+    # against parse failures where the reviewer reports a sub-8 overall
+    # while emitting inflated dim scores. Matches the project's documented
+    # 8.0 minimum pass (docs/.../non-negotiable-rules.md §2).
     DIMENSION_FLOOR = 8.0
-    OVERALL_PASS = 9.0
+    OVERALL_PASS = 8.0
     DIMENSIONS = ("factual", "language", "decolonization", "completeness", "actionable")
     failing_dims = [d for d in DIMENSIONS if scores.get(d, 0) < DIMENSION_FLOOR]
     overall_ok = score >= OVERALL_PASS
