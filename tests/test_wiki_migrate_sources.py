@@ -46,6 +46,11 @@ sys.path.insert(0, os.path.join(_project_root, "scripts"))
             ["ext-foo-1"] * 4 + ["ext-ulp_youtube-99"],
             ["ext-ulp_youtube-99"],
         ),
+        (
+            "Source 34: *лінгвістика* (наук.) — *мовознавство* (публ.)",
+            ["ext-foo-1"] * 33 + ["ext-style-example-34"],
+            ["ext-style-example-34"],
+        ),
     ],
 )
 def test_resolve_legacy_citation_body_variants(

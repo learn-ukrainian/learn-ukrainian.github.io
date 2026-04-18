@@ -28,7 +28,7 @@ from wiki.sources_schema import (
 
 WIKI_META_RE = re.compile(r"<!--\s*wiki-meta\b(?P<body>.*?)-->", re.DOTALL)
 LEGACY_CITATION_RE = re.compile(
-    r"\((?P<body>[^()]*?(?:Source\s+\d+(?:\s*:)?|Джерел[оа]\s*:)[^()]*)\)",
+    r"\((?P<body>(?:[^()]|\([^()]*\))*?(?:Source\s+\d+(?:\s*:)?|Джерел[оа]\s*:)(?:[^()]|\([^()]*\))*)\)",
     re.IGNORECASE | re.DOTALL,
 )
 SOURCE_SEGMENT_RE = re.compile(
