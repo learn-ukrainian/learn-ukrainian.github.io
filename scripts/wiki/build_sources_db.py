@@ -76,16 +76,29 @@ CREATE TABLE IF NOT EXISTS external_articles (
     text TEXT NOT NULL DEFAULT '',
     source_file TEXT NOT NULL DEFAULT '',
     domain TEXT DEFAULT '',
-    char_count INTEGER DEFAULT 0
+    char_count INTEGER DEFAULT 0,
+    channel_id TEXT DEFAULT '',
+    speaker TEXT DEFAULT '',
+    register_tag TEXT DEFAULT '',
+    decolonization_tag TEXT DEFAULT '',
+    quality_tier INTEGER DEFAULT 2,
+    publish_date TEXT DEFAULT '',
+    duration_s INTEGER DEFAULT 0,
+    chunk_start_ts INTEGER,
+    chunk_end_ts INTEGER,
+    video_id TEXT DEFAULT ''
 );
 CREATE VIRTUAL TABLE IF NOT EXISTS external_fts USING fts5(
-    title, text, content='external_articles', content_rowid='id', tokenize='unicode61'
+    title, text, speaker, content='external_articles', content_rowid='id', tokenize='unicode61'
 );
 CREATE TRIGGER IF NOT EXISTS external_ai AFTER INSERT ON external_articles BEGIN
-    INSERT INTO external_fts(rowid, title, text) VALUES (new.id, new.title, new.text);
+    INSERT INTO external_fts(rowid, title, text, speaker)
+    VALUES (new.id, new.title, new.text, new.speaker);
 END;
 CREATE INDEX IF NOT EXISTS idx_ext_url ON external_articles(url);
 CREATE INDEX IF NOT EXISTS idx_ext_url_norm ON external_articles(url_normalized);
+CREATE INDEX IF NOT EXISTS idx_ext_channel ON external_articles(channel_id);
+CREATE INDEX IF NOT EXISTS idx_ext_quality ON external_articles(quality_tier);
 
 CREATE TABLE IF NOT EXISTS literary_texts (
     id INTEGER PRIMARY KEY,
