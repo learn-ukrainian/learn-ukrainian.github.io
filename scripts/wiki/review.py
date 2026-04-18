@@ -62,6 +62,7 @@ from agent_runtime.errors import (
 )
 from agent_runtime.json_parse import extract_json_object
 from agent_runtime.runner import invoke
+from agent_runtime.tool_config import build_mcp_tool_config
 from wiki.config import PROMPTS_DIR, WIKI_DIR
 from wiki.review_merger import (
     Fix,
@@ -116,11 +117,6 @@ DIM_PROMPT_FILES: dict[str, str] = {
     "ukrainian_perspective": "review_ukrainian_perspective.md",
     "register": "review_register.md",
 }
-
-#: Project `.mcp.json` path — loaded for Claude tool-config. Relative to
-#: repo root; callers running in a worktree should override or ensure
-#: the worktree carries a `.mcp.json` symlink.
-_MCP_CONFIG_PATH = _REPO_ROOT / ".mcp.json"
 
 #: Max review rounds. ADR-001: if score doesn't improve, stop.
 MAX_ROUNDS = 2
@@ -240,54 +236,15 @@ class ReviewReport:
 
 
 def _tool_config_for(agent: str, *, needs_mcp: bool) -> dict | None:
-    """Build per-agent tool_config enabling MCP `sources` server.
-
-    Shapes differ per adapter (see `scripts/agent_runtime/adapters/`):
-      - Claude: `{"mcp_config_path": ".mcp.json", "allowed_tools": "..."}`
-      - Gemini: `{"mcp_server_names": ["sources"]}`
-      - Codex : `{"mcp_servers": {"sources": {"command": ..., "args": ...}}}`
-
-    For factual_accuracy + register dims, MCP access is required — agents
-    unable to serve MCP reviews must be skipped in favor of fallback.
-    """
+    """Build per-agent tool_config enabling the MCP `sources` server."""
     if not needs_mcp:
         return None
 
-    if agent == "claude":
-        if not _MCP_CONFIG_PATH.exists():
-            return None
-        return {
-            "mcp_config_path": str(_MCP_CONFIG_PATH),
-            "allowed_tools": "mcp__sources__*",
-        }
-
-    if agent == "gemini":
-        return {"mcp_server_names": ["sources"]}
-
-    if agent == "codex":
-        # Codex MCP via #1325 adapter fix — requires the sources server be
-        # reachable (SSE 127.0.0.1:8766). Shape: nested mcp_servers dict.
-        mcp = _load_mcp_config_for_codex()
-        return {"mcp_servers": mcp} if mcp else None
-
-    return None
-
-
-@functools.lru_cache(maxsize=1)
-def _load_mcp_config_for_codex() -> dict | None:
-    """Translate repo .mcp.json → Codex's `-c mcp_servers.<k>=<v>` shape.
-
-    Cached for process lifetime: `.mcp.json` is immutable during a
-    review run; reading it per (round × dim × fallback) burned file I/O
-    for no benefit.
-    """
-    if not _MCP_CONFIG_PATH.exists():
-        return None
-    try:
-        data = json.loads(_MCP_CONFIG_PATH.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return None
-    return data.get("mcpServers") or None
+    return build_mcp_tool_config(
+        agent,
+        mcp_servers=["sources"],
+        allowed_tools="mcp__sources__*" if agent == "claude" else None,
+    )
 
 
 def _dim_needs_mcp(dim: str) -> bool:

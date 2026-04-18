@@ -20,6 +20,8 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+from agent_runtime.tool_config import build_mcp_tool_config
+
 # ---------------------------------------------------------------------------
 # Rate limit detection + pacing
 # ---------------------------------------------------------------------------
@@ -415,7 +417,7 @@ def _dispatch_claude_via_runtime(
 
     Phase 5: Claude joins Codex + Gemini on the runtime. Preserves
     legacy behavior:
-    - MCP tool config via tool_config={"mcp_config_path": ..., "allowed_tools": ...}
+    - MCP tool config via the shared agent_runtime builder
     - No session resume (dispatch uses fresh sessions)
     - --exclude-dynamic-system-prompt-sections is applied inside ClaudeAdapter
       via utils.claude_version gating
@@ -428,13 +430,14 @@ def _dispatch_claude_via_runtime(
     )
     from agent_runtime.runner import invoke as runtime_invoke
 
-    tool_config: dict | None = None
-    if mcp_tools and allowed_tools:
-        mcp_config_path = str(PROJECT_ROOT / ".mcp.json")
-        tool_config = {
-            "mcp_config_path": mcp_config_path,
-            "allowed_tools": allowed_tools,
-        }
+    tool_config = (
+        build_mcp_tool_config(
+            "claude",
+            allowed_tools=allowed_tools,
+        )
+        if mcp_tools and allowed_tools
+        else None
+    )
 
     t0 = time.monotonic()
     call_start = datetime.now().astimezone()
@@ -536,9 +539,11 @@ def _dispatch_via_runtime(
     if is_gemini:
         # Gemini in the pipeline is always -y (write-enabled) — existing behavior.
         runtime_mode = "workspace-write"
-        tool_config: dict | None = None
-        if mcp_tools:
-            tool_config = {"mcp_server_names": ["rag"]}
+        tool_config = (
+            build_mcp_tool_config("gemini", mcp_servers=["rag"])
+            if mcp_tools
+            else None
+        )
         # Pace Gemini calls (preserved from legacy path)
         _pace_gemini_calls()
     elif runtime_agent_name == "gemma-local":
