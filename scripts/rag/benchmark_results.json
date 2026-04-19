@@ -134,5 +134,90 @@
     "status": "blocked",
     "sample_size": 1000,
     "error": "Hugging Face gated repo: google/embeddinggemma-300m returned 401 Unauthorized in this environment."
+  },
+  "_rerankers": {
+    "bge-reranker-v2-m3": {
+      "status": "complete",
+      "sample_size": 1000,
+      "fts5_baseline": {
+        "overall": {
+          "recall@10": 0.13333333333333333,
+          "ndcg@10": 0.08335822121614346
+        },
+        "by_period": {
+          "old_east_slavic": {
+            "recall@10": 0.1,
+            "ndcg@10": 0.1
+          },
+          "middle_ukrainian": {
+            "recall@10": 0.1,
+            "ndcg@10": 0.04217734095488644
+          },
+          "modern": {
+            "recall@10": 0.2,
+            "ndcg@10": 0.10789732269354393
+          }
+        },
+        "human_curated_only": {
+          "recall@10": 0.11111111111111112,
+          "ndcg@10": 0.07475306500151413
+        },
+        "auto_populated_count": 9,
+        "human_curated_count": 21
+      },
+      "reranked": {
+        "overall": {
+          "recall@10": 0.24444444444444444,
+          "ndcg@10": 0.18438609866608285
+        },
+        "by_period": {
+          "old_east_slavic": {
+            "recall@10": 0.1,
+            "ndcg@10": 0.05
+          },
+          "middle_ukrainian": {
+            "recall@10": 0.1,
+            "ndcg@10": 0.062405052000383786
+          },
+          "modern": {
+            "recall@10": 0.5333333333333333,
+            "ndcg@10": 0.4407532439978648
+          }
+        },
+        "human_curated_only": {
+          "recall@10": 0.12698412698412698,
+          "ndcg@10": 0.07724951321286908
+        },
+        "auto_populated_count": 9,
+        "human_curated_count": 21
+      },
+      "delta": {
+        "overall": {
+          "recall@10": 0.1111111111111111,
+          "ndcg@10": 0.1010278774499394
+        },
+        "by_period": {
+          "modern": {
+            "recall@10": 0.3333333333333333,
+            "ndcg@10": 0.33285592130432085
+          },
+          "middle_ukrainian": {
+            "recall@10": 0.0,
+            "ndcg@10": 0.020227711045497344
+          },
+          "old_east_slavic": {
+            "recall@10": 0.0,
+            "ndcg@10": -0.05
+          }
+        },
+        "human_curated_only": {
+          "recall@10": 0.015873015873015858,
+          "ndcg@10": 0.0024964482113549458
+        }
+      },
+      "peak_rss_mb": 990.078125,
+      "mps_memory_mb": 2165.942138671875,
+      "rerank_time_s": 529.988686800003
+    }
   }
 }
