@@ -87,42 +87,43 @@
     "encode_time_s": 672.8415758609772
   },
   "jina-v3": {
-    "status": "partial_smoke_only",
-    "sample_size": 20,
+    "status": "complete",
+    "sample_size": 1000,
     "metrics": {
       "overall": {
-        "recall@5": 0.6666666666666666,
-        "recall@10": 0.8166666666666667,
-        "ndcg@10": 0.6761780449345317
+        "recall@5": 0.4166666666666667,
+        "recall@10": 0.47777777777777775,
+        "ndcg@10": 0.42415981966168737
       },
       "by_period": {
         "old_east_slavic": {
-          "recall@5": 0.35,
-          "recall@10": 0.6,
-          "ndcg@10": 0.3672488010914838
+          "recall@5": 0.1,
+          "recall@10": 0.15,
+          "ndcg@10": 0.11845756967795681
         },
         "middle_ukrainian": {
-          "recall@5": 0.65,
-          "recall@10": 0.85,
-          "ndcg@10": 0.6612853337121117
+          "recall@5": 0.18333333333333332,
+          "recall@10": 0.2833333333333333,
+          "ndcg@10": 0.17547699360555727
         },
         "modern": {
-          "recall@5": 1.0,
+          "recall@5": 0.9666666666666666,
           "recall@10": 1.0,
-          "ndcg@10": 1.0
+          "ndcg@10": 0.9785448957015481
         }
       },
       "human_curated_only": {
-        "recall@5": 0.5238095238095238,
-        "recall@10": 0.7380952380952381,
-        "ndcg@10": 0.5373972070493311
+        "recall@5": 0.18253968253968253,
+        "recall@10": 0.25396825396825395,
+        "ndcg@10": 0.1831129080176106
       },
       "auto_populated_count": 9,
       "human_curated_count": 21
     },
-    "peak_rss_mb": 4335.203125,
-    "mps_memory_mb": 2205.717529296875,
-    "encode_time_s": 105.48173308372498
+    "peak_rss_mb": 4268.53125,
+    "encode_time_s": 2150.419287919998,
+    "mps_memory_mb": 2221.373779296875,
+    "notes": "Full 1000-sample run. Native retrieval.query/retrieval.passage adapters."
   },
   "qwen3-0.6b": {
     "status": "blocked",
