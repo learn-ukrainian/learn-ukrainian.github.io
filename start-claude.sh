@@ -112,10 +112,10 @@ echo "   Quick reference: npm run generate, npm run vocab:enrich, npm run pipeli
 
 echo ""
 
-# Autocompact at 65% of 1M context (~650K tokens)
+# Autocompact at 75% of 1M context (~750K tokens)
 # Balances: using the 1M window we pay for vs. leaving buffer before degradation
 # Subagents handle isolated work in their own windows, so main thread stays clean
-export CLAUDE_CODE_AUTO_COMPACT_WINDOW=650000
+export CLAUDE_CODE_AUTO_COMPACT_WINDOW=750000
 
 # Launch via npx to avoid cache bugs (stale binary + prompt caching issues)
 echo "Launching Claude Code via npx (cache-safe)..."
