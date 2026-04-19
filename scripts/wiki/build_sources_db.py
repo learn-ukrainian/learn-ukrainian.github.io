@@ -36,6 +36,7 @@ import contextlib
 import json
 import sqlite3
 import sys
+from datetime import datetime
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -46,6 +47,13 @@ GDRIVE_DATA = (
 )
 EXTERNAL_DIR = PROJECT_ROOT / "data" / "external_articles"
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+LOG_DIR = PROJECT_ROOT / "logs"
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from wiki.sources import build_literary_row
+else:
+    from .sources import build_literary_row
 
 SCHEMA = """
 -- === FTS5 tables (prose — full-text search) ===
@@ -107,7 +115,11 @@ CREATE TABLE IF NOT EXISTS literary_texts (
     text TEXT NOT NULL DEFAULT '',
     source_file TEXT NOT NULL DEFAULT '',
     author TEXT DEFAULT '',
+    work TEXT DEFAULT '',
+    work_id TEXT DEFAULT '',
+    year INTEGER,
     genre TEXT DEFAULT '',
+    language_period TEXT DEFAULT '',
     char_count INTEGER DEFAULT 0
 );
 CREATE VIRTUAL TABLE IF NOT EXISTS literary_fts USING fts5(
@@ -116,6 +128,9 @@ CREATE VIRTUAL TABLE IF NOT EXISTS literary_fts USING fts5(
 CREATE TRIGGER IF NOT EXISTS literary_ai AFTER INSERT ON literary_texts BEGIN
     INSERT INTO literary_fts(rowid, title, text) VALUES (new.id, new.title, new.text);
 END;
+CREATE INDEX IF NOT EXISTS idx_literary_period ON literary_texts(language_period);
+CREATE INDEX IF NOT EXISTS idx_literary_work_id ON literary_texts(work_id);
+CREATE INDEX IF NOT EXISTS idx_literary_period_genre ON literary_texts(language_period, genre);
 
 -- === Standard indexed tables (dictionaries — headword lookup) ===
 
@@ -328,6 +343,38 @@ def _restore_wikipedia_snapshot(conn: sqlite3.Connection,
         )
 
 
+def format_literary_validation_report(conn: sqlite3.Connection) -> str:
+    """Return the AC5 literary metadata validation report."""
+    period_counts = dict(
+        conn.execute(
+            """
+            SELECT language_period, COUNT(*)
+            FROM literary_texts
+            GROUP BY language_period
+            ORDER BY language_period
+            """
+        ).fetchall()
+    )
+    work_id_count = conn.execute(
+        "SELECT COUNT(DISTINCT work_id) FROM literary_texts"
+    ).fetchone()[0]
+
+    lines = ["Literary metadata validation report"]
+    for period, count in period_counts.items():
+        lines.append(f"{period}: {count}")
+    lines.append(f"total: {sum(period_counts.values())}")
+    lines.append(f"distinct work_id: {work_id_count}")
+    return "\n".join(lines)
+
+
+def write_literary_validation_report(report: str) -> Path:
+    """Persist the AC5 literary metadata validation report under logs/."""
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    report_path = LOG_DIR / f"literary_metadata_restore_{datetime.now().strftime('%Y%m%d')}.txt"
+    report_path.write_text(report + "\n", encoding="utf-8")
+    return report_path
+
+
 def build(db_path: Path | None = None,
           external_dir: Path | None = None,
           textbook_dir: Path | None = None,
@@ -472,26 +519,27 @@ def build(db_path: Path | None = None,
     print("\n📚 Literary texts")
     lit_dir = gd / "literary_texts"
     lit_sql = """INSERT INTO literary_texts
-                 (chunk_id, title, text, source_file, author, char_count)
-                 VALUES (?, ?, ?, ?, ?, ?)"""
+                 (chunk_id, title, text, source_file, author, work, work_id,
+                  year, genre, language_period, char_count)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
     if lit_dir.exists():
         for jsonl_path in sorted(lit_dir.glob("*.jsonl")):
             source_file = jsonl_path.stem
-            batch = []
+            batch: list[tuple] = []
             with open(jsonl_path, encoding="utf-8") as f:
                 for line in f:
                     line = line.strip()
                     if not line:
                         continue
                     entry = json.loads(line)
-                    batch.append((
-                        entry.get("chunk_id", f"lit-{source_file}-{len(batch)}"),
-                        entry.get("section_title", entry.get("title", "")),
-                        entry.get("text", ""),
-                        source_file,
-                        entry.get("author", ""),
-                        len(entry.get("text", "")),
-                    ))
+                    batch.append(
+                        build_literary_row(
+                            entry,
+                            source_file=source_file,
+                            chunk_index=len(batch),
+                            warn=print,
+                        )
+                    )
             if batch:
                 conn.executemany(lit_sql, batch)
             total += len(batch)
@@ -523,6 +571,10 @@ def build(db_path: Path | None = None,
                            "PULS CEFR")
 
     conn.commit()
+    literary_report = format_literary_validation_report(conn)
+    report_path = write_literary_validation_report(literary_report)
+    print(f"\n{literary_report}")
+    print(f"\n  📝 Validation report: {report_path}")
     conn.execute("PRAGMA optimize")
     conn.close()
 

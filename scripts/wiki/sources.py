@@ -6,11 +6,119 @@ compilation into wiki articles.
 """
 
 import json
+import re
+from collections.abc import Callable
 from pathlib import Path
 
 import yaml
 
 from .config import CURRICULUM_DIR, LITERARY_DIR, TEXTBOOK_CHUNKS_DIR
+
+LITERARY_LANGUAGE_PERIODS = ("modern", "middle_ukrainian", "old_east_slavic")
+_LANGUAGE_PERIOD_ALIASES = {
+    "early-modern": "middle_ukrainian",
+    "early_modern": "middle_ukrainian",
+}
+_UKRAINIAN_SLUG_MAP = {
+    "а": "a",
+    "б": "b",
+    "в": "v",
+    "г": "h",
+    "ґ": "g",
+    "д": "d",
+    "е": "e",
+    "є": "ye",
+    "ж": "zh",
+    "з": "z",
+    "и": "y",
+    "і": "i",
+    "ї": "yi",
+    "й": "y",
+    "к": "k",
+    "л": "l",
+    "м": "m",
+    "н": "n",
+    "о": "o",
+    "п": "p",
+    "р": "r",
+    "с": "s",
+    "т": "t",
+    "у": "u",
+    "ф": "f",
+    "х": "kh",
+    "ц": "ts",
+    "ч": "ch",
+    "ш": "sh",
+    "щ": "shch",
+    "ь": "",
+    "ю": "yu",
+    "я": "ya",
+    "'": "",
+    "’": "",
+    "ʼ": "",
+}
+
+
+def work_to_id(work: str) -> str:
+    """Create a stable ASCII work identifier from a human display title."""
+    transliterated = "".join(_UKRAINIAN_SLUG_MAP.get(char, char) for char in str(work or "").lower())
+    slug = re.sub(r"[^a-z0-9]+", "_", transliterated)
+    slug = re.sub(r"_+", "_", slug).strip("_")
+    return slug or "unknown_work"
+
+
+def normalize_language_period(raw_value: object) -> str:
+    """Normalize literary language period values to the canonical DB set."""
+    value = str(raw_value or "").strip().lower().replace(" ", "_")
+    if not value:
+        raise ValueError("literary chunk is missing required field 'language_period'")
+    canonical = _LANGUAGE_PERIOD_ALIASES.get(value, value)
+    if canonical not in LITERARY_LANGUAGE_PERIODS:
+        raise ValueError(f"unsupported language_period {raw_value!r}")
+    return canonical
+
+
+def _coerce_year(raw_value: object) -> int | None:
+    if raw_value in (None, ""):
+        return None
+    if isinstance(raw_value, int):
+        return raw_value
+    text = str(raw_value).strip()
+    if not text:
+        return None
+    return int(text)
+
+
+def build_literary_row(
+    entry: dict,
+    *,
+    source_file: str,
+    chunk_index: int,
+    warn: Callable[[str], None] | None = None,
+) -> tuple:
+    """Normalize a literary JSONL chunk into the DB insert tuple."""
+    work = str(entry.get("work", "") or "").strip()
+    if not work:
+        work = source_file
+        if warn is not None:
+            warn(
+                f"  ⚠️  {source_file}: missing work for chunk "
+                f"{entry.get('chunk_id', f'lit-{source_file}-{chunk_index}')}; using source_file"
+            )
+
+    return (
+        str(entry.get("chunk_id", f"lit-{source_file}-{chunk_index}") or f"lit-{source_file}-{chunk_index}"),
+        str(entry.get("section_title", entry.get("title", "")) or ""),
+        str(entry.get("text", "") or ""),
+        source_file,
+        str(entry.get("author", "") or ""),
+        work,
+        work_to_id(work),
+        _coerce_year(entry.get("year")),
+        str(entry.get("genre", "") or ""),
+        normalize_language_period(entry.get("language_period")),
+        len(str(entry.get("text", "") or "")),
+    )
 
 
 def load_literary_jsonl(path: Path) -> list[dict]:
