@@ -369,6 +369,29 @@ def normalize_section_title(text: str) -> str:
     return normalized
 
 
+def strip_leading_section_marker(section_title: str) -> str:
+    """Remove numbering/chapter markers for AC3 grouping normalization."""
+    normalized = normalize_section_title(section_title)
+    section_match = SECTION_MARKER_RE.match(normalized)
+    if section_match:
+        return clean_text(section_match.group(2) or "") or normalized
+
+    chapter_match = CHAPTER_RE.match(normalized)
+    if chapter_match:
+        return clean_text(chapter_match.group(3) or "") or normalized
+
+    roman_match = ROMAN_SECTION_RE.match(normalized)
+    if roman_match:
+        return clean_text(roman_match.group(2) or "") or normalized
+
+    return normalized
+
+
+def section_group_key(section_title: str) -> str:
+    """Return the normalized grouping key for a section title."""
+    return strip_leading_section_marker(section_title).casefold()
+
+
 def extract_section_number(section_title: str) -> str | None:
     """Pull a section/chapter number out of the canonical section title."""
     normalized = normalize_section_title(section_title)
@@ -604,6 +627,27 @@ def mergeable_duplicate_title(title: str) -> bool:
     )
 
 
+def title_has_leading_marker(title: str) -> bool:
+    """True when the title starts with a structural section/chapter marker."""
+    normalized = normalize_section_title(title)
+    return bool(
+        SECTION_MARKER_RE.match(normalized)
+        or CHAPTER_RE.match(normalized)
+        or ROMAN_SECTION_RE.match(normalized)
+    )
+
+
+def prefer_section_title(existing: str, candidate: str) -> str:
+    """Keep the richer persisted title when grouping marker-normalized variants."""
+    existing_normalized = normalize_section_title(existing)
+    candidate_normalized = normalize_section_title(candidate)
+    existing_score = (title_has_leading_marker(existing_normalized), len(existing_normalized))
+    candidate_score = (title_has_leading_marker(candidate_normalized), len(candidate_normalized))
+    if candidate_score > existing_score:
+        return candidate_normalized
+    return existing_normalized
+
+
 def build_section_groups(assignments: list[SectionAssignment]) -> list[SectionGroup]:
     """Group contiguous assigned chunks into canonical section records."""
     contiguous_groups: list[SectionGroup] = []
@@ -629,10 +673,15 @@ def build_section_groups(assignments: list[SectionAssignment]) -> list[SectionGr
         current_group = contiguous_groups[-1]
         same_group = (
             current_group.source_file == assignment.row.source_file
-            and current_group.section_title == title
+            and section_group_key(current_group.section_title) == section_group_key(title)
             and current_group.grade == grade
         )
         if same_group:
+            current_group.section_title = prefer_section_title(current_group.section_title, title)
+            current_group.section_number = (
+                extract_section_number(current_group.section_title)
+                or current_group.section_number
+            )
             current_group.rows.append(assignment)
             continue
 
@@ -648,19 +697,23 @@ def build_section_groups(assignments: list[SectionAssignment]) -> list[SectionGr
 
     groups_by_key: dict[tuple[str, str], list[SectionGroup]] = defaultdict(list)
     for group in contiguous_groups:
-        groups_by_key[(group.source_file, group.section_title)].append(group)
+        groups_by_key[(group.source_file, section_group_key(group.section_title))].append(group)
 
     finalized: list[SectionGroup] = []
     for duplicate_groups in groups_by_key.values():
-        if len(duplicate_groups) == 1 or mergeable_duplicate_title(duplicate_groups[0].section_title):
+        preferred_title = duplicate_groups[0].section_title
+        for group in duplicate_groups[1:]:
+            preferred_title = prefer_section_title(preferred_title, group.section_title)
+
+        if len(duplicate_groups) == 1 or mergeable_duplicate_title(preferred_title):
             merged_rows = [row for group in duplicate_groups for row in group.rows]
             template = duplicate_groups[0]
             finalized.append(
                 SectionGroup(
                     source_file=template.source_file,
                     grade=template.grade,
-                    section_title=template.section_title,
-                    section_number=template.section_number,
+                    section_title=preferred_title,
+                    section_number=extract_section_number(preferred_title),
                     rows=merged_rows,
                 )
             )
@@ -669,12 +722,13 @@ def build_section_groups(assignments: list[SectionAssignment]) -> list[SectionGr
         for group in duplicate_groups:
             page_start = group.page_start
             suffix = f" (p. {page_start})" if page_start is not None else f" (chunk {group.rows[0].row.chunk_id})"
+            preferred_group_title = prefer_section_title(group.section_title, preferred_title)
             finalized.append(
                 SectionGroup(
                     source_file=group.source_file,
                     grade=group.grade,
-                    section_title=f"{group.section_title}{suffix}",
-                    section_number=group.section_number,
+                    section_title=f"{preferred_group_title}{suffix}",
+                    section_number=extract_section_number(preferred_group_title),
                     rows=group.rows,
                 )
             )

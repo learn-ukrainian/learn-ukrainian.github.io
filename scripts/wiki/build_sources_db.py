@@ -51,8 +51,10 @@ LOG_DIR = PROJECT_ROOT / "logs"
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from wiki.extract_sections import DEFAULT_REPORT_PATH, extract_sections
     from wiki.sources import build_literary_row
 else:
+    from .extract_sections import DEFAULT_REPORT_PATH, extract_sections
     from .sources import build_literary_row
 
 SCHEMA = """
@@ -577,6 +579,16 @@ def build(db_path: Path | None = None,
     print(f"\n  📝 Validation report: {report_path}")
     conn.execute("PRAGMA optimize")
     conn.close()
+
+    section_report = extract_sections(db, report_path=DEFAULT_REPORT_PATH)
+    print("\n🧩 Textbook section extraction")
+    print(
+        "  ✅ Extracted "
+        f"{len(section_report.sections)} sections from {section_report.total_chunks:,} chunks; "
+        f"assigned {section_report.assigned_chunks:,} ({section_report.assigned_rate:.2%}), "
+        f"unassigned {section_report.unassigned_chunks:,} ({section_report.unassigned_rate:.2%})"
+    )
+    print(f"  📝 Validation report: {DEFAULT_REPORT_PATH}")
 
     db_size = db.stat().st_size / 1024 / 1024
     print(f"\n  ✅ Built {db.name}: {total:,} entries, {db_size:.1f} MB")

@@ -9,8 +9,10 @@ from scripts.wiki.extract_sections import (
     build_section_groups,
     column_exists,
     ensure_schema,
+    extract_sections,
     load_textbook_rows,
     persist_sections,
+    table_exists,
 )
 from scripts.wiki.rollback_sections import rebuild_textbooks_without_parent
 
@@ -191,6 +193,50 @@ def test_assign_sections_rejects_sources_that_span_grade_boundaries() -> None:
         assign_sections(load_textbook_rows(conn))
 
 
+def test_build_section_groups_normalizes_marker_variants_to_one_parent() -> None:
+    conn = make_connection()
+    insert_textbook_rows(
+        conn,
+        [
+            {
+                "chunk_id": "grade5-variant_s0000",
+                "title": "§ 30. Звуки мови та звуки мовлення",
+                "text": "Вступ до теми.",
+                "source_file": "grade5-variant",
+                "grade": "5",
+                "author": "tester",
+                "char_count": 15,
+            },
+            {
+                "chunk_id": "grade5-variant_s0001",
+                "title": "Звуки мови та звуки мовлення",
+                "text": "Продовження теми без нового параграфа.",
+                "source_file": "grade5-variant",
+                "grade": "5",
+                "author": "tester",
+                "char_count": 36,
+            },
+            {
+                "chunk_id": "grade5-variant_s0002",
+                "title": "Сторінка 3",
+                "text": "3\nЩе кілька прикладів до цієї самої теми.",
+                "source_file": "grade5-variant",
+                "grade": "5",
+                "author": "tester",
+                "char_count": 38,
+            },
+        ],
+    )
+
+    assignments = assign_sections(load_textbook_rows(conn))
+    sections = build_section_groups(assignments)
+
+    assert len(sections) == 1
+    assert sections[0].section_title == "§ 30. Звуки мови та звуки мовлення"
+    assert sections[0].section_number == "30"
+    assert sections[0].chunk_count == 3
+
+
 def test_schema_persist_is_idempotent_and_backfills_parent_ids() -> None:
     conn = make_connection()
     insert_textbook_rows(conn, sample_rows())
@@ -198,6 +244,7 @@ def test_schema_persist_is_idempotent_and_backfills_parent_ids() -> None:
     rows = load_textbook_rows(conn)
     assignments = assign_sections(rows)
     sections = build_section_groups(assignments)
+    expected_backfilled = sum(assignment.section_title is not None for assignment in assignments)
 
     with conn:
         ensure_schema(conn)
@@ -219,11 +266,62 @@ def test_schema_persist_is_idempotent_and_backfills_parent_ids() -> None:
     direct_chunk_parent = conn.execute(
         "SELECT parent_section_id FROM textbooks WHERE chunk_id = 'grade6-direct_s0000'"
     ).fetchone()[0]
+    missing_chunk_parent = conn.execute(
+        "SELECT parent_section_id FROM textbooks WHERE chunk_id = 'grade6-missing_s0000'"
+    ).fetchone()[0]
 
     assert column_exists(conn, "textbooks", "parent_section_id")
     assert first_section_count == second_section_count == 4
-    assert first_backfilled == second_backfilled == 8
+    assert first_backfilled == second_backfilled == expected_backfilled == 8
     assert direct_chunk_parent is not None
+    assert missing_chunk_parent is None
+
+
+def test_extract_sections_blocks_without_partial_schema_when_unassigned_rate_is_too_high(tmp_path) -> None:
+    db_path = tmp_path / "sources.db"
+    report_path = tmp_path / "section_extraction_report.md"
+    conn = sqlite3.connect(db_path)
+    conn.execute(TEXTBOOKS_SCHEMA_SQL)
+    conn.execute(TEXTBOOKS_FTS_SQL)
+    conn.execute(TEXTBOOKS_TRIGGER_SQL)
+    insert_textbook_rows(
+        conn,
+        [
+            {
+                "chunk_id": f"grade6-unassigned_s{index:04d}",
+                "title": "Сторінка 1",
+                "text": f"{index + 1}\nсуцільний текст без придатного заголовка {index}",
+                "source_file": "grade6-unassigned",
+                "grade": "6",
+                "author": "tester",
+                "char_count": 48,
+            }
+            for index in range(5)
+        ]
+        + [
+            {
+                "chunk_id": "grade6-assigned_s0000",
+                "title": "§ 1. Повторення",
+                "text": "Матеріал із валідним заголовком.",
+                "source_file": "grade6-assigned",
+                "grade": "6",
+                "author": "tester",
+                "char_count": 31,
+            }
+        ],
+    )
+    conn.commit()
+    conn.close()
+
+    with pytest.raises(RuntimeError, match="exceeds blocker threshold 20%"):
+        extract_sections(db_path, report_path=report_path)
+
+    blocked_conn = sqlite3.connect(db_path)
+    assert not column_exists(blocked_conn, "textbooks", "parent_section_id")
+    assert not table_exists(blocked_conn, "textbook_sections")
+    assert report_path.exists()
+    assert "Status: **BLOCKER**" in report_path.read_text(encoding="utf-8")
+    blocked_conn.close()
 
 
 def test_rollback_rebuild_removes_parent_column_and_preserves_rows() -> None:

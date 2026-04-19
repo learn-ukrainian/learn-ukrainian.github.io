@@ -4,7 +4,7 @@
 - Total chunks processed: **24268**
 - Chunks assigned to a section: **23983** (98.83%)
 - Chunks left unassigned: **285** (1.17%)
-- Sections created: **5389**
+- Sections created: **5276**
 
 ## Unassigned Samples
 
@@ -76,19 +76,19 @@
 - Grade 2: 185
 - Grade 3: 145
 - Grade 4: 132
-- Grade 5: 614
-- Grade 6: 883
-- Grade 7: 565
-- Grade 8: 797
-- Grade 9: 565
-- Grade 10: 743
-- Grade 11: 698
+- Grade 5: 610
+- Grade 6: 875
+- Grade 7: 557
+- Grade 8: 778
+- Grade 9: 528
+- Grade 10: 731
+- Grade 11: 673
 
 ## Chunks per Section
 
-- Mean: 4.45
+- Mean: 4.55
 - Median: 2.00
-- P95: 15.00
+- P95: 16.00
 
 ## Largest 10 Sections
 
@@ -101,7 +101,7 @@
 - `6-klas-ukrlit-avramenko-2023` — `ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИЖОК (p. 106)`: 72 chunks (pages 106–156)
 - `5-klas-ukrlit-avramenko-2022` — `Розділ 3. ВІД КАЗКИ ДО КНИГИ БУТТЯ`: 60 chunks (pages 144–245)
 - `10-klas-ukrajinska-literatura-avramenko-2018` — `МОДЕРНА УКРАЇНСЬКА ПРОЗА (p. 126)`: 59 chunks (pages 126–155)
-- `7-klas-ukrlit-zabolotnyi-2024` — `ФАНТАСТИКА, МІСТИКА, ПРИГОДИ (p. 233)`: 57 chunks (pages 233–267)
+- `6-klas-ukrlit-kovalenko-2023` — `Розділ XIX,`: 59 chunks (pages 132–187)
 
 ## Smallest 10 Sections
 
