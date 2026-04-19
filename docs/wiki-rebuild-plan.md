@@ -18,7 +18,20 @@ Four articles were compiled by the **pre-Phase 2 pipeline** and committed in `4a
 
 ## Prerequisites
 
-All shipped and verified:
+### Hard dependency — retrieval rebuild must ship first
+
+**Do NOT start Phase 1 until EPIC #1335 ships and Phase 0 re-runs clean.** The existing chunk-level FTS5 retrieval is the bottleneck identified in #1330. The Phase 0 smoke that ran on 2026-04-18 REJECTed on `source_grounding` (scored 4→5 across 2 rounds, 16→9 findings, dominated by `STALE_CITATION` and `MISATTRIBUTION`) — both symptoms trace to retrieval returning wrong chunks, not to writer or reviewer bugs.
+
+Running Phase 1 (55 A1 articles) against current retrieval would burn ~275 Gemini calls (55 articles × 5 calls/article) on a systematic failure mode that's already been diagnosed. **Don't.**
+
+Sequence gate:
+
+1. ⏸️ #1338 (T1-T2 section-level FTS5 + dense re-ranker) must ship
+2. ⏸️ #1340 re-validation must show ≥8/10 concepts surfaced (vs 5/10 on old retrieval)
+3. ⏸️ Phase 0 smoke re-runs with new retrieval — all 4 dims PASS
+4. ✅ Only then: Phase 1 unlocked
+
+### Upstream shipped and verified
 
 - ✅ Phase 2 dim-review orchestrator (`scripts/wiki/review.py`)
 - ✅ Deterministic fix-merger with AMBIGUOUS/MISSING/SPAN_OVERLAP/DIFFERENT_REPLACE conflict detection (`scripts/wiki/review_merger.py`)
@@ -27,7 +40,10 @@ All shipped and verified:
 - ✅ Sibling-YAML source migration (#1323)
 - ✅ External corpus re-chunk + MCP expose + per-track ranking (`scripts/wiki/migrate_external_chunks.py`, #1324)
 - ✅ Fetch-sources extensions: channel registry + rate limit + resume (#1151)
+- ✅ Parent-section schema + extractor (#1337) — 98.83% chunks assigned to sections
 - 🟡 Diasporiana PDF ingest — Doroshenko «Нарис історії України» (#1188 in flight; blocks HIST/ISTORIO optimality, not startability)
+- ❌ #1338 T1-T2 retrieval pipeline — **blocking Phase 1**
+- ❌ #1340 re-validation — **blocking Phase 1**
 
 Corpus inventory already in `data/sources.db`:
 
@@ -71,9 +87,40 @@ The review report MUST contain: 4 per-dim entries (source_grounding, factual_acc
 
 **Why A1 first:** simplest prompts (`compile_pedagogy_brief.md`), fastest articles, most forgiving corpus alignment. Builds confidence in the pipeline before tackling harder tracks.
 
-**Halt criteria:** if `grep -rl '"final_verdict": "ERROR"' wiki/.reviews/pedagogy/a1/` shows >10% of compiled articles → stop, diagnose, fix before continuing.
+**Halt criteria** (both trigger immediate stop — whichever fires first):
 
-### Phase 2 · A2 → B1 → B2 sequential (~12-15 hrs, 256 articles)
+1. **ERROR rate**: 3 consecutive `"final_verdict": "ERROR"` OR >5% ERROR across the phase. ERROR is infrastructure — JSON parse failure, timeout, reviewer process crash. Three in a row means something real is broken; 5% means it's happening too often to ignore.
+2. **REJECT rate**: >25% `"final_verdict": "REJECT"` on completed reviews. This is the silent killer — pipeline runs perfectly, outputs are garbage. A REJECT rate this high means systemic prompt / retrieval / coverage misalignment that needs diagnosis before scaling to A2+.
+
+Diagnose via:
+
+```bash
+# ERROR count
+grep -rl '"final_verdict": *"ERROR"' wiki/.reviews/pedagogy/a1/ | wc -l
+
+# REJECT count
+grep -rl '"final_verdict": *"REJECT"' wiki/.reviews/pedagogy/a1/ | wc -l
+
+# Per-dim failure distribution
+for dim in source_grounding factual_accuracy ukrainian_perspective register; do
+  printf "%-22s " "$dim:"
+  grep -rE "\"$dim\".*\"verdict\": *\"REJECT\"" wiki/.reviews/pedagogy/a1/ | wc -l
+done
+```
+
+### Runtime estimate caveat — read before running any Phase
+
+**Estimates are happy-path only.** They assume zero rate-limit stalls, zero retry cascades, and ~5 min/article at 4 concurrent dim-review calls per article.
+
+What will actually blow them up by 2–3×:
+
+- **Gemini rate limits**: 4 concurrent review calls × N articles at A1 scale is already at the edge of rate-limit thresholds. Exponential backoff adds dead time.
+- **Fix-merger repair loops**: when REVISE produces a patch with MISSING or AMBIGUOUS conflicts, the merger falls through to a second review round — effectively doubling the per-article cost.
+- **Context payload growth from the new retrieval**: section-level retrieval (post-#1338) delivers section `full_text` blocks instead of chunks. Each call carries more tokens; slower per call.
+
+Monitor per-phase wall-clock vs estimate. If observed runtime is > 2× the estimate midway through a phase, stop and implement concurrency throttling (max 2 concurrent dim-review calls per article) before continuing.
+
+### Phase 2 · A2 → B1 → B2 sequential (~12-15 hrs happy-path, 256 articles)
 
 ```bash
 .venv/bin/python scripts/wiki/compile.py --track a2 --all --dim-review
