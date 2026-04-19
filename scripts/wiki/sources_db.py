@@ -95,10 +95,29 @@ def _table_columns(table: str) -> set[str]:
 # ── FTS5 search functions (prose) ───────────────────────────────
 
 
+#: CEFR track → allowed Ukrainian school grades. A1 is absolute
+#: beginner — sounds/letters/ABC — so textbook retrieval must stay in
+#: the primary-school Grades 1-4 window. Pulling Grade 5-10 grammar into an
+#: A1 pedagogy brief gave us 19 cited sources on 2026-04-18 that
+#: included a Grade 10 morphology textbook in a lesson teaching
+#: vowels — pedagogically absurd and the direct cause of the
+#: source_grounding MISATTRIBUTION findings the dim-review flagged.
+_TRACK_GRADE_RANGES: dict[str, tuple[str, ...]] = {
+    "a1": ("1", "2", "3", "4"),
+    "a2": ("1", "2", "3", "4"),
+    "b1": ("3", "4", "5", "6"),
+    "b2": ("5", "6", "7", "8"),
+    "c1": ("7", "8", "9", "10", "11"),
+    "c2": ("9", "10", "11"),
+}
+
+
 def _fts_search(fts_table: str, data_table: str,
                 keywords: set[str], max_total: int,
                 extra_cols: str = "",
-                min_text_len: int = 300) -> list[dict]:
+                min_text_len: int = 300,
+                extra_where: str = "",
+                extra_params: tuple = ()) -> list[dict]:
     """Generic FTS5 search across any prose table.
 
     Args:
@@ -131,22 +150,47 @@ def _fts_search(fts_table: str, data_table: str,
             JOIN {data_table} s ON s.id = {fts_table}.rowid
             WHERE {fts_table} MATCH ?
             {length_filter}
+            {extra_where}
             ORDER BY rank
             LIMIT ?""",
-        (fts_query, max_total),
+        (fts_query, *extra_params, max_total),
     ).fetchall()
 
     return [dict(row) for row in rows]
 
 
-def search_textbooks(ukr_keywords: set[str], max_total: int = 40) -> list[dict]:
+def search_textbooks(
+    ukr_keywords: set[str],
+    max_total: int = 40,
+    *,
+    track: str | None = None,
+) -> list[dict]:
     """Search textbook chunks via FTS5.
 
     Filters out TOC pages and short noise chunks before returning.
     Requests extra rows from FTS5 to compensate for filtered-out noise.
+
+    `track`: CEFR track (a1, a2, ...). When provided, restricts results
+    to grade levels appropriate for learners at that track per
+    `_TRACK_GRADE_RANGES`. Caller should always pass this when compiling
+    a wiki article — retrieving a Grade-10 morphology chapter into an
+    A1 pedagogy brief is pedagogically wrong and causes
+    source_grounding MISATTRIBUTION findings.
     """
+    extra_where = ""
+    extra_params: tuple = ()
+    if track and track in _TRACK_GRADE_RANGES:
+        grades = _TRACK_GRADE_RANGES[track]
+        # The grade gate must match the configured CEFR window exactly:
+        # #1339 expects A1 retrieval to keep Grades 1-4 and drop Grade 5+.
+        placeholders = ",".join("?" * len(grades))
+        extra_where = f"AND s.grade IN ({placeholders})"
+        extra_params = tuple(grades)
     # Request 2x to compensate for filtered TOC/noise chunks
-    rows = _fts_search("textbooks_fts", "textbooks", ukr_keywords, max_total * 2)
+    rows = _fts_search(
+        "textbooks_fts", "textbooks", ukr_keywords, max_total * 2,
+        extra_where=extra_where, extra_params=extra_params,
+    )
     results = []
     for r in rows:
         text = r.get("text", "")
