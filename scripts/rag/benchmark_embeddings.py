@@ -33,8 +33,10 @@ Usage:
 """
 
 import argparse
+import fcntl
 import gc
 import json
+import os
 import random
 import resource
 import sqlite3
@@ -60,6 +62,10 @@ GEMMA_DIM = 768
 # Qwen3 Embedding config
 QWEN3_EMB_MODEL = "Qwen/Qwen3-Embedding-0.6B"
 JINA_V3_MODEL = "jinaai/jina-embeddings-v3"
+EMBEDDER_LOCK_FILE = "/tmp/benchmark-embedder.lock"
+GEMMA_LICENSE_URL = "https://huggingface.co/google/embeddinggemma-300m"
+_DRY_RUN_HOLD_ENV = "BENCHMARK_DRY_RUN_HOLD_SECS"
+_HF_TOKEN_WARNED = False
 
 # Evaluation constants
 METRICS = ("recall@5", "recall@10", "ndcg@10")
@@ -209,6 +215,90 @@ def load_queries() -> list[dict]:
     return data["queries"]
 
 
+def acquire_benchmark_lock(lock_path: str, benchmark_kind: str = "embedder"):
+    """Acquire a non-blocking file lock for benchmark mutual exclusion."""
+    raw_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o644)
+    lock_fd = os.fdopen(raw_fd, "a+", encoding="utf-8")
+    try:
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        lock_fd.seek(0)
+        lock_fd.truncate()
+        lock_fd.write(str(os.getpid()))
+        lock_fd.flush()
+        return lock_fd
+    except BlockingIOError:
+        holder_pid = "unknown"
+        try:
+            lock_fd.seek(0)
+            holder_pid = lock_fd.read().strip() or "unknown"
+        except Exception:
+            pass
+        sys.exit(
+            f"ERROR: another {benchmark_kind} benchmark is running (PID {holder_pid}). "
+            "Refusing to start — parallel runs will OOM."
+        )
+
+
+def get_hf_token() -> str | None:
+    """Return HF_TOKEN and warn once when absent."""
+    global _HF_TOKEN_WARNED
+    token = os.environ.get("HF_TOKEN")
+    if not token and not _HF_TOKEN_WARNED:
+        print(
+            "WARN: HF_TOKEN not set. Gated models "
+            "(e.g. google/embeddinggemma-300m) will 401."
+        )
+        _HF_TOKEN_WARNED = True
+    return token
+
+
+def is_hf_unauthorized(exc: Exception) -> bool:
+    """Detect Hugging Face auth failures without retrying."""
+    response = getattr(exc, "response", None)
+    status_code = getattr(response, "status_code", None)
+    if status_code == 401:
+        return True
+    return "401" in str(exc)
+
+
+def maybe_hold_dry_run_lock_for_tests():
+    """Hold the lock briefly in tests without loading any model."""
+    hold_seconds = os.environ.get(_DRY_RUN_HOLD_ENV)
+    if not hold_seconds:
+        return
+    time.sleep(float(hold_seconds))
+
+
+def build_result_row(metrics: dict, sample_size: int, peak_rss_mb: float,
+                     encode_time_s: float, *, status: str = "complete",
+                     extra: dict | None = None) -> dict:
+    """Normalize benchmark result rows across harnesses."""
+    row = {
+        "status": status,
+        "sample_size": sample_size,
+        "metrics": metrics,
+        "peak_rss_mb": peak_rss_mb,
+        "encode_time_s": encode_time_s,
+    }
+    if extra:
+        row.update(extra)
+    return row
+
+
+def save_benchmark_results(results: dict):
+    """Persist benchmark results with numpy scalars coerced for JSON."""
+    results_path = SCRIPT_DIR / "benchmark_results.json"
+    serializable = json.loads(
+        json.dumps(
+            results,
+            default=lambda x: float(x) if isinstance(x, np.floating) else x,
+        )
+    )
+    with open(results_path, "w") as f:
+        json.dump(serializable, f, indent=2)
+    print(f"\nResults saved to {results_path}")
+
+
 def get_db_connection() -> sqlite3.Connection:
     """Open the benchmark source DB."""
     if not SOURCES_DB_PATH.exists():
@@ -343,14 +433,26 @@ class GemmaEncoder:
             self._device = "cpu"
 
         print(f"[bench] Loading EmbeddingGemma-300M from {GEMMA_MODEL_NAME} on {self._device}...")
-        self._tokenizer = AutoTokenizer.from_pretrained(GEMMA_MODEL_NAME)
-        # Gemma tokenizer may lack a pad_token — set to EOS
-        if self._tokenizer.pad_token is None:
-            self._tokenizer.pad_token = self._tokenizer.eos_token
-        self._model = AutoModel.from_pretrained(
-            GEMMA_MODEL_NAME,
-            torch_dtype=torch.float16,
-        ).to(self._device)
+        token = get_hf_token()
+        try:
+            self._tokenizer = AutoTokenizer.from_pretrained(
+                GEMMA_MODEL_NAME,
+                token=token,
+            )
+            # Gemma tokenizer may lack a pad_token — set to EOS
+            if self._tokenizer.pad_token is None:
+                self._tokenizer.pad_token = self._tokenizer.eos_token
+            self._model = AutoModel.from_pretrained(
+                GEMMA_MODEL_NAME,
+                torch_dtype=torch.float16,
+                token=token,
+            ).to(self._device)
+        except Exception as exc:
+            if is_hf_unauthorized(exc):
+                raise SystemExit(
+                    f"ERROR: {GEMMA_MODEL_NAME} needs license acceptance at {GEMMA_LICENSE_URL}"
+                ) from exc
+            raise
         self._model.eval()
         print("[bench] EmbeddingGemma-300M loaded.")
 
@@ -415,6 +517,7 @@ class Qwen3Encoder:
         self._model = SentenceTransformer(
             QWEN3_EMB_MODEL,
             trust_remote_code=True,
+            token=get_hf_token(),
         )
         dim = self._model.get_sentence_embedding_dimension()
         print(f"[bench] Qwen3-Embedding-0.6B loaded (dim={dim}).")
@@ -468,6 +571,7 @@ class JinaV3Encoder:
         self._model = SentenceTransformer(
             JINA_V3_MODEL,
             trust_remote_code=True,
+            token=get_hf_token(),
         )
         dim = self._model.get_sentence_embedding_dimension()
         print(f"[bench] jina-embeddings-v3 loaded (dim={dim}).")
@@ -747,18 +851,20 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
         )
 
         mps_mem = get_mps_memory_mb()
-        results["bge-m3-dense"] = {
-            "metrics": bge_dense_metrics,
-            "peak_rss_mb": peak_rss,
-            "mps_memory_mb": mps_mem,
-            "encode_time_s": encode_time,
-        }
-        results["bge-m3-hybrid"] = {
-            "metrics": bge_hybrid_metrics,
-            "peak_rss_mb": peak_rss,
-            "mps_memory_mb": mps_mem,
-            "encode_time_s": encode_time,
-        }
+        results["bge-m3-dense"] = build_result_row(
+            bge_dense_metrics,
+            sample_size,
+            peak_rss,
+            encode_time,
+            extra={"mps_memory_mb": mps_mem},
+        )
+        results["bge-m3-hybrid"] = build_result_row(
+            bge_hybrid_metrics,
+            sample_size,
+            peak_rss,
+            encode_time,
+            extra={"mps_memory_mb": mps_mem},
+        )
 
         encoder.unload()
 
@@ -795,12 +901,13 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
         )
 
         mps_mem = get_mps_memory_mb()
-        results["gemma-300m"] = {
-            "metrics": gemma_metrics,
-            "peak_rss_mb": peak_rss,
-            "mps_memory_mb": mps_mem,
-            "encode_time_s": encode_time,
-        }
+        results["gemma-300m"] = build_result_row(
+            gemma_metrics,
+            sample_size,
+            peak_rss,
+            encode_time,
+            extra={"mps_memory_mb": mps_mem},
+        )
 
         encoder.unload()
 
@@ -838,12 +945,13 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
         )
 
         mps_mem = get_mps_memory_mb()
-        results["qwen3-0.6b"] = {
-            "metrics": qwen3_metrics,
-            "peak_rss_mb": peak_rss,
-            "mps_memory_mb": mps_mem,
-            "encode_time_s": encode_time,
-        }
+        results["qwen3-0.6b"] = build_result_row(
+            qwen3_metrics,
+            sample_size,
+            peak_rss,
+            encode_time,
+            extra={"mps_memory_mb": mps_mem},
+        )
 
         encoder.unload()
 
@@ -880,12 +988,13 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
         )
 
         mps_mem = get_mps_memory_mb()
-        results["jina-v3"] = {
-            "metrics": jina_metrics,
-            "peak_rss_mb": peak_rss,
-            "mps_memory_mb": mps_mem,
-            "encode_time_s": encode_time,
-        }
+        results["jina-v3"] = build_result_row(
+            jina_metrics,
+            sample_size,
+            peak_rss,
+            encode_time,
+            extra={"mps_memory_mb": mps_mem},
+        )
 
         encoder.unload()
 
@@ -893,17 +1002,13 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
     print_report(results)
 
     # Save results, preserving prior model runs when benchmarking incrementally
-    results_path = SCRIPT_DIR / "benchmark_results.json"
     existing_results = {}
+    results_path = SCRIPT_DIR / "benchmark_results.json"
     if results_path.exists():
         with open(results_path) as f:
             existing_results = json.load(f)
     existing_results.update(results)
-    # Convert numpy types for JSON serialization
-    serializable = json.loads(json.dumps(existing_results, default=lambda x: float(x) if isinstance(x, (np.floating,)) else x))
-    with open(results_path, "w") as f:
-        json.dump(serializable, f, indent=2)
-    print(f"\nResults saved to {results_path}")
+    save_benchmark_results(existing_results)
 
 
 def evaluate_model(queries: list[dict], q_dense: np.ndarray,
@@ -1069,21 +1174,88 @@ def print_report(results: dict):
     print()
 
 
-def main():
+def build_parser() -> argparse.ArgumentParser:
+    """Build CLI parser for the embedding benchmark harness."""
     parser = argparse.ArgumentParser(description="Benchmark Ukrainian embedding models from sources.db")
-    parser.add_argument("--model", choices=["bge-m3", "gemma", "qwen3", "jina"], default=None,
-                        help="Run only one model (default: all four)")
-    parser.add_argument("--sample-size", type=int, default=1000,
-                        help="Number of chunks to sample per collection (default: 1000)")
-    parser.add_argument("--populate-ground-truth", action="store_true",
-                        help="Use BGE-M3 + SQLite tier pools to fill empty relevant_chunks in queries")
-    args = parser.parse_args()
+    parser.add_argument(
+        "--model",
+        choices=["bge-m3", "gemma", "qwen3", "jina"],
+        default=None,
+        help="Run only one model (default: all four)",
+    )
+    parser.add_argument(
+        "--sample-size",
+        type=int,
+        default=1000,
+        help="Number of chunks to sample per collection (default: 1000)",
+    )
+    parser.add_argument(
+        "--populate-ground-truth",
+        action="store_true",
+        help="Use BGE-M3 + SQLite tier pools to fill empty relevant_chunks in queries",
+    )
+    parser.add_argument(
+        "--lock-file",
+        default=EMBEDDER_LOCK_FILE,
+        help=f"Lock file for mutual exclusion (default: {EMBEDDER_LOCK_FILE})",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print the benchmark plan and exit without loading any model",
+    )
+    return parser
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI arguments."""
+    return build_parser().parse_args(argv)
+
+
+def print_dry_run_plan(args: argparse.Namespace):
+    """Print the non-loading execution plan."""
+    queries = load_queries()
+    queries_with_gt = [q for q in queries if q.get("relevant_chunks")]
+    selected_models = [args.model] if args.model else ["bge-m3", "gemma", "qwen3", "jina"]
 
     if args.populate_ground_truth:
-        populate_ground_truth()
-    else:
-        run_benchmark(model_filter=args.model, sample_size=args.sample_size)
+        empty_queries = [q for q in queries if not q.get("relevant_chunks")]
+        print(
+            "DRY RUN: would load BGE-M3 to populate ground truth for "
+            f"{len(empty_queries)} queries with empty relevant_chunks."
+        )
+        maybe_hold_dry_run_lock_for_tests()
+        return
+
+    print(
+        "DRY RUN: would benchmark "
+        f"{len(queries_with_gt)} queries with ground truth across models: "
+        f"{', '.join(selected_models)}."
+    )
+    print(
+        "DRY RUN: would sample "
+        f"{args.sample_size} chunks per period from {SOURCES_DB_PATH}."
+    )
+    maybe_hold_dry_run_lock_for_tests()
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    lock_fd = acquire_benchmark_lock(args.lock_file)
+    try:
+        if args.dry_run:
+            print_dry_run_plan(args)
+            return 0
+
+        if args.populate_ground_truth:
+            populate_ground_truth()
+        else:
+            run_benchmark(model_filter=args.model, sample_size=args.sample_size)
+        return 0
+    finally:
+        # Keep the file descriptor alive for the process lifetime; close on exit.
+        lock_fd.close()
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
