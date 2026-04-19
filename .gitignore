@@ -169,6 +169,8 @@ data/backups/
 data/esu/urls.jsonl
 data/esu/chunks.jsonl
 data/zno/
+data/embeddings/
+embed-venv/
 
 # Starlight
 starlight/dist
