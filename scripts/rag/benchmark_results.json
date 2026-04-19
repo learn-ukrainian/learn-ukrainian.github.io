@@ -1,74 +1,137 @@
 {
+  "_meta": {
+    "date": "2026-04-19",
+    "source_backend": "sqlite:data/sources.db",
+    "default_sample_size": 1000,
+    "notes": [
+      "Modern textbook benchmark uses all grades because benchmark_queries.yaml ground truth spans grades 3-11.",
+      "literary_texts slices are filtered by source_file allowlists derived from the corpus language_period metadata.",
+      "jina-v3 results below are a smoke run at sample_size=20, not the full 1000-chunk benchmark.",
+      "gemma-300m and qwen3-0.6b were blocked at sample_size=1000 in this environment; see their status entries."
+    ]
+  },
   "bge-m3-dense": {
+    "status": "complete",
+    "sample_size": 1000,
     "metrics": {
       "overall": {
-        "recall@5": 0.6166666666666667,
-        "recall@10": 0.6555555555555554,
-        "ndcg@10": 0.598985326752963
+        "recall@5": 0.5,
+        "recall@10": 0.6,
+        "ndcg@10": 0.5092714372462194
+      },
+      "by_period": {
+        "old_east_slavic": {
+          "recall@5": 0.3,
+          "recall@10": 0.3,
+          "ndcg@10": 0.26934264036172706
+        },
+        "middle_ukrainian": {
+          "recall@5": 0.2,
+          "recall@10": 0.5,
+          "ndcg@10": 0.2617248730280139
+        },
+        "modern": {
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "ndcg@10": 0.9967467983489169
+        }
+      },
+      "human_curated_only": {
+        "recall@5": 0.2857142857142857,
+        "recall@10": 0.42857142857142855,
+        "ndcg@10": 0.2989591960660276
+      },
+      "auto_populated_count": 9,
+      "human_curated_count": 21
+    },
+    "peak_rss_mb": 4737.15625,
+    "mps_memory_mb": 1085.035888671875,
+    "encode_time_s": 672.8415758609772
+  },
+  "bge-m3-hybrid": {
+    "status": "complete",
+    "sample_size": 1000,
+    "metrics": {
+      "overall": {
+        "recall@5": 0.4888888888888889,
+        "recall@10": 0.55,
+        "ndcg@10": 0.4804063320221671
+      },
+      "by_period": {
+        "old_east_slavic": {
+          "recall@5": 0.15,
+          "recall@10": 0.2,
+          "ndcg@10": 0.17977228895450265
+        },
+        "middle_ukrainian": {
+          "recall@5": 0.35,
+          "recall@10": 0.45,
+          "ndcg@10": 0.2692680192123778
+        },
+        "modern": {
+          "recall@5": 0.9666666666666666,
+          "recall@10": 1.0,
+          "ndcg@10": 0.9921786878996208
+        }
+      },
+      "human_curated_only": {
+        "recall@5": 0.2698412698412699,
+        "recall@10": 0.35714285714285715,
+        "ndcg@10": 0.2577233314602387
+      },
+      "auto_populated_count": 9,
+      "human_curated_count": 21
+    },
+    "peak_rss_mb": 4737.15625,
+    "mps_memory_mb": 1085.035888671875,
+    "encode_time_s": 672.8415758609772
+  },
+  "jina-v3": {
+    "status": "partial_smoke_only",
+    "sample_size": 20,
+    "metrics": {
+      "overall": {
+        "recall@5": 0.6666666666666666,
+        "recall@10": 0.8166666666666667,
+        "ndcg@10": 0.6761780449345317
       },
       "by_period": {
         "old_east_slavic": {
           "recall@5": 0.35,
-          "recall@10": 0.4,
-          "ndcg@10": 0.3790386479549506
-        },
-        "middle_ukrainian": {
-          "recall@5": 0.5333333333333333,
           "recall@10": 0.6,
-          "ndcg@10": 0.44138126860507637
-        },
-        "modern": {
-          "recall@5": 0.9666666666666666,
-          "recall@10": 0.9666666666666666,
-          "ndcg@10": 0.9765360636988621
-        }
-      },
-      "human_curated_only": {
-        "recall@5": 0.4523809523809523,
-        "recall@10": 0.5079365079365079,
-        "ndcg@10": 0.4271218953613758
-      },
-      "auto_populated_count": 9,
-      "human_curated_count": 21
-    },
-    "peak_rss_mb": 3785.0625,
-    "mps_memory_mb": 1085.035888671875,
-    "encode_time_s": 357.0843713283539
-  },
-  "bge-m3-hybrid": {
-    "metrics": {
-      "overall": {
-        "recall@5": 0.5444444444444444,
-        "recall@10": 0.5777777777777777,
-        "ndcg@10": 0.5325205527139372
-      },
-      "by_period": {
-        "old_east_slavic": {
-          "recall@5": 0.25,
-          "recall@10": 0.3,
-          "ndcg@10": 0.2375325938735648
+          "ndcg@10": 0.3672488010914838
         },
         "middle_ukrainian": {
-          "recall@5": 0.41666666666666663,
-          "recall@10": 0.4666666666666666,
-          "ndcg@10": 0.38674620222046774
+          "recall@5": 0.65,
+          "recall@10": 0.85,
+          "ndcg@10": 0.6612853337121117
         },
         "modern": {
-          "recall@5": 0.9666666666666666,
-          "recall@10": 0.9666666666666666,
-          "ndcg@10": 0.9732828620477791
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "ndcg@10": 1.0
         }
       },
       "human_curated_only": {
-        "recall@5": 0.3492063492063492,
-        "recall@10": 0.39682539682539675,
-        "ndcg@10": 0.33372136180614026
+        "recall@5": 0.5238095238095238,
+        "recall@10": 0.7380952380952381,
+        "ndcg@10": 0.5373972070493311
       },
       "auto_populated_count": 9,
       "human_curated_count": 21
     },
-    "peak_rss_mb": 3785.0625,
-    "mps_memory_mb": 1085.035888671875,
-    "encode_time_s": 357.0843713283539
+    "peak_rss_mb": 4335.203125,
+    "mps_memory_mb": 2205.717529296875,
+    "encode_time_s": 105.48173308372498
+  },
+  "qwen3-0.6b": {
+    "status": "blocked",
+    "sample_size": 1000,
+    "error": "MPS backend out of memory during chunk encoding on the old_east_slavic slice with the model-card query prompt enabled."
+  },
+  "gemma-300m": {
+    "status": "blocked",
+    "sample_size": 1000,
+    "error": "Hugging Face gated repo: google/embeddinggemma-300m returned 401 Unauthorized in this environment."
   }
 }

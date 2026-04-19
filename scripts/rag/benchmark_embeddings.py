@@ -6,12 +6,13 @@ Compares embedding quality across three language periods:
 - Modern Ukrainian (textbooks)
 
 Models: BGE-M3 (current), EmbeddingGemma-300M, Qwen3-Embedding-0.6B
+        jina-embeddings-v3
 
 Approach:
   1. Load ground-truth queries from benchmark_queries.yaml
-  2. Sample chunks from Qdrant collections
+  2. Sample chunks from sources.db tier pools
   3. Embed queries + chunks with each model (+ BGE-M3 dense-only)
-  4. Compute Recall@K and nDCG@K via numpy (no new Qdrant collections needed)
+  4. Compute Recall@K and nDCG@K via numpy
   5. Profile peak memory for each model
 
 Usage:
@@ -22,6 +23,7 @@ Usage:
     .venv/bin/python scripts/rag/benchmark_embeddings.py --model bge-m3
     .venv/bin/python scripts/rag/benchmark_embeddings.py --model gemma
     .venv/bin/python scripts/rag/benchmark_embeddings.py --model qwen3
+    .venv/bin/python scripts/rag/benchmark_embeddings.py --model jina
 
     # Adjust sample size
     .venv/bin/python scripts/rag/benchmark_embeddings.py --sample-size 500
@@ -33,7 +35,9 @@ Usage:
 import argparse
 import gc
 import json
+import random
 import resource
+import sqlite3
 import sys
 import time
 from collections import defaultdict
@@ -44,13 +48,10 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from rag.config import (
-    QDRANT_GRPC_PORT,
-    QDRANT_HOST,
-)
-
 SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parents[1]
 QUERIES_PATH = SCRIPT_DIR / "benchmark_queries.yaml"
+SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 
 # EmbeddingGemma config
 GEMMA_MODEL_NAME = "google/embeddinggemma-300m"
@@ -58,6 +59,7 @@ GEMMA_DIM = 768
 
 # Qwen3 Embedding config
 QWEN3_EMB_MODEL = "Qwen/Qwen3-Embedding-0.6B"
+JINA_V3_MODEL = "jinaai/jina-embeddings-v3"
 
 # Evaluation constants
 METRICS = ("recall@5", "recall@10", "ndcg@10")
@@ -66,6 +68,105 @@ PERIOD_LABELS = {
     "old_east_slavic": "OES (X-XIII)",
     "middle_ukrainian": "Middle (XIV-XVIII)",
     "modern": "Modern (textbooks)",
+}
+SAMPLE_SEED = 42
+
+# `sources.db` no longer stores `language_period`, so benchmark tiering uses
+# source_file allowlists derived from the literary JSONL metadata that built the DB.
+LITERARY_SOURCE_FILES = {
+    "old_east_slavic": (
+        "wave0-pvl-yaremenko",
+        "wave0-slovo-o-polku",
+        "wave1-galytsko-volynskyi",
+        "wave1-kyivskyi-litopys",
+        "wave1-pateryk-pechersky",
+        "wave1-pvl-ipatskyi",
+        "wave1-pvl-lavrentiyivskyi",
+        "wave1-pvl-lavrentiyivskyi-rozshyfrovka",
+        "wave1-slovo-poetic-translations",
+        "wave11-izbornyk-svyatoslava-uryvky",
+        "wave12-ipatskyj-litopys",
+        "wave12-lavrentiivskyj-litopys",
+        "wave12-novgorodskyj-litopys-1",
+        "wave12-paterikon-pecherskyi",
+        "wave12-pvl-lavrentiivska",
+        "wave12-slovo-o-polku-ihorevim",
+        "wave5-buhoslavsky-borys-hlib",
+        "wave5-oldukr-xi-xiii",
+        "wave5-oldukr-xi-xiii-galvol",
+        "wave5-yushkov-ruska-pravda",
+        "wave6-galvol-kostruba",
+        "wave9-rech-zhydovskoho-1282",
+        "wave9-tlkovaniye-1431",
+    ),
+    "middle_ukrainian": (
+        "wave0-samovydets",
+        "wave12-bajky-xvii-xviii",
+        "wave12-chernihivsky-litopys",
+        "wave12-grabianka-litopys",
+        "wave12-samovyd-litopys",
+        "wave12-ukrainska-poeziia-xvi-xvii",
+        "wave12-ukrainski-intermediyi",
+        "wave12-velychko-litopys",
+        "wave2-berynda-leksykon",
+        "wave2-chernihivskyi-litopys",
+        "wave2-fedorovych-bukvar",
+        "wave2-hrabianka",
+        "wave2-istoriya-rusiv",
+        "wave2-smotrytsky-gramatyka",
+        "wave2-velychko",
+        "wave2-zyzaniy-leksys",
+        "wave3-bajky-xvii-xviii",
+        "wave3-hramoty-xiv",
+        "wave3-intermedii-xvii-xviii",
+        "wave3-likarski-poradnyky",
+        "wave3-poeziya-baroko",
+        "wave3-pysovnyk-lystuvannia",
+        "wave5-dovhalevsky-poetyka",
+        "wave5-hramoty-volyn-xvi",
+        "wave5-hramoty-xv",
+        "wave5-humanisty-vidrodzennia",
+        "wave5-klementiy-zinoviiv",
+        "wave5-oldukr-xiv-xvi",
+        "wave5-oldukr-xvii",
+        "wave5-oldukr-xviii",
+        "wave5-poradnyky-xviii",
+        "wave5-prokopovych-filosofski",
+        "wave5-skovoroda-tvory",
+        "wave5-suspilna-dumka-xvi-xvii",
+        "wave5-velychkovsky",
+        "wave6-bilozersky-pivdennoruski",
+        "wave6-boplan-opys-ukrainy",
+        "wave6-chevalier-istoriia-viiny",
+        "wave6-gustmon-litopys",
+        "wave6-huklyvsky-litopys",
+        "wave6-khaenko-shchodennyk-rizne",
+        "wave6-khanenko-shchodennyk",
+        "wave6-keresturska-khronika",
+        "wave6-krman-shchodennyk",
+        "wave6-kyivskyi-litopys-xvii",
+        "wave6-litopys-binvilsky",
+        "wave6-litopys-krekhiv",
+        "wave6-litopysni-zamitky-1783",
+        "wave6-litopysni-zamitky-novorosiia",
+        "wave6-litopystsi-krokovskyi",
+        "wave6-litovsko-biloruski",
+        "wave6-ostrozky-litopys",
+        "wave6-povist-ukraina-lytva",
+        "wave6-rihelman-litopysna-opovid",
+        "wave6-sborlet-zbirnyk",
+        "wave6-scherer-litopys-malorosiyi",
+        "wave6-sofonovych-khronika",
+        "wave6-symonovskyi-korotky-opys",
+        "wave6-synopsis-1674",
+        "wave7-statut-1566",
+        "wave9-fedorovych-azbuka-1578",
+        "wave9-synonima-slavenoroskaia",
+        "wave9-uzhevych-hramatyka",
+        "wave9-uzhevych-paryzky",
+        "wave9-verbytsky-bukvar-1627",
+        "wikisource-орлик",
+    ),
 }
 
 
@@ -108,47 +209,70 @@ def load_queries() -> list[dict]:
     return data["queries"]
 
 
-def sample_chunks_from_qdrant(collection: str, sample_size: int) -> list[dict]:
-    """Randomly sample chunks from a Qdrant collection (text + chunk_id only, no vectors).
-
-    Scrolls the full collection then randomly selects sample_size entries.
-    This avoids insertion-order bias from taking the first N.
-    """
-    import random
-
-    from qdrant_client import QdrantClient
-
-    client = QdrantClient(
-        host=QDRANT_HOST, grpc_port=QDRANT_GRPC_PORT,
-        prefer_grpc=True, check_compatibility=False,
-    )
-
-    # Scroll entire collection (payload only, no vectors — lightweight)
-    all_chunks = []
-    offset = None
-    while True:
-        points, next_offset = client.scroll(
-            collection_name=collection,
-            limit=100,
-            offset=offset,
-            with_payload=["chunk_id", "text"],
-            with_vectors=False,
+def get_db_connection() -> sqlite3.Connection:
+    """Open the benchmark source DB."""
+    if not SOURCES_DB_PATH.exists():
+        raise FileNotFoundError(
+            f"Sources database not found at {SOURCES_DB_PATH}. "
+            "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-        for p in points:
-            payload = p.payload or {}
-            all_chunks.append({
-                "chunk_id": payload.get("chunk_id", ""),
-                "text": payload.get("text", ""),
-            })
-        if next_offset is None:
-            break
-        offset = next_offset
+    conn = sqlite3.connect(str(SOURCES_DB_PATH))
+    conn.row_factory = sqlite3.Row
+    return conn
 
-    # Random sample
-    if len(all_chunks) > sample_size:
-        all_chunks = random.sample(all_chunks, sample_size)
 
-    print(f"  Sampled {len(all_chunks)} chunks from {collection} (total: {len(all_chunks)})")
+def get_period_sql(period: str) -> tuple[str, str, tuple]:
+    """Return (table, where_sql, params) for a benchmark period.
+
+    Modern uses all textbook grades to preserve comparability with the
+    existing ground truth, which includes grades 3-11.
+    """
+    if period == "modern":
+        return "textbooks", "", ()
+    if period in LITERARY_SOURCE_FILES:
+        source_files = LITERARY_SOURCE_FILES[period]
+        placeholders = ", ".join("?" * len(source_files))
+        return "literary_texts", f"WHERE source_file IN ({placeholders})", tuple(source_files)
+    raise ValueError(f"Unsupported benchmark period: {period}")
+
+
+def load_period_chunks(period: str, chunk_ids: set[str] | None = None) -> list[dict]:
+    """Load all SQLite chunks for a benchmark period or a specific chunk subset."""
+    table, where_sql, params = get_period_sql(period)
+    clauses = []
+    query_params: list[str] = []
+
+    if where_sql:
+        clauses.append(where_sql.removeprefix("WHERE ").strip())
+        query_params.extend(params)
+
+    if chunk_ids:
+        placeholders = ", ".join("?" * len(chunk_ids))
+        clauses.append(f"chunk_id IN ({placeholders})")
+        query_params.extend(sorted(chunk_ids))
+
+    where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+
+    conn = get_db_connection()
+    try:
+        rows = conn.execute(
+            f"SELECT chunk_id, text FROM {table} {where_clause}",
+            tuple(query_params),
+        ).fetchall()
+    finally:
+        conn.close()
+
+    return [{"chunk_id": row["chunk_id"], "text": row["text"]} for row in rows]
+
+
+def sample_chunks_from_sqlite(period: str, sample_size: int) -> list[dict]:
+    """Randomly sample benchmark chunks from sources.db for one period."""
+    all_chunks = load_period_chunks(period)
+    total_chunks = len(all_chunks)
+    if total_chunks > sample_size:
+        rng = random.Random(SAMPLE_SEED)
+        all_chunks = rng.sample(all_chunks, sample_size)
+    print(f"  Sampled {len(all_chunks)} chunks for {period} from sources.db (total: {total_chunks})")
     return all_chunks
 
 
@@ -295,12 +419,14 @@ class Qwen3Encoder:
         dim = self._model.get_sentence_embedding_dimension()
         print(f"[bench] Qwen3-Embedding-0.6B loaded (dim={dim}).")
 
-    def encode(self, texts: list[str], batch_size: int = 4) -> dict:
+    def encode(self, texts: list[str], batch_size: int = 2, *,
+               prompt_name: str | None = None) -> dict:
         """Returns {dense: np.ndarray}. Qwen3 is dense-only (no sparse).
 
         Qwen3-Embedding-0.6B is a decoder model (not BERT-like), so it uses
         significantly more memory per token. We truncate to 512 tokens to match
-        BGE-M3's max_length for a fair comparison, and use small batches.
+        BGE-M3's max_length for a fair comparison, and use very small batches
+        to reduce MPS pressure on Apple Silicon.
         """
         self.load()
         # Truncate texts to ~512 tokens (~2000 chars) to match BGE-M3
@@ -310,6 +436,7 @@ class Qwen3Encoder:
             batch_size=batch_size,
             show_progress_bar=True,
             normalize_embeddings=True,
+            prompt_name=prompt_name,
         )
         return {"dense": np.array(vecs)}
 
@@ -324,6 +451,51 @@ class Qwen3Encoder:
         except Exception:
             pass
         print("[bench] Qwen3-Embedding-0.6B unloaded.")
+
+
+class JinaV3Encoder:
+    """Wraps jina-embeddings-v3 with retrieval task adapters."""
+
+    def __init__(self):
+        self._model = None
+
+    def load(self):
+        if self._model is not None:
+            return
+        from sentence_transformers import SentenceTransformer
+
+        print(f"[bench] Loading {JINA_V3_MODEL}...")
+        self._model = SentenceTransformer(
+            JINA_V3_MODEL,
+            trust_remote_code=True,
+        )
+        dim = self._model.get_sentence_embedding_dimension()
+        print(f"[bench] jina-embeddings-v3 loaded (dim={dim}).")
+
+    def encode(self, texts: list[str], batch_size: int = 8, *,
+               task: str = "retrieval.passage") -> dict:
+        """Returns {dense: np.ndarray} using jina-v3 task adapters."""
+        self.load()
+        vecs = self._model.encode(
+            texts,
+            batch_size=batch_size,
+            show_progress_bar=True,
+            normalize_embeddings=True,
+            task=task,
+        )
+        return {"dense": np.array(vecs)}
+
+    def unload(self):
+        del self._model
+        self._model = None
+        gc.collect()
+        try:
+            import torch
+            if torch.backends.mps.is_available():
+                torch.mps.empty_cache()
+        except Exception:
+            pass
+        print("[bench] jina-embeddings-v3 unloaded.")
 
 
 # ── Sparse scoring ────────────────────────────────────────────────
@@ -407,16 +579,13 @@ def get_mps_memory_mb() -> float:
 # ── Ground truth population ───────────────────────────────────────
 
 def populate_ground_truth():
-    """Use existing BGE-M3 + Qdrant to find candidate chunks for empty queries.
+    """Use existing BGE-M3 against SQLite tier pools to find candidate chunks for empty queries.
 
     WARNING: Auto-populated ground truth is biased toward BGE-M3. These queries
     are tagged with 'auto_populated: true' and reported separately in the benchmark
     to avoid circular evaluation (BGE-M3 evaluated against its own predictions).
     Human review of auto-populated chunks is strongly recommended.
     """
-    from qdrant_client import QdrantClient
-    from qdrant_client.models import FusionQuery, Prefetch, SparseVector
-
     with open(QUERIES_PATH) as f:
         data = yaml.safe_load(f)
 
@@ -430,44 +599,38 @@ def populate_ground_truth():
     print(f"Populating ground truth for {len(empty_queries)} queries...")
     print("  WARNING: Auto-populated chunks are BGE-M3-biased. Review manually!")
 
-    client = QdrantClient(
-        host=QDRANT_HOST, grpc_port=QDRANT_GRPC_PORT,
-        prefer_grpc=True, check_compatibility=False,
-    )
     encoder = BGEEncoder()
     encoder.load()
+    period_chunks: dict[str, list[dict]] = {}
+    period_dense: dict[str, np.ndarray] = {}
+    period_sparse: dict[str, list[dict]] = {}
+    period_ids: dict[str, list[str]] = {}
 
     for q in empty_queries:
-        collection = q["collection"]
+        period = q["period"]
+        if period not in period_chunks:
+            period_chunks[period] = load_period_chunks(period)
+            texts = [chunk["text"] for chunk in period_chunks[period]]
+            chunk_result = encoder.encode(texts, batch_size=64)
+            period_dense[period] = chunk_result["dense"]
+            period_sparse[period] = chunk_result["sparse_weights"]
+            period_ids[period] = [chunk["chunk_id"] for chunk in period_chunks[period]]
+
         result = encoder.encode([q["query"]])
-        dense_vec = result["dense"][0].tolist()
-        sparse_w = result["sparse_weights"][0]
-
-        if isinstance(sparse_w, dict):
-            sparse_indices = [int(k) if isinstance(k, (int, float)) else hash(k) % (2**31) for k in sparse_w]
-            sparse_values = list(sparse_w.values())
-        else:
-            sparse_indices, sparse_values = [], []
-
-        results = client.query_points(
-            collection_name=collection,
-            prefetch=[
-                Prefetch(query=dense_vec, using="dense", limit=15),
-                Prefetch(
-                    query=SparseVector(indices=sparse_indices, values=sparse_values),
-                    using="sparse", limit=15,
-                ),
-            ],
-            query=FusionQuery(fusion="rrf"),
-            limit=3,
-            with_payload=True,
+        retrieved = retrieve_hybrid(
+            result["dense"][0],
+            result["sparse_weights"][0],
+            period_dense[period],
+            period_sparse[period],
+            period_ids[period],
+            top_k=3,
         )
 
         chunk_ids = []
         print(f"\n  Query: {q['query']}")
-        for point in results.points:
-            cid = point.payload.get("chunk_id", "")
-            text_preview = point.payload.get("text", "")[:100]
+        text_lookup = {chunk["chunk_id"]: chunk["text"] for chunk in period_chunks[period]}
+        for cid in retrieved:
+            text_preview = text_lookup.get(cid, "")[:100]
             chunk_ids.append(cid)
             print(f"    [{cid}] {text_preview}...")
 
@@ -502,59 +665,39 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
         sys.exit(1)
 
     print(f"Benchmark: {len(queries_with_gt)} queries with ground truth")
-    print(f"Sample size per collection: {sample_size}")
+    print(f"Sample size per period: {sample_size}")
     print()
 
-    # Group queries by collection
-    by_collection = defaultdict(list)
+    # Group queries by benchmark period
+    by_period = defaultdict(list)
     for q in queries_with_gt:
-        by_collection[q["collection"]].append(q)
+        by_period[q["period"]].append(q)
 
-    # Sample chunks from each collection
-    print("Sampling chunks from Qdrant...")
+    # Sample chunks from each period-specific SQLite pool
+    print("Sampling chunks from sources.db...")
     collection_chunks = {}
-    for coll in by_collection:
-        collection_chunks[coll] = sample_chunks_from_qdrant(coll, sample_size)
+    for period in by_period:
+        collection_chunks[period] = sample_chunks_from_sqlite(period, sample_size)
 
     # Ensure ground-truth chunks are included in samples
-    for coll, coll_queries in by_collection.items():
-        sample_ids = {c["chunk_id"] for c in collection_chunks[coll]}
+    for period, period_queries in by_period.items():
+        sample_ids = {c["chunk_id"] for c in collection_chunks[period]}
         missing_ids = set()
-        for q in coll_queries:
+        for q in period_queries:
             for cid in q["relevant_chunks"]:
                 if cid not in sample_ids:
                     missing_ids.add(cid)
 
         if missing_ids:
-            print(f"  Fetching {len(missing_ids)} ground-truth chunks missing from sample ({coll})")
-            from qdrant_client import QdrantClient
-            from qdrant_client.models import FieldCondition, Filter, MatchValue
-
-            client = QdrantClient(
-                host=QDRANT_HOST, grpc_port=QDRANT_GRPC_PORT,
-                prefer_grpc=True, check_compatibility=False,
-            )
-            for cid in missing_ids:
-                points, _ = client.scroll(
-                    collection_name=coll,
-                    scroll_filter=Filter(
-                        must=[FieldCondition(key="chunk_id", match=MatchValue(value=cid))]
-                    ),
-                    limit=1, with_payload=True, with_vectors=False,
-                )
-                if points:
-                    payload = points[0].payload or {}
-                    collection_chunks[coll].append({
-                        "chunk_id": payload.get("chunk_id", ""),
-                        "text": payload.get("text", ""),
-                    })
+            print(f"  Fetching {len(missing_ids)} ground-truth chunks missing from sample ({period})")
+            collection_chunks[period].extend(load_period_chunks(period, missing_ids))
 
     # Prepare texts for encoding
     collection_texts = {}
     collection_ids = {}
-    for coll, chunks in collection_chunks.items():
-        collection_texts[coll] = [c["text"] for c in chunks]
-        collection_ids[coll] = [c["chunk_id"] for c in chunks]
+    for period, chunks in collection_chunks.items():
+        collection_texts[period] = [c["text"] for c in chunks]
+        collection_ids[period] = [c["chunk_id"] for c in chunks]
 
     query_texts = [q["query"] for q in queries_with_gt]
 
@@ -630,7 +773,6 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
 
         t0 = time.time()
 
-        # Encode queries
         print("  Encoding queries...")
         q_result = encoder.encode(query_texts)
         q_dense = q_result["dense"]
@@ -673,16 +815,16 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
 
         t0 = time.time()
 
-        # Encode queries
+        # Encode queries with the model-card query prompt.
         print("  Encoding queries...")
-        q_result = encoder.encode(query_texts)
+        q_result = encoder.encode(query_texts, prompt_name="query")
         q_dense = q_result["dense"]
 
-        # Encode chunks per collection (small batches for M4 Air memory)
+        # Encode chunks per collection (very small batches for Apple Silicon memory)
         c_dense = {}
         for coll, texts in collection_texts.items():
             print(f"  Encoding {len(texts)} chunks from {coll}...")
-            c_result = encoder.encode(texts)  # uses default batch_size=8
+            c_result = encoder.encode(texts, batch_size=2)
             c_dense[coll] = c_result["dense"]
 
         encode_time = time.time() - t0
@@ -705,13 +847,60 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
 
         encoder.unload()
 
+    # ── jina-embeddings-v3 ──────────────────────────────────────
+    if model_filter in (None, "jina"):
+        print("\n" + "=" * 60)
+        print("MODEL: jina-embeddings-v3 (dense only)")
+        print("=" * 60)
+
+        encoder = JinaV3Encoder()
+        encoder.load()
+
+        t0 = time.time()
+
+        # Encode queries with the asymmetric retrieval query adapter
+        print("  Encoding queries...")
+        q_result = encoder.encode(query_texts, task="retrieval.query")
+        q_dense = q_result["dense"]
+
+        # Encode chunks per collection with the passage adapter
+        c_dense = {}
+        for coll, texts in collection_texts.items():
+            print(f"  Encoding {len(texts)} chunks from {coll}...")
+            c_result = encoder.encode(texts, task="retrieval.passage")
+            c_dense[coll] = c_result["dense"]
+
+        encode_time = time.time() - t0
+        peak_rss = get_peak_memory_mb()
+
+        print("\n  Evaluating jina-embeddings-v3...")
+        jina_metrics = evaluate_model(
+            queries_with_gt, q_dense, None,
+            collection_ids, c_dense, None, mode="dense"
+        )
+
+        mps_mem = get_mps_memory_mb()
+        results["jina-v3"] = {
+            "metrics": jina_metrics,
+            "peak_rss_mb": peak_rss,
+            "mps_memory_mb": mps_mem,
+            "encode_time_s": encode_time,
+        }
+
+        encoder.unload()
+
     # ── Report ────────────────────────────────────────────────────
     print_report(results)
 
-    # Save results
+    # Save results, preserving prior model runs when benchmarking incrementally
     results_path = SCRIPT_DIR / "benchmark_results.json"
+    existing_results = {}
+    if results_path.exists():
+        with open(results_path) as f:
+            existing_results = json.load(f)
+    existing_results.update(results)
     # Convert numpy types for JSON serialization
-    serializable = json.loads(json.dumps(results, default=lambda x: float(x) if isinstance(x, (np.floating,)) else x))
+    serializable = json.loads(json.dumps(existing_results, default=lambda x: float(x) if isinstance(x, (np.floating,)) else x))
     with open(results_path, "w") as f:
         json.dump(serializable, f, indent=2)
     print(f"\nResults saved to {results_path}")
@@ -738,7 +927,7 @@ def evaluate_model(queries: list[dict], q_dense: np.ndarray,
     auto_populated_count = 0
 
     for i, q in enumerate(queries):
-        coll = q["collection"]
+        coll = q["period"]
         relevant = q["relevant_chunks"]
         period = q["period"]
         is_auto = q.get("auto_populated", False)
@@ -881,13 +1070,13 @@ def print_report(results: dict):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Benchmark BGE-M3 vs EmbeddingGemma-300M")
-    parser.add_argument("--model", choices=["bge-m3", "gemma", "qwen3"], default=None,
-                        help="Run only one model (default: all three)")
+    parser = argparse.ArgumentParser(description="Benchmark Ukrainian embedding models from sources.db")
+    parser.add_argument("--model", choices=["bge-m3", "gemma", "qwen3", "jina"], default=None,
+                        help="Run only one model (default: all four)")
     parser.add_argument("--sample-size", type=int, default=1000,
                         help="Number of chunks to sample per collection (default: 1000)")
     parser.add_argument("--populate-ground-truth", action="store_true",
-                        help="Use BGE-M3 + Qdrant to fill empty relevant_chunks in queries")
+                        help="Use BGE-M3 + SQLite tier pools to fill empty relevant_chunks in queries")
     args = parser.parse_args()
 
     if args.populate_ground_truth:
