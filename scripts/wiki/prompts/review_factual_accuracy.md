@@ -52,7 +52,7 @@ If a claim cannot be verified by ANY of the tools above, that itself is a findin
 
 Check these:
 - **Linguistic claims** — "The vocative ending -е is specific to masculine nouns", "Стіл inflects as a hard-stem masculine", "Х and Г differ in voicing"
-- **Orthography claims** — "Після глухих приголосних пишемо 'с'-", "Апостроф пишеться після…"
+- **Orthography claims** — "Префікс 'з-' перед глухими приголосними 'к, п, т, ф, х' переходить у 'с-'", "Апостроф пишеться після…"
 - **Etymology / word origin** — "Слово 'вишня' походить з…"
 - **Historical dates / events** — "Переяславська рада 1654 року…", "У 1932-33 роках…"
 - **Biographical assertions** — "Шевченко народився 1814 року", "Франко переклав…"
@@ -91,10 +91,12 @@ Every finding MUST include BOTH:
 A finding that asserts "this is wrong" without showing the tool output that proves it is itself ungrounded. Such findings will be discarded. **Reviewers who fail to ground findings fail the review themselves.**
 
 Minimum evidence standard per finding:
-- For `FACTUAL_ERROR` / `LINGUISTIC_ERROR`: cite the specific tool call (`verify_word("рахувати")` → `{...}`) showing the contradiction
+- For `FACTUAL_ERROR` / `LINGUISTIC_ERROR`: cite the specific tool call that contradicts the article's claim, e.g. the article says "Переяславська рада 1653 року" and `query_wikipedia("Переяславська рада")` returns "1654 року" — show the actual mismatch.
 - For `UNVERIFIABLE`: cite AT LEAST 2 tool calls that returned nothing substantive
 - For `FABRICATED_ENTITY`: cite `query_wikipedia` + one other tool, both returning nothing
 - For `HALLUCINATED_QUOTE`: cite `search_literary` for the figure's corpus + absence of the quote
+
+**LANE DISCIPLINE:** a word like `рахувати` existing in VESUM is NOT a factual error — VESUM will return a positive match. The problem with `рахувати` meaning "to consider" is a SEMANTIC CALQUE from Russian (`считать`), which is dim 4 (register) territory, not dim 1. Do not use `verify_word` to check semantic correctness; use it to check whether a claimed form exists as described.
 
 ## Output schema
 
@@ -108,8 +110,8 @@ Output EXACTLY this JSON object. No preamble, no trailing prose. Start with `{` 
       "location": "## Section heading or paragraph identifier",
       "claim_quote": "<exact quote from article, Ukrainian text preserved>",
       "tool_evidence": [
-        {"tool": "verify_word", "args": "рахувати", "result_summary": "<short quote or 'no match'>"},
-        {"tool": "search_style_guide", "args": "рахувати", "result_summary": "<relevant entry or 'no match'>"}
+        {"tool": "query_wikipedia", "args": "Переяславська рада", "result_summary": "'Переяславська рада відбулася 8 (18) січня 1654 року' — contradicts article's '1653'"},
+        {"tool": "verify_word", "args": "slizon'ky", "result_summary": "no match — claimed form not in VESUM"}
       ],
       "issue_type": "FACTUAL_ERROR | LINGUISTIC_ERROR | CONTESTED_AS_CONSENSUS | OUTDATED_CLAIM | UNVERIFIABLE | FABRICATED_ENTITY | HALLUCINATED_QUOTE",
       "issue_description": "<one sentence explaining why the claim is wrong or unverifiable, with reference to the tool evidence>",

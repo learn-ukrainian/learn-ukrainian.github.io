@@ -66,13 +66,14 @@ An A1 article written in plain direct Ukrainian is CORRECT register; do not faul
 
 | Type | Definition | Severity default |
 |---|---|---|
-| `CALQUE` | Word-for-word translation of a Russian or English expression with no independent Ukrainian idiomaticity. Flagged in Антоненко-Давидович or absent from Ukrainian literary corpus. | major |
-| `RUSSIANISM` | Russian lexical item or construction with Ukrainian orthography (рахувати meaning "to consider", "приймати участь", "на протязі"). | critical |
+| `CALQUE` | Valid Ukrainian words combined via Russian syntax OR a valid Ukrainian word carrying an imposed Russian meaning. Examples: `рахувати` = "to consider" (semantic calque of `считать`; correct UK: `вважати`), `приймати участь` (syntactic calque of `принимать участие`; correct UK: `брати участь`), `на протязі тижня` (semantic calque of `на протяжении`; correct UK: `протягом тижня`). Per Антоненко-Давидович — these are native words in wrong combinations, not foreign borrowings. | major |
+| `RUSSIANISM` | Russian lexical item imported wholesale with Ukrainian orthography — the lexeme itself is foreign to standard Ukrainian. Examples: `получати` (correct: `отримувати`), `окружаючі` (correct: `навколишні`), `міроприємство` (correct: `захід`). | critical |
 | `TRANSLATIONESE` | Sentence structure characteristic of translated (not composed) prose: over-long subordinate chains, English-style topicalization, Russian genitive stacks ("вирішення питання розвитку"), missing natural colloquial particles. | major |
 | `MT_SMELL` | Characteristic machine-translation artifacts: over-literal prepositions (в vs на mismatches), flat word order, missing discourse markers ("адже", "утім", "зрештою"), unnatural tense sequencing. | major |
 | `REGISTER_MISMATCH` | Wrong register for the level/domain: journalistic density in pedagogy; gamified scaffolding in seminar; academic jargon in A1; legalese in cultural article. | major |
 | `UNNATURAL_COLLOCATION` | Grammatically correct but non-native word combination (e.g., "робити помилку" where "помилятися" is the natural Ukrainian). | minor |
-| `AWKWARD_PREPOSITION` | Wrong preposition choice reflecting Russian pattern (в школі vs у школі misuse, по неділям as calque of по воскресеньям). | major |
+| `WRONG_CASE_GOVERNMENT` | Correct preposition but Russian-patterned case on the noun. Example: `по неділям` (Russian dative plural) → UK takes locative plural: `по неділях`. This is morphology, not preposition choice. | major |
+| `AWKWARD_PREPOSITION` | Wrong preposition choice itself (not the case it governs). Example: `на Україну` (Russian-patterned) → correct UK: `в Україну`. For case-government errors use `WRONG_CASE_GOVERNMENT` instead. | major |
 | `SURZHYK_IN_FORMAL` | Surzhyk forms in an article that should be standard Ukrainian (любий vs будь-який, получати vs отримувати). Note: some Surzhyk may be pedagogically intentional if the article is ABOUT Surzhyk — check domain. | major |
 
 NOT a failure mode:
@@ -110,7 +111,7 @@ Output EXACTLY this JSON object. No preamble, no trailing prose. Start with `{` 
         {"tool": "search_style_guide", "args": "рахувати", "result_summary": "<relevant entry or 'no match'>"}
       ],
       "natural_alternative": "<concrete idiomatic Ukrainian rewrite>",
-      "issue_type": "CALQUE | RUSSIANISM | TRANSLATIONESE | MT_SMELL | REGISTER_MISMATCH | UNNATURAL_COLLOCATION | AWKWARD_PREPOSITION | SURZHYK_IN_FORMAL",
+      "issue_type": "CALQUE | RUSSIANISM | TRANSLATIONESE | MT_SMELL | REGISTER_MISMATCH | UNNATURAL_COLLOCATION | WRONG_CASE_GOVERNMENT | AWKWARD_PREPOSITION | SURZHYK_IN_FORMAL",
       "issue_description": "<one sentence explaining what reads as non-native and why>",
       "severity": "critical | major | minor"
     }
@@ -127,7 +128,7 @@ Output EXACTLY this JSON object. No preamble, no trailing prose. Start with `{` 
 }
 ```
 
-`tool_evidence` is required for CALQUE, RUSSIANISM, AWKWARD_PREPOSITION, SURZHYK_IN_FORMAL. `natural_alternative` is required for all finding types.
+`tool_evidence` is required for CALQUE, RUSSIANISM, WRONG_CASE_GOVERNMENT, AWKWARD_PREPOSITION, SURZHYK_IN_FORMAL. `natural_alternative` is required for all finding types.
 
 ## Scoring rubric (derive, don't ask the user)
 
@@ -193,7 +194,7 @@ Do NOT write fixes that:
 ## Self-audit (run before emitting)
 
 - [ ] Every finding has `quote` and `natural_alternative`
-- [ ] CALQUE / RUSSIANISM / AWKWARD_PREPOSITION / SURZHYK_IN_FORMAL findings have `tool_evidence` from `search_style_guide` or VESUM
+- [ ] CALQUE / RUSSIANISM / WRONG_CASE_GOVERNMENT / AWKWARD_PREPOSITION / SURZHYK_IN_FORMAL findings have `tool_evidence` from `search_style_guide` or VESUM
 - [ ] Level calibration applied: A1-A2 simplicity not faulted; C1+ register mismatches weighted appropriately
 - [ ] Score matches severity counts; density cap applied if findings/1000 words > 5
 - [ ] Verdict matches the score + severity gate

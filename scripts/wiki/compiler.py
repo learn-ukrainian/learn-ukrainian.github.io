@@ -100,7 +100,7 @@ def compile_article(
     article_path = WIKI_DIR / domain / f"{slug}.md"
     article_path.parent.mkdir(parents=True, exist_ok=True)
     article_path.write_text(response.strip() + "\n", encoding="utf-8")
-    _write_sources_registry(article_path, sources, response)
+    _write_sources_registry(article_path, sources, response, force=force)
 
     word_count = len(response.split())
     print(f"  ✅ Wrote {article_path.relative_to(WIKI_DIR)} ({word_count} words)")
@@ -217,8 +217,31 @@ def _format_sources(sources: list[dict]) -> str:
     return "\n\n---\n\n".join(parts)
 
 
-def _write_sources_registry(article_path: Path, sources: list[dict], article_text: str) -> None:
-    """Emit a sibling sources registry for freshly compiled articles."""
+def _write_sources_registry(
+    article_path: Path,
+    sources: list[dict],
+    article_text: str,
+    *,
+    force: bool = False,
+) -> None:
+    """Emit a sibling sources registry for freshly compiled articles.
+
+    **Prompt↔registry numbering invariant**: the prompt labels sources
+    positionally (Source 1, Source 2, ... Source N via ``_format_sources``
+    enumerate). Gemini cites them as ``[S1]`` .. ``[SN]`` using the
+    SAME positional numbering. For the registry to match, we assign
+    IDs S1..SN in the SAME order the chunks are passed to the prompt —
+    NOT in chunk-id-sorted order and NOT preserving stale IDs from a
+    previous run whose chunk ordering was different.
+
+    On ``force=True`` (user asked to recompile from scratch), the stale
+    sibling YAML is deleted before assignment so ``assign_source_ids``
+    starts fresh. Without this, a --force run with a different chunk
+    set re-uses old IDs for overlapping filenames and silently drops
+    IDs for non-overlapping ones — producing orphan citations like
+    S1/S6/S8 that never end up in the YAML. (Surfaced 2026-04-18 when
+    the 45k→60k cap bump changed the chunk selection.)
+    """
     source_files: list[str] = []
     seen: set[str] = set()
     for source in sources:
@@ -232,6 +255,11 @@ def _write_sources_registry(article_path: Path, sources: list[dict], article_tex
         return
 
     registry_path = registry_path_for(article_path)
+    if force and registry_path.exists():
+        # Stale IDs from a previous run will mis-map S# ↔ chunk when the
+        # current chunk set differs. Clean slate for --force.
+        registry_path.unlink()
+
     registry = assign_source_ids(source_files, existing=load_sources_registry(registry_path))
     cited_ids = set(extract_short_citation_ids(article_text))
     if cited_ids:

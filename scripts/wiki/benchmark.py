@@ -114,14 +114,22 @@ COMPATIBLE_ISSUE_TYPES: dict[str, set[str]] = {
     "TOURISTIC_VOICE": {"TOURISTIC_VOICE"},
     "SOFT_PROVINCIAL": {"SOFT_PROVINCIAL"},
     "DEFENSIVE_POSTURE": {"DEFENSIVE_POSTURE", "LIKE_RUSSIAN_BUT"},
-    # register prompt taxonomy
-    "CALQUE": {"CALQUE", "TRANSLATIONESE"},
-    "RUSSIANISM": {"RUSSIANISM", "CALQUE"},
+    # register prompt taxonomy — CALQUE and RUSSIANISM are now strictly
+    # separated per Antonenko-Davydovych (adversarial review 2026-04-18):
+    # CALQUE = native UK words in wrong combinations; RUSSIANISM = foreign
+    # lexeme with UK orthography. Compatibility map allows reviewer to
+    # label as the other without penalty, but with slight precision loss.
+    "CALQUE": {"CALQUE", "RUSSIANISM", "TRANSLATIONESE"},
+    "RUSSIANISM": {"RUSSIANISM", "CALQUE", "SURZHYK_IN_FORMAL"},
     "TRANSLATIONESE": {"TRANSLATIONESE", "MT_SMELL"},
     "MT_SMELL": {"MT_SMELL", "TRANSLATIONESE"},
     "REGISTER_MISMATCH": {"REGISTER_MISMATCH"},
     "UNNATURAL_COLLOCATION": {"UNNATURAL_COLLOCATION"},
-    "AWKWARD_PREPOSITION": {"AWKWARD_PREPOSITION", "CALQUE"},
+    # WRONG_CASE_GOVERNMENT is morphological; AWKWARD_PREPOSITION is
+    # lexical preposition choice. Compatibility allows misclassification
+    # between them but not collapse into CALQUE.
+    "WRONG_CASE_GOVERNMENT": {"WRONG_CASE_GOVERNMENT", "AWKWARD_PREPOSITION"},
+    "AWKWARD_PREPOSITION": {"AWKWARD_PREPOSITION", "WRONG_CASE_GOVERNMENT"},
     "SURZHYK_IN_FORMAL": {"SURZHYK_IN_FORMAL", "RUSSIANISM"},
 }
 

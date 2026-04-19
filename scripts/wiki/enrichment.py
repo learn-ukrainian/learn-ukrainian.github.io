@@ -8,8 +8,6 @@ This module adds relevant textbook chunks, literary texts, local data files,
 and cross-references to build a rich context for wiki article compilation.
 """
 
-from pathlib import Path
-
 import yaml
 
 from .channels import rank_external_hits as apply_channel_ranking
@@ -22,7 +20,12 @@ from .config import PROJECT_ROOT
 CORE_TRACKS = {"a1", "a2", "b1", "b2", "c1", "c2"}
 
 SOURCE_CHAR_CAPS = {
-    "a1": 45_000,
+    # A1 bumped 45_000 → 60_000 on 2026-04-18 after smoke-test showed
+    # 62 chunks → 33 chunks trimming (117k → 45k chars) correlated with
+    # source_grounding REJECT (5 MISATTRIBUTION findings). With 2k-char
+    # post-#1324 chunks, 60k ≈ 30 chunks — still bounded, more headroom
+    # for the writer to find a supporting chunk per claim.
+    "a1": 60_000,
     "a2": 60_000,
     "b1": 80_000,
     "b2": 90_000,
@@ -31,15 +34,18 @@ SOURCE_CHAR_CAPS = {
 }
 
 _BACKGROUND_SOURCE_TYPES = {"wikipedia", "external", "external_article"}
-_SOURCE_TYPE_PRIORITY = {
-    "discovery": 120,
-    "local": 110,
-    "textbook": 100,
-    "literary": 95,
-    "external_article": 60,
-    "external": 55,
-    "wikipedia": 40,
-    "external_video": 0,
+#: `dict[str, float]` (not int) so callers with float-typed parameter
+#: signatures — e.g. `rank_external_hits(..., source_type_priority=...)` —
+#: type-check without dict invariance warnings.
+_SOURCE_TYPE_PRIORITY: dict[str, float] = {
+    "discovery": 120.0,
+    "local": 110.0,
+    "textbook": 100.0,
+    "literary": 95.0,
+    "external_article": 60.0,
+    "external": 55.0,
+    "wikipedia": 40.0,
+    "external_video": 0.0,
 }
 
 
@@ -190,12 +196,16 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     # (the slug is Latin transliteration — useless for searching Ukrainian text)
     ukr_keywords = _extract_ukrainian_keywords(sources_info)
 
-    # 2. Core tracks: search textbooks via FTS5 database
+    # 2. Core tracks: search textbooks via FTS5 database, grade-filtered
+    #    per track (A1 → Grade 1-2, A2 → 1-4, ...). Without this filter,
+    #    A1 articles were being compiled with Grade 5-10 morphology
+    #    textbook chunks — pedagogically wrong and a direct cause of
+    #    source_grounding MISATTRIBUTION findings (2026-04-18 smoke test).
     if track in CORE_TRACKS and ukr_keywords:
         from .sources_db import search_textbooks
-        tb_chunks = search_textbooks(ukr_keywords, max_total=40)
+        tb_chunks = search_textbooks(ukr_keywords, max_total=40, track=track)
         if tb_chunks:
-            print(f"  📖 +{len(tb_chunks)} textbook chunks ({len(ukr_keywords)} keywords)")
+            print(f"  📖 +{len(tb_chunks)} textbook chunks ({len(ukr_keywords)} keywords, {track}-filtered)")
             all_chunks.extend(tb_chunks)
 
     # 3. Seminar + folk tracks: search ALL literary texts via FTS5
