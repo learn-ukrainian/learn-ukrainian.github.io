@@ -3,6 +3,19 @@
 > **Status:** Active plan as of 2026-04-18. Applies to the net-new wiki rebuild on top of Phase 2 dimensional-review system (commit `15db4323a` + follow-ups).
 > **Related:** [`docs/design/dimensional-review.md`](design/dimensional-review.md), [`docs/session-state/current.md`](session-state/current.md).
 
+## Deprecated Phase A canary — scheduled for replacement (#1344)
+
+Four articles were compiled by the **pre-Phase 2 pipeline** and committed in `4a0c77b55`. They have **not** passed the 4-dim review (source_grounding / factual_accuracy / ukrainian_perspective / register) and must be treated as wrong content. Each carries an inline `⚠️ DEPRECATED` banner at the top.
+
+| Old path (retained, do NOT cite) | Target path after rebuild |
+|---|---|
+| `wiki/figures/knyahynia-olha.md` | `wiki/pedagogy/bio/knyahynia-olha.md` |
+| `wiki/linguistics/oes/walls-speak-intro.md` | `wiki/pedagogy/oes/walls-speak-intro.md` |
+| `wiki/literature/works/introduction-to-kotliarevsky.md` | `wiki/pedagogy/lit/introduction-to-kotliarevsky.md` |
+| `wiki/periods/trypillian-civilization.md` | `wiki/pedagogy/hist/trypillian-civilization.md` |
+
+**Retained only** to prevent dangling references in `curriculum/l2-uk-en/plans/{bio,oes,lit,hist}/*.yaml` until the rebuild pipeline produces replacements. Deletion is blocked on #1344 AC1–AC4 (rebuild replacement + plan migration + no-regression check).
+
 ## Prerequisites
 
 All shipped and verified:

@@ -1,5 +1,17 @@
 # Стіни говорять: Графіті Софії Київської як джерело давньоруської мови
 
+> ⚠️ **DEPRECATED — Phase A canary content (pre-dim-review pipeline).**
+> This article was compiled before the Phase 2 dimensional review system
+> shipped. It has **not** passed source_grounding / factual_accuracy /
+> ukrainian_perspective / register review. Kept on disk only to prevent
+> dangling references in `curriculum/l2-uk-en/plans/oes/` until the
+> rebuild pipeline produces a dim-reviewed replacement at
+> `wiki/pedagogy/oes/walls-speak-intro.md`.
+>
+> **Do NOT use as source-of-truth. Do NOT cite. Do NOT compile curriculum
+> content against this file.** Replacement tracked in #1344. See
+> `docs/wiki-rebuild-plan.md`.
+
 <!-- wiki-meta
 slug: walls-speak-intro
 domain: linguistics/oes

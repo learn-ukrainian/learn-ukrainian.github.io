@@ -1,5 +1,17 @@
 # Історія України: Трипільська цивілізація
 
+> ⚠️ **DEPRECATED — Phase A canary content (pre-dim-review pipeline).**
+> This article was compiled before the Phase 2 dimensional review system
+> shipped. It has **not** passed source_grounding / factual_accuracy /
+> ukrainian_perspective / register review. Kept on disk only to prevent
+> dangling references in `curriculum/l2-uk-en/plans/hist/` until the
+> rebuild pipeline produces a dim-reviewed replacement at
+> `wiki/pedagogy/hist/trypillian-civilization.md`.
+>
+> **Do NOT use as source-of-truth. Do NOT cite. Do NOT compile curriculum
+> content against this file.** Replacement tracked in #1344. See
+> `docs/wiki-rebuild-plan.md`.
+
 <!-- wiki-meta
 slug: trypillian-civilization
 domain: periods
