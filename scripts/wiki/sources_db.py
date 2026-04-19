@@ -27,6 +27,19 @@ SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 _conn: sqlite3.Connection | None = None
 
 
+#: Max wait (ms) for SQLite to acquire a shared read lock when another
+#: process holds it (e.g. a concurrent `build_sources_db.py` ingest
+#: during #1188 Diasporiana that rebuilt `literary_texts` FTS5 indices
+#: while a wiki compile was reading — see 2026-04-18 smoke-test race).
+_SQLITE_BUSY_TIMEOUT_MS = 30_000
+
+#: Retry wrapper for `_fts_search` — on `sqlite3.OperationalError`
+#: (typically "database is locked"), wait this many seconds and try
+#: once more. Two retries total (≈4.5s max extra wait). If it still
+#: fails, callers get a loud empty-with-exception instead of silent [].
+_FTS_RETRY_DELAYS_S: tuple[float, ...] = (0.5, 4.0)
+
+
 def _get_conn() -> sqlite3.Connection:
     """Get or create a cached database connection."""
     global _conn
@@ -38,6 +51,10 @@ def _get_conn() -> sqlite3.Connection:
             )
         _conn = sqlite3.connect(str(SOURCES_DB_PATH), check_same_thread=False)
         _conn.row_factory = sqlite3.Row
+        # Concurrent readers must wait for a concurrent writer rather
+        # than silently returning empty rowsets — see §race-condition
+        # comment on `_SQLITE_BUSY_TIMEOUT_MS` above.
+        _conn.execute(f"PRAGMA busy_timeout = {_SQLITE_BUSY_TIMEOUT_MS}")
     return _conn
 
 
@@ -127,6 +144,11 @@ def _fts_search(fts_table: str, data_table: str,
             of real content — below that, chunks rarely contain
             anything the wiki compiler can cite.
             Set to 0 to disable.
+
+    Race-safe: retries on `sqlite3.OperationalError` (typically
+    "database is locked") per `_FTS_RETRY_DELAYS_S`. If all retries
+    exhaust the error propagates — caller can decide policy. See
+    2026-04-18 smoke-test note on `_SQLITE_BUSY_TIMEOUT_MS`.
     """
     try:
         conn = _get_conn()
@@ -144,19 +166,37 @@ def _fts_search(fts_table: str, data_table: str,
     # Filter out short/noise chunks (TOC pages, captions, exercise headers)
     length_filter = f"AND length(s.text) >= {min_text_len}" if min_text_len > 0 else ""
 
-    rows = conn.execute(
-        f"""SELECT {cols}
+    sql = f"""SELECT {cols}
             FROM {fts_table}
             JOIN {data_table} s ON s.id = {fts_table}.rowid
             WHERE {fts_table} MATCH ?
             {length_filter}
             {extra_where}
             ORDER BY rank
-            LIMIT ?""",
-        (fts_query, *extra_params, max_total),
-    ).fetchall()
+            LIMIT ?"""
+    params = (fts_query, *extra_params, max_total)
 
-    return [dict(row) for row in rows]
+    attempt_delays: tuple[float, ...] = (0.0, *_FTS_RETRY_DELAYS_S)
+    last_exc: sqlite3.OperationalError | None = None
+    for attempt_delay in attempt_delays:
+        if attempt_delay > 0:
+            import sys as _sys
+            import time as _time
+            print(
+                f"  ⚠️  FTS5 query on {fts_table} retrying in "
+                f"{attempt_delay}s (DB lock / FTS rebuild race)",
+                file=_sys.stderr,
+            )
+            _time.sleep(attempt_delay)
+        try:
+            rows = conn.execute(sql, params).fetchall()
+            return [dict(row) for row in rows]
+        except sqlite3.OperationalError as exc:
+            last_exc = exc
+            continue
+    # All retries exhausted
+    assert last_exc is not None
+    raise last_exc
 
 
 def search_textbooks(
