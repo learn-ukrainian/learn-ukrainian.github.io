@@ -1,5 +1,11 @@
 # ADR-005: Wiki knowledge base — pre-compiled articles replace live RAG for seminar writes
 
+> **Note (2026-04-19)**: The "SQLite FTS5, not Qdrant" decision is correct for
+> WRITE-layer retrieval and for T3-T4 (RUTH/OES) compile-layer retrieval. For
+> T1-T2 (modern Ukrainian) compile-layer retrieval, see ADR-006 — `#1101`
+> benchmark data showed dense embeddings hit 0.967 Recall@10 on modern
+> textbooks, and ADR-005's project-wide retirement of dense was over-broad.
+
 **Status**: Accepted
 **Date**: 2026-04-06 (landed) / 2026-04-11 (recorded)
 **Related**: #1129 (epic), #1136, #1161, #1171, `scripts/wiki/`, `docs/best-practices/track-architecture.md`
