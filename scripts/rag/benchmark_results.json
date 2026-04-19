@@ -131,9 +131,42 @@
     "error": "MPS backend out of memory during chunk encoding on the old_east_slavic slice with the model-card query prompt enabled."
   },
   "gemma-300m": {
-    "status": "blocked",
+    "status": "complete",
     "sample_size": 1000,
-    "error": "Hugging Face gated repo: google/embeddinggemma-300m returned 401 Unauthorized in this environment."
+    "metrics": {
+      "overall": {
+        "recall@5": 0.07777777777777778,
+        "recall@10": 0.07777777777777778,
+        "ndcg@10": 0.08985243705178911
+      },
+      "by_period": {
+        "old_east_slavic": {
+          "recall@5": 0.05,
+          "recall@10": 0.05,
+          "ndcg@10": 0.06131471927654584
+        },
+        "middle_ukrainian": {
+          "recall@5": 0.15,
+          "recall@10": 0.15,
+          "ndcg@10": 0.16131471927654584
+        },
+        "modern": {
+          "recall@5": 0.03333333333333333,
+          "recall@10": 0.03333333333333333,
+          "ndcg@10": 0.04692787260227564
+        }
+      },
+      "human_curated_only": {
+        "recall@5": 0.09523809523809523,
+        "recall@10": 0.09523809523809523,
+        "ndcg@10": 0.10601401835861508
+      },
+      "auto_populated_count": 9,
+      "human_curated_count": 21
+    },
+    "peak_rss_mb": 3950.953125,
+    "encode_time_s": 371.85416316986084,
+    "mps_memory_mb": 577.666748046875
   },
   "_rerankers": {
     "bge-reranker-v2-m3": {
