@@ -302,5 +302,44 @@
       "peak_rss_mb": 1791.40625,
       "mps_memory_mb": 531.077880859375
     }
+  },
+  "e5-large-instruct": {
+    "status": "complete",
+    "sample_size": 1000,
+    "metrics": {
+      "overall": {
+        "recall@5": 0.4888888888888889,
+        "recall@10": 0.5111111111111111,
+        "ndcg@10": 0.4681634978200219
+      },
+      "by_period": {
+        "old_east_slavic": {
+          "recall@5": 0.1,
+          "recall@10": 0.1,
+          "ndcg@10": 0.1
+        },
+        "middle_ukrainian": {
+          "recall@5": 0.4,
+          "recall@10": 0.4333333333333333,
+          "ndcg@10": 0.33003329715764684
+        },
+        "modern": {
+          "recall@5": 0.9666666666666666,
+          "recall@10": 1.0,
+          "ndcg@10": 0.9744571963024189
+        }
+      },
+      "human_curated_only": {
+        "recall@5": 0.2857142857142857,
+        "recall@10": 0.30158730158730157,
+        "ndcg@10": 0.24792182891005485
+      },
+      "auto_populated_count": 9,
+      "human_curated_count": 21
+    },
+    "peak_rss_mb": 3836.359375,
+    "encode_time_s": 588.5605089664459,
+    "mps_memory_mb": 2135.82080078125,
+    "notes": "Query instruction prefix applied per model card. Max input length is 512 tokens; 2020/3048 sampled passages exceeded that limit and were truncated during encoding, a known downside for section-scale retrieval. Query texts stayed within the limit."
   }
 }

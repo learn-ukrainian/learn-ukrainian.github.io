@@ -5,8 +5,8 @@ Compares embedding quality across three language periods:
 - Middle Ukrainian (XIV-XVIII c.)
 - Modern Ukrainian (textbooks)
 
-Models: BGE-M3 (current), EmbeddingGemma-300M, Qwen3-Embedding-0.6B
-        jina-embeddings-v3
+Models: BGE-M3 (current), EmbeddingGemma-300M, Qwen3-Embedding-0.6B,
+        jina-embeddings-v3, multilingual-e5-large-instruct
 
 Approach:
   1. Load ground-truth queries from benchmark_queries.yaml
@@ -24,6 +24,7 @@ Usage:
     .venv/bin/python scripts/rag/benchmark_embeddings.py --model gemma
     .venv/bin/python scripts/rag/benchmark_embeddings.py --model qwen3
     .venv/bin/python scripts/rag/benchmark_embeddings.py --model jina
+    .venv/bin/python scripts/rag/benchmark_embeddings.py --model e5-large-instruct
 
     # Adjust sample size
     .venv/bin/python scripts/rag/benchmark_embeddings.py --sample-size 500
@@ -62,10 +63,15 @@ GEMMA_DIM = 768
 # Qwen3 Embedding config
 QWEN3_EMB_MODEL = "Qwen/Qwen3-Embedding-0.6B"
 JINA_V3_MODEL = "jinaai/jina-embeddings-v3"
+E5_INSTRUCT_MODEL = "intfloat/multilingual-e5-large-instruct"
 EMBEDDER_LOCK_FILE = "/tmp/benchmark-embedder.lock"
 GEMMA_LICENSE_URL = "https://huggingface.co/google/embeddinggemma-300m"
 _DRY_RUN_HOLD_ENV = "BENCHMARK_DRY_RUN_HOLD_SECS"
 _HF_TOKEN_WARNED = False
+E5_QUERY_INSTRUCTION = (
+    "Instruct: Given a search query about Ukrainian language/literature, "
+    "retrieve relevant passages.\nQuery: "
+)
 
 # Evaluation constants
 METRICS = ("recall@5", "recall@10", "ndcg@10")
@@ -297,6 +303,20 @@ def save_benchmark_results(results: dict):
     with open(results_path, "w") as f:
         json.dump(serializable, f, indent=2)
     print(f"\nResults saved to {results_path}")
+
+
+def count_overlong_texts(tokenizer, texts: list[str], max_length: int) -> tuple[int, int]:
+    """Return (count_over_limit, max_token_length) for a text batch."""
+    over_limit = 0
+    max_tokens = 0
+    for text in texts:
+        token_count = len(
+            tokenizer.encode(text, add_special_tokens=True, truncation=False)
+        )
+        max_tokens = max(max_tokens, token_count)
+        if token_count > max_length:
+            over_limit += 1
+    return over_limit, max_tokens
 
 
 def get_db_connection() -> sqlite3.Connection:
@@ -600,6 +620,52 @@ class JinaV3Encoder:
         except Exception:
             pass
         print("[bench] jina-embeddings-v3 unloaded.")
+
+
+class E5InstructEncoder:
+    """Wraps multilingual-e5-large-instruct for asymmetric retrieval."""
+
+    def __init__(self):
+        self._model = None
+
+    def load(self):
+        if self._model is not None:
+            return
+        from sentence_transformers import SentenceTransformer
+
+        print(f"[bench] Loading {E5_INSTRUCT_MODEL}...")
+        self._model = SentenceTransformer(
+            E5_INSTRUCT_MODEL,
+            token=get_hf_token(),
+        )
+        dim = self._model.get_sentence_embedding_dimension()
+        print(
+            "[bench] multilingual-e5-large-instruct loaded "
+            f"(dim={dim}, max_seq_length={self._model.max_seq_length})."
+        )
+
+    def encode(self, texts: list[str], batch_size: int = 8) -> dict:
+        """Returns {dense: np.ndarray}. Queries must be preformatted upstream."""
+        self.load()
+        vecs = self._model.encode(
+            texts,
+            batch_size=batch_size,
+            show_progress_bar=True,
+            normalize_embeddings=True,
+        )
+        return {"dense": np.array(vecs)}
+
+    def unload(self):
+        del self._model
+        self._model = None
+        gc.collect()
+        try:
+            import torch
+            if torch.backends.mps.is_available():
+                torch.mps.empty_cache()
+        except Exception:
+            pass
+        print("[bench] multilingual-e5-large-instruct unloaded.")
 
 
 # ── Sparse scoring ────────────────────────────────────────────────
@@ -998,6 +1064,88 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
 
         encoder.unload()
 
+    # ── multilingual-e5-large-instruct ─────────────────────────
+    if model_filter in (None, "e5-large-instruct"):
+        print("\n" + "=" * 60)
+        print("MODEL: multilingual-e5-large-instruct (dense only)")
+        print("=" * 60)
+
+        encoder = E5InstructEncoder()
+        encoder.load()
+
+        t0 = time.time()
+
+        # Encode queries with the model-card asymmetric instruction prompt.
+        print("  Encoding queries...")
+        formatted_queries = [
+            f"{E5_QUERY_INSTRUCTION}{query_text}"
+            for query_text in query_texts
+        ]
+        max_seq_length = encoder._model.max_seq_length
+        tokenizer = encoder._model.tokenizer
+        query_over_limit, _ = count_overlong_texts(
+            tokenizer, formatted_queries, max_seq_length
+        )
+        q_result = encoder.encode(formatted_queries, batch_size=8)
+        q_dense = q_result["dense"]
+
+        # Encode passages without any instruction prefix.
+        c_dense = {}
+        total_passages = 0
+        passages_over_limit = 0
+        for coll, texts in collection_texts.items():
+            print(f"  Encoding {len(texts)} chunks from {coll}...")
+            over_limit, _ = count_overlong_texts(
+                tokenizer, texts, max_seq_length
+            )
+            total_passages += len(texts)
+            passages_over_limit += over_limit
+            c_result = encoder.encode(texts, batch_size=8)
+            c_dense[coll] = c_result["dense"]
+
+        encode_time = time.time() - t0
+        peak_rss = get_peak_memory_mb()
+
+        print("\n  Evaluating multilingual-e5-large-instruct...")
+        e5_metrics = evaluate_model(
+            queries_with_gt, q_dense, None,
+            collection_ids, c_dense, None, mode="dense"
+        )
+
+        mps_mem = get_mps_memory_mb()
+        results["e5-large-instruct"] = build_result_row(
+            e5_metrics,
+            sample_size,
+            peak_rss,
+            encode_time,
+            extra={
+                "mps_memory_mb": mps_mem,
+                "notes": (
+                    "Query instruction prefix applied per model card. "
+                    f"Max input length is {max_seq_length} tokens; "
+                    f"{passages_over_limit}/{total_passages} sampled passages "
+                    "exceeded that limit and were truncated during encoding, "
+                    "a known downside for section-scale retrieval."
+                    if passages_over_limit
+                    else (
+                        "Query instruction prefix applied per model card. "
+                        f"Max input length is {max_seq_length} tokens; no "
+                        "sampled passages exceeded that limit."
+                    )
+                )
+                + (
+                    " Query texts stayed within the limit."
+                    if query_over_limit == 0
+                    else (
+                        f" {query_over_limit}/{len(formatted_queries)} query "
+                        "texts also exceeded the limit."
+                    )
+                ),
+            },
+        )
+
+        encoder.unload()
+
     # ── Report ────────────────────────────────────────────────────
     print_report(results)
 
@@ -1179,9 +1327,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Benchmark Ukrainian embedding models from sources.db")
     parser.add_argument(
         "--model",
-        choices=["bge-m3", "gemma", "qwen3", "jina"],
+        choices=["bge-m3", "gemma", "qwen3", "jina", "e5-large-instruct"],
         default=None,
-        help="Run only one model (default: all four)",
+        help="Run only one model (default: all five)",
     )
     parser.add_argument(
         "--sample-size",
@@ -1216,7 +1364,11 @@ def print_dry_run_plan(args: argparse.Namespace):
     """Print the non-loading execution plan."""
     queries = load_queries()
     queries_with_gt = [q for q in queries if q.get("relevant_chunks")]
-    selected_models = [args.model] if args.model else ["bge-m3", "gemma", "qwen3", "jina"]
+    selected_models = (
+        [args.model]
+        if args.model
+        else ["bge-m3", "gemma", "qwen3", "jina", "e5-large-instruct"]
+    )
 
     if args.populate_ground_truth:
         empty_queries = [q for q in queries if not q.get("relevant_chunks")]
