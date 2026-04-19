@@ -341,5 +341,43 @@
     "encode_time_s": 588.5605089664459,
     "mps_memory_mb": 2135.82080078125,
     "notes": "Query instruction prefix applied per model card. Max input length is 512 tokens; 2020/3048 sampled passages exceeded that limit and were truncated during encoding, a known downside for section-scale retrieval. Query texts stayed within the limit."
+  },
+  "gte-multilingual-base": {
+    "status": "complete",
+    "sample_size": 1000,
+    "metrics": {
+      "overall": {
+        "recall@5": 0.4,
+        "recall@10": 0.45555555555555555,
+        "ndcg@10": 0.36706798292552917
+      },
+      "by_period": {
+        "old_east_slavic": {
+          "recall@5": 0.1,
+          "recall@10": 0.1,
+          "ndcg@10": 0.05706417189553201
+        },
+        "middle_ukrainian": {
+          "recall@5": 0.1,
+          "recall@10": 0.26666666666666666,
+          "ndcg@10": 0.12084422497791716
+        },
+        "modern": {
+          "recall@5": 1.0,
+          "recall@10": 1.0,
+          "ndcg@10": 0.9232955519031382
+        }
+      },
+      "human_curated_only": {
+        "recall@5": 0.14285714285714285,
+        "recall@10": 0.22222222222222218,
+        "ndcg@10": 0.13078818820112673
+      },
+      "auto_populated_count": 9,
+      "human_curated_count": 21
+    },
+    "peak_rss_mb": 2415.890625,
+    "encode_time_s": 246.0090570449829,
+    "mps_memory_mb": 1196.950439453125
   }
 }

@@ -62,6 +62,7 @@ GEMMA_DIM = 768
 
 # Qwen3 Embedding config
 QWEN3_EMB_MODEL = "Qwen/Qwen3-Embedding-0.6B"
+GTE_MULTILINGUAL_BASE_MODEL = "Alibaba-NLP/gte-multilingual-base"
 JINA_V3_MODEL = "jinaai/jina-embeddings-v3"
 E5_INSTRUCT_MODEL = "intfloat/multilingual-e5-large-instruct"
 EMBEDDER_LOCK_FILE = "/tmp/benchmark-embedder.lock"
@@ -622,6 +623,56 @@ class JinaV3Encoder:
         print("[bench] jina-embeddings-v3 unloaded.")
 
 
+class GTEMultilingualBaseEncoder:
+    """Wraps gte-multilingual-base for dense-only retrieval."""
+
+    def __init__(self):
+        self._model = None
+
+    def load(self):
+        if self._model is not None:
+            return
+        from sentence_transformers import SentenceTransformer
+
+        print(f"[bench] Loading {GTE_MULTILINGUAL_BASE_MODEL}...")
+        self._model = SentenceTransformer(
+            GTE_MULTILINGUAL_BASE_MODEL,
+            token=get_hf_token(),
+            trust_remote_code=True,
+        )
+        # Match the benchmark's 512-token retrieval regime and avoid
+        # default long-context allocations that exceed local MPS memory.
+        self._model.max_seq_length = 512
+        dim = self._model.get_sentence_embedding_dimension()
+        print(
+            "[bench] gte-multilingual-base loaded "
+            f"(dim={dim}, max_seq_length={self._model.max_seq_length})."
+        )
+
+    def encode(self, texts: list[str], batch_size: int = 8) -> dict:
+        """Returns {dense: np.ndarray}. No task adapter or prompt required."""
+        self.load()
+        vecs = self._model.encode(
+            texts,
+            batch_size=batch_size,
+            show_progress_bar=True,
+            normalize_embeddings=True,
+        )
+        return {"dense": np.array(vecs)}
+
+    def unload(self):
+        del self._model
+        self._model = None
+        gc.collect()
+        try:
+            import torch
+            if torch.backends.mps.is_available():
+                torch.mps.empty_cache()
+        except Exception:
+            pass
+        print("[bench] gte-multilingual-base unloaded.")
+
+
 class E5InstructEncoder:
     """Wraps multilingual-e5-large-instruct for asymmetric retrieval."""
 
@@ -1064,6 +1115,47 @@ def run_benchmark(model_filter: str | None = None, sample_size: int = 1000):
 
         encoder.unload()
 
+    # ── gte-multilingual-base ───────────────────────────────────
+    if model_filter in (None, "gte-multilingual-base"):
+        print("\n" + "=" * 60)
+        print("MODEL: gte-multilingual-base (dense only)")
+        print("=" * 60)
+
+        encoder = GTEMultilingualBaseEncoder()
+        encoder.load()
+
+        t0 = time.time()
+
+        print("  Encoding queries...")
+        q_result = encoder.encode(query_texts, batch_size=8)
+        q_dense = q_result["dense"]
+
+        c_dense = {}
+        for coll, texts in collection_texts.items():
+            print(f"  Encoding {len(texts)} chunks from {coll}...")
+            c_result = encoder.encode(texts, batch_size=8)
+            c_dense[coll] = c_result["dense"]
+
+        encode_time = time.time() - t0
+        peak_rss = get_peak_memory_mb()
+
+        print("\n  Evaluating gte-multilingual-base...")
+        gte_metrics = evaluate_model(
+            queries_with_gt, q_dense, None,
+            collection_ids, c_dense, None, mode="dense"
+        )
+
+        mps_mem = get_mps_memory_mb()
+        results["gte-multilingual-base"] = build_result_row(
+            gte_metrics,
+            sample_size,
+            peak_rss,
+            encode_time,
+            extra={"mps_memory_mb": mps_mem},
+        )
+
+        encoder.unload()
+
     # ── multilingual-e5-large-instruct ─────────────────────────
     if model_filter in (None, "e5-large-instruct"):
         print("\n" + "=" * 60)
@@ -1327,9 +1419,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Benchmark Ukrainian embedding models from sources.db")
     parser.add_argument(
         "--model",
-        choices=["bge-m3", "gemma", "qwen3", "jina", "e5-large-instruct"],
+        choices=["bge-m3", "gemma", "qwen3", "jina", "gte-multilingual-base", "e5-large-instruct"],
         default=None,
-        help="Run only one model (default: all five)",
+        help="Run only one model (default: all configured models)",
     )
     parser.add_argument(
         "--sample-size",
@@ -1367,7 +1459,7 @@ def print_dry_run_plan(args: argparse.Namespace):
     selected_models = (
         [args.model]
         if args.model
-        else ["bge-m3", "gemma", "qwen3", "jina", "e5-large-instruct"]
+        else ["bge-m3", "gemma", "qwen3", "jina", "gte-multilingual-base", "e5-large-instruct"]
     )
 
     if args.populate_ground_truth:
