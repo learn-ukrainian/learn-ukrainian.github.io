@@ -1,8 +1,8 @@
 # Retrieval Diagnosis — a1/sounds-letters-and-hello
 
 ## Summary
-- Concepts present in 40 returned chunks: 5 / 10
-- Concepts absent from 40 but present in full corpus: 4 / 10
+- Concepts present in 40 returned chunks: 6 / 10
+- Concepts absent from 40 but present in full corpus: 3 / 10
 - Concepts absent from full corpus entirely: 1 / 10
 
 ## Verdict
@@ -13,7 +13,7 @@ retrieval_bottleneck
 |---|---|---|---|
 | syllable_count_rule | yes | yes | 2 |
 | larynx_touch_exercise | no | yes | 5 |
-| final_voicing | no | yes | 2, 2, 3, 3, 3 |
+| final_voicing | yes | yes | 3 |
 | v_to_w_rule | no | yes | 3, 4, 5, 5, 5 |
 | yi_letter_two_sounds | yes | yes | 2 |
 | ya_yu_ye_dual | yes | yes | 2 |
@@ -24,7 +24,7 @@ retrieval_bottleneck
 
 ## Recommendation
 - Proceed with the retrieval bakeoff issue; the corpus already contains the missing concepts, but the A1 playback did not surface them.
-- Retrieval misses: larynx_touch_exercise, final_voicing, v_to_w_rule, milozvuchnist.
+- Retrieval misses: larynx_touch_exercise, v_to_w_rule, milozvuchnist.
 
 ## Notes
 - Playback returned 40 chunk(s); the script logs the actual count instead of assuming 41.
