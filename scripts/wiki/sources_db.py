@@ -17,12 +17,19 @@ Indexed tables (dictionary headword lookup):
 """
 
 import sqlite3
+from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import yaml
+
 from .channels import rank_external_hits
+from .dense_rerank import chunk_wikipedia_article, rerank_candidates, rerank_sections
+from .query_builder import build_query_buckets
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+TRACK_PRIORS_PATH = PROJECT_ROOT / "scripts" / "wiki" / "track_priors.yaml"
 
 _conn: sqlite3.Connection | None = None
 
@@ -38,6 +45,34 @@ _SQLITE_BUSY_TIMEOUT_MS = 30_000
 #: once more. Two retries total (≈4.5s max extra wait). If it still
 #: fails, callers get a loud empty-with-exception instead of silent [].
 _FTS_RETRY_DELAYS_S: tuple[float, ...] = (0.5, 4.0)
+_CORPORA = (
+    "textbook_sections",
+    "modern_literary",
+    "archaic_literary",
+    "external",
+    "wikipedia",
+)
+_PRIOR_KEY_BY_CORPUS = {
+    "textbook_sections": "textbook",
+    "modern_literary": "modern_literary",
+    "archaic_literary": "archaic_literary",
+    "external": "external",
+    "wikipedia": "wikipedia",
+}
+
+
+def _load_track_priors() -> dict[str, dict[str, float]]:
+    if not TRACK_PRIORS_PATH.exists():
+        return {}
+    data = yaml.safe_load(TRACK_PRIORS_PATH.read_text(encoding="utf-8")) or {}
+    return {
+        str(track): {str(corpus): float(weight) for corpus, weight in priors.items()}
+        for track, priors in data.items()
+        if isinstance(priors, dict)
+    }
+
+
+_TRACK_PRIORS = _load_track_priors()
 
 
 def _get_conn() -> sqlite3.Connection:
@@ -107,6 +142,641 @@ def _table_columns(table: str) -> set[str]:
         row["name"]
         for row in conn.execute(f"PRAGMA table_info({table})").fetchall()
     }
+
+
+def _build_preserving_fts_query(terms: list[str] | tuple[str, ...]) -> str | None:
+    """Build an FTS5 OR query without stripping apostrophes."""
+    cleaned_terms: list[str] = []
+    for raw in terms:
+        term = str(raw or "").replace('"', " ").strip()
+        if not term:
+            continue
+        cleaned_terms.append(f'"{term}"')
+    return " OR ".join(cleaned_terms) if cleaned_terms else None
+
+
+def _bucket_a_plaintext(bucket_a_phrases: list[str]) -> list[str]:
+    return [phrase.strip().strip('"') for phrase in bucket_a_phrases if phrase.strip().strip('"')]
+
+
+def _tokenize_normalized_text(text: str) -> set[str]:
+    tokens: set[str] = set()
+    for token in _normalize_text(text).replace("/", " ").replace("-", " ").split():
+        cleaned = token.strip(".,;:!?\"«»()[]{}")
+        if cleaned:
+            tokens.add(cleaned)
+    return tokens
+
+
+def _normalize_text(text: str) -> str:
+    from .diagnostics.retrieval_playback import normalize_text
+
+    return normalize_text(text)
+
+
+def _search_sections_fts5(
+    bucket_a_phrases: list[str],
+    bucket_b_keywords: set[str],
+    *,
+    track: str,
+    max_chunk_candidates: int = 100,
+    max_sections: int = 30,
+) -> list[dict]:
+    """Return section candidates grouped from chunk-level FTS5 hits."""
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return []
+
+    terms = [*_bucket_a_plaintext(bucket_a_phrases), *sorted(bucket_b_keywords)]
+    fts_query = _build_preserving_fts_query(terms)
+    if not fts_query:
+        return []
+
+    extra_where = ["s.parent_section_id IS NOT NULL"]
+    extra_params: list[object] = []
+    if track in _TRACK_GRADE_RANGES:
+        grades = _TRACK_GRADE_RANGES[track]
+        placeholders = ",".join("?" * len(grades))
+        extra_where.append(f"s.grade IN ({placeholders})")
+        extra_params.extend(grades)
+
+    rows = conn.execute(
+        f"""
+        SELECT
+            s.id,
+            s.chunk_id,
+            s.title,
+            s.text,
+            s.source_file,
+            s.grade,
+            s.author,
+            s.parent_section_id,
+            bm25(textbooks_fts, 5.0, 1.0) AS rank
+        FROM textbooks_fts
+        JOIN textbooks s ON s.id = textbooks_fts.rowid
+        WHERE textbooks_fts MATCH ?
+          AND {' AND '.join(extra_where)}
+        ORDER BY rank
+        LIMIT ?
+        """,
+        (fts_query, *extra_params, max_chunk_candidates),
+    ).fetchall()
+
+    if not rows:
+        return []
+
+    bucket_a_plain = [_normalize_text(phrase) for phrase in _bucket_a_plaintext(bucket_a_phrases)]
+    normalized_bucket_b = {_normalize_text(keyword) for keyword in bucket_b_keywords}
+
+    by_section: dict[int, dict] = defaultdict(lambda: {
+        "bucket_a_hits": 0,
+        "bucket_b_hits": 0,
+        "best_rank": float("inf"),
+        "matched_chunk_ids": [],
+    })
+
+    for row in rows:
+        text = str(row["text"] or "")
+        title = str(row["title"] or "")
+        searchable = _normalize_text(f"{title}\n{text}")
+        tokens = _tokenize_normalized_text(searchable)
+
+        bucket_a_hit = any(phrase in searchable for phrase in bucket_a_plain)
+        bucket_b_hit = bool(tokens & normalized_bucket_b)
+        if not bucket_a_hit and not bucket_b_hit:
+            continue
+
+        section_id = int(row["parent_section_id"])
+        aggregated = by_section[section_id]
+        aggregated["bucket_a_hits"] += int(bucket_a_hit)
+        aggregated["bucket_b_hits"] += int(bucket_b_hit)
+        aggregated["best_rank"] = min(float(row["rank"] or 0.0), aggregated["best_rank"])
+        aggregated["matched_chunk_ids"].append(str(row["chunk_id"]))
+
+    if not by_section:
+        return []
+
+    ranked_sections = sorted(
+        (
+            {
+                "section_id": section_id,
+                "bucket_a_hits": data["bucket_a_hits"],
+                "bucket_b_hits": data["bucket_b_hits"],
+                "section_score": (data["bucket_a_hits"] * 3) + data["bucket_b_hits"],
+                "best_rank": data["best_rank"],
+                "matched_chunk_ids": data["matched_chunk_ids"],
+            }
+            for section_id, data in by_section.items()
+        ),
+        key=lambda row: (
+            -int(row["section_score"]),
+            float(row["best_rank"]),
+            int(row["section_id"]),
+        ),
+    )[:max_sections]
+
+    section_ids = [int(row["section_id"]) for row in ranked_sections]
+    placeholders = ",".join("?" * len(section_ids))
+    section_rows = conn.execute(
+        f"""
+        SELECT
+            section_id,
+            source_file,
+            grade,
+            section_title,
+            section_number,
+            page_start,
+            page_end,
+            chunk_count,
+            full_text
+        FROM textbook_sections
+        WHERE section_id IN ({placeholders})
+        """,
+        tuple(section_ids),
+    ).fetchall()
+    section_meta = {int(row["section_id"]): dict(row) for row in section_rows}
+
+    results: list[dict] = []
+    for ranked in ranked_sections:
+        meta = section_meta.get(int(ranked["section_id"]))
+        if not meta:
+            continue
+        results.append({
+            **meta,
+            **ranked,
+            "text": meta["full_text"],
+            "chunk_id": f"S{meta['section_id']}",
+            "title": meta["section_title"],
+            "source_type": "textbook",
+        })
+    return results
+
+
+def _build_dense_query(bucket_a_phrases: list[str], bucket_b_keywords: set[str], fallback: str) -> str:
+    dense_query = " ".join(
+        [*(phrase.strip().strip('"') for phrase in bucket_a_phrases), *sorted(bucket_b_keywords)]
+    ).strip()
+    return dense_query or str(fallback)
+
+
+def _prepare_query(query: str | Path, track: str) -> tuple[list[str], set[str], str]:
+    candidate_path = Path(query)
+    if candidate_path.exists():
+        bucket_a_phrases, bucket_b_keywords = build_query_buckets(candidate_path, track)
+        return bucket_a_phrases, bucket_b_keywords, _build_dense_query(
+            bucket_a_phrases,
+            bucket_b_keywords,
+            candidate_path.stem.replace("-", " "),
+        )
+
+    raw_query = _normalize_text(str(query))
+    bucket_a_phrases: list[str] = []
+    if _is_bucket_a_query(raw_query):
+        bucket_a_phrases.append(f'"{raw_query}"')
+    bucket_b_keywords = _tokenize_normalized_text(raw_query)
+    return bucket_a_phrases, bucket_b_keywords, _build_dense_query(
+        bucket_a_phrases,
+        bucket_b_keywords,
+        raw_query,
+    )
+
+
+def _is_bucket_a_query(phrase: str) -> bool:
+    words = phrase.split()
+    return bool(phrase) and (len(words) >= 3 or len(phrase) >= 10)
+
+
+def _corpus_prior(track: str, corpus: str) -> float:
+    prior_key = _PRIOR_KEY_BY_CORPUS[corpus]
+    return float(_TRACK_PRIORS.get(track, {}).get(prior_key, 1.0))
+
+
+def _fts_terms(bucket_a_phrases: list[str], bucket_b_keywords: set[str]) -> list[str]:
+    return [*_bucket_a_plaintext(bucket_a_phrases), *sorted(bucket_b_keywords)]
+
+
+def _search_literary_candidates(
+    bucket_a_phrases: list[str],
+    bucket_b_keywords: set[str],
+    *,
+    corpus: str,
+    candidate_k: int,
+) -> list[dict]:
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return []
+
+    fts_query = _build_preserving_fts_query(_fts_terms(bucket_a_phrases, bucket_b_keywords))
+    if not fts_query:
+        return []
+
+    periods = ("modern",) if corpus == "modern_literary" else ("middle_ukrainian", "old_east_slavic")
+    placeholders = ",".join("?" * len(periods))
+    rows = conn.execute(
+        f"""
+        SELECT
+            s.id,
+            s.chunk_id,
+            s.title,
+            s.text,
+            s.source_file,
+            s.author,
+            s.work,
+            s.work_id,
+            s.language_period,
+            bm25(literary_fts, 5.0, 1.0) AS rank
+        FROM literary_fts
+        JOIN literary_texts s ON s.id = literary_fts.rowid
+        WHERE literary_fts MATCH ?
+          AND s.language_period IN ({placeholders})
+        ORDER BY rank
+        LIMIT ?
+        """,
+        (fts_query, *periods, candidate_k),
+    ).fetchall()
+
+    return [
+        {
+            "unit_key": f"{corpus}:{row['chunk_id']}",
+            "corpus": corpus,
+            "source_type": "literary",
+            "chunk_id": str(row["chunk_id"] or ""),
+            "title": str(row["title"] or ""),
+            "text": str(row["text"] or ""),
+            "full_text": str(row["text"] or ""),
+            "source_file": str(row["source_file"] or ""),
+            "parent_key": str(row["work_id"] or row["source_file"] or ""),
+            "author": str(row["author"] or ""),
+            "work": str(row["work"] or ""),
+            "language_period": str(row["language_period"] or ""),
+            "fts_score": float(row["rank"] or 0.0),
+            "row_id": int(row["id"]),
+        }
+        for row in rows
+    ]
+
+
+def _search_external_candidates(
+    bucket_a_phrases: list[str],
+    bucket_b_keywords: set[str],
+    *,
+    candidate_k: int,
+) -> list[dict]:
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return []
+
+    fts_query = _build_preserving_fts_query(_fts_terms(bucket_a_phrases, bucket_b_keywords))
+    if not fts_query:
+        return []
+
+    rows = conn.execute(
+        """
+        SELECT
+            s.id,
+            s.chunk_id,
+            s.title,
+            s.text,
+            s.source_file,
+            s.url,
+            s.domain,
+            s.speaker,
+            bm25(external_fts, 5.0, 1.0) AS rank
+        FROM external_fts
+        JOIN external_articles s ON s.id = external_fts.rowid
+        WHERE external_fts MATCH ?
+        ORDER BY rank
+        LIMIT ?
+        """,
+        (fts_query, candidate_k),
+    ).fetchall()
+
+    return [
+        {
+            "unit_key": f"external:{row['chunk_id'] or row['id']}",
+            "corpus": "external",
+            "source_type": "external",
+            "chunk_id": str(row["chunk_id"] or ""),
+            "title": str(row["title"] or ""),
+            "text": str(row["text"] or ""),
+            "full_text": str(row["text"] or ""),
+            "source_file": str(row["source_file"] or ""),
+            "parent_key": str(row["source_file"] or ""),
+            "url": str(row["url"] or ""),
+            "source_name": str(row["domain"] or row["source_file"] or ""),
+            "speaker": str(row["speaker"] or ""),
+            "fts_score": float(row["rank"] or 0.0),
+        }
+        for row in rows
+    ]
+
+
+def _search_wikipedia_candidates(
+    bucket_a_phrases: list[str],
+    bucket_b_keywords: set[str],
+    *,
+    candidate_k: int,
+) -> list[dict]:
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return []
+
+    fts_query = _build_preserving_fts_query(_fts_terms(bucket_a_phrases, bucket_b_keywords))
+    if not fts_query:
+        return []
+
+    rows = conn.execute(
+        """
+        SELECT
+            s.id,
+            s.title,
+            s.url,
+            s.text,
+            bm25(wikipedia_fts, 5.0, 1.0) AS rank
+        FROM wikipedia_fts
+        JOIN wikipedia s ON s.id = wikipedia_fts.rowid
+        WHERE wikipedia_fts MATCH ?
+        ORDER BY rank
+        LIMIT ?
+        """,
+        (fts_query, candidate_k),
+    ).fetchall()
+
+    candidates: list[dict] = []
+    for row in rows:
+        title = str(row["title"] or "")
+        for chunk in chunk_wikipedia_article(title, str(row["text"] or "")):
+            candidates.append(
+                {
+                    "unit_key": str(chunk["unit_key"]),
+                    "corpus": "wikipedia",
+                    "source_type": "wikipedia",
+                    "title": title,
+                    "text": str(chunk["text"]),
+                    "full_text": str(chunk["text"]),
+                    "parent_key": title,
+                    "url": str(row["url"] or ""),
+                    "chunk_index": int(chunk["chunk_index"]),
+                    "source_name": "Wikipedia",
+                    "fts_score": float(row["rank"] or 0.0),
+                }
+            )
+    return candidates
+
+
+def _dispatch_corpus_search(
+    corpus: str,
+    *,
+    bucket_a_phrases: list[str],
+    bucket_b_keywords: set[str],
+    dense_query: str,
+    track: str,
+    candidate_k_per_corpus: int,
+) -> list[dict]:
+    if corpus == "textbook_sections":
+        candidates = _search_sections_fts5(
+            bucket_a_phrases,
+            bucket_b_keywords,
+            track=track,
+            max_sections=candidate_k_per_corpus,
+            max_chunk_candidates=max(candidate_k_per_corpus * 4, candidate_k_per_corpus),
+        )
+        for candidate in candidates:
+            candidate["corpus"] = corpus
+            candidate["unit_key"] = candidate.get("unit_key") or f"textbook_sections:{int(candidate['section_id'])}"
+            candidate["parent_key"] = str(candidate.get("source_file", ""))
+            candidate["fts_score"] = float(candidate.get("best_rank", 0.0) or 0.0)
+    elif corpus in {"modern_literary", "archaic_literary"}:
+        candidates = _search_literary_candidates(
+            bucket_a_phrases,
+            bucket_b_keywords,
+            corpus=corpus,
+            candidate_k=candidate_k_per_corpus,
+        )
+    elif corpus == "external":
+        candidates = _search_external_candidates(
+            bucket_a_phrases,
+            bucket_b_keywords,
+            candidate_k=candidate_k_per_corpus,
+        )
+    elif corpus == "wikipedia":
+        candidates = _search_wikipedia_candidates(
+            bucket_a_phrases,
+            bucket_b_keywords,
+            candidate_k=candidate_k_per_corpus,
+        )
+    else:
+        return []
+
+    reranked = rerank_candidates(
+        dense_query,
+        candidates,
+        corpus=corpus,
+        limit=candidate_k_per_corpus,
+    )
+    prior = _corpus_prior(track, corpus)
+    for row in reranked:
+        row["prior_weight"] = prior
+        row["final_score"] = float(row.get("dense_score", 0.0)) * prior
+    return reranked
+
+
+def _expand_literary_neighbors(match: dict) -> dict:
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return match
+
+    parent_key = str(match.get("parent_key", "")).strip()
+    chunk_id = str(match.get("chunk_id", "")).strip()
+    rows = conn.execute(
+        """
+        SELECT id, chunk_id, text
+        FROM literary_texts
+        WHERE work_id = ? OR source_file = ?
+        ORDER BY id
+        """,
+        (parent_key, parent_key),
+    ).fetchall()
+    if not rows:
+        return match
+
+    target_index = next(
+        (
+            index
+            for index, row in enumerate(rows)
+            if str(row["chunk_id"] or "") == chunk_id
+        ),
+        None,
+    )
+    if target_index is None:
+        return match
+
+    start = max(0, target_index - 1)
+    end = min(len(rows), target_index + 2)
+    context_rows = rows[start:end]
+    full_text = "\n\n".join(str(row["text"] or "") for row in context_rows if str(row["text"] or "").strip())
+    return {
+        **match,
+        "full_text": full_text or str(match.get("full_text", "")),
+        "context_unit_keys": [f"{match['corpus']}:{row['chunk_id']}" for row in context_rows],
+    }
+
+
+def _expand_wikipedia_neighbors(match: dict) -> dict:
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return match
+
+    title = str(match.get("parent_key", "")).strip()
+    row = conn.execute(
+        "SELECT text FROM wikipedia WHERE title = ? LIMIT 1",
+        (title,),
+    ).fetchone()
+    if row is None:
+        return match
+
+    chunks = chunk_wikipedia_article(title, str(row["text"] or ""))
+    chunk_index = int(match.get("chunk_index", 0))
+    context = chunks[max(0, chunk_index - 1):chunk_index + 2]
+    if not context:
+        return match
+
+    return {
+        **match,
+        "full_text": "\n\n".join(str(chunk["text"]) for chunk in context),
+        "context_unit_keys": [str(chunk["unit_key"]) for chunk in context],
+    }
+
+
+def _expand_neighbor_context(match: dict) -> dict:
+    corpus = str(match.get("corpus", ""))
+    if corpus in {"modern_literary", "archaic_literary"}:
+        return _expand_literary_neighbors(match)
+    if corpus == "wikipedia":
+        return _expand_wikipedia_neighbors(match)
+    return match
+
+
+def _apply_context_cap(track: str, matches: list[dict]) -> list[dict]:
+    from .enrichment import SOURCE_CHAR_CAPS
+
+    char_cap = int(SOURCE_CHAR_CAPS.get(track, 110_000))
+    total = 0
+    selected: list[dict] = []
+    seen_contexts: set[tuple] = set()
+
+    for match in matches:
+        full_text = str(match.get("full_text") or match.get("text") or "")
+        if not full_text.strip():
+            continue
+        context_key = (
+            str(match.get("corpus", "")),
+            str(match.get("parent_key", "")),
+            tuple(match.get("context_unit_keys", []) or [str(match.get("unit_key", ""))]),
+        )
+        if context_key in seen_contexts:
+            continue
+
+        if not selected and len(full_text) > char_cap:
+            trimmed = {**match, "full_text": full_text[:char_cap], "text": full_text[:char_cap]}
+            selected.append(trimmed)
+            break
+
+        if total + len(full_text) > char_cap:
+            continue
+
+        selected.append({**match, "text": full_text})
+        total += len(full_text)
+        seen_contexts.add(context_key)
+
+    return selected
+
+
+def _search_archaic_metadata(
+    bucket_a_phrases: list[str],
+    bucket_b_keywords: set[str],
+    *,
+    limit: int,
+) -> list[dict]:
+    candidates = _search_literary_candidates(
+        bucket_a_phrases,
+        bucket_b_keywords,
+        corpus="archaic_literary",
+        candidate_k=limit,
+    )
+    return [
+        {
+            **candidate,
+            "dense_score": 0.0,
+            "prior_weight": 1.0,
+            "final_score": 0.0,
+        }
+        for candidate in candidates[:limit]
+    ]
+
+
+def search_sources(
+    query: str | Path,
+    *,
+    track: str,
+    strategy: str = "unified_dense",
+    limit: int = 10,
+    candidate_k_per_corpus: int = 30,
+) -> list[dict]:
+    """Unified source search entry point for compile-layer retrieval."""
+    if strategy == "archaic_metadata":
+        bucket_a_phrases, bucket_b_keywords, _ = _prepare_query(query, track)
+        return _apply_context_cap(
+            track,
+            _search_archaic_metadata(
+                bucket_a_phrases,
+                bucket_b_keywords,
+                limit=limit,
+            ),
+        )
+    if strategy == "modern_dense_section":
+        strategy = "unified_dense"
+    if strategy != "unified_dense":
+        raise ValueError(f"Unsupported search_sources strategy: {strategy}")
+
+    bucket_a_phrases, bucket_b_keywords, dense_query = _prepare_query(query, track)
+    if not dense_query.strip():
+        return []
+
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = [
+            executor.submit(
+                _dispatch_corpus_search,
+                corpus,
+                bucket_a_phrases=bucket_a_phrases,
+                bucket_b_keywords=bucket_b_keywords,
+                dense_query=dense_query,
+                track=track,
+                candidate_k_per_corpus=candidate_k_per_corpus,
+            )
+            for corpus in _CORPORA
+        ]
+        merged: list[dict] = []
+        for future in futures:
+            merged.extend(future.result())
+
+    merged.sort(
+        key=lambda row: (
+            -float(row.get("final_score", 0.0)),
+            -float(row.get("dense_score", 0.0)),
+            float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
+            str(row.get("unit_key", "")),
+        )
+    )
+    expanded = [_expand_neighbor_context(match) for match in merged[:max(limit * 3, limit)]]
+    capped = _apply_context_cap(track, expanded)
+    return capped[:limit]
 
 
 # ── FTS5 search functions (prose) ───────────────────────────────
@@ -205,7 +875,7 @@ def search_textbooks(
     *,
     track: str | None = None,
 ) -> list[dict]:
-    """Search textbook chunks via FTS5.
+    """Deprecated chunk-level FTS5 textbook search kept for backward compatibility.
 
     Filters out TOC pages and short noise chunks before returning.
     Requests extra rows from FTS5 to compensate for filtered-out noise.
@@ -362,7 +1032,7 @@ def search_external(
 
 
 def search_literary(ukr_keywords: set[str], max_total: int = 20) -> list[dict]:
-    """Search literary texts via FTS5."""
+    """Deprecated chunk-level literary FTS5 search kept for backward compatibility."""
     rows = _fts_search("literary_fts", "literary_texts", ukr_keywords, max_total)
     for r in rows:
         r["_kw_score"] = _kw_score(r.get("text", ""), r.get("title", ""), ukr_keywords)

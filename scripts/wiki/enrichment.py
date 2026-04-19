@@ -11,13 +11,7 @@ and cross-references to build a rich context for wiki article compilation.
 import yaml
 
 from .channels import rank_external_hits as apply_channel_ranking
-from .config import PROJECT_ROOT
-
-# ── Core track textbook source mappings ───────────────────────
-# Maps core tracks to textbook JSONL files (Ukrainian language only).
-# Same approach as seminar tracks use literary JSONLs.
-# All files searched — keyword relevance scoring picks the right chunks.
-CORE_TRACKS = {"a1", "a2", "b1", "b2", "c1", "c2"}
+from .config import CURRICULUM_DIR, PROJECT_ROOT
 
 SOURCE_CHAR_CAPS = {
     # A1 bumped 45_000 → 60_000 on 2026-04-18 after smoke-test showed
@@ -192,77 +186,32 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
         all_chunks.append({**chunk, "_kw_score": 100, "source_type": _chunk_source_type(chunk)})
     discovery_count = len(all_chunks)
 
-    # Extract Ukrainian keywords from discovery for searching
-    # (the slug is Latin transliteration — useless for searching Ukrainian text)
-    ukr_keywords = _extract_ukrainian_keywords(sources_info)
+    # 2. Unified dense retrieval across all dense-indexed corpora.
+    discovery_path = CURRICULUM_DIR / track / "discovery" / f"{slug}.yaml"
+    if discovery_path.exists():
+        from .sources_db import search_sources
 
-    # 2. Core tracks: search textbooks via FTS5 database, grade-filtered
-    #    per track (A1 → Grade 1-2, A2 → 1-4, ...). Without this filter,
-    #    A1 articles were being compiled with Grade 5-10 morphology
-    #    textbook chunks — pedagogically wrong and a direct cause of
-    #    source_grounding MISATTRIBUTION findings (2026-04-18 smoke test).
-    if track in CORE_TRACKS and ukr_keywords:
-        from .sources_db import search_textbooks
-        tb_chunks = search_textbooks(ukr_keywords, max_total=40, track=track)
-        if tb_chunks:
-            print(f"  📖 +{len(tb_chunks)} textbook chunks ({len(ukr_keywords)} keywords, {track}-filtered)")
-            all_chunks.extend(tb_chunks)
+        unified_hits = search_sources(
+            discovery_path,
+            track=track,
+            strategy="unified_dense",
+            limit=10,
+        )
+        if unified_hits:
+            print(f"  🔎 +{len(unified_hits)} unified dense sources ({track})")
+            all_chunks.extend(unified_hits)
 
-    # 3. Seminar + folk tracks: search ALL literary texts via FTS5
-    if track not in CORE_TRACKS and ukr_keywords:
-        from .sources_db import search_literary
-        lit_chunks = search_literary(ukr_keywords, max_total=40)
-        if lit_chunks:
-            print(f"  📚 +{len(lit_chunks)} literary chunks ({len(ukr_keywords)} keywords)")
-            all_chunks.extend(lit_chunks)
-
-    # 4. Also search textbooks for seminar tracks (folk content appears in textbooks too)
-    if track not in CORE_TRACKS and ukr_keywords:
-        from .sources_db import search_textbooks
-        tb_chunks = search_textbooks(ukr_keywords, max_total=20)
-        if tb_chunks:
-            print(f"  📖 +{len(tb_chunks)} textbook chunks (cross-search)")
-            all_chunks.extend(tb_chunks)
-
-    # 5. Wikipedia — for ALL tracks (factual grounding)
-    if ukr_keywords:
-        from .sources_db import search_wikipedia
-        wiki_chunks = search_wikipedia(ukr_keywords, max_total=10)
-        if wiki_chunks:
-            print(f"  🌐 +{len(wiki_chunks)} Wikipedia articles ({len(ukr_keywords)} keywords)")
-            all_chunks.extend(wiki_chunks)
-
-    # 6. Local data enrichment
+    # 3. Local data enrichment
     local_chunks = _load_local_data(track, slug)
     if local_chunks:
         print(f"  📄 +{len(local_chunks)} chunks from local data")
         all_chunks.extend(local_chunks)
 
-    # 7. External resources — explicit YAML mappings (URL-matched)
+    # 4. External resources — explicit YAML mappings (URL-matched)
     ext_chunks = _load_external_resources(track, slug)
-    mapped_urls: set[str] = set()
     if ext_chunks:
         print(f"  🌐 +{len(ext_chunks)} external reference sources (mapped)")
         all_chunks.extend(ext_chunks)
-        # Collect URLs to avoid duplicates in keyword search
-        for c in ext_chunks:
-            url = str(c.get("url", "")).strip()
-            if url:
-                mapped_urls.add(url)
-
-    # 8. External articles — FTS5 search (deduped against YAML-mapped URLs)
-    if ukr_keywords:
-        from .sources_db import search_external
-        ext_kw_chunks = search_external(
-            ukr_keywords,
-            max_total=10,
-            exclude_urls=mapped_urls,
-            min_quality_tier=2,
-            track=track,
-        )
-        if ext_kw_chunks:
-            print(f"  🌐 +{len(ext_kw_chunks)} external articles (keyword-matched)")
-            all_chunks.extend(ext_kw_chunks)
 
     if not all_chunks:
         print(f"  ⚠️  No source material found for {track}/{slug}")

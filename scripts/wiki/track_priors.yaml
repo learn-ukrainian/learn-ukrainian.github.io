@@ -1,0 +1,12 @@
+# Per-track corpus priors. Multiplicative weights on cosine scores.
+# Tune after #1340 validation. These are starting values.
+a1:   {textbook: 1.0, modern_literary: 0.3, archaic_literary: 0.1, external: 0.5, wikipedia: 0.2}
+a2:   {textbook: 1.0, modern_literary: 0.4, archaic_literary: 0.1, external: 0.6, wikipedia: 0.3}
+b1:   {textbook: 0.9, modern_literary: 0.5, archaic_literary: 0.2, external: 0.7, wikipedia: 0.4}
+b2:   {textbook: 0.8, modern_literary: 0.7, archaic_literary: 0.3, external: 0.6, wikipedia: 0.4}
+c1:   {textbook: 0.5, modern_literary: 1.0, archaic_literary: 0.7, external: 0.4, wikipedia: 0.5}
+c2:   {textbook: 0.3, modern_literary: 1.0, archaic_literary: 0.9, external: 0.3, wikipedia: 0.5}
+hist: {textbook: 0.5, modern_literary: 0.8, archaic_literary: 1.0, external: 0.4, wikipedia: 0.6}
+lit:  {textbook: 0.4, modern_literary: 1.0, archaic_literary: 1.0, external: 0.3, wikipedia: 0.4}
+ruth: {textbook: 0.3, modern_literary: 0.7, archaic_literary: 1.0, external: 0.2, wikipedia: 0.5}
+oes:  {textbook: 0.2, modern_literary: 0.5, archaic_literary: 1.0, external: 0.1, wikipedia: 0.4}

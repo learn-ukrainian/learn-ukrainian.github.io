@@ -106,6 +106,13 @@ def build_literary_row(
                 f"{entry.get('chunk_id', f'lit-{source_file}-{chunk_index}')}; using source_file"
             )
 
+    raw_language_period = entry.get("language_period")
+    if not raw_language_period and warn is not None:
+        warn(
+            f"  ⚠️  {source_file}: missing language_period for chunk "
+            f"{entry.get('chunk_id', f'lit-{source_file}-{chunk_index}')}; defaulting to modern"
+        )
+
     return (
         str(entry.get("chunk_id", f"lit-{source_file}-{chunk_index}") or f"lit-{source_file}-{chunk_index}"),
         str(entry.get("section_title", entry.get("title", "")) or ""),
@@ -116,7 +123,7 @@ def build_literary_row(
         work_to_id(work),
         _coerce_year(entry.get("year")),
         str(entry.get("genre", "") or ""),
-        normalize_language_period(entry.get("language_period")),
+        normalize_language_period(raw_language_period or "modern"),
         len(str(entry.get("text", "") or "")),
     )
 
