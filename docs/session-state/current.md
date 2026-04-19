@@ -1,4 +1,32 @@
-# Session Handoff — 2026-04-19 late afternoon (#1345 closed · L1-UK pivot question refined · #1338 ready)
+# Session Handoff — 2026-04-19 late afternoon (#1345 closed · L1-UK pivot IS real · #1338 ready)
+
+## ⚠️ CORRECTION to the "L1-UK pivot status" section below
+
+**The tri-agent discussion reached the wrong conclusion.** Both Codex and Gemini claimed "the wiki compile layer already emits Ukrainian articles." **This is false for A1 pedagogy wiki.** Direct inspection:
+
+- `wiki/pedagogy/a1/sounds-letters-and-hello.md` body is **English prose** with Ukrainian metalanguage/examples sprinkled in. Section headings are bilingual (`## Методичний підхід (Methodological Approach)`) but explanatory text is English.
+- `scripts/wiki/prompts/compile_pedagogy_brief.md:3` — "compiling a **pedagogical brief**... for **English-speaking teens and adults**"
+- Line 103: "**English-speaker focused.** Frame advice through what an English speaker expects vs what Ukrainian actually does"
+
+**So the L1-Ukrainian-first wiki proposal IS a real pivot**, not a prompt-engineering question. Codex and Gemini both mistakenly read Ukrainian terminology embedded in the prompt + output as evidence of Ukrainian-language output.
+
+What's still correct from the discussion:
+- `l2-uk-direct` as the proper home for a Ukrainian-only immersion track (NOT a new `l1-uk/` tree)
+- A2.9 Metalanguage Bridge already built (6 modules, don't re-design)
+- Adjusted 8-article A/B scope (+ vocab, + syntax, + one A2.9 module)
+- Blinded review, identical retrieval, two-batch confirmation rule
+- Risk of A1/A2 writer over-shifting into Ukrainian technical prose (violates English-scaffolding contracts in `scripts/config.py:215,231,311,391`)
+
+What needs re-discussion (next session, with sharper brief showing the actual A1 wiki article as evidence):
+- The real pipeline impact map if compile prompts switch from English-scaffolded-Ukrainian-about-Ukrainian to pure Ukrainian
+- Whether the writer-layer A/B can be run against the CURRENT English wiki (control) vs a rebuilt Ukrainian wiki (treatment)
+- Or whether we need to rebuild the canary article in Ukrainian first, then test both writers on it
+
+**Rest of this handoff is otherwise accurate.** The narrower interpretation below is wrong; the real pivot is on the table.
+
+---
+
+
 
 You're resuming (or starting cold). Boot via the API, not the filesystem:
 
