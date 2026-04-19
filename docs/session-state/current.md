@@ -1,188 +1,132 @@
-# Session Handoff — 2026-04-19 late afternoon (#1345 closed · L1-UK pivot IS real · #1338 ready)
+# Session Handoff — 2026-04-19 night → 2026-04-20 morning
 
-## ⚠️ CORRECTION to the "L1-UK pivot status" section below
+You went to sleep. Here's where things stand and what's running.
 
-**The tri-agent discussion reached the wrong conclusion.** Both Codex and Gemini claimed "the wiki compile layer already emits Ukrainian articles." **This is false for A1 pedagogy wiki.** Direct inspection:
+## TL;DR — the single plan
 
-- `wiki/pedagogy/a1/sounds-letters-and-hello.md` body is **English prose** with Ukrainian metalanguage/examples sprinkled in. Section headings are bilingual (`## Методичний підхід (Methodological Approach)`) but explanatory text is English.
-- `scripts/wiki/prompts/compile_pedagogy_brief.md:3` — "compiling a **pedagogical brief**... for **English-speaking teens and adults**"
-- Line 103: "**English-speaker focused.** Frame advice through what an English speaker expects vs what Ukrainian actually does"
+- Staged dispatch of #1348 to Codex overnight: **(a) MLX bridge done → (b) manifest storage IN PROGRESS → (c) retrieval rewire → (d) tests + ADR + cold-encode script → (e) actual cold encode of 157K units on your Mac**
+- **Stage (e) runs tonight if and only if (a)–(d) all land clean.** Revised from an earlier draft of the plan which wrongly postponed the cold encode.
+- If anything crashes: shards already written survive, manifest up to date, clear resume command in this file.
+- You wake up to either: fully indexed 157K-unit dense corpus, OR a clean partial state with exact resume instructions. Not to a frozen machine.
 
-**So the L1-Ukrainian-first wiki proposal IS a real pivot**, not a prompt-engineering question. Codex and Gemini both mistakenly read Ukrainian terminology embedded in the prompt + output as evidence of Ukrainian-language output.
+## Why running the cold encode overnight is safe now (vs. why the first attempt crashed)
 
-What's still correct from the discussion:
-- `l2-uk-direct` as the proper home for a Ukrainian-only immersion track (NOT a new `l1-uk/` tree)
-- A2.9 Metalanguage Bridge already built (6 modules, don't re-design)
-- Adjusted 8-article A/B scope (+ vocab, + syntax, + one A2.9 module)
-- Blinded review, identical retrieval, two-batch confirmation rule
-- Risk of A1/A2 writer over-shifting into Ukrainian technical prose (violates English-scaffolding contracts in `scripts/config.py:215,231,311,391`)
+First attempt (pre-smoke-test): `SECTION_BATCH_SIZE=128` + variable-length inputs up to 484K chars + PyTorch MPS + FlagEmbedding autocast fp16 → 8–12 GB memory spike per batch → machine hang.
 
-What needs re-discussion (next session, with sharper brief showing the actual A1 wiki article as evidence):
-- The real pipeline impact map if compile prompts switch from English-scaffolded-Ukrainian-about-Ukrainian to pure Ukrainian
-- Whether the writer-layer A/B can be run against the CURRENT English wiki (control) vs a rebuilt Ukrainian wiki (treatment)
-- Or whether we need to rebuild the canary article in Ukrainian first, then test both writers on it
+Now:
+- MLX fp16 end-to-end (no autocast parallel-path overhead) — measured peak 1,760 MB vs PyTorch MPS 3,098 MB on the same 100-text smoke sample
+- Token-budget batching: `max_rows=16` OR `max_tokens=4096`, whichever binds first (not fixed 128 rows)
+- `mx.metal.set_memory_limit(int(recommended_max_working_set * 0.7))` hard cap — prevents the allocator from reaching system-wide memory pressure
+- `mx.metal.clear_cache()` + `gc.collect()` between every batch
+- Child-process encoder isolation: parent kills child on OOM, halves batch, retries (max 3 before giving up)
+- Shard checkpointing per source_file / per 5K-unit group: each shard atomically committed (tmp → fsync → rename → SQLite transaction) so crash at unit 80,000 loses at most the one in-flight shard (~1 min of work)
+- Fallback: `EMBED_FRAMEWORK=pytorch_mps` env var reverts to FlagEmbedding path if MLX path has issues
 
-**Rest of this handoff is otherwise accurate.** The narrower interpretation below is wrong; the real pivot is on the table.
+Risk is bounded. If the encode crashes, you wake up to a partial state, NOT a frozen Mac.
 
----
+## Chain state (what's in git right now)
 
-
-
-You're resuming (or starting cold). Boot via the API, not the filesystem:
-
-```bash
-curl -s http://localhost:8765/api/state/manifest
-curl -s http://localhost:8765/api/orient
-curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'
-```
-
-## TL;DR
-
-Three things happened since the morning handoff:
-
-1. **#1345 bakeoff closed** (8-task Codex chain, zero OOM after initial parallel-dispatch correction). Verdict: `BAAI/bge-m3` for #1338 T1-T2; metadata-first locked for #1341 T3-T4. Qwen3 parked in #1346.
-
-2. **You proposed a "crazy idea" on your bike ride**: build the canonical wiki in Ukrainian, publish dual tracks (English-scaffolded A1/A2 + Ukrainian-only immersion for B1+). Tri-agent discussion revealed the idea is **narrower than it seemed** — see "L1-UK pivot status" below.
-
-3. **#1338 prompt is still ready to dispatch** at `/tmp/codex-1338-prompt-DRAFT.md`. Retrieval rebuild is orthogonal to the L1-UK question.
-
-## L1-UK pivot status (read this — key reframe)
-
-Tri-agent discussion (`architecture` channel, thread `90555b6ee066`, full text at `orchestration/discussions/2026-04-19-l1-uk-wiki-pivot.md`) ended with Gemini + Codex both [AGREE], Claude's responses failed due to a bridge bug (no actual disagreement). Codex's main correction:
-
-> **"The wiki compile layer already emits Ukrainian articles, not English briefs."**
-
-Evidence: `scripts/wiki/prompts/compile_article.md:45`, `compile_pedagogy_brief.md:41`, `compile_grammar_brief.md:41`, `compile_academic.md:79` — all require Ukrainian output today.
-
-**So "build wiki in Ukrainian" is NOT a pivot. It's already the case.**
-
-The real variable under test is the **A1/A2 writer layer** (`scripts/build/phases/v6-write.md`). It currently consumes Ukrainian wiki briefs and produces English-scaffolded MDX modules. The genuine question is whether changing the writer's **prompt framing** (e.g. "paraphrase this Ukrainian brief into English scaffolding preserving Ukrainian metalanguage where pedagogically appropriate") produces measurably better modules than current behavior.
-
-This is a **prompt engineering + audit question**, not an architecture rebuild.
-
-### What NOT to do
-
-- **Don't create `l1-uk/`** as a new publish root. The repo already has `l2-uk-direct` architecture (`docs/architecture/ARCHITECTURE.md:167`, `scripts/build/build_module_direct.py`) for the no-English case. If we want a published immersion track later, that's the proper home — a separate migration, not coupled to this experiment.
-- **Don't couple the writer A/B to any publish/routing changes.** `l2-uk-en` is hardcoded in 4+ places (`scripts/build/v6_build.py:428`, `scripts/manifest_utils.py:36`, `scripts/generate_landing_pages.py:20`, `scripts/paths.py:18`). Changing roots is a separate project.
-- **Don't rebuild what's already built.** A2.9 Metalanguage Bridge (6 modules, sequence 61–66) is already designed and grounded in Заболотний + Литвінова. Don't re-design it.
-
-### Adjusted A/B test (8 articles, from the discussion)
-
-Expand your original 6 to 8 per Gemini's + Codex's push:
-
-| # | Module | Why |
-|---|---|---|
-| 1 | A1/M01 | early literacy, concrete |
-| 2 | A1/M02 | early literacy |
-| 3 | A1/M03 | early literacy |
-| 4 | A1 mid — case intro (accusative or nominative) | morphology |
-| 5 | A1 late — verb aspect intro | abstract |
-| 6 | A1 or A2 — one vocabulary module (daily routines, shopping) | lexical, Gemini's add |
-| 7 | A2 grammar-heavy (conditional mood or instrumental) | syntax/morphology |
-| 8 | One A2.9 metalanguage module (pick from metalanguage-phonetics, metalanguage-morphology, etc.) | immersion handoff stress test, Codex's add |
-
-Protocol:
-- **Identical retrieval** between A arm and B arm (same wiki sources, same query construction)
-- **Blinded review** — reviewer does not know which arm
-- Compare on the 4-dim scores used for wiki review, OR design a consistent module reviewer (wiki review is 4-dim; learner module review is 9-dim — measurement gap to resolve before the A/B)
-- **Two-batch confirmation** — if canary wins twice, discuss architecture. Until then, no published-tree changes.
-
-### Key risk the A/B must test for
-
-Codex flagged: A1/A2 writer could "over-shift into Ukrainian technical prose" when primed with Ukrainian briefs, violating the English-scaffolding contracts in `scripts/config.py:215, 231, 311, 391`. This is the failure mode the test design must surface.
-
-## Chain status
-
-| # | Title | State | Next step |
+| # | Title | State | Commit / evidence |
 |---|---|---|---|
-| **#1338** | T1-T2 retrieval pipeline | ⏸️ waiting | **Dispatch next** — split into 6 sub-tasks per the plan agreed pre-bike. Prompt draft at `/tmp/codex-1338-prompt-DRAFT.md`. BGE-M3 locked. |
-| #1340 | Re-validate #1330 | ⏸️ gated on #1338 | — |
-| #1341 | T3-T4 archaic retrieval | ⏸️ **deferred** | User's call: close as "deferred until better archaic retrieval tech (sovereign UK LLM, historical-Slavic fine-tunes). Revisit 2026 Q3 or earlier if candidate emerges." Don't ship weak T3-T4 to lock in mediocrity. |
-| #1342 | Doc updates | ⏸️ last | — |
-| #1344 | Replace Phase A canary | ⏸️ gated on #1338 | Plan audit posted to issue |
-| **#1345** | Bakeoff + rerankers | ✅ **closed** | BGE-M3 wins, metadata-first confirmed |
-| #1346 | Qwen3 CPU/smaller-batch parked | open | Conditional reopen only |
-| #1335 | EPIC tracker | open | Closes when #1338/#1340/#1342 all done |
+| #1338 | original textbook-only scope | ✅ closed as superseded | — |
+| #1347 | literary metadata restoration | ✅ done | `2824b3b70` — 137,688 rows, period distribution correct, SHA256 text immutability verified |
+| #1348 | full-corpus dense retrieval (MLX + hybrid) | 🔄 in progress | stages below |
+| #1348 stage (a) — MLX encoder + subprocess bridge | ✅ done | `428be007b` — parity min cosine 0.999998, mean 0.999999, top-5 overlap 20/20; `embed-venv/` 719 MB gitignored |
+| #1348 stage (b) — embedding manifest + storage | 🔄 running | dispatched 22:32 (Codex PID 47802) |
+| #1348 stage (c) — retrieval rewire | ⏸ queued | blocks on (b) |
+| #1348 stage (d) — tests + cold-encode script + ADR-006 revision | ⏸ queued | blocks on (c) |
+| #1348 stage (e) — cold encode of full 157K corpus | ⏸ queued | blocks on (d); runs on user's Mac |
 
-### The writer A/B — open question
+## What's happening while you sleep
 
-New work item implied by today's discussion. Consider filing as its own GH issue:
+Tonight, sequentially:
 
-> **Issue title**: "A/B test: writer prompt framing for Ukrainian-brief → English-scaffolded A1/A2 output"
-> Scope: 8-article canary per the table above. Measurement: consistent reviewer (pick 4-dim wiki-style OR 9-dim module-style, not both). Blinded. Identical retrieval. Two-batch confirmation rule.
-> Blocked on: #1338 (so the retrieval feeding both arms is actually working).
+1. **Monitor fires when stage (b) finishes.** I verify the commit + tests green, then dispatch stage (c).
+2. **Stage (c)** (estimated 30–60 min Codex time): rewire `scripts/wiki/dense_rerank.py` + `scripts/wiki/enrichment.py` + `scripts/wiki/sources_db.py::search_sources` for multi-corpus dispatch, per-track priors via `scripts/wiki/track_priors.yaml`.
+3. **Stage (d)** (estimated 30–60 min Codex time): write the `scripts/wiki/cold_encode.py` entry-point script, full test suite, ADR-006 revision.
+4. **Stage (e) — run cold encode on your Mac.** This is the one local-execution step. Logged to `logs/cold_encode_2026-04-20_HHMMSS.jsonl`. Expected runtime ~2 hours. I watch for OOM / timeout / error via Monitor on the JSONL event stream.
 
-I recommend filing it but holding dispatch until #1338 + #1340 are green (so the baseline "current pipeline works end-to-end" exists).
+Estimated completion: stages (a)–(d) done by ~01:00, cold encode done by ~03:00. If Codex stages take longer than estimated, cold encode gets pushed back or postponed.
 
-## Codex chain summary — what shipped today
+## What I will NOT do tonight
 
-| SHA | Task | What |
-|---|---|---|
-| `c7d429d07` | #1345-A | Sequential lockfile + reranker harness skeleton + HF_TOKEN wiring |
-| `8f5d753c8` | #1345-B | jina-v3 full 1000-sample — smoke didn't hold, archaic collapsed |
-| `87d7a454f` | #1345-F | BGE-reranker-v2-m3 full — lifts modern FTS5 +0.33 R@10, no archaic help |
-| `0101ce36e` | #1345-G | jina-reranker-v2 — essentially ties BGE-reranker |
-| `b32033f46` | #1345-C | e5-large-instruct — 512-tok cap, 2020/3048 passages truncated |
-| `3f57300dc` | #1345-D | gte-multilingual-base — fastest (246s), weakest on archaic |
-| `2e7bda11e` | #1345-E | EmbeddingGemma-300M — shockingly weak on Ukrainian (0.03 R@10 modern) |
-| `089e6e459` | #1345-H | Survey doc refresh + verdict + #1345 closed |
+- Touch any `text` column in any source table (archaic text stays verbatim)
+- Modify `curriculum/`, `plans/`, `orchestration/`
+- Dispatch stage (e) cold encode if ANY prior stage failed validation
+- Retry a failed stage more than once
+- Run content builds (`v6_build.py`) — not in scope
+- Decide any new architectural trade-offs without measured evidence
 
-## Plus my own commits today
+## Hard constraints the Codex dispatches respect (baked into each stage prompt)
 
-| SHA | What |
-|---|---|
-| `d110b741d` | rebuild orchestrator + plan doc |
-| `a613f9b82` | dim-review taxonomy + A1 char cap + registry invariant |
-| `5e0b0bd47` | autocompact 650k → 750k |
-| `0ce8d5b7e` | Phase A canary deprecated (#1344) |
-| `c9707dc00` | statusline context % |
-| `249ab34fe` | statusline subscription-oriented (dropped $cost) |
-| `549cefacb` | Gemini rebuild-plan review encoded |
-| `74ab96e3b`, `6deab3faf` | earlier handoffs (this supersedes) |
+- `.venv/bin/python` / `.venv/bin/ruff` / `.venv/bin/pytest` — never bare `python`
+- `git add` allow-list only — no `-A` / `-u`
+- Each stage is one commit on `main`, with the issue number in the message
+- Do not close #1348 until stage (d) completes
+- Verify with ruff + pytest before commit
+- Never touch files outside the explicit allow-list for the stage
 
-## Issues updated
+## Resume commands (if you wake up to a partial state)
 
-| # | Action |
-|---|---|
-| #1336, #1337, #1339 | closed earlier |
-| #1343 | closed (Codex claimed closure but hadn't) |
-| #1332 | closed (superseded by ADR-006) |
-| #1345 | **closed with full verdict** |
-| #1344 | curriculum-plan audit posted as comment |
-| #1346 | newly opened (Qwen3 parked follow-up) |
+**If stages (a)–(d) completed but (e) did not run or crashed mid-run:**
+```bash
+# Verify the manifest is consistent
+.venv/bin/python -c "from scripts.wiki.embedding_manifest import EmbeddingManifest; print(EmbeddingManifest().stats())"
 
-**Today's total on main: 36 commits** (34 + this handoff + discussion archive).
-
-## Env / infra recap
-
-- HF_TOKEN ✅ in `~/.bash_secrets`, sourced by bash login shells
-- Autocompact 750k (picked up on fresh session launch)
-- `CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000`, `CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS=32000` confirmed correct
-- Statusline works; shows `[ctx: N%]` with color coding + `[5h/7d: N%]` when elevated
-- Bridge bug noticed: `ab discuss` fails for claude because pinned context gets passed as CLI flags. File as a small issue if not already known; Gemini + Codex work fine.
-
-## Git dirty state (unchanged — do not touch)
-
-```
-?? wiki/.reviews/pedagogy/a1/sounds-letters-and-hello.json
-?? wiki/pedagogy/a1/   (sounds-letters-and-hello.md + .sources.yaml)
+# Resume cold encode — picks up from the last checkpoint
+.venv/bin/python scripts/wiki/cold_encode.py --all-corpora --resume
 ```
 
-Phase 0 smoke artifacts — known-REJECT under old retrieval. Wait for #1338 → #1340 → clean Phase 0 re-run.
+**If stages (a)–(b) done and (c) or (d) failed:**
+```bash
+# See which stages landed
+git log --oneline main -10 | grep "#1348 stage"
 
-## Gemini reviews archived today
+# For each missing stage, the dispatch prompts are at:
+ls /tmp/codex-1348-stage-*.md
+```
 
-- `review-wiki-rebuild-plan` (msg #391) — 3 findings encoded in `549cefacb`
-- `review-1338-prompt` (msg #393) — 4 findings encoded in draft prompt
-- Tri-agent discussion archived at `orchestration/discussions/2026-04-19-l1-uk-wiki-pivot.md`
+**If you need to start the cold encode yourself** (e.g. I was unable to get stages through by wake-up):
+```bash
+EMBED_FRAMEWORK=mlx .venv/bin/python scripts/wiki/cold_encode.py --all-corpora 2>&1 | tee logs/cold_encode_$(date +%Y-%m-%d_%H%M%S).jsonl
+```
 
-## What to do first on resume
+## Key measured evidence (from 2026-04-19 smoke test on your Mac)
 
-1. **Read this handoff + `orchestration/discussions/2026-04-19-l1-uk-wiki-pivot.md`** (has the full discussion text — 134 lines)
-2. Decide: dispatch #1338 now? Or also file the writer-A/B issue first so it's on the tracker?
-3. Consider closing #1341 as "deferred pending better archaic retrieval" if you agree with that call
-4. Re-arm Monitor watcher when you dispatch #1338 (snippet in previous handoffs)
+| Framework | Warm load | Encode 100 texts × batch=8 | Peak RSS | Parity vs canonical BGE-M3 |
+|---|---|---|---|---|
+| MLX fp16 + manual CLS-pooling | 2.62s | 19.88s | 1,760 MB | cosine=1.00000, 100% top-5 overlap |
+| PyTorch MPS + FlagEmbedding fp16 | 9.81s | 20.77s | 3,098 MB | reference |
+| MLX 8bit | — | 20.61s | 1,516 MB (−12%) | cosine=0.99964, 99% top-5 overlap — rejected, too much quality loss |
 
-## Monitor state
+fp16 vs fp32 on modern AND archaic: cosine ≥ 0.99998, 100% top-5 overlap → fp16 is sufficient everywhere.
 
-Monitor watcher already stopped (chain done). Re-arm per snippet in previous handoff when dispatching #1338 sub-tasks.
+## Infra + process notes
+
+- **MLX community port quirk**: `mlx-community/bge-m3-mlx-fp16` is missing `1_Pooling/config.json`. The library defaults to mean-pooling → wrong vectors (cosine 0.68). Manual CLS-pooling is mandatory, baked into the stage (a) encoder script.
+- **Dependency isolation**: MLX requires `transformers≥5.0.0`; main venv has 4.57.6 (FlagEmbedding/peft/sentence-transformers/marker-pdf/surya-ocr depend on 4.x). MLX lives in `embed-venv/` (project root, gitignored) and is called via subprocess bridge.
+- **Manifest DB location**: `data/embeddings/manifest.db` — separate SQLite file, NOT a table in `sources.db`. Reason: `scripts/wiki/build_sources_db.py:382` deletes sources.db on rebuild; putting embedding tables there would orphan all shards on next rebuild.
+- **Archaic text is encoded verbatim**. No orthographic normalization. `ѣ`, `ѳ`, `ъ`-endings stay as-is. Primary-source integrity is non-negotiable.
+
+## Adversarial review archive
+
+Full 2026-04-19 discussion: `architecture` channel thread `dacd16a8b81b4d09`. Gemini + Codex caught 13 real bugs in the initial ticket drafts before they were filed. All 13 applied. Specific wins:
+
+- Codex: schema migration must start in the builder (ALTER on already-built DB gets wiped on rebuild)
+- Codex: `language_period` canonical value is `'modern'` not `'modern_literary'` (source JSONLs verified)
+- Gemini: `np.concatenate(mmap'd arrays)` defeats mmap — use per-shard dict routing instead
+- Gemini: `gc.collect()` doesn't free MLX Metal cache — `mx.metal.clear_cache()` is mandatory
+- Both agreed: keep archaic text untouched at encoding time; normalize only at QUERY time if needed at all
+
+Saved: `batch_state/tasks/review-1338v2.result` (Codex), `/tmp/review-gemini.md` (Gemini).
+
+## Files left untouched (by design)
+
+- `docs/session-state/2026-04-19-l1-uk-evidence-brief.md` — L1-UK pivot roadmap, orthogonal to this thread
+- `docs/session-state/2026-04-19-evening.md` — previous handoff, archived
+- `wiki/.reviews/pedagogy/a1/sounds-letters-and-hello.json`, `wiki/pedagogy/a1/*` — Phase 0 smoke artifacts known-REJECT under old retrieval; will be rebuilt after #1348 lands
+- Pre-existing uncommitted work from earlier sessions (`scripts/wiki/dense_rerank.py`, `scripts/wiki/query_builder.py`, `tests/wiki/test_*.py`) — integrated by stage (c)
+
+## Bridge bug still open
+
+`ab discuss` fails for Claude because pinned context gets passed as CLI flags. Worked around this session by using `ask-gemini` + `ab post --to codex`. Worth a small follow-up issue if it becomes recurring.
