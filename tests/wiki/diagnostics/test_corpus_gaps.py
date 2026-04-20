@@ -243,3 +243,130 @@ def test_roadmap_generation_orders_priority():
     assert rows[0]["priority"] == "BLOCKER"
     assert any(row["priority"] == "MAJOR" for row in rows)
     assert any(row["priority"] == "MINOR" for row in rows)
+
+
+def test_gap_classification_handles_a1_usage_and_imperative_gaps():
+    coverage_map = {
+        "metadata": {
+            "generated_at": "2026-04-21T00:00:00+00:00",
+            "tracks": ["a1"],
+            "article_count": 3,
+            "concept_count": 3,
+            "absent_concept_count": 3,
+        },
+        "articles": [
+            {
+                "track": "a1",
+                "slug": "please-do-this",
+                "severity_tier": "BLOCKER",
+                "concept_count": 2,
+                "absent_concept_count": 2,
+                "concepts": [
+                    {
+                        "concept": "розрізнення форм «ти» і «ви»",
+                        "variants": ["ти-форма і ви-форма"],
+                        "absent_from_corpus": True,
+                    },
+                    {
+                        "concept": "утворення форми на -й",
+                        "variants": ["додати -й", "основа + й"],
+                        "absent_from_corpus": True,
+                    },
+                ],
+            },
+            {
+                "track": "a1",
+                "slug": "what-time",
+                "severity_tier": "BLOCKER",
+                "concept_count": 1,
+                "absent_concept_count": 1,
+                "concepts": [
+                    {
+                        "concept": "Відповідь про точну годину",
+                        "variants": ["Зараз сьома година."],
+                        "absent_from_corpus": True,
+                    }
+                ],
+            },
+        ],
+    }
+
+    categories = audit.classify_gap_categories(coverage_map)
+    labels = {category["label"] for category in categories}
+    assert "Мовленнєві формули й етикет" in labels
+    assert "Дієслово: вид, час, спосіб" in labels
+    assert "Побутові сценарії та лексичні формули" in labels
+
+
+def test_render_a1_report_markdown_includes_summary_and_sources():
+    article_concepts = {
+        "metadata": {"tracks": ["a1"], "llm_model": "gpt-5.4"},
+        "articles": {
+            "a1/at-the-cafe": {"track": "a1", "slug": "at-the-cafe", "concepts": []},
+            "a1/what-time": {"track": "a1", "slug": "what-time", "concepts": []},
+        },
+    }
+    coverage_map = {
+        "metadata": {
+            "generated_at": "2026-04-21T00:00:00+00:00",
+            "tracks": ["a1"],
+            "article_count": 2,
+            "concept_count": 4,
+            "absent_concept_count": 2,
+        },
+        "articles": [
+            {
+                "track": "a1",
+                "slug": "at-the-cafe",
+                "severity_tier": "BLOCKER",
+                "concept_count": 3,
+                "absent_concept_count": 2,
+                "concepts": [
+                    {
+                        "concept": "ввічливе прохання про меню",
+                        "variants": ["Меню, будь ласка."],
+                        "in_textbooks": False,
+                        "in_external": False,
+                        "absent_from_corpus": True,
+                    },
+                    {
+                        "concept": "замовлення напою",
+                        "variants": ["Я візьму каву."],
+                        "in_textbooks": False,
+                        "in_external": False,
+                        "absent_from_corpus": True,
+                    },
+                    {
+                        "concept": "кафе",
+                        "variants": ["кафе"],
+                        "in_textbooks": True,
+                        "in_external": False,
+                        "absent_from_corpus": False,
+                    },
+                ],
+            },
+            {
+                "track": "a1",
+                "slug": "what-time",
+                "severity_tier": "BLOCKER",
+                "concept_count": 1,
+                "absent_concept_count": 0,
+                "concepts": [
+                    {
+                        "concept": "називання часу",
+                        "variants": ["Зараз друга година."],
+                        "in_textbooks": True,
+                        "in_external": True,
+                        "absent_from_corpus": False,
+                    }
+                ],
+            },
+        ],
+    }
+
+    categories = audit.classify_gap_categories(coverage_map)
+    report = audit.render_a1_report_markdown(article_concepts, coverage_map, categories)
+    assert "# Corpus Coverage Map — A1 Smoke Test" in report
+    assert "## Summary" in report
+    assert "## Priority Ukrainian Sources" in report
+    assert "ввічливе прохання про меню" in report

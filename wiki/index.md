@@ -3,7 +3,7 @@
 Auto-generated index of compiled wiki articles.
 
 **Total articles:** 5
-**Total words:** 9,938
+**Total words:** 9,719
 
 ## Figures
 
@@ -19,7 +19,7 @@ Auto-generated index of compiled wiki articles.
 
 ## Pedagogy
 
-- [Педагогіка A1: Sounds Letters And Hello](pedagogy/a1/sounds-letters-and-hello.md) (1,660 words)
+- [Педагогіка A1: Sounds Letters And Hello](pedagogy/a1/sounds-letters-and-hello.md) (1,441 words)
 
 ## Periods
 

@@ -31,6 +31,7 @@ COVERAGE_MAP_PATH = OUTPUT_DIR / "coverage_map.json"
 GAP_CATEGORIES_PATH = OUTPUT_DIR / "gap_categories.md"
 INGESTION_ROADMAP_PATH = OUTPUT_DIR / "ingestion_roadmap.md"
 DRAFT_TICKETS_DIR = OUTPUT_DIR / "draft_tickets"
+A1_REPORT_PATH = PROJECT_ROOT / "docs" / "architecture" / "corpus-coverage-map-a1.md"
 
 DEFAULT_TRACKS = ("a1", "a2", "b1")
 DEFAULT_MODEL = "gpt-5.4"
@@ -168,6 +169,8 @@ CATEGORY_RULES: tuple[dict[str, Any], ...] = (
         "label": "Відмінки й відмінювання",
         "keywords": {
             "відмінок",
+            "в чи на",
+            "в/у чи на",
             "родов",
             "давальн",
             "знахідн",
@@ -185,13 +188,19 @@ CATEGORY_RULES: tuple[dict[str, Any], ...] = (
         "label": "Дієслово: вид, час, спосіб",
         "keywords": {
             "дієслов",
+            "вчора",
+            "вчорашн",
+            "додати -й",
+            "додати -іть",
             "доконан",
             "недоконан",
             "вид",
             "минулий",
             "майбутн",
-            "теперішн",
+            "на -й",
+            "на -іть",
             "наказов",
+            "теперішн",
             "умовн",
             "рух",
             "інфінітив",
@@ -202,11 +211,16 @@ CATEGORY_RULES: tuple[dict[str, Any], ...] = (
         "slug": "plural-and-agreement",
         "label": "Множина й узгодження",
         "keywords": {
+            "жіночого роду",
+            "інженерка",
             "множин",
+            "назвах осіб",
+            "програмістка",
             "узгоджен",
             "прикметник",
             "займенник",
             "числівник",
+            "чоловічого роду",
             "plural",
         },
         "source_tags": ("morphology", "agreement", "grammar"),
@@ -245,15 +259,23 @@ CATEGORY_RULES: tuple[dict[str, Any], ...] = (
         "slug": "speech-formulas-and-etiquette",
         "label": "Мовленнєві формули й етикет",
         "keywords": {
+            "будь ласка",
             "вітан",
             "діалог",
             "кличн",
             "по батькові",
+            "перепрошую",
+            "офіціант",
             "звертан",
             "етикет",
             "прохання",
             "запрошенн",
             "представлен",
+            "ти-форма",
+            "форми «ти» та «ви»",
+            "форма «ти»",
+            "форма «ви»",
+            "ви-форма",
         },
         "source_tags": ("pedagogy", "etiquette", "usage"),
     },
@@ -262,11 +284,15 @@ CATEGORY_RULES: tuple[dict[str, Any], ...] = (
         "label": "Побутові сценарії та лексичні формули",
         "keywords": {
             "адрес",
+            "блакитн",
             "готівк",
             "дорогу",
+            "гостре",
+            "годин",
             "замовлен",
             "картк",
             "колір",
+            "квартир",
             "ліворуч",
             "меню",
             "напою",
@@ -274,6 +300,7 @@ CATEGORY_RULES: tuple[dict[str, Any], ...] = (
             "прямо",
             "район",
             "рахунок",
+            "синій",
             "страви",
         },
         "source_tags": ("a1-scenarios", "pedagogy"),
@@ -1128,6 +1155,226 @@ def summarize_gap_categories(categories: list[dict[str, Any]], limit: int = 5) -
         f"{category['label']} ({category['affected_article_count']} article(s))"
         for category in categories[:limit]
     ]
+
+
+def render_ratio_bar(numerator: int, denominator: int, width: int = 20) -> str:
+    if denominator <= 0:
+        return "." * width
+    filled = round((numerator / denominator) * width)
+    filled = max(0, min(width, filled))
+    return "#" * filled + "." * (width - filled)
+
+
+def build_article_coverage_rows(coverage_map: dict[str, Any]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for article in coverage_map.get("articles", []):
+        concept_count = int(article.get("concept_count", 0))
+        absent_count = int(article.get("absent_concept_count", 0))
+        covered_count = max(0, concept_count - absent_count)
+        coverage_pct = round((covered_count / concept_count) * 100, 1) if concept_count else 0.0
+        missing_concepts = [
+            concept["concept"]
+            for concept in article.get("concepts", [])
+            if concept.get("absent_from_corpus")
+        ]
+        rows.append(
+            {
+                "track": article["track"],
+                "slug": article["slug"],
+                "concept_count": concept_count,
+                "absent_concept_count": absent_count,
+                "covered_concept_count": covered_count,
+                "coverage_pct": coverage_pct,
+                "coverage_bar": render_ratio_bar(covered_count, concept_count),
+                "missing_concepts": missing_concepts,
+            }
+        )
+    rows.sort(
+        key=lambda item: (
+            -item["absent_concept_count"],
+            item["coverage_pct"],
+            item["slug"],
+        )
+    )
+    return rows
+
+
+def build_presence_breakdown(coverage_map: dict[str, Any]) -> dict[str, int]:
+    counts = {
+        "textbooks_and_external": 0,
+        "textbooks_only": 0,
+        "external_only": 0,
+        "absent_from_both": 0,
+    }
+    for article in coverage_map.get("articles", []):
+        for concept in article.get("concepts", []):
+            in_textbooks = bool(concept.get("in_textbooks"))
+            in_external = bool(concept.get("in_external"))
+            if in_textbooks and in_external:
+                counts["textbooks_and_external"] += 1
+            elif in_textbooks:
+                counts["textbooks_only"] += 1
+            elif in_external:
+                counts["external_only"] += 1
+            else:
+                counts["absent_from_both"] += 1
+    return counts
+
+
+def build_report_source_rows(categories: list[dict[str, Any]], limit: int = 8) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for category in categories:
+        for proposal in select_sources_for_category(category):
+            rows.append(
+                {
+                    "priority": category["severity_tier"],
+                    "gap_category": category["label"],
+                    "affected_article_count": category["affected_article_count"],
+                    "affected_concept_count": category["affected_concept_count"],
+                    "source": f"{proposal.author} — {proposal.title}",
+                    "format": proposal.format,
+                    "license": proposal.license,
+                    "estimated_chunks": round(proposal.estimated_pages * DEFAULT_CHUNKS_PER_PAGE),
+                }
+            )
+    rows.sort(
+        key=lambda item: (
+            SEVERITY_ORDER[item["priority"]],
+            -item["affected_article_count"],
+            -item["affected_concept_count"],
+            item["gap_category"],
+            item["source"],
+        )
+    )
+    return rows[:limit]
+
+
+def render_a1_report_markdown(
+    article_concepts: dict[str, Any],
+    coverage_map: dict[str, Any],
+    categories: list[dict[str, Any]],
+) -> str:
+    metadata = coverage_map.get("metadata", {})
+    article_rows = build_article_coverage_rows(coverage_map)
+    presence = build_presence_breakdown(coverage_map)
+    total_concepts = int(metadata.get("concept_count", 0))
+    absent_concepts = int(metadata.get("absent_concept_count", 0))
+    covered_concepts = max(0, total_concepts - absent_concepts)
+    coverage_pct = round((covered_concepts / total_concepts) * 100, 1) if total_concepts else 0.0
+    cached_a1_concepts = sum(
+        1 for key in article_concepts.get("articles", {}) if key.startswith("a1/")
+    )
+    source_rows = build_report_source_rows(categories)
+
+    lines = [
+        "# Corpus Coverage Map — A1 Smoke Test",
+        "",
+        "## Scope",
+        (
+            "This report summarizes the `#1333` A1 smoke-test slice only: the 23 already-audited A1 articles, "
+            "with seminar tracks excluded."
+        ),
+        (
+            f"`article_concepts.json` currently caches concept derivation for {cached_a1_concepts} A1 discovery files, "
+            f"but the audited coverage slice in `coverage_map.json` remains {metadata.get('article_count', 0)} articles."
+        ),
+        "",
+        "## Method",
+        "- Concept derivation uses Codex judgment only; the prompt and model are recorded in `data/corpus_audit/article_concepts.json` for reproducibility.",
+        "- Corpus presence checks are deterministic: normalized exact-substring matching against `textbooks` and `external_articles`, reusing `normalize_text` from `#1330` for apostrophes and OCR cleanup.",
+        "- No LLM fuzzy matching is used for presence checks.",
+        "",
+        "## Summary",
+        f"- Generated from data timestamp: {metadata.get('generated_at', 'unknown')}",
+        f"- Articles audited: {metadata.get('article_count', 0)}",
+        f"- Concepts checked: {total_concepts}",
+        f"- Concepts grounded in at least one corpus: {covered_concepts} / {total_concepts} ({coverage_pct}%)",
+        f"- Concepts absent from both corpora: {absent_concepts} / {total_concepts}",
+        "",
+        "## Corpus Presence Mix",
+        "",
+        "| Presence bucket | Concepts |",
+        "|---|---:|",
+        f"| In `textbooks` and `external_articles` | {presence['textbooks_and_external']} |",
+        f"| In `textbooks` only | {presence['textbooks_only']} |",
+        f"| In `external_articles` only | {presence['external_only']} |",
+        f"| In neither corpus | {presence['absent_from_both']} |",
+        "",
+        "## Lowest-Coverage Articles",
+        "",
+        "| Article | Covered | Missing | Coverage |",
+        "|---|---:|---:|---|",
+    ]
+
+    for row in article_rows[:10]:
+        lines.append(
+            f"| `{row['track']}/{row['slug']}` | "
+            f"{row['covered_concept_count']} / {row['concept_count']} | "
+            f"{row['absent_concept_count']} | "
+            f"`{row['coverage_bar']}` {row['coverage_pct']}% |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Top Gap Categories",
+            "",
+            "| Severity | Category | Affected articles | Absent concepts | Representative gaps |",
+            "|---|---|---:|---:|---|",
+        ]
+    )
+
+    for category in categories[:5]:
+        examples = ", ".join(
+            concept["concept"] for concept in category["affected_concepts"][:3]
+        )
+        lines.append(
+            f"| {category['severity_tier']} | {category['label']} | "
+            f"{category['affected_article_count']} | "
+            f"{category['affected_concept_count']} | "
+            f"{examples} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Priority Ukrainian Sources",
+            "",
+            "Strictly Ukrainian sources only; no Russian-language or translated-from-Russian works are proposed here.",
+            "",
+            "| Priority | Gap category | Affected articles | Source | Format | License | Est. chunks |",
+            "|---|---|---:|---|---|---|---:|",
+        ]
+    )
+
+    for row in source_rows:
+        lines.append(
+            f"| {row['priority']} | {row['gap_category']} | {row['affected_article_count']} | "
+            f"{row['source']} | {row['format']} | {row['license']} | {row['estimated_chunks']} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Findings",
+            (
+                "The weakest article by far is `a1/at-the-cafe`, where service-interaction language "
+                "(menu requests, recommendations, bill/payment talk, dietary clarifications) is missing much more often "
+                "than core school-grammar concepts."
+            ),
+            (
+                "Most remaining A1 misses cluster around situational learner language: route-giving formulas, etiquette "
+                "distinctions such as `ти`/`ви`, precise clock-time answers, and a few imperative/morphology teaching phrases."
+            ),
+            (
+                "This points to a structural corpus mix problem rather than a broad grammar deficit: the school-textbook corpus "
+                "covers phonetics and formal grammar better than adult beginner interactional Ukrainian."
+            ),
+            "",
+        ]
+    )
+
+    return "\n".join(lines)
 
 
 def build_coverage_map(
