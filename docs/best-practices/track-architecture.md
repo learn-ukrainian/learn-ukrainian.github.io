@@ -41,6 +41,15 @@
 
 ---
 
+## Retrieval Architecture Notes
+
+- A1/A2 now have a dedicated compile-layer bootstrap corpus, `ukrainian_wiki`, alongside the existing five-corpus retrieval stack in `data/sources.db`.
+- That corpus is retrieval-only infrastructure for English-speaker early levels. It is **not** a published `l1-uk` tree and **not** a separate module-generation step.
+- Priors stay soft, not hard-gated: `ukrainian_wiki` is high-weight for `a1` / `a2` and near-zero for `b1+`.
+- Corpus design, schema, admission gates, and rollback details live in [ukrainian-wiki-corpus-design.md](/Users/krisztiankoos/projects/learn-ukrainian/docs/architecture/ukrainian-wiki-corpus-design.md).
+
+---
+
 ## Pedagogy Models
 
 ### PPP (Presentation–Practice–Production)
