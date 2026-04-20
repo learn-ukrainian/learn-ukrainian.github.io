@@ -462,6 +462,21 @@ def append_shard(
         raise
 
 
+def reserve_corpus_shard(manifest: EmbeddingManifest, *, corpus: str) -> int:
+    """Register a corpus in the manifest with a zero-row reserved shard."""
+
+    shard_map = manifest.shard_map_for_corpus(corpus)
+    if shard_map:
+        return next(iter(shard_map))
+
+    return append_shard(
+        manifest,
+        corpus=corpus,
+        vectors=np.zeros((0, DEFAULT_DIMS), dtype=np.float16),
+        unit_specs=[],
+    )
+
+
 def filter_new_or_changed(
     manifest: EmbeddingManifest,
     *,

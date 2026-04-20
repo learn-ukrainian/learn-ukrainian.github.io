@@ -51,6 +51,7 @@ _CORPORA = (
     "archaic_literary",
     "external",
     "wikipedia",
+    "ukrainian_wiki",
 )
 _PRIOR_KEY_BY_CORPUS = {
     "textbook_sections": "textbook",
@@ -58,6 +59,7 @@ _PRIOR_KEY_BY_CORPUS = {
     "archaic_literary": "archaic_literary",
     "external": "external",
     "wikipedia": "wikipedia",
+    "ukrainian_wiki": "ukrainian_wiki",
 }
 
 
@@ -536,6 +538,89 @@ def _search_wikipedia_candidates(
     return candidates
 
 
+def _search_ukrainian_wiki_candidates(
+    bucket_a_phrases: list[str],
+    bucket_b_keywords: set[str],
+    *,
+    candidate_k: int,
+) -> list[dict]:
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return []
+
+    fts_query = _build_preserving_fts_query(_fts_terms(bucket_a_phrases, bucket_b_keywords))
+    if not fts_query:
+        return []
+
+    try:
+        tables = {
+            str(row["name"])
+            for row in conn.execute(
+                """
+                SELECT name
+                FROM sqlite_master
+                WHERE type IN ('table', 'view')
+                  AND name IN ('ukrainian_wiki', 'ukrainian_wiki_fts')
+                """
+            ).fetchall()
+        }
+    except (sqlite3.Error, SystemError):
+        return []
+    if {"ukrainian_wiki", "ukrainian_wiki_fts"} - tables:
+        return []
+
+    try:
+        rows = conn.execute(
+            """
+            SELECT
+                s.id,
+                s.passage_id,
+                s.article_slug,
+                s.article_title,
+                s.article_path,
+                s.section_path,
+                s.paragraph_start,
+                s.paragraph_end,
+                s.word_count,
+                s.char_count,
+                s.text,
+                bm25(ukrainian_wiki_fts, 5.0, 2.0, 1.0) AS rank
+            FROM ukrainian_wiki_fts
+            JOIN ukrainian_wiki s ON s.id = ukrainian_wiki_fts.rowid
+            WHERE ukrainian_wiki_fts MATCH ?
+            ORDER BY rank
+            LIMIT ?
+            """,
+            (fts_query, candidate_k),
+        ).fetchall()
+    except (sqlite3.Error, SystemError):
+        return []
+
+    return [
+        {
+            "unit_key": f"ukrainian_wiki:{row['passage_id']}",
+            "corpus": "ukrainian_wiki",
+            "source_type": "ukrainian_wiki",
+            "chunk_id": str(row["passage_id"] or ""),
+            "title": str(row["article_title"] or ""),
+            "text": str(row["text"] or ""),
+            "full_text": str(row["text"] or ""),
+            "source_file": str(row["article_path"] or ""),
+            "parent_key": str(row["article_slug"] or ""),
+            "section_path": str(row["section_path"] or ""),
+            "paragraph_start": int(row["paragraph_start"] or 0),
+            "paragraph_end": int(row["paragraph_end"] or 0),
+            "word_count": int(row["word_count"] or 0),
+            "char_count": int(row["char_count"] or 0),
+            "source_name": "Ukrainian wiki",
+            "fts_score": float(row["rank"] or 0.0),
+            "row_id": int(row["id"]),
+        }
+        for row in rows
+    ]
+
+
 def _dispatch_corpus_search(
     corpus: str,
     *,
@@ -573,6 +658,12 @@ def _dispatch_corpus_search(
         )
     elif corpus == "wikipedia":
         candidates = _search_wikipedia_candidates(
+            bucket_a_phrases,
+            bucket_b_keywords,
+            candidate_k=candidate_k_per_corpus,
+        )
+    elif corpus == "ukrainian_wiki":
+        candidates = _search_ukrainian_wiki_candidates(
             bucket_a_phrases,
             bucket_b_keywords,
             candidate_k=candidate_k_per_corpus,
@@ -662,12 +753,51 @@ def _expand_wikipedia_neighbors(match: dict) -> dict:
     }
 
 
+def _expand_ukrainian_wiki_neighbors(match: dict) -> dict:
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return match
+
+    article_slug = str(match.get("parent_key", "")).strip()
+    start_paragraph = int(match.get("paragraph_start", 0))
+    end_paragraph = int(match.get("paragraph_end", 0))
+    try:
+        rows = conn.execute(
+            """
+            SELECT passage_id, text
+            FROM ukrainian_wiki
+            WHERE article_slug = ?
+              AND paragraph_start <= ?
+              AND paragraph_end >= ?
+            ORDER BY paragraph_start, id
+            """,
+            (article_slug, end_paragraph + 1, start_paragraph - 1),
+        ).fetchall()
+    except (sqlite3.Error, SystemError):
+        return match
+    if not rows:
+        return match
+
+    context_rows = [row for row in rows if str(row["text"] or "").strip()]
+    if not context_rows:
+        return match
+
+    return {
+        **match,
+        "full_text": "\n\n".join(str(row["text"] or "") for row in context_rows),
+        "context_unit_keys": [f"ukrainian_wiki:{row['passage_id']}" for row in context_rows],
+    }
+
+
 def _expand_neighbor_context(match: dict) -> dict:
     corpus = str(match.get("corpus", ""))
     if corpus in {"modern_literary", "archaic_literary"}:
         return _expand_literary_neighbors(match)
     if corpus == "wikipedia":
         return _expand_wikipedia_neighbors(match)
+    if corpus == "ukrainian_wiki":
+        return _expand_ukrainian_wiki_neighbors(match)
     return match
 
 
@@ -757,7 +887,7 @@ def search_sources(
     if not dense_query.strip():
         return []
 
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    with ThreadPoolExecutor(max_workers=len(_CORPORA)) as executor:
         futures = [
             executor.submit(
                 _dispatch_corpus_search,

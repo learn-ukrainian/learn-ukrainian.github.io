@@ -46,6 +46,7 @@ SUPPORTED_CORPORA = (
     "archaic_literary",
     "external",
     "wikipedia",
+    "ukrainian_wiki",
 )
 
 _TOKENIZER = None
@@ -713,12 +714,54 @@ def _iter_wikipedia_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
             )
 
 
+def _iter_ukrainian_wiki_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
+    conn.row_factory = sqlite3.Row
+    try:
+        rows = conn.execute(
+            """
+            SELECT
+                passage_id,
+                article_slug,
+                article_title,
+                article_path,
+                section_path,
+                paragraph_start,
+                paragraph_end,
+                text
+            FROM ukrainian_wiki
+            ORDER BY article_slug, paragraph_start, id
+            """
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return
+
+    for row in rows:
+        text = str(row["text"] or "")
+        yield CorpusUnit(
+            unit_key=f"ukrainian_wiki:{row['passage_id']}",
+            corpus="ukrainian_wiki",
+            parent_key=str(row["article_slug"] or ""),
+            text=text,
+            text_sha256=text_sha256(text),
+            metadata={
+                "passage_id": str(row["passage_id"] or ""),
+                "article_slug": str(row["article_slug"] or ""),
+                "article_title": str(row["article_title"] or ""),
+                "article_path": str(row["article_path"] or ""),
+                "section_path": str(row["section_path"] or ""),
+                "paragraph_start": int(row["paragraph_start"] or 0),
+                "paragraph_end": int(row["paragraph_end"] or 0),
+            },
+        )
+
+
 CORPUS_UNIT_LOADERS: dict[str, Callable[[sqlite3.Connection], Iterator[CorpusUnit]]] = {
     "textbook_sections": _iter_textbook_units,
     "modern_literary": _iter_modern_literary_units,
     "archaic_literary": _iter_archaic_literary_units,
     "external": _iter_external_units,
     "wikipedia": _iter_wikipedia_units,
+    "ukrainian_wiki": _iter_ukrainian_wiki_units,
 }
 
 

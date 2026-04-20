@@ -53,9 +53,11 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     from wiki.extract_sections import DEFAULT_REPORT_PATH, extract_sections
     from wiki.sources import build_literary_row
+    from wiki.ukrainian_wiki_corpus import ensure_ukrainian_wiki_manifest, ensure_ukrainian_wiki_schema
 else:
     from .extract_sections import DEFAULT_REPORT_PATH, extract_sections
     from .sources import build_literary_row
+    from .ukrainian_wiki_corpus import ensure_ukrainian_wiki_manifest, ensure_ukrainian_wiki_schema
 
 SCHEMA = """
 -- === FTS5 tables (prose — full-text search) ===
@@ -444,6 +446,7 @@ def build(db_path: Path | None = None,
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA synchronous=OFF")
     conn.executescript(SCHEMA)
+    ensure_ukrainian_wiki_schema(conn)
 
     if preserve_wiki and (wiki_rows or neg_rows):
         _restore_wikipedia_snapshot(conn, wiki_rows, neg_rows)
@@ -591,6 +594,7 @@ def build(db_path: Path | None = None,
     print(f"  📝 Validation report: {DEFAULT_REPORT_PATH}")
 
     db_size = db.stat().st_size / 1024 / 1024
+    ensure_ukrainian_wiki_manifest(PROJECT_ROOT / "data" / "embeddings" / "manifest.db")
     print(f"\n  ✅ Built {db.name}: {total:,} entries, {db_size:.1f} MB")
     return db
 
