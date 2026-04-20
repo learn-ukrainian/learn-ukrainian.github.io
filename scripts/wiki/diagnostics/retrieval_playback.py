@@ -79,14 +79,11 @@ _WHITESPACE = re.compile(r"\s+")
 # beyond "sounds vs letters / vowels vs consonants / iotated / soft sign"
 # do NOT belong here — they live in B1+/HIST/BIO seminar diagnostics.
 #
-# Match types per entry:
+# Match types per entry (see ConceptVariant alias):
 #   - str literal               → substring match (after normalize_text)
 #   - {"all_of": [str, ...]}    → ALL substrings must appear in the same
 #                                 chunk (use for multi-token concepts where
 #                                 word order varies across textbook authors)
-#   - {"any_of_groups":         → at least one inner group must satisfy
-#       [{"all_of": [...]}, …]}    its all_of (use for "exists a phrasing
-#                                  that means X" semantics)
 BASE_TARGET_CONCEPTS: dict[str, list[ConceptVariant]] = {
     "syllable_count_rule": [
         "скільки в слові голосних, стільки й складів",
@@ -125,15 +122,21 @@ BASE_TARGET_CONCEPTS: dict[str, list[ConceptVariant]] = {
         "[йе]",
         "пом'якшує попередній приголосний",
     ],
-    "milozvuchnist": [
-        # BORDERLINE A1: mentioned in knowledge packet only as the "core
-        # rule of Ukrainian euphony" that explains в→[ў]. Full milozvuchnist
-        # (у/в, і/й alternation system) is B1+ grammar. Kept here because
-        # the A1 wiki article should mention it as a one-line gloss; if a
-        # future audit decides it's a leak, drop it to a B1 diagnostic.
-        "милозвучність",
-        "евфонія",
-        "уникає важких збігів",
+    "milozvuchnist_v_to_w_gloss": [
+        # A1-SCOPED: only the one-line euphony gloss that explains why
+        # в→[ў] (knowledge packet line 76 — "core rule of Ukrainian
+        # euphony, major marker of a non-native accent"). Bare
+        # `милозвучність` / `евфонія` as standalone tokens used to live
+        # here but were satisfied by Grade 10 §23 sections — exactly
+        # the scope leak this rename guards against. Codex review
+        # (#1340) flagged the bare-noun match as a Grade-10 false win.
+        # Variants now require co-occurrence of the A1 phenomenon
+        # (в→[ў]) so a Grade 10 generic milozvuchnist chapter no
+        # longer counts.
+        {"all_of": ["милозвучн", "[ў]"]},
+        {"all_of": ["милозвучн", "лев"]},      # primer example: лев → [леў]
+        {"all_of": ["милозвучн", "був"]},      # primer example: був → [буў]
+        "уникаємо збігу голосних або приголосних",
     ],
     # REMOVED 2026-04-20 (#1340): "g_ge_history" — the 1933 abolition /
     # 1990 reinstatement story is Grade 10 ukrmova / Grade 11 istoriya
@@ -194,11 +197,11 @@ ADDED_VARIANTS: dict[str, list[ConceptVariant]] = {
         "після приголосних букви я, ю, є позначають один звук",
         "позначають два звуки: [йа], [йу], [йе]",
     ],
-    "milozvuchnist": [
-        "милозвучність української мови",
-        "забезпечує милозвучність мови",
-        "уникаємо збігу голосних або приголосних",
-        "чергування у-в та і-й",
+    "milozvuchnist_v_to_w_gloss": [
+        # A1 textbook variants that pair the euphony concept with the
+        # specific в→[ў] example. The full у/в, і/й alternation system
+        # is B1+ and lives in a separate (future) diagnostic.
+        {"all_of": ["милозвучн", "коротк", "голос"]},  # "короткий голосний [ў]" framing
     ],
     # g_ge_history removed — see BASE_TARGET_CONCEPTS comment above.
     "sound_before_letter": [
@@ -224,11 +227,21 @@ TARGET_CONCEPTS: dict[str, list[ConceptVariant]] = {
 #: Keep tied to TARGET_CONCEPTS — never hardcode "/10" anywhere downstream.
 TOTAL_CONCEPTS: int = len(TARGET_CONCEPTS)
 
-#: PASS threshold for the comparison report. 80% coverage of the in-scope
-#: concept list — 8/10 historically, 8/9 = 89% after #1340 dropped
-#: g_ge_history. Computed as ceil(0.8 * total) so future scope edits scale
-#: proportionally without manual tweaks.
+#: PASS threshold for the comparison report (legacy_chunk vs modern_dense
+#: bake-off): 80% coverage of in-scope concepts. ceil() chosen over round()
+#: so 79.x% never silently passes. 8/10 historically; 8/9 ≈ 89% after
+#: #1340 dropped g_ge_history.
 PASS_THRESHOLD: int = max(1, math.ceil(0.8 * TOTAL_CONCEPTS))
+
+#: VERDICT threshold for the per-strategy diagnostic. 70% coverage of
+#: in-scope concepts qualifies as "retrieval is healthy, look at the
+#: writer next" — strictly looser than PASS_THRESHOLD. Codex review
+#: (#1340) flagged that hardcoding `>= 7` here while the comparison
+#: report scaled was internally inconsistent: a run could be FAIL in
+#: comparison and writer_bottleneck in the per-strategy verdict. The
+#: two thresholds have different intent (gate vs. diagnosis) but they
+#: must scale together as TOTAL_CONCEPTS changes.
+VERDICT_BOTTLENECK_THRESHOLD: int = max(1, math.ceil(0.7 * TOTAL_CONCEPTS))
 
 
 def normalize_text(text: str) -> str:
@@ -437,11 +450,11 @@ def diagnose_verdict(concepts: dict[str, dict[str, Any]]) -> str:
     full_present = sum(
         1 for result in concepts.values() if result["present_in_full_corpus"]
     )
-    if returned_present >= 7:
+    if returned_present >= VERDICT_BOTTLENECK_THRESHOLD:
         return "writer_bottleneck"
-    if returned_present < 7 and full_present >= 7:
+    if returned_present < VERDICT_BOTTLENECK_THRESHOLD and full_present >= VERDICT_BOTTLENECK_THRESHOLD:
         return "retrieval_bottleneck"
-    if full_present < 7:
+    if full_present < VERDICT_BOTTLENECK_THRESHOLD:
         return "corpus_bottleneck"
     return "mixed"
 

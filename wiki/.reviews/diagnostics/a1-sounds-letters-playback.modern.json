@@ -273,21 +273,29 @@
         "10"
       ]
     },
-    "milozvuchnist": {
+    "milozvuchnist_v_to_w_gloss": {
       "present_in_returned_41": true,
       "chunks_containing": [
+        "S5121",
+        "S2298",
         "S283"
       ],
-      "evidence_quote": "ий1 в, й голосний риба в акваріумі, помідори й огірки § 23. милозвучність 1 тут і далі в таблиці: голосний — це умовне позначення літери, яка передає на письмі голосний звук",
+      "evidence_quote": "робіть фонетичний розбір виділеного слова. одним із засобів милозвучності української мови є спрощення у групах приголосних. в усному мовленні й на письмі спрощення відб",
       "present_in_full_corpus": true,
-      "corpus_match_count": 1,
+      "corpus_match_count": 3,
       "sample_chunk_ids": [
+        "S5121",
+        "S2298",
         "S283"
       ],
       "sample_grades": [
+        "9",
+        "5",
         "10"
       ],
       "returned_sample_grades": [
+        "9",
+        "5",
         "10"
       ]
     },

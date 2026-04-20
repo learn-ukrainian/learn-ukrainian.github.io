@@ -72,7 +72,7 @@ def test_run_diagnostic_matches_concepts_with_mocked_search(tmp_path, monkeypatc
             "sample_chunk_ids": ["vowel-definition-1"],
             "sample_grades": ["2"],
         },
-        "milozvuchnist": {
+        "milozvuchnist_v_to_w_gloss": {
             "present_in_full_corpus": True,
             "corpus_match_count": 2,
             "sample_chunk_ids": ["milozvuchnist-1"],
@@ -101,8 +101,12 @@ def test_run_diagnostic_matches_concepts_with_mocked_search(tmp_path, monkeypatc
             return corpus_hits["sound_before_letter"]
         if retrieval_playback.normalize_text("голосні звуки утворюються за допомогою голосу") in normalized:
             return corpus_hits["vowel_consonant_definition"]
-        if retrieval_playback.normalize_text("милозвучність") in normalized:
-            return corpus_hits["milozvuchnist"]
+        # Variants for milozvuchnist_v_to_w_gloss now emit the root token
+        # `милозвучн` (not the full noun) so a Grade 10 generic milozvuchnist
+        # chapter no longer satisfies the concept on its own — the all_of
+        # logic also requires в→[ў]/лев/був co-occurrence.
+        if retrieval_playback.normalize_text("милозвучн") in normalized:
+            return corpus_hits["milozvuchnist_v_to_w_gloss"]
         return corpus_hits["default_not_in_corpus"]
 
     monkeypatch.setattr(retrieval_playback.sqlite3, "connect", lambda *args, **kwargs: FakeConnection())
@@ -125,7 +129,7 @@ def test_run_diagnostic_matches_concepts_with_mocked_search(tmp_path, monkeypatc
     assert result["concepts"]["ya_yu_ye_dual"]["chunks_containing"] == ["iotated"]
     assert result["concepts"]["sound_before_letter"]["present_in_full_corpus"] is True
     assert result["concepts"]["vowel_consonant_definition"]["present_in_full_corpus"] is True
-    assert result["concepts"]["milozvuchnist"]["present_in_full_corpus"] is True
+    assert result["concepts"]["milozvuchnist_v_to_w_gloss"]["present_in_full_corpus"] is True
     # #1340: g_ge_history removed from A1 scope (Grade 10/11 material).
     # Guard against accidental re-introduction.
     assert "g_ge_history" not in result["concepts"]

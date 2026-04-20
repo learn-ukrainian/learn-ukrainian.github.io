@@ -790,26 +790,15 @@ def search_sources(
 # ── FTS5 search functions (prose) ───────────────────────────────
 
 
-# NOTE: Track→grade mapping was REMOVED here in #1340 (2026-04-20).
-# Historical mapping (a1/a2 → 1-4, b1 → 3-6, b2 → 5-8, c1 → 7-11,
-# c2 → 9-11) preserved in git: see commit 3704d2f2f and earlier.
+# Track→grade mapping was REMOVED in #1340 (2026-04-20). See
+# `docs/architecture/adr/adr-007-no-hard-grade-filter-for-cefr-retrieval.md`
+# for the full rationale, alternatives considered, and verification
+# strategy. Short version: CEFR L2 levels and Ukrainian L1 school
+# grades are orthogonal scaffolding systems — dense rerank (#1348)
+# is the source of truth for topic relevance, not a hard SQL gate.
 #
-# Why removed: CEFR (L2 framework) describes what an L2 learner can DO
-# in the target language. Ukrainian school grades (1-11) describe staged
-# curriculum for NATIVE speakers who already speak Ukrainian fluently.
-# They are orthogonal scaffolding systems. Adult L2 A1 learners can
-# absorb Grade 5 systematic phonetics that would overwhelm a Grade 1
-# native — they bring metacognition the native primary-schooler lacks.
-# The 2026-04-18 "Grade 10 morphology in vowels lesson" symptom that
-# motivated the original gate was a bug in the FTS5-only pre-#1348
-# pipeline (no semantic reranking). Post-#1348 dense rerank handles
-# topic relevance natively, making a hard grade gate a band-aid for
-# a cured disease.
-#
-# If a future change re-introduces grade-aware retrieval, prefer a
-# SOFT prior (additive boost in dense rerank) over a hard SQL filter,
-# and gate the change behind a #1340-style retrieval-playback diagnostic
-# showing dense rerank alone cannot solve the relevance problem.
+# DO NOT re-introduce a hard `WHERE grade IN (...)` filter without
+# updating ADR-007 first. Soft priors at the rerank layer are fine.
 
 
 def _fts_search(fts_table: str, data_table: str,

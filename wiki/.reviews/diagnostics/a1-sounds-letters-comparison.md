@@ -13,7 +13,7 @@ Verdict: FAIL
 | v_to_w_rule | yes | yes |
 | yi_letter_two_sounds | yes | yes |
 | ya_yu_ye_dual | yes | yes |
-| milozvuchnist | no | yes |
+| milozvuchnist_v_to_w_gloss | no | yes |
 | sound_before_letter | yes | yes |
 | vowel_consonant_definition | yes | no |
 
