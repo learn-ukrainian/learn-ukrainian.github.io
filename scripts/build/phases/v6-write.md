@@ -112,13 +112,27 @@ Your prose should contain (after the relevant sections):
 
 **This is your primary teaching material.** The excerpt packet below was compressed from the project wiki into section-mapped facts with citations. It contains the correct terminology, paradigm tables, teaching sequences, and examples for this module. Your job is to TRANSFORM this into engaging, level-appropriate content — not to copy it verbatim.
 
-**How to use the excerpt packet:**
-1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type."
+### ⚠️ Language contract — brief language ≠ module language
+
+**The brief is written in Ukrainian because it's a corpus artifact authored for a Ukrainian-reading methodologist.** The language of your module output is governed by `IMMERSION TARGET` (Rule 1), NOT by the brief's language. Do NOT mirror the brief's register.
+
+- **A1 (10–50% Ukrainian):** English narrative prose carries explanations, section framing, and task instructions. Ukrainian appears in examples, dialogues, vocabulary anchors, and the grammar illustrations themselves. **Ukrainian methodological prose from the brief becomes English pedagogical scaffolding in your output.** You pull the Ukrainian terminology and examples forward; you don't pull the Ukrainian explanatory prose forward.
+- **A2 (50–90% Ukrainian):** More Ukrainian, but substantial English scaffolding remains — especially in task instructions, grammar explanations on first introduction, and translation blockquotes after Ukrainian dialogue lines.
+- **B1 (85–100% Ukrainian):** Mostly Ukrainian; minimal English only where the contract allows.
+- **B2+ (95–100% Ukrainian):** Ukrainian throughout; English rare and only for unfamiliar grammatical metalanguage.
+
+The brief gives you the Ukrainian WHAT-to-teach. The IMMERSION TARGET tells you the HOW-to-scaffold language. **Synthesize across the two; do not conflate them.**
+
+Concrete rule for A1/A2: when the brief uses Ukrainian explanatory prose to describe a rule (e.g., «Дієприслівник — це…»), your A1 module output renders the explanation in English scaffolding prose while keeping the Ukrainian term and examples. At A2, you may render more of the explanation in Ukrainian, but task instructions and the introductory framing of a new concept stay in English per the immersion contract.
+
+### How to use the excerpt packet:
+1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type." **Terminology transfers; surrounding explanatory prose does NOT transfer language.**
 2. **Follow the teaching sequence.** If the article shows: sound model → syllable → word → sentence, follow that progression. Do not rearrange or substitute your own.
-3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns.
-4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level.
-5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories.
+3. **Use the article's examples as your foundation.** Authentic examples from textbooks beat invented ones. Use the article's examples and expand with your own that follow the same patterns. **Examples and dialogue lines stay in Ukrainian at every level.**
+4. **Synthesize and teach, don't summarize.** You are a teacher, not a summarizer. Take the facts from the article and weave them into engaging explanations with dialogues, situations, and practice. The article tells you WHAT to teach — you decide HOW to teach it for the target level, in the scaffolding language the immersion contract requires.
+5. **Your pre-training is contaminated by Russian and English linguistics.** When the article contradicts your instinct, the article wins. Ukrainian has its own phonetic categories (голосний/приголосний, дзвінкий/глухий, м'який/твердий) that do not map 1:1 to English or Russian. Use the Ukrainian categories — **in your scaffolding language** (English descriptions for A1, Ukrainian for B2+).
 6. **Do NOT copy paragraphs verbatim.** The article is reference material. Your output must be original teaching prose at the correct CEFR level, not a rephrased version of the article.
+7. **Task-instruction language = scaffolding language.** Task instructions (what the learner is asked to DO in exercises and self-checks) follow the immersion contract, not the brief. At A1, "Read the dialogue and answer the question" stays English. At A2, "Прочитайте діалог…" is allowed. At B1+, Ukrainian throughout.
 
 {SECTION_WIKI_EXCERPTS}
 
