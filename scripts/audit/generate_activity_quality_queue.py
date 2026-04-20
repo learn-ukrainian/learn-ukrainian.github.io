@@ -31,6 +31,7 @@ from scripts.audit.checks.activity_quality import (
     estimate_vocabulary_difficulty,
     validate_activity_quality_deterministic,
 )
+from scripts.audit.cleaners import split_sentences
 
 
 def extract_activity_text(activity: dict, item: dict | None = None) -> str:
@@ -186,9 +187,8 @@ def run_deterministic_checks(
     # Overall variety check (across all items)
     all_sentences = []
     for text in all_text:
-        import re
-        sentences = re.split(r'[.!?]+', text)
-        sentences = [s.strip() for s in sentences if s.strip() and len(s) > 5]
+        # Shared splitter keeps abbreviation-aware segmentation; retain the >5 char filter.
+        sentences = [s for s in split_sentences(text) if len(s) > 5]
         all_sentences.extend(sentences)
 
     variety_result = analyze_sentence_variety(all_sentences) if len(all_sentences) > 2 else None

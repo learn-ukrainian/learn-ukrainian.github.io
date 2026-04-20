@@ -16,6 +16,7 @@ All checks return list[dict] with 'type', 'severity', 'message' keys
 Issue: #610
 """
 
+import contextlib
 import hashlib
 import json
 import re
@@ -25,10 +26,11 @@ from pathlib import Path
 
 # Ensure scripts/ is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
-import contextlib
 
 from slug_utils import review_path as _review_path
 from slug_utils import to_bare_slug
+
+from ..cleaners import split_sentences
 
 # Reuse existing infrastructure from review_validation
 from .review_validation import (
@@ -87,6 +89,12 @@ def _get_all_review_files(track_dir: Path) -> list[Path]:
     if review_dir.is_dir():
         return sorted(review_dir.glob('*-review.md'))
     return []
+
+
+def _split_issue_sentences(text: str) -> list[str]:
+    """Split review issue prose while preserving the >20 char filter."""
+    # Shared splitter avoids false sentence breaks on abbreviations like "т.д.".
+    return [s for s in split_sentences(text) if len(s) > 20]
 
 
 # =============================================================================
@@ -451,10 +459,7 @@ def check_review_boilerplate(
         return []  # Too short to meaningfully check
 
     # Split into sentences and hash
-    current_sentences = [
-        s.strip() for s in re.split(r'(?<=[.!?])\s+', current_issues_text)
-        if len(s.strip()) > 20
-    ]
+    current_sentences = _split_issue_sentences(current_issues_text)
     if len(current_sentences) < 3:
         return []
 
@@ -487,10 +492,7 @@ def check_review_boilerplate(
             continue
 
         other_text = other_issues.group(1).strip()
-        other_sentences = [
-            s.strip() for s in re.split(r'(?<=[.!?])\s+', other_text)
-            if len(s.strip()) > 20
-        ]
+        other_sentences = _split_issue_sentences(other_text)
         if not other_sentences:
             continue
 

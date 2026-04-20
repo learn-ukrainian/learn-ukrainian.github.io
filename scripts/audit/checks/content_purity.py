@@ -10,6 +10,8 @@ Activities are SUPPOSED to use lesson content, so no cross-file checks.
 
 import re
 
+from ..cleaners import split_sentences
+
 
 def get_word_set(text: str) -> set:
     """Extract set of unique words from text."""
@@ -43,8 +45,8 @@ def check_duplicate_sentences(content: str, yaml_content: str = "") -> list[dict
     text = re.sub(r'^- \*\*.*?\*\*.*$', '', text, flags=re.MULTILINE)
     # Remove dialogue lines — similar structure is intentional (multiple examples of same pattern)
     text = re.sub(r'<div class="dialogue-line">.*?</div>', '', text, flags=re.DOTALL)
-    sentence_pattern = re.compile(r'(?<=[.!?])\s+')
-    lesson_sentences = [s.strip() for s in sentence_pattern.split(text) if len(s.strip()) > 50]
+    # Shared splitter keeps Ukrainian abbreviations like "м." inside the sentence.
+    lesson_sentences = [s for s in split_sentences(text) if len(s) > 50]
 
     seen_sets = []
     for idx, s in enumerate(lesson_sentences):
@@ -81,10 +83,9 @@ def check_robotic_structure(content: str) -> list[dict]:
     violations = []
     body = re.sub(r'^---.*?---\n', '', content, flags=re.DOTALL)
 
-    sentences = re.split(r'(?<=[.!?])\s+', body)
     clean_sentences = []
-    for s in sentences:
-        s = s.strip()
+    # Shared splitter avoids false boundaries on Ukrainian abbreviations.
+    for s in split_sentences(body):
         # Ignore list items, headers, short lines, AND TABLES
         if (len(s) < 20 or s.startswith('-') or s.startswith('>') or s.startswith('*') or
             s.startswith('#') or s.startswith('|') or s.startswith('(') or

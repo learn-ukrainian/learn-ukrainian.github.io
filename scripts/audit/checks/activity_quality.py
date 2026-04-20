@@ -12,6 +12,8 @@ These checks complement manual semantic validation for full quality coverage.
 import re
 from collections import Counter
 
+from ..cleaners import split_sentences
+
 
 def analyze_sentence_variety(sentences: list[str]) -> dict:
     """
@@ -232,8 +234,8 @@ def check_natural_ukrainian_markers(text: str) -> dict:
 
     # Check 1: Overuse of subject pronouns
     # Count sentences and pronouns
-    sentences = re.split(r'[.!?]+', text)
-    sentences = [s.strip() for s in sentences if s.strip()]
+    # Shared splitter keeps abbreviations like "м. Київ" from inflating sentence count.
+    sentences = split_sentences(text)
 
     if len(sentences) >= 3:
         pronoun_pattern = r'\b(я|ти|він|вона|воно|ми|ви|вони)\b'
@@ -354,8 +356,8 @@ def validate_activity_quality_deterministic(
     Returns comprehensive quality assessment without API calls.
     """
     # Extract sentences from text
-    sentences = re.split(r'[.!?]+', text)
-    sentences = [s.strip() for s in sentences if s.strip() and len(s) > 5]
+    # Shared splitter keeps abbreviation-aware segmentation; retain the >5 char filter.
+    sentences = [s for s in split_sentences(text) if len(s) > 5]
 
     # Run all checks
     variety = analyze_sentence_variety(sentences) if len(sentences) > 2 else None
