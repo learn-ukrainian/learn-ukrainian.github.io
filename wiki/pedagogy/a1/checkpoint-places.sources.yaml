@@ -1,0 +1,30 @@
+# Source registry for wiki/pedagogy/a1/checkpoint-places.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S4688
+  type: unknown
+- id: S2
+  file: S2390
+  type: unknown
+- id: S3
+  file: S2445
+  type: unknown
+- id: S4
+  file: S5089
+  type: unknown
+- id: S5
+  file: S3122
+  type: unknown
+- id: S6
+  file: S582
+  type: unknown
+- id: S8
+  file: S3335
+  type: unknown
+- id: S9
+  file: ext-article-1
+  type: external
+- id: S10
+  file: ext-article-2
+  type: external
