@@ -117,14 +117,21 @@ def _advance_thermal_epoch(
         controller.consecutive_regressed_epochs = 0
     else:
         if thermal_state >= _THERMAL_SERIOUS:
-            controller.tier = "warm" if controller.tier == "cool" else controller.tier
+            # Escalate: cool → warm → warm (don't jump to hot on SERIOUS; CRITICAL does that)
+            if controller.tier == "cool":
+                controller.tier = "warm"
+            # warm and hot stay as-is; SERIOUS doesn't escalate from warm/hot
             controller.consecutive_nominal_epochs = 0
             controller.consecutive_regressed_epochs = 0
         elif regressed:
             controller.consecutive_regressed_epochs += 1
             controller.consecutive_nominal_epochs = 0
             if controller.consecutive_regressed_epochs >= _THERMAL_REGRESSION_EPOCHS:
-                controller.tier = "warm" if controller.tier == "cool" else controller.tier
+                if controller.tier == "cool":
+                    controller.tier = "warm"
+                elif controller.tier == "warm":
+                    controller.tier = "hot"
+                # if already "hot", stay at "hot"
         else:
             controller.consecutive_regressed_epochs = 0
             if thermal_state == _THERMAL_NOMINAL:

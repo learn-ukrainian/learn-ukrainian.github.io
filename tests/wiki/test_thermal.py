@@ -85,3 +85,28 @@ def test_thermal_controller_does_not_throttle_on_fair() -> None:
 
     assert tier == "cool"
     assert sleep_s == 0.0
+
+
+def test_thermal_controller_escalates_warm_to_hot_on_regression() -> None:
+    """If already at warm tier, regressions should escalate to hot."""
+    controller = dense_rerank._ThermalEpochController(tier="warm", ms_per_token_ewma=10.0)
+
+    # First two regressions: stay at warm
+    for _ in range(2):
+        tier, sleep_s = dense_rerank._advance_thermal_epoch(
+            controller,
+            ms_per_token=12.0,  # regression threshold
+            thermal_state=0,
+        )
+        assert tier == "warm"
+        assert sleep_s == 1.5
+
+    # Third regression: escalate to hot
+    tier, sleep_s = dense_rerank._advance_thermal_epoch(
+        controller,
+        ms_per_token=12.0,
+        thermal_state=0,
+    )
+
+    assert tier == "hot"
+    assert sleep_s == 5.0
