@@ -38,6 +38,10 @@ def _emit(frame: dict[str, Any]) -> None:
 def _configure_memory_limit() -> None:
     info = mx.metal.device_info()
     recommended = info.get("max_recommended_working_set_size")
+    override = os.environ.get("MLX_MEMORY_LIMIT_BYTES")
+    if override is not None:
+        mx.metal.set_memory_limit(int(override))
+        return
     if recommended is None:
         return
     mx.metal.set_memory_limit(int(recommended * 0.7))
