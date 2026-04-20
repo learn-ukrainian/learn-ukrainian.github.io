@@ -2,41 +2,34 @@ module: a2-063
 level: A2
 sequence: 63
 slug: metalanguage-sentences-and-classroom
-version: 1.1.2
+version: 1.1.4
 title: Речення і клас
 subtitle: Синтаксичні терміни, будова слова та мова класу
 focus: bridge
 pedagogy: Bridge
-phase: A2.9 [Metalanguage Bridge & Foundation]
+phase: 'A2.9 [Метамова: місток та основи]'
 word_target: 2000
 objectives:
-- Learner can name and identify sentence members in Ukrainian (підмет, присудок,
-  додаток, означення, обставина) in simple sentences.
-- Learner can identify word anatomy parts using Ukrainian terms (корінь, 
-  префікс, суфікс, закінчення) and break words into morphemes.
-- Learner can understand and respond to classroom imperatives in Ukrainian 
-  (Прочитайте, Запишіть, Виберіть, Підкресліть, Вставте, Дайте відповідь).
-- Learner can follow a Ukrainian-language grammar exercise format, preparing for
-  B1 immersion-style instruction.
+- Студент вміє називати та розпізнавати члени речення українською мовою (підмет, присудок, додаток, означення, обставина) у простих реченнях.
+- Студент вміє розпізнавати частини слова, використовуючи українські терміни (корінь, префікс, суфікс, закінчення), та розбирати слова на морфеми.
+- Студент вміє розуміти вказівки вчителя та реагувати на них українською мовою (Прочитайте, Запишіть, Виберіть, Підкресліть, Вставте, Дайте відповідь).
+- Студент вміє виконувати граматичні вправи за україномовним форматом, готуючись до навчання методом занурення на рівні B1.
 dialogue_situations:
-- situation: A student asking the teacher how to analyze a sentence — Як 
-    визначити підмет? Що таке обставина? Teacher explains using simple examples
-  functions:
-  - asking about grammar terms
-  - requesting clarification
-  - understanding instructions
+- setting: 'Студент запитує вчителя, як аналізувати речення: Як визначити підмет? Що таке обставина? Вчитель пояснює на простих прикладах.'
+  motivation: 'Запитувати про граматичні терміни, просити пояснення, розуміти інструкції'
+  speakers:
+  - Студент
+  - Вчитель
   key_vocabulary:
   - підмет
   - присудок
   - означення
   - обставина
-- situation: Two students working through a Ukrainian textbook exercise together
-    — reading instructions in Ukrainian and helping each other with morpheme 
-    analysis
-  functions:
-  - following instructions in Ukrainian
-  - peer collaboration
-  - analyzing word structure
+- setting: 'Двоє студентів разом виконують вправу з українського підручника — читають інструкції українською та допомагають одне одному з морфемним аналізом.'
+  motivation: 'Виконувати інструкції українською, співпрацювати з одногрупниками, аналізувати будову слова'
+  speakers:
+  - Студент 1
+  - Студент 2
   key_vocabulary:
   - корінь
   - префікс
@@ -44,70 +37,39 @@ dialogue_situations:
   - прочитайте
   - визначте
 content_outline:
-- section: 'Члени речення: хто що робить? (Sentence Members: Who Does What?)'
+- section: 'Члени речення: хто що робить?'
   words: 550
   points:
-  - 'Re-labeling with Grade 3-4 textbook method: Ukrainian children learn sentence
-    analysis (розбір речення) by asking questions. Підмет (subject) — хто? що? — underlined
-    with one line. Присудок (predicate) — що робить? що зробив? — underlined with
-    two lines.'
-  - 'Другорядні члени речення (secondary sentence members): Додаток (object) — кого?
-    що? кому? чим? — answers case questions. Означення (attribute) — який? яка? яке?
-    чий? — describes the noun. Обставина (adverbial modifier) — де? коли? як? куди?
-    — describes the action.'
-  - 'Practice: analyze 5-6 simple sentences, identifying підмет, присудок, and other
-    members. Grade 4 textbook format: draw arrows and underline.'
-  - 'Simple vs. compound sentence: просте речення (one підмет + присудок) vs. складне
-    речення (two or more pairs).'
-- section: 'Будова слова: корінь, префікс, суфікс (Word Anatomy: Root, Prefix, Suffix)'
+  - 'Нова термінологія за підручниками 3-4 класів: українські школярі вивчають розбір речення, ставлячи запитання. Підмет — хто? що? — підкреслюється однією рискою. Присудок — що робить? що зробив? — підкреслюється двома рисками.'
+  - 'Другорядні члени речення: Додаток — кого? що? кому? чим? — відповідає на питання непрямих відмінків. Означення — який? яка? яке? чий? — описує іменник. Обставина — де? коли? як? куди? — описує дію.'
+  - 'Практика: проаналізувати 5-6 простих речень, визначаючи підмет, присудок та інші члени речення. Формат підручника для 4 класу: малювати стрілки та підкреслювати.'
+  - 'Просте і складне речення: просте речення (один підмет + присудок) і складне речення (дві або більше пар).'
+- section: 'Будова слова: корінь, префікс, суфікс'
   words: 500
   points:
-  - 'Корінь (root) — the core meaning: ліс → лісок, лісовий, лісник, пролісок. All
-    share the root ліс-. Споріднені слова (cognate words) share a root.'
-  - 'Префікс (prefix) — before the root, changes meaning: ходити → виходити, заходити,
-    приходити, переходити. Each prefix adds a new direction or nuance.'
-  - 'Суфікс (suffix) — after the root, changes part of speech or adds meaning: ліс
-    → лісок (diminutive), лісовий (adjective), лісник (person). Connect to diminutive
-    suffixes from M52.'
-  - 'Закінчення (ending) — the grammatical ending that changes by case, gender, number:
-    книга, книги, книзі, книгу, книгою. Основа (stem) = everything except the закінчення.'
-  - 'Practice: break 8-10 words into morphemes using the корінь-префікс-суфікс-закінчення
-    framework.'
-- section: 'Мова класу: накази вчителя (Classroom Language: Teacher Instructions)'
+  - 'Корінь — основне значення: ліс → лісок, лісовий, лісник, пролісок. Усі вони мають спільний корінь ліс-. Споріднені слова мають спільний корінь.'
+  - 'Префікс — стоїть перед коренем, змінює значення: ходити → виходити, заходити, приходити, переходити. Кожен префікс додає новий напрямок або відтінок.'
+  - 'Суфікс — стоїть після кореня, змінює частину мови або додає значення: ліс → лісок (зменшувальне), лісовий (прикметник), лісник (особа). Зв''язок із суфіксами здрібнілості з модуля M52.'
+  - 'Закінчення — граматична частина, що змінюється за відмінком, родом, числом: книга, книги, книзі, книгу, книгою. Основа = усе, крім закінчення.'
+  - 'Практика: розібрати 8-10 слів на морфеми за схемою корінь-префікс-суфікс-закінчення.'
+- section: 'Мова класу: накази вчителя'
   words: 550
   points:
-  - 'Essential classroom imperatives the learner will encounter in B1+ Ukrainian-language
-    instruction: Прочитайте (Read), Запишіть (Write down), Виберіть (Choose), Підкресліть
-    (Underline), Вставте (Insert), Дайте відповідь (Give an answer), Знайдіть (Find),
-    Визначте (Determine), Порівняйте (Compare), Доповніть (Complete/supplement).'
-  - 'These are formal imperative (ви-form). Connect to nakazovyy sposib from M56.
-    Formation: stem + -іть/-йте.'
-  - 'Common exercise instructions: Вставте пропущені букви (Insert missing letters).
-    Підкресліть підмет і присудок (Underline subject and predicate). Визначте відмінок
-    іменника (Determine the case of the noun).'
-  - 'Practice: read 5-6 Ukrainian exercise instructions and do the exercise. This
-    simulates real Ukrainian classroom work.'
-- section: 'Усе разом: аналізуємо текст (Putting It All Together: Text Analysis)'
+  - 'Основні наказові форми, які студент зустріне під час україномовного навчання на рівні B1+: Прочитайте, Запишіть, Виберіть, Підкресліть, Вставте, Дайте відповідь, Знайдіть, Визначте, Порівняйте, Доповніть.'
+  - 'Це форми ввічливого наказового способу (на "ви"). Зв''язок із наказовим способом із модуля M56. Утворення: основа + -іть/-йте.'
+  - 'Поширені інструкції до вправ: Вставте пропущені букви. Підкресліть підмет і присудок. Визначте відмінок іменника.'
+  - 'Практика: прочитати 5-6 українських інструкцій та виконати вправу. Це імітує реальну роботу в українському класі.'
+- section: 'Усе разом: аналізуємо текст'
   words: 400
   points:
-  - 'Integrated exercise: a short Ukrainian text (6-8 sentences). The learner identifies
-    parts of speech (частини мови), sentence members (члени речення), and breaks selected
-    words into morphemes (будова слова).'
-  - 'Reading: a Grade 4 textbook exercise page — the learner works through it as a
-    Ukrainian student would, following instructions in Ukrainian.'
-  - 'Self-assessment: Can I understand grammar instructions in Ukrainian? Am I ready
-    for B1 where more content will be in Ukrainian?'
-- section: Підсумок — Summary
+  - 'Комплексна вправа: короткий український текст (6-8 речень). Студент визначає частини мови, члени речення та розбирає вибрані слова на морфеми (будова слова).'
+  - 'Читання: сторінка з підручника для 4 класу — студент виконує завдання так, як це робив би український школяр, дотримуючись інструкцій українською мовою.'
+  - 'Самооцінювання: Чи розумію я граматичні інструкції українською? Чи готовий я до рівня B1, де більше матеріалу буде українською?'
+- section: Підсумок
   words: 200
   points:
-  - "Sentence members (члени речення) answer specific questions: підмет (хто? що?)
-    and присудок (що робить?). Word anatomy (будова слова) breaks words into корінь,
-    префікс, суфікс, and закінчення. Self-check: What is the difference between a
-    root (корінь) and a stem (основа)? Break the word 'виходити' into its morphemes."
-  - "Classroom language relies on formal imperatives (ви-form) to give instructions:
-    Прочитайте, Запишіть, Вставте, and Підкресліть. Self-check: How do you say 'Underline
-    the subject and predicate' in Ukrainian? Translate 3 common textbook instructions
-    (e.g., 'Визначте відмінок іменника')."
+  - 'Члени речення відповідають на конкретні запитання: підмет (хто? що?) і присудок (що робить?). Будова слова розкладає слова на корінь, префікс, суфікс і закінчення. Самоперевірка: У чому різниця між коренем та основою? Розберіть слово "виходити" на морфеми.'
+  - 'Мова класу спирається на ввічливі форми наказового способу (на "ви") для надання інструкцій: Прочитайте, Запишіть, Вставте і Підкресліть. Самоперевірка: Як сказати "Underline the subject and predicate" українською? Перекладіть 3 поширені інструкції з підручника (наприклад, "Визначте відмінок іменника").'
 vocabulary_hints:
   required:
   - речення (sentence)
@@ -130,19 +92,19 @@ vocabulary_hints:
   - визначте (determine — imperative)
 activity_hints:
 - type: match-up
-  focus: Match sentence member terms to their question words
+  focus: Зіставити терміни членів речення з їхніми питальними словами
   items: 8
 - type: fill-in
-  focus: Break words into morphemes (корінь, префікс, суфікс, закінчення)
+  focus: Розібрати слова на морфеми (корінь, префікс, суфікс, закінчення)
   items: 8
 - type: quiz
-  focus: Read a classroom instruction in Ukrainian and choose what to do
+  focus: Прочитати інструкцію українською та вибрати правильну дію
   items: 8
 - type: group-sort
-  focus: Sort words into groups by shared корінь (root families)
+  focus: Розподілити слова на групи за спільним коренем (родини слів)
   items: 8
 references:
 - title: Вашуленко Grade 3, Будова слова
-  notes: Root, prefix, suffix as taught to Ukrainian 3rd graders
+  notes: Корінь, префікс і суфікс, як їх викладають українським третьокласникам
 - title: Большакова Grade 4, Речення. Члени речення
-  notes: Sentence analysis method with підмет and присудок identification
+  notes: Метод аналізу речення з визначенням підмета і присудка

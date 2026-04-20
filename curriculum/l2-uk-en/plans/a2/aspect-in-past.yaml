@@ -2,88 +2,58 @@ module: a2-040
 level: A2
 sequence: 40
 slug: aspect-in-past
-version: 1.0.2
+version: 1.0.3
 title: Що ти робив? А що зробив?
 subtitle: Вид дієслова в минулому часі — процес чи результат
 focus: grammar
 pedagogy: PPP
-phase: A2.6 [Aspect, Tenses, and Motion]
+phase: 'A2.6 [Вид дієслова, часи та рух]'
 word_target: 2000
 objectives:
-- Learner can distinguish between imperfective past (що робив?) expressing 
-  process, duration, or repetition and perfective past (що зробив?) expressing a
-  completed action with a visible result.
-- Learner can choose the correct aspect in past tense based on context clues 
-  (signal words, result focus, background vs. foreground).
-- Learner can form past tense forms for both aspects of 10 common verb pairs, 
-  correctly applying gender and number agreement (робив/робила/робили vs. 
-  зробив/зробила/зробили).
-- Learner can narrate a simple sequence of events using perfective past for 
-  completed steps and imperfective past for background actions.
+- Учень може розрізняти недоконаний вид у минулому часі (що робив?), який виражає процес, тривалість чи повторення, та доконаний вид (що зробив?), що вказує на завершену дію з видимим результатом.
+- Учень може обрати правильний вид дієслова в минулому часі на основі контексту (слова-маркери, акцент на результаті, фонова дія проти основної).
+- Учень може утворювати форми минулого часу для обох видів 10 поширених пар дієслів, правильно узгоджуючи рід та число (робив/робила/робили проти зробив/зробила/зробили).
+- Учень може розповісти просту послідовність подій, використовуючи доконаний вид для завершених кроків і недоконаний вид для фонових дій.
 dialogue_situations:
-- setting: 'Two friends comparing how they spent Sunday — process vs result: Я читала
-    (impf) весь день. А ти? Я прочитав (pf) роман (m)! Я готувала (impf) обід. Я приготувала
-    (pf) борщ.'
+- setting: 'Двоє друзів обговорюють, як вони провели неділю — процес проти результату: Я читала (impf) весь день. А ти? Я прочитав (pf) роман (m)! Я готувала (impf) обід. Я приготувала (pf) борщ.'
   speakers:
   - Оля
   - Тарас
-  motivation: 'Past aspect: читала(impf, process) vs прочитав(pf, finished)'
+  motivation: 'Вид у минулому часі: читала (недоконаний, процес) проти прочитав (доконаний, завершено)'
 content_outline:
-- section: Два питання — два види (Two Questions — Two Aspects)
+- section: 'Два питання — два види'
   words: 500
   points:
-  - 'The key question pair: Що ти робив? (What were you doing? — process) vs. Що ти
-    зробив? (What did you get done? — result). This is not a grammar trick but a real
-    difference in how Ukrainians think about actions.'
-  - 'Imperfective past = the camera was rolling: Я читав книгу (I was reading). The
-    focus is on the action itself, its duration, or its repetition.'
-  - 'Perfective past = the photo of the result: Я прочитав книгу (I read/finished
-    the book). The focus is on the completed outcome.'
-  - 'Gender agreement review: він робив / вона робила / воно робило / вони робили.
-    Same pattern for perfective: він зробив / вона зробила.'
-- section: Коли вживати недоконаний вид (When to Use Imperfective Past)
+  - 'Ключова пара запитань: Що ти робив? (процес) проти Що ти зробив? (результат). Це не просто граматичне правило, а реальна відмінність у тому, як українці сприймають дії.'
+  - 'Минулий час недоконаного виду = камера знімає: Я читав книгу. Акцент робиться на самій дії, її тривалості чи повторюваності.'
+  - 'Минулий час доконаного виду = фотографія результату: Я прочитав книгу. Акцент робиться на завершеному результаті.'
+  - 'Повторення узгодження за родом: він робив / вона робила / воно робило / вони робили. Та сама модель і для доконаного виду: він зробив / вона зробила.'
+- section: 'Коли вживати недоконаний вид'
   words: 500
   points:
-  - 'Process or duration: Я довго писав листа (I was writing a letter for a long time).
-    The action stretched over time.'
-  - 'Repetition or habit: Вона щодня готувала сніданок (She made breakfast every day).
-    A repeated action, not one single event.'
-  - 'Background action: Коли я снідав, подзвонив друг (While I was having breakfast,
-    a friend called). Imperfective sets the scene.'
-  - 'Signal words: довго, часто, завжди, щодня, зазвичай, раніше, коли (for background).'
-- section: Коли вживати доконаний вид (When to Use Perfective Past)
+  - 'Процес або тривалість: Я довго писав листа. Дія розтягнута в часі.'
+  - 'Повторення або звичка: Вона щодня готувала сніданок. Повторювана дія, а не одна подія.'
+  - 'Фонова дія: Коли я снідав, подзвонив друг. Недоконаний вид створює контекст для події.'
+  - 'Слова-маркери: довго, часто, завжди, щодня, зазвичай, раніше, коли (для фону).'
+- section: 'Коли вживати доконаний вид'
   words: 500
   points:
-  - 'Completed result: Я написав листа (I wrote the letter — it is done). The action
-    reached its endpoint and produced a result.'
-  - 'Single event in sequence: Я прийшов додому, пообідав і подзвонив мамі (I came
-    home, had lunch, and called Mom). Each verb marks a completed step.'
-  - 'Sudden action: Раптом хтось постукав у двері (Suddenly someone knocked on the
-    door). A single, punctual event.'
-  - 'Signal words: вже, нарешті, раптом, одного разу, вчора (when referring to a single
-    completed event).'
-- section: Практика вибору виду (Choosing the Right Aspect)
+  - 'Завершений результат: Я написав листа. Дія досягла своєї мети і дала результат.'
+  - 'Одинична подія в послідовності: Я прийшов додому, пообідав і подзвонив мамі. Кожне дієслово позначає завершений крок.'
+  - 'Раптова дія: Раптом хтось постукав у двері. Одинична, точкова подія.'
+  - 'Слова-маркери: вже, нарешті, раптом, одного разу, вчора (коли йдеться про одиничну завершену дію).'
+- section: 'Практика вибору виду'
   words: 500
   points:
-  - 'Contrastive pairs in context: Він читав газету (was reading) vs. Він прочитав
-    газету (finished reading). Вона вчила слова (was studying words) vs. Вона вивчила
-    слова (learned the words).'
-  - 'Mini-narratives combining both aspects: Коли я готував вечерю, раптом погасло
-    світло. Я знайшов свічку і запалив її.'
-  - 'Common mistakes: using imperfective when result matters (*Я писав листа вчора
-    — ambiguous), using perfective for repeated actions (*Він щодня зробив вправи
-    — wrong).'
-  - 'Decision flowchart: Is there a result? → Perfective. Is it a process, habit,
-    or background? → Imperfective.'
-- section: Підсумок — Summary
+  - 'Контрастні пари в контексті: Він читав газету (процес) проти Він прочитав газету (завершив читати). Вона вчила слова (вивчала) проти Вона вивчила слова (вивчила напам''ять).'
+  - 'Мінірозповіді, що поєднують обидва види: Коли я готував вечерю, раптом погасло світло. Я знайшов свічку і запалив її.'
+  - 'Типові помилки: використання недоконаного виду, коли важливий результат (*Я писав листа вчора — двозначно), використання доконаного виду для повторюваних дій (*Він щодня зробив вправи — неправильно).'
+  - 'Схема прийняття рішень: Є результат? → Доконаний вид. Це процес, звичка чи фонова дія? → Недоконаний вид.'
+- section: Підсумок
   words: 200
   points:
-  - 'The past tense requires choosing between two aspects: imperfective for process,
-    repetition, or background (що робив?) and perfective for completed results or
-    sequences (що зробив?). Both forms agree in gender and number (він робив, вона
-    робила, вони робили).'
-  - "Self-check: What is the difference between 'я читав книгу' and 'я прочитав книгу'?
-    Describe a sequence of 3 things you finished yesterday using the perfective past."
+  - 'Минулий час вимагає вибору між двома видами: недоконаний для процесу, повторення або фонової дії (що робив?) і доконаний для завершених результатів або послідовностей (що зробив?). Обидві форми узгоджуються в роді та числі (він робив, вона робила, вони робили).'
+  - 'Самоперевірка: Яка різниця між "я читав книгу" і "я прочитав книгу"? Опишіть послідовність із 3 дій, які ви завершили вчора, використовуючи минулий час доконаного виду.'
 vocabulary_hints:
   required:
   - минулий час (past tense)
@@ -103,23 +73,20 @@ vocabulary_hints:
   - тривалість (duration)
 activity_hints:
 - type: quiz
-  focus: Given a sentence, identify whether the verb is imperfective or 
-    perfective and explain why
+  focus: 'Визначення виду дієслова в реченні (доконаний чи недоконаний) з поясненням причини'
   items: 8
 - type: fill-in
-  focus: Choose the correct aspect form (imperfective or perfective past) to 
-    complete sentences based on context
+  focus: 'Вибір правильної видової форми (недоконаний чи доконаний минулий час) для доповнення речень за контекстом'
   items: 8
 - type: match-up
-  focus: Match signal words (довго, раптом, щодня, нарешті) with the correct 
-    aspect and example sentence
+  focus: 'Зіставлення слів-маркерів (довго, раптом, щодня, нарешті) з відповідним видом і прикладом речення'
   items: 8
 - type: error-correction
-  focus: Fix incorrect verb aspect usage in sentences
+  focus: 'Виправлення неправильного вживання виду дієслова в реченнях'
   items: 6
 references:
 - title: Заболотний Grade 6, §52-54
-  notes: Вид дієслова в минулому часі — process vs. result contrast
+  notes: 'Вид дієслова в минулому часі — контраст процесу та результату'
 - title: 'ULP: Past Tense and Aspect'
   url: https://www.ukrainianlessons.com/grammar-hub/
-  notes: Practical examples of aspect choice in past tense
+  notes: 'Практичні приклади вибору виду в минулому часі'

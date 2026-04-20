@@ -2,73 +2,48 @@ module: a2-039
 level: A2
 sequence: 39
 slug: checkpoint-cases
-version: 1.0.2
+version: 1.0.3
 title: 'Контрольна точка: Відмінки та множина'
 subtitle: 'Перевірка знань: усі відмінки в однині та множині'
 focus: review
 pedagogy: Review
-phase: A2.5 [Case Synthesis and Plurals]
+phase: А2.5 [Синтез відмінків та множина]
 word_target: 1500
 objectives:
-- Learner can correctly form plural nouns in all 7 cases, including the 
-  difficult Genitive plural with zero endings and fleeting vowels.
-- Learner can select the appropriate case based on verb government, preposition,
-  or context (time, characteristic, path) across mixed exercises.
-- Learner can identify and correct case errors in short texts, demonstrating 
-  conscious control over the case system.
-- Learner can produce a short coherent text (8-10 sentences) that naturally uses
-  at least 5 different cases in both singular and plural.
+- Здобувач може правильно утворювати іменники у множині в усіх 7 відмінках, включаючи складний родовий відмінок множини з нульовим закінченням та випадними голосними.
+- Здобувач може вибрати відповідний відмінок на основі керування дієслова, прийменника або контексту (час, характеристика, шлях) у змішаних вправах.
+- Здобувач може знаходити та виправляти відмінкові помилки в коротких текстах, демонструючи свідомий контроль над системою відмінків.
+- Здобувач може створити короткий зв'язний текст (8-10 речень), який природно використовує принаймні 5 різних відмінків як в однині, так і в множині.
 dialogue_situations:
-- setting: 'Planning a wedding — every case appears naturally: Запрошення для гостей
-    (gen). Подарунок нареченій (dat). Бачу наречену (acc). Фото з молодятами (inst).
-    На весіллі (loc). Олено! (voc)'
+- setting: 'Планування весілля — кожен відмінок з''являється природно: Запрошення для гостей (gen). Подарунок нареченій (dat). Бачу наречену (acc). Фото з молодятами (inst). На весіллі (loc). Олено! (voc)'
   speakers:
   - Наречена
   - Подруга
-  motivation: 'All 7 cases in wedding planning: gen, dat, acc, inst, loc, voc'
+  motivation: 'Усі 7 відмінків у плануванні весілля: родовий, давальний, знахідний, орудний, місцевий, кличний'
 content_outline:
-- section: 'Частина 1: Форми множини (Part 1: Plural Forms)'
+- section: 'Частина 1: Форми множини'
   words: 450
   points:
-  - 'Exercise 1: Form the Nominative plural from 10 singular nouns across all відміни
-    (mixed genders, including irregulars like дитина, людина, око).'
-  - 'Exercise 2: Form the Genitive plural — the hardest forms. Given 10 nouns, learner
-    produces Gen.Pl. (книга → книг, студент → студентів, місто → міст, ніч → ночей,
-    теля → телят).'
-  - 'Exercise 3: Complete quantity expressions with the correct Gen.Pl. form (п''ять
-    ___, багато ___, скільки ___?).'
-- section: 'Частина 2: Який відмінок? (Part 2: Which Case?)'
+  - 'Вправа 1: Утворити називний відмінок множини від 10 іменників однини різних відмін (включно з винятками, такими як дитина, людина, око).'
+  - 'Вправа 2: Утворити родовий відмінок множини — найскладніші форми. Для 10 іменників написати форму родового відмінка множини (книга → книг, студент → студентів, місто → міст, ніч → ночей, теля → телят).'
+  - 'Вправа 3: Доповнити вирази кількості правильною формою родового відмінка множини (п''ять ___, багато ___, скільки ___?).'
+- section: 'Частина 2: Який відмінок?'
   words: 500
   points:
-  - 'Exercise 4: Multiple-choice — given a sentence with a blank, choose the correct
-    case form. Includes all triggers: verbs (допомагати + Dat., бачити + Acc., користуватися
-    + Instr.), prepositions (у + Loc./Acc., з + Gen./Instr., по + Loc.), special uses
-    (у четвер, у 2014 році, хлопець у светрі).'
-  - 'Exercise 5: Case identification — a short text (8-10 sentences) with underlined
-    nouns. Learner identifies the case of each underlined noun and the trigger (verb,
-    preposition, or construction).'
-  - 'Exercise 6: Error correction — 6 sentences with case errors. Learner finds and
-    corrects each error (e.g., *Я допомагаю сестру → сестрі; *багато студенти → студентів).'
-- section: 'Частина 3: Вільне мовлення (Part 3: Free Production)'
+  - 'Вправа 4: Множинний вибір — для речення з пропуском вибрати правильну форму відмінка. Охоплює всі тригери: дієслова (допомагати + давальний, бачити + знахідний, користуватися + орудний), прийменники (у + місцевий/знахідний, з + родовий/орудний, по + місцевий), особливі випадки (у четвер, у 2014 році, хлопець у светрі).'
+  - 'Вправа 5: Визначення відмінка — короткий текст (8-10 речень) з підкресленими іменниками. Здобувач визначає відмінок кожного підкресленого іменника та його тригер (дієслово, прийменник або конструкцію).'
+  - 'Вправа 6: Виправлення помилок — 6 речень з відмінковими помилками. Здобувач знаходить і виправляє кожну помилку (наприклад, *Я допомагаю сестру → сестрі; *багато студенти → студентів).'
+- section: 'Частина 3: Вільне мовлення'
   words: 550
   points:
-  - 'Exercise 7: Guided writing — "Опишіть свій ідеальний вихідний день" (Describe
-    your ideal day off). Must include: where you go (Acc./Loc.), who you meet (Acc./Dat.),
-    what you do (Acc./Instr.), what you eat (Gen. for quantities, Acc. for items).'
-  - 'Exercise 8: Dialogue completion — a dialogue with missing noun forms. Learner
-    fills in 8-10 blanks using the correct case, both singular and plural.'
-  - 'Self-assessment checklist: Can I form plurals confidently? Do I know which case
-    each preposition takes? Can I use the case compass from M31? Ready for A2.6?'
-- section: Підсумок — Summary
+  - 'Вправа 7: Кероване письмо — "Опишіть свій ідеальний вихідний день". Обов''язково включити: куди ви йдете (знахідний/місцевий), з ким зустрічаєтесь (знахідний/давальний), що робите (знахідний/орудний), що їсте (родовий для кількості, знахідний для предметів).'
+  - 'Вправа 8: Завершення діалогу — діалог з пропущеними формами іменників. Здобувач заповнює 8-10 пропусків, використовуючи правильний відмінок, як в однині, так і в множині.'
+  - 'Чек-лист для самооцінки: Чи можу я впевнено утворювати множину? Чи знаю я, якого відмінка вимагає кожен прийменник? Чи можу я користуватися відмінковим компасом з М31? Чи готовий я до А2.6?'
+- section: Підсумок
   words: 200
   points:
-  - 'Plural formation in all 7 cases relies heavily on mastering the Genitive plural
-    with its zero endings and fleeting vowels (книга → книг, місто → міст). Self-check:
-    What are the Genitive plural forms for дитина, людина, and око?'
-  - "Choosing the correct case depends on verb government (допомагати + Dat.), prepositions,
-    and context (time, characteristics). Self-check: What's the difference between
-    'у четвер' and 'у 2014 році'? Describe what you do on your ideal day off using
-    at least 5 different cases."
+  - 'Утворення множини у всіх 7 відмінках значною мірою спирається на засвоєння родового відмінка множини з його нульовими закінченнями та випадними голосними (книга → книг, місто → міст). Самоперевірка: Які форми родового відмінка множини мають слова дитина, людина та око?'
+  - 'Вибір правильного відмінка залежить від керування дієслова (допомагати + давальний), прийменників та контексту (час, характеристики). Самоперевірка: Яка різниця між "у четвер" та "у 2014 році"? Опишіть, що ви робите у свій ідеальний вихідний день, використовуючи принаймні 5 різних відмінків.'
 vocabulary_hints:
   required:
   - перевірка (check, review)
@@ -85,21 +60,19 @@ vocabulary_hints:
   - вихідний день (day off)
 activity_hints:
 - type: fill-in
-  focus: Mixed case drill — complete sentences requiring all 7 cases, singular 
-    and plural
+  focus: 'Змішане тренування відмінків — доповнити речення, що вимагають усіх 7 відмінків в однині та множині'
   items: 8
 - type: quiz
-  focus: Error correction — identify and fix case errors in sentences
+  focus: 'Виправлення помилок — знайти та виправити відмінкові помилки в реченнях'
   items: 8
 - type: group-sort
-  focus: Sort noun forms by case (Nom., Gen., Dat., Acc., Instr., Loc., Voc.)
+  focus: 'Відсортувати форми іменників за відмінками (називний, родовий, давальний, знахідний, орудний, місцевий, кличний)'
   items: 8
 - type: error-correction
-  focus: Find and fix mixed case errors in sentences — wrong endings after 
-    prepositions, animate/inanimate confusion, Gen.Pl. mistakes
+  focus: 'Знайти та виправити змішані відмінкові помилки в реченнях — неправильні закінчення після прийменників, плутанина істот/неістот, помилки в родовому відмінку множини'
   items: 6
 references:
 - title: Заболотний Grade 6, Повторення вивченого
-  notes: End-of-chapter review exercises covering all cases
+  notes: 'Підсумкові вправи до розділу, що охоплюють усі відмінки'
 - title: Варзацька Grade 4, с. 38
-  notes: Full declension table — all cases, singular and plural, as reference
+  notes: 'Повна таблиця відмінювання — усі відмінки, однина і множина, для довідки'

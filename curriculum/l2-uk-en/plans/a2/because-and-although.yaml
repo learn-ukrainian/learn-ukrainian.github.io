@@ -2,81 +2,53 @@ module: a2-047
 level: A2
 sequence: 47
 slug: because-and-although
-version: 1.1.2
+version: 1.1.3
 title: Тому що, бо, хоча
 subtitle: Складне речення з причиною та допустом
 focus: grammar
 pedagogy: PPP
-phase: A2.7 [Complex Sentences and Conditionals]
+phase: А2.7 [Складні речення та умови]
 word_target: 2000
 objectives:
-- Learner can join two clauses using тому що and бо to express cause or reason.
-- Learner can use хоча to express concession (although, even though) in compound
-  sentences.
-- Learner can build compound sentences with coordinating conjunctions і, та, але
-  to expand simple ideas into longer utterances.
-- Learner can distinguish between причина (cause with бо/тому що) and допуст 
-  (concession with хоча) in context.
+- Здобувач може з'єднати дві частини речення за допомогою "тому що" та "бо" для вираження причини.
+- Здобувач може використовувати "хоча" для вираження допусту в складних реченнях.
+- Здобувач може будувати складносурядні речення зі сполучниками "і", "та", "але" для розширення простих думок.
+- Здобувач може розрізняти причину (з "бо" / "тому що") та допуст (з "хоча") у контексті.
 dialogue_situations:
-- setting: 'Two students debating whether to skip class — giving reasons: Я не піду,
-    бо хворію. Але тобі треба, тому що завтра контрольна (f, test)! Хоча я втомився,
-    я все одно піду.'
+- setting: 'Два студенти сперечаються, чи йти на заняття — наводять причини: Я не піду, бо хворію. Але тобі треба, тому що завтра контрольна (f, test)! Хоча я втомився, я все одно піду.'
   speakers:
   - Студент 1
   - Студент 2
-  motivation: Бо, тому що, хоча, але with контрольна(f), лекція(f)
+  motivation: 'Бо, тому що, хоча, але зі словами контрольна(f), лекція(f)'
 content_outline:
-- section: Чому? Тому що... / Бо... (Why? Because...)
+- section: Чому? Тому що... / Бо...
   words: 700
   points:
-  - 'Introducing subordinate clauses of cause: the question Чому? and the answers
-    тому що... and бо... Both mean "because" but differ in register — бо is more colloquial,
-    тому що is more neutral/formal.'
-  - 'Word order: тому що always introduces the subordinate clause; бо can appear mid-sentence
-    or at the start of the second clause. Comma placement before the conjunction.'
-  - 'Building natural cause sentences from everyday life: Я не прийшов, тому що був
-    зайнятий. Вона вивчає українську, бо хоче розуміти друзів.'
-  - 'Practice transformations: two simple sentences into one compound sentence with
-    тому що or бо.'
-- section: Хоча... (Although...)
+  - 'Введення підрядних речень причини: запитання "Чому?" та відповіді "тому що..." і "бо...". Обидва означають причину, але відрізняються регістром — "бо" більш розмовне, "тому що" більш нейтральне або формальне.'
+  - 'Порядок слів: "тому що" завжди стоїть на початку підрядної частини; "бо" може бути всередині речення або на початку другої частини. Правила пунктуації: кома перед сполучником.'
+  - 'Побудова природних речень із повсякденного життя: Я не прийшов, тому що був зайнятий. Вона вивчає українську, бо хоче розуміти друзів.'
+  - 'Практика трансформації: поєднання двох простих речень в одне складне за допомогою "тому що" або "бо".'
+- section: Хоча...
   words: 600
   points:
-  - 'Introducing concessive clauses with хоча: expressing a contrast between expectation
-    and reality. Хоча надворі холодно, ми пішли гуляти.'
-  - 'Distinguishing хоча (although — concession) from але (but — simple contrast):
-    Хоча він втомився, він продовжив працювати vs. Він втомився, але продовжив працювати.'
-  - 'Position flexibility: хоча-clause can come first or second. When first, the main
-    clause often has no additional conjunction. Comma before or after хоча-clause.'
-  - 'Natural examples: Хоча я вчу українську недовго, я вже розумію багато. Ми пішли
-    на прогулянку, хоча йшов дощ.'
-- section: 'Складносурядне речення: і, та, але (Compound Sentences: and, but)'
+  - 'Введення підрядних речень допусту з "хоча": вираження контрасту між очікуванням та реальністю. Хоча надворі холодно, ми пішли гуляти.'
+  - 'Розрізнення "хоча" (допуст) та "але" (простий контраст): Хоча він втомився, він продовжив працювати vs. Він втомився, але продовжив працювати.'
+  - 'Гнучкість позиції: частина з "хоча" може стояти першою або другою. Якщо вона перша, головна частина часто не має додаткового сполучника. Кома перед або після підрядної частини.'
+  - 'Природні приклади: Хоча я вчу українську недовго, я вже розумію багато. Ми пішли на прогулянку, хоча йшов дощ.'
+- section: 'Складносурядне речення: і, та, але'
   words: 700
   points:
-  - 'Expanding from A1 coordinating conjunctions: і/та (and), але/проте/однак (but).
-    Difference between і and та — та is slightly more formal or used to avoid repeating
-    і.'
-  - 'Building longer compound sentences: Я прийшов додому, і ми разом повечеряли.
-    Сергій хотів піти в кіно, але не мав часу.'
-  - 'Contrast: coordinating (і, та, але — equal clauses) vs. subordinating (тому що,
-    бо, хоча — main + dependent clause). How to tell the difference.'
-  - 'Comma rules for compound sentences: always a comma before але/проте/однак; comma
-    before і/та when joining two clauses (not two words).'
-  - 'Consolidation exercise: rewrite a short paragraph using all three types (cause,
-    concession, coordination) to create natural, connected prose.'
-  - 'Intonation patterns for cause and concession: in причинових реченнях, the main
-    clause carries a falling tone (↘) while the subordinate clause with тому що/бо
-    has a slight rising tone (↗) leading into it. In допустових реченнях with хоча,
-    the хоча-clause rises (↗) to signal the concession, then the main clause falls
-    (↘) to deliver the contrasting result.'
-- section: Підсумок — Summary
+  - 'Розширення сурядних сполучників рівня А1: "і"/"та", "але"/"проте"/"однак". Різниця між "і" та "та" — "та" є трохи більш формальним або використовується, щоб уникнути повторення "і".'
+  - 'Побудова довших складносурядних речень: Я прийшов додому, і ми разом повечеряли. Сергій хотів піти в кіно, але не мав часу.'
+  - 'Контраст: сурядний зв''язок ("і", "та", "але" — рівноправні частини) та підрядний зв''язок ("тому що", "бо", "хоча" — головна і підрядна частини). Як їх розрізняти.'
+  - 'Правила пунктуації для складних речень: завжди кома перед "але", "проте", "однак"; кома перед "і" / "та" при поєднанні двох частин складного речення.'
+  - 'Вправа на закріплення: переписати короткий абзац, використовуючи всі три типи (причина, допуст, сурядність) для створення природного зв''язного тексту.'
+  - 'Інтонаційні моделі: у причинових реченнях головна частина має низхідний тон (↘), тоді як підрядна частина з "тому що" / "бо" має легкий висхідний тон (↗) перед нею. У допустових реченнях з "хоча", частина з "хоча" має висхідний тон (↗), щоб вказати на допуст, а потім головна частина має низхідний тон (↘) для вираження результату.'
+- section: Підсумок
   words: 200
   points:
-  - "Express cause using 'тому що' (neutral) or 'бо' (colloquial), and concession
-    using 'хоча'. Self-check: What is the difference between 'бо' and 'тому що'? Combine
-    'Надворі холодно' and 'Ми йдемо гуляти' using 'хоча'."
-  - "Build compound sentences with coordinating conjunctions 'і', 'та', 'але', always
-    placing a comma when joining two full clauses. Self-check: What is the difference
-    between 'хоча' and 'але'? Write a sentence about your day using 'і' and 'але'."
+  - 'Виражайте причину за допомогою "тому що" (нейтрально) або "бо" (розмовно), а допуст за допомогою "хоча". Самоперевірка: Яка різниця між "бо" та "тому що"? З''єднайте "Надворі холодно" та "Ми йдемо гуляти", використовуючи "хоча".'
+  - 'Будуйте складні речення з сурядними сполучниками "і", "та", "але", завжди ставлячи кому при з''єднанні двох повноцінних частин. Самоперевірка: Яка різниця між "хоча" та "але"? Напишіть речення про свій день, використовуючи "і" та "але".'
 vocabulary_hints:
   required:
   - тому що (because)
@@ -96,32 +68,25 @@ vocabulary_hints:
   - незважаючи на (despite)
 activity_hints:
 - type: quiz
-  focus: Choose the correct conjunction (тому що, бо, хоча, але) to complete 
-    sentences
+  focus: 'Вибрати правильний сполучник (тому що, бо, хоча, але) для завершення речення'
   items: 8
 - type: fill-in
-  focus: Complete compound sentences by adding the missing clause after the 
-    conjunction
+  focus: 'Завершити складні речення, додавши пропущену частину після сполучника'
   items: 8
 - type: match-up
-  focus: Match two halves of sentences — причина with наслідок, допуст with 
-    результат
+  focus: 'З''єднати дві половини речення — причину з наслідком, допуст із результатом'
   items: 8
 - type: group-sort
-  focus: Sort conjunctions into причина (тому що, бо) vs. допуст (хоча) vs. 
-    протиставлення (але, проте, однак)
+  focus: 'Відсортувати сполучники за категоріями (причина, допуст, протиставлення)'
   items: 8
 - type: unjumble
-  focus: Reorder words to form correct compound sentences with тому що, бо, and 
-    хоча
+  focus: 'Відновити порядок слів, щоб утворити правильні складні речення з тому що, бо, хоча'
   items: 6
 references:
 - title: Заболотний Grade 5, §28
-  notes: Складнопідрядні речення з підрядними причини, мети, умови — primary 
-    grammar source
+  notes: 'Складнопідрядні речення з підрядними причини, мети, умови — основне джерело з граматики'
 - title: Заболотний Grade 6, сполучники
-  notes: 'Cause conjunctions: бо, тому що, через те що, оскільки — with examples from
-    Ukrainian proverbs'
+  notes: 'Сполучники причини: бо, тому що, через те що, оскільки — з прикладами з українських прислів''їв'
 - title: 'ULP: Ukrainian Conjunctions'
   url: https://www.ukrainianlessons.com/conjunctions/
-  notes: Overview of coordinating and subordinating conjunctions
+  notes: 'Огляд сурядних та підрядних сполучників'

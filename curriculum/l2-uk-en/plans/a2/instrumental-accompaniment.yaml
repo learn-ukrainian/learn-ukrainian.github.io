@@ -2,7 +2,7 @@ module: a2-024
 level: A2
 sequence: 24
 slug: instrumental-accompaniment
-version: 1.0.2
+version: 1.0.3
 title: З другом
 subtitle: Прийменники з/із/зі з орудним відмінком для супроводу та ознаки
 focus: grammar
@@ -10,80 +10,50 @@ pedagogy: PPP
 phase: A2.4 [Instrumental Case]
 word_target: 2000
 objectives:
-- Learner can form the Instrumental singular of masculine, feminine, and neuter 
-  nouns after the preposition з/із/зі.
-- Learner can use з + Instrumental to express accompaniment (з другом, з 
-  сестрою, з дитиною).
-- Learner can use з + Instrumental to express an attribute or ingredient (чай з 
-  лимоном, хліб з маслом, кава з молоком).
-- Learner can choose the correct variant (з/із/зі) based on phonetic context.
+- Учень може утворювати орудний відмінок однини іменників чоловічого, жіночого та середнього роду після прийменників з/із/зі.
+- Учень вміє використовувати з + орудний відмінок для вираження супроводу (з другом, з сестрою, з дитиною).
+- Учень може використовувати з + орудний відмінок для вираження ознаки або інгредієнта (чай з лимоном, хліб з маслом, кава з молоком).
+- Учень вміє обирати правильний варіант (з/із/зі) залежно від фонетичного контексту.
 dialogue_situations:
-- setting: 'Planning a picnic — who''s coming with whom and bringing what: Я іду з
-    Олегом (m). Вона прийде з подругою (f, girlfriend). Візьмемо каву з молоком (n,
-    milk). Бутерброди з шинкою (f, ham).'
+- setting: 'Планування пікніка — хто з ким іде і що бере з собою: Я іду з Олегом (m). Вона прийде з подругою (f, girlfriend). Візьмемо каву з молоком (n, milk). Бутерброди з шинкою (f, ham).'
   speakers:
-  - Організатор пікніку
+  - Організатор пікніка
   - Друзі
-  motivation: 'З + instrumental: з Олегом, з подругою, з молоком, з шинкою'
+  motivation: 'З + орудний відмінок: з Олегом, з подругою, з молоком, з шинкою'
 content_outline:
-- section: 'Орудний відмінок: Знайомство (The Instrumental Case: Introduction)'
+- section: 'Орудний відмінок: Знайомство'
   words: 450
   points:
-  - Introducing the Instrumental case (Орудний відмінок), answering the 
-    questions 'Ким? Чим?' — the seventh Ukrainian case in our curriculum 
-    journey.
-  - 'Its core meaning: the "tool" or "companion" of an action. Today we focus on companionship
-    — doing something WITH someone or something.'
-  - Quick overview of all Instrumental functions (accompaniment, tool, 
-    profession, spatial) — to be covered across M21-M25.
-  - Connection to cases already learned (Nominative, Accusative, Genitive, 
-    Dative) and how Instrumental completes the picture of noun relationships.
-- section: Закінчення орудного відмінка однини (Instrumental Singular Endings)
+  - 'Ознайомлення з орудним відмінком, що відповідає на питання "Ким? Чим?" — сьомий український відмінок у нашому курсі.'
+  - 'Його основне значення: "інструмент" або "супутник" дії. Сьогодні ми зосереджуємось на супроводі — робити щось З кимось або чимось.'
+  - 'Короткий огляд усіх функцій орудного відмінка (супровід, інструмент, професія, простір) — вивчатимуться в модулях M21-M25.'
+  - 'Зв''язок з уже вивченими відмінками (називний, знахідний, родовий, давальний) і як орудний відмінок доповнює картину зв''язків іменника.'
+- section: 'Закінчення орудного відмінка однини'
   words: 600
   points:
-  - 'Masculine nouns: -ом for hard stems (другом, столом, братом), -ем for soft stems
-    and sibilants (вчителем, ножем, товаришем), -єм for stems in [й] (чаєм, трамваєм).'
-  - 'Feminine nouns: -ою for hard stems (сестрою, мамою, книгою), -ею for soft stems
-    and sibilants (землею, душею), -єю for stems in [й] (мрією, надією).'
-  - 'Neuter nouns: -ом for -о stems (вікном, молоком, маслом), -ем/-ям for -е/-я stems
-    (морем, ім''ям).'
-  - Clear comparison chart with Nominative and Instrumental side by side for 
-    each gender. Textbook pattern from Захарійчук Grade 4 and Пономарьова Grade 
-    4.
-- section: З/із/зі + орудний відмінок (Z/iz/zi + Instrumental)
+  - 'Іменники чоловічого роду: -ом для твердої групи (другом, столом, братом), -ем для м''якої та мішаної груп (вчителем, ножем, товаришем), -єм для основ на [й] (чаєм, трамваєм).'
+  - 'Іменники жіночого роду: -ою для твердої групи (сестрою, мамою, книгою), -ею для м''якої та мішаної груп (землею, душею), -єю для основ на [й] (мрією, надією).'
+  - 'Іменники середнього роду: -ом для основ на -о (вікном, молоком, маслом), -ем/-ям для основ на -е/-я (морем, ім''ям).'
+  - 'Чітка порівняльна таблиця з називним та орудним відмінками для кожного роду. Модель за підручниками Захарійчук 4 клас та Пономарьова 4 клас.'
+- section: 'З/із/зі + орудний відмінок'
   words: 500
   points:
-  - 'The preposition з (with) + Instrumental expresses two meanings: (1) accompaniment
-    — Я гуляю з другом, Вона живе з батьками; (2) attribute — чай з лимоном, хліб
-    з маслом, борщ зі сметаною.'
-  - 'Phonetic variants: з before vowels and most consonants (з другом, з молоком),
-    із before consonant clusters (із сестрою), зі before з-, с-, ш- initial words
-    (зі мною, зі сметаною).'
-  - 'Common collocations: каша з маслом, кава з молоком, піца з грибами, салат з овочами
-    — food descriptions that learners can use immediately.'
-  - Dialogue practice in a cafe setting where friends order food and describe 
-    dishes.
-- section: 'Практика: З ким? З чим? (Practice: With Whom? With What?)'
+  - 'Прийменник з (with) + орудний відмінок виражає два значення: (1) супровід — Я гуляю з другом, Вона живе з батьками; (2) ознака — чай з лимоном, хліб з маслом, борщ зі сметаною.'
+  - 'Фонетичні варіанти: з перед голосними та більшістю приголосних (з другом, з молоком), із перед збігом приголосних (із сестрою), зі перед словами, що починаються на з-, с-, ш- (зі мною, зі сметаною).'
+  - 'Поширені словосполучення: каша з маслом, кава з молоком, піца з грибами, салат з овочами — описи їжі, які учні можуть використовувати одразу.'
+  - 'Діалогічна практика в кафе, де друзі замовляють їжу та описують страви.'
+- section: 'Практика: З ким? З чим?'
   words: 450
   points:
-  - 'Practice answering questions: З ким ти живеш? — Я живу з мамою. З ким ти ходиш
-    у кіно? — З другом. Чай з чим? — З лимоном.'
-  - 'Dialogue: Two friends meeting at a cafe, ordering drinks and snacks, describing
-    what they want (Мені, будь ласка, каву з молоком. А мені чай з медом).'
-  - Transformation drill from Nominative to Instrumental in context sentences.
-  - 'Common expressions: розмовляти з кимось, зустрітися з другом, погодитися з думкою.'
-- section: Підсумок — Summary
+  - 'Практика відповідей на запитання: З ким ти живеш? — Я живу з мамою. З ким ти ходиш у кіно? — З другом. Чай з чим? — З лимоном.'
+  - 'Діалог: двоє друзів зустрічаються в кафе, замовляють напої та закуски, описують, чого вони хочуть (Мені, будь ласка, каву з молоком. А мені чай з медом).'
+  - 'Вправа на трансформацію з називного в орудний відмінок у контексті речень.'
+  - 'Поширені вирази: розмовляти з кимось, зустрітися з другом, погодитися з думкою.'
+- section: Підсумок
   words: 200
   points:
-  - 'Instrumental singular endings for accompaniment and ingredients: Masculine/Neuter
-    take -ом for hard-stems (другом, маслом) and -ем/-єм for soft-stems (вчителем,
-    чаєм). Feminine takes -ою for hard-stems (сестрою) and -ею/-єю for soft-stems
-    (землею, мрією).'
-  - "The preposition 'with' adapts to phonetics: use з generally (з другом), із for
-    consonant clusters (із сестрою), and зі before з-, с-, ш- sounds (зі сметаною).
-    Self-check: How do you order 'coffee with milk' and 'tea with lemon'? (кава з
-    молоком, чай з лимоном) Answer the question: З ким ти живеш? Describe 3 food combinations
-    using 'з/із/зі'. When exactly must you use 'зі'?"
+  - 'Закінчення орудного відмінка однини для супроводу та інгредієнтів: чоловічий/середній рід мають -ом для твердої групи (другом, маслом) та -ем/-єм для м''якої (вчителем, чаєм). Жіночий рід має -ою для твердої групи (сестрою) та -ею/-єю для м''якої (землею, мрією).'
+  - 'Прийменник "з" адаптується до фонетики: використовуйте з зазвичай (з другом), із для збігу приголосних (із сестрою) та зі перед звуками з-, с-, ш- (зі сметаною). Самоперевірка: Як ви замовите "coffee with milk" та "tea with lemon"? (кава з молоком, чай з лимоном) Дайте відповідь на запитання: З ким ти живеш? Опишіть 3 комбінації їжі, використовуючи "з/із/зі". Коли саме потрібно використовувати "зі"?'
 vocabulary_hints:
   required:
   - орудний відмінок (instrumental case)
@@ -104,24 +74,22 @@ vocabulary_hints:
   - гриби (mushrooms)
 activity_hints:
 - type: fill-in
-  focus: Form the correct Instrumental ending for nouns after з/із/зі
+  focus: 'Утворіть правильне закінчення орудного відмінка для іменників після з/із/зі'
   items: 8
 - type: match-up
-  focus: Match Nominative nouns to their Instrumental forms
+  focus: 'З''єднайте іменники в називному відмінку з їхніми формами в орудному'
   items: 8
 - type: quiz
-  focus: Choose з/із/зі based on the following word
+  focus: 'Виберіть з/із/зі залежно від наступного слова'
   items: 8
 - type: fill-in
-  focus: Complete cafe dialogue sentences with correct Instrumental forms
+  focus: 'Доповніть речення діалогу в кафе правильними формами орудного відмінка'
   items: 8
 references:
 - title: Захарійчук Grade 4, с. 62-63
-  notes: Instrumental endings for masculine nouns (-ом, -ем, -єм) with 
-    prepositions з, за, із, над, під, між, перед
+  notes: 'Закінчення орудного відмінка для іменників чоловічого роду (-ом, -ем, -єм) з прийменниками з, за, із, над, під, між, перед'
 - title: Пономарьова Grade 4, с. 53-56
-  notes: Instrumental endings for feminine (-ою, -ею, -єю) and masculine (-ом, 
-    -ем, -єм) nouns with discovery exercises
+  notes: 'Закінчення орудного відмінка для іменників жіночого (-ою, -ею, -єю) та чоловічого (-ом, -ем, -єм) роду з пошуковими вправами'
 - title: 'ULP: Ukrainian Cases — Instrumental'
   url: https://www.ukrainianlessons.com/instrumental-case/
-  notes: Overview of Instrumental case functions for L2 learners
+  notes: 'Огляд функцій орудного відмінка для студентів, які вивчають українську як іноземну'

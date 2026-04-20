@@ -2,72 +2,55 @@ module: a2-015
 level: A2
 sequence: 15
 slug: shopping-and-health
-version: 1.0.2
+version: 1.0.3
 title: На ринку та у лікаря
 subtitle: Родовий відмінок у реальних ситуаціях — покупки та здоров'я
 focus: communication
 pedagogy: TBL
-phase: A2.2 [Genitive Case Complete]
+phase: 'A2.2 [Родовий відмінок повністю]'
 word_target: 2000
 objectives:
-- Learner can request specific quantities of food items at a market using Genitive (кілограм яблук, пів кіло сиру, пляшка
-  води).
-- Learner can describe symptoms and health complaints using Genitive constructions (немає температури, болить від холоду,
-  ліки від кашлю).
-- Learner can participate in a natural shopping dialogue including asking prices, quantities, and preferences.
-- Learner can participate in a basic doctor visit dialogue including describing symptoms and understanding simple instructions.
+- Вміти просити певну кількість продуктів на ринку, використовуючи родовий відмінок (кілограм яблук, пів кіло сиру, пляшка води).
+- Навчитися описувати симптоми та скарги на здоров'я за допомогою конструкцій родового відмінка (немає температури, болить від холоду, ліки від кашлю).
+- Опанувати участь у природному діалозі під час покупок, включаючи питання про ціни, кількість та вподобання.
+- Вміти брати участь у базовому діалозі на прийомі у лікаря, включаючи опис симптомів та розуміння простих вказівок.
 dialogue_situations:
-- setting: 'At a Kyiv ринок (m, market) — buying produce: Дайте мені кілограм помідорів (m, tomatoes) і півкіло огірків (m,
-    cucumbers). Then at the лікар (m, doctor): У мене болить горло (n, throat). Then at the аптека (f, pharmacy): Мені потрібні
-    краплі (pl, drops).'
+- setting: 'На київському ринку (m, market) — купуємо продукти: Дайте мені кілограм помідорів (m, tomatoes) і півкіло огірків (m, cucumbers). Потім у лікаря (m, doctor): У мене болить горло (n, throat). Потім в аптеці (f, pharmacy): Мені потрібні краплі (pl, drops).'
   speakers:
-  - Покупець/Пацієнт
-  - Продавець/Лікар/Фармацевт
-  motivation: 'Three real situations: помідор(m), огірок(m), горло(n), краплі(pl)'
+  - Покупець
+  - Пацієнт
+  - Продавець
+  - Лікар
+  - Фармацевт
+  motivation: 'Три реальні ситуації: помідор(m), огірок(m), горло(n), краплі(pl)'
 content_outline:
-- section: 'На ринку: скільки вам? (At the Market: How Much Do You Want?)'
+- section: 'На ринку: скільки вам?'
   words: 750
   points:
-  - 'Quantity + Genitive: кілограм яблук, пів кіло помідорів, літр молока, пляшка води, пачка масла, десяток яєць.'
-  - 'Natural market dialogue: greeting the vendor, asking what is fresh today, requesting quantities, asking the price, paying.
-    Based on real market interactions — vendor offers tastes, suggests alternatives.'
-  - 'Genitive after measure words: склянка соку (a glass of juice), шматок хліба (a piece of bread), банка меду (a jar of
-    honey). Practice with partitive Genitive.'
-  - 'Price expressions: скільки коштує кілограм? по скільки? — дорого/дешево/нормально.'
-  - 'Polite forms: Дайте, будь ласка... Чи є у вас...? Мені, будь ласка...'
-- section: 'У лікаря: що вас турбує? (At the Doctor: What Troubles You?)'
+  - 'Кількість + родовий відмінок: кілограм яблук, пів кіло помідорів, літр молока, пляшка води, пачка масла, десяток яєць.'
+  - 'Природний діалог на ринку: привітання з продавцем, запитання про те, що сьогодні свіже, запит на кількість, запитання про ціну, оплата. На основі реальних ситуацій на ринку — продавець пропонує скуштувати, радить альтернативи.'
+  - 'Родовий відмінок після слів-мір: склянка соку, шматок хліба, банка меду. Практика з партитивним родовим відмінком.'
+  - 'Вираження ціни: скільки коштує кілограм? по скільки? — дорого/дешево/нормально.'
+  - 'Ввічливі форми: Дайте, будь ласка... Чи є у вас...? Мені, будь ласка...'
+- section: 'У лікаря: що вас турбує?'
   words: 700
   points:
-  - 'Doctor''s questions: Що вас турбує? Як давно? Чи є температура? Чи є алергія на ліки?'
-  - 'Patient responses with Genitive: немає температури (no fever), немає апетиту (no appetite), немає сил (no energy). Also:
-    болить від холоду (hurts from the cold), кашель від алергії (cough from allergy).'
-  - 'Medicine and prescriptions: ліки від кашлю (cough medicine), краплі від нежиті (drops for a runny nose), таблетки від
-    головного болю (headache pills). Genitive after від for ''against/for'' a condition.'
-  - 'Natural dialogue: arriving, describing how you feel, doctor asking follow-up questions, receiving advice (пийте багато
-    води, відпочивайте).'
-- section: В аптеці та повсякденне здоров'я (At the Pharmacy and Everyday Health)
+  - 'Запитання лікаря: Що вас турбує? Як давно? Чи є температура? Чи є алергія на ліки?'
+  - 'Відповіді пацієнта з родовим відмінком: немає температури, немає апетиту, немає сил. А також: болить від холоду, кашель від алергії.'
+  - 'Ліки та рецепти: ліки від кашлю, краплі від нежиті, таблетки від головного болю. Родовий відмінок після «від» для позначення засобу проти хвороби.'
+  - 'Природний діалог: прихід, опис самопочуття, уточнюючі запитання лікаря, отримання порад (пийте багато води, відпочивайте).'
+- section: В аптеці та повсякденне здоров'я
   words: 550
   points:
-  - 'Pharmacy dialogue: asking for specific medicine, asking for advice (Що ви порадите від...?), understanding pharmacist
-    recommendations.'
-  - 'Health vocabulary with Genitive: для здоров''я (for health), без рецепта (without a prescription), після їжі (after a
-    meal — for taking medicine).'
-  - 'Everyday health phrases: дбати про здоров''я, багато води, мало цукру, без кофеїну. Connecting diet and health language
-    with Genitive structures.'
-  - 'Consolidation: both scenarios (market + health) use the same Genitive patterns — quantity (кілограм яблук / багато води),
-    absence (немає / без), source/cause (від кашлю / з ринку).'
-- section: Підсумок — Summary
+  - 'Діалог в аптеці: прохання дати конкретні ліки, запит на пораду (Що ви порадите від...?), розуміння рекомендацій фармацевта.'
+  - 'Лексика про здоров''я з родовим відмінком: для здоров''я, без рецепта, після їжі.'
+  - 'Повсякденні фрази про здоров''я: дбати про здоров''я, багато води, мало цукру, без кофеїну. Зв''язок лексики про дієту та здоров''я з конструкціями родового відмінка.'
+  - 'Закріплення: обидва сценарії (ринок + здоров''я) використовують однакові моделі родового відмінка — кількість (кілограм яблук / багато води), відсутність (немає / без), джерело/причина (від кашлю / з ринку).'
+- section: Підсумок
   words: 200
   points:
-  - 'Master expressing quantities using the Genitive case in market settings, such as `кілограм яблук` (a kilogram of apples),
-    `пів кіло сиру` (half a kilo of cheese), and `пляшка води` (a bottle of water). This includes practicing natural dialogue
-    for asking what''s fresh, requesting specific amounts, and inquiring about prices. Self-check: How would you ask for "a
-    dozen eggs" and "how much does this cost" in Ukrainian?'
-  - 'Learn to describe symptoms and health complaints using the Genitive case. Key patterns include negation like `немає температури`
-    (no fever) or `немає апетиту` (no appetite), and indicating cause with phrases like `болить від холоду` (hurts from the
-    cold) or `кашель від алергії` (cough from allergy). Additionally, practice pharmacy interactions, asking for medicines
-    (`Що ви порадите від...?`). Self-check: How do you tell a doctor, "I have no energy" or ask for "something for a headache"
-    in Ukrainian?'
+  - 'Опануйте вираження кількості за допомогою родового відмінка на ринку, наприклад «кілограм яблук», «пів кіло сиру» та «пляшка води». Це включає практику природного діалогу для запитань про свіжість продуктів, прохань про конкретну кількість та запитань про ціни. Самоперевірка: Як ви попросите "десяток яєць" і запитаєте "скільки це коштує" українською?'
+  - 'Навчіться описувати симптоми та скарги на здоров''я за допомогою родового відмінка. Ключові моделі включають заперечення, наприклад «немає температури» або «немає апетиту», а також вказування причини фразами на кшталт «болить від холоду» або «кашель від алергії». Крім того, попрактикуйте спілкування в аптеці, запитуючи ліки («Що ви порадите від...?»). Самоперевірка: Як сказати лікареві "у мене немає сил" або попросити "щось від головного болю" українською?'
 vocabulary_hints:
   required:
   - ринок (market)
@@ -88,20 +71,20 @@ vocabulary_hints:
   - шматок (piece)
 activity_hints:
 - type: fill-in
-  focus: Complete market dialogue lines with correct quantity + Genitive forms
+  focus: Доповнити репліки діалогу на ринку правильними формами кількість + родовий відмінок
   items: 8
 - type: quiz
-  focus: Choose the correct Genitive phrase for health complaints and remedies
+  focus: 'Обрати правильну фразу в родовому відмінку для скарг на здоров''я та ліків'
   items: 8
 - type: match-up
-  focus: Match health problems to their remedies (ліки від..., краплі від...)
+  focus: 'Поєднати проблеми зі здоров''ям з відповідними засобами (ліки від..., краплі від...)'
   items: 8
 - type: true-false
-  focus: Judge whether shopping and health phrases use the Genitive correctly
+  focus: 'Визначити, чи правильно використовується родовий відмінок у фразах про покупки та здоров''я'
   items: 8
 references:
 - title: Заболотний Grade 5, §20-22
   notes: Родовий відмінок іменників у повсякденних контекстах
 - title: 'ULP: At the Market in Ukraine'
   url: https://www.ukrainianlessons.com/at-the-market/
-  notes: Real market dialogues and vocabulary
+  notes: Реальні діалоги на ринку та лексика

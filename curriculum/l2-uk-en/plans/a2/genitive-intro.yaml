@@ -2,111 +2,86 @@ module: a2-005
 level: A2
 sequence: 5
 slug: genitive-intro
-version: 1.1.2
+version: 1.1.3
 title: У мене немає...
 subtitle: Родовий відмінок для вираження відсутності та кількості
 focus: grammar
 pedagogy: PPP
-phase: A2.1 [Foundation and Aspect Introduction]
+phase: 'A2.1 [Основи та вступ до видів дієслова]'
 word_target: 2000
 objectives:
-- Learner can correctly use the Genitive singular after `немає` to express the 
-  absence of an object.
-- Learner can form the Genitive singular endings for all three noun genders 
-  (-а/-я, -у/-ю, -и/-і).
-- Learner can use quantity words `багато`, `мало`, `кілька`, `декілька` with the
-  Genitive plural.
-- Learner can form the Genitive plural endings for all three noun genders (-ів, 
-  -ей, нульове закінчення).
+  - Вміти правильно використовувати родовий відмінок однини після `немає` для вираження відсутності об'єкта.
+  - Вміти утворювати закінчення родового відмінка однини для іменників усіх трьох родів (-а/-я, -у/-ю, -и/-і).
+  - Навчитися використовувати слова на позначення кількості `багато`, `мало`, `кілька`, `декілька` з родовим відмінком множини.
+  - Вміти утворювати закінчення родового відмінка множини для іменників усіх трьох родів (-ів, -ей, нульове закінчення).
 dialogue_situations:
-- setting: 'Moving into a new apartment — discovering what''s missing: Немає холодильника
-    (m, fridge)! Немає плити (f, stove)! Немає дзеркала (n, mirror)! Є багато коробок
-    (pl, boxes) але мало меблів (pl, furniture).'
-  speakers:
-  - Сусідка (neighbor)
-  - Нова мешканка (new tenant)
-  motivation: 'Genitive with немає: холодильник→холодильника, плита→плити, дзеркало→дзеркала'
+  - setting: 'Переїзд у нову квартиру — виявлення того, чого бракує: Немає холодильника (m, fridge)! Немає плити (f, stove)! Немає дзеркала (n, mirror)! Є багато коробок (pl, boxes), але мало меблів (pl, furniture).'
+    speakers:
+      - Сусідка (neighbor)
+      - Нова мешканка (new tenant)
+    motivation: 'Родовий відмінок з немає: холодильник→холодильника, плита→плити, дзеркало→дзеркала'
 content_outline:
-- section: 'Родовий відмінок: Коли чогось немає (The Genitive Case: When Something
-    Isn''t There)'
-  words: 600
-  points:
-  - Introducing the Genitive case (Родовий відмінок), answering 'Кого? Чого?'.
-  - 'Its first key function: expressing absence or non-existence with the construction
-    `(У мене) немає + Genitive`.'
-  - 'Contrast: ''У мене є брат'' (Nominative) vs. ''У мене немає брата'' (Genitive).'
-  - 'Practice with simple sentences: ''Тут є стіл.'' -> ''Тут немає стола.'''
-- section: Закінчення родового відмінка однини (Genitive Singular Endings)
-  words: 700
-  points:
-  - 'Masculine nouns: the -а/-я vs. -у/-ю puzzle. -а/-я for concrete, animate, specific
-    items (стола, брата, комп''ютера). -у/-ю for abstract concepts, substances, locations
-    (часу, цукру, Києву).'
-  - 'Feminine nouns: -и for hard stems (книги, мами), -і for soft stems and stems
-    in -я (землі, пісні).'
-  - 'Neuter nouns: -а for stems in -о (вікна), -я for stems in -е (моря, сонця).'
-  - Provide clear charts and practice drills for forming the Genitive singular.
-- section: Коли є багато або мало (When There Is a Lot or a Little)
-  words: 700
-  points:
-  - 'Introducing quantity words that require the Genitive plural: багато (a lot),
-    мало (a little, few), кілька/декілька (a few, some), скільки (how many).'
-  - 'Genitive Plural Endings: a tricky topic. Masculine: often -ів (столів, братів).
-    Feminine/Neuter: often a zero ending, sometimes with a fleeting vowel (книг →
-    книжок, сестер, вікон). A small group of masculine/neuter nouns takes -ей (гостей,
-    коней, очей).'
-  - 'Lots of examples: багато друзів, мало грошей, кілька книжок, скільки студентів?'
-  - Focus on recognizing and using the most common forms, not memorizing every 
-    exception.
-- section: Підсумок — Summary
-  words: 200
-  points:
-  - "The Genitive singular is used with `немає` to express absence. Masculine endings
-    split between -а/-я (concrete: брата, стола) and -у/-ю (abstract/substance: часу,
-    цукру). Feminine takes -и/-і, and neuter takes -а/-я. Self-check: How do you say
-    'I don't have a computer'? What is the difference between the masculine endings
-    -а and -у?"
-  - "Quantity words (`багато`, `мало`, `кілька`) require the Genitive plural. Endings
-    vary: masculine often takes -ів (братів), feminine/neuter often take a zero ending
-    (книжок, вікон), and some take -ей (гостей). Self-check: Name 3 things you have
-    'багато' of and 3 things you have 'мало' of. How do you ask 'How many students?'
-    in Ukrainian?"
+  - section: Родовий відмінок. Коли чогось немає
+    words: 600
+    points:
+      - 'Ознайомлення з родовим відмінком, що відповідає на питання ''Кого? Чого?''.'
+      - 'Його перша ключова функція: вираження відсутності за допомогою конструкції `(У мене) немає + родовий відмінок`.'
+      - 'Протиставлення: ''У мене є брат'' (називний відмінок) проти ''У мене немає брата'' (родовий відмінок).'
+      - 'Практика з простими реченнями: ''Тут є стіл.'' -> ''Тут немає стола.'''
+  - section: Закінчення родового відмінка однини
+    words: 700
+    points:
+      - 'Іменники чоловічого роду: головоломка -а/-я проти -у/-ю. -а/-я для конкретних, істот, чітко окреслених предметів (стола, брата, комп''ютера). -у/-ю для абстрактних понять, речовин, просторових понять (часу, цукру, Києву).'
+      - 'Іменники жіночого роду: -и для твердої групи (книги, мами), -і для м''якої групи та основ на -я (землі, пісні).'
+      - 'Іменники середнього роду: -а для основ на -о (вікна), -я для основ на -е (моря, сонця).'
+      - Надайте чіткі таблиці та вправи для відпрацювання утворення родового відмінка однини.
+  - section: Коли є багато або мало
+    words: 700
+    points:
+      - 'Ознайомлення зі словами на позначення кількості, що вимагають родового відмінка множини: багато, мало, кілька/декілька, скільки.'
+      - 'Закінчення родового відмінка множини: складна тема. Чоловічий рід: часто -ів (столів, братів). Жіночий/середній рід: часто нульове закінчення, іноді з вставним голосним (книг → книжок, сестер, вікон). Невелика група іменників чоловічого/середнього роду має закінчення -ей (гостей, коней, очей).'
+      - 'Багато прикладів: багато друзів, мало грошей, кілька книжок, скільки студентів?'
+      - 'Зосередьтеся на розпізнаванні та використанні найпоширеніших форм, а не на запам''ятовуванні кожного винятку.'
+  - section: Підсумок
+    words: 200
+    points:
+      - 'Родовий відмінок однини використовується з `немає` для вираження відсутності. Закінчення чоловічого роду поділяються на -а/-я (конкретні: брата, стола) та -у/-ю (абстрактні/речовини: часу, цукру). Жіночий рід має закінчення -и/-і, а середній — -а/-я. Перевірка: Як сказати "У мене немає комп''ютера"? У чому різниця між закінченнями чоловічого роду -а та -у?'
+      - 'Слова на позначення кількості (`багато`, `мало`, `кілька`) вимагають родового відмінка множини. Закінчення різні: чоловічий рід часто має -ів (братів), жіночий/середній часто мають нульове закінчення (книжок, вікон), а деякі мають -ей (гостей). Перевірка: Назвіть 3 речі, яких у вас "багато", і 3 речі, яких у вас "мало". Як спитати "Скільки студентів?" українською?'
 vocabulary_hints:
   required:
-  - родовий відмінок (genitive case)
-  - немає ((there) is not, (I) don't have)
-  - багато (a lot, many, much)
-  - мало (a little, few)
-  - кілька (a few, several)
-  - скільки (how many, how much)
-  - закінчення (ending (grammar))
-  - однина (singular)
-  - множина (plural)
+    - родовий відмінок (genitive case)
+    - немає ((there) is not, (I) don't have)
+    - багато (a lot, many, much)
+    - мало (a little, few)
+    - кілька (a few, several)
+    - скільки (how many, how much)
+    - закінчення (ending (grammar))
+    - однина (singular)
+    - множина (plural)
   recommended:
-  - кількість (quantity)
-  - відсутність (absence)
-  - гроші (money)
-  - час (time)
+    - кількість (quantity)
+    - відсутність (absence)
+    - гроші (money)
+    - час (time)
 activity_hints:
-- type: quiz
-  focus: Possession vs. Absence Drill (`Є` vs. `Немає`)
-  items: 8
-- type: fill-in
-  focus: Genitive Singular Formation
-  items: 8
-- type: match-up
-  focus: Genitive Plural Formation with Quantity Words
-  items: 8
-- type: match-up
-  focus: Translate sentences with 'a lot of...' / 'I don't have...'
-  items: 8
-- type: unjumble
-  focus: Reorder words to form correct genitive phrases with немає and quantity 
-    expressions
-  items: 6
+  - type: quiz
+    focus: Вправа на протиставлення наявності та відсутності (`Є` проти `Немає`)
+    items: 8
+  - type: fill-in
+    focus: Утворення родового відмінка однини
+    items: 8
+  - type: match-up
+    focus: Утворення родового відмінка множини зі словами кількості
+    items: 8
+  - type: match-up
+    focus: 'Переклад речень із конструкціями ''багато...'' / ''у мене немає...'''
+    items: 8
+  - type: unjumble
+    focus: 'Впорядкування слів для утворення правильних фраз у родовому відмінку з немає та виразами кількості'
+    items: 6
 references:
-- title: 'ULP: 10 Uses of Genitive Case'
-  url: https://www.ukrainianlessons.com/genitive-case/
-  notes: All genitive functions explained
-- title: Заболотний Grade 6, §81
-  notes: немає vs не має — key distinction with examples
+  - title: 'ULP: 10 Uses of Genitive Case'
+    url: https://www.ukrainianlessons.com/genitive-case/
+    notes: Пояснення всіх функцій родового відмінка
+  - title: Заболотний Grade 6, §81
+    notes: немає проти не має — ключова різниця з прикладами

@@ -2,98 +2,94 @@ module: a2-043
 level: A2
 sequence: 43
 slug: motion-verbs
-version: 1.0.2
+version: 1.0.3
 title: Іду, їду, лечу
 subtitle: Дієслова руху та моделі дієвідмінювання з чергуванням основи
 focus: grammar
 pedagogy: PPP
-phase: A2.6 [Aspect, Tenses, and Motion]
+phase: A2.6 [Вид, часи та рух]
 word_target: 2000
 objectives:
-- Learner can distinguish between unidirectional (іти, їхати, летіти) and 
-  multidirectional (ходити, їздити, літати) motion verbs and use each type 
-  correctly based on whether the motion is one-way/in-progress or habitual/ 
-  round-trip.
-- Learner can conjugate all three base motion pairs in present tense and form 
-  their perfective partners with the prefix по- (піти, поїхати, полетіти).
-- Learner can conjugate three irregular verb models — казати → кажу (stem 
-  consonant change), пити → п'ю (irregular contraction), боротися → борюся 
-  (-отися reflexive) — and apply these patterns to similar verbs.
-- Learner can use motion verbs with appropriate prepositions and cases to 
-  describe direction (іти до школи, їхати на роботу, летіти в Україну).
+- Учень вміє розрізняти односпрямовані (іти, їхати, летіти) та різноспрямовані 
+  (ходити, їздити, літати) дієслова руху і правильно використовувати кожен тип 
+  залежно від того, чи це рух в один бік/у процесі, чи регулярний/в обидва боки.
+- Учень вміє відмінювати всі три базові пари дієслів руху в теперішньому часі та
+  утворювати їхні доконані відповідники за допомогою префікса по- (піти, 
+  поїхати, полетіти).
+- Учень вміє відмінювати три неправильні моделі дієслів — казати → кажу 
+  (чергування приголосних основи), пити → пю (неправильне стягнення), боротися →
+  борюся (зворотні на -отися) — і застосовувати ці патерни до схожих дієслів.
+- Учень вміє використовувати дієслова руху з відповідними прийменниками та 
+  відмінками для опису напрямку (іти до школи, їхати на роботу, летіти в 
+  Україну).
 dialogue_situations:
-- setting: 'Airport chaos — everyone going in different directions: Я іду (on foot)
-    до виходу (m, gate). Він їде (by vehicle) в місто. Літак (m, plane) летить до
-    Парижа. Ми пішли (left) о третій.'
+- setting: 'Хаос в аеропорту — всі рухаються в різних напрямках: Я іду до виходу (m).
+    Він їде в місто. Літак (m) летить до Парижа. Ми пішли о третій.'
   speakers:
   - Пасажири
-  - Друг (on phone)
-  motivation: 'Motion verbs: іти/їхати/летіти with real travel situations'
+  - Друг (по телефону)
+  motivation: 'Дієслова руху: іти/їхати/летіти з реальними ситуаціями подорожі'
 content_outline:
-- section: Три пари дієслів руху (Three Pairs of Motion Verbs)
+- section: Три пари дієслів руху
   words: 500
   points:
-  - Ukrainian distinguishes one-way motion (right now, in one direction) from 
-    habitual/round-trip motion. This is NOT about speed or distance — it is 
-    about the nature of the trip.
-  - 'Pair 1 — on foot: іти (going right now, one direction) vs. ходити (going regularly,
-    back and forth). Я іду до магазину (I am walking to the store right now). Я ходжу
-    до магазину щодня (I go to the store every day).'
-  - 'Pair 2 — by vehicle: їхати (riding/driving right now) vs. їздити (riding regularly).
-    Ми їдемо до Львова (We are driving to Lviv). Ми їздимо до Львова щоліта (We go
-    to Lviv every summer).'
-  - 'Pair 3 — by air: летіти (flying right now) vs. літати (flying regularly/ in general).
-    Літак летить до Києва (The plane is flying to Kyiv). Він часто літає до Києва
-    (He often flies to Kyiv).'
-- section: Дієвідміна та доконаний вид (Conjugation and Perfective Forms)
+  - Українська мова відрізняє рух в один бік (саме зараз, в одному напрямку) від
+    регулярного руху або руху туди й назад. Це НЕ стосується швидкості чи 
+    відстані — йдеться про характер поїздки.
+  - 'Перша пара — пішки: іти (рух саме зараз, в один бік) проти ходити (регулярний
+    рух, туди й назад). Я іду до магазину. Я ходжу до магазину щодня.'
+  - 'Друга пара — транспортом: їхати (їхати саме зараз) проти їздити (їздити регулярно).
+    Ми їдемо до Львова. Ми їздимо до Львова щоліта.'
+  - 'Третя пара — повітрям: летіти (летіти саме зараз) проти літати (летіти регулярно/взагалі).
+    Літак летить до Києва. Він часто літає до Києва.'
+- section: Дієвідміна та доконаний вид
   words: 500
   points:
-  - 'Present tense conjugation of all six verbs. іти: іду, ідеш, іде, ідемо, ідете,
-    ідуть. ходити: ходжу, ходиш, ходить, ходимо, ходите, ходять.'
+  - 'Відмінювання всіх шести дієслів у теперішньому часі. іти: іду, ідеш, іде, ідемо,
+    ідете, ідуть. ходити: ходжу, ходиш, ходить, ходимо, ходите, ходять.'
   - 'їхати: їду, їдеш, їде, їдемо, їдете, їдуть. їздити: їжджу, їздиш, їздить, їздимо,
     їздите, їздять.'
   - 'летіти: лечу, летиш, летить, летимо, летите, летять. літати: літаю, літаєш, літає,
     літаємо, літаєте, літають.'
-  - 'Perfective with по-: піти (to leave on foot), поїхати (to leave by vehicle),
-    полетіти (to fly off). Він пішов додому (He left for home). Вона поїхала на роботу
-    (She left for work). Літак полетів (The plane took off).'
-- section: 'Моделі дієвідмінювання: казати, пити, боротися (Conjugation Models)'
+  - 'Доконаний вид з по-: піти, поїхати, полетіти. Він пішов додому. Вона поїхала
+    на роботу. Літак полетів.'
+- section: 'Моделі дієвідмінювання: казати, пити, боротися'
   words: 550
   points:
-  - 'Model 1 — Stem consonant change (казати → кажу): the з → ж alternation affects
-    the ENTIRE present tense stem (1st conjugation pattern). Full conjugation: кажу,
-    кажеш, каже, кажемо, кажете, кажуть. Similar verbs: писати → пишу, пишеш (с →
-    ш throughout), сказати → скажу, скажеш.'
-  - 'Model 2 — Irregular contraction (пити → п''ю): the stem reduces and takes the
-    contracted endings. Full conjugation: п''ю, п''єш, п''є, п''ємо, п''єте, п''ють.
-    Similar verbs: бити → б''ю, лити → ллю.'
-  - 'Model 3 — Reflexive -отися (боротися → борюся): the reflexive particle -ся stays
-    attached throughout. Full conjugation: борюся, борешся, бореться, боремося, боретеся,
-    борються. Note the от → ор stem change.'
-  - 'Why these models matter: Ukrainian has predictable consonant alternations (з/ж,
-    с/ш, т/ч, д/дж) that appear across many verbs. Learning the pattern once unlocks
-    dozens of verbs.'
-- section: Рух + прийменники + відмінки (Motion + Prepositions + Cases)
+  - 'Перша модель — чергування приголосних основи (казати → кажу): чергування з →
+    ж впливає на ВСЮ основу теперішнього часу (I дієвідміна). Повна дієвідміна: кажу,
+    кажеш, каже, кажемо, кажете, кажуть. Схожі дієслова: писати → пишу, пишеш (с →
+    ш усюди), сказати → скажу, скажеш.'
+  - 'Друга модель — неправильне стягнення (пити → пю): основа скорочується і приймає
+    стягнені закінчення. Повна дієвідміна: пю, пєш, пє, пємо, пєте, пють. Схожі дієслова:
+    бити → бю, лити → ллю.'
+  - 'Третя модель — зворотні на -отися (боротися → борюся): зворотна частка -ся залишається
+    приєднаною усюди. Повна дієвідміна: борюся, борешся, бореться, боремося, боретеся,
+    борються. Зверніть увагу на зміну основи от → ор.'
+  - 'Чому ці моделі важливі: в українській мові є передбачувані чергування приголосних
+    (з/ж, с/ш, т/ч, д/дж), які зявляються в багатьох дієсловах. Вивчення патерну один
+    раз відкриває десятки дієслів.'
+- section: Рух + прийменники + відмінки
   words: 450
   points:
-  - 'Direction TO: іти/їхати до + Gen. (до школи, до друга), на + Acc. (на роботу,
-    на пошту), в/у + Acc. (в Україну, у місто).'
-  - 'Direction FROM: іти/їхати з + Gen. (зі школи, з роботи), від + Gen. (від друга).'
-  - 'Through/along: через + Acc. (через парк), по + Loc. (по вулиці).'
-  - 'Practical dialogues: Куди ти їдеш? — Їду на роботу. Звідки ти йдеш? — Іду з магазину.
-    Як ти їдеш? — Автобусом (Instr.).'
-- section: Підсумок — Summary
+  - 'Напрямок КУДИ: іти/їхати до + Род. (до школи, до друга), на + Знах. (на роботу,
+    на пошту), в/у + Знах. (в Україну, у місто).'
+  - 'Напрямок ЗВІДКИ: іти/їхати з + Род. (зі школи, з роботи), від + Род. (від друга).'
+  - 'Через/по: через + Знах. (через парк), по + Місц. (по вулиці).'
+  - 'Практичні діалоги: Куди ти їдеш? — Їду на роботу. Звідки ти йдеш? — Іду з магазину.
+    Як ти їдеш? — Автобусом.'
+- section: Підсумок
   words: 200
   points:
-  - "Motion verbs come in unidirectional/multidirectional pairs: іти/ходити (foot),
-    їхати/їздити (vehicle), летіти/літати (air). Perfective forms use the prefix по-
-    (піти, поїхати). Self-check: What is the difference between 'Я іду' and 'Я ходжу'?
-    Describe your typical commute using the correct motion verbs and prepositions."
-  - "Irregular conjugation models include stem consonant changes (казати → кажу),
-    contractions (пити → п'ю), and the -отися reflexive (боротися → борюся). Direction
-    requires specific cases: до/з/від + Genitive, на/в/через + Accusative. Self-check:
-    Conjugate 'пити' in the present tense. Translate: 'We are driving to Lviv' and
-    'I am walking from the store.'"
+  - 'Дієслова руху існують у парах односпрямованих/різноспрямованих: іти/ходити, їхати/їздити,
+    летіти/літати. Форми доконаного виду використовують префікс по- (піти, поїхати).
+    Самоперевірка: Яка різниця між "Я іду" та "Я ходжу"? Опишіть свій типовий маршрут,
+    використовуючи правильні дієслова руху та прийменники.'
+  - 'Неправильні моделі дієвідмінювання включають чергування приголосних основи (казати
+    → кажу), стягнення (пити → пю) та зворотні на -отися (боротися → борюся). Напрямок
+    вимагає певних відмінків: до/з/від + Родовий, на/в/через + Знахідний. Самоперевірка:
+    Провідміняйте "пити" в теперішньому часі. Перекладіть: "Ми їдемо до Львова" та
+    "Я іду з магазину".'
 vocabulary_hints:
   required:
   - іти / ходити (to go on foot — unidirectional/multidirectional)
@@ -113,27 +109,26 @@ vocabulary_hints:
   - звідки (from where)
 activity_hints:
 - type: group-sort
-  focus: Sort motion verb forms into unidirectional vs. multidirectional 
-    categories
+  focus: 'Розподілити форми дієслів руху на категорії односпрямованих та різноспрямованих'
   items: 8
 - type: fill-in
-  focus: Complete sentences with the correct motion verb form based on whether 
-    the action is one-way/now or habitual/round-trip
+  focus: 'Доповнити речення правильною формою дієслова руху залежно від того, чи дія
+    є односпрямованою/зараз, чи регулярною/туди й назад'
   items: 8
 - type: quiz
-  focus: Conjugate казати, пити, and боротися — choose the correct form for the 
-    given person and number
+  focus: 'Відміняти казати, пити та боротися — вибрати правильну форму для заданої
+    особи та числа'
   items: 8
 - type: match-up
-  focus: Match motion verbs with the correct preposition and case for direction 
-    (до + Gen., на + Acc., з + Gen.)
+  focus: 'Зіставити дієслова руху з правильним прийменником та відмінком для напрямку
+    (до + Род., на + Знах., з + Род.)'
   items: 8
 - type: unjumble
-  focus: Reorder words to form correct directional sentences with motion verbs 
-    and prepositions (іду до школи, їду на роботу)
+  focus: 'Розставити слова в правильному порядку, щоб утворити речення про напрямок
+    з дієсловами руху та прийменниками (іду до школи, їду на роботу)'
   items: 6
 references:
 - title: Заболотний Grade 6, §39-41
-  notes: Дієвідміни дієслів, чергування приголосних при дієвідмінюванні
+  notes: 'Дієвідміни дієслів, чергування приголосних при дієвідмінюванні'
 - title: Ohoiko, Verbs of Motion with Prefixes (2024)
-  notes: Chart of іти/ходити, їхати/їздити, летіти/літати + prefix system
+  notes: 'Таблиця іти/ходити, їхати/їздити, летіти/літати + система префіксів'

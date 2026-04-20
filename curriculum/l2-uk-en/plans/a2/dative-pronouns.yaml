@@ -2,85 +2,58 @@ module: a2-017
 level: A2
 sequence: 17
 slug: dative-pronouns
-version: 1.0.2
+version: 1.0.3
 title: Мені, тобі, йому...
 subtitle: Давальний відмінок особових займенників та безособові конструкції
 focus: grammar
 pedagogy: PPP
-phase: A2.3 [Dative Case]
+phase: A2.3 [Давальний відмінок]
 word_target: 2000
 objectives:
-- Learner can produce all dative personal pronoun forms (мені, тобі, йому/їй, 
-  нам, вам, їм) from memory when given the nominative form.
-- Learner can use dative pronouns as indirect objects in sentences with verbs 
-  like давати, говорити, писати.
-- Learner can form impersonal sentences with dative pronoun + adverb (мені 
-  холодно, тобі потрібно, їй цікаво).
-- Learner can distinguish between accusative (бачу тебе) and dative (кажу тобі) 
-  pronoun forms in context.
+- Вміти відтворювати по пам'яті всі форми особових займенників у давальному відмінку (мені, тобі, йому/їй, нам, вам, їм), маючи форму називного відмінка.
+- Вміти використовувати займенники в давальному відмінку як непрямі додатки в реченнях з такими дієсловами, як давати, говорити, писати.
+- Вміти будувати безособові речення за моделлю займенник у давальному відмінку + прислівник (мені холодно, тобі потрібно, їй цікаво).
+- Вміти розрізняти форми займенників знахідного (бачу тебе) та давального (кажу тобі) відмінків у контексті.
 dialogue_situations:
-- setting: 'Distributing birthday gifts at a family gathering — who gets what: Мені
-    — книгу. Тобі — шоколад. Йому — шарф (m, scarf). Їй — квіти (pl, flowers). Нам
-    — торт!'
+- setting: 'Роздача подарунків на день народження під час сімейного свята — хто що отримує: Мені — книгу. Тобі — шоколад. Йому — шарф (m, scarf). Їй — квіти (pl, flowers). Нам — торт!'
   speakers:
   - Іменинник
   - Родина
-  motivation: 'Dative pronouns: мені, тобі, йому, їй with подарунок(m), книга(f)'
+  motivation: 'Займенники в давальному відмінку: мені, тобі, йому, їй зі словами подарунок (m), книга (f)'
 content_outline:
-- section: 'Давальний відмінок: Кому? (The Dative Case: To Whom?)'
+- section: 'Давальний відмінок: Кому?'
   words: 500
   points:
-  - Introducing the Dative case (Давальний відмінок) as the case that answers 
-    Кому? Чому?
-  - 'Core meaning: the recipient — the person who receives something, is told something,
-    or for whom something is done.'
-  - Compare with Genitive (Кого? Чого?) and Accusative (Кого? Що?) — each case 
-    has its own question and function.
-  - Simple examples showing the dative in action with familiar verbs (давати, 
-    казати).
-- section: Особові займенники у давальному відмінку (Personal Pronouns in the 
-    Dative)
+  - 'Знайомство з давальним відмінком як таким, що відповідає на питання Кому? Чому?'
+  - 'Основне значення: одержувач — особа, яка щось отримує, якій щось говорять, або для якої щось робиться.'
+  - 'Порівняння з родовим (Кого? Чого?) та знахідним (Кого? Що?) відмінками — кожен відмінок має своє питання та функцію.'
+  - 'Прості приклади, що демонструють давальний відмінок у дії зі знайомими дієсловами (давати, казати).'
+- section: Особові займенники у давальному відмінку
   words: 700
   points:
-  - 'Full paradigm: я→мені, ти→тобі, він→йому, вона→їй, воно→йому, ми→нам, ви→вам,
-    вони→їм.'
-  - 'Key pattern: 1st/2nd person forms (мені, тобі, нам, вам) are unique — must be
-    memorized as a set.'
-  - '3rd person: йому (masc/neut), їй (fem), їм (plural). After prepositions these
-    gain initial н-: до нього, але йому.'
-  - 'Practice with common verbs: Дай мені книгу. Скажи їй правду. Покажи нам фото.
-    Напиши їм листа.'
-  - Contrast accusative vs. dative forms in pairs to build discrimination.
-- section: 'Мені холодно: Безособові конструкції (Impersonal Constructions with Dative)'
+  - 'Повна парадигма: я→мені, ти→тобі, він→йому, вона→їй, воно→йому, ми→нам, ви→вам, вони→їм.'
+  - 'Ключова закономірність: форми 1-ї та 2-ї особи (мені, тобі, нам, вам) є унікальними — їх потрібно запам''ятати як єдиний набір.'
+  - '3-я особа: йому (чоловічий/середній рід), їй (жіночий рід), їм (множина). Після прийменників вони отримують початкову н-: до нього, але йому.'
+  - 'Практика з поширеними дієсловами: Дай мені книгу. Скажи їй правду. Покажи нам фото. Напиши їм листа.'
+  - 'Протиставлення форм знахідного і давального відмінків у парах для вироблення навички їх розрізнення.'
+- section: 'Мені холодно: Безособові конструкції'
   words: 500
   points:
-  - 'Pattern: Dative pronoun + adverb/predicate to express states and feelings without
-    a subject — мені холодно, тобі сумно, їй весело.'
-  - 'Common predicates: холодно, тепло, важко, легко, весело, сумно, приємно, цікаво,
-    нудно, потрібно, можна.'
-  - 'Compare with nominative subject sentences: Я втомлена vs. Мені важко — different
-    structure, different nuance.'
-  - Dialogue practice where characters describe how they feel using impersonal 
-    dative.
-- section: Давальний чи знахідний? (Dative or Accusative?)
+  - 'Модель: Займенник у давальному відмінку + прислівник для вираження станів і почуттів без підмета — мені холодно, тобі сумно, їй весело.'
+  - 'Поширені предикативи: холодно, тепло, важко, легко, весело, сумно, приємно, цікаво, нудно, потрібно, можна.'
+  - 'Порівняння з реченнями, що мають підмет у називному відмінку: Я втомлена проти Мені важко — різна структура, різний відтінок значення.'
+  - 'Діалогічна практика, де герої описують, як вони почуваються, використовуючи безособові конструкції з давальним відмінком.'
+- section: Давальний чи знахідний?
   words: 300
   points:
-  - 'Minimal pairs: Я бачу тебе (Acc.) vs. Я кажу тобі (Dat.). Він знає її (Acc.)
-    vs. Він дзвонить їй (Dat.).'
-  - 'Decision strategy: Who receives the action? → Dative. Who is directly affected?
-    → Accusative.'
-  - Practice distinguishing case usage with two-object verbs (давати щось 
-    комусь).
-- section: Підсумок — Summary
+  - 'Мінімальні пари: Я бачу тебе (знах. відм.) проти Я кажу тобі (дав. відм.). Він знає її (знах. відм.) проти Він дзвонить їй (дав. відм.).'
+  - 'Стратегія вибору: Хто є одержувачем дії? → Давальний відмінок. Хто піддається безпосередньому впливу? → Знахідний відмінок.'
+  - 'Практика розрізнення відмінків за допомогою дієслів з двома додатками (давати щось комусь).'
+- section: Підсумок
   words: 200
   points:
-  - "The Dative case (Кому?) is used for the recipient of an action. Key pronoun forms:
-    я→мені, ти→тобі, він/воно→йому, вона→їй, ми→нам, ви→вам, вони→їм. Self-check:
-    What is the difference between 'Я бачу тебе' (Accusative) and 'Я кажу тобі' (Dative)?"
-  - "Impersonal constructions use a Dative pronoun + adverb to express states and
-    feelings (мені холодно, тобі потрібно). Self-check: Describe how you feel right
-    now using an impersonal construction. How do you say 'It is interesting for us'
-    in Ukrainian?"
+  - 'Давальний відмінок (Кому?) використовується для позначення одержувача дії. Ключові форми займенників: я→мені, ти→тобі, він/воно→йому, вона→їй, ми→нам, ви→вам, вони→їм. Самоперевірка: У чому різниця між «Я бачу тебе» (знахідний відмінок) та «Я кажу тобі» (давальний відмінок)?'
+  - 'У безособових конструкціях використовується займенник у давальному відмінку + прислівник для вираження станів та почуттів (мені холодно, тобі потрібно). Самоперевірка: Опишіть, як ви почуваєтеся зараз, використовуючи безособову конструкцію. Як сказати «It is interesting for us» українською?'
 vocabulary_hints:
   required:
   - давальний відмінок (dative case)
@@ -100,24 +73,22 @@ vocabulary_hints:
   - важко (difficult, hard)
 activity_hints:
 - type: match-up
-  focus: Match nominative pronoun to its dative form (я→мені, ти→тобі, etc.)
+  focus: Зіставити займенник у називному відмінку з його формою в давальному (я→мені, ти→тобі тощо)
   items: 8
 - type: fill-in
-  focus: Complete sentences with the correct dative pronoun based on context
+  focus: Доповнити речення правильним займенником у давальному відмінку на основі контексту
   items: 8
 - type: quiz
-  focus: Choose dative or accusative pronoun form in context (тобі vs. тебе)
+  focus: Обрати форму займенника давального або знахідного відмінка в контексті (тобі чи тебе)
   items: 8
 - type: true-false
-  focus: Judge whether impersonal dative sentences (мені холодно, мені бачу) are
-    correct
+  focus: Визначити, чи правильні безособові речення з давальним відмінком (мені холодно, мені бачу)
   items: 8
 references:
 - title: Захарійчук Grade 4, §281
-  notes: Full declension table of personal pronouns 1st/2nd person with dative 
-    forms
+  notes: Повна таблиця відмінювання особових займенників 1-ї/2-ї особи з формами давального відмінка
 - title: Заболотний Grade 10, §157
-  notes: Dative endings for masculine nouns with parallel forms -ові/-у
+  notes: Закінчення давального відмінка для іменників чоловічого роду з паралельними формами -ові/-у
 - title: 'ULP: Dative Case in Ukrainian'
   url: https://www.ukrainianlessons.com/dative-case/
-  notes: Dative pronoun forms and impersonal constructions overview
+  notes: Огляд форм займенників у давальному відмінку та безособових конструкцій

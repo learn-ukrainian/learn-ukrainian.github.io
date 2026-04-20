@@ -2,102 +2,64 @@ module: a2-046
 level: A2
 sequence: 46
 slug: checkpoint-verbs
-version: 1.1.2
+version: 1.1.3
 title: 'Контрольна точка: Вид, час і рух'
-subtitle: 'Перевірка знань: видові пари, майбутній час, дієслова руху та наказовий
-  спосіб'
+subtitle: 'Перевірка знань: видові pairs, майбутній час, дієслова руху та наказовий спосіб'
 focus: review
 pedagogy: Review
-phase: A2.6 [Aspect, Tenses, and Motion]
+phase: А2.6 [Вид, часи та дієслова руху]
 word_target: 1500
 objectives:
-- Learner can correctly choose between imperfective and perfective aspect in 
-  past and future tense across varied contexts (process vs. result, habit vs. 
-  single event, background vs. foreground).
-- Learner can form synthetic future (perfective) and analytical future 
-  (imperfective) for common verb pairs and explain why each form is used.
-- Learner can use motion verbs (іти/ходити, їхати/їздити) with correct 
-  prepositions and cases, and form their perfective partners with по-.
-- Learner can produce imperatives for all persons (2nd, 3rd with хай, 1st plural
-  with -мо), including Vocative + imperative + Instrumental wish constructions.
+- Здобувач може правильно вибирати між недоконаним і доконаним видом у минулому та майбутньому часі в різних контекстах (процес vs. результат, звичка vs. одноразова подія, тло vs. основна дія).
+- Здобувач може утворювати синтетичний майбутній час (доконаний вид) та аналітичний майбутній час (недоконаний вид) для поширених видових пар дієслів і пояснювати, чому використовується кожна форма.
+- Здобувач може використовувати дієслова руху (іти/ходити, їхати/їздити) з правильними прийменниками та відмінками, а також утворювати їхні видові пари з префіксом по-.
+- Здобувач може утворювати форми наказового способу для всіх осіб (2-га особа, 3-тя особа з "хай", 1-ша особа множини на -мо), включаючи конструкції побажань (Кличний відмінок + наказовий спосіб + Орудний відмінок).
 dialogue_situations:
-- situation: A teacher conducting an oral review — asking a student to retell 
-    their weekend using correct aspect, motion verbs, and imperatives
+- situation: 'Викладач проводить усне опитування — просить студента переказати свої вихідні, правильно використовуючи вид дієслова, дієслова руху та наказовий спосіб'
   functions:
-  - narrating past events
-  - choosing aspect
-  - using motion verbs
+  - розповідь про минулі події
+  - вибір виду дієслова
+  - використання дієслів руху
   key_vocabulary:
   - вид дієслова
   - дієслова руху
   - наказовий спосіб
-- situation: Two friends planning a hiking trip — one gives directions using 
-    motion verbs, the other suggests what to bring using imperatives
+- situation: 'Двоє друзів планують похід у гори — один вказує дорогу, використовуючи дієслова руху, інший радить, що взяти з собою, використовуючи наказовий спосіб'
   functions:
-  - giving directions
-  - making suggestions
-  - planning activities
+  - вказування дороги
+  - висловлення пропозицій
+  - планування діяльності
   key_vocabulary:
   - іти
   - їхати
   - візьми
   - ходімо
 content_outline:
-- section: 'Частина 1: Вид дієслова — минулий і майбутній час (Part 1: Aspect in Past
-    and Future)'
+- section: 'Частина 1: Вид дієслова — минулий і майбутній час'
   words: 450
   points:
-  - 'Exercise 1: Aspect identification — read 8 sentences in past tense, identify
-    the aspect of each underlined verb and explain the choice (process, result, habit,
-    single event, background, sequence).'
-  - 'Exercise 2: Aspect choice — fill in the blank with the correct aspect form (imperfective
-    or perfective) in past and future tense sentences. Mixed contexts: Вона довго
-    ___ (готувати/приготувати) обід. Він вже ___ (писати/написати) листа.'
-  - 'Exercise 3: Future tense formation — given 8 infinitives (mixed aspects), form
-    the correct future: perfective → synthetic (напишу), imperfective → analytical
-    (буду писати).'
-- section: 'Частина 2: Дієслова руху та наказовий спосіб (Part 2: Motion Verbs and
-    Imperatives)'
+  - 'Вправа 1: Визначення виду — прочитати 8 речень у минулому часі, визначити вид кожного підкресленого дієслова та пояснити вибір (процес, результат, звичка, одноразова подія, тло, послідовність).'
+  - 'Вправа 2: Вибір виду — заповнити пропуск правильною видовою формою (недоконаною або доконаною) у реченнях минулого та майбутнього часу. Змішані контексти: Вона довго ___ (готувати/приготувати) обід. Він вже ___ (писати/написати) листа.'
+  - 'Вправа 3: Утворення майбутнього часу — для заданих 8 інфінітивів (змішаних видів) утворити правильну форму майбутнього часу: доконаний вид → синтетична форма (напишу), недоконаний вид → аналітична форма (буду писати).'
+- section: 'Частина 2: Дієслова руху та наказовий спосіб'
   words: 450
   points:
-  - 'Exercise 4: Motion verb choice — complete 6 sentences by choosing between unidirectional
-    and multidirectional motion verbs. Зараз я ___ (іти/ходити) додому. Щодня він
-    ___ (їхати/їздити) на роботу.'
-  - 'Exercise 5: Motion + prepositions — match motion verbs with destinations using
-    the correct preposition and case: ___ школи (з + Gen. — from), ___ Львова (до
-    + Gen. — to), ___ роботу (на + Acc. — to).'
-  - 'Exercise 6: Imperative formation — form imperatives for all persons from given
-    infinitives. 2nd person: читай/читайте. 3rd person: хай читає. 1st plural: читаймо.
-    Include aspect choice.'
-- section: 'Частина 3: Комплексні завдання (Part 3: Integrated Tasks)'
+  - 'Вправа 4: Вибір дієслова руху — доповнити 6 речень, вибираючи між дієсловами односпрямованого та різноспрямованого руху. Зараз я ___ (іти/ходити) додому. Щодня він ___ (їхати/їздити) на роботу.'
+  - 'Вправа 5: Дієслова руху + прийменники — з''єднати дієслова руху з пунктами призначення, використовуючи правильний прийменник і відмінок: ___ школи (з + родовий — from), ___ Львова (до + родовий — to), ___ роботу (на + знахідний — to).'
+  - 'Вправа 6: Утворення наказового способу — утворити форми наказового способу для всіх осіб від заданих інфінітивів. 2-га особа: читай/читайте. 3-тя особа: хай читає. 1-ша особа множини: читаймо. Включаючи вибір виду дієслова.'
+- section: 'Частина 3: Комплексні завдання'
   words: 600
   points:
-  - 'Exercise 7: Error correction — 8 sentences with verb errors (wrong aspect, wrong
-    motion verb, wrong imperative form, wrong future type). Learner identifies and
-    corrects each. E.g., *Він щодня зробив вправи → робив; *Ми їдемо туди кожного
-    літа → їздимо.'
-  - 'Exercise 8: Story completion — a short narrative with 8 blanks. Learner fills
-    in correct forms using all skills from M35-40: aspect in past, future tense, motion
-    verbs, imperatives.'
-  - 'Exercise 9: Guided production — write 8-10 sentences narrating a weekend trip.
-    Must include: past tense aspect (both), motion verbs (at least 2 pairs), one imperative
-    (suggestion to a friend), one wish (Vocative + imperative + Instrumental).'
-  - 'Self-assessment: Can I choose aspect confidently? Can I form both futures? Do
-    I know when to use іти vs. ходити? Can I make wishes with Vocative + будь + Instrumental?
-    Ready for A2.7?'
-- section: Підсумок — Summary
+  - 'Вправа 7: Виправлення помилок — 8 речень із дієслівними помилками (неправильний вид, неправильний тип руху, неправильна форма наказового способу, неправильний тип майбутнього часу). Здобувач виявляє та виправляє кожну помилку. Наприклад: *Він щодня зробив вправи → робив; *Ми їдемо туди кожного літа → їздимо.'
+  - 'Вправа 8: Завершення розповіді — коротка розповідь із 8 пропусками. Здобувач заповнює пропуски правильними формами, використовуючи всі навички з М35-40: вид дієслова в минулому часі, майбутній час, дієслова руху, наказовий спосіб.'
+  - 'Вправа 9: Кероване мовлення — написати 8-10 речень із розповіддю про поїздку на вихідні. Обов''язково включити: вид дієслова в минулому часі (обидва), дієслова руху (принаймні 2 пари), одну форму наказового способу (порада другу), одне побажання (Кличний відмінок + будь + Орудний відмінок).'
+  - 'Самооцінка: Чи можу я впевнено вибирати вид дієслова? Чи можу я утворювати обидва типи майбутнього часу? Чи знаю я, коли використовувати "іти" або "ходити"? Чи можу я висловлювати побажання за допомогою "Кличний відмінок + будь + Орудний відмінок"? Чи готовий я до А2.7?'
+- section: Підсумок
   words: 200
   points:
-  - "Aspect choice dictates meaning: imperfective for processes or habits (я писав,
-    буду писати), perfective for results or single events (я написав, напишу). Self-check:
-    What is the difference between 'вона готувала' and 'вона приготувала'?"
-  - "Motion verbs split into unidirectional (іти, їхати) for one-way trips in progress,
-    and multidirectional (ходити, їздити) for habits or round trips. Self-check: Translate
-    'I go to work every day' and 'I am going to work right now' using the correct
-    motion verbs."
-  - "Imperatives allow you to give commands or make suggestions across all persons
-    (читай, читаймо, хай читає). Self-check: How do you suggest 'Let's go to the cafe!'
-    in Ukrainian?"
+  - 'Вибір виду дієслова визначає його значення: недоконаний вид для процесів або звичок (я писав, буду писати), доконаний вид для результатів або одноразових подій (я написав, напишу). Самоперевірка: Яка різниця між "вона готувала" та "вона приготувала"?'
+  - 'Дієслова руху поділяються на односпрямовані (іти, їхати) для поїздок у межах одного напрямку в процесі та різноспрямовані (ходити, їздити) для звичок або поїздок туди й назад. Самоперевірка: Перекладіть "I go to work every day" та "I am going to work right now", використовуючи правильні дієслова руху.'
+  - 'Наказовий спосіб дозволяє давати команди або висловлювати пропозиції в усіх особах (читай, читаймо, хай читає). Самоперевірка: Як запропонувати "Let''s go to the cafe!" українською?'
 vocabulary_hints:
   required:
   - контрольна точка (checkpoint)
@@ -114,22 +76,17 @@ vocabulary_hints:
   - обрати (to choose — pf.)
 activity_hints:
 - type: fill-in
-  focus: Mixed drill — complete sentences requiring aspect choice, motion verb 
-    selection, and imperative formation across all M35-40 topics
+  focus: 'Змішане тренування — доповнити речення, що вимагають вибору виду, дієслова руху та утворення наказового способу для всіх тем М35-40'
   items: 8
 - type: quiz
-  focus: Error correction — identify and fix verb errors (wrong aspect, motion 
-    type, imperative form, or future formation)
+  focus: 'Виправлення помилок — знайти та виправити дієслівні помилки (неправильний вид, тип руху, форма наказового способу або утворення майбутнього часу)'
   items: 8
 - type: group-sort
-  focus: Sort verb forms into categories — imperfective past, perfective past, 
-    synthetic future, analytical future, imperative
+  focus: 'Відсортувати дієслівні форми за категоріями — минулий час недоконаного виду, минулий час доконаного виду, синтетичний майбутній час, аналітичний майбутній час, наказовий спосіб'
   items: 8
 - type: error-correction
-  focus: Find and fix verb form errors — wrong aspect, wrong motion verb type, 
-    wrong imperative form, wrong future tense construction
+  focus: 'Знайти та виправити помилки в дієслівних формах — неправильний вид, неправильний тип дієслова руху, неправильна форма наказового способу, неправильна конструкція майбутнього часу'
   items: 6
 references:
 - title: Заболотний Grade 6, §45-55
-  notes: Comprehensive verb chapter covering aspect, tenses, motion, and 
-    imperative mood
+  notes: 'Комплексний розділ про дієслово, що охоплює вид, часи, дієслова руху та наказовий спосіб'

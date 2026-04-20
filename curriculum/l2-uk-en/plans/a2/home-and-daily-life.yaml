@@ -2,89 +2,57 @@ module: a2-038
 level: A2
 sequence: 38
 slug: home-and-daily-life
-version: 1.0.2
+version: 1.0.3
 title: Мій дім, мій день
-subtitle: Описуємо помешкання, меблі та щоденний розпорядок із повною системою 
-  відмінків
+subtitle: Описуємо помешкання, меблі та щоденний розпорядок із повною системою відмінків
 focus: communication
 pedagogy: TBL
 phase: A2.5 [Case Synthesis and Plurals]
 word_target: 2000
 objectives:
-- Learner can describe their home and its rooms, using Locative for location (у 
-  кухні, на балконі), Genitive for absence/quantity (немає гаража, багато 
-  кімнат), and Nominative for listing (тут є диван, шафа, стіл).
-- Learner can describe furniture and household items using Instrumental for 
-  characteristics (стіл з дерева, кімната з великими вікнами) and Accusative for
-  actions (поставити стілець, повісити картину).
-- Learner can narrate a daily routine in sequence, using appropriate tenses and 
-  cases (вранці я встаю о сьомій годині, снідаю з родиною, їду на роботу).
-- Learner can participate in a dialogue about visiting someone's home, asking 
-  about rooms and routines using the full case system naturally.
+- Учень може описати свій дім та його кімнати, використовуючи місцевий відмінок для розташування (у кухні, на балконі), родовий для відсутності/кількості (немає гаража, багато кімнат) та називний для переліку (тут є диван, шафа, стіл).
+- Учень вміє описувати меблі та предмети побуту, вживаючи орудний відмінок для характеристик (стіл з дерева, кімната з великими вікнами) та знахідний для дій (поставити стілець, повісити картину).
+- Учень може розповісти про свій розпорядок дня у послідовності, правильно вживаючи часи та відмінки (вранці я встаю о сьомій годині, снідаю з родиною, їду на роботу).
+- Учень вміє брати участь у діалозі про візит до когось додому, запитуючи про кімнати та розпорядок, природно використовуючи повну систему відмінків.
 dialogue_situations:
-- setting: 'Scenario 1: Video tour of your помешкання (n, apartment) — кухня (f, kitchen),
-    вітальня (f, living room), спальня (f, bedroom). Scenario 2: Describing your розпорядок
-    дня (m, daily routine). Scenario 3: Visiting Ukrainian friends — bringing гостинці
-    (pl, gifts).'
+- setting: 'Сценарій 1: Відеотур вашим помешканням (n, apartment) — кухня (f, kitchen), вітальня (f, living room), спальня (f, bedroom). Сценарій 2: Опис вашого розпорядку дня (m, daily routine). Сценарій 3: У гостях в українських друзів — приносимо гостинці (pl, gifts).'
   speakers:
   - Мешканець
   - Онлайн-друг / Господарі
-  motivation: 'Home + daily life: кухня(f), вітальня(f), спальня(f), гостинці(pl)'
+  motivation: 'Дім та щоденне життя: кухня(f), вітальня(f), спальня(f), гостинці(pl)'
 content_outline:
-- section: 'Сценарій 1: Моє помешкання (Scenario 1: My Home)'
+- section: 'Сценарій 1: Моє помешкання'
   words: 600
   points:
-  - 'Dialogue: showing a friend around a new apartment. Host describes rooms and furniture.
-    Cases emerge naturally: Ось вітальня (Nom.). У вітальні (Loc.) стоїть великий
-    диван. На стіні (Loc.) висить картина. Біля вікна (Gen.) є крісло.'
-  - 'Room vocabulary: кухня, спальня, вітальня, ванна кімната, коридор, балкон, кабінет.'
-  - 'Furniture vocabulary: диван, крісло, стіл, стілець, шафа, ліжко, полиця, дзеркало,
-    килим.'
-  - 'Guest asks questions: А скільки у вас кімнат (Gen.Pl.)? Що на балконі (Loc.)?
-    Де ви поставили книжки (Acc.Pl.)?'
-- section: 'Сценарій 2: Мій звичайний день (Scenario 2: My Typical Day)'
+  - 'Діалог: показуємо другові нову квартиру. Господар описує кімнати та меблі. Відмінки з''являються природно: Ось вітальня (Nom.). У вітальні (Loc.) стоїть великий диван. На стіні (Loc.) висить картина. Біля вікна (Gen.) є крісло.'
+  - 'Словник кімнат: кухня, спальня, вітальня, ванна кімната, коридор, балкон, кабінет.'
+  - 'Словник меблів: диван, крісло, стіл, стілець, шафа, ліжко, полиця, дзеркало, килим.'
+  - 'Гість ставить запитання: А скільки у вас кімнат (Gen.Pl.)? Що на балконі (Loc.)? Де ви поставили книжки (Acc.Pl.)?'
+- section: 'Сценарій 2: Мій звичайний день'
   words: 600
   points:
-  - 'Monologue: describing a typical weekday from morning to evening. Вранці я встаю
-    о сьомій (Loc. for time). Іду у ванну (Acc. direction). Снідаю з родиною (Instr.).
-    Їду на роботу (Acc.) автобусом (Instr.).'
-  - 'Daily actions: вставати, вмиватися, снідати, обідати, вечеряти, працювати, відпочивати,
-    лягати спати.'
-  - 'Time expressions: вранці, вдень, увечері, вночі; о котрій годині; після обіду
-    (Gen.), перед сном (Instr.), під час роботи (Gen.).'
-  - 'Contrast weekday vs. weekend: У будні я працюю, а у вихідні відпочиваю. По суботах
-    ходжу на ринок (Acc.).'
-- section: 'Сценарій 3: В гостях (Scenario 3: Visiting Someone)'
+  - 'Монолог: опис типового буднього дня з ранку до вечора. Вранці я встаю о сьомій (Loc. для часу). Іду у ванну (Acc. напрямок). Снідаю з родиною (Instr.). Їду на роботу (Acc.) автобусом (Instr.).'
+  - 'Щоденні дії: вставати, вмиватися, снідати, обідати, вечеряти, працювати, відпочивати, лягати спати.'
+  - 'Вирази часу: вранці, вдень, увечері, вночі; о котрій годині; після обіду (Gen.), перед сном (Instr.), під час роботи (Gen.).'
+  - 'Порівняння буднів та вихідних: У будні я працюю, а у вихідні відпочиваю. По суботах ходжу на ринок (Acc.).'
+- section: 'Сценарій 3: В гостях'
   words: 500
   points:
-  - 'Dialogue: visiting a Ukrainian friend for dinner. Arrival, tour of the home,
-    sitting down to eat, conversation about daily routines.'
-  - 'Hospitality expressions: Будь ласка, заходьте! Сідайте за стіл (Acc.). Пригощайтеся!
-    Хочете чаю (Gen.) чи кави (Gen.)?'
-  - 'Comparing routines: А о котрій ви встаєте? Хто у вас готує вечерю (Acc.)? Ви
-    снідаєте вдома (Loc. implied) чи на роботі (Loc.)?'
-  - 'Cases in action: за столом (Instr.), на кухні (Loc.), для гостей (Gen.), з цукром
-    (Instr.), дякую господарям (Dat.).'
-- section: 'Мовленнєве завдання: Опишіть свій дім (Speaking Task: Describe Your Home)'
+  - 'Діалог: візит до українського друга на вечерю. Прибуття, огляд дому, сідання за стіл, розмова про щоденний розпорядок.'
+  - 'Вирази гостинності: Будь ласка, заходьте! Сідайте за стіл (Acc.). Пригощайтеся! Хочете чаю (Gen.) чи кави (Gen.)?'
+  - 'Порівняння розпорядків: А о котрій ви встаєте? Хто у вас готує вечерю (Acc.)? Ви снідаєте вдома (Loc. мається на увазі) чи на роботі (Loc.)?'
+  - 'Відмінки в дії: за столом (Instr.), на кухні (Loc.), для гостей (Gen.), з цукром (Instr.), дякую господарям (Dat.).'
+- section: 'Мовленнєве завдання: Опишіть свій дім'
   words: 300
   points:
-  - 'Guided production task: learner writes 8-10 sentences describing their home and
-    daily routine, using a checklist to ensure they include at least 5 different cases.'
-  - 'Checklist: use Nom. (what is there), Gen. (what is not there / how many), Dat.
-    (for whom), Acc. (where you go / what you do), Instr. (with whom / by what means),
-    Loc. (where things are).'
-  - Model answer provided for comparison.
-- section: Підсумок — Summary
+  - 'Завдання з керованого мовлення: учень пише 8-10 речень, описуючи свій дім і розпорядок дня, використовуючи контрольний список, щоб переконатися, що він включив щонайменше 5 різних відмінків.'
+  - 'Контрольний список: використайте Nom. (що є), Gen. (чого немає / скільки), Dat. (для кого), Acc. (куди йдете / що робите), Instr. (з ким / чим), Loc. (де знаходяться речі).'
+  - 'Надано зразок відповіді для порівняння.'
+- section: Підсумок
   words: 200
   points:
-  - "Describing a home requires mixing cases: Locative for location (у вітальні),
-    Genitive for absence/quantity (немає балкона), and Accusative for movement (поставити
-    шафу). Self-check: Describe 3 rooms in your house and name 2 pieces of furniture
-    in each. What is the difference between 'на кухні' and 'на кухню'?"
-  - "Daily routines combine sequence verbs (вставати, снідати, працювати) with time
-    expressions (вранці, о сьомій, після обіду). Self-check: Narrate your typical
-    weekday morning in 3 sentences. How do you say 'I eat breakfast with my family'
-    using the Instrumental case?"
+  - 'Опис дому вимагає поєднання відмінків: місцевий для розташування (у вітальні), родовий для відсутності/кількості (немає балкона) та знахідний для руху (поставити шафу). Самоперевірка: опишіть 3 кімнати у вашому домі та назвіть 2 предмети меблів у кожній. У чому різниця між "на кухні" та "на кухню"?'
+  - 'Щоденний розпорядок поєднує дієслова послідовності (вставати, снідати, працювати) з виразами часу (вранці, о сьомій, після обіду). Самоперевірка: розкажіть про свій типовий ранок буднього дня 3 реченнями. Як ви скажете "I eat breakfast with my family", використовуючи орудний відмінок?'
 vocabulary_hints:
   required:
   - помешкання (dwelling, apartment)
@@ -105,23 +73,20 @@ vocabulary_hints:
   - господар (host)
 activity_hints:
 - type: fill-in
-  focus: Complete a description of a home with the correct case forms for room 
-    and furniture nouns
+  focus: 'Доповніть опис дому правильними формами відмінків для іменників, що позначають кімнати та меблі'
   items: 8
 - type: quiz
-  focus: Choose the correct case form in daily routine sentences (time 
-    expressions, prepositions, verbs)
+  focus: 'Виберіть правильну форму відмінка в реченнях про розпорядок дня (вирази часу, прийменники, дієслова)'
   items: 8
 - type: match-up
-  focus: Match daily activities with the correct time of day and appropriate 
-    case construction
+  focus: 'З''єднайте щоденні дії з правильним часом доби та відповідною відмінковою конструкцією'
   items: 8
 - type: error-correction
-  focus: Find and correct grammar errors in sentences
+  focus: 'Знайдіть та виправте граматичні помилки в реченнях'
   items: 6
 references:
 - title: Заболотний Grade 5, §§25-28
-  notes: Describing places and daily activities — case usage in context
+  notes: 'Опис місць та щоденних дій — вживання відмінків у контексті'
 - title: 'ULP: Home and Daily Routine'
   url: https://www.ukrainianlessons.com/season3/
-  notes: Vocabulary for home description and daily routines with audio
+  notes: 'Словник для опису дому та щоденного розпорядку з аудіо'

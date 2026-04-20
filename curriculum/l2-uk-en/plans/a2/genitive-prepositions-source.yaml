@@ -2,112 +2,84 @@ module: a2-009
 level: A2
 sequence: 9
 slug: genitive-prepositions-source
-version: 1.1.2
+version: 1.1.3
 title: Звідки ти? З чого це зроблено?
 subtitle: Прийменники з/із/зі, від, після з родовим відмінком
 focus: grammar
 pedagogy: PPP
-phase: A2.2 [Genitive Case Complete]
+phase: 'A2.2 [Родовий відмінок: завершення]'
 word_target: 2000
 objectives:
-- Learner can use з/із/зі + Genitive to express origin, material, and starting 
-  point in time.
-- Learner can choose the correct variant (з, із, зі) based on the following 
-  consonant cluster.
-- Learner can use від + Genitive to express 'from a person' or 'from a source'.
-- Learner can use після + Genitive to express 'after' an event or time period.
+  - Вміти використовувати з/із/зі + родовий відмінок для вираження походження, матеріалу та початкової точки в часі.
+  - Навчитися обирати правильний варіант (з, із, зі) залежно від наступного збігу приголосних.
+  - Вміти використовувати від + родовий відмінок для вираження відправника або джерела.
+  - Вміти використовувати після + родовий відмінок для вираження події чи періоду, що слідує за чимось.
 dialogue_situations:
-- setting: 'International potluck dinner — everyone brought something from their country:
-    Це сир (m) з Франції. Оливки (pl) з Греції. Шоколад (m) від бабусі з Бельгії.
-    А це вино (n) після подорожі Італією.'
-  speakers:
-  - Учасники вечірки
-  motivation: 'З/від/після + genitive: з Франції, від бабусі, після подорожі'
+  - setting: 'Міжнародна вечеря в складчину — кожен приніс щось зі своєї країни: Це сир (m) з Франції. Оливки (pl) з Греції. Шоколад (m) від бабусі з Бельгії. А це вино (n) після подорожі Італією.'
+    speakers:
+      - Учасники вечірки
+    motivation: 'З/від/після + родовий відмінок: з Франції, від бабусі, після подорожі'
 content_outline:
-- section: Звідки? З/із/зі + родовий (Where From? З/із/зі + Genitive)
-  words: 700
-  points:
-  - 'Origin and source: з Києва, з України, зі Львова, зі Швеції. The core meaning
-    is ''from'' a place, person, or source.'
-  - 'Phonetic variants: з before vowels and single consonants (з Одеси, з університету);
-    із before single sibilants [з], [с], [ц], [ж], [ч], [ш] (із золота, із села) and
-    between two consonants (лист із Бразилії); зі before clusters starting with з-,
-    с-, ш- (зі Львова, зі школи, зі стола). General principle: euphony (милозвучність)
-    — choose the variant that''s easier to pronounce.'
-  - 'Material and composition: склянка з молока (a glass of milk), сік з яблук (apple
-    juice), сукня з шовку (a dress made of silk).'
-  - 'Time starting point: з ранку (since morning), з понеділка (since Monday), з дитинства
-    (since childhood).'
-- section: Від кого? Від + родовий (From Whom? Від + Genitive)
-  words: 600
-  points:
-  - 'From a person: лист від мами (a letter from mom), подарунок від друга (a gift
-    from a friend), новини від сусіда (news from a neighbor).'
-  - 'Contrast з vs. від: з Києва (from Kyiv — place) vs. від Олени (from Olena — person).
-    З = source/origin, від = from a specific person or entity.'
-  - 'Distance from: далеко від центру (far from the center), недалеко від вокзалу
-    (not far from the station).'
-  - 'Protection from: ліки від головного болю (medicine for a headache), парасолька
-    від дощу (umbrella from rain).'
-- section: Що було потім? Після + родовий (What Happened Next? Після + Genitive)
-  words: 700
-  points:
-  - 'After an event or period: після уроку (after the lesson), після обіду (after
-    lunch), після роботи (after work), після канікул (after vacation).'
-  - 'Genitive forms after після with both hard and soft nouns: після екзамену (hard
-    masc.), після дня (soft masc.), після лекції (-ія fem.), після свята (hard neuter
-    -о).'
-  - 'Common daily routine sequences: після сніданку йду на роботу, після роботи готую
-    вечерю, після вечері дивлюся фільм.'
-  - 'Contrast with до (before) to reinforce both prepositions: до уроку vs. після
-    уроку, до обіду vs. після обіду.'
-- section: Підсумок — Summary
-  words: 200
-  points:
-  - Prepositions з/із/зі, від, and після all require the Genitive case to 
-    express origin (з Києва), material (сік з яблук), source from a person (від 
-    мами), and sequence (після роботи).
-  - "Euphony (милозвучність) rules determine the variant of 'from': use 'з' before
-    vowels (з Одеси), 'із' before sibilants or between consonants (із села), and 'зі'
-    before consonant clusters starting with з, с, ш (зі Львова, зі школи)."
-  - "Self-check: What is the difference between 'з Києва' and 'від Олени'? Describe
-    3 things in your daily routine using 'після'. When do you use 'зі' instead of
-    'з'?"
+  - section: Звідки? З/із/зі + родовий відмінок
+    words: 700
+    points:
+      - 'Походження та джерело: з Києва, з України, зі Львова, зі Швеції. Основне значення — походження з місця, від особи або джерела.'
+      - 'Фонетичні варіанти: з перед голосними та одиночними приголосними (з Одеси, з університету); із перед одиночними свистячими і шиплячими [з], [с], [ц], [ж], [ч], [ш] (із золота, із села) та між двома приголосними (лист із Бразилії); зі перед збігом приголосних, що починається на з-, с-, ш- (зі Львова, зі школи, зі стола). Загальний принцип: милозвучність — обирайте той варіант, який легше вимовити.'
+      - 'Матеріал і склад: склянка з молока, сік з яблук, сукня з шовку.'
+      - 'Початкова точка в часі: з ранку, з понеділка, з дитинства.'
+  - section: Від кого? Від + родовий відмінок
+    words: 600
+    points:
+      - 'Від особи: лист від мами, подарунок від друга, новини від сусіда.'
+      - 'Протиставлення з проти від: з Києва (з місця) проти від Олени (від особи). З = джерело/місце походження, від = від конкретної особи або організації.'
+      - 'Відстань: далеко від центру, недалеко від вокзалу.'
+      - 'Захист: ліки від головного болю, парасолька від дощу.'
+  - section: Що було потім? Після + родовий відмінок
+    words: 700
+    points:
+      - 'Після події або періоду: після уроку, після обіду, після роботи, після канікул.'
+      - 'Форми родового відмінка після після з іменниками твердої та м''якої груп: після екзамену (тверда чол.), після дня (м''яка чол.), після лекції (жін. на -ія), після свята (тверда сер. на -о).'
+      - 'Поширені послідовності щоденної рутини: після сніданку йду на роботу, після роботи готую вечерю, після вечері дивлюся фільм.'
+      - 'Протиставлення з до (перед) для закріплення обох прийменників: до уроку проти після уроку, до обіду проти після обіду.'
+  - section: Підсумок
+    words: 200
+    points:
+      - 'Прийменники з/із/зі, від та після завжди вимагають родового відмінка для вираження походження (з Києва), матеріалу (сік з яблук), відправника (від мами) та послідовності (після роботи).'
+      - 'Правила милозвучності визначають варіант прийменника з: використовуйте з перед голосними (з Одеси), із перед свистячими/шиплячими або між приголосними (із села), та зі перед збігом приголосних, що починається на з, с, ш (зі Львова, зі школи).'
+      - 'Перевірка: Яка різниця між "з Києва" та "від Олени"? Опишіть 3 події з вашого розпорядку дня, використовуючи "після". Коли використовується "зі" замість "з"?'
 vocabulary_hints:
   required:
-  - прийменник (preposition)
-  - джерело (source)
-  - походження (origin)
-  - матеріал (material)
-  - далеко (far)
-  - недалеко (not far, nearby)
-  - подарунок (gift)
-  - сніданок (breakfast)
-  - вечеря (dinner, supper)
-  - канікули (vacation, holidays)
+    - прийменник (preposition)
+    - джерело (source)
+    - походження (origin)
+    - матеріал (material)
+    - далеко (far)
+    - недалеко (not far, nearby)
+    - подарунок (gift)
+    - сніданок (breakfast)
+    - вечеря (dinner, supper)
+    - канікули (vacation, holidays)
   recommended:
-  - дитинство (childhood)
-  - шовк (silk)
-  - парасолька (umbrella)
-  - сусід (neighbor)
+    - дитинство (childhood)
+    - шовк (silk)
+    - парасолька (umbrella)
+    - сусід (neighbor)
 activity_hints:
-- type: quiz
-  focus: Choose the correct variant з/із/зі based on the following word
-  items: 8
-- type: fill-in
-  focus: Complete sentences with від or з + correct Genitive noun form
-  items: 8
-- type: match-up
-  focus: Match preposition phrases to their English meanings (origin, material, 
-    time)
-  items: 8
-- type: group-sort
-  focus: Sort phrases into з (place/material) vs. від (person/protection) vs. 
-    після (time)
-  items: 8
+  - type: quiz
+    focus: Вибір правильного варіанта з/із/зі залежно від наступного слова
+    items: 8
+  - type: fill-in
+    focus: Доповнення речень прийменниками від або з + правильною формою родового відмінка
+    items: 8
+  - type: match-up
+    focus: Встановлення відповідності між прийменниковими фразами та їхніми англійськими значеннями (походження, матеріал, час)
+    items: 8
+  - type: group-sort
+    focus: Групування фраз за прийменниками з (місце/матеріал) проти від (особа/захист) проти після (час)
+    items: 8
 references:
-- title: Заболотний Grade 5, §31
-  notes: Прийменники з родовим відмінком
-- title: 'ULP: 10 Uses of Genitive Case'
-  url: https://www.ukrainianlessons.com/genitive-case/
-  notes: Genitive after prepositions section
+  - title: Заболотний Grade 5, §31
+    notes: Прийменники з родовим відмінком
+  - title: 'ULP: 10 Uses of Genitive Case'
+    url: https://www.ukrainianlessons.com/genitive-case/
+    notes: Розділ про родовий відмінок після прийменників

@@ -2,84 +2,58 @@ module: a2-034
 level: A2
 sequence: 34
 slug: plural-other-cases
-version: 1.0.2
+version: 1.0.3
 title: З друзями, для дітей
 subtitle: Давальний, орудний та місцевий відмінки множини
 focus: grammar
 pedagogy: PPP
-phase: A2.5 [Case Synthesis and Plurals]
+phase: A2.5 [Синтез відмінків та множина]
 word_target: 2000
 objectives:
-- Learner can form the Dative plural for nouns of all declension classes using 
-  the endings -ам/-ям.
-- Learner can form the Instrumental plural using -ами/-ями and recognize the 
-  common alternation pattern.
-- Learner can form the Locative plural using -ах/-ях and use it correctly with 
-  prepositions (у/в, на, по).
-- Learner can use all three plural cases in practical sentences about doing 
-  things with friends, giving things to people, and describing locations.
+- Учень вміє утворювати давальний відмінок множини для іменників усіх відмін, використовуючи закінчення -ам/-ям.
+- Учень вміє утворювати орудний відмінок множини за допомогою -ами/-ями та розпізнавати типові моделі чергування.
+- Учень вміє утворювати місцевий відмінок множини за допомогою -ах/-ях і правильно використовувати його з прийменниками (у/в, на, по).
+- Учень вміє використовувати всі три відмінки множини в практичних реченнях про спільні дії з друзями, дарування подарунків та опис локацій.
 dialogue_situations:
-- setting: 'Organizing a school trip — all cases in plural: Розкажіть дітям (dat pl)
-    план. Їдемо автобусами (inst pl). Зупинимося в готелях (loc pl). Купимо подарунки
-    для батьків (gen pl).'
+- setting: 'Організація шкільної поїздки — усі відмінки у множині: Розкажіть дітям (dat pl) план. Їдемо автобусами (inst pl). Зупинимося в готелях (loc pl). Купимо подарунки для батьків (gen pl).'
   speakers:
   - Вчитель
   - Учні
-  motivation: 'All plural cases: дітям, автобусами, готелях, батьків'
+  motivation: 'Усі відмінки множини: дітям, автобусами, готелях, батьків'
 content_outline:
-- section: 'Давальний множини: Кому? (Dative Plural: To Whom?)'
+- section: 'Давальний множини: Кому?'
   words: 550
   points:
-  - 'Universal pattern: all nouns take -ам (hard) or -ям (soft) in Dat.Pl. студентам,
-    друзям, дітям, містам, ночам.'
-  - This is the most regular plural case — ONE rule covers almost everything. 
-    Compare with the complexity of Gen.Pl.
-  - 'Common verbs requiring Dative: давати, допомагати, пояснювати, телефонувати,
-    дякувати, радити.'
-  - 'Practice: Я даю подарунки друзям. Вчитель пояснює правила студентам. Батьки допомагають
-    дітям.'
-- section: 'Орудний множини: З ким? Чим? (Instrumental Plural: With Whom? With What?)'
+  - 'Універсальне правило: усі іменники приймають -ам (тверда група) або -ям (м''яка група) у Дав. мн. студентам, друзям, дітям, містам, ночам.'
+  - 'Це найрегулярніший відмінок множини — ОДНЕ правило охоплює майже все. Порівняйте зі складністю родового відмінка множини.'
+  - 'Типові дієслова, що вимагають давального відмінка: давати, допомагати, пояснювати, телефонувати, дякувати, радити.'
+  - 'Практика: Я даю подарунки друзям. Вчитель пояснює правила студентам. Батьки допомагають дітям.'
+- section: 'Орудний множини: З ким? Чим?'
   words: 600
   points:
-  - 'Universal pattern: -ами (hard) or -ями (soft). студентами, друзями, дітьми (irregular),
-    містами, ночами.'
-  - 'Key irregular forms: діти → дітьми, люди → людьми, коні → кіньми, гості → гістьми
-    (or гостями). These are high-frequency — learn them.'
-  - 'Preposition з/із + Instr.Pl.: Я зустрівся з друзями. Ми розмовляли з учителями.
-    Вона прийшла з дітьми.'
-  - 'Instrumental without preposition (means/tool): писати олівцями, їсти паличками,
-    прикрасити квітами.'
-  - 'Practice dialogues: planning activities with friends, describing how things are
-    done.'
-- section: 'Місцевий множини: Де? На чому? (Locative Plural: Where? On What?)'
+  - 'Універсальне правило: -ами (тверда група) або -ями (м''яка група). студентами, друзями, дітьми (неправильне), містами, ночами.'
+  - 'Ключові неправильні форми: діти → дітьми, люди → людьми, коні → кіньми, гості → гістьми (або гостями). Вони дуже поширені — вивчіть їх.'
+  - 'Прийменник з/із + Оруд. мн.: Я зустрівся з друзями. Ми розмовляли з учителями. Вона прийшла з дітьми.'
+  - 'Орудний відмінок без прийменника (засіб/інструмент): писати олівцями, їсти паличками, прикрасити квітами.'
+  - 'Практичні діалоги: планування спільних справ з друзями, опис того, як щось робиться.'
+- section: 'Місцевий множини: Де? На чому?'
   words: 500
   points:
-  - 'Universal pattern: -ах (hard) or -ях (soft). у містах, на столах, у книжках,
-    на заняттях, у ночах.'
-  - 'Prepositions: у/в + Loc.Pl. (location), на + Loc.Pl. (surface/event), по + Loc.Pl.
-    (distribution/across).'
-  - 'Examples: Діти грають у парках. Книжки лежать на полицях. По вулицях ходять люди.
-    На заняттях ми багато говоримо.'
-  - 'Compare Dat. and Loc. plural — same stems, different endings: друзям (Dat.) vs.
-    на друзях (Loc. — rare but demonstrates the pattern).'
-- section: 'Три відмінки разом: Практика (All Three Together: Practice)'
+  - 'Універсальне правило: -ах (тверда група) або -ях (м''яка група). у містах, на столах, у книжках, на заняттях, у ночах.'
+  - 'Прийменники: у/в + Місц. мн. (локація), на + Місц. мн. (поверхня/подія), по + Місц. мн. (розповсюдження/рух вздовж).'
+  - 'Приклади: Діти грають у парках. Книжки лежать на полицях. По вулицях ходять люди. На заняттях ми багато говоримо.'
+  - 'Порівняйте давальний і місцевий відмінки множини — однакові основи, різні закінчення: друзям (Дав.) проти на друзях (Місц. — рідко, але демонструє модель).'
+- section: 'Три відмінки разом: Практика'
   words: 350
   points:
-  - 'Combined sentences using Dat., Instr., and Loc. plurals: Ми подарували квіти
-    вчителям (Dat.) і сфотографувалися з ними (Instr.) у класах (Loc.).'
-  - 'Short dialogue: organizing a trip — who to invite (Dat.), what to bring (Instr.),
-    where to go (Loc.).'
-  - 'Summary table: Dat. -ам/-ям, Instr. -ами/-ями, Loc. -ах/-ях — the most regular
-    set of plural endings in Ukrainian.'
-- section: Підсумок — Summary
+  - 'Об''єднані речення з використанням Дав., Оруд., і Місц. відмінків множини: Ми подарували квіти вчителям (Дав.) і сфотографувалися з ними (Оруд.) у класах (Місц.).'
+  - 'Короткий діалог: організація поїздки — кого запросити (Дав.), що взяти з собою (Оруд.), куди поїхати (Місц.).'
+  - 'Підсумкова таблиця: Дав. -ам/-ям, Оруд. -ами/-ями, Місц. -ах/-ях — найрегулярніший набір закінчень множини в українській мові.'
+- section: Підсумок
   words: 200
   points:
-  - 'The Dative (-ам/-ям), Instrumental (-ами/-ями), and Locative (-ах/-ях) plurals
-    are highly regular across all noun classes. Watch out for high-frequency irregulars
-    in the Instrumental plural: діти → дітьми, люди → людьми.'
-  - "Self-check: What prepositions are commonly used with the Locative plural? Translate:
-    'I give gifts to friends' and 'We are walking with children in the parks.' Describe
-    3 objects you can eat with using the Instrumental plural."
+  - 'Давальний (-ам/-ям), орудний (-ами/-ями) та місцевий (-ах/-ях) відмінки множини є дуже регулярними в усіх групах іменників. Зверніть увагу на дуже поширені неправильні форми в орудному відмінку множини: діти → дітьми, люди → людьми.'
+  - 'Самоперевірка: Які прийменники зазвичай використовуються з місцевим відмінком множини? Перекладіть: "Я даю подарунки друзям" та "Ми гуляємо з дітьми в парках". Опишіть 3 предмети, якими ви можете їсти, використовуючи орудний відмінок множини.'
 vocabulary_hints:
   required:
   - давальний відмінок (dative case)
@@ -99,23 +73,19 @@ vocabulary_hints:
   - прикрашати (to decorate)
 activity_hints:
 - type: fill-in
-  focus: Put the noun into the correct plural case (Dat., Instr., or Loc.) based
-    on the preposition or verb in the sentence
+  focus: 'Поставити іменник у правильний відмінок множини (Дав., Оруд., або Місц.) залежно від прийменника чи дієслова в реченні'
   items: 8
 - type: match-up
-  focus: Match plural noun forms with the correct case label (Dat., Instr., 
-    Loc.)
+  focus: 'Зіставити форми іменників у множині з правильною назвою відмінка (Дав., Оруд., Місц.)'
   items: 8
 - type: quiz
-  focus: Choose the correct preposition + plural case combination to complete a 
-    sentence
+  focus: 'Вибрати правильну комбінацію прийменника та відмінка множини, щоб доповнити речення'
   items: 8
 - type: error-correction
-  focus: Fix incorrect case endings in sentences
+  focus: 'Виправити неправильні відмінкові закінчення в реченнях'
   items: 6
 references:
 - title: Заболотний Grade 6, §§63-65
-  notes: Dat., Instr., Loc. plural endings with exercises
+  notes: 'Закінчення Дав., Оруд., Місц. множини зі вправами'
 - title: Кравцова Grade 4, с. 46-48
-  notes: Distinguishing Dative and Locative — simple exercises for recognizing 
-    case by question words
+  notes: 'Розрізнення давального та місцевого відмінків — прості вправи на розпізнавання відмінка за запитальними словами'

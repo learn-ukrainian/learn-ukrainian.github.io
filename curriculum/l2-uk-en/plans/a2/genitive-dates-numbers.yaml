@@ -2,115 +2,90 @@ module: a2-006
 level: A2
 sequence: 6
 slug: genitive-dates-numbers
-version: 1.1.2
+version: 1.1.3
 title: Скільки? Котра година? Яке число?
 subtitle: Родовий відмінок з числами, датами та запереченням
 focus: grammar
 pedagogy: PPP
-phase: A2.1 [Foundation and Aspect Introduction]
+phase: 'A2.1 [Основи та вступ до видів дієслова]'
 word_target: 2000
 objectives:
-- Learner can use the Genitive singular of months to state the date.
-- Learner can apply the '1, 2-4, 5+' rule for noun agreement with cardinal 
-  numbers, using Nominative singular, Nominative plural, and Genitive plural 
-  accordingly.
-- Learner can use the Genitive case for the direct object in a negated sentence.
-- Learner can ask and answer basic questions about quantity, dates, and negated 
-  actions using the Genitive case.
+  - Вміти використовувати назви місяців у родовому відмінку однини для називання дати.
+  - Вміти застосовувати правило 1, 2-4, 5+ для узгодження кількісних числівників з іменниками, використовуючи називний однини, називний множини та родовий множини відповідно.
+  - Вміти використовувати родовий відмінок для прямого додатка в заперечному реченні.
+  - Навчитися ставити основні запитання про кількість, дати та заперечні дії і відповідати на них, використовуючи родовий відмінок.
 dialogue_situations:
-- setting: 'Booking a hotel room over the phone — dates and prices: З якого числа?
-    З п''ятого березня. До якого? До десятого. Скільки номерів? Два номери. Скільки
-    гостей? П''ять гостей.'
-  speakers:
-  - Гість
-  - Адміністратор готелю
-  motivation: 'Genitive with dates: п''ятого березня, and counting: два номери, п''ять
-    гостей'
+  - setting: 'Бронювання номера в готелі телефоном — дати та ціни: З якого числа? З п''ятого березня. До якого? До десятого. Скільки номерів? Два номери. Скільки гостей? П''ять гостей.'
+    speakers:
+      - Гість
+      - Адміністратор готелю
+    motivation: 'Родовий відмінок з датами: п''ятого березня, та лічбою: два номери, п''ять гостей'
 content_outline:
-- section: Яке сьогодні число? Родовий з датами (What's the Date? Genitive with 
-    Dates)
-  words: 500
-  points:
-  - 'How to ask the date: ''Яке сьогодні число?'''
-  - 'How to answer: The day is an ordinal numeral (перше, друге), and the month is
-    a noun in the Genitive singular.'
-  - 'Examples: перше січня, друге лютого, двадцять п''яте грудня. All month names
-    are masculine and take the standard genitive endings: -я (січня, лютого, березня...)
-    or -а (листопада).'
-  - Practice with all 12 months, asking and answering about important dates 
-    (birthdays, holidays).
-- section: 'Рахуємо предмети: правило ''1, 2-4, 5+'' (Counting Items: The ''1, 2-4,
-    5+'' Rule)'
-  words: 800
-  points:
-  - 'The fundamental rule for counting in Ukrainian:'
-  - '1 (+21, 31..): Nominative Singular (один стіл).'
-  - '2, 3, 4 (+22-24..): Nominative Plural (два столи, три столи, чотири столи).'
-  - '5-20 (+25-30..): Genitive Plural (п''ять столів).'
-  - Provide extensive practice with masculine, feminine, and neuter nouns. 'одна
-    книга, дві книги, п'ять книг'; 'одне вікно, два вікна, п'ять вікон'.
-  - Special attention to feminine nouns where Nom. Pl. and Gen. Sg. can look 
-    similar (e.g., 'сестри').
-- section: Заперечення з прямим додатком (Negation with a Direct Object)
-  words: 700
-  points:
-  - When you negate a verb that takes a direct object in the Accusative, the 
-    object often (but not always) shifts to the Genitive.
-  - This adds emphasis to the negation. It's the difference between 'I didn't 
-    read *the book*' and 'I didn't read *any book*'.
-  - 'Clear examples: ''Я читаю книгу'' (Acc) -> ''Я не читаю книги'' (Gen). ''Він
-    купив машину'' (Acc) -> ''Він не купив машини'' (Gen).'
-  - Explain that using the Accusative in negation is also possible and common, 
-    but the Genitive is grammatically standard and frequent.
-- section: Підсумок — Summary
-  words: 200
-  points:
-  - "Dates require the day as an ordinal numeral and the month in Genitive singular
-    (перше січня). The '1, 2-4, 5+' counting rule dictates noun cases: 1 takes Nominative
-    Singular, 2-4 take Nominative Plural, and 5+ take Genitive Plural. Self-check:
-    How do you say '3 tables' and '5 books'? Answer 'Яке сьогодні число?' for your
-    birthday."
-  - "Direct objects of negated verbs often shift from Accusative to Genitive (Я читаю
-    книгу → Я не читаю книги) to emphasize the negation. Self-check: What is the grammatical
-    difference between 'I didn't read the book' and 'I didn't read any book' in Ukrainian?
-    Transform 'Вона бачить брата' into a negative sentence."
+  - section: Яке сьогодні число? Родовий відмінок з датами
+    words: 500
+    points:
+      - 'Як спитати про дату: ''Яке сьогодні число?'''
+      - 'Як відповісти: День — це порядковий числівник (перше, друге), а місяць — іменник у родовому відмінку однини.'
+      - 'Приклади: перше січня, друге лютого, двадцять п''яте грудня. Усі назви місяців належать до чоловічого роду і мають стандартні закінчення родового відмінка: -я (січня, лютого, березня...) або -а (листопада).'
+      - Практика з усіма 12 місяцями, запитання та відповіді про важливі дати (дні народження, свята).
+  - section: 'Рахуємо предмети: правило 1, 2-4, 5+'
+    words: 800
+    points:
+      - 'Основне правило лічби в українській мові:'
+      - '1 (+21, 31..): Називний відмінок однини (один стіл).'
+      - '2, 3, 4 (+22-24..): Називний відмінок множини (два столи, три столи, чотири столи).'
+      - '5-20 (+25-30..): Родовий відмінок множини (п''ять столів).'
+      - 'Широка практика з іменниками чоловічого, жіночого та середнього родів. ''одна книга, дві книги, п''ять книг''; ''одне вікно, два вікна, п''ять вікон''.'
+      - 'Особлива увага іменникам жіночого роду, де форми називного множини та родового однини можуть бути схожими (наприклад, ''сестри'').'
+  - section: Заперечення з прямим додатком
+    words: 700
+    points:
+      - 'Під час заперечення дієслова, яке вимагає прямого додатка в знахідному відмінку, додаток часто (але не завжди) переходить у родовий відмінок.'
+      - 'Це додає наголос на запереченні. Це різниця між "я не читав конкретну книгу" та "я не читав жодної книги".'
+      - 'Зрозумілі приклади: ''Я читаю книгу'' (Acc) -> ''Я не читаю книги'' (Gen). ''Він купив машину'' (Acc) -> ''Він не купив машини'' (Gen).'
+      - 'Поясніть, що використання знахідного відмінка в запереченні також можливе і поширене, але родовий відмінок є граматично нормативним і часто вживаним.'
+  - section: Підсумок
+    words: 200
+    points:
+      - 'Для дат день вказується порядковим числівником, а місяць — у родовому відмінку однини (перше січня). Правило лічби ''1, 2-4, 5+'' визначає відмінки іменників: 1 вимагає називного однини, 2-4 — називного множини, а 5+ — родового множини. Перевірка: Як сказати ''3 столи'' і ''5 книг''? Відповідайте на запитання ''Яке сьогодні число?'' щодо свого дня народження.'
+      - 'Прямі додатки заперечних дієслів часто переходять зі знахідного відмінка в родовий (Я читаю книгу → Я не читаю книги), щоб підсилити заперечення. Перевірка: У чому граматична різниця між використанням знахідного та родового відмінків у заперечних реченнях? Перетворіть речення ''Вона бачить брата'' на заперечне.'
 vocabulary_hints:
   required:
-  - число (дата) (date)
-  - місяць (month)
-  - січень (січня) (January)
-  - лютий (лютого) (February)
-  - березень (березня) (March)
-  - квітень (квітня) (April)
-  - травень (травня) (May)
-  - червень (червня) (June)
-  - липень (липня) (July)
-  - серпень (серпня) (August)
-  - вересень (вересня) (September)
-  - жовтень (жовтня) (October)
-  - листопад (листопада) (November)
-  - грудень (грудня) (December)
-  - заперечення (negation)
+    - число (дата) (date)
+    - місяць (month)
+    - січень (січня) (January)
+    - лютий (лютого) (February)
+    - березень (березня) (March)
+    - квітень (квітня) (April)
+    - травень (травня) (May)
+    - червень (червня) (June)
+    - липень (липня) (July)
+    - серпень (серпня) (August)
+    - вересень (вересня) (September)
+    - жовтень (жовтня) (October)
+    - листопад (листопада) (November)
+    - грудень (грудня) (December)
+    - заперечення (negation)
   recommended:
-  - числівник (numeral)
-  - додаток (object (grammatical))
-  - правило (rule)
+    - числівник (numeral)
+    - додаток (object (grammatical))
+    - правило (rule)
 activity_hints:
-- type: quiz
-  focus: What's the Date? (Drill)
-  items: 8
-- type: fill-in
-  focus: Counting Objects (1, 2-4, 5+ Rule)
-  items: 8
-- type: match-up
-  focus: Accusative to Genitive Negation
-  items: 8
-- type: match-up
-  focus: Q&A about quantities and dates
-  items: 8
+  - type: quiz
+    focus: 'Яке сьогодні число? (Тренування)'
+    items: 8
+  - type: fill-in
+    focus: 'Рахуємо предмети (правило 1, 2-4, 5+)'
+    items: 8
+  - type: match-up
+    focus: Перехід зі знахідного в родовий при запереченні
+    items: 8
+  - type: match-up
+    focus: Запитання та відповіді про кількість і дати
+    items: 8
 references:
-- title: Заболотний Grade 5, §20-22
-  notes: Родовий відмінок іменників
-- title: 'ULP: 10 Uses of Genitive Case'
-  url: https://www.ukrainianlessons.com/genitive-case/
-  notes: All genitive functions
+  - title: Заболотний Grade 5, §20-22
+    notes: Родовий відмінок іменників
+  - title: 'ULP: 10 Uses of Genitive Case'
+    url: https://www.ukrainianlessons.com/genitive-case/
+    notes: Усі функції родового відмінка

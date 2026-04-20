@@ -2,7 +2,7 @@ module: a2-028
 level: A2
 sequence: 28
 slug: instrumental-prepositions
-version: 1.1.2
+version: 1.1.3
 title: Над, під, між
 subtitle: Просторові та часові прийменники з орудним відмінком
 focus: grammar
@@ -10,83 +10,54 @@ pedagogy: PPP
 phase: A2.4 [Instrumental Case]
 word_target: 2000
 objectives:
-- Learner can use spatial prepositions над, під, перед, за, між with the 
-  Instrumental case to describe location.
-- Learner can use перед + Instrumental for temporal meaning (перед обідом, перед
-  заняттям).
-- Learner can answer the question Де? using preposition + Instrumental phrases 
-  for location.
-- Learner can distinguish за + Instrumental (behind) from за + Accusative 
-  (for/in favor of) in context.
+- Учень може використовувати просторові прийменники над, під, перед, за, між з орудним відмінком для опису розташування.
+- Учень вміє використовувати перед + орудний відмінок для часового значення (перед обідом, перед заняттям).
+- Учень може відповідати на питання Де?, використовуючи словосполучення "прийменник + орудний відмінок" для розташування.
+- Учень вміє розрізняти за + орудний відмінок (behind) і за + знахідний відмінок (for/in favor of) у контексті.
 dialogue_situations:
-- setting: 'Giving directions inside a museum — spatial prepositions: Картина (f,
-    painting) над каміном (m, fireplace). Скульптура (f) між вікнами (pl). Лавка (f,
-    bench) під деревом (n, tree). Кафе за музеєм (m).'
+- setting: 'Вказівки всередині музею — просторові прийменники: Картина (f, painting) над каміном (m, fireplace). Скульптура (f) між вікнами (pl). Лавка (f, bench) під деревом (n, tree). Кафе за музеєм (m).'
   speakers:
   - Гід музею
   - Відвідувачі
-  motivation: 'Над/під/між/за + instrumental: камін→каміном, вікно→вікнами, дерево→деревом'
+  motivation: 'Над/під/між/за + орудний відмінок: камін→каміном, вікно→вікнами, дерево→деревом'
 content_outline:
-- section: 'Просторові прийменники: Де це? (Spatial Prepositions: Where Is It?)'
+- section: 'Просторові прийменники: Де це?'
   words: 600
   points:
-  - 'Five key spatial prepositions that take the Instrumental case: над (above/over),
-    під (under/below), перед (in front of), за (behind/beyond), між (between).'
+  - 'П''ять ключових просторових прийменників, які вимагають орудного відмінка: над (above/over), під (under/below), перед (in front of), за (behind/beyond), між (between).'
   - 'над + Ор.в.: Лампа висить над столом. Птах летить над містом. Хмари над горами.'
   - 'під + Ор.в.: Кіт сидить під столом. Книга лежить під ліжком. Підвал під будинком.'
-  - 'перед + Ор.в.: Дерево росте перед будинком. Машина стоїть перед гаражем. Фонтан
-    перед театром.'
+  - 'перед + Ор.в.: Дерево росте перед будинком. Машина стоїть перед гаражем. Фонтан перед театром.'
   - 'за + Ор.в.: Сад за будинком. Ліс за річкою. Хтось стоїть за дверима.'
-  - 'між + Ор.в.: Парк між школою і бібліотекою. Стілець між столом і стіною. Місто
-    між горами.'
-- section: Описуємо кімнату (Describing a Room)
+  - 'між + Ор.в.: Парк між школою і бібліотекою. Стілець між столом і стіною. Місто між горами.'
+- section: 'Описуємо кімнату'
   words: 500
   points:
-  - 'Practical application: describing where objects are in a room — Картина висить
-    над ліжком. Килим лежить під столом. Шафа стоїть між вікном і дверима.'
-  - 'Question-answer pattern: Де лампа? — Лампа над столом. Де кіт? — Під ліжком.
-    Де ваза? — Між книгами.'
-  - 'Dialogue: Two roommates arranging furniture. One asks where to put things, the
-    other gives directions using preposition + Instrumental.'
-  - 'Building vocabulary for room description: стіна, підлога, стеля, кут, шафа, полиця,
-    килим, картина.'
-- section: 'Перед обідом, за розкладом: Часове значення (Before Lunch, On Schedule:
-    Temporal Meaning)'
+  - 'Практичне застосування: опис того, де знаходяться предмети в кімнаті — Картина висить над ліжком. Килим лежить під столом. Шафа стоїть між вікном і дверима.'
+  - 'Модель запитання-відповіді: Де лампа? — Лампа над столом. Де кіт? — Під ліжком. Де ваза? — Між книгами.'
+  - 'Діалог: Двоє сусідів по кімнаті розставляють меблі. Один запитує, куди покласти речі, інший дає вказівки, використовуючи прийменник + орудний відмінок.'
+  - 'Накопичення словникового запасу для опису кімнати: стіна, підлога, стеля, кут, шафа, полиця, килим, картина.'
+- section: 'Перед обідом, за розкладом: Часове значення'
   words: 450
   points:
-  - 'перед + Ор.в. for "before" in time: перед обідом (before lunch), перед уроком
-    (before class), перед сном (before sleep), перед відпусткою (before vacation).'
-  - 'за + Ор.в. for fixed temporal expressions: за розкладом (according to schedule),
-    за планом (according to plan).'
-  - 'Contrast with spatial meaning: перед будинком (in front of — spatial) vs. перед
-    обідом (before — temporal). Same case, different meaning.'
-  - 'Common daily routine expressions: перед сніданком, перед роботою, перед заняттям.'
-- section: 'Практика: Де? Коли? (Practice: Where? When?)'
+  - 'перед + Ор.в. для "before" у часі: перед обідом (before lunch), перед уроком (before class), перед сном (before sleep), перед відпусткою (before vacation).'
+  - 'за + Ор.в. для сталих часових виразів: за розкладом (according to schedule), за планом (according to plan).'
+  - 'Контраст із просторовим значенням: перед будинком (in front of — просторове) проти перед обідом (before — часове). Однаковий відмінок, різне значення.'
+  - 'Поширені вирази щоденного розпорядку: перед сніданком, перед роботою, перед заняттям.'
+- section: 'Практика: Де? Коли?'
   words: 450
   points:
-  - 'Picture description exercise: look at a scene and describe locations using над,
-    під, перед, за, між.'
-  - 'Daily schedule exercise: Що ти робиш перед сніданком? Перед роботою? Перед сном?'
-  - 'Contrastive pairs: за + Instrumental (behind — location) vs. за + Accusative
-    (for — purpose). За будинком (behind the house) vs. Дякую за допомогу (thank you
-    for help).'
-  - 'Mini-dialogue: Describing a neighborhood — where the shop is, where the park
-    is, what is between buildings.'
-  - 'Accusative vs. Instrumental with під, над, між: location (де?) uses Instrumental
-    — Кіт сидить під столом. Direction/motion (куди?) uses Accusative — Кіт заліз
-    під стіл. Compare: Лампа висить над столом (location, Instr.) vs. Повісь лампу
-    над стіл (direction, Acc.). Між follows the same pattern but Accusative is rare
-    in everyday speech.'
-- section: Підсумок — Summary
+  - 'Вправа на опис картинки: подивіться на сцену та опишіть розташування, використовуючи над, під, перед, за, між.'
+  - 'Вправа на щоденний розклад: Що ти робиш перед сніданком? Перед роботою? Перед сном?'
+  - 'Контрастивні пари: за + орудний відмінок (behind — розташування) проти за + знахідний відмінок (for — мета). За будинком (behind the house) проти Дякую за допомогу (thank you for help).'
+  - 'Міні-діалог: Опис району — де знаходиться магазин, де парк, що розташовано між будівлями.'
+  - 'Знахідний проти орудного відмінка з під, над, між: розташування (де?) використовує орудний відмінок — Кіт сидить під столом. Напрямок/рух (куди?) використовує знахідний відмінок — Кіт заліз під стіл. Порівняйте: Лампа висить над столом (розташування, Ор.в.) проти Повісь лампу над стіл (напрямок, Зн.в.). Прийменник між дотримується тієї самої моделі, але знахідний відмінок є рідкісним у повсякденному мовленні.'
+- section: Підсумок
   words: 200
   points:
-  - 'Spatial prepositions (над, під, перед, за, між) use the Instrumental case to
-    describe location (Де?): Кіт під столом, лампа над ліжком.'
-  - "The preposition перед + Instrumental is also used for temporal 'before' (Коли?):
-    перед обідом, перед сном, перед заняттям."
-  - "Self-check: Describe where 3 objects are in your room using над, під, перед,
-    за, or між. What is the difference between 'Кіт сидить під столом' and 'Кіт заліз
-    під стіл'?"
+  - 'Просторові прийменники (над, під, перед, за, між) використовують орудний відмінок для опису розташування (Де?): Кіт під столом, лампа над ліжком.'
+  - 'Прийменник перед + орудний відмінок також використовується для часового "перед" (Коли?): перед обідом, перед сном, перед заняттям.'
+  - 'Самоперевірка: Опишіть, де знаходяться 3 предмети у вашій кімнаті, використовуючи над, під, перед, за або між. У чому різниця між "Кіт сидить під столом" та "Кіт заліз під стіл"?'
 vocabulary_hints:
   required:
   - над (above, over)
@@ -107,25 +78,22 @@ vocabulary_hints:
   - сон (sleep, dream)
 activity_hints:
 - type: fill-in
-  focus: Complete location sentences with correct preposition + Instrumental 
-    noun form
+  focus: 'Доповніть речення про розташування правильним прийменником + формою іменника в орудному відмінку'
   items: 8
 - type: match-up
-  focus: Match prepositions (над, під, перед, за, між) to pictures showing 
-    spatial relationships
+  focus: 'З''єднайте прийменники (над, під, перед, за, між) із картинками, що показують просторові відношення'
   items: 8
 - type: quiz
-  focus: Distinguish spatial vs. temporal meaning of перед and за
+  focus: 'Розрізніть просторове та часове значення перед і за'
   items: 8
 - type: true-false
-  focus: Judge whether location descriptions match a room diagram
+  focus: 'Визначте, чи відповідають описи розташування схемі кімнати'
   items: 8
 references:
 - title: Захарійчук Grade 4, с. 63
-  notes: Instrumental case nouns with prepositions з, за, із, над, під, між, 
-    перед — explicit list from textbook rule box
+  notes: 'Іменники в орудному відмінку з прийменниками з, за, із, над, під, між, перед — чіткий перелік із правила в підручнику'
 - title: Заболотний Grade 5, §23
-  notes: Spatial prepositions with Instrumental case, room description exercises
+  notes: 'Просторові прийменники з орудним відмінком, вправи на опис кімнати'
 - title: 'ULP: Ukrainian Prepositions'
   url: https://www.ukrainianlessons.com/prepositions/
-  notes: Preposition + case pairings including Instrumental spatial prepositions
+  notes: 'Пари прийменник + відмінок, включаючи просторові прийменники орудного відмінка'

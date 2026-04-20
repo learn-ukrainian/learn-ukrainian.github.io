@@ -2,67 +2,46 @@ module: a2-011
 level: A2
 sequence: 11
 slug: genitive-prepositions-direction
-version: '1.1'
+version: 1.1.2
 title: Куди? До якого часу?
 subtitle: Прийменник до з родовим відмінком для напрямку, мети та часу
 focus: grammar
 pedagogy: PPP
-phase: A2.2 [Genitive Case Complete]
+phase: 'A2.2 [Родовий відмінок: завершення]'
 word_target: 2000
 objectives:
-  - Learner can use до + Genitive to express direction toward a destination.
-  - Learner can use до + Genitive to express a time limit ('until', 'by').
-  - Learner can use до + Genitive to express purpose ('to see someone', 'to the 
-    doctor').
-  - Learner can contrast до with other directional constructions (в/на + 
-    Accusative) and explain when each is appropriate.
+  - Вміти використовувати прийменник до + родовий відмінок для вираження напрямку до місця призначення.
+  - Вміти використовувати до + родовий відмінок для позначення часової межі.
+  - Вміти використовувати до + родовий відмінок для вираження мети (піти до когось, до лікаря).
+  - Навчитися протиставляти конструкцію з до іншим конструкціям напрямку (в/на + знахідний відмінок) і пояснювати доцільність кожної з них.
 dialogue_situations:
-  - setting: 'Giving directions to a taxi driver — a series of destinations: До вокзалу
-      (m, station), будь ласка. Потім до аптеки (f, pharmacy). Чекайте до п''ятої
-      години. А потім до готелю (m, hotel).'
+  - setting: 'Вказуємо дорогу таксисту — серія пунктів призначення: До вокзалу (m, station), будь ласка. Потім до аптеки (f, pharmacy). Чекайте до п''ятої години. А потім до готелю (m, hotel).'
     speakers:
       - Пасажир
       - Таксист
-    motivation: 'До + genitive: вокзал→вокзалу, аптека→аптеки, готель→готелю'
+    motivation: 'До + родовий відмінок: вокзал→вокзалу, аптека→аптеки, готель→готелю'
 content_outline:
-  - section: 'Куди ти йдеш? До + родовий для напрямку (Where Are You Going? До + Genitive
-      for Direction)'
+  - section: Куди ти йдеш? До + родовий відмінок для напрямку
     words: 700
     points:
-      - 'Destination as a place: до Львова, до Києва, до Одеси. Used for cities and
-        countries: до України, до Польщі.'
-      - 'Destination as a person: до друга (to a friend''s place), до бабусі (to grandma''s),
-        до лікаря (to the doctor). До + person = going to see them / to their place.'
-      - 'Contrast до vs. в/на + Accusative: ''Іду до магазину'' vs. ''Іду в магазин''
-        — до emphasizes the direction/journey, в/на emphasizes the destination itself.
-        Both are equally standard in Ukrainian. No hierarchy — use whichever fits
-        the context.'
-      - 'Hard and soft stems: до будинку (hard masc.), до музею (soft masc.), до школи
-        (hard fem.), до станції (-ія fem.), до моря (soft neuter).'
-  - section: 'До якого часу? До + родовий для часу (Until When? До + Genitive for
-      Time)'
+      - 'Пункт призначення як місце: до Львова, до Києва, до Одеси. Використовується для міст і країн: до України, до Польщі.'
+      - 'Пункт призначення як особа: до друга, до бабусі, до лікаря. До + особа = йти до когось / до їхнього місця.'
+      - 'Протиставлення до проти в/на + знахідний відмінок: ''Іду до магазину'' проти ''Іду в магазин'' — до наголошує на напрямку/шляху, в/на підкреслює саму кінцеву точку. Обидва варіанти є абсолютно нормативними в українській мові. Немає ієрархії — використовуйте те, що краще пасує до контексту.'
+      - 'Тверда та м''яка групи: до будинку (тверда чол.), до музею (м''яка чол.), до школи (тверда жін.), до станції (-ія жін.), до моря (м''яка сер.).'
+  - section: До якого часу? До + родовий відмінок для часу
     words: 650
     points:
-      - 'Time limit — until: до вечора (until evening), до ранку (until morning),
-        до понеділка (until Monday), до літа (until summer).'
-      - 'Deadline — by: зробити до п''ятниці (finish by Friday), прийти до восьмої
-        (come by eight o''clock).'
-      - 'Paired with від/з for time ranges: від ранку до вечора (from morning to evening),
-        з понеділка до п''ятниці (from Monday to Friday).'
-      - 'Common daily phrases: працювати до шостої, чекати до завтра, відкрито до
-        дев''ятої.'
-  - section: 'До + родовий: решта значень та узагальнення (До + Genitive: Other Meanings
-      and Summary)'
+      - 'Часова межа — до: до вечора, до ранку, до понеділка, до літа.'
+      - 'Дедлайн: зробити до п''ятниці, прийти до восьмої.'
+      - 'У парі з від/з для позначення часових проміжків: від ранку до вечора, з понеділка до п''ятниці.'
+      - 'Поширені щоденні фрази: працювати до шостої, чекати до завтра, відкрито до дев''ятої.'
+  - section: 'До + родовий відмінок: решта значень та узагальнення'
     words: 650
     points:
-      - 'Purpose — with abstract nouns: до речі (by the way), до побачення (goodbye
-        — lit. until seeing), готовий до екзамену (ready for the exam).'
-      - 'Addition and relation: додати до списку (add to the list), ставлення до роботи
-        (attitude toward work), інтерес до мови (interest in the language).'
-      - 'Summary table of all до meanings: direction (до Львова), person (до лікаря),
-        time limit (до вечора), deadline (до п''ятниці), purpose (до побачення).'
-      - 'Consolidation: compare до with від and після from M08 — all three take the
-        Genitive, but express different relationships (toward, from, after).'
+      - 'Мета — з абстрактними іменниками: до речі, до побачення, готовий до екзамену.'
+      - 'Додавання та відношення: додати до списку, ставлення до роботи, інтерес до мови.'
+      - 'Зведена таблиця всіх значень прийменника до: напрямок (до Львова), особа (до лікаря), часова межа (до вечора), дедлайн (до п''ятниці), мета (до побачення).'
+      - 'Закріплення: порівняйте до з від і після з модуля M08 — усі три прийменники вимагають родового відмінка, але виражають різні відношення (назустріч, від, після).'
 vocabulary_hints:
   required:
     - напрямок (direction)
@@ -82,22 +61,20 @@ vocabulary_hints:
     - завтра (tomorrow)
 activity_hints:
   - type: quiz
-    focus: Choose the correct meaning of до in context (direction, time, 
-      purpose)
+    focus: Вибір правильного значення прийменника до в контексті (напрямок, час, мета)
     items: 8
   - type: fill-in
-    focus: Complete sentences with до + correct Genitive noun form
+    focus: Доповнення речень прийменником до + правильною формою іменника в родовому відмінку
     items: 8
   - type: match-up
-    focus: Match до-phrases with their functions (direction, time limit, 
-      purpose)
+    focus: Встановлення відповідності між фразами з до та їхніми функціями (напрямок, часова межа, мета)
     items: 8
   - type: group-sort
-    focus: Sort до-phrases by meaning category (direction vs. time vs. purpose)
+    focus: Групування фраз з до за категорією значення (напрямок проти часу проти мети)
     items: 8
 references:
   - title: Заболотний Grade 5, §31
     notes: Прийменник до з родовим відмінком
   - title: 'ULP: 10 Uses of Genitive Case'
     url: https://www.ukrainianlessons.com/genitive-case/
-    notes: Direction and time uses of до
+    notes: Використання прийменника до для напрямку та часу

@@ -2,83 +2,58 @@ module: a2-019
 level: A2
 sequence: 19
 slug: dative-adjectives-pronouns
-version: 1.0.2
+version: 1.0.3
 title: Моєму другові, нашій вчительці
-subtitle: Узгодження прикметників та присвійних займенників у давальному 
-  відмінку
+subtitle: Узгодження прикметників та присвійних займенників у давальному відмінку
 focus: grammar
 pedagogy: PPP
-phase: A2.3 [Dative Case]
+phase: A2.3 [Давальний відмінок]
 word_target: 2000
 objectives:
-- Learner can form dative adjective endings for all genders and plural 
-  (-ому/-ій/-ому/-им).
-- Learner can form dative possessive pronoun endings (моєму/моїй, твоєму/твоїй, 
-  нашому/нашій, вашому/вашій).
-- Learner can produce correctly agreeing noun phrases in the dative (моєму 
-  старшому братові, нашій новій вчительці).
-- Learner can use demonstrative pronouns цьому/цій/тому/тій in dative noun 
-  phrases.
+- Вміти утворювати закінчення прикметників у давальному відмінку для всіх родів та множини (-ому/-ій/-ому/-им).
+- Вміти утворювати закінчення присвійних займенників у давальному відмінку (моєму/моїй, твоєму/твоїй, нашому/нашій, вашому/вашій).
+- Вміти будувати правильно узгоджені іменникові групи у давальному відмінку (моєму старшому братові, нашій новій вчительці).
+- Вміти використовувати вказівні займенники цьому/цій/тому/тій в іменникових групах у давальному відмінку.
 dialogue_situations:
-- setting: 'Teacher handing back graded essays — giving to specific students: Моєму
-    найкращому студентові — десятка! Нашій новій студентці — дев''ятка. Цьому хлопцю
-    треба більше працювати.'
+- setting: 'Викладач роздає перевірені есе — віддає конкретним студентам: Моєму найкращому студентові — десятка! Нашій новій студентці — дев''ятка. Цьому хлопцю треба більше працювати.'
   speakers:
   - Вчитель
   - Студенти
-  motivation: 'Full dative phrases: моєму студентові, нашій студентці, цьому хлопцю'
+  motivation: 'Повні конструкції у давальному відмінку: моєму студентові, нашій студентці, цьому хлопцю'
 content_outline:
-- section: Прикметники у давальному відмінку (Adjectives in the Dative Case)
+- section: Прикметники у давальному відмінку
   words: 600
   points:
-  - 'Masculine/neuter dative ending: -ому for hard stems (новому, старому, гарному),
-    -ьому for soft stems (синьому, середньому).'
-  - 'Feminine dative ending: -ій for hard stems (новій, старій, гарній), -ій for soft
-    stems too (синій→синій). After г, к, х: -ій with no alternation (довгій, тихій).'
-  - 'Plural dative ending for all genders: -им (новим, старим, гарним).'
-  - Chart comparing adjective endings across Nominative, Genitive, Dative for 
-    pattern recognition.
-  - Practice with familiar adjectives from A1-A2 vocabulary.
-- section: Присвійні та вказівні займенники у давальному відмінку (Possessive 
-    and Demonstrative Pronouns in the Dative)
+  - 'Закінчення чоловічого та середнього роду: -ому для твердої групи (новому, старому, гарному), -ьому для м''якої групи (синьому, середньому).'
+  - 'Закінчення жіночого роду: -ій для твердої групи (новій, старій, гарній), -ій також для м''якої групи (синя→синій). Після г, к, х: -ій без чергування (довгій, тихій).'
+  - 'Закінчення множини для всіх родів: -им (новим, старим, гарним).'
+  - 'Таблиця порівняння закінчень прикметників у називному, родовому та давальному відмінках для розпізнавання патернів.'
+  - 'Практика зі знайомими прикметниками зі словника рівнів A1-A2.'
+- section: Присвійні та вказівні займенники у давальному відмінку
   words: 550
   points:
-  - 'Possessive pronouns follow adjective endings: мій→моєму/моїй, твій→твоєму/твоїй,
-    його (invariable), її (invariable), наш→нашому/нашій, ваш→вашому/вашій, їхній→їхньому/їхній.'
-  - 'Demonstrative pronouns: цей→цьому/цій, той→тому/тій. Plural: цим, тим.'
-  - 'Key insight: його, її, їхній — його never changes form (give to його брат → його
-    братові), but їхній declines (їхньому братові).'
-  - Practice forming dative phrases with possessive + noun combinations.
-- section: Повні іменникові групи у давальному відмінку (Full Dative Noun 
-    Phrases)
+  - 'Присвійні займенники мають такі ж закінчення, як і прикметники: мій→моєму/моїй, твій→твоєму/твоїй, його (незмінний), її (незмінний), наш→нашому/нашій, ваш→вашому/вашій, їхній→їхньому/їхній.'
+  - 'Вказівні займенники: цей→цьому/цій, той→тому/тій. Множина: цим, тим.'
+  - 'Ключове правило: його, її, їхній — його ніколи не змінює форму (дати його брату → його братові), але їхній відмінюється (їхньому братові).'
+  - 'Практика утворення конструкцій у давальному відмінку з комбінаціями присвійний займенник + іменник.'
+- section: Повні іменникові групи у давальному відмінку
   words: 500
   points:
-  - 'Building multi-word dative phrases: possessive + adjective + noun all must agree
-    — моєму старшому братові, нашій новій вчительці, твоєму маленькому синові.'
-  - 'Word order: possessive before adjective before noun, same as nominative.'
-  - 'Practice with real-life scenarios: giving presents (подарувати моєму другові),
-    writing to someone (написати нашій бабусі), explaining to someone (пояснити цьому
-    студентові).'
-  - Common mistakes to avoid — mixing masculine -ому with feminine -ій.
-- section: Порівняння відмінків (Comparing Cases So Far)
+  - 'Побудова багатослівних фраз у давальному відмінку: присвійний займенник + прикметник + іменник — усі слова мають бути узгоджені (моєму старшому братові, нашій новій вчительці, твоєму маленькому синові).'
+  - 'Порядок слів: присвійний займенник перед прикметником перед іменником, так само як у називному відмінку.'
+  - 'Практика з реальними життєвими ситуаціями: дарувати подарунки (подарувати моєму другові), писати комусь (написати нашій бабусі), пояснювати комусь (пояснити цьому студентові).'
+  - 'Поширені помилки, яких слід уникати — сплутування чоловічого закінчення -ому з жіночим закінченням -ій.'
+- section: Порівняння вивчених відмінків
   words: 350
   points:
-  - 'Quick comparison chart: Nominative, Genitive, Dative adjective/pronoun endings
-    side by side for all genders.'
-  - 'Pattern recognition: masculine/neuter Genitive -ого vs. Dative -ому; feminine
-    Genitive -ої vs. Dative -ій.'
-  - Practice choosing the correct case form based on the verb and sentence 
-    context.
-- section: Підсумок — Summary
+  - 'Коротка порівняльна таблиця: закінчення прикметників/займенників у називному, родовому та давальному відмінках поруч для всіх родів.'
+  - 'Розпізнавання патернів: закінчення чоловічого/середнього роду родового відмінка -ого проти давального -ому; жіночого роду родового відмінка -ої проти давального -ій.'
+  - 'Практика вибору правильної форми відмінка залежно від дієслова та контексту речення.'
+- section: Підсумок
   words: 200
   points:
-  - "Dative adjective and pronoun agreement depends on gender: Masculine/Neuter take
-    -ому/-ьому (моєму новому), Feminine takes -ій (моїй новій), and Plural takes -им.
-    Remember that 'його' and 'її' are invariable, while 'їхній' declines."
-  - "Self-check: How do you say 'to my older brother' and 'to our new teacher' in
-    Ukrainian? (моєму старшому братові, нашій новій вчительці) What is the difference
-    between the masculine Genitive and Dative adjective endings? (-ого vs. -ому) Write
-    3 sentences describing who you give gifts to using full dative noun phrases."
+  - 'Узгодження прикметників і займенників у давальному відмінку залежить від роду: чоловічий і середній рід мають закінчення -ому/-ьому (моєму новому), жіночий рід має закінчення -ій (моїй новій), а множина має закінчення -им. Пам''ятайте, що «його» та «її» є незмінними, тоді як «їхній» відмінюється.'
+  - 'Самоперевірка: Як сказати українською «моєму старшому братові» (to my older brother) та «нашій новій вчительці» (to our new teacher)? Яка різниця між закінченнями прикметників чоловічого роду у родовому та давальному відмінках? (-ого проти -ому) Напишіть 3 речення, описуючи, кому ви даруєте подарунки, використовуючи повні іменникові групи у давальному відмінку.'
 vocabulary_hints:
   required:
   - моєму (to my (masc./neut. dat.))
@@ -98,30 +73,25 @@ vocabulary_hints:
   - їхньому (to their (masc./neut. dat.))
 activity_hints:
 - type: fill-in
-  focus: Complete dative noun phrases with the correct adjective/pronoun ending 
-    (мо___ друг___)
+  focus: Доповнити іменникові групи у давальному відмінку правильним закінченням прикметника/займенника (мо___ друг___)
   items: 8
 - type: quiz
-  focus: Choose the correct dative form of the possessive pronoun (моєму vs. 
-    моїй vs. моїм)
+  focus: Обрати правильну форму присвійного займенника у давальному відмінку (моєму чи моїй чи моїм)
   items: 8
 - type: match-up
-  focus: Match nominative noun phrases to their dative equivalents (мій друг → 
-    моєму другові)
+  focus: Зіставити іменникові групи у називному відмінку з їхніми еквівалентами у давальному (мій друг → моєму другові)
   items: 8
 - type: group-sort
-  focus: Sort dative adjective forms by gender (masculine -ому, feminine -ій, 
-    plural -им)
+  focus: Відсортувати форми прикметників у давальному відмінку за родами (чоловічий -ому, жіночий -ій, множина -им)
   items: 8
 - type: error-correction
-  focus: Find and fix adjective-pronoun agreement errors in dative phrases 
-    (e.g., *моїй другові → моєму другові, *нашому вчительці → нашій вчительці)
+  focus: 'Знайти та виправити помилки узгодження прикметників та займенників в іменникових групах у давальному відмінку (наприклад, *моїй другові → моєму другові, *нашому вчительці → нашій вчительці)'
   items: 6
 references:
 - title: Заболотний Grade 10, §157
-  notes: Dative case paradigm with examples of adjective+noun agreement
+  notes: Парадигма давального відмінка з прикладами узгодження прикметника та іменника
 - title: Захарійчук Grade 4, §281
-  notes: Pronoun declension tables showing dative forms of possessives
+  notes: Таблиці відмінювання займенників із формами присвійних займенників у давальному відмінку
 - title: 'ULP: Ukrainian Possessive Pronouns'
   url: https://www.ukrainianlessons.com/possessive-pronouns/
-  notes: Declension of possessive pronouns across all cases
+  notes: Відмінювання присвійних займенників у всіх відмінках

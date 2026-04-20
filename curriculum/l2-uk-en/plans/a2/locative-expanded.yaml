@@ -2,100 +2,62 @@ module: a2-020
 level: A2
 sequence: 20
 slug: locative-expanded
-version: 1.0.2
+version: 1.0.4
 title: Місцевий відмінок у нових контекстах
-subtitle: Абстрактні іменники, часові вирази та тема розмови у місцевому 
-  відмінку
+subtitle: Абстрактні іменники, часові вирази та тема розмови у місцевому відмінку
 focus: grammar
 pedagogy: PPP
-phase: A2.3 [Dative Case]
+phase: 'A2.3 [Давальний відмінок]'
 word_target: 2000
 objectives:
-- Learner can use the locative case with abstract nouns to express contexts and 
-  domains (у житті, в освіті, на роботі, у політиці).
-- Learner can use temporal locative expressions for months, weeks, and periods 
-  (у минулому місяці, на цьому тижні, у дитинстві).
-- Learner can use topic-marking locative with по + locative for communication 
-  topics (по телефону, по радіо) and розмовляти/говорити про + accusative vs. по
-  + locative distinctions.
-- Learner can combine locative with prepositions у/в, на, по in varied real-life
-  contexts beyond simple physical location.
+- Студент вміє використовувати місцевий відмінок з абстрактними іменниками для вираження контексту та сфери діяльності (у житті, в освіті, на роботі, у політиці).
+- Студент вміє використовувати часові вирази в місцевому відмінку для позначення місяців, тижнів та періодів (у минулому місяці, на цьому тижні, у дитинстві).
+- Студент вміє позначати тему чи засіб зв'язку за допомогою конструкції по + місцевий відмінок (по телефону, по радіо) та розрізняти розмовляти/говорити про + знахідний відмінок і по + місцевий відмінок.
+- Студент вміє поєднувати місцевий відмінок із прийменниками у/в, на, по в різних життєвих контекстах, що виходять за межі простого позначення фізичного місця.
 dialogue_situations:
-- setting: 'Two friends catching up after a long time — talking about life changes:
-    Що нового у твоєму житті? — У минулому місяці я змінила роботу. Тепер працюю в
-    освіті. А ти? — Я на новому курсі. Розмовляли по телефону з мамою — вона хвилюється.'
+- setting: 'Двоє друзів діляться новинами після довгої розлуки — говорять про зміни в житті: Що нового у твоєму житті? — У минулому місяці я змінила роботу. Тепер працюю в освіті. А ти? — Я на новому курсі. Розмовляли по телефону з мамою — вона хвилюється.'
   speakers:
   - Марія
   - Ігор
-  motivation: 'Natural catch-up triggers all three locative extensions: abstract (у
-    житті, в освіті), temporal (у минулому місяці), topic (по телефону)'
-- setting: 'Student discussing schedule and interests with a tutor: На цьому тижні
-    у мене три заняття. У вільний час я читаю про Україну — у підручнику з історії.
-    В дитинстві я мало знав про українську культуру.'
+  motivation: 'Природна розмова, що охоплює всі три нові функції місцевого відмінка: абстрактну (у житті, в освіті), часову (у минулому місяці) та комунікативну (по телефону)'
+- setting: 'Студент обговорює свій розклад та інтереси з викладачем: На цьому тижні у мене три заняття. У вільний час я читаю про Україну — у підручнику з історії. В дитинстві я мало знав про українську культуру.'
   speakers:
   - Студент
   - Викладач
-  motivation: Temporal locative (на цьому тижні, в дитинстві) + abstract domain 
-    (в історії, про культуру)
+  motivation: 'Часовий місцевий відмінок (на цьому тижні, в дитинстві) + абстрактна сфера (в історії, про культуру)'
 content_outline:
-- section: Місцевий з абстрактними іменниками (Locative with Abstract Nouns)
+- section: Місцевий відмінок з абстрактними іменниками
   words: 550
   points:
-  - A1 taught locative for physical location (у місті, на вулиці). Now expanding
-    to abstract domains and contexts.
-  - 'Common abstract locative phrases: у житті (in life), в освіті (in education),
-    у політиці (in politics), на роботі (at work), в економіці (in economics), у мистецтві
-    (in art).'
-  - 'Pattern: у/в + abstract noun in locative = "in the domain/field of." Note: на
-    роботі (not *у роботі) — на is fixed for робота.'
-  - 'Practice forming locative of abstract feminine nouns in -а/-я: наука→у науці,
-    політика→у політиці, культура→у культурі.'
-- section: Часовий місцевий відмінок (Temporal Locative)
+  - 'На рівні A1 ми вивчали місцевий відмінок для позначення фізичного місця (у місті, на вулиці). Тепер розширюємо його на абстрактні сфери та контексти.'
+  - 'Поширені абстрактні словосполучення в місцевому відмінку: у житті, в освіті, у політиці, на роботі, в економіці, у мистецтві.'
+  - 'Модель: у/в + абстрактний іменник у місцевому відмінку = "у певній сфері/галузі". Зверніть увагу: на роботі (не *у роботі) — для слова робота традиційно використовується прийменник на.'
+  - 'Практика утворення місцевого відмінка абстрактних іменників жіночого роду на -а/-я: наука→у науці, політика→у політиці, культура→у культурі.'
+- section: Часовий місцевий відмінок
   words: 600
   points:
-  - 'Months: у січні, у лютому, у березні... all months use у/в + locative. Masculine
-    months in -ень: -ні (січень→у січні). Neuter місяць compounds: у минулому місяці,
-    у наступному місяці.'
-  - 'Weeks: на цьому тижні, на минулому тижні, на наступному тижні. Note: тиждень
-    uses на (not у).'
-  - 'Life periods: у дитинстві (in childhood), у молодості (in youth), у старості
-    (in old age), у минулому (in the past), у майбутньому (in the future).'
-  - 'Contrast with accusative for duration: у понеділок (on Monday, acc.) vs. у минулому
-    місяці (last month, loc.). The question test: Коли? (temporal loc.) vs. Як довго?
-    (duration, acc.).'
-- section: 'По телефону, по радіо: місцевий із прийменником «по» (Locative with "po")'
+  - 'Місяці: у січні, у лютому, у березні... усі місяці вживаються з прийменниками у/в + місцевий відмінок. Чоловічий рід на -ень змінюється на -ні (січень→у січні). Конструкції зі словом місяць: у минулому місяці, у наступному місяці.'
+  - 'Тижні: на цьому тижні, на минулому тижні, на наступному тижні. Зверніть увагу: зі словом тиждень використовується прийменник на (а не у).'
+  - 'Життєві періоди: у дитинстві, у молодості, у старості, у минулому, у майбутньому.'
+  - 'Протиставлення зі знахідним відмінком для позначення тривалості: у понеділок (знахідний відм.) та у минулому місяці (місцевий відм.). Перевірка запитанням: Коли? (часовий місцевий) та Як довго? (тривалість, знахідний).'
+- section: 'По телефону, по радіо: місцевий відмінок із прийменником «по»'
   words: 500
   points:
-  - 'Topic/means with по + locative: по телефону (by phone), по радіо (on the radio),
-    по пошті (by mail), по дорозі (on the way).'
-  - 'Distinction: говорити по телефону (the medium of communication) vs. говорити
-    про телефон (about the phone as a topic). По + locative = means/channel. Про +
-    accusative = topic.'
-  - 'Common phrases: Я подзвоню по телефону. Ми почули по радіо. Він надіслав по пошті.
-    Зустрілися по дорозі додому.'
-  - 'Note: по + locative is the traditional Ukrainian pattern. Some modern usage shifts
-    to по + dative for distribution (по одному), but for communication means, locative
-    is standard.'
-- section: 'Місцевий відмінок: від місця до сенсу (From Place to Meaning)'
+  - 'Тема або засіб комунікації за допомогою конструкції по + місцевий відмінок: по телефону, по радіо, по пошті, по дорозі.'
+  - 'Різниця: говорити по телефону (засіб зв''язку) та говорити про телефон (про телефон як тему). По + місцевий відмінок = засіб/канал. Про + знахідний відмінок = тема.'
+  - 'Поширені фрази: Я подзвоню по телефону. Ми почули по радіо. Він надіслав по пошті. Зустрілися по дорозі додому.'
+  - 'Зверніть увагу: по + місцевий відмінок — це традиційна українська модель. У сучасному мовленні іноді трапляється перехід до по + давальний відмінок (розподіл: по одному), але для засобів зв''язку місцевий відмінок залишається нормою.'
+- section: 'Місцевий відмінок: від місця до сенсу'
   words: 350
   points:
-  - 'Summary: locative is not just "where" — it answers де? (location), коли? (time),
-    and як? (means/channel).'
-  - 'Consolidation table: physical (у місті), abstract (у житті), temporal (у січні),
-    means (по телефону) — all locative, four different functions.'
-  - 'Practice: building sentences that use 2-3 locative functions together: У минулому
-    місяці я розмовляв по телефону з другом у Києві.'
-- section: Підсумок — Summary
+  - 'Підсумок: місцевий відмінок позначає не лише місце — він відповідає на запитання де? (місце), коли? (час) та як? (засіб/канал).'
+  - 'Узагальнювальна таблиця: фізичне місце (у місті), абстрактна сфера (у житті), час (у січні), засіб (по телефону) — усе це місцевий відмінок, але чотири різні функції.'
+  - 'Практика: побудова речень, у яких поєднуються 2-3 функції місцевого відмінка: У минулому місяці я розмовляв по телефону з другом у Києві.'
+- section: Підсумок
   words: 200
   points:
-  - "The Locative case expands beyond physical places to abstract domains (у житті,
-    у політиці, на роботі) and time periods (у січні, на цьому тижні, у дитинстві).
-    Self-check: Translate 'at work in January' into Ukrainian. What preposition do
-    we use with 'тиждень' (week) in the locative?"
-  - "The preposition 'по' + locative expresses the means or channel of communication
-    (по телефону, по радіо). Self-check: What is the difference between 'говорити
-    по телефону' and 'говорити про телефон'? Write a single sentence that uses the
-    locative case for both a time period and a communication channel."
+  - 'Місцевий відмінок виходить за межі фізичних місць, охоплюючи абстрактні сфери (у житті, у політиці, на роботі) та періоди часу (у січні, на цьому тижні, у дитинстві). Самоперевірка: Перекладіть "at work in January" українською. Який прийменник ми використовуємо зі словом "тиждень" у місцевому відмінку?'
+  - 'Прийменник "по" + місцевий відмінок виражає засіб або канал зв''язку (по телефону, по радіо). Самоперевірка: У чому різниця між "говорити по телефону" та "говорити про телефон"? Напишіть одне речення, у якому місцевий відмінок вживається і для позначення періоду часу, і для каналу зв''язку.'
 vocabulary_hints:
   required:
   - місцевий (locative (case))
@@ -116,20 +78,16 @@ vocabulary_hints:
   - мистецтво (art)
 activity_hints:
 - type: quiz
-  focus: Identify the function of locative in each sentence (physical location, 
-    abstract domain, temporal, or means)
+  focus: Визначити функцію місцевого відмінка в кожному реченні (фізичне місце, абстрактна сфера, час або засіб)
   items: 8
 - type: fill-in
-  focus: Complete sentences with the correct locative form of the noun (у 
-    минулому ___, на цьому ___, по ___)
+  focus: Доповнити речення правильною формою іменника в місцевому відмінку (у минулому ___, на цьому ___, по ___)
   items: 8
 - type: match-up
-  focus: Match locative expressions with their English equivalents across all 
-    four function types
+  focus: Зіставити вирази в місцевому відмінку з їхніми англійськими відповідниками для всіх чотирьох типів функцій
   items: 8
 - type: error-correction
-  focus: Fix preposition errors (e.g., *у роботі → на роботі, *у телефону → по 
-    телефону, *на минулому місяці → у минулому місяці)
+  focus: Виправити помилки у вживанні прийменників (наприклад, *у роботі → на роботі, *у телефону → по телефону, *на минулому місяці → у минулому місяці)
   items: 8
 references:
 - title: Заболотний Grade 5, §28-30
@@ -138,4 +96,4 @@ references:
   notes: Часові конструкції з місцевим відмінком
 - title: 'ULP: Ukrainian Cases — Locative'
   url: https://www.ukrainianlessons.com/locative-case/
-  notes: Locative case uses including temporal and abstract
+  notes: Використання місцевого відмінка, зокрема для позначення часу та абстрактних понять

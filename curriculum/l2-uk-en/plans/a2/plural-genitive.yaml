@@ -2,79 +2,58 @@ module: a2-033
 level: A2
 sequence: 33
 slug: plural-genitive
-version: 1.0.2
+version: 1.0.3
 title: Скільки?
 subtitle: Родовий відмінок множини — найскладніший відмінок
 focus: grammar
 pedagogy: PPP
-phase: A2.5 [Case Synthesis and Plurals]
+phase: A2.5 [Синтез відмінків та множина]
 word_target: 2000
 objectives:
-- Learner can form the Genitive plural for I відміна nouns, applying the zero 
-  ending correctly and inserting fleeting vowels where needed (сестер, книжок).
-- Learner can form the Genitive plural for II відміна nouns using the correct 
-  ending (-ів/-їв for most masculine, zero ending for most neuter, -ей for 
-  soft-stem masculine).
-- Learner can use quantity expressions (скільки, багато, мало, кілька, декілька,
-  numerals 5+) with the Genitive plural correctly.
-- Learner can produce short utterances about quantities in everyday contexts 
-  (shopping, describing a room, talking about family).
+- Учень вміє утворювати родовий відмінок множини для іменників I відміни, правильно застосовуючи нульове закінчення та вставляючи вставні голосні там, де це потрібно (сестер, книжок).
+- Учень вміє утворювати родовий відмінок множини для іменників II відміни, використовуючи правильне закінчення (-ів/-їв для більшості чоловічого роду, нульове закінчення для більшості середнього роду, -ей для чоловічого роду на м'який приголосний).
+- Учень вміє правильно використовувати вислови кількості (скільки, багато, мало, кілька, декілька, числівники від 5) з родовим відмінком множини.
+- Учень вміє будувати короткі висловлювання про кількість у повсякденних контекстах (покупки, опис кімнати, розмова про родину).
 dialogue_situations:
-- setting: 'School cafeteria inventory — counting remaining items: Скільки тарілок
-    (f, plates)? Двадцять. Виделок (f, forks)? П''ятнадцять. Ложок (f, spoons)? Десять.
-    Склянок (f, glasses)? Немає склянок!'
+- setting: 'Інвентаризація в шкільній їдальні — підрахунок речей, що залишилися: Скільки тарілок (f)? Двадцять. Виделок (f)? П''ятнадцять. Ложок (f)? Десять. Склянок (f)? Немає склянок!'
   speakers:
-  - Завідувач їдальні (cafeteria manager)
+  - Завідувач їдальні
   - Помічник
-  motivation: 'Genitive plural: тарілка→тарілок, виделка→виделок, склянка→склянок'
+  motivation: 'Родовий множини: тарілка→тарілок, виделка→виделок, склянка→склянок'
 content_outline:
-- section: Чому родовий множини такий складний? (Why Is the Genitive Plural So 
-    Hard?)
+- section: Чому родовий множини такий складний?
   words: 400
   points:
-  - 'Overview: Gen.Pl. has THREE possible endings — zero (нульове закінчення), -ів/-їв,
-    -ей — plus fleeting vowels. No single rule covers all nouns.'
-  - 'Why it matters: Gen.Pl. appears after numbers 5+, after багато/мало/кілька/скільки,
-    and in many prepositional phrases. It is the most common plural case.'
-  - 'Strategy: learn by відміна and gender, with the most frequent words first.'
-- section: 'I відміна: нульове закінчення (First Declension: Zero Ending)'
+  - 'Огляд: Род. мн. має ТРИ можливі закінчення — нульове закінчення, -ів/-їв, -ей — плюс вставні голосні. Немає єдиного правила, що охоплює всі іменники.'
+  - 'Чому це важливо: Род. мн. з''являється після чисел від 5, після багато/мало/кілька/скільки та в багатьох прийменникових конструкціях. Це найпоширеніший відмінок множини.'
+  - 'Стратегія: вчити за відмінами та родами, починаючи з найуживаніших слів.'
+- section: 'I відміна: нульове закінчення'
   words: 500
   points:
-  - 'Most I відміна nouns (feminine -а/-я) take zero ending: книга → книг, зірка →
-    зірок, вишня → вишень.'
-  - 'Fleeting vowels appear when consonant clusters form: сестра → сестер, земля →
-    земель, пісня → пісень, казка → казок.'
-  - 'Exceptions with -ів or -ей: суддя → суддів, сім''я → сімей, стаття → статей.'
-  - 'Drill: form Gen.Pl. for common I відміна nouns with and without fleeting vowels.'
-- section: 'II відміна: -ів, нульове, -ей (Second Declension: Three Patterns)'
+  - 'Більшість іменників I відміни (жіночий та чоловічий рід на -а/-я) мають нульове закінчення: книга → книг, зірка → зірок, вишня → вишень.'
+  - 'Вставні голосні з''являються, коли утворюється збіг приголосних: сестра → сестер, земля → земель, пісня → пісень, казка → казок.'
+  - 'Винятки з -ів або -ей: суддя → суддів, сім''я → сімей, стаття → статей.'
+  - 'Вправа: утворити Род. мн. для поширених іменників I відміни зі вставними голосними та без них.'
+- section: 'II відміна: -ів, нульове, -ей'
   words: 600
   points:
-  - 'Masculine hard stems: -ів (столів, братів, учнів, днів).'
-  - 'Masculine soft stems: -ів or -ей (учителів, but гостей, коней).'
-  - 'Neuter -о: zero ending, often with fleeting vowels (вікон, слів, but міст — no
-    fleeting vowel).'
-  - 'Neuter -е/-я: -ів/-їв (морів, подвір''їв) or zero (сердець, яєць).'
-  - 'The -ин/-їн suffix disappears: громадянин → громадян, киянин → киян.'
-- section: Скільки чого? Кількість у житті (How Much of What? Quantity in Daily 
-    Life)
+  - 'Чоловічий рід на твердий приголосний: -ів (столів, братів, учнів, днів).'
+  - 'Чоловічий рід на м''який приголосний: -ів або -ей (учителів, але гостей, коней).'
+  - 'Середній рід на -о: нульове закінчення, часто зі вставними голосними (вікон, слів, але міст — без вставного голосного).'
+  - 'Середній рід на -е/-я: -ів/-їв (морів, подвір''їв) або нульове (сердець, яєць).'
+  - 'Суфікс -ин/-їн зникає: громадянин → громадян, киянин → киян.'
+- section: Скільки чого? Кількість у житті
   words: 500
   points:
-  - 'Pattern: скільки/багато/мало/кілька/декілька + Gen.Pl. — Скільки студентів? Багато
-    книжок. Мало грошей. Кілька друзів.'
-  - 'Numbers 5+ take Gen.Pl.: п''ять яблук, десять студентів, двадцять гривень.'
-  - 'Contrast with 2-4 (Nom.Pl.): два студенти vs. п''ять студентів; три книжки vs.
-    сім книжок.'
-  - 'Dialogues: at a store asking for quantities, describing what is in a room, talking
-    about family members.'
-- section: Підсумок — Summary
+  - 'Патерн: скільки/багато/мало/кілька/декілька + Род. мн. — Скільки студентів? Багато книжок. Мало грошей. Кілька друзів.'
+  - 'Числа від 5 вимагають Род. мн.: п''ять яблук, десять студентів, двадцять гривень.'
+  - 'Порівняння з 2-4 (Наз. мн.): два студенти проти п''ять студентів; три книжки проти сім книжок.'
+  - 'Діалоги: у магазині запитувати про кількість, описувати, що є в кімнаті, розповідати про членів родини.'
+- section: Підсумок
   words: 200
   points:
-  - 'Genitive plural endings depend on the declension: I відміна often uses a zero
-    ending (книга → книг) with fleeting vowels (сестра → сестер). II відміна masculine
-    usually uses -ів (столів) or -ей (гостей), and neuter uses a zero ending (вікон).'
-  - "Quantity words (скільки, багато, мало, кілька) and numbers 5+ require the Genitive
-    plural. Self-check: What is the difference between 'два студенти' and 'п'ять студентів'?
-    Describe the quantity of 3 different items in your room using 'багато' or 'мало'."
+  - 'Закінчення родового відмінка множини залежать від відміни: I відміна часто має нульове закінчення (книга → книг) зі вставними голосними (сестра → сестер). II відміна чоловічого роду зазвичай має -ів (столів) або -ей (гостей), а середній рід має нульове закінчення (вікон).'
+  - 'Слова на позначення кількості (скільки, багато, мало, кілька) та числа від 5 вимагають родового відмінка множини. Самоперевірка: Яка різниця між "два студенти" та "п''ять студентів"? Опишіть кількість 3 різних предметів у вашій кімнаті, використовуючи "багато" або "мало".'
 vocabulary_hints:
   required:
   - родовий відмінок (genitive case)
@@ -93,25 +72,22 @@ vocabulary_hints:
   - десяток (a dozen, ten-unit)
 activity_hints:
 - type: fill-in
-  focus: Form the Genitive plural from given nouns (mixed відміни), inserting 
-    fleeting vowels where needed
+  focus: 'Утворити родовий відмінок множини від поданих іменників (змішані відміни), вставляючи вставні голосні там, де це потрібно'
   items: 8
 - type: quiz
-  focus: Choose the correct Gen.Pl. form in quantity expressions (багато ___, 
-    п'ять ___)
+  focus: 'Вибрати правильну форму Род. мн. у виразах кількості (багато ___, п''ять ___)'
   items: 8
 - type: match-up
-  focus: Match singular nouns with their correct Genitive plural forms
+  focus: 'Зіставити іменники в однині з їхніми правильними формами родового відмінка множини'
   items: 8
 - type: true-false
-  focus: Judge whether a given Gen.Pl. form is correct or incorrect (common 
-    errors like книгів instead of книг)
+  focus: 'Визначити, чи є подана форма Род. мн. правильною чи неправильною (типові помилки, як-от книгів замість книг)'
   items: 8
 references:
 - title: Літвінова Grade 6, с. 160
-  notes: Gen.Pl. endings for II відміна with full table and exercises
+  notes: 'Закінчення Род. мн. для II відміни з повною таблицею та вправами'
 - title: Заболотний Grade 6, §62
-  notes: Gen.Pl. of I відміна — zero ending, fleeting vowels, exceptions
+  notes: 'Род. мн. I відміни — нульове закінчення, вставні голосні, винятки'
 - title: 'ULP: Genitive Plural'
   url: https://www.ukrainianlessons.com/genitive-case/
-  notes: Practical examples of Gen.Pl. in everyday speech
+  notes: 'Практичні приклади Род. мн. у повсякденному мовленні'

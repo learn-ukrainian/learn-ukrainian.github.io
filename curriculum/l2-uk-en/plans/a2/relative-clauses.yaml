@@ -2,82 +2,53 @@ module: a2-049
 level: A2
 sequence: 49
 slug: relative-clauses
-version: 1.1.2
+version: 1.1.3
 title: Той, який...
 subtitle: Означальні підрядні речення з який, де, куди, звідки
 focus: grammar
 pedagogy: PPP
-phase: A2.7 [Complex Sentences and Conditionals]
+phase: 'A2.7 [Складні речення та умовні конструкції]'
 word_target: 2000
 objectives:
-- Learner can form relative clauses using який/яка/яке/які, agreeing in gender 
-  and number with the noun they describe.
-- Learner can use де, куди, and звідки as relative words to describe places in 
-  subordinate clauses.
-- Learner can distinguish який in questions (Який це будинок?) from який in 
-  relative clauses (Будинок, який стоїть на розі...).
-- Learner can produce natural sentences with relative clauses to describe 
-  people, objects, and places.
+- Вміти утворювати означальні підрядні речення за допомогою який/яка/яке/які, узгоджуючи їх у роді та числі з іменником, який вони описують.
+- Навчитися використовувати де, куди та звідки як сполучні слова для опису місця в підрядних реченнях.
+- Розрізняти «який» у питаннях (Який це будинок?) та «який» в означальних підрядних реченнях (Будинок, який стоїть на розі...).
+- Вміти будувати природні речення з підрядними означальними для опису людей, предметів та місць.
 dialogue_situations:
-- setting: 'Real estate agent showing apartments — describing features: Це квартира
-    (f), яка має балкон (m). Ось кімната (f), де можна працювати. Сусід (m), який
-    живе поруч, дуже тихий.'
+- setting: 'Агент з нерухомості показує квартири — опис характеристик: Це квартира (f), яка має балкон (m). Ось кімната (f), де можна працювати. Сусід (m), який живе поруч, дуже тихий.'
   speakers:
   - Ріелтор
   - Покупець
-  motivation: Який/яка/яке, де, куди with квартира(f), балкон(m), кімната(f)
+  motivation: 'Який/яка/яке, де, куди з квартира(f), балкон(m), кімната(f)'
 content_outline:
-- section: Який? Яка? Яке? Які? (Which? What Kind?)
+- section: Який? Яка? Яке? Які?
   words: 750
   points:
-  - 'Introducing relative clauses (означальні підрядні речення): a clause that describes
-    a noun in the main sentence. The relative pronoun який agrees with the noun it
-    refers to in gender and number.'
-  - 'Gender and number agreement: Книжка, яка лежить на столі... Хлопець, який прийшов
-    вчора... Місто, яке я люблю... Друзі, які живуть у Києві...'
-  - 'Case of який: it takes the case required by its role in the subordinate clause,
-    not the main clause. Людина, яку я зустрів (Acc.) vs. Людина, яка мене зустріла
-    (Nom.). At A2 level, focus on Nominative and Accusative cases of який.'
-  - 'Comma placement: always a comma before який/яка/яке/які when introducing a relative
-    clause.'
-  - 'Contrast with questions: Який це фільм? (question) vs. Фільм, який ми дивилися
-    вчора, був цікавий (relative clause). Same word, different function.'
-- section: Де, куди, звідки — місце (Where, Where To, Where From — Place)
+  - 'Вступ до означальних підрядних речень: речення, що описує іменник у головній частині. Відносний займенник «який» узгоджується з іменником, якого він стосується, у роді та числі.'
+  - 'Узгодження в роді та числі: Книжка, яка лежить на столі... Хлопець, який прийшов вчора... Місто, яке я люблю... Друзі, які живуть у Києві...'
+  - 'Відмінок слова «який»: він набуває відмінка, який вимагається його роллю в підрядному реченні, а не в головному. Людина, яку я зустрів (Зн. в.) порівняно з Людина, яка мене зустріла (Наз. в.). На рівні А2 фокус на називному та знахідному відмінках.'
+  - 'Розділові знаки: кома завжди ставиться перед який/яка/яке/які на початку означального підрядного речення.'
+  - 'Контраст із питаннями: Який це фільм? (питання) порівняно з Фільм, який ми дивилися вчора, був цікавий (означальне підрядне речення). Одне й те саме слово, різна функція.'
+- section: Де, куди, звідки — місце
   words: 600
   points:
-  - 'Using де as a relative word for places: Кафе, де ми зустрілися, було затишне.
-    Місто, де я народився, знаходиться на заході.'
-  - 'Using куди for direction: Парк, куди ми ходимо гуляти, дуже гарний.'
-  - 'Using звідки for origin: Країна, звідки вона приїхала, — це Україна.'
-  - 'When to use де vs. який: Будинок, де живе мій друг = Будинок, в якому живе мій
-    друг. At A2 level, де is simpler and more natural for places.'
-- section: Описуємо людей, речі та місця (Describing People, Things, and Places)
+  - 'Використання «де» як сполучного слова для місць: Кафе, де ми зустрілися, було затишне. Місто, де я народився, знаходиться на заході.'
+  - 'Використання «куди» для напрямку: Парк, куди ми ходимо гуляти, дуже гарний.'
+  - 'Використання «звідки» для походження: Країна, звідки вона приїхала, — це Україна.'
+  - 'Коли використовувати «де» замість «який»: Будинок, де живе мій друг = Будинок, в якому живе мій друг. На рівні А2 «де» є простішим і природнішим для місць.'
+- section: Описуємо людей, речі та місця
   words: 650
   points:
-  - 'Building longer descriptions by combining relative clauses with previously learned
-    grammar: Подруга, яка живе у Львові, працює вчителькою. Ресторан, де ми вчора
-    вечеряли, знаходиться біля парку.'
-  - 'Avoiding common errors: redundant pronoun (Книжка, яка вона цікава = WRONG),
-    wrong gender agreement (Хлопець, яке = WRONG), missing comma.'
-  - 'Stacking information naturally: instead of many short sentences (Це мій друг.
-    Він живе у Києві. Він працює програмістом.), combine with який: Це мій друг, який
-    живе у Києві і працює програмістом.'
-  - 'Practical production: describe your favorite place, a person you admire, an object
-    you use daily — using relative clauses.'
-  - 'Intonation of означальні речення: the main clause begins with neutral intonation,
-    then the relative clause (який/яка/яке, де, куди) carries a slightly lower pitch
-    as a parenthetical insert, before the sentence returns to normal pitch or falls
-    at the end. The comma pause before який signals the listener to expect a descriptive
-    addition.'
-- section: Підсумок — Summary
+  - 'Побудова довших описів шляхом поєднання означальних підрядних речень із раніше вивченою граматикою: Подруга, яка живе у Львові, працює вчителькою. Ресторан, де ми вчора вечеряли, знаходиться біля парку.'
+  - 'Уникнення типових помилок: зайвий займенник (Книжка, яка вона цікава = НЕПРАВИЛЬНО), неправильне узгодження в роді (Хлопець, яке = НЕПРАВИЛЬНО), пропущена кома.'
+  - 'Природне нагромадження інформації: замість багатьох коротких речень (Це мій друг. Він живе у Києві. Він працює програмістом.), поєднайте їх за допомогою «який»: Це мій друг, який живе у Києві і працює програмістом.'
+  - 'Практичне використання: опишіть ваше улюблене місце, людину, якою ви захоплюєтеся, предмет, яким ви щодня користуєтеся, — використовуючи означальні підрядні речення.'
+  - 'Інтонація означальних речень: головне речення починається з нейтральною інтонацією, потім підрядне речення (який/яка/яке, де, куди) вимовляється трохи нижчим тоном як вставна конструкція, після чого речення повертається до нормального тону або спадає в кінці. Пауза з комою перед «який» сигналізує слухачеві про очікування описового доповнення.'
+- section: Підсумок
   words: 200
   points:
-  - 'Relative clauses use який/яка/яке/які (agreeing in gender and number with the
-    noun) or де/куди/звідки for places. Always place a comma before the relative word:
-    чоловік, який читає; місто, де я живу.'
-  - "Self-check: What is the difference between 'Який це фільм?' and 'Фільм, який
-    ми дивилися'? Combine these two sentences naturally: 'Це моя подруга. Вона працює
-    вчителькою.' Describe your favorite place using a relative clause with 'де'."
+  - 'Означальні підрядні речення використовують який/яка/яке/які (узгоджуючись у роді та числі з іменником) або де/куди/звідки для місць. Завжди ставте кому перед сполучним словом: чоловік, який читає; місто, де я живу.'
+  - 'Самоперевірка: Яка різниця між «Який це фільм?» та «Фільм, який ми дивилися»? Природно поєднайте ці два речення: «Це моя подруга. Вона працює вчителькою.» Опишіть ваше улюблене місце, використовуючи означальне підрядне речення з «де».'
 vocabulary_hints:
   required:
   - який (which, that — masc.)
@@ -97,29 +68,25 @@ vocabulary_hints:
   - стояти (to stand, to be situated)
 activity_hints:
 - type: fill-in
-  focus: Insert the correct form of який (яка, яке, які) into relative clauses, 
-    matching gender and number
+  focus: Вставити правильну форму який (яка, яке, які) в означальні підрядні речення, узгоджуючи рід і число
   items: 8
 - type: quiz
-  focus: Choose де, куди, or звідки to complete sentences about places
+  focus: Обрати де, куди або звідки для доповнення речень про місця
   items: 8
 - type: match-up
-  focus: Combine two simple sentences into one using a relative clause
+  focus: Поєднати два простих речення в одне за допомогою означального підрядного речення
   items: 8
 - type: true-false
-  focus: Judge whether relative clauses have correct agreement and comma 
-    placement
+  focus: Визначити, чи мають означальні підрядні речення правильне узгодження та розділові знаки
   items: 8
 - type: unjumble
-  focus: Reorder words to form correct relative clauses with який/яка/яке and 
-    де/куди/звідки
+  focus: Впорядкувати слова, щоб утворити правильні означальні підрядні речення з який/яка/яке та де/куди/звідки
   items: 6
 references:
 - title: Заболотний Grade 5, §28
-  notes: Означальні підрядні речення — який, котрий, де, куди, звідки as 
-    relative words, with agreement rules and examples
+  notes: Означальні підрядні речення — який, котрий, де, куди, звідки як сполучні слова, з правилами узгодження та прикладами
 - title: Заболотний Grade 6
-  notes: Relative clauses with який — exercises and literary examples
+  notes: Означальні підрядні речення з «який» — вправи та літературні приклади
 - title: 'ULP: Relative Clauses in Ukrainian'
   url: https://www.ukrainianlessons.com/який/
-  notes: Practical overview of який in relative clauses
+  notes: Практичний огляд використання «який» в означальних підрядних реченнях

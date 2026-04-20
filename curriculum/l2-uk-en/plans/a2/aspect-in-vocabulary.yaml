@@ -2,80 +2,55 @@ module: a2-003
 level: A2
 sequence: 3
 slug: aspect-in-vocabulary
-version: 1.1.2
+version: 1.1.3
 title: Дієслова ходять парами
 subtitle: Як утворюються та вивчаються видові пари
 focus: grammar
 pedagogy: PPP
-phase: A2.1 [Foundation and Aspect Introduction]
+phase: 'A2.1 [Основи та вступ до виду дієслова]'
 word_target: 2000
 objectives:
-- Learner can recognize that most Ukrainian verbs exist in aspectual pairs and 
-  understand the importance of learning them together.
-- 'Learner can identify the three main patterns of aspect pair formation: prefixation,
-  suffix/root vowel change, and suppletion.'
-- Learner can list and use approximately 20 essential A2-level aspectual pairs 
-  in simple sentences.
-- Given one verb from a common pair, the learner can name its aspectual partner.
+- Учень може розпізнавати, що більшість українських дієслів існують у видових парах, і розуміє важливість вивчення їх разом.
+- Учень може назвати три основні моделі утворення видових пар: префіксація, зміна суфікса/голосного кореня та суплетивізм.
+- Учень може перелічити та використовувати близько 20 основних видових пар рівня А2 у простих реченнях.
+- Отримавши одне дієслово з поширеної пари, учень може назвати його видового партнера.
 dialogue_situations:
-- setting: 'Cooking varenyky together — one person reads the recipe step by step:
-    Ліпи (impf, keep forming) вареники. Зліпи (pf, form one). Вари (impf) 10 хвилин.
-    Звари (pf) до готовності.'
+- setting: 'Спільне приготування вареників — одна людина читає рецепт крок за кроком: Ліпи (impf, продовжуй ліпити) вареники. Зліпи (pf, зліпи один). Вари (impf) 10 хвилин. Звари (pf) до готовності.'
   speakers:
-  - Бабуся (teaching recipe)
-  - Онучка (cooking)
-  motivation: 'Aspect pairs in cooking: ліпити/зліпити, варити/зварити'
+  - Бабуся
+  - Онучка
+  motivation: 'Видові пари в кулінарії: ліпити/зліпити, варити/зварити'
 content_outline:
-- section: Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in 
-    Pairs)
+- section: 'Чому дієслова потрібно вчити парами?'
   words: 400
   points:
-  - Reinforce the idea that aspect is fundamental. Learning a verb without its 
-    partner is like learning only half a word.
-  - 'Introduce the standard notation: imperfective / perfective (e.g., робити / зробити).'
-  - 'Using a dictionary: how to find aspectual pairs in online or paper dictionaries.'
-- section: 'Спосіб 1: Додавання префікса (Method 1: Adding a Prefix)'
+  - 'Підкріплення ідеї про фундаментальність виду дієслова. Вивчати дієслово без пари — це як вчити лише половину слова.'
+  - 'Вступ до стандартного способу запису: недоконаний вид / доконаний вид (наприклад, робити / зробити).'
+  - 'Використання словника: як знаходити видові пари в онлайн- або паперових словниках.'
+- section: 'Спосіб 1: Додавання префікса'
   words: 600
   points:
-  - 'The most common way to form a perfective verb: add a prefix to the imperfective
-    base. The prefix often adds a specific meaning, but for now, we focus on its role
-    in creating a perfective verb.'
-  - 'Core examples: писати / **на**писати; читати / **про**читати; робити / **з**робити;
-    бачити / **по**бачити; готувати / **при**готувати.'
-  - 'Practice: given an imperfective verb, learner adds the correct prefix to make
-    it perfective.'
-- section: 'Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or
-    Suffix)'
+  - 'Найпоширеніший спосіб утворення доконаного виду: додавання префікса до основи недоконаного виду. Префікс часто додає конкретне значення, але наразі ми фокусуємося на його ролі в утворенні доконаного дієслова.'
+  - 'Базові приклади: писати / **на**писати; читати / **про**читати; робити / **з**робити; бачити / **по**бачити; готувати / **при**готувати.'
+  - 'Практика: для заданого недоконаного дієслова учень додає правильний префікс, щоб зробити його доконаним.'
+- section: 'Спосіб 2: Зміна в корені або суфіксі'
   words: 600
   points:
-  - 'The ''imperfectivization'' pattern: a complex perfective verb (often with a prefix)
-    gets an ''-ува-'' or ''-юва-'' suffix to become imperfective.'
-  - 'This is a more advanced concept, so we introduce it with simple pairs: відповідати
-    / відповісти; вирішувати / вирішити; запитувати / запитати.'
-  - 'Show the vowel change that often accompanies this: ''о'' -> ''а'' (допомогти
-    / допомагати).'
-- section: 'Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different
-    Words - Suppletion)'
+  - 'Модель "імперфективації": складне дієслово доконаного виду (часто з префіксом) отримує суфікс "-ува-" або "-юва-", щоб стати недоконаним.'
+  - 'Це більш просунута концепція, тому ми вводимо її на простих парах: відповідати / відповісти; вирішувати / вирішити; запитувати / запитати.'
+  - 'Демонстрація чергування голосних, що часто супроводжує це: "о" -> "а" (допомогти / допомагати).'
+- section: 'Спосіб 3: Зовсім інші слова (суплетивізм)'
   words: 400
   points:
-  - Some of the most common verbs have suppletive pairs that must be memorized.
-  - 'Essential pairs: брати / взяти (to take); говорити / сказати (to say/tell); ловити
-    / піймати (to catch); класти / покласти (to put).'
-  - 'Note: шукати (to search) and знайти (to find) are often presented together, but
-    they are different actions, not a true aspect pair. The perfective of шукати is
-    пошукати or відшукати.'
-  - Present a list of the 20 most important aspectual pairs for A2 learners to 
-    memorize, covering all three formation types.
-- section: Підсумок — Summary
+  - 'Деякі з найпоширеніших дієслів мають суплетивні пари, які потрібно запам''ятати.'
+  - 'Основні пари: брати / взяти; говорити / сказати; ловити / піймати; класти / покласти.'
+  - 'Примітка: шукати та знайти часто подаються разом, але це різні дії, а не справжня видова пара. Доконаний вид від шукати — пошукати або відшукати.'
+  - 'Представлення списку з 20 найважливіших видових пар для учнів рівня А2, що охоплюють усі три типи утворення.'
+- section: Підсумок
   words: 200
   points:
-  - Ukrainian verbs must be learned in aspectual pairs (imperfective / 
-    perfective). The three main ways to form them are adding a prefix (писати / 
-    написати), changing a suffix/root vowel (відповідати / відповісти), or using
-    completely different words (брати / взяти).
-  - 'Self-check: What is the perfective partner for говорити? What is the difference
-    between шукати and знайти? Name 3 verb pairs that use a prefix to form the perfective
-    aspect.'
+  - 'Українські дієслова слід вивчати у видових парах (недоконаний / доконаний). Трьома основними способами їх утворення є додавання префікса (писати / написати), зміна суфікса/голосного кореня (відповідати / відповісти) або використання зовсім інших слів (брати / взяти).'
+  - 'Самоперевірка: Який дієслово доконаного виду є парою до "говорити"? Яка різниця між "шукати" та "знайти"? Назвіть 3 пари дієслів, які використовують префікс для утворення доконаного виду.'
 vocabulary_hints:
   required:
   - пара (pair)
@@ -93,20 +68,20 @@ vocabulary_hints:
   - базовий (basic)
 activity_hints:
 - type: quiz
-  focus: Find the Partner (Verb Matching)
+  focus: 'Знайти пару (поєднання дієслів)'
   items: 8
 - type: fill-in
-  focus: Categorize by Formation Type
+  focus: 'Категоризація за типом утворення'
   items: 8
 - type: match-up
-  focus: Fill in the Blanks with the Correct Pair
+  focus: 'Заповнення пропусків правильною парою'
   items: 8
 - type: fill-in
-  focus: Choose the Correct Aspect Partner
+  focus: 'Вибір правильного видового партнера'
   items: 8
 references:
 - title: Заболотний Grade 6, §52-54
   notes: 'Вид дієслова: доконаний і недоконаний'
 - title: 'ULP: Ukrainian Verb Aspect'
   url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
-  notes: Imperfective vs perfective
+  notes: 'Недоконаний проти доконаного виду'

@@ -2,76 +2,52 @@ module: a2-032
 level: A2
 sequence: 32
 slug: plural-nominative-accusative
-version: 1.0.2
+version: 1.0.3
 title: Багато людей, багато речей
 subtitle: Множина називного та знахідного відмінків для всіх відмін
 focus: grammar
 pedagogy: PPP
-phase: A2.5 [Case Synthesis and Plurals]
+phase: A2.5 [Синтез відмінків та множина]
 word_target: 2000
 objectives:
-- Learner can form the Nominative plural for nouns of all four declension 
-  classes (I-IV відміна).
-- Learner can form the Accusative plural, applying the animate/inanimate 
-  distinction correctly (animate = Genitive plural form, inanimate = Nominative 
-  plural form).
-- Learner can identify when a plural noun is in Nominative vs. Accusative by its
-  syntactic role (subject vs. direct object).
-- Learner can produce correct plural Nom/Acc forms in short sentences describing
-  groups of people and collections of objects.
+- Учень вміє утворювати називний відмінок множини для іменників усіх чотирьох відмін (I-IV відміна).
+- Учень вміє утворювати знахідний відмінок множини, правильно застосовуючи розрізнення істот/неістот (істоти = форма родового множини, неістоти = форма називного множини).
+- Учень вміє визначати, чи стоїть іменник у множині в називному, чи в знахідному відмінку, за його синтаксичною роллю (підмет проти прямого додатка).
+- Учень вміє будувати правильні форми називного/знахідного відмінків множини в коротких реченнях, що описують групи людей і набори предметів.
 dialogue_situations:
-- setting: 'At a zoo — identifying animals and their groups: Дивись — леви (m, lions)!
-    Бачиш тих жирафів (m, giraffes)? А ось мавпи (f, monkeys)! Діти люблять пінгвінів
-    (m, penguins).'
+- setting: 'У зоопарку — ідентифікація тварин та їхніх груп: Дивись — леви (m)! Бачиш тих жирафів (m)? А ось мавпи (f)! Діти люблять пінгвінів (m).'
   speakers:
-  - Батько/Мати
+  - Батьки
   - Діти
-  motivation: 'Nom plural: лев→леви. Acc animate plural: жираф→жирафів, пінгвін→пінгвінів'
+  motivation: 'Називний множини: лев→леви. Знахідний множини істот: жираф→жирафів, пінгвін→пінгвінів'
 content_outline:
-- section: Множина називного відмінка (Nominative Plural)
+- section: Множина називного відмінка
   words: 650
   points:
-  - 'I відміна (feminine/masculine -а/-я): сестра → сестри, земля → землі, суддя →
-    судді. Hard stems: -и; soft stems: -і.'
-  - 'II відміна (masculine consonant, neuter -о/-е/-я): стіл → столи, місто → міста,
-    поле → поля, море → моря. Consonant alternations: друг → друзі, рік → роки.'
-  - 'III відміна (feminine consonant): ніч → ночі, сіль → солі, мати → матері.'
-  - 'IV відміна (neuter -а/-ят-): курча → курчата, теля → телята.'
-  - 'Common irregulars: людина → люди, дитина → діти, око → очі, вухо → вуха.'
-- section: 'Знахідний відмінок множини: Живе чи неживе? (Accusative Plural: Animate
-    vs. Inanimate)'
+  - 'I відміна (жіночий/чоловічий рід на -а/-я): сестра → сестри, земля → землі, суддя → судді. Тверда група: -и; м''яка група: -і.'
+  - 'II відміна (чоловічий рід на приголосний, середній рід на -о/-е/-я): стіл → столи, місто → міста, поле → поля, море → моря. Чергування приголосних: друг → друзі, рік → роки.'
+  - 'III відміна (жіночий рід на приголосний): ніч → ночі, сіль → солі, мати → матері.'
+  - 'IV відміна (середній рід на -а/-ят-): курча → курчата, теля → телята.'
+  - 'Типові неправильні форми: людина → люди, дитина → діти, око → очі, вухо → вуха.'
+- section: 'Знахідний відмінок множини: Живе чи неживе?'
   words: 650
   points:
-  - 'The key rule: inanimate Acc.Pl. = Nom.Pl. (Я бачу столи, книги, міста). Animate
-    Acc.Pl. = Gen.Pl. (Я бачу братів, сестер, дітей).'
-  - 'How this differs from singular: masculine singular already has this split (бачу
-    стіл vs. бачу брата), but in plural ALL genders follow it.'
-  - 'Practice with mixed animate/inanimate: Я бачу студентів і підручники. Ми зустріли
-    друзів і знайшли ключі.'
-  - 'Verbs that take Accusative: бачити, знати, любити, зустрічати, шукати — practice
-    forming correct plural objects.'
-- section: Називний чи знахідний? Визначаємо за контекстом (Nominative or 
-    Accusative? Reading the Context)
+  - 'Головне правило: Знах. мн. неістот = Наз. мн. (Я бачу столи, книги, міста). Знах. мн. істот = Род. мн. (Я бачу братів, сестер, дітей).'
+  - 'Чим це відрізняється від однини: чоловічий рід в однині вже має цей поділ (бачу стіл проти бачу брата), але у множині УСІ роди дотримуються його.'
+  - 'Практика зі змішаними істотами/неістотами: Я бачу студентів і підручники. Ми зустріли друзів і знайшли ключі.'
+  - 'Дієслова, що вимагають знахідного відмінка: бачити, знати, любити, зустрічати, шукати — практика утворення правильних форм множини прямих додатків.'
+- section: Називний чи знахідний? Визначаємо за контекстом
   words: 700
   points:
-  - 'Subject test: Who/what does the action? = Nominative. Студенти читають (Nom).
-    Я бачу студентів (Acc).'
-  - 'Inanimate nouns look identical in Nom/Acc plural — only syntax tells them apart:
-    Книги лежать на столі (Nom) vs. Я купив книги (Acc).'
-  - 'Practice: short paragraphs where learner identifies Nom vs. Acc plural by role
-    in sentence. Dialogues about shopping, meeting friends, describing groups.'
-  - 'Integration: combine with prepositions that take Accusative (через, на (direction),
-    у/в (direction), про) to reinforce recognition.'
-- section: Підсумок — Summary
+  - 'Перевірка підметом: Хто/що виконує дію? = Називний. Студенти читають (Наз). Я бачу студентів (Знах).'
+  - 'Неістоти виглядають однаково в Наз/Знах множини — лише синтаксис їх розрізняє: Книги лежать на столі (Наз) проти Я купив книги (Знах).'
+  - 'Практика: короткі абзаци, де учень визначає називний чи знахідний відмінок множини за роллю в реченні. Діалоги про покупки, зустрічі з друзями, описи груп.'
+  - 'Інтеграція: поєднання з прийменниками, які вимагають знахідного відмінка (через, на (напрямок), у/в (напрямок), про), щоб закріпити розпізнавання.'
+- section: Підсумок
   words: 200
   points:
-  - 'Nominative plural forms depend on declension and stem type (hard: столи, сестри;
-    soft: землі). Accusative plural follows the animate/inanimate rule for all genders:
-    inanimate = Nominative plural (бачу міста), animate = Genitive plural (бачу сестер).'
-  - "Self-check: What is the plural of людина and дитина? (люди, діти) Translate 'I
-    see friends and books'. Describe 3 objects and 3 people you see every day using
-    the Accusative plural. How do you distinguish between Nominative and Accusative
-    for inanimate plural nouns?"
+  - 'Форми називного відмінка множини залежать від відміни та типу основи (тверда: столи, сестри; м''яка: землі). Знахідний відмінок множини підпорядковується правилу істот/неістот для всіх родів: неістоти = називний множини (бачу міста), істоти = родовий множини (бачу сестер).'
+  - 'Самоперевірка: Яка множина слів "людина" та "дитина"? (люди, діти). Перекладіть: "Я бачу друзів і книги". Опишіть 3 предмети та 3 людей, яких ви бачите щодня, використовуючи знахідний відмінок множини. Як розрізнити називний і знахідний відмінки для неістот у множині?'
 vocabulary_hints:
   required:
   - множина (plural)
@@ -91,24 +67,19 @@ vocabulary_hints:
   - група (group)
 activity_hints:
 - type: fill-in
-  focus: Form the Nominative plural from given singular nouns across all 
-    declension classes
+  focus: 'Утворити називний відмінок множини від поданих іменників в однині з усіх відмін'
   items: 8
 - type: group-sort
-  focus: Sort plural nouns into animate vs. inanimate, then predict their 
-    Accusative form
+  focus: 'Розподілити іменники в множині на істоти та неістоти, а потім передбачити їхню форму в знахідному відмінку'
   items: 8
 - type: quiz
-  focus: Choose the correct Accusative plural form (animate = Gen.Pl., inanimate
-    = Nom.Pl.) in sentences
+  focus: 'Вибрати правильну форму знахідного відмінка множини (істоти = Род. мн., неістоти = Наз. мн.) у реченнях'
   items: 8
 - type: error-correction
-  focus: Find and fix wrong plural noun endings in Nominative and Accusative 
-    (e.g., *дітей грають → діти грають, *бачу студенти → студентів)
+  focus: 'Знайти та виправити неправильні закінчення іменників у множині в називному та знахідному відмінках (наприклад, *дітей грають → діти грають, *бачу студенти → студентів)'
   items: 6
 references:
 - title: Заболотний Grade 6, §§59-61
-  notes: Nominative and Accusative plural formation, animate/inanimate 
-    distinction
+  notes: 'Утворення називного та знахідного відмінків множини, розрізнення істот/неістот'
 - title: Літвінова Grade 6, с. 157-162
-  notes: Plural declension tables for all відміни with exercises
+  notes: 'Таблиці відмінювання в множині для всіх відмін із вправами'

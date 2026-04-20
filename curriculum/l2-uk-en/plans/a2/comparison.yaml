@@ -2,80 +2,55 @@ module: a2-054
 level: A2
 sequence: 54
 slug: comparison
-version: 1.1.2
+version: 1.1.3
 title: Більше, краще, найкраще
 subtitle: Ступені порівняння прикметників та прислівників
 focus: grammar
 pedagogy: PPP
-phase: A2.8 [Refinement and Graduation]
+phase: A2.8 [Удосконалення та завершення]
 word_target: 2000
 objectives:
-- Learner can form the comparative degree of adjectives using both synthetic 
-  (-ший) and analytic (більш) forms.
-- Learner can form the superlative degree using the prefix най- (найсолодший) 
-  and the analytic form (найбільш солодкий).
-- Learner can correctly use suppletive comparative forms (великий → більший, 
-  добрий → кращий, поганий → гірший, малий → менший).
-- Learner can use comparative constructions with ніж and за + Accusative to 
-  compare two objects.
+- Вміти утворювати вищий ступінь порівняння прикметників, використовуючи як просту (-ший), так і складену (більш) форми.
+- Вміти утворювати найвищий ступінь порівняння за допомогою префікса най- (найсолодший) та складеної форми (найбільш солодкий).
+- Правильно використовувати суплетивні форми ступенів порівняння (великий → більший, добрий → кращий, поганий → гірший, малий → менший).
+- Вміти будувати конструкції зі словами «ніж» та «за» + знахідний відмінок для порівняння двох об'єктів.
 dialogue_situations:
-- setting: 'Choosing a new phone — comparing models in a store: Цей телефон (m) більший,
-    але дорожчий. Той дешевший, але менший. Який найкращий? Найкращий — той, що має
-    найбільший екран (m, screen).'
+- setting: 'Вибір нового телефону — порівняння моделей у магазині: Цей телефон (m) більший, але дорожчий. Той дешевший, але менший. Який найкращий? Найкращий — той, що має найбільший екран (m, screen).'
   speakers:
   - Покупець
   - Консультант
-  motivation: 'Comparative/superlative: більший, дорожчий, найкращий with телефон(m),
-    екран(m)'
+  motivation: 'Ступені порівняння: більший, дорожчий, найкращий зі словами телефон (m), екран (m)'
 content_outline:
-- section: 'Вищий ступінь: порівнюємо два предмети (Comparative: Comparing Two Things)'
+- section: Вищий ступінь порівняння
   words: 650
   points:
-  - 'Synthetic comparative: add -ший/-іший to the stem (солодкий → солодший, цікавий
-    → цікавіший). Consonant alternations: г→ж, к→ч, х→ш (дорогий → дорожчий).'
-  - 'Analytic comparative: більш/менш + adjective (більш солодкий, менш відомий).
-    When to prefer analytic over synthetic forms.'
-  - 'Comparison constructions: ніж + Nominative (Київ більший, ніж Львів) and за +
-    Accusative (Київ більший за Львів). Both are correct and interchangeable.'
-  - 'Practice dialogues: comparing foods, cities, seasons — which is better, bigger,
-    more interesting?'
-- section: 'Найвищий ступінь: хто найкращий? (Superlative: Who Is the Best?)'
+  - 'Проста форма: додаємо суфікси -ший/-іший до основи (солодкий → солодший, цікавий → цікавіший). Чергування приголосних: г→ж, к→ч, х→ш (дорогий → дорожчий).'
+  - 'Складена форма: більш/менш + прикметник у початковій формі (більш солодкий, менш відомий). Коли варто надавати перевагу складеній формі перед простою.'
+  - 'Конструкції для порівняння: ніж + називний відмінок (Київ більший, ніж Львів) та за + знахідний відмінок (Київ більший за Львів). Обидва варіанти правильні та взаємозамінні.'
+  - 'Діалогічна практика: порівняння їжі, міст, пір року — що краще, більше, цікавіше?'
+- section: Найвищий ступінь порівняння
   words: 500
   points:
-  - 'Synthetic superlative: prefix най- to the comparative stem (найсолодший, найцікавіший,
-    найдорожчий).'
-  - 'Analytic superlative: найбільш/найменш + adjective (найбільш популярний, найменш
-    відомий).'
-  - 'Usage in context: Яке місто найбільше в Україні? Хто найкращий футболіст? Яка
-    пора року найгарніша?'
-- section: 'Особливі форми: більший, кращий, гірший (Irregular Forms)'
+  - 'Проста форма найвищого ступеня: додаємо префікс най- до форми вищого ступеня (найсолодший, найцікавіший, найдорожчий).'
+  - 'Складена форма найвищого ступеня: найбільш/найменш + прикметник у початковій формі (найбільш популярний, найменш відомий).'
+  - 'Використання в контексті: Яке місто найбільше в Україні? Хто найкращий футболіст? Яка пора року найгарніша?'
+- section: 'Особливі форми: більший, кращий, гірший'
   words: 450
   points:
-  - 'Suppletive forms that must be memorized: великий → більший → найбільший, малий
-    → менший → найменший, добрий → кращий → найкращий, поганий → гірший → найгірший,
-    гарний → кращий/гарніший.'
-  - 'Common adverb comparatives: добре → краще, погано → гірше, багато → більше, мало
-    → менше.'
-  - 'Typical errors: *більш кращий (double comparison) — explain why this is wrong.'
-- section: Порівняння у житті (Comparisons in Daily Life)
+  - 'Суплетивні форми, які потрібно запам''ятати: великий → більший → найбільший, малий → менший → найменший, добрий → кращий → найкращий, поганий → гірший → найгірший, гарний → кращий/гарніший.'
+  - 'Поширені форми вищого ступеня прислівників: добре → краще, погано → гірше, багато → більше, мало → менше.'
+  - 'Типові помилки: *більш кращий (подвійне порівняння) — пояснення, чому це неправильно.'
+- section: Порівняння у повсякденному житті
   words: 400
   points:
-  - 'Dialogue: two friends discuss which vacation destination is better — comparing
-    prices, weather, food, activities.'
-  - 'Reading practice: a short text ranking Ukrainian cities by size, population,
-    and beauty.'
-  - 'Useful phrases: набагато кращий (much better), трохи більший (a bit bigger),
-    значно цікавіший (significantly more interesting).'
-- section: Підсумок — Summary
+  - 'Діалог: двоє друзів обговорюють, куди краще поїхати у відпустку — порівняння цін, погоди, їжі, розваг.'
+  - 'Практика читання: короткий текст із рейтингом українських міст за розміром, кількістю населення та красою.'
+  - 'Корисні фрази: набагато кращий, трохи більший, значно цікавіший.'
+- section: Підсумок
   words: 200
   points:
-  - 'Comparisons are formed synthetically (солодший, найсолодший) or analytically
-    (більш солодкий, найбільш солодкий). Remember key irregulars: добрий → кращий,
-    поганий → гірший, великий → більший, малий → менший. Never mix synthetic and analytic
-    forms (e.g., *більш кращий).'
-  - "Self-check: How do you say 'Kyiv is bigger than Lviv' using both 'ніж' and 'за'?
-    Compare 3 cities you know using comparative adjectives. What are the comparative
-    and superlative forms of 'добрий' and 'поганий'?"
+  - 'Ступені порівняння утворюються простою (солодший, найсолодший) або складеною (більш солодкий, найбільш солодкий) формою. Слід запам''ятати ключові винятки: добрий → кращий, поганий → гірший, великий → більший, малий → менший. Ніколи не можна змішувати просту і складену форми (наприклад, *більш кращий).'
+  - "Самоперевірка: Як сказати «Київ більший за Львів» (Kyiv is bigger than Lviv) використовуючи як «ніж», так і «за»? Порівняйте 3 відомих вам міста, використовуючи прикметники вищого та найвищого ступенів порівняння. Які форми вищого та найвищого ступеня у слів «добрий» та «поганий»?"
 vocabulary_hints:
   required:
   - порівняння (comparison)
@@ -95,25 +70,22 @@ vocabulary_hints:
   - навпаки (on the contrary)
 activity_hints:
 - type: fill-in
-  focus: Form the comparative from the base adjective
+  focus: Утворити вищий ступінь від початкової форми прикметника
   items: 8
 - type: quiz
-  focus: Choose the correct suppletive form (більший, кращий, гірший)
+  focus: Обрати правильну суплетивну форму (більший, кращий, гірший)
   items: 8
 - type: match-up
-  focus: Match adjective to its superlative form
+  focus: Зіставити прикметник із його формою найвищого ступеня
   items: 8
 - type: true-false
-  focus: Identify correct and incorrect comparative constructions
+  focus: Визначити правильні та неправильні конструкції порівняння
   items: 8
 - type: error-correction
-  focus: Find and fix wrong comparative and superlative forms (e.g., *більш 
-    кращий → кращий, *гарніший → кращий/гарніший)
+  focus: 'Знайти та виправити неправильні форми вищого і найвищого ступенів (наприклад, *більш кращий → кращий, *гарніший → кращий/гарніший)'
   items: 6
 references:
 - title: Заболотний Grade 6, Ступені порівняння прикметників
-  notes: Full presentation of comparative and superlative formation with 
-    exercises
+  notes: Повний виклад творення вищого та найвищого ступенів порівняння із вправами
 - title: 'ULP: Ukrainian Adjectives — Degrees of Comparison'
-  notes: Synthetic vs analytic forms explained with examples (URL removed — 
-    confirmed 404)
+  notes: Пояснення простої та складеної форм із прикладами (URL видалено — підтверджено 404)

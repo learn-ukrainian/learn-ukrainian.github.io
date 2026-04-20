@@ -2,76 +2,48 @@ module: a2-014
 level: A2
 sequence: 14
 slug: genitive-plural
-version: '1.1'
+version: 1.1.2
 title: Багато книг, мало студентів
 subtitle: Родовий відмінок множини — найскладніша форма
 focus: grammar
 pedagogy: PPP
-phase: A2.2 [Genitive Case Complete]
+phase: 'A2.2 [Родовий відмінок: завершення]'
 word_target: 2000
 objectives:
-  - Learner can form the Genitive plural of masculine nouns using the correct
-    ending (-ів or zero ending for -ин/-їн nouns).
-  - Learner can form the Genitive plural of feminine nouns using zero ending
-    with possible vowel insertion or soft sign (and recognize rare -ей exceptions).
-  - Learner can form the Genitive plural of neuter nouns (zero ending, -ів for 
-    exceptions).
-  - Learner can use Genitive plural correctly after quantity words (кілька, 
-    багато, мало, скільки) and numerals 5+.
+  - Вміти утворювати родовий відмінок множини іменників чоловічого роду, використовуючи правильне закінчення (-ів або нульове закінчення для іменників на -ин/-їн).
+  - Вміти утворювати родовий відмінок множини іменників жіночого роду, використовуючи нульове закінчення з можливим вставним голосним або м'яким знаком (та розпізнавати рідкісні винятки на -ей).
+  - Вміти утворювати родовий відмінок множини іменників середнього роду (нульове закінчення, -ів для винятків).
+  - Вміти правильно використовувати родовий відмінок множини після слів на позначення кількості (кілька, багато, мало, скільки) та числівників від 5 і більше.
 dialogue_situations:
-  - setting: 'Inventory check at a small village shop — counting what''s left: Скільки
-      пляшок (f, bottles) води? П''ять. Скільки банок (f, jars) меду? Три. А булок
-      (f, buns)? Немає булок!'
+  - setting: 'Перевірка запасів у невеликому сільському магазині — рахуємо залишки: Скільки пляшок (f, bottles) води? П''ять. Скільки банок (f, jars) меду? Три. А булок (f, buns)? Немає булок!'
     speakers:
       - Продавець
       - Помічник (assistant)
-    motivation: 'Genitive plural: пляшок, банок, булок — feminine zero ending'
+    motivation: 'Родовий відмінок множини: пляшок, банок, булок — жіночий рід, нульове закінчення'
 content_outline:
-  - section: 'Чоловічий рід: -ів та нульове закінчення (Masculine: -ів and
-      Zero Ending)'
+  - section: 'Чоловічий рід: закінчення -ів та нульове'
     words: 650
     points:
-      - 'Main pattern -ів: столів, братів, студентів, будинків, підручників. Most
-        hard-stem masculine nouns take -ів.'
-      - 'Soft-stem -ів: учитель→учителів (fleeting е drops), олівець→олівців.
-        True -їв appears only after vowel/apostrophe stems: подвір''я→подвір''їв,
-        відкриття→відкриттів. Most soft masculine nouns take -ів, not -їв.'
-      - 'Zero ending (rare in masculine): nouns losing -ин/-їн suffix take zero
-        ending: громадянин→громадян, селянин→селян, болгарин→болгар. The word
-        чоловік has parallel forms (чоловік/чоловіків). Most masculine nouns take -ів.'
-      - 'Fleeting vowels: день→днів (е drops), хлопець→хлопців (е drops). Practice
-        recognizing stem changes in the Genitive plural.'
-  - section: 'Жіночий рід: нульове закінчення (Feminine: Zero Ending Patterns)'
+      - 'Основна модель -ів: столів, братів, студентів, будинків, підручників. Більшість іменників чоловічого роду твердої групи мають закінчення -ів.'
+      - 'М''яка група -ів: учитель→учителів (вставний е випадає), олівець→олівців. Справжнє закінчення -їв з''являється лише після основи на голосний/апостроф: подвір''я→подвір''їв, відкриття→відкриттів. Більшість м''яких іменників чоловічого роду мають закінчення -ів, а не -їв.'
+      - 'Нульове закінчення (рідко в чоловічому роді): іменники, що втрачають суфікс -ин/-їн, мають нульове закінчення: громадянин→громадян, селянин→селян, болгарин→болгар. Слово чоловік має паралельні форми (чоловік/чоловіків). Більшість іменників чоловічого роду мають закінчення -ів.'
+      - 'Випадні голосні: день→днів (е випадає), хлопець→хлопців (е випадає). Практика розпізнавання змін в основі у родовому відмінку множини.'
+  - section: 'Жіночий рід: моделі з нульовим закінченням'
     words: 700
     points:
-      - 'Hard-stem zero ending: книга→книг, жінка→жінок (vowel insertion о), сестра→сестер
-        (vowel insertion е). The main feminine pattern removes -а and uses zero ending.'
-      - 'Vowel insertion rules: consonant clusters at the end of the stem often require
-        о or е insertion. студентка→студенток, зупинка→зупинок, сумка→сумок.'
-      - 'Soft-stem zero + ь: пісня→пісень, вишня→вишень (regular I declension
-        soft-stem pattern). I declension -ей exceptions (small closed group):
-        стаття→статей, сім''я→сімей, миша→мишей. The -ія group: станція→станцій,
-        лекція→лекцій (zero ending, й drops).'
-      - 'Mixed group: площа→площ, задача→задач. Stems ending in ж, ч, ш, щ take zero
-        ending without vowel insertion.'
-      - 'Practice with common words: кілька книг, багато жінок, мало сестер, скільки
-        пісень, декілька лекцій.'
-  - section: 'Середній рід та узагальнення (Neuter and Summary)'
+      - 'Тверда група, нульове закінчення: книга→книг, жінка→жінок (вставний голосний о), сестра→сестер (вставний голосний е). Основна модель жіночого роду втрачає -а і має нульове закінчення.'
+      - 'Правила появи вставних голосних: збіг приголосних у кінці основи часто вимагає вставного о або е. студентка→студенток, зупинка→зупинок, сумка→сумок.'
+      - 'М''яка група, нульове закінчення + ь: пісня→пісень, вишня→вишень (звичайна модель I відміни м''якої групи). Винятки I відміни на -ей (невелика закрита група): стаття→статей, сім''я→сімей, миша→мишей. Група на -ія: станція→станцій, лекція→лекцій (нульове закінчення, й випадає).'
+      - 'Мішана група: площа→площ, задача→задач. Основи на ж, ч, ш, щ мають нульове закінчення без вставного голосного.'
+      - 'Практика з поширеними словами: кілька книг, багато жінок, мало сестер, скільки пісень, декілька лекцій.'
+  - section: Середній рід та узагальнення
     words: 650
     points:
-      - 'Neuter zero ending: вікно→вікон, слово→слів, місто→міст. The -о drops and
-        zero ending applies. Vowel insertion where needed: вікон (о inserted).'
-      - 'Soft neuter: море→морів, поле→полів (-ів ending, not zero). But: завдання→завдань
-        (-ь ending), питання→питань.'
-      - '-тя neuter: ім''я→імен, теля→телят. These have special stem changes in the
-        plural.'
-      - 'Summary table: masculine (-ів, rare zero), feminine (zero + vowel insertion
-        or ь, rare -ей exceptions), neuter (zero/-ів). Note: true -ей also exists
-        in II declension masc/neuter (гостей, коней, очей) — a small closed group.
-        Key insight: Genitive plural has the MOST variation of any case — memorize
-        common words, learn patterns, accept exceptions.'
-      - 'Quantity expressions: багато студентів, кілька книг, мало міст, декілька
-        днів, скільки людей.'
+      - 'Середній рід, нульове закінчення: вікно→вікон, слово→слів, місто→міст. -о випадає і застосовується нульове закінчення. Вставний голосний за потреби: вікон (вставлене о).'
+      - 'М''яка група середнього роду: море→морів, поле→полів (закінчення -ів, не нульове). Але: завдання→завдань (закінчення -ь), питання→питань.'
+      - 'Середній рід на -тя: ім''я→імен, теля→телят. Вони мають особливі зміни основи в множині.'
+      - 'Зведена таблиця: чоловічий рід (-ів, рідко нульове), жіночий рід (нульове + вставний голосний або ь, рідко винятки на -ей), середній рід (нульове/-ів). Зверніть увагу: справжнє закінчення -ей також існує в II відміні чол./сер. роду (гостей, коней, очей) — це невелика закрита група. Ключове розуміння: родовий відмінок множини має НАЙБІЛЬШЕ варіацій з-поміж усіх відмінків — запам''ятовуйте поширені слова, вивчайте моделі, приймайте винятки.'
+      - 'Вирази кількості: багато студентів, кілька книг, мало міст, декілька днів, скільки людей.'
 vocabulary_hints:
   required:
     - множина (plural)
@@ -92,20 +64,20 @@ vocabulary_hints:
     - вставний голосний (inserted vowel)
 activity_hints:
   - type: fill-in
-    focus: Form the Genitive plural of given nouns (all three genders)
+    focus: Утворення родового відмінка множини поданих іменників (усіх трьох родів)
     items: 8
   - type: quiz
-    focus: Choose the correct Genitive plural ending (-ів, -ей, zero, or -їв)
+    focus: 'Вибір правильного закінчення родового відмінка множини (-ів, -ей, нульове або -їв)'
     items: 8
   - type: match-up
-    focus: Match Nominative singular nouns to their Genitive plural forms
+    focus: Встановлення відповідності між називним однини та родовим множини
     items: 8
   - type: group-sort
-    focus: Sort Genitive plural forms by ending type (-ів/-їв vs. zero vs. -ей)
+    focus: 'Групування форм родового відмінка множини за типом закінчення (-ів/-їв проти нульового проти -ей)'
     items: 8
 references:
   - title: Заболотний Grade 6, §34-36
     notes: Родовий відмінок множини іменників усіх родів
   - title: 'ULP: 10 Uses of Genitive Case'
     url: https://www.ukrainianlessons.com/genitive-case/
-    notes: Genitive plural patterns and exceptions
+    notes: Моделі та винятки родового відмінка множини

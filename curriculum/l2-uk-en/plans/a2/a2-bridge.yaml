@@ -2,84 +2,56 @@ module: a2-001
 level: A2
 sequence: 1
 slug: a2-bridge
-version: 1.2.2
+version: 1.2.3
 title: Ласкаво просимо до рівня А2
-subtitle: Огляд граматики А1 та підготовка до нових тем
+subtitle: Огляд граматики рівня А1 та підготовка до нових тем
 focus: review
 pedagogy: PPP
-phase: A2.1 [Foundation and Aspect Introduction]
+phase: 'A2.1 [Основи та вступ до виду дієслова]'
 word_target: 2000
 objectives:
-- Learner can confidently recall and use the Nominative, Accusative, Locative, 
-  and Vocative cases for nouns and adjectives learned in A1.
-- Learner can recognize and predict common vowel alternations (e.g., о/і, е/і in
-  closed syllables) and consonant mutations (г/з/ж, к/ц/ч) in noun and verb 
-  stems.
-- Learner can actively apply basic euphonic rules (у/в, і/й, з/зі/із) to produce
-  more natural-sounding Ukrainian.
-- Learner can understand the roadmap for the A2 level, including the 
-  introduction of the Genitive, Dative, and Instrumental cases.
+- Учень може впевнено пригадати та використовувати називний, знахідний, місцевий та кличний відмінки для іменників та прикметників, вивчених на рівні А1.
+- Учень може розпізнавати та передбачати типові чергування голосних (наприклад, о/і, е/і в закритих складах) та приголосних (г/з/ж, к/ц/ч) в основах іменників та дієслів.
+- Учень може активно застосовувати базові правила милозвучності (у/в, і/й, з/зі/із), щоб його українська мова звучала природніше.
+- Учень розуміє план навчання на рівні А2, зокрема ознайомлення з родовим, давальним та орудним відмінками.
 dialogue_situations:
-- setting: 'Arrival at a Kyiv language school on the first day of A2 — reviewing what
-    you know: Я — студент (nominative). Я вивчаю українську мову (accusative). Я живу
-    в Києві (locative). Привіт, Оксано! (vocative).'
+- setting: 'Прибуття до мовної школи в Києві в перший день курсу А2 — повторення вивченого: Я — студент (називний відмінок). Я вивчаю українську мову (знахідний відмінок). Я живу в Києві (місцевий відмінок). Привіт, Оксано! (кличний відмінок).'
   speakers:
   - Новий студент
-  - Викладач (teacher)
-  motivation: Review all A1 cases in a natural intro conversation
+  - Викладач
+  motivation: 'Повторити всі відмінки рівня А1 у природній вступній розмові'
 content_outline:
-- section: Пригадуємо відмінки (Reviewing Cases)
+- section: Пригадуємо відмінки
   words: 600
   points:
-  - 'Quick review of the four A1 cases: Nominative (Хто? Що?), Accusative (Кого? Що?),
-    Locative (Де? На кому? На чому?), and Vocative (звертання).'
-  - 'Practice exercises: identifying case usage in sentences and declining familiar
-    noun-adjective pairs.'
-  - 'Introducing the full case system map: showing all seven cases and highlighting
-    the three new ones for A2 (Genitive, Dative, Instrumental).'
-- section: Магія української фонології (The Magic of Ukrainian Phonology)
+  - 'Короткий огляд чотирьох відмінків рівня А1: називний (Хто? Що?), знахідний (Кого? Що?), місцевий (Де? На кому? На чому?) та кличний (звертання).'
+  - 'Практичні вправи: визначення відмінка в реченнях та відмінювання знайомих пар іменників з прикметниками.'
+  - 'Ознайомлення з повною картою системи відмінків: демонстрація всіх семи відмінків і виділення трьох нових для рівня А2 (родового, давального, орудного).'
+- section: Магія української фонології
   words: 700
   points:
-  - 'Revisiting key vowel alternations: о/і, е/і (e.g., стіл/стола, Київ/Києва). Explaining
-    the ''closed syllable'' rule.'
-  - 'Revisiting key consonant alternations: the first palatalization (г/ж, к/ч, х/ш)
-    and its effect on noun and verb forms (нога/ніжка, рука/ручка).'
-  - 'Introduction to stress patterns: identifying common patterns and using stress
-    to disambiguate words (e.g., замок "castle" vs. замок "lock").'
-  - 'Consonant assimilation: дж and дз as single sounds (affricates), not two separate
-    consonants — джерело, дзвінок, бджола. Voicing assimilation before voiced consonants:
-    просьба → [проз''ба], боротьба → [бород''ба], вокзал → [воґзал].'
-  - 'Mobile stress in noun paradigms: stress shifts between stem and ending across
-    cases — вода/воду, рука/руки, голова/голову, нога/ногу. Recognizing this pattern
-    helps predict pronunciation of new nouns.'
-- section: 'Милозвучність мови: евфонія (The Melody of Language: Euphony)'
+  - 'Повторення ключових чергувань голосних: о/і, е/і (наприклад, стіл/стола, Київ/Києва). Пояснення правила закритого складу.'
+  - 'Повторення ключових чергувань приголосних: перша палаталізація (г/ж, к/ч, х/ш) та її вплив на форми іменників і дієслів (нога/ніжка, рука/ручка).'
+  - 'Вступ до моделей наголошування: розпізнавання типових моделей та використання наголосу для розрізнення слів (наприклад, за́мок vs. замо́к).'
+  - 'Асиміляція приголосних: дж і дз як єдині звуки (африкати), а не два окремі приголосні — джерело, дзвінок, бджола. Асиміляція за дзвінкістю перед дзвінкими приголосними: просьба → [проз''ба], боротьба → [бород''ба], вокзал → [воґзал].'
+  - 'Рухомий наголос у парадигмах іменників: переміщення наголосу між основою та закінченням у різних відмінках — вода/воду, рука/руки, голова/голову, нога/ногу. Розпізнавання цієї моделі допомагає передбачити вимову нових іменників.'
+- section: 'Милозвучність мови: евфонія'
   words: 400
   points:
-  - Formalizing the rules for у/в and і/й alternation based on surrounding 
-    sounds (vowel vs. consonant).
-  - Explaining the use of з/зі/із before difficult consonant clusters.
-  - Practice creating fluid sentences by choosing the correct euphonic particle.
-- section: Що нас чекає на рівні А2? (What Awaits Us in A2?)
+  - 'Формалізація правил чергування у/в та і/й залежно від сусідніх звуків (голосний чи приголосний).'
+  - 'Пояснення вживання з/зі/із перед складними збігами приголосних.'
+  - 'Практика побудови плавних речень шляхом вибору правильної евфонічної частки.'
+- section: Що нас чекає на рівні А2?
   words: 300
   points:
-  - 'A clear roadmap of the A2 curriculum: introduction to aspect, mastering all seven
-    noun cases, verb conjugation patterns, and verbs of motion.'
-  - 'Setting expectations: A2 is where learners begin to express more complex ideas
-    and move beyond simple statements.'
-- section: Підсумок — Summary
+  - 'Чіткий план курсу А2: вступ до виду дієслова, засвоєння всіх семи відмінків іменників, моделі дієвідмінювання та дієслова руху.'
+  - 'Формування очікувань: на рівні А2 учні починають висловлювати складніші думки та переходять від простих тверджень до розгорнутого мовлення.'
+- section: Підсумок
   words: 200
   points:
-  - "A1 cases (Nominative, Accusative, Locative, Vocative) form the baseline before
-    introducing the Genitive, Dative, and Instrumental cases. Self-check: Which case
-    answers the questions 'Де? На кому? На чому?' Decline your favorite noun-adjective
-    pair in the Accusative case."
-  - "Vowel alternations (о/і, е/і) occur in closed syllables, and consonant mutations
-    (г/ж, к/ч) predictably alter noun and verb stems. Self-check: Why does the 'і'
-    in 'Київ' change to 'є' in 'Києва'? What is the diminutive form of 'рука'?"
-  - "Euphony rules (у/в, і/й, з/зі/із) and consonant assimilation (voicing before
-    voiced consonants) create the natural melody of Ukrainian. Self-check: How do
-    you pronounce 'вокзал'? Create a short sentence demonstrating the correct choice
-    between 'і' and 'й'."
+  - 'Відмінки рівня А1 (називний, знахідний, місцевий, кличний) утворюють базу перед вивченням родового, давального та орудного відмінків. Самоперевірка: Який відмінок відповідає на питання "Де? На кому? На чому?" Провідміняйте свою улюблену пару іменника з прикметником у знахідному відмінку.'
+  - 'Чергування голосних (о/і, е/і) відбуваються в закритих складах, а чергування приголосних (г/ж, к/ч) передбачувано змінюють основи іменників та дієслів. Самоперевірка: Чому "і" в слові "Київ" змінюється на "є" в "Києва"? Яка зменшувальна форма слова "рука"?'
+  - 'Правила милозвучності (у/в, і/й, з/зі/із) та асиміляція приголосних (одзвінчення перед дзвінкими приголосними) створюють природну мелодику української мови. Самоперевірка: Як ви вимовляєте "вокзал"? Складіть коротке речення, що демонструє правильний вибір між "і" та "й".'
 vocabulary_hints:
   required:
   - відмінок (case)
@@ -98,17 +70,17 @@ vocabulary_hints:
   - правило (rule)
 activity_hints:
 - type: quiz
-  focus: Case Identification Drill
+  focus: 'Тренування на визначення відмінків'
   items: 8
 - type: fill-in
-  focus: Phonological Alternation Pairs
+  focus: 'Пари фонологічних чергувань'
   items: 8
 - type: match-up
-  focus: Euphony Choice Exercise
+  focus: 'Вправа на вибір правильного варіанта милозвучності'
   items: 8
 - type: error-correction
-  focus: Euphony Error Correction
+  focus: 'Виправлення помилок у милозвучності'
   items: 6
 references:
 - title: Заболотний Grade 5, §1-10
-  notes: Повторення вивченого в початкових класах
+  notes: 'Повторення вивченого в початкових класах'

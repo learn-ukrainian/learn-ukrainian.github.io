@@ -2,72 +2,49 @@ module: a2-031
 level: A2
 sequence: 31
 slug: checkpoint-instrumental
-version: 1.0.2
+version: 1.0.3
 title: 'Контрольна точка: Орудний відмінок'
 subtitle: 'Перевірка знань: усі функції орудного відмінка'
 focus: review
 pedagogy: Review
-phase: A2.4 [Instrumental Case]
+phase: А2.4 [Орудний відмінок]
 word_target: 1500
 objectives:
-- Learner can accurately produce Instrumental singular and plural endings for 
-  nouns of all three genders in varied contexts.
-- Learner can correctly use all Instrumental functions (accompaniment, 
-  tool/means, profession, spatial prepositions) in connected discourse.
-- Learner can form complete noun phrases in Instrumental with adjective and 
-  pronoun agreement (з моїм новим другом, під великою ялинкою).
-- Learner can synthesize Instrumental knowledge in a short paragraph describing 
-  their daily routine, profession, and surroundings.
+- Здобувач може правильно утворювати закінчення орудного відмінка однини та множини для іменників усіх трьох родів у різних контекстах.
+- Здобувач може правильно використовувати всі функції орудного відмінка (сумісність, інструмент/засіб, професія, просторові прийменники) у зв'язному мовленні.
+- Здобувач може будувати повні іменникові словосполучення в орудному відмінку з узгодженням прикметників і займенників (з моїм новим другом, під великою ялинкою).
+- Здобувач може синтезувати знання з орудного відмінка в короткому абзаці, описуючи свій розпорядок дня, професію та оточення.
 dialogue_situations:
-- setting: 'Describing a perfect picnic — everything with instrumental: Поїхали автобусом
-    (m). Гуляли з дітьми (pl). Їли бутерброди з ковбасою (f). Сиділи під деревом (n).
-    Цей день був найкращим!'
+- setting: 'Опис ідеального пікніка — все в орудному відмінку: Поїхали автобусом (m). Гуляли з дітьми (pl). Їли бутерброди з ковбасою (f). Сиділи під деревом (n). Цей день був найкращим!'
   speakers:
   - Друзі (згадуючи)
-  motivation: 'All instrumental: автобусом, з дітьми, з ковбасою, під деревом'
+  motivation: 'Все в орудному відмінку: автобусом, з дітьми, з ковбасою, під деревом'
 content_outline:
-- section: 'Частина 1: Розпізнавання та форми (Part 1: Recognition and Forms)'
+- section: 'Частина 1: Розпізнавання та форми'
   words: 400
   points:
-  - 'Exercise 1: A short text about someone''s day is provided. Learner must identify
-    all nouns in the Instrumental case and label each function (tool, companion, profession,
-    spatial, temporal).'
-  - 'Exercise 2: Put nouns in parentheses into the correct Instrumental form — covers
-    all three genders, hard and soft stems: (брат) → братом, (подруга) → подругою,
-    (море) → морем.'
-  - 'Exercise 3: Form Instrumental plural from given Nominative plurals: (руки) →
-    руками, (олівці) → олівцями, (діти) → дітьми.'
-- section: 'Частина 2: Вибір та застосування (Part 2: Choice and Application)'
+  - 'Вправа 1: Надається короткий текст про чийсь день. Здобувач повинен знайти всі іменники в орудному відмінку та визначити кожну функцію (інструмент, супутник, професія, просторова, часова).'
+  - 'Вправа 2: Поставити іменники в дужках у правильну форму орудного відмінка — охоплює всі три роди, тверду та м''яку групи: (брат) → братом, (подруга) → подругою, (море) → морем.'
+  - 'Вправа 3: Утворити форму орудного відмінка множини від заданих форм називного відмінка множини: (руки) → руками, (олівці) → олівцями, (діти) → дітьми.'
+- section: 'Частина 2: Вибір та застосування'
   words: 500
   points:
-  - 'Exercise 4: Choose the correct preposition (з, над, під, перед, за, між) to complete
-    spatial and temporal sentences.'
-  - 'Exercise 5: Decide whether to use bare Instrumental or з + Instrumental — tool
-    vs. accompaniment discrimination (писати ручкою vs. ходити з другом).'
-  - 'Exercise 6: Multiple-choice — select the correct Instrumental form of adjective
-    + noun phrases (з [гарний/гарним/гарною] [друг/другом/другові]).'
-  - 'Exercise 7: Transform Nominative sentences into sentences using бути/стати +
-    Instrumental for professions (Вона лікарка → Вона буде лікаркою).'
-- section: 'Частина 3: Вільне вживання (Part 3: Free Production)'
+  - 'Вправа 4: Вибрати правильний прийменник (з, над, під, перед, за, між) для доповнення речень із просторовим і часовим значенням.'
+  - 'Вправа 5: Вирішити, чи використовувати орудний відмінок без прийменника, чи "з" + орудний відмінок — розрізнення інструмента та сумісності (писати ручкою vs. ходити з другом).'
+  - 'Вправа 6: Множинний вибір — вибрати правильну форму словосполучення "прикметник + іменник" в орудному відмінку (з [гарний/гарним/гарною] [друг/другом/другові]).'
+  - 'Вправа 7: Перетворити речення в називному відмінку на речення з "бути"/"стати" + орудний відмінок для позначення професій (Вона лікарка → Вона буде лікаркою).'
+- section: 'Частина 3: Вільне вживання'
   words: 600
   points:
-  - 'Exercise 8: Answer open-ended questions requiring various Instrumental functions:
-    Ким ти працюєш? Чим ти захоплюєшся? З ким ти живеш? Що знаходиться перед твоїм
-    будинком?'
-  - 'Exercise 9: Describe a picture of a kitchen scene — who is cooking, what tools
-    they use, what ingredients are on the table, where objects are located.'
-  - 'Exercise 10: Writing prompt (8-10 sentences): "Опишіть свій типовий день. Розкажіть
-    про свою професію, як ви добираєтесь на роботу, з ким ви обідаєте, і що ви готуєте
-    на вечерю." Learner must use at least 6 different Instrumental constructions.'
-- section: Підсумок — Summary
+  - 'Вправа 8: Дати відповіді на відкриті запитання, що вимагають використання різних функцій орудного відмінка: Ким ти працюєш? Чим ти захоплюєшся? З ким ти живеш? Що знаходиться перед твоїм будинком?'
+  - 'Вправа 9: Описати картинку із зображенням кухні — хто готує, які інструменти вони використовують, які інгредієнти лежать на столі, де розташовані предмети.'
+  - 'Вправа 10: Письмове завдання (8-10 речень): "Опишіть свій типовий день. Розкажіть про свою професію, як ви добираєтесь на роботу, з ким ви обідаєте, і що ви готуєте на вечерю." Здобувач повинен використати принаймні 6 різних конструкцій з орудним відмінком.'
+- section: Підсумок
   words: 200
   points:
-  - The Instrumental case expresses accompaniment (з ким), tools/means (чим), 
-    professions (ким бути), and spatial locations (під, над, перед, за, між).
-  - "Self-check: What is the difference between using a bare noun and using 'з' in
-    the Instrumental case (e.g., писати ручкою vs. гуляти з другом)?"
-  - Describe 3 things in your room and their spatial relationship to each other 
-    using Instrumental prepositions (під, над, між) and adjective agreement.
+  - 'Орудний відмінок виражає сумісність (з ким), інструмент/засіб (чим), професії (ким бути) та просторове розташування (під, над, перед, за, між).'
+  - 'Самоперевірка: Яка різниця між використанням іменника без прийменника та з прийменником "з" в орудному відмінку (наприклад, писати ручкою vs. гуляти з другом)?'
+  - 'Опишіть 3 речі у вашій кімнаті та їхнє просторове відношення одна до одної, використовуючи прийменники орудного відмінка (під, над, між) та узгодження прикметників.'
 vocabulary_hints:
   required:
   - орудний відмінок (instrumental case)
@@ -85,24 +62,21 @@ vocabulary_hints:
   - визначити (to identify, to determine)
 activity_hints:
 - type: quiz
-  focus: Mixed Instrumental case quiz covering all functions from M21-M26
+  focus: 'Змішаний тест на орудний відмінок, що охоплює всі функції з М21-М26'
   items: 8
 - type: fill-in
-  focus: Sentence transformation — put noun phrases into Instrumental with 
-    correct agreement
+  focus: 'Трансформація речень — поставити іменникові словосполучення в орудний відмінок із правильним узгодженням'
   items: 8
 - type: group-sort
-  focus: Sort Instrumental sentences by function (tool, companion, profession, 
-    spatial, temporal)
+  focus: 'Відсортувати речення в орудному відмінку за функцією (інструмент, супутник, професія, просторова, часова)'
   items: 8
 - type: error-correction
-  focus: Find and correct grammar errors in sentences covering module topics
+  focus: 'Знайти та виправити граматичні помилки в реченнях, що охоплюють теми модуля'
   items: 6
 references:
 - title: Захарійчук Grade 4, с. 62-69
-  notes: Full Instrumental case unit — endings, prepositions, exercises for all 
-    genders
+  notes: 'Повний розділ про орудний відмінок — закінчення, прийменники, вправи для всіх родів'
 - title: Заболотний Grade 5, §20-23
-  notes: Instrumental case review exercises in broader declension context
+  notes: 'Вправи на повторення орудного відмінка в ширшому контексті відмінювання'
 - title: Голуб Grade 6, с. 179
-  notes: Pronoun declension tables for review of Instrumental pronoun forms
+  notes: 'Таблиці відмінювання займенників для повторення форм займенників в орудному відмінку'

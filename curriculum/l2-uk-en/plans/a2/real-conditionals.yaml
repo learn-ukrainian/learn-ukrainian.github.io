@@ -2,85 +2,53 @@ module: a2-051
 level: A2
 sequence: 51
 slug: real-conditionals
-version: 1.1.2
+version: 1.1.3
 title: Якщо... то...
 subtitle: Реальна умова — теперішній і майбутній час
 focus: grammar
 pedagogy: PPP
-phase: A2.7 [Complex Sentences and Conditionals]
+phase: 'A2.7 [Складні речення та умовні конструкції]'
 word_target: 2000
 objectives:
-- Learner can form real conditional sentences using якщо + present or future 
-  tense to describe likely or possible situations.
-- Learner can use the якщо... то... frame to clearly connect condition and 
-  result.
-- Learner can distinguish real conditions (якщо — A2) from unreal/hypothetical 
-  conditions (якби — B1, not taught here).
-- Learner can apply real conditionals in practical everyday scenarios (planning,
-  advice, warnings, promises).
+- Вміти утворювати умовні речення за допомогою «якщо» + теперішній або майбутній час для опису ймовірних або можливих ситуацій.
+- Навчитися використовувати конструкцію «якщо... то...» для чіткого зв'язку між умовою та результатом.
+- Розрізняти реальні умови («якщо» — А2) та нереальні/гіпотетичні умови («якби» — В1, тут не вивчається).
+- Опанувати використання реальних умов у повсякденних ситуаціях (планування, поради, попередження, обіцянки).
 dialogue_situations:
-- setting: 'Planning a garden — if/then decisions about planting: Якщо буде сонце
-    (n, sun), посадимо помідори (pl). Якщо не буде дощу (m, rain), доведеться полити
-    ввечері. Якщо ти купиш насіння (n, seeds), я підготую грядку (f, garden bed).'
+- setting: 'Планування городу — рішення "якщо/то" щодо посадки: Якщо буде сонце (n, sun), посадимо помідори (pl). Якщо не буде дощу (m, rain), доведеться полити ввечері. Якщо ти купиш насіння (n, seeds), я підготую грядку (f, garden bed).'
   speakers:
   - Подружжя (на дачі)
-  motivation: 'Якщо + future: сонце(n), дощ(m), насіння(n), грядка(f)'
+  motivation: '«Якщо» + майбутній час: сонце(n), дощ(m), насіння(n), грядка(f)'
 content_outline:
-- section: Якщо + теперішній/майбутній час (If + Present/Future)
+- section: Якщо + теперішній/майбутній час
   words: 700
   points:
-  - 'Introducing real conditionals: якщо expresses a condition that is possible or
-    likely. Якщо буде гарна погода, ми підемо гуляти. Якщо ти хочеш, я допоможу.'
-  - 'Tense in real conditionals: якщо-clause uses present or future tense. The result
-    clause uses future or imperative. No special mood — just regular verb forms.'
-  - 'The якщо... то... frame: то is optional but very common in Ukrainian. It marks
-    the beginning of the result clause. Якщо дощитиме, то ми залишимося вдома.'
-  - 'Comma placement: comma before якщо when it comes second; comma after the якщо-clause
-    when it comes first.'
-  - 'Explicit scope note: this module covers ONLY real conditions (реальна умова)
-    with якщо. Unreal/hypothetical conditions with якби (нереальна умова) are a B1
-    topic and are NOT covered here.'
-- section: Умова в повсякденному житті (Conditions in Everyday Life)
+  - 'Вступ до реальних умов: «якщо» виражає умову, яка є можливою або ймовірною. Якщо буде гарна погода, ми підемо гуляти. Якщо ти хочеш, я допоможу.'
+  - 'Час у реальних умовах: у частині з «якщо» використовується теперішній або майбутній час. У частині результату використовується майбутній час або наказовий спосіб. Немає спеціального способу дієслова — лише звичайні форми.'
+  - 'Конструкція «якщо... то...»: «то» не є обов''язковим, але дуже поширене в українській мові. Воно позначає початок частини з результатом. Якщо дощитиме, то ми залишимося вдома.'
+  - 'Розділові знаки: кома ставиться перед «якщо», коли воно стоїть у другій частині речення; кома ставиться після частини з «якщо», коли вона стоїть на початку.'
+  - 'Чітке обмеження: цей модуль охоплює ТІЛЬКИ реальні умови з «якщо». Нереальні/гіпотетичні умови з «якби» належать до рівня B1 і тут НЕ вивчаються.'
+- section: Умова в повсякденному житті
   words: 700
   points:
-  - 'Planning and decisions: Якщо завтра буде вільний час, я піду в спортзал. Якщо
-    у магазині є свіжий хліб, купи, будь ласка.'
-  - 'Advice and recommendations: Якщо болить голова, випий таблетку. Якщо хочеш вивчити
-    мову, практикуй щодня.'
-  - 'Warnings: Якщо не поспішиш, запізнишся. Якщо не візьмеш парасольку, змокнеш.'
-  - 'Promises and agreements: Якщо ти допоможеш мені, я допоможу тобі. Якщо все буде
-    добре, ми поїдемо у відпустку.'
-  - 'Natural dialogues: two friends making weekend plans, a parent giving advice to
-    a child, colleagues discussing a project deadline — all using real conditionals.'
-- section: Якщо чи якби? Тільки реальна умова (Якщо or якби? Real Conditions 
-    Only)
+  - 'Планування та прийняття рішень: Якщо завтра буде вільний час, я піду в спортзал. Якщо у магазині є свіжий хліб, купи, будь ласка.'
+  - 'Поради та рекомендації: Якщо болить голова, випий таблетку. Якщо хочеш вивчити мову, практикуй щодня.'
+  - 'Попередження: Якщо не поспішиш, запізнишся. Якщо не візьмеш парасольку, змокнеш.'
+  - 'Обіцянки та домовленості: Якщо ти допоможеш мені, я допоможу тобі. Якщо все буде добре, ми поїдемо у відпустку.'
+  - 'Природні діалоги: двоє друзів планують вихідні, мама дає пораду дитині, колеги обговорюють дедлайн проєкту — усі використовують реальні умови.'
+- section: Якщо чи якби? Тільки реальна умова
   words: 600
   points:
-  - 'Preview of the difference: якщо = real, possible condition (if it rains, we will
-    stay home). якби = unreal, hypothetical condition (if I were a bird, I would fly).
-    At A2, learners use only якщо.'
-  - 'Recognition only for якби: learners may encounter якби in songs, proverbs, or
-    conversation. They should recognize it means "if (hypothetically)" but not produce
-    it yet. Якби я знав — if only I knew (but I do not).'
-  - 'Consolidation of all complex sentence types from A2.7: причина (тому що, бо),
-    допуст (хоча), мета (щоб), означальне (який, де), умова (якщо). Building paragraphs
-    that use multiple types.'
-  - 'Self-check: can I explain why (тому що), despite what (хоча), for what purpose
-    (щоб), which one (який), and under what condition (якщо)?'
-  - 'Intonation of conditional sentences: the якщо-clause carries a rising tone (↗),
-    signaling that the condition is incomplete and the result is coming. The main
-    clause (result) carries a falling tone (↘). Example: Якщо буде сонце↗, ми підемо
-    гуляти↘.'
-- section: Підсумок — Summary
+  - 'Попередній огляд відмінностей: «якщо» = реальна, можлива умова. «якщо буде дощ, ми залишимося вдома». «якби» = нереальна, гіпотетична умова. На рівні А2 студенти використовують лише «якщо».'
+  - 'Тільки розпізнавання для «якби»: студенти можуть зустріти «якби» у піснях, прислів''ях або розмовах. Вони повинні розуміти, що це означає гіпотетичну умову, але ще не утворювати її самостійно. Якби я знав.'
+  - 'Закріплення всіх типів складних речень з A2.7: причина (тому що, бо), допуст (хоча), мета (щоб), означальне (який, де), умова (якщо). Побудова абзаців, що використовують кілька типів.'
+  - 'Самоперевірка: чи можу я пояснити чому (тому що), незважаючи на що (хоча), з якою метою (щоб), який саме (який) і за якої умови (якщо)?'
+  - 'Інтонація умовних речень: частина з «якщо» має висхідну інтонацію (↗), що сигналізує про незавершеність умови та очікування результату. Головна частина (результат) має низхідну інтонацію (↘). Наприклад: Якщо буде сонце↗, ми підемо гуляти↘.'
+- section: Підсумок
   words: 200
   points:
-  - "Real conditional sentences express possible situations using 'якщо' + present
-    or future tense, often followed by 'то' in the result clause: Якщо ти хочеш, то
-    я допоможу. The condition uses rising intonation (↗) and the result uses falling
-    intonation (↘)."
-  - "Self-check: What is the difference between 'якщо' and 'якби'? Give 3 pieces of
-    advice to a friend using 'якщо' (e.g., 'Якщо болить голова...'). Where do you
-    place the comma if the 'якщо' clause is in the second half of the sentence?"
+  - 'Реальні умовні речення виражають можливі ситуації за допомогою «якщо» + теперішній або майбутній час, часто супроводжуючись «то» в частині результату: Якщо ти хочеш, то я допоможу. Умова має висхідну інтонацію (↗), а результат — низхідну інтонацію (↘).'
+  - 'Самоперевірка: Яка різниця між «якщо» та «якби»? Дайте 3 поради другу, використовуючи «якщо» (наприклад, "Якщо болить голова..."). Де ставиться кома, якщо частина з «якщо» знаходиться у другій половині речення?'
 vocabulary_hints:
   required:
   - якщо (if — real condition)
@@ -101,26 +69,22 @@ vocabulary_hints:
   - відпустка (vacation, holiday)
 activity_hints:
 - type: fill-in
-  focus: Complete real conditional sentences with the correct verb form in the 
-    якщо-clause or result clause
+  focus: Доповнити реальні умовні речення правильною формою дієслова в частині з «якщо» або в частині результату
   items: 8
 - type: quiz
-  focus: Choose якщо or якби — identify real vs. hypothetical conditions 
-    (recognition only for якби)
+  focus: 'Обрати «якщо» або «якби» — розрізнити реальні та гіпотетичні умови (тільки розпізнавання для «якби»)'
   items: 8
 - type: match-up
-  focus: Match conditions (якщо-clauses) to their logical results
+  focus: З'єднати умови (частини з «якщо») з їхніми логічними результатами
   items: 8
 - type: error-correction
-  focus: Fix incorrect verb aspect usage in sentences
+  focus: Виправити неправильне використання виду дієслова в реченнях
   items: 6
 references:
 - title: Заболотний Grade 5, §28
-  notes: Складнопідрядні речення умови — якщо, коли, як with examples from 
-    literature and proverbs
+  notes: 'Складнопідрядні речення умови — якщо, коли, як з прикладами з літератури та прислів''ями'
 - title: Заболотний Grade 6
-  notes: Підрядні частини умови та допусту — distinguishing real and unreal 
-    conditions
+  notes: Підрядні частини умови та допусту — розрізнення реальних і нереальних умов
 - title: 'ULP: If in Ukrainian — якщо vs якби'
   url: https://www.ukrainianlessons.com/if-in-ukrainian/
-  notes: Clear explanation of real vs. unreal conditionals for learners
+  notes: Зрозуміле пояснення реальних і нереальних умов для студентів

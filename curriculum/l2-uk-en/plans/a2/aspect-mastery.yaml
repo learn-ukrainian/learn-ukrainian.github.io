@@ -2,92 +2,57 @@ module: a2-042
 level: A2
 sequence: 42
 slug: aspect-mastery
-version: 1.0.2
+version: 1.0.3
 title: 30 найважливіших видових пар
 subtitle: Морфологія видових пар та вибір виду в контексті
 focus: grammar
 pedagogy: PPP
-phase: A2.6 [Aspect, Tenses, and Motion]
+phase: 'A2.6 [Вид дієслова, часи та рух]'
 word_target: 2000
 objectives:
-- Learner can produce both members of 30 essential aspect pairs from memory, 
-  organized by morphological pattern (prefix, suffix change, stem change, 
-  suppletive).
-- Learner can identify the four main formation patterns for aspect pairs and 
-  predict the perfective or imperfective partner of an unfamiliar verb using 
-  these patterns.
-- Learner can choose the correct aspect in complex sentences involving sequence,
-  interruption, habitual action, and single result — beyond simple signal words.
-- Learner can use aspect pairs fluently in short dialogues about daily plans, 
-  completed tasks, and ongoing activities.
+- Учень може по пам'яті відтворити обидва члени 30 основних видових пар, згрупованих за морфологічною моделлю (префікс, зміна суфікса, зміна основи, суплетив).
+- Учень може визначити чотири основні моделі утворення видових пар та передбачити форму доконаного або недоконаного виду для незнайомого дієслова за допомогою цих моделей.
+- Учень може вибрати правильний вид дієслова у складних реченнях, що описують послідовність, переривання, звичну дію та одиничний результат — виходячи за межі простих слів-маркерів.
+- Учень може вільно використовувати видові пари в коротких діалогах про щоденні плани, завершені завдання та поточні дії.
 dialogue_situations:
-- setting: 'Parent and child doing homework — choosing the right aspect: Ти написав
-    (pf) домашнє завдання? Ні, я ще пишу (impf). Прочитай (pf) цей абзац. Я читаю
-    (impf) вже годину!'
+- setting: 'Батьки і дитина роблять домашнє завдання — вибір правильного виду: Ти написав (pf) домашнє завдання? Ні, я ще пишу (impf). Прочитай (pf) цей абзац. Я читаю (impf) вже годину!'
   speakers:
   - Мама/Тато
-  - Школяр (student)
-  motivation: '30 aspect pairs in homework context: писати/написати, читати/прочитати'
+  - Школяр
+  motivation: '30 видових пар у контексті домашнього завдання: писати/написати, читати/прочитати'
 content_outline:
-- section: Як утворюються видові пари (How Aspect Pairs Are Formed)
+- section: 'Як утворюються видові пари'
   words: 500
   points:
-  - 'Pattern 1 — Prefixation (most common): писати → написати, читати → прочитати,
-    робити → зробити, їсти → з''їсти, варити → зварити. The prefix adds completion
-    without changing the base meaning.'
-  - 'Pattern 2 — Suffix change: записувати → записати (-увати → -ати), розповідати
-    → розповісти (-ідати → -істи), пояснювати → пояснити (-ювати → -ити). Imperfective
-    suffixes are longer.'
-  - 'Pattern 3 — Stem change: допомагати → допомогти, відповідати → відповісти. The
-    stem itself transforms.'
-  - 'Pattern 4 — Suppletive (different roots): брати → взяти, говорити → сказати,
-    класти → покласти. These must be memorized as pairs.'
-- section: '30 пар: Список і приклади (30 Pairs: List and Examples)'
+  - 'Модель 1 — Префіксація (найпоширеніша): писати → написати, читати → прочитати, робити → зробити, їсти → з''їсти, варити → зварити. Префікс додає значення завершеності, не змінюючи основного змісту слова.'
+  - 'Модель 2 — Зміна суфікса: записувати → записати (-увати → -ати), розповідати → розповісти (-ідати → -істи), пояснювати → пояснити (-ювати → -ити). Суфікси недоконаного виду зазвичай довші.'
+  - 'Модель 3 — Зміна основи: допомагати → допомогти, відповідати → відповісти. Відбувається трансформація самої основи.'
+  - 'Модель 4 — Суплетивізм (різні корені): брати → взяти, говорити → сказати, класти → покласти. Ці пари слід запам''ятовувати як окремі одиниці.'
+- section: '30 пар: Список і приклади'
   words: 600
   points:
-  - 'Group A — Daily actions (10 pairs): робити/зробити, писати/написати, читати/прочитати,
-    готувати/приготувати, їсти/з''їсти, пити/випити, варити/зварити, мити/помити,
-    прибирати/прибрати, прасувати/випрасувати.'
-  - 'Group B — Communication & learning (10 pairs): говорити/сказати, питати/запитати,
-    відповідати/відповісти, пояснювати/пояснити, вчити/вивчити, розуміти/зрозуміти,
-    казати/сказати, розповідати/розповісти, записувати/записати, перекладати/перекласти.'
-  - 'Group C — Movement & interaction (10 pairs): брати/взяти, давати/дати, класти/покласти,
-    відкривати/відкрити, закривати/закрити, починати/почати, закінчувати/закінчити,
-    допомагати/допомогти, купувати/купити, платити/заплатити.'
-  - 'Each pair shown in a minimal contrast sentence: Я варив суп (was cooking) vs.
-    Я зварив суп (cooked it, done).'
-- section: Вибір виду в складних ситуаціях (Aspect Choice in Complex Situations)
+  - 'Група А — Повсякденні дії (10 пар): робити/зробити, писати/написати, читати/прочитати, готувати/приготувати, їсти/з''їсти, пити/випити, варити/зварити, мити/помити, прибирати/прибрати, прасувати/випрасувати.'
+  - 'Група Б — Спілкування та навчання (10 пар): говорити/сказати, питати/запитати, відповідати/відповісти, пояснювати/пояснити, вчити/вивчити, розуміти/зрозуміти, казати/сказати, розповідати/розповісти, записувати/записати, перекладати/перекласти.'
+  - 'Група В — Рух та взаємодія (10 пар): брати/взяти, давати/дати, класти/покласти, відкривати/відкрити, закривати/закрити, починати/почати, закінчувати/закінчити, допомагати/допомогти, купувати/купити, платити/заплатити.'
+  - 'Кожна пара представлена в мінімально контрастному реченні: Я варив суп (був у процесі) проти Я зварив суп (приготував, зроблено).'
+- section: 'Вибір виду в складних ситуаціях'
   words: 500
   points:
-  - 'Sequence of completed events — all perfective: Я встав, вмився, поснідав і пішов
-    на роботу (I got up, washed, had breakfast, and left for work).'
-  - 'Interruption — imperfective background + perfective event: Коли я готувала вечерю,
-    подзвонила подруга (While I was cooking dinner, a friend called).'
-  - 'Habitual vs. single — imperfective for habit, perfective for one-time: Вона завжди
-    допомагала сусідам (She always helped the neighbors) vs. Вона допомогла сусідці
-    вчора (She helped the neighbor yesterday).'
-  - 'Negation nuance: Я не читав цю книгу (I haven''t read it / never read it) vs.
-    Я не прочитав цю книгу (I didn''t finish reading it — started but didn''t complete).'
-- section: Практика у діалогах (Practice in Dialogues)
+  - 'Послідовність завершених подій — лише доконаний вид: Я встав, вмився, поснідав і пішов на роботу.'
+  - 'Переривання дії — фонова дія недоконаного виду + подія доконаного виду: Коли я готувала вечерю, подзвонила подруга.'
+  - 'Звична дія проти одиничної — недоконаний вид для звички, доконаний для одноразової: Вона завжди допомагала сусідам проти Вона допомогла сусідці вчора.'
+  - 'Нюанси заперечення: Я не читав цю книгу (ніколи не читав) проти Я не прочитав цю книгу (не дочитав до кінця).'
+- section: 'Практика у діалогах'
   words: 400
   points:
-  - 'Dialogue 1: Що ти зробив сьогодні? — Listing completed tasks with perfective.
-    А що ти робив увечері? — Describing an ongoing evening activity with imperfective.'
-  - 'Dialogue 2: Planning and reporting. Що ти будеш робити завтра? (impf.) vs. Що
-    ти зробиш до п''ятниці? (pf.) — aspect in future context too.'
-  - 'Common conversational patterns with aspect: Ти вже зробив? (Have you done it
-    yet?), Я ще роблю (I''m still doing it), Я тільки що зробив (I just did it).'
-- section: Підсумок — Summary
+  - 'Діалог 1: Що ти зробив сьогодні? — Перелік завершених завдань за допомогою доконаного виду. А що ти робив увечері? — Опис тривалої вечірньої дії за допомогою недоконаного виду.'
+  - 'Діалог 2: Планування та звіт. Що ти будеш робити завтра? (недоконаний) проти Що ти зробиш до п''ятниці? (доконаний) — вид у контексті майбутнього часу.'
+  - 'Типові розмовні конструкції з видами дієслів: Ти вже зробив?, Я ще роблю, Я тільки що зробив.'
+- section: Підсумок
   words: 200
   points:
-  - 'Aspect pairs are formed using 4 patterns: prefixation (робити → зробити), suffix
-    change (записувати → записати), stem change (допомагати → допомогти), and suppletive
-    roots (брати → взяти). Self-check: What is the perfective partner of говорити?
-    (сказати) Describe 3 things you finished doing today using perfective verbs.'
-  - "Perfective verbs show completed sequences or single results, while imperfective
-    verbs show habits or interrupted background actions. Self-check: What is the difference
-    between 'Я не читав' and 'Я не прочитав'? Which aspect do you use for the interruption
-    in 'Коли я готувала вечерю, подзвонила подруга'?"
+  - 'Видові пари утворюються за 4 моделями: префіксація (робити → зробити), зміна суфікса (записувати → записати), зміна основи (допомагати → допомогти) і суплетивні корені (брати → взяти). Самоперевірка: Яка доконана форма від "говорити"? (сказати) Опишіть 3 дії, які ви завершили сьогодні, використовуючи дієслова доконаного виду.'
+  - 'Дієслова доконаного виду вказують на послідовність завершених дій або одиничний результат, тоді як дієслова недоконаного виду позначають звички або перервані фонові дії. Самоперевірка: Яка різниця між "Я не читав" та "Я не прочитав"? Який вид ви використаєте для переривання в реченні "Коли я готувала вечерю, подзвонила подруга"?'
 vocabulary_hints:
   required:
   - видова пара (aspect pair)
@@ -107,23 +72,19 @@ vocabulary_hints:
   - вже (already)
 activity_hints:
 - type: match-up
-  focus: Match imperfective verbs with their perfective partners from the 30 
-    pairs
+  focus: 'Зіставлення дієслів недоконаного виду з їхніми парами доконаного виду з 30 вивчених пар'
   items: 8
 - type: fill-in
-  focus: Complete sentences by choosing the correct aspect based on context 
-    (sequence, interruption, habit, single event)
+  focus: 'Доповнення речень правильним видом дієслова залежно від контексту (послідовність, переривання, звичка, одинична подія)'
   items: 8
 - type: group-sort
-  focus: Sort aspect pairs by formation pattern (prefix, suffix, stem change, 
-    suppletive)
+  focus: 'Сортування видових пар за моделлю утворення (префікс, суфікс, зміна основи, суплетив)'
   items: 8
 - type: quiz
-  focus: Read a mini-situation and choose the correct aspect form with 
-    justification
+  focus: 'Прочитати мініситуацію та вибрати правильну форму виду з обґрунтуванням'
   items: 8
 references:
 - title: Заболотний Grade 6, §52-54
-  notes: Видові пари дієслів — formation patterns and usage
+  notes: 'Видові пари дієслів — моделі утворення та використання'
 - title: Ohoiko, 500+ Ukrainian Verbs (2024)
-  notes: Comprehensive aspect pair reference with conjugation tables
+  notes: 'Детальний довідник з видових пар із таблицями відмінювання'

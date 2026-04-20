@@ -2,100 +2,56 @@ module: a2-045
 level: A2
 sequence: 45
 slug: telling-stories-and-travel
-version: 1.0.2
+version: 1.0.3
 title: Розповіді та подорожі
-subtitle: Розповідаємо про минуле з видом дієслова та плануємо подорожі з 
-  дієсловами руху
+subtitle: Розповідаємо про минуле з видом дієслова та плануємо подорожі з дієсловами руху
 focus: communication
 pedagogy: TBL
-phase: A2.6 [Aspect, Tenses, and Motion]
+phase: 'A2.6 [Вид дієслова, часи та рух]'
 word_target: 2000
 objectives:
-- Learner can narrate a past event as a coherent story, correctly alternating 
-  between imperfective (background, process) and perfective (completed actions, 
-  plot events) past tense verbs.
-- Learner can describe travel plans using motion verbs (іти/ходити, 
-  їхати/їздити, летіти/літати) with appropriate prepositions and cases for 
-  origin, destination, and route.
-- Learner can participate in a dialogue about a past trip — answering questions 
-  about where they went, how they traveled, what they did, and what happened.
-- Learner can write a short narrative (8-10 sentences) about a real or imagined 
-  journey, integrating past tense aspect, motion verbs, and time expressions.
+- Вміти розповідати про подію в минулому як зв'язну історію, правильно чергуючи дієслова недоконаного (фон, процес) та доконаного (завершені дії, події сюжету) виду минулого часу.
+- Вміти описувати плани на подорожі, використовуючи дієслова руху (іти/ходити, їхати/їздити, летіти/літати) з відповідними прийменниками та відмінками для точки відправлення, призначення та маршруту.
+- Опанувати участь у діалозі про минулу поїздку — відповідаючи на запитання про те, куди їздили, як подорожували, що робили і що сталося.
+- Вміти написати коротку розповідь (8-10 речень) про реальну або уявну подорож, поєднуючи вид дієслова в минулому часі, дієслова руху та вирази часу.
 dialogue_situations:
-- setting: 'Scenario 1: A funny thing happened at the вокзал (m, train station) yesterday.
-    Scenario 2: Planning a trip to Карпати (pl) — booking хатинка (f, cabin). Scenario
-    3: Showing vacation photos from Одеса — пляж (m), море (n), ресторан (m).'
+- setting: 'Сценарій 1: Смішна історія на вокзалі (m, train station) вчора. Сценарій 2: Планування поїздки в Карпати (pl) — бронювання хатинки (f, cabin). Сценарій 3: Показ фотографій з відпустки в Одесі — пляж (m), море (n), ресторан (m).'
   speakers:
-  - Друзі (sharing stories)
-  motivation: 'Past + future + travel: вокзал(m), хатинка(f), пляж(m), море(n)'
+  - Друзі (розповідають історії)
+  motivation: 'Минуле + майбутнє + подорож: вокзал(m), хатинка(f), пляж(m), море(n)'
 content_outline:
-- section: 'Сценарій 1: Що вчора трапилось? (Scenario 1: What Happened Yesterday?)'
+- section: 'Сценарій 1: Що вчора трапилось?'
   words: 550
   points:
-  - 'Story-telling structure: setting the scene (imperfective) → events (perfective)
-    → reactions (both aspects). Example: Був теплий вечір. Я сидів на балконі і читав
-    книгу (background — impf.). Раптом подзвонив друг (event — pf.) і запросив мене
-    на вечерю (event — pf.).'
-  - 'Time connectors for narratives: спочатку (at first), потім (then), після цього
-    (after that), нарешті (finally), тим часом (meanwhile), раптом (suddenly), у цей
-    момент (at that moment).'
-  - 'Practice: learner reads a short story with mixed aspects, identifies which verbs
-    are background (impf.) and which are plot events (pf.).'
-  - 'Guided storytelling: given a sequence of pictures or prompts, learner tells what
-    happened using correct aspect choices.'
-- section: 'Сценарій 2: Плануємо подорож (Scenario 2: Planning a Trip)'
+  - 'Структура розповіді: створення фону (недоконаний вид) → події (доконаний вид) → реакції (обидва види). Приклад: Був теплий вечір. Я сидів на балконі і читав книгу. Раптом подзвонив друг і запросив мене на вечерю.'
+  - 'Зв''язкові слова часу для розповідей: спочатку, потім, після цього, нарешті, тим часом, раптом, у цей момент.'
+  - 'Практика: студент читає коротку історію зі змішаними видами дієслів, визначає, які дієслова є фоном (недок. вид), а які — подіями сюжету (док. вид).'
+  - 'Керована розповідь: отримавши послідовність картинок або підказок, студент розповідає, що сталося, використовуючи правильний вибір виду дієслова.'
+- section: 'Сценарій 2: Плануємо подорож'
   words: 500
   points:
-  - 'Dialogue: two friends planning a trip to Lviv. Куди поїдемо? (pf. — specific
-    trip) Як доберемося? Поїдемо потягом чи полетимо? Де зупинимося? (pf. — specific
-    result) Що будемо робити? (impf. — general activities).'
-  - 'Travel vocabulary: подорож (trip), квиток (ticket), потяг (train), літак (airplane),
-    автобус (bus), вокзал (station), аеропорт (airport), готель (hotel), зупинитися
-    (to stay/stop).'
-  - 'Motion verbs in context: Ми поїдемо потягом до Львова (pf. — specific trip).
-    Зазвичай ми їздимо туди влітку (impf. — habitual). Літак летить дві години (unidirectional
-    — in progress).'
-  - 'Preposition patterns: поїхати до + Gen. (to a city/person), поїхати на + Acc.
-    (to an event/area — на море, на фестиваль), прилетіти з + Gen. (from a place).'
-- section: 'Сценарій 3: Розкажи про поїздку! (Scenario 3: Tell Me About Your Trip!)'
+  - 'Діалог: двоє друзів планують поїздку до Львова. Куди поїдемо? (док. вид — конкретна поїздка). Як доберемося? Поїдемо потягом чи полетимо? Де зупинимося? (док. вид — конкретний результат). Що будемо робити? (недок. вид — загальні заняття).'
+  - 'Лексика подорожей: подорож, квиток, потяг, літак, автобус, вокзал, аеропорт, готель, зупинитися.'
+  - 'Дієслова руху в контексті: Ми поїдемо потягом до Львова (док. вид — конкретна поїздка). Зазвичай ми їздимо туди влітку (недок. вид — звичка). Літак летить дві години (в один бік — у процесі).'
+  - 'Моделі прийменників: поїхати до + Род. в. (до міста/людини), поїхати на + Зн. в. (на подію/територію — на море, на фестиваль), прилетіти з + Род. в. (з місця).'
+- section: 'Сценарій 3: Розкажи про поїздку!'
   words: 550
   points:
-  - 'Dialogue: one friend asks about another''s recent trip. Де ти був? Куди їздив?
-    Як доїхав? Що бачив? Що найбільше сподобалось? — All answered using past tense
-    with correct aspect.'
-  - 'Sample narrative: Минулого тижня я їздив до Одеси (impf. — round trip). Ми поїхали
-    потягом (pf. — departed). Доїхали за десять годин (pf. — completed). Там ми ходили
-    по місту (impf. — walked around), відвідали музей (pf. — specific event), купили
-    сувеніри (pf.) і з''їли найсмачніший борщ (pf.).'
-  - 'Expressing impressions: Мені дуже сподобалось (I really liked it). Було чудово
-    / цікаво / весело (It was wonderful / interesting / fun). Я хочу поїхати ще раз
-    (I want to go again).'
-  - 'Contrast: їздив (was there, round-trip completed) vs. поїхав (departed, left).
-    Я їздив до Києва (I went to Kyiv and came back) vs. Він поїхав до Києва (He left
-    for Kyiv — may still be there).'
-- section: 'Мовленнєве завдання: Моя подорож (Speaking Task: My Journey)'
+  - 'Діалог: один друг розпитує іншого про недавню поїздку. Де ти був? Куди їздив? Як доїхав? Що бачив? Що найбільше сподобалось? — На все дається відповідь у минулому часі з правильним видом дієслова.'
+  - 'Приклад розповіді: Минулого тижня я їздив до Одеси (недок. вид — поїздка туди й назад). Ми поїхали потягом (док. вид — відправилися). Доїхали за десять годин (док. вид — завершено). Там ми ходили по місту (недок. вид — гуляли), відвідали музей (док. вид — конкретна подія), купили сувеніри (док. вид) і з''їли найсмачніший борщ (док. вид).'
+  - 'Вираження вражень: Мені дуже сподобалось. Було чудово / цікаво / весело. Я хочу поїхати ще раз.'
+  - 'Контраст: їздив (був там, поїздка туди-назад завершена) проти поїхав (відправився, поїхав геть). Я їздив до Києва (Я поїхав до Києва і повернувся) проти Він поїхав до Києва (Він відправився до Києва — можливо, ще там).'
+- section: 'Мовленнєве завдання: Моя подорож'
   words: 400
   points:
-  - 'Guided writing task: write 8-10 sentences about a real or imagined trip. Include:
-    where you went (motion verb + destination), how you traveled (vehicle — Instr.),
-    what you did (perfective events), what was happening around you (imperfective
-    background).'
-  - 'Checklist: Did you use at least 2 motion verbs? Did you alternate aspects? Did
-    you use time connectors? Did you describe impressions?'
-  - Model answer for comparison, annotated with aspect labels.
-- section: Підсумок — Summary
+  - 'Завдання з керованого письма: написати 8-10 речень про реальну або уявну подорож. Включіть: куди ви їздили (дієслово руху + місце призначення), як подорожували (транспортний засіб — Ор. в.), що робили (події доконаного виду), що відбувалося навколо вас (фон недоконаного виду).'
+  - 'Чекліст: Ви використали принаймні 2 дієслова руху? Ви чергували види дієслів? Ви використали зв''язкові слова часу? Ви описали враження?'
+  - 'Зразкова відповідь для порівняння, з анотаціями щодо видів дієслів.'
+- section: Підсумок
   words: 200
   points:
-  - 'Storytelling in the past tense alternates verb aspects: use imperfective verbs
-    for background scenes or ongoing processes (читав книгу), and perfective verbs
-    for sudden or completed plot events (раптом подзвонив). Self-check: Describe what
-    you were doing yesterday when something suddenly happened, using both aspects
-    and the word "раптом".'
-  - 'Travel planning and narrating requires motion verbs and specific prepositions:
-    destination uses до + Genitive (до Львова) or на + Accusative (на море), while
-    the mode of transport uses the Instrumental case (потягом, автобусом). Self-check:
-    What is the difference between "Я їздив до Києва" and "Він поїхав до Києва"? Narrate
-    a short trip using at least 3 travel vocabulary words.'
+  - 'У розповіді в минулому часі чергуються види дієслів: використовуйте дієслова недоконаного виду для фонових сцен або тривалих процесів (читав книгу) та дієслова доконаного виду для раптових або завершених подій сюжету (раптом подзвонив). Самоперевірка: Опишіть, що ви робили вчора, коли раптом щось сталося, використовуючи обидва види та слово "раптом".'
+  - 'Планування подорожей та розповіді про них вимагають дієслів руху та специфічних прийменників: для місця призначення використовується «до» + родовий відмінок (до Львова) або «на» + знахідний відмінок (на море), тоді як для виду транспорту використовується орудний відмінок (потягом, автобусом). Самоперевірка: Яка різниця між «Я їздив до Києва» та «Він поїхав до Києва»? Розкажіть про коротку поїздку, використовуючи принаймні 3 слова з лексики подорожей.'
 vocabulary_hints:
   required:
   - подорож (trip, journey)
@@ -116,23 +72,20 @@ vocabulary_hints:
   - сувенір (souvenir)
 activity_hints:
 - type: fill-in
-  focus: Complete a travel narrative by choosing the correct verb form (aspect 
-    and motion verb type) for each blank
+  focus: Доповнити розповідь про подорож, вибравши правильну форму дієслова (вид і тип дієслова руху) для кожного пропуску
   items: 8
 - type: quiz
-  focus: Read a past trip description and answer comprehension questions about 
-    what happened, in what order, and how the person traveled
+  focus: Прочитати опис минулої поїздки та відповісти на запитання на розуміння про те, що сталося, в якому порядку та як людина подорожувала
   items: 8
 - type: match-up
-  focus: Match travel situations with the correct motion verb and preposition 
-    combination (їхати до + Gen., летіти на + Acc.)
+  focus: Поєднати ситуації з подорожей із правильною комбінацією дієслова руху та прийменника (їхати до + Род. в., летіти на + Зн. в.)
   items: 8
 - type: error-correction
-  focus: Find and correct grammar errors in sentences
+  focus: Знайти та виправити граматичні помилки в реченнях
   items: 6
 references:
 - title: Заболотний Grade 6, §42-44, §39-41
-  notes: Вид дієслова + дієслова руху — combined in communicative context
+  notes: Вид дієслова + дієслова руху — об'єднані в комунікативному контексті
 - title: 'ULP: Ukrainian Travel Vocabulary'
   url: https://www.ukrainianlessons.com/travel/
-  notes: Travel-related vocabulary and dialogues with audio
+  notes: Лексика на тему подорожей та діалоги з аудіо

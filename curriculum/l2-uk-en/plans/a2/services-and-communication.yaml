@@ -2,84 +2,59 @@ module: a2-022
 level: A2
 sequence: 22
 slug: services-and-communication
-version: 1.0.2
+version: 1.0.3
 title: На пошті
-subtitle: Давальний відмінок у ситуаціях обслуговування — надсилання, отримання,
-  прохання
+subtitle: Давальний відмінок у ситуаціях обслуговування — надсилання, отримання, прохання
 focus: communication
 pedagogy: TBL
-phase: A2.3 [Dative Case]
+phase: 'A2.3 [Давальний відмінок]'
 word_target: 2000
 objectives:
-- Learner can navigate a post office interaction in Ukrainian — sending a letter
-  or parcel, asking about delivery, filling out an address form.
-- Learner can use dative constructions in service situations to express giving, 
-  sending, and addressing (надіслати листа другові, дати посилку листоноші).
-- Learner can request help and thank service workers using dative-governing 
-  verbs (допоможіть мені, дякую вам).
-- Learner can write a short message or address using dative forms (Дорогому 
-  другові Андрію, Любій бабусі Олені).
+- Опанувати спілкування на пошті українською мовою — відправлення листа чи посилки, запит про доставку, заповнення бланка з адресою.
+- Вміти використовувати конструкції давального відмінка у сфері обслуговування для вираження передачі, надсилання та адресування (надіслати листа другові, дати посилку листоноші).
+- Навчитися просити про допомогу та дякувати працівникам сфери послуг, використовуючи дієслова, що вимагають давального відмінка (допоможіть мені, дякую вам).
+- Вміти написати коротке повідомлення або адресу, використовуючи форми давального відмінка (Дорогому другові Андрію, Любій бабусі Олені).
 dialogue_situations:
-- setting: 'At Укрпошта (Ukrainian postal service) — sending a parcel to relatives:
-    Бандероль (f, parcel) для сестри в Канаду. Скільки коштує? Заповніть бланк (m,
-    form). Адреса одержувача (m, recipient)?'
+- setting: 'На Укрпошті — відправлення посилки родичам: Бандероль (f, parcel) для сестри в Канаду. Скільки коштує? Заповніть бланк (m, form). Адреса одержувача (m, recipient)?'
   speakers:
   - Відправник
   - Працівник пошти
-  motivation: 'Post office: бандероль(f), бланк(m), адреса(f), одержувач(m)'
+  motivation: 'Пошта: бандероль(f), бланк(m), адреса(f), одержувач(m)'
 content_outline:
-- section: 'На пошті: Базова лексика (At the Post Office: Essential Vocabulary)'
+- section: 'На пошті: Базова лексика'
   words: 400
   points:
-  - 'Post office vocabulary: пошта, відділення, лист, конверт, марка, посилка, бандероль,
-    квитанція, адреса, індекс.'
-  - 'People: листоноша, одержувач, відправник.'
-  - 'Actions: надіслати/відправити (to send), отримати (to receive), заповнити (to
-    fill out), підписати (to sign).'
-  - Brief cultural note on Укрпошта and how postal services work in Ukraine.
-- section: 'Надіслати листа: Діалоги на пошті (Sending a Letter: Dialogues at the
-    Post Office)'
+  - 'Поштова лексика: пошта, відділення, лист, конверт, марка, посилка, бандероль, квитанція, адреса, індекс.'
+  - 'Люди: листоноша, одержувач, відправник.'
+  - 'Дії: надіслати/відправити, отримати, заповнити, підписати.'
+  - 'Коротка культурна довідка про Укрпошту та як працюють поштові послуги в Україні.'
+- section: 'Надіслати листа: Діалоги на пошті'
   words: 550
   points:
-  - 'Dialogue 1: Sending a letter — asking for an envelope and stamps, giving the
-    address, paying. Natural interaction with a postal worker.'
-  - 'Dialogue 2: Sending a parcel to a friend — explaining contents, filling out the
-    form (кому — одержувач, від кого — відправник), asking about delivery time.'
-  - 'Dative in action: Я хочу надіслати листа другові. Дайте мені два конверти. Покажіть
-    мені бланк. Напишіть адресу одержувачеві.'
-  - Polite request forms with dative: Допоможіть мені, будь ласка. Підкажіть 
-      мені, де...
-- section: 'Просити, дякувати, допомагати: Давальний у сфері послуг (Requesting, Thanking,
-    Helping: Dative in Services)'
+  - 'Діалог 1: Відправлення листа — прохання дати конверт і марки, вказування адреси, оплата. Природне спілкування з працівником пошти.'
+  - 'Діалог 2: Відправлення посилки другу — пояснення вмісту, заповнення бланка (кому — одержувач, від кого — відправник), запит про час доставки.'
+  - 'Давальний відмінок у дії: Я хочу надіслати листа другові. Дайте мені два конверти. Покажіть мені бланк. Напишіть адресу одержувачеві.'
+  - 'Ввічливі форми прохання з давальним відмінком: Допоможіть мені, будь ласка. Підкажіть мені, де...'
+- section: 'Просити, дякувати, допомагати: Давальний у сфері послуг'
   words: 550
   points:
-  - 'Requesting help: Допоможіть мені заповнити бланк. Покажіть мені, як це зробити.
-    Поясніть мені правила.'
-  - 'Thanking: Дякую вам за допомогу. Дякую листоноші.'
-  - 'Giving advice: Раджу вам надіслати бандероллю. Раджу тобі перевірити адресу.'
-  - 'Extended scenario: Asking a neighbor to help send something, explaining who it
-    is for (Це подарунок моїй бабусі. Допоможи мені загорнути).'
-  - Review of imperative + dative (дай мені, покажи нам, скажіть їй) from 
-    natural service interactions.
-- section: 'Написати адресу: Давальний у листуванні (Writing an Address: Dative in
-    Correspondence)'
+  - 'Прохання про допомогу: Допоможіть мені заповнити бланк. Покажіть мені, як це зробити. Поясніть мені правила.'
+  - 'Подяка: Дякую вам за допомогу. Дякую листоноші.'
+  - 'Надання порад: Раджу вам надіслати бандероллю. Раджу тобі перевірити адресу.'
+  - 'Розширений сценарій: попросити сусіда допомогти щось відправити, пояснити, для кого це (Це подарунок моїй бабусі. Допоможи мені загорнути).'
+  - 'Повторення наказового способу + давальний відмінок (дай мені, покажи нам, скажіть їй) з природних ситуацій обслуговування.'
+- section: 'Написати адресу: Давальний у листуванні'
   words: 500
   points:
-  - 'Addressing letters and messages: Кому — дорогому другові Андрію, любій бабусі
-    Олені, шановному професорові Петренку.'
-  - 'Full dative agreement in addresses: possessive + adjective + noun + name all
-    in dative — моєму дорогому братові Михайлові.'
-  - 'Short message writing: Дорогій подрузі! Пишу тобі з Києва. Посилаю тобі маленький
-    подарунок.'
-  - Practice writing addresses and short greetings using dative forms.
-- section: Підсумок — Summary
+  - 'Адресування листів і повідомлень: Кому — дорогому другові Андрію, любій бабусі Олені, шановному професорові Петренку.'
+  - 'Повне узгодження в давальному відмінку в адресах: присвійний займенник + прикметник + іменник + ім''я, все в давальному відмінку — моєму дорогому братові Михайлові.'
+  - 'Написання коротких повідомлень: Дорогій подрузі! Пишу тобі з Києва. Посилаю тобі маленький подарунок.'
+  - 'Практика написання адрес і коротких привітань з використанням форм давального відмінка.'
+- section: Підсумок
   words: 200
   points:
-  - 'Dative case is used for requesting help, thanking, and addressing correspondence:
-    допоможіть мені, дякую вам, моєму дорогому братові Михайлові.'
-  - "Self-check: How do you say 'I want to send a letter to a friend' in Ukrainian?
-    Write a short address label to 'dear grandmother Olena'. What is the difference
-    between відправник and одержувач?"
+  - 'Давальний відмінок використовується для прохання про допомогу, подяки та адресування кореспонденції: допоможіть мені, дякую вам, моєму дорогому братові Михайлові.'
+  - 'Самоперевірка: Як сказати "Я хочу надіслати листа другу" українською? Напишіть коротку адресну етикетку "любій бабусі Олені". Яка різниця між відправником та одержувачем?'
 vocabulary_hints:
   required:
   - пошта (post office, mail)
@@ -100,27 +75,22 @@ vocabulary_hints:
   - індекс (postal code)
 activity_hints:
 - type: fill-in
-  focus: Complete post office dialogue lines with correct dative forms 
-    (Надішліть цю посилку ___)
+  focus: 'Доповнити репліки з діалогу на пошті правильними формами давального відмінка (Надішліть цю посилку ___)'
   items: 8
 - type: match-up
-  focus: Match service requests to appropriate responses (Допоможіть мені → 
-    Звичайно, що вам потрібно?)
+  focus: 'Поєднати прохання у сфері обслуговування з відповідними відповідями (Допоможіть мені → Звичайно, що вам потрібно?)'
   items: 8
 - type: quiz
-  focus: Choose the correct dative address form (дорогому/дорогій/дорогим + 
-    name)
+  focus: 'Обрати правильну форму давального відмінка для адреси (дорогому/дорогій/дорогим + ім''я)'
   items: 8
 - type: group-sort
-  focus: Sort phrases into categories — requesting (прохання), thanking 
-    (подяка), giving (давання)
+  focus: 'Розподілити фрази за категоріями — прохання, подяка, передача (давання)'
   items: 8
 references:
 - title: Заболотний Grade 10, §157
-  notes: Dative case in formal address and letter-writing conventions
+  notes: Давальний відмінок в офіційному звертанні та правилах написання листів
 - title: 'ULP: At the Post Office'
   url: https://www.ukrainianlessons.com/at-the-post-office/
-  notes: Post office vocabulary and dialogues with dative constructions
+  notes: Поштова лексика та діалоги з конструкціями давального відмінка
 - title: Кравцова Grade 4, §135
-  notes: Dative vs. Locative distinction — relevant for на пошті (Loc.) vs. 
-    надіслати листоношеві (Dat.)
+  notes: 'Розрізнення давального та місцевого відмінків — актуально для "на пошті" (Місц.) та "надіслати листоноші" (Дав.)'
