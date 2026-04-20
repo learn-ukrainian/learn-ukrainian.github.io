@@ -17,16 +17,19 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from wiki.sources_db import SOURCES_DB_PATH, search_textbooks
+from wiki.sources_db import SOURCES_DB_PATH, search_sources, search_textbooks
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DISCOVERY_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "a1" / "discovery" / "sounds-letters-and-hello.yaml"
 SOURCE_REGISTRY_PATH = PROJECT_ROOT / "wiki" / "pedagogy" / "a1" / "sounds-letters-and-hello.sources.yaml"
 PLAYBACK_OUTPUT_PATH = PROJECT_ROOT / "wiki" / ".reviews" / "diagnostics" / "a1-sounds-letters-playback.json"
-DIAGNOSIS_OUTPUT_PATH = PROJECT_ROOT / "wiki" / ".reviews" / "diagnostics" / "a1-sounds-letters-and-hello-diagnosis.md"
+PLAYBACK_MARKDOWN_OUTPUT_PATH = PROJECT_ROOT / "wiki" / ".reviews" / "diagnostics" / "a1-sounds-letters-playback.md"
+COMPARISON_OUTPUT_PATH = PROJECT_ROOT / "wiki" / ".reviews" / "diagnostics" / "a1-sounds-letters-comparison.md"
 SUPPORTED_TRACK = "a1"
 SUPPORTED_SLUG = "sounds-letters-and-hello"
 MAX_EVIDENCE_CHARS = 200
+STRATEGY_LEGACY = "legacy_chunk"
+STRATEGY_MODERN = "modern_dense"
 
 APOSTROPHE_MAP = str.maketrans({
     "’": "'",
@@ -431,12 +434,143 @@ def ensure_supported_target(track: str, slug: str) -> None:
         )
 
 
-def run_diagnostic(track: str, slug: str) -> dict[str, Any]:
+def output_paths_for_strategy(strategy: str) -> tuple[Path, Path]:
+    if strategy == STRATEGY_MODERN:
+        return (
+            PLAYBACK_OUTPUT_PATH.with_name(f"{PLAYBACK_OUTPUT_PATH.stem}.modern.json"),
+            PLAYBACK_MARKDOWN_OUTPUT_PATH.with_name(
+                f"{PLAYBACK_MARKDOWN_OUTPUT_PATH.stem}.modern.md"
+            ),
+        )
+    return PLAYBACK_OUTPUT_PATH, PLAYBACK_MARKDOWN_OUTPUT_PATH
+
+
+def adapt_modern_dense_match(match: dict[str, Any]) -> dict[str, Any]:
+    chunk_id = str(match.get("chunk_id") or match.get("unit_key") or "")
+    score = match.get("final_score")
+    if score is None:
+        score = match.get("dense_score")
+    if score is None:
+        score = match.get("fts_score")
+    return {
+        "text": str(match.get("text", "")),
+        "chunk_id": chunk_id,
+        "grade": str(match.get("grade", "")),
+        "source_file": str(match.get("source_file", "")),
+        "author": str(match.get("author", "")),
+        "title": str(match.get("title", "")),
+        "score": score,
+        "rank": score,
+        "corpus": str(match.get("corpus", "")),
+        "source_type": str(match.get("source_type", "")),
+    }
+
+
+def search_returned_chunks(track: str, discovery_path: Path, keywords: list[str], strategy: str) -> list[dict[str, Any]]:
+    if strategy == STRATEGY_LEGACY:
+        return search_textbooks(set(keywords), max_total=40, track=track)
+    if strategy == STRATEGY_MODERN:
+        return [
+            adapt_modern_dense_match(match)
+            for match in search_sources(
+                discovery_path,
+                strategy="unified_dense",
+                track=track,
+                limit=40,
+            )
+        ]
+    raise ValueError(f"Unsupported playback strategy: {strategy}")
+
+
+def serialized_returned_chunks(chunks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        {
+            "chunk_id": chunk.get("chunk_id", ""),
+            "grade": chunk.get("grade", ""),
+            "author": chunk.get("author", ""),
+            "title": chunk.get("title", ""),
+            "source_file": chunk.get("source_file", ""),
+            "score": chunk.get("score", chunk.get("rank")),
+            "text": chunk.get("text", ""),
+        }
+        for chunk in chunks
+    ]
+
+
+def count_present_in_returned(concepts: dict[str, dict[str, Any]]) -> int:
+    return sum(1 for result in concepts.values() if result["present_in_returned_41"])
+
+
+def render_comparison_markdown(
+    legacy_result: dict[str, Any],
+    modern_result: dict[str, Any],
+) -> str:
+    legacy_present = count_present_in_returned(legacy_result["concepts"])
+    modern_present = count_present_in_returned(modern_result["concepts"])
+    verdict = "PASS" if modern_present >= 8 else "FAIL"
+    lines = [
+        "# Retrieval Comparison — a1/sounds-letters-and-hello",
+        "",
+        f"legacy_concepts_present: {legacy_present}/10",
+        f"modern_concepts_present: {modern_present}/10",
+        "",
+        f"Verdict: {verdict}",
+        "",
+        "| Concept | Legacy (present in returned 40?) | Modern (present in returned 40?) |",
+        "|---|---|---|",
+    ]
+    for concept in TARGET_CONCEPTS:
+        legacy_hit = legacy_result["concepts"][concept]["present_in_returned_41"]
+        modern_hit = modern_result["concepts"][concept]["present_in_returned_41"]
+        lines.append(
+            f"| {concept} | {'yes' if legacy_hit else 'no'} | {'yes' if modern_hit else 'no'} |"
+        )
+
+    if verdict == "FAIL":
+        failing_concepts = [
+            concept
+            for concept in TARGET_CONCEPTS
+            if not modern_result["concepts"][concept]["present_in_returned_41"]
+        ]
+        lines.extend(
+            [
+                "",
+                f"Modern misses: {', '.join(failing_concepts) or 'none'}.",
+            ]
+        )
+
+    return "\n".join(lines) + "\n"
+
+
+def load_strategy_result(strategy: str) -> dict[str, Any]:
+    json_path, _ = output_paths_for_strategy(strategy)
+    if not json_path.exists():
+        raise SystemExit(
+            "Comparison requires both strategy outputs. "
+            f"Missing {json_path.relative_to(PROJECT_ROOT)}; "
+            f"run --strategy {STRATEGY_LEGACY} and --strategy {STRATEGY_MODERN} first."
+        )
+    return json.loads(json_path.read_text(encoding="utf-8"))
+
+
+def write_comparison_report() -> tuple[Path, str, int, int]:
+    legacy_result = load_strategy_result(STRATEGY_LEGACY)
+    modern_result = load_strategy_result(STRATEGY_MODERN)
+    markdown = render_comparison_markdown(legacy_result, modern_result)
+    COMPARISON_OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    COMPARISON_OUTPUT_PATH.write_text(markdown, encoding="utf-8")
+    modern_present = count_present_in_returned(modern_result["concepts"])
+    legacy_present = count_present_in_returned(legacy_result["concepts"])
+    verdict = "PASS" if modern_present >= 8 else "FAIL"
+    return COMPARISON_OUTPUT_PATH, verdict, legacy_present, modern_present
+
+
+def run_diagnostic(track: str, slug: str, strategy: str = STRATEGY_LEGACY) -> dict[str, Any]:
     ensure_supported_target(track, slug)
     discovery = load_yaml(DISCOVERY_PATH)
     registry = load_yaml(SOURCE_REGISTRY_PATH)
     ukr_keywords = extract_ukrainian_keywords(discovery)
-    returned_chunks = search_textbooks(set(ukr_keywords), max_total=40, track=track)
+    returned_chunks = search_returned_chunks(track, DISCOVERY_PATH, ukr_keywords, strategy)
     concept_results = match_returned_concepts(returned_chunks)
     collect_returned_grade_samples(returned_chunks, concept_results)
 
@@ -454,6 +588,7 @@ def run_diagnostic(track: str, slug: str) -> dict[str, Any]:
     return {
         "track": track,
         "slug": slug,
+        "strategy": strategy,
         "retrieval_query_keywords": ukr_keywords,
         "returned_chunk_count": len(returned_chunks),
         "cited_source_files": [
@@ -461,29 +596,22 @@ def run_diagnostic(track: str, slug: str) -> dict[str, Any]:
             for source in registry.get("sources", [])
             if isinstance(source, dict) and source.get("file")
         ],
-        "returned_chunks": [
-            {
-                "chunk_id": chunk.get("chunk_id", ""),
-                "grade": chunk.get("grade", ""),
-                "author": chunk.get("author", ""),
-                "title": chunk.get("title", ""),
-                "score": chunk.get("rank"),
-                "text": chunk.get("text", ""),
-            }
-            for chunk in returned_chunks
-        ],
+        "returned_chunks": serialized_returned_chunks(returned_chunks),
         "concepts": concept_results,
         "verdict": verdict,
     }
 
 
-def write_outputs(result: dict[str, Any]) -> None:
-    PLAYBACK_OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    PLAYBACK_OUTPUT_PATH.write_text(
+def write_outputs(result: dict[str, Any]) -> tuple[Path, Path]:
+    playback_path, markdown_path = output_paths_for_strategy(
+        str(result.get("strategy", STRATEGY_LEGACY))
+    )
+    playback_path.parent.mkdir(parents=True, exist_ok=True)
+    playback_path.write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    DIAGNOSIS_OUTPUT_PATH.write_text(
+    markdown_path.write_text(
         render_diagnosis_markdown(
             result["concepts"],
             result["verdict"],
@@ -491,23 +619,44 @@ def write_outputs(result: dict[str, Any]) -> None:
         ),
         encoding="utf-8",
     )
+    return playback_path, markdown_path
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--track", required=True)
     parser.add_argument("--slug", required=True)
+    parser.add_argument(
+        "--strategy",
+        choices=(STRATEGY_LEGACY, STRATEGY_MODERN),
+        default=STRATEGY_LEGACY,
+    )
+    parser.add_argument(
+        "--compare",
+        action="store_true",
+        help="Compare previously generated legacy and modern playback outputs.",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    result = run_diagnostic(track=args.track, slug=args.slug)
-    write_outputs(result)
+    ensure_supported_target(args.track, args.slug)
+    if args.compare:
+        comparison_path, verdict, legacy_present, modern_present = write_comparison_report()
+        print(
+            f"Wrote {comparison_path.relative_to(PROJECT_ROOT)} "
+            f"(verdict: {verdict}, legacy: {legacy_present}/10, modern: {modern_present}/10)"
+        )
+        return
+
+    result = run_diagnostic(track=args.track, slug=args.slug, strategy=args.strategy)
+    playback_path, markdown_path = write_outputs(result)
     print(
-        f"Wrote {PLAYBACK_OUTPUT_PATH.relative_to(PROJECT_ROOT)} and "
-        f"{DIAGNOSIS_OUTPUT_PATH.relative_to(PROJECT_ROOT)} "
-        f"(verdict: {result['verdict']}, returned_chunks: {result['returned_chunk_count']})"
+        f"Wrote {playback_path.relative_to(PROJECT_ROOT)} and "
+        f"{markdown_path.relative_to(PROJECT_ROOT)} "
+        f"(strategy: {result['strategy']}, verdict: {result['verdict']}, "
+        f"returned_chunks: {result['returned_chunk_count']})"
     )
 
 
