@@ -23,6 +23,8 @@ paths:
 - `mcp__sources__query_pravopys` — Ukrainian orthography rules (Правопис 2019)
 - `mcp__sources__query_wikipedia` — Ukrainian Wikipedia
 
+> MCP `search_text` currently uses the legacy `search_textbooks` path. T1-T2 modules building via wiki compile use the new `search_sources(strategy='modern_dense_section')` path. Migration ticket TBD.
+
 ## Dictionary tools (for quality and vocabulary)
 - `mcp__sources__search_style_guide` — Антоненко-Давидович (279 entries) — **calques and Russianisms**. HIGH PRIORITY.
 - `mcp__sources__query_cefr_level` — PULS CEFR vocabulary (5.9K words, A1-C1) — check level-appropriateness

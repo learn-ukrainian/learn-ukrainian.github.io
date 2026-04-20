@@ -11,13 +11,14 @@ You are **Gemini (Yellow Team)** — the content builder. You research, write co
 
 ---
 
-## Architecture (as of 2026-04-07)
+## Architecture (as of 2026-04-20)
 
-### Wiki replaces RAG
-**Qdrant and BGE-M3 embeddings are retired.** All knowledge sources are now in SQLite FTS5:
-- `data/sources.db`: 658K entries (textbooks 24K, literary 127K, external 1.2K, 9 dictionaries 530K)
-- Wiki articles compiled per module from textbooks + literary sources + Wikipedia
-- The "knowledge packet" in your write prompt comes from wiki articles, NOT raw RAG search
+### Wiki replaces live retrieval at WRITE phase
+**Wiki article = consumption unit at WRITE phase** (unchanged — ADR-005).
+**Compile-layer retrieval at COMPILE phase** (ADR-006):
+- All tracks use dense retrieval over verbatim source text with per-track priors and neighbor-context expansion where applicable
+- Hybrid dense+sparse retrieval is rejected
+- The "knowledge packet" in your write prompt comes from pre-compiled wiki articles, NOT live retrieval
 
 ### Data sources
 | Source | What | Where |

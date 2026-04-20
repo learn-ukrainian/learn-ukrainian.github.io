@@ -271,7 +271,7 @@ After every content or activity build, Gemini outputs a `===BUILDER_NOTES_START=
 - **status**: SUCCESS / PARTIAL / BLOCKED
 - **deviations**: where and why Gemini deviated from the plan
 - **frictions**: template/schema issues encountered
-- **unverified_terms**: Ukrainian words Gemini couldn't verify via RAG/VESUM
+- **unverified_terms**: Ukrainian words Gemini couldn't verify via sources tools / VESUM (compile-layer retrieval architecture: ADR-006)
 - **review_focus**: specific items that need reviewer attention
 
 The pipeline extracts this to `orchestration/{slug}/builder-notes.yaml`. The review prompt injects it via `{BUILDER_NOTES_BLOCK}` so Claude knows where to focus the review.
