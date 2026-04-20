@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 10
-**Total words:** 17,670
+**Total articles:** 16
+**Total words:** 26,919
 
 ## Figures
 
@@ -21,6 +21,12 @@ Auto-generated index of compiled wiki articles.
 
 - [Педагогіка A1: A1 Finale](pedagogy/a1/a1-finale.md) (1,654 words)
 - [Педагогіка A1: Around The City](pedagogy/a1/around-the-city.md) (1,605 words)
+- [Педагогіка A1: At The Cafe](pedagogy/a1/at-the-cafe.md) (1,498 words)
+- [Педагогіка A1: Checkpoint Actions](pedagogy/a1/checkpoint-actions.md) (1,505 words)
+- [Педагогіка A1: Checkpoint Communication](pedagogy/a1/checkpoint-communication.md) (1,544 words)
+- [Педагогіка A1: Checkpoint First Contact](pedagogy/a1/checkpoint-first-contact.md) (1,582 words)
+- [Педагогіка A1: Checkpoint Food Shopping](pedagogy/a1/checkpoint-food-shopping.md) (1,556 words)
+- [Педагогіка A1: Checkpoint My World](pedagogy/a1/checkpoint-my-world.md) (1,564 words)
 - [Педагогіка A1: Colors](pedagogy/a1/colors.md) (1,405 words)
 - [Педагогіка A1: Euphony](pedagogy/a1/euphony.md) (1,528 words)
 - [Педагогіка A1: My Family](pedagogy/a1/my-family.md) (1,759 words)

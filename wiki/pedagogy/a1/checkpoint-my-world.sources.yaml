@@ -1,0 +1,21 @@
+# Source registry for wiki/pedagogy/a1/checkpoint-my-world.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1807
+  type: unknown
+- id: S2
+  file: S677
+  type: unknown
+- id: S3
+  file: S1927
+  type: unknown
+- id: S4
+  file: S3399
+  type: unknown
+- id: S5
+  file: S3119
+  type: unknown
+- id: S7
+  file: S3270
+  type: unknown

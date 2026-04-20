@@ -1,0 +1,21 @@
+# Source registry for wiki/pedagogy/a1/checkpoint-communication.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3336
+  type: unknown
+- id: S2
+  file: S4715
+  type: unknown
+- id: S3
+  file: S2390
+  type: unknown
+- id: S4
+  file: S2396
+  type: unknown
+- id: S5
+  file: S2524
+  type: unknown
+- id: S6
+  file: S3165
+  type: unknown

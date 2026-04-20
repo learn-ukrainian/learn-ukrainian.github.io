@@ -1,0 +1,30 @@
+# Source registry for wiki/pedagogy/a1/checkpoint-first-contact.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2317
+  type: unknown
+- id: S2
+  file: S1566
+  type: unknown
+- id: S3
+  file: S2368
+  type: unknown
+- id: S4
+  file: S2410
+  type: unknown
+- id: S5
+  file: S3129
+  type: unknown
+- id: S7
+  file: S2318
+  type: unknown
+- id: S8
+  file: S3947
+  type: unknown
+- id: S9
+  file: S1188
+  type: unknown
+- id: S10
+  file: S4586
+  type: unknown
