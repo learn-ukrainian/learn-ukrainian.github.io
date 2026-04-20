@@ -1,13 +1,19 @@
 # Google Drive DB Backup
 
-This runbook sets up daily Google Drive backups for the two expensive local
-databases:
+This runbook sets up daily Google Drive backups for the expensive local
+retrieval state:
 
-- `data/sources.db`
-- `data/vesum.db`
+- `data/sources.db` — corpus FTS5 index (~1.4G)
+- `data/vesum.db` — morphology dictionary (~0.9G)
+- `data/embeddings/` — MLX-encoded dense retrieval shards + manifest.db (~0.4G)
+  - Regenerating these costs ~3h of MLX encoding
+    (`scripts/wiki/cold_encode.py --all-corpora`), so they're worth
+    shipping to Drive. `rclone copy --checksum` is incremental:
+    only new/changed shards transfer on repeat runs.
 
-The backup job uploads only those two `.db` files to
-`learn-ukrainian-backups/YYYY-MM-DD/` on Google Drive.
+The backup job uploads those to
+`learn-ukrainian-backups/YYYY-MM-DD/` on Google Drive. DBs at the root,
+embeddings under `embeddings/` to mirror the local layout.
 
 ## Prerequisites
 
@@ -60,14 +66,21 @@ bash scripts/ops/backup_dbs.sh
 
 Behavior:
 
-- Copies `data/sources.db` and `data/vesum.db`
-- Uses `rclone copy --checksum`
+- Copies `data/sources.db`, `data/vesum.db`, and the `data/embeddings/` tree
+- Uses `rclone copy --checksum` — incremental, so repeat runs only transfer
+  new/changed shards (typical daily delta: 0 bytes unless cold_encode re-ran)
 - Writes logs to `logs/gdrive-backup.log`
 - Exits nonzero on failure so cron can surface problems
 
-If `data/sources.db-wal` exists, the script logs a warning and still uploads
-only `data/sources.db`. If you need the latest uncheckpointed SQLite changes
-captured, checkpoint that database before running the backup.
+If `data/sources.db-wal`, `data/vesum.db-wal`, or
+`data/embeddings/manifest.db-wal` exists, the script logs a warning and
+still uploads only the checkpointed `.db` file. If you need the latest
+uncheckpointed SQLite changes captured, checkpoint that database before
+running the backup.
+
+If `data/embeddings/` is missing or empty (e.g. on a fresh clone that hasn't
+run `cold_encode.py` yet), the script logs a warning, skips the embeddings
+copy, and still ships the DBs. This is non-fatal.
 
 ## Prune Script
 

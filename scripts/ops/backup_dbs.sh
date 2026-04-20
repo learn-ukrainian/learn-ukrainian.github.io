@@ -119,6 +119,19 @@ main() {
     [[ -f "$file_path" ]] || fail "Required backup source is missing: $file_path"
   done
 
+  # data/embeddings/ holds the MLX-encoded dense retrieval shards + manifest.db.
+  # Regenerating them costs ~3h of MLX encoding (see scripts/wiki/cold_encode.py).
+  # Expected layout: data/embeddings/{corpus}/shard-*.npy + manifest.db.
+  # Non-fatal if missing — the DBs will still ship.
+  local embeddings_dir
+  embeddings_dir="$PROJECT_ROOT/data/embeddings"
+  local embeddings_ok=0
+  if [[ -d "$embeddings_dir" ]] && [[ -n "$(ls -A "$embeddings_dir" 2>/dev/null)" ]]; then
+    embeddings_ok=1
+  else
+    log "Warning: data/embeddings/ is missing or empty; skipping dense shard backup. Run scripts/wiki/cold_encode.py --all-corpora to regenerate."
+  fi
+
   local remote_name
   remote_name="$(detect_remote || true)"
   if [[ -z "$remote_name" ]]; then
@@ -138,6 +151,9 @@ main() {
   if [[ -f "$PROJECT_ROOT/data/vesum.db-wal" ]]; then
     log "Warning: data/vesum.db-wal exists; this job uploads only data/vesum.db."
   fi
+  if [[ "$embeddings_ok" -eq 1 ]] && [[ -f "$embeddings_dir/manifest.db-wal" ]]; then
+    log "Warning: data/embeddings/manifest.db-wal exists; this job uploads only the checkpointed manifest.db."
+  fi
 
   log "Ensuring destination exists: $destination"
   rclone mkdir "$destination"
@@ -148,6 +164,13 @@ main() {
     log "Copying $db_name to $destination/"
     rclone copy --checksum "$file_path" "$destination"
   done
+
+  if [[ "$embeddings_ok" -eq 1 ]]; then
+    # Mirror the whole embeddings tree. --checksum makes repeat runs cheap:
+    # unchanged shards skip upload, only new/modified files transfer.
+    log "Copying data/embeddings/ tree to $destination/embeddings/"
+    rclone copy --checksum "$embeddings_dir" "$destination/embeddings"
+  fi
 
   log "Backup complete: $destination"
 }

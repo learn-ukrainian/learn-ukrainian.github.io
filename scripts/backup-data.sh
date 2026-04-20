@@ -13,10 +13,11 @@ echo "Target: $GDRIVE"
 
 mkdir -p "$GDRIVE"
 
-# Sync everything — exclude only Qdrant storage (4.6G, regenerable from JSONL)
-# and SQLite WAL/SHM files (transient)
+# Sync everything — exclude only SQLite WAL/SHM files (transient) and noise.
+# Qdrant is retired (ADR-005/ADR-006) — no exclude needed.
+# data/embeddings/ (MLX-encoded dense retrieval shards, ~374M) is included:
+# regenerating costs ~3h of MLX encoding via scripts/wiki/cold_encode.py.
 rsync -av \
-  --exclude='qdrant/' \
   --exclude='*.db-shm' \
   --exclude='*.db-wal' \
   --exclude='__pycache__/' \
@@ -32,3 +33,8 @@ echo "Files backed up:"
 find "$GDRIVE" -type f | wc -l | xargs echo "  Total files:"
 find "$GDRIVE" -name '*.jsonl' | wc -l | xargs echo "  JSONL files:"
 find "$GDRIVE" -name '*.db' | wc -l | xargs echo "  SQLite DBs:"
+if [[ -d "$GDRIVE/embeddings" ]]; then
+  find "$GDRIVE/embeddings" -type f -name 'shard-*.npy' | wc -l \
+    | xargs echo "  Dense shards:"
+  du -sh "$GDRIVE/embeddings" | awk '{print "  Embeddings size:", $1}'
+fi
