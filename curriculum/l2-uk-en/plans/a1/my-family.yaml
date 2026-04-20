@@ -2,76 +2,54 @@ module: a1-006
 level: A1
 sequence: 6
 slug: my-family
-version: '1.3'
-title: My Family
-subtitle: У мене є брат — Showing photos
+version: 1.3.2
+title: Моя сім'я
+subtitle: У мене є брат — показуємо фотографії
 focus: vocabulary
 pedagogy: PPP
-phase: A1.1 [Sounds, Letters, and First Contact]
+phase: A1.1 [Звуки, літери та перший контакт]
 word_target: 1200
 objectives:
-- Name close family members in Ukrainian
-- Use "У мене є" to say what you have (memorized chunk)
-- Use possessive pronouns мій/моя/моє in nominative only
-- Introduce family members using Це + possessives
+- Вміти називати близьких членів родини українською мовою
+- Навчитися використовувати конструкцію «У мене є» для вираження власності (як сталий вираз)
+- Вміти вживати присвійні займенники мій/моя/моє лише в називному відмінку
+- Навчитися представляти членів родини, використовуючи конструкцію «Це» + присвійні займенники
 dialogue_situations:
-- setting: Video call showing phone photos to a new friend
+- setting: 'Відеодзвінок: показуємо фотографії на телефоні новому другу'
   speakers:
   - Оля
   - Марк
-  motivation: У мене є + family members, possessives мій/моя with photos
-- setting: Showing family photos to a new Ukrainian friend at school — describing
-    who everyone is, asking about each other's families
+  motivation: У мене є + члени родини, присвійні займенники мій/моя з фотографіями
+- setting: Показуємо сімейні фото новому українському другу в школі — розповідаємо, хто є хто, розпитуємо про сім'ї одне одного
   speakers:
   - Даша
   - Андрій
-  motivation: Family vocabulary, У тебе є брати? Це мій/моя... in natural teen context
+  motivation: Лексика про сім'ю, запитання «У тебе є брати? Це мій/моя...» у природному підлітковому контексті
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 400
   points:
-  - 'Dialogue 1 — Showing phone photos (Anna Ep6-7): — У тебе є брати чи сестри? —
-    Так, у мене є два брати і одна сестра. — Ого! У мене тільки один брат. Як його
-    звати? — Коля.'
-  - 'Dialogue 2 — Family in a photo (Anna Ep7): — Це моя сім''я на фотографії. Класно!
-    Хто це? — Це моя мама Марина. Це мій тато Євген. Це моя сестра Катя і мої брати
-    — Іван і Денис. — А це твоя бабуся? — Так, її звати Тетяна.'
-  - 'Dialogue 3 — Connected speech (Anna Ep10 review pattern): Привіт! Мене звати...
-    Моя мама — вчителька. Мій тато — інженер. У мене є один брат. Combining all A1.1
-    skills.'
-- section: Сім'я (Family Vocabulary)
+  - 'Діалог 1 — Показуємо фото з телефону (Anna Епізод 6-7): — У тебе є брати чи сестри? — Так, у мене є два брати і одна сестра. — Ого! У мене тільки один брат. Як його звати? — Коля.'
+  - 'Діалог 2 — Сім''я на фотографії (Anna Епізод 7): — Це моя сім''я на фотографії. — Класно! Хто це? — Це моя мама Марина. Це мій тато Євген. Це моя сестра Катя і мої брати — Іван і Денис. — А це твоя бабуся? — Так, її звати Тетяна.'
+  - 'Діалог 3 — Зв''язне мовлення (Anna Епізод 10, повторення шаблону): Привіт! Мене звати... Моя мама — вчителька. Мій тато — інженер. У мене є один брат. Поєднання всіх навичок з A1.1.'
+- section: Сім'я
   words: 200
   points:
-  - 'Anna Ep6: Two words for family: сім''я and родина (both used). Core: мама/мати,
-    тато/батько, брат, сестра, син, дочка/донька. Extended: бабуся/баба, дідусь/дід,
-    тітка, дядько. Note: Ukrainian has NO single word for ''grandparents'' — always
-    say бабуся і дідусь.'
-- section: У мене є (I have)
+  - 'Anna Епізод 6: Два слова для позначення сім''ї: «сім''я» та «родина» (обидва вживаються). Основні: мама/мати, тато/батько, брат, сестра, син, дочка/донька. Додаткові: бабуся/баба, дідусь/дід, тітка, дядько. Зверніть увагу: в українській немає одного слова для «grandparents» — завжди кажемо «бабуся і дідусь».'
+- section: У мене є
   words: 250
   points:
-  - 'Anna Ep6 pattern: Ukrainian doesn''t say ''I have'' with a verb. Instead: ''At
-    me there-is'' — У мене є брат. For A1, teach only: у мене є, у тебе є (informal),
-    у вас є (formal). Other forms (у нього, у неї, у нас, у них) use genitive pronouns
-    which are A2 grammar — introduce them gradually through dialogues as memorized
-    phrases, not as a paradigm table.'
-  - 'Questions with rising intonation: У тебе є сестра? ↗ Negative: Defer ''У мене
-    немає'' to A2 where genitive is taught. For A1, learners answer: Ні. / Ні, у мене
-    тільки один брат. This avoids the pedagogical trap of немає + nominative (*немає
-    брат).'
-  - 'Numbers preview (Anna Ep6): один/одна changes by gender: один брат, одна сестра.
-    два/дві: два брати, дві сестри.'
-- section: Мій, моя, моє (Possessive Pronouns)
+  - 'Шаблон з Anna Епізод 6: В українській мові не кажуть "I have" за допомогою дієслова мати. Натомість використовують конструкцію: У мене є брат. Для рівня А1 вивчаємо лише: у мене є, у тебе є, у вас є (ввічлива форма). Інші форми (у нього, у неї, у нас, у них) вимагають використання займенників у родовому відмінку, що є граматикою рівня А2 — вводимо їх поступово через діалоги як сталі фрази, а не як парадигму.'
+  - 'Запитання з висхідною інтонацією: У тебе є сестра? ↗ Заперечення: Відкладаємо вивчення "У мене немає" до рівня А2 (коли вивчатимемо родовий відмінок). На рівні А1 учні відповідають: Ні. / Ні, у мене тільки один брат. Це дозволяє уникнути педагогічної пастки використання "немає" + називний відмінок (*немає брат).'
+  - 'Ознайомлення з числівниками (Anna Епізод 6): один/одна змінюється за родами: один брат, одна сестра. два/дві: два брати, дві сестри.'
+- section: Мій, моя, моє
   words: 200
   points:
-  - 'Anna Ep7: Possessives match the gender of the thing possessed. мій брат (m),
-    моя сестра (f), моє місто (n), мої батьки (pl). твій/твоя/твоє/твої (your, informal).
-    його (his — doesn''t change), її (her — doesn''t change). State Standard note:
-    full paradigm (наш, ваш, їхній) is A2. At A1: мій/твій/його/її in nominative only.'
-- section: Підсумок — Summary
+  - 'Anna Епізод 7: Присвійні займенники узгоджуються в роді з іменником, якого стосуються. мій брат (m), моя сестра (f), моє місто (n), мої батьки (pl). твій/твоя/твоє/твої (your, informal). його (не змінюється), її (не змінюється). Зауваження згідно з Державним стандартом: повна парадигма (наш, ваш, їхній) — це рівень А2. На рівні А1 вивчаємо мій/твій/його/її лише в називному відмінку.'
+- section: Підсумок
   words: 150
   points:
-  - 'Self-check: Name 5 family members. Say ''I have a sister.'' What''s the difference
-    between мій and моя? Introduce your family in 4-5 sentences.'
+  - 'Самоперевірка: Назвіть 5 членів родини. Скажіть "У мене є сестра". Яка різниця між «мій» та «моя»? Розкажіть про свою сім''ю у 4-5 реченнях.'
 vocabulary_hints:
   required:
   - сім'я (family) — apostrophe word
@@ -101,50 +79,37 @@ vocabulary_hints:
   - тільки (only)
 activity_hints:
 - type: quiz
-  focus: 'У тебе є...? — answer Так/Ні. Use ONLY the chunk ''у тебе є''. Example questions:
-    ''У тебе є брат?'', ''У тебе є сестра?'', ''У тебе є бабуся?'' Answer options:
-    ''Так, у мене є брат.'' / ''Ні.'' / ''Так, у мене є два брати.'' Do NOT use genitive
-    names (no ''У Оксани є'').'
+  focus: '«У тебе є...?» — дайте відповідь Так/Ні. Використовуйте ЛИШЕ сталий вираз «у тебе є». Приклади питань: "У тебе є брат?", "У тебе є сестра?", "У тебе є бабуся?". Варіанти відповідей: "Так, у мене є брат." / "Ні." / "Так, у мене є два брати." НЕ використовуйте імена в родовому відмінку (ніякого "У Оксани є").'
   items: 6
 - type: fill-in
-  focus: 'Choose correct possessive pronoun. EXACT pattern: ''Це {___} мама.'' → моя
-    | ''Де {___} тато?'' → твій | ''Ось {___} батьки.'' → мої All nominative case.
-    Options: мій/моя/моє/мої or твій/твоя/твоє/твої.'
+  focus: 'Оберіть правильний присвійний займенник. ТОЧНИЙ шаблон: "Це {___} мама." → моя | "Де {___} тато?" → твій | "Ось {___} батьки." → мої. Усе в називному відмінку. Варіанти: мій/моя/моє/мої або твій/твоя/твоє/твої.'
   items: 8
 - type: match-up
-  focus: 'Match English family words to Ukrainian. Pairs: parents↔батьки, uncle↔дядько,
-    aunt↔тітка, grandfather↔дідусь, grandmother↔бабуся, brother↔брат, sister↔сестра,
-    mother and father↔мама і тато.'
+  focus: 'З''єднайте англійські слова про сім''ю з українськими відповідниками. Пари: parents↔батьки, uncle↔дядько, aunt↔тітка, grandfather↔дідусь, grandmother↔бабуся, brother↔брат, sister↔сестра, mother and father↔мама і тато.'
   items: 8
 - type: fill-in
-  focus: 'Complete a family introduction dialogue with blanks. Pattern: ''— Привіт!
-    Це {твій} брат?'' / ''— Так, це мій брат. Ось мій {тато}.'' Options per blank:
-    family members or possessives. NO genitive forms.'
+  focus: 'Заповніть пропуски в діалозі про знайомство з сім''єю. Шаблон: "— Привіт! Це {твій} брат?" / "— Так, це мій брат. Ось мій {тато}." Варіанти для пропусків: члени родини або присвійні займенники. ЖОДНИХ форм родового відмінка.'
   items: 4
 connects_to:
-- a1-007 (Checkpoint — First Contact)
+- a1-007 (Рубіжний контроль — Перший контакт)
 prerequisites:
-- a1-005 (Who Am I?)
+- a1-005 (Хто я?)
 grammar:
-- У мене є / у тебе є / у вас є (memorized chunks for possession)
-- Possessive pronouns мій/моя/моє/мої, твій/твоя/твоє — nominative is the focus
-- 'Genitive forms appear ONLY as memorized chunks: у мене, у тебе, у вас are taught
-  explicitly. Forms like у нього, у неї may appear in dialogues for exposure but are NOT
-  drilled — full genitive paradigm is A2.'
-- 'Gender agreement preview (possessive + noun): мій брат, моя сестра'
-- Numbers один/одна, два/дві with family members
-- 'Family relationship descriptions: use Це + nominative (Це мій брат), NOT genitive
-  constructions (avoid: мама мого тата). Describe relationships through simple sentences:
-  Мій тато. Його мама — моя бабуся.'
-- 'Negation: Ні + simple response (NOT У мене немає — deferred to A2)'
+- 'У мене є / у тебе є / у вас є (завчені фрази для вираження власності)'
+- 'Присвійні займенники мій/моя/моє/мої, твій/твоя/твоє — фокус на називному відмінку'
+- 'Форми родового відмінка з''являються ЛИШЕ як завчені сталі вирази: у мене, у тебе, у вас. Форми у нього, у неї можуть траплятися в діалогах для ознайомлення, але НЕ відпрацьовуються — повна парадигма родового відмінка вивчається на рівні А2.'
+- 'Узгодження в роді (присвійний займенник + іменник): мій брат, моя сестра'
+- 'Числівники один/одна, два/дві з членами родини'
+- 'Опис родинних зв''язків: використовуйте конструкцію Це + називний відмінок (Це мій брат), а НЕ конструкції з родовим відмінком (уникайте: мама мого тата). Описуйте стосунки через прості речення: Мій тато. Його мама — моя бабуся.'
+- 'Заперечення: Ні + проста відповідь (У мене немає — перенесено на рівень А2)'
 register: розмовний
 references:
 - title: ULP Season 1, Episode 6 — Family + I Have
   url: https://www.ukrainianlessons.com/episode6/
-  notes: У мене є with family. Один/одна gender.
+  notes: 'Конструкція «у мене є» з лексикою про сім''ю. Рід числівників один/одна.'
 - title: ULP Season 1, Episode 7 — Possessive Pronouns
   url: https://www.ukrainianlessons.com/episode7/
-  notes: мій/моя/моє paradigm. Це моя мама.
+  notes: 'Парадигма мій/моя/моє. Конструкція «Це моя мама».'
 - title: ULP Season 1, Episode 10 — Review
   url: https://www.ukrainianlessons.com/episode10/
-  notes: 'Connected self-introduction: Я і моя сім''я.'
+  notes: 'Зв''язна розповідь про себе: Я і моя сім''я.'

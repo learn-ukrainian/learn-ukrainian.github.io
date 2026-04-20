@@ -2,60 +2,43 @@ module: a1-034
 level: A1
 sequence: 34
 slug: where-from
-version: '1.2'
-title: Where From?
-subtitle: Звідки ти? Я з України — origins and directions
+version: 1.2.1
+title: Звідки?
+subtitle: Звідки ти? Я з України — походження та напрямки
 focus: communication
 pedagogy: PPP
-phase: A1.5 [Places]
+phase: A1.5 [Місця]
 word_target: 1200
 objectives:
-- Ask and answer Звідки? (Where from?) using з/із + country/city
-- Name Ukrainian cities and common countries
-- Complete the location trio: Де? / Куди? / Звідки?
-- Talk about origins, nationality, and travel history
+- Ставити запитання «Звідки?» та відповідати на нього, використовуючи прийменники з/із + країна/місто
+- Називати українські міста та поширені країни
+- 'Опанувати тріаду запитань про місце: Де? / Куди? / Звідки?'
+- Розповідати про своє походження, національність та історію подорожей
 dialogue_situations:
-- setting: 'International student mixer at a Kyiv university — sharing origins: Я
-    з Канади, Вона з Японії, Він з Німеччини. Also: З якого міста? З Торонто, з Токіо,
-    з Берліна.'
+- setting: 'Міжнародна зустріч студентів у київському університеті — розповідають про своє походження: Я з Канади, Вона з Японії, Він з Німеччини. А також: З якого міста? З Торонто, з Токіо, з Берліна.'
   speakers:
-  - Кілька студентів (group)
-  motivation: 'Звідки? + з: Канада(f), Японія(f), Німеччина(f), Торонто(n)'
+  - Кілька студентів
+  motivation: 'Запитання «Звідки?» + прийменник «з»: Канада(f), Японія(f), Німеччина(f), Торонто(n)'
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — Meeting someone (extending M05, ULP Ep4): — Звідки ти? — Я з України,
-    з Києва. А ти? — Я з Канади, із Торонто. — Давно тут? — Ні, я приїхав місяць тому.
-    Звідки? pattern with countries and cities.'
-  - 'Dialogue 2 — Coming from somewhere: — Звідки ти йдеш? — Я йду з роботи. — А Олена?
-    — Вона йде зі школи. — Куди вона йде? — Додому. Direction FROM (з + genitive chunk)
-    vs TO (в/на + accusative).'
-- section: Звідки? (Where From?)
+  - 'Діалог 1 — Знайомство (розширення М05, ULP Ep4): — Звідки ти? — Я з України, з Києва. А ти? — Я з Канади, із Торонто. — Давно тут? — Ні, я приїхав місяць тому. Конструкція «Звідки?» з країнами та містами.'
+  - 'Діалог 2 — Повернення звідкись: — Звідки ти йдеш? — Я йду з роботи. — А Олена? — Вона йде зі школи. — Куди вона йде? — Додому. Напрямок ЗВІДКИ (з + форма родового відмінка як стала фраза) та напрямок КУДИ (в/на + знахідний відмінок).'
+- section: Звідки?
   words: 300
   points:
-  - 'Three direction questions complete: Де ти? — В Україні. (locative — where you
-    ARE) Куди ти їдеш? — В Україну. (accusative — where you''re GOING) Звідки ти?
-    — З України. (genitive — where you''re FROM) At A1: learn з + country/city as
-    chunks. Genitive grammar = A2.'
-  - 'Pattern: з/із/зі + genitive (memorized forms): з України, з Києва, зі Львова,
-    з Одеси, з Харкова. з Канади, зі США (зі Штатів), з Англії, з Німеччини, з Польщі.
-    з роботи, зі школи, з магазину, з банку. Note: euphony rules from M28 apply: з/із/зі.'
-- section: Країни і міста (Countries and Cities)
+  - 'Три запитання про напрямок у повному обсязі: Де ти? — В Україні. (місцевий відмінок — де ви ЗНАХОДИТЕСЯ). Куди ти їдеш? — В Україну. (знахідний відмінок — куди ви РУХАЄТЕСЯ). Звідки ти? — З України. (родовий відмінок — звідки ви РОДОМ АБО ЇДЕТЕ). На рівні А1 ми вивчаємо «з + країна/місто» як сталі фрази. Граматика родового відмінка вивчатиметься на рівні А2.'
+  - 'Конструкція: з/із/зі + родовий відмінок (завчені форми): з України, з Києва, зі Львова, з Одеси, з Харкова. з Канади, зі США (зі Штатів), з Англії, з Німеччини, з Польщі. з роботи, зі школи, з магазину, з банку. Зверніть увагу: тут діють правила милозвучності з М28 (з/із/зі).'
+- section: Країни і міста
   words: 300
   points:
-  - 'Ukrainian cities: Київ (Kyiv), Львів (Lviv), Одеса (Odesa), Харків (Kharkiv),
-    Дніпро (Dnipro), Запоріжжя (Zaporizhzhia). Countries (common for learners): Україна,
-    Канада, США, Англія, Німеччина, Польща, Франція, Італія, Японія.'
-  - 'Nationality and language links: Я з України → Я українець/українка → Я говорю
-    українською. Review from M05: Мене звати..., Я з..., Я говорю... New: Я живу в
-    Києві, але я зі Львова. (current location vs origin)'
-- section: Підсумок — Summary
+  - 'Українські міста: Київ, Львів, Одеса, Харків, Дніпро, Запоріжжя. Країни (найпоширеніші для іноземців): Україна, Канада, США, Англія, Німеччина, Польща, Франція, Італія, Японія.'
+  - 'Зв''язок національності та мови: Я з України → Я українець/українка → Я говорю українською. Повторення з М05: Мене звати..., Я з..., Я говорю... Нове: Я живу в Києві, але я зі Львова. (теперішнє місце проживання та походження).'
+- section: Підсумок
   words: 300
   points:
-  - 'Three location questions: Де? → в/на + locative (В Україні) Куди? → в/на + accusative
-    (В Україну) Звідки? → з/із/зі + genitive chunk (З України) Self-check: Where are
-    you from? Where do you live now? Where are you going after this lesson?'
+  - 'Три запитання про місцезнаходження: Де? → в/на + місцевий відмінок (В Україні). Куди? → в/на + знахідний відмінок (В Україну). Звідки? → з/із/зі + форма родового відмінка як стала фраза (З України). Самоперевірка: Звідки ви? Де ви зараз живете? Куди ви підете після цього уроку?'
 vocabulary_hints:
   required:
   - звідки (where from)
@@ -74,7 +57,7 @@ vocabulary_hints:
   - додому (home — direction)
 activity_hints:
 - type: fill-in
-  focus: Answer Звідки? using з/із/зі + memorized genitive chunks
+  focus: Дайте відповідь на запитання «Звідки?» за допомогою прийменників з/із/зі + завчені фрази у родовому відмінку
   items: 8
   blanks:
   - Звідки ти? — Я {з України}.
@@ -86,26 +69,26 @@ activity_hints:
   - Вони {з Англії}.
   - Олена {з Одеси}.
 - type: group-sort
-  focus: Categorize phrases into Де? (Locative), Куди? (Accusative), Звідки? (Genitive)
+  focus: 'Розподіліть фрази за запитаннями: Де? (Місцевий), Куди? (Знахідний), Звідки? (Родовий)'
   items: 9
   groups:
-  - name: Де? (Where?)
+  - name: Де?
     items:
     - в Україні
     - в Києві
     - на роботі
-  - name: Куди? (Where to?)
+  - name: Куди?
     items:
     - в Україну
     - в Київ
     - на роботу
-  - name: Звідки? (Where from?)
+  - name: Звідки?
     items:
     - з України
     - з Києва
     - з роботи
 - type: quiz
-  focus: Choose correct preposition (в/на/з) for location/direction
+  focus: Оберіть правильний прийменник (в/на/з) для позначення місця/напрямку
   items: 8
   questions:
   - Я йду... роботи. (з / на / в)
@@ -117,7 +100,7 @@ activity_hints:
   - Я йду... магазину. (з / в / на)
   - Олена... школи. (зі / в / на)
 - type: fill-in
-  focus: Contrast current location (в/на) and origin (з/із)
+  focus: Протиставлення поточного місцезнаходження (в/на) та походження (з/із)
   items: 6
   blanks:
   - Я живу {в Києві}, але я {зі Львова}.
@@ -127,15 +110,15 @@ activity_hints:
   - Я {з Німеччини}, але зараз я {в Україні}.
   - Ти {зі США}, але живеш {у Києві}.
 connects_to:
-- a1-035 (Checkpoint — Places)
+- a1-035 (Контрольна точка — Місця)
 prerequisites:
-- a1-033 (Around the City)
+- a1-033 (По місту)
 grammar:
-- Звідки? + з/із/зі + genitive (memorized chunks)
-- 'Location trio: Де? (M.в.) / Куди? (Зн.в.) / Звідки? (Р.в. chunk)'
-- Country/city names in three case forms
+- Звідки? + з/із/зі + родовий відмінок (завчені сталі фрази)
+- 'Тріада місця: Де? (Місцевий в.) / Куди? (Знахідний в.) / Звідки? (Родовий в. як стала фраза)'
+- Назви країн і міст у трьох відмінкових формах
 register: розмовний
 references:
 - title: ULP Season 1, Episode 4
   url: https://www.ukrainianlessons.com/episode4/
-  notes: Where are you from? — nationalities and countries.
+  notes: Звідки ви? — національності та країни.

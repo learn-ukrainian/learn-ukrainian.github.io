@@ -2,64 +2,44 @@ module: a1-030
 level: A1
 sequence: 30
 slug: my-city
-version: '1.1'
-title: My City
-subtitle: Бібліотека, аптека, ресторан — city vocabulary
+version: 1.1.2
+title: Моє місто
+subtitle: Бібліотека, аптека, ресторан — лексика міста
 focus: vocabulary
 pedagogy: PPP
-phase: A1.5 [Places]
+phase: A1.5 [Місця]
 word_target: 1200
 objectives:
-- Name 15+ common city places (бібліотека, аптека, ресторан, etc.)
-- Use locative case from M29 with city vocabulary
-- Describe what you do at each place (combining verbs from A1.3)
-- Give simple directions using є (there is) and тут/там
+- Вміти називати понад 15 основних місць у місті (бібліотека, аптека, ресторан тощо)
+- Навчитися вживати місцевий відмінок з лексикою на тему міста (на базі модуля M29)
+- Вміти описувати, що ви робите в кожному місці (за допомогою дієслів з A1.3)
+- Навчитися пояснювати дорогу, використовуючи дієслово «є» та прислівники «тут»/«там»
 dialogue_situations:
-- setting: 'Drawing a map of your Kyiv neighborhood for a pen pal — marking: бібліотека
-    (f), музей (m, museum), площа (f, square), озеро (n, lake), зупинка (f, bus stop),
-    церква (f, church). Use біля, поруч з, далеко від for distances.'
+- setting: 'Малюємо карту свого району в Києві для друга по листуванню — позначаємо: бібліотека (f), музей (m, museum), площа (f, square), озеро (n, lake), зупинка (f, bus stop), церква (f, church). Використовуємо «біля», «поруч з», «далеко від» для опису відстані.'
   speakers:
   - Аліна (describing)
   - Ігор (asking questions)
-  motivation: City vocab with бібліотека(f), музей(m), площа(f), озеро(n)
+  motivation: 'Лексика на тему міста: бібліотека(f), музей(m), площа(f), озеро(n)'
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — New in the city: — Вибачте, де тут аптека? — Аптека на вулиці Шевченка.
-    — А бібліотека? — Бібліотека в центрі, біля парку. — Дякую! — Будь ласка! City
-    places in asking-for-directions context.'
-  - 'Dialogue 2 — My neighborhood: — Що є біля твого дому? — Біля дому є магазин і
-    кафе. — А школа? — Школа далеко, у центрі міста. Review: в/на + locative for all
-    places.'
-- section: Місця в місті (City Places)
+  - 'Діалог 1 — Новачок у місті: — Вибачте, де тут аптека? — Аптека на вулиці Шевченка. — А бібліотека? — Бібліотека в центрі, біля парку. — Дякую! — Будь ласка! Міські локації в контексті запитань про дорогу.'
+  - 'Діалог 2 — Мій район: — Що є біля твого дому? — Біля дому є магазин і кафе. — А школа? — Школа далеко, у центрі міста. Повторення: прийменники в/на + місцевий відмінок для всіх місць.'
+- section: Місця в місті
   words: 300
   points:
-  - 'Essential city vocabulary: аптека (pharmacy), бібліотека (library), лікарня (hospital),
-    магазин (shop), супермаркет (supermarket), ресторан (restaurant), кафе (café),
-    банк (bank), пошта (post office), вокзал (train station), готель (hotel), музей
-    (museum), театр (theater), кінотеатр (cinema), церква (church), стадіон (stadium),
-    університет (university).'
-  - 'Each place with its preposition (locative from M29): в аптеці, у бібліотеці,
-    у лікарні, в магазині, у ресторані, у кафе, у банку, на пошті, на вокзалі, у готелі,
-    в музеї. What you do there: Я купую ліки в аптеці. Я читаю в бібліотеці. Я працюю
-    в офісі. Я відпочиваю в парку.'
-- section: Де це? (Where Is It?)
+  - 'Базова міська лексика: аптека, бібліотека, лікарня, магазин, супермаркет, ресторан, кафе, банк, пошта, вокзал, готель, музей, театр, кінотеатр, церква, стадіон, університет.'
+  - 'Кожне місце з відповідним прийменником (місцевий відмінок з M29): в аптеці, у бібліотеці, у лікарні, в магазині, у ресторані, у кафе, у банку, на пошті, на вокзалі, у готелі, в музеї. Що ми там робимо: Я купую ліки в аптеці. Я читаю в бібліотеці. Я працюю в офісі. Я відпочиваю в парку.'
+- section: Де це?
   words: 300
   points:
-  - 'Location words: тут (here), там (there), далеко (far), близько (near/close),
-    біля + gen (near — as chunk: біля парку, біля дому), у центрі (in the center),
-    на розі (on the corner). Note: біля requires genitive — learn as chunks, not grammar.'
-  - 'Describing your city: У моєму місті є великий парк і два музеї. Бібліотека біля
-    університету. Магазин тут, біля дому. Note: є = ''there is/are'' (already used
-    since M06).'
-- section: Підсумок — Summary
+  - 'Слова для позначення розташування: тут, там, далеко, близько, біля + родовий відмінок (біля парку, біля дому), у центрі, на розі. Примітка: «біля» вимагає родового відмінка — запам''ятовуємо як сталі вирази, а не як граматичне правило.'
+  - 'Опис вашого міста: У моєму місті є великий парк і два музеї. Бібліотека біля університету. Магазин тут, біля дому. Зверніть увагу: використовуємо «є» для позначення наявності (вивчено у M06).'
+- section: Підсумок
   words: 300
   points:
-  - 'City vocabulary with prepositions: В/у: аптеці, бібліотеці, магазині, банку,
-    готелі, ресторані. На: пошті, вокзалі, стадіоні, площі. Location words: тут, там,
-    далеко, близько, біля. Self-check: Name 5 places near your home. What do you do
-    there?'
+  - 'Міська лексика з прийменниками: В/у: аптеці, бібліотеці, магазині, банку, готелі, ресторані. На: пошті, вокзалі, стадіоні, площі. Слова розташування: тут, там, далеко, близько, біля. Самоперевірка: Назвіть 5 місць біля вашого дому. Що ви там робите?'
 vocabulary_hints:
   required:
   - аптека (pharmacy, f)
@@ -81,27 +61,26 @@ vocabulary_hints:
   - біля (near — + genitive chunk)
 activity_hints:
 - type: match-up
-  focus: 'Match place to activity: аптека ↔ купувати ліки'
+  focus: 'З''єднайте місце з дією: аптека ↔ купувати ліки'
   items: 8
 - type: quiz
-  focus: В or на? Choose preposition for city places.
+  focus: 'В чи на? Оберіть правильний прийменник для місць у місті.'
   items: 8
 - type: fill-in
-  focus: 'Describe your city: У моєму місті є ___.'
+  focus: 'Опишіть своє місто: У моєму місті є ___.'
   items: 6
 - type: quiz
-  focus: Where would you go? Choose the right place for each situation.
+  focus: 'Куди б ви пішли? Оберіть правильне місце для кожної ситуації.'
   items: 6
 connects_to:
-- a1-031 (Where To?)
+- a1-031 (Куди?)
 prerequisites:
-- a1-029 (Where Is It?)
+- a1-029 (Де це?)
 grammar:
-- City vocabulary with locative prepositions (в/на + М.в.)
-- 'Location expressions: тут, там, далеко, близько, біля'
-- Є = there is/are
+- 'Лексика міста з прийменниками місцевого відмінка (в/на + М.в.)'
+- 'Вирази місця: тут, там, далеко, близько, біля'
+- 'Конструкція з дієсловом «є» (наявність)'
 register: розмовний
 references:
 - title: Anna-led module — city vocabulary through practical situations
-  notes: No single textbook source — vocabulary compiled from multiple textbook city
-    themes.
+  notes: 'Немає єдиного підручника-джерела — лексика зібрана з різних тем про місто.'

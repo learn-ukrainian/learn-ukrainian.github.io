@@ -2,65 +2,44 @@ module: a1-038
 level: A1
 sequence: 38
 slug: at-the-cafe
-version: '1.2'
-title: At the Cafe
-subtitle: У кафе — ordering, paying, and cafe culture
+version: '1.2.1'
+title: У кафе
+subtitle: У кафе — замовлення, оплата та культура кафе
 focus: communication
 pedagogy: PPP
-phase: A1.6 [Food and Shopping]
+phase: А1.6 [Їжа та покупки]
 word_target: 1200
 objectives:
-- Order food and drinks at a Ukrainian cafe
-- Use polite request phrases (Можна...? Дайте, будь ласка...)
-- Read a simple Ukrainian menu and ask about items
-- Understand Ukrainian cafe culture (tipping, paying)
+- Замовляти їжу та напої в українському кафе
+- Використовувати фрази для ввічливого прохання (Можна...? Дайте, будь ласка...)
+- Читати просте українське меню та ставити запитання щодо страв
+- Розуміти українську культуру кафе (чайові, оплата)
 dialogue_situations:
-- setting: 'A date at a cozy Lviv café — ordering from the menu: кава (f, coffee),
-    чай (m, tea), тістечко (n, pastry), круасан (m, croissant), вода (f, water), сік
-    (m, juice). Мені каву, будь ласка. А мені — чай і тістечко.'
+- setting: 'Побачення в затишному львівському кафе — замовлення з меню: кава (f), чай (m), тістечко (n), круасан (m), вода (f), сік (m). Мені каву, будь ласка. А мені — чай і тістечко.'
   speakers:
   - Ростик
   - Іванка
-  motivation: Ordering with кава(f), чай(m), тістечко(n), круасан(m)
+  motivation: 'Замовлення зі словами кава(f), чай(m), тістечко(n), круасан(m)'
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — Ordering at a cafe: — Добрий день! Ось меню. — Дякую. Що ви рекомендуєте?
-    — Борщ дуже смачний. — Добре, мені борщ і хліб, будь ласка. — А що будете пити?
-    — Каву з молоком. — Добре, одну хвилинку. Polite ordering with будь ласка, мені
-    + accusative.'
-  - 'Dialogue 2 — Paying the bill: — Рахунок, будь ласка. — Ось, будь ласка. Сто двадцять
-    гривень. — Можна карткою? — Так, звичайно. — Дякую, дуже смачно було! — Дякуємо,
-    приходьте ще! Paying, complimenting food, tipping.'
-- section: Як замовити (How to Order)
+  - 'Діалог 1 — Замовлення в кафе: — Добрий день! Ось меню. — Дякую. Що ви рекомендуєте? — Борщ дуже смачний. — Добре, мені борщ і хліб, будь ласка. — А що будете пити? — Каву з молоком. — Добре, одну хвилинку. Ввічливе замовлення за допомогою будь ласка, мені + знахідний відмінок.'
+  - 'Діалог 2 — Оплата рахунку: — Рахунок, будь ласка. — Ось, будь ласка. Сто двадцять гривень. — Можна карткою? — Так, звичайно. — Дякую, дуже смачно було! — Дякуємо, приходьте ще! Оплата, похвала їжі, чайові.'
+- section: Як замовити
   words: 300
   points:
-  - 'Ordering patterns: Мені [accusative], будь ласка. (Мені каву, будь ласка.) Можна
-    [accusative]? (Можна воду?) Дайте, будь ласка, [accusative]. (Дайте, будь ласка,
-    борщ.) Я хочу / Я буду [accusative]. (Я буду салат.) All use accusative from M37
-    — real application.'
-  - 'Asking about the menu: Що ви рекомендуєте? (What do you recommend?) Це гостре?
-    (Is it spicy?) Це з м''ясом? (Is it with meat?) А що це? (What is this?) Скільки
-    коштує? (How much?) Є вегетаріанське меню? (Is there a vegetarian menu?)'
-- section: Культура кафе (Cafe Culture)
+  - 'Шаблони для замовлення: Мені [знахідний відмінок], будь ласка. (Мені каву, будь ласка.) Можна [знахідний відмінок]? (Можна воду?) Дайте, будь ласка, [знахідний відмінок]. (Дайте, будь ласка, борщ.) Я хочу / Я буду [знахідний відмінок]. (Я буду салат.) Всюди використовується знахідний відмінок з M37 — реальне застосування.'
+  - 'Запитання щодо меню: Що ви рекомендуєте? Це гостре? Це з м''ясом? А що це? Скільки коштує? Є вегетаріанське меню?'
+- section: Культура кафе
   words: 300
   points:
-  - 'Ukrainian cafe culture: Кафе vs ресторан: кафе is casual, ресторан is formal.
-    Меню: the waiter brings it, or it''s on the wall/board. Рахунок: ask for the bill
-    — it doesn''t come automatically. Чайові (tips): 10% is standard, not obligatory.
-    Карткою чи готівкою? (Card or cash?) — most places take cards.'
-  - 'Useful cafe phrases: Вільно? / Тут вільно? (Is this seat free?) Можна меню? (Can
-    I have the menu?) Ще одну каву, будь ласка. (One more coffee, please.) Без цукру.
-    (Without sugar.) З лимоном. (With lemon.) Все було дуже смачно! (Everything was
-    delicious!)'
-- section: Підсумок — Summary
+  - 'Українська культура кафе: Кафе проти ресторану: кафе — неформальне, ресторан — формальний. Меню: офіціант приносить його, або воно є на стіні/дошці. Рахунок: просіть рахунок — його не приносять автоматично. Чайові: 10% — це стандарт, але не обов''язково. Карткою чи готівкою? — більшість закладів приймають картки.'
+  - 'Корисні фрази для кафе: Вільно? / Тут вільно? Можна меню? Ще одну каву, будь ласка. Без цукру. З лимоном. Все було дуже смачно!'
+- section: Підсумок
   words: 300
   points:
-  - 'Cafe communication toolkit: Order: Мені [accusative], будь ласка. Ask: Скільки
-    коштує? Що рекомендуєте? Pay: Рахунок, будь ласка. Можна карткою? Compliment:
-    Дуже смачно! Self-check: Order a full meal (starter, main, drink) at a cafe. Ask
-    for the bill and pay.'
+  - 'Інструментарій для спілкування в кафе: Замовлення: Мені [знахідний відмінок], будь ласка. Запитання: Скільки коштує? Що рекомендуєте? Оплата: Рахунок, будь ласка. Можна карткою? Похвала: Дуже смачно! Самоперевірка: Замовте повноцінний обід (перше, друге, напій) у кафе. Попросіть рахунок і розрахуйтеся.'
 vocabulary_hints:
   required:
   - кафе (cafe, n, indecl.)
@@ -80,7 +59,7 @@ vocabulary_hints:
   - вегетаріанський (vegetarian — adj.)
 activity_hints:
 - type: fill-in
-  focus: 'Order at a cafe: Мені ___, будь ласка. (choose correct accusative)'
+  focus: 'Замовлення в кафе: Мені ___, будь ласка. (виберіть правильний знахідний відмінок)'
   items:
   - Мені {каву|кава|каві}, будь ласка.
   - Мені {воду|вода|водою}, будь ласка.
@@ -91,50 +70,50 @@ activity_hints:
   - Я буду {піцу|піца|піці}.
   - Можна {хліб|хліба|хлібом}?
 - type: quiz
-  focus: What do you say? Match situation to phrase (order/pay/ask/compliment)
+  focus: Що ви скажете? З'єднайте ситуацію з фразою (замовлення/оплата/запитання/комплемент)
   items:
-  - question: You want to order coffee. What do you say?
+  - question: Ви хочете замовити каву. Що ви скажете?
     options:
     - Мені каву, будь ласка.
     - Рахунок, будь ласка.
     - Що ви рекомендуєте?
-  - question: You want to pay. What do you say?
+  - question: Ви хочете розрахуватися. Що ви скажете?
     options:
     - Рахунок, будь ласка.
     - Можна меню?
     - Це гостре?
-  - question: You want to know the price. What do you say?
+  - question: Ви хочете дізнатися ціну. Що ви скажете?
     options:
     - Скільки коштує?
     - Це з м'ясом?
     - Тут вільно?
-  - question: You want to ask for a recommendation. What do you say?
+  - question: Ви хочете попросити рекомендацію. Що ви скажете?
     options:
     - Що ви рекомендуєте?
     - Є вегетаріанське меню?
     - Все було дуже смачно!
-  - question: You want to praise the food. What do you say?
+  - question: Ви хочете похвалити їжу. Що ви скажете?
     options:
     - Все було дуже смачно!
     - Можна карткою?
     - Без цукру.
-  - question: You want to know if a seat is free. What do you say?
+  - question: Ви хочете дізнатися, чи вільне місце. Що ви скажете?
     options:
     - Тут вільно?
     - Ще одну каву, будь ласка.
     - Рахунок, будь ласка.
-  - question: You want to ask if the dish is spicy. What do you say?
+  - question: Ви хочете запитати, чи страва гостра. Що ви скажете?
     options:
     - Це гостре?
     - Це з м'ясом?
     - Скільки коштує?
-  - question: You want to pay by card. What do you say?
+  - question: Ви хочете розрахуватися карткою. Що ви скажете?
     options:
     - Можна карткою?
     - Є вегетаріанське меню?
     - Що ви рекомендуєте?
 - type: fill-in
-  focus: Complete the cafe dialogue with correct phrases
+  focus: Доповнити діалог у кафе правильними фразами
   items:
   - — Добрий день! Ось {меню|рахунок|картка}.
   - — Дякую. Що ви {рекомендуєте|коштуєте|платите}?
@@ -143,28 +122,28 @@ activity_hints:
   - — А що будете {пити|їсти|читати}?
   - — Каву з молоком. — Добре, одну {хвилинку|годину|каву}.
 - type: match-up
-  focus: Match Ukrainian cafe phrases with their functions
+  focus: З'єднати українські фрази для кафе з їхніми функціями
   items:
-  - Рахунок, будь ласка.: Asking for the bill
-  - Що ви рекомендуєте?: Asking for advice
-  - Мені борщ, будь ласка.: Ordering food
-  - Скільки коштує?: Asking the price
-  - Можна карткою?: Asking about payment method
-  - Дуже смачно!: Complimenting the food
-  - Тут вільно?: Asking for a seat
-  - Можна меню?: Asking to see the options
+  - Рахунок, будь ласка.: Прохання принести рахунок
+  - Що ви рекомендуєте?: Прохання порадити
+  - Мені борщ, будь ласка.: Замовлення їжі
+  - Скільки коштує?: Запитання про ціну
+  - Можна карткою?: Запитання про спосіб оплати
+  - Дуже смачно!: Похвала їжі
+  - Тут вільно?: Запитання про вільне місце
+  - Можна меню?: Прохання принести меню
 connects_to:
-- a1-039 (Shopping)
+- a1-039 (Покупки)
 prerequisites:
-- a1-037 (I Eat, I Drink)
+- a1-037 (Я їм, я п'ю)
 grammar:
-- Мені + accusative (ordering pattern)
-- Можна + accusative (polite request)
-- 'Review: accusative inanimate from M37'
+- Мені + знахідний відмінок (шаблон замовлення)
+- Можна + знахідний відмінок (ввічливе прохання)
+- Повторення: знахідний відмінок неістот з M37
 register: розмовний
 references:
 - title: ULP Season 1, Episodes 11-12
   url: https://www.ukrainianlessons.com/episode11/
-  notes: Ordering at a cafe, restaurant vocabulary.
+  notes: Замовлення в кафе, ресторанна лексика.
 - title: State Standard 2024, Topic 3 (ресторан)
-  notes: 'Communicative situation: ordering food and drinks.'
+  notes: 'Комунікативна ситуація: замовлення їжі та напоїв.'

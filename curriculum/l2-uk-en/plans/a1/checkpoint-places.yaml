@@ -2,72 +2,52 @@ module: a1-035
 level: A1
 sequence: 35
 slug: checkpoint-places
-version: '1.2'
-title: 'Checkpoint: Places'
-subtitle: Can you navigate a Ukrainian city?
+version: '1.2.2'
+title: 'Підсумок: Місця'
+subtitle: Чи вмієте ви орієнтуватися в українському місті?
 focus: review
 pedagogy: PPP
-phase: A1.5 [Places]
+phase: A1.5 [Місця]
 word_target: 1200
 objectives:
-- Demonstrate correct use of euphony (у/в, і/й, з/із/зі)
-- Use locative for location (Де?) and accusative for direction (Куди?)
-- Navigate using city vocabulary, transport, and directions
-- Answer Звідки? with genitive chunks
-- Combine all A1.5 skills in connected urban scenarios
+- Правильно застосовувати правила милозвучності (у/в, і/й, з/із/зі)
+- Використовувати місцевий відмінок для місця (Де?) та знахідний для напрямку руху (Куди?)
+- Орієнтуватися за допомогою лексики міста, транспорту та напрямків
+- Відповідати на питання Звідки?, використовуючи сталі вирази з родовим відмінком
+- Поєднувати всі навички рівня A1.5 у зв'язних міських ситуаціях
 dialogue_situations:
-- setting: 'Video-calling a friend while walking through Одеса (Odesa) — showing:
-    Дерибасівська вулиця (f), Потьомкінські сходи (pl, Potemkin Stairs), порт (m,
-    port), пляж (m, beach). Describing where you are, where you''re going.'
+- setting: 'Відеодзвінок другу під час прогулянки Одесою — показ місць: Дерибасівська вулиця (f), Потьомкінські сходи (pl), порт (m), пляж (m). Опис свого місцеперебування та напрямку руху.'
   speakers:
   - Мешканець (filming)
   - Онлайн-друг (watching)
-  motivation: Consolidation with вулиця(f), сходи(pl), порт(m), пляж(m)
+  motivation: 'Закріплення з вулиця(f), сходи(pl), порт(m), пляж(m)'
 content_outline:
-- section: Що ми знаємо? (What Do We Know?)
+- section: Що ми знаємо?
   words: 200
   points:
-  - 'Self-check covering M28-M34: Can you apply euphony rules? (M28) Can you say where
-    things are? (M29) Can you name city places? (M30) Can you say where you''re going?
-    (M31) Can you use transport? (M32) Can you give directions? (M33) Can you say
-    where you''re from? (M34)'
-- section: Читання (Reading Practice)
+  - 'Самоперевірка за темами M28-M34: Чи вмієте ви застосовувати правила милозвучності? (M28) Чи можете сказати, де знаходяться речі? (M29) Чи можете назвати міські локації? (M30) Чи можете сказати, куди ви йдете? (M31) Чи вмієте користуватися транспортом? (M32) Чи можете вказувати напрямок? (M33) Чи можете сказати, звідки ви? (M34)'
+- section: Читання
   words: 250
   points:
-  - 'A short Ukrainian text using vocabulary from M28-M34. Content: a tourist navigates
-    Kyiv — asks for directions, takes metro, finds a museum, describes where they''re
-    from and where they''re going. Uses euphony, locative, accusative, genitive chunks,
-    transport.'
-- section: Граматика (Grammar Summary)
+  - 'Короткий український текст із використанням лексики з M28-M34. Зміст: турист орієнтується в Києві — питає дорогу, їде на метро, знаходить музей, розповідає, звідки він і куди йде. Використовуються правила милозвучності, місцевий і знахідний відмінки, сталі вирази з родовим відмінком, транспорт.'
+- section: Граматика
   words: 200
   points:
-  - 'Key patterns from A1.5: 1. Euphony: у/в, і/й, з/із/зі (M28) 2. Де? → в/на + locative:
-    в школі, на роботі (M29) 3. Куди? → в/на + accusative: у школу, на роботу (M31)
-    4. Звідки? → з + genitive chunk: з України, з роботи (M34) 5. Transport: автобусом,
-    на метро (M32) 6. Directions: прямо, направо, наліво (M33) 7. City places with
-    correct prepositions (M30)'
-- section: Діалог (Connected Dialogue)
+  - 'Ключові конструкції з A1.5: 1. Милозвучність: у/в, і/й, з/із/зі (M28) 2. Де? → в/на + місцевий відмінок: в школі, на роботі (M29) 3. Куди? → в/на + знахідний відмінок: у школу, на роботу (M31) 4. Звідки? → з + конструкція родового відмінка: з України, з роботи (M34) 5. Транспорт: автобусом, на метро (M32) 6. Напрямки: прямо, направо, наліво (M33) 7. Міські локації з правильними прийменниками (M30)'
+- section: Діалог
   words: 300
   points:
-  - 'A tourist in Kyiv asks for help: — Вибачте, я з Канади. Де тут музей? — Музей
-    у центрі. Ідіть на метро до станції Хрещатик. — А як дістатися від метро? — Вийдіть
-    і йдіть направо. Музей на площі. — Дякую! А потім я хочу їхати у Львів. Де вокзал?
-    — Вокзал далеко, їдьте на метро до станції Вокзальна. Uses all A1.5 skills in
-    one realistic scenario.'
-- section: Підсумок — Summary
+  - 'Турист у Києві просить допомоги: — Вибачте, я з Канади. Де тут музей? — Музей у центрі. Ідіть на метро до станції Хрещатик. — А як дістатися від метро? — Вийдіть і йдіть направо. Музей на площі. — Дякую! А потім я хочу їхати у Львів. Де вокзал? — Вокзал далеко, їдьте на метро до станції Вокзальна. Використовує всі навички A1.5 в одній реалістичній ситуації.'
+- section: Підсумок
   words: 250
   points:
-  - 'A1.5 achievement summary: You can now navigate Ukrainian cities. You know euphony
-    rules for natural speech. You can say WHERE something is (locative). You can say
-    WHERE you''re GOING (accusative). You can say WHERE you''re FROM (genitive chunks).
-    You can use transport and give directions. Next: A1.6 — Food and Shopping (ordering,
-    buying, accusative for objects).'
+  - 'Огляд досягнень A1.5: Тепер ви можете орієнтуватися в українських містах. Ви знаєте правила милозвучності для природного мовлення. Ви можете сказати, ДЕ щось знаходиться (місцевий відмінок). Ви можете сказати, КУДИ ви ЙДЕТЕ (знахідний відмінок). Ви можете сказати, ЗВІДКИ ви РОДОМ (конструкції родового відмінка). Ви вмієте користуватися транспортом і вказувати дорогу. Далі: A1.6 — Їжа та покупки (замовлення, покупки, знахідний відмінок для об''єктів).'
 vocabulary_hints:
   required: []
   recommended: []
 activity_hints:
 - type: quiz
-  focus: 'Choose the correct question: Де? Куди? Звідки?'
+  focus: 'Оберіть правильне запитання: Де? Куди? Звідки?'
   items: 8
   questions:
   - '... ти живеш? — У Києві. (Де / Куди / Звідки)'
@@ -79,7 +59,7 @@ activity_hints:
   - '... аптека? — Направо. (Де / Куди / Звідки)'
   - '... вони? — Зі США. (Звідки / Де / Куди)'
 - type: fill-in
-  focus: Complete the connected dialogue with correct forms
+  focus: Доповніть зв'язний діалог правильними формами
   items: 6
   blanks:
   - Вибачте, я {з Канади}. Де тут музей?
@@ -89,7 +69,7 @@ activity_hints:
   - Я хочу їхати {у Львів}. Де вокзал?
   - Вокзал далеко, їдьте {на метро}.
 - type: group-sort
-  focus: Sort phrases by case/function (Locative, Accusative, Genitive chunks)
+  focus: Розподіліть фрази за відмінком/функцією (місцевий, знахідний, сталі вирази з родовим)
   items: 9
   groups:
   - name: Локація (Де?)
@@ -108,7 +88,7 @@ activity_hints:
     - зі США
     - з роботи
 - type: quiz
-  focus: 'Euphony rules check: у/в, і/й, з/із/зі'
+  focus: 'Перевірка правил милозвучності: у/в, і/й, з/із/зі'
   items: 8
   questions:
   - Брат ... сестра (і / й)
@@ -120,15 +100,15 @@ activity_hints:
   - Я ... кімнаті (в / у)
   - Вона ... США (зі / з)
 connects_to:
-- a1-036 (Food and Drink)
+- a1-036 (Їжа та напої)
 prerequisites:
-- a1-034 (Where From?)
+- a1-034 (Звідки?)
 grammar:
-- 'Review: locative for location (Де?)'
-- 'Review: accusative for direction (Куди?)'
-- 'Review: genitive chunks for origin (Звідки?)'
-- 'Review: euphony and transport'
+- 'Повторення: місцевий відмінок для розташування (Де?)'
+- 'Повторення: знахідний відмінок для напрямку руху (Куди?)'
+- 'Повторення: конструкції родового відмінка для походження (Звідки?)'
+- 'Повторення: правила милозвучності та транспорт'
 register: розмовний
 references:
 - title: Synthesis of M28-M34 content
-  notes: No new material — review and integration of A1.5 phase.
+  notes: Нового матеріалу немає — лише повторення та інтеграція етапу A1.5.

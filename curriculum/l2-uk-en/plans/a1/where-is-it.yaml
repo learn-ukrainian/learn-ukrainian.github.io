@@ -2,66 +2,44 @@ module: a1-029
 level: A1
 sequence: 29
 slug: where-is-it
-version: '1.1'
-title: Where Is It?
-subtitle: В школі, на роботі — the locative case
+version: 1.1.1
+title: Де це?
+subtitle: В школі, на роботі — місцевий відмінок
 focus: grammar
 pedagogy: PPP
-phase: A1.5 [Places]
+phase: A1.5 [Місця]
 word_target: 1200
 objectives:
-- Use в/у and на + locative to answer Де? (Where?)
-- Form basic locative endings for familiar nouns
-- Distinguish в (inside) from на (on/at) with place vocabulary
-- Use the Grade 4 helper word method: М. (на, у) — "на/у кому? на/у чому?"
+- Вміти використовувати прийменники в/у та на + місцевий відмінок для відповіді на запитання «Де?»
+- Утворювати базові закінчення місцевого відмінка для знайомих іменників
+- Розрізняти використання прийменника в (усередині) та на (на поверхні/події) з назвами місць
+- 'Використовувати метод допоміжних слів за 4 клас: М. (на, у) — «на/у кому? на/у чому?»'
 dialogue_situations:
-- setting: 'First week in a new city — asking a neighbor where to find: аптека (f,
-    pharmacy), банк (m, bank), пошта (f, post office), кафе (n, café), лікарня (f,
-    hospital), парк (m, park). В аптеці, на пошті, у банку.'
+- setting: 'Перший тиждень у новому місті — розпитуємо сусіда, де знайти такі місця: аптека (f), банк (m), пошта (f), кафе (n), лікарня (f), парк (m). В аптеці, на пошті, у банку.'
   speakers:
-  - Новий мешканець (newcomer)
-  - Сусід (neighbor)
-  motivation: В/на + locative with аптека(f), банк(m), пошта(f), кафе(n)
+  - Новий мешканець
+  - Сусід
+  motivation: Прийменники в/на + місцевий відмінок зі словами аптека(f), банк(m), пошта(f), кафе(n)
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — Where is everyone? (ULP Ep17 pattern): — Де Олена? — Вона в школі.
-    — А Тарас? — Він на роботі. — А діти? — Вони в парку. — А кішка? — Вона на дивані!
-    Locative case emerges naturally from answering ''Де?'''
-  - 'Dialogue 2 — Describing locations: — Де ти живеш? — Я живу в Києві, на вулиці
-    Хрещатик. — А де ти працюєш? — В офісі, на другому поверсі. City + street + building
-    locations.'
-- section: Місцевий відмінок (The Locative Case)
+  - 'Діалог 1 — Де всі? (за зразком ULP Ep17): — Де Олена? — Вона в школі. — А Тарас? — Він на роботі. — А діти? — Вони в парку. — А кішка? — Вона на дивані! Місцевий відмінок з''являється природно як відповідь на запитання «Де?».'
+  - 'Діалог 2 — Опис місцезнаходження: — Де ти живеш? — Я живу в Києві, на вулиці Хрещатик. — А де ти працюєш? — В офісі, на другому поверсі. Локації: місто + вулиця + будівля.'
+- section: Місцевий відмінок
   words: 300
   points:
-  - 'Grade 4 case system: helper word method (Захарійчук Gr4 p.74): М. = місцевий
-    відмінок: на/у кому? на/у чому? The locative ALWAYS needs a preposition — в/у
-    or на. В/у = inside: в школі, у банку, в магазині, у лікарні. На = on/at: на роботі,
-    на вулиці, на площі, на уроці.'
-  - 'Basic locative endings (most common patterns): Masculine: -і or -у — в парку,
-    у банку, в офісі, на уроці. Feminine: -і — в школі, на роботі, у лікарні, на вулиці.
-    Neuter: -і — в місті, на морі. Note: endings depend on the noun''s declension
-    — learn the common places as fixed phrases for now.'
-- section: В чи на? (В or На?)
+  - 'Метод допоміжних слів для відмінків за 4 клас (Захарійчук 4 клас, с.74): М. = місцевий відмінок: на/у кому? на/у чому? Місцевий відмінок ЗАВЖДИ вживається з прийменником — в/у або на. В/у = усередині: в школі, у банку, в магазині, у лікарні. На = на поверхні/події: на роботі, на вулиці, на площі, на уроці.'
+  - 'Базові закінчення місцевого відмінка (найпоширеніші моделі): Чоловічий рід: -і або -у — в парку, у банку, в офісі, на уроці. Жіночий рід: -і — в школі, на роботі, у лікарні, на вулиці. Середній рід: -і — в місті, на морі. Зверніть увагу: закінчення залежать від відміни іменника — наразі запам''ятовуйте поширені місця як сталі фрази.'
+- section: В чи на?
   words: 300
   points:
-  - 'General guide: В/у = enclosed spaces: в школі, в магазині, у банку, в лікарні,
-    в кафе. На = open spaces, surfaces, events: на вулиці, на площі, на роботі, на
-    концерті. Some are conventional: на пошті (not в пошті), на вокзалі (not в вокзалі).
-    Learn each place with its preposition — like English ''at school'' vs ''in the
-    office''.'
-  - 'Country/city rule: В/у + country/city: в Україні, у Києві, у Львові, в Одесі.
-    На + some special cases: на Хрещатику (on Khreshchatyk street). Remember: NEVER
-    ''на Україні'' — it''s ЗАВЖДИ ''в Україні''. This is not just grammar — it''s
-    a matter of respect and sovereignty.'
-- section: Підсумок — Summary
+  - 'Загальне правило: В/у = закриті простори: в школі, в магазині, у банку, в лікарні, в кафе. На = відкриті простори, поверхні, події: на вулиці, на площі, на роботі, на концерті. Деякі варіанти є традиційними: на пошті (а не «в пошті»), на вокзалі (а не «в вокзалі»). Вивчайте кожне місце разом із його прийменником.'
+  - 'Правило щодо країн і міст: В/у + країна/місто: в Україні, у Києві, у Львові, в Одесі. На + деякі винятки: на Хрещатику. Пам''ятайте: НІКОЛИ не кажіть «на Україні» — це ЗАВЖДИ «в Україні». Це не просто граматика — це питання поваги та суверенітету.'
+- section: Підсумок
   words: 300
   points:
-  - 'Locative case = where something IS (static location). Де? → в/у + locative (inside)
-    or на + locative (on/at). Helper word: М. (на, у) — на/у кому? на/у чому? Common
-    places: в школі, на роботі, у банку, в парку, на вулиці. Self-check: Where are
-    you right now? Where do you work? Where do you live?'
+  - 'Місцевий відмінок = де щось ЗНАХОДИТЬСЯ (статичне розташування). Де? → в/у + місцевий відмінок (усередині) або на + місцевий відмінок (на поверхні/події). Допоміжне слово: М. (на, у) — на/у кому? на/у чому? Поширені місця: в школі, на роботі, у банку, в парку, на вулиці. Самоперевірка: Де ви зараз? Де ви працюєте? Де ви живете?'
 vocabulary_hints:
   required:
   - школа → в школі (school)
@@ -79,30 +57,30 @@ vocabulary_hints:
   - пошта → на пошті (post office)
 activity_hints:
 - type: quiz
-  focus: В or на? Choose the correct preposition for each place.
+  focus: «В» чи «на»? Оберіть правильний прийменник для кожного місця.
   items: 10
 - type: fill-in
-  focus: 'Answer Де?: Олена ___ (школа). Тарас ___ (робота).'
+  focus: 'Дайте відповідь на запитання «Де?»: Олена ___ (школа). Тарас ___ (робота).'
   items: 8
 - type: match-up
-  focus: 'Match nominative to locative: школа ↔ в школі'
+  focus: 'З''єднайте називний і місцевий відмінки: школа ↔ в школі'
   items: 8
 - type: quiz
-  focus: Where is it? Choose the correct locative form.
+  focus: Де це? Оберіть правильну форму місцевого відмінка.
   items: 6
 connects_to:
-- a1-030 (My City)
+- a1-030 (Моє місто)
 prerequisites:
-- a1-028 (Euphony)
+- a1-028 (Милозвучність)
 grammar:
-- 'Locative case: в/у + М.в. (inside), на + М.в. (on/at)'
-- 'Helper word method: М. (на, у) — на/у кому? на/у чому?'
-- 'Basic locative endings: -і (most common), -у (masculine some)'
-- В Україні (never на Україні)
+- 'Місцевий відмінок: в/у + М.в. (усередині), на + М.в. (на поверхні/події)'
+- 'Метод допоміжних слів: М. (на, у) — на/у кому? на/у чому?'
+- 'Базові закінчення місцевого відмінка: -і (найпоширеніше), -у (деякі іменники чоловічого роду)'
+- В Україні (ніколи «на Україні»)
 register: розмовний
 references:
 - title: Захарійчук Grade 4, p.74
-  notes: 'Case system table: М.в. = на/у кому? на/у чому?'
+  notes: 'Таблиця відмінків: М.в. = на/у кому? на/у чому?'
 - title: ULP Season 1, Episode 17
   url: https://www.ukrainianlessons.com/episode17/
-  notes: Locative case for places — where things are.
+  notes: Місцевий відмінок для позначення місця — де знаходяться речі.

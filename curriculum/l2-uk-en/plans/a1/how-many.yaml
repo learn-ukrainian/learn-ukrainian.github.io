@@ -2,119 +2,88 @@ module: a1-011
 level: A1
 sequence: 11
 slug: how-many
-version: '1.2'
-title: How Many?
-subtitle: Один, два, три — numbers through prices, ages, and phones
+version: '1.2.2'
+title: Скільки?
+subtitle: Один, два, три — числа через ціни, вік та номери телефонів
 focus: vocabulary
 pedagogy: PPP
-phase: A1.2 [My World]
+phase: A1.2 [Мій світ]
 word_target: 1200
 objectives:
-- Count from 1 to 100 in Ukrainian
-- Say prices using гривня and round numbers up to 1000
-- Give age using Мені ... років (as memorized chunk — NO case grammar)
-- Read and say Ukrainian phone numbers
+- Рахувати від 1 до 100 українською
+- Називати ціни, використовуючи слово «гривня» та круглі числа до 1000
+- Називати вік за допомогою фрази «Мені ... років» (як завченої фрази — БЕЗ граматики відмінків)
+- Читати та називати українські номери телефонів
 dialogue_situations:
-- setting: 'At a bakery — ordering bread, pastries, and cakes for a family gathering.
-    Count: один хліб (m, bread), одна булочка (f, bun), одне тістечко (n, pastry). Prices in гривні.
-    Ask: Скільки коштує торт? А три булочки?'
+- setting: 'У пекарні — замовлення хліба, булочок та тістечок для сімейної зустрічі. Рахуємо: один хліб (m, bread), одна булочка (f, bun), одне тістечко (n, pastry). Ціни у гривнях. Запитання: Скільки коштує торт? А три булочки?'
   speakers:
   - Покупець
   - Пекар (baker)
-  motivation: Скільки коштує? with торт(m), булочка(f), тістечко(n), хліб(m)
-- setting: Counting items in a school backpack before class — ручка (f, pen), олівець
-    (m, pencil), зошит (m, notebook), підручник (m, textbook).
+  motivation: 'Скільки коштує? зі словами торт (m), булочка (f), тістечко (n), хліб (m)'
+- setting: Рахуємо речі у шкільному рюкзаку перед уроком — ручка (f, pen), олівець (m, pencil), зошит (m, notebook), підручник (m, textbook).
   speakers:
   - Учень (student)
   - Мама
-  motivation: 'Numbers with school supplies: один олівець, дві ручки, п''ять зошитів'
+  motivation: 'Числа зі шкільним приладдям: один олівець, дві ручки, п''ять зошитів'
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — At a market stall: — Скільки коштує сумка? — Двісті гривень.
-    — А маленька? — Сто п''ятдесят. — Добре, дякую!
-    Numbers emerge through real shopping context. Uses only vocabulary from M08-M10
-    (gender, adjectives, colors). Demonstratives (ця/та) come in M12.'
-  - 'Dialogue 2 — Meeting someone new (extending M05): — Скільки тобі років? — Мені
-    двадцять п''ять. А тобі? — Мені тридцять два. А твоя сестра? — Їй вісімнадцять.
-    Age formula as chunk: Мені/тобі/їй + number + років/роки/рік.'
-- section: Числа 1-20 (Numbers 1-20)
+  - 'Діалог 1 — Біля ятки на ринку: — Скільки коштує сумка? — Двісті гривень. — А маленька? — Сто п''ятдесят. — Добре, дякую! Числа засвоюються через реальний контекст покупок. Використовується лише лексика з М08-М10 (рід, прикметники, кольори). Вказівні займенники (ця/та) з''являться у М12.'
+  - 'Діалог 2 — Знайомство (розширення М05): — Скільки тобі років? — Мені двадцять п''ять. А тобі? — Мені тридцять два. А твоя сестра? — Їй вісімнадцять. Формула віку як фраза: Мені/тобі/їй + число + років/роки/рік.'
+- section: Числа 1-20
   words: 300
   points:
-  - '1-10: один, два, три, чотири, п''ять, шість, сім, вісім, дев''ять, десять. Pronunciation
-    focus: п''ять (apostrophe!), сім (not ''сем''), дев''ять (apostrophe!). Practice:
-    counting objects from M08 — один стіл, два стільці, три книги. Note: the noun
-    changes after numbers, but we learn the PATTERNS as chunks, not the grammar rule.'
-  - '11-20: одинадцять, дванадцять, тринадцять, чотирнадцять, п''ятнадцять, шістнадцять,
-    сімнадцять, вісімнадцять, дев''ятнадцять, двадцять. Pattern: base + -надцять (like
-    English ''-teen''). Watch the stress: одинáдцять, дванáдцять — stress always falls
-    on the syllable ''на'' in -надцять.'
-- section: Десятки і сотні (Tens and Hundreds)
+  - '1-10: один, два, три, чотири, п''ять, шість, сім, вісім, дев''ять, десять. Фокус на вимові: п''ять (апостроф!), сім (не «сєм»), дев''ять (апостроф!). Практика: рахуємо предмети з М08 — один стіл, два стільці, три книги. Зверніть увагу: іменник змінюється після чисел, але ми вивчаємо шаблони як фрази, а не граматичне правило.'
+  - '11-20: одинадцять, дванадцять, тринадцять, чотирнадцять, п''ятнадцять, шістнадцять, сімнадцять, вісімнадцять, дев''ятнадцять, двадцять. Шаблон: основа + -надцять (як англійське «-teen»). Зверніть увагу на наголос: одинáдцять, дванáдцять — наголос завжди падає на склад «на» в закінченні -надцять.'
+- section: Десятки і сотні
   words: 300
   points:
-  - 'Tens: двадцять, тридцять, сорок (!), п''ятдесят, шістдесят, сімдесят, вісімдесят,
-    дев''яносто (!), сто. Two irregulars: сорок (40 — not ''чотиридесят'') and дев''яносто
-    (90 — not ''дев''ятдесят''). Combined: двадцять один, тридцять п''ять, сорок сім
-    — just add the unit.'
-  - 'Hundreds for prices: сто (100), двісті (200), триста (300), чотириста (400),
-    п''ятсот (500), тисяча (1000). Гривня: одна гривня, дві гривні, п''ять гривень.
-    These noun changes are memorized patterns — grammar comes in A2. ULP Ep9: Anna
-    teaches numbers through real prices.'
-- section: Підсумок — Summary
+  - 'Десятки: двадцять, тридцять, сорок (!), п''ятдесят, шістдесят, сімдесят, вісімдесят, дев''яносто (!), сто. Два винятки: сорок (40 — не «чотиридесят») і дев''яносто (90 — не «дев''ятдесят»). Комбіновані числа: двадцять один, тридцять п''ять, сорок сім — просто додаємо одиниці.'
+  - 'Сотні для цін: сто (100), двісті (200), триста (300), чотириста (400), п''ятсот (500), тисяча (1000). Гривня: одна гривня, дві гривні, п''ять гривень. Ці зміни іменників є завченими шаблонами — граматика буде на рівні A2. ULP Ep9: Анна навчає числам через реальні ціни.'
+- section: Підсумок
   words: 300
   points:
-  - 'Three practical uses of numbers: 1. Prices: Скільки коштує? — Двісті гривень.
-    Сто п''ятдесят гривень. 2. Age: Скільки тобі років? — Мені двадцять три (роки).
-    3. Phone: Мій номер — нуль дев''яносто сім, три два один, сорок п''ять, шістдесят
-    сім. Self-check: Say your age in Ukrainian. Say a price (250 hryvnias). Read a
-    phone number.'
+  - 'Три практичні способи використання чисел: 1. Ціни: Скільки коштує? — Двісті гривень. Сто п''ятдесят гривень. 2. Вік: Скільки тобі років? — Мені двадцять три (роки). 3. Телефон: Мій номер — нуль дев''яносто сім, три два один, сорок п''ять, шістдесят сім. Самоперевірка: Назвіть свій вік українською. Назвіть ціну (250 hryvnias). Прочитайте номер телефону.'
 vocabulary_hints:
   required:
   - один, два, три, чотири, п'ять (1-5)
   - шість, сім, вісім, дев'ять, десять (6-10)
   - двадцять, тридцять, сорок (20, 30, 40)
   - сто, тисяча (100, 1000)
-  - скільки (how many/how much)
-  - коштує (costs — from коштувати)
-  - гривня (hryvnia — Ukrainian currency)
-  - рік, роки, років (year/years — age chunks)
-  recommended:
-  - п'ятдесят, шістдесят, сімдесят (50, 60, 70)
-  - вісімдесят, дев'яносто (80, 90)
-  - двісті, триста, п'ятсот (200, 300, 500)
+  - '...'
   - копійка (kopek)
   - номер (number — phone/room)
   - нуль (zero)
 activity_hints:
 - type: fill-in
-  focus: 'Write the number in words: 15 → п''ятнадцять, 47 → сорок сім'
+  focus: 'Напишіть число словами: 15 → п''ятнадцять, 47 → сорок сім'
   items: 10
 - type: quiz
-  focus: Скільки коштує? Match price tags to spoken prices.
+  focus: Скільки коштує? Зіставте цінники з озвученими цінами.
   items: 8
 - type: quiz
-  focus: Скільки років? Match ages to descriptions.
+  focus: Скільки років? Зіставте вік з описами.
   items: 6
 - type: fill-in
-  focus: Complete the phone number dictation
+  focus: Запишіть номер телефону під диктовку
   items: 4
 connects_to:
-- a1-012 (This and That)
+- a1-012 (Це і те)
 prerequisites:
-- a1-009 (What Is It Like?)
+- a1-009 (Яке воно?)
 grammar:
-- Cardinal numbers 1-1000 (vocabulary, not morphology)
-- Скільки коштує? question pattern
-- 'Age chunk: Мені + number + років/роки/рік (memorized, not analyzed)'
-- 'Irregular tens: сорок (40), дев''яносто (90)'
+- Кількісні числівники 1-1000 (як лексика, не морфологія)
+- Конструкція запитання «Скільки коштує?»
+- 'Фраза віку: Мені + число + років/роки/рік (завчена, без аналізу)'
+- 'Нерегулярні десятки: сорок (40), дев''яносто (90)'
 register: розмовний
 references:
 - title: ULP Season 1, Episode 5
   url: https://www.ukrainianlessons.com/episode5/
-  notes: Numbers 1-10 pronunciation.
+  notes: Вимова чисел 1-10.
 - title: ULP Season 1, Episode 9
   url: https://www.ukrainianlessons.com/episode9/
-  notes: Numbers 11-100 and prices.
+  notes: Числа 11-100 та ціни.
 - title: Авраменко Grade 6, p.152
-  notes: Числівники кількісні vs порядкові — basic classification.
+  notes: Числівники кількісні проти порядкових — базова класифікація.

@@ -2,63 +2,44 @@ module: a1-033
 level: A1
 sequence: 33
 slug: around-the-city
-version: '1.3'
-title: Around the City
-subtitle: Де/куди + directions — navigating in Ukrainian
+version: '1.3.1'
+title: У місті
+subtitle: Де/куди + напрямки — орієнтування містом українською
 focus: communication
 pedagogy: PPP
-phase: A1.5 [Places]
+phase: А1.5 [Місця]
 word_target: 1200
 objectives:
-- Combine Де? (locative) and Куди? (accusative) in real navigation
-- Give and follow simple directions
-- Describe your neighborhood and daily routes
-- Synthesize M28-M32 skills in connected urban communication
+- Поєднувати "Де?" (місцевий відмінок) та "Куди?" (знахідний відмінок) у реальному орієнтуванні
+- Давати та розуміти прості вказівки напрямку
+- Описувати свій район та щоденні маршрути
+- Синтезувати навички з модулів M28-M32 у зв'язному міському спілкуванні
 dialogue_situations:
-- setting: Walking tour of Lviv old town — going from Площа Ринок (f, main square)
-    to Оперний театр (m, Opera house) to Високий замок (m, High Castle). Де ми? На
-    площі. Куди далі? В театр. Звідки прийшли? З замку.
+- setting: Пішохідна екскурсія старим містом Львова — йдемо від Площі Ринок (f) до Оперного театру (m), а потім до Високого замку (m). Де ми? На площі. Куди далі? В театр. Звідки прийшли? З замку.
   speakers:
   - Гід (guide)
   - Туристи
-  motivation: Де/Куди/Звідки with площа(f), театр(m), замок(m), парк(m)
+  motivation: 'Де/Куди/Звідки зі словами площа(f), театр(m), замок(m), парк(m)'
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — Asking for directions: — Вибачте, як дістатися до бібліотеки? —
-    Ідіть прямо, потім направо. Бібліотека на розі. — А музей? — Музей далеко. Їдьте
-    на метро до центру. Combines directions + transport + city places.'
-  - 'Dialogue 2 — Describing your route: — Як ти дістаєшся на роботу? — Спочатку йду
-    на зупинку. Потім їду автобусом до центру. — А потім? — Потім іду пішки п''ять
-    хвилин. Робота в офісі на площі. Daily route using sequence words + transport
-    + places.'
-- section: Де і куди разом (Where and Where To Together)
+  - 'Діалог 1 — Питаємо дорогу: — Вибачте, як дістатися до бібліотеки? — Ідіть прямо, потім направо. Бібліотека на розі. — А музей? — Музей далеко. Їдьте на метро до центру. Поєднує напрямки + транспорт + місця в місті.'
+  - 'Діалог 2 — Описуємо свій маршрут: — Як ти дістаєшся на роботу? — Спочатку йду на зупинку. Потім їду автобусом до центру. — А потім? — Потім іду пішки п''ять хвилин. Робота в офісі на площі. Щоденний маршрут із використанням слів послідовності + транспорт + місця.'
+- section: Де і куди разом
   words: 300
   points:
-  - 'Real navigation uses both cases together: Я зараз у парку (де? — locative). Я
-    йду в магазин (куди? — accusative). Магазин на вулиці Шевченка (де? — locative).
-    Потім їду на роботу (куди? — accusative). The constant switch between де? and
-    куди? is natural Ukrainian.'
-  - 'Preposition patterns (synthesis): | Situation | Question | Form | | Static |
-    Де ти? | в/на + locative | | Direction | Куди йдеш? | в/на + accusative | | By
-    transport | Як? Чим? | автобусом / на метро | | Distance | Далеко? | далеко /
-    близько / пішки |'
-- section: Мій район (My Neighborhood)
+  - 'Реальне орієнтування використовує обидва відмінки разом: Я зараз у парку (де? — місцевий). Я йду в магазин (куди? — знахідний). Магазин на вулиці Шевченка (де? — місцевий). Потім їду на роботу (куди? — знахідний). Постійне перемикання між де? та куди? є природним для української мови.'
+  - 'Шаблони прийменників (синтез): | Ситуація | Питання | Форма | | Статична | Де ти? | в/на + місцевий | | Напрямок | Куди йдеш? | в/на + знахідний | | Транспортом | Як? Чим? | автобусом / на метро | | Відстань | Далеко? | далеко / близько / пішки |'
+- section: Мій район
   words: 300
   points:
-  - 'Describing where you live: Я живу на вулиці Франка. Біля мого дому є парк і магазин.
-    Школа далеко — треба їхати автобусом. Аптека близько, можна піти пішки. У моєму
-    районі є кафе, ресторан і бібліотека.'
-  - 'Useful phrases for city life: пішки (on foot), хвилина (minute) — П''ять хвилин
-    пішки. далеко/близько від (far/near from — chunk). У центрі міста / на околиці
-    (in the center / on the outskirts).'
-- section: Підсумок — Summary
+  - 'Описуємо місце, де ви живете: Я живу на вулиці Франка. Біля мого дому є парк і магазин. Школа далеко — треба їхати автобусом. Аптека близько, можна піти пішки. У моєму районі є кафе, ресторан і бібліотека.'
+  - 'Корисні фрази для життя в місті: пішки, хвилина — П''ять хвилин пішки. далеко/близько від. У центрі міста / на околиці.'
+- section: Підсумок
   words: 300
   points:
-  - 'Urban communication toolkit: Asking: Де...? Як дістатися до...? Directions: прямо,
-    направо, наліво. Location: в/на + locative, в/на + accusative. Transport: автобусом,
-    на метро, пішки. Self-check: Describe your route from home to work/school.'
+  - 'Інструментарій для міського спілкування: Запитання: Де...? Як дістатися до...? Напрямки: прямо, направо, наліво. Розташування: в/на + місцевий, в/на + знахідний. Транспорт: автобусом, на метро, пішки. Самоперевірка: Опишіть свій маршрут від дому до роботи/школи.'
 vocabulary_hints:
   required:
   - пішки (on foot)
@@ -73,7 +54,7 @@ vocabulary_hints:
   - поруч (nearby)
 activity_hints:
 - type: fill-in
-  focus: Give directions using прямо, направо, наліво
+  focus: Вказувати напрямок, використовуючи прямо, направо, наліво
   items: 6
   blanks:
   - Ідіть {прямо}, потім {направо}. Бібліотека на розі.
@@ -83,7 +64,7 @@ activity_hints:
   - Йдіть {прямо}, а потім {наліво}.
   - Ресторан поруч. Ідіть {прямо} і {направо}.
 - type: quiz
-  focus: Де (locative) or Куди (accusative) in context
+  focus: '"Де" (місцевий відмінок) або "Куди" (знахідний відмінок) у контексті'
   items: 6
   questions:
   - Я зараз... (в парку / в парк)
@@ -93,7 +74,7 @@ activity_hints:
   - Ми зараз у... (центрі / центр)
   - Вона йде в... (офіс / офісі)
 - type: fill-in
-  focus: Describe route with transport (автобусом, пішки, на метро)
+  focus: Описати маршрут за допомогою транспорту (автобусом, пішки, на метро)
   items: 6
   blanks:
   - Я їду в центр {на метро}.
@@ -103,7 +84,7 @@ activity_hints:
   - Парк близько, ми йдемо {пішки}.
   - Ми їдемо в ресторан {автобусом}.
 - type: match-up
-  focus: Match question to logical response for navigation
+  focus: З'єднати питання з логічною відповіддю для орієнтування
   items: 6
   pairs:
   - Вибачте, як дістатися до бібліотеки?: Ідіть прямо, потім направо.
@@ -113,17 +94,16 @@ activity_hints:
   - Куди ви йдете?: У магазин.
   - Де ти живеш?: На вулиці Франка.
 connects_to:
-- a1-034 (Where From?)
+- a1-034 (Звідки?)
 prerequisites:
-- a1-032 (Transport)
+- a1-032 (Транспорт)
 grammar:
-- 'Synthesis: Де? (locative) + Куди? (accusative) in real navigation'
-- Direction + transport + location combined
-- 'Imperative preview: ідіть, їдьте (formal commands)'
+- 'Синтез: Де? (місцевий відмінок) + Куди? (знахідний відмінок) у реальному орієнтуванні'
+- Напрямок + транспорт + розташування в поєднанні
+- 'Ознайомлення з наказовим способом: ідіть, їдьте (ввічливі форми наказів)'
 register: розмовний
 references:
 - title: Synthesis of M28-M32 skills
-  notes: Applied communication — no new grammar, just integration.
+  notes: Прикладне спілкування — без нової граматики, лише інтеграція.
 - title: Большакова Grade 2, розділ «Моє місто»
-  notes: Basic directions vocabulary (прямо, направо, наліво), neighborhood descriptions,
-    asking/giving directions at A1 level.
+  notes: Базова лексика напрямків (прямо, направо, наліво), описи районів, запитання/вказівки дороги на рівні А1.

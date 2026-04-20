@@ -2,82 +2,62 @@ module: a1-005
 level: A1
 sequence: 5
 slug: who-am-i
-version: '1.1'
-title: Who Am I?
-subtitle: Мене звати... — Your first real conversation
+version: 1.1.1
+title: Хто я?
+subtitle: Мене звати... — ваша перша справжня розмова
 focus: vocabulary
 pedagogy: PPP
-phase: A1.1 [Sounds, Letters, and First Contact]
+phase: A1.1 [Звуки, літери та перший контакт]
 word_target: 1200
 objectives:
-- Introduce yourself with name, nationality, and profession
-- Use the Це construction to identify things and people
-- Ask and answer "What is your name?" formally and informally
-- Understand the Ukrainian sentence without verb "to be" (Я — студент)
+- Вміти представити себе, назвавши своє ім'я, національність і професію
+- Використовувати конструкцію з часткою «це» для ідентифікації предметів і людей
+- Вміти ставити запитання «Як тебе/вас звати?» та відповідати на нього формально і неформально
+- Розуміти структуру українського речення без дієслова-зв'язки «бути» (Я — студент)
 dialogue_situations:
-- setting: Hostel common room — two backpackers meet for the first time
+- setting: Кімната відпочинку в хостелі — два туристи з рюкзаками вперше зустрічаються
   speakers:
-  - Марко (Canadian student)
-  - Олена (from Kyiv)
-  motivation: Мене звати, Звідки ти? — real first-meeting context
-- setting: University orientation day — students introduce themselves to the group
+  - Марко
+  - Олена
+  motivation: Мене звати, Звідки ти? — контекст реального першого знайомства
+- setting: Орієнтаційний день в університеті — студенти представляються групі
   speakers:
-  - Тарас (new student)
-  - Софія (second-year volunteer)
-  motivation: Formal vs informal register, professions with Я — студент
+  - Тарас
+  - Софія
+  motivation: Формальний та неформальний регістри, назви професій із конструкцією Я — студент
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 350
   points:
-  - 'Dialogue 1 — At a hostel (informal, following Anna Ep3): — Привіт! Як тебе звати?
-    — Мене звати Марко. А тебе? — Мене звати Олена. Звідки ти? — Я з Канади. А ти?
-    — Я з України. — Дуже приємно!'
-  - 'Dialogue 2 — At a conference (formal, following Anna Ep3-4): — Добрий день! Як
-    вас звати? — Мене звати Петро. Дуже приємно! — Мені також! Ви з України? — Так,
-    я з Києва.'
-  - 'Dialogue 3 — Introducing someone else: Це Андрій. Він зі Львова. Він
-    — інженер. А це Оксана. Вона з Одеси. Вона — лікарка.'
-- section: Мене звати... (My name is...)
+  - 'Діалог 1 — У хостелі (неформальний, за зразком Anna Ep3): — Привіт! Як тебе звати? — Мене звати Марко. А тебе? — Мене звати Олена. Звідки ти? — Я з Канади. А ти? — Я з України. — Дуже приємно!'
+  - 'Діалог 2 — На конференції (формальний, за зразком Anna Ep3-4): — Добрий день! Як вас звати? — Мене звати Петро. Дуже приємно! — Мені також! Ви з України? — Так, я з Києва.'
+  - 'Діалог 3 — Представлення когось іншого: Це Андрій. Він зі Львова. Він — інженер. А це Оксана. Вона з Одеси. Вона — лікарка.'
+- section: Мене звати...
   words: 250
   points:
-  - 'Following Anna Ep3: Мене звати... literally ''me they-call.'' Ukrainian doesn''t
-    use ''My name IS'' — no verb ''to be'' needed. Asking: Як тебе звати? (informal)
-    / Як вас звати? (formal). About others: Як його звати? (his) / Як її звати? (her).'
-  - 'Pleased to meet you: Дуже приємно! or Приємно познайомитись! Said AFTER exchanging
-    names.'
-- section: Це... (This is...)
+  - 'За зразком Anna Ep3: Конструкція «Мене звати...» є безособовою. В українській мові для представлення себе дієслово-зв''язка «є» не потрібне. Питання: Як тебе звати? (неформально) / Як вас звати? (формально). Про інших: Як його звати? / Як її звати?.'
+  - 'Приємно познайомитись: Дуже приємно! або Приємно познайомитись! Ця фраза звучить ПІСЛЯ обміну іменами.'
+- section: Це...
   words: 200
   points:
-  - 'Це = ''this is / it is / these are.'' No verb ''to be'' needed. Це кава. Це Київ.
-    Це Андрій. Questions: Що це? (What is this?) Хто це? (Who is this?) Question
-    words go FIRST: Хто це? not *Це хто?'
-- section: Особові займенники (Personal Pronouns)
+  - 'Займенник «це» використовується для вказівки на щось або когось. Дієслово-зв''язка «є» тут також не потрібне. Це кава. Це Київ. Це Андрій. Питання: Що це? Хто це? Питальні слова завжди стоять НА ПОЧАТКУ речення: Хто це? (не *Це хто?).'
+- section: Особові займенники
   words: 100
   points:
-  - 'The basic personal pronouns: я (I), ти (you, informal), він (he), вона (she),
-    ми (we), ви (you, formal/plural), вони (they). Note: ви is both formal singular
-    and plural — like English ''you'' but written with capital В (Ви) when formal.
-    These pronouns are needed for every sentence from now on.'
-- section: Я — студент (I am a student)
+  - 'Базові особові займенники: я, ти (неформально), він, вона, ми, ви (формально/множина), вони. Зверніть увагу: «ви» використовується як для ввічливого звертання до однієї особи, так і для звертання до кількох осіб (на письмі при ввічливому звертанні часто пишеться з великої літери — Ви). Ці займенники знадобляться для побудови будь-якого речення.'
+- section: Я — студент
   words: 150
   points:
-  - 'No verb ''to be'' in present tense. Subject — Noun: Я — студент. Він — лікар.
-    Вона — вчителька. The dash (—) marks where ''is'' would go.'
-  - 'Nationalities (nominative, no verb): українець / українка, американець / американка,
-    канадієць / канадка. Professions: студент/студентка, вчитель/вчителька, лікар/лікарка,
-    програміст/програмістка.'
-- section: Звідки? (Where from?)
+  - 'У теперішньому часі дієслово-зв''язка «є» пропускається. Підмет — Іменник: Я — студент. Він — лікар. Вона — вчителька. Тире (—) позначає місце, де в інших мовах стояло б дієслово «бути».'
+  - 'Національності (називний відмінок, без дієслова): українець / українка, американець / американка, канадієць / канадка. Професії: студент/студентка, вчитель/вчителька, лікар/лікарка, програміст/програмістка.'
+- section: Звідки?
   words: 200
   points:
-  - 'Following Anna Ep4: Звідки ти? / Звідки ви? Я з України. Я з Канади. Я зі Штатів.
-    Я з Німеччини. Note: ''з/зі + country'' uses genitive forms (України, Канади)
-    but teach as MEMORIZED CHUNKS — genitive grammar is A2. Do NOT introduce ''Де
-    ви живете?'' here — locative + verb conjugation are taught later (M16 verbs, M29
-    locative).'
-- section: Підсумок — Summary
+  - 'За зразком Anna Ep4: Звідки ти? / Звідки ви? Я з України. Я з Канади. Я зі Штатів. Я з Німеччини. Зверніть увагу: у конструкції «з/зі + країна» використовуються форми родового відмінка (України, Канади), але ми подаємо їх як ЗАВЧЕНІ ФРАЗИ, оскільки граматика родового відмінка вивчається на рівні А2. На цьому етапі НЕ вводьте питання «Де ви живете?» — використання місцевого відмінка та дієвідмінювання вивчатимуться пізніше (дієслова в М16, місцевий відмінок у М29).'
+- section: Підсумок
   words: 0
   points:
-  - Self-check folded into dialogue practice above.
+  - 'Самоперевірка включена до практики діалогів, наведеної вище.'
 vocabulary_hints:
   required:
   - я (I)
@@ -108,36 +88,36 @@ vocabulary_hints:
   - Німеччина (Germany)
 activity_hints:
 - type: fill-in
-  focus: 'Complete self-introduction: Мене звати..., Я з..., Я —...'
+  focus: 'Доповніть розповідь про себе: Мене звати..., Я з..., Я —...'
   items: 6
 - type: quiz
-  focus: Formal or informal? Choose the right introduction.
+  focus: Формально чи неформально? Оберіть правильний варіант представлення.
   items: 6
 - type: match-up
-  focus: Match professions with male/female forms
+  focus: З'єднайте назви професій у чоловічому та жіночому роді
   items: 8
 - type: fill-in
-  focus: Complete the dialogue with correct phrases
+  focus: Доповніть діалог правильними фразами
   items: 6
 connects_to:
-- a1-006 (My Family)
+- a1-006 (Моя родина)
 prerequisites:
-- a1-004 (Stress and Melody)
+- a1-004 (Наголос та мелодика)
 grammar:
-- "Personal pronouns: я, ти, він, вона, ми, ви, вони (nominative only)"
-- Мене звати construction (impersonal)
-- Це + noun identification
-- Zero copula (Я — студент, no verb 'is')
-- Nationality and profession vocabulary (nominative)
-- Звідки? + country as memorized chunk (NOT genitive grammar)
+- "Особові займенники: я, ти, він, вона, ми, ви, вони (лише називний відмінок)"
+- Конструкція «Мене звати» (безособова)
+- Вказівна частка «це» + іменник
+- Нульова зв'язка (Я — студент, пропуск дієслова «є»)
+- Лексика на позначення національностей та професій (називний відмінок)
+- Конструкція «Звідки?» + назва країни як стала фраза (БЕЗ пояснення граматики родового відмінка)
 register: розмовний
 references:
 - title: ULP Season 1, Episode 3 — How to Introduce Yourself
   url: https://www.ukrainianlessons.com/episode3/
-  notes: Мене звати, nationality, Дуже приємно.
+  notes: Конструкція «Мене звати», національності, вислів «Дуже приємно».
 - title: ULP Season 1, Episode 4 — Where You Live and Where From
   url: https://www.ukrainianlessons.com/episode4/
-  notes: Де ви живете? Звідки ви?
+  notes: Питання «Де ви живете?», «Звідки ви?».
 - title: ULP Season 1, Episode 8 — Jobs and Professions
   url: https://www.ukrainianlessons.com/episode8/
-  notes: Profession vocabulary with gendered forms.
+  notes: Лексика на позначення професій із формами чоловічого та жіночого роду.

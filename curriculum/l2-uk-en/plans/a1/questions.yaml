@@ -2,63 +2,44 @@ module: a1-019
 level: A1
 sequence: 19
 slug: questions
-version: '1.1'
-title: Questions
-subtitle: Хто? Що? Де? — asking about the world
+version: '1.1.1'
+title: Питання
+subtitle: Хто? Що? Де? — як запитувати про світ
 focus: grammar
 pedagogy: PPP
-phase: A1.3 [Actions]
+phase: A1.3 [Дії]
 word_target: 1200
 objectives:
-- Ask questions using хто, що, де, куди, коли, чому, як
-- Use negation with не (verb) and ні (nothing/nobody)
-- Form yes/no questions with intonation (no word order change)
-- Combine question words with verbs from M16-M18
+- Вміти ставити питання за допомогою слів хто, що, де, куди, коли, чому, як
+- Опанувати заперечення з часткою "не" (для дієслів) та "ні" (ніщо/ніхто)
+- Навчитися утворювати загальні питання (так/ні) за допомогою інтонації (без зміни порядку слів)
+- Поєднувати питальні слова з дієсловами з модулів M16-M18
 dialogue_situations:
-- setting: A tourist asking a local for help navigating the city center
+- setting: Турист просить у перехожого допомоги з орієнтуванням у центрі міста
   speakers:
   - Турист
-  - Перехожий (passerby)
-  motivation: 'Question words: Де? Куди? Як? Коли? in real navigation'
+  - Перехожий
+  motivation: 'Питальні слова: Де? Куди? Як? Коли? у реальній навігації'
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — Getting to know someone (extending M05): — Хто ти? — Я студент.
-    — Що ти вивчаєш? — Я вивчаю українську. — Де ти живеш? — Я живу в Києві. — Коли
-    ти працюєш? — Вранці. Question words demonstrated in real conversation.'
-  - 'Dialogue 2 — At home: — Де моя книга? — Я не знаю.
-    — А хто знає? — Мама знає. — Чому мама? — Тому що вона все знає! Questions
-    + negation in practical context.'
-- section: Питальні слова (Question Words)
+  - 'Діалог 1 — Знайомство (розширення M05): — Хто ти? — Я студент. — Що ти вивчаєш? — Я вивчаю українську. — Де ти живеш? — Я живу в Києві. — Коли ти працюєш? — Вранці. Питальні слова продемонстровано у реальній розмові.'
+  - 'Діалог 2 — Вдома: — Де моя книга? — Я не знаю. — А хто знає? — Мама знає. — Чому мама? — Тому що вона все знає! Питання та заперечення в практичному контексті.'
+- section: Питальні слова
   words: 300
   points:
-  - 'Seven essential question words: Хто? (Who?) — Хто це? Хто говорить? Що? (What?)
-    — Що це? Що ти робиш? Де? (Where?) — Де ти живеш? Де книга? Куди? (Where to?)
-    — Куди ти ходиш? Коли? (When?) — Коли ти працюєш? Чому? (Why?) — Чому ти не працюєш?
-    Як? (How?) — Як справи? Як тебе звати?'
-  - 'Word order: question word + verb + subject (flexible): Де ти живеш? = Ти де живеш?
-    (both acceptable). Yes/no questions: just raise intonation at the end: Ти говориш
-    українською? ↑ (no special word needed). Чи ти говориш? — formal/written (optional
-    for A1).'
-- section: Заперечення (Negation)
+  - 'Сім основних питальних слів: Хто? — Хто це? Хто говорить? Що? — Що це? Що ти робиш? Де? — Де ти живеш? Де книга? Куди? — Куди ти ходиш? Коли? — Коли ти працюєш? Чому? — Чому ти не працюєш? Як? — Як справи? Як тебе звати?'
+  - 'Порядок слів: питальне слово + дієслово + підмет (гнучкий): Де ти живеш? = Ти де живеш? (обидва варіанти прийнятні). Питання типу так/ні: просто підвищте інтонацію в кінці: Ти говориш українською? ↑ (жодних спеціальних слів не потрібно). Чи ти говориш? — формальний/письмовий варіант (необов''язковий для А1).'
+- section: Заперечення
   words: 300
   points:
-  - 'Не = not (before verb): Я не знаю. Він не працює. Ми не розуміємо. Не goes directly
-    before the verb — never separated. Review: Я не хочу. Мені не подобається. (from
-    M15, M18)'
-  - 'Ні = no (standalone) / nothing, nobody (with pronouns): Ні, я не знаю. (No, I
-    don''t know.) Нічого (nothing), ніхто (nobody), ніколи (never), ніде (nowhere).
-    Double negation is REQUIRED in Ukrainian: Я нічого не знаю. (literally: I nothing
-    don''t know = I don''t know anything.) Ніхто не говорить. (Nobody speaks.) — unlike
-    English, both не and ні- are needed.'
-- section: Підсумок — Summary
+  - 'Не (перед дієсловом): Я не знаю. Він не працює. Ми не розуміємо. Частка «не» ставиться безпосередньо перед дієсловом — ніколи не відокремлюється. Повторення: Я не хочу. Мені не подобається. (з M15, M18)'
+  - 'Ні (самостійно) / нічого, ніхто (із займенниками): Ні, я не знаю. Нічого, ніхто, ніколи, ніде. Подвійне заперечення є ОБОВ''ЯЗКОВИМ в українській мові: Я нічого не знаю. Ніхто не говорить. На відміну від англійської, потрібні і «не», і «ні-».'
+- section: Підсумок
   words: 300
   points:
-  - 'Questions: Хто? Що? Де? Куди? Коли? Чому? Як? Yes/no: intonation only (Ти знаєш?
-    ↑) Negation: не before verb (Я не знаю). Double negation: Ніхто не знає. Я нічого
-    не бачу. Self-check: Ask 3 questions about a friend (Де...? Що...? Коли...?).
-    Make 2 negative sentences (Я не... / Ніхто не...).'
+  - 'Питання: Хто? Що? Де? Куди? Коли? Чому? Як? Так/ні: лише інтонація (Ти знаєш? ↑) Заперечення: «не» перед дієсловом (Я не знаю). Подвійне заперечення: Ніхто не знає. Я нічого не бачу. Самоперевірка: Поставте 3 запитання про друга (Де...? Що...? Коли...?). Складіть 2 заперечні речення (Я не... / Ніхто не...).'
 vocabulary_hints:
   required:
   - хто (who)
@@ -79,30 +60,30 @@ vocabulary_hints:
   - тому що (because)
 activity_hints:
 - type: quiz
-  focus: 'Choose the right question word: ___ ти живеш? (Де/Що/Хто)'
+  focus: 'Обери правильне питальне слово: ___ ти живеш? (Де/Що/Хто)'
   items: 8
 - type: fill-in
-  focus: 'Make it negative: Я знаю → Я не знаю, Хтось знає → Ніхто не знає'
+  focus: 'Утвори заперечення: Я знаю → Я не знаю, Хтось знає → Ніхто не знає'
   items: 8
 - type: match-up
-  focus: 'Match question to answer: Де ти живеш? ↔ У Києві.'
+  focus: 'З''єднай питання з відповіддю: Де ти живеш? ↔ У Києві.'
   items: 6
 - type: quiz
-  focus: 'Double negation: choose the correct Ukrainian sentence.'
+  focus: 'Подвійне заперечення: обери правильне українське речення.'
   items: 6
 connects_to:
-- a1-020 (My Morning)
+- a1-020 (Мій ранок)
 prerequisites:
-- a1-018 (I Want, I Can)
+- a1-018 (Я хочу, я можу)
 grammar:
-- 'Question words: хто, що, де, куди, коли, чому, як'
-- Yes/no questions with rising intonation
-- 'Negation: не before verb'
-- 'Double negation: ніхто не + verb, нічого не + verb'
+- 'Питальні слова: хто, що, де, куди, коли, чому, як'
+- Загальні питання з висхідною інтонацією
+- 'Заперечення: не перед дієсловом'
+- 'Подвійне заперечення: ніхто не + дієслово, нічого не + дієслово'
 register: розмовний
 references:
-- title: Варзацька Grade 4, p.41
-  notes: Question words in case system context (хто? що? кого? чого?).
+- title: Варзацька 4 клас, стор. 41
+  notes: Питальні слова у контексті системи відмінків (хто? що? кого? чого?).
 - title: ULP Season 1, Episode 35
   url: https://www.ukrainianlessons.com/episode35/
-  notes: Questions in Ukrainian — word order and intonation.
+  notes: Питання в українській мові — порядок слів та інтонація.

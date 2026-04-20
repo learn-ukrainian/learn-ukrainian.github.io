@@ -2,62 +2,44 @@ module: a1-020
 level: A1
 sequence: 20
 slug: my-morning
-version: '1.2'
-title: My Morning
-subtitle: Прокидаюся, вмиваюся — reflexive verbs and routines
+version: 1.2.2
+title: Мій ранок
+subtitle: Прокидаюся, вмиваюся — зворотні дієслова та ранкова рутина
 focus: grammar
 pedagogy: PPP
-phase: A1.3 [Actions]
+phase: A1.3 [Дії]
 word_target: 1200
 objectives:
-- Recognize and use reflexive verbs with -ся/-сь
-- Describe a morning routine using sequence words
-- Conjugate reflexive verbs in present tense (same endings + ся)
-- Tell a simple daily story in sequence
+- Вміти розпізнавати та використовувати зворотні дієслова із постфіксом -ся/-сь
+- Навчитися описувати свою ранкову рутину за допомогою слів послідовності
+- Вміти відмінювати зворотні дієслова в теперішньому часі (стандартні закінчення + ся)
+- Навчитися розповідати просту щоденну історію у хронологічній послідовності
 dialogue_situations:
-- setting: Two roommates comparing their morning routines before leaving for work
+- setting: Дві сусідки по кімнаті порівнюють свої ранкові звички перед виходом на роботу
   speakers:
   - Ліна
   - Настя
-  motivation: 'Reflexive verbs: прокидаюся, вмиваюся, одягаюся in sequence'
+  motivation: 'Зворотні дієслова: прокидаюся, вмиваюся, одягаюся у логічній послідовності'
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — Morning routine: — Коли ти прокидаєшся? — Я прокидаюся о сьомій.
-    — Що ти робиш потім? — Вмиваюся, одягаюся і снідаю. — А коли ти йдеш на роботу?
-    — О восьмій. Reflexive verbs emerge through describing the morning.'
-  - 'Dialogue 2 — Weekend morning (contrast): — У суботу я не поспішаю. Прокидаюся
-    пізно, лежу, дивлюся телефон. — А я навчаюся вранці. Потім гуляю. Mix of reflexive
-    and non-reflexive verbs.'
-- section: Дієслова на -ся (Reflexive Verbs)
+  - 'Діалог 1 — Ранкова рутина: — Коли ти прокидаєшся? — Я прокидаюся о сьомій. — Що ти робиш потім? — Вмиваюся, одягаюся і снідаю. — А коли ти йдеш на роботу? — О восьмій. Зворотні дієслова з''являються природно під час розповіді про ранок.'
+  - 'Діалог 2 — Ранок вихідного дня (порівняння): — У суботу я не поспішаю. Прокидаюся пізно, лежу, дивлюся телефон. — А я навчаюся вранці. Потім гуляю. Поєднання зворотних і незворотних дієслів.'
+- section: Дієслова на -ся
   words: 300
   points:
-  - 'Караман Grade 10 p.176: Дієслова із суфіксом -ся(-сь) означають дію, спрямовану
-    на себе. вмивати (to wash someone) → вмиватися (to wash oneself). одягати (to
-    dress someone) → одягатися (to dress oneself). The -ся attaches to the end of
-    every conjugated form: я вмиваюся, ти вмиваєшся, він/вона вмивається.'
-  - 'Кравцова Grade 4 p.113: pronunciation note: -шся sounds like [с'':а] (long soft
-    с): вмиваєшся → [вмиваєс'':а]. -ться sounds like [ц'':а] (long soft ц): вмивається
-    → [вмиваєц'':а]. The spelling and pronunciation differ — learn both!'
-- section: Мій ранок (My Morning)
+  - 'Караман, 10 клас, с. 176: Дієслова із суфіксом -ся(-сь) означають дію, спрямовану на себе. вмивати (когось) → вмиватися (себе). одягати (когось) → одягатися (себе). Постфікс -ся додається в кінці кожної особової форми: я вмиваюся, ти вмиваєшся, він/вона вмивається.'
+  - 'Кравцова, 4 клас, с. 113: правило вимови: -шся звучить як [с'':а] (подовжений м''який "с"): вмиваєшся → [вмиваєс'':а]. -ться звучить як [ц'':а] (подовжений м''який "ц"): вмивається → [вмиваєц'':а]. Написання і вимова відрізняються — потрібно запам''ятати і те, і інше!'
+- section: Мій ранок
   words: 300
   points:
-  - 'Morning routine vocabulary (reflexive verbs): прокидатися (to wake up), вмиватися
-    (to wash face/hands), одягатися (to get dressed), збиратися (to get ready), повертатися
-    (to return home). Non-reflexive morning verbs for contrast: снідати (to have breakfast),
-    пити каву (to drink coffee). Йти (to go) — irregular: я йду, ти йдеш, він/вона
-    йде. Learn these forms — they don''t follow Group I or II patterns.'
-  - 'Sequence words for telling a story: спочатку (first), потім (then), після цього
-    (after this), нарешті (finally). Мій ранок: Спочатку я прокидаюся. Потім вмиваюся
-    і одягаюся. Після цього снідаю. Нарешті йду на роботу.'
-- section: Підсумок — Summary
+  - 'Лексика ранкової рутини (зворотні дієслова): прокидатися, вмиватися, одягатися, збиратися, повертатися. Незворотні дієслова для ранку (для контрасту): снідати, пити каву. Дієслово "йти" — неправильне: я йду, ти йдеш, він/вона йде. Запам''ятайте ці форми — вони не підпорядковуються правилам І або ІІ дієвідміни.'
+  - 'Слова послідовності для створення розповіді: спочатку, потім, після цього, нарешті. Мій ранок: Спочатку я прокидаюся. Потім вмиваюся і одягаюся. Після цього снідаю. Нарешті йду на роботу.'
+- section: Підсумок
   words: 300
   points:
-  - 'Reflexive verbs = regular verb + ся at the end. я -юся, ти -єшся, він/вона -ється
-    (Group I pattern + ся). Morning routine: прокидатися → вмиватися → одягатися →
-    снідати → йти. Sequence words: спочатку, потім, після цього, нарешті. Self-check:
-    Describe your morning in 4-5 sentences using sequence words.'
+  - 'Зворотні дієслова = звичайне дієслово + ся в кінці. я -юся, ти -єшся, він/вона -ється (схема І дієвідміни + ся). Ранкова рутина: прокидатися → вмиватися → одягатися → снідати → йти. Слова послідовності: спочатку, потім, після цього, нарешті. Самоперевірка: Опишіть свій ранок у 4-5 реченнях, використовуючи слова послідовності.'
 vocabulary_hints:
   required:
   - прокидатися (to wake up)
@@ -78,30 +60,30 @@ vocabulary_hints:
   - пізно (late)
 activity_hints:
 - type: fill-in
-  focus: 'Add -ся: я вмиваю__ , ти одягаєш__ , він прокидаєть__'
+  focus: 'Додайте -ся: я вмиваю__ , ти одягаєш__ , він прокидаєть__'
   items: 10
 - type: quiz
-  focus: 'Reflexive or not? Choose: Я (вмиваю/вмиваюся) руки.'
+  focus: 'Зворотне чи ні? Оберіть: Я (вмиваю/вмиваюся) руки.'
   items: 8
 - type: fill-in
-  focus: 'Put the morning routine in order: спочатку ___, потім ___, нарешті ___'
+  focus: 'Відновіть правильний порядок ранкової рутини: спочатку ___, потім ___, нарешті ___'
   items: 6
 - type: fill-in
-  focus: Describe your morning in 3 sentences
+  focus: Опишіть свій ранок у 3 реченнях
   items: 3
 connects_to:
-- a1-021 (Checkpoint — Actions)
+- a1-021 (Рубіжний контроль — Дії)
 prerequisites:
-- a1-019 (Questions)
+- a1-019 (Запитання)
 grammar:
-- 'Reflexive verbs: regular conjugation + -ся/-сь suffix'
-- 'Pronunciation: -шся=[с'':а], -ться=[ц'':а] (gemination)'
-- 'Sequence words: спочатку, потім, після цього, нарешті'
+- 'Зворотні дієслова: звичайне відмінювання + постфікс -ся/-сь'
+- 'Вимова: -шся=[с'':а], -ться=[ц'':а] (подовження приголосних)'
+- 'Слова послідовності: спочатку, потім, після цього, нарешті'
 register: розмовний
 references:
 - title: Караман Grade 10, p.176
   notes: 'Зворотні дієслова: суфікс -ся(-сь) означає дію, спрямовану на себе.'
 - title: Кравцова Grade 4, p.113
-  notes: 'Pronunciation: -шся=[с''а], -ться=[ц''а].'
+  notes: 'Вимова: -шся=[с''а], -ться=[ц''а].'
 - title: Захарійчук Grade 4, p.162
   notes: 'Дієслова на -ся: вправи з вимовою та правописом.'

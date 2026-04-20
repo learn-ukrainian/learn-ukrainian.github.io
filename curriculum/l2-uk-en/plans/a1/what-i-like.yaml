@@ -2,64 +2,44 @@ module: a1-015
 level: A1
 sequence: 15
 slug: what-i-like
-version: '1.1'
-title: What I Like
-subtitle: Я люблю читати — your first verbs
+version: 1.1.1
+title: Що я люблю
+subtitle: Я люблю читати — ваші перші дієслова
 focus: grammar
 pedagogy: PPP
-phase: A1.3 [Actions]
+phase: A1.3 [Дії]
 word_target: 1200
 objectives:
-- Use люблю + infinitive to express what you like doing
-- Use мені подобається + noun to express what you like (as memorized chunk)
-- Recognize Ukrainian infinitive form (-ти ending)
-- Talk about hobbies and interests using simple verb phrases
+- Вміти використовувати «люблю» + інфінітив, щоб розповісти про те, що вам подобається робити
+- Вміти використовувати сталу фразу «мені подобається» + іменник, щоб висловити вподобання
+- Розпізнавати форму українського інфінітива (закінчення -ти)
+- Розповідати про хобі та інтереси за допомогою простих дієслівних конструкцій
 dialogue_situations:
-- setting: First day at a language exchange — sharing hobbies over tea
+- setting: Перший день на мовному обміні — розмова про хобі за чаєм
   speakers:
-  - Анна (learner)
-  - Віктор (tandem partner)
-  motivation: 'Люблю + infinitive: Люблю читати, Люблю малювати'
+  - Анна
+  - Віктор
+  motivation: '«Люблю» + інфінітив: Люблю читати, Люблю малювати'
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — Meeting someone''s interests (ULP Ep14 pattern): — Що ти любиш робити?
-    — Я люблю читати і слухати музику. — А я люблю готувати. — Правда? Що ти готуєш?
-    Infinitives introduced naturally through ''люблю + verb''.'
-  - 'Dialogue 2 — Describing preferences: — Тобі подобається ця книга? — Так, мені
-    подобається. — А цей фільм? — Ні, мені не подобається. Мені подобається музика.
-    ''Подобається'' as a fixed chunk — dative grammar NOT analyzed.'
-- section: Я люблю... (I Like...)
+  - 'Діалог 1 — Запитуємо про інтереси співрозмовника (за зразком ULP Ep14): — Що ти любиш робити? — Я люблю читати і слухати музику. — А я люблю готувати. — Правда? Що ти готуєш? Інфінітиви природно вводяться через конструкцію «люблю + дієслово».'
+  - 'Діалог 2 — Опис уподобань: — Тобі подобається ця книга? — Так, мені подобається. — А цей фільм? — Ні, мені не подобається. Мені подобається музика. «Подобається» подається як стала фраза — граматика давального відмінка ТУТ НЕ аналізується.'
+- section: Я люблю...
   words: 300
   points:
-  - 'Люблю + infinitive (what you enjoy doing): Я люблю читати (I like to read). Я
-    люблю гуляти (I like to walk). Я люблю готувати (I like to cook). Я люблю слухати
-    музику (I like to listen to music). Pattern: subject + люблю + infinitive (-ти
-    ending). Infinitive = dictionary form of the verb, always ends in -ти.'
-  - 'Common infinitives for hobbies (new vocabulary): читати (to read), гуляти (to
-    walk), готувати (to cook), слухати (to listen), дивитися (to watch), грати (to
-    play), малювати (to draw), подорожувати (to travel), співати (to sing). Pronunciation:
-    the stress in infinitives varies — learn each one.'
-- section: Мені подобається... (I Like...)
+  - 'Люблю + інфінітив (те, що вам подобається робити): Я люблю читати. Я люблю гуляти. Я люблю готувати. Я люблю слухати музику. Схема: підмет + люблю + інфінітив (закінчення -ти). Інфінітив = словникова форма дієслова, що завжди закінчується на -ти.'
+  - 'Поширені інфінітиви для позначення хобі (нова лексика): читати, гуляти, готувати, слухати, дивитися, грати, малювати, подорожувати, співати. Вимова: наголос в інфінітивах може падати на різні склади — їх треба запам''ятовувати.'
+- section: Мені подобається...
   words: 300
   points:
-  - 'Two ways to say ''I like'' — different grammar, same meaning at A1: Я люблю +
-    infinitive = I love/like doing something. Мені подобається + noun = I like something
-    (a thing). Мені подобається музика. Мені подобається ця книга. Мені подобається
-    Київ. Note: ''мені подобається'' is a chunk — we don''t analyze WHY мені (dative).
-    Just use it.'
-  - 'Negative: Я не люблю / Мені не подобається: Я не люблю готувати. Мені не подобається
-    цей фільм. Question: Ти любиш читати? Тобі подобається? Note: люблю changes by
-    person (я люблю, ти любиш) — full conjugation in M17 (Group II).'
-- section: Підсумок — Summary
+  - 'Два способи сказати про свої вподобання — різна граматика, але однакове значення на рівні А1: Я люблю + інфінітив = мені подобається щось робити. Мені подобається + іменник = мені подобається щось (якась річ). Мені подобається музика. Мені подобається ця книга. Мені подобається Київ. Зверніть увагу: «мені подобається» — це стала фраза, ми не аналізуємо ЧОМУ саме «мені» (давальний відмінок). Просто використовуємо її.'
+  - 'Заперечення: Я не люблю / Мені не подобається: Я не люблю готувати. Мені не подобається цей фільм. Питання: Ти любиш читати? Тобі подобається? Зверніть увагу: дієслово «люблю» змінюється за особами (я люблю, ти любиш) — повне відмінювання розглядатиметься в М17 (Дієвідміна II).'
+- section: Підсумок
   words: 300
   points:
-  - 'Two structures for ''like'': 1. Я люблю + infinitive (-ти) — for activities 2.
-    Мені подобається + noun — for things Negative: не before the verb (не люблю, не
-    подобається). Self-check: Name 3 things you like doing (Я люблю...). Name 2 things
-    you like (Мені подобається...). Name 1 thing you don''t like (Я не люблю... /
-    Мені не подобається...).'
+  - 'Дві конструкції для висловлення вподобань: 1. Я люблю + інфінітив (-ти) — для дій 2. Мені подобається + іменник — для речей. Заперечення: частка «не» ставиться перед дієсловом (не люблю, не подобається). Самоперевірка: Назвіть 3 дії, які ви любите виконувати (Я люблю...). Назвіть 2 речі, які вам подобаються (Мені подобається...). Назвіть 1 річ, яка вам не подобається (Я не люблю... / Мені не подобається...).'
 vocabulary_hints:
   required:
   - любити (to love/like — verb)
@@ -79,30 +59,30 @@ vocabulary_hints:
   - книга (book — review from M08)
 activity_hints:
 - type: fill-in
-  focus: 'Complete: Я люблю ___. (choose infinitive for the picture)'
+  focus: 'Доповніть речення: Я люблю ___. (оберіть інфінітив до малюнка)'
   items: 8
 - type: quiz
-  focus: Люблю or подобається? Choose the right structure.
+  focus: «Люблю» чи «подобається»? Оберіть правильну конструкцію.
   items: 8
 - type: match-up
-  focus: 'Match infinitives to their meanings: читати ↔ to read'
+  focus: 'З''єднайте інфінітиви з їхнім значенням: читати ↔ to read'
   items: 8
 - type: fill-in
-  focus: 'Make it negative: Я люблю → Я не люблю'
+  focus: 'Утворіть заперечну форму: Я люблю → Я не люблю'
   items: 6
 connects_to:
-- a1-016 (Verbs Group I)
+- a1-016 (Дієслова І дієвідміни)
 prerequisites:
-- a1-014 (Checkpoint — My World)
+- a1-014 (Контрольна точка — Мій світ)
 grammar:
-- 'Infinitive form: all verbs end in -ти'
-- Люблю + infinitive for activities
-- Мені подобається + noun (chunk — no dative analysis)
-- Negation with не before the verb
+- 'Форма інфінітива: всі дієслова закінчуються на -ти'
+- Люблю + інфінітив для позначення дій
+- Мені подобається + іменник (стала фраза — без аналізу давального відмінка)
+- Заперечення за допомогою частки «не» перед дієсловом
 register: розмовний
 references:
 - title: ULP Season 1, Episode 14
   url: https://www.ukrainianlessons.com/episode14/
-  notes: Hobbies and interests — люблю + infinitive pattern.
+  notes: Хобі та інтереси — конструкція «люблю» + інфінітив.
 - title: Літвінова Grade 7, p.26-27
-  notes: 'Infinitive definition: форма, що закінчується суфіксом -ти.'
+  notes: 'Визначення інфінітива: форма, що закінчується суфіксом -ти.'

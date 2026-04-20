@@ -2,68 +2,51 @@ module: a1-041
 level: A1
 sequence: 41
 slug: checkpoint-food-shopping
-version: '1.2'
-title: 'Checkpoint: Food and Shopping'
-subtitle: Can you order food and buy things in Ukrainian?
+version: '1.2.2'
+title: 'Підсумок: Їжа та покупки'
+subtitle: Чи вмієте ви замовляти їжу та купувати речі українською?
 focus: review
 pedagogy: PPP
-phase: A1.6 [Food and Shopping]
+phase: A1.6 [Їжа та покупки]
 word_target: 1000
 objectives:
-- Demonstrate food and drink vocabulary in context
-- Use accusative case correctly for both inanimate and animate nouns
-- Order at a cafe and buy things at a shop/market
-- Combine all A1.6 skills in connected scenarios
+- Використовувати лексику про їжу та напої в контексті
+- Правильно використовувати знахідний відмінок для істот та неістот
+- Замовляти в кафе та купувати речі в магазині чи на ринку
+- Поєднувати всі навички рівня A1.6 у зв'язних ситуаціях
 dialogue_situations:
-- setting: 'Hosting a вечеря (f, dinner party) — full flow: shopping for продукти
-    (pl) at the ринок (m, market), cooking вареники (pl) and салат (m), setting the
-    table with тарілки (pl, plates) and склянки (pl, glasses), serving guests.'
+- setting: 'Проведення вечері (f) — повний процес: купівля продуктів (pl) на ринку (m), приготування вареників (pl) та салату (m), сервірування столу тарілками (pl) та склянками (pl), частування гостей.'
   speakers:
-  - Господиня (host)
-  - Гості (guests)
-  motivation: 'Consolidation: продукти(pl), вареники(pl), тарілка(f), склянка(f)'
+  - Господиня
+  - Гості
+  motivation: 'Закріплення: продукти(pl), вареники(pl), тарілка(f), склянка(f)'
 content_outline:
-- section: Що ми знаємо? (What Do We Know?)
+- section: Що ми знаємо?
   words: 200
   points:
-  - 'Self-check covering M36-M40: Can you name 10 foods and 5 drinks? (M36) Can you
-    say what you eat/drink using accusative? (M37) Can you order at a cafe? (M38)
-    Can you ask prices and buy things? (M39) Can you use accusative for people? (M40)'
-- section: Читання (Reading Practice)
+  - 'Самоперевірка за темами M36-M40: Чи можете ви назвати 10 продуктів і 5 напоїв? (M36) Чи можете ви сказати, що їсте/п''єте, використовуючи знахідний відмінок? (M37) Чи вмієте ви замовляти в кафе? (M38) Чи можете ви запитати ціну та купити речі? (M39) Чи можете ви використовувати знахідний відмінок для людей? (M40)'
+- section: Читання
   words: 250
   points:
-  - 'A short Ukrainian text using vocabulary from M36-M40. Content: Anna goes to the
-    market, buys food, then goes to a cafe. She orders борщ and каву з молоком, asks
-    for the bill, then meets a friend and introduces her brother. Uses food vocabulary,
-    accusative inanimate and animate, cafe phrases.'
-- section: Граматика (Grammar Summary)
+  - 'Короткий український текст із використанням лексики з M36-M40. Зміст: Анна йде на ринок, купує продукти, потім іде в кафе. Вона замовляє борщ і каву з молоком, просить рахунок, потім зустрічає подругу та знайомить її з братом. Використовується лексика про їжу, знахідний відмінок для істот і неістот, фрази для кафе.'
+- section: Граматика
   words: 200
   points:
-  - 'Key patterns from A1.6: 1. Food/drink vocabulary: їжа, напої, meals (M36) 2.
-    Accusative inanimate: masc = nom, fem -а→-у (M37) 3. Ordering: Мені каву, будь
-    ласка (M38) 4. Prices: Скільки коштує? Гривня/гривні/гривень (M39) 5. Accusative
-    animate: fem -а→-у, masc = genitive (M40) 6. Chunks: кава з молоком, кілограм
-    яблук (M36, M39)'
-- section: Діалог (Connected Dialogue)
+  - 'Ключові конструкції з A1.6: 1. Лексика про їжу/напої: їжа, напої, прийоми їжі (M36) 2. Знахідний відмінок неістот: чол. = наз., жін. -а→-у (M37) 3. Замовлення: Мені каву, будь ласка (M38) 4. Ціни: Скільки коштує? Гривня/гривні/гривень (M39) 5. Знахідний відмінок істот: жін. -а→-у, чол. = родовий (M40) 6. Сталі вирази: кава з молоком, кілограм яблук (M36, M39)'
+- section: Діалог
   words: 200
   points:
-  - 'A day of food and shopping: — Що ти їш на сніданок? — Я їм кашу і п''ю каву з
-    молоком. — Потім іду на ринок. Скільки коштують помідори? — Тридцять гривень.
-    — Дайте кілограм, будь ласка. — Потім у кафе: Мені борщ і воду, будь ласка. —
-    О, я бачу Олену! Олено, привіт! Ти знаєш мого брата? Combines all A1.6 skills
-    in one realistic day.'
-- section: Підсумок — Summary
+  - 'День покупок і їжі: — Що ти їш на сніданок? — Я їм кашу і п''ю каву з молоком. — Потім іду на ринок. Скільки коштують помідори? — Тридцять гривень. — Дайте кілограм, будь ласка. — Потім у кафе: Мені борщ і воду, будь ласка. — О, я бачу Олену! Олено, привіт! Ти знаєш мого брата? Поєднує всі навички A1.6 в одному реалістичному дні.'
+- section: Підсумок
   words: 150
   points:
-  - 'A1.6 achievement summary: You can talk about food and drinks. You can use accusative
-    for things AND people. You can order at a cafe and pay. You can shop at a market
-    and ask prices. Next: A1.7 — Communication (phone, email, making plans).'
+  - 'Огляд досягнень A1.6: Ви вмієте говорити про їжу та напої. Ви можете використовувати знахідний відмінок для речей І людей. Ви вмієте замовляти в кафе та розраховуватися. Ви можете робити покупки на ринку та питати ціни. Далі: A1.7 — Спілкування (телефон, електронна пошта, планування).'
 vocabulary_hints:
   required: []
   recommended: []
 activity_hints:
 - type: quiz
-  focus: 'Accusative check: choose correct form for inanimate AND animate nouns'
+  focus: 'Перевірка знахідного відмінка: обрати правильну форму для істот і неістот'
   items:
   - question: Я їм ___.
     options:
@@ -116,7 +99,7 @@ activity_hints:
     - мама
     - мами
 - type: fill-in
-  focus: Complete the cafe + market dialogue with correct forms
+  focus: Доповнити діалог у кафе та на ринку правильними формами
   items:
   - — Що ти їш на сніданок? — Я їм {кашу|каша|каші} і п'ю каву.
   - — Потім іду на ринок. Скільки {коштують|коштує|коштувати} помідори?
@@ -127,7 +110,7 @@ activity_hints:
   - — О, я бачу {Олену|Олена|Олени}! Олено, привіт!
   - — Ти знаєш мого {брата|брат|братом}?
 - type: group-sort
-  focus: 'Sort accusative forms: inanimate (що?) vs animate (кого?)'
+  focus: 'Розподіл форм знахідного відмінка: неістоти (що?) проти істот (кого?)'
   groups:
   - name: Inanimate (що?)
     items:
@@ -144,7 +127,7 @@ activity_hints:
     - друга
     - вчителя
 - type: quiz
-  focus: What do you say? Match shopping/cafe situations to correct phrases
+  focus: Що ви скажете? Підберіть правильні фрази для ситуацій у магазині чи кафе
   items:
   - question: 'You want to order coffee:'
     options:
@@ -187,14 +170,14 @@ activity_hints:
     - Можна карткою?
     - Це гостре?
 connects_to:
-- a1-042 (next module in A1.7)
+- a1-042 (Наступний модуль в A1.7)
 prerequisites:
-- a1-040 (People Around Me)
+- a1-040 (Люди навколо мене)
 grammar:
-- 'Review: accusative inanimate (M37) and animate (M40)'
-- 'Review: ordering patterns (M38) and price patterns (M39)'
-- 'Review: з + noun chunks (M36, M39)'
+- 'Повторення: знахідний відмінок для неістот (M37) та істот (M40)'
+- 'Повторення: конструкції замовлення (M38) та запитання ціни (M39)'
+- 'Повторення: з + іменник у сталих виразах (M36, M39)'
 register: розмовний
 references:
 - title: Synthesis of M36-M40 content
-  notes: No new material — review and integration of A1.6 phase.
+  notes: Нового матеріалу немає — лише повторення та інтеграція етапу A1.6.

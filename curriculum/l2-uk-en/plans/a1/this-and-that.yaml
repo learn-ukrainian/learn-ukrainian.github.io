@@ -2,66 +2,44 @@ module: a1-012
 level: A1
 sequence: 12
 slug: this-and-that
-version: '1.1'
-title: This and That
-subtitle: Цей стіл, та книга — pointing at things
+version: '1.1.1'
+title: Це і те
+subtitle: Цей стіл, та книга — вказуємо на предмети
 focus: grammar
 pedagogy: PPP
-phase: A1.2 [My World]
+phase: A1.2 [Мій світ]
 word_target: 1200
 objectives:
-- Use цей/ця/це (this) and той/та/те (that) with correct gender agreement
-- Point at and identify objects using demonstratives + nouns from M08-M10
-- Combine demonstratives with adjectives and colors (цей великий червоний стіл)
-- Distinguish цей (near/this) from той (far/that)
+- Вживати займенники цей/ця/це та той/та/те з правильним узгодженням у роді
+- Вказувати на предмети та називати їх, використовуючи вказівні займенники та іменники з M08-M10
+- Поєднувати вказівні займенники з прикметниками та кольорами (цей великий червоний стіл)
+- Розрізняти займенники цей (близько) та той (далеко)
 dialogue_situations:
-- setting: At an electronics store — comparing phones, laptops, and headphones on
-    different shelves. Цей телефон (m, this phone near you) vs той ноутбук (m, that
-    laptop over there). Ця камера (f) vs та. Це радіо (n) vs те.
+- setting: У магазині електроніки — порівняння телефонів, ноутбуків і навушників на різних полицях. Цей телефон (поруч) порівняно з той ноутбук (ген там). Ця камера порівняно з та. Це радіо порівняно з те.
   speakers:
   - Ірина
-  - Консультант (shop assistant)
-  motivation: Цей/ця/це vs той/та/те with телефон(m), камера(f), радіо(n)
+  - Консультант
+  motivation: Займенники цей/ця/це та той/та/те зі словами телефон, камера, радіо
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — Shopping (extending M10 colors + M11 prices): — Скільки коштує ця
-    сумка? — Яка? Ця червона? — Ні, та синя. — Та коштує двісті гривень. — А цей рюкзак?
-    — Цей — сто п''ятдесят. Demonstratives emerge naturally: цей/ця = the one here,
-    той/та = the one there.'
-  - 'Dialogue 2 — In a room (extending M08-M09): — Що це? — Це мій стіл. — А те? —
-    Те — крісло. — Цей стілець новий, а той — старий. Contrast near/far with objects
-    already known.'
-- section: Цей, ця, це (This)
+  - 'Діалог 1 — Покупки (розширення кольорів із M10 та цін із M11): — Скільки коштує ця сумка? — Яка? Ця червона? — Ні, та синя. — Та коштує двісті гривень. — А цей рюкзак? — Цей — сто п''ятдесят. Вказівні займенники виникають природно: цей/ця = той, що тут, той/та = той, що там.'
+  - 'Діалог 2 — У кімнаті (розширення M08-M09): — Що це? — Це мій стіл. — А те? — Те — крісло. — Цей стілець новий, а той — старий. Контраст близько/далеко з уже відомими предметами.'
+- section: Цей, ця, це
   words: 300
   points:
-  - 'Demonstrative pronouns follow the same gender pattern as мій/моя/моє and який/яка/яке:
-    Цей стіл (m) — this table. Ця книга (f) — this book. Це вікно (n) — this window.
-    Заболотний Grade 6 p.210: вказівні займенники цей, той змінюються за родами. At
-    A1 we learn nominative only — other forms come later.'
-  - 'Combining with adjectives and colors: Цей великий червоний стіл. Ця нова синя
-    сумка. Це маленьке біле вікно. Word order: demonstrative + adjective(s) + noun
-    (same as English!).'
-- section: Той, та, те (That)
+  - 'Вказівні займенники мають таку саму модель узгодження в роді, як мій/моя/моє та який/яка/яке: Цей стіл. Ця книга. Це вікно. Заболотний, 6 клас, с. 210: вказівні займенники цей, той змінюються за родами. На рівні A1 ми вивчаємо лише називний відмінок — інші форми будуть пізніше.'
+  - 'Поєднання з прикметниками та кольорами: Цей великий червоний стіл. Ця нова синя сумка. Це маленьке біле вікно. Порядок слів: вказівний займенник + прикметник(и) + іменник (як і в англійській!).'
+- section: Той, та, те
   words: 300
   points:
-  - 'Той/та/те = that (farther away, or previously mentioned): Той стіл (m) — that
-    table. Та книга (f) — that book. Те вікно (n) — that window. Contrast: Цей стілець
-    новий, а той — старий. Warning: ''та'' also means ''and'' (like і/й). Context
-    makes it clear: мама та тато (and) vs та книга (that book).'
-  - 'Practical usage — pointing and choosing: Який стіл? — Цей чи той? (This one or
-    that one?) Яка сумка? — Ця червона чи та синя? Яке вікно? — Це велике чи те маленьке?
-    Note: ''Це'' as demonstrative (це вікно = this window) vs ''це'' as ''this is''
-    (Це вікно = This is a window). Context makes it clear.'
-- section: Підсумок — Summary
+  - 'Той/та/те = той, що далі, або згаданий раніше: Той стіл. Та книга. Те вікно. Контраст: Цей стілець новий, а той — старий. Застереження: слово "та" також означає сполучник (як і/й). Контекст робить це зрозумілим: мама та тато порівняно з та книга.'
+  - 'Практичне використання — вказування та вибір: Який стіл? — Цей чи той? Яка сумка? — Ця червона чи та синя? Яке вікно? — Це велике чи те маленьке? Зверніть увагу: "Це" як вказівний займенник (це вікно) і "це" як "це є" (Це вікно). Контекст усе прояснює.'
+- section: Підсумок
   words: 300
   points:
-  - 'Gender agreement table — all patterns from A1.2 together: | | m | f | n | | мій
-    | моя | моє | (M06 possessives) | який | яка | яке | (M09 questions) | цей | ця
-    | це | (M12 this) | той | та | те | (M12 that) Same endings, same logic — Ukrainian
-    is consistent! Self-check: Point at 3 things near you (цей/ця/це), then 3 things
-    far away (той/та/те).'
+  - 'Таблиця узгодження в роді — всі моделі з A1.2 разом: | | ч | ж | с | | мій | моя | моє | | який | яка | яке | | цей | ця | це | | той | та | те | Ті самі закінчення, та сама логіка — українська мова послідовна! Самоперевірка: вкажіть на 3 речі поруч із вами (цей/ця/це), потім на 3 речі далеко (той/та/те).'
 vocabulary_hints:
   required:
   - цей, ця, це (this — m/f/n)
@@ -74,29 +52,29 @@ vocabulary_hints:
   - він, вона, воно (review from M08 — used for reference)
 activity_hints:
 - type: quiz
-  focus: Цей, ця, or це? Choose the right demonstrative for each noun.
+  focus: Цей, ця чи це? Виберіть правильний вказівний займенник для кожного іменника.
   items: 8
 - type: fill-in
-  focus: 'Complete: ___ книга нова, а ___ — стара. (ця/та)'
+  focus: 'Доповніть: ___ книга нова, а ___ — стара. (ця/та)'
   items: 8
 - type: match-up
-  focus: Match цей/ця/це with мій/моя/моє and який/яка/яке — same gender!
+  focus: З'єднайте цей/ця/це з мій/моя/моє та який/яка/яке — рід збігається!
   items: 6
 - type: quiz
-  focus: Той, та, or те? Point at the far object.
+  focus: Той, та чи те? Вкажіть на предмет, що знаходиться далеко.
   items: 6
 connects_to:
-- a1-013 (Many Things)
+- a1-013 (Багато речей)
 prerequisites:
-- a1-009 (What Is It Like?)
+- a1-009 (Яке воно?)
 grammar:
-- Demonstrative pronouns цей/ця/це (this) and той/та/те (that) — nominative only
-- 'Gender agreement pattern: same as мій/який'
-- 'Word order: demonstrative + adjective + noun'
-- та = 'that' (demonstrative) vs та = 'and' (conjunction) — context distinguishes
+- Вказівні займенники цей/ця/це та той/та/те — лише називний відмінок
+- Модель узгодження в роді збігається із займенниками мій/який
+- Порядок слів вказівний займенник + прикметник + іменник
+- Займенник та порівняно зі сполучником та — розрізнення за контекстом
 register: розмовний
 references:
 - title: Заболотний Grade 6, p.210
   notes: Вказівні займенники цей, той змінюються за родами, числами, відмінками.
 - title: Літвінова Grade 6, p.273
-  notes: Full declension table for той — we use nominative only at A1.
+  notes: Повна таблиця відмінювання займенника той — на рівні A1 використовуємо лише називний відмінок.

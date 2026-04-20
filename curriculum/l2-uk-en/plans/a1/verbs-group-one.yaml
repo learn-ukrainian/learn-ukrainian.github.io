@@ -2,63 +2,44 @@ module: a1-016
 level: A1
 sequence: 16
 slug: verbs-group-one
-version: '1.1'
-title: Verbs Group I
-subtitle: Читаю, читаєш, читає — your first conjugation
+version: '1.1.1'
+title: Дієслова першої групи
+subtitle: Читаю, читаєш, читає — ваша перша дієвідміна
 focus: grammar
 pedagogy: PPP
-phase: A1.3 [Actions]
+phase: A1.3 [Дії]
 word_target: 1200
 objectives:
-- Conjugate Group I (-ати) verbs in present tense for all persons
-- Use 6 high-frequency Group I verbs in sentences
-- Recognize the Group I ending pattern (-у/-ю, -єш, -є, -ємо, -єте, -ють)
-- Build simple sentences about daily activities
+- Відмінювати дієслова I дієвідміни (-ати) в теперішньому часі для всіх осіб
+- Використовувати 6 найуживаніших дієслів I дієвідміни в реченнях
+- Розпізнавати модель закінчень I дієвідміни (-у/-ю, -єш, -є, -ємо, -єте, -ють)
+- Будувати прості речення про повсякденні справи
 dialogue_situations:
-- setting: In a shared kitchen — one person cooking, other asking what they're doing
+- setting: На спільній кухні — одна людина готує, інша запитує, що вона робить
   speakers:
-  - Юля (cooking)
-  - Сашко (curious)
-  motivation: 'Group I verbs in action: читаєш, працюєш, готуєш'
+  - Юля
+  - Сашко
+  motivation: Дієслова I дієвідміни в дії (читаєш, працюєш, готуєш)
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — What do you do? (ULP Ep22 pattern): — Що ти робиш? — Я читаю книгу.
-    А ти? — Я слухаю музику. — А що робить Олена? — Вона готує вечерю. All three persons
-    (я/ти/він,вона) emerge naturally.'
-  - 'Dialogue 2 — At work/school: — Де ти працюєш? — Я працюю в офісі. А ти? — Я не
-    працюю, я навчаюся. — Ти знаєш українську? — Так, я вивчаю! Group I verbs in practical
-    context.'
-- section: Перша дієвідміна (Group I Verbs)
+  - 'Діалог 1 — Що ти робиш?: — Що ти робиш? — Я читаю книгу. А ти? — Я слухаю музику. — А що робить Олена? — Вона готує вечерю. Усі три особи (я/ти/він, вона) виникають природно.'
+  - 'Діалог 2 — На роботі/навчанні: — Де ти працюєш? — Я працюю в офісі. А ти? — Я не працюю, я навчаюся. — Ти знаєш українську? — Так, я вивчаю! Дієслова I дієвідміни в практичному контексті.'
+- section: Перша дієвідміна
   words: 300
   points:
-  - 'Варзацька Grade 4 p.129: verb conjugation table (теперішній час). Group I verbs
-    have infinitive in -ати (or -увати, -яти): читати → я читаю, ти читаєш, він/вона
-    читає ми читаємо, ви читаєте, вони читають. Pattern: stem + -ю, -єш, -є, -ємо,
-    -єте, -ють.'
-  - 'Six essential Group I verbs: читати (to read): читаю, читаєш, читає... знати
-    (to know): знаю, знаєш, знає... працювати (to work): працюю, працюєш, працює...
-    слухати (to listen): слухаю, слухаєш, слухає... гуляти (to walk): гуляю, гуляєш,
-    гуляє... готувати (to cook): готую, готуєш, готує...'
-- section: Я, ти, він/вона (Persons)
+  - 'Варзацька, 4 клас, с. 129: таблиця відмінювання дієслів (теперішній час). Дієслова I дієвідміни мають інфінітив на -ати (або -увати, -яти): читати → я читаю, ти читаєш, він/вона читає ми читаємо, ви читаєте, вони читають. Модель: основа + -ю, -єш, -є, -ємо, -єте, -ють.'
+  - 'Шість основних дієслів I дієвідміни: читати: читаю, читаєш, читає... знати: знаю, знаєш, знає... працювати: працюю, працюєш, працює... слухати: слухаю, слухаєш, слухає... гуляти: гуляю, гуляєш, гуляє... готувати: готую, готуєш, готує...'
+- section: Я, ти, він/вона
   words: 300
   points:
-  - 'Focus on the three most-used forms: Я читаю (I read) — ending -ю Ти читаєш (You
-    read) — ending -єш Він/вона читає (He/she reads) — ending -є These three cover
-    90% of A1 conversations. Plural forms for recognition: ми читаємо, ви читаєте,
-    вони читають.'
-  - 'Building sentences with known vocabulary: Я читаю нову книгу. (M08 noun + M09
-    adjective + M16 verb) Ти знаєш цю пісню? (M12 demonstrative + M16 verb) Вона слухає
-    українську музику. (M16 verb + adjective + noun) Note: the object may change form
-    (книгу, пісню) — learn as chunks for now.'
-- section: Підсумок — Summary
+  - 'Зосередження на трьох найуживаніших формах: Я читаю — закінчення -ю. Ти читаєш — закінчення -єш. Він/вона читає — закінчення -є. Ці три форми покривають 90% розмов на рівні A1. Форми множини для розпізнавання: ми читаємо, ви читаєте, вони читають.'
+  - 'Побудова речень із відомою лексикою: Я читаю нову книгу. Ти знаєш цю пісню? Вона слухає українську музику. Зверніть увагу: об''єкт може змінювати форму (книгу, пісню) — наразі вивчайте це як цілісні фрази.'
+- section: Підсумок
   words: 300
   points:
-  - 'Group I conjugation pattern: я -ю, ти -єш, він/вона -є, ми -ємо, ви -єте, вони
-    -ють. Works for: читати, знати, працювати, слухати, гуляти, готувати. Self-check:
-    Conjugate ''слухати'' for я, ти, він/вона. Say what you do (Я читаю...), ask what
-    someone does (Що ти робиш?).'
+  - 'Модель відмінювання I дієвідміни: я -ю, ти -єш, він/вона -є, ми -ємо, ви -єте, вони -ють. Працює для слів: читати, знати, працювати, слухати, гуляти, готувати. Самоперевірка: Провідміняйте слово "слухати" для я, ти, він/вона. Розкажіть, що ви робите (Я читаю...), запитайте, що робить інша людина (Що ти робиш?).'
 vocabulary_hints:
   required:
   - читати (to read)
@@ -76,32 +57,32 @@ vocabulary_hints:
   - музика (music — review from M15)
 activity_hints:
 - type: fill-in
-  focus: 'Conjugate: я чита__, ти чита__, він чита__'
+  focus: 'Провідміняйте: я чита__, ти чита__, він чита__'
   items: 10
 - type: quiz
-  focus: 'Choose correct form: Вона (читаю/читаєш/читає) книгу.'
+  focus: 'Виберіть правильну форму: Вона (читаю/читаєш/читає) книгу.'
   items: 8
 - type: match-up
-  focus: 'Match person to verb form: я ↔ читаю, ти ↔ читаєш'
+  focus: 'З''єднайте особу з формою дієслова: я ↔ читаю, ти ↔ читаєш'
   items: 6
 - type: fill-in
-  focus: 'Complete the sentence: Що ти ___? — Я ___ музику. (слухати)'
+  focus: 'Доповніть речення: Що ти ___? — Я ___ музику. (слухати)'
   items: 6
 connects_to:
-- a1-017 (Verbs Group II)
+- a1-017 (Дієслова другої групи)
 prerequisites:
-- a1-015 (What I Like)
+- a1-015 (Що мені подобається)
 grammar:
-- 'Group I conjugation: -ю, -єш, -є, -ємо, -єте, -ють'
-- Infinitive → present tense transformation
-- 'Simple sentences: Subject + Verb + Object'
-- 'Question: Що ти робиш?'
+- Відмінювання I дієвідміни (-ю, -єш, -є, -ємо, -єте, -ють)
+- Трансформація інфінітива в теперішній час
+- Прості речення з підметом, присудком і додатком
+- Запитання Що ти робиш?
 register: розмовний
 references:
 - title: Варзацька Grade 4, p.129
-  notes: 'Conjugation table: теперішній час, persons and endings.'
+  notes: Таблиця відмінювання теперішнього часу, особи та закінчення.
 - title: Захарійчук Grade 4, p.110
-  notes: 'Verb conjugation table: однина та множина за особами.'
+  notes: Таблиця відмінювання дієслів однини та множини за особами.
 - title: ULP Season 1, Episode 22
   url: https://www.ukrainianlessons.com/episode22/
-  notes: Present tense verbs in daily life.
+  notes: Дієслова теперішнього часу в повсякденному житті.

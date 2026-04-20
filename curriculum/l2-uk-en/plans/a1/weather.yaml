@@ -2,62 +2,44 @@ module: a1-024
 level: A1
 sequence: 24
 slug: weather
-version: '1.2'
-title: Weather
-subtitle: Сьогодні холодно — talking about the weather
+version: '1.2.1'
+title: Погода
+subtitle: Сьогодні холодно — розмовляємо про погоду
 focus: vocabulary
 pedagogy: PPP
-phase: A1.4 [Time and Nature]
+phase: A1.4 [Час і природа]
 word_target: 1200
 objectives:
-- Describe weather using impersonal constructions (cold, warm, hot)
-- Use "іде дощ / іде сніг" pattern for precipitation
-- Combine weather with seasons and months
-- Ask and answer "What's the weather like?"
+- Описувати погоду за допомогою безособових конструкцій (холодно, тепло, спекотно)
+- Використовувати конструкцію іде дощ / іде сніг для опадів
+- Поєднувати опис погоди з порами року та місяцями
+- Запитувати та відповідати "Яка погода?"
 dialogue_situations:
-- setting: Two friends deciding whether to go hiking — checking weather together
+- setting: Двоє друзів вирішують, чи йти в похід, і разом перевіряють погоду
   speakers:
   - Іванко
   - Галя
-  motivation: 'Impersonal: Сьогодні холодно, Завтра буде тепло, Іде дощ'
+  motivation: Безособові речення (Сьогодні холодно, Завтра буде тепло, Іде дощ)
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — Looking out the window (ULP Ep16 pattern): — Яка сьогодні погода?
-    — Сьогодні холодно і йде дощ. — А завтра? — Завтра буде тепло і сонячно. — Добре!
-    Тоді завтра гуляємо! Weather + future plans (буде as chunk).'
-  - 'Dialogue 2 — Seasons conversation: — Яка пора року тобі подобається? — Мені подобається
-    літо. — Чому? — Тому що влітку тепло і сонячно. А тобі? — Мені подобається осінь.
-    Восени красиво. Weather + seasons + opinion verbs from M15.'
-- section: Яка погода? (What's the Weather?)
+  - 'Діалог 1 — Дивлячись у вікно: — Яка сьогодні погода? — Сьогодні холодно і йде дощ. — А завтра? — Завтра буде тепло і сонячно. — Добре! Тоді завтра гуляємо! Погода та плани на майбутнє.'
+  - 'Діалог 2 — Розмова про пори року: — Яка пора року тобі подобається? — Мені подобається літо. — Чому? — Тому що влітку тепло і сонячно. А тобі? — Мені подобається осінь. Восени красиво. Погода, пори року та дієслова вподобань із M15.'
+- section: Яка погода?
   words: 300
   points:
-  - 'Impersonal weather expressions (no subject — the weather just IS): Сьогодні холодно.
-    (It''s cold today.) Сьогодні тепло. (It''s warm.) Сьогодні спекотно. (It''s hot.)
-    Сьогодні прохолодно. (It''s cool.) Заболотний Grade 8 p.126: безособові речення
-    передають явища природи. These are adverbs — no subject needed, just the state.'
-  - 'Precipitation patterns: Іде дощ. (It''s raining — literally ''rain goes''.) Іде
-    сніг. (It''s snowing — ''snow goes''.) Дме вітер. (The wind is blowing.) Світить
-    сонце. (The sun is shining.) Хмарно / ясно. (Cloudy / clear.) Note: іде дощ (not
-    ''дощить'') is the natural conversational form.'
-- section: Погода і пори року (Weather and Seasons)
+  - 'Безособові вирази для опису погоди (без підмета): Сьогодні холодно. Сьогодні тепло. Сьогодні спекотно. Сьогодні прохолодно. Заболотний, 8 клас, с. 126: безособові речення передають явища природи. Це прислівники — підмет не потрібен, лише стан.'
+  - 'Фрази для опадів: Іде дощ. Іде сніг. Дме вітер. Світить сонце. Хмарно / ясно. Зверніть увагу: іде дощ — це найприродніша розмовна форма.'
+- section: Погода і пори року
   words: 300
   points:
-  - 'Connecting weather to seasons (M23): Взимку холодно. Іде сніг. (In winter it''s
-    cold. It snows.) Навесні тепло. Все зелене. (In spring it''s warm. Everything''s
-    green.) Влітку спекотно. Світить сонце. (In summer it''s hot. The sun shines.)
-    Восени прохолодно. Іде дощ. (In autumn it''s cool. It rains.)'
-  - 'Temperature vocabulary: градуси (degrees) — Сьогодні двадцять градусів. (20 degrees.)
-    плюс / мінус — Мінус десять. (Minus 10.) тепло / холодно as nouns: На вулиці тепло.
-    (It''s warm outside.) Time words: сьогодні (today), завтра (tomorrow), вчора (yesterday).'
-- section: Підсумок — Summary
+  - 'Поєднання погоди з порами року (M23): Взимку холодно. Іде сніг. Навесні тепло. Все зелене. Влітку спекотно. Світить сонце. Восени прохолодно. Іде дощ.'
+  - 'Лексика для температури: градуси — Сьогодні двадцять градусів. плюс / мінус — Мінус десять. тепло / холодно як стан: На вулиці тепло. Слова часу: сьогодні, завтра, вчора.'
+- section: Підсумок
   words: 300
   points:
-  - 'Weather toolkit: Question: Яка сьогодні погода? Temperature: холодно, тепло,
-    спекотно, прохолодно. Precipitation: іде дощ, іде сніг, дме вітер, світить сонце.
-    Sky: хмарно, ясно, сонячно. Seasons: взимку холодно, влітку спекотно. Self-check:
-    Describe today''s weather. What''s winter like where you live?'
+  - 'Словник погоди: Запитання: Яка сьогодні погода? Температура: холодно, тепло, спекотно, прохолодно. Опади: іде дощ, іде сніг, дме вітер, світить сонце. Небо: хмарно, ясно, сонячно. Пори року: взимку холодно, влітку спекотно. Самоперевірка: Опишіть сьогоднішню погоду. Яка зима там, де ви живете?'
 vocabulary_hints:
   required:
   - погода (weather, f)
@@ -79,7 +61,7 @@ vocabulary_hints:
   - вчора (yesterday)
 activity_hints:
 - type: match-up
-  focus: Match the weather phrase to its logical context or season
+  focus: З'єднайте вираз про погоду з логічним контекстом або порою року
   pairs:
   - іде дощ ↔ холодно і мокро
   - іде сніг ↔ зима
@@ -90,7 +72,7 @@ activity_hints:
   - плюс двадцять ↔ тепло
   - хмарно ↔ сонце не світить
 - type: fill-in
-  focus: Choose the logical weather for the season
+  focus: Виберіть логічну погоду для кожної пори року
   items:
   - Взимку часто {іде сніг|іде дощ|світить сонце}.
   - Влітку дуже {спекотно|холодно|хмарно}.
@@ -99,24 +81,24 @@ activity_hints:
   - Сьогодні мінус п'ять, дуже {холодно|тепло|спекотно}.
   - Сьогодні плюс двадцять п'ять, {тепло|прохолодно|холодно}.
 - type: fill-in
-  focus: Complete the dialogue about the weather
+  focus: Доповніть діалог про погоду
   items:
   - — Яка сьогодні {погода|сонце|дощ}? — Сьогодні тепло.
   - — Завтра {буде|є|був} сонячно. — Добре, гуляємо!
   - — Яка пора року тобі {подобається|любить|робить}? — Літо.
   - — Чому ти любиш літо? — Тому що влітку {сонячно|холодно|хмарно}.
 connects_to:
-- a1-025 (My Day)
+- a1-025 (Мій день)
 prerequisites:
-- a1-023 (Days and Months)
+- a1-023 (Дні та місяці)
 grammar:
-- 'Impersonal constructions: cold/warm/hot (no subject)'
-- Іде дощ / іде сніг pattern (literally 'goes rain/snow')
-- 'Time adverbs: сьогодні, завтра, вчора'
+- Безособові конструкції стану (холодно/тепло/спекотно)
+- Конструкція іде дощ / іде сніг
+- Прислівники часу (сьогодні, завтра, вчора)
 register: розмовний
 references:
 - title: Заболотний Grade 8, p.126
-  notes: 'Безособові речення: явища природи, стан людини.'
+  notes: Безособові речення — явища природи, стан людини.
 - title: ULP Season 1, Episode 16
   url: https://www.ukrainianlessons.com/episode16/
-  notes: Weather vocabulary and expressions.
+  notes: Лексика та вирази про погоду.

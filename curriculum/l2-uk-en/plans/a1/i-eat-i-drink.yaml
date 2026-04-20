@@ -2,64 +2,44 @@ module: a1-037
 level: A1
 sequence: 37
 slug: i-eat-i-drink
-version: '1.2'
-title: I Eat, I Drink
-subtitle: Я їм хліб, п'ю каву — accusative for what you eat and drink
+version: '1.2.2'
+title: Я їм, я п'ю
+subtitle: Я їм хліб, п'ю каву — знахідний відмінок для того, що ви їсте та п'єте
 focus: grammar
 pedagogy: PPP
-phase: A1.6 [Food and Shopping]
+phase: A1.6 [Їжа та покупки]
 word_target: 1200
 objectives:
-- Conjugate їсти and пити in present tense
-- Use accusative case for inanimate direct objects (Я їм хліб, п'ю каву)
-- Recognize feminine accusative ending change (-а → -у): кава → каву, вода → воду
-- Describe eating and drinking habits using accusative
+- Відмінювати дієслова «їсти» та «пити» в теперішньому часі
+- Вживати знахідний відмінок для неістот-прямих додатків (Я їм хліб, п'ю каву)
+- Розпізнавати зміну закінчення жіночого роду в знахідному відмінку (-а → -у): кава → каву, вода → воду
+- Описувати звички харчування, використовуючи знахідний відмінок
 dialogue_situations:
-- setting: 'Lunch break at work — unpacking lunch boxes: Я їм бутерброд (m, sandwich)
-    і п''ю чай (m, tea). А ти? Я їм салат (m) і п''ю каву (f, coffee). Also: яблуко
-    (n), банан (m), вода (f), сік (m, juice).'
+- setting: 'Обідня перерва на роботі — розпакування ланч-боксів: Я їм бутерброд (m, sandwich) і п''ю чай (m, tea). А ти? Я їм салат (m) і п''ю каву (f, coffee). Також: яблуко (n), банан (m), вода (f), сік (m, juice).'
   speakers:
   - Колега 1
   - Колега 2
-  motivation: 'Accusative: бутерброд(m), салат(m), каву(f→acc), яблуко(n), чай(m)'
+  motivation: 'Знахідний відмінок: бутерброд (m), салат (m), каву (f→acc), яблуко (n), чай (m)'
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — Breakfast conversation: — Що ти їш на сніданок? — Я їм кашу і п''ю
-    каву. — А Олена? — Вона їсть хліб з маслом і п''є чай. — А діти? — Вони їдять
-    яйця і п''ють молоко. Full conjugation of їсти and пити in natural context.'
-  - 'Dialogue 2 — At lunch: — Що ви їсте на обід? — Ми їмо суп і салат. — А що п''єте?
-    — Ми п''ємо воду або сік. — Я теж хочу суп. — Добре, замовляй! Review of їсти/пити
-    with plural subjects.'
-- section: Їсти і пити (To Eat and To Drink)
+  - 'Діалог 1 — Розмова за сніданком: — Що ти їш на сніданок? — Я їм кашу і п''ю каву. — А Олена? — Вона їсть хліб з маслом і п''є чай. — А діти? — Вони їдять яйця і п''ють молоко. Повне відмінювання дієслів «їсти» та «пити» у природному контексті.'
+  - 'Діалог 2 — За обідом: — Що ви їсте на обід? — Ми їмо суп і салат. — А що п''єте? — Ми п''ємо воду або сік. — Я теж хочу суп. — Добре, замовляй! Повторення «їсти/пити» з підметами у множині.'
+- section: Їсти і пити
   words: 300
   points:
-  - 'Conjugation of їсти (irregular — NOT Group I or II): я їм, ти їси, він/вона їсть,
-    ми їмо, ви їсте, вони їдять. Conjugation of пити (Group I): я п''ю, ти п''єш,
-    він/вона п''є, ми п''ємо, ви п''єте, вони п''ють. Both are essential daily verbs
-    — high frequency.'
-  - 'Ukrainian school approach (Grade 4 — знахідний відмінок): ''Бачу що? кого?''
-    — the accusative answers ''what do I see/eat/drink?'' Я їм (що?) хліб. Я п''ю
-    (що?) каву. The question що? triggers accusative for inanimate objects.'
-- section: Знахідний відмінок — неживе (Accusative Inanimate)
+  - 'Відмінювання дієслова «їсти» (нерегулярне — НЕ I або II дієвідміна): я їм, ти їси, він/вона їсть, ми їмо, ви їсте, вони їдять. Відмінювання дієслова «пити» (I дієвідміна): я п''ю, ти п''єш, він/вона п''є, ми п''ємо, ви п''єте, вони п''ють. Обидва є важливими щоденними дієсловами з високою частотністю.'
+  - 'Підхід української школи (4 клас — знахідний відмінок): «Бачу що? кого?» — знахідний відмінок відповідає на питання «що я бачу/їм/п''ю?» Я їм (що?) хліб. Я п''ю (що?) каву. Питання «що?» вимагає знахідного відмінка для неістот.'
+- section: Знахідний відмінок — неживе
   words: 300
   points:
-  - 'Accusative for inanimate nouns — what changes: Masculine inanimate: NO CHANGE
-    (= nominative). хліб → хліб (Я їм хліб), суп → суп (Я їм суп), сік → сік (Я п''ю
-    сік). Neuter: NO CHANGE (= nominative). молоко → молоко (Я п''ю молоко), яйце
-    → яйце (Я їм яйце).'
-  - 'Feminine -а → -у (THE key change at A1): кава → каву (Я п''ю каву), вода → воду
-    (Я п''ю воду), риба → рибу (Я їм рибу), каша → кашу (Я їм кашу), картопля → картоплю
-    (Я їм картоплю). Pattern: feminine nouns ending in -а change to -у, ending in
-    -я change to -ю. This is the ONLY accusative change learners need now.'
-- section: Підсумок — Summary
+  - 'Знахідний відмінок для неістот — що змінюється: Чоловічий рід (неістоти): БЕЗ ЗМІН (= називний). хліб → хліб (Я їм хліб), суп → суп (Я їм суп), сік → сік (Я п''ю сік). Середній рід: БЕЗ ЗМІН (= називний). молоко → молоко (Я п''ю молоко), яйце → яйце (Я їм яйце).'
+  - 'Жіночий рід -а → -у (ГОЛОВНА зміна на рівні A1): кава → каву (Я п''ю каву), вода → воду (Я п''ю воду), риба → рибу (Я їм рибу), каша → кашу (Я їм кашу), картопля → картоплю (Я їм картоплю). Правило: іменники жіночого роду на -а змінюються на -у, на -я змінюються на -ю. Це ЄДИНА зміна у знахідному відмінку, яку потрібно знати студентам на цьому етапі.'
+- section: Підсумок
   words: 300
   points:
-  - 'Accusative inanimate summary: Masculine/Neuter: no change (хліб, молоко stay
-    the same). Feminine -а → -у, -я → -ю (кава → каву, картопля → картоплю). Test:
-    Я їм ___ (риба → рибу). Я п''ю ___ (вода → воду). Self-check: Say 3 things you
-    eat and 3 things you drink today. Use the correct accusative form for each.'
+  - 'Коротко про знахідний відмінок неістот: Чоловічий/Середній рід: без змін (хліб, молоко залишаються такими ж). Жіночий рід -а → -у, -я → -ю (кава → каву, картопля → картоплю). Тест: Я їм ___ (риба → рибу). Я п''ю ___ (вода → воду). Самоперевірка: Назвіть 3 речі, які ви сьогодні їсте, і 3 речі, які п''єте. Використовуйте правильну форму знахідного відмінка для кожного слова.'
 vocabulary_hints:
   required:
   - їсти (to eat — irregular)
@@ -79,8 +59,7 @@ vocabulary_hints:
   - п'ють (they drink)
 activity_hints:
 - type: fill-in
-  focus: Form the accusative case for feminine (-а/-я → -у/-ю) and masculine/neuter
-    (no change)
+  focus: Утворіть знахідний відмінок для іменників жіночого роду (-а/-я → -у/-ю) та чоловічого/середнього (без змін)
   items: 8
   blanks:
   - Я їм (риба) {рибу}.
@@ -92,7 +71,7 @@ activity_hints:
   - Я їм (суп) {суп}.
   - Вона їсть (картопля) {картоплю}.
 - type: quiz
-  focus: Select the correct accusative form to complete the sentence
+  focus: Виберіть правильну форму знахідного відмінка, щоб доповнити речення
   items: 6
   questions:
   - Я п'ю... (каву / кава / кави)
@@ -102,7 +81,7 @@ activity_hints:
   - Вони п'ють... (воду / вода / воді)
   - Ти їш... (кашу / каша / каші)
 - type: fill-in
-  focus: Conjugate the verbs їсти (irregular) and пити (Group I)
+  focus: Провідміняйте дієслова їсти (нерегулярне) та пити (I дієвідміна)
   items: 8
   blanks:
   - Я {їм} суп.
@@ -114,7 +93,7 @@ activity_hints:
   - Він {п'є} сік.
   - Вони {їдять} кашу.
 - type: group-sort
-  focus: Sort nouns based on how they change in the accusative case (inanimate)
+  focus: Розподіліть іменники залежно від того, як вони змінюються у знахідному відмінку (неістоти)
   items: 8
   groups:
   - name: Змінюється (-у/-ю)
@@ -130,17 +109,17 @@ activity_hints:
     - молоко
     - м'ясо
 connects_to:
-- a1-038 (At the Cafe)
+- a1-038 (У кафе)
 prerequisites:
-- a1-036 (Food and Drink)
+- a1-036 (Їжа та напої)
 grammar:
-- 'Accusative inanimate: masculine/neuter = nominative, feminine -а→-у, -я→-ю'
-- Conjugation of їсти (irregular) and пити (Group I)
-- Question що? as accusative trigger for inanimate
+- 'Знахідний відмінок неістот: чоловічий/середній = називний, жіночий -а→-у, -я→-ю'
+- Відмінювання дієслів «їсти» (нерегулярне) та «пити» (I дієвідміна)
+- Питання «що?» як індикатор знахідного відмінка для неістот
 register: розмовний
 references:
 - title: ULP Season 1, Episode 32
   url: https://www.ukrainianlessons.com/episode32/
-  notes: Accusative case introduction — inanimate objects.
-- title: 'Grade 4 textbook: Знахідний відмінок (Заболотний)'
-  notes: 'Ukrainian school approach: бачу що? кого?'
+  notes: Знайомство зі знахідним відмінком — неістоти.
+- title: 'Підручник 4 класу: Знахідний відмінок (Заболотний)'
+  notes: 'Підхід української школи: бачу що? кого?'

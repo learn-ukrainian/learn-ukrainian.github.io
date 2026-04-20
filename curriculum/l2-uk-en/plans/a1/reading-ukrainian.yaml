@@ -2,70 +2,43 @@ module: a1-002
 level: A1
 sequence: 2
 slug: reading-ukrainian
-version: '1.2'
-title: Reading Ukrainian
-subtitle: From letters to words to sentences
+version: '1.2.1'
+title: Читаємо українською
+subtitle: Від літер до слів та речень
 focus: phonetics
 pedagogy: PPP
-phase: A1.1 [Sounds, Letters, and First Contact]
+phase: A1.1 [Звуки, літери та перший контакт]
 word_target: 1200
 objectives:
-- Read any Ukrainian word by sounding out letters and blending syllables
-- Apply the syllable rule — count vowels to count syllables
-- Read multisyllable words confidently (not letter by letter)
-- Understand how the 10 vowel letters map to 6 vowel sounds
+- Вміти читати будь-яке українське слово, розпізнаючи звуки та об'єднуючи їх у склади
+- Розуміти правило складоподілу — рахувати голосні, щоб порахувати склади
+- Навчитися впевнено читати багатоскладові слова (не по літерах)
+- Розуміти, як 10 голосних літер позначають 6 голосних звуків
 content_outline:
-- section: Склади (Syllables)
+- section: Склади
   words: 250
   points:
-  - 'Большакова Grade 1 p.25: ''У слові стільки складів, скільки голосних звуків.''
-    Count the vowels, count the syllables. This rule never breaks. ма-ма (2 vowels
-    = 2 syllables), мо-ло-ко (3 vowels = 3 syllables), банк (1 vowel = 1 syllable).'
-  - 'How Ukrainian children learn to read — складові ланцюжки (syllable chains):
-    Start with a consonant + vowel pair: М → ма, мо, му, ми. Then reverse: ам, ом, ум.
-    Then build words: ма-ма, мо-ло-ко. This is bottom-up: sound → syllable → word.
-    (Захарійчук Grade 1, p.46; Большакова Grade 1, p.25)'
-  - 'Звуковий аналіз слова (Большакова p.29): 1) Визначаю голосні звуки 2) Ділю
-    слово на склади 3) Ставлю наголос 4) Позначаю приголосні звуки.
-    Chin-test for syllable counting (Кравцова Grade 2, p.13): put your palm under
-    your chin, say the word — each chin touch = one syllable.'
-  - 'Ukrainian sound notation system (Захарійчук p.15): [●] голосний, [—] твердий
-    приголосний, [=] м''який приголосний. Every Ukrainian child learns this in Grade 1.'
-- section: Голосні літери (Vowel Letters)
+  - 'Большакова, 1 клас, стор. 25: «У слові стільки складів, скільки голосних звуків.» Порахуй голосні — дізнаєшся кількість складів. Це правило ніколи не порушується. ма-ма (2 голосні = 2 склади), мо-ло-ко (3 голосні = 3 склади), банк (1 голосна = 1 склад).'
+  - 'Як українські діти вчаться читати — складові ланцюжки: Починаємо з пари приголосний + голосний: М → ма, мо, му, ми. Потім навпаки: ам, ом, ум. Далі будуємо слова: ма-ма, мо-ло-ко. Це підхід "знизу вгору": звук → склад → слово. (Захарійчук 1 клас, стор. 46; Большакова 1 клас, стор. 25)'
+  - 'Звуковий аналіз слова (Большакова стор. 29): 1) Визначаю голосні звуки 2) Ділю слово на склади 3) Ставлю наголос 4) Позначаю приголосні звуки. Тест із підборіддям для підрахунку складів (Кравцова 2 клас, стор. 13): покладіть долоню під підборіддя, скажіть слово — кожен дотик підборіддя = один склад.'
+  - 'Українська система позначення звуків (Захарійчук стор. 15): [●] голосний, [—] твердий приголосний, [=] м''який приголосний. Цього вчиться кожна українська дитина в 1 класі.'
+- section: Голосні літери
   words: 300
   points:
-  - 'Review from M01: 6 sounds, 10 letters. Now learn all 10 individually. Simple
-    vowels (one sound each): А [а], О [о], У [у], Е [е], И [и], І [і]. Each makes
-    ONE consistent sound — no surprises.'
-  - 'Iotated vowels (two sounds or softening): Я = [йа] at word start (яблуко) or
-    after vowel (моя). After consonant: softens it + [а] (пісня — Н is softened).
-    Ю = [йу] or softening + [у]. Є = [йе] or softening + [е]. Ї = ALWAYS [йі] — never
-    softens. Only at word start, after vowel, or after apostrophe. Unique to Ukrainian.'
-  - 'Critical minimal pairs: И vs І: кит (whale) vs кіт (cat), дим (smoke) vs дім
-    (house). Listen to Anna''s pronunciation videos for each — the difference is subtle
-    but changes meaning.'
-- section: Читання слів (Reading Words)
+  - 'Повторення з M01: 6 звуків, 10 літер. Тепер розберемо всі 10 окремо. Прості голосні (один звук кожна): А [а], О [о], У [у], Е [е], И [и], І [і]. Кожна позначає ОДИН стабільний звук — жодних сюрпризів.'
+  - 'Йотовані голосні (два звуки або пом''якшення): Я = [йа] на початку слова (яблуко) або після голосного (моя). Після приголосного: пом''якшує його + [а] (пісня — Н пом''якшений). Ю = [йу] або пом''якшення + [у]. Є = [йе] або пом''якшення + [е]. Ї = ЗАВЖДИ [йі] — ніколи не пом''якшує. Лише на початку слова, після голосного або після апострофа. Унікальна для української мови.'
+  - 'Критичні мінімальні пари: И проти І: кит проти кіт, дим проти дім. Послухайте відео Анни з правильною вимовою кожного з них — різниця тонка, але вона змінює значення.'
+- section: Читання слів
   words: 500
   points:
-  - 'Apply складові ланцюжки to real words. Don''t read letter-by-letter — read
-    syllable-by-syllable. Use звуковий аналіз: find vowels first, split into склади,
-    then blend. Example: книга — find vowels И, А → кни-га → read.'
-  - 'Progressive difficulty using Ukrainian classification (односкладові → багатоскладові):
-    односкладові (1 syllable): дім, сон, ліс, дуб, хліб.
-    двоскладові (2 syllables): ма-ма, та-то, во-да, ру-ка, ха-та, ка-ша.
-    трискладові (3 syllables): ап-те-ка, мо-ло-ко, лю-ди-на, ву-ли-ця.
-    багатоскладові (4+ syllables): у-ні-вер-си-тет, біб-лі-о-те-ка, фо-то-гра-фі-я.'
-  - 'Ukrainian city names as reading practice: Ки-їв, Льві-в, О-де-са, Хар-ків,
-    Дні-про, Пол-та-ва. Note the different syllable counts and structures.'
-  - 'Special letter combinations to watch for (preview for M03): Щ is always [шч] — що, ще.
-    Ь has no sound — it softens: день, сіль, кінь. Apostrophe separates: сім''я,
-    м''ясо, п''ять. These will be explored fully in M03.'
-- section: Підсумок — Summary
+  - 'Застосовуйте складові ланцюжки до реальних слів. Не читайте по літерах — читайте по складах. Використовуйте звуковий аналіз: спочатку знайдіть голосні, поділіть на склади, потім об''єднайте. Приклад: книга — знайдіть голосні И, А → кни-га → прочитайте.'
+  - 'Поступове ускладнення за українською класифікацією: односкладові (1 склад): дім, сон, ліс, дуб, хліб. двоскладові (2 склади): ма-ма, та-то, во-да, ру-ка, ха-та, ка-ша. трискладові (3 склади): ап-те-ка, мо-ло-ко, лю-ди-на, ву-ли-ця. багатоскладові (4+ склади): у-ні-вер-си-тет, біб-лі-о-те-ка, фо-то-гра-фі-я.'
+  - 'Назви українських міст як практика читання: Ки-їв, Льві-в, О-де-са, Хар-ків, Дні-про, Пол-та-ва. Зверніть увагу на різну кількість складів та їхню структуру.'
+  - 'Особливі буквосполучення, на які слід звернути увагу (анонс для M03): Щ — це завжди [шч] — що, ще. Ь не має звуку — він пом''якшує: день, сіль, кінь. Апостроф розділяє: сім''я, м''ясо, п''ять. Вони будуть детально розібрані в M03.'
+- section: Підсумок
   words: 150
   points:
-  - 'Self-check: How do you count syllables in a Ukrainian word? What are the 6 vowel
-    sounds? Name the 4 iotated vowel letters. What does Ь do? What does the apostrophe
-    do? Read this word: бібліотека — how many syllables?'
+  - 'Самоперевірка: Як порахувати склади в українському слові? Назвіть 6 голосних звуків. Назвіть 4 йотовані голосні літери. Що робить Ь? Що робить апостроф? Прочитайте це слово: бібліотека — скільки в ньому складів?'
 vocabulary_hints:
   required:
   - яблуко (apple) — Я at word start = [йа]
@@ -88,32 +61,32 @@ activity_hints:
   focus: 'Порахуй склади — скільки голосних, стільки й складів'
   items: 8
 - type: match-up
-  focus: 'Match iotated vowels to their sound components: Я=[й]+[а]'
+  focus: 'З''єднай йотовані голосні з їхніми звуковими компонентами: Я=[й]+[а]'
   items: 6
 - type: quiz
-  focus: Read the word and choose its meaning
+  focus: Прочитай слово і вибери його значення
   items: 6
 - type: odd-one-out
-  focus: 'Яке слово зайве? — by syllable count (односкладове серед двоскладових)'
+  focus: 'Яке слово зайве? — за кількістю складів (односкладове серед двоскладових)'
   items: 6
 connects_to:
-- a1-003 (Special Signs)
+- a1-003 (Особливі знаки)
 prerequisites:
-- a1-001 (Sounds, Letters, and Hello)
+- a1-001 (Звуки, літери та привіт)
 grammar:
 - 'Правило складоподілу: у слові стільки складів, скільки голосних звуків'
 - 'Звуковий аналіз слова: визначити голосні → поділити на склади → наголос → приголосні'
 - 'Складові ланцюжки: приголосний + голосний = склад (ма, мо, му)'
-- 'Ukrainian sound notation: [●] голосний, [—] твердий приголосний, [=] м''який приголосний'
-- 10 vowel letters → 6 vowel sounds mapping
-- Iotated vowels (Я, Ю, Є as two sounds or softening; Ї always [йі])
-- 'Word classification: односкладові, двоскладові, трискладові, багатоскладові'
-- Ь, apostrophe (preview — detailed in M03)
+- 'Українська система позначення звуків: [●] голосний, [—] твердий приголосний, [=] м''який приголосний'
+- Співвідношення: 10 голосних літер → 6 голосних звуків
+- Йотовані голосні (Я, Ю, Є як два звуки або пом'якшення; Ї завжди [йі])
+- 'Класифікація слів: односкладові, двоскладові, трискладові, багатоскладові'
+- Ь, апостроф (ознайомлення — детально в M03)
 register: розмовний
 references:
-- title: Большакова Grade 1 буквар, p.25
-  notes: 'Syllable rule: ''У слові стільки складів, скільки голосних звуків.'''
-- title: Большакова Grade 1 буквар, p.29
-  notes: Звуковий аналіз слова method — how to analyze word sounds.
-- title: Захарійчук Grade 1 (NUS 2025), p.13-15
-  notes: 'Sound notation: [•] for vowels, [–] for consonants, [=] for soft.'
+- title: Большакова, буквар 1 клас, стор. 25
+  notes: 'Правило складоподілу: «У слові стільки складів, скільки голосних звуків.»'
+- title: Большакова, буквар 1 клас, стор. 29
+  notes: Звуковий аналіз слова — як аналізувати звуки у слові.
+- title: Захарійчук 1 клас (НУШ 2025), стор. 13-15
+  notes: 'Позначення звуків: [•] для голосних, [–] для приголосних, [=] для м''яких.'

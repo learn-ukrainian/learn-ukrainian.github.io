@@ -2,72 +2,45 @@ module: a1-003
 level: A1
 sequence: 3
 slug: special-signs
-version: '1.3'
-title: Special Signs
-subtitle: Ь, apostrophe, and the voice of consonants
+version: '1.3.1'
+title: Особливі знаки
+subtitle: Ь, апостроф та дзвінкість приголосних
 focus: phonetics
 pedagogy: PPP
-phase: A1.1 [Sounds, Letters, and First Contact]
+phase: A1.1 [Звуки, літери та перший контакт]
 word_target: 1200
 objectives:
-- Understand what the soft sign (Ь) does to consonants
-- Read words with apostrophe correctly (сім'я, м'ясо)
-- Distinguish voiced and voiceless consonant pairs
-- Pronounce the tricky Ukrainian sounds И, Г, Р
+- Розуміти вплив м'якого знака (Ь) на приголосні
+- Правильно читати слова з апострофом (сім'я, м'ясо)
+- Розрізняти пари дзвінких та глухих приголосних
+- Опанувати вимову складних українських звуків И, Г, Р
 content_outline:
-- section: М'який знак (The Soft Sign — Ь)
+- section: М'який знак
   words: 250
   points:
-  - 'Ь has no sound. Its job: soften the consonant before it. Three-way distinction
-    (Авраменко Grade 5 p.75, Большакова Grade 2 p.46): м''які приголосні (truly soft,
-    9 pairs: Д/Д'', Т/Т'', З/З'', С/С'', Ц/Ц'', Л/Л'', Н/Н'', Р/Р'', ДЗ/ДЗ'' + Й),
-    пом''якшені (partially softened: губні, шиплячі, задньоязикові — Ь never after
-    these), тверді (hard). Захарійчук Grade 1 p.15 notation: hard = [–], soft = [=].'
-  - 'Літвінова Grade 5 mnemonic: «ДЗіДЗьо, Де Ти З''їСи Ці ЛиНи» — exactly
-    the 9 consonants Ь can soften. Common patterns: -нь (день, кінь, осінь),
-    -ль (сіль, біль), -ть (мить), -зь (мазь). Practice: учитель, батько, маленький.'
-- section: Апостроф (The Apostrophe)
+  - 'Ь не має власного звуку. Його завдання: пом''якшити приголосний, що стоїть перед ним. Потрійний поділ (Авраменко 5 клас, стор. 75, Большакова 2 клас, стор. 46): м''які приголосні (справді м''які, 9 пар: Д/Д'', Т/Т'', З/З'', С/С'', Ц/Ц'', Л/Л'', Н/Н'', Р/Р'', ДЗ/ДЗ'' + Й), пом''якшені (частково пом''якшені: губні, шиплячі, задньоязикові — Ь ніколи після них не ставиться), тверді. Позначення Захарійчук, 1 клас, стор. 15: тверді = [–], м''які = [=].'
+  - 'Мнемонічне правило Літвінової для 5 класу: «ДЗіДЗьо, Де Ти З''їСи Ці ЛиНи» — саме ті 9 приголосних, які Ь може пом''якшити. Типові моделі: -нь (день, кінь, осінь), -ль (сіль, біль), -ть (мить), -зь (мазь). Практика: учитель, батько, маленький.'
+- section: Апостроф
   words: 250
   points:
-  - 'Захарійчук Grade 1 p.97: Apostrophe comes after б, п, в, м, ф, р before я, ю,
-    є, ї. It keeps the consonant HARD and gives the vowel its full [й] + vowel sound.'
-  - 'Without apostrophe: consonant softens (пісня — Н is soft). With apostrophe: consonant
-    stays hard + vowel = two sounds. сім''я [сім-йа] (family), м''ясо [м-йасо] (meat),
-    п''ять [п-йать] (five), комп''ютер [комп-йутер] (computer). Reading practice:
-    п''ять, дев''ять, м''який, м''яч, об''єкт. IMPORTANT: Only use apostrophe words
-    where apostrophe follows the labial rule (б,п,в,м,ф,р + я,ю,є,ї). Do NOT include
-    під''їзд or з''їзд — these follow the prefix rule (під-/з- + їзд) which is A2+.
-    Also: тварь is a RUSSIAN form — do NOT use it. Ukrainian has тварина (animal).'
-- section: Дзвінкі і глухі (Voiced and Voiceless)
+  - 'Захарійчук, 1 клас, стор. 97: Апостроф ставиться після б, п, в, м, ф, р перед я, ю, є, ї. Він зберігає приголосний ТВЕРДИМ і надає голосному його повний звук [й] + голосний.'
+  - 'Без апострофа: приголосний пом''якшується (пісня — Н м''який). З апострофом: приголосний залишається твердим + голосний = два звуки. сім''я [сім-йа], м''ясо [м-йасо], п''ять [п-йать], комп''ютер [комп-йутер]. Практика читання: п''ять, дев''ять, м''який, м''яч, об''єкт. ВАЖЛИВО: Використовуйте лише ті слова з апострофом, де він ставиться за правилом губних приголосних та р (б, п, в, м, ф, р + я, ю, є, ї). НЕ використовуйте «під''їзд» або «з''їзд» — вони підпорядковуються правилу префіксів (під-/з- + їзд), що вивчається на рівні А2+. Крім того: «тварь» — це РОСІЙСЬКА форма, НЕ використовуйте її. В українській мові є слово «тварина».'
+- section: Дзвінкі і глухі
   words: 250
   points:
-  - 'Consonants come in voiced-voiceless pairs. Hand on throat test: vibration = voiced.
-    Pairs: Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч.'
-  - 'Ukrainian pronounces voiced consonants clearly at word end — дуб is [дуб], мороз is
-    [мороз]. Voiced consonants переважно (mostly) keep their sound. Exception: легко
-    [лехко]. This is a defining feature of Ukrainian phonetics.'
-  - 'Minimal pairs for ear training: балка (beam) vs палка (stick), коза (goat) vs
-    коса (braid).'
-- section: Вимова українських звуків (Pronouncing Ukrainian Sounds)
+  - 'Приголосні утворюють пари дзвінких і глухих. Тест із рукою на горлі: є вібрація = дзвінкий. Пари: Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч.'
+  - 'Українська мова чітко вимовляє дзвінкі приголосні в кінці слова — дуб звучить як [дуб], мороз як [мороз]. Дзвінкі приголосні переважно зберігають своє звучання. Виняток: легко [лехко]. Це визначальна риса української фонетики.'
+  - 'Мінімальні пари для тренування слуху: балка проти палка, коза проти коса.'
+- section: Вимова українських звуків
   words: 250
   points:
-  - 'И [и] — a unique Ukrainian vowel. It is NOT the same as І [і]. Minimal pairs to hear
-    the difference: бик (bull) vs бік (side), дим (smoke) vs дім (house), лист (letter/leaf)
-    vs ліс (forest), кит (whale) vs кіт (cat). Practice with Anna Ohoiko''s И video.'
-  - 'Г [ɦ] vs Ґ [g] — two different letters, two different sounds. Г is a voiced
-    fricative (air flows through narrowed throat): гарно, гора, голова. Its voiceless
-    partner is Х — say Х then add voice to get Г. Ґ is a voiced stop (full throat
-    closure then release): ґанок, ґудзик. Its voiceless partner is К. Ґ is uniquely
-    Ukrainian — an important part of Ukrainian phonetic identity. DO NOT call Г "soft"
-    — in Ukrainian phonetics "м''який" means palatalized, which Г is not.'
-  - 'Р [р] — the Ukrainian rolled/trilled Р. Practice with Anna Ohoiko''s video: рука, робота,
-    ранок, риба. An imperfect Р is always understood — focus on getting comfortable, not perfect.'
-- section: Підсумок — Summary
+  - 'И [и] — унікальний український голосний. Це НЕ те саме, що І [і]. Мінімальні пари, щоб почути різницю: бик проти бік, дим проти дім, лист проти ліс, кит проти кіт. Потренуйтеся з відео Анни Огойко про звук И.'
+  - 'Г [ɦ] проти Ґ [g] — дві різні літери, два різні звуки. Г — це дзвінкий фрикативний (повітря проходить через звужене горло): гарно, гора, голова. Його глуха пара — Х; скажіть Х, потім додайте голос, щоб отримати Г. Ґ — це дзвінкий проривний (повне змикання горла, а потім вивільнення): ґанок, ґудзик. Його глуха пара — К. Ґ є унікальним для української мови — важливою частиною її фонетичної ідентичності. НЕ називайте Г "м''яким" — в українській фонетиці "м''який" означає палаталізований, яким Г не є.'
+  - 'Р [р] — український дрижачий (сонорний) Р. Потренуйтеся з відео Анни Огойко: рука, робота, ранок, риба. Недосконалий Р завжди зрозумілий — зосередьтеся на тому, щоб вимовляти його комфортно, а не ідеально.'
+- section: Підсумок
   words: 200
   points:
-  - 'Self-check: What does Ь do? After which letters does apostrophe appear? Name
-    3 voiced-voiceless pairs. How is Ukrainian Г different from Ґ? Read these words:
-    сім''я, день, п''ять, гарно.'
+  - 'Самоперевірка: Що робить Ь? Після яких літер ставиться апостроф? Назвіть 3 пари дзвінких і глухих приголосних. Чим український Г відрізняється від Ґ? Прочитайте ці слова: сім''я, день, п''ять, гарно.'
 vocabulary_hints:
   required:
   - сім'я (family) — apostrophe word
@@ -86,52 +59,48 @@ vocabulary_hints:
 activity_hints:
 - type: odd-one-out
   section: "М'який знак"
-  focus: 'Which consonant does NOT have a soft pair? (Ь can''t soften it)'
+  focus: 'Який приголосний НЕ має м''якої пари? (Ь не може його пом''якшити)'
   items: 6
 - type: fill-in
   section: "Апостроф"
-  focus: 'Add the missing Ь or apostrophe: сім_я, ден_, п_ять'
+  focus: 'Додай пропущений Ь або апостроф: сім_я, ден_, п_ять'
   items: 6
 - type: error-correction
   section: "Апостроф"
-  focus: 'Find missing apostrophes in words like м''ясо, сім''я, п''ять'
+  focus: 'Знайди пропущені апострофи у словах типу м''ясо, сім''я, п''ять'
   items: 6
 - type: group-sort
   section: "Апостроф"
-  focus: 'Sort words into: has Ь / has apostrophe / neither'
+  focus: 'Розподіли слова: є Ь / є апостроф / немає нічого'
   items: 18
 - type: match-up
   section: "Дзвінкі і глухі"
-  focus: 'Match voiced-voiceless pairs: Б↔П, Д↔Т, Г↔Х, Ґ↔К, etc.'
+  focus: 'З''єднай пари дзвінких та глухих: Б↔П, Д↔Т, Г↔Х, Ґ↔К, тощо.'
   items: 8
 - type: true-false
   section: "Дзвінкі і глухі"
-  focus: 'Statements about voiced/voiceless rules and non-devoicing'
+  focus: 'Твердження про правила дзвінких/глухих та не-оглушення в кінці слів'
   items: 6
 - type: quiz
   section: "Вимова українських звуків"
-  focus: 'Г vs Ґ: choose the correct letter for each word'
+  focus: 'Г чи Ґ: обери правильну літеру для кожного слова'
   items: 6
 connects_to:
-- a1-004 (Stress and Melody)
+- a1-004 (Наголос та мелодика)
 prerequisites:
-- a1-002 (Reading Ukrainian)
+- a1-002 (Читаємо українською)
 grammar:
-- 'Soft sign (Ь) — softens preceding consonant, no sound. Only after 9 consonants:
-  Д, Т, З, С, Ц, Л, Н, Р, ДЗ (mnemonic: ДЗіДЗьо, Де Ти З''їСи Ці ЛиНи)'
-- 'Three-way distinction: м''які (truly soft, 9+Й), пом''якшені (partially softened
-  губні/шиплячі/задньоязикові), тверді (hard)'
-- 'Apostrophe — after б,п,в,м,ф,р before я,ю,є,ї (Захарійчук rule). NO prefix
-  apostrophe examples (під''їзд, з''їзд) at A1.'
-- 'Voiced/voiceless pairs (8): Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч.
-  Сонорні (В,Л,М,Н,Й,Р) are NEITHER voiced nor voiceless.'
-- 'Non-devoicing: voiced consonants переважно keep sound at word end. Exception: легко [лехко].'
-- 'Г [ɦ] voiced fricative (NOT "soft") vs Ґ [g] voiced stop'
+- 'М''який знак (Ь) — пом''якшує попередній приголосний, не має звуку. Тільки після 9 приголосних: Д, Т, З, С, Ц, Л, Н, Р, ДЗ (мнемоніка: ДЗіДЗьо, Де Ти З''їСи Ці ЛиНи)'
+- 'Потрійний поділ: м''які (справді м''які, 9+Й), пом''якшені (частково пом''якшені губні/шиплячі/задньоязикові), тверді'
+- 'Апостроф — після б, п, в, м, ф, р перед я, ю, є, ї (правило Захарійчук). ЖОДНИХ прикладів префіксного апострофа (під''їзд, з''їзд) на А1.'
+- 'Пари дзвінких і глухих приголосних (8): Б-П, Д-Т, Г-Х, Ґ-К, З-С, Ж-Ш, ДЗ-Ц, ДЖ-Ч. Сонорні (В, Л, М, Н, Й, Р) НЕ є ані дзвінкими, ані глухими (вони лише дзвінкі).'
+- 'Не-оглушення: дзвінкі приголосні переважно зберігають своє звучання в кінці слова. Виняток: легко [лехко].'
+- 'Г [ɦ] (дзвінкий фрикативний, НЕ "м''який") проти Ґ [g] (дзвінкий проривний)'
 register: розмовний
 references:
-- title: Захарійчук Grade 1 (NUS 2025), p.97
-  notes: 'Apostrophe rule: after б,п,в,м,ф,р before я,ю,є,ї.'
-- title: Захарійчук Grade 1 (NUS 2025), p.15
-  notes: Hard [–] vs soft [=] consonant notation.
-- title: Большакова Grade 1, p.45-47
+- title: Захарійчук, 1 клас (НУШ 2025), стор. 97
+  notes: 'Правило апострофа: після б, п, в, м, ф, р перед я, ю, є, ї.'
+- title: Захарійчук, 1 клас (НУШ 2025), стор. 15
+  notes: Позначення твердих [–] та м'яких [=] приголосних.
+- title: Большакова, 1 клас, стор. 45-47
   notes: Тверді і пом'якшені приголосні звуки.
