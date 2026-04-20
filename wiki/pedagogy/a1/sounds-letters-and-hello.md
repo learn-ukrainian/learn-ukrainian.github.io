@@ -1,153 +1,150 @@
-MCP issues detected. Run /mcp list for status.# Педагогіка A1: Sounds Letters And Hello
+# Педагогіка A1: Sounds Letters And Hello
 
 <!-- wiki-meta
 slug: sounds-letters-and-hello
 domain: pedagogy/a1
 tracks: [a1, a2]
-compiled: 2026-04-18
+compiled: 2026-04-21
 -->
 
-## Методичний підхід (Methodological Approach)
+## Методичний підхід
 
-The foundational approach for teaching Ukrainian sounds to beginners, as derived from Grade 1-2 textbooks, is "звук перед буквою" (sound before letter). The learner must first learn to hear, identify, and produce the core sounds of Ukrainian before associating them with written symbols [S17, S31]. This method builds a strong phonetic base and minimizes negative transfer from the learner's native language.
+Основою для вивчення української мови на початковому етапі є глибоке розуміння її звукової системи. Українська педагогічна традиція, що відображена у підручниках для 1–5 класів, наголошує на первинності **звука** як найменшої одиниці мови та мовлення [S1]. Перш ніж учень побачить літеру, він має почути й навчитися розпізнавати звук. Цей підхід, орієнтований на слухове сприйняття, є ключовим для формування правильної вимови й уникнення фонетичної інтерференції з рідної мови учня.
 
-Key pedagogical principles from Ukrainian primary education include:
+Система української фонетики складається з 38 звуків: 6 голосних та 32 приголосних [S1]. Водночас український алфавіт налічує 33 літери [S2]. Ця розбіжність між кількістю звуків і літер є центральним методичним викликом і вимагає послідовного пояснення. Такі літери, як `я`, `ю`, `є`, `ї`, `щ`, та диграфи `дж`, `дз` не мають простої відповідності "одна літера — один звук", що потребує окремої уваги [S2, S3]. Звукозапис, або транскрипція у квадратних дужках `[ ]`, вводиться з перших уроків як інструмент для візуалізації вимови, що допомагає розрізняти написання та звучання слів [S3].
 
-1.  **Start with the Physicality of Sound:** Introduce the core distinction between vowels (голосні) and consonants (приголосні) through physical action. Vowels are formed purely with the voice, and you can sing them [S14, S29]. Consonants involve the voice plus noise, or only noise, created by obstructions with the tongue, lips, and teeth [S14, S28]. An effective exercise is having students place a hand on their larynx to feel the vibration of vowels, or hold a hand in front of their mouth to feel the puff of air from plosives [S6, S16].
+Важливо з самого початку підкреслювати милозвучність та вокалічність української мови. Хоча у фонетичній системі голосні становлять лише 15.8%, у живому мовленні їхня частка сягає 42–46% [S6]. Це створює особливу мелодику, яку учні мають відчути через слухання пісень, віршів та скоромовок, що є поширеною практикою в українських школах [S4, S5]. Методика має будуватися на автентичних зразках мовлення, а не на штучних конструкціях, щоб учень одразу занурювався в природне звукове середовище української мови.
 
-2.  **Use Simple, Visual Models:** Ukrainian textbooks for first graders consistently use a simple schematic to represent sounds in a word, separate from the letters. A circle `[•]` represents a vowel, a single dash `[–]` represents a hard consonant, and a double dash `[=]` represents a soft consonant [S3, S8, S40]. This visual analysis should be used from day one to reinforce the sound structure of words.
+## Послідовність введення
 
-3.  **Vowels as the Core of a Syllable:** A critical concept is that the number of syllables in a word is strictly equal to the number of vowels [S20]. Every syllable is built around a single vowel sound. This concept helps learners correctly parse and pronounce multi-syllable words.
+Правильна послідовність введення фонем та графем є критичною для успішного засвоєння. Порядок має враховувати частотність звуків, простоту артикуляції для англомовних учнів та логіку самої української абетки.
 
-4.  **From Sound to Syllable to Word:** The learning progression is phonetically logical. After isolating individual sounds (e.g., [м], [а]), they are immediately combined into simple, open syllables (`ма`) and then into simple words (`ма-ма`) [S29, S40]. This provides an immediate sense of accomplishment and demonstrates the building-block nature of the language.
+**Крок 1: Розрізнення звуків і літер**
+Починати слід із фундаментального поняття: звуки — це те, що ми чуємо і вимовляємо, а літери — це символи для їхнього запису. Введіть поняття транскрипції `[ ]` як способу "записати звук" [S3]. Наведіть приклади, де написання і вимова збігаються (`мама` [ма́ма]) і де відрізняються (`граються` [гра́йуц':а]) [S3]. Цей крок закладає основу для свідомого підходу до орфографії та орфоепії.
 
-5.  **Concrete Examples over Abstract Rules:** The initial focus is on recognizing and reproducing sounds in high-frequency words. Abstract rules about phonology are avoided. Instead, learning is done through minimal pairs (`дим-дім`, `бик-бак`), riddles, and simple rhymes [S9, S11].
+**Крок 2: Голосні звуки**
+Введіть 6 голосних звуків: **[а], [о], [у], [е], [и], [і]** [S1].
+1.  Почніть з літер `А`, `О`, `У`, `Е`, `І`, що мають відносно близькі аналоги в англійській мові та є простими для артикуляції.
+2.  Літеру `И` та звук `[и]` введіть окремо, наголошуючи, що це унікальний український звук, який не є ані `[і]`, ані англійським `[i]` (як у "bit"). Поясніть артикуляцію (язик відсунутий назад). Використовуйте мінімальні пари, як-от `дим` — `дім` [S1].
+3.  Одразу вводьте поняття наголошених і ненаголошених голосних, пояснюючи, що наголошені вимовляються чітко, а ненаголошені `[е]` та `[и]` можуть наближатися один до одного у вимові ([еи], [ие]) [S4].
 
-This native Ukrainian approach, grounded in decades of primary school pedagogy, builds a learner's phonetic intuition from the ground up, rather than relying on flawed comparisons to English or other languages.
+**Крок 3: Базові приголосні та склад**
+Введіть групу простих і частотних приголосних: `М`, `Т`, `Н`, `С`, `П`, `К`, `Л`. Це дозволить одразу будувати прості слова (мама, тато, син, ліс, так, ні). Поясніть, що склад в українській мові майже завжди містить голосний звук. Це допоможе учням інтуїтивно ділити слова на склади.
 
-## Послідовність введення (Introduction Sequence)
+**Крок 4: "Йотовані" та літери з двома звуками**
+Цю групу слід вводити разом, оскільки їхня функція пов'язана зі звуком `[й]`.
+-   **Ї, ї**: Завжди позначає два звуки `[йі]` (`їжак` [йіжа́к]) [S3]. Це найпростіша літера в цій групі.
+-   **Щ, щ**: Завжди позначає два звуки `[шч]` (`щука` [шчу́ка]) [S3].
+-   **Я, Ю, Є**: Поясніть їхню подвійну роль [S2]:
+    -   Два звуки (`[йа]`, `[йу]`, `[йе]`) на початку слова (`яблуко`), після голосного (`моя`) та після апострофа чи м'якого знака (`п'ять`, `м'ясо`).
+    -   Один голосний звук (`[а]`, `[у]`, `[е]`) після приголосного, пом'якшуючи його (`няня`, `люди`, `синє`).
 
-The order of introducing letters and sounds should be based on phonetic simplicity and frequency, not alphabetical order. This method is standard in Ukrainian primary education [S29].
+**Крок 5: М'який знак (ь) та Апостроф (')**
+-   **М'який знак `ь`**: Поясніть, що він не є звуком, а лише вказує на м'якість попереднього приголосного: `день` [ден'], `сіль` [с'іл'].
+-   **Апостроф `’`**: Його функція — роздільна. Він сигналізує, що попередній приголосний залишається твердим, а наступні `я, ю, є, ї` вимовляються як два звуки (з `[й]`): `п'ю` [пйу], `з'їзд` [зйізд] [S3].
 
-1.  **Step 1: Звуки (Sounds) vs. Букви (Letters).** Before any letters are taught, establish the core concept: звуки are what we hear and say, букви are the symbols we use to write them down [S13, S18, S31]. Sounds can be long or short, loud or soft; letters can be big or small, black or blue [S13]. In Ukrainian, there are 38 sounds but only 33 letters, so the relationship is not one-to-one [S13, S30].
+**Крок 6: Африкати та специфічні приголосні**
+-   **ДЖ, ДЗ**: Введіть як єдині звуки, що позначаються двома літерами: `джміль` [джм'іл'], `дзвінок` [дзв'іно́к]. Важливо відрізняти їх від збігу приголосних на межі префікса та кореня, як у слові `підземний` [п'ідзе́мний] [S2].
+-   **Г vs Ґ**: Поясніть, що в українській мові є два звуки: поширений `[г]` (гортанний, фрикативний) і рідкісний `[ґ]` (проривний) [S2, S7]. Наведіть список обов'язкових слів з `ґ` (`аґрус`, `ґава`, `ґудзик`, `ґрунт`, `дзиґа` тощо) та смислорозрізнювальні пари, як `грати` (на піаніно) та `ґрати` (решітка) [S2].
 
-2.  **Step 2: The First Vowels (Голосні).** Begin with the 6 vowel sounds: [а], [о], [у], [е], [и], [і] [S28, S30]. Introduce the letters for the three most phonetically distinct and unambiguous ones first: **Аа, Оо, Уу**. Teach them by singing, showing they are pure voice [S29].
+## Типові помилки L2 (англомовні учні)
 
-3.  **Step 3: The First Consonants (Приголосні).** Introduce a small set of high-frequency consonants whose letter forms are familiar to an English speaker and whose sounds are relatively straightforward: **Мм, Тт, Нн, Сс**. Immediately practice combining them with the vowels to form open syllables: `ма, мо, му, та, то, ту` etc. [S29]. Then, form the first simple words: `мама, тато, там, тут`.
-
-4.  **Step 4: Syllables (Склади) and Stress (Наголос).** Introduce the concept that every syllable has exactly one vowel [S20]. Use the visual schema (`— • — •` for `мама`) to analyze the first words [S40]. Introduce stress by showing how it can change a word's meaning or identify a word, e.g., showing the stress mark on `мáма` [S40].
-
-5.  **Step 5: The Remaining Vowels and Their Letters.**
-    *   Introduce **Ии**. This sound is critical and has no English equivalent. It must be taught carefully through imitation.
-    *   Introduce **Іі**. This sound is softer and higher than **Ии**. Practice minimal pairs like `дим` and `дім` immediately.
-    *   Introduce **Ее**.
-    *   Introduce **Яя, Юю, Єє, Її**. Teach them as "special" letters. **Її** *always* makes two sounds: [йі] [S27, S38]. **Яя, Юю, Єє** make two sounds ([йа], [йу], [йе]) at the beginning of a word/syllable, and one sound ([а], [у], [е]) while softening the preceding consonant after another consonant [S28].
-
-6.  **Step 6: Foundational Greetings.** Introduce the first practical, high-value phrases. This applies the knowledge and provides motivation.
-    *   `Привіт!` (Hello - informal)
-    *   `Дякую.` (Thank you.)
-    *   `Так.` / `Ні.` (Yes. / No.)
-
-7.  **Step 7: The Full Alphabet (Абетка/Алфавіт).** Once the core concepts of sounds, letters, and syllables are established, present the full 33-letter Ukrainian alphabet as a reference tool [S38]. Go through each letter, naming it correctly (e.g., "be", "ve", "he", not English names) and giving its primary sound.
-
-## Типові помилки L2 (Common L2 Errors)
-
-English speakers will consistently make predictable phonetic errors due to L1 interference. These must be addressed proactively from the first lesson.
+Англомовні учні часто переносять фонетичні звички своєї мови на українську. Важливо передбачити ці помилки та працювати над їхнім попередженням.
 
 | ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
-| Pronouncing **и** like English "i" in "b**i**t" or "ee" in "s**ee**". | [**и**] - a retracted, unrounded, mid-high vowel. | English lacks this specific vowel. It's not [ɪ] or [iː]. The tongue is further back and lower than for `і`. The best method is imitation of a native speaker and focusing on the physical difference in tongue/lip position between `и` and `і`. Minimal pairs are essential: `мити` (to wash) vs. `міти` (obsolete verb) [S9]. |
-| Devoicing final consonants, e.g., saying `зуб` (tooth) as `[зуп]`. | `зуб` is `[зуб]`. Voiced consonants stay voiced. | In English, word-final voiced consonants are often partially or fully devoiced. In Ukrainian, they retain their voicing clearly [S7]. An exception is `г`, which can become `[х]` before a voiceless consonant (`кігті` -> `[кіхті]`), but not typically at the end of a word [S7, S37]. The rule is: pronounce the letter as you see it. |
-| Pronouncing **г** as a hard [g] (like in "go"). | **[г]** is a voiced glottal fricative, [ɦ]. It's a "breathy" sound made in the back of the throat. | The English [g] sound is represented by the letter **ґ**. While **ґ** is rare, the distinction is crucial. Using [g] for **г** is one of the most common and noticeable mistakes an English speaker makes. The sound is similar to the `g` in Dutch `goed` or a voiced `h`. The writer should emphasize this is a new sound to learn [S13, S37]. |
-| Pronouncing **в** at the end of a word or before a consonant as the English 'v' [v]. | `[ў]` (a non-syllabic 'u' sound, like the 'w' in "now"). | The letter **в** only has the [v] sound before a vowel. At the end of a word (`лев` - lion) or before a consonant (`завтра` - tomorrow), it becomes a bilabial semivowel [ў], forming a diphthong with the preceding vowel. It's a light sound made with the lips, not teeth-on-lip [S7]. |
-| Ignoring palatalization (softening), e.g., pronouncing `тінь` (shadow) as `[тін]` instead of `[тін′]`. | **[н']** - a soft/palatalized consonant. | English does not have phonemic palatalization. Learners must be taught that `ть`, `нь`, `сь`, etc., are distinct sounds from `т`, `н`, `с`. The tongue position is different (body of the tongue raises towards the hard palate). The letter `ь` (the "soft sign") is not a sound itself but a command to soften the preceding consonant [S23, S27]. |
-| Pronouncing **щи** as "sh-chi" or "sh-k". | `[шч]` - a clear sequence of two sounds, [ш] + [ч]. | The letter **щ** reliably represents the combination of two sounds, [ш] and [ч]. It should be pronounced as such: `борщ` -> `[боршч]` [S27, S38]. Learners often try to blend it into a single sound, but it's two distinct, sequential sounds. |
+| Вимова `[и]` як `[і]` (sea) або англійського `[ɪ]` (sit). | Вимова `[и]` як окремої, центрально-задньої фонеми. | Англійська не має прямого відповідника звуку `[и]`. Учні намагаються замінити його найближчим знайомим звуком. Потрібно тренувати на мінімальних парах (`мило`-`міло`, `дим`-`дім` [S1]) і фокусуватися на правильному положенні язика (відтягнутий назад, не напружений). |
+| Ігнорування пом'якшення приголосних перед `ь`, `я`, `ю`, `є`, `і`. Слово `тінь` вимовляється як "тин". | Чітке пом'якшення приголосного: `[т']` у слові `[т'ін']`. | В англійській немає системної палаталізації (пом'якшення). Учні сприймають `т` і `ь` як два окремі елементи. Слід пояснювати, що `ь` — це модифікатор попередньої літери. Пари `стан` - `стань` [S4] є добрим тренажером. |
+| Вимова `г` як англійського `g` ([g]). | Вимова `г` як гортанного фрикативного `[ɦ]`. | Англійське `g` відповідає українському `[ґ]`, який є рідкісним. Учні автоматично використовують звичний їм проривний звук. Важливо з першого дня тренувати гортанний `[ɦ]`, описуючи його як "дихаючий" звук, схожий на видих. |
+| Вимова `щ` як `[ш]` (sh). | Вимова `щ` як звукосполучення `[шч]`. | Учні бачать одну літеру і намагаються вимовити один звук. Потрібно механічно тренувати вимову двох звуків поспіль: `[ш] + [ч]`. Приклад: `борщ` [боршч] [S1]. |
+| Дзвінкі приголосні в кінці слова вимовляються глухо (`хліб` як `[хл'іп]`). | Дзвінкі приголосні в кінці слова та складу вимовляються дзвінко: `хліб` `[хл'іб]`, `мед` `[мед]` [S5]. | Це пряма інтерференція з англійської, німецької та російської мов, де оглушення в кінці слова є нормою. Українська мова зберігає дзвінкість, і на цьому потрібно наголошувати окремо. |
+| Неправильна вимова `я, ю, є` після приголосних, з додаванням `[й]` (`дякую` як `[дйакую]`). | Пом'якшення попереднього приголосного і вимова чистого голосного (`дякую` `[д'акую]`). | Учні запам'ятовують, що `я` — це `[йа]`, і застосовують це правило всюди. Необхідно чітко розмежувати дві функції цих літер залежно від позиції [S2]. |
 
-## Деколонізаційні застереження (Decolonization Notes)
+## Деколонізаційні застереження
 
-**This is a mandatory section.** The teaching of Ukrainian, especially at the phonetic level, must be actively decolonized from Russian influence, which has historically sought to erase Ukrainian's distinctiveness.
+Викладання української мови, особливо для початківців, вимагає свідомого уникнення колоніальної оптики, яка часто подає українську через порівняння з російською.
 
-1.  **Build from a Ukrainian Base, Not Russian Comparisons:** Under no circumstances should Ukrainian phonetics be taught "through" Russian. Avoid statements like "Ukrainian **и** is like Russian **ы**" or "It's like Russian, but...". This approach incorrectly frames Ukrainian as a derivative of Russian and contaminates the learner's phonology. Ukrainian phonetics must be taught on their own terms, establishing a new, independent system in the learner's mind [S2].
+1.  **Жодних порівнянь з російською абеткою чи фонетикою.** Неприпустимо пояснювати українські літери через російські аналоги (напр., "українська `и` — це як російська `ы`", "українська `г` — це як південноросійське `г`"). Це створює хибне враження, що українська є діалектом або варіантом російської, та заважає формуванню чистої української фонетичної бази. Учень має будувати систему звуків "з нуля".
 
-2.  **The Political History of 'Ґ':** The letter **ґ**, which represents the plosive [g] sound, has a history of political suppression. It was part of the standard Ukrainian alphabet until it was officially removed in 1933 by the Soviet regime to make the Ukrainian language "closer to Russian" [S2]. A Soviet linguist, Naum Kaganovich, infamously compared the letter **ґ** to a gallows (`шибениця`) and celebrated its removal as a way of asserting Russia's role as the "older sister" [S2]. Reclaiming and correctly using **ґ** in the few words where it belongs (`ґрунт`, `ґанок`, `аґрус`) is an act of linguistic decolonization [S2, S37].
+2.  **Наголос на унікальності звука `[г]` ([ɦ]).** Слід підкреслити, що гортанний `[г]` є питомо українським, нормативним і надзвичайно поширеним звуком [S2]. Звук `[ґ]` ([g]) також є нормативним, але вживається в обмеженій кількості слів. Подавати `[г]` як "особливий" чи "відмінний" звук, маючи на увазі російський `[g]` як неусвідомлену "норму", — це колоніальний підхід.
 
-3.  **Emphasize 'Милозвучність' (Euphony):** Ukrainian phonology actively avoids difficult consonant clusters, a principle known as `милозвучність` (melodiousness or euphony) [S1]. This is achieved through natural phonetic processes like:
-    *   **Vowel Insertion:** Adding a vowel to break up consonants (e.g., `розібрати` instead of `розбрати`) [S1].
-    *   **Consonant Simplification:** Dropping a consonant in a cluster (e.g., `тижневий` from `тиждень`, dropping the 'д') [S1].
-    *   **Vowel/Consonant Alternation (`у/в`, `і/й`):** Using `в` or `й` after a vowel and `у` or `і` after a consonant to maintain a smooth rhythm. This is a key feature of Ukrainian that distinguishes it from Russian, which has more consonant clusters. While the rules are for a later stage, the concept that Ukrainian *strives for a consonant-vowel-consonant-vowel flow* should be introduced early [S1]. This inherent musicality is a core part of the language's identity [S36].
+3.  **Правильні назви літер.** Слід використовувати виключно українські назви літер (`а`, `бе`, `ве`, `ге`), як подано в алфавіті [S2], і уникати російських назв (`бэ`, `вэ`, `гэ`).
 
-## Словниковий мінімум (Vocabulary Boundaries)
+4.  **Уникнення хибної етимології.** Пояснюючи спільну лексику, не можна подавати її як "запозичену з російської". Більшість таких слів мають спільне праслов'янське коріння.
 
-Vocabulary for this initial stage must be extremely limited, high-frequency, and phonetically simple. The goal is to master sounds, not to build a large lexicon.
+5.  **Фокус на українській орфоепії.** Правила вимови (напр., збереження дзвінкості приголосних у кінці слова [S5]) мають подаватися як самостійна норма, а не як "відмінність від російської".
 
-**Greetings / Basic Phrases**
-*   `Привіт` (Hello) ★★★
-*   `Так` / `Ні` (Yes / No) ★★★
-*   `Дякую` (Thank you) ★★★
-*   `Добрий день` (Good day) ★★
+## Словниковий мінімум
 
-**Іменники (Nouns)**
-*   `мама` (mom) ★★★
-*   `тато` (dad) ★★★
-*   `дім` (house, home) ★★
-*   `вода` (water) ★★
-*   `син` (son) ★
+На початковому етапі лексика має бути простою, частотною та корисною для побудови перших фраз.
 
-**Займенники (Pronouns)**
-*   `я` (I) ★★★
-*   `ти` (you, sg.) ★★★
-*   `він` / `вона` / `воно` (he / she / it) ★★★
-*   `ми` (we) ★★
-*   `ви` (you, pl./formal) ★★
-*   `вони` (they) ★★
+**Привітання та базові фрази:**
+- Привіт ★★★
+- Добрий день ★★★
+- Дякую ★★★
+- Так / Ні ★★★
+- Як справи? ★★★
 
-**Дієслова (Verbs)**
-*   `є` (is/are - form of `бути`) ★★★
-*   `жити` (to live) ★
-*   `мати` (to have) ★
+**Іменники (Nouns):**
+- мама, тато ★★★
+- дім, хата ★★★
+- слово, мова ★★★ [S5]
+- школа ★★★ [S3]
+- стіл, стілець ★★
+- яблуко ★★ [S1]
+- кіт, собака ★★ [S3]
+- вода ★★★
+- хліб ★★★ [S5]
 
-**Прислівники (Adverbs)**
-*   `тут` (here) ★★
-*   `там` (there) ★★
+**Займенники (Pronouns):**
+- я, ти, він, вона, воно, ми, ви, вони ★★★
 
-## Приклади з підручників (Textbook Examples)
+**Дієслова (Verbs):**
+- бути (є) ★★★
+- мати ★★★
+- жити ★★★ [S5]
+- іти / ходити ★★
+- говорити ★★★ [S5]
+- читати, писати ★★
 
-The writer should model activities directly on those used in Ukrainian primary schools. These are proven, effective methods for teaching the sound system.
+**Прикметники (Adjectives):**
+- добрий, поганий ★★★
+- великий, малий ★★★
+- новий, старий ★★
+- український ★★★
 
-**1. Звуковий аналіз слова (Sound Analysis of a Word)**
-*   **Source:** Большакова, 1 клас, Буквар [S40]
-*   **Description:** This is the most fundamental exercise. The learner analyzes a word by breaking it down into its component sounds, not letters. They identify vowels, consonants, syllables, and stress.
-*   **Prompt Example:** "Зроби звуковий аналіз слова `мама`."
-    1.  Назви голосні звуки: `[а]`, `[а]`.
-    2.  Поділи слово на склади: `ма-ма`.
-    3.  Постав наголос: `мá-ма`.
-    4.  Познач приголосні звуки: `[м]`.
-    5.  Склади схему: `[– •́ – •]`
+**Питальні слова:**
+- Хто? Що? ★★★
+- Де? Коли? ★★
+- Як? ★★★
 
-**2. Minimal Pair Riddles (Загадки на розрізнення звуків)**
-*   **Source:** Литвинова, 5 клас [S9]
-*   **Description:** Riddles that hinge on changing a single sound. This trains phonemic awareness in a fun way.
-*   **Prompt Example:**
-    > З [и] я плаваю у морі,
-    > З [і] ловлю мишей в коморі.
-    > (Відгадка: кит / кіт)
-    *Translation: With [и] I swim in the sea, With [і] I catch mice in the pantry. (Answer: whale / cat)*
+## Приклади з підручників
 
-**3. Voiced vs. Voiceless Consonant Check (Перевірка дзвінких і глухих)**
-*   **Source:** Кравцова, 2 клас [S16]
-*   **Description:** A physical exercise to help students feel the difference between voiced (дзвінкі) and voiceless (глухі) consonants.
-*   **Prompt Example:** "Проведи мовне дослідження. Закрий долонями вуха і вимов звук [д], а потім [т]. Якщо у вухах дзвенить, то це дзвінкий приголосний звук. А якщо не дзвенить? Який це звук?"
-    *Translation: "Conduct a language experiment. Cover your ears with your palms and pronounce the sound [d], and then [t]. If it rings in your ears, it's a voiced consonant. And if it doesn't? What sound is it?"*
+Для створення вправ слід орієнтуватися на типові завдання з українських підручників для початкової та середньої школи.
 
-**4. Filling in the Vowels (Встав пропущені голосні)**
-*   **Source:** Литвинова, 5 клас [S33]
-*   **Description:** A cloze exercise where all consonants are present, but vowels are missing. This forces the learner to recognize the word's structure and the central role of vowels in forming words.
-*   **Prompt Example:** "Розшифруйте фрагмент казки, уставивши на місці пропусків голосні звуки."
-    > Б..л.. с..б.. д..д та б..б.. .
-    *Translation: "Decode the fragment of the fairy tale by inserting vowels in place of the gaps." (Answer: Були собі дід та баба.)*
+1.  **Завдання на звуко-буквений аналіз** (Вашуленко, 5 клас [S1]):
+    *   **Формулювання:** "Напишіть транскрипцію слів. Визначте кількість звуків і букв у записаних словах."
+    *   **Приклад слів:** `Морква, яблуко, їжак, джміль, щавель, поле, сім'я.`
+    *   **Мета:** Навчити розрізняти звуки та літери, застосовувати правила для "йотованих" та `щ`, `дж`. (Chunk ID: `S2464`)
+
+2.  **Завдання на розрізнення Г і Ґ** (Заболотний, 5 клас [S2]):
+    *   **Формулювання:** "Запишіть слова, вставляючи пропущені літери `г` або `ґ`."
+    *   **Приклад слів:** `..ітара, ..арний, ..речний, ..рунтовний, ..уля, ..ава, ла..уна.`
+    *   **Мета:** Закріпити вживання рідкісної літери `ґ` в найпоширеніших словах. (Chunk ID: `S2368`)
+
+3.  **Завдання на перевірку сумнівних приголосних** (Большакова, 4 клас [S5]):
+    *   **Формулювання:** "Доберіть перевірне слово, щоб правильно написати слово із сумнівним приголосним. Вставте пропущену букву."
+    *   **Приклад:** `Просьба — про[..]ити → про[с]ити → просьба. Легко — ле[..]енько → ле[г]енько → легко.`
+    *   **Мета:** Продемонструвати, як зміна слова допомагає визначити правильне написання приголосного, виходячи з вимови (уподібнення). (Chunk ID: `S1797`)
+
+4.  **Завдання на подвійну роль Я, Ю, Є** (Заболотний, 5 клас [S2]):
+    *   **Формулювання:** "Запишіть подані слова у два стовпчики: в один — ті, де `я, ю, є` позначають один звук, у другий — де позначають два звуки."
+    *   **Приклад слів:** `Свято, ячмінь, м'ята, духмяний, зілля, дають, яскраво, насіння.`
+    *   **Мета:** Практичне закріплення правила про подвійну функцію "йотованих" голосних. (Chunk ID: `S2368`)
 
 ## Пов'язані статті
-- `pedagogy/a1/introduction-to-nouns-and-gender`
-- `pedagogy/a1/the-seven-cases-overview`
-- `grammar/a1/the-ukrainian-alphabet`
-- `phonetics/vowels-and-consonants`
+- `[[pedagogy/a1/ukrainian-alphabet-order]]`
+- `[[grammar/a1/introduction-to-transcription]]`
+- `[[grammar/a1/hard-and-soft-consonants]]`
+- `[[pedagogy/a1/common-phrases-and-greetings]]`
+- `[[decolonization/phonetic-interference-from-russian]]`
