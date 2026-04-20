@@ -164,7 +164,9 @@ Each section should follow the word budget specified. The total must reach {WORD
 - Teach through PATTERNS, not rules: show examples first, then name the pattern
 - Cultural context where relevant — this is Ukrainian, not generic L2
 - Use vocabulary from the plan's vocabulary_hints. Function words (pronouns, conjunctions) are always allowed.
-- Keep one instructional voice inside the section body. Do not alternate between Ukrainian teaching prose and full English lecture paragraphs. If English support is needed, keep it brief: parenthetical glosses, short line-level translations, or a short blockquote translation after the Ukrainian sentence.
+- Keep one instructional voice inside the section body — the dominant language is set by **IMMERSION TARGET** (Rule 1), not hard-coded to Ukrainian. Do not zig-zag between full Ukrainian teaching paragraphs and full English lecture paragraphs; pick the dominant voice per the level contract and let the non-dominant language appear only as scaffolding.
+  - **A1 / early A2 (English dominant):** English carries narrative explanation and task framing. Ukrainian appears in examples, dialogues, vocabulary anchors, and grammar illustrations — not in the connective prose between them.
+  - **B1+ (Ukrainian dominant):** Ukrainian carries explanation and framing. English appears only as brief parenthetical glosses, short line-level translations, or a short blockquote translation after a Ukrainian sentence.
 - In A1/A2 service dialogues, write a full mini-interaction, not clipped slot-filling turns. A café/shop exchange should usually include: request -> clarifying question or recommendation -> acceptance/refusal -> natural close.
 - In summary sections, avoid worksheet-command openers (`Запам'ятайте`, `Прочитайте й повторіть`) and abstract recap lines (`These verbs express...`). Build the recap from concrete everyday Ukrainian examples first.
 
