@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 8
-**Total words:** 14,411
+**Total articles:** 10
+**Total words:** 17,670
 
 ## Figures
 
@@ -19,6 +19,8 @@ Auto-generated index of compiled wiki articles.
 
 ## Pedagogy
 
+- [Педагогіка A1: A1 Finale](pedagogy/a1/a1-finale.md) (1,654 words)
+- [Педагогіка A1: Around The City](pedagogy/a1/around-the-city.md) (1,605 words)
 - [Педагогіка A1: Colors](pedagogy/a1/colors.md) (1,405 words)
 - [Педагогіка A1: Euphony](pedagogy/a1/euphony.md) (1,528 words)
 - [Педагогіка A1: My Family](pedagogy/a1/my-family.md) (1,759 words)

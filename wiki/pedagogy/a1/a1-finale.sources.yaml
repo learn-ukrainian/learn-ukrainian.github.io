@@ -1,0 +1,12 @@
+# Source registry for wiki/pedagogy/a1/a1-finale.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3912
+  type: unknown
+- id: S3
+  file: S279
+  type: unknown
+- id: S6
+  file: S3908
+  type: unknown

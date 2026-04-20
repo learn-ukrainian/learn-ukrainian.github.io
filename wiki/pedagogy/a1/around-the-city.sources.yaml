@@ -1,0 +1,24 @@
+# Source registry for wiki/pedagogy/a1/around-the-city.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2445
+  type: unknown
+- id: S2
+  file: S2390
+  type: unknown
+- id: S3
+  file: S1800
+  type: unknown
+- id: S4
+  file: S3371
+  type: unknown
+- id: S5
+  file: S4688
+  type: unknown
+- id: S6
+  file: S3061
+  type: unknown
+- id: S7
+  file: S3956
+  type: unknown
