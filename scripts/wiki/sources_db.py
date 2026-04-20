@@ -195,11 +195,19 @@ def _search_sections_fts5(
 
     extra_where = ["s.parent_section_id IS NOT NULL"]
     extra_params: list[object] = []
-    if track in _TRACK_GRADE_RANGES:
-        grades = _TRACK_GRADE_RANGES[track]
-        placeholders = ",".join("?" * len(grades))
-        extra_where.append(f"s.grade IN ({placeholders})")
-        extra_params.extend(grades)
+    # #1340 (2026-04-20): grade filter intentionally NOT applied here.
+    # CEFR (L2 framework) does not map onto Ukrainian school grades
+    # (L1 native staging). Grade 5 systematic phonetics is exactly
+    # what an adult L2 A1 learner needs — adult metacognition makes
+    # grade-5/6 explicit grammar appropriate even when grade-1/2
+    # picture-driven primers are not. Dense rerank + per-track priors
+    # in track_priors.yaml handle topic relevance; an a-priori grade
+    # gate masks corpus coverage we explicitly want.
+    # See docs/session-state/2026-04-20-plan-audit-a1a2.md for context.
+    # `track` retained in signature for future soft-prior use; do NOT
+    # re-add a hard `grade IN (...)` filter without an empirical
+    # diagnostic showing dense rerank cannot handle the topic.
+    _ = track  # keep parameter live for downstream callers
 
     rows = conn.execute(
         f"""
@@ -782,21 +790,26 @@ def search_sources(
 # ── FTS5 search functions (prose) ───────────────────────────────
 
 
-#: CEFR track → allowed Ukrainian school grades. A1 is absolute
-#: beginner — sounds/letters/ABC — so textbook retrieval must stay in
-#: the primary-school Grades 1-4 window. Pulling Grade 5-10 grammar into an
-#: A1 pedagogy brief gave us 19 cited sources on 2026-04-18 that
-#: included a Grade 10 morphology textbook in a lesson teaching
-#: vowels — pedagogically absurd and the direct cause of the
-#: source_grounding MISATTRIBUTION findings the dim-review flagged.
-_TRACK_GRADE_RANGES: dict[str, tuple[str, ...]] = {
-    "a1": ("1", "2", "3", "4"),
-    "a2": ("1", "2", "3", "4"),
-    "b1": ("3", "4", "5", "6"),
-    "b2": ("5", "6", "7", "8"),
-    "c1": ("7", "8", "9", "10", "11"),
-    "c2": ("9", "10", "11"),
-}
+# NOTE: Track→grade mapping was REMOVED here in #1340 (2026-04-20).
+# Historical mapping (a1/a2 → 1-4, b1 → 3-6, b2 → 5-8, c1 → 7-11,
+# c2 → 9-11) preserved in git: see commit 3704d2f2f and earlier.
+#
+# Why removed: CEFR (L2 framework) describes what an L2 learner can DO
+# in the target language. Ukrainian school grades (1-11) describe staged
+# curriculum for NATIVE speakers who already speak Ukrainian fluently.
+# They are orthogonal scaffolding systems. Adult L2 A1 learners can
+# absorb Grade 5 systematic phonetics that would overwhelm a Grade 1
+# native — they bring metacognition the native primary-schooler lacks.
+# The 2026-04-18 "Grade 10 morphology in vowels lesson" symptom that
+# motivated the original gate was a bug in the FTS5-only pre-#1348
+# pipeline (no semantic reranking). Post-#1348 dense rerank handles
+# topic relevance natively, making a hard grade gate a band-aid for
+# a cured disease.
+#
+# If a future change re-introduces grade-aware retrieval, prefer a
+# SOFT prior (additive boost in dense rerank) over a hard SQL filter,
+# and gate the change behind a #1340-style retrieval-playback diagnostic
+# showing dense rerank alone cannot solve the relevance problem.
 
 
 def _fts_search(fts_table: str, data_table: str,
@@ -880,22 +893,13 @@ def search_textbooks(
     Filters out TOC pages and short noise chunks before returning.
     Requests extra rows from FTS5 to compensate for filtered-out noise.
 
-    `track`: CEFR track (a1, a2, ...). When provided, restricts results
-    to grade levels appropriate for learners at that track per
-    `_TRACK_GRADE_RANGES`. Caller should always pass this when compiling
-    a wiki article — retrieving a Grade-10 morphology chapter into an
-    A1 pedagogy brief is pedagogically wrong and causes
-    source_grounding MISATTRIBUTION findings.
+    `track`: accepted for backward compatibility with existing callers;
+    the value is no longer consulted. This function is deprecated; use
+    `search_sources` for new code.
     """
+    _ = track  # accepted for backward compatibility; ignored
     extra_where = ""
     extra_params: tuple = ()
-    if track and track in _TRACK_GRADE_RANGES:
-        grades = _TRACK_GRADE_RANGES[track]
-        # The grade gate must match the configured CEFR window exactly:
-        # #1339 expects A1 retrieval to keep Grades 1-4 and drop Grade 5+.
-        placeholders = ",".join("?" * len(grades))
-        extra_where = f"AND s.grade IN ({placeholders})"
-        extra_params = tuple(grades)
     # Request 2x to compensate for filtered TOC/noise chunks
     rows = _fts_search(
         "textbooks_fts", "textbooks", ukr_keywords, max_total * 2,

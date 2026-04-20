@@ -5,13 +5,30 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import sqlite3
 import sys
 import unicodedata
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
+
+
+class AllOfVariant(TypedDict):
+    """Multi-token variant: ALL listed substrings must appear in the same chunk.
+
+    Use when textbook authors phrase the same concept with varying word
+    order (e.g. "ґ ... 1933 ... 1990" in any order satisfies the
+    "Ґ-letter abolition + reinstatement" concept).
+    """
+    all_of: list[str]
+
+
+#: A concept variant is either a literal substring or an `AllOfVariant`
+#: token-set. This alias is what `BASE_TARGET_CONCEPTS`,
+#: `ADDED_VARIANTS`, and `TARGET_CONCEPTS` should hold.
+ConceptVariant = str | AllOfVariant
 
 import yaml
 
@@ -40,7 +57,37 @@ APOSTROPHE_MAP = str.maketrans({
     "՚": "'",
 })
 
-BASE_TARGET_CONCEPTS: dict[str, list[str]] = {
+# OCR'd PDF textbooks routinely break Ukrainian words across lines using
+# soft hyphens (U+00AD) or hyphen-minus + line break ("зву-\nків"). Both
+# silently fail substring matching against the unbroken form ("звуків")
+# and were the direct cause of #1340 false negatives for syllable_count_rule
+# and (initially diagnosed as a corpus gap) g_ge_history. We strip both
+# variants before substring matching. We do NOT strip hyphen-minus when
+# it sits between two letters with no whitespace ("по-перше"), only when
+# whitespace separates the two halves (line-break hyphenation only).
+_SOFT_HYPHEN = "\u00AD"
+_LINE_BREAK_HYPHENATION = re.compile(r"([\u0400-\u04FFa-zа-яіїєґ])-\s+([\u0400-\u04FFa-zа-яіїєґ])", re.IGNORECASE)
+_WHITESPACE = re.compile(r"\s+")
+
+# A1 sounds-letters concept checklist for retrieval coverage scoring.
+#
+# Scope policy (#1340, 2026-04-20): every concept listed here MUST be in
+# the A1 spec — check curriculum/l2-uk-en/a1/research/sounds-letters-and-hello-knowledge-packet.md
+# before adding. Things that belong to language *history* (Ґ-abolition
+# 1933 → reinstatement 1990), advanced phonological systems
+# (full milozvuchnist у/в/і/й alternation), or grammar metalanguage
+# beyond "sounds vs letters / vowels vs consonants / iotated / soft sign"
+# do NOT belong here — they live in B1+/HIST/BIO seminar diagnostics.
+#
+# Match types per entry:
+#   - str literal               → substring match (after normalize_text)
+#   - {"all_of": [str, ...]}    → ALL substrings must appear in the same
+#                                 chunk (use for multi-token concepts where
+#                                 word order varies across textbook authors)
+#   - {"any_of_groups":         → at least one inner group must satisfy
+#       [{"all_of": [...]}, …]}    its all_of (use for "exists a phrasing
+#                                  that means X" semantics)
+BASE_TARGET_CONCEPTS: dict[str, list[ConceptVariant]] = {
     "syllable_count_rule": [
         "скільки в слові голосних, стільки й складів",
         "стільки складів",
@@ -79,14 +126,24 @@ BASE_TARGET_CONCEPTS: dict[str, list[str]] = {
         "пом'якшує попередній приголосний",
     ],
     "milozvuchnist": [
+        # BORDERLINE A1: mentioned in knowledge packet only as the "core
+        # rule of Ukrainian euphony" that explains в→[ў]. Full milozvuchnist
+        # (у/в, і/й alternation system) is B1+ grammar. Kept here because
+        # the A1 wiki article should mention it as a one-line gloss; if a
+        # future audit decides it's a leak, drop it to a B1 diagnostic.
         "милозвучність",
         "евфонія",
         "уникає важких збігів",
     ],
-    "g_ge_history": [
-        "вилучення літери ґ",
-        "повернення літери ґ",
-    ],
+    # REMOVED 2026-04-20 (#1340): "g_ge_history" — the 1933 abolition /
+    # 1990 reinstatement story is Grade 10 ukrmova / Grade 11 istoriya
+    # material, not A1. At A1 level Ґ exists only as the К-Ґ voiced/
+    # voiceless pair (intro Step 5). The historical narrative belongs
+    # in HIST/BIO seminar diagnostics. Verified in corpus via
+    # mcp__sources__search_text: covered by Karaman Grade 10 + Hisem
+    # Grade 11 — the diagnostic's prior "not in corpus" claim was a
+    # pattern-matching false negative caused by OCR soft hyphens (now
+    # fixed in normalize_text).
     "sound_before_letter": [
         "звук перед буквою",
         "спочатку звук, потім літера",
@@ -100,10 +157,12 @@ BASE_TARGET_CONCEPTS: dict[str, list[str]] = {
     ],
 }
 
-ADDED_VARIANTS: dict[str, list[str]] = {
+ADDED_VARIANTS: dict[str, list[ConceptVariant]] = {
     "syllable_count_rule": [
         "у слові стільки складів, скільки голосних звуків",
         "стільки складів, скільки голосних",
+        # textbook variants where "звуків" is hyphenated across a line
+        # are now caught by normalize_text — no need to enumerate.
     ],
     "larynx_touch_exercise": [
         "покладіть пальці на гортань",
@@ -125,6 +184,10 @@ ADDED_VARIANTS: dict[str, list[str]] = {
     ],
     "yi_letter_two_sounds": [
         "буква ї завжди позначає два звуки",
+        # token-set: any chunk that mentions Ї and "two sounds" together
+        # in any phrasing satisfies the concept — this catches Grade 1-2
+        # primer wording that doesn't use the exact technical formula.
+        {"all_of": ["ї", "два звуки"]},
     ],
     "ya_yu_ye_dual": [
         "букви я, ю, є позначають",
@@ -137,12 +200,7 @@ ADDED_VARIANTS: dict[str, list[str]] = {
         "уникаємо збігу голосних або приголосних",
         "чергування у-в та і-й",
     ],
-    "g_ge_history": [
-        "у правописі 1933 року",
-        "літеру ґ було вилучено",
-        "літеру ґ було повернуто",
-        "повернули літеру ґ",
-    ],
+    # g_ge_history removed — see BASE_TARGET_CONCEPTS comment above.
     "sound_before_letter": [
         "букви — це умовні знаки, які позначають звуки мови",
         "букви ми бачимо, читаємо і пишемо",
@@ -157,16 +215,34 @@ ADDED_VARIANTS: dict[str, list[str]] = {
     ],
 }
 
-TARGET_CONCEPTS: dict[str, list[str]] = {
+TARGET_CONCEPTS: dict[str, list[ConceptVariant]] = {
     key: BASE_TARGET_CONCEPTS[key] + ADDED_VARIANTS.get(key, [])
     for key in BASE_TARGET_CONCEPTS
 }
 
+#: Total concepts under test, used to scale reporting and PASS threshold.
+#: Keep tied to TARGET_CONCEPTS — never hardcode "/10" anywhere downstream.
+TOTAL_CONCEPTS: int = len(TARGET_CONCEPTS)
+
+#: PASS threshold for the comparison report. 80% coverage of the in-scope
+#: concept list — 8/10 historically, 8/9 = 89% after #1340 dropped
+#: g_ge_history. Computed as ceil(0.8 * total) so future scope edits scale
+#: proportionally without manual tweaks.
+PASS_THRESHOLD: int = max(1, math.ceil(0.8 * TOTAL_CONCEPTS))
+
 
 def normalize_text(text: str) -> str:
-    """Normalize apostrophes, spacing, and case for concept matching."""
+    """Normalize apostrophes, OCR hyphenation, spacing, and case for concept matching.
+
+    Order matters: strip soft hyphens FIRST (they're invisible), then collapse
+    OCR line-break hyphenation BEFORE whitespace collapse (because the regex
+    needs to see the literal whitespace to identify line breaks), then collapse
+    whitespace, then lowercase.
+    """
     text = unicodedata.normalize("NFKC", text).translate(APOSTROPHE_MAP)
-    text = re.sub(r"\s+", " ", text).strip()
+    text = text.replace(_SOFT_HYPHEN, "")
+    text = _LINE_BREAK_HYPHENATION.sub(r"\1\2", text)
+    text = _WHITESPACE.sub(" ", text).strip()
     return text.lower()
 
 
@@ -200,40 +276,103 @@ def build_concept_result() -> dict[str, Any]:
     }
 
 
-def find_evidence_snippet(text: str, phrase: str) -> str:
+def _flatten_variant_tokens(variant: Any) -> list[str]:
+    """Return every literal token a variant references (for snippet/SQL prefilter)."""
+    if isinstance(variant, str):
+        return [variant]
+    if isinstance(variant, dict) and "all_of" in variant:
+        return [token for token in variant["all_of"] if isinstance(token, str)]
+    return []
+
+
+def _normalize_variant(variant: Any) -> list[str]:
+    """Pre-normalize a variant into the list of substrings that must ALL appear.
+
+    Returns:
+      - [normalized_str]                   for a str literal variant
+      - [normalized_token1, ..., tokenN]   for an {"all_of": [...]} variant
+      - []                                 for an unrecognized / empty variant
+        (matches will then short-circuit to False)
+
+    A variant is satisfied iff every string in the returned list is a
+    substring of the normalized chunk text. Empty list = never matches.
+    Compute once per variant at module load — never per-chunk.
+    """
+    tokens = [normalize_text(token) for token in _flatten_variant_tokens(variant)]
+    return [token for token in tokens if token]
+
+
+def variant_matches(normalized_text: str, normalized_variant: list[str]) -> bool:
+    """Return True iff every token in `normalized_variant` is a substring of
+    `normalized_text`. Both inputs must already be passed through
+    `normalize_text` / `_normalize_variant`."""
+    return bool(normalized_variant) and all(token in normalized_text for token in normalized_variant)
+
+
+#: Pre-normalized mirror of `TARGET_CONCEPTS`, keyed by concept. Computed
+#: once at import time so per-chunk matching avoids re-normalizing every
+#: variant string for every chunk (was O(chunks × variants) normalize_text
+#: calls per concept; now O(variants) at startup, then O(1) lookups).
+NORMALIZED_TARGET_CONCEPTS: dict[str, list[list[str]]] = {
+    concept: [_normalize_variant(variant) for variant in variants]
+    for concept, variants in TARGET_CONCEPTS.items()
+}
+
+
+def find_evidence_snippet(text: str, normalized_variant: list[str]) -> str:
+    """Return a short snippet of `text` near the first matched token.
+
+    `normalized_variant` is the already-normalized token list for the
+    variant that matched; we find the first one in the normalized text.
+    """
     normalized_text = normalize_text(text)
-    normalized_phrase = normalize_text(phrase)
-    start = normalized_text.find(normalized_phrase)
-    if start == -1:
-        return ""
-    snippet_start = max(0, start - 60)
-    snippet_end = min(len(normalized_text), start + len(normalized_phrase) + 100)
-    return normalized_text[snippet_start:snippet_end][:MAX_EVIDENCE_CHARS].strip()
+    for normalized_token in normalized_variant:
+        if not normalized_token:
+            continue
+        start = normalized_text.find(normalized_token)
+        if start == -1:
+            continue
+        snippet_start = max(0, start - 60)
+        snippet_end = min(len(normalized_text), start + len(normalized_token) + 100)
+        return normalized_text[snippet_start:snippet_end][:MAX_EVIDENCE_CHARS].strip()
+    return ""
 
 
 def match_returned_concepts(chunks: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     results = {concept: build_concept_result() for concept in TARGET_CONCEPTS}
-    for concept, variants in TARGET_CONCEPTS.items():
+    for concept, normalized_variants in NORMALIZED_TARGET_CONCEPTS.items():
         for chunk in chunks:
             normalized_text = normalize_text(chunk.get("text", ""))
-            for variant in variants:
-                normalized_variant = normalize_text(variant)
-                if normalized_variant and normalized_variant in normalized_text:
+            for normalized_variant in normalized_variants:
+                if variant_matches(normalized_text, normalized_variant):
                     result = results[concept]
                     result["present_in_returned_41"] = True
                     chunk_id = chunk.get("chunk_id", "")
                     if chunk_id and chunk_id not in result["chunks_containing"]:
                         result["chunks_containing"].append(chunk_id)
                     if not result["evidence_quote"]:
-                        result["evidence_quote"] = find_evidence_snippet(chunk.get("text", ""), variant)
+                        result["evidence_quote"] = find_evidence_snippet(chunk.get("text", ""), normalized_variant)
                     break
     return results
 
 
 def query_full_corpus_for_concept(
     conn: sqlite3.Connection,
-    variants: Iterable[str],
+    variants: Iterable[Any],
 ) -> dict[str, Any]:
+    """Look up every textbook chunk that satisfies any variant.
+
+    SQL prefilter: OR over every literal token referenced by any variant
+    (this over-collects rows). Python post-filter: re-check each candidate
+    row against the full variant logic (str OR all_of) using
+    `variant_matches`, so token-set variants that need ALL tokens in the
+    same chunk are honored. The SQL prefilter is unaware of variant
+    semantics; the Python verifier is the source of truth.
+
+    Variants are normalized ONCE at the top — the per-row loop below
+    consults the pre-normalized list, not the raw variants.
+    """
+    normalized_variants = [_normalize_variant(variant) for variant in variants]
     deduped_rows: dict[str, sqlite3.Row] = {}
     conn.row_factory = sqlite3.Row
     normalized_sql = (
@@ -248,17 +387,15 @@ def query_full_corpus_for_concept(
         "'´', char(39))"
     )
     candidate_forms: list[str] = []
-    for variant in variants:
-        normalized_variant = normalize_text(variant)
-        if not normalized_variant:
-            continue
-        for form in {
-            normalized_variant,
-            normalized_variant.capitalize(),
-            normalized_variant.upper(),
-        }:
-            for apostrophe in ("'", "’", "ʼ", "ʹ"):
-                candidate_forms.append(form.replace("'", apostrophe))
+    for normalized_variant in normalized_variants:
+        for normalized_token in normalized_variant:
+            for form in {
+                normalized_token,
+                normalized_token.capitalize(),
+                normalized_token.upper(),
+            }:
+                for apostrophe in ("'", "’", "ʼ", "ʹ"):
+                    candidate_forms.append(form.replace("'", apostrophe))
 
     if not candidate_forms:
         return {
@@ -278,10 +415,9 @@ def query_full_corpus_for_concept(
         """,
         tuple(unique_forms),
     ).fetchall()
-    normalized_variants = {normalize_text(variant) for variant in variants if normalize_text(variant)}
     for row in rows:
         normalized_text = normalize_text(row["text"])
-        if any(variant in normalized_text for variant in normalized_variants):
+        if any(variant_matches(normalized_text, normalized_variant) for normalized_variant in normalized_variants):
             deduped_rows[row["chunk_id"]] = row
 
     ordered_rows = list(deduped_rows.values())
@@ -374,9 +510,9 @@ def render_diagnosis_markdown(
         "# Retrieval Diagnosis — a1/sounds-letters-and-hello",
         "",
         "## Summary",
-        f"- Concepts present in {returned_count} returned chunks: {present_returned} / 10",
-        f"- Concepts absent from {returned_count} but present in full corpus: {absent_returned_present_corpus} / 10",
-        f"- Concepts absent from full corpus entirely: {absent_corpus} / 10",
+        f"- Concepts present in {returned_count} returned chunks: {present_returned} / {TOTAL_CONCEPTS}",
+        f"- Concepts absent from {returned_count} but present in full corpus: {absent_returned_present_corpus} / {TOTAL_CONCEPTS}",
+        f"- Concepts absent from full corpus entirely: {absent_corpus} / {TOTAL_CONCEPTS}",
         "",
         "## Verdict",
         verdict,
@@ -407,7 +543,15 @@ def render_diagnosis_markdown(
         ]
     )
     for concept, variants in ADDED_VARIANTS.items():
-        lines.append(f"- {concept}: {', '.join(variants)}")
+        rendered = []
+        for variant in variants:
+            if isinstance(variant, str):
+                rendered.append(variant)
+            elif isinstance(variant, dict) and "all_of" in variant:
+                rendered.append("all_of(" + " + ".join(variant["all_of"]) + ")")
+            else:
+                rendered.append(str(variant))
+        lines.append(f"- {concept}: {', '.join(rendered)}")
     return "\n".join(lines) + "\n"
 
 
@@ -507,16 +651,16 @@ def render_comparison_markdown(
 ) -> str:
     legacy_present = count_present_in_returned(legacy_result["concepts"])
     modern_present = count_present_in_returned(modern_result["concepts"])
-    verdict = "PASS" if modern_present >= 8 else "FAIL"
+    verdict = "PASS" if modern_present >= PASS_THRESHOLD else "FAIL"
     lines = [
         "# Retrieval Comparison — a1/sounds-letters-and-hello",
         "",
-        f"legacy_concepts_present: {legacy_present}/10",
-        f"modern_concepts_present: {modern_present}/10",
+        f"legacy_concepts_present: {legacy_present}/{TOTAL_CONCEPTS}",
+        f"modern_concepts_present: {modern_present}/{TOTAL_CONCEPTS} (PASS threshold: {PASS_THRESHOLD})",
         "",
         f"Verdict: {verdict}",
         "",
-        "| Concept | Legacy (present in returned 40?) | Modern (present in returned 40?) |",
+        "| Concept | Legacy (present in returned set?) | Modern (present in returned set?) |",
         "|---|---|---|",
     ]
     for concept in TARGET_CONCEPTS:
@@ -561,7 +705,7 @@ def write_comparison_report() -> tuple[Path, str, int, int]:
     COMPARISON_OUTPUT_PATH.write_text(markdown, encoding="utf-8")
     modern_present = count_present_in_returned(modern_result["concepts"])
     legacy_present = count_present_in_returned(legacy_result["concepts"])
-    verdict = "PASS" if modern_present >= 8 else "FAIL"
+    verdict = "PASS" if modern_present >= PASS_THRESHOLD else "FAIL"
     return COMPARISON_OUTPUT_PATH, verdict, legacy_present, modern_present
 
 
@@ -646,7 +790,8 @@ def main() -> None:
         comparison_path, verdict, legacy_present, modern_present = write_comparison_report()
         print(
             f"Wrote {comparison_path.relative_to(PROJECT_ROOT)} "
-            f"(verdict: {verdict}, legacy: {legacy_present}/10, modern: {modern_present}/10)"
+            f"(verdict: {verdict}, legacy: {legacy_present}/{TOTAL_CONCEPTS}, "
+            f"modern: {modern_present}/{TOTAL_CONCEPTS})"
         )
         return
 

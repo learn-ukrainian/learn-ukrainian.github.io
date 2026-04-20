@@ -78,7 +78,12 @@ def test_run_diagnostic_matches_concepts_with_mocked_search(tmp_path, monkeypatc
             "sample_chunk_ids": ["milozvuchnist-1"],
             "sample_grades": ["5"],
         },
-        "g_ge_history": {
+        # Default: not found in corpus. Used for any concept not explicitly
+        # mapped above. After #1340 dropped g_ge_history this is just a
+        # safety net; no real concept is expected to hit it under this
+        # fixture. Kept as the default branch so future concept additions
+        # don't silently inherit "found in corpus".
+        "default_not_in_corpus": {
             "present_in_full_corpus": False,
             "corpus_match_count": 0,
             "sample_chunk_ids": [],
@@ -87,14 +92,18 @@ def test_run_diagnostic_matches_concepts_with_mocked_search(tmp_path, monkeypatc
     }
 
     def fake_query(_conn, variants):
-        normalized = {retrieval_playback.normalize_text(v) for v in variants}
+        normalized = {
+            retrieval_playback.normalize_text(token)
+            for variant in variants
+            for token in retrieval_playback._flatten_variant_tokens(variant)
+        }
         if retrieval_playback.normalize_text("букви — це умовні знаки, які позначають звуки мови") in normalized:
             return corpus_hits["sound_before_letter"]
         if retrieval_playback.normalize_text("голосні звуки утворюються за допомогою голосу") in normalized:
             return corpus_hits["vowel_consonant_definition"]
         if retrieval_playback.normalize_text("милозвучність") in normalized:
             return corpus_hits["milozvuchnist"]
-        return corpus_hits["g_ge_history"]
+        return corpus_hits["default_not_in_corpus"]
 
     monkeypatch.setattr(retrieval_playback.sqlite3, "connect", lambda *args, **kwargs: FakeConnection())
     monkeypatch.setattr(retrieval_playback, "query_full_corpus_for_concept", fake_query)
@@ -117,7 +126,9 @@ def test_run_diagnostic_matches_concepts_with_mocked_search(tmp_path, monkeypatc
     assert result["concepts"]["sound_before_letter"]["present_in_full_corpus"] is True
     assert result["concepts"]["vowel_consonant_definition"]["present_in_full_corpus"] is True
     assert result["concepts"]["milozvuchnist"]["present_in_full_corpus"] is True
-    assert result["concepts"]["g_ge_history"]["present_in_full_corpus"] is False
+    # #1340: g_ge_history removed from A1 scope (Grade 10/11 material).
+    # Guard against accidental re-introduction.
+    assert "g_ge_history" not in result["concepts"]
     assert result["verdict"] == "retrieval_bottleneck"
 
 
@@ -136,12 +147,18 @@ def test_match_returned_concepts_normalizes_apostrophes():
 
 
 def test_diagnose_verdict_fixture_scenarios():
+    # Verdict thresholds are absolute counts in diagnose_verdict (>= 7),
+    # which aligns with ~70% coverage at the current 9-concept scope.
+    # Scenarios use counts that stay valid as the scope shrinks/grows;
+    # the final case uses TOTAL_CONCEPTS to test the "everything covered"
+    # extreme without hardcoding.
+    total = retrieval_playback.TOTAL_CONCEPTS
     scenarios = [
-        (7, 9, "writer_bottleneck"),
+        (7, total, "writer_bottleneck"),
         (6, 7, "retrieval_bottleneck"),
         (2, 6, "corpus_bottleneck"),
         (6, 6, "corpus_bottleneck"),
-        (10, 10, "writer_bottleneck"),
+        (total, total, "writer_bottleneck"),
     ]
 
     for returned_present, full_present, expected in scenarios:
@@ -151,7 +168,9 @@ def test_diagnose_verdict_fixture_scenarios():
                 "present_in_returned_41": index < returned_present,
                 "present_in_full_corpus": index < full_present,
             }
-        assert retrieval_playback.diagnose_verdict(concepts) == expected
+        assert retrieval_playback.diagnose_verdict(concepts) == expected, (
+            f"failed for (returned={returned_present}, full={full_present}, total={total})"
+        )
 
 
 def test_run_diagnostic_modern_dense_uses_search_sources(tmp_path, monkeypatch):
@@ -205,7 +224,11 @@ def test_run_diagnostic_modern_dense_uses_search_sources(tmp_path, monkeypatch):
             return False
 
     def fake_query(_conn, variants):
-        normalized = {retrieval_playback.normalize_text(v) for v in variants}
+        normalized = {
+            retrieval_playback.normalize_text(token)
+            for variant in variants
+            for token in retrieval_playback._flatten_variant_tokens(variant)
+        }
         if retrieval_playback.normalize_text("букви — це умовні знаки, які позначають звуки мови") in normalized:
             return {
                 "present_in_full_corpus": True,
@@ -288,12 +311,13 @@ def test_write_comparison_report_reads_both_outputs(tmp_path, monkeypatch):
     comparison_path, verdict, legacy_present, modern_present = retrieval_playback.write_comparison_report()
 
     report = comparison_md.read_text(encoding="utf-8")
+    total = retrieval_playback.TOTAL_CONCEPTS
     assert comparison_path == comparison_md
     assert verdict == "PASS"
     assert legacy_present == 6
     assert modern_present == 8
-    assert "legacy_concepts_present: 6/10" in report
-    assert "modern_concepts_present: 8/10" in report
+    assert f"legacy_concepts_present: 6/{total}" in report
+    assert f"modern_concepts_present: 8/{total}" in report
     assert "Verdict: PASS" in report
     assert "| syllable_count_rule | yes | yes |" in report
 
