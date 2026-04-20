@@ -2,61 +2,44 @@ module: a1-022
 level: A1
 sequence: 22
 slug: what-time
-version: '1.1'
-title: What Time?
-subtitle: Котра година? О котрій? — telling time in Ukrainian
+version: '1.1.2'
+title: Котра година?
+subtitle: Котра година? О котрій? — позначення часу в українській мові
 focus: vocabulary
 pedagogy: PPP
-phase: A1.4 [Time and Nature]
+phase: A1.4 [Час і природа]
 word_target: 1200
 objectives:
-- Ask and answer "What time is it?" (Котра година?)
-- Tell time on the hour and half hour
-- Use "at" + time (о + locative as chunk — no case grammar)
-- Schedule simple events using time expressions
+- Вміти запитувати та відповідати на запитання «Котра година?».
+- Навчитися називати час (повні години та половини годин).
+- Застосовувати прийменник «о»/«об» із часом як лексичні конструкції (без заглиблення у граматику місцевого відмінка).
+- Вміти планувати прості події, використовуючи часові вирази.
 dialogue_situations:
-- setting: Coordinating a meeting time over the phone — both checking schedules
+- setting: 'Узгодження часу зустрічі телефоном — співрозмовники перевіряють свої графіки'
   speakers:
   - Марина
   - Олексій
-  motivation: О котрій годині? time expressions in scheduling
+  motivation: 'Використання конструкції «О котрій годині?» для планування зустрічі'
 content_outline:
-- section: Діалоги (Dialogues)
+- section: Діалоги
   words: 300
   points:
-  - 'Dialogue 1 — Scheduling a meeting: — Котра година? — Десята. — О котрій ти працюєш?
-    — О дев''ятій. А ти? — Я працюю о десятій. — Добре, тоді о першій? — Так!
-    Time expressions emerge through making plans.'
-  - 'Dialogue 2 — Daily schedule: — Коли ти снідаєш? — О восьмій ранку. — А обідаєш?
-    — О першій. Вечеряю о сьомій. Combining time with verbs from A1.3.'
-- section: Котра година? (What Time Is It?)
+  - 'Діалог 1 — планування зустрічі: — Котра година? — Десята. — О котрій ти працюєш? — О дев''ятій. А ти? — Я працюю о десятій. — Добре, тоді о першій? — Так! Вирази часу засвоюються під час планування.'
+  - 'Діалог 2 — розпорядок дня: — Коли ти снідаєш? — О восьмій ранку. — А обідаєш? — О першій. Вечеряю о сьомій. Поєднання часу з дієсловами з модуля A1.3.'
+- section: Котра година?
   words: 300
   points:
-  - 'Захарійчук Grade 4 p.117: Котра година? — ordinal numbers for hours. Full hours
-    use feminine ordinal numbers (година = feminine): Перша (1:00), друга (2:00),
-    третя (3:00), четверта (4:00), п''ята (5:00), шоста (6:00), сьома (7:00), восьма
-    (8:00), дев''ята (9:00), десята (10:00), одинадцята (11:00), дванадцята (12:00).
-    Learn these as vocabulary — the grammar behind ordinals comes later.'
-  - 'Half hours and quarters: Пів на другу (1:30 — literally ''half to the second'').
-    Чверть на третю (2:15). За чверть третя (2:45). At A1: focus on full hours and
-    ''пів на''. Quarters for recognition only.'
-- section: О котрій? (At What Time?)
+  - 'Захарійчук Grade 4 p.117: Котра година? — порядкові числівники для позначення годин. Для повних годин використовуються порядкові числівники жіночого роду: Перша (1:00), друга (2:00), третя (3:00), четверта (4:00), п''ята (5:00), шоста (6:00), сьома (7:00), восьма (8:00), дев''ята (9:00), десята (10:00), одинадцята (11:00), дванадцята (12:00). Вивчати як лексику — граматика порядкових числівників буде пізніше.'
+  - 'Половини та чверті годин: Пів на другу (1:30). Чверть на третю (2:15). За чверть третя (2:45). На рівні A1: зосередитися на повних годинах і конструкції «пів на». Чверті — лише для розпізнавання.'
+- section: О котрій?
   words: 300
   points:
-  - '''At'' + time uses о/об + locative form (taught as chunks): О першій (at 1),
-    о другій (at 2), о третій (at 3), о четвертій (at 4), о п''ятій (at 5), о шостій
-    (at 6), о сьомій (at 7), о восьмій (at 8), о дев''ятій (at 9), о десятій (at 10),
-    об одинадцятій (at 11), о дванадцятій (at 12). Note: об before vowels (об одинадцятій).'
-  - 'Time of day words: ранку (in the morning), дня (in the afternoon), вечора (in
-    the evening), ночі (at night). О сьомій ранку (at 7 AM). О третій дня (at 3 PM).
-    О десятій вечора (at 10 PM). Опівдні (at noon). Опівночі (at midnight).'
-- section: Підсумок — Summary
+  - 'Для вказівки на час дії використовується конструкція о/об + місцевий відмінок (вивчається як лексичні блоки): О першій (at 1), о другій (at 2), о третій (at 3), о четвертій (at 4), о п''ятій (at 5), о шостій (at 6), о сьомій (at 7), о восьмій (at 8), о дев''ятій (at 9), о десятій (at 10), об одинадцятій (at 11), о дванадцятій (at 12). Зверніть увагу: форма об перед голосними (об одинадцятій).'
+  - 'Слова для позначення частини доби: ранку, дня, вечора, ночі. О сьомій ранку (at 7 AM). О третій дня (at 3 PM). О десятій вечора (at 10 PM). Опівдні (at noon). Опівночі (at midnight).'
+- section: Підсумок
   words: 300
   points:
-  - 'Telling time: Котра година? — Десята. (What time? — Ten o''clock.) О котрій?
-    — О десятій. (At what time? — At ten.) Пів на другу (1:30). О пів на другу (at
-    1:30). Self-check: What time is it now? When do you wake up? When do you eat lunch?
-    Say 3 times in Ukrainian.'
+  - 'Позначення часу: Котра година? — Десята. О котрій? — О десятій. Пів на другу (1:30). О пів на другу (at 1:30). Самоперевірка: Котра зараз година? Коли ви прокидаєтеся? Коли обідаєте? Скажіть це українською мовою тричі.'
 vocabulary_hints:
   required:
   - година (hour, f)
@@ -75,30 +58,30 @@ vocabulary_hints:
   - опівдні (at noon)
 activity_hints:
 - type: quiz
-  focus: Котра година? Match clock faces to spoken time.
+  focus: 'Котра година? Зіставити зображення годинників із названим часом.'
   items: 8
 - type: fill-in
-  focus: 'О котрій? Complete: Я снідаю о ___. (восьмій)'
+  focus: 'О котрій? Доповнити: Я снідаю о ___. (восьмій)'
   items: 8
 - type: match-up
-  focus: 'Match times: 7:00 ↔ сьома, 9:00 ↔ дев''ята'
+  focus: 'Зіставити час: 7:00 ↔ сьома, 9:00 ↔ дев''ята'
   items: 6
 - type: quiz
-  focus: Ранку, дня, or вечора? Choose the right time of day.
+  focus: 'Ранку, дня чи вечора? Обрати правильну частину доби.'
   items: 6
 connects_to:
-- a1-023 (Days and Months)
+- a1-023 (Дні тижня та місяці)
 prerequisites:
-- a1-021 (Checkpoint — Actions)
+- a1-021 (Підсумок — дії)
 grammar:
-- Ordinal numbers for hours (feminine forms — learned as vocabulary)
-- О/об + locative time expressions (memorized chunks)
-- Пів на + ordinal (half-hour pattern)
+- Порядкові числівники для позначення годин (форми жіночого роду — вивчаються як лексика)
+- Конструкції о/об + місцевий відмінок для позначення часу (засвоюються як лексичні блоки)
+- Конструкція пів на + порядковий числівник для позначення половини години
 register: розмовний
 references:
 - title: Захарійчук Grade 4, p.117
-  notes: О котрій годині? Котра година? — time expressions with ordinals.
+  notes: О котрій годині? Котра година? — часові вирази з порядковими числівниками.
 - title: Літвінова Grade 6, p.245-246
-  notes: 'Full time expression system: на, по, до, пів на.'
+  notes: 'Повна система часових виразів: на, по, до, пів на.'
 - title: Авраменко Grade 6, p.172
   notes: 'Прийменники на позначення часу: о, за, на, по, до.'

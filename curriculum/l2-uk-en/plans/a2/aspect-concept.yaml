@@ -2,79 +2,53 @@ module: a2-002
 level: A2
 sequence: 2
 slug: aspect-concept
-version: 1.2.2
-title: Зроблено чи в процесі? Вступ до виду дієслів
+version: 1.2.3
+title: Зроблено чи в процесі? Вступ до виду дієслова
 subtitle: Концепція доконаного та недоконаного виду
 focus: grammar
 pedagogy: PPP
-phase: A2.1 [Foundation and Aspect Introduction]
+phase: A2.1 [Основи та вступ до виду дієслова]
 word_target: 2000
 objectives:
-- Learner can define grammatical aspect (вид дієслова) and differentiate between
-  perfective (доконаний) and imperfective (недоконаний) verbs.
-- 'Learner can explain the core conceptual difference: imperfective for process/repetition,
-  perfective for a single, completed result.'
-- Learner can identify the aspect of a verb in a simple sentence (past or 
-  present tense).
-- Given a simple action, learner can describe it as a process (imperfective) and
-  as a completed result (perfective).
+- Вміти визначати вид дієслова та розрізняти доконаний і недоконаний види.
+- Вміти пояснювати концептуальну різницю: недоконаний вид позначає процес або повторення, а доконаний — одноразовий завершений результат.
+- Вміти розпізнавати вид дієслова в простому реченні (минулий чи теперішній час).
+- Вміти описувати просту дію як процес (недоконаний вид) і як завершений результат (доконаний вид).
 dialogue_situations:
-- setting: 'Watching a football match on TV — commenting on what''s happening vs what
-    just happened: Він біжить (impf, running)! Він забив гол (pf, scored)! Вони грають
-    (impf) добре. Вона передала (pf) м''яч (m, ball).'
+- setting: 'Перегляд футбольного матчу по телевізору — коментування того, що відбувається, порівняно з тим, що щойно сталося: Він біжить! Він забив гол! Вони грають добре. Вона передала м''яч.'
   speakers:
-  - Два друзі (watching together)
-  motivation: Impf (process) vs pf (result) with гра(f), гол(m), м'яч(m)
+  - Два друзі
+  motivation: 'Контраст недоконаного (процес) і доконаного (результат) видів із лексикою: гра(f), гол(m), м''яч(m)'
 content_outline:
-- section: Що таке вид дієслова? (What is Verb Aspect?)
+- section: Що таке вид дієслова?
   words: 500
   points:
-  - 'Introduction to the concept: Ukrainian verbs have a hidden dimension called ''aspect''.
-    It''s not about *when* (tense), but *how* the action unfolds.'
-  - 'Meet the two types: Недоконаний вид (НВ, imperfective) for ongoing processes,
-    repeated actions, or facts. Доконаний вид (ДВ, perfective) for a single, completed
-    action with a clear result.'
-  - 'Analogy: Imperfective is like watching a movie; perfective is like seeing the
-    ''The End'' screen.'
-- section: 'Недоконаний вид: Процес і повторення (Imperfective: Process & Repetition)'
+  - 'Вступ до концепції: українські дієслова мають прихований вимір, що називається видом. Йдеться не про час (коли), а про те, як розгортається дія.'
+  - 'Ознайомлення з двома видами: Недоконаний вид (для тривалих процесів, повторюваних дій або фактів) і доконаний вид (для одноразової, завершеної дії з чітким результатом).'
+  - 'Аналогія: недоконаний вид — це як перегляд фільму; доконаний вид — як поява напису «Кінець».'
+- section: 'Недоконаний вид: процес і повторення'
   words: 600
   points:
-  - 'Focus on the uses of imperfective: describing an action in progress (''Я читав,
-    коли ти подзвонив''), a repeated action (''Я читав цю книгу три рази''), or a
-    general fact (''Діти читають книги'').'
-  - 'Simple examples in present and past tense: ''Я читаю'' (I am reading), ''Я читав''
-    (I was reading / I used to read).'
-  - 'Key signal words: завжди (always), часто (often), зазвичай (usually), довго (for
-    a long time), щодня (every day).'
-- section: 'Доконаний вид: Результат! (Perfective: The Result!)'
+  - 'Фокус на використанні недоконаного виду: опис дії в процесі (Я читав, коли ти подзвонив), повторюваної дії (Я читав цю книгу три рази) або загального факту (Діти читають книги).'
+  - 'Прості приклади в теперішньому та минулому часі: Я читаю (дія відбувається зараз), Я читав (дія тривала в минулому).'
+  - 'Ключові слова-маркери: завжди, часто, зазвичай, довго, щодня.'
+- section: 'Доконаний вид: результат!'
   words: 600
   points:
-  - 'Focus on the use of perfective: describing a single, successfully completed action.
-    The result is what matters.'
-  - 'Example: ''Я прочитав книгу'' (I have read the book, it is finished). Contrast
-    with ''Я читав книгу'' (I was reading the book, maybe I finished, maybe not).'
-  - 'Perfective verbs have no true present tense. Their ''present'' form has a future
-    meaning (e.g., ''зроблю'' means ''I will do''). We will focus on the past tense
-    for now: ''зробив'', ''написала''.'
-  - 'Key signal words: раптом (suddenly), нарешті (finally), вже (already). Note:
-    вчора (yesterday) works with BOTH aspects — Вчора я читав (impf) vs Вчора я прочитав
-    (pf).'
-- section: 'Порівняння пар: Бачимо різницю (Comparing Pairs: Seeing the Difference)'
+  - 'Фокус на використанні доконаного виду: опис одноразової, успішно завершеної дії. Головним є результат.'
+  - 'Приклад: Я прочитав книгу (дія завершена, є результат). Порівняння з недоконаним: Я читав книгу (дія тривала, можливо, завершилася, а можливо й ні).'
+  - 'Дієслова доконаного виду не мають форм теперішнього часу. Їхня форма теперішнього часу має значення майбутнього (наприклад, зроблю означає I will do). Поки що зосередимося на минулому часі: зробив, написала.'
+  - 'Ключові слова-маркери: раптом, нарешті, вже. Зверніть увагу: слово вчора може вживатися з обома видами — Вчора я читав (недоконаний) та Вчора я прочитав (доконаний).'
+- section: 'Порівняння пар: бачимо різницю'
   words: 300
   points:
-  - 'Side-by-side comparison of simple pairs: ''Він писав лист'' (He was writing a
-    letter) vs. ''Він написав лист'' (He wrote a letter).'
-  - 'Visual aids: timelines showing the duration of an imperfective action vs. the
-    single point of completion for a perfective action.'
-- section: Підсумок — Summary
+  - 'Паралельне порівняння простих пар: Він писав лист (процес написання) та Він написав лист (результат).'
+  - 'Візуальні засоби: часові лінії (timelines), що показують тривалість дії недоконаного виду порівняно з єдиною точкою завершення для доконаного виду.'
+- section: Підсумок
   words: 200
   points:
-  - 'Verb aspect (вид дієслова) focuses on how an action unfolds: Imperfective (недоконаний)
-    describes ongoing processes or repeated actions, while Perfective (доконаний)
-    describes a single, completed result.'
-  - "Self-check: What is the difference between 'Він писав лист' and 'Він написав
-    лист'? Name 3 signal words that usually pair with the imperfective aspect. Why
-    do perfective verbs lack a true present tense?"
+  - 'Вид дієслова вказує на те, як розгортається дія: недоконаний вид описує тривалі процеси або повторювані дії, тоді як доконаний вид позначає одноразовий завершений результат.'
+  - 'Самоперевірка: Яка різниця між реченнями Він писав лист і Він написав лист? Назвіть 3 слова-маркери, які зазвичай вживаються з недоконаним видом. Чому дієслова доконаного виду не мають теперішнього часу?'
 vocabulary_hints:
   required:
   - вид дієслова (verb aspect)
@@ -92,21 +66,20 @@ vocabulary_hints:
   - концепція (concept)
 activity_hints:
 - type: quiz
-  focus: 'Aspect Sorting: Process vs. Result'
+  focus: 'Розподіл за видами: процес чи результат'
   items: 8
 - type: fill-in
-  focus: Identify the Aspect in Sentences
+  focus: 'Визначення виду дієслова в реченнях'
   items: 8
 - type: match-up
-  focus: Choose the Correct Aspect (Context-based)
+  focus: 'Вибір правильного виду за контекстом'
   items: 8
 - type: error-correction
-  focus: Find and fix wrong aspect choice in sentences (e.g., *Він щодня зробив 
-    вправи → робив, *Вона довго написала листа → писала)
+  focus: 'Пошук і виправлення помилок у виборі виду в реченнях (напр., *Він щодня зробив вправи → робив, *Вона довго написала листа → писала)'
   items: 6
 references:
 - title: Авраменко Grade 7, §28-30
-  notes: 'Вид дієслова: доконаний і недоконаний — aspect is taught in 7th grade curriculum'
+  notes: 'Вид дієслова: доконаний і недоконаний — концепція виду вивчається в програмі 7-го класу'
 - title: 'ULP: Ukrainian Verb Aspect'
   url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
-  notes: Imperfective vs perfective
+  notes: Недоконаний проти доконаного виду
