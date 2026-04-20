@@ -47,7 +47,10 @@ SUPPORTED_CORPORA = (
 _TOKENIZER = None
 _TOKENIZER_LOCK = threading.Lock()
 _ENCODER = None
-_ENCODER_LOCK = threading.Lock()
+#: Re-entrant because encode_query() acquires this lock then calls _get_encoder()
+#: which also acquires it. With a plain Lock() that's an instant self-deadlock
+#: the first time a query comes in without a cached encoder.
+_ENCODER_LOCK = threading.RLock()
 _QUERY_CACHE: dict[tuple[str, int, str], NDArray[np.float32]] = {}
 _INDEX_CACHE: dict[tuple[Path, str], CorpusEmbeddingIndex] = {}
 _INDEX_CACHE_LOCK = threading.Lock()

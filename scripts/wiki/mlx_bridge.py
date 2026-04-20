@@ -6,6 +6,7 @@ import base64
 import json
 import os
 import subprocess
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -35,6 +36,11 @@ class MLXEncoderBridge:
         self._worker_python = worker_python
         self._worker_script = worker_script
         self._process: subprocess.Popen[str] | None = None
+        # Serialize encode() calls — stdin/stdout framing is NOT thread-safe.
+        # search_sources fans out to 5 per-corpus workers via ThreadPoolExecutor,
+        # each calling rerank_candidates → _get_encoder().encode(query). Without
+        # this lock, interleaved writes deadlock or return garbled responses.
+        self._io_lock = threading.Lock()
 
     def __enter__(self) -> MLXEncoderBridge:
         return self
@@ -60,24 +66,29 @@ class MLXEncoderBridge:
         effective_batch_size = batch_size
         retries = 0
 
-        while index < len(texts):
-            end = min(index + effective_batch_size, len(texts))
-            batch = texts[index:end]
-            try:
-                chunk = self._encode_batch(batch, max_length=max_length)
-            except WorkerCrashedError as exc:
-                retries += 1
-                self._restart_worker()
-                effective_batch_size = max(1, effective_batch_size // 2)
-                if retries > MAX_RETRIES:
-                    raise RuntimeError(
-                        f"MLX worker crashed {retries} times while encoding batch at index {index}"
-                    ) from exc
-                continue
+        # Serialize across callers: stdin/stdout framing is NOT thread-safe,
+        # and search_sources fans out to 5 per-corpus threads that each call
+        # rerank_candidates → _get_encoder().encode(query). Without this lock
+        # the interleaved writes deadlock or return garbled responses.
+        with self._io_lock:
+            while index < len(texts):
+                end = min(index + effective_batch_size, len(texts))
+                batch = texts[index:end]
+                try:
+                    chunk = self._encode_batch(batch, max_length=max_length)
+                except WorkerCrashedError as exc:
+                    retries += 1
+                    self._restart_worker()
+                    effective_batch_size = max(1, effective_batch_size // 2)
+                    if retries > MAX_RETRIES:
+                        raise RuntimeError(
+                            f"MLX worker crashed {retries} times while encoding batch at index {index}"
+                        ) from exc
+                    continue
 
-            chunks.append(chunk)
-            index = end
-            retries = 0
+                chunks.append(chunk)
+                index = end
+                retries = 0
 
         return np.concatenate(chunks, axis=0).astype(np.float16, copy=False)
 
