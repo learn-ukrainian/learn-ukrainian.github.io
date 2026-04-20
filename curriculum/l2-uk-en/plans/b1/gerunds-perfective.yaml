@@ -2,170 +2,161 @@ module: b1-070
 level: B1
 sequence: 70
 slug: gerunds-perfective
-version: '3.1'
-title: "Дієприслівники доконаного виду"
-subtitle: "Попередня дія: прочитавши, дізнавшись, повернувшись"
+version: 3.1.2
+title: Дієприслівники доконаного виду
+subtitle: 'Попередня дія: прочитавши, дізнавшись, повернувшись'
 focus: grammar
 pedagogy: PPP
-phase: "B1.6 [Participles & Gerunds]"
+phase: B1.6 [Дієприкметники та дієприслівники]
 word_target: 4000
 objectives:
-  - "Learner can form perfective gerunds using суфікси -вши (after vowel) and -ши
-    (after consonant) from perfective verb stems"
-  - "Learner can express temporal sequence: the gerund action happens BEFORE the main
-    verb action (різночасність)"
-  - "Learner can contrast imperfective gerunds (одночасність: читаючи) with perfective
-    gerunds (різночасність: прочитавши)"
-  - "Learner can use perfective gerunds naturally in connected discourse, choosing
-    between gerund and subordinate clause based on register"
-  - "Learner can form and correctly use reflexive perfective gerunds (повернувшись,
-    дізнавшись, зустрівшись)"
+- Учень вміє утворювати дієприслівники доконаного виду за допомогою суфіксів -вши (після голосних) та
+  -ши (після приголосних) від основ дієслів доконаного виду
+- 'Учень вміє виражати часову послідовність: дія дієприслівника відбувається ПЕРЕД дією основного дієслова
+  (різночасність)'
+- 'Учень вміє відрізняти дієприслівники недоконаного виду (одночасність: читаючи) від дієприслівників
+  доконаного виду (різночасність: прочитавши)'
+- Учень вміє природно вживати дієприслівники доконаного виду в зв'язному мовленні, обираючи між дієприслівником
+  та підрядним реченням залежно від стилю
+- Учень вміє утворювати та правильно вживати зворотні дієприслівники доконаного виду (повернувшись, дізнавшись,
+  зустрівшись)
 dialogue_situations:
-  - setting: 'Detective recounting events at a поліцейський відділок (m, police station)
-      — sequence of completed actions: Увійшовши (having entered) в кімнату, я побачив
-      сліди (pl, traces). Оглянувши (having examined) місце, я зателефонував. Дізнавшись
-      (having learned) правду, ми діяли.'
-    speakers:
-      - Детектив
-      - Колега
-    motivation: 'Perfective gerunds: увійшовши, оглянувши, дізнавшись — completed
-      prior actions'
+- setting: 'Детектив переказує події в поліцейському відділку (m) — послідовність завершених дій: Увійшовши
+    в кімнату, я побачив сліди (pl). Оглянувши місце, я зателефонував. Дізнавшись правду, ми діяли.'
+  speakers:
+  - Детектив
+  - Колега
+  motivation: 'Дієприслівники доконаного виду: увійшовши, оглянувши, дізнавшись — завершені попередні
+    дії'
 content_outline:
-  - section: "Різночасність: дія до основної"
-    words: 750
-    points:
-      - "Core concept from Заболотний Grade 7 p.131: Дієприслівники доконаного виду
-        відповідають на питання що зробивши? They express an action COMPLETED BEFORE
-        the main action: Прочитавши книгу, я віддав її другу. (First: I finished reading.
-        Then: I gave it back.) Дізнавшись новину, мати зателефонувала. (First: mother
-        learned the news. Then: she called.) Contrast with M61 (imperfective — simultaneous):
-        Читаючи книгу, я пив каву. (both at the same time)"
-      - "The temporal logic: Дієприслівник недок. виду: ЩО РОБЛЯЧИ? → одночасність.
-        Дієприслівник док. виду: ЩО ЗРОБИВШИ? → різночасність (попередність). This
-        distinction is crucial: mixing them up changes the meaning. Відчинивши двері,
-        я побачив кота. (opened, then saw — sequence) Відчиняючи двері, я побачив
-        кота. (while opening, I saw — simultaneous)"
-      - "Practice: 8 sentence pairs contrasting -учи/-ючи vs -вши/-ши with different
-        temporal meanings."
-  - section: "Творення дієприслівників доконаного виду"
-    words: 850
-    points:
-      - "Formation from Литвінова Grade 7 p.118: Основа інфінітива доконаного виду:
-        After vowel + -вши: прочитати → прочитавши, написати → написавши, зробити
-        → зробивши, побачити → побачивши, дізнатися → дізнавшись. After consonant
-        + -ши: принести → принісши, привезти → привізши. Note: some forms after consonant
-        have alternatives — привізши or привізши (less common, prefer clause instead)."
-      - "Reflexive perfective gerunds: повернутися → повернувшись, зустрітися → зустрівшись,
-        дізнатися → дізнавшись, прокинутися → прокинувшись, умитися → умившись, зібратися
-        → зібравшись. The -ся becomes -сь after vowel, stays -ся after consonant."
-      - "Verbs that DON'T easily form perfective gerunds: Some consonant-final stems
-        produce awkward forms: ?знайшовши (from знайти), ?випекши (from випекти).
-        Ukrainian speakers often prefer a clause: після того як знайшов... Rule of
-        thumb: if the form sounds awkward, use a clause."
-      - "Practice: form perfective gerunds from 15 verbs, including reflexive ones.
-        Flag any forms that sound unnatural."
-  - section: "Порівняння двох видів дієприслівників"
-    words: 750
-    points:
-      - "Side-by-side comparison: | Feature | Недоконаний | Доконаний | | Питання
-        | що роблячи? | що зробивши? | | Час | одночасність | різночасність | | Суфікси
-        | -учи/-ючи, -ачи/-ячи | -вши, -ши | | Приклад | читаючи | прочитавши | |
-        Значення | while reading | having read |"
-      - "Context determines the choice: Scenario 1: Two simultaneous actions. Снідаючи,
-        я переглядаю новини. (at the same time — imperfective) Scenario 2: Sequential
-        actions. Поснідавши, я вийшов з дому. (first breakfast, then left — perfective)
-        Practice: 10 contexts where learners choose the correct вид."
-      - "Mixed usage in a paragraph: a narrative that uses both types naturally. Прокинувшись
-        рано, Андрій умився й, снідаючи, переглянув пошту. Прочитавши листи, він,
-        усміхаючись, відповів на найважливіший. (perfective for sequence, imperfective
-        for manner/simultaneity)"
-  - section: "Дієприслівник vs підрядне речення"
-    words: 650
-    points:
-      - "Every perfective gerund has a clause equivalent: Прочитавши книгу, я віддав
-        її. = Після того як я прочитав книгу, я віддав її. = Коли я прочитав книгу,
-        я віддав її. The gerund is more concise; the clause is more natural in speech.
-        Ukrainian stylistic preference: clauses in розмовний, gerunds in діловий and
-        художній styles."
-      - "When the gerund is preferable: Short, clear sequences: Повернувшись додому,
-        я зателефонував. When the gerund is NOT preferable: Different subjects: *Повернувшись,
-        мама приготувала вечерю. (Who returned? If it's someone else — use a clause.)
-        Awkward consonant-stem forms: use a clause instead."
-      - "Practice: transform 8 sentences between gerund and clause forms. Evaluate
-        which version is more natural for each context."
-  - section: "Читання та вільне письмо"
-    words: 600
-    points:
-      - "Reading passage: a short narrative (about a day in someone's life) that uses
-        both imperfective and perfective gerunds. Learners identify all дієприслівники,
-        classify by вид, check logical subject alignment, and explain the temporal
-        relationship in each case."
-      - "Production: learners write a short narrative (5-7 sentences) about their
-        morning routine or a recent experience, using at least 3 perfective gerunds
-        and 2 imperfective gerunds correctly."
-  - section: "Підсумок та перехід до M63"
-    words: 400
-    points:
-      - "Summary: дієприслівники док. виду = попередня дія. Суфікси: -вши (після голосного),
-        -ши (після приголосного). Різночасність vs одночасність — ключова різниця
-        з недок. видом. Self-check: Я розрізняю що роблячи? i що зробивши? ✓/✗."
-      - "Consolidation: complete formation table for both вид types side by side.
-        Imperfective: основа 3-ої ос. мн. теперішнього часу + -чи (-учи/-ючи, -ачи/-ячи).
-        Perfective: основа інфінітива док. виду + -вши/-ши. Reflexive: -сь after vowel,
-        -ся after consonant. 10 model verb pairs showing both forms: читати → читаючи
-        / прочитати → прочитавши."
-      - "Preview: M63 — Дієприслівниковий зворот. The gerund with its dependent words:
-        punctuation rules and stylistic usage."
+- section: 'Різночасність: дія до основної'
+  words: 750
+  points:
+  - 'Основне поняття з підручника Заболотного, 7 клас, с.131: Дієприслівники доконаного виду відповідають
+    на питання що зробивши? Вони виражають дію, ЗАВЕРШЕНУ ПЕРЕД основною дією: Прочитавши книгу, я віддав
+    її другу. Дізнавшись новину, мати зателефонувала. Порівняння з М61 (недоконаний вид — одночасність):
+    Читаючи книгу, я пив каву. (обидві дії одночасно)'
+  - 'Часова логіка: Дієприслівник недок. виду: ЩО РОБЛЯЧИ? → одночасність. Дієприслівник док. виду: ЩО
+    ЗРОБИВШИ? → різночасність (попередність). Ця відмінність є вирішальною: їхнє змішування змінює значення
+    речення. Відчинивши двері, я побачив кота. (відчинив, потім побачив — послідовність). Відчиняючи двері,
+    я побачив кота. (під час відчинення я побачив — одночасність).'
+  - 'Практика: 8 пар речень для порівняння -учи/-ючи та -вши/-ши з різними часовими значеннями.'
+- section: Творення дієприслівників доконаного виду
+  words: 850
+  points:
+  - 'Творення за підручником Литвінової, 7 клас, с.118: Основа інфінітива доконаного виду: Після голосного
+    + -вши: прочитати → прочитавши, написати → написавши, зробити → зробивши, побачити → побачивши, дізнатися
+    → дізнавшись. Після приголосного + -ши: принести → принісши, привезти → привізши. Зверніть увагу:
+    деякі форми після приголосних мають альтернативи, але краще використовувати підрядні речення.'
+  - 'Зворотні дієприслівники доконаного виду: повернутися → повернувшись, зустрітися → зустрівшись, дізнатися
+    → дізнавшись, прокинутися → прокинувшись, умитися → умившись, зібратися → зібравшись. Суфікс -ся перетворюється
+    на -сь після голосного, і залишається -ся після приголосного.'
+  - 'Дієслова, від яких складно утворити дієприслівники доконаного виду: Деякі основи на приголосний утворюють
+    незграбні форми: ?знайшовши, ?випекши. Українці часто віддають перевагу підрядному реченню: після
+    того як знайшов... Емпіричне правило: якщо форма звучить неприродно, використовуйте підрядне речення.'
+  - 'Практика: утворити дієприслівники доконаного виду від 15 дієслів, включаючи зворотні. Позначити всі
+    форми, що звучать неприродно.'
+- section: Порівняння двох видів дієприслівників
+  words: 750
+  points:
+  - 'Порівняльна таблиця: | Ознака | Недоконаний | Доконаний | | Питання | що роблячи? | що зробивши?
+    | | Час | одночасність | різночасність | | Суфікси | -учи/-ючи, -ачи/-ячи | -вши, -ши | | Приклад
+    | читаючи | прочитавши |'
+  - 'Контекст визначає вибір: Ситуація 1: Дві одночасні дії. Снідаючи, я переглядаю новини. Ситуація 2:
+    Послідовні дії. Поснідавши, я вийшов з дому. Практика: 10 контекстів, де учні обирають правильний
+    вид.'
+  - 'Змішане використання в абзаці: розповідь, що природно використовує обидва типи. Прокинувшись рано,
+    Андрій умився й, снідаючи, переглянув пошту. Прочитавши листи, він, усміхаючись, відповів на найважливіший.
+    (доконаний для послідовності, недоконаний для способу дії/одночасності).'
+- section: Дієприслівник vs підрядне речення
+  words: 650
+  points:
+  - 'Кожен дієприслівник доконаного виду має еквівалент у вигляді підрядного речення: Прочитавши книгу,
+    я віддав її. = Після того як я прочитав книгу, я віддав її. = Коли я прочитав книгу, я віддав її.
+    Дієприслівник є більш лаконічним; підрядне речення природніше в розмовному мовленні. Українська стилістична
+    перевага: підрядні речення в розмовному стилі, дієприслівники — в діловому та художньому.'
+  - 'Коли краще вживати дієприслівник: Короткі, чіткі послідовності: Повернувшись додому, я зателефонував.
+    Коли дієприслівник НЕ варто вживати: Різні підмети: *Повернувшись, мама приготувала вечерю. (Хто повернувся?
+    Якщо хтось інший — використовуйте підрядне речення.) Незграбні форми з основами на приголосний: краще
+    підрядне речення.'
+  - 'Практика: перетворити 8 речень з дієприслівникових конструкцій на підрядні й навпаки. Оцінити, який
+    варіант природніший для кожного контексту.'
+- section: Читання та вільне письмо
+  words: 600
+  points:
+  - 'Текст для читання: коротка розповідь (про день із життя), де використовуються дієприслівники обох
+    видів. Учні знаходять усі дієприслівники, класифікують їх за видом, перевіряють узгодження логічного
+    підмета і пояснюють часовий зв''язок у кожному випадку.'
+  - 'Письмо: учні пишуть коротку розповідь (5-7 речень) про свій ранковий розпорядок або нещодавній досвід,
+    правильно використавши щонайменше 3 дієприслівники доконаного виду та 2 дієприслівники недоконаного
+    виду.'
+- section: Підсумок та перехід до M63
+  words: 400
+  points:
+  - 'Підсумок: дієприслівники док. виду = попередня дія. Суфікси: -вши (після голосного), -ши (після приголосного).
+    Різночасність проти одночасності — ключова різниця з недок. видом. Самоперевірка: Я розрізняю що роблячи?
+    і що зробивши? ✓/✗.'
+  - 'Закріплення матеріалу: повна таблиця творення для обох видів. Недоконаний: основа 3-ої ос. мн. теперішнього
+    часу + -чи (-учи/-ючи, -ачи/-ячи). Доконаний: основа інфінітива док. виду + -вши/-ши. Зворотні: -сь
+    після голосного, -ся після приголосного. 10 модельних пар дієслів: читати → читаючи / прочитати →
+    прочитавши.'
+  - 'Анонс: M63 — Дієприслівниковий зворот. Дієприслівник із залежними словами: правила пунктуації та
+    стилістичне використання.'
 vocabulary_hints:
   required:
-    - "дієприслівник доконаного виду (perfective gerund)"
-    - "різночасність (temporal non-simultaneity — gerund before main action)"
-    - "одночасність (simultaneity — imperfective gerund, review)"
-    - "прочитавши (having read — perfective gerund)"
-    - "дізнавшись (having found out — reflexive perfective gerund)"
-    - "повернувшись (having returned — reflexive perfective gerund)"
-    - "написавши (having written — perfective gerund)"
-    - "побачивши (having seen — perfective gerund)"
-    - "попередність (precedence — action completed before the main one)"
+  - дієприслівник доконаного виду (perfective gerund)
+  - різночасність (temporal non-simultaneity — gerund before main action)
+  - одночасність (simultaneity — imperfective gerund, review)
+  - прочитавши (having read — perfective gerund)
+  - дізнавшись (having found out — reflexive perfective gerund)
+  - повернувшись (having returned — reflexive perfective gerund)
+  - написавши (having written — perfective gerund)
+  - побачивши (having seen — perfective gerund)
+  - попередність (precedence — action completed before the main one)
   recommended:
-    - "зробивши (having done — perfective gerund)"
-    - "прокинувшись (having woken up — reflexive perfective gerund)"
-    - "умившись (having washed up — reflexive perfective gerund)"
-    - "зустрівшись (having met — reflexive perfective gerund)"
-    - "зібравшись (having gathered — reflexive perfective gerund)"
-    - "принісши (having brought — consonant-stem gerund)"
+  - зробивши (having done — perfective gerund)
+  - прокинувшись (having woken up — reflexive perfective gerund)
+  - умившись (having washed up — reflexive perfective gerund)
+  - зустрівшись (having met — reflexive perfective gerund)
+  - зібравшись (having gathered — reflexive perfective gerund)
+  - принісши (having brought — consonant-stem gerund)
 activity_hints:
-  - type: reading
-    focus: "Прочитайте текст про різночасність: дія до основної і дайте відповіді на запитання."
-  - type: essay-response
-    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Творення дієприслівників доконаного виду»."
-  - type: fill-in
-    focus: "Вставте правильну граматичну форму у реченнях на тему різночасність: дія до основної."
-  - type: error-correction
-    focus: "Знайдіть і виправте помилки у реченнях на тему творення дієприслівників доконаного виду."
-  - type: quiz
-    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Різночасність: дія до основної»."
-  - type: match-up
-    focus: "З'єднайте терміни з розділу «Творення дієприслівників доконаного виду» з їхніми визначеннями."
+- type: reading
+  focus: Прочитати текст про різночасність (дію до основної) та дати відповіді на запитання
+  items: 12
+- type: essay-response
+  focus: Написати 5 речень, використовуючи нову лексику з розділу «Творення дієприслівників доконаного
+    виду»
+  items: 12
+- type: fill-in
+  focus: Вставити правильну граматичну форму в реченнях на тему різночасності
+  items: 12
+- type: error-correction
+  focus: Знайти й виправити помилки в реченнях на тему творення дієприслівників доконаного виду
+  items: 12
+- type: quiz
+  focus: 'Обрати правильний варіант: лексика та граматика з розділу «Різночасність: дія до основної»'
+  items: 12
+- type: match-up
+  focus: З'єднати терміни з розділу «Творення дієприслівників доконаного виду» з їхніми визначеннями
+  items: 12
 connects_to:
-  - "b1-061 (Дієприслівники недоконаного виду — imperfective gerunds)"
-  - "b1-063 (Дієприслівниковий зворот — gerund phrases and punctuation)"
+- b1-061 (Дієприслівники недоконаного виду)
+- b1-063 (Дієприслівниковий зворот та пунктуація)
 prerequisites:
-  - "b1-061 (Imperfective gerunds — дієприслівник concept introduced)"
+- b1-061 (Дієприслівники недоконаного виду — базове поняття дієприслівника)
 grammar:
-  - "Дієприслівники доконаного виду: попередня дія, різночасність"
-  - "Formation: -вши (after vowel), -ши (after consonant)"
-  - "Reflexive gerunds: -вшись, -шись"
-  - "Contrast: одночасність (недок.) vs різночасність (док.)"
-  - "Gerund ↔ clause transformation"
+- 'Дієприслівники доконаного виду: попередня дія, різночасність'
+- 'Творення: -вши (після голосного), -ши (після приголосного)'
+- 'Зворотні дієприслівники: -вшись, -шись'
+- 'Зіставлення: одночасність (недок.) проти різночасності (док.)'
+- 'Трансформація: дієприслівник ↔ підрядне речення'
 register: науково-навчальний
 references:
-  - title: "Литвінова Grade 7, p.118-121"
-    notes: "§21 Вид i час дієприслівників. Творення дієприслівників недоконаного й
-      доконаного виду: formation table and exercises."
-  - title: "Заболотний Grade 7, p.131-135"
-    notes: "Дієприслівники доконаного i недоконаного виду: comparison, що роблячи?
-      vs що зробивши?, sorting exercises."
-  - title: "Авраменко Grade 7, p.123-126"
-    notes: "§55 Вид i час дієприслівників: test-format exercises, suffix identification
-      for both types."
+- title: Литвінова, 7 клас, с.118-121
+  notes: §21 Вид і час дієприслівників. Творення дієприслівників недоконаного й доконаного виду.
+- title: Заболотний, 7 клас, с.131-135
+  notes: 'Дієприслівники доконаного і недоконаного виду: порівняння, що роблячи? проти що зробивши?, вправи
+    на розподіл.'
+- title: Авраменко, 7 клас, с.123-126
+  notes: '§55 Вид і час дієприслівників: тестові вправи, визначення суфіксів для обох видів.'

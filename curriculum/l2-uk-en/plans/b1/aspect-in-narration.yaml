@@ -2,7 +2,7 @@ module: b1-006
 level: B1
 sequence: 6
 slug: aspect-in-narration
-version: '1.0'
+version: '1.0.2'
 title: "Вид у розповіді"
 subtitle: "Тло і передній план — як аспект створює наратив"
 focus: aspect-narration
@@ -10,106 +10,45 @@ pedagogy: TTT
 phase: "B1.0 [Baselines & Aspect Mastery]"
 word_target: 4000
 objectives:
-  - "Learner can identify background (тло — imperfective) and foreground events
-    (передній план — perfective) in a Ukrainian narrative text and explain the
-    aspect logic using Ukrainian metalanguage"
-  - "Learner can weave both aspects into connected storytelling: imperfective for
-    setting, atmosphere, and simultaneous actions; perfective for sequential events
-    and plot advancement"
-  - "Learner can use temporal connectors (спочатку, потім, тим часом, раптом, нарешті)
-    correctly with the appropriate aspect"
-  - "Learner can rewrite a narrative passage changing the aspect distribution to
-    demonstrate how aspect transforms the story's focus and pacing"
+  - "Студент уміє ідентифікувати тло (недоконаний) та події переднього плану (доконаний) в українському розповідному тексті й пояснювати видову логіку, використовуючи українську метамову"
+  - "Студент уміє вплітати обидва види у зв'язну розповідь: недоконаний для обстановки, атмосфери та одночасних дій; доконаний для послідовних подій і розвитку сюжету"
+  - "Студент уміє правильно використовувати часові конектори (спочатку, потім, тим часом, раптом, нарешті) з відповідним видом"
+  - "Студент уміє переписати розповідний уривок, змінюючи розподіл видів, щоб продемонструвати, як вид змінює фокус і темп розповіді"
 dialogue_situations:
-  - setting: "Two friends recounting a dramatic evening — one describes the atmosphere
-      (impf background), the other jumps in with the key events (pf foreground): Було
-      тихо. Ми сиділи в кав'ярні, пили каву... — І раптом зайшов Максим! Він кинув
-      сумку на стіл і сказав: 'Я знайшов роботу!'"
+  - setting: 'Дві подруги розповідають про драматичний вечір: одна описує атмосферу (недок. тло), інша втручається з ключовими подіями (док. передній план): Було тихо. Ми сиділи в кав''ярні, пили каву... — І раптом зайшов Максим! Він кинув сумку на стіл і сказав: "Я знайшов роботу!"'
     speakers:
       - Юлія
       - Катерина
-    motivation: "Natural collaborative storytelling — one speaker provides background
-      (impf), the other delivers events (pf)"
+    motivation: "Природна спільна розповідь: один мовець надає тло (недок.), інший передає події (док.)"
 content_outline:
   - section: "Тест: тло чи подія?"
     words: 850
     points:
-      - "Diagnostic: learners read a short Ukrainian narrative (10-12 sentences) and
-        mark each verb as тло (background) or подія (foreground event). No rules given —
-        pure intuition. Text example: Був теплий вечір. Сонце сідало за обрій. Ми
-        сиділи на терасі й розмовляли. Раптом задзвонив телефон. Я підвів і відповів.
-        Це був Андрій — він повернувся з Америки."
-      - "Self-assessment: how many verbs did you classify correctly? Discussion: what
-        patterns did you notice? (Background verbs = impf, event verbs = pf.) This
-        module makes the pattern explicit and teaches you to USE it in your own writing."
-      - "Key concept introduced: every narrative has two layers. Тло (background) —
-        setting, weather, ongoing situations, emotions, descriptions. Uses недоконаний
-        вид. Передній план (foreground) — events that move the story forward, changes,
-        turning points. Uses доконаний вид."
-      - "Visual metaphor: тло is the stage set (static, continuous), передній план is
-        the actors' actions (dynamic, sequential). A story with only foreground is a
-        bare list of events. A story with only background is a description with no plot."
+      - "Діагностика: студенти читають коротку українську розповідь (10-12 речень) і позначають кожне дієслово як тло або подію. Жодних правил не надається — чиста інтуїція. Приклад тексту: Був теплий вечір. Сонце сідало за обрій. Ми сиділи на терасі й розмовляли. Раптом задзвонив телефон. Я підвівся і відповів. Це був Андрій — він повернувся з Америки."
+      - "Самооцінювання: скільки дієслів ви класифікували правильно? Обговорення: які патерни ви помітили? (Дієслова тла = недок., дієслова подій = док.). Цей модуль робить патерн явним і вчить вас ВИКОРИСТОВУВАТИ його у власному письмі."
+      - "Введення ключового концепту: кожна розповідь має два шари. Тло — обстановка, погода, тривалі ситуації, емоції, описи. Використовує недоконаний вид. Передній план — події, що рухають історію вперед, зміни, поворотні моменти. Використовує доконаний вид."
+      - "Візуальна метафора: тло — це декорації на сцені (статичні, неперервні), передній план — це дії акторів (динамічні, послідовні). Історія, де є лише передній план, — це голий перелік подій. Історія, де є лише тло, — це опис без сюжету."
   - section: "Тло: недоконаний вид у наративі"
     words: 1050
     points:
-      - "Functions of imperfective in narration (Заболотний Grade 7 p.54): Setting the
-        scene: Надворі було холодно. Дув сильний вітер. Describing ongoing actions:
-        Діти гралися у дворі. Бабуся сиділа біля вікна і в'язала. Simultaneous actions:
-        Поки мама готувала вечерю, тато читав газету. Emotional/mental states: Він
-        хвилювався. Вона не знала, що робити."
-      - "Temporal connectors with imperfective background: тим часом (meanwhile),
-        у цей час (at that time), поки (while), доки (while/until), увесь час
-        (all the time), зазвичай (usually — for habitual background). Each connector
-        naturally pairs with imperfective because it signals duration or simultaneity."
-      - "Extended background passage practice: learners write a 5-sentence scene-setting
-        paragraph using only недоконаний вид. Topic: Опишіть вечір у маленькому
-        українському містечку. Every verb must be imperfective. Discussion: what kind
-        of atmosphere does pure background create? (Calm, static, timeless.)"
-      - "Contrast: what happens when you accidentally use perfective in background?
-        *Надворі було холодно. Подув сильний вітер. — 'Подув' (pf) turns the wind into
-        an EVENT, not a setting element. It implies the wind just started, changing the
-        story. Aspect choice changes meaning, not just 'correctness.'"
+      - "Функції недоконаного виду в розповіді (Заболотний 7 клас, с. 54): Обстановка: Надворі було холодно. Дув сильний вітер. Опис тривалих дій: Діти гралися у дворі. Бабуся сиділа біля вікна і в'язала. Одночасні дії: Поки мама готувала вечерю, тато читав газету. Емоційні/ментальні стани: Він хвилювався. Вона не знала, що робити."
+      - "Часові конектори з недоконаним тлом: тим часом, у цей час, поки, доки, увесь час, зазвичай. Кожен конектор природно поєднується з недоконаним видом, оскільки він сигналізує про тривалість або одночасність."
+      - "Розширена практика з уривком тла: студенти пишуть абзац із 5 речень для створення обстановки, використовуючи лише недоконаний вид. Тема: Опишіть вечір у маленькому українському містечку. Кожне дієслово має бути недоконаного виду. Обговорення: яку атмосферу створює суто тло? (Спокійну, статичну, позачасову)."
+      - "Контраст: що відбувається, коли ви випадково використовуєте доконаний вид у тлі? *Надворі було холодно. Подув сильний вітер. — «Подув» перетворює вітер на ПОДІЮ, а не на елемент обстановки. Це означає, що вітер щойно почався, змінюючи історію. Вибір виду змінює значення, а не просто «правильність»."
   - section: "Передній план: доконаний вид у наративі"
     words: 1050
     points:
-      - "Functions of perfective in narration: Sequential events (plot): Він встав,
-        одягнувся, вийшов із дому. Turning points: Раптом двері відчинилися. Completed
-        results: Вона написала лист і відправила його. Single decisive actions: Він
-        прийняв рішення."
-      - "Temporal connectors with perfective foreground: спочатку (first), потім (then),
-        після цього (after that), раптом (suddenly), нарешті (finally), тоді (then).
-        These connectors signal sequence — one action follows another. Sequential chains
-        are naturally perfective: Спочатку я подзвонив. Потім написав листа. Нарешті
-        отримав відповідь."
-      - "The interplay — weaving both layers: Ми сиділи (impf — background) в парку.
-        Було (impf — setting) тихо. Раптом хтось закричав (pf — event). Ми підвелися
-        (pf — reaction) і побігли (pf — action) до виходу. Серце калатало (impf — state
-        during events). Ми вибігли (pf — completed escape) на вулицю."
-      - "Practice: learners receive a bare event chain (6 perfective verbs) and must
-        add background sentences between events using imperfective. Then they receive
-        a pure background description and must insert events. Both exercises demonstrate
-        that aspect creates narrative RHYTHM."
+      - "Функції доконаного виду в розповіді: Послідовні події (сюжет): Він встав, одягнувся, вийшов із дому. Поворотні моменти: Раптом двері відчинилися. Завершені результати: Вона написала лист і відправила його. Одиничні рішучі дії: Він прийняв рішення."
+      - "Часові конектори з доконаним переднім планом: спочатку, потім, після цього, раптом, нарешті, тоді. Ці конектори сигналізують про послідовність — одна дія йде за іншою. Послідовні ланцюжки природно є доконаними: Спочатку я подзвонив. Потім написав листа. Нарешті отримав відповідь."
+      - "Взаємодія — сплетіння обох шарів: Ми сиділи (недок.) в парку. Було (недок.) тихо. Раптом хтось закричав (док.). Ми підвелися (док.) і побігли (док.) до виходу. Серце калатало (недок.). Ми вибігли (док.) на вулицю."
+      - "Практика: студенти отримують голий ланцюжок подій (6 дієслів доконаного виду) і повинні додати речення тла між подіями, використовуючи недоконаний вид. Потім вони отримують суто опис тла і повинні вставити події. Обидві вправи демонструють, що вид створює наративний РИТМ."
   - section: "Підсумок: аспект як наративний інструмент"
     words: 1050
     points:
-      - "Synthesis: aspect in narration is not about individual sentences — it's about
-        the FLOW between background and foreground. Native speakers shift between aspects
-        instinctively. B1 learners need to make this shift consciously until it becomes
-        automatic."
-      - "Narrative transformation exercise: learners receive a short text and rewrite
-        it twice. Version A: emphasize background (expand descriptions, add imperfective
-        detail, slow the pacing). Version B: emphasize foreground (cut descriptions,
-        accelerate events, make it punchy). Compare both versions — how does aspect
-        distribution change the FEEL of the story?"
-      - "Common errors in aspect narration: Mixing aspects within a background block
-        (*Надворі йшов дощ. Загриміло. Було сиро. — 'загриміло' is pf, breaking the
-        background). Using imperfective for clearly sequential events (*Він вставав,
-        одягався, виходив з дому — sounds habitual, not narrative). Over-using one
-        aspect — either all-pf (reads like a police report) or all-impf (reads like
-        a description with no events)."
-      - "Preview of next module: after daily-life-and-routines thematic break,
-        aspect-in-imperatives — how aspect changes the meaning of commands (Не відкривай!
-        vs Відкрий!)."
+      - "Синтез: вид у розповіді стосується не окремих речень — він стосується ПЕРЕХОДУ між тлом і переднім планом. Носії мови змінюють види інстинктивно. Студентам рівня B1 потрібно робити цю зміну свідомо, поки вона не стане автоматичною."
+      - "Вправа на наративну трансформацію: студенти отримують короткий текст і переписують його двічі. Версія А: підкреслити тло (розширити описи, додати деталі недоконаного виду, уповільнити темп). Версія Б: підкреслити передній план (скоротити описи, прискорити події, зробити текст динамічнішим). Порівняйте обидві версії: як розподіл видів змінює ВІДЧУТТЯ історії?"
+      - "Типові помилки: Змішування видів у блоці тла (*Надворі йшов дощ. Загриміло. Було сиро. — «загриміло» розриває тло). Використання недоконаного виду для чітко послідовних подій (*Він вставав, одягався, виходив з дому — звучить як звичка, а не розповідь). Надмірне використання одного виду — або суто доконаного (читається як поліцейський звіт), або суто недоконаного (читається як опис без подій)."
+      - "Анонс наступного модуля: після тематичної перерви (повсякденне життя та рутина), Вид у наказовому способі — як вид змінює значення команд (Не відкривай! проти Відкрий!)."
 vocabulary_hints:
   - word: "тло"
     pos: "noun:n"
@@ -170,36 +109,30 @@ vocabulary_hints:
     translation: "then, at that time"
 activity_hints:
   - type: quiz
-    focus: "Identify each verb in a narrative as тло (background/impf) or подія
-      (foreground/pf) and explain why"
+    focus: "Ідентифікуйте кожне дієслово в розповіді як тло або подію й поясніть чому"
     items: 10
   - type: fill-in
-    focus: "Choose the correct aspect (impf or pf) for verbs in a narrative passage
-      based on their narrative function"
+    focus: "Виберіть правильний вид (недок. чи док.) для дієслів у розповідному уривку на основі їхньої наративної функції"
     items: 8
   - type: group-sort
-    focus: "Sort temporal connectors into background-connectors (тим часом, поки) and
-      foreground-connectors (потім, раптом, нарешті)"
+    focus: "Розподіліть часові конектори на конектори тла (тим часом, поки) та конектори переднього плану (потім, раптом, нарешті)"
     items: 8
   - type: error-correction
-    focus: "Find aspect errors in narrative passages — background verbs that should be
-      impf, event verbs that should be pf"
+    focus: "Знайдіть помилки виду в розповідних уривках: дієслова тла, які мають бути недок., і дієслова подій, які мають бути док."
     items: 6
   - type: match-up
-    focus: "Match narrative functions (setting, turning point, simultaneous action,
-      sequential chain) to the correct aspect"
+    focus: "Установіть відповідність між наративними функціями (обстановка, поворотний момент, одночасна дія, послідовний ланцюжок) та правильним видом"
     items: 8
   - type: open-writing
-    focus: "Write a short story (8-10 sentences) about an unexpected event — weave
-      background (impf) and foreground (pf) deliberately"
+    focus: "Напишіть коротку історію (8-10 речень) про несподівану подію — свідомо поєднуйте тло (недок.) і передній план (док.)"
     items: 6
 connects_to:
-  - "b1-004 (Вид у минулому часі — aspect in past, prerequisite)"
-  - "b1-005 (Вид у майбутньому часі — aspect in future)"
-  - "b1-008 (Вид у наказовому способі — aspect in imperatives, after thematic break)"
+  - "b1-004 (Вид у минулому часі, передумова)"
+  - "b1-005 (Вид у майбутньому часі)"
+  - "b1-008 (Вид у наказовому способі, після тематичної перерви)"
 prerequisites:
-  - "b1-004 aspect-past-tense (result vs process in past)"
-  - "b1-005 aspect-future-tense (three future constructions)"
+  - "b1-004 aspect-past-tense (результат проти процесу в минулому часі)"
+  - "b1-005 aspect-future-tense (три конструкції майбутнього часу)"
 grammar:
   - "Тло розповіді: недоконаний вид для опису, стану, тривалих дій"
   - "Передній план: доконаний вид для подій, послідовності, поворотних моментів"
@@ -209,11 +142,8 @@ grammar:
 register: розмовний
 references:
   - title: "Заболотний Grade 7, p.54-60"
-    notes: "Вид дієслова у розповіді: тло і передній план, вправи на вживання виду
-      в оповіданні, аналіз текстів."
+    notes: "Вид дієслова у розповіді: тло і передній план, вправи на вживання виду в оповіданні, аналіз текстів."
   - title: "Литвінова Grade 7, p.30-40"
-    notes: "Вид дієслова: зв'язок виду і наративної функції, часові конектори,
-      практичні вправи на розповідь."
+    notes: "Вид дієслова: зв'язок виду і наративної функції, часові конектори, практичні вправи на розповідь."
   - title: "Авраменко Grade 7, p.63-68"
-    notes: "Вид у тексті: аналіз оповідань, визначення наративних функцій доконаного
-      і недоконаного виду."
+    notes: "Вид у тексті: аналіз оповідань, визначення наративних функцій доконаного і недоконаного виду."

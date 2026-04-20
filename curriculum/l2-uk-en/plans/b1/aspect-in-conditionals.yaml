@@ -2,119 +2,53 @@ module: b1-011
 level: B1
 sequence: 11
 slug: aspect-in-conditionals
-version: '1.0'
+version: '1.0.2'
 title: "Вид в умовних реченнях"
-subtitle: "Якщо зробиш vs якби робив — реальність і вид"
+subtitle: "Якщо зробиш проти якби робив — реальність і вид"
 focus: aspect-conditionals
 pedagogy: TTT
-phase: "B1.0 [Baselines & Aspect Mastery]"
+phase: "B1.0 [Основи та майстерність виду]"
 word_target: 4000
 objectives:
-  - "Learner can distinguish реальна умова (якщо + indicative) from нереальна умова
-    (якби + conditional mood) and explain how each type interacts with aspect choice"
-  - "Learner can produce real conditionals where the result clause typically uses
-    доконаний вид (specific outcome) and unreal conditionals where both aspects appear
-    based on whether the hypothetical focuses on process or result"
-  - "Learner can explain why якщо + perfective future (Якщо напишеш — пришлю) is the
-    most common real conditional pattern, and why якби + imperfective past (Якби я
-    знав...) expresses open-ended hypotheticals"
-  - "Learner can use conditional sentences naturally in everyday planning (real) and
-    wishful thinking (unreal), selecting aspect based on communicative intent"
+  - 'Здобувач навчиться розрізняти реальну умову (якщо + дійсний спосіб) від нереальної умови (якби + умовний спосіб) і пояснювати, як кожен тип взаємодіє з вибором виду'
+  - 'Здобувач навчиться будувати реальні умовні речення, де в наслідку зазвичай використовується доконаний вид (конкретний результат), та нереальні умовні речення, де з''являються обидва види залежно від того, чи гіпотетична ситуація фокусується на процесі, чи на результаті'
+  - 'Здобувач навчиться пояснювати, чому конструкція якщо + майбутній час доконаного виду (Якщо напишеш — пришлю) є найпоширенішою моделлю реальної умови, і чому якби + минулий час недоконаного виду (Якби я знав...) виражає відкриті гіпотетичні ситуації'
+  - 'Здобувач навчиться природно використовувати умовні речення у повсякденному плануванні (реальна умова) та мріях (нереальна умова), обираючи вид залежно від комунікативного наміру'
 dialogue_situations:
-  - setting: "Two friends making plans — one proposes real conditions for a trip
-      (якщо + pf: якщо знайдемо квитки, поїдемо), the other daydreams about unreal
-      scenarios (якби + impf/pf: якби я мав більше грошей, подорожував би щоліта):
-      Якщо купимо квитки сьогодні, полетимо у суботу. — А якби ми могли подорожувати
-      безкоштовно, я б об'їздив увесь світ!"
+  - setting: 'Двоє друзів будують плани — один пропонує реальні умови для поїздки (якщо + доконаний вид: якщо знайдемо квитки, поїдемо), інший мріє про нереальні сценарії (якби + недоконаний/доконаний вид: якби я мав більше грошей, подорожував би щоліта): Якщо купимо квитки сьогодні, полетимо у суботу. — А якби ми могли подорожувати безкоштовно, я б об''їздив увесь світ!'
     speakers:
       - Наталія
       - Богдан
-    motivation: "Real conditionals (якщо + pf result) vs unreal conditionals (якби +
-      conditional mood) — natural planning vs daydreaming contrast"
+    motivation: 'Реальні умови (якщо + доконаний вид, результат) проти нереальних умов (якби + умовний спосіб) — контраст між природним плануванням та мріями'
 content_outline:
   - section: "Тест: реальне чи нереальне?"
     words: 850
     points:
-      - "Diagnostic: 10 conditional sentences — learners classify as реальна умова
-        (real, possible) or нереальна умова (unreal, hypothetical) and choose the
-        natural verb form. Examples: (Якщо / Якби) матимеш час, зателефонуй мені.
-        (Якщо / Якби) я був президентом, змінив би все. (Якщо / Якби) вивчиш цей
-        матеріал, складеш іспит."
-      - "Self-assessment: most learners intuitively distinguish якщо (real possibility)
-        from якби (contrary to fact). But aspect choice within conditionals is less
-        intuitive — this module makes it explicit."
-      - "Key framework: Two types of conditionals, two aspect logics. Реальна умова:
-        якщо + future indicative → result in future. Нереальна умова: якби + past form
-        + б/би → hypothetical result. Aspect choice is INDEPENDENT of the conditional
-        type — it depends on what you want to say about the action."
-      - "Quick grammar review: conditional mood formation. Дієслово минулого часу + би
-        (б після голосної): я знав би / я б знав, вона прочитала б / вона б прочитала,
-        ми зробили б / ми б зробили. Position of б/би is flexible."
+      - 'Діагностика: 10 умовних речень — здобувачі класифікують їх як реальна умова (дійсна, можлива) або нереальна умова (нереальна, гіпотетична) і вибирають природну форму дієслова. Приклади: (Якщо / Якби) матимеш час, зателефонуй мені. (Якщо / Якби) я був президентом, змінив би все. (Якщо / Якби) вивчиш цей матеріал, складеш іспит.'
+      - 'Самооцінювання: більшість здобувачів інтуїтивно відрізняють "якщо" (реальна можливість) від "якби" (суперечить фактам). Але вибір виду в межах умовних речень менш інтуїтивний — цей модуль робить його очевидним.'
+      - 'Ключовий концепт: Два типи умовних речень, дві логіки використання виду. Реальна умова: якщо + майбутній час дійсного способу → результат у майбутньому. Нереальна умова: якби + форма минулого часу + б/би → гіпотетичний результат. Вибір виду НЕ ЗАЛЕЖИТЬ від типу умовного речення — він залежить від того, що ви хочете сказати про дію.'
+      - 'Швидкий граматичний огляд: утворення умовного способу. Дієслово минулого часу + би (б після голосної): я знав би / я б знав, вона прочитала б / вона б прочитала, ми зробили б / ми б зробили. Позиція б/би гнучка.'
   - section: "Реальна умова: якщо + вид"
     words: 1050
     points:
-      - "Real conditionals express genuine possibilities (Заболотний Grade 7 p.94).
-        Condition clause: often доконаний (specific completed condition) — Якщо
-        напишеш лист... Якщо прийдуть гості... Якщо закінчиш роботу... Result clause:
-        typically доконаний (specific result follows) — ...я відправлю його. ...ми
-        приготуємо вечерю. ...підемо гуляти."
-      - "Imperfective in real conditionals — when process matters: Якщо будеш багато
-        працювати, втомишся. (impf condition: process of working → pf result: getting
-        tired). Якщо читатимеш щодня, поліпшиш мову. (impf condition: ongoing habit
-        → pf result: improvement). The condition is a process; the result is an
-        achievement."
-      - "Double-perfective pattern (most common): Якщо вивчиш — складеш. Якщо
-        приїдеш — покажу. Якщо допоможеш — подякую. Both clauses focus on specific
-        completed actions — 'if X is done, Y will be done.' This is the workhorse
-        pattern of Ukrainian real conditionals."
-      - "Practice: learners complete real conditional sentences by choosing the aspect
-        for both clauses and explaining their choice. Якщо (вивчити / вчити) всі
-        правила, ти (скласти / складати) іспит. Якщо мама (приготувати / готувати)
-        обід, ми (пообідати / обідати) разом."
+      - 'Реальні умовні речення виражають справжні можливості (Заболотний, 7 клас, с.94). Частина з умовою: часто доконаний вид (конкретна завершена умова) — Якщо напишеш лист... Якщо прийдуть гості... Якщо закінчиш роботу... Частина з наслідком: зазвичай доконаний вид (настає конкретний результат) — ...я відправлю його. ...ми приготуємо вечерю. ...підемо гуляти.'
+      - 'Недоконаний вид у реальних умовних реченнях — коли процес має значення: Якщо будеш багато працювати, втомишся. (умова недоконаного виду: процес роботи → результат доконаного виду: втома). Якщо читатимеш щодня, поліпшиш мову. (умова недоконаного виду: тривала звичка → результат доконаного виду: покращення). Умова — це процес; результат — це досягнення.'
+      - 'Модель "доконаний + доконаний" (найпоширеніша): Якщо вивчиш — складеш. Якщо приїдеш — покажу. Якщо допоможеш — подякую. Обидві частини зосереджені на конкретних завершених діях — "якщо X буде зроблено, Y буде зроблено". Це основна модель реальних умовних речень в українській мові.'
+      - 'Практика: здобувачі доповнюють реальні умовні речення, обираючи вид для обох частин і пояснюючи свій вибір. Якщо (вивчити / вчити) всі правила, ти (скласти / складати) іспит. Якщо мама (приготувати / готувати) обід, ми (пообідати / обідати) разом.'
   - section: "Нереальна умова: якби + вид"
     words: 1100
     points:
-      - "Unreal conditionals express impossible or unlikely scenarios (Литвінова Grade 7
-        p.90). Contrary to present fact: Якби я знав українську краще, я б читав
-        Шевченка в оригіналі. (impf — ongoing hypothetical activity). Якби в мене
-        були гроші, я б купив цей будинок. (pf — specific hypothetical result)."
-      - "Contrary to past fact: Якби я прочитав ту книжку, я б знав відповідь.
-        (pf condition: reading completed in hypothetical past → impf result: ongoing
-        hypothetical knowledge). Якби вона зателефонувала, ми б зустрілися. (pf + pf:
-        specific hypothetical actions)."
-      - "Aspect choice in unreal conditionals — the pattern is FLEXIBLE: Impf + impf:
-        Якби я жив у Львові, щодня ходив би на каву. (both habitual/ongoing). Pf + pf:
-        Якби я знайшов ключі, відчинив би двері. (both specific completed). Impf + pf:
-        Якби я знав раніше, подзвонив би. (ongoing state → specific action). Pf + impf:
-        Якби я закінчив цей проєкт, відпочивав би. (completed event → ongoing state).
-        The choice depends on what aspect of the hypothetical the speaker imagines."
-      - "Practice: learners produce unreal conditionals for 6 scenarios, choosing aspect
-        deliberately. A) Якби я вмів літати... (fantasy — what would you DO? impf
-        process). B) Якби я виграв лотерею... (what specific thing would you DO FIRST?
-        pf result). C) Якби я народився в Україні... (counterfactual — ongoing
-        hypothetical life, impf). Compare class answers — different aspect choices
-        reflect different imagined scenarios."
+      - 'Нереальні умовні речення виражають неможливі або малоймовірні сценарії (Литвінова, 7 клас, с.90). Суперечить фактам у теперішньому часі: Якби я знав українську краще, я б читав Шевченка в оригіналі. (недоконаний вид — тривала гіпотетична дія). Якби в мене були гроші, я б купив цей будинок. (доконаний вид — конкретний гіпотетичний результат).'
+      - 'Суперечить фактам у минулому часі: Якби я прочитав ту книжку, я б знав відповідь. (умова доконаного виду: читання завершене в гіпотетичному минулому → наслідок недоконаного виду: тривалі гіпотетичні знання). Якби вона зателефонувала, ми б зустрілися. (доконаний + доконаний: конкретні гіпотетичні дії).'
+      - 'Вибір виду в нереальних умовних реченнях — модель ГНУЧКА: Недоконаний + недоконаний: Якби я жив у Львові, щодня ходив би на каву. (обидві дії звичні/тривалі). Доконаний + доконаний: Якби я знайшов ключі, відчинив би двері. (обидві дії конкретні завершені). Недоконаний + доконаний: Якби я знав раніше, подзвонив би. (тривалий стан → конкретна дія). Доконаний + недоконаний: Якби я закінчив цей проєкт, відпочивав би. (завершена подія → тривалий стан). Вибір залежить від того, який аспект гіпотетичної ситуації уявляє мовець.'
+      - 'Практика: здобувачі створюють нереальні умовні речення для 6 сценаріїв, свідомо обираючи вид. А) Якби я вмів літати... (фантазія — що б ви РОБИЛИ? недоконаний вид, процес). Б) Якби я виграв у лотерею... (яку конкретну річ ви б ЗРОБИЛИ ПЕРШОЮ? доконаний вид, результат). В) Якби я народився в Україні... (суперечить фактам — тривале гіпотетичне життя, недоконаний вид). Порівняйте відповіді в класі — різний вибір виду відображає різні уявні сценарії.'
   - section: "Підсумок: вид як спосіб бачити можливості"
     words: 1000
     points:
-      - "Synthesis: real conditionals are about planning (mostly pf — specific actions
-        and results). Unreal conditionals are about imagining (flexible — aspect depends
-        on what kind of hypothetical world the speaker envisions). In both cases, aspect
-        is a CHOICE, not a mechanical rule."
-      - "Contrastive pairs showing the power of aspect in conditionals: Якщо вивчиш
-        українську, знатимеш її добре. (real: if you learn it, you'll know it — both
-        focused on completion + ongoing state). Якби вивчив українську, знав би її
-        добре. (unreal: if you HAD learned — hypothetical completed event → ongoing
-        hypothetical knowledge)."
-      - "Common errors: *Якщо будеш написати лист... (impossible — буду + pf; should be
-        якщо напишеш). *Якби я знатиму... (future form in unreal conditional — should
-        be якби я знав). *Якби я прочитав би книжку (double би — one б/би is enough).
-        Mixing якщо/якби — якщо for real, якби for unreal."
-      - "Capstone review: aspect mastery block recap. From M04 (past) through M05
-        (future), M06 (narration), M08 (imperatives), M09 (negation), to M11
-        (conditionals) — aspect is always a DECISION about how to present an action.
-        The speaker chooses, the grammar expresses the choice. Preview: checkpoint-aspect
-        (comprehensive aspect test)."
+      - 'Синтез: реальні умовні речення пов''язані з плануванням (переважно доконаний вид — конкретні дії та результати). Нереальні умовні речення пов''язані з уявленням (гнучкість — вид залежить від того, який саме гіпотетичний світ уявляє мовець). В обох випадках вид — це ВИБІР, а не механічне правило.'
+      - 'Контрастні пари, що демонструють силу виду в умовних реченнях: Якщо вивчиш українську, знатимеш її добре. (реальна умова: якщо ти її вивчиш, ти її знатимеш — обидві частини зосереджені на завершенні + тривалому стані). Якби вивчив українську, знав би її добре. (нереальна умова: якби ти її ВИВЧИВ — гіпотетична завершена подія → тривалі гіпотетичні знання).'
+      - 'Типові помилки: *Якщо будеш написати лист... (неможливо — буду + доконаний вид; має бути "якщо напишеш"). *Якби я знатиму... (форма майбутнього часу в нереальній умові — має бути "якби я знав"). *Якби я прочитав би книжку (подвійне "би" — одного б/би достатньо). Змішування якщо/якби — "якщо" для реальної умови, "якби" для нереальної.'
+      - 'Підсумковий огляд: повторення блоку "майстерність виду". Від M04 (минулий час) до M05 (майбутній час), M06 (розповідь), M08 (наказовий спосіб), M09 (заперечення) і до M11 (умовні речення) — вид це завжди РІШЕННЯ про те, як подати дію. Мовець обирає, граматика виражає вибір. Анонс: checkpoint-aspect (комплексний тест на вид).'
 vocabulary_hints:
   - word: "умовний спосіб"
     pos: "noun phrase"
@@ -178,50 +112,41 @@ vocabulary_hints:
     translation: "to imagine (pf — a specific act of imagining)"
 activity_hints:
   - type: quiz
-    focus: "Choose якщо or якби and the correct aspect for both clauses based on
-      whether the conditional is real or unreal"
+    focus: 'Оберіть "якщо" або "якби" та правильний вид для обох частин речення залежно від того, чи є умовне речення реальним, чи нереальним'
     items: 10
   - type: fill-in
-    focus: "Complete conditional sentences with the correct verb form — real (future
-      indicative) vs unreal (conditional mood) and appropriate aspect"
+    focus: 'Доповніть умовні речення правильною формою дієслова — реальна (майбутній час дійсного способу) проти нереальної (умовний спосіб) та відповідний вид'
     items: 8
   - type: group-sort
-    focus: "Sort conditional sentences into реальна умова (якщо) and нереальна умова
-      (якби), then identify the aspect pattern in each"
+    focus: 'Розподіліть умовні речення на реальна умова (якщо) та нереальна умова (якби), а потім визначте модель виду в кожному з них'
     items: 10
   - type: error-correction
-    focus: "Find and correct errors in conditional sentences (*якщо будеш написати,
-      *якби я знатиму, *якби прочитав би)"
+    focus: 'Знайдіть і виправте помилки в умовних реченнях (*якщо будеш написати, *якби я знатиму, *якби прочитав би)'
     items: 6
   - type: match-up
-    focus: "Match hypothetical scenarios to the correct conditional type and aspect
-      pattern"
+    focus: 'З''єднайте гіпотетичні сценарії з правильним типом умовного речення та моделлю виду'
     items: 8
   - type: open-writing
-    focus: "Write 4 real conditionals about your plans and 4 unreal conditionals about
-      your dreams — explain your aspect choice for each"
+    focus: 'Напишіть 4 реальних умовних речення про ваші плани і 4 нереальних умовних речення про ваші мрії — поясніть вибір виду для кожного'
     items: 8
 connects_to:
-  - "b1-009 (Вид і заперечення — aspect with negation, prerequisite)"
-  - "b1-012 (checkpoint-aspect — comprehensive aspect test)"
-  - "b1-004 through b1-009 (full aspect mastery block)"
+  - 'b1-009 (Вид і заперечення)'
+  - 'b1-012 (Перевірка знань про вид)'
+  - 'b1-004 до b1-009 (Блок майстерності виду)'
 prerequisites:
-  - "b1-009 aspect-in-negation (aspect pragmatics with negation)"
-  - "b1-004 aspect-past-tense (aspect decision-making foundations)"
+  - 'b1-009 (Вид і заперечення)'
+  - 'b1-004 (Вид у минулому часі)'
 grammar:
-  - "Реальна умова: якщо + дійсний спосіб (часто доконаний майбутній)"
-  - "Нереальна умова: якби + умовний спосіб (минулий час + б/би)"
-  - "Вибір виду в умові і наслідку — незалежний від типу умовного речення"
-  - "Доконаний + доконаний як найпоширеніша модель реальної умови"
-  - "Гнучкість вибору виду в нереальній умові: процес vs результат у гіпотезі"
+  - 'Реальна умова: якщо + дійсний спосіб (часто доконаний майбутній)'
+  - 'Нереальна умова: якби + умовний спосіб (минулий час + б/би)'
+  - 'Вибір виду в умові і наслідку — незалежний від типу умовного речення'
+  - 'Доконаний + доконаний як найпоширеніша модель реальної умови'
+  - 'Гнучкість вибору виду в нереальній умові: процес проти результату в гіпотезі'
 register: розмовний
 references:
   - title: "Заболотний Grade 7, p.92-98"
-    notes: "Умовний спосіб: утворення, вживання, реальна і нереальна умова, вид
-      дієслова в умовних реченнях."
+    notes: 'Умовний спосіб: утворення, вживання, реальна і нереальна умова, вид дієслова в умовних реченнях.'
   - title: "Литвінова Grade 7, p.88-92"
-    notes: "Умовний спосіб дієслова: якщо і якби, частка б/би, вибір виду в умовних
-      конструкціях."
+    notes: 'Умовний спосіб дієслова: якщо і якби, частка б/би, вибір виду в умовних конструкціях.'
   - title: "Авраменко Grade 7, p.86-90"
-    notes: "Умовні речення: реальна і нереальна умова, практичні вправи на утворення
-      і вживання умовних конструкцій з різним видом."
+    notes: 'Умовні речення: реальна і нереальна умова, практичні вправи на утворення і вживання умовних конструкцій з різним видом.'

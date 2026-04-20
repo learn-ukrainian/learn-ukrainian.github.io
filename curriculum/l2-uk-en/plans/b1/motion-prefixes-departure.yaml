@@ -2,196 +2,128 @@ module: b1-037
 level: B1
 sequence: 37
 slug: motion-prefixes-departure
-version: '3.1'
-title: Піти, від'їхати
-subtitle: Префікси пі-/по- (вирушання) та від- (віддалення) з дієсловами руху
+version: '3.1.2'
+title: "Піти, від'їхати"
+subtitle: "Префікси пі-/по- (вирушання) та від- (віддалення) з дієсловами руху"
 focus: grammar
 pedagogy: PPP
-phase: B1.3 [Motion Verb Universe]
+phase: "B1.3 [Всесвіт дієслів руху]"
 word_target: 4000
 objectives:
-  - Learner can explain the semantic difference between пі-/по- (setting off, 
-    departing) and від- (moving away from) with motion verbs
-  - Learner can form and conjugate prefixed motion verbs with пі-/по- and від- 
-    (піти, поїхати, побігти, понести, повести, повезти; відійти, від'їхати, 
-    відбігти, віднести, відвести, відвезти)
-  - Learner can use departure verbs with correct prepositions and cases (піти з 
-    + Р.в., відійти від + Р.в.)
-  - Learner can distinguish пі-/по- (starting a journey) from від- (creating 
-    distance from a point) in spoken and written Ukrainian
+  - "Учень вміє пояснювати семантичну різницю між пі-/по- (вирушання, відправлення) та від- (віддалення від точки) з дієсловами руху."
+  - "Учень вміє утворювати та відмінювати префіксальні дієслова руху з пі-/по- та від- (піти, поїхати, побігти, понести, повести, повезти; відійти, від'їхати, відбігти, віднести, відвести, відвезти)."
+  - "Учень вміє використовувати дієслова відправлення з правильними прийменниками та відмінками (піти з + Р.в., відійти від + Р.в.)."
+  - "Учень вміє розрізняти пі-/по- (початок подорожі) від від- (створення дистанції від точки) в усному та писемному українському мовленні."
 dialogue_situations:
-  - setting: 'Farewell scene at Київський вокзал (m, Kyiv train station) — seeing
-      off friends: Поїзд відходить (departs) о шостій. Вони вже пішли (left) на перон
-      (m, platform). Ми від''їжджаємо (driving away) завтра вранці.'
+  - setting: 'Сцена прощання на Київському вокзалі — проводи друзів: Поїзд відходить (departs) о шостій. Вони вже пішли (left) на перон (m, platform). Ми від''їжджаємо (driving away) завтра вранці.'
     speakers:
       - Проводжаючі (those seeing off)
       - Мандрівники (travelers)
-    motivation: 'Departure prefixes: піти (пі-), від''їхати (від-), відходити (від-)'
+    motivation: 'Префікси відправлення: піти (пі-), від''їхати (від-), відходити (від-)'
 content_outline:
-  - section: Від прибуття до відправлення
+  - section: "Від прибуття до відправлення"
     words: 550
     points:
-      - 'Bridge from M29: при-/до- brought us TO a destination. Now we learn the opposite
-        — leaving and moving away. Two prefix groups serve this function: пі-/по-
-        (setting off on a journey, departing) and від- (moving away from a specific
-        point).'
-      - 'Reading passage: a farewell scene at a train station — relatives пішли, поїхали,
-        відійшли, від''їхали. Learners identify departure verbs and their spatial
-        meanings.'
-      - 'Important decolonization note from Заболотний Grade 7 p.188: Ukrainian uses
-        відбувати/виїжджати, not the Russicism *відправлятися for departures of vehicles.
-        Автобус відбуває/виїжджає о восьмій.'
-  - section: 'Префікси пі-/по-: вирушання в дорогу'
+      - "Перехід від M29: при-/до- привели нас ДО місця призначення. Тепер ми вивчаємо протилежне — залишення місця та віддалення від нього. Дві групи префіксів виконують цю функцію: пі-/по- (вирушання в дорогу, відправлення) та від- (віддалення від певної точки)."
+      - "Читання: сцена прощання на вокзалі — родичі пішли, поїхали, відійшли, від'їхали. Учні визначають дієслова відправлення та їх просторові значення."
+      - "Важлива примітка щодо деколонізації від Заболотного, 7 клас, с.188: Українська мова використовує відбувати/виїжджати, а не русизм *відправлятися для позначення відправлення транспорту. Автобус відбуває/виїжджає о восьмій."
+  - section: "Префікси пі-/по-: вирушання в дорогу"
     words: 900
     points:
-      - 'Пі- (exclusively with іти → піти) — setting off on foot: Він пішов на роботу
-        (He left for work/set off for work). Пішли додому! (Let''s go home! — invitation
-        to start moving). Full conjugation: піду, підеш, піде, підемо, підете, підуть.
-        Past: пішов, пішла, пішло, пішли. Note: пі- only combines with іти. All other
-        verbs use по-.'
-      - 'По- (setting off by vehicle, running, carrying, etc.): поїхати (to depart
-        by vehicle): Поїзд поїхав о третій. побігти (to take off running): Дитина
-        побігла до мами. понести (to start carrying): Поніс валізу на другий поверх.
-        повести (to take someone somewhere): Повів дитину до парку. повезти (to start
-        transporting): Повіз товар до складу. полетіти (to take off/fly away): Літак
-        полетів до Відня. поплисти (to set sail/start swimming): Човен поплив за течією.'
-      - 'Imperfective counterparts: піти → (no standard imperfective — use йти or
-        відходити in context). поїхати → (use виїжджати or від''їжджати for repeated
-        departures). Note: піти and поїхати are purely perfective departure events.'
-      - 'Prepositions: піти з/із + Р.в. (Пішов з дому), піти до + Р.в. (Пішов до друга),
-        поїхати в/на + Зн.в. (Поїхав у Львів). 8-10 example sentences.'
-  - section: 'Префікс від-: віддалення'
+      - "Пі- (виключно з іти → піти) — вирушання пішки: Він пішов на роботу. Пішли додому! (заклик до руху). Повне відмінювання: піду, підеш, піде, підемо, підете, підуть. Минулий час: пішов, пішла, пішло, пішли. Примітка: пі- комбінується лише з іти. Усі інші дієслова використовують по-."
+      - "По- (вирушання транспортом, бігом, перенесення тощо): поїхати (вирушити транспортом): Поїзд поїхав о третій. побігти (побігти кудись): Дитина побігла до мами. понести (почати нести): Поніс валізу на другий поверх. повести (повести когось кудись): Повів дитину до парку. повезти (почати транспортувати): Повіз товар до складу. полетіти (злетіти/полетіти геть): Літак полетів до Відня. поплисти (поплисти/вирушити водою): Човен поплив за течією."
+      - "Форми недоконаного виду: піти → (немає стандартного недоконаного виду — використовуйте йти або відходити в контексті). поїхати → (використовуйте виїжджати або від'їжджати для повторюваних відправлень). Примітка: піти та поїхати є суто подіями доконаного виду."
+      - "Прийменники: піти з/із + Р.в. (Пішов з дому), піти до + Р.в. (Пішов до друга), поїхати в/на + Зн.в. (Поїхав у Львів). 8-10 речень-прикладів."
+  - section: "Префікс від-: віддалення"
     words: 900
     points:
-      - 'Від- means moving away from a specific point, creating distance: відійти
-        (to step away): Відійди від дверей, будь ласка. від''їхати (to drive/ride
-        away): Автобус від''їхав від зупинки. відбігти (to run away from): Собака
-        відбіг від хазяїна. відлетіти (to fly away): Птахи відлетіли на південь. відпливти
-        (to sail/swim away): Човен відплив від берега.'
-      - 'Carrying/leading/transporting away: віднести (to carry away): Віднеси цей
-        лист на пошту. відвести (to take someone away): Відвів дитину до бабусі. відвезти
-        (to transport away): Відвіз старі меблі на дачу. Full conjugation of відійти:
-        відійду, відійдеш, відійде, відійдемо, відійдете, відійдуть. Past: відійшов,
-        відійшла, відійшло, відійшли.'
-      - 'Imperfective counterparts: відходити (to walk away/depart — regular): Поїзд
-        відходить о п''ятій. від''їжджати (to drive away — habitual): Автобуси від''їжджають
-        щогодини. відбігати (to run away repeatedly): not common — learners should
-        note that some imperfective forms are rare in natural speech.'
-      - 'Prepositions: від- verbs require від + Р.в.: відійти від вікна, від''їхати
-        від станції, відбігти від небезпеки. The preposition від echoes the prefix
-        від-, reinforcing the meaning. 8-10 example sentences.'
-  - section: Пі-/по- чи від-? Різниця у значенні
+      - "Від- означає віддалення від певної точки, створення відстані: відійти (відступити): Відійди від дверей, будь ласка. від'їхати (від'їхати від чогось): Автобус від'їхав від зупинки. відбігти (відбігти геть): Собака відбіг від хазяїна. відлетіти (полетіти геть): Птахи відлетіли на південь. відпливти (відплисти геть): Човен відплив від берега."
+      - "Перенесення/спрямовування/транспортування геть: віднести (віднести геть): Віднеси цей лист на пошту. відвести (відвести когось геть): Відвів дитину до бабусі. відвезти (відвезти геть транспортом): Відвіз старі меблі на дачу. Повне відмінювання відійти: відійду, відійдеш, відійде, відійдемо, відійдете, відійдуть. Минулий час: відійшов, відійшла, відійшло, відійшли."
+      - "Форми недоконаного виду: відходити (відходити/відправлятися — регулярно): Поїзд відходить о п'ятій. від'їжджати (від'їжджати геть — регулярно): Автобуси від'їжджають щогодини. відбігати (відбігати постійно): не поширене — учні повинні знати, що деякі форми недоконаного виду рідко зустрічаються в живій мові."
+      - "Прийменники: дієслова з від- вимагають від + Р.в.: відійти від вікна, від'їхати від станції, відбігти від небезпеки. Прийменник від перегукується з префіксом від-, підсилюючи значення. 8-10 речень-прикладів."
+  - section: "Пі-/по- чи від-? Різниця у значенні"
     words: 800
     points:
-      - 'Core distinction: пі-/по- focuses on STARTING A JOURNEY (departing for a
-        destination): Він пішов на роботу = He left for work (focus: he set off).
-        від- focuses on MOVING AWAY FROM a point (creating distance): Він відійшов
-        від столу = He stepped away from the table (focus: distance).'
-      - 'When пі-/по- is more natural: Starting a journey: Ми поїхали у відпустку.
-        Leaving for good: Вона пішла i більше не повернулася. Setting off: Давай підемо!
-        (Let''s go! — starting motion). When від- is more natural: Stepping back/away:
-        Відійди, мені тісно. Vehicle pulling away: Потяг відійшов від перону. Moving
-        away from danger: Відбіг від вогню.'
-      - 'Contrastive examples: Поїзд поїхав (The train departed — started its journey).
-        Поїзд відійшов від перону (The train pulled away from the platform). Вона
-        пішла додому (She left for home — destination focus). Вона відійшла від нас
-        (She walked away from us — distance focus).'
-      - '6-8 practice scenarios: learners choose пі-/по- or від-.'
-  - section: При- та до- проти пі-/по- та від-
+      - "Ключова відмінність: пі-/по- акцентує на ПОЧАТКУ ПОДОРОЖІ (відправленні до місця призначення): Він пішов на роботу (фокус: він вирушив). від- акцентує на ВІДДАЛЕННІ ВІД точки (створенні дистанції): Він відійшов від столу (фокус: дистанція)."
+      - "Коли пі-/по- більш природне: Початок подорожі: Ми поїхали у відпустку. Залишення назавжди: Вона пішла і більше не повернулася. Вирушання: Давай підемо! Коли від- більш природне: Відступ/відхід назад: Відійди, мені тісно. Транспорт рушає з місця: Потяг відійшов від перону. Відхід від небезпеки: Відбіг від вогню."
+      - "Контрастні приклади: Поїзд поїхав (Потяг вирушив — почав свій рух). Поїзд відійшов від перону (Потяг від'їхав від платформи). Вона пішла додому (Вона вирушила додому — фокус на пункті призначення). Вона відійшла від нас (Вона віддалилася від нас — фокус на дистанції)."
+      - "6-8 практичних сценаріїв: учні вибирають пі-/по- або від-."
+  - section: "При- та до- проти пі-/по- та від-"
     words: 550
     points:
-      - 'Four-prefix comparison table: при- = arriving (Друзі прийшли — friends came/arrived).
-        до- = reaching (Дійшли до вершини — we reached the summit). пі-/по- = departing
-        (Пішли додому — they left for home). від- = moving away (Відійшов від дверей
-        — he stepped away from the door). Journey stages: відійшов (pulled away) →
-        поїхав (departed) → доїхав (traveled to) → приїхав (arrived).'
-      - 'Semantic map: arrival vs departure as mirror images. при- (arrival at destination)
-        mirrors пі-/по- (departure toward destination). до- (reaching a point) mirrors
-        від- (moving away from a point). This symmetry helps learners internalize the
-        system: при-/від- are about PROXIMITY, до-/по- are about JOURNEY endpoints.'
-      - 'Dialogue: phone conversation tracking someone''s journey with all four prefix
-        groups. ''Вже від''їхали?'' ''Так, доїхали до Білої Церкви.'' ''Коли приїдете?''
-        — a natural context for all prefixes.'
-      - 'Production practice: learners narrate a friend''s trip using all four prefix
-        types in sequence. Model: Від''їхав із Харкова о шостій (від-). Поїхав через
-        Полтаву (по-). Доїхав до Києва за п''ять годин (до-). Приїхав на вокзал о
-        одинадцятій (при-). Learners write their own 6-8 sentence journey narratives.'
-  - section: 'Підсумок: префікси від''їзду'
+      - "Порівняльна таблиця чотирьох префіксів: при- = прибуття (Друзі прийшли). до- = досягнення (Дійшли до вершини). пі-/по- = вирушання (Пішли додому). від- = віддалення (Відійшов від дверей). Етапи подорожі: відійшов → поїхав → доїхав → приїхав."
+      - "Семантична мапа: прибуття і відправлення як дзеркальні відображення. при- (прибуття до пункту призначення) віддзеркалює пі-/по- (вирушання до пункту призначення). до- (досягнення точки) віддзеркалює від- (віддалення від точки). Ця симетрія допомагає учням засвоїти систему: при-/від- стосуються ПРОСТОРОВОЇ БЛИЗЬКОСТІ, до-/по- стосуються КІНЦЕВИХ ТОЧОК ПОДОРОЖІ."
+      - "Діалог: телефонна розмова, що відстежує чиюсь подорож із використанням усіх чотирьох груп префіксів. 'Вже від'їхали?' 'Так, доїхали до Білої Церкви.' 'Коли приїдете?' — природний контекст для всіх префіксів."
+      - "Практика продукування: учні розповідають про поїздку друга, використовуючи всі чотири типи префіксів у правильній послідовності. Зразок: Від'їхав із Харкова о шостій (від-). Поїхав через Полтаву (по-). Доїхав до Києва за п'ять годин (до-). Приїхав на вокзал об одинадцятій (при-). Учні пишуть власні розповіді про подорожі на 6-8 речень."
+  - section: "Підсумок: префікси від'їзду"
     words: 350
     points:
-      - 'Complete table: пі-/по- and від- with all base verbs. пі-/по-: піти, поїхати,
-        побігти, понести, повести, повезти, полетіти, поплисти. від-: відійти, від''їхати,
-        відбігти, віднести, відвести, відвезти, відлетіти, відпливти.'
-      - 'Preview of M31: Зайти, вийти — entering and exiting. The motion verb prefix
-        system continues inward and outward.'
+      - "Повна таблиця: пі-/по- та від- з усіма базовими дієсловами. пі-/по-: піти, поїхати, побігти, понести, повести, повезти, полетіти, поплисти. від-: відійти, від'їхати, відбігти, віднести, відвести, відвезти, відлетіти, відпливти."
+      - "Анонс M31: Зайти, вийти — вхід та вихід. Система префіксів дієслів руху продовжує відображати більше просторових переміщень."
 vocabulary_hints:
   required:
-    - піти (to leave/set off on foot — perfective)
-    - поїхати (to depart by vehicle — perfective)
-    - побігти (to take off running — perfective)
-    - понести (to start carrying — perfective)
-    - відійти (to step away / walk away — perfective)
-    - від'їхати (to drive/ride away — perfective)
-    - відбігти (to run away from — perfective)
-    - віднести (to carry away — perfective)
-    - відвести (to take someone away — perfective)
-    - відвезти (to transport away — perfective)
-    - відходити (to depart — imperfective, used for scheduled departures)
-    - від'їжджати (to drive away — imperfective)
-    - від'їзд (departure — noun)
+    - "піти (to leave/set off on foot — perfective)"
+    - "поїхати (to depart by vehicle — perfective)"
+    - "побігти (to take off running — perfective)"
+    - "понести (to start carrying — perfective)"
+    - "відійти (to step away / walk away — perfective)"
+    - "від'їхати (to drive/ride away — perfective)"
+    - "відбігти (to run away from — perfective)"
+    - "віднести (to carry away — perfective)"
+    - "відвести (to take someone away — perfective)"
+    - "відвезти (to transport away — perfective)"
+    - "відходити (to depart — imperfective, used for scheduled departures)"
+    - "від'їжджати (to drive away — imperfective)"
+    - "від'їзд (departure — noun)"
   recommended:
-    - повести (to take someone — perfective)
-    - повезти (to start transporting — perfective)
-    - полетіти (to fly away/take off — perfective)
-    - поплисти (to set sail — perfective)
-    - відлетіти (to fly away — perfective)
-    - відпливти (to sail away — perfective)
-    - перон (platform — train station)
-    - відбувати (to depart — for scheduled transport, native Ukrainian)
-    - виїжджати (to depart/leave — native Ukrainian alternative)
+    - "повести (to take someone — perfective)"
+    - "повезти (to start transporting — perfective)"
+    - "полетіти (to fly away/take off — perfective)"
+    - "поплисти (to set sail — perfective)"
+    - "відлетіти (to fly away — perfective)"
+    - "відпливти (to sail away — perfective)"
+    - "перон (platform — train station)"
+    - "відбувати (to depart — for scheduled transport, native Ukrainian)"
+    - "виїжджати (to depart/leave — native Ukrainian alternative)"
 activity_hints:
   - type: quiz
-    focus: Choose пі-/по- or від- verb based on context (setting off vs moving 
-      away)
+    focus: 'Виберіть дієслово з пі-/по- або від- на основі контексту (вирушання чи віддалення)'
     items: 8
   - type: fill-in
-    focus: Conjugate departure verbs to complete travel and farewell sentences
+    focus: 'Відміняйте дієслова відправлення, щоб завершити речення про подорожі та прощання'
     items: 8
   - type: match-up
-    focus: Match departure verbs with their arrival counterparts (прийти↔піти, 
-      приїхати↔поїхати)
+    focus: "З'єднайте дієслова відправлення з їхніми відповідниками прибуття (прийти↔піти, приїхати↔поїхати)"
     items: 8
   - type: group-sort
-    focus: Sort prefixed verbs into при-/до- (arrival) vs пі-/по-/від- 
-      (departure)
+    focus: 'Відсортуйте префіксальні дієслова на при-/до- (прибуття) та пі-/по-/від- (відправлення)'
     items: 12
   - type: error-correction
-    focus: Fix incorrect prefix choices in departure/arrival contexts
+    focus: 'Виправте неправильний вибір префікса в контекстах відправлення/прибуття'
     items: 6
   - type: free-write
-    focus: Write a farewell scene at a station using 5+ departure verbs
+    focus: 'Напишіть сцену прощання на вокзалі, використовуючи 5+ дієслів відправлення'
     items: 6
 connects_to:
-  - b1-029 (motion-prefixes-arrival — при-/до- arrival prefixes, direct 
-    contrast)
-  - b1-031 (motion-prefixes-in-out — за-/ви- entering and exiting)
-  - b1-036 (traveling-ukraine — departure verbs in travel narratives)
+  - "b1-029 (Префікси прибуття — при-/до-, прямий контраст)"
+  - "b1-031 (Префікси входу-виходу — за-/ви- вхід та вихід)"
+  - "b1-036 (Подорожі Україною — дієслова відправлення в розповідях про подорожі)"
 prerequisites:
-  - b1-028 (motion-base-review — base motion verb pairs)
-  - b1-029 (motion-prefixes-arrival — при-/до- arrival prefixes)
+  - "b1-028 (Огляд базових дієслів руху — базова пара дієслів руху)"
+  - "b1-029 (Префікси прибуття — при-/до- префікси прибуття)"
 grammar:
-  - 'Prefix пі- with іти only: піти (departure on foot)'
-  - 'Prefix по- with other motion verbs: поїхати, побігти, понести, etc.'
-  - 'Prefix від- with motion verbs: moving away semantics'
-  - Apostrophe in від'їхати, від'їзд, від'їжджати
-  - 'Aspectual pairs: відходити/відійти, від''їжджати/від''їхати'
-  - 'Prepositions: з + Р.в. (departure from), від + Р.в. (away from)'
-  - 'Decolonized vocabulary: відбувати, виїжджати (not *відправлятися)'
+  - "Префікс пі- лише з іти: піти (вирушання пішки)"
+  - "Префікс по- з іншими дієсловами руху: поїхати, побігти, понести тощо"
+  - "Префікс від- з дієсловами руху: семантика віддалення"
+  - "Апостроф у від'їхати, від'їзд, від'їжджати"
+  - "Видові пари: відходити/відійти, від'їжджати/від'їхати"
+  - "Прийменники: з + Р.в. (вирушання з), від + Р.в. (віддалення від)"
+  - "Деколонізована лексика: відбувати, виїжджати (а не *відправлятися)"
 register: науково-навчальний
 references:
-  - title: Заболотний Grade 5, p.55
-    notes: Prefix diagram with бігти — по- among the prefix options.
-  - title: Заболотний Grade 7, p.188
-    notes: 'Decolonization: відправлятися is a Russicism; use відбувати, виїжджати.'
-  - title: Авраменко Grade 5, p.63
-    notes: 'Prefix semantics: при- = наближення, по- = початок руху.'
+  - title: "Заболотний Grade 5, p.55"
+    notes: "Схема префіксів із дієсловом бігти — по- серед префіксів на вибір."
+  - title: "Заболотний Grade 7, p.188"
+    notes: "Деколонізація: відправлятися — це русизм; використовуйте відбувати, виїжджати."
+  - title: "Авраменко Grade 5, p.63"
+    notes: "Семантика префіксів: при- = наближення, по- = початок руху."

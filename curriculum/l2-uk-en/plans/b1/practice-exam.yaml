@@ -2,78 +2,64 @@ module: b1-093
 level: B1
 sequence: 93
 slug: practice-exam
-version: 1.0.2
-title: Пробний екзамен B1
-subtitle: 'Інтегрований екзамен: читання, слухання, письмо, говоріння'
+version: 1.0.3
+title: 'Пробний екзамен B1'
+subtitle: 'Інтегрований екзамен: читання, аудіювання, письмо, говоріння'
 focus: exam
 pedagogy: PPP
-phase: B1.9 [Synthesis & Graduation]
+phase: 'B1.9 [Синтез та випуск]'
 word_target: 4000
 objectives:
-- Learner can demonstrate B1-level reading comprehension on texts of various 
-  genres (news, literary, formal, informal)
-- Learner can demonstrate B1-level listening comprehension by answering 
-  questions on audio/text-based simulations
-- 'Learner can produce B1-level written texts: informal leaf, formal letter, narrative
-  paragraph, opinion paragraph'
-- Learner can demonstrate B1-level speaking by describing images, role-playing 
-  situations, and expressing opinions on familiar topics
-- Learner can complete exam-format tasks (multiple choice, true/false, fill-in, 
-  matching, open writing) within time constraints
+- 'Студент може продемонструвати розуміння прочитаних текстів різних жанрів (новини, художні, офіційні, неофіційні) на рівні B1.'
+- 'Студент може продемонструвати розуміння на слух на рівні B1, відповідаючи на запитання до аудіо або симуляцій на основі тексту.'
+- 'Студент може створювати письмові тексти на рівні B1: неофіційне повідомлення, офіційний лист, розповідний абзац, абзац-роздум (висловлення власної думки).'
+- 'Студент може продемонструвати навички говоріння на рівні B1, описуючи зображення, беручи участь у рольових іграх і висловлюючи думки на знайомі теми.'
+- 'Студент може виконувати типові екзаменаційні завдання (множинний вибір, правда/неправда, заповнення пропусків, встановлення відповідностей, відкриті письмові завдання) в межах відведеного часу.'
 content_outline:
 - section: 'Частина 1: Читання і розуміння'
   words: 1000
   points:
-  - 3-4 texts of varying genres and registers (200-400 words each)
-  - 'Comprehension questions: основна думка, деталі, vocabulary in context'
-  - 'Text analysis: стиль, граматика, лексика, художні засоби'
-- section: 'Частина 2: Слухання і розуміння'
+  - '3-4 тексти різних жанрів і стилів (по 200-400 слів кожний).'
+  - 'Запитання на розуміння: основна думка, деталі, лексика в контексті.'
+  - 'Аналіз тексту: стиль, граматика, лексика, художні засоби.'
+- section: 'Частина 2: Аудіювання і розуміння'
   words: 800
   points:
-  - Audio-simulated listening tasks with transcripts
-  - News broadcast, dialogue, academic lecture excerpts
-  - Note-taking and comprehension verification
+  - 'Аудіосимуляції екзаменаційних завдань із транскриптами.'
+  - 'Уривки з випусків новин, діалогів, академічних лекцій.'
+  - 'Створення нотаток та перевірка розуміння.'
 - section: 'Частина 3: Письмо'
   words: 1200
   points:
-  - Informal letter/message to a friend
-  - Formal letter (application, complaint, request)
-  - Narrative paragraph (past/present/future tenses, aspect)
-  - Opinion paragraph with argumentation
+  - 'Неофіційний лист або повідомлення другові.'
+  - 'Офіційний лист (заява, скарга, запит).'
+  - 'Розповідний абзац (минулий/теперішній/майбутній часи, вид дієслова).'
+  - 'Абзац-роздум з аргументацією.'
 - section: 'Частина 4: Говоріння'
   words: 1000
   points:
-  - Image description (vocabulary, grammar, fluency)
-  - Role-play situation (at doctor, in restaurant, at work)
-  - Expressing opinion on familiar topic with arguments
-  - Spontaneous Q&A on personal topics
-- section: Підсумок — Summary
+  - 'Опис зображення (лексика, граматика, побіжність мовлення).'
+  - 'Рольова гра (у лікаря, в ресторані, на роботі).'
+  - 'Висловлення власної думки на знайому тему з наведенням аргументів.'
+  - 'Спонтанні запитання та відповіді на особисті теми.'
+- section: 'Підсумок'
   words: 300
   points:
-  - 'Review key B1 competencies across all four domains: reading comprehension of
-    diverse genres, listening to broadcasts, producing structured formal and informal
-    writing, and spontaneous speaking in varied scenarios.'
-  - "Self-check: Describe a picture from your phone for 1 minute using B1 vocabulary.
-    What's the difference in tone and vocabulary between an informal message to a
-    friend and a formal complaint letter?"
+  - 'Повторення ключових компетенцій рівня B1 у всіх чотирьох видах мовленнєвої діяльності: розуміння прочитаних текстів різних жанрів, аудіювання новин, написання структурованих офіційних та неофіційних текстів, а також спонтанне мовлення в різних ситуаціях.'
+  - 'Самоперевірка: опишіть фотографію з вашого телефону протягом 1 хвилини, використовуючи лексику рівня B1. Яка різниця в тоні та лексиці між неофіційним повідомленням другові та офіційним листом-скаргою?'
 activity_hints:
 - type: reading
-  focus: 'Прочитайте текст про частина 1: читання і розуміння і дайте відповіді на
-    запитання.'
+  focus: 'Прочитайте текст про частину 1: читання і розуміння та дайте відповіді на запитання.'
 - type: essay-response
-  focus: 'Напишіть 5 речень, використовуючи нову лексику з розділу «Частина 2: Слухання
-    і розуміння».'
+  focus: 'Напишіть 5 речень, використовуючи нову лексику з розділу «Частина 2: Аудіювання і розуміння».'
 - type: fill-in
-  focus: 'Вставте правильну граматичну форму у реченнях на тему частина 1: читання
-    і розуміння.'
+  focus: 'Вставте правильну граматичну форму у реченнях на тему «Частина 1: Читання і розуміння».'
 - type: error-correction
-  focus: 'Знайдіть і виправте помилки у реченнях на тему частина 2: слухання і розуміння.'
+  focus: 'Знайдіть і виправте помилки у реченнях на тему «Частина 2: Аудіювання і розуміння».'
 - type: quiz
-  focus: 'Оберіть правильний варіант: лексика та граматика з розділу «Частина 1: Читання
-    і розуміння».'
+  focus: 'Оберіть правильний варіант: лексика та граматика з розділу «Частина 1: Читання і розуміння».'
 - type: match-up
-  focus: 'З''єднайте терміни з розділу «Частина 2: Слухання і розуміння» з їхніми
-    визначеннями.'
+  focus: 'З''єднайте терміни з розділу «Частина 2: Аудіювання і розуміння» з їхніми визначеннями.'
 references:
-- ЗНО format (Зовнішнє незалежне оцінювання)
-- CEFR B1 exam descriptors
+- 'Формат ЗНО (Зовнішнє незалежне оцінювання)'
+- 'Описові критерії іспиту CEFR для рівня B1'

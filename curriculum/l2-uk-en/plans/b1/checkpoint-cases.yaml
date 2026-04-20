@@ -2,121 +2,61 @@ module: b1-063
 level: B1
 sequence: 63
 slug: checkpoint-cases
-version: '3.1'
+version: '3.1.2'
 title: "Контрольна робота 5"
-subtitle: "Перевірка знань: розширені відмінки, прийменники, числівники, займенники,
-  житло"
+subtitle: "Перевірка знань: розширені відмінки, прийменники, числівники, займенники, житло"
 focus: review
 pedagogy: PPP
-phase: "B1.5 [Case Nuances & Prepositions]"
+phase: "B1.5 [Нюанси відмінків та прийменники]"
 word_target: 4000
 objectives:
-  - "Learner can demonstrate mastery of advanced genitive (partitive, negation, dates,
-    -а/-я vs -у/-ю), dative (experiencer, age, impersonal), and instrumental (characterisation,
-    means, path, agent) usage"
-  - "Learner can correctly use temporal prepositions (через, за, перед, після, протягом)
-    and cause/purpose prepositions (через, завдяки, для, заради, щоб)"
-  - "Learner can use vocative in formal contexts with patronymics and titles"
-  - "Learner can decline ordinal and cardinal numerals, agree quantity expressions
-    with nouns, and use collective numerals appropriately"
-  - "Learner can use interrogative, indefinite, negative, and reflexive pronouns with
-    correct spelling, case forms, and preposition splitting"
+  - "Вміти правильно вживати складні випадки родового (частковий, заперечення, дати, -а/-я чи -у/-ю), давального (суб'єкт стану, вік, безособові) та орудного (характеристика, засіб, шлях, агент пасиву) відмінків."
+  - "Навчитися правильно використовувати часові (через, за, перед, після, протягом) та причиново-цільові прийменники (через, завдяки, для, заради, щоб)."
+  - "Вміти використовувати кличний відмінок в офіційних контекстах з іменами по батькові та посадами."
+  - "Навчитися відмінювати порядкові та кількісні числівники, узгоджувати кількісні вирази з іменниками та доречно вживати збірні числівники."
+  - "Вміти використовувати питальні, неозначені, заперечні та зворотні займенники з правильним написанням, формами відмінків і розділенням прийменників."
 dialogue_situations:
-  - setting: 'University seminar presentation — student presents on Ukrainian cities
-      using all case nuances: Для мешканців Києва (gen). Завдяки інвестиціям (dat).
-      Славиться архітектурою (inst). У центрі міста (loc). Пане професоре! (voc)'
+  - setting: 'Презентація на університетському семінарі — студент розповідає про українські міста, використовуючи всі нюанси відмінків: Для мешканців Києва (Р.в.). Завдяки інвестиціям (Д.в.). Славиться архітектурою (Ор.в.). У центрі міста (М.в.). Пане професоре! (Кл.в.)'
     speakers:
-      - Студент (presenting)
-      - Професор (questioning)
-    motivation: 'Consolidation: partitive gen, experiencer dat, instrumental characterization,
-      formal voc'
+      - Студент
+      - Професор
+    motivation: 'Закріплення: частковий родовий, давальний суб''єкта стану, орудний характеристики, офіційний кличний'
 content_outline:
   - section: "Повторення: відмінки"
     words: 800
     points:
-      - "Genitive review — five semantic roles: 1. Частковий: склянка води, багато
-        часу. 2. Бажання/пошуку: шукати правди, бажати щастя. 3. Заперечення: немає
-        часу, не бачив друга. 4. Дати: п'ятнадцятого березня, цього тижня. 5. -а/-я
-        vs -у/-ю: стола vs часу (semantic categories). Drill: 12 sentences requiring
-        correct Р.в. usage."
-      - "Dative review — four semantic roles: 1. Суб'єкт стану: мені холодно, тобі
-        не спиться. 2. Вік: мені двадцять років. 3. Безособові: потрібно, варто, вдалося,
-        довелося. 4. Адресат: допомагати другові, телефонувати лікарю. Drill: 10 sentences
-        requiring correct Д.в. usage."
-      - "Instrumental review — five semantic roles: 1. Характеристика: працювати лікарем,
-        стати вчителькою. 2. Засіб: писати ручкою, їхати автобусом. 3. Шлях: іти вулицею,
-        їхати дорогою. 4. Керування: захоплюватися, цікавитися, пишатися. 5. Агент
-        пасиву: написано автором. Drill: 10 sentences requiring correct Ор.в. usage."
+      - 'Повторення родового відмінка — п''ять семантичних ролей: 1. Частковий: склянка води, багато часу. 2. Бажання/пошуку: шукати правди, бажати щастя. 3. Заперечення: немає часу, не бачив друга. 4. Дати: п''ятнадцятого березня, цього тижня. 5. -а/-я чи -у/-ю: стола чи часу (семантичні категорії). Практика: 12 речень, що вимагають правильного вживання Р.в.'
+      - 'Повторення давального відмінка — чотири семантичні ролі: 1. Суб''єкт стану: мені холодно, тобі не спиться. 2. Вік: мені двадцять років. 3. Безособові: потрібно, варто, вдалося, довелося. 4. Адресат: допомагати другові, телефонувати лікарю. Практика: 10 речень, що вимагають правильного вживання Д.в.'
+      - 'Повторення орудного відмінка — п''ять семантичних ролей: 1. Характеристика: працювати лікарем, стати вчителькою. 2. Засіб: писати ручкою, їхати автобусом. 3. Шлях: іти вулицею, їхати дорогою. 4. Керування: захоплюватися, цікавитися, пишатися. 5. Агент пасиву: написано автором. Практика: 10 речень, що вимагають правильного вживання Ор.в.'
   - section: "Повторення: прийменники"
     words: 700
     points:
-      - "Temporal prepositions reference: через + Зн.в. (after period), за + Зн.в.
-        (within period), перед + Ор.в. (before), після + Р.в. (after), до + Р.в. (until),
-        під час + Р.в. (during), протягом + Р.в. (throughout), на + Зн.в. (for duration)."
-      - "Cause/purpose prepositions reference: Cause: через (neg.), завдяки (pos.),
-        від (reaction), з (motivation), внаслідок (formal result), у зв'язку з (formal
-        connection). Purpose: для, заради, за + Ор.в. (fetch), щоб + inf. Golden rule:
-        завдяки = GOOD, через = BAD. Compound: через те що, завдяки тому що, для того
-        щоб. Drill: 12 mixed sentences choosing correct preposition + case."
+      - 'Довідник часових прийменників: через + Зн.в., за + Зн.в., перед + Ор.в., після + Р.в., до + Р.в., під час + Р.в., протягом + Р.в., на + Зн.в.'
+      - 'Довідник причиново-цільових прийменників: Причина: через, завдяки, від, з, внаслідок, у зв''язку з. Мета: для, заради, за + Ор.в., щоб + інфінітив. Золоте правило: завдяки = ДОБРЕ, через = ПОГАНО. Складені: через те що, завдяки тому що, для того щоб. Практика: 12 змішаних речень на вибір правильного прийменника та відмінка.'
   - section: "Повторення: кличний, числівники, займенники"
     words: 700
     points:
-      - "Vocative in formal contexts: ім'я + по батькові: Іване Петровичу, Маріє Степанівно.
-        Title + прізвище: лікарю Петренко (тільки перше в Кл.в.). Practice: form correct
-        vocative for 8 formal address scenarios."
-      - "Numerals: ordinal declension (like adjectives, compound — last word only),
-        cardinal agreement (1 + Н.в., 2-4 + Н.в.мн., 5+ + Р.в.мн.), collective numerals
-        (двоє, троє + Р.в.мн.), dates (Р.в.) and time (о + М.в., за десять хвилин).
-        Drill: 10 numeral usage exercises."
-      - "Pronouns: interrogative-relative (хто, який, чий — declension), reflexive
-        (себе/собі/собою), indefinite (хтось, будь-хто, -небудь), negative (ніхто,
-        ніщо — preposition splits: ні з ким), означальні (кожний, весь/увесь, сам,
-        інший). Fractions: половина, третина, чверть + Р.в., півтора/півтори. Drill:
-        12 pronoun and numeral exercises with spelling, case, and agreement."
+      - 'Кличний відмінок в офіційних контекстах: ім''я + по батькові: Іване Петровичу, Маріє Степанівно. Посада + прізвище: лікарю Петренко (тільки перше слово в Кл.в.). Практика: утворити правильний кличний відмінок для 8 ситуацій офіційного звертання.'
+      - 'Числівники: відмінювання порядкових, узгодження кількісних (1 + Н.в., 2-4 + Н.в.мн., 5+ + Р.в.мн.), збірні числівники (двоє, троє + Р.в.мн.), дати (Р.в.) та час (о + М.в., за десять хвилин). Практика: 10 вправ на використання числівників.'
+      - 'Займенники: питально-відносні (хто, який, чий — відмінювання), зворотний (себе/собі/собою), неозначені (хтось, будь-хто, -небудь), заперечні (ніхто, ніщо — розділення прийменників: ні з ким), означальні (кожний, весь/увесь, сам, інший). Дроби: половина, третина, чверть + Р.в., півтора/півтори. Практика: 12 вправ на займенники та числівники з правильним написанням, відмінком та узгодженням.'
   - section: "Комплексні завдання"
     words: 1000
     points:
-      - "Text analysis: a Ukrainian newspaper article about housing in a city. Tasks:
-        identify all case usages, prepositions, numerals, and pronouns. Answer comprehension
-        questions requiring correct grammar in responses."
-      - "Error correction block: 12-15 sentences with mixed errors across ALL Phase
-        6 topics — wrong case, wrong preposition, agreement errors, pronoun spelling,
-        vocative mistakes, Russicisms in time/cause expressions. Each error must be
-        identified, categorised, and corrected."
-      - "Production task: write a formal email to a landlord describing your housing
-        needs, asking about availability, and negotiating terms. Must include: vocative
-        address, case constructions, temporal prepositions, cause/purpose expressions,
-        quantity expressions. Self-assessment rubric provided."
-      - "Dialogue reconstruction: rearrange lines of a housing negotiation, filling
-        in missing case forms, prepositions, and numeral agreements."
+      - 'Аналіз тексту: стаття з української газети про житло в місті. Завдання: визначити всі випадки вживання відмінків, прийменників, числівників та займенників. Відповісти на питання для розуміння, що вимагають правильної граматики у відповідях.'
+      - 'Блок виправлення помилок: 12-15 речень зі змішаними помилками з усіх тем Фази 6 — неправильний відмінок, неправильний прийменник, помилки в узгодженні, написання займенників, помилки в кличному відмінку, росіянізми у виразах часу та причини. Кожну помилку потрібно знайти, класифікувати та виправити.'
+      - 'Продуктивне завдання: написати офіційний електронний лист орендодавцеві з описом своїх потреб у житлі, запитати про наявність та обговорити умови. Потрібно включити: звертання в кличному відмінку, відмінкові конструкції, часові прийменники, вирази причини та мети, кількісні вирази. Надається рубрика для самооцінювання.'
+      - 'Реконструкція діалогу: впорядкувати репліки переговорів щодо житла, заповнюючи пропущені відмінкові форми, прийменники та узгодження числівників.'
   - section: "Самооцінка та підготовка до Фази 7"
     words: 500
     points:
-      - "Self-check grid for all Phase 6 topics: Can I use Р.в. for partitive, negation,
-        dates? ___ Can I use Д.в. for experiencer, age, impersonal? ___ Can I use
-        Ор.в. for characterisation, means, path? ___ Can I form vocative for formal
-        address? ___ Can I decline and agree numerals? ___ Can I use indefinite and
-        negative pronouns? ___ Can I choose correct temporal and cause/purpose prepositions?
-        ___"
-      - "Gap analysis: which areas need more practice? Preview of Phase 7: дієприкметники
-        і дієприслівники (participles and gerunds). The shift from USING cases precisely
-        to BUILDING complex modifiers."
-      - "Diagnostic: 15 quick-check questions covering all Phase 6 topics, with answer
-        key and explanations."
+      - 'Таблиця самоперевірки для всіх тем Фази 6: Чи можу я використовувати Р.в. для частковості, заперечення, дат? ___ Чи можу я використовувати Д.в. для суб''єкта стану, віку, безособових дієслів? ___ Чи можу я використовувати Ор.в. для характеристики, засобу, шляху? ___ Чи можу я утворювати кличний відмінок для офіційного звертання? ___ Чи можу я відмінювати та узгоджувати числівники? ___ Чи можу я використовувати неозначені та заперечні займенники? ___ Чи можу я вибирати правильні часові та причиново-цільові прийменники? ___'
+      - 'Аналіз прогалин: які теми потребують більше практики? Огляд Фази 7: дієприкметники і дієприслівники. Перехід від точного ВИКОРИСТАННЯ відмінків до ПОБУДОВИ складних означень.'
+      - 'Діагностика: 15 запитань для швидкої перевірки, що охоплюють усі теми Фази 6, з ключем до відповідей та поясненнями.'
   - section: "Підсумок"
     words: 300
     points:
-      - "Phase 6 achievement summary: advanced case usage (genitive with 15+ prepositions,
-        dative of experiencer and purpose, instrumental with 8+ prepositions and manner),
-        formal vocative with patronymics and profession + name, temporal and cause/purpose
-        prepositions, ordinal and cardinal numeral declension with fractions, complete
-        pronoun system (indefinite, negative, definitive, reflexive). These are the
-        building blocks for Phase 7 (participles) and Phase 8 (complex syntax), where
-        precise case knowledge becomes essential."
-      - "Transition to Phase 7: дієприкметники (participles) require precise case
-        agreement — a дієприкметник agrees with its noun in gender, number, AND case.
-        All the case knowledge from Phase 6 becomes the foundation for building complex
-        modifiers."
+      - 'Підсумок досягнень Фази 6: поглиблене вживання відмінків, офіційний кличний відмінок з іменами по батькові та посада + прізвище, часові та причиново-цільові прийменники, відмінювання порядкових і кількісних числівників із дробами, повна система займенників. Це базові елементи для Фази 7 та Фази 8, де точне знання відмінків стає надзвичайно важливим.'
+      - 'Перехід до Фази 7: дієприкметники вимагають точного узгодження відмінків — дієприкметник узгоджується з іменником у роді, числі ТА відмінку. Усі знання про відмінки з Фази 6 стають фундаментом для побудови складних означень.'
 vocabulary_hints:
   required:
     - "повторення (review)"
@@ -129,30 +69,30 @@ vocabulary_hints:
     - "прогалина (gap — in knowledge)"
 activity_hints:
   - type: reading
-    focus: "Прочитайте текст про повторення: відмінки і дайте відповіді на запитання."
+    focus: 'Прочитайте текст про повторення: відмінки і дайте відповіді на запитання.'
   - type: essay-response
-    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Повторення: прийменники»."
+    focus: 'Напишіть 5 речень, використовуючи нову лексику з розділу «Повторення: прийменники».'
   - type: fill-in
-    focus: "Вставте правильну граматичну форму у реченнях на тему повторення: відмінки."
+    focus: 'Вставте правильну граматичну форму у реченнях на тему повторення: відмінки.'
   - type: error-correction
-    focus: "Знайдіть і виправте помилки у реченнях на тему повторення: прийменники."
+    focus: 'Знайдіть і виправте помилки у реченнях на тему повторення: прийменники.'
   - type: quiz
-    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Повторення: відмінки»."
+    focus: 'Оберіть правильний варіант: лексика та граматика з розділу «Повторення: відмінки».'
   - type: match-up
-    focus: "З'єднайте терміни з розділу «Повторення: прийменники» з їхніми визначеннями."
+    focus: 'З''єднайте терміни з розділу «Повторення: прийменники» з їхніми визначеннями.'
 connects_to:
-  - "b1-046 through b1-055 (all Phase 6 modules)"
-  - "b1-057 (Активні дієприкметники — first module of Phase 7)"
+  - "b1-046 до b1-055 (усі модулі Фази 6)"
+  - "b1-057 (Активні дієприкметники — перший модуль Фази 7)"
 prerequisites:
-  - "b1-046 through b1-055 (Phase 6 completion)"
+  - "b1-046 до b1-055 (завершення Фази 6)"
 grammar:
-  - "Review: розширені значення Р.в., Д.в., Ор.в."
-  - "Review: кличний відмінок у формальному контексті"
-  - "Review: часові та причиново-цільові прийменники"
-  - "Review: порядкові і кількісні числівники з відмінками"
-  - "Review: неозначені, заперечні, зворотний займенники"
-  - "Integration: all Phase 6 grammar in housing communication"
+  - "Повторення: розширені значення Р.в., Д.в., Ор.в."
+  - "Повторення: кличний відмінок у формальному контексті"
+  - "Повторення: часові та причиново-цільові прийменники"
+  - "Повторення: порядкові і кількісні числівники з відмінками"
+  - "Повторення: неозначені, заперечні, зворотний займенники"
+  - "Інтеграція: уся граматика Фази 6 у спілкуванні про житло"
 register: науково-навчальний
 references:
   - title: "Review module"
-    notes: "Consolidates M46-55 (Phase 6: Advanced Case Usages & Prepositions)."
+    notes: "Закріплює матеріал модулів 46-55."

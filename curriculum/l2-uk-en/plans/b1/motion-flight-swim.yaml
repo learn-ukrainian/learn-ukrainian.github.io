@@ -2,202 +2,130 @@ module: b1-041
 level: B1
 sequence: 41
 slug: motion-flight-swim
-version: '3.1'
-title: Летіти, пливти
-subtitle: Дієслова руху в повітрі та на воді — з усіма префіксами
+version: '3.1.2'
+title: "Летіти, пливти"
+subtitle: "Дієслова руху в повітрі та на воді — з усіма префіксами"
 focus: grammar
 pedagogy: PPP
-phase: B1.3 [Motion Verb Universe]
+phase: "B1.3 [Всесвіт дієслів руху]"
 word_target: 4000
 objectives:
-  - Learner can conjugate air motion verbs (летіти/літати) and water motion 
-    verbs (пливти/плавати) in present and past tense
-  - Learner can apply all 10 motion prefixes to летіти and пливти, producing 
-    correct prefixed forms (прилетіти, відлетіти, перелетіти, підлетіти, 
-    пролетіти, облетіти; припливти, відпливти, переплисти, підплисти, проплисти,
-    обплисти)
-  - Learner can distinguish летіти/літати and пливти/плавати as 
-    односпрямовані/різноспрямовані pairs and choose correctly in context
-  - Learner can use air and water motion verbs with appropriate vocabulary 
-    (аеропорт, літак, рейс, порт, корабель, човен, берег)
+  - "Учень вміє відмінювати дієслова руху в повітрі (летіти/літати) та дієслова руху на воді (пливти/плавати) у теперішньому та минулому часі."
+  - "Учень вміє додавати всі 10 префіксів руху до летіти та пливти, утворюючи правильні префіксальні форми (прилетіти, відлетіти, перелетіти, підлетіти, пролетіти, облетіти; припливти, відпливти, переплисти, підплисти, проплисти, обплисти)."
+  - "Учень вміє розрізняти летіти/літати та пливти/плавати як односпрямовані/різноспрямовані пари та правильно обирати їх у контексті."
+  - "Учень вміє використовувати дієслова руху в повітрі та на воді з відповідною лексикою (аеропорт, літак, рейс, порт, корабель, човен, берег)."
 dialogue_situations:
-  - setting: 'At the Чорне море (n, Black Sea) near Одеса — a summer day at the beach:
-      Чайки (pl, seagulls) летять над морем. Діти пливуть (swimming) до буйка (m,
-      buoy). Літак (m, plane) пролетів над нами. Човен (m, boat) попливе на острів
-      (m, island).'
+  - setting: 'На Чорному морі біля Одеси — літній день на пляжі: Чайки (pl, seagulls) летять над морем. Діти пливуть (swimming) до буйка (m, buoy). Літак (m, plane) пролетів над нами. Човен (m, boat) попливе на острів (m, island).'
     speakers:
       - Батьки
       - Діти
-    motivation: 'Fly/swim verbs: летіти/літати, пливти/плавати with море(n), літак(m),
-      човен(m)'
+    motivation: 'Дієслова польоту/плавання: летіти/літати, пливти/плавати з море(n), літак(m), човен(m)'
 content_outline:
-  - section: 'У повітрі та на воді: два особливі домени руху'
+  - section: "У повітрі та на воді: два особливі домени руху"
     words: 550
     points:
-      - 'Bridge from M28: learners were introduced to летіти/літати and пливти/плавати
-        as the last two pairs. Now, after mastering all 10 prefixes (M29-M33), this
-        module applies the full prefix system to air and water motion.'
-      - 'Why a separate module: air and water motion have unique vocabulary (аеропорт,
-        термінал, реєстрація, посадка; порт, причал, палуба, каюта) and some irregular
-        prefixed forms (переплисти, not *переплисти).'
-      - 'Reading passage: a journey by plane and ferry — from аеропорт Боріспіль to
-        Стамбул, then a ferry across the Босфор. Learners encounter all prefixed air/water
-        verbs in context.'
-  - section: 'Летіти / літати: рух у повітрі'
+      - "Перехід від M28: учні ознайомилися з летіти/літати та пливти/плавати як останніми двома парами. Тепер, після опанування всіх 10 префіксів (M29-M33), цей модуль застосовує повну систему префіксів до руху в повітрі та на воді."
+      - "Чому окремий модуль: рух у повітрі та на воді має унікальну лексику (аеропорт, термінал, реєстрація, посадка; порт, причал, палуба, каюта) та деякі неправильні префіксальні форми (переплисти, а не *перепливти)."
+      - "Читання: подорож літаком та поромом — від аеропорту Бориспіль до Стамбула, потім поромом через Босфор. Учні зустрічають усі префіксальні дієслова повітряного/водного руху в контексті."
+  - section: "Летіти / літати: рух у повітрі"
     words: 900
     points:
-      - 'Base pair: летіти (односпрямований — flying right now, one direction): Літак
-        летить до Відня (The plane is flying to Vienna). Птахи летять на південь (Birds
-        are flying south). Conjugation: лечу, летиш, летить, летимо, летите, летять.
-        Past: летів, летіла, летіло, летіли.'
-      - 'Літати (різноспрямований — flying habitually, in various directions): Цей
-        пілот літає щодня (This pilot flies every day). Ластівки літають над річкою
-        (Swallows fly above the river). Ми літали до Варшави двічі (We flew to Warsaw
-        twice — round trips). Conjugation: літаю, літаєш, літає, літаємо, літаєте,
-        літають.'
-      - 'All 10 prefixes with летіти: прилетіти (arrive by air): Літак прилетів з
-        Лондона. долетіти (fly all the way to): Долетіли за три години. полетіти (take
-        off/depart): Полетіли о шостій ранку. відлетіти (fly away): Птах відлетів
-        від вікна. залетіти (fly in): Метелик залетів у кімнату. вилетіти (fly out/depart):
-        Вилетіли за розкладом. перелетіти (fly across): Лелеки перелетіли через море.
-        пролетіти (fly past): Літак пролетів над містом. облетіти (fly around): Облетів
-        усю країну. підлетіти (fly up to): Пташка підлетіла до годівниці.'
-      - 'Imperfective forms: прилітати, долітати, відлітати, залітати, вилітати, перелітати,
-        пролітати, облітати, підлітати. 6-8 contextual examples.'
-  - section: 'Пливти / плавати: рух на воді'
+      - "Базова пара: летіти (односпрямоване — політ прямо зараз, в одному напрямку): Літак летить до Відня. Птахи летять на південь. Відмінювання: лечу, летиш, летить, летимо, летите, летять. Минулий час: летів, летіла, летіло, летіли."
+      - "Літати (різноспрямоване — звичний політ, у різних напрямках): Цей пілот літає щодня. Ластівки літають над річкою. Ми літали до Варшави двічі. Відмінювання: літаю, літаєш, літає, літаємо, літаєте, літають."
+      - "Усі 10 префіксів із летіти: прилетіти (прибути повітрям): Літак прилетів з Лондона. долетіти (долетіти до пункту призначення): Долетіли за три години. полетіти (злетіти/вирушити): Полетіли о шостій ранку. відлетіти (полетіти геть): Птах відлетів від вікна. залетіти (влетіти всередину): Метелик залетів у кімнату. вилетіти (вилетіти звідкись/вирушити): Вилетіли за розкладом. перелетіти (перелетіти через): Лелеки перелетіли через море. пролетіти (пролетіти повз): Літак пролетів над містом. облетіти (облетіти навколо): Облетів усю країну. підлетіти (підлетіти ближче): Пташка підлетіла до годівниці."
+      - "Недоконаний вид: прилітати, долітати, відлітати, залітати, вилітати, перелітати, пролітати, облітати, підлітати. 6-8 контекстних прикладів."
+  - section: "Пливти / плавати: рух на воді"
     words: 900
     points:
-      - 'Base pair: пливти (односпрямований — swimming/sailing right now, one direction):
-        Човен пливе по Дніпру (The boat is sailing along the Dnipro). Він пливе до
-        берега (He is swimming to shore). Conjugation: пливу, пливеш, пливе, пливемо,
-        пливете, пливуть. Past: плив, пливла, пливло, пливли.'
-      - 'Плавати (різноспрямований — swimming habitually, in various directions):
-        Вона чудово плаває (She swims wonderfully — general ability). Качки плавають
-        на озері (Ducks swim on the lake — various directions). Ми плавали на Кіпр
-        минулого року (We sailed to Cyprus last year — round trip). Conjugation: плаваю,
-        плаваєш, плаває, плаваємо, плаваєте, плавають.'
-      - 'All 10 prefixes with пливти: припливти (arrive by water): Корабель припливши
-        до порту. доплисти (swim all the way to): Доплив до острова. поплисти (set
-        sail/start swimming): Поплили о світанку. відпливти (sail/swim away): Корабель
-        відплив від причалу. заплисти (swim into): Човен заплив у затоку. виплисти
-        (swim out): Виплив з печери. переплисти (swim across): Переплив річку. проплисти
-        (sail past): Проплили повз острів. обплисти (sail around): Обпливли острів
-        за день. підплисти (swim up to): Підплив до човна.'
-      - 'Note on irregular forms: переплисти (not *переплисти), доплисти, обплисти
-        — the stem changes from плив- to плис- in some prefixed forms. 6-8 contextual
-        examples.'
-  - section: Авіаційна та морська лексика
+      - "Базова пара: пливти (односпрямоване — плавання прямо зараз, в одному напрямку): Човен пливе по Дніпру. Він пливе до берега. Відмінювання: пливу, пливеш, пливе, пливемо, пливете, пливуть. Минулий час: плив, пливла, пливло, пливли."
+      - "Плавати (різноспрямоване — звичне плавання, у різних напрямках): Вона чудово плаває. Качки плавають на озері. Ми плавали на Кіпр минулого року (подорож туди й назад). Відмінювання: плаваю, плаваєш, плаває, плаваємо, плаваєте, плавають."
+      - "Усі 10 префіксів із пливти: припливти (прибути по воді): Корабель приплив до порту. доплисти (доплисти до пункту призначення): Доплив до острова. поплисти (вирушити по воді/почати плавати): Поплили о світанку. відпливти (відплисти геть): Корабель відплив від причалу. заплисти (заплисти всередину): Човен заплив у затоку. виплисти (виплисти звідкись): Виплив з печери. переплисти (переплисти на інший берег): Переплив річку. проплисти (проплисти повз): Проплили повз острів. обплисти (обплисти навколо): Обпливли острів за день. підплисти (підплисти ближче): Підплив до човна."
+      - "Примітка щодо неправильних форм: переплисти (не *перепливти), доплисти, обплисти — основа змінюється з плив- на плис- у деяких префіксальних формах. 6-8 контекстних прикладів."
+  - section: "Авіаційна та морська лексика"
     words: 800
     points:
-      - 'Airport vocabulary: аеропорт, термінал, рейс, посадковий талон, реєстрація
-        на рейс, зал очікування, злітна смуга, посадка, зльот, пересадка, прямий рейс
-        (direct flight), стикувальний рейс (connecting flight). Example: Рейс на Відень
-        вилітає о п''ятнадцятій двадцять.'
-      - 'Maritime vocabulary: порт, причал, пристань, пором, корабель, човен, яхта,
-        палуба, каюта, капітан, матрос, берег, острів, затока. Example: Пором відплив
-        від причалу i поплив до острова.'
-      - 'Practical dialogues: At the airport: check-in, boarding, announcements. At
-        a port: buying a ferry ticket, asking about departures. 6-8 example exchanges
-        in natural Ukrainian.'
-  - section: 'Переносні значення: час летить, думки пливуть'
+      - "Лексика аеропорту: аеропорт, термінал, рейс, посадковий талон, реєстрація на рейс, зал очікування, злітна смуга, посадка, зліт, пересадка, прямий рейс, стикувальний рейс. Приклад: Рейс на Відень вилітає о п'ятнадцятій двадцять."
+      - "Морська лексика: порт, причал, пристань, пором, корабель, човен, яхта, палуба, каюта, капітан, матрос, берег, острів, затока. Приклад: Пором відплив від причалу і поплив до острова."
+      - "Практичні діалоги: В аеропорту: реєстрація, посадка, оголошення. У порту: купівля квитка на пором, запитання про відправлення. 6-8 прикладів діалогів природною українською мовою."
+  - section: "Переносні значення: час летить, думки пливуть"
     words: 550
     points:
-      - 'Brief preview of M35 (figurative-motion): летіти figuratively = moving very
-        fast: Час летить! Дні летять! пливти figuratively = moving smoothly/slowly:
-        Хмари пливуть. Мелодія пливе. These figurative uses are so common that learners
-        will encounter them constantly. M35 covers this in depth.'
-      - 'Quick contrastive examples: Літак летить (literal — the plane is flying).
-        Час летить (figurative — time flies). Корабель пливе (literal — the ship is
-        sailing). Думки пливуть (figurative — thoughts drift).'
-      - 'Ukrainian idioms and collocations with летіти/пливти: Гроші летять (money
-        disappears fast). Все пливе перед очима (everything is blurry/spinning). Пливти
-        за течією (go with the flow). These are high-frequency expressions that learners
-        will encounter in everyday Ukrainian. Compare with English equivalents to show
-        where metaphors overlap and where they diverge.'
-      - 'Practice: learners sort 10-12 sentences into literal vs figurative categories,
-        then explain what the figurative meaning is in each case. Extension: write 3-4
-        original sentences using летіти or пливти figuratively in contexts from their
-        own life — Мої канікули летять! Дні до іспиту пливуть повільно.'
-  - section: 'Підсумок: повітряний та водний рух'
+      - "Короткий анонс M35 (переносне значення руху): летіти в переносному значенні = рухатися дуже швидко: Час летить! Дні летять! пливти в переносному значенні = рухатися плавно/повільно: Хмари пливуть. Мелодія пливе. Ці переносні значення настільки поширені, що учні будуть постійно з ними стикатися. M35 розглядає це детально."
+      - "Короткі контрастні приклади: Літак летить (пряме — літак перебуває в польоті). Час летить (переносне — час минає швидко). Корабель пливе (пряме — корабель іде по воді). Думки пливуть (переносне — думки плинуть плавно)."
+      - "Українські фразеологізми та сталі вирази з летіти/пливти: Гроші летять (гроші швидко зникають). Все пливе перед очима (все розмите/крутиться). Пливти за течією (йти за обставинами). Це високочастотні вирази, з якими учні зустрінуться в повсякденній українській мові. Порівняння з англійськими еквівалентами для демонстрації того, де метафори збігаються, а де різняться."
+      - "Практика: учні сортують 10-12 речень на категорії прямого і переносного значення, потім пояснюють переносне значення в кожному випадку. Розширення: написати 3-4 оригінальних речення, використовуючи летіти або пливти в переносному значенні в контексті власного життя — Мої канікули летять! Дні до іспиту пливуть повільно."
+  - section: "Підсумок: повітряний та водний рух"
     words: 300
     points:
-      - 'Complete table: летіти/літати and пливти/плавати with all 10 prefixes. All
-        base pairs now mastered: іти/ходити, їхати/їздити, бігти/бігати, нести/носити,
-        вести/водити, везти/возити, летіти/літати, пливти/плавати.'
-      - 'Preview of M35: Час іде, дощ іде — figurative uses of ALL motion verbs. The
-        literal system is now complete; figurative extension follows.'
+      - "Повна таблиця: летіти/літати та пливти/плавати з усіма 10 префіксами. Усі базові пари тепер опановано: іти/ходити, їхати/їздити, бігти/бігати, нести/носити, вести/водити, везти/возити, летіти/літати, пливти/плавати."
+      - "Анонс M35: Час іде, дощ іде — переносні значення ВСІХ дієслів руху. Система прямого значення тепер повністю вивчена; далі йде переносне розширення."
 vocabulary_hints:
   required:
-    - летіти (to fly — unidirectional)
-    - літати (to fly — multidirectional/habitual)
-    - пливти (to swim/sail — unidirectional)
-    - плавати (to swim/sail — multidirectional/habitual)
-    - прилетіти (to arrive by air — perfective)
-    - вилетіти (to depart by air — perfective)
-    - припливти (to arrive by water — perfective)
-    - переплисти (to swim across — perfective)
-    - аеропорт (airport)
-    - рейс (flight/route)
-    - посадка (boarding)
-    - порт (port/harbor)
-    - корабель (ship)
+    - "летіти (to fly — unidirectional)"
+    - "літати (to fly — multidirectional/habitual)"
+    - "пливти (to swim/sail — unidirectional)"
+    - "плавати (to swim/sail — multidirectional/habitual)"
+    - "прилетіти (to arrive by air — perfective)"
+    - "вилетіти (to depart by air — perfective)"
+    - "припливти (to arrive by water — perfective)"
+    - "переплисти (to swim across — perfective)"
+    - "аеропорт (airport)"
+    - "рейс (flight/route)"
+    - "посадка (boarding)"
+    - "порт (port/harbor)"
+    - "корабель (ship)"
   recommended:
-    - долетіти (to fly all the way to — perfective)
-    - полетіти (to take off — perfective)
-    - перелетіти (to fly across — perfective)
-    - облетіти (to fly around — perfective)
-    - доплисти (to swim all the way to — perfective)
-    - поплисти (to set sail — perfective)
-    - відпливти (to sail away — perfective)
-    - пором (ferry)
-    - причал (pier/dock)
-    - човен (boat)
-    - палуба (deck)
-    - каюта (cabin — on a ship)
-    - термінал (terminal)
-    - пересадка (transfer/connection)
+    - "долетіти (to fly all the way to — perfective)"
+    - "полетіти (to take off — perfective)"
+    - "перелетіти (to fly across — perfective)"
+    - "облетіти (to fly around — perfective)"
+    - "доплисти (to swim all the way to — perfective)"
+    - "поплисти (to set sail — perfective)"
+    - "відпливти (to sail away — perfective)"
+    - "пором (ferry)"
+    - "причал (pier/dock)"
+    - "човен (boat)"
+    - "палуба (deck)"
+    - "каюта (cabin — on a ship)"
+    - "термінал (terminal)"
+    - "пересадка (transfer/connection)"
 activity_hints:
   - type: quiz
-    focus: Choose летіти/літати or пливти/плавати and correct prefix based on 
-      context
+    focus: 'Виберіть летіти/літати або пливти/плавати та правильний префікс на основі контексту'
     items: 8
   - type: fill-in
-    focus: Complete airport and maritime sentences with correct prefixed motion 
-      verbs
+    focus: 'Доповніть речення на тему авіації та моря правильними префіксальними дієсловами руху'
     items: 8
   - type: match-up
-    focus: Match aviation/maritime vocabulary with definitions in Ukrainian
+    focus: 'З''єднайте авіаційну/морську лексику з її визначеннями українською мовою'
     items: 8
   - type: group-sort
-    focus: Sort prefixed forms of летіти and пливти by prefix meaning
+    focus: 'Відсортуйте префіксальні форми дієслів летіти та пливти за значенням префікса'
     items: 12
   - type: error-correction
-    focus: Fix incorrect air/water motion verb forms (wrong prefix, wrong base 
-      verb)
+    focus: 'Виправте неправильні форми дієслів повітряного/водного руху (неправильний префікс, неправильне базове дієслово)'
     items: 6
   - type: free-write
-    focus: Write a travel story involving both air and water transport using 6+ 
-      prefixed verbs
+    focus: 'Напишіть історію про подорож повітряним та водним транспортом, використовуючи 6+ префіксальних дієслів'
     items: 6
 connects_to:
-  - b1-033 (motion-prefixes-around — final land-motion prefixes)
-  - b1-035 (figurative-motion — figurative uses of all motion verbs)
-  - b1-036 (traveling-ukraine — travel narratives combining all modes)
+  - "b1-033 (Префікси руху навколо — останні префікси наземного руху)"
+  - "b1-035 (Переносний рух — переносне використання всіх дієслів руху)"
+  - "b1-036 (Подорожі Україною — туристичні розповіді, що поєднують усі види транспорту)"
 prerequisites:
-  - b1-028 (motion-base-review — base motion verb pairs including летіти/пливти)
-  - b1-033 (motion-prefixes-around — all 10 prefixes mastered)
+  - "b1-028 (Огляд базових дієслів руху — базові пари, включаючи летіти/пливти)"
+  - "b1-033 (Префікси руху навколо — всі 10 префіксів засвоєно)"
 grammar:
-  - 'Летіти/літати pair: односпрямований/різноспрямований'
-  - 'Пливти/плавати pair: односпрямований/різноспрямований'
-  - All 10 prefixes applied to летіти and пливти
-  - 'Irregular stems: пливти → переплисти, доплисти (плив- → плис-)'
-  - Aviation and maritime terminology
+  - "Пара летіти/літати: односпрямоване/різноспрямоване"
+  - "Пара пливти/плавати: односпрямоване/різноспрямоване"
+  - "Всі 10 префіксів додані до летіти та пливти"
+  - "Неправильні основи: пливти → переплисти, доплисти (плив- → плис-)"
+  - "Авіаційна та морська термінологія"
 register: науково-навчальний
 references:
-  - title: Авраменко Grade 10, p.19
-    notes: 'Летіти — багатозначне слово: літак летить (literal), час летить (figurative).'
-  - title: Вашуленко Grade 2, p.80
-    notes: Iде катер → Пливе катер — early distinction of motion verb polysemy.
-  - title: Авраменко Grade 7, p.74
-    notes: Літаєш (I дієвідміна) vs полетять (II дієвідміна) — conjugation 
-      class.
+  - title: "Авраменко Grade 10, p.19"
+    notes: "Летіти — багатозначне слово: літак летить (пряме), час летить (переносне)."
+  - title: "Вашуленко Grade 2, p.80"
+    notes: "Іде катер → Пливе катер — раннє розрізнення багатозначності дієслів руху."
+  - title: "Авраменко Grade 7, p.74"
+    notes: "Літаєш (І дієвідміна) проти полетять (ІІ дієвідміна) — дієвідмінювання."

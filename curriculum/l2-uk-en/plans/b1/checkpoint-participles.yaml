@@ -2,111 +2,70 @@ module: b1-072
 level: B1
 sequence: 72
 slug: checkpoint-participles
-version: '3.0'
+version: '3.0.2'
 title: "Контрольна робота 6"
 subtitle: "Перевірка знань: дієприкметники, короткі прикметники, дієприслівники, освіта"
 focus: review
 pedagogy: PPP
-phase: "B1.6 [Participles & Gerunds]"
+phase: "B1.6 [Дієприкметники та дієприслівники]"
 word_target: 4000
 objectives:
-  - "Learner can demonstrate mastery of active and passive participle formation, including
-    suffix selection and consonant alternations"
-  - "Learner can correctly punctuate sentences with дієприкметникові and дієприслівникові
-    звороти, including exception cases"
-  - "Learner can distinguish natural Ukrainian participles from Russian calques and
-    apply appropriate replacement strategies"
-  - "Learner can form and use both imperfective and perfective gerunds, choosing correctly
-    based on temporal logic (одночасність vs різночасність)"
-  - "Learner can apply all Phase 7 grammar in academic and literary contexts"
+  - "Вміти утворювати активні та пасивні дієприкметники, обираючи правильні суфікси та застосовуючи чергування приголосних."
+  - "Навчитися правильно ставити розділові знаки в реченнях із дієприкметниковими та дієприслівниковими зворотами, зважаючи на винятки."
+  - "Вміти відрізняти питомі українські дієприкметники від російських кальок і застосовувати доречні стратегії заміни."
+  - "Навчитися утворювати та вживати дієприслівники недоконаного та доконаного виду, правильно обираючи форму на основі часової логіки (одночасність чи різночасність)."
+  - "Вміти застосовувати всю граматику Фази 7 в академічному та літературному контекстах."
 dialogue_situations:
-  - setting: 'Literary analysis seminar — students discuss a Шевченко poem using participles
-      and gerunds: Написаний Шевченком вірш (m, poem)... Читаючи ці рядки (pl, lines),
-      розумієш... Прочитавши ''Кобзар'', неможливо залишитися байдужим.'
+  - setting: 'Літературознавчий семінар — студенти обговорюють вірш Шевченка, використовуючи дієприкметники та дієприслівники: Написаний Шевченком вірш... Читаючи ці рядки, розумієш... Прочитавши ''Кобзар'', неможливо залишитися байдужим.'
     speakers:
       - Викладач літератури
       - Студенти
-    motivation: 'Consolidation: active/passive participles, imperfective/perfective
-      gerunds in literary analysis'
+    motivation: 'Закріплення: активні й пасивні дієприкметники, дієприслівники недоконаного й доконаного виду в літературному аналізі'
 content_outline:
   - section: "Вступ: як працювати з контрольною"
     words: 350
     points:
-      - "Overview: this checkpoint tests everything from M57-M64 (Phase 7): активні
-        дієприкметники (M57), пасивні дієприкметники (M58), дієприкметниковий зворот
-        (M59), короткі прикметники (M60), дієприслівники недоконаного виду (M61),
-        дієприслівники доконаного виду (M62), дієприслівниковий зворот (M63), освіта
-        (M64)."
-      - "Self-assessment framework: after each block, rate confidence: впевнено /
-        потребую повторення / не розумію."
+      - 'Огляд: ця контрольна перевіряє матеріал модулів 57-64. Активні дієприкметники (M57), пасивні дієприкметники (M58), дієприкметниковий зворот (M59), короткі прикметники (M60), дієприслівники недоконаного виду (M61), дієприслівники доконаного виду (M62), дієприслівниковий зворот (M63), освіта (M64).'
+      - 'Система самооцінювання: після кожного блоку оцініть свою впевненість: впевнено / потребую повторення / не розумію.'
   - section: "Блок 1: Дієприкметники"
     words: 600
     points:
-      - "Formation exercise: form active and passive participles from 12 verbs. Learners
-        must choose correct suffix and apply consonant alternations: квітнути → ?,
-        носити → ?, прочитати → ?, зів'яти → ?, побачити → ?, мити → ?, закрутити
-        → ?, робити → ?"
-      - "Classification: given 10 participles, classify as активний теперішній, активний
-        минулий, or пасивний. Then determine whether each active present participle
-        is natural Ukrainian or a Russian calque."
-      - "Russian calque editing: rewrite 6 phrases replacing unnatural participles
-        with natural Ukrainian equivalents (descriptions, adjectives, descriptive
-        clauses)."
+      - 'Утворення форм: утворити активні та пасивні дієприкметники від 12 дієслів. Учні повинні вибрати правильний суфікс і застосувати чергування приголосних: квітнути → ?, носити → ?, прочитати → ?, зів''яти → ?, побачити → ?, мити → ?, закрутити → ?, робити → ?'
+      - 'Класифікація: класифікувати 10 дієприкметників як активні теперішнього часу, активні минулого часу або пасивні. Далі визначити, чи кожен активний дієприкметник теперішнього часу є природним для української мови, чи російською калькою.'
+      - 'Редагування російських кальок: переписати 6 словосполучень, замінивши неприродні дієприкметники питомими українськими відповідниками (описовими конструкціями, прикметниками, підрядними означальними реченнями).'
   - section: "Блок 2: Звороти і пунктуація"
     words: 600
     points:
-      - "Punctuation exercise: 10 sentences with дієприкметникові and дієприслівникові
-        звороти — learners place all commas correctly. Include edge cases: preposed
-        participle phrases, pronoun referents, phraseological gerund expressions."
-      - "Classification: identify whether each phrase is дієприкметниковий (означення)
-        or дієприслівниковий (обставина) and state the rule that determines comma
-        placement."
-      - "Transformation: convert 6 participle/gerund phrases to subordinate clauses
-        with який/коли/після того як, and vice versa."
+      - 'Вправа на пунктуацію: 10 речень із дієприкметниковими та дієприслівниковими зворотами — розставити всі коми. Включає особливі випадки: препозитивні дієприкметникові звороти, особові займенники, фразеологізовані дієприслівникові звороти.'
+      - 'Класифікація: визначити, чи є зворот дієприкметниковим (означення), чи дієприслівниковим (обставина), і сформулювати правило, що визначає постановку ком.'
+      - 'Трансформація: переробити 6 зворотів на підрядні речення зі словами який/коли/після того як і навпаки.'
   - section: "Блок 3: Дієприслівники"
     words: 550
     points:
-      - "Formation: form imperfective and perfective gerunds from 10 verbs. Include
-        reflexive verbs. Learners must choose correct suffix (-учи/-ючи/-ачи/-ячи
-        vs -вши/-ши)."
-      - "Temporal logic: given 8 sentence contexts, learners choose imperfective (одночасність)
-        or perfective (різночасність) gerund."
-      - "Logical subject check: identify and fix 4 dangling gerund errors."
+      - 'Утворення: утворити дієприслівники недоконаного і доконаного виду від 10 дієслів. Включає зворотні дієслова. Потрібно правильно вибрати суфікс (-учи/-ючи/-ачи/-ячи або -вши/-ши).'
+      - 'Часова логіка: для 8 речень вибрати дієприслівник недоконаного (одночасність) або доконаного (різночасність) виду.'
+      - 'Перевірка логічного суб''єкта: знайти та виправити 4 помилки з неправильним уживанням дієприслівникового звороту (коли дія звороту і присудка стосуються різних підметів).'
   - section: "Блок 4: Короткі прикметники"
     words: 400
     points:
-      - "Identification: find short-form adjectives in 5 literary/folk excerpts and
-        give their full forms."
-      - "Modern usage: complete 6 sentences with correct short-form adjective (потрібен/певен/годен/ладен/варт/рад)
-        in predicative position."
+      - 'Ідентифікація: знайти короткі прикметники в 5 літературних/фольклорних уривках і записати їхні повні форми.'
+      - 'Сучасне використання: доповнити 6 речень правильним коротким прикметником (потрібен/певен/годен/ладен/варт/рад) у предикативній позиції.'
   - section: "Блок 5: Освіта та академічний стиль"
     words: 550
     points:
-      - "Academic vocabulary: match 10 academic terms to definitions."
-      - "Register transformation: rewrite 5 informal sentences about university life
-        in academic register using participle phrases and gerund constructions."
-      - "Reading comprehension: a short academic passage using Phase 7 grammar. Questions
-        test language: identify all дієприкметники, звороти, стиль."
+      - 'Академічна лексика: з''єднати 10 академічних термінів з їхніми визначеннями.'
+      - 'Стилістична трансформація: переписати 5 неформальних речень про університетське життя в академічному стилі, використовуючи дієприкметникові звороти та дієприслівникові конструкції.'
+      - 'Розуміння прочитаного: короткий академічний текст із використанням граматики Фази 7. Запитання перевіряють мовні навички: знайти всі дієприкметники, звороти, визначити стиль.'
   - section: "Блок 6: Інтегроване завдання"
     words: 550
     points:
-      - "Cloze passage: an academic text with 10 blanks. Learners fill in correct
-        participle/gerund forms, choosing between active/passive, imperfective/perfective,
-        with correct agreement and punctuation."
-      - "Production: write a short paragraph (5-7 sentences) describing a research
-        project or study experience, using at least 2 participle phrases, 2 gerund
-        phrases, and 1 short-form adjective."
+      - 'Заповнення пропусків: академічний текст із 10 пропусками. Учні вписують правильні форми дієприкметників та дієприслівників, обираючи між активними і пасивними, недоконаним і доконаним видом, забезпечуючи правильне узгодження та пунктуацію.'
+      - 'Продуктивне завдання: написати невеликий абзац (5-7 речень) з описом дослідницького проєкту або досвіду навчання, використавши щонайменше 2 дієприкметникові звороти, 2 дієприслівникові звороти та 1 короткий прикметник.'
   - section: "Підсумок та самооцінка"
     words: 400
     points:
-      - "Self-assessment checklist: Дієприкметники: Чи правильно я утворюю активні
-        й пасивні форми? Звороти: Чи правильно я ставлю розділові знаки? Дієприслівники:
-        Чи розрізняю одночасність і різночасність? Короткі прикметники: Чи вживаю
-        потрібен/певен/годен правильно? Освіта: Чи можу я говорити про навчання науковим
-        стилем?"
-      - "Recommendations: if any block scores below 70%, return to the corresponding
-        module. Phase 8 (Complex Syntax) builds on this foundation to construct multi-clause
-        sentences."
+      - 'Контрольний список самооцінювання: Дієприкметники: Чи правильно я утворюю активні й пасивні форми? Звороти: Чи правильно я ставлю розділові знаки? Дієприслівники: Чи розрізняю одночасність і різночасність? Короткі прикметники: Чи вживаю потрібен/певен/годен правильно? Освіта: Чи можу я говорити про навчання науковим стилем?'
+      - 'Рекомендації: якщо будь-який блок оцінено нижче 70%, поверніться до відповідного модуля. Фаза 8 (Синтаксис складного речення) будується на цій базі для конструювання багатокомпонентних речень.'
 vocabulary_hints:
   required:
     - "контрольна робота (test/assessment)"
@@ -124,31 +83,31 @@ vocabulary_hints:
     - "впевнено (confidently)"
 activity_hints:
   - type: reading
-    focus: "Прочитайте текст про вступ: як працювати з контрольною і дайте відповіді на запитання."
+    focus: 'Прочитайте текст про вступ: як працювати з контрольною і дайте відповіді на запитання.'
   - type: essay-response
-    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Блок 1: Дієприкметники»."
+    focus: 'Напишіть 5 речень, використовуючи нову лексику з розділу «Блок 1: Дієприкметники».'
   - type: fill-in
-    focus: "Вставте правильну граматичну форму у реченнях на тему вступ: як працювати з контрольною."
+    focus: 'Вставте правильну граматичну форму у реченнях на тему вступ: як працювати з контрольною.'
   - type: error-correction
-    focus: "Знайдіть і виправте помилки у реченнях на тему блок 1: дієприкметники."
+    focus: 'Знайдіть і виправте помилки у реченнях на тему блок 1: дієприкметники.'
   - type: quiz
-    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Вступ: як працювати з контрольною»."
+    focus: 'Оберіть правильний варіант: лексика та граматика з розділу «Вступ: як працювати з контрольною».'
   - type: match-up
-    focus: "З'єднайте терміни з розділу «Блок 1: Дієприкметники» з їхніми визначеннями."
+    focus: 'З''єднайте терміни з розділу «Блок 1: Дієприкметники» з їхніми визначеннями.'
 connects_to:
-  - "b1-057 to b1-064 (all Phase 7 modules)"
-  - "b1-066 (complex-compound — first module of Phase 8)"
+  - "b1-057 до b1-064 (усі модулі Фази 7)"
+  - "b1-066 (Складносурядне речення — перший модуль Фази 8)"
 prerequisites:
-  - "b1-064 (Education and university — all Phase 7 complete)"
+  - "b1-064 (завершення Фази 7)"
 grammar:
-  - "Review: active participles (-уч-/-юч-, -ач-/-яч-, -л-) and Russian calque avoidance"
-  - "Review: passive participles (-н-, -ен-/-єн-, -т-) with consonant alternations"
-  - "Review: дієприкметниковий зворот punctuation"
-  - "Review: короткі прикметники (поетичні and сучасні предикативні)"
-  - "Review: дієприслівники (недоконаний -учи/-ючи, доконаний -вши/-ши)"
-  - "Review: дієприслівниковий зворот punctuation and exceptions"
-  - "Integration: Phase 7 grammar in academic register"
+  - "Повторення: активні дієприкметники (-уч-/-юч-, -ач-/-яч-, -л-) та уникнення російських кальок"
+  - "Повторення: пасивні дієприкметники (-н-, -ен-/-єн-, -т-) із чергуванням приголосних"
+  - "Повторення: пунктуація при дієприкметниковому звороті"
+  - "Повторення: короткі прикметники (поетичні та сучасні предикативні)"
+  - "Повторення: дієприслівники (недоконаний вид -учи/-ючи, доконаний вид -вши/-ши)"
+  - "Повторення: пунктуація при дієприслівниковому звороті та винятки"
+  - "Інтеграція: граматика Фази 7 в академічному стилі"
 register: науково-навчальний
 references:
   - title: "All Phase 7 module references"
-    notes: "This checkpoint draws on textbook sources cited in M57-M64."
+    notes: "Закріплює матеріал модулів 57-64."

@@ -2,198 +2,127 @@ module: b1-036
 level: B1
 sequence: 36
 slug: motion-prefixes-arrival
-version: '3.0'
-title: Прийти, доїхати
-subtitle: Префікси при- (прибуття) та до- (досягнення мети) з дієсловами руху
+version: '3.0.2'
+title: "Прийти, доїхати"
+subtitle: "Префікси при- (прибуття) та до- (досягнення мети) з дієсловами руху"
 focus: grammar
 pedagogy: PPP
-phase: B1.3 [Motion Verb Universe]
+phase: "B1.3 [Всесвіт дієслів руху]"
 word_target: 4000
 objectives:
-  - Learner can explain the semantic difference between при- (arrival at a 
-    destination) and до- (reaching a destination/endpoint) with motion verbs
-  - Learner can form and conjugate prefixed motion verbs with при- and до- 
-    (прийти, приїхати, прибігти, принести, привести, привезти, прилетіти, 
-    припливти; дійти, доїхати, добігти, донести, довести, довезти)
-  - Learner can use при-/до- motion verbs with correct prepositions and cases 
-    (прийти до + Р.в., приїхати в/на + Зн.в., дійти до + Р.в.)
-  - Learner can distinguish при- (focus on arriving) from до- (focus on 
-    reaching/completing the journey) in context
+  - "Учень вміє пояснювати семантичну різницю між при- (прибуття до місця призначення) та до- (досягнення місця призначення/кінцевої точки) з дієсловами руху."
+  - "Учень вміє утворювати та відмінювати префіксальні дієслова руху з при- та до- (прийти, приїхати, прибігти, принести, привести, привезти, прилетіти, припливти; дійти, доїхати, добігти, донести, довести, довезти)."
+  - "Учень вміє використовувати дієслова руху з при-/до- з правильними прийменниками та відмінками (прийти до + Р.в., приїхати в/на + Зн.в., дійти до + Р.в.)."
+  - "Учень вміє розрізняти при- (акцент на прибутті) від до- (акцент на досягненні/завершенні подорожі) в контексті."
 dialogue_situations:
-  - setting: 'Visitors arriving at a сільська садиба (f, rural estate) in Закарпаття
-      — everyone arrives differently: Ми прийшли (arrived on foot) з вокзалу. Тато
-      доїхав (reached by car) за дві години. Поїзд прибув (arrived, formal) о десятій.'
+  - setting: 'Гості прибувають до сільської садиби на Закарпатті — кожен прибуває по-різному: Ми прийшли (arrived on foot) з вокзалу. Тато доїхав (reached by car) за дві години. Поїзд прибув (arrived, formal) о десятій.'
     speakers:
       - Господарі садиби
       - Гості
-    motivation: 'Arrival prefixes: прийти (при-), доїхати (до-), прибути (при-)'
+    motivation: 'Префікси прибуття: прийти (при-), доїхати (до-), прибути (при-)'
 content_outline:
-  - section: Як префікси змінюють дієслова руху
+  - section: "Як префікси змінюють дієслова руху"
     words: 600
     points:
-      - 'Bridge from M28: learners now know 8 base motion verb pairs. This module
-        begins the prefix system — the most productive word-formation mechanism for
-        motion verbs. From Заболотний Grade 5 p.55: adding a prefix to бігти creates
-        прибігти, добігти, забігти, вибігти, перебігти — each with a distinct spatial
-        meaning.'
-      - 'Key principle: when a prefix is added to a motion verb, the result is almost
-        always доконаний вид (perfective). The односпрямований base becomes the perfective
-        stem: іти → прийти (pf.), їхати → приїхати (pf.). The різноспрямований base
-        becomes the new imperfective: ходити → приходити (impf.), їздити → приїздити
-        (impf.).'
-      - 'This module focuses on при- and до- — the ''arrival'' prefixes. Reading passage:
-        a family reunion scene where relatives прийшли, приїхали, прилетіли from different
-        cities.'
-  - section: 'Префікс при-: прибуття'
+      - "Перехід від M28: учні вже знають 8 базових пар дієслів руху. Цей модуль розпочинає вивчення системи префіксів — найпродуктивнішого механізму словотворення для дієслів руху. За Заболотним, 5 клас, с.55: додавання префікса до бігти утворює прибігти, добігти, забігти, вибігти, перебігти — кожне з чітким просторовим значенням."
+      - "Ключовий принцип: коли префікс додається до дієслова руху, результат майже завжди має доконаний вид. Односпрямована база стає основою доконаного виду: іти → прийти (док.), їхати → приїхати (док.). Різноспрямована база стає новим дієсловом недоконаного виду: ходити → приходити (недок.), їздити → приїздити (недок.)."
+      - "Цей модуль фокусується на при- та до- — префіксах «прибуття». Читання: сцена родинної зустрічі, де родичі прийшли, приїхали, прилетіли з різних міст."
+  - section: "Префікс при-: прибуття"
     words: 850
     points:
-      - 'При- means arriving at a destination, showing up, appearing: прийти (to come/arrive
-        on foot): Друзі прийшли о шостій. приїхати (to arrive by vehicle): Поїзд приїхав
-        вчасно. прибігти (to come running): Дитина прибігла з вулиці. прилетіти (to
-        arrive by air): Літак прилетів з Варшави. припливти (to arrive by water):
-        Корабель припливши до порту.'
-      - 'Carrying/leading/transporting arrivals: принести (to bring on foot): Принеси
-        мені воду, будь ласка. привести (to bring someone): Мати привела дитину до
-        лікаря. привезти (to deliver by vehicle): Курієр привіз посилку. Full conjugation
-        of прийти: прийду, прийдеш, прийде, прийдемо, прийдете, прийдуть. Past: прийшов,
-        прийшла, прийшло, прийшли.'
-      - 'Imperfective counterparts (from різноспрямовані bases): приходити (to come
-        regularly): Вона приходить щодня о дев''ятій. приїздити (to visit regularly):
-        Бабуся приїздить на літо. прибігати (to come running repeatedly): Кіт прибігає,
-        коли чує їжу. приносити (to bring regularly): Листоноша приносить пошту щоранку.'
-      - 'Prepositions with при-: прийти до + Р.в. (прийти до лікаря), прийти в/у +
-        Зн.в. (прийти в магазин), прийти на + Зн.в. (прийти на роботу). 8-10 example
-        sentences in realistic contexts.'
-  - section: 'Префікс до-: досягнення мети'
+      - "При- означає прибуття до місця призначення, з'явлення на місці: прийти (прибути пішки): Друзі прийшли о шостій. приїхати (прибути транспортом): Поїзд приїхав вчасно. прибігти (прибігти кудись): Дитина прибігла з вулиці. прилетіти (прибути літаком): Літак прилетів з Варшави. припливти (прибути по воді): Корабель приплив до порту."
+      - "Перенесення/спрямовування/транспортування з прибуттям: принести (принести пішки): Принеси мені воду, будь ласка. привести (привести когось): Мати привела дитину до лікаря. привезти (доставити транспортом): Кур'єр привіз посилку. Повне відмінювання прийти: прийду, прийдеш, прийде, прийдемо, прийдете, прийдуть. Минулий час: прийшов, прийшла, прийшло, прийшли."
+      - "Форми недоконаного виду (від різноспрямованих основ): приходити (приходити регулярно): Вона приходить щодня о дев'ятій. приїздити (приїжджати регулярно): Бабуся приїздить на літо. прибігати (прибігати постійно): Кіт прибігає, коли чує їжу. приносити (приносити регулярно): Листоноша приносить пошту щоранку."
+      - "Прийменники з при-: прийти до + Р.в. (прийти до лікаря), прийти в/у + Зн.в. (прийти в магазин), прийти на + Зн.в. (прийти на роботу). 8-10 речень-прикладів у реалістичних контекстах."
+  - section: "Префікс до-: досягнення мети"
     words: 850
     points:
-      - 'До- means reaching a point, getting all the way to the destination, often
-        emphasizing the effort or distance of reaching: дійти (to walk all the way
-        to): Ми дійшли до вершини гори. доїхати (to ride/drive all the way to): Доїхали
-        до Одеси за 6 годин. добігти (to run all the way to): Добіг до зупинки i встиг
-        на автобус. долетіти (to fly all the way to): Літак долетів за дві години.
-        доплисти (to swim all the way to): Він доплив до берега.'
-      - 'Carrying/leading/transporting to destination: донести (to carry all the way):
-        Доніс валізу до кімнати. довести (to lead all the way): Провідник довів групу
-        до табору. довезти (to transport all the way): Таксі довезло нас до готелю.
-        Full conjugation of доїхати: доїду, доїдеш, доїде, доїдемо, доїдете, доїдуть.
-        Past: доїхав, доїхала, доїхало, доїхали.'
-      - 'Imperfective counterparts: доходити (to walk to regularly/manage to reach):
-        Дорога доходить до річки. доїздити (less common but valid): not typically
-        used as imperfective — learners should note that not every prefixed verb has
-        a natural imperfective pair in everyday speech.'
-      - 'Do- always requires до + Р.в. (direction toward): дійти до школи, доїхати
-        до міста, добігти до фінішу. The preposition до echoes the prefix до-, reinforcing
-        the meaning. 8-10 example sentences.'
-  - section: При- чи до-? Різниця у значенні
+      - "До- означає досягнення точки, прибуття аж до самого місця призначення, часто підкреслюючи зусилля або відстань досягнення: дійти (дійти до кінця пішки): Ми дійшли до вершини гори. доїхати (доїхати до кінця транспортом): Доїхали до Одеси за 6 годин. добігти (добігти до кінця): Добіг до зупинки і встиг на автобус. долетіти (долетіти до кінця): Літак долетів за дві години. доплисти (доплисти до кінця): Він доплив до берега."
+      - "Перенесення/спрямовування/транспортування до пункту призначення: донести (донести до кінця): Доніс валізу до кімнати. довести (довести до кінця): Провідник довів групу до табору. довезти (довезти до кінця): Таксі довезло нас до готелю. Повне відмінювання доїхати: доїду, доїдеш, доїде, доїдемо, доїдете, доїдуть. Минулий час: доїхав, доїхала, доїхало, доїхали."
+      - "Форми недоконаного виду: доходити (регулярно доходити до/спромогтися дійти): Дорога доходить до річки. доїздити (менш поширене, але правильне): зазвичай не використовується як пара недоконаного виду в повсякденному мовленні — учні мають зауважити, що не кожне префіксальне дієслово має природну пару недоконаного виду в живій мові."
+      - "До- завжди вимагає до + Р.в. (напрямок до): дійти до школи, доїхати до міста, добігти до фінішу. Прийменник до перегукується з префіксом до-, підсилюючи значення. 8-10 речень-прикладів."
+  - section: "При- чи до-? Різниця у значенні"
     words: 700
     points:
-      - 'Core distinction: при- focuses on ARRIVAL (appearing at the destination):
-        Ми приїхали до Києва = We arrived in Kyiv (focus: we are now here). до- focuses
-        on REACHING (completing the journey to the endpoint): Ми доїхали до Києва
-        = We made it to Kyiv (focus: we covered the distance). Both can describe the
-        same event, but with different emphasis.'
-      - 'When при- is more natural: Guests arriving: Гості прийшли (not дійшли — guests
-        ''arrived''). Vehicles arriving on schedule: Поїзд приїхав о третій. Deliveries:
-        Посилка прийшла (the package arrived). When до- is more natural: Emphasis
-        on distance/difficulty: Нарешті ми дійшли до табору! Reaching a deadline/point:
-        Дорога доходить до лісу. ''Getting as far as'': Ми доїхали лише до Вінниці.'
-      - 'Contrastive examples with the same verb: Я прийшов до тебе (I came to you
-        — visiting you). Я дійшов до тебе (I walked all the way to you — emphasis
-        on journey). Він приїхав до Львова (He arrived in Lviv — he is now there).
-        Він доїхав до Львова (He made it to Lviv — covering the distance).'
-      - '6-8 practice scenarios: learners choose при- or до- based on context.'
-  - section: 'Практика: прибуття та досягнення'
+      - "Ключова відмінність: при- акцентує на ПРИБУТТІ (з'явленні в пункті призначення): Ми приїхали до Києва (фокус: ми зараз тут). до- акцентує на ДОСЯГНЕННІ (завершенні подорожі до кінцевої точки): Ми доїхали до Києва (фокус: ми подолали відстань). Обидва дієслова можуть описувати ту саму подію, але з різними акцентами."
+      - "Коли при- більш природне: Гості прибувають: Гості прийшли (не дійшли — гості 'прибули'). Транспорт прибуває за розкладом: Поїзд приїхав о третій. Доставки: Посилка прийшла. Коли до- більш природне: Акцент на відстані/складності: Нарешті ми дійшли до табору! Досягнення межі/дедлайну: Дорога доходить до лісу. Означає 'дістатися аж до': Ми доїхали лише до Вінниці."
+      - "Контрастні приклади з тим самим дієсловом: Я прийшов до тебе (Я прийшов тебе провідати). Я дійшов до тебе (Я подолав відстань пішки до тебе — акцент на подорожі). Він приїхав до Львова (Він прибув до Львова — він зараз там). Він доїхав до Львова (Він дістався Львова — подолав шлях)."
+      - "Практика: 6-8 сценаріїв, де учні вибирають при- або до- залежно від контексту."
+  - section: "Практика: прибуття та досягнення"
     words: 700
     points:
-      - 'Dialogue: two friends discuss travel plans and arrivals — incorporating при-
-        and до- verbs naturally in conversation. 8-10 exchanges demonstrating both
-        prefixes in context.'
-      - 'Narrative exercise: a travel story from Kyiv to Carpathians — using при-
-        and до- verbs at each stage of the journey. Model text (150-200 words) followed
-        by comprehension questions.'
-      - 'Production exercise: learners describe their own journey (real or imagined),
-        using at least 5 different при-/до- motion verbs with correct prepositions
-        and cases.'
-  - section: 'Підсумок: при- і до-'
+      - "Діалог: двоє друзів обговорюють плани подорожі та прибуття — природне використання дієслів із при- та до- у розмові. 8-10 реплік, що демонструють обидва префікси в контексті."
+      - "Розповідь: туристична історія від Києва до Карпат — використання дієслів із при- та до- на кожному етапі подорожі. Зразок тексту (150-200 слів) та питання на розуміння."
+      - "Продукція: учні описують власну подорож (реальну чи уявну), використовуючи щонайменше 5 різних дієслів руху з при-/до-, а також правильні прийменники та відмінки."
+  - section: "Підсумок: при- і до-"
     words: 300
     points:
-      - 'Complete table: при- and до- with all 8 base verbs. при-: прийти, приїхати,
-        прибігти, принести, привести, привезти, прилетіти, припливти. до-: дійти,
-        доїхати, добігти, донести, довести, довезти, долетіти, доплисти. With imperfective
-        pairs where applicable.'
-      - 'Preview of M30: Піти, від''їхати — the departure prefixes. If при-/до- bring
-        you TO a place, пі-/по- and від- take you AWAY.'
+      - "Повна таблиця: при- та до- з усіма 8 базовими дієсловами. при-: прийти, приїхати, прибігти, принести, привести, привезти, прилетіти, припливти. до-: дійти, доїхати, добігти, донести, довести, довезти, долетіти, доплисти. Включаючи пари недоконаного виду, де це застосовно."
+      - "Анонс M30: Піти, від'їхати — префікси відправлення. Якщо при-/до- приносять вас ДО якогось місця, пі-/по- та від- забирають вас ГЕТЬ."
 vocabulary_hints:
   required:
-    - прийти (to come/arrive on foot — perfective)
-    - приїхати (to arrive by vehicle — perfective)
-    - прибігти (to come running — perfective)
-    - принести (to bring — perfective)
-    - привести (to bring someone — perfective)
-    - привезти (to deliver by vehicle — perfective)
-    - дійти (to walk to / reach on foot — perfective)
-    - доїхати (to reach by vehicle — perfective)
-    - добігти (to run to / reach running — perfective)
-    - донести (to carry to / deliver on foot — perfective)
-    - приходити (to come — imperfective)
-    - приїздити (to visit / come by vehicle — imperfective)
-    - приносити (to bring — imperfective)
+    - "прийти (to come/arrive on foot — perfective)"
+    - "приїхати (to arrive by vehicle — perfective)"
+    - "прибігти (to come running — perfective)"
+    - "принести (to bring — perfective)"
+    - "привести (to bring someone — perfective)"
+    - "привезти (to deliver by vehicle — perfective)"
+    - "дійти (to walk to / reach on foot — perfective)"
+    - "доїхати (to reach by vehicle — perfective)"
+    - "добігти (to run to / reach running — perfective)"
+    - "донести (to carry to / deliver on foot — perfective)"
+    - "приходити (to come — imperfective)"
+    - "приїздити (to visit / come by vehicle — imperfective)"
+    - "приносити (to bring — imperfective)"
   recommended:
-    - прилетіти (to arrive by air — perfective)
-    - припливти (to arrive by water — perfective)
-    - долетіти (to fly all the way to — perfective)
-    - доплисти (to swim all the way to — perfective)
-    - довести (to lead all the way to — perfective)
-    - довезти (to transport all the way to — perfective)
-    - кур'єр (courier)
-    - посилка (package/parcel)
-    - листоноша (mail carrier)
-    - вершина (summit/peak)
+    - "прилетіти (to arrive by air — perfective)"
+    - "припливти (to arrive by water — perfective)"
+    - "долетіти (to fly all the way to — perfective)"
+    - "доплисти (to swim all the way to — perfective)"
+    - "довести (to lead all the way to — perfective)"
+    - "довезти (to transport all the way to — perfective)"
+    - "кур'єр (courier)"
+    - "посилка (package/parcel)"
+    - "листоноша (mail carrier)"
+    - "вершина (summit/peak)"
 activity_hints:
   - type: quiz
-    focus: Choose при- or до- verb based on context (arrival vs reaching)
+    focus: 'Виберіть дієслово з при- або до- на основі контексту (прибуття чи досягнення)'
     items: 8
   - type: fill-in
-    focus: Conjugate при-/до- motion verbs to complete travel sentences
+    focus: 'Відміняйте дієслова руху з при-/до-, щоб завершити речення про подорожі'
     items: 8
   - type: match-up
-    focus: Match perfective при-/до- verbs with their imperfective counterparts
+    focus: "З'єднайте дієслова доконаного виду з при-/до- з їхніми відповідниками недоконаного виду"
     items: 8
   - type: group-sort
-    focus: Sort prefixed motion verbs into при- (arrival) / до- (reaching) 
-      groups
+    focus: 'Відсортуйте префіксальні дієслова руху на групи при- (прибуття) та до- (досягнення)'
     items: 10
   - type: error-correction
-    focus: Fix incorrect prefix or preposition choices in sentences about 
-      arriving
+    focus: 'Виправте неправильний вибір префікса або прийменника в реченнях про прибуття'
     items: 6
   - type: free-write
-    focus: Write a short travel narrative using at least 4 при- and 3 до- verbs
+    focus: 'Напишіть коротку туристичну розповідь, використовуючи щонайменше 4 дієслова з при- та 3 з до-'
     items: 6
 connects_to:
-  - b1-028 (motion-base-review — unprefixed motion verbs that these are built 
-    on)
-  - b1-030 (motion-prefixes-departure — пі-/по- and від- departure prefixes)
-  - b1-036 (traveling-ukraine — travel narratives using all prefix groups)
+  - "b1-028 (Огляд базових дієслів руху — безпрефіксні дієслова руху, на основі яких вони будуються)"
+  - "b1-030 (Префікси відправлення — пі-/по- та від-)"
+  - "b1-036 (Подорожі Україною — туристичні розповіді з використанням усіх груп префіксів)"
 prerequisites:
-  - b1-028 (motion-base-review — base motion verb pairs)
-  - b1-027 (prepositions-spatial-review — prepositions for direction)
+  - "b1-028 (Огляд базових дієслів руху — базові пари дієслів руху)"
+  - "b1-027 (Огляд просторових прийменників — прийменники напрямку)"
 grammar:
-  - 'Prefix при- with motion verbs: arrival semantics'
-  - 'Prefix до- with motion verbs: reaching/completing journey semantics'
-  - 'Aspectual pairs: при-/до- perfectives with imperfective counterparts from різноспрямовані
-    bases'
-  - 'Prepositions with при- verbs: до + Р.в., в/на + Зн.в.'
-  - 'Preposition with до- verbs: до + Р.в.'
-  - 'Conjugation of irregular prefixed forms: прийду, дійду'
+  - "Префікс при- з дієсловами руху: семантика прибуття"
+  - "Префікс до- з дієсловами руху: семантика досягнення/завершення подорожі"
+  - "Видові пари: доконані дієслова з при-/до- та відповідники недоконаного виду від різноспрямованих основ"
+  - "Прийменники з дієсловами на при-: до + Р.в., в/на + Зн.в."
+  - "Прийменники з дієсловами на до-: до + Р.в."
+  - "Відмінювання неправильних префіксальних форм: прийду, дійду"
 register: науково-навчальний
 references:
-  - title: Заболотний Grade 5, p.55
-    notes: 'Prefix diagram: бігти + при/за/до/по/на/в/з/від/ви/пере/об/під.'
-  - title: Литвінова Grade 6, p.54
-    notes: Написання префіксів пре-, при-, прі- — spelling rules for при- 
-      prefix.
-  - title: Заболотний Grade 5, p.65
-    notes: Приїхати, прибігти, приклеїти — prefix при- means наближення 
-      (approach/arrival).
+  - title: "Заболотний Grade 5, p.55"
+    notes: "Схема префіксів: бігти + при/за/до/по/на/в/з/від/ви/пере/об/під."
+  - title: "Литвінова Grade 6, p.54"
+    notes: "Написання префіксів пре-, при-, прі- — правила написання префікса при-."
+  - title: "Заболотний Grade 5, p.65"
+    notes: "Приїхати, прибігти, приклеїти — префікс при- означає наближення."

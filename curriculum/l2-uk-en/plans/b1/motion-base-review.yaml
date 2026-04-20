@@ -2,205 +2,132 @@ module: b1-035
 level: B1
 sequence: 35
 slug: motion-base-review
-version: '3.0'
-title: 'Рух: іти, їхати, бігти'
-subtitle: Базові пари дієслів руху — односпрямовані та різноспрямовані
+version: '3.0.2'
+title: "Рух: іти, їхати, бігти"
+subtitle: "Базові пари дієслів руху — односпрямовані та різноспрямовані"
 focus: review
 pedagogy: PPP
-phase: B1.3 [Motion Verb Universe]
+phase: "B1.3 [Всесвіт дієслів руху]"
 word_target: 4000
 objectives:
-  - 'Learner can explain the Ukrainian system of paired motion verbs: односпрямовані
-    (unidirectional: іти, їхати, бігти, нести, вести, везти, летіти, пливти) vs різноспрямовані
-    (multidirectional: ходити, їздити, бігати, носити, водити, возити, літати, плавати)'
-  - Learner can choose the correct verb from each pair based on whether motion 
-    is one-way/in-progress or habitual/round-trip/multiple-direction
-  - Learner can conjugate all base motion verbs in present and past tense 
-    without errors, including irregular forms (іду, їду, біжу)
-  - Learner can use base motion verbs with correct prepositions and cases (іти 
-    до + Р.в., їхати в/на + Зн.в., бігти через + Зн.в.)
+  - "Учень вміє пояснювати українську систему парних дієслів руху: односпрямовані (іти, їхати, бігти, нести, вести, везти, летіти, пливти) проти різноспрямованих (ходити, їздити, бігати, носити, водити, возити, літати, плавати)."
+  - "Учень вміє вибирати правильне дієслово з кожної пари на основі того, чи є рух одностороннім/у процесі, чи звичним/в обидва боки/у різних напрямках."
+  - "Учень вміє безпомилково відмінювати всі базові дієслова руху в теперішньому та минулому часі, включаючи неправильні форми (іду, їду, біжу)."
+  - "Учень вміє використовувати базові дієслова руху з правильними прийменниками та відмінками (іти до + Р.в., їхати в/на + Зн.в., бігти через + Зн.в.)."
 dialogue_situations:
-  - setting: 'Weekend morning in Київ — a couple decides how to get around: Я йду
-      (on foot) до ринку (m, market). Ти їдеш (by transport) на Поділ? Діти біжать
-      (running) у парк (m). А бабуся їде трамваєм.'
+  - setting: 'Ранок вихідного дня в Києві — пара вирішує, як дістатися: Я йду (on foot) до ринку (m, market). Ти їдеш (by transport) на Поділ? Діти біжать (running) у парк (m). А бабуся їде трамваєм.'
     speakers:
       - Чоловік
       - Дружина
-    motivation: 'Motion verb pairs: іти/ходити, їхати/їздити, бігти/бігати'
+    motivation: 'Пари дієслів руху: іти/ходити, їхати/їздити, бігти/бігати'
 content_outline:
-  - section: 'Світ руху: чому дієслова руху — особлива група?'
+  - section: "Світ руху: чому дієслова руху — особлива група?"
     words: 500
     points:
-      - 'Introduction: Ukrainian has a rich system of paired motion verbs that does
-        not exist in English. Where English uses ''go'' for nearly everything, Ukrainian
-        distinguishes HOW you move (on foot, by vehicle, running, flying, swimming),
-        WHETHER it is one-way or habitual, and later (M29-M33) adds prefixes for WHERE
-        exactly (arriving, departing, entering, crossing).'
-      - 'The core principle from Заболотний Grade 5 p.55 (prefix diagram with бігти):
-        one base verb + different prefixes = different meanings. But before prefixes,
-        learners must master the unprefixed base pairs.'
-      - 'Reading passage: a day in the life of a Kyivite — using 6+ different motion
-        verbs in natural context. Learners identify which verbs describe one-time
-        journeys vs habitual actions.'
-  - section: 'Односпрямовані дієслова: іти, їхати, бігти'
+      - "Вступ: Українська мова має багату систему парних дієслів руху, якої не існує в англійській. Там, де англійська використовує «go» майже для всього, українська розрізняє, ЯК ви рухаєтеся (пішки, транспортом, бігом, літаком, у воді), ЧИ це односторонній рух, чи звична дія, а згодом (M29-M33) додає префікси, щоб вказати КУДИ саме (прибуття, відправлення, вхід, перетин)."
+      - "Основний принцип за Заболотним, 5 клас, с.55 (схема префіксів із дієсловом бігти): одне базове дієслово + різні префікси = різні значення. Але перед префіксами учні повинні опанувати базові безпрефіксні пари."
+      - "Читання: день із життя киянина — використання 6+ різних дієслів руху у природному контексті. Учні визначають, які дієслова описують одноразові поїздки, а які — звичні дії."
+  - section: "Односпрямовані дієслова: іти, їхати, бігти"
     words: 800
     points:
-      - 'Iти — going on foot, one direction, right now or specific occasion: Я іду
-        до школи (I am walking to school right now). Вчора я йшов додому i зустрів
-        друга (I was walking home and met a friend). Full conjugation: іду, ідеш,
-        іде, ідемо, ідете, ідуть. Past: йшов, йшла, йшло, йшли.'
-      - 'Їхати — going by vehicle, one direction, right now or specific occasion:
-        Ми їдемо до Львова (We are driving/riding to Lviv). Поїзд їхав усю ніч (The
-        train traveled all night). Full conjugation: їду, їдеш, їде, їдемо, їдете,
-        їдуть. Past: їхав, їхала, їхало, їхали.'
-      - 'Бігти — running, one direction, right now: Дитина біжить до мами (The child
-        is running to mom). Спортсмен біг до фінішу (The athlete was running to the
-        finish line). Full conjugation: біжу, біжиш, біжить, біжимо, біжите, біжать.
-        Past: біг, бігла, бігло, бігли.'
-      - 'Key pattern: односпрямовані verbs describe motion happening RIGHT NOW in
-        ONE direction, or a specific single journey. They answer: ''Where are you
-        going right now?'' — Куди ти зараз ідеш?'
-  - section: 'Різноспрямовані дієслова: ходити, їздити, бігати'
+      - "Іти — рух пішки, в одному напрямку, прямо зараз або в конкретному випадку: Я іду до школи. Вчора я йшов додому і зустрів друга. Повне відмінювання: іду, ідеш, іде, ідемо, ідете, ідуть. Минулий час: йшов, йшла, йшло, йшли."
+      - "Їхати — рух транспортом, в одному напрямку, прямо зараз або в конкретному випадку: Ми їдемо до Львова. Поїзд їхав усю ніч. Повне відмінювання: їду, їдеш, їде, їдемо, їдете, їдуть. Минулий час: їхав, їхала, їхало, їхали."
+      - "Бігти — біг, в одному напрямку, прямо зараз: Дитина біжить до мами. Спортсмен біг до фінішу. Повне відмінювання: біжу, біжиш, біжить, біжимо, біжите, біжать. Минулий час: біг, бігла, бігло, бігли."
+      - "Ключова модель: односпрямовані дієслова описують рух, що відбувається ПРЯМО ЗАРАЗ в ОДНОМУ напрямку, або конкретну одноразову подорож. Вони відповідають на запитання: Куди ти зараз ідеш?"
+  - section: "Різноспрямовані дієслова: ходити, їздити, бігати"
     words: 800
     points:
-      - 'Ходити — going on foot, habitual/round-trip/multiple directions: Я ходжу
-        до школи щодня (I go to school every day — habitual). Він ходить по кімнаті
-        (He walks around the room — multiple directions). Ми ходили в театр (We went
-        to the theater — round trip, returned). Full conjugation: ходжу, ходиш, ходить,
-        ходимо, ходите, ходять. Note the alternation: д → дж in 1st person (ходити
-        → ходжу).'
-      - 'Їздити — going by vehicle, habitual/round-trip: Вона їздить на роботу автобусом
-        (She commutes to work by bus). Влітку ми їздили до моря (In summer we went
-        to the sea — round trip). Full conjugation: їжджу, їздиш, їздить, їздимо,
-        їздите, їздять. Note the alternation: зд → ждж in 1st person (їздити → їжджу).'
-      - 'Бігати — running, habitual/exercise/multiple directions: Я бігаю щоранку
-        (I jog every morning — habitual exercise). Діти бігають у дворі (Children
-        run around in the yard — multiple directions). Full conjugation: бігаю, бігаєш,
-        бігає, бігаємо, бігаєте, бігають.'
-      - 'Key pattern: різноспрямовані verbs describe repeated, habitual, round-trip,
-        or multidirectional motion. They answer: ''Do you regularly go there?'' —
-        Ти часто туди ходиш?'
-  - section: 'Повний набір: нести/носити, вести/водити, везти/возити'
+      - "Ходити — рух пішки, звичний/в обидва боки/у різних напрямках: Я ходжу до школи щодня. Він ходить по кімнаті. Ми ходили в театр. Повне відмінювання: ходжу, ходиш, ходить, ходимо, ходите, ходять. Зверніть увагу на чергування: д → дж у 1-й особі (ходити → ходжу)."
+      - "Їздити — рух транспортом, звичний/в обидва боки: Вона їздить на роботу автобусом. Влітку ми їздили до моря. Повне відмінювання: їжджу, їздиш, їздить, їздимо, їздите, їздять. Зверніть увагу на чергування: зд → ждж у 1-й особі (їздити → їжджу)."
+      - "Бігати — біг, звичний/фізичні вправи/у різних напрямках: Я бігаю щоранку. Діти бігають у дворі. Повне відмінювання: бігаю, бігаєш, бігає, бігаємо, бігаєте, бігають."
+      - "Ключова модель: різноспрямовані дієслова описують повторюваний, звичний рух, рух в обидва боки або рух у різних напрямках. Вони відповідають на запитання: Ти часто туди ходиш?"
+  - section: "Повний набір: нести/носити, вести/водити, везти/возити"
     words: 700
     points:
-      - 'Нести (one-way) vs носити (habitual) — carrying on foot: Він несе валізу
-        до вокзалу (He is carrying a suitcase to the station). Вона носить окуляри
-        (She wears glasses — habitual). Нести: несу, несеш, несе, несемо, несете,
-        несуть. Носити: ношу, носиш, носить, носимо, носите, носять.'
-      - 'Вести (one-way) vs водити (habitual) — leading/guiding: Мати веде дитину
-        до лікаря (Mother is leading the child to the doctor). Він водить екскурсії
-        по місту (He leads city tours — habitual). Вести: веду, ведеш, веде, ведемо,
-        ведете, ведуть. Водити: воджу, водиш, водить, водимо, водите, водять.'
-      - 'Везти (one-way) vs возити (habitual) — transporting by vehicle: Таксі везе
-        нас до аеропорту (The taxi is taking us to the airport). Він возить товари
-        по всій країні (He transports goods across the country). Везти: везу, везеш,
-        везе, веземо, везете, везуть. Возити: вожу, возиш, возить, возимо, возите,
-        возять.'
-  - section: Прийменники з дієсловами руху
+      - "Нести (односпрямоване) проти носити (різноспрямоване) — перенесення пішки: Він несе валізу до вокзалу. Вона носить окуляри. Нести: несу, несеш, несе, несемо, несете, несуть. Носити: ношу, носиш, носить, носимо, носите, носять."
+      - "Вести (односпрямоване) проти водити (різноспрямоване) — спрямовування/керування: Мати веде дитину до лікаря. Він водить екскурсії по місту. Вести: веду, ведеш, веде, ведемо, ведете, ведуть. Водити: воджу, водиш, водить, водимо, водите, водять."
+      - "Везти (односпрямоване) проти возити (різноспрямоване) — транспортування транспортом: Таксі везе нас до аеропорту. Він возить товари по всій країні. Везти: везу, везеш, везе, веземо, везете, везуть. Возити: вожу, возиш, возить, возимо, возите, возять."
+  - section: "Прийменники з дієсловами руху"
     words: 600
     points:
-      - 'Direction TO: іти/їхати до + Р.в. (Iду до школи), в/у + Зн.в. (Їду в місто),
-        на + Зн.в. (Біжу на стадіон). Choice: до for specific places/people, в for
-        ''into,'' на for open/named places and events.'
-      - 'Direction FROM: іти/їхати з/із + Р.в. (Iду з роботи), від + Р.в. (Біжу від
-        собаки). Direction THROUGH: іти через + Зн.в. (Iду через парк), їхати повз
-        + Зн.в. (Їдемо повз станцію).'
-      - 'Connection to M27 spatial prepositions: prepositions of location describe
-        WHERE; prepositions of direction describe WHERE TO/FROM. під столом (location,
-        Ор.в.) → під стіл (direction, Зн.в.). за будинком (location, Ор.в.) → за будинок
-        (direction, Зн.в.).'
-      - 8-10 practice sentences combining motion verbs with prepositions in 
-        realistic scenarios (commuting, traveling, daily errands).
-  - section: 'Практика: односпрямований чи різноспрямований?'
+      - "Напрямок ДО: іти/їхати до + Р.в. (Іду до школи), в/у + Зн.в. (Їду в місто), на + Зн.в. (Біжу на стадіон). Вибір: до для конкретних місць/людей, в для входження всередину, на для відкритих/названих просторів і подій."
+      - "Напрямок ВІД: іти/їхати з/із + Р.в. (Іду з роботи), від + Р.в. (Біжу від собаки). Напрямок ЧЕРЕЗ: іти через + Зн.в. (Іду через парк), їхати повз + Зн.в. (Їдемо повз станцію)."
+      - "Зв'язок із просторовими прийменниками M27: прийменники місця описують ДЕ; прийменники напрямку описують КУДИ/ЗВІДКИ. під столом (місце, Ор.в.) → під стіл (напрямок, Зн.в.). за будинком (місце, Ор.в.) → за будинок (напрямок, Зн.в.)."
+      - "8-10 практичних речень, що поєднують дієслова руху з прийменниками в реалістичних сценаріях (поїздки, подорожі, щоденні справи)."
+  - section: "Практика: односпрямований чи різноспрямований?"
     words: 350
     points:
-      - 'Decision tree for choosing the correct verb: Is the motion happening right
-        now, in one direction? → Односпрямований. Is the motion habitual, round-trip,
-        or in many directions? → Різноспрямований. Worked examples with 6-8 scenarios.'
-      - 'Common mistakes to avoid: *Я ходжу до школи зараз (wrong — if you are on
-        your way RIGHT NOW, use іду). Я ходжу до школи щодня (correct — habitual).
-        *Вчора ми їхали до Львова i залишилися там (wrong — if you stayed, you went
-        one way, use поїхали; їздили implies return).'
-  - section: 'Підсумок: система дієслів руху'
+      - "Алгоритм вибору правильного дієслова: Рух відбувається прямо зараз, в одному напрямку? → Односпрямований. Рух звичний, в обидва боки або в різних напрямках? → Різноспрямований. Практичні приклади з 6-8 сценаріями."
+      - "Поширені помилки, яких слід уникати: *Я ходжу до школи зараз (неправильно — якщо ви йдете ПРЯМО ЗАРАЗ, використовуйте іду). Я ходжу до школи щодня (правильно — звична дія). *Вчора ми їхали до Львова і залишилися там (неправильно — якщо ви залишилися, ви поїхали в один кінець, використовуйте поїхали; їздили означає повернення)."
+  - section: "Підсумок: система дієслів руху"
     words: 250
     points:
-      - 'Complete table of 8 base pairs: односпрямовані: іти, їхати, бігти, нести,
-        вести, везти, летіти, пливти. різноспрямовані: ходити, їздити, бігати, носити,
-        водити, возити, літати, плавати. With летіти/літати and пливти/плавати previewing
-        M34.'
-      - 'Preview of M29: Прийти, доїхати — what happens when you add prefixes to these
-        base verbs. The prefix system transforms motion verbs into a precise tool
-        for describing exactly how, where, and when movement happens.'
+      - "Повна таблиця 8 базових пар: односпрямовані: іти, їхати, бігти, нести, вести, везти, летіти, пливти. різноспрямовані: ходити, їздити, бігати, носити, водити, возити, літати, плавати. З дієсловами летіти/літати та пливти/плавати як анонс для M34."
+      - "Анонс M29: Прийти, доїхати — що відбувається, коли ви додаєте префікси до цих базових дієслів. Система префіксів перетворює дієслова руху на точний інструмент для опису того, як, куди і коли саме відбувається рух."
 vocabulary_hints:
   required:
-    - іти (to go on foot — unidirectional)
-    - ходити (to go on foot — multidirectional/habitual)
-    - їхати (to go by vehicle — unidirectional)
-    - їздити (to go by vehicle — multidirectional/habitual)
-    - бігти (to run — unidirectional)
-    - бігати (to run — multidirectional/habitual)
-    - нести (to carry — unidirectional)
-    - носити (to carry — multidirectional/habitual)
-    - вести (to lead — unidirectional)
-    - водити (to lead — multidirectional/habitual)
-    - везти (to transport — unidirectional)
-    - возити (to transport — multidirectional/habitual)
-    - односпрямований (unidirectional — motion in one direction)
-    - різноспрямований (multidirectional — motion in various directions)
+    - "іти (to go on foot — unidirectional)"
+    - "ходити (to go on foot — multidirectional/habitual)"
+    - "їхати (to go by vehicle — unidirectional)"
+    - "їздити (to go by vehicle — multidirectional/habitual)"
+    - "бігти (to run — unidirectional)"
+    - "бігати (to run — multidirectional/habitual)"
+    - "нести (to carry — unidirectional)"
+    - "носити (to carry — multidirectional/habitual)"
+    - "вести (to lead — unidirectional)"
+    - "водити (to lead — multidirectional/habitual)"
+    - "везти (to transport — unidirectional)"
+    - "возити (to transport — multidirectional/habitual)"
+    - "односпрямований (unidirectional — motion in one direction)"
+    - "різноспрямований (multidirectional — motion in various directions)"
   recommended:
-    - летіти (to fly — unidirectional, preview for M34)
-    - літати (to fly — multidirectional, preview for M34)
-    - пливти (to swim/sail — unidirectional, preview for M34)
-    - плавати (to swim/sail — multidirectional, preview for M34)
-    - щодня (every day — adverb for habitual actions)
-    - зараз (right now — adverb for current action)
-    - валіза (suitcase)
-    - пішки (on foot)
+    - "летіти (to fly — unidirectional, preview for M34)"
+    - "літати (to fly — multidirectional, preview for M34)"
+    - "пливти (to swim/sail — unidirectional, preview for M34)"
+    - "плавати (to swim/sail — multidirectional, preview for M34)"
+    - "щодня (every day — adverb for habitual actions)"
+    - "зараз (right now — adverb for current action)"
+    - "валіза (suitcase)"
+    - "пішки (on foot)"
 activity_hints:
   - type: quiz
-    focus: Choose односпрямований or різноспрямований verb based on context 
-      clues (зараз, щодня, туди-сюди)
+    focus: 'Виберіть односпрямоване чи різноспрямоване дієслово на основі підказок контексту (зараз, щодня, туди-сюди)'
     items: 8
   - type: fill-in
-    focus: Conjugate motion verbs in present tense to complete sentences
+    focus: 'Відміняйте дієслова руху в теперішньому часі, щоб завершити речення'
     items: 8
   - type: match-up
-    focus: Match односпрямовані verbs with their різноспрямовані pairs
+    focus: "З'єднайте односпрямовані дієслова з їхніми різноспрямованими парами"
     items: 8
   - type: group-sort
-    focus: Sort motion verb forms into односпрямовані / різноспрямовані
+    focus: 'Відсортуйте форми дієслів руху на односпрямовані та різноспрямовані'
     items: 10
   - type: error-correction
-    focus: Fix incorrect motion verb choices in sentences (ходжу vs іду, їздили 
-      vs їхали)
+    focus: 'Виправте неправильний вибір дієслова руху в реченнях (ходжу проти іду, їздили проти їхали)'
     items: 6
   - type: free-write
-    focus: Describe your typical day's movements using at least 4 different 
-      motion verb pairs
+    focus: 'Опишіть рухи вашого типового дня, використовуючи щонайменше 4 різні пари дієслів руху'
     items: 6
 connects_to:
-  - b1-027 (prepositions-spatial-review — spatial prepositions that combine with
-    motion verbs)
-  - b1-029 (motion-prefixes-arrival — adding при-, до- to these base verbs)
-  - b1-034 (motion-flight-swim — летіти/пливти pairs in detail)
+  - "b1-027 (Огляд просторових прийменників — прийменники, що поєднуються з дієсловами руху)"
+  - "b1-029 (Префікси прибуття — додавання при-, до- до цих базових дієслів)"
+  - "b1-034 (Рух: летіти, пливти — пари летіти/пливти детально)"
 prerequisites:
-  - A2 completion (basic motion verbs introduced)
-  - b1-027 (prepositions-spatial-review — spatial relationships)
+  - "Завершення рівня A2 (ознайомлення з базовими дієсловами руху)"
+  - "b1-027 (Огляд просторових прийменників — просторові відношення)"
 grammar:
-  - Односпрямовані vs різноспрямовані motion verbs — 8 pairs
-  - Full conjugation of іти, їхати, бігти, нести, вести, везти
-  - Full conjugation of ходити, їздити, бігати, носити, водити, возити
-  - 'Consonant alternations in 1st person: ходжу, їжджу, ношу, воджу, вожу'
-  - 'Prepositions of direction: до + Р.в., в/на + Зн.в., з + Р.в., через + Зн.в.'
+  - "Односпрямовані та різноспрямовані дієслова руху — 8 пар"
+  - "Повне відмінювання дієслів іти, їхати, бігти, нести, вести, везти"
+  - "Повне відмінювання дієслів ходити, їздити, бігати, носити, водити, возити"
+  - "Чергування приголосних у 1-й особі: ходжу, їжджу, ношу, воджу, вожу"
+  - "Прийменники напрямку: до + Р.в., в/на + Зн.в., з + Р.в., через + Зн.в."
 register: науково-навчальний
 references:
-  - title: Заболотний Grade 5, p.55
-    notes: Prefix diagram with бігти — all prefixes radiating from base verb. 
-      Foundation for prefix modules.
-  - title: Вашуленко Grade 2, p.80
-    notes: Iде катер, іде поїзд, іде зима, іде час — early motion verb polysemy.
-  - title: Заболотний Grade 7, p.188
-    notes: 'Russicism alert: відправлятися vs відбувати/виїжджати — decolonized motion
-      vocabulary.'
-  - title: Авраменко Grade 7, p.74
-    notes: 'Дієвідміна determination for motion verbs: літаєш (I) vs полетять (II).'
+  - title: "Заболотний Grade 5, p.55"
+    notes: "Схема префіксів із дієсловом бігти — всі префікси, що відходять від базового дієслова. Основа для модулів про префікси."
+  - title: "Вашуленко Grade 2, p.80"
+    notes: "Іде катер, іде поїзд, іде зима, іде час — рання багатозначність дієслів руху."
+  - title: "Заболотний Grade 7, p.188"
+    notes: "Увага до русизмів: відправлятися проти відбувати/виїжджати — деколонізована лексика руху."
+  - title: "Авраменко Grade 7, p.74"
+    notes: "Визначення дієвідміни для дієслів руху: літаєш (І) проти полетять (ІІ)."

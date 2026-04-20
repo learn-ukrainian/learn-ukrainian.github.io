@@ -2,115 +2,63 @@ module: b1-051
 level: B1
 sequence: 51
 slug: checkpoint-comparison
-version: '3.1'
+version: '3.1.2'
 title: "Контрольна робота 4"
 subtitle: "Перевірка знань: ступені порівняння, словотвір, покупки і послуги"
 focus: review
 pedagogy: PPP
-phase: "B1.4 [Comparison & Word Formation]"
+phase: "B1.4 [Порівняння та словотвір]"
 word_target: 4000
 objectives:
-  - "Learner can demonstrate mastery of comparative and superlative formation for
-    both adjectives and adverbs, including all alternation patterns"
-  - "Learner can correctly use suppletive comparison forms (гарний-кращий-найкращий,
-    добре-краще-найкраще) in context"
-  - "Learner can form adjectives and nouns using the full range of word formation
-    methods (suffixal, prefixal, prefixal-suffixal, compound, zero-derivation)"
-  - "Learner can apply comparison structures and word formation vocabulary in transactional
-    contexts (shopping, services, reviews)"
-  - "Learner can identify and correct common errors: *більш кращий, *самий великий,
-    incorrect -н-/-нн- spelling, wrong suffix choice"
+  - "Вміти утворювати вищий і найвищий ступені порівняння прикметників і прислівників, розуміючи всі моделі чергування."
+  - "Навчитися правильно використовувати суплетивні форми порівняння (гарний-кращий-найкращий, добре-краще-найкраще) в контексті."
+  - "Вміти утворювати прикметники та іменники, використовуючи всі способи словотвору (суфіксальний, префіксальний, префіксально-суфіксальний, складання, безафіксний)."
+  - "Вміти застосовувати конструкції порівняння та лексику словотвору в комунікативних ситуаціях (покупки, послуги, відгуки)."
+  - "Навчитися знаходити та виправляти типові помилки: *більш кращий, *самий великий, неправильне написання -н-/-нн-, неправильний вибір суфікса."
 dialogue_situations:
-  - setting: 'Panel discussion at a Київській конференції (f, Kyiv conference) — comparing
-      Ukrainian cities for investment: Львів — найпривабливіший для туризму. Харків
-      розвивається швидше. Одеса — веселіша. Дніпро — наймолодше ІТ-місто.'
+  - setting: 'Панельна дискусія на Київській конференції — порівняння українських міст для інвестицій: Львів — найпривабливіший для туризму. Харків розвивається швидше. Одеса — веселіша. Дніпро — наймолодше ІТ-місто.'
     speakers:
       - Модератор
       - Експерти
-    motivation: 'Consolidation: comparative/superlative adjectives and adverbs, word
-      formation'
+    motivation: 'Закріплення: вищий і найвищий ступені порівняння прикметників і прислівників, словотвір'
 content_outline:
   - section: "Повторення: ступені порівняння"
     words: 800
     points:
-      - "Systematic review of all comparison forms: Вищий ступінь: проста (-іш-/-ш-)
-        + складена (більш/менш). Найвищий ступінь: проста (най-) + складена (найбільш/найменш).
-        Підсилені форми: що-/як- + найвищий. Full formation table with examples for
-        each pattern."
-      - "Consonant alternation review for comparison: [г]+[ш]=[жч]: дорогий-дорожчий,
-        дорого-дорожче [з]+[ш]=[жч]: вузький-вужчий, вузько-вужче [к]+[ш]=[чч/щ]:
-        легкий-легший, високий-вищий [с]+[ш]=[шч/щ]: високий-вищий, високо-вище Practice:
-        15 adjectives and adverbs to transform."
-      - "Suppletive forms review: гарний-кращий-найкращий (добре-краще-найкраще) поганий-гірший-найгірший
-        (погано-гірше-найгірше) великий-більший-найбільший (багато-більше-найбільше)
-        малий-менший-найменший (мало-менше-найменше) Drill: sentences requiring correct
-        form selection."
+      - 'Систематичний огляд усіх форм порівняння: Вищий ступінь: проста (-іш-/-ш-) + складена (більш/менш). Найвищий ступінь: проста (най-) + складена (найбільш/найменш). Підсилені форми: що-/як- + найвищий. Повна таблиця утворення з прикладами для кожної моделі.'
+      - 'Огляд чергування приголосних при порівнянні: [г]+[ш]=[жч]: дорогий-дорожчий, дорого-дорожче; [з]+[ш]=[жч]: вузький-вужчий, вузько-вужче; [к]+[ш]=[чч/щ]: легкий-легший, високий-вищий; [с]+[ш]=[шч/щ]: високий-вищий, високо-вище. Практика: 15 прикметників і прислівників для перетворення.'
+      - 'Огляд суплетивних форм: гарний-кращий-найкращий (добре-краще-найкраще), поганий-гірший-найгірший (погано-гірше-найгірше), великий-більший-найбільший (багато-більше-найбільше), малий-менший-найменший (мало-менше-найменше). Практика: речення, що вимагають вибору правильної форми.'
   - section: "Повторення: словотвір"
     words: 750
     points:
-      - "Adjective formation methods review: Суфіксальний: -н-, -ськ-/-зьк-/-цьк-,
-        -ів-, -уват-, -еньк- Префіксальний: пре-, без-, над-, анти- Складання: чорноокий,
-        темно-зелений -Н-/-НН- spelling rule: основа на -н- + суфікс -н- = -нн-."
-      - "Noun formation methods review: Agent nouns: -ач, -ець, -ник, -тель, -ар,
-        -ист (m. → f. counterparts) Place nouns: -ня, -ниця, -ище; prefix-suffix:
-        при-...-я, за-...-я Verbal nouns: -ння, -ття; безафіксний: підписати → підпис
-        Словотвірний ланцюжок: вода → водний → водник → підводник."
-      - "Adverb formation review: суфіксальний (-о, -е: швидко, гарно), префіксально-
-        суфіксальний (по-доброму, по-українськи). Adverb comparison: -іше/-ше (тихіше,
-        швидше), най- (найтихіше). Parallel adjective/adverb forms: тихіший (adj.)
-        vs тихіше (adv.)."
+      - 'Огляд способів творення прикметників: Суфіксальний: -н-, -ськ-/-зьк-/-цьк-, -ів-, -уват-, -еньк-. Префіксальний: пре-, без-, над-, анти-. Складання: чорноокий, темно-зелений. Правило написання -Н-/-НН-: основа на -н- + суфікс -н- = -нн-.'
+      - 'Огляд способів творення іменників: Назви діячів: -ач, -ець, -ник, -тель, -ар, -ист (чоловічий та жіночий рід). Назви місць: -ня, -ниця, -ище; префіксально-суфіксальний: при-...-я, за-...-я. Віддієслівні іменники: -ння, -ття; безафіксний: підписати → підпис. Словотвірний ланцюжок: вода → водний → водник → підводник.'
+      - 'Огляд творення прислівників: суфіксальний (-о, -е: швидко, гарно), префіксально-суфіксальний (по-доброму, по-українськи). Ступені порівняння прислівників: -іше/-ше (тихіше, швидше), най- (найтихіше). Паралельні форми прикметників та прислівників: тихіший vs тихіше.'
   - section: "Повторення: покупки і послуги"
     words: 500
     points:
-      - "Key transactional vocabulary and phrases from M40: На ринку: ціна, знижка,
-        готівка, здача, ваги. У магазині: розмір, примірочна, чек, гарантія, бракований.
-        На пошті: посилка, бандероль, доставка. У банку: рахунок, переказ, обмін валют,
-        курс."
-      - "Review of comparison in transactional contexts: product comparison, service
-        reviews, complaint register."
+      - 'Ключова лексика для спілкування: На ринку: ціна, знижка, готівка, здача, ваги. У магазині: розмір, примірочна, чек, гарантія, бракований. На пошті: посилка, бандероль, доставка. У банку: рахунок, переказ, обмін валют, курс.'
+      - 'Повторення порівняння в контексті послуг: порівняння товарів, відгуки про послуги, скарги.'
   - section: "Комплексні завдання"
     words: 1000
     points:
-      - "Text analysis: a Ukrainian consumer magazine article comparing products.
-        Tasks: identify all comparatives/superlatives, analyze word formation of agent
-        and place nouns, answer comprehension questions."
-      - "Error correction block: 10-12 sentences with mixed errors — comparison formation,
-        -н-/-нн- spelling, suffix choice, Russicisms. Each error must be identified,
-        explained, and corrected."
-      - "Production task: write a 10-sentence product/service comparison using at
-        least 5 comparatives, 3 superlatives, and 4 derived nouns. Self-assessment
-        rubric provided."
-      - "Dialogue reconstruction: arrange jumbled dialogue lines from a shopping scenario
-        into correct conversational order, filling in missing comparative forms and
-        transactional vocabulary."
+      - 'Аналіз тексту: стаття з українського журналу для споживачів, що порівнює товари. Завдання: знайти всі ступені порівняння, проаналізувати словотвір назв діячів і місць, відповісти на запитання для розуміння.'
+      - 'Блок виправлення помилок: 10-12 речень зі змішаними помилками — утворення ступенів порівняння, написання -н-/-нн-, вибір суфікса, росіянізми. Кожну помилку потрібно знайти, пояснити та виправити.'
+      - 'Продуктивне завдання: написати порівняння товарів/послуг із 10 речень, використовуючи щонайменше 5 вищих ступенів, 3 найвищих та 4 похідних іменники. Надається рубрика для самооцінювання.'
+      - 'Реконструкція діалогу: впорядкувати репліки з ситуації покупки у правильному порядку, заповнюючи пропущені форми порівняння та лексику.'
   - section: "Самооцінка і підготовка до Фази 6"
     words: 550
     points:
-      - "Self-check grid: can I form comparatives? superlatives? suppletive forms?
-        Can I form adjectives from nouns? Nouns from verbs? Agent nouns (m./f.)? Can
-        I shop, complain, and write reviews in Ukrainian? Rate each skill 1-5."
-      - "Gap analysis: which areas need more practice before Phase 6? Preview of Phase
-        6: advanced case usages, prepositions, numerals, pronouns. The shift: from
-        FORMING words to USING cases precisely."
-      - "Diagnostic: 10 quick-check questions covering all Phase 5 topics, with answer
-        key and explanations."
-      - "Remediation guide: for each skill rated below 3, specific exercises to revisit
-        from M34-M40. Cross-references to the relevant sections in each module so
-        learners can self-direct their review."
+      - 'Таблиця самоперевірки: Чи можу я утворювати вищий ступінь? найвищий ступінь? суплетивні форми? Чи можу я утворювати прикметники від іменників? Іменники від дієслів? Назви діячів? Чи можу я робити покупки, скаржитися та писати відгуки українською? Оцініть кожну навичку від 1 до 5.'
+      - 'Аналіз прогалин: які теми потребують більше практики перед Фазою 6? Огляд Фази 6: розширене вживання відмінків, прийменники, числівники, займенники. Перехід: від ТВОРЕННЯ слів до точного ВИКОРИСТАННЯ відмінків.'
+      - 'Діагностика: 10 запитань для швидкої перевірки, що охоплюють усі теми Фази 5, з ключем до відповідей та поясненнями.'
+      - 'Керівництво для повторення: для кожної навички, оціненої нижче 3, вказані конкретні вправи з відповідних розділів модулів, щоб учні могли самостійно спрямувати своє повторення.'
   - section: "Підсумок"
     words: 400
     points:
-      - "Phase 5 achievement summary: comparison forms (проста, складена, підсилена),
-        suppletive pairs, word formation methods (suffixal, prefixal, compound,
-        zero-derivation), adverb formation and comparison, and practical application
-        in shopping/service contexts."
-      - "Key patterns to carry forward: the relationship between adjective and adverb
-        comparison (parallel suffixes, same alternations), word formation chains as
-        vocabulary expansion strategy, and register awareness (проста for speech,
-        складена for formal texts)."
-      - "Transition to Phase 6: mastering the nuances of Ukrainian cases — Родовий
-        відмінок у деталях, прийменники з відмінками, числівники. The focus shifts
-        from forming words to using them precisely in syntactic structures."
+      - 'Підсумок досягнень Фази 5: форми порівняння (проста, складена, підсилена), суплетивні пари, способи словотвору, творення та порівняння прислівників, практичне застосування в ситуаціях покупок і послуг.'
+      - 'Ключові моделі для запам''ятовування: зв''язок між порівнянням прикметників і прислівників (паралельні суфікси, однакові чергування), словотвірні ланцюжки як стратегія розширення словникового запасу, усвідомлення стилю (проста форма для розмови, складена для офіційних текстів).'
+      - 'Перехід до Фази 6: опанування нюансів українських відмінків — родовий відмінок у деталях, прийменники з відмінками, числівники. Фокус зміщується з творення слів на їхнє точне використання в синтаксичних структурах.'
 vocabulary_hints:
   required:
     - "повторення (review — systematic revision of material)"
@@ -122,29 +70,29 @@ vocabulary_hints:
     - "аналіз помилок (error analysis)"
 activity_hints:
   - type: reading
-    focus: "Прочитайте текст про повторення: ступені порівняння і дайте відповіді на запитання."
+    focus: 'Прочитайте текст про повторення: ступені порівняння і дайте відповіді на запитання.'
   - type: essay-response
-    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Повторення: словотвір»."
+    focus: 'Напишіть 5 речень, використовуючи нову лексику з розділу «Повторення: словотвір».'
   - type: fill-in
-    focus: "Вставте правильну граматичну форму у реченнях на тему повторення: ступені порівняння."
+    focus: 'Вставте правильну граматичну форму у реченнях на тему повторення: ступені порівняння.'
   - type: error-correction
-    focus: "Знайдіть і виправте помилки у реченнях на тему повторення: словотвір."
+    focus: 'Знайдіть і виправте помилки у реченнях на тему повторення: словотвір.'
   - type: quiz
-    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Повторення: ступені порівняння»."
+    focus: 'Оберіть правильний варіант: лексика та граматика з розділу «Повторення: ступені порівняння».'
   - type: match-up
-    focus: "З'єднайте терміни з розділу «Повторення: словотвір» з їхніми визначеннями."
+    focus: 'З''єднайте терміни з розділу «Повторення: словотвір» з їхніми визначеннями.'
 connects_to:
-  - "b1-038 through b1-044 (all Phase 5 modules)"
-  - "b1-046 (Родовий відмінок деталі — first module of Phase 6)"
+  - "b1-038 до b1-044 (усі модулі Фази 5)"
+  - "b1-046 (Родовий відмінок деталі — перший модуль Фази 6)"
 prerequisites:
-  - "b1-038 through b1-044 (Phase 5 completion)"
+  - "b1-038 до b1-044 (завершення Фази 5)"
 grammar:
-  - "Review: вищий і найвищий ступені порівняння (прикметники і прислівники)"
-  - "Review: суплетивні форми (гарний-кращий, добре-краще)"
-  - "Review: словотвір прикметників і іменників"
-  - "Review: порівняльні конструкції (за, від, ніж)"
-  - "Integration: comparison + word formation in transactional contexts"
+  - "Повторення: вищий і найвищий ступені порівняння (прикметники і прислівники)"
+  - "Повторення: суплетивні форми (гарний-кращий, добре-краще)"
+  - "Повторення: словотвір прикметників і іменників"
+  - "Повторення: порівняльні конструкції (за, від, ніж)"
+  - "Інтеграція: порівняння та словотвір у комунікативних ситуаціях"
 register: науково-навчальний
 references:
   - title: "Review module"
-    notes: "Consolidates M38-44 (Phase 5: Degrees of Comparison & Word Formation)."
+    notes: "Закріплює матеріал Фази 5."
