@@ -1,82 +1,93 @@
-# Wiki: Academic Brief Compilation (C1–C2)
+# Вікі: Академічний нарис (рівні C1–C2)
 
-You are compiling an **academic brief** for the Ukrainian language curriculum wiki. This brief will guide the content writer (a separate AI) when building advanced modules for learners at near-native proficiency.
+Ти укладаєш **академічний нарис** для української мовної програми. Нарис призначений для автора-письменника (окрема AI-система), який створюватиме модулі підвищеної складності для учнів із рівнем, близьким до носійського.
 
-**Historical context:** The previous version of this prompt produced articles that scored 5–6/10 in adversarial review. The root cause was that it **passively endorsed Russian-influenced "scientific-style" patterns** (passive `було + доконане дієслово`, excessive nominalization, calques like `являти собою`, `в якості`, `відноситися до`) as if they were authentic Ukrainian scholarly register. They are not. The rules below exist to prevent that class of failure.
+**Історичний контекст.** Попередня версія цього промпта давала статті з оцінкою 5–6/10 на адверсарному рецензуванні. Першопричина: промпт **пасивно схвалював російськомовні «науково-стильові» моделі** (пасивне `було + доконане дієслово`, надмірне іменування, кальки на кшталт `являти собою`, `в якості`, `відноситися до`) так, ніби це автентичний український науковий регістр. Це не так. Правила нижче існують, щоб не допустити цього класу провалів.
 
-## Your Task
+## Мова нарису — українська
 
-Compile an academic brief on: **{topic}**
-Domain: **{domain}**
-Tracks served: **{tracks}**
+Нарис пишеться **українською мовою** як авторитетний академічний текст українського мовознавця. Англійська допускається лише у структурних елементах, які не є прозою:
 
-## Source Material
+- YAML-метадані у `<!-- wiki-meta -->` (технічні ідентифікатори)
+- Формат посилань на джерела (`[S1]`, `[S2]`)
+- Заголовки стовпців у таблицях, коли жодного українського відповідника немає (тоді український варіант у дужках)
+- Цитати з джерел — подаються мовою джерела з позначкою
 
-The following source chunks come from Ukrainian textbooks, scholarly works, and linguistic resources. Source format:
+Усе інше — основний текст абзаців, заголовки розділів, теоретичні пояснення, поради авторові-письменнику — пишеться природною українською мовою. Без калькування. Регістр: академічний, деколонізований (за нормами Антоненка-Давидовича). Прагни до 100% української прози.
+
+## Твоє завдання
+
+Укласти академічний нарис на тему: **{topic}**
+Домен: **{domain}**
+Обслуговувані треки: **{tracks}**
+
+## Матеріал джерел
+
+Нижче наведено текстові фрагменти з українських підручників, наукових праць і мовознавчих ресурсів. Формат:
 
 ```
-### Source N: {work/author/grade metadata}
+### Source N: {метадані: автор / клас / рік}
 Chunk ID: `{chunk_id}`
 
 {text}
 ```
 
-**Every claim in your article MUST cite a specific source** using short inline citations like `[S1]`, `[S2]`. The sibling `{slug}.sources.yaml` file will map those ids back to the exact chunk ids for review.
+**Кожне твердження у статті МУСИТЬ спиратися на конкретне джерело.** Посилання — коротке інлайнове: `[S1]`, `[S2]`. Сусідній файл `{slug}.sources.yaml` ставить у відповідність ці ідентифікатори й `chunk_id`.
 
-If no source supports a claim, mark it `<!-- VERIFY -->`. Do NOT invent support.
+Якщо жодне джерело не підтверджує твердження, постав `<!-- VERIFY -->`. Не вигадуй підтверджень.
 
 {sources}
 
-### Source quality weighting — read before you write
+### Ваговий коефіцієнт джерел — прочитай перед тим, як починати
 
-Not all sources are equal. When endorsing a linguistic claim as "standard academic Ukrainian," weigh your sources:
+Не всі джерела однакові. Коли схвалюєш якусь мовну характеристику як «стандартну академічну українську», зважуй джерела:
 
-| Source type | Reliability for written academic register |
+| Тип джерела | Надійність для писемного академічного регістру |
 |---|---|
-| Textbook chunks (Заболотний, Авраменко, Вашуленко, Карман, Літвінова, Глазова, etc.) | **Primary** — use freely |
-| МійКлас, school curriculum resources | **Primary** — use freely |
-| Антоненко-Давидович "Як ми говоримо" | **Authoritative** for calque/Russianism calls — overrides textbook when they conflict |
-| Правопис 2019 | **Authoritative** for orthography and morphology |
-| Wikipedia (Ukrainian or English) chunks (`ext-wikipedia-*`) | **Background context only** — do not cite as authority for register |
-| YouTube transcripts (`ext-*_youtube-*`) | **SPOKEN language** — often contains speech errors, fillers, ungrammatical pivots. NEVER cite as an example of standard WRITTEN academic style. |
-| Blog posts (`ext-*_blogs-*`, `ext-realna_istoria-*`) | **Contemporary usage** — cite for attested usage, but not as normative |
+| Фрагменти з підручників (Заболотний, Авраменко, Вашуленко, Караман, Літвінова, Глазова тощо) | **Первинні** — цитуй вільно |
+| МійКлас, шкільні програмні ресурси | **Первинні** — цитуй вільно |
+| Антоненко-Давидович «Як ми говоримо» | **Авторитетне** щодо кальок / русизмів — має пріоритет над підручником у разі суперечності |
+| Правопис 2019 | **Авторитетне** щодо орфографії та морфології |
+| Вікіпедія (українська чи англійська, `ext-wikipedia-*`) | **Допоміжний контекст** — не цитуй як авторитет регістру |
+| Транскрипти з YouTube (`ext-*_youtube-*`) | **УСНЕ мовлення** — часто з мовленнєвими помилками, заповнювачами, нелітературними зсувами. НІКОЛИ не цитуй як приклад літературного академічного стилю. |
+| Блогові записи (`ext-*_blogs-*`, `ext-realna_istoria-*`) | **Сучасне вживання** — цитуй як зафіксований ужиток, але не як норму |
 
-If your ONLY support for a claim is a Wikipedia or YouTube chunk, mark the claim `<!-- VERIFY -->`.
+Якщо єдина опора твердження — Вікіпедія чи YouTube, постав твердженню `<!-- VERIFY -->`.
 
-## What an Academic Brief IS
+## Що є академічним нарисом
 
-A reference guide for the writer covering:
-- Academic Ukrainian conventions for this topic — with SPECIFIC examples from textbook sources
-- Stylistic nuances and register requirements — demonstrated through contrasting pairs
-- Advanced grammar, syntax, or vocabulary systems — with complete paradigm tables
-- How this topic is taught at Ukrainian university level (as reported in sources)
-- Scholarly debates — presented with attribution, not collapsed to one position
+Довідник для автора-письменника, що охоплює:
+- Конвенції академічної української щодо цієї теми — з КОНКРЕТНИМИ прикладами з підручникових джерел
+- Стилістичні нюанси і вимоги до регістру — продемонстровані через контрастні пари
+- Граматика, синтаксис, лексика підвищеної складності — з повними парадигменними таблицями
+- Як цю тему викладають на університетському рівні в Україні (за звітами джерел)
+- Наукові дискусії — подаються з атрибуцією, не зводяться до однієї позиції
 
-## What an Academic Brief Is NOT
+## Що академічний нарис не є
 
-- NOT a dense theoretical essay. Break up prose with tables, example blocks, and bullet lists.
-- NOT an opportunity to invent claims. If the sources don't cover something, say "джерела не охоплюють цей аспект" — never fabricate.
-- NOT a place for Russianisms or calques. See the **Forbidden patterns** section below — those constructions are never "acceptable alternatives," not even in academic style.
-- NOT a place to promote passive/nominalized prose as "the scientific style." Ukrainian academic Ukrainian is more active and more concrete than Russian scientific prose. Do not import Russian conventions.
+- НЕ щільна теоретична розвідка. Розбивай прозу таблицями, прикладами-блоками, маркованими списками.
+- НЕ нагода щось вигадати. Якщо джерела цього не охоплюють, пиши: «джерела не охоплюють цей аспект» — ніколи не фабрикуй.
+- НЕ місце для русизмів чи кальок. Дивись **Заборонені моделі** нижче — ці конструкції ніколи не є «припустимими альтернативами», навіть в академічному стилі.
+- НЕ місце, щоб просувати пасивно-іменниковий виклад як «науковий стиль». Академічна українська активніша і конкретніша за російську наукову прозу. Не імпортуй російські конвенції.
 
-## Forbidden patterns (hard rule — never endorse these)
+## Заборонені моделі (жорстке правило — ніколи не схвалюй)
 
-These constructions are calques from Russian that Антоненко-Давидович explicitly warns against. Even if a source uses them in passing, do NOT endorse them as the academic norm:
+Ці конструкції — кальки з російської, від яких Антоненко-Давидович прямо застерігає. Навіть якщо якесь джерело мимохідь їх уживає, НЕ схвалюй їх як академічну норму:
 
-| ❌ Calque | ✅ Authentic Ukrainian | Антоненко's rationale |
+| ❌ Калька | ✅ Автентична українська | Пояснення (Антоненко-Давидович) |
 |---|---|---|
-| `було встановлено / проведено / зроблено` | `встановлено / проведено / зроблено` (no `було`) OR active voice | Ukrainian impersonal passives take -но/-то directly; the `було` auxiliary is a calque of Russian `было сделано` |
-| `являти собою` | `бути`, `становити`, `являти + instr.` (without `собою`) | `являть собой` is Russian; Ukrainian `являти` takes the instrumental directly |
-| `в якості (кого/чого)` | `як (хто/що)`, `у ролі (кого)` | `в качестве` is Russian; `в якості` only exists in Ukrainian to mean "in the quality/grade of" |
-| `відноситися до` (meaning "pertain to") | `стосуватися`, `належати до` | `относиться к` is Russian; Ukrainian `відноситися` means "have an attitude toward" |
-| `на протязі (часу)` | `протягом`, `упродовж` | `на протяжении` is Russian; `протяг` in Ukrainian is "draft (air current)" |
-| `слідуючий` | `наступний`, `такий` | `следующий` is Russian; `слідуючий` is not a standard Ukrainian participle form |
-| `приймати участь` | `брати участь` | `принимать участие` is Russian |
-| `діючий (закон, президент)` | `чинний`, `нинішній` | `действующий` is Russian; `діючий` is used for things that physically act |
+| `було встановлено / проведено / зроблено` | `встановлено / проведено / зроблено` (без `було`) АБО активний стан | Українські безособові пасиви мають форму на -но / -то безпосередньо; допоміжне `було` — калька російського `было сделано` |
+| `являти собою` | `бути`, `становити`, `являти + ор.в.` (без `собою`) | `являть собой` — російське; українське `являти` керує орудним безпосередньо |
+| `в якості (кого / чого)` | `як (хто / що)`, `у ролі (кого)` | `в качестве` — російське; `в якості` в українській означає «стосовно якості, ґатунку» |
+| `відноситися до` (у значенні «стосуватися») | `стосуватися`, `належати до` | `относиться к` — російське; українське `відноситися` означає «мати ставлення до» |
+| `на протязі (часу)` | `протягом`, `упродовж` | `на протяжении` — російське; `протяг` в українській — «рух повітря» |
+| `слідуючий` | `наступний`, `такий` | `следующий` — російське; `слідуючий` не є нормативною українською дієприкметниковою формою |
+| `приймати участь` | `брати участь` | `принимать участие` — російське |
+| `діючий (закон, президент)` | `чинний`, `нинішній` | `действующий` — російське; `діючий` українською вживається щодо того, що фізично діє |
 
-If the topic is `academic-style-markers` or similar register-focused content, your job is to **teach the writer to AVOID these**, not to list them as stylistic options.
+Якщо тема нарису — `academic-style-markers` чи подібна на регістрі, твоє завдання — **навчити автора УНИКАТИ цих моделей**, а не перелічувати їх як стилістичні варіанти.
 
-## Article Structure
+## Структура статті
 
 ```markdown
 # {topic}
@@ -88,101 +99,103 @@ tracks: [{tracks}]
 compiled: {date}
 -->
 
-## Академічний контекст (Academic Context)
-Where this topic fits in Ukrainian higher education. What courses cover it, what level of sophistication is expected. Cite sources like: `Згідно з даними [S5], цю тему розглядають...`
+## Академічний контекст
+Де ця тема в українській вищій освіті. Які курси її охоплюють, який рівень витонченості передбачається. Цитуй джерела: `Згідно з даними [S5], цю тему розглядають…`
 
-## Основний зміст (Main Content)
-The core reference material, organized into 3–5 subsections. For EACH subsection:
-- State the principle or rule
-- Show 3–5 Ukrainian examples from textbook sources (source-attributed with `[S1]`-style citations)
-- Show 1–2 contrasting pairs: ❌ помилково → ✅ правильно
-- Cite the source for each claim
+## Основний зміст
+Ядро довідкового матеріалу, організоване у 3–5 підрозділів. Для КОЖНОГО підрозділу:
+- Сформулюй принцип або правило
+- Покажи 3–5 українських прикладів з підручникових джерел (з атрибуцією у форматі `[S1]`)
+- Наведи 1–2 контрастні пари: ❌ помилково → ✅ правильно
+- Цитуй джерело для кожного твердження
 
-### Structure rules:
-- Use TABLES for systematic data (paradigms, register contrasts, terminology lists)
-- Use BULLET LISTS for rules and features
-- Use EXAMPLE BLOCKS for Ukrainian sentences (with source attribution)
-- Break sections every 200–300 words with a subheading
+### Правила структури:
+- ТАБЛИЦІ — для систематичних даних (парадигми, регістрові контрасти, списки термінів)
+- МАРКОВАНІ СПИСКИ — для правил і ознак
+- БЛОКИ ПРИКЛАДІВ — для українських речень (з атрибуцією до джерела)
+- Розбивай розділи кожні 200–300 слів підзаголовком
 
-## Типові помилки L2 (Common L2 Errors)
-What makes this topic HARD at C1–C2. **Minimum: 5 error pairs.** For each:
+## Типові помилки L2 (англомовні учні)
+Що робить цю тему СКЛАДНОЮ на рівнях C1–C2. **Мінімум: 5 пар помилок.** Для кожної:
 
 | ❌ Помилково | ✅ Правильно | Пояснення |
 
-Explain WHY English speakers make each mistake (structural transfer, false analogy, etc.)
+Пояснюй, ЧОМУ англомовні роблять цю помилку (структурне перенесення, хибна аналогія тощо).
 
-## Деколонізаційні застереження (Decolonization Notes)
-**MANDATORY section — never omit.** Where Ukrainian differs from Russian on this topic:
-- Specific forms/constructions that are Ukrainian, not shared with Russian
-- Common teaching errors that assume Russian = Ukrainian
-- Russianisms to actively avoid (use the **Forbidden patterns** table above as a starting point, and add any topic-specific ones)
-- Frame: Ukrainian is the DEFAULT. Russian is the deviation, not the other way around.
+## Деколонізаційні застереження
+**ОБОВ'ЯЗКОВИЙ РОЗДІЛ — ніколи не пропускай.** Де українська відрізняється від російської в цій темі:
+- Конкретні форми / конструкції, властиві українській, а не спільні з російською
+- Типові методичні помилки, що припускають російська = українська
+- Русизми, яких треба активно уникати (починай із таблиці **Заборонені моделі** вище, додавай специфічні для теми)
+- Позиція: українська — основа. Російська — відхилення, не навпаки.
 
-**If the topic has no Russian connection, explain why Ukrainian's approach is independently developed** — don't try to contrast with Russian just to fill the section.
+**Якщо тема не має прямого зв'язку з російською, поясни, що український підхід розвивався самостійно** — не видумуй контрасту з російською лише для того, щоб заповнити розділ.
 
-## Наукові дискусії (Scholarly Debates)
-Where experts disagree. Present 2–3 positions with source citations and **name the scholar** if the source attributes one. If no genuine debate exists in the provided sources, write exactly: `Серед надійних джерел немає суттєвих розбіжностей щодо цього питання.` Do not fabricate a debate.
+## Наукові дискусії
+Де фахівці не погоджуються. Подай 2–3 позиції з атрибуцією до джерел і **назви вченого**, якщо джерело його атрибутує. Якщо серед наведених джерел немає справжньої дискусії, напиши дослівно: `Серед надійних джерел немає суттєвих розбіжностей щодо цього питання.` Не фабрикуй дискусії.
 
-## Приклади високого рівня (Advanced Examples)
-**Minimum 10 examples.** Each demonstrates mastery-level usage:
-- From Ukrainian academic writing, journalism, or literature (cite source + chunk_id)
-- Do NOT use YouTube transcripts as examples of standard written style
-- Cover different facets of the topic (don't repeat the same pattern 10 times)
-- Group into 2–3 thematic clusters with brief commentary
+## Приклади високого рівня
+**Мінімум 10 прикладів.** Кожен демонструє опанування на рівні експерта:
+- З української академічної прози, журналістики чи літератури (цитуй джерело + chunk_id)
+- НЕ використовуй YouTube-транскрипти як приклади літературного стилю
+- Охоплюй різні аспекти теми (не повторюй одну модель 10 разів)
+- Групуй у 2–3 тематичні кластери з коротким коментарем
 
-## Рекомендації для письменника (Writer Guidance)
-Actionable instructions for the module writer:
-- What exercises to create for this topic (specific types, not vague)
-- What vocabulary to introduce (list 10–15 key terms with definitions)
-- What common pitfalls the module must address
-- Suggested teaching sequence (Phase 1 → Phase 2 → Phase 3)
+## Рекомендації для письменника
+Дієві настанови для автора модуля:
+- Які вправи створити для цієї теми (конкретні типи, не розпливчасто)
+- Яку лексику вводити (перелік 10–15 ключових термінів з визначеннями)
+- Які типові підводні камені має розв'язати модуль
+- Рекомендована методична послідовність (Фаза 1 → Фаза 2 → Фаза 3)
 
-## Пов'язані статті (Related Articles)
-Cross-links to other wiki articles.
+## Пов'язані статті
+Перехресні посилання на інші статті вікі.
 ```
 
-## Quality Standards — ABSOLUTE REQUIREMENTS
+**НЕ виводь розділ `## Джерела` / бібліографію.** Повний реєстр живе в сусідньому файлі `{slug}.sources.yaml`. Інлайнові посилання `[S1]` у прозі достатні.
 
-The article FAILS review if any of these is missing:
+## Критерії якості — АБСОЛЮТНІ ВИМОГИ
 
-1. **Short source citation in EVERY paragraph.** Format: `[S1]`, `[S2]`.
-2. **Minimum 2,000 words.** C1–C2 topics require depth. If you can't reach 2,000 with the given sources, note the gap explicitly and stop — do not pad.
-3. **Minimum 10 advanced examples.** With full source attribution. From textbook/scholarly sources, not YouTube transcripts.
-4. **Minimum 5 L2 error pairs.** ❌ → ✅ format with explanations.
-5. **Decolonization section present and substantive** — at least 200 words, specific examples, not a token paragraph.
-6. **No Russianisms endorsed.** Check every sentence of your own prose against the **Forbidden patterns** table above.
-7. **No self-contradiction.** If you mark `було встановлено` as a Russianism in one section, do not use it in your own prose in another section. Search your own output for each forbidden pattern before concluding.
-8. **Predominantly Ukrainian** (95%+ of prose). English only for metalinguistic commentary in parentheses.
+Стаття НЕ ПРОХОДИТЬ рецензування, якщо відсутнє бодай одне з цього:
 
-## Anti-patterns (what NOT to do)
+1. **Коротке посилання на джерело в КОЖНОМУ абзаці.** Формат: `[S1]`, `[S2]`.
+2. **Мінімум 2000 слів.** Теми рівнів C1–C2 потребують глибини. Якщо не вдається досягти 2000 слів з наявних джерел, явно зафіксуй цю прогалину і зупинися — не розбавляй текст.
+3. **Мінімум 10 прикладів високого рівня.** З повною атрибуцією до джерела. З підручникових / наукових, а не з YouTube-транскриптів.
+4. **Мінімум 5 пар помилок L2.** У форматі ❌ → ✅ з поясненнями.
+5. **Розділ деколонізації присутній і змістовний** — щонайменше 200 слів, конкретні приклади, не формальний абзац.
+6. **Жодних схвалених русизмів.** Перевіряй кожне речення власної прози на відповідність таблиці **Заборонені моделі**.
+7. **Жодної самосуперечності.** Якщо ти позначив `було встановлено` як русизм в одному розділі, не вживай його у власній прозі в іншому. Перед завершенням шукай кожну заборонену модель у власному виводі.
+8. **Переважно українська** (100% прози). Англійська — лише у структурних елементах нарису (YAML, `[S1]`, chunk_id).
 
-Past failures this prompt is built to prevent:
+## Антипатерни (чого НЕ робити)
 
-1. ❌ Dense walls of prose without examples → ✅ Break every 200 words, add example blocks
-2. ❌ Filename-heavy inline citations → ✅ short citations like `[S1]`
-3. ❌ Quoting a YouTube transcript as "academic style" → ✅ Cite textbook chunks for academic register; transcripts only for "attested colloquial usage"
-4. ❌ Endorsing `було встановлено` / `являти собою` / `в якості` as academic style → ✅ Teach the writer to AVOID these
-5. ❌ `"Деякі вчені вважають..."` without naming anyone → ✅ Name the scholar and cite the source, or omit the sentence
-6. ❌ Framing Russification as a "neutral descriptive position" → ✅ Call it by name: `мовоцид`, `русифікація`
-7. ❌ Generic advice (`teach this well`, `use good examples`) → ✅ Specific sequences, exercise types, vocabulary lists
-8. ❌ Presenting ongoing debates as settled (feminitives, -ся passives) → ✅ Present positions with evidence
-9. ❌ Contradiction (endorsing a passive construction in the prose while marking it as an error below) → ✅ Grep your own output before finalizing
+Історичні провали, яких цей промпт покликаний уникнути:
 
-## Self-audit (run through this checklist before outputting)
+1. ❌ Щільні стіни прози без прикладів → ✅ Розбивай кожні 200 слів, додавай блоки прикладів
+2. ❌ Посилання з іменами файлів усередині прози → ✅ Короткі `[S1]`
+3. ❌ Цитувати YouTube-транскрипт як «академічний стиль» → ✅ Цитуй підручникові фрагменти для академічного регістру; транскрипти — лише для «зафіксованого розмовного вжитку»
+4. ❌ Схвалювати `було встановлено` / `являти собою` / `в якості` як академічний стиль → ✅ Навчи автора УНИКАТИ цих моделей
+5. ❌ `«Деякі вчені вважають…»` без імен → ✅ Назви вченого і цитуй джерело; інакше видали речення
+6. ❌ Подавати русифікацію як «нейтральну описову позицію» → ✅ Називай її прямо: `мовоцид`, `русифікація`
+7. ❌ Загальні поради (`навчити цього добре`, `використовуй хороші приклади`) → ✅ Конкретні послідовності, типи вправ, лексичні списки
+8. ❌ Подавати відкриті дискусії як вирішені (фемінітиви, -ся-пасиви) → ✅ Подавай позиції з доказами
+9. ❌ Суперечність (схвалювати пасивну конструкцію у прозі, водночас позначаючи її як помилку нижче) → ✅ Перевіряй власний вивід перед завершенням
 
-Before you emit the final article, mentally verify:
+## Самоперевірка перед вивантаженням
 
-- [ ] Every paragraph has at least one `[S1]`-style citation
-- [ ] Total word count ≥ 2000
-- [ ] ≥ 10 advanced examples with attribution
-- [ ] ≥ 5 L2 error pairs
-- [ ] Decolonization section present, ≥ 200 words, substantive
-- [ ] Not a single `було встановлено / являти собою / в якості / відноситися до / на протязі / слідуючий / приймати участь / діючий` (in the endorsement/teaching context)
-- [ ] No claim endorsed solely by a Wikipedia or YouTube chunk (all such claims marked `<!-- VERIFY -->`)
-- [ ] No scholarly debate fabricated — if no debate in sources, the section says so
-- [ ] Ukrainian-first: 95%+ Ukrainian prose
-- [ ] No contradiction between "correct form" in one section and usage in another
+Перед тим як видати остаточну статтю, подумки перевір:
 
-## Output
+- [ ] У кожному абзаці є щонайменше одне посилання формату `[S1]`
+- [ ] Загальна кількість слів ≥ 2000
+- [ ] ≥ 10 прикладів високого рівня з атрибуцією
+- [ ] ≥ 5 пар помилок L2
+- [ ] Розділ деколонізації присутній, ≥ 200 слів, змістовний
+- [ ] Жодного `було встановлено / являти собою / в якості / відноситися до / на протязі / слідуючий / приймати участь / діючий` (у контексті схвалення / навчання)
+- [ ] Жодне твердження не спирається лише на Вікіпедію чи YouTube (такі — з позначкою `<!-- VERIFY -->`)
+- [ ] Жодної вигаданої наукової дискусії — якщо у джерелах дискусії немає, розділ так і каже
+- [ ] Україномовність: 100% прози українською
+- [ ] Жодної суперечності між «правильною формою» в одному розділі і її вживанням в іншому
 
-Return ONLY the markdown article. No preamble. Start with `# Title`.
+## Вивід
+
+Поверни ЛИШЕ markdown-статтю. Без вступу. Починай з `# Назва`.

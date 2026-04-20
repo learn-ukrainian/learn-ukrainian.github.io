@@ -1,44 +1,55 @@
-# Wiki: Grammar Brief Compilation (A2–B2)
+# Вікі: Граматичний нарис (рівні А2–В2)
 
-You are compiling a **grammar brief** for the Ukrainian language curriculum wiki. This brief will guide the content writer (a separate AI) when building modules that teach Ukrainian grammar to English-speaking teens and adults.
+Ти укладаєш **граматичний нарис** для української мовної програми. Нарис призначений для автора-письменника (окрема AI-система), який створюватиме модулі, що навчають української граматики англомовних підлітків і дорослих.
 
-## Your Task
+## Мова нарису — українська
 
-Compile a grammar brief on: **{topic}**
-Domain: **{domain}**
-Tracks served: **{tracks}**
+Нарис пишеться **українською мовою** як авторитетний методичний текст українського педагога-мовознавця. Англійська допускається лише у структурних елементах, які не є прозою:
 
-## Source Material
+- YAML-метадані у `<!-- wiki-meta -->` (технічні ідентифікатори)
+- Формат посилань на джерела (`[S1]`, `[S2]`)
+- Заголовки стовпців у таблицях, коли жодного українського відповідника немає (тоді український варіант у дужках)
+- Цитати з джерел — подаються мовою джерела з позначкою
 
-The following source chunks come from Ukrainian textbooks (Заболотний Grades 5-9, Авраменко Grades 7-11, Літвінова Grade 7, Глазова Grade 11, Карман Grade 10, МійКлас) and grammar resources. Source format:
+Усе інше — основний текст абзаців, заголовки розділів, пояснення парадигм, поради авторові-письменнику — пишеться природною українською мовою. Без калькування з англійської чи російської. Регістр: науково-навчальний, деколонізований (за нормами Антоненка-Давидовича).
+
+## Твоє завдання
+
+Укласти граматичний нарис на тему: **{topic}**
+Домен: **{domain}**
+Обслуговувані треки: **{tracks}**
+
+## Матеріал джерел
+
+Нижче наведено текстові фрагменти з українських підручників (Заболотний, 5–9 класи; Авраменко, 7–11 класи; Літвінова, 7 клас; Глазова, 11 клас; Караман, 10 клас; МійКлас) та граматичних ресурсів. Формат:
 
 ```
-### Source N: {work/grade metadata}
+### Source N: {метадані: автор / клас}
 Chunk ID: `{chunk_id}`
 
 {text}
 ```
 
-**Every claim in your article MUST cite a specific source** using short inline citations like `[S1]`, `[S2]`. The sibling `{slug}.sources.yaml` file will map those ids to the underlying chunk ids for review.
+**Кожне твердження у статті МУСИТЬ спиратися на конкретне джерело.** Посилання — коротке інлайнове: `[S1]`, `[S2]`. Сусідній файл `{slug}.sources.yaml` ставить у відповідність ці ідентифікатори й `chunk_id`.
 
-If no source supports a claim, mark it `<!-- VERIFY -->`. Do NOT invent support.
+Якщо жодне джерело не підтверджує твердження, постав `<!-- VERIFY -->`. Не вигадуй підтверджень.
 
-### Source quality weighting
+### Ваговий коефіцієнт джерел
 
-Textbook chunks and МійКлас are **primary sources** — cite them freely. Wikipedia (`ext-wikipedia-*`) and YouTube transcripts (`ext-*_youtube-*`) are **background context only** — YouTube transcripts often contain speech errors and spoken-language pivots, so never quote them as examples of standard written grammar. If your only support for a claim is a Wikipedia or YouTube chunk, mark it `<!-- VERIFY -->`.
+Фрагменти з підручників і МійКлас — **первинні джерела**; цитуй вільно. Вікіпедія (`ext-wikipedia-*`) і транскрипти з YouTube (`ext-*_youtube-*`) — **допоміжний контекст**. Транскрипти з YouTube часто містять мовленнєві помилки та розмовні відхилення, тому ніколи не цитуй їх як зразки літературної граматики. Якщо єдина опора твердження — Вікіпедія або YouTube, постав `<!-- VERIFY -->`.
 
 {sources}
 
-## What a Grammar Brief IS
+## Що є граматичним нарисом
 
-This is NOT a lesson. It's a **reference guide for the writer** covering:
-- HOW Ukrainian schools teach this grammar point (progression, examples, exercises)
-- The COMPLETE paradigm (all forms, with patterns highlighted)
-- WHICH forms are most useful at this level (frequency-driven)
-- Common L2 errors and how to address them
-- Natural Ukrainian examples (not translated-from-English sentences)
+Це НЕ урок. Це **довідник для автора-письменника**, що охоплює:
+- ЯК українські школи подають цю граматичну тему (прогресія, приклади, вправи)
+- ПОВНА парадигма (усі форми з виділеними закономірностями)
+- ЯКІ форми найкорисніші на цьому рівні (за частотністю)
+- Типові помилки L2 та шляхи їх запобігання
+- Природні українські приклади (а не речення, перекладені з англійської)
 
-## Article Structure
+## Структура статті
 
 ```markdown
 # {topic}
@@ -50,94 +61,98 @@ tracks: [{tracks}]
 compiled: {date}
 -->
 
-## Як це пояснюють у школі (How Schools Teach This)
-The Ukrainian textbook approach. What Grade introduces this? What sequence? What terminology do they use? **Cite specific textbooks:** "Заболотний вводить цю тему в 6 класі через... [S3]"
+## Як це пояснюють у школі
+Підхід українських підручників. У якому класі вводиться ця тема? Яка послідовність? Яку термінологію використовують? **Цитуй конкретні підручники:** «Заболотний уводить цю тему у 6 класі через… [S3]».
 
-## Повна парадигма (Full Paradigm)
-Tables showing all forms. Highlight patterns (which endings are predictable, which are exceptions). Group by declension/conjugation class.
-- Use TABLES — not prose — for paradigms
-- Mark irregular forms in **bold**
-- Show formation rules **as an explicit transformation chain**: `{infinitive} → {stem} → {+suffix} → {final form}`. Example: `посивіти → посиві- → +ідl- → посивілий`. Prose like "add -л-" is insufficient — show the mechanical step.
-- **State ALL restrictions explicitly**, not just formation rules. Examples: "active past participles form only from INTRANSITIVE perfective verbs — `*прочиталий книгу` is impossible" (cite the source that establishes the restriction). Missing a restriction is a failure mode that has historically tanked review scores.
+## Повна парадигма
+Таблиці з усіма формами. Виділи закономірності (які закінчення передбачувані, які — винятки). Згрупуй за відміною / дієвідміною.
+- Використовуй ТАБЛИЦІ — не прозу — для парадигм
+- Нерегулярні форми познач **жирним**
+- Правила творення подавай **як чіткий ланцюжок перетворення**: `{інфінітив} → {основа} → {+суфікс} → {кінцева форма}`. Приклад: `посивіти → посиві- → +л- → посивілий`. Прози на зразок «додати -л-» недостатньо — покажи механічний крок.
+- **Фіксуй УСІ обмеження явно**, не лише правила творення. Приклади: «активні дієприкметники минулого часу утворюються тільки від НЕПЕРЕХІДНИХ дієслів доконаного виду — `*прочиталий книгу` неможливо» (цитуй джерело, що встановлює обмеження). Пропущене обмеження — типовий режим провалу, що історично знижував оцінки рецензування.
 
-## Частотність і пріоритети (Frequency & Priorities)
-Which forms appear most in real Ukrainian? What should the learner master first? What can wait? Cite frequency data if available.
+## Частотність і пріоритети
+Які форми найчастіше трапляються в реальному вжитку? Що учень має засвоїти першим? Що може зачекати? Цитуй частотні дані, якщо вони є.
 
-## Типові помилки L2 (Common L2 Errors)
-What English speakers get wrong with this grammar point. For EACH error:
+## Типові помилки L2 (англомовні учні)
+Що англомовні учні роблять неправильно в цій граматичній темі. Для КОЖНОЇ помилки:
 
 | ❌ Помилково | ✅ Правильно | Чому |
-Show structural transfer from English, false analogies, missing categories (aspect, gender agreement).
-**Minimum: 5 error pairs.**
 
-## Деколонізаційні застереження (Decolonization Notes)
-**MANDATORY — never omit.** Where Ukrainian grammar differs from Russian:
-- Specific Ukrainian forms that differ from Russian equivalents
-- Common teaching traps: assuming shared rules, using Russian examples
-- Never present Ukrainian forms as "exceptions to Russian norms" — Ukrainian is the default
+Покажи структурне перенесення з англійської, хибні аналогії, відсутні категорії (вид, узгодження за родом).
+**Мінімум: 5 пар помилок.**
 
-## Природні приклади (Natural Examples)
-**Minimum 12 natural Ukrainian sentences** using this grammar point. Requirements:
-- NOT translated from English — must sound like something a Ukrainian would say
-- Source-attributed where possible with `[S1]`-style citations
-- Include: daily life situations, textbook dialogues, common phrases, literary citations
-- Each example demonstrates ONE specific form or usage pattern
-- Group examples by pattern (2-3 examples per group, 4-5 groups)
+## Деколонізаційні застереження
+**ОБОВ'ЯЗКОВИЙ РОЗДІЛ — ніколи не пропускай.** Де українська граматика відрізняється від російської:
+- Конкретні українські форми, що відрізняються від російських відповідників
+- Типові методичні пастки: припущення про спільні правила, російські приклади
+- Ніколи не подавай українські форми як «винятки з російських норм» — українська є основою
 
-## Рекомендації для вправ (Activity Concepts)
-Specific exercise types and teaching sequences the writer should use:
-- Phase 1 → Phase 2 → Phase 3 progression
-- Exact drill formats (fill-in, transformation, choice, etc.)
-- Which forms to drill first (frequency-based)
+## Природні приклади
+**Мінімум 12 природних українських речень** із цією граматичною темою. Вимоги:
+- НЕ перекладені з англійської — мають звучати як щось, що реально скаже українець
+- З атрибуцією до джерела, де це можливо, у форматі `[S1]`
+- Включай: побутові ситуації, підручникові діалоги, усталені фрази, літературні цитати
+- Кожен приклад ілюструє ОДНУ конкретну форму або модель вживання
+- Групуй приклади за моделлю (2–3 приклади на групу, 4–5 груп)
 
-## Зв'язки з іншими темами (Connections)
-How this grammar point connects to what came before and what comes after. Prerequisites and what this enables.
+## Рекомендації для вправ
+Конкретні типи вправ і методичні послідовності, які має використати автор:
+- Прогресія Фаза 1 → Фаза 2 → Фаза 3
+- Точні формати тренувань (заповнити, трансформувати, обрати тощо)
+- Які форми відпрацьовувати першими (на основі частотності)
 
-## Пов'язані статті (Related Articles)
-Cross-links to other wiki articles.
+## Зв'язки з іншими темами
+Як ця граматична тема пов'язана з тим, що було раніше, і з тим, що буде далі. Передумови і те, що ця тема уможливлює.
+
+## Пов'язані статті
+Перехресні посилання на інші статті вікі.
 ```
 
-## Quality Standards
+**НЕ виводь розділ `## Джерела` / бібліографію.** Повний реєстр живе в сусідньому файлі `{slug}.sources.yaml`. Інлайнові посилання `[S1]` у прозі достатні.
 
-### ABSOLUTE REQUIREMENTS:
-1. **Short source citations in every section.** Format: `[S1]`, `[S2]`. Keep chunk ids out of prose; they live in the sibling registry.
-2. **Complete paradigms in tables.** Don't summarize — show ALL forms.
-3. **Formation as transformation chain**: `{infinitive} → {stem} → {+suffix} → {final}`, not just "add suffix X".
-4. **ALL restrictions stated explicitly** (intransitive-only, perfective-only, etc.) with the source that establishes each.
-5. **Minimum 12 natural examples.** Source-attributed with chunk_id. Grouped by pattern. Textbook chunks only — not YouTube transcripts.
-6. **Minimum 5 error pairs.** With explanations.
-7. **Decolonization section present and substantive.**
-8. **No Russianisms.** Not even as "also acceptable."
-9. **Minimum 1,500 words.**
+## Критерії якості
 
-### STRONG PREFERENCES:
-- Frequency-driven: not every form is equally important. Highlight what matters most.
-- Actionable: a writer should be able to extract exact drills and sequences without reinvention.
-- Cite textbook approaches specifically: "Заболотний introduces the genitive through possession (у кого є що)" — not vague advice.
+### АБСОЛЮТНІ ВИМОГИ:
+1. **Коротке посилання на джерело в кожному розділі.** Формат: `[S1]`, `[S2]`. Chunk id у прозу не виноси — він у сусідньому файлі-реєстрі.
+2. **Повні парадигми в таблицях.** Не підсумовуй — показуй УСІ форми.
+3. **Творення як ланцюжок перетворення**: `{інфінітив} → {основа} → {+суфікс} → {кінцева}`, а не просто «додати суфікс Х».
+4. **УСІ обмеження — явно** (тільки неперехідні, тільки доконані тощо) з джерелом, яке кожне обмеження встановлює.
+5. **Мінімум 12 природних прикладів.** З атрибуцією до chunk_id. Згруповані за моделлю. Лише з підручникових джерел — не з YouTube-транскриптів.
+6. **Мінімум 5 пар помилок.** З поясненнями.
+7. **Розділ деколонізації присутній і змістовний.**
+8. **Жодних русизмів.** Навіть у форматі «також припустимо».
+9. **Мінімум 1500 слів.**
 
-## Anti-patterns (what NOT to do)
+### СИЛЬНІ ПЕРЕВАГИ:
+- Частотний підхід: не всі форми однаково важливі. Виділи найважливіші.
+- Дієвість: автор має змогти дістати точні тренування й послідовності без власного винайдення.
+- Цитуй підручникові підходи конкретно: «Заболотний уводить родовий через посесію (у кого є що)» — а не розпливчасті поради.
 
-1. ❌ Inventing grammar rules not in the sources → ✅ Mark unsourced claims `<!-- VERIFY -->`
-2. ❌ Missing the key constraint (e.g., "past active participles form only from intransitive verbs") → ✅ State ALL formation rules, especially restrictions
-3. ❌ Meta-commentary in examples ("це пасивний... -> Краще") → ✅ Clean examples only
-4. ❌ Strikethrough corrections in example sections → ✅ Put corrections in the L2 Errors section
-5. ❌ Presenting every paradigm cell as equally important → ✅ Frequency-rank the forms
-6. ❌ "Like in Russian..." as explanation → ✅ Explain from Ukrainian internal logic
+## Антипатерни (чого НЕ робити)
 
-## Self-audit (run through this checklist before outputting)
+1. ❌ Винайдення правил, яких немає в джерелах → ✅ Познач недоведені твердження `<!-- VERIFY -->`
+2. ❌ Пропуск ключового обмеження (напр., «активні дієприкметники минулого часу — лише від неперехідних») → ✅ Формулюй УСІ правила творення, особливо обмеження
+3. ❌ Метакоментар у прикладах («це пасив… -> Краще») → ✅ Лише чисті приклади
+4. ❌ Закреслені виправлення у прикладах → ✅ Виправлення — у розділі помилок L2
+5. ❌ Усі комірки парадигми подаються як однаково важливі → ✅ Ранжуй за частотністю
+6. ❌ «Як у російській…» як пояснення → ✅ Поясни з внутрішньої логіки української
 
-Before emitting the final article, mentally verify:
+## Самоперевірка перед вивантаженням
 
-- [ ] Every paragraph has at least one `[S1]`-style citation
-- [ ] Total word count ≥ 1500
-- [ ] Formation rules shown as transformation chains, not bare prose
-- [ ] ALL restrictions stated explicitly with source attribution
-- [ ] ≥ 12 natural examples, grouped by pattern, textbook-sourced
-- [ ] ≥ 5 error pairs in ❌/✅ table format
-- [ ] Decolonization section present and substantive
-- [ ] No claim endorsed solely by a Wikipedia or YouTube chunk (all such claims marked `<!-- VERIFY -->`)
-- [ ] No Russianisms endorsed in your own prose (включно з: `було встановлено`, `являти собою`, `в якості`, `відноситися до`, `на протязі`, `слідуючий`, `приймати участь`, `діючий`)
+Перед тим як видати остаточну статтю, подумки перевір:
 
-## Output
+- [ ] У кожному абзаці є щонайменше одне посилання формату `[S1]`
+- [ ] Загальна кількість слів ≥ 1500
+- [ ] Правила творення подано як ланцюжки перетворення, а не голою прозою
+- [ ] УСІ обмеження — явно сформульовані, з атрибуцією до джерел
+- [ ] ≥ 12 природних прикладів, згрупованих за моделлю, з підручникових джерел
+- [ ] ≥ 5 пар помилок у форматі ❌/✅
+- [ ] Розділ деколонізації присутній і змістовний
+- [ ] Жодне твердження не спирається лише на Вікіпедію чи YouTube (такі — з позначкою `<!-- VERIFY -->`)
+- [ ] У твоїй власній прозі немає русизмів (зокрема: `було встановлено`, `являти собою`, `в якості`, `відноситися до`, `на протязі`, `слідуючий`, `приймати участь`, `діючий`)
+- [ ] Текст прози — українською, не англійською
 
-Return ONLY the markdown article. No preamble. Start with `# Title`.
+## Вивід
+
+Поверни ЛИШЕ markdown-статтю. Без вступу. Починай з `# Назва`.

@@ -1,58 +1,69 @@
-# Wiki Article Compilation Prompt
+# Вікі: Компіляція статті знаннєвої бази
 
-You are compiling a knowledge base article for the Ukrainian language curriculum wiki. This wiki serves as the knowledge foundation for building seminar-track modules (HIST, BIO, LIT, OES, RUTH, FOLK, ISTORIO).
+Ти укладаєш статтю знаннєвої бази для вікі української мовної програми. Ця вікі слугує фундаментом для побудови модулів семінарських треків (HIST, BIO, LIT, OES, RUTH, FOLK, ISTORIO).
 
-## Your Task
+## Мова статті — українська
 
-Compile a structured wiki article on the topic: **{topic}**
-Domain: **{domain}**
-Tracks served: **{tracks}**
+Стаття пишеться **українською мовою** як авторитетний науково-популярний чи науковий текст. Англійська допускається лише у структурних елементах, які не є прозою:
 
-## Source Material
+- YAML-метадані у `<!-- wiki-meta -->` (технічні ідентифікатори)
+- Формат посилань на джерела (`[S1]`, `[S2]`)
+- Заголовки стовпців у таблицях, коли жодного українського відповідника немає (тоді український варіант у дужках)
+- Цитати з джерел — подаються мовою джерела з позначкою
 
-The following source chunks are provided. Source format:
+Усе інше — основний текст абзаців, заголовки розділів, теоретичні пояснення, історичний виклад — пишеться природною українською мовою. Без калькування з російської. Регістр: науково-популярний / науковий, деколонізований (за нормами Антоненка-Давидовича). Прагни до 100% української прози (окрім згаданих структурних елементів та цитат з іншомовних джерел).
+
+## Твоє завдання
+
+Укласти структуровану статтю на тему: **{topic}**
+Домен: **{domain}**
+Обслуговувані треки: **{tracks}**
+
+## Матеріал джерел
+
+Нижче наведено текстові фрагменти з різних джерел. Формат:
 
 ```
-### Source N: {work/author/year/genre/period metadata}
+### Source N: {метадані: автор / рік / жанр / період}
 Chunk ID: `{chunk_id}`
 
 {text}
 ```
 
-**Every claim in your article MUST cite a specific source** using short inline citations like `[S1]`, `[S2]`. The sibling `{slug}.sources.yaml` file will map `S1` to the underlying chunk id, so keep filenames out of the prose.
+**Кожне твердження у статті МУСИТЬ спиратися на конкретне джерело.** Посилання — коротке інлайнове: `[S1]`, `[S2]`. Сусідній файл `{slug}.sources.yaml` ставить у відповідність `S1` і `chunk_id` — тож тримай назви файлів поза прозою.
 
-Do NOT invent facts — everything must come from the sources. If sources conflict, note the disagreement and cite both sides with chunk_ids.
+Не вигадуй фактів — усе має походити з джерел. Якщо джерела суперечать одне одному, зафіксуй розбіжність і цитуй обидва боки з chunk_id.
 
-### Source quality weighting — crucial for seminar articles
+### Ваговий коефіцієнт джерел — критично для семінарських статей
 
-Seminar tracks (HIST, BIO, LIT, OES, RUTH, FOLK, ISTORIO) MUST be grounded in **primary sources**, not Wikipedia or YouTube paraphrases. Weigh your sources accordingly:
+Семінарські треки (HIST, BIO, LIT, OES, RUTH, FOLK, ISTORIO) МАЮТЬ спиратися на **первинні джерела**, а не на парафрази Вікіпедії чи YouTube. Зважуй джерела відповідно:
 
-| Source type | Use for |
+| Тип джерела | Для чого використовувати |
 |---|---|
-| Primary literary/historical texts (chronicles, legal documents, original works) | **Primary evidence** — quote directly, attribute to chunk_id |
-| Ukrainian textbooks (`*-klas-istoriya-*`, `*-klas-istoriia-*`, `*-klas-ukrmova-*`) | **Authoritative** for the school-taught canonical narrative |
-| Scholarly monographs and academic articles | **Authoritative** for historiographic positions |
-| Wikipedia chunks (`ext-wikipedia-*`) | **Background context only** — do not quote Wikipedia as the primary source for a historical claim. Find the underlying primary source or mark the claim `<!-- VERIFY -->` |
-| YouTube transcripts (`ext-*_youtube-*`) | **Oral discussion only** — often contains speech errors, ungrammatical pivots, interviewee opinions. Do NOT treat as authoritative evidence |
-| Blog posts (`ext-*_blogs-*`, `ext-realna_istoria-*`) | **Contemporary Ukrainian commentary** — cite for decolonized contemporary interpretation, not for primary facts |
+| Первинні літературні / історичні тексти (хроніки, правові пам'ятки, оригінальні твори) | **Первинний доказ** — цитуй напряму, з атрибуцією до chunk_id |
+| Українські підручники (`*-klas-istoriya-*`, `*-klas-istoriia-*`, `*-klas-ukrmova-*`) | **Авторитетні** щодо канонічного шкільного наративу |
+| Наукові монографії та академічні статті | **Авторитетні** щодо історіографічних позицій |
+| Фрагменти з Вікіпедії (`ext-wikipedia-*`) | **Допоміжний контекст** — не цитуй Вікіпедію як первинне джерело історичного твердження. Знайди підставове первинне джерело або постав `<!-- VERIFY -->` |
+| Транскрипти з YouTube (`ext-*_youtube-*`) | **Лише усне обговорення** — часто з мовленнєвими помилками, нелітературними зсувами, суб'єктивними поглядами інтерв'юйованих. НЕ трактуй як авторитетний доказ |
+| Блогові записи (`ext-*_blogs-*`, `ext-realna_istoria-*`) | **Сучасний український коментар** — цитуй для деколонізованої сучасної інтерпретації, не для первинних фактів |
 
-If your ONLY evidence for a historical claim is a Wikipedia or YouTube chunk, that claim must be marked `<!-- VERIFY -->`. Do not cite Wikipedia as your source for dates, names, or events.
+Якщо єдиний доказ історичного твердження — Вікіпедія чи YouTube, це твердження слід позначити `<!-- VERIFY -->`. Не цитуй Вікіпедію як джерело дат, імен чи подій.
 
 {sources}
 
-## Article Requirements
+## Вимоги до статті
 
-### Language
-- Write the article **in Ukrainian** — this is an immersion curriculum
-- Key terms should include transliteration in parentheses on first use
-- Section headers in Ukrainian
-- Brief English glosses only for highly specialized terms
+### Мова
+- Пиши статтю **українською мовою** — це імерсивна програма
+- Ключові терміни на перший вжиток супроводжуй транслітерацією в дужках
+- Заголовки розділів — українською
+- Короткі англомовні глоси — лише для вузькоспеціалізованих термінів
 
-### Structure
-Every article MUST have these sections:
+### Структура
+Кожна стаття МАЄ такі розділи:
 
 ```markdown
-# [Choose an appropriate Ukrainian title for: {topic}]
+# [Добери відповідну українську назву для: {topic}]
 
 <!-- wiki-meta
 slug: {slug}
@@ -62,121 +73,121 @@ compiled: {date}
 -->
 
 ## Короткий зміст
-(2-3 sentence summary — what this article covers and why it matters)
+(Стислий виклад у 2–3 реченнях — що охоплює стаття і чому це важливо)
 
 ## Основний зміст
-(Main content — organized into 3-5 subsections with clear headings)
+(Головний матеріал — 3–5 підрозділів з чіткими заголовками)
 
-For EACH subsection:
-- State claims with short citations: "Згідно з даними [S1], ..."
-- Include relevant Ukrainian quotations from primary sources
-- Use tables for dates, names, and systematic comparisons
-- Break prose every 200-300 words with a subheading or example block
+Для КОЖНОГО підрозділу:
+- Формулюй твердження з короткими посиланнями: «Згідно з даними [S1], …»
+- Уводь доречні українські цитати з первинних джерел
+- Для дат, імен і систематичних порівнянь — таблиці
+- Розбивай прозу щокілька 200–300 слів підзаголовком або блоком прикладу
 
 ## Ключові терміни
-(10-15 key terms with brief definitions, in Ukrainian. Format as a table:)
+(10–15 ключових термінів з короткими визначеннями, українською. Формат — таблиця:)
 
 | Термін | Визначення |
 |--------|-----------|
 
-## Мовні зразки (Language Models)
-**Minimum 8 examples** of advanced Ukrainian prose relevant to the topic:
-- Direct quotations from primary sources (with attribution)
-- Key phrases and collocations the module writer should use
-- Register-appropriate academic or literary language
-This section helps the module writer match the correct Ukrainian register.
+## Мовні зразки
+**Мінімум 8 прикладів** української прози підвищеної складності, доречної до теми:
+- Прямі цитати з первинних джерел (з атрибуцією)
+- Ключові фрази та словосполуки, якими має користуватися автор модуля
+- Регістрово відповідна академічна чи літературна мова
+Цей розділ допомагає автору модуля влучити у правильний регістр.
 
-## Деколонізаційна перспектива (Decolonization Perspective)
-**MANDATORY — never omit.**
-- How this topic has been distorted by imperial/Soviet/Russian narratives
-- What the Ukrainian sources actually say (with citations)
-- Common myths and their refutations
-- Frame: the Ukrainian perspective is the default, not the "alternative"
+## Деколонізаційна перспектива
+**ОБОВ'ЯЗКОВИЙ РОЗДІЛ — ніколи не пропускай.**
+- Як цю тему викривлювали імперські / радянські / російські наративи
+- Що насправді кажуть українські джерела (з посиланнями)
+- Поширені міфи та їх спростування
+- Позиція: українська перспектива — основа, а не «альтернатива»
 
 ## Пов'язані статті
-(Cross-links to other wiki articles that relate to this topic)
+(Перехресні посилання на інші статті вікі, пов'язані з цією темою)
 ```
 
-**Do NOT emit a `## Джерела` / sources / bibliography section at the end of the article.** The full source registry lives in the sibling `{slug}.sources.yaml` file and is managed separately. Inline `[S1]`-style citations throughout the prose are sufficient — the sidecar YAML resolves each reference to its underlying chunk_id. A prose `## Джерела` section duplicates the sidecar and is treated as a defect by downstream review.
+**НЕ виводь розділ `## Джерела` / бібліографію наприкінці статті.** Повний реєстр джерел живе в сусідньому файлі `{slug}.sources.yaml` і керується окремо. Інлайнові посилання формату `[S1]` у прозі — достатньо; сусідній YAML-файл роз'яснює кожне посилання до відповідного chunk_id. Прозовий розділ `## Джерела` дублює сусідній файл і трактується downstream-рецензуванням як дефект.
 
-### Quality Standards
+### Критерії якості
 
-#### ABSOLUTE REQUIREMENTS:
-1. **Short source citations in every paragraph.** Format: `[S1]`, `[S2]`. Filenames belong only in the sibling registry, never in the prose.
-2. **Minimum 1,500 words** for the main content section. This is a knowledge base, not a summary.
-3. **Minimum 8 language model examples.** Source-attributed Ukrainian text with chunk_id. Prefer primary texts over Wikipedia paraphrases.
-4. **Primary sources over Wikipedia.** Historical dates, names, and events must cite the underlying primary/scholarly source, not `ext-wikipedia-*`. Wikipedia-only claims get `<!-- VERIFY -->`.
-5. **Decolonization section present and substantive.** Not a token paragraph.
-6. **No Russianisms.** Check every word. If unsure, mark `<!-- VERIFY -->`. Pay particular attention to: `було встановлено`, `являти собою`, `в якості`, `відноситися до`, `на протязі`, `слідуючий`, `приймати участь`, `діючий`.
-7. **No filler.** Every sentence conveys information. No "як відомо", "варто зазначити", "не можна не згадати".
-8. **Factual honesty.** If the sources don't cover something, write "Наявні джерела не охоплюють цей аспект" — never fabricate.
-9. **Named scholars for historiographic claims.** When presenting a scholarly position, name the scholar: "Плохій стверджує...", not "Деякі історики вважають...". If the source does not attribute a name, omit the claim rather than hedging.
+#### АБСОЛЮТНІ ВИМОГИ:
+1. **Коротке посилання на джерело в кожному абзаці.** Формат: `[S1]`, `[S2]`. Назви файлів — лише у сусідньому реєстрі, ніколи у прозі.
+2. **Мінімум 1500 слів** у розділі «Основний зміст». Це знаннєва база, а не резюме.
+3. **Мінімум 8 мовних зразків.** З атрибуцією до джерела й chunk_id. Надавай перевагу первинним текстам перед парафразами Вікіпедії.
+4. **Первинні джерела замість Вікіпедії.** Історичні дати, імена, події мають спиратися на підставове первинне / наукове джерело, а не на `ext-wikipedia-*`. Твердження, що мають лише Вікіпедію, позначаються `<!-- VERIFY -->`.
+5. **Розділ деколонізації присутній і змістовний.** Не формальний абзац.
+6. **Жодних русизмів.** Перевіряй кожне слово. У разі сумніву — `<!-- VERIFY -->`. Особливу увагу приділи: `було встановлено`, `являти собою`, `в якості`, `відноситися до`, `на протязі`, `слідуючий`, `приймати участь`, `діючий`.
+7. **Жодного словесного баласту.** Кожне речення несе інформацію. Без «як відомо», «варто зазначити», «не можна не згадати».
+8. **Фактологічна чесність.** Якщо джерела цього не охоплюють, пиши: «Наявні джерела не охоплюють цей аспект» — ніколи не фабрикуй.
+9. **Імена вчених для історіографічних тверджень.** Подаючи наукову позицію, називай вченого: «Плохій стверджує…», а не «деякі історики вважають…». Якщо джерело імені не містить, краще пропусти твердження, ніж ховати за загальником.
 
-#### STRONG PREFERENCES:
-- Primary sources over secondary interpretations
-- Tables for dates, names, comparisons (not prose lists)
-- Break dense prose with quotation blocks and examples
-- Decolonized perspective throughout, not just in the dedicated section
+#### СИЛЬНІ ПЕРЕВАГИ:
+- Первинні джерела — понад вторинні інтерпретації
+- Для дат, імен, порівнянь — таблиці (не прозові списки)
+- Щільну прозу розбивай цитатними блоками й прикладами
+- Деколонізована перспектива — наскрізно, а не лише у виділеному розділі
 
-### Domain-Specific Guidance
+### Настанови за доменом
 
-**For HIST/BIO (periods, figures):**
-- Chronological structure with clear date markers
-- Connect events to broader Ukrainian state-building narrative
-- Note historiographical debates with source citations
-- Include connections to other figures/periods
+**Для HIST / BIO (періоди, постаті):**
+- Хронологічна структура з чіткими часовими маркерами
+- Пов'язуй події з ширшим наративом української державобудови
+- Фіксуй історіографічні дискусії з атрибуцією до джерел
+- Додавай зв'язки з іншими постатями / періодами
 
-**For LIT (literature):**
-- Literary analysis grounded in Ukrainian critical tradition (Чижевський, Грабович)
-- Contextualize works in their historical period
-- Note how the work is taught in Ukrainian schools (if textbook sources available)
-- Include key quotations from the literary work itself
+**Для LIT (література):**
+- Літературний аналіз спирається на українську критичну традицію (Чижевський, Грабович)
+- Контекстуалізуй твори у їхній історичний період
+- Фіксуй, як твір викладають в українських школах (якщо є підручникові джерела)
+- Включай ключові цитати з самого літературного твору
 
-**For OES/RUTH (linguistics):**
-- Use proper linguistic terminology (Ukrainian terms with transliteration)
-- Include example forms/texts with morphological analysis
-- Note the relationship to modern Ukrainian
-- Distinguish OES features from Church Slavonic borrowings
+**Для OES / RUTH (мовознавство):**
+- Використовуй правильну лінгвістичну термінологію (українські терміни з транслітерацією)
+- Додавай зразки форм / текстів з морфологічним розбором
+- Фіксуй зв'язок із сучасною українською
+- Розрізняй ознаки OES і церковнослов'янські запозичення
 
-**For FOLK (oral tradition):**
-- Classification by genre with examples
-- Performance context (who, when, where)
-- Regional variations if noted in sources
-- Connection to calendar/life-cycle rituals
-- Include full text examples of songs/riddles/proverbs
+**Для FOLK (усна традиція):**
+- Класифікація за жанрами з прикладами
+- Виконавський контекст (хто, коли, де)
+- Регіональні варіанти, якщо згадано в джерелах
+- Зв'язок з календарними / життєво-циклічними ритуалами
+- Повнотекстові приклади пісень / загадок / прислів'їв
 
-**For ISTORIO (historiography):**
-- Always present multiple perspectives: Ukrainian national, imperial Russian, Soviet, Western
-- Identify each author's position and biases with source citations
-- Show how the same events are interpreted differently
-- Let the reader judge — present evidence, not predetermined conclusions
-- **But be clear:** Ukrainian primary sources take precedence over imperial interpretations
+**Для ISTORIO (історіографія):**
+- Завжди подавай кілька перспектив: українську національну, імперську російську, радянську, західну
+- Ідентифікуй позицію й упередження кожного автора з посиланнями
+- Показуй, як однакові події інтерпретуються по-різному
+- Дай читачеві змогу судити — подавай докази, а не готові висновки
+- **Але чітко:** українські первинні джерела мають пріоритет над імперськими інтерпретаціями
 
-## Anti-patterns (what NOT to do)
+## Антипатерни (чого НЕ робити)
 
-1. ❌ "Як відомо, це важлива тема..." → ✅ Start with concrete facts
-2. ❌ Unsourced claims about dates or events → ✅ "(Source N) датує цю подію..."
-3. ❌ Presenting Russian imperial narratives as "balanced" → ✅ Label them: "Російська імперська інтерпретація стверджує..."
-4. ❌ Prose lists of dates and names → ✅ Use chronological tables
-5. ❌ Generic summaries that could describe any topic → ✅ Specific details unique to THIS topic
-6. ❌ Missing quotations from primary sources → ✅ Direct quotes with attribution
+1. ❌ «Як відомо, це важлива тема…» → ✅ Починай з конкретних фактів
+2. ❌ Бездоказові твердження про дати / події → ✅ «(Source N) датує цю подію…»
+3. ❌ Подавати російські імперські наративи як «збалансовані» → ✅ Називай їх: «Російська імперська інтерпретація стверджує…»
+4. ❌ Прозові списки дат та імен → ✅ Хронологічні таблиці
+5. ❌ Загальні підсумки, що годяться для будь-якої теми → ✅ Конкретні деталі, властиві саме цій темі
+6. ❌ Відсутні цитати з первинних джерел → ✅ Прямі цитати з атрибуцією
 
-## Self-audit (run through this checklist before outputting)
+## Самоперевірка перед вивантаженням
 
-Before emitting the final article, mentally verify:
+Перед тим як видати остаточну статтю, подумки перевір:
 
-- [ ] Every paragraph has at least one `[S1]`-style citation
-- [ ] Main content word count ≥ 1500
-- [ ] ≥ 8 language model examples, each with attribution, from primary texts (not YouTube or Wikipedia)
-- [ ] Every historical claim (date, name, event) cites a textbook or primary source — not Wikipedia
-- [ ] Decolonization section present and substantive (≥ 200 words, specific examples)
-- [ ] Every scholarly position is attributed to a named scholar (no anonymous "some historians say")
-- [ ] No Russianisms in your own prose (see the forbidden list above)
-- [ ] No filler phrases: `як відомо`, `варто зазначити`, `не можна не згадати`
-- [ ] No fabricated debates — if no debate is in the sources, the Наукові дискусії section says so
-- [ ] ≥ 95% Ukrainian prose
-- [ ] **No `## Джерела` section in the output.** Sources registry lives in the sibling `.sources.yaml` only. Inline `[S#]` citations in prose are sufficient.
+- [ ] У кожному абзаці є щонайменше одне посилання формату `[S1]`
+- [ ] Кількість слів в «Основному змісті» ≥ 1500
+- [ ] ≥ 8 мовних зразків, з атрибуцією, з первинних текстів (не з YouTube чи Вікіпедії)
+- [ ] Кожне історичне твердження (дата, ім'я, подія) спирається на підручник / первинне джерело — а не на Вікіпедію
+- [ ] Розділ деколонізації присутній і змістовний (≥ 200 слів, конкретні приклади)
+- [ ] Кожна наукова позиція атрибутована іменем (без анонімного «деякі історики кажуть»)
+- [ ] У твоїй власній прозі немає русизмів (див. заборонений перелік вище)
+- [ ] Жодних баластних фраз: `як відомо`, `варто зазначити`, `не можна не згадати`
+- [ ] Жодних фабрикованих дискусій — якщо у джерелах дискусії немає, розділ «Наукові дискусії» це і каже
+- [ ] ≥ 95% прози — українською
+- [ ] **Немає розділу `## Джерела` у виводі.** Реєстр джерел — лише у сусідньому `.sources.yaml`. Інлайнові `[S#]` посилання у прозі — достатньо.
 
-## Output
+## Вивід
 
-Return ONLY the markdown article. No preamble, no explanation. Start with the `# Title` line.
+Поверни ЛИШЕ markdown-статтю. Без вступу, без пояснень. Починай із рядка `# Назва`.

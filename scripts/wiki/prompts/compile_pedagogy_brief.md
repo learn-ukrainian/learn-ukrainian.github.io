@@ -1,44 +1,55 @@
-# Wiki: Pedagogical Brief Compilation (A1)
+# Вікі: Методичний нарис (рівень А1)
 
-You are compiling a **pedagogical brief** for the Ukrainian language curriculum wiki. This brief will guide the content writer (a separate AI) when building A1 modules for English-speaking teens and adults learning Ukrainian from zero.
+Ти укладаєш **методичний нарис** для української мовної програми. Нарис призначений для автора-письменника (окрема AI-система), який створюватиме модулі рівня А1 для англомовних підлітків і дорослих, що вивчають українську мову з нуля.
 
-## Your Task
+## Мова нарису — українська
 
-Compile a pedagogical brief on: **{topic}**
-Domain: **{domain}**
-Tracks served: **{tracks}**
+Нарис пишеться **українською мовою** як авторитетний методичний текст українського педагога. Англійська допускається лише у структурних елементах, які не є прозою:
 
-## Source Material
+- YAML-метадані у `<!-- wiki-meta -->` (технічні ідентифікатори)
+- Формат посилань на джерела (`[S1]`, `[S2]`)
+- Заголовки стовпців у таблицях, коли жодного українського відповідника немає (тоді український варіант у дужках)
+- Цитати з джерел — подаються мовою джерела з позначкою
 
-The following source chunks come from Ukrainian textbooks (Большакова, Вашуленко Grades 1-2) and pedagogy resources. Source format:
+Усе інше — основний текст абзаців, заголовки розділів, пояснення, поради авторові-письменнику — пишеться природною українською мовою. Без калькування з англійської чи російської. Регістр: науково-методичний, деколонізований (за нормами Антоненка-Давидовича).
+
+## Твоє завдання
+
+Укласти методичний нарис на тему: **{topic}**
+Домен: **{domain}**
+Обслуговувані треки: **{tracks}**
+
+## Матеріал джерел
+
+Нижче наведено текстові фрагменти з українських підручників (Большакова, Вашуленко, 1–2 класи) та методичних ресурсів. Формат:
 
 ```
-### Source N: {work/grade metadata}
+### Source N: {метадані: автор / клас}
 Chunk ID: `{chunk_id}`
 
 {text}
 ```
 
-**Every claim MUST cite a specific source** using short inline citations like `[S1]`, `[S2]`. The sibling `{slug}.sources.yaml` file will map those ids to the underlying chunk ids.
+**Кожне твердження МУСИТЬ спиратися на конкретне джерело.** Посилання — коротке інлайнове: `[S1]`, `[S2]`. Сусідній файл `{slug}.sources.yaml` ставить у відповідність ці ідентифікатори й `chunk_id`.
 
-If no source supports a claim, mark it `<!-- VERIFY -->`. Do NOT invent support.
+Якщо жодне джерело не підтверджує твердження, постав `<!-- VERIFY -->`. Не вигадуй підтверджень.
 
-### Source quality weighting
+### Ваговий коефіцієнт джерел
 
-Textbook chunks (Вашуленко, Большакова, Заболотний Grade 5) are **primary** — cite freely. Wikipedia and YouTube chunks are **background only**; A1 pedagogy should be driven by the school textbook progression, not by general-purpose sources.
+Фрагменти зі шкільних підручників (Вашуленко, Большакова, Заболотний, 5 клас) — **первинні**; цитуй вільно. Матеріали з Вікіпедії та YouTube — **допоміжні**; методика рівня А1 будується на шкільному підручниковому прогресі, а не на загальнодовідкових джерелах.
 
 {sources}
 
-## What a Pedagogical Brief IS
+## Що є методичним нарисом
 
-This is NOT a lesson. It's a **methodology guide for the writer**. It tells the writer:
-- HOW Ukrainian teachers teach this concept (the native approach)
-- WHAT order to introduce elements (letter sequences, vocabulary progression)
-- WHAT mistakes English-speaking learners make (and how to prevent them)
-- WHAT to avoid (Russian-influenced phonetics, English phonetic analogies)
-- WHAT vocabulary and examples are appropriate at this stage
+Це НЕ урок. Це **методичний посібник для автора-письменника**. Нарис пояснює:
+- ЯК українські педагоги подають цю тему (рідний підхід)
+- У ЯКОМУ ПОРЯДКУ вводити елементи (послідовність літер, прогресія лексики)
+- ЯКИХ помилок припускаються англомовні учні і як їм запобігти
+- ЧОГО уникати (російськомовного фонетичного впливу, англомовних фонетичних аналогій)
+- ЯКА лексика та які приклади доречні на цьому етапі
 
-## Article Structure
+## Структура статті
 
 ```markdown
 # {topic}
@@ -50,78 +61,82 @@ tracks: [{tracks}]
 compiled: {date}
 -->
 
-## Методичний підхід (Methodological Approach)
-How Ukrainian Grade 1-2 teachers introduce this concept. What sequence, what exercises, what examples. **Cite specific textbooks:** "Большакова починає з голосних: А, О, У... [S2]"
+## Методичний підхід
+Як українські вчителі 1–2 класів подають це поняття. Яка послідовність, які вправи, які приклади. **Цитуй конкретні підручники:** «Большакова починає з голосних: А, О, У… [S2]».
 
-## Послідовність введення (Introduction Sequence)
-Exact order of elements. For letters: which letters first, which clusters. For grammar: which forms before which. For vocabulary: which words are appropriate.
-- Number each step (Step 1 → Step 2 → Step 3...)
-- Explain WHY this order (not arbitrary — based on frequency, phonetic simplicity, or pedagogy)
+## Послідовність введення
+Точний порядок елементів. Для літер: які літери першими, які групами. Для граматики: які форми раніше, які пізніше. Для лексики: які слова доречні.
+- Пронумеруй кроки (Крок 1 → Крок 2 → Крок 3…)
+- Поясни, ЧОМУ саме такий порядок (не випадково — на підставі частотності, фонетичної простоти чи методики)
 
-## Типові помилки L2 (Common L2 Errors)
-What English speakers get wrong. For EACH error:
+## Типові помилки L2 (англомовні учні)
+Що англомовні учні роблять неправильно. Для КОЖНОЇ помилки:
 
 | ❌ Помилково | ✅ Правильно | Чому |
-Phonetic interference, false cognates, structural transfer from English. How to prevent each error.
-**Minimum: 5 error pairs.**
 
-## Деколонізаційні застереження (Decolonization Notes)
-**MANDATORY — never omit.** Where Russian-influenced teaching creeps in:
-- Common traps: using Russian phonetic comparisons, teaching Ukrainian letters as "like Russian X but..."
-- Presenting shared vocabulary as "borrowed from Russian" (when it's Common Slavic or Ukrainian-origin)
-- The learner must build Ukrainian phonetic categories from scratch, not through Russian
+Фонетична інтерференція, хибні когнати, структурне перенесення з англійської. Як запобігти кожній помилці.
+**Мінімум: 5 пар помилок.**
 
-## Словниковий мінімум (Vocabulary Boundaries)
-What words/phrases are appropriate at this stage. What to avoid introducing too early.
-- Organize by part of speech: іменники, дієслова, прикметники, прислівники
-- Mark frequency: ★★★ = essential, ★★ = useful, ★ = can wait
-- Maximum complexity level for this A1 stage
+## Деколонізаційні застереження
+**ОБОВ'ЯЗКОВИЙ РОЗДІЛ — ніколи не пропускай.** Де просочується російськомовне викладання:
+- Типові пастки: російські фонетичні порівняння, пояснення українських літер через «як російська Х, але…»
+- Подання спільної лексики як «запозиченої з російської», коли вона спільнослов'янська або українська за походженням
+- Учень має вибудовувати українські фонетичні категорії з нуля, а не через російську
 
-## Приклади з підручників (Textbook Examples)
-**Minimum 4 specific exercises/activities** from the source textbooks:
-- Show the exact exercise format (fill-in, match, listen-and-repeat, etc.)
-- Include Ukrainian prompts as they appear in the textbook
-- These are the gold standard — the writer should follow these patterns
+## Словниковий мінімум
+Які слова й вирази доречні на цьому етапі. Чого уникати на ранньому введенні.
+- Організуй за частинами мови: іменники, дієслова, прикметники, прислівники
+- Познач частотність: ★★★ = базове, ★★ = корисне, ★ = може зачекати
+- Максимальний рівень складності для цього етапу А1
 
-## Пов'язані статті (Related Articles)
-Cross-links to other wiki articles that complement this one.
+## Приклади з підручників
+**Мінімум 4 конкретні вправи чи завдання** зі згаданих джерел:
+- Точний формат вправи (заповнити, з'єднати, слухати-і-повторити тощо)
+- Українське формулювання завдання, як воно подане в підручнику
+- Це — взірець, якого автор-письменник має триматися
+
+## Пов'язані статті
+Перехресні посилання на інші статті вікі, що доповнюють цю.
 ```
 
-## Quality Standards
+**НЕ виводь розділ `## Джерела` / бібліографію.** Повний реєстр живе в сусідньому файлі `{slug}.sources.yaml`. Інлайнові посилання `[S1]` у прозі достатні.
 
-### ABSOLUTE REQUIREMENTS:
-1. **Short source citations in every section.** Format: `[S1]`, `[S2]`.
-2. **Minimum 5 error pairs.** ❌ → ✅ format with explanations.
-3. **Minimum 4 textbook exercise examples.** Specific, not vague. Cite the textbook + chunk_id + grade for each.
-4. **Grade-level attribution.** When describing "how schools teach this," specify the exact grade and textbook author from the sources (e.g., "Вашуленко Grade 1 introduces А, О, У first [S3].").
-5. **Decolonization section present and substantive.**
-6. **No Russianisms.** Not even in "also acceptable" framing.
-7. **Minimum 1,000 words.**
+## Критерії якості
 
-### STRONG PREFERENCES:
-- Practical, not theoretical. The writer needs actionable guidance, not linguistics lectures.
-- English-speaker focused. Frame advice through what an English speaker expects vs what Ukrainian actually does.
-- Decolonized from day 1. Ukrainian is taught on its own terms. Never "like Russian X."
-- Vocabulary must be age-appropriate for teens AND adults (no baby talk, but simple).
+### АБСОЛЮТНІ ВИМОГИ:
+1. **Коротке посилання на джерело в кожному абзаці.** Формат: `[S1]`, `[S2]`.
+2. **Мінімум 5 пар помилок.** У форматі ❌ → ✅ з поясненням.
+3. **Мінімум 4 конкретні приклади вправ з підручників.** Не загальні, а чіткі. Для кожного — підручник, chunk_id і клас.
+4. **Атрибуція за класами.** Коли описуєш «як навчають у школах», називай конкретний клас і автора підручника з джерел (напр., «Вашуленко, 1 клас, уводить спершу А, О, У [S3]»).
+5. **Розділ деколонізації присутній і змістовний.**
+6. **Жодних русизмів.** Навіть у форматі «також припустимо».
+7. **Мінімум 1000 слів.**
 
-## Anti-patterns (what NOT to do)
+### СИЛЬНІ ПЕРЕВАГИ:
+- Практичність, а не теорія. Авторові потрібні дієві настанови, а не лекції з лінгвістики.
+- Орієнтація на англомовного учня. Формулюй поради через те, що англомовний очікує і чим українська насправді відрізняється.
+- Деколонізована позиція від самого початку. Українська подається на власних засадах. Ніколи «як російська Х».
+- Лексика доречна для підлітків ТА дорослих (без дитячих слівцят, але проста).
 
-1. ❌ "Teach the letters" (generic) → ✅ "Start with А, О, У (Большакова), then М, Н, Т (high-frequency consonants)"
-2. ❌ English phonetic approximations ("И sounds like the i in bit") → ✅ Ukrainian phonetic description with audio guidance
-3. ❌ Mixing Cyrillic script systems (Ukrainian vs Russian И/І) → ✅ Only Ukrainian alphabet
-4. ❌ Vocabulary beyond A1 level → ✅ Stick to frequency-ranked A1 vocabulary
-5. ❌ Theoretical phonology → ✅ Practical pronunciation guidance the writer can use
+## Антипатерни (чого НЕ робити)
 
-## Self-audit (run through this checklist before outputting)
+1. ❌ «Навчити літер» (загально) → ✅ «Почати з А, О, У (Большакова), потім М, Н, Т (високочастотні приголосні)»
+2. ❌ Англомовні фонетичні аналогії («И — як i у слові bit») → ✅ Українська фонетична характеристика з настановами щодо вимови
+3. ❌ Змішування кириличних систем (українська vs російська И/І) → ✅ Лише український алфавіт
+4. ❌ Лексика понад рівень А1 → ✅ Тримайся частотно-ранжованого словника А1
+5. ❌ Теоретична фонологія → ✅ Практичні настанови щодо вимови, придатні для автора-письменника
 
-- [ ] Every paragraph has at least one `[S1]`-style citation
-- [ ] Total word count ≥ 1000
-- [ ] ≥ 5 L2 error pairs in ❌/✅ format
-- [ ] ≥ 4 specific textbook exercise examples (grade + author + chunk_id)
-- [ ] Decolonization section present and substantive — not a token paragraph
-- [ ] No claim supported only by Wikipedia or YouTube (those get `<!-- VERIFY -->`)
-- [ ] No Russianisms in the teaching recommendations (no phonetic comparisons to Russian, no "like Russian X but…")
+## Самоперевірка перед вивантаженням
 
-## Output
+- [ ] У кожному абзаці є щонайменше одне посилання формату `[S1]`
+- [ ] Загальна кількість слів ≥ 1000
+- [ ] ≥ 5 пар помилок L2 у форматі ❌/✅
+- [ ] ≥ 4 конкретні приклади вправ з підручників (клас + автор + chunk_id)
+- [ ] Розділ деколонізації присутній і змістовний — не формальний абзац
+- [ ] Жодне твердження не спирається лише на Вікіпедію чи YouTube (такі — з позначкою `<!-- VERIFY -->`)
+- [ ] У методичних рекомендаціях немає русизмів (жодних фонетичних порівнянь з російською, жодних «як російське Х, але…»)
+- [ ] Текст прози — українською, не англійською
 
-Return ONLY the markdown article. No preamble. Start with `# Title`.
+## Вивід
+
+Поверни ЛИШЕ markdown-статтю. Без вступу. Починай з `# Назва`.
