@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 5
-**Total words:** 9,719
+**Total articles:** 8
+**Total words:** 14,411
 
 ## Figures
 
@@ -19,6 +19,9 @@ Auto-generated index of compiled wiki articles.
 
 ## Pedagogy
 
+- [Педагогіка A1: Colors](pedagogy/a1/colors.md) (1,405 words)
+- [Педагогіка A1: Euphony](pedagogy/a1/euphony.md) (1,528 words)
+- [Педагогіка A1: My Family](pedagogy/a1/my-family.md) (1,759 words)
 - [Педагогіка A1: Sounds Letters And Hello](pedagogy/a1/sounds-letters-and-hello.md) (1,441 words)
 
 ## Periods

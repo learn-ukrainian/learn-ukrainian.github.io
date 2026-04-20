@@ -1,0 +1,24 @@
+# Source registry for wiki/pedagogy/a1/euphony.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3123
+  type: unknown
+- id: S2
+  file: S2378
+  type: unknown
+- id: S3
+  file: S599
+  type: unknown
+- id: S4
+  file: S594
+  type: unknown
+- id: S5
+  file: S351
+  type: unknown
+- id: S7
+  file: S346
+  type: unknown
+- id: S8
+  file: S765
+  type: unknown

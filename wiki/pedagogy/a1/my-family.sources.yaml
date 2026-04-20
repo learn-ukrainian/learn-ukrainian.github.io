@@ -1,0 +1,21 @@
+# Source registry for wiki/pedagogy/a1/my-family.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3202
+  type: unknown
+- id: S2
+  file: S3371
+  type: unknown
+- id: S3
+  file: S3129
+  type: unknown
+- id: S4
+  file: S2452
+  type: unknown
+- id: S5
+  file: S2415
+  type: unknown
+- id: S6
+  file: S2435
+  type: unknown
