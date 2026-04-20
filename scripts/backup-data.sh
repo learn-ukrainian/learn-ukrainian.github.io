@@ -41,11 +41,17 @@ fi
 mkdir -p "$GDRIVE"
 
 rsync -av \
+  --exclude='qdrant/' \
   --exclude='*.db-shm' \
   --exclude='*.db-wal' \
   --exclude='__pycache__/' \
   --exclude='.DS_Store' \
   "$SRC/" "$GDRIVE/"
+# `qdrant/` exclude: Qdrant is retired (ADR-005/006) but ~4.6G of old
+# storage is still on disk. Not worth backing up — regenerable from
+# JSONL if ever needed. Safe to `rm -rf data/qdrant/` locally to
+# reclaim the space; this exclude just keeps the dir out of Drive
+# whether or not it's been cleaned up locally.
 
 echo ""
 echo "=== Backup complete ==="
