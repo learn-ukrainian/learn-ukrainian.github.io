@@ -139,9 +139,16 @@ All work happens on `main` — no feature branches. Use `git worktree` for
 isolation when needed. Read `CLAUDE.md` + `docs/best-practices/` before
 touching pipeline code.
 
-Ops runbooks live under `docs/ops/`, including
-[Google Drive DB backup setup](docs/ops/gdrive-backup.md) for the large local
-SQLite databases that are not tracked in git.
+Back up the large local state (SQLite DBs + MLX-encoded dense shards) to
+Google Drive manually whenever it matters:
+
+```bash
+./scripts/backup-data.sh
+```
+
+This rsyncs all of `data/` to the Google Drive for Desktop mount. No cron,
+no rclone config — Drive handles the upload in the background. See the
+script's top comment for details.
 
 ## Contributing
 
