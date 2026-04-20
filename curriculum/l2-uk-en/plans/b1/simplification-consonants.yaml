@@ -2,138 +2,68 @@ module: b1-017
 level: B1
 sequence: 17
 slug: simplification-consonants
-version: '3.1'
-title: "Спрощення приголосних"
-subtitle: "Щастя — щасливий: коли приголосний випадає"
+version: '3.1.2'
+title: 'Спрощення приголосних'
+subtitle: 'Щастя — щасливий: коли приголосний випадає'
 focus: grammar
 pedagogy: PPP
-phase: "B1.1 [Morphophonemics]"
+phase: 'B1.1 [Морфонологія]'
 word_target: 4000
 objectives:
-  - "Learner can identify consonant simplification in Ukrainian words and explain
-    WHY the consonant drops: a cluster of three consonants simplifies to two for ease
-    of pronunciation (милозвучність)"
-  - "Learner can apply spelling rules for simplification that is закріплене на письмі
-    (reflected in writing): тижневий (not *тижденевий), щасливий (not *щастливий),
-    корисний (not *користний)"
-  - "Learner can identify exceptions where simplification occurs in speech but NOT
-    in writing: шістнадцять, зап'ястний, контрастний"
-  - "Learner can distinguish simplification from чергування (alternation): simplification
-    = consonant DROPS; alternation = consonant CHANGES"
+  - 'Вміти ідентифікувати спрощення приголосних в українських словах та пояснювати, ЧОМУ випадає приголосний: збіг трьох приголосних спрощується до двох для легкості вимови (милозвучність)'
+  - 'Вміти застосовувати правила правопису для спрощення, яке закріплене на письмі: тижневий (не *тижденевий), щасливий (не *щастливий), корисний (не *користний)'
+  - 'Вміти визначати винятки, коли спрощення відбувається у вимові, але НЕ на письмі: шістнадцять, зап''ястний, контрастний'
+  - 'Вміти розрізняти спрощення та чергування: спрощення = приголосний ВИПАДАЄ; чергування = приголосний ЗМІНЮЄТЬСЯ'
 dialogue_situations:
-  - setting: 'Dictation exercise in a Дніпро classroom — the teacher reads words aloud
-      and students discuss which letters disappear: серце (not серДце), тижневий (not
-      тижДневий), чесний (not чесТний), щасливий (not щасТливий).'
+  - setting: 'Диктант у класі у Дніпрі — вчитель читає слова вголос, а студенти обговорюють, які літери зникають: серце, тижневий, чесний, щасливий.'
     speakers:
       - Вчитель
       - Студенти
-    motivation: 'Consonant simplification: серДце→серце, чесТний→чесний, щасТливий→щасливий'
+    motivation: 'Спрощення приголосних: серДце→серце, чесТний→чесний, щасТливий→щасливий'
 content_outline:
-  - section: "Що таке спрощення?"
+  - section: 'Що таке спрощення?'
     words: 600
     points:
-      - "Bridge from M08-M10: learners now understand чергування — sounds that CHANGE
-        to other sounds. Спрощення is different: a sound DISAPPEARS entirely from
-        a consonant cluster. Литвінова Grade 5 p.180: 'Одним із засобів милозвучності
-        української мови є спрощення приголосних. Якщо в процесі словотворення виникає
-        група з трьох приголосних, один із них може випадати.'"
-      - "Demonstration from Литвінова Grade 5 p.180, вправа 296: проїЗД + Н = проїЗДНий
-        -> проїзний. The [д] drops because the cluster [здн] is awkward to pronounce.
-        Ukrainian prefers two-consonant clusters over three-consonant ones."
-      - "Key distinction: чергування = sound A becomes sound B; спрощення = sound
-        A disappears. Both are morphophonemic processes, but they work differently.
-        чергування: друг -> друже ([г] -> [ж]) спрощення: щастя -> щасливий ([т] drops)"
-  - section: "Спрощення, закріплене на письмі"
+      - 'Зв''язок із M08-M10: учні вже розуміють чергування — звуки, що ЗМІНЮЮТЬСЯ на інші. Спрощення — це інше: звук повністю ЗНИКАЄ зі збігу приголосних. Литвінова (5 клас, с.180): «Одним із засобів милозвучності української мови є спрощення приголосних. Якщо в процесі словотворення виникає група з трьох приголосних, один із них може випадати».'
+      - 'Демонстрація з підручника Литвінової (5 клас, с.180, вправа 296): проїЗД + Н = проїЗДНий -> проїзний. Звук [д] випадає, оскільки збіг [здн] незручно вимовляти. Українська мова віддає перевагу збігам із двох приголосних перед трьома.'
+      - 'Ключова відмінність: чергування = звук А стає звуком Б; спрощення = звук А зникає. Обидва явища — морфонологічні, але працюють по-різному. чергування: друг -> друже ([г] -> [ж]); спрощення: щастя -> щасливий ([т] випадає).'
+  - section: 'Спрощення, закріплене на письмі'
     words: 850
     points:
-      - "Complete table from Заболотний Grade 5 p.110: [ждн] -> [жн]: тиждень — тижневий
-        [здн] -> [зн]: проїзд — проїзний, виїзд — виїзний [стл] -> [сл]: щастя — щасливий,
-        лестощі — улесливий [стн] -> [сн]: радість — радісний, якість — якісний, честь
-        — чесний, користь — корисний, вість — вісник [скн] -> [сн]: бризки — бризнути,
-        тиск — тиснути [слн] -> [сн]: масло — масний"
-      - "From Литвінова Grade 5 p.181: additional examples organized by cluster type.
-        Emphasis: in these words, the simplified consonant is NOT written. You write
-        тижневий, not *тижд­невий. The spelling reflects the pronunciation."
-      - "How to recognize simplification in practice: If a derived word seems to be
-        'missing' a consonant compared to its base form, it is likely спрощення. Base:
-        тиждень (has [д]). Derived: тижневий (no [д]). Base: щастя (has [т]). Derived:
-        щасливий (no [т]). Practice: learners identify the 'missing' consonant in
-        10+ pairs."
-      - "Авраменко Grade 5 p.109: орфограма 'спрощення в групах приголосних' — students
-        learn to recognize this as a specific spelling pattern that requires rule
-        knowledge, not just memory."
-  - section: "Винятки: спрощення у вимові, але не на письмі"
+      - 'Повна таблиця за підручником Заболотного (5 клас, с.110): [ждн] -> [жн]: тиждень — тижневий. [здн] -> [зн]: проїзд — проїзний, виїзд — виїзний. [стл] -> [сл]: щастя — щасливий, лестощі — улесливий. [стн] -> [сн]: радість — радісний, якість — якісний, честь — чесний, користь — корисний, вість — вісник. [скн] -> [сн]: бризки — бризнути, тиск — тиснути. [слн] -> [сн]: масло — масний.'
+      - 'З підручника Литвінової (5 клас, с.181): додаткові приклади, згруповані за типом збігу. Наголос: у цих словах спрощений приголосний НЕ пишеться. Ви пишете "тижневий", а не *"тиждневий". Написання відображає вимову.'
+      - 'Як розпізнати спрощення на практиці: Якщо у похідному слові ніби "не вистачає" приголосного порівняно з основою, це, ймовірно, спрощення. Основа: тиждень (є [д]). Похідне: тижневий (немає [д]). Основа: щастя (є [т]). Похідне: щасливий (немає [т]). Практика: учні знаходять "зниклий" приголосний у 10+ парах слів.'
+      - 'Авраменко (5 клас, с.109): орфограма «спрощення в групах приголосних» — учні вчаться розпізнавати це як конкретну орфограму, що вимагає знання правил, а не лише запам''ятовування.'
+  - section: 'Винятки: спрощення у вимові, але не на письмі'
     words: 650
     points:
-      - "From Заболотний Grade 5 p.110: Group 1 — no simplification at all (both speech
-        and writing): пестливий, хвастливий, кістлявий — pronounce and write [стл].
-        These are EXCEPTIONS to the [стл]->[сл] rule."
-      - "Group 2 — simplification in speech only (write the consonant): шістнадцять
-        [шіс:нац':ат'], зап'ястний [зап'ас:ний], контрастний [контрасний], баластний
-        [баласний]. Авраменко Grade 5 p.109: 'У словах невістці, шістсот i подібних
-        літеру т пишемо, але звук [т] не вимовляємо.'"
-      - "How to remember which is which: The exceptions that KEEP the letter in writing
-        are mostly words where the base form is clearly felt: шість -> шістнадцять
-        (the connection to шість is obvious, so the т stays in writing). The words
-        where simplification IS in writing have drifted farther from their base: щастя
-        -> щасливий (the connection is felt less directly)."
-  - section: "Спрощення [сонце], [серце] та інші особливі випадки"
+      - 'З підручника Заболотного (5 клас, с.110): Група 1 — взагалі немає спрощення (ні у вимові, ні на письмі): пестливий, хвастливий, кістлявий — вимовляємо і пишемо [стл]. Це ВИНЯТКИ з правила [стл]->[сл].'
+      - 'Група 2 — спрощення лише у вимові (приголосний пишеться): шістнадцять [шіс:нац'':ат''], зап''ястний [зап''ас:ний], контрастний [контрасний], баластний [баласний]. Авраменко (5 клас, с.109): «У словах "невістці", "шістсот" i подібних літеру "т" пишемо, але звук [т] не вимовляємо».'
+      - 'Як запам''ятати, де яке: Винятки, що ЗБЕРІГАЮТЬ літеру на письмі, здебільшого є словами, де базова форма чітко відчувається: шість -> шістнадцять (зв''язок із "шість" очевидний, тому "т" залишається на письмі). Слова, де спрощення ВІДБУВАЄТЬСЯ на письмі, більше віддалилися від своєї бази: щастя -> щасливий (зв''язок відчувається менш прямо).'
+  - section: 'Спрощення [сонце], [серце] та інші особливі випадки'
     words: 600
     points:
-      - "Words where simplification is so old it is not always recognized: сонце [сонце]
-        — but is there a 'missing' [л]? (cf. солоній) серце [серце] — is there a 'missing'
-        [д]? (cf. сердитий, сердечний) These etymological simplifications are taught
-        as орфограми: in серце, the [д] dropped historically but surfaces in related
-        words."
-      - "Голуб Grade 5 p.93, вправа 234: connecting спрощення to the concept of милозвучність.
-        Students are asked: 'Чи можна вважати спрощення засобом милозвучності? Чому?'
-        Answer: yes — Ukrainian avoids difficult consonant clusters as part of its
-        phonetic character."
-      - "Practice: learners work with word families, identifying where simplification
-        occurs and where it does not: тиждень: тижневий (спрощення), тижня (біглий
-        голосний from M08), щотижня (спрощення). Multiple morphophonemic processes
-        in one family."
-  - section: "Спрощення у дієслівних формах та прикметниках"
+      - 'Слова, де спрощення є настільки давнім, що його не завжди розпізнають: сонце [сонце] — але чи є "зникле" [л]? (порівняйте: сонячний, але російське "солнце"). серце [серце] — чи є "зникле" [д]? (порівняйте: сердитий, сердечний). Ці етимологічні спрощення вивчаються як орфограми: у "серце" [д] історично випало, але з''являється у спільнокореневих словах.'
+      - 'Голуб (5 клас, с.93, вправа 234): зв''язок спрощення з концепцією милозвучності. Учням ставлять запитання: «Чи можна вважати спрощення засобом милозвучності? Чому?» Відповідь: так — українська мова уникає важких збігів приголосних як частини свого фонетичного характеру.'
+      - 'Практика: учні працюють з родинами слів, визначаючи, де відбувається спрощення, а де — ні: тиждень: тижневий (спрощення), тижня (біглий голосний з M08), щотижня (спрощення). Кілька морфонологічних процесів в одній родині слів.'
+  - section: 'Спрощення у дієслівних формах та прикметниках'
     words: 600
     points:
-      - "Simplification in adjective formation from nouns: якість — якісний ([стн]->[сн])
-        совість — совісний ([стн]->[сн]) ненависть — ненависний ([стн]->[сн]) область
-        — обласний ([стн]->[сн]) These follow the regular [стн]->[сн] pattern."
-      - "Simplification in verb-related forms: виїзд — виїзний ([здн]->[зн]) тиск
-        — тиснути ([скн]->[сн]) блиск — блиснути ([скн]->[сн]) These show that спрощення
-        applies across parts of speech."
-      - "Connecting to previous modules: the learner now has three morphophonemic
-        tools: чергування голосних (M08), чергування приголосних (M09-10), and спрощення
-        (this module). Together, they explain most of Ukrainian's spelling 'irregularities.'"
-  - section: "Спрощення vs. чергування: порівняння"
+      - 'Спрощення у творенні прикметників від іменників: якість — якісний ([стн]->[сн]), совість — совісний ([стн]->[сн]), ненависть — ненависний ([стн]->[сн]), область — обласний ([стн]->[сн]). Вони підпорядковуються регулярному патерну [стн]->[сн].'
+      - 'Спрощення у дієслівних формах: виїзд — виїзний ([здн]->[зн]), тиск — тиснути ([скн]->[сн]), блиск — блиснути ([скн]->[сн]). Це показує, що спрощення стосується різних частин мови.'
+      - 'Зв''язок з попередніми модулями: тепер учень має три морфонологічні інструменти: чергування голосних (M08), чергування приголосних (M09-10) та спрощення (цей модуль). Разом вони пояснюють більшість орфографічних "нерегулярностей" української мови.'
+  - section: 'Спрощення vs. чергування: порівняння'
     words: 400
     points:
-      - "Side-by-side comparison: | Feature | Чергування | Спрощення | | What happens
-        | Sound A -> Sound B | Sound A -> zero | | Example | друг -> друже | щастя
-        -> щасливий | | Trigger | Morphological (case, person) | Cluster of 3+ consonants
-        | | Reversible? | Yes (друже -> друг) | Yes (щасливий -> щастя) | Both are
-        regular, predictable, and essential for Ukrainian spelling."
-      - "Diagnostic algorithm for learners: 1. Does the derived word have FEWER
-        consonants than the base? → спрощення. 2. Does the derived word have a DIFFERENT
-        consonant? → чергування. 3. Apply: сонце vs сонячний (missing [л]? спрощення).
-        друг vs друже ([г]→[ж] чергування). Each step builds on the table above."
-      - "Practice: mixed exercises where learners identify WHETHER a given change
-        is чергування or спрощення, and WHICH specific type it is. This integrates
-        learning from M08-M11."
-      - "Cross-reference to real text: excerpt from a news article or literary passage
-        containing both processes. Learners annotate each morphophonemic change,
-        labeling it as чергування (type) or спрощення (cluster). Demonstrates that
-        both processes co-occur naturally in authentic Ukrainian prose."
-  - section: "Підсумок і практика"
+      - 'Паралельне порівняння: Чергування — Звук А -> Звук Б (друг -> друже), тригер: морфологічний (відмінок, особа), зворотне: так (друже -> друг). Спрощення — Звук А -> нуль (щастя -> щасливий), тригер: збіг 3+ приголосних, зворотне: так (щасливий -> щастя). Обидва явища є регулярними, передбачуваними та важливими для української орфографії.'
+      - 'Діагностичний алгоритм для учнів: 1. Чи має похідне слово МЕНШЕ приголосних, ніж основа? → спрощення. 2. Чи має похідне слово ІНШИЙ приголосний? → чергування. 3. Застосування: сонце vs сонячний ("зникле" [л]? спрощення). друг vs друже ([г]→[ж] чергування).'
+      - 'Практика: мішані вправи, де учні визначають, ЧИ є дана зміна чергуванням або спрощенням, і ЯКИЙ саме це тип. Це інтегрує знання з M08-M11.'
+      - 'Перехресне посилання на реальний текст: уривок з новинної статті або літературного твору, що містить обидва процеси. Учні анотують кожну морфонологічну зміну, позначаючи її як чергування (тип) або спрощення (збіг).'
+  - section: 'Підсумок і практика'
     words: 300
     points:
-      - "Quick reference: all спрощення patterns with one example each. Self-check:
-        Дайте відповіді на запитання: 1. Чому у слові 'щасливий' немає літери т? 2.
-        Чому у слові 'шістнадцять' літера т пишеться? 3. Яка різниця між спрощенням
-        i чергуванням? 4. Утворіть прикметники: радість, якість, тиждень."
-      - "Preview of next module: Iменники на -ар, -яр, -ин (M12) — shifting from phonetics
-        to morphology, applying all the morphophonemic knowledge to specific noun
-        subclasses."
+      - 'Короткий довідник: усі патерни спрощення з одним прикладом на кожен. Самоперевірка: Дайте відповіді на запитання: 1. Чому у слові "щасливий" немає літери "т"? 2. Чому у слові "шістнадцять" літера "т" пишеться? 3. Яка різниця між спрощенням і чергуванням? 4. Утворіть прикметники: радість, якість, тиждень.'
+      - 'Анонс наступного модуля: Іменники на -ар, -яр, -ин (M12) — перехід від фонетики до морфології, застосування всіх морфонологічних знань до конкретних підкласів іменників.'
 vocabulary_hints:
   required:
     - "спрощення (simplification — dropping of a consonant from a cluster)"
@@ -162,51 +92,36 @@ vocabulary_hints:
     - "непохідний (underived — base form)"
 activity_hints:
   - type: fill-in
-    focus: "Form adjectives or adverbs from nouns, applying simplification (e.g.,
-      щастя -> щасл___вий, тиждень -> тижн___вий)"
-    items: 8
+    focus: 'Утворити прикметники або прислівники від іменників, застосовуючи спрощення (наприклад, щастя -> щасл___вий, тиждень -> тижн___вий).'
   - type: quiz
-    focus: "Decide: does the derived word keep or drop the consonant? (e.g., шість
-      + -надцять = шістнадцять [keep] vs. радість + -ний = радісний [drop])"
-    items: 8
+    focus: 'Визначити: чи зберігає, чи втрачає приголосний похідне слово? (наприклад, шість + -надцять = шістнадцять [зберігає] vs. радість + -ний = радісний [втрачає]).'
   - type: group-sort
-    focus: "Sort words into two groups: спрощення закріплене на письмі vs. спрощення
-      тільки у вимові"
-    items: 10
+    focus: 'Розподілити слова на дві групи: спрощення, закріплене на письмі, vs спрощення тільки у вимові.'
   - type: match-up
-    focus: "Match base words with their simplified derivatives (e.g., проїзд <-> проїзний,
-      щастя <-> щасливий)"
-    items: 8
+    focus: 'З''єднати базові слова з їхніми похідними зі спрощенням (наприклад, проїзд <-> проїзний, щастя <-> щасливий).'
   - type: error-correction
-    focus: "Find spelling errors: words written with or without the simplified consonant
-      incorrectly (e.g., *щастливий -> щасливий, *радісний -> correct as is)"
-    items: 6
+    focus: 'Знайти орфографічні помилки: слова, неправильно написані зі збереженим або пропущеним приголосним (наприклад, *щастливий -> щасливий, *радісний -> правильно).'
 connects_to:
-  - "b1-008 (alternation-vowels — vowel alternation as morphophonemic process)"
-  - "b1-009 (alternation-consonants-nouns — consonant alternation for comparison)"
-  - "b1-010 (alternation-consonants-verbs — consonant changes in verbs)"
-  - "b1-012 (noun-subclasses-masculine — applying morphophonemic knowledge)"
+  - 'b1-008 (Чергування голосних)'
+  - 'b1-009 (Чергування приголосних в іменниках)'
+  - 'b1-010 (Чергування приголосних у дієсловах)'
+  - 'b1-012 (Підкласи іменників чоловічого роду)'
 prerequisites:
-  - "A2 completion (learner can form basic adjectives and read consonant clusters)"
-  - "b1-001 (metalanguage-phonetics — приголосний, група приголосних)"
+  - 'Завершення А2 (учень може утворювати базові прикметники та читати збіги приголосних)'
+  - 'b1-001 (Метамова: фонетика — приголосний, група приголосних)'
 grammar:
-  - "Спрощення закріплене на письмі: [ждн]->[жн], [здн]->[зн], [стл]->[сл], [стн]->[сн],
-    [скн]->[сн], [слн]->[сн]"
-  - "Винятки: пестливий, хвастливий, кістлявий (no simplification)"
-  - "Спрощення у вимові, але не на письмі: шістнадцять, зап'ястний, контрастний"
-  - "Distinction between спрощення (sound drops) and чергування (sound changes)"
-  - "Application across parts of speech: nouns, adjectives, verbs"
+  - 'Спрощення, закріплене на письмі: [ждн]->[жн], [здн]->[зн], [стл]->[сл], [стн]->[сн], [скн]->[сн], [слн]->[сн]'
+  - 'Винятки: пестливий, хвастливий, кістлявий (без спрощення)'
+  - 'Спрощення у вимові, але не на письмі: шістнадцять, зап''ястний, контрастний'
+  - 'Розрізнення між спрощенням (звук зникає) та чергуванням (звук змінюється)'
+  - 'Застосування в різних частинах мови: іменники, прикметники, дієслова'
 register: академічний
 references:
   - title: "Заболотний Grade 5, p.109-112"
-    notes: "Спрощення в групах приголосних (section 26): complete table, exceptions
-      (пестливий, хвастливий, кістлявий), written-only cases."
+    notes: 'Спрощення в групах приголосних (розділ 26): повна таблиця, винятки (пестливий, хвастливий, кістлявий), випадки лише у вимові.'
   - title: "Литвінова Grade 5, p.180-183"
-    notes: "Спрощення в групах приголосних: visual demonstration with проїЗДНий, tables
-      of закріплені and незакріплені simplifications."
+    notes: 'Спрощення в групах приголосних: візуальна демонстрація з проїЗДНий, таблиці закріплених та незакріплених спрощень.'
   - title: "Авраменко Grade 5, p.109"
-    notes: "Спрощення в групах приголосних: орфограма presentation, невістці/шістсот
-      exceptions, exercises."
+    notes: 'Спрощення в групах приголосних: представлення орфограми, винятки невістці/шістсот, вправи.'
   - title: "Голуб Grade 5, p.93"
-    notes: "Спрощення як засіб милозвучності: conceptual framing, table-based rule
-      formulation exercise."
+    notes: 'Спрощення як засіб милозвучності: концептуальне оформлення, вправа на формування правил на основі таблиці.'

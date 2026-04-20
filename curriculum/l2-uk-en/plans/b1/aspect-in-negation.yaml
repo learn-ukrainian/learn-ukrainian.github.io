@@ -2,120 +2,58 @@ module: b1-009
 level: B1
 sequence: 9
 slug: aspect-in-negation
-version: '1.0'
-title: "Вид і заперечення"
-subtitle: "Не робив vs ще не зробив — заперечення факту чи очікування"
+version: '1.0.2'
+title: 'Вид і заперечення'
+subtitle: 'Не робив vs ще не зробив — заперечення факту чи очікування'
 focus: aspect-negation
 pedagogy: TTT
-phase: "B1.0 [Baselines & Aspect Mastery]"
+phase: 'B1.0 [Базові концепції та опанування виду]'
 word_target: 4000
 objectives:
-  - "Learner can distinguish не + недоконаний вид (general negation — the action didn't
-    happen at all) from ще не + доконаний вид (expected completion — hasn't happened
-    YET) and produce both forms naturally"
-  - "Learner can explain how aspect choice in negation changes the pragmatic meaning
-    of a sentence using Ukrainian metalanguage (загальне заперечення vs незавершене
-    очікування)"
-  - "Learner can apply the negation-aspect pattern across all three tenses (past,
-    present, future) and in questions (Ти не читав? vs Ти ще не прочитав?)"
-  - "Learner can use negated aspect pairs in natural conversation to express factual
-    denial, incomplete expectations, and general statements about non-occurrence"
+  - 'Учень вміє розрізняти не + недоконаний вид (загальне заперечення — дія взагалі не відбулася) та ще не + доконаний вид (очікуване завершення — дія ЩЕ не відбулася) і природно використовувати обидві форми'
+  - 'Учень вміє пояснювати, як вибір виду в запереченні змінює прагматичне значення речення, використовуючи українську метамову (загальне заперечення vs незавершене очікування)'
+  - 'Учень вміє застосовувати шаблон заперечення з видом у всіх трьох часах (минулому, теперішньому, майбутньому) та в питаннях (Ти не читав? vs Ти ще не прочитав?)'
+  - 'Учень вміє використовувати заперечні видові пари у природній розмові для вираження фактичного заперечення, незавершених очікувань та загальних тверджень про відсутність дії'
 dialogue_situations:
-  - setting: "Two roommates — one asks about household tasks. The other distinguishes
-      between things they didn't do at all vs things they haven't finished yet: Ти
-      прибрав кімнату? — Ні, я не прибирав. А посуд? — Посуд я мив, але ще не домив —
-      залишилося трохи."
+  - setting: 'Двоє сусідів по кімнаті — один питає про хатні справи. Інший розмежовує те, що взагалі не робив, і те, що ще не закінчив: Ти прибрав кімнату? — Ні, я не прибирав. А посуд? — Посуд я мив, але ще не домив — залишилося трохи.'
     speakers:
       - Ольга
       - Михайло
-    motivation: "Natural contrast: не + impf (didn't do it at all / general negation)
-      vs ще не + pf (haven't finished yet / expected completion)"
-  - setting: "Student and professor discussing a paper deadline — professor asks about
-      progress, student explains what's not yet done: Ви вже написали вступ? — Ще не
-      написав, але я працюю над ним. А літературу ви читали? — Ні, ще не читав — не
-      знаю, з чого почати."
+    motivation: 'Природний контраст: не + недок. (взагалі не робив / загальне заперечення) vs ще не + док. (ще не закінчив / очікуване завершення)'
+  - setting: 'Студент і професор обговорюють терміни здачі роботи — професор запитує про прогрес, студент пояснює, що ще не зроблено: Ви вже написали вступ? — Ще не написав, але я працюю над ним. А літературу ви читали? — Ні, ще не читав — не знаю, з чого почати.'
     speakers:
       - Професор
       - Студент
-    motivation: "ще не + pf (expected progress not yet achieved) vs не + impf (the
-      activity hasn't been engaged with at all)"
+    motivation: 'ще не + док. (очікуваний прогрес ще не досягнутий) vs не + недок. (до діяльності взагалі не приступали)'
 content_outline:
-  - section: "Тест: що ви заперечуєте?"
+  - section: 'Тест: що ви заперечуєте?'
     words: 850
     points:
-      - "Diagnostic: 10 sentence pairs with negation — learners choose the natural
-        option. Examples: — Ти читав цю книжку? — Ні, (не читав / ще не прочитав).
-        [Both are valid — but they mean different things. Which fits the context?]
-        — Ти написав звіт? — (Не писав / Ще не написав). — Чому ти не їв? / Чому ти
-        ще не поїв?"
-      - "Self-assessment: learners notice that both options often 'work' grammatically,
-        but the MEANING shifts. This module teaches how to control that shift
-        intentionally."
-      - "Key concept: negation + aspect = TWO different speech acts. Не + недоконаний:
-        'This activity didn't happen. I'm stating a fact.' Ще не + доконаний: 'This
-        result hasn't been achieved yet, but it's expected.' The speaker's attitude
-        toward the action (neutral fact vs pending expectation) determines the aspect."
-      - "Mini-dialogue illustrating the difference: — Ти вже обідав? — Ні, не обідав.
-        (Factual: I haven't eaten lunch.) vs — Ти вже пообідав? — Ще не пообідав.
-        (Expected: I haven't had lunch YET — but I will.)"
-  - section: "Не + недоконаний: загальне заперечення"
+      - 'Діагностика: 10 пар речень із запереченням — учні обирають природний варіант. Приклади: — Ти читав цю книжку? — Ні, (не читав / ще не прочитав). [Обидва правильні — але означають різне. Який підходить за контекстом?] — Ти написав звіт? — (Не писав / Ще не написав). — Чому ти не їв? / Чому ти ще не поїв?'
+      - 'Самооцінювання: учні помічають, що граматично часто підходять обидва варіанти, але ЗНАЧЕННЯ змінюється. Цей модуль навчає, як свідомо керувати цією зміною.'
+      - 'Головний концепт: заперечення + вид = ДВА різні мовленнєві акти. Не + недоконаний: «Ця дія не відбулася. Я констатую факт». Ще не + доконаний: «Цей результат ще не досягнутий, але він очікується». Ставлення мовця до дії (нейтральний факт vs очікування в процесі) визначає вид.'
+      - 'Мінідіалог, що ілюструє різницю: — Ти вже обідав? — Ні, не обідав. (Фактично: я не обідав.) vs — Ти вже пообідав? — Ще не пообідав. (Очікувано: я ЩЕ не обідав — але збираюся.)'
+  - section: 'Не + недоконаний: загальне заперечення'
     words: 1050
     points:
-      - "Core pattern: не + недоконаний вид = the action is denied as a general fact
-        (Заболотний Grade 7 p.57). Я не читав цю книжку. (Never read it — factual.)
-        Вона не телефонувала. (She didn't call — no call occurred.) Ми не обговорювали
-        це питання. (We didn't discuss it — the topic wasn't raised.) Він не вчив
-        українську. (He didn't study Ukrainian — general statement.)"
-      - "In present tense: not doing something now/generally. Я не розумію. (I don't
-        understand — ongoing state.) Він не працює сьогодні. (He's not working today.)
-        Вона не їсть м'ясо. (She doesn't eat meat — general habit.) All naturally
-        imperfective because the present tense itself is imperfective."
-      - "In questions: Ти не бачив моїх ключів? (general — have you seen my keys at
-        all?) Ви не знаєте, де бібліотека? (polite question — impf natural). Чому ви
-        не відповідали на листи? (why didn't you respond — general non-occurrence)."
-      - "Practice: learners answer questions with не + impf to express general negation.
-        — Ти дивився цей фільм? — Ні, не дивився. — Вона вчила іспанську? — Ні, не
-        вчила. Focus: the speaker makes no comment about whether they SHOULD have
-        done it."
-  - section: "Ще не + доконаний: очікуване завершення"
+      - 'Основний шаблон: не + недоконаний вид = дія заперечується як загальний факт (Заболотний 7 клас, с.57). Я не читав цю книжку. (Ніколи не читав — констатація факту.) Вона не телефонувала. (Вона не телефонувала — дзвінка не було.) Ми не обговорювали це питання. (Ми не обговорювали — тему не порушували.) Він не вчив українську. (Він не вчив українську — загальне твердження.)'
+      - 'У теперішньому часі: не робить чогось зараз/загалом. Я не розумію. (Я не розумію — тривалий стан.) Він не працює сьогодні. (Він сьогодні не працює.) Вона не їсть м''ясо. (Вона не їсть м''ясо — загальна звичка.) Усі форми природно недоконані, оскільки сам теперішній час є недоконаним.'
+      - 'У питаннях: Ти не бачив моїх ключів? (загальне — чи бачив ти мої ключі взагалі?) Ви не знаєте, де бібліотека? (ввічливе питання — недок. природний). Чому ви не відповідали на листи? (чому ви не відповідали — загальна відсутність дії).'
+      - 'Практика: учні відповідають на запитання, використовуючи не + недок., щоб виразити загальне заперечення. — Ти дивився цей фільм? — Ні, не дивився. — Вона вчила іспанську? — Ні, не вчила. Фокус: мовець не робить жодних коментарів щодо того, чи ПОВИННІ вони були це робити.'
+  - section: 'Ще не + доконаний: очікуване завершення'
     words: 1050
     points:
-      - "Core pattern: ще не + доконаний вид = expected result has not been achieved
-        YET (Литвінова Grade 7 p.38). Я ще не прочитав цю книжку. (I haven't read it
-        yet — but I intend to / I'm expected to.) Вона ще не зателефонувала. (She
-        hasn't called yet — but she's supposed to.) Ми ще не вирішили. (We haven't
-        decided yet — decision pending.)"
-      - "The word ще is the key signal: it marks the expectation that the action WILL
-        eventually be completed. Without ще, perfective negation is rare and marked:
-        Він не прочитав книжку (unusual — implies specific failure). With ще: Він ще
-        не прочитав книжку (natural — pending completion)."
-      - "In future: Я ще не зроблю це до п'ятниці. (I won't have done it by Friday —
-        result pending.) Вона ще не закінчить до вечора. (She won't have finished by
-        evening.) These express incomplete progress toward an expected endpoint."
-      - "Contrastive pairs — same sentence, different aspect, different pragmatics:
-        Він не писав лист. (General: he didn't write any letter.) Він ще не написав
-        лист. (Specific: the letter exists as expectation, but isn't done yet.)
-        Я не вчила цей матеріал. (I didn't study this material at all.) Я ще не
-        вивчила цей матеріал. (I haven't mastered it yet — but I'm working on it.)
-        Practice: learners produce both variants and explain the pragmatic difference."
-  - section: "Підсумок: заперечення як прагматичний вибір"
+      - 'Основний шаблон: ще не + доконаний вид = очікуваний результат ЩЕ не досягнутий (Литвінова 7 клас, с.38). Я ще не прочитав цю книжку. (Я ще не прочитав її — але маю намір / від мене очікують.) Вона ще не зателефонувала. (Вона ще не зателефонувала — але повинна.) Ми ще не вирішили. (Ми ще не вирішили — рішення очікується).'
+      - 'Слово «ще» є ключовим маркером: воно сигналізує про очікування того, що дія зрештою БУДЕ завершена. Без «ще» заперечення доконаного виду зустрічається рідко і є маркованим: Він не прочитав книжку (незвично — вказує на конкретний провал). З «ще»: Він ще не прочитав книжку (природно — очікування завершення).'
+      - 'У майбутньому: Я ще не зроблю це до п''ятниці. (Я не встигну зробити це до п''ятниці — результат очікується пізніше.) Вона ще не закінчить до вечора. (Вона ще не закінчить до вечора.) Вони виражають неповний прогрес до очікуваного кінцевого моменту.'
+      - 'Контрастні пари — одне й те саме речення, різний вид, різна прагматика: Він не писав лист. (Загальне: він взагалі не писав листа.) Він ще не написав лист. (Конкретне: лист існує як очікування, але ще не готовий.) Я не вчила цей матеріал. (Я взагалі не вчила цей матеріал.) Я ще не вивчила цей матеріал. (Я ще не опанувала його — але працюю над цим.) Практика: учні утворюють обидва варіанти і пояснюють прагматичну різницю.'
+  - section: 'Підсумок: заперечення як прагматичний вибір'
     words: 1050
     points:
-      - "Synthesis: negation + aspect is about the speaker's ATTITUDE, not about
-        objective reality. The same factual situation (no letter was written) can be
-        expressed as не писав (neutral fact) or ще не написав (pending expectation).
-        The speaker CHOOSES how to frame the non-occurrence."
-      - "Extended dialogue practice: learners roleplay a scenario where a boss asks
-        about project progress. Employee uses не + impf for tasks they weren't assigned
-        (Ні, я не працював над цим — це не моє завдання) and ще не + pf for tasks in
-        progress (Ще не закінчив, але закінчу до п'ятниці). The aspect reveals the
-        employee's relationship to each task."
-      - "Common errors: *Я ще не читав цю книжку (mixing ще не with impf — awkward;
-        choose either не читав or ще не прочитав). *Він не написав лист (without ще,
-        perfective negation sounds like accusation or complaint — unnatural for neutral
-        statement). Over-using ще не — not every negation implies pending completion."
-      - "Preview of next module: after work-and-career thematic break, aspect-in-
-        conditionals — how aspect behaves in якщо/якби sentences."
+      - 'Синтез: заперечення + вид — це про СТАВЛЕННЯ мовця, а не про об''єктивну реальність. Ту саму фактичну ситуацію (лист не написано) можна висловити як не писав (нейтральний факт) або ще не написав (очікування завершення). Мовець ОБИРАЄ, як подати відсутність дії.'
+      - 'Розширена діалогова практика: учні розігрують сценарій, де керівник запитує про хід проєкту. Співробітник використовує не + недок. для завдань, які йому не доручали (Ні, я не працював над цим — це не моє завдання) та ще не + док. для завдань у процесі (Ще не закінчив, але закінчу до п''ятниці). Вид розкриває ставлення працівника до кожного завдання.'
+      - 'Типові помилки: *Я ще не читав цю книжку (поєднання ще не з недок. — звучить незграбно; оберіть або не читав, або ще не прочитав). *Він не написав лист (без ще заперечення доконаного виду звучить як звинувачення або скарга — неприродно для нейтрального твердження). Надмірне використання ще не — не кожне заперечення передбачає очікування завершення.'
+      - 'Анонс наступного модуля: після тематичної паузи про роботу та кар''єру, вид в умовних реченнях — як вид поводиться в конструкціях з якщо/якби.'
 vocabulary_hints:
   - word: "заперечення"
     pos: "noun:n"
@@ -176,50 +114,41 @@ vocabulary_hints:
     translation: "intention (ще не implies intention to complete)"
 activity_hints:
   - type: quiz
-    focus: "Choose не + impf or ще не + pf based on context — factual denial vs
-      pending expectation"
+    focus: 'Оберіть не + недок. або ще не + док. залежно від контексту — констатація факту vs очікування завершення'
     items: 10
   - type: fill-in
-    focus: "Complete negated sentences with the correct aspect form based on the
-      speaker's attitude (neutral fact vs 'not yet')"
+    focus: 'Доповніть заперечні речення правильною видовою формою залежно від ставлення мовця (нейтральний факт vs «ще ні»)'
     items: 8
   - type: group-sort
-    focus: "Sort negated sentences into загальне заперечення (не + impf) and
-      незавершене очікування (ще не + pf)"
+    focus: 'Розподіліть заперечні речення на загальне заперечення (не + недок.) та незавершене очікування (ще не + док.)'
     items: 10
   - type: error-correction
-    focus: "Find and correct aspect errors in negated sentences (*ще не читав →
-      ще не прочитав; *не написав without context → не писав)"
+    focus: 'Знайдіть і виправте помилки у виборі виду в заперечних реченнях (*ще не читав → ще не прочитав; *не написав без контексту → не писав)'
     items: 6
   - type: match-up
-    focus: "Match pragmatic situations (boss asking about tasks, friend asking about
-      books, teacher checking homework) to the correct negation pattern"
+    focus: 'З''єднайте прагматичні ситуації (керівник запитує про завдання, друг питає про книжки, вчитель перевіряє домашнє завдання) із правильним шаблоном заперечення'
     items: 8
   - type: open-writing
-    focus: "Write a dialogue where one person asks about progress on several tasks —
-      use не + impf for unstarted tasks and ще не + pf for pending tasks"
+    focus: 'Напишіть діалог, у якому одна особа розпитує про виконання кількох завдань — використовуйте не + недок. для нерозпочатих завдань і ще не + док. для завдань у процесі виконання'
     items: 6
 connects_to:
-  - "b1-008 (Вид у наказовому способі — aspect in imperatives, prerequisite)"
-  - "b1-011 (Вид в умовних реченнях — aspect in conditionals)"
-  - "b1-004 (Вид у минулому часі — negation pairs build on past-tense aspect)"
+  - 'b1-008 (Вид у наказовому способі — передумова)'
+  - 'b1-011 (Вид в умовних реченнях)'
+  - 'b1-004 (Вид у минулому часі — заперечні пари будуються на виді минулого часу)'
 prerequisites:
-  - "b1-008 aspect-in-imperatives (aspect pragmatics in commands)"
-  - "b1-004 aspect-past-tense (aspect choice in past tense)"
+  - 'b1-008 aspect-in-imperatives (прагматика виду в наказах)'
+  - 'b1-004 aspect-past-tense (вибір виду в минулому часі)'
 grammar:
-  - "Не + недоконаний вид: загальне заперечення — факт ненастання дії"
-  - "Ще не + доконаний вид: очікуване, але незавершене — результат ще попереду"
-  - "Прагматична різниця: нейтральний факт vs незавершене очікування"
-  - "Заперечення у всіх часах: минулий, теперішній, майбутній"
-  - "Дієслова з префіксом до- (домити, дочитати, доробити) у контексті ще не"
+  - 'Не + недоконаний вид: загальне заперечення — факт ненастання дії'
+  - 'Ще не + доконаний вид: очікуване, але незавершене — результат ще попереду'
+  - 'Прагматична різниця: нейтральний факт vs незавершене очікування'
+  - 'Заперечення у всіх часах: минулий, теперішній, майбутній'
+  - 'Дієслова з префіксом до- (домити, дочитати, доробити) у контексті ще не'
 register: розмовний
 references:
   - title: "Заболотний Grade 7, p.54-60"
-    notes: "Вид дієслова: заперечення і вид, вибір виду в заперечних конструкціях,
-      вправи на мінімальні пари з запереченням."
+    notes: 'Вид дієслова: заперечення і вид, вибір виду в заперечних конструкціях, вправи на мінімальні пари з запереченням.'
   - title: "Литвінова Grade 7, p.36-40"
-    notes: "Вид і заперечення: ще не + доконаний як маркер очікуваного завершення,
-      не + недоконаний як загальне заперечення."
+    notes: 'Вид і заперечення: ще не + доконаний як маркер очікуваного завершення, не + недоконаний як загальне заперечення.'
   - title: "Авраменко Grade 7, p.63-70"
-    notes: "Заперечні конструкції з видом: вправи на розрізнення загального заперечення
-      і незавершеного очікування."
+    notes: 'Заперечні конструкції з видом: вправи на розрізнення загального заперечення і незавершеного очікування.'
