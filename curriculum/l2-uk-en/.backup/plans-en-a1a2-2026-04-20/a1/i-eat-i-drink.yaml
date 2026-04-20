@@ -1,0 +1,146 @@
+module: a1-037
+level: A1
+sequence: 37
+slug: i-eat-i-drink
+version: '1.2'
+title: I Eat, I Drink
+subtitle: Я їм хліб, п'ю каву — accusative for what you eat and drink
+focus: grammar
+pedagogy: PPP
+phase: A1.6 [Food and Shopping]
+word_target: 1200
+objectives:
+- Conjugate їсти and пити in present tense
+- Use accusative case for inanimate direct objects (Я їм хліб, п'ю каву)
+- Recognize feminine accusative ending change (-а → -у): кава → каву, вода → воду
+- Describe eating and drinking habits using accusative
+dialogue_situations:
+- setting: 'Lunch break at work — unpacking lunch boxes: Я їм бутерброд (m, sandwich)
+    і п''ю чай (m, tea). А ти? Я їм салат (m) і п''ю каву (f, coffee). Also: яблуко
+    (n), банан (m), вода (f), сік (m, juice).'
+  speakers:
+  - Колега 1
+  - Колега 2
+  motivation: 'Accusative: бутерброд(m), салат(m), каву(f→acc), яблуко(n), чай(m)'
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 300
+  points:
+  - 'Dialogue 1 — Breakfast conversation: — Що ти їш на сніданок? — Я їм кашу і п''ю
+    каву. — А Олена? — Вона їсть хліб з маслом і п''є чай. — А діти? — Вони їдять
+    яйця і п''ють молоко. Full conjugation of їсти and пити in natural context.'
+  - 'Dialogue 2 — At lunch: — Що ви їсте на обід? — Ми їмо суп і салат. — А що п''єте?
+    — Ми п''ємо воду або сік. — Я теж хочу суп. — Добре, замовляй! Review of їсти/пити
+    with plural subjects.'
+- section: Їсти і пити (To Eat and To Drink)
+  words: 300
+  points:
+  - 'Conjugation of їсти (irregular — NOT Group I or II): я їм, ти їси, він/вона їсть,
+    ми їмо, ви їсте, вони їдять. Conjugation of пити (Group I): я п''ю, ти п''єш,
+    він/вона п''є, ми п''ємо, ви п''єте, вони п''ють. Both are essential daily verbs
+    — high frequency.'
+  - 'Ukrainian school approach (Grade 4 — знахідний відмінок): ''Бачу що? кого?''
+    — the accusative answers ''what do I see/eat/drink?'' Я їм (що?) хліб. Я п''ю
+    (що?) каву. The question що? triggers accusative for inanimate objects.'
+- section: Знахідний відмінок — неживе (Accusative Inanimate)
+  words: 300
+  points:
+  - 'Accusative for inanimate nouns — what changes: Masculine inanimate: NO CHANGE
+    (= nominative). хліб → хліб (Я їм хліб), суп → суп (Я їм суп), сік → сік (Я п''ю
+    сік). Neuter: NO CHANGE (= nominative). молоко → молоко (Я п''ю молоко), яйце
+    → яйце (Я їм яйце).'
+  - 'Feminine -а → -у (THE key change at A1): кава → каву (Я п''ю каву), вода → воду
+    (Я п''ю воду), риба → рибу (Я їм рибу), каша → кашу (Я їм кашу), картопля → картоплю
+    (Я їм картоплю). Pattern: feminine nouns ending in -а change to -у, ending in
+    -я change to -ю. This is the ONLY accusative change learners need now.'
+- section: Підсумок — Summary
+  words: 300
+  points:
+  - 'Accusative inanimate summary: Masculine/Neuter: no change (хліб, молоко stay
+    the same). Feminine -а → -у, -я → -ю (кава → каву, картопля → картоплю). Test:
+    Я їм ___ (риба → рибу). Я п''ю ___ (вода → воду). Self-check: Say 3 things you
+    eat and 3 things you drink today. Use the correct accusative form for each.'
+vocabulary_hints:
+  required:
+  - їсти (to eat — irregular)
+  - пити (to drink)
+  - їм (I eat)
+  - п'ю (I drink)
+  - каву (coffee — accusative)
+  - воду (water — accusative)
+  - рибу (fish — accusative)
+  recommended:
+  - кашу (porridge — accusative)
+  - картоплю (potato — accusative)
+  - сметану (sour cream — accusative)
+  - їсть (he/she eats)
+  - п'є (he/she drinks)
+  - їдять (they eat)
+  - п'ють (they drink)
+activity_hints:
+- type: fill-in
+  focus: Form the accusative case for feminine (-а/-я → -у/-ю) and masculine/neuter
+    (no change)
+  items: 8
+  blanks:
+  - Я їм (риба) {рибу}.
+  - Вона п'є (вода) {воду}.
+  - Він їсть (хліб) {хліб}.
+  - Ми п'ємо (молоко) {молоко}.
+  - Вони їдять (каша) {кашу}.
+  - Ти п'єш (кава) {каву}.
+  - Я їм (суп) {суп}.
+  - Вона їсть (картопля) {картоплю}.
+- type: quiz
+  focus: Select the correct accusative form to complete the sentence
+  items: 6
+  questions:
+  - Я п'ю... (каву / кава / кави)
+  - Він їсть... (рибу / риба / рибі)
+  - Ми п'ємо... (сік / соку / соком)
+  - Вона їсть... (м'ясо / м'ясу / м'яса)
+  - Вони п'ють... (воду / вода / воді)
+  - Ти їш... (кашу / каша / каші)
+- type: fill-in
+  focus: Conjugate the verbs їсти (irregular) and пити (Group I)
+  items: 8
+  blanks:
+  - Я {їм} суп.
+  - Ми {п'ємо} чай.
+  - Вона {їсть} хліб.
+  - Вони {п'ють} воду.
+  - Ти {їси} рибу?
+  - Ви {п'єте} каву?
+  - Він {п'є} сік.
+  - Вони {їдять} кашу.
+- type: group-sort
+  focus: Sort nouns based on how they change in the accusative case (inanimate)
+  items: 8
+  groups:
+  - name: Змінюється (-у/-ю)
+    items:
+    - кава
+    - вода
+    - риба
+    - каша
+  - name: Не змінюється (як у називному)
+    items:
+    - хліб
+    - сік
+    - молоко
+    - м'ясо
+connects_to:
+- a1-038 (At the Cafe)
+prerequisites:
+- a1-036 (Food and Drink)
+grammar:
+- 'Accusative inanimate: masculine/neuter = nominative, feminine -а→-у, -я→-ю'
+- Conjugation of їсти (irregular) and пити (Group I)
+- Question що? as accusative trigger for inanimate
+register: розмовний
+references:
+- title: ULP Season 1, Episode 32
+  url: https://www.ukrainianlessons.com/episode32/
+  notes: Accusative case introduction — inanimate objects.
+- title: 'Grade 4 textbook: Знахідний відмінок (Заболотний)'
+  notes: 'Ukrainian school approach: бачу що? кого?'

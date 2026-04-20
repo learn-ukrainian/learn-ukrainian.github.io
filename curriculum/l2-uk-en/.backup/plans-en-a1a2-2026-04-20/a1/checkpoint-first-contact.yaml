@@ -1,0 +1,87 @@
+module: a1-007
+level: A1
+sequence: 7
+slug: checkpoint-first-contact
+version: '1.1'
+title: 'Checkpoint: First Contact'
+subtitle: Can you read, greet, and introduce yourself?
+focus: review
+pedagogy: PPP
+phase: A1.1 [Sounds, Letters, and First Contact]
+word_target: 1200
+objectives:
+- Demonstrate ability to read Ukrainian Cyrillic fluently
+- Hold a complete first conversation (greet → introduce → family)
+- Self-assess knowledge of sounds, letters, greetings, introductions
+- Combine all A1.1 skills in connected speech
+dialogue_situations:
+- setting: Conference coffee break — two professionals meet between sessions
+  speakers:
+  - Богдан (engineer from Dnipro)
+  - Соломія (teacher from Ternopil)
+  motivation: 'Consolidation: name, origin, profession, family — full introduction'
+content_outline:
+- section: Що ми знаємо? (What Do We Know?)
+  words: 200
+  points:
+  - 'Self-check covering M01-M06: Can you read any Ukrainian word? (M01-M02) Do you
+    know what Ь and apostrophe do? (M03) Can you place stress correctly? (M04) Can
+    you introduce yourself? (M05) Can you talk about your family? (M06)'
+- section: Читання (Reading Practice)
+  words: 250
+  points:
+  - 'A short Ukrainian text (8-10 sentences) using ONLY vocabulary from M01-M06. No
+    new words. The learner reads aloud. Content: A person introduces themselves, describes
+    family, mentions professions, says where from.'
+  - Following Anna Ep10 'Я і моя сім'я' review pattern.
+- section: Граматика (Grammar Summary)
+  words: 200
+  points:
+  - 'Key patterns from A1.1: 1. Це + noun (identification) 2. Subject — Noun (no ''is''):
+    Я — студент 3. У мене є + noun (possession) 4. Як тебе/вас звати? (asking names)
+    5. Мій/моя/моє + noun (possession with gender) 6. Звідки ти? — Я з... (origin
+    as chunk)'
+- section: Діалог (Capstone Dialogue)
+  words: 400
+  points:
+  - 'The Full Introduction — comprehensive dialogue combining EVERYTHING from A1.1.
+    Setting: meeting someone new. Full cycle: greeting → name → origin → profession
+    → family → showing photos → goodbye. If learner can follow and produce this dialogue,
+    A1.1 is complete.'
+  - 'Connected monologue: learner''s own self-introduction. Привіт! Мене звати [name].
+    Я [nationality]. Я — [profession]. Моя мама — [profession]. Мій тато — [profession].
+    У мене є [family]. This is the A1.1 graduation speech.'
+- section: Підсумок — Summary
+  words: 150
+  points:
+  - 'Final self-check questions: How many letters/sounds in Ukrainian? Say hello formally
+    and informally. Introduce yourself in 5 sentences. Name your family members with
+    possessives.'
+vocabulary_hints:
+  required:
+  - All vocabulary from M01-M06 is recycled — no new required words
+  recommended:
+  - ім'я (first name)
+  - прізвище (surname)
+activity_hints:
+- type: quiz
+  focus: 'Comprehensive review: sounds, letters, greetings, family'
+  items: 12
+- type: fill-in
+  focus: Complete the full self-introduction monologue
+  items: 8
+- type: match-up
+  focus: Match questions with answers (Як звати? → Мене звати...)
+  items: 8
+connects_to:
+- a1-008 (Things Have Gender)
+prerequisites:
+- a1-006 (My Family)
+grammar:
+- 'Review: Це + noun, Subject — Noun, У мене є, possessives'
+- No new grammar — consolidation only
+register: розмовний
+references:
+- title: ULP Season 1, Episode 10 — Review 1-9
+  url: https://www.ukrainianlessons.com/episode10/
+  notes: Anna's connected self-introduction review pattern.

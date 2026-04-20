@@ -1,0 +1,112 @@
+module: a2-005
+level: A2
+sequence: 5
+slug: genitive-intro
+version: 1.1.2
+title: У мене немає...
+subtitle: Родовий відмінок для вираження відсутності та кількості
+focus: grammar
+pedagogy: PPP
+phase: A2.1 [Foundation and Aspect Introduction]
+word_target: 2000
+objectives:
+- Learner can correctly use the Genitive singular after `немає` to express the 
+  absence of an object.
+- Learner can form the Genitive singular endings for all three noun genders 
+  (-а/-я, -у/-ю, -и/-і).
+- Learner can use quantity words `багато`, `мало`, `кілька`, `декілька` with the
+  Genitive plural.
+- Learner can form the Genitive plural endings for all three noun genders (-ів, 
+  -ей, нульове закінчення).
+dialogue_situations:
+- setting: 'Moving into a new apartment — discovering what''s missing: Немає холодильника
+    (m, fridge)! Немає плити (f, stove)! Немає дзеркала (n, mirror)! Є багато коробок
+    (pl, boxes) але мало меблів (pl, furniture).'
+  speakers:
+  - Сусідка (neighbor)
+  - Нова мешканка (new tenant)
+  motivation: 'Genitive with немає: холодильник→холодильника, плита→плити, дзеркало→дзеркала'
+content_outline:
+- section: 'Родовий відмінок: Коли чогось немає (The Genitive Case: When Something
+    Isn''t There)'
+  words: 600
+  points:
+  - Introducing the Genitive case (Родовий відмінок), answering 'Кого? Чого?'.
+  - 'Its first key function: expressing absence or non-existence with the construction
+    `(У мене) немає + Genitive`.'
+  - 'Contrast: ''У мене є брат'' (Nominative) vs. ''У мене немає брата'' (Genitive).'
+  - 'Practice with simple sentences: ''Тут є стіл.'' -> ''Тут немає стола.'''
+- section: Закінчення родового відмінка однини (Genitive Singular Endings)
+  words: 700
+  points:
+  - 'Masculine nouns: the -а/-я vs. -у/-ю puzzle. -а/-я for concrete, animate, specific
+    items (стола, брата, комп''ютера). -у/-ю for abstract concepts, substances, locations
+    (часу, цукру, Києву).'
+  - 'Feminine nouns: -и for hard stems (книги, мами), -і for soft stems and stems
+    in -я (землі, пісні).'
+  - 'Neuter nouns: -а for stems in -о (вікна), -я for stems in -е (моря, сонця).'
+  - Provide clear charts and practice drills for forming the Genitive singular.
+- section: Коли є багато або мало (When There Is a Lot or a Little)
+  words: 700
+  points:
+  - 'Introducing quantity words that require the Genitive plural: багато (a lot),
+    мало (a little, few), кілька/декілька (a few, some), скільки (how many).'
+  - 'Genitive Plural Endings: a tricky topic. Masculine: often -ів (столів, братів).
+    Feminine/Neuter: often a zero ending, sometimes with a fleeting vowel (книг →
+    книжок, сестер, вікон). A small group of masculine/neuter nouns takes -ей (гостей,
+    коней, очей).'
+  - 'Lots of examples: багато друзів, мало грошей, кілька книжок, скільки студентів?'
+  - Focus on recognizing and using the most common forms, not memorizing every 
+    exception.
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - "The Genitive singular is used with `немає` to express absence. Masculine endings
+    split between -а/-я (concrete: брата, стола) and -у/-ю (abstract/substance: часу,
+    цукру). Feminine takes -и/-і, and neuter takes -а/-я. Self-check: How do you say
+    'I don't have a computer'? What is the difference between the masculine endings
+    -а and -у?"
+  - "Quantity words (`багато`, `мало`, `кілька`) require the Genitive plural. Endings
+    vary: masculine often takes -ів (братів), feminine/neuter often take a zero ending
+    (книжок, вікон), and some take -ей (гостей). Self-check: Name 3 things you have
+    'багато' of and 3 things you have 'мало' of. How do you ask 'How many students?'
+    in Ukrainian?"
+vocabulary_hints:
+  required:
+  - родовий відмінок (genitive case)
+  - немає ((there) is not, (I) don't have)
+  - багато (a lot, many, much)
+  - мало (a little, few)
+  - кілька (a few, several)
+  - скільки (how many, how much)
+  - закінчення (ending (grammar))
+  - однина (singular)
+  - множина (plural)
+  recommended:
+  - кількість (quantity)
+  - відсутність (absence)
+  - гроші (money)
+  - час (time)
+activity_hints:
+- type: quiz
+  focus: Possession vs. Absence Drill (`Є` vs. `Немає`)
+  items: 8
+- type: fill-in
+  focus: Genitive Singular Formation
+  items: 8
+- type: match-up
+  focus: Genitive Plural Formation with Quantity Words
+  items: 8
+- type: match-up
+  focus: Translate sentences with 'a lot of...' / 'I don't have...'
+  items: 8
+- type: unjumble
+  focus: Reorder words to form correct genitive phrases with немає and quantity 
+    expressions
+  items: 6
+references:
+- title: 'ULP: 10 Uses of Genitive Case'
+  url: https://www.ukrainianlessons.com/genitive-case/
+  notes: All genitive functions explained
+- title: Заболотний Grade 6, §81
+  notes: немає vs не має — key distinction with examples

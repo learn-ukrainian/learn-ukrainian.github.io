@@ -1,0 +1,109 @@
+module: a1-004
+level: A1
+sequence: 4
+slug: stress-and-melody
+version: '1.1'
+title: Stress and Melody
+subtitle: Наголос changes meaning, intonation changes intent
+focus: phonetics
+pedagogy: PPP
+phase: A1.1 [Sounds, Letters, and First Contact]
+word_target: 1200
+objectives:
+- Understand that Ukrainian stress is free and can change word meaning
+- Place stress correctly on common A1 words
+- Use rising intonation for yes/no questions and falling for statements
+- Read aloud with natural Ukrainian rhythm
+content_outline:
+- section: Наголос (Stress)
+  words: 350
+  points:
+  - 'Заболотний Grade 5 p.73: Ukrainian has 38 sounds, and stress (наголос) determines
+    which syllable is louder and longer. Stress is FREE — it can fall on any syllable,
+    and it MOVES between forms of the same word. This is unlike French (always last)
+    or Czech (always first).'
+  - 'Stress changes meaning — real pairs learners will encounter: замок (castle) vs
+    замок (lock), мука (torment) vs мука (flour), атлас (atlas) vs атлас (satin).
+    Wrong stress = wrong word. This is why stress marks matter.'
+  - In writing, stress marks (') appear in textbooks and dictionaries but NOT in everyday
+    Ukrainian text. As a learner, always check goroh.pp.ua for stress when unsure.
+  - 'Common patterns for beginners: First syllable: мама, тато, ранок, кава, книга.
+    Last syllable: вода, зима, рука, метро, кафе. No shortcut — learn each word''s
+    stress individually.'
+- section: Інтонація (Intonation)
+  words: 300
+  points:
+  - 'Ukrainian uses intonation (melody) to distinguish sentence types. Same words,
+    different melody, different meaning. Statement: Це кава. ↘ (falling — telling)
+    Question: Це кава? ↗ (rising on last stressed syllable — asking) Exclamation:
+    Як гарно! ↘↘ (strong fall — expressing emotion)'
+  - 'Question words (хто, що, де, коли) make questions WITHOUT rising: Що це? ↘ (falling
+    — the question word does the work). Де метро? ↘ (falling). But yes/no questions
+    always rise: Це метро? ↗'
+  - 'Ukrainian classifies sentences by purpose: розповідні (declarative), питальні
+    (interrogative), спонукальні (imperative). Any of these can also be окличні (exclamatory)
+    — a separate dimension. For A1: focus on the three punctuation patterns: . for
+    statements, ? for questions, ! for exclamations/commands.'
+- section: Читаємо вголос (Reading Aloud)
+  words: 300
+  points:
+  - 'Multisyllable reading with correct stress: у-кра-їн-ська (Ukrainian — stress
+    on ї), фо-то-гра-фі-я (photograph — stress on third а: фотографія), ві-дпо-чи-нок
+    (rest — stress on и). Method: break → find stressed syllable → read at natural
+    speed.'
+  - 'Word stress reading practice — read aloud with correct наголос: Ки-їв, мо-ло-ко,
+    ран-ок, ка-ва, во-да, зи-ма, у-кра-їн-ська. Find the stressed syllable, then
+    read the whole word at natural speed.'
+  - 'Dialogue practice using greetings from M01: — Привіт! ↘ (statement/greeting)
+    — Привіт! Як справи? ↗ (yes/no question) — Добре! А у тебе? ↗ — Добре! ↘ Apply
+    intonation patterns to the greetings already learned.'
+- section: Підсумок — Summary
+  words: 250
+  points:
+  - 'Self-check: What is наголос? Can it change word meaning? Give an example. What
+    intonation do you use for a yes/no question? For a statement? Read this aloud:
+    Це аптека? Так, це аптека. Як гарно!'
+vocabulary_hints:
+  required:
+  - наголос (stress/accent) — metalanguage word
+  - замок (castle) — stress pair (first syllable)
+  - замок (lock) — stress pair (second syllable)
+  - кава (coffee) — first-syllable stress
+  - вода (water) — second-syllable stress
+  - столиця (capital) — Київ — столиця України
+  recommended:
+  - мука (flour) — stress pair with мука (torment)
+  - ранок (morning) — first-syllable stress
+  - метро (metro) — last-syllable stress
+  - фотографія (photograph) — long word practice
+activity_hints:
+- type: quiz
+  focus: Where is the stress? Choose the correct syllable.
+  items: 8
+- type: match-up
+  focus: 'Match stress pairs: замок (castle) ↔ замок (lock)'
+  items: 4
+- type: quiz
+  focus: Statement, question, or exclamation? Choose based on punctuation.
+  items: 6
+- type: fill-in
+  focus: 'Add the correct punctuation: Це кава_ Де метро_ Як гарно_'
+  items: 6
+connects_to:
+- a1-005 (Who Am I?)
+prerequisites:
+- a1-003 (Special Signs)
+grammar:
+- Free stress system (наголос)
+- Stress-meaning pairs
+- 'Three intonation patterns: statement ↘, question ↗, exclamation ↘↘'
+- Question words don't need rising intonation
+register: розмовний
+references:
+- title: Заболотний Grade 5, p.73
+  notes: 38 звуків, наголос. Stress as free and mobile.
+- title: Авраменко Grade 5, p.19
+  notes: Інтонація речень — розповідні, питальні, окличні.
+- title: ULP Season 1, Episode 5 — Pronunciation Trainer
+  url: https://www.ukrainianlessons.com/episode5/
+  notes: Stress practice with numbers.

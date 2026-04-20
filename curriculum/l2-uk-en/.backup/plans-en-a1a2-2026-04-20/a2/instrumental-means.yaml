@@ -1,0 +1,129 @@
+module: a2-025
+level: A2
+sequence: 25
+slug: instrumental-means
+version: 1.0.2
+title: Ручкою, автобусом
+subtitle: Орудний відмінок без прийменника для знаряддя та засобу
+focus: grammar
+pedagogy: PPP
+phase: A2.4 [Instrumental Case]
+word_target: 2000
+objectives:
+- Learner can use the Instrumental case without a preposition to express the 
+  tool or instrument of an action (писати ручкою, малювати олівцем).
+- Learner can use the Instrumental to express means of transport (їхати 
+  автобусом, летіти літаком).
+- Learner can distinguish accompaniment (з другом) from tool/means usage (писати
+  ручкою) — preposition vs. no preposition.
+- Learner can form Instrumental plural endings for common nouns (-ами, -ями).
+dialogue_situations:
+- setting: 'Art class — discussing tools and methods: Малюю олівцем (m, pencil). Фарбую
+    пензлем (m, brush). Ріжу ножицями (pl, scissors). Їду на виставку автобусом (m,
+    bus).'
+  speakers:
+  - Вчитель мистецтва
+  - Учні
+  motivation: 'Instrumental of means: олівець→олівцем, пензель→пензлем, ножиці→ножицями'
+content_outline:
+- section: Чим? Знаряддя дії (With What? The Tool of an Action)
+  words: 550
+  points:
+  - 'The original meaning of Instrumental: the tool you use to do something. No preposition
+    needed — the case ending alone carries the meaning.'
+  - 'Writing and drawing: писати ручкою, писати олівцем, малювати фарбами, креслити
+    лінійкою, різати ножем, їсти ложкою.'
+  - 'Housework and daily tools: мити водою, витирати ганчіркою, чистити щіткою, підмітати
+    віником.'
+  - Contrast with English "with a pen" — Ukrainian does NOT use з for tools. 
+    Писати з ручкою = wrong (means "write accompanied by a pen"). Писати ручкою 
+    = correct.
+  - Practice forming Instrumental from Nominative for common tool nouns across 
+    all three genders.
+- section: 'Їхати автобусом: Засіб пересування (Travel by Bus: Means of Transport)'
+  words: 500
+  points:
+  - 'Transport in Instrumental without a preposition: їхати автобусом, їхати потягом,
+    летіти літаком, пливти кораблем, їхати таксі (indeclinable).'
+  - 'Question pattern: Чим ти їдеш на роботу? — Я їду автобусом / метро / трамваєм.'
+  - 'Dialogue: Two colleagues discussing how they get to work — one takes the bus,
+    the other walks (іти пішки — an exception that uses no Instrumental).'
+  - Common transport vocabulary with Instrumental forms side by side.
+- section: Орудний відмінок множини (Instrumental Plural)
+  words: 500
+  points:
+  - 'Instrumental plural endings: -ами for hard stems (руками, столами, вікнами),
+    -ями for soft stems (олівцями, дверями, конями).'
+  - The plural pattern is simpler than singular — same endings across all 
+    genders.
+  - 'Practice with tools in plural: малювати фарбами, їсти паличками, працювати руками,
+    писати олівцями.'
+  - 'Feminine III declension plural: -ями with possible consonant changes (ночами
+    but мишами).'
+- section: 'Практика: Знаряддя чи супутник? (Practice: Tool or Companion?)'
+  words: 450
+  points:
+  - 'Contrastive drill: Я пишу ручкою (tool) vs. Я ходжу з ручкою (companion — carrying
+    it around). Він їде автобусом (means) vs. Він їде з другом (companion).'
+  - 'Fill-in exercises: choose whether to add з or use bare Instrumental based on
+    meaning.'
+  - 'Dialogue: At school — students discuss what they write with, draw with, and how
+    they get to school.'
+  - 'Common expressions: пахнути квітами (to smell of flowers), займатися спортом
+    (to do sports) — Instrumental without preposition in fixed phrases.'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - The Instrumental case without a preposition indicates the tool of an action 
+    (писати ручкою) or means of transport (їхати автобусом), while adding 'з' 
+    changes the meaning to accompaniment (їхати з другом). Plural endings are 
+    -ами for hard stems (руками) and -ями for soft stems (олівцями).
+  - "Self-check: What is the difference between 'я пишу ручкою' and 'я пишу з ручкою'?
+    Describe 3 tools you use for daily chores and 2 vehicles you can take to work
+    using the Instrumental case."
+vocabulary_hints:
+  required:
+  - ручка (pen)
+  - олівець (pencil)
+  - фарба (paint)
+  - лінійка (ruler)
+  - ніж (knife)
+  - ложка (spoon)
+  - автобус (bus)
+  - потяг (train)
+  - літак (airplane)
+  - трамвай (tram)
+  - засіб (means, tool)
+  recommended:
+  - знаряддя (instrument, tool)
+  - транспорт (transport)
+  - пішки (on foot)
+  - корабель (ship)
+activity_hints:
+- type: fill-in
+  focus: Put the noun in Instrumental singular to express the tool of an action
+  items: 8
+- type: quiz
+  focus: Choose between з + Instrumental (companion) and bare Instrumental 
+    (tool)
+  items: 8
+- type: match-up
+  focus: Match transport nouns to their Instrumental forms
+  items: 8
+- type: group-sort
+  focus: Sort sentences into Tool/Means vs. Accompaniment categories
+  items: 8
+- type: unjumble
+  focus: Reorder words to form correct instrumental phrases expressing tool or 
+    means of transport
+  items: 6
+references:
+- title: Кравцова Grade 4, с. 56-57
+  notes: Discovery exercises for masculine Instrumental endings (-ом, -ем, -єм) 
+    with tool verbs (писати, малювати)
+- title: Захарійчук Grade 4, с. 62
+  notes: Instrumental endings for masculine nouns, exercises with tool and 
+    transport contexts
+- title: 'ULP: Ukrainian Cases — Instrumental'
+  url: https://www.ukrainianlessons.com/instrumental-case/
+  notes: Tool and transport functions of Instrumental

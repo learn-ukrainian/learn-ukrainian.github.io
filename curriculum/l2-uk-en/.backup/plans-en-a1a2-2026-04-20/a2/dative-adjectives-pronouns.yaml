@@ -1,0 +1,127 @@
+module: a2-019
+level: A2
+sequence: 19
+slug: dative-adjectives-pronouns
+version: 1.0.2
+title: Моєму другові, нашій вчительці
+subtitle: Узгодження прикметників та присвійних займенників у давальному 
+  відмінку
+focus: grammar
+pedagogy: PPP
+phase: A2.3 [Dative Case]
+word_target: 2000
+objectives:
+- Learner can form dative adjective endings for all genders and plural 
+  (-ому/-ій/-ому/-им).
+- Learner can form dative possessive pronoun endings (моєму/моїй, твоєму/твоїй, 
+  нашому/нашій, вашому/вашій).
+- Learner can produce correctly agreeing noun phrases in the dative (моєму 
+  старшому братові, нашій новій вчительці).
+- Learner can use demonstrative pronouns цьому/цій/тому/тій in dative noun 
+  phrases.
+dialogue_situations:
+- setting: 'Teacher handing back graded essays — giving to specific students: Моєму
+    найкращому студентові — десятка! Нашій новій студентці — дев''ятка. Цьому хлопцю
+    треба більше працювати.'
+  speakers:
+  - Вчитель
+  - Студенти
+  motivation: 'Full dative phrases: моєму студентові, нашій студентці, цьому хлопцю'
+content_outline:
+- section: Прикметники у давальному відмінку (Adjectives in the Dative Case)
+  words: 600
+  points:
+  - 'Masculine/neuter dative ending: -ому for hard stems (новому, старому, гарному),
+    -ьому for soft stems (синьому, середньому).'
+  - 'Feminine dative ending: -ій for hard stems (новій, старій, гарній), -ій for soft
+    stems too (синій→синій). After г, к, х: -ій with no alternation (довгій, тихій).'
+  - 'Plural dative ending for all genders: -им (новим, старим, гарним).'
+  - Chart comparing adjective endings across Nominative, Genitive, Dative for 
+    pattern recognition.
+  - Practice with familiar adjectives from A1-A2 vocabulary.
+- section: Присвійні та вказівні займенники у давальному відмінку (Possessive 
+    and Demonstrative Pronouns in the Dative)
+  words: 550
+  points:
+  - 'Possessive pronouns follow adjective endings: мій→моєму/моїй, твій→твоєму/твоїй,
+    його (invariable), її (invariable), наш→нашому/нашій, ваш→вашому/вашій, їхній→їхньому/їхній.'
+  - 'Demonstrative pronouns: цей→цьому/цій, той→тому/тій. Plural: цим, тим.'
+  - 'Key insight: його, її, їхній — його never changes form (give to його брат → його
+    братові), but їхній declines (їхньому братові).'
+  - Practice forming dative phrases with possessive + noun combinations.
+- section: Повні іменникові групи у давальному відмінку (Full Dative Noun 
+    Phrases)
+  words: 500
+  points:
+  - 'Building multi-word dative phrases: possessive + adjective + noun all must agree
+    — моєму старшому братові, нашій новій вчительці, твоєму маленькому синові.'
+  - 'Word order: possessive before adjective before noun, same as nominative.'
+  - 'Practice with real-life scenarios: giving presents (подарувати моєму другові),
+    writing to someone (написати нашій бабусі), explaining to someone (пояснити цьому
+    студентові).'
+  - Common mistakes to avoid — mixing masculine -ому with feminine -ій.
+- section: Порівняння відмінків (Comparing Cases So Far)
+  words: 350
+  points:
+  - 'Quick comparison chart: Nominative, Genitive, Dative adjective/pronoun endings
+    side by side for all genders.'
+  - 'Pattern recognition: masculine/neuter Genitive -ого vs. Dative -ому; feminine
+    Genitive -ої vs. Dative -ій.'
+  - Practice choosing the correct case form based on the verb and sentence 
+    context.
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - "Dative adjective and pronoun agreement depends on gender: Masculine/Neuter take
+    -ому/-ьому (моєму новому), Feminine takes -ій (моїй новій), and Plural takes -им.
+    Remember that 'його' and 'її' are invariable, while 'їхній' declines."
+  - "Self-check: How do you say 'to my older brother' and 'to our new teacher' in
+    Ukrainian? (моєму старшому братові, нашій новій вчительці) What is the difference
+    between the masculine Genitive and Dative adjective endings? (-ого vs. -ому) Write
+    3 sentences describing who you give gifts to using full dative noun phrases."
+vocabulary_hints:
+  required:
+  - моєму (to my (masc./neut. dat.))
+  - моїй (to my (fem. dat.))
+  - твоєму (to your (masc./neut. dat.))
+  - нашій (to our (fem. dat.))
+  - цьому (to this (masc./neut. dat.))
+  - тому (to that (masc./neut. dat.))
+  - новому (to the new (masc./neut. dat.))
+  - старшому (to the older (masc./neut. dat.))
+  - прикметник (adjective)
+  - присвійний (possessive)
+  recommended:
+  - вказівний (demonstrative)
+  - узгодження (agreement (grammar))
+  - іменникова група (noun phrase)
+  - їхньому (to their (masc./neut. dat.))
+activity_hints:
+- type: fill-in
+  focus: Complete dative noun phrases with the correct adjective/pronoun ending 
+    (мо___ друг___)
+  items: 8
+- type: quiz
+  focus: Choose the correct dative form of the possessive pronoun (моєму vs. 
+    моїй vs. моїм)
+  items: 8
+- type: match-up
+  focus: Match nominative noun phrases to their dative equivalents (мій друг → 
+    моєму другові)
+  items: 8
+- type: group-sort
+  focus: Sort dative adjective forms by gender (masculine -ому, feminine -ій, 
+    plural -им)
+  items: 8
+- type: error-correction
+  focus: Find and fix adjective-pronoun agreement errors in dative phrases 
+    (e.g., *моїй другові → моєму другові, *нашому вчительці → нашій вчительці)
+  items: 6
+references:
+- title: Заболотний Grade 10, §157
+  notes: Dative case paradigm with examples of adjective+noun agreement
+- title: Захарійчук Grade 4, §281
+  notes: Pronoun declension tables showing dative forms of possessives
+- title: 'ULP: Ukrainian Possessive Pronouns'
+  url: https://www.ukrainianlessons.com/possessive-pronouns/
+  notes: Declension of possessive pronouns across all cases

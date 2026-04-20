@@ -1,0 +1,117 @@
+module: a1-025
+level: A1
+sequence: 25
+slug: my-day
+version: '1.2'
+title: My Day
+subtitle: Спочатку, потім, нарешті — telling a story about your day
+focus: communication
+pedagogy: PPP
+phase: A1.4 [Time and Nature]
+word_target: 1200
+objectives:
+- Describe a full day from morning to evening using verbs and time expressions
+- Use sequence words to connect events (спочатку, потім, після того, нарешті)
+- Combine time (M22), days (M23), weather (M24), and verbs (A1.3)
+- Tell a simple coherent story about a typical or specific day
+dialogue_situations:
+- setting: Writing a blog post / diary entry about your day — reading it to a friend
+  speakers:
+  - Автор (narrator)
+  - Друг (listener, reacting)
+  motivation: 'Sequence words: спочатку, потім, нарешті in narration'
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 300
+  points:
+  - Dialogue 1 — What did you do today? — Як пройшов твій день? — Добре! Вранці я
+    працював. — А потім? — Потім обідав о першій. Після обіду гуляв. — А ввечері?
+    — Ввечері дивився фільм і читав книгу. Past tense emerges naturally here — teach
+    as vocabulary chunks, not grammar (past tense grammar = M48-49).
+  - 'Dialogue 2 — Planning tomorrow: — Що ти будеш робити завтра? — Вранці буду працювати.
+    — А після обіду? — Буду вивчати українську. А ввечері — гуляти. Future ''буду
+    + infinitive'' as a chunk.'
+- section: Мій типовий день (My Typical Day)
+  words: 300
+  points:
+  - 'A model text using all A1.3-A1.4 skills: Я прокидаюся о сьомій. Спочатку вмиваюся
+    і одягаюся. Потім снідаю. О дев''ятій я працюю. О першій обідаю. Після обіду працюю
+    до п''ятої. Ввечері готую вечерю, читаю і дивлюся фільм. О одинадцятій лягаю спати.'
+  - 'Parts of the day: вранці (in the morning), вдень (during the day), після обіду
+    (in the afternoon — literally ''after lunch''), ввечері (in the evening), вночі
+    (at night). These are adverbs — just add them to the beginning of a sentence.'
+- section: Від ранку до вечора (From Morning to Evening)
+  words: 300
+  points:
+  - 'Extended sequence words (building on M20): спочатку (first/at first), потім (then/next),
+    після того/після цього (after that), нарешті (finally), також (also), а потім
+    (and then). These connect sentences into a coherent narrative.'
+  - 'Daily activity verbs (review + new): снідати (to have breakfast — review M20),
+    обідати (to have lunch), вечеряти (to have dinner), відпочивати (to rest), лягати
+    спати (to go to bed — chunk). All Group I (-ати), easy to conjugate with M16 patterns.'
+- section: Підсумок — Summary
+  words: 300
+  points:
+  - 'Telling your day: Time + sequence + activity = а coherent story. О сьомій прокидаюся.
+    Спочатку снідаю. Потім працюю. Після обіду відпочиваю. Ввечері читаю. Нарешті
+    лягаю спати. Self-check: Describe your typical Monday from morning to evening.
+    Use at least 3 time expressions and 3 sequence words.'
+vocabulary_hints:
+  required:
+  - вранці (in the morning)
+  - вдень (during the day)
+  - ввечері (in the evening)
+  - обідати (to have lunch)
+  - вечеряти (to have dinner)
+  - відпочивати (to rest)
+  - після (after)
+  recommended:
+  - прокидатися (to wake up — review from M20)
+  - вмиватися (to wash — review from M20)
+  - одягатися (to get dressed — review from M20)
+  - вночі (at night)
+  - після обіду (in the afternoon)
+  - також (also)
+  - лягати спати (to go to bed — chunk)
+  - типовий (typical)
+  - вільний (free)
+activity_hints:
+- type: match-up
+  focus: Match the activity to the logical time of day
+  pairs:
+  - прокидаюся ↔ вранці
+  - снідаю ↔ вранці
+  - працюю ↔ вдень
+  - обідаю ↔ вдень
+  - вечеряю ↔ ввечері
+  - дивлюся фільм ↔ ввечері
+  - лягаю спати ↔ вночі
+  - сплю ↔ вночі
+- type: fill-in
+  focus: Complete the logical sequence of the day
+  items:
+  - '{Спочатку|Потім|Нарешті} я прокидаюся і вмиваюся.'
+  - Після того я {снідаю|вечеряю|лягаю спати}.
+  - Вдень я {працюю|прокидаюся|снідаю} в офісі.
+  - О першій годині я {обідаю|вечеряю|прокидаюся}.
+  - '{Потім|Спочатку|Вранці} я читаю книгу або дивлюся фільм.'
+  - '{Нарешті|Спочатку|Вдень} я лягаю спати о дванадцятій.'
+- type: fill-in
+  focus: Choose the correct part of the day
+  items:
+  - Я п'ю каву {вранці|вночі|ввечері}.
+  - Ми вечеряємо {ввечері|вранці|вдень}.
+  - Вона працює з дев'ятої до п'ятої {вдень|вночі|вранці}.
+  - Вони гуляють у парку {після обіду|вночі|вранці}.
+connects_to:
+- a1-026 (Free Time)
+prerequisites:
+- a1-024 (Weather)
+grammar:
+- 'Sequence words: спочатку, потім, після того, нарешті'
+- 'Parts of the day as adverbs: вранці, вдень, ввечері, вночі'
+- 'Preview chunks only: працював/працювала, буду + infinitive (grammar in A1.8)'
+register: розмовний
+references:
+- title: Вашуленко Grade 2, p.83
+  notes: Planning your day activity — connecting activities to time.

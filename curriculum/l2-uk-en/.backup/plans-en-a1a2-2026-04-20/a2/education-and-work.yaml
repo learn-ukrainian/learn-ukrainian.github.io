@@ -1,0 +1,119 @@
+module: a2-052
+level: A2
+sequence: 52
+slug: education-and-work
+version: 1.0.2
+title: Навчання і робота
+subtitle: Складні речення в академічному та професійному контексті
+focus: communication
+pedagogy: TBL
+phase: A2.7 [Complex Sentences and Conditionals]
+word_target: 2000
+objectives:
+- Learner can talk about their education background and work experience using 
+  complex sentences (тому що, щоб, який, якщо).
+- Learner can explain motivations for studying or working using purpose clauses 
+  (Я вивчаю українську, щоб працювати в Україні).
+- Learner can describe a workplace or school using relative clauses 
+  (Університет, де я навчаюся... / Компанія, в якій я працюю...).
+- Learner can discuss plans and conditions related to education and career using
+  real conditionals (Якщо я складу іспит, то вступлю до університету).
+dialogue_situations:
+- setting: Career counseling session at a university — Що ви вивчаєте? Право (n,
+    law). Ким хочете стати? Адвокатом (m, lawyer). Де хочете працювати? В 
+    юридичній фірмі (f, law firm).
+  speakers:
+  - Консультант
+  - Студент
+  motivation: 'Education + career: право(n), адвокат(m), фірма(f)'
+content_outline:
+- section: 'Про освіту: школа та університет (About Education: School and University)'
+  words: 700
+  points:
+  - 'Talking about your educational path: Я закінчив школу у 2015 році. Потім я вступив
+    до університету, тому що хотів стати інженером.'
+  - 'Describing your school/university with relative clauses: Університет, де я навчався,
+    знаходиться у Львові. Предмет, який мені найбільше подобався, — це історія.'
+  - 'Purpose of education: Я вчуся, щоб отримати диплом. Вона поїхала за кордон, щоб
+    вивчити нову спеціальність.'
+  - 'Ukrainian education vocabulary: школа, гімназія, ліцей, університет, інститут,
+    факультет, спеціальність, диплом, іспит, залік, предмет, курс.'
+  - 'Natural dialogue: two new acquaintances asking about each other''s education
+    — Де ти навчався? Яку спеціальність обрав? Чому саме цю?'
+- section: 'Про роботу: ким ви працюєте? (About Work: What Do You Do?)'
+  words: 700
+  points:
+  - 'Describing your job and workplace: Я працюю програмістом у компанії, яка розробляє
+    додатки. Моя колега, яка сидить поруч, допомагає мені з проєктами.'
+  - 'Explaining why you chose your profession: Я став вчителем, тому що люблю працювати
+    з дітьми. Хоча робота важка, вона дає задоволення.'
+  - 'Work conditions with якщо: Якщо я добре працюю, то отримую премію. Якщо є вільний
+    час, я ходжу на курси.'
+  - 'Common work vocabulary: робота, посада, компанія, офіс, колега, зарплата, графік,
+    завдання, проєкт, керівник, співбесіда.'
+  - 'Natural dialogue: at a party, someone asks what you do — Ким ви працюєте? Вам
+    подобається ваша робота? Що ви робите на роботі?'
+- section: Плани на майбутнє (Plans for the Future)
+  words: 600
+  points:
+  - 'Discussing career and education goals: Якщо я складу іспит, то вступлю до магістратури.
+    Я хочу змінити роботу, щоб мати більше вільного часу.'
+  - 'Giving and receiving career advice using conditionals: Якщо хочеш знайти кращу
+    роботу, вивчай нову мову. Якщо тобі не подобається робота, шукай іншу.'
+  - 'Concessions about work/study: Хоча я ще студент, я вже працюю на частковий робочий
+    день. Хоча зарплата невелика, робота цікава.'
+  - 'Consolidation dialogue: a career counseling conversation or a job interview where
+    the learner uses all complex sentence types naturally — причина, мета, означення,
+    умова, допуст.'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - "Complex sentences are essential for professional topics. Reason: я працюю, тому
+    що... Purpose: я вчуся, щоб... Condition: якщо я складу іспит, то... Self-check:
+    How do you say 'I study Ukrainian to work in Ukraine'? (Я вивчаю українську, щоб
+    працювати в Україні)."
+  - "Relative clauses link details about your background: університет, де я навчався;
+    компанія, яка розробляє додатки. Self-check: Describe your current job or studies
+    using 3 new words (e.g., спеціальність, посада, колега). What is the difference
+    between 'тому що' and 'щоб'?"
+vocabulary_hints:
+  required:
+  - освіта (education)
+  - навчання (studying, learning)
+  - університет (university)
+  - спеціальність (specialty, major)
+  - професія (profession)
+  - працювати (to work)
+  - робота (work, job)
+  - досвід (experience)
+  - іспит (exam)
+  - диплом (diploma, degree)
+  recommended:
+  - факультет (faculty, department)
+  - зарплата (salary)
+  - співбесіда (job interview)
+  - керівник (manager, supervisor)
+  - магістратура (master's program)
+activity_hints:
+- type: fill-in
+  focus: Complete sentences about education and work using тому що, щоб, який, 
+    якщо
+  items: 8
+- type: quiz
+  focus: Choose the correct complex sentence type for work/education scenarios
+  items: 8
+- type: match-up
+  focus: Match education/career situations to appropriate responses using 
+    complex sentences
+  items: 8
+- type: true-false
+  focus: Judge whether statements about Ukrainian education and work culture use
+    correct complex sentence structures
+  items: 8
+references:
+- title: Заболотний Grade 5, §28
+  notes: Complex sentences of cause, purpose, condition — applied in thematic 
+    context
+- title: 'ULP: How to Talk About Your Job in Ukrainian'
+  url: https://www.ukrainianlessons.com/work-in-ukrainian/
+  notes: Work vocabulary and conversational patterns

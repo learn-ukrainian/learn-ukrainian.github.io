@@ -1,0 +1,107 @@
+module: a1-027
+level: A1
+sequence: 27
+slug: checkpoint-time-nature
+version: '1.2'
+title: 'Checkpoint: Time and Nature'
+subtitle: Can you tell time, plan a week, and describe the weather?
+focus: review
+pedagogy: PPP
+phase: A1.4 [Time and Nature]
+word_target: 1200
+objectives:
+- Demonstrate ability to tell time and use "at" + time expressions
+- Name days, months, and seasons with correct preposition chunks
+- Describe weather using impersonal constructions
+- Tell a coherent story about a typical day
+- Discuss hobbies and make plans using frequency words
+dialogue_situations:
+- setting: Planning a road trip together — dates, weather, schedule
+  speakers:
+  - Організатор
+  - Друзі
+  motivation: 'Consolidation: time, calendar, weather, daily routine'
+content_outline:
+- section: Що ми знаємо? (What Do We Know?)
+  words: 200
+  points:
+  - 'Self-check covering M22-M26: Can you tell time? (M22) Can you name days and months?
+    (M23) Can you describe the weather? (M24) Can you describe your day? (M25) Can
+    you talk about hobbies? (M26)'
+- section: Читання (Reading Practice)
+  words: 250
+  points:
+  - 'A short Ukrainian text (8-10 sentences) using vocabulary from M22-M26. Content:
+    a person describes their typical week — schedule, weather, hobbies. Example: У
+    понеділок я працюю з дев''ятої до п''ятої. У вівторок вивчаю українську. Влітку
+    я часто гуляю. Взимку ходжу в кіно. Мені подобається осінь.'
+- section: Граматика (Grammar Summary)
+  words: 200
+  points:
+  - 'Key patterns from A1.4: 1. Time: Котра година? О котрій? (ordinal chunks) 2.
+    Days: у понеділок, в суботу (accusative chunks) 3. Months: у січні, в серпні (locative
+    chunks) 4. Seasons: взимку, навесні, влітку, восени 5. Weather: холодно, тепло,
+    іде дощ, іде сніг 6. Sequence: спочатку, потім, нарешті 7. Frequency: завжди,
+    часто, іноді, рідко, ніколи'
+- section: Діалог (Connected Dialogue)
+  words: 300
+  points:
+  - 'A complete conversation combining all A1.4 skills: Planning a weekend outing.
+    — Яка завтра погода? — Тепло і сонячно. — Чудово! Ходімо в парк! О котрій? — О
+    десятій ранку. — Добре! Я часто гуляю в суботу. — А потім ходімо в кіно! — О п''ятій?
+    — Так! Uses: time, day, weather, invitation, frequency.'
+- section: Підсумок — Summary
+  words: 250
+  points:
+  - 'A1.4 achievement summary: You can now talk about time, schedules, and the world
+    around you. You can tell time and plan meetings. You can name all days, months,
+    and seasons. You can describe the weather. You can tell a story about your day.
+    You can discuss hobbies and make plans. Next: A1.5 — Places (city, directions,
+    transport).'
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: fill-in
+  focus: Mixed review of time, days, and weather chunks
+  items:
+  - Зустріч {о п'ятій|в п'ятій|у п'ята} годині.
+  - Ми йдемо в кіно {у суботу|в суботі|на суботу}.
+  - Мій день народження {у січні|в січень|січень}.
+  - Сьогодні {іде дощ|іде дощова|дощить} і холодно.
+  - Взимку дуже {холодно|спекотно|тепло}.
+  - Я прокидаюся о сьомій {ранку|рано|вранці}.
+- type: match-up
+  focus: Match the questions to logical answers
+  pairs:
+  - Котра година? ↔ Десята тридцять.
+  - О котрій зустріч? ↔ О першій.
+  - Яка сьогодні погода? ↔ Тепло і сонячно.
+  - Коли твій день народження? ↔ У жовтні.
+  - Що ти робиш у суботу? ↔ Граю у футбол.
+  - Як часто ти читаєш? ↔ Кожен день ввечері.
+  - Ходімо в парк! ↔ Добре, о котрій?
+  - Що ти будеш робити завтра? ↔ Буду працювати.
+- type: fill-in
+  focus: Complete the paragraph describing a day
+  items:
+  - '{Спочатку|Потім|Нарешті} я прокидаюся і снідаю.'
+  - '{Потім|Вранці|Вночі} я йду на роботу.'
+  - Я працюю з дев'ятої {до|і|по} п'ятої.
+  - '{Після обіду|Вранці|Вночі} я гуляю в парку.'
+  - Я гуляю, тому що сьогодні {тепло|холодно|дощ} і сонячно.
+  - '{Ввечері|Вдень|Вранці} я вечеряю і слухаю музику.'
+  - '{Нарешті|Спочатку|Потім} я лягаю спати о дванадцятій.'
+connects_to:
+- a1-028 (Euphony)
+prerequisites:
+- a1-026 (Free Time)
+grammar:
+- 'Review: time expressions and ordinal chunks'
+- 'Review: calendar vocabulary with prepositions'
+- 'Review: impersonal weather constructions'
+- 'Review: sequence and frequency words'
+register: розмовний
+references:
+- title: Synthesis of M22-M26 content
+  notes: No new material — review and integration of A1.4 phase.

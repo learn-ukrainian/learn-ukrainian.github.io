@@ -1,0 +1,134 @@
+module: a2-030
+level: A2
+sequence: 30
+slug: work-and-food
+version: 1.0.2
+title: Професії та кулінарія
+subtitle: Застосування орудного відмінка у розмовах про роботу та приготування 
+  їжі
+focus: communication
+pedagogy: TBL
+phase: A2.4 [Instrumental Case]
+word_target: 2000
+objectives:
+- Learner can conduct a natural conversation about professions using 
+  Instrumental constructions (Ким ти працюєш? Чим ти захоплюєшся?).
+- Learner can describe a recipe or cooking process using Instrumental for tools 
+  (різати ножем) and ingredients (салат з помідорами).
+- Learner can combine all Instrumental functions (companionship, tool, 
+  profession, spatial) in a single extended conversation.
+- Learner can use Instrumental noun phrases with adjectives and pronouns in 
+  communicative contexts.
+dialogue_situations:
+- setting: 'Job interview at a restaurant — talking about experience and cooking a
+    test dish: Ким ви працювали? Кухарем (m, cook). Що ви вмієте готувати? Борщ з
+    яловичиною (f, beef), вареники з картоплею (f, potato).'
+  speakers:
+  - Шеф-кухар (head chef)
+  - Кандидат
+  motivation: 'Professions + cooking: кухар→кухарем, з яловичиною, з картоплею'
+content_outline:
+- section: Розмова про професії (Talking About Professions)
+  words: 550
+  points:
+  - 'Task scenario: You meet someone new at a gathering. Ask about their profession,
+    interests, and what they are passionate about.'
+  - 'Key question chains: Хто ти за фахом? → Я працюю програмістом. Чим ти захоплюєшся?
+    → Захоплююся фотографією. Ким ти хотів/хотіла стати в дитинстві? → Я мріяв/мріяла
+    стати лікарем.'
+  - 'Extended dialogue: Two people at a party — one is a cook, the other is a teacher.
+    They discuss their jobs, what they like about them, and what they do in their
+    free time.'
+  - 'Useful response frames: Я працюю... (Instrumental). Мені подобається бути...
+    (Instrumental). Я цікавлюся... (Instrumental).'
+- section: 'На кухні: Готуємо разом (In the Kitchen: Cooking Together)'
+  words: 550
+  points:
+  - 'Task scenario: Describe how to make a simple Ukrainian dish (e.g., вареники з
+    картоплею, салат з овочами, бутерброд з маслом і сиром).'
+  - 'Tool Instrumental: різати ножем, мішати ложкою, смажити на сковорідці (Locative
+    — contrast!), посипати сіллю, поливати олією.'
+  - 'Ingredient Instrumental with з: борщ зі сметаною, вареники з картоплею, салат
+    з помідорами і огірками, чай з медом.'
+  - 'Dialogue: Two friends cooking together — one reads the recipe, the other asks
+    questions (Чим мішати? Що різати? З чим подавати?).'
+- section: Мій робочий день (My Workday)
+  words: 500
+  points:
+  - 'Task: Describe a full workday using all Instrumental functions — Вранці я їду
+    на роботу автобусом. Працюю за комп''ютером (Instrumental — tool). Обідаю з колегами
+    (accompaniment). Перед обідом маю нараду.'
+  - 'Combining prepositions: перед роботою (before work), між нарадами (between meetings),
+    за розкладом (according to schedule), з моїм начальником (with my boss).'
+  - 'Dialogue: A vlog-style monologue where someone describes their typical day —
+    uses all Instrumental patterns naturally.'
+  - 'Spatial review: Мій офіс між кафе і аптекою. Парковка за будинком. Над моїм столом
+    висить картина.'
+- section: 'Практика: Розкажи про себе (Practice: Tell About Yourself)'
+  words: 400
+  points:
+  - 'Integrated production task: Write 8-10 sentences about yourself — your profession,
+    interests, daily routine, favorite food — using as many Instrumental constructions
+    as possible.'
+  - 'Self-check: identify which Instrumental function each sentence uses (accompaniment,
+    tool, profession, spatial, temporal).'
+  - 'Peer dialogue simulation: Practice a full getting-to-know-you conversation that
+    touches on work, hobbies, food preferences, and daily schedule.'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - The Instrumental case expresses professions (працюю програмістом), interests
+    (захоплююся фотографією), tools (різати ножем), accompaniment/ingredients (з
+    колегами, салат з помідорами), and spatial/temporal relations (перед обідом,
+    між кафе і аптекою).
+  - 'Self-check: How do you ask someone about their profession and hobbies? (Ким ти
+    працюєш? Чим ти захоплюєшся?) Describe your typical workday using at least 3 different
+    Instrumental functions.'
+  - What is the difference between 'мішати ложкою' (tool) and 'борщ зі сметаною'
+    (accompaniment)? Describe how to make a simple dish using at least 2 
+    ingredients and 1 tool.
+vocabulary_hints:
+  required:
+  - готувати (to cook, to prepare)
+  - різати (to cut)
+  - мішати (to stir, to mix)
+  - посипати (to sprinkle)
+  - подавати (to serve)
+  - вареники (varenyky, dumplings)
+  - картопля (potato)
+  - помідор (tomato)
+  - огірок (cucumber)
+  - сіль (salt)
+  - олія (oil)
+  - виделка (fork)
+  recommended:
+  - рецепт (recipe)
+  - інгредієнт (ingredient)
+  - нарада (meeting)
+  - колега (colleague)
+  - начальник (boss)
+activity_hints:
+- type: fill-in
+  focus: Complete a recipe description with correct Instrumental forms for tools
+    and ingredients
+  items: 8
+- type: match-up
+  focus: Match profession questions to appropriate Instrumental answers
+  items: 8
+- type: quiz
+  focus: Identify which Instrumental function (tool, companion, profession, 
+    spatial) is used in each sentence
+  items: 8
+- type: true-false
+  focus: Judge whether sentences about a workday use correct Instrumental forms
+  items: 8
+references:
+- title: Кравцова Grade 4, с. 54
+  notes: Tool Instrumental exercises — "Пишу ручкою, зафарбовую фарбою, вишиваю 
+    ниткою" — natural tool contexts
+- title: 'ULP: Ukrainian Recipes'
+  url: https://www.ukrainianlessons.com/season4-lesson80/
+  notes: Cooking vocabulary and Instrumental usage in recipe contexts
+- title: Захарійчук Grade 4, с. 62-63
+  notes: Full range of Instrumental prepositions and noun forms for practical 
+    application

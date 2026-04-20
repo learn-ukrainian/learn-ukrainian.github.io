@@ -1,0 +1,132 @@
+module: a1-050
+level: A1
+sequence: 50
+slug: what-will-happen
+version: '1.2'
+title: What Will Happen?
+subtitle: Я буду читати — your first future tense
+focus: grammar
+pedagogy: PPP
+phase: A1.8 [Past, Future, Graduation]
+word_target: 1200
+objectives:
+- Form analytic future tense using буду + infinitive for all persons
+- Distinguish analytic future from present tense
+- Use future tense to talk about plans and intentions
+- Ask and answer "What will you do?" (Що ти будеш робити?)
+dialogue_situations:
+- setting: 'A village ворожка reading a client''s palm in her kitchen — predicting
+    the future with analytical imperfective future: Ти будеш багато подорожувати.
+    Будеш зустрічати цікавих людей (m). Будеш отримувати подарунки (pl). Будеш щасливий/щаслива!'
+  speakers:
+  - Ворожка (village fortune teller, at home)
+  - Клієнт
+  motivation: 'Imperfective analytical future (буду + infinitive): подорожувати, зустрічати, отримувати — iterative/process actions across time, not single completed events.'
+content_outline:
+- section: Dialogues
+  words: 300
+  points:
+  - 'Dialogue 1 — Plans for tomorrow: — Що ти будеш робити завтра? — Завтра я буду
+    працювати. — А ввечері? — Ввечері я буду готувати вечерю. — А що буде робити Олена?
+    — Вона буде читати. — А ви будете гуляти? — Так, ми будемо гуляти в парку! All
+    persons of буду + infinitive.'
+  - 'Dialogue 2 — Weekend plans: — Що ви будете робити на вихідних? — У суботу ми
+    будемо відпочивати. — А в неділю? — У неділю я буду готувати, а чоловік буде гуляти
+    з дітьми. — Звучить добре! А я буду дивитися футбол. — Ти завжди будеш дивитися
+    футбол! Future in natural planning conversation.'
+- section: Майбутній час (Future Tense)
+  words: 300
+  points:
+  - 'Grade 3-4 textbooks: майбутній час (future tense). Ukrainian has TWO futures.
+    At A1 we learn ONE — the analytic future: буду + infinitive (like English ''will''
+    + verb). я буду читати (I will read) ти будеш читати (you will read) він/вона
+    буде читати (he/she will read) ми будемо читати (we will read) ви будете читати
+    (you will read) вони будуть читати (they will read) The infinitive stays the same
+    — only буду changes by person.'
+  - 'Compare all three tenses: Минулий (past): Я читав/читала книжку. (I read a book.)
+    Теперішній (present): Я читаю книжку. (I am reading a book.) Майбутній (future):
+    Я буду читати книжку. (I will read a book.) Past = gender endings. Present = person
+    endings. Future = буду + infinitive. Note: the synthetic future (прочитаю) exists
+    but is A2 material.'
+- section: Практика (Practice)
+  words: 300
+  points:
+  - 'Core verbs in future tense: читати → буду читати, будеш читати, буде читати...
+    працювати → буду працювати, будеш працювати... готувати → буду готувати, будеш
+    готувати... гуляти → буду гуляти, будеш гуляти... дивитися → буду дивитися, будеш
+    дивитися... говорити → буду говорити, будеш говорити...'
+  - 'Building sentences about the future: Завтра я буду працювати з дев''ятої до п''ятої.
+    Ввечері ми будемо дивитися фільм. У суботу вони будуть гуляти в парку. Що ви будете
+    їсти на вечерю? Time words for future: завтра (tomorrow), наступного тижня (next
+    week), у суботу (on Saturday), ввечері (in the evening).'
+- section: Summary
+  words: 300
+  points:
+  - 'Analytic future formation: буду / будеш / буде / будемо / будете / будуть + infinitive.
+    The infinitive never changes — only буду conjugates. Three tenses now: Учора я
+    читав. (Past — gender) Зараз я читаю. (Present — person) Завтра я буду читати.
+    (Future — буду + infinitive) Question: Що ти будеш робити? (What will you do?)
+    Answer: Я буду + infinitive. Self-check: What will you do tomorrow morning, afternoon,
+    and evening?'
+vocabulary_hints:
+  required:
+  - завтра (tomorrow)
+  - буду (I will — form of бути)
+  - будеш (you will)
+  - буде (he/she/it will)
+  - будемо (we will)
+  - будете (you pl. will)
+  - будуть (they will)
+  - робити (to do)
+  recommended:
+  - відпочивати (to rest)
+  - наступний (next, adj)
+  - тиждень (week, m)
+  - план (plan, m)
+  - звучати (to sound)
+  - футбол (football, m)
+  - зараз (now)
+activity_hints:
+- type: matching
+  focus: Match pronoun to the correct form of 'бути' (future)
+  pairs:
+  - я: буду
+  - ти: будеш
+  - він/вона: буде
+  - ми: будемо
+  - ви: будете
+  - вони: будуть
+- type: fill-in
+  focus: Complete the analytic future tense (бути + infinitive)
+  items:
+  - Завтра я {буду|буде|будемо} працювати.
+  - Що ти {будеш|буду|будете} робити ввечері?
+  - Вона {буде|будуть|будемо} читати книжку.
+  - Ми {будемо|буде|буду} дивитися футбол.
+  - Ви {будете|будеш|будуть} гуляти в парку?
+  - Вони {будуть|будемо|буде} відпочивати.
+- type: fill-in
+  focus: Distinguish between past, present, and future tenses
+  items:
+  - Зараз я {читаю|читав|буду читати}.
+  - Учора він {гуляв|гуляє|буде гуляти} у парку.
+  - Завтра ми {будемо дивитися|дивилися|дивимося} фільм.
+  - Минулого тижня вона {працювала|працює|буде працювати}.
+connects_to:
+- a1-051 (My Plans)
+prerequisites:
+- a1-049 (Yesterday)
+grammar:
+- 'Analytic future: буду + infinitive (only this form at A1)'
+- 'Conjugation of бути in future: буду, будеш, буде, будемо, будете, будуть'
+- 'Three-tense comparison: past (gender), present (person), future (буду + inf)'
+- 'Question: Що ти будеш робити?'
+register: розмовний
+references:
+- title: State Standard 2024, §4.2.4.1
+  notes: Future tense — analytic form (буду + infinitive) at A1.
+- title: 'Grade 3-4 textbook: Майбутній час'
+  notes: 'Future tense formation: складений майбутній час (analytic future).'
+- title: ULP Season 1, Episode 28
+  url: https://www.ukrainianlessons.com/episode28/
+  notes: 'Future tense: talking about plans.'

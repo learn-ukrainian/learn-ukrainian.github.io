@@ -1,0 +1,119 @@
+module: a2-054
+level: A2
+sequence: 54
+slug: comparison
+version: 1.1.2
+title: Більше, краще, найкраще
+subtitle: Ступені порівняння прикметників та прислівників
+focus: grammar
+pedagogy: PPP
+phase: A2.8 [Refinement and Graduation]
+word_target: 2000
+objectives:
+- Learner can form the comparative degree of adjectives using both synthetic 
+  (-ший) and analytic (більш) forms.
+- Learner can form the superlative degree using the prefix най- (найсолодший) 
+  and the analytic form (найбільш солодкий).
+- Learner can correctly use suppletive comparative forms (великий → більший, 
+  добрий → кращий, поганий → гірший, малий → менший).
+- Learner can use comparative constructions with ніж and за + Accusative to 
+  compare two objects.
+dialogue_situations:
+- setting: 'Choosing a new phone — comparing models in a store: Цей телефон (m) більший,
+    але дорожчий. Той дешевший, але менший. Який найкращий? Найкращий — той, що має
+    найбільший екран (m, screen).'
+  speakers:
+  - Покупець
+  - Консультант
+  motivation: 'Comparative/superlative: більший, дорожчий, найкращий with телефон(m),
+    екран(m)'
+content_outline:
+- section: 'Вищий ступінь: порівнюємо два предмети (Comparative: Comparing Two Things)'
+  words: 650
+  points:
+  - 'Synthetic comparative: add -ший/-іший to the stem (солодкий → солодший, цікавий
+    → цікавіший). Consonant alternations: г→ж, к→ч, х→ш (дорогий → дорожчий).'
+  - 'Analytic comparative: більш/менш + adjective (більш солодкий, менш відомий).
+    When to prefer analytic over synthetic forms.'
+  - 'Comparison constructions: ніж + Nominative (Київ більший, ніж Львів) and за +
+    Accusative (Київ більший за Львів). Both are correct and interchangeable.'
+  - 'Practice dialogues: comparing foods, cities, seasons — which is better, bigger,
+    more interesting?'
+- section: 'Найвищий ступінь: хто найкращий? (Superlative: Who Is the Best?)'
+  words: 500
+  points:
+  - 'Synthetic superlative: prefix най- to the comparative stem (найсолодший, найцікавіший,
+    найдорожчий).'
+  - 'Analytic superlative: найбільш/найменш + adjective (найбільш популярний, найменш
+    відомий).'
+  - 'Usage in context: Яке місто найбільше в Україні? Хто найкращий футболіст? Яка
+    пора року найгарніша?'
+- section: 'Особливі форми: більший, кращий, гірший (Irregular Forms)'
+  words: 450
+  points:
+  - 'Suppletive forms that must be memorized: великий → більший → найбільший, малий
+    → менший → найменший, добрий → кращий → найкращий, поганий → гірший → найгірший,
+    гарний → кращий/гарніший.'
+  - 'Common adverb comparatives: добре → краще, погано → гірше, багато → більше, мало
+    → менше.'
+  - 'Typical errors: *більш кращий (double comparison) — explain why this is wrong.'
+- section: Порівняння у житті (Comparisons in Daily Life)
+  words: 400
+  points:
+  - 'Dialogue: two friends discuss which vacation destination is better — comparing
+    prices, weather, food, activities.'
+  - 'Reading practice: a short text ranking Ukrainian cities by size, population,
+    and beauty.'
+  - 'Useful phrases: набагато кращий (much better), трохи більший (a bit bigger),
+    значно цікавіший (significantly more interesting).'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - 'Comparisons are formed synthetically (солодший, найсолодший) or analytically
+    (більш солодкий, найбільш солодкий). Remember key irregulars: добрий → кращий,
+    поганий → гірший, великий → більший, малий → менший. Never mix synthetic and analytic
+    forms (e.g., *більш кращий).'
+  - "Self-check: How do you say 'Kyiv is bigger than Lviv' using both 'ніж' and 'за'?
+    Compare 3 cities you know using comparative adjectives. What are the comparative
+    and superlative forms of 'добрий' and 'поганий'?"
+vocabulary_hints:
+  required:
+  - порівняння (comparison)
+  - більший (bigger)
+  - менший (smaller)
+  - кращий (better)
+  - гірший (worse)
+  - найкращий (the best)
+  - найбільший (the biggest)
+  - солодший (sweeter)
+  - цікавіший (more interesting)
+  - ніж (than)
+  recommended:
+  - набагато (much, significantly)
+  - трохи (a little, slightly)
+  - значно (considerably)
+  - навпаки (on the contrary)
+activity_hints:
+- type: fill-in
+  focus: Form the comparative from the base adjective
+  items: 8
+- type: quiz
+  focus: Choose the correct suppletive form (більший, кращий, гірший)
+  items: 8
+- type: match-up
+  focus: Match adjective to its superlative form
+  items: 8
+- type: true-false
+  focus: Identify correct and incorrect comparative constructions
+  items: 8
+- type: error-correction
+  focus: Find and fix wrong comparative and superlative forms (e.g., *більш 
+    кращий → кращий, *гарніший → кращий/гарніший)
+  items: 6
+references:
+- title: Заболотний Grade 6, Ступені порівняння прикметників
+  notes: Full presentation of comparative and superlative formation with 
+    exercises
+- title: 'ULP: Ukrainian Adjectives — Degrees of Comparison'
+  notes: Synthetic vs analytic forms explained with examples (URL removed — 
+    confirmed 404)

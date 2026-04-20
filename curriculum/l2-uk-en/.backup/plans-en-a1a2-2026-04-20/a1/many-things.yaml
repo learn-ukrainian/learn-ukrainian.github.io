@@ -1,0 +1,112 @@
+module: a1-013
+level: A1
+sequence: 13
+slug: many-things
+version: '1.1'
+title: Many Things
+subtitle: Столи, книги, вікна — from one to many
+focus: grammar
+pedagogy: PPP
+phase: A1.2 [My World]
+word_target: 1200
+objectives:
+- Form nominative plurals of nouns learned in M08-M12
+- Recognize the three main plural patterns (-и, -і, -а/-я)
+- Use adjective plural form (-і) with plural nouns
+- Describe groups of objects using plurals + adjectives + colors
+dialogue_situations:
+- setting: 'Setting up a classroom for a Ukrainian lesson — counting and arranging
+    items. Singular → plural: один стілець → стільці, одна дошка → дошки, одне крісло
+    → крісла. Also: олівці, ручки, підручники, карти.'
+  speakers:
+  - Вчитель (teacher)
+  - Учні (students)
+  motivation: 'Plurals with classroom items: стілець→стільці, дошка→дошки, крісло→крісла'
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 300
+  points:
+  - 'Dialogue 1 — Describing a room (Вашуленко Grade 3 p.114-115): — Що тут є?
+    — Столи, стільці і вікна. — Які столи? — Столи великі й нові. А стільці — старі.
+    Plurals emerge naturally from describing a room full of things.'
+  - 'Dialogue 2 — Shopping for several items (extending M11-M12): — У вас є ручки?
+    — Так! Які ручки? Червоні чи сині? — Сині. І ще зошити. — Скільки? — Три зошити. Plural
+    adjectives (-і) in real context.'
+- section: Один → багато (Singular → Plural)
+  words: 300
+  points:
+  - 'Большакова Grade 2 p.18: ''Один предмет → багато предметів.'' Three main plural
+    patterns for nominative: Masculine → usually -и or -і: стіл → столи, стілець →
+    стільці, телефон → телефони, зошит → зошити. Feminine → usually -и or -і: книга
+    → книги, лампа → лампи, ручка → ручки, сумка → сумки. Neuter → usually -а or -я:
+    вікно → вікна, ліжко → ліжка, крісло → крісла, дзеркало → дзеркала.'
+  - 'Guideline (not a rule — exceptions exist): After г, к, х → -и (книга → книги,
+    ручка → ручки). After most other consonants → -и or -і (стіл → столи, стілець
+    → стільці). Neuter -о → -а (вікно → вікна). Neuter -е → -я (not covered yet).
+    Full declension rules come later — for now, learn each plural with its noun.'
+- section: Прикметники у множині (Adjectives in Plural)
+  words: 300
+  points:
+  - 'Большакова Grade 2 p.42: який/яка/яке → які, веселий/весела/веселе → веселі.
+    ALL adjectives take -і in the plural, regardless of gender: великий стіл → великі
+    столи нова книга → нові книги чисте вікно → чисті вікна This is simpler than singular
+    — one ending for all genders!'
+  - 'Colors in plural (review M10): червоні ручки (red pens), сині зошити (blue notebooks),
+    білі стіни (white walls), чорні стільці (black chairs). Demonstratives also have
+    a plural form: ці (these) — Ці столи великі. Ці книги нові. ті (those) — Ті вікна
+    чисті. Ті стільці старі.'
+- section: Підсумок — Summary
+  words: 300
+  points:
+  - 'Plural formation summary: Nouns: learn each plural individually (столи, книги,
+    вікна). Adjectives: always -і (великі, нові, червоні, сині). Demonstratives: ці
+    (these), ті (those). Possessives: мої (my — plural). Self-check: Make these plural
+    — стіл, книга, вікно. Describe your classroom: Які столи? Які стільці? Які вікна?'
+vocabulary_hints:
+  required:
+  - столи (tables — pl of стіл)
+  - книги (books — pl of книга)
+  - вікна (windows — pl of вікно)
+  - стільці (chairs — pl of стілець)
+  - ці (these — pl of цей/ця/це)
+  - ті (those — pl of той/та/те)
+  - мої (my — plural)
+  - які (what kind? — plural)
+  recommended:
+  - ручки (pens — pl of ручка)
+  - сумки (bags — pl of сумка)
+  - лампи (lamps — pl of лампа)
+  - зошити (notebooks — pl of зошит)
+  - дзеркала (mirrors — pl of дзеркало)
+  - крісла (armchairs — pl of крісло)
+  - речі (things — pl of річ)
+activity_hints:
+- type: fill-in
+  focus: 'Make it plural: стіл → столи, книга → книги, вікно → вікна'
+  items: 10
+- type: quiz
+  focus: 'Choose the correct plural: стіл → столи/стола/столів?'
+  items: 8
+- type: fill-in
+  focus: 'Adjective agreement in plural: нов__ книги, велик__ столи, чист__ вікна'
+  items: 8
+- type: group-sort
+  focus: Sort words into однина (singular) and множина (plural)
+  items: 12
+connects_to:
+- a1-014 (Checkpoint — My World)
+prerequisites:
+- a1-012 (This and That)
+grammar:
+- 'Nominative plural of nouns: -и/-і (m/f), -а/-я (n)'
+- 'Adjective plural: always -і (великі, нові, червоні)'
+- 'Plural demonstratives: ці (these), ті (those)'
+- 'Plural possessive: мої (my)'
+register: розмовний
+references:
+- title: Вашуленко Grade 3, p.114-115
+  notes: 'Іменники мають два числа: однину і множину. Exercises with singular→plural.'
+- title: Большакова Grade 2, p.18
+  notes: Один предмет → багато предметів. First introduction of plural concept.
+- title: Большакова Grade 2, p.42
+  notes: 'Adjective singular/plural: який/яка/яке → які, веселий → веселі.'

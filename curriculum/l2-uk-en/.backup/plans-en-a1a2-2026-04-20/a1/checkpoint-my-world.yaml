@@ -1,0 +1,93 @@
+module: a1-014
+level: A1
+sequence: 14
+slug: checkpoint-my-world
+version: '1.1'
+title: 'Checkpoint: My World'
+subtitle: Can you describe things, count, and point?
+focus: review
+pedagogy: PPP
+phase: A1.2 [My World]
+word_target: 1200
+objectives:
+- Demonstrate ability to identify noun gender and use possessives correctly
+- Describe objects using adjectives and colors with correct agreement
+- Use numbers in practical contexts (prices, age)
+- Point at and identify objects using demonstratives
+- Use basic plurals for familiar nouns
+dialogue_situations:
+- setting: 'Walking through a Ukrainian street market (ярмарок) — pointing at handmade
+    crafts: вишиванка (f, embroidered shirt), глечик (m, jug), намисто (n, necklace),
+    писанки (pl, decorated eggs). Describe, count, point, buy.'
+  speakers:
+  - Іванко (tourist)
+  - Катя (local friend)
+  motivation: 'Consolidation with Ukrainian cultural objects: вишиванка, глечик, писанка'
+content_outline:
+- section: Що ми знаємо? (What Do We Know?)
+  words: 200
+  points:
+  - 'Self-check covering M08-M13: Can you determine noun gender? (M08) Can you describe
+    things with adjectives? (M09) Can you name colors, including both blues? (M10)
+    Can you count and say prices? (M11) Can you say ''this'' and ''that''? (M12) Can
+    you make things plural? (M13)'
+- section: Читання (Reading Practice)
+  words: 250
+  points:
+  - 'A short Ukrainian text (8-10 sentences) using ONLY vocabulary from M08-M13. No
+    new words. The learner reads aloud. Content: describing a room — objects, colors,
+    prices, pointing at things. Example: Це моя кімната. Мій стіл великий і новий.
+    Ця лампа біла, а та — жовта. У мене є три книги. Ці книги нові. Стіни білі.'
+- section: Граматика (Grammar Summary)
+  words: 200
+  points:
+  - 'Key patterns from A1.2: 1. Gender: він/вона/воно test + endings (consonant/−а,−я/−о,−е)
+    2. Agreement: великий стіл, велика книга, велике вікно 3. Hard vs soft stem: червоний
+    (-ий) vs синій (-ій) 4. Demonstratives: цей/ця/це, той/та/те 5. Plurals: столи,
+    книги, вікна; adjective always -і 6. Numbers: as vocabulary (no morphology)'
+- section: Діалог (Connected Dialogue)
+  words: 300
+  points:
+  - 'A complete conversation combining all A1.2 skills: Shopping scenario — choosing
+    items, describing what you want, asking prices. Uses gender agreement, colors,
+    demonstratives, numbers, and plurals. — Добрий день! У вас є сумки? — Так!
+    Ця червона чи та синя? — Та синя. Скільки вона коштує? — Двісті гривень. — Добре.
+    А ці зошити? Скільки коштує один зошит? — Двадцять гривень.'
+- section: Підсумок — Summary
+  words: 250
+  points:
+  - 'A1.2 achievement summary: You can now describe your world in Ukrainian. You know
+    20+ objects with their genders. You can describe them (big, new, red, blue). You
+    can count and talk about prices. You can point at things (this/that). You can
+    talk about groups (plurals). Next: A1.3 — Actions (verbs, what you do and like).'
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: quiz
+  focus: 'Mixed gender/agreement review: choose correct form for noun+adjective pairs'
+  items: 10
+- type: fill-in
+  focus: Complete the shopping dialogue with correct demonstratives, adjectives, and
+    numbers
+  items: 8
+- type: group-sort
+  focus: 'Sort vocabulary from M08-M13 by category: objects, colors, numbers'
+  items: 12
+- type: quiz
+  focus: Singular or plural? Transform sentences from singular to plural
+  items: 8
+connects_to:
+- a1-015 (What I Like)
+prerequisites:
+- a1-013 (Many Things)
+grammar:
+- 'Review: gender agreement (m/f/n)'
+- 'Review: hard-stem vs soft-stem adjectives'
+- 'Review: demonstratives цей/ця/це, той/та/те'
+- 'Review: nominative plurals'
+- 'Review: numbers as vocabulary'
+register: розмовний
+references:
+- title: Synthesis of M08-M13 content
+  notes: No new material — review and integration of A1.2 phase.

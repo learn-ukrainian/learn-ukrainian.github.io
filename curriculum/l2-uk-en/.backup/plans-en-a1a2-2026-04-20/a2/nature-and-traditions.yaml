@@ -1,0 +1,122 @@
+module: a2-060
+level: A2
+sequence: 60
+slug: nature-and-traditions
+version: 1.0.2
+title: Пори року і свята
+subtitle: Природа, пори року та українські традиції
+focus: communication
+pedagogy: TBL
+phase: A2.8 [Refinement and Graduation]
+word_target: 2000
+objectives:
+- Learner can describe all four seasons and weather using adjectives, 
+  comparatives, and aspect-appropriate verbs.
+- Learner can talk about major Ukrainian holidays and traditions (Різдво, 
+  Великдень, Івана Купала, День Незалежності) using all A2 grammar.
+- Learner can narrate seasonal activities and personal traditions using complex 
+  sentences with тому що, коли, щоб.
+- Learner can integrate all A2 grammar (cases, aspect, comparison, adjectives) 
+  in a sustained communicative context.
+dialogue_situations:
+- setting: 'Ukrainian family preparing for Івана Купала — weaving вінок (m, wreath),
+    jumping over вогнище (n, bonfire), searching for цвіт папороті (m, fern flower).
+    Also: Різдво (n) — колядки (pl, carols), Великдень (m) — писанки (pl, Easter eggs).'
+  speakers:
+  - Родина
+  - Іноземний гість
+  motivation: 'Traditions: вінок(m), вогнище(n), колядки(pl), писанки(pl)'
+content_outline:
+- section: Чотири пори року (The Four Seasons)
+  words: 550
+  points:
+  - 'Describing each season with rich vocabulary: весна (spring) — все розквітає,
+    птахи повертаються, стає тепліше; літо (summer) — спекотно, купатися, відпочивати;
+    осінь (autumn) — листя падає, дощить, прохолодно; зима (winter) — сніг, мороз,
+    ковзанка.'
+  - 'Weather expressions: Яка сьогодні погода? Сьогодні сонячно/хмарно/ вітряно. Іде
+    дощ/сніг. Температура — п''ять градусів.'
+  - 'Comparisons between seasons: Літо тепліше за весну. Зима — найхолодніша пора
+    року. Восени більше дощів, ніж влітку.'
+  - 'Dialogue: friends discuss their favorite seasons and why.'
+- section: 'Українські свята: від Різдва до Купала (Ukrainian Holidays: From Christmas
+    to Kupala)'
+  words: 600
+  points:
+  - 'Winter holidays: Різдво (January 7/December 25 — both dates in modern Ukraine),
+    Святий Вечір, колядки, кутя. Новий рік celebrations.'
+  - 'Spring holidays: Великдень (Easter) — писанки, паски, Христос воскрес! Вербна
+    неділя. Spring traditions of nature awakening.'
+  - 'Summer holidays: Івана Купала (July 7) — вінки на воду, стрибати через вогонь.
+    День Конституції (June 28), День Незалежності (August 24).'
+  - 'Autumn: День захисників і захисниць України (October 1/14). Harvest traditions.'
+  - 'Cultural context: why these traditions matter, how they connect to Ukrainian
+    identity and the agricultural calendar.'
+- section: Що ми робимо у кожну пору року? (What We Do Each Season)
+  words: 450
+  points:
+  - 'Seasonal activities: збирати гриби та ягоди (autumn), кататися на лижах (winter),
+    садити квіти (spring), подорожувати (summer).'
+  - 'Narration practice: Коли настає весна, ми завжди... Минулого літа ми поїхали...
+    Цієї зими я планую...'
+  - 'Using aspect naturally: Сніг падав цілий день (imperfective) vs. Сніг нарешті
+    розтанув (perfective).'
+- section: Мої традиції (My Traditions)
+  words: 400
+  points:
+  - 'Task: describe your family traditions for one holiday — what you prepare, where
+    you go, who you celebrate with. Integrates all A2 grammar: cases, comparison,
+    aspect, complex sentences.'
+  - 'Reading practice: a Ukrainian teenager describes their family''s Різдво traditions
+    — кутя, колядки, подарунки, родинна вечеря.'
+  - 'Discussion prompts: Яке свято вам найбільше подобається? Чому? Які українські
+    традиції ви хотіли б спробувати?'
+- section: Підсумок — Summary
+  words: 200
+  points:
+  - 'Describing seasons and weather requires rich vocabulary and comparatives: літо
+    тепліше за весну, зима — найхолодніша. Self-check: What is the weather like today
+    in Ukrainian? Describe your favorite season using at least 3 adjectives and weather
+    expressions.'
+  - "Narrating holiday traditions (Різдво, Великдень) and seasonal activities relies
+    on accurate verb aspect: сніг падав (process) vs. сніг розтанув (result). Self-check:
+    What's the difference between 'ми святкували' and 'ми відсвяткували'? Name 3 Ukrainian
+    holidays and one specific tradition for each (e.g., писанки)."
+vocabulary_hints:
+  required:
+  - пора року (season)
+  - весна (spring)
+  - літо (summer)
+  - осінь (autumn)
+  - зима (winter)
+  - погода (weather)
+  - свято (holiday)
+  - Різдво (Christmas)
+  - Великдень (Easter)
+  - традиція (tradition)
+  - писанка (decorated Easter egg)
+  recommended:
+  - кутя (kutia — Christmas ritual dish)
+  - колядка (Christmas carol)
+  - вінок (wreath)
+  - мороз (frost)
+  - розквітати (to blossom)
+activity_hints:
+- type: match-up
+  focus: Match seasonal vocabulary and activities to the correct season
+  items: 8
+- type: quiz
+  focus: Identify which holiday a tradition belongs to
+  items: 8
+- type: fill-in
+  focus: Complete sentences about weather and seasons with correct grammar forms
+  items: 8
+- type: true-false
+  focus: Verify facts about Ukrainian holiday traditions
+  items: 8
+references:
+- title: 'ULP: Ukrainian Holidays and Traditions'
+  url: https://www.ukrainianlessons.com/ukrainian-holidays/
+  notes: Overview of major Ukrainian holidays with cultural context
+- title: Большакова Grade 2, Пори року
+  notes: Seasonal vocabulary and descriptions from primary school textbooks

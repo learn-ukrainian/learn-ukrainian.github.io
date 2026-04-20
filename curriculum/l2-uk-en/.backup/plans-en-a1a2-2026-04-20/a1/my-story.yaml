@@ -1,0 +1,138 @@
+module: a1-052
+level: A1
+sequence: 52
+slug: my-story
+version: '1.2'
+title: My Story
+subtitle: Я народився, я живу, я буду... — your life in three tenses
+focus: communicative
+pedagogy: PPP
+phase: A1.8 [Past, Future, Graduation]
+word_target: 1200
+objectives:
+- Combine all three tenses (past, present, future) in one coherent narrative
+- Tell a simple life story: where you were born, where you live, what you plan
+- Use time expressions to signal tense shifts
+- Understand a short biography read aloud or in text
+dialogue_situations:
+- setting: Grandparent telling their life story — Я народився в селі (n, village).
+    Ходив у школу (f). Зараз живу в місті (n, city). Працюю в лікарні (f, hospital).
+    Буду відпочивати на дачі (f, dacha).
+  speakers:
+  - Дідусь/Бабуся
+  - Онуки
+  motivation: Three tenses with село(n), школа(f), місто(n), лікарня(f), дача(f)
+content_outline:
+- section: Dialogues
+  words: 300
+  points:
+  - 'Dialogue 1 — Getting to know someone deeply: — Розкажи про себе! — Я народився
+    в Канаді, у Торонто. — А зараз ти живеш тут? — Так, зараз я живу в Києві. — Чому
+    ти переїхав? — Я хотів вивчати українську. Мої бабуся і дідусь з України. — А
+    що ти будеш робити далі? — Я буду працювати тут і вчити мову. — Чудово! Успіхів
+    тобі! All three tenses in one conversation.'
+  - 'Dialogue 2 — Anna''s story: — Я народилася у Львові. Там я вчилася в школі. —
+    Потім я переїхала в Київ і закінчила університет. — Зараз я працюю вчителькою
+    і живу в центрі міста. — А що далі? — Я буду подорожувати! Я хочу побачити Японію.
+    — І ти будеш вчити японську? — Може! Але спочатку — українська для тебе! Past
+    → present → future flow.'
+- section: Три часи разом (Three Tenses Together)
+  words: 300
+  points:
+  - 'Life story structure: PAST (минулий час): Я народився/народилася в... Я жив/жила
+    в... Я вчився/вчилася... Я працював/працювала... PRESENT (теперішній час): Зараз
+    я живу в... Я працюю... Я вивчаю... Я люблю... FUTURE (майбутній час): Я буду
+    працювати... Я буду вивчати... Я буду жити...'
+  - 'Signal words that mark tense shifts: Past: раніше (before), у дитинстві (in childhood),
+    коли я був/була маленьким/маленькою (when I was little). Present: зараз (now),
+    сьогодні (today), цього року (this year). Future: потім (then), далі (further),
+    наступного року (next year). These words help the listener know which tense is
+    coming.'
+- section: Моя історія (My Story)
+  words: 300
+  points:
+  - 'Model story — Taras''s life: Я народився в Одесі у тисяча дев''ятсот дев''яносто
+    п''ятому році. Я жив там з батьками і сестрою. Я ходив у школу і любив математику.
+    Потім я переїхав у Київ і вчився в університеті. Зараз я живу в Києві. Я працюю
+    програмістом. Я люблю свою роботу. У вільний час я граю у футбол і читаю книжки.
+    Далі я буду подорожувати. Я буду вивчати англійську. І я буду жити в Києві — це
+    моє місто! Past (народився, жив, ходив) → Present (живу, працюю) → Future (буду
+    подорожувати).'
+  - 'Your turn — tell YOUR story: Start: Я народився/народилася в [city/country].
+    Past: Я жив/жила... Я вчився/вчилася... Я працював/працювала... Present: Зараз
+    я живу... Я працюю... Я вивчаю українську, тому що... Future: Я буду... Я хочу...
+    Use at least 3 past verbs, 3 present verbs, and 3 future constructions.'
+- section: Summary
+  words: 300
+  points:
+  - 'Three tenses — one story: Past: -в/-ла/-ло/-ли (gender endings). Я народився.
+    Я жила. Present: person endings. Я живу. Ти працюєш. Вона вивчає. Future: буду
+    + infinitive. Я буду працювати. Вона буде жити. Signal words: раніше → past, зараз
+    → present, далі → future. Life story vocabulary: народитися (to be born), жити
+    (to live), вчитися (to study), переїхати (to move), подорожувати (to travel).
+    Self-check: Write your life story in 8-10 sentences using all three tenses.'
+vocabulary_hints:
+  required:
+  - народитися (to be born)
+  - жити (to live)
+  - вчитися (to study)
+  - переїхати (to move)
+  - зараз (now)
+  - раніше (before/earlier)
+  - далі (further/next)
+  - розповідати (to tell/narrate)
+  recommended:
+  - подорожувати (to travel)
+  - закінчити (to finish/graduate)
+  - дитинство (childhood, n)
+  - університет (university, m)
+  - програміст (programmer, m)
+  - успіх (success, m)
+  - мрія (dream, f)
+  - батьки (parents, pl)
+activity_hints:
+- type: ordering
+  focus: Put the life events in logical chronological order
+  items:
+  - Я народився в Торонто.
+  - У дитинстві я жив з батьками.
+  - Потім я вчився в університеті.
+  - Зараз я живу в Києві і працюю програмістом.
+  - Далі я буду подорожувати.
+- type: fill-in
+  focus: Use signal words to determine the correct tense
+  items:
+  - Раніше я {жив|живу|буду жити} в Канаді.
+  - Зараз я {працюю|працював|буду працювати} в університеті.
+  - Далі я {буду вивчати|вивчав|вивчаю} українську мову.
+  - У дитинстві вона {любила|любить|буде любити} читати.
+  - Сьогодні ми {живемо|жили|будемо жити} в Україні.
+- type: matching
+  focus: Match the life event verb to the correct tense category
+  pairs:
+  - народився: Минулий час (Past)
+  - переїхала: Минулий час (Past)
+  - живу: Теперішній час (Present)
+  - працюю: Теперішній час (Present)
+  - буду подорожувати: Майбутній час (Future)
+  - будемо вчитися: Майбутній час (Future)
+- type: fill-in
+  focus: Complete a biography combining all three tenses
+  items:
+  - Я {народилася|народився|народилися} у Львові.
+  - Там я {вчилася|вчився|вчилися} в школі.
+  - Зараз я {працюю|працювала|буду працювати} вчителькою.
+  - Наступного року я {буду подорожувати|подорожувала|подорожую}.
+connects_to:
+- a1-053 (Health)
+prerequisites:
+- a1-051 (My Plans)
+grammar:
+- 'All three tenses combined: past (-в/-ла), present (person endings), future (буду
+  + inf)'
+- 'Tense-shift signal words: раніше, зараз, далі'
+- 'Life story verbs: народитися, жити, вчитися, переїхати'
+register: розмовний
+references:
+- title: State Standard 2024, §4.2.4.1
+  notes: All three tenses combined in narrative — capstone grammar for A1.

@@ -1,0 +1,122 @@
+module: a1-010
+level: A1
+sequence: 10
+slug: colors
+version: '1.1'
+title: Colors
+subtitle: Синій, жовтий — the colors of Ukraine and your world
+focus: vocabulary
+pedagogy: PPP
+phase: A1.2 [My World]
+word_target: 1200
+objectives:
+- Name 12 basic colors in Ukrainian
+- Use color adjectives with correct gender agreement (including soft-stem синій)
+- Distinguish синій (dark blue) from блакитний (light blue) — a distinction English
+  lacks
+- Describe objects using color + M09 adjective combinations
+dialogue_situations:
+- setting: 'At an outdoor flower market — choosing bouquets for different occasions.
+    Describe: червоні троянди (roses), білі лілії (lilies), жовті соняшники (sunflowers),
+    синя ваза (f), зелене листя (n, leaves). Use flowers, plants, and wrapping.'
+  speakers:
+  - Наталка
+  - Продавець (flower seller)
+  motivation: 'Color adjectives: червоний/а/е with троянда(f), соняшник(m), листя(n)'
+- setting: 'Choosing an outfit for a party from a friend''s wardrobe. Describe: чорна
+    сукня (f, dress), білий светр (m, sweater), сіре пальто (n, coat), коричневі черевики
+    (pl, shoes). Use clothing items, NOT bags.'
+  speakers:
+  - Дмитро
+  - Ліза
+  motivation: 'Color + gender: сукня(f), светр(m), пальто(n), черевики(pl)'
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 300
+  points:
+  - 'Dialogue 1 — Choosing a gift (Большакова Grade 2 p.38 colors poem as inspiration):
+    — Яка гарна сумка! Якого вона кольору? — Червона. А є ще синя і зелена.
+    — Мені подобається синя. — А мені — жовта! Colors emerge naturally through shopping
+    scenario. Note: Мені подобається is a memorized chunk (like У мене є) — dative grammar is A2.'
+  - 'Dialogue 2 — Describing your room (extending M08-M09): — Якого кольору твоя кімната?
+    — Біла. — А стіл? — Стіл коричневий. А крісло — сіре. Review: gender
+    agreement + new color vocabulary.'
+- section: Кольори (Colors)
+  words: 300
+  points:
+  - '12 basic colors organized by adjective type: Hard-stem (-ий/-а/-е — same pattern
+    as M09): червоний/червона/червоне (red) жовтий/жовта/жовте (yellow) зелений/зелена/зелене
+    (green) чорний/чорна/чорне (black) білий/біла/біле (white) сірий/сіра/сіре (grey)'
+  - 'Soft-stem (-ій/-я/-є — NEW pattern): синій/синя/синє (dark blue) Вашуленко Grade
+    3 p.130: adjectives divide into тверда група (-ий) and м''яка група (-ій). Only
+    синій is soft-stem among basic colors — learn it as a special case now. Compare:
+    великий стіл → синій стіл, велика книга → синя книга, велике вікно → синє вікно.'
+- section: Синій ≠ блакитний (Blue ≠ Blue)
+  words: 300
+  points:
+  - 'Ukrainian has TWO blues — English has one: синій = dark blue, deep blue (the
+    sea, the night sky, ink) блакитний = light blue, sky blue (a clear daytime sky,
+    baby blue) Прапор України — синьо-жовтий (Кравцова Grade 2 p.22: Синьо-жовтий
+    прапор маєм: синє — небо, жовте — жито). Cultural note: ''голубий'' is a Russian-influenced
+    word for light blue — use блакитний.'
+  - 'More colors for describing things: коричневий (brown), рожевий (pink), помаранчевий
+    (orange), фіолетовий (purple). These are all hard-stem (-ий/-а/-е). Compound colors:
+    темно-зелений (dark green), світло-синій (light blue-ish). Cultural hook: вишиванка
+    — traditional embroidered shirt, typically червоний і чорний (Полісся) or червоний
+    і синій (Полтавщина).'
+- section: Підсумок — Summary
+  words: 300
+  points:
+  - 'Color agreement follows the same rules as M09: Hard-stem: червоний стіл, червона
+    книга, червоне вікно. Soft-stem: синій стіл, синя книга, синє вікно. Self-check:
+    What color is the Ukrainian flag? (синьо-жовтий) Describe 3 things in your room
+    using colors. What''s the difference between синій and блакитний?'
+vocabulary_hints:
+  required:
+  - червоний (red)
+  - жовтий (yellow)
+  - зелений (green)
+  - синій (dark blue — soft-stem!)
+  - блакитний (light blue, sky blue)
+  - білий (white)
+  - чорний (black)
+  - сірий (grey)
+  - колір (color, m)
+  - якого кольору? (what color?)
+  recommended:
+  - коричневий (brown)
+  - рожевий (pink)
+  - помаранчевий (orange)
+  - фіолетовий (purple)
+  - темний (dark — as prefix: темно-)
+  - світлий (light — as prefix: світло-)
+  - прапор (flag, m)
+activity_hints:
+- type: quiz
+  focus: Якого кольору? Match objects to their typical color.
+  items: 8
+- type: fill-in
+  focus: 'Gender agreement with colors: син__ книга, червон__ стіл, біл__ вікно'
+  items: 10
+- type: quiz
+  focus: синій or блакитний? Choose the right shade of blue.
+  items: 6
+- type: group-sort
+  focus: Sort colors into тверда група (-ий) and м'яка група (-ій)
+  items: 10
+connects_to:
+- a1-011 (How Many?)
+prerequisites:
+- a1-009 (What Is It Like?)
+grammar:
+- 'Soft-stem adjectives: синій/синя/синє (-ій/-я/-є) vs hard-stem (-ий/-а/-е)'
+- Color adjective agreement follows M09 rules
+- Compound colors with темно-/світло- (hyphenated)
+register: розмовний
+references:
+- title: Большакова Grade 2, p.38
+  notes: 'Colors poem: синє, чорне, зелене, блакитне, червоне, жовте, золоте, оранжеве.'
+- title: Вашуленко Grade 3, p.130
+  notes: 'Hard vs soft adjective groups: новий (тверда) vs синій (м''яка).'
+- title: Кравцова Grade 2, p.22-23
+  notes: 'Синьо-жовтий прапор маєм: синє — небо, жовте — жито.'

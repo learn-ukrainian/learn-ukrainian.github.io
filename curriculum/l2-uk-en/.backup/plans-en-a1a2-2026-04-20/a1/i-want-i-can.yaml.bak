@@ -1,0 +1,142 @@
+module: a1-018
+level: A1
+sequence: 18
+slug: i-want-i-can
+version: 1.1.3
+title: I Want, I Can
+subtitle: Хочу, можу, мушу — expressing wants and abilities
+focus: grammar
+pedagogy: PPP
+phase: A1.3 [Actions]
+word_target: 1200
+objectives:
+- Use хотіти (want), могти (can), мусити (must) + infinitive
+- Express desires, abilities, and obligations in present tense
+- Handle irregular conjugation of хотіти and могти
+- Build practical sentences for everyday needs
+dialogue_situations:
+- setting: Deciding which movie to watch or where to walk
+  speakers:
+  - Оля
+  - Денис
+  motivation: 'Хочу/можу/мушу + infinitive: Хочу піти в кіно, Не можу, мушу працювати'
+- setting: Ordering at a café
+  speakers:
+  - Клієнт
+  - Офіціантка
+  motivation: 'A1 service exchange: order a drink politely, ask for a simple recommendation, and accept it naturally'
+content_outline:
+- section: Діалоги (Dialogues)
+  words: 300
+  points:
+  - 'Dialogue: Olya and Denys decide on an evening plan (cinema or walk). Use "Я хочу
+    піти...", "Я не можу...", "Я мушу...". Focus on natural speech, not abstract descriptions.'
+  - 'Dialogue 2 — At a café (preview for A1.6): build a short natural service exchange.
+    The customer orders coffee politely, asks for a simple recommendation, and accepts
+    it naturally. Prefer A1 service formulas such as "Можна мені, будь ласка, каву?",
+    "Що можете порадити?", "Тоді ще борщ, будь ласка." Show хотіти + noun nearby
+    in learner-facing prose or peer-style lines, but do not force blunt "Я хочу
+    [noun]" as the direct café order.'
+- section: Хотіти (To Want)
+  words: 300
+  points:
+  - 'Хотіти is irregular (Group I): я хочу, ти хочеш, він хоче, ми хочемо, ви хочете,
+    вони хочуть. Note the т→ч change and the specific ending for each person. Uses:
+    + infinitive or + noun in Accusative (e.g., хочу каву).'
+  - 'Negation: Я не хочу їсти. Note that "не" typically precedes the modal, but avoid
+    teaching absolute "never" rules as placement can vary for emphasis.'
+- section: Могти і мусити (Can and Must)
+  words: 300
+  points:
+  - 'Могти (can/able to) is irregular (Group I): я можу, ти можеш, ми можемо, вони
+    можуть (г→ж change). It expresses ability, possibility, or permission (e.g., skills
+    or requests).'
+  - Мусити (must/have to) is Group II. It expresses obligation or necessity. Clarify
+    that it denotes a requirement but not necessarily an "immediate" urgency.
+- section: Підсумок — Summary
+  words: 300
+  points:
+  - 'Summary: Compare desire, ability, and obligation with three simple sentences
+    from a daily routine. Avoid abstract coaching and meta-narration like "In this
+    module".'
+vocabulary_hints:
+  required:
+  - хотіти (to want — irregular!)
+  - могти (to be able/can — irregular!)
+  - мусити (to must/have to)
+  - кава (coffee, f)
+  - їсти (to eat)
+  recommended:
+  - шкода (pity, unfortunately)
+  - допомогти (to help)
+  - борщ (borscht, m)
+  - порадити (to recommend / advise)
+  - треба (need to — impersonal, preview)
+activity_hints:
+- type: fill-in
+  focus: 'Conjugate: я хоч__, ти хоч__, він хоч__'
+  items: 9
+- type: quiz
+  focus: Хочу, можу, or мушу? Choose the right modal for the situation.
+  items: 8
+- type: fill-in
+  focus: 'Complete: Я ___ гуляти, але не ___ — ___ працювати.'
+  items: 6
+- type: quiz
+  focus: Regular or irregular? Identify the conjugation pattern.
+  items: 6
+connects_to:
+- a1-019 (Questions)
+prerequisites:
+- a1-017 (Verbs Group II)
+grammar:
+- 'Modal verbs: хотіти, могти, мусити + infinitive'
+- 'Irregular conjugation: хот-→хоч-, мог-→мож-'
+- 'Мусити: regular Group II except я-form (мушу)'
+- Хотіти + noun (Я хочу каву) vs хотіти + infinitive (Я хочу їсти)
+register: розмовний
+references:
+- title: Караман Grade 10, p.179
+  notes: Хотіти listed as Group I exception (despite -іти infinitive).
+- title: Літвінова Grade 7, p.55
+  notes: 'Exceptions: хотіти, гудіти, ревіти, іржати — Group I despite -іти.'
+plan_fixes:
+- version: 1.1.3
+  date: '2026-04-15'
+  trigger: The 1.1.2 source-of-truth rewrite left section budgets 20 words short
+    of the module word_target, which fails the deterministic plan gate.
+  changes:
+  - replace content_outline[1].words — Restores the Хотіти section to 300 words
+    so section budgets sum cleanly to the 1200-word target.
+- version: 1.1.2
+  date: '2026-04-15'
+  trigger: Hardcoded café dialogue in the plan kept seeding translated service
+    rhythm and weak recommendation phrasing into the live contract.
+  changes:
+  - add dialogue_situations[1] — Adds the café scene as its own scenario instead
+    of leaving it implicit inside one section point.
+  - replace content_outline[0].points[1] — Replaces literal weak café lines with
+    communicative goals and stronger native A1 service formulas.
+  - replace vocabulary_hints.recommended[3] — Swaps the stiffer `порекомендувати`
+    prompt-word for `порадити` as the preferred A1 recommendation verb.
+- version: 1.1.1
+  date: '2026-04-15'
+  trigger: Expository filler prose and abstract coaching, combined with factually
+    narrow or incorrect modal definitions.
+  changes:
+  - replace dialogue_situations[0].setting — Replaces the vague 'negotiating' phrasing
+    that the reviewer identified as sounding generated.
+  - replace content_outline[0].points[0] — Forces a concrete scenario to improve tone
+    and satisfy the [DIALOGUE_ACT] requirement.
+  - replace content_outline[1].words — Tightens the budget to fix the [WORD_BUDGET]
+    violation and force the removal of 'filler' grandiosity.
+  - replace content_outline[1].points[0] — Fixes [FACTUAL_ANCHOR] 'ending' and clarifies
+    case usage to prevent linguistic errors.
+  - replace content_outline[1].points[1] — Directly corrects the teaching of an incorrect
+    absolute rule regarding negation.
+  - replace content_outline[2].points[0] — Broadens the definition to correct the
+    'strictly physical' error in the prose.
+  - replace content_outline[2].points[1] — Corrects the linguistic error identifying
+    'мусити' solely with immediate action.
+  - replace content_outline[3].points[0] — Removes the summary filler and fixes the
+    [META_NARRATION] violation.
