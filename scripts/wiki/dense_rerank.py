@@ -12,6 +12,7 @@ import time
 from collections import defaultdict
 from collections.abc import Callable, Iterable, Iterator, Sequence
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +27,7 @@ from .embedding_manifest import (
     filter_new_or_changed,
 )
 from .mlx_bridge import EMBEDDING_DIMS, MLXEncoderBridge
+from .thermal import nsprocessinfo_thermal_state
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_MANIFEST_DB = PROJECT_ROOT / "data" / "embeddings" / "manifest.db"
@@ -36,6 +38,8 @@ MAX_BATCH_ROWS = 16
 MAX_BATCH_TOKENS = 4096
 LITERARY_SHARD_LIMIT = 5000
 SEQUENTIAL_SHARD_LIMIT = 1000
+EPOCH_BATCH_LIMIT = 8
+EPOCH_TOKEN_LIMIT = 32_000
 SUPPORTED_CORPORA = (
     "textbook_sections",
     "modern_literary",
@@ -75,6 +79,77 @@ class CorpusEmbeddingIndex:
     corpus: str
     shards: dict[int, np.memmap]
     unit_rows: dict[str, tuple[int, int]]
+
+
+@dataclass
+class _ThermalEpochController:
+    tier: str = "cool"
+    consecutive_nominal_epochs: int = 0
+    ms_per_token_ewma: float | None = None
+    consecutive_regressed_epochs: int = 0
+
+
+_EPOCH_SLEEP_BY_TIER = {"cool": 0.0, "warm": 1.5, "hot": 5.0}
+_THERMAL_NOMINAL = 0
+_THERMAL_FAIR = 1
+_THERMAL_SERIOUS = 2
+_THERMAL_CRITICAL = 3
+_MS_PER_TOKEN_REGRESSION_RATIO = 1.15
+_THERMAL_EWMA_ALPHA = 0.2
+_THERMAL_DEMOTION_NOMINAL_EPOCHS = 5
+_THERMAL_REGRESSION_EPOCHS = 3
+
+
+def _advance_thermal_epoch(
+    controller: _ThermalEpochController,
+    *,
+    ms_per_token: float,
+    thermal_state: int,
+) -> tuple[str, float]:
+    regressed = (
+        controller.ms_per_token_ewma is not None
+        and ms_per_token > controller.ms_per_token_ewma * _MS_PER_TOKEN_REGRESSION_RATIO
+    )
+
+    if thermal_state >= _THERMAL_CRITICAL:
+        controller.tier = "hot"
+        controller.consecutive_nominal_epochs = 0
+        controller.consecutive_regressed_epochs = 0
+    else:
+        if thermal_state >= _THERMAL_SERIOUS:
+            controller.tier = "warm" if controller.tier == "cool" else controller.tier
+            controller.consecutive_nominal_epochs = 0
+            controller.consecutive_regressed_epochs = 0
+        elif regressed:
+            controller.consecutive_regressed_epochs += 1
+            controller.consecutive_nominal_epochs = 0
+            if controller.consecutive_regressed_epochs >= _THERMAL_REGRESSION_EPOCHS:
+                controller.tier = "warm" if controller.tier == "cool" else controller.tier
+        else:
+            controller.consecutive_regressed_epochs = 0
+            if thermal_state == _THERMAL_NOMINAL:
+                controller.consecutive_nominal_epochs += 1
+                if controller.consecutive_nominal_epochs >= _THERMAL_DEMOTION_NOMINAL_EPOCHS:
+                    if controller.tier == "hot":
+                        controller.tier = "warm"
+                    elif controller.tier == "warm":
+                        controller.tier = "cool"
+                    controller.consecutive_nominal_epochs = 0
+            else:
+                controller.consecutive_nominal_epochs = 0
+
+    if controller.ms_per_token_ewma is None:
+        controller.ms_per_token_ewma = ms_per_token
+    elif not regressed and thermal_state <= _THERMAL_FAIR:
+        controller.ms_per_token_ewma += _THERMAL_EWMA_ALPHA * (
+            ms_per_token - controller.ms_per_token_ewma
+        )
+
+    return controller.tier, _EPOCH_SLEEP_BY_TIER[controller.tier]
+
+
+def _now_utc_iso() -> str:
+    return datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
 
 def _get_tokenizer():
@@ -179,8 +254,11 @@ def _sorted_token_batches(
     max_length: int,
     max_rows: int = MAX_BATCH_ROWS,
     max_tokens: int = MAX_BATCH_TOKENS,
+    token_lengths: Sequence[int] | None = None,
 ) -> list[list[int]]:
-    token_lengths = [_token_count(text, max_length=max_length) for text in texts]
+    token_lengths = list(token_lengths) if token_lengths is not None else [
+        _token_count(text, max_length=max_length) for text in texts
+    ]
     order = sorted(range(len(texts)), key=token_lengths.__getitem__)
     batches: list[list[int]] = []
     current: list[int] = []
@@ -216,6 +294,8 @@ def encode_texts(
     max_length: int = INDEX_MAX_LENGTH,
     max_rows: int = MAX_BATCH_ROWS,
     max_tokens: int = MAX_BATCH_TOKENS,
+    corpus: str | None = None,
+    progress_callback: Callable[[dict[str, Any]], None] | None = None,
 ) -> NDArray[np.float16]:
     """Encode texts with token-budget batching while preserving input order."""
 
@@ -224,15 +304,24 @@ def encode_texts(
 
     encoder = encoder or _get_encoder()
     result = np.zeros((len(texts), EMBEDDING_DIMS), dtype=np.float16)
+    token_lengths = [_token_count(text, max_length=max_length) for text in texts]
     batches = _sorted_token_batches(
         texts,
         max_length=max_length,
         max_rows=max_rows,
         max_tokens=max_tokens,
+        token_lengths=token_lengths,
     )
+    controller = _ThermalEpochController()
+    epoch_rows = 0
+    epoch_tokens = 0
+    epoch_encode_s = 0.0
+    epoch_batches = 0
 
-    for batch_indices in batches:
+    for batch_number, batch_indices in enumerate(batches, start=1):
         batch_texts = [texts[index] for index in batch_indices]
+        batch_tokens = sum(min(token_lengths[index], max_tokens) for index in batch_indices)
+        batch_started = time.perf_counter()
         with _ENCODER_LOCK:
             batch_vectors = _extract_dense_vectors(
                 encoder.encode(
@@ -241,8 +330,49 @@ def encode_texts(
                     max_length=max_length,
                 )
             )
+        batch_encode_s = time.perf_counter() - batch_started
         for row_index, original_index in enumerate(batch_indices):
             result[original_index] = batch_vectors[row_index]
+        epoch_rows += len(batch_indices)
+        epoch_tokens += batch_tokens
+        epoch_encode_s += batch_encode_s
+        epoch_batches += 1
+
+        epoch_boundary = (
+            epoch_batches >= EPOCH_BATCH_LIMIT
+            or epoch_tokens >= EPOCH_TOKEN_LIMIT
+            or batch_number == len(batches)
+        )
+        if epoch_boundary:
+            thermal_state = nsprocessinfo_thermal_state()
+            ms_per_token = (epoch_encode_s * 1000.0) / max(epoch_tokens, 1)
+            tier, sleep_s = _advance_thermal_epoch(
+                controller,
+                ms_per_token=ms_per_token,
+                thermal_state=thermal_state,
+            )
+            actual_sleep_s = sleep_s if batch_number < len(batches) else 0.0
+            if progress_callback is not None and corpus is not None:
+                progress_callback(
+                    {
+                        "event": "epoch_done",
+                        "ts": _now_utc_iso(),
+                        "corpus": corpus,
+                        "rows": epoch_rows,
+                        "tokens": epoch_tokens,
+                        "encode_s": round(epoch_encode_s, 3),
+                        "ms_per_token": round(ms_per_token, 6),
+                        "tier": tier,
+                        "thermal_state": thermal_state,
+                        "sleep_s": actual_sleep_s,
+                    }
+                )
+            if actual_sleep_s:
+                time.sleep(actual_sleep_s)
+            epoch_rows = 0
+            epoch_tokens = 0
+            epoch_encode_s = 0.0
+            epoch_batches = 0
         gc.collect()
 
     return result
@@ -673,6 +803,8 @@ def cold_encode_corpus(
                 [unit.text for unit in group],
                 encoder=encoder,
                 max_length=INDEX_MAX_LENGTH,
+                corpus=corpus,
+                progress_callback=progress_callback,
             )
             shard_id = append_shard(
                 manifest,
