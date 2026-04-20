@@ -2,13 +2,13 @@ module: a2-065
 level: A2
 sequence: 65
 slug: metalanguage-morphology
-version: '3.0'
+version: '3.1'
 title: "Морфологія"
 subtitle: "Будова слова і частини мови — від знання до називання"
 focus: morphology
 pedagogy: PPP
 phase: "A2.9 [Metalanguage Bridge & Foundation]"
-word_target: 4000
+word_target: 2000  # A2.9 metalanguage bridge — aligned with 3 sibling plans at 2000 (user decision 2026-04-20). Minimum only; content may overshoot.
 objectives:
   - "Learner can name and identify the five parts of a Ukrainian word (корінь, префікс,
     суфікс, закінчення, основа) using Ukrainian terminology"

@@ -2,13 +2,13 @@ module: a2-064
 level: A2
 sequence: 64
 slug: metalanguage-phonetics
-version: '3.0'
+version: '3.1'
 title: "Звуки і букви"
 subtitle: "Фонетика українською — від звуків до транскрипції"
 focus: phonetics
 pedagogy: PPP
 phase: "A2.9 [Metalanguage Bridge & Foundation]"
-word_target: 4000
+word_target: 2000  # A2.9 metalanguage bridge — aligned with 3 sibling plans at 2000 (user decision 2026-04-20). Minimum only; content may overshoot.
 objectives:
   - "Learner can name and classify Ukrainian sounds using Ukrainian metalanguage (голосний,
     приголосний, дзвінкий, глухий, твердий, м'який, сонорний)"
