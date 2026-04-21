@@ -255,9 +255,8 @@ class TestDispatchAgent:
         assert call_kwargs["mode"] == "workspace-write"
         assert call_kwargs["model"] == "gemini-test"
         assert call_kwargs["entrypoint"] == "dispatch"
-        assert call_kwargs["tool_config"] is None  # mcp_tools=False by default
+        assert call_kwargs["tool_config"] == {"auth_mode": "api"}
 
-    @patch.dict("os.environ", {"GEMINI_AUTH_MODE": "subscription"}, clear=False)
     @patch("build.dispatch._log")
     @patch("agent_runtime.runner.invoke")
     def test_gemini_dispatch_logs_auth_mode(self, mock_invoke, mock_log, tmp_path):
@@ -282,7 +281,58 @@ class TestDispatchAgent:
         assert ok is True
         assert raw == "ok"
         log_messages = [call.args[0] for call in mock_log.call_args_list]
-        assert any("Gemini auth mode: subscription" in message for message in log_messages)
+        assert any("Gemini auth mode: ladder (API → OAuth per model)" in message for message in log_messages)
+
+    @patch("build.dispatch._pace_gemini_calls")
+    @patch("agent_runtime.runner.invoke")
+    def test_gemini_dispatch_rate_limit_falls_through_to_oauth(
+        self,
+        mock_invoke,
+        _mock_pace,
+        tmp_path,
+    ):
+        from agent_runtime.errors import RateLimitedError
+        from agent_runtime.result import Result
+
+        mock_invoke.side_effect = [
+            RateLimitedError("gemini", "gemini-3.1-pro-preview", "429 quota"),
+            Result(
+                ok=True,
+                agent="gemini",
+                model="gemini-3.1-pro-preview",
+                mode="workspace-write",
+                response="oauth fallback reply",
+                stderr_excerpt=None,
+                duration_s=0.5,
+                session_id=None,
+                rate_limited=False,
+                stalled=False,
+                returncode=0,
+                usage_record={},
+            ),
+        ]
+
+        ok, raw = dispatch_agent(
+            "test prompt",
+            agent="gemini-tools",
+            phase="write",
+            orch_dir=tmp_path,
+            timeout=300,
+            model="gemini-3.1-pro-preview",
+            mcp_tools=True,
+        )
+
+        assert ok is True
+        assert raw == "oauth fallback reply"
+        first_call = mock_invoke.call_args_list[0].kwargs
+        second_call = mock_invoke.call_args_list[1].kwargs
+        assert first_call["model"] == "gemini-3.1-pro-preview"
+        assert second_call["model"] == "gemini-3.1-pro-preview"
+        assert first_call["tool_config"] == {"mcp_server_names": ["rag"], "auth_mode": "api"}
+        assert second_call["tool_config"] == {
+            "mcp_server_names": ["rag"],
+            "auth_mode": "subscription",
+        }
 
     @patch("agent_runtime.runner.invoke")
     def test_gemma_local_dispatch(self, mock_invoke, tmp_path):

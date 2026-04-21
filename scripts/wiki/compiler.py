@@ -7,9 +7,10 @@ calls Gemini, and writes the resulting markdown article to wiki/.
 import os
 import re
 import shutil
-import subprocess
 import time
 from pathlib import Path
+
+from ai_llm.fallback import call_gemini_with_fallback, visible_sleep
 
 from .config import GEMINI_MODEL, PROMPTS_DIR, TRACK_DOMAINS, WIKI_DIR
 from .sources_schema import (
@@ -27,7 +28,9 @@ from .state import is_compiled, mark_compiled
 # Gemini CLI path (same pattern as agent bridge)
 GEMINI_CLI = shutil.which("gemini") or "gemini"
 
-# Snapshot environment for Gemini subprocess
+# Snapshot environment for Gemini subprocesses.
+# Each rung rebuilds from this base env, then the shared helper strips
+# key vars for OAuth rungs. GEMINI_SESSION=1 stays enabled across both.
 _PARENT_ENV = os.environ.copy()
 _PARENT_ENV["GEMINI_SESSION"] = "1"
 
@@ -371,88 +374,26 @@ def _recover_from_session(before_ts: float, prompt_fingerprint: str = "") -> str
     return None
 
 
+def _visible_sleep(seconds: int, reason: str) -> None:
+    """Preserve the existing visible backoff pattern for compiler retries."""
+    visible_sleep(seconds, reason, logger=lambda msg: print(msg, flush=True))
+
+
 def _call_gemini(prompt: str, *, max_retries: int = 3) -> str | None:
-    """Call Gemini CLI and return the response.
-
-    On failure, checks Gemini's session files (~/.gemini/tmp/.../chats/)
-    for the response before retrying. Gemini often completes generation
-    even when the CLI process fails (timeout, rate limit, pipe error).
-    """
-    for attempt in range(max_retries):
-        call_start = time.time()
-        try:
-            gemini_cmd = [GEMINI_CLI, "-m", GEMINI_MODEL, "--approval-mode=yolo"]
-
-            proc = subprocess.Popen(
-                gemini_cmd,
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                cwd=str(Path(__file__).resolve().parents[2]),
-                env=_PARENT_ENV,
-            )
-
-            # Use communicate() for input — handles large prompts and
-            # avoids deadlocks from pipe buffer filling up.
-            # Timeout: 5 min base + 2s per 1K chars. Generous but bounded.
-            timeout_s = min(300 + len(prompt) // 500, 900)
-            try:
-                stdout, stderr = proc.communicate(input=prompt, timeout=timeout_s)
-            except subprocess.TimeoutExpired:
-                proc.kill()
-                proc.communicate()
-                print(f"  ⏱️  Gemini timed out after {timeout_s}s")
-                # Check session file — Gemini may have finished
-                recovered = _recover_from_session(call_start, prompt[:200])
-                if recovered:
-                    return recovered
-                if attempt < max_retries - 1:
-                    time.sleep(10)
-                continue
-
-            if proc.returncode != 0:
-                stderr_text = stderr or ""
-                is_rate_limit = "429" in stderr_text or "quota" in stderr_text.lower() or "rate" in stderr_text.lower()
-                if is_rate_limit:
-                    print(f"  ⏳ Rate limited (attempt {attempt + 1}/{max_retries})")
-                else:
-                    print(f"  ⚠️  Gemini exit code {proc.returncode}: {stderr_text[:200]}")
-                # Check session file before retrying
-                recovered = _recover_from_session(call_start, prompt[:200])
-                if recovered:
-                    return recovered
-                if is_rate_limit and attempt < max_retries - 1:
-                    time.sleep(60 * (attempt + 1))
-                elif attempt < max_retries - 1:
-                    time.sleep(10)
-                continue
-
-            response = stdout.strip()
-            if len(response) < 100:
-                print(f"  ⚠️  Very short response ({len(response)} chars)")
-                recovered = _recover_from_session(call_start, prompt[:200])
-                if recovered:
-                    return recovered
-                if attempt < max_retries - 1:
-                    time.sleep(10)
-                continue
-
-            return response
-
-        except FileNotFoundError:
-            print("  ❌ gemini CLI not found. Install: https://github.com/google-gemini/gemini-cli")
-            return None
-        except Exception as e:
-            print(f"  ❌ Error calling Gemini: {e}")
-            recovered = _recover_from_session(call_start, prompt[:200])
-            if recovered:
-                return recovered
-            if attempt < max_retries - 1:
-                time.sleep(10)
-
-    print(f"  ❌ All {max_retries} attempts failed")
-    return None
+    """Call Gemini CLI through the shared model/auth fallback ladder."""
+    result = call_gemini_with_fallback(
+        prompt,
+        task_name="wiki compiler",
+        preferred_model=GEMINI_MODEL,
+        max_retries=max_retries,
+        gemini_cli=GEMINI_CLI,
+        cwd=Path(__file__).resolve().parents[2],
+        base_env=_PARENT_ENV,
+        logger=lambda msg: print(msg, flush=True),
+        sleep_fn=_visible_sleep,
+        recover_response=_recover_from_session,
+    )
+    return result.response_text
 
 
 def update_index() -> None:

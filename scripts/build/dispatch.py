@@ -13,6 +13,7 @@ Issue: #1029 (observability)
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import re
@@ -21,6 +22,12 @@ from datetime import datetime
 from pathlib import Path
 
 from agent_runtime.tool_config import build_mcp_tool_config
+from ai_llm.fallback import (
+    AttemptOutcome,
+    is_gemini_rate_limited,
+    run_gemini_fallback_ladder,
+    visible_sleep,
+)
 
 # ---------------------------------------------------------------------------
 # Rate limit detection + pacing
@@ -108,6 +115,29 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 def _log(msg: str) -> None:
     print(msg, flush=True)
+
+
+@contextlib.contextmanager
+def _temporary_rate_limit_bypass() -> object:
+    """Bypass the runtime's coarse per-(agent, model) pre-check within the ladder.
+
+    The shared ladder intentionally tries the same Gemini model twice with
+    different auth modes. The runtime headroom cache keys only on
+    ``(agent, model)``, so a rate-limited API rung would incorrectly block the
+    immediate OAuth rung on the same model unless we suppress that pre-check
+    here. This keeps the existing cache implementation untouched while letting
+    the model/auth ladder run as designed.
+    """
+    sentinel = object()
+    previous = os.environ.get("LU_BYPASS_RATE_LIMIT", sentinel)
+    os.environ["LU_BYPASS_RATE_LIMIT"] = "1"
+    try:
+        yield
+    finally:
+        if previous is sentinel:
+            os.environ.pop("LU_BYPASS_RATE_LIMIT", None)
+        else:
+            os.environ["LU_BYPASS_RATE_LIMIT"] = str(previous)
 
 
 def _token_divisor_for_text(text: str | None) -> float:
@@ -367,9 +397,7 @@ def dispatch_agent(
     agent_label = f"{agent} ({model})"
     _log(f"  Dispatching to {agent_label}...")
     if is_gemini:
-        from agent_runtime.adapters.gemini import resolve_gemini_auth_mode
-
-        _log(f"  Gemini auth mode: {resolve_gemini_auth_mode()}")
+        _log("  Gemini auth mode: ladder (API → OAuth per model)")
 
     # ---------- All three agents now routed through agent_runtime (Phase 3 + 5) ----------
     if is_codex or is_gemini or is_gemma_local:
@@ -522,7 +550,7 @@ def _dispatch_via_runtime(
 
     Preserves the legacy behavior the pipeline depends on:
     - Pacing between Gemini calls to prevent burst-induced rate limits
-    - Model fallback (Pro → Flash) on non-rate-limited failure
+    - Shared Gemini ladder: API first, OAuth on 429/quota, then model downshift
     - __RATE_LIMITED__ sentinel in the return value for rate-limited calls
     - Writes to orchestration/{slug}/dispatch/ via _save_dispatch_log
       (this is PIPELINE observability, separate from the runtime's
@@ -544,8 +572,6 @@ def _dispatch_via_runtime(
             if mcp_tools
             else None
         )
-        # Pace Gemini calls (preserved from legacy path)
-        _pace_gemini_calls()
     elif runtime_agent_name == "gemma-local":
         runtime_mode = "workspace-write"
         tool_config = None
@@ -638,63 +664,167 @@ def _dispatch_via_runtime(
             )
             return False, "", str(exc), elapsed, None
 
-    # Cap the first attempt so a single stalled call can't eat the entire
-    # budget and leave zero room for the cascade. For Gemini we use the
-    # shared cascade budget; Codex + Claude get the full timeout since
-    # they don't have a fallback chain to preserve budget for.
     if is_gemini:
+        from agent_runtime.errors import (
+            AgentStalledError,
+            AgentTimeoutError,
+            AgentUnavailableError,
+            RateLimitedError,
+        )
+        from agent_runtime.runner import invoke as runtime_invoke
         from batch_gemini_config import CASCADE_PER_CALL_MAX_S
-        per_call_cap = cascade_per_call_max_s or CASCADE_PER_CALL_MAX_S
-        first_call_timeout = min(per_call_cap, timeout)
-    else:
-        first_call_timeout = timeout
 
-    # First attempt
-    ok, raw, _, elapsed1, _ = _call_runtime(model, agent_label, first_call_timeout)
+        per_call_cap = cascade_per_call_max_s or CASCADE_PER_CALL_MAX_S
+
+        def _gemini_attempt_runner(
+            rung,
+            _attempt_index: int,
+            call_timeout: int | None,
+        ) -> AttemptOutcome:
+            auth_mode_label = "OAuth" if rung.auth_mode == "oauth" else "API"
+            label = f"{agent} [{rung.model} + {auth_mode_label}]"
+            t0 = time.monotonic()
+            call_start = datetime.now().astimezone()
+            call_tool_config = dict(tool_config or {})
+            call_tool_config["auth_mode"] = "subscription" if rung.auth_mode == "oauth" else "api"
+            try:
+                _pace_gemini_calls()
+                with _temporary_rate_limit_bypass():
+                    result = runtime_invoke(
+                        runtime_agent_name,
+                        prompt,
+                        mode=runtime_mode,
+                        cwd=PROJECT_ROOT,
+                        model=rung.model,
+                        task_id=f"{phase}-{orch_dir.name}" if orch_dir else phase,
+                        session_id=None,
+                        tool_config=call_tool_config,
+                        entrypoint="dispatch",
+                        hard_timeout=call_timeout or per_call_cap,
+                        stall_timeout=min(600, call_timeout or per_call_cap),
+                    )
+                elapsed = time.monotonic() - t0
+                _save_dispatch_log(
+                    orch_dir, phase, label,
+                    model=rung.model,
+                    prompt_chars=len(prompt),
+                    response_chars=len(result.response),
+                    stderr=result.stderr_excerpt or "",
+                    returncode=result.returncode,
+                    duration_s=elapsed,
+                    ok=result.ok,
+                    prompt=prompt,
+                    response=result.response,
+                    call_start_time=call_start,
+                )
+                if result.ok:
+                    return AttemptOutcome(
+                        status="success",
+                        elapsed_s=elapsed,
+                        response_text=result.response,
+                        stderr_excerpt=result.stderr_excerpt,
+                        returncode=result.returncode,
+                    )
+                return AttemptOutcome(
+                    status="retryable_error",
+                    elapsed_s=elapsed,
+                    stderr_excerpt=result.stderr_excerpt or "",
+                    returncode=result.returncode,
+                )
+            except RateLimitedError as exc:
+                elapsed = time.monotonic() - t0
+                _save_dispatch_log(
+                    orch_dir, phase, label,
+                    model=rung.model,
+                    prompt_chars=len(prompt),
+                    response_chars=0,
+                    stderr=f"RateLimitedError: {exc}",
+                    returncode=None,
+                    duration_s=elapsed,
+                    ok=False,
+                    prompt=prompt,
+                )
+                status = "rate_limited" if is_gemini_rate_limited(str(exc)) else "retryable_error"
+                return AttemptOutcome(
+                    status=status,
+                    elapsed_s=elapsed,
+                    stderr_excerpt=str(exc),
+                )
+            except AgentTimeoutError as exc:
+                elapsed = time.monotonic() - t0
+                _save_dispatch_log(
+                    orch_dir, phase, label,
+                    model=rung.model,
+                    prompt_chars=len(prompt),
+                    response_chars=0,
+                    stderr=f"AgentTimeoutError: {exc}",
+                    returncode=None,
+                    duration_s=elapsed,
+                    ok=False,
+                    prompt=prompt,
+                )
+                return AttemptOutcome(
+                    status="timeout",
+                    elapsed_s=elapsed,
+                    stderr_excerpt=str(exc),
+                )
+            except AgentStalledError as exc:
+                elapsed = time.monotonic() - t0
+                _save_dispatch_log(
+                    orch_dir, phase, label,
+                    model=rung.model,
+                    prompt_chars=len(prompt),
+                    response_chars=0,
+                    stderr=f"AgentStalledError: {exc}",
+                    returncode=None,
+                    duration_s=elapsed,
+                    ok=False,
+                    prompt=prompt,
+                )
+                return AttemptOutcome(
+                    status="retryable_error",
+                    elapsed_s=elapsed,
+                    stderr_excerpt=str(exc),
+                )
+            except AgentUnavailableError as exc:
+                elapsed = time.monotonic() - t0
+                _save_dispatch_log(
+                    orch_dir, phase, label,
+                    model=rung.model,
+                    prompt_chars=len(prompt),
+                    response_chars=0,
+                    stderr=f"AgentUnavailableError: {exc}",
+                    returncode=None,
+                    duration_s=elapsed,
+                    ok=False,
+                    prompt=prompt,
+                )
+                return AttemptOutcome(
+                    status="fatal",
+                    elapsed_s=elapsed,
+                    stderr_excerpt=str(exc),
+                )
+
+        ladder_result = run_gemini_fallback_ladder(
+            task_name=f"dispatch/{phase}",
+            preferred_model=model,
+            per_rung_timeout_s=per_call_cap,
+            overall_timeout_s=timeout,
+            min_attempt_budget_s=30,
+            attempt_runner=_gemini_attempt_runner,
+            logger=_log,
+            sleep_fn=lambda seconds, reason: visible_sleep(seconds, reason, logger=_log),
+        )
+        if ladder_result.ok:
+            return True, ladder_result.response_text or ""
+        if ladder_result.attempts and all(
+            attempt.status == "rate_limited" for attempt in ladder_result.attempts
+        ):
+            return False, "__RATE_LIMITED__"
+        return False, ""
+
+    ok, raw, _, _, _ = _call_runtime(model, agent_label, timeout)
     if ok:
         return True, raw
-
-    # Short-circuit rate-limited: don't fall back, same quota
-    if raw == "__RATE_LIMITED__":
-        _log("  ⏳ Rate limited — skipping fallback cascade (same quota)")
-        return False, "__RATE_LIMITED__"
-
-    # Gemini-only: walk the fallback cascade
-    # (e.g. flash → pro → auto, or flash-lite → flash → pro → auto)
-    # Each step is capped at CASCADE_PER_CALL_MAX_S so no single call can
-    # starve the remaining budget for downstream attempts. We also require
-    # at least 30s of headroom before trying — a sub-30s attempt is useless.
-    if is_gemini:
-        from batch_gemini_config import CASCADE_PER_CALL_MAX_S
-        _MIN_ATTEMPT_S = 30
-        per_call_cap = cascade_per_call_max_s or CASCADE_PER_CALL_MAX_S
-        elapsed_total = elapsed1
-        for fallback_model in _get_gemini_fallback_chain(model):
-            remaining_total = int(timeout - elapsed_total)
-            if remaining_total < _MIN_ATTEMPT_S:
-                _log(
-                    f"  ⏳ No budget left for {fallback_model} fallback "
-                    f"(elapsed: {elapsed_total:.0f}s of {timeout}s)"
-                )
-                break
-            step_timeout = min(per_call_cap, remaining_total)
-            _pace_gemini_calls()
-            fallback_label = f"{agent} ({fallback_model})"
-            _log(
-                f"  🔄 Cascade → {fallback_label} "
-                f"(step budget: {step_timeout}s, remaining: {remaining_total}s)"
-            )
-            ok2, raw2, _, elapsed_step, _ = _call_runtime(
-                fallback_model, fallback_label, step_timeout
-            )
-            elapsed_total += elapsed_step
-            if ok2:
-                return True, raw2
-            if raw2 == "__RATE_LIMITED__":
-                _log(
-                    f"  ⏳ {fallback_label} rate-limited — aborting cascade"
-                )
-                return False, "__RATE_LIMITED__"
-            # else: loop to next fallback
 
     return ok, raw

@@ -26,7 +26,7 @@ DICT_DIR = GDRIVE_DATA  # grinchenko/, sum11/, frazeolohichnyi/ etc.
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 
 # ── Gemini ─────────────────────────────────────────────────────────
-GEMINI_MODEL = "gemini-2.5-pro"
+GEMINI_MODEL = "gemini-3.1-pro-preview"
 
 # ── Wiki structure ─────────────────────────────────────────────────
 WIKI_DOMAINS = [

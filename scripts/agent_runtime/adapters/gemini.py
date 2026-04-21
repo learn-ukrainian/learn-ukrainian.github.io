@@ -36,34 +36,14 @@ import re
 import shutil
 from pathlib import Path
 
+from ai_llm.fallback import GEMINI_AUTH_ENV_VARS, is_gemini_rate_limited
+
 from ..result import ParseResult
 from .base import InvocationPlan
 
-# TRUE rate-limit patterns — only things that mean "quota is EXHAUSTED for
-# hours", not transient server-side issues that clear in seconds.
-# (See issue #1185 follow-up: "No capacity available" and raw 429 status
-# codes are transient and were causing 5h false-lockouts after a single
-# ~2-minute retry on Gemini's end.)
-_RATE_LIMIT_PATTERNS = (
-    r"RESOURCE_EXHAUSTED",
-    r"usage limit reached",
-    r"quota exceeded",
-    r"daily.{0,10}limit.{0,10}exceeded",
-)
-_RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
-
-# Transient capacity / retry patterns — NOT rate limits. The Gemini CLI
-# retries these internally with backoff and usually succeeds on a later
-# attempt. We log them as warnings but never block the quota.
 _TRANSIENT_ERROR_PATTERNS = (
     r"No capacity available",
     r"Retrying with backoff",
-    r"\bstatus 429\b",
-    r"\bHTTP 429\b",
-    r"\b429\b",
-    r"too many requests",
-    r"rate limit",
-    r"rate_limit",
 )
 _TRANSIENT_ERROR_RE = re.compile("|".join(_TRANSIENT_ERROR_PATTERNS), re.IGNORECASE)
 _AUTH_MODE_VALUES = frozenset({"auto", "subscription", "api"})
@@ -74,6 +54,8 @@ def _normalize_gemini_auth_mode(raw: str | None) -> str:
     value = (raw or "auto").strip().lower()
     if value == "api-key":
         return "api"
+    if value == "oauth":
+        return "subscription"
     return value if value in _AUTH_MODE_VALUES else "auto"
 
 
@@ -163,7 +145,7 @@ class GeminiAdapter:
         )
         env_unsets: tuple[str, ...] = ()
         if auth_mode == "subscription":
-            env_unsets = ("GEMINI_API_KEY", "GOOGLE_API_KEY")
+            env_unsets = GEMINI_AUTH_ENV_VARS
 
         return InvocationPlan(
             cmd=cmd,
@@ -207,9 +189,8 @@ class GeminiAdapter:
         """
         _ = output_file  # unused — Gemini doesn't use -o
 
-        combined = f"{stdout}\n{stderr}"
-        hard_limit_hit = bool(_RATE_LIMIT_RE.search(combined))
-        transient_seen = bool(_TRANSIENT_ERROR_RE.search(combined))
+        hard_limit_hit = is_gemini_rate_limited(stderr)
+        transient_seen = bool(_TRANSIENT_ERROR_RE.search(f"{stdout}\n{stderr}"))
 
         stdout_response = stdout.strip()
 

@@ -1637,7 +1637,12 @@ def test_gemini_adapter_subscription_mode_strips_api_key_env(tmp_path):
         session_id=None,
         tool_config=None,
     )
-    assert plan.env_unsets == ("GEMINI_API_KEY", "GOOGLE_API_KEY")
+    assert plan.env_unsets == (
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_GENERATIVE_AI_API_KEY",
+        "GOOGLE_APPLICATION_CREDENTIALS",
+    )
 
 
 @patch.dict("os.environ", {"GEMINI_AUTH_MODE": "api"}, clear=True)
@@ -1692,7 +1697,12 @@ def test_gemini_adapter_tool_config_auth_mode_overrides_env(tmp_path):
         session_id=None,
         tool_config={"auth_mode": "subscription"},
     )
-    assert plan.env_unsets == ("GEMINI_API_KEY", "GOOGLE_API_KEY")
+    assert plan.env_unsets == (
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_GENERATIVE_AI_API_KEY",
+        "GOOGLE_APPLICATION_CREDENTIALS",
+    )
 
 
 def test_gemini_adapter_mcp_tool_config(tmp_path):
@@ -1786,7 +1796,7 @@ def test_gemini_parse_response_rate_limit_resource_exhausted():
     adapter = GeminiAdapter()
     result = adapter.parse_response(
         stdout="",
-        stderr="Error: RESOURCE_EXHAUSTED",
+        stderr="Error: RESOURCE_EXHAUSTED 429 quota",
         returncode=1,
         output_file=None,
     )
@@ -1805,8 +1815,8 @@ def test_gemini_parse_response_rate_limit_quota_exceeded():
     assert result.rate_limited is True
 
 
-def test_gemini_parse_response_rate_limit_in_stdout():
-    """Some Gemini rate-limit messages land in stdout, not stderr."""
+def test_gemini_parse_response_rate_limit_in_stdout_is_not_a_fallback_signal():
+    """The ladder only advances on stderr-based rate-limit signals."""
     adapter = GeminiAdapter()
     result = adapter.parse_response(
         stdout="Error: quota exceeded",
@@ -1814,7 +1824,8 @@ def test_gemini_parse_response_rate_limit_in_stdout():
         returncode=1,
         output_file=None,
     )
-    assert result.rate_limited is True
+    assert result.rate_limited is False
+    assert result.ok is False
 
 
 def test_gemini_parse_response_url_no_false_positive():
@@ -2389,3 +2400,5 @@ def test_invoke_applies_env_unsets_to_subprocess(tmp_path):
     assert env.get("GEMINI_AUTH_MODE") == "subscription"
     assert "GEMINI_API_KEY" not in env
     assert "GOOGLE_API_KEY" not in env
+    assert "GOOGLE_GENERATIVE_AI_API_KEY" not in env
+    assert "GOOGLE_APPLICATION_CREDENTIALS" not in env
