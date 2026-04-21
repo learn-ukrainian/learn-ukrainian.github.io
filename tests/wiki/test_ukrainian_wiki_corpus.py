@@ -14,12 +14,19 @@ from wiki.embedding_manifest import EmbeddingManifest
 from wiki import dense_rerank, sources_db, ukrainian_wiki_corpus
 
 
-def _article_with_registry(tmp_path: Path, *, slug: str = "apostrof", text: str) -> Path:
-    article = tmp_path / "wiki" / "pedagogy" / "a1" / f"{slug}.md"
+def _article_with_registry(
+    tmp_path: Path,
+    *,
+    slug: str = "apostrof",
+    text: str,
+    source_dir: tuple[str, ...] = ("wiki", "pedagogy", "a1"),
+) -> Path:
+    article = tmp_path.joinpath(*source_dir) / f"{slug}.md"
     article.parent.mkdir(parents=True, exist_ok=True)
     article.write_text(text, encoding="utf-8")
+    article_rel = article.relative_to(tmp_path).as_posix()
     article.with_suffix(".sources.yaml").write_text(
-        f"# Source registry for wiki/pedagogy/a1/{slug}.md\n"
+        f"# Source registry for {article_rel}\n"
         "sources:\n"
         "  - id: S1\n"
         "    file: ext-demo\n"
@@ -206,6 +213,54 @@ def test_round_trip_insert_and_search_query(tmp_path: Path, monkeypatch: pytest.
     assert "п'ять" in results[0]["text"]
 
 
+def test_round_trip_insert_preserves_a2_track(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    article = _article_with_registry(
+        tmp_path,
+        slug="aspect-concept",
+        source_dir=("wiki", "grammar", "a2"),
+        text=(
+            "# Вид дієслова\n\n"
+            "Вид дієслова допомагає розрізняти завершену та незавершену дію [S1]. "
+            "Для рівня A2 ця тема потрібна, щоб поєднувати часові форми і намір мовця.\n\n"
+            "У парах читати і прочитати учень бачить, як змінюється значення результату "
+            "та тривалості дії.\n"
+        ),
+    )
+    db_path = tmp_path / "sources.db"
+    manifest_path = tmp_path / "embeddings" / "manifest.db"
+
+    monkeypatch.setattr(
+        ukrainian_wiki_corpus,
+        "vesum_batch_lookup",
+        lambda words: {word: [{"word": word}] for word in words},
+    )
+    monkeypatch.setattr(ukrainian_wiki_corpus, "check_russicisms", lambda text, file_path="": [])
+    monkeypatch.setattr(ukrainian_wiki_corpus, "pravopys_lookup", lambda term: {"term": term})
+    monkeypatch.setattr(ukrainian_wiki_corpus, "search_style_guide", lambda term: [])
+
+    report, inserted = ukrainian_wiki_corpus.ingest_article(
+        article,
+        db_path=db_path,
+        manifest_db=manifest_path,
+        min_words=5,
+        max_chars=1000,
+        min_vesum_coverage=0.5,
+    )
+
+    assert report.passed is True
+    assert inserted == 2
+
+    conn = sqlite3.connect(db_path)
+    try:
+        rows = conn.execute(
+            "SELECT article_slug, track FROM ukrainian_wiki ORDER BY chunk_index"
+        ).fetchall()
+    finally:
+        conn.close()
+
+    assert rows == [("aspect-concept", "a2"), ("aspect-concept", "a2")]
+
+
 def test_admission_gate_pass_and_fail(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     good_article = _article_with_registry(
         tmp_path,
@@ -277,10 +332,11 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    article_dir = tmp_path / "wiki" / "pedagogy" / "a1"
+    article_dir = tmp_path / "wiki" / "grammar" / "a2"
     _article_with_registry(
         tmp_path,
         slug="apostrof",
+        source_dir=("wiki", "grammar", "a2"),
         text=(
             "# Апостроф\n\n"
             "Апостроф допомагає відділяти звук й від попереднього приголосного в словах "
@@ -290,6 +346,7 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
     _article_with_registry(
         tmp_path,
         slug="holosni",
+        source_dir=("wiki", "grammar", "a2"),
         text=(
             "# Голосні\n\n"
             "Голосні в українській мові формують склад і визначають мелодію мовлення [S1]. "
@@ -299,6 +356,7 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
     _article_with_registry(
         tmp_path,
         slug="pryvitannia",
+        source_dir=("wiki", "grammar", "a2"),
         text=(
             "# Привітання\n\n"
             "Фрази добрий день, привіт і дякую потрібні з першого уроку [S1]. "
@@ -308,6 +366,7 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
     _article_with_registry(
         tmp_path,
         slug="nagolos",
+        source_dir=("wiki", "grammar", "a2"),
         text=(
             "# Наголос\n\n"
             "Наголос в українській мові допомагає розрізняти форми слів і підтримує природну "
@@ -317,6 +376,7 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
     _article_with_registry(
         tmp_path,
         slug="kyrylytsia",
+        source_dir=("wiki", "grammar", "a2"),
         text=(
             "# Кирилиця\n\n"
             "Українська кирилиця має власні літери, зокрема ґ та ї [S1]. "
@@ -326,7 +386,7 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
 
     db_path = tmp_path / "sources.db"
     manifest_path = tmp_path / "embeddings" / "manifest.db"
-    report_path = tmp_path / "ukrainian_wiki_a1_ingest_report.md"
+    report_path = tmp_path / "ukrainian_wiki_a2_ingest_report.md"
 
     first_results = ukrainian_wiki_corpus.ingest_articles(
         article_dir,
@@ -349,6 +409,7 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
 
     assert len(first_results) == 5
     assert all(result.failure is None for result in first_results)
+    assert [result.track for result in first_results] == ["a2", "a2", "a2", "a2", "a2"]
     assert [result.inserted_chunks for result in first_results] == [1, 1, 1, 1, 1]
     assert [result.inserted_chunks for result in second_results] == [1, 1, 1, 1, 1]
 
@@ -367,7 +428,7 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
             ("апостроф",),
         ).fetchall()
         _configure_search(monkeypatch, conn, manifest_path)
-        results = sources_db.search_sources("наголос", track="a1", strategy="modern_dense_section", limit=5)
+        results = sources_db.search_sources("наголос", track="a2", strategy="modern_dense_section", limit=5)
     finally:
         conn.close()
 
@@ -375,6 +436,8 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
     assert bm25_rows[0]["article_slug"] == "apostrof"
     assert report_path.exists()
     report_text = report_path.read_text(encoding="utf-8")
+    assert "# Ukrainian Wiki A2 Ingest Report" in report_text
+    assert "wiki/grammar/a2" in report_text
     assert "Total chunks ingested: 5" in report_text
     assert "`apostrof`" in report_text
     assert len(results) == 1

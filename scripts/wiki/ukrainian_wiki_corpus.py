@@ -165,6 +165,24 @@ class ArticleIngestResult:
     failure: str | None = None
 
 
+@dataclass(frozen=True)
+class SmokeQueryMatch:
+    rank: int
+    article_slug: str
+    article_title: str
+    track: str
+    section_path: str
+    source_file: str
+    excerpt: str
+    final_score: float
+
+
+@dataclass(frozen=True)
+class SmokeQueryResult:
+    query: str
+    matches: list[SmokeQueryMatch]
+
+
 def ensure_ukrainian_wiki_schema(conn: sqlite3.Connection) -> None:
     conn.executescript(UKRAINIAN_WIKI_SCHEMA)
     existing = {
@@ -228,6 +246,18 @@ def _infer_article_title(path: Path, headings: list[str]) -> str:
 
 def _infer_track(article_path: Path) -> str:
     return article_path.parent.name.strip().lower() or "a1"
+
+
+def _report_title(article_root: Path | None, results: list[ArticleIngestResult]) -> str:
+    if article_root is not None:
+        track = article_root.name.strip().lower()
+        if track:
+            return f"Ukrainian Wiki {track.upper()} Ingest Report"
+
+    tracks = sorted({result.track for result in results if result.track})
+    if len(tracks) == 1:
+        return f"Ukrainian Wiki {tracks[0].upper()} Ingest Report"
+    return "Ukrainian Wiki Ingest Report"
 
 
 def _split_overlong_passage(text: str, *, max_chars: int) -> list[str]:
@@ -678,10 +708,67 @@ def _suspicious_thresholds(chunk_counts: list[int]) -> tuple[float, float]:
     return max(0.0, q1 - 1.5 * iqr), q3 + 1.5 * iqr
 
 
+def run_smoke_queries(
+    queries: list[str],
+    *,
+    track: str,
+    limit: int = 5,
+    db_path: Path = DEFAULT_DB_PATH,
+) -> list[SmokeQueryResult]:
+    conn = sqlite3.connect(str(db_path))
+    conn.row_factory = sqlite3.Row
+    smoke_results: list[SmokeQueryResult] = []
+    try:
+        for query in queries:
+            phrase = query.replace('"', " ").strip()
+            rows = conn.execute(
+                """
+                SELECT
+                    s.article_slug,
+                    s.article_title,
+                    s.track,
+                    s.section_path,
+                    s.article_path,
+                    s.text,
+                    bm25(ukrainian_wiki_fts, 5.0, 2.0, 1.0) AS rank
+                FROM ukrainian_wiki_fts
+                JOIN ukrainian_wiki s ON s.id = ukrainian_wiki_fts.rowid
+                WHERE ukrainian_wiki_fts MATCH ?
+                  AND s.track = ?
+                ORDER BY rank
+                LIMIT ?
+                """,
+                (f'"{phrase}"', track, limit),
+            ).fetchall()
+            smoke_results.append(
+                SmokeQueryResult(
+                    query=query,
+                    matches=[
+                        SmokeQueryMatch(
+                            rank=index,
+                            article_slug=str(row["article_slug"] or ""),
+                            article_title=str(row["article_title"] or ""),
+                            track=str(row["track"] or ""),
+                            section_path=str(row["section_path"] or ""),
+                            source_file=str(row["article_path"] or ""),
+                            excerpt=" ".join(str(row["text"] or "").split())[:220].strip(),
+                            final_score=float(row["rank"] or 0.0),
+                        )
+                        for index, row in enumerate(rows, start=1)
+                    ],
+                )
+            )
+    finally:
+        conn.close()
+    return smoke_results
+
+
 def write_ingest_report(
     results: list[ArticleIngestResult],
     *,
     report_path: Path = DEFAULT_REPORT_PATH,
+    article_root: Path | None = None,
+    smoke_queries: list[SmokeQueryResult] | None = None,
 ) -> Path:
     report_path.parent.mkdir(parents=True, exist_ok=True)
     completed = [result for result in results if result.failure is None]
@@ -704,9 +791,10 @@ def write_ingest_report(
     failures = [result for result in results if result.failure is not None]
 
     lines = [
-        "# Ukrainian Wiki A1 Ingest Report",
+        f"# {_report_title(article_root, results)}",
         "",
         f"- Generated: {_utc_now()}",
+        f"- Source root: {_relative_or_absolute(article_root) if article_root else 'n/a'}",
         f"- Articles scanned: {len(results)}",
         f"- Articles ingested: {len(completed)}",
         f"- Articles failed: {len(failures)}",
@@ -767,6 +855,26 @@ def write_ingest_report(
         for result in failures:
             lines.append(f"- `{result.article_slug}`: {result.failure}")
 
+    if smoke_queries:
+        lines.extend(["", "## Smoke Queries", ""])
+        for smoke in smoke_queries:
+            lines.append(f"### `{smoke.query}`")
+            lines.append("")
+            if not smoke.matches:
+                lines.append("- No `ukrainian_wiki` matches returned.")
+                lines.append("")
+                continue
+            lines.append("| Rank | Article | Track | Section | Score | Source | Excerpt |")
+            lines.append("| ---: | --- | --- | --- | ---: | --- | --- |")
+            for match in smoke.matches:
+                section = match.section_path or "root"
+                lines.append(
+                    f"| {match.rank} | `{match.article_slug}` ({match.article_title}) | "
+                    f"`{match.track or 'unknown'}` | `{section}` | {match.final_score:.4f} | "
+                    f"`{match.source_file}` | {match.excerpt} |"
+                )
+            lines.append("")
+
     report_path.write_text("\n".join(lines).strip() + "\n", encoding="utf-8")
     return report_path
 
@@ -800,7 +908,10 @@ def ingest_articles(
                 )
                 if passages:
                     article_title = passages[0].article_title
-                payload, skipped = _build_insert_payload(passages, min_chunk_chars=min_chunk_chars)
+                payload, skipped = _build_insert_payload(
+                    passages,
+                    min_chunk_chars=min_chunk_chars,
+                )
                 _write_passages(conn, article_slug=article_slug, payload=payload)
                 results.append(
                     ArticleIngestResult(
@@ -847,7 +958,7 @@ def ingest_articles(
     finally:
         conn.close()
 
-    write_ingest_report(results, report_path=report_path)
+    write_ingest_report(results, report_path=report_path, article_root=article_root)
     return results
 
 
