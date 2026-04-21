@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/a2/liudyna-i-stosunky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3835
+  type: unknown
+- id: S2
+  file: S3836
+  type: unknown
+- id: S3
+  file: S3840
+  type: unknown
+- id: S4
+  file: S3844
+  type: unknown
+- id: S5
+  file: S2302
+  type: unknown
+- id: S6
+  file: S3919
+  type: unknown
+- id: S9
+  file: S3132
+  type: unknown
+- id: S10
+  file: S1189
+  type: unknown

@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/a2/metalanguage-phonetics.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5121
+  type: unknown
+- id: S2
+  file: S2464
+  type: unknown
+- id: S3
+  file: S2367
+  type: unknown
+- id: S4
+  file: S2298
+  type: unknown
+- id: S5
+  file: S2515
+  type: unknown
+- id: S6
+  file: S2363
+  type: unknown
+- id: S7
+  file: S2360
+  type: unknown

@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/metalanguage-morphology.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3383
+  type: unknown
+- id: S2
+  file: S3149
+  type: unknown
+- id: S3
+  file: S301
+  type: unknown
+- id: S4
+  file: S2513
+  type: unknown
+- id: S5
+  file: S1764
+  type: unknown
+- id: S6
+  file: S3781
+  type: unknown
+- id: S7
+  file: S3324
+  type: unknown
+- id: S8
+  file: S2493
+  type: unknown
+- id: S9
+  file: S4548
+  type: unknown

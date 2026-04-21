@@ -1,0 +1,18 @@
+# Source registry for wiki/grammar/a2/locative-expanded.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3164
+  type: unknown
+- id: S2
+  file: S550
+  type: unknown
+- id: S4
+  file: S2390
+  type: unknown
+- id: S5
+  file: S3122
+  type: unknown
+- id: S6
+  file: S3215
+  type: unknown
