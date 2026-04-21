@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/plural-other-cases.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1800
+  type: unknown
+- id: S2
+  file: S3164
+  type: unknown
+- id: S3
+  file: S1887
+  type: unknown
+- id: S4
+  file: S3342
+  type: unknown
+- id: S6
+  file: S2439
+  type: unknown
+- id: S7
+  file: S1874
+  type: unknown
+- id: S8
+  file: S1875
+  type: unknown
+- id: S9
+  file: S3341
+  type: unknown
+- id: S10
+  file: S2427
+  type: unknown

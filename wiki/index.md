@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 111
-**Total words:** 203,816
+**Total articles:** 117
+**Total words:** 215,981
 
 ## Figures
 
@@ -63,6 +63,12 @@ Auto-generated index of compiled wiki articles.
 - [Граматика A2: Іду, їду, лечу](grammar/a2/motion-verbs.md) (2,303 words)
 - [Граматика A2: Пори року і свята](grammar/a2/nature-and-traditions.md) (2,108 words)
 - [Граматика A2: Числа у відмінках](grammar/a2/numerals-and-cases.md) (2,410 words)
+- [Граматика A2: Скільки?](grammar/a2/plural-genitive.md) (1,742 words)
+- [Граматика A2: Багато людей, багато речей](grammar/a2/plural-nominative-accusative.md) (1,829 words)
+- [Граматика A2: Непрямі відмінки іменників](grammar/a2/plural-other-cases.md) (2,467 words)
+- [Граматика A2: Я обираю, я вважаю](grammar/a2/preferences-and-choices.md) (2,080 words)
+- [Граматика A2: Щоб зрозуміти...](grammar/a2/purpose-clauses.md) (1,921 words)
+- [Граматика A2: Якщо... то...](grammar/a2/real-conditionals.md) (2,126 words)
 
 ## Linguistics
 

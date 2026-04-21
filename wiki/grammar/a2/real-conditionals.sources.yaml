@@ -1,0 +1,21 @@
+# Source registry for wiki/grammar/a2/real-conditionals.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3872
+  type: unknown
+- id: S2
+  file: S3939
+  type: unknown
+- id: S3
+  file: S3228
+  type: unknown
+- id: S4
+  file: S1153
+  type: unknown
+- id: S5
+  file: S1816
+  type: unknown
+- id: S6
+  file: S2300
+  type: unknown

@@ -1,0 +1,21 @@
+# Source registry for wiki/grammar/a2/purpose-clauses.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5163
+  type: unknown
+- id: S3
+  file: S3147
+  type: unknown
+- id: S4
+  file: S5026
+  type: unknown
+- id: S6
+  file: S5164
+  type: unknown
+- id: S9
+  file: S5162
+  type: unknown
+- id: S10
+  file: S5223
+  type: unknown

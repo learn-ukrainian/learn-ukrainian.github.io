@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/a2/plural-nominative-accusative.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3387
+  type: unknown
+- id: S2
+  file: S3164
+  type: unknown
+- id: S3
+  file: S2427
+  type: unknown
+- id: S5
+  file: S3069
+  type: unknown
+- id: S6
+  file: S3338
+  type: unknown
+- id: S7
+  file: S308
+  type: unknown
+- id: S9
+  file: S3169
+  type: unknown
+- id: S10
+  file: S3388
+  type: unknown

@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/a2/plural-genitive.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3387
+  type: unknown
+- id: S2
+  file: S1144
+  type: unknown
+- id: S3
+  file: S3337
+  type: unknown
+- id: S4
+  file: S3164
+  type: unknown
+- id: S5
+  file: S1801
+  type: unknown
+- id: S6
+  file: S308
+  type: unknown
+- id: S7
+  file: S361
+  type: unknown
+- id: S8
+  file: S3061
+  type: unknown
