@@ -12,7 +12,7 @@ import tempfile
 import time
 from pathlib import Path
 
-from ai_llm.fallback import call_gemini_with_fallback, visible_sleep
+from ai_llm.fallback import CallResult, call_gemini_with_fallback, visible_sleep
 
 from .config import GEMINI_MODEL, PROMPTS_DIR, TRACK_DOMAINS, WIKI_DIR
 from .sources_schema import (
@@ -35,6 +35,7 @@ GEMINI_CLI = shutil.which("gemini") or "gemini"
 # key vars for OAuth rungs. GEMINI_SESSION=1 stays enabled across both.
 _PARENT_ENV = os.environ.copy()
 _PARENT_ENV["GEMINI_SESSION"] = "1"
+WIKI_META_RE = re.compile(r"<!--\s*wiki-meta\b(?P<body>.*?)-->", re.DOTALL)
 
 
 def compile_article(
@@ -64,7 +65,14 @@ def compile_article(
     article_key = f"{domain}/{slug}"
 
     if dry_run:
-        prompt = _build_prompt(topic=topic, slug=slug, domain=domain, sources=sources, track=track)
+        prompt = _build_prompt(
+            topic=topic,
+            slug=slug,
+            domain=domain,
+            sources=sources,
+            track=track,
+            generated_by_model="unknown",
+        )
         formatted_sources = _format_sources(sources)
         print(f"\n{'═' * 60}")
         print(f"DRY RUN: {article_key}")
@@ -82,11 +90,28 @@ def compile_article(
         return WIKI_DIR / domain / f"{slug}.md"
 
     # Build the prompt (track selects the right template)
-    prompt = _build_prompt(topic=topic, slug=slug, domain=domain, sources=sources, track=track)
+    prompt = _build_prompt(
+        topic=topic,
+        slug=slug,
+        domain=domain,
+        sources=sources,
+        track=track,
+        generated_by_model="unknown",
+    )
 
     # Call Gemini
     print(f"  🤖 Compiling {article_key} ({len(sources)} sources)...")
-    response = _call_gemini(prompt)
+    call_result = _call_gemini(prompt)
+    response = (
+        call_result.response_text
+        if isinstance(call_result, CallResult)
+        else call_result
+    )
+    model_used = (
+        call_result.model_used
+        if isinstance(call_result, CallResult)
+        else None
+    )
     if not response:
         print(f"  ❌ Gemini returned empty response for {article_key}")
         return None
@@ -95,6 +120,7 @@ def compile_article(
     fence_match = re.match(r"^```\w*\n(.*?)```\s*$", response.strip(), re.DOTALL)
     if fence_match:
         response = fence_match.group(1)
+    response = _inject_generated_by_model(response, model_used=model_used)
 
     # Validate response
     if not response.strip().startswith("#"):
@@ -119,14 +145,15 @@ def compile_article(
         article_key,
         source_count=len(sources),
         word_count=word_count,
-        model=GEMINI_MODEL,
+        model=_normalize_generated_by_model(model_used),
     )
 
     return article_path
 
 
 def _build_prompt(*, topic: str, slug: str, domain: str,
-                  sources: list[dict], track: str = "") -> str:
+                  sources: list[dict], track: str = "",
+                  generated_by_model: str = "unknown") -> str:
     """Build the Gemini prompt from template + source material.
 
     Uses track-specific prompt when available (A1 pedagogy, A2-B2 grammar,
@@ -169,7 +196,43 @@ def _build_prompt(*, topic: str, slug: str, domain: str,
     prompt = prompt.replace("{sources}", source_text)
     prompt = prompt.replace("{source_ids}", source_ids_str)
     prompt = prompt.replace("{date}", date)
+    prompt = prompt.replace("{generated_by_model}", generated_by_model)
     return prompt
+
+
+def _normalize_generated_by_model(model_used: str | None) -> str:
+    """Normalize missing runtime model information for wiki metadata."""
+    return (model_used or "").strip() or "unknown"
+
+
+def _inject_generated_by_model(article_text: str, *, model_used: str | None) -> str:
+    """Write the actual successful Gemini rung into the wiki-meta block."""
+    match = WIKI_META_RE.search(article_text)
+    if not match:
+        return article_text
+
+    model = _normalize_generated_by_model(model_used)
+    body = match.group("body").strip()
+    lines = [line.rstrip() for line in body.splitlines()]
+    updated: list[str] = []
+    inserted = False
+
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("generated_by_model:"):
+            updated.append(f"generated_by_model: {model}")
+            inserted = True
+            continue
+        updated.append(line)
+        if stripped.startswith("compiled:"):
+            updated.append(f"generated_by_model: {model}")
+            inserted = True
+
+    if not inserted:
+        updated.append(f"generated_by_model: {model}")
+
+    rendered = "<!-- wiki-meta\n" + "\n".join(updated) + "\n-->"
+    return article_text[:match.start()] + rendered + article_text[match.end():]
 
 
 def _format_sources(sources: list[dict]) -> str:
@@ -456,7 +519,7 @@ def _visible_sleep(seconds: int, reason: str) -> None:
     visible_sleep(seconds, reason, logger=lambda msg: print(msg, flush=True))
 
 
-def _call_gemini(prompt: str, *, max_retries: int = 3) -> str | None:
+def _call_gemini(prompt: str, *, max_retries: int = 3) -> CallResult:
     """Call Gemini CLI through the shared model/auth fallback ladder."""
     result = call_gemini_with_fallback(
         prompt,
@@ -470,7 +533,7 @@ def _call_gemini(prompt: str, *, max_retries: int = 3) -> str | None:
         sleep_fn=_visible_sleep,
         recover_response=_recover_from_session,
     )
-    return result.response_text
+    return result
 
 
 def update_index() -> None:

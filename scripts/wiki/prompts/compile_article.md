@@ -70,6 +70,7 @@ slug: {slug}
 domain: {domain}
 tracks: [{tracks}]
 compiled: {date}
+generated_by_model: {generated_by_model}
 -->
 
 ## Короткий зміст

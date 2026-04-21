@@ -1,3 +1,11 @@
+<!-- wiki-meta
+slug: introductory-words-homogeneous-parts
+domain: grammar/b1
+tracks: [b1, b2]
+compiled: 2026-04-07
+generated_by_model: gemini-2.5-pro
+-->
+
 version: "1.0"
 module: sounds-letters-and-hello
 level: a1

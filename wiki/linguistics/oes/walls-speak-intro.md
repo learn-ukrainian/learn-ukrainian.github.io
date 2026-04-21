@@ -17,6 +17,7 @@ slug: walls-speak-intro
 domain: linguistics/oes
 tracks: [oes]
 compiled: 2026-04-18
+generated_by_model: gemini-2.5-pro
 -->
 
 ## Короткий зміст

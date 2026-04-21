@@ -17,6 +17,7 @@ slug: introduction-to-kotliarevsky
 domain: literature/works
 tracks: [lit, lit-essay, lit-war, lit-hist-fic, lit-youth, lit-fantastika, lit-humor, lit-drama]
 compiled: 2026-04-18
+generated_by_model: gemini-2.5-pro
 -->
 
 ## Короткий зміст

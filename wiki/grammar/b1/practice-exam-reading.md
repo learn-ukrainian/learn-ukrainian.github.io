@@ -5,6 +5,7 @@ slug: practice-exam-reading
 domain: grammar/b1
 tracks: [b1, b2]
 compiled: 2026-04-21
+generated_by_model: gemini-3.1-pro-preview
 -->
 
 ## Як це пояснюють у школі

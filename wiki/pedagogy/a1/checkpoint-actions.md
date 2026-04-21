@@ -5,6 +5,7 @@ slug: checkpoint-actions
 domain: pedagogy/a1
 tracks: [a1, a2]
 compiled: 2026-04-21
+generated_by_model: gemini-2.5-pro
 -->
 
 ## Методичний підхід

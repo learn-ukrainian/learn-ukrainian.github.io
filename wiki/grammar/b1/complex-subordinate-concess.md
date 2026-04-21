@@ -1,3 +1,11 @@
+<!-- wiki-meta
+slug: complex-subordinate-concessive
+domain: grammar/b1
+tracks: [b1, b2]
+compiled: 2026-04-07
+generated_by_model: gemini-2.5-pro
+-->
+
 <verification>
 ## VESUM Verification
 - Confirmed: звук, літера, голосний, приголосний, привіт, добре, чудово, мама, молоко, нормально, тато, око, дім, ніс, сон, як, справи, радий, рада.

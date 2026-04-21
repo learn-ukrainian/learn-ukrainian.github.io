@@ -5,6 +5,7 @@ slug: adjectives-comparative-and-superlative
 domain: grammar/b1
 tracks: [b1, b2]
 compiled: 2026-04-21
+generated_by_model: gemini-2.5-pro
 -->
 
 ## Як це пояснюють у школі

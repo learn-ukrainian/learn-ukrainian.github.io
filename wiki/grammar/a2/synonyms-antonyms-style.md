@@ -5,6 +5,7 @@ slug: synonyms-antonyms-style
 domain: grammar/a2
 tracks: [a2, b1]
 compiled: 2026-04-21
+generated_by_model: gemini-2.5-pro
 -->
 
 ## Як це пояснюють у школі

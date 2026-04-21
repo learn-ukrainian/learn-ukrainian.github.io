@@ -138,6 +138,7 @@ class TestBuildPrompt:
             "Domain: {domain}\n"
             "Tracks: {tracks}\n"
             "Date: {date}\n"
+            "Model: {generated_by_model}\n"
             "Source IDs: {source_ids}\n\n"
             "## Sources\n{sources}\n"
         )
@@ -161,6 +162,20 @@ class TestBuildPrompt:
         assert "{topic}" not in result
         assert "{slug}" not in result
         assert "{domain}" not in result
+        assert "{generated_by_model}" not in result
+
+    def test_replaces_generated_by_model_placeholder(self, prompt_template):
+        from wiki.compiler import _build_prompt
+
+        with patch("wiki.compiler.PROMPTS_DIR", prompt_template):
+            result = _build_prompt(
+                topic="Test",
+                slug="test",
+                domain="folk/genres",
+                sources=[],
+                generated_by_model="gemini-3-flash-preview",
+            )
+        assert "Model: gemini-3-flash-preview" in result
 
     def test_tracks_resolved_from_domain(self, prompt_template):
         from wiki.compiler import _build_prompt
@@ -308,6 +323,57 @@ class TestCompileArticleSkipLogic:
         assert not (wiki_dir / "folk" / "test.sources.yaml").exists()
         assert list((wiki_dir / "folk").glob("*.tmp")) == []
         mark_compiled.assert_not_called()
+
+    def test_compile_records_actual_fallback_model_in_meta_and_state(self, tmp_path):
+        from ai_llm.fallback import CallResult
+        from wiki.compiler import compile_article
+
+        prompts_dir = tmp_path / "prompts"
+        prompts_dir.mkdir()
+        (prompts_dir / "compile_article.md").write_text(
+            "# {topic}\n\n"
+            "<!-- wiki-meta\n"
+            "slug: {slug}\n"
+            "domain: {domain}\n"
+            "tracks: [{tracks}]\n"
+            "compiled: {date}\n"
+            "generated_by_model: {generated_by_model}\n"
+            "-->\n"
+        )
+        wiki_dir = tmp_path / "wiki"
+        call_result = CallResult(
+            response_text=(
+                "# Test\n\n"
+                "<!-- wiki-meta\n"
+                "slug: test\n"
+                "domain: folk\n"
+                "tracks: [folk]\n"
+                "compiled: 2026-04-21\n"
+                "generated_by_model: unknown\n"
+                "-->\n"
+            ),
+            model_used="gemini-3-flash-preview",
+            auth_mode_used="oauth",
+            elapsed_s=1.2,
+        )
+
+        with patch("wiki.compiler.PROMPTS_DIR", prompts_dir), \
+             patch("wiki.compiler.WIKI_DIR", wiki_dir), \
+             patch("wiki.compiler.is_compiled", return_value=False), \
+             patch("wiki.compiler.mark_compiled") as mark_compiled, \
+             patch("wiki.compiler._call_gemini", return_value=call_result):
+            result = compile_article(
+                topic="Test",
+                slug="test",
+                domain="folk",
+                sources=[{"chunk_id": "ext-foo-1", "text": "text"}],
+            )
+
+        assert result == wiki_dir / "folk" / "test.md"
+        written = result.read_text(encoding="utf-8")
+        assert "generated_by_model: gemini-3-flash-preview" in written
+        mark_compiled.assert_called_once()
+        assert mark_compiled.call_args.kwargs["model"] == "gemini-3-flash-preview"
 
 
 class TestCompileCommand:

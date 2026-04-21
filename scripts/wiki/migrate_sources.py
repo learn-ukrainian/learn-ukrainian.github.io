@@ -94,6 +94,7 @@ def parse_wiki_meta(article_text: str) -> tuple[dict, re.Match[str] | None]:
         data = None
 
     if isinstance(data, dict):
+        data.setdefault("generated_by_model", "unknown")
         return data, match
 
     inline: dict[str, object] = {}
@@ -107,7 +108,7 @@ def parse_wiki_meta(article_text: str) -> tuple[dict, re.Match[str] | None]:
 
 def render_wiki_meta(meta: dict) -> str:
     """Render wiki-meta in a stable multiline format without ``sources:``."""
-    ordered_keys = ["slug", "domain", "tracks", "compiled"]
+    ordered_keys = ["slug", "domain", "tracks", "compiled", "generated_by_model"]
     seen: set[str] = set()
     lines = ["<!-- wiki-meta"]
 
