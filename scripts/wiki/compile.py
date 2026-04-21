@@ -86,7 +86,12 @@ from wiki.sources import (
     list_discovery_slugs_readonly,
     list_literary_sources,
 )
-from wiki.sources_schema import registry_path_for
+from wiki.sources_schema import (
+    extract_short_citation_ids,
+    load_sources_registry,
+    registry_path_for,
+    validate_sources_registry,
+)
 from wiki.state import log_event, read_log
 
 # ── Domain mapping: how to group discovery slugs into wiki articles ──
@@ -310,16 +315,17 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
     """
     from wiki.state import is_compiled
 
-    print(f"\n🔨 Compiling: {track}/{slug}")
-
-    # Get domain mapping
-    t_stage = time.monotonic()
     domain = _get_domain(track, slug)
     article_key = f"{domain}/{slug}"
-    already_compiled = not force and not dry_run and is_compiled(article_key)
+    if not force and not dry_run and _compiled_article_is_ready(track, slug):
+        print(f"  ⏭️  Already compiled: {article_key}")
+        return True
+
+    print(f"\n🔨 Compiling: {track}/{slug}")
 
     # Gather sources — can stall on cloud-backed or slow filesystem paths.
     # Codex review 2026-04-21 flagged this as the #1 silent-hang suspect.
+    t_stage = time.monotonic()
     print(f"  📂 Gathering discovery sources... ({_ts()})", flush=True)
     sources_info = gather_discovery_sources(track, slug)
     print(f"    ✓ gather_discovery_sources in {time.monotonic() - t_stage:.1f}s", flush=True)
@@ -344,13 +350,13 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
         domain=domain,
         sources=all_chunks,
         track=track,
-        force=force,
+        force=force or is_compiled(article_key),
         dry_run=dry_run,
     )
     print(f"    ✓ compile_article in {time.monotonic() - t_stage:.1f}s", flush=True)
 
     if result:
-        if not already_compiled and not dry_run:
+        if not dry_run:
             t_stage = time.monotonic()
             print("  📑 Updating index + logging event...", flush=True)
             update_index()
@@ -369,6 +375,39 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
             print(f"    ✓ dim-review in {time.monotonic() - t_stage:.1f}s", flush=True)
         return True
     return dry_run  # dry_run returns None but isn't a failure
+
+
+def _compiled_article_is_ready(track: str, slug: str) -> bool:
+    """Return True when an article is fully compiled and safe to skip.
+
+    "Compiled" here means more than a progress-db row: the markdown must
+    exist, and if the article cites sources then its sibling
+    ``.sources.yaml`` must exist and validate cleanly.
+    """
+    from wiki.state import is_compiled
+
+    domain = _get_domain(track, slug)
+    article_key = f"{domain}/{slug}"
+    if not is_compiled(article_key):
+        return False
+
+    article_path = WIKI_DIR / domain / f"{slug}.md"
+    try:
+        article_text = article_path.read_text(encoding="utf-8")
+    except OSError:
+        return False
+
+    registry_path = registry_path_for(article_path)
+    citation_ids = extract_short_citation_ids(article_text)
+    if not registry_path.exists():
+        return not citation_ids
+
+    try:
+        registry = load_sources_registry(registry_path)
+    except Exception:
+        return False
+
+    return not validate_sources_registry(article_text, registry)
 
 
 def _dim_review_article(article_path: Path, track: str, slug: str) -> None:
@@ -1174,6 +1213,13 @@ def cmd_compile_all(track: str, *, limit: int | None = None,
     for i, slug in enumerate(slugs, 1):
         slug_start = time.time()
         print(f"\n[{i}/{len(slugs)}] {slug}  ({_ts()})")
+        if not force and not dry_run and _compiled_article_is_ready(track, slug):
+            domain = _get_domain(track, slug)
+            skipped += 1
+            elapsed = time.time() - slug_start
+            print(f"  ⏭️  Already compiled: {domain}/{slug}")
+            print(f"  ⏭️  Skipped (already compiled) in {elapsed:.1f}s")
+            continue
         try:
             result = cmd_compile_one(
                 track, slug,
