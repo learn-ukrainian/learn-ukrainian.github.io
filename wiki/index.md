@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 76
-**Total words:** 129,860
+**Total articles:** 82
+**Total words:** 142,374
 
 ## Figures
 
@@ -27,6 +27,12 @@ Auto-generated index of compiled wiki articles.
 - [Граматика A2: Контрольна робота — родовий відмінок](grammar/a2/checkpoint-genitive.md) (1,947 words)
 - [Граматика A2: Контрольна точка: Орудний відмінок](grammar/a2/checkpoint-instrumental.md) (2,177 words)
 - [Граматика A2: Контрольна робота — складне речення](grammar/a2/checkpoint-syntax.md) (2,433 words)
+- [Граматика A2: Контрольна точка: Вид, час і рух](grammar/a2/checkpoint-verbs.md) (2,651 words)
+- [Граматика A2: Більше, краще, найкраще](grammar/a2/comparison.md) (2,168 words)
+- [Граматика A2: Моєму другові, нашій вчительці](grammar/a2/dative-adjectives-pronouns.md) (2,040 words)
+- [Граматика A2: Студентові, сестрі, дитині](grammar/a2/dative-nouns.md) (2,037 words)
+- [Граматика A2: Мені, тобі, йому...](grammar/a2/dative-pronouns.md) (1,837 words)
+- [Граматика A2: Допомагати, дякувати, дзвонити](grammar/a2/dative-verbs.md) (1,781 words)
 - [Граматика A2: Синтаксис і відмінки](grammar/a2/metalanguage-syntax-cases.md) (2,307 words)
 
 ## Linguistics

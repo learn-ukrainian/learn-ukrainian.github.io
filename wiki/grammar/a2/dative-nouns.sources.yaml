@@ -1,0 +1,6 @@
+# Source registry for wiki/grammar/a2/dative-nouns.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1800
+  type: unknown

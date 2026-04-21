@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/a2/dative-pronouns.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1800
+  type: unknown
+- id: S2
+  file: S3371
+  type: unknown
+- id: S3
+  file: S1807
+  type: unknown
+- id: S4
+  file: S4598
+  type: unknown
+- id: S5
+  file: S3336
+  type: unknown
+- id: S6
+  file: S3164
+  type: unknown
+- id: S7
+  file: S1887
+  type: unknown

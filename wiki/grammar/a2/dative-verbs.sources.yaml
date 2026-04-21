@@ -1,0 +1,21 @@
+# Source registry for wiki/grammar/a2/dative-verbs.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: S1807
+  type: unknown
+- id: S3
+  file: S3164
+  type: unknown
+- id: S5
+  file: S4709
+  type: unknown
+- id: S6
+  file: S1887
+  type: unknown
+- id: S7
+  file: S320
+  type: unknown
+- id: S8
+  file: S361
+  type: unknown
