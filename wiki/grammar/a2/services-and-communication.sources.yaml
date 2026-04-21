@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/services-and-communication.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3869
+  type: unknown
+- id: S2
+  file: S3967
+  type: unknown
+- id: S3
+  file: S3173
+  type: unknown
+- id: S4
+  file: S4650
+  type: unknown
+- id: S5
+  file: S4741
+  type: unknown
+- id: S6
+  file: S2345
+  type: unknown
+- id: S7
+  file: S727
+  type: unknown
+- id: S8
+  file: S3281
+  type: unknown
+- id: S9
+  file: S1461
+  type: unknown

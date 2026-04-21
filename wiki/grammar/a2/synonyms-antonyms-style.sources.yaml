@@ -1,0 +1,39 @@
+# Source registry for wiki/grammar/a2/synonyms-antonyms-style.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1183
+  type: unknown
+- id: S2
+  file: S2171
+  type: unknown
+- id: S3
+  file: S3779
+  type: unknown
+- id: S4
+  file: S3020
+  type: unknown
+- id: S5
+  file: S3595
+  type: unknown
+- id: S6
+  file: S4640
+  type: unknown
+- id: S7
+  file: S2210
+  type: unknown
+- id: S8
+  file: S1214
+  type: unknown
+- id: S9
+  file: S1202
+  type: unknown
+- id: S10
+  file: S3931
+  type: unknown
+- id: S11
+  file: ext-article-0
+  type: external
+- id: S12
+  file: ext-article-1
+  type: external

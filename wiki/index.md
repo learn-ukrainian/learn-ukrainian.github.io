@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 117
-**Total words:** 215,981
+**Total articles:** 123
+**Total words:** 228,457
 
 ## Figures
 
@@ -69,6 +69,12 @@ Auto-generated index of compiled wiki articles.
 - [Граматика A2: Я обираю, я вважаю](grammar/a2/preferences-and-choices.md) (2,080 words)
 - [Граматика A2: Щоб зрозуміти...](grammar/a2/purpose-clauses.md) (1,921 words)
 - [Граматика A2: Якщо... то...](grammar/a2/real-conditionals.md) (2,126 words)
+- [Граматика A2: Той, який...](grammar/a2/relative-clauses.md) (1,973 words)
+- [Граматика A2: На пошті](grammar/a2/services-and-communication.md) (1,947 words)
+- [Граматика A2: На ринку та у лікаря](grammar/a2/shopping-and-health.md) (2,572 words)
+- [Граматика A2: Своє та себе](grammar/a2/sviy-and-sebe.md) (2,129 words)
+- [Граматика A2: Слова мають друзів](grammar/a2/synonyms-antonyms-style.md) (1,976 words)
+- [Граматика A2: Я напишу!](grammar/a2/synthetic-future.md) (1,879 words)
 
 ## Linguistics
 

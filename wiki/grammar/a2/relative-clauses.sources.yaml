@@ -1,0 +1,15 @@
+# Source registry for wiki/grammar/a2/relative-clauses.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1273
+  type: unknown
+- id: S2
+  file: S1274
+  type: unknown
+- id: S3
+  file: S5089
+  type: unknown
+- id: S4
+  file: S1275
+  type: unknown

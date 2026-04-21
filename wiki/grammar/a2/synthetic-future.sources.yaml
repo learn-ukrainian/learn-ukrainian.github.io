@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/a2/synthetic-future.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3217
+  type: unknown
+- id: S2
+  file: S1814
+  type: unknown
+- id: S3
+  file: S1922
+  type: unknown
+- id: S4
+  file: S686
+  type: unknown
+- id: S5
+  file: S3912
+  type: unknown
+- id: S6
+  file: S3213
+  type: unknown
+- id: S7
+  file: S3910
+  type: unknown
