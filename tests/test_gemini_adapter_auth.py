@@ -546,3 +546,48 @@ class TestRateLimitClassification:
             f"expected API rung attempted ONCE before advancing, got "
             f"{len(api_attempts)} attempts: {attempts_seen}"
         )
+
+
+class TestRateLimitMarkersFromCodexReview:
+    """Markers flagged as missing in the Codex adversarial review
+    (task review-1384-phase1). Evidence: gemini-cli GitHub issues
+    #2596 (free-tier quota phrasing) and #7227 (503 overloaded)."""
+
+    def test_rate_limit_exceeded(self) -> None:
+        from ai_llm.fallback import is_gemini_rate_limited
+        assert is_gemini_rate_limited("Rate limit exceeded. Please try again.")
+
+    def test_free_tier_limits(self) -> None:
+        from ai_llm.fallback import is_gemini_rate_limited
+        assert is_gemini_rate_limited(
+            "Rate limit exceeded. Free tier limits have been reached."
+        )
+
+    def test_model_is_overloaded(self) -> None:
+        """503 from Gemini — wrong to retry same rung, advance to next model."""
+        from ai_llm.fallback import is_gemini_rate_limited
+        assert is_gemini_rate_limited(
+            "The model is overloaded. Please try again later."
+        )
+
+    def test_json_status_unavailable(self) -> None:
+        """UNAVAILABLE covers 503 in any whitespace / quoting form."""
+        from ai_llm.fallback import is_gemini_rate_limited
+        assert is_gemini_rate_limited('{"error": {"status": "UNAVAILABLE", "code": 503}}')
+        assert is_gemini_rate_limited('{"status":"UNAVAILABLE"}')
+        assert is_gemini_rate_limited("Status: UNAVAILABLE (503)")
+
+    def test_classifier_contract_stderr_only(self) -> None:
+        """Contract: the classifier is called on FAILURE-PATH stderr
+        only (see _attempt_runner fast-path in scripts/ai_llm/fallback.py).
+        Stdout success content never reaches it. Therefore broad
+        substring matches like 'quota' or 'unavailable' are safe —
+        they can only trigger if Gemini itself emitted them as an
+        error signal. This test documents the contract, not a
+        false-positive defense at classifier layer."""
+        from ai_llm.fallback import is_gemini_rate_limited
+        # Empty / None are safe
+        assert not is_gemini_rate_limited("")
+        assert not is_gemini_rate_limited(None)
+        # Normal success-shaped strings don't accidentally match
+        assert not is_gemini_rate_limited("Lesson written successfully.")

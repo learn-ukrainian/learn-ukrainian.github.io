@@ -37,11 +37,22 @@ GEMINI_AUTH_ENV_VARS = (
 #: ``resource_exhausted`` is the GRPC status name for 429; Gemini sometimes
 #: prints it instead of a numeric 429 code.
 _RATE_LIMIT_MARKERS = (
+    # HTTP / GRPC status codes (numeric + name forms)
     "429",
+    "resource_exhausted",
+    # Explicit quota / rate-limit phrases from Gemini CLI stderr
     "quota",
     "rate_limited",
-    "resource_exhausted",
-    "no capacity available",
+    "rate limit exceeded",          # CLI free-tier 429 phrasing (#2596)
+    "free tier limits",             # CLI auth-fallback quota exhaustion phrasing
+    # Backend unavailability = "advance rung", not "retry same rung"
+    "no capacity available",        # backend queue full (observed 14:30 today)
+    "model is overloaded",          # CLI 503 phrasing (#7227)
+    "unavailable",                  # GRPC status name for 503, covers JSON +
+                                    # text forms regardless of whitespace.
+                                    # Safe because the classifier is only
+                                    # called on failure-path stderr (never
+                                    # on article content stdout).
 )
 
 AuthMode = Literal["api", "oauth"]
