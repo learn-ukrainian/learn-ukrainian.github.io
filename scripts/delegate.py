@@ -79,6 +79,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import signal
 import subprocess
 import sys
@@ -149,6 +150,63 @@ def _pid_alive(pid: int) -> bool:
     except PermissionError:
         return True  # exists, we just can't signal it
     return True
+
+
+def _normalize_worktree_path(raw_path: str) -> Path:
+    """Resolve a worktree path relative to the repo root."""
+    path = Path(raw_path).expanduser()
+    if not path.is_absolute():
+        path = _REPO_ROOT / path
+    return path.resolve()
+
+
+def _derive_worktree_branch(agent: str, task_id: str) -> str:
+    """Derive a git-safe branch name for a delegated worktree."""
+    safe_task = re.sub(r"[^A-Za-z0-9._/-]+", "-", task_id).strip("./-")
+    safe_task = re.sub(r"/{2,}", "/", safe_task)
+    if not safe_task:
+        safe_task = "task"
+    return f"{agent}/{safe_task}"
+
+
+def _ensure_worktree(
+    *,
+    agent: str,
+    task_id: str,
+    raw_path: str,
+) -> tuple[Path, str]:
+    """Return a ready worktree path, creating it if needed."""
+    worktree_path = _normalize_worktree_path(raw_path)
+    branch = _derive_worktree_branch(agent, task_id)
+
+    if worktree_path.exists():
+        if not worktree_path.is_dir():
+            raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
+        return worktree_path, branch
+
+    proc = subprocess.run(
+        ["git", "worktree", "add", "-b", branch, str(worktree_path), "main"],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
+        raise RuntimeError(stderr)
+    return worktree_path, branch
+
+
+def _augment_prompt_with_worktree(prompt: str, worktree_path: Path | None) -> str:
+    """Inject worktree context into the delegated prompt when relevant."""
+    if worktree_path is None:
+        return prompt
+    return (
+        "[delegate worktree]\n"
+        f"Run all file edits, tests, and git commands inside this worktree: {worktree_path}\n"
+        "Do not switch branches in the main checkout.\n\n"
+        f"{prompt}"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -310,6 +368,22 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately with the task-id."""
     task_id = args.task_id
     state_path = _state_path(task_id)
+    worktree_arg = getattr(args, "worktree", None)
+
+    if args.mode == "danger" and not worktree_arg:
+        print(
+            "❌ --mode danger requires --worktree to keep delegated writes out "
+            "of the main checkout.",
+            file=sys.stderr,
+        )
+        return 2
+    if args.cwd and worktree_arg:
+        print(
+            "❌ --cwd and --worktree are mutually exclusive. Use --worktree for "
+            "delegated write isolation.",
+            file=sys.stderr,
+        )
+        return 2
 
     # Refuse to clobber a task that's still alive — whether it's in
     # "running" (worker up and executing) OR "spawning" (worker created
@@ -341,7 +415,21 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print("❌ --prompt or --prompt-file is required", file=sys.stderr)
         return 2
 
-    cwd = args.cwd or str(_REPO_ROOT)
+    worktree_path: Path | None = None
+    worktree_branch: str | None = None
+    if worktree_arg:
+        try:
+            worktree_path, worktree_branch = _ensure_worktree(
+                agent=args.agent,
+                task_id=task_id,
+                raw_path=worktree_arg,
+            )
+        except (ValueError, RuntimeError) as exc:
+            print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)
+            return 1
+
+    cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
+    prompt = _augment_prompt_with_worktree(prompt, worktree_path)
 
     # Write initial state BEFORE forking so a fast caller can see it.
     # pid is filled in by the worker once it starts; for now we record
@@ -352,6 +440,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "model": args.model,
         "mode": args.mode,
         "cwd": cwd,
+        "worktree_path": str(worktree_path) if worktree_path else None,
+        "worktree_branch": worktree_branch,
         "pid": None,  # worker fills this
         "status": "spawning",
         "started_at": datetime.now(UTC).isoformat(),
@@ -707,6 +797,11 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument("--model", default=None)
     d.add_argument("--cwd", default=None,
                    help="Working directory for the worker (default: repo root)")
+    d.add_argument(
+        "--worktree",
+        default=None,
+        help="Run inside this git worktree (created on demand, required for --mode danger)",
+    )
     d.add_argument("--hard-timeout", type=int, default=3600,
                    help="Max wall-clock seconds for the worker (default: 3600)")
     d.set_defaults(func=cmd_dispatch)

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -272,6 +273,7 @@ def test_dispatch_refuses_to_clobber_running_task(tmp_tasks_dir, capsys):
         mode="read-only",
         model=None,
         cwd=None,
+        worktree=None,
         hard_timeout=3600,
     )
     rc = delegate.cmd_dispatch(args)
@@ -299,6 +301,7 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
         mode="read-only",
         model=None,
         cwd=None,
+        worktree=None,
         hard_timeout=3600,
     )
 
@@ -458,6 +461,7 @@ def test_dispatch_clobber_guard_rejects_spawning_status(tmp_tasks_dir, capsys):
         mode="read-only",
         model=None,
         cwd=None,
+        worktree=None,
         hard_timeout=3600,
     )
     rc = delegate.cmd_dispatch(args)
@@ -485,6 +489,7 @@ def test_dispatch_allows_new_task_when_prior_crashed(tmp_tasks_dir, capsys):
         mode="read-only",
         model=None,
         cwd=None,
+        worktree=None,
         hard_timeout=3600,
     )
 
@@ -510,6 +515,128 @@ def test_dispatch_allows_new_task_when_prior_crashed(tmp_tasks_dir, capsys):
         "parent MUST write Popen child's PID into state file immediately "
         "after spawn, before the worker gets a chance to run"
     )
+
+
+def test_dispatch_rejects_danger_without_worktree(tmp_tasks_dir, capsys):
+    import argparse
+
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="danger-no-worktree",
+        prompt="test",
+        prompt_file=None,
+        mode="danger",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 2
+    assert delegate._read_state(delegate._state_path("danger-no-worktree")) is None
+    captured = capsys.readouterr()
+    assert "--worktree" in captured.err
+
+
+def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, monkeypatch, capsys):
+    import argparse
+
+    recorded_prompt: dict[str, str] = {}
+
+    class _FakeStdin:
+        def write(self, data):
+            recorded_prompt["text"] = data.decode("utf-8")
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24680
+        stdin = _FakeStdin()
+
+    calls: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(cmd)
+        assert cmd[:5] == ["git", "worktree", "add", "-b", "codex/issue-1383-smoke"]
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
+
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="issue-1383-smoke",
+        prompt="Implement the fix",
+        prompt_file=None,
+        mode="danger",
+        model=None,
+        cwd=None,
+        worktree=".worktrees/codex-1383",
+        hard_timeout=3600,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("issue-1383-smoke"))
+    assert state is not None
+    assert state["status"] == "spawning"
+    assert state["worktree_branch"] == "codex/issue-1383-smoke"
+    assert state["worktree_path"].endswith(".worktrees/codex-1383")
+    assert state["cwd"].endswith(".worktrees/codex-1383")
+    assert state["pid"] == 24680
+    assert "delegate worktree" in recorded_prompt["text"]
+    assert ".worktrees/codex-1383" in recorded_prompt["text"]
+    assert len(calls) == 1
+    captured = capsys.readouterr()
+    assert "issue-1383-smoke" in captured.out
+
+
+def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path, monkeypatch):
+    import argparse
+
+    worktree = tmp_path / "existing-worktree"
+    worktree.mkdir()
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 13579
+        stdin = _FakeStdin()
+
+    monkeypatch.setattr(
+        delegate.subprocess,
+        "run",
+        lambda *a, **k: pytest.fail("git worktree add should not run for an existing path"),
+    )
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
+
+    args = argparse.Namespace(
+        agent="gemini",
+        task_id="existing-worktree",
+        prompt="test",
+        prompt_file=None,
+        mode="workspace-write",
+        model=None,
+        cwd=None,
+        worktree=str(worktree),
+        hard_timeout=3600,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("existing-worktree"))
+    assert state["worktree_path"] == str(worktree.resolve())
+    assert state["cwd"] == str(worktree.resolve())
 
 
 # ---------------------------------------------------------------------------

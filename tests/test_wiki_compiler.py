@@ -301,6 +301,25 @@ class TestCompileCommand:
         update_index.assert_not_called()
         log_event.assert_not_called()
 
+    def test_dim_review_flag_runs_shadow_review_and_writes_report(self):
+        from wiki.compile import cmd_compile_one
+
+        article_path = Path("wiki/pedagogy/a1/demo.md")
+
+        with patch("wiki.compile._get_domain", return_value="pedagogy/a1"), \
+             patch("wiki.compile.gather_discovery_sources", return_value={}), \
+             patch("wiki.compile.enrich_sources", return_value=[{"chunk_id": "c1", "text": "text"}]), \
+             patch("wiki.compile._slug_to_topic", return_value="Demo"), \
+             patch("wiki.compile.compile_article", return_value=article_path), \
+             patch("wiki.compile._dim_review_article") as dim_review, \
+             patch("wiki.compile.update_index"), \
+             patch("wiki.compile.log_event"), \
+             patch("wiki.state.is_compiled", return_value=False):
+            ok = cmd_compile_one("a1", "demo", dim_review=True)
+
+        assert ok is True
+        dim_review.assert_called_once_with(article_path, "a1", "demo")
+
     def test_build_review_prompt_includes_sources_registry(self, tmp_path):
         from wiki.compile import _build_review_prompt
 

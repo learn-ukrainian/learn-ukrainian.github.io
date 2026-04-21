@@ -254,10 +254,17 @@ At `scripts/audit/checks/`:
 ### Delegate to background workers
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch --agent {codex|gemini|claude} --task-id <id> --prompt-file <file>
+.venv/bin/python scripts/delegate.py dispatch \
+  --agent {codex|gemini|claude} \
+  --task-id <id> \
+  --prompt-file <file> \
+  --worktree .worktrees/<agent>-<task-id> \
+  --mode danger
 ```
 
 Fire-and-forget **execution** with status polling and completion artifacts. This is the right tool when you need another agent to write code, run commands, and commit — not to hold a conversation. For discussion, reviews, or Q&A see [Inter-Agent Communication](#inter-agent-communication) below (`ab` channel bridge, `ask-*`).
+
+For write-capable delegation, prefer `--worktree`. `delegate.py` creates the worktree if missing and records its path in the task state. `--mode danger` now requires `--worktree` so background agents cannot switch branches in the main checkout by accident.
 
 ---
 
@@ -828,6 +835,19 @@ ab sync gemini --auth subscription
 ### Execution via `delegate.py dispatch`
 
 For write-access work (implement, commit, push). See [Delegate to background workers](#delegate-to-background-workers) above for the full command. **Not** a comms tool — use `ab` or `ask-*` to discuss, `delegate.py` to have the work done.
+
+When the delegated task may edit files or run git commands:
+
+```bash
+.venv/bin/python scripts/delegate.py dispatch \
+  --agent codex \
+  --task-id issue-1383-smoke \
+  --prompt-file /tmp/prompt.md \
+  --worktree .worktrees/codex-issue-1383-smoke \
+  --mode danger
+```
+
+`delegate.py status <task-id>` will include the `worktree_path` so operators can inspect or clean it up later.
 
 ### Monitoring
 
