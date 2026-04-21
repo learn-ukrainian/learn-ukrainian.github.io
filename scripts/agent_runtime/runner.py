@@ -32,9 +32,18 @@ import os
 import signal
 import subprocess
 import time
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+from ai_llm.fallback import (
+    AttemptOutcome,
+    CallResult,
+    GeminiRung,
+    resolve_allowed_auth_modes,
+    run_gemini_fallback_ladder,
+)
 
 from .adapters.base import AgentAdapter
 from .errors import (
@@ -283,6 +292,452 @@ def _build_usage_record(
     }
 
 
+@dataclass(frozen=True)
+class _ExecutionOutcome:
+    """Runner-owned result for one spawned InvocationPlan."""
+
+    parse: ParseResult
+    duration_s: float
+    returncode: int | None
+    kill_reason: str | None
+    stdout_text: str
+    stderr_text: str
+    liveness_paths: tuple[Path, ...]
+
+
+def _normalize_gemini_tool_auth_mode(raw: Any) -> str:
+    """Mirror Gemini adapter auth-mode normalization for tool_config overrides."""
+    value = str(raw or "auto").strip().lower()
+    if value == "api-key":
+        return "api"
+    if value == "oauth":
+        return "subscription"
+    if value in {"auto", "subscription", "api"}:
+        return value
+    return "auto"
+
+
+def _resolve_gemini_ladder_auth_modes(tool_config: dict | None) -> tuple[str, ...]:
+    """Resolve which Gemini auth rungs are allowed for this runtime call."""
+    env = dict(os.environ)
+    if tool_config and "auth_mode" in tool_config:
+        env["GEMINI_AUTH_MODE"] = _normalize_gemini_tool_auth_mode(
+            tool_config.get("auth_mode")
+        )
+    return resolve_allowed_auth_modes(env)
+
+
+def _gemini_per_rung_timeout(prompt: str, hard_timeout: int) -> int:
+    """Match direct-call Gemini rung budgeting while honoring caller caps."""
+    return max(1, min(hard_timeout, 300 + len(prompt) // 500, 900))
+
+
+def _build_gemini_attempt_tool_config(
+    tool_config: dict | None,
+    rung: GeminiRung,
+) -> dict:
+    """Clone tool_config and pin the current ladder rung's auth mode."""
+    attempt_tool_config = dict(tool_config or {})
+    attempt_tool_config["auth_mode"] = (
+        "subscription" if rung.auth_mode == "oauth" else "api"
+    )
+    return attempt_tool_config
+
+
+def _execute_invocation_plan(
+    *,
+    agent_name: str,
+    adapter: AgentAdapter,
+    plan: Any,
+    prompt: str,
+    mode: str,
+    cwd: Path,
+    model: str,
+    task_id: str | None,
+    session_id: str | None,
+    entrypoint: str,
+    hard_timeout: int,
+    stall_timeout: int,
+) -> _ExecutionOutcome:
+    """Spawn one plan, run watchdog/parse flow, and return raw execution state."""
+    env = {**os.environ, **plan.env_overrides}
+    for key in plan.env_unsets:
+        env.pop(key, None)
+
+    start_time = time.monotonic()
+    proc: subprocess.Popen | None = None
+    watchdog_state: WatchdogState | None = None
+    watchdog_threads: list = []
+    liveness_paths: tuple[Path, ...] = ()
+
+    try:
+        try:
+            proc = subprocess.Popen(
+                plan.cmd,
+                stdin=subprocess.PIPE if plan.stdin_payload else None,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                cwd=str(cwd),
+                env=env,
+                bufsize=1,
+                start_new_session=True,
+            )
+        except (FileNotFoundError, PermissionError, OSError) as exc:
+            record = _build_usage_record(
+                agent=agent_name,
+                entrypoint=entrypoint,
+                model=model,
+                mode=mode,
+                task_id=task_id,
+                cwd=cwd,
+                session_id=session_id,
+                duration_s=time.monotonic() - start_time,
+                input_chars=len(prompt),
+                output_chars=0,
+                returncode=None,
+                outcome="error",
+                rate_limited=False,
+                stalled=False,
+                stderr_excerpt=(
+                    f"Popen failed: {type(exc).__name__}: {exc}"
+                )[:500],
+                tokens=None,
+            )
+            write_record(record)
+            raise AgentUnavailableError(
+                f"{agent_name!r} Popen failed: {type(exc).__name__}: {exc}"
+            ) from exc
+
+        if plan.stdin_payload and proc.stdin is not None:
+            try:
+                proc.stdin.write(plan.stdin_payload)
+                proc.stdin.close()
+            except BrokenPipeError:
+                pass
+
+        liveness_paths = tuple(adapter.liveness_signal_paths(plan))
+        if plan.output_file is not None and plan.output_file not in liveness_paths:
+            liveness_paths = (*liveness_paths, plan.output_file)
+        watchdog_state, watchdog_threads = start_watchdog(proc, list(liveness_paths))
+
+        early_reap_check = getattr(adapter, "check_early_reap", None)
+        kill_reason: str | None = None
+        while True:
+            returncode = proc.poll()
+            if returncode is not None:
+                break
+
+            if early_reap_check is not None:
+                try:
+                    if early_reap_check(plan, call_start_time=start_time):
+                        returncode = proc.poll()
+                        if returncode is not None:
+                            kill_reason = None
+                            break
+                        kill_reason = "early_reap"
+                        _kill_process_tree(proc)
+                        break
+                except Exception:
+                    pass
+
+            kill_reason = should_kill(watchdog_state, stall_timeout, hard_timeout)
+            if kill_reason is not None:
+                returncode = proc.poll()
+                if returncode is not None:
+                    kill_reason = None
+                    break
+                _kill_process_tree(proc)
+                break
+            time.sleep(_POLL_INTERVAL_S)
+
+        duration_s = time.monotonic() - start_time
+        assert watchdog_state is not None
+
+        for thread in watchdog_threads:
+            if "stdout" in thread.name or "stderr" in thread.name:
+                thread.join(timeout=5.0)
+
+        stdout_text = "".join(watchdog_state.stdout_lines)
+        stderr_text = "".join(watchdog_state.stderr_lines)
+
+        stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
+        parse = adapter.parse_response(
+            stdout=stdout_text,
+            stderr=stderr_text,
+            returncode=proc.returncode if proc.returncode is not None else -1,
+            output_file=plan.output_file,
+            plan=plan,
+            call_start_time=start_time,
+        )
+        return _ExecutionOutcome(
+            parse=parse,
+            duration_s=duration_s,
+            returncode=proc.returncode,
+            kill_reason=kill_reason,
+            stdout_text=stdout_text,
+            stderr_text=stderr_text,
+            liveness_paths=liveness_paths,
+        )
+    finally:
+        if proc is not None and proc.poll() is None:
+            with contextlib.suppress(Exception):
+                _kill_process_tree(proc)
+
+        if watchdog_state is not None:
+            stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
+
+        if (
+            plan.output_file is not None
+            and plan.output_file.exists()
+            and _is_temp_file(plan.output_file)
+        ):
+            should_delete = False
+            try:
+                file_size = plan.output_file.stat().st_size
+            except OSError:
+                file_size = -1
+
+            if (
+                file_size == 0
+                or (proc is not None and proc.returncode == 0)
+                or (
+                proc is not None
+                and proc.returncode is not None
+                and proc.returncode < 0
+                )
+            ):
+                should_delete = True
+
+            if should_delete:
+                with contextlib.suppress(OSError):
+                    plan.output_file.unlink()
+
+
+def _invoke_gemini_with_fallback(
+    *,
+    agent_name: str,
+    adapter: AgentAdapter,
+    prompt: str,
+    mode: str,
+    cwd: Path,
+    model: str,
+    task_id: str | None,
+    session_id: str | None,
+    tool_config: dict | None,
+    entrypoint: str,
+    hard_timeout: int,
+    stall_timeout: int,
+) -> Result:
+    """Run Gemini through the shared model/auth fallback ladder."""
+
+    def _attempt_runner(
+        rung: GeminiRung,
+        _attempt_index: int,
+        timeout_s: int | None,
+    ) -> AttemptOutcome:
+        attempt_tool_config = _build_gemini_attempt_tool_config(tool_config, rung)
+        plan = adapter.build_invocation(
+            prompt=prompt,
+            mode=mode,
+            cwd=cwd,
+            model=rung.model,
+            task_id=task_id,
+            session_id=session_id,
+            tool_config=attempt_tool_config,
+        )
+        execution = _execute_invocation_plan(
+            agent_name=agent_name,
+            adapter=adapter,
+            plan=plan,
+            prompt=prompt,
+            mode=mode,
+            cwd=cwd,
+            model=rung.model,
+            task_id=task_id,
+            session_id=session_id,
+            entrypoint=entrypoint,
+            hard_timeout=timeout_s or hard_timeout,
+            stall_timeout=stall_timeout,
+        )
+        parse = execution.parse
+
+        if execution.kill_reason == "hard_timeout" and not parse.ok:
+            return AttemptOutcome(
+                status="timeout",
+                elapsed_s=execution.duration_s,
+                stderr_excerpt=(
+                    parse.stderr_excerpt
+                    or execution.stderr_text[:500]
+                    or tail_liveness_file_for_debug(execution.liveness_paths)[:500]
+                ),
+                returncode=execution.returncode,
+            )
+
+        if parse.rate_limited:
+            return AttemptOutcome(
+                status="rate_limited",
+                elapsed_s=execution.duration_s,
+                stderr_excerpt=parse.stderr_excerpt,
+                returncode=execution.returncode,
+            )
+
+        if parse.ok:
+            return AttemptOutcome(
+                status="success",
+                elapsed_s=execution.duration_s,
+                response_text=parse.response,
+                stderr_excerpt=parse.stderr_excerpt,
+                returncode=execution.returncode,
+                note=parse.stderr_excerpt,
+            )
+
+        return AttemptOutcome(
+            status="retryable_error",
+            elapsed_s=execution.duration_s,
+            stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
+            returncode=execution.returncode,
+        )
+
+    call_result: CallResult = run_gemini_fallback_ladder(
+        task_name=task_id or f"{agent_name}-runtime",
+        preferred_model=model,
+        per_rung_timeout_s=_gemini_per_rung_timeout(prompt, hard_timeout),
+        overall_timeout_s=hard_timeout,
+        attempt_runner=_attempt_runner,
+        logger=lambda _msg: None,
+        allowed_auth_modes=_resolve_gemini_ladder_auth_modes(tool_config),
+    )
+
+    last_attempt = call_result.attempts[-1] if call_result.attempts else None
+    record_model = call_result.model_used or (last_attempt.model if last_attempt else model)
+    stderr_excerpt = (
+        (last_attempt.note if last_attempt and last_attempt.note else None)
+        or (last_attempt.stderr_excerpt if last_attempt else None)
+        or call_result.error_message
+    )
+    returncode = last_attempt.returncode if last_attempt else None
+
+    if call_result.ok:
+        response_text = call_result.response_text or ""
+        record = _build_usage_record(
+            agent=agent_name,
+            entrypoint=entrypoint,
+            model=record_model,
+            mode=mode,
+            task_id=task_id,
+            cwd=cwd,
+            session_id=session_id,
+            duration_s=call_result.elapsed_s,
+            input_chars=len(prompt),
+            output_chars=len(response_text),
+            returncode=returncode,
+            outcome="ok",
+            rate_limited=False,
+            stalled=False,
+            stderr_excerpt=stderr_excerpt,
+            tokens=None,
+        )
+        write_record(record)
+        return Result(
+            ok=True,
+            agent=agent_name,
+            model=record_model,
+            mode=mode,
+            response=response_text,
+            stderr_excerpt=stderr_excerpt,
+            duration_s=call_result.elapsed_s,
+            session_id=None,
+            rate_limited=False,
+            stalled=False,
+            returncode=returncode,
+            usage_record=record,
+        )
+
+    if call_result.attempts and all(
+        attempt.status == "rate_limited" for attempt in call_result.attempts
+    ):
+        record = _build_usage_record(
+            agent=agent_name,
+            entrypoint=entrypoint,
+            model=record_model,
+            mode=mode,
+            task_id=task_id,
+            cwd=cwd,
+            session_id=session_id,
+            duration_s=call_result.elapsed_s,
+            input_chars=len(prompt),
+            output_chars=0,
+            returncode=returncode,
+            outcome="rate_limited",
+            rate_limited=True,
+            stalled=False,
+            stderr_excerpt=stderr_excerpt,
+            tokens=None,
+        )
+        write_record(record)
+        raise RateLimitedError(agent_name, record_model, reason=(stderr_excerpt or "")[:200])
+
+    if (
+        (last_attempt is not None and last_attempt.status == "timeout")
+        or "no budget left" in (call_result.error_message or "").lower()
+    ):
+        record = _build_usage_record(
+            agent=agent_name,
+            entrypoint=entrypoint,
+            model=record_model,
+            mode=mode,
+            task_id=task_id,
+            cwd=cwd,
+            session_id=session_id,
+            duration_s=call_result.elapsed_s,
+            input_chars=len(prompt),
+            output_chars=0,
+            returncode=returncode,
+            outcome="hard_timeout",
+            rate_limited=False,
+            stalled=False,
+            stderr_excerpt=stderr_excerpt,
+            tokens=None,
+        )
+        write_record(record)
+        raise AgentTimeoutError(agent_name, hard_timeout)
+
+    record = _build_usage_record(
+        agent=agent_name,
+        entrypoint=entrypoint,
+        model=record_model,
+        mode=mode,
+        task_id=task_id,
+        cwd=cwd,
+        session_id=session_id,
+        duration_s=call_result.elapsed_s,
+        input_chars=len(prompt),
+        output_chars=0,
+        returncode=returncode,
+        outcome="error",
+        rate_limited=False,
+        stalled=False,
+        stderr_excerpt=stderr_excerpt,
+        tokens=None,
+    )
+    write_record(record)
+    return Result(
+        ok=False,
+        agent=agent_name,
+        model=record_model,
+        mode=mode,
+        response="",
+        stderr_excerpt=stderr_excerpt,
+        duration_s=call_result.elapsed_s,
+        session_id=None,
+        rate_limited=False,
+        stalled=False,
+        returncode=returncode,
+        usage_record=record,
+    )
+
+
 def invoke(
     agent_name: str,
     prompt: str,
@@ -390,6 +845,22 @@ def invoke(
         write_record(record)
         raise RateLimitedError(agent_name, effective_model, reason)
 
+    if agent_name == "gemini":
+        return _invoke_gemini_with_fallback(
+            agent_name=agent_name,
+            adapter=adapter,
+            prompt=prompt,
+            mode=mode,
+            cwd=effective_cwd,
+            model=effective_model,
+            task_id=task_id,
+            session_id=session_id,
+            tool_config=tool_config,
+            entrypoint=entrypoint,
+            hard_timeout=hard_timeout,
+            stall_timeout=stall_timeout,
+        )
+
     # ---------- 6. Build invocation plan ----------
     plan = adapter.build_invocation(
         prompt=prompt,
@@ -401,260 +872,23 @@ def invoke(
         tool_config=tool_config,
     )
 
-    # Merge env overrides onto a snapshot of os.environ. We do NOT mutate
-    # os.environ itself — this keeps the parent process clean and prevents
-    # leakage to other adapters running concurrently.
-    env = {**os.environ, **plan.env_overrides}
-    # Apply unsets after overrides so an adapter can force a clean child
-    # environment for one invocation (unset wins if both mention the key).
-    for key in plan.env_unsets:
-        env.pop(key, None)
+    execution = _execute_invocation_plan(
+        agent_name=agent_name,
+        adapter=adapter,
+        plan=plan,
+        prompt=prompt,
+        mode=mode,
+        cwd=effective_cwd,
+        model=effective_model,
+        task_id=task_id,
+        session_id=session_id,
+        entrypoint=entrypoint,
+        hard_timeout=hard_timeout,
+        stall_timeout=stall_timeout,
+    )
+    parse = execution.parse
 
-    # ---------- 7–9. Run the subprocess with watchdog ----------
-    start_time = time.monotonic()
-    proc: subprocess.Popen | None = None
-    watchdog_state: WatchdogState | None = None
-    watchdog_threads: list = []  # threading.Thread, loose-typed to avoid import
-
-    try:
-        try:
-            proc = subprocess.Popen(
-                plan.cmd,
-                stdin=subprocess.PIPE if plan.stdin_payload else None,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                cwd=str(effective_cwd),
-                env=env,
-                # bufsize=1 = line-buffered. Critical for stall watchdog: the
-                # default (-1 = io.DEFAULT_BUFFER_SIZE, typically 8KB) makes
-                # the stdout streamer thread wait for a full buffer before
-                # seeing *any* lines. Quiet CLIs like Codex `-o <file>` emit
-                # only a few short lines over many minutes; with default
-                # buffering the streamer sees nothing for the whole run and
-                # the watchdog falsely stalls. (Fixed 2026-04-10.)
-                bufsize=1,
-                # start_new_session=True calls os.setsid(), placing the child
-                # in its own process group. This lets _kill_process_tree() send
-                # SIGKILL to the entire group, killing all descendants (e.g.
-                # Codex's sandboxed runtime workers). Without this, only the
-                # direct child is killed and its children become orphans that
-                # accumulate as stale processes. Issue: #1286.
-                start_new_session=True,
-            )
-        except (FileNotFoundError, PermissionError, OSError) as exc:
-            # Popen failed at spawn time — most commonly because the
-            # CLI binary isn't on PATH. The public contract documents
-            # AgentUnavailableError for this case; without this
-            # translation we'd raise a raw FileNotFoundError and skip
-            # writing a usage record. Codex 2026-04-10 audit finding.
-            record = _build_usage_record(
-                agent=agent_name,
-                entrypoint=entrypoint,
-                model=effective_model,
-                mode=mode,
-                task_id=task_id,
-                cwd=effective_cwd,
-                session_id=session_id,
-                duration_s=time.monotonic() - start_time,
-                input_chars=len(prompt),
-                output_chars=0,
-                returncode=None,
-                outcome="error",
-                rate_limited=False,
-                stalled=False,
-                stderr_excerpt=(
-                    f"Popen failed: {type(exc).__name__}: {exc}"
-                )[:500],
-                tokens=None,
-            )
-            write_record(record)
-            raise AgentUnavailableError(
-                f"{agent_name!r} Popen failed: {type(exc).__name__}: {exc}"
-            ) from exc
-
-        # Write stdin non-blockingly (we'll drain via watchdog threads,
-        # so we can close stdin right after writing the payload).
-        if plan.stdin_payload and proc.stdin is not None:
-            try:
-                proc.stdin.write(plan.stdin_payload)
-                proc.stdin.close()
-            except BrokenPipeError:
-                pass  # Subprocess died before reading stdin; watchdog will catch it.
-
-        # Start watchdog threads (stdout streamer + mtime poller).
-        liveness_paths = list(adapter.liveness_signal_paths(plan))
-        if plan.output_file is not None and plan.output_file not in liveness_paths:
-            liveness_paths.append(plan.output_file)
-        watchdog_state, watchdog_threads = start_watchdog(proc, liveness_paths)
-
-        # Poll loop — wait for subprocess to exit OR hard_timeout to fire
-        # OR the adapter's early-reap detector to fire.
-        #
-        # Stall detection was removed from the kill path on 2026-04-10
-        # (see watchdog.py::should_kill docstring). Hard timeout is the
-        # wall-clock safety net.
-        #
-        # Early reap (2026-04-10): adapters MAY implement
-        # check_early_reap(plan, call_start_time) -> bool. If present
-        # and True, the runner kills the subprocess immediately and
-        # falls through to parse_response, which is expected to recover
-        # the response from the adapter's persistent state file. This
-        # is the fix for Codex 0.118 post-completion hangs — the CLI
-        # writes its answer to the rollout file then sits in Tokio
-        # cond_wait forever. CodexAdapter returns True the moment a
-        # task_complete event appears in the rollout JSONL, which
-        # unblocks the call in ~10s instead of the full hard_timeout.
-        early_reap_check = getattr(adapter, "check_early_reap", None)
-        kill_reason: str | None = None
-        while True:
-            returncode = proc.poll()
-            if returncode is not None:
-                break
-
-            # Early reap — adapter-provided readiness check.
-            if early_reap_check is not None:
-                try:
-                    if early_reap_check(plan, call_start_time=start_time):
-                        # Response ready on disk. Kill and reap.
-                        returncode = proc.poll()
-                        if returncode is not None:
-                            # Race: process exited between poll and
-                            # early_reap_check. Normal exit, no kill.
-                            kill_reason = None
-                            break
-                        kill_reason = "early_reap"
-                        _kill_process_tree(proc)
-                        break
-                except Exception:
-                    # An adapter bug in check_early_reap must never
-                    # crash the whole invocation. Fall through to
-                    # normal poll/kill logic.
-                    pass
-
-            kill_reason = should_kill(watchdog_state, stall_timeout, hard_timeout)
-            if kill_reason is not None:
-                # Race-check (Gemini review finding #1): the subprocess may
-                # have exited between proc.poll() above and should_kill()
-                # returning True. Re-check before killing, because killing
-                # a process that already exited successfully and then
-                # classifying the run as a kill would discard a good result.
-                returncode = proc.poll()
-                if returncode is not None:
-                    kill_reason = None
-                    break
-                _kill_process_tree(proc)
-                break
-            time.sleep(_POLL_INTERVAL_S)
-
-        duration_s = time.monotonic() - start_time
-
-        # Watchdog state is guaranteed non-None here because start_watchdog
-        # always returns a state (it was called unconditionally above).
-        assert watchdog_state is not None
-
-        # Drain both streamer threads before reading captured lines.
-        # Without these joins, the final tail of stdout/stderr may still
-        # be sitting in the OS pipe buffer, causing truncated responses
-        # on fast-exiting subprocesses. (Gemini review finding #2,
-        # extended to stderr on 2026-04-10 after discovering that
-        # proc.stderr.read() at completion time was the ROOT CAUSE of
-        # Codex post-completion hangs for tool-heavy tasks — the stderr
-        # pipe filled up during the run and blocked Codex's writes.)
-        for t in watchdog_threads:
-            if "stdout" in t.name or "stderr" in t.name:
-                t.join(timeout=5.0)
-
-        # Read captured stdout AND stderr from watchdog state. We no
-        # longer call proc.stderr.read() because the _stderr_streamer
-        # thread now drains stderr in parallel with stdout during the
-        # run, preventing pipe-buffer backpressure from blocking the
-        # subprocess. See watchdog.py::_stderr_streamer for the full
-        # incident chain.
-        stdout_text = "".join(watchdog_state.stdout_lines)
-        stderr_text = "".join(watchdog_state.stderr_lines)
-
-        # ---------- Parse response FIRST, then decide kill outcome ----------
-        #
-        # CRITICAL (2026-04-10): we MUST call adapter.parse_response() even
-        # when the subprocess was hard-killed. Otherwise we throw away the
-        # adapter's ability to recover work that was already completed and
-        # written to disk before the kill.
-        #
-        # Specifically: the Gemini CLI can block-buffer stdout for minutes
-        # while actively streaming its response into
-        # ~/.gemini/tmp/<project>/chats/session-*.json. On a hard_timeout
-        # kill, stdout is empty but the session file has the full (or
-        # partial-but-usable) response. GeminiAdapter.parse_response reads
-        # that file and returns ok=True with the recovered response.
-        #
-        # The old flow raised AgentTimeoutError immediately on kill and
-        # never gave the adapter a chance to recover. That forced the
-        # dispatcher's cascade to retry the same call on a different
-        # model — wasting another 15 minutes on work that was ALREADY
-        # DONE and sitting on disk.
-        #
-        # New flow: always parse, then raise only if parse_response couldn't
-        # recover anything meaningful (ok == False).
-        stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
-        parse: ParseResult = adapter.parse_response(
-            stdout=stdout_text,
-            stderr=stderr_text,
-            returncode=proc.returncode if proc.returncode is not None else -1,
-            output_file=plan.output_file,
-            plan=plan,
-            call_start_time=start_time,
-        )
-
-        # ---------- Handle hard_timeout AFTER parse_response ----------
-        if kill_reason == "hard_timeout" and not parse.ok:
-            # Parse could not recover a usable response from disk. This
-            # is a true hard timeout — raise so the caller can cascade
-            # to a different model.
-            record = _build_usage_record(
-                agent=agent_name,
-                entrypoint=entrypoint,
-                model=effective_model,
-                mode=mode,
-                task_id=task_id,
-                cwd=effective_cwd,
-                session_id=session_id,
-                duration_s=duration_s,
-                input_chars=len(prompt),
-                output_chars=len(stdout_text),
-                returncode=proc.returncode,
-                outcome="hard_timeout",
-                rate_limited=False,
-                stalled=False,
-                stderr_excerpt=(
-                    parse.stderr_excerpt
-                    or stderr_text[:500]
-                    or tail_liveness_file_for_debug(liveness_paths)[:500]
-                ),
-                tokens=None,
-            )
-            write_record(record)
-            raise AgentTimeoutError(agent_name, hard_timeout)
-
-        # If parse.ok after a hard_timeout kill, we successfully recovered
-        # from disk. Fall through to the normal success path — the usage
-        # record will show outcome=ok but the stderr_excerpt carries the
-        # adapter's "recovered N chars from ..." note so the recovery is
-        # visible in logs.
-
-        # "stalled" kill branch removed 2026-04-10 — should_kill() no
-        # longer returns "stalled". Only hard_timeout is in the kill
-        # path now. AgentStalledError remains importable from errors.py
-        # for backward compatibility with test mocks, but is never raised.
-
-        # ---------- Classify outcome ----------
-        if parse.rate_limited:
-            outcome = "rate_limited"
-        elif parse.ok:
-            outcome = "ok"
-        else:
-            outcome = "error"
-
+    if execution.kill_reason == "hard_timeout" and not parse.ok:
         record = _build_usage_record(
             agent=agent_name,
             entrypoint=entrypoint,
@@ -663,98 +897,68 @@ def invoke(
             task_id=task_id,
             cwd=effective_cwd,
             session_id=session_id,
-            duration_s=duration_s,
+            duration_s=execution.duration_s,
             input_chars=len(prompt),
-            output_chars=len(parse.response),
-            returncode=proc.returncode,
-            outcome=outcome,
-            rate_limited=parse.rate_limited,
+            output_chars=len(execution.stdout_text),
+            returncode=execution.returncode,
+            outcome="hard_timeout",
+            rate_limited=False,
             stalled=False,
-            stderr_excerpt=parse.stderr_excerpt,
-            tokens=parse.tokens,
+            stderr_excerpt=(
+                parse.stderr_excerpt
+                or execution.stderr_text[:500]
+                or tail_liveness_file_for_debug(execution.liveness_paths)[:500]
+            ),
+            tokens=None,
         )
         write_record(record)
+        raise AgentTimeoutError(agent_name, hard_timeout)
 
-        if parse.rate_limited:
-            raise RateLimitedError(
-                agent_name,
-                effective_model,
-                reason=(parse.stderr_excerpt or "")[:200],
-            )
+    if parse.rate_limited:
+        outcome = "rate_limited"
+    elif parse.ok:
+        outcome = "ok"
+    else:
+        outcome = "error"
 
-        return Result(
-            ok=parse.ok,
-            agent=agent_name,
-            model=effective_model,
-            mode=mode,
-            response=parse.response,
-            stderr_excerpt=parse.stderr_excerpt,
-            duration_s=duration_s,
-            session_id=parse.session_id,
-            rate_limited=parse.rate_limited,
-            stalled=False,
-            returncode=proc.returncode,
-            usage_record=record,
+    record = _build_usage_record(
+        agent=agent_name,
+        entrypoint=entrypoint,
+        model=effective_model,
+        mode=mode,
+        task_id=task_id,
+        cwd=effective_cwd,
+        session_id=session_id,
+        duration_s=execution.duration_s,
+        input_chars=len(prompt),
+        output_chars=len(parse.response),
+        returncode=execution.returncode,
+        outcome=outcome,
+        rate_limited=parse.rate_limited,
+        stalled=False,
+        stderr_excerpt=parse.stderr_excerpt,
+        tokens=parse.tokens,
+    )
+    write_record(record)
+
+    if parse.rate_limited:
+        raise RateLimitedError(
+            agent_name,
+            effective_model,
+            reason=(parse.stderr_excerpt or "")[:200],
         )
 
-    finally:
-        # Cleanup ordering matters (Gemini 2026-04-10 review finding):
-        #
-        # 1. If proc is still alive (e.g. a KeyboardInterrupt or unexpected
-        #    exception fired mid-poll), we MUST kill it AND its entire
-        #    process group before closing stdout. Closing stdout on an alive
-        #    proc gives the child SIGPIPE on its next write, and more
-        #    importantly leaks an orphan if we never explicitly kill.
-        #
-        # 2. Only after proc has exited do we call stop_watchdog(proc=proc),
-        #    which closes proc.stdout to unblock the streamer thread.
-        #
-        # proc may be None if Popen itself raised — skip the kill.
-        if proc is not None and proc.poll() is None:
-            with contextlib.suppress(Exception):
-                _kill_process_tree(proc)
-
-        if watchdog_state is not None:
-            stop_watchdog(watchdog_state, watchdog_threads, proc=proc)
-        # Clean up the output file.
-        #
-        # Old policy: only delete on returncode==0, leave on error "for
-        # debugging". In practice this accumulated hundreds of empty 0-byte
-        # temp files from killed Codex processes (returncode=-9 on early
-        # reap or hard timeout). An empty file has zero debugging value.
-        #
-        # New policy (Issue #1286): delete the output file whenever it
-        # exists in a temp directory AND either (a) the response was
-        # successfully parsed (content is in Result.response) or (b) the
-        # file is empty. Non-empty files from genuinely failed calls are
-        # still preserved.
-        if (
-            plan is not None  # type: ignore[possibly-undefined]
-            and plan.output_file is not None
-            and plan.output_file.exists()
-            and _is_temp_file(plan.output_file)
-        ):
-            should_delete = False
-            try:
-                file_size = plan.output_file.stat().st_size
-            except OSError:
-                file_size = -1
-
-            if file_size == 0:
-                # Empty file — no debugging value.
-                should_delete = True
-            elif proc is not None and proc.returncode == 0:
-                # Normal exit, content is in Result.response.
-                should_delete = True
-            elif (
-                proc is not None
-                and proc.returncode is not None
-                and proc.returncode < 0
-                # Killed process — output file is usually empty or
-                # redundant (content recovered from rollout).
-            ):
-                should_delete = True
-
-            if should_delete:
-                with contextlib.suppress(OSError):
-                    plan.output_file.unlink()
+    return Result(
+        ok=parse.ok,
+        agent=agent_name,
+        model=effective_model,
+        mode=mode,
+        response=parse.response,
+        stderr_excerpt=parse.stderr_excerpt,
+        duration_s=execution.duration_s,
+        session_id=parse.session_id,
+        rate_limited=parse.rate_limited,
+        stalled=False,
+        returncode=execution.returncode,
+        usage_record=record,
+    )
