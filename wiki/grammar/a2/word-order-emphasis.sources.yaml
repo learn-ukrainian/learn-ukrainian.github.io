@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/word-order-emphasis.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1262
+  type: unknown
+- id: S2
+  file: S1160
+  type: unknown
+- id: S3
+  file: S4717
+  type: unknown
+- id: S4
+  file: S4584
+  type: unknown
+- id: S5
+  file: S4567
+  type: unknown
+- id: S6
+  file: S2244
+  type: unknown
+- id: S7
+  file: S2469
+  type: unknown
+- id: S8
+  file: S2217
+  type: unknown
+- id: S10
+  file: S2249
+  type: unknown

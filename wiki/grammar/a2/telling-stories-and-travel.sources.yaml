@@ -1,0 +1,18 @@
+# Source registry for wiki/grammar/a2/telling-stories-and-travel.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3817
+  type: unknown
+- id: S2
+  file: S4703
+  type: unknown
+- id: S3
+  file: S685
+  type: unknown
+- id: S4
+  file: S1815
+  type: unknown
+- id: S5
+  file: S3911
+  type: unknown

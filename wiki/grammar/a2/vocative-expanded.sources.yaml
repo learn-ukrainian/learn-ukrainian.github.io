@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/a2/vocative-expanded.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3336
+  type: unknown
+- id: S2
+  file: S4642
+  type: unknown
+- id: S3
+  file: S1266
+  type: unknown
+- id: S4
+  file: S311
+  type: unknown
+- id: S5
+  file: S3165
+  type: unknown
+- id: S6
+  file: S310
+  type: unknown
+- id: S7
+  file: S2447
+  type: unknown

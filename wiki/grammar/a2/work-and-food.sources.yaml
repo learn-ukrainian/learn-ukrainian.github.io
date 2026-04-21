@@ -1,0 +1,18 @@
+# Source registry for wiki/grammar/a2/work-and-food.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5128
+  type: unknown
+- id: S2
+  file: S3371
+  type: unknown
+- id: S3
+  file: S3850
+  type: unknown
+- id: S4
+  file: S698
+  type: unknown
+- id: S5
+  file: S1188
+  type: unknown

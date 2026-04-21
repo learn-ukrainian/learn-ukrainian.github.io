@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 123
-**Total words:** 228,457
+**Total articles:** 128
+**Total words:** 239,020
 
 ## Figures
 
@@ -75,6 +75,11 @@ Auto-generated index of compiled wiki articles.
 - [Граматика A2: Своє та себе](grammar/a2/sviy-and-sebe.md) (2,129 words)
 - [Граматика A2: Слова мають друзів](grammar/a2/synonyms-antonyms-style.md) (1,976 words)
 - [Граматика A2: Я напишу!](grammar/a2/synthetic-future.md) (1,879 words)
+- [Граматика A2: Розповіді та подорожі](grammar/a2/telling-stories-and-travel.md) (2,386 words)
+- [Граматика A2: Пане лікарю! Друже мій!](grammar/a2/vocative-expanded.md) (1,920 words)
+- [Граматика A2: Компас відмінків](grammar/a2/which-case-when.md) (2,480 words)
+- [Граматика A2: Порядок слів і наголос у реченні](grammar/a2/word-order-emphasis.md) (1,955 words)
+- [Граматика A2: Професії та кулінарія](grammar/a2/work-and-food.md) (1,822 words)
 
 ## Linguistics
 

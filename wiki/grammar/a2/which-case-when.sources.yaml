@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/which-case-when.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5185
+  type: unknown
+- id: S2
+  file: S4598
+  type: unknown
+- id: S3
+  file: S3937
+  type: unknown
+- id: S5
+  file: S1800
+  type: unknown
+- id: S6
+  file: S3956
+  type: unknown
+- id: S7
+  file: S3935
+  type: unknown
+- id: S8
+  file: S2434
+  type: unknown
+- id: S9
+  file: S1154
+  type: unknown
+- id: S10
+  file: S3164
+  type: unknown
