@@ -144,16 +144,61 @@ def _should_skip_path(path: tuple[str, ...]) -> bool:
     return len(path) >= 3 and path[-3:] == ("references", "[]", "title")
 
 
-def _walk_and_fix(node: Any, path: tuple[str, ...] = ()) -> int:
-    raise NotImplementedError("_walk_and_fix should not be used directly")
+def _is_escaped_double_quote(text: str, index: int) -> bool:
+    backslashes = 0
+    current = index - 1
+    while current >= 0 and text[current] == "\\":
+        backslashes += 1
+        current -= 1
+    return backslashes % 2 == 1
 
 
-def _replace_line(lines: list[str], line_no: int, transform: Any) -> bool:
-    original = lines[line_no]
+def _find_closing_quote(text: str, quote: str) -> int:
+    index = 0
+    while index < len(text):
+        if text[index] != quote:
+            index += 1
+            continue
+        if quote == '"' and _is_escaped_double_quote(text, index):
+            index += 1
+            continue
+        if quote == "'" and index + 1 < len(text) and text[index + 1] == "'":
+            index += 2
+            continue
+        return index
+    return -1
+
+
+def _find_scalar_span(lines: list[str], line_no: int) -> tuple[int, int]:
+    line = lines[line_no]
+    stripped = line.lstrip()
+    if stripped.startswith("- "):
+        value_text = stripped[2:].lstrip()
+    elif ":" in stripped:
+        value_text = stripped.split(":", 1)[1].lstrip()
+    else:
+        return line_no, line_no
+
+    if not value_text or value_text[0] not in {"'", '"'}:
+        return line_no, line_no
+
+    quote = value_text[0]
+    if _find_closing_quote(value_text[1:], quote) != -1:
+        return line_no, line_no
+
+    for end_line in range(line_no + 1, len(lines)):
+        if _find_closing_quote(lines[end_line], quote) != -1:
+            return line_no, end_line
+    return line_no, line_no
+
+
+def _replace_scalar_span(lines: list[str], line_no: int, transform: Any) -> bool:
+    start_line, end_line = _find_scalar_span(lines, line_no)
+    original = "".join(lines[start_line : end_line + 1])
     updated = transform(original)
     if updated == original:
         return False
-    lines[line_no] = updated
+    lines[start_line : end_line + 1] = updated.splitlines(keepends=True)
     return True
 
 
@@ -164,7 +209,7 @@ def _apply_string_updates(node: Any, lines: list[str], path: tuple[str, ...] = (
             child_path = (*path, "[]")
             if isinstance(value, str) and not _should_skip_path(child_path):
                 line_no = node.lc.item(index)[0]
-                if _replace_line(lines, line_no, replace_latin_module_refs):
+                if _replace_scalar_span(lines, line_no, replace_latin_module_refs):
                     changes += 1
             else:
                 changes += _apply_string_updates(value, lines, child_path)
@@ -175,7 +220,7 @@ def _apply_string_updates(node: Any, lines: list[str], path: tuple[str, ...] = (
             child_path = (*path, str(key))
             if isinstance(value, str) and not _should_skip_path(child_path):
                 line_no = node.lc.value(key)[0]
-                if _replace_line(lines, line_no, replace_latin_module_refs):
+                if _replace_scalar_span(lines, line_no, replace_latin_module_refs):
                     changes += 1
             else:
                 changes += _apply_string_updates(value, lines, child_path)
