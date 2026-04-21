@@ -1,0 +1,24 @@
+# Source registry for wiki/pedagogy/a1/where-to.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2434
+  type: unknown
+- id: S2
+  file: S1800
+  type: unknown
+- id: S3
+  file: S3258
+  type: unknown
+- id: S4
+  file: S3164
+  type: unknown
+- id: S6
+  file: S3161
+  type: unknown
+- id: S7
+  file: ext-article-0
+  type: external
+- id: S8
+  file: ext-article-2
+  type: external

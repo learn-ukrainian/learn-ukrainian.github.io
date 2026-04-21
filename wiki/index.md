@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 56
-**Total words:** 89,073
+**Total articles:** 59
+**Total words:** 93,517
 
 ## Figures
 
@@ -71,6 +71,9 @@ Auto-generated index of compiled wiki articles.
 - [Педагогіка A1: When And Where](pedagogy/a1/when-and-where.md) (1,541 words)
 - [Педагогіка A1: Where From](pedagogy/a1/where-from.md) (1,534 words)
 - [Педагогіка A1: Where Is It](pedagogy/a1/where-is-it.md) (1,501 words)
+- [Педагогіка A1: Where To](pedagogy/a1/where-to.md) (1,569 words)
+- [Педагогіка A1: Who Am I](pedagogy/a1/who-am-i.md) (1,579 words)
+- [Педагогіка A1: Yesterday](pedagogy/a1/yesterday.md) (1,296 words)
 
 ## Periods
 
