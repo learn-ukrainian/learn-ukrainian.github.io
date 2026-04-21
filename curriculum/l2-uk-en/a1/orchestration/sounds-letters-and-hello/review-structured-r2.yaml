@@ -1,0 +1,89 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 4
+  evidence: 'All required sections exist, but the module is 1977 words vs target 1200,
+    and local section counts are far above max budgets: ~658/581/518/504/191 vs 330/275/275/275/165.
+    The named dialogue also misse'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: No Russianisms or Surzhyk found, but Latin `ULP`, `M02`, `M08` break the
+    all-Ukrainian prose register; `Різниця полягає в останньому звуці` is imprecise.
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: Core explanations are correct, but the lesson overexplains beyond A1 and
+    buries key beats under long expository expansions.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required vocabulary is introduced naturally: `звук`, `літера`, `голосний`,
+    `приголосний`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`.'
+- dimension: 5
+  name: Exercise quality
+  score: 5
+  evidence: Exercise placement is partly sensible, but the marker inventory does not
+    map cleanly to the contracted activity types and duplicates `watch-and-repeat`.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: The tone is teacherly and clear, but the prose is overextended and stress-mark
+    saturation makes it feel less canonical and less natural to read.
+- dimension: 7
+  name: Structural integrity
+  score: 5
+  evidence: Headings are present and ordered correctly, but section budgets are badly
+    exceeded and the activity marker scheme is not contract-clean.
+- dimension: 8
+  name: Cultural accuracy
+  score: 8
+  evidence: The module treats Ukrainian on its own terms and avoids colonial framing;
+    the main issue is formatting/register drift, not cultural stance.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: Dialogues are mostly natural and the formal `Ви` exchange works, but the
+    required reciprocal `А у тебе?` is not used in the name-exchange slot.
+findings:
+- dimension: PLAN ADHERENCE
+  severity: major
+  location: '`В украї́нській мо́ві 33 літери, але́ 38 зву́ків... Це дуже важли́во
+    запам''ята́ти.` and similarly expanded paragraphs across all core sections'
+  issue: The module massively exceeds the word budget; the prose keeps restating already-covered
+    beats instead of staying at A1 teaching density.
+  fix: Compress each explanatory paragraph back to the contract beat, keeping one
+    clear explanation plus 1-2 examples.
+- dimension: LINGUISTIC ACCURACY
+  severity: major
+  location: '`Усі дета́лі — в M02.` / `На осно́ві епізо́ду 1 ULP Анни Огойко.` / `почина́ючи
+    з M08.`'
+  issue: Latin-script meta labels inside Ukrainian prose violate the canonical Ukrainian-only
+    register required by this review mode.
+  fix: Replace them with plain Ukrainian references such as `у наступному модулі`,
+    `у першому епізоді`, `у наступних модулях`.
+- dimension: DIALOGUE & CONVERSATION QUALITY
+  severity: major
+  location: '`> **Марко:** Ме́не звати Марко. А тебе?`'
+  issue: The contract explicitly requires reciprocal `А у тебе?` in the named dialogue;
+    the current line does not satisfy that requirement.
+  fix: Change the replica to `Мене звати Марко. А у тебе?`
+- dimension: EXERCISE QUALITY
+  severity: major
+  location: '`<!-- INJECT_ACTIVITY: alphabet-grid -->`, `<!-- INJECT_ACTIVITY: match-letters-to-sounds
+    -->`, `<!-- INJECT_ACTIVITY: sort-vowels-consonants -->`, `<!-- INJECT_ACTIVITY:
+    watch-and-repeat-consonants -->`'
+  issue: The marker inventory does not cleanly match the contracted activity types
+    and splits one obligated `watch-and-repeat` into two separate markers.
+  fix: 'Normalize markers to the contracted types: `letter-grid`, `match-up`, `group-sort`,
+    and one `watch-and-repeat`.'
+- dimension: PEDAGOGICAL QUALITY
+  severity: minor
+  location: '`Різниця поляга́є в оста́нньому зву́ці.`'
+  issue: This explains `рада/радий` too loosely; the contrast is a grammatical form/ending
+    difference, not just one sound.
+  fix: Replace with `Різниця полягає в закінченні та формі слова.`
+overall_score: 6.2
+verdict: REVISE
+passed: false

@@ -2,13 +2,13 @@
   "module": "sounds-letters-and-hello",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-21T18:47:38.955606Z",
+  "last_audit": "2026-04-21T19:47:53.926008Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-21T18:47:29.282799Z",
+    "md": "2026-04-21T19:47:43.765363Z",
     "meta": null,
-    "activities": "2026-04-21T18:44:05.925478Z",
-    "vocabulary": "2026-04-21T18:44:57.693715Z",
+    "activities": "2026-04-21T19:47:22.445792Z",
+    "vocabulary": "2026-04-21T19:47:22.446818Z",
     "research": null,
     "plan": "2026-04-21T00:20:38.127531Z"
   },
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "fail",
       "violations": 1,
-      "message": "1977/1200 (raw: 2019) | immersion: 97.9% HIGH (target 5-25% (M01))"
+      "message": "1830/1200 (raw: 1868) | immersion: 98.5% HIGH (target 5-25% (M01))"
     },
     "activities": {
       "status": "pass",
@@ -55,13 +55,13 @@
     "review": {
       "status": "fail",
       "violations": 2,
-      "message": "Latest review review-structured-r1.yaml score is 8.9 < 9.0"
+      "message": "Latest review review-structured-r3.yaml score is 6.0 < 9.0"
     }
   },
   "overall": {
     "status": "fail",
     "blocking_issues": [
-      "Latest review review-structured-r1.yaml score is 8.9 < 9.0",
+      "Latest review review-structured-r3.yaml score is 6.0 < 9.0",
       "No review-structured-style-r*.yaml found in orchestration dir"
     ],
     "pass_count": 4,

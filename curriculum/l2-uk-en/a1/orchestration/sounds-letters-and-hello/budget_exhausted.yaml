@@ -1,163 +1,286 @@
 level: a1
 slug: sounds-letters-and-hello
 writer: gemini-tools
-attempts: 2
+attempts: 3
 history:
 - attempt: 1
   strategy: write
   writer: gemini-tools
   writer_model_version: gemini-3.1-pro-preview
-  reviewer: gemini
-  reviewer_model_version: gemini-3.1-pro-preview
-  score_overall: 8.6
+  reviewer: codex
+  reviewer_model_version: gpt-5.4
+  score_overall: 6.2
   scores_per_dimension:
-    Plan adherence: 9
+    Plan adherence: 4
     Linguistic accuracy: 7
-    Pedagogical quality: 8
+    Pedagogical quality: 6
     Vocabulary coverage: 9
-    Exercise quality: 8
-    Engagement & tone: 9
-    Structural integrity: 10
-    Cultural accuracy: 10
-    Dialogue & conversation quality: 10
-  dim_floor_fail:
-  - pedagogical_quality
+    Exercise quality: 5
+    Engagement & tone: 6
+    Structural integrity: 5
+    Cultural accuracy: 8
+    Dialogue & conversation quality: 7
+  dim_floor_fail: []
   verdict: revise
-  content_hash: 2792fb14f5150575376c596f878ad9b585e14bc3e69f583bf89f9fff64b00070
-  prompt_hash: 21d09edb00cf9c61b43d1b07b60fd09c80184a58039bfb37e88ad39213fb00ba
-  contract_snapshot_hash: 5455b68c3f48dfbcf73c74b4abe2ca93f12ff4f7be844ba17005fd8c43d256d8
+  content_hash: a0c029e210ecc44a8e54b7e04920ee29c884ad2be33a261ff6040d2693e411b5
+  prompt_hash: 2f0b8e916816a0072605ec4d81e7bfaf48bd040f7526cb62eec3f7f0683dfaed
+  contract_snapshot_hash: 85c1d85053809ed4b58b0de727f72243765845f47cc78b9c698d775a61c036c9
   findings_normalized:
-  - nf_2fa3b6e8477cd7d1
-  - nf_83e241789f5bfd0d
-  - nf_88b11bbf0e0e1afd
-  - nf_4fc3d7454de6d538
-  - nf_a87fa14048b3059c
-  - nf_1cea55744c9869ef
+  - nf_2a899f2627100568
+  - nf_0c30fe9795d78c7f
+  - nf_9ae13968cb46ec05
+  - nf_025d75dd46beee79
+  - nf_c3981ce905d3dfab
   mutation_summary: null
   decision_reason: initial
   artifacts:
-    review_path: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/sounds-letters-and-hello-review-r1.md
+    review_path: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/sounds-letters-and-hello-review-r2.md
     prompt_path: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/sounds-letters-and-hello/v6-review-prompt.md
   timestamps:
-    started: '2026-04-21T16:25:48.792440+00:00'
-    finished: '2026-04-21T16:26:57.010940+00:00'
+    started: '2026-04-21T17:25:42.675171+00:00'
+    finished: '2026-04-21T17:31:18.274481+00:00'
   cost:
     input_tokens: null
     output_tokens: null
-    wall_clock_s: 68.198
+    wall_clock_s: 335.569
   prioritized_findings:
-  - &id001
-    dimension: pedagogical_quality
+  - dimension: dialogue_conversation_quality
+    severity: major
+    error_class: dialogue_arc_fail
+    scope:
+      section_title: null
+      speaker: Марко
+      target_lexeme: '> **Марко:** Ме́не звати Марко. А тебе?'
+    location: '`> **Марко:** Ме́не звати Марко. А тебе?`'
+    issue: The contract explicitly requires reciprocal `А у тебе?` in the named dialogue;
+      the current line does not satisfy that requirement.
+    fix: Change the replica to `Мене звати Марко. А у тебе?`
+    normalized_id: nf_2a899f2627100568
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - dimension: exercise_quality
     severity: major
     error_class: unclassified
     scope:
       section_title: null
-      speaker: Порівняйте
-      target_lexeme: 'Порівняйте: «мило'
-    location: '`Порівняйте: «мило» ( soap ) та «міло» ( swept ).`'
-    issue: Contains English translations in prose (violates rule) and uses "міло",
-      which is not a valid Ukrainian word (swept is "мело").
-    fix: 'Replace with a valid minimal pair without English translations, e.g., `Порівняйте:
-      «лис» та «ліс».`'
-    normalized_id: nf_2fa3b6e8477cd7d1
+      speaker: INJECT_ACTIVITY
+      target_lexeme: '<!-- INJECT_ACTIVITY: alphabet-grid -->'
+    location: '`<!-- INJECT_ACTIVITY: alphabet-grid -->`, `<!-- INJECT_ACTIVITY: match-letters-to-sounds
+      -->`, `<!-- INJECT_ACTIVITY: sort-vowels-consonants -->`, `<!-- INJECT_ACTIVITY:
+      watch-and-repeat-consonants -->`'
+    issue: The marker inventory does not cleanly match the contracted activity types
+      and splits one obligated `watch-and-repeat` into two separate markers.
+    fix: 'Normalize markers to the contracted types: `letter-grid`, `match-up`, `group-sort`,
+      and one `watch-and-repeat`.'
+    normalized_id: nf_0c30fe9795d78c7f
     plan_level: false
     original_prose:
-      location: '`Порівняйте: «мило» ( soap ) та «міло» ( swept ).`'
-      issue: Contains English translations in prose (violates rule) and uses "міло",
-        which is not a valid Ukrainian word (swept is "мело").
-      fix: 'Replace with a valid minimal pair without English translations, e.g.,
-        `Порівняйте: «лис» та «ліс».`'
+      location: '`<!-- INJECT_ACTIVITY: alphabet-grid -->`, `<!-- INJECT_ACTIVITY:
+        match-letters-to-sounds -->`, `<!-- INJECT_ACTIVITY: sort-vowels-consonants
+        -->`, `<!-- INJECT_ACTIVITY: watch-and-repeat-consonants -->`'
+      issue: The marker inventory does not cleanly match the contracted activity types
+        and splits one obligated `watch-and-repeat` into two separate markers.
+      fix: 'Normalize markers to the contracted types: `letter-grid`, `match-up`,
+        `group-sort`, and one `watch-and-repeat`.'
     topology: local_to_prose
-    effective_severity: critical
-  - &id002
-    dimension: pedagogical_quality
-    severity: major
-    error_class: unclassified
-    scope:
-      section_title: null
-      speaker: null
-      target_lexeme: «стан
-    location: '`«стан» ( condition ) та «стань» ( stand up! )`, `«Добре» ( fine ),
-      «Чудово» ( great ) або «Нормально» ( okay ).`, `схожий на англійське «garden»`,
-      `(як «k» у слові «know»)`'
-    issue: English scaffolding inside Ukrainian prose.
-    fix: Remove the English words and parentheses entirely.
-    normalized_id: nf_83e241789f5bfd0d
-    plan_level: false
-    original_prose:
-      location: '`«стан» ( condition ) та «стань» ( stand up! )`, `«Добре» ( fine
-        ), «Чудово» ( great ) або «Нормально» ( okay ).`, `схожий на англійське «garden»`,
-        `(як «k» у слові «know»)`'
-      issue: English scaffolding inside Ukrainian prose.
-      fix: Remove the English words and parentheses entirely.
-    topology: local_to_prose
-    effective_severity: critical
-  - &id003
-    dimension: linguistic_accuracy
+    effective_severity: major
+  - dimension: linguistic_accuracy
     severity: major
     error_class: register_drift
     scope:
       section_title: null
       speaker: null
-      target_lexeme: На відміну від англіиськоі мови
-    location: '`На відміну від англіиськоі мови`, `Кожен голоснии звук`, `в англіиськіи
-      мові`'
-    issue: OCR/Generation typos confusing 'й/и' and 'ї/і'.
-    fix: 'Replace with correct forms: `англійської`, `голосний`, `англійській`.'
-    normalized_id: nf_88b11bbf0e0e1afd
+      target_lexeme: Усі дета́лі — в M02.
+    location: '`Усі дета́лі — в M02.` / `На осно́ві епізо́ду 1 ULP Анни Огойко.` /
+      `почина́ючи з M08.`'
+    issue: Latin-script meta labels inside Ukrainian prose violate the canonical Ukrainian-only
+      register required by this review mode.
+    fix: Replace them with plain Ukrainian references such as `у наступному модулі`,
+      `у першому епізоді`, `у наступних модулях`.
+    normalized_id: nf_9ae13968cb46ec05
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - dimension: plan_adherence
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: null
+      target_lexeme: ята́ти.
+    location: '`В украї́нській мо́ві 33 літери, але́ 38 зву́ків... Це дуже важли́во
+      запам''ята́ти.` and similarly expanded paragraphs across all core sections'
+    issue: The module massively exceeds the word budget; the prose keeps restating
+      already-covered beats instead of staying at A1 teaching density.
+    fix: Compress each explanatory paragraph back to the contract beat, keeping one
+      clear explanation plus 1-2 examples.
+    normalized_id: nf_025d75dd46beee79
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - dimension: pedagogical_quality
+    severity: minor
+    error_class: unclassified
+    scope:
+      section_title: null
+      speaker: null
+      target_lexeme: Різниця поляга́є в оста́нньому зву́ці.
+    location: '`Різниця поляга́є в оста́нньому зву́ці.`'
+    issue: This explains `рада/радий` too loosely; the contrast is a grammatical form/ending
+      difference, not just one sound.
+    fix: Replace with `Різниця полягає в закінченні та формі слова.`
+    normalized_id: nf_c3981ce905d3dfab
+    plan_level: false
+    original_prose:
+      location: '`Різниця поляга́є в оста́нньому зву́ці.`'
+      issue: This explains `рада/радий` too loosely; the contrast is a grammatical
+        form/ending difference, not just one sound.
+      fix: Replace with `Різниця полягає в закінченні та формі слова.`
+    topology: local_to_prose
+    effective_severity: minor
+  tier: 0
+- attempt: 2
+  strategy: patch
+  writer: gemini-tools
+  writer_model_version: gemini-3.1-pro-preview
+  reviewer: codex
+  reviewer_model_version: gpt-5.4
+  score_overall: 5.8
+  scores_per_dimension:
+    Plan adherence: 4
+    Linguistic accuracy: 7
+    Pedagogical quality: 6
+    Vocabulary coverage: 8
+    Exercise quality: 3
+    Engagement & tone: 6
+    Structural integrity: 4
+    Cultural accuracy: 9
+    Dialogue & conversation quality: 7
+  dim_floor_fail:
+  - linguistic_accuracy
+  verdict: revise
+  content_hash: 8ba8294839a661965de306fba33b72961cd9df2b45dab55c52b957db9c424949
+  prompt_hash: cbea9d0f8a658a6fb324fc28f0e6acba79a709e53924c22dff50a5e2211cf5f6
+  contract_snapshot_hash: 9b4465051152c52f64e55a0a4dfe19ec5cb7ab8abe1df089571dcb36cc1d101c
+  findings_normalized:
+  - nf_2aca693258e7236c
+  - nf_75a7a2c9eac9c558
+  - nf_82c901ff5754bc65
+  - nf_ce5db961327c83a8
+  - nf_d8fb71621e1dd89c
+  mutation_summary:
+    changed: true
+    mutation_count: 13
+    summary: deterministic fixes applied
+  decision_reason: all findings are local prose edits and reviewer emitted deterministic
+    fixes
+  artifacts:
+    review_path: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/review/sounds-letters-and-hello-review-r3.md
+    prompt_path: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/sounds-letters-and-hello/v6-review-prompt.md
+  timestamps:
+    started: '2026-04-21T17:31:18.285803+00:00'
+    finished: '2026-04-21T17:36:48.953160+00:00'
+  cost:
+    input_tokens: null
+    output_tokens: null
+    wall_clock_s: 330.64
+  prioritized_findings:
+  - &id001
+    dimension: linguistic_accuracy
+    severity: minor
+    error_class: unclassified
+    scope:
+      section_title: null
+      speaker: null
+      target_lexeme: приголосні
+    location: '`32 при́голосних звуки з 22 приголосних літер.`'
+    issue: Порушене узгодження числівника з іменником.
+    fix: '`32 приголосні звуки позначаються 22 приголосними літерами.`'
+    normalized_id: nf_2aca693258e7236c
+    plan_level: false
+    original_prose:
+      location: '`32 при́голосних звуки з 22 приголосних літер.`'
+      issue: Порушене узгодження числівника з іменником.
+      fix: '`32 приголосні звуки позначаються 22 приголосними літерами.`'
+    topology: local_to_prose
+    effective_severity: critical
+  - &id002
+    dimension: exercise_quality
+    severity: major
+    error_class: activity_order
+    scope:
+      section_title: null
+      speaker: INJECT_ACTIVITY
+      target_lexeme: '<!-- INJECT_ACTIVITY: quiz -->'
+    location: '`<!-- INJECT_ACTIVITY: quiz -->`, `<!-- INJECT_ACTIVITY: letter-grid
+      -->`, `<!-- INJECT_ACTIVITY: watch-and-repeat -->`, `<!-- INJECT_ACTIVITY: match-up
+      -->`, `<!-- INJECT_ACTIVITY: group-sort -->`, `<!-- INJECT_ACTIVITY: fill-in
+      -->`'
+    issue: Порядок маркерів не відповідає `activity_obligations`. Через це вправи
+      з діалогом і зіставленням ідуть пізніше, ніж вимагає контракт.
+    fix: Переставити маркери в порядок `quiz → match-up → fill-in → group-sort → letter-grid
+      → watch-and-repeat`.
+    normalized_id: nf_75a7a2c9eac9c558
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id003
+    dimension: exercise_quality
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: null
+      target_lexeme: group-sort
+    location: 'activities YAML — `- id: group-words-by-syllables ... type: group-sort
+      ... Розподіліть слова за кількістю голосних звуків (складів).`'
+    issue: Контрактний `group-sort` має сортувати звуки на `Голосні` та `Приголосні`,
+      а не слова за кількістю складів.
+    fix: Замінити цей блок на `group-sort` із двома групами `Голосні` / `Приголосні`
+      і відповідними звуками.
+    normalized_id: nf_82c901ff5754bc65
     plan_level: false
     topology: local_to_prose
     effective_severity: major
   - &id004
     dimension: exercise_quality
-    severity: minor
-    error_class: activity_order
-    scope:
-      section_title: null
-      speaker: null
-      target_lexeme: activity_obligations
-    location: Activity markers
-    issue: Markers do not match the exact names from `activity_obligations` and one
-      is duplicated.
-    fix: Rename to exact types (`quiz`, `watch-and-repeat`, `fill-in`) and remove
-      the duplicate `fill-in` from the "Голосні звуки" section.
-    normalized_id: nf_4fc3d7454de6d538
-    plan_level: false
-    topology: cross_section
-    effective_severity: minor
-  - &id005
-    dimension: linguistic_accuracy
-    severity: minor
+    severity: major
     error_class: register_drift
     scope:
       section_title: null
       speaker: null
-      target_lexeme: Давайте спробуємо зробити
-    location: '`Давайте спробуємо зробити`, `Давайте подивимося`, `Давайте зробимо`'
-    issue: Use of "Давайте" + verb is a calque. The Ukrainian imperative form should
-      be used.
-    fix: Change to `Спробуймо зробити`, `Погляньмо`, `Зробімо`.
-    normalized_id: nf_a87fa14048b3059c
+      target_lexeme: 'instruction: Голосні — Vowels'
+    location: 'activities YAML — `instruction: Голосні — Vowels`, `instruction: Friendly
+      letters`, `instruction: False friends!`, `instruction: New shapes`, `instruction:
+      Special letters`, `instruction: ''Watch and repeat: ...''`'
+    issue: У вправах з’являється English-bridging, хоча модуль має бути українсько-канонічним
+      без англомовного scaffolding.
+    fix: Локалізувати всі інструкції й назви вправ українською.
+    normalized_id: nf_ce5db961327c83a8
     plan_level: false
     topology: local_to_prose
-    effective_severity: minor
-  - &id006
-    dimension: linguistic_accuracy
-    severity: minor
-    error_class: surzhyk
+    effective_severity: major
+  - &id005
+    dimension: plan_adherence
+    severity: major
+    error_class: register_drift
     scope:
-      section_title: null
+      section_title: 'Зву́ки і лі́тери ... ## Підсумок'
       speaker: null
-      target_lexeme: Справа в тому, що деякі літери...
-    location: '`Справа в тому, що деякі літери...`'
-    issue: '"Справа в тому" is a Russianism (дело в том).'
-    fix: Replace with "Річ у тім".
-    normalized_id: nf_1cea55744c9869ef
+      target_lexeme: '## Зву́ки і лі́тери ... ## Підсумок'
+    location: 'whole module — `## Зву́ки і лі́тери ... ## Підсумок`'
+    issue: 'Модуль сильно перевищує контрактний бюджет: 1830 слів замість 1200; усі
+      секції вийшли за свої max. Це вже не A1.1-щільність, а роздутий пояснювальний
+      текст.'
+    fix: Скоротити повтори й залишити тільки контрактні beats; прибрати другі хвилі
+      пояснення після того, як тезу вже введено.
+    normalized_id: nf_d8fb71621e1dd89c
     plan_level: false
-    topology: local_to_prose
-    effective_severity: minor
-  tier: 0
-- attempt: 2
+    topology: cross_section
+    effective_severity: major
+  tier: 1
+- attempt: 3
   strategy: full_rewrite
   writer: gemini-tools
   writer_model_version: gemini-tools
@@ -171,20 +294,16 @@ history:
   prompt_hash: 2737d768927fcadab0c046a31d296dc80a26d163133a465cd3c15fd35e9b35cd
   contract_snapshot_hash: ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356
   findings_normalized:
-  - nf_2fa3b6e8477cd7d1
-  - nf_83e241789f5bfd0d
-  - nf_88b11bbf0e0e1afd
-  - nf_4fc3d7454de6d538
-  - nf_a87fa14048b3059c
-  - nf_1cea55744c9869ef
+  - nf_2aca693258e7236c
+  - nf_75a7a2c9eac9c558
+  - nf_82c901ff5754bc65
+  - nf_ce5db961327c83a8
+  - nf_d8fb71621e1dd89c
   mutation_summary: null
   decision_reason: exception
   exception_type: RuntimeError
-  exception_message: 'plan-sidecar validation failed: Activity order mismatch at position
-    2 (expected type ''match-up'', found ''alphabet-grid'') and position 3 (expected
-    type ''fill-in'', found ''watch-and-repeat-vowels'') and position 4 (expected
-    type ''group-sort'', found ''match-letters-to-sounds'') and position 5 (expected
-    type ''letter-grid'', found ''sort-vowels-consonants'')'
+  exception_message: 'plan-sidecar validation failed: Missing contract vocabulary
+    targets: [''мама (mother)'', ''молоко (milk)'']'
   exception_traceback: "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/projects/learn-ukrainian/scripts/build/convergence_loop.py\"\
     , line 584, in run_convergence_loop\n    if mutation.changed and not context.refresh_sidecars(decision.strategy):\n\
     \                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
@@ -196,45 +315,47 @@ history:
     \  File \"/Users/krisztiankoos/projects/learn-ukrainian/scripts/build/v6_build.py\"\
     , line 9286, in _validate_regenerated_sidecars\n    raise RuntimeError(f\"plan-sidecar\
     \ validation failed: {messages}\")\nRuntimeError: plan-sidecar validation failed:\
-    \ Activity order mismatch at position 2 (expected type 'match-up', found 'alphabet-grid')\
-    \ and position 3 (expected type 'fill-in', found 'watch-and-repeat-vowels') and\
-    \ position 4 (expected type 'group-sort', found 'match-letters-to-sounds') and\
-    \ position 5 (expected type 'letter-grid', found 'sort-vowels-consonants')\n"
+    \ Missing contract vocabulary targets: ['мама (mother)', 'молоко (milk)']\n"
   artifacts: {}
   timestamps:
-    started: '2026-04-21T16:26:57.017918+00:00'
-    finished: '2026-04-21T16:44:57.718329+00:00'
+    started: '2026-04-21T17:36:48.965917+00:00'
+    finished: '2026-04-21T17:46:00.404532+00:00'
   cost:
     input_tokens: null
     output_tokens: null
-    wall_clock_s: 1080.688
+    wall_clock_s: 551.444
   prioritized_findings:
   - *id001
   - *id002
   - *id003
   - *id004
   - *id005
-  - *id006
   tier: 3
 trace:
 - attempt: 1
+  tier: 1
+  strategy: patch
+  reason: all findings are local prose edits and reviewer emitted deterministic fixes
+  stall_signals: []
+  finding_ids:
+  - nf_2a899f2627100568
+  - nf_0c30fe9795d78c7f
+  - nf_9ae13968cb46ec05
+- attempt: 2
   tier: 3
   strategy: full_rewrite
   reason: cross-section findings require a full module regeneration
   stall_signals: []
   finding_ids:
-  - nf_2fa3b6e8477cd7d1
-  - nf_83e241789f5bfd0d
-  - nf_88b11bbf0e0e1afd
+  - nf_2aca693258e7236c
+  - nf_75a7a2c9eac9c558
+  - nf_82c901ff5754bc65
 exception:
-  attempt: 1
+  attempt: 2
   strategy: full_rewrite
   type: RuntimeError
-  message: 'plan-sidecar validation failed: Activity order mismatch at position 2
-    (expected type ''match-up'', found ''alphabet-grid'') and position 3 (expected
-    type ''fill-in'', found ''watch-and-repeat-vowels'') and position 4 (expected
-    type ''group-sort'', found ''match-letters-to-sounds'') and position 5 (expected
-    type ''letter-grid'', found ''sort-vowels-consonants'')'
+  message: 'plan-sidecar validation failed: Missing contract vocabulary targets: [''мама
+    (mother)'', ''молоко (milk)'']'
   traceback: "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/projects/learn-ukrainian/scripts/build/convergence_loop.py\"\
     , line 584, in run_convergence_loop\n    if mutation.changed and not context.refresh_sidecars(decision.strategy):\n\
     \                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
@@ -246,7 +367,4 @@ exception:
     \  File \"/Users/krisztiankoos/projects/learn-ukrainian/scripts/build/v6_build.py\"\
     , line 9286, in _validate_regenerated_sidecars\n    raise RuntimeError(f\"plan-sidecar\
     \ validation failed: {messages}\")\nRuntimeError: plan-sidecar validation failed:\
-    \ Activity order mismatch at position 2 (expected type 'match-up', found 'alphabet-grid')\
-    \ and position 3 (expected type 'fill-in', found 'watch-and-repeat-vowels') and\
-    \ position 4 (expected type 'group-sort', found 'match-letters-to-sounds') and\
-    \ position 5 (expected type 'letter-grid', found 'sort-vowels-consonants')\n"
+    \ Missing contract vocabulary targets: ['мама (mother)', 'молоко (milk)']\n"

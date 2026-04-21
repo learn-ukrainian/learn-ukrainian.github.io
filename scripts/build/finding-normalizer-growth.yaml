@@ -10,3 +10,20 @@
     у слові «know»)`'
   issue: English scaffolding inside Ukrainian prose.
   fix: Remove the English words and parentheses entirely.
+- dimension: exercise_quality
+  location: '`<!-- INJECT_ACTIVITY: alphabet-grid -->`, `<!-- INJECT_ACTIVITY: match-letters-to-sounds
+    -->`, `<!-- INJECT_ACTIVITY: sort-vowels-consonants -->`, `<!-- INJECT_ACTIVITY:
+    watch-and-repeat-consonants -->`'
+  issue: The marker inventory does not cleanly match the contracted activity types
+    and splits one obligated `watch-and-repeat` into two separate markers.
+  fix: 'Normalize markers to the contracted types: `letter-grid`, `match-up`, `group-sort`,
+    and one `watch-and-repeat`.'
+- dimension: pedagogical_quality
+  location: '`Різниця поляга́є в оста́нньому зву́ці.`'
+  issue: This explains `рада/радий` too loosely; the contrast is a grammatical form/ending
+    difference, not just one sound.
+  fix: Replace with `Різниця полягає в закінченні та формі слова.`
+- dimension: linguistic_accuracy
+  location: '`32 при́голосних звуки з 22 приголосних літер.`'
+  issue: Порушене узгодження числівника з іменником.
+  fix: '`32 приголосні звуки позначаються 22 приголосними літерами.`'

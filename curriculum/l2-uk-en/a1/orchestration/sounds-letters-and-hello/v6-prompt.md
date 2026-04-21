@@ -1,8 +1,8 @@
 Full module rewrite required. Preserve the plan and contract exactly.
 Prioritize these persistent findings:
-- [pedagogical_quality/unclassified] Contains English translations in prose (violates rule) and uses "міло", which is not a valid Ukrainian word (swept is "мело"). :: Replace with a valid minimal pair without English translations, e.g., `Порівняйте: «лис» та «ліс».`
-- [pedagogical_quality/unclassified] English scaffolding inside Ukrainian prose. :: Remove the English words and parentheses entirely.
-- [linguistic_accuracy/register_drift] OCR/Generation typos confusing 'й/и' and 'ї/і'. :: Replace with correct forms: `англійської`, `голосний`, `англійській`.
+- [linguistic_accuracy/unclassified] Порушене узгодження числівника з іменником. :: `32 приголосні звуки позначаються 22 приголосними літерами.`
+- [exercise_quality/activity_order] Порядок маркерів не відповідає `activity_obligations`. Через це вправи з діалогом і зіставленням ідуть пізніше, ніж вимагає контракт. :: Переставити маркери в порядок `quiz → match-up → fill-in → group-sort → letter-grid → watch-and-repeat`.
+- [exercise_quality/register_drift] Контрактний `group-sort` має сортувати звуки на `Голосні` та `Приголосні`, а не слова за кількістю складів. :: Замінити цей блок на `group-sort` із двома групами `Голосні` / `Приголосні` і відповідними звуками.
 
 
 
@@ -784,7 +784,7 @@ Pipeline-generated deterministic module state from the local Monitor API. Use it
 ship_ready: false
 gates:
   content_exists: true
-  word_target_met: false
+  word_target_met: true
   audit_pass: false
   final_review_pass: false
   plan_fresh: false
@@ -796,7 +796,7 @@ review_snapshot:
 state_drift:
   in_sync: false
   kinds:
-  - content_without_audit
+  - mdx_without_state
 ```
 [END MONITOR TELEMETRY LITERAL]
 

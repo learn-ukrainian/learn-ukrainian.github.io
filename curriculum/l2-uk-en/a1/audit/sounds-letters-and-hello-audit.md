@@ -1,7 +1,7 @@
 # Audit Report: M01 — sounds-letters-and-hello.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-21 18:47:38
+**Generated:** 2026-04-21 19:47:53
 
 ## Configuration
 **Type:** A1
@@ -87,11 +87,9 @@
   - FIX: Complex sentences not allowed at A1 M1-M14. Use simple SVO sentences.
 - **[GRAMMAR]** Subordinate clause marker at A1: 'бо г'
   - FIX: Complex sentences not allowed at A1 M1-M14. Use simple SVO sentences.
-- **[GRAMMAR]** Subordinate clause marker at A1: 'Щоб в'
+- **[GRAMMAR]** Subordinate clause marker at A1: 'щоб д'
   - FIX: Complex sentences not allowed at A1 M1-M14. Use simple SVO sentences.
-- **[GRAMMAR]** Subordinate clause marker at A1: 'Щоб в'
-  - FIX: Complex sentences not allowed at A1 M1-M14. Use simple SVO sentences.
-- **[GRAMMAR]** Subordinate clause marker at A1: 'Щоб в'
+- **[GRAMMAR]** Subordinate clause marker at A1: 'щоб н'
   - FIX: Complex sentences not allowed at A1 M1-M14. Use simple SVO sentences.
 - **[COMPLEXITY]** Sentence too long for A1: 13 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Золоте́ правило підру́чника Заболо́тного клас...'
@@ -101,8 +99,6 @@
   - FIX: Break into shorter sentences. First 5 words: 'Коли ви берете́ ру́чку малю́єте...'
 - **[COMPLEXITY]** Sentence too long for A1: 12 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Одна́ літера взагалі́ не познача́є...'
-- **[COMPLEXITY]** Sentence too long for A1: 13 words (max 10)
-  - FIX: Break into shorter sentences. First 5 words: 'Якби́ ко́жна літера за́вжди́ познача́ла...'
 - **[COMPLEXITY]** Sentence too long for A1: 14 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Її єди́на робо́та стоя́ти по́руч...'
 - **[COMPLEXITY]** Sentence too long for A1: 15 words (max 10)
@@ -125,20 +121,14 @@
   - FIX: Break into shorter sentences. First 5 words: 'Якщо ви хо́чете покликати когось...'
 - **[COMPLEXITY]** Sentence too long for A1: 17 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'На́віть якщо голосний звук стої́ть...'
+- **[COMPLEXITY]** Sentence too long for A1: 13 words (max 10)
+  - FIX: Break into shorter sentences. First 5 words: 'Запам ятайте ці шість звуків...'
 - **[COMPLEXITY]** Sentence too long for A1: 12 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Пра́ктика сприйня́ття́ голосних мА мА...'
 - **[COMPLEXITY]** Sentence too long for A1: 14 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Коли вчи́тель про́сить зроби́ти звукови́й...'
 - **[COMPLEXITY]** Sentence too long for A1: 18 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Обов язко́во подиві́ться відео Анни...'
-- **[COMPLEXITY]** Sentence too long for A1: 12 words (max 10)
-  - FIX: Break into shorter sentences. First 5 words: 'Щоб вимовити звук ваші губи...'
-- **[COMPLEXITY]** Sentence too long for A1: 17 words (max 10)
-  - FIX: Break into shorter sentences. First 5 words: 'Щоб вимовити ваш язик наближа́ється...'
-- **[COMPLEXITY]** Sentence too long for A1: 22 words (max 10)
-  - FIX: Break into shorter sentences. First 5 words: 'Саме тому ці звуки так...'
-- **[COMPLEXITY]** Sentence too long for A1: 12 words (max 10)
-  - FIX: Break into shorter sentences. First 5 words: 'Ви можете спро́бувати потягну́ти звук...'
 - **[COMPLEXITY]** Sentence too long for A1: 14 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Цього́ по́ділу на тверді та...'
 - **[COMPLEXITY]** Sentence too long for A1: 12 words (max 10)
@@ -153,10 +143,6 @@
   - FIX: Break into shorter sentences. First 5 words: 'Літера завжди ко́жному слові розпадається...'
 - **[COMPLEXITY]** Sentence too long for A1: 14 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Ува́жно дивіться відео Анни Огойко...'
-- **[COMPLEXITY]** Sentence too long for A1: 12 words (max 10)
-  - FIX: Break into shorter sentences. First 5 words: 'Після того́ як ми розібра́лися...'
-- **[COMPLEXITY]** Sentence too long for A1: 12 words (max 10)
-  - FIX: Break into shorter sentences. First 5 words: 'Найпрості́ший спо́сіб розпоча́ти розмо́ву дру́зями...'
 - **[COMPLEXITY]** Sentence too long for A1: 12 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Зверніть увагу учні відповідають Вас...'
 - **[COMPLEXITY]** Sentence too long for A1: 13 words (max 10)
@@ -183,12 +169,12 @@
 ## Recommendation
 **🔄 REWRITE** (severity 100/100)
 
-- 71 violations (severe - consider revision)
-- 21 grammar-level violations (fundamental)
+- 64 violations (severe - consider revision)
+- 20 grammar-level violations (fundamental)
 - Immersion 73% off target (major rebalancing needed)
 
 ## Gates
-- **Words:** ✅ 1977/1200 (raw: 2019)
+- **Words:** ✅ 1830/1200 (raw: 1868)
 - **Activities:** ✅ 11/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
@@ -200,7 +186,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 97.9% HIGH (target 5-25% (M01))
+- **Immersion:** ❌ 98.5% HIGH (target 5-25% (M01))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ✅ Content aligned with research
@@ -208,8 +194,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 480 | Included in Core |
-| **Голосні звуки** | ✅ | 448 | Included in Core |
-| **Приголосні звуки** | ✅ | 428 | Included in Core |
-| **Приві́т!** | ✅ | 452 | Included in Core |
+| **Intro/Narrative** | ✅ | 457 | Included in Core |
+| **Голосні звуки** | ✅ | 440 | Included in Core |
+| **Приголосні звуки** | ✅ | 370 | Included in Core |
+| **Приві́т!** | ✅ | 394 | Included in Core |
 | **Підсумок** | ✅ | 169 | Included in Core |

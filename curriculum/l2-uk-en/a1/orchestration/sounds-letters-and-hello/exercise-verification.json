@@ -1,33 +1,32 @@
 {
-  "total_items": 61,
-  "grounded_items": 58,
+  "total_items": 50,
+  "grounded_items": 48,
   "ungrounded": [
     {
-      "word": "яка",
-      "exercise_type": "quiz",
-      "context": "Яка літера не позначає жодного звуку?",
+      "word": "співати",
+      "exercise_type": "true-false",
+      "context": "Голосні звуки можна співати.",
       "role": "context"
     },
     {
-      "word": "жодного",
-      "exercise_type": "quiz",
-      "context": "Яка літера не позначає жодного звуку?",
-      "role": "context"
-    },
-    {
-      "word": "дякую",
-      "exercise_type": "match-up",
-      "context": "Чудово, дякую.",
+      "word": "роті",
+      "exercise_type": "true-false",
+      "context": "Приголосні звуки утворюються без перешкод у роті.",
       "role": "context"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 17,
-    "tested_in_exercises": 14,
+    "tested_in_exercises": 9,
     "not_tested": [
-      "голосний",
+      "дім",
+      "мама",
+      "молоко",
+      "ніс",
       "око",
-      "приголосний"
+      "приголосний",
+      "сон",
+      "тато"
     ]
   },
   "all_grounded": false

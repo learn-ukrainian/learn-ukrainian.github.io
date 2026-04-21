@@ -1,6 +1,6 @@
 # Build Summary: sounds-letters-and-hello (A1)
 
-Generated: 2026-04-21 18:47
+Generated: 2026-04-21 19:47
 
 ## Pipeline Phases
 
@@ -10,25 +10,27 @@ Generated: 2026-04-21 18:47
 | research | complete | 2026-04-21 15:57:25 |
 | skeleton | complete | 2026-04-21 16:01:48 |
 | pre-verify | complete | 2026-04-21 16:06:10 |
-| write | complete | 2026-04-21 16:30:59 |
+| write | complete | 2026-04-21 17:40:17 |
 | exercises | complete | 2026-04-21 16:16:51 |
-| activities | complete | 2026-04-21 16:44:05 |
-| repair | complete | 2026-04-21 16:44:05 |
-| verify-exercises | complete | 2026-04-21 16:44:06 |
-| annotate | complete | 2026-04-21 16:31:00 |
-| vocab | complete | 2026-04-21 16:44:57 |
+| activities | complete | 2026-04-21 17:45:12 |
+| repair | complete | 2026-04-21 17:45:12 |
+| verify-exercises | complete | 2026-04-21 17:45:13 |
+| annotate | complete | 2026-04-21 17:40:21 |
+| vocab | complete | 2026-04-21 17:46:00 |
 | enrich | complete | 2026-04-21 16:25:26 |
-| verify | failed | 2026-04-21 16:44:06 |
-| review | failed | 2026-04-21 16:44:57 |
-| stress | complete | 2026-04-21 16:47:29 |
-| audit | complete | 2026-04-21 16:47:38 |
-| publish | complete | 2026-04-21 16:47:43 |
+| verify | failed | 2026-04-21 17:45:13 |
+| review | failed | 2026-04-21 17:46:00 |
+| stress | complete | 2026-04-21 17:47:43 |
+| audit | complete | 2026-04-21 17:47:53 |
+| publish | complete | 2026-04-21 17:47:58 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | sounds-letters-and-hello-review-r1.md |
+| 2 | sounds-letters-and-hello-review-r2.md |
+| 3 | sounds-letters-and-hello-review-r3.md |
 
 ## Dispatch Log
 
@@ -41,15 +43,22 @@ Generated: 2026-04-21 18:47
 | write | gemini-tools [gemini-3.1-pro-preview + OAuth] | 242s | ❌ |
 | write | gemini-tools [gemini-3-flash-preview + OAuth] | 66s | ✅ |
 | write | gemini-tools [gemini-3.1-pro-preview + OAuth] | 240s | ✅ |
+| write | gemini-tools [gemini-3.1-pro-preview + OAuth] | 207s | ✅ |
 | activities | gemini-tools [gemini-3.1-pro-preview + OAuth] | 200s | ✅ |
 | activities | gemini-tools [gemini-3.1-pro-preview + OAuth] | 125s | ✅ |
 | activities | gemini-tools [gemini-3.1-pro-preview + OAuth] | 130s | ✅ |
 | activities | gemini-tools [gemini-3.1-pro-preview + OAuth] | 550s | ✅ |
 | activities | gemini-tools [gemini-3.1-pro-preview + OAuth] | 150s | ✅ |
 | activities | gemini-tools [gemini-3.1-pro-preview + OAuth] | 80s | ✅ |
+| activities | gemini-tools [gemini-3.1-pro-preview + OAuth] | 105s | ✅ |
+| activities | gemini-tools [gemini-3.1-pro-preview + OAuth] | 80s | ✅ |
+| activities | gemini-tools [gemini-3.1-pro-preview + OAuth] | 100s | ✅ |
 | vocab | gemini [gemini-3.1-pro-preview + OAuth] | 50s | ✅ |
 | vocab | gemini [gemini-3.1-pro-preview + OAuth] | 50s | ✅ |
+| vocab | gemini [gemini-3.1-pro-preview + OAuth] | 45s | ✅ |
 | review | gemini-tools [gemini-3.1-pro-preview + OAuth] | 66s | ✅ |
+| review | codex-tools (gpt-5.4) | 335s | ✅ |
+| review | codex-tools (gpt-5.4) | 330s | ✅ |
 | write-fix | gemini-tools [gemini-3.1-pro-preview + OAuth] | 230s | ❌ |
 | write-fix | gemini-tools [gemini-3-flash-preview + OAuth] | 40s | ✅ |
 
@@ -71,6 +80,8 @@ Generated: 2026-04-21 18:47
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`
