@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/b1/reported-speech.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5163
+  type: unknown
+- id: S3
+  file: S5026
+  type: unknown
+- id: S4
+  file: S5162
+  type: unknown
+- id: S6
+  file: S1174
+  type: unknown
+- id: S7
+  file: S2398
+  type: unknown
+- id: S8
+  file: S5164
+  type: unknown
+- id: S10
+  file: S1281
+  type: unknown

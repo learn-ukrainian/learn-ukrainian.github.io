@@ -1,0 +1,21 @@
+# Source registry for wiki/grammar/b1/complex-subordinate-purpose.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5090
+  type: unknown
+- id: S2
+  file: S3945
+  type: unknown
+- id: S3
+  file: S1273
+  type: unknown
+- id: S4
+  file: S5181
+  type: unknown
+- id: S6
+  file: S1275
+  type: unknown
+- id: S7
+  file: S5179
+  type: unknown

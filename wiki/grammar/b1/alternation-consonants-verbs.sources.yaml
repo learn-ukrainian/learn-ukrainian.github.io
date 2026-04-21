@@ -1,0 +1,33 @@
+# Source registry for wiki/grammar/b1/alternation-consonants-verbs.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3219
+  type: unknown
+- id: S2
+  file: S3926
+  type: unknown
+- id: S3
+  file: S1148
+  type: unknown
+- id: S4
+  file: S684
+  type: unknown
+- id: S5
+  file: S595
+  type: unknown
+- id: S6
+  file: S3213
+  type: unknown
+- id: S7
+  file: S685
+  type: unknown
+- id: S8
+  file: S3913
+  type: unknown
+- id: S9
+  file: S3222
+  type: unknown
+- id: S10
+  file: S3823
+  type: unknown

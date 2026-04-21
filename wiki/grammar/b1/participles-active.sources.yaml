@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/participles-active.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1150
+  type: unknown
+- id: S2
+  file: S3921
+  type: unknown
+- id: S3
+  file: S3919
+  type: unknown
+- id: S4
+  file: S690
+  type: unknown
+- id: S5
+  file: S1423
+  type: unknown
+- id: S6
+  file: S689
+  type: unknown
+- id: S7
+  file: S692
+  type: unknown
+- id: S8
+  file: S3832
+  type: unknown
+- id: S9
+  file: S3831
+  type: unknown

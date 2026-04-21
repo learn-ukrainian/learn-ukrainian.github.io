@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/places-and-locations.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S4622
+  type: unknown
+- id: S2
+  file: S1602
+  type: unknown
+- id: S3
+  file: S3967
+  type: unknown
+- id: S4
+  file: S5100
+  type: unknown
+- id: S5
+  file: S4640
+  type: unknown
+- id: S6
+  file: S4733
+  type: unknown
+- id: S8
+  file: S3380
+  type: unknown
+- id: S9
+  file: S288
+  type: unknown
+- id: S10
+  file: S2558
+  type: unknown

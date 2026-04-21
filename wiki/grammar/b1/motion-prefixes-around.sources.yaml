@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/b1/motion-prefixes-around.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3312
+  type: unknown
+- id: S2
+  file: S1765
+  type: unknown
+- id: S3
+  file: S3310
+  type: unknown
+- id: S4
+  file: S352
+  type: unknown
+- id: S5
+  file: S3315
+  type: unknown
+- id: S6
+  file: S3796
+  type: unknown
+- id: S8
+  file: S3311
+  type: unknown

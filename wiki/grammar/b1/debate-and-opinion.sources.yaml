@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/b1/debate-and-opinion.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2328
+  type: unknown
+- id: S2
+  file: S316
+  type: unknown
+- id: S3
+  file: S369
+  type: unknown
+- id: S5
+  file: S2337
+  type: unknown
+- id: S6
+  file: S3105
+  type: unknown
+- id: S7
+  file: S313
+  type: unknown
+- id: S8
+  file: S363
+  type: unknown
+- id: S10
+  file: S318
+  type: unknown

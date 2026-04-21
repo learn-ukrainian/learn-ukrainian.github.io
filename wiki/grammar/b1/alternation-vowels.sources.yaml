@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/alternation-vowels.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S351
+  type: unknown
+- id: S3
+  file: S2224
+  type: unknown
+- id: S4
+  file: S2475
+  type: unknown
+- id: S5
+  file: S597
+  type: unknown
+- id: S6
+  file: S598
+  type: unknown
+- id: S7
+  file: S1875
+  type: unknown
+- id: S8
+  file: S1801
+  type: unknown
+- id: S9
+  file: S599
+  type: unknown
+- id: S10
+  file: S2476
+  type: unknown

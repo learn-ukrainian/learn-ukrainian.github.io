@@ -1,0 +1,18 @@
+# Source registry for wiki/grammar/b1/complex-subordinate-concess.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5092
+  type: unknown
+- id: S2
+  file: S5178
+  type: unknown
+- id: S3
+  file: S3945
+  type: unknown
+- id: S4
+  file: S3872
+  type: unknown
+- id: S5
+  file: S3870
+  type: unknown

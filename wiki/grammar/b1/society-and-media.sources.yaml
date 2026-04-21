@@ -1,0 +1,33 @@
+# Source registry for wiki/grammar/b1/society-and-media.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3800
+  type: unknown
+- id: S2
+  file: S4568
+  type: unknown
+- id: S3
+  file: S3877
+  type: unknown
+- id: S4
+  file: S731
+  type: unknown
+- id: S5
+  file: S564
+  type: unknown
+- id: S6
+  file: S3962
+  type: unknown
+- id: S7
+  file: S4552
+  type: unknown
+- id: S8
+  file: S5027
+  type: unknown
+- id: S9
+  file: S711
+  type: unknown
+- id: S10
+  file: S4586
+  type: unknown

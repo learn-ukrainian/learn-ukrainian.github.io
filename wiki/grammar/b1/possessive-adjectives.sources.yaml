@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/b1/possessive-adjectives.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3084
+  type: unknown
+- id: S3
+  file: S3401
+  type: unknown
+- id: S4
+  file: S3081
+  type: unknown
+- id: S5
+  file: S3387
+  type: unknown
+- id: S7
+  file: S673
+  type: unknown
+- id: S8
+  file: S1417
+  type: unknown
+- id: S10
+  file: S3350
+  type: unknown

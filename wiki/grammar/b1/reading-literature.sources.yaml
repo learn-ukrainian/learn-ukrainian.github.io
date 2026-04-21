@@ -1,0 +1,33 @@
+# Source registry for wiki/grammar/b1/reading-literature.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3020
+  type: unknown
+- id: S2
+  file: S3779
+  type: unknown
+- id: S3
+  file: S3595
+  type: unknown
+- id: S4
+  file: S5126
+  type: unknown
+- id: S5
+  file: S2171
+  type: unknown
+- id: S6
+  file: S4541
+  type: unknown
+- id: S7
+  file: S1965
+  type: unknown
+- id: S8
+  file: S3629
+  type: unknown
+- id: S9
+  file: S3791
+  type: unknown
+- id: S10
+  file: S4540
+  type: unknown

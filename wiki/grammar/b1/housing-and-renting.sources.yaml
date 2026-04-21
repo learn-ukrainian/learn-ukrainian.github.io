@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/housing-and-renting.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3067
+  type: unknown
+- id: S2
+  file: S614
+  type: unknown
+- id: S3
+  file: S1761
+  type: unknown
+- id: S4
+  file: S286
+  type: unknown
+- id: S5
+  file: S1914
+  type: unknown
+- id: S6
+  file: S5205
+  type: unknown
+- id: S7
+  file: S323
+  type: unknown
+- id: S8
+  file: ext-ulp_youtube-76
+  type: external
+- id: S9
+  file: ext-ulp_youtube-260
+  type: external

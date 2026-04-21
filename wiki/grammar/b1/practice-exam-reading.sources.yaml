@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/b1/practice-exam-reading.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3940
+  type: unknown
+- id: S2
+  file: S5197
+  type: unknown
+- id: S4
+  file: S5209
+  type: unknown
+- id: S6
+  file: S3407
+  type: unknown
+- id: S7
+  file: S2532
+  type: unknown
+- id: S8
+  file: S345
+  type: unknown
+- id: S9
+  file: S3877
+  type: unknown
+- id: S10
+  file: S5057
+  type: unknown

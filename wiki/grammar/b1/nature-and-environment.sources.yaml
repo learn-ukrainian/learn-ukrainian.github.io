@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/nature-and-environment.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S4724
+  type: unknown
+- id: S2
+  file: S1571
+  type: unknown
+- id: S3
+  file: S2262
+  type: unknown
+- id: S4
+  file: S2522
+  type: unknown
+- id: S5
+  file: S5081
+  type: unknown
+- id: S6
+  file: S2294
+  type: unknown
+- id: S7
+  file: S1434
+  type: unknown
+- id: S8
+  file: S1523
+  type: unknown
+- id: S9
+  file: S1504
+  type: unknown

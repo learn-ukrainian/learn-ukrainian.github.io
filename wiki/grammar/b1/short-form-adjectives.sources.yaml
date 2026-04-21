@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/b1/short-form-adjectives.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S675
+  type: unknown
+- id: S2
+  file: S3081
+  type: unknown
+- id: S3
+  file: S673
+  type: unknown
+- id: S4
+  file: S3393
+  type: unknown
+- id: S5
+  file: S3351
+  type: unknown
+- id: S6
+  file: S1804
+  type: unknown
+- id: S7
+  file: S674
+  type: unknown

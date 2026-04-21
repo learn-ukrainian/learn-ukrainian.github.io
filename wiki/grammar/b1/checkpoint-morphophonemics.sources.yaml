@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/b1/checkpoint-morphophonemics.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1801
+  type: unknown
+- id: S2
+  file: S3063
+  type: unknown
+- id: S3
+  file: S3912
+  type: unknown
+- id: S4
+  file: S2475
+  type: unknown
+- id: S5
+  file: S2537
+  type: unknown
+- id: S6
+  file: S3338
+  type: unknown
+- id: S7
+  file: S3387
+  type: unknown
+- id: S8
+  file: S308
+  type: unknown

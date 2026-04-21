@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/gerund-phrases.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3925
+  type: unknown
+- id: S3
+  file: S3846
+  type: unknown
+- id: S4
+  file: S4663
+  type: unknown
+- id: S5
+  file: S1209
+  type: unknown
+- id: S6
+  file: S1442
+  type: unknown
+- id: S7
+  file: S3900
+  type: unknown
+- id: S8
+  file: S3893
+  type: unknown
+- id: S9
+  file: S694
+  type: unknown
+- id: S10
+  file: S1169
+  type: unknown

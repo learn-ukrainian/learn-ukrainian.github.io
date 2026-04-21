@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/gerunds-perfective.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3926
+  type: unknown
+- id: S3
+  file: S685
+  type: unknown
+- id: S4
+  file: S694
+  type: unknown
+- id: S5
+  file: S3924
+  type: unknown
+- id: S6
+  file: S5130
+  type: unknown
+- id: S7
+  file: S1147
+  type: unknown
+- id: S8
+  file: S3912
+  type: unknown
+- id: S9
+  file: S3927
+  type: unknown
+- id: S10
+  file: S3923
+  type: unknown

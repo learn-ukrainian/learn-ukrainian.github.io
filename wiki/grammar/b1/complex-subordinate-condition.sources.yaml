@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/complex-subordinate-condition.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5181
+  type: unknown
+- id: S2
+  file: S5242
+  type: unknown
+- id: S3
+  file: S5119
+  type: unknown
+- id: S4
+  file: S5039
+  type: unknown
+- id: S5
+  file: S1273
+  type: unknown
+- id: S6
+  file: S5179
+  type: unknown
+- id: S7
+  file: S5240
+  type: unknown
+- id: S8
+  file: S5098
+  type: unknown
+- id: S9
+  file: S5177
+  type: unknown

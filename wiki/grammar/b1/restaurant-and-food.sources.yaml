@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/b1/restaurant-and-food.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2397
+  type: unknown
+- id: S2
+  file: S3335
+  type: unknown
+- id: S3
+  file: S1154
+  type: unknown
+- id: S4
+  file: S689
+  type: unknown
+- id: S5
+  file: S3255
+  type: unknown
+- id: S6
+  file: S1914
+  type: unknown
+- id: S7
+  file: S4598
+  type: unknown

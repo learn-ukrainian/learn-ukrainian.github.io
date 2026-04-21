@@ -1,0 +1,15 @@
+# Source registry for wiki/grammar/b1/complex-subordinate-relative.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1274
+  type: unknown
+- id: S2
+  file: S5178
+  type: unknown
+- id: S3
+  file: S4701
+  type: unknown
+- id: S4
+  file: S693
+  type: unknown

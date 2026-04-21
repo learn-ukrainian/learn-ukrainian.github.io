@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/b1/prepositions-cause-purpose.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5179
+  type: unknown
+- id: S3
+  file: S3873
+  type: unknown
+- id: S4
+  file: S5180
+  type: unknown
+- id: S6
+  file: S4694
+  type: unknown
+- id: S7
+  file: S1273
+  type: unknown
+- id: S8
+  file: S698
+  type: unknown
+- id: S9
+  file: S1265
+  type: unknown

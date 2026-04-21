@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/adjectives-suppletive.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3931
+  type: unknown
+- id: S2
+  file: S3079
+  type: unknown
+- id: S3
+  file: S3175
+  type: unknown
+- id: S4
+  file: S3853
+  type: unknown
+- id: S5
+  file: S1204
+  type: unknown
+- id: S6
+  file: S3351
+  type: unknown
+- id: S7
+  file: S1419
+  type: unknown
+- id: S8
+  file: S4705
+  type: unknown
+- id: S9
+  file: S1144
+  type: unknown

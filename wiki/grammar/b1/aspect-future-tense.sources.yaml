@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/b1/aspect-future-tense.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3217
+  type: unknown
+- id: S2
+  file: S1922
+  type: unknown
+- id: S3
+  file: S3912
+  type: unknown
+- id: S4
+  file: S3926
+  type: unknown
+- id: S5
+  file: S4574
+  type: unknown
+- id: S6
+  file: S4708
+  type: unknown
+- id: S9
+  file: S1148
+  type: unknown

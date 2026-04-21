@@ -1,0 +1,33 @@
+# Source registry for wiki/grammar/b1/conditionals-real.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S688
+  type: unknown
+- id: S2
+  file: S3915
+  type: unknown
+- id: S3
+  file: S3824
+  type: unknown
+- id: S4
+  file: S1149
+  type: unknown
+- id: S5
+  file: S3899
+  type: unknown
+- id: S6
+  file: S1211
+  type: unknown
+- id: S7
+  file: S523
+  type: unknown
+- id: S8
+  file: S3949
+  type: unknown
+- id: S9
+  file: S3916
+  type: unknown
+- id: S10
+  file: S283
+  type: unknown

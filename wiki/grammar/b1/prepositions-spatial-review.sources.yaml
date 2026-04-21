@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/b1/prepositions-spatial-review.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S698
+  type: unknown
+- id: S2
+  file: S3866
+  type: unknown
+- id: S3
+  file: S3939
+  type: unknown
+- id: S4
+  file: S1154
+  type: unknown
+- id: S5
+  file: S699
+  type: unknown
+- id: S6
+  file: S3935
+  type: unknown
+- id: S7
+  file: S3937
+  type: unknown
+- id: S8
+  file: S3936
+  type: unknown

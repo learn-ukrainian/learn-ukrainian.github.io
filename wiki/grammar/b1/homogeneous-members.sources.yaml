@@ -1,0 +1,33 @@
+# Source registry for wiki/grammar/b1/homogeneous-members.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1167
+  type: unknown
+- id: S2
+  file: S4712
+  type: unknown
+- id: S3
+  file: S2257
+  type: unknown
+- id: S4
+  file: S4637
+  type: unknown
+- id: S5
+  file: S2393
+  type: unknown
+- id: S6
+  file: S4639
+  type: unknown
+- id: S7
+  file: S2260
+  type: unknown
+- id: S8
+  file: S2258
+  type: unknown
+- id: S9
+  file: S2394
+  type: unknown
+- id: S10
+  file: S2304
+  type: unknown

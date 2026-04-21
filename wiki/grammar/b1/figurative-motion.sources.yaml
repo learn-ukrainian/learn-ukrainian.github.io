@@ -1,0 +1,33 @@
+# Source registry for wiki/grammar/b1/figurative-motion.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2181
+  type: unknown
+- id: S2
+  file: S255
+  type: unknown
+- id: S3
+  file: S2342
+  type: unknown
+- id: S4
+  file: S1918
+  type: unknown
+- id: S5
+  file: S619
+  type: unknown
+- id: S6
+  file: S2188
+  type: unknown
+- id: S7
+  file: S2537
+  type: unknown
+- id: S8
+  file: S1560
+  type: unknown
+- id: S9
+  file: S1653
+  type: unknown
+- id: S10
+  file: S2184
+  type: unknown

@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/b1/instrumental-nuances.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3935
+  type: unknown
+- id: S2
+  file: S1170
+  type: unknown
+- id: S3
+  file: S3338
+  type: unknown
+- id: S4
+  file: S1807
+  type: unknown
+- id: S5
+  file: S1152
+  type: unknown
+- id: S6
+  file: S4718
+  type: unknown
+- id: S7
+  file: S3342
+  type: unknown
+- id: S8
+  file: S3911
+  type: unknown

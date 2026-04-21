@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/pluralia-tantum.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3258
+  type: unknown
+- id: S2
+  file: S3342
+  type: unknown
+- id: S3
+  file: S3071
+  type: unknown
+- id: S4
+  file: S672
+  type: unknown
+- id: S5
+  file: S671
+  type: unknown
+- id: S6
+  file: S3338
+  type: unknown
+- id: S7
+  file: S3387
+  type: unknown
+- id: S8
+  file: S3388
+  type: unknown
+- id: S9
+  file: S1143
+  type: unknown

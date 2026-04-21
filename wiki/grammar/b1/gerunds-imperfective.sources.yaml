@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/gerunds-imperfective.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S694
+  type: unknown
+- id: S2
+  file: S3847
+  type: unknown
+- id: S3
+  file: S3924
+  type: unknown
+- id: S4
+  file: S685
+  type: unknown
+- id: S5
+  file: S3926
+  type: unknown
+- id: S6
+  file: S1209
+  type: unknown
+- id: S7
+  file: S1147
+  type: unknown
+- id: S8
+  file: S3910
+  type: unknown
+- id: S10
+  file: S3845
+  type: unknown

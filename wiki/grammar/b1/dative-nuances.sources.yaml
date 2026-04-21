@@ -1,0 +1,18 @@
+# Source registry for wiki/grammar/b1/dative-nuances.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1800
+  type: unknown
+- id: S2
+  file: S3401
+  type: unknown
+- id: S3
+  file: S4709
+  type: unknown
+- id: S4
+  file: S1875
+  type: unknown
+- id: S5
+  file: S1216
+  type: unknown

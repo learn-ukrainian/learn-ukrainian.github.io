@@ -1,0 +1,18 @@
+# Source registry for wiki/grammar/b1/text-compression.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S328
+  type: unknown
+- id: S2
+  file: S352
+  type: unknown
+- id: S3
+  file: S608
+  type: unknown
+- id: S4
+  file: S539
+  type: unknown
+- id: S5
+  file: S295
+  type: unknown

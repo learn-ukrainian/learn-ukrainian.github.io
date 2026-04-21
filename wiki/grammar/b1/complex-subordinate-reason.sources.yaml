@@ -1,0 +1,18 @@
+# Source registry for wiki/grammar/b1/complex-subordinate-reason.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5179
+  type: unknown
+- id: S2
+  file: S5240
+  type: unknown
+- id: S3
+  file: S3873
+  type: unknown
+- id: S4
+  file: S5178
+  type: unknown
+- id: S5
+  file: S3942
+  type: unknown

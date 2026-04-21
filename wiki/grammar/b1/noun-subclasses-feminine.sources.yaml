@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/b1/noun-subclasses-feminine.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S309
+  type: unknown
+- id: S2
+  file: S3387
+  type: unknown
+- id: S3
+  file: S3340
+  type: unknown
+- id: S4
+  file: S3337
+  type: unknown
+- id: S6
+  file: S1801
+  type: unknown
+- id: S7
+  file: S308
+  type: unknown
+- id: S8
+  file: S672
+  type: unknown

@@ -1,0 +1,21 @@
+# Source registry for wiki/grammar/b1/motion-prefixes-departure.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1765
+  type: unknown
+- id: S2
+  file: S1154
+  type: unknown
+- id: S3
+  file: S3315
+  type: unknown
+- id: S5
+  file: S1658
+  type: unknown
+- id: S6
+  file: S1901
+  type: unknown
+- id: S8
+  file: S1767
+  type: unknown

@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/b1/advanced-pronouns.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3400
+  type: unknown
+- id: S3
+  file: S3206
+  type: unknown
+- id: S4
+  file: S3106
+  type: unknown
+- id: S5
+  file: S3271
+  type: unknown
+- id: S6
+  file: S3203
+  type: unknown
+- id: S7
+  file: S3198
+  type: unknown
+- id: S8
+  file: S3371
+  type: unknown
+- id: S10
+  file: S677
+  type: unknown

@@ -1,0 +1,12 @@
+# Source registry for wiki/grammar/b1/genitive-nuances.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S550
+  type: unknown
+- id: S3
+  file: S3389
+  type: unknown
+- id: S4
+  file: S309
+  type: unknown

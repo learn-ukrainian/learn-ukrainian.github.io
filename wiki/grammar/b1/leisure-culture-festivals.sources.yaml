@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/b1/leisure-culture-festivals.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3384
+  type: unknown
+- id: S2
+  file: S3331
+  type: unknown
+- id: S3
+  file: S3262
+  type: unknown
+- id: S5
+  file: S2795
+  type: unknown
+- id: S6
+  file: S2797
+  type: unknown
+- id: S8
+  file: S2709
+  type: unknown
+- id: S9
+  file: S557
+  type: unknown
+- id: S10
+  file: S1870
+  type: unknown

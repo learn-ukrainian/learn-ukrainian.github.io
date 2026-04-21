@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/comprehensive-b1-review.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2330
+  type: unknown
+- id: S2
+  file: S1822
+  type: unknown
+- id: S4
+  file: S3289
+  type: unknown
+- id: S5
+  file: S5070
+  type: unknown
+- id: S6
+  file: S3413
+  type: unknown
+- id: S7
+  file: S2300
+  type: unknown
+- id: S8
+  file: S3122
+  type: unknown
+- id: S9
+  file: S3115
+  type: unknown
+- id: S10
+  file: S3021
+  type: unknown

@@ -1,0 +1,18 @@
+# Source registry for wiki/grammar/b1/aspect-in-conditionals.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3915
+  type: unknown
+- id: S2
+  file: S3220
+  type: unknown
+- id: S3
+  file: S3824
+  type: unknown
+- id: S5
+  file: S700
+  type: unknown
+- id: S7
+  file: S1149
+  type: unknown

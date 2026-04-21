@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/b1/introductory-words.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2524
+  type: unknown
+- id: S2
+  file: S1221
+  type: unknown
+- id: S3
+  file: S4647
+  type: unknown
+- id: S4
+  file: S1266
+  type: unknown
+- id: S5
+  file: S2265
+  type: unknown
+- id: S6
+  file: S5159
+  type: unknown
+- id: S7
+  file: S2260
+  type: unknown

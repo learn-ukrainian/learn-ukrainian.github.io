@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/b1/aspect-past-tense.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3910
+  type: unknown
+- id: S2
+  file: S3213
+  type: unknown
+- id: S3
+  file: S685
+  type: unknown
+- id: S4
+  file: S3912
+  type: unknown
+- id: S5
+  file: S1931
+  type: unknown
+- id: S6
+  file: S5143
+  type: unknown
+- id: S7
+  file: S694
+  type: unknown
+- id: S9
+  file: S2543
+  type: unknown
+- id: S10
+  file: S3812
+  type: unknown

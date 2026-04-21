@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/b1/complex-compound.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5034
+  type: unknown
+- id: S2
+  file: S1270
+  type: unknown
+- id: S3
+  file: S5080
+  type: unknown
+- id: S4
+  file: S5171
+  type: unknown
+- id: S5
+  file: S3943
+  type: unknown
+- id: S6
+  file: S5174
+  type: unknown
+- id: S7
+  file: S5048
+  type: unknown

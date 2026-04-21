@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/b1/education-and-university.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3939
+  type: unknown
+- id: S2
+  file: S3910
+  type: unknown
+- id: S3
+  file: S715
+  type: unknown
+- id: S4
+  file: S3067
+  type: unknown
+- id: S7
+  file: S3897
+  type: unknown
+- id: S8
+  file: S4226
+  type: unknown
+- id: S9
+  file: S1255
+  type: unknown
+- id: S10
+  file: S1059
+  type: unknown
