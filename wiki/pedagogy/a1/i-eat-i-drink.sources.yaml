@@ -1,0 +1,21 @@
+# Source registry for wiki/pedagogy/a1/i-eat-i-drink.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3218
+  type: unknown
+- id: S2
+  file: S3216
+  type: unknown
+- id: S3
+  file: S689
+  type: unknown
+- id: S4
+  file: S2390
+  type: unknown
+- id: S5
+  file: S3164
+  type: unknown
+- id: S9
+  file: S3821
+  type: unknown

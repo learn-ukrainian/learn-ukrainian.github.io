@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 25
-**Total words:** 40,825
+**Total articles:** 31
+**Total words:** 49,947
 
 ## Figures
 
@@ -38,6 +38,12 @@ Auto-generated index of compiled wiki articles.
 - [Педагогіка A1: Health](pedagogy/a1/health.md) (1,544 words)
 - [Педагогіка A1: Hey Friend](pedagogy/a1/hey-friend.md) (1,510 words)
 - [Педагогіка A1: Holidays](pedagogy/a1/holidays.md) (1,456 words)
+- [Педагогіка A1: How Many](pedagogy/a1/how-many.md) (1,547 words)
+- [Педагогіка A1: I Eat I Drink](pedagogy/a1/i-eat-i-drink.md) (1,486 words)
+- [Педагогіка A1: I Want I Can](pedagogy/a1/i-want-i-can.md) (1,516 words)
+- [Педагогіка A1: Linking Ideas](pedagogy/a1/linking-ideas.md) (1,453 words)
+- [Педагогіка A1: Many Things](pedagogy/a1/many-things.md) (1,579 words)
+- [Педагогіка A1: My City](pedagogy/a1/my-city.md) (1,541 words)
 - [Педагогіка A1: My Family](pedagogy/a1/my-family.md) (1,759 words)
 - [Педагогіка A1: Sounds Letters And Hello](pedagogy/a1/sounds-letters-and-hello.md) (1,441 words)
 

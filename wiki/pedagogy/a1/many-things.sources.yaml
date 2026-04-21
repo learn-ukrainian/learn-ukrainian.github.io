@@ -1,0 +1,21 @@
+# Source registry for wiki/pedagogy/a1/many-things.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1926
+  type: unknown
+- id: S2
+  file: S3158
+  type: unknown
+- id: S3
+  file: S3192
+  type: unknown
+- id: S4
+  file: S3334
+  type: unknown
+- id: S5
+  file: S2427
+  type: unknown
+- id: S6
+  file: S3258
+  type: unknown

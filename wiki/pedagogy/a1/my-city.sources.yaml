@@ -1,0 +1,15 @@
+# Source registry for wiki/pedagogy/a1/my-city.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3158
+  type: unknown
+- id: S2
+  file: S3177
+  type: unknown
+- id: S3
+  file: S4703
+  type: unknown
+- id: S4
+  file: S2434
+  type: unknown
