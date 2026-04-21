@@ -87,6 +87,59 @@ workbook:
         answer: "сестру"
 ```
 
+## Схема полів за типами — ДОТРИМУЙТЕСЬ ТОЧНО
+
+**КРИТИЧНО:** назви полів у YAML мають збігатися з цією схемою дослівно.
+Перекладати назви полів НЕ МОЖНА — `pairs[{left, right}]` залишається
+саме `left`/`right`, не `prompt`/`answer` і не «запитання/відповідь».
+Текст значень — українською, а структура — як тут. Валідатор схеми
+відхиляє альтернативні назви полів.
+
+### Ядрові типи (A1-C2)
+
+- **quiz**: `id`, `instruction`, `items: [{question, options[], correct}]`
+- **fill-in**: `id`, `instruction`, `items: [{sentence, answer}]`.
+  Порожнє місце позначайте `____` (чотири підкреслення), НЕ `{word}`.
+- **match-up**: `id`, `instruction`, `pairs: [{left, right}]`. Мін. 3 пари.
+  (Не `prompt`/`answer`, не `word`/`translation` — саме `left` і `right`.)
+- **group-sort**: `id`, `instruction`, `groups: [{label, items[]}]`. Мін. 2 групи.
+  (Не `title`/`items`, не `category`/`words` — саме `label` і `items`.)
+- **classify**: `id`, `instruction`, `categories: [{label, items[]}]`.
+  (Структура як `group-sort`, але ключ верхнього рівня `categories`.)
+- **true-false**: `id`, `instruction`, `items: [{statement, correct}]`.
+  `correct` — boolean `true`/`false`. (Не `answer`.)
+- **error-correction**: `id`, `instruction`, `items: [{sentence, error, correction}]`.
+  Опційно: `error_type` (одне з `"word"`, `"phrase"`, `"register"`, `"construction"`),
+  `options[]`, `explanation`.
+- **anagram**: `id`, `instruction`, `items: [{letters[], answer}]`.
+  `letters` — масив літер, не рядок. (Не `scrambled`.)
+- **translate**: `id`, `instruction`, `items: [{source}]`. Для варіантів — `options[]`.
+- **unjumble**: `id`, `instruction`, `items: [{words[], correct_order[]}]`.
+  `correct_order` — масив **РЯДКІВ** (слова в правильному порядку), не індексів.
+- **order**: `id`, `instruction`, `items: []` (масив рядків), `correct_order[]` —
+  ВЕРХНЬОРІВНЕВИЙ масив **цілих** (0-base індекси). Не всередині кожного item.
+- **observe**: `id`, `examples[]`, `prompt`.
+
+### Українська педагогіка (A1 фонетика / склади)
+
+- **divide-words**: `id`, `instruction`, `items: [{word, answer}]`.
+  Приклад: `word: "молоко"`, `answer: "мо-ло-ко"`. НЕ додавайте `hint:`.
+- **count-syllables**: `id`, `items: [{word, correct}]`. Опційно: `instruction`, `maxCount`.
+- **pick-syllables**: `id`, `syllables[]`, `correctIndices[]`, `category`.
+- **odd-one-out**: `id`, `items: [{words[], correct, explanation}]`. `correct` — 0-base індекс.
+- **image-to-letter**: `id`, `instruction`, `items: [{image, letter}]`. Опційно `options[]`.
+- **letter-grid**: `id`, `letters: [{upper, lower}]`. Опційно `name`, `emoji`, `key_word`.
+- **phrase-table**: `id`, `groups: [{label, phrases[]}]`.
+
+### Типові помилки, на яких падає валідатор
+
+- `{item, group}` замість `{label, items[]}` → ❌ валідатор відхиляє
+- `{prompt, answer}` замість `{left, right}` → ❌ валідатор відхиляє
+- `{scrambled, answer}` замість `{letters[], answer}` → ❌ валідатор відхиляє
+- рядок замість масиву для `letters` / `items` / `options` → ❌ валідатор відхиляє
+
+Поля значень — українською. **Ключі полів — як у схемі вище, не перекладати.**
+
 ## Які патерни заборонені
 
 - англійські інструкції

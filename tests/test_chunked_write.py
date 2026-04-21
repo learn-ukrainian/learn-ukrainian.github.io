@@ -440,12 +440,14 @@ class TestWriteStepForcesNoChunkOnOverride:
 
         source = inspect.getsource(step_write)
         # The override branch should flip no_chunk; grep for the assignment
-        # within the override handling block.
+        # within the override-detection block. Pattern generalized in #1385
+        # to cover both V6_WRITER_TEMPLATE and V6_PHASE_SUITE overrides:
+        # ``if template_source != "default" and not no_chunk:``
         lines = source.splitlines()
         in_override_block = False
         found_no_chunk_assignment = False
         for line in lines:
-            if "if override and not no_chunk" in line:
+            if 'template_source != "default"' in line and "not no_chunk" in line:
                 in_override_block = True
                 continue
             if in_override_block:
@@ -457,5 +459,6 @@ class TestWriteStepForcesNoChunkOnOverride:
                     break
         assert found_no_chunk_assignment, (
             "Override branch must set no_chunk = True so chunked path is "
-            "skipped when V6_WRITER_TEMPLATE is set (#1381)"
+            "skipped when V6_WRITER_TEMPLATE or V6_PHASE_SUITE forces a "
+            "non-default writer template (#1381 / #1385)"
         )
