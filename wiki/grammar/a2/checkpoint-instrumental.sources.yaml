@@ -1,0 +1,21 @@
+# Source registry for wiki/grammar/a2/checkpoint-instrumental.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5128
+  type: unknown
+- id: S2
+  file: S3387
+  type: unknown
+- id: S3
+  file: S3164
+  type: unknown
+- id: S4
+  file: S1801
+  type: unknown
+- id: S5
+  file: S3388
+  type: unknown
+- id: S6
+  file: S3340
+  type: unknown

@@ -1,0 +1,18 @@
+# Source registry for wiki/grammar/a2/checkpoint-syntax.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1219
+  type: unknown
+- id: S2
+  file: S1273
+  type: unknown
+- id: S3
+  file: S5181
+  type: unknown
+- id: S4
+  file: S5169
+  type: unknown
+- id: S5
+  file: S5230
+  type: unknown

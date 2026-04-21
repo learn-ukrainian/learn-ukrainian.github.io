@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 71
-**Total words:** 119,001
+**Total articles:** 76
+**Total words:** 129,860
 
 ## Figures
 
@@ -22,6 +22,11 @@ Auto-generated index of compiled wiki articles.
 - [Граматика A2: 30 найважливіших видових пар](grammar/a2/aspect-mastery.md) (2,113 words)
 - [Граматика A2: Тому що, бо, хоча](grammar/a2/because-and-although.md) (2,090 words)
 - [Граматика A2: Контрольна точка: Відмінки та множина](grammar/a2/checkpoint-cases.md) (2,546 words)
+- [Граматика A2: Контрольна робота — давальний відмінок](grammar/a2/checkpoint-dative.md) (1,955 words)
+- [Граматика A2: Контрольна точка: Основи А2](grammar/a2/checkpoint-foundations.md) (2,347 words)
+- [Граматика A2: Контрольна робота — родовий відмінок](grammar/a2/checkpoint-genitive.md) (1,947 words)
+- [Граматика A2: Контрольна точка: Орудний відмінок](grammar/a2/checkpoint-instrumental.md) (2,177 words)
+- [Граматика A2: Контрольна робота — складне речення](grammar/a2/checkpoint-syntax.md) (2,433 words)
 - [Граматика A2: Синтаксис і відмінки](grammar/a2/metalanguage-syntax-cases.md) (2,307 words)
 
 ## Linguistics
