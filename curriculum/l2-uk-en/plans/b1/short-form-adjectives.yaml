@@ -2,7 +2,7 @@ module: b1-068
 level: B1
 sequence: 68
 slug: short-form-adjectives
-version: '3.1'
+version: '3.2'
 title: "Короткі прикметники (зелен, потрібен)"
 subtitle: "Повні та короткі форми якісних прикметників"
 focus: grammar
@@ -105,7 +105,7 @@ content_outline:
         to OES paradigm gives learners a glimpse of historical morphology."
       - "Practice: classify forms as короткі прикметники, повні прикметники, or усічені
         прикметники in literary excerpts."
-  - section: "Підсумок та перехід до M61"
+  - section: "Підсумок та перехід до модуля №61"
     words: 450
     points:
       - "Summary: короткі прикметники = тільки називний відмінок, змінюються за родом
@@ -117,7 +117,7 @@ content_outline:
         predicative short forms (потрібен, певен, годен, ладен, варт, рад) mapped to
         their syntactic patterns. Learners complete a self-assessment choosing the
         correct form for 6 mixed contexts (poetic vs modern predicative)."
-      - "Preview: M61 — Дієприслівники недоконаного виду. A new verb form: reading-writing
+      - "Preview: модуль №61 — Дієприслівники недоконаного виду. A new verb form: reading-writing
         → reading, they walked."
 vocabulary_hints:
   required:

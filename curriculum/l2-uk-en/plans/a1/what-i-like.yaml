@@ -2,7 +2,7 @@ module: a1-015
 level: A1
 sequence: 15
 slug: what-i-like
-version: 1.1.1
+version: 1.1.2
 title: Що я люблю
 subtitle: Я люблю читати — ваші перші дієслова
 focus: grammar
@@ -56,7 +56,7 @@ vocabulary_hints:
   - співати (to sing)
   - музика (music, f)
   - фільм (film, m)
-  - книга (book — review from M08)
+  - книга (book — review from модуль №8)
 activity_hints:
 - type: fill-in
   focus: 'Доповніть речення: Я люблю ___. (оберіть інфінітив до малюнка)'

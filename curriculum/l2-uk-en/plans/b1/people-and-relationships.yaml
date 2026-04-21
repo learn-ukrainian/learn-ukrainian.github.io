@@ -2,7 +2,7 @@ module: b1-003
 level: B1
 sequence: 3
 slug: people-and-relationships
-version: '3.0'
+version: '3.1'
 title: "Людина і стосунки"
 subtitle: "Зовнішність, характер, родина та знайомство"
 focus: communication
@@ -118,7 +118,7 @@ content_outline:
         responses: 'Дуже приємно,' 'Радий/рада з вами познайомитися.' At the end of
         the conversation: 'Дякую, що приділили час.'"
       - "Кличний відмінок in introductions and address: Review: Андрію! Маріє! Тетяно
-        Iванівно! B1 expansion: formal address patterns with ім'я по батькові. Practice:
+        Іванівно! B1 expansion: formal address patterns with ім'я по батькові. Practice:
         learners role-play introductions in formal and informal settings."
       - "Practice dialogue: introducing a Ukrainian friend to your family, switching
         between formal and informal register as appropriate."
@@ -149,7 +149,7 @@ content_outline:
         речень). 2. Назвіть 5 позитивних i 3 негативних рис характеру. 3. Яка різниця
         між словами стосунки, ставлення, відносини? 4. Представте свого друга колезі
         (формально i неформально)."
-      - "Preview of checkpoint module: Контрольна робота 1 (M07) — testing metalanguage,
+      - "Preview of checkpoint module: Контрольна робота 1 (модуль №7) — testing metalanguage,
         verb tenses, aspect, and descriptions."
 vocabulary_hints:
   required:

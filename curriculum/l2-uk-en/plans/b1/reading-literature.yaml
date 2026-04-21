@@ -2,7 +2,7 @@ module: b1-087
 level: B1
 sequence: 87
 slug: reading-literature
-version: '3.1'
+version: '3.2'
 title: "Читання художніх текстів"
 subtitle: "Художній стиль мовлення — від уривків до розуміння літератури"
 focus: communication
@@ -85,8 +85,8 @@ content_outline:
         Ukrainian. During reading: mark художні засоби. Post-reading: comprehension
         questions in Ukrainian."
       - "Adapted literary excerpt 2 (150-200 words) — a character portrait or dialogue
-        from Ukrainian prose. Connects to M06 портретна лексика. Focus on how художній
-        стиль uses розмовні елементи in dialogue (connecting to M78 Розмовний стиль).
+        from Ukrainian prose. Connects to модуль №6 портретна лексика. Focus on how художній
+        стиль uses розмовні елементи in dialogue (connecting to модуль №78 Розмовний стиль).
         Practice: learners answer questions about character, setting, mood."
       - "Reading strategies for B1 literary texts: 1. Не зупиняйтеся на кожному невідомому
         слові — use context. 2. Зверніть увагу на художні засоби — they carry meaning.
@@ -157,7 +157,7 @@ content_outline:
         Франко 'Захар Беркут,' Коцюбинський 'Тіні забутих предків,' Лесін Українка
         selected poems, Стефаник short stories. Resources for finding adapted Ukrainian
         texts online."
-      - "Preview: Контрольна робота 9 (M84) — testing register awareness, negation,
+      - "Preview: Контрольна робота 9 (модуль №84) — testing register awareness, negation,
         вставні слова, nature vocabulary, and literary reading."
 vocabulary_hints:
   required:

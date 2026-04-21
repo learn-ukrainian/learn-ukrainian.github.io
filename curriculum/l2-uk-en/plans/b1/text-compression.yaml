@@ -2,7 +2,7 @@ module: b1-086
 level: B1
 sequence: 86
 slug: text-compression
-version: '3.1'
+version: '3.2'
 title: "Абревіатури та скорочення"
 subtitle: "Складноскорочені слова, абревіатури, графічні скорочення"
 focus: grammar
@@ -13,7 +13,7 @@ objectives:
   - "Learner can explain what абревіація is and how складноскорочені слова are formed
     in Ukrainian (складання початкових частин, звуків, літер)"
   - "Learner can read, pronounce, and decode common Ukrainian абревіатури (ЗСУ, ООН,
-    ЗМI, ЄС, ЗЗСО, МВФ, ЦНАП, СБУ)"
+    ЗМІ, ЄС, ЗЗСО, МВФ, ЦНАП, СБУ)"
   - "Learner can determine граматичний рід of абревіатури and use them correctly in
     sentences with proper agreement"
   - "Learner can use standard графічні скорочення in Ukrainian writing (вул., кг,
@@ -45,7 +45,7 @@ content_outline:
         абревіатури by type."
       - "Essential Ukrainian абревіатури for B1 from Голуб Grade 6 p.52: ЗСУ (Збройні
         сили України), ЗЗСО (заклад загальної середньої освіти), ООН (Організація
-        Об'єднаних Націй), МВФ (Міжнародний валютний фонд), ЗМI (засоби масової інформації),
+        Об'єднаних Націй), МВФ (Міжнародний валютний фонд), ЗМІ (засоби масової інформації),
         ЄС (Європейський Союз), СБУ (Служба безпеки України), ПАРЄ (Парламентська
         асамблея Ради Європи), НБУ (Національний банк України). Practice: learners
         match абревіатури to their full forms."
@@ -62,7 +62,7 @@ content_outline:
     words: 700
     points:
       - "Рід абревіатур — how to determine grammatical gender: Рід визначаємо за головним
-        словом: ООН — жіночий рід (Організація), ЗМI — середній рід? Ні — множина
+        словом: ООН — жіночий рід (Організація), ЗМІ — середній рід? Ні — множина
         (засоби), МВФ — чоловічий рід (фонд), ЄС — чоловічий рід (Союз). Складні випадки:
         НАТО, ЮНЕСКО — рід за останнім словом або за традицією."
       - "Agreement in sentences: 'ООН ухвалила резолюцію' (feminine — Організація).
@@ -126,12 +126,12 @@ content_outline:
   - section: "Абревіатури в повсякденному житті"
     words: 650
     points:
-      - "Абревіатури в новинах та ЗМI: Learners read a short news excerpt containing
+      - "Абревіатури в новинах та ЗМІ: Learners read a short news excerpt containing
         ЗСУ, ООН, ЄС, МЗС (Міністерство закордонних справ), ВР (Верховна Рада) and
         practice decoding and using them in summaries."
       - "Абревіатури в побуті: ДСНС (Державна служба з надзвичайних ситуацій), ОСББ
         (об'єднання співвласників багатоквартирного будинку), ФОП (фізична особа-підприємець),
-        КНЕУ, КПI, ЛНУ (university names). Practice: learners explain what each абревіатура
+        КНЕУ, КПІ, ЛНУ (university names). Practice: learners explain what each абревіатура
         stands for."
       - "Digital abbreviations in Ukrainian: Common online скорочення: до речі (д/р
         is NOT used — full form), Modern usage: гуглити, чатити, лайкати (adapted
@@ -142,13 +142,13 @@ content_outline:
     points:
       - "Complete reference table: types of скорочення, правопис rules, граматичні
         особливості. Quick-reference for абревіатури studied."
-      - "Self-check in Ukrainian: 1. Розшифруйте: ЗСУ, ООН, ЗМI, ЄС, ЦНАП. 2. Визначте
+      - "Self-check in Ukrainian: 1. Розшифруйте: ЗСУ, ООН, ЗМІ, ЄС, ЦНАП. 2. Визначте
         рід: ООН (вона), МВФ (він), ЗСУ (вони). 3. Напишіть адресу з правильними скороченнями.
         4. Запишіть дату прописом: 14.08.1991."
       - "Common abbreviation errors and their corrections: *О.О.Н. → ООН (no dots
         in абревіатурах), *5 кг. → 5 кг (no dot after одиниці виміру), *22 березень →
         22 березня (родовий відмінок). Learners self-correct using the reference table."
-      - "Preview of next module: Подвійне заперечення (M80) — the Ukrainian system
+      - "Preview of next module: Подвійне заперечення (модуль №80) — the Ukrainian system
         of double (and triple) negation, which differs fundamentally from English."
 vocabulary_hints:
   required:
@@ -208,7 +208,7 @@ references:
       on creating abbreviated forms from словосполучення."
   - title: "Голуб Grade 6, p.52-53"
     notes: "Абревіація: what it is, how it works, essential Ukrainian абревіатури
-      (ЗСУ, ЗЗСО, ООН, МВФ, ТЮГ, ЦНАП, ЗМI, СБУ, ПАРЄ). Formation exercises."
+      (ЗСУ, ЗЗСО, ООН, МВФ, ТЮГ, ЦНАП, ЗМІ, СБУ, ПАРЄ). Formation exercises."
   - title: "Глазова Grade 10, p.143"
     notes: "Правила графічних скорочень слів: усічення, відкидання внутрішньої частини,
       позначення дефісом. Одиниці виміру."

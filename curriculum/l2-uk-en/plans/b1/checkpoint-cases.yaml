@@ -2,7 +2,7 @@ module: b1-063
 level: B1
 sequence: 63
 slug: checkpoint-cases
-version: '3.1.2'
+version: '3.1.3'
 title: "Контрольна робота 5"
 subtitle: "Перевірка знань: розширені відмінки, прийменники, числівники, займенники, житло"
 focus: review
@@ -95,4 +95,4 @@ grammar:
 register: науково-навчальний
 references:
   - title: "Review module"
-    notes: "Закріплює матеріал модулів 46-55."
+    notes: "Закріплює матеріал модулів №46–55."

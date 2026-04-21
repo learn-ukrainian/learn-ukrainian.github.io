@@ -2,7 +2,7 @@ module: b1-065
 level: B1
 sequence: 65
 slug: participles-passive
-version: '3.1'
+version: '3.2'
 title: "Пасивні дієприкметники"
 subtitle: "Ознака за дією, якої зазнає предмет"
 focus: grammar
@@ -14,7 +14,7 @@ objectives:
     (основа на приголосний та -и-/-i-/-ї-), and -т- (односкладові)"
   - "Learner can use passive participles in attributive position with correct agreement
     in рід, число, and відмінок (прочитана книга, збудований міст)"
-  - "Learner can connect passive participles to -но/-то forms from M23: прочитаний
+  - "Learner can connect passive participles to -но/-то forms from модуль №23: прочитаний
     → прочитано, збудований → збудовано"
   - "Learner can apply consonant alternations that occur in passive participle formation:
     носити → ношений, водити → воджений, просити → прошений"
@@ -39,7 +39,7 @@ content_outline:
         does NOT perform the action — someone else does: прочитана книга (книгу хтось
         прочитав), збудований міст (міст хтось збудував), вишита сорочка (сорочку
         хтось вишив)."
-      - "Contrast with active participles (M57): Active: квітучий сад — сад сам квітне
+      - "Contrast with active participles (модуль №57): Active: квітучий сад — сад сам квітне
         (subject acts). Passive: посаджений сад — сад хтось посадив (subject receives).
         Passive participles are FAR more productive and natural in Ukrainian than
         active present participles. This is the core participle type."
@@ -78,7 +78,7 @@ content_outline:
         + noun phrases through all cases."
       - "Short form (predicate use) vs full form (attributive use): Attributive: Прочитана
         книга лежить на столі. Predicate: Книга прочитана. (short form, not declined)
-        Connection to -но/-то: Книгу прочитано. (impersonal, M23)"
+        Connection to -но/-то: Книгу прочитано. (impersonal, модуль №23)"
   - section: "Дієприкметник чи прикметник?"
     words: 550
     points:
@@ -107,7 +107,7 @@ content_outline:
       - "Production: learners write 5-6 sentences describing a room, building, or
         object using passive participles: 'У кімнаті стоїть пофарбований стіл. На
         стіні висить намальована картина. На підлозі лежить вишитий килимок.'"
-  - section: "Підсумок та перехід до M59"
+  - section: "Підсумок та перехід до модуля №59"
     words: 500
     points:
       - "Summary: пасивні дієприкметники = ознака за дією іншого виконавця. Три суфікси:
@@ -119,7 +119,7 @@ content_outline:
         → add adjectival ending. Model examples for each path: прочитати (-а- stem →
         -н-), побачити (consonant stem → -ен-), мити (monosyllabic → -т-). Quick-reference
         alternation chart: д→дж, т→ч, з→ж, с→ш, б→бл."
-      - "Preview: M59 — Дієприкметниковий зворот. The participle + its dependent words
+      - "Preview: модуль №59 — Дієприкметниковий зворот. The participle + its dependent words
         form a phrase that requires specific punctuation rules."
 vocabulary_hints:
   required:

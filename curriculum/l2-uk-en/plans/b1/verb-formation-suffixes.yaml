@@ -2,7 +2,7 @@ module: b1-032
 level: B1
 sequence: 32
 slug: verb-formation-suffixes
-version: '3.0'
+version: '3.1'
 title: Творення дієслів
 subtitle: Префікси, суфікси та способи дієслівного словотворення
 focus: grammar
@@ -118,14 +118,14 @@ content_outline:
         each one, explain the prefix meaning, and determine the aspect (most prefixed
         verbs are доконаний). Then they form the imperfective pair where it exists:
         переписати → переписувати, розповісти → розповідати.'
-  - section: Підсумок та перехід до M25
+  - section: Підсумок та перехід до модуля №25
     words: 450
     points:
       - 'Summary: три способи творення дієслів, системний огляд префіксів (просторові,
         результативні, модифікаційні), суфікси (-ити, -увати, -нути), префіксально-суфіксальний
         спосіб. Self-check: Я можу визначити спосіб творення дієслова ✓/✗, Я розумію,
         як префікси змінюють значення ✓/✗, Я можу розкласти незнайоме дієслово ✓/✗.'
-      - 'Preview: M25 — Щоденне життя. Communication module that puts all Phase 3
+      - 'Preview: модуль №25 — Щоденне життя. Communication module that puts all Phase 3
         verb grammar into practice: conditionals for planning, imperatives for instructions,
         reflexive verbs for routines, prefixed verbs for describing daily actions.'
 vocabulary_hints:
