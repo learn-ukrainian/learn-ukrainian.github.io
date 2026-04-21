@@ -23,7 +23,26 @@ GEMINI_AUTH_ENV_VARS = (
     "GOOGLE_GENERATIVE_AI_API_KEY",
     "GOOGLE_APPLICATION_CREDENTIALS",
 )
-_RATE_LIMIT_MARKERS = ("429", "quota", "rate_limited")
+#: Stderr/stdout markers that mean "this rung is not going to answer —
+#: advance to the next rung instead of retrying the same one 3x". Lowercase;
+#: matched via case-insensitive ``in`` on the haystack.
+#:
+#: ``no capacity available`` is emitted by Gemini when the backend queue for
+#: the chosen model is full. Treating it as a retryable error (as happened
+#: before 2026-04-21 PM, #1384) produced the exact failure mode the user hit:
+#: 3 retries on rung 1 API, every one seeing "No capacity", never advancing
+#: to OAuth or to the flash model. Now classified as rate-limited so the
+#: ladder advances immediately.
+#:
+#: ``resource_exhausted`` is the GRPC status name for 429; Gemini sometimes
+#: prints it instead of a numeric 429 code.
+_RATE_LIMIT_MARKERS = (
+    "429",
+    "quota",
+    "rate_limited",
+    "resource_exhausted",
+    "no capacity available",
+)
 
 AuthMode = Literal["api", "oauth"]
 AttemptStatus = Literal["success", "rate_limited", "retryable_error", "timeout", "fatal"]

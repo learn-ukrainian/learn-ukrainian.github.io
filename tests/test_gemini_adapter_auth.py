@@ -436,3 +436,113 @@ class TestLadderAuthModeFiltering:
         import pytest
         with pytest.raises(ValueError, match="allowed_auth_modes"):
             build_gemini_ladder(allowed_auth_modes=())
+
+
+# ── Rate-limit classification (the bug that burned 15 min at 14:30) ──
+
+
+class TestRateLimitClassification:
+    """``is_gemini_rate_limited`` must return True for EVERY stderr that
+    means "this rung will not answer, advance." Missing patterns here
+    cause the ladder to retry the same rung 3× instead of advancing,
+    which is exactly how #1384 Phase 1 shipped broken on 2026-04-21.
+    """
+
+    def test_matches_429(self) -> None:
+        from ai_llm.fallback import is_gemini_rate_limited
+        assert is_gemini_rate_limited("429 Too Many Requests")
+
+    def test_matches_quota(self) -> None:
+        from ai_llm.fallback import is_gemini_rate_limited
+        assert is_gemini_rate_limited("Error: quota exceeded for project")
+
+    def test_matches_rate_limited_word(self) -> None:
+        from ai_llm.fallback import is_gemini_rate_limited
+        assert is_gemini_rate_limited("Response: rate_limited")
+
+    def test_matches_resource_exhausted(self) -> None:
+        """GRPC status name — Gemini prints this in place of 429."""
+        from ai_llm.fallback import is_gemini_rate_limited
+        assert is_gemini_rate_limited("RESOURCE_EXHAUSTED: ...")
+
+    def test_matches_no_capacity_available(self) -> None:
+        """The exact string Gemini emitted that burned 15 min on rung 1
+        at 14:30 today before this regression guard existed. A backend
+        queue-full signal — must classify as rate-limited so the ladder
+        advances to OAuth / flash / 2.5-pro instead of retrying the
+        same overloaded model-auth combo three times."""
+        from ai_llm.fallback import is_gemini_rate_limited
+        assert is_gemini_rate_limited(
+            "No capacity available for model gemini-3.1-pro-preview"
+        )
+
+    def test_case_insensitive(self) -> None:
+        """Gemini capitalizes inconsistently; matching must be robust."""
+        from ai_llm.fallback import is_gemini_rate_limited
+        assert is_gemini_rate_limited("No Capacity Available in region")
+        assert is_gemini_rate_limited("NO CAPACITY AVAILABLE")
+
+    def test_clean_success_is_not_rate_limited(self) -> None:
+        """Regression guard against an over-broad pattern. A normal
+        response must NOT flip to rate_limited just because it mentions
+        'capacity' or similar words in article content."""
+        from ai_llm.fallback import is_gemini_rate_limited
+        assert not is_gemini_rate_limited(
+            "The lesson explains Ukrainian phonetics clearly."
+        )
+        assert not is_gemini_rate_limited("")
+        assert not is_gemini_rate_limited(None)
+
+    def test_no_capacity_triggers_rung_advance_not_retry(
+        self, tmp_path: Path, monkeypatch
+    ) -> None:
+        """End-to-end behavior: when an API-rung outcome reports
+        'No capacity available', ``run_gemini_fallback_ladder`` MUST
+        advance to the next rung on the first occurrence. Before the
+        fix, it retried the same rung 3× (elapsed burned on transient
+        errors instead of actual work).
+        """
+        from ai_llm.cooldown import clear_api_cooldown
+        from ai_llm.fallback import (
+            AttemptOutcome,
+            run_gemini_fallback_ladder,
+        )
+
+        monkeypatch.setenv("LU_GEMINI_COOLDOWN_PATH", str(tmp_path / "cd.json"))
+        clear_api_cooldown()
+
+        # Simulate: rung 1 API returns "No capacity", rung 1 OAuth succeeds.
+        attempts_seen: list[tuple[str, int]] = []
+
+        def runner(rung, attempt_idx, timeout_s) -> AttemptOutcome:
+            attempts_seen.append((rung.auth_mode, rung.index))
+            if rung.auth_mode == "api":
+                return AttemptOutcome(
+                    status="rate_limited",
+                    elapsed_s=0.1,
+                    stderr_excerpt="No capacity available",
+                )
+            return AttemptOutcome(
+                status="success",
+                elapsed_s=0.1,
+                response_text="x" * 200,
+            )
+
+        # With no env override and no cooldown, ladder includes both modes.
+        result = run_gemini_fallback_ladder(
+            task_name="test-no-capacity",
+            preferred_model="gemini-3.1-pro-preview",
+            max_retries=3,
+            attempt_runner=runner,
+            logger=lambda _msg: None,  # silence output in tests
+            sleep_fn=lambda _s, _r: None,  # don't actually sleep
+            allowed_auth_modes=("api", "oauth"),
+        )
+        # Must have advanced to OAuth on the VERY FIRST rung-1 API attempt
+        # (not retried api 3×). Pattern observed: api once, then oauth.
+        assert result.ok, f"expected success, got {result.error_message}"
+        api_attempts = [a for a in attempts_seen if a[0] == "api"]
+        assert len(api_attempts) == 1, (
+            f"expected API rung attempted ONCE before advancing, got "
+            f"{len(api_attempts)} attempts: {attempts_seen}"
+        )
