@@ -502,9 +502,9 @@ def _execute_invocation_plan(
                 file_size == 0
                 or (proc is not None and proc.returncode == 0)
                 or (
-                proc is not None
-                and proc.returncode is not None
-                and proc.returncode < 0
+                    proc is not None
+                    and proc.returncode is not None
+                    and proc.returncode < 0
                 )
             ):
                 should_delete = True
@@ -609,14 +609,19 @@ def _invoke_gemini_with_fallback(
         allowed_auth_modes=_resolve_gemini_ladder_auth_modes(tool_config),
     )
 
-    last_attempt = call_result.attempts[-1] if call_result.attempts else None
-    record_model = call_result.model_used or (last_attempt.model if last_attempt else model)
+    last_attempt_record = call_result.attempts[-1] if call_result.attempts else None
+    # Failure-path usage records should attribute the last rung we actually ran,
+    # not the caller's preferred model.
+    record_model = (
+        call_result.model_used
+        or (last_attempt_record.model if last_attempt_record else model)
+    )
     stderr_excerpt = (
-        (last_attempt.note if last_attempt and last_attempt.note else None)
-        or (last_attempt.stderr_excerpt if last_attempt else None)
+        (last_attempt_record.note if last_attempt_record and last_attempt_record.note else None)
+        or (last_attempt_record.stderr_excerpt if last_attempt_record else None)
         or call_result.error_message
     )
-    returncode = last_attempt.returncode if last_attempt else None
+    returncode = last_attempt_record.returncode if last_attempt_record else None
 
     if call_result.ok:
         response_text = call_result.response_text or ""
@@ -679,7 +684,7 @@ def _invoke_gemini_with_fallback(
         raise RateLimitedError(agent_name, record_model, reason=(stderr_excerpt or "")[:200])
 
     if (
-        (last_attempt is not None and last_attempt.status == "timeout")
+        (last_attempt_record is not None and last_attempt_record.status == "timeout")
         or "no budget left" in (call_result.error_message or "").lower()
     ):
         record = _build_usage_record(

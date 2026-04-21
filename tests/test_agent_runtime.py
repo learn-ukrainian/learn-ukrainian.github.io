@@ -1564,6 +1564,7 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
     assert mock_popen.call_count == 3
     written = mock_write.call_args.args[0]
     assert written["outcome"] == "rate_limited"
+    assert written["model"] == "gemini-2.5-pro"
 
 
 def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
@@ -1616,6 +1617,7 @@ def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
 
     written = mock_write.call_args.args[0]
     assert written["outcome"] == "hard_timeout"
+    assert written["model"] == "gemini-3.1-pro-preview"
 
 
 # ---------------------------------------------------------------------------
