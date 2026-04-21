@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/euphony-advanced.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S523
+  type: unknown
+- id: S2
+  file: S2378
+  type: unknown
+- id: S3
+  file: S283
+  type: unknown
+- id: S4
+  file: S346
+  type: unknown
+- id: S5
+  file: S765
+  type: unknown
+- id: S6
+  file: S3123
+  type: unknown
+- id: S7
+  file: S599
+  type: unknown
+- id: S8
+  file: S282
+  type: unknown
+- id: S9
+  file: S2479
+  type: unknown

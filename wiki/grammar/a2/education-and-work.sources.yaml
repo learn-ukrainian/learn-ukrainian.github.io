@@ -1,0 +1,21 @@
+# Source registry for wiki/grammar/a2/education-and-work.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3166
+  type: unknown
+- id: S2
+  file: S5197
+  type: unknown
+- id: S3
+  file: S5258
+  type: unknown
+- id: S4
+  file: S3939
+  type: unknown
+- id: S6
+  file: S5132
+  type: unknown
+- id: S7
+  file: S1137
+  type: unknown

@@ -1,0 +1,15 @@
+# Source registry for wiki/grammar/a2/dozvillia-i-khobi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3251
+  type: unknown
+- id: S2
+  file: S4724
+  type: unknown
+- id: S3
+  file: S2441
+  type: unknown
+- id: S5
+  file: S3371
+  type: unknown

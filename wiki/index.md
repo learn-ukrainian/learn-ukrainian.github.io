@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 82
-**Total words:** 142,374
+**Total articles:** 88
+**Total words:** 154,630
 
 ## Figures
 
@@ -33,6 +33,12 @@ Auto-generated index of compiled wiki articles.
 - [Граматика A2: Студентові, сестрі, дитині](grammar/a2/dative-nouns.md) (2,037 words)
 - [Граматика A2: Мені, тобі, йому...](grammar/a2/dative-pronouns.md) (1,837 words)
 - [Граматика A2: Допомагати, дякувати, дзвонити](grammar/a2/dative-verbs.md) (1,781 words)
+- [Граматика A2: Чим ти захоплюєшся? Дозвілля та хобі](grammar/a2/dozvillia-i-khobi.md) (1,821 words)
+- [Граматика A2: Навчання і робота](grammar/a2/education-and-work.md) (2,043 words)
+- [Граматика A2: Милозвучність у складних контекстах](grammar/a2/euphony-advanced.md) (1,938 words)
+- [Граматика A2: Перші кроки в А2](grammar/a2/foundations-practice.md) (2,061 words)
+- [Граматика A2: Родовий відмінок прикметників і займенників (Мого друга, цієї книги)](grammar/a2/genitive-adjectives-pronouns.md) (2,283 words)
+- [Граматика A2: Скільки? Котра година? Яке число?](grammar/a2/genitive-dates-numbers.md) (2,110 words)
 - [Граматика A2: Синтаксис і відмінки](grammar/a2/metalanguage-syntax-cases.md) (2,307 words)
 
 ## Linguistics
