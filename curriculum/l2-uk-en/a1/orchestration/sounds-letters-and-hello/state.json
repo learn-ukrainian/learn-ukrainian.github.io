@@ -12,23 +12,35 @@
       "ts": "2026-04-21T15:57:25.701735+00:00"
     },
     "skeleton": {
-      "status": "complete",
+      "status": "stale",
       "ts": "2026-04-21T16:01:48.759985+00:00",
-      "plan_hash": "55b2bbfef413a7f5777530c221bb1989aa6d1b3770792e37428c2a3b89c85e54"
+      "plan_hash": "55b2bbfef413a7f5777530c221bb1989aa6d1b3770792e37428c2a3b89c85e54",
+      "previous_status": "complete",
+      "stale_reason": "plan hash drift: skeleton -> skeleton, write, exercises, annotate, verify",
+      "stale_detected_at": "2026-04-21T17:53:48.924230+00:00",
+      "current_plan_hash": "5e700ddd05369aeba2ae27d35374cd3178a358f499207cf98bc0e50e1394e9d9"
     },
     "pre-verify": {
       "status": "complete",
       "ts": "2026-04-21T16:06:10.185035+00:00"
     },
     "write": {
-      "status": "complete",
+      "status": "stale",
       "ts": "2026-04-21T17:40:17.337318+00:00",
-      "plan_hash": "55b2bbfef413a7f5777530c221bb1989aa6d1b3770792e37428c2a3b89c85e54"
+      "plan_hash": "55b2bbfef413a7f5777530c221bb1989aa6d1b3770792e37428c2a3b89c85e54",
+      "previous_status": "complete",
+      "stale_reason": "plan hash drift: skeleton -> skeleton, write, exercises, annotate, verify",
+      "stale_detected_at": "2026-04-21T17:53:48.924230+00:00",
+      "current_plan_hash": "5e700ddd05369aeba2ae27d35374cd3178a358f499207cf98bc0e50e1394e9d9"
     },
     "exercises": {
-      "status": "complete",
+      "status": "stale",
       "ts": "2026-04-21T16:16:51.161499+00:00",
-      "plan_hash": "55b2bbfef413a7f5777530c221bb1989aa6d1b3770792e37428c2a3b89c85e54"
+      "plan_hash": "55b2bbfef413a7f5777530c221bb1989aa6d1b3770792e37428c2a3b89c85e54",
+      "previous_status": "complete",
+      "stale_reason": "plan hash drift: skeleton -> skeleton, write, exercises, annotate, verify",
+      "stale_detected_at": "2026-04-21T17:53:48.924230+00:00",
+      "current_plan_hash": "5e700ddd05369aeba2ae27d35374cd3178a358f499207cf98bc0e50e1394e9d9"
     },
     "activities": {
       "status": "complete",
@@ -43,9 +55,13 @@
       "ts": "2026-04-21T17:45:13.104844+00:00"
     },
     "annotate": {
-      "status": "complete",
+      "status": "stale",
       "ts": "2026-04-21T17:40:21.946060+00:00",
-      "plan_hash": "55b2bbfef413a7f5777530c221bb1989aa6d1b3770792e37428c2a3b89c85e54"
+      "plan_hash": "55b2bbfef413a7f5777530c221bb1989aa6d1b3770792e37428c2a3b89c85e54",
+      "previous_status": "complete",
+      "stale_reason": "plan hash drift: skeleton -> skeleton, write, exercises, annotate, verify",
+      "stale_detected_at": "2026-04-21T17:53:48.924230+00:00",
+      "current_plan_hash": "5e700ddd05369aeba2ae27d35374cd3178a358f499207cf98bc0e50e1394e9d9"
     },
     "vocab": {
       "status": "complete",
@@ -56,9 +72,13 @@
       "ts": "2026-04-21T16:25:26.926531+00:00"
     },
     "verify": {
-      "status": "failed",
+      "status": "stale",
       "ts": "2026-04-21T17:45:13.031306+00:00",
-      "plan_hash": "55b2bbfef413a7f5777530c221bb1989aa6d1b3770792e37428c2a3b89c85e54"
+      "plan_hash": "55b2bbfef413a7f5777530c221bb1989aa6d1b3770792e37428c2a3b89c85e54",
+      "previous_status": "failed",
+      "stale_reason": "plan hash drift: skeleton -> skeleton, write, exercises, annotate, verify",
+      "stale_detected_at": "2026-04-21T17:53:48.924230+00:00",
+      "current_plan_hash": "5e700ddd05369aeba2ae27d35374cd3178a358f499207cf98bc0e50e1394e9d9"
     },
     "review": {
       "status": "failed",
