@@ -1,0 +1,27 @@
+# Source registry for wiki/pedagogy/a1/what-time.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3366
+  type: unknown
+- id: S2
+  file: S3193
+  type: unknown
+- id: S3
+  file: S1146
+  type: unknown
+- id: S4
+  file: S1583
+  type: unknown
+- id: S5
+  file: S1916
+  type: unknown
+- id: S6
+  file: S3268
+  type: unknown
+- id: S7
+  file: S3195
+  type: unknown
+- id: S9
+  file: S3939
+  type: unknown

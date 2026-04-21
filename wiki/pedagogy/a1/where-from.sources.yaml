@@ -1,0 +1,30 @@
+# Source registry for wiki/pedagogy/a1/where-from.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1566
+  type: unknown
+- id: S2
+  file: S2215
+  type: unknown
+- id: S3
+  file: S2416
+  type: unknown
+- id: S5
+  file: S1554
+  type: unknown
+- id: S6
+  file: S5186
+  type: unknown
+- id: S7
+  file: S5247
+  type: unknown
+- id: S8
+  file: S2415
+  type: unknown
+- id: S9
+  file: S319
+  type: unknown
+- id: S10
+  file: S3809
+  type: unknown

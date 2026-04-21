@@ -1,0 +1,12 @@
+# Source registry for wiki/pedagogy/a1/where-is-it.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1873
+  type: unknown
+- id: S2
+  file: S1800
+  type: unknown
+- id: S6
+  file: S1801
+  type: unknown
