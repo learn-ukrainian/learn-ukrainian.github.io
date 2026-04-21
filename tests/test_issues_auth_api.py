@@ -171,14 +171,13 @@ def test_runtime_auth_reports_api_key_presence(monkeypatch, tmp_path):
     )
 
 
-def test_runtime_auth_invalid_mode_defaults_to_auto(monkeypatch, tmp_path):
+def test_runtime_auth_invalid_mode_uses_default_resolution(monkeypatch, tmp_path):
     monkeypatch.setenv("GEMINI_AUTH_MODE", "bogus-value")
     fake_home = tmp_path
     monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: fake_home))
 
     body = client.get("/api/runtime/auth").json()
-    # resolve_gemini_auth_mode normalizes unknown values to "auto".
-    assert body["gemini"]["auth_mode"] == "auto"
+    assert body["gemini"]["auth_mode"] == "api"
     # Raw is NOT echoed — just flagged as invalid with a length.
     assert body["gemini"]["auth_mode_raw_valid"] is False
     assert body["gemini"]["auth_mode_raw_length"] == len("bogus-value")

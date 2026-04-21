@@ -1621,8 +1621,9 @@ def test_gemini_adapter_workspace_write_yolo(tmp_path):
 
 
 @patch.dict("os.environ", {}, clear=True)
-def test_resolve_gemini_auth_mode_defaults_to_auto():
-    assert resolve_gemini_auth_mode() == "auto"
+def test_resolve_gemini_auth_mode_defaults_to_api_without_oauth_creds(tmp_path, monkeypatch):
+    monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
+    assert resolve_gemini_auth_mode() == "api"
 
 
 @patch.dict("os.environ", {"GEMINI_AUTH_MODE": "subscription"}, clear=True)
@@ -1661,7 +1662,10 @@ def test_gemini_adapter_api_mode_preserves_api_key_env(tmp_path):
 
 
 @patch.dict("os.environ", {"GEMINI_AUTH_MODE": "auto"}, clear=True)
-def test_gemini_adapter_auto_mode_preserves_existing_env_behavior(tmp_path):
+def test_gemini_adapter_auto_mode_prefers_subscription_when_oauth_creds_exist(tmp_path, monkeypatch):
+    (tmp_path / ".gemini").mkdir(parents=True)
+    (tmp_path / ".gemini" / "oauth_creds.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
     adapter = GeminiAdapter()
     plan = adapter.build_invocation(
         prompt="hello",
@@ -1672,12 +1676,18 @@ def test_gemini_adapter_auto_mode_preserves_existing_env_behavior(tmp_path):
         session_id=None,
         tool_config=None,
     )
-    assert plan.env_unsets == ()
+    assert plan.env_unsets == (
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_GENERATIVE_AI_API_KEY",
+        "GOOGLE_APPLICATION_CREDENTIALS",
+    )
 
 
 @patch.dict("os.environ", {"GEMINI_AUTH_MODE": "bogus"}, clear=True)
-def test_resolve_gemini_auth_mode_invalid_value_falls_back_to_auto():
-    assert resolve_gemini_auth_mode() == "auto"
+def test_resolve_gemini_auth_mode_invalid_value_uses_default_resolution(tmp_path, monkeypatch):
+    monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
+    assert resolve_gemini_auth_mode() == "api"
 
 
 @patch.dict("os.environ", {"GEMINI_AUTH_MODE": "api-key"}, clear=True)

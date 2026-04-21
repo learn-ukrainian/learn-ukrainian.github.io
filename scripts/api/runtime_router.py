@@ -267,8 +267,9 @@ async def runtime_auth():
     Shape::
         {
           "gemini": {
-            "auth_mode":          "subscription" | "api" | "auto",
-            "auth_mode_raw":      "<env var value as given>",
+            "auth_mode":          "subscription" | "api",
+            "auth_mode_raw_valid": true,
+            "auth_mode_raw_length": 12,
             "api_key_present":    false,
             "google_key_present": false,
             "google_oauth_cred":  true,   # ~/.gemini/oauth_creds.json readable
@@ -284,7 +285,10 @@ async def runtime_auth():
     from datetime import UTC, datetime
     from pathlib import Path as _Path
 
-    from agent_runtime.adapters.gemini import resolve_gemini_auth_mode
+    from agent_runtime.adapters.gemini import (
+        has_gemini_oauth_credentials,
+        resolve_gemini_auth_mode,
+    )
 
     env = os.environ
     home = _Path.home()
@@ -306,7 +310,7 @@ async def runtime_auth():
         "auth_mode_raw_length": len(raw_mode),
         "api_key_present": bool(env.get("GEMINI_API_KEY")),
         "google_key_present": bool(env.get("GOOGLE_API_KEY")),
-        "google_oauth_cred": (home / ".gemini" / "oauth_creds.json").is_file(),
+        "google_oauth_cred": has_gemini_oauth_credentials(home),
     }
 
     # Claude is subscription-only via the CLI; we still surface whether a

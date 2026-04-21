@@ -49,6 +49,12 @@ _TRANSIENT_ERROR_RE = re.compile("|".join(_TRANSIENT_ERROR_PATTERNS), re.IGNOREC
 _AUTH_MODE_VALUES = frozenset({"auto", "subscription", "api"})
 
 
+def has_gemini_oauth_credentials(home: Path | None = None) -> bool:
+    """Return True when Gemini CLI OAuth credentials are present on disk."""
+    base = home if home is not None else Path.home()
+    return (base / ".gemini" / "oauth_creds.json").is_file()
+
+
 def _normalize_gemini_auth_mode(raw: str | None) -> str:
     """Normalize CLI/env auth mode strings to the canonical runtime values."""
     value = (raw or "auto").strip().lower()
@@ -66,35 +72,23 @@ def resolve_gemini_auth_mode(
 ) -> str:
     """Resolve the effective Gemini auth mode for this invocation.
 
-    Explicit values (``subscription``, ``api``, ``auto``) are honored as-is.
-    An unset ``GEMINI_AUTH_MODE`` defaults to ``auto``. Invalid values also
-    degrade to ``auto`` for backward compatibility.
+    Explicit ``subscription`` / ``api`` values are honored. Unset,
+    ``auto``, and invalid values all use the same default heuristic
+    from #1384 Phase 1:
 
-    ``auto`` semantics (#1384): API-first (faster), auto-fall to
-    subscription ONLY when the project's API cooldown is active (set by
-    a prior 429 response, lasts 1h). No probe calls — cooldown is driven
-    by actual rate-limit signals, never by a liveness check, because
-    Gemini API has a small daily call budget (~150) that we refuse to
-    burn on anything other than real work.
+      - Gemini OAuth creds present on disk → ``subscription``
+      - no Gemini OAuth creds present      → ``api``
 
-      - cooldown active (recent 429)     → ``subscription``
-      - cooldown inactive (default case) → ``api``
-
-    Users can force either mode explicitly. ``cooldown_active`` is
-    injectable for tests; production code leaves it as ``None`` and the
-    cooldown state is read from disk.
+    ``cooldown_active`` is retained for call-site compatibility with the
+    earlier API-cooldown design, but the adapter path no longer consults
+    it when picking the default auth mode.
     """
+    _ = cooldown_active
     source = os.environ if env is None else env
     mode = _normalize_gemini_auth_mode(source.get("GEMINI_AUTH_MODE"))
     if mode != "auto":
         return mode
-    if cooldown_active is None:
-        # Local import to avoid a sys.path-order edge case during package
-        # init — adapters can be imported before ai_llm is resolved on
-        # some entry points.
-        from ai_llm.cooldown import is_api_cooldown_active
-        cooldown_active = is_api_cooldown_active()
-    return "subscription" if cooldown_active else "api"
+    return "subscription" if has_gemini_oauth_credentials() else "api"
 
 
 class GeminiAdapter:
