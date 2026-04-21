@@ -55,18 +55,9 @@ DEFAULT_PLAN_ROOTS = (
     Path("curriculum/l2-uk-en/plans/b1"),
 )
 
-
-def _styled_scalar(original: Any, text: str) -> Any:
-    """Rebuild a ruamel scalar while preserving quote style when possible."""
-    if not isinstance(original, str):
-        return text
-    scalar_type = type(original)
-    if scalar_type is str:
-        return text
-    try:
-        return scalar_type(text)
-    except Exception:
-        return text
+VERSION_LINE_RE = re.compile(
+    r"^(?P<prefix>\s*version:\s*)(?P<quote>['\"]?)(?P<value>[^#\n]+?)(?P=quote)(?P<suffix>\s*(?:#.*)?\n?)$"
+)
 
 
 def _parse_ref(ref: str) -> tuple[int, int | None]:
@@ -154,54 +145,74 @@ def _should_skip_path(path: tuple[str, ...]) -> bool:
 
 
 def _walk_and_fix(node: Any, path: tuple[str, ...] = ()) -> int:
+    raise NotImplementedError("_walk_and_fix should not be used directly")
+
+
+def _replace_line(lines: list[str], line_no: int, transform: Any) -> bool:
+    original = lines[line_no]
+    updated = transform(original)
+    if updated == original:
+        return False
+    lines[line_no] = updated
+    return True
+
+
+def _apply_string_updates(node: Any, lines: list[str], path: tuple[str, ...] = ()) -> int:
     changes = 0
     if isinstance(node, list):
         for index, value in enumerate(node):
             child_path = (*path, "[]")
             if isinstance(value, str) and not _should_skip_path(child_path):
-                updated = replace_latin_module_refs(value)
-                if updated != value:
-                    node[index] = _styled_scalar(value, updated)
+                line_no = node.lc.item(index)[0]
+                if _replace_line(lines, line_no, replace_latin_module_refs):
                     changes += 1
             else:
-                changes += _walk_and_fix(value, child_path)
+                changes += _apply_string_updates(value, lines, child_path)
         return changes
 
     if isinstance(node, dict):
         for key, value in node.items():
             child_path = (*path, str(key))
             if isinstance(value, str) and not _should_skip_path(child_path):
-                updated = replace_latin_module_refs(value)
-                if updated != value:
-                    node[key] = _styled_scalar(value, updated)
+                line_no = node.lc.value(key)[0]
+                if _replace_line(lines, line_no, replace_latin_module_refs):
                     changes += 1
             else:
-                changes += _walk_and_fix(value, child_path)
+                changes += _apply_string_updates(value, lines, child_path)
         return changes
 
     return 0
 
 
+def _replace_version_line(line: str, new_version: str) -> str:
+    match = VERSION_LINE_RE.match(line)
+    if not match:
+        raise ValueError(f"Could not parse version line: {line!r}")
+    return (
+        f"{match.group('prefix')}{match.group('quote')}{new_version}"
+        f"{match.group('quote')}{match.group('suffix')}"
+    )
+
+
 def fix_plan_file(plan_path: Path, *, write: bool = False) -> tuple[int, str | None, str | None]:
     yaml = YAML()
-    yaml.preserve_quotes = True
-    yaml.width = 4096
-
-    document = yaml.load(plan_path.read_text("utf-8"))
+    original_text = plan_path.read_text("utf-8")
+    document = yaml.load(original_text)
     if not isinstance(document, dict):
         return 0, None, None
 
-    changes = _walk_and_fix(document)
+    lines = original_text.splitlines(keepends=True)
+    changes = _apply_string_updates(document, lines)
     if changes == 0:
         return 0, None, None
 
     old_version = str(document.get("version", "1.0.0"))
     new_version = _bump_version(old_version)
-    document["version"] = _styled_scalar(document.get("version"), new_version)
+    version_line_no = document.lc.value("version")[0]
+    lines[version_line_no] = _replace_version_line(lines[version_line_no], new_version)
 
     if write:
-        with plan_path.open("w", encoding="utf-8") as handle:
-            yaml.dump(document, handle)
+        plan_path.write_text("".join(lines), encoding="utf-8")
 
     return changes, old_version, new_version
 
