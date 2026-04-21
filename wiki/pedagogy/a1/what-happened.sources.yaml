@@ -1,0 +1,21 @@
+# Source registry for wiki/pedagogy/a1/what-happened.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1815
+  type: unknown
+- id: S2
+  file: S3215
+  type: unknown
+- id: S3
+  file: S686
+  type: unknown
+- id: S4
+  file: S1921
+  type: unknown
+- id: S5
+  file: S1902
+  type: unknown
+- id: S8
+  file: S3912
+  type: unknown

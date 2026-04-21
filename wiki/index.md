@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 44
-**Total words:** 70,771
+**Total articles:** 51
+**Total words:** 81,243
 
 ## Figures
 
@@ -59,6 +59,13 @@ Auto-generated index of compiled wiki articles.
 - [Педагогіка A1: Stress And Melody](pedagogy/a1/stress-and-melody.md) (1,419 words)
 - [Педагогіка A1: Things Have Gender](pedagogy/a1/things-have-gender.md) (1,649 words)
 - [Педагогіка A1: This And That](pedagogy/a1/this-and-that.md) (1,657 words)
+- [Педагогіка A1: Transport](pedagogy/a1/transport.md) (1,570 words)
+- [Педагогіка A1: Verbs Group One](pedagogy/a1/verbs-group-one.md) (1,596 words)
+- [Педагогіка A1: Verbs Group Two](pedagogy/a1/verbs-group-two.md) (1,494 words)
+- [Педагогіка A1: Weather](pedagogy/a1/weather.md) (1,586 words)
+- [Педагогіка A1: What Happened](pedagogy/a1/what-happened.md) (1,491 words)
+- [Педагогіка A1: What I Like](pedagogy/a1/what-i-like.md) (1,470 words)
+- [Педагогіка A1: What Is It Like](pedagogy/a1/what-is-it-like.md) (1,265 words)
 
 ## Periods
 

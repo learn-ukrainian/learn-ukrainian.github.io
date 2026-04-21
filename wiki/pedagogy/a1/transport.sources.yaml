@@ -1,0 +1,24 @@
+# Source registry for wiki/pedagogy/a1/transport.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2388
+  type: unknown
+- id: S2
+  file: S1731
+  type: unknown
+- id: S4
+  file: S2436
+  type: unknown
+- id: S5
+  file: S3158
+  type: unknown
+- id: S6
+  file: S2445
+  type: unknown
+- id: S7
+  file: S3058
+  type: unknown
+- id: S8
+  file: S1427
+  type: unknown

@@ -1,0 +1,21 @@
+# Source registry for wiki/pedagogy/a1/what-is-it-like.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3164
+  type: unknown
+- id: S2
+  file: S3393
+  type: unknown
+- id: S3
+  file: S2302
+  type: unknown
+- id: S4
+  file: S2428
+  type: unknown
+- id: S5
+  file: S3079
+  type: unknown
+- id: S6
+  file: S1803
+  type: unknown

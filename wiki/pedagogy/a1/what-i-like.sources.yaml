@@ -1,0 +1,27 @@
+# Source registry for wiki/pedagogy/a1/what-i-like.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3211
+  type: unknown
+- id: S2
+  file: S3908
+  type: unknown
+- id: S3
+  file: S2434
+  type: unknown
+- id: S4
+  file: S2530
+  type: unknown
+- id: S7
+  file: S2388
+  type: unknown
+- id: S8
+  file: S684
+  type: unknown
+- id: S9
+  file: S2291
+  type: unknown
+- id: S10
+  file: S3149
+  type: unknown

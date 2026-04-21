@@ -1,0 +1,12 @@
+# Source registry for wiki/pedagogy/a1/weather.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2256
+  type: unknown
+- id: S2
+  file: S2511
+  type: unknown
+- id: S4
+  file: ext-article-0
+  type: external

@@ -1,0 +1,33 @@
+# Source registry for wiki/pedagogy/a1/verbs-group-one.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S684
+  type: unknown
+- id: S2
+  file: S3218
+  type: unknown
+- id: S3
+  file: S1148
+  type: unknown
+- id: S5
+  file: S3823
+  type: unknown
+- id: S6
+  file: S3913
+  type: unknown
+- id: S7
+  file: S1813
+  type: unknown
+- id: S9
+  file: S3211
+  type: unknown
+- id: S10
+  file: S685
+  type: unknown
+- id: S12
+  file: ext-article-1
+  type: external
+- id: S13
+  file: ext-article-2
+  type: external
