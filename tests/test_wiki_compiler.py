@@ -280,6 +280,35 @@ class TestCompileArticleSkipLogic:
         assert "id: S1" in registry_text
         assert "file: ext-foo-1" in registry_text
 
+    def test_compile_does_not_leave_md_without_sidecar_on_registry_failure(self, tmp_path):
+        from wiki.compiler import compile_article
+
+        prompts_dir = tmp_path / "prompts"
+        prompts_dir.mkdir()
+        (prompts_dir / "compile_article.md").write_text(
+            "Prompt: {topic} {slug} {domain} {tracks} {sources} {source_ids} {date}"
+        )
+        wiki_dir = tmp_path / "wiki"
+
+        with patch("wiki.compiler.PROMPTS_DIR", prompts_dir), \
+             patch("wiki.compiler.WIKI_DIR", wiki_dir), \
+             patch("wiki.compiler.is_compiled", return_value=False), \
+             patch("wiki.compiler.mark_compiled") as mark_compiled, \
+             patch("wiki.compiler._call_gemini", return_value="# Title\n\nSentence [S1].\n"), \
+             patch("wiki.compiler.save_sources_registry", side_effect=OSError("disk full")):
+            with pytest.raises(OSError, match="disk full"):
+                compile_article(
+                    topic="Test",
+                    slug="test",
+                    domain="folk",
+                    sources=[{"chunk_id": "ext-foo-1", "text": "text"}],
+                )
+
+        assert not (wiki_dir / "folk" / "test.md").exists()
+        assert not (wiki_dir / "folk" / "test.sources.yaml").exists()
+        assert list((wiki_dir / "folk").glob("*.tmp")) == []
+        mark_compiled.assert_not_called()
+
 
 class TestCompileCommand:
     def test_skip_does_not_log_compile_or_update_index(self):

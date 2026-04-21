@@ -4,9 +4,11 @@ This is the core engine: given a topic and source chunks, it builds a prompt,
 calls Gemini, and writes the resulting markdown article to wiki/.
 """
 
+import contextlib
 import os
 import re
 import shutil
+import tempfile
 import time
 from pathlib import Path
 
@@ -102,8 +104,12 @@ def compile_article(
     # Write the article
     article_path = WIKI_DIR / domain / f"{slug}.md"
     article_path.parent.mkdir(parents=True, exist_ok=True)
-    article_path.write_text(response.strip() + "\n", encoding="utf-8")
-    _write_sources_registry(article_path, sources, response, force=force)
+    _write_article_bundle_atomic(
+        article_path,
+        article_text=response.strip() + "\n",
+        sources=sources,
+        force=force,
+    )
 
     word_count = len(response.split())
     print(f"  ✅ Wrote {article_path.relative_to(WIKI_DIR)} ({word_count} words)")
@@ -220,14 +226,14 @@ def _format_sources(sources: list[dict]) -> str:
     return "\n\n---\n\n".join(parts)
 
 
-def _write_sources_registry(
+def _build_sources_registry(
     article_path: Path,
     sources: list[dict],
     article_text: str,
     *,
     force: bool = False,
-) -> None:
-    """Emit a sibling sources registry for freshly compiled articles.
+) -> WikiSourcesRegistry | None:
+    """Build the sibling sources registry for a compiled article.
 
     **Prompt↔registry numbering invariant**: the prompt labels sources
     positionally (Source 1, Source 2, ... Source N via ``_format_sources``
@@ -255,15 +261,15 @@ def _write_sources_registry(
         seen.add(chunk_id)
 
     if not source_files:
-        return
+        return None
 
     registry_path = registry_path_for(article_path)
-    if force and registry_path.exists():
-        # Stale IDs from a previous run will mis-map S# ↔ chunk when the
-        # current chunk set differs. Clean slate for --force.
-        registry_path.unlink()
-
-    registry = assign_source_ids(source_files, existing=load_sources_registry(registry_path))
+    existing_registry = (
+        WikiSourcesRegistry(sources=[])
+        if force
+        else load_sources_registry(registry_path)
+    )
+    registry = assign_source_ids(source_files, existing=existing_registry)
     cited_ids = set(extract_short_citation_ids(article_text))
     if cited_ids:
         registry = WikiSourcesRegistry(
@@ -271,14 +277,85 @@ def _write_sources_registry(
         )
 
     if not registry.sources:
-        return
+        return None
 
-    save_sources_registry(registry_path, registry, article_path=article_path)
     issues = validate_sources_registry(article_text, registry)
     if issues:
         print("  ⚠️  Sources registry validation issues:")
         for issue in issues[:5]:
             print(f"     - {issue}")
+    return registry
+
+
+def _write_article_bundle_atomic(
+    article_path: Path,
+    *,
+    article_text: str,
+    sources: list[dict],
+    force: bool = False,
+) -> None:
+    """Write article + sidecar via temp files so markdown lands last."""
+    registry = _build_sources_registry(
+        article_path,
+        sources,
+        article_text,
+        force=force,
+    )
+    article_tmp = _write_temp_text(article_path, article_text)
+    registry_tmp: Path | None = None
+
+    try:
+        if registry is not None:
+            registry_tmp = _temp_output_path(registry_path_for(article_path))
+            save_sources_registry(registry_tmp, registry, article_path=article_path)
+            _fsync_file(registry_tmp)
+            os.replace(registry_tmp, registry_path_for(article_path))
+
+        os.replace(article_tmp, article_path)
+        _fsync_directory(article_path.parent)
+    except Exception:
+        for temp_path in (article_tmp, registry_tmp):
+            if temp_path is not None:
+                with contextlib.suppress(OSError):
+                    temp_path.unlink()
+        raise
+
+
+def _temp_output_path(path: Path) -> Path:
+    """Allocate a temp path next to the final artifact."""
+    fd, raw_path = tempfile.mkstemp(
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        dir=path.parent,
+    )
+    os.close(fd)
+    return Path(raw_path)
+
+
+def _write_temp_text(path: Path, text: str) -> Path:
+    """Write + fsync a temp text file before atomic replace."""
+    temp_path = _temp_output_path(path)
+    temp_path.write_text(text, encoding="utf-8")
+    _fsync_file(temp_path)
+    return temp_path
+
+
+def _fsync_file(path: Path) -> None:
+    """Flush a fully-written file before exposing it via rename."""
+    with open(path, "rb") as handle:
+        os.fsync(handle.fileno())
+
+
+def _fsync_directory(path: Path) -> None:
+    """Flush directory metadata after atomic replaces."""
+    flags = getattr(os, "O_RDONLY", 0)
+    if hasattr(os, "O_DIRECTORY"):
+        flags |= os.O_DIRECTORY
+    dir_fd = os.open(path, flags)
+    try:
+        os.fsync(dir_fd)
+    finally:
+        os.close(dir_fd)
 
 
 def _clean_chunk_text(chunk: dict) -> str:
