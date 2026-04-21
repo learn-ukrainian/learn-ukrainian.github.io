@@ -282,24 +282,75 @@ class TestCompileArticleSkipLogic:
 
 
 class TestCompileCommand:
+    def test_compiled_article_is_ready_with_valid_sources_sidecar(self, tmp_path):
+        from wiki.compile import _compiled_article_is_ready
+
+        wiki_dir = tmp_path / "wiki"
+        article_dir = wiki_dir / "pedagogy" / "a1"
+        article_dir.mkdir(parents=True)
+        (article_dir / "demo.md").write_text("# Demo\n\nSentence [S1].\n", encoding="utf-8")
+        (article_dir / "demo.sources.yaml").write_text(
+            "sources:\n"
+            "  - id: S1\n"
+            "    file: ext-demo-1\n"
+            "    type: external\n",
+            encoding="utf-8",
+        )
+
+        with patch("wiki.compile.WIKI_DIR", wiki_dir), \
+             patch("wiki.state.is_compiled", return_value=True), \
+             patch("wiki.compile._get_domain", return_value="pedagogy/a1"):
+            assert _compiled_article_is_ready("a1", "demo") is True
+
+    def test_compiled_article_is_not_ready_when_citations_lack_sidecar(self, tmp_path):
+        from wiki.compile import _compiled_article_is_ready
+
+        wiki_dir = tmp_path / "wiki"
+        article_dir = wiki_dir / "pedagogy" / "a1"
+        article_dir.mkdir(parents=True)
+        (article_dir / "demo.md").write_text("# Demo\n\nSentence [S1].\n", encoding="utf-8")
+
+        with patch("wiki.compile.WIKI_DIR", wiki_dir), \
+             patch("wiki.state.is_compiled", return_value=True), \
+             patch("wiki.compile._get_domain", return_value="pedagogy/a1"):
+            assert _compiled_article_is_ready("a1", "demo") is False
+
     def test_skip_does_not_log_compile_or_update_index(self):
         from wiki.compile import cmd_compile_one
 
-        article_path = os.path.join("wiki", "pedagogy", "a1", "demo.md")
-
         with patch("wiki.compile._get_domain", return_value="pedagogy/a1"), \
-             patch("wiki.compile.gather_discovery_sources", return_value={}), \
-             patch("wiki.compile.enrich_sources", return_value=[{"chunk_id": "c1", "text": "text"}]), \
-             patch("wiki.compile._slug_to_topic", return_value="Demo"), \
-             patch("wiki.compile.compile_article", return_value=Path(article_path)), \
+             patch("wiki.compile._compiled_article_is_ready", return_value=True), \
+             patch("wiki.compile.gather_discovery_sources") as gather_sources, \
+             patch("wiki.compile.enrich_sources") as enrich_sources, \
+             patch("wiki.compile.compile_article") as compile_article, \
              patch("wiki.compile.update_index") as update_index, \
-             patch("wiki.compile.log_event") as log_event, \
-             patch("wiki.state.is_compiled", return_value=True):
+             patch("wiki.compile.log_event") as log_event:
             ok = cmd_compile_one("a1", "demo")
 
         assert ok is True
+        gather_sources.assert_not_called()
+        enrich_sources.assert_not_called()
+        compile_article.assert_not_called()
         update_index.assert_not_called()
         log_event.assert_not_called()
+
+    def test_compile_all_skips_ready_articles_before_cmd_compile_one(self):
+        from wiki.compile import cmd_compile_all
+
+        with patch("wiki.compile.list_discovery_slugs", return_value=["done", "todo"]), \
+             patch("wiki.compile._compiled_article_is_ready", side_effect=[True, False]), \
+             patch("wiki.compile._get_domain", return_value="pedagogy/a1"), \
+             patch("wiki.compile.cmd_compile_one", return_value=True) as compile_one:
+            cmd_compile_all("a1")
+
+        compile_one.assert_called_once_with(
+            "a1",
+            "todo",
+            force=False,
+            dry_run=False,
+            review=False,
+            dim_review=False,
+        )
 
     def test_dim_review_flag_runs_shadow_review_and_writes_report(self):
         from wiki.compile import cmd_compile_one
