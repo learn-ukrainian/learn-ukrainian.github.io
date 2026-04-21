@@ -77,17 +77,33 @@ class CallResult:
         return self.response_text is not None
 
 
-def build_gemini_ladder(preferred_model: str = PRIMARY_GEMINI_MODEL) -> list[GeminiRung]:
-    """Build the ordered `(model, auth)` ladder for one fresh Gemini call."""
+def build_gemini_ladder(
+    preferred_model: str = PRIMARY_GEMINI_MODEL,
+    *,
+    allowed_auth_modes: tuple[AuthMode, ...] = ("api", "oauth"),
+) -> list[GeminiRung]:
+    """Build the ordered `(model, auth)` ladder for one fresh Gemini call.
+
+    ``allowed_auth_modes`` filters which auth modes appear in the ladder.
+    Used by callers that know one mode is exhausted (e.g. API cooldown
+    active ⇒ pass ``("oauth",)`` to skip all API rungs and avoid burning
+    retries on a key that's guaranteed to 429). The rung indices in the
+    result are renumbered to the filtered total so log lines like
+    ``Rung 1/3`` stay accurate.
+    """
+    if not allowed_auth_modes:
+        raise ValueError("allowed_auth_modes must not be empty")
     if preferred_model in GEMINI_MODEL_LADDER:
         model_order = list(GEMINI_MODEL_LADDER[GEMINI_MODEL_LADDER.index(preferred_model):])
     else:
         model_order = [preferred_model, FLASH_GEMINI_MODEL, FINAL_GEMINI_MODEL]
 
     rungs: list[GeminiRung] = []
-    total = len(model_order) * 2
+    total = len(model_order) * len(allowed_auth_modes)
     for model in model_order:
         for auth_mode in ("api", "oauth"):
+            if auth_mode not in allowed_auth_modes:
+                continue
             rungs.append(
                 GeminiRung(
                     index=len(rungs) + 1,
@@ -97,6 +113,40 @@ def build_gemini_ladder(preferred_model: str = PRIMARY_GEMINI_MODEL) -> list[Gem
                 )
             )
     return rungs
+
+
+def resolve_allowed_auth_modes(
+    env: Mapping[str, str] | None = None,
+    *,
+    cooldown_active: bool | None = None,
+) -> tuple[AuthMode, ...]:
+    """Choose which ladder rungs to include for this call.
+
+    Honors (in order of precedence):
+
+    1. ``GEMINI_AUTH_MODE=api``  — API rungs only
+    2. ``GEMINI_AUTH_MODE=subscription`` / ``oauth``  — OAuth rungs only
+    3. ``GEMINI_AUTH_MODE=auto`` / unset  — cooldown-aware:
+         - cooldown active ⇒ OAuth only (API key is near-budget, don't burn retries)
+         - cooldown inactive ⇒ both modes (API first, OAuth as fallback)
+
+    Invalid values degrade to the ``auto`` behavior.
+
+    ``cooldown_active`` is injectable for tests.
+    """
+    source = os.environ if env is None else env
+    raw = (source.get("GEMINI_AUTH_MODE") or "").strip().lower()
+    if raw == "api" or raw == "api-key":
+        return ("api",)
+    if raw in ("subscription", "oauth"):
+        return ("oauth",)
+    # auto / unset / invalid
+    if cooldown_active is None:
+        from ai_llm.cooldown import is_api_cooldown_active
+        cooldown_active = is_api_cooldown_active()
+    if cooldown_active:
+        return ("oauth",)
+    return ("api", "oauth")
 
 
 def is_gemini_rate_limited(stderr_text: str | None) -> bool:
@@ -148,12 +198,33 @@ def run_gemini_fallback_ladder(
     attempt_runner: Callable[[GeminiRung, int, int | None], AttemptOutcome],
     logger: Callable[[str], None] | None = None,
     sleep_fn: Callable[[int, str], None] | None = None,
+    allowed_auth_modes: tuple[AuthMode, ...] | None = None,
 ) -> CallResult:
-    """Run the shared 6-rung Gemini ladder until success or terminal failure."""
+    """Run the shared Gemini ladder until success or terminal failure.
+
+    ``allowed_auth_modes`` filters which rungs the ladder attempts. When
+    None (default), resolved from ``GEMINI_AUTH_MODE`` env var and the
+    API cooldown state — so a ``GEMINI_AUTH_MODE=subscription`` shell or
+    an active cooldown automatically skips API rungs. Explicit callers
+    (e.g. tests) can still pass a specific tuple.
+
+    Hooks ``set_api_cooldown()`` on any rate-limited outcome whose rung
+    was on API mode, so future ladder invocations skip API rungs without
+    a probe call (#1384).
+    """
     emit = logger or print
     sleeper = sleep_fn or (lambda seconds, reason: visible_sleep(seconds, reason, logger=emit))
     attempts: list[AttemptRecord] = []
-    ladder = build_gemini_ladder(preferred_model)
+    effective_auth_modes = (
+        allowed_auth_modes if allowed_auth_modes is not None
+        else resolve_allowed_auth_modes()
+    )
+    ladder = build_gemini_ladder(preferred_model, allowed_auth_modes=effective_auth_modes)
+    if effective_auth_modes != ("api", "oauth"):
+        emit(
+            f"  🎛️  Ladder filtered to auth modes {effective_auth_modes} "
+            f"({len(ladder)} rungs)"
+        )
     overall_start = time.monotonic()
 
     for rung in ladder:
@@ -229,6 +300,17 @@ def run_gemini_fallback_ladder(
                     f"  ⚠️  Rate-limited after {outcome.elapsed_s:.1f}s "
                     f"(stderr: {excerpt}). {next_step}"
                 )
+                # 429 on an API rung = key is near-budget. Set the sticky
+                # cooldown so subsequent ladder invocations skip API
+                # entirely without a probe call. 429 on OAuth rung is
+                # handled as "try next model" only — no cooldown.
+                if rung.auth_mode == "api":
+                    from ai_llm.cooldown import set_api_cooldown
+                    expires_at = set_api_cooldown()
+                    emit(
+                        f"  🧊 API cooldown armed until {time.strftime('%H:%M:%S', time.localtime(expires_at))} "
+                        f"(future calls skip API rungs)"
+                    )
                 break
 
             if outcome.status == "timeout":

@@ -26,6 +26,10 @@ from ai_llm.cooldown import (
     is_api_cooldown_active,
     set_api_cooldown,
 )
+from ai_llm.fallback import (
+    build_gemini_ladder,
+    resolve_allowed_auth_modes,
+)
 
 # ── _normalize_gemini_auth_mode ───────────────────────────────────────
 
@@ -375,3 +379,60 @@ class TestParseResponseCooldownTrip:
             "Successful calls must not trip cooldown — it's driven by "
             "real 429s only, never by liveness probing."
         )
+
+
+# ── Ladder rung filtering (#1384, the thing biting the 14:00 batch) ───
+
+
+class TestLadderAuthModeFiltering:
+    """When GEMINI_AUTH_MODE=subscription or cooldown is active, the
+    ladder must NOT include API rungs. Otherwise a wiki compile run
+    wastes 3 × per_rung_timeout on rung-1 API before advancing — exactly
+    the ~15-min silent hang the user hit at 14:00.
+    """
+
+    def test_auto_no_cooldown_includes_both(self) -> None:
+        assert resolve_allowed_auth_modes({}, cooldown_active=False) == ("api", "oauth")
+
+    def test_auto_with_cooldown_skips_api(self) -> None:
+        assert resolve_allowed_auth_modes({}, cooldown_active=True) == ("oauth",)
+
+    def test_explicit_subscription_skips_api(self) -> None:
+        env = {"GEMINI_AUTH_MODE": "subscription"}
+        assert resolve_allowed_auth_modes(env, cooldown_active=False) == ("oauth",)
+
+    def test_explicit_oauth_alias_skips_api(self) -> None:
+        env = {"GEMINI_AUTH_MODE": "oauth"}
+        assert resolve_allowed_auth_modes(env, cooldown_active=False) == ("oauth",)
+
+    def test_explicit_api_skips_oauth_even_under_cooldown(self) -> None:
+        """Explicit API wins even if cooldown says skip. Fail-loudly path
+        for debugging — if a user forces API they want to see the 429."""
+        env = {"GEMINI_AUTH_MODE": "api"}
+        assert resolve_allowed_auth_modes(env, cooldown_active=True) == ("api",)
+
+    def test_ladder_oauth_only_has_three_rungs(self) -> None:
+        ladder = build_gemini_ladder(allowed_auth_modes=("oauth",))
+        assert len(ladder) == 3
+        assert all(r.auth_mode == "oauth" for r in ladder)
+        # Rung indices renumber to filtered total so log "Rung 1/3" is honest
+        assert [r.index for r in ladder] == [1, 2, 3]
+        assert all(r.total == 3 for r in ladder)
+
+    def test_ladder_api_only_has_three_rungs(self) -> None:
+        ladder = build_gemini_ladder(allowed_auth_modes=("api",))
+        assert len(ladder) == 3
+        assert all(r.auth_mode == "api" for r in ladder)
+
+    def test_ladder_both_has_six_rungs_with_api_first_per_model(self) -> None:
+        ladder = build_gemini_ladder(allowed_auth_modes=("api", "oauth"))
+        assert len(ladder) == 6
+        # API-first ordering preserves the "fast-path first" intent
+        assert ladder[0].auth_mode == "api"
+        assert ladder[1].auth_mode == "oauth"
+        assert ladder[0].model == ladder[1].model
+
+    def test_empty_allowed_modes_rejected(self) -> None:
+        import pytest
+        with pytest.raises(ValueError, match="allowed_auth_modes"):
+            build_gemini_ladder(allowed_auth_modes=())
