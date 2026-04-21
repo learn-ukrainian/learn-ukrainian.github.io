@@ -2603,7 +2603,19 @@ def _is_seminar_track(level: str) -> bool:
 
 
 def _chunk_cache_meta_path(orch_dir: Path) -> Path:
-    """Metadata file tracking which skeleton produced cached chunks."""
+    """Metadata file tracking which inputs produced cached chunks.
+
+    Schema (v2, 2026-04-21, #1381):
+        {
+            "skeleton_hash": str,   # SHA256 of the skeleton text
+            "plan_hash":     str,   # SHA256 of the plan YAML raw bytes
+            "writer_mode":   str,   # fingerprint of writer + template override + seminar mode
+        }
+
+    Legacy v1 caches (only `skeleton_hash`) are treated as stale because the
+    other two dimensions cannot be verified — safer to regenerate once than
+    to reuse chunks that were written for a different plan or writer.
+    """
     return orch_dir / "chunk-cache-meta.json"
 
 
@@ -2612,42 +2624,120 @@ def _hash_skeleton(skeleton: str) -> str:
     return hashlib.sha256(skeleton.encode("utf-8")).hexdigest()
 
 
-def _load_chunk_cache_skeleton_hash(orch_dir: Path) -> str | None:
-    """Read cached skeleton hash for chunk cache validation."""
+def _hash_plan_content(plan_content: str) -> str:
+    """Hash the exact plan YAML text used during chunk generation.
+
+    Any semantic edit to the plan (word targets, content_outline, vocabulary
+    hints, personas, phase) changes the hash and invalidates cached chunks.
+    """
+    return hashlib.sha256(plan_content.encode("utf-8")).hexdigest()
+
+
+def _compute_writer_mode(
+    writer: str,
+    *,
+    template_override: str | None,
+    is_seminar: bool,
+) -> str:
+    """Fingerprint the writer configuration that produced cached chunks.
+
+    Changes to any of:
+      - writer backend (gemini / gemini-tools / claude-tools / codex-tools / ...)
+      - V6_WRITER_TEMPLATE override (e.g. v6-write-uk.md for the Ukrainian pilot)
+      - seminar vs core track (different lang_directive inside chunk prompts)
+
+    must invalidate the cache. A change in any dimension produces different
+    prose output, so reusing stale chunks would silently ship bilingual or
+    wrong-register content (the exact failure mode #1381 was filed against).
+    """
+    override_marker = template_override or ""
+    seminar_marker = "seminar" if is_seminar else "core"
+    return f"{writer}|{override_marker}|{seminar_marker}"
+
+
+def _load_chunk_cache_meta(orch_dir: Path) -> dict[str, str]:
+    """Read cached fingerprints for chunk cache validation.
+
+    Returns a dict with any subset of {skeleton_hash, plan_hash, writer_mode}
+    that was persisted. Missing keys imply a stale / legacy cache.
+    """
     meta_path = _chunk_cache_meta_path(orch_dir)
     if not meta_path.exists():
-        return None
+        return {}
     try:
         data = json.loads(meta_path.read_text("utf-8"))
     except (OSError, json.JSONDecodeError):
-        return None
+        return {}
     if not isinstance(data, dict):
-        return None
-    value = data.get("skeleton_hash")
-    return value if isinstance(value, str) and value else None
+        return {}
+    out: dict[str, str] = {}
+    for key in ("skeleton_hash", "plan_hash", "writer_mode"):
+        value = data.get(key)
+        if isinstance(value, str) and value:
+            out[key] = value
+    return out
 
 
-def _write_chunk_cache_meta(orch_dir: Path, skeleton_hash: str) -> None:
-    """Persist the skeleton fingerprint for future chunk cache reuse checks."""
+def _write_chunk_cache_meta(
+    orch_dir: Path,
+    *,
+    skeleton_hash: str,
+    plan_hash: str,
+    writer_mode: str,
+) -> None:
+    """Persist all chunk-cache fingerprints for future reuse checks."""
     meta_path = _chunk_cache_meta_path(orch_dir)
-    meta = {"skeleton_hash": skeleton_hash}
+    meta = {
+        "skeleton_hash": skeleton_hash,
+        "plan_hash": plan_hash,
+        "writer_mode": writer_mode,
+    }
     meta_path.write_text(json.dumps(meta, indent=2), "utf-8")
 
 
-def _invalidate_chunk_cache_if_needed(orch_dir: Path, skeleton: str) -> str:
-    """Clear cached chunk files when they were built from a different skeleton.
+def _invalidate_chunk_cache_if_needed(
+    orch_dir: Path,
+    skeleton: str,
+    *,
+    plan_content: str,
+    writer_mode: str,
+) -> tuple[str, str, str]:
+    """Clear cached chunk files when ANY chunk-influencing input changed.
 
-    Legacy caches without metadata are treated as stale because their source
-    skeleton cannot be verified safely.
+    Returns (skeleton_hash, plan_hash, writer_mode) so callers can pass them
+    straight to _write_chunk_cache_meta after regeneration.
+
+    Invalidates on:
+      - skeleton text change (section titles / budgets / structure)
+      - plan YAML change (word targets, vocabulary hints, content_outline, ...)
+      - writer mode change (backend, template override, seminar/core)
+
+    Legacy caches missing any of the three keys are treated as stale.
     """
     skeleton_hash = _hash_skeleton(skeleton)
+    plan_hash = _hash_plan_content(plan_content)
+
     chunk_files = sorted(orch_dir.glob("chunk-*.md"))
     if not chunk_files:
-        return skeleton_hash
+        return skeleton_hash, plan_hash, writer_mode
 
-    cached_hash = _load_chunk_cache_skeleton_hash(orch_dir)
-    if cached_hash == skeleton_hash:
-        return skeleton_hash
+    cached = _load_chunk_cache_meta(orch_dir)
+    reasons: list[str] = []
+    if cached.get("skeleton_hash") != skeleton_hash:
+        reasons.append(
+            "missing skeleton hash" if "skeleton_hash" not in cached else "skeleton changed"
+        )
+    if cached.get("plan_hash") != plan_hash:
+        reasons.append(
+            "missing plan hash" if "plan_hash" not in cached else "plan changed"
+        )
+    if cached.get("writer_mode") != writer_mode:
+        reasons.append(
+            "missing writer mode" if "writer_mode" not in cached else "writer mode changed"
+        )
+
+    if not reasons:
+        return skeleton_hash, plan_hash, writer_mode
 
     cleared = 0
     for chunk_file in chunk_files:
@@ -2658,10 +2748,9 @@ def _invalidate_chunk_cache_if_needed(orch_dir: Path, skeleton: str) -> str:
             _log(f"  ⚠️  Could not delete stale {chunk_file.name}: {exc}")
 
     if cleared:
-        reason = "missing skeleton hash" if cached_hash is None else "skeleton changed"
-        _log(f"  🗑️  Cleared {cleared} stale chunk cache file(s) ({reason})")
+        _log(f"  🗑️  Cleared {cleared} stale chunk cache file(s) ({', '.join(reasons)})")
 
-    return skeleton_hash
+    return skeleton_hash, plan_hash, writer_mode
 
 
 def step_research(level: str, module_num: int, slug: str) -> Path | None:
@@ -3843,7 +3932,24 @@ def step_write_chunked(
     use_mcp = use_tools and not writer.startswith("codex")
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
-    skeleton_hash = _invalidate_chunk_cache_if_needed(orch_dir, skeleton)
+
+    # Fingerprint writer configuration for cache validation (#1381).
+    # V6_WRITER_TEMPLATE forces single-call upstream, so on the chunked path
+    # template_override should always be None here — we still record it so
+    # future refactors can't silently bypass invalidation.
+    import os as _os_for_mode
+    template_override = _os_for_mode.environ.get("V6_WRITER_TEMPLATE")
+    writer_mode = _compute_writer_mode(
+        writer,
+        template_override=template_override,
+        is_seminar=_is_seminar_track(level),
+    )
+    skeleton_hash, plan_hash, writer_mode = _invalidate_chunk_cache_if_needed(
+        orch_dir,
+        skeleton,
+        plan_content=plan_content_raw,
+        writer_mode=writer_mode,
+    )
 
     written_sections: list[str] = []
 
@@ -3985,7 +4091,12 @@ def step_write_chunked(
     output_dir = CURRICULUM_ROOT / level
     output_path = output_dir / f"{slug}.md"
     output_path.write_text(final_content, "utf-8")
-    _write_chunk_cache_meta(orch_dir, skeleton_hash)
+    _write_chunk_cache_meta(
+        orch_dir,
+        skeleton_hash=skeleton_hash,
+        plan_hash=plan_hash,
+        writer_mode=writer_mode,
+    )
 
     total_words = len(final_content.split())
     _log(f"\n  ✅ Chunked write complete: {total_words} words total ({len(sections)} sections)")
@@ -4010,6 +4121,22 @@ def step_write(level: str, module_num: int, slug: str,
     _log(f"  Step 5: WRITE — Content generation ({writer})")
     _log(f"{'='*60}")
 
+    # Read template override BEFORE the chunking gate so we can force
+    # single-call when the caller asks for a custom writer template.
+    # The chunked path (`step_write_chunked`) builds prompts inline and
+    # does NOT read any writer template file — so V6_WRITER_TEMPLATE has
+    # no effect there. Forcing non-chunked guarantees the override is
+    # actually honored. See #1381 for the failure mode this prevents.
+    import os as _os
+    override = _os.environ.get("V6_WRITER_TEMPLATE")
+    is_seminar = _is_seminar_track(level)
+    if override and not no_chunk:
+        _log(
+            f"  🧪 V6_WRITER_TEMPLATE={override} set — forcing single-call write "
+            f"(chunked path ignores the template, see #1381)"
+        )
+        no_chunk = True
+
     # --- Chunking gate: section-by-section for large modules ---
     if skeleton and not no_chunk:
         plan_path_tmp = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
@@ -4028,11 +4155,6 @@ def step_write(level: str, module_num: int, slug: str,
                 _log("  ⚠️  Chunked write failed — falling back to single-call")
 
     # Load template — use seminar prompt for seminar tracks.
-    # Env override V6_WRITER_TEMPLATE wins for experimental writers
-    # (e.g. v6-write-uk.md for Ukrainian-canonical pilot).
-    import os as _os
-    override = _os.environ.get("V6_WRITER_TEMPLATE")
-    is_seminar = _is_seminar_track(level)
     if override:
         template_name = override
         _log(f"  🧪 Writer template overridden via V6_WRITER_TEMPLATE={override}")

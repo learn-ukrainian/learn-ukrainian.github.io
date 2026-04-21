@@ -45,6 +45,7 @@ import json
 import re
 import sys
 import time
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -501,6 +502,8 @@ def _run_round(
     article_text: str,
     agent_overrides: dict[str, str],
     cwd: Path,
+    round_num: int = 1,
+    progress_logger: Callable[[str], None] | None = None,
 ) -> dict[str, DimResult]:
     """Fire all 4 dim reviews in parallel via ThreadPoolExecutor.
 
@@ -508,21 +511,32 @@ def _run_round(
     Cache prewarm-then-fan-out is N/A here (only 1 Claude call). True
     parallel fan-out on 4 subprocesses is fine — each adapter runs its
     own CLI process; threads just wait on subprocess completion.
+
+    Emits per-dim progress lines via ``progress_logger`` so operators can
+    see which of the 4 parallel subprocesses are alive (#1384). Previously
+    the entire round was silent — with HARD_TIMEOUT_S=600 and 4 parallel
+    calls that could mean up to 10 min of zero output. Progress prints
+    ``▶`` on submit and ``◀`` on completion. ``print`` is thread-safe at
+    the line level in CPython, so parallel completions don't interleave.
     """
+    emit = progress_logger or print
+    emit(f"  ── Round {round_num}: fanning out {len(DIMS)} dim reviewers in parallel")
     results: dict[str, DimResult] = {}
+    round_start = time.monotonic()
     with ThreadPoolExecutor(max_workers=len(DIMS)) as pool:
-        futures = {
-            pool.submit(
+        futures: dict = {}
+        for dim in DIMS:
+            primary_agent = agent_overrides.get(dim, DEFAULT_PRIMARY[dim])
+            emit(f"    ▶ {dim:<22} start (agent={primary_agent})")
+            futures[pool.submit(
                 _run_single_dim,
                 dim=dim,
                 article_path=article_path,
                 article_text=article_text,
-                primary=agent_overrides.get(dim, DEFAULT_PRIMARY[dim]),
+                primary=primary_agent,
                 fallbacks=DEFAULT_FALLBACKS[dim],
                 cwd=cwd,
-            ): dim
-            for dim in DIMS
-        }
+            )] = dim
         for future in as_completed(futures):
             dim = futures[future]
             # _run_single_dim swallows all per-agent exceptions and always
@@ -530,13 +544,21 @@ def _run_round(
             # for a hypothetical future bug that lets one escape. Keeping
             # it guarantees every dim gets a result entry for _failing_dims.
             try:
-                results[dim] = future.result()
+                dr = future.result()
             except Exception as exc:  # pragma: no cover
-                results[dim] = DimResult(
+                dr = DimResult(
                     dim=dim, agent="?", model="", score=0, verdict="ERROR",
                     findings=[], fixes=[], notes="", duration_s=0.0,
                     error=f"executor raised: {type(exc).__name__}: {exc}",
                 )
+            results[dim] = dr
+            # Surface enough per-dim state to tell at a glance whether this
+            # dim passed, needs fixes, or rage-quit on rate-limit / timeout.
+            detail = f"verdict={dr.verdict}, score={dr.score}"
+            if dr.error:
+                detail += f", error={dr.error[:80]}"
+            emit(f"    ◀ {dim:<22} done in {dr.duration_s:.1f}s ({detail})")
+    emit(f"  ── Round {round_num} complete in {time.monotonic() - round_start:.1f}s")
     return results
 
 
@@ -577,6 +599,7 @@ def review_article(
             article_text=current_text,
             agent_overrides=agent_overrides,
             cwd=cwd,
+            round_num=round_num,
         )
 
         all_fixes: list[Fix] = []

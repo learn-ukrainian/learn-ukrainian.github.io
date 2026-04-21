@@ -213,3 +213,249 @@ class TestChunkingGate:
 
         sections = _parse_skeleton_sections(MINIMAL_SKELETON)
         assert _should_chunk_write(4000, sections, False) is False
+
+
+# ---------------------------------------------------------------------------
+# Chunk cache invalidation (#1381)
+# ---------------------------------------------------------------------------
+
+class TestChunkCacheInvalidation:
+    """Tests for _invalidate_chunk_cache_if_needed and fingerprint helpers.
+
+    Catches the #1381 regression class: chunks reused across changes in
+    skeleton, plan YAML, writer template override, or writer backend.
+    """
+
+    @staticmethod
+    def _seed_cache(tmp_path, skeleton_hash, plan_hash, writer_mode, *, chunks=2):
+        """Create a fake orch_dir with N chunk files + cache meta."""
+        import json
+
+        for i in range(1, chunks + 1):
+            (tmp_path / f"chunk-{i:02d}.md").write_text(f"chunk {i}\n", "utf-8")
+        meta = {
+            "skeleton_hash": skeleton_hash,
+            "plan_hash": plan_hash,
+            "writer_mode": writer_mode,
+        }
+        (tmp_path / "chunk-cache-meta.json").write_text(json.dumps(meta), "utf-8")
+
+    def test_no_chunks_no_invalidation(self, tmp_path):
+        from build.v6_build import _invalidate_chunk_cache_if_needed
+
+        # Cold cache: nothing to clear, just returns fresh fingerprints
+        sk, pl, wm = _invalidate_chunk_cache_if_needed(
+            tmp_path, "skeleton text",
+            plan_content="plan: yaml",
+            writer_mode="gemini||core",
+        )
+        assert sk and pl and wm == "gemini||core"
+        assert list(tmp_path.glob("chunk-*.md")) == []
+
+    def test_all_fingerprints_match_keeps_chunks(self, tmp_path):
+        from build.v6_build import (
+            _hash_plan_content,
+            _hash_skeleton,
+            _invalidate_chunk_cache_if_needed,
+        )
+
+        skeleton = "## One\n- P1: stuff\n"
+        plan = "word_target: 1200\n"
+        writer_mode = "gemini||core"
+        self._seed_cache(
+            tmp_path,
+            _hash_skeleton(skeleton),
+            _hash_plan_content(plan),
+            writer_mode,
+        )
+
+        _invalidate_chunk_cache_if_needed(
+            tmp_path, skeleton, plan_content=plan, writer_mode=writer_mode,
+        )
+        # All chunks preserved
+        assert len(list(tmp_path.glob("chunk-*.md"))) == 2
+
+    def test_skeleton_change_invalidates(self, tmp_path):
+        from build.v6_build import (
+            _hash_plan_content,
+            _hash_skeleton,
+            _invalidate_chunk_cache_if_needed,
+        )
+
+        plan = "word_target: 1200\n"
+        writer_mode = "gemini||core"
+        self._seed_cache(
+            tmp_path,
+            _hash_skeleton("old skeleton"),
+            _hash_plan_content(plan),
+            writer_mode,
+        )
+
+        _invalidate_chunk_cache_if_needed(
+            tmp_path, "NEW skeleton", plan_content=plan, writer_mode=writer_mode,
+        )
+        assert list(tmp_path.glob("chunk-*.md")) == []
+
+    def test_plan_change_invalidates(self, tmp_path):
+        """#1381: plan YAML edit must invalidate chunks (word_target, vocab hints, etc)."""
+        from build.v6_build import (
+            _hash_plan_content,
+            _hash_skeleton,
+            _invalidate_chunk_cache_if_needed,
+        )
+
+        skeleton = "## One\n- P1: stuff\n"
+        writer_mode = "gemini||core"
+        self._seed_cache(
+            tmp_path,
+            _hash_skeleton(skeleton),
+            _hash_plan_content("word_target: 1200\n"),
+            writer_mode,
+        )
+
+        _invalidate_chunk_cache_if_needed(
+            tmp_path, skeleton,
+            plan_content="word_target: 4000\n",  # plan changed
+            writer_mode=writer_mode,
+        )
+        assert list(tmp_path.glob("chunk-*.md")) == []
+
+    def test_writer_mode_change_invalidates(self, tmp_path):
+        """#1381: switching writer backend or template override must regenerate."""
+        from build.v6_build import (
+            _hash_plan_content,
+            _hash_skeleton,
+            _invalidate_chunk_cache_if_needed,
+        )
+
+        skeleton = "## One\n- P1: stuff\n"
+        plan = "word_target: 1200\n"
+        self._seed_cache(
+            tmp_path,
+            _hash_skeleton(skeleton),
+            _hash_plan_content(plan),
+            "gemini||core",  # seeded writer mode
+        )
+
+        _invalidate_chunk_cache_if_needed(
+            tmp_path, skeleton,
+            plan_content=plan,
+            writer_mode="gemini-tools||core",  # writer backend changed
+        )
+        assert list(tmp_path.glob("chunk-*.md")) == []
+
+    def test_legacy_v1_cache_treated_as_stale(self, tmp_path):
+        """Legacy chunk-cache-meta.json with only skeleton_hash invalidates."""
+        import json
+
+        from build.v6_build import _hash_skeleton, _invalidate_chunk_cache_if_needed
+
+        skeleton = "## One\n- P1: stuff\n"
+        (tmp_path / "chunk-01.md").write_text("stale\n", "utf-8")
+        # v1 schema: only skeleton_hash, no plan_hash or writer_mode
+        legacy = {"skeleton_hash": _hash_skeleton(skeleton)}
+        (tmp_path / "chunk-cache-meta.json").write_text(json.dumps(legacy), "utf-8")
+
+        _invalidate_chunk_cache_if_needed(
+            tmp_path, skeleton,
+            plan_content="word_target: 1200\n",
+            writer_mode="gemini||core",
+        )
+        assert list(tmp_path.glob("chunk-*.md")) == []
+
+    def test_corrupt_meta_file_treated_as_stale(self, tmp_path):
+        from build.v6_build import _invalidate_chunk_cache_if_needed
+
+        (tmp_path / "chunk-01.md").write_text("stale\n", "utf-8")
+        (tmp_path / "chunk-cache-meta.json").write_text("{not valid json", "utf-8")
+
+        _invalidate_chunk_cache_if_needed(
+            tmp_path, "skel",
+            plan_content="plan",
+            writer_mode="gemini||core",
+        )
+        assert list(tmp_path.glob("chunk-*.md")) == []
+
+
+class TestWriterModeFingerprint:
+    """Tests for _compute_writer_mode()."""
+
+    def test_core_no_override(self):
+        from build.v6_build import _compute_writer_mode
+        assert _compute_writer_mode(
+            "gemini", template_override=None, is_seminar=False,
+        ) == "gemini||core"
+
+    def test_seminar_differs_from_core(self):
+        from build.v6_build import _compute_writer_mode
+        core = _compute_writer_mode("gemini", template_override=None, is_seminar=False)
+        sem = _compute_writer_mode("gemini", template_override=None, is_seminar=True)
+        assert core != sem
+
+    def test_template_override_differs(self):
+        from build.v6_build import _compute_writer_mode
+        default = _compute_writer_mode("gemini", template_override=None, is_seminar=False)
+        uk = _compute_writer_mode(
+            "gemini", template_override="v6-write-uk.md", is_seminar=False,
+        )
+        assert default != uk
+
+    def test_writer_backend_differs(self):
+        from build.v6_build import _compute_writer_mode
+        plain = _compute_writer_mode("gemini", template_override=None, is_seminar=False)
+        tools = _compute_writer_mode("gemini-tools", template_override=None, is_seminar=False)
+        assert plain != tools
+
+
+class TestWriteStepForcesNoChunkOnOverride:
+    """#1381: V6_WRITER_TEMPLATE must force single-call write.
+
+    The chunked path builds prompts inline and does not read any writer
+    template file, so the override would silently no-op without this guard.
+    This is a structural test: verify the env check happens before the
+    chunking gate in step_write().
+    """
+
+    def test_override_check_precedes_chunking_gate_in_source(self):
+        """Structural: override branch appears before the chunking gate."""
+        import inspect
+
+        from build.v6_build import step_write
+
+        source = inspect.getsource(step_write)
+        override_pos = source.find("V6_WRITER_TEMPLATE")
+        chunking_pos = source.find("Chunking gate")
+        assert override_pos != -1, "V6_WRITER_TEMPLATE check missing"
+        assert chunking_pos != -1, "Chunking gate marker missing"
+        assert override_pos < chunking_pos, (
+            "V6_WRITER_TEMPLATE must be read BEFORE the chunking gate so "
+            "the override can force no_chunk (#1381)"
+        )
+
+    def test_override_forces_no_chunk_flag(self):
+        """Override branch sets no_chunk = True."""
+        import inspect
+
+        from build.v6_build import step_write
+
+        source = inspect.getsource(step_write)
+        # The override branch should flip no_chunk; grep for the assignment
+        # within the override handling block.
+        lines = source.splitlines()
+        in_override_block = False
+        found_no_chunk_assignment = False
+        for line in lines:
+            if "if override and not no_chunk" in line:
+                in_override_block = True
+                continue
+            if in_override_block:
+                if "no_chunk = True" in line:
+                    found_no_chunk_assignment = True
+                    break
+                # Don't allow the block to span past the next top-level block
+                if line and not line.startswith((" ", "\t")):
+                    break
+        assert found_no_chunk_assignment, (
+            "Override branch must set no_chunk = True so chunked path is "
+            "skipped when V6_WRITER_TEMPLATE is set (#1381)"
+        )

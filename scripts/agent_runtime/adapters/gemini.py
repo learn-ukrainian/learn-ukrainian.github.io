@@ -49,6 +49,26 @@ _TRANSIENT_ERROR_RE = re.compile("|".join(_TRANSIENT_ERROR_PATTERNS), re.IGNOREC
 _AUTH_MODE_VALUES = frozenset({"auto", "subscription", "api"})
 
 
+#: Default location of Gemini OAuth credentials written by ``gemini auth login``.
+#: When this file is present, the user has a working subscription session and
+#: should prefer it over API-mode billing (see ``resolve_gemini_auth_mode``).
+_GEMINI_OAUTH_CREDS_PATH = Path.home() / ".gemini" / "oauth_creds.json"
+
+
+def _oauth_creds_present(creds_path: Path | None = None) -> bool:
+    """Return True if Gemini OAuth credentials are on disk and non-empty.
+
+    A zero-byte file is treated as absent because the CLI will reject it
+    and fall through to API mode — so treating it as present would make
+    ``auto`` mode flip to subscription and then silently fail.
+    """
+    path = creds_path if creds_path is not None else _GEMINI_OAUTH_CREDS_PATH
+    try:
+        return path.is_file() and path.stat().st_size > 0
+    except OSError:
+        return False
+
+
 def _normalize_gemini_auth_mode(raw: str | None) -> str:
     """Normalize CLI/env auth mode strings to the canonical runtime values."""
     value = (raw or "auto").strip().lower()
@@ -59,18 +79,37 @@ def _normalize_gemini_auth_mode(raw: str | None) -> str:
     return value if value in _AUTH_MODE_VALUES else "auto"
 
 
-def resolve_gemini_auth_mode(env: dict[str, str] | None = None) -> str:
+def resolve_gemini_auth_mode(
+    env: dict[str, str] | None = None,
+    *,
+    creds_path: Path | None = None,
+) -> str:
     """Resolve the effective Gemini auth mode for this invocation.
 
-    ``auto`` preserves current behavior.
-    ``subscription`` strips API-key env vars so the CLI uses the logged-in
-    subscription/OAuth path instead.
-    ``api`` preserves key env vars explicitly.
+    Explicit values (``subscription``, ``api``, ``auto``) are honored as-is.
+    An unset ``GEMINI_AUTH_MODE`` defaults to ``auto``. Invalid values also
+    degrade to ``auto`` for backward compatibility.
 
-    Invalid values degrade to ``auto`` for backward compatibility.
+    ``auto`` semantics (changed 2026-04-21 PM, #1384): detect whether the
+    user has an on-disk OAuth session and prefer it.
+
+      - OAuth creds present → ``subscription``  (strip API-key env vars,
+        Gemini CLI takes the Ultra/subscription path)
+      - OAuth creds absent  → ``api``           (keep env vars, CLI uses key)
+
+    Rationale: before this change, ``auto`` left ``GEMINI_API_KEY`` in the
+    environment regardless of subscription state, so Ultra-authenticated
+    users silently paid API-mode dollars on every call. Users can still
+    force either mode by setting ``GEMINI_AUTH_MODE`` explicitly.
+
+    ``creds_path`` overrides the on-disk check for tests; production code
+    leaves it as ``None``.
     """
     source = os.environ if env is None else env
-    return _normalize_gemini_auth_mode(source.get("GEMINI_AUTH_MODE"))
+    mode = _normalize_gemini_auth_mode(source.get("GEMINI_AUTH_MODE"))
+    if mode == "auto":
+        return "subscription" if _oauth_creds_present(creds_path) else "api"
+    return mode
 
 
 class GeminiAdapter:
