@@ -1,0 +1,12 @@
+# Source registry for wiki/pedagogy/a1/special-signs.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1506
+  type: unknown
+- id: S2
+  file: S2299
+  type: unknown
+- id: S4
+  file: S2374
+  type: unknown

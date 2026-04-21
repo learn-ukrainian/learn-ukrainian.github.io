@@ -1,0 +1,30 @@
+# Source registry for wiki/pedagogy/a1/reading-ukrainian.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1550
+  type: unknown
+- id: S2
+  file: S1503
+  type: unknown
+- id: S3
+  file: S2368
+  type: unknown
+- id: S4
+  file: S1502
+  type: unknown
+- id: S5
+  file: S584
+  type: unknown
+- id: S6
+  file: S2464
+  type: unknown
+- id: S7
+  file: S2467
+  type: unknown
+- id: S9
+  file: S2219
+  type: unknown
+- id: S12
+  file: ext-article-1
+  type: external

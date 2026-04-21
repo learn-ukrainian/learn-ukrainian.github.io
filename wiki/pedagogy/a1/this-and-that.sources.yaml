@@ -1,0 +1,15 @@
+# Source registry for wiki/pedagogy/a1/this-and-that.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1807
+  type: unknown
+- id: S2
+  file: S2427
+  type: unknown
+- id: S3
+  file: S3371
+  type: unknown
+- id: S4
+  file: S3399
+  type: unknown

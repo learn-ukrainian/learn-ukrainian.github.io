@@ -1,0 +1,24 @@
+# Source registry for wiki/pedagogy/a1/stress-and-melody.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S527
+  type: unknown
+- id: S2
+  file: S286
+  type: unknown
+- id: S3
+  file: S1548
+  type: unknown
+- id: S4
+  file: S606
+  type: unknown
+- id: S5
+  file: S2298
+  type: unknown
+- id: S6
+  file: S1503
+  type: unknown
+- id: S8
+  file: S3696
+  type: unknown

@@ -1,0 +1,21 @@
+# Source registry for wiki/pedagogy/a1/things-have-gender.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3154
+  type: unknown
+- id: S2
+  file: S2427
+  type: unknown
+- id: S3
+  file: S14
+  type: unknown
+- id: S4
+  file: S3151
+  type: unknown
+- id: S5
+  file: S3371
+  type: unknown
+- id: S6
+  file: S2428
+  type: unknown
