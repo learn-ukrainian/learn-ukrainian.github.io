@@ -1,0 +1,27 @@
+# Source registry for wiki/pedagogy/a1/questions.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3951
+  type: unknown
+- id: S2
+  file: S1653
+  type: unknown
+- id: S3
+  file: S3224
+  type: unknown
+- id: S4
+  file: S2302
+  type: unknown
+- id: S5
+  file: S3206
+  type: unknown
+- id: S6
+  file: S1594
+  type: unknown
+- id: S7
+  file: S3198
+  type: unknown
+- id: S9
+  file: ext-article-1
+  type: external

@@ -1,0 +1,30 @@
+# Source registry for wiki/pedagogy/a1/people-around-me.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S670
+  type: unknown
+- id: S2
+  file: S1801
+  type: unknown
+- id: S3
+  file: S3164
+  type: unknown
+- id: S4
+  file: S365
+  type: unknown
+- id: S5
+  file: S1144
+  type: unknown
+- id: S6
+  file: S1873
+  type: unknown
+- id: S7
+  file: S1207
+  type: unknown
+- id: S8
+  file: ext-article-0
+  type: external
+- id: S10
+  file: ext-article-2
+  type: external

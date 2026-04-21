@@ -1,0 +1,24 @@
+# Source registry for wiki/pedagogy/a1/my-plans.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1580
+  type: unknown
+- id: S2
+  file: S4607
+  type: unknown
+- id: S3
+  file: S3101
+  type: unknown
+- id: S4
+  file: S2417
+  type: unknown
+- id: S5
+  file: S3912
+  type: unknown
+- id: S7
+  file: S1767
+  type: unknown
+- id: S9
+  file: S1597
+  type: unknown

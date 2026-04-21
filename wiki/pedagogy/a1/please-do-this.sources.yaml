@@ -1,0 +1,33 @@
+# Source registry for wiki/pedagogy/a1/please-do-this.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3221
+  type: unknown
+- id: S2
+  file: S1211
+  type: unknown
+- id: S3
+  file: S1149
+  type: unknown
+- id: S4
+  file: S688
+  type: unknown
+- id: S5
+  file: S3824
+  type: unknown
+- id: S6
+  file: S3914
+  type: unknown
+- id: S7
+  file: S3911
+  type: unknown
+- id: S11
+  file: ext-article-0
+  type: external
+- id: S12
+  file: ext-article-1
+  type: external
+- id: S13
+  file: ext-article-2
+  type: external

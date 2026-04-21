@@ -1,0 +1,18 @@
+# Source registry for wiki/pedagogy/a1/my-story.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1930
+  type: unknown
+- id: S2
+  file: S2417
+  type: unknown
+- id: S3
+  file: S3166
+  type: unknown
+- id: S4
+  file: S256
+  type: unknown
+- id: S5
+  file: S1488
+  type: unknown

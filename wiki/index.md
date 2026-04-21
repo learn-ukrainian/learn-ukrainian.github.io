@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 31
-**Total words:** 49,947
+**Total articles:** 38
+**Total words:** 61,109
 
 ## Figures
 
@@ -44,7 +44,14 @@ Auto-generated index of compiled wiki articles.
 - [Педагогіка A1: Linking Ideas](pedagogy/a1/linking-ideas.md) (1,453 words)
 - [Педагогіка A1: Many Things](pedagogy/a1/many-things.md) (1,579 words)
 - [Педагогіка A1: My City](pedagogy/a1/my-city.md) (1,541 words)
+- [Педагогіка A1: My Day](pedagogy/a1/my-day.md) (1,636 words)
 - [Педагогіка A1: My Family](pedagogy/a1/my-family.md) (1,759 words)
+- [Педагогіка A1: My Morning](pedagogy/a1/my-morning.md) (1,485 words)
+- [Педагогіка A1: My Plans](pedagogy/a1/my-plans.md) (1,594 words)
+- [Педагогіка A1: My Story](pedagogy/a1/my-story.md) (1,655 words)
+- [Педагогіка A1: People Around Me](pedagogy/a1/people-around-me.md) (1,721 words)
+- [Педагогіка A1: Наказовий спосіб (The Imperative Mood)](pedagogy/a1/please-do-this.md) (1,602 words)
+- [Педагогіка A1: Questions](pedagogy/a1/questions.md) (1,469 words)
 - [Педагогіка A1: Sounds Letters And Hello](pedagogy/a1/sounds-letters-and-hello.md) (1,441 words)
 
 ## Periods
