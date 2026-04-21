@@ -53,11 +53,28 @@ Tracks: a1, a2, b1, b2, c1, c2, folk, hist, bio, istorio, lit, lit-essay,
 
 import argparse
 import sys
+import time
+import traceback
 from collections import Counter
+from datetime import datetime
 from pathlib import Path
+
+# Force line-buffered stdout so progress is visible even when piped (tee, less,
+# some terminals).  Without this, `print()` can buffer for kilobytes and make
+# the process look frozen.
+try:
+    sys.stdout.reconfigure(line_buffering=True)  # type: ignore[attr-defined]
+    sys.stderr.reconfigure(line_buffering=True)  # type: ignore[attr-defined]
+except AttributeError:
+    pass  # Python < 3.7 fallback — not supported here anyway
 
 # Add scripts/ to path for relative imports
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
+def _ts() -> str:
+    """Compact HH:MM:SS timestamp for log lines."""
+    return datetime.now().strftime("%H:%M:%S")
 
 from wiki.compiler import compile_article, update_index
 from wiki.config import ALL_TRACKS, CURRICULUM_DIR, TRACK_DOMAINS, WIKI_DIR
@@ -296,22 +313,31 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
     print(f"\n🔨 Compiling: {track}/{slug}")
 
     # Get domain mapping
+    t_stage = time.monotonic()
     domain = _get_domain(track, slug)
     article_key = f"{domain}/{slug}"
     already_compiled = not force and not dry_run and is_compiled(article_key)
 
-    # Gather sources
+    # Gather sources — can stall on cloud-backed or slow filesystem paths.
+    # Codex review 2026-04-21 flagged this as the #1 silent-hang suspect.
+    print(f"  📂 Gathering discovery sources... ({_ts()})", flush=True)
     sources_info = gather_discovery_sources(track, slug)
+    print(f"    ✓ gather_discovery_sources in {time.monotonic() - t_stage:.1f}s", flush=True)
     if "error" in sources_info:
         print(f"  ❌ {sources_info['error']}")
         return False
 
-    # Collect and enrich source chunks
+    # Collect and enrich source chunks — dense retrieval + tokenizer encode,
+    # can take 10–60s on a cold cache.
+    t_stage = time.monotonic()
+    print("  🔎 Enriching sources (dense retrieval + encoding)...", flush=True)
     all_chunks = enrich_sources(track, slug, sources_info)
+    print(f"    ✓ enrich_sources → {len(all_chunks)} chunks in {time.monotonic() - t_stage:.1f}s", flush=True)
 
     # Build a human-readable topic from discovery keywords (Ukrainian) or slug (fallback)
     topic = _slug_to_topic(slug, track, sources_info)
 
+    t_stage = time.monotonic()
     result = compile_article(
         topic=topic,
         slug=slug,
@@ -321,16 +347,26 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
         force=force,
         dry_run=dry_run,
     )
+    print(f"    ✓ compile_article in {time.monotonic() - t_stage:.1f}s", flush=True)
 
     if result:
         if not already_compiled and not dry_run:
+            t_stage = time.monotonic()
+            print("  📑 Updating index + logging event...", flush=True)
             update_index()
             word_count = len(result.read_text("utf-8").split()) if result.exists() else 0
             log_event(track, slug, "compile", words=word_count, sources=len(all_chunks))
+            print(f"    ✓ post-write I/O in {time.monotonic() - t_stage:.1f}s ({word_count} words)", flush=True)
         if review and not dry_run:
+            print("  📋 Review enabled — running legacy single-call review...", flush=True)
+            t_stage = time.monotonic()
             _review_article(result, track, slug)
+            print(f"    ✓ review in {time.monotonic() - t_stage:.1f}s", flush=True)
         if dim_review and not dry_run:
+            print("  🔬 Dim-review enabled — running 4-dim shadow-mode review...", flush=True)
+            t_stage = time.monotonic()
             _dim_review_article(result, track, slug)
+            print(f"    ✓ dim-review in {time.monotonic() - t_stage:.1f}s", flush=True)
         return True
     return dry_run  # dry_run returns None but isn't a failure
 
@@ -1125,32 +1161,59 @@ def cmd_compile_all(track: str, *, limit: int | None = None,
         print("  📋 Review enabled — each article will be reviewed after compilation")
     if dim_review:
         print("  🔬 Dimensional review enabled (shadow mode — never blocks)")
+    print(f"  🕐 Batch started at {_ts()}")
     print(f"{'═' * 60}")
 
     success = 0
     failed = 0
     skipped = 0
+    batch_start = time.time()
+
+    from wiki.state import is_compiled
 
     for i, slug in enumerate(slugs, 1):
-        print(f"\n[{i}/{len(slugs)}] {slug}")
-        result = cmd_compile_one(
-            track, slug,
-            force=force, dry_run=dry_run,
-            review=review, dim_review=dim_review,
-        )
+        slug_start = time.time()
+        print(f"\n[{i}/{len(slugs)}] {slug}  ({_ts()})")
+        try:
+            result = cmd_compile_one(
+                track, slug,
+                force=force, dry_run=dry_run,
+                review=review, dim_review=dim_review,
+            )
+        except KeyboardInterrupt:
+            # Explicit interrupt — stop the whole batch but leave state clean
+            print(f"\n⚠️  Interrupted by user at [{i}/{len(slugs)}] {slug}")
+            print(f"  Progress so far: ✅ {success}  ⏭️  {skipped}  ❌ {failed}")
+            raise
+        except Exception:
+            # Catch-all so one broken slug doesn't kill the whole batch.
+            # Without this, an unhandled exception in any per-slug step
+            # silently terminates the outer loop and the user sees "no more
+            # output" with no indication of what broke.
+            elapsed = time.time() - slug_start
+            print(f"  💥 Unhandled exception after {elapsed:.1f}s compiling {slug}:")
+            traceback.print_exc()
+            print("  → Treating as FAILED, continuing to next slug")
+            failed += 1
+            continue
+
+        elapsed = time.time() - slug_start
         if result:
             success += 1
+            print(f"  ✅ Done in {elapsed:.1f}s")
         else:
-            # Check if it was skipped (already compiled)
-            from wiki.state import is_compiled
             domain = _get_domain(track, slug)
             if is_compiled(f"{domain}/{slug}"):
                 skipped += 1
+                print(f"  ⏭️  Skipped (already compiled) in {elapsed:.1f}s")
             else:
                 failed += 1
+                print(f"  ❌ Failed after {elapsed:.1f}s")
 
+    total_elapsed = time.time() - batch_start
     print(f"\n{'═' * 60}")
     print(f"✅ Compiled: {success} | ⏭️  Skipped: {skipped} | ❌ Failed: {failed}")
+    print(f"  🕐 Batch finished at {_ts()} (total {total_elapsed:.0f}s)")
 
 
 def _get_domain(track: str, slug: str) -> str:
