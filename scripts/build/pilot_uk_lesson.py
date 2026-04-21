@@ -10,7 +10,6 @@ Minimal assembly script for the A.12 pilot. Not a production pipeline.
 from __future__ import annotations
 
 import argparse
-import subprocess
 import sys
 from pathlib import Path
 
@@ -127,17 +126,30 @@ def assemble_prompt(plan: dict, level: str) -> str:
 
 
 def call_gemini(prompt: str, model: str = "gemini-3.1-pro-preview") -> str:
-    """Call Gemini CLI in headless mode, return its stdout."""
-    proc = subprocess.run(
-        ["gemini", "-p", prompt, "-m", model],
-        capture_output=True,
-        text=True,
-        timeout=600,
+    """Call Gemini through the shared fallback ladder (#1384).
+
+    The ladder honors ``GEMINI_AUTH_MODE`` and the sticky API cooldown,
+    so a 429 on the API key automatically flips subsequent calls to
+    the subscription/OAuth path for ~1h without user intervention.
+    Using the shared ladder — instead of a bespoke ``subprocess.run`` —
+    is what makes that auto-fallover reach this script.
+    """
+    # Local import keeps the ``--no-call`` path zero-cost.
+    from ai_llm.fallback import call_gemini_with_fallback
+
+    result = call_gemini_with_fallback(
+        prompt,
+        task_name=f"pilot_uk_lesson (model={model})",
+        preferred_model=model,
+        cwd=REPO,
+        logger=lambda msg: print(msg, flush=True),
     )
-    if proc.returncode != 0:
-        sys.stderr.write(f"Gemini exited {proc.returncode}\nstderr:\n{proc.stderr}\n")
+    if not result.ok or not result.response_text:
+        sys.stderr.write(
+            f"Gemini ladder exhausted: {result.error_message or 'no response'}\n"
+        )
         sys.exit(1)
-    return proc.stdout
+    return result.response_text
 
 
 def main() -> None:
