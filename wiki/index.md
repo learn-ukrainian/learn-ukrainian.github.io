@@ -2,12 +2,16 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 59
-**Total words:** 93,517
+**Total articles:** 60
+**Total words:** 95,824
 
 ## Figures
 
 - [Княгиня Ольга: Архітекторка держави](figures/knyahynia-olha.md) (2,447 words)
+
+## Grammar
+
+- [Граматика A2: Синтаксис і відмінки](grammar/a2/metalanguage-syntax-cases.md) (2,307 words)
 
 ## Linguistics
 

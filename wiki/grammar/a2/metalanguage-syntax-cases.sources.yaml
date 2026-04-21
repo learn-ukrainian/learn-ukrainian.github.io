@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/metalanguage-syntax-cases.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S4696
+  type: unknown
+- id: S2
+  file: S2385
+  type: unknown
+- id: S3
+  file: S4688
+  type: unknown
+- id: S4
+  file: S3142
+  type: unknown
+- id: S5
+  file: S1660
+  type: unknown
+- id: S6
+  file: S5146
+  type: unknown
+- id: S8
+  file: S3164
+  type: unknown
+- id: S9
+  file: S2435
+  type: unknown
+- id: S10
+  file: S2449
+  type: unknown
