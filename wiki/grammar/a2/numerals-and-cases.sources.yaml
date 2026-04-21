@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/a2/numerals-and-cases.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3397
+  type: unknown
+- id: S2
+  file: S682
+  type: unknown
+- id: S3
+  file: S1145
+  type: unknown
+- id: S4
+  file: S3192
+  type: unknown
+- id: S5
+  file: S1144
+  type: unknown
+- id: S6
+  file: S3094
+  type: unknown
+- id: S7
+  file: S1206
+  type: unknown
+- id: S8
+  file: S3186
+  type: unknown

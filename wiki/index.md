@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 105
-**Total words:** 190,274
+**Total articles:** 111
+**Total words:** 203,816
 
 ## Figures
 
@@ -56,7 +56,13 @@ Auto-generated index of compiled wiki articles.
 - [Граматика A2: Місцевий відмінок у нових контекстах](grammar/a2/locative-expanded.md) (2,134 words)
 - [Граматика A2: Морфологія](grammar/a2/metalanguage-morphology.md) (1,938 words)
 - [Граматика A2: Звуки і букви](grammar/a2/metalanguage-phonetics.md) (2,214 words)
+- [Граматика A2: Речення і клас](grammar/a2/metalanguage-sentences-and-classroom.md) (1,953 words)
 - [Граматика A2: Синтаксис і відмінки](grammar/a2/metalanguage-syntax-cases.md) (2,307 words)
+- [Граматика A2: Дія і час](grammar/a2/metalanguage-verbs-and-time.md) (2,642 words)
+- [Граматика A2: Слова і відмінки](grammar/a2/metalanguage-words-and-cases.md) (2,126 words)
+- [Граматика A2: Іду, їду, лечу](grammar/a2/motion-verbs.md) (2,303 words)
+- [Граматика A2: Пори року і свята](grammar/a2/nature-and-traditions.md) (2,108 words)
+- [Граматика A2: Числа у відмінках](grammar/a2/numerals-and-cases.md) (2,410 words)
 
 ## Linguistics
 

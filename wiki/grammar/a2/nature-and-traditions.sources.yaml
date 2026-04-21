@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/nature-and-traditions.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2419
+  type: unknown
+- id: S2
+  file: S2418
+  type: unknown
+- id: S3
+  file: S3384
+  type: unknown
+- id: S4
+  file: S2421
+  type: unknown
+- id: S5
+  file: S632
+  type: unknown
+- id: S6
+  file: S3334
+  type: unknown
+- id: S7
+  file: S2796
+  type: unknown
+- id: S8
+  file: S2707
+  type: unknown
+- id: S9
+  file: S2709
+  type: unknown

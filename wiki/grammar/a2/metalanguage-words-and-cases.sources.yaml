@@ -1,0 +1,33 @@
+# Source registry for wiki/grammar/a2/metalanguage-words-and-cases.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3956
+  type: unknown
+- id: S2
+  file: S4689
+  type: unknown
+- id: S3
+  file: S3781
+  type: unknown
+- id: S4
+  file: S679
+  type: unknown
+- id: S5
+  file: S3164
+  type: unknown
+- id: S6
+  file: S3149
+  type: unknown
+- id: S7
+  file: S668
+  type: unknown
+- id: S8
+  file: S3154
+  type: unknown
+- id: S9
+  file: S5141
+  type: unknown
+- id: S10
+  file: S2428
+  type: unknown
