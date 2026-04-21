@@ -1,4 +1,8 @@
-# Session Handoff — 2026-04-21 overnight (A1 + A2 wikis COMPLETE, A.0 + A.0b validated, A.6 ingested)
+# Session Handoff — 2026-04-21 overnight (A1 + A2 wikis COMPLETE, A.6 + A.10b ingested, 1,424 chunks in ukrainian_wiki)
+
+## TL;DR (read this first)
+
+**A1 + A2 wiki-corpus bootstrap is DONE end-to-end.** Compile ✅ Ingest ✅ Scanner-verified ✅. 124 articles, 1,424 chunks, ready for A.7 native-reviewer engagement. No modules built (per your wikis-first directive). Two open decisions below.
 
 Cold-start: read memory rules #0C (handoff chain, not just this file) and #0D (corpus-bootstrap framing — NEVER use "pivot" / "L1-UK pivot" language). Nothing has changed there. Previous handoff at `docs/session-state/2026-04-21-morning-handoff.md` (the pre-overnight state).
 
@@ -48,7 +52,8 @@ a42ada4ef feat(wiki): language-ratio scanner (shipped as AC2 of #1371)
 | Failed compiles | 0 |
 | Scanner tool shipped | ✅ (`scripts/wiki/check_language_ratio.py`) |
 | A.6 chunks ingested (A1) | 609 chunks |
-| A.10b chunks ingested (A2) | pending Codex |
+| A.10b chunks ingested (A2) | 815 chunks (17 gate-skipped) |
+| **Combined ukrainian_wiki corpus** | **1,424 chunks across 124 articles** |
 
 ## Issues opened / closed this session
 
@@ -59,15 +64,16 @@ a42ada4ef feat(wiki): language-ratio scanner (shipped as AC2 of #1371)
 | #1371 | A.1 canary re-spec | ✅ CLOSED (evidence now 55× thick — entire A1 track ingested) |
 | #1372 | A.5 — A1 wiki batch | ✅ CLOSED |
 | #1373 | A.6 — A1 ingest | ✅ CLOSED (Codex shipped `0155e756f`) |
-| #1374 | A.10b — A2 ingest | OPEN — Codex dispatched |
+| #1374 | A.10b — A2 ingest | ✅ CLOSED (Codex shipped `64ee940f2`, 815 chunks) |
+| #1375 | fix(wiki/compile): transactional write | OPEN (follow-up filed tonight) |
+| #1376 | fix(wiki/compile): --dim-review silently skipped | OPEN (follow-up filed tonight) |
 | #1333 | Corpus gap analysis | ✅ Codex shipped (commit mixed into `2c4e32740` + tracking commit `ad91b8261`) |
 
 Issues documented-but-not-touched tonight: #1344 (B+.1 seminar canary), #1350, #1351, #1334, many others.
 
 ## In flight RIGHT NOW
 
-- **Codex dispatch `issue-1374-a10b-ingest`** — 69 A2 wikis → ukrainian_wiki corpus. Mirrors A.6 logic. Should finish overnight or early morning.
-- Nothing else dispatched. No Gemini task active. No parallel work fans open.
+**Nothing.** All Codex/Gemini dispatches from tonight completed. Working tree has minor uncommitted files (curriculum audit/status, `review.md` agent scratchpad, `data/corpus_audit/section_extraction_report.md`, `wiki/.reviews/pedagogy/a1/sounds-letters-and-hello.json`) — none are critical path. User can review and commit or discard as desired.
 
 ## What's DEFERRED for sequencing (not dropped)
 
@@ -85,7 +91,7 @@ Issues documented-but-not-touched tonight: #1344 (B+.1 seminar canary), #1350, #
 
 ## Next-session priorities (when user wakes)
 
-1. **Check if A.10b Codex dispatch landed cleanly.** If yes, close #1374.
+1. ~~Check if A.10b Codex dispatch landed cleanly.~~ **DONE — closed automatically at 05:31 when Claude woke to verify.** Commit `64ee940f2` shipped.
 2. **Decide open sequencing Q1** (wikis-first scope expansion). Claude's default: yes, the principle holds — but the decision is user's because it's +500 wikis of additional work. Until decided, no B1+ work proceeds.
 3. **Decide open sequencing Q2** (#1344 path convention). Then 4 seminar canary wikis can compile (~10 min).
 4. **A.7** — native-reviewer engagement (user-owned, not Claude). Register + Russianism canon calibration for the A1 + A2 wiki batch.
