@@ -1,169 +1,198 @@
 vocabulary:
 - word: норма́льно
-  translation: okay
+  definition: задовільно, непогано; так, як має бути
   expression: false
   pos: присл.
   gender: ''
   verified: true
 - word: та́то
-  translation: father
+  definition: чоловік щодо своїх дітей; батько
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: о́ко
-  translation: eye
+  definition: орган зору людини або тварини
   expression: false
   pos: ім.
   gender: с.
   verified: true
 - word: дім
-  translation: house
+  definition: будівля, призначена для житла; родинна оселя
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: ніс
-  translation: nose
+  definition: частина обличчя людини або морди тварини, орган нюху та дихання
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: сон
-  translation: dream
+  definition: фізіологічний стан спокою та відпочинку організму
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: звук
-  translation: sound
+  definition: найменша одиниця мовлення, яку ми чуємо і вимовляємо
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: лі́тера
-  translation: letter
+  definition: графічний знак для позначення звука на письмі; буква
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: голосни́й
-  translation: vowel sound
+  definition: звук, який утворюється лише за допомогою голосу, без перешкод у роті
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: при́голосний
-  translation: consonant sound
+  definition: звук, що утворюється за допомогою шуму та голосу або лише шуму
   expression: false
   pos: прикм.
   gender: ''
   verified: true
 - word: приві́т
-  translation: hi, informal
+  definition: неформальне вітання при зустрічі
   expression: false
   pos: ім.
   gender: ч.
   verified: true
-- word: як справи
-  translation: how are you
+- word: Як справи?
+  definition: звичне запитання про стан, життя або настрій співрозмовника
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: до́бре
-  translation: fine, good
+  definition: позитивна оцінка стану, справ чи ситуації
   expression: false
   pos: присл.
   gender: ''
   verified: true
 - word: чудо́во
-  translation: great, wonderful
+  definition: дуже добре, прекрасно; вищий ступінь позитивної оцінки
   expression: false
   pos: присл.
   gender: ''
   verified: true
 - word: ма́ма
-  translation: mother
+  definition: жінка щодо своїх дітей; мати
   expression: false
   pos: ім.
   gender: ж.
   verified: true
 - word: молоко́
-  translation: milk
+  definition: біла поживна рідина, яку виробляють самки ссавців
   expression: false
   pos: ім.
   gender: с.
   verified: true
-- word: бу́ква
-  translation: letter
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
 - word: абе́тка
-  translation: alphabet
+  definition: сукупність усіх літер мови в усталеному порядку; алфавіт
   expression: false
+  additional: true
   pos: ім.
   gender: ж.
   verified: true
-- word: алфа́ві́т
-  translation: alphabet
+- word: бу́ква
+  definition: те саме, що літера; графічний символ звука
   expression: false
+  additional: true
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: склад
+  definition: частина слова, що вимовляється одним поштовхом повітря і містить один
+    голосний звук
+  expression: false
+  additional: true
   pos: ім.
   gender: ч.
   verified: true
+- word: м'який знак
+  definition: літера, яка не позначає звука, а лише пом'якшує попередній приголосний
+  expression: true
+  additional: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: тверди́й
-  translation: hard
+  definition: 'про приголосний звук: такий, що вимовляється без підняття середньої
+    частини язика до піднебіння'
   expression: false
+  additional: true
   pos: прикм.
   gender: ''
   verified: true
 - word: м'яки́й
-  translation: soft
+  definition: 'про приголосний звук: такий, що вимовляється з підняттям середньої
+    частини язика до піднебіння'
   expression: false
+  additional: true
   pos: прикм.
   gender: ''
   verified: true
-- word: Добрий день
-  translation: Good day
+- word: йото́ваний
+  definition: про літеру, що позначає сполучення приголосного [й] з голосним
+  expression: false
+  additional: true
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: Добрий день!
+  definition: офіційне або ввічливе вітання вдень
   expression: true
+  additional: true
   pos: ''
   gender: ''
   verified: true
 - word: А у тебе?
-  translation: And you?
+  definition: зустрічне неформальне запитання для підтримання розмови
   expression: true
+  additional: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А у Вас?
+  definition: зустрічне шанобливе запитання для підтримання розмови
+  expression: true
+  additional: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Радий зустрічі!
+  definition: ввічлива фраза при знайомстві або зустрічі (каже чоловік)
+  expression: true
+  additional: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Рада зустрічі!
+  definition: ввічлива фраза при знайомстві або зустрічі (каже жінка)
+  expression: true
+  additional: true
   pos: ''
   gender: ''
   verified: true
 - word: Як тебе звати?
-  translation: What is your name?
+  definition: запитання, щоб дізнатися ім'я співрозмовника
   expression: true
+  additional: true
   pos: ''
   gender: ''
   verified: true
-- word: Мене звати
-  translation: My name is
+- word: Мене звати...
+  definition: фраза для представлення себе, називання свого імені
   expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Радий тебе бачити
-  translation: Glad to see you
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: Рада тебе бачити
-  translation: Glad to see you
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: звуковий аналіз
-  translation: sound analysis
-  expression: true
+  additional: true
   pos: ''
   gender: ''
   verified: true

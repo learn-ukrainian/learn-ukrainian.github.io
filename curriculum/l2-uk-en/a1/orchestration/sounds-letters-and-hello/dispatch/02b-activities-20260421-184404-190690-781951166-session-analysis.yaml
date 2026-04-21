@@ -1,0 +1,29 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-21T16-42-4bffb5f1.json
+phase: activities
+prompt_chars: 29150
+response_chars: 7213
+prompt_words: 4141
+response_words: 840
+sections:
+- name: unknown
+  start: 0
+  length: 29150
+  fraction: 1.0
+large_sections:
+- unknown
+directives_total: 17
+directives_covered: 14
+directives_missed:
+- kind: must
+  text: Your first character must be 'version:'.
+  covered: false
+  coverage_note: 0/5 keywords (0%)
+- kind: must
+  text: '**ALL instructions and task stems MUST be in Ukrainian.'
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: '- Activities must test the Ukrainian forms taught in the module, not subject-matter
+    recall.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)

@@ -1,9 +1,0 @@
-attempt: 1
-label: review
-violations:
-- type: ACTIVITY_ORDER
-  severity: ERROR
-  section: (whole module)
-  message: Activity order mismatch at position 3 (expected type 'fill-in', found 'group-sort-vowels-consonants')
-    and position 4 (expected type 'group-sort', found 'letter-grid-alphabet') and
-    position 5 (expected type 'letter-grid', found 'fill-in-greetings')

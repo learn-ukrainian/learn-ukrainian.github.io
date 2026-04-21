@@ -1,22 +1,34 @@
 {
-  "total_items": 8,
-  "grounded_items": 8,
-  "ungrounded": [],
+  "total_items": 61,
+  "grounded_items": 58,
+  "ungrounded": [
+    {
+      "word": "яка",
+      "exercise_type": "quiz",
+      "context": "Яка літера не позначає жодного звуку?",
+      "role": "context"
+    },
+    {
+      "word": "жодного",
+      "exercise_type": "quiz",
+      "context": "Яка літера не позначає жодного звуку?",
+      "role": "context"
+    },
+    {
+      "word": "дякую",
+      "exercise_type": "match-up",
+      "context": "Чудово, дякую.",
+      "role": "context"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 17,
-    "tested_in_exercises": 7,
+    "tested_in_exercises": 14,
     "not_tested": [
       "голосний",
-      "дім",
-      "звук",
-      "літера",
-      "молоко",
-      "ніс",
       "око",
-      "приголосний",
-      "сон",
-      "тато"
+      "приголосний"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

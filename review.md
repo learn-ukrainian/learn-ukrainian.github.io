@@ -1,45 +1,58 @@
-## Linguistic Scan
-No linguistic errors found, other than one critical factual error regarding phonetics rules (simplification in the word "серце").
+Here is the adversarial review of the 4 wiki-compile prompts, evaluating them for Ukrainian-canonical output and potential escape hatches.
 
-## Exercise Check
-All exercise markers are present, correctly placed after the relevant sections, and match the types and focus outlined in the `activity_hints`.
-- `quiz-alternation-type` (10 items) — present.
-- `match-alternated-forms` (10 items) — present.
-- `fill-in-declension-context` (10 items) — present.
-- `error-correction-morphophonemics` (8 items) — present.
-- `sort-noun-subclasses` (12 items) — present.
-- `comprehension-medical-grammar` (6 items) — present.
+### 1. `scripts/wiki/prompts/compile_pedagogy_brief.md`
+**Verdict: MAJOR**
+- **Language-contract clarity**: The contract is explicit ("Нарис пишеться українською мовою"), but is undermined by a contradictory structural exception.
+- **Escape hatches**:
+  1. **Quote:** `Заголовки стовпців у таблицях, коли жодного українського відповідника немає (тоді український варіант у дужках)`
+     **Why:** This is logically contradictory ("if no Ukrainian equivalent exists, provide the Ukrainian variant in parentheses"). More dangerously, it gives the LLM explicit permission to use English column headers if it feels a concept is "too English".
+     **Proposed rewrite:** Remove this bullet point entirely. All column headers must be Ukrainian.
+  2. **Quote:** `Фонетична інтерференція, хибні когнати, структурне перенесення з англійської. Як запобігти кожній помилці.`
+     **Why:** When explaining L2 structural transfer, the LLM will naturally want to switch to English to explain the "English side" of the rule or the mechanism of the error.
+     **Proposed rewrite:** Add explicitly: `Пояснення механізму помилки має бути написано ВИКЛЮЧНО українською мовою.`
+- **Structural completeness**: All 8 template placeholders (`{topic}`, `{domain}`, `{tracks}`, `{slug}`, `{date}`, `{sources}`, `{text}`, `{chunk_id}`) are preserved verbatim.
+- **Register target**: Explicitly required ("науково-методичний, деколонізований (за нормами Антоненка-Давидовича)").
+- **Self-audit checklist**: The item `- [ ] Текст прози — українською, не англійською` is present but weak. It should be tightened to `- [ ] 100% прози написано українською мовою`.
 
-## Scores
-| Dimension | Score | Evidence |
-|-----------|-------|----------|
-| 1. Plan adherence | 9/10 | The text adheres tightly to the plan, but missed the point of the 'серце' trap mentioned in the plan ("Actually рц→рд is NOT спрощення"). |
-| 2. Linguistic accuracy | 8/10 | The text incorrectly claims that the consonant cluster 'рц' simplifies to the sound [р] in the word 'серце' ("спрощення довгої групи «рц» до звука [р]"). This is factually wrong. There is also a capitalization typo ("правильно!"). |
-| 3. Pedagogical quality | 9/10 | Excellent PPP flow, but the erroneous explanation of "серце" undermines the phonetics pedagogy in that section. |
-| 4. Vocabulary coverage | 10/10 | All required vocabulary is integrated contextually and naturally (e.g., чергування, спрощення, pluralia tantum, медична лексика). |
-| 5. Exercise quality | 10/10 | Exercise markers are all placed after the relevant theoretical blocks, exactly matching the plan. |
-| 6. Engagement & tone | 10/10 | The quiz-show framing is highly engaging, consistently maintained throughout, and avoids corporate/robotic tone. |
-| 7. Structural integrity | 10/10 | Clean markdown, word count comfortably exceeds the minimum (4895 words), all sections present. |
-| 8. Cultural accuracy | 10/10 | Culturally appropriate contexts (Carpathians, Ukrainian names/scenarios) without any colonial comparison. |
-| 9. Dialogue & conversation quality | 10/10 | The quiz-show dialogue successfully blends natural communication with grammar demonstrations without feeling overly forced. |
+### 2. `scripts/wiki/prompts/compile_grammar_brief.md`
+**Verdict: MAJOR**
+- **Language-contract clarity**: Clear overall, but contains the same contradictory bullet point for tables.
+- **Escape hatches**:
+  1. **Quote:** `Заголовки стовпців у таблицях, коли жодного українського відповідника немає (тоді український варіант у дужках)`
+     **Why:** Grants permission to use English column headers.
+     **Proposed rewrite:** Remove entirely.
+  2. **Quote:** `| ❌ Помилково | ✅ Правильно | Чому |`
+     **Why:** The "Чому" column explaining English L2 errors is highly susceptible to slipping into English prose for the explanation.
+     **Proposed rewrite:** Add a clarifying note: `Пояснення "Чому" в таблиці повинно бути ВИКЛЮЧНО українською мовою.`
+- **Structural completeness**: All 8 template placeholders are preserved verbatim.
+- **Register target**: Explicitly required ("науково-навчальний, деколонізований (за нормами Антоненка-Давидовича)").
+- **Self-audit checklist**: Present (`- [ ] Текст прози — українською, не англійською`), but similarly weak.
 
-## Findings
-[2. Linguistic accuracy] [Critical]
-Location: section "Огляд чергувань", paragraph 5: "Ще один дуже частий випадок — це спрощення довгої групи «рц» до звука [р], як у слові «серце» (*heart*)."
-Issue: The text claims that the sound [ц] drops in "серце" and it simplifies to [р]. This is factually wrong. "Серце" is pronounced with [ц]. The plan explicitly warned that "серце-сердечний" is a trap and not a standard simplification.
-Fix: Replace with an explanation of the trap: "Водночас будьте уважні зі словами-пастками: наприклад, у парі «серце» — «сердечний» ми бачимо не спрощення, а історичне чергування (рц → рд)."
+### 3. `scripts/wiki/prompts/compile_academic.md`
+**Verdict: MINOR**
+- **Language-contract clarity**: Good, but features the same column header escape hatch.
+- **Escape hatches**:
+  1. **Quote:** `Заголовки стовпців у таблицях, коли жодного українського відповідника немає (тоді український варіант у дужках)`
+     **Why:** Same logical contradiction and permission to use English headers.
+     **Proposed rewrite:** Remove entirely.
+- **Structural completeness**: All 8 template placeholders are preserved verbatim.
+- **Register target**: Explicitly required ("академічний, деколонізований (за нормами Антоненка-Давидовича)").
+- **Self-audit checklist**: `- [ ] Україномовність: 100% прози українською`. Excellent. This is the strongest checklist item among the 4 prompts.
 
-[2. Linguistic accuracy] [Minor]
-Location: section "Діалог-синтез", blockquote: "— **Ведучий:** правильно!"
-Issue: Capitalization typo.
-Fix: Capitalize the first word of the sentence.
-
-## Verdict: REVISE
-The module is outstanding in structure, pedagogy, and engagement, significantly exceeding the word count while maintaining quality. However, it contains a critical phonetic error regarding the word "серце", teaching a false rule instead of explaining the trap as the plan requested. This requires a targeted revision before publishing.
-
-<fixes>
-- find: "Ще один дуже частий випадок — це спрощення довгої групи «рц» до звука [р], як у слові «серце» (*heart*)."
-  replace: "Водночас будьте уважні зі словами-пастками: наприклад, у парі «серце» — «сердечний» ми бачимо не спрощення, а історичне чергування (рц → рд)."
-- find: "— **Ведучий:** правильно! А чому ми кажемо «з радістю», без подвоєння приголосних літер?"
-  replace: "— **Ведучий:** Правильно! А чому ми кажемо «з радістю», без подвоєння приголосних літер?"
-</fixes>
+### 4. `scripts/wiki/prompts/compile_article.md`
+**Verdict: MAJOR**
+- **Language-contract clarity**: The contract mentions "Прагни до 100% української прози", but is immediately undermined by specific permissions that allow English leakage.
+- **Escape hatches**:
+  1. **Quote:** `Заголовки стовпців у таблицях, коли жодного українського відповідника немає (тоді український варіант у дужках)`
+     **Why:** Same as above.
+     **Proposed rewrite:** Remove entirely.
+  2. **Quote:** `Короткі англомовні глоси — лише для вузькоспеціалізованих термінів`
+     **Why:** This is a massive escape hatch. A confused LLM will classify any term it struggles to translate as "highly specialized" and output English glosses or even whole sentences.
+     **Proposed rewrite:** Change to: `Англомовні відповідники допускаються ЛИШЕ в дужках після українського терміна при його першому згадуванні.`
+  3. **Quote:** `- [ ] ≥ 95% прози — українською`
+     **Why:** This explicitly tells the LLM that 5% English prose is acceptable! This is a fatal flaw for a "no English surface" constraint.
+     **Proposed rewrite:** Change to: `- [ ] 100% прози — українською (без винятків)`.
+- **Structural completeness**: All 8 template placeholders are preserved verbatim.
+- **Register target**: Explicitly required ("науково-популярний / науковий, деколонізований (за нормами Антоненка-Давидовича)").
+- **Source-weighting hierarchy**: Excellent. The primary-source-over-Wikipedia weighting is clearly laid out in a table and explicitly calls out "Семінарські треки ... МАЮТЬ спиратися на первинні джерела".
+- **Self-audit checklist**: Present, but fundamentally broken by the `≥ 95%` allowance mentioned above.

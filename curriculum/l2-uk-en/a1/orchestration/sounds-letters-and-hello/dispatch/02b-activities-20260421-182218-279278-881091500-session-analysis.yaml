@@ -1,0 +1,57 @@
+session_path: /Users/krisztiankoos/.gemini/tmp/learn-ukrainian/chats/session-2026-04-21T16-20-c9955edc.json
+phase: activities
+prompt_chars: 27461
+response_chars: 837
+prompt_words: 3982
+response_words: 93
+sections:
+- name: unknown
+  start: 0
+  length: 27461
+  fraction: 1.0
+large_sections:
+- unknown
+directives_total: 16
+directives_covered: 6
+directives_missed:
+- kind: must
+  text: '**ALL instructions and task stems MUST be in Ukrainian.'
+  covered: false
+  coverage_note: 0/6 keywords (0%)
+- kind: must
+  text: '- Activities must test the Ukrainian forms taught in the module, not subject-matter
+    recall.'
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-greetings
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: watch-and-repeat-vowels
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-greetings
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-sounds-vs-letters
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-greetings
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: watch-and-repeat-vowels
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-greetings
+  covered: false
+  coverage_note: marker missing

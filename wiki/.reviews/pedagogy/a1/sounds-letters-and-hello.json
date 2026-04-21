@@ -4,42 +4,7 @@
     {
       "round": 1,
       "dims": {
-        "ukrainian_perspective": {
-          "agent": "claude",
-          "model": "claude-opus-4-6",
-          "score": 9,
-          "verdict": "PASS",
-          "findings_count": 1,
-          "findings": [
-            {
-              "location": "## Деколонізаційні застереження (Decolonization Notes), point 3",
-              "quote": "This is a key feature of Ukrainian that distinguishes it from Russian, which has more consonant clusters.",
-              "issue_type": "LIKE_RUSSIAN_BUT",
-              "severity": "minor",
-              "description": "Милозвучність is defined through contrast with Russian rather than on its own terms; the sentence makes Russian the reference point for a core Ukrainian phonological identity feature.",
-              "raw": {
-                "location": "## Деколонізаційні застереження (Decolonization Notes), point 3",
-                "framing_quote": "This is a key feature of Ukrainian that distinguishes it from Russian, which has more consonant clusters.",
-                "implied_premise": "Russian is the default phonological baseline against which Ukrainian features are measured, even in a section explicitly about decolonization.",
-                "tool_evidence": [],
-                "issue_type": "LIKE_RUSSIAN_BUT",
-                "issue_description": "Милозвучність is defined through contrast with Russian rather than on its own terms; the sentence makes Russian the reference point for a core Ukrainian phonological identity feature.",
-                "severity": "minor"
-              }
-            }
-          ],
-          "fixes": [
-            {
-              "dim": "ukrainian_perspective",
-              "find": "This is a key feature of Ukrainian that distinguishes it from Russian, which has more consonant clusters.",
-              "replace": "This is a defining feature of Ukrainian phonology, which actively maintains a smooth consonant-vowel rhythm."
-            }
-          ],
-          "notes": "Strong decolonized framing throughout; one minor instance of Russian-as-baseline contrast in the милозвучність description, easily fixed by positive restatement.",
-          "duration_s": 85.52,
-          "error": ""
-        },
-        "register": {
+        "factual_accuracy": {
           "agent": "gemini",
           "model": "gemini-3.1-pro-preview",
           "score": 8,
@@ -47,378 +12,245 @@
           "findings_count": 1,
           "findings": [
             {
-              "location": "## Приклади з підручників (Textbook Examples)",
-              "quote": "Закрий долонями вуха і вимов звук [д], а потім [т].",
-              "issue_type": "CALQUE",
-              "severity": "major",
-              "description": "Using 'закрити' (to close/cover) for ears is a semantic calque from the Russian 'закрыть уши'; the idiomatic native Ukrainian verb is 'затулити'.",
-              "raw": {
-                "location": "## Приклади з підручників (Textbook Examples)",
-                "quote": "Закрий долонями вуха і вимов звук [д], а потім [т].",
-                "tool_evidence": [
-                  {
-                    "tool": "search_style_guide",
-                    "args": "закривати вуха",
-                    "result_summary": "Дієслово 'закрити' щодо вух та очей є семантичною калькою з російської ('закрыть уши', 'закрыть глаза'). Українською правильно казати 'затуляти/затулити вуха' та 'заплющувати/заплющити очі'."
-                  }
-                ],
-                "natural_alternative": "Затули долонями вуха і вимов звук [д], а потім [т].",
-                "issue_type": "CALQUE",
-                "issue_description": "Using 'закрити' (to close/cover) for ears is a semantic calque from the Russian 'закрыть уши'; the idiomatic native Ukrainian verb is 'затулити'.",
-                "severity": "major"
-              }
-            }
-          ],
-          "fixes": [
-            {
-              "dim": "register",
-              "find": "Закрий долонями вуха і вимов звук [д], а потім [т].",
-              "replace": "Затули долонями вуха і вимов звук [д], а потім [т]."
-            }
-          ],
-          "notes": "The Ukrainian text is largely idiomatic, with one major semantic calque ('закрити вуха' instead of 'затулити вуха').",
-          "duration_s": 100.15,
-          "error": ""
-        },
-        "factual_accuracy": {
-          "agent": "gemini",
-          "model": "gemini-3.1-pro-preview",
-          "score": 7,
-          "verdict": "REVISE",
-          "findings_count": 1,
-          "findings": [
-            {
-              "location": "## Типові помилки L2 (Common L2 Errors)",
-              "quote": "The sound is similar to the g in Dutch goed or a voiced h.",
+              "location": "## Типові помилки L2 (англомовні учні)",
+              "quote": "Вимова `[и]` як окремої, центрально-задньої фонеми.",
               "issue_type": "LINGUISTIC_ERROR",
-              "severity": "critical",
-              "description": "The article incorrectly equates the Ukrainian 'г' [ɦ] with the Dutch 'g' in 'goed' [x]/[ɣ]. These are distinct sounds with different places of articulation (glottal vs. velar/uvular), and the Dutch sound is much closer to the Ukrainian 'х'.",
+              "severity": "major",
+              "description": "В українській фонетиці звук [и] належить до голосних переднього ряду (хоч і дещо відтягнений назад порівняно з [і]), а не 'центрально-задньої' фонеми.",
               "raw": {
-                "location": "## Типові помилки L2 (Common L2 Errors)",
-                "claim_quote": "The sound is similar to the g in Dutch goed or a voiced h.",
+                "location": "## Типові помилки L2 (англомовні учні)",
+                "claim_quote": "Вимова `[и]` як окремої, центрально-задньої фонеми.",
                 "tool_evidence": [
                   {
-                    "tool": "google_web_search",
-                    "args": "\"Dutch g\" \"Ukrainian г\" phonetics",
-                    "result_summary": "Search confirms Ukrainian 'г' [ɦ] is a voiced glottal fricative (similar to a voiced English 'h'), whereas the Dutch 'g' in 'goed' is a velar/uvular fricative [x]/[ɣ] (a harsh scraping sound). Equating them is a known phonological error."
+                    "tool": "search_text",
+                    "args": "голосний [и] ряд",
+                    "result_summary": "Підручники класифікують [и] як голосний переднього ряду (разом з [і] та [е]). Заднього ряду є [у], [о], [а]."
                   }
                 ],
                 "issue_type": "LINGUISTIC_ERROR",
-                "issue_description": "The article incorrectly equates the Ukrainian 'г' [ɦ] with the Dutch 'g' in 'goed' [x]/[ɣ]. These are distinct sounds with different places of articulation (glottal vs. velar/uvular), and the Dutch sound is much closer to the Ukrainian 'х'.",
-                "severity": "critical"
+                "issue_description": "В українській фонетиці звук [и] належить до голосних переднього ряду (хоч і дещо відтягнений назад порівняно з [і]), а не 'центрально-задньої' фонеми.",
+                "severity": "major"
               }
             }
           ],
           "fixes": [
             {
               "dim": "factual_accuracy",
-              "find": "The sound is similar to the g in Dutch goed or a voiced h.",
-              "replace": "The sound is similar to a voiced h."
+              "find": "Вимова `[и]` як окремої, центрально-задньої фонеми.",
+              "replace": "Вимова `[и]` як окремої фонеми переднього ряду."
             }
           ],
-          "notes": "One critical linguistic error regarding the phonetic comparison of Ukrainian 'г' and Dutch 'g'.",
-          "duration_s": 230.27,
+          "notes": "Виявлено одну лінгвістичну неточність щодо класифікації ряду звука [и], решта фонетичних і методичних фактів відповідають академічній нормі.",
+          "duration_s": 105.16,
+          "error": ""
+        },
+        "ukrainian_perspective": {
+          "agent": "claude",
+          "model": "claude-opus-4-6",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 115.58,
+          "error": ""
+        },
+        "register": {
+          "agent": "gemini",
+          "model": "gemini-3.1-pro-preview",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 2,
+          "findings": [
+            {
+              "location": "## Послідовність введення",
+              "quote": "Правильна послідовність введення фонем та графем є критичною для успішного засвоєння.",
+              "issue_type": "CALQUE",
+              "severity": "minor",
+              "description": "Using 'є критичною' as a direct translation of English 'is critical' (meaning crucial) is an unnatural semantic calque in Ukrainian academic/pedagogical writing.",
+              "raw": {
+                "location": "## Послідовність введення",
+                "quote": "Правильна послідовність введення фонем та графем є критичною для успішного засвоєння.",
+                "tool_evidence": [
+                  {
+                    "tool": "search_definitions",
+                    "args": "критичний",
+                    "result_summary": "СУМ-11 defines 'критичний' primarily in relation to criticism or a crisis state. Using it to mean 'crucial' or 'decisive' is a semantic calque from English."
+                  }
+                ],
+                "natural_alternative": "Правильна послідовність введення фонем та графем має вирішальне значення для успішного засвоєння.",
+                "issue_type": "CALQUE",
+                "issue_description": "Using 'є критичною' as a direct translation of English 'is critical' (meaning crucial) is an unnatural semantic calque in Ukrainian academic/pedagogical writing.",
+                "severity": "minor"
+              }
+            },
+            {
+              "location": "## Типові помилки L2 (англомовні учні)",
+              "quote": "Пари `стан` - `стань` [S4] є добрим тренажером.",
+              "issue_type": "UNNATURAL_COLLOCATION",
+              "severity": "minor",
+              "description": "In Ukrainian, 'тренажер' refers to a physical device or software simulator, making its application to word pairs sound like translated English slang ('a good trainer').",
+              "raw": {
+                "location": "## Типові помилки L2 (англомовні учні)",
+                "quote": "Пари `стан` - `стань` [S4] є добрим тренажером.",
+                "tool_evidence": [
+                  {
+                    "tool": "search_definitions",
+                    "args": "тренажер",
+                    "result_summary": "СУМ-11 defines 'тренажер' as a training apparatus or machine. Applying it metaphorically to word pairs is informal and unnatural in standard pedagogy."
+                  }
+                ],
+                "natural_alternative": "Пари `стан` - `стань` [S4] є гарним матеріалом для тренування.",
+                "issue_type": "UNNATURAL_COLLOCATION",
+                "issue_description": "In Ukrainian, 'тренажер' refers to a physical device or software simulator, making its application to word pairs sound like translated English slang ('a good trainer').",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "register",
+              "find": "Правильна послідовність введення фонем та графем є критичною для успішного засвоєння.",
+              "replace": "Правильна послідовність введення фонем та графем має вирішальне значення для успішного засвоєння."
+            },
+            {
+              "dim": "register",
+              "find": "Пари `стан` - `стань` [S4] є добрим тренажером.",
+              "replace": "Пари `стан` - `стань` [S4] є гарним матеріалом для тренування."
+            }
+          ],
+          "notes": "The article is written in highly natural, idiomatic Ukrainian with the correct pedagogical register; only two minor anglicisms/unnatural collocations were found.",
+          "duration_s": 184.97,
           "error": ""
         },
         "source_grounding": {
           "agent": "codex",
           "model": "gpt-5.4",
-          "score": 4,
+          "score": 5,
           "verdict": "REJECT",
-          "findings_count": 16,
+          "findings_count": 7,
           "findings": [
             {
-              "location": "## Методичний підхід (Methodological Approach)",
-              "quote": "The foundational approach for teaching Ukrainian sounds to beginners, as derived from Grade 1-2 textbooks, is \"звук перед буквою\" (sound before letter). The learner must first learn to hear, identify, and produce the core sounds of Ukrainian before associating them with written symbols [S17, S31].",
-              "issue_type": "STALE_CITATION",
+              "location": "## Методичний підхід",
+              "quote": "Українська педагогічна традиція, що відображена у підручниках для 1–5 класів, наголошує на первинності **звука** як найменшої одиниці мови та мовлення [S1]. Перш ніж учень побачить літеру, він має почути й навчитися розпізнавати звук.",
+              "issue_type": "OVERCLAIM",
               "severity": "major",
-              "description": "One cited source is missing and the other does not support the claimed pedagogical principle.",
+              "description": "S1 supports the definition of sound, not the broader claim about a cross-grade pedagogical tradition or a required instructional order.",
               "raw": {
-                "location": "## Методичний підхід (Methodological Approach)",
-                "claim_quote": "The foundational approach for teaching Ukrainian sounds to beginners, as derived from Grade 1-2 textbooks, is \"звук перед буквою\" (sound before letter). The learner must first learn to hear, identify, and produce the core sounds of Ukrainian before associating them with written symbols [S17, S31].",
-                "citation_refs": [
-                  "S17",
-                  "S31"
-                ],
-                "source_content_quote": "S17 is absent from `wiki/pedagogy/a1/sounds-letters-and-hello.sources.yaml`. S31 (`6-klas-ukrmova-litvinova-2023_s0037`) asks: \"Скільки літер в українському алфавіті? ... Які літери позначають два звуки?\"; it does not describe a Grade 1-2 \"sound before letter\" teaching method.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "One cited source is missing and the other does not support the claimed pedagogical principle.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Методичний підхід (Methodological Approach)",
-              "quote": "An effective exercise is having students place a hand on their larynx to feel the vibration of vowels, or hold a hand in front of their mouth to feel the puff of air from plosives [S6, S16].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "The cited sources do not resolve to the physical drill the article attributes to them.",
-              "raw": {
-                "location": "## Методичний підхід (Methodological Approach)",
-                "claim_quote": "An effective exercise is having students place a hand on their larynx to feel the vibration of vowels, or hold a hand in front of their mouth to feel the puff of air from plosives [S6, S16].",
-                "citation_refs": [
-                  "S6",
-                  "S16"
-                ],
-                "source_content_quote": "S6 is absent from the source registry. S16 (`5-klas-ukrmova-zabolotnyi-2023_s0073`) says: \"Звук – це найменша одиниця мови та мовлення\" and \"Тільки в певному поєднанні звуки творять слова\"; it does not describe hand-on-larynx or puff-of-air drills.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The cited sources do not resolve to the physical drill the article attributes to them.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Методичний підхід (Methodological Approach)",
-              "quote": "A circle `[•]` represents a vowel, a single dash `[–]` represents a hard consonant, and a double dash `[=]` represents a soft consonant [S3, S8, S40].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "The article gives a specific symbol system that the cited chunks do not actually state.",
-              "raw": {
-                "location": "## Методичний підхід (Methodological Approach)",
-                "claim_quote": "A circle `[•]` represents a vowel, a single dash `[–]` represents a hard consonant, and a double dash `[=]` represents a soft consonant [S3, S8, S40].",
-                "citation_refs": [
-                  "S3",
-                  "S8",
-                  "S40"
-                ],
-                "source_content_quote": "S8 is absent from the source registry. S3 (`5-klas-ukrmova-litvinova-2022_s0117`) is an exercise page: \"Об’єднайтесь у три групи та зашифруйте...\". S40 (`5-klas-ukrmova-avramenko-2022_s0076`) discusses transcription: \"кожний звук або все слово беруть у квадратні дужки\" and sound/letter distinctions. Neither chunk gives the claimed `[•] / [–] / [=]` legend.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The article gives a specific symbol system that the cited chunks do not actually state.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Методичний підхід (Methodological Approach)",
-              "quote": "A critical concept is that the number of syllables in a word is strictly equal to the number of vowels [S20]. Every syllable is built around a single vowel sound.",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "The cited page is about orthoepy, not the syllable-count rule claimed here.",
-              "raw": {
-                "location": "## Методичний підхід (Methodological Approach)",
-                "claim_quote": "A critical concept is that the number of syllables in a word is strictly equal to the number of vowels [S20]. Every syllable is built around a single vowel sound.",
-                "citation_refs": [
-                  "S20"
-                ],
-                "source_content_quote": "S20 (`5-klas-ukrmova-uhor-2022-1_s0157`) says: \"Орфоепія — це розділ мовознавства, що вивчає правильну вимову слів\" and treats stressed/unstressed vowels; it does not state \"скільки в слові голосних, стільки й складів\".",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The cited page is about orthoepy, not the syllable-count rule claimed here.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Послідовність введення (Introduction Sequence)",
-              "quote": "Before any letters are taught, establish the core concept: звуки are what we hear and say, букви are the symbols we use to write them down [S13, S18, S31]. Sounds can be long or short, loud or soft; letters can be big or small, black or blue [S13].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "The article attributes a specific explanation to sources that either are missing or discuss different material.",
-              "raw": {
-                "location": "## Послідовність введення (Introduction Sequence)",
-                "claim_quote": "Before any letters are taught, establish the core concept: звуки are what we hear and say, букви are the symbols we use to write them down [S13, S18, S31]. Sounds can be long or short, loud or soft; letters can be big or small, black or blue [S13].",
-                "citation_refs": [
-                  "S13",
-                  "S18",
-                  "S31"
-                ],
-                "source_content_quote": "S18 is absent from the source registry. S13 (`5-klas-ukrmova-litvinova-2022_s0115`) says: \"голосні вимовляємо голосом\" and \"Приголосні звуки утворюються за допомогою голосу та шуму\". S31 (`6-klas-ukrmova-litvinova-2023_s0037`) asks alphabet questions such as \"Скільки літер в українському алфавіті?\". Neither cited chunk gives the quoted sound-vs-letter formulation or the \"big or small, black or blue\" contrast.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The article attributes a specific explanation to sources that either are missing or discuss different material.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Послідовність введення (Introduction Sequence)",
-              "quote": "Introduce **Яя, Юю, Єє, Її**. Teach them as \"special\" letters. **Її** *always* makes two sounds: [йі] [S27, S38]. **Яя, Юю, Єє** make two sounds ([йа], [йу], [йе]) at the beginning of a word/syllable, and one sound ([а], [у], [е]) while softening the preceding consonant after another consonant [S28].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "The cited chunks only partially cover the letter behavior described, and they do not support the full claim about `ї` or the full teaching rule stated here.",
-              "raw": {
-                "location": "## Послідовність введення (Introduction Sequence)",
-                "claim_quote": "Introduce **Яя, Юю, Єє, Її**. Teach them as \"special\" letters. **Її** *always* makes two sounds: [йі] [S27, S38]. **Яя, Юю, Єє** make two sounds ([йа], [йу], [йе]) at the beginning of a word/syllable, and one sound ([а], [у], [е]) while softening the preceding consonant after another consonant [S28].",
-                "citation_refs": [
-                  "S27",
-                  "S38",
-                  "S28"
-                ],
-                "source_content_quote": "S27 (`2-klas-ukrmova-bolshakova-2019-1_s0035`) says: \"Букви я, ю, є позначають: один звук [а], [у], [е]; два звуки [йа], [йу], [йе]\". S38 (`4-klas-ukrayinska-mova-kravtsova-2021-1_s0005`) discusses doubtful consonants and `нігті/кігті`; it does not mention `ї`. S28 (`1-klas-bukvar-bolshakova-2018-1_s0023`) explains how vowels and consonants are formed, not the positional rule for iotated letters.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The cited chunks only partially cover the letter behavior described, and they do not support the full claim about `ї` or the full teaching rule stated here.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Послідовність введення (Introduction Sequence)",
-              "quote": "6.  **Step 6: Foundational Greetings.** Introduce the first practical, high-value phrases. This applies the knowledge and provides motivation.",
-              "issue_type": "UNSUPPORTED_CLAIM",
-              "severity": "major",
-              "description": "This pedagogical recommendation is substantive but entirely uncited.",
-              "raw": {
-                "location": "## Послідовність введення (Introduction Sequence)",
-                "claim_quote": "6.  **Step 6: Foundational Greetings.** Introduce the first practical, high-value phrases. This applies the knowledge and provides motivation.",
-                "citation_refs": [],
-                "source_content_quote": "No `[S#]` citation is attached to this step, and there is no nearby `<!-- VERIFY -->` tag.",
-                "issue_type": "UNSUPPORTED_CLAIM",
-                "issue_description": "This pedagogical recommendation is substantive but entirely uncited.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Типові помилки L2 (Common L2 Errors)",
-              "quote": "In English, word-final voiced consonants are often partially or fully devoiced. In Ukrainian, they retain their voicing clearly [S7]. An exception is `г`, which can become `[х]` before a voiceless consonant (`кігті` -> `[кіхті]`), but not typically at the end of a word [S7, S37].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "The phonological rule in the table is not grounded in the sources cited for it.",
-              "raw": {
-                "location": "## Типові помилки L2 (Common L2 Errors)",
-                "claim_quote": "In English, word-final voiced consonants are often partially or fully devoiced. In Ukrainian, they retain their voicing clearly [S7]. An exception is `г`, which can become `[х]` before a voiceless consonant (`кігті` -> `[кіхті]`), but not typically at the end of a word [S7, S37].",
-                "citation_refs": [
-                  "S7",
-                  "S37"
-                ],
-                "source_content_quote": "S7 (`3-klas-ukrainska-mova-ponomarova-2020-1_s0005`) asks students to build sound schemes and pronounce soft consonants. S37 (`5-klas-ukrmova-litvinova-2022_s0116`) gives minimal-pair practice such as \"бик — бак — бук\" and \"дим — дум — дам\". Neither cited chunk states that word-final voiced consonants stay voiced or gives the `г -> [х] before voiceless consonant` rule.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The phonological rule in the table is not grounded in the sources cited for it.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Типові помилки L2 (Common L2 Errors)",
-              "quote": "The letter **в** only has the [v] sound before a vowel. At the end of a word (`лев` - lion) or before a consonant (`завтра` - tomorrow), it becomes a bilabial semivowel [ў], forming a diphthong with the preceding vowel. It's a light sound made with the lips, not teeth-on-lip [S7].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "The cited page is off-topic for the `в -> [ў]` pronunciation claim.",
-              "raw": {
-                "location": "## Типові помилки L2 (Common L2 Errors)",
-                "claim_quote": "The letter **в** only has the [v] sound before a vowel. At the end of a word (`лев` - lion) or before a consonant (`завтра` - tomorrow), it becomes a bilabial semivowel [ў], forming a diphthong with the preceding vowel. It's a light sound made with the lips, not teeth-on-lip [S7].",
-                "citation_refs": [
-                  "S7"
-                ],
-                "source_content_quote": "S7 (`3-klas-ukrainska-mova-ponomarova-2020-1_s0005`) is about sound schemes and soft consonants: \"Пригадай, як позначаються голосні і тверді та м’які приголосні звуки у схемах слів\". It does not discuss `в` as `[ў]` word-finally or before consonants.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The cited page is off-topic for the `в -> [ў]` pronunciation claim.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Деколонізаційні застереження (Decolonization Notes)",
-              "quote": "Under no circumstances should Ukrainian phonetics be taught \"through\" Russian. Avoid statements like \"Ukrainian **и** is like Russian **ы**\" or \"It's like Russian, but...\". This approach incorrectly frames Ukrainian as a derivative of Russian and contaminates the learner's phonology. Ukrainian phonetics must be taught on their own terms, establishing a new, independent system in the learner's mind [S2].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "The cited source is off-topic and does not ground the decolonization policy stated here.",
-              "raw": {
-                "location": "## Деколонізаційні застереження (Decolonization Notes)",
-                "claim_quote": "Under no circumstances should Ukrainian phonetics be taught \"through\" Russian. Avoid statements like \"Ukrainian **и** is like Russian **ы**\" or \"It's like Russian, but...\". This approach incorrectly frames Ukrainian as a derivative of Russian and contaminates the learner's phonology. Ukrainian phonetics must be taught on their own terms, establishing a new, independent system in the learner's mind [S2].",
-                "citation_refs": [
-                  "S2"
-                ],
-                "source_content_quote": "S2 (`1-klas-bukvar-zaharijchuk-2025-1_s0013`) is a phonics page: \"Мовні звуки: голосні та приголосні\", \"Приголосний звук позначаємо так: [–]\", \"Голосний звук позначаємо так: [•]\". It contains no discussion of Russian comparisons or decolonization.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The cited source is off-topic and does not ground the decolonization policy stated here.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Деколонізаційні застереження (Decolonization Notes)",
-              "quote": "It was part of the standard Ukrainian alphabet until it was officially removed in 1933 by the Soviet regime to make the Ukrainian language \"closer to Russian\" [S2]. A Soviet linguist, Naum Kaganovich, infamously compared the letter **ґ** to a gallows (`шибениця`) and celebrated its removal as a way of asserting Russia's role as the \"older sister\" [S2].",
-              "issue_type": "MISATTRIBUTION",
-              "severity": "critical",
-              "description": "The article assigns detailed historical claims to a source that is actually an elementary phonics page.",
-              "raw": {
-                "location": "## Деколонізаційні застереження (Decolonization Notes)",
-                "claim_quote": "It was part of the standard Ukrainian alphabet until it was officially removed in 1933 by the Soviet regime to make the Ukrainian language \"closer to Russian\" [S2]. A Soviet linguist, Naum Kaganovich, infamously compared the letter **ґ** to a gallows (`шибениця`) and celebrated its removal as a way of asserting Russia's role as the \"older sister\" [S2].",
-                "citation_refs": [
-                  "S2"
-                ],
-                "source_content_quote": "S2 (`1-klas-bukvar-zaharijchuk-2025-1_s0013`) contains beginner phonics prompts such as \"Вимов голосні звуки...\" and the labels \"Мовні звуки: голосні та приголосні\". It does not mention 1933, Soviet language policy, or Naum Kaganovich.",
-                "issue_type": "MISATTRIBUTION",
-                "issue_description": "The article assigns detailed historical claims to a source that is actually an elementary phonics page.",
-                "severity": "critical"
-              }
-            },
-            {
-              "location": "## Деколонізаційні застереження (Decolonization Notes)",
-              "quote": "Ukrainian phonology actively avoids difficult consonant clusters, a principle known as `милозвучність` (melodiousness or euphony) [S1].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "The core source cited for this principle is missing entirely from the registry.",
-              "raw": {
-                "location": "## Деколонізаційні застереження (Decolonization Notes)",
-                "claim_quote": "Ukrainian phonology actively avoids difficult consonant clusters, a principle known as `милозвучність` (melodiousness or euphony) [S1].",
+                "location": "## Методичний підхід",
+                "claim_quote": "Українська педагогічна традиція, що відображена у підручниках для 1–5 класів, наголошує на первинності **звука** як найменшої одиниці мови та мовлення [S1]. Перш ніж учень побачить літеру, він має почути й навчитися розпізнавати звук.",
                 "citation_refs": [
                   "S1"
                 ],
-                "source_content_quote": "S1 is absent from `wiki/pedagogy/a1/sounds-letters-and-hello.sources.yaml`.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The core source cited for this principle is missing entirely from the registry.",
+                "source_content_quote": "S1 says: \"Звук — найменша одиниця мови та мовлення.\" It defines phonetics and lists sounds, but it does not say that grades 1–5 textbooks follow a \"sound first, letter later\" teaching sequence.",
+                "issue_type": "OVERCLAIM",
+                "issue_description": "S1 supports the definition of sound, not the broader claim about a cross-grade pedagogical tradition or a required instructional order.",
                 "severity": "major"
               }
             },
             {
-              "location": "## Приклади з підручників (Textbook Examples)",
-              "quote": "*   **Source:** Большакова, 1 клас, Буквар [S40]",
-              "issue_type": "MISATTRIBUTION",
-              "severity": "critical",
-              "description": "The source label in the article names a different book and grade than the cited source actually is.",
+              "location": "## Послідовність введення / Крок 4",
+              "quote": "-   **Я, Ю, Є**: Поясніть їхню подвійну роль [S2]:\n    -   Два звуки (`[йа]`, `[йу]`, `[йе]`) на початку слова (`яблуко`), після голосного (`моя`) та після апострофа чи м'якого знака (`п'ять`, `м'ясо`).\n    -   Один голосний звук (`[а]`, `[у]`, `[е]`) після приголосного, пом'якшуючи його (`няня`, `люди`, `синє`).",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "The article anchors this rule to S2, but the cited chunk itself is unavailable, so the claim cannot be verified against its stated source.",
               "raw": {
-                "location": "## Приклади з підручників (Textbook Examples)",
-                "claim_quote": "*   **Source:** Большакова, 1 клас, Буквар [S40]",
+                "location": "## Послідовність введення / Крок 4",
+                "claim_quote": "-   **Я, Ю, Є**: Поясніть їхню подвійну роль [S2]:\n    -   Два звуки (`[йа]`, `[йу]`, `[йе]`) на початку слова (`яблуко`), після голосного (`моя`) та після апострофа чи м'якого знака (`п'ять`, `м'ясо`).\n    -   Один голосний звук (`[а]`, `[у]`, `[е]`) після приголосного, пом'якшуючи його (`няня`, `люди`, `синє`).",
                 "citation_refs": [
-                  "S40"
+                  "S2"
                 ],
-                "source_content_quote": "S40 resolves to `5-klas-ukrmova-avramenko-2022_s0076`, title \"Сторінка 73\"; its text begins \"§ 30–31. Звуки мови та звуки мовлення. Голосні й приголосні звуки\". It is not \"Большакова, 1 клас, Буквар\".",
-                "issue_type": "MISATTRIBUTION",
-                "issue_description": "The source label in the article names a different book and grade than the cited source actually is.",
-                "severity": "critical"
+                "source_content_quote": "The registry points S2 to file `S2368`, but no chunk text for `S2368` is present in the supplied chunk set or resolvable as a live cited chunk in the available local source store.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "The article anchors this rule to S2, but the cited chunk itself is unavailable, so the claim cannot be verified against its stated source.",
+                "severity": "major"
               }
             },
             {
-              "location": "## Приклади з підручників (Textbook Examples)",
-              "quote": "*   **Source:** Литвинова, 5 клас [S9]",
-              "issue_type": "MISATTRIBUTION",
-              "severity": "critical",
-              "description": "The article attributes the citation to the wrong textbook and wrong grade.",
+              "location": "## Послідовність введення / Крок 6",
+              "quote": "-   **Г vs Ґ**: Поясніть, що в українській мові є два звуки: поширений `[г]` (гортанний, фрикативний) і рідкісний `[ґ]` (проривний) [S2, S7]. Наведіть список обов'язкових слів з `ґ` (`аґрус`, `ґава`, `ґудзик`, `ґрунт`, `дзиґа` тощо) та смислорозрізнювальні пари, як `грати` (на піаніно) та `ґрати` (решітка) [S2].",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "This phonetics claim and its example list rely on cited chunks that do not resolve to available source text.",
               "raw": {
-                "location": "## Приклади з підручників (Textbook Examples)",
-                "claim_quote": "*   **Source:** Литвинова, 5 клас [S9]",
+                "location": "## Послідовність введення / Крок 6",
+                "claim_quote": "-   **Г vs Ґ**: Поясніть, що в українській мові є два звуки: поширений `[г]` (гортанний, фрикативний) і рідкісний `[ґ]` (проривний) [S2, S7]. Наведіть список обов'язкових слів з `ґ` (`аґрус`, `ґава`, `ґудзик`, `ґрунт`, `дзиґа` тощо) та смислорозрізнювальні пари, як `грати` (на піаніно) та `ґрати` (решітка) [S2].",
                 "citation_refs": [
-                  "S9"
+                  "S2",
+                  "S7"
                 ],
-                "source_content_quote": "S9 resolves to `10-klas-ukrmova-glazova-2018_s0144`, title \"Сторінка 102\"; the page is on \"Чергування звуків\" and is not a Grade 5 Litvinova page.",
-                "issue_type": "MISATTRIBUTION",
-                "issue_description": "The article attributes the citation to the wrong textbook and wrong grade.",
-                "severity": "critical"
+                "source_content_quote": "The registry maps S2 to `S2368` and S7 to `S2516`, but neither cited chunk is provided in the supplied chunk set; `S2516` is entirely unresolved here.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "This phonetics claim and its example list rely on cited chunks that do not resolve to available source text.",
+                "severity": "major"
               }
             },
             {
-              "location": "## Приклади з підручників (Textbook Examples)",
-              "quote": "*   **Source:** Кравцова, 2 клас [S16]",
-              "issue_type": "MISATTRIBUTION",
-              "severity": "critical",
-              "description": "The cited source is a different author, grade, and page than the article claims.",
+              "location": "## Типові помилки L2 (англомовні учні)",
+              "quote": "| Вимова `г` як англійського `g` ([g]). | Вимова `г` як гортанного фрикативного `[ɦ]`. | Англійське `g` відповідає українському `[ґ]`, який є рідкісним. Учні автоматично використовують звичний їм проривний звук. Важливо з першого дня тренувати гортанний `[ɦ]`, описуючи його як \"дихаючий\" звук, схожий на видих. |",
+              "issue_type": "UNSUPPORTED_CLAIM",
+              "severity": "major",
+              "description": "This is a substantive linguistic and pedagogical claim, but the article gives no source for it.",
               "raw": {
-                "location": "## Приклади з підручників (Textbook Examples)",
-                "claim_quote": "*   **Source:** Кравцова, 2 клас [S16]",
-                "citation_refs": [
-                  "S16"
-                ],
-                "source_content_quote": "S16 resolves to `5-klas-ukrmova-zabolotnyi-2023_s0073`, title \"Сторінка 75\"; it defines sounds and words and is not \"Кравцова, 2 клас\".",
-                "issue_type": "MISATTRIBUTION",
-                "issue_description": "The cited source is a different author, grade, and page than the article claims.",
-                "severity": "critical"
+                "location": "## Типові помилки L2 (англомовні учні)",
+                "claim_quote": "| Вимова `г` як англійського `g` ([g]). | Вимова `г` як гортанного фрикативного `[ɦ]`. | Англійське `g` відповідає українському `[ґ]`, який є рідкісним. Учні автоматично використовують звичний їм проривний звук. Важливо з першого дня тренувати гортанний `[ɦ]`, описуючи його як \"дихаючий\" звук, схожий на видих. |",
+                "citation_refs": [],
+                "source_content_quote": "No `[S#]` citation appears in this row, and there is no `<!-- VERIFY -->` marker nearby.",
+                "issue_type": "UNSUPPORTED_CLAIM",
+                "issue_description": "This is a substantive linguistic and pedagogical claim, but the article gives no source for it.",
+                "severity": "major"
               }
             },
             {
-              "location": "## Приклади з підручників (Textbook Examples)",
-              "quote": "*   **Source:** Литвинова, 5 клас [S33]",
+              "location": "## Типові помилки L2 (англомовні учні)",
+              "quote": "| Дзвінкі приголосні в кінці слова вимовляються глухо (`хліб` як `[хл'іп]`). | Дзвінкі приголосні в кінці слова та складу вимовляються дзвінко: `хліб` `[хл'іб]`, `мед` `[мед]` [S5]. |",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "The claim may be plausible, but the cited source chunk itself is unavailable, so this specific citation does not ground the statement.",
+              "raw": {
+                "location": "## Типові помилки L2 (англомовні учні)",
+                "claim_quote": "| Дзвінкі приголосні в кінці слова вимовляються глухо (`хліб` як `[хл'іп]`). | Дзвінкі приголосні в кінці слова та складу вимовляються дзвінко: `хліб` `[хл'іб]`, `мед` `[мед]` [S5]. |",
+                "citation_refs": [
+                  "S5"
+                ],
+                "source_content_quote": "The registry points S5 to file `S1797`, but no chunk text for `S1797` is present in the supplied chunk set or resolvable as the cited chunk in the available local sources.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "The claim may be plausible, but the cited source chunk itself is unavailable, so this specific citation does not ground the statement.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Деколонізаційні застереження",
+              "quote": "1.  **Жодних порівнянь з російською абеткою чи фонетикою.** Неприпустимо пояснювати українські літери через російські аналоги (напр., \"українська `и` — це як російська `ы`\", \"українська `г` — це як південноросійське `г`\"). Це створює хибне враження, що українська є діалектом або варіантом російської, та заважає формуванню чистої української фонетичної бази. Учень має будувати систему звуків \"з нуля\".",
+              "issue_type": "UNSUPPORTED_CLAIM",
+              "severity": "major",
+              "description": "The section makes substantive pedagogical and interpretive claims without attributing them to any source.",
+              "raw": {
+                "location": "## Деколонізаційні застереження",
+                "claim_quote": "1.  **Жодних порівнянь з російською абеткою чи фонетикою.** Неприпустимо пояснювати українські літери через російські аналоги (напр., \"українська `и` — це як російська `ы`\", \"українська `г` — це як південноросійське `г`\"). Це створює хибне враження, що українська є діалектом або варіантом російської, та заважає формуванню чистої української фонетичної бази. Учень має будувати систему звуків \"з нуля\".",
+                "citation_refs": [],
+                "source_content_quote": "This numbered item has no `[S#]` citation and no `<!-- VERIFY -->` tag.",
+                "issue_type": "UNSUPPORTED_CLAIM",
+                "issue_description": "The section makes substantive pedagogical and interpretive claims without attributing them to any source.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Приклади з підручників / 1",
+              "quote": "1.  **Завдання на звуко-буквений аналіз** (Вашуленко, 5 клас [S1]):\n    *   **Формулювання:** \"Напишіть транскрипцію слів. Визначте кількість звуків і букв у записаних словах.\"\n    *   **Приклад слів:** `Морква, яблуко, їжак, джміль, щавель, поле, сім'я.`\n    *   **Мета:** Навчити розрізняти звуки та літери, застосовувати правила для \"йотованих\" та `щ`, `дж`. (Chunk ID: `S2464`)",
               "issue_type": "MISATTRIBUTION",
               "severity": "critical",
-              "description": "The article labels a YouTube transcript as a Grade 5 textbook source.",
+              "description": "The article attributes S1 to the wrong textbook/author and also supplies a different example list than the cited source text.",
               "raw": {
-                "location": "## Приклади з підручників (Textbook Examples)",
-                "claim_quote": "*   **Source:** Литвинова, 5 клас [S33]",
+                "location": "## Приклади з підручників / 1",
+                "claim_quote": "1.  **Завдання на звуко-буквений аналіз** (Вашуленко, 5 клас [S1]):\n    *   **Формулювання:** \"Напишіть транскрипцію слів. Визначте кількість звуків і букв у записаних словах.\"\n    *   **Приклад слів:** `Морква, яблуко, їжак, джміль, щавель, поле, сім'я.`\n    *   **Мета:** Навчити розрізняти звуки та літери, застосовувати правила для \"йотованих\" та `щ`, `дж`. (Chunk ID: `S2464`)",
                 "citation_refs": [
-                  "S33"
+                  "S1"
                 ],
-                "source_content_quote": "S33 resolves to `ext-ulp_youtube-28`, title \"ULP 6-212 | Про літеру ґ | Ukrainian Lessons Podcast Season 6\". It is not a Grade 5 Litvinova textbook source.",
+                "source_content_quote": "S1's actual source metadata is `5-klas-ukrmova-uhor-2022-1`, not Vašulenko. Its exercise says: \"Напишіть транскрипцію слів. Визначте кількість звуків і букв...\" and uses the list `Морква, марка, лист, сир, тир, іграшка, гора, поле, молоко, урожай`.",
                 "issue_type": "MISATTRIBUTION",
-                "issue_description": "The article labels a YouTube transcript as a Grade 5 textbook source.",
+                "issue_description": "The article attributes S1 to the wrong textbook/author and also supplies a different example list than the cited source text.",
                 "severity": "critical"
               }
             }
@@ -426,129 +258,92 @@
           "fixes": [
             {
               "dim": "source_grounding",
-              "find": "The learner must first learn to hear, identify, and produce the core sounds of Ukrainian before associating them with written symbols [S17, S31].",
-              "replace": "The learner must first learn to hear, identify, and produce the core sounds of Ukrainian before associating them with written symbols <!-- VERIFY -->."
+              "find": "Українська педагогічна традиція, що відображена у підручниках для 1–5 класів, наголошує на первинності **звука** як найменшої одиниці мови та мовлення [S1]. Перш ніж учень побачить літеру, він має почути й навчитися розпізнавати звук.",
+              "replace": "У підручнику [S1] звук визначено як найменшу одиницю мови та мовлення. <!-- VERIFY: чи справді підручники 1–5 класів послідовно вибудовують навчання за принципом «спершу звук, потім літера» -->"
             },
             {
               "dim": "source_grounding",
-              "find": "A circle `[•]` represents a vowel, a single dash `[–]` represents a hard consonant, and a double dash `[=]` represents a soft consonant [S3, S8, S40].",
-              "replace": "A circle `[•]` represents a vowel, a single dash `[–]` represents a hard consonant, and a double dash `[=]` represents a soft consonant <!-- VERIFY -->."
+              "find": "-   **Я, Ю, Є**: Поясніть їхню подвійну роль [S2]:",
+              "replace": "-   **Я, Ю, Є**: Поясніть їхню подвійну роль <!-- VERIFY: потрібне джерело для цього правила -->:"
             },
             {
               "dim": "source_grounding",
-              "find": "6.  **Step 6: Foundational Greetings.** Introduce the first practical, high-value phrases. This applies the knowledge and provides motivation.",
-              "replace": "6.  **Step 6: Foundational Greetings.** Introduce the first practical, high-value phrases <!-- VERIFY -->. This applies the knowledge and provides motivation."
+              "find": "-   **Г vs Ґ**: Поясніть, що в українській мові є два звуки: поширений `[г]` (гортанний, фрикативний) і рідкісний `[ґ]` (проривний) [S2, S7]. Наведіть список обов'язкових слів з `ґ` (`аґрус`, `ґава`, `ґудзик`, `ґрунт`, `дзиґа` тощо) та смислорозрізнювальні пари, як `грати` (на піаніно) та `ґрати` (решітка) [S2].",
+              "replace": "-   **Г vs Ґ**: Поясніть, що в українській мові є два звуки: поширений `[г]` і рідкісний `[ґ]`. <!-- VERIFY: потрібне джерело для артикуляційного опису, переліку слів з `ґ` та смислорозрізнювальних пар -->"
             },
             {
               "dim": "source_grounding",
-              "find": "It was part of the standard Ukrainian alphabet until it was officially removed in 1933 by the Soviet regime to make the Ukrainian language \"closer to Russian\" [S2].",
-              "replace": "It was part of the standard Ukrainian alphabet until it was officially removed in 1933 by the Soviet regime to make the Ukrainian language \"closer to Russian\" <!-- VERIFY -->."
+              "find": "| Вимова `г` як англійського `g` ([g]). | Вимова `г` як гортанного фрикативного `[ɦ]`. | Англійське `g` відповідає українському `[ґ]`, який є рідкісним. Учні автоматично використовують звичний їм проривний звук. Важливо з першого дня тренувати гортанний `[ɦ]`, описуючи його як \"дихаючий\" звук, схожий на видих. |",
+              "replace": "| Вимова `г` як англійського `g` ([g]). | Вимова `г` як гортанного фрикативного `[ɦ]`. | <!-- VERIFY: потрібне джерело для цього зіставлення з англійською та для рекомендації щодо тренування --> |"
             },
             {
               "dim": "source_grounding",
-              "find": "*   **Source:** Большакова, 1 клас, Буквар [S40]",
-              "replace": "*   **Source:** <!-- VERIFY -->"
+              "find": "1.  **Жодних порівнянь з російською абеткою чи фонетикою.** Неприпустимо пояснювати українські літери через російські аналоги (напр., \"українська `и` — це як російська `ы`\", \"українська `г` — це як південноросійське `г`\"). Це створює хибне враження, що українська є діалектом або варіантом російської, та заважає формуванню чистої української фонетичної бази. Учень має будувати систему звуків \"з нуля\".",
+              "replace": "1.  **Жодних порівнянь з російською абеткою чи фонетикою.** <!-- VERIFY: потрібне джерело для цього педагогічного висновку та його обґрунтування -->"
             },
             {
               "dim": "source_grounding",
-              "find": "*   **Source:** Литвинова, 5 клас [S9]",
-              "replace": "*   **Source:** <!-- VERIFY -->"
-            },
-            {
-              "dim": "source_grounding",
-              "find": "*   **Source:** Кравцова, 2 клас [S16]",
-              "replace": "*   **Source:** <!-- VERIFY -->"
-            },
-            {
-              "dim": "source_grounding",
-              "find": "*   **Source:** Литвинова, 5 клас [S33]",
-              "replace": "*   **Source:** <!-- VERIFY -->"
+              "find": "1.  **Завдання на звуко-буквений аналіз** (Вашуленко, 5 клас [S1]):\n    *   **Формулювання:** \"Напишіть транскрипцію слів. Визначте кількість звуків і букв у записаних словах.\"\n    *   **Приклад слів:** `Морква, яблуко, їжак, джміль, щавель, поле, сім'я.`\n    *   **Мета:** Навчити розрізняти звуки та літери, застосовувати правила для \"йотованих\" та `щ`, `дж`. (Chunk ID: `S2464`)",
+              "replace": "1.  **Завдання на звуко-буквений аналіз** (Угор, 5 клас [S1]):\n    *   **Формулювання:** \"Напишіть транскрипцію слів. Визначте кількість звуків і букв у записаних словах.\"\n    *   **Приклад слів:** `Морква, марка, лист, сир, тир, іграшка, гора, поле, молоко, урожай.`\n    *   **Мета:** Навчити розрізняти звуки та літери. (Chunk ID: `S2464`)"
             }
           ],
-          "notes": "The article has systematic source-resolution failures: six cited `S#` IDs are missing or off-topic, and four textbook-example source lines point to entirely different sources.",
-          "duration_s": 295.31,
+          "notes": "Several core claims are uncited or tied to unresolved registry IDs (especially S2, S5, S7), and one textbook example misattributes S1 to the wrong source.",
+          "duration_s": 315.36,
           "error": ""
         }
       },
       "merge": {
-        "applied_count": 10,
-        "conflicts_count": 1,
+        "applied_count": 9,
+        "conflicts_count": 0,
         "applied": [
           {
-            "dim": "ukrainian_perspective",
-            "find": "This is a key feature of Ukrainian that distinguishes it from Russian, which has more consonant clusters.",
-            "replace": "This is a defining feature of Ukrainian phonology, which actively maintains a smooth consonant-vowel rhythm."
+            "dim": "factual_accuracy",
+            "find": "Вимова `[и]` як окремої, центрально-задньої фонеми.",
+            "replace": "Вимова `[и]` як окремої фонеми переднього ряду."
           },
           {
             "dim": "register",
-            "find": "Закрий долонями вуха і вимов звук [д], а потім [т].",
-            "replace": "Затули долонями вуха і вимов звук [д], а потім [т]."
+            "find": "Правильна послідовність введення фонем та графем є критичною для успішного засвоєння.",
+            "replace": "Правильна послідовність введення фонем та графем має вирішальне значення для успішного засвоєння."
+          },
+          {
+            "dim": "register",
+            "find": "Пари `стан` - `стань` [S4] є добрим тренажером.",
+            "replace": "Пари `стан` - `стань` [S4] є гарним матеріалом для тренування."
           },
           {
             "dim": "source_grounding",
-            "find": "The learner must first learn to hear, identify, and produce the core sounds of Ukrainian before associating them with written symbols [S17, S31].",
-            "replace": "The learner must first learn to hear, identify, and produce the core sounds of Ukrainian before associating them with written symbols <!-- VERIFY -->."
+            "find": "Українська педагогічна традиція, що відображена у підручниках для 1–5 класів, наголошує на первинності **звука** як найменшої одиниці мови та мовлення [S1]. Перш ніж учень побачить літеру, він має почути й навчитися розпізнавати звук.",
+            "replace": "У підручнику [S1] звук визначено як найменшу одиницю мови та мовлення. <!-- VERIFY: чи справді підручники 1–5 класів послідовно вибудовують навчання за принципом «спершу звук, потім літера» -->"
           },
           {
             "dim": "source_grounding",
-            "find": "A circle `[•]` represents a vowel, a single dash `[–]` represents a hard consonant, and a double dash `[=]` represents a soft consonant [S3, S8, S40].",
-            "replace": "A circle `[•]` represents a vowel, a single dash `[–]` represents a hard consonant, and a double dash `[=]` represents a soft consonant <!-- VERIFY -->."
+            "find": "-   **Я, Ю, Є**: Поясніть їхню подвійну роль [S2]:",
+            "replace": "-   **Я, Ю, Є**: Поясніть їхню подвійну роль <!-- VERIFY: потрібне джерело для цього правила -->:"
           },
           {
             "dim": "source_grounding",
-            "find": "6.  **Step 6: Foundational Greetings.** Introduce the first practical, high-value phrases. This applies the knowledge and provides motivation.",
-            "replace": "6.  **Step 6: Foundational Greetings.** Introduce the first practical, high-value phrases <!-- VERIFY -->. This applies the knowledge and provides motivation."
+            "find": "-   **Г vs Ґ**: Поясніть, що в українській мові є два звуки: поширений `[г]` (гортанний, фрикативний) і рідкісний `[ґ]` (проривний) [S2, S7]. Наведіть список обов'язкових слів з `ґ` (`аґрус`, `ґава`, `ґудзик`, `ґрунт`, `дзиґа` тощо) та смислорозрізнювальні пари, як `грати` (на піаніно) та `ґрати` (решітка) [S2].",
+            "replace": "-   **Г vs Ґ**: Поясніть, що в українській мові є два звуки: поширений `[г]` і рідкісний `[ґ]`. <!-- VERIFY: потрібне джерело для артикуляційного опису, переліку слів з `ґ` та смислорозрізнювальних пар -->"
           },
           {
             "dim": "source_grounding",
-            "find": "It was part of the standard Ukrainian alphabet until it was officially removed in 1933 by the Soviet regime to make the Ukrainian language \"closer to Russian\" [S2].",
-            "replace": "It was part of the standard Ukrainian alphabet until it was officially removed in 1933 by the Soviet regime to make the Ukrainian language \"closer to Russian\" <!-- VERIFY -->."
+            "find": "| Вимова `г` як англійського `g` ([g]). | Вимова `г` як гортанного фрикативного `[ɦ]`. | Англійське `g` відповідає українському `[ґ]`, який є рідкісним. Учні автоматично використовують звичний їм проривний звук. Важливо з першого дня тренувати гортанний `[ɦ]`, описуючи його як \"дихаючий\" звук, схожий на видих. |",
+            "replace": "| Вимова `г` як англійського `g` ([g]). | Вимова `г` як гортанного фрикативного `[ɦ]`. | <!-- VERIFY: потрібне джерело для цього зіставлення з англійською та для рекомендації щодо тренування --> |"
           },
           {
             "dim": "source_grounding",
-            "find": "*   **Source:** Большакова, 1 клас, Буквар [S40]",
-            "replace": "*   **Source:** <!-- VERIFY -->"
+            "find": "1.  **Жодних порівнянь з російською абеткою чи фонетикою.** Неприпустимо пояснювати українські літери через російські аналоги (напр., \"українська `и` — це як російська `ы`\", \"українська `г` — це як південноросійське `г`\"). Це створює хибне враження, що українська є діалектом або варіантом російської, та заважає формуванню чистої української фонетичної бази. Учень має будувати систему звуків \"з нуля\".",
+            "replace": "1.  **Жодних порівнянь з російською абеткою чи фонетикою.** <!-- VERIFY: потрібне джерело для цього педагогічного висновку та його обґрунтування -->"
           },
           {
             "dim": "source_grounding",
-            "find": "*   **Source:** Литвинова, 5 клас [S9]",
-            "replace": "*   **Source:** <!-- VERIFY -->"
-          },
-          {
-            "dim": "source_grounding",
-            "find": "*   **Source:** Кравцова, 2 клас [S16]",
-            "replace": "*   **Source:** <!-- VERIFY -->"
-          },
-          {
-            "dim": "source_grounding",
-            "find": "*   **Source:** Литвинова, 5 клас [S33]",
-            "replace": "*   **Source:** <!-- VERIFY -->"
+            "find": "1.  **Завдання на звуко-буквений аналіз** (Вашуленко, 5 клас [S1]):\n    *   **Формулювання:** \"Напишіть транскрипцію слів. Визначте кількість звуків і букв у записаних словах.\"\n    *   **Приклад слів:** `Морква, яблуко, їжак, джміль, щавель, поле, сім'я.`\n    *   **Мета:** Навчити розрізняти звуки та літери, застосовувати правила для \"йотованих\" та `щ`, `дж`. (Chunk ID: `S2464`)",
+            "replace": "1.  **Завдання на звуко-буквений аналіз** (Угор, 5 клас [S1]):\n    *   **Формулювання:** \"Напишіть транскрипцію слів. Визначте кількість звуків і букв у записаних словах.\"\n    *   **Приклад слів:** `Морква, марка, лист, сир, тир, іграшка, гора, поле, молоко, урожай.`\n    *   **Мета:** Навчити розрізняти звуки та літери. (Chunk ID: `S2464`)"
           }
         ],
-        "conflicts": [
-          {
-            "kind": "MISSING",
-            "find": "The sound is similar to the g in Dutch goed or a voiced h.",
-            "dims": [
-              "factual_accuracy"
-            ],
-            "proposals": [
-              [
-                "factual_accuracy",
-                "The sound is similar to a voiced h."
-              ]
-            ],
-            "chosen": null,
-            "reason": "find-string not present in article text"
-          }
-        ],
-        "skipped_missing": [
-          {
-            "dim": "factual_accuracy",
-            "find": "The sound is similar to the g in Dutch goed or a voiced h.",
-            "replace": "The sound is similar to a voiced h."
-          }
-        ]
+        "conflicts": [],
+        "skipped_missing": []
       }
     },
     {
@@ -563,39 +358,219 @@
           "findings": [],
           "fixes": [],
           "notes": "",
-          "duration_s": 80.15,
+          "duration_s": 90.13,
+          "error": ""
+        },
+        "register": {
+          "agent": "gemini",
+          "model": "gemini-3.1-pro-preview",
+          "score": 7,
+          "verdict": "REVISE",
+          "findings_count": 6,
+          "findings": [
+            {
+              "location": "## Типові помилки L2 (англомовні учні)",
+              "quote": "Важливо передбачити ці помилки та працювати над їхнім попередженням.",
+              "issue_type": "CALQUE",
+              "severity": "major",
+              "description": "Using the noun 'попередження' (warning) instead of the verb 'запобігати' (to prevent) is a direct semantic and syntactic calque of the Russian phrase 'предупреждение ошибок'.",
+              "raw": {
+                "location": "## Типові помилки L2 (англомовні учні)",
+                "quote": "Важливо передбачити ці помилки та працювати над їхнім попередженням.",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "попередження",
+                    "result_summary": "Слово 'попереджувати' у значенні 'не допускати чогось' є калькою з рос. 'предупреждать' (напр., 'предупреждать ошибки'). Українською слід казати 'запобігати'."
+                  }
+                ],
+                "natural_alternative": "Важливо передбачити ці помилки та запобігати їм.",
+                "issue_type": "CALQUE",
+                "issue_description": "Using the noun 'попередження' (warning) instead of the verb 'запобігати' (to prevent) is a direct semantic and syntactic calque of the Russian phrase 'предупреждение ошибок'.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Приклади з підручників",
+              "quote": "Продемонструвати, як зміна слова допомагає визначити правильне написання приголосного, виходячи з вимови (уподібнення).",
+              "issue_type": "CALQUE",
+              "severity": "major",
+              "description": "The prepositional phrase 'виходячи з' is a highly common syntactic calque of the Russian 'исходя из'. It should be replaced with 'орієнтуючись на' or 'спираючись на'.",
+              "raw": {
+                "location": "## Приклади з підручників",
+                "quote": "Продемонструвати, як зміна слова допомагає визначити правильне написання приголосного, виходячи з вимови (уподібнення).",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "виходячи з",
+                    "result_summary": "Конструкція 'виходячи з' як прийменник є типовою калькою з російського 'исходя из'. Рекомендується заміняти на 'орієнтуючись на', 'спираючись на' або 'з огляду на'."
+                  }
+                ],
+                "natural_alternative": "Продемонструвати, як зміна слова допомагає визначити правильне написання приголосного, орієнтуючись на вимову (уподібнення).",
+                "issue_type": "CALQUE",
+                "issue_description": "The prepositional phrase 'виходячи з' is a highly common syntactic calque of the Russian 'исходя из'. It should be replaced with 'орієнтуючись на' or 'спираючись на'.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Деколонізаційні застереження",
+              "quote": "Слід використовувати виключно українські назви літер",
+              "issue_type": "CALQUE",
+              "severity": "major",
+              "description": "Using 'виключно' as a restrictive particle is a calque of the Russian 'исключительно'. The natural Ukrainian choice is 'лише' or 'тільки'.",
+              "raw": {
+                "location": "## Деколонізаційні застереження",
+                "quote": "Слід використовувати виключно українські назви літер",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "виключно",
+                    "result_summary": "Уживання слова 'виключно' в значенні обмежувальної частки (замість 'тільки', 'лише') є калькою з рос. 'исключительно'. Правильно: 'лише' або 'тільки'."
+                  }
+                ],
+                "natural_alternative": "Слід використовувати лише українські назви літер",
+                "issue_type": "CALQUE",
+                "issue_description": "Using 'виключно' as a restrictive particle is a calque of the Russian 'исключительно'. The natural Ukrainian choice is 'лише' or 'тільки'.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Послідовність введення",
+              "quote": "що мають відносно близькі аналоги в англійській мові",
+              "issue_type": "CALQUE",
+              "severity": "minor",
+              "description": "The adverb 'відносно' used as an intensifier is a calque of the Russian 'относительно'. 'Порівняно' is the idiomatic Ukrainian equivalent.",
+              "raw": {
+                "location": "## Послідовність введення",
+                "quote": "що мають відносно близькі аналоги в англійській мові",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "відносно",
+                    "result_summary": "Слово 'відносно' в ролі прислівника міри часто копіює рос. 'относительно'. Стилістично краще вживати 'порівняно'."
+                  }
+                ],
+                "natural_alternative": "що мають порівняно близькі аналоги в англійській мові",
+                "issue_type": "CALQUE",
+                "issue_description": "The adverb 'відносно' used as an intensifier is a calque of the Russian 'относительно'. 'Порівняно' is the idiomatic Ukrainian equivalent.",
+                "severity": "minor"
+              }
+            },
+            {
+              "location": "## Методичний підхід",
+              "quote": "яку учні мають відчути через слухання пісень, віршів та скоромовок",
+              "issue_type": "TRANSLATIONESE",
+              "severity": "minor",
+              "description": "The noun-heavy construction 'через слухання' (through listening) combined with genitive chaining is a translationese artifact. A verbal adverbial phrase ('слухаючи') is much more natural.",
+              "raw": {
+                "location": "## Методичний підхід",
+                "quote": "яку учні мають відчути через слухання пісень, віршів та скоромовок",
+                "tool_evidence": [],
+                "natural_alternative": "яку учні мають відчути, слухаючи пісні, вірші та скоромовки",
+                "issue_type": "TRANSLATIONESE",
+                "issue_description": "The noun-heavy construction 'через слухання' (through listening) combined with genitive chaining is a translationese artifact. A verbal adverbial phrase ('слухаючи') is much more natural.",
+                "severity": "minor"
+              }
+            },
+            {
+              "location": "## Типові помилки L2 (англомовні учні)",
+              "quote": "Англійська не має прямого відповідника звуку `[и]`.",
+              "issue_type": "TRANSLATIONESE",
+              "severity": "minor",
+              "description": "This is an English-style topicalization ('English does not have'). In Ukrainian, an impersonal locative construction ('В англійській немає') is the idiomatic way to express this absence.",
+              "raw": {
+                "location": "## Типові помилки L2 (англомовні учні)",
+                "quote": "Англійська не має прямого відповідника звуку `[и]`.",
+                "tool_evidence": [],
+                "natural_alternative": "В англійській немає прямого відповідника звуку `[и]`.",
+                "issue_type": "TRANSLATIONESE",
+                "issue_description": "This is an English-style topicalization ('English does not have'). In Ukrainian, an impersonal locative construction ('В англійській немає') is the idiomatic way to express this absence.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "register",
+              "find": "Важливо передбачити ці помилки та працювати над їхнім попередженням.",
+              "replace": "Важливо передбачити ці помилки та запобігати їм."
+            },
+            {
+              "dim": "register",
+              "find": "виходячи з вимови (уподібнення).",
+              "replace": "орієнтуючись на вимову (уподібнення)."
+            },
+            {
+              "dim": "register",
+              "find": "Слід використовувати виключно українські назви літер",
+              "replace": "Слід використовувати лише українські назви літер"
+            },
+            {
+              "dim": "register",
+              "find": "що мають відносно близькі аналоги в англійській мові",
+              "replace": "що мають порівняно близькі аналоги в англійській мові"
+            },
+            {
+              "dim": "register",
+              "find": "яку учні мають відчути через слухання пісень, віршів та скоромовок,",
+              "replace": "яку учні мають відчути, слухаючи пісні, вірші та скоромовки,"
+            },
+            {
+              "dim": "register",
+              "find": "Англійська не має прямого відповідника звуку `[и]`.",
+              "replace": "В англійській немає прямого відповідника звуку `[и]`."
+            }
+          ],
+          "notes": "The article has a solid structure and appropriate register for A1, but contains several noticeable calques ('попередження', 'виходячи з', 'виключно') and minor translationese patterns that need to be addressed.",
+          "duration_s": 115.23,
           "error": ""
         },
         "factual_accuracy": {
           "agent": "gemini",
           "model": "gemini-3.1-pro-preview",
-          "score": 8,
-          "verdict": "PASS",
-          "findings_count": 1,
+          "score": 6,
+          "verdict": "REVISE",
+          "findings_count": 2,
           "findings": [
             {
-              "location": "## Деколонізаційні застереження (Decolonization Notes)",
-              "quote": "A Soviet linguist, Naum Kaganovich, infamously compared the letter **ґ** to a gallows (`шибениця`) and celebrated its removal as a way of asserting Russia's role as the \"older sister\" [S2].",
-              "issue_type": "UNVERIFIABLE",
-              "severity": "major",
-              "description": "The specific attribution of the 'gallows' (шибениця) comparison to Naum Kaganovich cannot be verified in the primary databases, though his role in the 1933 reform is factual.",
+              "location": "## Типові помилки L2 (англомовні учні)",
+              "quote": "Потрібно тренувати на мінімальних парах (`мило`-`міло`, `дим`-`дім` [S1])",
+              "issue_type": "FACTUAL_ERROR",
+              "severity": "critical",
+              "description": "The word 'міло' is not a valid Ukrainian word; it appears to be a hallucination or Russian interference, making it invalid for a minimal pair.",
               "raw": {
-                "location": "## Деколонізаційні застереження (Decolonization Notes)",
-                "claim_quote": "A Soviet linguist, Naum Kaganovich, infamously compared the letter **ґ** to a gallows (`шибениця`) and celebrated its removal as a way of asserting Russia's role as the \"older sister\" [S2].",
+                "location": "## Типові помилки L2 (англомовні учні)",
+                "claim_quote": "Потрібно тренувати на мінімальних парах (`мило`-`міло`, `дим`-`дім` [S1])",
                 "tool_evidence": [
                   {
-                    "tool": "query_wikipedia",
-                    "args": "Наум Каганович",
-                    "result_summary": "Article confirms his leadership in 1930s linguistic Russification but does not contain the specific 'шибениця' (gallows) quote."
-                  },
-                  {
-                    "tool": "search_literary",
-                    "args": "Каганович шибениця ґ",
-                    "result_summary": "no match — claimed quote not found in literary/historical database."
+                    "tool": "mcp__sources__verify_word",
+                    "args": "міло",
+                    "result_summary": "no match — claimed form not in VESUM"
                   }
                 ],
-                "issue_type": "UNVERIFIABLE",
-                "issue_description": "The specific attribution of the 'gallows' (шибениця) comparison to Naum Kaganovich cannot be verified in the primary databases, though his role in the 1933 reform is factual.",
+                "issue_type": "FACTUAL_ERROR",
+                "issue_description": "The word 'міло' is not a valid Ukrainian word; it appears to be a hallucination or Russian interference, making it invalid for a minimal pair.",
+                "severity": "critical"
+              }
+            },
+            {
+              "location": "## Типові помилки L2 (англомовні учні)",
+              "quote": "Неправильна вимова `я, ю, є` після приголосних, з додаванням `[й]` (`дякую` як `[дйакую]`). | Пом'якшення попереднього приголосного і вимова чистого голосного (`дякую` `[д'акую]`).",
+              "issue_type": "LINGUISTIC_ERROR",
+              "severity": "major",
+              "description": "The phonetic transcriptions [дйакую] and [д'акую] incorrectly include the orthographic letter 'ю' inside phonetic brackets, which violates the fundamental rules of phonetic transcription.",
+              "raw": {
+                "location": "## Типові помилки L2 (англомовні учні)",
+                "claim_quote": "Неправильна вимова `я, ю, є` після приголосних, з додаванням `[й]` (`дякую` як `[дйакую]`). | Пом'якшення попереднього приголосного і вимова чистого голосного (`дякую` `[д'акую]`).",
+                "tool_evidence": [
+                  {
+                    "tool": "mcp__sources__query_pravopys",
+                    "args": "фонетична транскрипція букви ю",
+                    "result_summary": "Правопис specifies that 'ю' denotes two sounds [йу] or one sound [у] with palatalization. The letter 'ю' itself cannot be used inside phonetic brackets []."
+                  }
+                ],
+                "issue_type": "LINGUISTIC_ERROR",
+                "issue_description": "The phonetic transcriptions [дйакую] and [д'акую] incorrectly include the orthographic letter 'ю' inside phonetic brackets, which violates the fundamental rules of phonetic transcription.",
                 "severity": "major"
               }
             }
@@ -603,195 +578,166 @@
           "fixes": [
             {
               "dim": "factual_accuracy",
-              "find": "A Soviet linguist, Naum Kaganovich, infamously compared the letter **ґ** to a gallows (`шибениця`) and celebrated its removal as a way of asserting Russia's role as the \"older sister\" [S2].",
-              "replace": "A Soviet linguist, Naum Kaganovich, played a key role in its removal as part of a broader campaign to assert Russia's role as the \"older sister\" <!-- VERIFY: attribution of the specific 'gallows' / шибениця quote to Kaganovich --> [S2]."
+              "find": "(`мило`-`міло`, `дим`-`дім` [S1])",
+              "replace": "(`кит`-`кіт`, `дим`-`дім` [S1])"
+            },
+            {
+              "dim": "factual_accuracy",
+              "find": "(`дякую` як `[дйакую]`)",
+              "replace": "(`дякую` як `[дйа́куйу]`)"
+            },
+            {
+              "dim": "factual_accuracy",
+              "find": "(`дякую` `[д'акую]`)",
+              "replace": "(`дякую` `[д'а́куйу]`)"
             }
           ],
-          "notes": "Content is factually sound and pedagogically accurate; flagged one historical quote attribution for verification.",
-          "duration_s": 90.21,
-          "error": ""
-        },
-        "register": {
-          "agent": "gemini",
-          "model": "gemini-3.1-pro-preview",
-          "score": 10,
-          "verdict": "PASS",
-          "findings_count": 0,
-          "findings": [],
-          "fixes": [],
-          "notes": "",
-          "duration_s": 255.5,
+          "notes": "One critical factual error (invented word 'міло' in minimal pair) and one major linguistic error (incorrect phonetic transcription using the letter 'ю').",
+          "duration_s": 215.3,
           "error": ""
         },
         "source_grounding": {
           "agent": "codex",
           "model": "gpt-5.4",
-          "score": 5,
-          "verdict": "REJECT",
-          "findings_count": 9,
+          "score": 6,
+          "verdict": "REVISE",
+          "findings_count": 8,
           "findings": [
             {
-              "location": "## Деколонізаційні застереження (Decolonization Notes) — 2. The Political History of 'Ґ'",
-              "quote": "It was part of the standard Ukrainian alphabet until it was officially removed in 1933 by the Soviet regime to make the Ukrainian language \"closer to Russian\" [S2].",
-              "issue_type": "MISATTRIBUTION",
-              "severity": "critical",
-              "description": "A specific historical claim is attributed to a source that only teaches basic sound symbols.",
+              "location": "## Методичний підхід",
+              "quote": "Цей підхід, орієнтований на слухове сприйняття, є ключовим для формування правильної вимови й уникнення фонетичної інтерференції з рідної мови учня.",
+              "issue_type": "UNSUPPORTED_CLAIM",
+              "severity": "major",
+              "description": "This is a substantive pedagogical claim about listening-first instruction and L1 interference, but it is uncited.",
               "raw": {
-                "location": "## Деколонізаційні застереження (Decolonization Notes) — 2. The Political History of 'Ґ'",
-                "claim_quote": "It was part of the standard Ukrainian alphabet until it was officially removed in 1933 by the Soviet regime to make the Ukrainian language \"closer to Russian\" [S2].",
+                "location": "## Методичний підхід",
+                "claim_quote": "Цей підхід, орієнтований на слухове сприйняття, є ключовим для формування правильної вимови й уникнення фонетичної інтерференції з рідної мови учня.",
+                "citation_refs": [],
+                "source_content_quote": "No `[S#]` citation is attached to this sentence, and there is no nearby `<!-- VERIFY -->` tag.",
+                "issue_type": "UNSUPPORTED_CLAIM",
+                "issue_description": "This is a substantive pedagogical claim about listening-first instruction and L1 interference, but it is uncited.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Методичний підхід",
+              "quote": "Звукозапис, або транскрипція у квадратних дужках `[ ]`, вводиться з перших уроків як інструмент для візуалізації вимови, що допомагає розрізняти написання та звучання слів [S3].",
+              "issue_type": "WEAK_SUPPORT",
+              "severity": "minor",
+              "description": "The source supports transcription as a notation system, but not the specific timing claim that it is introduced from the first lessons.",
+              "raw": {
+                "location": "## Методичний підхід",
+                "claim_quote": "Звукозапис, або транскрипція у квадратних дужках `[ ]`, вводиться з перших уроків як інструмент для візуалізації вимови, що допомагає розрізняти написання та звучання слів [S3].",
+                "citation_refs": [
+                  "S3"
+                ],
+                "source_content_quote": "S3 says: «Щоб показати вимову слова, користуються спеціальним способом запису — транскрипцією» and then explains the symbols `[ ]`, `ʹ`, `:` and examples such as `граються [гра́йуцʹ:а]`; it does not say transcription is introduced «з перших уроків».",
+                "issue_type": "WEAK_SUPPORT",
+                "issue_description": "The source supports transcription as a notation system, but not the specific timing claim that it is introduced from the first lessons.",
+                "severity": "minor"
+              }
+            },
+            {
+              "location": "## Послідовність введення",
+              "quote": "Порядок має враховувати частотність звуків, простоту артикуляції для англомовних учнів та логіку самої української абетки.",
+              "issue_type": "UNSUPPORTED_CLAIM",
+              "severity": "major",
+              "description": "This is a substantive curriculum-design criterion, but the article gives no source for it.",
+              "raw": {
+                "location": "## Послідовність введення",
+                "claim_quote": "Порядок має враховувати частотність звуків, простоту артикуляції для англомовних учнів та логіку самої української абетки.",
+                "citation_refs": [],
+                "source_content_quote": "No `[S#]` citation is attached to this sentence, and there is no nearby `<!-- VERIFY -->` tag.",
+                "issue_type": "UNSUPPORTED_CLAIM",
+                "issue_description": "This is a substantive curriculum-design criterion, but the article gives no source for it.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Послідовність введення — Крок 2",
+              "quote": "3.  Одразу вводьте поняття наголошених і ненаголошених голосних, пояснюючи, що наголошені вимовляються чітко, а ненаголошені `[е]` та `[и]` можуть наближатися один до одного у вимові ([еи], [ие]) [S4].",
+              "issue_type": "WEAK_SUPPORT",
+              "severity": "major",
+              "description": "The cited source is generally about phonetics, but it does not ground the specific unstressed-vowel rule claimed here.",
+              "raw": {
+                "location": "## Послідовність введення — Крок 2",
+                "claim_quote": "3.  Одразу вводьте поняття наголошених і ненаголошених голосних, пояснюючи, що наголошені вимовляються чітко, а ненаголошені `[е]` та `[и]` можуть наближатися один до одного у вимові ([еи], [ие]) [S4].",
+                "citation_refs": [
+                  "S4"
+                ],
+                "source_content_quote": "S4 includes the categories «голосні / ненаголошені / наголошені» and minimal-pair work such as «стан — стань» and «дим — дім», but this section does not state that ненаголошені `[е]` та `[и]` approach each other as `([еи], [ие])`.",
+                "issue_type": "WEAK_SUPPORT",
+                "issue_description": "The cited source is generally about phonetics, but it does not ground the specific unstressed-vowel rule claimed here.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Послідовність введення — Крок 6",
+              "quote": "-   **ДЖ, ДЗ**: Введіть як єдині звуки, що позначаються двома літерами: `джміль` [джм'іл'], `дзвінок` [дзв'іно́к]. Важливо відрізняти їх від збігу приголосних на межі префікса та кореня, як у слові `підземний` [п'ідзе́мний] [S2].",
+              "issue_type": "MISATTRIBUTION",
+              "severity": "major",
+              "description": "The article attributes a `дж/дз` teaching rule to S2, but S2 is about the alphabet and `г/ґ`, not affricate-vs-cluster distinction.",
+              "raw": {
+                "location": "## Послідовність введення — Крок 6",
+                "claim_quote": "-   **ДЖ, ДЗ**: Введіть як єдині звуки, що позначаються двома літерами: `джміль` [джм'іл'], `дзвінок` [дзв'іно́к]. Важливо відрізняти їх від збігу приголосних на межі префікса та кореня, як у слові `підземний` [п'ідзе́мний] [S2].",
                 "citation_refs": [
                   "S2"
                 ],
-                "source_content_quote": "S2 (`1-klas-bukvar-zaharijchuk-2025-1_s0013`) is a first-grade phonics page: \"Мовні звуки: голосні та приголосні\"; \"Приголосний звук позначаємо так: [–]\"; \"Голосний звук позначаємо так: [•]\". It contains no history of the letter `ґ`, no 1933 date, and no Soviet language-policy discussion.",
+                "source_content_quote": "S2 is the section «Позначення звуків на письмі. Алфавіт» plus «Вимова звуків [г] і [ґ]...»: «Сучасний український алфавіт складається із 33 літер...»; «В українській мові важливо розрізняти приголосні звуки [г] і [ґ]...». It does not discuss `дж/дз` as affricates or the `підземний` prefix-root contrast.",
                 "issue_type": "MISATTRIBUTION",
-                "issue_description": "A specific historical claim is attributed to a source that only teaches basic sound symbols.",
-                "severity": "critical"
+                "issue_description": "The article attributes a `дж/дз` teaching rule to S2, but S2 is about the alphabet and `г/ґ`, not affricate-vs-cluster distinction.",
+                "severity": "major"
               }
             },
             {
-              "location": "## Деколонізаційні застереження (Decolonization Notes) — 2. The Political History of 'Ґ'",
-              "quote": "A Soviet linguist, Naum Kaganovich, infamously compared the letter **ґ** to a gallows (`шибениця`) and celebrated its removal as a way of asserting Russia's role as the \"older sister\" [S2].",
+              "location": "## Типові помилки L2 (англомовні учні)",
+              "quote": "Необхідно чітко розмежувати дві функції цих літер залежно від позиції [S2].",
               "issue_type": "MISATTRIBUTION",
-              "severity": "critical",
-              "description": "The article assigns a named historical quotation to a source that does not discuss the topic at all.",
+              "severity": "major",
+              "description": "This sentence cites the wrong source: the rule it describes is grounded in S3, not S2.",
               "raw": {
-                "location": "## Деколонізаційні застереження (Decolonization Notes) — 2. The Political History of 'Ґ'",
-                "claim_quote": "A Soviet linguist, Naum Kaganovich, infamously compared the letter **ґ** to a gallows (`шибениця`) and celebrated its removal as a way of asserting Russia's role as the \"older sister\" [S2].",
+                "location": "## Типові помилки L2 (англомовні учні)",
+                "claim_quote": "Необхідно чітко розмежувати дві функції цих літер залежно від позиції [S2].",
                 "citation_refs": [
                   "S2"
                 ],
-                "source_content_quote": "S2 (`1-klas-bukvar-zaharijchuk-2025-1_s0013`) says only: \"Вимов голосні звуки...\", \"Вимов приголосні звуки...\", \"Приголосний звук позначаємо так: [–]\", \"Голосний звук позначаємо так: [•]\". It does not mention Naum Kaganovich, `шибениця`, or any Soviet-era quotation.",
+                "source_content_quote": "S2 covers the alphabet and `г/ґ`: «Сучасний український алфавіт складається із 33 літер...»; «В українській мові важливо розрізняти приголосні звуки [г] і [ґ]...». The positional dual role of `я, ю, є` is stated in S3 instead: «я, ю, є [а], [у], [е] або [йа], [йу], [йе]» and «’ (апостроф) твердий приголосний + [йа], [йу], [йе], [йі]».",
                 "issue_type": "MISATTRIBUTION",
-                "issue_description": "The article assigns a named historical quotation to a source that does not discuss the topic at all.",
-                "severity": "critical"
-              }
-            },
-            {
-              "location": "## Методичний підхід (Methodological Approach) — 1. Start with the Physicality of Sound",
-              "quote": "An effective exercise is having students place a hand on their larynx to feel the vibration of vowels, or hold a hand in front of their mouth to feel the puff of air from plosives [S6, S16].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "One cited source is missing and the other does not support the specific exercise described.",
-              "raw": {
-                "location": "## Методичний підхід (Methodological Approach) — 1. Start with the Physicality of Sound",
-                "claim_quote": "An effective exercise is having students place a hand on their larynx to feel the vibration of vowels, or hold a hand in front of their mouth to feel the puff of air from plosives [S6, S16].",
-                "citation_refs": [
-                  "S6",
-                  "S16"
-                ],
-                "source_content_quote": "S6 does not appear in the provided source registry/chunks. S16 (`5-klas-ukrmova-zabolotnyi-2023_s0073`) says: \"Звуки поділено на голосні і приголосні... Голосними називають звуки, в основі яких лежить голос... Приголосними називають звуки, в основі яких лежить лише шум або шум із голосом\"; it does not mention touching the larynx or feeling plosive airflow.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "One cited source is missing and the other does not support the specific exercise described.",
+                "issue_description": "This sentence cites the wrong source: the rule it describes is grounded in S3, not S2.",
                 "severity": "major"
               }
             },
             {
-              "location": "## Методичний підхід (Methodological Approach) — 3. Vowels as the Core of a Syllable",
-              "quote": "A critical concept is that the number of syllables in a word is strictly equal to the number of vowels [S20].",
-              "issue_type": "STALE_CITATION",
+              "location": "## Деколонізаційні застереження",
+              "quote": "Більшість таких слів мають спільне праслов'янське коріння.",
+              "issue_type": "UNSUPPORTED_CLAIM",
               "severity": "major",
-              "description": "The cited page is off-topic for the syllable-count rule attributed to it.",
+              "description": "This is a substantive historical-linguistic claim, but it is unsourced.",
               "raw": {
-                "location": "## Методичний підхід (Methodological Approach) — 3. Vowels as the Core of a Syllable",
-                "claim_quote": "A critical concept is that the number of syllables in a word is strictly equal to the number of vowels [S20].",
-                "citation_refs": [
-                  "S20"
-                ],
-                "source_content_quote": "S20 (`5-klas-ukrmova-uhor-2022-1_s0157`) is about orthoepy and unstressed vowels: \"Орфоепія — це розділ мовознавства, що вивчає правильну вимову слів\" and \"Голосний [е] в ненаголошеному складі наближається у вимові до [еи]...\". It does not give the rule \"скільки в слові голосних, стільки й складів\".",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The cited page is off-topic for the syllable-count rule attributed to it.",
+                "location": "## Деколонізаційні застереження",
+                "claim_quote": "Більшість таких слів мають спільне праслов'янське коріння.",
+                "citation_refs": [],
+                "source_content_quote": "No `[S#]` citation is attached to this sentence, and there is no nearby `<!-- VERIFY -->` tag.",
+                "issue_type": "UNSUPPORTED_CLAIM",
+                "issue_description": "This is a substantive historical-linguistic claim, but it is unsourced.",
                 "severity": "major"
               }
             },
             {
-              "location": "## Послідовність введення (Introduction Sequence) — 5. The Remaining Vowels and Their Letters",
-              "quote": "**Її** *always* makes two sounds: [йі] [S27, S38].",
-              "issue_type": "STALE_CITATION",
+              "location": "## Приклади з підручників — 4",
+              "quote": "*   **Формулювання:** \"Запишіть подані слова у два стовпчики: в один — ті, де `я, ю, є` позначають один звук, у другий — де позначають два звуки.\"",
+              "issue_type": "MISATTRIBUTION",
               "severity": "major",
-              "description": "The cited sources do not ground the article's specific claim about the letter `ї`.",
+              "description": "The article presents a specific textbook task as if it came from S2, but that formulation is not in the cited chunk.",
               "raw": {
-                "location": "## Послідовність введення (Introduction Sequence) — 5. The Remaining Vowels and Their Letters",
-                "claim_quote": "**Її** *always* makes two sounds: [йі] [S27, S38].",
+                "location": "## Приклади з підручників — 4",
+                "claim_quote": "*   **Формулювання:** \"Запишіть подані слова у два стовпчики: в один — ті, де `я, ю, є` позначають один звук, у другий — де позначають два звуки.\"",
                 "citation_refs": [
-                  "S27",
-                  "S38"
+                  "S2"
                 ],
-                "source_content_quote": "S27 (`2-klas-ukrmova-bolshakova-2019-1_s0035`) says only: \"Букви я, ю, є позначають: один звук [а], [у], [е]; два звуки [йа], [йу], [йе]\". S38 (`4-klas-ukrayinska-mova-kravtsova-2021-1_s0005`) discusses consonant pronunciation in words like \"легко, вогко, кігті, нігті\". Neither cited chunk addresses `ї`.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The cited sources do not ground the article's specific claim about the letter `ї`.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Послідовність введення (Introduction Sequence) — 7. The Full Alphabet (Абетка/Алфавіт)",
-              "quote": "Once the core concepts of sounds, letters, and syllables are established, present the full 33-letter Ukrainian alphabet as a reference tool [S38].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "The source is about consonant pronunciation, not the pedagogical step of presenting the full alphabet.",
-              "raw": {
-                "location": "## Послідовність введення (Introduction Sequence) — 7. The Full Alphabet (Абетка/Алфавіт)",
-                "claim_quote": "Once the core concepts of sounds, letters, and syllables are established, present the full 33-letter Ukrainian alphabet as a reference tool [S38].",
-                "citation_refs": [
-                  "S38"
-                ],
-                "source_content_quote": "S38 (`4-klas-ukrayinska-mova-kravtsova-2021-1_s0005`) says: \"У словах легко, вогко, кігті, нігті, дьогтю звук [ґ] перед кіт вимовляється як [х]...\" and explains how to check doubtful consonants. It is not about introducing the full alphabet.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The source is about consonant pronunciation, not the pedagogical step of presenting the full alphabet.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Типові помилки L2 (Common L2 Errors) — row for **и**",
-              "quote": "Minimal pairs are essential: `мити` (to wash) vs. `міти` (obsolete verb) [S9].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "The cited source does not support the specific minimal-pair example used here.",
-              "raw": {
-                "location": "## Типові помилки L2 (Common L2 Errors) — row for **и**",
-                "claim_quote": "Minimal pairs are essential: `мити` (to wash) vs. `міти` (obsolete verb) [S9].",
-                "citation_refs": [
-                  "S9"
-                ],
-                "source_content_quote": "S9 (`10-klas-ukrmova-glazova-2018_s0144`) says: \"При зміні форми слів і творенні нових слів голосний або приголосний звук може замінюватися на інший, тобто відбувається чергування звуків.\" It discusses sound alternation, not the pair `мити` / `міти`.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The cited source does not support the specific minimal-pair example used here.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Типові помилки L2 (Common L2 Errors) — row for final devoicing",
-              "quote": "In Ukrainian, they retain their voicing clearly [S7]. An exception is `г`, which can become `[х]` before a voiceless consonant (`кігті` -> `[кіхті]`), but not typically at the end of a word [S7, S37].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "Both cited pages are off-topic for the phonological rule being asserted.",
-              "raw": {
-                "location": "## Типові помилки L2 (Common L2 Errors) — row for final devoicing",
-                "claim_quote": "In Ukrainian, they retain their voicing clearly [S7]. An exception is `г`, which can become `[х]` before a voiceless consonant (`кігті` -> `[кіхті]`), but not typically at the end of a word [S7, S37].",
-                "citation_refs": [
-                  "S7",
-                  "S37"
-                ],
-                "source_content_quote": "S7 (`3-klas-ukrainska-mova-ponomarova-2020-1_s0005`) asks pupils to recall how to mark \"голосні і тверді та м’які приголосні звуки у схемах слів\" and discusses \"м’які приголосні звуки\" in words like `Львів`. S37 (`5-klas-ukrmova-litvinova-2022_s0116`) gives minimal-pair and riddle exercises such as \"З [и] я плаваю у морі, З [і] ловлю мишей в коморі\". Neither source states the final-voicing rule or the `кігті` exception.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "Both cited pages are off-topic for the phonological rule being asserted.",
-                "severity": "major"
-              }
-            },
-            {
-              "location": "## Деколонізаційні застереження (Decolonization Notes) — 3. Emphasize 'Милозвучність' (Euphony)",
-              "quote": "Ukrainian phonology actively avoids difficult consonant clusters, a principle known as `милозвучність` (melodiousness or euphony) [S1].",
-              "issue_type": "STALE_CITATION",
-              "severity": "major",
-              "description": "The cited reference does not resolve to any provided source material.",
-              "raw": {
-                "location": "## Деколонізаційні застереження (Decolonization Notes) — 3. Emphasize 'Милозвучність' (Euphony)",
-                "claim_quote": "Ukrainian phonology actively avoids difficult consonant clusters, a principle known as `милозвучність` (melodiousness or euphony) [S1].",
-                "citation_refs": [
-                  "S1"
-                ],
-                "source_content_quote": "S1 is not present in the provided `sounds-letters-and-hello.sources.yaml`, and no source chunk for S1 was supplied.",
-                "issue_type": "STALE_CITATION",
-                "issue_description": "The cited reference does not resolve to any provided source material.",
+                "source_content_quote": "S2 contains alphabet material and `г/ґ` exercises, e.g. «В українській мові важливо розрізняти приголосні звуки [г] і [ґ]...» and «Запишіть слова, вставляючи пропущені літери ..ітара, ..арний, ..рунтовний...». It does not contain the quoted two-column `я, ю, є` exercise.",
+                "issue_type": "MISATTRIBUTION",
+                "issue_description": "The article presents a specific textbook task as if it came from S2, but that formulation is not in the cited chunk.",
                 "severity": "major"
               }
             }
@@ -799,129 +745,149 @@
           "fixes": [
             {
               "dim": "source_grounding",
-              "find": "An effective exercise is having students place a hand on their larynx to feel the vibration of vowels, or hold a hand in front of their mouth to feel the puff of air from plosives [S6, S16].",
-              "replace": "An effective exercise is having students place a hand on their larynx to feel the vibration of vowels, or hold a hand in front of their mouth to feel the puff of air from plosives <!-- VERIFY -->."
+              "find": "Цей підхід, орієнтований на слухове сприйняття, є ключовим для формування правильної вимови й уникнення фонетичної інтерференції з рідної мови учня.",
+              "replace": "Цей підхід, орієнтований на слухове сприйняття, є ключовим для формування правильної вимови й уникнення фонетичної інтерференції з рідної мови учня. <!-- VERIFY: потрібне джерело для цього педагогічного висновку -->"
             },
             {
               "dim": "source_grounding",
-              "find": "A critical concept is that the number of syllables in a word is strictly equal to the number of vowels [S20].",
-              "replace": "A critical concept is that the number of syllables in a word is strictly equal to the number of vowels <!-- VERIFY -->."
+              "find": "Звукозапис, або транскрипція у квадратних дужках `[ ]`, вводиться з перших уроків як інструмент для візуалізації вимови, що допомагає розрізняти написання та звучання слів [S3].",
+              "replace": "Звукозапис, або транскрипція у квадратних дужках `[ ]`, використовується як інструмент для візуалізації вимови, що допомагає розрізняти написання та звучання слів [S3]."
             },
             {
               "dim": "source_grounding",
-              "find": "**Її** *always* makes two sounds: [йі] [S27, S38].",
-              "replace": "**Її** *always* makes two sounds: [йі] <!-- VERIFY -->."
+              "find": "Порядок має враховувати частотність звуків, простоту артикуляції для англомовних учнів та логіку самої української абетки.",
+              "replace": "Порядок має враховувати частотність звуків, простоту артикуляції для англомовних учнів та логіку самої української абетки. <!-- VERIFY: потрібне джерело для критеріїв цієї послідовності -->"
             },
             {
               "dim": "source_grounding",
-              "find": "Once the core concepts of sounds, letters, and syllables are established, present the full 33-letter Ukrainian alphabet as a reference tool [S38].",
-              "replace": "Once the core concepts of sounds, letters, and syllables are established, present the full 33-letter Ukrainian alphabet as a reference tool <!-- VERIFY -->."
+              "find": "3.  Одразу вводьте поняття наголошених і ненаголошених голосних, пояснюючи, що наголошені вимовляються чітко, а ненаголошені `[е]` та `[и]` можуть наближатися один до одного у вимові ([еи], [ие]) [S4].",
+              "replace": "3.  Одразу вводьте поняття наголошених і ненаголошених голосних. <!-- VERIFY: потрібне джерело для твердження про зближення `[е]` та `[и]` у формі ([еи], [ие]) -->"
             },
             {
               "dim": "source_grounding",
-              "find": "It was part of the standard Ukrainian alphabet until it was officially removed in 1933 by the Soviet regime to make the Ukrainian language \"closer to Russian\" [S2].",
-              "replace": "It has a history of political suppression <!-- VERIFY -->."
+              "find": "-   **ДЖ, ДЗ**: Введіть як єдині звуки, що позначаються двома літерами: `джміль` [джм'іл'], `дзвінок` [дзв'іно́к]. Важливо відрізняти їх від збігу приголосних на межі префікса та кореня, як у слові `підземний` [п'ідзе́мний] [S2].",
+              "replace": "-   **ДЖ, ДЗ**: Введіть як єдині звуки, що позначаються двома літерами: `джміль` [джм'іл'], `дзвінок` [дзв'іно́к] [S3]. <!-- VERIFY: потрібне окреме джерело для зіставлення з префіксальним збігом у слові `підземний` -->"
             },
             {
               "dim": "source_grounding",
-              "find": "A Soviet linguist, Naum Kaganovich, infamously compared the letter **ґ** to a gallows (`шибениця`) and celebrated its removal as a way of asserting Russia's role as the \"older sister\" [S2].",
-              "replace": "Some Soviet-era rhetoric about the letter **ґ** requires source verification before inclusion <!-- VERIFY -->."
+              "find": "Необхідно чітко розмежувати дві функції цих літер залежно від позиції [S2].",
+              "replace": "Необхідно чітко розмежувати дві функції цих літер залежно від позиції [S3]."
             },
             {
               "dim": "source_grounding",
-              "find": "Ukrainian phonology actively avoids difficult consonant clusters, a principle known as `милозвучність` (melodiousness or euphony) [S1].",
-              "replace": "Ukrainian phonology actively avoids difficult consonant clusters, a principle known as `милозвучність` (melodiousness or euphony) <!-- VERIFY -->."
+              "find": "Більшість таких слів мають спільне праслов'янське коріння.",
+              "replace": "Більшість таких слів мають спільне праслов'янське коріння. <!-- VERIFY: потрібне джерело для цього історико-лінгвістичного твердження -->"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "*   **Формулювання:** \"Запишіть подані слова у два стовпчики: в один — ті, де `я, ю, є` позначають один звук, у другий — де позначають два звуки.\"",
+              "replace": "*   **Формулювання:** \"Запишіть подані слова у два стовпчики: в один — ті, де `я, ю, є` позначають один звук, у другий — де позначають два звуки.\" <!-- VERIFY: chunk S2368 не підтверджує це формулювання -->"
             }
           ],
-          "notes": "Multiple core claims are tied to missing or off-topic citations, and the strongest historical assertions about `ґ` are misattributed to an unrelated first-grade phonics page.",
-          "duration_s": 400.59,
+          "notes": "Core phonetics facts are mostly grounded, but several pedagogical inferences are uncited and multiple specific rules/tasks are attributed to S2 even though S2 covers the alphabet and `г/ґ`, not those claims.",
+          "duration_s": 390.38,
           "error": ""
         }
       },
       "merge": {
-        "applied_count": 6,
-        "conflicts_count": 2,
+        "applied_count": 17,
+        "conflicts_count": 0,
         "applied": [
           {
+            "dim": "register",
+            "find": "Важливо передбачити ці помилки та працювати над їхнім попередженням.",
+            "replace": "Важливо передбачити ці помилки та запобігати їм."
+          },
+          {
+            "dim": "register",
+            "find": "виходячи з вимови (уподібнення).",
+            "replace": "орієнтуючись на вимову (уподібнення)."
+          },
+          {
+            "dim": "register",
+            "find": "Слід використовувати виключно українські назви літер",
+            "replace": "Слід використовувати лише українські назви літер"
+          },
+          {
+            "dim": "register",
+            "find": "що мають відносно близькі аналоги в англійській мові",
+            "replace": "що мають порівняно близькі аналоги в англійській мові"
+          },
+          {
+            "dim": "register",
+            "find": "яку учні мають відчути через слухання пісень, віршів та скоромовок,",
+            "replace": "яку учні мають відчути, слухаючи пісні, вірші та скоромовки,"
+          },
+          {
+            "dim": "register",
+            "find": "Англійська не має прямого відповідника звуку `[и]`.",
+            "replace": "В англійській немає прямого відповідника звуку `[и]`."
+          },
+          {
             "dim": "factual_accuracy",
-            "find": "A Soviet linguist, Naum Kaganovich, infamously compared the letter **ґ** to a gallows (`шибениця`) and celebrated its removal as a way of asserting Russia's role as the \"older sister\" [S2].",
-            "replace": "A Soviet linguist, Naum Kaganovich, played a key role in its removal as part of a broader campaign to assert Russia's role as the \"older sister\" <!-- VERIFY: attribution of the specific 'gallows' / шибениця quote to Kaganovich --> [S2]."
+            "find": "(`мило`-`міло`, `дим`-`дім` [S1])",
+            "replace": "(`кит`-`кіт`, `дим`-`дім` [S1])"
+          },
+          {
+            "dim": "factual_accuracy",
+            "find": "(`дякую` як `[дйакую]`)",
+            "replace": "(`дякую` як `[дйа́куйу]`)"
+          },
+          {
+            "dim": "factual_accuracy",
+            "find": "(`дякую` `[д'акую]`)",
+            "replace": "(`дякую` `[д'а́куйу]`)"
           },
           {
             "dim": "source_grounding",
-            "find": "An effective exercise is having students place a hand on their larynx to feel the vibration of vowels, or hold a hand in front of their mouth to feel the puff of air from plosives [S6, S16].",
-            "replace": "An effective exercise is having students place a hand on their larynx to feel the vibration of vowels, or hold a hand in front of their mouth to feel the puff of air from plosives <!-- VERIFY -->."
+            "find": "Цей підхід, орієнтований на слухове сприйняття, є ключовим для формування правильної вимови й уникнення фонетичної інтерференції з рідної мови учня.",
+            "replace": "Цей підхід, орієнтований на слухове сприйняття, є ключовим для формування правильної вимови й уникнення фонетичної інтерференції з рідної мови учня. <!-- VERIFY: потрібне джерело для цього педагогічного висновку -->"
           },
           {
             "dim": "source_grounding",
-            "find": "A critical concept is that the number of syllables in a word is strictly equal to the number of vowels [S20].",
-            "replace": "A critical concept is that the number of syllables in a word is strictly equal to the number of vowels <!-- VERIFY -->."
+            "find": "Звукозапис, або транскрипція у квадратних дужках `[ ]`, вводиться з перших уроків як інструмент для візуалізації вимови, що допомагає розрізняти написання та звучання слів [S3].",
+            "replace": "Звукозапис, або транскрипція у квадратних дужках `[ ]`, використовується як інструмент для візуалізації вимови, що допомагає розрізняти написання та звучання слів [S3]."
           },
           {
             "dim": "source_grounding",
-            "find": "**Її** *always* makes two sounds: [йі] [S27, S38].",
-            "replace": "**Її** *always* makes two sounds: [йі] <!-- VERIFY -->."
+            "find": "Порядок має враховувати частотність звуків, простоту артикуляції для англомовних учнів та логіку самої української абетки.",
+            "replace": "Порядок має враховувати частотність звуків, простоту артикуляції для англомовних учнів та логіку самої української абетки. <!-- VERIFY: потрібне джерело для критеріїв цієї послідовності -->"
           },
           {
             "dim": "source_grounding",
-            "find": "Once the core concepts of sounds, letters, and syllables are established, present the full 33-letter Ukrainian alphabet as a reference tool [S38].",
-            "replace": "Once the core concepts of sounds, letters, and syllables are established, present the full 33-letter Ukrainian alphabet as a reference tool <!-- VERIFY -->."
+            "find": "3.  Одразу вводьте поняття наголошених і ненаголошених голосних, пояснюючи, що наголошені вимовляються чітко, а ненаголошені `[е]` та `[и]` можуть наближатися один до одного у вимові ([еи], [ие]) [S4].",
+            "replace": "3.  Одразу вводьте поняття наголошених і ненаголошених голосних. <!-- VERIFY: потрібне джерело для твердження про зближення `[е]` та `[и]` у формі ([еи], [ие]) -->"
           },
           {
             "dim": "source_grounding",
-            "find": "Ukrainian phonology actively avoids difficult consonant clusters, a principle known as `милозвучність` (melodiousness or euphony) [S1].",
-            "replace": "Ukrainian phonology actively avoids difficult consonant clusters, a principle known as `милозвучність` (melodiousness or euphony) <!-- VERIFY -->."
+            "find": "-   **ДЖ, ДЗ**: Введіть як єдині звуки, що позначаються двома літерами: `джміль` [джм'іл'], `дзвінок` [дзв'іно́к]. Важливо відрізняти їх від збігу приголосних на межі префікса та кореня, як у слові `підземний` [п'ідзе́мний] [S2].",
+            "replace": "-   **ДЖ, ДЗ**: Введіть як єдині звуки, що позначаються двома літерами: `джміль` [джм'іл'], `дзвінок` [дзв'іно́к] [S3]. <!-- VERIFY: потрібне окреме джерело для зіставлення з префіксальним збігом у слові `підземний` -->"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "Необхідно чітко розмежувати дві функції цих літер залежно від позиції [S2].",
+            "replace": "Необхідно чітко розмежувати дві функції цих літер залежно від позиції [S3]."
+          },
+          {
+            "dim": "source_grounding",
+            "find": "Більшість таких слів мають спільне праслов'янське коріння.",
+            "replace": "Більшість таких слів мають спільне праслов'янське коріння. <!-- VERIFY: потрібне джерело для цього історико-лінгвістичного твердження -->"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "*   **Формулювання:** \"Запишіть подані слова у два стовпчики: в один — ті, де `я, ю, є` позначають один звук, у другий — де позначають два звуки.\"",
+            "replace": "*   **Формулювання:** \"Запишіть подані слова у два стовпчики: в один — ті, де `я, ю, є` позначають один звук, у другий — де позначають два звуки.\" <!-- VERIFY: chunk S2368 не підтверджує це формулювання -->"
           }
         ],
-        "conflicts": [
-          {
-            "kind": "DIFFERENT_REPLACE",
-            "find": "A Soviet linguist, Naum Kaganovich, infamously compared the letter **ґ** to a gallows (`шибениця`) and celebrated its removal as a way of asserting Russia's role as the \"older sister\" [S2].",
-            "dims": [
-              "factual_accuracy",
-              "source_grounding"
-            ],
-            "proposals": [
-              [
-                "factual_accuracy",
-                "A Soviet linguist, Naum Kaganovich, played a key role in its removal as part of a broader campaign to assert Russia's role as the \"older sister\" <!-- VERIFY: attribution of the specific 'gallows' / шибениця quote to Kaganovich --> [S2]."
-              ],
-              [
-                "source_grounding",
-                "Some Soviet-era rhetoric about the letter **ґ** requires source verification before inclusion <!-- VERIFY -->."
-              ]
-            ],
-            "chosen": "factual_accuracy",
-            "reason": "priority tiebreaker: factual_accuracy outranks others"
-          },
-          {
-            "kind": "MISSING",
-            "find": "It was part of the standard Ukrainian alphabet until it was officially removed in 1933 by the Soviet regime to make the Ukrainian language \"closer to Russian\" [S2].",
-            "dims": [
-              "source_grounding"
-            ],
-            "proposals": [
-              [
-                "source_grounding",
-                "It has a history of political suppression <!-- VERIFY -->."
-              ]
-            ],
-            "chosen": null,
-            "reason": "find-string not present in article text"
-          }
-        ],
-        "skipped_missing": [
-          {
-            "dim": "source_grounding",
-            "find": "It was part of the standard Ukrainian alphabet until it was officially removed in 1933 by the Soviet regime to make the Ukrainian language \"closer to Russian\" [S2].",
-            "replace": "It has a history of political suppression <!-- VERIFY -->."
-          }
-        ]
+        "conflicts": [],
+        "skipped_missing": []
       }
     }
   ],
-  "final_verdict": "REJECT",
+  "final_verdict": "NEEDS_FIXES",
   "failing_dims": [
+    "register",
+    "factual_accuracy",
     "source_grounding"
   ],
   "thresholds": {
@@ -932,7 +898,7 @@
   },
   "thresholds_calibrated": false,
   "shadow_mode": true,
-  "started_at": 1776545520.808898,
-  "finished_at": 1776546216.693387,
-  "duration_s": 695.88
+  "started_at": 1776727259.1084669,
+  "finished_at": 1776727964.87214,
+  "duration_s": 705.76
 }

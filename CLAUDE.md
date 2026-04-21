@@ -75,13 +75,13 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 | Feature | How | When |
 |---------|-----|------|
 | `Monitor` tool | Stream stdout events as notifications | **Build monitoring.** NEVER poll manually — use Monitor with `grep --line-buffered` to filter v6_build.py JSONL events. See below. |
-| `/effort` | Set model effort dynamically mid-session | `low`: config/typo fixes. `medium`: code fixes (default). `high`: content review, plan review, module building, linguistic analysis |
+| `/effort` | Set model effort dynamically mid-session | Levels: `low` / `medium` / `high` / `xhigh` / `max`. `low`: config/typo fixes. `medium`: code fixes (default). `xhigh`: content review, plan review, module building, linguistic analysis on Opus 4.7 — Anthropic notes Opus 4.7 at `high` is weaker than prior versions, so **use `xhigh` where we previously used `high`**. `max`: reserve for deep architecture / adversarial reviews where cost is justified. |
 | Transcript search | `Ctrl+O` then `/` to search, `n`/`N` to navigate | Finding previous discussions in long sessions |
 | `--bare` flag | `claude -p "..." --bare` | Scripted calls (agent bridge) — skips hooks/LSP/plugins for speed |
 | `worktree.sparsePaths` | Configured in settings.json | Subagent worktrees exclude `node_modules/`, `data/` for speed |
 | `PostCompact` hook | Auto-runs after context compaction | Restores current task, open issues, key reminders |
 | `FileChanged` hook | Auto-runs when `curriculum/**/*.md` changes | Triggers audit on module file edits |
-| `effort: high` on skills | Frontmatter in review skills | `content-review`, `plan-review`, `plan-review-seminar`, `batch-review`, `prompt-review` |
+| `effort: xhigh` on skills | Frontmatter in review skills | `content-review`, `plan-review`, `plan-review-seminar`, `batch-review`, `prompt-review` — forces deep analysis. Bumped from `high` → `xhigh` on 2026-04-21 after Anthropic noted Opus 4.7 at `high` underperforms prior versions. |
 | `paths:` scoping on rules | Frontmatter in rule files | `ukrainian-linguistics.md` only active for curriculum/orchestration work |
 
 ### Build Monitoring (MANDATORY)

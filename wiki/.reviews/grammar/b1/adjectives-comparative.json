@@ -1,0 +1,1061 @@
+{
+  "article_path": "/Users/krisztiankoos/projects/learn-ukrainian/wiki/grammar/b1/adjectives-comparative.md",
+  "rounds": [
+    {
+      "round": 1,
+      "dims": {
+        "register": {
+          "agent": "gemini",
+          "model": "gemini-3.1-pro-preview",
+          "score": 6,
+          "verdict": "REVISE",
+          "findings_count": 6,
+          "findings": [
+            {
+              "location": "## Як це пояснюють у школі",
+              "quote": "увага приділяється змінам приголосних при додаванні суфіксів",
+              "issue_type": "CALQUE",
+              "severity": "major",
+              "description": "Russian-style passive construction combined with 'при' + verbal noun.",
+              "raw": {
+                "location": "## Як це пояснюють у школі",
+                "quote": "увага приділяється змінам приголосних при додаванні суфіксів",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "увага приділяється",
+                    "result_summary": "Passive verbs with '-ся' (приділяється) are Russian calques; active or impersonal forms (приділяють) are native. 'При' + locative verbal noun is also a calque of 'при добавлении'."
+                  }
+                ],
+                "natural_alternative": "увагу приділяють змінам приголосних під час додавання суфіксів",
+                "issue_type": "CALQUE",
+                "issue_description": "Russian-style passive construction combined with 'при' + verbal noun.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "### Прикметники, що не утворюють ступенів порівняння",
+              "quote": "Ця здатність відсутня в таких груп [S2, S3, S5, S7, S8]:",
+              "issue_type": "CALQUE",
+              "severity": "major",
+              "description": "Syntactic calque of the Russian possessive 'отсутствует у таких групп'.",
+              "raw": {
+                "location": "### Прикметники, що не утворюють ступенів порівняння",
+                "quote": "Ця здатність відсутня в таких груп [S2, S3, S5, S7, S8]:",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "відсутній у",
+                    "result_summary": "The construction 'відсутній в/у' + Genitive to denote lacking something is a calque of Russian 'отсутствует у'. Natural Ukrainian uses 'не мати'."
+                  }
+                ],
+                "natural_alternative": "Цієї здатності не мають такі групи [S2, S3, S5, S7, S8]:",
+                "issue_type": "CALQUE",
+                "issue_description": "Syntactic calque of the Russian possessive 'отсутствует у таких групп'.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Частотність і пріоритети",
+              "quote": "перевага надається **простим (синтетичним) формам** ступенів порівняння",
+              "issue_type": "CALQUE",
+              "severity": "major",
+              "description": "Passive construction calqued from Russian 'предпочтение отдается'.",
+              "raw": {
+                "location": "## Частотність і пріоритети",
+                "quote": "перевага надається **простим (синтетичним) формам** ступенів порівняння",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "перевага надається",
+                    "result_summary": "Passive '-ся' verb instead of active. Recommended: 'віддавати перевагу' or 'надавати перевагу' in active/impersonal form."
+                  }
+                ],
+                "natural_alternative": "перевагу віддають **простим (синтетичним) формам** ступенів порівняння",
+                "issue_type": "CALQUE",
+                "issue_description": "Passive construction calqued from Russian 'предпочтение отдается'.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Природні приклади",
+              "quote": "*Клас вважався **найбільш галасливим** і недисциплінованим у всій школі.*",
+              "issue_type": "CALQUE",
+              "severity": "major",
+              "description": "Passive '-ся' verb applied to a subject, echoing Russian 'считался'.",
+              "raw": {
+                "location": "## Природні приклади",
+                "quote": "*Клас вважався **найбільш галасливим** і недисциплінованим у всій школі.*",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "вважатися",
+                    "result_summary": "Using 'вважатися' for a subject (especially animates/groups) is a Russianism ('считался'). Should use active/impersonal 'вважати'."
+                  }
+                ],
+                "natural_alternative": "*Клас вважали **найбільш галасливим** і недисциплінованим у всій школі.*",
+                "issue_type": "CALQUE",
+                "issue_description": "Passive '-ся' verb applied to a subject, echoing Russian 'считался'.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Деколонізаційні застереження",
+              "quote": "не варто подавати її як повний і завжди взаємозамінний еквівалент простій формі.",
+              "issue_type": "WRONG_CASE_GOVERNMENT",
+              "severity": "major",
+              "description": "Using Dative instead of Genitive, modeled after Russian 'эквивалент простой форме'.",
+              "raw": {
+                "location": "## Деколонізаційні застереження",
+                "quote": "не варто подавати її як повний і завжди взаємозамінний еквівалент простій формі.",
+                "tool_evidence": [
+                  {
+                    "tool": "search_definitions",
+                    "args": "еквівалент",
+                    "result_summary": "The noun 'еквівалент' governs the Genitive case (еквівалент чого), not the Dative."
+                  }
+                ],
+                "natural_alternative": "не варто подавати її як повний і завжди взаємозамінний еквівалент простої форми.",
+                "issue_type": "WRONG_CASE_GOVERNMENT",
+                "issue_description": "Using Dative instead of Genitive, modeled after Russian 'эквивалент простой форме'.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Деколонізаційні застереження",
+              "quote": "українська граматика зазнавала впливу та часто помилково викладалася через призму російської.",
+              "issue_type": "CALQUE",
+              "severity": "major",
+              "description": "Passive '-ся' verb mimicking Russian 'преподавалась'.",
+              "raw": {
+                "location": "## Деколонізаційні застереження",
+                "quote": "українська граматика зазнавала впливу та часто помилково викладалася через призму російської.",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "викладатися",
+                    "result_summary": "Passive '-ся' verb for inanimate subjects is a Russian stylistic influence. Active impersonal 'її викладали' is correct."
+                  }
+                ],
+                "natural_alternative": "українська граматика зазнавала впливу і її часто помилково викладали через призму російської.",
+                "issue_type": "CALQUE",
+                "issue_description": "Passive '-ся' verb mimicking Russian 'преподавалась'.",
+                "severity": "major"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "register",
+              "find": "є наріжною у шкільній програмі",
+              "replace": "є ключовою у шкільній програмі"
+            },
+            {
+              "dim": "register",
+              "find": "увага приділяється змінам приголосних при додаванні суфіксів",
+              "replace": "увагу приділяють змінам приголосних під час додавання суфіксів"
+            },
+            {
+              "dim": "register",
+              "find": "відразу зазначаються групи прикметників, які не утворюють ступенів порівняння",
+              "replace": "відразу зазначають групи прикметників, які не утворюють ступенів порівняння"
+            },
+            {
+              "dim": "register",
+              "find": "окремо вивчаються форми, утворені від інших коренів",
+              "replace": "окремо вивчають форми, утворені від інших коренів"
+            },
+            {
+              "dim": "register",
+              "find": "у 7-му класі та в старшій школі (11 клас) наголошується, що прислівники",
+              "replace": "у 7-му класі та в старшій школі (11 клас) наголошують, що прислівники"
+            },
+            {
+              "dim": "register",
+              "find": "ця тема повторюється та поглиблюється",
+              "replace": "цю тему повторюють та поглиблюють"
+            },
+            {
+              "dim": "register",
+              "find": "Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою",
+              "replace": "Кожен з них можна виразити простою (синтетичною) або складеною (аналітичною) формою"
+            },
+            {
+              "dim": "register",
+              "find": "Ця здатність відсутня в таких груп [S2, S3, S5, S7, S8]:",
+              "replace": "Цієї здатності не мають такі групи [S2, S3, S5, S7, S8]:"
+            },
+            {
+              "dim": "register",
+              "find": "перевага надається **простим (синтетичним) формам** ступенів порівняння",
+              "replace": "перевагу віддають **простим (синтетичним) формам** ступенів порівняння"
+            },
+            {
+              "dim": "register",
+              "find": "*Клас вважався **найбільш галасливим** і недисциплінованим у всій школі.* [S7]",
+              "replace": "*Клас вважали **найбільш галасливим** і недисциплінованим у всій школі.* [S7]"
+            },
+            {
+              "dim": "register",
+              "find": "еквівалент простій формі.",
+              "replace": "еквівалент простої форми."
+            },
+            {
+              "dim": "register",
+              "find": "зазнавала впливу та часто помилково викладалася через призму російської.",
+              "replace": "зазнавала впливу і її часто помилково викладали через призму російської."
+            }
+          ],
+          "notes": "The article exhibits a pervasive pattern of Russian-style passive verbs with '-ся' (викладалася, вважався, приділяється, зазначаються) and syntactic calques like 'відсутня в' + genitive, requiring systematic surface-level de-passivization.",
+          "duration_s": 105.16,
+          "error": ""
+        },
+        "ukrainian_perspective": {
+          "agent": "claude",
+          "model": "claude-opus-4-6",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 120.66,
+          "error": ""
+        },
+        "source_grounding": {
+          "agent": "codex",
+          "model": "gpt-5.4",
+          "score": 4,
+          "verdict": "REJECT",
+          "findings_count": 6,
+          "findings": [
+            {
+              "location": "## Як це пояснюють у школі",
+              "quote": "Зазвичай перше знайомство з нею відбувається у 6-му класі [S2, S3, S7].",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "The article makes a specific curricular-timeline claim, but the cited sources cannot be checked because their chunks are missing.",
+              "raw": {
+                "location": "## Як це пояснюють у школі",
+                "claim_quote": "Зазвичай перше знайомство з нею відбувається у 6-му класі [S2, S3, S7].",
+                "citation_refs": [
+                  "S2",
+                  "S3",
+                  "S7"
+                ],
+                "source_content_quote": "The provided source-chunks block contains only: \"# (source chunks not inlined in this build — sibling YAML only)\". No actual chunk text is provided for S2, S3, or S7.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "The article makes a specific curricular-timeline claim, but the cited sources cannot be checked because their chunks are missing.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Як це пояснюють у школі",
+              "quote": "У старших класах (10-11) ця тема повторюється та поглиблюється, з особливим акцентом на морфологічних нормах, стилістичному розрізненні форм та запобіганні типовим помилкам, як-от поєднання простої і складеної форм (*більш красивіший*) або вживання слова *самий* [S5, S8, S9].",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "This pedagogical and normative claim cannot be grounded because none of the cited source text is available to verify it.",
+              "raw": {
+                "location": "## Як це пояснюють у школі",
+                "claim_quote": "У старших класах (10-11) ця тема повторюється та поглиблюється, з особливим акцентом на морфологічних нормах, стилістичному розрізненні форм та запобіганні типовим помилкам, як-от поєднання простої і складеної форм (*більш красивіший*) або вживання слова *самий* [S5, S8, S9].",
+                "citation_refs": [
+                  "S5",
+                  "S8",
+                  "S9"
+                ],
+                "source_content_quote": "The provided source-chunks block contains only: \"# (source chunks not inlined in this build — sibling YAML only)\". No actual chunk text is provided for S5, S8, or S9.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "This pedagogical and normative claim cannot be grounded because none of the cited source text is available to verify it.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Повна парадигма",
+              "quote": "Якісні прикметники в українській мові мають два ступені порівняння: вищий і найвищий. Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою [S2, S5, S7].",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "This core grammatical framing is cited, but the cited chunks are absent, so the grounding cannot be verified.",
+              "raw": {
+                "location": "## Повна парадигма",
+                "claim_quote": "Якісні прикметники в українській мові мають два ступені порівняння: вищий і найвищий. Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою [S2, S5, S7].",
+                "citation_refs": [
+                  "S2",
+                  "S5",
+                  "S7"
+                ],
+                "source_content_quote": "The provided source-chunks block contains only: \"# (source chunks not inlined in this build — sibling YAML only)\". No actual chunk text is provided for S2, S5, or S7.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "This core grammatical framing is cited, but the cited chunks are absent, so the grounding cannot be verified.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Прикметники, що не утворюють ступенів порівняння",
+              "quote": "Не всі якісні прикметники можуть утворювати ступені порівняння. Ця здатність відсутня в таких груп [S2, S3, S5, S7, S8]:",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "The taxonomy of non-comparable adjectives is substantive, but the cited sources do not resolve to any checkable text.",
+              "raw": {
+                "location": "## Прикметники, що не утворюють ступенів порівняння",
+                "claim_quote": "Не всі якісні прикметники можуть утворювати ступені порівняння. Ця здатність відсутня в таких груп [S2, S3, S5, S7, S8]:",
+                "citation_refs": [
+                  "S2",
+                  "S3",
+                  "S5",
+                  "S7",
+                  "S8"
+                ],
+                "source_content_quote": "The provided source-chunks block contains only: \"# (source chunks not inlined in this build — sibling YAML only)\". No actual chunk text is provided for S2, S3, S5, S7, or S8.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "The taxonomy of non-comparable adjectives is substantive, but the cited sources do not resolve to any checkable text.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Частотність і пріоритети",
+              "quote": "У живому українському мовленні, а також у художній літературі, перевага надається **простим (синтетичним) формам** ступенів порівняння [S8].",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "This frequency/register claim depends on source evidence, but the cited source chunk is missing.",
+              "raw": {
+                "location": "## Частотність і пріоритети",
+                "claim_quote": "У живому українському мовленні, а також у художній літературі, перевага надається **простим (синтетичним) формам** ступенів порівняння [S8].",
+                "citation_refs": [
+                  "S8"
+                ],
+                "source_content_quote": "The provided source-chunks block contains only: \"# (source chunks not inlined in this build — sibling YAML only)\". No actual chunk text is provided for S8.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "This frequency/register claim depends on source evidence, but the cited source chunk is missing.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Деколонізаційні застереження",
+              "quote": "Вживання конструкції з *самий* в українській мові є грубою стилістичною помилкою і калькою з російської. Це одна з найпоширеніших і найпомітніших помилок.",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "This interpretive normative claim is presented as sourced, but the cited chunks are unavailable, so alignment with the sources cannot be checked.",
+              "raw": {
+                "location": "## Деколонізаційні застереження",
+                "claim_quote": "Вживання конструкції з *самий* в українській мові є грубою стилістичною помилкою і калькою з російської. Це одна з найпоширеніших і найпомітніших помилок.",
+                "citation_refs": [
+                  "S5",
+                  "S9"
+                ],
+                "source_content_quote": "The surrounding subsection cites [S5, S9], but the provided source-chunks block contains only: \"# (source chunks not inlined in this build — sibling YAML only)\". No actual chunk text is provided for S5 or S9.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "This interpretive normative claim is presented as sourced, but the cited chunks are unavailable, so alignment with the sources cannot be checked.",
+                "severity": "major"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "source_grounding",
+              "find": "Зазвичай перше знайомство з нею відбувається у 6-му класі [S2, S3, S7].",
+              "replace": "Зазвичай перше знайомство з нею відбувається у 6-му класі [S2, S3, S7]. <!-- VERIFY -->"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "У старших класах (10-11) ця тема повторюється та поглиблюється, з особливим акцентом на морфологічних нормах, стилістичному розрізненні форм та запобіганні типовим помилкам, як-от поєднання простої і складеної форм (*більш красивіший*) або вживання слова *самий* [S5, S8, S9].",
+              "replace": "У старших класах (10-11) ця тема повторюється та поглиблюється, з особливим акцентом на морфологічних нормах, стилістичному розрізненні форм та запобіганні типовим помилкам, як-от поєднання простої і складеної форм (*більш красивіший*) або вживання слова *самий* [S5, S8, S9]. <!-- VERIFY -->"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "Якісні прикметники в українській мові мають два ступені порівняння: вищий і найвищий. Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою [S2, S5, S7].",
+              "replace": "Якісні прикметники в українській мові мають два ступені порівняння: вищий і найвищий. Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою [S2, S5, S7]. <!-- VERIFY -->"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "У живому українському мовленні, а також у художній літературі, перевага надається **простим (синтетичним) формам** ступенів порівняння [S8].",
+              "replace": "У живому українському мовленні, а також у художній літературі, перевага надається **простим (синтетичним) формам** ступенів порівняння [S8]. <!-- VERIFY -->"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "Вживання конструкції з *самий* в українській мові є грубою стилістичною помилкою і калькою з російської. Це одна з найпоширеніших і найпомітніших помилок.",
+              "replace": "Вживання конструкції з *самий* в українській мові є грубою стилістичною помилкою і калькою з російської. <!-- VERIFY -->"
+            }
+          ],
+          "notes": "The sibling registry resolves only to bare S-IDs, and the provided source-chunks block contains no actual source text, so the article's citations cannot ground its substantive claims.",
+          "duration_s": 140.19,
+          "error": ""
+        },
+        "factual_accuracy": {
+          "agent": "claude",
+          "model": "claude-opus-4-6",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 2,
+          "findings": [
+            {
+              "location": "## Природні приклади → Група 1: Проста форма вищого ступеня (базове порівняння)",
+              "quote": "Життя буя, горить і кличе, летить все **далеко** і все **швидко**.* (Тут прислівники, але ілюструють форму) [S6]",
+              "issue_type": "LINGUISTIC_ERROR",
+              "severity": "minor",
+              "description": "The example is placed under 'Проста форма вищого ступеня' but the bolded words далеко and швидко are positive (base) degree adverbs, not comparative forms. The Glazova Grade 11 source presents these in parentheses as an exercise requiring conversion to comparative (далі/дальше, швидше). The article appears to have copied the exercise's base forms rather than the expected comparative answers.",
+              "raw": {
+                "location": "## Природні приклади → Група 1: Проста форма вищого ступеня (базове порівняння)",
+                "claim_quote": "Життя буя, горить і кличе, летить все **далеко** і все **швидко**.* (Тут прислівники, але ілюструють форму) [S6]",
+                "tool_evidence": [
+                  {
+                    "tool": "verify_word",
+                    "args": "далеко (pos_filter: adv)",
+                    "result_summary": "далеко — FOUND: adv:compb:predic — 'compb' = comparative BASE (positive degree), confirming this is NOT a comparative form"
+                  },
+                  {
+                    "tool": "verify_words",
+                    "args": "['далі', 'швидше', 'дальше'] (pos_filter: adv)",
+                    "result_summary": "All three FOUND as adverbs — далі and дальше are the actual comparative forms of далеко; швидше is the comparative of швидко"
+                  },
+                  {
+                    "tool": "search_text",
+                    "args": "Антоненко-Давидович проста форма порівняння природніша",
+                    "result_summary": "Glazova Grade 11 exercise 30 presents this Sосюра quote as '(далеко) і все (швидко)' in parentheses — an exercise format where students must convert to comparative form. The article copied the base forms instead of the comparative answers."
+                  }
+                ],
+                "issue_type": "LINGUISTIC_ERROR",
+                "issue_description": "The example is placed under 'Проста форма вищого ступеня' but the bolded words далеко and швидко are positive (base) degree adverbs, not comparative forms. The Glazova Grade 11 source presents these in parentheses as an exercise requiring conversion to comparative (далі/дальше, швидше). The article appears to have copied the exercise's base forms rather than the expected comparative answers.",
+                "severity": "minor"
+              }
+            },
+            {
+              "location": "## Частотність і пріоритети",
+              "quote": "Борис Антоненко-Давидович зазначав, що проста форма є природнішою та поширенішою для української мови [S8]",
+              "issue_type": "UNVERIFIABLE",
+              "severity": "minor",
+              "description": "The specific attribution of this claim to Антоненко-Давидович cannot be verified — 5 searches of the style guide (279 entries from 'Як ми говоримо') returned no results about comparative degree forms. The underlying linguistic claim IS confirmed by Glazova Grade 11 textbook (p.18), but that source does not attribute it to Антоненко-Давидович. The style guide database may not contain every passage from the book, so the attribution may be correct but is unverifiable through available tools.",
+              "raw": {
+                "location": "## Частотність і пріоритети",
+                "claim_quote": "Борис Антоненко-Давидович зазначав, що проста форма є природнішою та поширенішою для української мови [S8]",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "самий найвищий ступінь порівняння",
+                    "result_summary": "No results in Антоненко-Давидович"
+                  },
+                  {
+                    "tool": "search_style_guide",
+                    "args": "ступені порівняння проста форма складена",
+                    "result_summary": "No results in Антоненко-Давидович"
+                  },
+                  {
+                    "tool": "search_style_guide",
+                    "args": "простіший форма порівняння прикметник",
+                    "result_summary": "No results in Антоненко-Давидович"
+                  },
+                  {
+                    "tool": "search_style_guide",
+                    "args": "порівняння прикметник",
+                    "result_summary": "No results in Антоненко-Давидович"
+                  },
+                  {
+                    "tool": "search_style_guide",
+                    "args": "синтетичний аналітичний форма",
+                    "result_summary": "No results in Антоненко-Давидович"
+                  },
+                  {
+                    "tool": "search_text",
+                    "args": "чергування приголосних при творенні вищого ступеня порівняння",
+                    "result_summary": "Glazova Grade 11 p.18 states the identical linguistic claim WITHOUT attributing it to Антоненко-Давидович: 'Проста форма вищого й найвищого ступенів є для української мови природнішою і вживається в усіх стилях мовлення.'"
+                  }
+                ],
+                "issue_type": "UNVERIFIABLE",
+                "issue_description": "The specific attribution of this claim to Антоненко-Давидович cannot be verified — 5 searches of the style guide (279 entries from 'Як ми говоримо') returned no results about comparative degree forms. The underlying linguistic claim IS confirmed by Glazova Grade 11 textbook (p.18), but that source does not attribute it to Антоненко-Давидович. The style guide database may not contain every passage from the book, so the attribution may be correct but is unverifiable through available tools.",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "factual_accuracy",
+              "find": "*Життя буя, горить і кличе, летить все **далеко** і все **швидко**.* (Тут прислівники, але ілюструють форму) [S6]",
+              "replace": "*Життя буя, горить і кличе, летить все **далі** і все **швидше**.* (за В. Сосюрою; прислівники) [S6]"
+            },
+            {
+              "dim": "factual_accuracy",
+              "find": "Борис Антоненко-Давидович зазначав, що проста форма є природнішою та поширенішою для української мови [S8].",
+              "replace": "Проста форма є природнішою та поширенішою для української мови [S8]. <!-- VERIFY: attribution to Антоненко-Давидович not confirmed in available excerpts of «Як ми говоримо» -->"
+            }
+          ],
+          "notes": "Article is factually strong — all 25+ word forms verified in VESUM, consonant alternation rules confirmed across 6 textbooks (Glazova, Litvinova, Betsa, Golub, Avramenko, Zabolotnyi), suppletive forms match СУМ-11, 'самий' prohibition confirmed, comparison constructions (за/від/ніж) validated. Two minor issues: one misclassified example (base-form adverbs in comparative section) and one unverifiable attribution.",
+          "duration_s": 385.32,
+          "error": ""
+        }
+      },
+      "merge": {
+        "applied_count": 16,
+        "conflicts_count": 3,
+        "applied": [
+          {
+            "dim": "register",
+            "find": "є наріжною у шкільній програмі",
+            "replace": "є ключовою у шкільній програмі"
+          },
+          {
+            "dim": "register",
+            "find": "увага приділяється змінам приголосних при додаванні суфіксів",
+            "replace": "увагу приділяють змінам приголосних під час додавання суфіксів"
+          },
+          {
+            "dim": "register",
+            "find": "відразу зазначаються групи прикметників, які не утворюють ступенів порівняння",
+            "replace": "відразу зазначають групи прикметників, які не утворюють ступенів порівняння"
+          },
+          {
+            "dim": "register",
+            "find": "окремо вивчаються форми, утворені від інших коренів",
+            "replace": "окремо вивчають форми, утворені від інших коренів"
+          },
+          {
+            "dim": "register",
+            "find": "у 7-му класі та в старшій школі (11 клас) наголошується, що прислівники",
+            "replace": "у 7-му класі та в старшій школі (11 клас) наголошують, що прислівники"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "У старших класах (10-11) ця тема повторюється та поглиблюється, з особливим акцентом на морфологічних нормах, стилістичному розрізненні форм та запобіганні типовим помилкам, як-от поєднання простої і складеної форм (*більш красивіший*) або вживання слова *самий* [S5, S8, S9].",
+            "replace": "У старших класах (10-11) ця тема повторюється та поглиблюється, з особливим акцентом на морфологічних нормах, стилістичному розрізненні форм та запобіганні типовим помилкам, як-от поєднання простої і складеної форм (*більш красивіший*) або вживання слова *самий* [S5, S8, S9]. <!-- VERIFY -->"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "Якісні прикметники в українській мові мають два ступені порівняння: вищий і найвищий. Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою [S2, S5, S7].",
+            "replace": "Якісні прикметники в українській мові мають два ступені порівняння: вищий і найвищий. Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою [S2, S5, S7]. <!-- VERIFY -->"
+          },
+          {
+            "dim": "register",
+            "find": "Ця здатність відсутня в таких груп [S2, S3, S5, S7, S8]:",
+            "replace": "Цієї здатності не мають такі групи [S2, S3, S5, S7, S8]:"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "У живому українському мовленні, а також у художній літературі, перевага надається **простим (синтетичним) формам** ступенів порівняння [S8].",
+            "replace": "У живому українському мовленні, а також у художній літературі, перевага надається **простим (синтетичним) формам** ступенів порівняння [S8]. <!-- VERIFY -->"
+          },
+          {
+            "dim": "register",
+            "find": "*Клас вважався **найбільш галасливим** і недисциплінованим у всій школі.* [S7]",
+            "replace": "*Клас вважали **найбільш галасливим** і недисциплінованим у всій школі.* [S7]"
+          },
+          {
+            "dim": "register",
+            "find": "еквівалент простій формі.",
+            "replace": "еквівалент простої форми."
+          },
+          {
+            "dim": "register",
+            "find": "зазнавала впливу та часто помилково викладалася через призму російської.",
+            "replace": "зазнавала впливу і її часто помилково викладали через призму російської."
+          },
+          {
+            "dim": "source_grounding",
+            "find": "Зазвичай перше знайомство з нею відбувається у 6-му класі [S2, S3, S7].",
+            "replace": "Зазвичай перше знайомство з нею відбувається у 6-му класі [S2, S3, S7]. <!-- VERIFY -->"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "Вживання конструкції з *самий* в українській мові є грубою стилістичною помилкою і калькою з російської. Це одна з найпоширеніших і найпомітніших помилок.",
+            "replace": "Вживання конструкції з *самий* в українській мові є грубою стилістичною помилкою і калькою з російської. <!-- VERIFY -->"
+          },
+          {
+            "dim": "factual_accuracy",
+            "find": "*Життя буя, горить і кличе, летить все **далеко** і все **швидко**.* (Тут прислівники, але ілюструють форму) [S6]",
+            "replace": "*Життя буя, горить і кличе, летить все **далі** і все **швидше**.* (за В. Сосюрою; прислівники) [S6]"
+          },
+          {
+            "dim": "factual_accuracy",
+            "find": "Борис Антоненко-Давидович зазначав, що проста форма є природнішою та поширенішою для української мови [S8].",
+            "replace": "Проста форма є природнішою та поширенішою для української мови [S8]. <!-- VERIFY: attribution to Антоненко-Давидович not confirmed in available excerpts of «Як ми говоримо» -->"
+          }
+        ],
+        "conflicts": [
+          {
+            "kind": "SPAN_OVERLAP",
+            "find": "У старших класах (10-11) ця тема повторюється та поглиблюється, з особливим акцентом на морфологічних нормах, стилістичному розрізненні форм та запобіганні типовим помилкам, як-от поєднання простої і складеної форм (*більш красивіший*) або вживання слова *самий* [S5, S8, S9].",
+            "dims": [
+              "register",
+              "source_grounding"
+            ],
+            "proposals": [
+              [
+                "register",
+                "цю тему повторюють та поглиблюють"
+              ],
+              [
+                "source_grounding",
+                "У старших класах (10-11) ця тема повторюється та поглиблюється, з особливим акцентом на морфологічних нормах, стилістичному розрізненні форм та запобіганні типовим помилкам, як-от поєднання простої і складеної форм (*більш красивіший*) або вживання слова *самий* [S5, S8, S9]. <!-- VERIFY -->"
+              ]
+            ],
+            "chosen": "source_grounding",
+            "reason": "span-overlap; longest find selected"
+          },
+          {
+            "kind": "SPAN_OVERLAP",
+            "find": "Якісні прикметники в українській мові мають два ступені порівняння: вищий і найвищий. Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою [S2, S5, S7].",
+            "dims": [
+              "register",
+              "source_grounding"
+            ],
+            "proposals": [
+              [
+                "register",
+                "Кожен з них можна виразити простою (синтетичною) або складеною (аналітичною) формою"
+              ],
+              [
+                "source_grounding",
+                "Якісні прикметники в українській мові мають два ступені порівняння: вищий і найвищий. Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою [S2, S5, S7]. <!-- VERIFY -->"
+              ]
+            ],
+            "chosen": "source_grounding",
+            "reason": "span-overlap; longest find selected"
+          },
+          {
+            "kind": "SPAN_OVERLAP",
+            "find": "У живому українському мовленні, а також у художній літературі, перевага надається **простим (синтетичним) формам** ступенів порівняння [S8].",
+            "dims": [
+              "register",
+              "source_grounding"
+            ],
+            "proposals": [
+              [
+                "register",
+                "перевагу віддають **простим (синтетичним) формам** ступенів порівняння"
+              ],
+              [
+                "source_grounding",
+                "У живому українському мовленні, а також у художній літературі, перевага надається **простим (синтетичним) формам** ступенів порівняння [S8]. <!-- VERIFY -->"
+              ]
+            ],
+            "chosen": "source_grounding",
+            "reason": "span-overlap; longest find selected"
+          }
+        ],
+        "skipped_missing": []
+      }
+    },
+    {
+      "round": 2,
+      "dims": {
+        "factual_accuracy": {
+          "agent": "gemini",
+          "model": "gemini-3.1-pro-preview",
+          "score": 9,
+          "verdict": "PASS",
+          "findings_count": 1,
+          "findings": [
+            {
+              "location": "### Орфографічні та фонетичні зміни при творенні",
+              "quote": "3.  **Чергування приголосних:** Кінцевий приголосний основи **[с]** у сполученні з суфіксом **-ш-** змінюється на **[шч]** (на письмі **-щ-**) [S2, S7].\n    - *ви**с**окий → ви**щ**ий*\n    - *тов**ст**ий → тов**щ**ий* [S7]",
+              "issue_type": "LINGUISTIC_ERROR",
+              "severity": "minor",
+              "description": "The rule omits the consonant cluster [ст], even though it correctly provides 'товстий' as an example. Both [с] and [ст] before -ш- change to [шч].",
+              "raw": {
+                "location": "### Орфографічні та фонетичні зміни при творенні",
+                "claim_quote": "3.  **Чергування приголосних:** Кінцевий приголосний основи **[с]** у сполученні з суфіксом **-ш-** змінюється на **[шч]** (на письмі **-щ-**) [S2, S7].\n    - *ви**с**окий → ви**щ**ий*\n    - *тов**ст**ий → тов**щ**ий* [S7]",
+                "tool_evidence": [
+                  {
+                    "tool": "query_pravopys",
+                    "args": "чергування приголосних вищий ступінь",
+                    "result_summary": "Правопис § 19. Приголосні [с], [ст] перед суфіксом -ш- змінюються на [шч] (на письмі щ): високий — вищий, товстий — товщий."
+                  }
+                ],
+                "issue_type": "LINGUISTIC_ERROR",
+                "issue_description": "The rule omits the consonant cluster [ст], even though it correctly provides 'товстий' as an example. Both [с] and [ст] before -ш- change to [шч].",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "factual_accuracy",
+              "find": "3.  **Чергування приголосних:** Кінцевий приголосний основи **[с]** у сполученні з суфіксом **-ш-** змінюється на **[шч]** (на письмі **-щ-**) [S2, S7].",
+              "replace": "3.  **Чергування приголосних:** Кінцевий приголосний основи **[с]** та сполучення **[ст]** у сполученні з суфіксом **-ш-** змінюються на **[шч]** (на письмі **-щ-**) [S2, S7]."
+            }
+          ],
+          "notes": "The article is highly accurate; only one minor omission regarding the [ст] consonant cluster in the orthography rule.",
+          "duration_s": 70.17,
+          "error": ""
+        },
+        "ukrainian_perspective": {
+          "agent": "claude",
+          "model": "claude-opus-4-6",
+          "score": 10,
+          "verdict": "PASS",
+          "findings_count": 0,
+          "findings": [],
+          "fixes": [],
+          "notes": "",
+          "duration_s": 100.11,
+          "error": ""
+        },
+        "register": {
+          "agent": "gemini",
+          "model": "gemini-3.1-pro-preview",
+          "score": 7,
+          "verdict": "REVISE",
+          "findings_count": 4,
+          "findings": [
+            {
+              "location": "## Орфографічні та фонетичні зміни при творенні",
+              "quote": "При утворенні простої форми вищого ступеня відбуваються такі зміни в основі прикметника:",
+              "issue_type": "CALQUE",
+              "severity": "major",
+              "description": "Конструкція «при + віддієслівний іменник» на позначення часу дії — це типова синтаксична калька з російської мови («при образовании»).",
+              "raw": {
+                "location": "## Орфографічні та фонетичні зміни при творенні",
+                "quote": "При утворенні простої форми вищого ступеня відбуваються такі зміни в основі прикметника:",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "при утворенні",
+                    "result_summary": "Антоненко-Давидович зазначає, що вживання прийменника «при» з віддієслівними іменниками на позначення часу (напр. «при читанні») є синтаксичною калькою з російської. Слід вживати «під час» або дієприслівник."
+                  }
+                ],
+                "natural_alternative": "Під час творення простої форми вищого ступеня відбуваються такі зміни в основі прикметника:",
+                "issue_type": "CALQUE",
+                "issue_description": "Конструкція «при + віддієслівний іменник» на позначення часу дії — це типова синтаксична калька з російської мови («при образовании»).",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Деколонізаційні застереження",
+              "quote": "При викладанні української мови важливо чітко розмежовувати її норми від російських",
+              "issue_type": "CALQUE",
+              "severity": "major",
+              "description": "Аналогічна синтаксична калька з прийменником «при» для вираження одночасності дії («при преподавании»).",
+              "raw": {
+                "location": "## Деколонізаційні застереження",
+                "quote": "При викладанні української мови важливо чітко розмежовувати її норми від російських",
+                "tool_evidence": [
+                  {
+                    "tool": "search_style_guide",
+                    "args": "при викладанні",
+                    "result_summary": "Так само як і з «при утворенні», це калька російської конструкції «при + діянні»."
+                  }
+                ],
+                "natural_alternative": "Викладаючи українську мову, важливо чітко розмежовувати її норми від російських",
+                "issue_type": "CALQUE",
+                "issue_description": "Аналогічна синтаксична калька з прийменником «при» для вираження одночасності дії («при преподавании»).",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Частотність і пріоритети",
+              "quote": "У живому українському мовленні, а також у художній літературі, перевага надається **простим (синтетичним) формам** ступенів порівняння [S8].",
+              "issue_type": "TRANSLATIONESE",
+              "severity": "major",
+              "description": "Пасивні конструкції на -ся (перевага надається) менш притаманні природній українській мові, часто є калькою з російського канцелярського стилю («предпочтение отдается»).",
+              "raw": {
+                "location": "## Частотність і пріоритети",
+                "quote": "У живому українському мовленні, а також у художній літературі, перевага надається **простим (синтетичним) формам** ступенів порівняння [S8].",
+                "tool_evidence": [],
+                "natural_alternative": "У живому українському мовленні, а також у художній літературі, переважають **прості (синтетичні) форми** ступенів порівняння [S8].",
+                "issue_type": "TRANSLATIONESE",
+                "issue_description": "Пасивні конструкції на -ся (перевага надається) менш притаманні природній українській мові, часто є калькою з російського канцелярського стилю («предпочтение отдается»).",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "Multiple locations (Частотність і пріоритети, Типові помилки)",
+              "quote": "Ця конструкція є корисною для уникнення... / Форми на зразок якнайкраще, щонайшвидше є дуже поширеними та експресивними... / Цей автомобіль є швидкий...",
+              "issue_type": "MT_SMELL",
+              "severity": "minor",
+              "description": "Надмірне та неприродне використання дієслова-зв'язки «є» в теперішньому часі (калька з англійської «is useful / is fast»).",
+              "raw": {
+                "location": "Multiple locations (Частотність і пріоритети, Типові помилки)",
+                "quote": "Ця конструкція є корисною для уникнення... / Форми на зразок якнайкраще, щонайшвидше є дуже поширеними та експресивними... / Цей автомобіль є швидкий...",
+                "tool_evidence": [],
+                "natural_alternative": "Ця конструкція корисна... / Форми ... дуже поширені та експресивні... / Цей автомобіль швидкий...",
+                "issue_type": "MT_SMELL",
+                "issue_description": "Надмірне та неприродне використання дієслова-зв'язки «є» в теперішньому часі (калька з англійської «is useful / is fast»).",
+                "severity": "minor"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "register",
+              "find": "При утворенні простої форми вищого ступеня відбуваються такі зміни",
+              "replace": "Під час творення простої форми вищого ступеня відбуваються такі зміни"
+            },
+            {
+              "dim": "register",
+              "find": "При викладанні української мови важливо чітко розмежовувати",
+              "replace": "Викладаючи українську мову, важливо чітко розмежовувати"
+            },
+            {
+              "dim": "register",
+              "find": "перевага надається **простим (синтетичним) формам**",
+              "replace": "переважають **прості (синтетичні) форми**"
+            },
+            {
+              "dim": "register",
+              "find": "Ця конструкція є корисною для уникнення",
+              "replace": "Ця конструкція корисна для уникнення"
+            },
+            {
+              "dim": "register",
+              "find": "є дуже поширеними та експресивними",
+              "replace": "дуже поширені та експресивні"
+            },
+            {
+              "dim": "register",
+              "find": "| *Цей автомобіль є **швидкий**, але той **ще швидше**.* | *Цей автомобіль є **швидкий**, але той **ще швидший**.* |",
+              "replace": "| *Цей автомобіль **швидкий**, але той **ще швидше**.* | *Цей автомобіль **швидкий**, але той **ще швидший**.* |"
+            }
+          ],
+          "notes": "Article is largely excellent, but contains a few syntactic calques ('при утворенні', passive '-ся') and overuses the copula 'є' in present tense.",
+          "duration_s": 165.26,
+          "error": ""
+        },
+        "source_grounding": {
+          "agent": "codex",
+          "model": "gpt-5.4",
+          "score": 5,
+          "verdict": "REJECT",
+          "findings_count": 6,
+          "findings": [
+            {
+              "location": "## Як це пояснюють у школі (paragraph 1)",
+              "quote": "Зазвичай перше знайомство з нею відбувається у 6-му класі [S2, S3, S7].",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "The cited references do not resolve to any supplied source content, so the specific 6th-grade claim cannot be verified.",
+              "raw": {
+                "location": "## Як це пояснюють у школі (paragraph 1)",
+                "claim_quote": "Зазвичай перше знайомство з нею відбувається у 6-му класі [S2, S3, S7].",
+                "citation_refs": [
+                  "S2",
+                  "S3",
+                  "S7"
+                ],
+                "source_content_quote": "Chunk missing: the input’s source-chunks block says `# (source chunks not inlined in this build — sibling YAML only)`, and the sibling registry provides only opaque entries `file: S3175`, `file: S3079`, and `file: S3351` with `type: unknown`, not the actual source text.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "The cited references do not resolve to any supplied source content, so the specific 6th-grade claim cannot be verified.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Повна парадигма (intro)",
+              "quote": "Якісні прикметники в українській мові мають два ступені порівняння: вищий і найвищий. Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою [S2, S5, S7].",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "This core grammatical summary is cited, but the cited sources are not actually present in the review bundle.",
+              "raw": {
+                "location": "## Повна парадигма (intro)",
+                "claim_quote": "Якісні прикметники в українській мові мають два ступені порівняння: вищий і найвищий. Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою [S2, S5, S7].",
+                "citation_refs": [
+                  "S2",
+                  "S5",
+                  "S7"
+                ],
+                "source_content_quote": "Chunk missing: the provided bundle includes no chunk text for `S3175`, `S1142`, or `S3351`; it supplies only registry rows with `type: unknown` and no actual excerpt to check.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "This core grammatical summary is cited, but the cited sources are not actually present in the review bundle.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Частотність і пріоритети",
+              "quote": "У живому українському мовленні, а також у художній літературі, перевага надається **простим (синтетичним) формам** ступенів порівняння [S8].",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "The stylistic-frequency claim cannot be checked because the cited source text for S8 is absent.",
+              "raw": {
+                "location": "## Частотність і пріоритети",
+                "claim_quote": "У живому українському мовленні, а також у художній літературі, перевага надається **простим (синтетичним) формам** ступенів порівняння [S8].",
+                "citation_refs": [
+                  "S8"
+                ],
+                "source_content_quote": "Chunk missing: the bundle provides only the registry line `- id: S8 / file: S674 / type: unknown`; no source excerpt for S8 is included.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "The stylistic-frequency claim cannot be checked because the cited source text for S8 is absent.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Частотність і пріоритети",
+              "quote": "**Складені (аналітичні) форми** (*більш цікавий, найбільш важливий*) частіше трапляються в науковому та офіційно-діловому стилях [S6, S8].",
+              "issue_type": "STALE_CITATION",
+              "severity": "major",
+              "description": "The article makes a specific register-distribution claim, but neither cited source is available to confirm it.",
+              "raw": {
+                "location": "## Частотність і пріоритети",
+                "claim_quote": "**Складені (аналітичні) форми** (*більш цікавий, найбільш важливий*) частіше трапляються в науковому та офіційно-діловому стилях [S6, S8].",
+                "citation_refs": [
+                  "S6",
+                  "S8"
+                ],
+                "source_content_quote": "Chunk missing: the source-chunks section contains no text at all, and the registry exposes only `file: S1204` and `file: S674` with `type: unknown`.",
+                "issue_type": "STALE_CITATION",
+                "issue_description": "The article makes a specific register-distribution claim, but neither cited source is available to confirm it.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Типові помилки L2 (англомовні учні) (intro)",
+              "quote": "Англомовні учні, вивчаючи ступені порівняння в українській мові, часто припускаються помилок через інтерференцію рідної мови та хибні аналогії з російською.",
+              "issue_type": "UNSUPPORTED_CLAIM",
+              "severity": "major",
+              "description": "This is a substantive claim about L2 learner error patterns, but it is presented without any source.",
+              "raw": {
+                "location": "## Типові помилки L2 (англомовні учні) (intro)",
+                "claim_quote": "Англомовні учні, вивчаючи ступені порівняння в українській мові, часто припускаються помилок через інтерференцію рідної мови та хибні аналогії з російською.",
+                "citation_refs": [],
+                "source_content_quote": "No citation is attached to this sentence, and there is no nearby `<!-- VERIFY -->` marker covering it in the article text.",
+                "issue_type": "UNSUPPORTED_CLAIM",
+                "issue_description": "This is a substantive claim about L2 learner error patterns, but it is presented without any source.",
+                "severity": "major"
+              }
+            },
+            {
+              "location": "## Деколонізаційні застереження (intro)",
+              "quote": "При викладанні української мови важливо чітко розмежовувати її норми від російських, оскільки історично українська граматика зазнавала впливу і її часто помилково викладали через призму російської.",
+              "issue_type": "UNSUPPORTED_CLAIM",
+              "severity": "major",
+              "description": "This historical framing is substantive and interpretive, but the article gives no source for it.",
+              "raw": {
+                "location": "## Деколонізаційні застереження (intro)",
+                "claim_quote": "При викладанні української мови важливо чітко розмежовувати її норми від російських, оскільки історично українська граматика зазнавала впливу і її часто помилково викладали через призму російської.",
+                "citation_refs": [],
+                "source_content_quote": "No citation is attached to this historical assertion, and there is no nearby `<!-- VERIFY -->` marker covering it in the article text.",
+                "issue_type": "UNSUPPORTED_CLAIM",
+                "issue_description": "This historical framing is substantive and interpretive, but the article gives no source for it.",
+                "severity": "major"
+              }
+            }
+          ],
+          "fixes": [
+            {
+              "dim": "source_grounding",
+              "find": "Зазвичай перше знайомство з нею відбувається у 6-му класі [S2, S3, S7].",
+              "replace": "Тема ступенів порівняння прикметників вводиться відносно рано в шкільному курсі. <!-- VERIFY -->"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "Якісні прикметники в українській мові мають два ступені порівняння: вищий і найвищий. Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою [S2, S5, S7].",
+              "replace": "У шкільних граматиках прикметники описують через вищий і найвищий ступені порівняння. <!-- VERIFY -->"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "**Складені (аналітичні) форми** (*більш цікавий, найбільш важливий*) частіше трапляються в науковому та офіційно-діловому стилях [S6, S8].",
+              "replace": "**Складені (аналітичні) форми** (*більш цікавий, найбільш важливий*) пов'язують зі стилістичним розрізненням форм. <!-- VERIFY -->"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "Англомовні учні, вивчаючи ступені порівняння в українській мові, часто припускаються помилок через інтерференцію рідної мови та хибні аналогії з російською.",
+              "replace": "Учні L2 можуть припускатися типових помилок у творенні ступенів порівняння. <!-- VERIFY -->"
+            },
+            {
+              "dim": "source_grounding",
+              "find": "При викладанні української мови важливо чітко розмежовувати її норми від російських, оскільки історично українська граматика зазнавала впливу і її часто помилково викладали через призму російської.",
+              "replace": "У цій темі варто окремо пояснювати відмінності між українськими та російськими моделями порівняння. <!-- VERIFY -->"
+            }
+          ],
+          "notes": "The review bundle does not include any actual chunk text for the cited sources, so core citations are non-resolving and several additional substantive claims are uncited.",
+          "duration_s": 225.28,
+          "error": ""
+        }
+      },
+      "merge": {
+        "applied_count": 11,
+        "conflicts_count": 1,
+        "applied": [
+          {
+            "dim": "factual_accuracy",
+            "find": "3.  **Чергування приголосних:** Кінцевий приголосний основи **[с]** у сполученні з суфіксом **-ш-** змінюється на **[шч]** (на письмі **-щ-**) [S2, S7].",
+            "replace": "3.  **Чергування приголосних:** Кінцевий приголосний основи **[с]** та сполучення **[ст]** у сполученні з суфіксом **-ш-** змінюються на **[шч]** (на письмі **-щ-**) [S2, S7]."
+          },
+          {
+            "dim": "register",
+            "find": "При утворенні простої форми вищого ступеня відбуваються такі зміни",
+            "replace": "Під час творення простої форми вищого ступеня відбуваються такі зміни"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "При викладанні української мови важливо чітко розмежовувати її норми від російських, оскільки історично українська граматика зазнавала впливу і її часто помилково викладали через призму російської.",
+            "replace": "У цій темі варто окремо пояснювати відмінності між українськими та російськими моделями порівняння. <!-- VERIFY -->"
+          },
+          {
+            "dim": "register",
+            "find": "перевага надається **простим (синтетичним) формам**",
+            "replace": "переважають **прості (синтетичні) форми**"
+          },
+          {
+            "dim": "register",
+            "find": "Ця конструкція є корисною для уникнення",
+            "replace": "Ця конструкція корисна для уникнення"
+          },
+          {
+            "dim": "register",
+            "find": "є дуже поширеними та експресивними",
+            "replace": "дуже поширені та експресивні"
+          },
+          {
+            "dim": "register",
+            "find": "| *Цей автомобіль є **швидкий**, але той **ще швидше**.* | *Цей автомобіль є **швидкий**, але той **ще швидший**.* |",
+            "replace": "| *Цей автомобіль **швидкий**, але той **ще швидше**.* | *Цей автомобіль **швидкий**, але той **ще швидший**.* |"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "Зазвичай перше знайомство з нею відбувається у 6-му класі [S2, S3, S7].",
+            "replace": "Тема ступенів порівняння прикметників вводиться відносно рано в шкільному курсі. <!-- VERIFY -->"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "Якісні прикметники в українській мові мають два ступені порівняння: вищий і найвищий. Кожен з них може виражатися простою (синтетичною) або складеною (аналітичною) формою [S2, S5, S7].",
+            "replace": "У шкільних граматиках прикметники описують через вищий і найвищий ступені порівняння. <!-- VERIFY -->"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "**Складені (аналітичні) форми** (*більш цікавий, найбільш важливий*) частіше трапляються в науковому та офіційно-діловому стилях [S6, S8].",
+            "replace": "**Складені (аналітичні) форми** (*більш цікавий, найбільш важливий*) пов'язують зі стилістичним розрізненням форм. <!-- VERIFY -->"
+          },
+          {
+            "dim": "source_grounding",
+            "find": "Англомовні учні, вивчаючи ступені порівняння в українській мові, часто припускаються помилок через інтерференцію рідної мови та хибні аналогії з російською.",
+            "replace": "Учні L2 можуть припускатися типових помилок у творенні ступенів порівняння. <!-- VERIFY -->"
+          }
+        ],
+        "conflicts": [
+          {
+            "kind": "SPAN_OVERLAP",
+            "find": "При викладанні української мови важливо чітко розмежовувати її норми від російських, оскільки історично українська граматика зазнавала впливу і її часто помилково викладали через призму російської.",
+            "dims": [
+              "register",
+              "source_grounding"
+            ],
+            "proposals": [
+              [
+                "register",
+                "Викладаючи українську мову, важливо чітко розмежовувати"
+              ],
+              [
+                "source_grounding",
+                "У цій темі варто окремо пояснювати відмінності між українськими та російськими моделями порівняння. <!-- VERIFY -->"
+              ]
+            ],
+            "chosen": "source_grounding",
+            "reason": "span-overlap; longest find selected"
+          }
+        ],
+        "skipped_missing": []
+      }
+    }
+  ],
+  "final_verdict": "REJECT",
+  "failing_dims": [
+    "register",
+    "source_grounding"
+  ],
+  "thresholds": {
+    "source_grounding": 8,
+    "factual_accuracy": 8,
+    "ukrainian_perspective": 8,
+    "register": 8
+  },
+  "thresholds_calibrated": false,
+  "shadow_mode": true,
+  "started_at": 1776771964.0753732,
+  "finished_at": 1776773175.4076319,
+  "duration_s": 1211.33
+}

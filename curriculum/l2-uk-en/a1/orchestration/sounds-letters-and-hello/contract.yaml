@@ -2,70 +2,70 @@ module:
   slug: sounds-letters-and-hello
   level: a1
   module_num: 1
-  title: Sounds, Letters, and Hello
-  phase: A1.1 [Sounds, Letters, and First Contact]
+  title: Звуки, літери та привіт
+  phase: A1.1 [Звуки, літери та перший контакт]
   word_target: 1200
 teaching_beats:
   section_order:
-  - Звуки і літери (Sounds and Letters)
-  - Голосні звуки (Vowel Sounds)
-  - Приголосні звуки (Consonant Sounds)
-  - Привіт! (Hello!)
-  - Підсумок (Summary)
+  - Звуки і літери
+  - Голосні звуки
+  - Приголосні звуки
+  - Привіт!
+  - Підсумок
   sections:
   - order: 1
-    name: Звуки і літери (Sounds and Letters)
+    name: Звуки і літери
     word_budget: &id011
       target: 300
       min: 270
       max: 330
     teaching_beats:
-    - 'Golden rule from Заболотний Grade 5 p.83: «Звуки ми чуємо й вимовляємо, а букви
-      бачимо й пишемо». We hear and pronounce sounds (звуки). We see and write letters
-      (літери). These are NOT the same thing. A letter is a symbol on paper. A sound
-      is what your mouth produces. This distinction is the foundation of Ukrainian
-      phonetics — Ukrainian teachers drill it from Grade 1.'
-    - 'Ukrainian has 33 letters (літери) but 38 sounds (звуків). Why the mismatch?
-      Some letters represent two sounds (Я, Ю, Є, Ї in certain positions). One letter
-      (Ь) makes no sound at all — it only softens the consonant before it. Litvinova
-      Grade 5 p.130 asks: Чи можна говорити «голосна літера»? Answer: no! Sounds are
-      голосні or приголосні, not letters. Letters only represent sounds.'
-    - 'The Ukrainian alphabet (абетка/алфавіт): all 33 letters in order. Each letter
-      has a name. Unlike English, Ukrainian spelling is highly phonetic — what you
-      see is (mostly) what you hear. No silent letters, no surprise pronunciations.
-      Once you know the sounds, you can read any word.'
+    - 'Золоте правило з підручника Заболотного, 5 клас, стор. 83: «Звуки ми чуємо
+      й вимовляємо, а букви бачимо й пишемо». Ми чуємо і вимовляємо звуки. Ми бачимо
+      і пишемо літери (букви). Це НЕ одне й те саме. Літера — це символ на папері.
+      Звук — це те, що вимовляє рот. Це розрізнення є основою української фонетики
+      — українські вчителі відпрацьовують його з 1 класу.'
+    - 'В українській мові 33 літери, але 38 звуків. Чому так? Деякі літери позначають
+      два звуки (Я, Ю, Є, Ї в певних позиціях). Одна літера (Ь) взагалі не позначає
+      звуку — вона лише пом''якшує попередній приголосний. Літвінова, 5 клас, стор.
+      130 запитує: Чи можна говорити «голосна літера»? Відповідь: ні! Звуки бувають
+      голосні або приголосні, а не літери. Літери лише позначають звуки.'
+    - 'Український алфавіт (абетка): усі 33 літери по порядку. Кожна літера має свою
+      назву. На відміну від англійської, український правопис переважно фонетичний
+      — те, що ви бачите, те (здебільшого) і чуєте. Жодних "німих" літер, жодних несподіваних
+      вимов. Щойно ви вивчите звуки, ви зможете прочитати будь-яке слово.'
     required_terms:
-    - Заболотний
+    - Золоте
+    - правило
+    - підручника
+    - Заболотного
+    - клас
+    - стор
     - Звуки
     - чуємо
-    - вимовляємо
-    - букви
-    - бачимо
-    - пишемо
-    - звуки
     factual_anchors:
     - &id001
-      section: Звуки і літери (Sounds and Letters)
-      claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-        Approach) The foundational principle of Ukrainian pedagogy for literacy is
-        the strict distinction between **звуки (sounds)** and **букви (letters)**.'
-      citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
-      matched_terms:
-      - all
-      - alphabet
-      - and
-      - are
-    - &id002
-      section: Звуки і літери (Sounds and Letters)
-      claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-        Approach) The Ukrainian pedagogical approach to teaching initial introductions
-        is fundamentally communicative and context-driven.'
+      section: Звуки і літери
+      claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший
+        контакт учня з українською мовою має бути одночасно комунікативним і структурно
+        обґрунтованим.'
       citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
       matched_terms:
-      - alphabet
-      - and
-      - answer
-      - are
+      - алфавіт
+      - будь
+      - від
+      - відміну
+    - &id002
+      section: Звуки і літери
+      claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід В основі
+        навчання української фонетики на початковому рівні лежить принцип "від звука
+        до букви".'
+      citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
+      matched_terms:
+      - англіиськоі
+      - букви
+      - від
+      - відміну
     activity_types_after_section:
     - quiz
     - match-up
@@ -74,56 +74,57 @@ teaching_beats:
     - letter-grid
     - watch-and-repeat
   - order: 2
-    name: Голосні звуки (Vowel Sounds)
+    name: Голосні звуки
     word_budget: &id012
       target: 250
       min: 225
       max: 275
     teaching_beats:
-    - 'Большакова Grade 1 p.24 teaches vowels through a poem: «Голосні почуєш в пісні,
-      і у темному у лісі, і коли дивуєшся, і коли милуєшся. Легко вимовляються, весело
-      співаються!» Голосні (vowels) are made with voice only — air flows freely through
-      the mouth with no obstruction. You can sing them. You can shout them across
-      a field.'
-    - '6 vowel sounds: [а], [о], [у], [е], [и], [і]. But 10 vowel letters: А, О, У,
-      Е, И, І, Я, Ю, Є, Ї. The extra four (Я, Ю, Є, Ї) are ''iotated'' — they can
-      represent two sounds. Full details in M02. For now: every Ukrainian word has
-      at least one vowel sound. Vowels are the heart of every syllable.'
-    - 'Захарійчук Grade 1 p.13 notation: vowel sounds are marked [•] in sound models.
-      Practice hearing vowels: мА-мА (two [а]), мО-лО-кО (three [о]), У-ля (one [у]).
-      Anna Ohoiko video for each vowel letter — watch, listen, repeat.'
+    - 'Большакова, 1 клас, стор. 24 навчає голосним через вірш: «Голосні почуєш в
+      пісні, і у темному у лісі, і коли дивуєшся, і коли милуєшся. Легко вимовляються,
+      весело співаються!» Голосні звуки утворюються лише за допомогою голосу — повітря
+      вільно проходить через рот без жодних перешкод. Ви можете їх проспівати. Їх
+      можна прокричати через поле.'
+    - '6 голосних звуків: [а], [о], [у], [е], [и], [і]. Але 10 голосних літер: А,
+      О, У, Е, И, І, Я, Ю, Є, Ї. Інші чотири (Я, Ю, Є, Ї) є йотованими — вони можуть
+      позначати два звуки. Усі деталі — в M02. Наразі: кожне українське слово має
+      хоча б один голосний звук. Голосні — це серце кожного складу.'
+    - 'Позначення Захарійчук, 1 клас, стор. 13: голосні звуки позначаються [•] у звукових
+      моделях. Практика сприйняття голосних: мА-мА (два [а]), мО-лО-кО (три [о]),
+      У-ля (одне [у]). Відео Анни Огойко для кожної голосної літери — дивіться, слухайте,
+      повторюйте.'
     required_terms:
     - Большакова
+    - клас
+    - стор
+    - навчає
+    - голосним
+    - через
+    - вірш
     - Голосні
-    - почуєш
-    - пісні
-    - темному
-    - лісі
-    - коли
-    - дивуєшся
     factual_anchors:
     - &id003
-      section: Голосні звуки (Vowel Sounds)
-      claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-        Approach) The foundational principle of Ukrainian pedagogy for literacy is
-        the strict distinction between **звуки (sounds)** and **букви (letters)**.'
+      section: Голосні звуки
+      claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід В основі
+        навчання української фонетики на початковому рівні лежить принцип "від звука
+        до букви".'
       citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
       matched_terms:
-      - are
-      - but
-      - can
-      - every
+      - вимовляються
+      - голосних
+      - голосні
+      - два
     - &id004
-      section: Голосні звуки (Vowel Sounds)
-      claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-        Approach) The Ukrainian pedagogical approach to teaching initial introductions
-        is fundamentally communicative and context-driven.'
+      section: Голосні звуки
+      claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший
+        контакт учня з українською мовою має бути одночасно комунікативним і структурно
+        обґрунтованим.'
       citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
       matched_terms:
-      - anna
-      - are
-      - can
-      - for
+      - без
+      - голоснии
+      - голосні
+      - два
     activity_types_after_section:
     - quiz
     - match-up
@@ -132,57 +133,57 @@ teaching_beats:
     - letter-grid
     - watch-and-repeat
   - order: 3
-    name: Приголосні звуки (Consonant Sounds)
+    name: Приголосні звуки
     word_budget: &id013
       target: 250
       min: 225
       max: 275
     teaching_beats:
-    - 'Большакова Grade 1 p.24: «Приголосні деренчать і тихенько шелестять, голосно
-      свистять і шиплять». Приголосні (consonants) are made with voice + noise or
-      noise only. Your lips, teeth, or tongue create an obstruction. You cannot sing
-      a pure consonant — try singing [к] or [п].'
-    - '32 consonant sounds from 22 consonant letters. Some consonants come in pairs:
-      тверді (hard) and м''які (soft). Захарійчук Grade 1 p.15: hard sounds marked
-      [–], soft sounds marked [=]. This hard/soft distinction doesn''t exist in English
-      — it''s uniquely Slavic.'
-    - 'Consonant letters to meet through Anna Ohoiko videos: М, Н, С, К, Л, Р, Б,
-      В, Д, П, Т, Г, Ґ, З, Ж, Ш, Х, Й, Ч, Щ, Ц, Ф. Each video shows the letter, demonstrates
-      the sound, and gives example words. Special: the letter Ґ represents the hard
-      [g] sound, whereas Г is the pharyngeal [h]. Щ always = two sounds [шч]. Ь (м''який
-      знак) makes no sound — it softens the consonant before it.'
+    - 'Большакова, 1 клас, стор. 24: «Приголосні деренчать і тихенько шелестять, голосно
+      свистять і шиплять». Приголосні звуки утворюються за допомогою голосу і шуму
+      або лише шуму. Ваші губи, зуби або язик створюють перешкоду. Неможливо проспівати
+      чистий приголосний — спробуйте проспівати [к] або [п].'
+    - '32 приголосних звуки з 22 приголосних літер. Деякі приголосні утворюють пари:
+      тверді і м''які. Захарійчук, 1 клас, стор. 15: тверді звуки позначаються [–],
+      м''які позначаються [=]. Цього поділу на тверді та м''які немає в англійській
+      мові — це суто слов''янська особливість.'
+    - 'Приголосні літери для вивчення через відео Анни Огойко: М, Н, С, К, Л, Р, Б,
+      В, Д, П, Т, Г, Ґ, З, Ж, Ш, Х, Й, Ч, Щ, Ц, Ф. Кожне відео показує літеру, демонструє
+      звук і наводить приклади слів. Особливість: літера Ґ позначає твердий звук [g],
+      тоді як Г — це фарингальний [ɦ]. Щ завжди дорівнює двом звукам [шч]. Ь (м''який
+      знак) не має звуку — він пом''якшує попередній приголосний.'
     required_terms:
     - Большакова
+    - клас
+    - стор
     - Приголосні
     - деренчать
     - тихенько
     - шелестять
     - голосно
-    - свистять
-    - шиплять
     factual_anchors:
     - &id005
-      section: Приголосні звуки (Consonant Sounds)
-      claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-        Approach) The foundational principle of Ukrainian pedagogy for literacy is
-        the strict distinction between **звуки (sounds)** and **букви (letters)**.'
+      section: Приголосні звуки
+      claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід В основі
+        навчання української фонетики на початковому рівні лежить принцип "від звука
+        до букви".'
       citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
       matched_terms:
-      - always
-      - and
-      - are
-      - before
+      - англіиськіи
+      - він
+      - завжди
+      - звук
     - &id006
-      section: Приголосні звуки (Consonant Sounds)
-      claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-        Approach) The Ukrainian pedagogical approach to teaching initial introductions
-        is fundamentally communicative and context-driven.'
+      section: Приголосні звуки
+      claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший
+        контакт учня з українською мовою має бути одночасно комунікативним і структурно
+        обґрунтованим.'
       citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
       matched_terms:
-      - always
-      - and
-      - anna
-      - are
+      - англіиськіи
+      - вивчення
+      - він
+      - завжди
     activity_types_after_section:
     - quiz
     - match-up
@@ -191,55 +192,56 @@ teaching_beats:
     - letter-grid
     - watch-and-repeat
   - order: 4
-    name: Привіт! (Hello!)
+    name: Привіт!
     word_budget: &id014
       target: 250
       min: 225
       max: 275
     teaching_beats:
-    - 'Your first Ukrainian conversation. Following Anna Ohoiko ULP Episode 1. Привіт!
-      — Hi! (informal, for friends, family, peers). Як справи? — How are you? Answers:
-      Добре (fine). Чудово (great). Нормально (okay). А у тебе? — And you?'
-    - Рада тебе бачити! (female speaker) / Радий тебе бачити! (male speaker) — Glad
-      to see you! Ukrainian has gendered forms — women say рада, men say радий. This
-      is your first encounter with grammatical gender. It will become a major topic
-      starting M08.
-    - 'Let''s read Привіт letter by letter — your first sound analysis (звуковий аналіз):
-      П [п] приголосний + р [р] приголосний + и [и] голосний + в [в] приголосний +
-      і [і] голосний + т [т] приголосний. Two голосні, four приголосні. Every type
-      of sound you learned in this module appears in this one word.'
+    - 'Ваша перша розмова українською. На основі епізоду 1 ULP Анни Огойко. Привіт!
+      (неформально, для друзів, родини, однолітків). Як справи? Відповіді: Добре.
+      Чудово. Нормально. А у тебе?'
+    - Рада тебе бачити! (каже жінка) / Радий тебе бачити! (каже чоловік) — Радий/рада
+      зустрічі! В українській мові є родові форми — жінки кажуть «рада», чоловіки
+      — «радий». Це ваше перше знайомство з граматичним родом. Це стане великою темою,
+      починаючи з M08.
+    - 'Прочитаймо «Привіт» по літерах — ваш перший звуковий аналіз: П [п] приголосний
+      + р [р] приголосний + и [и] голосний + в [в] приголосний + і [і] голосний +
+      т [т] приголосний. Два голосні, чотири приголосні. Кожен тип звука, який ви
+      вивчили в цьому модулі, з''являється в цьому єдиному слові.'
     required_terms:
-    - Привіт
-    - справи
-    - Добре
-    - Чудово
-    - Нормально
-    - тебе
-    - Рада
-    - бачити
+    - Ваша
+    - перша
+    - розмова
+    - українською
+    - основі
+    - епізоду
+    - Анни
+    - Огойко
     factual_anchors:
     - &id007
-      section: Привіт! (Hello!)
-      claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-        Approach) The foundational principle of Ukrainian pedagogy for literacy is
-        the strict distinction between **звуки (sounds)** and **букви (letters)**.'
-      citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
-      matched_terms:
-      - analysis
-      - and
-      - are
-      - every
-    - &id008
-      section: Привіт! (Hello!)
-      claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-        Approach) The Ukrainian pedagogical approach to teaching initial introductions
-        is fundamentally communicative and context-driven.'
+      section: Привіт!
+      claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший
+        контакт учня з українською мовою має бути одночасно комунікативним і структурно
+        обґрунтованим.'
       citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
       matched_terms:
-      - analysis
-      - and
-      - anna
-      - are
+      - бачити
+      - відповіді
+      - голоснии
+      - голосні
+    - &id008
+      section: Привіт!
+      claim: '# Педагогіка A1: How Many ## Методичний підхід В українській педагогічній
+        практиці вивчення чисел починається з розмежування двох фундаментальних питань:
+        **«скільки?»** для позначення кількості та **«котрий?»** для позначення порядку
+        [S1].'
+      citation: 'pedagogy/a1/how-many.md :: Overview'
+      matched_terms:
+      - аналіз
+      - великою
+      - відповіді
+      - два
     activity_types_after_section:
     - quiz
     - match-up
@@ -248,46 +250,48 @@ teaching_beats:
     - letter-grid
     - watch-and-repeat
   - order: 5
-    name: Підсумок (Summary)
+    name: Підсумок
     word_budget: &id015
       target: 150
       min: 135
       max: 165
     teaching_beats:
-    - 'Self-check questions: How many letters in the Ukrainian alphabet? (33) How
-      many sounds? (38) Why are they different? What are голосні? What are приголосні?
-      Can you say «голосна літера»? (No — sounds are голосні, not letters!) What does
-      Привіт mean? How do you answer Як справи?'
+    - 'Запитання для самоперевірки: Скільки літер в українській абетці? (33) Скільки
+      звуків? (38) Чому вони відрізняються? Що таке голосні? Що таке приголосні? Чи
+      можна сказати «голосна літера»? (Ні — голосні бувають звуки, а не літери!) Що
+      означає «Привіт»? Як ви відповісте на «Як справи?»'
     required_terms:
-    - голосні
-    - приголосні
-    - голосна
-    - літера
-    - Привіт
-    - справи
+    - Запитання
+    - для
+    - самоперевірки
+    - Скільки
+    - літер
+    - українській
+    - абетці
+    - звуків
     factual_anchors:
     - &id009
-      section: Підсумок (Summary)
-      claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-        Approach) The foundational principle of Ukrainian pedagogy for literacy is
-        the strict distinction between **звуки (sounds)** and **букви (letters)**.'
+      section: Підсумок
+      claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід В основі
+        навчання української фонетики на початковому рівні лежить принцип "від звука
+        до букви".'
       citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
       matched_terms:
-      - alphabet
-      - are
-      - can
-      - check
+      - абетці
+      - голосні
+      - звуки
+      - звуків
     - &id010
-      section: Підсумок (Summary)
-      claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-        Approach) The Ukrainian pedagogical approach to teaching initial introductions
-        is fundamentally communicative and context-driven.'
+      section: Підсумок
+      claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший
+        контакт учня з українською мовою має бути одночасно комунікативним і структурно
+        обґрунтованим.'
       citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
       matched_terms:
-      - alphabet
-      - answer
-      - are
-      - can
+      - голосні
+      - звуки
+      - звуків
+      - літер
     activity_types_after_section:
     - quiz
     - match-up
@@ -296,20 +300,20 @@ teaching_beats:
     - letter-grid
     - watch-and-repeat
 dialogue_acts:
-- setting: First day of Ukrainian class — teacher greets students, students respond
-    and practice basic Привіт/Добрий день exchange
+- setting: Перший урок української мови — вчитель вітає учнів, учні відповідають і
+    практикують базовий обмін фразами Привіт/Добрий день
   speakers:
   - Вчитель
   - Учні
-  function: 'Practice greeting chunks: Привіт! Добрий день! Як справи? Добре.'
-- setting: 'Two new classmates meet in the hallway before their first Ukrainian lesson
-    and introduce themselves. MUST use named speaker labels (Марко: ..., Софія: ...),
-    exchange names, and use the reciprocal «А у тебе?».'
+  function: 'Практика вітальних фраз: Привіт! Добрий день! Як справи? Добре.'
+- setting: 'Двоє нових однокласників зустрічаються в коридорі перед першим уроком
+    української мови та знайомляться. ОБОВ''ЯЗКОВО використовувати імена для реплік
+    (Марко: ..., Софія: ...), обмінятися іменами та використати взаємне «А у тебе?».'
   speakers:
   - Марко
   - Софія
-  function: Привіт! Як тебе звати? Мене звати... А у тебе? — first social use of sounds
-    learned
+  function: Привіт! Як тебе звати? Мене звати... А у тебе? — перше соціальне використання
+    вивчених звуків
 vocab_grammar_targets:
   must_introduce:
   - звук (sound)
@@ -323,13 +327,13 @@ vocab_grammar_targets:
   - мама (mother)
   - молоко (milk)
   scope_lock:
-  - Звуки vs літери — 33 літери, 38 звуків. 'Звуки ми чуємо й вимовляємо, а букви
+  - Звуки проти літер — 33 літери, 38 звуків. 'Звуки ми чуємо й вимовляємо, а букви
     бачимо й пишемо.'
-  - Голосні (6 sounds, 10 letters) — voice only, no obstruction, singable
-  - Приголосні (32 sounds, 22 letters) — voice + noise or noise only, obstruction
-  - 'Why 38 > 33: iotated vowels (Я, Ю, Є, Ї), hard/soft pairs, Ь (no sound)'
-  - Звуковий аналіз — identifying голосні and приголосні in a word
-  - Привіт greeting as first spoken Ukrainian
+  - Голосні (6 звуків, 10 літер) — лише голос, немає перешкод, можна співати
+  - Приголосні (32 звуки, 22 літери) — голос + шум або лише шум, є перешкода
+  - 'Чому 38 > 33: йотовані голосні (Я, Ю, Є, Ї), тверді/м''які пари, Ь (без звуку)'
+  - Звуковий аналіз — визначення голосних і приголосних у слові
+  - Привітання "Привіт" як перші кроки в розмовній українській
 factual_anchors:
 - *id001
 - *id002
@@ -352,73 +356,46 @@ activity_obligations:
 - order: 1
   id: ''
   type: quiz
-  focus: 'Distinguish between sounds (звуки) and letters (літери). Example questions:
-    ''Що ми чуємо і вимовляємо?'' → ''звуки'' | ''Що ми бачимо і пишемо?'' → ''літери''
-    | ''Скільки літер в абетці?'' → ''33'' | ''Скільки звуків в українській мові?''
-    → ''38'' | ''Чи можна говорити «голосна літера»?'' → ''Ні, голосний — це звук,
-    не літера.'''
+  focus: 'Розрізняй звуки та літери. Приклади питань: Що ми чуємо і вимовляємо? →
+    звуки | Що ми бачимо і пишемо? → літери | Скільки літер в абетці? → 33 | Скільки
+    звуків в українській мові? → 38 | Чи можна говорити «голосна літера»? → Ні, голосний
+    — це звук, не літера.'
 - order: 2
   id: ''
   type: match-up
-  focus: 'Match Ukrainian letters to the sounds they represent — following Захарійчук''s
-    ''Бачу... Чую...'' pattern. Pairs: А ↔ [а], О ↔ [о], У ↔ [у], М ↔ [м], К ↔ [к],
-    Н ↔ [н]. This is how Ukrainian first-graders learn: see the letter (бачу), hear
-    the sound (чую).'
+  focus: 'З''єднай українські літери зі звуками, які вони позначають — за схемою Захарійчук
+    «Бачу... Чую...». Пари: А ↔ [а], О ↔ [о], У ↔ [у], М ↔ [м], К ↔ [к], Н ↔ [н].
+    Саме так вчаться українські першокласники: бачать літеру (бачу), чують звук (чую).'
 - order: 3
   id: ''
   type: fill-in
-  focus: 'Complete a basic greeting dialogue with blanks. ''— {Привіт}! Як {справи}?''
-    / ''— {Добре}. А у {тебе}?'' / ''— {Чудово}.'' Options per blank: Привіт / справи
-    / Добре / тебе / Чудово / Нормально.'
+  focus: 'Доповни базовий діалог-привітання. — {Привіт}! Як {справи}? / — {Добре}.
+    А у {тебе}? / — {Чудово}. Варіанти: Привіт / справи / Добре / тебе / Чудово /
+    Нормально.'
 - order: 4
   id: ''
   type: group-sort
-  focus: 'Sort Ukrainian sounds into Голосні (vowels) and Приголосні (consonants).
-    Голосні: [а], [о], [у], [е], [и], [і]. Приголосні: [к], [м], [т], [в], [н], [р],
-    [с], [х].'
+  focus: 'Розподіли українські звуки на Голосні та Приголосні. Голосні: [а], [о],
+    [у], [е], [и], [і]. Приголосні: [к], [м], [т], [в], [н], [р], [с], [х].'
 - order: 5
   id: ''
   type: letter-grid
-  focus: 'Interactive alphabet card grid showing all 33 Ukrainian letters. Each card:
-    upper/lower case, emoji key word, vowel/consonant coloring. Vowel letters highlighted
-    differently from consonant letters. Ь marked as special (no sound).'
+  focus: 'Інтерактивна таблиця абетки, що показує всі 33 українські літери. Кожна
+    картка: велика/мала літера, ключове слово з емодзі, кольорове розрізнення голосних/приголосних.
+    Голосні літери виділені іншим кольором, ніж приголосні. Ь позначено як особливий
+    (без звуку).'
 - order: 6
   id: ''
   type: watch-and-repeat
-  focus: 'Pronunciation practice with Anna Ohoiko videos. Vowels: А (hvB3VpcR3ZE),
-    У (VB1O6PmtYRU), Е (KFlsroBW0dk), И (W-1rCu0indE), І (Z9TH0H4ShGo). Consonants:
-    М (Ez95H4ibuJo), Н (vNUfiKHPYaU), С (7UsFBgSL91E), К (J7sGEI4-xJo), Л (v6-3Xg52Buk),
-    Р (fMGsQ5KPQgg). Each item: YouTube video + letter + key word + sound notation.'
+  focus: 'Практика вимови з відео Анни Огойко. Голосні: А (hvB3VpcR3ZE), У (VB1O6PmtYRU),
+    Е (KFlsroBW0dk), И (W-1rCu0indE), І (Z9TH0H4ShGo). Приголосні: М (Ez95H4ibuJo),
+    Н (vNUfiKHPYaU), С (7UsFBgSL91E), К (J7sGEI4-xJo), Л (v6-3Xg52Buk), Р (fMGsQ5KPQgg).
+    Кожен пункт: відео YouTube + літера + ключове слово + позначення звука.'
 section_word_budgets:
-  Звуки і літери (Sounds and Letters): *id011
-  Голосні звуки (Vowel Sounds): *id012
-  Приголосні звуки (Consonant Sounds): *id013
-  Привіт! (Hello!): *id014
-  Підсумок (Summary): *id015
+  Звуки і літери: *id011
+  Голосні звуки: *id012
+  Приголосні звуки: *id013
+  Привіт!: *id014
+  Підсумок: *id015
 artifacts:
   wiki_excerpt_file: wiki-excerpts.yaml
-style_review_advice:
-- type: PRAGMATIC_FORMULA_MISMATCH
-  location: Привіт! (Hello!), Марко–Софія dialogue
-  evidence: Two new classmates meet for the first time, but they close with «Радий
-    тебе бачити! / Рада тебе бачити!», which fits reunion/seeing someone again better
-    than first introduction.
-  fix: Rewrite the closing as a first-meeting formula such as «Радий/рада знайомству»
-    or «Дуже приємно познайомитися», and keep «Рада/радий тебе бачити» for a reunion
-    scene only.
-- type: REGISTER_SCENE_MISMATCH
-  location: Привіт! (Hello!), opening classroom dialogue
-  evidence: The teacher says «Добрий день! Як справи?», the class answers «Добрий
-    день! Добре.», then Maksym repeats «Добрий день! Добре.»; the adjacency pairs
-    are unnatural and mix greeting with small-talk in a stiff way.
-  fix: 'Rewrite as a natural formal classroom exchange: greeting first («Добрий день!»
-    / «Добрий день!»), then, if needed, a separate one-to-one «Як справи? — Добре,
-    дякую» rather than a choral response.'
-- type: META_PEDAGOGICAL_NARRATION
-  location: Привіт! (Hello!), prose between the two dialogues
-  evidence: Sentences like «Here Добрий день and Добре form a simple classroom exchange.
-    Keep Привіт for the classmate dialogue below.» and «The pair Як тебе звати? /
-    Мене звати ... covers the basic name exchange.» narrate the lesson architecture
-    instead of speaking in a stable module voice.
-  fix: Replace meta-commentary with direct explanation of usage and register, without
-    referring to 'the dialogue below', 'the pair', or what the exercise is doing.

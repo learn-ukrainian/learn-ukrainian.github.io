@@ -1,287 +1,283 @@
 sections:
-  Звуки і літери (Sounds and Letters):
-  - citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
-    source_path: pedagogy/a1/sounds-letters-and-hello.md
-    source_heading: Overview
-    matched_terms:
-    - all
-    - alphabet
-    - and
-    - are
-    - before
-    - but
-    score: 47
-    excerpt: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-      Approach) The foundational principle of Ukrainian pedagogy for literacy is the
-      strict distinction between **звуки (sounds)** and **букви (letters)**. This
-      is not a trivial point; it is the core of the entire approach (Source 12, 28,
-      34). A sound is the smallest unit of speech we hear and pronounce, while a letter
-      is the graphical symbol we use to write it down. The native teaching method,
-      as seen in Ukrainian first-grade textbooks, is...'
+  Звуки і літери:
   - citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
     source_path: pedagogy/a1/checkpoint-first-contact.md
     source_heading: Overview
     matched_terms:
-    - alphabet
-    - and
-    - answer
-    - are
-    - can
-    - consonant
-    score: 31
-    excerpt: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-      Approach) The Ukrainian pedagogical approach to teaching initial introductions
-      is fundamentally communicative and context-driven. Even from the first lesson,
-      the goal is to enable a learner to participate in a simple, formulaic dialogue
-      (діалог). The core concepts of **ім''я** (first name), **прізвище** (surname),
-      and **по батькові** (patronymic) are introduced as functional chunks of language
-      needed to complete a real-world task, such...'
-  Голосні звуки (Vowel Sounds):
-  - citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
-    source_path: pedagogy/a1/sounds-letters-and-hello.md
-    source_heading: Overview
-    matched_terms:
-    - are
-    - but
-    - can
-    - every
-    - for
-    - grade
-    score: 31
-    excerpt: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-      Approach) The foundational principle of Ukrainian pedagogy for literacy is the
-      strict distinction between **звуки (sounds)** and **букви (letters)**. This
-      is not a trivial point; it is the core of the entire approach (Source 12, 28,
-      34). A sound is the smallest unit of speech we hear and pronounce, while a letter
-      is the graphical symbol we use to write it down. The native teaching method,
-      as seen in Ukrainian first-grade textbooks, is...'
-  - citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
-    source_path: pedagogy/a1/checkpoint-first-contact.md
-    source_heading: Overview
-    matched_terms:
-    - anna
-    - are
-    - can
-    - for
-    - full
-    - letter
-    score: 20
-    excerpt: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-      Approach) The Ukrainian pedagogical approach to teaching initial introductions
-      is fundamentally communicative and context-driven. Even from the first lesson,
-      the goal is to enable a learner to participate in a simple, formulaic dialogue
-      (діалог). The core concepts of **ім''я** (first name), **прізвище** (surname),
-      and **по батькові** (patronymic) are introduced as functional chunks of language
-      needed to complete a real-world task, such...'
-  Приголосні звуки (Consonant Sounds):
-  - citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
-    source_path: pedagogy/a1/sounds-letters-and-hello.md
-    source_heading: Overview
-    matched_terms:
-    - always
-    - and
-    - are
-    - before
-    - consonant
-    - consonants
+    - алфавіт
+    - будь
+    - від
+    - відміну
+    - відповідь
+    - говорити
     score: 35
-    excerpt: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-      Approach) The foundational principle of Ukrainian pedagogy for literacy is the
-      strict distinction between **звуки (sounds)** and **букви (letters)**. This
-      is not a trivial point; it is the core of the entire approach (Source 12, 28,
-      34). A sound is the smallest unit of speech we hear and pronounce, while a letter
-      is the graphical symbol we use to write it down. The native teaching method,
-      as seen in Ukrainian first-grade textbooks, is...'
-  - citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
-    source_path: pedagogy/a1/checkpoint-first-contact.md
-    source_heading: Overview
-    matched_terms:
-    - always
-    - and
-    - anna
-    - are
-    - consonant
-    - demonstrates
-    score: 18
-    excerpt: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-      Approach) The Ukrainian pedagogical approach to teaching initial introductions
-      is fundamentally communicative and context-driven. Even from the first lesson,
-      the goal is to enable a learner to participate in a simple, formulaic dialogue
-      (діалог). The core concepts of **ім''я** (first name), **прізвище** (surname),
-      and **по батькові** (patronymic) are introduced as functional chunks of language
-      needed to complete a real-world task, such...'
-  Привіт! (Hello!):
+    excerpt: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший
+      контакт учня з українською мовою має бути одночасно комунікативним і структурно
+      обґрунтованим. Українська педагогічна традиція, навіть у 1-2 класах, одразу
+      розрізняє мову як систему (мова) та мовлення як її використання (мовлення),
+      а також його усну та писемну форми [S5]. На відміну від суто імерсивних підходів,
+      українські підручники змалечку вводять базові аналітичні категорії, що стає
+      фундаментом для свідомого засвоєння граматики. Ключовий...'
   - citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
     source_path: pedagogy/a1/sounds-letters-and-hello.md
     source_heading: Overview
     matched_terms:
-    - analysis
-    - and
-    - are
-    - every
-    - first
-    - following
+    - англіиськоі
+    - букви
+    - від
+    - відміну
+    - говорити
+    - голосні
+    score: 35
+    excerpt: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід В основі
+      навчання української фонетики на початковому рівні лежить принцип "від звука
+      до букви". Учень спочатку вчиться чути, розрізняти й правильно вимовляти звуки,
+      і лише потім асоціює їх із графічними символами — літерами [S4]. Українські
+      методисти наголошують, що звук є "живою плоттю і кров''ю" мови, її найменшою
+      одиницею [S1, S4]. Тому перші уроки мають бути зосереджені на слуханні та імітації
+      звуків довкілля (шум дощу, скрип дверей), поступово...'
+  Голосні звуки:
+  - citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
+    source_path: pedagogy/a1/sounds-letters-and-hello.md
+    source_heading: Overview
+    matched_terms:
+    - вимовляються
+    - голосних
+    - голосні
+    - два
+    - звук
+    - звуки
+    score: 21
+    excerpt: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід В основі
+      навчання української фонетики на початковому рівні лежить принцип "від звука
+      до букви". Учень спочатку вчиться чути, розрізняти й правильно вимовляти звуки,
+      і лише потім асоціює їх із графічними символами — літерами [S4]. Українські
+      методисти наголошують, що звук є "живою плоттю і кров''ю" мови, її найменшою
+      одиницею [S1, S4]. Тому перші уроки мають бути зосереджені на слуханні та імітації
+      звуків довкілля (шум дощу, скрип дверей), поступово...'
+  - citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
+    source_path: pedagogy/a1/checkpoint-first-contact.md
+    source_heading: Overview
+    matched_terms:
+    - без
+    - голоснии
+    - голосні
+    - два
+    - жодних
+    - звук
+    score: 20
+    excerpt: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший
+      контакт учня з українською мовою має бути одночасно комунікативним і структурно
+      обґрунтованим. Українська педагогічна традиція, навіть у 1-2 класах, одразу
+      розрізняє мову як систему (мова) та мовлення як її використання (мовлення),
+      а також його усну та писемну форми [S5]. На відміну від суто імерсивних підходів,
+      українські підручники змалечку вводять базові аналітичні категорії, що стає
+      фундаментом для свідомого засвоєння граматики. Ключовий...'
+  Приголосні звуки:
+  - citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
+    source_path: pedagogy/a1/sounds-letters-and-hello.md
+    source_heading: Overview
+    matched_terms:
+    - англіиськіи
+    - він
+    - завжди
+    - звук
+    - звуки
+    - звуку
     score: 26
-    excerpt: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-      Approach) The foundational principle of Ukrainian pedagogy for literacy is the
-      strict distinction between **звуки (sounds)** and **букви (letters)**. This
-      is not a trivial point; it is the core of the entire approach (Source 12, 28,
-      34). A sound is the smallest unit of speech we hear and pronounce, while a letter
-      is the graphical symbol we use to write it down. The native teaching method,
-      as seen in Ukrainian first-grade textbooks, is...'
+    excerpt: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід В основі
+      навчання української фонетики на початковому рівні лежить принцип "від звука
+      до букви". Учень спочатку вчиться чути, розрізняти й правильно вимовляти звуки,
+      і лише потім асоціює їх із графічними символами — літерами [S4]. Українські
+      методисти наголошують, що звук є "живою плоттю і кров''ю" мови, її найменшою
+      одиницею [S1, S4]. Тому перші уроки мають бути зосереджені на слуханні та імітації
+      звуків довкілля (шум дощу, скрип дверей), поступово...'
   - citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
     source_path: pedagogy/a1/checkpoint-first-contact.md
     source_heading: Overview
     matched_terms:
-    - analysis
-    - and
-    - anna
-    - are
-    - conversation
-    - first
-    score: 24
-    excerpt: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-      Approach) The Ukrainian pedagogical approach to teaching initial introductions
-      is fundamentally communicative and context-driven. Even from the first lesson,
-      the goal is to enable a learner to participate in a simple, formulaic dialogue
-      (діалог). The core concepts of **ім''я** (first name), **прізвище** (surname),
-      and **по батькові** (patronymic) are introduced as functional chunks of language
-      needed to complete a real-world task, such...'
-  Підсумок (Summary):
+    - англіиськіи
+    - вивчення
+    - він
+    - завжди
+    - звук
+    - звуки
+    score: 21
+    excerpt: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший
+      контакт учня з українською мовою має бути одночасно комунікативним і структурно
+      обґрунтованим. Українська педагогічна традиція, навіть у 1-2 класах, одразу
+      розрізняє мову як систему (мова) та мовлення як її використання (мовлення),
+      а також його усну та писемну форми [S5]. На відміну від суто імерсивних підходів,
+      українські підручники змалечку вводять базові аналітичні категорії, що стає
+      фундаментом для свідомого засвоєння граматики. Ключовий...'
+  Привіт!:
+  - citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
+    source_path: pedagogy/a1/checkpoint-first-contact.md
+    source_heading: Overview
+    matched_terms:
+    - бачити
+    - відповіді
+    - голоснии
+    - голосні
+    - два
+    - добре
+    score: 23
+    excerpt: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший
+      контакт учня з українською мовою має бути одночасно комунікативним і структурно
+      обґрунтованим. Українська педагогічна традиція, навіть у 1-2 класах, одразу
+      розрізняє мову як систему (мова) та мовлення як її використання (мовлення),
+      а також його усну та писемну форми [S5]. На відміну від суто імерсивних підходів,
+      українські підручники змалечку вводять базові аналітичні категорії, що стає
+      фундаментом для свідомого засвоєння граматики. Ключовий...'
+  - citation: 'pedagogy/a1/how-many.md :: Overview'
+    source_path: pedagogy/a1/how-many.md
+    source_heading: Overview
+    matched_terms:
+    - аналіз
+    - великою
+    - відповіді
+    - два
+    - мові
+    - перша
+    score: 15
+    excerpt: '# Педагогіка A1: How Many ## Методичний підхід В українській педагогічній
+      практиці вивчення чисел починається з розмежування двох фундаментальних питань:
+      **«скільки?»** для позначення кількості та **«котрий?»** для позначення порядку
+      [S1]. Цей підхід, закладений у підручниках для 1–2 класів, є основою для подальшого
+      розуміння кількісних та порядкових числівників [S3]. На рівні А1 головна мета
+      — не глибокий граматичний аналіз, а функціональне використання чисел у простих
+      комунікативних ситуаціях: назвати вік, ціну...'
+  Підсумок:
   - citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
     source_path: pedagogy/a1/sounds-letters-and-hello.md
     source_heading: Overview
     matched_terms:
-    - alphabet
-    - are
-    - can
-    - check
-    - different
-    - does
-    score: 17
-    excerpt: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-      Approach) The foundational principle of Ukrainian pedagogy for literacy is the
-      strict distinction between **звуки (sounds)** and **букви (letters)**. This
-      is not a trivial point; it is the core of the entire approach (Source 12, 28,
-      34). A sound is the smallest unit of speech we hear and pronounce, while a letter
-      is the graphical symbol we use to write it down. The native teaching method,
-      as seen in Ukrainian first-grade textbooks, is...'
+    - абетці
+    - голосні
+    - звуки
+    - звуків
+    - літер
+    - літера
+    score: 12
+    excerpt: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід В основі
+      навчання української фонетики на початковому рівні лежить принцип "від звука
+      до букви". Учень спочатку вчиться чути, розрізняти й правильно вимовляти звуки,
+      і лише потім асоціює їх із графічними символами — літерами [S4]. Українські
+      методисти наголошують, що звук є "живою плоттю і кров''ю" мови, її найменшою
+      одиницею [S1, S4]. Тому перші уроки мають бути зосереджені на слуханні та імітації
+      звуків довкілля (шум дощу, скрип дверей), поступово...'
   - citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
     source_path: pedagogy/a1/checkpoint-first-contact.md
     source_heading: Overview
     matched_terms:
-    - alphabet
-    - answer
-    - are
-    - can
-    - different
-    - letters
-    score: 15
-    excerpt: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-      Approach) The Ukrainian pedagogical approach to teaching initial introductions
-      is fundamentally communicative and context-driven. Even from the first lesson,
-      the goal is to enable a learner to participate in a simple, formulaic dialogue
-      (діалог). The core concepts of **ім''я** (first name), **прізвище** (surname),
-      and **по батькові** (patronymic) are introduced as functional chunks of language
-      needed to complete a real-world task, such...'
+    - голосні
+    - звуки
+    - звуків
+    - літер
+    - літера
+    - літери
+    score: 10
+    excerpt: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший
+      контакт учня з українською мовою має бути одночасно комунікативним і структурно
+      обґрунтованим. Українська педагогічна традиція, навіть у 1-2 класах, одразу
+      розрізняє мову як систему (мова) та мовлення як її використання (мовлення),
+      а також його усну та писемну форми [S5]. На відміну від суто імерсивних підходів,
+      українські підручники змалечку вводять базові аналітичні категорії, що стає
+      фундаментом для свідомого засвоєння граматики. Ключовий...'
 factual_anchors:
-- section: Звуки і літери (Sounds and Letters)
-  claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-    Approach) The foundational principle of Ukrainian pedagogy for literacy is the
-    strict distinction between **звуки (sounds)** and **букви (letters)**.'
-  citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
-  matched_terms:
-  - all
-  - alphabet
-  - and
-  - are
-- section: Звуки і літери (Sounds and Letters)
-  claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-    Approach) The Ukrainian pedagogical approach to teaching initial introductions
-    is fundamentally communicative and context-driven.'
+- section: Звуки і літери
+  claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший контакт
+    учня з українською мовою має бути одночасно комунікативним і структурно обґрунтованим.'
   citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
   matched_terms:
-  - alphabet
-  - and
-  - answer
-  - are
-- section: Голосні звуки (Vowel Sounds)
-  claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-    Approach) The foundational principle of Ukrainian pedagogy for literacy is the
-    strict distinction between **звуки (sounds)** and **букви (letters)**.'
+  - алфавіт
+  - будь
+  - від
+  - відміну
+- section: Звуки і літери
+  claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід В основі
+    навчання української фонетики на початковому рівні лежить принцип "від звука до
+    букви".'
   citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
   matched_terms:
-  - are
-  - but
-  - can
-  - every
-- section: Голосні звуки (Vowel Sounds)
-  claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-    Approach) The Ukrainian pedagogical approach to teaching initial introductions
-    is fundamentally communicative and context-driven.'
-  citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
-  matched_terms:
-  - anna
-  - are
-  - can
-  - for
-- section: Приголосні звуки (Consonant Sounds)
-  claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-    Approach) The foundational principle of Ukrainian pedagogy for literacy is the
-    strict distinction between **звуки (sounds)** and **букви (letters)**.'
+  - англіиськоі
+  - букви
+  - від
+  - відміну
+- section: Голосні звуки
+  claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід В основі
+    навчання української фонетики на початковому рівні лежить принцип "від звука до
+    букви".'
   citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
   matched_terms:
-  - always
-  - and
-  - are
-  - before
-- section: Приголосні звуки (Consonant Sounds)
-  claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-    Approach) The Ukrainian pedagogical approach to teaching initial introductions
-    is fundamentally communicative and context-driven.'
+  - вимовляються
+  - голосних
+  - голосні
+  - два
+- section: Голосні звуки
+  claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший контакт
+    учня з українською мовою має бути одночасно комунікативним і структурно обґрунтованим.'
   citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
   matched_terms:
-  - always
-  - and
-  - anna
-  - are
-- section: Привіт! (Hello!)
-  claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-    Approach) The foundational principle of Ukrainian pedagogy for literacy is the
-    strict distinction between **звуки (sounds)** and **букви (letters)**.'
+  - без
+  - голоснии
+  - голосні
+  - два
+- section: Приголосні звуки
+  claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід В основі
+    навчання української фонетики на початковому рівні лежить принцип "від звука до
+    букви".'
   citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
   matched_terms:
-  - analysis
-  - and
-  - are
-  - every
-- section: Привіт! (Hello!)
-  claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-    Approach) The Ukrainian pedagogical approach to teaching initial introductions
-    is fundamentally communicative and context-driven.'
+  - англіиськіи
+  - він
+  - завжди
+  - звук
+- section: Приголосні звуки
+  claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший контакт
+    учня з українською мовою має бути одночасно комунікативним і структурно обґрунтованим.'
   citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
   matched_terms:
-  - analysis
-  - and
-  - anna
-  - are
-- section: Підсумок (Summary)
-  claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід (Methodological
-    Approach) The foundational principle of Ukrainian pedagogy for literacy is the
-    strict distinction between **звуки (sounds)** and **букви (letters)**.'
+  - англіиськіи
+  - вивчення
+  - він
+  - завжди
+- section: Привіт!
+  claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший контакт
+    учня з українською мовою має бути одночасно комунікативним і структурно обґрунтованим.'
+  citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
+  matched_terms:
+  - бачити
+  - відповіді
+  - голоснии
+  - голосні
+- section: Привіт!
+  claim: '# Педагогіка A1: How Many ## Методичний підхід В українській педагогічній
+    практиці вивчення чисел починається з розмежування двох фундаментальних питань:
+    **«скільки?»** для позначення кількості та **«котрий?»** для позначення порядку
+    [S1].'
+  citation: 'pedagogy/a1/how-many.md :: Overview'
+  matched_terms:
+  - аналіз
+  - великою
+  - відповіді
+  - два
+- section: Підсумок
+  claim: '# Педагогіка A1: Sounds Letters And Hello ## Методичний підхід В основі
+    навчання української фонетики на початковому рівні лежить принцип "від звука до
+    букви".'
   citation: 'pedagogy/a1/sounds-letters-and-hello.md :: Overview'
   matched_terms:
-  - alphabet
-  - are
-  - can
-  - check
-- section: Підсумок (Summary)
-  claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід (Methodological
-    Approach) The Ukrainian pedagogical approach to teaching initial introductions
-    is fundamentally communicative and context-driven.'
+  - абетці
+  - голосні
+  - звуки
+  - звуків
+- section: Підсумок
+  claim: '# Педагогіка A1: Checkpoint First Contact ## Методичний підхід Перший контакт
+    учня з українською мовою має бути одночасно комунікативним і структурно обґрунтованим.'
   citation: 'pedagogy/a1/checkpoint-first-contact.md :: Overview'
   matched_terms:
-  - alphabet
-  - answer
-  - are
-  - can
+  - голосні
+  - звуки
+  - звуків
+  - літер

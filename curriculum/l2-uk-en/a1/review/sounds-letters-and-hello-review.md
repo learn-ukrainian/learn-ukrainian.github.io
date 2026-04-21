@@ -1,52 +1,92 @@
 ## Linguistic Scan
-No linguistic errors found.
+Errors found: Typos (англіиськоі, голоснии, англіиськіи), Russianism (Справа в тому), Calques (Давайте + дієслово), non-existent word (міло). 
 
 ## Exercise Check
-Markers present: `quiz-sounds-vs-letters`, `match-up-letters-sounds`, `fill-in-greetings`, `group-sort-vowels-consonants`, `letter-grid-alphabet`, `watch-and-repeat-ohoiko-videos`.
-
-Count matches the 6 contracted `activity_obligations`, the marker order matches exactly, and each marker id has the correct contracted type prefix. No inline DSL exercises to audit.
+Issues found:
+- Activity markers in the text (e.g., `<!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->`) have suffixes that do not strictly match the contract's type names.
+- `<!-- INJECT_ACTIVITY: fill-in-greetings -->` is injected twice (once in `Голосні звуки` and once in `Привіт!`). 
+- English scaffolding inside parentheses violates the "кириличність прози" rule.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 7/10 | All five H2 sections are present and most contract beats are covered, but the consonant section stops at “There are a few special consonant letters to recognize...” instead of covering the contracted Anna Ohoiko consonant sequence, and the pipeline word count is 1163/1200. |
-| 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, calques, paronym errors, or wrong Ukrainian forms found in the module text. |
-| 3. Pedagogical quality | 7/10 | Strong textbook anchoring (`Заболотний`, `Большакова`, `Захарійчук`) and correct sound-model notation, but section 3 gives only `[к]/[п]` plus `Ґ/Г/Щ`, and the hello section tells learners “Use **Добрий день** with teachers or strangers” right after the teacher models `Привіт, Максиме!`. |
-| 4. Vocabulary coverage | 9/10 | Required items are present in prose: `звук`, `літера`, `голосні`, `приголосні`, `привіт`, `як справи`, `добре`, `чудово`, `мама`, `молоко`. |
-| 5. Exercise quality | 10/10 | Marker-only module: count, order, and contracted type prefixes all match exactly. |
-| 6. Engagement & tone | 7/10 | The module has useful classroom framing, but lines like “The first sound you will learn is the vowel,” “Following Anna Ohoiko's Episode 1, you can build your first conversation,” and “Review these core concepts before moving forward” read like template narration rather than a live teacher voice. |
-| 7. Structural integrity | 7/10 | Clean markdown and correct section order, but the pipeline word count is 1163, below the 1200 target. |
-| 8. Cultural accuracy | 10/10 | Ukrainian is presented on its own terms, with no Russia-centered framing or cultural distortion. |
-| 9. Dialogue & conversation quality | 8/10 | The named-speaker hallway dialogue is functional and includes `А у тебе?`, but the classroom exchange blurs formal vs informal register by having the teacher use `Привіт`. |
+| 1. Plan adherence | 9/10 | Covers all required beats and sections, but activity markers are slightly off. |
+| 2. Linguistic accuracy | 7/10 | Typos in adjectives (англіиськоі, голоснии), "Справа в тому" (Russianism), non-existent word "міло". |
+| 3. Pedagogical quality | 8/10 | English scaffolding incorrectly placed in the text; minimal pair "мило / міло" is flawed. |
+| 4. Vocabulary coverage | 9/10 | Integrates words well but includes English translations. |
+| 5. Exercise quality | 8/10 | Markers need renaming to exactly match contract types; duplicate fill-in marker. |
+| 6. Engagement & tone | 9/10 | Very natural teacher tone, encouraging and clear. |
+| 7. Structural integrity | 10/10 | Proper use of headings and structure. |
+| 8. Cultural accuracy | 10/10 | Culturally rooted explanations, references to real textbooks. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural and correctly use the target vocabulary. |
 
 ## Findings
-- [PLAN ADHERENCE] [SEVERITY: major]  
-Location: `There are a few special consonant letters to recognize. The letter **Ґ** represents the hard [g] sound... Another unique letter is **Щ**, which always represents two distinct sounds spoken together: [шч].`  
-Issue: The consonant section skips the contracted Anna Ohoiko consonant walkthrough (`М, Н, С, К, Л, Р, ...`) and jumps straight to three special letters. That leaves a contracted teaching beat uncovered and helps explain why the module is still at 1163 words instead of 1200.  
-Fix: Insert a short paragraph in this section naming the contracted consonant-video sequence and telling learners to practice those letters here.
+[Linguistic accuracy] [major]
+Location: `На відміну від англіиськоі мови`, `Кожен голоснии звук`, `в англіиськіи мові`
+Issue: OCR/Generation typos confusing 'й/и' and 'ї/і'.
+Fix: Replace with correct forms: `англійської`, `голосний`, `англійській`.
 
-- [PEDAGOGICAL QUALITY] [SEVERITY: major]  
-Location: `**Вчитель:** Привіт, Максиме! (Hi, Maksym!)` and `The greeting **Привіт** is strictly informal. Use **Добрий день** with teachers or strangers.`  
-Issue: The module teaches one register rule and models the opposite in the same section. For A1, that is avoidable confusion.  
-Fix: Make the teacher-student exchange formal and keep `Привіт` in the peer dialogue only.
+[Linguistic accuracy] [minor]
+Location: `Справа в тому, що деякі літери...`
+Issue: "Справа в тому" is a Russianism (дело в том).
+Fix: Replace with "Річ у тім".
 
-- [ENGAGEMENT & TONE] [SEVERITY: minor]  
-Location: `The first sound you will learn is the vowel.` / `Following Anna Ohoiko's Episode 1, you can build your first conversation.` / `Review these core concepts before moving forward.`  
-Issue: These are formulaic section openers/meta narration. They flatten the teacher persona and sound templated.  
-Fix: Replace them with content-led, direct guidance.
+[Linguistic accuracy] [minor]
+Location: `Давайте спробуємо зробити`, `Давайте подивимося`, `Давайте зробимо`
+Issue: Use of "Давайте" + verb is a calque. The Ukrainian imperative form should be used.
+Fix: Change to `Спробуймо зробити`, `Погляньмо`, `Зробімо`.
+
+[Pedagogical quality] [major]
+Location: `Порівняйте: «мило» ( soap ) та «міло» ( swept ).`
+Issue: Contains English translations in prose (violates rule) and uses "міло", which is not a valid Ukrainian word (swept is "мело").
+Fix: Replace with a valid minimal pair without English translations, e.g., `Порівняйте: «лис» та «ліс».`
+
+[Pedagogical quality] [major]
+Location: `«стан» ( condition ) та «стань» ( stand up! )`, `«Добре» ( fine ), «Чудово» ( great ) або «Нормально» ( okay ).`, `схожий на англійське «garden»`, `(як «k» у слові «know»)`
+Issue: English scaffolding inside Ukrainian prose.
+Fix: Remove the English words and parentheses entirely.
+
+[Exercise quality] [minor]
+Location: Activity markers
+Issue: Markers do not match the exact names from `activity_obligations` and one is duplicated.
+Fix: Rename to exact types (`quiz`, `watch-and-repeat`, `fill-in`) and remove the duplicate `fill-in` from the "Голосні звуки" section.
 
 ## Verdict: REVISE
-The module is structurally intact and linguistically clean, so this is not a reject. It still needs revision because it misses part of the contracted consonant beat, falls short of the 1200-word target, and muddies greeting register in the exact section that teaches formal vs informal use.
+The text has excellent tone and structure but suffers from several noticeable typos, a few Russianisms/calques, and the incorrect inclusion of English scaffolding in the Ukrainian-canonical text.
 
 <fixes>
-- insert_after: "Another unique letter is **Щ**, which always represents two distinct sounds spoken together: [шч]."
-  text: "Anna Ohoiko's consonant videos are the next concrete step here: listen for **М, Н, С, К, Л, Р**, then extend to **Б, В, Д, П, Т, Г, Ґ, З, Ж, Ш, Х, Й, Ч, Щ, Ц, Ф**. Each video pairs a written **літера** with a spoken **звук**, so you can hear how the alphabet turns into real pronunciation."
-- find: "**Вчитель:** Привіт, Максиме! (Hi, Maksym!)\n**Максим:** Привіт! Нормально. (Hi! Okay.)\n\nHere **Добрий день** and **Добре** form a simple classroom exchange."
-  replace: "**Вчитель:** Добрий день, Максиме! (Good day, Maksym!)\n**Максим:** Добрий день! Добре. (Good day! Fine.)\n\nHere **Добрий день** and **Добре** form a simple classroom exchange. Keep **Привіт** for the classmate dialogue below."
-- find: "The first sound you will learn is the vowel. In Ukrainian, these are called **Голосні** (vowels)."
-  replace: "Start with **Голосні** (vowels). These are the vowel sounds of Ukrainian."
-- find: "Following Anna Ohoiko's Episode 1, you can build your first conversation."
-  replace: "Anna Ohoiko's Episode 1 gives you a simple first conversation to imitate."
-- find: "Review these core concepts before moving forward."
-  replace: "Use these questions to check the core ideas from the module."
+- find: "На відміну від англіиськоі мови, де одна й та сама літера може читатися по-різному в різних словах, або існують «німі» літери (як «k» у слові «know»), український правопис переважно фонетичний."
+  replace: "На відміну від англійської мови, де одна й та сама літера може читатися по-різному в різних словах, або існують «німі» літери, український правопис переважно фонетичний."
+- find: "Кожен голоснии звук утворюється виключно за допомогою голосу."
+  replace: "Кожен голосний звук утворюється виключно за допомогою голосу."
+- find: "Порівняйте: «мило» ( soap ) та «міло» ( swept )."
+  replace: "Порівняйте: «лис» та «ліс»."
+- find: "Подивіться на пару слів: «стан» ( condition ) та «стань» ( stand up! )."
+  replace: "Подивіться на пару слів: «стан» та «стань»."
+- find: "«Добре» ( fine ), «Чудово» ( great ) або «Нормально» ( okay )."
+  replace: "«Добре», «Чудово» або «Нормально»."
+- find: "На відміну від того, як сприймається приголосний в англіиськіи мові"
+  replace: "На відміну від того, як сприймається приголосний в англійській мові"
+- find: "Літера Ґ позначає твердий звук [g], схожий на англійське «garden» (наприклад, у слові «ґанок»)."
+  replace: "Літера Ґ позначає твердий звук [g] (наприклад, у слові «ґанок»)."
+- find: "<!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->"
+  replace: "<!-- INJECT_ACTIVITY: quiz -->"
+- find: "<!-- INJECT_ACTIVITY: fill-in-greetings -->\n\n<!-- INJECT_ACTIVITY: group-sort -->"
+  replace: "<!-- INJECT_ACTIVITY: group-sort -->"
+- find: "<!-- INJECT_ACTIVITY: watch-and-repeat-vowels -->"
+  replace: "<!-- INJECT_ACTIVITY: watch-and-repeat -->"
+- find: "<!-- INJECT_ACTIVITY: fill-in-greetings -->"
+  replace: "<!-- INJECT_ACTIVITY: fill-in -->"
+- find: "Справа в тому, що деякі літери можуть позначати одразу два звуки."
+  replace: "Річ у тім, що деякі літери можуть позначати одразу два звуки."
+- find: "Давайте спробуємо зробити звуковий аналіз простих слів."
+  replace: "Спробуймо зробити звуковий аналіз простих слів."
+- find: "Давайте подивимося, як це виглядає на практиці в класі під час першого уроку."
+  replace: "Погляньмо, як це виглядає на практиці в класі під час першого уроку."
+- find: "Давайте зробимо наш перший звуковий аналіз слова «Привіт»."
+  replace: "Зробімо наш перший звуковий аналіз слова «Привіт»."
+- find: "настала Ваша перша розмова українською."
+  replace: "час для вашої першої розмови українською."
+- find: "Звук [и] вимовляється більш глибоко в роті"
+  replace: "Звук [и] вимовляється глибше в роті"
 </fixes>

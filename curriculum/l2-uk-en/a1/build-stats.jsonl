@@ -210,3 +210,13 @@
 {"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-04-17T18:34:24.609569+00:00"}
 {"slug": "sounds-letters-and-hello", "error_type": "WRITE_FAILED", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-17T21:58:21.773988+00:00"}
 {"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-17T22:09:28.794943+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-21T13:53:01.329993+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-21T13:55:18.065802+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "TOXIC", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-21T14:01:25.219650+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "", "attempt": 4, "model": "gemini-tools", "success": false, "timestamp": "2026-04-21T14:07:07.232630+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "", "attempt": 5, "model": "gemini-tools", "success": false, "timestamp": "2026-04-21T14:12:33.510533+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-21T15:00:31.825495+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-21T15:03:02.188932+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 3, "model": "gemini-tools", "success": true, "timestamp": "2026-04-21T15:08:39.051121+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-21T16:11:19.408652+00:00"}
+{"slug": "sounds-letters-and-hello", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-04-21T16:16:51.160656+00:00"}

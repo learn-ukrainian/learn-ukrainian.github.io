@@ -2,7 +2,7 @@
   "module": "checkpoint-cases",
   "level": "A2",
   "plan_version": "2.0",
-  "last_audit": "2026-04-17T23:57:31.632789Z",
+  "last_audit": "2026-04-21T03:11:30.140965Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-04-12T21:47:16.546334Z",
@@ -10,7 +10,7 @@
     "activities": "2026-04-12T21:33:07.831588Z",
     "vocabulary": "2026-04-12T21:33:52.419796Z",
     "research": null,
-    "plan": "2026-04-13T20:14:52.525293Z"
+    "plan": "2026-04-21T00:42:36.329698Z"
   },
   "gates": {
     "meta": {

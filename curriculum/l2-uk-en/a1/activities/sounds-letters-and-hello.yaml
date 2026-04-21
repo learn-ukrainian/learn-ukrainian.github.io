@@ -4,54 +4,48 @@ level: a1
 inline:
 - id: quiz-sounds-vs-letters
   type: quiz
-  instruction: Choose the correct answer.
+  instruction: Оберіть правильну відповідь.
   items:
-  - question: What do we hear and pronounce?
+  - question: Що ми чуємо і вимовляємо?
     options:
-    - sounds
-    - letters
-    - words
-    - syllables
+    - звуки
+    - літери
+    - слова
     correct: 0
-  - question: What do we see and write?
+  - question: Що ми бачимо і пишемо?
     options:
-    - letters
-    - sounds
-    - vowels
-    - consonants
+    - літери
+    - звуки
+    - думки
     correct: 0
-  - question: How many letters are in the Ukrainian alphabet?
+  - question: Скільки літер в українській абетці?
     options:
     - '33'
     - '38'
-    - '6'
     - '32'
     correct: 0
-  - question: How many sounds are there in the Ukrainian language?
+  - question: Скільки звуків в українській мові?
     options:
-    - '38'
     - '33'
-    - '10'
-    - '6'
-    correct: 0
-  - question: Is it correct to say 'vowel letter'?
+    - '38'
+    - '32'
+    correct: 1
+  - question: Чи можна говорити «голосна літера»?
     options:
-    - No, a letter is just a symbol.
-    - Yes, always.
-    - Sometimes.
-    - Only for A, O, U.
-    correct: 0
-  - question: Which letter makes no sound of its own?
+    - Так
+    - Ні, голосний — це звук
+    - Тільки про літеру А
+    correct: 1
+  - question: Яка літера не позначає жодного звуку?
     options:
-    - ь (soft sign)
-    - я
-    - ю
-    - є
+    - М'який знак (Ь)
+    - Літера Я
+    - Літера Ї
     correct: 0
-  title: Choose the correct answer.
-- id: match-up-letters-sounds
+  title: Оберіть правильну відповідь.
+- id: match-letters-to-sounds
   type: match-up
-  instruction: Match the letter to its sound.
+  instruction: З'єднайте літеру зі звуком, який вона позначає.
   pairs:
   - left: А
     right: '[а]'
@@ -65,66 +59,24 @@ inline:
     right: '[к]'
   - left: Н
     right: '[н]'
-  title: Match the letter to its sound.
+  title: З'єднайте літеру зі звуком, який вона позначає.
 - id: fill-in-greetings
   type: fill-in
-  instruction: Fill in the blanks with the correct word.
+  instruction: Доповніть базовий діалог-привітання.
   items:
   - sentence: — ____! Як справи?
     answer: Привіт
-    options:
-    - Привіт
-    - справи
-    - Добре
-    - тебе
-    - Чудово
-    - Нормально
   - sentence: — Привіт! Як ____?
     answer: справи
-    options:
-    - Привіт
-    - справи
-    - Добре
-    - тебе
-    - Чудово
-    - Нормально
-  - sentence: — Як справи? / — ____.
+  - sentence: — ____. А у тебе?
     answer: Добре
-    options:
-    - Привіт
-    - справи
-    - Добре
-    - тебе
-    - Чудово
-    - Нормально
-  - sentence: — Добре. А у ____?
+  - sentence: — А у ____?
     answer: тебе
-    options:
-    - Привіт
-    - справи
-    - Добре
-    - тебе
-    - Чудово
-    - Нормально
-  - sentence: — Як справи? / — ____!
+  - sentence: — ____!
     answer: Чудово
-    options:
-    - Привіт
-    - справи
-    - Добре
-    - тебе
-    - Чудово
-    - Нормально
-  - sentence: — Як справи? / — ____.
+  - sentence: — ____.
     answer: Нормально
-    options:
-    - Привіт
-    - справи
-    - Добре
-    - тебе
-    - Чудово
-    - Нормально
-  title: Fill in the blanks with the correct word.
+  title: Доповніть базовий діалог-привітання.
 - type: letter-grid
   instruction: Голосні — Vowels
   letters:
@@ -475,162 +427,143 @@ inline:
     note: ''
   id: watch-and-repeat-13
 workbook:
-- id: divide-words-practice
+- id: divide-words-into-syllables
   type: divide-words
-  instruction: Divide the words into syllables.
+  instruction: Поділіть слова на склади (за кількістю голосних звуків).
   items:
+  - word: молоко
+    answer: мо-ло-ко
   - word: мама
     answer: ма-ма
   - word: тато
     answer: та-то
-  - word: молоко
-    answer: мо-ло-ко
   - word: добре
     answer: до-бре
   - word: чудово
     answer: чу-до-во
-  - word: нормально
-    answer: нор-маль-но
-  title: Divide the words into syllables.
-- id: count-syllables-practice
+  - word: привіт
+    answer: при-віт
+  title: Поділіть слова на склади (за кількістю голосних звуків).
+- id: count-vowels-syllables
   type: count-syllables
-  instruction: Count the number of syllables in each word.
+  instruction: Порахуйте кількість складів (голосних звуків) у словах.
   items:
-  - word: дім
-    correct: 1
-  - word: мама
-    correct: 2
   - word: молоко
     correct: 3
-  - word: сон
-    correct: 1
-  - word: чудово
-    correct: 3
+  - word: мама
+    correct: 2
   - word: нормально
     correct: 3
-  title: Count the number of syllables in each word.
-- id: odd-one-out-vowels
-  type: odd-one-out
-  instruction: Choose the word with a different number of syllables.
+  - word: дім
+    correct: 1
+  - word: ніс
+    correct: 1
+  - word: справи
+    correct: 2
+  title: Порахуйте кількість складів (голосних звуків) у словах.
+- id: true-false-phonetics
+  type: true-false
+  instruction: Визначте, чи правильне твердження про українські звуки та літери.
   items:
-  - words:
+  - statement: В українській абетці 33 літери.
+    correct: true
+  - statement: В українській мові 33 звуки.
+    correct: false
+  - statement: Голосні звуки утворюються лише за допомогою голосу.
+    correct: true
+  - statement: М'який знак (Ь) позначає звук [ь].
+    correct: false
+  - statement: Літера — це графічний знак.
+    correct: true
+  - statement: Можна говорити «голосна літера».
+    correct: false
+  title: Визначте, чи правильне твердження про українські звуки та літери.
+- id: match-up-greetings
+  type: match-up
+  instruction: З'єднайте фразу з правильною відповіддю.
+  pairs:
+  - left: Як справи?
+    right: Добре!
+  - left: Як тебе звати?
+    right: Мене звати Марко.
+  - left: Привіт!
+    right: Привіт!
+  - left: А у тебе?
+    right: Чудово, дякую.
+  - left: Радий зустрічі!
+    right: Рада зустрічі!
+  - left: Мене звати Софія.
+    right: А мене Марко.
+  title: З'єднайте фразу з правильною відповіддю.
+- id: group-words-by-syllables
+  type: group-sort
+  instruction: Розподіліть слова за кількістю голосних звуків (складів).
+  groups:
+  - label: Один склад
+    items:
+    - дім
+    - ніс
+    - сон
+    - звук
+  - label: Два склади
+    items:
     - мама
     - тато
-    - дім
-    correct: 2
-    explanation: дім has 1 syllable, the others have 2.
-  - words:
-    - сон
-    - ніс
-    - молоко
-    correct: 2
-    explanation: молоко has 3 syllables, the others have 1.
-  - words:
     - добре
-    - око
-    - звук
-    correct: 2
-    explanation: звук has 1 syllable, the others have 2.
-  - words:
+    - привіт
+  - label: Три склади
+    items:
+    - молоко
     - чудово
     - нормально
-    - привіт
-    correct: 2
-    explanation: привіт has 2 syllables, the others have 3.
-  - words:
-    - звук
-    - сон
-    - тато
-    correct: 2
-    explanation: тато has 2 syllables, the others have 1.
-  - words:
-    - голосний
-    - приголосний
-    - мама
-    correct: 2
-    explanation: мама has 2 syllables, the others have 3 or 4.
-  title: Choose the word with a different number of syllables.
-- id: anagram-vocab
+    - літера
+  title: Розподіліть слова за кількістю голосних звуків (складів).
+- id: anagram-greetings
   type: anagram
-  instruction: Unscramble the letters to form a word.
+  instruction: Складіть слова з літер.
   items:
   - letters:
-    - м
-    - а
-    - м
-    - а
-    answer: мама
-  - letters:
+    - п
+    - р
+    - и
+    - в
+    - і
     - т
-    - а
-    - т
-    - о
-    answer: тато
+    answer: привіт
   - letters:
     - д
-    - і
-    - м
-    answer: дім
+    - о
+    - б
+    - р
+    - е
+    answer: добре
+  - letters:
+    - ч
+    - у
+    - д
+    - о
+    - в
+    - о
+    answer: чудово
   - letters:
     - с
-    - о
-    - н
-    answer: сон
-  - letters:
-    - о
-    - к
-    - о
-    answer: око
-  - letters:
-    - н
-    - і
-    - с
-    answer: ніс
+    - п
+    - р
+    - а
+    - в
+    - и
+    answer: справи
   - letters:
     - з
     - в
-    - у
-    - к
-    answer: звук
-  title: Unscramble the letters to form a word.
-- id: true-false-sounds
-  type: true-false
-  instruction: Is this statement true or false?
-  items:
-  - statement: There are 33 sounds in the Ukrainian language.
-    correct: false
-    explanation: There are 38 sounds and 33 letters.
-  - statement: We see and write letters, but we hear and pronounce sounds.
-    correct: true
-    explanation: This is the fundamental difference between sounds and letters.
-  - statement: The letter ь (soft sign) represents a vowel sound.
-    correct: false
-    explanation: The soft sign makes no sound of its own; it only softens the preceding
-      consonant.
-  - statement: There are 6 vowel sounds in Ukrainian.
-    correct: true
-    explanation: The six vowel sounds are [а], [о], [у], [е], [и], [і].
-  - statement: Vowel sounds can be sung easily.
-    correct: true
-    explanation: Vowels are made with open airflow and can be sung.
-  - statement: Consonants are pronounced with an obstruction in the mouth.
-    correct: true
-    explanation: Consonants involve lips, teeth, or tongue blocking the airflow.
-  title: Is this statement true or false?
-- id: match-up-vocab-eng
-  type: match-up
-  instruction: Match the Ukrainian words to their English translations.
-  pairs:
-  - left: привіт
-    right: hi
-  - left: як справи
-    right: how are you
-  - left: добре
-    right: fine
-  - left: чудово
-    right: great
-  - left: нормально
-    right: okay
-  - left: мама
-    right: mother
-  title: Match the Ukrainian words to their English translations.
+    - а
+    - т
+    - и
+    answer: звати
+  - letters:
+    - т
+    - е
+    - б
+    - е
+    answer: тебе
+  title: Складіть слова з літер.

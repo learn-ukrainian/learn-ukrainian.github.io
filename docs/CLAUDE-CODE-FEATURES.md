@@ -36,15 +36,15 @@ Spawned with `subagent_type: "curriculum-maintainer"`. The `initialPrompt` means
 
 ## Skills (6)
 
-All review/analysis skills have `effort: high` — forces deep analysis, no shortcuts.
+All review/analysis skills have `effort: xhigh` — forces deep analysis on Opus 4.7. (Bumped from `high` → `xhigh` on 2026-04-21 after Anthropic noted Opus 4.7 at `high` underperforms prior versions. The 2026-04-06 removal of `effort: high` for token savings was reversed — reviews are where pedagogy quality lives, so cost is justified.)
 
 | Skill | Purpose | Effort |
 |-------|---------|--------|
-| `/content-review` | Post-build quality review (plan adherence, linguistics, activities) | high |
-| `/plan-review` | Review core plans (A1-C2, PRO) using State Standard + textbook RAG + VESUM | high |
-| `/plan-review-seminar` | Review seminar plans (HIST, BIO, LIT, etc.) using Wikipedia + Literary RAG | high |
-| `/batch-review` | Parallel review across module ranges using subagents | high |
-| `/prompt-review` | Find prompt/context engineering problems in orchestration folders | high |
+| `/content-review` | Post-build quality review (plan adherence, linguistics, activities) | xhigh |
+| `/plan-review` | Review core plans (A1-C2, PRO) using State Standard + textbook RAG + VESUM | xhigh |
+| `/plan-review-seminar` | Review seminar plans (HIST, BIO, LIT, etc.) using Wikipedia + Literary RAG | xhigh |
+| `/batch-review` | Parallel review across module ranges using subagents | xhigh |
+| `/prompt-review` | Find prompt/context engineering problems in orchestration folders | xhigh |
 | `/apply-plan-fixes` | Apply fixes from plan review reports with approval workflow | default |
 
 ---
@@ -207,6 +207,6 @@ Subagent spawned
   └── worktree.sparsePaths → fast sparse clone (no node_modules)
 
 Review skill invoked
-  └── effort: high → deep analysis mode
+  └── effort: xhigh → deep analysis mode (Opus 4.7 needs xhigh, not high)
   └── paths: scoping → only relevant rules loaded
 ```

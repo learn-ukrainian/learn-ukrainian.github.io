@@ -1,45 +1,92 @@
 ## Linguistic Scan
-No linguistic errors found.
+Errors found: Typos (англіиськоі, голоснии, англіиськіи), Russianism (Справа в тому), Calques (Давайте + дієслово), non-existent word (міло). 
 
 ## Exercise Check
-Six markers are present: `quiz-sounds-vs-letters`, `match-up-letters-sounds`, `fill-in-greetings`, `group-sort-vowels-consonants`, `letter-grid-alphabet`, `watch-and-repeat-ohoiko-videos`.
-
-Marker count and overall contracted type order are correct: `quiz` → `match-up` → `fill-in` → `group-sort` → `letter-grid` → `watch-and-repeat`.
-
-One placement issue: `<!-- INJECT_ACTIVITY: fill-in-greetings -->` appears after the consonant section at [sounds-letters-and-hello.md](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/sounds-letters-and-hello.md:42), before `## Привіт! (Hello!)` starts at [sounds-letters-and-hello.md](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/sounds-letters-and-hello.md:46). It tests greeting material before that material is taught.
+Issues found:
+- Activity markers in the text (e.g., `<!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->`) have suffixes that do not strictly match the contract's type names.
+- `<!-- INJECT_ACTIVITY: fill-in-greetings -->` is injected twice (once in `Голосні звуки` and once in `Привіт!`). 
+- English scaffolding inside parentheses violates the "кириличність прози" rule.
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 7/10 | All five contracted H2 sections are present and ordered, and the pipeline word count is 1223. But the section-1 contract explicitly requires “all 33 letters in order” at [contract.yaml](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/sounds-letters-and-hello/contract.yaml:33), while the prose at [sounds-letters-and-hello.md](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/sounds-letters-and-hello.md:11) names the alphabet without actually listing the 33-letter sequence. |
-| 2. Linguistic accuracy | 10/10 | No Russianisms, Surzhyk, calques, bad case/gender forms, or banned Russian letters were found in the Ukrainian text. Core forms such as `Рада`, `радий`, `нормально`, and `привіт` are standard Ukrainian forms. |
-| 3. Pedagogical quality | 7/10 | The module has solid textbook anchoring and concrete examples: `ма-ма`, `мо-ло-ко`, `У-ля`, and the `Привіт` sound analysis at [sounds-letters-and-hello.md](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/sounds-letters-and-hello.md:22) and [sounds-letters-and-hello.md](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/sounds-letters-and-hello.md:68). But learners are not shown the full alphabet sequence in the alphabet section, and the greetings fill-in is placed before the greetings lesson. |
-| 4. Vocabulary coverage | 9/10 | Required target vocabulary appears naturally in context: `звук`, `літера`, `голосні`, `приголосні`, `Привіт`, `Як справи?`, `Добре`, `Чудово`, `мама`, `молоко`. |
-| 5. Exercise quality | 6/10 | This is a marker-only module, so marker count/order/type are the relevant checks, and those mostly pass. The major failure is placement: `fill-in-greetings` is at [sounds-letters-and-hello.md](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/sounds-letters-and-hello.md:42), before the greeting content begins at line 46. |
-| 6. Engagement & tone | 8/10 | The tone is clear and teacherly, and the module uses concrete classroom content rather than empty hype. The dialogues and sound examples keep it grounded. |
-| 7. Structural integrity | 10/10 | Clean markdown, all H2 headings present once, correct section order, and pipeline word count is above the 1200 target. |
-| 8. Cultural accuracy | 10/10 | The module presents Ukrainian on its own terms, uses Ukrainian textbook pedagogy, and avoids Russian-centered framing. |
-| 9. Dialogue & conversation quality | 9/10 | The module includes named-speaker dialogue (`Марко`, `Софія`) and uses the required reciprocal `А у тебе?`, with correct `Рада/Радий` contrast. |
+| 1. Plan adherence | 9/10 | Covers all required beats and sections, but activity markers are slightly off. |
+| 2. Linguistic accuracy | 7/10 | Typos in adjectives (англіиськоі, голоснии), "Справа в тому" (Russianism), non-existent word "міло". |
+| 3. Pedagogical quality | 8/10 | English scaffolding incorrectly placed in the text; minimal pair "мило / міло" is flawed. |
+| 4. Vocabulary coverage | 9/10 | Integrates words well but includes English translations. |
+| 5. Exercise quality | 8/10 | Markers need renaming to exactly match contract types; duplicate fill-in marker. |
+| 6. Engagement & tone | 9/10 | Very natural teacher tone, encouraging and clear. |
+| 7. Structural integrity | 10/10 | Proper use of headings and structure. |
+| 8. Cultural accuracy | 10/10 | Culturally rooted explanations, references to real textbooks. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are natural and correctly use the target vocabulary. |
 
 ## Findings
-[DIMENSION 1] [SEVERITY: major]  
-Location: [sounds-letters-and-hello.md](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/sounds-letters-and-hello.md:11) — “The complete collection of these thirty-three letters is called the **абетка** or **алфавіт** (alphabet). Each individual letter has its own specific name.”  
-Issue: The contract requires this teaching beat to show “all 33 letters in order” ([contract.yaml](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/sounds-letters-and-hello/contract.yaml:33)), but the prose never actually gives the alphabet sequence.  
-Fix: Replace this paragraph with a concise version that includes the 33 letters in order.
+[Linguistic accuracy] [major]
+Location: `На відміну від англіиськоі мови`, `Кожен голоснии звук`, `в англіиськіи мові`
+Issue: OCR/Generation typos confusing 'й/и' and 'ї/і'.
+Fix: Replace with correct forms: `англійської`, `голосний`, `англійській`.
 
-[DIMENSION 5] [SEVERITY: major]  
-Location: [sounds-letters-and-hello.md](/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/sounds-letters-and-hello.md:42) — `<!-- INJECT_ACTIVITY: fill-in-greetings -->`  
-Issue: The greetings fill-in marker appears before `## Привіт! (Hello!)`, so it tests `Привіт`, `Як справи?`, `Добре`, `Чудово`, and `А у тебе?` before those chunks are taught.  
-Fix: Move `<!-- INJECT_ACTIVITY: fill-in-greetings -->` to the end of the `## Привіт! (Hello!)` section, before the watch-and-repeat marker.
+[Linguistic accuracy] [minor]
+Location: `Справа в тому, що деякі літери...`
+Issue: "Справа в тому" is a Russianism (дело в том).
+Fix: Replace with "Річ у тім".
+
+[Linguistic accuracy] [minor]
+Location: `Давайте спробуємо зробити`, `Давайте подивимося`, `Давайте зробимо`
+Issue: Use of "Давайте" + verb is a calque. The Ukrainian imperative form should be used.
+Fix: Change to `Спробуймо зробити`, `Погляньмо`, `Зробімо`.
+
+[Pedagogical quality] [major]
+Location: `Порівняйте: «мило» ( soap ) та «міло» ( swept ).`
+Issue: Contains English translations in prose (violates rule) and uses "міло", which is not a valid Ukrainian word (swept is "мело").
+Fix: Replace with a valid minimal pair without English translations, e.g., `Порівняйте: «лис» та «ліс».`
+
+[Pedagogical quality] [major]
+Location: `«стан» ( condition ) та «стань» ( stand up! )`, `«Добре» ( fine ), «Чудово» ( great ) або «Нормально» ( okay ).`, `схожий на англійське «garden»`, `(як «k» у слові «know»)`
+Issue: English scaffolding inside Ukrainian prose.
+Fix: Remove the English words and parentheses entirely.
+
+[Exercise quality] [minor]
+Location: Activity markers
+Issue: Markers do not match the exact names from `activity_obligations` and one is duplicated.
+Fix: Rename to exact types (`quiz`, `watch-and-repeat`, `fill-in`) and remove the duplicate `fill-in` from the "Голосні звуки" section.
 
 ## Verdict: REVISE
-The module is structurally sound and linguistically clean, but it has two concrete contract failures: the alphabet section omits the required 33-letter sequence, and the greetings fill-in marker is placed before the greetings lesson. Those issues require fixes, so this cannot pass.
+The text has excellent tone and structure but suffers from several noticeable typos, a few Russianisms/calques, and the incorrect inclusion of English scaffolding in the Ukrainian-canonical text.
 
 <fixes>
-- find: "The complete collection of these thirty-three letters is called the **абетка** or **алфавіт** (alphabet). Each individual letter has its own specific name. Unlike English, Ukrainian spelling is highly phonetic. What you see on the page is almost exactly what you hear spoken aloud. There are no hidden silent letters to trip you up, except for the functional soft sign mentioned earlier, and no surprise pronunciations. Because the writing system is incredibly consistent, once you learn the sounds, you will be able to accurately read any word you encounter."
-  replace: "The complete collection of these thirty-three letters is called the **абетка** or **алфавіт** (alphabet): А, Б, В, Г, Ґ, Д, Е, Є, Ж, З, И, І, Ї, Й, К, Л, М, Н, О, П, Р, С, Т, У, Ф, Х, Ц, Ч, Ш, Щ, Ь, Ю, Я. Each letter has its own specific name. Unlike English, Ukrainian spelling is highly phonetic. What you see on the page is almost exactly what you hear spoken aloud. There are almost no surprise pronunciations, so once you learn the sounds, you will be able to read new words much more confidently."
-- find: "<!-- INJECT_ACTIVITY: fill-in-greetings -->\n<!-- INJECT_ACTIVITY: group-sort-vowels-consonants -->\n<!-- INJECT_ACTIVITY: letter-grid-alphabet -->"
-  replace: "<!-- INJECT_ACTIVITY: group-sort-vowels-consonants -->\n<!-- INJECT_ACTIVITY: letter-grid-alphabet -->"
-- find: "Every type of sound you learned in this module appears in this one word.\n\n<!-- INJECT_ACTIVITY: watch-and-repeat-ohoiko-videos -->"
-  replace: "Every type of sound you learned in this module appears in this one word.\n\n<!-- INJECT_ACTIVITY: fill-in-greetings -->\n<!-- INJECT_ACTIVITY: watch-and-repeat-ohoiko-videos -->"
+- find: "На відміну від англіиськоі мови, де одна й та сама літера може читатися по-різному в різних словах, або існують «німі» літери (як «k» у слові «know»), український правопис переважно фонетичний."
+  replace: "На відміну від англійської мови, де одна й та сама літера може читатися по-різному в різних словах, або існують «німі» літери, український правопис переважно фонетичний."
+- find: "Кожен голоснии звук утворюється виключно за допомогою голосу."
+  replace: "Кожен голосний звук утворюється виключно за допомогою голосу."
+- find: "Порівняйте: «мило» ( soap ) та «міло» ( swept )."
+  replace: "Порівняйте: «лис» та «ліс»."
+- find: "Подивіться на пару слів: «стан» ( condition ) та «стань» ( stand up! )."
+  replace: "Подивіться на пару слів: «стан» та «стань»."
+- find: "«Добре» ( fine ), «Чудово» ( great ) або «Нормально» ( okay )."
+  replace: "«Добре», «Чудово» або «Нормально»."
+- find: "На відміну від того, як сприймається приголосний в англіиськіи мові"
+  replace: "На відміну від того, як сприймається приголосний в англійській мові"
+- find: "Літера Ґ позначає твердий звук [g], схожий на англійське «garden» (наприклад, у слові «ґанок»)."
+  replace: "Літера Ґ позначає твердий звук [g] (наприклад, у слові «ґанок»)."
+- find: "<!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->"
+  replace: "<!-- INJECT_ACTIVITY: quiz -->"
+- find: "<!-- INJECT_ACTIVITY: fill-in-greetings -->\n\n<!-- INJECT_ACTIVITY: group-sort -->"
+  replace: "<!-- INJECT_ACTIVITY: group-sort -->"
+- find: "<!-- INJECT_ACTIVITY: watch-and-repeat-vowels -->"
+  replace: "<!-- INJECT_ACTIVITY: watch-and-repeat -->"
+- find: "<!-- INJECT_ACTIVITY: fill-in-greetings -->"
+  replace: "<!-- INJECT_ACTIVITY: fill-in -->"
+- find: "Справа в тому, що деякі літери можуть позначати одразу два звуки."
+  replace: "Річ у тім, що деякі літери можуть позначати одразу два звуки."
+- find: "Давайте спробуємо зробити звуковий аналіз простих слів."
+  replace: "Спробуймо зробити звуковий аналіз простих слів."
+- find: "Давайте подивимося, як це виглядає на практиці в класі під час першого уроку."
+  replace: "Погляньмо, як це виглядає на практиці в класі під час першого уроку."
+- find: "Давайте зробимо наш перший звуковий аналіз слова «Привіт»."
+  replace: "Зробімо наш перший звуковий аналіз слова «Привіт»."
+- find: "настала Ваша перша розмова українською."
+  replace: "час для вашої першої розмови українською."
+- find: "Звук [и] вимовляється більш глибоко в роті"
+  replace: "Звук [и] вимовляється глибше в роті"
 </fixes>

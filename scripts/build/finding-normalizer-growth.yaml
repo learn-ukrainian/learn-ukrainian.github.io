@@ -1,0 +1,12 @@
+- dimension: pedagogical_quality
+  location: '`Порівняйте: «мило» ( soap ) та «міло» ( swept ).`'
+  issue: Contains English translations in prose (violates rule) and uses "міло", which
+    is not a valid Ukrainian word (swept is "мело").
+  fix: 'Replace with a valid minimal pair without English translations, e.g., `Порівняйте:
+    «лис» та «ліс».`'
+- dimension: pedagogical_quality
+  location: '`«стан» ( condition ) та «стань» ( stand up! )`, `«Добре» ( fine ), «Чудово»
+    ( great ) або «Нормально» ( okay ).`, `схожий на англійське «garden»`, `(як «k»
+    у слові «know»)`'
+  issue: English scaffolding inside Ukrainian prose.
+  fix: Remove the English words and parentheses entirely.

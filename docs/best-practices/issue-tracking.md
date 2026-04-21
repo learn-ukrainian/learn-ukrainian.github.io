@@ -180,3 +180,18 @@ Never put the substantive request in the broker message. The issue is the source
 - Link related issues to each other
 - Don't create duplicate issues — search first
 - Stale `working:` labels (>3 days) should be removed and issue re-triaged
+
+---
+
+## GitHub API Rate Limiting
+
+The `gh` CLI shares the GitHub REST API budget (5000 req/hr authenticated). Heavy issue-hygiene loops — bulk `gh issue list` / `gh issue view` / `gh issue comment` across many issues — can drain it.
+
+**Claude Code 2.1.116+** surfaces a rate-limit hint from the Bash tool when `gh` hits the limit. When you see it:
+
+1. **Stop retrying.** Retrying in a tight loop burns the reset window and produces zero results.
+2. **Drain other work first.** Switch to tasks that don't touch `gh` (file edits, builds, local greps, agent bridge calls).
+3. **Back off 60s+ before retry.** The reset interval is minutes, not seconds. A single sleep is cheaper than ten failed retries.
+4. **Prefer batch reads.** `gh issue list --json ...` returning 50 issues costs one call; 50 `gh issue view` calls cost 50.
+
+If you are about to run >20 `gh` calls in a row, reconsider — there is almost always a `--json` field list + `--jq` filter that collapses it to one call.

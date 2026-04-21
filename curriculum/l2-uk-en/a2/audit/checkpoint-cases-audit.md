@@ -1,7 +1,7 @@
 # Audit Report: M39 — checkpoint-cases.md
-**Level:** A2 | **Module:** M39 | **Phase:** A2.5 | **Pedagogy:** Review | **Target:** 1500
+**Level:** A2 | **Module:** M39 | **Phase:** A2 | **Pedagogy:** Review | **Target:** 1500
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-17 23:57:31
+**Generated:** 2026-04-21 03:11:30
 
 ## Configuration
 **Type:** A2

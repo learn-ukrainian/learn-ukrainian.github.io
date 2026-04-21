@@ -1,0 +1,390 @@
+version: "1.0"
+module: sounds-letters-and-hello
+level: a1
+inline:
+  - id: quiz-sounds-vs-letters
+    type: quiz
+    instruction: "Оберіть правильну відповідь."
+    items:
+      - question: "Що ми чуємо і вимовляємо?"
+        options: ["Звуки", "Літери", "Слова", "Речення"]
+        correct: 0
+      - question: "Що ми бачимо і пишемо?"
+        options: ["Літери", "Звуки", "Рот", "Голос"]
+        correct: 0
+      - question: "Скільки літер в українській абетці?"
+        options: ["33", "38", "32", "30"]
+        correct: 0
+      - question: "Скільки звуків в українській мові?"
+        options: ["38", "33", "32", "40"]
+        correct: 0
+      - question: "Чи можна говорити «голосна літера»?"
+        options: ["Ні, голосні бувають тільки звуки", "Так, це правильна назва", "Тільки для літери А", "Так, завжди"]
+        correct: 0
+      - question: "Яка літера ніколи не позначає окремого звуку?"
+        options: ["Ь (м'який знак)", "Ї", "Щ", "Я"]
+        correct: 0
+
+  - id: alphabet-grid
+    type: letter-grid
+    instruction: "Ознайомтеся з усіма 33 літерами української абетки."
+    letters:
+      - upper: "А"
+        lower: "а"
+        name: "а"
+        emoji: "🚌"
+        key_word: "автобус"
+      - upper: "Б"
+        lower: "б"
+        name: "бе"
+        emoji: "🐿️"
+        key_word: "білка"
+      - upper: "В"
+        lower: "в"
+        name: "ве"
+        emoji: "🐻"
+        key_word: "ведмідь"
+      - upper: "Г"
+        lower: "г"
+        name: "ге"
+        emoji: "🍄"
+        key_word: "гриб"
+      - upper: "Ґ"
+        lower: "ґ"
+        name: "ґе"
+        emoji: "🚪"
+        key_word: "ґанок"
+      - upper: "Д"
+        lower: "д"
+        name: "де"
+        emoji: "🌳"
+        key_word: "дерево"
+      - upper: "Е"
+        lower: "е"
+        name: "е"
+        emoji: "🚜"
+        key_word: "екскаватор"
+      - upper: "Є"
+        lower: "є"
+        name: "є"
+        emoji: "🦝"
+        key_word: "єнот"
+      - upper: "Ж"
+        lower: "ж"
+        name: "же"
+        emoji: "🐸"
+        key_word: "жаба"
+      - upper: "З"
+        lower: "з"
+        name: "зе"
+        emoji: "🦓"
+        key_word: "зебра"
+      - upper: "И"
+        lower: "и"
+        name: "и"
+        emoji: "🧀"
+        key_word: "сир"
+      - upper: "І"
+        lower: "і"
+        name: "і"
+        emoji: "🦃"
+        key_word: "індик"
+      - upper: "Ї"
+        lower: "ї"
+        name: "ї"
+        emoji: "🦔"
+        key_word: "їжак"
+      - upper: "Й"
+        lower: "й"
+        name: "йот"
+        emoji: "🍦"
+        key_word: "йогурт"
+      - upper: "К"
+        lower: "к"
+        name: "ка"
+        emoji: "🐈"
+        key_word: "кіт"
+      - upper: "Л"
+        lower: "л"
+        name: "ел"
+        emoji: "🍋"
+        key_word: "лимон"
+      - upper: "М"
+        lower: "м"
+        name: "ем"
+        emoji: "🥛"
+        key_word: "молоко"
+      - upper: "Н"
+        lower: "н"
+        name: "ен"
+        emoji: "👃"
+        key_word: "ніс"
+      - upper: "О"
+        lower: "о"
+        name: "о"
+        emoji: "👁️"
+        key_word: "око"
+      - upper: "П"
+        lower: "п"
+        name: "пе"
+        emoji: "🚂"
+        key_word: "потяг"
+      - upper: "Р"
+        lower: "р"
+        name: "ер"
+        emoji: "🐟"
+        key_word: "риба"
+      - upper: "С"
+        lower: "с"
+        name: "ес"
+        emoji: "🐘"
+        key_word: "слон"
+      - upper: "Т"
+        lower: "т"
+        name: "те"
+        emoji: "👨"
+        key_word: "тато"
+      - upper: "У"
+        lower: "у"
+        name: "у"
+        emoji: "🐌"
+        key_word: "удав"
+      - upper: "Ф"
+        lower: "ф"
+        name: "еф"
+        emoji: "📷"
+        key_word: "фотоапарат"
+      - upper: "Х"
+        lower: "х"
+        name: "ха"
+        emoji: "🍞"
+        key_word: "хліб"
+      - upper: "Ц"
+        lower: "ц"
+        name: "це"
+        emoji: "🍬"
+        key_word: "цукерка"
+      - upper: "Ч"
+        lower: "ч"
+        name: "че"
+        emoji: "☕"
+        key_word: "чай"
+      - upper: "Ш"
+        lower: "ш"
+        name: "ша"
+        emoji: "🧣"
+        key_word: "шарф"
+      - upper: "Щ"
+        lower: "щ"
+        name: "ща"
+        emoji: "🧹"
+        key_word: "щітка"
+      - upper: "Ь"
+        lower: "ь"
+        name: "м'який знак"
+        emoji: "💧"
+        key_word: "крапля"
+      - upper: "Ю"
+        lower: "ю"
+        name: "ю"
+        emoji: "🍲"
+        key_word: "юшка"
+      - upper: "Я"
+        lower: "я"
+        name: "я"
+        emoji: "🍎"
+        key_word: "яблуко"
+
+  - id: watch-and-repeat-vowels
+    type: watch-and-repeat
+    title: "Голосні звуки"
+    instruction: "Подивіться відео, слухайте та повторюйте голосні звуки."
+    items:
+      - letter: "А"
+        video: "hvB3VpcR3ZE"
+      - letter: "У"
+        video: "VB1O6PmtYRU"
+      - letter: "Е"
+        video: "KFlsroBW0dk"
+      - letter: "И"
+        video: "W-1rCu0indE"
+      - letter: "І"
+        video: "Z9TH0H4ShGo"
+
+  - id: match-letters-to-sounds
+    type: match-up
+    instruction: "З'єднайте українські літери зі звуками, які вони позначають."
+    pairs:
+      - left: "А"
+        right: "[а]"
+      - left: "О"
+        right: "[о]"
+      - left: "У"
+        right: "[у]"
+      - left: "М"
+        right: "[м]"
+      - left: "К"
+        right: "[к]"
+      - left: "Н"
+        right: "[н]"
+
+  - id: sort-vowels-consonants
+    type: group-sort
+    instruction: "Розподіліть звуки на голосні та приголосні."
+    groups:
+      - label: "Голосні звуки"
+        items:
+          - "[а]"
+          - "[о]"
+          - "[у]"
+          - "[е]"
+          - "[и]"
+          - "[і]"
+      - label: "Приголосні звуки"
+        items:
+          - "[к]"
+          - "[м]"
+          - "[т]"
+          - "[в]"
+          - "[н]"
+          - "[р]"
+          - "[с]"
+          - "[х]"
+
+  - id: watch-and-repeat-consonants
+    type: watch-and-repeat
+    title: "Приголосні звуки"
+    instruction: "Подивіться відео, слухайте та повторюйте приголосні звуки."
+    items:
+      - letter: "М"
+        video: "Ez95H4ibuJo"
+      - letter: "Н"
+        video: "vNUfiKHPYaU"
+      - letter: "С"
+        video: "7UsFBgSL91E"
+      - letter: "К"
+        video: "J7sGEI4-xJo"
+      - letter: "Л"
+        video: "v6-3Xg52Buk"
+      - letter: "Р"
+        video: "fMGsQ5KPQgg"
+
+  - id: fill-in-greetings
+    type: fill-in
+    instruction: "Доповніть базовий діалог-привітання. Варіанти: Привіт, справи, Добре, тебе, Чудово, Нормально."
+    items:
+      - sentence: "— ____! Як справи?"
+        answer: "Привіт"
+      - sentence: "— Привіт! Як ____?"
+        answer: "справи"
+      - sentence: "— ____. А у тебе?"
+        answer: "Добре"
+      - sentence: "— Добре. А у ____?"
+        answer: "тебе"
+      - sentence: "— ____."
+        answer: "Чудово"
+      - sentence: "— Нормально. Радий ____!"
+        answer: "зустрічі"
+
+workbook:
+  - id: sounds-vs-letters-tf
+    type: true-false
+    instruction: "Визначте, чи правильне твердження."
+    items:
+      - statement: "В українській абетці 38 літер."
+        correct: false
+      - statement: "Літера — це графічний знак, який ми бачимо і пишемо."
+        correct: true
+      - statement: "Звук — це те, що ми чуємо і вимовляємо."
+        correct: true
+      - statement: "М'який знак (Ь) позначає голосний звук."
+        correct: false
+      - statement: "Голосні звуки утворюються лише за допомогою голосу."
+        correct: true
+      - statement: "Можна сказати «голосна літера»."
+        correct: false
+
+  - id: syllables-count
+    type: count-syllables
+    instruction: "Порахуйте кількість складів (кількість голосних звуків) у словах."
+    items:
+      - word: "мама"
+        correct: 2
+      - word: "молоко"
+        correct: 3
+      - word: "дім"
+        correct: 1
+      - word: "тато"
+        correct: 2
+      - word: "сон"
+        correct: 1
+      - word: "око"
+        correct: 2
+
+  - id: words-divide
+    type: divide-words
+    instruction: "Поділіть слова на склади (кожен склад має містити один голосний звук)."
+    items:
+      - word: "мама"
+        answer: "ма-ма"
+      - word: "молоко"
+        answer: "мо-ло-ко"
+      - word: "добре"
+        answer: "до-бре"
+      - word: "чудово"
+        answer: "чу-до-во"
+      - word: "тато"
+        answer: "та-то"
+      - word: "привіт"
+        answer: "при-віт"
+
+  - id: scrambled-words
+    type: anagram
+    instruction: "Розшифруйте слова з поданих літер."
+    items:
+      - letters: ["о", "м", "о", "к", "л", "о"]
+        answer: "молоко"
+      - letters: ["т", "а", "о", "т"]
+        answer: "тато"
+      - letters: ["а", "м", "а", "м"]
+        answer: "мама"
+      - letters: ["і", "д", "м"]
+        answer: "дім"
+      - letters: ["о", "с", "н"]
+        answer: "сон"
+      - letters: ["к", "о", "о"]
+        answer: "око"
+
+  - id: greetings-unjumble
+    type: unjumble
+    instruction: "Складіть слова в правильному порядку, щоб утворити речення."
+    items:
+      - words: ["справи", "Як"]
+        correct_order: ["Як", "справи"]
+      - words: ["тебе", "у", "А"]
+        correct_order: ["А", "у", "тебе"]
+      - words: ["зустрічі", "Рада"]
+        correct_order: ["Рада", "зустрічі"]
+      - words: ["звати", "Як", "тебе"]
+        correct_order: ["Як", "тебе", "звати"]
+      - words: ["звати", "Софія", "Мене"]
+        correct_order: ["Мене", "звати", "Софія"]
+      - words: ["Марко", "звати", "Мене"]
+        correct_order: ["Мене", "звати", "Марко"]
+
+  - id: match-vocab
+    type: match-up
+    instruction: "З'єднайте слова, які підходять одне одному за змістом."
+    pairs:
+      - left: "Як"
+        right: "справи"
+      - left: "А у"
+        right: "тебе"
+      - left: "Мене"
+        right: "звати"
+      - left: "Радий"
+        right: "зустрічі"
+      - left: "Голосний"
+        right: "звук"
+      - left: "М'який"
+        right: "знак"
