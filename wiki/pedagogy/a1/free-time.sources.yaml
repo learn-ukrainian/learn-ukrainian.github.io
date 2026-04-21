@@ -1,0 +1,12 @@
+# Source registry for wiki/pedagogy/a1/free-time.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2433
+  type: unknown
+- id: S2
+  file: S4697
+  type: unknown
+- id: S3
+  file: S2387
+  type: unknown

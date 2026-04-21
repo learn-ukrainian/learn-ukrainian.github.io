@@ -1,0 +1,21 @@
+# Source registry for wiki/pedagogy/a1/health.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1908
+  type: unknown
+- id: S2
+  file: S3385
+  type: unknown
+- id: S3
+  file: S253
+  type: unknown
+- id: S4
+  file: S258
+  type: unknown
+- id: S5
+  file: S2461
+  type: unknown
+- id: S8
+  file: ext-article-1
+  type: external

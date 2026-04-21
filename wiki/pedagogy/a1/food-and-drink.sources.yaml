@@ -1,0 +1,24 @@
+# Source registry for wiki/pedagogy/a1/food-and-drink.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2423
+  type: unknown
+- id: S2
+  file: S5020
+  type: unknown
+- id: S3
+  file: S3850
+  type: unknown
+- id: S4
+  file: S2397
+  type: unknown
+- id: S6
+  file: S2396
+  type: unknown
+- id: S8
+  file: S1478
+  type: unknown
+- id: S12
+  file: ext-article-1
+  type: external

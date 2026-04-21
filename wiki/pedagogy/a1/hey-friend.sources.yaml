@@ -1,0 +1,21 @@
+# Source registry for wiki/pedagogy/a1/hey-friend.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S4642
+  type: unknown
+- id: S2
+  file: S3165
+  type: unknown
+- id: S3
+  file: S3336
+  type: unknown
+- id: S4
+  file: S4715
+  type: unknown
+- id: S5
+  file: S552
+  type: unknown
+- id: S6
+  file: S2447
+  type: unknown

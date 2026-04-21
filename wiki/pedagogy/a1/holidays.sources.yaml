@@ -1,0 +1,24 @@
+# Source registry for wiki/pedagogy/a1/holidays.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S4740
+  type: unknown
+- id: S2
+  file: S1580
+  type: unknown
+- id: S3
+  file: S4632
+  type: unknown
+- id: S4
+  file: S1486
+  type: unknown
+- id: S5
+  file: S3331
+  type: unknown
+- id: S6
+  file: S944
+  type: unknown
+- id: S9
+  file: S1047
+  type: unknown

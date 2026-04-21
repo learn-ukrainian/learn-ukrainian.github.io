@@ -1,0 +1,24 @@
+# Source registry for wiki/pedagogy/a1/emergencies.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3825
+  type: unknown
+- id: S2
+  file: S3284
+  type: unknown
+- id: S3
+  file: S2387
+  type: unknown
+- id: S4
+  file: S1141
+  type: unknown
+- id: S5
+  file: S2289
+  type: unknown
+- id: S6
+  file: S2374
+  type: unknown
+- id: S7
+  file: ext-article-0
+  type: external

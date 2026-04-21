@@ -1,0 +1,30 @@
+# Source registry for wiki/pedagogy/a1/days-and-months.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1916
+  type: unknown
+- id: S2
+  file: S1584
+  type: unknown
+- id: S3
+  file: S3268
+  type: unknown
+- id: S4
+  file: S2421
+  type: unknown
+- id: S5
+  file: S1883
+  type: unknown
+- id: S6
+  file: S2434
+  type: unknown
+- id: S7
+  file: S1207
+  type: unknown
+- id: S8
+  file: S2459
+  type: unknown
+- id: S10
+  file: S1496
+  type: unknown
