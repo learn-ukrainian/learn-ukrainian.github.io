@@ -327,7 +327,27 @@ def _handle_codex_usage(args) -> None:
 
 def _build_parser() -> argparse.ArgumentParser:
     """Build the CLI argument parser."""
-    parser = argparse.ArgumentParser(description="AI Agent Bridge - Claude/Gemini/Codex Communication")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Bridge CLI for Claude, Gemini, and Codex message passing.\n"
+            "Use it for brokered multi-agent communication; do not use it as a substitute for direct local shell commands."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for gemini\n"
+            "  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - --task-id review-123 < prompt.md\n"
+            "  .venv/bin/python scripts/ai_agent_bridge/__main__.py process-codex 4812 --new-session\n\n"
+            "Outputs:\n"
+            "  Reads and writes broker messages, may invoke agent CLIs, and can post follow-up data to GitHub.\n\n"
+            "Exit codes:\n"
+            "  0 on successful command completion; non-zero on CLI misuse, broker failures, or agent invocation failures.\n\n"
+            "Related:\n"
+            "  Broker DB: batch_state/agent_comms.db\n"
+            "  Runtime: scripts/agent_runtime/\n"
+            "  Issue: #1379\n"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # inbox
