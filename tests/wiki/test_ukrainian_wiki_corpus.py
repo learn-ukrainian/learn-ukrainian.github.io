@@ -14,12 +14,12 @@ from wiki.embedding_manifest import EmbeddingManifest
 from wiki import dense_rerank, sources_db, ukrainian_wiki_corpus
 
 
-def _article_with_registry(tmp_path: Path, *, text: str) -> Path:
-    article = tmp_path / "wiki" / "pedagogy" / "a1" / "apostrof.md"
+def _article_with_registry(tmp_path: Path, *, slug: str = "apostrof", text: str) -> Path:
+    article = tmp_path / "wiki" / "pedagogy" / "a1" / f"{slug}.md"
     article.parent.mkdir(parents=True, exist_ok=True)
     article.write_text(text, encoding="utf-8")
     article.with_suffix(".sources.yaml").write_text(
-        "# Source registry for wiki/pedagogy/a1/apostrof.md\n"
+        f"# Source registry for wiki/pedagogy/a1/{slug}.md\n"
         "sources:\n"
         "  - id: S1\n"
         "    file: ext-demo\n"
@@ -76,6 +76,10 @@ def test_schema_creation_adds_table_and_fts(tmp_path: Path) -> None:
                 """
             ).fetchall()
         }
+        columns = {
+            row[1]
+            for row in conn.execute("PRAGMA table_info(ukrainian_wiki)").fetchall()
+        }
     finally:
         conn.close()
 
@@ -84,6 +88,7 @@ def test_schema_creation_adds_table_and_fts(tmp_path: Path) -> None:
     assert ("trigger", "ukrainian_wiki_ai") in rows
     assert ("trigger", "ukrainian_wiki_ad") in rows
     assert ("trigger", "ukrainian_wiki_au") in rows
+    assert {"track", "heading_path", "chunk_index"} <= columns
 
 
 def test_manifest_registration_reserves_zero_row_shard(tmp_path: Path) -> None:
@@ -174,7 +179,7 @@ def test_round_trip_insert_and_search_query(tmp_path: Path, monkeypatch: pytest.
         stored_count = conn.execute("SELECT COUNT(*) FROM ukrainian_wiki").fetchone()[0]
         row = conn.execute(
             """
-            SELECT article_slug, article_title, section_path, word_count, text, gate_report_json
+            SELECT article_slug, article_title, track, heading_path, section_path, chunk_index, word_count, text, gate_report_json
             FROM ukrainian_wiki
             ORDER BY paragraph_start, id
             LIMIT 1
@@ -183,7 +188,10 @@ def test_round_trip_insert_and_search_query(tmp_path: Path, monkeypatch: pytest.
         assert stored_count == 2
         assert row["article_slug"] == "apostrof"
         assert row["article_title"] == "Апостроф"
+        assert row["track"] == "a1"
+        assert row["heading_path"] == "Апостроф"
         assert row["section_path"] == "Апостроф"
+        assert row["chunk_index"] == 1
         assert "Апостроф допомагає" in row["text"]
         assert json.loads(row["gate_report_json"])["passed"] is True
 
@@ -253,3 +261,122 @@ def test_admission_gate_pass_and_fail(tmp_path: Path, monkeypatch: pytest.Monkey
     assert failed_report.results[1].passed is False
     assert failed_report.results[2].passed is False
     assert failed_report.results[4].passed is False
+
+
+def test_chunk_admission_gate_rejects_short_non_cyrillic_text() -> None:
+    report = ukrainian_wiki_corpus.run_chunk_admission_gates("hello", min_chars=50)
+
+    assert report.passed is False
+    assert [result.name for result in report.results] == ["utf8", "min_length", "cyrillic"]
+    assert report.results[0].passed is True
+    assert report.results[1].passed is False
+    assert report.results[2].passed is False
+
+
+def test_batch_ingest_directory_is_idempotent_and_writes_report(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    article_dir = tmp_path / "wiki" / "pedagogy" / "a1"
+    _article_with_registry(
+        tmp_path,
+        slug="apostrof",
+        text=(
+            "# Апостроф\n\n"
+            "Апостроф допомагає відділяти звук й від попереднього приголосного в словах "
+            "типу п'ять і м'ята [S1]. Це базове правило для початківця.\n"
+        ),
+    )
+    _article_with_registry(
+        tmp_path,
+        slug="holosni",
+        text=(
+            "# Голосні\n\n"
+            "Голосні в українській мові формують склад і визначають мелодію мовлення [S1]. "
+            "Учень має чітко чути різницю між и та і.\n"
+        ),
+    )
+    _article_with_registry(
+        tmp_path,
+        slug="pryvitannia",
+        text=(
+            "# Привітання\n\n"
+            "Фрази добрий день, привіт і дякую потрібні з першого уроку [S1]. "
+            "Вони дають учневі прості моделі для контакту.\n"
+        ),
+    )
+    _article_with_registry(
+        tmp_path,
+        slug="nagolos",
+        text=(
+            "# Наголос\n\n"
+            "Наголос в українській мові допомагає розрізняти форми слів і підтримує природну "
+            "інтонацію речення [S1]. Учень тренує слухання і повторення.\n"
+        ),
+    )
+    _article_with_registry(
+        tmp_path,
+        slug="kyrylytsia",
+        text=(
+            "# Кирилиця\n\n"
+            "Українська кирилиця має власні літери, зокрема ґ та ї [S1]. "
+            "Це варто показувати з першого дня навчання.\n"
+        ),
+    )
+
+    db_path = tmp_path / "sources.db"
+    manifest_path = tmp_path / "embeddings" / "manifest.db"
+    report_path = tmp_path / "ukrainian_wiki_a1_ingest_report.md"
+
+    first_results = ukrainian_wiki_corpus.ingest_articles(
+        article_dir,
+        db_path=db_path,
+        manifest_db=manifest_path,
+        report_path=report_path,
+        min_words=5,
+        max_chars=1000,
+        min_chunk_chars=50,
+    )
+    second_results = ukrainian_wiki_corpus.ingest_articles(
+        article_dir,
+        db_path=db_path,
+        manifest_db=manifest_path,
+        report_path=report_path,
+        min_words=5,
+        max_chars=1000,
+        min_chunk_chars=50,
+    )
+
+    assert len(first_results) == 5
+    assert all(result.failure is None for result in first_results)
+    assert [result.inserted_chunks for result in first_results] == [1, 1, 1, 1, 1]
+    assert [result.inserted_chunks for result in second_results] == [1, 1, 1, 1, 1]
+
+    conn = sqlite3.connect(db_path, check_same_thread=False)
+    conn.row_factory = sqlite3.Row
+    try:
+        stored_count = conn.execute("SELECT COUNT(*) FROM ukrainian_wiki").fetchone()[0]
+        bm25_rows = conn.execute(
+            """
+            SELECT s.article_slug, bm25(ukrainian_wiki_fts, 5.0, 2.0, 1.0) AS rank
+            FROM ukrainian_wiki_fts
+            JOIN ukrainian_wiki s ON s.id = ukrainian_wiki_fts.rowid
+            WHERE ukrainian_wiki_fts MATCH ?
+            ORDER BY rank
+            """,
+            ("апостроф",),
+        ).fetchall()
+        _configure_search(monkeypatch, conn, manifest_path)
+        results = sources_db.search_sources("наголос", track="a1", strategy="modern_dense_section", limit=5)
+    finally:
+        conn.close()
+
+    assert stored_count == 5
+    assert bm25_rows[0]["article_slug"] == "apostrof"
+    assert report_path.exists()
+    report_text = report_path.read_text(encoding="utf-8")
+    assert "Total chunks ingested: 5" in report_text
+    assert "`apostrof`" in report_text
+    assert len(results) == 1
+    assert results[0]["corpus"] == "ukrainian_wiki"
+    assert results[0]["title"] == "Наголос"
