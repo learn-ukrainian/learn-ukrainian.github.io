@@ -206,3 +206,7 @@ curriculum/l2-uk-en/plans/*/*.yaml.bak
 # SQLite WAL/SHM sidecars — same exclusion as the .db files themselves.
 data/*.db-shm
 data/*.db-wal
+
+# Alona's teaching material (large, local-only, IP-sensitive)
+data/alona-lessons/
+

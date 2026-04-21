@@ -4027,9 +4027,17 @@ def step_write(level: str, module_num: int, slug: str,
                     return result
                 _log("  ⚠️  Chunked write failed — falling back to single-call")
 
-    # Load template — use seminar prompt for seminar tracks
+    # Load template — use seminar prompt for seminar tracks.
+    # Env override V6_WRITER_TEMPLATE wins for experimental writers
+    # (e.g. v6-write-uk.md for Ukrainian-canonical pilot).
+    import os as _os
+    override = _os.environ.get("V6_WRITER_TEMPLATE")
     is_seminar = _is_seminar_track(level)
-    template_name = "v6-write-seminar.md" if is_seminar else "v6-write.md"
+    if override:
+        template_name = override
+        _log(f"  🧪 Writer template overridden via V6_WRITER_TEMPLATE={override}")
+    else:
+        template_name = "v6-write-seminar.md" if is_seminar else "v6-write.md"
     template_path = PHASES_DIR / template_name
     if not template_path.exists():
         _log(f"  ❌ Template not found: {template_path}")
