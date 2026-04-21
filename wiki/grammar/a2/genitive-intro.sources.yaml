@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/a2/genitive-intro.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S361
+  type: unknown
+- id: S3
+  file: S3164
+  type: unknown
+- id: S4
+  file: S3341
+  type: unknown
+- id: S5
+  file: S3389
+  type: unknown
+- id: S6
+  file: S3387
+  type: unknown
+- id: S7
+  file: S672
+  type: unknown
+- id: S8
+  file: S2202
+  type: unknown

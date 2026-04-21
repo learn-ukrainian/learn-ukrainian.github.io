@@ -1,0 +1,21 @@
+# Source registry for wiki/grammar/a2/genitive-prepositions-direction.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3939
+  type: unknown
+- id: S2
+  file: S4598
+  type: unknown
+- id: S3
+  file: S1154
+  type: unknown
+- id: S6
+  file: S1215
+  type: unknown
+- id: S7
+  file: S1146
+  type: unknown
+- id: S8
+  file: S3335
+  type: unknown

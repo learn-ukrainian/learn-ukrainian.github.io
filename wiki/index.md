@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 88
-**Total words:** 154,630
+**Total articles:** 93
+**Total words:** 164,954
 
 ## Figures
 
@@ -39,6 +39,11 @@ Auto-generated index of compiled wiki articles.
 - [Граматика A2: Перші кроки в А2](grammar/a2/foundations-practice.md) (2,061 words)
 - [Граматика A2: Родовий відмінок прикметників і займенників (Мого друга, цієї книги)](grammar/a2/genitive-adjectives-pronouns.md) (2,283 words)
 - [Граматика A2: Скільки? Котра година? Яке число?](grammar/a2/genitive-dates-numbers.md) (2,110 words)
+- [Граматика A2: У мене немає...](grammar/a2/genitive-intro.md) (2,004 words)
+- [Граматика A2: Багато книг, мало студентів](grammar/a2/genitive-plural.md) (2,143 words)
+- [Граматика A2: Куди? До якого часу?](grammar/a2/genitive-prepositions-direction.md) (2,171 words)
+- [Граматика A2: Для кого? Без чого? Біля чого?](grammar/a2/genitive-prepositions-purpose.md) (2,082 words)
+- [Граматика A2: Звідки ти? З чого це зроблено?](grammar/a2/genitive-prepositions-source.md) (1,924 words)
 - [Граматика A2: Синтаксис і відмінки](grammar/a2/metalanguage-syntax-cases.md) (2,307 words)
 
 ## Linguistics

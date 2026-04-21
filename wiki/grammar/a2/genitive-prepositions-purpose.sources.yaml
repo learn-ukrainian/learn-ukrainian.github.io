@@ -1,0 +1,21 @@
+# Source registry for wiki/grammar/a2/genitive-prepositions-purpose.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3387
+  type: unknown
+- id: S3
+  file: S358
+  type: unknown
+- id: S5
+  file: S1548
+  type: unknown
+- id: S7
+  file: S1213
+  type: unknown
+- id: S9
+  file: S2315
+  type: unknown
+- id: S10
+  file: S2508
+  type: unknown
