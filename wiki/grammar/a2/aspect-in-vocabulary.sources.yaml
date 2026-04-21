@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/a2/aspect-in-vocabulary.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S685
+  type: unknown
+- id: S3
+  file: S3309
+  type: unknown
+- id: S4
+  file: S3213
+  type: unknown
+- id: S5
+  file: S1765
+  type: unknown
+- id: S6
+  file: S3812
+  type: unknown
+- id: S7
+  file: S1901
+  type: unknown
+- id: S8
+  file: S3912
+  type: unknown
+- id: S9
+  file: S1240
+  type: unknown

@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/a2/aspect-in-past.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3912
+  type: unknown
+- id: S2
+  file: S3817
+  type: unknown
+- id: S3
+  file: S686
+  type: unknown
+- id: S4
+  file: S1902
+  type: unknown
+- id: S5
+  file: S1657
+  type: unknown
+- id: S6
+  file: S3215
+  type: unknown
+- id: S7
+  file: S694
+  type: unknown
+- id: S8
+  file: S1901
+  type: unknown

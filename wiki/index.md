@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 65
-**Total words:** 106,411
+**Total articles:** 71
+**Total words:** 119,001
 
 ## Figures
 
@@ -16,6 +16,12 @@ Auto-generated index of compiled wiki articles.
 - [Граматика A2: Фінал A2](grammar/a2/a2-finale.md) (1,955 words)
 - [Граматика A2: Пробний іспит](grammar/a2/a2-practice-exam.md) (2,468 words)
 - [Граматика A2: Все разом](grammar/a2/all-cases-practice.md) (1,894 words)
+- [Граматика A2: Зроблено чи в процесі? Вступ до виду дієслів](grammar/a2/aspect-concept.md) (1,955 words)
+- [Граматика A2: Що ти робив? А що зробив?](grammar/a2/aspect-in-past.md) (2,042 words)
+- [Граматика A2: Дієслова ходять парами](grammar/a2/aspect-in-vocabulary.md) (1,844 words)
+- [Граматика A2: 30 найважливіших видових пар](grammar/a2/aspect-mastery.md) (2,113 words)
+- [Граматика A2: Тому що, бо, хоча](grammar/a2/because-and-although.md) (2,090 words)
+- [Граматика A2: Контрольна точка: Відмінки та множина](grammar/a2/checkpoint-cases.md) (2,546 words)
 - [Граматика A2: Синтаксис і відмінки](grammar/a2/metalanguage-syntax-cases.md) (2,307 words)
 
 ## Linguistics

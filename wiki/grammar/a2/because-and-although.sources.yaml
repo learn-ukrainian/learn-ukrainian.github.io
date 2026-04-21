@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/because-and-although.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S5092
+  type: unknown
+- id: S2
+  file: S5179
+  type: unknown
+- id: S3
+  file: S5240
+  type: unknown
+- id: S4
+  file: S5034
+  type: unknown
+- id: S5
+  file: S1273
+  type: unknown
+- id: S6
+  file: S5168
+  type: unknown
+- id: S8
+  file: S5055
+  type: unknown
+- id: S9
+  file: S2449
+  type: unknown
+- id: S10
+  file: S5162
+  type: unknown

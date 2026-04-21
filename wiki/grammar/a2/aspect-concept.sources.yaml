@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/a2/aspect-concept.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3213
+  type: unknown
+- id: S2
+  file: S3910
+  type: unknown
+- id: S3
+  file: S685
+  type: unknown
+- id: S4
+  file: S3926
+  type: unknown
+- id: S5
+  file: S1901
+  type: unknown
+- id: S6
+  file: S694
+  type: unknown
+- id: S8
+  file: S3812
+  type: unknown
+- id: S9
+  file: S5143
+  type: unknown

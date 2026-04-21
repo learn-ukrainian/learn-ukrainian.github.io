@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/checkpoint-cases.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3337
+  type: unknown
+- id: S2
+  file: S3335
+  type: unknown
+- id: S4
+  file: S1926
+  type: unknown
+- id: S5
+  file: S3164
+  type: unknown
+- id: S6
+  file: S3070
+  type: unknown
+- id: S7
+  file: S1800
+  type: unknown
+- id: S8
+  file: S3342
+  type: unknown
+- id: S9
+  file: S3064
+  type: unknown
+- id: S10
+  file: S1917
+  type: unknown
