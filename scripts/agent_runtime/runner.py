@@ -614,7 +614,11 @@ def _invoke_gemini_with_fallback(
     # not the caller's preferred model.
     record_model = (
         call_result.model_used
-        or (last_attempt_record.model if last_attempt_record else model)
+        or (
+            last_attempt_record.model
+            if last_attempt_record and last_attempt_record.model
+            else model
+        )
     )
     stderr_excerpt = (
         (last_attempt_record.note if last_attempt_record and last_attempt_record.note else None)
