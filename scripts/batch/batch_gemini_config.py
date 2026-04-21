@@ -29,14 +29,34 @@ FLASH_LITE_MODEL = "gemini-3.1-flash-lite-preview"   # Fast structured output: s
 GEMINI_REVIEW_MODEL = PRO_MODEL                      # Review needs Pro for strict schema + linguistic analysis
 FALLBACK_MODEL = "auto"                              # Let gemini-cli route when a model is unavailable
 
-# Timeouts (seconds) — one place to tune for all pipeline steps
+# Timeouts (seconds) — one place to tune for all pipeline steps.
+#
+# Semantics (dispatch.py sets both `hard_timeout=TIMEOUT` and
+# `stall_timeout=min(600, TIMEOUT)`):
+#
+#   - ``hard_timeout`` is a wall-clock SAFETY CEILING. A healthy-but-slow
+#     process that keeps emitting liveness signals (stdout stream, rollout
+#     file updates for Codex, session file for Gemini) will still be killed
+#     at this limit. Size it generously — better to let a productive run
+#     finish than to chop it mid-fix-generation.
+#   - ``stall_timeout`` (10 min, computed from the value here) is the real
+#     liveness kill: if no signal for 10 min, the adapter considers the
+#     subprocess hung and kills it. This is the tight primary guard.
+#
+# Long-running reviews on Ukrainian modules (Codex-tools flagging 20+
+# Russianisms / calques / register issues and generating a full <fixes>
+# block) were hitting the old 900s ceiling while still healthy. Raised
+# to 1h for reviewers; stall_timeout keeps genuinely-hung subprocesses
+# from lingering.
 TIMEOUT_SKELETON = 300
 TIMEOUT_WRITE = 900
 TIMEOUT_WRITE_NO_TOOLS = 600
 TIMEOUT_VOCAB = 600
 TIMEOUT_ACTIVITIES = 900
 TIMEOUT_REVIEW_GEMINI_PROBE = 300
-TIMEOUT_REVIEW_CLAUDE = 900
+TIMEOUT_REVIEW_CLAUDE = 3600           # 1h — reviewers routinely generate
+                                       # large <fixes> blocks; rely on the
+                                       # 600s stall_timeout for real liveness
 TIMEOUT_PRE_VERIFY = 600
 TIMEOUT_ANNOTATE = 600
 TIMEOUT_PUBLISH = 600
