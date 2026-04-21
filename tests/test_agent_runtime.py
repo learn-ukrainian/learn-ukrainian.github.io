@@ -30,6 +30,7 @@ from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.adapters.gemini import GeminiAdapter, resolve_gemini_auth_mode
 from agent_runtime.errors import (
+    AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
 )
@@ -1373,6 +1374,248 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
     assert "Skeleton" in result.response
     assert "Section 1" in result.response
     assert "recovered" in (result.stderr_excerpt or "")
+
+
+def test_invoke_gemini_runtime_falls_through_to_subscription_rung(tmp_path):
+    """Runtime Gemini calls should reuse the shared auth ladder, not stay single-shot."""
+    from unittest.mock import MagicMock
+
+    api_proc = MagicMock()
+    api_proc.poll = MagicMock(return_value=1)
+    api_proc.returncode = 1
+    api_proc.stdin = MagicMock()
+    api_proc.stderr = MagicMock()
+    api_proc.stderr.readline = MagicMock(side_effect=["429 quota exceeded\n", ""])
+    api_proc.stderr.close = MagicMock()
+    api_proc.stdout = MagicMock()
+    api_proc.stdout.readline = MagicMock(return_value="")
+    api_proc.stdout.close = MagicMock()
+    api_proc.pid = 10101
+
+    oauth_proc = MagicMock()
+    oauth_proc.poll = MagicMock(return_value=0)
+    oauth_proc.returncode = 0
+    oauth_proc.stdin = MagicMock()
+    oauth_proc.stderr = MagicMock()
+    oauth_proc.stderr.readline = MagicMock(return_value="")
+    oauth_proc.stderr.close = MagicMock()
+    oauth_proc.stdout = MagicMock()
+    oauth_proc.stdout.readline = MagicMock(
+        side_effect=["Recovered on subscription rung\n", ""]
+    )
+    oauth_proc.stdout.close = MagicMock()
+    oauth_proc.pid = 20202
+
+    mock_popen = MagicMock(side_effect=[api_proc, oauth_proc])
+
+    with patch.dict(
+        "os.environ",
+        {
+            "GEMINI_API_KEY": "secret-key",
+            "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
+        },
+        clear=False,
+    ), patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ), patch(
+        "agent_runtime.runner.subprocess.Popen", mock_popen,
+    ), patch(
+        "agent_runtime.runner._resolve_gemini_ladder_auth_modes",
+        return_value=("api", "oauth"),
+    ), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ):
+        result = invoke(
+            "gemini",
+            "hello",
+            mode="workspace-write",
+            cwd=tmp_path,
+            task_id="gemini-auth-fallback",
+            entrypoint="runtime",
+        )
+
+    assert result.ok is True
+    assert result.response == "Recovered on subscription rung"
+    assert mock_popen.call_count == 2
+
+    first_env = mock_popen.call_args_list[0].kwargs["env"]
+    second_env = mock_popen.call_args_list[1].kwargs["env"]
+    assert first_env.get("GEMINI_API_KEY") == "secret-key"
+    assert "GEMINI_API_KEY" not in second_env
+
+
+def test_invoke_gemini_runtime_reports_actual_fallback_model(tmp_path):
+    """If Gemini succeeds on a later model rung, Result.model must reflect that model."""
+    from unittest.mock import MagicMock
+
+    primary_proc = MagicMock()
+    primary_proc.poll = MagicMock(return_value=1)
+    primary_proc.returncode = 1
+    primary_proc.stdin = MagicMock()
+    primary_proc.stderr = MagicMock()
+    primary_proc.stderr.readline = MagicMock(side_effect=["429 RESOURCE_EXHAUSTED\n", ""])
+    primary_proc.stderr.close = MagicMock()
+    primary_proc.stdout = MagicMock()
+    primary_proc.stdout.readline = MagicMock(return_value="")
+    primary_proc.stdout.close = MagicMock()
+    primary_proc.pid = 30303
+
+    flash_proc = MagicMock()
+    flash_proc.poll = MagicMock(return_value=0)
+    flash_proc.returncode = 0
+    flash_proc.stdin = MagicMock()
+    flash_proc.stderr = MagicMock()
+    flash_proc.stderr.readline = MagicMock(return_value="")
+    flash_proc.stderr.close = MagicMock()
+    flash_proc.stdout = MagicMock()
+    flash_proc.stdout.readline = MagicMock(side_effect=["Flash model answer\n", ""])
+    flash_proc.stdout.close = MagicMock()
+    flash_proc.pid = 40404
+
+    mock_popen = MagicMock(side_effect=[primary_proc, flash_proc])
+
+    with patch.dict(
+        "os.environ",
+        {
+            "GEMINI_AUTH_MODE": "api",
+            "GEMINI_API_KEY": "secret-key",
+            "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
+        },
+        clear=False,
+    ), patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ), patch(
+        "agent_runtime.runner.subprocess.Popen", mock_popen,
+    ), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ):
+        result = invoke(
+            "gemini",
+            "hello",
+            mode="workspace-write",
+            cwd=tmp_path,
+            task_id="gemini-model-fallback",
+            entrypoint="runtime",
+        )
+
+    assert result.ok is True
+    assert result.model == "gemini-3-flash-preview"
+    assert result.usage_record["model"] == "gemini-3-flash-preview"
+    attempted_models = [call.args[0][2] for call in mock_popen.call_args_list]
+    assert attempted_models == ["gemini-3.1-pro-preview", "gemini-3-flash-preview"]
+
+
+def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
+    """Runtime Gemini ladder exhaustion should surface as RateLimitedError."""
+    from unittest.mock import MagicMock
+
+    def make_rate_limited_proc(pid: int) -> MagicMock:
+        proc = MagicMock()
+        proc.poll = MagicMock(return_value=1)
+        proc.returncode = 1
+        proc.stdin = MagicMock()
+        proc.stderr = MagicMock()
+        proc.stderr.readline = MagicMock(side_effect=["429 quota exceeded\n", ""])
+        proc.stderr.close = MagicMock()
+        proc.stdout = MagicMock()
+        proc.stdout.readline = MagicMock(return_value="")
+        proc.stdout.close = MagicMock()
+        proc.pid = pid
+        return proc
+
+    mock_popen = MagicMock(
+        side_effect=[
+            make_rate_limited_proc(50001),
+            make_rate_limited_proc(50002),
+            make_rate_limited_proc(50003),
+        ]
+    )
+
+    with patch.dict(
+        "os.environ",
+        {
+            "GEMINI_AUTH_MODE": "api",
+            "GEMINI_API_KEY": "secret-key",
+            "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
+        },
+        clear=False,
+    ), patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ) as mock_write, patch(
+        "agent_runtime.runner.subprocess.Popen", mock_popen,
+    ), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ), pytest.raises(RateLimitedError):
+        invoke(
+            "gemini",
+            "hello",
+            mode="workspace-write",
+            cwd=tmp_path,
+            task_id="gemini-rate-limited",
+            entrypoint="runtime",
+        )
+
+    assert mock_popen.call_count == 3
+    written = mock_write.call_args.args[0]
+    assert written["outcome"] == "rate_limited"
+
+
+def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
+    """If Gemini burns the overall ladder budget, invoke should raise AgentTimeoutError."""
+    from unittest.mock import MagicMock
+
+    timed_out_proc = MagicMock()
+    timed_out_proc.poll = MagicMock(side_effect=[None, -9, -9])
+    timed_out_proc.returncode = -9
+    timed_out_proc.stdin = MagicMock()
+    timed_out_proc.stderr = MagicMock()
+    timed_out_proc.stderr.readline = MagicMock(return_value="")
+    timed_out_proc.stderr.close = MagicMock()
+    timed_out_proc.stdout = MagicMock()
+    timed_out_proc.stdout.readline = MagicMock(return_value="")
+    timed_out_proc.stdout.close = MagicMock()
+    timed_out_proc.pid = 60606
+
+    with patch.dict(
+        "os.environ",
+        {
+            "GEMINI_AUTH_MODE": "api",
+            "GEMINI_API_KEY": "secret-key",
+            "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
+        },
+        clear=False,
+    ), patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ) as mock_write, patch(
+        "agent_runtime.runner.subprocess.Popen", return_value=timed_out_proc,
+    ), patch(
+        "agent_runtime.runner.should_kill",
+        side_effect=lambda *a, **kw: "hard_timeout",
+    ), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ), patch(
+        "agent_runtime.runner._kill_process_tree",
+    ), pytest.raises(AgentTimeoutError):
+        invoke(
+            "gemini",
+            "hello",
+            mode="workspace-write",
+            cwd=tmp_path,
+            task_id="gemini-timeout",
+            entrypoint="runtime",
+            hard_timeout=1,
+        )
+
+    written = mock_write.call_args.args[0]
+    assert written["outcome"] == "hard_timeout"
 
 
 # ---------------------------------------------------------------------------
