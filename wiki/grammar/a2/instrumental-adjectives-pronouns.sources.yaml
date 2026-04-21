@@ -1,0 +1,15 @@
+# Source registry for wiki/grammar/a2/instrumental-adjectives-pronouns.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3202
+  type: unknown
+- id: S2
+  file: S3371
+  type: unknown
+- id: S3
+  file: S3401
+  type: unknown
+- id: S4
+  file: S3164
+  type: unknown

@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/imperative-complete.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3221
+  type: unknown
+- id: S2
+  file: S1211
+  type: unknown
+- id: S3
+  file: S1149
+  type: unknown
+- id: S4
+  file: S688
+  type: unknown
+- id: S5
+  file: S3914
+  type: unknown
+- id: S6
+  file: S3916
+  type: unknown
+- id: S7
+  file: S3911
+  type: unknown
+- id: S8
+  file: S3336
+  type: unknown
+- id: S9
+  file: S3824
+  type: unknown

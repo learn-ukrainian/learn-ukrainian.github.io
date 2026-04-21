@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 93
-**Total words:** 164,954
+**Total articles:** 99
+**Total words:** 177,667
 
 ## Figures
 
@@ -44,6 +44,12 @@ Auto-generated index of compiled wiki articles.
 - [Граматика A2: Куди? До якого часу?](grammar/a2/genitive-prepositions-direction.md) (2,171 words)
 - [Граматика A2: Для кого? Без чого? Біля чого?](grammar/a2/genitive-prepositions-purpose.md) (2,082 words)
 - [Граматика A2: Звідки ти? З чого це зроблено?](grammar/a2/genitive-prepositions-source.md) (1,924 words)
+- [Граматика A2: Мій дім, мій день](grammar/a2/home-and-daily-life.md) (2,227 words)
+- [Граматика A2: Хай він прочитає!](grammar/a2/imperative-complete.md) (2,083 words)
+- [Граматика A2: Хтось, ніхто](grammar/a2/indefinite-negative-pronouns.md) (2,472 words)
+- [Граматика A2: З другом](grammar/a2/instrumental-accompaniment.md) (1,855 words)
+- [Граматика A2: З моїм найкращим другом](grammar/a2/instrumental-adjectives-pronouns.md) (1,935 words)
+- [Граматика A2: Ручкою, автобусом](grammar/a2/instrumental-means.md) (2,141 words)
 - [Граматика A2: Синтаксис і відмінки](grammar/a2/metalanguage-syntax-cases.md) (2,307 words)
 
 ## Linguistics

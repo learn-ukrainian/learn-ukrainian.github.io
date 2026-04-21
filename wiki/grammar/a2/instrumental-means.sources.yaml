@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/instrumental-means.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S361
+  type: unknown
+- id: S2
+  file: S780
+  type: unknown
+- id: S3
+  file: S1873
+  type: unknown
+- id: S4
+  file: S3164
+  type: unknown
+- id: S5
+  file: S3046
+  type: unknown
+- id: S6
+  file: S359
+  type: unknown
+- id: S7
+  file: S778
+  type: unknown
+- id: S8
+  file: S3387
+  type: unknown
+- id: S9
+  file: S3341
+  type: unknown
