@@ -963,20 +963,43 @@ def ingest_articles(
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Ingest compiled wiki markdown into the ukrainian_wiki corpus.")
-    parser.add_argument("article", type=Path, help="Path to a compiled wiki markdown article or a directory of articles")
-    parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH, help="Override sources.db path")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Ingest compiled wiki markdown into the ukrainian_wiki retrieval corpus.\n"
+            "Use it after wiki compilation; do not use it on raw discovery or lesson markdown."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/wiki/ingest_ukrainian_wiki.py wiki/pedagogy/a1/hello.md\n"
+            "  .venv/bin/python scripts/wiki/ingest_ukrainian_wiki.py wiki/pedagogy/a1 --report-path data/corpus_audit/a1-report.md\n\n"
+            "Outputs:\n"
+            "  Inserts passages into data/sources.db, updates the embedding manifest, and writes a markdown ingest report.\n\n"
+            "Exit codes:\n"
+            "  0 when all requested articles ingest cleanly; 1 when any article fails.\n\n"
+            "Related:\n"
+            "  Wrapper: scripts/wiki/ingest_ukrainian_wiki.py\n"
+            "  Issue: #1379\n"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("article", type=Path, help="Compiled wiki markdown path or a directory of compiled articles.")
+    parser.add_argument("--db-path", type=Path, default=DEFAULT_DB_PATH, help=f"Override sources DB path (default: {DEFAULT_DB_PATH}).")
     parser.add_argument(
         "--manifest-db",
         type=Path,
         default=DEFAULT_MANIFEST_DB,
-        help="Override embeddings manifest path",
+        help=f"Override embedding manifest DB path (default: {DEFAULT_MANIFEST_DB}).",
     )
-    parser.add_argument("--report-path", type=Path, default=DEFAULT_REPORT_PATH)
-    parser.add_argument("--min-words", type=int, default=DEFAULT_MIN_WORDS)
-    parser.add_argument("--max-chars", type=int, default=DEFAULT_MAX_CHARS)
-    parser.add_argument("--min-chunk-chars", type=int, default=DEFAULT_CHUNK_MIN_CHARS)
-    parser.add_argument("--min-vesum-coverage", type=float, default=DEFAULT_VESUM_MIN_COVERAGE)
+    parser.add_argument("--report-path", type=Path, default=DEFAULT_REPORT_PATH,
+                        help=f"Markdown report output path (default: {DEFAULT_REPORT_PATH}).")
+    parser.add_argument("--min-words", type=int, default=DEFAULT_MIN_WORDS,
+                        help=f"Reject passages below this word count (default: {DEFAULT_MIN_WORDS}).")
+    parser.add_argument("--max-chars", type=int, default=DEFAULT_MAX_CHARS,
+                        help=f"Maximum characters per passage chunk before splitting (default: {DEFAULT_MAX_CHARS}).")
+    parser.add_argument("--min-chunk-chars", type=int, default=DEFAULT_CHUNK_MIN_CHARS,
+                        help=f"Minimum characters for a kept chunk after splitting (default: {DEFAULT_CHUNK_MIN_CHARS}).")
+    parser.add_argument("--min-vesum-coverage", type=float, default=DEFAULT_VESUM_MIN_COVERAGE,
+                        help=f"Minimum Vesum/Pravopys coverage ratio for single-article ingest (default: {DEFAULT_VESUM_MIN_COVERAGE}).")
     return parser
 
 

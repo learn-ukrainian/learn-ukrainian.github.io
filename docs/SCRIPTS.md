@@ -6,6 +6,10 @@ Current operational reference for repo-local scripts and agent workflows.
 - Validation pipeline after content exists: `npm run audit`, `npm run pipeline`, `npm run generate:json`
 - This document intentionally omits retired pipelines and legacy script paths
 
+Before guessing CLI flags, run the tool's `--help`. The repo standard lives in
+`claude_extensions/rules/cli-help-standard.md`, and touched CLIs are expected to
+meet it so agents can use them without source-diving.
+
 ---
 
 ## Startup Wrappers

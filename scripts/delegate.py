@@ -782,19 +782,41 @@ def cmd_worker(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="delegate.py",
-        description="Async task dispatch over agent_runtime (#1184)",
+        description=(
+            "Dispatch async agent_runtime tasks and monitor their lifecycle.\n"
+            "Use it for long-running background agent work; do not use it for one-shot local invocations."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id review-123 --prompt-file prompt.md --mode workspace-write --cwd .\n"
+            "  .venv/bin/python scripts/delegate.py wait review-123 --timeout 600\n"
+            "  .venv/bin/python scripts/delegate.py list --status running\n\n"
+            "Outputs:\n"
+            "  Persists task state under batch_state/tasks/ and streams worker output to task-owned logs.\n\n"
+            "Exit codes:\n"
+            "  0 on successful command completion; non-zero on CLI misuse or worker/task failures.\n\n"
+            "Related:\n"
+            "  Runtime: scripts/agent_runtime/\n"
+            "  Rule: claude_extensions/rules/delegate-must-use-worktree.md\n"
+            "  Issue: #1379\n"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     sub = p.add_subparsers(dest="command", required=True)
 
     # dispatch
     d = sub.add_parser("dispatch", help="Fire a task, return immediately")
-    d.add_argument("--agent", required=True, choices=["codex", "gemini", "claude"])
-    d.add_argument("--task-id", required=True)
-    d.add_argument("--prompt", help="Prompt text, or '-' for stdin")
-    d.add_argument("--prompt-file", help="Read prompt from this file")
+    d.add_argument("--agent", required=True, choices=["codex", "gemini", "claude"],
+                   help="Agent to run for the task: codex, gemini, or claude.")
+    d.add_argument("--task-id", required=True,
+                   help="Stable task identifier used for state/log files, e.g. review-123.")
+    d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")
+    d.add_argument("--prompt-file", help="Read the prompt body from this file path.")
     d.add_argument("--mode", default="read-only",
-                   choices=["read-only", "workspace-write", "danger"])
-    d.add_argument("--model", default=None)
+                   choices=["read-only", "workspace-write", "danger"],
+                   help="Runtime mode (default: read-only). Use danger only with --worktree.")
+    d.add_argument("--model", default=None,
+                   help="Optional model override, e.g. gpt-5.4 or gemini-3.1-pro-preview.")
     d.add_argument("--cwd", default=None,
                    help="Working directory for the worker (default: repo root)")
     d.add_argument(
@@ -808,12 +830,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     # status
     s = sub.add_parser("status", help="Check task status (fast, no block)")
-    s.add_argument("task_id")
+    s.add_argument("task_id", help="Task ID to inspect, e.g. review-123.")
     s.set_defaults(func=cmd_status)
 
     # wait
     w = sub.add_parser("wait", help="Block until task reaches terminal state")
-    w.add_argument("task_id")
+    w.add_argument("task_id", help="Task ID to wait for, e.g. review-123.")
     w.add_argument("--timeout", type=float, default=0,
                    help="Max wait seconds (0 = forever)")
     w.add_argument("--poll-interval", type=float, default=2.0,
@@ -822,14 +844,15 @@ def build_parser() -> argparse.ArgumentParser:
 
     # cancel
     c = sub.add_parser("cancel", help="SIGTERM the worker")
-    c.add_argument("task_id")
+    c.add_argument("task_id", help="Task ID to cancel, e.g. review-123.")
     c.set_defaults(func=cmd_cancel)
 
     # list
     l = sub.add_parser("list", help="List tasks (with optional status filter)")
     l.add_argument("--status", default=None,
                    choices=["spawning", "running", "done", "failed",
-                            "rate_limited", "crashed", "cancelled"])
+                            "rate_limited", "crashed", "cancelled"],
+                   help="Optional status filter, e.g. running or failed.")
     l.set_defaults(func=cmd_list)
 
     # _worker (hidden — internal)

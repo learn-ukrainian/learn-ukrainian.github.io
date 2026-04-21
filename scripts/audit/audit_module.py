@@ -100,18 +100,34 @@ def auto_fix_yaml_violations(file_path: str) -> tuple[int, list[str]]:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Audit curriculum module files for quality and standards."
+        description=(
+            "Audit curriculum modules for content, YAML, review, and gate compliance.\n"
+            "Use it on built module markdown; do not use it for wiki articles or raw plans."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/a1/01-hello.md\n"
+            "  .venv/bin/python scripts/audit_module.py --fix curriculum/l2-uk-en/a2/03-genitive.md\n\n"
+            "Outputs:\n"
+            "  Prints audit findings to stdout and may rewrite YAML / IPA issues when --fix is set.\n\n"
+            "Exit codes:\n"
+            "  0 when every audited module passes; 1 when any module fails or CLI usage is invalid.\n\n"
+            "Related:\n"
+            "  Implementation: scripts/audit/audit_module.py\n"
+            "  Issue: #1379\n"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("files", nargs="*", help="Module file(s) to audit")
+    parser.add_argument("files", nargs="*", help="Module markdown file(s) to audit, e.g. curriculum/l2-uk-en/a1/01-hello.md.")
     parser.add_argument(
         "--fix",
         action="store_true",
-        help="Automatically fix YAML schema violations"
+        help="Automatically fix YAML schema violations and rerun the audit."
     )
     parser.add_argument(
         "--naturalness",
         action="store_true",
-        help="Auto-check naturalness via Gemini if PENDING"
+        help="Auto-check naturalness via Gemini when the audit would otherwise leave it PENDING."
     )
     parser.add_argument(
         "--skip-activities",
@@ -132,8 +148,7 @@ if __name__ == "__main__":
         os.environ['AUDIT_AUTO_NATURALNESS'] = '1'
 
     if not args.files:
-        print("Usage: python3 scripts/audit_module.py <file.md> [file2.md ...] [--fix]")
-        sys.exit(1)
+        parser.error("at least one module file is required")
 
     any_failure = False
     for file_path in args.files:

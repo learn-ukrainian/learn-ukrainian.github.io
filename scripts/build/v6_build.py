@@ -10146,9 +10146,28 @@ def main():
     if isinstance(sys.stdout, io.TextIOWrapper):
         sys.stdout.reconfigure(line_buffering=True)
 
-    parser = argparse.ArgumentParser(description="V6 Pipeline Build")
-    parser.add_argument("level", help="Level (e.g., a1)")
-    parser.add_argument("module", type=int, help="Module number (or start of range with --range)")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Build curriculum modules through the v6 pipeline.\n"
+            "Use it for end-to-end module orchestration; do not use it for isolated wiki/article maintenance."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/build/v6_build.py a1 7\n"
+            "  .venv/bin/python scripts/build/v6_build.py a2 3 --step review --reviewer codex\n"
+            "  .venv/bin/python scripts/build/v6_build.py b1 1 --range 4 --resume\n\n"
+            "Outputs:\n"
+            "  Writes module markdown, sidecars, orchestration state, review/audit artifacts, and published outputs.\n\n"
+            "Exit codes:\n"
+            "  0 on successful build; non-zero on CLI misuse or any failed phase.\n\n"
+            "Related:\n"
+            "  Docs: docs/SCRIPTS.md\n"
+            "  Issue: #1379\n"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("level", help="Curriculum level, e.g. a1, a2, or b1.")
+    parser.add_argument("module", type=int, help="Module number, or range start when used with --range.")
     parser.add_argument("--range", type=int, default=None, metavar="END",
                         help="Build modules from MODULE to END (inclusive). E.g., a1 7 --range 14")
     parser.add_argument("--writer", choices=["gemini", "gemini-tools", "claude", "claude-tools", "codex", "codex-tools"], default="gemini-tools",
@@ -10156,7 +10175,8 @@ def main():
     parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools", "codex", "codex-tools"], default=None,
                         help="Override reviewer. Default: cross-agent (opposite of writer)")
     parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "exercises", "activities", "repair", "verify-exercises", "annotate", "enrich", "verify", "review", "review-style", "publish", "audit", "all"],
-                        default="all")
+                        default="all",
+                        help="Stop after this phase or run the full pipeline (default: all).")
     skeleton_group = parser.add_mutually_exclusive_group()
     skeleton_group.add_argument("--skeleton", action="store_true", default=None,
                                 help="Force skeleton step (default: always on)")

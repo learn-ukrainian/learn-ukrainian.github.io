@@ -1362,13 +1362,29 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
             "Wiki knowledge base compiler. Compiles curated articles from textbook "
-            "sources and RAG data using Gemini. Articles are used as context for "
-            "module content generation.\n\n"
+            "sources and RAG data using Gemini.\n"
+            "Use it for wiki article compile/review/index workflows; do not use it "
+            "for module generation itself.\n\n"
             "Prompt per track type:\n"
             "  A1:         Pedagogical briefs (methodology, phonetics, vocab boundaries)\n"
             "  A2-B2:      Grammar briefs (paradigms, frequency, L2 errors)\n"
             "  C1-C2:      Academic briefs (scholarly register, stylistics)\n"
             "  Seminars:   Knowledge articles (primary sources, historiography)"
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/wiki/compile.py --track a2 --slug genitive-intro --dry-run\n"
+            "  .venv/bin/python scripts/wiki/compile.py --track a2 --all --limit 5 --review\n"
+            "  .venv/bin/python scripts/wiki/compile.py --track folk --review-only\n\n"
+            "Outputs:\n"
+            "  Writes wiki/<domain>/<slug>.md plus sibling .sources.yaml registries,\n"
+            "  updates wiki/index.md, and appends build events under wiki/.state/.\n\n"
+            "Exit codes:\n"
+            "  0 on success; 1 on invalid CLI usage or single-slug compile failure.\n\n"
+            "Related:\n"
+            "  Prompts: scripts/wiki/prompts/\n"
+            "  Design: docs/design/dimensional-review.md\n"
+            "  Issue: #1379\n"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -1383,19 +1399,19 @@ def main() -> None:
     # Track selection
     parser.add_argument("--track", choices=ALL_TRACKS,
                         help="Track to compile (a1-c2 for core, folk/hist/etc for seminars)")
-    parser.add_argument("--slug", help="Specific module slug to compile")
+    parser.add_argument("--slug", help="Specific module slug to compile, e.g. genitive-intro")
     parser.add_argument("--all", action="store_true", dest="compile_all",
-                        help="Compile all modules in the track")
+                        help="Compile every discovery slug in the selected --track")
     parser.add_argument("--list", action="store_true",
-                        help="List available modules for a track")
+                        help="List available module slugs for the selected --track")
 
     # Options
     parser.add_argument("--limit", type=int,
-                        help="Max articles to compile (with --all)")
+                        help="Max articles to compile with --all, e.g. --limit 20")
     parser.add_argument("--force", action="store_true",
-                        help="Recompile even if already done")
+                        help="Recompile even if article + valid sidecar already exist")
     parser.add_argument("--dry-run", action="store_true",
-                        help="Print prompt without calling Gemini")
+                        help="Print the assembled prompt without calling Gemini")
     parser.add_argument("--review", action="store_true",
                         help="Review articles after compilation (legacy single-call)")
     parser.add_argument("--review-only", action="store_true",

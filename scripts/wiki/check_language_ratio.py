@@ -131,9 +131,25 @@ def check_file(path: Path, threshold: float, verbose: bool = False) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Check wiki prose is Ukrainian-canonical (Cyrillic ratio guard)."
+        description=(
+            "Check wiki prose is Ukrainian-canonical with a Cyrillic-ratio guard.\n"
+            "Use it on compiled wiki markdown; do not use it for lesson/module files."
+        ),
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python scripts/wiki/check_language_ratio.py wiki/pedagogy/a1/hello.md\n"
+            "  .venv/bin/python scripts/wiki/check_language_ratio.py --threshold 0.95 wiki/periods/*.md\n\n"
+            "Outputs:\n"
+            "  Prints per-file PASS/FAIL lines and optional heading stats.\n\n"
+            "Exit codes:\n"
+            "  0 if all files pass; 1 if any file fails the threshold or cannot be read.\n\n"
+            "Related:\n"
+            "  Wiki compiler: scripts/wiki/compile.py\n"
+            "  Issue: #1379\n"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    ap.add_argument("files", nargs="+", type=Path, help="Wiki markdown file(s) to check.")
+    ap.add_argument("files", nargs="+", type=Path, help="Wiki markdown file(s) to check, e.g. wiki/pedagogy/a1/hello.md.")
     ap.add_argument(
         "--threshold",
         type=float,
@@ -141,7 +157,7 @@ def main() -> int:
         help="Minimum Cyrillic ratio in body prose (default 0.85 for pedagogy wikis; "
         "raise to 0.95 for academic seminar wikis).",
     )
-    ap.add_argument("--verbose", "-v", action="store_true", help="Also print heading-language stats.")
+    ap.add_argument("--verbose", "-v", action="store_true", help="Also print heading-language stats (default: off).")
     args = ap.parse_args()
 
     worst_exit = 0
