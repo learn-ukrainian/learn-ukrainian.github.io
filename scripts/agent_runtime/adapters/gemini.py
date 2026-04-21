@@ -49,26 +49,6 @@ _TRANSIENT_ERROR_RE = re.compile("|".join(_TRANSIENT_ERROR_PATTERNS), re.IGNOREC
 _AUTH_MODE_VALUES = frozenset({"auto", "subscription", "api"})
 
 
-#: Default location of Gemini OAuth credentials written by ``gemini auth login``.
-#: When this file is present, the user has a working subscription session and
-#: should prefer it over API-mode billing (see ``resolve_gemini_auth_mode``).
-_GEMINI_OAUTH_CREDS_PATH = Path.home() / ".gemini" / "oauth_creds.json"
-
-
-def _oauth_creds_present(creds_path: Path | None = None) -> bool:
-    """Return True if Gemini OAuth credentials are on disk and non-empty.
-
-    A zero-byte file is treated as absent because the CLI will reject it
-    and fall through to API mode — so treating it as present would make
-    ``auto`` mode flip to subscription and then silently fail.
-    """
-    path = creds_path if creds_path is not None else _GEMINI_OAUTH_CREDS_PATH
-    try:
-        return path.is_file() and path.stat().st_size > 0
-    except OSError:
-        return False
-
-
 def _normalize_gemini_auth_mode(raw: str | None) -> str:
     """Normalize CLI/env auth mode strings to the canonical runtime values."""
     value = (raw or "auto").strip().lower()
@@ -82,7 +62,7 @@ def _normalize_gemini_auth_mode(raw: str | None) -> str:
 def resolve_gemini_auth_mode(
     env: dict[str, str] | None = None,
     *,
-    creds_path: Path | None = None,
+    cooldown_active: bool | None = None,
 ) -> str:
     """Resolve the effective Gemini auth mode for this invocation.
 
@@ -90,26 +70,31 @@ def resolve_gemini_auth_mode(
     An unset ``GEMINI_AUTH_MODE`` defaults to ``auto``. Invalid values also
     degrade to ``auto`` for backward compatibility.
 
-    ``auto`` semantics (changed 2026-04-21 PM, #1384): detect whether the
-    user has an on-disk OAuth session and prefer it.
+    ``auto`` semantics (#1384): API-first (faster), auto-fall to
+    subscription ONLY when the project's API cooldown is active (set by
+    a prior 429 response, lasts 1h). No probe calls — cooldown is driven
+    by actual rate-limit signals, never by a liveness check, because
+    Gemini API has a small daily call budget (~150) that we refuse to
+    burn on anything other than real work.
 
-      - OAuth creds present → ``subscription``  (strip API-key env vars,
-        Gemini CLI takes the Ultra/subscription path)
-      - OAuth creds absent  → ``api``           (keep env vars, CLI uses key)
+      - cooldown active (recent 429)     → ``subscription``
+      - cooldown inactive (default case) → ``api``
 
-    Rationale: before this change, ``auto`` left ``GEMINI_API_KEY`` in the
-    environment regardless of subscription state, so Ultra-authenticated
-    users silently paid API-mode dollars on every call. Users can still
-    force either mode by setting ``GEMINI_AUTH_MODE`` explicitly.
-
-    ``creds_path`` overrides the on-disk check for tests; production code
-    leaves it as ``None``.
+    Users can force either mode explicitly. ``cooldown_active`` is
+    injectable for tests; production code leaves it as ``None`` and the
+    cooldown state is read from disk.
     """
     source = os.environ if env is None else env
     mode = _normalize_gemini_auth_mode(source.get("GEMINI_AUTH_MODE"))
-    if mode == "auto":
-        return "subscription" if _oauth_creds_present(creds_path) else "api"
-    return mode
+    if mode != "auto":
+        return mode
+    if cooldown_active is None:
+        # Local import to avoid a sys.path-order edge case during package
+        # init — adapters can be imported before ai_llm is resolved on
+        # some entry points.
+        from ai_llm.cooldown import is_api_cooldown_active
+        cooldown_active = is_api_cooldown_active()
+    return "subscription" if cooldown_active else "api"
 
 
 class GeminiAdapter:
@@ -290,6 +275,18 @@ class GeminiAdapter:
         # anywhere. If we recovered from the session file, it's not a
         # real rate-limit — the CLI survived whatever transient 429 it saw.
         rate_limited = hard_limit_hit and not final_response
+
+        # Only trip the sticky cooldown when we were actually on the API
+        # path. If the caller was already on subscription, a 429 there
+        # means subscription is exhausted — the cooldown would wrongly
+        # steer subsequent auto-mode callers INTO the exhausted path.
+        if rate_limited and plan is not None and not plan.env_unsets:
+            # env_unsets empty on this plan ⇒ API-key env vars were NOT
+            # stripped ⇒ this call used API mode. Set cooldown so the
+            # next auto-mode resolver flips to subscription for ~1h
+            # without burning a probe call (#1384).
+            from ai_llm.cooldown import set_api_cooldown
+            set_api_cooldown()
 
         ok = bool(final_response) and not rate_limited
         response = final_response if ok else ""
