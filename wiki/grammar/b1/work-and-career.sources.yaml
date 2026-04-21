@@ -1,0 +1,21 @@
+# Source registry for wiki/grammar/b1/work-and-career.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S336
+  type: unknown
+- id: S3
+  file: S4694
+  type: unknown
+- id: S4
+  file: S5211
+  type: unknown
+- id: S5
+  file: S1137
+  type: unknown
+- id: S6
+  file: S566
+  type: unknown
+- id: S7
+  file: S1021
+  type: unknown

@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/b1/verbal-nouns.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S3381
+  type: unknown
+- id: S2
+  file: S694
+  type: unknown
+- id: S4
+  file: S3258
+  type: unknown
+- id: S6
+  file: S690
+  type: unknown
+- id: S7
+  file: S537
+  type: unknown
+- id: S8
+  file: S285
+  type: unknown
+- id: S9
+  file: S686
+  type: unknown
+- id: S10
+  file: S3832
+  type: unknown

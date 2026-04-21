@@ -1,0 +1,18 @@
+# Source registry for wiki/grammar/b1/traveling-ukraine.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1427
+  type: unknown
+- id: S2
+  file: S3908
+  type: unknown
+- id: S4
+  file: S3323
+  type: unknown
+- id: S5
+  file: S4725
+  type: unknown
+- id: S9
+  file: S356
+  type: unknown
