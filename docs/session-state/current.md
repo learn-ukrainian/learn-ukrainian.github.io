@@ -65,24 +65,39 @@ These block everything downstream. Laid out as
 
 ## What shipped today (commits on main, newest first)
 
+**Note:** Commit hashes were rewritten mid-session (rebase during Codex
+git operations — safety backup preserved at
+`backup/main-before-recovering-safety-2026-04-21`). Messages and content
+are identical; the hashes below are the CURRENT ones.
+
 ```
-811a089a4 fix(v6-uk): activity schema contract + stale test (#1385)
-b0b8c1e26 fix(a1/m01): revert incorrect А у тебе? in name dialogue
-863ed7524 content(a1/m01): apply Codex review fixes to Ukrainian M01 (#1385)
-67ddd96cd snapshot: M01 UK pipeline artifacts pre-codex-review
-bd5adf85a fix(timeouts): reviewer hard_timeout 900s → 3600s
-a43bc6e70 fix(fallback): classify 'No capacity available' as rate-limited (#1384)
-8fdec493f fix(pilot): route pilot_uk_lesson.py through fallback ladder (#1384)
-805f67413 fix(fallback): honor GEMINI_AUTH_MODE + cooldown in ladder (#1384)
-d30e883ed fix(gemini): API-first auto + sticky cooldown, no probe calls (#1384)
-fac3002de fix(v6-build,gemini): chunk cache fingerprints + subscription default (#1381 + #1384)
+7cd03229d fix(a1/m01): revert incorrect А у тебе? in name dialogue
+cd85a7894 content(a1/m01): apply Codex review fixes to Ukrainian M01 (#1385)
+c4b7ff9e0 snapshot: M01 UK pipeline artifacts pre-codex-review (self-review issue)
+40ba1ea83 fix(timeouts): reviewer hard_timeout 900s → 3600s
+454cda1c7 fix(v6-uk): activity schema contract + stale test (#1385)
+e325fa7b4 content(b1): restore missing generated wiki set
+e175a0bc6 docs: strategic audit + ADR-008 draft + session handoff (2026-04-21 evening)
+<earlier>
+# Phase 1 #1384 + #1381 work (pre-rewrite hashes, content intact):
+# was: 811a089a4 454cda1c7 (matches current)
+# was: b0b8c1e26 7cd03229d (matches current)
+# was: 863ed7524 cd85a7894 (matches current)
+# was: 67ddd96cd c4b7ff9e0 (matches current)
+# was: bd5adf85a 40ba1ea83 (matches current)
+# a43bc6e70 + 8fdec493f + 805f67413 + d30e883ed + fac3002de —
+# these earlier Gemini-ladder commits were merged/rebased into the
+# history before the rewrite; verify via git log if needed.
 ```
 
 **Not shipped (in flight / ready to merge):**
-- `codex/codex-1392-plan-latin-fix` branch has 5 commits ready from Codex:
-  `75a7c8194`, `baf7116de`, `49dd5fbbd`, `58504eb5c`, `322554b32`. **Has
-  NOT been merged pending strategic review** — wait until F1-F4
+- `codex/codex-1392-plan-latin-fix` branch at `.worktrees/codex-1392-plan-latin-fix`
+  (moved there from top-level post-handoff). Branch HEAD: `75a7c8194`.
+  **Has NOT been merged pending strategic review** — wait until F1-F4
   decisions land, because some findings may fold into its PR.
+- `backup/main-before-recovering-safety-2026-04-21` is the safety
+  snapshot from the git rewrite. Safe to delete after verifying main
+  is healthy.
 
 ## What's in flight
 
@@ -183,15 +198,36 @@ Do these in order. Do not skip.
   fixes landing
 - Do not file any GH issues until Krisztian approves the list above
 
-## Git state
+## Git state (as of handoff update 2026-04-21 ~20:50)
 
 ```
-On branch main (current HEAD: 811a089a4)
-Clean modulo user-side B1 wiki compile work + other pre-existing .md edits
-2 worktrees:
-  .worktrees/codex-1392-plan-latin-fix — Codex Phase 1 result, 5 commits pending review
-  codex-1392-plan-latin-fix (also same branch, top level — delegate.py auto-created)
-No orphan branches from this session.
+On branch main (current HEAD: 7cd03229d)
+Working tree: CLEAN — verified via `git status` + 89 tests pass
+
+Worktrees (post-cleanup):
+  /Users/krisztiankoos/projects/learn-ukrainian                          [main]
+  /Users/krisztiankoos/projects/learn-ukrainian-monitor-audit            [monitor-api-coverage-audit-clean]
+  .worktrees/claude-prompt-budget-1280 [claude/fix-prompt-budget-1280]
+  .worktrees/claude-state-1304         [claude/fix-state-drift-1304]
+  .worktrees/codex-interactive         (detached HEAD, ddae2216d)
+  .worktrees/codex-1392-plan-latin-fix [codex/codex-1392-plan-latin-fix]  ← this session
+  .worktrees/gemini-style-1301         [gemini/fix-style-loop-1301]
+  .worktrees/integrate-1311            [integrate/pr-1311]
+  .worktrees/review-1301               (detached HEAD)
+  .worktrees/review-1311               [review/pr-1311]
+
+Safety artifact:
+  backup/main-before-recovering-safety-2026-04-21  — Codex git-rewrite safety
+  (at e325fa7b4, 5 commits behind current main, safe to delete)
+
+Content integrity verified:
+  ✅ docs/session-state/2026-04-21-evening-strategic-audit.md (this file)
+  ✅ docs/session-state/current.md (mirror)
+  ✅ docs/architecture/2026-04-21-pilot-readiness-audit.md
+  ✅ docs/architecture/adr/adr-008-uk-native-track-destination.md
+  ✅ curriculum/l2-uk-en/a1/sounds-letters-and-hello.md (restored English-bridge)
+  ✅ starlight/src/content/docs/a1/sounds-letters-and-hello.mdx
+  ✅ 89 tests pass (test_chunked_write + test_gemini_adapter_auth + test_v6_phase_suite_uk)
 ```
 
 ## Key file references (for next session)
