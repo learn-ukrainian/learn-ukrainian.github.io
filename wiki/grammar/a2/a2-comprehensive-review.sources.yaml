@@ -1,0 +1,30 @@
+# Source registry for wiki/grammar/a2/a2-comprehensive-review.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1926
+  type: unknown
+- id: S2
+  file: S3289
+  type: unknown
+- id: S3
+  file: S673
+  type: unknown
+- id: S4
+  file: S1894
+  type: unknown
+- id: S5
+  file: S3079
+  type: unknown
+- id: S6
+  file: S3351
+  type: unknown
+- id: S7
+  file: S1822
+  type: unknown
+- id: S8
+  file: S3175
+  type: unknown
+- id: S9
+  file: S4598
+  type: unknown

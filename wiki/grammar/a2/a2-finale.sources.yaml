@@ -1,0 +1,24 @@
+# Source registry for wiki/grammar/a2/a2-finale.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S1820
+  type: unknown
+- id: S2
+  file: S4580
+  type: unknown
+- id: S3
+  file: S3912
+  type: unknown
+- id: S4
+  file: S1188
+  type: unknown
+- id: S6
+  file: S336
+  type: unknown
+- id: S7
+  file: S755
+  type: unknown
+- id: S8
+  file: S4579
+  type: unknown

@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 60
-**Total words:** 95,824
+**Total articles:** 65
+**Total words:** 106,411
 
 ## Figures
 
@@ -11,6 +11,11 @@ Auto-generated index of compiled wiki articles.
 
 ## Grammar
 
+- [Граматика A2: Ласкаво просимо до рівня А2](grammar/a2/a2-bridge.md) (2,208 words)
+- [Граматика A2: Повна картина](grammar/a2/a2-comprehensive-review.md) (2,062 words)
+- [Граматика A2: Фінал A2](grammar/a2/a2-finale.md) (1,955 words)
+- [Граматика A2: Пробний іспит](grammar/a2/a2-practice-exam.md) (2,468 words)
+- [Граматика A2: Все разом](grammar/a2/all-cases-practice.md) (1,894 words)
 - [Граматика A2: Синтаксис і відмінки](grammar/a2/metalanguage-syntax-cases.md) (2,307 words)
 
 ## Linguistics

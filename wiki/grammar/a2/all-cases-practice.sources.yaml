@@ -1,0 +1,18 @@
+# Source registry for wiki/grammar/a2/all-cases-practice.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S4703
+  type: unknown
+- id: S2
+  file: S3793
+  type: unknown
+- id: S3
+  file: S3830
+  type: unknown
+- id: S4
+  file: S3227
+  type: unknown
+- id: S5
+  file: S3147
+  type: unknown

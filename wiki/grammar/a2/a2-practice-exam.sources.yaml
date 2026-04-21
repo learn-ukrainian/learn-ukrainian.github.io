@@ -1,0 +1,33 @@
+# Source registry for wiki/grammar/a2/a2-practice-exam.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: S2513
+  type: unknown
+- id: S2
+  file: S2313
+  type: unknown
+- id: S3
+  file: S2410
+  type: unknown
+- id: S4
+  file: S2402
+  type: unknown
+- id: S5
+  file: S3402
+  type: unknown
+- id: S6
+  file: S2314
+  type: unknown
+- id: S7
+  file: S3292
+  type: unknown
+- id: S8
+  file: S2409
+  type: unknown
+- id: S9
+  file: S2244
+  type: unknown
+- id: S10
+  file: S1157
+  type: unknown
