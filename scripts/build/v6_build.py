@@ -536,6 +536,104 @@ class ModuleBuildLock:
 
 PHASES_DIR = PROJECT_ROOT / "scripts" / "build" / "phases"
 
+_SUPPORTED_PHASE_SUITES = {"uk"}
+
+
+def _current_phase_suite() -> str:
+    """Return the normalized phase suite selector from the environment."""
+    suite = os.getenv("V6_PHASE_SUITE", "").strip().lower()
+    return suite if suite in _SUPPORTED_PHASE_SUITES else ""
+
+
+def _suite_variant_name(template_name: str, suite: str) -> str:
+    """Return the sibling template name for a suite-specific variant."""
+    template_path = Path(template_name)
+    return f"{template_path.stem}-{suite}{template_path.suffix}"
+
+
+def _resolve_phase_template_path(
+    template_name: str,
+    *,
+    log_override: bool = False,
+    allow_missing_base: bool = False,
+) -> Path | None:
+    """Resolve a phase template, preferring the active suite's sibling variant."""
+    suite = _current_phase_suite()
+    if suite:
+        variant_name = _suite_variant_name(template_name, suite)
+        variant_path = PHASES_DIR / variant_name
+        if variant_path.exists():
+            if log_override:
+                _log(
+                    f"  🧪 Phase template overridden via V6_PHASE_SUITE={suite}: "
+                    f"{variant_name}"
+                )
+            return variant_path
+
+    base_path = PHASES_DIR / template_name
+    if base_path.exists() or not allow_missing_base:
+        return base_path
+    return None
+
+
+def _load_phase_template_text(template_name: str, *, log_override: bool = False) -> str | None:
+    """Load a phase template file after suite-aware resolution."""
+    template_path = _resolve_phase_template_path(template_name, log_override=log_override)
+    if template_path is None or not template_path.exists():
+        return None
+    return template_path.read_text("utf-8")
+
+
+def _resolve_writer_template_name(level: str) -> tuple[str, str]:
+    """Return the writer template name plus the source of the choice."""
+    override = os.getenv("V6_WRITER_TEMPLATE", "").strip()
+    if override:
+        return override, "V6_WRITER_TEMPLATE"
+
+    if _current_phase_suite() == "uk" and not _is_seminar_track(level):
+        uk_template = PHASES_DIR / "v6-write-uk.md"
+        if uk_template.exists():
+            return uk_template.name, "V6_PHASE_SUITE"
+
+    return ("v6-write-seminar.md" if _is_seminar_track(level) else "v6-write.md"), "default"
+
+
+def _parse_markdown_frontmatter(text: str) -> dict:
+    """Parse YAML frontmatter from a markdown file, returning an empty dict on failure."""
+    match = re.match(r"\A---\n(.*?)\n---\n", text, re.DOTALL)
+    if not match:
+        return {}
+    try:
+        parsed = yaml.safe_load(match.group(1)) or {}
+    except Exception:
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def _load_enrich_profile(*, log_override: bool = False) -> dict:
+    """Return the suite-aware enrich/publish profile."""
+    profile = {
+        "lesson_tab_label": "Урок",
+        "vocab_tab_label": "Словник",
+        "workbook_tab_label": "Зошит",
+        "resources_tab_label": "Ресурси",
+        "slovnyk_mode": "translation",
+        "allow_plan_fallback": True,
+        "flashcards": True,
+    }
+    template_path = _resolve_phase_template_path(
+        "v6-enrich.md",
+        log_override=log_override,
+        allow_missing_base=True,
+    )
+    if template_path is None or not template_path.exists():
+        return profile
+
+    overrides = _parse_markdown_frontmatter(template_path.read_text("utf-8"))
+    if overrides:
+        profile.update(overrides)
+    return profile
+
 
 # ---------------------------------------------------------------------------
 # Model Family — single source of truth for model selection (#1072)
@@ -2643,7 +2741,8 @@ def _compute_writer_mode(
 
     Changes to any of:
       - writer backend (gemini / gemini-tools / claude-tools / codex-tools / ...)
-      - V6_WRITER_TEMPLATE override (e.g. v6-write-uk.md for the Ukrainian pilot)
+      - effective writer template override (explicit V6_WRITER_TEMPLATE or implicit
+        V6_PHASE_SUITE selection such as v6-write-uk.md)
       - seminar vs core track (different lang_directive inside chunk prompts)
 
     must invalidate the cache. A change in any dimension produces different
@@ -3205,8 +3304,8 @@ def step_pre_verify(level: str, module_num: int, slug: str,
     _log(f"{'='*60}")
 
     # Load template
-    template_path = PHASES_DIR / "v6-pre-verify.md"
-    if not template_path.exists():
+    template_path = _resolve_phase_template_path("v6-pre-verify.md", log_override=True)
+    if template_path is None or not template_path.exists():
         _log(f"  ❌ Template not found: {template_path}")
         return None
 
@@ -3343,8 +3442,8 @@ def step_skeleton(level: str, module_num: int, slug: str,
     _log(f"{'='*60}")
 
     # Load template
-    template_path = PHASES_DIR / "v6-skeleton.md"
-    if not template_path.exists():
+    template_path = _resolve_phase_template_path("v6-skeleton.md", log_override=True)
+    if template_path is None or not template_path.exists():
         _log(f"  ❌ Template not found: {template_path}")
         return None
 
@@ -3937,8 +4036,8 @@ def step_write_chunked(
     # V6_WRITER_TEMPLATE forces single-call upstream, so on the chunked path
     # template_override should always be None here — we still record it so
     # future refactors can't silently bypass invalidation.
-    import os as _os_for_mode
-    template_override = _os_for_mode.environ.get("V6_WRITER_TEMPLATE")
+    template_name, template_source = _resolve_writer_template_name(level)
+    template_override = template_name if template_source != "default" else None
     writer_mode = _compute_writer_mode(
         writer,
         template_override=template_override,
@@ -4127,12 +4226,16 @@ def step_write(level: str, module_num: int, slug: str,
     # does NOT read any writer template file — so V6_WRITER_TEMPLATE has
     # no effect there. Forcing non-chunked guarantees the override is
     # actually honored. See #1381 for the failure mode this prevents.
-    import os as _os
-    override = _os.environ.get("V6_WRITER_TEMPLATE")
+    template_name, template_source = _resolve_writer_template_name(level)
     is_seminar = _is_seminar_track(level)
-    if override and not no_chunk:
+    if template_source != "default" and not no_chunk:
+        reason = (
+            f"V6_WRITER_TEMPLATE={template_name} set"
+            if template_source == "V6_WRITER_TEMPLATE"
+            else f"V6_PHASE_SUITE={_current_phase_suite()} set"
+        )
         _log(
-            f"  🧪 V6_WRITER_TEMPLATE={override} set — forcing single-call write "
+            f"  🧪 {reason} — forcing single-call write "
             f"(chunked path ignores the template, see #1381)"
         )
         no_chunk = True
@@ -4155,11 +4258,13 @@ def step_write(level: str, module_num: int, slug: str,
                 _log("  ⚠️  Chunked write failed — falling back to single-call")
 
     # Load template — use seminar prompt for seminar tracks.
-    if override:
-        template_name = override
-        _log(f"  🧪 Writer template overridden via V6_WRITER_TEMPLATE={override}")
-    else:
-        template_name = "v6-write-seminar.md" if is_seminar else "v6-write.md"
+    if template_source == "V6_WRITER_TEMPLATE":
+        _log(f"  🧪 Writer template overridden via V6_WRITER_TEMPLATE={template_name}")
+    elif template_source == "V6_PHASE_SUITE":
+        _log(
+            f"  🧪 Writer template overridden via V6_PHASE_SUITE={_current_phase_suite()}: "
+            f"{template_name}"
+        )
     template_path = PHASES_DIR / template_name
     if not template_path.exists():
         _log(f"  ❌ Template not found: {template_path}")
@@ -5753,8 +5858,8 @@ def step_vocab(content_path: Path, level: str, module_num: int,
         return None
 
     # Load vocab prompt template
-    template_path = PHASES_DIR / "v6-vocab.md"
-    if not template_path.exists():
+    template_path = _resolve_phase_template_path("v6-vocab.md", log_override=True)
+    if template_path is None or not template_path.exists():
         _log(f"  ⚠️  Vocab template not found: {template_path}")
         return None
 
@@ -6032,6 +6137,19 @@ def _build_activity_level_context(level: str, module_num: int, plan: dict) -> st
     Tells the generator WHO the learner is, what they can and can't do,
     what language to use for instructions, and which activity types are appropriate.
     """
+    if _current_phase_suite() == "uk":
+        return (
+            f"**Track: Ukrainian-canonical ({level.upper()}, module {module_num})**\n\n"
+            "The learner reads Ukrainian directly. Treat this as a Ukrainian-native "
+            "instructional environment, not an English-bridged lesson.\n\n"
+            "**ALL instructions and task stems MUST be in Ukrainian.**\n"
+            "- No English prompts, glosses, or bilingual scaffolding.\n"
+            "- Do not use translate-from-English patterns unless the plan explicitly contracts them.\n"
+            "- Prefer Ukrainian language mechanics: наголос, складоподіл, відмінок, вид, милозвучність, "
+            "узгодження, word order, lexical choice, register.\n"
+            "- Activities must test the Ukrainian forms taught in the module, not subject-matter recall.\n"
+        )
+
     pv = plan.get("pronunciation_videos", {})
     video_text = ""
     if pv:
@@ -6245,8 +6363,8 @@ def step_activities(
         return None
 
     # Load prompt template
-    template_path = PHASES_DIR / "v6-activities.md"
-    if not template_path.exists():
+    template_path = _resolve_phase_template_path("v6-activities.md", log_override=True)
+    if template_path is None or not template_path.exists():
         _log(f"  ❌ Activity prompt template not found: {template_path}")
         return None
 
@@ -6953,8 +7071,8 @@ def step_review(content_path: Path, level: str, module_num: int,
         return False, 0.0, ""
 
     # Load review template
-    template_path = PHASES_DIR / "v6-review.md"
-    if not template_path.exists():
+    template_path = _resolve_phase_template_path("v6-review.md", log_override=True)
+    if template_path is None or not template_path.exists():
         _log(f"  ❌ Review template not found: {template_path}")
         return False, 0.0, ""
 
@@ -7249,8 +7367,8 @@ def step_review_style(
         _log("  ❌ No content file")
         return False, 0.0, ""
 
-    template_path = PHASES_DIR / "v6-review-style.md"
-    if not template_path.exists():
+    template_path = _resolve_phase_template_path("v6-review-style.md", log_override=True)
+    if template_path is None or not template_path.exists():
         _log(f"  ❌ Style review template not found: {template_path}")
         return False, 0.0, ""
 
@@ -8620,7 +8738,8 @@ def _run_convergence_loop(
     plan_data = yaml.safe_load(plan_path.read_text("utf-8")) if plan_path and plan_path.exists() else {}
     raw_plan_version = str(plan_data.get("version") or "0")
     plan_version = int(re.match(r"\d+", raw_plan_version).group(0)) if re.match(r"\d+", raw_plan_version) else 0
-    template_path = PHASES_DIR / ("v6-write-seminar.md" if _is_seminar_track(level) else "v6-write.md")
+    writer_template_name, _writer_template_source = _resolve_writer_template_name(level)
+    template_path = PHASES_DIR / writer_template_name
     result = run_convergence_loop(
         ConvergenceContext(
             level=level,
@@ -9614,6 +9733,11 @@ def _build_slovnyk_tab(level: str, slug: str) -> str:
 
     Issue: #1124 — moved from enrich.py to publish step.
     """
+    profile = _load_enrich_profile()
+    meaning_mode = str(profile.get("slovnyk_mode") or "translation")
+    allow_plan_fallback = bool(profile.get("allow_plan_fallback", True))
+    meaning_label = "Тлумачення" if meaning_mode == "definition" else "Переклад"
+
     # 1. Try writer-generated vocabulary YAML
     vocab_path = CURRICULUM_ROOT / level / "vocabulary" / f"{slug}.yaml"
     if vocab_path.exists():
@@ -9625,11 +9749,29 @@ def _build_slovnyk_tab(level: str, slug: str) -> str:
                 expressions = [e for e in entries if e.get("expression")]
                 additional = [e for e in entries if e.get("additional") and not e.get("expression")]
                 plan_entries = [e for e in entries if not e.get("expression") and not e.get("additional")]
-                result = build_slovnyk_markdown(plan_entries, additional, expressions)
+                if meaning_mode == "definition":
+                    result = build_slovnyk_markdown(
+                        plan_entries,
+                        additional,
+                        expressions,
+                        meaning_label=meaning_label,
+                        flashcards_enabled=bool(profile.get("flashcards", True)),
+                        meaning_mode=meaning_mode,
+                    )
+                else:
+                    result = build_slovnyk_markdown(
+                        plan_entries,
+                        additional,
+                        expressions,
+                        flashcards_enabled=bool(profile.get("flashcards", True)),
+                    )
                 if result.strip():
                     return result
         except Exception as e:
             _log(f"  ⚠️  Vocabulary YAML parse error: {e}")
+
+    if not allow_plan_fallback:
+        return ""
 
     # 2. Fallback: plan vocabulary_hints
     plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
@@ -9808,6 +9950,7 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
 
     from build.activity_renderer import get_required_imports
     from generate_mdx.dsl_to_mdx import convert_dsl_to_mdx
+    enrich_profile = _load_enrich_profile(log_override=True)
 
     text = content_path.read_text("utf-8")
 
@@ -9878,7 +10021,7 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
     tab_parts.append('<Tabs syncKey="module-tab">')
 
     # Tab 1: Урок
-    tab_parts.append('<TabItem label="Урок">')
+    tab_parts.append(f'<TabItem label="{enrich_profile["lesson_tab_label"]}">')
     tab_parts.append("")
     tab_parts.append(urok_content)
     tab_parts.append("")
@@ -9886,14 +10029,14 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
 
     # Tab 2: Словник
     if slovnyk_content.strip():
-        tab_parts.append('<TabItem label="Словник">')
+        tab_parts.append(f'<TabItem label="{enrich_profile["vocab_tab_label"]}">')
         tab_parts.append("")
         tab_parts.append(slovnyk_content.strip())
         tab_parts.append("")
         tab_parts.append("</TabItem>")
 
     # Tab 3: Зошит
-    tab_parts.append('<TabItem label="Зошит">')
+    tab_parts.append(f'<TabItem label="{enrich_profile["workbook_tab_label"]}">')
     tab_parts.append("")
     tab_parts.append(workbook_content)
     tab_parts.append("")
@@ -9901,7 +10044,7 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
 
     # Tab 4: Ресурси
     if resources_content.strip():
-        tab_parts.append('<TabItem label="Ресурси">')
+        tab_parts.append(f'<TabItem label="{enrich_profile["resources_tab_label"]}">')
         tab_parts.append("")
         tab_parts.append(resources_content.strip())
         tab_parts.append("")

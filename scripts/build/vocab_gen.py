@@ -20,7 +20,21 @@ import yaml
 logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-VESUM_DB = PROJECT_ROOT / "data" / "vesum.db"
+
+
+def _resolve_shared_data_file(*parts: str) -> Path:
+    """Resolve repo-shared data files from a worktree when needed."""
+    candidate = PROJECT_ROOT.joinpath(*parts)
+    if candidate.exists():
+        return candidate
+    if PROJECT_ROOT.parent.name == ".worktrees":
+        shared_candidate = PROJECT_ROOT.parent.parent.joinpath(*parts)
+        if shared_candidate.exists():
+            return shared_candidate
+    return candidate
+
+
+VESUM_DB = _resolve_shared_data_file("data", "vesum.db")
 
 # Ukrainian POS labels
 _POS_LABELS = {
@@ -213,6 +227,10 @@ def build_slovnyk_markdown(
     plan_vocab: list[dict],
     additional_vocab: list[dict],
     expressions: list[dict],
+    *,
+    meaning_label: str = "Переклад",
+    flashcards_enabled: bool = True,
+    meaning_mode: str = "translation",
 ) -> str:
     """Build the словник tab: dictionary table + interactive FlashcardDeck below.
 
@@ -229,18 +247,23 @@ def build_slovnyk_markdown(
 
     lines = []
 
+    def _entry_meaning(entry: dict) -> str:
+        if meaning_mode == "definition":
+            return entry.get("definition") or entry.get("translation", "")
+        return entry.get("translation") or entry.get("definition", "")
+
     # 1. Dictionary tables
     if plan_vocab:
         lines.extend([
             "",
             "### Обов'язкові та рекомендовані слова",
             "",
-            "| Слово | Переклад | Частина мови | Рід |",
+            f"| Слово | {meaning_label} | Частина мови | Рід |",
             "|-------|----------|-------------|-----|",
         ])
         for entry in plan_vocab:
             word = _stress_word(entry.get("word", ""))
-            trans = entry.get("translation", "")
+            trans = _entry_meaning(entry)
             pos = entry.get("pos", "")
             gender = entry.get("gender", "")
             lines.append(f"| **{word}** | {trans} | {pos} | {gender} |")
@@ -250,12 +273,12 @@ def build_slovnyk_markdown(
             "",
             "### Додаткові слова з уроку",
             "",
-            "| Слово | Переклад | Частина мови | Рід |",
+            f"| Слово | {meaning_label} | Частина мови | Рід |",
             "|-------|----------|-------------|-----|",
         ])
         for entry in additional_vocab:
             word = _stress_word(entry.get("word", ""))
-            trans = entry.get("translation", "")
+            trans = _entry_meaning(entry)
             pos = entry.get("pos", "")
             gender = entry.get("gender", "")
             lines.append(f"| **{word}** | {trans} | {pos} | {gender} |")
@@ -265,21 +288,21 @@ def build_slovnyk_markdown(
             "",
             "### Вирази",
             "",
-            "| Вираз | Переклад |",
+            f"| Вираз | {meaning_label} |",
             "|-------|----------|",
         ])
         for entry in expressions:
             word = entry.get("word", "")
-            trans = entry.get("translation", "")
+            trans = _entry_meaning(entry)
             lines.append(f"| **{word}** | {trans} |")
 
     # 2. Interactive flashcards below the tables
     all_words = (plan_vocab or []) + (additional_vocab or [])
-    if all_words:
+    if flashcards_enabled and all_words:
         cards = []
         for entry in all_words:
             word = _stress_word(entry.get("word", ""))
-            trans = entry.get("translation", "")
+            trans = _entry_meaning(entry)
             pos = entry.get("pos", "")
             gender = entry.get("gender", "")
 
