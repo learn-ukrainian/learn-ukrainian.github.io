@@ -212,6 +212,9 @@ jobs:
           .venv/bin/python -m pip install --upgrade pip
           .venv/bin/python -m pip install --no-deps -r requirements-lock.txt
           .venv/bin/python -m pip install multiprocess==0.70.18 huggingface-hub==0.36.0
+          .venv/bin/python -m pip install --no-deps --force-reinstall \
+            --index-url https://download.pytorch.org/whl/cpu \
+            torch==2.11.0 torchvision==0.26.0
 
       - name: Run tests with coverage
         run: |
