@@ -88,7 +88,7 @@ V6 uses **reviewer-as-fixer**: Gemini reviews, finds issues, outputs `<fixes>` w
 | Requirement | Threshold |
 |---|---|
 | Review score | 9+/10 target (8+ minimum PASS) |
-| **MIN-score gate** | **`min(dim_scores)` ≥ 9 to PASS, not weighted average.** A single failing dim fails the module. See `docs/best-practices/strict-reviewer-persona.md`. |
+| **MIN-score gate** | **`min(dim_scores)` ≥ 8 to PASS, not weighted average.** A single failing dim fails the module. <8 → REVISE; <6 → REJECT. See `docs/best-practices/strict-reviewer-persona.md`. (Threshold dropped from 9 to 8 by user 2026-04-23.) |
 | Russian ghost words | Zero (кот → кіт, хорошо → добре) |
 | Dialogues | Natural situations from textbooks — not invented. Someone searches for keys, not interrogation. |
 | Vocabulary | All words VESUM-verified. Writer generates словнік YAML with contextual translations. |

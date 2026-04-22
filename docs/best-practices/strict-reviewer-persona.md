@@ -78,7 +78,8 @@ User-stated 2026-04-23: instead of one reviewer scoring 9 dims in one pass with 
 1. **Each dimension reviewed independently** — separate model call, separate prompt, separate `<fixes>` block per dim. No bundling.
 2. **Each per-dim reviewer adopts the strict persona above** — adapted to its dimension. Zero-tolerance for that dimension's violations.
 3. **Module verdict = MIN(dim_scores)**, not weighted average. A single failing dim fails the module. No averaging away weak dims with strong ones.
-4. **Threshold:** ≥9/10 minimum per dim for PASS. <9 → REVISE with that dim's `<fixes>` applied. <7 → REJECT (re-plan / re-write needed).
+4. **Threshold (user-stated 2026-04-23):** ≥**8**/10 minimum per dim for PASS. <8 → REVISE with that dim's `<fixes>` applied. <6 → REJECT (re-plan / re-write needed).
+   - The 9+ aspirational target stays as a quality-stretch goal but is no longer the gate. User explicitly dropped to 8 to avoid the perfect-is-enemy-of-good trap on dims like dialogue authenticity that may legitimately score 8 even with strong content.
 
 This matches existing rule **`.claude/rules/non-negotiable-rules.md` §2**: "ALL gates must be GREEN (✅) or the module FAILS." MIN-score gate is the natural quantitative form of that rule.
 
