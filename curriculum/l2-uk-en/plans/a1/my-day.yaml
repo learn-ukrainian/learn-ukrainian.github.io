@@ -9,13 +9,21 @@ reviewed_by: claude-opus-4-7-xhigh-my-day
 review_notes: >-
   Review-and-lock pass (scale batch 2) for A.9 scale build input. See
   wiki/.reviews/pedagogy/a1/my-day-review-LOCKED.md for the wiki-side
-  report and the PR body for plan-side findings (pragmatic / Russianism
-  / calque / contradiction / references / wiki-plan alignment). The plan
-  was brought into alignment with the locked wiki: chunk-policy entries
-  (`Котра година?`, `о сьомій годині`, `робити зарядку`) added to
+  report (incl. the #1392 D1–D7 systemic-defect scan) and the PR body
+  for plan-side findings (pragmatic / Russianism / calque / contradiction
+  / references / wiki-plan alignment). The plan was brought into
+  alignment with the locked wiki: chunk-policy entries (`Котра година?`,
+  `о сьомій годині`, `робити зарядку`, `Ходімо!`) added to
   vocabulary_hints; new fill-in activity drills the 8 routine-specific
   Surzhyk pairs from the wiki's new "Типові помилки L2" table; author
-  warnings added against `Давайте + 1pl` and `Який час?` calques.
+  warnings added against `Давайте + 1pl` (→ `Ходімо!` chunk only; full
+  paradigm deferred to B1+) and `Який час?` calques. Cross-agent
+  adversarial review by Codex (task my-day-adv-review): 1 BLOCKER (vocab
+  minimum listed `приймати душ` — fixed to `брати душ`), 2 MEDIUM
+  (reflexive-imperative chunk-policy inconsistency — fixed by dropping
+  `прокиньмося` examples and pinning only `Ходімо!`; missing explicit
+  #1392 D3/D5/D6/D7 documentation — fixed in LOCKED review), 1 NIT
+  (VESUM-verified overclaim for multi-word collocations — reworded).
 title: Мій день
 subtitle: Спочатку, потім, нарешті — як розповісти про свій день
 focus: communication
@@ -38,7 +46,7 @@ content_outline:
   words: 300
   points:
   - 'Діалог 1 — Що ти робив сьогодні? — Як пройшов твій день? — Добре! Вранці я працював. — А потім? — Потім обідав о першій. Після обіду гуляв. — А ввечері? — Ввечері дивився фільм і читав книгу. Минулий час з''являється природно — подаємо як лексичні конструкції, а не граматику (граматика минулого часу = модулі №48–49).'
-  - 'Діалог 2 — Плануємо завтрашній день: — Що ти будеш робити завтра? — Вранці буду працювати. — А після обіду? — Буду вивчати українську. А ввечері — гуляти. Майбутній час «буду + інфінітив» подається як цілісна фраза. УВАГА до автора: для пропозицій / заохочень уживайте `Ходімо`, `Прокиньмося`, `Почнімо` (синтетичний наказовий спосіб 1-ї особи множини), а не кальку `Давайте підемо` / `Давайте прокинемось` (див. wiki "Типові помилки L2"). Для запитання про час — `Котра година?`, а не калька `*Який час?`.'
+  - 'Діалог 2 — Плануємо завтрашній день: — Що ти будеш робити завтра? — Вранці буду працювати. — А після обіду? — Буду вивчати українську. А ввечері — гуляти. Майбутній час «буду + інфінітив» подається як цілісна фраза. УВАГА до автора: для пропозицій уживайте готовий чанк `Ходімо!` (1-ша ос. мн. наказового способу), а не кальку `Давайте підемо!` (див. wiki "Типові помилки L2"). На рівні А1 подавайте `Ходімо!` як окремий вираз; повну парадигму синтетичного наказового способу 1-ї ос. мн. (`почнімо`, `зробімо` тощо) НЕ вводьте. Для запитання про час — `Котра година?`, а не калька `*Який час?`.'
 - section: Мій типовий день
   words: 300
   points:

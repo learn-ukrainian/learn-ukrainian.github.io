@@ -68,7 +68,7 @@ generated_by_model: gemini-2.5-pro
 **Дієслова (Verbs):**
 *   ★★★ (базові): `прокидатися`, `вставати`, `вмиватися`, `чистити зуби`, `снідати`, `пити (каву/чай)`, `йти/їхати (на роботу/в університет)`, `працювати`, `вчитися`, `обідати`, `відпочивати`, `вечеряти`, `читати`, `дивитися (фільм/серіал)`, `лягати спати`.
 *   ★★ (корисні): `робити зарядку`, `одягатися`, `готувати (їжу)`, `зустрічатися (з друзями)`, `говорити (телефоном)`, `допомагати`, `слухати (музику)`.
-*   ★ (може зачекати): `планувати`, `прибирати`, `гуляти`, `приймати душ`, `закінчувати (роботу)`.
+*   ★ (може зачекати): `планувати`, `прибирати`, `гуляти`, `брати душ` (або `купатися під душем`; НЕ `*приймати душ` — калька, див. «Типові помилки L2»), `закінчувати (роботу)`.
 
 **Іменники (Nouns):**
 *   ★★★: `ранок`, `день`, `вечір`, `ніч`, `сніданок`, `обід`, `вечеря`, `робота`, `урок`, `університет`, `дім`, `час`, `година`.
@@ -80,15 +80,16 @@ generated_by_model: gemini-2.5-pro
 *   ★★: `сьогодні`, `вчора`, `завтра`, `потім`, `спочатку`, `швидко`, `повільно`.
 *   ★: `обов'язково` [S2], `після (чогось)`, `до (чогось)`.
 
-> **Note for the writer.** Treat the following as **indivisible chunks** at A1. Do NOT introduce the underlying grammar (ordinal numbers in locative, collective numerals, synthetic imperative of reflexive verbs, etc.) until B1:
+> **Note for the writer.** Treat the following as **indivisible chunks** at A1. Do NOT introduce the underlying grammar (ordinal numbers in locative, collective numerals, synthetic 1pl imperative paradigm, etc.) until B1:
 > - `Котра година?` — "What time is it?" (fixed question)
 > - `о сьомій (годині)`, `о восьмій`, `о дев'ятій`, `о першій`, `о другій` … — "at seven (o'clock)" etc. (fixed time-stamp)
 > - `пів на восьму`, `пів на дев'яту` — "half past seven", "half past eight" (fixed chunk)
 > - `лягати спати` — "to go to bed" (fixed collocation; `спати` is a bare infinitive, not an objective complement)
 > - `робити зарядку` — "to do (physical) exercise"
 > - `о котрій (годині)?` — "at what time?" (fixed question form)
+> - `Ходімо!` — "Let's go!" (fixed 1pl imperative chunk; use as the drop-in replacement for `*Давайте підемо` — do NOT teach the full synthetic-imperative paradigm at A1)
 >
-> The writer should use these as memorised service formulas. The learner must be able to recognise and produce them inside routine-description scripts, but should not be asked to inflect `сьомий` / `восьмий` / `перший` or to analyse the imperative of `лягати`.
+> The writer should use these as memorised service formulas. The learner must be able to recognise and produce them inside routine-description scripts, but should not be asked to inflect `сьомий` / `восьмий` / `перший`, to analyse the imperative of `лягати`, or to derive `Ходімо` from the paradigm.
 
 ## Типові помилки L2 (Common L2 Errors — my-day-specific Surzhyk / calques)
 
@@ -98,7 +99,7 @@ This is the **daily-routine slice** of the broader Surzhyk-and-calque problem. A
 | :--- | :--- | :--- |
 | `Приймати душ` | **Брати душ** (або `купатися під душем`) | Калька російської моделі *принимать душ*. Те саме правило, що й `приймати участь → брати участь`: із конкретною активною дією в українській іде `брати`, а не `приймати`. |
 | `Приймати ліки` | **Пити ліки** / **вживати ліки** | Калька рос. *принимать лекарства*. Українською ліки саме `п'ють` (рідкі / таблетовані — розмовно) або `вживають` (формальний стиль). |
-| `Давайте прокинемось!` / `Давайте підемо!` | **Прокиньмося!** / **Ходімо!** | `Давайте + 1-ша ос. мн.` — калька російської аналітичної конструкції *давайте + 1pl*. В українській є синтетична форма 1-ї особи множини наказового способу на `-імо`/`-ймо`/`-мо` (ходімо, прокиньмося, почнімо). |
+| `Давайте підемо!` | **Ходімо!** | `Давайте + 1-ша ос. мн.` — калька російської аналітичної конструкції *давайте + 1pl*. В українській є синтетична форма 1-ї особи множини наказового способу на `-імо`/`-ймо`/`-мо`. На рівні А1 подавайте `Ходімо!` як готовий чанк; повну парадигму (`почнімо`, `зробімо` тощо) — на B1+. |
 | `Який час?` (у знач. «котра година?») | **Котра година?** | В українській `час` = «time» (загальне поняття), а годинникова позначка — `година`. Питання `*Який час?` у значенні «What time?» є калькою з рос. *Который час?* (де `час` = «hour»). |
 | `завтрак` | **сніданок** | Пряме запозичення з рос. *завтрак*; **сніданок** — нормативне (СУМ-11). Вживайте лише `сніданок` / `снідати`. |
 | Кава / обід **вкусний** | Кава / обід **смачний** | *Вкусный* — рос.; **смачний** — нормативне. Ця пара вже відпрацьована в модулі `at-the-cafe`; тут — профілактика для розповідей про обід і вечерю. |
