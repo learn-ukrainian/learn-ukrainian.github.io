@@ -1,0 +1,901 @@
+# Phase 1B Apply — Report
+
+Generated: 2026-04-22 07:49:34 UTC
+Findings total: 861
+Applied: 425  (REAL_DEFECT)
+Skipped: 436  (FALSE_POSITIVE + PEDAGOGICAL)
+
+Method note:
+The source audit report is condensed. D7 is largely summary-only, D4 omits 3 imperative-nuances line items in the body, and the D6 header count (37) exceeds the 32 line items expanded in the body. Where the source report omitted line-level detail, I reconstructed candidates from the affected plan files and kept the audit totals authoritative in the breakdown below.
+
+## Breakdown by category
+
+| Category | Findings | Applied | Skipped | Skip reasons |
+|---|---|---|---|---|
+| D7-content | 782 | 416 | 366 | morphology tags; speaker-role annotations |
+| D4 | 28 | 8 | 20 | pedagogical discussion of invitation forms; acceptable contextual phrasing; literal culinary sense |
+| D6 | 37 | 1 | 36 | pedagogical error lists; legitimate identity use of `самий`; literal `зʼявляється` sense |
+| D2 | 14 | 0 | 14 | grammar/rule explanations; vocabulary glosses; natural quoted emphasis |
+
+## Fixes applied (chronological)
+
+### D7-content
+
+- `a2-finale.yaml:18` — `(f, bookshop)` → `removed` — mirrored to l1-uk: no
+- `a2-finale.yaml:18` — `(f, dinner)` → `removed` — mirrored to l1-uk: no
+- `a2-finale.yaml:18` — `(f, main square)` → `removed` — mirrored to l1-uk: no
+- `a2-finale.yaml:18` — `(m, hotel)` → `removed` — mirrored to l1-uk: no
+- `adjectives-comparative.yaml:19` — `(pl, ceilings)` → `removed` — mirrored to l1-uk: no
+- `advanced-pronouns.yaml:19` — `(f, answer)` → `removed` — mirrored to l1-uk: no
+- `alternation-vowels.yaml:18` — `(m, horse)` → `removed` — mirrored to l1-uk: no
+- `aspect-concept.yaml:46` — `(timelines)` → `removed` — mirrored to l1-uk: no
+- `b1-baseline-future-aspect.yaml:19` — `(f, poster)` → `removed` — mirrored to l1-uk: no
+- `b1-baseline-future-aspect.yaml:19` — `(m, Kharkiv university)` → `removed` — mirrored to l1-uk: no
+- `b1-baseline-future-aspect.yaml:19` — `(pl, funds)` → `removed` — mirrored to l1-uk: no
+- `b1-baseline-past-present.yaml:18` — `(f, article)` → `removed` — mirrored to l1-uk: no
+- `b1-baseline-past-present.yaml:18` — `(m, magazine)` → `removed` — mirrored to l1-uk: no
+- `b1-baseline-past-present.yaml:18` — `(n, publishing house)` → `removed` — mirrored to l1-uk: no
+- `because-and-although.yaml:18` — `(f, test)` → `removed` — mirrored to l1-uk: no
+- `cases-with-ordinal-numerals.yaml:19` — `(f, ticket office)` → `removed` — mirrored to l1-uk: no
+- `cases-with-ordinal-numerals.yaml:19` — `(m, car)` → `removed` — mirrored to l1-uk: no
+- `cases-with-ordinal-numerals.yaml:19` — `(m, floor)` → `removed` — mirrored to l1-uk: no
+- `cases-with-ordinal-numerals.yaml:19` — `(m, platform)` → `removed` — mirrored to l1-uk: no
+- `cases-with-ordinal-numerals.yaml:19` — `(m, ticket)` → `removed` — mirrored to l1-uk: no
+- `cases-with-quantity-expressions.yaml:19` — `(f, land)` → `removed` — mirrored to l1-uk: no
+- `cases-with-quantity-expressions.yaml:19` — `(f, livestock)` → `removed` — mirrored to l1-uk: no
+- `cases-with-quantity-expressions.yaml:19` — `(f, rooms)` → `removed` — mirrored to l1-uk: no
+- `cases-with-quantity-expressions.yaml:19` — `(n, children)` → `removed` — mirrored to l1-uk: no
+- `cases-with-quantity-expressions.yaml:53` — `(more than)` → `removed` — mirrored to l1-uk: no
+- `cases-with-quantity-expressions.yaml:53` — `(up to)` → `removed` — mirrored to l1-uk: no
+- `checkpoint-dative.yaml:18` — `(f, cup)` → `removed` — mirrored to l1-uk: no
+- `checkpoint-dative.yaml:55` — `(I am cold)` → `removed` — mirrored to l1-uk: no
+- `checkpoint-dative.yaml:55` — `(to help)` → `removed` — mirrored to l1-uk: no
+- `checkpoint-dative.yaml:55` — `(to thank)` → `removed` — mirrored to l1-uk: no
+- `checkpoint-genitive.yaml:18` — `(m, cathedral)` → `removed` — mirrored to l1-uk: no
+- `checkpoint-genitive.yaml:18` — `(m, ticket)` → `removed` — mirrored to l1-uk: no
+- `comparison.yaml:18` — `(m, screen)` → `removed` — mirrored to l1-uk: no
+- `comparison.yaml:53` — `(Kyiv is bigger than Lviv)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-concess.yaml:19` — `(m, Kharkiv lyceum)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-condition.yaml:19` — `(f, Dnipro factory)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-condition.yaml:19` — `(f, price)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-condition.yaml:19` — `(f, quality)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-condition.yaml:19` — `(n, production)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-purpose.yaml:19` — `(enroll)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-purpose.yaml:19` — `(m, score)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-purpose.yaml:19` — `(n, Ukrainian standardized test)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-purpose.yaml:19` — `(pl, courses)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-reason.yaml:19` — `(f, library)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-reason.yaml:19` — `(pl, sources)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-reason.yaml:19` — `(was ill)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-relative.yaml:19` — `(m, botanical garden)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-relative.yaml:19` — `(n, tree)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-time.yaml:19` — `(f, family dinner)` → `removed` — mirrored to l1-uk: no
+- `complex-subordinate-time.yaml:19` — `(f, house)` → `removed` — mirrored to l1-uk: no
+- `conditionals-unreal.yaml:19` — `(f, Lviv pub)` → `removed` — mirrored to l1-uk: no
+- `conditionals-unreal.yaml:19` — `(f, house)` → `removed` — mirrored to l1-uk: no
+- `conditionals-unreal.yaml:19` — `(pl, poems)` → `removed` — mirrored to l1-uk: no
+- `daily-life-and-routines.yaml:20` — `(f, canteen)` → `removed` — mirrored to l1-uk: no
+- `daily-life-and-routines.yaml:20` — `(f, embankment)` → `removed` — mirrored to l1-uk: no
+- `daily-life-and-routines.yaml:20` — `(f, porridge)` → `removed` — mirrored to l1-uk: no
+- `daily-life-and-routines.yaml:20` — `(m, tram)` → `removed` — mirrored to l1-uk: no
+- `dative-adjectives-pronouns.yaml:56` — `(to my older brother)` → `removed` — mirrored to l1-uk: no
+- `dative-adjectives-pronouns.yaml:56` — `(to our new teacher)` → `removed` — mirrored to l1-uk: no
+- `dative-nouns.yaml:18` — `(f, postcard)` → `removed` — mirrored to l1-uk: no
+- `dative-nouns.yaml:18` — `(f, toy)` → `removed` — mirrored to l1-uk: no
+- `dative-nouns.yaml:18` — `(m, textbook)` → `removed` — mirrored to l1-uk: no
+- `dative-nouns.yaml:56` — `(to give a book to a brother)` → `removed` — mirrored to l1-uk: no
+- `dative-nuances.yaml:19` — `(bored)` → `removed` — mirrored to l1-uk: no
+- `dative-nuances.yaml:19` — `(f, child)` → `removed` — mirrored to l1-uk: no
+- `dative-pronouns.yaml:18` — `(m, scarf)` → `removed` — mirrored to l1-uk: no
+- `dative-pronouns.yaml:18` — `(pl, flowers)` → `removed` — mirrored to l1-uk: no
+- `dative-verbs.yaml:18` — `(f, grandma)` → `removed` — mirrored to l1-uk: no
+- `dative-verbs.yaml:18` — `(f, neighbor)` → `removed` — mirrored to l1-uk: no
+- `dative-verbs.yaml:18` — `(m, friend)` → `removed` — mirrored to l1-uk: no
+- `debate-and-opinion.yaml:19` — `(f, discipline)` → `removed` — mirrored to l1-uk: no
+- `debate-and-opinion.yaml:19` — `(f, freedom)` → `removed` — mirrored to l1-uk: no
+- `dozvillia-i-khobi.yaml:40` — `(I go to the theater regularly)` → `removed` — mirrored to l1-uk: no
+- `education-and-university.yaml:19` — `(f, coursework)` → `removed` — mirrored to l1-uk: no
+- `education-and-university.yaml:19` — `(f, exam period)` → `removed` — mirrored to l1-uk: no
+- `education-and-university.yaml:19` — `(f, grade book)` → `removed` — mirrored to l1-uk: no
+- `education-and-university.yaml:19` — `(f, scholarship)` → `removed` — mirrored to l1-uk: no
+- `education-and-work.yaml:18` — `(f, law firm)` → `removed` — mirrored to l1-uk: no
+- `education-and-work.yaml:18` — `(m, lawyer)` → `removed` — mirrored to l1-uk: no
+- `education-and-work.yaml:18` — `(n, law)` → `removed` — mirrored to l1-uk: no
+- `euphony.yaml:18` — `(garden)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:18` — `(f, cabbage)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:18` — `(f, carrot)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:18` — `(f, onion)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:18` — `(f, potato)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:18` — `(f, sour cream)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:18` — `(m, beetroot)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:18` — `(m, borshch)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:18` — `(n, meat)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:33` — `(cured pork fat)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:33` — `(dumplings)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:33` — `(filled dumplings)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:33` — `(potato pancakes)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:42` — `(breakfast)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:42` — `(dinner)` → `removed` — mirrored to l1-uk: no
+- `food-and-drink.yaml:42` — `(lunch)` → `removed` — mirrored to l1-uk: no
+- `foundations-practice.yaml:18` — `(m, cake)` → `removed` — mirrored to l1-uk: no
+- `foundations-practice.yaml:18` — `(m, cheese)` → `removed` — mirrored to l1-uk: no
+- `foundations-practice.yaml:18` — `(m, honey)` → `removed` — mirrored to l1-uk: no
+- `foundations-practice.yaml:18` — `(pl, berries)` → `removed` — mirrored to l1-uk: no
+- `foundations-practice.yaml:18` — `(pl, drinks)` → `removed` — mirrored to l1-uk: no
+- `foundations-practice.yaml:18` — `(pl, napkins)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:32` — `(to draw)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:32` — `(to listen to music)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:32` — `(to take photos)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:33` — `(to go to a concert)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:33` — `(to go to a museum)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:33` — `(to go to the cinema)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:33` — `(to go to the theater)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:37` — `(always)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:37` — `(never)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:37` — `(often)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:37` — `(rarely)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:37` — `(sometimes)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:37` — `(usually)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:38` — `(every day)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:38` — `(once a week)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:38` — `(three times a week)` → `removed` — mirrored to l1-uk: no
+- `free-time.yaml:38` — `(twice a week)` → `removed` — mirrored to l1-uk: no
+- `genitive-adjectives-pronouns.yaml:18` — `(f, umbrella)` → `removed` — mirrored to l1-uk: no
+- `genitive-adjectives-pronouns.yaml:18` — `(m, suitcase)` → `removed` — mirrored to l1-uk: no
+- `genitive-adjectives-pronouns.yaml:36` — `(gen fem)` → `removed` — mirrored to l1-uk: no
+- `genitive-adjectives-pronouns.yaml:36` — `(gen masc)` → `removed` — mirrored to l1-uk: no
+- `genitive-adjectives-pronouns.yaml:36` — `(gen neut)` → `removed` — mirrored to l1-uk: no
+- `genitive-intro.yaml:18` — `(f, stove)` → `removed` — mirrored to l1-uk: no
+- `genitive-intro.yaml:18` — `(m, fridge)` → `removed` — mirrored to l1-uk: no
+- `genitive-intro.yaml:18` — `(n, mirror)` → `removed` — mirrored to l1-uk: no
+- `genitive-intro.yaml:18` — `(pl, boxes)` → `removed` — mirrored to l1-uk: no
+- `genitive-intro.yaml:18` — `(pl, furniture)` → `removed` — mirrored to l1-uk: no
+- `genitive-plural.yaml:18` — `(f, bottles)` → `removed` — mirrored to l1-uk: no
+- `genitive-plural.yaml:18` — `(f, buns)` → `removed` — mirrored to l1-uk: no
+- `genitive-plural.yaml:18` — `(f, jars)` → `removed` — mirrored to l1-uk: no
+- `genitive-prepositions-direction.yaml:18` — `(f, pharmacy)` → `removed` — mirrored to l1-uk: no
+- `genitive-prepositions-direction.yaml:18` — `(m, hotel)` → `removed` — mirrored to l1-uk: no
+- `genitive-prepositions-direction.yaml:18` — `(m, station)` → `removed` — mirrored to l1-uk: no
+- `genitive-prepositions-purpose.yaml:18` — `(f, blanket)` → `removed` — mirrored to l1-uk: no
+- `genitive-prepositions-purpose.yaml:18` — `(f, river)` → `removed` — mirrored to l1-uk: no
+- `genitive-prepositions-purpose.yaml:18` — `(m, flashlight)` → `removed` — mirrored to l1-uk: no
+- `genitive-prepositions-purpose.yaml:18` — `(m, tent)` → `removed` — mirrored to l1-uk: no
+- `gerund-phrases.yaml:19` — `(m, step)` → `removed` — mirrored to l1-uk: no
+- `gerund-phrases.yaml:100` — `(dangling gerund)` → `removed` — mirrored to l1-uk: no
+- `health.yaml:18` — `(f, fever)` → `removed` — mirrored to l1-uk: no
+- `health.yaml:18` — `(f, head)` → `removed` — mirrored to l1-uk: no
+- `health.yaml:18` — `(m, cough)` → `removed` — mirrored to l1-uk: no
+- `health.yaml:18` — `(m, runny nose)` → `removed` — mirrored to l1-uk: no
+- `health.yaml:18` — `(m, stomach)` → `removed` — mirrored to l1-uk: no
+- `health.yaml:18` — `(n, throat)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:18` — `(f, fish)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:18` — `(f, kutia)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:18` — `(m, Christmas Eve)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:18` — `(m, dried fruit compote)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:27` — `(carols)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:32` — `(Christmas)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:32` — `(Holy Supper)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:32` — `(carols)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:32` — `(kutia)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:33` — `(Easter bread)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:33` — `(Easter)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:33` — `(blessing the Easter basket at church)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:37` — `(fireworks)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:37` — `(flags)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:37` — `(national holiday)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:37` — `(parade)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:38` — `(Constitution Day)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:38` — `(New Year)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:38` — `(Vyshyvanka Day)` → `removed` — mirrored to l1-uk: no
+- `holidays.yaml:38` — `(embroidered shirt)` → `removed` — mirrored to l1-uk: no
+- `home-and-daily-life.yaml:18` — `(f, bedroom)` → `removed` — mirrored to l1-uk: no
+- `home-and-daily-life.yaml:18` — `(f, kitchen)` → `removed` — mirrored to l1-uk: no
+- `home-and-daily-life.yaml:18` — `(f, living room)` → `removed` — mirrored to l1-uk: no
+- `home-and-daily-life.yaml:18` — `(m, daily routine)` → `removed` — mirrored to l1-uk: no
+- `home-and-daily-life.yaml:18` — `(n, apartment)` → `removed` — mirrored to l1-uk: no
+- `home-and-daily-life.yaml:18` — `(pl, gifts)` → `removed` — mirrored to l1-uk: no
+- `how-many.yaml:18` — `(f, bun)` → `removed` — mirrored to l1-uk: no
+- `how-many.yaml:18` — `(m, bread)` → `removed` — mirrored to l1-uk: no
+- `how-many.yaml:18` — `(n, pastry)` → `removed` — mirrored to l1-uk: no
+- `how-many.yaml:23` — `(f, pen)` → `removed` — mirrored to l1-uk: no
+- `how-many.yaml:23` — `(m, notebook)` → `removed` — mirrored to l1-uk: no
+- `how-many.yaml:23` — `(m, pencil)` → `removed` — mirrored to l1-uk: no
+- `how-many.yaml:23` — `(m, textbook)` → `removed` — mirrored to l1-uk: no
+- `i-eat-i-drink.yaml:18` — `(f, coffee)` → `removed` — mirrored to l1-uk: no
+- `i-eat-i-drink.yaml:18` — `(m, juice)` → `removed` — mirrored to l1-uk: no
+- `i-eat-i-drink.yaml:18` — `(m, sandwich)` → `removed` — mirrored to l1-uk: no
+- `i-eat-i-drink.yaml:18` — `(m, tea)` → `removed` — mirrored to l1-uk: no
+- `imperative-complete.yaml:18` — `(f, onion)` → `removed` — mirrored to l1-uk: no
+- `imperative-complete.yaml:27` — `(Let her read it through)` → `removed` — mirrored to l1-uk: no
+- `imperative-complete.yaml:27` — `(Let him read)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:26` — `(somehow)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:26` — `(someone specific)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:26` — `(something specific)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:26` — `(somewhere specific)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:32` — `(anyone at all)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:32` — `(anything)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:32` — `(anywhere)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:33` — `(some people)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:33` — `(some things)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:33` — `(sometimes)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:34` — `(anyone whatsoever)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:34` — `(anything at all)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:34` — `(anywhere)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:35` — `(carelessly)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:35` — `(just anyone)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:39` — `(never)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:39` — `(no kind of)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:39` — `(no way)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:39` — `(nobody)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:39` — `(nothing)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:39` — `(nowhere)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:42` — `(never)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:42` — `(nobody)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:42` — `(nowhere)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:42` — `(someone)` → `removed` — mirrored to l1-uk: no
+- `indefinite-negative-pronouns.yaml:42` — `(somewhere)` → `removed` — mirrored to l1-uk: no
+- `instrumental-accompaniment.yaml:18` — `(f, girlfriend)` → `removed` — mirrored to l1-uk: no
+- `instrumental-accompaniment.yaml:18` — `(f, ham)` → `removed` — mirrored to l1-uk: no
+- `instrumental-accompaniment.yaml:18` — `(n, milk)` → `removed` — mirrored to l1-uk: no
+- `instrumental-accompaniment.yaml:41` — `(with)` → `removed` — mirrored to l1-uk: no
+- `instrumental-adjectives-pronouns.yaml:34` — `(behind that wall)` → `removed` — mirrored to l1-uk: no
+- `instrumental-adjectives-pronouns.yaml:34` — `(by this bus)` → `removed` — mirrored to l1-uk: no
+- `instrumental-adjectives-pronouns.yaml:42` — `(meanwhile)` → `removed` — mirrored to l1-uk: no
+- `instrumental-means.yaml:18` — `(m, brush)` → `removed` — mirrored to l1-uk: no
+- `instrumental-means.yaml:18` — `(m, bus)` → `removed` — mirrored to l1-uk: no
+- `instrumental-means.yaml:18` — `(m, pencil)` → `removed` — mirrored to l1-uk: no
+- `instrumental-means.yaml:18` — `(pl, scissors)` → `removed` — mirrored to l1-uk: no
+- `instrumental-means.yaml:52` — `(to do sports)` → `removed` — mirrored to l1-uk: no
+- `instrumental-means.yaml:52` — `(to smell of flowers)` → `removed` — mirrored to l1-uk: no
+- `instrumental-nuances.yaml:19` — `(f, beauty)` → `removed` — mirrored to l1-uk: no
+- `instrumental-nuances.yaml:19` — `(f, director)` → `removed` — mirrored to l1-uk: no
+- `instrumental-nuances.yaml:19` — `(m, expression)` → `removed` — mirrored to l1-uk: no
+- `instrumental-nuances.yaml:19` — `(m, translator)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:18` — `(f, bench)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:18` — `(f, painting)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:18` — `(m, fireplace)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:18` — `(n, tree)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:27` — `(between)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:27` — `(in front of)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:43` — `(before class)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:43` — `(before lunch)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:43` — `(before sleep)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:43` — `(before vacation)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:44` — `(according to plan)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:44` — `(according to schedule)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:52` — `(behind the house)` → `removed` — mirrored to l1-uk: no
+- `instrumental-prepositions.yaml:52` — `(thank you for help)` → `removed` — mirrored to l1-uk: no
+- `instrumental-profession.yaml:34` — `(to be interested in)` → `removed` — mirrored to l1-uk: no
+- `instrumental-profession.yaml:34` — `(to be passionate about)` → `removed` — mirrored to l1-uk: no
+- `instrumental-profession.yaml:35` — `(to admire)` → `removed` — mirrored to l1-uk: no
+- `instrumental-profession.yaml:35` — `(to be proud of)` → `removed` — mirrored to l1-uk: no
+- `instrumental-profession.yaml:36` — `(to be engaged in)` → `removed` — mirrored to l1-uk: no
+- `introductory-words.yaml:20` — `(m, approach)` → `removed` — mirrored to l1-uk: no
+- `introductory-words.yaml:20` — `(n, research)` → `removed` — mirrored to l1-uk: no
+- `introductory-words.yaml:20` — `(pl, data)` → `removed` — mirrored to l1-uk: no
+- `linking-ideas.yaml:18` — `(n, sea)` → `removed` — mirrored to l1-uk: no
+- `linking-ideas.yaml:18` — `(pl, Carpathians)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-morphology.yaml:19` — `(f, stem)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-morphology.yaml:19` — `(m, prefix)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-morphology.yaml:19` — `(m, root)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-morphology.yaml:19` — `(m, suffix)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-morphology.yaml:19` — `(n, ending)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-phonetics.yaml:19` — `(f, board)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-phonetics.yaml:19` — `(f, letter)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-phonetics.yaml:19` — `(m, consonant)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-phonetics.yaml:19` — `(m, sound)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-phonetics.yaml:19` — `(m, stress)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-phonetics.yaml:19` — `(m, syllable)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-phonetics.yaml:19` — `(m, vowel)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-syntax-cases.yaml:19` — `(f, adverbial)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-syntax-cases.yaml:19` — `(m, object)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-syntax-cases.yaml:19` — `(m, predicate)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-syntax-cases.yaml:19` — `(m, subject)` → `removed` — mirrored to l1-uk: no
+- `metalanguage-syntax-cases.yaml:19` — `(n, attribute)` → `removed` — mirrored to l1-uk: no
+- `motion-base-review.yaml:18` — `(by transport)` → `removed` — mirrored to l1-uk: no
+- `motion-base-review.yaml:18` — `(m, market)` → `removed` — mirrored to l1-uk: no
+- `motion-base-review.yaml:18` — `(on foot)` → `removed` — mirrored to l1-uk: no
+- `motion-base-review.yaml:18` — `(running)` → `removed` — mirrored to l1-uk: no
+- `motion-flight-swim.yaml:18` — `(m, boat)` → `removed` — mirrored to l1-uk: no
+- `motion-flight-swim.yaml:18` — `(m, buoy)` → `removed` — mirrored to l1-uk: no
+- `motion-flight-swim.yaml:18` — `(m, island)` → `removed` — mirrored to l1-uk: no
+- `motion-flight-swim.yaml:18` — `(m, plane)` → `removed` — mirrored to l1-uk: no
+- `motion-flight-swim.yaml:18` — `(pl, seagulls)` → `removed` — mirrored to l1-uk: no
+- `motion-flight-swim.yaml:18` — `(swimming)` → `removed` — mirrored to l1-uk: no
+- `motion-prefixes-arrival.yaml:18` — `(arrived on foot)` → `removed` — mirrored to l1-uk: no
+- `motion-prefixes-arrival.yaml:18` — `(reached by car)` → `removed` — mirrored to l1-uk: no
+- `motion-prefixes-departure.yaml:18` — `(departs)` → `removed` — mirrored to l1-uk: no
+- `motion-prefixes-departure.yaml:18` — `(driving away)` → `removed` — mirrored to l1-uk: no
+- `motion-prefixes-departure.yaml:18` — `(left)` → `removed` — mirrored to l1-uk: no
+- `motion-prefixes-departure.yaml:18` — `(m, platform)` → `removed` — mirrored to l1-uk: no
+- `motion-prefixes-in-out.yaml:18` — `(drove into)` → `removed` — mirrored to l1-uk: no
+- `motion-prefixes-in-out.yaml:18` — `(enter)` → `removed` — mirrored to l1-uk: no
+- `motion-prefixes-in-out.yaml:18` — `(exit)` → `removed` — mirrored to l1-uk: no
+- `motion-prefixes-in-out.yaml:18` — `(f, parking lot)` → `removed` — mirrored to l1-uk: no
+- `motion-prefixes-in-out.yaml:18` — `(m, office room)` → `removed` — mirrored to l1-uk: no
+- `motion-prefixes-in-out.yaml:18` — `(m, side entrance)` → `removed` — mirrored to l1-uk: no
+- `my-city.yaml:18` — `(f, bus stop)` → `removed` — mirrored to l1-uk: no
+- `my-city.yaml:18` — `(f, church)` → `removed` — mirrored to l1-uk: no
+- `my-city.yaml:18` — `(f, square)` → `removed` — mirrored to l1-uk: no
+- `my-city.yaml:18` — `(m, museum)` → `removed` — mirrored to l1-uk: no
+- `my-city.yaml:18` — `(n, lake)` → `removed` — mirrored to l1-uk: no
+- `participles-passive.yaml:27` — `(n, decoration)` → `removed` — mirrored to l1-uk: no
+- `participles-passive.yaml:86` — `(baked)` → `removed` — mirrored to l1-uk: no
+- `participles-passive.yaml:86` — `(salted)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:58` — `(gentle)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:58` — `(welcoming)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:63` — `(impatient)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:63` — `(talkative)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:63` — `(withdrawn)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:80` — `(husband)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:81` — `(married couple)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:81` — `(wife)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:85` — `(father-in-law)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:103` — `(respect)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:103` — `(romantic love)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:103` — `(support)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:103` — `(trust)` → `removed` — mirrored to l1-uk: no
+- `people-and-relationships.yaml:104` — `(reconciliation)` → `removed` — mirrored to l1-uk: no
+- `places-and-locations.yaml:18` — `(f, instr)` → `removed` — mirrored to l1-uk: no
+- `places-and-locations.yaml:18` — `(f, loc)` → `removed` — mirrored to l1-uk: no
+- `places-and-locations.yaml:18` — `(m, gen)` → `removed` — mirrored to l1-uk: no
+- `places-and-locations.yaml:23` — `(f, gen)` → `removed` — mirrored to l1-uk: no
+- `places-and-locations.yaml:23` — `(f, nom)` → `removed` — mirrored to l1-uk: no
+- `places-and-locations.yaml:23` — `(n, gen)` → `removed` — mirrored to l1-uk: no
+- `places-and-locations.yaml:54` — `(loc pl)` → `removed` — mirrored to l1-uk: no
+- `plural-other-cases.yaml:18` — `(dat pl)` → `removed` — mirrored to l1-uk: no
+- `plural-other-cases.yaml:18` — `(inst pl)` → `removed` — mirrored to l1-uk: no
+- `plural-other-cases.yaml:18` — `(loc pl)` → `removed` — mirrored to l1-uk: no
+- `pluralia-tantum.yaml:52` — `(singularia tantum)` → `removed` — mirrored to l1-uk: no
+- `possessive-adjectives.yaml:45` — `(though the genitive phrase exists too)` → `removed` — mirrored to l1-uk: no
+- `reading-literature.yaml:26` — `(f, community)` → `removed` — mirrored to l1-uk: no
+- `reading-literature.yaml:54` — `(fairy tale)` → `removed` — mirrored to l1-uk: no
+- `reading-literature.yaml:54` — `(legend)` → `removed` — mirrored to l1-uk: no
+- `reading-literature.yaml:54` — `(poem)` → `removed` — mirrored to l1-uk: no
+- `reading-literature.yaml:54` — `(short story)` → `removed` — mirrored to l1-uk: no
+- `reading-literature.yaml:134` — `(to inspire)` → `removed` — mirrored to l1-uk: no
+- `reading-literature.yaml:134` — `(to surprise)` → `removed` — mirrored to l1-uk: no
+- `reading-literature.yaml:135` — `(to disappoint)` → `removed` — mirrored to l1-uk: no
+- `reading-literature.yaml:135` — `(to remind)` → `removed` — mirrored to l1-uk: no
+- `real-conditionals.yaml:18` — `(f, garden bed)` → `removed` — mirrored to l1-uk: no
+- `real-conditionals.yaml:18` — `(m, rain)` → `removed` — mirrored to l1-uk: no
+- `real-conditionals.yaml:18` — `(n, seeds)` → `removed` — mirrored to l1-uk: no
+- `real-conditionals.yaml:18` — `(n, sun)` → `removed` — mirrored to l1-uk: no
+- `services-and-communication.yaml:18` — `(f, parcel)` → `removed` — mirrored to l1-uk: no
+- `services-and-communication.yaml:18` — `(m, form)` → `removed` — mirrored to l1-uk: no
+- `services-and-communication.yaml:18` — `(m, recipient)` → `removed` — mirrored to l1-uk: no
+- `shopping-and-health.yaml:18` — `(f, pharmacy)` → `removed` — mirrored to l1-uk: no
+- `shopping-and-health.yaml:18` — `(m, cucumbers)` → `removed` — mirrored to l1-uk: no
+- `shopping-and-health.yaml:18` — `(m, doctor)` → `removed` — mirrored to l1-uk: no
+- `shopping-and-health.yaml:18` — `(m, market)` → `removed` — mirrored to l1-uk: no
+- `shopping-and-health.yaml:18` — `(m, tomatoes)` → `removed` — mirrored to l1-uk: no
+- `shopping-and-health.yaml:18` — `(n, throat)` → `removed` — mirrored to l1-uk: no
+- `shopping-and-health.yaml:18` — `(pl, drops)` → `removed` — mirrored to l1-uk: no
+- `shopping-and-services.yaml:19` — `(f, discount)` → `removed` — mirrored to l1-uk: no
+- `shopping-and-services.yaml:19` — `(f, dress)` → `removed` — mirrored to l1-uk: no
+- `shopping-and-services.yaml:19` — `(f, shop)` → `removed` — mirrored to l1-uk: no
+- `shopping-and-services.yaml:19` — `(m, option)` → `removed` — mirrored to l1-uk: no
+- `short-form-adjectives.yaml:26` — `(capable)` → `removed` — mirrored to l1-uk: no
+- `short-form-adjectives.yaml:26` — `(certain)` → `removed` — mirrored to l1-uk: no
+- `short-form-adjectives.yaml:26` — `(willing)` → `removed` — mirrored to l1-uk: no
+- `short-form-adjectives.yaml:64` — `(neutral)` → `removed` — mirrored to l1-uk: no
+- `short-form-adjectives.yaml:64` — `(poetic)` → `removed` — mirrored to l1-uk: no
+- `short-form-adjectives.yaml:65` — `(folk song)` → `removed` — mirrored to l1-uk: no
+- `society-and-media.yaml:19` — `(f, evacuation)` → `removed` — mirrored to l1-uk: no
+- `society-and-media.yaml:19` — `(m, government)` → `removed` — mirrored to l1-uk: no
+- `society-and-media.yaml:19` — `(pl, funds)` → `removed` — mirrored to l1-uk: no
+- `synonyms-antonyms-style.yaml:18` — `(m, palace)` → `removed` — mirrored to l1-uk: no
+- `synthetic-future.yaml:18` — `(m, exam)` → `removed` — mirrored to l1-uk: no
+- `telling-stories-and-travel.yaml:18` — `(f, cabin)` → `removed` — mirrored to l1-uk: no
+- `telling-stories-and-travel.yaml:18` — `(m, train station)` → `removed` — mirrored to l1-uk: no
+- `text-compression.yaml:25` — `(Armed Forces of Ukraine)` → `removed` — mirrored to l1-uk: no
+- `text-compression.yaml:25` — `(Ministry of Health)` → `removed` — mirrored to l1-uk: no
+- `text-register-formal.yaml:19` — `(f, leave)` → `removed` — mirrored to l1-uk: no
+- `text-register-formal.yaml:19` — `(pl, circumstances)` → `removed` — mirrored to l1-uk: no
+- `text-register-informal.yaml:19` — `(f, party)` → `removed` — mirrored to l1-uk: no
+- `text-register-informal.yaml:19` — `(f, pizza)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:56` — `(out of)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:56` — `(to cut out)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:56` — `(to turn off)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:57` — `(away from)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:57` — `(to attach)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:57` — `(to fasten)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:63` — `(to cut apart)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:63` — `(to wait a bit)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:64` — `(completion up to)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:64` — `(to finish reading)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:64` — `(to tell)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:65` — `(completion)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:65` — `(to bake)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:68` — `(to forge)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:68` — `(to replace secretly)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:69` — `(to discuss)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:78` — `(to redden)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:78` — `(to turn blue)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:82` — `(irregular)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:82` — `(to build)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:82` — `(to dance)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:86` — `(pf, one push)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:97` — `(to arm)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:97` — `(to disarm)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:190` — `(from adj)` → `removed` — mirrored to l1-uk: no
+- `verb-formation-suffixes.yaml:190` — `(from noun)` → `removed` — mirrored to l1-uk: no
+- `verbal-nouns.yaml:19` — `(n, reading)` → `removed` — mirrored to l1-uk: no
+- `verbal-nouns.yaml:19` — `(n, testing)` → `removed` — mirrored to l1-uk: no
+- `verbal-nouns.yaml:19` — `(n, training)` → `removed` — mirrored to l1-uk: no
+- `verbal-nouns.yaml:19` — `(n, writing)` → `removed` — mirrored to l1-uk: no
+- `vocative-formal.yaml:19` — `(f, parliament)` → `removed` — mirrored to l1-uk: no
+- `what-time.yaml:38` — `(at midnight)` → `removed` — mirrored to l1-uk: no
+- `what-time.yaml:38` — `(at noon)` → `removed` — mirrored to l1-uk: no
+- `word-formation-adjectives.yaml:20` — `(f, Kyiv gallery)` → `removed` — mirrored to l1-uk: no
+- `word-formation-adjectives.yaml:20` — `(m, color)` → `removed` — mirrored to l1-uk: no
+- `word-formation-adjectives.yaml:20` — `(m, landscape)` → `removed` — mirrored to l1-uk: no
+- `word-formation-adjectives.yaml:20` — `(m, shade)` → `removed` — mirrored to l1-uk: no
+- `word-formation-nouns.yaml:25` — `(m, teacher)` → `removed` — mirrored to l1-uk: no
+- `word-formation-nouns.yaml:25` — `(m, writer)` → `removed` — mirrored to l1-uk: no
+- `word-formation-nouns.yaml:26` — `(f, canteen)` → `removed` — mirrored to l1-uk: no
+- `word-formation-nouns.yaml:66` — `(over the Dnieper region)` → `removed` — mirrored to l1-uk: no
+- `work-and-career.yaml:18` — `(f, job interview)` → `removed` — mirrored to l1-uk: no
+- `work-and-career.yaml:23` — `(impf, present)` → `removed` — mirrored to l1-uk: no
+
+### D4
+
+- `all-cases-practice.yaml:32` — `приймати ліки` → `пити ліки` — mirrored to l1-uk: yes — Russian calque in ordinary patient-doctor prose; replaced with idiomatic Ukrainian.
+- `cases-with-ordinal-numerals.yaml:50` — `В першу чергу.` → `Насамперед.` — mirrored to l1-uk: no — Canonical calque replacement in running prose.
+- `cases-with-ordinal-numerals.yaml:79` — `в першу чергу` → `насамперед` — mirrored to l1-uk: no — Vocabulary item normalized to the Ukrainian idiom used in the lesson.
+- `checkpoint-verbs.yaml:37` — `Давайте обговоримо.` → `Обговорімо.` — mirrored to l1-uk: no — Joint-action prompt in prose; imperative form is the natural Ukrainian wording here.
+- `daily-life-and-routines.yaml:37` — `Давайте обговоримо це після обіду.` → `Обговорімо це після обіду.` — mirrored to l1-uk: no — Joint-action prompt in prose; imperative form is the natural Ukrainian wording here.
+- `daily-life-and-routines.yaml:48` — `Давайте зустрінемося!` → `Зустріньмося!` — mirrored to l1-uk: no — Invitation in prose; direct inclusive imperative is more idiomatic here.
+- `word-formation-adjectives.yaml:29` — `зима → зимний` → `ліс → лісний` — mirrored to l1-uk: no — Replaced the bad example with a valid -н- derivation instead of introducing a different word-formation pattern.
+- `word-formation-adjectives.yaml:42` — `зима → зимний` → `ліс → лісний` — mirrored to l1-uk: no — Same correction mirrored within the explanatory rule block to keep the paradigm consistent.
+
+### D6
+
+- `genitive-nuances.yaml:98` — `Виключення` → `Винятки` — mirrored to l1-uk: no — Russianism for “exception”; replaced with the standard Ukrainian noun.
+
+### D2
+
+- No D2 findings were promoted to REAL_DEFECT after context review.
+
+## Skipped findings (reasons)
+
+### FALSE_POSITIVE
+
+- `around-the-city.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `around-the-city.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `around-the-city.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `around-the-city.yaml:20` — `(guide)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `at-the-cafe.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `at-the-cafe.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `at-the-cafe.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `at-the-cafe.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `at-the-cafe.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `at-the-cafe.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-communication.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-communication.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-communication.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-communication.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-communication.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-first-contact.yaml:20` — `(engineer from Dnipro)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `checkpoint-first-contact.yaml:21` — `(teacher from Ternopil)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `checkpoint-food-shopping.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-food-shopping.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-food-shopping.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-food-shopping.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-food-shopping.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-food-shopping.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-food-shopping.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-my-world.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-my-world.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-my-world.yaml:19` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-my-world.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-my-world.yaml:21` — `(tourist)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `checkpoint-my-world.yaml:22` — `(local friend)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `checkpoint-places.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-places.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-places.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-places.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-places.yaml:21` — `(filming)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `checkpoint-places.yaml:22` — `(watching)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `colors.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `colors.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `colors.yaml:23` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `colors.yaml:23` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `colors.yaml:23` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `colors.yaml:23` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `days-and-months.yaml:38` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `days-and-months.yaml:38` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `days-and-months.yaml:38` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `days-and-months.yaml:38` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `emergencies.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `emergencies.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `emergencies.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `emergencies.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `emergencies.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `euphony.yaml:21` — `(correcting)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `food-and-drink.yaml:20` — `(teaching)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `food-and-drink.yaml:21` — `(learning)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `hey-friend.yaml:20` — `(birthday person)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `holidays.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `holidays.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `how-many.yaml:21` — `(baker)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `how-many.yaml:25` — `(student)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `i-eat-i-drink.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `i-eat-i-drink.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `i-eat-i-drink.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `i-eat-i-drink.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `linking-ideas.yaml:20` — `(couple)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `many-things.yaml:20` — `(teacher)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `many-things.yaml:21` — `(students)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `my-city.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `my-city.yaml:20` — `(describing)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `my-city.yaml:21` — `(asking questions)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `my-day.yaml:20` — `(narrator)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `my-family.yaml:48` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `my-family.yaml:48` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `my-family.yaml:48` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `my-family.yaml:48` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `my-plans.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `my-plans.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `my-plans.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `verbs-group-two.yaml:37` — `(I)` — reason: Morphology tag only; no English gloss to remove.
+- `verbs-group-two.yaml:37` — `(II)` — reason: Morphology tag only; no English gloss to remove.
+- `verbs-group-two.yaml:37` — `(I)` — reason: Morphology tag only; no English gloss to remove.
+- `verbs-group-two.yaml:37` — `(II)` — reason: Morphology tag only; no English gloss to remove.
+- `what-is-it-like.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `what-is-it-like.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `what-is-it-like.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `what-is-it-like.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `what-is-it-like.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `what-is-it-like.yaml:32` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `what-is-it-like.yaml:32` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `what-is-it-like.yaml:32` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `what-will-happen.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `what-will-happen.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `when-and-where.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `when-and-where.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `when-and-where.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `when-and-where.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `where-is-it.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `where-is-it.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `where-is-it.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `where-is-it.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `where-is-it.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `where-is-it.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `where-to.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `where-to.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `where-to.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `yesterday.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `yesterday.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `yesterday.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `yesterday.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `yesterday.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `yesterday.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `a2-finale.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `a2-finale.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `all-cases-practice.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `all-cases-practice.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `all-cases-practice.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `all-cases-practice.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `all-cases-practice.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `all-cases-practice.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `aspect-in-past.yaml:18` — `(impf)` — reason: Morphology tag only; no English gloss to remove.
+- `aspect-in-past.yaml:18` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `aspect-in-past.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `aspect-in-past.yaml:18` — `(impf)` — reason: Morphology tag only; no English gloss to remove.
+- `aspect-in-past.yaml:18` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `aspect-in-vocabulary.yaml:18` — `(impf)` — reason: Morphology tag only; no English gloss to remove.
+- `aspect-in-vocabulary.yaml:18` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `aspect-mastery.yaml:18` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `aspect-mastery.yaml:18` — `(impf)` — reason: Morphology tag only; no English gloss to remove.
+- `aspect-mastery.yaml:18` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `aspect-mastery.yaml:18` — `(impf)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-cases.yaml:18` — `(gen)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-cases.yaml:18` — `(dat)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-cases.yaml:18` — `(acc)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-cases.yaml:18` — `(inst)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-cases.yaml:18` — `(loc)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-cases.yaml:18` — `(voc)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-dative.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-dative.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-dative.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-dative.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-genitive.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-instrumental.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-instrumental.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-instrumental.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `checkpoint-instrumental.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `comparison.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `foundations-practice.yaml:20` — `(friends)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `foundations-practice.yaml:21` — `(vendor)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `genitive-adjectives-pronouns.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `genitive-adjectives-pronouns.yaml:20` — `(owner)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `genitive-dates-numbers.yaml:45` — `(Acc)` — reason: Morphology tag only; no English gloss to remove.
+- `genitive-dates-numbers.yaml:45` — `(Gen)` — reason: Morphology tag only; no English gloss to remove.
+- `genitive-dates-numbers.yaml:45` — `(Acc)` — reason: Morphology tag only; no English gloss to remove.
+- `genitive-dates-numbers.yaml:45` — `(Gen)` — reason: Morphology tag only; no English gloss to remove.
+- `genitive-intro.yaml:20` — `(neighbor)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `genitive-intro.yaml:21` — `(new tenant)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `genitive-plural.yaml:21` — `(assistant)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `genitive-prepositions-source.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `genitive-prepositions-source.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `genitive-prepositions-source.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `genitive-prepositions-source.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `imperative-complete.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `imperative-complete.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `indefinite-negative-pronouns.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `indefinite-negative-pronouns.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `instrumental-accompaniment.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `instrumental-adjectives-pronouns.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `instrumental-adjectives-pronouns.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `instrumental-adjectives-pronouns.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `instrumental-prepositions.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `instrumental-prepositions.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `instrumental-prepositions.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `instrumental-profession.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `instrumental-profession.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `instrumental-profession.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `liudyna-i-stosunky.yaml:18` — `(impf)` — reason: Morphology tag only; no English gloss to remove.
+- `liudyna-i-stosunky.yaml:18` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `liudyna-i-stosunky.yaml:23` — `(impf)` — reason: Morphology tag only; no English gloss to remove.
+- `liudyna-i-stosunky.yaml:41` — `(impf)` — reason: Morphology tag only; no English gloss to remove.
+- `liudyna-i-stosunky.yaml:41` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `motion-verbs.yaml:26` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `motion-verbs.yaml:27` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `nature-and-traditions.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `nature-and-traditions.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `nature-and-traditions.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `nature-and-traditions.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `nature-and-traditions.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `nature-and-traditions.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `nature-and-traditions.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `numerals-and-cases.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `numerals-and-cases.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `numerals-and-cases.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `numerals-and-cases.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `numerals-and-cases.yaml:30` — `(m.)` — reason: Morphology tag only; no English gloss to remove.
+- `numerals-and-cases.yaml:30` — `(f.)` — reason: Morphology tag only; no English gloss to remove.
+- `numerals-and-cases.yaml:30` — `(n.)` — reason: Morphology tag only; no English gloss to remove.
+- `numerals-and-cases.yaml:34` — `(m.)` — reason: Morphology tag only; no English gloss to remove.
+- `numerals-and-cases.yaml:34` — `(f.)` — reason: Morphology tag only; no English gloss to remove.
+- `numerals-and-cases.yaml:34` — `(n.)` — reason: Morphology tag only; no English gloss to remove.
+- `numerals-and-cases.yaml:34` — `(f.)` — reason: Morphology tag only; no English gloss to remove.
+- `plural-genitive.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `plural-genitive.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `plural-genitive.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `plural-genitive.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `plural-nominative-accusative.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `plural-nominative-accusative.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `plural-nominative-accusative.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `plural-nominative-accusative.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `plural-other-cases.yaml:18` — `(gen pl)` — reason: Morphology tag only; no English gloss to remove.
+- `preferences-and-choices.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `preferences-and-choices.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `preferences-and-choices.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `purpose-clauses.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `purpose-clauses.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `purpose-clauses.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `real-conditionals.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `relative-clauses.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `relative-clauses.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `relative-clauses.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `relative-clauses.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `sviy-and-sebe.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `sviy-and-sebe.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `sviy-and-sebe.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `synonyms-antonyms-style.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `synonyms-antonyms-style.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `synthetic-future.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `synthetic-future.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `telling-stories-and-travel.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `telling-stories-and-travel.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `telling-stories-and-travel.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `telling-stories-and-travel.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `vocative-expanded.yaml:22` — `(by phone)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `work-and-food.yaml:20` — `(head chef)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `adjectives-comparative.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `adjectives-comparative.yaml:19` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `adjectives-comparative.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `adjectives-comparative.yaml:29` — `(m.)` — reason: Morphology tag only; no English gloss to remove.
+- `adjectives-comparative.yaml:29` — `(f.)` — reason: Morphology tag only; no English gloss to remove.
+- `adjectives-comparative.yaml:29` — `(n.)` — reason: Morphology tag only; no English gloss to remove.
+- `adjectives-comparative.yaml:29` — `(pl.)` — reason: Morphology tag only; no English gloss to remove.
+- `adjectives-superlative.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `adjectives-superlative.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `adjectives-superlative.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `adjectives-superlative.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `adjectives-superlative.yaml:19` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `adjectives-superlative.yaml:19` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `alternation-vowels.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `alternation-vowels.yaml:18` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `alternation-vowels.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `b1-baseline-past-present.yaml:28` — `(I)` — reason: Morphology tag only; no English gloss to remove.
+- `b1-baseline-past-present.yaml:28` — `(II)` — reason: Morphology tag only; no English gloss to remove.
+- `cases-with-quantity-expressions.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `complex-subordinate-concess.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `complex-subordinate-condition.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `complex-subordinate-object.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `complex-subordinate-object.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `complex-subordinate-purpose.yaml:22` — `(graduate)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `complex-subordinate-reason.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `complex-subordinate-relative.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `complex-subordinate-relative.yaml:19` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `complex-subordinate-relative.yaml:21` — `(botanist)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `complex-subordinate-time.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `comprehensive-b1-review.yaml:21` — `(presenting)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `comprehensive-b1-review.yaml:22` — `(examination board)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `conditionals-real.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `conditionals-real.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `conditionals-real.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `daily-life-and-routines.yaml:20` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `dative-nuances.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `dative-nuances.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `dative-nuances.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `debate-and-opinion.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `figurative-motion.yaml:22` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `genitive-nuances.yaml:24` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `genitive-nuances.yaml:24` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `genitive-nuances.yaml:25` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `genitive-nuances.yaml:25` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `gerund-phrases.yaml:19` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `gerunds-imperfective.yaml:23` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `gerunds-imperfective.yaml:24` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `gerunds-imperfective.yaml:24` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `gerunds-imperfective.yaml:24` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `gerunds-perfective.yaml:24` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `gerunds-perfective.yaml:25` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `health-at-the-doctor.yaml:23` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `health-at-the-doctor.yaml:23` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `health-at-the-doctor.yaml:24` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `health-at-the-doctor.yaml:24` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `health-at-the-doctor.yaml:24` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `health-at-the-doctor.yaml:24` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `homogeneous-members.yaml:24` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `homogeneous-members.yaml:25` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `homogeneous-members.yaml:25` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `homogeneous-members.yaml:25` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `homogeneous-members.yaml:25` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `housing-and-renting.yaml:24` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `housing-and-renting.yaml:25` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `housing-and-renting.yaml:25` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `housing-and-renting.yaml:25` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `housing-and-renting.yaml:27` — `(tenant)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `housing-and-renting.yaml:28` — `(landlord)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `housing-and-renting.yaml:71` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `housing-and-renting.yaml:71` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `housing-and-renting.yaml:71` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `housing-and-renting.yaml:71` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `imperative-nuances.yaml:25` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `imperative-nuances.yaml:25` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `introductory-words.yaml:22` — `(presenter)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `motion-base-review.yaml:18` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `motion-prefixes-departure.yaml:20` — `(those seeing off)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `motion-prefixes-departure.yaml:21` — `(travelers)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `narrative-mastery.yaml:21` — `(reading)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `narrative-mastery.yaml:22` — `(commenting)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `participles-active.yaml:109` — `(I)` — reason: Morphology tag only; no English gloss to remove.
+- `participles-active.yaml:109` — `(II)` — reason: Morphology tag only; no English gloss to remove.
+- `passive-voice-intro.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `passive-voice-intro.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `passive-voice-intro.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `passive-voice-intro.yaml:19` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `people-and-relationships.yaml:25` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `people-and-relationships.yaml:26` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `people-and-relationships.yaml:26` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `people-and-relationships.yaml:32` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:18` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:18` — `(loc)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:18` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:18` — `(impf)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:18` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:23` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:54` — `(loc)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:54` — `(gen)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:54` — `(gen)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:54` — `(acc)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:54` — `(loc)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:54` — `(gen)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:54` — `(gen)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:54` — `(acc)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:54` — `(gen pl)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:54` — `(gen pl)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:54` — `(loc)` — reason: Morphology tag only; no English gloss to remove.
+- `places-and-locations.yaml:54` — `(gen)` — reason: Morphology tag only; no English gloss to remove.
+- `pluralia-tantum.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `pluralia-tantum.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `pluralia-tantum.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `pluralia-tantum.yaml:19` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `possessive-adjectives.yaml:25` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `possessive-adjectives.yaml:25` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `possessive-adjectives.yaml:90` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `possessive-adjectives.yaml:90` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `possessive-adjectives.yaml:90` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `possessive-adjectives.yaml:90` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `text-compression.yaml:28` — `(reads aloud)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `text-compression.yaml:29` — `(explains)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `text-register-informal.yaml:21` — `(group chat)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `verb-formation-suffixes.yaml:32` — `(course attendees)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `verbal-nouns.yaml:22` — `(developer)` — reason: Speaker role annotation, not Ukrainian teaching prose.
+- `word-formation-adjectives.yaml:20` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `word-formation-nouns.yaml:25` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `word-formation-nouns.yaml:25` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `word-formation-nouns.yaml:26` — `(m)` — reason: Morphology tag only; no English gloss to remove.
+- `work-and-career.yaml:18` — `(impf)` — reason: Morphology tag only; no English gloss to remove.
+- `work-and-career.yaml:18` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `work-and-career.yaml:18` — `(pl)` — reason: Morphology tag only; no English gloss to remove.
+- `work-and-career.yaml:18` — `(f)` — reason: Morphology tag only; no English gloss to remove.
+- `work-and-career.yaml:23` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `work-and-career.yaml:23` — `(n)` — reason: Morphology tag only; no English gloss to remove.
+- `work-and-career.yaml:23` — `(pf)` — reason: Morphology tag only; no English gloss to remove.
+- `around-the-city.yaml:38` — `..., хвилина — П''ять хвилин пішки. далеко/близько від. У центрі міста / на околиці.' - sectio...` — reason: The line lists “далеко/близько від” as locational phrases; this is not a clear calque defect requiring rewrite in context.
+- `checkpoint-aspect.yaml:38` — `...не завдання, дедлайн). [Читай/Прочитай] кожен день перед сном (недок. — регулярна порада)....` — reason: “кожен день” is acceptable here; no source-backed need to normalize to “щодня” in this exercise prompt.
+- `checkpoint-time-nature.yaml:66` — `...раю у футбол.   - Як часто ти читаєш? ↔ Кожен день ввечері.   - Ходімо в парк! ↔ Добре, о ...` — reason: “Кожен день ввечері” is acceptable in context; no verified defect.
+- `free-time.yaml:38` — `... тричі на тиждень (three times a week), кожен день (every day). Я граю у футбол двічі на т...` — reason: Frequency example is acceptable as written; not enough to force a stylistic replacement.
+- `my-plans.yaml:36` — `...и в парку. В неділю я буду спати довго! Кожен день = буду + дія.'   - 'Ваша черга — сплану...` — reason: “Кожен день” is acceptable in this future-planning context; no verified defect.
+- `work-and-food.yaml:35` — `...рудний відмінок знаряддя: різати ножем, мішати ложкою, смажити на сковорідці (місцевий...` — reason: Literal cooking sense “мішати ложкою” is correct; this is not the false-friend sense “to bother”.
+- `work-and-food.yaml:37` — `...ає рецепт, інший ставить запитання (Чим мішати? Що різати? З чим подавати?).' - sectio...` — reason: Literal cooking question “Чим мішати?” is correct in context.
+- `work-and-food.yaml:56` — `...дного відмінка.'   - 'Яка різниця між ''мішати ложкою'' (знаряддя) та ''борщ зі сметан...` — reason: The line explicitly contrasts the literal cooking sense; no defect.
+- `advanced-pronouns.yaml:58` — `...й набір: кожний/кожен, весь/увесь, сам, самий (той самий, у тій самій кімнаті), інший...` — reason: Legitimate identity use of “самий / той самий”, not the Russian superlative calque.
+- `advanced-pronouns.yaml:59` — `...верніть увагу: сам (без допомоги) проти самий (підсилення ідентичності — той самий). ...` — reason: Legitimate identity use of “самий / той самий”, not the Russian superlative calque.
+- `advanced-pronouns.yaml:60` — `... зробив це — ніхто не допомагав. Це той самий фільм, який ми дивилися. Інші студенти ...` — reason: Legitimate identity use of “самий / той самий”, not the Russian superlative calque.
+- `alternation-consonants-nouns.yaml:28` — `... здобувачів передбачати, який із них з''являється і де. Система є регулярною та продуктив...` — reason: “зʼявляється” is used in the literal sense “appears / emerges”, not as copular “є”.
+- `alternation-consonants-nouns.yaml:41` — `...в. (на) нозі, Кл.в. ного! Чергування з''являється ЛИШЕ перед -і в Д.в. та М.в.'       - '...` — reason: “зʼявляється” is used in the literal sense “appears / emerges”, not as copular “є”.
+- `alternation-consonants-verbs.yaml:28` — `...о приголосного. Саме тому чергування з''являється ЛИШЕ у формах на "я", а не у формах на ...` — reason: “зʼявляється” is used in the literal sense “appears / emerges”, not as copular “є”.
+- `alternation-consonants-verbs.yaml:48` — `...усіх особах, переконуючись, що [л''] з''являється лише у формі "я": я ловлю, ти ловиш, ві...` — reason: “зʼявляється” is used in the literal sense “appears / emerges”, not as copular “є”.
+- `alternation-consonants-verbs.yaml:65` — `...я сиджу"? 2. Чому в дієслові "роблю" з''являється звук [л'']? 3. Провідмінюйте дієслово "...` — reason: “зʼявляється” is used in the literal sense “appears / emerges”, not as copular “є”.
+- `cases-with-quantity-expressions.yaml:52` — `...багато роботи. Усі вимагають Р.в. — той самий патерн, що й числівники 5-20."       - ...` — reason: Legitimate identity use of “самий / той самий”, not the Russian superlative calque.
+- `checkpoint-cases.yaml:18` — `...'Планування весілля — кожен відмінок з''являється природно: Запрошення для гостей (gen). ...` — reason: “зʼявляється” is used in the literal sense “appears / emerges”, not as copular “є”.
+- `colors.yaml:37` — `...тників: Тверда група (-ий/-а/-е — такий самий патерн, як у M09): червоний/червона/чер...` — reason: Legitimate identity use of “самий / той самий”, not the Russian superlative calque.
+- `genitive-plural.yaml:28` — `...ець→олівців. Справжнє закінчення -їв з''являється лише після основи на голосний/апостроф:...` — reason: “зʼявляється” is used in the literal sense “appears / emerges”, not as copular “є”.
+- `health-at-the-doctor.yaml:36` — `...строф після губного [в] перед [й] — той самий     патерн, що й правила вживання м''як...` — reason: Legitimate identity use of “самий / той самий”, not the Russian superlative calque.
+- `many-things.yaml:27` — `...і й нові. А стільці — старі. Множина з''являється природно під час опису кімнати з різним...` — reason: “зʼявляється” is used in the literal sense “appears / emerges”, not as copular “є”.
+- `metalanguage-morphology.yaml:35` — `... слова — якщо там, де нічого не було, з'являється звук, то початкова форма мала нульове з...` — reason: “зʼявляється” is used in the literal sense “appears / emerges”, not as copular “є”.
+- `my-day.yaml:27` — `...вся фільм і читав книгу. Минулий час з''являється природно — подаємо як лексичні конструк...` — reason: “зʼявляється” is used in the literal sense “appears / emerges”, not as copular “є”.
+- `noun-subclasses-feminine.yaml:36` — `...(і → е). Це прямо пов''язано з M08: той самий патерн [о/е] → [і] в закритому складі з...` — reason: Legitimate identity use of “самий / той самий”, not the Russian superlative calque.
+- `numerals-and-cases.yaml:35` — `...к сказав...), "сам" (я один/одна), "той самий" (ми з одного міста).'   - 'Практичні р...` — reason: Legitimate identity use of “самий / той самий”, not the Russian superlative calque.
+- `plural-genitive.yaml:28` — `...ики.'   - 'Чому це важливо: Род. мн. з''являється після чисел від 5, після багато/мало/кі...` — reason: “зʼявляється” is used in the literal sense “appears / emerges”, not as copular “є”.
+- `conditionals-unreal.yaml:42` — `... минуле."       - "Мрії та фантазії (не обов'язково контрфактичні): Якби я міг подорожувати...` — reason: Meta-commentary: “not necessarily counterfactual” is a semantic explanation, not a prescription.
+- `conditionals-unreal.yaml:47` — `...а фестиваль. — Так, якби я знав раніше, обов'язково б купив квитки. — Якби не робота, я б т...` — reason: Natural dialogue emphasis (“обовʼязково б купив”) fits the described context.
+- `leisure-culture-festivals.yaml:36` — `...іша подія року». Подруга сказала: «Тобі обов'язково треба це побачити!»"   - section: "Укра...` — reason: Quoted natural speech (“Тобі обовʼязково треба...”) is pragmatically normal here.
+
+### PEDAGOGICAL
+
+- `imperative-complete.yaml:14` — `...ожини на -мо (читаймо, ходімо, зробімо, давайте поїдемо) для групових запрошень і пропо...` — reason: The lesson explicitly teaches the contrast between -мо forms and “давайте”; rewriting it would distort the teaching content.
+- `imperative-complete.yaml:36` — `...'s go by vehicle).'   - 'Альтернатива з давайте: давайте читати (let''s read), давайте ...` — reason: Contrastive explanation of invitation forms; “давайте” is being discussed, not accidentally leaked.
+- `imperative-complete.yaml:71` — `... — Instr.pl.)   - ходімо (let's go)   - давайте (let's — suggestion particle)   recomme...` — reason: Vocabulary item naming the invitation particle inside a grammar lesson.
+- `imperative-nuances.yaml:74` — `...: Прошу не палити. Прошу тиші. 4. Давай/давайте     як запрошення: Давайте обговоримо. ...` — reason: The lesson is explicitly teaching the “давай/давайте” invitation strategy.
+- `imperative-nuances.yaml:75` — `...ші. 4. Давай/давайте     як запрошення: Давайте обговоримо. Зверніть увагу: Давай — неф...` — reason: Contrastive grammar explanation of invitation forms; keep as teaching content.
+- `imperative-nuances.yaml:78` — `...ка використовує форми на -імо або давай/давайте + доконаний вид, А НЕ *пішли як наказ.'...` — reason: Meta-rule about acceptable invitation patterns; not an accidental calque.
+- `imperative-nuances.yaml:89` — `...орімо план. Хай Оленка купить продукти. Давайте зустрінемося о п''ятій. Нехай кожен при...` — reason: Example sentence inside a lesson whose purpose is to teach invitation variants.
+- `imperative-nuances.yaml:100` — `...аний), ввічливий наказ (будь ласка,     давайте, чи не могли б ви), правила вживання м'...` — reason: Summary bullet listing the invitation strategy by name.
+- `work-and-food.yaml:61` — `...ok, to prepare)   - різати (to cut)   - мішати (to stir, to mix)   - посипати (to spri...` — reason: Vocabulary entry defines the literal culinary verb “мішати”, which is appropriate here.
+- `imperative-nuances.yaml:112` — `- давай / давайте (let's — invitation to joint action)` — reason: Vocabulary entry naming the invitation form inside the lesson.
+- `imperative-nuances.yaml:140` — `focus: Переписати прямі накази як ввічливі прохання, використовуючи будь ласка, давайте, чи не могли` — reason: Exercise instruction explicitly asks learners to use “давайте” in polite reformulations.
+- `imperative-nuances.yaml:169` — `- 'Ввічливий регістр: будь ласка, давайте, прошу, чи не могли б ви'` — reason: Grammar summary naming the polite-register strategy.
+- `adjectives-comparative.yaml:44` — `... разом. За Авраменком (11 клас, с.29): "самий кращий" — це русизм, правильно: найкращ...` — reason: The line teaches the error *самий ... as a mistake to avoid; no correction needed.
+- `adjectives-superlative.yaml:16` — `...найвищого ступеня від типових помилок (*самий кращий, *найбільш найкращий)'   - 'Здоб...` — reason: The line teaches the error *самий ... as a mistake to avoid; no correction needed.
+- `adjectives-superlative.yaml:37` — `...ш найкращий). НІКОЛИ не використовуйте "самий" (*самий кращий — це русизм). Правильно...` — reason: The line teaches the error *самий ... as a mistake to avoid; no correction needed.
+- `adjectives-superlative.yaml:57` — `...ься щонайкращий від найкращий? 3. Чому *самий кращий — помилка?'   - section: "Типові...` — reason: The line teaches the error *самий ... as a mistake to avoid; no correction needed.
+- `adjectives-superlative.yaml:61` — `...а Заболотним (8 клас, с.21): 1. Русизм *самий кращий (→ найкращий). 2. Подвійне вираж...` — reason: The line teaches the error *самий ... as a mistake to avoid; no correction needed.
+- `adjectives-superlative.yaml:111` — `...-ісіньк-, повтор'   - 'Типові помилки: *самий кращий, *найбільш найкращий' register: ...` — reason: The line teaches the error *самий ... as a mistake to avoid; no correction needed.
+- `adverbs-comparison-formation.yaml:60` — `... *по українськи (пропущений дефіс). 3. *самий добре (русизм — правильно: найкраще). 4...` — reason: The line teaches the error *самий ... as a mistake to avoid; no correction needed.
+- `checkpoint-comparison.yaml:17` — `...равляти типові помилки: *більш кращий, *самий великий, неправильне написання -н-/-нн-...` — reason: The line teaches the error *самий ... as a mistake to avoid; no correction needed.
+- `prepositions-temporal.yaml:45` — `...помилок (Заболотний 7 клас, с.193): НЕ *на протязі (калька з російської) — правильно "прот...` — reason: The flagged Russianism appears only inside explicit “avoid this form” guidance or reference notes.
+- `prepositions-temporal.yaml:63` — `... - 'Типові русизми, яких слід уникати: *на протязі (вживати протягом), *без десяти шість (...` — reason: The flagged Russianism appears only inside explicit “avoid this form” guidance or reference notes.
+- `prepositions-temporal.yaml:63` — `...ці (вживати цього року — Р.в.). Також: *слідуючий тиждень — правильно: наступний тиждень....` — reason: The flagged Russianism appears only inside explicit “avoid this form” guidance or reference notes.
+- `prepositions-temporal.yaml:114` — `...notes: 'завдяки vs через (причина), НЕ *на протязі.'   - title: "Литвінова Grade 7, p.187"...` — reason: The flagged Russianism appears only inside explicit “avoid this form” guidance or reference notes.
+- `alternation-consonants-nouns.yaml:60` — `...милка іноземців: *Олего! (неправильно — має бути Олеже).'       - 'Практика: здобувачі п...` — reason: Rule explanation correcting the vocative form; the prescriptive phrasing is the lesson content.
+- `aspect-in-conditionals.yaml:50` — `...т... (неможливо — буду + доконаний вид; має бути "якщо напишеш"). *Якби я знатиму... (фо...` — reason: Error-correction example explaining aspect in conditional clauses; no pragmatic defect.
+- `aspect-in-narration.yaml:36` — `...у українському містечку. Кожне дієслово має бути недоконаного виду. Обговорення: яку атм...` — reason: Instruction for an exercise constraint, not a context-blind usage prescription.
+- `conditionals-real.yaml:94` — `... "розклад (schedule, timetable)"     - "обов'язково (definitely, without fail)"     - "вихі...` — reason: Inside vocabulary_hints; glossing the adverb, not prescribing a phrase.
+- `conditionals-unreal.yaml:72` — `...t reference in counterfactuals)"     - "обов'язково (definitely, certainly)"     - "знав/зн...` — reason: Inside vocabulary_hints; glossing the adverb, not prescribing a phrase.
+- `gerunds-imperfective.yaml:117` — `...є в ролі обставини. Логічний     підмет має бути спільним. Самоперевірка: Я можу утворит...` — reason: Standard grammatical rule: the logical subject must be shared in the construction.
+- `homogeneous-members.yaml:88` — `... узагальнювального слова — НЕПРАВИЛЬНО, має бути: Усе зраділо: і трави, і квіти).'   - '...` — reason: Explicit correction of a punctuation error; the “має бути” wording is doing instruction, not overprescription.
+- `motion-prefixes-in-out.yaml:57` — `...енників. *Зайшов у друга (неправильно — має бути до друга). *Вийшов від магазину (неправ...` — reason: Contrastive error list teaching preposition choice; keeping the correction is appropriate.
+- `pluralia-tantum.yaml:61` — `... та на письмі: *Ці гроші коштує дорого (має бути коштують). *Мої окуляри зламався (має б...` — reason: Agreement-error correction examples; the prescriptive wording is part of the exercise.
+- `vocative-formal.yaml:44` — `...ера, до державного службовця. У кожному має бути використана правильна форма кличного ві...` — reason: Task requirement for formal vocative usage, not a context-blind lexical prescription.
+- `vocative-formal.yaml:56` — `...ову як другу: *Шановний Іван Петрович! (має бути: Іване Петровичу). *Пані Оксано Петрівн...` — reason: Formal-address correction examples; prescriptive wording is appropriate in this grammar context.
+
+### Audit-Body Gaps
+
+- `D6 summary-only count` — reason: The audit summary counts 37 D6 findings, but only 32 line items are expanded in the published report body. The remaining 5 count-only items were not enumerated there; they were treated as skipped under the same pedagogical / false-positive rationale used for the visible D6 items.
