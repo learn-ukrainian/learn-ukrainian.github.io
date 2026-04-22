@@ -243,6 +243,7 @@ def _run_worker(
     cwd_str: str,
     model: str | None,
     hard_timeout: int,
+    effort: str | None = None,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
 
@@ -297,6 +298,7 @@ def _run_worker(
             tool_config=None,
             entrypoint="delegate",
             hard_timeout=hard_timeout,
+            effort=effort,
         )
         ok_outcome = result.ok
         response = result.response
@@ -438,6 +440,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "task_id": task_id,
         "agent": args.agent,
         "model": args.model,
+        "effort": getattr(args, "effort", None),
         "mode": args.mode,
         "cwd": cwd,
         "worktree_path": str(worktree_path) if worktree_path else None,
@@ -480,6 +483,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     ]
     if args.model:
         cmd.extend(["--model", args.model])
+    effort = getattr(args, "effort", None)
+    if effort:
+        cmd.extend(["--effort", effort])
 
     # Pipe the prompt via stdin so it doesn't hit argv length limits.
     # start_new_session=True detaches from our process group — the
@@ -772,6 +778,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
         cwd_str=args.cwd,
         model=args.model,
         hard_timeout=args.hard_timeout,
+        effort=args.effort,
     )
 
 
@@ -817,6 +824,20 @@ def build_parser() -> argparse.ArgumentParser:
                    help="Runtime mode (default: read-only). Use danger only with --worktree.")
     d.add_argument("--model", default=None,
                    help="Optional model override, e.g. gpt-5.4 or gemini-3.1-pro-preview.")
+    d.add_argument(
+        "--effort",
+        default=None,
+        choices=["low", "medium", "high", "xhigh", "max"],
+        help=(
+            "Optional reasoning / effort level. Accepted: low, medium, "
+            "high, xhigh, max. Omit to use the agent's own default: "
+            "Codex falls through to ~/.codex/config.toml (currently high); "
+            "Claude falls through to its CLI default (currently high for "
+            "Opus/Sonnet 4.6+ per CC 1.117); Gemini effort is not yet "
+            "wired (gemini-cli does not expose the flag) and is a no-op. "
+            "See #1396."
+        ),
+    )
     d.add_argument("--cwd", default=None,
                    help="Working directory for the worker (default: repo root)")
     d.add_argument(
@@ -862,6 +883,11 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--mode", required=True)
     wk.add_argument("--cwd", required=True)
     wk.add_argument("--model", default=None)
+    wk.add_argument(
+        "--effort",
+        default=None,
+        choices=["low", "medium", "high", "xhigh", "max"],
+    )
     wk.add_argument("--hard-timeout", type=int, default=3600)
     wk.set_defaults(func=cmd_worker)
 

@@ -107,6 +107,7 @@ class AgentAdapter(Protocol):
         task_id: str | None,
         session_id: str | None,
         tool_config: dict | None,
+        effort: str | None = None,
     ) -> InvocationPlan:
         """Build the full InvocationPlan for spawning this agent.
 
@@ -124,6 +125,18 @@ class AgentAdapter(Protocol):
                 Gemini this carries MCP server names and allowed tools.
                 Structure is adapter-defined; keys the adapter doesn't
                 understand are silently ignored.
+            effort: Cross-agent reasoning/effort level. Peer of ``model``
+                in invocation semantics — NOT adapter-specific
+                tool_config. Accepted levels: ``"low" | "medium" | "high"
+                | "xhigh" | "max"``. When ``None``, each adapter falls
+                through to its own CLI / config default (Claude CLI
+                default, Codex's ``~/.codex/config.toml``, etc.). Each
+                adapter decides how to surface the level to its CLI:
+                Claude passes ``--effort <level>`` when the binary
+                supports it (CC 2.1.98+); Codex passes
+                ``-c model_reasoning_effort=<level>``; Gemini currently
+                no-ops with a debug log (see #1396). Adapters MUST NOT
+                hard-fail on an unsupported CLI — warn and proceed.
 
         Returns:
             InvocationPlan ready for subprocess.Popen.

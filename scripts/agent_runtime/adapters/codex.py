@@ -128,6 +128,7 @@ class CodexAdapter:
         task_id: str | None,
         session_id: str | None,
         tool_config: dict | None,
+        effort: str | None = None,
     ) -> InvocationPlan:
         """Build the codex exec invocation.
 
@@ -137,6 +138,12 @@ class CodexAdapter:
             - ``{"mcp_servers": {"sources": {"url": "http://127.0.0.1:8766/sse"}}}``
               → ``-c 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"'``
             - Unknown top-level keys are ignored (forward-compatible).
+
+        ``effort``: when non-None, appended as
+        ``-c model_reasoning_effort=<level>`` so it overrides
+        ``~/.codex/config.toml`` for this invocation only. When None,
+        Codex falls through to the config default (currently ``high``).
+        See #1396.
         """
         # Defensively drop session_id — Codex is always fresh-session by
         # design (see class docstring). Local `_ =` rebind silences the
@@ -174,6 +181,9 @@ class CodexAdapter:
 
         cmd: list[str] = [codex_bin, "exec"]
         cmd.extend(self._tool_config_flags(tool_config))
+        if effort is not None:
+            # Per-invocation override of ~/.codex/config.toml (#1396).
+            cmd.extend(["-c", f"model_reasoning_effort={effort}"])
         cmd.extend([
             "--skip-git-repo-check",
             "-C", str(cwd),
