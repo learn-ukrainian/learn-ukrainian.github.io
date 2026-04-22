@@ -2,11 +2,20 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3268
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s0017
+  type: textbook
 - id: S2
-  file: S1419
-  type: unknown
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0122
+  type: textbook
 - id: S3
-  file: S3158
-  type: unknown
+  file: S2509
+  type: textbook
+- id: S4
+  file: S2393
+  type: textbook
+- id: S5
+  file: S1143
+  type: textbook
+- id: S6
+  file: ext-ulp_youtube-272
+  type: external
