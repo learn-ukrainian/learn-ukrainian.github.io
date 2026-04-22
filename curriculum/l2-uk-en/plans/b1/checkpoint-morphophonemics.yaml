@@ -2,9 +2,9 @@ module: b1-023
 level: B1
 sequence: 23
 slug: checkpoint-morphophonemics
-version: '3.1.2'
+version: '3.1.3'
 title: "Контрольна робота 1"
-subtitle: "Базовий рівень та морфонеміка — перевірка M01-M12"
+subtitle: "Базовий рівень та морфонеміка — перевірка модулі №1–12"
 focus: review
 pedagogy: PPP
 phase: "B1.1 [Морфонеміка]"

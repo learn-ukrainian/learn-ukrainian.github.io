@@ -2,7 +2,7 @@ module: a1-016
 level: A1
 sequence: 16
 slug: verbs-group-one
-version: '1.1.1'
+version: '1.1.2'
 title: Дієслова першої групи
 subtitle: Читаю, читаєш, читає — ваша перша дієвідміна
 focus: grammar
@@ -54,7 +54,7 @@ vocabulary_hints:
   - малювати (to draw)
   - грати (to play)
   - вечеря (dinner, f)
-  - музика (music — review from M15)
+  - музика (music — review from модуль №15)
 activity_hints:
 - type: fill-in
   focus: 'Провідміняйте: я чита__, ти чита__, він чита__'
