@@ -13,13 +13,16 @@ review_notes: >-
   no findings in plan prose (homoglyph scan NONE; no "приймати X" /
   "Давайте + 1pl" / "на винос" patterns). The plan was brought into
   alignment with the locked wiki: Крок 6 patronymic recognition hook
-  (`ім'я + по батькові + Ви` as formal-register signal) added to the
-  "Сім'я" section; `ім'я`, `прізвище`, `по батькові` added to
-  recommended vocab; new family-Surzhyk fill-in activity added to
-  mirror the wiki's "Типові помилки L2" table (жена/дружина,
-  муж/чоловік, бабушка/бабуся, etc.); wiki back-reference added to
-  references. See PR body for the full audit and the LOCKED review
-  at wiki/.reviews/pedagogy/a1/my-family-review-LOCKED.md.
+  added to "Сім'я" section (fenced as recognition-only, NOT an added
+  `dialogue_situation` — both dialogues remain peer/photo-sharing);
+  `ім'я`, `прізвище`, `по батькові`, `родичі` added to recommended
+  vocab; family-Surzhyk fill-in activity added (7 pairs: жена/дружина,
+  муж/чоловік, бабушка/бабуся, родственники/родичі, ребьонок/дитина,
+  младший/молодший, женатий/одружений — NO папа/тато pair because
+  VESUM lists `папа` without restrictive tags); wiki back-reference
+  added to references. Cross-agent adversarial review (Codex) caught
+  `папа` overreach in first draft; fixed before lock. See PR body for
+  full audit and wiki/.reviews/pedagogy/a1/my-family-review-LOCKED.md.
 title: Моя сім'я
 subtitle: У мене є брат — показуємо фотографії
 focus: vocabulary
@@ -53,7 +56,7 @@ content_outline:
   words: 200
   points:
   - 'Anna Епізод 6: Два слова для позначення сім''ї: «сім''я» та «родина» (обидва вживаються). Основні: мама/мати, тато/батько, брат, сестра, син, дочка/донька. Додаткові: бабуся/баба, дідусь/дід, тітка, дядько. Зверніть увагу: в українській немає одного слова для «grandparents» — завжди кажемо «бабуся і дідусь».'
-  - 'Ім''я + по батькові — тільки для впізнавання (не для продукції на А1): українська модель повного імені — `ім''я + по батькові + прізвище` (наприклад, `Марія Василівна Коваленко`). Суфікси: чоловічі `-ович`/`-йович` (`Іван → Іванович`), жіночі `-івна`/`-ївна` (`Петро → Петрівна`). УВАГА до автора: українська жіноча форма — `-івна`/`-ївна`, НЕ російська `-овна`. Увести в одному короткому діалозі формально-реєстрового контексту (учень → вчителька): `— Добрий день, Маріє Василівно!` Продукція власних форм по батькові відкладається на А2; А1 = впізнавання + розуміння, що це сигнал формальності.'
+  - 'Ім''я + по батькові — ТІЛЬКИ для впізнавання (не для продукції на А1, не окреме `dialogue_situation`): українська модель повного імені — `ім''я + по батькові + прізвище` (наприклад, `Марія Василівна Коваленко`). Суфікси: чоловічі `-ович`/`-йович` (`Іван → Іванович`), жіночі `-івна`/`-ївна` (`Петро → Петрівна`). УВАГА до автора: українська жіноча форма — `-івна`/`-ївна`, НЕ російська `-овна`. Подати ОДИН короткий ілюстративний приклад у секції (напр. у самому тексті «Сім''я» або «Підсумок»): `— Добрий день, Маріє Василівно!` з позначкою «recognition-only; формальний регістр». Дві головні `dialogue_situations[]` залишаються peer/photo-sharing з `ти` — формальний регістр з `по батькові` не вводиться як окремий діалог і не тренується продуктивно. Продукція власних форм по батькові відкладається на А2; А1 = впізнавання + розуміння, що це сигнал формальності.'
 - section: У мене є
   words: 250
   points:
@@ -113,7 +116,7 @@ activity_hints:
   focus: 'Заповніть пропуски в діалозі про знайомство з сім''єю. Шаблон: "— Привіт! Це {твій} брат?" / "— Так, це мій брат. Ось мій {тато}." Варіанти для пропусків: члени родини або присвійні займенники. ЖОДНИХ форм родового відмінка.'
   items: 4
 - type: fill-in
-  focus: 'Типові родинні суржикові пари — оберіть нормативну форму (див. wiki "Типові помилки L2"). Мета: нейтралізувати поширені запозичення з рос. (`жена`, `муж`, `бабушка`, `родственники`, `ребьонок`, `младший`, `женатий`, `папа` у значенні батько) перед тим, як вони закріпляться як «норма».'
+  focus: 'Типові родинні суржикові пари — оберіть нормативну форму (див. wiki "Типові помилки L2"). Мета: нейтралізувати поширені запозичення з рос. (`жена`, `муж`, `бабушка`, `родственники`, `ребьонок`, `младший`, `женатий`) перед тим, як вони закріпляться як «норма». УВАГА: пара `папа/тато` свідомо відсутня — `папа` зафіксоване у VESUM без обмежень і є регістрово-стильовою преференцією, а не словниковою помилкою (автор модулює `тато`, але не маркує `папа` як «неправильно»).'
   items:
   - Моя {дружина|жена} — вчителька.
   - Мій {чоловік|муж} працює в лікарні.
@@ -122,7 +125,6 @@ activity_hints:
   - Моя племінниця ще маленька {дитина|ребьонок}.
   - Мій {молодший|младший} брат навчається в школі.
   - Мій старший брат уже {одружений|женатий}. У нього двоє дітей.
-  - Мама і {тато|папа} вдома.
 connects_to:
 - a1-007 (Рубіжний контроль — Перший контакт)
 prerequisites:
@@ -155,5 +157,5 @@ changelog:
   - 'Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md (scale batch 1, alongside food-and-drink / colors / sounds-letters-and-hello). Added lifecycle markers (lifecycle/reviewed_at/reviewed_by/review_notes).'
   - 'Added patronymic recognition hook in "Сім''я" section (ім''я + по батькові + Ви as formal-register signal; `-івна`/`-ївна` explicitly flagged as distinct from Russian `-овна`) to align with locked wiki Крок 6.'
   - 'Added ім''я / прізвище / по батькові / родичі to recommended vocabulary (recognition-only at A1).'
-  - 'Added family-Surzhyk fill-in activity mirroring the wiki "Типові помилки L2" table (8 pairs: жена/дружина, муж/чоловік, бабушка/бабуся, родственники/родичі, ребьонок/дитина, младший/молодший, женатий/одружений, папа/тато).'
+  - 'Added family-Surzhyk fill-in activity mirroring the wiki "Типові помилки L2" table (7 pairs: жена/дружина, муж/чоловік, бабушка/бабуся, родственники/родичі, ребьонок/дитина, младший/молодший, женатий/одружений). NOTE: папа/тато pair dropped after AC-3 cross-agent adversarial review — VESUM lists `папа` without restrictive tags, so framing it as a dictionary-backed error would be overreach.'
   - 'Added wiki back-reference to references: section.'
