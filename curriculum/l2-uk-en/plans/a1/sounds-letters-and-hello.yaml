@@ -2,7 +2,22 @@ module: a1-001
 level: A1
 sequence: 1
 slug: sounds-letters-and-hello
-version: 1.5.3
+version: '1.6.0'
+lifecycle: locked
+reviewed_at: '2026-04-23T00:00:00Z'
+reviewed_by: claude-opus-4-7-xhigh-1412-sounds-letters-and-hello
+review_notes: >-
+  Review-and-lock pass per the #1412 rubric template
+  (docs/best-practices/wiki-plan-review-and-lock.md). Plan-side findings:
+  (a) context-blind reciprocal `А у тебе?` mandated for a name-exchange
+  in dialogue_situations[1] — fixed to the context-appropriate `А тебе?`
+  (elliptical for `А тебе як звати?`); (b) no Russianisms in plan prose
+  (scan clean — uses synthetic imperative `Прочитаймо`, no `Давайте`,
+  no `приймати` calques); (c) no calques in vocabulary_hints (all
+  VESUM-verified); (d) no plan-internal contradictions (word_target
+  sum 300+250+250+250+150 = 1200); (e) added back-reference to LOCKED
+  wiki in references[]. Paired wiki is LOCKED at 9/10 across all 5
+  dimensions (wiki/.reviews/pedagogy/a1/sounds-letters-and-hello-review-LOCKED.md).
 title: Звуки, літери та привіт
 subtitle: 33 літери, 38 звуків, Привіт!
 focus: phonetics
@@ -21,11 +36,11 @@ dialogue_situations:
   - Вчитель
   - Учні
   motivation: 'Практика вітальних фраз: Привіт! Добрий день! Як справи? Добре.'
-- setting: 'Двоє нових однокласників зустрічаються в коридорі перед першим уроком української мови та знайомляться. ОБОВ''ЯЗКОВО використовувати імена для реплік (Марко:..., Софія:...), обмінятися іменами та використати взаємне «А у тебе?».'
+- setting: 'Двоє нових однокласників зустрічаються в коридорі перед першим уроком української мови та знайомляться. ОБОВ''ЯЗКОВО використовувати імена для реплік (Марко:..., Софія:...), обмінятися іменами та використати взаємне «А тебе?» (елептично від «А тебе як звати?»). НЕ вживати «А у тебе?» — це контекстно-сліпа репліка (конструкція `у тебе` не поєднується з дієсловом `звати когось`).'
   speakers:
   - Марко
   - Софія
-  motivation: Привіт! Як тебе звати? Мене звати... А у тебе? — перше соціальне використання вивчених звуків
+  motivation: Привіт! Як тебе звати? Мене звати... А тебе? — перше соціальне використання вивчених звуків із коректним прагматичним реципрокалом для обміну іменами
 content_outline:
 - section: Звуки і літери
   words: 300
@@ -48,7 +63,7 @@ content_outline:
 - section: Привіт!
   words: 250
   points:
-  - 'Ваша перша розмова українською. На основі епізоду 1 ULP Анни Огойко. Привіт! (неформально, для друзів, родини, однолітків). Як справи? Відповіді: Добре. Чудово. Нормально. А у тебе?'
+  - 'Ваша перша розмова українською. На основі епізоду 1 ULP Анни Огойко. Привіт! (неформально, для друзів, родини, однолітків). Як справи? Відповіді: Добре. Чудово. Нормально. А у тебе? (реципрокал для обміну станом — правильно з «у тебе», бо «у мене все добре» → «а у тебе?»).'
   - 'Рада тебе бачити! (каже жінка) / Радий тебе бачити! (каже чоловік) — Радий/рада зустрічі! В українській мові є родові форми — жінки кажуть «рада», чоловіки — «радий». Це ваше перше знайомство з граматичним родом. Це стане великою темою, починаючи з модуля №8.'
   - 'Прочитаймо «Привіт» по літерах — ваш перший звуковий аналіз: П [п] приголосний + р [р] приголосний + и [и] голосний + в [в] приголосний + і [і] голосний + т [т] приголосний. Два голосні, чотири приголосні. Кожен тип звука, який ви вивчили в цьому модулі, з''являється в цьому єдиному слові.'
 - section: Підсумок
@@ -116,6 +131,8 @@ references:
 - title: ULP Season 1, Episode 1 — Informal Greetings
   url: https://www.ukrainianlessons.com/episode1/
   notes: Привіт, Як справи?, моделі відповідей.
+- title: 'Wiki: pedagogy/a1/sounds-letters-and-hello (LOCKED 2026-04-23)'
+  notes: 'Authoritative pedagogical brief — див. Крок 8 (привітання як чанки), Типові помилки L2 (6 помилок + кінестетичні тести), Методичний підхід (милозвучність, наголос).'
 pronunciation_videos:
   credit: Anna Ohoiko — Ukrainian Lessons
   overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
@@ -177,3 +194,12 @@ plan_fixes:
     of em dashes and include the required greeting.
   - replace dialogue_situations[1].motivation — Update motivation to explicitly include
     the reciprocal greeting pattern.
+changelog:
+- version: '1.6.0'
+  date: '2026-04-23'
+  changes:
+  - 'Review-and-lock pass per the #1412 rubric template (`docs/best-practices/wiki-plan-review-and-lock.md`). Paired wiki locked at 9/10.'
+  - 'Fixed context-blind reciprocal `А у тебе?` in dialogue_situations[1] (name-exchange context) — replaced with `А тебе?` (elliptical for `А тебе як звати?`). Per #1392 Defect 2. `А у тебе?` retained in content_outline[3].points[0] for the `Як справи? → Добре. А у тебе?` exchange, where the `у тебе` construction IS contextually correct (state exchange, not name exchange).'
+  - 'Added lifecycle markers (lifecycle/reviewed_at/reviewed_by/review_notes) per the convention documented in `docs/best-practices/wiki-plan-review-and-lock.md`.'
+  - 'Added back-reference to LOCKED wiki (`wiki/pedagogy/a1/sounds-letters-and-hello.md`) in references[].'
+  - 'Adversarial scan clean: no Russianisms in plan prose (synthetic `Прочитаймо`, no `Давайте`); no calques in vocabulary_hints (all VESUM-verified); no plan-internal contradictions (word_target sum 1200 = 300+250+250+250+150).'
