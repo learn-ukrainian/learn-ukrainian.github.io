@@ -70,7 +70,7 @@ jobs:
           fi
 
           if [[ "$base_sha" =~ ^0+$ ]]; then
-            base_sha="$(git hash-object -t tree /dev/null)"
+            base_sha="$(git merge-base origin/main "$head_sha")"
           fi
 
           mapfile -t changed_files < <(
@@ -156,7 +156,7 @@ jobs:
           fi
 
           if [[ "$base_sha" =~ ^0+$ ]]; then
-            base_sha="$(git hash-object -t tree /dev/null)"
+            base_sha="$(git merge-base origin/main "$head_sha")"
           fi
 
           if [[ -z "$base_sha" ]]; then
