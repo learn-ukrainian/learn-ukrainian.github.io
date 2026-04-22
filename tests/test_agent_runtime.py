@@ -1866,9 +1866,14 @@ def test_gemini_adapter_workspace_write_yolo(tmp_path):
 
 
 @patch.dict("os.environ", {}, clear=True)
-def test_resolve_gemini_auth_mode_defaults_to_api_without_oauth_creds(tmp_path, monkeypatch):
+def test_resolve_gemini_auth_mode_defaults_to_subscription_without_explicit_api_opt_in(
+    tmp_path, monkeypatch,
+):
+    # Always-subscription policy (2026-04-23, post-#1416, commit 4f0fae3c0b):
+    # unset GEMINI_AUTH_MODE resolves to ``subscription``. The old
+    # ``default to api when no oauth creds`` conditional was deleted.
     monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
-    assert resolve_gemini_auth_mode() == "api"
+    assert resolve_gemini_auth_mode() == "subscription"
 
 
 @patch.dict("os.environ", {"GEMINI_AUTH_MODE": "subscription"}, clear=True)
@@ -1931,8 +1936,11 @@ def test_gemini_adapter_auto_mode_prefers_subscription_when_oauth_creds_exist(tm
 
 @patch.dict("os.environ", {"GEMINI_AUTH_MODE": "bogus"}, clear=True)
 def test_resolve_gemini_auth_mode_invalid_value_uses_default_resolution(tmp_path, monkeypatch):
+    # Invalid GEMINI_AUTH_MODE normalizes to ``auto`` then falls through to
+    # the always-subscription default. Only an explicit ``api`` opt-out
+    # preserves the API-key path. See commit 4f0fae3c0b.
     monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
-    assert resolve_gemini_auth_mode() == "api"
+    assert resolve_gemini_auth_mode() == "subscription"
 
 
 @patch.dict("os.environ", {"GEMINI_AUTH_MODE": "api-key"}, clear=True)
