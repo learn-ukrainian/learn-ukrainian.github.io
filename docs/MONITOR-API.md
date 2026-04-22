@@ -1009,6 +1009,10 @@ Newest usage records from today's runtime logs, newest first.
 ### `GET /api/delegate/tasks?status=&limit=50`
 
 List delegate task state files with derived age and zombie detection.
+Delegate task status only becomes `rate_limited` when the runtime adapter sees
+an actual provider rate-limit failure signal; for Claude's text-mode runtime
+that means a failed call with a rate-limit phrase on `stderr`, not a successful
+response whose body happens to mention rate limits.
 
 ```json
 {

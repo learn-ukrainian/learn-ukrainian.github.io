@@ -238,12 +238,19 @@ class ClaudeAdapter:
         _ = plan
         _ = call_start_time
 
-        # Rate-limit detection across both streams
-        combined = f"{stdout}\n{stderr}"
-        rate_limited = bool(_RATE_LIMIT_RE.search(combined))
+        # Claude Code 2.1.117 does not document a dedicated rate-limit exit
+        # code in `claude --help`, and this runtime currently requests plain
+        # text (`--output-format text`), not machine-readable JSON. The safest
+        # remaining signal is a rate-limit phrase on stderr from a failed or
+        # empty-response call. We intentionally ignore stdout here: successful
+        # Claude responses can legitimately discuss "rate limited" without the
+        # task being blocked.
+        usable_response = bool(stdout.strip())
+        failed_call = returncode != 0 or not usable_response
+        rate_limited = failed_call and bool(_RATE_LIMIT_RE.search(stderr or ""))
 
         # Success classification
-        ok = returncode == 0 and bool(stdout.strip()) and not rate_limited
+        ok = returncode == 0 and usable_response and not rate_limited
         response = stdout.strip() if ok else ""
 
         # Stderr excerpt on failure

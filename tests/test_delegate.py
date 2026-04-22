@@ -72,6 +72,14 @@ def test_read_state_corrupted_json(tmp_tasks_dir):
     assert delegate._read_state(path) is None
 
 
+def test_classify_final_status_prioritizes_cancelled_over_other_flags():
+    assert delegate._classify_final_status(
+        cancelled=True,
+        rate_limited=True,
+        ok_outcome=True,
+    ) == "cancelled"
+
+
 # ---------------------------------------------------------------------------
 # PID liveness probe
 # ---------------------------------------------------------------------------
