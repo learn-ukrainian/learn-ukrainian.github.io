@@ -1,0 +1,153 @@
+reviewer_model: opus
+fixture: a1/special-signs
+axes:
+  linguistic_correctness:
+    score: 6
+    evidence:
+    - quote: Бил — Біл
+      issue: Fabricated minimal pair. «Бил» is not a standard Ukrainian lexeme; «біл»
+        is not a standard Ukrainian lexeme either. Presenting invented word-shapes
+        as a reading-drill pair misleads the learner about what И/І actually contrast
+        in real vocabulary.
+      authority: VESUM
+    - quote: Мить — Міть
+      issue: «Мить» (моment) is real; «міть» is not a Ukrainian word (no such imperative
+        of «мити» or «мести»; no nominal). Second fabricated pair in the same exercise.
+      authority: VESUM
+    - quote: 'Д (дзвінкий) — Т (глухий): дім — тім.'
+      issue: «Тім» is not a free-standing noun in modern Ukrainian; the lexeme «тім'я»
+        exists, but standalone «тім» is marginal at best. Pedagogically weak minimal
+        pair for A1.
+      authority: VESUM
+    - quote: Сил — Сіль (тут додається і м'якість!)
+      issue: «Сил» is genitive plural of «сила» — not an A1 citation form and a confusing
+        standalone comparator with «сіль». The parenthetical even admits the contrast
+        is not clean И/І.
+      authority: VESUM
+    - quote: «вогко», «нігті», «кігті», «дьогтю»
+      issue: Correct list of voiced-plosive devoicing exceptions alongside «легко».
+        Accurate and well-placed.
+      authority: Правопис 2019
+    - quote: Г [ɦ] — це дзвінкий фрикативний звук. … Ґ [g] — це дзвінкий проривний
+        звук.
+      issue: Correctly distinguishes the two phonemes and their articulation; matches
+        plan's note not to call Г «м'яким».
+      authority: Правопис 2019
+  pedagogical_accuracy:
+    score: 7
+    evidence:
+    - quote: «ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи?» … Усі приголосні в цій фразі (ДЗ, Д,
+        Т, З, С, Ц, Л, Н) плюс звук Р та Й складають основу м'якості
+      issue: Writer correctly compensates for the plan's 8-consonant mnemonic by adding
+        «плюс Р» to reach the real 9 (+Й). Better than the plan statement that calls
+        the mnemonic itself «саме ті 9».
+      authority: 'plan: content_outline / grammar'
+    - quote: Складніші правила, пов'язані з префіксами (як у словах «під'їзд» чи «з'їзд»),
+        ми розглянемо згодом.
+      issue: Plan explicitly says «ЖОДНИХ прикладів префіксного апострофа на А1»,
+        including «під'їзд» / «з'їзд». Writer names both words in the body, softening
+        but not honoring the ban. Pedagogically arguable; plan-wise a violation.
+      authority: 'plan: content_outline/Апостроф + grammar'
+    - quote: Використовуйте фразу «Мавпа Буф», додавши до неї літеру Р.
+      issue: «Мавпа Буф(+Р)» is a well-known school mnemonic for МФПБВ(+Р) that is
+        NOT in the plan. Adds pedagogical value but is writer-introduced content.
+      authority: none (writer addition)
+    - quote: 'Порівняйте: «лан» [лан] (поле) та «лань» [лан''] (тварина).'
+      issue: Valid and clean minimal pair to demonstrate Ь softening of Н. Good.
+      authority: VESUM
+    - quote: '«буряк» [бур''ак]: тут немає апострофа, тому Р — м''який'
+      issue: Contrasts «буряк» vs «бур'ян» for the apostrophe rule in R-position.
+        Classic textbook contrast, appropriate; transcription notation is consistent
+        with how the plan teaches the split.
+      authority: 'plan: М''який знак / Апостроф sections'
+  decodability_a1:
+    score: 5
+    evidence:
+    - quote: тонкощі української фонетики та графіки
+      issue: «Тонкощі» is above A1 receptive vocabulary for an introductory phonetics
+        module taught in Ukrainian.
+    - quote: тверді приголосні звуки позначаються однією рискою [–], а м'які — двома
+        рівнобіжними рисками [=]
+      issue: «Рівнобіжними» is well above A1. A1 can handle «паралельними» at best;
+        ideally «двома рисками» (show the symbol, skip the adjective).
+    - quote: Ті, що завжди залишаються непохитними у своїй твердості.
+      issue: «Непохитними» is literary register, not A1. The sentence also nominalises
+        «твердість», stacking abstract vocab unnecessarily.
+    - quote: На завершення нашого фонетичного екскурсу розглянемо кілька звуків
+      issue: «Фонетичний екскурс» is metacommentary register at B1–B2. Not decodable
+        for an A1 reader encountering Ь / апостроф for the first time.
+    - quote: Наш звук Р — дрижачий і сонорний.
+      issue: Two technical terms stacked («дрижачий», «сонорний») with no paraphrase;
+        A1 reader has no anchor.
+  plan_adherence:
+    score: 6
+    missing_from_plan:
+    - 'Activity odd-one-out items=6: text provides only 3 rows (1. Учитель/тінь/м''яч,
+      2. Сеньйор/сіль/квітка, 3. Осінь/кінь/голуб). Half the required volume.'
+    - 'Activity true-false items=6: text provides 5 statements, missing 1.'
+    - 'Activity match-up items=8: text lists 7 prompts (Д, Г, З, Ж, Ґ, ДЗ, ДЖ) plus
+      an example — short by one if Б-П was meant to be a solved item too.'
+    - 'Plan directive «ЖОДНИХ прикладів префіксного апострофа»: text names «під''їзд»,
+      «з''їзд» in body prose. Not taught but named.'
+    - Section-level word budgets are not tracked in-text; «Апостроф» section is noticeably
+      longer than 250 words while «Підсумок» is roughly on target.
+    extra_not_in_plan:
+    - «Мавпа Буф» mnemonic for the apostrophe rule (helpful but not listed in plan).
+    - Exception list «вогко», «нігті», «кігті», «дьогтю» alongside «легко» (plan only
+      requires «легко»).
+    - Final read-aloud sentence «Моя сім'я́ п'ять днів гарно працювала» is an extra
+      reading-out-loud task not in activity_hints.
+  register_naturalness:
+    score: 8
+    evidence:
+    - quote: Українська мова славиться своєю милозвучністю та м'якістю.
+      issue: Natural opening line, common textbook register. Slightly ornamental but
+        idiomatic.
+    - quote: 'Апостроф каже нам: «Стій! Не пом''якшуй приголосний. Прочитай його твердо,
+        а наступний голосний вимов так, ніби перед ним стоїть звук [й]».'
+      issue: Anthropomorphised rule statement is natural Ukrainian pedagogical voice.
+        Reads cleanly, no calque feel.
+    - quote: Це правило — ключ до того, щоб ваша мова звучала по-справжньому по-українськи.
+      issue: Natural idiomatic Ukrainian; no Russian-shaped construction.
+    - quote: 'Запам''ятайте: ми ніколи не пишемо «сімь» чи «нічь» — це груба помилка,
+        що походить з інших мов.'
+      issue: «Груба помилка, що походить з інших мов» is a tactful decolonised way
+        to say «so пишуть у російській». Natural and pedagogically honest.
+    - quote: Недосконалий Р завжди зрозумілий — зосередьтеся на тому, щоб вимовляти
+        його комфортно, а не ідеально.
+      issue: Plan's original phrasing preserved in spirit; reads as natural encouragement.
+  honesty:
+    score: 4
+    verify_markers_present: false
+    notes: 'No <!-- VERIFY --> markers anywhere. The module presents fabricated minimal
+      pairs («Бил — Біл», «Мить — Міть», arguably «дім — тім», «Сил — Сіль») as though
+      they were real Ukrainian contrast pairs — exactly the failure mode the VERIFY
+      convention exists to prevent. Elsewhere the writer is confident in places they
+      should be: e.g. the claim that Р «частіше пом''якшується перед голосними» is
+      stated without qualification, even though Р palatalisation in Ukrainian is narrower
+      than that sentence implies. Nowhere does the writer admit not knowing or defer
+      to an authority.'
+plan_issues:
+- plan_field: content_outline.М'який знак.points[0]
+  issue: The mnemonic «ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи» contains only 8 consonants (ДЗ,
+    Д, Т, З, С, Ц, Л, Н); Р is absent. Plan calls this mnemonic «саме ті 9 приголосних,
+    які Ь може пом'якшити», which is arithmetically wrong. Writer had to patch this
+    in prose.
+  evidence: '«Мнемонічне правило Літвінової для 5 класу: «ДЗіДЗьо, Де Ти З''їСи Ці
+    ЛиНи» — саме ті 9 приголосних, які Ь може пом''якшити.»'
+- plan_field: 'activity_hints (odd-one-out).items: 6'
+  issue: A 6-item odd-one-out at A1 Ukrainian-native with only the «М'який знак» scope
+    is tight; either plan should specify «6 rows» clearly or relax to 3-4. Current
+    writer output (3 rows) illustrates the ambiguity.
+  evidence: '«type: odd-one-out, section: М''який знак, items: 6»'
+summary:
+  overall_score: 6.0
+  single_worst_error: Exercise 8 («Слухаємо И та І») presents «Бил — Біл» and «Мить
+    — Міть» as Ukrainian minimal pairs, but «біл», «бил», «міть» are not standard
+    Ukrainian lexemes — fabricated contrast pairs in a reading drill meant to train
+    phonemic discrimination.
+  single_best_moment: The writer corrected the plan's 8-consonant mnemonic in prose
+    by appending «плюс звук Р», giving the learner the full 9-consonant Ь-softening
+    set the plan grammar field actually requires.
+  verdict: FAIL
+  word_count_estimate: 1650

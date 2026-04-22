@@ -1,0 +1,150 @@
+reviewer_model: sonnet
+fixture: a1/special-signs
+axes:
+  linguistic_correctness:
+    score: 9
+    evidence:
+    - quote: '«буряк» і «бур''ян». Без апострофа [р] м''який, а я читається як [а]:
+        [бур''ак]. З апострофом [р] твердий, а я звучить як [йа]: [бурйан].'
+      issue: Correct and verified. Правопис 2019 §7 Примітка under rule 2 uses 'буряк'
+        as its canonical no-apostrophe example. Module is precisely aligned with the
+        authoritative rule.
+      authority: Правопис 2019 §7
+    - quote: Це [д], [т], [з], [с], [ц], [л], [н], [р] та [дз]. Окремо стоїть [й]
+        — він завжди м'який сам по собі, і Ь йому не потрібен.
+      issue: Correct enumeration of the 9 soft-capable consonants plus [й] as permanently
+        soft. No errors.
+      authority: Правопис 2019
+    - quote: 'Г вимовляється так: повітря проходить через звужене горло, голосові
+        зв''язки працюють. Це дзвінкий фрикативний звук, у міжнародній транскрипції
+        — [ɦ].'
+      issue: Correct. Ukrainian Г is [ɦ] (voiced glottal fricative), not [ɡ]. Voiceless
+        counterpart is Х.
+      authority: none
+    - quote: 'І ніколи не називай Г «м''яким»: у фонетиці м''який означає палаталізований,
+        а Г таким не є.'
+      issue: Correct and important disambiguation. The plan explicitly mandates this
+        warning. Executed cleanly.
+      authority: plan section grammar
+    - quote: аґрус
+      issue: VERIFIED in VESUM (noun:inanim:m). Correct use of Ґ, not a hallucination.
+      authority: VESUM
+  pedagogical_accuracy:
+    score: 8
+    evidence:
+    - quote: 'Захарійчук формулює правило коротко: апостроф пишемо після б, п, в,
+        м, ф, р перед я, ю, є, ї.'
+      issue: Correct attribution to Захарійчук, 1 клас, стор. 97. Matches plan reference
+        exactly.
+      authority: plan section references
+    - quote: Марія Захарійчук у підручнику для першого класу позначає тверді приголосні
+        однією рискою [–], а м'які — двома рисочками [=].
+      issue: Correct attribution to Захарійчук, 1 клас, стор. 15. Matches plan reference
+        exactly.
+      authority: plan section references
+    - quote: 'учні середніх класів користуються мнемонічною фразою: «ДЗіДЗьо, Де Ти
+        З''їСи Ці ЛиНи?»'
+      issue: Mnemonic is correctly included but Літвінова is not credited. Plan explicitly
+        names this as 'Мнемонічне правило Літвінової для 5 класу'. Attribution gap.
+      authority: plan section content_outline
+    - quote: У цьому модулі ми працюємо лише з правилом губних і р. Слова типу «під'їзд»
+        чи «з'їзд» теж мають апостроф, але там діє інше правило — правило префіксів...
+        Його вивчають пізніше, на рівні А2.
+      issue: Excellent scope discipline. Plan explicitly forbids prefix-apostrophe
+        examples at A1. Module not only avoids them but explains why, which prevents
+        learner confusion.
+      authority: plan section grammar
+    - quote: Добрі тренувальні відео зі звуком Р є в курсах Анни Огойко.
+      issue: Correct reference as called out in the plan. Matches 'Потренуйтеся з
+        відео Анни Огойко' in plan points.
+      authority: plan section content_outline
+  decodability_a1:
+    score: 7
+    evidence:
+    - quote: Це дзвінкий фрикативний звук, у міжнародній транскрипції — [ɦ].
+      issue: '''Фрикативний'' is a Grade 5+ phonetic term (Авраменко 5 клас). The
+        plan cites Grade 1 (Захарійчук) as primary source. A Grade 1 learner does
+        not encounter ''фрикативний'' in their curriculum. Creates register split
+        within the module''s own reference set.'
+      authority: plan section references
+    - quote: 'Ніколи не називай Г «м''яким»: у фонетиці м''який означає палаталізований,
+        а Г таким не є. Г і Ґ відрізняються типом артикуляції, а не м''якістю.'
+      issue: '''Палаталізований'' and ''артикуляції'' are metalinguistic terms above
+        Grade 1-2 native speaker level. Accurate and appropriate for Grade 5 (plan''s
+        mnemonic source), but the module blends Grade 1 and Grade 5 register without
+        signalling the shift.'
+      authority: plan section references
+    - quote: Скажи слово «син» — [н] тут твердий. А тепер скажи «синь» — [н] уже м'який.
+      issue: Within A1 scope. Direct, concrete instruction with minimal pairs. No
+        vocabulary barrier.
+      above_a1_scope: false
+    - quote: Поклади долоню на горло і скажи [б-б-б]. Горло злегка вібрує — отже,
+        [б] дзвінкий.
+      issue: Excellent kinesthetic instruction. Fully accessible to early learners,
+        no decoding barrier.
+      above_a1_scope: false
+  plan_adherence:
+    score: 9
+    missing_from_plan:
+    - Літвінова not credited for the mnemonic 'ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи' — plan
+      explicitly labels it 'Мнемонічне правило Літвінової для 5 класу'
+    - Большакова not cited anywhere — plan references Большакова 1 клас стор. 45-47
+      (тверді і пом'якшені) and Большакова 2 клас стор. 46 (in content_outline point
+      for triple classification)
+    extra_not_in_plan:
+    - '''свято'' vs ''м''ята'' contrast added as extra apostrophe pair — not in plan,
+      but reinforces the rule correctly'
+  register_naturalness:
+    score: 9
+    evidence:
+    - quote: Апостроф ніби ставить тиху межу між приголосним і голосним, щоб вони
+        не злилися.
+      issue: Natural Ukrainian metaphor. 'Тиху межу' is idiomatic and apt. Not translated
+        from English.
+      authority: none
+    - quote: 'Якщо Р виходить не одразу, не переймайся: його все одно буде зрозуміло.'
+      issue: Very natural, colloquial encouragement. 'Не переймайся' is idiomatic
+        Ukrainian.
+      authority: none
+    - quote: Прочитай уголос
+      issue: '''Уголос'' is attested and not wrong, but ''вголос'' is the more canonical
+        modern adverb form. Used consistently throughout the module. Very minor.'
+      authority: none
+    - quote: Отже, дзвінкість і глухість в українській мові — це смислова різниця.
+      issue: Natural Ukrainian logical connector 'отже' used correctly. No calques
+        or Russianisms detected throughout the module.
+      authority: none
+  honesty:
+    score: 8
+    verify_markers_present: false
+    notes: 'No <!-- VERIFY --> markers, but the content is grounded in verifiable
+      authoritative sources and none were needed for the claims made. The module is
+      transparent about scope (''лише ті слова з апострофом, де він ставиться за правилом
+      губних...''), honest about exceptions (''Винятків дуже мало. Один із найвідоміших
+      — слово «легко»''), and accurate about A2 scope boundaries. The ''аґрус'' example
+      (Ґ) was verified in VESUM and is correct. One missed opportunity: the mild softening
+      of devoicing in final position in fast speech is an acknowledged phonetic nuance
+      that the module doesn''t flag — but the standard pedagogical position (no devoicing)
+      is what is taught and is correct to teach at A1.'
+plan_issues:
+- plan_field: content_outline / references
+  issue: The plan mixes Grade 1 (Захарійчук) and Grade 5 (Авраменко, Літвінова) sources
+    within a single A1 module without specifying how to manage the register difference.
+    This forces the writer to either use Grade 5 phonetic terminology ('фрикативний',
+    'палаталізований') or rephrase plan content points that directly quote these terms.
+    The plan should either restrict to Grade 1 register or mark which points are for
+    teacher notes vs. learner-facing text.
+  evidence: '''Г [ɦ] (дзвінкий фрикативний, НЕ "м''''який")'' — plan uses phonetic
+    metalanguage in its content points without registering that this is Grade 5 terminology'
+summary:
+  overall_score: 8.3
+  single_worst_error: Advanced phonetic metalanguage ('фрикативний', 'палаталізований',
+    'артикуляції') is woven into learner-facing prose without register marking — these
+    terms appear in Авраменко Grade 5, not in Захарійчук Grade 1, and the module's
+    own reference set crosses both without signalling the shift.
+  single_best_moment: The 'буряк' vs 'бур'ян' minimal pair contrast demonstrating
+    apostrophe changing both phonology and lexical meaning is the canonical Правопис
+    2019 §7 example — author used the authoritative source correctly and pedagogically
+    effectively.
+  verdict: REVISE
+  word_count_estimate: 1380

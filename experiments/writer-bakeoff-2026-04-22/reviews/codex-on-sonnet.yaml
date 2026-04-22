@@ -1,0 +1,99 @@
+reviewer_model: codex
+fixture: a1/special-signs
+axes:
+  linguistic_correctness:
+    score: 7
+    evidence:
+    - quote: Апостроф потрібен лише тоді, коли губний або Р стоять безпосередньо перед
+        Я, Ю, Є або Ї.
+      issue: This is an overbroad absolute. It converts an A1 teaching slice into
+        a false universal spelling rule by erasing other apostrophe environments.
+      authority: none
+    - quote: Апостроф ставиться лише після **Б, П, В, М, Ф, Р** перед **Я, Ю, Є, Ї**.
+      issue: The same overstatement is repeated in the summary, so the learner is
+        left with a linguistically incomplete rule stated as final truth.
+      authority: none
+    - quote: 'Порівняйте: **кут** і **куть**, **лис** і **лись**'
+      issue: <!-- VERIFY --> `куть` and `лись` look unattested or highly marginal
+        here. If these are invented phonetic pairs, the text must mark them as such.
+      authority: none
+    - quote: Г і Ґ — дві різні літери, два різні звуки. Плутати їх — помилка.
+      issue: Correct. The module consistently keeps Г [ɦ] distinct from Ґ [g], which
+        is an important Ukrainian contrast.
+      authority: none
+    - quote: '**дуб** вимовляється [дуб], не [дуп]'
+      issue: Correct. This matches the Ukrainian non-devoicing point the plan requires.
+      authority: none
+  pedagogical_accuracy:
+    score: 7
+    evidence:
+    - quote: 'Порівняйте слова **без** апострофа і **з** апострофом:'
+      issue: Good contrastive setup. `пісня` versus `сім'я` directly teaches what
+        the apostrophe changes.
+      authority: plan section
+    - quote: 'Важливе застереження: не називайте Г «м''яким».'
+      issue: Good corrective move and aligned with the plan's warning about Г not
+        being 'м'який'.
+      authority: plan section
+    - quote: 'У кожній парі перше слово містить И: ширший, трохи задніший звук. Друге
+        — І: вужчий, більш передній.'
+      issue: Too much articulatory metalanguage for first-contact A1; the plan only
+        needed hearing practice through minimal pairs.
+      authority: plan section
+    - quote: Апостроф потрібен лише тоді, коли губний або Р стоять безпосередньо перед
+        Я, Ю, Є або Ї.
+      issue: Pedagogically harmful simplification. The plan bans prefix examples at
+        A1; it does not license teaching a false absolute rule.
+      authority: plan section
+  decodability_a1:
+    score: 5
+    evidence:
+    - quote: 'word_target: 1200'
+      issue: The module is about 2220 words, almost double the plan target. That is
+        too much input for A1.1 phonetics.
+    - quote: палаталізований — вимовлений із піднесенням середини язика до піднебіння.
+      issue: Above A1 scope. This is specialist phonetic terminology with no scaffold.
+    - quote: Загострюйте фонематичний слух на **мінімальних парах**
+      issue: Abstract teacher-language, not beginner-facing A1 wording.
+    - quote: Г — дзвінкий фрикативний приголосний. ... **Ґ** [g] — дзвінкий проривний
+        приголосний.
+      issue: Too much dense terminology in one burst for a module labelled A1.1 '[Звуки,
+        літери та перший контакт]'.
+  plan_adherence:
+    score: 8
+    missing_from_plan:
+    - 'Practice word with apostrophe from the plan: "об''єкт".'
+    - 'Prompt from the plan: "Потренуйтеся з відео Анни Огойко про звук И."'
+    - 'Prompt from the plan: "Потренуйтеся з відео Анни Огойко: рука, робота, ранок,
+      риба."'
+    extra_not_in_plan:
+    - Added unplanned pair "кут / куть, лис / лись" in the soft-sign introduction.
+  register_naturalness:
+    score: 7
+    evidence:
+    - quote: стоїть бар'єром між твердим приголосним та голосним, що заходить після
+        нього
+      issue: Awkward phrasing. `що заходить після нього` sounds translated and unnatural.
+    - quote: Загострюйте фонематичний слух
+      issue: Bookish and stiff. This is not natural A1 classroom Ukrainian.
+    - quote: 'Якщо Р ще не виходить ідеальним — не хвилюйтеся: недосконалий Р завжди
+        зрозумілий.'
+      issue: Natural, direct, and supportive without sounding childish.
+    - quote: Г і Ґ — дві різні літери, два різні звуки. Плутати їх — помилка.
+      issue: Crisp, idiomatic, native-sounding formulation.
+  honesty:
+    score: 5
+    verify_markers_present: false
+    notes: 'No `<!-- VERIFY -->` markers. The writer papers over uncertainty instead
+      of flagging it: the absolute apostrophe rule is stated as settled fact, and
+      the dubious pair `кут/куть, лис/лись` is not marked as invented or needing verification.'
+plan_issues: []
+summary:
+  overall_score: 6.5
+  single_worst_error: The lesson teaches the apostrophe as if it exists only after
+    б, п, в, м, ф, р directly before я, ю, є, ї, which is an A1 simplification presented
+    as a false full rule.
+  single_best_moment: The `пісня` versus `сім'я` contrast is the cleanest teaching
+    move in the module because it makes the apostrophe's function audible.
+  verdict: REVISE
+  word_count_estimate: 2220

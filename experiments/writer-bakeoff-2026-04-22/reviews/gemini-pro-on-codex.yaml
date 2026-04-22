@@ -1,0 +1,65 @@
+reviewer_model: gemini-pro
+fixture: a1/special-signs
+axes:
+  linguistic_correctness:
+    score: 10
+    evidence:
+    - quote: 'Він уживається після дев''яти приголосних: д, т, з, с, ц, л, н, р, дз.'
+      issue: Correct listing of consonants that take a soft sign.
+      authority: Правопис 2019
+    - quote: апостроф ставимо після б, п, в, м, ф, р перед я, ю, є, ї.
+      issue: Correct standard apostrophe rule.
+      authority: Правопис 2019
+    - quote: дзвінкі приголосні наприкінці слова переважно не оглушуються. Ми вимовляємо
+        дуб як [дуб], мороз як [мороз]... Виняток, який варто запам'ятати, — слово
+        легко, де чуємо [лехко].
+      issue: Accurate description of Ukrainian phonetics regarding voice assimilation.
+      authority: VESUM
+  pedagogical_accuracy:
+    score: 7
+    evidence:
+    - quote: Тверді вимовляємо без додаткового підняття середини язика. М'які мають
+        виразне м'яке звучання.
+      issue: Omitted the standard primary school phonetic transcription symbols [–]
+        and [=] required by the plan, and instead used an overly academic phonetic
+        definition ('підняття середини язика') which is less practical for early learners.
+      authority: plan section
+  decodability_a1:
+    score: 10
+    evidence:
+    - quote: М'який знак — це особливий знак письма. Сам він не читається як окремий
+        звук, але показує, що попередній приголосний треба вимовити м'яко.
+      issue: within A1 scope
+  plan_adherence:
+    score: 5
+    missing_from_plan:
+    - 'Позначення Захарійчук, 1 клас, стор. 15: тверді = [–], м''які = [=].'
+    - Потренуйтеся з відео Анни Огойко про звук И.
+    - 'Потренуйтеся з відео Анни Огойко: рука, робота, ранок, риба.'
+    extra_not_in_plan:
+    - 'Explicit mention of words «під''їзд» and «з''їзд» (Quote: ''Слова на зразок
+      під''їзд або з''їзд...''), directly violating the strict negative constraint
+      (''НЕ використовуйте «під''їзд» або «з''їзд»'').'
+  register_naturalness:
+    score: 10
+    evidence:
+    - quote: 'Отже, апостроф ніби розділяє вимову: він не дає злитись твердому приголосному
+        з наступною буквою.'
+      issue: natural
+    - quote: Коли працюємо з такими парами, важливо не ковтати звук і не замінювати
+        його приблизним.
+      issue: natural
+  honesty:
+    score: 10
+    verify_markers_present: false
+    notes: The writer confidently and accurately explained phonetics without hallucinating
+      rules or papering over ambiguities.
+plan_issues: []
+summary:
+  overall_score: 8.7
+  single_worst_error: Blatantly violated a negative constraint by explicitly mentioning
+    'під'їзд' and 'з'їзд', and skipped standard pedagogical notation [–] and [=].
+  single_best_moment: Very clear, natural explanation of the role of the apostrophe
+    in separating pronunciation.
+  verdict: REVISE
+  word_count_estimate: 1100

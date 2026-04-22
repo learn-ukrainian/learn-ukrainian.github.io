@@ -1,0 +1,152 @@
+reviewer_model: opus
+fixture: a1/special-signs
+axes:
+  linguistic_correctness:
+    score: 8.5
+    evidence:
+    - quote: 'Він уживається після дев''яти приголосних: д, т, з, с, ц, л, н, р, дз.'
+      issue: Correct. The nine consonants that Ь can soften are listed accurately
+        per Правопис 2019 / Авраменко Grade 5.
+      authority: Правопис 2019
+    - quote: Якщо апострофа нема, букви я, ю, є часто пом'якшують попередній приголосний.
+        Так читаємо слова буряк, свято, рюкзак.
+      issue: 'буряк and рюкзак are acceptable (soft р), but свято is not a case of
+        simple softening — it lacks apostrophe because в stands in a consonant cluster
+        after с (general rule exception: no apostrophe after a consonant + лабіальний
+        within the same root). The simplified explanation is misleading here.'
+      authority: Правопис 2019
+    - quote: Ми вимовляємо дуб як [дуб], мороз як [мороз], а не змінюємо останній
+        приголосний на глухий.
+      issue: Correct statement of the non-devoicing feature of Ukrainian fonetics.
+      authority: Правопис 2019
+    - quote: Виняток, який варто запам'ятати, — слово легко, де чуємо [лехко].
+      issue: Correct canonical exception.
+      authority: Правопис 2019
+    - quote: 'Літеру Ґ читаємо інакше: це проривний звук, близький до к за способом
+        творення, тільки дзвінкий.'
+      issue: Correct phonetic description of Ґ [g] as voiced plosive, with К as its
+        voiceless pair.
+      authority: VESUM
+    - quote: сім'я́ — рідні люди, які живуть разом або підтримують одне одного.
+      issue: Stress сім'я́ on final syllable is correct for 'family'.
+      authority: Горох
+  pedagogical_accuracy:
+    score: 8.5
+    evidence:
+    - quote: «ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи»
+      issue: Matches plan's Літвінова Grade 5 mnemonic — faithfully used, with decolonized
+        cultural reference (band Дзідзьо).
+      authority: plan content_outline
+    - quote: У слові м'який є лише апостроф. М'якого знака тут немає, бо й не потребує
+        додаткового позначення м'якості.
+      issue: 'Excellent pedagogical moment: the м''який example directly clarifies
+        the plan''s recommended-vocab note that й is always soft. Right at the conceptual
+        fault line learners confuse.'
+      authority: plan vocabulary_hints.recommended
+    - quote: Треба також розрізняти тверді, м'які й пом'якшені приголосні.
+      issue: Implements plan's triple division (м'які / пом'якшені / тверді) from
+        Авраменко 5 kl., but never names or illustrates пом'якшені — says only that
+        Ь is not written after them. Learners get the label without the contrast example.
+      authority: plan content_outline section М'який знак
+    - quote: Для самоперевірки покладіть руку на горло і по черзі вимовте б — п, д
+        — т, з — с.
+      issue: Standard and effective phonetic diagnostic technique.
+      authority: textbook citation
+    - quote: Перша вправа — «знайди зайве» ... Друга вправа — вставити пропущений
+        знак ...
+      issue: All 7 plan-required activity types are present (odd-one-out, fill-in,
+        error-correction, group-sort, match-up, true-false, Г/Ґ quiz). Good plan coverage.
+      authority: plan activity_hints
+  decodability_a1:
+    score: 7.5
+    evidence:
+    - quote: А от після губних, шиплячих і задькоязикових м'який знак не ставимо
+      issue: Terms 'губних', 'шиплячих', 'задньоязикових' given without definition.
+        Appropriate for an L1 native learner if this module maps onto Grade 5 content
+        (as the plan cites Авраменко 5 kl.), but borderline for an A1-labelled module.
+        Acceptable only because this is the L1-UK track targeting native speakers.
+    - quote: Український Р дрижачий.
+      issue: '''Дрижачий'' is a Grade-5 linguistic term. Defensible for L1-UK but
+        a jump for any reader who reached this via the A1 label alone.'
+    - quote: 'Є сонорні: в, л, м, н, й, р.'
+      issue: '''Сонорні'' is introduced with only a functional gloss (''звучать голосно'').
+        For L1 natives learning the terminology this is acceptable; not suited to
+        any L2 A1 audience.'
+  plan_adherence:
+    score: 9
+    missing_from_plan:
+    - 'Plan explicitly notes: «НЕ називайте Г ''м''яким'' — в українській фонетиці
+      ''м''який'' означає палаталізований». The text neither restates this caution
+      nor positively disambiguates ''м''який'' vs ''дзвінкий фрикативний'' — a learner
+      could still carry the misconception in.'
+    - Triple division named (тверді / м'які / пом'якшені) but пом'якшені are never
+      concretely illustrated with examples — learners see the label but no prototype
+      word.
+    extra_not_in_plan:
+    - The 'не-оглушення' section expands on minimal pairs (балка — палка, коза — коса)
+      with prose analysis beyond the plan bullet. Value-adds rather than drifts.
+    - Explicit statement that the module teaches only the simplified apostrophe rule
+      (explicitly deferring під'їзд / з'їзд to later study) — aligns with the plan's
+      A2+ boundary warning and is well-handled.
+  register_naturalness:
+    score: 8
+    evidence:
+    - quote: У шкільному навчанні зручно пам'ятати, що м'який знак працює не після
+        будь-якого приголосного.
+      issue: '''М''який знак працює'' is slightly wooden — standard pedagogical Ukrainian
+        would more naturally say ''вживається'' / ''ставиться''. Register not wrong,
+        just flat.'
+    - quote: Саме ці приголосні можуть бути такими, що їх легко пом'якшує ь.
+      issue: Awkward relative construction — 'можуть бути такими, що їх пом'якшує
+        ь' reads like translated syntax. A native textbook would say 'саме ці приголосні
+        можуть бути м'якими, і тому після них пишемо ь'.
+    - quote: Мама додала трохи солі до супу.
+      issue: Natural, idiomatic Ukrainian sentence in the dictionary — good model.
+      authority: none
+    - quote: 'Коли читаємо такі слова, не треба поспішати: спершу вимовляємо приголосний,
+        а тоді відчуваємо, як ь робить його м''яким.'
+      issue: Natural, calm teaching voice. No calques.
+      authority: none
+    - quote: Так вухо вчиться помічати один звук, що змінює значення цілого слова.
+      issue: Clean, idiomatic Ukrainian. No Russianism, no surzhyk detected in the
+        module.
+      authority: Антоненко-Давидович
+  honesty:
+    score: 8.5
+    verify_markers_present: false
+    notes: 'No <!-- VERIFY --> markers, but the module handles its own limits honestly:
+      explicitly scopes the apostrophe rule (''У цьому модулі ми працюємо лише з найпростішим
+      правилом апострофа: після б, п, в, м, ф, р. Слова на зразок під''їзд або з''їзд
+      мають інше пояснення і належать до пізнішого вивчення''). Names the легко exception
+      rather than papering over it. Does not fabricate authority, does not overclaim.
+      The only hedge gap is that свято/буряк/рюкзак are presented as uniform counter-examples
+      when they are not — a VERIFY marker on свято would have been appropriate.'
+plan_issues:
+- plan_field: content_outline[Апостроф].points
+  issue: 'Plan does not supply counter-examples (words without apostrophe where the
+    same labials precede я/ю/є/ї in clusters), so writers have no guidance for the
+    свято / цвях / Святослав pattern and the module ends up using свято as if it were
+    a simple softening case. Plan could add: ''Counter-examples for clusters: свято,
+    цвях, дзвякнути — labial stands after another consonant, тому апостроф не ставимо.'''
+  evidence: plan lines 30-31 — only positive examples (сім'я, м'ясо, п'ять, комп'ютер)
+    listed; no guidance on cluster exceptions.
+- plan_field: decodability / audience framing
+  issue: Plan is labelled A1 but references Авраменко Grade 5 (Літвінова mnemonic,
+    triple division) — for the L1-UK native-speaker track this is defensible, but
+    the plan should state the intended reader age/proficiency so writers can calibrate
+    terminology (губні / шиплячі / проривний / фрикативний / сонорний) confidently.
+  evidence: 'plan lines 4-14 — ''track: l1-uk ... level: A1 ... sequence: 3'' but
+    references span Захарійчук 1 kl. and Авраменко 5 kl. without explicit audience
+    calibration.'
+summary:
+  overall_score: 8.3
+  single_worst_error: свято is presented alongside буряк and рюкзак as an example
+    of 'consonant softened when no apostrophe' — but свято actually lacks an apostrophe
+    because в stands in a consonant cluster after с, not because в is soft; the simplified
+    framing risks teaching a false rule.
+  single_best_moment: The м'який disambiguation — 'М'якого знака тут немає, бо й не
+    потребує додаткового позначення м'якості' — lands exactly at the learner's confusion
+    point between apostrophe and soft sign, using the vocabulary item 'м'який' itself
+    as the teaching example.
+  verdict: REVISE
+  word_count_estimate: 1950

@@ -1,0 +1,73 @@
+reviewer_model: gemini-flash
+fixture: a1/special-signs
+axes:
+  linguistic_correctness:
+    score: 7
+    evidence:
+    - quote: сі́м'я | іменник; апостроф після М перед Я | Моя сім'я живе у Харкові.
+      issue: Incorrect stress for 'family'. сім'я́ (family) is the correct form; сі́м'я
+        means 'semen' or 'seed' in scientific contexts. This is a significant lexical
+        error for an A1 module.
+      authority: Горох
+    - quote: 'Їх дев''ять: Д, Т, З, С, Ц, Л, Н, Р, ДЗ, а також Й, який завжди м''який.
+        Саме після цих приголосних Ь може стояти і виконувати свою роботу.'
+      issue: Ь never stands after Й in Ukrainian orthography. The statement incorrectly
+        implies Ь can follow Й.
+      authority: Правопис 2019
+    - quote: кут і куть, лис і лись
+      issue: Use of non-existent words ('куть', 'лись') for phonetic contrast. While
+        common in some pedagogical contexts, using real words like 'линь' or 'стань'
+        is preferred.
+      authority: VESUM
+  pedagogical_accuracy:
+    score: 10
+    evidence:
+    - quote: Захарійчук позначає тверді приголосні рискою [–], а м'які — двома рисками
+        [=].
+      issue: Excellent integration of specific textbook visual conventions requested
+        in the plan.
+      authority: Захарійчук, 1 клас
+    - quote: Покладіть долоню на горло і вимовте звук. Якщо відчуваєте вібрацію —
+        це дзвінкий.
+      issue: High-quality, age-appropriate practical instruction for distinguishing
+        voicing.
+      authority: 'plan section: content_outline'
+  decodability_a1:
+    score: 10
+    evidence:
+    - quote: бик — бік, дим — дім, лист — ліс, кит — кіт
+      issue: Perfect selection of A1-level minimal pairs for vowel distinction.
+      authority: none
+  plan_adherence:
+    score: 9
+    missing_from_plan:
+    - Specific links or mentions of Anna Ogoiko videos (referenced as 'Потренуйтеся
+      з відео Анни Огойко' in the plan)
+    extra_not_in_plan:
+    - 'Negative examples for apostrophe rule: ''свято'', ''цвях'''
+  register_naturalness:
+    score: 10
+    evidence:
+    - quote: Він мовчить і змушує сусіда звучати по-іншому.
+      issue: Engaging and native-sounding explanation of the function of the soft
+        sign.
+      authority: none
+    - quote: ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи?
+      issue: Natural and idiomatic mnemonic used effectively.
+      authority: none
+  honesty:
+    score: 7
+    verify_markers_present: false
+    notes: No verify markers were used despite the presence of a critical stress error
+      (сі́м'я) and a theoretical inaccuracy regarding Й. The author presents incorrect
+      forms as certain.
+plan_issues: []
+summary:
+  overall_score: 8.8
+  single_worst_error: Assigning the stress 'сі́м'я' to the word for family, which
+    fundamentally changes its meaning, and stating that Ь can follow the consonant
+    Й.
+  single_best_moment: An exceptionally robust practice section that meticulously fulfills
+    every activity requirement in the plan with clear, high-quality examples.
+  verdict: PASS
+  word_count_estimate: 1450

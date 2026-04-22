@@ -1,0 +1,185 @@
+reviewer_model: opus
+fixture: a1/special-signs
+axes:
+  linguistic_correctness:
+    score: 7
+    evidence:
+    - quote: 'Таких приголосних в українській мові рівно дев''ять пар: Д/Д'', Т/Т'',
+        З/З'', С/С'', Ц/Ц'', Л/Л'', Н/Н'', Р/Р'', ДЗ/ДЗ''. ... «ДЗіДЗьо, Де Ти З''їСи
+        Ці ЛиНи». Кожна велика літера у цій веселій фразі безпосередньо вказує на
+        приголосний, який Ь здатен пом''якшити.'
+      issue: Internal inconsistency. The text lists 9 pairs including Р/Р', then claims
+        'every big letter in the mnemonic points to a consonant Ь can soften' — but
+        Р does not appear in the mnemonic 'ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи'. The 8 letters
+        visible cover Д, Т, З, С, Ц, Л, Н, ДЗ. The claim is self-contradicting and
+        the writer did not catch it.
+      authority: Правопис 2019
+    - quote: Українська мова не оглушує дзвінкі приголосні наприкінці!
+      issue: Overstated as absolute with exclamation. Plan (and reality) says 'переважно
+        зберігають'. Then two paragraphs later the module itself contradicts this
+        with an exception (легко→[лехко]) — which is actually not a word-final phenomenon
+        but regressive assimilation before a voiceless consonant, so the exception
+        is misclassified and the 'ніколи не оглушує в кінці' claim remains unqualified.
+      authority: Правопис 2019
+    - quote: У словах «сім'я» [сім-йа], «м'ясо» [м-йасо] чи «п'ять» [п-йать]
+      issue: Transcriptions are non-standard and inconsistent. [п-йать] uses the orthographic
+        letter ь inside a phonetic transcription — transcription should use palatalization
+        mark [т'] or [т̶ʲ], not the letter ь. A1 simplification is acceptable but
+        this particular notation mixes writing with phonetics in a way that can mislead.
+      authority: none
+    - quote: в українській літературній мові використовується слово «тварина», тоді
+        як форма «тварь» (з м'яким знаком після Р наприкінці) є російською і не вживається
+        в нашій мові
+      issue: Correct decolonizing observation. Matches plan instruction to flag 'тварь'
+        as Russian. Semantic point also accurate — in Ukrainian Ь is not written after
+        Р word-finally.
+      authority: Антоненко-Давидович
+    - quote: порівняйте тверде звучання у слові «син» (родинний зв'язок) і м'яке у
+        слові «синь» (синій колір)
+      issue: «Синь» as a noun meaning 'blueness / blue colour' exists in СУМ-11 but
+        is poetic/literary, not basic vocabulary. Weak minimal pair for an A1 phonetics
+        module — the pedagogical choice risks introducing a marginal word rather than
+        clarifying the Ь contrast.
+      authority: none
+  pedagogical_accuracy:
+    score: 7
+    evidence:
+    - quote: тверді приголосні (у шкільній фонетичній транскрипції вони позначаються
+        як [–]) ... справжні м'які приголосні (позначаються як [=])
+      issue: Correctly uses Захарійчук 1-clas notation ([–] hard, [=] soft) as specified
+        in plan.
+      authority: plan content_outline М'який знак / Захарійчук 1 клас
+    - quote: 'Типові моделі слів із м''яким знаком найчастіше зустрічаються в закінченнях:
+        -нь (як у словах день, кінь, осінь), -ль (сіль, біль), -ть (мить, робіть,
+        працюють), -зь (мазь)'
+      issue: Matches plan's 'Типові моделі' bullet exactly. Good textbook-grounded
+        pedagogy.
+      authority: plan М'який знак points
+    - quote: Звук И [и] — це унікальний український голосний, який є значно глибшим
+        і твердішим за звук І [і]
+      issue: Mirrors plan, gives accurate articulatory cue, followed by proper minimal
+        pairs (бик/бік, дим/дім, лист/ліс, кит/кіт) — correct pedagogy for A1 phonemic
+        contrast.
+      authority: plan Вимова українських звуків
+    - quote: НЕ називайте Г "м'яким" — в українській фонетиці "м'який" означає палаталізований
+        ... Г не є
+      issue: Important decolonized distinction preserved from plan. Counters the common
+        folk misconception that 'Г is soft' because it differs from Russian [g].
+      authority: plan grammar bullet
+    - quote: "Додайте пропущений м'який знак (Ь) або апостроф ('), спираючись на правила\
+        \ вимови.\n   - с_огодні, сім_я, ден_, п_ять, маз_"
+      issue: Only 5 items instead of plan's requested 6. Plus the heading reads 'Доповни
+        слово (Апостроф)' while actually testing both Ь and apostrophe — pedagogically
+        fine but the label is misleading.
+      authority: 'plan activity_hints fill-in items: 6'
+  decodability_a1:
+    score: 4
+    evidence:
+    - quote: апостроф діє як фонетичний бар'єр. Він показує роздільну вимову твердого
+        приголосного і наступного йотованого голосного
+      issue: Phrases 'фонетичний бар'єр', 'роздільна вимова', 'йотованого' are firmly
+        above A1. For an L1-UK A1 learner (early literacy or adult beginner phonetics),
+        abstract metalanguage is dense.
+    - quote: утворюється повним змиканням у горлі з подальшим різким вивільненням
+        повітря
+      issue: Articulatory description at phonetics-course register, not A1. Abstract
+        nouns 'змикання', 'вивільнення' without scaffold.
+    - quote: частково пом'якшені, тобто частково пом'якшені звуки, до яких належать
+        губні, шиплячі та задньоязикові приголосні
+      issue: Terms 'губні', 'шиплячі', 'задньоязикові' are Grade 5 level (per plan
+        citing Авраменко 5 клас) — fine if plan targets phase A1.1 intentionally,
+        but still heavy density for learners just meeting Ь.
+    - quote: Ця м'якість робить українську фонетику такою плавною та милозвучною
+      issue: Purple-prose register ('плавною та милозвучною', 'повнозвучним, багатим
+        і мелодійним') inflates cognitive load without teaching anything.
+    - quote: кардинально змінюється ... іншомовного походження ... непорушною ...
+        визначальною рисою
+      issue: A cluster of high-register vocabulary (кардинально, іншомовного, непорушною,
+        визначальною) concentrated in the Дзвінкі/Глухі section — well above beginner
+        reading load.
+  plan_adherence:
+    score: 5
+    missing_from_plan:
+    - 'Activity 2 (fill-in): plan requested 6 items, delivered 5 (с_огодні, сім_я,
+      ден_, п_ять, маз_)'
+    - 'Activity 3 (error-correction): plan requested 6 items, delivered 5 (мясо, компютер,
+      свято, цвях, девять)'
+    - 'Activity 4 (group-sort): plan requested 18 items, delivered 7 (батько, м''яч,
+      пісня, тінь, п''ятниця, буряк, здоров''я) — 61% shortfall, severe'
+    - 'Activity 5 (match-up): plan requested 8 pairs, delivered 5 (Б, Г, З, ДЖ, Ґ)'
+    - 'Activity 6 (true-false): plan requested 6 statements, delivered 2'
+    - 'Activity 7 (quiz Г/Ґ): plan requested 6 items, delivered 4 (_удзик, _ора, _анок,
+      _олова)'
+    - Plan phase says 'А1.1 [Звуки, літери та перший контакт]' but module never frames
+      itself as part of that sequenced phase or links to a1-002 prerequisite
+    extra_not_in_plan:
+    - Word count overshoot (~1900 vs 1200 target) — permitted per 1.5x policy but
+      sections are unevenly expanded
+    - Additional minimal pair 'син/синь' not in plan (plan mentions only бик/бік,
+      дим/дім, лист/ліс, кит/кіт for И)
+    - Added emotive framing ('плавною та милозвучною', 'повнозвучним, багатим і мелодійним',
+      'залізного правила') not grounded in plan
+  register_naturalness:
+    score: 7
+    evidence:
+    - quote: Моя велика сім'я живе в Києві.
+      issue: Natural Ukrainian example sentence, idiomatic, A1-appropriate.
+    - quote: На вечерю ми приготували смачне м'ясо.
+      issue: Natural, colloquial register, fits plan's register=розмовний spec.
+    - quote: Якщо ви відчуваєте виразну вібрацію голосових зв'язок — звук дзвінкий
+      issue: Natural Ukrainian phrasing for a physical instruction. No Russianism,
+        no calque.
+    - quote: Ця м'якість робить українську фонетику такою плавною та милозвучною
+      issue: Natural but drifts into promotional poetic register — mismatches plan's
+        stated register 'розмовний'. Reads like a tourist-brochure sentence, not a
+        phonetics module.
+    - quote: картина кардинально змінюється
+      issue: '''Кардинально'' is acceptable in modern Ukrainian but Антоненко-Давидович
+        would prefer ''докорінно'' / ''цілковито'' for a native-register text. Not
+        wrong, mildly russified-modern.'
+      authority: Антоненко-Давидович
+  honesty:
+    score: 5
+    verify_markers_present: false
+    notes: No <!-- VERIFY --> markers anywhere. The writer propagated the plan's Р/Р'
+      ambiguity (Р listed in 9 pairs but absent from the mnemonic letters) without
+      flagging it — a competent reviewer-writer should have caught this and emitted
+      a VERIFY on whether Р belongs in the mnemonic or is a 10th case. Also made the
+      non-oглушення rule absolute where the plan says 'переважно' — a silent tightening
+      of the claim rather than flagging the nuance. No honest acknowledgement of the
+      'свято/цвях' distractor rule (apostrophe-skipped-after-consonant+labial) which
+      appears in Activity 3 without any supporting explanation earlier in the text
+      — the writer silently relied on a rule that was neither taught nor flagged for
+      later.
+plan_issues:
+- plan_field: content_outline / М'який знак / points
+  issue: Plan lists 9 pairs (Д, Т, З, С, Ц, Л, Н, Р, ДЗ) but the mnemonic 'ДЗіДЗьо,
+    Де Ти З'їСи Ці ЛиНи' encodes only 8 (ДЗ, Д, Т, З, С, Ц, Л, Н). Either Р must be
+    explicitly excluded from the mnemonic-covered set (with a separate note that Р-pair
+    exists but is not captured by the mnemonic) or a different mnemonic should be
+    used. The current plan wording guarantees any faithful writer reproduces the contradiction.
+  evidence: '''9 пар: Д/Д'''', Т/Т'''', З/З'''', С/С'''', Ц/Ц'''', Л/Л'''', Н/Н'''',
+    Р/Р'''', ДЗ/ДЗ'''' + Й ... Мнемонічне правило Літвінової для 5 класу: «ДЗіДЗьо,
+    Де Ти З''''їСи Ці ЛиНи» — саме ті 9 приголосних, які Ь може пом''''якшити.'''
+- plan_field: register
+  issue: Plan declares register=розмовний, but the content_outline is structured around
+    abstract phonetics terminology (фрикативний, проривний, палаталізований, сонорний)
+    — the plan itself demands academic-phonetics register. Writer is trapped between
+    the declared register and the content. Recommend register=навчально-пояснювальний
+    or академічно-дидактичний for this module.
+  evidence: '''register: розмовний'''
+- plan_field: activity_hints / group-sort items
+  issue: 18 items for a single A1 sort activity is extraordinarily high for the level;
+    even a strong writer will prune it. Either justify the count in the hint or lower
+    the target to 9-12.
+  evidence: '''type: group-sort ... items: 18'''
+summary:
+  overall_score: 5.8
+  single_worst_error: Activity 4 (group-sort) delivers 7 of 18 requested items — a
+    61% shortfall that breaks the plan's practice budget, and six of seven activities
+    are under-count.
+  single_best_moment: The 'тварь' decolonization callout (line 29) correctly flags
+    the Russian form and reaffirms 'тварина' as the Ukrainian word, executing the
+    plan's decolonized-pedagogy intent precisely.
+  verdict: REVISE
+  word_count_estimate: 1895

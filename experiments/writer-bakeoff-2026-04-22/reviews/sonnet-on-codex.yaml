@@ -1,0 +1,58 @@
+reviewer_model: sonnet
+fixture: a1/special-signs
+note: "hand-extracted from raw result because original YAML contained an unquoted
+  string with colons that failed to parse. Numeric scores verified verbatim from
+  grep of the result file; evidence entries omitted but visible in raw file
+  batch_state/tasks/review-sonnet-on-codex.result"
+axes:
+  linguistic_correctness:
+    score: 9
+    evidence:
+      - quote: "hand-extraction: see raw file for full evidence"
+        issue: "extracted"
+        authority: "Правопис 2019"
+  pedagogical_accuracy:
+    score: 8
+    evidence:
+      - quote: "hand-extraction: see raw file"
+        issue: "PPP structure respected; apostrophe scope statement excellent; group-sort and true-false activity counts under plan spec (half of required)"
+        authority: "plan activity_hints"
+  decodability_a1:
+    score: 9
+    evidence:
+      - quote: "hand-extraction: see raw file"
+        issue: "Within A1 scope; conditional structures simple; concrete physical instruction"
+        authority: none
+  plan_adherence:
+    score: 7
+    missing_from_plan:
+      - "Захарійчук hard [–] / soft [=] notation not mentioned"
+      - "Reference to Анна Огойко video for И and Р absent"
+      - "group-sort 18 items required, 9 provided"
+      - "true-false 6 items required, 3 provided"
+    extra_not_in_plan:
+      - "Словник section with full contextual definitions (positive addition)"
+      - "Цілі модуля restatement"
+      - "Added Ґ to pronunciation objective (minor positive divergence)"
+  register_naturalness:
+    score: 9
+    evidence:
+      - quote: "hand-extraction: see raw file"
+        issue: "Natural classroom imperatives (Порівняймо), authentic idioms (не треба), no calques"
+        authority: "Антоненко-Давидович"
+  honesty:
+    score: 9
+    verify_markers_present: false
+    notes: "No VERIFY markers but appropriate — no uncertain claims. Explicit
+      apostrophe scope statement ('під'їзд / з'їзд mають інше пояснення') is a
+      standout honesty move. Р section acknowledges difficulty realistically."
+plan_issues:
+  - plan_field: "content_outline[Вимова].points[1]"
+    issue: "Plan references 'відео Анни Огойко' — external YouTube link creates fragile dependency"
+    evidence: "Потренуйтеся з відео Анни Огойко про звук И"
+summary:
+  overall_score: 8.5
+  single_worst_error: "Group-sort activity provides 9 words where plan requires 18; true-false provides 3 items where plan requires 6"
+  single_best_moment: "Apostrophe scope-limiting statement explicitly teaches what is out of scope and why"
+  verdict: PASS
+  word_count_estimate: 2050

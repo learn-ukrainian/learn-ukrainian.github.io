@@ -1,0 +1,102 @@
+Good. All 10 vocabulary words verified in VESUM. Apostrophe rule confirmed against Правопис 2019 §7.1-2. М'який знак rule confirmed against §26. "звучать голосно" not flagged by Антоненко-Давидович. I have everything needed.
+
+```yaml
+reviewer_model: sonnet
+fixture: a1/special-signs
+axes:
+  linguistic_correctness:
+    score: 9
+    evidence:
+      - quote: "Він уживається після дев'яти приголосних: д, т, з, с, ц, л, н, р, дз"
+        issue: Correct. Matches Правопис 2019 §26 and the plan's grammar note. The traditional 9-consonant rule for Ь is accurately stated. VESUM confirms all affected word forms (день, сіль, мазь) are valid.
+        authority: Правопис 2019
+      - quote: "апостроф ставимо після б, п, в, м, ф, р перед я, ю, є, ї"
+        issue: Correct. Matches Правопис 2019 §7.1 (губні) and §7.2 (після р) verbatim. All apostrophe vocabulary verified in VESUM (сім'я, м'ясо, п'ять, дев'ять, комп'ютер — all FOUND).
+        authority: Правопис 2019
+      - quote: "Г вимовляємо з тертям повітря в горлі: гарно, гора, голова. Його парним глухим звуком є Х."
+        issue: Correct phonetic description. Г [ɦ] is a voiced glottal/pharyngeal fricative; Х is its canonical voiceless pair in Ukrainian school phonology. The writer correctly avoids calling Г "м'який" — a common error explicitly forbidden by the plan.
+        authority: none
+      - quote: "Є сонорні: в, л, м, н, й, р. Вони звучать голосно, але не мають глухої пари."
+        issue: Factually correct list (matches plan grammar note exactly). Minor imprecision: "звучать голосно" is informal — standard term is "дзвінкі без глухої пари" or simply "сонорні". Антоненко-Давидович does not flag this phrase. Acceptable at A1 level; not wrong. VESUM confirms "сонорні" as valid adjective.
+        authority: none
+      - quote: "Ґ — це проривний звук, близький до к за способом творення, тільки дзвінкий"
+        issue: Phonetically accurate. Ґ [g] is a voiced velar plosive; К [k] is its voiceless pair. Correct description of place and manner of articulation.
+        authority: none
+  pedagogical_accuracy:
+    score: 8
+    evidence:
+      - quote: "У шкільному навчанні зручно пам'ятати, що м'який знак працює не після будь-якого приголосного"
+        issue: Good pedagogical framing. The PPP structure is followed throughout — explanation → examples → practice. The plan's PPP pedagogy is respected.
+        authority: plan section М'який знак
+      - quote: "Слова на зразок під'їзд або з'їзд мають інше пояснення і належать до пізнішого вивчення"
+        issue: Excellent. Plan explicitly says "ЖОДНИХ прикладів префіксного апострофа (під'їзд, з'їзд) на А1" and the text not only avoids them but explicitly tells the learner why — pedagogically superior to silent omission.
+        authority: plan section Апостроф (grammar note)
+      - quote: "Четверта вправа — розподіл слів на три групи: є ь, є апостроф, немає ні того, ні того. Для початку можна взяти такі слова: день, сім'я, риба, сіль, гарно, м'ясо, батько, дев'ять, коза"
+        issue: DEFECT. Plan requires group-sort with 18 items. Module provides 9. Item count is exactly half of requirement. The exercise is still pedagogically sound but under-stuffed per plan spec.
+        authority: plan activity_hints group-sort (items: 18)
+      - quote: "Шоста вправа — твердження «так чи ні». Наприклад: «У слові дуб останній звук оглушується»; «Апостроф ставимо після м перед я»; «У слові день м'який знак позначає окремий звук»"
+        issue: DEFECT. Plan requires true-false with 6 items. Module provides 3 (the word "Наприклад" suggests exemplary rather than complete). Half the required count.
+        authority: plan activity_hints true-false (items: 6)
+  decodability_a1:
+    score: 9
+    evidence:
+      - quote: "Якщо під час вимови горло тремтить, маємо дзвінкий звук. Якщо тремтіння немає, це глухий звук. Для самоперевірки покладіть руку на горло і по черзі вимовте б — п, д — т, з — с."
+        issue: Within A1 scope. Simple conditional structures. Concrete physical instruction. Accessible to a beginning reader of Ukrainian.
+        authority: none
+      - quote: "Тверді вимовляємо без додаткового підняття середини язика."
+        issue: Slightly technical phonetic description, but manageable. A1 phonetics modules in Ukrainian schools regularly use this metalanguage (Большакова Gr.1, Авраменко Gr.5). Not above scope.
+        authority: none
+      - quote: "апостроф ніби розділяє вимову: він не дає злитись твердому приголосному з наступною буквою"
+        issue: Clear, accessible analogy. "ніби" (as if) softens the technical framing naturally. Within A1 scope.
+        authority: none
+  plan_adherence:
+    score: 7
+    missing_from_plan:
+      - "Захарійчук (1 клас, стор. 15) notation for hard [–] and soft [=] consonants — plan explicitly references it under М'який знак section points; not mentioned anywhere in the module"
+      - "Reference to 'відео Анни Огойко' for И and Р pronunciation practice — plan content_outline Вимова section specifies this for both sounds; absent from module"
+      - "group-sort activity: 18 items required, 9 provided (exactly half)"
+      - "true-false activity: 6 items required, 3 provided — module uses 'Наприклад' suggesting examples not a complete set"
+    extra_not_in_plan:
+      - "Словник section with full contextual definitions and usage examples for all 12 vocabulary items (required × 7 + recommended × 5) — not in plan activity_hints but consistent with vocabulary_hints requirements; positive addition"
+      - "Цілі модуля section restating objectives — standard format, not a defect"
+      - "Module adds Ґ to objective statement ('вправлятися у вимові звуків И, Г, Ґ, Р') where plan says only 'И, Г, Р' — content already covers Г vs Ґ distinction, so objective is more precise; minor positive divergence"
+  register_naturalness:
+    score: 9
+    evidence:
+      - quote: "Порівняймо: день, кінь, сіль."
+        issue: Natural Ukrainian classroom imperative. "Порівняймо" (let's compare — 1pl hortative) is the correct and idiomatic form for instructional Ukrainian prose. No calque or Russianism.
+        authority: none
+      - quote: "апостроф ніби розділяє вимову: він не дає злитись твердому приголосному з наступною буквою"
+        issue: Natural. "ніби" connector is distinctly Ukrainian. "не дає злитись" is authentic Ukrainian idiom (not *не дозволяє злитися — which would be more bookish/calque). Register is consistent throughout.
+        authority: Антоненко-Давидович
+      - quote: "Не всім він дається однаково легко, але боятися цього не треба. Спокійне, чітке повторення коротких слів допомагає краще, ніж надмірне напруження."
+        issue: Warm, authentic pedagogical voice. "не треба" over *не слід/не варто* is natural spoken Ukrainian. No awkward calquing from Russian pedagogy-speak.
+        authority: none
+      - quote: "Вони звучать голосно, але не мають глухої пари."
+        issue: "Звучать голосно" as a description of sonants is informal but not a Russianism (confirmed: not in Антоненко-Давидович index). Slightly imprecise terminologically — standard Ukrainian phonology term is "сонорні/дзвінкі" — but does not mislead learners. Minor register inconsistency compared to the technical precision elsewhere.
+        authority: none
+  honesty:
+    score: 9
+    verify_markers_present: false
+    notes: >
+      No VERIFY markers used, but this is appropriate — the writer shows no signs of uncertain claims.
+      Every phonetic rule stated is authoritative and traceable. The standout honesty move is the
+      explicit apostrophe scope statement: "Слова на зразок під'їзд або з'їзд мають інше пояснення
+      і належать до пізнішого вивчення" — the writer tells the learner not just what the rule IS
+      but what it does NOT cover and why, which is the honest pedagogical move.
+      The Р section acknowledges difficulty without false reassurance: "Не всім він дається однаково
+      легко, але боятися цього не треба" — honest about the challenge, realistic about approach.
+      The only marginal honesty gap: sonant status of В is debated among Ukrainian phoneticians
+      (some treat it as approximant, not sonant), but this is exactly what the school grammar and
+      plan prescribe, so flagging it would be pedantic at A1. The writer was right not to flag it.
+plan_issues:
+  - plan_field: content_outline[Вимова].points[1]
+    issue: Plan instructs writer to reference "відео Анни Огойко" for both И and Р. This is an external resource link, not phonetic content — embedding a specific YouTube reference in a static module plan creates a fragile dependency (video may be deleted, URL may change). The plan should either provide a stable URL or frame this as a "look for pronunciation examples online" suggestion rather than a named video.
+    evidence: "Потренуйтеся з відео Анни Огойко про звук И" / "Потренуйтеся з відео Анни Огойко: рука, робота, ранок, риба"
+summary:
+  overall_score: 8.5
+  single_worst_error: "Group-sort activity provides 9 words where the plan requires 18, and true-false provides 3 items where the plan requires 6 — both exercises are pedagogically sound but half-built relative to spec."
+  single_best_moment: "The apostrophe scope-limiting statement — 'Слова на зразок під'їзд або з'їзд мають інше пояснення і належать до пізнішого вивчення' — explicitly teaches the learner what is out of scope and why, turning a potential confusion point into a teachable moment about language complexity."
+  verdict: PASS
+  word_count_estimate: 2050
+```

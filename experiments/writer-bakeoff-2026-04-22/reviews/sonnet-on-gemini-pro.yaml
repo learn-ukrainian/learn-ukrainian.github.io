@@ -1,0 +1,162 @@
+reviewer_model: sonnet
+fixture: a1/special-signs
+axes:
+  linguistic_correctness:
+    score: 9
+    evidence:
+    - quote: апостроф ставиться після губних приголосних (Б, П, В, М, Ф) та після
+        сонорного Р перед літерами Я, Ю, Є, Ї
+      issue: Correct. Matches Правопис 2019 §7 verbatim. All apostrophe examples (сім'я,
+        м'ясо, п'ять, комп'ютер, дев'ять, м'який) verified in VESUM — all 9 key vocabulary
+        forms found.
+      authority: Правопис 2019
+    - quote: Якщо ми не вимовляємо м'який знак, слово може повністю втратити свій
+        сенс або звучати вкрай неприродно. Наприклад, порівняйте тверде звучання у
+        слові «син» (родинний зв'язок) і м'яке у слові «синь» (синій колір).
+      issue: Correct. «синь» (blueness) vs «син» (son) is a valid minimal pair demonstrating
+        the phonemic value of Ь. ✓
+      authority: none
+    - quote: 'вісім основних пар приголосних: Б–П, Д–Т, Г–Х, Ґ–К, З–С, Ж–Ш, ДЗ–Ц,
+        ДЖ–Ч'
+      issue: Correct. All 8 pairs match the plan's grammar section and standard Ukrainian
+        phonology.
+      authority: none
+    - quote: Важливо пам'ятати, що Г не є «м'яким» звуком (в українській фонетиці
+        «м'який» означає палаталізований, яким Г не є); його справжньою глухою парою
+        є Х.
+      issue: Correct. Г [ɦ] is a voiced glottal/laryngeal fricative, not palatalized.
+        Its voiceless counterpart is Х. This is the exact clarification the plan mandates.
+      authority: none
+    - quote: 'Доповни слово (Апостроф): ... с_огодні, сім_я, ден_, п_ять, маз_'
+      issue: 'Minor label mismatch: activity header says ''Апостроф'' but items include
+        purely Ь words (ден_, маз_, с_огодні). The plan''s fill-in hint says ''Ь або
+        апостроф,'' so the content is correct — the section label is slightly misleading.
+        Not a linguistic error, a labeling issue.'
+      authority: 'plan section: activity_hints[1]'
+  pedagogical_accuracy:
+    score: 8
+    evidence:
+    - quote: «тварина», тоді як форма «тварь» (з м'яким знаком після Р наприкінці)
+        є російською і не вживається в нашій мові.
+      issue: CORRECT — and proactively included. The plan explicitly flagged this
+        ('«тварь» — це РОСІЙСЬКА форма, НЕ використовуйте її'). Writer followed the
+        decolonized pedagogy directive. ✓
+      authority: 'plan section: content_outline[1].points[1]'
+    - quote: Знайдіть слова, в яких пропущено апострофи, і запишіть їх правильно.
+        Зверніть увагу на роздільну вимову твердого приголосного і йотованого голосного.
+        *мясо, компютер, свято, цвях, девять*
+      issue: 'PEDAGOGICAL FLAW. Activity 3 includes «свято» and «цвях» as distractors
+        (correctly written without apostrophe per Правопис 2019 §7 Примітка: no apostrophe
+        when another root consonant precedes the губний). But this exception — ''якщо
+        перед губним є інша буква кореня, апостроф не пишемо'' — is NEVER taught in
+        the module text. A student who reads only this module and correctly applies
+        the taught rule (губні + Я/Ю/Є/Ї → apostrophe) will write «св''ято» and «цв''ях»
+        — both wrong. The activity silently tests a rule that wasn''t taught.'
+      authority: Правопис 2019 §7 Примітка
+    - quote: Потренуйтеся з відео Анни Огойко про звук И. Потренуйтеся з відео Анни
+        Огойко [для Р].
+      issue: MISSING. The plan specifies video references to Анна Огойко for both
+        И and Р sections. Neither appears in the module. These are supplementary but
+        explicitly in the plan's content points.
+      authority: 'plan section: content_outline[3].points[0], content_outline[3].points[2]'
+    - quote: «ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи»
+      issue: Correct. Mnemonic reproduced faithfully. Linked correctly to the 9 softening
+        consonants. ✓
+      authority: 'plan section: content_outline[0].points[1]'
+  decodability_a1:
+    score: 8
+    evidence:
+    - quote: Він показує роздільну вимову твердого приголосного і наступного йотованого
+        голосного.
+      issue: Term «йотованого голосного» (yodated vowel) is a metalinguistic technical
+        term. For teen/adult native Ukrainian speakers (the stated audience), it is
+        appropriate — they understand Ukrainian and can learn new phonetic vocabulary.
+        For Grade 1 children (6-7 years), this would be above scope. Evaluation assumes
+        teen/adult target per project mission.
+      authority: none
+    - quote: апостроф діє як фонетичний бар'єр
+      issue: Metaphor is effective and accessible. No VESUM or Антоненко-Давидович
+        flags. Мildly above 'розмовний' register, but pedagogically clear. ✓
+      authority: none
+    - quote: Важливо пам'ятати, що Г не є «м'яким» звуком (в українській фонетиці
+        «м'який» означає палаталізований, яким Г не є)
+      issue: «палаталізований» is a sophisticated term used once without a plain-Ukrainian
+        gloss. For teen/adult native speakers, still decodable from context. No issue
+        at this audience level.
+      authority: none
+  plan_adherence:
+    score: 7
+    missing_from_plan:
+    - 'Video reference: ''Потренуйтеся з відео Анни Огойко про звук И'' (plan content_outline[3].points[0])'
+    - 'Video reference: ''Потренуйтеся з відео Анни Огойко [для Р]'' (plan content_outline[3].points[2])'
+    - 'Activity item count: group-sort specifies 18 items, module provides 7 (батько,
+      м''яч, пісня, тінь, п''ятниця, буряк, здоров''я) — 61% below plan target'
+    - 'Activity item count: true-false specifies 6 statements, module provides 2 —
+      67% below plan target'
+    - 'Activity item count: match-up specifies 8 pairs, module provides 5 — 37% below
+      plan target'
+    - 'Activity item count: quiz specifies 6 items, module provides 4 (_удзик, _ора,
+      _анок, _олова)'
+    - 'Activity item count: fill-in specifies 6 items, module provides 5 (с_огодні,
+      сім_я, ден_, п_ять, маз_)'
+    extra_not_in_plan:
+    - с_огодні added to fill-in activity beyond the 3 plan-specified examples (сім_я,
+      ден_, п_ять) — acceptable extra, not a problem
+    - Explicit 'тварь' = Russian warning (directly from plan note, not a surprise
+      addition)
+  register_naturalness:
+    score: 8
+    evidence:
+    - quote: Ця м'якість робить українську фонетику такою плавною та милозвучною.
+      issue: Natural Ukrainian. Lyrical register appropriate for cultural pride framing
+        in Ukrainian L1 curriculum. Not a calque. ✓
+      authority: none
+    - quote: Збереження цієї дзвінкості робить українське мовлення повнозвучним, багатим
+        і мелодійним.
+      issue: Natural Ukrainian. Same pattern — appealing to the beauty of the language
+        as pedagogical motivation. ✓
+      authority: none
+    - quote: кардинально змінюється
+      issue: «Кардинально» is attested and natural in Ukrainian. Not a Russianism.
+        Антоненко-Давидович returns no flag. ✓
+      authority: Антоненко-Давидович
+    - quote: апостроф діє як фонетичний бар'єр
+      issue: The phrase 'фонетичний бар'єр' is a pedagogical coinage, not a calque.
+        No style guide entry against it. Register is more formal/academic than the
+        plan's 'розмовний' spec, but appropriate for a written phonetics module. The
+        register gap is real — the entire module reads as academic prose, not conversational
+        Ukrainian — but no individual phrase is a Russianism or calque.
+      authority: Антоненко-Давидович
+  honesty:
+    score: 8
+    verify_markers_present: false
+    notes: 'No VERIFY markers present — none were needed. All factually settled phonetics
+      claims. The writer correctly addressed every plan-mandated warning: (1) explicit
+      statement that Г is not ''м''який'' in the phonetic sense of palatalized; (2)
+      explicit ''тварь'' = Russian warning; (3) no prefix apostrophe examples (під''їзд,
+      з''їзд) used; (4) словник entry for «м''який» explicitly notes no Ь (only apostrophe,
+      Й always soft). One honesty gap: the module silently includes «свято» and «цвях»
+      as activity-3 distractors without acknowledging that they follow an exception
+      rule not covered in the explanatory text. A genuinely honest module would either
+      teach the exception or note that these words are beyond A1 scope.'
+plan_issues:
+- plan_field: grammar[3]
+  issue: Internal contradiction. States 'Сонорні (В, Л, М, Н, Й, Р) НЕ є ані дзвінкими,
+    ані глухими (вони лише дзвінкі).' The parenthetical 'вони лише дзвінкі' directly
+    contradicts 'не є дзвінкими.' Standard Ukrainian phonology classifies sonants
+    as a third category — always voiced but not contrasted — and the plan cannot simultaneously
+    hold both claims. The module handles this gracefully by saying sonants 'є виключно
+    дзвінкими і не мають своїх глухих відповідників,' which is the cleaner formulation.
+  evidence: 'grammar[3]: ''Сонорні (В, Л, М, Н, Й, Р) НЕ є ані дзвінкими, ані глухими
+    (вони лише дзвінкі).'''
+summary:
+  overall_score: 8.0
+  single_worst_error: Activity 3 tests knowledge of the consonant-cluster apostrophe
+    exception (Правопис 2019 §7 Примітка — why «свято» and «цвях» have no apostrophe)
+    without ever teaching that exception, meaning students who apply the taught rule
+    correctly will produce wrong answers on those two items.
+  single_best_moment: The explicit pre-emptive correction 'Важливо пам'ятати, що Г
+    не є «м'яким» звуком (в українській фонетиці «м'який» означає палаталізований,
+    яким Г не є)' directly kills a common misconception before it can form.
+  verdict: REVISE
+  word_count_estimate: 1430

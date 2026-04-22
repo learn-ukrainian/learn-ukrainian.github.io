@@ -1,0 +1,73 @@
+reviewer_model: gemini-pro
+fixture: a1/special-signs
+axes:
+  linguistic_correctness:
+    score: 8
+    evidence:
+    - quote: м'яки́й — прикметник з апострофом (а не з м'яким знаком, бо [й] і так
+        завжди м'який).
+      issue: Conflates the apostrophe after 'м' with the rule that 'й' doesn't take
+        a soft sign. Makes it sound like we use an apostrophe instead of a soft sign
+        because 'й' is already soft, which is linguistically nonsensical.
+      authority: Правопис 2019
+  pedagogical_accuracy:
+    score: 8
+    evidence:
+    - quote: Д, Т, З, С, Ц, Л, Н, Р або ДЗ — тих, що ховаються у мнемоніці «ДЗіДЗьо,
+        Де Ти З'їСи Ці ЛиНи?»
+      issue: Pedagogical hallucination. The author claims all 9 consonants (including
+        'Р') hide in the mnemonic, but 'Р' is missing from the phrase. The author
+        failed to notice the plan's flawed mnemonic and presented it as a complete
+        set of 9.
+      authority: none
+    - quote: 'Прочитай уголос: п''ять, дев''ять, м''який, м''яч, об''єкт.'
+      issue: Includes 'об'єкт' as an example of the basic 'labial + r' rule, but 'об'єкт'
+        takes an apostrophe due to the foreign word/prefix rule. This contradicts
+        the module's explicit constraint to avoid prefix-based apostrophe examples
+        (like під'їзд).
+      authority: plan section
+  decodability_a1:
+    score: 9
+    evidence:
+    - quote: 'Потрійний поділ приголосних запам''ятати просто: тверді (більшість),
+        м''які (наша дев''ятка та й), пом''якшені (губні, шиплячі, задньоязикові —
+        у певних позиціях).'
+      issue: within A1 scope
+  plan_adherence:
+    score: 8
+    missing_from_plan:
+    - Mention of Anna Ohoiko's videos for the sound И (only mentioned for Р, but plan
+      required it for И).
+    extra_not_in_plan:
+    - The word 'об'єкт', which breaks the constraint against using prefix/foreign-based
+      apostrophes on A1.
+  register_naturalness:
+    score: 9
+    evidence:
+    - quote: Апостроф ніби ставить тиху межу між приголосним і голосним, щоб вони
+        не злилися.
+      issue: natural
+  honesty:
+    score: 7
+    verify_markers_present: false
+    notes: The writer papered over the mismatch between the 9 soft consonants and
+      the 8 consonants present in the mnemonic. They falsely claimed 'Р' is hidden
+      in 'ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи?' instead of flagging the plan's error. They
+      also blindly pasted the plan's cryptic 'БЕЗ м'якого знака! Й завжди м'який'
+      note for 'м'який' into an absurd explanation.
+plan_issues:
+- plan_field: content_outline[0].points[1]
+  issue: The plan claims the mnemonic 'ДЗіДЗьо, Де Ти З'їСи Ці ЛиНи' contains 'саме
+    ті 9 приголосних', but it only contains 8 (ДЗ, Д, Т, З, С, Ц, Л, Н). The letter
+    'Р' is missing.
+  evidence: 'Мнемонічне правило Літвінової для 5 класу: «ДЗіДЗьо, Де Ти З''їСи Ці
+    ЛиНи» — саме ті 9 приголосних, які Ь може пом''якшити.'
+summary:
+  overall_score: 8.2
+  single_worst_error: Falsely asserting that the letter 'Р' is hidden in the mnemonic
+    to force it to match the 9 consonants, and writing a linguistically nonsensical
+    explanation for 'м'який' to justify the plan's cryptic constraints.
+  single_best_moment: Excellent, accessible explanation of the 'pom'yaksheni' (partially
+    softened) consonants and why the soft sign is never written after them.
+  verdict: REVISE
+  word_count_estimate: 1200

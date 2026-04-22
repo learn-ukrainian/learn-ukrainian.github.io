@@ -1,0 +1,109 @@
+reviewer_model: codex
+fixture: a1/special-signs
+axes:
+  linguistic_correctness:
+    score: 6
+    evidence:
+    - quote: М'який знак після нього ставиться лише у певних випадках (наприклад,
+        у слові «кобзар»)
+      issue: Wrong. Normative Ukrainian writes «кобзар» without ь; this is a core-rule
+        example teaching the opposite of the norm.
+      authority: Правопис 2019
+    - quote: Апостроф ставиться після губних приголосних (Б, П, В, М, Ф) та після
+        Р, якщо після них йдуть йотовані літери Я, Ю, Є, Ї.
+      issue: Correct A1-level statement of the basic apostrophe rule for this module.
+      authority: Правопис 2019
+    - quote: Слово «дуб» ми вимовляємо чітко з [б] на кінці, а не як [дуп]. Слово
+        «мороз» звучить із виразним [з], а не як [морос].
+      issue: Correct explanation of Ukrainian non-devoicing in word-final position.
+      authority: none
+  pedagogical_accuracy:
+    score: 6
+    evidence:
+    - quote: М'який знак після нього ставиться лише у певних випадках (наприклад,
+        у слові «кобзар»)
+      issue: 'Pedagogically damaging: a false example is placed inside the main explanation
+        of the rule instead of in an error-correction task.'
+      authority: content_outline > М'який знак
+    - quote: 'Бил — Біл
+
+        - Мить — Міть
+
+        - Сил — Сіль (тут додається і м''якість!)
+
+        - Тин — Тінь'
+      issue: This replaces the plan's cleaner minimal-pair set with rarer or less
+        transparent forms and drops the planned pair «лист проти ліс».
+      authority: content_outline > Вимова українських звуків
+    - quote: '1. Сім_я (сім''я) — ставимо апостроф після губного М.
+
+        2. Ден_ (день).
+
+        3. П_ять (п''ять).'
+      issue: 'Good alignment with the plan''s fill-in activity: core target words
+        are practiced directly and explicitly.'
+      authority: activity_hints > fill-in
+    - quote: Складніші правила, пов'язані з префіксами (як у словах «під'їзд» чи «з'їзд»),
+        ми розглянемо згодом.
+      issue: The plan explicitly says not to use prefix-apostrophe examples at A1.
+        Mentioning them still spends learner attention on prohibited material.
+      authority: grammar > Апостроф
+  decodability_a1:
+    score: 5
+    evidence:
+    - quote: У цьому модулі ми зануримося в тонкощі української фонетики та графіки.
+      issue: Above A1 scope. The module opens with abstract metalanguage instead of
+        immediately decodable beginner phrasing.
+    - quote: це дзвінкий фрикативний звук... повне змикання в горлі, а потім різкий
+        «вибух» звуку
+      issue: Heavy technical articulation vocabulary for an A1 lesson.
+    - quote: Слово «дуб» ми вимовляємо чітко з [б] на кінці, а не як [дуп].
+      issue: Within A1 scope. Concrete, audible, and easy to test aloud.
+  plan_adherence:
+    score: 7
+    missing_from_plan:
+    - 'content_outline > Вимова українських звуків: minimal pair «лист проти ліс»
+      is omitted.'
+    - 'content_outline > Апостроф: planned practice word «об''єкт» is omitted.'
+    - 'content_outline > Вимова українських звуків: the plan''s video prompt for звук
+      И is omitted.'
+    - 'content_outline > Вимова українських звуків: the plan''s video prompt for звук
+      Р is omitted.'
+    - activity_hints > odd-one-out requires 6 items; the module gives 3 tasks plus
+      a sample.
+    - activity_hints > true-false requires 6 items; the module gives 5 statements.
+    extra_not_in_plan:
+    - Prefix-apostrophe examples «під'їзд» and «з'їзд» are mentioned even though the
+      plan says not to use them at A1.
+    - The exception list is expanded from the plan's A1-safe «легко» to «вогко», «нігті»,
+      «кігті», «дьогтю».
+  register_naturalness:
+    score: 6
+    evidence:
+    - quote: Українська мова славиться своєю милозвучністю та м'якістю. Одним із головних
+        інструментів, що створюють цю атмосферу...
+      issue: Grammatically natural Ukrainian, but the tone is brochure-like rather
+        than conversational-instructional.
+    - quote: Це правило — ключ до того, щоб ваша мова звучала по-справжньому по-українськи.
+      issue: Slogan-like phrasing. It pushes rhetoric harder than explanation.
+    - quote: Слово «дуб» ми вимовляємо чітко з [б] на кінці
+      issue: Natural, plain teacherly sentence. This is the register the rest of the
+        module needed more often.
+  honesty:
+    score: 3
+    verify_markers_present: false
+    notes: No <!-- VERIFY --> markers appear. The author states a false example («кобзар»
+      with supposed ь) and a broadened exception list without flagging uncertainty.
+plan_issues:
+- plan_field: grammar[3]
+  issue: The line about sonorants is internally contradictory.
+  evidence: Сонорні (В, Л, М, Н, Й, Р) НЕ є ані дзвінкими, ані глухими (вони лише
+    дзвінкі).
+summary:
+  overall_score: 5.5
+  single_worst_error: The module explicitly presents «кобзар» as a word where soft
+    sign is written after Р, but normative Ukrainian writes «кобзар» without ь.
+  single_best_moment: The explanation of non-devoicing with «дуб» and «мороз» is clear,
+    concrete, and immediately usable.
+  verdict: FAIL
+  word_count_estimate: 1906

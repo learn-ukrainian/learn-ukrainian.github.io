@@ -1,0 +1,198 @@
+{
+  "parsed_reviews": 20,
+  "parse_failures": [],
+  "per_writer": {
+    "gemini-pro": {
+      "mean_per_axis": {
+        "linguistic_correctness": 8.0,
+        "pedagogical_accuracy": 7.5,
+        "decodability_a1": 6.75,
+        "plan_adherence": 6.5,
+        "register_naturalness": 7.5,
+        "honesty": 6.5
+      },
+      "mean_overall": 7.12,
+      "n_reviews": 4,
+      "verdicts": [
+        "REVISE",
+        "REVISE",
+        "REVISE",
+        "REVISE"
+      ],
+      "word_count_estimates": [
+        1200,
+        1786,
+        1895,
+        1430
+      ]
+    },
+    "gemini-flash": {
+      "mean_per_axis": {
+        "linguistic_correctness": 5.5,
+        "pedagogical_accuracy": 5.75,
+        "decodability_a1": 5.75,
+        "plan_adherence": 6.0,
+        "register_naturalness": 7.5,
+        "honesty": 4.5
+      },
+      "mean_overall": 5.83,
+      "n_reviews": 4,
+      "verdicts": [
+        "FAIL",
+        "FAIL",
+        "FAIL",
+        "REVISE"
+      ],
+      "word_count_estimates": [
+        1100,
+        1906,
+        1650,
+        1580
+      ]
+    },
+    "codex": {
+      "mean_per_axis": {
+        "linguistic_correctness": 7.62,
+        "pedagogical_accuracy": 6.62,
+        "decodability_a1": 7.88,
+        "plan_adherence": 6.25,
+        "register_naturalness": 8.5,
+        "honesty": 7.88
+      },
+      "mean_overall": 7.45,
+      "n_reviews": 4,
+      "verdicts": [
+        "REVISE",
+        "FAIL",
+        "REVISE",
+        "PASS"
+      ],
+      "word_count_estimates": [
+        1100,
+        1100,
+        1950,
+        2050
+      ]
+    },
+    "opus": {
+      "mean_per_axis": {
+        "linguistic_correctness": 8.0,
+        "pedagogical_accuracy": 7.75,
+        "decodability_a1": 7.75,
+        "plan_adherence": 8.0,
+        "register_naturalness": 8.5,
+        "honesty": 6.75
+      },
+      "mean_overall": 7.8,
+      "n_reviews": 4,
+      "verdicts": [
+        "REVISE",
+        "REVISE",
+        "REVISE",
+        "REVISE"
+      ],
+      "word_count_estimates": [
+        1200,
+        1200,
+        1767,
+        1380
+      ]
+    },
+    "sonnet": {
+      "mean_per_axis": {
+        "linguistic_correctness": 5.5,
+        "pedagogical_accuracy": 7.25,
+        "decodability_a1": 6.5,
+        "plan_adherence": 8.25,
+        "register_naturalness": 8.25,
+        "honesty": 5.25
+      },
+      "mean_overall": 6.83,
+      "n_reviews": 4,
+      "verdicts": [
+        "FAIL",
+        "PASS",
+        "REVISE",
+        "REVISE"
+      ],
+      "word_count_estimates": [
+        1150,
+        1450,
+        2220,
+        1650
+      ]
+    }
+  },
+  "per_reviewer": {
+    "gemini-pro": {
+      "mean_score_given": 6.47,
+      "score_range_given": [
+        4.3,
+        8.7
+      ],
+      "verdict_counts": {
+        "PASS": 0,
+        "REVISE": 2,
+        "FAIL": 2
+      },
+      "mean_evidence_entries": 11.2,
+      "n_reviews_given": 4
+    },
+    "gemini-flash": {
+      "mean_score_given": 7.38,
+      "score_range_given": [
+        4.3,
+        8.8
+      ],
+      "verdict_counts": {
+        "PASS": 1,
+        "REVISE": 2,
+        "FAIL": 1
+      },
+      "mean_evidence_entries": 9.5,
+      "n_reviews_given": 4
+    },
+    "codex": {
+      "mean_score_given": 6.25,
+      "score_range_given": [
+        5.5,
+        6.5
+      ],
+      "verdict_counts": {
+        "PASS": 0,
+        "REVISE": 3,
+        "FAIL": 1
+      },
+      "mean_evidence_entries": 22.5,
+      "n_reviews_given": 4
+    },
+    "opus": {
+      "mean_score_given": 6.85,
+      "score_range_given": [
+        5.8,
+        8.3
+      ],
+      "verdict_counts": {
+        "PASS": 0,
+        "REVISE": 3,
+        "FAIL": 1
+      },
+      "mean_evidence_entries": 25.2,
+      "n_reviews_given": 4
+    },
+    "sonnet": {
+      "mean_score_given": 8.07,
+      "score_range_given": [
+        7.5,
+        8.5
+      ],
+      "verdict_counts": {
+        "PASS": 1,
+        "REVISE": 3,
+        "FAIL": 0
+      },
+      "mean_evidence_entries": 19.8,
+      "n_reviews_given": 4
+    }
+  }
+}

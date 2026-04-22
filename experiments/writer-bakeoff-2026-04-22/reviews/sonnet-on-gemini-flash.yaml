@@ -1,0 +1,160 @@
+reviewer_model: sonnet
+fixture: a1/special-signs
+axes:
+  linguistic_correctness:
+    score: 7
+    evidence:
+    - quote: М'який знак після нього ставиться лише у певних випадках (наприклад,
+        у слові «кобзар»)
+      issue: Factual error. «Кобзар» has no soft sign — it is spelled к-о-б-з-а-р
+        in all its forms. In modern Ukrainian orthography, Ь is NOT written after
+        Р at word's end (unlike Russian «царь», «лікарь»). Citing «кобзар» as an example
+        of Р+Ь will actively mislead learners about a foundational Ukrainian–Russian
+        orthographic difference.
+      authority: Правопис 2019
+    - quote: Тут відбувається повне змикання в горлі, а потім різкий «вибух» звуку
+      issue: Ґ [g] is a velar stop — the closure is at the velum (задня частина м'якого
+        піднебіння), not in «горлі» (throat/larynx). «Горло» implies a glottal articulation,
+        which belongs to a different sound class. Minor but the wrong anatomical landmark.
+      authority: none
+    - quote: «п'ять» — [п-йать]
+      issue: The sequence [йать] in the transcription shows soft Т (through the orthographic
+        Ь) mixed with the phonetic string — the reader sees 'ять' which is part of
+        Cyrillic letter naming, not IPA. The hyphen notation is informal but not erroneous
+        for a pedagogical text; however the internal Ь in the bracketed transcription
+        will confuse a learner who just learned that Ь is not a sound. Ambiguous,
+        not wrong.
+      authority: none
+    - quote: дім — тім
+      issue: «Тім» as minimal pair for Д-Т is pedagogically weak. «Тім» is archaic
+        dative/locative of «той» — it is not a word a modern learner will encounter.
+        The plan suggests «балка–палка, коза–коса» as minimal pair models. Non-A1
+        vocabulary used where functional A1 words were available.
+      authority: none
+  pedagogical_accuracy:
+    score: 7
+    evidence:
+    - quote: наприклад, у слові «кобзар»
+      issue: Teaching Р+Ь using a word that has no Ь is a foundational pedagogical
+        error. Learners form their rule from examples; this example will produce a
+        wrong rule.
+      authority: 'plan section: М''який знак, grammar notes'
+    - quote: Складніші правила, пов'язані з префіксами (як у словах «під'їзд» чи «з'їзд»),
+        ми розглянемо згодом.
+      issue: 'Plan grammar rule states explicitly: «ЖОДНИХ прикладів префіксного апострофа
+        (під''їзд, з''їзд) на А1.» The module mentions them by name, even while deferring.
+        Naming the examples activates cognitive interference — a learner may try to
+        apply them. The plan''s prohibition is clear.'
+      authority: 'plan grammar notes: Апостроф'
+    - quote: Вправа 1. «Третій зайвий» — 1. Учитель, тінь, м'яч. 2. Сеньйор, сіль,
+        квітка. 3. Осінь, кінь, голуб.
+      issue: Plan specifies 6 items for odd-one-out; module delivers 3. Additionally
+        «сеньйор» is a foreign borrowing (Spanish/Italian «señor») not present in
+        any A1 Ukrainian word list — it is above level and irrelevant to the module's
+        vocabulary.
+      authority: 'plan activity_hints: odd-one-out, items: 6'
+    - quote: Вправа 6. «Правда чи неправда» — (5 statements listed)
+      issue: Plan specifies 6 items for true-false; module delivers 5. One statement
+        short.
+      authority: 'plan activity_hints: true-false, items: 6'
+    - quote: (no mention of Анна Огойко anywhere in the module)
+      issue: Plan specifies «Потренуйтеся з відео Анни Огойко про звук И» and «Потренуйтеся
+        з відео Анни Огойко» for Р section. The video reference is a concrete resource
+        the plan includes for learner support — omitted entirely.
+      authority: 'plan section: Вимова українських звуків, points'
+  decodability_a1:
+    score: 8
+    evidence:
+    - quote: Він утворюється глибоко в горлі, коли повітря проходить через звуження,
+        створюючи м'який шум із голосом.
+      issue: Within A1 scope for a phonetics module. Technical metalanguage (фрикативний,
+        проривний implied) is necessary when teaching sound distinctions. The description
+        is accessible without requiring the IPA terms explicitly.
+      authority: none
+    - quote: Сеньйор, сіль, квітка
+      issue: «Сеньйор» is above A1 scope. Ukrainian A1 learners will not encounter
+        this word. Replacing with a native Ukrainian word (e.g., «кінь») would keep
+        the activity within level.
+      authority: plan vocabulary_hints
+    - quote: Слово «дуб» ми вимовляємо чітко з [б] на кінці, а не як [дуп]. Слово
+        «мороз» звучить із виразним [з], а не як [морос].
+      issue: Within A1 scope. «Дуб» and «мороз» are basic vocabulary. The contrast
+        with devoiced forms is explained clearly without requiring learners to know
+        the devoicing rule — they just need to recognize what NOT to do.
+      authority: none
+  plan_adherence:
+    score: 7
+    missing_from_plan:
+    - Анна Огойко video reference for И and Р sections — explicitly listed in plan
+      content_outline points
+    - 'Вправа 1 (odd-one-out): 3 items delivered, plan requires 6'
+    - 'Вправа 6 (true-false): 5 items delivered, plan requires 6'
+    - Fill-in activity scoped to «Апостроф» section per plan, but module's Вправа
+      2 includes Ь items (день, батько, сіль) — section misalignment
+    extra_not_in_plan:
+    - Вправа 8 «Слухаємо И та І» — reading aloud minimal pairs activity not listed
+      in plan activity_hints
+    - Explicit mention of «під'їзд» and «з'їзд» as prefixed apostrophe examples, deferred
+      — plan prohibits any mention of these at A1
+  register_naturalness:
+    score: 9
+    evidence:
+    - quote: Якщо м'який знак — це «пом'якшувач», то апостроф (') — це «розділювач».
+      issue: Natural and memorable. Original Ukrainian metaphor, not a translation
+        calque. Appropriate for the target audience (upper-primary / secondary). Sounds
+        like something a real Ukrainian teacher would say.
+      authority: none
+    - quote: Це правило — ключ до того, щоб ваша мова звучала по-справжньому по-українськи.
+        Лише одне слово в сучасній мові є винятком...
+      issue: Natural register. «По-справжньому по-українськи» is idiomatic and warm,
+        not translated or robotic.
+      authority: none
+    - quote: 'Уявіть, що ви вимовляєте звук Х, але додаєте до нього голос. Приклади:
+        «гарно», «голова», «господар».'
+      issue: Effective teaching metaphor for Г [ɦ]. «Скажіть Х, потім додайте голос»
+        is a well-known Ukrainian phonetics teaching device. Natural, appropriate
+        register.
+      authority: Антоненко-Давидович
+    - quote: Навіть якщо ваш Р спочатку не буде ідеальним, не хвилюйтеся — в українському
+        контексті енергійна вимова завжди сприймається краще, ніж млява.
+      issue: Warm, encouraging tone. No calques detected. Natural colloquial framing
+        that respects learner anxiety without being condescending.
+      authority: none
+  honesty:
+    score: 7
+    verify_markers_present: false
+    notes: 'The кобзар claim — that Ь appears after Р in «кобзар» — is stated with
+      full confidence and no verification flag despite being factually wrong. This
+      is precisely the kind of claim that should carry a <!-- VERIFY --> marker: Р+Ь
+      in Ukrainian is an edge case where pre-training Russian contamination is a known
+      risk (Russian has «царь», «лекарь», etc., Ukrainian does not). The writer did
+      not flag this uncertainty. The rest of the module does not venture into territory
+      that required flagging — phoneme descriptions, the mnemonic, the devoicing exception
+      «легко» are all correct and unhedged. The false confidence on кобзар, combined
+      with zero VERIFY markers in a 1600-word phonetics module, signals overconfidence
+      in a domain where conservative flagging is warranted.'
+plan_issues:
+- plan_field: 'grammar[4]: ''Сонорні (В, Л, М, Н, Й, Р) НЕ є ані дзвінкими, ані глухими
+    (вони лише дзвінкі)'''
+  issue: 'The plan''s parenthetical ''(вони лише дзвінкі)'' is self-contradictory:
+    it says they are NOT voiced-or-voiceless, then immediately says ''they are only
+    voiced.'' Phonologically, sonorants ARE voiced — the correct framing is that they
+    lack a voiceless counterpart in the voiced/voiceless opposition, not that they
+    are outside both categories. The module handles this more cleanly: ''завжди дзвінкі
+    (сонорні): В, Л, М, Н, Й, Р. У них немає глухої пари.'' The plan''s wording needs
+    revision for precision.'
+  evidence: 'grammar: ''Сонорні (В, Л, М, Н, Й, Р) НЕ є ані дзвінкими, ані глухими
+    (вони лише дзвінкі).'''
+summary:
+  overall_score: 7.5
+  single_worst_error: Line 18 cites «кобзар» as an example where Ь follows Р — «кобзар»
+    has no soft sign in any form; this is a factual error that exploits exactly the
+    Russian-contamination risk (cf. Russian «царь», «лекарь») and will instill a wrong
+    rule in learners at the foundational phonetics stage.
+  single_best_moment: 'The буряк/бур''ян contrastive pair (lines 47-48) is a precise,
+    clean demonstration of the core apostrophe rule: same consonant cluster, same
+    surface letters Р+Я, but phonetically different outcomes depending on presence/absence
+    of apostrophe — this is exactly the kind of minimal-pair contrast that makes a
+    phonetics concept click.'
+  verdict: REVISE
+  word_count_estimate: 1580
