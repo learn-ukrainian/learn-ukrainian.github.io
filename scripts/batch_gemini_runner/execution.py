@@ -10,6 +10,13 @@ import time
 from datetime import datetime
 
 import yaml
+from agent_runtime.adapters.gemini import resolve_gemini_auth_mode
+from agent_runtime.errors import (
+    AgentTimeoutError,
+    AgentUnavailableError,
+    RateLimitedError,
+)
+from agent_runtime.runner import invoke as runtime_invoke
 from batch_gemini_config import PROJECT_ROOT
 from batch_utils import ErrorCategory, ExponentialBackoff, classify_error
 from gemini_output import (
@@ -23,7 +30,6 @@ from slug_utils import to_bare_slug
 
 from .constants import (
     AUDIT_SCRIPT,
-    GEMINI_BIN,
     MAX_RETRIES,
     QUOTA_MAX_RETRIES,
     QUOTA_RETRY_WAIT_SECONDS,
@@ -185,50 +191,28 @@ def call_gemini(prompt_file, track, slug="unknown", phase="unknown", retry=0):
     # Read the prompt file and pass content via -p
     prompt_content = prompt_file.read_text(encoding="utf-8")
 
-    cmd = [GEMINI_BIN, "-p", prompt_content, "-o", "json"]
     start_time = time.monotonic()
     try:
-        res = subprocess.run(
-            cmd,
-            capture_output=True,
-            timeout=TIMEOUT_SECONDS,
-            cwd=str(PROJECT_ROOT),
+        # Load-bearing: route through the shared runtime so batch_gemini_runner
+        # inherits the Gemini fallback ladder's per-rung env stripping,
+        # 429 auto-fallover across model/auth rungs, and API cooldown awareness.
+        result = runtime_invoke(
+            "gemini",
+            prompt_content,
+            mode="read-only",
+            cwd=PROJECT_ROOT,
+            task_id=_runtime_task_id(track, slug, phase, retry),
+            tool_config={"auth_mode": resolve_gemini_auth_mode()},
+            entrypoint="dispatch",
+            hard_timeout=TIMEOUT_SECONDS,
         )
-        elapsed_ms = int((time.monotonic() - start_time) * 1000)
-
-        # Decode with error handling (Gemini output can be truncated mid-character)
-        res.stdout = res.stdout.decode("utf-8", errors="replace") if isinstance(res.stdout, bytes) else res.stdout
-        res.stderr = res.stderr.decode("utf-8", errors="replace") if isinstance(res.stderr, bytes) else res.stderr
-
-        # Parse JSON output -- extract response text and stats
-        stdout_text = ""
-        gemini_json = {}
-        if res.returncode == 0 and res.stdout.strip():
-            try:
-                gemini_json = json.loads(res.stdout)
-                stdout_text = gemini_json.get("response", "")
-                # Log API usage
-                _log_api_usage(track, slug, phase, retry, gemini_json, elapsed_ms)
-            except json.JSONDecodeError:
-                # Fallback: treat as plain text (non-JSON mode)
-                stdout_text = res.stdout
-
-        return {
-            "returncode": res.returncode,
-            "stdout": stdout_text,
-            "stderr": res.stderr,
-            "gemini_json": gemini_json,
-            "elapsed_ms": elapsed_ms,
-        }
-    except subprocess.TimeoutExpired:
-        elapsed_ms = int((time.monotonic() - start_time) * 1000)
-        return {
-            "returncode": -1,
-            "stdout": "",
-            "stderr": f"Timeout expired ({TIMEOUT_SECONDS}s)",
-            "gemini_json": {},
-            "elapsed_ms": elapsed_ms,
-        }
+        return _runtime_result_to_legacy_payload(
+            result, track=track, slug=slug, phase=phase, retry=retry,
+        )
+    except AgentTimeoutError:
+        return _timeout_payload(start_time, TIMEOUT_SECONDS)
+    except (AgentUnavailableError, RateLimitedError) as exc:
+        return _runtime_error_payload(exc, start_time)
 
 
 def apply_output(phase, output, paths):
@@ -393,12 +377,9 @@ def handle_quota_error(runner, slug, phase, stderr):
         )
         time.sleep(wait)
 
-        # Quick test: try a minimal gemini call to check if capacity is back
-        test_result = subprocess.run(
-            [GEMINI_BIN, "-p", "Say OK", "-o", "text"],
-            capture_output=True, text=True, timeout=30,
-        )
-        if test_result.returncode == 0:
+        # Probe the current account through the runtime so auth-mode
+        # resolution and env stripping match the real batch call path.
+        if _gemini_capacity_probe(runner.track, slug, phase):
             log.info(f"  Capacity restored for {current}. Resuming.")
             return True
 
@@ -426,11 +407,7 @@ def handle_quota_error(runner, slug, phase, stderr):
         log.info(f"  Trying account: {next_account}")
         if _switch_gemini_account(next_account):
             # Test the new account
-            test_result = subprocess.run(
-                [GEMINI_BIN, "-p", "Say OK", "-o", "text"],
-                capture_output=True, text=True, timeout=30,
-            )
-            if test_result.returncode == 0:
+            if _gemini_capacity_probe(runner.track, slug, phase):
                 log.info(f"  Account {next_account} works. Resuming batch.")
                 return True
             else:
@@ -458,3 +435,114 @@ def _append_log(log_path, message):
     """Append a timestamped message to a log file."""
     with open(log_path, "a", encoding="utf-8") as f:
         f.write(f"\n[{datetime.now().isoformat()}] {message}\n")
+
+
+def _runtime_task_id(track, slug, phase, retry, purpose="call"):
+    """Build a stable task identifier for runtime usage records."""
+    return f"batch-gemini-runner:{purpose}:{track}:{slug}:{phase}:retry-{retry}"
+
+
+def _timeout_payload(start_time, timeout_seconds):
+    """Preserve the legacy timeout return shape from direct subprocess.run."""
+    elapsed_ms = int((time.monotonic() - start_time) * 1000)
+    return {
+        "returncode": -1,
+        "stdout": "",
+        "stderr": f"Timeout expired ({timeout_seconds}s)",
+        "gemini_json": {},
+        "elapsed_ms": elapsed_ms,
+    }
+
+
+def _runtime_error_payload(exc, start_time):
+    """Map runtime exceptions onto the legacy non-zero subprocess payload."""
+    elapsed_ms = int((time.monotonic() - start_time) * 1000)
+    stderr = exc.reason or str(exc) if isinstance(exc, RateLimitedError) else str(exc)
+    return {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": stderr,
+        "gemini_json": {},
+        "elapsed_ms": elapsed_ms,
+    }
+
+
+def _parse_gemini_runtime_response(raw_response):
+    """Parse runtime Gemini output, preserving the legacy JSON contract when possible."""
+    if not raw_response.strip():
+        return "", {}
+    try:
+        payload = json.loads(raw_response)
+    except json.JSONDecodeError:
+        return raw_response, {}
+    if isinstance(payload, dict):
+        return payload.get("response", raw_response), payload
+    return raw_response, {}
+
+
+def _build_runtime_usage_payload(result, gemini_json, elapsed_ms):
+    """Backfill the legacy batch usage logger from runtime results.
+
+    Exact token counters are only available when the runtime response is a
+    Gemini `-o json` payload. Otherwise we still preserve model + latency
+    continuity for the batch usage ledger without inventing token splits.
+    """
+    if gemini_json:
+        return gemini_json
+    return {
+        "response": result.response,
+        "stats": {
+            "models": {
+                result.model: {
+                    "api": {
+                        "totalLatencyMs": elapsed_ms,
+                    },
+                },
+            },
+        },
+    }
+
+
+def _runtime_result_to_legacy_payload(result, *, track, slug, phase, retry, log_usage=True):
+    """Translate runtime Result into the historical batch_gemini_runner dict."""
+    elapsed_ms = int(result.duration_s * 1000)
+    stdout_text, gemini_json = _parse_gemini_runtime_response(result.response or "")
+    if result.ok and log_usage:
+        _log_api_usage(
+            track,
+            slug,
+            phase,
+            retry,
+            _build_runtime_usage_payload(result, gemini_json, elapsed_ms),
+            elapsed_ms,
+        )
+    return {
+        "returncode": result.returncode if result.returncode is not None else (0 if result.ok else 1),
+        "stdout": stdout_text,
+        "stderr": result.stderr_excerpt or "",
+        "gemini_json": gemini_json,
+        "elapsed_ms": elapsed_ms,
+    }
+
+
+def _gemini_capacity_probe(track, slug, phase):
+    """Probe the current Gemini subscription account through the runtime."""
+    try:
+        result = runtime_invoke(
+            "gemini",
+            "Say OK",
+            mode="read-only",
+            cwd=PROJECT_ROOT,
+            task_id=_runtime_task_id(track, slug, phase, 0, purpose="probe"),
+            tool_config={"auth_mode": "subscription"},
+            entrypoint="dispatch",
+            hard_timeout=30,
+        )
+        payload = _runtime_result_to_legacy_payload(
+            result, track=track, slug=slug, phase=phase, retry=0, log_usage=False,
+        )
+        return payload["returncode"] == 0
+    except AgentTimeoutError:
+        return False
+    except (AgentUnavailableError, RateLimitedError):
+        return False
