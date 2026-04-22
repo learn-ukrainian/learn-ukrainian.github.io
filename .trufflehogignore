@@ -1,0 +1,7 @@
+# Public Algolia search credentials are intentionally embedded in site config.
+^starlight/astro\.config\.mjs$
+
+# Lockfiles contain high-entropy hashes and pinned blobs.
+\.lock$
+(^|/)requirements-lock\.txt$
+(^|/)package-lock\.json$
