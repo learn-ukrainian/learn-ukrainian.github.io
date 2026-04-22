@@ -1,12 +1,8 @@
 """Shared constants for the batch Gemini runner package."""
 
 import logging
-import shutil
 
 from batch_gemini_config import PROJECT_ROOT
-
-# Gemini binary location
-GEMINI_BIN = shutil.which("gemini") or "/opt/homebrew/bin/gemini"
 
 # Paths
 AUDIT_SCRIPT = PROJECT_ROOT / "scripts" / "audit_module.sh"
