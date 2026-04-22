@@ -223,6 +223,10 @@ jobs:
           # current: 39% on 2026-04-10. Bumping the floor above measured
           # coverage would break CI, so we nudge the minimum and track the
           # trend. Re-measure after each new batch of tests and raise the floor.
+          #
+          # Keep the required PR gate hermetic: these ignored files depend on
+          # local corpora, generated review/orchestration artifacts, or sidecar
+          # binaries/CLIs that are not provisioned on GitHub-hosted runners.
           .venv/bin/python -m pytest tests/ \
             --cov=scripts \
             --cov-report=term-missing \
@@ -230,7 +234,21 @@ jobs:
             --cov-fail-under=35 \
             -v --tb=short \
             -k "not slow and not website" \
-            --ignore=tests/test_rag.py
+            --ignore=tests/test_rag.py \
+            --ignore=tests/test_a1_review_scores.py \
+            --ignore=tests/test_agent_runtime.py \
+            --ignore=tests/test_channels_registry.py \
+            --ignore=tests/test_convergence_loop.py \
+            --ignore=tests/test_morphological_validator.py \
+            --ignore=tests/test_plan_hash.py \
+            --ignore=tests/test_scrape_diasporiana.py \
+            --ignore=tests/test_v6_plan_hash_drift.py \
+            --ignore=tests/test_vocab_gen.py \
+            --ignore=tests/test_wiki_channels.py \
+            --ignore=tests/test_wiki_enrichment.py \
+            --ignore=tests/wiki/test_grade_filter.py \
+            --ignore=tests/wiki/test_mlx_fault_injection.py \
+            --ignore=tests/wiki/test_t1_t2_pipeline.py
 
       - name: Upload coverage
         if: always()
