@@ -23,7 +23,7 @@
 
 - All 5 dimensions at ≥9.
 - The four documented gaps from the 8.4/10 final review (Hello integration, L2 errors, euphony/stress pedagogy, lifecycle markers) have been closed.
-- Every new vocabulary item (including mini-pair words `дим, кит, лис, ліс, рис, рись, гриб, грип, казка, каска`, `[ґ]`-words, greeting chunks) is VESUM-verified (`data/vesum.db`).
+- Every new single-word vocabulary item (mini-pair words `дим, кит, лис, ліс, рис, рись, гриб, грип, казка, каска`; `[ґ]`-word list; `лев, тюль, молоко, колос, голова, корова, болото`) is VESUM-verified (`data/vesum.db`). Multi-word greeting formulas (`Добрий день`, `Доброго ранку`, `Добрий вечір`, `До побачення`, `Радий/Рада тебе бачити`, `На все добре`) are treated as indivisible chunks — their component wordforms verify in VESUM, and the chunk-level authority is the textbook corpus (S1, S4) plus ULP Season 1 Episode 1.
 - Every L2-error row in the new "Типові помилки L2" table has a documented minimal pair and/or kinesthetic test.
 - Meta block carries `lifecycle: locked` + `reviewed_by` + `last_reviewed`.
 - This wiki is cleared as a clean input for A1 scale batch module build.
