@@ -41,6 +41,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 8. **Hit the word target** — you MUST write {WORD_TARGET}–{WORD_CEILING} words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and, only if the contract has non-empty dialogue_acts, include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
 9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
 10. **EVERY module MUST end with `## {SUMMARY_HEADING}`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
+11. **State rules honestly. Cite or hedge — never invent.** A grammar rule is "strict" ONLY when the plan YAML or a named Ukrainian authority (Правопис 2019, Антоненко-Давидович, VESUM, Захарійчук / Большакова / Авраменко textbooks) says so explicitly. Default language when a rule has exceptions or sociolinguistic variation: *common*, *typical*, *usually*, *most often*. When your pre-training and the wiki brief disagree, the brief wins — and if the brief's claim surprises you, flag it inline with `<!-- VERIFY: {word or claim} -->` rather than silently picking the version that "feels right." `<!-- VERIFY -->` is not a failure signal; it is the correct honest move, and reviewers score its presence positively on the honesty axis.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -98,6 +99,40 @@ Your prose should contain (after the relevant sections):
 - Do NOT write exercise questions, answers, or options — the ACTIVITIES step handles all of this
 - Do NOT invent marker IDs — use only IDs from the shared contract's `activity_obligations`
 
+### WRONG — do not write these inline
+
+The failure mode is not just "DSL blocks." It is prose that describes-an-exercise with a short item list. Writers rationalize these as "just examples" — they are exercise authoring, and they break the pipeline. The 2026-04-22 writer bakeoff recorded every winning writer falling into at least one of these patterns.
+
+WRONG (numbered inline items — the canonical failure):
+> **Вправа 4. Розподіл слів на три колонки.** Вісімнадцять слів потрібно розподілити за трьома колонками: з м'яким знаком, з апострофом і без жодного знака. Наприклад: «сіль» → Ь; «м'яч» → апостроф; «риба» → без знака.
+
+WRONG (fill-in slots written inline):
+> **Вправа 2. Вставити Ь або апостроф.** Наприклад: «сім_я» → «сім'я»; «ден_» → «день»; «п_ять» → «п'ять».
+
+WRONG (prompt disguised as a reading drill — activity items scattered into prose):
+> Для тренування: _удзик, _ора, _анок, _олова. Обери правильну літеру для кожного слова.
+
+WRONG (reading-aloud prompt masquerading as prose when the plan has it as a fill-in activity):
+> Прочитай уголос: сім'я, п'ять, буряк, дев'ять.
+
+RIGHT — all four of those belong as a single injection marker right after the teaching section that sets them up:
+> [...teaching prose about apostrophe after губні + р...]
+>
+> `<!-- INJECT_ACTIVITY: quiz-apostrophe-after-labials -->`
+
+### Rule of thumb — STOP test
+
+Before you finish a section, read it back. If either of these is true, you are authoring an exercise inline and you must delete it:
+
+1. Your prose contains a numbered list of two or more exercise items (`«сіль» → Ь; «м'яч» → апостроф; ...`, `_арно, _удзик, _ора, _рунт`, `сім_я, ден_, п_ять`), whether as a bulleted list, inline semicolon-separated list, or the phrase «наприклад: ...» followed by more than one item-with-answer.
+2. Your prose contains the phrase «Вправа N.», «Exercise N.», or any task-instruction verb («розподіли», «з'єднай», «обери», «встав», «прочитай уголос», «познач») followed by a task description and the items to work on.
+
+If either is true: delete the items AND the instruction. Replace with `<!-- INJECT_ACTIVITY: {id} -->` where `{id}` is the exact `activity_obligations` id that targets this concept.
+
+### Authority — activity_hints.items belongs to the NEXT step
+
+When the shared contract or plan shows `activity_hints[group-sort].items: 18` or `activity_hints[true-false].count: 6`, those counts are a signal to the downstream ACTIVITIES step. They are NOT a request for you to demonstrate the items. Your deliverable is (a) the teaching prose that makes the concept learnable, and (b) a marker placed at the correct position. Item generation is explicitly the responsibility of the next pipeline step. If you write the items, the next step generates them again — they will not match, the audit will flag the duplication, and the build will reject.
+
 ---
 
 ## Shared Module Contract
@@ -124,6 +159,26 @@ Your prose should contain (after the relevant sections):
 The brief gives you the Ukrainian WHAT-to-teach. The IMMERSION TARGET tells you the HOW-to-scaffold language. **Synthesize across the two; do not conflate them.**
 
 Concrete rule for A1/A2: when the brief uses Ukrainian explanatory prose to describe a rule (e.g., «Дієприслівник — це…»), your A1 module output renders the explanation in English scaffolding prose while keeping the Ukrainian term and examples. At A2, you may render more of the explanation in Ukrainian, but task instructions and the introductory framing of a new concept stay in English per the immersion contract.
+
+#### WRONG / RIGHT — A1 metalanguage containment (issue #1370)
+
+WRONG (A1 — Ukrainian explanatory prose from the brief leaks into the module's scaffolding):
+> «Апостроф — це графічний знак, який ставиться перед я, ю, є, ї після твердих приголосних.»
+
+RIGHT (A1 — English scaffolding carries the explanation; Ukrainian terminology, examples, and the grammar illustration itself stay in Ukrainian):
+> An **апостроф** (apostrophe) sits before **я, ю, є, ї** after hard consonants — for example **сім'я** (family), **п'ять** (five), **об'єкт** (object).
+
+The Ukrainian-language term transfers. The Ukrainian examples transfer. The Ukrainian explanatory sentence does NOT transfer — it becomes an English sentence that introduces the Ukrainian term and anchors it to Ukrainian examples.
+
+#### Three containment checks — run these on your own output before stopping
+
+Before finishing an A1 (or early A2) module, re-read and answer each of these in order. If any answer is wrong, fix the offending sentences before stopping:
+
+1. **Task-instruction language.** Are the task instructions ("Read the dialogue", "Match the pairs", "Fill in the blank") in English for A1, and in English (optionally with a short Ukrainian parenthetical) for early A2? If an instruction reads «Прочитай діалог і дай відповідь…» at A1, rewrite it in English.
+2. **Section-framing language.** Are the sentences that introduce a new concept or transition between sub-topics in English at A1? If a framing sentence leads with Ukrainian explanatory prose pulled from the brief («Сьогодні ми поговоримо про…»), rewrite it in English.
+3. **Ukrainian-kept-Ukrainian content.** Are the Ukrainian examples, dialogue turns, vocabulary anchors (bolded Ukrainian words), and grammar-illustration sentences still in Ukrainian? At every level, these must stay Ukrainian. Never English-gloss a Ukrainian example in place of the Ukrainian — always show Ukrainian first, then the gloss.
+
+Failing check 1 or 2 is the #1370 metalanguage-leak failure mode: Ukrainian explanatory prose from the brief gets copied through into A1 scaffolding instead of being rendered into English. Failing check 3 is the opposite over-correction: translating Ukrainian examples into English and losing the immersion anchor.
 
 ### How to use the excerpt packet:
 1. **Adopt the Ukrainian terminology.** If the article says «складоподіл», you write «складоподіл» — never CVCCV or "syllable division rules" paraphrased from English phonology. If it says «відкритий склад», you write «відкритий склад» — never "open syllable type." **Terminology transfers; surrounding explanatory prose does NOT transfer language.**
@@ -188,10 +243,6 @@ Do not interchange these fixed phrases. They are context-locked:
 - «Дай Бог» — religious register. Avoid in neutral A1-A2 dialogue.
 
 When a character responds to thanks in a non-food/drink context, use «Будь ласка» or «Прошу».
-
-## Do not invent grammar restrictions
-
-Do not write rules like "X is strictly used only for Y" unless the rule appears explicitly in the plan YAML or in Ukrainian grammar authorities (Правопис 2019, Антоненко-Давидович, VESUM). If uncertain, state the usage as common/typical, not strict.
 
 ### FORBIDDEN WORDS — never write these (#1189)
 
