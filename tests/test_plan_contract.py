@@ -259,6 +259,76 @@ def test_wiki_compressor_fallback_when_no_scenario_article_present() -> None:
     assert dialog_items[0]["score_breakdown"]["article"] == 0
 
 
+def test_wiki_compressor_generic_article_wins_for_non_scenario_section() -> None:
+    """#1282 Gemini adversarial-review finding: a scenario-specific article
+    must not monopolise every section of a multi-section module. When a
+    section (e.g. a grammar breakdown) has zero query overlap with the
+    scenario article's blocks, the generic article's relevant block must
+    win — otherwise the article-path + scenario bonuses starve the writer
+    of the actually-relevant generic context.
+
+    Regression for the ``query_score == 0 → skip`` relevance floor."""
+    plan = {
+        "slug": "at-the-cafe",
+        "title": "У кафе",
+        "subtitle": "Сценарій замовлення у кафе",
+        "objectives": ["Замовляти їжу у кафе"],
+        "content_outline": [
+            {
+                "section": "Діалоги",
+                "words": 300,
+                "points": ["Замовлення в кафе — кава, меню, рахунок."],
+            },
+            {
+                "section": "Знахідний відмінок",
+                "words": 300,
+                "points": [
+                    "Знахідний відмінок іменника чоловічого роду: живі "
+                    "істоти отримують закінчення -а, -я; неживі — нульове.",
+                ],
+            },
+        ],
+        "dialogue_situations": [
+            {
+                "setting": "Замовлення у кафе — кава, меню, рахунок",
+                "speakers": ["Клієнт", "Офіціантка"],
+                "motivation": "Ввічливе замовлення",
+            }
+        ],
+        "activity_hints": [{"id": "quiz", "type": "quiz", "focus": "x"}],
+        "word_target": 600,
+    }
+    packet = (
+        # Scenario-specific article but its only block is pure cafe
+        # dialogue — zero content about the accusative case.
+        "### Вікі: pedagogy/a1/at-the-cafe.md\n\n"
+        "## Приклади з підручників\n\n"
+        "Мені каву, будь ласка. Можна меню? Рахунок, будь ласка.\n\n"
+        # Generic grammar article — carries the tokens the grammar section
+        # actually asks about.
+        "### Вікі: grammar/accusative-case.md\n\n"
+        "## Закінчення\n\n"
+        "Знахідний відмінок іменника чоловічого роду: живі істоти "
+        "отримують закінчення -а, -я; неживі зберігають нульове "
+        "закінчення.\n"
+    )
+    compression = compress_wiki_packet(plan, packet)
+
+    dialog_picks = compression["section_excerpts"]["Діалоги"]
+    assert dialog_picks, "Scenario-aligned section must have picks"
+    assert dialog_picks[0]["source_path"] == "pedagogy/a1/at-the-cafe.md"
+
+    grammar_picks = compression["section_excerpts"]["Знахідний відмінок"]
+    assert grammar_picks, "Grammar section must surface the grammar article"
+    assert grammar_picks[0]["source_path"] == "grammar/accusative-case.md"
+    # And the scenario article must not appear at all for the grammar
+    # section, since its one block has zero query overlap there.
+    assert not any(
+        item["source_path"] == "pedagogy/a1/at-the-cafe.md"
+        for item in grammar_picks
+    )
+
+
 def test_build_contract_persists_selection_trace_in_artifact() -> None:
     """#1282 AC-3: the wiki-excerpts.yaml artifact must carry the trace so
     reviewers can inspect why each section got its picks."""

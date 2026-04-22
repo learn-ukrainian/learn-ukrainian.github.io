@@ -281,22 +281,29 @@ def compress_wiki_packet(
         ranked: list[dict] = []
         for block in all_blocks:
             query_score, overlap = _score_block(block, query_tokens)
+            # Require at least one per-section query-token overlap before
+            # the scenario/article bonuses apply. Without this floor, a
+            # scenario-article block with zero section-relevance would beat
+            # a moderately-relevant generic block in a multi-section module
+            # (e.g. a grammar section inside a scenario module), starving
+            # the writer of actually-relevant generic context.
+            if query_score == 0:
+                continue
             scenario_overlap = sorted(scenario_tokens & block["tokens"])
             # Cap the scenario bonus so it enriches without dominating
             # a well-matched per-section query on short sections.
             scenario_score = min(len(scenario_overlap), 4)
             article_score = _scenario_article_bonus(block["path"], plan)
             total = query_score + scenario_score + article_score
-            if total > 0:
-                ranked.append({
-                    "block": block,
-                    "total": total,
-                    "query_score": query_score,
-                    "scenario_score": scenario_score,
-                    "article_score": article_score,
-                    "matched_terms": overlap,
-                    "scenario_terms": scenario_overlap[:6],
-                })
+            ranked.append({
+                "block": block,
+                "total": total,
+                "query_score": query_score,
+                "scenario_score": scenario_score,
+                "article_score": article_score,
+                "matched_terms": overlap,
+                "scenario_terms": scenario_overlap[:6],
+            })
         ranked.sort(key=lambda entry: (-entry["total"], entry["block"]["citation"]))
 
         seen_citations: set[str] = set()
