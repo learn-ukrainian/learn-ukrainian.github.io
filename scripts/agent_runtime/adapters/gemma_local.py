@@ -38,10 +38,12 @@ class GemmaLocalAdapter:
         task_id: str | None,
         session_id: str | None,
         tool_config: dict | None,
+        effort: str | None = None,
     ) -> InvocationPlan:
         _ = mode
         _ = task_id
         _ = session_id
+        _ = effort  # Gemma local lane has no effort knob; silently ignore.
         tc = tool_config or {}
         python_bin = Path(
             tc.get(

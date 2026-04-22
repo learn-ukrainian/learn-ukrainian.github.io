@@ -416,3 +416,136 @@ def test_gemini_adapter_accepts_effort_without_crashing(tmp_path, caplog):
         f"expected a DEBUG log mentioning 'xhigh' and '#1396'; "
         f"records={[r.message for r in caplog.records]}"
     )
+
+
+# ---------------------------------------------------------------------------
+# Regression: gemma-local adapter must accept effort without crashing
+# (Codex adversarial review 2026-04-22: gemma-local broke when every
+# non-Gemini adapter got effort forwarded.)
+# ---------------------------------------------------------------------------
+
+def test_gemma_local_adapter_accepts_effort_kwarg(tmp_path):
+    from agent_runtime.adapters.gemma_local import GemmaLocalAdapter
+
+    adapter = GemmaLocalAdapter()
+    # No exception on effort=... even though the CLI has no such knob.
+    plan = adapter.build_invocation(
+        prompt="hi",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+        effort="xhigh",
+    )
+    # And no '--effort' / 'xhigh' leaks into the Gemma argv.
+    assert "--effort" not in plan.cmd
+    assert "xhigh" not in plan.cmd
+
+
+# ---------------------------------------------------------------------------
+# Gemini fallback ladder path propagates effort on every rung
+# (Codex adversarial review 2026-04-22 finding #2.)
+# ---------------------------------------------------------------------------
+
+def test_gemini_fallback_ladder_forwards_effort_to_every_rung(tmp_path):
+    """When invoke() routes to _invoke_gemini_with_fallback, each rung's
+    attempt must call adapter.build_invocation with effort= propagated.
+    Drive two rungs by returning rate_limited on the first, success on
+    the second, and assert both build_invocation calls saw the kwarg."""
+    from agent_runtime import runner as runner_mod
+
+    spy_adapter = MagicMock()
+    spy_adapter.supported_modes = frozenset({"read-only", "workspace-write", "danger"})
+    spy_adapter.default_model = "gemini-3.1-pro-preview"
+
+    fake_plan = MagicMock()
+    fake_plan.cmd = ["/bin/true"]
+    fake_plan.cwd = tmp_path
+    fake_plan.stdin_payload = ""
+    fake_plan.env_overrides = {}
+    fake_plan.env_unsets = ()
+    fake_plan.output_file = None
+    fake_plan.liveness_paths = ()
+    spy_adapter.build_invocation.return_value = fake_plan
+    spy_adapter.liveness_signal_paths.return_value = ()
+
+    # Drive the ladder: rung 1 → rate_limited, rung 2 → success.
+    from ai_llm.fallback import CallResult
+    fake_call_result = CallResult(
+        response_text="pong",
+        model_used="gemini-3.1-pro-preview",
+        auth_mode_used="oauth",
+        elapsed_s=0.1,
+    )
+
+    with patch(
+        "agent_runtime.runner._load_adapter", return_value=spy_adapter,
+    ), patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ), patch(
+        "agent_runtime.runner.run_gemini_fallback_ladder",
+    ) as mock_ladder:
+        def _run_ladder(*, attempt_runner, **_kwargs):
+            # Invoke the runner's attempt callback twice with different rungs
+            # to prove effort gets forwarded on each call.
+            from ai_llm.fallback import GeminiRung
+            rung_a = GeminiRung(
+                index=0, total=2,
+                model="gemini-3.1-pro-preview", auth_mode="oauth",
+            )
+            rung_b = GeminiRung(
+                index=1, total=2,
+                model="gemini-3.1-flash-preview", auth_mode="api",
+            )
+            # The runner's _attempt_runner internally calls adapter.build_invocation.
+            # We patch _execute_invocation_plan to a no-op success so the runner
+            # returns an AttemptOutcome without running a real subprocess.
+            with patch(
+                "agent_runtime.runner._execute_invocation_plan",
+                return_value=MagicMock(
+                    parse=MagicMock(
+                        ok=True,
+                        response="pong",
+                        stderr_excerpt=None,
+                        rate_limited=False,
+                        session_id=None,
+                        tokens=None,
+                    ),
+                    duration_s=0.1,
+                    returncode=0,
+                    kill_reason=None,
+                    stdout_text="pong",
+                    stderr_text="",
+                    liveness_paths=(),
+                ),
+            ):
+                attempt_runner(rung_a, 0, 60)
+                attempt_runner(rung_b, 1, 60)
+            return fake_call_result
+
+        mock_ladder.side_effect = _run_ladder
+
+        runner_mod.invoke(
+            "gemini",
+            "hi",
+            mode="read-only",
+            cwd=tmp_path,
+            model="gemini-3.1-pro-preview",
+            effort="xhigh",
+            entrypoint="delegate",
+        )
+
+    # Both rung invocations must have forwarded effort="xhigh".
+    assert spy_adapter.build_invocation.call_count == 2, (
+        f"expected 2 build_invocation calls (one per rung); "
+        f"got {spy_adapter.build_invocation.call_count}"
+    )
+    for call in spy_adapter.build_invocation.call_args_list:
+        assert call.kwargs.get("effort") == "xhigh", (
+            f"every rung must propagate effort='xhigh'; "
+            f"kwargs={call.kwargs}"
+        )
