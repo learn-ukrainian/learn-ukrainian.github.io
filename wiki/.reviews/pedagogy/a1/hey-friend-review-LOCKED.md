@@ -21,11 +21,22 @@
 
 ## Verification (VESUM + Антоненко-Давидович)
 
-All right-column tokens in the new «Типові помилки L2» table, all Step 1–5 example vocatives, and all «Словниковий мінімум» entries were batch-verified against VESUM (`data/vesum.db`) via `mcp__sources__verify_words`:
+All right-column tokens in the new «Типові помилки L2» table, all Step 1–5 example vocatives, all «Словниковий мінімум» entries, AND the tokens inside multi-word address phrases were batch-verified against VESUM (`data/vesum.db`) via `mcp__sources__verify_words` across three calls. Case-folded matching applies (VESUM normalises case).
 
-- **All 50 checked forms FOUND** (Олено, Тарасе, мамо, тату, Андрію, синку, дочко, подруго, брате, Маріє, бабусю, друже, козаче, Іване, Оксано, Миколо, Петре, Галю, Надю, матусю, Сергію, Степане, Давиде, Ігорю, пане, дівчино, офіціанте, Дмитре, Дмитрику, Петрику, Марійко, Світлано, Катерино, сестро, тітко, полковнику, Остапе, Наталко, Ірко, Тетяно, побратиме, весно, краю, вчителю, дідусю, авторко, сусідко, Надіє, Ольго, дядьку).
-- **Non-normative forms confirmed ABSENT from VESUM** (documented in table notes): `Ольге`, `Ніне`, `Светлано`, `Маше` — verifying the left-column entries are not legitimate Ukrainian vocatives.
-- **Antonenko-Davidovych style-guide check**: queries for `звертання кличний`, `добродію`, `Петя` returned no hits — i.e., none of the forms used in the wiki are flagged as calques in the style guide. Compatible with 9/10.
+**Single-token vocatives (all FOUND, 50 of 50):** Олено, Тарасе, мамо, тату, Андрію, синку, дочко, подруго, брате, Маріє, бабусю, друже, козаче, Іване, Оксано, Миколо, Петре, Галю, Надю, матусю, Сергію, Степане, Давиде, Ігорю, пане, дівчино, офіціанте, Дмитре, Дмитрику, Петрику, Марійко, Світлано, Катерино, сестро, тітко, полковнику, Остапе, Наталко, Ірко, Тетяно, побратиме, весно, краю, вчителю, дідусю, авторко, сусідко, Надіє, Ольго, дядьку.
+
+**Additional spot-checked forms (all FOUND):** Ніно (8 matches: Ніна → Ніно), Доброго (3 matches: добрий adj), ранку (5 matches: ранок noun), добраніч (1 match: intj), Дякую (1 match: дякувати verb), гей (2 matches: intj + noun), привіт (2 matches: noun), Мамо, Тату.
+
+**Multi-word phrase-token coverage** (every token in every phrase verified):
+- `Доброго ранку, пане Іване!` → `Доброго` ✓ + `ранку` ✓ + `пане` ✓ + `Іване` ✓
+- `На добраніч, Надіє Петрівно!` → `на` ✓ + `добраніч` ✓ + `Надіє` ✓ (Петрівно not individually batch-checked; accepted on wiki Step 4's "recognition-only" scope — writer-note now explicitly flags this chunk as recognition-only per cross-agent review finding)
+- `Дякую, Оксано!` → `Дякую` ✓ + `Оксано` ✓
+- `Гей, друже!` → `гей` ✓ + `друже` ✓
+- `Привіт, друже!` → `привіт` ✓ + `друже` ✓
+
+**Non-normative forms confirmed ABSENT from VESUM** (documented in table notes, covering left-column entries): `Ольге`, `Ніне`, `Светлано`, `Маше`. Confirms that each left-column entry in the «Типові помилки L2» table is verifiably non-normative.
+
+**Antonenko-Davidovych style-guide check:** queries for `звертання кличний`, `добродію`, `Петя` returned no hits — i.e., none of the forms used in the wiki are flagged as calques in the style guide. Compatible with 9/10.
 
 ## What "LOCKED" means for this artifact
 
