@@ -25,6 +25,17 @@
 
 **Overall: 9/10 — LOCKED.**
 
+## Plan review (AC-2 checklist)
+
+The paired plan `curriculum/l2-uk-en/plans/a1/holidays.yaml` was reviewed during the same pass against the 6-point AC-2 checklist from `docs/best-practices/wiki-plan-review-and-lock.md`.
+
+1. **Pragmatic precision:** fixed the old drift where one `dialogue_situations[]` setting did not actually motivate the content-outline dialogues. The locked plan now uses three concrete scenarios that match the dialogue goals (greeting card, family holiday talk, state-holiday date talk).
+2. **Russianisms in prose:** no Russianisms remained after the rewrite. The prior decorative `салют` direction was removed from the state-holiday block.
+3. **Calques in vocabulary / hints:** reviewed the active holiday lexicon and kept only straightforward, attested items (`колядка`, `щедрівка`, `святвечір`, `паска`, `писанка`, etc.). New additions were VESUM-verified during the pass.
+4. **Plan-internal contradictions:** closed the earlier mismatch between dialogue setting, objectives, grammar, and activities. The locked plan now explicitly teaches the contrast `святкувати + назва свята` vs `на + свято` and mirrors the wiki's winter-holiday split.
+5. **References present and specific:** the plan already had external references and now also includes a back-reference to the locked wiki.
+6. **Alignment with locked wiki:** every new wiki hook now has a plan-side hook: greeting formulas, winter-holiday distinction (`колядки` / `щедрівки`), Easter basics, lean state-holiday block, and the error drill around `з + орудний` greetings plus `святкувати` vs `на + свято`.
+
 ## What "LOCKED" means for this artifact
 
 - All 5 rubric dimensions are at 9 or above.
