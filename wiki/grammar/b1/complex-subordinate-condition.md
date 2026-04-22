@@ -5,6 +5,7 @@ slug: complex-subordinate-condition
 domain: grammar/b1
 tracks: [b1, b2]
 compiled: 2026-04-21
+generated_by_model: gemini-3-flash-preview
 -->
 
 У цьому нарисі розглянуто систему складнопідрядних речень з підрядною частиною умови (Complex Subordinate Clauses of Condition). Речення умови є критично важливими для рівня B1, оскільки вони дозволяють учневі висловлювати гіпотези, планувати дії залежно від обставин та аналізувати нереальні сценарії в минулому чи майбутньому.

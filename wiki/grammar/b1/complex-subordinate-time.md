@@ -5,6 +5,7 @@ slug: complex-subordinate-time
 domain: grammar/b1
 tracks: [b1, b2]
 compiled: 2026-04-21
+generated_by_model: gemini-3-flash-preview
 -->
 
 ## Як це пояснюють у школі

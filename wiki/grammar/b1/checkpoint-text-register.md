@@ -1,3 +1,11 @@
+<!-- wiki-meta
+slug: checkpoint-text-register
+domain: grammar/b1
+tracks: [b1, b2]
+compiled: 2026-04-07
+generated_by_model: gemini-2.5-pro
+-->
+
 <skeleton>
 ## Звуки і літери (~330 words total)
 - P1 (~100 words): Introduce the Golden Rule from Zabolotnyi's 5th-grade textbook: «Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо». Emphasize the fundamental difference between a sound (what the mouth produces and ears hear) and a letter (a written symbol on paper).

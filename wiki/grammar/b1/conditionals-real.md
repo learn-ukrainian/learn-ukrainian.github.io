@@ -1,3 +1,11 @@
+<!-- wiki-meta
+slug: b1-conditionals-real
+domain: grammar/b1
+tracks: [b1, b2]
+compiled: 2026-04-07
+generated_by_model: gemini-2.5-pro
+-->
+
 vocabulary:
   - word: "нормально"
     translation: "okay"

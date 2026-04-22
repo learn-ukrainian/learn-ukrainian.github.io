@@ -17,6 +17,7 @@ slug: trypillian-civilization
 domain: periods
 tracks: [hist, bio, istorio, lit-war, lit-hist-fic, oes, ruth]
 compiled: 2026-04-18
+generated_by_model: gemini-2.5-pro
 -->
 
 ## Короткий зміст

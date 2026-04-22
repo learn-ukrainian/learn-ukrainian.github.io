@@ -115,6 +115,21 @@ def test_migrate_then_verify_roundtrip(tmp_path: Path) -> None:
     assert verify_articles([article_path]) == []
 
 
+def test_parse_wiki_meta_defaults_missing_generated_by_model_to_unknown() -> None:
+    from wiki.migrate_sources import parse_wiki_meta
+
+    meta, _ = parse_wiki_meta(
+        "<!-- wiki-meta\n"
+        "slug: demo\n"
+        "domain: periods\n"
+        "tracks: [hist]\n"
+        "compiled: 2026-04-18\n"
+        "-->\n"
+    )
+
+    assert meta["generated_by_model"] == "unknown"
+
+
 def test_render_diff_replaces_legacy_citations(tmp_path: Path, monkeypatch) -> None:
     from wiki import migrate_sources
 
