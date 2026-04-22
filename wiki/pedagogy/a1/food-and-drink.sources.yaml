@@ -22,3 +22,21 @@ sources:
 - id: S12
   file: ext-article-1
   type: external
+- id: S13
+  file: ext-ulp_youtube-255
+  type: external
+- id: S14
+  file: ext-ulp_youtube-291
+  type: external
+- id: S15
+  file: ext-ulp_youtube-292
+  type: external
+- id: S16
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0014
+  type: textbook
+- id: S17
+  file: 7-klas-ukrmova-zabolotnyi-2024_s0017
+  type: textbook
+- id: S18
+  file: ext-ulp_youtube-84
+  type: external
