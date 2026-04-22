@@ -17,13 +17,14 @@ paths:
 
 ## Core tools (always use)
 - `mcp__sources__verify_word` / `mcp__sources__verify_words` / `mcp__sources__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms)
+- `mcp__sources__search_sources` — **PREFERRED unified entry point** across textbooks, literary corpora, Wikipedia, external articles, and `ukrainian_wiki`
 - `mcp__sources__search_text` — textbook content search (23K chunks, Grades 1-11)
 - `mcp__sources__search_images` — textbook image search (14K images)
 - `mcp__sources__search_literary` — primary literary sources (125K chunks — chronicles, poetry, legal texts)
 - `mcp__sources__query_pravopys` — Ukrainian orthography rules (Правопис 2019)
 - `mcp__sources__query_wikipedia` — Ukrainian Wikipedia
 
-> MCP `search_text` currently uses the legacy `search_textbooks` path. T1-T2 modules building via wiki compile use the new `search_sources(strategy='modern_dense_section')` path. Migration ticket TBD.
+> Start with `mcp__sources__search_sources` for general retrieval. Keep `mcp__sources__search_text` for explicit textbook-only scoping when you do not want literary, Wikipedia, external, or `ukrainian_wiki` results mixed in.
 
 ## Dictionary tools (for quality and vocabulary)
 - `mcp__sources__search_style_guide` — Антоненко-Давидович (279 entries) — **calques and Russianisms**. HIGH PRIORITY.

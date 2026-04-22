@@ -93,7 +93,7 @@ Order violation or type mismatch = deduct in Dimension 5.
 
 ### PROOF OF ABSENCE — mandatory before claiming ANYTHING is missing
 
-**Before you claim a word, symbol, notation, or plan point is MISSING from the content, you MUST search for it.** Use your MCP tools (`verify_words`, `search_text`) or carefully re-read the specific section where it should appear.
+**Before you claim a word, symbol, notation, or plan point is MISSING from the content, you MUST search for it.** Use your MCP tools (`verify_words`, `search_sources`, `search_text`) or carefully re-read the specific section where it should appear. Prefer `search_sources`; keep `search_text` for textbook-only checks.
 
 Rules:
 - If you claim "[•] notation is missing" — you must have searched the content for `[•]` and confirmed 0 occurrences

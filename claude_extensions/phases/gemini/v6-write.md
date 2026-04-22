@@ -125,6 +125,11 @@ Your prose should contain (after the relevant sections):
 {KNOWLEDGE_PACKET}
 </knowledge_packet>
 
+## MCP Retrieval Tools
+
+- `search_sources` — **PREFERRED** unified source search across textbooks, literary works, Wikipedia, external articles, AND the Ukrainian wiki pedagogy corpus (compiled from Ukrainian textbooks for Ukrainian learners). Use this as your default when you need supporting retrieval beyond the knowledge packet.
+- `search_text` — textbook-only search. Use this only when you explicitly need school textbook coverage without other corpora.
+
 ---
 
 ## Section Structure

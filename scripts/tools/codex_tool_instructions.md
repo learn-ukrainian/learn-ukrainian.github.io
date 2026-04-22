@@ -63,7 +63,26 @@ if not results:
 "
 ```
 
-### 5. Search textbook content (Ukrainian school textbooks, Grades 1-11)
+### 5. Search Ukrainian source content (preferred unified retrieval)
+
+```bash
+.venv/bin/python -c "
+import sys; sys.path.insert(0, 'scripts')
+from wiki.sources_db import search_sources
+results = search_sources('голосні звуки', track='a1', limit=5)
+for r in results:
+    corpus = r.get('corpus', '?')
+    title = r.get('title', r.get('section_title', ''))
+    text = (r.get('text') or r.get('full_text') or '')[:200]
+    print(f'[{corpus}] {title}')
+    print(f'  {text}')
+    print()
+"
+```
+
+Use `search_textbooks` only when you explicitly need textbook-only scoping.
+
+### 6. Search textbook content (Ukrainian school textbooks, Grades 1-11)
 
 ```bash
 .venv/bin/python -c "
@@ -81,7 +100,7 @@ for r in results:
 "
 ```
 
-### 6. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
+### 7. Search style guide for calques/Russianisms (Антоненко-Давидович, 279 entries)
 
 ```bash
 .venv/bin/python -c "
@@ -97,7 +116,7 @@ if not results:
 "
 ```
 
-### 7. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
+### 8. Look up word definition in СУМ-11 (Ukrainian explanatory dictionary, 127K entries)
 
 ```bash
 .venv/bin/python -c "
@@ -109,7 +128,7 @@ for r in results:
 "
 ```
 
-### 8. Search idioms (Фразеологічний словник, 25K entries)
+### 9. Search idioms (Фразеологічний словник, 25K entries)
 
 ```bash
 .venv/bin/python -c "
@@ -121,7 +140,7 @@ for r in results:
 "
 ```
 
-### 9. English-to-Ukrainian translation (Балла, 79K entries)
+### 10. English-to-Ukrainian translation (Балла, 79K entries)
 
 ```bash
 .venv/bin/python -c "
@@ -145,10 +164,9 @@ for r in results:
    is level-appropriate.
 4. **When unsure about a case ending or conjugation** — use `verify_lemma` (tool 3)
    to see the full paradigm.
-5. **When covering a grammar topic** — search textbooks (tool 5) to see how
-   Ukrainian school textbooks teach it.
-6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 7).
-7. **When looking for natural Ukrainian expressions** — search idioms (tool 8).
+5. **When covering a grammar topic or looking for supporting pedagogy** — start with unified retrieval (tool 5), then use textbook-only search (tool 6) if you need school-textbook scope only.
+6. **When you need the precise Ukrainian meaning** — use СУМ-11 (tool 8).
+7. **When looking for natural Ukrainian expressions** — search idioms (tool 9).
 
 **Batching rule:** Collect all words you want to verify, then run ONE `verify_words`
 call instead of multiple `verify_word` calls. This is faster and uses fewer tokens.

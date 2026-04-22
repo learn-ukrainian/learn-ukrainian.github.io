@@ -46,7 +46,7 @@ class TestListTools:
         tool_names = {t.name for t in tools}
 
         expected = {
-            "search_text", "search_images", "search_literary", "search_external",
+            "search_sources", "search_text", "search_images", "search_literary", "search_external",
             "get_full_text", "get_chunk_context", "collection_stats",
             "verify_word", "verify_words", "verify_lemma",
             "query_wikipedia", "query_grac", "query_ulif",
@@ -103,6 +103,12 @@ class TestCallToolDispatch:
             _run(server_module.call_tool("verify_words", {"words": ["тест"]}))
             mock.assert_called_once_with({"words": ["тест"]})
 
+    def test_search_sources_dispatches(self, server_module):
+        with patch.object(server_module, "handle_search_sources", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("search_sources", {"query": "голосні звуки"}))
+            mock.assert_called_once_with({"query": "голосні звуки"})
+
     def test_handler_exception_returns_error_text(self, server_module):
         with patch.object(server_module, "handle_verify_word", new_callable=AsyncMock) as mock:
             mock.side_effect = RuntimeError("test error")
@@ -148,6 +154,40 @@ class TestVerifyWordsHandler:
             assert "Found: 1/2" in text
             assert "**стій** — FOUND" in text
             assert "**взяйте** — NOT FOUND" in text
+
+
+class TestSearchSourcesHandler:
+    """Test search_sources handler formatting."""
+
+    def test_empty_results(self, server_module):
+        with patch("wiki.sources_db.search_sources", return_value=[]):
+            result = _run(server_module.handle_search_sources({"query": "голосні звуки"}))
+            assert result[0].text == "[]"
+
+    def test_defaults_track_to_empty_string(self, server_module):
+        with patch("wiki.sources_db.search_sources", return_value=[]) as mock:
+            _run(server_module.handle_search_sources({"query": "голосні звуки"}))
+            mock.assert_called_once_with("голосні звуки", track="", limit=10)
+
+    def test_returns_json_payload(self, server_module):
+        mock_hits = [
+            {
+                "chunk_id": "ukwiki:test-1",
+                "corpus": "ukrainian_wiki",
+                "title": "Голосні звуки",
+                "text": "Голосні звуки творяться без перешкод.",
+                "final_score": 0.91,
+            }
+        ]
+        with patch("wiki.sources_db.search_sources", return_value=mock_hits) as mock:
+            result = _run(
+                server_module.handle_search_sources(
+                    {"query": "голосні звуки", "track": "a1", "limit": 5}
+                )
+            )
+            mock.assert_called_once_with("голосні звуки", track="a1", limit=5)
+            assert '"corpus": "ukrainian_wiki"' in result[0].text
+            assert '"chunk_id": "ukwiki:test-1"' in result[0].text
 
 
 class TestSSEStateless:
