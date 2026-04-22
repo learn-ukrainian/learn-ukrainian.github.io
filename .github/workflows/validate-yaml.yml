@@ -50,7 +50,7 @@ jobs:
           mapfile -t changed_files < <(
             git diff --name-only --diff-filter=AMR "$base_sha" "$head_sha" -- \
               | grep -E '^curriculum/.+\.(yaml|yml)$' \
-              | grep -E '/(activities|vocabulary|plans)/'
+              | grep -E '/(activities|vocabulary)/'
           )
 
           if ((${#changed_files[@]} == 0)); then
