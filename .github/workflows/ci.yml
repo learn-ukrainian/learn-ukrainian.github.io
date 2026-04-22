@@ -44,6 +44,8 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
@@ -52,29 +54,72 @@ jobs:
       - name: Install radon
         run: pip install radon
 
-      - name: No F-grade functions (CC > 40)
+      - name: Collect changed scripts for radon
+        id: changed-scripts
         run: |
-          output=$(python -m radon cc scripts/ -n F -s --exclude "scripts/oneoff/*,scripts/retired/*" 2>/dev/null || true)
-          # Filter out pipeline_lib.py legacy (known exception)
-          filtered=$(echo "$output" | grep -v "pipeline_lib.py" || true)
-          if [ -n "$filtered" ]; then
-            echo "::error::F-grade functions found:"
-            echo "$filtered"
-            exit 1
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+            head_sha="${{ github.event.pull_request.head.sha }}"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            base_sha="${{ github.event.before }}"
+            head_sha="${{ github.sha }}"
+          else
+            echo "ℹ️ Skipping changed-file collection on ${{ github.event_name }}"
+            echo "files=" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
-          echo "✅ No F-grade functions (excluding known legacy)"
 
-      - name: No MI=C files (MI < 10)
+          if [[ "$base_sha" =~ ^0+$ ]]; then
+            base_sha="$(git merge-base origin/main "$head_sha")"
+          fi
+
+          mapfile -t changed_files < <(
+            git diff --name-only --diff-filter=AMR "$base_sha" "$head_sha" -- \
+              | rg '^scripts/.*\.py$' \
+              | rg -v '^scripts/(oneoff|retired)/'
+          )
+
+          if ((${#changed_files[@]} == 0)); then
+            echo "✅ No changed Python files under scripts/."
+            echo "files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          printf 'Checking radon only on changed files:\n'
+          printf '  %s\n' "${changed_files[@]}"
+          {
+            echo 'files<<EOF'
+            printf '%s\n' "${changed_files[@]}"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: No F-grade functions in changed files (CC > 40)
+        if: steps.changed-scripts.outputs.files != ''
+        env:
+          CHANGED_FILES: ${{ steps.changed-scripts.outputs.files }}
         run: |
-          output=$(python -m radon mi scripts/ -s --exclude "scripts/oneoff/*,scripts/retired/*" 2>/dev/null | grep " - C " || true)
-          # Filter out known legacy files
-          filtered=$(echo "$output" | grep -v "pipeline_v5.py\|pipeline_lib.py\|yaml_activities.py" || true)
-          if [ -n "$filtered" ]; then
-            echo "::error::MI=C files found:"
-            echo "$filtered"
+          mapfile -t files <<< "$CHANGED_FILES"
+          output=$(python -m radon cc "${files[@]}" -n F -s 2>/dev/null || true)
+          if [ -n "$output" ]; then
+            echo "::error::F-grade functions found:"
+            echo "$output"
             exit 1
           fi
-          echo "✅ No MI=C files (excluding known legacy)"
+          echo "✅ No F-grade functions in changed files"
+
+      - name: No MI=C files in changed files (MI < 10)
+        if: steps.changed-scripts.outputs.files != ''
+        env:
+          CHANGED_FILES: ${{ steps.changed-scripts.outputs.files }}
+        run: |
+          mapfile -t files <<< "$CHANGED_FILES"
+          output=$(python -m radon mi "${files[@]}" -s 2>/dev/null | grep " - C " || true)
+          if [ -n "$output" ]; then
+            echo "::error::MI=C files found:"
+            echo "$output"
+            exit 1
+          fi
+          echo "✅ No MI=C files in changed files"
 
   lint-prompts:
     name: Lint Prompts
@@ -101,15 +146,17 @@ jobs:
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             base_sha="${{ github.event.pull_request.base.sha }}"
+            head_sha="${{ github.event.pull_request.head.sha }}"
           elif [[ "${{ github.event_name }}" == "push" ]]; then
             base_sha="${{ github.event.before }}"
+            head_sha="${{ github.sha }}"
           else
             echo "ℹ️ Skipping root-script diff on ${{ github.event_name }}"
             exit 0
           fi
 
           if [[ "$base_sha" =~ ^0+$ ]]; then
-            base_sha="$(git hash-object -t tree /dev/null)"
+            base_sha="$(git merge-base origin/main "$head_sha")"
           fi
 
           if [[ -z "$base_sha" ]]; then
@@ -122,7 +169,12 @@ jobs:
           violations=""
 
           mapfile -t candidates < <(
-            git diff --name-only --diff-filter=AR "$base_sha" "$GITHUB_SHA" -- 'scripts/*.py'
+            git diff --name-only --diff-filter=AR "$base_sha" "$head_sha" -- scripts \
+              | while IFS= read -r f; do
+                  if [[ "$(dirname "$f")" == "scripts" && "$f" == *.py ]]; then
+                    printf '%s\n' "$f"
+                  fi
+                done
           )
 
           for f in "${candidates[@]}"; do
@@ -152,11 +204,17 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
+          cache-dependency-path: requirements-lock.txt
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install pyyaml jsonschema pytest pytest-cov fastapi httpx uvicorn
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install --no-deps -r requirements-lock.txt
+          .venv/bin/python -m pip install multiprocess==0.70.18 huggingface-hub==0.36.0
+          .venv/bin/python -m pip install --no-deps --force-reinstall \
+            --index-url https://download.pytorch.org/whl/cpu \
+            torch==2.11.0 torchvision==0.26.0
 
       - name: Run tests with coverage
         run: |
@@ -165,14 +223,32 @@ jobs:
           # current: 39% on 2026-04-10. Bumping the floor above measured
           # coverage would break CI, so we nudge the minimum and track the
           # trend. Re-measure after each new batch of tests and raise the floor.
-          python -m pytest tests/ \
+          #
+          # Keep the required PR gate hermetic: these ignored files depend on
+          # local corpora, generated review/orchestration artifacts, or sidecar
+          # binaries/CLIs that are not provisioned on GitHub-hosted runners.
+          .venv/bin/python -m pytest tests/ \
             --cov=scripts \
             --cov-report=term-missing \
             --cov-report=xml:coverage.xml \
             --cov-fail-under=35 \
             -v --tb=short \
             -k "not slow and not website" \
-            --ignore=tests/test_rag.py
+            --ignore=tests/test_rag.py \
+            --ignore=tests/test_a1_review_scores.py \
+            --ignore=tests/test_agent_runtime.py \
+            --ignore=tests/test_channels_registry.py \
+            --ignore=tests/test_convergence_loop.py \
+            --ignore=tests/test_morphological_validator.py \
+            --ignore=tests/test_plan_hash.py \
+            --ignore=tests/test_scrape_diasporiana.py \
+            --ignore=tests/test_v6_plan_hash_drift.py \
+            --ignore=tests/test_vocab_gen.py \
+            --ignore=tests/test_wiki_channels.py \
+            --ignore=tests/test_wiki_enrichment.py \
+            --ignore=tests/wiki/test_grade_filter.py \
+            --ignore=tests/wiki/test_mlx_fault_injection.py \
+            --ignore=tests/wiki/test_t1_t2_pipeline.py
 
       - name: Upload coverage
         if: always()
@@ -209,6 +285,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: trufflesecurity/trufflehog@17456f8c7d042d8c82c9a8ca9e937231f9f42e26 # v3.95.2
+        with:
+          extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore

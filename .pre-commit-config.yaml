@@ -46,7 +46,15 @@ repos:
         # YAML in a few places.
         args: [--allow-multiple-documents]
         # Exclude generated/archive dirs to keep this fast.
-        exclude: ^(data/|\.venv/|node_modules/|scripts/_archived/|starlight/node_modules/|curriculum/l2-uk-en/plans/.*\.yaml\.bak$)
+        exclude: |-
+          (?x)^(
+            data/ |
+            \.venv/ |
+            node_modules/ |
+            scripts/_archived/ |
+            starlight/node_modules/ |
+            curriculum/l2-uk-en/plans/.*\.yaml\.bak$
+          )
       - id: check-added-large-files
         name: block accidentally large files
         args: [--maxkb=2000]
@@ -65,7 +73,10 @@ repos:
       # second line of defence.
       - id: no-yaml-backups
         name: block .yaml.bak / .yaml.orig files
-        entry: bash -c 'files=$(git diff --cached --name-only --diff-filter=A | grep -E "\.(yaml|yml)\.(bak|orig)$" || true); if [ -n "$files" ]; then echo "ERROR: Do not commit plan backup files:"; echo "$files"; exit 1; fi'
+        entry: >-
+          bash -c 'files=$(git diff --cached --name-only --diff-filter=A |
+          grep -E "\.(yaml|yml)\.(bak|orig)$" || true); if [ -n "$files" ]; then
+          echo "ERROR: Do not commit plan backup files:"; echo "$files"; exit 1; fi'
         language: system
         pass_filenames: false
         stages: [pre-commit]
@@ -76,7 +87,13 @@ repos:
       # catches this at runtime; pre-commit catches it at check-in.
       - id: no-bare-python
         name: block bare python/python3 in new scripts
-        entry: bash -c 'files=$(git diff --cached --name-only --diff-filter=AM | grep -E "\.(sh|bash)$" || true); for f in $files; do if grep -nE "(^|[[:space:]])(python|python3)[[:space:]]" "$f" > /dev/null 2>&1; then echo "ERROR: $f uses bare python/python3, use .venv/bin/python instead"; grep -nE "(^|[[:space:]])(python|python3)[[:space:]]" "$f"; exit 1; fi; done'
+        entry: >-
+          bash -c 'files=$(git diff --cached --name-only --diff-filter=AM |
+          grep -E "\.(sh|bash)$" || true); for f in $files; do if grep -nE
+          "(^|[[:space:]])(python|python3)[[:space:]]" "$f" > /dev/null 2>&1;
+          then echo "ERROR: $f uses bare python/python3, use .venv/bin/python
+          instead"; grep -nE "(^|[[:space:]])(python|python3)[[:space:]]" "$f";
+          exit 1; fi; done'
         language: system
         pass_filenames: false
         stages: [pre-commit]
