@@ -299,7 +299,13 @@ def test_resume_plan_reruns_when_latest_review_hits_dimension_floor(tmp_path, mo
     plan = v6_build._build_resume_invalidation_plan("b1", slug, "publish", 8.0)
 
     assert plan.should_skip is False
-    assert plan.reason == "latest review dimension floor fail"
+    # Per-dim refactor (#1421) aggregates dim scores with MIN, so the failing
+    # dimension IS the overall score. The ``score < threshold`` branch of
+    # ``_resume_review_failure_reason`` now fires before the dimension-floor
+    # branch: dim1=7 ⇒ MIN=7 ⇒ "latest review 7.0/10 < 8.0". The older
+    # "dimension floor fail" reason is now effectively unreachable under
+    # MIN aggregation (when a dim fails the floor, MIN reflects it).
+    assert plan.reason == "latest review 7.0/10 < 8.0"
     assert plan.invalidate_phases == ("review", "review-style", "stress", "publish", "audit")
 
 

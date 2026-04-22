@@ -27,6 +27,33 @@ REVIEW_PASS_RAW = """\
 Verdict: PASS
 """
 
+# Per-dim reviewer (added #1421) — 9 independent calls + per-dim templates.
+PER_DIM_REVIEW_IDS = (
+    "factual",
+    "language",
+    "decolonization",
+    "completeness",
+    "actionable",
+    "naturalness",
+    "plan_adherence",
+    "honesty",
+    "dialogue",
+)
+
+PER_DIM_REVIEW_RAW = (
+    "## Dimension\n"
+    "id: {dim_id}\n"
+    "name: {dim_id}\n"
+    "score: 9.0/10\n"
+    "verdict: PASS\n"
+    "\n"
+    "## Evidence\n"
+    "- grounded in cited sources\n"
+    "\n"
+    "## Findings\n"
+    "None.\n"
+)
+
 
 def _write_phase_templates(phases_dir: Path) -> None:
     phases_dir.mkdir(parents=True, exist_ok=True)
@@ -37,12 +64,33 @@ def _write_phase_templates(phases_dir: Path) -> None:
         "v6-vocab-uk.md": "UK-VOCAB\n{PLAN_VOCULARY}\n{PLAN_VOCABULARY}\n{MODULE_CONTENT}\n",
         "v6-activities.md": "EN-ACTIVITIES\n{LEVEL_CONTEXT}\n{INJECTION_MARKERS}\n{PLAN_ACTIVITY_HINTS}\n{MODULE_CONTENT}\n",
         "v6-activities-uk.md": "UK-ACTIVITIES\n{LEVEL_CONTEXT}\n{INJECTION_MARKERS}\n{PLAN_ACTIVITY_HINTS}\n{MODULE_CONTENT}\n",
+        # ``v6-review.md`` / ``v6-review-uk.md`` are legacy: the per-dim
+        # refactor (#1421) loads from ``v6-review/v6-review-{dim}.md``
+        # instead. Legacy entries are retained so tests exercising the
+        # resolver at the monolithic name (e.g. suite-variant lookup) keep
+        # working. See ``test_phase_suite_switches_templates_and_writer_default``.
         "v6-review.md": "EN-REVIEW\n{CONTRACT_YAML}\n{SECTION_WIKI_EXCERPTS}\n{GENERATED_CONTENT}\n",
         "v6-review-uk.md": "UK-REVIEW\n{CONTRACT_YAML}\n{SECTION_WIKI_EXCERPTS}\n{GENERATED_CONTENT}\n",
         "v6-review-style.md": "STYLE\n{GENERATED_CONTENT}\n",
     }
     for name, body in templates.items():
         (phases_dir / name).write_text(body, "utf-8")
+
+    review_subdir = phases_dir / "v6-review"
+    review_subdir.mkdir(parents=True, exist_ok=True)
+    # Only ``{CONTRACT_YAML}`` / ``{SECTION_WIKI_EXCERPTS}`` /
+    # ``{GENERATED_CONTENT}`` are substituted by v6_build — the rest are
+    # raw text, so we cannot use ``str.format`` here (it would try to
+    # resolve the prompt placeholders as keyword args).
+    for dim_id in PER_DIM_REVIEW_IDS:
+        filename = f"v6-review-{dim_id.replace('_', '-')}.md"
+        body = (
+            f"PER-DIM-{dim_id.upper()}\n"
+            "{CONTRACT_YAML}\n"
+            "{SECTION_WIKI_EXCERPTS}\n"
+            "{GENERATED_CONTENT}\n"
+        )
+        (review_subdir / filename).write_text(body, "utf-8")
 
     (phases_dir / "v6-enrich-uk.md").write_text(
         textwrap.dedent(
@@ -267,8 +315,9 @@ def test_uk_suite_end_to_end_build_uses_uk_templates_and_publishes_ukrainian_onl
                 """
             )
             return True, ("# padding to clear the activity short-response guard\n" * 12) + payload
-        if phase == "review":
-            return True, REVIEW_PASS_RAW
+        if phase.startswith("review-"):
+            dim_id = phase.removeprefix("review-")
+            return True, PER_DIM_REVIEW_RAW.format(dim_id=dim_id)
         raise AssertionError(f"Unexpected phase: {phase}")
 
     monkeypatch.setenv("V6_PHASE_SUITE", "uk")
@@ -299,7 +348,12 @@ def test_uk_suite_end_to_end_build_uses_uk_templates_and_publishes_ukrainian_onl
     assert "UK-WRITE" in prompts["write"]
     assert "UK-VOCAB" in prompts["vocab"]
     assert "UK-ACTIVITIES" in prompts["activities"]
-    assert "UK-REVIEW" in prompts["review"]
+    # Per-dim reviewer refactor (#1421) replaced the monolithic review
+    # template with one per dimension; the suite-UK variant of a monolithic
+    # ``v6-review.md`` no longer drives any call. The per-dim base
+    # templates are always used regardless of V6_PHASE_SUITE.
+    assert "PER-DIM-FACTUAL" in prompts["review-factual"]
+    assert "PER-DIM-DIALOGUE" in prompts["review-dialogue"]
     assert "ALL instructions and task stems MUST be in Ukrainian" in prompts["activities"]
     assert "EN-WRITE" not in prompts["write"]
     assert "EN-ACTIVITIES" not in prompts["activities"]

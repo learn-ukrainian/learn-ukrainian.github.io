@@ -79,13 +79,17 @@ class TestEvidenceHasErrorKeyword:
 class TestDimFloorFailIntegration:
     """_parse_review_result uses negation-aware matching."""
 
-    def _make_review_text(self, dim_score: int, evidence: str) -> str:
+    def _make_review_text(
+        self, dim_score: int, evidence: str, *, verdict: str = "PASS"
+    ) -> str:
         # Format must match the regex in _parse_review_result:
         #   r"\|\s*(\d+)\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]*)\|"
-        # Need all 9 dimensions for a valid weighted score >= 8.0
+        # Need all 9 dimensions. A bare finding is included so that a
+        # sub-threshold score does not trip the ``reviewer_contract_invalid``
+        # escape hatch (score < floor + zero findings → non-blocking).
         lines = [
             "## Review\n",
-            "Verdict: PASS\n",
+            f"Verdict: {verdict}\n",
             "| # | Dimension | Score | Evidence |",
             "|---|-----------|-------|----------|",
         ]
@@ -94,16 +98,35 @@ class TestDimFloorFailIntegration:
                 lines.append(f"| {i}. Linguistic accuracy | {dim_score}/10 | {evidence} |")
             else:
                 lines.append(f"| {i}. Dimension {i} | 10/10 | Excellent |")
+        lines.extend([
+            "",
+            "## Findings",
+            "",
+            "[LINGUISTIC] [minor]",
+            "Location: Vocabulary table, row 3",
+            "Issue: Incorrect declension of the noun іменник",
+            "Fix: Use the correct genitive form",
+            "",
+        ])
         return "\n".join(lines) + "\n"
 
     def test_negated_evidence_does_not_trigger_dim_floor_fail(self) -> None:
-        review_text = self._make_review_text(8, "No incorrect forms found in the text")
+        # Sub-threshold score (7 < REVIEW_TARGET_SCORE=8) with negated evidence:
+        # negation-aware matcher must swallow "No incorrect forms found" so
+        # ``dim_floor_fail`` stays False. Module still fails the MIN gate
+        # (MIN=7 < 8) but not via the floor-fail path.
+        review_text = self._make_review_text(
+            7, "No incorrect forms found in the text", verdict="REVISE"
+        )
         parsed = v6_build._parse_review_result(review_text)
         assert not parsed.dim_floor_fail
-        assert parsed.passed  # weighted score >= 8.0, verdict == PASS, no floor fail
 
     def test_genuine_error_evidence_triggers_dim_floor_fail(self) -> None:
-        review_text = self._make_review_text(8, "Incorrect declension of іменник")
+        # Sub-threshold score (7 < 8) + non-negated error evidence:
+        # dim_floor_fail must fire and the module must be flagged failed.
+        review_text = self._make_review_text(
+            7, "Incorrect declension of іменник", verdict="REVISE"
+        )
         parsed = v6_build._parse_review_result(review_text)
         assert parsed.dim_floor_fail
         assert not parsed.passed
