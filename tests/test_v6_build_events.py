@@ -81,6 +81,33 @@ Fix: Add a concrete recap sentence that contrasts хотіти and могти.
 """
 
 
+def _per_dim_review_response(dim_id: str, dim_name: str, score: float, verdict: str, findings: str = "None.") -> str:
+    return (
+        "## Dimension\n"
+        f"id: {dim_id}\n"
+        f"name: {dim_name}\n"
+        f"score: {score:.1f}/10\n"
+        f"verdict: {verdict}\n\n"
+        "## Evidence\n"
+        "- Українською: точкове підтвердження з модуля.\n"
+        "  English: cited from the module.\n\n"
+        "## Findings\n"
+        f"{findings}\n\n"
+        "## Verdict Reason\n"
+        "Scoped to this dimension only.\n"
+    )
+
+
+def _write_per_dim_review_templates(phases_dir: Path) -> None:
+    review_dir = phases_dir / "v6-review"
+    review_dir.mkdir(parents=True, exist_ok=True)
+    for spec in v6_build.REVIEW_DIMENSIONS:
+        (review_dir / Path(spec["template"]).name).write_text(
+            "Review {TOPIC_TITLE}\n\n{GENERATED_CONTENT}\n",
+            "utf-8",
+        )
+
+
 def _write_manifest(curriculum_root: Path, level: str, slugs: list[str]) -> None:
     curriculum_root.mkdir(parents=True, exist_ok=True)
     manifest = {"levels": {level: {"modules": slugs}}}
@@ -217,24 +244,36 @@ def test_step_review_emits_review_score_event(
 
     phases_dir = tmp_path / "scripts" / "build" / "phases"
     phases_dir.mkdir(parents=True, exist_ok=True)
-    (phases_dir / "v6-review.md").write_text(
-        "Review {TOPIC_TITLE}\n\n{GENERATED_CONTENT}\n",
-        "utf-8",
-    )
+    _write_per_dim_review_templates(phases_dir)
 
     import build.dispatch as dispatch
 
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
     monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
     monkeypatch.setattr(v6_build, "_build_vesum_report", lambda *args, **kwargs: "")
-    monkeypatch.setattr(v6_build, "_save_structured_findings", lambda *args, **kwargs: None)
-    monkeypatch.setattr(dispatch, "dispatch_agent", lambda *args, **kwargs: (True, REVIEW_RAW))
+    monkeypatch.setattr(
+        dispatch,
+        "dispatch_agent",
+        lambda *args, **kwargs: (
+            True,
+            _per_dim_review_response(
+                kwargs["phase"].removeprefix("review-"),
+                next(
+                    spec["label"]
+                    for spec in v6_build.REVIEW_DIMENSIONS
+                    if spec["id"] == kwargs["phase"].removeprefix("review-")
+                ),
+                9.0,
+                "PASS",
+            ),
+        ),
+    )
 
     passed, score, raw = v6_build.step_review(content_path, level, 1, slug, writer="claude")
 
     assert passed is True
     assert score == 9.0
-    assert raw == REVIEW_RAW
+    assert "## Verdict: PASS" in raw
 
     review_events = [
         event for event in _event_lines(capsys.readouterr().out)
@@ -260,24 +299,37 @@ def test_step_review_treats_subthreshold_empty_findings_as_non_blocking(
 
     phases_dir = tmp_path / "scripts" / "build" / "phases"
     phases_dir.mkdir(parents=True, exist_ok=True)
-    (phases_dir / "v6-review.md").write_text(
-        "Review {TOPIC_TITLE}\n\n{GENERATED_CONTENT}\n",
-        "utf-8",
-    )
+    _write_per_dim_review_templates(phases_dir)
 
     import build.dispatch as dispatch
 
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
     monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
     monkeypatch.setattr(v6_build, "_build_vesum_report", lambda *args, **kwargs: "")
-    monkeypatch.setattr(dispatch, "dispatch_agent", lambda *args, **kwargs: (True, REVIEW_RAW_REVISE_NO_FINDINGS))
+    monkeypatch.setattr(
+        dispatch,
+        "dispatch_agent",
+        lambda *args, **kwargs: (
+            True,
+            _per_dim_review_response(
+                kwargs["phase"].removeprefix("review-"),
+                next(
+                    spec["label"]
+                    for spec in v6_build.REVIEW_DIMENSIONS
+                    if spec["id"] == kwargs["phase"].removeprefix("review-")
+                ),
+                7.0,
+                "REVISE",
+            ),
+        ),
+    )
 
     passed, score, raw = v6_build.step_review(content_path, level, 1, slug, writer="claude")
 
     output = capsys.readouterr().out
     assert passed is True
-    assert score == 8.0
-    assert raw == REVIEW_RAW_REVISE_NO_FINDINGS
+    assert score == 7.0
+    assert "## Verdict: REVISE" in raw
     assert "Reviewer contract invalid" in output
 
 
@@ -293,23 +345,43 @@ def test_step_review_still_blocks_subthreshold_review_with_actionable_findings(
 
     phases_dir = tmp_path / "scripts" / "build" / "phases"
     phases_dir.mkdir(parents=True, exist_ok=True)
-    (phases_dir / "v6-review.md").write_text(
-        "Review {TOPIC_TITLE}\n\n{GENERATED_CONTENT}\n",
-        "utf-8",
-    )
+    _write_per_dim_review_templates(phases_dir)
 
     import build.dispatch as dispatch
 
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
     monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
     monkeypatch.setattr(v6_build, "_build_vesum_report", lambda *args, **kwargs: "")
-    monkeypatch.setattr(dispatch, "dispatch_agent", lambda *args, **kwargs: (True, REVIEW_RAW_REVISE_WITH_FINDING))
+    monkeypatch.setattr(
+        dispatch,
+        "dispatch_agent",
+        lambda *args, **kwargs: (
+            True,
+            _per_dim_review_response(
+                kwargs["phase"].removeprefix("review-"),
+                next(
+                    spec["label"]
+                    for spec in v6_build.REVIEW_DIMENSIONS
+                    if spec["id"] == kwargs["phase"].removeprefix("review-")
+                ),
+                7.0,
+                "REVISE",
+                findings=(
+                    "[LANGUAGE] [SEVERITY: critical]\n"
+                    "Location: Summary\n"
+                    "Issue: Українською: є конкретна мовна помилка.\n"
+                    "English: actionable language issue.\n"
+                    "Fix: Виправити форму."
+                ),
+            ),
+        ),
+    )
 
     passed, score, raw = v6_build.step_review(content_path, level, 1, slug, writer="claude")
 
     assert passed is False
-    assert score == 8.0
-    assert raw == REVIEW_RAW_REVISE_WITH_FINDING
+    assert score == 7.0
+    assert "## Verdict: REVISE" in raw
 
 
 def test_step_review_style_emits_review_style_score_event(
