@@ -61,7 +61,7 @@ Main at **`58b1ea1c9`** (post `feat: --effort wiring for claude/codex dispatch (
 
 ### 7. Writer-prompt hardening DISPATCHED (#1370)
 
-**In flight as of 14:00 CET stop** — will complete overnight.
+**In flight as of 14:00 CET stop** — will complete during peak window. Progress at stop: 3 commits already on branch (AC-A done, AC-D re-test fired, mid AC-F adversarial review). ~42 min elapsed of ~2h budget.
 
 - Task ID: `claude-1370-writer-harden`
 - Worktree: `.worktrees/claude-1370-writer-harden`
@@ -94,10 +94,25 @@ Background wait is running (`delegate.py wait claude-1370-writer-harden`). Notif
 ## What is NOT done
 
 - **#1370 PR not yet open** — dispatch still running at stop time.
-- **Phase 3 branch triage (#1399)** — 19 branches still in triage queue. Group A (bakeoff forks) and Group B (writer-bakeoff outputs) are near-safe-deletes once verified.
+- **Phase 3 branch triage (#1399)** — 18 branches still in triage queue. Group A (bakeoff forks) and Group B (writer-bakeoff outputs) are near-safe-deletes once verified.
 - **Agent frontmatter `mcpServers` scoping** (queued earlier) — not touched.
 - **#1395 `/api/git/cleanup` endpoint** — still deferred per plan.
-- **Pre-existing CI red on main** (ruff + no-new-root-scripts + gitleaks-license) — noted, not caused by this session. Worth a separate cleanup pass when someone gets to it.
+
+## Peak-window dispatches (14:00 onward — three agents working concurrently)
+
+User correction at 14:03 CET: stopping Claude at 14:00 without firing dispatches to the CHEAPER agents is a waste of the peak window. Fired two parallel dispatches so the window is productive:
+
+| Agent | Task ID | Scope |
+|---|---|---|
+| Codex | `codex-peak-ci-red-and-force-audit` | Fix pre-existing CI red on main (1 ruff error + no-new-root-scripts + gitleaks-license decision) + `--force` audit from deferred #1394 AC |
+| Gemini | `gemini-peak-bakeoff-patterns` | Analysis across all 20 bakeoff review YAMLs — rank systemic gaps BEYOND activity-count → `docs/experiments/2026-04-22-writer-bakeoff-patterns.md` |
+
+Plus Claude already running: `claude-1370-writer-harden`. Three concurrent worktrees. All fire-and-forget, background `delegate.py wait` will notify on each completion. Expected three PRs waiting at 20:00 CET.
+
+Briefs at:
+- `.worktree-briefs/codex-peak-ci-red-plus-force-audit.md`
+- `.worktree-briefs/gemini-peak-bakeoff-pattern-analysis.md`
+- `.worktree-briefs/1370-writer-prompt-harden.md` (from earlier)
 
 ## What to do when resuming (afternoon/next session)
 
