@@ -235,6 +235,22 @@ def _worker_sigterm_handler(_signum, _frame):
     raise KeyboardInterrupt("SIGTERM received; unwinding for cleanup")
 
 
+def _classify_final_status(
+    *,
+    cancelled: bool,
+    rate_limited: bool,
+    ok_outcome: bool,
+) -> str:
+    """Map worker outcome flags to the persisted delegate task status."""
+    if cancelled:
+        return "cancelled"
+    if rate_limited:
+        return "rate_limited"
+    if ok_outcome:
+        return "done"
+    return "failed"
+
+
 def _run_worker(
     task_id: str,
     agent: str,
@@ -337,15 +353,11 @@ def _run_worker(
         except OSError:
             result_file = None
 
-    # Classify final status
-    if cancelled:
-        final_status = "cancelled"
-    elif rate_limited:
-        final_status = "rate_limited"
-    elif ok_outcome:
-        final_status = "done"
-    else:
-        final_status = "failed"
+    final_status = _classify_final_status(
+        cancelled=cancelled,
+        rate_limited=rate_limited,
+        ok_outcome=ok_outcome,
+    )
 
     final_state = _read_state(state_path) or {}
     final_state.update({
