@@ -94,13 +94,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
 
       - name: Check for non-stub scripts in scripts/ root
         run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            base_sha="${{ github.event.before }}"
+          else
+            echo "ℹ️ Skipping root-script diff on ${{ github.event_name }}"
+            exit 0
+          fi
+
+          if [[ "$base_sha" =~ ^0+$ ]]; then
+            base_sha="$(git hash-object -t tree /dev/null)"
+          fi
+
+          if [[ -z "$base_sha" ]]; then
+            echo "::error::Unable to determine the comparison base for scripts/ root guard."
+            exit 1
+          fi
+
           # Allowed non-stub files at scripts/ root
           allowed="__init__.py|batch_gemini_runner.py|config.py|generate_mdx.py|manifest_direct.py|manifest_utils.py|paths.py|pipeline_lib.py|slug_utils.py|yaml_activities.py"
           violations=""
-          for f in scripts/*.py; do
+
+          mapfile -t candidates < <(
+            git diff --name-only --diff-filter=AR "$base_sha" "$GITHUB_SHA" -- 'scripts/*.py'
+          )
+
+          for f in "${candidates[@]}"; do
             [ ! -f "$f" ] && continue
             basename=$(basename "$f")
             # Skip allowed files

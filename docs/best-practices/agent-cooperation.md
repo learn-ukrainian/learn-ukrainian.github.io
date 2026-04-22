@@ -295,6 +295,7 @@ Never parse Gemini's prose output for structured data.
 ## Escalation
 
 If Gemini is stuck (not completing a phase, silently failing):
+<!-- TODO(#1394): classify --force usage -->
 ```bash
 .venv/bin/python scripts/build_module_v5.py {track} {num} --force-phase {research|content|activities|validate|review}
 ```
