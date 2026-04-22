@@ -2,7 +2,20 @@ module: a1-025
 level: A1
 sequence: 25
 slug: my-day
-version: 1.2.3
+version: '1.3.0'
+lifecycle: locked
+reviewed_at: '2026-04-23T00:00:00Z'
+reviewed_by: claude-opus-4-7-xhigh-my-day
+review_notes: >-
+  Review-and-lock pass (scale batch 2) for A.9 scale build input. See
+  wiki/.reviews/pedagogy/a1/my-day-review-LOCKED.md for the wiki-side
+  report and the PR body for plan-side findings (pragmatic / Russianism
+  / calque / contradiction / references / wiki-plan alignment). The plan
+  was brought into alignment with the locked wiki: chunk-policy entries
+  (`Котра година?`, `о сьомій годині`, `робити зарядку`) added to
+  vocabulary_hints; new fill-in activity drills the 8 routine-specific
+  Surzhyk pairs from the wiki's new "Типові помилки L2" table; author
+  warnings added against `Давайте + 1pl` and `Який час?` calques.
 title: Мій день
 subtitle: Спочатку, потім, нарешті — як розповісти про свій день
 focus: communication
@@ -25,7 +38,7 @@ content_outline:
   words: 300
   points:
   - 'Діалог 1 — Що ти робив сьогодні? — Як пройшов твій день? — Добре! Вранці я працював. — А потім? — Потім обідав о першій. Після обіду гуляв. — А ввечері? — Ввечері дивився фільм і читав книгу. Минулий час з''являється природно — подаємо як лексичні конструкції, а не граматику (граматика минулого часу = модулі №48–49).'
-  - 'Діалог 2 — Плануємо завтрашній день: — Що ти будеш робити завтра? — Вранці буду працювати. — А після обіду? — Буду вивчати українську. А ввечері — гуляти. Майбутній час «буду + інфінітив» подається як цілісна фраза.'
+  - 'Діалог 2 — Плануємо завтрашній день: — Що ти будеш робити завтра? — Вранці буду працювати. — А після обіду? — Буду вивчати українську. А ввечері — гуляти. Майбутній час «буду + інфінітив» подається як цілісна фраза. УВАГА до автора: для пропозицій / заохочень уживайте `Ходімо`, `Прокиньмося`, `Почнімо` (синтетичний наказовий спосіб 1-ї особи множини), а не кальку `Давайте підемо` / `Давайте прокинемось` (див. wiki "Типові помилки L2"). Для запитання про час — `Котра година?`, а не калька `*Який час?`.'
 - section: Мій типовий день
   words: 300
   points:
@@ -56,9 +69,16 @@ vocabulary_hints:
   - вночі (at night)
   - після обіду (in the afternoon)
   - також (also)
-  - лягати спати (to go to bed — chunk)
+  - лягати спати (to go to bed — chunk; do not analyse `спати` as complement)
   - типовий (typical)
   - вільний (free)
+  - Котра година? (What time is it? — fixed question chunk)
+  - о сьомій (годині) (at seven o'clock — chunk; do not drill locative of ordinals at A1)
+  - пів на восьму (half past seven — chunk)
+  - робити зарядку (to do exercise — chunk)
+  - Ходімо! (Let's go — synthetic 1pl imperative; avoid calque `Давайте підемо`)
+  - брати душ (to take a shower — native verb; avoid calque `приймати душ`)
+  - пити ліки (to take medicine — native verb; avoid calque `приймати ліки`)
 activity_hints:
 - type: match-up
   focus: З'єднайте дію з логічним часом доби
@@ -87,6 +107,17 @@ activity_hints:
   - Ми вечеряємо {ввечері|вранці|вдень}.
   - Вона працює з дев'ятої до п'ятої {вдень|вночі|вранці}.
   - Вони гуляють у парку {після обіду|вночі|вранці}.
+- type: fill-in
+  focus: Типові суржикові пари у повсякденні — оберіть нормативну форму (див. wiki "Типові помилки L2")
+  items:
+  - Вранці я {беру душ|приймаю душ}.
+  - Коли я хворий, я {п'ю ліки|приймаю ліки}.
+  - '{Котра година|Який час} зараз? — Восьма.'
+  - '{Ходімо|Давайте підемо} в парк після обіду!'
+  - О восьмій годині я їм {сніданок|завтрак}.
+  - Мама готує дуже {смачний|вкусний} обід.
+  - Ввечері я хочу {поїсти|покушати}.
+  - О сьомій я {прокинувся|проснувся} і встав.
 connects_to:
 - a1-026 (Вільний час)
 prerequisites:
@@ -99,3 +130,14 @@ register: розмовний
 references:
 - title: Вашуленко Grade 2, p.83
   notes: 'Вправа на планування дня — поєднання дій та часу доби.'
+- title: 'Wiki: pedagogy/a1/my-day (LOCKED 2026-04-23)'
+  notes: 'Authoritative pedagogical brief — see writer-note on `час` vs `година`, chunk-policy note (`Котра година?`, `о сьомій годині`, `пів на восьму`, `лягати спати`, `робити зарядку`), and "Типові помилки L2" routine-specific Surzhyk table.'
+changelog:
+- version: '1.3.0'
+  date: '2026-04-23'
+  changes:
+  - 'Review-and-lock pass (scale batch 2). Added lifecycle markers (lifecycle/reviewed_at/reviewed_by/review_notes) per the convention in docs/best-practices/wiki-plan-review-and-lock.md.'
+  - 'Added wiki back-reference to the locked my-day wiki in `references:`.'
+  - 'Extended `vocabulary_hints.recommended` with the wiki-pinned indivisible chunks (`Котра година?`, `о сьомій (годині)`, `пів на восьму`, `робити зарядку`, `Ходімо!`) and Surzhyk-inoculation pairs (`брати душ`, `пити ліки`).'
+  - 'Added new fill-in activity mirroring the wiki "Типові помилки L2" table (8 routine-specific Surzhyk pairs: приймати душ → брати душ, приймати ліки → пити ліки, Який час? → Котра година?, Давайте підемо → Ходімо, завтрак → сніданок, вкусний → смачний, покушати → поїсти, проснутися → прокинутися at A1).'
+  - 'Added author warning inside Діалог 2 against `Давайте + 1pl` (use synthetic imperative: `Ходімо`, `Прокиньмося`, `Почнімо`) and against calque `Який час?` (use `Котра година?`).'
