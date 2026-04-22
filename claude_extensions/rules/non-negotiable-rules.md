@@ -88,6 +88,7 @@ V6 uses **reviewer-as-fixer**: Gemini reviews, finds issues, outputs `<fixes>` w
 | Requirement | Threshold |
 |---|---|
 | Review score | 9+/10 target (8+ minimum PASS) |
+| **MIN-score gate** | **`min(dim_scores)` ≥ 9 to PASS, not weighted average.** A single failing dim fails the module. See `docs/best-practices/strict-reviewer-persona.md`. |
 | Russian ghost words | Zero (кот → кіт, хорошо → добре) |
 | Dialogues | Natural situations from textbooks — not invented. Someone searches for keys, not interrogation. |
 | Vocabulary | All words VESUM-verified. Writer generates словнік YAML with contextual translations. |
@@ -95,6 +96,8 @@ V6 uses **reviewer-as-fixer**: Gemini reviews, finds issues, outputs `<fixes>` w
 | Stress marks | Added by deterministic annotator AFTER review, not by writer. |
 
 Rewrite any text that fails naturalness. No robotic or disconnected prose.
+
+**Reviewer architecture (load-bearing, user-stated 2026-04-23):** Each review dimension runs as an INDEPENDENT model call with its own strict persona — no single-pass multi-dim bundling. Aggregator takes MIN, not weighted average. Persona reference: `docs/best-practices/strict-reviewer-persona.md`. **Do NOT design new review prompts that bundle dims into one pass with a weighted average — that pattern is rejected.**
 
 ---
 
