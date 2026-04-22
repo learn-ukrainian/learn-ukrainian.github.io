@@ -1818,24 +1818,7 @@ def _parse_review_result(review_text: str) -> ReviewParseResult:
     if explicit_score_match:
         score = round(float(explicit_score_match.group(1)), 1)
     elif raw_scores:
-        # Legacy bundled reviews computed a weighted average. Keep that parser
-        # only as a fallback for old artifacts that do not carry an explicit
-        # verdict/minimum score line.
-        legacy_weights = {
-            1: 0.15,
-            2: 0.15,
-            3: 0.15,
-            4: 0.10,
-            5: 0.15,
-            6: 0.10,
-            7: 0.05,
-            8: 0.05,
-            9: 0.10,
-        }
-        available = min(len(raw_scores), len(legacy_weights))
-        weight_sum = sum(legacy_weights[k] for k in range(1, available + 1))
-        weighted = sum(raw_scores[i] * legacy_weights[i + 1] for i in range(available))
-        score = round(weighted / weight_sum, 1) if weight_sum > 0 else 0.0
+        score = round(min(raw_scores), 1)
     else:
         score = 0.0
 
