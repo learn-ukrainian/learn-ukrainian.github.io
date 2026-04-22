@@ -9,7 +9,6 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_REPORT_PATH = PROJECT_ROOT / "audit" / "phase-2c-wiki-strip" / "report.md"
 WIKI_META_START = "<!-- wiki-meta"
