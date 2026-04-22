@@ -112,22 +112,44 @@ WRONG (fill-in slots written inline):
 WRONG (prompt disguised as a reading drill — activity items scattered into prose):
 > Для тренування: _удзик, _ора, _анок, _олова. Обери правильну літеру для кожного слова.
 
-WRONG (reading-aloud prompt masquerading as prose when the plan has it as a fill-in activity):
-> Прочитай уголос: сім'я, п'ять, буряк, дев'ять.
+WRONG (fill-in slot tokens in prose — the learner is expected to produce the answer):
+> Додай пропущений знак: сім_я, ден_, п_ять.
 
-RIGHT — all four of those belong as a single injection marker right after the teaching section that sets them up:
+RIGHT — all of those belong as a single injection marker right after the teaching section that sets them up:
 > [...teaching prose about apostrophe after губні + р...]
 >
-> `<!-- INJECT_ACTIVITY: quiz-apostrophe-after-labials -->`
+> `<!-- INJECT_ACTIVITY: fill-in-apostrophe-or-soft-sign -->`
+
+### What teaching examples ARE allowed (NOT exercise authoring)
+
+The hardening targets exercise authoring, NOT teaching examples. The distinguishing test is whether the learner is asked to produce an answer. These patterns are teaching prose and belong in the module:
+
+ALLOWED — illustrative example list embedded in explanatory prose:
+> Типові моделі з м'яким знаком: **день**, **кінь**, **сіль**, **мить**, **мазь**. У довших словах Ь з'являється і в середині: **учитель**, **батько**.
+
+ALLOWED — minimal pairs that demonstrate a sound contrast, with the contrast stated for the learner:
+> Послухай різницю: **балка** / **палка**, **коза** / **коса**. У першому слові пари звук дзвінкий, у другому — глухий.
+
+ALLOWED — a short list of pronunciation anchors drawn directly from the plan's `content_outline` to ground a phonetic point:
+> Звук Р тренуємо на словах: **рука**, **робота**, **ранок**, **риба**.
+
+ALLOWED — a reading-aloud prompt that shows the learner the words and tells them what to notice (no answer required):
+> Прочитай уголос: **п'ять**, **дев'ять**, **м'який**. Зверни увагу, як приголосний перед апострофом залишається твердим.
+
+The distinguishing test: these SHOW the learner the concept with concrete anchors. They do NOT ask the learner to produce an answer, sort items into columns, fill slots, match pairs, or label rows. If it's a demonstration, it stays. If the learner must work and produce an answer, it becomes a marker.
 
 ### Rule of thumb — STOP test
 
-Before you finish a section, read it back. If either of these is true, you are authoring an exercise inline and you must delete it:
+Before you finish a section, read it back. You are authoring an exercise inline (and must delete) if ANY of these is true:
 
-1. Your prose contains a numbered list of two or more exercise items (`«сіль» → Ь; «м'яч» → апостроф; ...`, `_арно, _удзик, _ора, _рунт`, `сім_я, ден_, п_ять`), whether as a bulleted list, inline semicolon-separated list, or the phrase «наприклад: ...» followed by more than one item-with-answer.
-2. Your prose contains the phrase «Вправа N.», «Exercise N.», or any task-instruction verb («розподіли», «з'єднай», «обери», «встав», «прочитай уголос», «познач») followed by a task description and the items to work on.
+1. Your prose contains the phrase «Вправа N.», «Exercise N.», «Завдання N.», or any numbered heading that announces a discrete practice task.
+2. Your prose pairs an answer-demanding verb («розподіли», «з'єднай», «обери», «встав», «виправ», «заповни пропуск», «познач правду чи неправду») with a concrete list of items the learner must work on AND an implied answer the learner must produce.
+3. Your prose contains fill-in-the-blank slot tokens (`сім_я`, `_удзик`, `п_ять`) or item-with-answer arrows (`«сіль» → Ь`, `_удзик → Ґ`).
+4. Your prose presents a word bank of 6+ items the learner is expected to sort, match, label, or categorize.
 
-If either is true: delete the items AND the instruction. Replace with `<!-- INJECT_ACTIVITY: {id} -->` where `{id}` is the exact `activity_obligations` id that targets this concept.
+If ANY is true: delete the items AND the instruction. Replace with `<!-- INJECT_ACTIVITY: {id} -->` where `{id}` is the exact `activity_obligations` id that targets this concept.
+
+If NONE is true — your prose just shows the learner an example list, a minimal-pair demonstration, or a pronunciation anchor — that is teaching prose, not an exercise, and stays in the module.
 
 ### Authority — activity_hints.items belongs to the NEXT step
 

@@ -1,0 +1,92 @@
+reviewer_model: codex-1
+fixture: a1/special-signs-hardened-retest
+axes:
+  linguistic_correctness:
+    score: 8
+    evidence:
+      - quote: "Ще одна контрастна пара, яку часто наводять у підручниках: **буряк** (овоч, Р м'який перед Я, апострофа немає) і **бур'ян** (трава, Р твердий, апостроф розділяє)."
+        issue: "This contrast is linguistically correct: it distinguishes soft р before я from hard р plus apostrophe."
+        authority: "Правопис 2019"
+      - quote: "Правило сформульоване чітко (Захарійчук, 1 клас, стор. 97): **апостроф ставиться після Б, П, В, М, Ф, Р перед я, ю, є, ї.**"
+        issue: "As written, this is overgeneralized. Правопис 2019 gives standard no-apostrophe exceptions after губні and after р, including forms like «свято», «морквяний», «буряк»."
+        authority: "Правопис 2019"
+      - quote: "- **м'якиˊй** — прикметник; апостроф після М (Й завжди м'який, Ь тут не потрібен). *Цей хліб дуже м'який.*"
+        issue: "Stress placement and the note about the absence of soft sign are correct."
+        authority: "Горох"
+  pedagogical_accuracy:
+    score: 7
+    evidence:
+      - quote: "Позначення, яке використовує Захарійчук (1 клас, стор. 15): тверді приголосні позначаються знаком [–], м'які — знаком [=]."
+        issue: "Directly matches a cited primary-school textbook reference from the plan."
+        authority: "textbook citation"
+      - quote: "Окрему групу становлять **сонорні** приголосні — В, Л, М, Н, Й, Р. Вони завжди дзвінкі і не мають глухих пар."
+        issue: "This correctly teaches the intended distinction between paired obstruents and sonorants."
+        authority: "plan section"
+      - quote: "Правило сформульоване чітко (Захарійчук, 1 клас, стор. 97): **апостроф ставиться після Б, П, В, М, Ф, Р перед я, ю, є, ї.**"
+        issue: "The lesson teaches this as an absolute law instead of marking it as an A1-scope simplification."
+        authority: "none"
+  decodability_a1:
+    score: 4
+    evidence:
+      - quote: "Українська фонетика чітко розмежовує три групи приголосних за їхньою здатністю до пом'якшення"
+        issue: "Abstract metalanguage; this is above first- or second-grade readability."
+      - quote: "Не слід називати Г «м'яким» — у фонетичній термінології «м'який» означає палаталізований, а Г таким не є."
+        issue: "«Палаталізований» is far above A1 child-facing prose."
+      - quote: "Для читання слів з апострофом корисно уявити його як невидиму стіну між приголосним і голосним."
+        issue: "This is one of the few child-decipherable explanations; the metaphor works."
+  plan_adherence:
+    score: 4
+    marker_coverage:
+      expected_count: 7
+      present_count: 7
+      present_ids:
+        - "odd-one-out-soft-sign"
+        - "fill-in-apostrophe-or-soft-sign"
+        - "error-correction-missing-apostrophe"
+        - "group-sort-ь-apostrophe-nothing"
+        - "match-up-voiced-voiceless-pairs"
+        - "true-false-voicing-rules"
+        - "quiz-g-vs-ghanoki"
+      missing_hints: []
+    inline_exercise_violations:
+      - "Практика читання: **п'ять**, **дев'ять**, **м'який**, **м'яч**, **об'єкт**."
+      - "Потренуйте слух на мінімальних парах — словах, які відрізняються лише одним звуком:"
+      - "Мінімальні пари для тренування слуху:"
+      - "Потренуйтеся зі словами: **рука**, **робота**, **ранок**, **риба**."
+    missing_from_plan:
+      - "\"Апостроф\" is outside the ±10% budget: 355 words against a 250-word target (allowed 225-275)."
+      - "\"Дзвінкі і глухі\" is outside the ±10% budget: 208 words against a 250-word target (allowed 225-275)."
+      - "\"Вимова українських звуків\" is outside the ±10% budget: 286 words against a 250-word target (allowed 225-275)."
+      - "\"Підсумок\" is outside the ±10% budget: 145 words against a 200-word target (allowed 180-220)."
+    extra_not_in_plan:
+      - "Inline exercise authoring in place of a marker-only setup: \"Практика читання: **п'ять**, **дев'ять**, **м'який**, **м'яч**, **об'єкт**.\" (severity: high)"
+      - "Inline exercise authoring in place of a marker-only setup: \"Потренуйте слух на мінімальних парах — словах, які відрізняються лише одним звуком:\" followed by item bullets (severity: high)"
+      - "Inline exercise authoring in place of a marker-only setup: \"Мінімальні пари для тренування слуху:\" followed by four item bullets (severity: high)"
+      - "Inline exercise authoring in place of a marker-only setup: \"Потренуйтеся зі словами: **рука**, **робота**, **ранок**, **риба**.\" (severity: high)"
+  register_naturalness:
+    score: 6
+    evidence:
+      - quote: "Апостроф тут не декоративний — він змінює вимову і може змінити значення."
+        issue: "Natural, teacherly Ukrainian."
+      - quote: "Вони формують фонетичну ідентичність мови"
+        issue: "This sounds like an adult linguistics essay, not a primary-school textbook."
+      - quote: "згадаймо подвійну природу йотованих голосних"
+        issue: "Academic phrasing; it feels translated or over-theorized for the intended register."
+  honesty:
+    score: 2
+    verify_markers_present: false
+    verify_markers_count: 0
+    notes: "No <!-- VERIFY --> markers at all. The writer makes categorical claims about apostrophe usage and never flags standard exception zones such as «свято»/«морквяний» after губні or «буряк» after р. The contract explicitly said that honest uncertainty or scope conflicts should be surfaced, not papered over."
+plan_issues:
+  - plan_field: "grammar[3]"
+    issue: "The plan is internally contradictory about sonorants."
+    evidence: "Сонорні (В, Л, М, Н, Й, Р) НЕ є ані дзвінкими, ані глухими (вони лише дзвінкі)."
+  - plan_field: "content_outline[0].points[0] vs references[2]"
+    issue: "The plan cites one Большакова source in the section body and a different one in the references block."
+    evidence: "\"Большакова 2 клас, стор. 46\" in content_outline, but \"Большакова, 1 клас, стор. 45-47\" in references."
+summary:
+  overall_score: 5.2
+  single_worst_error: "The author broke the hardened markers-only contract repeatedly by writing inline practice blocks instead of stopping at marker placement."
+  single_best_moment: "\"Апостроф тут не декоративний — він змінює вимову і може змінити значення.\" is vivid, accurate, and actually teachable."
+  verdict: FAIL
+  word_count_estimate: 1441
