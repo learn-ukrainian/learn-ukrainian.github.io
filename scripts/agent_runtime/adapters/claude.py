@@ -44,6 +44,7 @@ Issue: #1184
 """
 from __future__ import annotations
 
+import logging
 import os
 import re
 import shutil
@@ -52,6 +53,8 @@ from typing import Any
 
 from ..result import ParseResult
 from .base import InvocationPlan
+
+_logger = logging.getLogger(__name__)
 
 # Rate-limit patterns (Claude/Anthropic-specific + generic fallbacks)
 _RATE_LIMIT_PATTERNS = (
@@ -91,6 +94,7 @@ class ClaudeAdapter:
         task_id: str | None,
         session_id: str | None,
         tool_config: dict | None,
+        effort: str | None = None,
     ) -> InvocationPlan:
         """Build the Claude Code invocation.
 
@@ -103,6 +107,12 @@ class ClaudeAdapter:
             - ``output_format: str`` — defaults to "text"
             - ``use_bare: bool`` — explicit opt-out of --bare (default: auto-enable
               when no session + ANTHROPIC_API_KEY is set)
+
+        ``effort``: optional reasoning-level string. When non-None and the
+        probed Claude binary supports ``--effort`` (CC 2.1.98+), the flag
+        is appended as ``--effort <level>``. Otherwise we log a warning
+        and proceed without the flag so older CLIs don't hard-fail. See
+        ``utils.claude_version.supports_effort`` and issue #1396.
         """
         tc: dict[str, Any] = tool_config or {}
 
@@ -141,6 +151,30 @@ class ClaudeAdapter:
         # Model override
         if model:
             cmd.extend(["--model", model])
+
+        # Effort (reasoning level) — version-gated. See #1396.
+        if effort is not None:
+            probe_prefix_for_effort: tuple[str, ...]
+            if cmd_prefix:
+                probe_prefix_for_effort = tuple(cmd_prefix)
+            elif shutil.which("claude"):
+                probe_prefix_for_effort = (cmd[0],)
+            else:
+                probe_prefix_for_effort = ("npx", "@anthropic-ai/claude-code@latest")
+            try:
+                from utils.claude_version import supports_effort
+                effort_supported = supports_effort(probe_prefix_for_effort)
+            except ImportError:
+                effort_supported = False
+            if effort_supported:
+                cmd.extend(["--effort", effort])
+            else:
+                _logger.warning(
+                    "Claude CLI at %s does not support --effort; "
+                    "ignoring effort=%r and using CLI default (#1396)",
+                    probe_prefix_for_effort,
+                    effort,
+                )
 
         # Output format
         cmd.extend(["--output-format", tc.get("output_format", "text")])

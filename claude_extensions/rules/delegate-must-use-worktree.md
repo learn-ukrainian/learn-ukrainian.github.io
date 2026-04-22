@@ -37,6 +37,14 @@ feature branch in the main checkout. Concrete setup:
     cd .worktrees/<task-name>
     # do work, commit, push
 
+    # For dispatches that warrant peak Opus 4.7 reasoning:
+    #   .venv/bin/python scripts/delegate.py dispatch \
+    #       --agent claude --effort xhigh --model claude-opus-4-7 \
+    #       --task-id <task-name> --worktree .worktrees/<task-name> \
+    #       --mode danger --prompt-file brief.md
+    # Accepted --effort levels: low | medium | high | xhigh | max
+    # (Omit --effort to use the agent's own CLI/config default.)
+
 The main checkout (wherever the user is working) stays untouched on
 `main`. After the PR merges, the worktree is cleaned up by the user
 or the next agent session:

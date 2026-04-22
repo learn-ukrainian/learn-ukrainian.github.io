@@ -31,6 +31,7 @@ Issue: #1184
 """
 from __future__ import annotations
 
+import logging
 import os
 import re
 import shutil
@@ -40,6 +41,8 @@ from ai_llm.fallback import GEMINI_AUTH_ENV_VARS, is_gemini_rate_limited
 
 from ..result import ParseResult
 from .base import InvocationPlan
+
+_logger = logging.getLogger(__name__)
 
 _TRANSIENT_ERROR_PATTERNS = (
     r"No capacity available",
@@ -111,6 +114,7 @@ class GeminiAdapter:
         task_id: str | None,
         session_id: str | None,
         tool_config: dict | None,
+        effort: str | None = None,
     ) -> InvocationPlan:
         """Build the ``gemini`` CLI invocation.
 
@@ -123,7 +127,18 @@ class GeminiAdapter:
             - ``{"mcp_server_names": ["rag", "other"]}`` → appended as
               ``--allowed-mcp-server-names rag,other``
             - Any other keys are ignored (forward-compatible).
+
+        ``effort`` is accepted for uniformity with the other adapters but
+        currently a no-op: the ``gemini`` CLI does not expose a reasoning
+        effort flag. When set we emit a debug log and proceed without
+        modifying the command. Follow-up #1396.
         """
+        if effort is not None:
+            _logger.debug(
+                "gemini effort %r not yet wired through CLI — "
+                "using adapter default (#1396 follow-up)",
+                effort,
+            )
         gemini_bin = shutil.which("gemini") or "gemini"
 
         cmd: list[str] = [

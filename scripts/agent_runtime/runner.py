@@ -528,6 +528,7 @@ def _invoke_gemini_with_fallback(
     entrypoint: str,
     hard_timeout: int,
     stall_timeout: int,
+    effort: str | None = None,
 ) -> Result:
     """Run Gemini through the shared model/auth fallback ladder."""
 
@@ -545,6 +546,7 @@ def _invoke_gemini_with_fallback(
             task_id=task_id,
             session_id=session_id,
             tool_config=attempt_tool_config,
+            effort=effort,
         )
         execution = _execute_invocation_plan(
             agent_name=agent_name,
@@ -760,6 +762,7 @@ def invoke(
     entrypoint: str = "runtime",
     hard_timeout: int = 3600,
     stall_timeout: int = 180,  # accepted but ignored; see docstring
+    effort: str | None = None,
 ) -> Result:
     """Single entry point for all agent CLI invocations.
 
@@ -792,6 +795,12 @@ def invoke(
             successful long-running calls were killed as false-positive
             stalls. See watchdog.py::should_kill() docstring for the
             full incident chain. hard_timeout is the only safety net now.
+        effort: Cross-agent reasoning/effort level. First-class peer of
+            ``model`` (NOT stuffed into ``tool_config``). Accepted values:
+            ``"low" | "medium" | "high" | "xhigh" | "max"``. When ``None``,
+            each adapter's CLI / config default applies (Claude CLI
+            default; Codex's ``~/.codex/config.toml``; Gemini has no
+            equivalent yet). See #1396.
 
     Returns:
         Result with ok, response, timing, session_id, and the full usage
@@ -868,6 +877,7 @@ def invoke(
             entrypoint=entrypoint,
             hard_timeout=hard_timeout,
             stall_timeout=stall_timeout,
+            effort=effort,
         )
 
     # ---------- 6. Build invocation plan ----------
@@ -879,6 +889,7 @@ def invoke(
         task_id=task_id,
         session_id=session_id,
         tool_config=tool_config,
+        effort=effort,
     )
 
     execution = _execute_invocation_plan(

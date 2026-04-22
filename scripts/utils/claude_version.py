@@ -198,6 +198,25 @@ def supports_exclude_dynamic_system_prompt_sections(
     return ok
 
 
+def supports_effort(cmd_prefix: Sequence[str] | str) -> bool:
+    """Return True iff Claude Code at ``cmd_prefix`` supports ``--effort``.
+
+    ``--effort`` was available in Claude Code 2.1.98+ (verified against
+    2.1.117 ``--help`` output on 2026-04-22). Gates on the same minimum
+    version as ``--exclude-dynamic-system-prompt-sections`` for
+    simplicity; if this turns out to be wrong, split the constant.
+
+    Args:
+        cmd_prefix: Same semantics as
+            :func:`supports_exclude_dynamic_system_prompt_sections` —
+            the exact argv prefix to probe.
+
+    Returns:
+        True if the probed CLI is >= 2.1.98, else False.
+    """
+    return supports_exclude_dynamic_system_prompt_sections(cmd_prefix)
+
+
 def _reset_cache_for_tests() -> None:
     """Clear the cache. Tests only — do NOT call from production code."""
     with _CACHE_LOCK:
