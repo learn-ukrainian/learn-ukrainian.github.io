@@ -1,6 +1,0 @@
-Section 1 "Просторові прийменники: Де це? (Spatial Prepositions: Where Is It?)": ~700 words — [Introduce 5 prepositions with Instrumental case: над, під, перед, за, між, with detailed grammar tables and examples.]
-Section 2 "Описуємо кімнату (Describing a Room)": ~550 words — [Describe locations of furniture in a room using preposition + Instrumental, with roommate dialogue.]
-Section 3 "Перед обідом, за розкладом: Часове значення (Before Lunch, On Schedule: Temporal Meaning)": ~500 words — [Explain how перед and за are used for time and schedule, comparing spatial and temporal meanings.]
-Section 4 "Практика: Де? Коли? (Practice: Where? When?)": ~500 words — [Contrast location vs direction, purpose vs location, and describe a neighborhood scene.]
-Summary "Підсумок": ~150 words
-Total: 2400+ words

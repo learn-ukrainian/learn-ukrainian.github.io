@@ -1,8 +1,0 @@
-Section 1 "Діалоги": ~380 words — Introduce basic introduction dialogues (informal, formal, third person).
-Section 2 "Мене звати...": ~270 words — Explain the "they call me" construction and how to ask names.
-Section 3 "Це...": ~220 words — Introduce the "this is / these are" construction without a verb.
-Section 4 "Особові займенники": ~110 words — Present the 7 basic personal pronouns.
-Section 5 "Я — студент": ~160 words — Explain the zero copula in present tense and gendered professions.
-Section 6 "Звідки?": ~220 words — Teach how to ask and answer "where from" as memorized chunks.
-Section 7 "Підсумок — Summary": ~40 words — Wrap up the module's conversational building blocks.
-Total: ~1400 words

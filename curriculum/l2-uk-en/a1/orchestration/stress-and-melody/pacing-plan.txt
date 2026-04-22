@@ -1,5 +1,0 @@
-Section 1 "Наголос (Stress)": ~430 words — Introduce free and mobile stress, minimal pairs, and common patterns.
-Section 2 "Інтонація (Intonation)": ~365 words — Teach falling melody for statements/wh-questions and rising for yes/no questions.
-Section 3 "Читаємо вголос (Reading Aloud)": ~370 words — Practice multisyllable words and apply intonation to dialogues.
-Section 4 "Підсумок — Summary": ~310 words — Recap stress, meaning changes, intonation, and final read-aloud practice.
-Total: ~1475 words

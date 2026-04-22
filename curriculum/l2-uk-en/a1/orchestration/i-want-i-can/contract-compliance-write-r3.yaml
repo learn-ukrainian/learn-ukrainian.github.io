@@ -1,8 +1,0 @@
-attempt: 3
-label: write
-violations:
-- type: WORD_BUDGET
-  severity: ERROR
-  section: Могти і мусити (Can and Must)
-  message: Section 'Могти і мусити (Can and Must)' has 331 words; contract requires
-    270-330
