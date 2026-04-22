@@ -22,8 +22,8 @@ objectives:
     префіксально-суфіксальний, безафіксний) for any given derived noun"
 dialogue_situations:
   - setting: 'Career fair at a Одеський університет (m) — reading job title badges:
-      Учитель (m, teacher), учителька (f). Письменник (m, writer), письменниця (f).
-      Бібліотека→бібліотекар (m). Їдальня (f, canteen) — від ''їсти''.'
+      Учитель, учителька (f). Письменник, письменниця (f).
+      Бібліотека→бібліотекар (m). Їдальня — від ''їсти''.'
     speakers:
       - Студенти на ярмарку вакансій
     motivation: 'Noun formation: -тель/-тельк-, -ник/-ниц-, -ар; place names: їдальня,
@@ -63,7 +63,7 @@ content_outline:
       - "Prefixal-suffixal formation for geographic/spatial nouns: при- + -я: Прикарпаття
         (при Карпатах), Придніпров'я (при Дніпрі) за- + -я: Закарпаття (за Карпатами),
         Запоріжжя (за порогами) під- + -я: Поділля (під горами — etymological) над-
-        + -я: Наддніпрянщина (over the Dnieper region)"
+        + -я: Наддніпрянщина"
       - "Abstract nouns with -ість, -ство, -ота: -ість: молодість, радість, мудрість
         (from adjectives) -ство: козацтво, студентство, людство (collective/abstract)
         -ота: краса → красота, висота, доброта Practice: form place and abstract nouns
