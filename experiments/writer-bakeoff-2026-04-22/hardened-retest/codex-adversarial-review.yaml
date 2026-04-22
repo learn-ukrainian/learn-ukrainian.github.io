@@ -1,0 +1,70 @@
+```yaml
+review_of: scripts/build/phases/v6-write.md
+reviewer: codex-adversarial
+commit_under_review: d725b89f3d79d0250b70a78feaec30183ed01e79
+questions:
+  Q1:
+    verdict: PARTIAL
+    evidence: |
+      "ALLOWED — minimal pairs that demonstrate a sound contrast, with the contrast stated for the learner:
+      > Послухай різницю: **балка** / **палка**, **коза** / **коса**."
+      
+      "ALLOWED — a short list of pronunciation anchors drawn directly from the plan's `content_outline` to ground a phonetic point:
+      > Звук Р тренуємо на словах: **рука**, **робота**, **ранок**, **риба**."
+      
+      "ALLOWED — a reading-aloud prompt that shows the learner the words and tells them what to notice (no answer required):
+      > Прочитай уголос: **п'ять**, **дев'ять**, **м'який**."
+      
+      "If NONE is true — your prose just shows the learner an example list, a minimal-pair demonstration, or a pronunciation anchor — that is teaching prose, not an exercise, and stays in the module."
+    residual_gap: |
+      Under v2, all four cited strings should now pass the STOP test:
+      - «Практика читання: п'ять, дев'ять...» is covered by the reading-aloud carve-out because it shows words and tells the learner what to notice, with no answer demanded.
+      - «мінімальні пари: балка/палка, коза/коса» is explicitly whitelisted by the minimal-pair carve-out.
+      - «Мінімальні пари для тренування слуху: бик/бік, дим/дім...» is the same whitelisted minimal-pair pattern.
+      - «Потренуйтеся зі словами: рука, робота...» is the pronunciation-anchor carve-out in substance.
+      Residual gap: the carve-outs are semantic, not lexical. A literal reviewer can still over-trigger on headings like «Практика читання:» or «Потренуйтеся...» because those exact phrasings are not themselves shown as RIGHT examples.
+  Q2:
+    verdict: SUFFICIENT
+    evidence: |
+      "1. Your prose contains the phrase «Вправа N.» ... or any numbered heading that announces a discrete practice task."
+      
+      "2. Your prose pairs an answer-demanding verb («розподіли», «з'єднай», «обери», «встав», «виправ», «заповни пропуск», «познач правду чи неправду») with a concrete list of items the learner must work on AND an implied answer the learner must produce."
+      
+      "3. Your prose contains fill-in-the-blank slot tokens (`сім_я`, `_удзик`, `п_ять`) or item-with-answer arrows (`«сіль» → Ь`, `_удзик → Ґ`)."
+    residual_gap: "The two baseline Opus failures are covered cleanly: «Вправа 4... 18 слів...» trips rules 1 and 3, and «Для тренування: _удзик... Обери...» trips rules 2 and 3; the remaining risk is unseen answer-demanding verbs outside the enumerated list."
+  Q3:
+    verdict: INSUFFICIENT
+    evidence: |
+      "State rules honestly. Cite or hedge — never invent. ... When your pre-training and the wiki brief disagree, the brief wins — and if the brief's claim surprises you, flag it inline with `<!-- VERIFY: {word or claim} -->` rather than silently picking the version that 'feels right.' `<!-- VERIFY -->` is not a failure signal; it is the correct honest move, and reviewers score its presence positively on the honesty axis."
+    recommendation: "Make it operational, not moralizing: add a mandatory pre-stop check that says 'If the plan contradicts itself or conflicts with Правопис/textbook authority, insert at least one `<!-- VERIFY -->` at the exact sentence,' plus a WRONG/RIGHT example using «свято» and the sonorants contradiction."
+  Q4:
+    verdict: SHARED
+    evidence: |
+      Bakeoff prompt pressure:
+      "You are the **Ukrainian Module Author.** You write one A1 lesson module in the voice and register of a Ukrainian school textbook ... Ukrainian-language prose throughout. No English scaffolding."
+      
+      Existing v6 pressure:
+      "Adopt the Ukrainian terminology."
+      
+      "Your pre-training is contaminated by Russian and English linguistics. When the article contradicts your instinct, the article wins."
+    recommendation: "Add an explicit A1 decodability override: preserve Ukrainian terms only when they are core and learner-safe; otherwise paraphrase or gloss them instead of importing grade-5 metalanguage verbatim."
+  Q5:
+    new_contradictions:
+      - "The new ALLOWED A1 example says `Прочитай уголос: ...`, but the unchanged containment check says A1 task instructions must be in English: `Are the task instructions ... in English for A1...?`."
+      - "The new ALLOWED examples show bare Ukrainian item lists, but the unchanged pedagogy/output rules still say `Every grammar rule needs 3+ Ukrainian examples with English translations` and for A1/A2 `provide an English translation on first use`."
+  Q6:
+    residual_over_trigger: "A writer on `reading-ukrainian` can still delete a legitimate teaching classification because STOP rule 4 still reads like '6+ categorized items = suspicious' even when the teacher already supplies the categories and the learner produces nothing."
+    evidence: |
+      STOP rule 4:
+      "Your prose presents a word bank of 6+ items the learner is expected to sort, match, label, or categorize."
+      
+      Real plan pattern:
+      `curriculum/l1-uk/plans/a1/reading-ukrainian.yaml`
+      "Поступове ускладнення за українською класифікацією: односкладові (1 склад): дім, сон, ліс, дуб, хліб. двоскладові (2 склади): ма-ма, та-то, во-да, ру-ка, ха-та, ка-ша. ..."
+      
+      Scenario: the model sees a long pre-categorized example bank and self-censors it into a marker, even though it is exposition, not an exercise.
+  Q7:
+    one_sentence: "The strongest residual failure mode is still honesty collapse: the writer will keep turning plan-level simplifications and contradictions into confident absolute rules, because `<!-- VERIFY -->` remains advisory rather than a required conflict-handling step."
+overall_verdict: REVISE
+one_sentence_conclusion: "Before merge, turn honesty into a mandatory decision point and rewrite the new ALLOWED A1 examples so they stop contradicting the unchanged English-scaffolding rules."
+```

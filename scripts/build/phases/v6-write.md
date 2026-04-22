@@ -122,21 +122,26 @@ RIGHT — all of those belong as a single injection marker right after the teach
 
 ### What teaching examples ARE allowed (NOT exercise authoring)
 
-The hardening targets exercise authoring, NOT teaching examples. The distinguishing test is whether the learner is asked to produce an answer. These patterns are teaching prose and belong in the module:
+The hardening targets exercise authoring, NOT teaching examples. The distinguishing test is whether the learner is asked to produce an answer. These patterns are teaching prose and belong in the module. **All ALLOWED examples below follow the level's scaffolding-language contract (Rule 1) — A1/A2 use English framing + Ukrainian anchors + English glosses on first-use bolded vocabulary; B1+ use Ukrainian framing without glosses.**
 
-ALLOWED — illustrative example list embedded in explanatory prose:
+ALLOWED — illustrative example list embedded in explanatory prose (A1 rendering):
+> Typical soft-sign patterns appear at word-end: **день** (day), **кінь** (horse), **сіль** (salt), **мить** (moment). They also appear mid-word: **учитель** (teacher), **батько** (father).
+
+ALLOWED — illustrative example list (B1+ Ukrainian rendering, for reference):
 > Типові моделі з м'яким знаком: **день**, **кінь**, **сіль**, **мить**, **мазь**. У довших словах Ь з'являється і в середині: **учитель**, **батько**.
 
-ALLOWED — minimal pairs that demonstrate a sound contrast, with the contrast stated for the learner:
-> Послухай різницю: **балка** / **палка**, **коза** / **коса**. У першому слові пари звук дзвінкий, у другому — глухий.
+ALLOWED — minimal pairs that demonstrate a sound contrast (A1 rendering — English framing + Ukrainian anchors):
+> Listen for the contrast: **балка** (beam) / **палка** (stick), **коза** (goat) / **коса** (braid). The first word in each pair is voiced; the second is voiceless.
 
-ALLOWED — a short list of pronunciation anchors drawn directly from the plan's `content_outline` to ground a phonetic point:
-> Звук Р тренуємо на словах: **рука**, **робота**, **ранок**, **риба**.
+ALLOWED — pronunciation anchor list drawn from the plan's `content_outline` (A1 rendering):
+> Practice the **Р** sound on: **рука** (hand), **робота** (work), **ранок** (morning), **риба** (fish).
 
-ALLOWED — a reading-aloud prompt that shows the learner the words and tells them what to notice (no answer required):
-> Прочитай уголос: **п'ять**, **дев'ять**, **м'який**. Зверни увагу, як приголосний перед апострофом залишається твердим.
+ALLOWED — reading-aloud prompt with a "notice what" framing (A1 rendering — no answer required):
+> Read aloud: **п'ять** (five), **дев'ять** (nine), **м'який** (soft). Notice how the consonant before the apostrophe stays hard.
 
 The distinguishing test: these SHOW the learner the concept with concrete anchors. They do NOT ask the learner to produce an answer, sort items into columns, fill slots, match pairs, or label rows. If it's a demonstration, it stays. If the learner must work and produce an answer, it becomes a marker.
+
+**Level-specific note on task instructions.** The framing verbs in the ALLOWED examples above ("Listen for the contrast", "Practice the Р sound on", "Read aloud", "Notice") are in the scaffolding language of the level (English for A1, Ukrainian for B1+). A1 examples use English framing; Ukrainian framing at A1 would violate Rule 1 and the AC-B containment checks. This is consistent — the ALLOWED patterns are format demonstrations, not language specifications.
 
 ### Rule of thumb — STOP test
 
@@ -377,6 +382,22 @@ Every heading from "Section Structure" above MUST appear as an `## H2` in your o
 You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
 
 {VOCABULARY_CHECKLIST}
+
+### Honesty pre-stop check (Rule #11, operational)
+
+This is a required check, not advice. Before you finish, walk through these three questions in order. If the answer to any is yes, you MUST have at least one `<!-- VERIFY: {specific claim} -->` marker in your prose at the relevant sentence. Zero VERIFY markers when real ambiguity exists is a review-fail signal on the honesty axis.
+
+1. **Does the plan YAML contradict itself, or cite conflicting textbook sources for the same point?** (E.g., `content_outline` says one thing about a rule while `references` says another; `grammar[N]` contradicts `grammar[M]` on a scope boundary.)
+2. **Does the plan state a rule as absolute where Правопис 2019 / Антоненко-Давидович / VESUM knows a standard exception?** (E.g., the plan formulates the apostrophe rule as "after б, п, в, м, ф, р before я, ю, є, ї" with no exceptions, but Правопис 2019 lists «свято», «цвях», «морквяний», «буряк» as standard no-apostrophe cases after labials.)
+3. **Does your pre-training strongly disagree with the plan or brief on a form, spelling, or rule?** The plan/brief wins — but you must surface the disagreement so a reviewer can check.
+
+**WRONG (no VERIFY marker; writer renders the simplified plan rule as absolute law, the reader inherits the error):**
+> Правило сформульоване чітко: **апостроф ставиться після Б, П, В, М, Ф, Р перед я, ю, є, ї.** Example words: **м'ясо**, **п'ять**, **об'єкт**.
+
+**RIGHT (VERIFY marker flags the scope gap without altering the plan's teaching pathway):**
+> Правило сформульоване чітко: **апостроф ставиться після Б, П, В, М, Ф, Р перед я, ю, є, ї.** Example words: **м'ясо**, **п'ять**, **об'єкт**. <!-- VERIFY: Правопис 2019 lists «свято», «цвях», «морквяний», «буряк» as standard no-apostrophe exceptions after labials even though they match the plan's labial+р+я pattern. A1 scope simplification or genuine plan gap? --> 
+
+The VERIFY marker does not interrupt the learner's reading flow — it is an HTML comment — but a reviewer grading honesty will see it and score positively. This is the explicit operational move rule #11 requires when plan-vs-authority disagreement is present.
 
 ### Forbidden words (never produce)
 
