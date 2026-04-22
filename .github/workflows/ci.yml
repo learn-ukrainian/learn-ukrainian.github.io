@@ -210,7 +210,8 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install -r requirements-lock.txt
+          .venv/bin/python -m pip install --no-deps -r requirements-lock.txt
+          .venv/bin/python -m pip install multiprocess==0.70.18 huggingface-hub==0.36.0
 
       - name: Run tests with coverage
         run: |
