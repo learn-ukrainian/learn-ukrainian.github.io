@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 import sys
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
@@ -12,6 +14,43 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 from wiki.embedding_manifest import EmbeddingManifest
 
 from wiki import dense_rerank, sources_db, ukrainian_wiki_corpus
+
+
+class _FakeTokenizer:
+    def encode(
+        self,
+        text: str,
+        add_special_tokens: bool = True,
+        truncation: bool = True,
+        max_length: int | None = None,
+    ) -> list[int]:
+        tokens = list(range(1, len(text.split()) + 1))
+        if max_length is not None:
+            limit = max_length - (2 if add_special_tokens else 0)
+            tokens = tokens[:limit]
+        if add_special_tokens:
+            return [0, *tokens, 1]
+        return tokens
+
+
+class _FakeEncoder:
+    def encode(self, texts: list[str], batch_size: int = 16, max_length: int = 512) -> np.ndarray:
+        vectors: list[np.ndarray] = []
+        for text in texts:
+            digest = hashlib.sha256(text.encode("utf-8")).digest()
+            seed = np.frombuffer(digest * 64, dtype=np.uint8)[: dense_rerank.EMBEDDING_DIMS].astype(np.float32)
+            vector = seed / np.clip(np.linalg.norm(seed), 1e-12, None)
+            vectors.append(vector.astype(np.float16))
+        return np.stack(vectors, axis=0)
+
+
+def _install_fake_encoder(monkeypatch: pytest.MonkeyPatch) -> None:
+    fake_tokenizer = _FakeTokenizer()
+    fake_encoder = _FakeEncoder()
+    monkeypatch.setattr(dense_rerank, "_TOKENIZER", fake_tokenizer)
+    monkeypatch.setattr(dense_rerank, "_get_tokenizer", lambda: fake_tokenizer)
+    monkeypatch.setattr(dense_rerank, "_ENCODER", fake_encoder)
+    monkeypatch.setattr(dense_rerank, "_get_encoder", lambda: fake_encoder)
 
 
 def _article_with_registry(
@@ -443,3 +482,154 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
     assert len(results) == 1
     assert results[0]["corpus"] == "ukrainian_wiki"
     assert results[0]["title"] == "Наголос"
+
+
+def test_encode_flag_populates_manifest_units_matching_search_unit_keys(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Regression for the zero-embedding gap: ingest only fills SQLite,
+    so ``--encode`` (or ``encode_ukrainian_wiki_corpus``) must populate the
+    manifest with unit rows whose keys match the ``ukrainian_wiki:{passage_id}``
+    format that ``_search_ukrainian_wiki_candidates`` emits — otherwise the
+    dense reranker silently drops every ukrainian_wiki candidate to score 0
+    and they lose to every other corpus in the final sort.
+    """
+
+    article = _article_with_registry(
+        tmp_path,
+        slug="kolory",
+        text=(
+            "# Кольори\n\n"
+            "Кольори допомагають описувати предмети довкола нас [S1]. "
+            "Червоний, синій, жовтий і зелений — це базова лексика для A1.\n\n"
+            "Учень використовує ці слова, щоб говорити про одяг, природу "
+            "і прості сцени з повсякденного життя.\n"
+        ),
+    )
+    db_path = tmp_path / "sources.db"
+    manifest_path = tmp_path / "embeddings" / "manifest.db"
+
+    monkeypatch.setattr(
+        ukrainian_wiki_corpus,
+        "vesum_batch_lookup",
+        lambda words: {word: [{"word": word}] for word in words},
+    )
+    monkeypatch.setattr(ukrainian_wiki_corpus, "check_russicisms", lambda text, file_path="": [])
+    monkeypatch.setattr(ukrainian_wiki_corpus, "pravopys_lookup", lambda term: {"term": term})
+    monkeypatch.setattr(ukrainian_wiki_corpus, "search_style_guide", lambda term: [])
+    _install_fake_encoder(monkeypatch)
+
+    report, inserted = ukrainian_wiki_corpus.ingest_article(
+        article,
+        db_path=db_path,
+        manifest_db=manifest_path,
+        min_words=5,
+        max_chars=1000,
+        min_vesum_coverage=0.5,
+    )
+    assert report.passed is True
+    assert inserted >= 1
+
+    manifest = EmbeddingManifest(manifest_path)
+    try:
+        active_before = manifest.active_units_for_corpus("ukrainian_wiki")
+    finally:
+        manifest.close()
+    assert active_before == [], (
+        "ingest alone must not encode — encode step is explicit so MLX is not "
+        "triggered unintentionally"
+    )
+
+    encode_summary = ukrainian_wiki_corpus.encode_ukrainian_wiki_corpus(
+        db_path=db_path,
+        manifest_db=manifest_path,
+    )
+    assert encode_summary["status"] == "encoded"
+    assert encode_summary["encoded_units"] == inserted
+
+    passage_ids = _fetch_passage_ids(db_path)
+    manifest = EmbeddingManifest(manifest_path)
+    try:
+        active_after = manifest.active_units_for_corpus("ukrainian_wiki")
+    finally:
+        manifest.close()
+
+    assert len(active_after) == inserted
+    encoded_keys = {row.unit_key for row in active_after}
+    expected_keys = {f"ukrainian_wiki:{pid}" for pid in passage_ids}
+    assert encoded_keys == expected_keys, (
+        "unit_key format must match _search_ukrainian_wiki_candidates so the "
+        "dense reranker can look up vectors by unit_key"
+    )
+
+    second = ukrainian_wiki_corpus.encode_ukrainian_wiki_corpus(
+        db_path=db_path,
+        manifest_db=manifest_path,
+    )
+    assert second["status"] == "up_to_date"
+    assert second["encoded_units"] == 0
+
+
+def _fetch_passage_ids(db_path: Path) -> list[str]:
+    conn = sqlite3.connect(db_path)
+    try:
+        return [row[0] for row in conn.execute("SELECT passage_id FROM ukrainian_wiki ORDER BY id")]
+    finally:
+        conn.close()
+
+
+def test_main_cli_encode_flag_wires_ingest_to_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """--encode on the CLI must trigger encoding after a successful ingest."""
+
+    article = _article_with_registry(
+        tmp_path,
+        slug="simya",
+        text=(
+            "# Сім'я\n\n"
+            "Сім'я — це найближчі люди поряд з учнем [S1]. "
+            "Мама, тато, брат і сестра дають першу лексику для A1.\n\n"
+            "Учень описує свою родину простими реченнями.\n"
+        ),
+    )
+    db_path = tmp_path / "sources.db"
+    manifest_path = tmp_path / "embeddings" / "manifest.db"
+
+    monkeypatch.setattr(
+        ukrainian_wiki_corpus,
+        "vesum_batch_lookup",
+        lambda words: {word: [{"word": word}] for word in words},
+    )
+    monkeypatch.setattr(ukrainian_wiki_corpus, "check_russicisms", lambda text, file_path="": [])
+    monkeypatch.setattr(ukrainian_wiki_corpus, "pravopys_lookup", lambda term: {"term": term})
+    monkeypatch.setattr(ukrainian_wiki_corpus, "search_style_guide", lambda term: [])
+    _install_fake_encoder(monkeypatch)
+
+    exit_code = ukrainian_wiki_corpus.main(
+        [
+            str(article),
+            "--db-path",
+            str(db_path),
+            "--manifest-db",
+            str(manifest_path),
+            "--min-words",
+            "5",
+            "--max-chars",
+            "1000",
+            "--min-vesum-coverage",
+            "0.5",
+            "--encode",
+        ]
+    )
+    assert exit_code == 0
+
+    manifest = EmbeddingManifest(manifest_path)
+    try:
+        active = manifest.active_units_for_corpus("ukrainian_wiki")
+    finally:
+        manifest.close()
+    assert len(active) >= 1
+    assert all(row.unit_key.startswith("ukrainian_wiki:") for row in active)

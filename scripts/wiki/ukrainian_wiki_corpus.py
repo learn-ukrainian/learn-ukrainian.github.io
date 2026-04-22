@@ -10,6 +10,7 @@ import statistics
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from audit.checks.cross_file_integrity import extract_ukrainian_words
 from audit.checks.russicism_detection import check_russicisms
@@ -216,6 +217,31 @@ def migrate_ukrainian_wiki_corpus(
     finally:
         conn.close()
     ensure_ukrainian_wiki_manifest(manifest_db)
+
+
+def encode_ukrainian_wiki_corpus(
+    *,
+    db_path: Path = DEFAULT_DB_PATH,
+    manifest_db: Path = DEFAULT_MANIFEST_DB,
+    encoder: Any | None = None,
+    progress_callback: Any | None = None,
+) -> dict[str, Any]:
+    """Encode all ``ukrainian_wiki`` passages into the manifest-backed shard index.
+
+    Thin wrapper around :func:`wiki.dense_rerank.cold_encode_corpus` so that
+    ingestion callers do not have to import the heavier dense-rerank module to
+    close the ingest→encode loop. Tests inject ``encoder`` to bypass MLX.
+    """
+
+    from .dense_rerank import cold_encode_corpus
+
+    return cold_encode_corpus(
+        UKRAINIAN_WIKI_CORPUS,
+        db_path=db_path,
+        manifest_db=manifest_db,
+        encoder=encoder,
+        progress_callback=progress_callback,
+    )
 
 
 def _utc_now() -> str:
@@ -1000,6 +1026,15 @@ def _build_parser() -> argparse.ArgumentParser:
                         help=f"Minimum characters for a kept chunk after splitting (default: {DEFAULT_CHUNK_MIN_CHARS}).")
     parser.add_argument("--min-vesum-coverage", type=float, default=DEFAULT_VESUM_MIN_COVERAGE,
                         help=f"Minimum Vesum/Pravopys coverage ratio for single-article ingest (default: {DEFAULT_VESUM_MIN_COVERAGE}).")
+    parser.add_argument(
+        "--encode",
+        action="store_true",
+        help=(
+            "After ingestion, encode any new/changed passages into the dense "
+            "index (calls cold_encode_corpus). Required for search_sources "
+            "dense reranking to surface the ingested passages."
+        ),
+    )
     return parser
 
 
@@ -1024,6 +1059,11 @@ def main(argv: list[str] | None = None) -> int:
             "skipped_chunks": sum(result.skipped_chunks for result in results),
             "report_path": _relative_or_absolute(args.report_path),
         }
+        if args.encode:
+            summary["encode"] = encode_ukrainian_wiki_corpus(
+                db_path=args.db_path,
+                manifest_db=args.manifest_db,
+            )
         print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
         return 0 if summary["articles_failed"] == 0 else 1
 
@@ -1038,6 +1078,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     print(report.to_json())
     print(f"inserted_passages={inserted}")
+    if args.encode and report.passed:
+        encode_summary = encode_ukrainian_wiki_corpus(
+            db_path=args.db_path,
+            manifest_db=args.manifest_db,
+        )
+        print(f"encode={json.dumps(encode_summary, ensure_ascii=False, sort_keys=True)}")
     return 0 if report.passed else 1
 
 
