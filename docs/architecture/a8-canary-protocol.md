@@ -13,15 +13,20 @@ If enriched ≥ baseline on quality + faithfulness metrics, scale to A.9 (batch 
 
 ## Slug selection
 
-**Pick:** `at-the-cafe` (A1/M18)
+**Pick:** `at-the-cafe` — **L2-UK-EN A1/M18** (English-speaker immersion module)
+
+Build target output path: `curriculum/l2-uk-en/a1/at-the-cafe.md`
+L1-UK source artifact (retrieved from): `wiki/pedagogy/a1/at-the-cafe.md`
 
 Reasoning:
-- Has a strong scenario-specific Ukrainian wiki article (`wiki/pedagogy/a1/at-the-cafe.md`) — meaningful enriched-side delta is plausible
-- Plan exists and is locked
+- Has a strong scenario-specific Ukrainian wiki article on the L1-UK side (`wiki/pedagogy/a1/at-the-cafe.md`) — meaningful enriched-side delta is plausible
+- Plan exists and is locked at `curriculum/l2-uk-en/plans/a1/at-the-cafe.yaml`
 - Concrete user-facing scenario (ordering at a café) — quality differences are inspectable by a non-expert
 - Dialogue-heavy, which is where naturalness regressions are easiest to spot
 - NOT `sounds-letters-and-hello` — that one's been beaten on for weeks; we want a fresh delta-detection signal, not a recovery story
 - NOT a checkpoint module — checkpoints aggregate across slugs; the wiki bootstrap signal would be diluted
+
+**Why this distinction matters:** the canary is measuring whether the L1-UK Ukrainian wiki corpus, surfaced via the new `search_sources` MCP tool (#1410), changes the quality of L2-UK-EN module output. The destination is always the English-speaker module — the L1-UK wikis are corpus input, never the build target.
 
 ## Pipeline parameters (held constant across both arms)
 
