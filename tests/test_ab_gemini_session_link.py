@@ -36,8 +36,9 @@ def _write_session(
     start_time: datetime,
     session_id: str,
     messages: list[dict[str, object]],
+    project_name: str = "learn-ukrainian",
 ) -> Path:
-    chats_dir = chats_root / "learn-ukrainian" / "chats"
+    chats_dir = chats_root / project_name / "chats"
     chats_dir.mkdir(parents=True, exist_ok=True)
     payload = {
         "sessionId": session_id,
@@ -205,6 +206,7 @@ def test_run_inbox_gemini_timeout_recovers_session_reply(mock_invoke, tmp_path):
                 "content": [{"text": "Recovered from session file."}],
             },
         ],
+        project_name=_inbox.REPO_ROOT.name,
     )
     mock_invoke.side_effect = AgentTimeoutError("gemini", 900)
 
