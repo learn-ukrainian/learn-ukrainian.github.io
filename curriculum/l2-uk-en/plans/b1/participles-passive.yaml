@@ -24,7 +24,7 @@ dialogue_situations:
   - setting: 'Visiting a renovated Маріїнський палац (m, Mariinskyi Palace) in Київ
       — the guide describes what was restored: Відреставрований (restored) фасад (m,
       facade). Написана (painted) у XIX столітті картина (f). Збережене (preserved)
-      оздоблення (n, decoration).'
+      оздоблення.'
     speakers:
       - Екскурсовод
       - Група туристів
@@ -83,7 +83,7 @@ content_outline:
     words: 550
     points:
       - "Some passive participles have become adjectives (втратили дієслівність):
-        варений (cooked — now a food descriptor), солений (salted), печений (baked),
+        варений (cooked — now a food descriptor), солений, печений,
         мелений (ground), крашений (dyed). Test: can you add a direct object or agent?
         If no → adjective. Варена картопля (adj.) vs зварена мамою картопля (participle
         with agent)."

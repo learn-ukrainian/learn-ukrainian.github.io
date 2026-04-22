@@ -53,20 +53,20 @@ content_outline:
     points:
       - 'Group 1 — Spatial prefixes (largely covered in M29-33 for motion verbs, reviewed
         here for ALL verbs): в-/у- (into): вписати (to inscribe), увімкнути (to turn
-        on) ви- (out of): вимкнути (to turn off), вирізати (to cut out) при- (toward/to):
-        приєднати (to attach), прикріпити (to fasten) від- (away from): відрізати
+        on) ви-: вимкнути, вирізати при- (toward/to):
+        приєднати, прикріпити від-: відрізати
         (to cut off), відключити (to disconnect) пере- (across/re-): переписати (to
         rewrite), перевірити (to verify)'
       - 'Group 2 — Resultative/Aktionsart prefixes: на- (accumulation): наготувати
         (to cook a lot), набрати (to gather) за- (beginning of action): заспівати
         (to start singing), заплакати по- (beginning/brief): побігти (to start running),
-        почекати (to wait a bit) роз- (dispersal/undoing): розрізати (to cut apart),
-        розповісти (to tell) до- (completion up to): дочитати (to finish reading),
-        добудувати з-/с- (completion): зробити (to do/make), спекти (to bake)'
+        почекати роз- (dispersal/undoing): розрізати,
+        розповісти до-: дочитати,
+        добудувати з-/с-: зробити (to do/make), спекти'
       - 'Group 3 — Modificational prefixes: недо- (insufficient): недоїсти (to not
         eat enough), недобачати пере- (excess): перевтомитися (to overtire), переоцінити
-        під- (slightly/secretly): підробити (to forge), підмінити (to replace secretly)
-        об-/обі- (around/comprehensive): обговорити (to discuss), обдумати (to think
+        під- (slightly/secretly): підробити, підмінити
+        об-/обі- (around/comprehensive): обговорити, обдумати (to think
         over)'
       - 'Practice: given a root verb, generate 4-5 prefixed forms and explain the
         meaning shift. Example: бити → вибити, забити, добити, перебити, розбити.
@@ -75,15 +75,15 @@ content_outline:
     words: 700
     points:
       - 'From adjectives with -ити/-іти: білий → білити (to whiten/whitewash), синій
-        → синіти (to turn blue), червоний → червоніти (to redden), чорний → чорніти
+        → синіти, червоний → червоніти, чорний → чорніти
         (to turn black). Pattern: adjective stem + -ити (causative) or -іти (inchoative).
         білити = to MAKE white, синіти = to BECOME blue.'
       - 'From nouns with -увати/-ювати: малюнок → малювати (to draw/paint), танець
-        → танцювати (to dance), будова → будувати (to build), інтерес → цікавити (irregular).
+        → танцювати, будова → будувати, інтерес → цікавити.
         -увати/-ювати is very productive, especially for borrowed words: програма
         → програмувати, фільтр → фільтрувати.'
       - 'Suffix -нути for single instantaneous action: штовхати (impf, repeated pushing)
-        → штовхнути (pf, one push), стукати → стукнути, кричати → крикнути, свистіти
+        → штовхнути, стукати → стукнути, кричати → крикнути, свистіти
         → свиснути. This suffix is aspectually significant: it always creates доконаний
         вид with the meaning of a single brief action.'
       - 'From Заболотний Grade 7 p.179: дієвідміна clues from infinitive suffixes.
@@ -94,7 +94,7 @@ content_outline:
     words: 650
     points:
       - 'Simultaneous addition of prefix AND suffix: земля → за-земл-ити (to ground/earth),
-        зброя → о-зброї-ти (to arm), зброя → роз-зброї-ти (to disarm), світло → о-світл-ити
+        зброя → о-зброї-ти, зброя → роз-зброї-ти, світло → о-світл-ити
         (to illuminate). From Заболотний Grade 6 p.57: the word is formed by adding
         BOTH parts at once, not sequentially.'
       - 'Common patterns: о-/об- + noun + -ити: оцінити (from ціна), описати (from
@@ -187,7 +187,7 @@ prerequisites:
 grammar:
   - 'Префіксальне творення: в-/у-, ви-, при-, від-, пере-, на-, за-, по-, роз-, до-,
     з-/с-'
-  - 'Суфіксальне творення: -ити/-іти (from adj), -увати/-ювати (from noun), -нути
+  - 'Суфіксальне творення: -ити/-іти, -увати/-ювати, -нути
     (instantaneous)'
   - 'Префіксально-суфіксальне: за-земл-ити, о-зброї-ти, з-не-шкод-ити'
   - 'Prefix → aspect: adding prefix to imperfective often creates perfective'
