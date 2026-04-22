@@ -2,7 +2,21 @@ module: a1-038
 level: A1
 sequence: 38
 slug: at-the-cafe
-version: '1.2.2'
+version: '1.3.0'
+lifecycle: locked
+reviewed_at: '2026-04-22T00:00:00Z'
+reviewed_by: claude-opus-4-7-xhigh-1412
+review_notes: >-
+  Review-and-lock pass for A.8 canary input. See PR #1412 and
+  wiki/.reviews/pedagogy/a1/at-the-cafe-review-LOCKED.md for the
+  wiki-side report; see PR #1412 body for the plan-side findings
+  (pragmatic / Russianism / calque / contradiction / references).
+  The plan was brought into alignment with the locked wiki: takeaway
+  question (Вам тут чи із собою?) + size collocations (велику каву /
+  маленьку каву) added to dialogues + vocabulary_hints; café-specific
+  Surzhyk drill added as a fill-in activity (mirrors wiki "Типові
+  помилки L2" table). Lifecycle marker convention documented in
+  docs/best-practices/wiki-plan-review-and-lock.md.
 title: У кафе
 subtitle: У кафе — замовлення, оплата та культура кафе
 focus: communication
@@ -14,6 +28,8 @@ objectives:
 - Використовувати фрази для ввічливого прохання (Можна...? Дайте, будь ласка...)
 - Читати просте українське меню та ставити запитання щодо страв
 - Розуміти українську культуру кафе (чайові, оплата)
+- Відповідати на запитання про формат замовлення (`Вам тут чи із собою?`) та розмір (`велику / маленьку каву`)
+- Впізнавати типові кав'ярні суржикові пари (счёт → рахунок, на винос → із собою, пірожене → тістечко)
 dialogue_situations:
 - setting: 'Побачення в затишному львівському кафе — замовлення з меню: кава (f), чай (m), тістечко (n), круасан (m), вода (f), сік (m). Мені каву, будь ласка. А мені — чай і тістечко.'
   speakers:
@@ -26,11 +42,13 @@ content_outline:
   points:
   - 'Діалог 1 — Замовлення в кафе: — Добрий день! Ось меню. — Дякую. Що ви рекомендуєте? — Борщ дуже смачний. — Добре, мені борщ і хліб, будь ласка. — А що будете пити? — Каву з молоком. — Добре, одну хвилинку. Ввічливе замовлення за допомогою будь ласка, мені + знахідний відмінок.'
   - 'Діалог 2 — Оплата рахунку: — Рахунок, будь ласка. — Ось, будь ласка. Сто двадцять гривень. — Можна карткою? — Так, звичайно. — Дякую, дуже смачно було! — Дякуємо, приходьте ще! Оплата, похвала їжі, чайові.'
+  - 'Діалог 3 — Кава із собою: — Доброго ранку! — Доброго ранку. Велику каву, будь ласка. — Вам тут чи із собою? — Із собою, дякую. — Щось іще? — Ні, дякую. — З вас сімдесят п''ять гривень. Конструкція «тут чи із собою» та розміри `велику каву` / `маленьку каву` як неподільні чанки (без пояснення відмінювання прикметника). УВАГА до автора: заголовок «Кава із собою» — нормативний; не використовуйте суржикову форму «Кава на винос».'
 - section: Як замовити
   words: 300
   points:
   - 'Шаблони для замовлення: Мені [знахідний відмінок], будь ласка. (Мені каву, будь ласка.) Можна [знахідний відмінок]? (Можна воду?) Дайте, будь ласка, [знахідний відмінок]. (Дайте, будь ласка, борщ.) Я хочу / Я буду [знахідний відмінок]. (Я буду салат.) Всюди використовується знахідний відмінок з модуля №37 — реальне застосування.'
   - 'Запитання щодо меню: Що ви рекомендуєте? Це гостре? Це з м''ясом? А що це? Скільки коштує? Є вегетаріанське меню?'
+  - 'Формат і розмір: запитання офіціанта `Вам тут чи із собою?` + відповіді `Тут, будь ласка.` / `Із собою, будь ласка.` Розміри `велику каву` / `маленьку каву` — подавати як фразові чанки в знахідному відмінку; НЕ пояснювати відмінювання прикметника (це не об''єкт цього модуля).'
 - section: Культура кафе
   words: 300
   points:
@@ -49,6 +67,8 @@ vocabulary_hints:
   - офіціант (waiter, m)
   - смачно (delicious — adverb)
   - будь ласка (please)
+  - тут (here — adverb, format reply)
+  - із собою (to go / takeaway — teach as indivisible chunk)
   recommended:
   - ресторан (restaurant, m)
   - рекомендувати (to recommend)
@@ -57,6 +77,9 @@ vocabulary_hints:
   - картка (card, f)
   - гостре (spicy — neuter adj.)
   - вегетаріанський (vegetarian — adj.)
+  - велику каву (a large coffee — chunk, acc.f.)
+  - маленьку каву (a small coffee — chunk, acc.f.)
+  - кав'ярня (coffee shop, f — near-synonym for `кафе`, wiki uses this)
 activity_hints:
 - type: fill-in
   focus: 'Замовлення в кафе: Мені ___, будь ласка. (виберіть правильний знахідний відмінок)'
@@ -132,6 +155,18 @@ activity_hints:
   - Дуже смачно!: Похвала їжі
   - Тут вільно?: Запитання про вільне місце
   - Можна меню?: Прохання принести меню
+  - Вам тут чи із собою?: Запитання офіціанта про формат замовлення
+  - Велику каву, будь ласка.: Замовлення з уточненням розміру
+- type: fill-in
+  focus: Типові кав'ярні суржикові пари — оберіть нормативну форму (див. wiki "Типові помилки L2")
+  items:
+  - Можна {рахунок|счёт}, будь ласка.
+  - Вам тут чи {із собою|на винос}?
+  - Дайте, будь ласка, одне {тістечко|пірожене}.
+  - Покладіть у {пакетик|кулечок}, будь ласка.
+  - Кава дуже {смачна|вкусна}.
+  - Я буду пити через {соломинку|трубочку}.
+  - Одну {чашку кави|чашку кофе}, будь ласка.
 connects_to:
 - a1-039 (Покупки)
 prerequisites:
@@ -147,3 +182,13 @@ references:
   notes: Замовлення в кафе, ресторанна лексика.
 - title: State Standard 2024, Topic 3 (ресторан)
   notes: 'Комунікативна ситуація: замовлення їжі та напоїв.'
+- title: 'Wiki: pedagogy/a1/at-the-cafe (LOCKED 2026-04-22)'
+  notes: 'Authoritative pedagogical brief — see Step 5 (takeaway + size) and "Типові помилки L2" (café-specific Surzhyk table).'
+changelog:
+- version: '1.3.0'
+  date: '2026-04-22'
+  changes:
+  - 'Review-and-lock pass (#1412). Added takeaway/size pragmatics (Діалог 3, formats: `Вам тут чи із собою?`, sizes `велику/маленьку каву`) to align with locked wiki Step 5.'
+  - Added café-specific Surzhyk drill as a new fill-in activity (mirrors wiki "Типові помилки L2" table).
+  - 'Added lifecycle markers (lifecycle/reviewed_at/reviewed_by/review_notes) per new convention in docs/best-practices/wiki-plan-review-and-lock.md.'
+  - 'Added `кав''ярня` to recommended vocab (wiki uses `кав''ярня`, plan uses `кафе` — both standard; flag near-synonym for the writer).'
