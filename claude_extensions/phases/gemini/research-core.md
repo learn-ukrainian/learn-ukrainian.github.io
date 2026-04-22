@@ -41,10 +41,13 @@ Research **{TOPIC_TITLE}** for the **{LEVEL}** core track. Core tracks need ligh
 
 | Tool | When to use |
 |------|-------------|
+| `search_sources` | Preferred unified retrieval across textbooks, literary, Wikipedia, external, and ukrainian_wiki |
 | `search_text` | Find how this topic is taught in Ukrainian textbooks |
 | `verify_words` | Check vocabulary exists in VESUM dictionary |
 | `query_grac` mode=`frequency` | Get word frequency data |
 | `query_wikipedia` mode=`summary` | Quick fact-check for cultural hooks |
+
+Use `search_text` only when you explicitly need textbook-only scoping.
 
 ### Research Requirements
 

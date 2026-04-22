@@ -14,7 +14,7 @@ The Python backing package is still `scripts/rag/` for backwards compat
 with imports; rename there is a follow-up.
 
 Tools:
-    - search_text, search_literary, search_external, search_images, get_chunk_context
+    - search_sources, search_text, search_literary, search_external, search_images, get_chunk_context
     - verify_word, verify_words, verify_lemma (VESUM)
     - query_wikipedia, query_pravopys, query_e2u, query_r2u, query_ulif
     - search_definitions, search_etymology, search_idioms, search_synonyms
@@ -48,6 +48,36 @@ server = Server("sources")
 async def list_tools() -> list[Tool]:
     """List available RAG tools."""
     return [
+        Tool(
+            name="search_sources",
+            description=(
+                "Unified Ukrainian source search across textbooks, literary corpora, "
+                "Wikipedia, external articles, AND the ukrainian_wiki corpus "
+                "(compiled Ukrainian textbook pedagogy). Use this for general retrieval "
+                "when you want all relevant Ukrainian-source content in one query. "
+                "Use the corpus-specific tools (search_text, search_literary, etc.) "
+                "only when you need to scope to a single source."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Search query in Ukrainian (e.g., 'голосні звуки', 'як утворюється минулий час')"
+                    },
+                    "track": {
+                        "type": "string",
+                        "description": "Optional curriculum track for retrieval prep and reranking (e.g., 'a1'). Defaults to empty string."
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Max results to return (default 10, max 20)",
+                        "default": 10
+                    }
+                },
+                "required": ["query"]
+            },
+        ),
         Tool(
             name="search_text",
             description=(
@@ -618,6 +648,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
     try:
         # Dispatch to handler
         _handlers = {
+            "search_sources": lambda: handle_search_sources(arguments),
             "search_text": lambda: handle_search_text(arguments),
             "search_images": lambda: handle_search_images(arguments),
             "search_literary": lambda: handle_search_literary(arguments),
@@ -682,6 +713,23 @@ async def handle_search_text(args: dict) -> list[TextContent]:
         lines.append("")
 
     return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_search_sources(args: dict) -> list[TextContent]:
+    query = args["query"]
+    # Empty-string track is intentional: `_prepare_query()` handles ad-hoc
+    # string queries without needing a concrete curriculum track.
+    track = str(args.get("track", "") or "")
+    limit = min(args.get("limit", 10), 20)
+
+    from wiki.sources_db import search_sources
+
+    hits = await asyncio.to_thread(search_sources, query, track=track, limit=limit)
+
+    if not hits:
+        return [TextContent(type="text", text="[]")]
+
+    return [TextContent(type="text", text=json.dumps(hits, ensure_ascii=False, indent=2))]
 
 
 async def handle_search_literary(args: dict) -> list[TextContent]:
