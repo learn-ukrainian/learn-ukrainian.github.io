@@ -1,0 +1,101 @@
+reviewer_model: codex-2
+fixture: a1/special-signs-hardened-retest
+axes:
+  linguistic_correctness:
+    score: 6
+    evidence:
+      - quote: "Правило сформульоване чітко (Захарійчук, 1 клас, стор. 97): **апостроф ставиться після Б, П, В, М, Ф, Р перед я, ю, є, ї.**"
+        issue: "Core A1 apostrophe rule is stated correctly."
+        authority: "Правопис 2019"
+      - quote: "**Ґ [g]** — дзвінкий проривний звук. При його вимові горло повністю змикається, а потім різко розмикається."
+        issue: "Articulation is described inaccurately: for Ґ the closure is not 'горло'."
+        authority: "none"
+      - quote: "Голосний звук И — унікальний для української мови."
+        issue: "This is an absolute overstatement. И is characteristic of Ukrainian here, not unique among all languages."
+        authority: "none"
+      - quote: "**комп'юˊтер**"
+        issue: "Stress placement is correct."
+        authority: "Горох"
+  pedagogical_accuracy:
+    score: 5
+    evidence:
+      - quote: "Позначення, яке використовує Захарійчук (1 клас, стор. 15): тверді приголосні позначаються знаком [–], м'які — знаком [=]."
+        issue: "This matches the plan and the cited textbook framing."
+        authority: "textbook citation"
+      - quote: "Практика читання: **п'ять**, **дев'ять**, **м'який**, **м'яч**, **об'єкт**."
+        issue: "This introduces \"об'єкт\", a prefix-apostrophe word, even though the plan explicitly limits A1 coverage to губні + р examples and forbids prefixal apostrophe examples."
+        authority: "plan section"
+      - quote: "Щоб зрозуміти, навіщо це потрібно, згадаймо подвійну природу йотованих голосних — Я, Ю, Є, Ї."
+        issue: "The explanation jumps into dense metalanguage instead of the simpler textbook-style pattern the module is supposed to teach."
+        authority: "textbook citation"
+      - quote: "**Ґ [g]** — дзвінкий проривний звук. При його вимові горло повністю змикається, а потім різко розмикається."
+        issue: "A wrong articulation cue is not a harmless simplification; it teaches the sound incorrectly."
+        authority: "plan section"
+  decodability_a1:
+    score: 4
+    evidence:
+      - quote: "Для читання слів з апострофом корисно уявити його як невидиму стіну між приголосним і голосним."
+        issue: "Within A1 scope; concrete and image-based."
+      - quote: "Українська фонетика чітко розмежовує три групи приголосних за їхньою здатністю до пом'якшення"
+        issue: "Above A1 scope; abstract grammatical metalanguage for a first- or second-grader."
+      - quote: "подвійну природу йотованих голосних"
+        issue: "Above A1 scope."
+      - quote: "у фонетичній термінології «м'який» означає палаталізований"
+        issue: "Far above Grade 1-2 readability."
+  plan_adherence:
+    score: 5
+    marker_coverage:
+      expected_count: 7
+      present_count: 7
+      present_ids:
+        - "odd-one-out-soft-sign"
+        - "fill-in-apostrophe-or-soft-sign"
+        - "error-correction-missing-apostrophe"
+        - "group-sort-ь-apostrophe-nothing"
+        - "match-up-voiced-voiceless-pairs"
+        - "true-false-voicing-rules"
+        - "quiz-g-vs-ghanoki"
+      missing_hints: []
+    inline_exercise_violations:
+      - "Практика читання: **п'ять**, **дев'ять**, **м'який**, **м'яч**, **об'єкт**."
+      - "Потренуйте слух на мінімальних парах — словах, які відрізняються лише одним звуком:"
+      - "Потренуйтеся зі словами: **рука**, **робота**, **ранок**, **риба**."
+    missing_from_plan:
+      - "## Дзвінкі і глухі undershoots the plan budget: about 208 words instead of 250 ±10%."
+      - "## Підсумок undershoots the plan budget: about 145 words instead of 200 ±10%."
+    extra_not_in_plan:
+      - "## Апостроф overshoots the plan budget: about 355 words instead of 250 ±10%."
+      - "## Вимова українських звуків overshoots the plan budget: about 286 words instead of 250 ±10%."
+      - "Inline exercise authoring, severe: \"Практика читання: **п'ять**, **дев'ять**, **м'який**, **м'яч**, **об'єкт**.\""
+      - "Inline exercise authoring, severe: \"Потренуйте слух на мінімальних парах — словах, які відрізняються лише одним звуком:\""
+      - "Inline exercise authoring, severe: \"Потренуйтеся зі словами: **рука**, **робота**, **ранок**, **риба**.\""
+      - "Adds prefix-apostrophe example \"об'єкт\" despite the plan's A1 ban on such examples."
+  register_naturalness:
+    score: 6
+    evidence:
+      - quote: "Порівняймо: **кон** і **кінь**."
+        issue: "Natural teacherly setup."
+      - quote: "Для читання слів з апострофом корисно уявити його як невидиму стіну між приголосним і голосним."
+        issue: "Natural classroom metaphor; sounds like a real Ukrainian teacher."
+      - quote: "Вони формують фонетичну ідентичність мови і відрізняють її від сусідніх мов."
+        issue: "This sounds essayistic and adult, not like native early-grade textbook prose."
+      - quote: "подвійну природу йотованих голосних"
+        issue: "Over-academic phrasing; not natural child-directed register."
+  honesty:
+    score: 3
+    verify_markers_present: false
+    verify_markers_count: 0
+    notes: "The module uses zero <!-- VERIFY --> markers while making several hard absolute claims and skating past real edge cases. The biggest honesty failure is the unflagged mismatch between the simplified apostrophe rule and the later use of the prefix-apostrophe example \"об'єкт\"."
+plan_issues:
+  - plan_field: "grammar[3]"
+    issue: "The plan contradicts itself about sonorants."
+    evidence: "Сонорні (В, Л, М, Н, Й, Р) НЕ є ані дзвінкими, ані глухими (вони лише дзвінкі)."
+  - plan_field: "content_outline[0].points[0] / references[2]"
+    issue: "The plan cites different Большакова grades for the same point."
+    evidence: "content_outline: \"Большакова, 2 клас, стор. 46\"; references: \"Большакова, 1 клас, стор. 45-47\"."
+summary:
+  overall_score: 4.8
+  single_worst_error: "The module breaks the hardened contract by authoring inline practice prompts and item lists instead of relying on markers only."
+  single_best_moment: "The line about the apostrophe as a 'невидима стіна' is the clearest child-readable explanation in the module."
+  verdict: FAIL
+  word_count_estimate: 1441
