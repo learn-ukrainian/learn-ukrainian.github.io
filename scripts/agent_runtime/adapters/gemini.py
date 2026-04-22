@@ -75,23 +75,27 @@ def resolve_gemini_auth_mode(
 ) -> str:
     """Resolve the effective Gemini auth mode for this invocation.
 
-    Explicit ``subscription`` / ``api`` values are honored. Unset,
-    ``auto``, and invalid values all use the same default heuristic
-    from #1384 Phase 1:
+    Project policy (2026-04-23, post-#1416): **always subscription** unless
+    the user has explicitly set ``GEMINI_AUTH_MODE=api`` for a one-off
+    legitimate API-mode run.
 
-      - Gemini OAuth creds present on disk → ``subscription``
-      - no Gemini OAuth creds present      → ``api``
+    Why: this project is permanently non-commercial, the user has an Ultra
+    OAuth subscription, and conditional resolution caused a macOS Keychain
+    permission popup loop on every gemini-cli spawn under env-strip (#1416).
+    Forcing subscription is the blunt fix the user asked for — one-time
+    Keychain "Always Allow" click + zero env complexity afterward.
 
     ``cooldown_active`` is retained for call-site compatibility with the
-    earlier API-cooldown design, but the adapter path no longer consults
-    it when picking the default auth mode.
+    earlier API-cooldown design but is now unused.
     """
     _ = cooldown_active
     source = os.environ if env is None else env
     mode = _normalize_gemini_auth_mode(source.get("GEMINI_AUTH_MODE"))
-    if mode != "auto":
-        return mode
-    return "subscription" if has_gemini_oauth_credentials() else "api"
+    # Honor explicit api opt-out for any caller who genuinely needs API mode
+    # (e.g., debugging a subscription-side bug). Everything else → subscription.
+    if mode == "api":
+        return "api"
+    return "subscription"
 
 
 class GeminiAdapter:
