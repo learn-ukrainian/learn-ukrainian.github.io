@@ -162,7 +162,7 @@ ruff==0.15.5
 safetensors==0.7.0
 scikit-learn==1.8.0
 scipy==1.17.0
-sentence-transformers==5.2.2
+sentence-transformers==5.4.1
 sentencepiece==0.2.1
 setuptools==80.10.2
 shellingham==1.5.4
