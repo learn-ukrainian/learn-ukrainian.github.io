@@ -59,7 +59,7 @@ def _write_v6_reviews(
             False,
             "Latest style review review-structured-style-r1.yaml has dimension(s) below 8.5: Pragmatic authenticity=8.2, Stylistic consistency=8.2, Culture + register=8.2, Naturalness=8.2",
         ),
-        ("A1", 8.0, 9.2, None, False, "Latest review review-structured-r1.yaml score is 8.0 < 9.0"),
+        ("A1", 8.0, 9.2, None, True, None),
         ("A1", 9.5, 8.0, None, False, "Latest style review review-structured-style-r1.yaml score is 8.0 < 9.0"),
         (
             "A1",

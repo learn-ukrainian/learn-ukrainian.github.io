@@ -529,6 +529,7 @@ def _check_praise_only_citations(content: str, citations: list[str], fix_prompt:
 
 
 _STYLE_REVIEW_DIMENSION_FLOOR = 8.5
+_V6_REVIEW_MIN_SCORE = 8.0
 _STYLE_REVIEW_DIMENSIONS = {
     'pragmatic_authenticity': 'Pragmatic authenticity',
     'stylistic_consistency': 'Stylistic consistency',
@@ -573,16 +574,36 @@ def _load_latest_yaml(orch_dir: Path, pattern: str) -> tuple[Path | None, dict |
 
 def check_v6_review_validity(file_path: str, level_code: str, module_slug: str) -> list[dict]:
     """Validate the structured linguistic + style review gate for v6 modules."""
-    orch_dir = Path(file_path).parent / 'orchestration' / module_slug
-    threshold = get_naturalness_min_score(level_code)
+    module_dir = Path(file_path).parent
+    orch_dir = module_dir / 'orchestration' / module_slug
+    review_dir = module_dir / 'review'
+    style_threshold = get_naturalness_min_score(level_code)
     violations = []
 
-    review_path, review_data, review_error = _load_latest_yaml(orch_dir, 'review-structured-r*.yaml')
+    review_path = review_dir / f'{module_slug}-review-aggregate.yaml'
+    review_data = None
+    review_error = None
+    if review_path.exists():
+        try:
+            review_data = yaml.safe_load(review_path.read_text(encoding='utf-8'))
+        except Exception as exc:
+            review_error = str(exc)
+    else:
+        versioned = list(review_dir.glob(f'{module_slug}-review-aggregate-r*.yaml'))
+        if versioned:
+            review_path = max(versioned, key=lambda path: (_versioned_round_number(path), path.name))
+            try:
+                review_data = yaml.safe_load(review_path.read_text(encoding='utf-8'))
+            except Exception as exc:
+                review_error = str(exc)
+        else:
+            review_path, review_data, review_error = _load_latest_yaml(orch_dir, 'review-structured-r*.yaml')
+
     if review_path is None:
         return [{
             'type': 'MISSING_STRUCTURED_REVIEW',
             'severity': 'critical',
-            'message': 'No review-structured-r*.yaml found in orchestration dir',
+            'message': 'No review aggregate YAML found',
         }]
     if review_error is not None:
         return [{
@@ -591,21 +612,30 @@ def check_v6_review_validity(file_path: str, level_code: str, module_slug: str) 
             'message': f'Failed to parse {review_path.name}: {review_error}',
         }]
 
-    scores = [d.get('score', 0) for d in review_data.get('scores', []) if isinstance(d, dict)]
-    if not scores:
+    verdict_score_raw = None
+    if isinstance(review_data, dict):
+        verdict_score_raw = review_data.get('verdict_score', review_data.get('overall_score'))
+    if verdict_score_raw is None:
+        scores = [d.get('score', 0) for d in review_data.get('scores', []) if isinstance(d, dict)]
+        if scores:
+            verdict_score_raw = min(scores)
+    if verdict_score_raw is None:
         violations.append({
             'type': 'STRUCTURED_REVIEW_NO_SCORES',
             'severity': 'critical',
             'message': f'No scores found in {review_path.name}',
         })
     else:
-        avg_score = sum(scores) / len(scores)
-        if avg_score < threshold:
+        try:
+            verdict_score = float(verdict_score_raw)
+        except (TypeError, ValueError):
+            verdict_score = 0.0
+        if verdict_score < _V6_REVIEW_MIN_SCORE:
             violations.append({
                 'type': 'STRUCTURED_REVIEW_BELOW_THRESHOLD',
                 'severity': 'critical',
                 'message': (
-                    f'Latest review {review_path.name} score is {avg_score:.1f} < {threshold:.1f}'
+                    f'Latest review {review_path.name} score is {verdict_score:.1f} < {_V6_REVIEW_MIN_SCORE:.1f}'
                 ),
             })
 
@@ -662,12 +692,12 @@ def check_v6_review_validity(file_path: str, level_code: str, module_slug: str) 
     except (TypeError, ValueError):
         overall_score = sum(style_scores.values()) / len(style_scores)
 
-    if overall_score < threshold:
+    if overall_score < style_threshold:
         violations.append({
             'type': 'STYLE_REVIEW_BELOW_THRESHOLD',
             'severity': 'critical',
             'message': (
-                f'Latest style review {style_path.name} score is {overall_score:.1f} < {threshold:.1f}'
+                f'Latest style review {style_path.name} score is {overall_score:.1f} < {style_threshold:.1f}'
             ),
         })
 

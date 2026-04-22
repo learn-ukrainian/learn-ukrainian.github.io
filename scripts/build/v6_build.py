@@ -51,6 +51,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextlib import suppress
 from datetime import UTC, datetime
 from pathlib import Path
@@ -107,7 +108,8 @@ logger = logging.getLogger(__name__)
 
 # Rate limit backoff — shared by all retry loops
 _RATE_LIMIT_BACKOFF_S = 300  # 5 min — long enough for Gemini quota to recover
-REVIEW_TARGET_SCORE = 9.0
+REVIEW_TARGET_SCORE = 8.0
+REVIEW_REJECT_SCORE = 6.0
 STYLE_REVIEW_TARGET_SCORE = 9.0
 STYLE_REVIEW_DIMENSION_FLOOR = 8.5
 REWRITE_BLOCK_TIMEOUT_S = 420
@@ -125,6 +127,56 @@ STYLE_REVIEW_DIMENSION_LABELS = {
     "stylistic_consistency": "Stylistic consistency",
     "culture_and_register": "Culture + register",
     "naturalness": "Naturalness",
+}
+REVIEW_DIMENSIONS = (
+    {
+        "id": "factual",
+        "label": "Factual",
+        "template": "v6-review/v6-review-factual.md",
+    },
+    {
+        "id": "language",
+        "label": "Language",
+        "template": "v6-review/v6-review-language.md",
+    },
+    {
+        "id": "decolonization",
+        "label": "Decolonization",
+        "template": "v6-review/v6-review-decolonization.md",
+    },
+    {
+        "id": "completeness",
+        "label": "Completeness",
+        "template": "v6-review/v6-review-completeness.md",
+    },
+    {
+        "id": "actionable",
+        "label": "Actionable",
+        "template": "v6-review/v6-review-actionable.md",
+    },
+    {
+        "id": "naturalness",
+        "label": "Naturalness",
+        "template": "v6-review/v6-review-naturalness.md",
+    },
+    {
+        "id": "plan_adherence",
+        "label": "Plan Adherence",
+        "template": "v6-review/v6-review-plan-adherence.md",
+    },
+    {
+        "id": "honesty",
+        "label": "Honesty",
+        "template": "v6-review/v6-review-honesty.md",
+    },
+    {
+        "id": "dialogue",
+        "label": "Dialogue",
+        "template": "v6-review/v6-review-dialogue.md",
+    },
+)
+REVIEW_DIMENSION_ORDER = {
+    spec["id"]: index for index, spec in enumerate(REVIEW_DIMENSIONS, start=1)
 }
 V6_PHASE_STATUS = Literal["complete", "skipped", "failed", "degraded", "stale"]
 _VALID_V6_PHASE_STATUSES = {"complete", "skipped", "failed", "degraded", "stale"}
@@ -666,12 +718,27 @@ class ReviewParseResult:
 
     score: float
     verdict: str
-    raw_scores: list[int]
+    raw_scores: list[float]
     parsed_scores: list[dict]
     findings_count: int
     dim_floor_fail: bool
     reviewer_contract_invalid: bool
     passed: bool
+
+
+@dataclass(frozen=True)
+class PerDimensionReviewResult:
+    """Parsed result of one independent review-dimension call."""
+
+    dimension_id: str
+    dimension_name: str
+    score: float
+    verdict: str
+    evidence: str
+    review_text: str
+    findings: tuple[dict, ...]
+    fixes: tuple[dict, ...]
+    rewrite_blocks: tuple[dict, ...]
 
 
 @dataclass(frozen=True)
@@ -1642,68 +1709,132 @@ def _run_pre_build_gate(level: str, slug: str) -> bool:
     return True
 
 
+_REVIEW_TABLE_ROW_RE = re.compile(
+    r"\|\s*(?:(\d+)\.\s*)?([^|]+?)\s*\|\s*(\d+(?:\.\d+)?)/10\s*\|\s*([^|]*)\|"
+)
+_REVIEW_EXPLICIT_SCORE_RE = re.compile(
+    r"(?im)^(?:overall score|verdict score|minimum score)\s*:\s*(\d+(?:\.\d+)?)/10\s*$"
+)
+
+
+def _review_verdict_from_score(score: float) -> str:
+    """Map the minimum dimension score to PASS / REVISE / REJECT."""
+    if score >= REVIEW_TARGET_SCORE:
+        return "PASS"
+    if score < REVIEW_REJECT_SCORE:
+        return "REJECT"
+    return "REVISE"
+
+
+def _parse_review_result_from_yaml_data(data: dict) -> ReviewParseResult:
+    """Parse a structured review YAML mapping into a ReviewParseResult."""
+    scores: list[dict] = []
+    for index, item in enumerate(data.get("scores") or (), start=1):
+        if not isinstance(item, dict):
+            continue
+        try:
+            score_value = float(item.get("score"))
+        except (TypeError, ValueError):
+            continue
+        dim_value = item.get("dimension", index)
+        try:
+            dim_num = int(dim_value)
+        except (TypeError, ValueError):
+            dim_num = index
+        scores.append({
+            "dimension": dim_num,
+            "name": str(item.get("name") or item.get("key") or dim_value or index).strip(),
+            "score": round(score_value, 1),
+            "evidence": str(item.get("evidence") or "").strip(),
+        })
+
+    raw_scores = [float(item["score"]) for item in scores]
+    verdict_score_raw = data.get("verdict_score", data.get("overall_score"))
+    if verdict_score_raw is None and raw_scores:
+        verdict_score = round(min(raw_scores), 1)
+    else:
+        try:
+            verdict_score = round(float(verdict_score_raw or 0), 1)
+        except (TypeError, ValueError):
+            verdict_score = round(min(raw_scores), 1) if raw_scores else 0.0
+
+    verdict = str(data.get("verdict") or _review_verdict_from_score(verdict_score)).upper()
+    findings = data.get("findings") or []
+    findings_count = len([item for item in findings if isinstance(item, dict)])
+    dim_floor_fail = any(
+        float(dim.get("score", 10) or 10) < REVIEW_TARGET_SCORE
+        and _evidence_has_error_keyword(str(dim.get("evidence", "")))
+        for dim in scores
+    )
+    reviewer_contract_invalid = (
+        bool(raw_scores)
+        and verdict_score < REVIEW_TARGET_SCORE
+        and findings_count == 0
+    )
+    passed = reviewer_contract_invalid or (
+        verdict_score >= REVIEW_TARGET_SCORE and verdict == "PASS" and not dim_floor_fail
+    )
+    return ReviewParseResult(
+        score=verdict_score,
+        verdict=verdict,
+        raw_scores=raw_scores,
+        parsed_scores=scores,
+        findings_count=findings_count,
+        dim_floor_fail=dim_floor_fail,
+        reviewer_contract_invalid=reviewer_contract_invalid,
+        passed=passed,
+    )
+
+
 def _parse_review_result(review_text: str) -> ReviewParseResult:
-    """Parse the deterministic score/verdict gates from a review markdown file."""
-    # Dimension weights (must match v6-review.md)
-    dimension_weights = {
-        1: 0.15,  # Plan adherence
-        2: 0.15,  # Linguistic accuracy
-        3: 0.15,  # Pedagogical quality
-        4: 0.10,  # Vocabulary coverage
-        5: 0.15,  # Exercise quality
-        6: 0.10,  # Engagement & tone
-        7: 0.05,  # Structural integrity
-        8: 0.05,  # Cultural accuracy
-        9: 0.10,  # Dialogue & conversation quality
-    }
+    """Parse the deterministic score/verdict gates from a review artifact."""
+    stripped = _strip_outer_code_fence(review_text)
+    with suppress(Exception):
+        maybe_yaml = yaml.safe_load(stripped)
+        if isinstance(maybe_yaml, dict) and (
+            "verdict_score" in maybe_yaml
+            or "overall_score" in maybe_yaml
+            or "scores" in maybe_yaml
+        ):
+            return _parse_review_result_from_yaml_data(maybe_yaml)
 
-    # Gemini sometimes outputs the score table twice. Only take the first 9.
-    score_pattern = re.compile(r"\|\s*\d+\.\s*[^|]+\|\s*(\d+)/10\s*\|")
-    all_raw_scores = [int(m.group(1)) for m in score_pattern.finditer(review_text)]
-    raw_scores = all_raw_scores[:len(dimension_weights)]
-
-    full_score_pattern = re.compile(r"\|\s*(\d+)\.\s*([^|]+)\|\s*(\d+)/10\s*\|([^|]*)\|")
-    parsed_scores = []
+    all_rows = list(_REVIEW_TABLE_ROW_RE.finditer(review_text))
+    parsed_scores: list[dict] = []
     seen_dims: set[int] = set()
-    for m in full_score_pattern.finditer(review_text):
-        dim_num = int(m.group(1))
+    for index, match in enumerate(all_rows, start=1):
+        dim_num = int(match.group(1)) if match.group(1) else index
         if dim_num in seen_dims:
             continue
         seen_dims.add(dim_num)
         parsed_scores.append({
             "dimension": dim_num,
-            "name": m.group(2).strip(),
-            "score": int(m.group(3)),
-            "evidence": m.group(4).strip(),
+            "name": match.group(2).strip(),
+            "score": round(float(match.group(3)), 1),
+            "evidence": match.group(4).strip(),
         })
 
-    if raw_scores:
-        available = min(len(raw_scores), len(dimension_weights))
-        used_weights = {k: v for k, v in dimension_weights.items() if k <= available}
-        weight_sum = sum(used_weights.values())
-        weighted = sum(
-            raw_scores[i] * dimension_weights.get(i + 1, 0)
-            for i in range(available)
-        )
-        score = round(weighted / weight_sum, 1) if weight_sum > 0 else 0.0
+    raw_scores = [float(item["score"]) for item in parsed_scores]
+    explicit_score_match = _REVIEW_EXPLICIT_SCORE_RE.search(review_text)
+    if explicit_score_match:
+        score = round(float(explicit_score_match.group(1)), 1)
+    elif raw_scores:
+        score = round(min(raw_scores), 1)
     else:
         score = 0.0
 
     verdict = "UNKNOWN"
     for value in ("PASS", "REVISE", "REJECT"):
-        if f"Verdict: {value}" in review_text or f"Verdict:{value}" in review_text:
+        if re.search(rf"(?im)^##\s*Verdict\s*:\s*{value}\s*$", review_text) or re.search(
+            rf"(?im)^verdict\s*:\s*{value}\s*$", review_text
+        ):
             verdict = value
             break
 
-    dim_floor_fail = False
-    if parsed_scores:
-        for dim in parsed_scores:
-            dim_score = dim.get("score", 10)
-            evidence = dim.get("evidence", "")
-            if dim_score < REVIEW_TARGET_SCORE and _evidence_has_error_keyword(evidence):
-                dim_floor_fail = True
-                break
-
+    dim_floor_fail = any(
+        float(dim.get("score", 10) or 10) < REVIEW_TARGET_SCORE
+        and _evidence_has_error_keyword(str(dim.get("evidence", "")))
+        for dim in parsed_scores
+    )
     findings_count = len(_extract_structured_findings(review_text))
     reviewer_contract_invalid = (
         bool(raw_scores)
@@ -2187,6 +2318,21 @@ def _review_loop_decision(
 def _load_latest_review_result(level: str, slug: str) -> ReviewParseResult | None:
     """Parse the latest saved review for a module, if present."""
     review_dir = CURRICULUM_ROOT / level / "review"
+    aggregate_path = review_dir / f"{slug}-review-aggregate.yaml"
+    if not aggregate_path.exists() and review_dir.exists():
+        versioned_aggregate = list(review_dir.glob(f"{slug}-review-aggregate-r*.yaml"))
+        latest_aggregate = _latest_versioned_path(versioned_aggregate)
+        if latest_aggregate is not None:
+            aggregate_path = latest_aggregate
+    if aggregate_path.exists():
+        try:
+            parsed = yaml.safe_load(aggregate_path.read_text("utf-8"))
+        except Exception:
+            parsed = None
+        if isinstance(parsed, dict):
+            with suppress(Exception):
+                return _parse_review_result_from_yaml_data(parsed)
+
     review_path = review_dir / f"{slug}-review.md"
     if not review_path.exists() and review_dir.exists():
         versioned = list(review_dir.glob(f"{slug}-review-r*.md"))
@@ -5192,6 +5338,226 @@ def _save_structured_findings_from_parsed(
     )
 
 
+def _extract_markdown_section(text: str, heading: str) -> str:
+    """Return the body of a markdown H2 section."""
+    pattern = re.compile(
+        rf"(?ms)^##\s+{re.escape(heading)}\s*\n(.*?)(?=^##\s+|\Z)"
+    )
+    match = pattern.search(text)
+    return match.group(1).strip() if match else ""
+
+
+def _summarize_review_evidence(text: str, *, limit: int = 200) -> str:
+    """Collapse a section body into a short single-line summary."""
+    summary = re.sub(r"\s+", " ", text or "").strip()
+    summary = summary.replace("|", "\\|")
+    if len(summary) <= limit:
+        return summary
+    return summary[: limit - 3].rstrip() + "..."
+
+
+def _parse_per_dimension_review(
+    review_text: str,
+    *,
+    dimension_id: str,
+    dimension_name: str,
+) -> PerDimensionReviewResult:
+    """Parse a single per-dimension reviewer response."""
+    score_match = re.search(r"(?im)^score:\s*(\d+(?:\.\d+)?)/10\s*$", review_text)
+    verdict_match = re.search(r"(?im)^verdict:\s*(PASS|REVISE|REJECT)\s*$", review_text)
+    if score_match is None or verdict_match is None:
+        raise ValueError(
+            f"{dimension_id} review output missing score/verdict header"
+        )
+
+    return PerDimensionReviewResult(
+        dimension_id=dimension_id,
+        dimension_name=dimension_name,
+        score=round(float(score_match.group(1)), 1),
+        verdict=verdict_match.group(1).upper(),
+        evidence=_summarize_review_evidence(_extract_markdown_section(review_text, "Evidence")),
+        review_text=review_text,
+        findings=tuple(_extract_structured_findings(review_text)),
+        fixes=tuple(_parse_review_fixes(review_text)),
+        rewrite_blocks=tuple(_parse_rewrite_blocks(review_text)),
+    )
+
+
+def _dedupe_yaml_items(items: list[dict]) -> list[dict]:
+    """Return stable-order unique dict items."""
+    seen: set[str] = set()
+    unique: list[dict] = []
+    for item in items:
+        key = yaml.safe_dump(item, sort_keys=True, allow_unicode=True)
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(item)
+    return unique
+
+
+def _render_structured_finding(finding: dict) -> str:
+    """Render one structured finding block."""
+    return (
+        f"[{finding.get('dimension', '')}] [SEVERITY: {finding.get('severity', '')}]\n"
+        f"Location: {finding.get('location', '')}\n"
+        f"Issue: {finding.get('issue', '')}\n"
+        f"Fix: {finding.get('fix', '')}"
+    ).strip()
+
+
+def _render_fixes_block(fixes: list[dict]) -> str:
+    """Render a combined <fixes> block."""
+    if not fixes:
+        return ""
+    payload = yaml.safe_dump(
+        fixes,
+        sort_keys=False,
+        allow_unicode=True,
+        default_flow_style=False,
+    ).rstrip()
+    return f"<fixes>\n{payload}\n</fixes>"
+
+
+def _render_rewrite_blocks(blocks: list[dict]) -> str:
+    """Render combined rewrite directives."""
+    if not blocks:
+        return ""
+    rendered = []
+    for block in blocks:
+        rendered.append(
+            f'<rewrite-block section="{block.get("section", "")}">\n'
+            f'{block.get("directive", "")}\n'
+            f"</rewrite-block>"
+        )
+    return "\n\n".join(rendered)
+
+
+def _build_review_aggregate_text(
+    results: list[PerDimensionReviewResult],
+    *,
+    verdict: str,
+    verdict_score: float,
+    weighted_average: float,
+) -> str:
+    """Build the aggregate review markdown consumed by the review-heal loop."""
+    by_id = {result.dimension_id: result for result in results}
+    findings = _dedupe_yaml_items(
+        [dict(item) for result in results for item in result.findings]
+    )
+    fixes = _dedupe_yaml_items(
+        [dict(item) for result in results for item in result.fixes]
+    )
+    rewrite_blocks = _dedupe_yaml_items(
+        [dict(item) for result in results for item in result.rewrite_blocks]
+    )
+    lowest = [
+        result.dimension_name for result in results if result.score == verdict_score
+    ]
+    lines = [
+        "# V6 Aggregate Review — Per-Dimension Independent Reviewer",
+        "",
+        f"Overall Score: {verdict_score:.1f}/10",
+        f"Weighted Average: {weighted_average:.1f}/10",
+        f"**Status:** {'PASS' if verdict == 'PASS' else 'FAIL'}",
+        "",
+        "## Scores",
+        "| Dimension | Score | Evidence |",
+        "|-----------|-------|----------|",
+    ]
+    for spec in REVIEW_DIMENSIONS:
+        result = by_id[spec["id"]]
+        lines.append(
+            f"| {REVIEW_DIMENSION_ORDER[spec['id']]}. {result.dimension_name} | "
+            f"{result.score:.1f}/10 | {result.evidence} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Findings",
+        ]
+    )
+    if findings:
+        lines.extend(_render_structured_finding(item) for item in findings)
+    else:
+        lines.append("None.")
+
+    lines.extend(
+        [
+            "",
+            f"## Verdict: {verdict}",
+            (
+                f"MIN score gate = {verdict_score:.1f}/10; "
+                f"driving dimension(s): {', '.join(lowest)}."
+            ),
+        ]
+    )
+
+    fixes_block = _render_fixes_block(fixes)
+    if fixes_block:
+        lines.extend(["", fixes_block])
+
+    rewrite_text = _render_rewrite_blocks(rewrite_blocks)
+    if rewrite_text:
+        lines.extend(["", rewrite_text])
+
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def _build_review_aggregate_payload(
+    *,
+    slug: str,
+    round_num: int,
+    verdict: str,
+    verdict_score: float,
+    weighted_average: float,
+    results: list[PerDimensionReviewResult],
+    content_filename: str,
+) -> dict:
+    """Build the aggregate YAML payload for a review round."""
+    scores = []
+    dim_scores = {}
+    findings = []
+    fixes_applied = []
+    for spec in REVIEW_DIMENSIONS:
+        result = next(item for item in results if item.dimension_id == spec["id"])
+        dim_scores[result.dimension_id] = round(result.score, 1)
+        scores.append(
+            {
+                "dimension": REVIEW_DIMENSION_ORDER[result.dimension_id],
+                "key": result.dimension_id,
+                "name": result.dimension_name,
+                "score": round(result.score, 1),
+                "evidence": result.evidence,
+            }
+        )
+        findings.extend(dict(item) for item in result.findings)
+        if result.fixes:
+            fixes_applied.append(
+                {
+                    "dim": result.dimension_id,
+                    "count": len(result.fixes),
+                    "files": [content_filename],
+                }
+            )
+
+    return {
+        "slug": slug,
+        "round": round_num,
+        "review_mode": "per-dimension-min",
+        "verdict": verdict,
+        "verdict_score": round(verdict_score, 1),
+        "overall_score": round(verdict_score, 1),
+        "weighted_average": round(weighted_average, 1),
+        "dim_scores": dim_scores,
+        "scores": scores,
+        "findings": _dedupe_yaml_items(findings),
+        "fixes_applied": fixes_applied,
+        "passed": verdict == "PASS",
+    }
+
+
 def _determine_reviewer(
     writer: str,
     reviewer_override: str | None,
@@ -7063,28 +7429,15 @@ def _build_vesum_report(content: str, level: str = "", slug: str = "") -> str:
 def step_review(content_path: Path, level: str, module_num: int,
                 slug: str, writer: str = "claude",
                 reviewer_override: str | None = None) -> tuple[bool, float, str]:
-    """Step 8: Cross-agent adversarial review.
-
-    If Claude wrote → Gemini reviews (and vice versa).
-    Returns (passed, score, review_text).
-    """
+    """Step 8: Cross-agent adversarial review with independent dim calls."""
     _log(f"\n{'='*60}")
-    _log("  Step 8: REVIEW — Cross-agent adversarial review")
+    _log("  Step 8: REVIEW — Per-dimension independent adversarial review")
     _log(f"{'='*60}")
 
     if not content_path or not content_path.exists():
         _log("  ❌ No content file")
         return False, 0.0, ""
 
-    # Load review template
-    template_path = _resolve_phase_template_path("v6-review.md", log_override=True)
-    if template_path is None or not template_path.exists():
-        _log(f"  ❌ Review template not found: {template_path}")
-        return False, 0.0, ""
-
-    template = template_path.read_text("utf-8")
-
-    # Load plan and content
     plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
     plan_content_raw = plan_path.read_text("utf-8") if plan_path.exists() else ""
     plan = yaml.safe_load(plan_content_raw) if plan_content_raw else {}
@@ -7099,33 +7452,24 @@ def step_review(content_path: Path, level: str, module_num: int,
     )
     contract_content, excerpt_content = _format_contract_prompt_artifacts(contract, excerpts)
 
-    # .md files now contain ONLY prose (no TAB markers, no enrichment artifacts).
-    # Strip any legacy TAB markers if still present (backward compat during migration).
     generated_content = raw_content
     if "<!-- TAB:Словник -->" in generated_content:
         generated_content = generated_content[:generated_content.index("<!-- TAB:Словник -->")].strip()
     generated_content = generated_content.replace("<!-- TAB:Урок -->", "").strip()
     generated_content = re.sub(r'\n{3,}', '\n\n', generated_content).strip()
 
-    # Calculate deterministic word count — injected OUTSIDE content block.
-    # #1321 follow-up: reuse the exact audit-core counter that the override
-    # gate uses, so the reviewer prompt, the deterministic override, and
-    # the final audit gate all see the same number. Mismatches between
-    # the reviewer's prompt value and the override's deterministic value
-    # previously let a truthful reviewer look like a hallucinator.
     prose_words = _compute_core_word_count_for_text(generated_content)
 
-    # Build review prompt
     if "claude" in writer:
         writer_model = "Claude"
     elif "codex" in writer:
         writer_model = "Codex"
     else:
         writer_model = "Gemini"
+
     generated_content_literal = _format_prompt_literal_block(
         "Generated Module Content", generated_content, language="markdown",
     )
-    prompt = template
     replacements = {
         "{MODULE_NUM}": str(module_num),
         "{TOPIC_TITLE}": plan.get("title", slug),
@@ -7137,51 +7481,23 @@ def step_review(content_path: Path, level: str, module_num: int,
         "{WORD_COUNT}": str(prose_words),
         "{CONTRACT_YAML}": contract_content,
         "{SECTION_WIKI_EXCERPTS}": excerpt_content,
-        "{PLAN_CONTENT}": contract_content,
-        "{KNOWLEDGE_PACKET}": excerpt_content,
         "{GENERATED_CONTENT}": generated_content_literal,
     }
-    for key, value in replacements.items():
-        prompt = prompt.replace(key, value)
 
     monitor_context = _build_monitor_prompt_context(level, slug)
-    if monitor_context:
-        prompt += monitor_context
-        _log("  📡 Monitor telemetry injected")
 
-    if _contract_has_no_dialogue_acts(contract):
-        dialogue_override = (
-            "### Non-Applicable Dimension Override\n\n"
-            "The shared contract explicitly has `dialogue_acts: []` for this module. "
-            "This module has no planned dialogue scene, so Dimension 9 is not applicable.\n\n"
-            "- Dimension 9 (**Dialogue & conversation quality**) MUST be scored as `10/10`.\n"
-            "- In the evidence cell, write exactly: `N/A — module contract has no dialogue_acts.`\n"
-            "- Do NOT criticize short vocabulary examples, sentence pairs, or call-and-response prompts as "
-            "\"stiff dialogue\" for this module.\n"
-            "- Do NOT include Dimension 9 complaints in Findings, `<fixes>`, or `<rewrite-block>` output "
-            "unless the writer introduced an unplanned dialogue and that dialogue itself is broken.\n"
-        )
-        step3_marker = "### Step 3: Score on 9 dimensions"
-        if step3_marker in prompt:
-            prompt = prompt.replace(step3_marker, f"{dialogue_override}\n{step3_marker}", 1)
-        else:
-            prompt += f"\n\n{dialogue_override}"
-
-    # Inject VESUM verification data so the reviewer has facts, not guesses
+    vesum_block = ""
     vesum_report = _build_vesum_report(generated_content, level=level, slug=slug)
     if vesum_report:
-        prompt = (
-            prompt
-            + "\n\n## VESUM Verification Data\n\n"
+        vesum_block = (
+            "\n\n## VESUM Verification Data\n\n"
             + _format_prompt_literal_block(
                 "VESUM Verification Data", vesum_report, language="text",
             )
         )
         _log(f"  VESUM pre-verification: injected ({len(vesum_report)} chars)")
 
-    # Inject VERIFY flags from writer (#1018)
-    # Unresolved flags are passed to the reviewer for human-quality verification.
-    # Resolved flags are shown for context. VERIFY flags are a POSITIVE signal.
+    flag_inject = ""
     flags_path = CURRICULUM_ROOT / level / "orchestration" / slug / "verify-flags.yaml"
     if flags_path.exists():
         try:
@@ -7208,151 +7524,202 @@ def step_review(content_path: Path, level: str, module_num: int,
                         resolution = _strip_prompt_control_tags(str(f.get("resolution", "")))
                         flag_inject += f"- {claim} -- {resolution}\n"
                     flag_inject += "\n"
-                prompt += flag_inject
                 _log(f"  VERIFY flags injected: {len(unresolved)} unresolved, {len(resolved)} resolved")
         except Exception:
-            pass  # Non-blocking
+            pass
 
     reviewer_tuple = _determine_reviewer(writer, reviewer_override)
     if reviewer_tuple is None:
         _log("  ❌ No allowed reviewer available under the convergence matrix")
         return False, 0.0, ""
     reviewer, reviewer_agent = reviewer_tuple
-    prompt = prompt + _build_review_tools_section(reviewer)
+    review_tools_section = _build_review_tools_section(reviewer)
 
-    # Save review prompt
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
-    review_prompt_path = orch_dir / "v6-review-prompt.md"
-    review_prompt_path.write_text(prompt, "utf-8")
-
-    ok, raw = _dispatch_review_prompt(
-        prompt,
-        reviewer=reviewer,
-        reviewer_agent=reviewer_agent,
-        orch_dir=orch_dir,
-        phase="review",
-    )
-
-    if not ok or not raw:
-        _log("  ❌ Reviewer returned no output")
-        return False, 0.0, ""
-
-    # Save review output — versioned + latest symlink
     review_dir = CURRICULUM_ROOT / level / "review"
     review_dir.mkdir(parents=True, exist_ok=True)
+    content_filename = content_path.name
 
-    # Determine round number from existing versioned files
-    existing = sorted(review_dir.glob(f"{slug}-review-r*.md"))
-    round_num = len(existing) + 1
-    versioned_path = review_dir / f"{slug}-review-r{round_num}.md"
-    versioned_path.write_text(raw, "utf-8")
+    existing = [
+        *review_dir.glob(f"{slug}-review-aggregate-r*.yaml"),
+        *review_dir.glob(f"{slug}-review-r*.md"),
+    ]
+    round_num = max((_versioned_round_number(path) for path in existing), default=0) + 1
 
-    # Also save as the "latest" for backward compatibility
-    review_path = review_dir / f"{slug}-review.md"
-    review_path.write_text(raw, "utf-8")
-    _log(f"  Review saved → {versioned_path.name} (round {round_num})")
-
-    # Note: structured-findings YAML is written AFTER override application
-    # (#1321 follow-up). Saving the pre-override scores here would let
-    # ``audit/checks/review_validation.py`` re-read raw reviewer claims
-    # that the live gate has already rejected, so live gating and audit
-    # would disagree. See `_save_structured_findings_from_parsed` below.
-    parsed = _parse_review_result(raw)
-
-    all_score_matches = list(re.finditer(r"\|\s*\d+\.\s*[^|]+\|\s*(\d+)/10\s*\|", raw))
-    if len(all_score_matches) > len(parsed.raw_scores):
-        _log(
-            f"  ⚠️  Parsed {len(all_score_matches)} scores — trimming to first {len(parsed.raw_scores)} "
-            "(duplicate table in review)"
+    prompts_by_dim: dict[str, str] = {}
+    prompt_manifest = {
+        "phase": "review",
+        "mode": "per-dimension-min",
+        "module": {"level": level, "module_num": module_num, "slug": slug},
+        "reviewer": {"writer_model": writer_model, "reviewer": reviewer},
+        "prompts": [],
+    }
+    for spec in REVIEW_DIMENSIONS:
+        template_path = _resolve_phase_template_path(spec["template"], log_override=True)
+        if template_path is None or not template_path.exists():
+            _log(f"  ❌ Review template not found: {spec['template']}")
+            return False, 0.0, ""
+        prompt = template_path.read_text("utf-8")
+        for key, value in replacements.items():
+            prompt = prompt.replace(key, value)
+        if monitor_context:
+            prompt += monitor_context
+        if spec["id"] == "dialogue" and _contract_has_no_dialogue_acts(contract):
+            prompt += (
+                "\n\n## Contract Note\n\n"
+                "The shared contract has no dialogue_acts for this module. "
+                "Score Dialogue as 10.0/10 and write exactly "
+                "`N/A — module contract has no dialogue_acts.` unless the writer "
+                "added an unplanned dialogue that is itself broken.\n"
+            )
+        prompt += vesum_block
+        prompt += flag_inject
+        prompt += review_tools_section
+        prompt_path = orch_dir / f"v6-review-{spec['id']}-prompt.md"
+        prompt_path.write_text(prompt, "utf-8")
+        prompts_by_dim[spec["id"]] = prompt
+        prompt_manifest["prompts"].append(
+            {
+                "dimension": spec["id"],
+                "template": str(template_path),
+                "prompt_path": str(prompt_path),
+                "prompt_chars": len(prompt),
+            }
         )
 
+    (orch_dir / "v6-review-prompt-manifest.yaml").write_text(
+        yaml.safe_dump(prompt_manifest, sort_keys=False, allow_unicode=True),
+        "utf-8",
+    )
+    if monitor_context:
+        _log("  📡 Monitor telemetry injected")
+
+    def _run_dimension_review(spec: dict) -> PerDimensionReviewResult:
+        ok, raw = _dispatch_review_prompt(
+            prompts_by_dim[spec["id"]],
+            reviewer=reviewer,
+            reviewer_agent=reviewer_agent,
+            orch_dir=orch_dir,
+            phase=f"review-{spec['id']}",
+        )
+        if not ok or not raw:
+            raise RuntimeError(f"reviewer returned no output for {spec['id']}")
+        return _parse_per_dimension_review(
+            raw,
+            dimension_id=spec["id"],
+            dimension_name=spec["label"],
+        )
+
+    results_by_id: dict[str, PerDimensionReviewResult] = {}
+    try:
+        with ThreadPoolExecutor(max_workers=len(REVIEW_DIMENSIONS)) as executor:
+            future_map = {
+                executor.submit(_run_dimension_review, spec): spec
+                for spec in REVIEW_DIMENSIONS
+            }
+            for future in as_completed(future_map):
+                spec = future_map[future]
+                result = future.result()
+                results_by_id[spec["id"]] = result
+                _log(
+                    f"  ✅ {result.dimension_name}: {result.score:.1f}/10 — {result.verdict}"
+                )
+    except Exception as exc:
+        _log(f"  ❌ Per-dimension review failed: {exc}")
+        return False, 0.0, ""
+
+    results = [results_by_id[spec["id"]] for spec in REVIEW_DIMENSIONS]
+    verdict_score = round(min(result.score for result in results), 1)
+    weighted_average = round(
+        sum(result.score for result in results) / len(results),
+        1,
+    )
+    verdict = _review_verdict_from_score(verdict_score)
+
+    for result in results:
+        per_dim_payload = {
+            "slug": slug,
+            "round": round_num,
+            "dimension": result.dimension_id,
+            "name": result.dimension_name,
+            "score": round(result.score, 1),
+            "verdict": result.verdict,
+            "evidence": result.evidence,
+            "findings": [dict(item) for item in result.findings],
+            "fixes": [dict(item) for item in result.fixes],
+            "rewrite_blocks": [dict(item) for item in result.rewrite_blocks],
+            "review_text": result.review_text,
+        }
+        dumped = yaml.safe_dump(per_dim_payload, sort_keys=False, allow_unicode=True)
+        (review_dir / f"{slug}-review-{result.dimension_id}-r{round_num}.yaml").write_text(
+            dumped, "utf-8"
+        )
+        (review_dir / f"{slug}-review-{result.dimension_id}.yaml").write_text(
+            dumped, "utf-8"
+        )
+
+    aggregate_payload = _build_review_aggregate_payload(
+        slug=slug,
+        round_num=round_num,
+        verdict=verdict,
+        verdict_score=verdict_score,
+        weighted_average=weighted_average,
+        results=results,
+        content_filename=content_filename,
+    )
+    aggregate_raw = _build_review_aggregate_text(
+        results,
+        verdict=verdict,
+        verdict_score=verdict_score,
+        weighted_average=weighted_average,
+    )
+
+    aggregate_dump = yaml.safe_dump(aggregate_payload, sort_keys=False, allow_unicode=True)
+    versioned_path = review_dir / f"{slug}-review-r{round_num}.md"
+    versioned_path.write_text(aggregate_raw, "utf-8")
+    (review_dir / f"{slug}-review.md").write_text(aggregate_raw, "utf-8")
+    (review_dir / f"{slug}-review-aggregate-r{round_num}.yaml").write_text(
+        aggregate_dump, "utf-8"
+    )
+    (review_dir / f"{slug}-review-aggregate.yaml").write_text(
+        aggregate_dump, "utf-8"
+    )
+    (orch_dir / f"review-structured-r{round_num}.yaml").write_text(
+        aggregate_dump, "utf-8"
+    )
+    _log(f"  Review saved → {versioned_path.name} (round {round_num})")
+
+    parsed = _parse_review_result(aggregate_dump)
     if parsed.raw_scores:
-        _log(f"  Raw scores: {parsed.raw_scores}")
-        if len(parsed.raw_scores) < 9:
-            _log(f"  ⚠️  Only {len(parsed.raw_scores)}/9 dimensions parsed — score normalized")
-        _log(f"  Weighted score (calculated): {parsed.score}/10")
+        _log(f"  Dim scores: {parsed.raw_scores}")
+        _log(f"  MIN score (gate): {parsed.score}/10")
+        _log(f"  Weighted average (info only): {weighted_average}/10")
     else:
         _log("  ⚠️  Could not parse any dimension scores")
 
-    # #1321 — deterministic-dimension override.
-    #
-    # Reviewer claims like "word count 1163 below target" or
-    # "only 3 activity markers present" are verifiable facts. When
-    # the reviewer gets them wrong on a dimension, don't let the
-    # wrong dim score flip the module from PASS to REVISE — recompute
-    # deterministically, override the dim, recompute the weighted
-    # score. Purely additive (never lowers a passing dim).
-    try:
-        plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
-        word_target = 0
-        if plan_path.exists():
-            plan_data = yaml.safe_load(plan_path.read_text("utf-8")) or {}
-            word_target = int(plan_data.get("word_target", 0) or 0)
-        parsed, applied_overrides = _apply_deterministic_overrides(
-            parsed,
-            content_path=content_path,
-            level=level,
-            slug=slug,
-            word_target=word_target,
-        )
-    except Exception as exc:  # pragma: no cover - defensive, never should mask review errors
-        _log(f"  ⚠️  Deterministic override skipped: {type(exc).__name__}: {exc}")
-        applied_overrides = []
-
-    if applied_overrides:
-        _log(
-            f"  🔁 Applied {len(applied_overrides)} deterministic override(s); "
-            f"weighted score: {parsed.score}/10"
-        )
-        for ov in applied_overrides:
-            _log(
-                f"     ↳ dim {ov['dim']} ({ov['name']}): "
-                f"{ov['claim']} — reviewer {ov['reviewer_value']} vs "
-                f"deterministic {ov['deterministic_value']} "
-                f"(+{ov['delta_score']} score)"
-            )
-
-    # #1321 follow-up: persist the POST-OVERRIDE structured YAML so the
-    # audit gate (review_validation.py) sees the same scores the live
-    # review gate just enforced. Without this, a successful override
-    # would clear the live gate but leave the pre-override sub-target
-    # dim score on disk, where audit would re-flag it later.
-    _save_structured_findings_from_parsed(
-        raw, parsed, applied_overrides, orch_dir, round_num,
-    )
-
-    score = parsed.score
-    score_pass = score >= REVIEW_TARGET_SCORE
-    severity_pass = parsed.verdict == "PASS"
-
     for dim in parsed.parsed_scores:
-        dim_score = dim.get("score", 10)
-        evidence = dim.get("evidence", "")
-        # Skip overridden dims — their evidence now starts with ``[OVERRIDE``
-        # and the underlying reviewer claim was already invalidated.
-        if isinstance(evidence, str) and evidence.startswith("[OVERRIDE"):
-            continue
+        dim_score = float(dim.get("score", 10) or 10)
+        evidence = str(dim.get("evidence", ""))
         if dim_score < REVIEW_TARGET_SCORE and _evidence_has_error_keyword(evidence):
             dim_name = dim.get("name", "?")
             _log(f"  ⚠️  Dimension floor: {dim_name} = {dim_score}/10 with identified errors")
 
-    passed = parsed.passed
     if parsed.reviewer_contract_invalid:
         _log(
             "  ⚠️  Reviewer contract invalid: sub-threshold score with zero actionable "
             "findings — treating review output as non-blocking"
         )
 
-    icon = "✅" if passed else "❌"
+    icon = "✅" if parsed.passed else "❌"
     floor_msg = " (dimension floor FAIL)" if parsed.dim_floor_fail else ""
     _log(
-        f"  {icon} Review: {score}/10 (score gate: {'✅' if score_pass else '❌'}) — "
-        f"{parsed.verdict} (severity gate: {'✅' if severity_pass else '❌'}){floor_msg}"
+        f"  {icon} Review: {parsed.score}/10 (MIN gate: {'✅' if parsed.score >= REVIEW_TARGET_SCORE else '❌'}) — "
+        f"{parsed.verdict}{floor_msg}"
     )
-    emit_event("review_score", level=level, slug=slug, round=round_num, score=score)
+    emit_event("review_score", level=level, slug=slug, round=round_num, score=parsed.score)
 
-    return passed, score, raw
+    return parsed.passed, parsed.score, aggregate_raw
 
 
 def step_review_style(

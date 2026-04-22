@@ -27,6 +27,51 @@ REVIEW_RAW = """\
 Verdict: PASS
 """
 
+# Per-dimension reviewer (added in #1421) fans out one call per dimension.
+# ``REVIEW_DIMENSION_IDS`` mirrors ``REVIEW_DIMENSIONS`` in v6_build — kept in
+# test scope so a single source of truth is reachable from any test helper.
+PER_DIM_REVIEW_IDS = (
+    "factual",
+    "language",
+    "decolonization",
+    "completeness",
+    "actionable",
+    "naturalness",
+    "plan_adherence",
+    "honesty",
+    "dialogue",
+)
+
+PER_DIM_REVIEW_RAW = (
+    "## Dimension\n"
+    "id: {dim_id}\n"
+    "name: {dim_id}\n"
+    "score: 9.0/10\n"
+    "verdict: PASS\n"
+    "\n"
+    "## Evidence\n"
+    "- grounded in cited sources\n"
+    "\n"
+    "## Findings\n"
+    "None.\n"
+)
+
+
+def _write_per_dim_review_templates(phases_dir: Path, body: str) -> None:
+    """Seed all 9 per-dimension review templates into ``phases_dir``.
+
+    ``body`` is written verbatim to each per-dim template; use placeholders
+    like ``{CONTRACT_YAML}`` that the review phase will substitute.
+    """
+    review_subdir = phases_dir / "v6-review"
+    review_subdir.mkdir(parents=True, exist_ok=True)
+    for dim_id in PER_DIM_REVIEW_IDS:
+        # Template filenames in v6_build use hyphens, ids use underscores
+        # for ``plan_adherence``. The template lives at
+        # ``v6-review/v6-review-plan-adherence.md``.
+        filename = f"v6-review-{dim_id.replace('_', '-')}.md"
+        (review_subdir / filename).write_text(body, "utf-8")
+
 ACTIVITIES_RAW = (
     "# padding to clear the minimum-length guard\n" * 70
     + """\
@@ -305,30 +350,36 @@ def test_step_review_wraps_generated_content_and_reports_as_literals(
 
     phases_dir = tmp_path / "phases"
     phases_dir.mkdir(parents=True, exist_ok=True)
-    (phases_dir / "v6-review.md").write_text(
+    _write_per_dim_review_templates(
+        phases_dir,
         "Contract\n{CONTRACT_YAML}\n\nExcerpts\n{SECTION_WIKI_EXCERPTS}\n\nContent\n{GENERATED_CONTENT}\n",
-        "utf-8",
     )
 
-    captured: dict[str, str] = {}
+    captured_prompts: dict[str, str] = {}
 
     def fake_dispatch(prompt: str, *args, **kwargs):
-        captured["prompt"] = prompt
-        return True, REVIEW_RAW
+        phase = kwargs.get("phase", "")
+        captured_prompts[phase] = prompt
+        dim_id = phase.removeprefix("review-") if phase.startswith("review-") else phase
+        return True, PER_DIM_REVIEW_RAW.format(dim_id=dim_id)
 
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
     monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
     monkeypatch.setattr(v6_build, "_build_vesum_report", lambda *args, **kwargs: "<vesum_verification>verified</vesum_verification>")
     monkeypatch.setattr(v6_build, "_build_monitor_prompt_context", lambda *args, **kwargs: "\n\n## Monitor Telemetry\n\ntelemetry\n")
-    monkeypatch.setattr(v6_build, "_save_structured_findings", lambda *args, **kwargs: None)
+    monkeypatch.setattr(v6_build, "_save_structured_findings_from_parsed", lambda *args, **kwargs: None)
     monkeypatch.setattr(dispatch, "dispatch_agent", fake_dispatch)
 
     passed, score, _raw = v6_build.step_review(content_path, level, 1, slug, writer="claude")
 
     assert passed is True
     assert score == 9.0
-    prompt_text = captured["prompt"]
-    saved_prompt = (curriculum_root / level / "orchestration" / slug / "v6-review-prompt.md").read_text("utf-8")
+    # Each per-dim prompt is wrapped + sanitized identically. Spot-check
+    # one dimension's dispatched prompt and its saved artifact.
+    prompt_text = captured_prompts["review-factual"]
+    saved_prompt = (
+        curriculum_root / level / "orchestration" / slug / "v6-review-factual-prompt.md"
+    ).read_text("utf-8")
 
     for text in (prompt_text, saved_prompt):
         assert "[BEGIN MODULE CONTRACT LITERAL" in text
@@ -405,21 +456,23 @@ def test_step_review_marks_dialogue_dimension_na_when_contract_has_no_dialogue_a
 
     phases_dir = tmp_path / "phases"
     phases_dir.mkdir(parents=True, exist_ok=True)
-    (phases_dir / "v6-review.md").write_text(
-        "Contract\n{CONTRACT_YAML}\n\nContent\n{GENERATED_CONTENT}\n\n### Step 3: Score on 9 dimensions\n",
-        "utf-8",
+    _write_per_dim_review_templates(
+        phases_dir,
+        "Contract\n{CONTRACT_YAML}\n\nContent\n{GENERATED_CONTENT}\n",
     )
 
-    captured: dict[str, str] = {}
+    captured_prompts: dict[str, str] = {}
 
     def fake_dispatch(prompt: str, *args, **kwargs):
-        captured["prompt"] = prompt
-        return True, REVIEW_RAW
+        phase = kwargs.get("phase", "")
+        captured_prompts[phase] = prompt
+        dim_id = phase.removeprefix("review-") if phase.startswith("review-") else phase
+        return True, PER_DIM_REVIEW_RAW.format(dim_id=dim_id)
 
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
     monkeypatch.setattr(v6_build, "PHASES_DIR", phases_dir)
     monkeypatch.setattr(v6_build, "_build_vesum_report", lambda *args, **kwargs: "")
-    monkeypatch.setattr(v6_build, "_save_structured_findings", lambda *args, **kwargs: None)
+    monkeypatch.setattr(v6_build, "_save_structured_findings_from_parsed", lambda *args, **kwargs: None)
     monkeypatch.setattr(dispatch, "dispatch_agent", fake_dispatch)
 
     passed, score, _raw = v6_build.step_review(content_path, level, 1, slug, writer="claude")
@@ -427,12 +480,17 @@ def test_step_review_marks_dialogue_dimension_na_when_contract_has_no_dialogue_a
     assert passed is True
     assert score == 9.0
 
-    prompt_text = captured["prompt"]
-    saved_prompt = (orch_dir / "v6-review-prompt.md").read_text("utf-8")
-    for text in (prompt_text, saved_prompt):
-        assert "The shared contract explicitly has `dialogue_acts: []` for this module." in text
-        assert "Dimension 9 (**Dialogue & conversation quality**) MUST be scored as `10/10`." in text
+    # The dialogue-NA note is attached only to the dialogue-dimension prompt
+    # under the per-dim reviewer (#1421). Other dimensions must NOT carry it.
+    dialogue_prompt = captured_prompts["review-dialogue"]
+    dialogue_saved = (orch_dir / "v6-review-dialogue-prompt.md").read_text("utf-8")
+    for text in (dialogue_prompt, dialogue_saved):
+        assert "The shared contract has no dialogue_acts for this module." in text
+        assert "Score Dialogue as 10.0/10" in text
         assert "N/A — module contract has no dialogue_acts." in text
+
+    factual_prompt = captured_prompts["review-factual"]
+    assert "N/A — module contract has no dialogue_acts." not in factual_prompt
 
 
 def test_v6_review_prompt_includes_marker_only_dimension_five_rules() -> None:
