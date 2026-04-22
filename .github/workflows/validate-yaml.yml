@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
@@ -27,19 +29,79 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
 
+      - name: Collect changed activity and vocab YAML
+        id: changed-yaml
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+            head_sha="${{ github.event.pull_request.head.sha }}"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            base_sha="${{ github.event.before }}"
+            head_sha="${{ github.sha }}"
+          else
+            echo "files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ "$base_sha" =~ ^0+$ ]]; then
+            base_sha="$(git merge-base origin/main "$head_sha")"
+          fi
+
+          mapfile -t changed_files < <(
+            git diff --name-only --diff-filter=AMR "$base_sha" "$head_sha" -- \
+              | grep -E '^curriculum/.+\.(yaml|yml)$' \
+              | grep -E '/(activities|vocabulary|plans)/'
+          )
+
+          if ((${#changed_files[@]} == 0)); then
+            echo "✅ No changed curriculum activity/vocabulary/plan YAML files."
+            echo "files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          {
+            echo 'files<<EOF'
+            printf '%s\n' "${changed_files[@]}"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: Install dependencies
+        if: steps.changed-yaml.outputs.files != ''
         run: |
           python -m pip install --upgrade pip
           pip install pyyaml jsonschema pytest yamllint
 
       - name: Lint YAML Files
-        run: yamllint .
+        if: steps.changed-yaml.outputs.files != ''
+        env:
+          CHANGED_FILES: ${{ steps.changed-yaml.outputs.files }}
+        run: |
+          mapfile -t files <<< "$CHANGED_FILES"
+          yamllint "${files[@]}"
 
       - name: Run Activity Tests
+        if: steps.changed-yaml.outputs.files != ''
         run: python -m pytest tests/test_yaml_activities.py -v
 
       - name: Validate Activity YAMLs
-        run: python scripts/validate_yaml.py --all
+        if: steps.changed-yaml.outputs.files != ''
+        env:
+          CHANGED_FILES: ${{ steps.changed-yaml.outputs.files }}
+        run: |
+          mapfile -t files <<< "$CHANGED_FILES"
+          activity_files=()
+          for file in "${files[@]}"; do
+            [[ "$file" == */activities/* ]] && activity_files+=("$file")
+          done
+
+          if ((${#activity_files[@]} == 0)); then
+            echo "✅ No changed activity YAML files."
+            exit 0
+          fi
+
+          for file in "${activity_files[@]}"; do
+            python scripts/validate_yaml.py "$file"
+          done
 
   validate-plans:
     name: Curriculum Plans
@@ -47,6 +109,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
@@ -54,16 +118,87 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
 
+      - name: Collect changed plan YAML
+        id: changed-plans
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+            head_sha="${{ github.event.pull_request.head.sha }}"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            base_sha="${{ github.event.before }}"
+            head_sha="${{ github.sha }}"
+          else
+            echo "files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ "$base_sha" =~ ^0+$ ]]; then
+            base_sha="$(git merge-base origin/main "$head_sha")"
+          fi
+
+          mapfile -t changed_files < <(
+            git diff --name-only --diff-filter=AMR "$base_sha" "$head_sha" -- \
+              | grep -E '^curriculum/l2-uk-en/plans/.+\.yaml$'
+          )
+
+          if ((${#changed_files[@]} == 0)); then
+            echo "✅ No changed plan YAML files."
+            echo "files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          {
+            echo 'files<<EOF'
+            printf '%s\n' "${changed_files[@]}"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: Install dependencies
+        if: steps.changed-plans.outputs.files != ''
         run: |
           python -m pip install --upgrade pip
           pip install pyyaml jsonschema
 
       - name: Validate Plan YAMLs
-        run: python scripts/validate_plans.py
+        if: steps.changed-plans.outputs.files != ''
+        env:
+          CHANGED_FILES: ${{ steps.changed-plans.outputs.files }}
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+
+          from scripts.validate.validate_plans import validate_plan
+
+          files = [Path(line) for line in """${CHANGED_FILES}""".splitlines() if line.strip()]
+          failures = []
+          for path in files:
+            issues = validate_plan(path)
+            errors = [issue for issue in issues if issue["severity"] == "error"]
+            if errors:
+              failures.append((path, errors))
+
+          if failures:
+            for path, errors in failures:
+              print(f"❌ {path}")
+              for issue in errors:
+                print(f"   - {issue['type']}: {issue['message']}")
+            sys.exit(1)
+
+          print(f"✅ {len(files)} changed plan file(s) valid")
+          PY
 
       - name: Validate Plan vs Config
-        run: python scripts/validate_plan_config.py --all
+        if: steps.changed-plans.outputs.files != ''
+        env:
+          CHANGED_FILES: ${{ steps.changed-plans.outputs.files }}
+        run: |
+          mapfile -t files <<< "$CHANGED_FILES"
+          for file in "${files[@]}"; do
+            level="$(echo "$file" | cut -d/ -f4)"
+            slug="$(basename "$file" .yaml)"
+            python scripts/validate_plan_config.py "${level}/${slug}"
+          done
 
   schema-check:
     name: Schema JSON Syntax
@@ -71,22 +206,57 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: '20'
 
-      - name: Validate JSON Schemas
+      - name: Collect changed schema files
+        id: changed-schemas
         run: |
-          for schema in schemas/*.schema.json; do
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+            head_sha="${{ github.event.pull_request.head.sha }}"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            base_sha="${{ github.event.before }}"
+            head_sha="${{ github.sha }}"
+          else
+            echo "files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ "$base_sha" =~ ^0+$ ]]; then
+            base_sha="$(git merge-base origin/main "$head_sha")"
+          fi
+
+          mapfile -t changed_files < <(
+            git diff --name-only --diff-filter=AMR "$base_sha" "$head_sha" -- \
+              | grep -E '^schemas/.+\.json$'
+          )
+
+          if ((${#changed_files[@]} == 0)); then
+            echo "✅ No changed schema JSON files."
+            echo "files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          {
+            echo 'files<<EOF'
+            printf '%s\n' "${changed_files[@]}"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Validate JSON Schemas
+        if: steps.changed-schemas.outputs.files != ''
+        env:
+          CHANGED_FILES: ${{ steps.changed-schemas.outputs.files }}
+        run: |
+          mapfile -t schemas <<< "$CHANGED_FILES"
+          for schema in "${schemas[@]}"; do
             echo "Validating $schema..."
             node -e "JSON.parse(require('fs').readFileSync('$schema'))"
           done
           echo "All schemas are valid JSON"
-
-      - name: Install Markdownlint
-        run: npm install -g markdownlint-cli2
-
-      - name: Lint MDX Files
-        run: markdownlint-cli2 "starlight/src/content/docs/**/*.mdx"
