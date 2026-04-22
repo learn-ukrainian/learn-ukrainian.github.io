@@ -177,7 +177,10 @@ def test_runtime_auth_invalid_mode_uses_default_resolution(monkeypatch, tmp_path
     monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: fake_home))
 
     body = client.get("/api/runtime/auth").json()
-    assert body["gemini"]["auth_mode"] == "api"
+    # Always-subscription policy (2026-04-23, post-#1416): any mode other
+    # than an explicit ``api`` resolves to subscription, including invalid
+    # values. See ``resolve_gemini_auth_mode`` + commit 4f0fae3c0b.
+    assert body["gemini"]["auth_mode"] == "subscription"
     # Raw is NOT echoed — just flagged as invalid with a length.
     assert body["gemini"]["auth_mode_raw_valid"] is False
     assert body["gemini"]["auth_mode_raw_length"] == len("bogus-value")
