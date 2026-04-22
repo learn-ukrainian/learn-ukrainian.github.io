@@ -2,7 +2,7 @@ module: b1-065
 level: B1
 sequence: 65
 slug: participles-passive
-version: '3.2'
+version: '3.3'
 title: "Пасивні дієприкметники"
 subtitle: "Ознака за дією, якої зазнає предмет"
 focus: grammar
@@ -43,7 +43,7 @@ content_outline:
         (subject acts). Passive: посаджений сад — сад хтось посадив (subject receives).
         Passive participles are FAR more productive and natural in Ukrainian than
         active present participles. This is the core participle type."
-      - "Connection to M23 (passive voice): passive participles are the foundation
+      - "Connection to №23 (passive voice): passive participles are the foundation
         of -но/-то forms: прочитаний → прочитано, збудований → збудовано. The participle
         is the attributive form, -но/-то is the predicate form."
   - section: "Творення пасивних дієприкметників"

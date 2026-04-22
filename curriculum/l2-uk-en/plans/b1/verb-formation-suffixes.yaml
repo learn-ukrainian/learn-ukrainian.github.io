@@ -2,7 +2,7 @@ module: b1-032
 level: B1
 sequence: 32
 slug: verb-formation-suffixes
-version: '3.1'
+version: '3.2'
 title: Творення дієслів
 subtitle: Префікси, суфікси та способи дієслівного словотворення
 focus: grammar
@@ -51,7 +51,7 @@ content_outline:
   - section: 'Префікси: системний огляд'
     words: 850
     points:
-      - 'Group 1 — Spatial prefixes (largely covered in M29-33 for motion verbs, reviewed
+      - 'Group 1 — Spatial prefixes (largely covered in №29–33 for motion verbs, reviewed
         here for ALL verbs): в-/у- (into): вписати (to inscribe), увімкнути (to turn
         on) ви-: вимкнути, вирізати при- (toward/to):
         приєднати, прикріпити від-: відрізати
