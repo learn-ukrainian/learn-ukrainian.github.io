@@ -5,6 +5,8 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from ai_llm.fallback import (
@@ -13,6 +15,15 @@ from ai_llm.fallback import (
     PRIMARY_GEMINI_MODEL,
     call_gemini_with_fallback,
 )
+
+
+@pytest.fixture(autouse=True)
+def isolate_gemini_auth_state(monkeypatch, tmp_path):
+    monkeypatch.setenv("GEMINI_AUTH_MODE", "auto")
+    monkeypatch.setenv(
+        "LU_GEMINI_COOLDOWN_PATH",
+        str(tmp_path / "gemini-cooldown.json"),
+    )
 
 
 class _FakeProc:
