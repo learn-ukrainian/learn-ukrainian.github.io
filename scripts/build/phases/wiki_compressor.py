@@ -45,6 +45,29 @@ _STOPWORDS = {
     "has",
 }
 
+# Split article bodies on any level-2-or-deeper markdown heading.
+# Pedagogy wiki articles under `wiki/pedagogy/**` use `## Section` as their
+# primary structure (Методичний підхід, Послідовність введення, Приклади з
+# підручників, …). The previous `###+` pattern missed these H2s and collapsed
+# each article into one ~13KB "Overview" block — the trim-to-520-chars step
+# then only surfaced the generic pedagogical intro, never the concrete
+# dialogue/example sections a writer actually needs (see #1282).
+_HEADING_RE = re.compile(r"^##+\s+")
+
+# Section-name cues that indicate dialogue/role-play content. Used to append
+# the full scenario situation text to a dialogue section's ranking query
+# (stronger signal than the general scenario-token bonus).
+_DIALOGUE_SECTION_KEYWORDS = {
+    "dialogues",
+    "dialogue",
+    "діалоги",
+    "діалог",
+    "service",
+    "exchange",
+    "розмова",
+    "розмови",
+}
+
 
 def _tokenize(text: str) -> set[str]:
     normalized = unicodedata.normalize("NFKD", text or "")
@@ -104,9 +127,9 @@ def _split_article_blocks(path: str, body: str) -> list[dict]:
         })
 
     for line in lines:
-        if re.match(r"^###+?\s+", line):
+        if _HEADING_RE.match(line):
             flush()
-            heading = re.sub(r"^###+\s+", "", line).strip() or "Overview"
+            heading = re.sub(r"^##+\s+", "", line).strip() or "Overview"
             chunk = []
             continue
         chunk.append(line)
@@ -157,25 +180,80 @@ def _anchor_claim(excerpt: str) -> str:
     return parts[0].strip() if parts else excerpt.strip()
 
 
+def _build_scenario_tokens(plan: dict) -> set[str]:
+    """Return the set of scenario-context tokens derived from the plan.
+
+    Combines plan-level identity fields (``title``, ``subtitle``,
+    ``objectives``) with the full dialogue-situation context. The result is
+    used as a module-wide "what is this module actually about" signal so
+    ranking can promote blocks that describe the real scenario — not just
+    the per-section query tokens (#1282).
+    """
+    parts: list[str] = [
+        str(plan.get("title") or ""),
+        str(plan.get("subtitle") or ""),
+    ]
+    parts.extend(str(item) for item in (plan.get("objectives") or []))
+    for situation in (plan.get("dialogue_situations") or []):
+        parts.append(str(situation.get("setting", "")))
+        parts.append(str(situation.get("motivation", "")))
+        parts.extend(str(s) for s in (situation.get("speakers") or []))
+    return _tokenize(" ".join(parts))
+
+
+def _scenario_article_bonus(block_path: str, plan: dict) -> int:
+    """Return a bonus for blocks whose article path matches the plan slug.
+
+    Plans like ``at-the-cafe`` typically ship alongside a wiki article at
+    ``wiki/pedagogy/a1/at-the-cafe.md``. When that article is present in the
+    knowledge packet, its path contains the slug verbatim and we promote its
+    blocks so scenario-specific material outranks token-dense generic
+    articles (e.g. ``i-eat-i-drink.md`` matching cafe dialogues on shared
+    vocabulary like "їсти" / "пити") — the core #1282 problem.
+
+    Deliberately conservative: only a slug-substring match fires. We do not
+    score path-token overlap against arbitrary plan text, because that would
+    re-introduce the generic-wins-on-coincidence failure mode.
+    """
+    slug = str(plan.get("slug") or "").strip().lower()
+    if not slug or len(slug) < 3:
+        return 0
+    return 3 if slug in block_path.lower() else 0
+
+
 def compress_wiki_packet(
     plan: dict,
     wiki_packet: str,
     *,
     items_per_section: int = 2,
+    trace_size: int = 5,
 ) -> dict:
-    """Map wiki facts to plan sections and extract prompt-sized excerpts."""
+    """Map wiki facts to plan sections and extract prompt-sized excerpts.
+
+    Returns a dict with:
+      - ``section_excerpts``: picked top-``items_per_section`` excerpts per
+        section (fed into writer prompts).
+      - ``anchors_by_section`` / ``factual_anchors``: first-sentence anchors
+        used by the contract.
+      - ``selection_trace``: deterministic top-``trace_size`` candidate list
+        per section with full score breakdowns (query / scenario / article
+        bonuses and matched terms). Saved in ``wiki-excerpts.yaml`` for
+        inspectability (#1282 AC-3) without entering the writer prompt.
+    """
     sections = plan.get("content_outline") or []
     articles = _parse_wiki_articles(wiki_packet)
     result = {
         "section_excerpts": {},
         "anchors_by_section": defaultdict(list),
         "factual_anchors": [],
+        "selection_trace": {},
     }
 
     if not sections or not articles:
         return result
 
     all_blocks = [block for article in articles for block in article["blocks"]]
+    scenario_tokens = _build_scenario_tokens(plan)
     situation_text = " ".join(
         " ".join(
             [
@@ -186,7 +264,7 @@ def compress_wiki_packet(
         )
         for item in (plan.get("dialogue_situations") or [])
     )
-    dialogue_keywords = {"dialogues", "dialogue", "діалоги", "діалог", "service", "exchange"}
+
     for section in sections:
         name = str(section.get("section", "")).strip()
         if not name:
@@ -196,46 +274,79 @@ def compress_wiki_packet(
             + [str(point) for point in (section.get("points") or [])[:5]]
         )
         section_tokens = _tokenize(" ".join(query_parts))
-        if section_tokens & dialogue_keywords and situation_text:
+        if section_tokens & _DIALOGUE_SECTION_KEYWORDS and situation_text:
             query_parts.append(situation_text)
-        query = " ".join(query_parts)
-        query_tokens = _tokenize(query)
-        ranked: list[tuple[int, list[str], dict]] = []
+        query_tokens = _tokenize(" ".join(query_parts))
+
+        ranked: list[dict] = []
         for block in all_blocks:
-            score, overlap = _score_block(block, query_tokens)
-            if score > 0:
-                ranked.append((score, overlap, block))
-        ranked.sort(key=lambda item: (-item[0], item[2]["citation"]))
+            query_score, overlap = _score_block(block, query_tokens)
+            # Require at least one per-section query-token overlap before
+            # the scenario/article bonuses apply. Without this floor, a
+            # scenario-article block with zero section-relevance would beat
+            # a moderately-relevant generic block in a multi-section module
+            # (e.g. a grammar section inside a scenario module), starving
+            # the writer of actually-relevant generic context.
+            if query_score == 0:
+                continue
+            scenario_overlap = sorted(scenario_tokens & block["tokens"])
+            # Cap the scenario bonus so it enriches without dominating
+            # a well-matched per-section query on short sections.
+            scenario_score = min(len(scenario_overlap), 4)
+            article_score = _scenario_article_bonus(block["path"], plan)
+            total = query_score + scenario_score + article_score
+            ranked.append({
+                "block": block,
+                "total": total,
+                "query_score": query_score,
+                "scenario_score": scenario_score,
+                "article_score": article_score,
+                "matched_terms": overlap,
+                "scenario_terms": scenario_overlap[:6],
+            })
+        ranked.sort(key=lambda entry: (-entry["total"], entry["block"]["citation"]))
 
         seen_citations: set[str] = set()
         section_items: list[dict] = []
-        for score, overlap, block in ranked:
+        trace_entries: list[dict] = []
+        for entry in ranked:
+            block = entry["block"]
             citation = block["citation"]
             if citation in seen_citations:
                 continue
             seen_citations.add(citation)
-            excerpt = _trim_excerpt(block["text"])
-            item = {
+            breakdown = {
+                "query": entry["query_score"],
+                "scenario": entry["scenario_score"],
+                "article": entry["article_score"],
+            }
+            trace_entry = {
                 "citation": citation,
                 "source_path": block["path"],
                 "source_heading": block["heading"],
-                "matched_terms": overlap,
-                "score": score,
-                "excerpt": excerpt,
+                "score": entry["total"],
+                "score_breakdown": breakdown,
+                "matched_terms": entry["matched_terms"],
+                "scenario_terms": entry["scenario_terms"],
             }
-            section_items.append(item)
-            anchor = {
-                "section": name,
-                "claim": _anchor_claim(excerpt),
-                "citation": citation,
-                "matched_terms": overlap[:4],
-            }
-            result["anchors_by_section"][name].append(anchor)
-            result["factual_anchors"].append(anchor)
-            if len(section_items) >= items_per_section:
+            trace_entries.append(trace_entry)
+            if len(section_items) < items_per_section:
+                excerpt = _trim_excerpt(block["text"])
+                item = dict(trace_entry, excerpt=excerpt)
+                section_items.append(item)
+                anchor = {
+                    "section": name,
+                    "claim": _anchor_claim(excerpt),
+                    "citation": citation,
+                    "matched_terms": entry["matched_terms"][:4],
+                }
+                result["anchors_by_section"][name].append(anchor)
+                result["factual_anchors"].append(anchor)
+            if len(trace_entries) >= trace_size and len(section_items) >= items_per_section:
                 break
 
         result["section_excerpts"][name] = section_items
+        result["selection_trace"][name] = trace_entries
 
     result["anchors_by_section"] = dict(result["anchors_by_section"])
     return result

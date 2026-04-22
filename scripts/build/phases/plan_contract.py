@@ -169,6 +169,7 @@ def build_contract(
     return contract, {
         "sections": compression["section_excerpts"],
         "factual_anchors": compression["factual_anchors"],
+        "selection_trace": compression.get("selection_trace", {}),
     }
 
 

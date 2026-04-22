@@ -3177,11 +3177,17 @@ def _format_contract_prompt_artifacts(
     section_map = excerpts.get("sections") or {}
     excerpt_payload: dict
     if section_title is None:
-        excerpt_payload = (
-            {"sections": section_map}
-            if mode == "write"
-            else excerpts
-        )
+        if mode == "write":
+            excerpt_payload = {"sections": section_map}
+        else:
+            # selection_trace is persisted to wiki-excerpts.yaml for
+            # inspectability (#1282 AC-3) but is not prompt material —
+            # strip it so it doesn't bloat the writer/review context.
+            excerpt_payload = {
+                key: value
+                for key, value in excerpts.items()
+                if key != "selection_trace"
+            }
     else:
         excerpt_payload = {
             "section": section_title,
