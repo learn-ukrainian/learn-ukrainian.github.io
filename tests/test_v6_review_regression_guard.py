@@ -7,9 +7,9 @@ The tests exercise ``_run_review_heal_loop`` with the heavy pieces
 monkeypatched out:
 
 * ``step_review`` → a scripted sequence of (passed, score, text)
-* ``_apply_review_fixes`` / ``_apply_review_rewrite_blocks`` /
-  ``_apply_contract_word_budget_rewrites`` → no-ops that mutate
-  the content file when a test wants to simulate a bad round
+* ``_apply_review_fixes`` / ``_apply_review_rewrite_blocks`` → no-ops
+  that mutate the content file when a test wants to simulate a bad
+  round
 * ``step_verify`` → no-op
 * ``check_contract_compliance`` → returns no violations
 
@@ -66,10 +66,6 @@ def _patch_noop_side_effects(monkeypatch: pytest.MonkeyPatch) -> None:
     """Stub the heavy parts of the heal loop that aren't under test."""
     monkeypatch.setattr(
         v6_build, "_apply_review_rewrite_blocks",
-        lambda *a, **kw: (False, 0),
-    )
-    monkeypatch.setattr(
-        v6_build, "_apply_contract_word_budget_rewrites",
         lambda *a, **kw: (False, 0),
     )
     monkeypatch.setattr(v6_build, "step_verify", lambda *a, **kw: None)
