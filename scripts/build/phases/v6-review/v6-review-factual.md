@@ -72,7 +72,7 @@ Score **Factual** from 1.0 to 10.0.
 - Review only the factual dimension.
 - Quote the exact passage(s) that triggered the score.
 - If you identify a fixable problem, emit a `<fixes>` block with exact find/replace pairs.
-- If a problem is factual but not safely patchable, emit `<rewrite-block section="...">...</rewrite-block>`.
+- If a problem is factual but not safely patchable, explain the limitation in findings and use `REJECT`.
 
 Use exactly this format:
 

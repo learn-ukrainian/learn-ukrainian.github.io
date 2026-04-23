@@ -758,7 +758,6 @@ class PerDimensionReviewResult:
     review_text: str
     findings: tuple[dict, ...]
     fixes: tuple[dict, ...]
-    rewrite_blocks: tuple[dict, ...]
 
 
 @dataclass(frozen=True)
@@ -5502,7 +5501,6 @@ def _parse_per_dimension_review(
         review_text=review_text,
         findings=tuple(_extract_structured_findings(review_text)),
         fixes=tuple(_parse_review_fixes(review_text)),
-        rewrite_blocks=tuple(_parse_rewrite_blocks(review_text)),
     )
 
 
@@ -5542,20 +5540,6 @@ def _render_fixes_block(fixes: list[dict]) -> str:
     return f"<fixes>\n{payload}\n</fixes>"
 
 
-def _render_rewrite_blocks(blocks: list[dict]) -> str:
-    """Render combined rewrite directives."""
-    if not blocks:
-        return ""
-    rendered = []
-    for block in blocks:
-        rendered.append(
-            f'<rewrite-block section="{block.get("section", "")}">\n'
-            f'{block.get("directive", "")}\n'
-            f"</rewrite-block>"
-        )
-    return "\n\n".join(rendered)
-
-
 def _build_review_aggregate_text(
     results: list[PerDimensionReviewResult],
     *,
@@ -5570,9 +5554,6 @@ def _build_review_aggregate_text(
     )
     fixes = _dedupe_yaml_items(
         [dict(item) for result in results for item in result.fixes]
-    )
-    rewrite_blocks = _dedupe_yaml_items(
-        [dict(item) for result in results for item in result.rewrite_blocks]
     )
     lowest = [
         result.dimension_name for result in results if result.score == verdict_score
@@ -5620,10 +5601,6 @@ def _build_review_aggregate_text(
     fixes_block = _render_fixes_block(fixes)
     if fixes_block:
         lines.extend(["", fixes_block])
-
-    rewrite_text = _render_rewrite_blocks(rewrite_blocks)
-    if rewrite_text:
-        lines.extend(["", rewrite_text])
 
     return "\n".join(lines).rstrip() + "\n"
 
@@ -7767,7 +7744,6 @@ def step_review(content_path: Path, level: str, module_num: int,
             "evidence": result.evidence,
             "findings": [dict(item) for item in result.findings],
             "fixes": [dict(item) for item in result.fixes],
-            "rewrite_blocks": [dict(item) for item in result.rewrite_blocks],
             "review_text": result.review_text,
         }
         dumped = yaml.safe_dump(per_dim_payload, sort_keys=False, allow_unicode=True)
@@ -8169,26 +8145,6 @@ def _normalize_activity_markers_to_contract(content: str, contract: dict) -> str
         cursor = match.end()
     rebuilt.append(content[cursor:])
     return "".join(rebuilt)
-
-
-def _parse_rewrite_blocks(review_text: str) -> list[dict]:
-    """Parse reviewer `<rewrite-block section="...">...</rewrite-block>` directives."""
-    text = review_text
-    if text.strip().startswith("```"):
-        text = re.sub(r"^```\w*\n?", "", text.strip())
-        text = re.sub(r"\n?```\s*$", "", text)
-
-    blocks: list[dict] = []
-    pattern = re.compile(
-        r"<rewrite-block\s+section=\"([^\"]+)\"\s*>(.*?)</rewrite-block>",
-        re.DOTALL | re.IGNORECASE,
-    )
-    for match in pattern.finditer(text):
-        section = match.group(1).strip()
-        directive = _strip_prompt_control_tags(match.group(2)).strip()
-        if section and directive:
-            blocks.append({"section": section, "directive": directive})
-    return blocks
 
 
 def _apply_review_fixes(
@@ -8707,33 +8663,6 @@ def _rewrite_block_section(
     return True
 
 
-def _apply_review_rewrite_blocks(
-    review_text: str,
-    content_path: Path,
-    *,
-    level: str,
-    module_num: int,
-    slug: str,
-    writer: str,
-) -> tuple[bool, int]:
-    blocks = _parse_rewrite_blocks(review_text)
-    if not blocks:
-        return False, 0
-    applied = 0
-    for block in blocks:
-        if _rewrite_block_section(
-            content_path,
-            level=level,
-            module_num=module_num,
-            slug=slug,
-            writer=writer,
-            section_name=block["section"],
-            directive=block["directive"],
-        ):
-            applied += 1
-    return applied > 0, applied
-
-
 def _parse_style_review_payload(review_text: str) -> dict | None:
     """Parse the YAML payload from a style review response."""
     try:
@@ -9123,19 +9052,9 @@ def _run_review_heal_loop(
             level=level,
             slug=slug,
         )
-        rewrite_applied, rewrite_count = _apply_review_rewrite_blocks(
-            review_text,
-            content_path,
-            level=level,
-            module_num=module_num,
-            slug=slug,
-            writer=writer,
-        )
         if fixes_applied:
             _log(f"\n🔧 Applied {fix_count} deterministic fix(es) from R{round_index}")
-        if rewrite_applied:
-            _log(f"\n✍️ Applied {rewrite_count} block rewrite(s) from R{round_index}")
-        if fixes_applied or rewrite_applied:
+        if fixes_applied:
             step_verify(content_path, level, module_num)
 
         contract, _ = _ensure_contract_artifacts(
@@ -9253,9 +9172,9 @@ def _run_review_heal_loop(
         # Bug #1316 Bug B — post-mutation confirmation review.
         #
         # The loop records the reviewer's ``passed`` / ``score`` from the
-        # review that ran BEFORE fixes / rewrites / word-budget rewrites
-        # were applied. If the loop now wants to plateau (either because of
-        # two small deltas or because we hit the round ceiling), that
+        # review that ran BEFORE fixes / word-budget rewrites were
+        # applied. If the loop now wants to plateau (either because of two
+        # small deltas or because we hit the round ceiling), that
         # decision is based on a stale score that doesn't reflect the
         # mutations this round. When mutations happened, run one
         # confirmation review on the now-current content and replace the
@@ -9266,7 +9185,7 @@ def _run_review_heal_loop(
         # resolved the reviewer's complaints. If the confirmation review
         # passes, the plateau becomes a pass; otherwise the plateau still
         # fires, but at least on honest data.
-        mutated_this_round = fixes_applied or rewrite_applied
+        mutated_this_round = fixes_applied
         if decision.outcome == "plateau" and mutated_this_round:
             _log(
                 f"\n🔁 Running post-mutation confirmation review on R{round_index}'s "
