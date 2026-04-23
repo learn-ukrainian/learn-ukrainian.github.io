@@ -5,8 +5,9 @@ context for injection into build prompts (all tracks — core and seminar).
 """
 
 import re
-import unicodedata
 from pathlib import Path
+
+from common.text_utils import strip_ukrainian_stress
 
 from .config import TRACK_DOMAINS, WIKI_DIR
 from .sources_schema import load_sources_registry, registry_path_for
@@ -154,8 +155,7 @@ def get_wiki_context(
 
 
 def _normalize_text(text: str) -> str:
-    normalized = unicodedata.normalize("NFKD", text or "")
-    stripped = "".join(ch for ch in normalized if not unicodedata.combining(ch))
+    stripped = strip_ukrainian_stress(text or "")
     return re.sub(r"[-_/.:]+", " ", stripped)
 
 

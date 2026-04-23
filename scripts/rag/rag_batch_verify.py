@@ -19,11 +19,11 @@ import argparse
 import json
 import re
 import sys
-import unicodedata
 from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
+from common.text_utils import strip_ukrainian_stress
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -35,15 +35,6 @@ PROJECT_ROOT = SCRIPT_DIR.parent
 sys.path.insert(0, str(SCRIPT_DIR))
 
 
-# ---------------------------------------------------------------------------
-# Stress-mark stripping
-# ---------------------------------------------------------------------------
-# Combining diacritical marks used for stress in Ukrainian text
-_COMBINING_MARKS = {
-    "\u0301",  # combining acute accent (most common stress mark)
-    "\u0300",  # combining grave accent
-    "\u030B",  # combining double acute
-}
 _APOSTROPHE_TRANSLATION = str.maketrans({
     "\u2019": "'",
     "\u2018": "'",
@@ -54,14 +45,8 @@ _TRAILING_JOINERS = "-'\u2019\u2018\u02BCʼ`"
 
 
 def strip_stress(text: str) -> str:
-    """Remove combining accent marks from Ukrainian text.
-
-    Normalizes to NFD, strips combining marks used for stress,
-    then re-normalizes to NFC.
-    """
-    nfd = unicodedata.normalize("NFD", text)
-    cleaned = "".join(ch for ch in nfd if ch not in _COMBINING_MARKS)
-    return unicodedata.normalize("NFC", cleaned)
+    """Remove Ukrainian acute stress marks without corrupting й/ї."""
+    return strip_ukrainian_stress(text)
 
 
 def normalize_apostrophes(text: str) -> str:
@@ -74,7 +59,7 @@ def normalize_apostrophes(text: str) -> str:
 # ---------------------------------------------------------------------------
 # Require at least 2 characters to avoid single-letter noise (abbreviations, etc.)
 _UKRAINIAN_WORD_RE = re.compile(
-    r"[а-яіїєґА-ЯІЇЄҐ][а-яіїєґА-ЯІЇЄҐ'\u2019\u2018ʼ\u0027\u02BC-]+"
+    r"[а-яіїєґА-ЯІЇЄҐ][а-яіїєґА-ЯІЇЄҐ'\u2019\u2018ʼ\u0027\u02BC-\u0301]+"
 )
 
 
@@ -84,19 +69,13 @@ def tokenize_all_ukrainian(text: str) -> list[tuple[str, str]]:
     Returns: [(original_form, clean_form), ...]
     where clean_form has stress marks stripped and is lowercased.
 
-    Strips combining diacritics BEFORE regex matching so that stress-marked
-    words like зва́ти are captured as single tokens (not split into зва + ти).
-
     Does NOT filter stop words.
     Preserves original casing for proper noun detection in report.
     """
-    # Strip stress marks before tokenization to avoid word-splitting
-    stripped_text = strip_stress(text)
-
     tokens = []
-    for match in _UKRAINIAN_WORD_RE.finditer(stripped_text):
+    for match in _UKRAINIAN_WORD_RE.finditer(text):
         original = match.group()
-        clean = normalize_apostrophes(original.lower())
+        clean = normalize_apostrophes(strip_stress(original).lower())
         # Strip trailing hyphens/apostrophes that regex may capture
         clean = clean.rstrip(_TRAILING_JOINERS)
         original = original.rstrip(_TRAILING_JOINERS)
