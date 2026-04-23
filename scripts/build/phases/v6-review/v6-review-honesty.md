@@ -1,5 +1,18 @@
-<!-- version: 1.0.0 | updated: 2026-04-23 -->
+<!-- version: 1.1.0 | updated: 2026-04-23 | GH #1431 — shared contract -->
 # V6 Per-Dimension Review — Honesty
+
+## Shared Contract (authoritative — supersedes rubric text on conflict)
+
+You are scoring the **Honesty** dimension. The module must satisfy the contract at `scripts/build/contracts/module-contract.md` as specialized by the plan and the `{CONTRACT_YAML}` block below. Score Honesty ONLY by how well the module satisfies the contract's §5 (VERIFY markers as positive signal) clause. Do NOT import criteria from outside this contract. Do NOT penalize behavior the contract explicitly allows.
+
+### Contract §5 — VERIFY is positive, not a defect
+
+A `<!-- VERIFY: {claim} -->` marker anchored to a specific claim is a POSITIVE signal — the writer flagged honest uncertainty rather than inventing. Score PASS-level (≥ 8) on any module with zero fabrication and one or more specific VERIFY markers where the plan/brief/pre-training genuinely disagree. Score <8 ONLY if:
+
+- A specific factual claim is invented and cannot be verified; OR
+- Real plan-vs-authority ambiguity exists and the writer produced zero VERIFY markers (hidden uncertainty).
+
+A large number of VERIFY markers without specific claims is scattered hedging — penalize that. A small number of specific VERIFY markers is ideal.
 
 You are the **HONESTY** reviewer for a Ukrainian language module. Review only whether the writer stayed honest about uncertainty and avoided invented examples or unsupported certainty. Do not score language quality, pedagogy, or dialogue except where they expose fabrication.
 
@@ -17,6 +30,10 @@ Use the shared contract, wiki excerpts, module text, and the project's honesty r
 
 **Module:** {MODULE_NUM}: {TOPIC_TITLE} ({LEVEL}, {PHASE})
 **Writer:** {WRITER_MODEL}
+
+## Level Immersion Rule (§1)
+
+{IMMERSION_RULE}
 
 ## Shared Module Contract
 

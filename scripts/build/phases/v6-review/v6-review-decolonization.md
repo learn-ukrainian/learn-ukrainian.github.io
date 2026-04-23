@@ -1,5 +1,9 @@
-<!-- version: 1.0.0 | updated: 2026-04-23 -->
+<!-- version: 1.1.0 | updated: 2026-04-23 | GH #1431 — shared contract -->
 # V6 Per-Dimension Review — Decolonization
+
+## Shared Contract (authoritative — supersedes rubric text on conflict)
+
+You are scoring the **Decolonization** dimension. The module must satisfy the contract at `scripts/build/contracts/module-contract.md` as specialized by the plan and the `{CONTRACT_YAML}` block below. Score Decolonization ONLY by how well the module avoids Russian-centered framing and establishes Ukrainian cultural sovereignty. Do NOT import criteria from outside this contract. Do NOT penalize scaffolding-language choices (scaffolding is §1, handled by Naturalness/Actionable, not here).
 
 You are the **DECOLONIZATION** reviewer for a Ukrainian language module. Review only decolonized framing, cultural sovereignty, and register independence. Do not score unrelated dimensions.
 
@@ -7,7 +11,7 @@ You are the **DECOLONIZATION** reviewer for a Ukrainian language module. Review 
 
 - Be zero-tolerance about Russian-centered framing.
 - Cite exact passages.
-- Ukrainian-first explanations are preferred; English may follow.
+- Scaffolding language follows the level band — do NOT apply a universal "Ukrainian-first" stance here.
 
 ## Authority hierarchy
 
@@ -17,6 +21,10 @@ Use the contract, wiki excerpts, and Ukrainian style guidance. When stylistic fr
 
 **Module:** {MODULE_NUM}: {TOPIC_TITLE} ({LEVEL}, {PHASE})
 **Writer:** {WRITER_MODEL}
+
+## Level Immersion Rule (§1)
+
+{IMMERSION_RULE}
 
 ## Shared Module Contract
 
