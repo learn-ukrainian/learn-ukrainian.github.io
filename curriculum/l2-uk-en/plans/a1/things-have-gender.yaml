@@ -31,8 +31,8 @@ objectives:
 - Розпізнавати рід за закінченнями слів (приголосний = ч, -а/-я = ж, -о/-е = с)
 - Називати понад 20 поширених предметів із правильним родом
 - Використовувати конструкцію "У мене є" з предметами (розширення теми родини з модуля модуль №6)
-- Свідомо не переносити рід з російської — вміти застосувати український тест `він/вона/воно` на двох демонстраційних парах (`біль` ч.р. vs рос. `боль` ж.р.; `степ` ч.р. vs рос. `степь` ж.р.)
-- Використовувати фемінітив як основну форму професії для жінки (`вчителька`, `лікарка`) — а не узагальнений чоловічий варіант
+- Застосовувати український тест `він/вона/воно` до будь-якого іменника — зокрема там, де інтуїція з іншої мови могла б дати неправильну відповідь (діагностична міні-вправа з 5 пунктів; детальна таблиця у wiki «Типові помилки L2»)
+- Використовувати фемінітив як основну форму професії для жінки (`вчителька`, `лікарка`)
 dialogue_situations:
 - setting: 'Вдома або під час відеодзвінка з демонстрацією кімнати. Учні вказують на повсякденні предмети та вживають із ними слова він/вона/воно: стіл, книга, вікно, лампа, ліжко, телефон, а також кілька знайомих домашніх улюбленців чи речей, як-от кіт та дзеркало.'
   speakers:
@@ -59,7 +59,7 @@ content_outline:
   words: 300
   points:
   - 'Визначення роду в 3 кроки: 1. Скажіть він/вона/воно з іменником — що підходить? 2. Перевірте закінчення — приголосний? -а/-я? -о/-е? 3. Використовуйте правильний присвійний займенник — мій/моя/моє. Самоперевірка: Якого роду слово "стіл"? Якого роду слово "книга"? А як щодо "вікно"? Скажіть українською, що у вас є стілець.'
-  - 'УВАГА до автора: (а) на A1 подавати `мій стіл / моя ручка / моє вікно / велике яблуко / синє море` як неподільні чанки — НЕ пояснювати повну парадигму відмінювання прикметників, тверду/м''яку групу, узгодження у множині чи відмінювання присвійних займенників. (б) Дві демонстраційні пари гендерного «перекидання» з російської (`біль` ч.р., `степ` ч.р.) подати як міні-підказку в кінці модуля, не як окрему вправу; детальну таблицю див. wiki розділ "Типові помилки L2". (в) Для професій (`вчителька`, `лікарка`) використовувати фемінітив як основну форму, коли мова про жінку, — не «Вона — лікар».'
+  - 'УВАГА до автора: (а) на A1 подавати `мій стіл / моя ручка / моє вікно / велике яблуко / синє море` як неподільні чанки — НЕ пояснювати повну парадигму відмінювання прикметників, тверду/м''яку групу, узгодження у множині чи відмінювання присвійних займенників. (б) Діагностична gender-flip міні-вправа (activity_hints[4], 5 пунктів) — короткий фінальний дрил на 5 хвилин, що дзеркалить п''ять рядків wiki «Типові помилки L2». НЕ робити з неї окрему повноцінну лексичну тему: слова `біль`, `степ`, `розпис`, `літопис`, `путь` — діагностичні опори, не module vocab. (в) Для професій (`вчителька`, `лікарка`) використовувати фемінітив як основну форму, коли мова про жінку, — не «Вона — лікар».'
 vocabulary_hints:
   required:
   - стіл (table, m)
@@ -83,8 +83,9 @@ vocabulary_hints:
   - стіна (wall, f)
   - вчителька / учителька (teacher, f — feminitive, VESUM-verified; mirror of вчитель / учитель m)
   - лікарка (doctor, f — feminitive, VESUM-verified; mirror of лікар m)
-  - біль (pain, m — demo pair for gender-flip: ж.р. in Russian; wiki "Типові помилки L2")
-  - степ (steppe, m — demo pair for gender-flip: ж.р. in Russian; wiki "Типові помилки L2")
+# NOTE: `біль`, `степ`, `розпис`, `літопис`, `путь` — NOT in vocabulary_hints.
+# They are diagnostic props for the gender-flip quiz (activity_hints[4]),
+# not A1 module vocab. Wiki "Типові помилки L2" carries the full table.
 activity_hints:
 - type: group-sort
   focus: Розподіліть предмети за родами (чоловічий/жіночий/середній)
@@ -100,10 +101,25 @@ activity_hints:
   items: 6
 - type: quiz
   focus: >-
-    Рід не як у російській — оберіть український займенник (він / вона / воно).
-    Віддзеркалює wiki "Типові помилки L2" + Приклад 5. Усі правильні відповіді
-    перевірено в VESUM. На A1 достатньо 2-3 пари (`біль`, `степ` + одна на вибір).
-  items: 4
+    Gender-flip diagnostic — оберіть український займенник (він / вона / воно).
+    Дзеркалить п'ять рядків wiki "Типові помилки L2" + Приклад 5 один-до-одного
+    (AC-3 drift check). Усі правильні відповіді перевірено в VESUM.
+  items:
+  - question: Який у мене сильний ___ у плечі! (БІЛЬ)
+    options: [він, вона, воно]
+    answer: він
+  - question: Український ___ широкий і вітряний. (СТЕП)
+    options: [він, вона, воно]
+    answer: він
+  - question: Цей ___ на стіні — робота українського художника. (РОЗПИС)
+    options: [він, вона, воно]
+    answer: він
+  - question: Давній ___ «Повість временних літ» розповідає про Київську Русь. (ЛІТОПИС)
+    options: [він, вона, воно]
+    answer: він
+  - question: 'Книжне / урочисте: «У далеку ___» — форма ж.р. (ПУТЬ, зворотний напрям)'
+    options: [він, вона, воно]
+    answer: вона
 connects_to:
 - a1-009 (Яке воно?)
 prerequisites:
@@ -112,7 +128,7 @@ grammar:
 - 'Рід іменників: чоловічий (він, мій), жіночий (вона, моя), середній (воно, моє)'
 - 'Визначення роду за закінченням: приголосний=ч, -а/-я=ж, -о/-е=с'
 - 'Конструкція "У мене є", розширена на предмети (з теми родини у модулі №6)'
-- 'Принцип «рід визначає українська мова»: якщо російський відповідник має інший рід, український тест він/вона/воно все одно вирішує (демо: біль ч.р., степ ч.р.)'
+- 'Діагностичний принцип: український рід визначає VESUM-парадигма + тест він/вона/воно. П''ять показових пар (`біль`, `степ`, `розпис`, `літопис`, `путь`) у wiki «Типові помилки L2» + quiz №5 в activity_hints.'
 - 'Фемінітиви як основна форма назви професії для жінки: вчителька, лікарка (НЕ «Вона — вчитель»)'
 register: розмовний
 references:
@@ -138,15 +154,12 @@ changelog:
 - version: '1.2.0'
   date: '2026-04-23'
   changes:
-  - 'Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md.'
-  - 'Added lifecycle markers (lifecycle / reviewed_at / reviewed_by / review_notes) matching at-the-cafe (#1412) and who-am-i (#1436) convention.'
-  - 'Added two objectives: (a) gender-flip awareness with `біль` ч.р. / `степ` ч.р. as demo pairs; (b) feminitive as primary form for female professions.'
-  - 'Added feminitive pairs `вчителька / учителька`, `лікарка` plus gender-flip demo words `біль`, `степ` to recommended vocabulary_hints — mirrors locked wiki Декол. #4 and "Типові помилки L2" table.'
-  - 'Added two grammar items: (a) principle "рід визначає українська мова" + demo pairs; (b) feminitive as primary form. Each mapped to new objectives.'
-  - 'Added fifth activity_hint (gender-flip quiz, 4 items) mirroring wiki Приклад 5.'
-  - 'Added writer-note point in section "Підсумок": five indivisible chunks (`мій стіл` etc.); gender-flip pairs handled as micro-tip not standalone drill; feminitive-first rule for professions.'
+  - 'Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md (rubric template: at-the-cafe #1412, who-am-i #1436).'
+  - 'Added lifecycle markers (lifecycle / reviewed_at / reviewed_by / review_notes).'
+  - 'Added two objectives: (a) diagnostic принцип «український тест він/вона/воно + VESUM-парадигма» (5-item mini-drill); (b) feminitive as primary form for female professions.'
+  - 'Added feminitive pairs `вчителька / учителька`, `лікарка` to recommended vocabulary_hints — mirrors locked wiki Декол. #4. Gender-flip demo words (`біль`, `степ`, `розпис`, `літопис`, `путь`) are intentionally NOT in vocabulary_hints — they live only in activity_hints[4] quiz items as diagnostic props (writer-note in Підсумок makes this explicit).'
+  - 'Added two grammar items: (a) diagnostic principle + five demo pairs; (b) feminitive as primary form. Each mapped to new objectives.'
+  - 'Added fifth activity_hint (gender-flip quiz, 5 enumerated items one-to-one with wiki Типові помилки L2 five rows) — satisfies rubric AC-3 drift check.'
+  - 'Added writer-note in section Підсумок: five indivisible chunks (`мій стіл` etc.); gender-flip treated as short diagnostic mini-drill mirroring wiki; feminitive-first rule for female professions.'
   - 'Added wiki back-reference to references list.'
-- version: '1.1.3'
-  date: '2026-03 (pre-lock)'
-  changes:
-  - 'Pre-lock: three iterations from batch-audit. Not tracked in this changelog beyond the 1.2.0 lock.'
+  - 'Post-Codex-adversarial-review tightening: (a) wiki Типові помилки L2 table shrunk 9 → 5 rows (addresses Goroh нестандартне-form nuance for `ярмарка` and rubric AC-3 compliance); (b) objective 5 rephrased from "не переносити рід з російської" → positive-framing "застосовувати український тест … зокрема там, де інтуїція з іншої мови могла б дати неправильну відповідь" (reduces D3 rubric-cap risk); (c) grammar item 4 similarly rephrased; (d) `кір` removed from wiki Exercise 5 (off-scope A1) — replaced with `розпис`; (e) `ярмарок` dropped from both wiki table and plan/wiki exercises; (f) Anglicism `Мірор` → `Дзеркалить` fixed.'
