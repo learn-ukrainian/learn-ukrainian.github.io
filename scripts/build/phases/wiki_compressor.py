@@ -6,6 +6,8 @@ import re
 import unicodedata
 from collections import defaultdict
 
+TOKENIZER_VERSION = "2026-04-23"
+
 _TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яІіЇїЄєҐґ'][A-Za-zА-Яа-яІіЇїЄєҐґ'’-]{1,}")
 _STOPWORDS = {
     "але",
