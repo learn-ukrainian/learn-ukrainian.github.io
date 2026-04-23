@@ -2,7 +2,23 @@ module: a1-002
 level: A1
 sequence: 2
 slug: reading-ukrainian
-version: '1.2.2'
+version: '1.3.0'
+lifecycle: locked
+reviewed_at: '2026-04-23T00:00:00Z'
+reviewed_by: claude-opus-4-7-xhigh-reading-ukrainian
+review_notes: >-
+  Review-and-lock pass for A1 scale batch input. See
+  wiki/.reviews/pedagogy/a1/reading-ukrainian-review-LOCKED.md for the
+  wiki-side report (5-dim, all ≥9); see PR body for the plan-side
+  findings (pragmatic / Russianism / calque / contradiction /
+  references / cross-pair drift). The plan was brought into alignment
+  with the locked wiki by (a) adding a reading-specific L2 error-drill
+  activity that mirrors the wiki's new "Типові помилки L2" table, (b)
+  adding a `references:` block with a back-reference to the locked
+  wiki, (c) adding lifecycle markers per
+  docs/best-practices/wiki-plan-review-and-lock.md. No Russianisms,
+  calques, or homoglyphs detected in plan prose; Latin-in-Cyrillic
+  homoglyph scan is clean.
 title: Читаємо українською
 subtitle: Від літер до слів та речень
 focus: phonetics
@@ -69,6 +85,17 @@ activity_hints:
 - type: odd-one-out
   focus: 'Яке слово зайве? — за кількістю складів (односкладове серед двоскладових)'
   items: 6
+- type: match-up
+  focus: 'Типові помилки L2 при читанні (mirror wiki "Типові помилки L2" table). З''єднайте слово з типом помилки, яку воно перевіряє.'
+  items:
+  - день: 'Ігнорування м''якого знака: [ден] замість [ден′]'
+  - сім'я: 'Злиття через апостроф: [сіма] замість [сімйа́]'
+  - дякую: 'Йотована після приголосного: [дйакуйу] замість [д''а́куйу]'
+  - Україна: '`Ї` → [і]: [Украіна] замість [Украйі́на]'
+  - борщ: '`Щ` → [ш]: [борш] замість [боршч]'
+  - джміль: '`ДЖ` як два звуки: [д]-[жміль] замість [джміль]'
+  - молоко: 'Читання по літерах замість по складах'
+  - огірок: 'Неправильне членування на склади при переносі (`о-гі-рок`, не `о-гірок`)'
 connects_to:
 - a1-003 (Особливі знаки)
 prerequisites:
@@ -90,3 +117,19 @@ references:
   notes: Звуковий аналіз слова — як аналізувати звуки у слові.
 - title: Захарійчук 1 клас (НУШ 2025), стор. 13-15
   notes: 'Позначення звуків: [•] для голосних, [–] для приголосних, [=] для м''яких.'
+- title: Вашуленко, Українська мова 2 клас, стор. 23-27
+  notes: 'Правила переносу, наголос як носій значення (сі́м''я/сім''я́, о́бід/обі́д), йотовані голосні.'
+- title: Кравцова, Українська мова 2 клас, стор. 13
+  notes: 'Кінестетичний тест «долоня під підборіддям» для підрахунку складів.'
+- title: 'Wiki: pedagogy/a1/reading-ukrainian (LOCKED 2026-04-23)'
+  notes: 'Authoritative pedagogical brief — see Кроки 1–7 (sequencing), "Типові помилки L2" (reading-specific decoding errors — 8 rows), and Приклад 5 (partner-diagnostic drill closing the loop).'
+- title: 'Wiki: pedagogy/a1/sounds-letters-and-hello (LOCKED 2026-04-23)'
+  notes: 'Sibling wiki for sound-production; this wiki (reading-ukrainian) targets the decoding-from-print slice — intentional overlap on Ь/apostrophe/iotated/Щ/ДЖ/ДЗ, deliberate distinction in framing (production vs. decoding).'
+changelog:
+- version: '1.3.0'
+  date: '2026-04-23'
+  changes:
+  - 'Review-and-lock pass. Added lifecycle markers (lifecycle/reviewed_at/reviewed_by/review_notes) per docs/best-practices/wiki-plan-review-and-lock.md.'
+  - 'Added new match-up activity: reading-specific L2 error drill (8 items, mirrors wiki "Типові помилки L2" table — closes the wiki-plan drift on reading errors).'
+  - 'Consolidated `references:` block: added Вашуленко, Кравцова textbook entries and back-references to both locked sibling wikis (reading-ukrainian + sounds-letters-and-hello). Previous bottom-of-file `references:` had only 3 Большакова/Захарійчук entries.'
+  - 'Removed duplicate `references:` block at end of file (was a pre-existing inconsistency — YAML takes the first occurrence; the tail duplicate was silently ignored).'
