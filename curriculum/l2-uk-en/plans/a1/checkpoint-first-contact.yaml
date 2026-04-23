@@ -2,13 +2,13 @@ module: a1-007
 level: A1
 sequence: 7
 slug: checkpoint-first-contact
-version: '1.2.0'
+version: '1.2.1'
 lifecycle: locked
 reviewed_at: '2026-04-23T09:43:24Z'
 reviewed_by: claude-opus-4-7-xhigh-scale-batch-1
 review_notes: >-
   Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md,
-  following the at-the-cafe (PR #1415) template. Wiki-side report:
+  following the at-the-cafe (#1412 / PR #1415) template. Wiki-side report:
   wiki/.reviews/pedagogy/a1/checkpoint-first-contact-review-LOCKED.md
   (5-dim scores 9/9/9/9/9). Plan-side findings addressed: (1) pragmatic
   register mismatch — `setting` reframed from formal conference to peer-
@@ -32,11 +32,11 @@ objectives:
 - Самостійно оцінювати знання звуків, літер, привітань та фраз для знайомства
 - Поєднувати всі навички рівня A1.1 у зв'язному мовленні
 dialogue_situations:
-- setting: 'Перший день мовних курсів — двоє студентів знайомляться під час перерви: розповідають про себе, родину і майбутню професію (ти-регістр, peer-to-peer)'
+- setting: 'Перший день мовних курсів — двоє студентів знайомляться під час перерви: розповідають про себе, родину і майбутню професію (ти-регістр, рівноправний студентський контекст).'
   speakers:
-  - Богдан (student from Dnipro, майбутній інженер)
-  - Соломія (student from Ternopil, майбутня вчителька)
-  motivation: 'Закріплення: ім''я, прізвище, походження, професія, родина — повна розповідь про себе у ти-регістрі. УВАГА до автора: peer-to-peer контекст обрано навмисно — він природно мотивує і ти-регістр, і розмову про родину (на конференції професіоналів родинна лексика не є доречною темою знайомства).'
+  - Богдан (студент із Дніпра, майбутній інженер)
+  - Соломія (студентка з Тернополя, майбутня вчителька)
+  motivation: 'Закріплення: ім''я, прізвище, походження, професія, родина — повна розповідь про себе у ти-регістрі. УВАГА до автора: рівноправний студентський контекст обрано навмисно — він природно мотивує і ти-регістр, і розмову про родину (на конференції професіоналів родинна лексика не є доречною темою знайомства).'
 content_outline:
 - section: Що ми знаємо?
   words: 200
@@ -46,7 +46,7 @@ content_outline:
   words: 250
   points:
   - 'Короткий український текст (8-10 речень) з використанням ТІЛЬКИ лексики з модулів №1–6. Жодних нових слів. Учень читає вголос. Зміст: Людина розповідає про себе, описує родину, згадує професії, каже, звідки вона родом.'
-  - 'За зразком оглядового епізоду Anna Ep10 "Я і моя сім''я".'
+  - 'За зразком оглядового епізоду Анни (ULP, епізод 10) «Я і моя сім''я».'
 - section: Граматика
   words: 200
   points:
@@ -54,9 +54,9 @@ content_outline:
 - section: Діалог
   words: 400
   points:
-  - 'Повне знайомство — комплексний діалог, що поєднує ВСЕ з рівня A1.1. Ситуація: зустріч із новою людиною у peer-to-peer контексті (мовні курси, студентське орієнтування). Повний цикл: привітання → ім''я → прізвище → походження → професія → родина → прощання. Якщо учень розуміє та може відтворити цей діалог, рівень A1.1 пройдено.'
+  - 'Повне знайомство — комплексний діалог, що поєднує ВСЕ з рівня A1.1. Ситуація: зустріч із новою людиною у рівноправному студентському контексті (мовні курси, студентське орієнтування). Повний цикл: привітання → ім''я → прізвище → походження → професія → родина → прощання. Якщо учень розуміє та може відтворити цей діалог, рівень A1.1 пройдено.'
   - 'Зв''язний монолог: власна розповідь учня про себе. Привіт! Мене звати [ім''я]. Моє прізвище [прізвище]. Я з [країна]. Я [національність]. Я — [професія]. Моя мама — [професія]. Мій тато — [професія]. У мене є [родина]. Дуже приємно познайомитися! Це випускна промова рівня A1.1.'
-  - 'УВАГА до автора (типові помилки L2 для A1.1 — див. wiki §"Типові помилки L2"): НЕ використовуйте `папа` у значенні "батько" (нормативне: `тато`); НЕ використовуйте `фамілія` (нормативне: `прізвище`); НЕ використовуйте кальку `Моє ім''я є Іван` (нормативне: `Мене звати Іван`); НЕ використовуйте форсоване `Я є студент` (нормативне: `Я студент`); НЕ використовуйте кальку `Я маю 25 років` (нормативне: `Мені 25 років`); НЕ використовуйте `Здрастуйте` / `Пока` (нормативні привітання та прощання: `Добрий день` / `До побачення`). Тримайте ти-регістр до кінця діалогу — НЕ змішуйте з Ви.'
+  - 'УВАГА до автора (типові помилки L2 для A1.1 — див. вікі-статтю, розділ «Типові помилки L2»): НЕ використовуйте `папа` у значенні "батько" (нормативне: `тато`); НЕ використовуйте `фамілія` (нормативне: `прізвище`); НЕ використовуйте кальку `Моє ім''я є Іван` (нормативне: `Мене звати Іван`); НЕ використовуйте форсоване `Я є студент` (нормативне: `Я студент`); НЕ використовуйте кальку `Я маю 25 років` (нормативне: `Мені 25 років`); НЕ використовуйте `Здрастуйте` / `Пока` (нормативні привітання та прощання: `Добрий день` / `До побачення`). Тримайте ти-регістр до кінця діалогу — НЕ змішуйте з Ви.'
 - section: Підсумок
   words: 150
   points:
@@ -110,10 +110,14 @@ references:
 - title: 'Wiki: pedagogy/a1/checkpoint-first-contact (LOCKED 2026-04-23)'
   notes: 'Authoritative pedagogical brief — see Крок 6 (чекпойнт-інтеграція A1.1) and "Типові помилки L2" (A1.1 self-introduction Surzhyk / calque table). The Діалог and Підсумок sections in this plan are hooks into those wiki sections.'
 changelog:
+- version: '1.2.1'
+  date: '2026-04-23'
+  changes:
+  - 'Address AC-3 cross-agent (Codex) adversarial-review findings: BLOCKER — removed 6 Latin-in-Ukrainian-prose tokens flagged as #1392 D1/D7 drift (`peer-to-peer` ×3 → `рівноправний студентський контекст`; `student from Dnipro` / `student from Ternopil` → `студент із Дніпра` / `студентка з Тернополя`; `Anna Ep10` → `Анни (ULP, епізод 10)`). MEDIUM — disambiguated at-the-cafe template provenance (#1412 issue / PR #1415). MEDIUM — LOCKED review now contains explicit #1392 D1–D7 systemic-defect scan. NIT — residual non-blockers in LOCKED review documents why the 8th wiki Surzhyk row (`Я із Росії`) is intentionally not mirrored in the drill activity.'
 - version: '1.2.0'
   date: '2026-04-23'
   changes:
-  - 'Review-and-lock pass (scale batch 1, per docs/best-practices/wiki-plan-review-and-lock.md, #1415 at-the-cafe template).'
+  - 'Review-and-lock pass (scale batch 1, per docs/best-practices/wiki-plan-review-and-lock.md, #1412 at-the-cafe template — landed as PR #1415).'
   - 'Reframed dialogue_situations[0].setting from formal conference (Ви-register, professional first-meeting) to peer-to-peer language-meetup (ти-register, student context) — resolves pragmatic mismatch between setting and the ти-register Привіт!-monologue in Діалог section, and makes family-topic content situationally coherent.'
   - 'Added integration vocabulary_hints.recommended (знайомство, професія, національність, походження, Вітаю, Дуже приємно, Мені теж, тато) to hook locked wiki Step 6.'
   - 'Added new fill-in activity "Типові помилки A1.1" mirroring locked wiki "Типові помилки L2" table (7 A1.1-specific Surzhyk / calque pairs).'
