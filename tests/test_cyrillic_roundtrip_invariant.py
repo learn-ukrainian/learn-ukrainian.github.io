@@ -323,7 +323,12 @@ def _reconstruct_from_chunks(text: str, chunks: list[str]) -> str:
 def _roundtrip_params() -> list[object]:
     params = []
     for path in ROUND_TRIPPERS:
-        for case_id in path.case_ids:
+        # Sort frozenset iteration to keep test collection deterministic
+        # across pytest-xdist workers. Without this, gw0 and gw1 see
+        # different test IDs and xdist refuses to run. Frozensets hash
+        # differently per Python invocation (PYTHONHASHSEED), so iteration
+        # order is not stable across the subprocesses xdist spawns.
+        for case_id in sorted(path.case_ids):
             case = CASES_BY_ID[case_id]
             params.append(pytest.param(path, case, id=f"{path.name}[{case_id}]"))
     return params
