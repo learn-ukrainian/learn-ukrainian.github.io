@@ -29,6 +29,7 @@ from slug_utils import status_path as _status_path
 from slug_utils import to_bare_slug
 
 REPO = Path(__file__).parent.parent.parent
+VENV_PYTHON = REPO / ".venv" / "bin" / "python"
 MAX_RETRIES = 3
 PASS_THRESHOLD = 9.0
 SUSPICIOUS_JUMP = 3.5  # Flag if score jumps more than this in one fix
@@ -267,7 +268,7 @@ def call_gemini(prompt_path: Path, task_id: str, model: str) -> Path:
     )
     result = subprocess.run(
         [
-            sys.executable, str(REPO / "scripts/ai_agent_bridge/__main__.py"),
+            str(VENV_PYTHON), str(REPO / "scripts/ai_agent_bridge/__main__.py"),
             "ask-gemini",
             "-",  # read prompt from stdin
             "--task-id", task_id,
@@ -290,7 +291,7 @@ def call_gemini_review(prompt_path: Path, task_id: str, model: str) -> Path:
     full_prompt = f"{prompt_content}\n\nWrap the ENTIRE review between ===REVIEW_START=== and ===REVIEW_END=== delimiters."
     result = subprocess.run(
         [
-            sys.executable, str(REPO / "scripts/ai_agent_bridge/__main__.py"),
+            str(VENV_PYTHON), str(REPO / "scripts/ai_agent_bridge/__main__.py"),
             "ask-gemini",
             "-",  # read prompt from stdin
             "--task-id", task_id,

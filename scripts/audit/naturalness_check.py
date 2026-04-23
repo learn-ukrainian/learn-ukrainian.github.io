@@ -18,6 +18,7 @@ from pathlib import Path
 import yaml
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
+VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 if str(PROJECT_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
@@ -101,7 +102,7 @@ def call_gemini(prompt: str, task_id: str) -> tuple[str, dict]:
     try:
         result = subprocess.run(
             [
-                sys.executable,
+                str(VENV_PYTHON),
                 str(PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"),
                 "ask-gemini",
                 "-",  # read prompt from stdin
@@ -148,7 +149,7 @@ def call_claude_headless(prompt: str, task_id: str) -> tuple[str, dict]:
     try:
         result = subprocess.run(
             [
-                sys.executable,
+                str(VENV_PYTHON),
                 str(PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"),
                 "ask-claude",
                 prompt,

@@ -15,6 +15,7 @@ from batch_gemini_config import FLASH_MODEL
 from slug_utils import to_bare_slug
 
 REPO = Path(__file__).parent.parent.parent
+VENV_PYTHON = REPO / ".venv" / "bin" / "python"
 
 
 def find_module_files(level: str, num: int) -> dict | None:
@@ -226,7 +227,7 @@ def research_module(level: str, num: int, model: str, dry_run: bool = False) -> 
     try:
         result = subprocess.run(
             [
-                sys.executable, str(REPO / "scripts/ai_agent_bridge/__main__.py"),
+                str(VENV_PYTHON), str(REPO / "scripts/ai_agent_bridge/__main__.py"),
                 "ask-gemini", "-",
                 "--task-id", task_id,
                 "--output-path", output_path,

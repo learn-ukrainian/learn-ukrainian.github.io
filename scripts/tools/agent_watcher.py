@@ -67,6 +67,7 @@ def _get_login_env() -> dict:
 LOGIN_ENV = _get_login_env()
 
 # Configuration
+VENV_PYTHON = Path(__file__).parent.parent.parent / ".venv" / "bin" / "python"
 DB_PATH = Path(__file__).parent.parent.parent / ".mcp/servers/message-broker/messages.db"
 PID_FILE = Path(__file__).parent.parent.parent / ".mcp/servers/message-broker/watcher.pid"
 LOG_FILE = Path(__file__).parent.parent.parent / ".mcp/servers/message-broker/watcher.log"
@@ -312,7 +313,7 @@ def trigger_agent(agent: str, message_id: int, task_id: str | None = None, from_
     try:
         bridge_cmd = agents[agent]["bridge_command"]
         cmd = [
-            sys.executable,
+            str(VENV_PYTHON),
             str(BRIDGE_SCRIPT),
             bridge_cmd,
             str(message_id)
