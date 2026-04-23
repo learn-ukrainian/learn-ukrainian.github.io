@@ -4,7 +4,7 @@
 - **Review date:** 2026-04-23
 - **Reviewer:** claude-opus-4-7, effort=xhigh (review-and-lock per `docs/best-practices/wiki-plan-review-and-lock.md`)
 - **Rubric:** 5-dimension wiki rubric (factual / language / decolonization / completeness / actionable), target ≥9 on each. Template applied: `at-the-cafe` (PR #1412, `wiki/.reviews/pedagogy/a1/at-the-cafe-review-LOCKED.md`).
-- **Prior state:** No formal wiki review existed (wiki last compiled 2026-04-21). Fresh review + lock in one round.
+- **Prior state:** No formal wiki review existed (wiki last compiled 2026-04-21). Fresh review + lock in one round, plus one Codex adversarial-review round that surfaced a BLOCKER on sources-sidecar traceability (fixed) and two MEDIUMs on plan grammar↔objectives mapping and Exercise 5 item count (fixed).
 - **Fixes applied:** see branch `claude/scale-who-am-i-review-and-lock` and the associated PR.
 
 ## Gaps identified on intake (vs. the locked at-the-cafe template)
@@ -18,7 +18,7 @@
 
 ## Fixes applied
 
-1. Added new **Типові помилки L2 (Common L2 Errors — introductions-specific Surzhyk)** section with seven pairs, fully VESUM-verified:
+1. Added new **Типові помилки L2 (Common L2 Errors — introductions-specific Surzhyk)** section with seven pairs, fully VESUM-verified [S8] and (where semantic trap matters) СУМ-11-verified [S9]:
    - `папа` (father) → `тато` — СУМ-11 confirms `папа` = "pope" only.
    - `жена` → `дружина` — `жена` absent from VESUM.
    - `врач` → `лікар` / `лікарка` — `врач` absent from VESUM.
@@ -29,8 +29,10 @@
 2. Converted vocabulary section to the `Українською | Англійською | Рівень | Джерело` table format, 28 entries + writer-note pinning 5 indivisible chunks (`Мене звати + Ім'я`, `Як тебе/вас звати?`, `Я з + country`, `Дуже приємно`, `А тебе? / А вас?`).
 3. Added echo-question pattern to **Крок 1**, explicitly warning against the `А у тебе?` reciprocal (#1392 Defect 2: genitive-after-preposition should not surface at A1).
 4. Added feminitives writer-instruction to **Крок 6** and new decolonization point **#5**.
-5. Added new **Exercise 5** in "Приклади з підручників" that drills the six Surzhyk pairs in the minimal context of self-introduction (mirrors at-the-cafe's Exercise 3).
+5. Added new **Exercise 5** in "Приклади з підручників" that drills all seven Surzhyk pairs in the minimal context of self-introduction (mirrors at-the-cafe's Exercise 3).
 6. Added `last_reviewed: 2026-04-23`, `lifecycle: locked`, `reviewed_by: claude-opus-4-7-xhigh` to wiki-meta block.
+7. Extended `wiki/pedagogy/a1/who-am-i.sources.yaml` with dictionary authorities **S8 (VESUM)** and **S9 (СУМ-11)**, cited inline at every claim site in Крок 6, Декол. #5, the "Типові помилки L2" table, and Exercise 5. Sidecar now supports the LOCKED review's "every claim sourced" language (fixed the Codex-flagged BLOCKER on sidecar traceability).
+8. Added two `grammar:` items to the plan to mirror the two new objectives introduced by this pass (echo-reciprocal chunk + normative-contrast pattern), so `grammar` ↔ `objectives` remain bidirectionally mapped.
 
 ## Dimension scores
 
@@ -40,7 +42,7 @@
 | 2 | Ukrainian language quality | **9/10** | Zero Russianisms in instructional text. The new "Типові помилки L2" table *explicitly shows* seven introductions-specific Russianism/calque pairs with cited authority. All right-column tokens (and their requested inflected forms `папу`, `тата`, `інженерка`, etc.) verified in VESUM. All left-column tokens confirmed absent from VESUM or flagged semantically via СУМ-11. Echo pattern `А тебе?` preferred over `А у тебе?` prevents the #1392 Defect 2 genitive-drag pattern. |
 | 3 | Decolonization | **9/10** | Old section (4 points) preserved; new point #5 addresses feminitives explicitly as a distinctly-Ukrainian feature (Russian lacks productive feminitive morphology for professions). Surzhyk table frames each Russianism with *which* Russian word it calques — teaching the asymmetry rather than hiding it. The `А у тебе?` avoidance note inside Крок 1 doubles as decolonization (it's a direct Ukrainian idiom vs. a Russian-model reciprocal). |
 | 4 | Completeness | **9/10** | Gap 1 (Surzhyk table) closed via new section + Exercise 5. Gap 2 (vocabulary table) closed via table rewrite + writer-note. Gap 3 (chunk guidance) closed via writer-note pinning 5 A1 chunks. Gap 4 (echo pattern) closed in Крок 1. Gap 5 (feminitives) closed via Крок 6 addition + decolonization #5. A writer using this wiki now has explicit guidance on: chunk boundaries, reciprocal echo pattern, feminitives as primary form for a female learner, and café-equivalent Surzhyk drill. |
-| 5 | Actionable guidance | **9/10** | Every example is now directly liftable: five original exercises from the 5-class textbook corpus, plus a new Exercise 5 that drills exactly the seven Surzhyk pairs from the new table. Writer-note inside "Словниковий мінімум" enumerates five indivisible chunks (no adjective declension, no `з+gen` analysis, no full accusative pronoun paradigm) so the writer cannot over-teach. Крок 1's echo-pattern note is a literal sentence the writer can paste into dialogue. |
+| 5 | Actionable guidance | **9/10** | Every example is now directly liftable: four original exercises from the 5-class textbook corpus, plus a new Exercise 5 that drills all seven Surzhyk pairs from the new table. Writer-note inside "Словниковий мінімум" enumerates five indivisible chunks (no adjective declension, no `з+gen` analysis, no full accusative pronoun paradigm) so the writer cannot over-teach. Крок 1's echo-pattern note is a literal sentence the writer can paste into dialogue. |
 
 **Overall: 9/10 — LOCKED.**
 
@@ -68,3 +70,4 @@ This LOCKED state should be revisited if any of the following happen:
 - `німеччина` and proper nouns like `Штати`, `Україна` return no hit in case-sensitive VESUM verification — this is a VESUM proper-noun handling artifact, not evidence of absence. The inflection `зі Штатів` is used in the paired plan without issue.
 - The wiki explicitly does NOT teach `Мене звуть` (alternative 3pl-like form — VESUM confirms `звуть` / `зовуть` both exist as valid `звати` forms). Decision: A1 teaches the single canonical chunk `Мене звати` to avoid variant overload; `Мене звуть` is a content-review concern for higher CEFR levels, not a wiki gap at A1.
 - Dialogue situation "Орієнтаційний день в університеті" (plan-side) mixes formal `Ви` for professor/group address with informal `ти` for peer chitchat — this is acceptable setting realism but will be watched in the module-build v6 review pass; not a wiki concern.
+- Plan word-count sum is 1250 vs `word_target: 1200` — within +5 % tolerance, not a contradiction for the purposes of AC-2 check #4 but flagged here for precision (Codex adversarial-review NIT).
