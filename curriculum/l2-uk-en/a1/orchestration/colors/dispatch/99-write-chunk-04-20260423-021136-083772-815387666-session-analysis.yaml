@@ -1,0 +1,48 @@
+session_path: ''
+phase: write-chunk-04
+prompt_chars: 10897
+response_chars: 2043
+prompt_words: 1621
+response_words: 310
+sections:
+- name: header
+  start: 0
+  length: 416
+  fraction: 0.0382
+- name: skeleton
+  start: 416
+  length: 1822
+  fraction: 0.1672
+- name: prior_summary
+  start: 2238
+  length: 8482
+  fraction: 0.7784
+- name: output_spec
+  start: 10720
+  length: 177
+  fraction: 0.0162
+large_sections:
+- prior_summary
+directives_total: 15
+directives_covered: 10
+directives_missed:
+- kind: must
+  text: Sweep up any required words that earlier sections did not naturally cover.
+  covered: false
+  coverage_note: 2/11 keywords (18%)
+- kind: inject_activity
+  text: fill-in-color-agreement
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-hard-soft
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-blue-vs-lightblue
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-appearance
+  covered: false
+  coverage_note: marker missing

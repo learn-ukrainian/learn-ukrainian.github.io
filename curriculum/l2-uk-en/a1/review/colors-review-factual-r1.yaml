@@ -1,0 +1,88 @@
+slug: colors
+round: 1
+dimension: factual
+name: Factual
+score: 7.4
+verdict: REVISE
+evidence: '- Українською: `Adjectives in Ukrainian are strictly divided into these
+  hard and soft groups.` English: The packet supports teaching two inflection patterns
+  for color adjectives in this lesson, but...'
+findings:
+- dimension: FACTUAL
+  severity: major
+  location: '`Adjectives in Ukrainian are strictly divided into these hard and soft
+    groups.`'
+  issue: 'Українською: Це надто широке граматичне узагальнення. Контракт і `pedagogy/a1/colors.md`
+    тут підтверджують лише навчальну рамку для кольорів: тверда група `-ий` проти
+    м''якої `-ій`, з акцентом на `синій`. Формула `strictly divided` про всі прикметники
+    виходить за межі підтвердженого.
+
+    English: This is an overgeneralization. The source supports a lesson-specific
+    contrast for color adjectives, not a universal statement about the entire adjective
+    system.'
+  fix: 'Замінити на формулювання, обмежене рамкою цього уроку: “For this lesson, color
+    adjectives are presented through two inflection patterns: hard and soft groups.”'
+- dimension: FACTUAL
+  severity: minor
+  location: '`When someone''s hair turns grey with age, we do not use «сірий» (the
+    color of a stone or an animal). Instead, we use the specific adjective for hair
+    and say «сиве волосся» (grey hair).`'
+  issue: 'Українською: Правильний чанк `сиве волосся` подано вірно, але речення перебільшує:
+    пакет дає позитивну норму `сиве волосся`, а не доводить категоричну заборону `сірий`;
+    вставка про “stone or an animal” також не має опори в джерелах.
+
+    English: The target collocation is correct, but the wording is too absolute and
+    adds an unsupported gloss.'
+  fix: 'Пом''якшити до описової норми: “When describing grey hair, Ukrainian normally
+    uses «сиве волосся».”'
+fixes:
+- find: Adjectives in Ukrainian are strictly divided into these hard and soft groups.
+    Learning «синій» now prepares you for other soft adjectives later.
+  replace: 'For this lesson, color adjectives are presented through two inflection
+    patterns: hard and soft groups. Learning «синій» now prepares you for other soft
+    adjectives later.'
+- find: When someone's hair turns grey with age, we do not use «сірий» (the color
+    of a stone or an animal). Instead, we use the specific adjective for hair and
+    say «сиве волосся» (grey hair).
+  replace: When describing grey hair, Ukrainian normally uses «сиве волосся».
+rewrite_blocks: []
+review_text: "## Dimension\nid: factual\nname: Factual\nscore: 7.4/10\nverdict: REVISE\n\
+  \n## Evidence\n- Українською: `Adjectives in Ukrainian are strictly divided into\
+  \ these hard and soft groups.`\n  English: The packet supports teaching two inflection\
+  \ patterns for color adjectives in this lesson, but this sentence overstates that\
+  \ as a universal fact about all adjectives.\n- Українською: `When someone's hair\
+  \ turns grey with age, we do not use «сірий» (the color of a stone or an animal).\
+  \ Instead, we use the specific adjective for hair and say «сиве волосся» (grey hair).`\n\
+  \  English: `сиве волосся` is the correct anchored collocation, but the blanket\
+  \ ban on `сірий` and the gloss “the color of a stone or an animal” are not supported\
+  \ by the cited packet. СУМ-11 positively defines `сивий` for hair; that does not\
+  \ prove the stronger prohibition as written.\n\n## Findings\n[FACTUAL] [SEVERITY:\
+  \ major]\nLocation: `Adjectives in Ukrainian are strictly divided into these hard\
+  \ and soft groups.`\nIssue: Українською: Це надто широке граматичне узагальнення.\
+  \ Контракт і `pedagogy/a1/colors.md` тут підтверджують лише навчальну рамку для\
+  \ кольорів: тверда група `-ий` проти м'якої `-ій`, з акцентом на `синій`. Формула\
+  \ `strictly divided` про всі прикметники виходить за межі підтвердженого.\nEnglish:\
+  \ This is an overgeneralization. The source supports a lesson-specific contrast\
+  \ for color adjectives, not a universal statement about the entire adjective system.\n\
+  Fix: Замінити на формулювання, обмежене рамкою цього уроку: “For this lesson, color\
+  \ adjectives are presented through two inflection patterns: hard and soft groups.”\n\
+  \n[FACTUAL] [SEVERITY: minor]\nLocation: `When someone's hair turns grey with age,\
+  \ we do not use «сірий» (the color of a stone or an animal). Instead, we use the\
+  \ specific adjective for hair and say «сиве волосся» (grey hair).`\nIssue: Українською:\
+  \ Правильний чанк `сиве волосся` подано вірно, але речення перебільшує: пакет дає\
+  \ позитивну норму `сиве волосся`, а не доводить категоричну заборону `сірий`; вставка\
+  \ про “stone or an animal” також не має опори в джерелах.\nEnglish: The target collocation\
+  \ is correct, but the wording is too absolute and adds an unsupported gloss.\nFix:\
+  \ Пом'якшити до описової норми: “When describing grey hair, Ukrainian normally uses\
+  \ «сиве волосся».”\n\n## Verdict Reason\nФактичне ядро модуля загалом тримається\
+  \ контракту: `синій` / `блакитний`, `карі очі`, `русяве волосся`, `сиве волосся`\
+  \ подані в правильному напрямі. Оцінку знижують два місця, де автор переходить від\
+  \ підтверджених фактів до надто широких або надто категоричних тверджень.\n\n<fixes>\n\
+  - find: \"Adjectives in Ukrainian are strictly divided into these hard and soft\
+  \ groups. Learning «синій» now prepares you for other soft adjectives later.\"\n\
+  \  replace: \"For this lesson, color adjectives are presented through two inflection\
+  \ patterns: hard and soft groups. Learning «синій» now prepares you for other soft\
+  \ adjectives later.\"\n- find: \"When someone's hair turns grey with age, we do\
+  \ not use «сірий» (the color of a stone or an animal). Instead, we use the specific\
+  \ adjective for hair and say «сиве волосся» (grey hair).\"\n  replace: \"When describing\
+  \ grey hair, Ukrainian normally uses «сиве волосся».\"\n</fixes>"

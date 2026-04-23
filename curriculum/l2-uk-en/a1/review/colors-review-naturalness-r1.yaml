@@ -1,0 +1,193 @@
+slug: colors
+round: 1
+dimension: naturalness
+name: Naturalness
+score: 4.8
+verdict: REJECT
+evidence: '- Українською: Модуль системно звучить як перекладена мета-розповідь, а
+  не як живе українське пояснення: "This first conversation features Natalka selecting
+  flowers for a special event.", "We will...'
+findings:
+- dimension: NATURALNESS
+  severity: critical
+  location: Діалоги / "This first conversation features Natalka selecting flowers
+    for a special event. She speaks with a seller to find the perfect combination
+    of bright spring colors."
+  issue: 'Українською: Це чиста англомовна підводка з рекламно-шаблонним тоном. Так
+    не починає український навчальний модуль.
+
+    English: It reads like AI scene-setting, not teacher prose.'
+  fix: '"У першому діалозі Наталка вибирає квіти для букета й питає про їхній колір."'
+- dimension: NATURALNESS
+  severity: major
+  location: Діалоги / "The phrase «мені подобаються» is a ready-made expression for
+    personal preferences. The adjective in «жовті соняшники» explicitly uses the plural
+    ending, and такі форми використовуються naturally in conversation."
+  issue: 'Українською: Речення ламане, з англійським синтаксисом і механічною термінологією
+    на кшталт "explicitly uses". Воно звучить не як українське пояснення, а як сирий
+    машинний мікс.
+
+    English: The code-switching is especially unnatural here.'
+  fix: '"Вислів «мені подобаються» краще запам''ятати як готову мовну модель. У словосполученні
+    «жовті соняшники» маємо форму множини, і в живому мовленні вона звучить природно."'
+- dimension: NATURALNESS
+  severity: major
+  location: Кольори / "When asking about the color of an object in Ukrainian, we use
+    the phrase якого кольору? (what color?). In natural speech, the immediate response
+    is often just the adjective. This provides a clear short відповідь before building
+    a full sentence."
+  issue: 'Українською: Уся підводка побудована як переклад з англійської. Формула
+    "clear short відповідь" неприродна й псує довіру до тексту.'
+  fix: '"Коли питаємо про колір, уживаємо формулу «Якого кольору?». У відповіді часто
+    досить одного слова: «Червоний», «Червона», «Біле»."'
+- dimension: NATURALNESS
+  severity: major
+  location: Кольори / "We will look at 12 базових кольорів, podілених на дві групи
+    за типами прикметників. Most of these belong to the hard group. Ця Тверда група
+    follows the exact same `-ий/-а/-е/-і` gender agreement pattern you already know."
+  issue: 'Українською: Це суцільна штучна мішанина мов і термінів. Український викладач
+    скаже простіше й суцільно однією мовою.'
+  fix: '"Розгляньмо 12 базових кольорів. Більшість із них належить до твердої групи
+    й змінюється за зразком `-ий/-а/-е/-і`."'
+- dimension: NATURALNESS
+  severity: major
+  location: 'Синій ≠ блакитний / "В українській мові ми активно вчимо пару слів для
+    цього кольору: «синій» та «блакитний»."'
+  issue: 'Українською: "активно вчимо пару слів" звучить канцелярсько й неприродно.
+    Тут потрібне просте пояснення різниці, а не методичний штамп.'
+  fix: '"В українській мові розрізняємо дві назви цього кольору: «синій» і «блакитний»."'
+- dimension: NATURALNESS
+  severity: critical
+  location: Підсумок / "To master the vocabulary in this lesson, you must apply the
+    grammar concepts from a previous module («модуль»)."
+  issue: 'Українською: Це жорстка перекладна інструкція з англомовним ритмом. У підсумку
+    вона звучить особливо неживо й формально.
+
+    English: The summary opens like a workbook translation, not natural Ukrainian
+    pedagogy.'
+  fix: '"Щоб упевнено вживати ці слова, повторімо узгодження прикметників із іменниками."'
+- dimension: NATURALNESS
+  severity: major
+  location: Підсумок / "Your primary tool for communication is the question «Якого
+    кольору...?». The base noun «колір» is masculine, but it changes form here."
+  issue: 'Українською: Формули "primary tool for communication" і "base noun" неприродні
+    для українського навчального стилю. Це не пояснення, а технічний переказ.'
+  fix: '"Головна мовна формула цього модуля — «Якого кольору...?». Після неї зазвичай
+    відповідаємо коротко: «зелений», «біла», «сіре»."'
+fixes:
+- find: This first conversation features Natalka selecting flowers for a special event.
+    She speaks with a seller to find the perfect combination of bright spring colors.
+  replace: У першому діалозі Наталка вибирає квіти для букета й питає про їхній колір.
+- find: The phrase «мені подобаються» is a ready-made expression for personal preferences.
+    The adjective in «жовті соняшники» explicitly uses the plural ending, and такі
+    форми використовуються naturally in conversation.
+  replace: Вислів «мені подобаються» краще запам'ятати як готову мовну модель. У словосполученні
+    «жовті соняшники» маємо форму множини, і в живому мовленні вона звучить природно.
+- find: When asking about the color of an object in Ukrainian, we use the phrase якого
+    кольору? (what color?). In natural speech, the immediate response is often just
+    the adjective. This provides a clear short відповідь before building a full sentence.
+  replace: 'Коли питаємо про колір, уживаємо формулу «Якого кольору?». У відповіді
+    часто досить одного слова: «Червоний», «Червона», «Біле».'
+- find: We will look at 12 базових кольорів, podілених на дві групи за типами прикметників.
+    Most of these belong to the hard group. Ця Тверда група follows the exact same
+    `-ий/-а/-е/-і` gender agreement pattern you already know.
+  replace: Розгляньмо 12 базових кольорів. Більшість із них належить до твердої групи
+    й змінюється за зразком `-ий/-а/-е/-і`.
+- find: 'В українській мові ми активно вчимо пару слів для цього кольору: «синій»
+    та «блакитний».'
+  replace: 'В українській мові розрізняємо дві назви цього кольору: «синій» і «блакитний».'
+- find: To master the vocabulary in this lesson, you must apply the grammar concepts
+    from a previous module («модуль»).
+  replace: Щоб упевнено вживати ці слова, повторімо узгодження прикметників із іменниками.
+- find: Your primary tool for communication is the question «Якого кольору...?». The
+    base noun «колір» is masculine, but it changes form here.
+  replace: 'Головна мовна формула цього модуля — «Якого кольору...?». Після неї зазвичай
+    відповідаємо коротко: «зелений», «біла», «сіре».'
+rewrite_blocks: []
+review_text: "## Dimension\nid: naturalness\nname: Naturalness\nscore: 4.8/10\nverdict:\
+  \ REJECT\n\n## Evidence\n- Українською: Модуль системно звучить як перекладена мета-розповідь,\
+  \ а не як живе українське пояснення: \"This first conversation features Natalka\
+  \ selecting flowers for a special event.\", \"We will look at 12 базових кольорів,\
+  \ поділених на дві групи за типами прикметників.\", \"To master the vocabulary in\
+  \ this lesson, you must apply the grammar concepts from a previous module...\"\n\
+  \  English: Repeated English-led framing makes the prose feel generated and non-native.\n\
+  - Українською: Є гібридні й шаблонні речення, де українська вмонтована в англійський\
+  \ каркас: \"This provides a clear short відповідь before building a full sentence.\"\
+  , \"The adjective in «жовті соняшники» explicitly uses the plural ending, and такі\
+  \ форми використовуються naturally in conversation.\"\n  English: This kind of mixed-code\
+  \ exposition is a strong naturalness failure.\n\n## Findings\n[NATURALNESS] [SEVERITY:\
+  \ critical]\nLocation: Діалоги / \"This first conversation features Natalka selecting\
+  \ flowers for a special event. She speaks with a seller to find the perfect combination\
+  \ of bright spring colors.\"\nIssue: Українською: Це чиста англомовна підводка з\
+  \ рекламно-шаблонним тоном. Так не починає український навчальний модуль.\nEnglish:\
+  \ It reads like AI scene-setting, not teacher prose.\nFix: \"У першому діалозі Наталка\
+  \ вибирає квіти для букета й питає про їхній колір.\"\n\n[NATURALNESS] [SEVERITY:\
+  \ major]\nLocation: Діалоги / \"The phrase «мені подобаються» is a ready-made expression\
+  \ for personal preferences. The adjective in «жовті соняшники» explicitly uses the\
+  \ plural ending, and такі форми використовуються naturally in conversation.\"\n\
+  Issue: Українською: Речення ламане, з англійським синтаксисом і механічною термінологією\
+  \ на кшталт \"explicitly uses\". Воно звучить не як українське пояснення, а як сирий\
+  \ машинний мікс.\nEnglish: The code-switching is especially unnatural here.\nFix:\
+  \ \"Вислів «мені подобаються» краще запам'ятати як готову мовну модель. У словосполученні\
+  \ «жовті соняшники» маємо форму множини, і в живому мовленні вона звучить природно.\"\
+  \n\n[NATURALNESS] [SEVERITY: major]\nLocation: Кольори / \"When asking about the\
+  \ color of an object in Ukrainian, we use the phrase якого кольору? (what color?).\
+  \ In natural speech, the immediate response is often just the adjective. This provides\
+  \ a clear short відповідь before building a full sentence.\"\nIssue: Українською:\
+  \ Уся підводка побудована як переклад з англійської. Формула \"clear short відповідь\"\
+  \ неприродна й псує довіру до тексту.\nFix: \"Коли питаємо про колір, уживаємо формулу\
+  \ «Якого кольору?». У відповіді часто досить одного слова: «Червоний», «Червона»,\
+  \ «Біле».\"\n\n[NATURALNESS] [SEVERITY: major]\nLocation: Кольори / \"We will look\
+  \ at 12 базових кольорів, podілених на дві групи за типами прикметників. Most of\
+  \ these belong to the hard group. Ця Тверда група follows the exact same `-ий/-а/-е/-і`\
+  \ gender agreement pattern you already know.\"\nIssue: Українською: Це суцільна\
+  \ штучна мішанина мов і термінів. Український викладач скаже простіше й суцільно\
+  \ однією мовою.\nFix: \"Розгляньмо 12 базових кольорів. Більшість із них належить\
+  \ до твердої групи й змінюється за зразком `-ий/-а/-е/-і`.\"\n\n[NATURALNESS] [SEVERITY:\
+  \ major]\nLocation: Синій ≠ блакитний / \"В українській мові ми активно вчимо пару\
+  \ слів для цього кольору: «синій» та «блакитний».\"\nIssue: Українською: \"активно\
+  \ вчимо пару слів\" звучить канцелярсько й неприродно. Тут потрібне просте пояснення\
+  \ різниці, а не методичний штамп.\nFix: \"В українській мові розрізняємо дві назви\
+  \ цього кольору: «синій» і «блакитний».\"\n\n[NATURALNESS] [SEVERITY: critical]\n\
+  Location: Підсумок / \"To master the vocabulary in this lesson, you must apply the\
+  \ grammar concepts from a previous module («модуль»).\"\nIssue: Українською: Це\
+  \ жорстка перекладна інструкція з англомовним ритмом. У підсумку вона звучить особливо\
+  \ неживо й формально.\nEnglish: The summary opens like a workbook translation, not\
+  \ natural Ukrainian pedagogy.\nFix: \"Щоб упевнено вживати ці слова, повторімо узгодження\
+  \ прикметників із іменниками.\"\n\n[NATURALNESS] [SEVERITY: major]\nLocation: Підсумок\
+  \ / \"Your primary tool for communication is the question «Якого кольору...?». The\
+  \ base noun «колір» is masculine, but it changes form here.\"\nIssue: Українською:\
+  \ Формули \"primary tool for communication\" і \"base noun\" неприродні для українського\
+  \ навчального стилю. Це не пояснення, а технічний переказ.\nFix: \"Головна мовна\
+  \ формула цього модуля — «Якого кольору...?». Після неї зазвичай відповідаємо коротко:\
+  \ «зелений», «біла», «сіре».\"\n\n## Verdict Reason\nРоботизованість тут повторюється\
+  \ в кожному розділі: англійські підводки, змішані речення й перекладний методичний\
+  \ тон. Через це текст звучить не як український навчальний модуль, а як машинно\
+  \ зібраний чернетковий переклад, тож вище 6.0 цей матеріал за рубрикою не піднімається.\n\
+  \n<fixes>\n- find: \"This first conversation features Natalka selecting flowers\
+  \ for a special event. She speaks with a seller to find the perfect combination\
+  \ of bright spring colors.\"\n  replace: \"У першому діалозі Наталка вибирає квіти\
+  \ для букета й питає про їхній колір.\"\n- find: \"The phrase «мені подобаються»\
+  \ is a ready-made expression for personal preferences. The adjective in «жовті соняшники»\
+  \ explicitly uses the plural ending, and такі форми використовуються naturally in\
+  \ conversation.\"\n  replace: \"Вислів «мені подобаються» краще запам'ятати як готову\
+  \ мовну модель. У словосполученні «жовті соняшники» маємо форму множини, і в живому\
+  \ мовленні вона звучить природно.\"\n- find: \"When asking about the color of an\
+  \ object in Ukrainian, we use the phrase якого кольору? (what color?). In natural\
+  \ speech, the immediate response is often just the adjective. This provides a clear\
+  \ short відповідь before building a full sentence.\"\n  replace: \"Коли питаємо\
+  \ про колір, уживаємо формулу «Якого кольору?». У відповіді часто досить одного\
+  \ слова: «Червоний», «Червона», «Біле».\"\n- find: \"We will look at 12 базових\
+  \ кольорів, podілених на дві групи за типами прикметників. Most of these belong\
+  \ to the hard group. Ця Тверда група follows the exact same `-ий/-а/-е/-і` gender\
+  \ agreement pattern you already know.\"\n  replace: \"Розгляньмо 12 базових кольорів.\
+  \ Більшість із них належить до твердої групи й змінюється за зразком `-ий/-а/-е/-і`.\"\
+  \n- find: \"В українській мові ми активно вчимо пару слів для цього кольору: «синій»\
+  \ та «блакитний».\"\n  replace: \"В українській мові розрізняємо дві назви цього\
+  \ кольору: «синій» і «блакитний».\"\n- find: \"To master the vocabulary in this\
+  \ lesson, you must apply the grammar concepts from a previous module («модуль»).\"\
+  \n  replace: \"Щоб упевнено вживати ці слова, повторімо узгодження прикметників\
+  \ із іменниками.\"\n- find: \"Your primary tool for communication is the question\
+  \ «Якого кольору...?». The base noun «колір» is masculine, but it changes form here.\"\
+  \n  replace: \"Головна мовна формула цього модуля — «Якого кольору...?». Після неї\
+  \ зазвичай відповідаємо коротко: «зелений», «біла», «сіре».\"\n</fixes>"

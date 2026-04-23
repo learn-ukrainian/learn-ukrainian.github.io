@@ -1,0 +1,63 @@
+session_path: ''
+phase: vocab
+prompt_chars: 10754
+response_chars: 1707
+prompt_words: 1681
+response_words: 187
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0742
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0214
+- name: plan
+  start: 1028
+  length: 9726
+  fraction: 0.9044
+large_sections:
+- plan
+directives_total: 9
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: Because colors are regular adjectives, they must match the gender of the noun
+    they describe.
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: must
+  text: To master the vocabulary in this lesson, you must apply the grammar concepts
+    from a previous module («модуль»).
+  covered: false
+  coverage_note: 1/13 keywords (8%)
+- kind: must
+  text: When someone asks this, your short answer must always reflect the gender of
+    the object being discussed.
+  covered: false
+  coverage_note: 0/14 keywords (0%)
+- kind: must
+  text: You must use «карі очі» for brown eyes, rather than the basic adjective.
+  covered: false
+  coverage_note: 4/11 keywords (36%)
+- kind: inject_activity
+  text: quiz-what-color
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-color-agreement
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-blue-vs-lightblue
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-appearance
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-hard-soft
+  covered: false
+  coverage_note: marker missing

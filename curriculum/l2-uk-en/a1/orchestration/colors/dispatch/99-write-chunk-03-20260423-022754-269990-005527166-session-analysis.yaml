@@ -1,0 +1,45 @@
+session_path: ''
+phase: write-chunk-03
+prompt_chars: 11331
+response_chars: 2026
+prompt_words: 1655
+response_words: 313
+sections:
+- name: header
+  start: 0
+  length: 425
+  fraction: 0.0375
+- name: skeleton
+  start: 425
+  length: 2116
+  fraction: 0.1867
+- name: prior_summary
+  start: 2541
+  length: 8604
+  fraction: 0.7593
+- name: output_spec
+  start: 11145
+  length: 186
+  fraction: 0.0164
+large_sections:
+- prior_summary
+directives_total: 14
+directives_covered: 10
+directives_missed:
+- kind: must
+  text: Even though it is a single word, it must still match the grammatical gender
+    of the object.
+  covered: false
+  coverage_note: 3/10 keywords (30%)
+- kind: inject_activity
+  text: quiz-what-color
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-color-agreement
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-hard-soft
+  covered: false
+  coverage_note: marker missing

@@ -1,0 +1,24 @@
+phase: write-chunk
+section: Кольори
+section_index: 1
+total_sections: 4
+components:
+- persona
+- section_skeleton
+- section_contract
+- section_wiki_excerpts
+- previous_sections_summary
+- paragraph_language_rule
+- section_rules
+- required_vocab_checklist
+- forbidden_words
+metrics:
+  prompt_chars: 10391
+  prompt_words: 1520
+  contract_chars: 1269
+  excerpt_chars: 2056
+  previous_summary_chars: 1953
+flags:
+  includes_dialogue_formatting: false
+  includes_vocab_checklist: true
+  includes_previous_summary: true

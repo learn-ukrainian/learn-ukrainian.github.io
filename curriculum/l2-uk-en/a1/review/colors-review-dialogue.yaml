@@ -1,0 +1,96 @@
+slug: colors
+round: 1
+dimension: dialogue
+name: Dialogue
+score: 5.8
+verdict: REVISE
+evidence: '- Українською: Найприродніше місце в розділі: `— **Наталка:** А ці квіти?
+  Якого вони кольору?` / `— **Продавець:** Це білі лілії. Вони дуже свіжі.` English:
+  This is the one exchange that actually s...'
+findings:
+- dimension: DIALOGUE
+  severity: critical
+  location: '`## Діалоги` / `— **Наталка:** За мотивами вірша про сонце, мені подобаються
+    жовті соняшники.`'
+  issue: "Українською: Це не репліка покупчині на ринку, а вбудована методична примітка.\
+    \ Фраза звучить штучно й одразу робить сцену \"підручниковою\".  \nEnglish: This\
+    \ is prompt language disguised as dialogue."
+  fix: '`— **Наталка:** Мені подобаються жовті соняшники.`'
+- dimension: DIALOGUE
+  severity: critical
+  location: '`## Діалоги` / `— **Продавець:** Чудово! У вас є синя ваза для них?`'
+  issue: "Українською: Порушена побутова логіка сцени: продавець не питає покупця,\
+    \ чи має той вазу, а зазвичай пропонує загорнути букет або додати щось до нього.\
+    \  \nEnglish: The turn-taking is not socially plausible for this setting."
+  fix: '`— **Продавець:** Чудово! Додати ще зелене листя?` + `— **Наталка:** Так,
+    будь ласка. У мене є синя ваза.`'
+- dimension: DIALOGUE
+  severity: major
+  location: '`## Діалоги` / `— **Дмитро:** Цей білий светр і коричневі черевики.`'
+  issue: "Українською: Це звучить як перелік лексики під картинкою, а не як відповідь\
+    \ у живій розмові. Діалог через це стає drill-like.  \nEnglish: The line is a\
+    \ label list, not natural speech."
+  fix: '`— **Дмитро:** Шукаю білий светр і коричневі черевики.`'
+fixes:
+- find: '> — **Наталка:** За мотивами вірша про сонце, мені подобаються жовті соняшники.
+    *(Inspired by a poem about the sun, I like yellow sunflowers.)*'
+  replace: '> — **Наталка:** Мені подобаються жовті соняшники. *(I like the yellow
+    sunflowers.)*'
+- find: '> — **Продавець:** Чудово! У вас є синя ваза для них? *(Wonderful! Do you
+    have a blue vase for them?)*
+
+    > — **Наталка:** Так. Додайте ще зелене листя, будь ласка. *(Yes. Add some green
+    leaves, please.)*'
+  replace: '> — **Продавець:** Чудово! Додати ще зелене листя? *(Wonderful! Shall
+    I add some green leaves?)*
+
+    > — **Наталка:** Так, будь ласка. У мене є синя ваза. *(Yes, please. I have a
+    blue vase.)*'
+- find: '> — **Дмитро:** Цей білий светр і коричневі черевики. *(This white sweater
+    and brown shoes.)*'
+  replace: '> — **Дмитро:** Шукаю білий светр і коричневі черевики. *(I''m looking
+    for a white sweater and brown shoes.)*'
+rewrite_blocks: []
+review_text: "## Dimension\nid: dialogue\nname: Dialogue\nscore: 5.8/10\nverdict:\
+  \ REVISE\n\n## Evidence\n- Українською: Найприродніше місце в розділі: `— **Наталка:**\
+  \ А ці квіти? Якого вони кольору?` / `— **Продавець:** Це білі лілії. Вони дуже\
+  \ свіжі.`\n  English: This is the one exchange that actually sounds like a real\
+  \ market interaction.\n- Українською: Штучна репліка: `— **Наталка:** За мотивами\
+  \ вірша про сонце, мені подобаються жовті соняшники.`\n  English: This sounds like\
+  \ authorial prompt leakage, not speech.\n- Українською: Логіка сцени ламається в\
+  \ репліці `— **Продавець:** Чудово! У вас є синя ваза для них?`\n  English: A seller\
+  \ would normally offer wrapping or add-ons, not ask whether the buyer owns a vase.\n\
+  - Українською: У другому діалозі репліка `— **Дмитро:** Цей білий светр і коричневі\
+  \ черевики.` звучить як список для вправи, а не жива відповідь.\n  English: It reads\
+  \ like item labeling.\n\n## Findings\n[DIALOGUE] [SEVERITY: critical]  \nLocation:\
+  \ `## Діалоги` / `— **Наталка:** За мотивами вірша про сонце, мені подобаються жовті\
+  \ соняшники.`  \nIssue: Українською: Це не репліка покупчині на ринку, а вбудована\
+  \ методична примітка. Фраза звучить штучно й одразу робить сцену \"підручниковою\"\
+  .  \nEnglish: This is prompt language disguised as dialogue.  \nFix: `— **Наталка:**\
+  \ Мені подобаються жовті соняшники.`\n\n[DIALOGUE] [SEVERITY: critical]  \nLocation:\
+  \ `## Діалоги` / `— **Продавець:** Чудово! У вас є синя ваза для них?`  \nIssue:\
+  \ Українською: Порушена побутова логіка сцени: продавець не питає покупця, чи має\
+  \ той вазу, а зазвичай пропонує загорнути букет або додати щось до нього.  \nEnglish:\
+  \ The turn-taking is not socially plausible for this setting.  \nFix: `— **Продавець:**\
+  \ Чудово! Додати ще зелене листя?` + `— **Наталка:** Так, будь ласка. У мене є синя\
+  \ ваза.`\n\n[DIALOGUE] [SEVERITY: major]  \nLocation: `## Діалоги` / `— **Дмитро:**\
+  \ Цей білий светр і коричневі черевики.`  \nIssue: Українською: Це звучить як перелік\
+  \ лексики під картинкою, а не як відповідь у живій розмові. Діалог через це стає\
+  \ drill-like.  \nEnglish: The line is a label list, not natural speech.  \nFix:\
+  \ `— **Дмитро:** Шукаю білий светр і коричневі черевики.`\n\n## Verdict Reason\n\
+  У розділі є один нормальний обмін типу `Якого кольору?`, але кілька ключових реплік\
+  \ звучать як вставлені слова з контракту, а не як жива українська розмова. Через\
+  \ ці методичні й неприродні репліки діалоги читаються як вправа, замаскована під\
+  \ сценку, тому це нижче прохідного рівня автентичності.\n\n<fixes>\n- find: \">\
+  \ — **Наталка:** За мотивами вірша про сонце, мені подобаються жовті соняшники.\
+  \ *(Inspired by a poem about the sun, I like yellow sunflowers.)*\"\n  replace:\
+  \ \"> — **Наталка:** Мені подобаються жовті соняшники. *(I like the yellow sunflowers.)*\"\
+  \n- find: \"> — **Продавець:** Чудово! У вас є синя ваза для них? *(Wonderful! Do\
+  \ you have a blue vase for them?)*\\n> — **Наталка:** Так. Додайте ще зелене листя,\
+  \ будь ласка. *(Yes. Add some green leaves, please.)*\"\n  replace: \"> — **Продавець:**\
+  \ Чудово! Додати ще зелене листя? *(Wonderful! Shall I add some green leaves?)*\\\
+  n> — **Наталка:** Так, будь ласка. У мене є синя ваза. *(Yes, please. I have a blue\
+  \ vase.)*\"\n- find: \"> — **Дмитро:** Цей білий светр і коричневі черевики. *(This\
+  \ white sweater and brown shoes.)*\"\n  replace: \"> — **Дмитро:** Шукаю білий светр\
+  \ і коричневі черевики. *(I'm looking for a white sweater and brown shoes.)*\"\n\
+  </fixes>"

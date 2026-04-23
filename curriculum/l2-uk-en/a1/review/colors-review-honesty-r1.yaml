@@ -1,0 +1,140 @@
+slug: colors
+round: 1
+dimension: honesty
+name: Honesty
+score: 4.8
+verdict: REVISE
+evidence: '- Українською: У writer prompt є пряме правило: uncertain claims must be
+  marked with `<!-- VERIFY -->`; також сказано “Never invent. Silent invention is
+  the worst failure mode.” У модулі немає жодн...'
+findings:
+- dimension: HONESTY
+  severity: major
+  location: '`## Діалоги` / “This first conversation features Natalka selecting flowers
+    for a special event. She speaks with a seller to find the perfect combination
+    of bright spring colors.”'
+  issue: 'Українською: Контракт задає квітковий ринок і вибір букета, але не “special
+    event” і не “bright spring colors”. Це домислене сценічне оформлення без опори
+    на надані джерела.
+
+    English: Unsupported scene embellishment.'
+  fix: Replace with neutral framing grounded in the contract, or add `<!-- VERIFY
+    -->`.
+- dimension: HONESTY
+  severity: critical
+  location: '`## Діалоги` / “За мотивами вірша про сонце, мені подобаються жовті соняшники.”'
+  issue: 'Українською: Контракт каже “за мотивами вірша про кольори з підручника Большакової”,
+    а модуль упевнено підміняє це на “вірша про сонце”. Це вже виглядає як вигадана
+    source-like detail без перевірки.
+
+    English: The module changes the source framing from “poem about colors” to “poem
+    about the sun” without support.'
+  fix: Restore the contract wording or add `<!-- VERIFY -->` at the sentence.
+- dimension: HONESTY
+  severity: major
+  location: '`## Кольори` / “Adjectives in Ukrainian are strictly divided into these
+    hard and soft groups.”'
+  issue: 'Українською: Це надто сильне, некваліфіковане правило. Вікі для цього модуля
+    справді протиставляє тверду й м’яку групу на прикладі `синій`, але не вимагає
+    такої абсолютної формули “strictly divided”.
+
+    English: Overstated certainty where the source supports a teaching contrast, not
+    a hard universal claim.'
+  fix: Hedge the claim or cite an explicit authority; otherwise mark `<!-- VERIFY
+    -->`.
+- dimension: HONESTY
+  severity: major
+  location: '`## Синій ≠ блакитний` and `## Підсумок` / “We do not use the standard
+    word for brown when talking about eyes.” / “You must use «карі очі»...” / “always
+    use «русяве волосся»...” / “exactly how native speakers talk.”'
+  issue: 'Українською: Джерела підтримують ці сполуки як готові природні чанки для
+    A1, але модуль перетворює це на абсолютні заборони й безапеляційні норми. За правилом
+    honesty тут треба було або пом’якшити формулювання, або позначити зону ризику
+    через `<!-- VERIFY -->`.
+
+    English: The source supports preferred collocations, not categorical “must/always/exactly”
+    language.'
+  fix: Rephrase as “natural/preferred chunks at A1” or add `<!-- VERIFY -->`.
+fixes:
+- find: This first conversation features Natalka selecting flowers for a special event.
+    She speaks with a seller to find the perfect combination of bright spring colors.
+  replace: 'This first conversation shows Natalka choosing flowers at a market. <!--
+    VERIFY: if ''special event'' or ''bright spring colors'' is intended, cite the
+    source -->'
+- find: За мотивами вірша про сонце, мені подобаються жовті соняшники.
+  replace: 'За мотивами вірша про кольори, мені подобаються жовті соняшники. <!--
+    VERIFY: if the source is specifically a poem about the sun, cite it -->'
+- find: Adjectives in Ukrainian are strictly divided into these hard and soft groups.
+    Learning «синій» now prepares you for other soft adjectives later.
+  replace: 'For this module, it is enough to contrast the hard pattern with the soft
+    pattern in «синій». <!-- VERIFY: if making a broader rule about all Ukrainian
+    adjectives, cite an authority -->'
+- find: You must use «карі очі» for brown eyes, rather than the basic adjective. When
+    describing hair, always use «русяве волосся» for light-brown hair and «сиве волосся»
+    for grey hair. These combinations are not literal translations, but they are exactly
+    how native speakers talk.
+  replace: 'At A1, prefer the ready-made chunks «карі очі», «русяве волосся», and
+    «сиве волосся». <!-- VERIFY: avoid categorical ''must/always/exactly how native
+    speakers talk'' unless cited -->'
+rewrite_blocks: []
+review_text: "## Dimension\nid: honesty\nname: Honesty\nscore: 4.8/10\nverdict: REVISE\n\
+  \n## Evidence\n- Українською: У writer prompt є пряме правило: uncertain claims\
+  \ must be marked with `<!-- VERIFY -->`; також сказано “Never invent. Silent invention\
+  \ is the worst failure mode.” У модулі немає жодного `<!-- VERIFY -->`, хоча є непідтверджені\
+  \ деталі й категоричні формули.\n  English: The project explicitly prefers flagged\
+  \ uncertainty over confident invention, but the module never flags uncertainty.\n\
+  - Українською: Вікі `colors.md` підтримує `синій`/`блакитний`, формулу `Якого кольору?`,\
+  \ і чанки `карі очі`, `русяве волосся`, `сиве волосся`; натомість модуль додає “special\
+  \ event”, “bright spring colors”, “вірша про сонце”, а також абсолюти типу “strictly\
+  \ divided”, “we do not use”, “must always”.\n  English: The grounded core is there,\
+  \ but the writer extends it with unsupported framing and absolute claims.\n\n##\
+  \ Findings\n[HONESTY] [SEVERITY: major]\nLocation: `## Діалоги` / “This first conversation\
+  \ features Natalka selecting flowers for a special event. She speaks with a seller\
+  \ to find the perfect combination of bright spring colors.”\nIssue: Українською:\
+  \ Контракт задає квітковий ринок і вибір букета, але не “special event” і не “bright\
+  \ spring colors”. Це домислене сценічне оформлення без опори на надані джерела.\n\
+  English: Unsupported scene embellishment.\nFix: Replace with neutral framing grounded\
+  \ in the contract, or add `<!-- VERIFY -->`.\n\n[HONESTY] [SEVERITY: critical]\n\
+  Location: `## Діалоги` / “За мотивами вірша про сонце, мені подобаються жовті соняшники.”\n\
+  Issue: Українською: Контракт каже “за мотивами вірша про кольори з підручника Большакової”,\
+  \ а модуль упевнено підміняє це на “вірша про сонце”. Це вже виглядає як вигадана\
+  \ source-like detail без перевірки.\nEnglish: The module changes the source framing\
+  \ from “poem about colors” to “poem about the sun” without support.\nFix: Restore\
+  \ the contract wording or add `<!-- VERIFY -->` at the sentence.\n\n[HONESTY] [SEVERITY:\
+  \ major]\nLocation: `## Кольори` / “Adjectives in Ukrainian are strictly divided\
+  \ into these hard and soft groups.”\nIssue: Українською: Це надто сильне, некваліфіковане\
+  \ правило. Вікі для цього модуля справді протиставляє тверду й м’яку групу на прикладі\
+  \ `синій`, але не вимагає такої абсолютної формули “strictly divided”.\nEnglish:\
+  \ Overstated certainty where the source supports a teaching contrast, not a hard\
+  \ universal claim.\nFix: Hedge the claim or cite an explicit authority; otherwise\
+  \ mark `<!-- VERIFY -->`.\n\n[HONESTY] [SEVERITY: major]\nLocation: `## Синій ≠\
+  \ блакитний` and `## Підсумок` / “We do not use the standard word for brown when\
+  \ talking about eyes.” / “You must use «карі очі»...” / “always use «русяве волосся»...”\
+  \ / “exactly how native speakers talk.”\nIssue: Українською: Джерела підтримують\
+  \ ці сполуки як готові природні чанки для A1, але модуль перетворює це на абсолютні\
+  \ заборони й безапеляційні норми. За правилом honesty тут треба було або пом’якшити\
+  \ формулювання, або позначити зону ризику через `<!-- VERIFY -->`.\nEnglish: The\
+  \ source supports preferred collocations, not categorical “must/always/exactly”\
+  \ language.\nFix: Rephrase as “natural/preferred chunks at A1” or add `<!-- VERIFY\
+  \ -->`.\n\n## Verdict Reason\nЯдро модуля спирається на контракт, але автор кілька\
+  \ разів тихо домислює деталі й подає неперевірені узагальнення з надмірною впевненістю.\
+  \ Через вигадану source-like деталь (“вірша про сонце”) без `<!-- VERIFY -->` чесність\
+  \ має жорстку стелю не вище 5/10.\n\n<fixes>\n- find: \"This first conversation\
+  \ features Natalka selecting flowers for a special event. She speaks with a seller\
+  \ to find the perfect combination of bright spring colors.\"\n  replace: \"This\
+  \ first conversation shows Natalka choosing flowers at a market. <!-- VERIFY: if\
+  \ 'special event' or 'bright spring colors' is intended, cite the source -->\"\n\
+  - find: \"За мотивами вірша про сонце, мені подобаються жовті соняшники.\"\n  replace:\
+  \ \"За мотивами вірша про кольори, мені подобаються жовті соняшники. <!-- VERIFY:\
+  \ if the source is specifically a poem about the sun, cite it -->\"\n- find: \"\
+  Adjectives in Ukrainian are strictly divided into these hard and soft groups. Learning\
+  \ «синій» now prepares you for other soft adjectives later.\"\n  replace: \"For\
+  \ this module, it is enough to contrast the hard pattern with the soft pattern in\
+  \ «синій». <!-- VERIFY: if making a broader rule about all Ukrainian adjectives,\
+  \ cite an authority -->\"\n- find: \"You must use «карі очі» for brown eyes, rather\
+  \ than the basic adjective. When describing hair, always use «русяве волосся» for\
+  \ light-brown hair and «сиве волосся» for grey hair. These combinations are not\
+  \ literal translations, but they are exactly how native speakers talk.\"\n  replace:\
+  \ \"At A1, prefer the ready-made chunks «карі очі», «русяве волосся», and «сиве\
+  \ волосся». <!-- VERIFY: avoid categorical 'must/always/exactly how native speakers\
+  \ talk' unless cited -->\"\n</fixes>"

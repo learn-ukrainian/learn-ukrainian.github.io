@@ -1,0 +1,877 @@
+plan_hash: 1852157ba155191b792fb7a614e8ab898ac775d1bdbe260cdd1d182952177090
+plan_version: 1
+sources_hash: 5b790cdd6e65745a755b41a35b43265bd13c28fe17bc55f5a5b134443cedc99a
+constraints: []
+history:
+- attempt: 1
+  strategy: write
+  writer: gemini-tools
+  writer_model_version: gemini-3.1-pro-preview
+  reviewer: codex
+  reviewer_model_version: gpt-5.4
+  score_overall: 4.8
+  scores_per_dimension:
+    Factual: 7.4
+    Language: 5.8
+    Decolonization: 8.8
+    Completeness: 8.3
+    Actionable: 4.9
+    Naturalness: 4.8
+    Plan Adherence: 6.8
+    Honesty: 4.8
+    Dialogue: 5.8
+  dim_floor_fail: []
+  verdict: revise
+  content_hash: e0545e7c241fffc674f76dbd57358086309a94a618372ba0ab8af0d9b835853d
+  prompt_hash: 2737d768927fcadab0c046a31d296dc80a26d163133a465cd3c15fd35e9b35cd
+  contract_snapshot_hash: df612c65cb492221e4a92e10a6cdfbd11e2536c94560829585d6de0f70db93c6
+  findings_normalized:
+  - nf_afb0c8510b9a2818
+  - nf_cd25686e28b29d56
+  - nf_4c2c56b35183b508
+  - nf_6dff24e33ffc1d17
+  - nf_5f5be8946ddeb429
+  - nf_b6a8183f5c7e8ba9
+  - nf_19ab2906462e0ca4
+  - nf_19ab2906462e0ca4
+  - nf_2e2397116773c350
+  - nf_8d98050de4ce8a5e
+  - nf_2a23801056fa360b
+  - nf_393b7a160d347d2f
+  - nf_0618b31f5f8be8c8
+  - nf_08d0bac5c71273df
+  - nf_6dff24e33ffc1d17
+  - nf_e6ecef1f9a005265
+  - nf_40f6d0bfb7bead9d
+  - nf_5740b2545b800622
+  - nf_7e00be97a91559d6
+  - nf_9890678f345846f7
+  - nf_cf4db3bcdca69cdf
+  - nf_740e901fdda4cd45
+  - nf_acde8a40351a9751
+  - nf_ce033b0ac98ae56a
+  - nf_dfd869d5e759c493
+  - nf_0a82b6a1ddfcc21e
+  - nf_64a01774849b8270
+  - nf_911674a8b81eab13
+  - nf_f099adde4bdecbbc
+  - nf_5db05398974e2a8e
+  - nf_4ee7a0325468c584
+  - nf_8b8f6da0383794a0
+  mutation_summary: null
+  decision_reason: initial
+  artifacts:
+    review_path: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/curriculum/l2-uk-en/a1/review/colors-review-r1.md
+    prompt_path: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/curriculum/l2-uk-en/a1/orchestration/colors/v6-review-prompt.md
+  timestamps:
+    started: '2026-04-23T00:20:05.582271+00:00'
+    finished: '2026-04-23T00:24:21.207386+00:00'
+  cost:
+    input_tokens: null
+    output_tokens: null
+    wall_clock_s: 255.627
+  prioritized_findings:
+  - &id001
+    dimension: actionable
+    severity: critical
+    error_class: register_drift
+    scope:
+      section_title: Кольори
+      speaker: INJECT_ACTIVITY
+      target_lexeme: '## Кольори /'
+    location: '`## Кольори / "<!-- INJECT_ACTIVITY: quiz-what-color -->"`; same pattern
+      in `fill-in-color-agreement`, `quiz-blue-vs-lightblue`, `match-up-appearance`,
+      `group-sort-hard-soft`'
+    issue: 'Українською: Тут немає вправ, лише технічні маркери. Учень не бачить запитання,
+      не має кроків, не дає відповіді і не виконує жодної дії, хоча контракт вимагає
+      вправ після кожного блоку.
+
+      English: The required learner tasks are missing from the rendered lesson.'
+    fix: Замінити кожен `INJECT_ACTIVITY` на коротку вправу з 3-5 пунктами, зразком
+      відповіді й чіткою дією для учня.
+    normalized_id: nf_afb0c8510b9a2818
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: critical
+  - &id002
+    dimension: dialogue
+    severity: critical
+    error_class: dialogue_arc_fail
+    scope:
+      section_title: Діалоги
+      speaker: Продавець
+      target_lexeme: '## Діалоги'
+    location: '`## Діалоги` / `— **Продавець:** Чудово! У вас є синя ваза для них?`'
+    issue: "Українською: Порушена побутова логіка сцени: продавець не питає покупця,\
+      \ чи має той вазу, а зазвичай пропонує загорнути букет або додати щось до нього.\
+      \  \nEnglish: The turn-taking is not socially plausible for this setting."
+    fix: '`— **Продавець:** Чудово! Додати ще зелене листя?` + `— **Наталка:** Так,
+      будь ласка. У мене є синя ваза.`'
+    normalized_id: nf_cd25686e28b29d56
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: critical
+  - &id003
+    dimension: dialogue
+    severity: critical
+    error_class: register_drift
+    scope:
+      section_title: Діалоги
+      speaker: Наталка
+      target_lexeme: '## Діалоги'
+    location: '`## Діалоги` / `— **Наталка:** За мотивами вірша про сонце, мені подобаються
+      жовті соняшники.`'
+    issue: "Українською: Це не репліка покупчині на ринку, а вбудована методична примітка.\
+      \ Фраза звучить штучно й одразу робить сцену \"підручниковою\".  \nEnglish:\
+      \ This is prompt language disguised as dialogue."
+    fix: '`— **Наталка:** Мені подобаються жовті соняшники.`'
+    normalized_id: nf_4c2c56b35183b508
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: critical
+  - &id004
+    dimension: honesty
+    severity: critical
+    error_class: register_drift
+    scope:
+      section_title: Діалоги
+      speaker: Українською
+      target_lexeme: '## Діалоги'
+    location: '`## Діалоги` / “За мотивами вірша про сонце, мені подобаються жовті
+      соняшники.”'
+    issue: 'Українською: Контракт каже “за мотивами вірша про кольори з підручника
+      Большакової”, а модуль упевнено підміняє це на “вірша про сонце”. Це вже виглядає
+      як вигадана source-like detail без перевірки.
+
+      English: The module changes the source framing from “poem about colors” to “poem
+      about the sun” without support.'
+    fix: Restore the contract wording or add `<!-- VERIFY -->` at the sentence.
+    normalized_id: nf_6dff24e33ffc1d17
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: critical
+  - &id005
+    dimension: naturalness
+    severity: critical
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: модуль
+    location: Підсумок / "To master the vocabulary in this lesson, you must apply
+      the grammar concepts from a previous module («модуль»)."
+    issue: 'Українською: Це жорстка перекладна інструкція з англомовним ритмом. У
+      підсумку вона звучить особливо неживо й формально.
+
+      English: The summary opens like a workbook translation, not natural Ukrainian
+      pedagogy.'
+    fix: '"Щоб упевнено вживати ці слова, повторімо узгодження прикметників із іменниками."'
+    normalized_id: nf_5f5be8946ddeb429
+    plan_level: false
+    topology: cross_section
+    effective_severity: critical
+  - &id006
+    dimension: naturalness
+    severity: critical
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: першому
+    location: Діалоги / "This first conversation features Natalka selecting flowers
+      for a special event. She speaks with a seller to find the perfect combination
+      of bright spring colors."
+    issue: 'Українською: Це чиста англомовна підводка з рекламно-шаблонним тоном.
+      Так не починає український навчальний модуль.
+
+      English: It reads like AI scene-setting, not teacher prose.'
+    fix: '"У першому діалозі Наталка вибирає квіти для букета й питає про їхній колір."'
+    normalized_id: nf_b6a8183f5c7e8ba9
+    plan_level: false
+    topology: cross_section
+    effective_severity: critical
+  - &id007
+    dimension: actionable
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: Діалоги
+      speaker: Українською
+      target_lexeme: '## Діалоги /'
+    location: '`## Діалоги / "This first conversation features Natalka selecting flowers
+      for a special event. She speaks with a seller to find the perfect combination
+      of bright spring colors."`'
+    issue: 'Українською: Це анонс сцени, а не навчальна інструкція. Учневі не сказано,
+      що саме зробити з діалогом: знайти форму, дати коротку відповідь, повторити
+      репліку, підставити інше слово.
+
+      English: The paragraph narrates content instead of directing learner behavior.'
+    fix: 'Перед діалогом дати завдання з послідовністю дій: знайти три відповіді на
+      `Якого кольору?`, виписати одну форму множини, повторити діалог з іншими назвами
+      квітів.'
+    normalized_id: nf_19ab2906462e0ca4
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id008
+    dimension: actionable
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: Діалоги
+      speaker: Українською
+      target_lexeme: '## Діалоги /'
+    location: '`## Діалоги / "Діалог на ринку часто вимагає чітких та коротких відповідей."`
+      and `## Кольори / "Learning «синій» now prepares you for other soft adjectives
+      later."`'
+    issue: 'Українською: Це загальні поради без учнівського ходу. Вони не дають ні
+      мовного зразка, ні міні-вправи, ні перевірки, тому не допомагають виконати конкретну
+      дію.
+
+      English: These are generic meta-comments, not usable teaching moves.'
+    fix: Кожен такий `tip` треба перетворити на мікрозавдання з 2-3 репліками або
+      міні-дрилом.
+    normalized_id: nf_19ab2906462e0ca4
+    plan_level: false
+    topology: cross_section
+    effective_severity: major
+  - &id009
+    dimension: actionable
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: Підсумок
+      speaker: Українською
+      target_lexeme: '## Підсумок /'
+    location: '`## Підсумок / "Your primary tool for communication is the question
+      «Якого кольору...?». The base noun «колір» is masculine, but it changes form
+      here."`'
+    issue: 'Українською: Блок знову пояснює правило абстрактно, хоча контракт вимагає
+      послідовність `коротка відповідь -> повне речення`. Конкретна дія з''являється
+      лише в кінцевому self-check, а не одразу після пояснення.
+
+      English: The learner is told about the pattern instead of being led through
+      it step by step.'
+    fix: 'Одразу після цього місця дати три кроки: коротка відповідь, повне речення,
+      власний приклад з предметом у кімнаті.'
+    normalized_id: nf_2e2397116773c350
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id010
+    dimension: completeness
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: Діалоги
+      speaker: Українською
+      target_lexeme: '## Діалоги'
+    location: '`## Діалоги` — перший діалог має `«А ці квіти? Якого вони кольору?»
+      → «Це білі лілії.»`; другий діалог від `«Мені потрібна чорна сукня.»` до `«У
+      нього сиве волосся.»` не містить жодної короткої репліки-відповіді на `Якого
+      кольору?`.'
+    issue: 'Українською: Контракт вимагає, щоб кольори в діалогах входили через запитання
+      `Якого кольору?` і коротку відповідь; у модулі ця рамка добре пояснена в секції
+      `Кольори`, але недостатньо відпрацьована саме в діалоговій практиці, особливо
+      в другому діалозі.
+
+      English: The speech frame is taught, but not sufficiently realized inside the
+      contracted dialogues.'
+    fix: Додати в обидва діалоги по 1-2 обміни з короткими відповідями типу `Якого
+      кольору троянди? — Червоні.` / `Якого кольору светр? — Білий.` і завершити перший
+      діалог реплікою `Загорнути букет?`.
+    normalized_id: nf_8d98050de4ce8a5e
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id011
+    dimension: decolonization
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: Синій ≠ блакитний
+    location: '`Синій ≠ блакитний` / “The word «голубий» is simply a synonym, but
+      we use «блакитний».”'
+    issue: 'Українською: Це не російсько-центричне пояснення напряму, але воно все
+      одно зсуває рамку в бік оборонного «відсікання» слова замість українсько-центричного
+      опису норми. За контрактом тут потрібне пасивне впізнавання `голубий` як словникового
+      синоніма поза модулем, а не формула «ми вживаємо `блакитний`», яка звучить як
+      жорстке витіснення.
+
+      English: This avoids an explicit Russian comparison, but it still frames the
+      topic as lexical policing rather than Ukrainian-first description. The contract
+      requires passive recognition, not blanket exclusion.'
+    fix: 'Замінити на нейтральне українсько-центричне формулювання: `У цьому модулі
+      активно вживаємо «блакитний»; слово «голубий», якщо трапиться поза модулем,
+      досить пасивно впізнавати як словниковий синонім.`'
+    normalized_id: nf_2a23801056fa360b
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id012
+    dimension: dialogue
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: Діалоги
+      speaker: Дмитро
+      target_lexeme: '## Діалоги'
+    location: '`## Діалоги` / `— **Дмитро:** Цей білий светр і коричневі черевики.`'
+    issue: "Українською: Це звучить як перелік лексики під картинкою, а не як відповідь\
+      \ у живій розмові. Діалог через це стає drill-like.  \nEnglish: The line is\
+      \ a label list, not natural speech."
+    fix: '`— **Дмитро:** Шукаю білий светр і коричневі черевики.`'
+    normalized_id: nf_393b7a160d347d2f
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id013
+    dimension: factual
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: pedagogy/a1/colors.md
+    location: '`Adjectives in Ukrainian are strictly divided into these hard and soft
+      groups.`'
+    issue: 'Українською: Це надто широке граматичне узагальнення. Контракт і `pedagogy/a1/colors.md`
+      тут підтверджують лише навчальну рамку для кольорів: тверда група `-ий` проти
+      м''якої `-ій`, з акцентом на `синій`. Формула `strictly divided` про всі прикметники
+      виходить за межі підтвердженого.
+
+      English: This is an overgeneralization. The source supports a lesson-specific
+      contrast for color adjectives, not a universal statement about the entire adjective
+      system.'
+    fix: 'Замінити на формулювання, обмежене рамкою цього уроку: “For this lesson,
+      color adjectives are presented through two inflection patterns: hard and soft
+      groups.”'
+    normalized_id: nf_0618b31f5f8be8c8
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id014
+    dimension: honesty
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: Синій ≠ блакитний
+      speaker: Українською
+      target_lexeme: '## Синій ≠ блакитний'
+    location: '`## Синій ≠ блакитний` and `## Підсумок` / “We do not use the standard
+      word for brown when talking about eyes.” / “You must use «карі очі»...” / “always
+      use «русяве волосся»...” / “exactly how native speakers talk.”'
+    issue: 'Українською: Джерела підтримують ці сполуки як готові природні чанки для
+      A1, але модуль перетворює це на абсолютні заборони й безапеляційні норми. За
+      правилом honesty тут треба було або пом’якшити формулювання, або позначити зону
+      ризику через `<!-- VERIFY -->`.
+
+      English: The source supports preferred collocations, not categorical “must/always/exactly”
+      language.'
+    fix: Rephrase as “natural/preferred chunks at A1” or add `<!-- VERIFY -->`.
+    normalized_id: nf_08d0bac5c71273df
+    plan_level: false
+    topology: cross_section
+    effective_severity: major
+  - &id015
+    dimension: honesty
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: Діалоги
+      speaker: Українською
+      target_lexeme: '## Діалоги'
+    location: '`## Діалоги` / “This first conversation features Natalka selecting
+      flowers for a special event. She speaks with a seller to find the perfect combination
+      of bright spring colors.”'
+    issue: 'Українською: Контракт задає квітковий ринок і вибір букета, але не “special
+      event” і не “bright spring colors”. Це домислене сценічне оформлення без опори
+      на надані джерела.
+
+      English: Unsupported scene embellishment.'
+    fix: Replace with neutral framing grounded in the contract, or add `<!-- VERIFY
+      -->`.
+    normalized_id: nf_6dff24e33ffc1d17
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id016
+    dimension: honesty
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: Кольори
+      speaker: Українською
+      target_lexeme: '## Кольори'
+    location: '`## Кольори` / “Adjectives in Ukrainian are strictly divided into these
+      hard and soft groups.”'
+    issue: 'Українською: Це надто сильне, некваліфіковане правило. Вікі для цього
+      модуля справді протиставляє тверду й м’яку групу на прикладі `синій`, але не
+      вимагає такої абсолютної формули “strictly divided”.
+
+      English: Overstated certainty where the source supports a teaching contrast,
+      not a hard universal claim.'
+    fix: Hedge the claim or cite an explicit authority; otherwise mark `<!-- VERIFY
+      -->`.
+    normalized_id: nf_e6ecef1f9a005265
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id017
+    dimension: language
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: The base noun «колір
+    location: Підсумок / `The base noun «колір» is masculine, but it changes form
+      here.`
+    issue: 'Українською: Граматичний коментар подано англійською, ще й через неприродне
+      для українського пояснення формулювання `base noun`.
+
+      English: The grammar note should be written in proper Ukrainian.'
+    fix: '`Іменник «колір» — чоловічого роду, але у формулі «Якого кольору?» він стоїть
+      у формі родового відмінка.`'
+    normalized_id: nf_40f6d0bfb7bead9d
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id018
+    dimension: language
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: The adjective in «жовті соняшники
+    location: Діалоги / `The adjective in «жовті соняшники» explicitly uses the plural
+      ending, and такі форми використовуються naturally in conversation. When asking
+      якого кольору? (what color?), a direct відповідь is expected, often без a full
+      sentence.`
+    issue: 'Українською: Це мішанина англійської й української в одному поясненні;
+      така подача неприродна і не може вважатися чистою українською.
+
+      English: This is direct code-switching inside a grammar explanation.'
+    fix: '`У словосполученні «жовті соняшники» прикметник ужито у формі множини, і
+      в розмові така форма звучить природно. На запитання «Якого кольору?» часто відповідають
+      коротко, без повного речення.`'
+    normalized_id: nf_5740b2545b800622
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id019
+    dimension: language
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: де є жовтий колір
+    location: Синій ≠ блакитний / `Наш прапор — синьо-жовтий, де є жовтий колір.`
+    issue: 'Українською: Зворот `де є жовтий колір` неідіоматичний і звучить як буквальний
+      переклад.
+
+      English: This is clumsy translationese.'
+    fix: '`Наш прапор — синьо-жовтий.`'
+    normalized_id: nf_7e00be97a91559d6
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id020
+    dimension: language
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: -ий/-а/-е/-і\
+    location: Кольори / `We will look at 12 базових кольорів, поділених на дві групи
+      за типами прикметників. Most of these belong to the hard group. Ця Тверда група
+      follows the exact same \`-ий/-а/-е/-і\` gender agreement pattern you already
+      know.`
+    issue: 'Українською: Пояснення знову ламане, з англійським синтаксисом і код-міксом;
+      `Ця Тверда група follows...` мовно неприйнятне.
+
+      English: The sentence is not valid clean Ukrainian.'
+    fix: '`Розгляньмо 12 базових кольорів, поділених на дві групи за типами прикметників.
+      Більшість із них належить до твердої групи. Ця тверда група має той самий зразок
+      узгодження: \`-ий/-а/-е/-і\`.`'
+    normalized_id: nf_9890678f345846f7
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id021
+    dimension: language
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: першому
+    location: Діалоги / `This first conversation features Natalka selecting flowers
+      for a special event. She speaks with a seller to find the perfect combination
+      of bright spring colors.`
+    issue: 'Українською: Англомовний вступ у середині українського модуля порушує
+      мовну чистоту й звучить як редакторська метанарація, а не як навчальний текст
+      українською.
+
+      English: The section opener is in English instead of clean Ukrainian.'
+    fix: '`У першому діалозі Наталка вибирає квіти для особливої події. Вона розмовляє
+      з продавцем і добирає гарне поєднання весняних кольорів.`'
+    normalized_id: nf_cf4db3bcdca69cdf
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id022
+    dimension: naturalness
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: синій
+    location: 'Синій ≠ блакитний / "В українській мові ми активно вчимо пару слів
+      для цього кольору: «синій» та «блакитний»."'
+    issue: 'Українською: "активно вчимо пару слів" звучить канцелярсько й неприродно.
+      Тут потрібне просте пояснення різниці, а не методичний штамп.'
+    fix: '"В українській мові розрізняємо дві назви цього кольору: «синій» і «блакитний»."'
+    normalized_id: nf_740e901fdda4cd45
+    plan_level: false
+    topology: cross_section
+    effective_severity: major
+  - &id023
+    dimension: naturalness
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: Якого кольору...?
+    location: Підсумок / "Your primary tool for communication is the question «Якого
+      кольору...?». The base noun «колір» is masculine, but it changes form here."
+    issue: 'Українською: Формули "primary tool for communication" і "base noun" неприродні
+      для українського навчального стилю. Це не пояснення, а технічний переказ.'
+    fix: '"Головна мовна формула цього модуля — «Якого кольору...?». Після неї зазвичай
+      відповідаємо коротко: «зелений», «біла», «сіре»."'
+    normalized_id: nf_acde8a40351a9751
+    plan_level: false
+    topology: cross_section
+    effective_severity: major
+  - &id024
+    dimension: naturalness
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: -ий/-а/-е/-і
+    location: Кольори / "We will look at 12 базових кольорів, podілених на дві групи
+      за типами прикметників. Most of these belong to the hard group. Ця Тверда група
+      follows the exact same `-ий/-а/-е/-і` gender agreement pattern you already know."
+    issue: 'Українською: Це суцільна штучна мішанина мов і термінів. Український викладач
+      скаже простіше й суцільно однією мовою.'
+    fix: '"Розгляньмо 12 базових кольорів. Більшість із них належить до твердої групи
+      й змінюється за зразком `-ий/-а/-е/-і`."'
+    normalized_id: nf_ce033b0ac98ae56a
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id025
+    dimension: naturalness
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: The phrase «мені подобаються
+    location: Діалоги / "The phrase «мені подобаються» is a ready-made expression
+      for personal preferences. The adjective in «жовті соняшники» explicitly uses
+      the plural ending, and такі форми використовуються naturally in conversation."
+    issue: 'Українською: Речення ламане, з англійським синтаксисом і механічною термінологією
+      на кшталт "explicitly uses". Воно звучить не як українське пояснення, а як сирий
+      машинний мікс.
+
+      English: The code-switching is especially unnatural here.'
+    fix: '"Вислів «мені подобаються» краще запам''ятати як готову мовну модель. У
+      словосполученні «жовті соняшники» маємо форму множини, і в живому мовленні вона
+      звучить природно."'
+    normalized_id: nf_dfd869d5e759c493
+    plan_level: false
+    topology: cross_section
+    effective_severity: major
+  - &id026
+    dimension: naturalness
+    severity: major
+    error_class: unclassified
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: clear short відповідь
+    location: Кольори / "When asking about the color of an object in Ukrainian, we
+      use the phrase якого кольору? (what color?). In natural speech, the immediate
+      response is often just the adjective. This provides a clear short відповідь
+      before building a full sentence."
+    issue: 'Українською: Уся підводка побудована як переклад з англійської. Формула
+      "clear short відповідь" неприродна й псує довіру до тексту.'
+    fix: '"Коли питаємо про колір, уживаємо формулу «Якого кольору?». У відповіді
+      часто досить одного слова: «Червоний», «Червона», «Біле»."'
+    normalized_id: nf_0a82b6a1ddfcc21e
+    plan_level: false
+    original_prose:
+      location: Кольори / "When asking about the color of an object in Ukrainian,
+        we use the phrase якого кольору? (what color?). In natural speech, the immediate
+        response is often just the adjective. This provides a clear short відповідь
+        before building a full sentence."
+      issue: 'Українською: Уся підводка побудована як переклад з англійської. Формула
+        "clear short відповідь" неприродна й псує довіру до тексту.'
+      fix: '"Коли питаємо про колір, уживаємо формулу «Якого кольору?». У відповіді
+        часто досить одного слова: «Червоний», «Червона», «Біле»."'
+    topology: local_to_prose
+    effective_severity: major
+  - &id027
+    dimension: plan_adherence
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: Діалоги
+      speaker: Наталка
+      target_lexeme: '## Діалоги'
+    location: '`## Діалоги`: `— **Наталка:** А ці квіти? Якого вони кольору?` / `—
+      **Продавець:** Це білі лілії. Вони дуже свіжі.`; далі перший діалог закінчується
+      на `— **Наталка:** Так. Додайте ще зелене листя, будь ласка.` і відразу починається
+      `Next, Dmytro and Liza...`'
+    issue: 'Українською: План вимагає, щоб кольори входили через `Якого кольору?`
+      + коротку відповідь, і прямо задає фінальний хід `— Добре, загорнути букет?`.
+      У модулі питання змінене на `Якого вони кольору?`, відповідь розгорнута, а репліка
+      про загортання букета відсутня до переходу в другий діалог.
+
+      English: The first dialogue drifts from the planned prompt-response shape and
+      omits the bouquet-wrapping close.'
+    fix: Переписати обмін як коротку модель `Якого кольору? — Білі/Червоні` і додати
+      завершення `— Добре, загорнути букет? — Так, будь ласка.`
+    normalized_id: nf_64a01774849b8270
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id028
+    dimension: plan_adherence
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: Діалоги
+      speaker: Дмитро
+      target_lexeme: '## Діалоги'
+    location: '`## Діалоги`: `— **Дмитро:** Який одяг ти шукаєш?` / `— **Ліза:** Мені
+      потрібна чорна сукня. А ти?` / `— **Дмитро:** Цей білий светр і коричневі черевики.`'
+    issue: 'Українською: За контрактом функція другого діалогу має містити `короткі
+      відповіді на "Якого кольору?"`; у наведеному уривку таких питань і коротких
+      відповідей немає, лише перелік предметів одягу.
+
+      English: Dialogue 2 covers the right nouns and appearance chunks, but not the
+      planned question-answer drill.'
+    fix: Додати щонайменше один обмін на кшталт `— Якого кольору сукня? — Чорна. —
+      А светр? — Білий.`
+    normalized_id: nf_911674a8b81eab13
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id029
+    dimension: plan_adherence
+    severity: major
+    error_class: register_drift
+    scope:
+      section_title: Діалоги
+      speaker: Українською
+      target_lexeme: '## Діалоги'
+    location: '`## Діалоги` — фактичний обсяг близько `376` слів при плані `270–330`.'
+    issue: 'Українською: Розділ перевищує верхню межу бюджету на приблизно 46 слів.
+      Перевищення створюють додані англомовні вступи й пояснювальні вставки, яких
+      план не вимагає.
+
+      English: The dialogues section is materially over budget.'
+    fix: Прибрати англомовні вступні абзаци й стиснути пояснення після діалогів, щоб
+      повернутися в межі `270–330` слів.
+    normalized_id: nf_f099adde4bdecbbc
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: major
+  - &id030
+    dimension: completeness
+    severity: minor
+    error_class: scenario_grammar_misalignment
+    scope:
+      section_title: Підсумок
+      speaker: Українською
+      target_lexeme: '## Підсумок'
+    location: '`## Підсумок` — `* **Опишіть 3 речі:** Give short descriptive answers
+      for three items near you...`'
+    issue: 'Українською: Контрактовий self-check вимагає `опишіть 3 речі у вашій кімнаті`,
+      але модуль розширює завдання до будь-яких речей `near you`, тому конкретний
+      кімнатний сценарій не зафіксований.
+
+      English: The recap task drifts from the contracted “in your room” scenario.'
+    fix: Уточнити вправу як опис саме трьох речей у кімнаті, бажано з одним прикладом
+      на кшталт `Кімната біла. Стіл коричневий. Крісло сіре.`
+    normalized_id: nf_5db05398974e2a8e
+    plan_level: true
+    topology: plan_level
+    effective_severity: minor
+  - &id031
+    dimension: factual
+    severity: minor
+    error_class: register_drift
+    scope:
+      section_title: null
+      speaker: Українською
+      target_lexeme: When someone
+    location: '`When someone''s hair turns grey with age, we do not use «сірий» (the
+      color of a stone or an animal). Instead, we use the specific adjective for hair
+      and say «сиве волосся» (grey hair).`'
+    issue: 'Українською: Правильний чанк `сиве волосся` подано вірно, але речення
+      перебільшує: пакет дає позитивну норму `сиве волосся`, а не доводить категоричну
+      заборону `сірий`; вставка про “stone or an animal” також не має опори в джерелах.
+
+      English: The target collocation is correct, but the wording is too absolute
+      and adds an unsupported gloss.'
+    fix: 'Пом''якшити до описової норми: “When describing grey hair, Ukrainian normally
+      uses «сиве волосся».”'
+    normalized_id: nf_4ee7a0325468c584
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: minor
+  - &id032
+    dimension: plan_adherence
+    severity: minor
+    error_class: register_drift
+    scope:
+      section_title: Синій ≠ блакитний
+      speaker: Українською
+      target_lexeme: '## Синій ≠ блакитний'
+    location: '`## Синій ≠ блакитний` — фактичний обсяг близько `333` слів при плані
+      `270–330`.'
+    issue: 'Українською: Розділ трохи виходить за ліміт.
+
+      English: This section is only slightly over the budget.'
+    fix: Скоротити 3-5 слів, найпростіше прибравши частину англомовного дубляжу.
+    normalized_id: nf_8b8f6da0383794a0
+    plan_level: false
+    topology: local_to_prose
+    effective_severity: minor
+  tier: 0
+- attempt: 2
+  strategy: full_rewrite
+  writer: gemini-tools
+  writer_model_version: gemini-tools
+  reviewer: ''
+  reviewer_model_version: ''
+  score_overall: null
+  scores_per_dimension: {}
+  dim_floor_fail: []
+  verdict: revise
+  content_hash: null
+  prompt_hash: 2737d768927fcadab0c046a31d296dc80a26d163133a465cd3c15fd35e9b35cd
+  contract_snapshot_hash: ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356
+  findings_normalized:
+  - nf_afb0c8510b9a2818
+  - nf_cd25686e28b29d56
+  - nf_4c2c56b35183b508
+  - nf_6dff24e33ffc1d17
+  - nf_5f5be8946ddeb429
+  - nf_b6a8183f5c7e8ba9
+  - nf_19ab2906462e0ca4
+  - nf_19ab2906462e0ca4
+  - nf_2e2397116773c350
+  - nf_8d98050de4ce8a5e
+  - nf_2a23801056fa360b
+  - nf_393b7a160d347d2f
+  - nf_0618b31f5f8be8c8
+  - nf_08d0bac5c71273df
+  - nf_6dff24e33ffc1d17
+  - nf_e6ecef1f9a005265
+  - nf_40f6d0bfb7bead9d
+  - nf_5740b2545b800622
+  - nf_7e00be97a91559d6
+  - nf_9890678f345846f7
+  - nf_cf4db3bcdca69cdf
+  - nf_740e901fdda4cd45
+  - nf_acde8a40351a9751
+  - nf_ce033b0ac98ae56a
+  - nf_dfd869d5e759c493
+  - nf_0a82b6a1ddfcc21e
+  - nf_64a01774849b8270
+  - nf_911674a8b81eab13
+  - nf_f099adde4bdecbbc
+  - nf_5db05398974e2a8e
+  - nf_4ee7a0325468c584
+  - nf_8b8f6da0383794a0
+  mutation_summary: null
+  decision_reason: exception
+  exception_type: RuntimeError
+  exception_message: 'plan-sidecar validation failed: Missing contract vocabulary
+    targets: [''чорний (black)'', ''сірий (grey)'', ''колір (color, m)'', ''якого
+    кольору? (what color?)'']; Activity order mismatch at position 3 (expected type
+    ''quiz'', found ''group-sort-hard-soft'') and position 4 (expected type ''match-up'',
+    found ''quiz-blue-vs-lightblue'') and position 5 (expected type ''group-sort'',
+    found ''match-up-appearance'')'
+  exception_traceback: "Traceback (most recent call last):\n  File \"/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/convergence_loop.py\"\
+    , line 584, in run_convergence_loop\n    if mutation.changed and not context.refresh_sidecars(decision.strategy):\n\
+    \                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\
+    \  File \"/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/v6_build.py\"\
+    , line 9126, in <lambda>\n    refresh_sidecars=lambda strategy: _refresh_post_patch_sidecars(\n\
+    \                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"\
+    /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/v6_build.py\"\
+    , line 9750, in _refresh_post_patch_sidecars\n    _validate_regenerated_sidecars(\n\
+    \  File \"/Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/v6_build.py\"\
+    , line 9659, in _validate_regenerated_sidecars\n    raise RuntimeError(f\"plan-sidecar\
+    \ validation failed: {messages}\")\nRuntimeError: plan-sidecar validation failed:\
+    \ Missing contract vocabulary targets: ['чорний (black)', 'сірий (grey)', 'колір\
+    \ (color, m)', 'якого кольору? (what color?)']; Activity order mismatch at position\
+    \ 3 (expected type 'quiz', found 'group-sort-hard-soft') and position 4 (expected\
+    \ type 'match-up', found 'quiz-blue-vs-lightblue') and position 5 (expected type\
+    \ 'group-sort', found 'match-up-appearance')\n"
+  artifacts: {}
+  timestamps:
+    started: '2026-04-23T00:24:21.219704+00:00'
+    finished: '2026-04-23T00:31:16.338090+00:00'
+  cost:
+    input_tokens: null
+    output_tokens: null
+    wall_clock_s: 415.119
+  prioritized_findings:
+  - *id001
+  - *id002
+  - *id003
+  - *id004
+  - *id005
+  - *id006
+  - *id007
+  - *id008
+  - *id009
+  - *id010
+  - *id011
+  - *id012
+  - *id013
+  - *id014
+  - *id015
+  - *id016
+  - *id017
+  - *id018
+  - *id019
+  - *id020
+  - *id021
+  - *id022
+  - *id023
+  - *id024
+  - *id025
+  - *id026
+  - *id027
+  - *id028
+  - *id029
+  - *id030
+  - *id031
+  - *id032
+  tier: 3
+events: []

@@ -1,0 +1,61 @@
+slug: colors
+round: 1
+dimension: decolonization
+name: Decolonization
+score: 8.8
+verdict: REVISE
+evidence: '- Українською: «В українській мові ми активно вчимо пару слів для цього
+  кольору: «синій» та «блакитний». «Синій» — це глибокий колір. Ми кажемо «синє море»
+  або «синє чорнило». Натомість «блакитний»...'
+findings:
+- dimension: DECOLONIZATION
+  severity: major
+  location: '`Синій ≠ блакитний` / “The word «голубий» is simply a synonym, but we
+    use «блакитний».”'
+  issue: 'Українською: Це не російсько-центричне пояснення напряму, але воно все одно
+    зсуває рамку в бік оборонного «відсікання» слова замість українсько-центричного
+    опису норми. За контрактом тут потрібне пасивне впізнавання `голубий` як словникового
+    синоніма поза модулем, а не формула «ми вживаємо `блакитний`», яка звучить як
+    жорстке витіснення.
+
+    English: This avoids an explicit Russian comparison, but it still frames the topic
+    as lexical policing rather than Ukrainian-first description. The contract requires
+    passive recognition, not blanket exclusion.'
+  fix: 'Замінити на нейтральне українсько-центричне формулювання: `У цьому модулі
+    активно вживаємо «блакитний»; слово «голубий», якщо трапиться поза модулем, досить
+    пасивно впізнавати як словниковий синонім.`'
+fixes:
+- find: The word «голубий» is simply a synonym, but we use «блакитний». This is worth
+    knowing for quick recognition of colors.
+  replace: У цьому модулі активно вживаємо «блакитний»; слово «голубий», якщо трапиться
+    поза модулем, досить пасивно впізнавати як словниковий синонім до «блакитний».
+rewrite_blocks: []
+review_text: "## Dimension\nid: decolonization\nname: Decolonization\nscore: 8.8/10\n\
+  verdict: REVISE\n\n## Evidence\n- Українською: «В українській мові ми активно вчимо\
+  \ пару слів для цього кольору: «синій» та «блакитний». «Синій» — це глибокий колір.\
+  \ Ми кажемо «синє море» або «синє чорнило». Натомість «блакитний» — це світлий колір,\
+  \ як «блакитне небо». Наш прапор — синьо-жовтий...»\n  English: This is largely\
+  \ Ukrainian-centered: the distinction is explained from Ukrainian usage itself,\
+  \ not through Russian comparison.\n- Українською: «When describing human appearance,\
+  \ Ukrainian uses fixed collocations rather than the basic color palette. ... we\
+  \ specifically say «карі очі» ... «русяве волосся» ... «сиве волосся».»\n  English:\
+  \ The lesson presents Ukrainian collocations as native norms, which supports register\
+  \ independence.\n\n## Findings\n[DECOLONIZATION] [SEVERITY: major]\nLocation: `Синій\
+  \ ≠ блакитний` / “The word «голубий» is simply a synonym, but we use «блакитний».”\n\
+  Issue: Українською: Це не російсько-центричне пояснення напряму, але воно все одно\
+  \ зсуває рамку в бік оборонного «відсікання» слова замість українсько-центричного\
+  \ опису норми. За контрактом тут потрібне пасивне впізнавання `голубий` як словникового\
+  \ синоніма поза модулем, а не формула «ми вживаємо `блакитний`», яка звучить як\
+  \ жорстке витіснення.\nEnglish: This avoids an explicit Russian comparison, but\
+  \ it still frames the topic as lexical policing rather than Ukrainian-first description.\
+  \ The contract requires passive recognition, not blanket exclusion.\nFix: Замінити\
+  \ на нейтральне українсько-центричне формулювання: `У цьому модулі активно вживаємо\
+  \ «блакитний»; слово «голубий», якщо трапиться поза модулем, досить пасивно впізнавати\
+  \ як словниковий синонім.`\n\n## Verdict Reason\nМодуль загалом не будує пояснення\
+  \ через російську і в ключовому контенті подає українські кольори та сталі словосполучення\
+  \ на власних підставах. Але формула про `голубий` порушує контрактну вимогу і зсуває\
+  \ тон у бік надмірно оборонної нормативності, тому потрібна правка.\n\n<fixes>\n\
+  - find: \"The word «голубий» is simply a synonym, but we use «блакитний». This is\
+  \ worth knowing for quick recognition of colors.\"\n  replace: \"У цьому модулі\
+  \ активно вживаємо «блакитний»; слово «голубий», якщо трапиться поза модулем, досить\
+  \ пасивно впізнавати як словниковий синонім до «блакитний».\"\n</fixes>"

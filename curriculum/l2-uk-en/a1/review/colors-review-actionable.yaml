@@ -1,0 +1,146 @@
+slug: colors
+round: 1
+dimension: actionable
+name: Actionable
+score: 4.9
+verdict: REJECT
+evidence: '- Українською: `For example: «Якого кольору олівець? — Червоний.», «Якого
+  кольору сукня? — Червона.», and «Якого кольору вікно? — Біле.»` English: This is
+  one of the few places where the learner ge...'
+findings:
+- dimension: ACTIONABLE
+  severity: critical
+  location: '`## Кольори / "<!-- INJECT_ACTIVITY: quiz-what-color -->"`; same pattern
+    in `fill-in-color-agreement`, `quiz-blue-vs-lightblue`, `match-up-appearance`,
+    `group-sort-hard-soft`'
+  issue: 'Українською: Тут немає вправ, лише технічні маркери. Учень не бачить запитання,
+    не має кроків, не дає відповіді і не виконує жодної дії, хоча контракт вимагає
+    вправ після кожного блоку.
+
+    English: The required learner tasks are missing from the rendered lesson.'
+  fix: Замінити кожен `INJECT_ACTIVITY` на коротку вправу з 3-5 пунктами, зразком
+    відповіді й чіткою дією для учня.
+- dimension: ACTIONABLE
+  severity: major
+  location: '`## Діалоги / "This first conversation features Natalka selecting flowers
+    for a special event. She speaks with a seller to find the perfect combination
+    of bright spring colors."`'
+  issue: 'Українською: Це анонс сцени, а не навчальна інструкція. Учневі не сказано,
+    що саме зробити з діалогом: знайти форму, дати коротку відповідь, повторити репліку,
+    підставити інше слово.
+
+    English: The paragraph narrates content instead of directing learner behavior.'
+  fix: 'Перед діалогом дати завдання з послідовністю дій: знайти три відповіді на
+    `Якого кольору?`, виписати одну форму множини, повторити діалог з іншими назвами
+    квітів.'
+- dimension: ACTIONABLE
+  severity: major
+  location: '`## Діалоги / "Діалог на ринку часто вимагає чітких та коротких відповідей."`
+    and `## Кольори / "Learning «синій» now prepares you for other soft adjectives
+    later."`'
+  issue: 'Українською: Це загальні поради без учнівського ходу. Вони не дають ні мовного
+    зразка, ні міні-вправи, ні перевірки, тому не допомагають виконати конкретну дію.
+
+    English: These are generic meta-comments, not usable teaching moves.'
+  fix: Кожен такий `tip` треба перетворити на мікрозавдання з 2-3 репліками або міні-дрилом.
+- dimension: ACTIONABLE
+  severity: major
+  location: '`## Підсумок / "Your primary tool for communication is the question «Якого
+    кольору...?». The base noun «колір» is masculine, but it changes form here."`'
+  issue: 'Українською: Блок знову пояснює правило абстрактно, хоча контракт вимагає
+    послідовність `коротка відповідь -> повне речення`. Конкретна дія з''являється
+    лише в кінцевому self-check, а не одразу після пояснення.
+
+    English: The learner is told about the pattern instead of being led through it
+    step by step.'
+  fix: 'Одразу після цього місця дати три кроки: коротка відповідь, повне речення,
+    власний приклад з предметом у кімнаті.'
+fixes:
+- find: This first conversation features Natalka selecting flowers for a special event.
+    She speaks with a seller to find the perfect combination of bright spring colors.
+  replace: 'Завдання перед діалогом: знайти три відповіді на `Якого кольору?`, виписати
+    одну форму множини, потім повторити діалог з іншими назвами квітів.'
+- find: '<!-- INJECT_ACTIVITY: quiz-what-color -->'
+  replace: '### Вправа: `Якого кольору?` 1. олівець — `Червоний.` 2. сукня — `Чорна.`
+    3. вікно — `Біле.` 4. Далі: дати свою коротку відповідь для слів `светр`, `книга`,
+    `листя`.'
+- find: '<!-- INJECT_ACTIVITY: fill-in-color-agreement -->'
+  replace: '### Вправа: Заповнити форму кольору. 1. син__ книга 2. червон__ стіл 3.
+    біл__ вікно 4. сір__ пальто 5. зелен__ квіти.'
+- find: '<!-- INJECT_ACTIVITY: quiz-blue-vs-lightblue -->'
+  replace: '### Вправа: `Синій` чи `блакитний`? 1. небо 2. море 3. чорнило 4. прапор.
+    Після вибору сказати повне речення: `Небо блакитне.`'
+- find: '<!-- INJECT_ACTIVITY: match-up-appearance -->'
+  replace: '### Вправа: Зіставити вираз і контекст. 1. `карі очі` 2. `русяве волосся`
+    3. `сиве волосся` A. людина старшого віку B. світло-коричневе волосся C. brown
+    eyes.'
+- find: '<!-- INJECT_ACTIVITY: group-sort-hard-soft -->'
+  replace: '### Вправа: Розподілити слова на дві групи. Тверда група: `червоний`,
+    `жовтий`, `зелений`, `білий`, `чорний`, `сірий`, `блакитний`. М''яка група: `синій`.'
+- find: Діалог на ринку часто вимагає чітких та коротких відповідей.
+  replace: 'Вправа: дати три короткі відповіді без повного речення. `троянди? — Червоні.`
+    `лілії? — Білі.` `листя? — Зелене.`'
+rewrite_blocks: []
+review_text: "## Dimension\nid: actionable\nname: Actionable\nscore: 4.9/10\nverdict:\
+  \ REJECT\n\n## Evidence\n- Українською: `For example: «Якого кольору олівець? —\
+  \ Червоний.», «Якого кольору сукня? — Червона.», and «Якого кольору вікно? — Біле.»`\n\
+  \  English: This is one of the few places where the learner gets an immediately\
+  \ reusable model.\n- Українською: `<!-- INJECT_ACTIVITY: quiz-what-color -->`\n\
+  \  English: This is not an activity. It is a missing activity.\n- Українською: `*\
+  \ **Поставте 3 запитання:** Look around your room and form three questions using\
+  \ the formula «Якого кольору...?».`\n  English: The summary finally becomes concrete,\
+  \ but that concreteness arrives too late.\n\n## Findings\n[ACTIONABLE] [SEVERITY:\
+  \ critical]\nLocation: `## Кольори / \"<!-- INJECT_ACTIVITY: quiz-what-color -->\"\
+  `; same pattern in `fill-in-color-agreement`, `quiz-blue-vs-lightblue`, `match-up-appearance`,\
+  \ `group-sort-hard-soft`\nIssue: Українською: Тут немає вправ, лише технічні маркери.\
+  \ Учень не бачить запитання, не має кроків, не дає відповіді і не виконує жодної\
+  \ дії, хоча контракт вимагає вправ після кожного блоку.\nEnglish: The required learner\
+  \ tasks are missing from the rendered lesson.\nFix: Замінити кожен `INJECT_ACTIVITY`\
+  \ на коротку вправу з 3-5 пунктами, зразком відповіді й чіткою дією для учня.\n\n\
+  [ACTIONABLE] [SEVERITY: major]\nLocation: `## Діалоги / \"This first conversation\
+  \ features Natalka selecting flowers for a special event. She speaks with a seller\
+  \ to find the perfect combination of bright spring colors.\"`\nIssue: Українською:\
+  \ Це анонс сцени, а не навчальна інструкція. Учневі не сказано, що саме зробити\
+  \ з діалогом: знайти форму, дати коротку відповідь, повторити репліку, підставити\
+  \ інше слово.\nEnglish: The paragraph narrates content instead of directing learner\
+  \ behavior.\nFix: Перед діалогом дати завдання з послідовністю дій: знайти три відповіді\
+  \ на `Якого кольору?`, виписати одну форму множини, повторити діалог з іншими назвами\
+  \ квітів.\n\n[ACTIONABLE] [SEVERITY: major]\nLocation: `## Діалоги / \"Діалог на\
+  \ ринку часто вимагає чітких та коротких відповідей.\"` and `## Кольори / \"Learning\
+  \ «синій» now prepares you for other soft adjectives later.\"`\nIssue: Українською:\
+  \ Це загальні поради без учнівського ходу. Вони не дають ні мовного зразка, ні міні-вправи,\
+  \ ні перевірки, тому не допомагають виконати конкретну дію.\nEnglish: These are\
+  \ generic meta-comments, not usable teaching moves.\nFix: Кожен такий `tip` треба\
+  \ перетворити на мікрозавдання з 2-3 репліками або міні-дрилом.\n\n[ACTIONABLE]\
+  \ [SEVERITY: major]\nLocation: `## Підсумок / \"Your primary tool for communication\
+  \ is the question «Якого кольору...?». The base noun «колір» is masculine, but it\
+  \ changes form here.\"`\nIssue: Українською: Блок знову пояснює правило абстрактно,\
+  \ хоча контракт вимагає послідовність `коротка відповідь -> повне речення`. Конкретна\
+  \ дія з'являється лише в кінцевому self-check, а не одразу після пояснення.\nEnglish:\
+  \ The learner is told about the pattern instead of being led through it step by\
+  \ step.\nFix: Одразу після цього місця дати три кроки: коротка відповідь, повне\
+  \ речення, власний приклад з предметом у кімнаті.\n\n## Verdict Reason\nУ модулі\
+  \ є кілька хороших моделей і нормальний self-check наприкінці, але більшість пояснення\
+  \ працює як опис теми, а не як інструкція для дії. Нерозгорнуті `INJECT_ACTIVITY`\
+  \ маркери й загальні поради знижують придатність модуля до рівня, де учень часто\
+  \ не знає, що робити далі.\n\n<fixes>\n- find: \"This first conversation features\
+  \ Natalka selecting flowers for a special event. She speaks with a seller to find\
+  \ the perfect combination of bright spring colors.\"\n  replace: \"Завдання перед\
+  \ діалогом: знайти три відповіді на `Якого кольору?`, виписати одну форму множини,\
+  \ потім повторити діалог з іншими назвами квітів.\"\n\n- find: \"<!-- INJECT_ACTIVITY:\
+  \ quiz-what-color -->\"\n  replace: \"### Вправа: `Якого кольору?` 1. олівець —\
+  \ `Червоний.` 2. сукня — `Чорна.` 3. вікно — `Біле.` 4. Далі: дати свою коротку\
+  \ відповідь для слів `светр`, `книга`, `листя`.\"\n\n- find: \"<!-- INJECT_ACTIVITY:\
+  \ fill-in-color-agreement -->\"\n  replace: \"### Вправа: Заповнити форму кольору.\
+  \ 1. син__ книга 2. червон__ стіл 3. біл__ вікно 4. сір__ пальто 5. зелен__ квіти.\"\
+  \n\n- find: \"<!-- INJECT_ACTIVITY: quiz-blue-vs-lightblue -->\"\n  replace: \"\
+  ### Вправа: `Синій` чи `блакитний`? 1. небо 2. море 3. чорнило 4. прапор. Після\
+  \ вибору сказати повне речення: `Небо блакитне.`\"\n\n- find: \"<!-- INJECT_ACTIVITY:\
+  \ match-up-appearance -->\"\n  replace: \"### Вправа: Зіставити вираз і контекст.\
+  \ 1. `карі очі` 2. `русяве волосся` 3. `сиве волосся` A. людина старшого віку B.\
+  \ світло-коричневе волосся C. brown eyes.\"\n\n- find: \"<!-- INJECT_ACTIVITY: group-sort-hard-soft\
+  \ -->\"\n  replace: \"### Вправа: Розподілити слова на дві групи. Тверда група:\
+  \ `червоний`, `жовтий`, `зелений`, `білий`, `чорний`, `сірий`, `блакитний`. М'яка\
+  \ група: `синій`.\"\n\n- find: \"Діалог на ринку часто вимагає чітких та коротких\
+  \ відповідей.\"\n  replace: \"Вправа: дати три короткі відповіді без повного речення.\
+  \ `троянди? — Червоні.` `лілії? — Білі.` `листя? — Зелене.`\"\n</fixes>"

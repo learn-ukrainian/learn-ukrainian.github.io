@@ -1,0 +1,152 @@
+slug: colors
+round: 1
+dimension: language
+name: Language
+score: 5.8
+verdict: REVISE
+evidence: '- Українською: У модулі системно змішано англійську з українською: `This
+  first conversation features Natalka...`, `такі форми використовуються naturally
+  in conversation`, `a direct відповідь is exp...'
+findings:
+- dimension: LANGUAGE
+  severity: major
+  location: Діалоги / `This first conversation features Natalka selecting flowers
+    for a special event. She speaks with a seller to find the perfect combination
+    of bright spring colors.`
+  issue: 'Українською: Англомовний вступ у середині українського модуля порушує мовну
+    чистоту й звучить як редакторська метанарація, а не як навчальний текст українською.
+
+    English: The section opener is in English instead of clean Ukrainian.'
+  fix: '`У першому діалозі Наталка вибирає квіти для особливої події. Вона розмовляє
+    з продавцем і добирає гарне поєднання весняних кольорів.`'
+- dimension: LANGUAGE
+  severity: major
+  location: Діалоги / `The adjective in «жовті соняшники» explicitly uses the plural
+    ending, and такі форми використовуються naturally in conversation. When asking
+    якого кольору? (what color?), a direct відповідь is expected, often без a full
+    sentence.`
+  issue: 'Українською: Це мішанина англійської й української в одному поясненні; така
+    подача неприродна і не може вважатися чистою українською.
+
+    English: This is direct code-switching inside a grammar explanation.'
+  fix: '`У словосполученні «жовті соняшники» прикметник ужито у формі множини, і в
+    розмові така форма звучить природно. На запитання «Якого кольору?» часто відповідають
+    коротко, без повного речення.`'
+- dimension: LANGUAGE
+  severity: major
+  location: Кольори / `We will look at 12 базових кольорів, поділених на дві групи
+    за типами прикметників. Most of these belong to the hard group. Ця Тверда група
+    follows the exact same \`-ий/-а/-е/-і\` gender agreement pattern you already know.`
+  issue: 'Українською: Пояснення знову ламане, з англійським синтаксисом і код-міксом;
+    `Ця Тверда група follows...` мовно неприйнятне.
+
+    English: The sentence is not valid clean Ukrainian.'
+  fix: '`Розгляньмо 12 базових кольорів, поділених на дві групи за типами прикметників.
+    Більшість із них належить до твердої групи. Ця тверда група має той самий зразок
+    узгодження: \`-ий/-а/-е/-і\`.`'
+- dimension: LANGUAGE
+  severity: major
+  location: Синій ≠ блакитний / `Наш прапор — синьо-жовтий, де є жовтий колір.`
+  issue: 'Українською: Зворот `де є жовтий колір` неідіоматичний і звучить як буквальний
+    переклад.
+
+    English: This is clumsy translationese.'
+  fix: '`Наш прапор — синьо-жовтий.`'
+- dimension: LANGUAGE
+  severity: major
+  location: Підсумок / `The base noun «колір» is masculine, but it changes form here.`
+  issue: 'Українською: Граматичний коментар подано англійською, ще й через неприродне
+    для українського пояснення формулювання `base noun`.
+
+    English: The grammar note should be written in proper Ukrainian.'
+  fix: '`Іменник «колір» — чоловічого роду, але у формулі «Якого кольору?» він стоїть
+    у формі родового відмінка.`'
+fixes:
+- find: This first conversation features Natalka selecting flowers for a special event.
+    She speaks with a seller to find the perfect combination of bright spring colors.
+  replace: У першому діалозі Наталка вибирає квіти для особливої події. Вона розмовляє
+    з продавцем і добирає гарне поєднання весняних кольорів.
+- find: The adjective in «жовті соняшники» explicitly uses the plural ending, and
+    такі форми використовуються naturally in conversation. When asking якого кольору?
+    (what color?), a direct відповідь is expected, often без a full sentence.
+  replace: У словосполученні «жовті соняшники» прикметник ужито у формі множини, і
+    в розмові така форма звучить природно. На запитання «Якого кольору?» часто відповідають
+    коротко, без повного речення.
+- find: We will look at 12 базових кольорів, поділених на дві групи за типами прикметників.
+    Most of these belong to the hard group. Ця Тверда група follows the exact same
+    `-ий/-а/-е/-і` gender agreement pattern you already know.
+  replace: 'Розгляньмо 12 базових кольорів, поділених на дві групи за типами прикметників.
+    Більшість із них належить до твердої групи. Ця тверда група має той самий зразок
+    узгодження: `-ий/-а/-е/-і`.'
+- find: Наш прапор — синьо-жовтий, де є жовтий колір.
+  replace: Наш прапор — синьо-жовтий.
+- find: The base noun «колір» is masculine, but it changes form here.
+  replace: Іменник «колір» — чоловічого роду, але у формулі «Якого кольору?» він стоїть
+    у формі родового відмінка.
+rewrite_blocks: []
+review_text: "## Dimension\nid: language\nname: Language\nscore: 5.8/10\nverdict:\
+  \ REVISE\n\n## Evidence\n- Українською: У модулі системно змішано англійську з українською:\
+  \ `This first conversation features Natalka...`, `такі форми використовуються naturally\
+  \ in conversation`, `a direct відповідь is expected, often без a full sentence`.\n\
+  \  English: The module has repeated code-switching, which breaks Ukrainian language\
+  \ purity.\n- Українською: Є неідіоматичний, перекладний зворот: `Наш прапор — синьо-жовтий,\
+  \ де є жовтий колір.`\n  English: This reads like translationese rather than natural\
+  \ Ukrainian.\n- Українською: Граматичні пояснення часто подано не українською, а\
+  \ англомовним метатекстом: `The base noun «колір» is masculine, but it changes form\
+  \ here.`\n  English: The grammar layer is not written in clean Ukrainian.\n\n##\
+  \ Findings\n[LANGUAGE] [SEVERITY: major]\nLocation: Діалоги / `This first conversation\
+  \ features Natalka selecting flowers for a special event. She speaks with a seller\
+  \ to find the perfect combination of bright spring colors.`\nIssue: Українською:\
+  \ Англомовний вступ у середині українського модуля порушує мовну чистоту й звучить\
+  \ як редакторська метанарація, а не як навчальний текст українською.\nEnglish: The\
+  \ section opener is in English instead of clean Ukrainian.\nFix: `У першому діалозі\
+  \ Наталка вибирає квіти для особливої події. Вона розмовляє з продавцем і добирає\
+  \ гарне поєднання весняних кольорів.`\n\n[LANGUAGE] [SEVERITY: major]\nLocation:\
+  \ Діалоги / `The adjective in «жовті соняшники» explicitly uses the plural ending,\
+  \ and такі форми використовуються naturally in conversation. When asking якого кольору?\
+  \ (what color?), a direct відповідь is expected, often без a full sentence.`\nIssue:\
+  \ Українською: Це мішанина англійської й української в одному поясненні; така подача\
+  \ неприродна і не може вважатися чистою українською.\nEnglish: This is direct code-switching\
+  \ inside a grammar explanation.\nFix: `У словосполученні «жовті соняшники» прикметник\
+  \ ужито у формі множини, і в розмові така форма звучить природно. На запитання «Якого\
+  \ кольору?» часто відповідають коротко, без повного речення.`\n\n[LANGUAGE] [SEVERITY:\
+  \ major]\nLocation: Кольори / `We will look at 12 базових кольорів, поділених на\
+  \ дві групи за типами прикметників. Most of these belong to the hard group. Ця Тверда\
+  \ група follows the exact same \\`-ий/-а/-е/-і\\` gender agreement pattern you already\
+  \ know.`\nIssue: Українською: Пояснення знову ламане, з англійським синтаксисом\
+  \ і код-міксом; `Ця Тверда група follows...` мовно неприйнятне.\nEnglish: The sentence\
+  \ is not valid clean Ukrainian.\nFix: `Розгляньмо 12 базових кольорів, поділених\
+  \ на дві групи за типами прикметників. Більшість із них належить до твердої групи.\
+  \ Ця тверда група має той самий зразок узгодження: \\`-ий/-а/-е/-і\\`.`\n\n[LANGUAGE]\
+  \ [SEVERITY: major]\nLocation: Синій ≠ блакитний / `Наш прапор — синьо-жовтий, де\
+  \ є жовтий колір.`\nIssue: Українською: Зворот `де є жовтий колір` неідіоматичний\
+  \ і звучить як буквальний переклад.\nEnglish: This is clumsy translationese.\nFix:\
+  \ `Наш прапор — синьо-жовтий.`\n\n[LANGUAGE] [SEVERITY: major]\nLocation: Підсумок\
+  \ / `The base noun «колір» is masculine, but it changes form here.`\nIssue: Українською:\
+  \ Граматичний коментар подано англійською, ще й через неприродне для українського\
+  \ пояснення формулювання `base noun`.\nEnglish: The grammar note should be written\
+  \ in proper Ukrainian.\nFix: `Іменник «колір» — чоловічого роду, але у формулі «Якого\
+  \ кольору?» він стоїть у формі родового відмінка.`\n\n## Verdict Reason\nМодуль\
+  \ не вчить відверто хибної української лексики на рівні базових кольорів, але мовна\
+  \ подача системно засмічена англомовною метанарацією та code-switching. Є також\
+  \ щонайменше один явний неідіоматичний калькований зворот, тому текст потребує суттєвої\
+  \ мовної правки перед прийняттям.\n\n<fixes>\n- find: \"This first conversation\
+  \ features Natalka selecting flowers for a special event. She speaks with a seller\
+  \ to find the perfect combination of bright spring colors.\"\n  replace: \"У першому\
+  \ діалозі Наталка вибирає квіти для особливої події. Вона розмовляє з продавцем\
+  \ і добирає гарне поєднання весняних кольорів.\"\n- find: \"The adjective in «жовті\
+  \ соняшники» explicitly uses the plural ending, and такі форми використовуються\
+  \ naturally in conversation. When asking якого кольору? (what color?), a direct\
+  \ відповідь is expected, often без a full sentence.\"\n  replace: \"У словосполученні\
+  \ «жовті соняшники» прикметник ужито у формі множини, і в розмові така форма звучить\
+  \ природно. На запитання «Якого кольору?» часто відповідають коротко, без повного\
+  \ речення.\"\n- find: \"We will look at 12 базових кольорів, поділених на дві групи\
+  \ за типами прикметників. Most of these belong to the hard group. Ця Тверда група\
+  \ follows the exact same `-ий/-а/-е/-і` gender agreement pattern you already know.\"\
+  \n  replace: \"Розгляньмо 12 базових кольорів, поділених на дві групи за типами\
+  \ прикметників. Більшість із них належить до твердої групи. Ця тверда група має\
+  \ той самий зразок узгодження: `-ий/-а/-е/-і`.\"\n- find: \"Наш прапор — синьо-жовтий,\
+  \ де є жовтий колір.\"\n  replace: \"Наш прапор — синьо-жовтий.\"\n- find: \"The\
+  \ base noun «колір» is masculine, but it changes form here.\"\n  replace: \"Іменник\
+  \ «колір» — чоловічого роду, але у формулі «Якого кольору?» він стоїть у формі родового\
+  \ відмінка.\"\n</fixes>"

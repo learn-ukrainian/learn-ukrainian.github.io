@@ -1,0 +1,36 @@
+session_path: ''
+phase: write-chunk-01
+prompt_chars: 9847
+response_chars: 1952
+prompt_words: 1424
+response_words: 331
+sections:
+- name: preamble
+  start: 0
+  length: 1154
+  fraction: 0.1172
+- name: header
+  start: 1154
+  length: 415
+  fraction: 0.0421
+- name: skeleton
+  start: 1569
+  length: 8102
+  fraction: 0.8228
+- name: output_spec
+  start: 9671
+  length: 176
+  fraction: 0.0179
+large_sections:
+- skeleton
+directives_total: 10
+directives_covered: 8
+directives_missed:
+- kind: must
+  text: Full module rewrite required.
+  covered: false
+  coverage_note: 0/4 keywords (0%)
+- kind: must
+  text: 'English: The required learner tasks are missing from the rendered lesson.'
+  covered: false
+  coverage_note: 2/9 keywords (22%)

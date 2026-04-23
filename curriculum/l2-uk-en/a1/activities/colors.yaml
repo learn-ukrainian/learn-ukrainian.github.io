@@ -1,0 +1,478 @@
+version: '1.0'
+module: colors
+level: a1
+inline:
+- id: quiz-what-color
+  type: quiz
+  instruction: Choose the correct color for these typical objects. (**Оберіть правильний
+    колір**)
+  items:
+  - question: Якого кольору соняшник? (sunflower)
+    options:
+    - жовтий
+    - синій
+    - червоний
+    - білий
+    correct: 0
+  - question: Якого кольору листя влітку? (leaves in summer)
+    options:
+    - блакитне
+    - зелене
+    - чорне
+    - коричневе
+    correct: 1
+  - question: Якого кольору море? (sea)
+    options:
+    - жовте
+    - синє
+    - рожеве
+    - каре
+    correct: 1
+  - question: Якого кольору небо вдень? (sky during the day)
+    options:
+    - зелене
+    - чорне
+    - блакитне
+    - коричневе
+    correct: 2
+  - question: Якого кольору жито? (wheat)
+    options:
+    - жовте
+    - синє
+    - червоне
+    - біле
+    correct: 0
+  - question: Якого кольору український прапор? (Ukrainian flag)
+    options:
+    - синьо-жовтий
+    - червоно-чорний
+    - біло-синій
+    - зелено-жовтий
+    correct: 0
+  - question: Якого кольору типова троянда? (typical rose)
+    options:
+    - червона
+    - синя
+    - зелена
+    - чорна
+    correct: 0
+  - question: Якого кольору типова лілія? (typical lily)
+    options:
+    - біла
+    - чорна
+    - кара
+    - синя
+    correct: 0
+  title: Choose the correct color for these typical objects. (**Оберіть правильний
+    колір*
+- id: fill-in-color-agreement
+  type: fill-in
+  instruction: Choose the correct form of the adjective to match the noun. (**Вставте
+    правильне слово**)
+  items:
+  - sentence: Це ____ стіл.
+    answer: червоний
+    options:
+    - червоний
+    - червона
+    - червоне
+    - червоні
+  - sentence: Це ____ книга.
+    answer: червона
+    options:
+    - червоний
+    - червона
+    - червоне
+    - червоні
+  - sentence: Це ____ вікно.
+    answer: біле
+    options:
+    - білий
+    - біла
+    - біле
+    - білі
+  - sentence: Там ____ квіти.
+    answer: жовті
+    options:
+    - жовтий
+    - жовта
+    - жовте
+    - жовті
+  - sentence: Це ____ стіл.
+    answer: синій
+    options:
+    - синій
+    - синя
+    - синє
+    - сині
+  - sentence: Це ____ ваза.
+    answer: синя
+    options:
+    - синій
+    - синя
+    - синє
+    - сині
+  - sentence: Це ____ море.
+    answer: синє
+    options:
+    - синій
+    - синя
+    - синє
+    - сині
+  - sentence: Це ____ квіти.
+    answer: сині
+    options:
+    - синій
+    - синя
+    - синє
+    - сині
+  - sentence: Тут є ____ светр.
+    answer: білий
+    options:
+    - білий
+    - біла
+    - біле
+    - білі
+  - sentence: У мене є ____ сукня.
+    answer: чорна
+    options:
+    - чорний
+    - чорна
+    - чорне
+    - чорні
+  title: Choose the correct form of the adjective to match the noun. (**Вставте правильне
+- id: quiz-blue-vs-lightblue
+  type: quiz
+  instruction: 'Choose the correct shade of blue: **синій** or **блакитний**.'
+  items:
+  - question: Якого кольору небо вдень? (sky during the day)
+    options:
+    - блакитне
+    - синє
+    - жовте
+    - чорне
+    correct: 0
+  - question: Якого кольору темне вечірнє море? (dark evening sea)
+    options:
+    - синє
+    - блакитне
+    - біле
+    - зелене
+    correct: 0
+  - question: Яка верхня частина українського прапора? (top part of the flag)
+    options:
+    - синя
+    - блакитна
+    - жовта
+    - біла
+    correct: 0
+  - question: Який колір світліший? (Which color is lighter?)
+    options:
+    - блакитний
+    - синій
+    - чорний
+    - коричневий
+    correct: 0
+  - question: Який колір темніший? (Which color is darker?)
+    options:
+    - синій
+    - блакитний
+    - білий
+    - жовтий
+    correct: 0
+  - question: Як сказати «light blue» українською? (How to say 'light blue'?)
+    options:
+    - блакитний
+    - синій
+    - фіолетовий
+    - зелений
+    correct: 0
+  title: 'Choose the correct shade of blue: **синій** or **блакитний**.'
+- id: match-up-appearance
+  type: match-up
+  instruction: Match the Ukrainian expression with its English meaning. (**З'єднайте
+    пари**)
+  pairs:
+  - left: карі очі
+    right: brown eyes
+  - left: русяве волосся
+    right: fair/light-brown hair
+  - left: сиве волосся
+    right: grey hair
+  - left: чорне волосся
+    right: black hair
+  - left: сині очі
+    right: dark blue eyes
+  - left: зелені очі
+    right: green eyes
+  - left: блакитні очі
+    right: light blue eyes
+  title: Match the Ukrainian expression with its English meaning. (**З'єднайте пари**)
+workbook:
+- id: fill-in-color-clothing
+  type: fill-in
+  instruction: What clothes are they talking about? Choose the correct noun to match
+    the gender of the color. (**Вставте правильне слово**)
+  items:
+  - sentence: Це чорна ____.
+    answer: сукня
+    options:
+    - сукня
+    - светр
+    - пальто
+    - черевики
+  - sentence: Тут є білий ____.
+    answer: светр
+    options:
+    - сукня
+    - светр
+    - пальто
+    - черевики
+  - sentence: Беру сіре ____.
+    answer: пальто
+    options:
+    - сукня
+    - светр
+    - пальто
+    - черевики
+  - sentence: Де коричневі ____?
+    answer: черевики
+    options:
+    - черевики
+    - сукня
+    - светр
+    - пальто
+  - sentence: У неї червона ____.
+    answer: сукня
+    options:
+    - сукня
+    - светр
+    - пальто
+    - черевики
+  - sentence: У нього синій ____.
+    answer: светр
+    options:
+    - сукня
+    - светр
+    - пальто
+    - черевики
+  title: What clothes are they talking about? Choose the correct noun to match the
+    gender
+- id: true-false-color-grammar
+  type: true-false
+  instruction: Is the statement true or false? (**Правда чи ні?**)
+  items:
+  - statement: The word «синій» belongs to the Hard group (**Тверда група**).
+    correct: false
+    explanation: «Синій» belongs to the Soft group (**М'яка група**).
+  - statement: 'Ukrainian has two different basic words for ''blue'': «синій» and
+      «блакитний».'
+    correct: true
+    explanation: «Синій» is dark blue, and «блакитний» is light blue or sky blue.
+  - statement: To say 'brown eyes', Ukrainians use the phrase «коричневі очі».
+    correct: false
+    explanation: For eyes, you must use the specific word «карі» (карі очі).
+  - statement: The phrase «русяве волосся» means 'grey hair'.
+    correct: false
+    explanation: «Русяве волосся» means fair or light-brown hair. Grey hair is «сиве
+      волосся».
+  - statement: The colors «червоний», «жовтий», and «зелений» belong to the Hard group.
+    correct: true
+    explanation: 'They take the standard endings: -ий, -а, -е, -і.'
+  - statement: Color adjectives do NOT need to match the gender of the noun.
+    correct: false
+    explanation: Colors must always agree with the noun (e.g., червоний стіл, червона
+      книга).
+  title: Is the statement true or false? (**Правда чи ні?**)
+- id: anagram-color-names
+  type: anagram
+  instruction: Make the names of colors from the given letters. (**Складіть слово
+    з літер**)
+  items:
+  - letters:
+    - б
+    - і
+    - л
+    - и
+    - й
+    answer: білий
+  - letters:
+    - ч
+    - о
+    - р
+    - н
+    - и
+    - й
+    answer: чорний
+  - letters:
+    - с
+    - і
+    - р
+    - и
+    - й
+    answer: сірий
+  - letters:
+    - с
+    - и
+    - н
+    - і
+    - й
+    answer: синій
+  - letters:
+    - ж
+    - о
+    - в
+    - т
+    - и
+    - й
+    answer: жовтий
+  - letters:
+    - к
+    - а
+    - р
+    - і
+    answer: карі
+  - letters:
+    - с
+    - и
+    - в
+    - е
+    answer: сиве
+  title: Make the names of colors from the given letters. (**Складіть слово з літер**)
+- id: divide-words-colors
+  type: divide-words
+  instruction: Divide the words into syllables. (**Розділіть слова на склади**)
+  items:
+  - word: червоний
+    answer: чер-во-ний
+  - word: зелений
+    answer: зе-ле-ний
+  - word: рожевий
+    answer: ро-же-вий
+  - word: блакитний
+    answer: бла-кит-ний
+  - word: пальто
+    answer: паль-то
+  - word: сукня
+    answer: сук-ня
+  title: Divide the words into syllables. (**Розділіть слова на склади**)
+- id: unjumble-color-sentences
+  type: unjumble
+  instruction: Put the words in the correct order to make a sentence. (**Складіть
+    речення**)
+  items:
+  - words:
+    - кольори?
+    - Якого
+    - вони
+    correct_order:
+    - Якого
+    - вони
+    - кольори?
+  - words:
+    - є
+    - синя
+    - мене
+    - ваза.
+    - У
+    correct_order:
+    - У
+    - мене
+    - є
+    - синя
+    - ваза.
+  - words:
+    - сукня?
+    - ця
+    - Якого
+    - кольору
+    correct_order:
+    - Якого
+    - кольору
+    - ця
+    - сукня?
+  - words:
+    - карі
+    - неї
+    - У
+    - очі.
+    correct_order:
+    - У
+    - неї
+    - карі
+    - очі.
+  - words:
+    - светр.
+    - Тут
+    - є
+    - білий
+    correct_order:
+    - Тут
+    - є
+    - білий
+    - светр.
+  - words:
+    - мене
+    - У
+    - чорна
+    - є
+    - книга.
+    correct_order:
+    - У
+    - мене
+    - є
+    - чорна
+    - книга.
+  title: Put the words in the correct order to make a sentence. (**Складіть речення**)
+- id: odd-one-out-color-groups
+  type: odd-one-out
+  instruction: Find the word that does not belong in the group. (**Знайдіть зайве
+    слово**)
+  items:
+  - words:
+    - червоний
+    - синій
+    - жовтий
+    - чорний
+    correct: 1
+    explanation: «Синій» belongs to the Soft group (**М'яка група**), the others belong
+      to the Hard group (**Тверда група**).
+  - words:
+    - синя
+    - червона
+    - біла
+    - зелене
+    correct: 3
+    explanation: «Зелене» is neuter gender (**середній рід**), the others are feminine
+      (**жіночий рід**).
+  - words:
+    - стіл
+    - светр
+    - олівець
+    - сукня
+    correct: 3
+    explanation: «Сукня» is feminine gender, the others are masculine (**чоловічий
+      рід**).
+  - words:
+    - карі
+    - коричневі
+    - русяве
+    - сиве
+    correct: 1
+    explanation: «Коричневі» is used for objects, the others are specific words for
+      human appearance (eyes and hair).
+  - words:
+    - світло-синій
+    - темно-синій
+    - блакитний
+    - червоний
+    correct: 3
+    explanation: All the other words are shades of blue.
+  - words:
+    - море
+    - вікно
+    - небо
+    - ваза
+    correct: 3
+    explanation: «Ваза» is feminine gender, the others are neuter gender.
+  title: Find the word that does not belong in the group. (**Знайдіть зайве слово**)

@@ -1,0 +1,28 @@
+session_path: ''
+phase: write-chunk-02
+prompt_chars: 10676
+response_chars: 1998
+prompt_words: 1559
+response_words: 309
+sections:
+- name: header
+  start: 0
+  length: 415
+  fraction: 0.0389
+- name: skeleton
+  start: 415
+  length: 2299
+  fraction: 0.2153
+- name: prior_summary
+  start: 2714
+  length: 7786
+  fraction: 0.7293
+- name: output_spec
+  start: 10500
+  length: 176
+  fraction: 0.0165
+large_sections:
+- prior_summary
+directives_total: 11
+directives_covered: 11
+directives_missed: []

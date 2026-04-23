@@ -1,0 +1,46 @@
+phase: review
+mode: per-dimension-min
+module:
+  level: a1
+  module_num: 10
+  slug: colors
+reviewer:
+  writer_model: Gemini
+  reviewer: codex
+prompts:
+- dimension: factual
+  template: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/phases/v6-review/v6-review-factual.md
+  prompt_path: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/curriculum/l2-uk-en/a1/orchestration/colors/v6-review-factual-prompt.md
+  prompt_chars: 39558
+- dimension: language
+  template: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/phases/v6-review/v6-review-language.md
+  prompt_path: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/curriculum/l2-uk-en/a1/orchestration/colors/v6-review-language-prompt.md
+  prompt_chars: 39173
+- dimension: decolonization
+  template: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/phases/v6-review/v6-review-decolonization.md
+  prompt_path: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/curriculum/l2-uk-en/a1/orchestration/colors/v6-review-decolonization-prompt.md
+  prompt_chars: 38965
+- dimension: completeness
+  template: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/phases/v6-review/v6-review-completeness.md
+  prompt_path: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/curriculum/l2-uk-en/a1/orchestration/colors/v6-review-completeness-prompt.md
+  prompt_chars: 38932
+- dimension: actionable
+  template: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/phases/v6-review/v6-review-actionable.md
+  prompt_path: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/curriculum/l2-uk-en/a1/orchestration/colors/v6-review-actionable-prompt.md
+  prompt_chars: 38962
+- dimension: naturalness
+  template: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/phases/v6-review/v6-review-naturalness.md
+  prompt_path: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/curriculum/l2-uk-en/a1/orchestration/colors/v6-review-naturalness-prompt.md
+  prompt_chars: 38968
+- dimension: plan_adherence
+  template: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/phases/v6-review/v6-review-plan-adherence.md
+  prompt_path: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/curriculum/l2-uk-en/a1/orchestration/colors/v6-review-plan_adherence-prompt.md
+  prompt_chars: 38764
+- dimension: honesty
+  template: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/phases/v6-review/v6-review-honesty.md
+  prompt_path: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/curriculum/l2-uk-en/a1/orchestration/colors/v6-review-honesty-prompt.md
+  prompt_chars: 39051
+- dimension: dialogue
+  template: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/scripts/build/phases/v6-review/v6-review-dialogue.md
+  prompt_path: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-smoke-colors/curriculum/l2-uk-en/a1/orchestration/colors/v6-review-dialogue-prompt.md
+  prompt_chars: 39046

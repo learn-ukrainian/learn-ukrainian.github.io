@@ -1,0 +1,64 @@
+session_path: ''
+phase: write-chunk-04
+prompt_chars: 10983
+response_chars: 2229
+prompt_words: 1621
+response_words: 349
+sections:
+- name: header
+  start: 0
+  length: 416
+  fraction: 0.0379
+- name: skeleton
+  start: 416
+  length: 1822
+  fraction: 0.1659
+- name: prior_summary
+  start: 2238
+  length: 8568
+  fraction: 0.7801
+- name: output_spec
+  start: 10806
+  length: 177
+  fraction: 0.0161
+large_sections:
+- prior_summary
+directives_total: 16
+directives_covered: 7
+directives_missed:
+- kind: checklist
+  text: жовтий (yellow)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: зелений (green)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: білий (white)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: checklist
+  text: чорний (black)
+  covered: false
+  coverage_note: 0/2 keywords (0%)
+- kind: must
+  text: Sweep up any required words that earlier sections did not naturally cover.
+  covered: false
+  coverage_note: 1/11 keywords (9%)
+- kind: inject_activity
+  text: fill-in-color-agreement
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-hard-soft
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-blue-vs-lightblue
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-appearance
+  covered: false
+  coverage_note: marker missing

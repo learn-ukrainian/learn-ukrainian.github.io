@@ -1,0 +1,163 @@
+slug: colors
+round: 1
+dimension: plan_adherence
+name: Plan Adherence
+score: 6.8
+verdict: REVISE
+evidence: '- Українською: Порядок розділів збігається з планом: `## Діалоги`, `##
+  Кольори`, `## Синій ≠ блакитний`, `## Підсумок`. English: The section order follows
+  the contract exactly. - Українською: Розді...'
+findings:
+- dimension: PLAN_ADHERENCE
+  severity: major
+  location: '`## Діалоги`: `— **Наталка:** А ці квіти? Якого вони кольору?` / `— **Продавець:**
+    Це білі лілії. Вони дуже свіжі.`; далі перший діалог закінчується на `— **Наталка:**
+    Так. Додайте ще зелене листя, будь ласка.` і відразу починається `Next, Dmytro
+    and Liza...`'
+  issue: 'Українською: План вимагає, щоб кольори входили через `Якого кольору?` +
+    коротку відповідь, і прямо задає фінальний хід `— Добре, загорнути букет?`. У
+    модулі питання змінене на `Якого вони кольору?`, відповідь розгорнута, а репліка
+    про загортання букета відсутня до переходу в другий діалог.
+
+    English: The first dialogue drifts from the planned prompt-response shape and
+    omits the bouquet-wrapping close.'
+  fix: Переписати обмін як коротку модель `Якого кольору? — Білі/Червоні` і додати
+    завершення `— Добре, загорнути букет? — Так, будь ласка.`
+- dimension: PLAN_ADHERENCE
+  severity: major
+  location: '`## Діалоги`: `— **Дмитро:** Який одяг ти шукаєш?` / `— **Ліза:** Мені
+    потрібна чорна сукня. А ти?` / `— **Дмитро:** Цей білий светр і коричневі черевики.`'
+  issue: 'Українською: За контрактом функція другого діалогу має містити `короткі
+    відповіді на "Якого кольору?"`; у наведеному уривку таких питань і коротких відповідей
+    немає, лише перелік предметів одягу.
+
+    English: Dialogue 2 covers the right nouns and appearance chunks, but not the
+    planned question-answer drill.'
+  fix: Додати щонайменше один обмін на кшталт `— Якого кольору сукня? — Чорна. — А
+    светр? — Білий.`
+- dimension: PLAN_ADHERENCE
+  severity: major
+  location: '`## Діалоги` — фактичний обсяг близько `376` слів при плані `270–330`.'
+  issue: 'Українською: Розділ перевищує верхню межу бюджету на приблизно 46 слів.
+    Перевищення створюють додані англомовні вступи й пояснювальні вставки, яких план
+    не вимагає.
+
+    English: The dialogues section is materially over budget.'
+  fix: Прибрати англомовні вступні абзаци й стиснути пояснення після діалогів, щоб
+    повернутися в межі `270–330` слів.
+- dimension: PLAN_ADHERENCE
+  severity: minor
+  location: '`## Синій ≠ блакитний` — фактичний обсяг близько `333` слів при плані
+    `270–330`.'
+  issue: 'Українською: Розділ трохи виходить за ліміт.
+
+    English: This section is only slightly over the budget.'
+  fix: Скоротити 3-5 слів, найпростіше прибравши частину англомовного дубляжу.
+fixes:
+- find: '— **Наталка:** А ці квіти? Якого вони кольору? *(And these flowers? What
+    color are they?)*
+
+    > — **Продавець:** Це білі лілії. Вони дуже свіжі. *(These are white lilies. They
+    are very fresh.)*'
+  replace: '— **Наталка:** Якого кольору ці лілії? *(What color are these lilies?)*
+
+    > — **Продавець:** Білі. *(White.)*'
+- find: '— **Продавець:** Чудово! У вас є синя ваза для них? *(Wonderful! Do you have
+    a blue vase for them?)*
+
+    > — **Наталка:** Так. Додайте ще зелене листя, будь ласка. *(Yes. Add some green
+    leaves, please.)*'
+  replace: '— **Продавець:** Чудово. Добре, загорнути букет? *(Wonderful. Shall I
+    wrap the bouquet?)*
+
+    > — **Наталка:** Так, будь ласка. Додайте ще зелене листя. *(Yes, please. Add
+    some green leaves too.)*'
+- find: '— **Дмитро:** Який одяг ти шукаєш? *(What clothes are you looking for?)*
+
+    > — **Ліза:** Мені потрібна чорна сукня. А ти? *(I need a black dress. And you?)*
+
+    > — **Дмитро:** Цей білий светр і коричневі черевики. *(This white sweater and
+    brown shoes.)*
+
+    > — **Ліза:** Надворі холодно. Тобі треба сіре пальто. *(It is cold outside. You
+    need a grey coat.)*'
+  replace: '— **Дмитро:** Якого кольору сукня для вечірки? *(What color is the dress
+    for the party?)*
+
+    > — **Ліза:** Чорна. А твій светр? *(Black. And your sweater?)*
+
+    > — **Дмитро:** Білий. А черевики коричневі. *(White. And the shoes are brown.)*
+
+    > — **Ліза:** Добре. Пальто сіре. *(Good. The coat is grey.)*'
+- find: This first conversation features Natalka selecting flowers for a special event.
+    She speaks with a seller to find the perfect combination of bright spring colors.
+  replace: ''
+- find: Next, Dmytro and Liza are putting together an outfit from a friend's wardrobe.
+    They also share a brief physical description to help recognize a guest.
+  replace: ''
+rewrite_blocks: []
+review_text: "## Dimension\nid: plan_adherence\nname: Plan Adherence\nscore: 6.8/10\n\
+  verdict: REVISE\n\n## Evidence\n- Українською: Порядок розділів збігається з планом:\
+  \ `## Діалоги`, `## Кольори`, `## Синій ≠ блакитний`, `## Підсумок`.\n  English:\
+  \ The section order follows the contract exactly.\n- Українською: Розділ `Кольори`\
+  \ реалізує планову рамку `Якого кольору...?` і протиставлення твердої/м'якої групи:\
+  \ `«Якого кольору олівець? — Червоний.»` і `«синій стіл», «синя книга», «синє вікно»`.\n\
+  \  English: The core grammar-teaching beat is present.\n- Українською: Розділ `Синій\
+  \ ≠ блакитний` покриває планові опори `«синє море»`, `«блакитне небо»`, `«синьо-жовтий»`,\
+  \ а також `«карі очі»`, `«русяве волосся»`, `«сиве волосся»`.\n  English: The blue/light-blue\
+  \ contrast and fixed appearance chunks are covered.\n\n## Findings\n[PLAN_ADHERENCE]\
+  \ [SEVERITY: major]\nLocation: `## Діалоги`: `— **Наталка:** А ці квіти? Якого вони\
+  \ кольору?` / `— **Продавець:** Це білі лілії. Вони дуже свіжі.`; далі перший діалог\
+  \ закінчується на `— **Наталка:** Так. Додайте ще зелене листя, будь ласка.` і відразу\
+  \ починається `Next, Dmytro and Liza...`\nIssue: Українською: План вимагає, щоб\
+  \ кольори входили через `Якого кольору?` + коротку відповідь, і прямо задає фінальний\
+  \ хід `— Добре, загорнути букет?`. У модулі питання змінене на `Якого вони кольору?`,\
+  \ відповідь розгорнута, а репліка про загортання букета відсутня до переходу в другий\
+  \ діалог.\nEnglish: The first dialogue drifts from the planned prompt-response shape\
+  \ and omits the bouquet-wrapping close.\nFix: Переписати обмін як коротку модель\
+  \ `Якого кольору? — Білі/Червоні` і додати завершення `— Добре, загорнути букет?\
+  \ — Так, будь ласка.`\n\n[PLAN_ADHERENCE] [SEVERITY: major]\nLocation: `## Діалоги`:\
+  \ `— **Дмитро:** Який одяг ти шукаєш?` / `— **Ліза:** Мені потрібна чорна сукня.\
+  \ А ти?` / `— **Дмитро:** Цей білий светр і коричневі черевики.`\nIssue: Українською:\
+  \ За контрактом функція другого діалогу має містити `короткі відповіді на \"Якого\
+  \ кольору?\"`; у наведеному уривку таких питань і коротких відповідей немає, лише\
+  \ перелік предметів одягу.\nEnglish: Dialogue 2 covers the right nouns and appearance\
+  \ chunks, but not the planned question-answer drill.\nFix: Додати щонайменше один\
+  \ обмін на кшталт `— Якого кольору сукня? — Чорна. — А светр? — Білий.`\n\n[PLAN_ADHERENCE]\
+  \ [SEVERITY: major]\nLocation: `## Діалоги` — фактичний обсяг близько `376` слів\
+  \ при плані `270–330`.\nIssue: Українською: Розділ перевищує верхню межу бюджету\
+  \ на приблизно 46 слів. Перевищення створюють додані англомовні вступи й пояснювальні\
+  \ вставки, яких план не вимагає.\nEnglish: The dialogues section is materially over\
+  \ budget.\nFix: Прибрати англомовні вступні абзаци й стиснути пояснення після діалогів,\
+  \ щоб повернутися в межі `270–330` слів.\n\n[PLAN_ADHERENCE] [SEVERITY: minor]\n\
+  Location: `## Синій ≠ блакитний` — фактичний обсяг близько `333` слів при плані\
+  \ `270–330`.\nIssue: Українською: Розділ трохи виходить за ліміт.\nEnglish: This\
+  \ section is only slightly over the budget.\nFix: Скоротити 3-5 слів, найпростіше\
+  \ прибравши частину англомовного дубляжу.\n\n## Verdict Reason\nСтруктура модуля\
+  \ і більшість змістових опор плану збережені, особливо в розділах `Кольори`, `Синій\
+  \ ≠ блакитний` і `Підсумок`. Але `Діалоги` відчутно відхиляються від заданої педагогічної\
+  \ форми `Якого кольору?` + коротка відповідь, пропускають плановий фінальний хід\
+  \ із букетом і виходять за бюджет, тому потрібна правка.\n\n<fixes>\n- find: \"\
+  — **Наталка:** А ці квіти? Якого вони кольору? *(And these flowers? What color are\
+  \ they?)*\\n> — **Продавець:** Це білі лілії. Вони дуже свіжі. *(These are white\
+  \ lilies. They are very fresh.)*\"\n  replace: \"— **Наталка:** Якого кольору ці\
+  \ лілії? *(What color are these lilies?)*\\n> — **Продавець:** Білі. *(White.)*\"\
+  \n- find: \"— **Продавець:** Чудово! У вас є синя ваза для них? *(Wonderful! Do\
+  \ you have a blue vase for them?)*\\n> — **Наталка:** Так. Додайте ще зелене листя,\
+  \ будь ласка. *(Yes. Add some green leaves, please.)*\"\n  replace: \"— **Продавець:**\
+  \ Чудово. Добре, загорнути букет? *(Wonderful. Shall I wrap the bouquet?)*\\n> —\
+  \ **Наталка:** Так, будь ласка. Додайте ще зелене листя. *(Yes, please. Add some\
+  \ green leaves too.)*\"\n- find: \"— **Дмитро:** Який одяг ти шукаєш? *(What clothes\
+  \ are you looking for?)*\\n> — **Ліза:** Мені потрібна чорна сукня. А ти? *(I need\
+  \ a black dress. And you?)*\\n> — **Дмитро:** Цей білий светр і коричневі черевики.\
+  \ *(This white sweater and brown shoes.)*\\n> — **Ліза:** Надворі холодно. Тобі\
+  \ треба сіре пальто. *(It is cold outside. You need a grey coat.)*\"\n  replace:\
+  \ \"— **Дмитро:** Якого кольору сукня для вечірки? *(What color is the dress for\
+  \ the party?)*\\n> — **Ліза:** Чорна. А твій светр? *(Black. And your sweater?)*\\\
+  n> — **Дмитро:** Білий. А черевики коричневі. *(White. And the shoes are brown.)*\\\
+  n> — **Ліза:** Добре. Пальто сіре. *(Good. The coat is grey.)*\"\n- find: \"This\
+  \ first conversation features Natalka selecting flowers for a special event. She\
+  \ speaks with a seller to find the perfect combination of bright spring colors.\"\
+  \n  replace: \"\"\n- find: \"Next, Dmytro and Liza are putting together an outfit\
+  \ from a friend's wardrobe. They also share a brief physical description to help\
+  \ recognize a guest.\"\n  replace: \"\"\n</fixes>"

@@ -1,0 +1,160 @@
+{
+  "total_items": 73,
+  "grounded_items": 50,
+  "ungrounded": [
+    {
+      "word": "соняшник",
+      "exercise_type": "quiz",
+      "context": "Якого кольору соняшник? (sunflower)",
+      "role": "context"
+    },
+    {
+      "word": "влітку",
+      "exercise_type": "quiz",
+      "context": "Якого кольору листя влітку? (leaves in summer)",
+      "role": "context"
+    },
+    {
+      "word": "вдень",
+      "exercise_type": "quiz",
+      "context": "Якого кольору небо вдень? (sky during the day)",
+      "role": "context"
+    },
+    {
+      "word": "український",
+      "exercise_type": "quiz",
+      "context": "Якого кольору український прапор? (Ukrainian flag)",
+      "role": "context"
+    },
+    {
+      "word": "типова",
+      "exercise_type": "quiz",
+      "context": "Якого кольору типова троянда? (typical rose)",
+      "role": "context"
+    },
+    {
+      "word": "троянда",
+      "exercise_type": "quiz",
+      "context": "Якого кольору типова троянда? (typical rose)",
+      "role": "context"
+    },
+    {
+      "word": "лілія",
+      "exercise_type": "quiz",
+      "context": "Якого кольору типова лілія? (typical lily)",
+      "role": "context"
+    },
+    {
+      "word": "сині",
+      "exercise_type": "fill-in",
+      "context": "сині",
+      "role": "answer"
+    },
+    {
+      "word": "темне",
+      "exercise_type": "quiz",
+      "context": "Якого кольору темне вечірнє море? (dark evening sea)",
+      "role": "context"
+    },
+    {
+      "word": "вечірнє",
+      "exercise_type": "quiz",
+      "context": "Якого кольору темне вечірнє море? (dark evening sea)",
+      "role": "context"
+    },
+    {
+      "word": "яка",
+      "exercise_type": "quiz",
+      "context": "Яка верхня частина українського прапора? (top part of the fl",
+      "role": "context"
+    },
+    {
+      "word": "верхня",
+      "exercise_type": "quiz",
+      "context": "Яка верхня частина українського прапора? (top part of the fl",
+      "role": "context"
+    },
+    {
+      "word": "частина",
+      "exercise_type": "quiz",
+      "context": "Яка верхня частина українського прапора? (top part of the fl",
+      "role": "context"
+    },
+    {
+      "word": "українського",
+      "exercise_type": "quiz",
+      "context": "Яка верхня частина українського прапора? (top part of the fl",
+      "role": "context"
+    },
+    {
+      "word": "прапора",
+      "exercise_type": "quiz",
+      "context": "Яка верхня частина українського прапора? (top part of the fl",
+      "role": "context"
+    },
+    {
+      "word": "який",
+      "exercise_type": "quiz",
+      "context": "Який колір світліший? (Which color is lighter?)",
+      "role": "context"
+    },
+    {
+      "word": "світліший",
+      "exercise_type": "quiz",
+      "context": "Який колір світліший? (Which color is lighter?)",
+      "role": "context"
+    },
+    {
+      "word": "темніший",
+      "exercise_type": "quiz",
+      "context": "Який колір темніший? (Which color is darker?)",
+      "role": "context"
+    },
+    {
+      "word": "сказати",
+      "exercise_type": "quiz",
+      "context": "Як сказати «light blue» українською? (How to say 'light blue",
+      "role": "context"
+    },
+    {
+      "word": "українською",
+      "exercise_type": "quiz",
+      "context": "Як сказати «light blue» українською? (How to say 'light blue",
+      "role": "context"
+    },
+    {
+      "word": "чорне",
+      "exercise_type": "match-up",
+      "context": "чорне волосся",
+      "role": "answer"
+    },
+    {
+      "word": "зелені",
+      "exercise_type": "match-up",
+      "context": "зелені очі",
+      "role": "answer"
+    },
+    {
+      "word": "блакитні",
+      "exercise_type": "match-up",
+      "context": "блакитні очі",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 19,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "карий",
+      "коричневий",
+      "помаранчевий",
+      "рожевий",
+      "русявий",
+      "сивий",
+      "сірий",
+      "фіолетовий",
+      "чорний"
+    ]
+  },
+  "all_grounded": false
+}

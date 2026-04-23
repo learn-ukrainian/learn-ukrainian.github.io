@@ -1,0 +1,68 @@
+session_path: ''
+phase: vocab
+prompt_chars: 10414
+response_chars: 3358
+prompt_words: 1611
+response_words: 369
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0766
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0221
+- name: plan
+  start: 1028
+  length: 9386
+  fraction: 0.9013
+large_sections:
+- plan
+directives_total: 12
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: Dmytro and Liza are picking out an outfit for a party from a friend's wardrobe
+    and describing a person they must recognize in the crowd.
+  covered: false
+  coverage_note: 1/16 keywords (6%)
+- kind: must
+  text: Even though it is a single word, it must still match the grammatical gender
+    of the object.
+  covered: false
+  coverage_note: 1/10 keywords (10%)
+- kind: must
+  text: We must always say "dark blue table", "dark blue book", and "dark blue window".
+  covered: false
+  coverage_note: 2/8 keywords (25%)
+- kind: must
+  text: When someone asks you this, your short answer must perfectly match the grammatical
+    gender of the object being discussed.
+  covered: false
+  coverage_note: 0/16 keywords (0%)
+- kind: must
+  text: ?» must reflect the noun's gender, even if the noun itself is omitted from
+    your response.
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: inject_activity
+  text: quiz-what-color
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-color-agreement
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: group-sort-hard-soft
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-blue-vs-lightblue
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-appearance
+  covered: false
+  coverage_note: marker missing

@@ -1,0 +1,113 @@
+slug: colors
+round: 1
+dimension: completeness
+name: Completeness
+score: 8.3
+verdict: REVISE
+evidence: '- Українською: Контракт: `Мовленнєва рамка: \`Якого кольору...?\` + коротка
+  відповідь одним прикметником` Модуль: `«Якого кольору олівець? — Червоний.»`, `«Якого
+  кольору сукня? — Червона.»`, `«Яког...'
+findings:
+- dimension: COMPLETENESS
+  severity: major
+  location: '`## Діалоги` — перший діалог має `«А ці квіти? Якого вони кольору?» →
+    «Це білі лілії.»`; другий діалог від `«Мені потрібна чорна сукня.»` до `«У нього
+    сиве волосся.»` не містить жодної короткої репліки-відповіді на `Якого кольору?`.'
+  issue: 'Українською: Контракт вимагає, щоб кольори в діалогах входили через запитання
+    `Якого кольору?` і коротку відповідь; у модулі ця рамка добре пояснена в секції
+    `Кольори`, але недостатньо відпрацьована саме в діалоговій практиці, особливо
+    в другому діалозі.
+
+    English: The speech frame is taught, but not sufficiently realized inside the
+    contracted dialogues.'
+  fix: Додати в обидва діалоги по 1-2 обміни з короткими відповідями типу `Якого кольору
+    троянди? — Червоні.` / `Якого кольору светр? — Білий.` і завершити перший діалог
+    реплікою `Загорнути букет?`.
+- dimension: COMPLETENESS
+  severity: minor
+  location: '`## Підсумок` — `* **Опишіть 3 речі:** Give short descriptive answers
+    for three items near you...`'
+  issue: 'Українською: Контрактовий self-check вимагає `опишіть 3 речі у вашій кімнаті`,
+    але модуль розширює завдання до будь-яких речей `near you`, тому конкретний кімнатний
+    сценарій не зафіксований.
+
+    English: The recap task drifts from the contracted “in your room” scenario.'
+  fix: Уточнити вправу як опис саме трьох речей у кімнаті, бажано з одним прикладом
+    на кшталт `Кімната біла. Стіл коричневий. Крісло сіре.`
+fixes:
+- insert_after: '> — **Наталка:** Так. Додайте ще зелене листя, будь ласка. *(Yes.
+    Add some green leaves, please.)*'
+  text: '> — **Наталка:** Якого кольору троянди? *(What color are the roses?)*
+
+    > — **Продавець:** Червоні. *(Red.)*
+
+    > — **Наталка:** А лілії? *(And the lilies?)*
+
+    > — **Продавець:** Білі. Загорнути букет? *(White. Shall I wrap the bouquet?)*'
+- insert_after: '> — **Ліза:** Надворі холодно. Тобі треба сіре пальто. *(It is cold
+    outside. You need a grey coat.)*'
+  text: '> — **Ліза:** Якого кольору светр? *(What color is the sweater?)*
+
+    > — **Дмитро:** Білий. *(White.)*
+
+    > — **Дмитро:** А сукня? *(And the dress?)*
+
+    > — **Ліза:** Чорна. *(Black.)*'
+- insert_after: '* **Опишіть 3 речі:** Give short descriptive answers for three items
+    near you, ensuring the color adjective matches the noun''s gender. For example,
+    you could say «Моя книга червона».'
+  text: '* **У вашій кімнаті:** Зробіть цю вправу саме з трьома речами у вашій кімнаті:
+    «Кімната біла», «Стіл коричневий», «Крісло сіре».'
+rewrite_blocks: []
+review_text: "## Dimension\nid: completeness\nname: Completeness\nscore: 8.3/10\n\
+  verdict: REVISE\n\n## Evidence\n- Українською: Контракт: `Мовленнєва рамка: \\`Якого\
+  \ кольору...?\\` + коротка відповідь одним прикметником` Модуль: `«Якого кольору\
+  \ олівець? — Червоний.»`, `«Якого кольору сукня? — Червона.»`, `«Якого кольору вікно?\
+  \ — Біле.»`\n  English: The core question frame and one-word answer pattern are\
+  \ explicitly taught.\n- Українською: Контракт: `Лише слово \"синій\" належить до\
+  \ м'якої групи...` Модуль: `The word for blue, «синій», belongs to the soft group\
+  \ (м'яка група)... «синій стіл», «синя книга», «синє вікно».`\n  English: The hard/soft\
+  \ adjective contrast is present and traceable.\n- Українською: Контракт: `синій\
+  \ = темно-/глибоко-синій ... блакитний = світло-/небесно-синій ... Прапор України\
+  \ — синьо-жовтий` Модуль: `«Синій» — це глибокий колір... «блакитний» — це світлий\
+  \ колір... Наш прапор — синьо-жовтий`\n  English: The blue/light-blue distinction\
+  \ and flag anchor are covered.\n- Українською: Контракт: activity obligations `quiz`,\
+  \ `fill-in`, `quiz`, `match-up`, `group-sort`. Модуль: `<!-- INJECT_ACTIVITY: quiz-what-color\
+  \ -->`, `fill-in-color-agreement`, `quiz-blue-vs-lightblue`, `match-up-appearance`,\
+  \ `group-sort-hard-soft`.\n  English: All five required activity slots are present\
+  \ in the required order.\n\n## Findings\n[COMPLETENESS] [SEVERITY: major]\nLocation:\
+  \ `## Діалоги` — перший діалог має `«А ці квіти? Якого вони кольору?» → «Це білі\
+  \ лілії.»`; другий діалог від `«Мені потрібна чорна сукня.»` до `«У нього сиве волосся.»`\
+  \ не містить жодної короткої репліки-відповіді на `Якого кольору?`.\nIssue: Українською:\
+  \ Контракт вимагає, щоб кольори в діалогах входили через запитання `Якого кольору?`\
+  \ і коротку відповідь; у модулі ця рамка добре пояснена в секції `Кольори`, але\
+  \ недостатньо відпрацьована саме в діалоговій практиці, особливо в другому діалозі.\n\
+  English: The speech frame is taught, but not sufficiently realized inside the contracted\
+  \ dialogues.\nFix: Додати в обидва діалоги по 1-2 обміни з короткими відповідями\
+  \ типу `Якого кольору троянди? — Червоні.` / `Якого кольору светр? — Білий.` і завершити\
+  \ перший діалог реплікою `Загорнути букет?`.\n\n[COMPLETENESS] [SEVERITY: minor]\n\
+  Location: `## Підсумок` — `* **Опишіть 3 речі:** Give short descriptive answers\
+  \ for three items near you...`\nIssue: Українською: Контрактовий self-check вимагає\
+  \ `опишіть 3 речі у вашій кімнаті`, але модуль розширює завдання до будь-яких речей\
+  \ `near you`, тому конкретний кімнатний сценарій не зафіксований.\nEnglish: The\
+  \ recap task drifts from the contracted “in your room” scenario.\nFix: Уточнити\
+  \ вправу як опис саме трьох речей у кімнаті, бажано з одним прикладом на кшталт\
+  \ `Кімната біла. Стіл коричневий. Крісло сіре.`\n\n## Verdict Reason\nМодуль майже\
+  \ повністю покриває контракт: базові кольори, тверду/м'яку групи, пару `синій`/`блакитний`,\
+  \ усталені словосполучення для зовнішності та всі 5 activity slots простежуються\
+  \ в тексті. Але ключова мовленнєва рамка `Якого кольору?` недостатньо реалізована\
+  \ в самих діалогах, а підсумкова самоперевірка відходить від контрактного сценарію\
+  \ кімнати, тому потрібна точкова правка.\n\n<fixes>\n- insert_after: \"> — **Наталка:**\
+  \ Так. Додайте ще зелене листя, будь ласка. *(Yes. Add some green leaves, please.)*\"\
+  \n  text: \"> — **Наталка:** Якого кольору троянди? *(What color are the roses?)*\\\
+  n> — **Продавець:** Червоні. *(Red.)*\\n> — **Наталка:** А лілії? *(And the lilies?)*\\\
+  n> — **Продавець:** Білі. Загорнути букет? *(White. Shall I wrap the bouquet?)*\"\
+  \n- insert_after: \"> — **Ліза:** Надворі холодно. Тобі треба сіре пальто. *(It\
+  \ is cold outside. You need a grey coat.)*\"\n  text: \"> — **Ліза:** Якого кольору\
+  \ светр? *(What color is the sweater?)*\\n> — **Дмитро:** Білий. *(White.)*\\n>\
+  \ — **Дмитро:** А сукня? *(And the dress?)*\\n> — **Ліза:** Чорна. *(Black.)*\"\n\
+  - insert_after: \"* **Опишіть 3 речі:** Give short descriptive answers for three\
+  \ items near you, ensuring the color adjective matches the noun's gender. For example,\
+  \ you could say «Моя книга червона».\"\n  text: \"* **У вашій кімнаті:** Зробіть\
+  \ цю вправу саме з трьома речами у вашій кімнаті: «Кімната біла», «Стіл коричневий»,\
+  \ «Крісло сіре».\"\n</fixes>"

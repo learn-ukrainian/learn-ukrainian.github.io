@@ -1,0 +1,16 @@
+session_path: ''
+phase: write-fix
+prompt_chars: 10023
+response_chars: 8815
+prompt_words: 1550
+response_words: 1390
+sections:
+- name: unknown
+  start: 0
+  length: 10023
+  fraction: 1.0
+large_sections:
+- unknown
+directives_total: 9
+directives_covered: 9
+directives_missed: []

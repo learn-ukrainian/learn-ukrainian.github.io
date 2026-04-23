@@ -1,0 +1,73 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "colors",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-23T00:02:36.511864+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-23T00:02:36.544587+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-23T00:03:25.596915+00:00",
+      "plan_hash": "1852157ba155191b792fb7a614e8ab898ac775d1bdbe260cdd1d182952177090"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-23T00:04:11.499726+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-23T00:28:46.130614+00:00",
+      "plan_hash": "1852157ba155191b792fb7a614e8ab898ac775d1bdbe260cdd1d182952177090"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-23T00:17:43.474254+00:00",
+      "plan_hash": "1852157ba155191b792fb7a614e8ab898ac775d1bdbe260cdd1d182952177090"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-23T00:30:18.866142+00:00"
+    },
+    "repair": {
+      "status": "complete",
+      "ts": "2026-04-23T00:30:18.896831+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-23T00:30:18.943541+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-23T00:28:46.955056+00:00",
+      "plan_hash": "1852157ba155191b792fb7a614e8ab898ac775d1bdbe260cdd1d182952177090"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-23T00:31:16.310287+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-23T00:19:59.038704+00:00"
+    },
+    "verify": {
+      "status": "degraded",
+      "ts": "2026-04-23T00:30:18.914920+00:00",
+      "plan_hash": "1852157ba155191b792fb7a614e8ab898ac775d1bdbe260cdd1d182952177090"
+    },
+    "review": {
+      "status": "failed",
+      "ts": "2026-04-23T00:31:16.370270+00:00"
+    }
+  },
+  "terminal": {
+    "status": "budget_exhausted",
+    "ts": "2026-04-23T00:31:16.369942+00:00",
+    "artifact_path": "budget_exhausted.yaml"
+  }
+}
