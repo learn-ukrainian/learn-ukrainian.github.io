@@ -343,3 +343,41 @@ def test_build_contract_persists_selection_trace_in_artifact() -> None:
     assert "selection_trace" in excerpts
     assert excerpts["selection_trace"]["Діалоги"]
     assert excerpts["sections"]["Діалоги"][0]["source_path"] == "pedagogy/a1/at-the-cafe.md"
+
+
+def test_build_contract_filters_colors_required_terms_to_learner_targets() -> None:
+    plan_path = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / "a1" / "colors.yaml"
+    plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    packet = _build_wiki_packet("a1", "colors")
+
+    contract, _ = build_contract(
+        plan,
+        packet,
+        level="a1",
+        slug="colors",
+        module_num=int(plan["sequence"]),
+    )
+
+    sections = contract["teaching_beats"]["sections"]
+    colors_section = next(section for section in sections if section["name"] == "Кольори")
+    required_terms = set(colors_section["required_terms"])
+
+    banned_terms = {"для", "мові", "активно", "вчимо", "пару", "такий", "поділених", "типами"}
+    learner_targets = {
+        "червоний",
+        "жовтий",
+        "зелений",
+        "синій",
+        "чорний",
+        "білий",
+        "сірий",
+        "блакитний",
+        "коричневий",
+        "рожевий",
+        "помаранчевий",
+        "фіолетовий",
+        "колір",
+    }
+
+    assert required_terms.isdisjoint(banned_terms)
+    assert required_terms <= learner_targets

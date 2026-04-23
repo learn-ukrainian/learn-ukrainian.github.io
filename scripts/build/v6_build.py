@@ -3893,6 +3893,20 @@ _CHUNK_FORBIDDEN_WORDS_BLOCK = """## FORBIDDEN WORDS — never produce (#1189)
 Never emit these Russian/Russianized forms: `хорошо`, `конечно`, `спасибо`, `пожалуйста`, `ничего`, `сейчас`, `тоже`, `здесь`, `кот`, `кон`.
 Use `добре`, `звичайно`, `дякую`, `будь ласка`, `нічого`, `зараз`, `теж`, `тут`, `кіт`, `кін`. Never output `ы`, `э`, `ё`, or `ъ`."""
 
+_TEACHER_VOICE_BLOCK = """## Teacher voice (follow this shape)
+
+Write in English as the narrative medium. Ukrainian appears ONLY as:
+- bolded inline lexical items with gloss — «синій» (dark blue)
+- block-quoted dialogue turns
+- example phrases you are explicitly teaching
+
+Do NOT embed Ukrainian grammatical forms (verbs, participles,
+function words) inside English sentences. If you feel pulled to
+write "follows the same правилами you practiced…", stop — write
+"follows the same rules you practiced…" in English and introduce
+«правило» separately as a lexical item if it is a teaching target.
+"""
+
 
 def _required_vocab_words(plan: dict) -> list[str]:
     """Return ordered module-required vocabulary words from the plan."""
@@ -4000,6 +4014,8 @@ You are {persona_desc}, writing ONE SECTION of a Ukrainian language module. Writ
 **Module:** {module_num}: {plan.get("title", slug)} ({level.upper()}, {phase})
 **Section to write:** {section_name}
 **Word target for this section:** about {word_target} words. Hitting the minimum matters more than staying short; do not undershoot this section.
+
+{_TEACHER_VOICE_BLOCK}
 
 ## Shared Contract (authoritative — GH #1431)
 
