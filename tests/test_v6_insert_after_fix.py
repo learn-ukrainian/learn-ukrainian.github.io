@@ -19,7 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from build import v6_build
-from build.v6_build import _apply_review_fixes, _parse_review_fixes, _rewrite_block_section
+from build.v6_build import _apply_review_fixes, _parse_review_fixes
 
 
 def _wrap(payload: str) -> str:
@@ -170,47 +170,3 @@ class TestActivityMarkerValidation:
         assert ok is True
         assert count == 1
         assert "<!-- INJECT_ACTIVITY: count-syllables -->" in content_path.read_text("utf-8")
-
-    def test_rewrite_block_rejects_off_contract_marker(self, tmp_path: Path, monkeypatch) -> None:
-        curriculum_root = tmp_path / "curriculum"
-        orch_dir = curriculum_root / "a1" / "orchestration" / "demo"
-        orch_dir.mkdir(parents=True)
-        monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
-        monkeypatch.setattr(
-            v6_build,
-            "_ensure_contract_artifacts",
-            lambda *args, **kwargs: (
-                {"activity_obligations": [{"type": "count-syllables"}]},
-                {"sections": []},
-            ),
-        )
-        monkeypatch.setattr(
-            v6_build,
-            "_format_contract_prompt_artifacts",
-            lambda *args, **kwargs: ("contract", "excerpts"),
-        )
-        monkeypatch.setattr(
-            v6_build,
-            "_dispatch_rewrite_prompt",
-            lambda *args, **kwargs: (
-                True,
-                "## Section\n\nRewritten text.\n\n<!-- INJECT_ACTIVITY: syllable-sort -->\n",
-            ),
-        )
-
-        content_path = tmp_path / "module.md"
-        original = "## Section\n\nOriginal text.\n"
-        content_path.write_text(original, "utf-8")
-
-        ok = _rewrite_block_section(
-            content_path,
-            level="a1",
-            module_num=1,
-            slug="demo",
-            writer="gemini",
-            section_name="Section",
-            directive="Tighten the section.",
-        )
-
-        assert ok is False
-        assert content_path.read_text("utf-8") == original

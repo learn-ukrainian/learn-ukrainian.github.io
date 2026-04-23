@@ -11,11 +11,9 @@ prompt string to scripts/build/phases/, will fail CI. If you believe
 a rewrite mechanism is justified, you need a new ADR that supersedes
 ADR-007 — not an exception to this test.
 
-Transitional state: PR-A (M1/M2/M3), PR-B (M4) and PR-C (M5) have
-merged. PR-D (M6 rewrite-block infrastructure cleanup) has not, so
-the M6 helper symbols are marked xfail(strict=True) below. When PR-D
-lands, those entries will XPASS — strict mode then flips them to FAIL,
-forcing the PR-D author to promote them into the active forbidden set.
+ADR-007 migration status: PR-A (M1/M2/M3), PR-B (M4), PR-C (M5), and
+PR-D (M6 rewrite-block infrastructure cleanup) have all merged. All
+KILLed symbols are in the active forbidden set.
 """
 from __future__ import annotations
 
@@ -26,7 +24,7 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-# Symbols KILLed by PR-A/PR-B/PR-C. Present in scripts/build/ → test fails.
+# Symbols KILLed by PR-A/PR-B/PR-C/PR-D. Present in scripts/build/ → test fails.
 FORBIDDEN_SYMBOLS_ACTIVE: tuple[str, ...] = (
     # PR-A (M1/M2/M3 convergence tiers)
     "section_rewrite",
@@ -43,12 +41,7 @@ FORBIDDEN_SYMBOLS_ACTIVE: tuple[str, ...] = (
     "_apply_review_rewrite_blocks",
     # PR-C (M5 WORD_BUDGET auto-heal)
     "_apply_contract_word_budget_rewrites",
-)
-
-# M6 rewrite-block infrastructure symbols. Still live on main pending PR-D
-# (ADR-007 Migration Plan §PR-D). Marked xfail(strict=True) so the test
-# auto-reports when PR-D removes them.
-FORBIDDEN_SYMBOLS_PENDING_PRD: tuple[str, ...] = (
+    # PR-D (M6 rewrite-block infrastructure cleanup)
     "_rewrite_block_section",
     "_dispatch_rewrite_prompt",
     "_rewrite_block_guardrails",
@@ -57,15 +50,7 @@ FORBIDDEN_SYMBOLS_PENDING_PRD: tuple[str, ...] = (
     "_extract_rewrite_block_auxiliary_forbidden_literals",
 )
 
-_PRD_XFAIL = pytest.mark.xfail(
-    strict=True,
-    reason="ADR-007 PR-D (M6 infrastructure cleanup) not yet merged; "
-    "symbol expected to be present until then.",
-)
-
-FORBIDDEN_SYMBOLS = [pytest.param(s, id=s) for s in FORBIDDEN_SYMBOLS_ACTIVE] + [
-    pytest.param(s, id=s, marks=_PRD_XFAIL) for s in FORBIDDEN_SYMBOLS_PENDING_PRD
-]
+FORBIDDEN_SYMBOLS = [pytest.param(s, id=s) for s in FORBIDDEN_SYMBOLS_ACTIVE]
 
 # Reviewer-prompt directive strings removed by PR-B. Reappearance in
 # scripts/build/phases/ → test fails.

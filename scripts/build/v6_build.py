@@ -120,16 +120,8 @@ _RATE_LIMIT_BACKOFF_S = 300  # 5 min — long enough for Gemini quota to recover
 REVIEW_TARGET_SCORE = REVIEW_PASS_FLOOR
 REVIEW_REJECT_SCORE = REVIEW_REJECT_FLOOR
 STYLE_REVIEW_TARGET_SCORE = STYLE_REVIEW_TARGET
-REWRITE_BLOCK_TIMEOUT_S = 420
-REWRITE_BLOCK_GEMINI_CALL_CAP_S = 120
-REWRITE_BLOCK_PROMPT_MAX_CHARS = 18_000
 MONITOR_API_BASE_URL = os.getenv("MONITOR_API_BASE_URL", "http://localhost:8765").rstrip("/")
 MONITOR_PROMPT_TIMEOUT_S = 2.0
-REWRITE_BLOCK_FORBIDDEN_HEADINGS = (
-    "## Shared Module Contract",
-    "## Previous Sections For Continuity",
-    "## Skeleton For This Section",
-)
 STYLE_REVIEW_DIMENSION_LABELS = {
     "pragmatic_authenticity": "Pragmatic authenticity",
     "stylistic_consistency": "Stylistic consistency",
@@ -719,7 +711,7 @@ class ModelFamily:
     """Model configuration for a writer/reviewer family (Claude, Gemini, or Codex).
 
     Each family has two tiers:
-    - thinking: full reasoning model (write, review, section rewrite)
+    - thinking: full reasoning model (write, review)
     - fast: efficient model (skeleton, activities, vocab)
 
     And a tool prefix for MCP tool instructions (empty for Codex, which
@@ -727,7 +719,7 @@ class ModelFamily:
     """
 
     name: str           # "claude", "gemini", or "codex"
-    thinking: str       # opus / pro / gpt-5.4 — for write, review, rewrite
+    thinking: str       # opus / pro / gpt-5.4 — for write and review
     fast: str           # sonnet / flash / gpt-5.4 — for skeleton, activities, vocab
     tool_prefix: str    # "mcp__rag__" (Claude), "mcp_rag_" (Gemini), "" (Codex)
 
@@ -1927,8 +1919,8 @@ def _parse_review_result(review_text: str) -> ReviewParseResult:
 # Design choices:
 #
 #   * Non-destructive. The raw review markdown on disk is untouched.
-#     Only the in-memory ``ReviewParseResult`` is rewritten, so fix /
-#     rewrite application continues to see the reviewer's own prose.
+#     Only the in-memory ``ReviewParseResult`` is rewritten, so fix
+#     application continues to see the reviewer's own prose.
 #
 #   * Dimension-bounded. We only override the dimension whose
 #     evidence contained the falsifiable claim. Other dimensions —
@@ -4182,11 +4174,7 @@ def _build_chunk_prompt_manifest(
     has_dialogue: bool,
     has_vocab_checklist: bool,
 ) -> dict:
-    """Build machine-readable prompt metadata for a write-chunk call.
-
-    Mirrors ``_rewrite_block_prompt_manifest`` so every prompt phase
-    can be audited with the same tooling.
-    """
+    """Build machine-readable prompt metadata for a write-chunk call."""
     components = ["persona", "section_skeleton", "section_contract", "section_wiki_excerpts"]
     if previous_summary:
         components.append("previous_sections_summary")
@@ -8157,7 +8145,7 @@ def _apply_review_fixes(
     """Apply <fixes> find/replace pairs from reviewer to content.
 
     Returns (success, count_of_fixes_applied).
-    Targeted fixes are better than section rewrites — they change
+    Targeted fixes are better than broad regenerations — they change
     only what the reviewer flagged, preserving everything else.
 
     The .md file now contains only prose (no TAB markers, no enrichment).
@@ -8362,305 +8350,6 @@ def _section_spans(content: str) -> list[dict]:
             "body": content[start:end].strip(),
         })
     return spans
-
-
-def _dispatch_rewrite_prompt(prompt: str, writer: str, phase: str, orch_dir: Path) -> tuple[bool, str]:
-    """Dispatch a rewrite prompt through the same writer family used for build."""
-    from build.dispatch import CLAUDE_WRITER_TOOLS, dispatch_agent
-
-    use_tools = writer.endswith("-tools")
-    if writer in ("gemini", "gemini-tools"):
-        ok, raw = dispatch_agent(
-            prompt,
-            agent="gemini",
-            phase=phase,
-            orch_dir=orch_dir,
-            timeout=REWRITE_BLOCK_TIMEOUT_S,
-            cascade_per_call_max_s=REWRITE_BLOCK_GEMINI_CALL_CAP_S,
-        )
-        if ok and raw:
-            return ok, raw
-        # Rewrite-block prompts are intentionally surgical. If Gemini exhausts
-        # its own cascade without output, give the bounded section rewrite one
-        # Codex fallback before failing the block outright.
-        return dispatch_agent(
-            prompt,
-            agent="codex",
-            phase=phase,
-            orch_dir=orch_dir,
-            timeout=REWRITE_BLOCK_TIMEOUT_S,
-        )
-    if writer in ("claude", "claude-tools"):
-        return dispatch_agent(
-            prompt,
-            agent=writer,
-            phase=phase,
-            orch_dir=orch_dir,
-            timeout=REWRITE_BLOCK_TIMEOUT_S if use_tools else TIMEOUT_WRITE_NO_TOOLS,
-            mcp_tools=use_tools,
-            allowed_tools=CLAUDE_WRITER_TOOLS if use_tools else None,
-        )
-    if writer in ("codex", "codex-tools"):
-        return dispatch_agent(
-            prompt,
-            agent="codex-tools" if use_tools else "codex",
-            phase=phase,
-            orch_dir=orch_dir,
-            timeout=REWRITE_BLOCK_TIMEOUT_S,
-        )
-    return False, ""
-
-
-def _rewrite_block_guardrails(current_section: str) -> str:
-    """Return a narrow guard block for surgical section rewrites."""
-    guardrails = [
-        "- Preserve the exact same H2 heading.",
-        "- Do not add any new H2/H3 headings, intro commentary, or closing notes.",
-        "- Keep existing `<!-- INJECT_ACTIVITY: ... -->` markers exactly as written.",
-        "- Rewrite only the prose/dialogue needed to satisfy the directive; keep valid teaching content intact.",
-    ]
-    if "<!-- INJECT_ACTIVITY:" not in current_section:
-        guardrails = [line for line in guardrails if "INJECT_ACTIVITY" not in line]
-    return "\n".join(guardrails)
-
-
-def _extract_rewrite_block_auxiliary_forbidden_literals(directive: str) -> list[str]:
-    """Derive evidence phrases that must not leak into auxiliary rewrite context."""
-    literals: list[str] = []
-    for raw_line in directive.splitlines():
-        if "Evidence:" not in raw_line:
-            continue
-        evidence = raw_line.split("Evidence:", 1)[1].strip()
-        quoted = [
-            match
-            for groups in re.findall(r"`([^`]{4,})`|\"([^\"]{4,})\"|“([^”]{4,})”", evidence)
-            for match in groups
-            if match
-        ]
-        if quoted:
-            literals.extend(quoted)
-            continue
-        for part in (chunk.strip() for chunk in evidence.split(";")):
-            if len(part) >= 4:
-                literals.append(part)
-    # Preserve order but deduplicate.
-    return list(dict.fromkeys(literals))
-
-
-def _rewrite_block_prompt_manifest(
-    *,
-    section_title: str,
-    prompt: str,
-    directive: str,
-    guardrails: str,
-    excerpt_literal: str,
-    current_section_literal: str,
-) -> dict:
-    """Build machine-readable rewrite prompt metadata for deterministic audit."""
-    derived_forbidden_literals = _extract_rewrite_block_auxiliary_forbidden_literals(directive)
-    auxiliary_text = "\n".join(
-        part for part in (guardrails, excerpt_literal) if part.strip()
-    )
-    forbidden_aux_literals = [
-        literal
-        for literal in derived_forbidden_literals
-        if literal in auxiliary_text
-    ]
-    return {
-        "phase": "rewrite-block",
-        "section": section_title,
-        "components": [
-            "rewrite_directive",
-            "rewrite_guardrails",
-            "section_mapped_wiki_excerpts",
-            "current_section",
-        ],
-        "metrics": {
-            "prompt_chars": len(prompt),
-            "prompt_words": len(prompt.split()),
-            "directive_chars": len(directive),
-            "guardrails_chars": len(guardrails),
-            "section_excerpt_chars": len(excerpt_literal),
-            "current_section_chars": len(current_section_literal),
-        },
-        "flags": {
-            "includes_shared_contract": "## Shared Module Contract" in prompt,
-            "includes_previous_sections": "## Previous Sections For Continuity" in prompt,
-            "includes_skeleton": "## Skeleton For This Section" in prompt,
-        },
-        "audit": {
-            "forbidden_headings_present": [
-                heading for heading in REWRITE_BLOCK_FORBIDDEN_HEADINGS if heading in prompt
-            ],
-            "derived_auxiliary_forbidden_literals": derived_forbidden_literals,
-            "auxiliary_forbidden_literals": forbidden_aux_literals,
-        },
-    }
-
-
-def _audit_rewrite_block_prompt(manifest: dict) -> list[str]:
-    """Return deterministic audit failures for a rewrite-block prompt manifest."""
-    failures: list[str] = []
-    metrics = manifest.get("metrics") or {}
-    audit = manifest.get("audit") or {}
-
-    if metrics.get("prompt_chars", 0) > REWRITE_BLOCK_PROMPT_MAX_CHARS:
-        failures.append(
-            f"prompt exceeds max chars ({metrics.get('prompt_chars')} > {REWRITE_BLOCK_PROMPT_MAX_CHARS})"
-        )
-
-    forbidden_headings = audit.get("forbidden_headings_present") or []
-    if forbidden_headings:
-        failures.append(
-            "prompt contains forbidden heading(s): " + ", ".join(forbidden_headings)
-        )
-
-    forbidden_literals = audit.get("auxiliary_forbidden_literals") or []
-    if forbidden_literals:
-        failures.append(
-            "auxiliary prompt context contains forbidden literal(s): "
-            + ", ".join(forbidden_literals)
-        )
-
-    return failures
-
-
-def _rewrite_block_section(
-    content_path: Path,
-    *,
-    level: str,
-    module_num: int,
-    slug: str,
-    writer: str,
-    section_name: str,
-    directive: str,
-) -> bool:
-    """Regenerate one H2 section under contract control."""
-    content = content_path.read_text("utf-8")
-    spans = _section_spans(content)
-    resolved_title = _resolve_section_title(section_name, spans)
-    if resolved_title is None:
-        _log(f"  ⚠️  Rewrite block section not found: {section_name}")
-        return False
-
-    target_index = next(i for i, span in enumerate(spans) if span["title"] == resolved_title)
-    current_section = spans[target_index]
-
-    contract, excerpts = _ensure_contract_artifacts(level, module_num, slug, log_creation=False)
-    _, excerpt_literal = _format_contract_prompt_artifacts(
-        contract, excerpts, section_title=resolved_title,
-    )
-    current_section_literal = _format_prompt_literal_block(
-        "Current Section", current_section["body"], language="markdown",
-    )
-    guardrails = _rewrite_block_guardrails(current_section["body"])
-
-    prompt = (
-        "# Rewrite One Module Section\n\n"
-        f"Rewrite ONLY the section `## {resolved_title}`.\n"
-        "Return ONLY the rewritten section, beginning with the exact same H2 heading.\n"
-        "Do not output any other sections, commentary, or code fences.\n\n"
-        "## Rewrite Directive\n\n"
-        f"{directive}\n\n"
-        "## Rewrite Guardrails\n\n"
-        f"{guardrails}\n\n"
-        "## Section-Mapped Wiki Excerpts\n\n"
-        f"{excerpt_literal}\n\n"
-        "## Current Section To Replace\n\n"
-        f"{current_section_literal}\n"
-    )
-
-    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
-    prompt_path = orch_dir / f"rewrite-block-{target_index + 1:02d}-prompt.md"
-    manifest_path = orch_dir / f"rewrite-block-{target_index + 1:02d}-prompt-manifest.yaml"
-    manifest = _rewrite_block_prompt_manifest(
-        section_title=resolved_title,
-        prompt=prompt,
-        directive=directive,
-        guardrails=guardrails,
-        excerpt_literal=excerpt_literal,
-        current_section_literal=current_section_literal,
-    )
-    failures = _audit_rewrite_block_prompt(manifest)
-    manifest["audit"]["passed"] = not failures
-    manifest["audit"]["failures"] = failures
-    prompt_path.write_text(prompt, "utf-8")
-    manifest_path.write_text(
-        yaml.safe_dump(manifest, sort_keys=False, allow_unicode=True),
-        "utf-8",
-    )
-    if failures:
-        _log(
-            f"  ❌ Rewrite block prompt rejected for {resolved_title} — "
-            + "; ".join(failures)
-        )
-        return False
-    ok, raw = _dispatch_rewrite_prompt(prompt, writer, f"rewrite-block-{target_index + 1:02d}", orch_dir)
-    if not ok or not raw:
-        _log(f"  ❌ Rewrite block failed for section: {resolved_title}")
-        return False
-
-    lines = raw.splitlines()
-    start = next((i for i, line in enumerate(lines) if line.startswith("## ")), -1)
-    rewritten = raw if start < 0 else "\n".join(lines[start:]).strip()
-    rewritten_sections = _parse_h2_sections(rewritten)
-    if len(rewritten_sections) != 1 or rewritten_sections[0]["title"] != resolved_title:
-        _log(f"  ❌ Rewrite block rejected for {resolved_title} — invalid H2 structure")
-        return False
-
-    directive_issue_types = {
-        match.group(1).strip()
-        for match in re.finditer(r"- Issue type:\s*([A-Z0-9_]+)", directive)
-    }
-    original_words = max(1, len(current_section["body"].split()))
-    rewritten_words = len(rewritten.split())
-    min_word_ratio = 0.6
-    if "META_PEDAGOGICAL_NARRATION" in directive_issue_types:
-        # Meta-narration cleanup can legitimately delete an explanatory
-        # after-dialogue paragraph outside summary sections while preserving
-        # the core teaching content of the section.
-        min_word_ratio = min(min_word_ratio, 0.4)
-    if (
-        ("summary" in resolved_title.lower() or "підсумок" in resolved_title.lower())
-        and "META_PEDAGOGICAL_NARRATION" in directive_issue_types
-    ):
-        # Summary cleanup sometimes needs to delete long English/meta lead-ins.
-        # Requiring 60% of the original length prevents a cleaner rewrite from
-        # landing when the reviewer explicitly asked for subtraction.
-        min_word_ratio = 0.30
-    if (
-        "summary" in resolved_title.lower() or "підсумок" in resolved_title.lower()
-    ) and directive_issue_types.intersection(
-        {"REGISTER_MISMATCH", "EXPLANATION_TONE_MISMATCH", "STYLE_REGISTER_MISMATCH"}
-    ):
-        # Summary register cleanup often removes workbook commands, bilingual
-        # glosses, and abstract lecture framing. Those are valid contractions,
-        # not evidence of a broken rewrite.
-        min_word_ratio = min(min_word_ratio, 0.35)
-    min_rewrite_words = min(original_words, max(8, int(original_words * min_word_ratio)))
-    if rewritten_words < min_rewrite_words:
-        _log(f"  ❌ Rewrite block rejected for {resolved_title} — too short ({rewritten_words} words)")
-        return False
-
-    invalid_types = _invalid_injected_activity_types(
-        rewritten,
-        {
-            str(item.get("type") or "").strip()
-            for item in contract.get("activity_obligations") or []
-            if isinstance(item, dict) and str(item.get("type") or "").strip()
-        },
-    )
-    if invalid_types:
-        _log(
-            f"  ❌ Rewrite block rejected for {resolved_title} — off-contract activity type(s): "
-            + ", ".join(sorted(set(invalid_types)))
-        )
-        return False
-
-    new_content = content[:current_section["start"]] + rewritten + "\n\n" + content[current_section["end"]:].lstrip()
-    content_path.write_text(new_content.rstrip() + "\n", "utf-8")
-    _log(f"  ✅ Rewrite block applied: {resolved_title}")
-    return True
 
 
 def _parse_style_review_payload(review_text: str) -> dict | None:
@@ -9040,7 +8729,7 @@ def _run_review_heal_loop(
             return ReviewLoopRunResult(outcome="error", rounds=tuple(rounds))
 
         # #1320 — capture the EXACT content the reviewer saw, before
-        # any fix / rewrite mutation runs. The snapshot (if this round
+        # any fix mutation runs. The snapshot (if this round
         # qualifies) must be of this pre-fix body, not whatever the
         # fixes turn it into — the reviewer's score applies to THIS
         # text, not the post-fix text.
@@ -9172,8 +8861,8 @@ def _run_review_heal_loop(
         # Bug #1316 Bug B — post-mutation confirmation review.
         #
         # The loop records the reviewer's ``passed`` / ``score`` from the
-        # review that ran BEFORE fixes / word-budget rewrites were
-        # applied. If the loop now wants to plateau (either because of two
+        # review that ran BEFORE deterministic fixes were applied. If the loop now
+        # wants to plateau (either because of two
         # small deltas or because we hit the round ceiling), that
         # decision is based on a stale score that doesn't reflect the
         # mutations this round. When mutations happened, run one
@@ -9328,7 +9017,7 @@ def _run_style_review_heal_loop(
     """Run style review exactly once.
 
     If it fails, record advice in the contract for the next write attempt
-    and continue (advisory-only). This stops in-phase rewrite churn.
+    and continue (advisory-only). This stops in-phase churn.
     """
     passed, score, review_text = step_review_style(
         content_path,
