@@ -1,0 +1,51 @@
+slug: colors
+round: 1
+dimension: completeness
+name: Completeness
+score: 9.0
+verdict: REVISE
+evidence: '- Українською: Прапор України — синьо-жовтий (Кравцова, 2 клас, с. 22:
+  Синє — небо, жовте — жито). English: Contract explicitly requires citing Kravtsova''s
+  Grade 2 textbook for the blue-yellow flag...'
+findings:
+- dimension: COMPLETENESS
+  severity: minor
+  location: Section "Синій ≠ блакитний"
+  issue: 'Українською: Пропущено педагогічну опору з підручника Кравцової для 2 класу:
+    "Синє — небо, жовте — жито", що була чітко вказана в контракті.
+
+    English: The specific textbook citation (Kravtsova, Grade 2) and the corresponding
+    quote for the flag colors are missing.'
+  fix: Add the Kravtsova textbook reference and quote to the explanation of the Ukrainian
+    flag colors.
+fixes:
+- insert_after: 'A stable reference pair to memorize: the Ukrainian flag is «синьо-жовтий»
+    — the dark stripe on top is «синій», the bright stripe below is «жовтий», and
+    a clear noon sky is «блакитне».'
+  text: ' As noted in textbook materials (Кравцова, Grade 2, p. 22), the flag represents
+    the landscape: **«Синє — небо, жовте — жито»** (*Blue is the sky, yellow is the
+    wheat*).'
+rewrite_blocks: []
+review_text: "```markdown\n## Dimension\nid: completeness\nname: Completeness\nscore:\
+  \ 9.0/10\nverdict: REVISE\n\n## Evidence\n- Українською: Прапор України — синьо-жовтий\
+  \ (Кравцова, 2 клас, с. 22: Синє — небо, жовте — жито).\n  English: Contract explicitly\
+  \ requires citing Kravtsova's Grade 2 textbook for the blue-yellow flag metaphor.\n\
+  - Українською: A stable reference pair to memorize: the Ukrainian flag is «синьо-жовтий»\
+  \ — the dark stripe on top is «синій», the bright stripe below is «жовтий», and\
+  \ a clear noon sky is «блакитне».\n  English: The generated text mentions the flag\
+  \ but omits the specific textbook citation and the poetic metaphor \"Синє — небо,\
+  \ жовте — жито\".\n\n## Findings\n[COMPLETENESS] [SEVERITY: minor]\nLocation: Section\
+  \ \"Синій ≠ блакитний\"\nIssue: Українською: Пропущено педагогічну опору з підручника\
+  \ Кравцової для 2 класу: \"Синє — небо, жовте — жито\", що була чітко вказана в\
+  \ контракті.\nEnglish: The specific textbook citation (Kravtsova, Grade 2) and the\
+  \ corresponding quote for the flag colors are missing.\nFix: Add the Kravtsova textbook\
+  \ reference and quote to the explanation of the Ukrainian flag colors.\n\n## Verdict\
+  \ Reason\nThe module is nearly perfectly complete, fulfilling all complex dialogue\
+  \ requirements, group sorting, and nuance distinctions. However, it missed one specific\
+  \ textbook citation (\"Кравцова, 2 клас, с. 22: Синє — небо, жовте — жито\") required\
+  \ by the section 3 teaching beat.\n\n<fixes>\n- insert_after: \"A stable reference\
+  \ pair to memorize: the Ukrainian flag is «синьо-жовтий» — the dark stripe on top\
+  \ is «синій», the bright stripe below is «жовтий», and a clear noon sky is «блакитне».\"\
+  \n  text: \" As noted in textbook materials (Кравцова, Grade 2, p. 22), the flag\
+  \ represents the landscape: **«Синє — небо, жовте — жито»** (*Blue is the sky, yellow\
+  \ is the wheat*).\"\n</fixes>\n```"

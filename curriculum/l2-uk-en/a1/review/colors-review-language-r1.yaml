@@ -1,0 +1,31 @@
+slug: colors
+round: 1
+dimension: language
+name: Language
+score: 10.0
+verdict: PASS
+evidence: '- Українською: **«Якого вони кольору?»**, **«Червоні.»**, **«Синя.»**,
+  **«Сіре.»** English: Correct use of the "What color?" formula and precise gender/number
+  agreement in short answers. - Українсь...'
+findings: []
+fixes: []
+rewrite_blocks: []
+review_text: "## Dimension\nid: language\nname: Language\nscore: 10.0/10\nverdict:\
+  \ PASS\n\n## Evidence\n- Українською: **«Якого вони кольору?»**, **«Червоні.»**,\
+  \ **«Синя.»**, **«Сіре.»**\n  English: Correct use of the \"What color?\" formula\
+  \ and precise gender/number agreement in short answers.\n- Українською: **«карі\
+  \ очі»**, **«русяве волосся»**, **«сиве волосся»**\n  English: Authentic Ukrainian\
+  \ collocations for physical appearance, correctly avoiding literal color translations\
+  \ (like *коричневі очі).\n- Українською: **«синій»** (soft group) vs **«червоний»**\
+  \ (hard group).\n  English: Accurately teaches the soft-stem declension pattern\
+  \ for \"синій\" (синя, синє, сині) as the sole common exception in the basic color\
+  \ palette.\n- Українською: **«синій»** vs **«блакитний»**\n  English: Correct linguistic\
+  \ distinction between dark blue and light blue as two distinct base colors in the\
+  \ Ukrainian worldview.\n\n## Findings\nNone.\n\n## Verdict Reason\nThe Ukrainian\
+  \ content is linguistically flawless and fully idiomatic. All adjective agreements\
+  \ across gender and number are correct, and the module successfully implements the\
+  \ soft-stem paradigm for \"синій\". The inclusion of fixed collocations for physical\
+  \ appearance (карі очі, русяве волосся) demonstrates a high level of idiomatic accuracy\
+  \ and adherence to decolonization standards (avoiding calques from English). The\
+  \ text is free of Russianisms, Surzhyk, and paronym errors. Scaffolding is applied\
+  \ correctly for the A1 level.\n\n<fixes>\n</fixes>"
