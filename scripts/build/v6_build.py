@@ -815,7 +815,7 @@ class StyleReviewLoopRunResult:
 
 CLAUDE_FAMILY = ModelFamily(
     name="claude",
-    thinking="claude-opus-4-6",
+    thinking="claude-opus-4-7",
     fast="claude-sonnet-4-6",
     tool_prefix="mcp__rag__",
 )

@@ -48,6 +48,8 @@ import logging
 import os
 import re
 import shutil
+import subprocess
+from functools import cache
 from pathlib import Path
 from typing import Any
 
@@ -75,13 +77,51 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # to stdout; the caller passes them IN via tool_config. Parser kept for
 # forward compat.)
 _SESSION_ID_RE = re.compile(r"session[_-]?id[:=]\s*([0-9a-f-]{8,})", re.IGNORECASE)
+_EFFORT_MIN_VERSION = (2, 1, 98)
+_MIN_SUPPORTED_CLI_VERSION = (2, 1, 116)
+_POSTMORTEM_URL = "https://www.anthropic.com/engineering/april-23-postmortem"
+
+
+@cache
+def _probe_claude_cli_version(cmd_prefix: tuple[str, ...]) -> tuple[int, int, int] | None:
+    """Probe ``claude --version`` once per binary prefix for this process."""
+    try:
+        from utils.claude_version import _parse_claude_semver
+    except ImportError:
+        return None
+
+    try:
+        result = subprocess.run(
+            [*cmd_prefix, "--version"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
+        return None
+
+    combined = f"{result.stdout or ''}\n{result.stderr or ''}".strip()
+    return _parse_claude_semver(combined)
+
+
+def _ensure_supported_claude_cli_version(cmd_prefix: tuple[str, ...]) -> tuple[int, int, int] | None:
+    """Reject Claude CLI versions with the 2026-04-23 postmortem regressions."""
+    version = _probe_claude_cli_version(cmd_prefix)
+    if version is not None and version < _MIN_SUPPORTED_CLI_VERSION:
+        raise RuntimeError(
+            "Claude CLI < 2.1.116 inherits known quality regressions fixed "
+            f"on 2026-04-23 (see {_POSTMORTEM_URL}). Upgrade with: "
+            "npm install -g @anthropic-ai/claude-cli@latest"
+        )
+    return version
 
 
 class ClaudeAdapter:
     """Adapter for ``npx @anthropic-ai/claude-code@latest`` print mode."""
 
     name: str = "claude"
-    default_model: str = "claude-opus-4-6"
+    default_model: str = "claude-opus-4-7"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
@@ -111,8 +151,8 @@ class ClaudeAdapter:
         ``effort``: optional reasoning-level string. When non-None and the
         probed Claude binary supports ``--effort`` (CC 2.1.98+), the flag
         is appended as ``--effort <level>``. Otherwise we log a warning
-        and proceed without the flag so older CLIs don't hard-fail. See
-        ``utils.claude_version.supports_effort`` and issue #1396.
+        and proceed without the flag. Claude CLI versions below 2.1.116
+        are rejected outright due to the 2026-04-23 postmortem gate.
         """
         tc: dict[str, Any] = tool_config or {}
 
@@ -122,10 +162,13 @@ class ClaudeAdapter:
         # override by passing ``tool_config={"cmd_prefix": [...]}``.
         cmd_prefix = tc.get("cmd_prefix")
         if cmd_prefix:
-            cmd: list[str] = list(cmd_prefix)
+            cmd = [cmd_prefix] if isinstance(cmd_prefix, str) else list(cmd_prefix)
         else:
             claude_bin = shutil.which("claude")
             cmd = [claude_bin] if claude_bin else ["npx", "@anthropic-ai/claude-code@latest"]
+
+        probe_prefix = tuple(cmd)
+        cli_version = _ensure_supported_claude_cli_version(probe_prefix)
 
         cmd.extend(["-p", prompt])
 
@@ -154,25 +197,22 @@ class ClaudeAdapter:
 
         # Effort (reasoning level) — version-gated. See #1396.
         if effort is not None:
-            probe_prefix_for_effort: tuple[str, ...]
-            if cmd_prefix:
-                probe_prefix_for_effort = tuple(cmd_prefix)
-            elif shutil.which("claude"):
-                probe_prefix_for_effort = (cmd[0],)
-            else:
-                probe_prefix_for_effort = ("npx", "@anthropic-ai/claude-code@latest")
-            try:
-                from utils.claude_version import supports_effort
-                effort_supported = supports_effort(probe_prefix_for_effort)
-            except ImportError:
-                effort_supported = False
+            # Use the `utils.claude_version.supports_effort` helper so tests
+            # can patch the decision at a single point. Inline version
+            # comparison bypassed the helper and left CI runs (no Claude CLI
+            # installed → cli_version=None) silently dropping --effort even
+            # though the test patched supports_effort=True. Root cause of the
+            # test_claude_adapter_emits_effort_when_supported CI failure on
+            # PR #1474.
+            from utils.claude_version import supports_effort
+            effort_supported = supports_effort(probe_prefix)
             if effort_supported:
                 cmd.extend(["--effort", effort])
             else:
                 _logger.warning(
                     "Claude CLI at %s does not support --effort; "
                     "ignoring effort=%r and using CLI default (#1396)",
-                    probe_prefix_for_effort,
+                    probe_prefix,
                     effort,
                 )
 
@@ -193,18 +233,8 @@ class ClaudeAdapter:
             cmd.extend(["--mcp-config", str(mcp_config_path), "--allowedTools", allowed_tools])
 
         # Cache-warmth optimization (CC 2.1.98+)
-        try:
-            from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
-            # Probe the prefix we're about to run (matches the actual binary)
-            probe_prefix = tuple(cmd[:1]) if len(cmd) >= 1 else tuple(cmd[:2] or ["claude"])
-            if cmd_prefix:
-                probe_prefix = tuple(cmd_prefix)
-            elif not shutil.which("claude"):
-                probe_prefix = ("npx", "@anthropic-ai/claude-code@latest")
-            if supports_exclude_dynamic_system_prompt_sections(probe_prefix):
-                cmd.append("--exclude-dynamic-system-prompt-sections")
-        except ImportError:
-            pass  # Graceful degradation if helper unavailable
+        if cli_version and cli_version >= _EFFORT_MIN_VERSION:
+            cmd.append("--exclude-dynamic-system-prompt-sections")
 
         return InvocationPlan(
             cmd=cmd,

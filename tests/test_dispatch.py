@@ -99,8 +99,9 @@ class TestSaveDispatchLog:
     def test_meta_json_structure(self, tmp_path):
         orch_dir = tmp_path / "orch"
         _save_dispatch_log(
-            orch_dir, "review", "claude-tools (claude-opus-4-6)",
-            model="claude-opus-4-6",
+            orch_dir, "review", "claude-tools (claude-opus-4-7)",
+            model="claude-opus-4-7",
+            effort="xhigh",
             prompt_chars=2000, response_chars=3000,
             returncode=0, duration_s=120.5, ok=True,
         )
@@ -108,8 +109,9 @@ class TestSaveDispatchLog:
         data = json.loads(meta_file.read_text())
 
         assert data["phase"] == "review"
-        assert data["agent"] == "claude-tools (claude-opus-4-6)"
-        assert data["model"] == "claude-opus-4-6"
+        assert data["agent"] == "claude-tools (claude-opus-4-7)"
+        assert data["model"] == "claude-opus-4-7"
+        assert data["effort"] == "xhigh"
         assert data["ok"] is True
         assert data["returncode"] == 0
         assert data["prompt_chars"] == 2000
@@ -374,7 +376,7 @@ class TestDispatchAgent:
         travels via tool_config dict, not argv assertions."""
         from agent_runtime.result import Result
         mock_invoke.return_value = Result(
-            ok=True, agent="claude", model="claude-opus-4-6", mode="read-only",
+            ok=True, agent="claude", model="claude-opus-4-7", mode="read-only",
             response="content here", stderr_excerpt=None, duration_s=1.0,
             session_id=None, rate_limited=False, stalled=False,
             returncode=0, usage_record={},
@@ -383,7 +385,7 @@ class TestDispatchAgent:
             "test prompt", agent="claude-tools", phase="review",
             orch_dir=tmp_path, timeout=600,
             mcp_tools=True, allowed_tools=CLAUDE_REVIEWER_TOOLS,
-            model="claude-opus-4-6",
+            model="claude-opus-4-7",
         )
         assert ok is True
         # MCP tool config must have been passed through tool_config
@@ -392,6 +394,7 @@ class TestDispatchAgent:
         assert "mcp_config_path" in kwargs["tool_config"]
         assert kwargs["tool_config"]["allowed_tools"] == CLAUDE_REVIEWER_TOOLS
         assert kwargs["entrypoint"] == "dispatch"
+        assert kwargs["effort"] == "xhigh"
 
     @patch.dict("os.environ", {}, clear=True)
     @patch("agent_runtime.runner.invoke")

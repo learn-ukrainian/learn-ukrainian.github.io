@@ -289,7 +289,7 @@ def _get_claude_bin() -> str:
 def dispatch_claude_phase(
     prompt_file: Path,
     phase_label: str,
-    model: str = "claude-opus-4-6",
+    model: str = "claude-opus-4-7",
     timeout: int = 600,
     allow_tools: list[str] | None = None,
 ) -> tuple[bool, str]:
@@ -301,6 +301,7 @@ def dispatch_claude_phase(
     prompt = prompt.replace("You are Gemini", "You are Claude")
 
     cmd = [_get_claude_bin(), "--model", model, "-p", "--output-format", "text"]
+    cmd.extend(["--effort", "xhigh"])  # postmortem 2026-04-23: pin explicitly, never inherit default
     if supports_exclude_dynamic_system_prompt_sections((_get_claude_bin(),)):
         cmd.append("--exclude-dynamic-system-prompt-sections")
     if allow_tools:
