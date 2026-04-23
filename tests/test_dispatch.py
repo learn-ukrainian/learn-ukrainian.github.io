@@ -25,6 +25,16 @@ def _isolate_usage_log(tmp_path):
     with patch("agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
         yield
 
+
+@pytest.fixture(autouse=True)
+def _isolate_gemini_auth_state(monkeypatch, tmp_path):
+    """Keep dispatch tests hermetic from shell env + repo-local cooldown files."""
+    monkeypatch.delenv("GEMINI_AUTH_MODE", raising=False)
+    monkeypatch.setenv(
+        "LU_GEMINI_COOLDOWN_PATH",
+        str(tmp_path / "gemini-cooldown.json"),
+    )
+
 # ---------------------------------------------------------------------------
 # Tool constants
 # ---------------------------------------------------------------------------

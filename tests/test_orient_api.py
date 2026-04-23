@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+import contextlib
 import time
 
 import pytest
@@ -170,6 +172,54 @@ def test_orient_hard_timeout_isolates_async_collector(monkeypatch):
     assert "section_timeout" in data["pipeline"]["error"]
     # Other sections must still populate — failure isolation is the point.
     assert data["runtime"]["agents"] == ["codex"]
+
+
+def test_orient_runtime_survives_default_executor_saturation(monkeypatch):
+    """Orient sync sections must not depend on the shared default executor.
+
+    Regression for the CI-only failure seen after the telemetry follow-up:
+    another part of the suite had already saturated the event loop's
+    default ``asyncio.to_thread`` pool, so lowering
+    ``ORIENT_SECTION_HARD_TIMEOUT_S`` to 0.1 s caused the trivial
+    runtime collector to time out before it even started. Orient now
+    uses its own executor for sync collectors, so shared-pool backlog
+    must not strip the ``runtime.agents`` payload.
+    """
+
+    _patch_orient_sources(monkeypatch)
+    monkeypatch.setattr(api_main, "ORIENT_SECTION_HARD_TIMEOUT_S", 0.1)
+
+    def block_default_executor():
+        time.sleep(0.5)
+
+    async def exercise() -> dict:
+        blockers = [
+            asyncio.create_task(
+                asyncio.wait_for(
+                    asyncio.to_thread(block_default_executor),
+                    timeout=0.01,
+                )
+            )
+            for _ in range(64)
+        ]
+        await asyncio.sleep(0.05)
+        try:
+            runtime, meta = await api_main._cached_orient_section(
+                "runtime",
+                api_main._collect_runtime_orient_data,
+                {},
+            )
+            return {"runtime": runtime, "meta": meta}
+        finally:
+            for task in blockers:
+                with contextlib.suppress(Exception):
+                    await task
+
+    result = asyncio.run(exercise())
+
+    assert result["runtime"]["agents"] == ["codex"]
+    assert result["meta"]["cache"] == "miss"
+    assert "error" not in result["meta"]
 
 
 def test_orient_errors_are_not_cached(monkeypatch):

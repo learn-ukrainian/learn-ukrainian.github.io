@@ -18,6 +18,7 @@ runtime-resolved values on completion.
 """
 from __future__ import annotations
 
+import contextlib
 import json
 import logging
 import re
@@ -34,6 +35,7 @@ from .registry import AGENTS
 _logger = logging.getLogger(__name__)
 _SEMVER_RE = re.compile(r"(?<![\d.])v?(\d+(?:\.\d+){1,3})(?![\d.])")
 _UNKNOWN = "unknown"
+_ORIGINAL_SUBPROCESS_POPEN = subprocess.Popen
 
 
 @dataclass(frozen=True)
@@ -216,16 +218,23 @@ def _gemini_version_prefix(cmd: list[str]) -> tuple[str, ...]:
 
 def _probe_version(prefix: tuple[str, ...]) -> str | None:
     try:
-        proc = subprocess.run(
+        proc = _ORIGINAL_SUBPROCESS_POPEN(
             [*prefix, "--version"],
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
-            timeout=5,
-            check=False,
         )
     except BaseException:
         return None
-    combined = f"{proc.stdout or ''}\n{proc.stderr or ''}".strip()
+    try:
+        stdout, stderr = proc.communicate(timeout=5)
+    except BaseException:
+        with contextlib.suppress(BaseException):
+            proc.kill()
+        with contextlib.suppress(BaseException):
+            proc.communicate()
+        return None
+    combined = f"{stdout or ''}\n{stderr or ''}".strip()
     return _extract_semverish(combined)
 
 
