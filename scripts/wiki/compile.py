@@ -75,10 +75,8 @@ def _ts() -> str:
     """Compact HH:MM:SS timestamp for log lines."""
     return datetime.now().strftime("%H:%M:%S")
 
-from common.thresholds import REVIEW_PASS_FLOOR
 from wiki.compiler import compile_article, update_index
 from wiki.config import ALL_TRACKS, CURRICULUM_DIR, TRACK_DOMAINS, WIKI_DIR
-from wiki.context import strip_meta
 from wiki.enrichment import enrich_sources
 from wiki.sources import (
     gather_discovery_sources,
@@ -303,15 +301,14 @@ def cmd_list(track: str) -> None:
 
 
 def cmd_compile_one(track: str, slug: str, *, force: bool = False,
-                    dry_run: bool = False, review: bool = False,
-                    dim_review: bool = False) -> bool:
+                    dry_run: bool = False, review: bool = False) -> bool:
     """Compile a single wiki article from a discovery file.
 
-    ``dim_review``: run the Phase-2 dimensional review orchestrator after
-    compile, in SHADOW MODE (logs findings to ``wiki/.reviews/``; never
-    blocks). Independent of the legacy single-call ``review``. Safe to
-    pass both during canary rollout (§8 Phase 2). See
-    ``docs/design/dimensional-review.md``.
+    ``review``: run the per-dim review orchestrator (independent model
+    calls per dim, strict persona, MIN aggregation) after compile. The
+    PASS floor is :data:`scripts.common.thresholds.REVIEW_PASS_FLOOR` —
+    a single dim below the floor fails the whole review with the
+    failing dim named in the report.
     """
     from wiki.state import is_compiled
 
@@ -380,15 +377,10 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
             log_event(track, slug, "compile", words=word_count, sources=len(all_chunks))
             print(f"    ✓ post-write I/O in {time.monotonic() - t_stage:.1f}s ({word_count} words)", flush=True)
         if review and not dry_run:
-            print("  📋 Review enabled — running legacy single-call review...", flush=True)
+            print("  📋 Review enabled — running per-dim + MIN review...", flush=True)
             t_stage = time.monotonic()
             _review_article(result, track, slug)
             print(f"    ✓ review in {time.monotonic() - t_stage:.1f}s", flush=True)
-        if dim_review and not dry_run:
-            print("  🔬 Dim-review enabled — running 4-dim shadow-mode review...", flush=True)
-            t_stage = time.monotonic()
-            _dim_review_article(result, track, slug)
-            print(f"    ✓ dim-review in {time.monotonic() - t_stage:.1f}s", flush=True)
         return True
     return dry_run  # dry_run returns None but isn't a failure
 
@@ -516,318 +508,95 @@ def _compiled_article_is_ready(track: str, slug: str) -> bool:
     return not validate_sources_registry(article_text, registry)
 
 
-def _dim_review_article(article_path: Path, track: str, slug: str) -> None:
-    """Phase-2 dimensional review, shadow mode. See `scripts/wiki/review.py`.
+def _review_article(article_path: Path, track: str, slug: str) -> None:
+    """Run the per-dim + MIN review orchestrator on a compiled wiki article.
 
-    Runs the 4 LLM dim reviewers + deterministic fix-merger in shadow
-    mode — the article file on disk is NOT modified by review, and no
-    non-zero exit is raised even if dims fail. The report lands in
-    ``wiki/.reviews/<domain>/<slug>.json`` for later calibration.
+    Replaces the legacy weighted-average single-call review. Each wiki
+    dim (source_grounding, factual_accuracy, ukrainian_perspective,
+    register) runs as an INDEPENDENT model call with the strict persona;
+    the aggregator takes ``min(dim_scores)`` (see
+    ``scripts.wiki.review.aggregate_min``) and fails the review if the
+    driving dim is below :data:`scripts.common.thresholds.REVIEW_PASS_FLOOR`.
 
-    Failures here (agent unavailable, rate-limited, prompt errors) are
-    logged but do NOT break the compile pipeline — this is canary
-    rollout (§8 Phase 2), not a hard gate.
+    The orchestrator applies surgical fixes round-by-round to an
+    in-memory copy of the article; when the final verdict is ``PASS``
+    and the text changed, the updated text is written back to disk.
+    Failures here are non-fatal to the outer compile pipeline: the
+    review report is persisted to ``wiki/.reviews/...`` and a
+    ``review_fail`` event is logged so failing wikis are visible in
+    downstream audits.
     """
     import traceback as _tb
 
     from wiki.review import review_article, write_report
 
-    try:
-        report, _ = review_article(article_path, shadow_mode=True)
-        out = write_report(report, article_path)
-        print(
-            f"  🔬 Dim-review: {report.final_verdict} "
-            f"(failing: {report.failing_dims or 'none'}) → {out.name}"
-        )
-        log_event(
-            track, slug, "dim_review",
-            verdict=report.final_verdict,
-            failing_dims=report.failing_dims,
-            rounds=len(report.rounds),
-            report=str(out),
-            shadow=True,
-        )
-    except Exception as exc:  # defensive: shadow mode must never block
-        print(f"  ⚠️  Dim-review failed (shadow mode — non-fatal): {type(exc).__name__}: {exc}")
-        log_event(
-            track, slug, "dim_review_error",
-            error=f"{type(exc).__name__}: {exc}",
-            traceback=_tb.format_exc(),
-            shadow=True,
-        )
-
-
-def _parse_review_scores(review_text: str) -> dict[str, float]:
-    """Parse all review scores: 5 dimensions + overall. Handles decimals.
-
-    Returns dict like:
-        {"factual": 9.0, "language": 9.0, "decolonization": 10.0,
-         "completeness": 7.0, "actionable": 9.0, "overall": 8.8}
-
-    Missing dimensions default to 0.0. Overall is parsed from the explicit
-    "Overall:" line, NOT averaged from dimensions (reviewer may weight them).
-
-    IMPORTANT: The review text contains the prompt template echo (with "X/10"
-    placeholders) followed by Gemini's actual response. We use findall and
-    take the LAST match for each dimension to skip the template.
-    """
-    import re
-
-    scores: dict[str, float] = {}
-
-    # Parse individual dimensions — take LAST match to skip prompt template echo
-    dimension_names = {
-        "factual": r"factual",
-        "language": r"(?:language|ukrainian\s+language)",
-        "decolonization": r"decolonization",
-        "completeness": r"completeness",
-        "actionable": r"actionable",
-    }
-    for key, pattern in dimension_names.items():
-        matches = re.findall(
-            rf"{pattern}\**[:\s]*\**\s*(\d+(?:\.\d+)?)\s*/\s*10",
-            review_text, re.IGNORECASE,
-        )
-        # Last match = Gemini's actual score (first may be prompt template)
-        scores[key] = float(matches[-1]) if matches else 0.0
-
-    # Parse overall score — also take LAST match
-    overall_matches = re.findall(
-        r"(?:overall|score|verdict|підсумок)[:\s]*\**\s*(\d+(?:\.\d+)?)\s*/\s*10",
-        review_text, re.IGNORECASE,
-    )
-    if overall_matches:
-        scores["overall"] = float(overall_matches[-1])
-    else:
-        # Fallback: last X/10 in the text
-        all_scores = re.findall(r"(\d+(?:\.\d+)?)\s*/\s*10", review_text)
-        scores["overall"] = float(all_scores[-1]) if all_scores else 0.0
-
-    return scores
-
-
-def _build_review_prompt(article_text: str, article_type: str,
-                         track: str, slug: str, round_label: str) -> str:
-    """Build a review prompt with the CURRENT article text.
-
-    Strips the `<!-- wiki-meta ... -->` block before sending — reviewer should
-    only score prose content, not machine-readable metadata (slug, domain,
-    tracks, source filenames). Otherwise Gemini wastes attention on metadata
-    and may flag legitimate source-filename strings as low-quality prose.
-    """
-    article_text = strip_meta(article_text)
-    sources_registry = ""
-    registry_path = registry_path_for(WIKI_DIR / _get_domain(track, slug) / f"{slug}.md")
-    if registry_path.exists():
-        sources_registry = f"\n\n## Sources registry\n\n{registry_path.read_text(encoding='utf-8').strip()}"
-    return (
-        f"You are a HARSH adversarial reviewer of a {article_type} for the Ukrainian "
-        "language curriculum wiki. Your job is to find problems, not praise.\n\n"
-        f"Track: {track}, Slug: {slug}, Round: {round_label}\n\n"
-        "## Review Rubric (score EACH dimension 1-10, then average)\n\n"
-        "1. **Factual accuracy** — every claim must have evidence from sources. "
-        "Vague or unsourced claims → deduct points.\n"
-        "2. **Ukrainian language quality** — check for Russianisms (кон→кін), "
-        "surzhyk (шо→що), calques (приймати душ→брати душ). Even ONE Russianism = max 7/10.\n"
-        "3. **Decolonization** — is Ukrainian presented on its own terms? Any "
-        "'like Russian but...' framing = max 6/10.\n"
-        "4. **Completeness** — does it cover ALL aspects a module writer needs? "
-        "Missing sections or shallow treatment → deduct.\n"
-        "5. **Actionable guidance** — can a writer actually USE this? Generic advice "
-        "like 'teach it well' = max 5/10. Must have specific examples, sequences, exercises.\n\n"
-        "## Rules\n"
-        "- Score each dimension separately, then give weighted average.\n"
-        "- Be honest. If the article is excellent, say so. 10/10 IS possible.\n"
-        "- 9/10 = excellent with minor issues. 8/10 = good. 7/10 = needs work.\n"
-        "- Output a <fixes> block with specific changes. "
-        "If the article is clean, output <fixes></fixes> (empty).\n"
-        "- Do NOT invent problems. Fabricated issues waste rebuild cycles.\n\n"
-        "## Fix syntax\n\n"
-        "Two formats are available:\n\n"
-        "**1. Replace existing text** (for corrections, rewording):\n"
-        "Use a SHORT anchor (1-2 sentences max) for the old: text. "
-        "Do NOT paste massive paragraphs — they break exact matching.\n"
-        "```\n"
-        "old: short exact text to find\n"
-        "new: replacement text\n"
-        "```\n\n"
-        "**2. Insert new content** (for missing sections, added examples):\n"
-        "Use INSERT AFTER with a short anchor from the article, then the new text to add.\n"
-        "```\n"
-        "INSERT AFTER: short anchor text that exists in the article\n"
-        "NEW TEXT: the new content to insert after the anchor\n"
-        "```\n\n"
-        "Separate multiple fixes with `---`.\n\n"
-        "## Output format\n\n"
-        "Dimension scores:\n"
-        "1. Factual: X/10 — [evidence]\n"
-        "2. Language: X/10 — [evidence]\n"
-        "3. Decolonization: X/10 — [evidence]\n"
-        "4. Completeness: X/10 — [evidence]\n"
-        "5. Actionable: X/10 — [evidence]\n\n"
-        "**Overall: X/10**\n\n"
-        "<fixes>\n"
-        "old: exact text to find in the article\n"
-        "new: replacement text\n"
-        "---\n"
-        "INSERT AFTER: anchor text in article\n"
-        "NEW TEXT: content to add after the anchor\n"
-        "</fixes>\n\n"
-        f"## Article to review\n\n{article_text}{sources_registry}"
-    )
-
-
-def _extract_review_summary(review_text: str) -> str:
-    """Extract a short human-readable summary from the first scored review."""
-    import re
-
-    score_line = re.compile(
-        r"^\s*(?:\d+\.\s*)?\*{0,2}"
-        r"(?:Factual|Language|Decolonization|Completeness|Actionable)"
-        r"\*{0,2}\s*:\s*\d+(?:\.\d+)?\s*/\s*10\s*[—-]\s*(.+?)\s*$",
-        re.IGNORECASE,
-    )
-
-    for line in review_text.splitlines():
-        match = score_line.match(line.strip())
-        if match:
-            return " ".join(match.group(1).split())[:300]
-
-    for line in review_text.splitlines():
-        stripped = line.strip()
-        if stripped and not stripped.startswith(("<fixes>", "</fixes>", "```")):
-            return " ".join(stripped.split())[:300]
-
-    return "No summary extracted from review."
-
-
-def _send_review(track: str, slug: str, review_prompt: str,
-                 round_label: str, project_root: str) -> str | None:
-    """Send a review prompt to Gemini via agent bridge. Returns Gemini's response body.
-
-    Uses --stdout-only so Gemini's actual response reaches stdout. Without this
-    flag, ask-gemini only prints send confirmations ("✅ Message sent (ID: N)"),
-    and the real response stays in the bridge message store — the parser then
-    sees only the confirmation and defaults every dimension to 0.0.
-    """
-    import subprocess
-
-    try:
-        result = subprocess.run(
-            [
-                ".venv/bin/python", "scripts/ai_agent_bridge/__main__.py",
-                "ask-gemini", "-",  # Read prompt from stdin (avoids arg length limits)
-                "--task-id", f"wiki-review-{track}-{slug}-{round_label}",
-                "--model", "gemini-3.1-pro-preview",
-                "--stdout-only",  # Route Gemini's response body to subprocess stdout
-            ],
-            input=review_prompt,
-            capture_output=True, text=True, timeout=900,
-            cwd=project_root,
-        )
-    except Exception as e:
-        print(f"  ⚠️  Review error: {e}")
-        return None
-
-    if result.returncode != 0:
-        print(f"  ⚠️  Review failed: {result.stderr[:200]}")
-        return None
-
-    return result.stdout
-
-
-def _review_article(article_path: Path, track: str, slug: str) -> None:
-    """Review a wiki article with a single scoring-only pass."""
-    from wiki.config import DEFAULT_PROMPT, TRACK_PROMPT, WIKI_DIR
     print(f"  🔍 Reviewing: {track}/{slug}")
 
     if not article_path.exists() or article_path.stat().st_size < 100:
         print("  ⚠️  Article missing or too short to review")
         return
 
-    prompt_type = TRACK_PROMPT.get(track, DEFAULT_PROMPT)
-    article_type = {
-        "compile_pedagogy_brief.md": "A1 pedagogical brief",
-        "compile_grammar_brief.md": "grammar brief",
-        "compile_academic.md": "academic brief",
-        "compile_article.md": "seminar knowledge article",
-    }.get(prompt_type, "wiki article")
-
-    review_dir = WIKI_DIR / ".reviews" / str(article_path.parent.relative_to(WIKI_DIR))
-    review_dir.mkdir(parents=True, exist_ok=True)
-
-    # Skip if a PASSING final review already exists (use --force to re-review).
-    # Failed reviews (score < 9) are retried on next run.
-    final_review = review_dir / f"{slug}-review-final.md"
-    if final_review.exists() and final_review.stat().st_size > 100:
-        print(f"  ⏭️  Already reviewed (passed): {track}/{slug}")
+    try:
+        report, final_text = review_article(article_path, shadow_mode=False)
+    except Exception as exc:
+        print(f"  ⚠️  Review orchestrator failed: {type(exc).__name__}: {exc}")
+        log_event(
+            track, slug, "review_error",
+            error=f"{type(exc).__name__}: {exc}",
+            traceback=_tb.format_exc(),
+        )
         return
 
-    project_root = str(Path(__file__).resolve().parents[2])
+    out_path = write_report(report, article_path)
+    min_score = report.min_score
+    failing_dim = report.failing_dim
+    verdict = report.final_verdict
 
-    article_text = article_path.read_text("utf-8")
-    review_prompt = _build_review_prompt(
-        article_text, article_type, track, slug, "r1",
-    )
-    review_text = _send_review(
-        track, slug, review_prompt, "r1", project_root,
-    )
-    if not review_text:
-        return
-
-    review_path = review_dir / f"{slug}-review-r1.md"
-    review_path.write_text(review_text, "utf-8")
-    (review_dir / f"{slug}-review.md").write_text(review_text, "utf-8")
-
-    scores = _parse_review_scores(review_text)
-    score = scores["overall"]
     dim_summary = " | ".join(
-        f"{k[:4]}:{v}" for k, v in scores.items() if k != "overall"
+        f"{dim}:{dr.score}" for dim, dr in report.rounds[-1].dim_results.items()
     )
-    print(f"  📋 Round 1: {score}/10 [{dim_summary}]")
-    log_event(track, slug, "review_round", round=1,
-              score=score, **{k: v for k, v in scores.items() if k != "overall"})
+    print(f"  📋 MIN {min_score}/10 [{dim_summary}]")
+    for round_result in report.rounds:
+        round_scores = {
+            dim: float(dr.score) for dim, dr in round_result.dim_results.items()
+        }
+        log_event(
+            track, slug, "review_round",
+            round=round_result.round_num,
+            score=min(round_scores.values()) if round_scores else 0.0,
+            **round_scores,
+        )
 
-    # Pass criteria: every individual dimension ≥ REVIEW_PASS_FLOOR AND
-    # overall ≥ REVIEW_PASS_FLOOR. The per-dimension floor catches the
-    # "one bad dimension hidden by a strong total" failure mode (Codex's
-    # A1 macro-report finding). Overall is a lower bound — if every dim
-    # is ≥ floor, overall is always ≥ floor by construction; the overall
-    # gate mostly guards against parse failures where the reviewer
-    # reports a sub-floor overall while emitting inflated dim scores.
-    DIMENSIONS = ("factual", "language", "decolonization", "completeness", "actionable")
-    failing_dims = [d for d in DIMENSIONS if scores.get(d, 0) < REVIEW_PASS_FLOOR]
-    overall_ok = score >= REVIEW_PASS_FLOOR
-
-    if overall_ok and not failing_dims:
-        log_event(track, slug, "review_pass", score=score, rounds=1)
-        print(f"  ✅ Review PASSED ({score}/10)")
-        (review_dir / f"{slug}-review-final.md").write_text(review_text, "utf-8")
+    if verdict == "PASS":
+        if not report.shadow_mode and final_text and final_text != article_path.read_text("utf-8"):
+            article_path.write_text(final_text, encoding="utf-8")
+        log_event(
+            track, slug, "review_pass",
+            score=min_score,
+            rounds=len(report.rounds),
+            report=str(out_path),
+        )
+        print(f"  ✅ Review PASSED (MIN {min_score}/10)")
         return
 
-    # Build failure reason for logs + user visibility.
-    fail_reasons = []
-    if not overall_ok:
-        fail_reasons.append(f"overall {score} < {REVIEW_PASS_FLOOR}")
-    for d in failing_dims:
-        fail_reasons.append(f"{d} {scores.get(d, 0)} < {REVIEW_PASS_FLOOR}")
-    fail_reason = "; ".join(fail_reasons)
-
-    review_summary = _extract_review_summary(review_text)
     force_cmd = (
         f".venv/bin/python scripts/wiki/compile.py --track {track} "
-        f"--slug {slug} --force"
+        f"--slug {slug} --force --review"
     )
     log_event(
-        track, slug, "review_fail", score=score, rounds=1,
-        article_path=str(article_path), review_summary=review_summary,
-        rerun_force_cmd=force_cmd, fail_reason=fail_reason,
-        failing_dimensions=failing_dims,
+        track, slug, "review_fail",
+        score=min_score,
+        rounds=len(report.rounds),
+        article_path=str(article_path),
+        failing_dim=failing_dim,
+        failing_dims=report.failing_dims,
+        verdict=verdict,
+        rerun_force_cmd=force_cmd,
+        report=str(out_path),
     )
-    print(f"  ❌ Review failed: {fail_reason}")
-    print(f"     path: {article_path}")
-    print(f"     final score: {score}/10")
-    print(f"     first review summary: {review_summary}")
+    print(f"  ❌ Review failed: {verdict} — MIN {min_score}/10 driven by {failing_dim}")
+    print(f"     failing dims: {report.failing_dims}")
+    print(f"     report: {out_path}")
     print(f"     rerun: {force_cmd}")
 
 
@@ -857,7 +626,7 @@ def cmd_review_existing(track: str, *, slug: str | None = None,
 
 def cmd_compile_all(track: str, *, limit: int | None = None,
                     force: bool = False, dry_run: bool = False,
-                    review: bool = False, dim_review: bool = False) -> None:
+                    review: bool = False) -> None:
     """Compile all articles for a track."""
     slugs = list_discovery_slugs(track)
     if not slugs:
@@ -869,9 +638,7 @@ def cmd_compile_all(track: str, *, limit: int | None = None,
 
     print(f"\n🔨 Compiling {len(slugs)} articles for {track.upper()}")
     if review:
-        print("  📋 Review enabled — each article will be reviewed after compilation")
-    if dim_review:
-        print("  🔬 Dimensional review enabled (shadow mode — never blocks)")
+        print("  📋 Per-dim + MIN review enabled — each article gated after compile")
     print(f"  🕐 Batch started at {_ts()}")
     print(f"{'═' * 60}")
 
@@ -896,7 +663,7 @@ def cmd_compile_all(track: str, *, limit: int | None = None,
             result = cmd_compile_one(
                 track, slug,
                 force=force, dry_run=dry_run,
-                review=review, dim_review=dim_review,
+                review=review,
             )
         except KeyboardInterrupt:
             # Explicit interrupt — stop the whole batch but leave state clean
@@ -1085,13 +852,11 @@ def main() -> None:
     parser.add_argument("--dry-run", action="store_true",
                         help="Print the assembled prompt without calling Gemini")
     parser.add_argument("--review", action="store_true",
-                        help="Review articles after compilation (legacy single-call)")
+                        help="Run per-dim + MIN review after compile "
+                             "(strict persona, independent model calls, "
+                             "aggregated via min(dim_scores)).")
     parser.add_argument("--review-only", action="store_true",
                         help="Review existing articles without recompiling")
-    parser.add_argument("--dim-review", action="store_true",
-                        help="Run Phase-2 dimensional review in SHADOW MODE "
-                             "after compile (logs findings, never blocks). "
-                             "See docs/design/dimensional-review.md.")
 
     args = parser.parse_args()
 
@@ -1123,7 +888,7 @@ def main() -> None:
         success = cmd_compile_one(
             args.track, args.slug,
             force=args.force, dry_run=args.dry_run,
-            review=args.review, dim_review=args.dim_review,
+            review=args.review,
         )
         sys.exit(0 if success else 1)
 
@@ -1131,7 +896,7 @@ def main() -> None:
         cmd_compile_all(
             args.track,
             limit=args.limit, force=args.force, dry_run=args.dry_run,
-            review=args.review, dim_review=args.dim_review,
+            review=args.review,
         )
         return
 

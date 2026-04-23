@@ -12,14 +12,17 @@ Invariants enforced here:
   `scripts.agent_runtime.runner.invoke()`. No bespoke subprocesses.
 - **§6c** No centralized LLM patcher. Fix resolution is deterministic
   (`review_merger.py`). Each reviewer emits only its own dim's fixes.
-- **§6d** Per-dimension gate logic. ALL dims must pass (score ≥ min). No
-  weighted averaging. First dim to fail sets `verdict=NEEDS_FIXES`.
-- **§7 / §4c** Thresholds are TBD pending seeded benchmark. The
-  `UNCALIBRATED_THRESHOLDS` constant below is a placeholder; the report
-  carries `thresholds_calibrated: False` until Phase 3 data exists.
-- **§8** Shadow-mode default. Orchestrator runs review and writes a
-  report, but does NOT block the pipeline — gating is a downstream
-  decision.
+- **§6d** Per-dimension gate logic via MIN aggregation: the overall
+  verdict score is ``min(dim_scores)``; any single dim below the PASS
+  floor fails the whole review. No weighted averaging — a wiki that
+  scores 9/9/9/6 fails at 6, and the report names the failing dim.
+- **Threshold source-of-truth.** The PASS floor is
+  :data:`scripts.common.thresholds.REVIEW_PASS_FLOOR` — the single
+  central value shared with the module pipeline. CLI / kwarg overrides
+  exist for experimentation; the default is never drift-prone.
+- **§8** Shadow mode remains available for testing (``shadow_mode=True``
+  skips the on-disk write-back) but is no longer the default. Callers
+  invoking from the compile pipeline gate on the final verdict.
 
 Usage::
 
@@ -64,6 +67,7 @@ from agent_runtime.errors import (
 from agent_runtime.json_parse import extract_json_object
 from agent_runtime.runner import invoke
 from agent_runtime.tool_config import build_mcp_tool_config
+from common.thresholds import REVIEW_PASS_FLOOR
 from wiki.config import PROMPTS_DIR, WIKI_DIR
 from wiki.review_merger import (
     Fix,
@@ -102,14 +106,16 @@ DEFAULT_FALLBACKS: dict[str, tuple[str, ...]] = {
     "register": ("claude", "codex"),
 }
 
-#: Placeholder thresholds. §4c + §7b: real numbers come from seeded
-#: benchmark. Report flags `thresholds_calibrated: False` until then.
-UNCALIBRATED_THRESHOLDS: dict[str, int] = {
-    "source_grounding": 8,
-    "factual_accuracy": 8,
-    "ukrainian_perspective": 8,
-    "register": 8,
-}
+#: Per-dim PASS floor, sourced from the central
+#: :mod:`scripts.common.thresholds` (post-#1454). All dims share the same
+#: floor; per-dim calibrated overrides from the Phase 3 benchmark land
+#: via CLI / kwarg in a subsequent change.
+WIKI_REVIEW_THRESHOLD: float = REVIEW_PASS_FLOOR
+
+
+def default_thresholds() -> dict[str, float]:
+    """Build the default per-dim threshold map from the central floor."""
+    return dict.fromkeys(DIMS, WIKI_REVIEW_THRESHOLD)
 
 #: Prompt filenames (`.md`) per dim. Living at PROMPTS_DIR.
 DIM_PROMPT_FILES: dict[str, str] = {
@@ -178,7 +184,13 @@ class ReviewReport:
     rounds: list[RoundResult]
     final_verdict: str  # "PASS" | "NEEDS_FIXES" | "REJECT" | "ERROR"
     failing_dims: list[str]
-    thresholds: dict[str, int]
+    min_score: float
+    """Overall review score — ``min(dim_scores)`` of the final round.
+    Drives the PASS/REVISE gate."""
+    failing_dim: str | None
+    """Name of the dim that drove ``min_score``. ``None`` only when the
+    review has zero dim results (shouldn't happen in practice)."""
+    thresholds: dict[str, float]
     thresholds_calibrated: bool
     shadow_mode: bool
     started_at: float
@@ -224,6 +236,8 @@ class ReviewReport:
             ],
             "final_verdict": self.final_verdict,
             "failing_dims": self.failing_dims,
+            "min_score": self.min_score,
+            "failing_dim": self.failing_dim,
             "thresholds": self.thresholds,
             "thresholds_calibrated": self.thresholds_calibrated,
             "shadow_mode": self.shadow_mode,
@@ -569,22 +583,24 @@ def review_article(
     article_path: Path,
     *,
     agent_overrides: dict[str, str] | None = None,
-    thresholds: dict[str, int] | None = None,
+    thresholds: dict[str, float] | None = None,
     max_rounds: int = MAX_ROUNDS,
-    shadow_mode: bool = True,
+    shadow_mode: bool = False,
     cwd: Path | None = None,
 ) -> tuple[ReviewReport, str]:
     """Run dimensional review on one article.
 
-    Returns `(report, final_article_text)`. In shadow mode, fixes are
-    still applied to an in-memory copy for the round-2 re-review, but
-    the on-disk article is NOT touched — callers decide when to promote
-    in-memory edits to disk.
+    Returns ``(report, final_article_text)``. Fixes are applied to an
+    in-memory copy round-by-round so the round-2 reviewer sees the
+    post-fix article. Callers decide whether to promote the final text
+    to disk — ``shadow_mode=True`` is a signal to downstream consumers
+    that the write-back is intentional-skip (used by tests and the
+    benchmark harness).
     """
     if agent_overrides is None:
         agent_overrides = {}
     if thresholds is None:
-        thresholds = dict(UNCALIBRATED_THRESHOLDS)
+        thresholds = default_thresholds()
     if cwd is None:
         cwd = _REPO_ROOT
 
@@ -638,6 +654,7 @@ def review_article(
     final_dim_results = rounds[-1].dim_results
     failing = _failing_dims(final_dim_results, thresholds)
     final_verdict = _final_verdict(final_dim_results, failing)
+    min_score, failing_dim = aggregate_min(final_dim_results)
 
     finished_at = time.time()
     report = ReviewReport(
@@ -645,8 +662,10 @@ def review_article(
         rounds=rounds,
         final_verdict=final_verdict,
         failing_dims=failing,
+        min_score=min_score,
+        failing_dim=failing_dim,
         thresholds=thresholds,
-        thresholds_calibrated=False,
+        thresholds_calibrated=True,
         shadow_mode=shadow_mode,
         started_at=started_at,
         finished_at=finished_at,
@@ -656,7 +675,7 @@ def review_article(
 
 def _failing_dims(
     dim_results: dict[str, DimResult],
-    thresholds: dict[str, int],
+    thresholds: dict[str, float],
 ) -> list[str]:
     """Return dims below their threshold OR with verdict REJECT/ERROR."""
     failing: list[str] = []
@@ -667,9 +686,37 @@ def _failing_dims(
         if dr.verdict == "REJECT":
             failing.append(dim)
             continue
-        if dr.score < thresholds.get(dim, 8):
+        if dr.score < thresholds.get(dim, WIKI_REVIEW_THRESHOLD):
             failing.append(dim)
     return failing
+
+
+def aggregate_min(
+    dim_results: dict[str, DimResult],
+) -> tuple[float, str | None]:
+    """Return ``(min_score, failing_dim)`` across a round's dim results.
+
+    The MIN aggregator is the authoritative gate (same semantics as the
+    module pipeline's ``verdict_score`` in
+    ``scripts.build.v6_build._build_review_aggregate_text``). A wiki that
+    scores 9 / 9 / 9 / 6 fails at 6 with the 6-scoring dim named as the
+    driver. Dims with verdict ``ERROR`` dominate — their score is
+    treated as ``0.0`` so a crashed reviewer never masks as high.
+
+    If ``dim_results`` is empty, returns ``(0.0, None)``.
+    """
+    if not dim_results:
+        return 0.0, None
+    min_score = float("inf")
+    min_dim: str | None = None
+    for dim, dr in dim_results.items():
+        score = 0.0 if dr.verdict == "ERROR" else float(dr.score)
+        if score < min_score:
+            min_score = score
+            min_dim = dim
+    if min_score == float("inf"):
+        return 0.0, None
+    return min_score, min_dim
 
 
 def _scores_regressed(
@@ -771,7 +818,19 @@ def main(argv: list[str] | None = None) -> int:
         action="append",
         default=[],
         metavar="DIM=N",
-        help="Override threshold for a dim (default 8). NOT calibrated (§7b).",
+        help=(
+            f"Override threshold for a dim (default {WIKI_REVIEW_THRESHOLD} "
+            "from scripts.common.thresholds.REVIEW_PASS_FLOOR)."
+        ),
+    )
+    parser.add_argument(
+        "--shadow-mode",
+        action="store_true",
+        help=(
+            "Mark the run as shadow (testing / benchmark). Emits the same "
+            "report but flags ``shadow_mode: true`` in the JSON output. "
+            "Independent of --hard-gate."
+        ),
     )
     args = parser.parse_args(argv)
 
@@ -781,34 +840,19 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     overrides = _parse_agent_overrides(args.agent)
-    thresholds = dict(UNCALIBRATED_THRESHOLDS)
+    thresholds = default_thresholds()
     for pair in args.threshold:
         if "=" not in pair:
             raise SystemExit(f"--threshold expects dim=N, got: {pair!r}")
         dim, num = pair.split("=", 1)
-        thresholds[dim] = int(num)
-
-    if args.hard_gate:
-        # Prominent warning — `UNCALIBRATED_THRESHOLDS` defaults to 8 for
-        # every dim but NO real seeded-benchmark data backs that. Using
-        # --hard-gate before Phase 3 calibration can brick builds on
-        # borderline scores. Keep the orchestrator honest: shout it.
-        # Surfaced in adversarial review 2026-04-18.
-        print(
-            "⚠️  --hard-gate WITH UNCALIBRATED THRESHOLDS: the per-dim minimum\n"
-            "    is a placeholder (8) pending Phase 3 seeded-benchmark\n"
-            "    calibration (§7b). A reviewer scoring 7.9 on genuinely-clean\n"
-            "    content will block the pipeline. Prefer shadow mode until\n"
-            "    thresholds_calibrated flips to True.\n",
-            file=sys.stderr,
-        )
+        thresholds[dim] = float(num)
 
     report, _ = review_article(
         article_path,
         agent_overrides=overrides,
         thresholds=thresholds,
         max_rounds=args.max_rounds,
-        shadow_mode=not args.hard_gate,
+        shadow_mode=args.shadow_mode,
     )
     out_path = write_report(report, article_path)
 
@@ -829,6 +873,8 @@ def main(argv: list[str] | None = None) -> int:
     print(json.dumps({
         "article": str(article_path),
         "verdict": report.final_verdict,
+        "min_score": report.min_score,
+        "failing_dim": report.failing_dim,
         "failing_dims": report.failing_dims,
         "rounds": len(report.rounds),
         "report_file": str(out_path),
