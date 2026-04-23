@@ -79,10 +79,6 @@ class Harness:
         self.observations = observations
         self.index = 0
         self.patch_calls = 0
-        self.section_calls = 0
-        self.full_calls = 0
-        self.swap_calls = 0
-        self.style_calls = 0
         self.tmp_path = tmp_path
 
     def review_round(self, _writer: str) -> ReviewObservation:
@@ -94,23 +90,8 @@ class Harness:
         self.patch_calls += 1
         return MutationSummary(True, 1, "patched")
 
-    def section_rewrite_round(self, _findings, _writer: str) -> MutationSummary:
-        self.section_calls += 1
-        return MutationSummary(True, 1, "section rewrite")
-
-    def full_rewrite_round(self, _findings, _writer: str) -> MutationSummary:
-        self.full_calls += 1
-        return MutationSummary(True, 1, "full rewrite")
-
-    def writer_swap_round(self, _findings, _writer: str) -> tuple[str | None, MutationSummary]:
-        self.swap_calls += 1
-        return "claude-tools", MutationSummary(True, 1, "writer swap")
-
     def refresh_sidecars(self, _strategy: str) -> bool:
         return True
-
-    def style_review_after_swap(self, _writer: str) -> None:
-        self.style_calls += 1
 
     def context(self) -> ConvergenceContext:
         curriculum_root = self.tmp_path / "curriculum" / "l2-uk-en"
@@ -121,9 +102,6 @@ class Harness:
             writer="gemini-tools",
             review_round=self.review_round,
             patch_round=self.patch_round,
-            section_rewrite_round=self.section_rewrite_round,
-            full_rewrite_round=self.full_rewrite_round,
-            writer_swap_round=self.writer_swap_round,
             refresh_sidecars=self.refresh_sidecars,
             memory_path=memory_path,
             terminal_dir=memory_path.parent,
@@ -131,13 +109,7 @@ class Harness:
             plan_hash="plan-hash",
             plan_version=1,
             sources_hash="sources-hash",
-            style_review_after_swap=self.style_review_after_swap,
         )
-
-
-class FailingSectionRewriteHarness(Harness):
-    def section_rewrite_round(self, _findings, _writer: str) -> MutationSummary:
-        raise RuntimeError("section rewrite exploded")
 
 
 class RecoverableSidecarHarness(Harness):
@@ -150,7 +122,7 @@ class RecoverableSidecarHarness(Harness):
         observations: list[ReviewObservation],
         tmp_path: Path,
         *,
-        fail_on_strategies: tuple[str, ...] = ("full_rewrite",),
+        fail_on_strategies: tuple[str, ...] = ("patch",),
         validator_findings: tuple[dict, ...] | None = None,
     ) -> None:
         super().__init__(observations, tmp_path)
@@ -216,85 +188,6 @@ def test_tier_one_patch_fires_on_local_findings(tmp_path: Path) -> None:
     assert harness.patch_calls == 1
 
 
-def test_section_rewrite_tier_fires(tmp_path: Path) -> None:
-    harness = Harness(
-        [
-            _observation(
-                score=8.4,
-                findings=[
-                    _finding(
-                        dimension="Pedagogical Quality",
-                        severity="major",
-                        location="## Привіт!",
-                        issue="The section teaches one register rule and models the opposite.",
-                        fix="Rewrite that section only.",
-                    )
-                ],
-                content_hash="hash-1",
-            ),
-            _observation(score=9.1, findings=[], content_hash="hash-2", passed=True),
-        ],
-        tmp_path,
-    )
-
-    result = run_convergence_loop(harness.context())
-
-    assert result.trace[0]["strategy"] == "section_rewrite"
-    assert harness.section_calls == 1
-
-
-def test_full_rewrite_tier_fires_on_cross_section_findings(tmp_path: Path) -> None:
-    harness = Harness(
-        [
-            _observation(
-                score=8.2,
-                findings=[
-                    _finding(
-                        dimension="Exercise Quality",
-                        severity="major",
-                        location="## Intro and ## Practice",
-                        issue="Activity order and vocabulary pacing drift across multiple sections.",
-                        fix="Resequence the module.",
-                    )
-                ],
-                content_hash="hash-1",
-            ),
-            _observation(score=9.0, findings=[], content_hash="hash-2", passed=True),
-        ],
-        tmp_path,
-    )
-
-    result = run_convergence_loop(harness.context())
-
-    assert result.trace[0]["strategy"] == "full_rewrite"
-    assert harness.full_calls == 1
-
-
-def test_writer_swap_tier_fires_after_full_rewrite_targets_repeat(tmp_path: Path) -> None:
-    finding = _finding(
-        dimension="Exercise Quality",
-        severity="major",
-        location="## Intro and ## Practice",
-        issue="Activity order and vocabulary pacing drift across multiple sections.",
-        fix="Resequence the module.",
-    )
-    harness = Harness(
-        [
-            _observation(score=8.2, findings=[finding], content_hash="hash-1"),
-            _observation(score=8.3, findings=[finding], content_hash="hash-2"),
-            _observation(score=9.2, findings=[], content_hash="hash-3", passed=True),
-        ],
-        tmp_path,
-    )
-
-    result = run_convergence_loop(harness.context())
-
-    assert result.trace[0]["strategy"] == "full_rewrite"
-    assert result.trace[1]["strategy"] == "writer_swap"
-    assert harness.swap_calls == 1
-    assert harness.style_calls == 1
-
-
 def test_hard_floor_priority_reorders_findings() -> None:
     observation = _observation(
         score=8.0,
@@ -330,14 +223,15 @@ def test_five_attempt_cap_emits_budget_exhausted_and_appends_stuck_modules(tmp_p
             score=8.0,
             findings=[
                 _finding(
-                    dimension="Exercise Quality",
+                    dimension="Linguistic Accuracy",
                     severity="major",
-                    location=f"## Section {index} and ## Practice",
-                    issue=f"Activity order drift variant {index}.",
-                    fix="Resequence the module.",
+                    location=f"## Section {index} / paragraph 1 / sentence 1",
+                    issue=f"Local prose defect variant {index}.",
+                    fix="Change the sentence only.",
                 )
             ],
             content_hash=f"hash-{index}",
+            patch_available=True,
         )
         for index in range(1, 7)
     ]
@@ -353,7 +247,7 @@ def test_five_attempt_cap_emits_budget_exhausted_and_appends_stuck_modules(tmp_p
     assert stuck_modules[0]["terminal"] == "budget_exhausted"
 
 
-def test_plan_level_fasts_to_tier5_after_tier3(tmp_path: Path) -> None:
+def test_non_patch_findings_route_directly_to_plan_revision_request(tmp_path: Path) -> None:
     finding = _finding(
         dimension="Plan Adherence",
         severity="major",
@@ -371,7 +265,7 @@ def test_plan_level_fasts_to_tier5_after_tier3(tmp_path: Path) -> None:
 
     result = run_convergence_loop(harness.context())
 
-    assert result.trace[0]["strategy"] == "full_rewrite"
+    assert result.trace[0]["strategy"] == "plan_revision_request"
     assert result.terminal == "plan_revision_request"
     assert result.artifact_path is not None and result.artifact_path.exists()
 
@@ -403,34 +297,6 @@ def test_happy_path_populates_memory_with_one_history_entry(tmp_path: Path) -> N
         "wall_clock_s": history_entry["cost"]["wall_clock_s"],
     }
     assert isinstance(history_entry["cost"]["wall_clock_s"], float)
-
-
-def test_local_findings_patch_converges_to_pass(tmp_path: Path) -> None:
-    harness = Harness(
-        [
-            _observation(
-                score=8.6,
-                findings=[
-                    _finding(
-                        dimension="Linguistic Accuracy",
-                        severity="major",
-                        location="## Intro / paragraph 1 / sentence 1",
-                        issue="The sentence mislabels [=] as a dash.",
-                        fix="Change the sentence only.",
-                    )
-                ],
-                content_hash="hash-1",
-                patch_available=True,
-            ),
-            _observation(score=9.1, findings=[], content_hash="hash-2", passed=True),
-        ],
-        tmp_path,
-    )
-
-    result = run_convergence_loop(harness.context())
-
-    assert result.terminal == "pass"
-    assert result.trace[0]["strategy"] == "patch"
 
 
 def test_prompt_hash_is_deterministic_for_same_prompt_across_runs(tmp_path: Path) -> None:
@@ -479,45 +345,6 @@ def test_prompt_hash_is_deterministic_for_same_prompt_across_runs(tmp_path: Path
     assert memory["history"][0]["prompt_hash"] == memory["history"][1]["prompt_hash"]
 
 
-def test_exception_in_mutation_emits_budget_exhausted_terminal(tmp_path: Path) -> None:
-    harness = FailingSectionRewriteHarness(
-        [
-            _observation(
-                score=8.4,
-                findings=[
-                    _finding(
-                        dimension="Pedagogical Quality",
-                        severity="major",
-                        location="## Привіт!",
-                        issue="The section teaches one register rule and models the opposite.",
-                        fix="Rewrite that section only.",
-                    )
-                ],
-                content_hash="hash-1",
-            ),
-        ],
-        tmp_path,
-    )
-    context = harness.context()
-
-    result = run_convergence_loop(context)
-    budget_payload = yaml.safe_load(result.artifact_path.read_text("utf-8"))
-    memory, _ = module_memory.load_module_memory(
-        context.memory_path,
-        expected_plan_hash="plan-hash",
-        expected_plan_version=1,
-        expected_sources_hash="sources-hash",
-    )
-
-    assert result.terminal == "budget_exhausted"
-    assert budget_payload["exception"]["type"] == "RuntimeError"
-    assert budget_payload["exception"]["message"] == "section rewrite exploded"
-    assert "section rewrite exploded" in budget_payload["exception"]["traceback"]
-    assert memory["history"][-1]["decision_reason"] == "exception"
-    assert memory["history"][-1]["exception_type"] == "RuntimeError"
-    assert memory["history"][-1]["exception_message"] == "section rewrite exploded"
-
-
 def test_end_to_end_stuck_a1_m1_uses_cached_reviews_without_budget_exhausted(tmp_path: Path) -> None:
     review_dir = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "a1" / "review"
     cached_reviews = [
@@ -557,25 +384,30 @@ def test_end_to_end_stuck_a1_m1_uses_cached_reviews_without_budget_exhausted(tmp
     assert result.terminal != "budget_exhausted"
 
 
-def test_recoverable_validation_error_does_not_collapse_budget(tmp_path: Path) -> None:
-    """Sidecar validator raising RecoverableValidationError must not terminate the
-    convergence budget. Its findings become the next iteration's prioritized findings,
-    and the escalation loop continues at a higher tier.
+def test_recoverable_validation_error_routes_to_plan_revision_request(tmp_path: Path) -> None:
+    """Sidecar validator findings should become the next decision input.
+
+    With rewrite tiers removed, a validator failure during patching should route the
+    loop to the honest terminal instead of trying another regeneration strategy.
     """
-    cross_section_finding = _finding(
-        dimension="Exercise Quality",
+    local_finding = _finding(
+        dimension="Linguistic Accuracy",
         severity="major",
-        location="## Intro and ## Practice",
-        issue="Activity order and vocabulary pacing drift across multiple sections.",
-        fix="Resequence the module.",
+        location="## Intro / paragraph 1 / sentence 1",
+        issue="The sentence mislabels [=] as a dash.",
+        fix="Change the sentence only.",
     )
     harness = RecoverableSidecarHarness(
         [
-            _observation(score=8.2, findings=[cross_section_finding], content_hash="hash-1"),
+            _observation(
+                score=8.2,
+                findings=[local_finding],
+                content_hash="hash-1",
+                patch_available=True,
+            ),
             _observation(score=9.1, findings=[], content_hash="hash-3", passed=True),
         ],
         tmp_path,
-        fail_on_strategies=("full_rewrite",),
     )
     context = harness.context()
 
@@ -587,11 +419,8 @@ def test_recoverable_validation_error_does_not_collapse_budget(tmp_path: Path) -
         expected_sources_hash="sources-hash",
     )
 
-    assert result.terminal == "pass"
-    # The first full_rewrite failed sidecar validation. Loop must have escalated
-    # to another strategy instead of collapsing: either a second full_rewrite or
-    # a writer_swap depending on stall detection.
-    assert harness.full_calls + harness.swap_calls >= 2
+    assert result.terminal == "plan_revision_request"
+    assert harness.patch_calls == 1
     sidecar_rounds = [
         entry
         for entry in memory["history"]
@@ -599,7 +428,7 @@ def test_recoverable_validation_error_does_not_collapse_budget(tmp_path: Path) -
     ]
     assert len(sidecar_rounds) == 1
     assert sidecar_rounds[0]["decision_reason"].startswith("sidecar validation failed")
-    assert sidecar_rounds[0]["tier"] == 3
+    assert sidecar_rounds[0]["tier"] == 1
     assert "missing_vocab" in {
         item["error_class"] for item in sidecar_rounds[0]["prioritized_findings"]
     }
@@ -608,19 +437,13 @@ def test_recoverable_validation_error_does_not_collapse_budget(tmp_path: Path) -
 def test_recoverable_validation_error_respects_escalation_budget(
     tmp_path: Path,
 ) -> None:
-    """A recoverable validator failure consumes one escalation of the five-attempt
-    budget — it is a legitimate mutation round, not a free retry. This guards against
-    runaway retries when the writer keeps producing sidecar-invalid content: the
-    loop still terminates in bounded time (via plan_revision_request once the stall
-    detector bumps past writer_swap, or via budget_exhausted if it runs out of
-    escalations first).
-    """
-    cross_section_finding = _finding(
-        dimension="Exercise Quality",
+    """Recoverable validator failures remain non-exceptional and bounded."""
+    local_finding = _finding(
+        dimension="Linguistic Accuracy",
         severity="major",
-        location="## Intro and ## Practice",
-        issue="Activity order and vocabulary pacing drift across multiple sections.",
-        fix="Resequence the module.",
+        location="## Intro / paragraph 1 / sentence 1",
+        issue="The sentence mislabels [=] as a dash.",
+        fix="Change the sentence only.",
     )
 
     class AlwaysFailingSidecarHarness(RecoverableSidecarHarness):
@@ -634,7 +457,12 @@ def test_recoverable_validation_error_respects_escalation_budget(
             )
 
     observations = [
-        _observation(score=8.2, findings=[cross_section_finding], content_hash=f"hash-{i}")
+        _observation(
+            score=8.2,
+            findings=[local_finding],
+            content_hash=f"hash-{i}",
+            patch_available=True,
+        )
         for i in range(1, 8)
     ]
     harness = AlwaysFailingSidecarHarness(observations, tmp_path)
@@ -648,52 +476,18 @@ def test_recoverable_validation_error_respects_escalation_budget(
         expected_sources_hash="sources-hash",
     )
 
-    assert result.terminal in {"budget_exhausted", "plan_revision_request"}
+    assert result.terminal == "plan_revision_request"
     assert len(memory["history"]) <= 1 + context.max_escalations
     sidecar_rounds = [
         entry
         for entry in memory["history"]
         if entry.get("reviewer") == "sidecar_validator"
     ]
-    # Every mutation that got as far as refresh_sidecars failed validation
-    assert len(sidecar_rounds) >= 1
-    # No generic-exception round should appear — validator failures are their own path
+    assert len(sidecar_rounds) == 1
     exception_rounds = [
         entry for entry in memory["history"] if entry.get("decision_reason") == "exception"
     ]
     assert exception_rounds == []
-
-
-def test_unrecoverable_runtime_error_still_collapses_budget(tmp_path: Path) -> None:
-    """Generic exceptions (pipeline/tooling failures) should still terminate the
-    budget early with an exception-context entry.
-    """
-    harness = FailingSectionRewriteHarness(
-        [
-            _observation(
-                score=8.4,
-                findings=[
-                    _finding(
-                        dimension="Pedagogical Quality",
-                        severity="major",
-                        location="## Привіт!",
-                        issue="The section teaches one register rule and models the opposite.",
-                        fix="Rewrite that section only.",
-                    )
-                ],
-                content_hash="hash-1",
-            ),
-        ],
-        tmp_path,
-    )
-    context = harness.context()
-
-    result = run_convergence_loop(context)
-    budget_payload = yaml.safe_load(result.artifact_path.read_text("utf-8"))
-
-    assert result.terminal == "budget_exhausted"
-    assert budget_payload["exception"]["type"] == "RuntimeError"
-    assert "section rewrite exploded" in budget_payload["exception"]["message"]
 
 
 def test_budget_exhausted_payload_has_no_exception_for_reviewer_disagreement(
@@ -707,14 +501,15 @@ def test_budget_exhausted_payload_has_no_exception_for_reviewer_disagreement(
             score=8.0,
             findings=[
                 _finding(
-                    dimension="Exercise Quality",
+                    dimension="Linguistic Accuracy",
                     severity="major",
-                    location=f"## Section {index} and ## Practice",
-                    issue=f"Activity order drift variant {index}.",
-                    fix="Resequence the module.",
+                    location=f"## Section {index} / paragraph 1 / sentence 1",
+                    issue=f"Local prose defect variant {index}.",
+                    fix="Change the sentence only.",
                 )
             ],
             content_hash=f"hash-{index}",
+            patch_available=True,
         )
         for index in range(1, 8)
     ]

@@ -5686,23 +5686,14 @@ def _determine_reviewer(
     reviewer_override: str | None,
 ) -> tuple[str, str] | None:
     """Resolve the reviewer family and agent id for review passes."""
-    writer_family = get_family(writer).name
-    matrix_enforced = _feature_flag_enabled("CONVERGENCE_MATRIX_ENFORCED")
-
-    def _validate(reviewer_agent: str) -> tuple[str, str] | None:
-        reviewer_family = get_family(reviewer_agent).name
-        if matrix_enforced and reviewer_family == writer_family:
-            return None
-        return reviewer_family, reviewer_agent
-
     if reviewer_override:
-        return _validate(reviewer_override)
+        return get_family(reviewer_override).name, reviewer_override
 
     if writer in ("claude", "claude-tools"):
-        return _validate("gemini-tools")
+        return get_family("gemini-tools").name, "gemini-tools"
     if writer in ("gemini", "gemini-tools"):
-        return _validate("codex-tools")
-    return _validate("gemini-tools")
+        return get_family("codex-tools").name, "codex-tools"
+    return get_family("gemini-tools").name, "gemini-tools"
 
 
 def _build_review_tools_section(reviewer: str) -> str:
@@ -9034,36 +9025,6 @@ def _structured_dim_floor_dimensions(parsed_scores: list[dict]) -> tuple[str, ..
     return tuple(floor_dimensions)
 
 
-def _build_section_rewrite_directive(findings: tuple[dict[str, object], ...]) -> str:
-    lines = [
-        "Repair this section while preserving valid teaching content.",
-    ]
-    for finding in findings:
-        lines.extend(
-            [
-                f"- Issue type: {str(finding.get('error_class') or '').upper()}",
-                f"- Dimension: {finding.get('dimension')}",
-                f"- Evidence: {finding.get('issue')}",
-                f"- Requested fix: {finding.get('fix')}",
-            ]
-        )
-    return "\n".join(lines)
-
-
-def _build_full_rewrite_directive(findings: tuple[dict[str, object], ...]) -> str:
-    lines = [
-        "Full module rewrite required. Preserve the plan and contract exactly.",
-        "Prioritize these persistent findings:",
-    ]
-    for finding in findings[:3]:
-        lines.append(
-            "- "
-            + f"[{finding.get('dimension')}/{finding.get('error_class')}] "
-            + f"{finding.get('issue')} :: {finding.get('fix')}"
-        )
-    return "\n".join(lines)
-
-
 def _convergence_review_observation(
     *,
     content_path: Path,
@@ -9122,9 +9083,6 @@ def _run_convergence_loop(
 ) -> ConvergenceRunResult:
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)
-    packet_path = CURRICULUM_ROOT / level / "research" / f"{slug}-knowledge-packet.md"
-    skeleton_path = orch_dir / "skeleton.md"
-    verification_path = orch_dir / "pre-verify-results.md"
 
     def _review_round(current_writer: str) -> ReviewObservation:
         return _convergence_review_observation(
@@ -9149,92 +9107,6 @@ def _run_convergence_loop(
             summary="deterministic fixes applied" if applied else "no deterministic fixes landed",
         )
 
-    def _section_rewrite_round(
-        findings: tuple[dict[str, object], ...],
-        current_writer: str,
-    ) -> ConvergenceMutationSummary:
-        grouped: dict[str, list[dict[str, object]]] = {}
-        for finding in findings:
-            scope = finding.get("scope") or {}
-            if not isinstance(scope, dict):
-                scope = {}
-            section_title = str(scope.get("section_title") or "").strip()
-            if not section_title:
-                continue
-            grouped.setdefault(section_title, []).append(finding)
-        applied = 0
-        for section_title, section_findings in grouped.items():
-            if _rewrite_block_section(
-                content_path,
-                level=level,
-                module_num=module_num,
-                slug=slug,
-                writer=current_writer,
-                section_name=section_title,
-                directive=_build_section_rewrite_directive(tuple(section_findings)),
-            ):
-                applied += 1
-        return ConvergenceMutationSummary(
-            changed=applied > 0,
-            mutation_count=applied,
-            summary="section rewrites applied" if applied else "no section rewrites landed",
-        )
-
-    def _full_rewrite_round(
-        findings: tuple[dict[str, object], ...],
-        current_writer: str,
-    ) -> ConvergenceMutationSummary:
-        previous_hash = _content_sha256(content_path)
-        output = step_write(
-            level,
-            module_num,
-            slug,
-            packet_path if packet_path.exists() else None,
-            writer=current_writer,
-            correction_directive=_build_full_rewrite_directive(findings),
-            skeleton=skeleton_path.read_text("utf-8") if skeleton_path.exists() else "",
-            verification_text=verification_path.read_text("utf-8") if verification_path.exists() else "",
-        )
-        if output is None:
-            return ConvergenceMutationSummary(False, 0, "writer returned no rewrite output")
-        _post_process_content(output)
-        _save_v6_state(level, slug, "write")
-        new_hash = _content_sha256(output)
-        return ConvergenceMutationSummary(
-            changed=new_hash != previous_hash,
-            mutation_count=1 if new_hash != previous_hash else 0,
-            summary="full rewrite complete" if new_hash != previous_hash else "rewrite matched prior content",
-        )
-
-    def _writer_swap_round(
-        findings: tuple[dict[str, object], ...],
-        current_writer: str,
-    ) -> tuple[str | None, ConvergenceMutationSummary]:
-        writer_order = ["gemini-tools", "claude-tools", "codex-tools"]
-        current_family = get_family(current_writer).name
-        family_to_writer = {
-            "gemini": "gemini-tools",
-            "claude": "claude-tools",
-            "codex": "codex-tools",
-        }
-        ordered_families = [get_family(item).name for item in writer_order]
-        next_index = (ordered_families.index(current_family) + 1) % len(ordered_families)
-        next_writer = family_to_writer[ordered_families[next_index]]
-        if _determine_reviewer(next_writer, reviewer_override) is None:
-            return None, ConvergenceMutationSummary(False, 0, "writer swap blocked by reviewer matrix")
-        mutation = _full_rewrite_round(findings, next_writer)
-        return (next_writer if mutation.changed else current_writer), mutation
-
-    def _style_review_after_swap(current_writer: str) -> None:
-        _run_style_review_heal_loop(
-            content_path,
-            level=level,
-            module_num=module_num,
-            slug=slug,
-            writer=current_writer,
-            reviewer_override=reviewer_override,
-        )
-
     plan_path = _plan_path(level, slug)
     plan_data = yaml.safe_load(plan_path.read_text("utf-8")) if plan_path and plan_path.exists() else {}
     raw_plan_version = str(plan_data.get("version") or "0")
@@ -9248,15 +9120,12 @@ def _run_convergence_loop(
             writer=writer,
             review_round=_review_round,
             patch_round=_patch_round,
-            section_rewrite_round=_section_rewrite_round,
-            full_rewrite_round=_full_rewrite_round,
-            writer_swap_round=_writer_swap_round,
-            refresh_sidecars=lambda strategy: _refresh_post_patch_sidecars(
+            refresh_sidecars=lambda _strategy: _refresh_post_patch_sidecars(
                 content_path,
                 level=level,
                 module_num=module_num,
                 slug=slug,
-                writer=writer if strategy != "writer_swap" else get_family(writer).name + "-tools",
+                writer=writer,
             ),
             memory_path=module_memory_path(CURRICULUM_ROOT, level, slug),
             terminal_dir=orch_dir,
@@ -9270,9 +9139,7 @@ def _run_convergence_loop(
                 slug=slug,
                 writer_template_path=template_path,
             ),
-            reviewer_matrix_enforced=_feature_flag_enabled("CONVERGENCE_MATRIX_ENFORCED"),
             growth_log_path=PROJECT_ROOT / "scripts" / "build" / "finding-normalizer-growth.yaml",
-            style_review_after_swap=_style_review_after_swap,
         )
     )
     return result
