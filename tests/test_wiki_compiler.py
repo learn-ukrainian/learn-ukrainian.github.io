@@ -173,6 +173,23 @@ class TestFormatSources:
         assert "Grade 7" in result
         assert "Section: Unit 5" in result
 
+    def test_disambiguates_textbook_chunk_id_from_source_citation(self):
+        from wiki.compiler import _format_sources
+
+        sources = [
+            {
+                "chunk_id": "S3931",
+                "source_type": "textbook",
+                "text": "Grammar text.",
+                "grade": 7,
+                "section_title": "Unit 5",
+            },
+        ]
+        result = _format_sources(sources)
+        assert "internal ref: `3931`" in result
+        assert "cite this source as `[S1]`" in result
+        assert "Chunk ID: `S3931`" not in result
+
     def test_empty_sources(self):
         from wiki.compiler import _format_sources
 
@@ -482,6 +499,107 @@ class TestCompileArticleSkipLogic:
         mark_compiled.assert_called_once()
         assert mark_compiled.call_args.kwargs["model"] == "gemini-3-flash-preview"
 
+    def test_compile_strips_mcp_warning_line_before_writing_article(self, tmp_path, capsys):
+        from wiki.compiler import compile_article
+
+        prompts_dir = tmp_path / "prompts"
+        prompts_dir.mkdir()
+        (prompts_dir / "compile_article.md").write_text(
+            "Prompt: {topic} {slug} {domain} {tracks} {sources} {source_ids} {date}"
+        )
+        wiki_dir = tmp_path / "wiki"
+
+        noisy_response = (
+            "MCP issues detected. Run /mcp list for status.# Граматика B2: Академічне письмо\n\n"
+            "Текст [S1].\n"
+        )
+
+        with patch("wiki.compiler.PROMPTS_DIR", prompts_dir), \
+             patch("wiki.compiler.WIKI_DIR", wiki_dir), \
+             patch("wiki.compiler.is_compiled", return_value=False), \
+             patch("wiki.compiler.mark_compiled"), \
+             patch("wiki.compiler._call_gemini", return_value=noisy_response):
+            result = compile_article(
+                topic="Академічне письмо",
+                slug="academic-writing",
+                domain="grammar/b2",
+                track="b2",
+                sources=[{"chunk_id": "ext-foo-1", "text": "text"}],
+            )
+
+        assert result == wiki_dir / "grammar" / "b2" / "academic-writing.md"
+        written = result.read_text(encoding="utf-8")
+        assert written.startswith("# Граматика B2: Академічне письмо\n")
+        assert "MCP issues detected." not in written
+        captured = capsys.readouterr()
+        assert "stripped MCP-warning line from academic-writing" in captured.err
+
+    def test_compile_dedupes_generated_by_model_in_wiki_meta(self, tmp_path):
+        from wiki.compiler import compile_article
+
+        prompts_dir = tmp_path / "prompts"
+        prompts_dir.mkdir()
+        (prompts_dir / "compile_article.md").write_text(
+            "Prompt: {topic} {slug} {domain} {tracks} {sources} {source_ids} {date}"
+        )
+        wiki_dir = tmp_path / "wiki"
+        response = (
+            "# Test\n\n"
+            "<!-- wiki-meta\n"
+            "slug: test\n"
+            "domain: grammar/b2\n"
+            "compiled: 2026-04-23\n"
+            "generated_by_model: unknown\n"
+            "generated_by_model: gemini-3.1-pro-preview\n"
+            "-->\n"
+            "\n"
+            "Текст [S1].\n"
+        )
+
+        with patch("wiki.compiler.PROMPTS_DIR", prompts_dir), \
+             patch("wiki.compiler.WIKI_DIR", wiki_dir), \
+             patch("wiki.compiler.is_compiled", return_value=False), \
+             patch("wiki.compiler.mark_compiled"), \
+             patch("wiki.compiler._call_gemini", return_value=response):
+            result = compile_article(
+                topic="Test",
+                slug="test",
+                domain="grammar/b2",
+                track="b2",
+                sources=[{"chunk_id": "ext-foo-1", "text": "text"}],
+            )
+
+        written = result.read_text(encoding="utf-8")
+        assert written.count("generated_by_model:") == 1
+        assert "generated_by_model: unknown" in written
+
+    def test_compile_leaves_clean_gemini_output_unchanged(self, tmp_path, capsys):
+        from wiki.compiler import compile_article
+
+        prompts_dir = tmp_path / "prompts"
+        prompts_dir.mkdir()
+        (prompts_dir / "compile_article.md").write_text(
+            "Prompt: {topic} {slug} {domain} {tracks} {sources} {source_ids} {date}"
+        )
+        wiki_dir = tmp_path / "wiki"
+        clean_response = "# Title\n\nSentence [S1].\n"
+
+        with patch("wiki.compiler.PROMPTS_DIR", prompts_dir), \
+             patch("wiki.compiler.WIKI_DIR", wiki_dir), \
+             patch("wiki.compiler.is_compiled", return_value=False), \
+             patch("wiki.compiler.mark_compiled"), \
+             patch("wiki.compiler._call_gemini", return_value=clean_response):
+            result = compile_article(
+                topic="Test",
+                slug="clean",
+                domain="folk",
+                sources=[{"chunk_id": "ext-foo-1", "text": "text"}],
+            )
+
+        assert result.read_text(encoding="utf-8") == clean_response
+        captured = capsys.readouterr()
+        assert "stripped MCP-warning line" not in captured.err
+
     def test_compile_builds_rich_sources_registry_without_unknown_types(self, tmp_path, attribution_db):
         from wiki.compiler import compile_article
         from wiki.sources_schema import load_sources_registry
@@ -684,6 +802,55 @@ class TestCompileCommand:
 
         assert ok is True
         dim_review.assert_called_once_with(article_path, "a1", "demo")
+
+    def test_cmd_compile_one_force_recompile_strips_mcp_warning_for_academic_writing(
+        self, tmp_path, capsys
+    ):
+        from wiki.compile import cmd_compile_one
+
+        prompts_dir = tmp_path / "prompts"
+        prompts_dir.mkdir()
+        (prompts_dir / "compile_grammar_brief.md").write_text(
+            "Prompt: {topic} {slug} {domain} {tracks} {sources} {source_ids} {date}"
+        )
+        wiki_dir = tmp_path / "wiki"
+
+        noisy_response = (
+            "MCP issues detected. Run /mcp list for status.# Граматика B2: Академічне письмо\n\n"
+            "<!-- wiki-meta\n"
+            "slug: academic-writing\n"
+            "domain: grammar/b2\n"
+            "compiled: 2026-04-23\n"
+            "generated_by_model: gemini-3.1-pro-preview\n"
+            "generated_by_model: gemini-3.1-pro-preview\n"
+            "-->\n"
+            "\n"
+            "Текст [S1].\n"
+        )
+
+        with patch("wiki.compile._get_domain", return_value="grammar/b2"), \
+             patch("wiki.compile.gather_discovery_sources", return_value={}), \
+             patch("wiki.compile.enrich_sources", return_value=[{"chunk_id": "ext-foo-1", "text": "text"}]), \
+             patch("wiki.compile._slug_to_topic", return_value="Академічне письмо"), \
+             patch("wiki.compile._compiled_article_is_ready", return_value=False), \
+             patch("wiki.compile.update_index"), \
+             patch("wiki.compile.log_event"), \
+             patch("wiki.state.is_compiled", return_value=False), \
+             patch("wiki.compiler.PROMPTS_DIR", prompts_dir), \
+             patch("wiki.compiler.WIKI_DIR", wiki_dir), \
+             patch("wiki.compile.WIKI_DIR", wiki_dir), \
+             patch("wiki.compiler.mark_compiled"), \
+             patch("wiki.compiler._call_gemini", return_value=noisy_response):
+            ok = cmd_compile_one("b2", "academic-writing", force=True)
+
+        assert ok is True
+        article_path = wiki_dir / "grammar" / "b2" / "academic-writing.md"
+        written = article_path.read_text(encoding="utf-8")
+        assert written.startswith("# Граматика B2: Академічне письмо\n")
+        assert "MCP issues detected." not in written
+        assert written.count("generated_by_model:") == 1
+        captured = capsys.readouterr()
+        assert "stripped MCP-warning line from academic-writing" in captured.err
 
     def test_build_review_prompt_includes_sources_registry(self, tmp_path):
         from wiki.compile import _build_review_prompt

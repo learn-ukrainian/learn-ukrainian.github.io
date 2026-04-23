@@ -108,6 +108,13 @@ class TestBuildChunkPrompt:
         prompt = self._make_prompt()
         assert "FORBIDDEN WORDS" in prompt
 
+    def test_contains_teacher_voice_block_before_contract(self):
+        prompt = self._make_prompt()
+        teacher_voice = "## Teacher voice (follow this shape)"
+        contract = "## Shared Contract (authoritative — GH #1431)"
+        assert teacher_voice in prompt
+        assert prompt.index(teacher_voice) < prompt.index(contract)
+
     def test_dialogue_formatting_excluded_for_plain_section(self):
         prompt = self._make_prompt(section=MINIMAL_SECTION)
         assert "Dialogue formatting" not in prompt

@@ -21,6 +21,17 @@ Use these sources when relevant:
 - **General facts / historical-cultural claims:** Wikipedia or primary-source references already present in the module packet
 - If a claim cannot be verified safely, flag it as `<!-- VERIFY -->` territory rather than guessing
 
+## Canonical anchors — REJECT triggers (contract §7a)
+
+The block below lists decolonization-critical Ukrainian facts with state
+or dictionary authority. Any match against a forbidden pattern = REJECT
+verdict, cite the exact matched text, and emit a `<fixes>` block
+replacing the forbidden form with the canonical one. These are not
+style preferences — they're contractual anchors. See
+`data/canonical_anchors.yaml` for the full registry.
+
+{CANONICAL_ANCHORS_REVIEWER}
+
 ## Module Under Review
 
 **Module:** {MODULE_NUM}: {TOPIC_TITLE} ({LEVEL}, {PHASE})

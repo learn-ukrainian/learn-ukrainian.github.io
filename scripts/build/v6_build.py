@@ -1009,6 +1009,42 @@ def _get_immersion_target_short(level: str, module_num: int) -> str:
         return "60-90%+ Ukrainian"
 
 
+def _build_canonical_anchors_replacements() -> dict[str, str]:
+    """Return writer + reviewer canonical-anchor blocks as prompt placeholders.
+
+    Both keys are always populated so writer and reviewer templates can
+    reference whichever side they need. Caches on first call (anchors
+    registry is static per-process).
+
+    Failure mode: if the registry is missing or malformed, returns empty
+    strings and emits a warning to stderr — does NOT hard-fail the build,
+    because an older level/stage that never depended on canonical anchors
+    should still be able to run. Factual/Honesty reviewers will degrade
+    to "no anchor REJECT triggers" but everything else continues.
+    """
+    try:
+        sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+        from wiki.discipline import (
+            render_canonical_anchors_for_reviewer,
+            render_canonical_anchors_for_writer,
+        )
+        return {
+            "{CANONICAL_ANCHORS}": render_canonical_anchors_for_writer(),
+            "{CANONICAL_ANCHORS_REVIEWER}": render_canonical_anchors_for_reviewer(),
+        }
+    except Exception as exc:
+        import sys as _sys
+        print(
+            f"⚠️  Could not load canonical anchors for prompt injection: "
+            f"{type(exc).__name__}: {exc}",
+            file=_sys.stderr,
+        )
+        return {
+            "{CANONICAL_ANCHORS}": "",
+            "{CANONICAL_ANCHORS_REVIEWER}": "",
+        }
+
+
 def _build_salad_phase_placeholders(level: str, module_num: int) -> dict[str, str]:
     """Resolve SALAD_* placeholders from the paragraph-language phase config.
 
@@ -3857,6 +3893,20 @@ _CHUNK_FORBIDDEN_WORDS_BLOCK = """## FORBIDDEN WORDS — never produce (#1189)
 Never emit these Russian/Russianized forms: `хорошо`, `конечно`, `спасибо`, `пожалуйста`, `ничего`, `сейчас`, `тоже`, `здесь`, `кот`, `кон`.
 Use `добре`, `звичайно`, `дякую`, `будь ласка`, `нічого`, `зараз`, `теж`, `тут`, `кіт`, `кін`. Never output `ы`, `э`, `ё`, or `ъ`."""
 
+_TEACHER_VOICE_BLOCK = """## Teacher voice (follow this shape)
+
+Write in English as the narrative medium. Ukrainian appears ONLY as:
+- bolded inline lexical items with gloss — «синій» (dark blue)
+- block-quoted dialogue turns
+- example phrases you are explicitly teaching
+
+Do NOT embed Ukrainian grammatical forms (verbs, participles,
+function words) inside English sentences. If you feel pulled to
+write "follows the same правилами you practiced…", stop — write
+"follows the same rules you practiced…" in English and introduce
+«правило» separately as a lexical item if it is a teaching target.
+"""
+
 
 def _required_vocab_words(plan: dict) -> list[str]:
     """Return ordered module-required vocabulary words from the plan."""
@@ -3964,6 +4014,8 @@ You are {persona_desc}, writing ONE SECTION of a Ukrainian language module. Writ
 **Module:** {module_num}: {plan.get("title", slug)} ({level.upper()}, {phase})
 **Section to write:** {section_name}
 **Word target for this section:** about {word_target} words. Hitting the minimum matters more than staying short; do not undershoot this section.
+
+{_TEACHER_VOICE_BLOCK}
 
 ## Shared Contract (authoritative — GH #1431)
 
@@ -4569,6 +4621,7 @@ def step_write(level: str, module_num: int, slug: str,
         "{IMMERSION_RULE}": get_immersion_rule(level, module_num),
         "{IMMERSION_TARGET_SHORT}": _get_immersion_target_short(level, module_num),
         **_build_salad_phase_placeholders(level, module_num),
+        **_build_canonical_anchors_replacements(),
         "{PEDAGOGICAL_CONSTRAINTS}": get_pedagogical_constraints(level, module_num, plan),
         "{LEVEL_CONSTRAINTS}": get_level_constraints(level, plan),
         "{VOCABULARY_HINTS}": "\n".join(vocab_lines),
@@ -7519,6 +7572,7 @@ def step_review(content_path: Path, level: str, module_num: int,
         "{GENERATED_CONTENT}": generated_content_literal,
         "{IMMERSION_RULE}": _get_immersion_rule_for_review(level, module_num),
         "{IMMERSION_TARGET_SHORT}": _get_immersion_target_short(level, module_num),
+        **_build_canonical_anchors_replacements(),
     }
 
     monitor_context = _build_monitor_prompt_context(level, slug)

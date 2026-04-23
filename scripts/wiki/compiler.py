@@ -8,6 +8,7 @@ import contextlib
 import os
 import re
 import shutil
+import sys
 import tempfile
 import time
 from pathlib import Path
@@ -38,6 +39,9 @@ GEMINI_CLI = shutil.which("gemini") or "gemini"
 _PARENT_ENV = os.environ.copy()
 _PARENT_ENV["GEMINI_SESSION"] = "1"
 WIKI_META_RE = re.compile(r"<!--\s*wiki-meta\b(?P<body>.*?)-->", re.DOTALL)
+_MCP_WARNING_PREFIX_RE = re.compile(
+    r"^MCP issues detected\. Run /mcp list for status\."
+)
 
 
 def compile_article(
@@ -122,6 +126,14 @@ def compile_article(
     fence_match = re.match(r"^```\w*\n(.*?)```\s*$", response.strip(), re.DOTALL)
     if fence_match:
         response = fence_match.group(1)
+    response, stripped_noise_labels = _strip_known_output_noise(response)
+    if stripped_noise_labels:
+        labels = ", ".join(sorted(stripped_noise_labels))
+        print(
+            f"⚠️  stripped {labels} line from {slug}",
+            file=sys.stderr,
+            flush=True,
+        )
     response = _inject_generated_by_model(response, model_used=model_used)
 
     # Validate response
@@ -190,6 +202,21 @@ def _build_prompt(*, topic: str, slug: str, domain: str,
     tracks_str = ", ".join(tracks) or "general"
     source_ids_str = ", ".join(source_ids[:20])
 
+    # Writer-discipline injection (2026-04-23, post-#1431 v2):
+    # - {citation_discipline} tells the writer exactly how many [S*] IDs
+    #   are legal (bounded by actual retrieval count — prevents [S6+]
+    #   hallucinations in a 5-chunk retrieval)
+    # - {canonical_anchors} lists decolonization-critical forbidden forms
+    #   (e.g. «блакитний-жовтий» for the flag) that the writer must never
+    #   produce, rendered as a Ukrainian table
+    # See scripts/wiki/discipline.py for the implementation.
+    from .discipline import (
+        render_canonical_anchors_for_writer,
+        render_citation_discipline_block,
+    )
+    citation_discipline = render_citation_discipline_block(len(sources))
+    canonical_anchors = render_canonical_anchors_for_writer()
+
     prompt = template
     prompt = prompt.replace("{topic}", topic)
     prompt = prompt.replace("{slug}", slug)
@@ -199,12 +226,36 @@ def _build_prompt(*, topic: str, slug: str, domain: str,
     prompt = prompt.replace("{source_ids}", source_ids_str)
     prompt = prompt.replace("{date}", date)
     prompt = prompt.replace("{generated_by_model}", generated_by_model)
+    prompt = prompt.replace("{citation_discipline}", citation_discipline)
+    prompt = prompt.replace("{canonical_anchors}", canonical_anchors)
     return prompt
 
 
 def _normalize_generated_by_model(model_used: str | None) -> str:
     """Normalize missing runtime model information for wiki metadata."""
     return (model_used or "").strip() or "unknown"
+
+
+def _strip_known_output_noise(article_text: str) -> tuple[str, set[str]]:
+    """Drop known Gemini CLI noise lines before writing article markdown."""
+    cleaned: list[str] = []
+    stripped_labels: set[str] = set()
+
+    for line in article_text.splitlines(keepends=True):
+        line_body = line.rstrip("\r\n")
+        line_ending = line[len(line_body):]
+        candidate = line_body.lstrip()
+        match = _MCP_WARNING_PREFIX_RE.match(candidate)
+        if not match:
+            cleaned.append(line)
+            continue
+
+        stripped_labels.add("MCP-warning")
+        remainder = candidate[match.end():].lstrip()
+        if remainder:
+            cleaned.append(remainder + line_ending)
+
+    return "".join(cleaned), stripped_labels
 
 
 def _inject_generated_by_model(article_text: str, *, model_used: str | None) -> str:
@@ -218,16 +269,16 @@ def _inject_generated_by_model(article_text: str, *, model_used: str | None) -> 
     lines = [line.rstrip() for line in body.splitlines()]
     lines = [line for line in lines if not line.strip().startswith("generated_by_model:")]
     updated: list[str] = []
-    inserted = False
+    wrote_generated_by_model = False
 
     for line in lines:
         stripped = line.strip()
         updated.append(line)
-        if stripped.startswith("compiled:"):
+        if stripped.startswith("compiled:") and not wrote_generated_by_model:
             updated.append(f"generated_by_model: {model}")
-            inserted = True
+            wrote_generated_by_model = True
 
-    if not inserted:
+    if not wrote_generated_by_model:
         updated.append(f"generated_by_model: {model}")
 
     rendered = "<!-- wiki-meta\n" + "\n".join(updated) + "\n-->"
@@ -280,9 +331,16 @@ def _format_sources(sources: list[dict]) -> str:
         header = " | ".join(header_parts) if header_parts else f"Source {i}"
         chunk_id = chunk.get("chunk_id", "")
         text = _clean_chunk_text(chunk)
+        # Strip the textbook S-prefix so the internal chunk reference cannot
+        # be mistaken for the [S1]..[SN] source citation format in prose.
+        display_ref = (
+            chunk_id.removeprefix("S")
+            if str(chunk.get("source_type")) == "textbook"
+            else chunk_id
+        )
 
         parts.append(f"### Source {i}: {header}\n"
-                     f"Chunk ID: `{chunk_id}`\n\n"
+                     f"(internal ref: `{display_ref}` — cite this source as `[S{i}]`)\n\n"
                      f"{text}")
 
     return "\n\n---\n\n".join(parts)
