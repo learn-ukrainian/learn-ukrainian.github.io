@@ -13,22 +13,54 @@ class ContractBuildError(ValueError):
 
 
 _TERM_RE = re.compile(r"[А-Яа-яІіЇїЄєҐґ'][А-Яа-яІіЇїЄєҐґ'’-]{2,}")
+_EXPLICIT_TERM_RE = re.compile(r"«([^»]+)»|`([^`]+)`")
 _TERM_STOPWORDS = {
     "або",
     "але",
-    "вони",
-    "вона",
+    "активно",
+    "базових",
+    "варто",
+    "використовуються",
+    "вчимо",
+    "вірша",
+    "групи",
+    "групою",
+    "де",
+    "для",
     "його",
+    "як",
+    "яка",
+    "яке",
+    "який",
+    "якого",
+    "якої",
+    "які",
+    "коли",
+    "мови",
+    "мові",
+    "мовою",
+    "мотивами",
+    "пару",
+    "поділених",
+    "проте",
+    "та",
+    "така",
+    "таке",
+    "такий",
+    "такі",
     "також",
-    "which",
-    "their",
-    "this",
-    "that",
-    "from",
-    "then",
-    "with",
-    "when",
-    "where",
+    "те",
+    "ті",
+    "типами",
+    "типом",
+    "той",
+    "ця",
+    "це",
+    "цей",
+    "ці",
+    "чи",
+    "що",
+    "щоб",
 }
 
 
@@ -39,16 +71,131 @@ def _require_non_empty(plan: dict, key: str) -> list | dict | str:
     return value
 
 
-def _extract_terms(text: str, *, limit: int = 8) -> list[str]:
-    seen: list[str] = []
-    for match in _TERM_RE.findall(text or ""):
-        lowered = match.lower()
-        if lowered in _TERM_STOPWORDS or match in seen:
+def _clean_term(value: str) -> str:
+    return value.strip().strip(".,:;!?()[]{}\"'")
+
+
+def _split_vocab_entry(value: object) -> list[str]:
+    text = str(value or "")
+    if not text:
+        return []
+    head = text.split("(", 1)[0]
+    return [_clean_term(match) for match in _TERM_RE.findall(head)]
+
+
+def _term_variants(term: str) -> set[str]:
+    lowered = term.lower()
+    variants = {lowered}
+
+    irregulars = {
+        "колір": {"колір", "кольору", "кольори", "кольорів", "кольором", "кольорі"},
+    }
+    if lowered in irregulars:
+        variants.update(irregulars[lowered])
+        return variants
+
+    if lowered.endswith("ій"):
+        stem = lowered[:-2]
+        variants.update({
+            stem + "я",
+            stem + "є",
+            stem + "і",
+            stem + "ього",
+            stem + "ьому",
+            stem + "ім",
+            stem + "ьою",
+        })
+        return variants
+
+    if lowered.endswith("ий"):
+        stem = lowered[:-2]
+        variants.update({
+            stem + "а",
+            stem + "е",
+            stem + "і",
+            stem + "ого",
+            stem + "ому",
+            stem + "им",
+            stem + "ою",
+        })
+        return variants
+
+    return variants
+
+
+def _curated_terms(plan: dict) -> list[str]:
+    vocab = plan.get("vocabulary_hints") or {}
+    items: list[object] = []
+    if isinstance(vocab, dict):
+        items.extend(vocab.get("required") or [])
+        items.extend(vocab.get("recommended") or [])
+
+    ordered_terms: list[str] = []
+    seen: set[str] = set()
+    for item in items:
+        tokens = _split_vocab_entry(item)
+        if len(tokens) != 1:
             continue
-        seen.append(match)
-        if len(seen) >= limit:
+        token = tokens[0]
+        lowered = token.lower()
+        if lowered in _TERM_STOPWORDS or lowered in seen:
+            continue
+        seen.add(lowered)
+        ordered_terms.append(token)
+    return ordered_terms
+
+
+def _extract_explicit_tokens(points: list[str]) -> list[str]:
+    tokens: list[str] = []
+    for point in points:
+        for match in _EXPLICIT_TERM_RE.finditer(point):
+            excerpt = match.group(1) or match.group(2) or ""
+            tokens.extend(_split_vocab_entry(excerpt))
+    return tokens
+
+
+def _canonicalize_term(token: str, curated_terms: list[str]) -> str | None:
+    lowered = token.lower()
+    exact = next((term for term in curated_terms if term.lower() == lowered), None)
+    if exact:
+        return exact
+
+    for candidate in curated_terms:
+        if lowered in _term_variants(candidate):
+            return candidate
+    return None
+
+
+def _extract_terms(points: list[str], plan: dict, *, limit: int = 8) -> list[str]:
+    curated_terms = _curated_terms(plan)
+    section_text = " ".join(str(point) for point in points)
+    section_tokens = {token.lower() for token in _TERM_RE.findall(section_text)}
+
+    seen: set[str] = set()
+    required_terms: list[str] = []
+    for term in curated_terms:
+        lowered = term.lower()
+        if lowered in seen:
+            continue
+        if _term_variants(term) & section_tokens:
+            seen.add(lowered)
+            required_terms.append(term)
+        if len(required_terms) >= limit:
+            return required_terms
+
+    for token in _extract_explicit_tokens([str(point) for point in points]):
+        canonical = _canonicalize_term(token, curated_terms)
+        if canonical is None:
+            continue
+        lowered = canonical.lower()
+        if lowered in _TERM_STOPWORDS or lowered in seen:
+            continue
+        seen.add(lowered)
+        required_terms.append(canonical)
+        if len(required_terms) >= limit:
             break
-    return seen
+
+    return required_terms
 
 
 def _word_budget_entry(words: int) -> dict[str, int]:
@@ -96,7 +243,10 @@ def build_contract(
             "name": name,
             "word_budget": section_word_budgets[name],
             "teaching_beats": [str(point) for point in (section.get("points") or [])],
-            "required_terms": _extract_terms(" ".join(str(point) for point in (section.get("points") or []))),
+            "required_terms": _extract_terms(
+                [str(point) for point in (section.get("points") or [])],
+                plan,
+            ),
             "factual_anchors": section_anchors,
             "activity_types_after_section": [
                 hint.get("type", "")
