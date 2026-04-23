@@ -2,20 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3218
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3218
+  type: textbook
+  title: § 98. Дієвідмінювання дієслів теперішнього
+  page: 212
+  grade: 6
 - id: S2
-  file: S3216
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3216
+  type: textbook
+  title: § 96. Теперішній час дієслів
+  page: 208
+  grade: 6
 - id: S3
-  file: S689
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0689
+  type: textbook
+  title: § 75. Стан дієслова. Перехідні й неперехідні дієслова
+  page: 187
+  grade: 10
 - id: S4
-  file: S2390
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2390
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Додаток
+  page: 213
+  grade: 5
 - id: S5
-  file: S3164
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3164
+  type: textbook
+  title: § 38. Відмінки іменників
+  page: 94
+  grade: 6
 - id: S9
-  file: S3821
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3821
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 73)
+  page: 73
+  grade: 7

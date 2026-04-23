@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2317
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2317
+  type: textbook
+  title: § 65. Життєво важлива звичка —
+  page: 185
+  grade: 5
 - id: S2
-  file: S1566
-  type: unknown
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1566
+  type: textbook
+  title: РОЗРІЗНЯЮ СЛОВА, ЯКІ ВІДПОВІДАЮТЬ
+  page: 50
+  grade: 2
 - id: S3
-  file: S2368
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2368
+  type: textbook
+  title: Фонетика. Графіка. Орфоепія. Орфографія. Позначення звуків на письмі . Алфавіт
+  page: 129
+  grade: 5
 - id: S4
-  file: S2410
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2410
+  type: textbook
+  title: Повторення. Синтаксис. Пунктуація
+  page: 266
+  grade: 5
 - id: S5
-  file: S3129
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3129
+  type: textbook
+  title: '§ 4. –5. Види мовленнєвої діяльності: читання,'
+  page: 16
+  grade: 6
 - id: S7
-  file: S2318
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2318
+  type: textbook
+  title: ІІІ Візьміть у домашній або шкільній бібліотеці книжку. Запишіть
+  page: 188
+  grade: 5
 - id: S8
-  file: S3947
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3947
+  type: textbook
+  title: Розділ 6 СПОЛУЧНИК. МОВЛЕННЄВИЙ ПРОСТІР
+  page: 216
+  grade: 7
 - id: S9
-  file: S1188
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1188
+  type: textbook
+  title: § 55. –56. ДІАЛОГІЧНІ ЖАНРИ
+  page: 194
+  grade: 11
 - id: S10
-  file: S4586
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4586
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 65)
+  page: 65
+  grade: 8

@@ -2,17 +2,33 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1427
-  type: unknown
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1427
+  type: textbook
+  title: Синтаксична норма (p. 68)
+  page: 68
+  grade: 11
 - id: S2
-  file: S3908
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3908
+  type: textbook
+  title: § 5. Інфінітив
+  page: 29
+  grade: 7
 - id: S4
-  file: S3323
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3323
+  type: textbook
+  title: Розділ 4. Морфологія. Орфографія
+  page: 104
+  grade: 6
 - id: S5
-  file: S4725
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4725
+  type: textbook
+  title: ОПИС ПАМ’ЯТКИ ІСТОРІЇ ТА КУЛЬТУРИ. ВИБІРКОВИЙ УСНИЙ ПЕРЕКАЗ РОЗПОВІДНОГО
+    ТЕКСТУ
+  page: 245
+  grade: 8
 - id: S9
-  file: S356
-  type: unknown
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0356
+  type: textbook
+  title: Морфологічна норма (p. 144)
+  page: 144
+  grade: 10

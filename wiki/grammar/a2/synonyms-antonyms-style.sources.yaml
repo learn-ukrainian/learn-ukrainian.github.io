@@ -2,35 +2,65 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1183
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1183
+  type: textbook
+  title: § 50. СТИЛІСТИЧНІ ЗАСОБИ СЛОВОТВОРУ
+  page: 177
+  grade: 11
 - id: S2
-  file: S2171
-  type: unknown
+  file: 5-klas-ukrlit-zabolotnyi-2022_s2171
+  type: textbook
+  title: ФОЛЬКЛОР (УСНА НАРОДНА ТВОРЧІСТЬ)
+  page: 209
+  grade: 5
 - id: S3
-  file: S3779
-  type: unknown
+  file: 7-klas-ukrlit-zabolotnyi-2024_s3779
+  type: textbook
+  title: Розділ 4. ПІДНЯТИСЯ НАД БУДЕННІСТЮ. ХУДОЖНІ ЗАСОБИ
+  page: 291
+  grade: 7
 - id: S4
-  file: S3020
-  type: unknown
+  file: 6-klas-ukrlit-zabolotnyi-2023_s3020
+  type: textbook
+  title: Розділ 35. ХУДОЖНІ ЗАСОБИ
+  page: 289
+  grade: 6
 - id: S5
-  file: S3595
-  type: unknown
+  file: 7-klas-ukrlit-avramenko-2024_s3595
+  type: textbook
+  title: ХУДОЖНІ ЗАСОБИ
+  page: 2
+  grade: 7
 - id: S6
-  file: S4640
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4640
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 131)
+  page: 131
+  grade: 8
 - id: S7
-  file: S2210
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2210
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 71)
+  page: 71
+  grade: 5
 - id: S8
-  file: S1214
-  type: unknown
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1214
+  type: textbook
+  title: Риторичні фігури. Порівняння. Повтор
+  page: 81
+  grade: 11
 - id: S9
-  file: S1202
-  type: unknown
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1202
+  type: textbook
+  title: Засоби мовного вираження промови. Тропи
+  page: 15
+  grade: 11
 - id: S10
-  file: S3931
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3931
+  type: textbook
+  title: § 24. Ступені порівняння прислівників
+  page: 143
+  grade: 7
 - id: S11
   file: ext-article-0
   type: external

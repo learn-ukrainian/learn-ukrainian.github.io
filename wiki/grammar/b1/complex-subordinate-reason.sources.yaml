@@ -2,17 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S5179
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5179
+  type: textbook
+  title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
+  page: 108
+  grade: 9
 - id: S2
-  file: S5240
-  type: unknown
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5240
+  type: textbook
+  title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
+  page: 108
+  grade: 9
 - id: S3
-  file: S3873
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3873
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 179)
+  page: 179
+  grade: 7
 - id: S4
-  file: S5178
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
+  type: textbook
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
 - id: S5
-  file: S3942
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3942
+  type: textbook
+  title: § 31. Сполучник як службова частина мови
+  page: 194
+  grade: 7

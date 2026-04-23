@@ -2,20 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3872
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3872
+  type: textbook
+  title: § 81. Написання сполучників
+  page: 178
+  grade: 7
 - id: S2
-  file: S3939
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3939
+  type: textbook
+  title: § 30. Особливості вживання прийменників
+  page: 181
+  grade: 7
 - id: S3
-  file: S3228
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3228
+  type: textbook
+  title: § 108. Узгодження дієслів з іменниками
+  page: 231
+  grade: 6
 - id: S4
-  file: S1153
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1153
+  type: textbook
+  title: § 21. СКЛАДНІ ВИПАДКИ СИНТАКСИЧНОГО КЕРУВАННЯ
+  page: 67
+  grade: 11
 - id: S5
-  file: S1816
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1816
+  type: textbook
+  title: Недарма в Стародавній Греції судову справу частенько... (вигра­
+  page: 112
+  grade: 4
 - id: S6
-  file: S2300
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2300
+  type: textbook
+  title: § 34. Мої плани на зиму
+  page: 101
+  grade: 5

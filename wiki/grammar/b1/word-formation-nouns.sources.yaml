@@ -2,20 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3381
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3381
+  type: textbook
+  title: § 16. ОСНОВНІ СПОСОБИ СЛОВОТВОРЕННЯ
+  page: 57
+  grade: 6
 - id: S3
-  file: S1183
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1183
+  type: textbook
+  title: § 50. СТИЛІСТИЧНІ ЗАСОБИ СЛОВОТВОРУ
+  page: 177
+  grade: 11
 - id: S4
-  file: S664
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0664
+  type: textbook
+  title: МОРФЕМІКА І СЛОВОТВІР (p. 136)
+  page: 136
+  grade: 10
 - id: S6
-  file: S3049
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3049
+  type: textbook
+  title: § 31. –32. Основні способи словотворення
+  page: 59
+  grade: 6
 - id: S7
-  file: S3380
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3380
+  type: textbook
+  title: Словотвiр. Орфографiя
+  page: 55
+  grade: 6
 - id: S8
-  file: S3319
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3319
+  type: textbook
+  title: § 15. Основні способи словотворення
+  page: 80
+  grade: 6

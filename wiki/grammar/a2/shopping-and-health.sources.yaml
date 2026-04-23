@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3793
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3793
+  type: textbook
+  title: § 8. Морфологія. Числівник
+  page: 22
+  grade: 7
 - id: S2
-  file: S3830
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3830
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 92)
+  page: 92
+  grade: 7
 - id: S3
-  file: S3268
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3268
+  type: textbook
+  title: § 59. Як не стати марнотратами
+  page: 155
+  grade: 6
 - id: S4
-  file: S3385
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3385
+  type: textbook
+  title: § 22. ІМЕННИК ЯК ЧАСТИНА МОВИ
+  page: 79
+  grade: 6
 - id: S5
-  file: S3267
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3267
+  type: textbook
+  title: § 58. Твоє здоров’я — найвища цінність
+  page: 152
+  grade: 6
 - id: S6
-  file: S3147
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3147
+  type: textbook
+  title: § 22. Пряма і непряма мова
+  page: 54
+  grade: 6
 - id: S7
-  file: S3227
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3227
+  type: textbook
+  title: § 107. Спостереження за узгодженням
+  page: 230
+  grade: 6

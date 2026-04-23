@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2445
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2445
+  type: textbook
+  title: § 25. Навчальний діалог
+  page: 82
+  grade: 5
 - id: S2
-  file: S2390
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2390
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Додаток
+  page: 213
+  grade: 5
 - id: S3
-  file: S1800
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1800
+  type: textbook
+  title: РОЗРІЗНЕННЯ ДАВАЛЬНОГО І МІСЦЕВОГО ВІДМІНКІВ )
+  page: 48
+  grade: 4
 - id: S4
-  file: S3371
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3371
+  type: textbook
+  title: § 54. Розряди займенників за значенням та особливості відмінювання
+  page: 255
+  grade: 6
 - id: S5
-  file: S4688
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4688
+  type: textbook
+  title: РЕЧЕННЯ ЧЛЕНИ РЕЧЕННЯ
+  page: 2
+  grade: 8
 - id: S6
-  file: S3061
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3061
+  type: textbook
+  title: § 46. Відмінки іменників
+  page: 91
+  grade: 6
 - id: S7
-  file: S3956
-  type: unknown
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3956
+  type: textbook
+  title: ОЛЕКСАНДР ЗАБОЛОТНИЙ ВІКТОР ЗАБОЛОТНИЙ
+  page: 1
+  grade: 7

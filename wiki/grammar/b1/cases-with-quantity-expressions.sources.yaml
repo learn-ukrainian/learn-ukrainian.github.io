@@ -2,32 +2,62 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1143
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1143
+  type: textbook
+  title: § 11. ЧИСЛІВНИК. СКЛАДНІ ВИПАДКИ УЗГОДЖЕННЯ
+  page: 34
+  grade: 11
 - id: S2
-  file: S3192
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3192
+  type: textbook
+  title: § 66. Уживання числівників з іменниками
+  page: 164
+  grade: 6
 - id: S3
-  file: S1207
-  type: unknown
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1207
+  type: textbook
+  title: Числівник. Складні випадки узгодження числівників з іменниками § 6
+  page: 31
+  grade: 11
 - id: S4
-  file: S1206
-  type: unknown
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1206
+  type: textbook
+  title: § 6. Числівник. Складні ви5падки
+  page: 28
+  grade: 11
 - id: S5
-  file: S3188
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3188
+  type: textbook
+  title: § 62. Відмінювання збірних, дробових,
+  page: 155
+  grade: 6
 - id: S6
-  file: S1144
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1144
+  type: textbook
+  title: Числівник. Складні випадки узгодження числівника
+  page: 35
+  grade: 11
 - id: S7
-  file: S3268
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3268
+  type: textbook
+  title: § 59. Як не стати марнотратами
+  page: 155
+  grade: 6
 - id: S8
-  file: S3396
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3396
+  type: textbook
+  title: § 51. ЧИСЛІВНИК ЯК ЧАСТИНА МОВИ
+  page: 164
+  grade: 6
 - id: S9
-  file: S5142
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5142
+  type: textbook
+  title: РОЗБІР ЧИСЛІВНИКА ЯК ЧАСТИНИ МОВИ ПОСЛІДОВНІСТЬ РОЗБОРУ
+  page: 223
+  grade: 9
 - id: S10
-  file: S682
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0682
+  type: textbook
+  title: § 68. Відмінювання числівників
+  page: 171
+  grade: 10

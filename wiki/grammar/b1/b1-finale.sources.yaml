@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2352
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2352
+  type: textbook
+  title: Лексикологія. Підсумковий тест
+  page: 84
+  grade: 5
 - id: S2
-  file: S2402
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2402
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Підсумковий тест
+  page: 254
+  grade: 5
 - id: S3
-  file: S3105
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3105
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 180)
+  page: 180
+  grade: 6
 - id: S4
-  file: S2313
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2313
+  type: textbook
+  title: § 55. Самооцінка важлива
+  page: 158
+  grade: 5
 - id: S5
-  file: S2513
-  type: unknown
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2513
+  type: textbook
+  title: ІІ. Виконайте завдання до тексту
+  page: 70
+  grade: 5
 - id: S6
-  file: S2380
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2380
+  type: textbook
+  title: Фонетика. Графіка. Орфоепія. Орфографія. Підсумковий тест
+  page: 185
+  grade: 5
 - id: S7
-  file: S2314
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2314
+  type: textbook
+  title: Залишайся вірним / вірною своїм цінностям. Не зраджуй
+  page: 160
+  grade: 5
 - id: S8
-  file: S3869
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3869
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 171)
+  page: 171
+  grade: 7
 - id: S10
-  file: S1255
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1255
+  type: textbook
+  title: Метод вивчення риторики був таким. Студентів вчили створювати
+  page: 75
+  grade: 11

@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3383
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3383
+  type: textbook
+  title: § 21. ЗАГАЛЬНА ХАРАКТЕРИСТИКА
+  page: 76
+  grade: 6
 - id: S2
-  file: S3149
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3149
+  type: textbook
+  title: § 24. Морфологія як розділ науки про мову
+  page: 59
+  grade: 6
 - id: S3
-  file: S301
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0301
+  type: textbook
+  title: МОРФОЛОГІЧНА НОРМА СПОСТЕРЕЖЕННЯ (p. 152)
+  page: 152
+  grade: 10
 - id: S4
-  file: S2513
-  type: unknown
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2513
+  type: textbook
+  title: ІІ. Виконайте завдання до тексту
+  page: 70
+  grade: 5
 - id: S5
-  file: S1764
-  type: unknown
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1764
+  type: textbook
+  title: БУДОВА СЛОВА
+  page: 59
+  grade: 3
 - id: S6
-  file: S3781
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3781
+  type: textbook
+  title: Самостійні частини мови. ЧАСТИНИ МОВИ (МОРФОЛОГІЯ)
+  page: 2
+  grade: 7
 - id: S7
-  file: S3324
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3324
+  type: textbook
+  title: § 19. Загальна характеристика частин мови
+  page: 105
+  grade: 6
 - id: S8
-  file: S2493
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2493
+  type: textbook
+  title: § 86. Розбір слова за будовою
+  page: 214
+  grade: 5
 - id: S9
-  file: S4548
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4548
+  type: textbook
+  title: ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО
+  page: 11
+  grade: 8

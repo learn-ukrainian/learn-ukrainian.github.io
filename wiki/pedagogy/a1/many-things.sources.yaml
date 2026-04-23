@@ -2,20 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1926
-  type: unknown
+  file: 4-klas-ukrmova-zaharijchuk_s1926
+  type: textbook
+  title: ПРИКМЕТНИК
+  page: 189
+  grade: 4
 - id: S2
-  file: S3158
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3158
+  type: textbook
+  title: § 32. Число іменників
+  page: 80
+  grade: 6
 - id: S3
-  file: S3192
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3192
+  type: textbook
+  title: § 66. Уживання числівників з іменниками
+  page: 164
+  grade: 6
 - id: S4
-  file: S3334
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3334
+  type: textbook
+  title: § 26. Число іменників
+  page: 133
+  grade: 6
 - id: S5
-  file: S2427
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2427
+  type: textbook
+  title: § 8. Частини мови. Іменники, що означають назви
+  page: 32
+  grade: 5
 - id: S6
-  file: S3258
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3258
+  type: textbook
+  title: § 35. Як розумно витрачати,
+  page: 91
+  grade: 6

@@ -2,26 +2,51 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3211
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3211
+  type: textbook
+  title: § 90. –91. Неозначена та особова форми дієслова
+  page: 199
+  grade: 6
 - id: S2
-  file: S3908
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3908
+  type: textbook
+  title: § 5. Інфінітив
+  page: 29
+  grade: 7
 - id: S3
-  file: S2434
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2434
+  type: textbook
+  title: § 14. Службові частини мови. Прийменник
+  page: 49
+  grade: 5
 - id: S4
-  file: S2530
-  type: unknown
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2530
+  type: textbook
+  title: ТЕМА 2. ПРАВИЛА СПІЛКУВАННЯ. МОНОЛОГІЧНЕ ТА ДІАЛОГІЧНЕ СПІЛКУВАННЯ
+  page: 220
+  grade: 5
 - id: S7
-  file: S2388
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2388
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Види речень за емоційним забарвленням
+  page: 206
+  grade: 5
 - id: S8
-  file: S684
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0684
+  type: textbook
+  title: § 71. Дві основи дієслова. Поділ дієслів на діє відміни. Словозміна дієслів
+    i та ii дієвідміни
+  page: 179
+  grade: 10
 - id: S9
-  file: S2291
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2291
+  type: textbook
+  title: ІІ Зверніть увагу на «слово дня». Що воно означає? Чи можете
+  page: 29
+  grade: 5
 - id: S10
-  file: S3149
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3149
+  type: textbook
+  title: § 24. Морфологія як розділ науки про мову
+  page: 59
+  grade: 6

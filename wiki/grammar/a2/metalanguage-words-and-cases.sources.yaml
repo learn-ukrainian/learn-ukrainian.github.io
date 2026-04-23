@@ -2,32 +2,62 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3956
-  type: unknown
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3956
+  type: textbook
+  title: ОЛЕКСАНДР ЗАБОЛОТНИЙ ВІКТОР ЗАБОЛОТНИЙ
+  page: 1
+  grade: 7
 - id: S2
-  file: S4689
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4689
+  type: textbook
+  title: СТИЛІ МОВЛЕННЯ
+  page: 4
+  grade: 8
 - id: S3
-  file: S3781
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3781
+  type: textbook
+  title: Самостійні частини мови. ЧАСТИНИ МОВИ (МОРФОЛОГІЯ)
+  page: 2
+  grade: 7
 - id: S4
-  file: S679
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0679
+  type: textbook
+  title: § 66. Числівник як частина мови
+  page: 167
+  grade: 10
 - id: S5
-  file: S3164
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3164
+  type: textbook
+  title: § 38. Відмінки іменників
+  page: 94
+  grade: 6
 - id: S6
-  file: S3149
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3149
+  type: textbook
+  title: § 24. Морфологія як розділ науки про мову
+  page: 59
+  grade: 6
 - id: S7
-  file: S668
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0668
+  type: textbook
+  title: § 56. Іменник
+  page: 141
+  grade: 10
 - id: S8
-  file: S3154
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3154
+  type: textbook
+  title: § 29. Рід іменників
+  page: 73
+  grade: 6
 - id: S9
-  file: S5141
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5141
+  type: textbook
+  title: МОРФОЛОГІЧНИЙ РОЗБІР РОЗБІР ІМЕННИКА ЯК ЧАСТИНИ МОВИ
+  page: 222
+  grade: 9
 - id: S10
-  file: S2428
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2428
+  type: textbook
+  title: § 9. Прикметник. Роль прикметників у тексті
+  page: 35
+  grade: 5

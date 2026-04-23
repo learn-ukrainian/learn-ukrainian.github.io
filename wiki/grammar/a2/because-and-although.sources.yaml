@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S5092
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5092
+  type: textbook
+  title: Підрядне допустове речення (рос. придаточное уступительное)
+  page: 83
+  grade: 9
 - id: S2
-  file: S5179
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5179
+  type: textbook
+  title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
+  page: 108
+  grade: 9
 - id: S3
-  file: S5240
-  type: unknown
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5240
+  type: textbook
+  title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
+  page: 108
+  grade: 9
 - id: S4
-  file: S5034
-  type: unknown
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5034
+  type: textbook
+  title: Синтаксис. Пунктуація. ПОВТОРЕННЯ
+  page: 52
+  grade: 9
 - id: S5
-  file: S1273
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1273
+  type: textbook
+  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
+  page: 173
+  grade: 11
 - id: S6
-  file: S5168
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5168
+  type: textbook
+  title: § 9. СКЛАДНЕ РЕЧЕННЯ ТА ЙОГО ОЗНАКИ
+  page: 48
+  grade: 9
 - id: S8
-  file: S5055
-  type: unknown
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5055
+  type: textbook
+  title: § 32. СкладнЕ речення з різними видами зв’язку
+  page: 112
+  grade: 9
 - id: S9
-  file: S2449
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2449
+  type: textbook
+  title: § 30. Складне речення. Загальне поняття
+  page: 98
+  grade: 5
 - id: S10
-  file: S5162
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5162
+  type: textbook
+  title: Синтаксис. Пунктуацiя
+  page: 25
+  grade: 9

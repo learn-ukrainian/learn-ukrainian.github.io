@@ -2,23 +2,45 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S5121
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5121
+  type: textbook
+  title: ФОНЕТИКА. ОРФОЕПІЯ. ГРАФІКА. ОРФОГРАФІЯ
+  page: 152
+  grade: 9
 - id: S2
-  file: S2464
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2464
+  type: textbook
+  title: § 46. 47. Звуки мови і звуки мовлення
+  page: 140
+  grade: 5
 - id: S3
-  file: S2367
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2367
+  type: textbook
+  title: Фонетика. Графіка. Орфоепія. Орфографія. Приголосні тверді та м’які . Позначення
+    м’якості
+  page: 126
+  grade: 5
 - id: S4
-  file: S2298
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2298
+  type: textbook
+  title: § 23. Не відкладаймо важливе на потім
+  page: 66
+  grade: 5
 - id: S5
-  file: S2515
-  type: unknown
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2515
+  type: textbook
+  title: Фонетика. Графіка
+  page: 74
+  grade: 5
 - id: S6
-  file: S2363
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2363
+  type: textbook
+  title: Фонетика. Графіка. Орфоепія. Орфографія. Голосні наголошені й ненаголошені
+  page: 114
+  grade: 5
 - id: S7
-  file: S2360
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2360
+  type: textbook
+  title: Фонетика. Графіка. Орфоепія. Орфографія. Транскрипція
+  page: 107
+  grade: 5

@@ -8,14 +8,23 @@ sources:
   file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0122
   type: textbook
 - id: S3
-  file: S2509
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2509
   type: textbook
+  title: Культура мовлення. ПРАВИЛЬНО
+  page: 14
+  grade: 5
 - id: S4
-  file: S2393
+  file: 5-klas-ukrmova-litvinova-2022_s2393
   type: textbook
+  title: Відомості із синтаксису й пунктуації. Речення з однорідними членами
+  page: 223
+  grade: 5
 - id: S5
-  file: S1143
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1143
   type: textbook
+  title: § 11. ЧИСЛІВНИК. СКЛАДНІ ВИПАДКИ УЗГОДЖЕННЯ
+  page: 34
+  grade: 11
 - id: S6
   file: ext-ulp_youtube-272
   type: external

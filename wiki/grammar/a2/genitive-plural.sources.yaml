@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3158
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3158
+  type: textbook
+  title: § 32. Число іменників
+  page: 80
+  grade: 6
 - id: S2
-  file: S3387
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3387
+  type: textbook
+  title: § 27. ВІДМІНИ Й ГРУПИ
+  page: 95
+  grade: 6
 - id: S4
-  file: S3154
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3154
+  type: textbook
+  title: § 29. Рід іменників
+  page: 73
+  grade: 6
 - id: S6
-  file: S3155
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3155
+  type: textbook
+  title: У деяких іменниках рід визначити складно. Такі слова
+  page: 74
+  grade: 6
 - id: S7
-  file: S1801
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1801
+  type: textbook
+  title: Крок 2. Розглянь таблицю відмінювання іменників. У яких імен­
+  page: 53
+  grade: 4
 - id: S8
-  file: S308
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0308
+  type: textbook
+  title: МОРФОЛОГІЧНА НОРМА СПОСТЕРЕЖЕННЯ (p. 166)
+  page: 166
+  grade: 10
 - id: S9
-  file: S303
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0303
+  type: textbook
+  title: МОРФОЛОГІЧНА НОРМА СПОСТЕРЕЖЕННЯ (p. 156)
+  page: 156
+  grade: 10

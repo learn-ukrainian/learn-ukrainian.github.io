@@ -2,17 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S5092
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5092
+  type: textbook
+  title: Підрядне допустове речення (рос. придаточное уступительное)
+  page: 83
+  grade: 9
 - id: S2
-  file: S5178
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
+  type: textbook
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
 - id: S3
-  file: S3945
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3945
+  type: textbook
+  title: § 34. Розрізнення сполучників й однозвучних слів
+  page: 206
+  grade: 7
 - id: S4
-  file: S3872
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3872
+  type: textbook
+  title: § 81. Написання сполучників
+  page: 178
+  grade: 7
 - id: S5
-  file: S3870
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3870
+  type: textbook
+  title: § 79. Сполучник як службова частина мови
+  page: 174
+  grade: 7

@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1800
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1800
+  type: textbook
+  title: РОЗРІЗНЕННЯ ДАВАЛЬНОГО І МІСЦЕВОГО ВІДМІНКІВ )
+  page: 48
+  grade: 4
 - id: S2
-  file: S3164
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3164
+  type: textbook
+  title: § 38. Відмінки іменників
+  page: 94
+  grade: 6
 - id: S3
-  file: S1887
-  type: unknown
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1887
+  type: textbook
+  title: § 34. Займенники 2­ї особи
+  page: 110
+  grade: 4
 - id: S4
-  file: S3342
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3342
+  type: textbook
+  title: § 34. Відмінювання іменників, що мають форму лише множини
+  page: 167
+  grade: 6
 - id: S6
-  file: S2439
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2439
+  type: textbook
+  title: § 19. Другорядні члени речення. Додаток
+  page: 66
+  grade: 5
 - id: S7
-  file: S1874
-  type: unknown
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1874
+  type: textbook
+  title: ВІДМІНЮВАННЯ ІМЕННИКІВ В ОДНИНІ
+  page: 41
+  grade: 4
 - id: S8
-  file: S1875
-  type: unknown
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1875
+  type: textbook
+  title: § 14. Чергування звуків [і] з [о], [е]
+  page: 50
+  grade: 4
 - id: S9
-  file: S3341
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3341
+  type: textbook
+  title: § 33. Відмінювання іменників ІV відміни
+  page: 165
+  grade: 6
 - id: S10
-  file: S2427
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2427
+  type: textbook
+  title: § 8. Частини мови. Іменники, що означають назви
+  page: 32
+  grade: 5

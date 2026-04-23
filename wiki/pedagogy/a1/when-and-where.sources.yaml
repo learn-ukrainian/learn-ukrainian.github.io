@@ -2,5 +2,8 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S5178
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
+  type: textbook
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9

@@ -251,3 +251,44 @@ def test_resolve_chunk_attribution_falls_back_to_inferred_type_for_filename_shap
         "type": "textbook",
         "title": "11-klas-ukrmova-avramenko-2019_s0077",
     }
+
+
+def test_resolve_chunk_attribution_any_corpus_finds_textbook_sections(attribution_db) -> None:
+    from wiki.source_attribution import resolve_chunk_attribution_any_corpus
+
+    result = resolve_chunk_attribution_any_corpus("S77")
+
+    assert result == (
+        "textbook_sections",
+        {
+            "file": "11-klas-ukrmova-avramenko-2019_s0077",
+            "type": "textbook",
+            "title": "Складне речення",
+            "grade": 11,
+            "page": 123,
+        },
+    )
+
+
+def test_resolve_chunk_attribution_any_corpus_returns_none_for_missing_chunk(attribution_db) -> None:
+    from wiki.source_attribution import resolve_chunk_attribution_any_corpus
+
+    assert resolve_chunk_attribution_any_corpus("S9999") is None
+
+
+def test_effective_db_path_falls_back_to_main_checkout_from_worktree(tmp_path, monkeypatch) -> None:
+    from wiki import source_attribution
+
+    repo_root = tmp_path
+    worktree_root = repo_root / ".worktrees" / "codex-demo"
+    local_db = worktree_root / "data" / "sources.db"
+    shared_db = repo_root / "data" / "sources.db"
+    local_db.parent.mkdir(parents=True)
+    shared_db.parent.mkdir(parents=True)
+    local_db.write_bytes(b"")
+    shared_db.write_bytes(b"sqlite")
+
+    monkeypatch.setattr(source_attribution, "PROJECT_ROOT", worktree_root)
+    monkeypatch.setattr(source_attribution, "DEFAULT_DB_PATH", local_db)
+
+    assert source_attribution._effective_db_path() == shared_db

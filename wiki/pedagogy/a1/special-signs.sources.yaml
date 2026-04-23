@@ -2,11 +2,20 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1506
-  type: unknown
+  file: 2-klas-ukrmova-kravcova-2019-1_s1506
+  type: textbook
+  title: АПОСТРОФ
+  page: 44
+  grade: 2
 - id: S2
-  file: S2299
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2299
+  type: textbook
+  title: § 26. Робота над власними помилками
+  page: 76
+  grade: 5
 - id: S4
-  file: S2374
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2374
+  type: textbook
+  title: Фонетика. Графіка. Орфоепія. Орфографія. Правила вживання апострофа
+  page: 159
+  grade: 5

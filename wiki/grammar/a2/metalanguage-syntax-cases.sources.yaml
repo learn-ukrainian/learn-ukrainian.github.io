@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S4696
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4696
+  type: textbook
+  title: СИНТАКСИС. ПУНКТУАЦІЯ
+  page: 42
+  grade: 8
 - id: S2
-  file: S2385
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2385
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Речення. Граматична основа речення
+  page: 196
+  grade: 5
 - id: S3
-  file: S4688
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4688
+  type: textbook
+  title: РЕЧЕННЯ ЧЛЕНИ РЕЧЕННЯ
+  page: 2
+  grade: 8
 - id: S4
-  file: S3142
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3142
+  type: textbook
+  title: § 18. Граматична основа речення. Другорядні
+  page: 47
+  grade: 6
 - id: S5
-  file: S1660
-  type: unknown
+  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1660
+  type: textbook
+  title: У реченні є головні та другорядні члени. Головні члени
+  page: 109
+  grade: 3
 - id: S6
-  file: S5146
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5146
+  type: textbook
+  title: РОЗБІР ВИГУКУ ЯК ЧАСТИНИ м о в и ПОСЛІДОВНІСТЬ РОЗБОРУ
+  page: 227
+  grade: 9
 - id: S8
-  file: S3164
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3164
+  type: textbook
+  title: § 38. Відмінки іменників
+  page: 94
+  grade: 6
 - id: S9
-  file: S2435
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2435
+  type: textbook
+  title: § 15. Словосполучення. Головне та залежне слово
+  page: 54
+  grade: 5
 - id: S10
-  file: S2449
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2449
+  type: textbook
+  title: § 30. Складне речення. Загальне поняття
+  page: 98
+  grade: 5

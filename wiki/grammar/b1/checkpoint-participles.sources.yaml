@@ -2,32 +2,65 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3900
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3900
+  type: textbook
+  title: § 19. Дієприслівник як особлива форма діє слова 108
+  page: 8
+  grade: 7
 - id: S2
-  file: S3925
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3925
+  type: textbook
+  title: § 20. Дієприслівниковий зворот
+  page: 115
+  grade: 7
 - id: S3
-  file: S3899
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3899
+  type: textbook
+  title: '§ 3. Діє слово: загальне значення, морфологічні ознаки, синтаксична роль
+    21'
+  page: 7
+  grade: 7
 - id: S4
-  file: S3839
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3839
+  type: textbook
+  title: § 47. Дієприкметниковий зворот... Б. Підкресліть дієприкметникові звороти
+    й означувані слова відповідно до
+  page: 108
+  grade: 7
 - id: S5
-  file: S3920
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3920
+  type: textbook
+  title: § 16. Дієприкметниковий зворот
+  page: 85
+  grade: 7
 - id: S6
-  file: S3845
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3845
+  type: textbook
+  title: § 53. Дієприслівник як особлива форма дієслова
+  page: 120
+  grade: 7
 - id: S7
-  file: S692
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0692
+  type: textbook
+  title: СПІЛКУВАННЯ (p. 191)
+  page: 191
+  grade: 10
 - id: S8
-  file: S3832
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3832
+  type: textbook
+  title: § 42. Активні й пасивні дієприкметники
+  page: 98
+  grade: 7
 - id: S9
-  file: S3837
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3837
+  type: textbook
+  title: § 46. Відмінювання дієприкметників
+  page: 106
+  grade: 7
 - id: S10
-  file: S3846
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3846
+  type: textbook
+  title: § 54. Дієприслівниковий зворот. Розділові знаки в реченнях... 2. Перебудуйте
+    речення на ускладнені одиничними дієприслівниками чи
+  page: 122
+  grade: 7

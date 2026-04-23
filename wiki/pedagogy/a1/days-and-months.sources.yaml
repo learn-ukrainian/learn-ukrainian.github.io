@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1916
-  type: unknown
+  file: 4-klas-ukrmova-zaharijchuk_s1916
+  type: textbook
+  title: ЧИСЛІВНИК (p. 110)
+  page: 110
+  grade: 4
 - id: S2
-  file: S1584
-  type: unknown
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1584
+  type: textbook
+  title: НАВЧАЮСЯ ВЖИВАТИ ЧИСЛІВНИКИ В МОВЛЕННІ
+  page: 92
+  grade: 2
 - id: S3
-  file: S3268
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3268
+  type: textbook
+  title: § 59. Як не стати марнотратами
+  page: 155
+  grade: 6
 - id: S4
-  file: S2421
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2421
+  type: textbook
+  title: § 5. Найважливіші вимоги до культури мовлення
+  page: 20
+  grade: 5
 - id: S5
-  file: S1883
-  type: unknown
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1883
+  type: textbook
+  title: § 29. Числівник як частина мови
+  page: 96
+  grade: 4
 - id: S6
-  file: S2434
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2434
+  type: textbook
+  title: § 14. Службові частини мови. Прийменник
+  page: 49
+  grade: 5
 - id: S7
-  file: S1207
-  type: unknown
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1207
+  type: textbook
+  title: Числівник. Складні випадки узгодження числівників з іменниками § 6
+  page: 31
+  grade: 11
 - id: S8
-  file: S2459
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2459
+  type: textbook
+  title: § 40. Етимологія (походження) слова
+  page: 128
+  grade: 5
 - id: S10
-  file: S1496
-  type: unknown
+  file: 2-klas-ukrmova-bolshakova-2019-2_s1496
+  type: textbook
+  title: розДІЛ 5. сЛово. Історія. Комікс
+  page: 68
+  grade: 2

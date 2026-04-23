@@ -2,20 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S5163
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5163
+  type: textbook
+  title: § 4. ПРЯМА МОВА
+  page: 26
+  grade: 9
 - id: S3
-  file: S3147
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3147
+  type: textbook
+  title: § 22. Пряма і непряма мова
+  page: 54
+  grade: 6
 - id: S4
-  file: S5026
-  type: unknown
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5026
+  type: textbook
+  title: § 7. Непряма мова
+  page: 26
+  grade: 9
 - id: S6
-  file: S5164
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5164
+  type: textbook
+  title: Пряма й непряма мова (p. 27)
+  page: 27
+  grade: 9
 - id: S9
-  file: S5162
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5162
+  type: textbook
+  title: Синтаксис. Пунктуацiя
+  page: 25
+  grade: 9
 - id: S10
-  file: S5223
-  type: unknown
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5223
+  type: textbook
+  title: Синтаксис. Пунктуацiя
+  page: 25
+  grade: 9

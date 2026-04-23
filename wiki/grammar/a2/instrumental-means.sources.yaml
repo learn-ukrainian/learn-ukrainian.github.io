@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S361
-  type: unknown
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0361
+  type: textbook
+  title: Морфологічна норма (p. 158)
+  page: 158
+  grade: 10
 - id: S2
-  file: S780
-  type: unknown
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0780
+  type: textbook
+  title: Морфологічна норма (p. 158)
+  page: 158
+  grade: 10
 - id: S3
-  file: S1873
-  type: unknown
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1873
+  type: textbook
+  title: § 12. Відмінювання іменників
+  page: 37
+  grade: 4
 - id: S4
-  file: S3164
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3164
+  type: textbook
+  title: § 38. Відмінки іменників
+  page: 94
+  grade: 6
 - id: S5
-  file: S3046
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3046
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 53)
+  page: 53
+  grade: 6
 - id: S6
-  file: S359
-  type: unknown
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0359
+  type: textbook
+  title: Морфологічна норма (p. 152)
+  page: 152
+  grade: 10
 - id: S7
-  file: S778
-  type: unknown
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0778
+  type: textbook
+  title: Морфологічна норма (p. 152)
+  page: 152
+  grade: 10
 - id: S8
-  file: S3387
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3387
+  type: textbook
+  title: § 27. ВІДМІНИ Й ГРУПИ
+  page: 95
+  grade: 6
 - id: S9
-  file: S3341
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3341
+  type: textbook
+  title: § 33. Відмінювання іменників ІV відміни
+  page: 165
+  grade: 6

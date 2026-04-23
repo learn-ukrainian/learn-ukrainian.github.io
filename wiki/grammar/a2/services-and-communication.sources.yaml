@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3869
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3869
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 171)
+  page: 171
+  grade: 7
 - id: S2
-  file: S3967
-  type: unknown
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3967
+  type: textbook
+  title: ТЕМА 16. ПОШТОВА АДРЕСА
+  page: 268
+  grade: 7
 - id: S3
-  file: S3173
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3173
+  type: textbook
+  title: § 47. Діловий стиль. Складання листа
+  page: 116
+  grade: 6
 - id: S4
-  file: S4650
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4650
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 143)
+  page: 143
+  grade: 8
 - id: S5
-  file: S4741
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4741
+  type: textbook
+  title: ТЕМА 19. ВИДИ ДІЛОВИХ ЛИСТІВ. ЛИСТ-ЗАПРОШЕННЯ, ЛИСТ-ПОВІДОМЛЕННЯ
+  page: 277
+  grade: 8
 - id: S6
-  file: S2345
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2345
+  type: textbook
+  title: Лексикологія. Пароніми
+  page: 44
+  grade: 5
 - id: S7
-  file: S727
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0727
+  type: textbook
+  title: ТЕМА 22. ЕЛЕКТРОННИЙ ЛИСТ. СМС-ПОВІДОМЛЕННЯ. Пишіть листи і надсилайте вчасно,
+  page: 262
+  grade: 10
 - id: S8
-  file: S3281
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3281
+  type: textbook
+  title: § 91. Нащо мені друзі
+  page: 228
+  grade: 6
 - id: S9
-  file: S1461
-  type: unknown
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1461
+  type: textbook
+  title: Практична риторика (p. 207)
+  page: 207
+  grade: 11

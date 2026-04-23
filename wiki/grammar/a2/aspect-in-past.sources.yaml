@@ -2,26 +2,50 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3912
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3912
+  type: textbook
+  title: § 9. Часи діє слова
+  page: 41
+  grade: 7
 - id: S2
-  file: S3817
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3817
+  type: textbook
+  title: § 29. Минулий час дієслів
+  page: 66
+  grade: 7
 - id: S3
-  file: S686
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0686
+  type: textbook
+  title: § 73. Часи дієслів, їх творення
+  page: 183
+  grade: 10
 - id: S4
-  file: S1902
-  type: unknown
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1902
+  type: textbook
+  title: 'Неозначена форма: … . Минулий час: … . Теперішній'
+  page: 107
+  grade: 4
 - id: S5
-  file: S1657
-  type: unknown
+  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1657
+  type: textbook
+  title: ДІЄСЛОВО
+  page: 85
+  grade: 3
 - id: S6
-  file: S3215
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3215
+  type: textbook
+  title: § 95. Час дієслова. Минулий час
+  page: 206
+  grade: 6
 - id: S7
-  file: S694
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0694
+  type: textbook
+  title: § 78. ДІЄПРИСЛІВНИК
+  page: 194
+  grade: 10
 - id: S8
-  file: S1901
-  type: unknown
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1901
+  type: textbook
+  title: ДІЄСЛОВО
+  page: 101
+  grade: 4

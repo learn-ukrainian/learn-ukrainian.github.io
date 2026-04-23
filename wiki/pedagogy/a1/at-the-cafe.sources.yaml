@@ -2,32 +2,62 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3787
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3787
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 9)
+  page: 9
+  grade: 7
 - id: S2
-  file: S2421
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2421
+  type: textbook
+  title: § 5. Найважливіші вимоги до культури мовлення
+  page: 20
+  grade: 5
 - id: S3
-  file: S2509
-  type: unknown
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2509
+  type: textbook
+  title: Культура мовлення. ПРАВИЛЬНО
+  page: 14
+  grade: 5
 - id: S4
-  file: S3221
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3221
+  type: textbook
+  title: § 101. –102. Творення дієслів наказового способу
+  page: 218
+  grade: 6
 - id: S5
-  file: S338
-  type: unknown
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0338
+  type: textbook
+  title: Лексична норма (p. 20)
+  page: 20
+  grade: 10
 - id: S6
-  file: S2387
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2387
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Види речень за метою висловлення
+  page: 203
+  grade: 5
 - id: S7
-  file: S1593
-  type: unknown
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1593
+  type: textbook
+  title: НАВЧАЮСЯ ПРАВИЛЬНО ВІДТВОРЮВАТИ ІНТОНАЦІЮ СПОНУКАЛЬНИХ РЕЧЕНЬ
+  page: 110
+  grade: 2
 - id: S8
-  file: S1863
-  type: unknown
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1863
+  type: textbook
+  title: § 1. Мова в житті народу
+  page: 4
+  grade: 4
 - id: S9
-  file: S3147
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3147
+  type: textbook
+  title: § 22. Пряма і непряма мова
+  page: 54
+  grade: 6
 - id: S10
-  file: S2459
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2459
+  type: textbook
+  title: § 40. Етимологія (походження) слова
+  page: 128
+  grade: 5

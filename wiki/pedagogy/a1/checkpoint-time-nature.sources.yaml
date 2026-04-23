@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2300
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2300
+  type: textbook
+  title: § 34. Мої плани на зиму
+  page: 101
+  grade: 5
 - id: S2
-  file: S1597
-  type: unknown
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1597
+  type: textbook
+  title: НАВЧАЮСЯ ПОШИРЮВАТИ РЕЧЕННЯ СЛОВАМИ ЗА ПОДАНИМИ ПИТАННЯМИ
+  page: 117
+  grade: 2
 - id: S3
-  file: S3939
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3939
+  type: textbook
+  title: § 30. Особливості вживання прийменників
+  page: 181
+  grade: 7
 - id: S4
-  file: S1564
-  type: unknown
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1564
+  type: textbook
+  title: СЛОВА — НАЗВИ. (ІМЕННИКИ)
+  page: 46
+  grade: 2
 - id: S7
-  file: S1580
-  type: unknown
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1580
+  type: textbook
+  title: Ивйщ1і| Пригадайте назви днів тижня. Послідовно запишіть їх
+  page: 83
+  grade: 2
 - id: S8
-  file: S1507
-  type: unknown
+  file: 2-klas-ukrmova-kravcova-2019-1_s1507
+  type: textbook
+  title: СПОСТЕРЕЖЕННЯ ЗА ЗНАЧЕННЯМ СЛОВА
+  page: 48
+  grade: 2
 - id: S9
-  file: S2459
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2459
+  type: textbook
+  title: § 40. Етимологія (походження) слова
+  page: 128
+  grade: 5

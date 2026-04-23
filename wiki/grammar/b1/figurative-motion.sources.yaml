@@ -2,32 +2,63 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2181
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2181
+  type: textbook
+  title: § 10. Лексичне значення слова
+  page: 27
+  grade: 5
 - id: S2
-  file: S255
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0255
+  type: textbook
+  title: Лексична норма. СПОСТЕРЕЖЕННЯ
+  page: 18
+  grade: 10
 - id: S3
-  file: S2342
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2342
+  type: textbook
+  title: Лексикологія. Однозначні й багатозначні слова
+  page: 33
+  grade: 5
 - id: S4
-  file: S1918
-  type: unknown
+  file: 4-klas-ukrmova-zaharijchuk_s1918
+  type: textbook
+  title: ДІЄСЛОВО
+  page: 134
+  grade: 4
 - id: S5
-  file: S619
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0619
+  type: textbook
+  title: § 33. Багатозначні й однозначні слова. Пряме і переносне значення. Омоніми.
+    Пароніми
+  page: 89
+  grade: 10
 - id: S6
-  file: S2188
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2188
+  type: textbook
+  title: § 16. Використання багатозначних слів у прямому й переносному значеннях
+  page: 41
+  grade: 5
 - id: S7
-  file: S2537
-  type: unknown
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2537
+  type: textbook
+  title: Додаток 3. СЛОВНИЧОК НАГОЛОСІВ
+  page: 240
+  grade: 5
 - id: S8
-  file: S1560
-  type: unknown
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1560
+  type: textbook
+  title: СЛОВА ІЗ ПРЯМИМ І ПЕРЕНОСНИМ ЗНАМЕННЯМ
+  page: 38
+  grade: 2
 - id: S9
-  file: S1653
-  type: unknown
+  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1653
+  type: textbook
+  title: ПРАВИЛЬНА ВИМОВА СЛІВ
+  page: 8
+  grade: 3
 - id: S10
-  file: S2184
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2184
+  type: textbook
+  title: ЛЕКСИКОЛОГІЯ (p. 35)
+  page: 35
+  grade: 5

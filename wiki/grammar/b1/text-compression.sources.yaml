@@ -2,17 +2,33 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S328
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0328
+  type: textbook
+  title: § 28. Орфографія. Ненаголошені голосні е, и ...........................................................................
+    85
+  page: 207
+  grade: 10
 - id: S2
-  file: S352
-  type: unknown
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0352
+  type: textbook
+  title: Орфографічна норма (p. 100)
+  page: 100
+  grade: 10
 - id: S3
-  file: S608
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0608
+  type: textbook
+  title: Українська графіка. Українська орфографія
+  page: 74
+  grade: 10
 - id: S4
-  file: S539
-  type: unknown
+  file: 10-klas-ukrmova-glazova-2018_s0539
+  type: textbook
+  title: § 33. Правила перенесення слів із рядка в рядок
+  page: 141
+  grade: 10
 - id: S5
-  file: S295
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0295
+  type: textbook
+  title: Правила перенесення слів. Графічні скорочення. СПОСТЕРЕЖЕННЯ
+  page: 117
+  grade: 10

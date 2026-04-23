@@ -2,29 +2,53 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1550
-  type: unknown
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1550
+  type: textbook
+  title: ПОДІЛ СЛІВ НА СКЛАДИ НАВЧАЮСЯ ДІЛИТИ СЛОВА НА СКЛАДИ
+  page: 18
+  grade: 2
 - id: S2
-  file: S1503
-  type: unknown
+  file: 2-klas-ukrmova-kravcova-2019-1_s1503
+  type: textbook
+  title: СКЛАД. ПОДІЛ СЛІВ НА СКЛАДИ
+  page: 13
+  grade: 2
 - id: S3
-  file: S2368
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2368
+  type: textbook
+  title: Фонетика. Графіка. Орфоепія. Орфографія. Позначення звуків на письмі . Алфавіт
+  page: 129
+  grade: 5
 - id: S4
-  file: S1502
-  type: unknown
+  file: 2-klas-ukrmova-kravcova-2019-1_s1502
+  type: textbook
+  title: ГОЛОСНІ ТА ПРИГОЛОСНІ ЗВУКИ
+  page: 9
+  grade: 2
 - id: S5
-  file: S584
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0584
+  type: textbook
+  title: § 13. Класифікація голосних звуків. Звук мовлення і фонема
+  page: 41
+  grade: 10
 - id: S6
-  file: S2464
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2464
+  type: textbook
+  title: § 46. 47. Звуки мови і звуки мовлення
+  page: 140
+  grade: 5
 - id: S7
-  file: S2467
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2467
+  type: textbook
+  title: § 50. Звукове значення букв я, ю, є, ї, щ
+  page: 148
+  grade: 5
 - id: S9
-  file: S2219
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2219
+  type: textbook
+  title: § 41. ВИМОВА ГОЛОСНИХ ЗВУКІВ
+  page: 94
+  grade: 5
 - id: S12
   file: ext-article-1
   type: external

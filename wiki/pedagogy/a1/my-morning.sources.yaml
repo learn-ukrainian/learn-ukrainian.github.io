@@ -2,29 +2,53 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3815
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3815
+  type: textbook
+  title: § 27. Особові форми дієслова
+  page: 62
+  grade: 7
 - id: S2
-  file: S320
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0320
+  type: textbook
+  title: ПРАКТИЧНА РИТОРИКА (p. 196)
+  page: 196
+  grade: 10
 - id: S3
-  file: S1921
-  type: unknown
+  file: 4-klas-ukrmova-zaharijchuk_s1921
+  type: textbook
+  title: М инулий час. Зміню вання дієслів минулого
+  page: 146
+  grade: 4
 - id: S4
-  file: S2349
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2349
+  type: textbook
+  title: Лексикологія. Написання слів іншомовного походження
+  page: 62
+  grade: 5
 - id: S5
-  file: S3865
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3865
+  type: textbook
+  title: § 74. Службові частини мови (загальні ознаки)
+  page: 164
+  grade: 7
 - id: S6
-  file: S277
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0277
+  type: textbook
+  title: ПРАКТИЧНА РИТОРИКА (p. 64)
+  page: 64
+  grade: 10
 - id: S7
-  file: S271
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0271
+  type: textbook
+  title: ПРАКТИЧНА РИТОРИКА (p. 54)
+  page: 54
+  grade: 10
 - id: S8
-  file: S2529
-  type: unknown
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2529
+  type: textbook
+  title: З БІОГРАФІЇ РОЗДІЛОВИХ ЗНАКІВ
+  page: 216
+  grade: 5
 - id: S11
   file: ext-article-3
   type: external

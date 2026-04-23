@@ -2,11 +2,20 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1873
-  type: unknown
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1873
+  type: textbook
+  title: § 12. Відмінювання іменників
+  page: 37
+  grade: 4
 - id: S2
-  file: S1800
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1800
+  type: textbook
+  title: РОЗРІЗНЕННЯ ДАВАЛЬНОГО І МІСЦЕВОГО ВІДМІНКІВ )
+  page: 48
+  grade: 4
 - id: S6
-  file: S1801
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1801
+  type: textbook
+  title: Крок 2. Розглянь таблицю відмінювання іменників. У яких імен­
+  page: 53
+  grade: 4

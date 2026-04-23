@@ -2,26 +2,50 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3366
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3366
+  type: textbook
+  title: § 52. Правильне вживання числівників на позначення дат і часу
+  page: 245
+  grade: 6
 - id: S2
-  file: S3193
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3193
+  type: textbook
+  title: § 67. Правильне вживання числівників для
+  page: 166
+  grade: 6
 - id: S3
-  file: S1146
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1146
+  type: textbook
+  title: § 14. СПОСТЕРЕЖЕННЯ
+  page: 41
+  grade: 11
 - id: S4
-  file: S1583
-  type: unknown
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1583
+  type: textbook
+  title: НАВЧАЮСЬ УТВОРЮВАТИ СПОЛУЧЕННЯ СЛІВ ІЗ ЧИСЛІВНИКАМИ
+  page: 90
+  grade: 2
 - id: S5
-  file: S1916
-  type: unknown
+  file: 4-klas-ukrmova-zaharijchuk_s1916
+  type: textbook
+  title: ЧИСЛІВНИК (p. 110)
+  page: 110
+  grade: 4
 - id: S6
-  file: S3268
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3268
+  type: textbook
+  title: § 59. Як не стати марнотратами
+  page: 155
+  grade: 6
 - id: S7
-  file: S3195
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3195
+  type: textbook
+  title: § 70. –71. Розбір числівника як частини мови
+  page: 168
+  grade: 6
 - id: S9
-  file: S3939
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3939
+  type: textbook
+  title: § 30. Особливості вживання прийменників
+  page: 181
+  grade: 7

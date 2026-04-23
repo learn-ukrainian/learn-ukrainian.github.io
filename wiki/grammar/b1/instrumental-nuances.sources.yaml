@@ -2,26 +2,50 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3935
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3935
+  type: textbook
+  title: § 27. Прийменник як службова частина мови
+  page: 166
+  grade: 7
 - id: S2
-  file: S1170
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1170
+  type: textbook
+  title: Відокремлені обставини. КУЛЬТУРА СЛОВА
+  page: 129
+  grade: 11
 - id: S3
-  file: S3338
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3338
+  type: textbook
+  title: § 30. Відмінювання іменників І відміни
+  page: 148
+  grade: 6
 - id: S4
-  file: S1807
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1807
+  type: textbook
+  title: ( ЗАЙМЕННИК. ОСОБОВІ ЗАЙМЕННИКИ
+  page: 88
+  grade: 4
 - id: S5
-  file: S1152
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1152
+  type: textbook
+  title: Синтаксична норма. Складні випадки синтаксичного узгодження
+  page: 63
+  grade: 11
 - id: S6
-  file: S4718
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4718
+  type: textbook
+  title: Костенко). поширена прикладка стоїть після
+  page: 202
+  grade: 8
 - id: S7
-  file: S3342
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3342
+  type: textbook
+  title: § 34. Відмінювання іменників, що мають форму лише множини
+  page: 167
+  grade: 6
 - id: S8
-  file: S3911
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3911
+  type: textbook
+  title: '§ 8. Спосіб діє слова: загальна характеристика'
+  page: 38
+  grade: 7

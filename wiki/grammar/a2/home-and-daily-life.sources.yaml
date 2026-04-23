@@ -2,17 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3148
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3148
+  type: textbook
+  title: § 23. Розвиток мовлення
+  page: 56
+  grade: 6
 - id: S2
-  file: S1916
-  type: unknown
+  file: 4-klas-ukrmova-zaharijchuk_s1916
+  type: textbook
+  title: ЧИСЛІВНИК (p. 110)
+  page: 110
+  grade: 4
 - id: S3
-  file: S1902
-  type: unknown
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1902
+  type: textbook
+  title: 'Неозначена форма: … . Минулий час: … . Теперішній'
+  page: 107
+  grade: 4
 - id: S4
-  file: S2390
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2390
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Додаток
+  page: 213
+  grade: 5
 - id: S6
-  file: S3526
-  type: unknown
+  file: 7-klas-istoria-ukr-hlibovska-2024_s3526
+  type: textbook
+  title: Поверх сорочки одягали спідницю. Знатні жінки носили довгі
+  page: 32
+  grade: 7

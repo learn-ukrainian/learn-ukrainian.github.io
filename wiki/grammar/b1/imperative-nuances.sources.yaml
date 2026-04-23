@@ -2,32 +2,59 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1149
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1149
+  type: textbook
+  title: § 17. НАКАЗОВИЙ СПОСІБ ДІЄСЛОВА
+  page: 54
+  grade: 11
 - id: S2
-  file: S1211
-  type: unknown
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1211
+  type: textbook
+  title: § 9. Паралельні форми вираження наказового
+  page: 46
+  grade: 11
 - id: S3
-  file: S688
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0688
+  type: textbook
+  title: § 74. Способи дієслів
+  page: 185
+  grade: 10
 - id: S4
-  file: S3914
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3914
+  type: textbook
+  title: § 11. Наказовий спосіб діє слів
+  page: 60
+  grade: 7
 - id: S5
-  file: S3911
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3911
+  type: textbook
+  title: '§ 8. Спосіб діє слова: загальна характеристика'
+  page: 38
+  grade: 7
 - id: S6
-  file: S3824
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3824
+  type: textbook
+  title: § 35. Спосіб дієслів
+  page: 82
+  grade: 7
 - id: S7
-  file: S1593
-  type: unknown
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1593
+  type: textbook
+  title: НАВЧАЮСЯ ПРАВИЛЬНО ВІДТВОРЮВАТИ ІНТОНАЦІЮ СПОНУКАЛЬНИХ РЕЧЕНЬ
+  page: 110
+  grade: 2
 - id: S8
-  file: S685
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0685
+  type: textbook
+  title: § 72. Види дієслів
+  page: 181
+  grade: 10
 - id: S9
-  file: S3916
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3916
+  type: textbook
+  title: § 13. Безособові діє слова Діє слівні форми на -но, -то
+  page: 66
+  grade: 7
 - id: S10
   file: ext-other_blogs-51
   type: external

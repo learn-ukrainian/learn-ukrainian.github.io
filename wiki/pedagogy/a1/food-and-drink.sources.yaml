@@ -2,23 +2,41 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2423
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2423
+  type: textbook
+  title: § 6. Види мовлення (монологічне і діалогічне; усне
+  page: 24
+  grade: 5
 - id: S2
-  file: S5020
-  type: unknown
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5020
+  type: textbook
+  title: § 2. Граматична основа. Односкладне
+  page: 9
+  grade: 9
 - id: S3
-  file: S3850
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3850
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 131)
+  page: 131
+  grade: 7
 - id: S4
-  file: S2397
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2397
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Кома між частинами складного речення
+  page: 237
+  grade: 5
 - id: S6
-  file: S2396
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2396
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Складне речення
+  page: 232
+  grade: 5
 - id: S8
-  file: S1478
-  type: unknown
+  file: 2-klas-ukrmova-bolshakova-2019-1_s1478
+  type: textbook
+  title: Вірш. Заголовок. Головна думка. Театралізуємо
+  page: 50
+  grade: 2
 - id: S12
   file: ext-article-1
   type: external

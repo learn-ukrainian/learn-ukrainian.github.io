@@ -2,11 +2,20 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S5178
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
+  type: textbook
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
 - id: S2
-  file: S1273
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1273
+  type: textbook
+  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
+  page: 173
+  grade: 11
 - id: S3
-  file: S3943
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3943
+  type: textbook
+  title: § 32. Сполучники сурядности й підрядности
+  page: 198
+  grade: 7

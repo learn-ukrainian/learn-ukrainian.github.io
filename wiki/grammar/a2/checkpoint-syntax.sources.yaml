@@ -2,17 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1219
-  type: unknown
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1219
+  type: textbook
+  title: § 25. Правила будови складних речень
+  page: 109
+  grade: 11
 - id: S2
-  file: S1273
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1273
+  type: textbook
+  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
+  page: 173
+  grade: 11
 - id: S3
-  file: S5181
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5181
+  type: textbook
+  title: Складнопiдрядне речення (p. 113)
+  page: 113
+  grade: 9
 - id: S4
-  file: S5169
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5169
+  type: textbook
+  title: Складне речення. ВИДИ СКЛАДНИХ РЕЧЕНЬ
+  page: 49
+  grade: 9
 - id: S5
-  file: S5230
-  type: unknown
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5230
+  type: textbook
+  title: Складне речення. ВИДИ СКЛАДНИХ РЕЧЕНЬ
+  page: 49
+  grade: 9

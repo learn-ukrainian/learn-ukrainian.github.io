@@ -2,14 +2,26 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3202
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3202
+  type: textbook
+  title: § 79. Присвійні, вказівні, означальні
+  page: 182
+  grade: 6
 - id: S2
-  file: S3371
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3371
+  type: textbook
+  title: § 54. Розряди займенників за значенням та особливості відмінювання
+  page: 255
+  grade: 6
 - id: S3
-  file: S3401
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3401
+  type: textbook
+  title: § 62. ПРИСВІЙНІ ЗАЙМЕННИКИ
+  page: 207
+  grade: 6
 - id: S4
-  file: S3164
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3164
+  type: textbook
+  title: § 38. Відмінки іменників
+  page: 94
+  grade: 6

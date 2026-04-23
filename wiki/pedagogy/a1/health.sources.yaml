@@ -2,20 +2,35 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1908
-  type: unknown
+  file: 4-klas-ukrmova-zaharijchuk_s1908
+  type: textbook
+  title: Бèло — давній сигнальний інструмент, виготовлений
+  page: 8
+  grade: 4
 - id: S2
-  file: S3385
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3385
+  type: textbook
+  title: § 22. ІМЕННИК ЯК ЧАСТИНА МОВИ
+  page: 79
+  grade: 6
 - id: S3
-  file: S253
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0253
+  type: textbook
+  title: Усі ми знаємо фразеологізм бити байдики й чудово розуміємо його зміст. Близькими
+  page: 11
+  grade: 10
 - id: S4
-  file: S258
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0258
+  type: textbook
+  title: Слова власне українські й запозичені. СПОСТЕРЕЖЕННЯ
+  page: 23
+  grade: 10
 - id: S5
-  file: S2461
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2461
+  type: textbook
+  title: § 42. Лексика за походженням
+  page: 132
+  grade: 5
 - id: S8
   file: ext-article-1
   type: external

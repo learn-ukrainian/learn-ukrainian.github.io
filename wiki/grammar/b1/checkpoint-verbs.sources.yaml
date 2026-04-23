@@ -2,29 +2,57 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S688
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0688
+  type: textbook
+  title: § 74. Способи дієслів
+  page: 185
+  grade: 10
 - id: S2
-  file: S3915
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3915
+  type: textbook
+  title: § 12. Умовний спосіб діє слів
+  page: 64
+  grade: 7
 - id: S3
-  file: S1149
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1149
+  type: textbook
+  title: § 17. НАКАЗОВИЙ СПОСІБ ДІЄСЛОВА
+  page: 54
+  grade: 11
 - id: S4
-  file: S3914
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3914
+  type: textbook
+  title: § 11. Наказовий спосіб діє слів
+  page: 60
+  grade: 7
 - id: S5
-  file: S3899
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3899
+  type: textbook
+  title: '§ 3. Діє слово: загальне значення, морфологічні ознаки, синтаксична роль
+    21'
+  page: 7
+  grade: 7
 - id: S6
-  file: S1211
-  type: unknown
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1211
+  type: textbook
+  title: § 9. Паралельні форми вираження наказового
+  page: 46
+  grade: 11
 - id: S7
-  file: S3824
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3824
+  type: textbook
+  title: § 35. Спосіб дієслів
+  page: 82
+  grade: 7
 - id: S8
-  file: S3381
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3381
+  type: textbook
+  title: § 16. ОСНОВНІ СПОСОБИ СЛОВОТВОРЕННЯ
+  page: 57
+  grade: 6
 - id: S9
-  file: S3917
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3917
+  type: textbook
+  title: § 14. Способи творення діє слів Правопис діє слів
+  page: 70
+  grade: 7

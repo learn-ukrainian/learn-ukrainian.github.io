@@ -2,32 +2,63 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3020
-  type: unknown
+  file: 6-klas-ukrlit-zabolotnyi-2023_s3020
+  type: textbook
+  title: Розділ 35. ХУДОЖНІ ЗАСОБИ
+  page: 289
+  grade: 6
 - id: S2
-  file: S3779
-  type: unknown
+  file: 7-klas-ukrlit-zabolotnyi-2024_s3779
+  type: textbook
+  title: Розділ 4. ПІДНЯТИСЯ НАД БУДЕННІСТЮ. ХУДОЖНІ ЗАСОБИ
+  page: 291
+  grade: 7
 - id: S3
-  file: S3595
-  type: unknown
+  file: 7-klas-ukrlit-avramenko-2024_s3595
+  type: textbook
+  title: ХУДОЖНІ ЗАСОБИ
+  page: 2
+  grade: 7
 - id: S4
-  file: S5126
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5126
+  type: textbook
+  title: Розвиток МОВЛЕННЯ. ПЕРЕКАЗ ТЕКСТУ ХУДОЖНЬОГО СТИЛЮ
+  page: 169
+  grade: 9
 - id: S5
-  file: S2171
-  type: unknown
+  file: 5-klas-ukrlit-zabolotnyi-2022_s2171
+  type: textbook
+  title: ФОЛЬКЛОР (УСНА НАРОДНА ТВОРЧІСТЬ)
+  page: 209
+  grade: 5
 - id: S6
-  file: S4541
-  type: unknown
+  file: 8-klas-ukrlit-zabolotnyi-2025_s4541
+  type: textbook
+  title: Розділ 5. ХУДОЖНІ ТВОРИ
+  page: 307
+  grade: 8
 - id: S7
-  file: S1965
-  type: unknown
+  file: 5-klas-ukrlit-avramenko-2022_s1965
+  type: textbook
+  title: КОРОТКИЙ СЛОВНИК ЛІТЕРАТУРОЗНАВЧИХ ТЕРМІНІВ
+  page: 281
+  grade: 5
 - id: S8
-  file: S3629
-  type: unknown
+  file: 7-klas-ukrlit-avramenko-2024_s3629
+  type: textbook
+  title: Розділ 2. ЛІТЕРАТУРОЗНАВЧИЙ СЛОВНИК
+  page: 238
+  grade: 7
 - id: S9
-  file: S3791
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3791
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 17)
+  page: 17
+  grade: 7
 - id: S10
-  file: S4540
-  type: unknown
+  file: 8-klas-ukrlit-zabolotnyi-2025_s4540
+  type: textbook
+  title: 'Ри́ма – співзвучні закінчення рядків у віршових творах. Наприклад: кришталь
+    –'
+  page: 304
+  grade: 8
