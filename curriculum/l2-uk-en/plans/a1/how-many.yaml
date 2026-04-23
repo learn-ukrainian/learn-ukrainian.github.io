@@ -5,7 +5,7 @@ slug: how-many
 version: '1.3.0'
 lifecycle: locked
 reviewed_at: '2026-04-23T00:00:00Z'
-reviewed_by: claude-opus-4-7-xhigh-scale-batch-1
+reviewed_by: claude-opus-4-7-xhigh-1446
 review_notes: >-
   Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md.
   See PR body for findings + fixes and
@@ -94,7 +94,7 @@ activity_hints:
   focus: Запишіть номер телефону під диктовку
   items: 4
 - type: fill-in
-  focus: 'Числівникові русизми та узгодження — оберіть нормативну форму (див. wiki "Типові помилки L2")'
+  focus: 'Числівникові русизми та узгодження — оберіть нормативну форму (mirror of wiki "Типові помилки L2" table — 10 rows, all represented)'
   items:
   - Мені двадцять один {рік|року|роки}.
   - Моїй сестрі двадцять чотири {рік|роки|років}.
@@ -102,7 +102,13 @@ activity_hints:
   - Цей чай коштує дві {гривні|гривень|гривня}.
   - А ця кава — сімдесят {гривні|гривень|гривня}.
   - У мене {пять|п'ять|пьять} книг.
+  - У нашій групі {шесть|шість|шисть} студентів.
+  - На поличці {семь|сім|сєм} книжок.
+  - На картці {сємнадцять|сімнадцять|семнадцять} гривень.
+  - Мамі {пятдесят|п'ятдесят|пятьдесят} років.
   - Дідусеві {дев'ятдесят|дев'яносто|дев'яносят} років.
+  - Яка фраза правильна — «скільки тобі років?» {Мені двадцять років|Я маю двадцять років|Я є двадцять років старий}.
+  - Зараз {пів на шосту|пол-шостого|половина шостого}.
   - Скажіть, скільки вам {років|год|рік}?
 connects_to:
 - a1-012 (Це і те)
@@ -132,7 +138,7 @@ changelog:
   changes:
   - 'Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md. Added lifecycle markers (lifecycle/reviewed_at/reviewed_by/review_notes).'
   - 'Added Діалог 3 (phone-number exchange) to Діалоги section — mirrors wiki Step 7 part 3. Explicit author-note about Ukrainian mobile format and `нуль` pronunciation.'
-  - 'Added numerals-specific L2-errors fill-in activity (activity 5) mirroring wiki "Типові помилки L2" table (рік/гривня agreement, пять/п''ять apostrophe, дев''яносто vs дев''ятдесят, рос. калька `год`).'
+  - 'Added numerals-specific L2-errors fill-in activity (activity 5) mirroring wiki "Типові помилки L2" table (all 10 pairs represented: шість/семь/сім/п''ять/п''ятдесят agreement + apostrophe/soft-sign rules, дев''яносто vs дев''ятдесят, рік vs років vs рідковживане `год`, пів на шосту vs pol-шостого calque, `Я маю/є ... років` calques).'
   - 'Added writer-notes to Діалог 1 (гривня agreement as chunk, not case grammar) and Діалог 2 (Я маю / Я є calques to avoid).'
   - 'Extended required vocab with гривня/гривні/гривень + рік/роки/років + full tens/hundreds ranges; added recommended: коштувати, телефон, скільки, dative pronoun chunks, collective numerals (passive only).'
   - 'Removed stray `"..."` placeholder from required vocabulary.'
