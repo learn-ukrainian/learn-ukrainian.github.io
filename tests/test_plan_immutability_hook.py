@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import yaml
@@ -31,9 +32,15 @@ def _git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProc
     )
 
 
-def _project_python() -> Path:
-    common_dir = _git(REPO_ROOT, "rev-parse", "--git-common-dir").stdout.strip()
-    return Path(common_dir).parent / ".venv" / "bin" / "python"
+def _project_python() -> str:
+    """Return the Python interpreter that should invoke the hook.
+
+    Tests must run both locally (where ``.venv/bin/python`` exists) and on
+    CI (which uses the actions/setup-python runner — no ``.venv``). Using
+    ``sys.executable`` picks up whichever Python is running pytest, so
+    both environments work without special-casing.
+    """
+    return sys.executable
 
 
 def _write_plan(path: Path, version: str, title: str) -> str:
@@ -78,7 +85,7 @@ def _run_hook(repo: Path, commit_message: str) -> subprocess.CompletedProcess[st
     commit_msg_file = repo / ".git" / "COMMIT_EDITMSG"
     commit_msg_file.write_text(commit_message, encoding="utf-8")
     return subprocess.run(
-        [str(_project_python()), str(HOOK_SCRIPT), str(commit_msg_file)],
+        [_project_python(), str(HOOK_SCRIPT), str(commit_msg_file)],
         cwd=repo,
         check=False,
         capture_output=True,
