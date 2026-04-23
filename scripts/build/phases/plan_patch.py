@@ -20,6 +20,7 @@ import yaml
 from batch_gemini_config import PRO_MODEL
 from build.io_utils import write_text_atomic
 from build.v6_build import _format_prompt_literal_block, _strip_prompt_control_tags
+from common.thresholds import STYLE_REVIEW_TARGET
 from gemini_output import extract_delimited
 from tools.plan_autofix import _bump_version
 
@@ -93,7 +94,7 @@ def load_structured_review_rounds(orch_dir: Path) -> list[dict]:
 def extract_plateau_complaints(
     structured_rounds: list[dict],
     *,
-    review_target_score: float = 9.0,
+    review_target_score: float = STYLE_REVIEW_TARGET,
     max_items: int = 6,
     contract: dict | None = None,
 ) -> list[dict]:

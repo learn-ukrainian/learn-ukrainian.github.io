@@ -6,8 +6,13 @@ pipeline version phase resolution, and legacy research/content checks.
 
 import contextlib
 import re
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from common.thresholds import REVIEW_PASS_FLOOR
 
 from .config import CURRICULUM_ROOT
 from .state_helpers import (
@@ -179,10 +184,10 @@ def _get_review_score(track_dir: Path, slug: str) -> dict:
 
 
 def _compute_shippable(audit_status: str, review_score: float | None) -> bool:
-    """Module is shippable if audit PASS + review >= 8.0."""
+    """Module is shippable if audit PASS + review >= REVIEW_PASS_FLOOR."""
     if audit_status != "pass":
         return False
-    return not (review_score is None or review_score < 8.0)
+    return not (review_score is None or review_score < REVIEW_PASS_FLOOR)
 
 
 def _get_stress_issues(orch_dir: Path) -> dict:

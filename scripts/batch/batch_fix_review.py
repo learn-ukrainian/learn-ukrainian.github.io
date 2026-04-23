@@ -24,6 +24,9 @@ import tempfile
 import time
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from common.thresholds import STYLE_REVIEW_TARGET
 from slug_utils import review_path as _review_path
 from slug_utils import status_path as _status_path
 from slug_utils import to_bare_slug
@@ -31,7 +34,8 @@ from slug_utils import to_bare_slug
 REPO = Path(__file__).parent.parent.parent
 VENV_PYTHON = REPO / ".venv" / "bin" / "python"
 MAX_RETRIES = 3
-PASS_THRESHOLD = 9.0
+# Batch fix loop targets the style-reviewer PASS score (9.0).
+PASS_THRESHOLD = STYLE_REVIEW_TARGET
 SUSPICIOUS_JUMP = 3.5  # Flag if score jumps more than this in one fix
 GEMINI_TIMEOUT = 600  # 10 minutes
 

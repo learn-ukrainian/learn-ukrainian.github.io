@@ -149,18 +149,39 @@ def _load_v6_build_constant(name: str) -> Any:
 
     v6_build_path = _module_attr("V6_BUILD_PATH")
     module = ast.parse(v6_build_path.read_text("utf-8"))
+    # Index top-level assigns so we can resolve Name aliases (e.g.
+    # ``REVIEW_TARGET_SCORE = REVIEW_PASS_FLOOR``) without importing
+    # v6_build. Maps target-name → (RHS AST node).
+    top_level_values: dict[str, Any] = {}
     for node in module.body:
         if isinstance(node, ast.Assign):
-            targets = [target for target in node.targets if isinstance(target, ast.Name)]
-            if any(target.id == name for target in targets):
-                return ast.literal_eval(node.value)
-        if (
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    top_level_values[target.id] = node.value
+        elif (
             isinstance(node, ast.AnnAssign)
             and isinstance(node.target, ast.Name)
-            and node.target.id == name
             and node.value is not None
         ):
-            return ast.literal_eval(node.value)
+            top_level_values[node.target.id] = node.value
+
+    def _resolve_node(value_node: ast.AST, seen: set[str]) -> Any:
+        if isinstance(value_node, ast.Name):
+            if value_node.id in seen:
+                raise RuntimeError(
+                    f"Cycle resolving {name} in {v6_build_path}: {' -> '.join(seen)}"
+                )
+            seen.add(value_node.id)
+            if value_node.id in top_level_values:
+                return _resolve_node(top_level_values[value_node.id], seen)
+            # Imported name — try the common.thresholds source of truth.
+            from common import thresholds as _thresholds
+            if hasattr(_thresholds, value_node.id):
+                return getattr(_thresholds, value_node.id)
+        return ast.literal_eval(value_node)
+
+    if name in top_level_values:
+        return _resolve_node(top_level_values[name], set())
     raise RuntimeError(f"Could not load {name} from {v6_build_path}")
 
 

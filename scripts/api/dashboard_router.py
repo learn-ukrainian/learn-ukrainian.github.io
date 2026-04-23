@@ -12,6 +12,10 @@ from pathlib import Path
 import yaml
 from fastapi import APIRouter, HTTPException
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from common.thresholds import REVIEW_PASS_FLOOR
+
 from .config import CURRICULUM_ROOT, LEVELS
 from .dashboard_comms import (
     collect_stuck_tasks,
@@ -222,11 +226,11 @@ async def module_detail(track_id: str, slug: str):
     result["review_verdict"] = review_info["review_verdict"]
     result["plan_review_verdict"] = review_info["plan_review_verdict"]
 
-    # Shippable = audit pass + review >= 8.0 (#971)
+    # Shippable = audit pass + review >= REVIEW_PASS_FLOOR (#971)
     audit_status = result.get("status", {})
     overall = audit_status.get("overall", {}).get("status") if isinstance(audit_status, dict) else None
     r_score = review_info["review_score"]
-    result["shippable"] = overall == "pass" and r_score is not None and r_score >= 8.0
+    result["shippable"] = overall == "pass" and r_score is not None and r_score >= REVIEW_PASS_FLOOR
 
     # Friction from friction.yaml (#970)
     orch_dir = track_dir / "orchestration" / slug

@@ -19,37 +19,31 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
     # --- Core Tracks (Beginner/Intermediate) ---
     "a1": {
         "model": FLASH_MODEL,
-        "word_floor": 2000,
         "persona": "The Helpful Neighbor",
         "immersion_range": [0.10, 0.50],
     },
     "a2": {
         "model": FLASH_MODEL,
-        "word_floor": 2500,
         "persona": "The Cultural Guide",
         "immersion_range": [0.50, 0.90],
     },
     "b1": {
         "model": FLASH_MODEL,
-        "word_floor": 3000,
         "persona": "The Storyteller",
         "immersion_range": [0.85, 1.0],
     },
     "b2": {
         "model": FLASH_MODEL,
-        "word_floor": 3500,
         "persona": "The Urbanist",
         "immersion_range": [0.95, 1.0],
     },
     "c1": {
         "model": PRO_MODEL,
-        "word_floor": 4000,
         "persona": "The Analyst",
         "immersion_range": [1.0, 1.0],
     },
     "c2": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Connoisseur",
         "immersion_range": [1.0, 1.0],
     },
@@ -57,25 +51,21 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
     # --- Seminar Tracks (Advanced/Scholar) ---
     "hist": {
         "model": PRO_MODEL,
-        "word_floor": 4000,
         "persona": "The Decolonizer",
         "immersion_range": [0.95, 1.0],
     },
     "istorio": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Sensory Historian",
         "immersion_range": [1.0, 1.0],
     },
     "bio": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Humanist Biographer",
         "immersion_range": [1.0, 1.0],
     },
     "lit": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Stylistic Critic",
         "immersion_range": [1.0, 1.0],
     },
@@ -83,55 +73,46 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
     # --- Specialized Literature Tracks ---
     "lit-war": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Trauma Analyst",
         "immersion_range": [1.0, 1.0],
     },
     "lit-essay": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Intellectual Historian",
         "immersion_range": [1.0, 1.0],
     },
     "lit-fantastika": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The World-Builder",
         "immersion_range": [1.0, 1.0],
     },
     "lit-hist-fic": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Historical Narratologist",
         "immersion_range": [1.0, 1.0],
     },
     "lit-humor": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Irony Analyst",
         "immersion_range": [1.0, 1.0],
     },
     "lit-youth": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Childhood Scholar",
         "immersion_range": [1.0, 1.0],
     },
     "lit-doc": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Witness Documentarian",
         "immersion_range": [1.0, 1.0],
     },
     "lit-drama": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Avant-Garde Playwright",
         "immersion_range": [1.0, 1.0],
     },
     "lit-crimea": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Crimean Narratologist",
         "immersion_range": [1.0, 1.0],
     },
@@ -139,25 +120,21 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
     # --- Scholar Tracks (Ancient/Professional) ---
     "ruth": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Baroque Scholar",
         "immersion_range": [0.97, 1.0],
     },
     "oes": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Paleographer",
         "immersion_range": [0.97, 1.0],
     },
     "b2-pro": {
         "model": PRO_MODEL,
-        "word_floor": 4000,
         "persona": "The Professional Coach",
         "immersion_range": [0.95, 1.0],
     },
     "c1-pro": {
         "model": PRO_MODEL,
-        "word_floor": 5000,
         "persona": "The Corporate Strategist",
         "immersion_range": [1.0, 1.0],
     },
@@ -492,7 +469,6 @@ def get_config(track: str) -> dict[str, Any]:
     """Retrieves config for a specific track, falling back to default core config."""
     return TRACK_CONFIG.get(track, {
         "model": FLASH_MODEL,
-        "word_floor": 2500,
         "persona": "The Helpful Neighbor",
         "immersion_range": [0.5, 1.0],
     })

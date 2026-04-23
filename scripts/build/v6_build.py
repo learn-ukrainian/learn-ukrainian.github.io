@@ -103,6 +103,12 @@ from build.plan_tracking import (
     plan_path_for,
 )
 from build.track_constraints import build_writer_constraints_section
+from common.thresholds import (
+    REVIEW_PASS_FLOOR,
+    REVIEW_REJECT_FLOOR,
+    STYLE_REVIEW_DIMENSION_FLOOR,
+    STYLE_REVIEW_TARGET,
+)
 
 _LEGACY_PLAN_HASH_DRIFT_DETECTOR = detect_plan_hash_drift
 
@@ -110,10 +116,10 @@ logger = logging.getLogger(__name__)
 
 # Rate limit backoff — shared by all retry loops
 _RATE_LIMIT_BACKOFF_S = 300  # 5 min — long enough for Gemini quota to recover
-REVIEW_TARGET_SCORE = 8.0
-REVIEW_REJECT_SCORE = 6.0
-STYLE_REVIEW_TARGET_SCORE = 9.0
-STYLE_REVIEW_DIMENSION_FLOOR = 8.5
+# Legacy aliases. Canonical names + values live in scripts/common/thresholds.py.
+REVIEW_TARGET_SCORE = REVIEW_PASS_FLOOR
+REVIEW_REJECT_SCORE = REVIEW_REJECT_FLOOR
+STYLE_REVIEW_TARGET_SCORE = STYLE_REVIEW_TARGET
 REWRITE_BLOCK_TIMEOUT_S = 420
 REWRITE_BLOCK_GEMINI_CALL_CAP_S = 120
 REWRITE_BLOCK_PROMPT_MAX_CHARS = 18_000

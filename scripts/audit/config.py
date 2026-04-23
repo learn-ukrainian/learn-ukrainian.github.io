@@ -5,6 +5,7 @@ Contains grammar constraints, case patterns, level configurations,
 and activity requirements for each CEFR level.
 """
 
+from common.thresholds import LEVEL_THRESHOLDS, get_naturalness_min
 from config import get_immersion_range as shared_get_immersion_range
 
 # Proper names and abbreviations whitelisted from VESUM verification.
@@ -40,19 +41,17 @@ PROPER_NAME_WHITELIST: set[str] = {
 # Syllable fragments (ка, ра, ль, нь, шч) in phonetics modules are not words.
 VESUM_MIN_WORD_LENGTH = 3
 
-# Gate thresholds — centralized so they're easy to find and adjust.
-# All per-level thresholds are in LEVEL_CONFIG below.
-# These are gate-evaluation constants used across gates.py.
+# Gate thresholds — audit-side knobs.
+# Per-level review floors live in scripts/common/thresholds.LEVEL_THRESHOLDS
+# (single source of truth). The ``naturalness_min_score`` sub-dict below is a
+# read-only view derived from there so existing AUDIT_THRESHOLDS[...] call
+# sites keep working without duplicating numbers.
 AUDIT_THRESHOLDS = {
     "word_count_fail_pct": 12,            # FAIL if more than this % below target
     "immersion_tolerance_pct": 3,        # ±% tolerance before FAIL
-    "naturalness_min_score": {           # Minimum review score for PASS by level family
-        "A1": 9.0,
-        "A2": 9.0,
-        "B1": 9.0,
-        "B2": 8.0,
-        "C1": 8.0,
-        "default": 8.0,
+    "naturalness_min_score": {
+        **{level: thr.naturalness_min for level, thr in LEVEL_THRESHOLDS.items()},
+        "default": get_naturalness_min(None),
     },
     "severity_update": 40,               # Severity score boundary: PASS → UPDATE
     "severity_rewrite": 75,              # Severity score boundary: UPDATE → REWRITE
@@ -61,11 +60,7 @@ AUDIT_THRESHOLDS = {
 
 def get_naturalness_min_score(level_code: str | None) -> float:
     """Return the review-score threshold for the given level family."""
-    thresholds = AUDIT_THRESHOLDS["naturalness_min_score"]
-    if not level_code:
-        return thresholds["default"]
-    level_prefix = level_code.upper().split("-", 1)[0]
-    return thresholds.get(level_prefix, thresholds["default"])
+    return get_naturalness_min(level_code)
 
 # Grammar constraints by level (what's ALLOWED at each level)
 GRAMMAR_CONSTRAINTS = {
@@ -633,7 +628,9 @@ EXCLUDE_KEYWORDS = ["activities", "activity", "production", "vocabulary", "check
 # Level-specific configuration
 LEVEL_CONFIG = {
     'A1': {
-        'target_words': 1200,  # Mar 2026: lowered from 2000 — A1 teaches letters/basics, activities do the heavy lifting
+        # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (1200).
+        # Mar 2026: lowered from 2000 — A1 teaches letters/basics, activities do the heavy lifting.
+        'target_words': LEVEL_THRESHOLDS['A1'].target_words,
         'min_activities': 0,   # Mar 2026: dropped — quality over quantity, LLM decides count (#969)
         'min_items_per_activity': 6,  # Standard: 6 items minimum per activity
         'min_types_unique': 0,  # Mar 2026: dropped with min_activities
@@ -644,7 +641,9 @@ LEVEL_CONFIG = {
         'priority_types': {'fill-in', 'match-up', 'anagram', 'unjumble', 'quiz', 'watch-and-repeat', 'classify', 'image-to-letter'}
     },
     'A2': {
-        'target_words': 2000,  # Mar 2026: lowered from 3000 — prose should be concise at A2
+        # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (2000).
+        # Mar 2026: lowered from 3000 — prose should be concise at A2.
+        'target_words': LEVEL_THRESHOLDS['A2'].target_words,
         'min_activities': 0,   # Mar 2026: dropped — quality over quantity, LLM decides count (#969)
         'min_items_per_activity': 8,  # Feb 2026: relaxed from 12 — was stricter than B1-grammar (6)
         'min_types_unique': 0,  # Mar 2026: dropped with min_activities
@@ -732,7 +731,9 @@ LEVEL_CONFIG = {
         'priority_types': {'reading', 'match-up', 'mark-the-words', 'translate', 'quiz'}  # Added reading
     },
     'B1': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (4000).
+        # Feb 2026: raised to 4000 minimum for all B1+.
+        'target_words': LEVEL_THRESHOLDS['B1'].target_words,
         'min_activities': 0,  # Mar 2026: dropped — plan activity_hints guide count (#969)
         'min_items_per_activity': 12,  # Reduced from 14 (Jan 2026)
         'min_types_unique': 4,
@@ -815,7 +816,9 @@ LEVEL_CONFIG = {
         'priority_types': {'reading', 'match-up', 'mark-the-words', 'translate', 'quiz'}  # Added reading
     },
     'B2': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (4000).
+        # Feb 2026: raised to 4000 minimum for all B1+.
+        'target_words': LEVEL_THRESHOLDS['B2'].target_words,
         'min_activities': 0,  # Mar 2026: dropped — plan activity_hints guide count (#969)
         'min_items_per_activity': 14,  # Reduced from 16 (Jan 2026)
         'min_types_unique': 4,
@@ -925,7 +928,9 @@ LEVEL_CONFIG = {
         'essay_max_words': 300
     },
     'C1': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
+        # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (4000).
+        # Feb 2026: raised to 4000 minimum for all B1+.
+        'target_words': LEVEL_THRESHOLDS['C1'].target_words,
         'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'min_items_per_activity': 12,
         'min_types_unique': 4,
@@ -1067,7 +1072,9 @@ LEVEL_CONFIG = {
     },
     'C2': {
         # C2 Track: Seminar style - production-focused
-        'target_words': 5000,  # Feb 2026: seminars raised to 5000 minimum
+        # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (5000).
+        # Feb 2026: seminars raised to 5000 minimum.
+        'target_words': LEVEL_THRESHOLDS['C2'].target_words,
         'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
         'max_activities': 9,
         'min_items_per_activity': 1,
