@@ -31,9 +31,54 @@ dialogue_situations:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `setting` | ✅ | WHERE the dialogue happens + WHAT specific objects are discussed. Must include Ukrainian nouns with gender labels: `(m)`, `(f)`, `(n)`, `(pl)`. The more specific, the better — the writer follows this literally. |
+| `setting` | ✅ (writer-only metadata) | WHERE the dialogue happens + WHAT specific objects are discussed. **NEVER rendered as prose in the student module.** Must include Ukrainian nouns with gender labels: `(m)`, `(f)`, `(n)`, `(pl)`. The more specific, the better — the writer uses this as scene-planning context only. |
 | `speakers` | ✅ | List of speaker names with roles. Use Ukrainian names. Avoid Russified forms (Лєна→Оленка, Ваня→Іванко). |
 | `motivation` | ✅ | WHY this setting — which grammar does it naturally produce? Link objects to the grammar being taught. |
+| `turns` | ✅ for A1/A2 (2026-04-23 onward) | **The canonical render source** — an ordered list of `{speaker, ua, en_gloss?}`. The writer renders these directly as block-quote speaker lines. See `turns:` section below. |
+
+### `turns:` — canonical render source (added 2026-04-23)
+
+**Background:** Before this convention, writers rendered `setting:` directly as English stage-direction narration ("Ліза picks a party outfit with Дмитро's help. He also asks how to recognize Оля…") before the actual Ukrainian turns. This consistently killed the Dialogue & Conversation Quality review dim (see `docs/reports/2026-04-23-a1-colors-opus-r1-dim-diagnosis.md` §3.3). Root cause: the plan only gave `setting:` as English metadata; the writer had no turn-by-turn skeleton so it invented stage directions.
+
+**`turns:` fixes this.** With `turns:` present, the writer has a ready speaker-by-speaker skeleton. `setting:` becomes pure writer-side metadata that is NEVER rendered as prose in the module.
+
+#### Shape
+
+```yaml
+dialogue_situations:
+  - setting: 'На відкритому квітковому ринку — червоні троянди, білі лілії, жовті соняшники, синя ваза (f), зелене листя (n). (писати-тільки; не рендерити як прозу)'
+    speakers:
+      - Наталка
+      - Продавець
+    motivation: 'Запитання «Якого кольору?» + узгодження з троянда(f), соняшник(m), листя(n), ваза(f)'
+    turns:
+      - { speaker: Наталка, ua: "Які гарні троянди! Якого вони кольору?" }
+      - { speaker: Продавець, ua: "Червоні." }
+      - { speaker: Наталка, ua: "А ці лілії — білі?" }
+      - { speaker: Продавець, ua: "Так, білі лілії." }
+      - { speaker: Наталка, ua: "Мені подобаються жовті соняшники." }
+      - { speaker: Продавець, ua: "Добре. Загорнути букет?" }
+      - { speaker: Наталка, ua: "Так, дякую. У синю стрічку." }
+```
+
+Optional `en_gloss:` per turn for rare/novel vocabulary only — **not a full translation** of each line. A1–A2 learners should be reading Ukrainian, not reading English beside Ukrainian.
+
+#### Writer render contract
+
+When `turns:` is present, the writer MUST:
+- Render EACH turn as a block-quote speaker line in Ukrainian: `> **Ім'я:** текст`
+- Use 5–8 turns per dialogue for A1–A2; 6–12 for B1; 8–15 for B2+
+- Write **≤2 sentences** of analytical gloss in English AFTER the dialogue, pointing at 1–2 specific forms (e.g. "`Якого кольору?` is a fixed pattern — `якого` agrees with `колір` in genitive masculine"). No summary narration of what happened in the scene.
+- NEVER emit English framing narration ("Liza picks an outfit…", "The scene opens at a market…"). The `setting:` field is not for rendering.
+- NEVER render `setting:` or `motivation:` as prose. Those are writer-side planning context only.
+
+#### Backward compatibility
+
+For plans authored before 2026-04-23 that have only `setting:` without `turns:`, the writer MAY synthesize 5–8 turns from `setting:` + `motivation:` — but the acceptance gate is the same: block-quote turns, ≤2 sentences of gloss, no stage direction narration. Scale-lock passes should add `turns:` to the plan when the dialogue is authoritatively validated.
+
+#### Audit gate (optional but recommended)
+
+`scripts/audit/checks/dialogue_density.py` (new — see EPIC #1451 Phase 3-B): dialogue sections must be ≥70% turn-line content; non-dialogue prose ≤30% of section body. Triggers on sections whose plan has non-empty `dialogue_acts`.
 
 ### Rules
 

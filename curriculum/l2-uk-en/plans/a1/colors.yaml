@@ -2,7 +2,7 @@ module: a1-010
 level: A1
 sequence: 10
 slug: colors
-version: '1.2.0'
+version: '1.3.0'
 lifecycle: locked
 reviewed_at: '2026-04-22T22:16:07Z'
 reviewed_by: codex-scale-batch-1-colors
@@ -29,16 +29,40 @@ objectives:
 - Описувати предмети, поєднуючи колір та прикметники з модуля №9
 - Використовувати кілька природних словосполучень для зовнішності (`карі очі`, `русяве волосся`, `сиве волосся`)
 dialogue_situations:
-- setting: 'На відкритому квітковому ринку — вибір букетів для різних подій. Описати: червоні троянди, білі лілії, жовті соняшники, синя ваза (f), зелене листя (n). Використовуються квіти, рослини та обгортка.'
+- setting: 'WRITER-ONLY metadata (never rendered as prose). На відкритому квітковому ринку — вибір букетів. Objects: червоні троянди, білі лілії, жовті соняшники, синя ваза (f), зелене листя (n).'
   speakers:
   - Наталка
   - Продавець
-  motivation: 'Запитання `Якого кольору?` + узгодження кольорів зі словами троянда(f), соняшник(m), листя(n), ваза(f)'
-- setting: 'Вибір вбрання для вечірки з гардероба друга і короткий опис людини, яку треба впізнати в натовпі. Описати: чорна сукня (f), білий светр (m), сіре пальто (n), коричневі черевики (pl), карі очі, русяве або сиве волосся. Використовується одяг, БЕЗ сумок.'
+  motivation: 'Запитання `Якого кольору?` + узгодження з троянда(f), соняшник(m), листя(n), ваза(f)'
+  # turns: canonical render source per docs/best-practices/dialogue-situations.md
+  # (added 2026-04-23 for EPIC #1451 Phase 3-B / #1458 — closes Dialogue &
+  # Conversation Quality dim failure diagnosed in
+  # docs/reports/2026-04-23-a1-colors-opus-r1-dim-diagnosis.md §3.3).
+  # The writer MUST render these as block-quote speaker turns, 5–8 per
+  # dialogue, with ≤2 sentences of English analytical gloss AFTER. No
+  # English stage-direction narration.
+  turns:
+  - {speaker: Наталка, ua: "Які гарні троянди! Якого вони кольору?"}
+  - {speaker: Продавець, ua: "Червоні."}
+  - {speaker: Наталка, ua: "А ці лілії — білі?"}
+  - {speaker: Продавець, ua: "Так, білі лілії."}
+  - {speaker: Наталка, ua: "Мені подобаються жовті соняшники."}
+  - {speaker: Продавець, ua: "Добре. Загорнути букет?"}
+  - {speaker: Наталка, ua: "Так, дякую. У синю стрічку."}
+- setting: 'WRITER-ONLY metadata (never rendered as prose). Вибір вбрання на вечірку + короткий опис Олі для впізнавання. Objects: чорна сукня (f), білий светр (m), сіре пальто (n), коричневі черевики (pl), карі очі, русяве/сиве волосся.'
   speakers:
   - Дмитро
   - Ліза
   motivation: 'Колір + рід: сукня(f), светр(m), пальто(n), черевики(pl); короткі відповіді на `Якого кольору?`; опис зовнішності через `карі очі`, `русяве/сиве волосся`'
+  turns:
+  - {speaker: Ліза, ua: "Що мені одягнути на вечірку?"}
+  - {speaker: Дмитро, ua: "Чорну сукню. І сіре пальто зверху."}
+  - {speaker: Ліза, ua: "А черевики?"}
+  - {speaker: Дмитро, ua: "Коричневі."}
+  - {speaker: Ліза, ua: "А як я впізнаю Олю?"}
+  - {speaker: Дмитро, ua: "У неї карі очі й русяве волосся."}
+  - {speaker: Ліза, ua: "А білий светр?"}
+  - {speaker: Дмитро, ua: "Ні, білий светр сьогодні не треба."}
 content_outline:
 - section: Діалоги
   words: 300
