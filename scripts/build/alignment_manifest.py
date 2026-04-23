@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import copy
+import functools
 import hashlib
 import json
 import re
@@ -48,7 +49,35 @@ def _load_v6_build_constant(name: str) -> Any:
     raise RuntimeError(f"Could not load {name} from {V6_BUILD_PATH}")
 
 
-REVIEW_TARGET_SCORE = float(_load_v6_build_constant("REVIEW_TARGET_SCORE"))
+@functools.lru_cache(maxsize=1)
+def _review_target_score() -> float:
+    """Lazy accessor for REVIEW_TARGET_SCORE.
+
+    Loading at import time was brittle: it ran AST parsing on
+    `v6_build.py` on every import of this module, which broke tests
+    that monkeypatch `PROJECT_ROOT` (the constant was already
+    evaluated against the real path before the fixture ran) and failed
+    with `FileNotFoundError` whenever this module was imported outside
+    a full checkout. Flagged by gemini-review on PR #1468.
+    """
+    return float(_load_v6_build_constant("REVIEW_TARGET_SCORE"))
+
+
+def __getattr__(name: str) -> Any:
+    """PEP 562 module-level lazy attribute.
+
+    Preserves the `alignment_manifest.REVIEW_TARGET_SCORE` access
+    shape used by `tests/test_alignment_manifest.py::manifest_fixture`
+    (which monkeypatches this value to test threshold-change
+    invalidation). First real access triggers `_review_target_score()`
+    and caches the result as a real module attribute, so subsequent
+    accesses — including `monkeypatch.setattr` — see a normal attribute.
+    """
+    if name == "REVIEW_TARGET_SCORE":
+        value = _review_target_score()
+        globals()[name] = value
+        return value
+    raise AttributeError(f"module 'alignment_manifest' has no attribute {name!r}")
 
 
 def _sha256_bytes(payload: bytes) -> str:
@@ -75,7 +104,11 @@ def _freeze(value: Any) -> Any:
 
 
 def _plan_path(level: str, slug: str) -> Path:
-    return CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    # Curriculum plan directories are lowercase on disk (a1, b2-pro, hist, …).
+    # Canonicalize `level` so callers can pass "A1" or "B2-Pro" without
+    # breaking on case-sensitive filesystems. Flagged by gemini-review on
+    # PR #1468.
+    return CURRICULUM_ROOT / "plans" / level.lower() / f"{slug}.yaml"
 
 
 def _canonical_plan_hash(level: str, slug: str) -> str:
@@ -100,7 +133,10 @@ def _sqlite_indexed_table_names(connection: sqlite3.Connection) -> tuple[str, ..
         has_explicit_index = bool(
             connection.execute(f'PRAGMA index_list("{table_name}")').fetchall()
         )
-        is_virtual_table = "VIRTUAL TABLE" in table_sql.upper()
+        # Substring `"VIRTUAL TABLE"` would false-positive on a table
+        # named e.g. `my_virtual_table_data`. Match the DDL prefix instead.
+        # Flagged by gemini-review on PR #1468.
+        is_virtual_table = table_sql.upper().lstrip().startswith("CREATE VIRTUAL TABLE")
         if has_explicit_index or is_virtual_table:
             names.append(table_name)
     return tuple(sorted(names))
@@ -121,7 +157,11 @@ def _sources_hash() -> str:
     if not SOURCES_DB_PATH.exists():
         return _sha256_bytes(_stable_json_bytes(()))
 
-    with sqlite3.connect(f"file:{SOURCES_DB_PATH}?mode=ro", uri=True) as connection:
+    # `Path.as_uri()` produces a cross-platform-safe `file://…` URI;
+    # raw f-string interpolation leaks backslashes on Windows. Flagged
+    # by gemini-review on PR #1468.
+    db_uri = f"{SOURCES_DB_PATH.as_uri()}?mode=ro"
+    with sqlite3.connect(db_uri, uri=True) as connection:
         manifest_rows = tuple(
             _sqlite_table_snapshot(connection, table_name)
             for table_name in _sqlite_indexed_table_names(connection)
@@ -183,6 +223,9 @@ def _threshold_snapshot(level: str) -> dict[str, Any]:
     level_key = _resolve_level_config_key(level)
     return {
         "level_config": _freeze(audit_config.LEVEL_CONFIG[level_key]),
+        # Access the module attribute (not the `_review_target_score()`
+        # function directly) so tests can `monkeypatch.setattr` the
+        # value. See `__getattr__` / `_review_target_score` docstrings.
         "review_target_score": REVIEW_TARGET_SCORE,
     }
 
