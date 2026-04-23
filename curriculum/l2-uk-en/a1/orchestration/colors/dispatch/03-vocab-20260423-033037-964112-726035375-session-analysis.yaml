@@ -1,0 +1,53 @@
+session_path: ''
+phase: vocab
+prompt_chars: 10553
+response_chars: 3523
+prompt_words: 1631
+response_words: 391
+sections:
+- name: preamble
+  start: 0
+  length: 798
+  fraction: 0.0756
+- name: output_spec
+  start: 798
+  length: 230
+  fraction: 0.0218
+- name: plan
+  start: 1028
+  length: 9525
+  fraction: 0.9026
+large_sections:
+- plan
+directives_total: 9
+directives_covered: 2
+directives_missed:
+- kind: must
+  text: When answering «Якого кольору?», the adjective ending must match the noun's
+    gender.
+  covered: false
+  coverage_note: 2/10 keywords (20%)
+- kind: must
+  text: Because colors describe objects, their endings must match the noun's gender.
+  covered: false
+  coverage_note: 0/10 keywords (0%)
+- kind: inject_activity
+  text: group-sort-hard-soft
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-what-color
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-agreement
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-blue-shades
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: match-up-appearance
+  covered: false
+  coverage_note: marker missing

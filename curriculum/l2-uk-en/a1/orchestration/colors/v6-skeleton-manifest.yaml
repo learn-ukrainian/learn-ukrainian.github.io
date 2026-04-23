@@ -1,0 +1,13 @@
+phase: skeleton
+components:
+- template
+- plan_content
+- knowledge_packet
+metrics:
+  prompt_chars: 41589
+  prompt_words: 5947
+  plan_chars: 8357
+  packet_chars: 30165
+flags:
+  packet_truncated: true
+word_target: 1200

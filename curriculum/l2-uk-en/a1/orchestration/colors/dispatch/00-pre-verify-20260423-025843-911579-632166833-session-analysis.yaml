@@ -1,0 +1,32 @@
+session_path: ''
+phase: pre-verify
+prompt_chars: 5203
+response_chars: 961
+prompt_words: 789
+response_words: 146
+sections:
+- name: preamble
+  start: 0
+  length: 515
+  fraction: 0.099
+- name: plan
+  start: 515
+  length: 4307
+  fraction: 0.8278
+- name: output_spec
+  start: 4822
+  length: 381
+  fraction: 0.0732
+large_sections:
+- plan
+directives_total: 2
+directives_covered: 0
+directives_missed:
+- kind: must
+  text: You MUST verify linguistic facts using the tools below BEFORE writing begins.
+  covered: false
+  coverage_note: 0/11 keywords (0%)
+- kind: must
+  text: Each task MUST include at least one tool call.
+  covered: false
+  coverage_note: 0/8 keywords (0%)

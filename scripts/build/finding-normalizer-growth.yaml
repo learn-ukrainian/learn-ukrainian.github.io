@@ -27,3 +27,22 @@
   location: '`32 при́голосних звуки з 22 приголосних літер.`'
   issue: Порушене узгодження числівника з іменником.
   fix: '`32 приголосні звуки позначаються 22 приголосними літерами.`'
+- dimension: linguistic_accuracy
+  location: '`## Діалоги` — `Ось короткий Діалог.`'
+  issue: Unmotivated capitalization of the common noun `діалог`.
+  fix: 'Change `Діалог` to lowercase: `діалог`.'
+- dimension: exercise_quality
+  location: '`## Синій ≠ блакитний` — `<!-- INJECT_ACTIVITY: match-up-appearance -->`
+    placed before `When describing a person''s physical appearance in Ukrainian...`'
+  issue: The appearance match-up marker is injected before the learner sees the target
+    collocations `карі очі`, `русяве волосся`, `сиве волосся`.
+  fix: 'Move `<!-- INJECT_ACTIVITY: match-up-appearance -->` to after the appearance-collocation
+    paragraph.'
+- dimension: pedagogical_quality
+  location: '`## Кольори`, `## Синій ≠ блакитний`, `## Підсумок` — `To describe the
+    visual world...`, `One crucial exception exists...`, `You have learned how to
+    describe the world around you...`'
+  issue: English-heavy lecture prose overwhelms the Ukrainian examples and weakens
+    the teach-then-practice flow required for A1.
+  fix: Rewrite these sections in concise, Ukrainian-first pedagogy with examples leading
+    the explanation, not the other way around.
