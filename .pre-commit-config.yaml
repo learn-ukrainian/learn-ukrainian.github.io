@@ -12,6 +12,10 @@
 # more expensive than catching a ruff error on save.
 #
 # Reference issue: #1081
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+
 repos:
 
   # --- Ruff: the primary linter (same rules as CI) ---
@@ -69,17 +73,33 @@ repos:
     hooks:
       # Prevent accidentally adding .yaml.bak / .yaml.orig files that
       # our update_plan_activities.py / other tools create as safety
-      # backups. They're already in .gitignore but pre-commit is the
-      # second line of defence.
+      # backups. Versioned curriculum plan snapshots are the exception:
+      # they are required by the plan immutability rule.
       - id: no-yaml-backups
         name: block .yaml.bak / .yaml.orig files
         entry: >-
           bash -c 'files=$(git diff --cached --name-only --diff-filter=A |
-          grep -E "\.(yaml|yml)\.(bak|orig)$" || true); if [ -n "$files" ]; then
-          echo "ERROR: Do not commit plan backup files:"; echo "$files"; exit 1; fi'
+          grep -E "\.(yaml|yml)\.(bak|orig)$" |
+          grep -Ev "^curriculum/[^/]+/plans/.+\.yaml\.bak$" || true); if [ -n "$files" ]; then
+          echo "ERROR: Do not commit non-plan backup files:"; echo "$files"; exit 1; fi'
         language: system
         pass_filenames: false
         stages: [pre-commit]
+
+      # Plans are immutable once committed. Any staged edit must ship
+      # with a bumped `version` field and a sibling `.bak` snapshot of
+      # the previous content. Run this in the commit-msg stage so the
+      # pipeline's escape-hatch tag is available.
+      - id: check-plan-immutability
+        name: enforce plan version bump + .bak
+        entry: >-
+          bash -c 'python=".venv/bin/python"; if [ ! -x "$python" ]; then
+          common_dir=$(git rev-parse --git-common-dir); python="$(cd "$common_dir/.." &&
+          pwd)/.venv/bin/python"; fi; exec "$python"
+          scripts/pre_commit/check_plan_immutability.py "$@"' --
+        language: system
+        always_run: true
+        stages: [commit-msg]
 
       # Block bare `python3`/`python` in shell scripts we add.
       # The project's venv is always at .venv/bin/python — use that
