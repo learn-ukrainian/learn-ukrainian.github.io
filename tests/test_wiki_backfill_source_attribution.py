@@ -14,67 +14,82 @@ _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(_project_root, "scripts"))
 
 
+# Schema expected by `source_attribution.resolve_source` / `run_backfill`.
+# Every test that points `DEFAULT_DB_PATH` at a fresh sqlite file MUST call
+# this — otherwise lookups fail with `no such table: textbook_sections`
+# (see #1469).
+_SOURCES_SCHEMA_DDL = """
+CREATE TABLE textbook_sections (
+    section_id INTEGER PRIMARY KEY,
+    source_file TEXT NOT NULL,
+    grade INTEGER NOT NULL,
+    section_title TEXT NOT NULL,
+    page_start INTEGER
+);
+
+CREATE TABLE textbooks (
+    id INTEGER PRIMARY KEY,
+    chunk_id TEXT NOT NULL DEFAULT '',
+    title TEXT NOT NULL DEFAULT '',
+    source_file TEXT NOT NULL DEFAULT '',
+    grade TEXT DEFAULT '',
+    author TEXT DEFAULT ''
+);
+
+CREATE TABLE literary_texts (
+    id INTEGER PRIMARY KEY,
+    chunk_id TEXT NOT NULL DEFAULT '',
+    title TEXT NOT NULL DEFAULT '',
+    source_file TEXT NOT NULL DEFAULT '',
+    author TEXT DEFAULT '',
+    work TEXT DEFAULT ''
+);
+
+CREATE TABLE external_articles (
+    id INTEGER PRIMARY KEY,
+    chunk_id TEXT NOT NULL DEFAULT '',
+    url TEXT NOT NULL DEFAULT '',
+    title TEXT NOT NULL DEFAULT '',
+    source_file TEXT NOT NULL DEFAULT '',
+    domain TEXT DEFAULT '',
+    video_id TEXT DEFAULT '',
+    chunk_start_ts INTEGER,
+    chunk_end_ts INTEGER
+);
+
+CREATE TABLE wikipedia (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    url TEXT NOT NULL DEFAULT ''
+);
+
+CREATE TABLE ukrainian_wiki (
+    id INTEGER PRIMARY KEY,
+    passage_id TEXT NOT NULL UNIQUE,
+    article_slug TEXT NOT NULL,
+    article_title TEXT NOT NULL DEFAULT '',
+    section_path TEXT NOT NULL DEFAULT ''
+);
+"""
+
+
+def _init_sources_schema(conn: sqlite3.Connection) -> None:
+    """Create the tables `source_attribution.resolve_source` expects.
+
+    Extracted so every test pointing `DEFAULT_DB_PATH` at a fresh sqlite
+    file uses the same schema — prevents #1469-class regressions where
+    a test creates an empty DB and `run_backfill` blows up on first query.
+    """
+    conn.executescript(_SOURCES_SCHEMA_DDL)
+
+
 @pytest.fixture
 def backfill_fixture(tmp_path: Path, monkeypatch) -> dict[str, Path]:
     from wiki import backfill_source_attribution, source_attribution
 
     db_path = tmp_path / "sources.db"
     conn = sqlite3.connect(str(db_path))
-    conn.executescript(
-        """
-        CREATE TABLE textbook_sections (
-            section_id INTEGER PRIMARY KEY,
-            source_file TEXT NOT NULL,
-            grade INTEGER NOT NULL,
-            section_title TEXT NOT NULL,
-            page_start INTEGER
-        );
-
-        CREATE TABLE textbooks (
-            id INTEGER PRIMARY KEY,
-            chunk_id TEXT NOT NULL DEFAULT '',
-            title TEXT NOT NULL DEFAULT '',
-            source_file TEXT NOT NULL DEFAULT '',
-            grade TEXT DEFAULT '',
-            author TEXT DEFAULT ''
-        );
-
-        CREATE TABLE literary_texts (
-            id INTEGER PRIMARY KEY,
-            chunk_id TEXT NOT NULL DEFAULT '',
-            title TEXT NOT NULL DEFAULT '',
-            source_file TEXT NOT NULL DEFAULT '',
-            author TEXT DEFAULT '',
-            work TEXT DEFAULT ''
-        );
-
-        CREATE TABLE external_articles (
-            id INTEGER PRIMARY KEY,
-            chunk_id TEXT NOT NULL DEFAULT '',
-            url TEXT NOT NULL DEFAULT '',
-            title TEXT NOT NULL DEFAULT '',
-            source_file TEXT NOT NULL DEFAULT '',
-            domain TEXT DEFAULT '',
-            video_id TEXT DEFAULT '',
-            chunk_start_ts INTEGER,
-            chunk_end_ts INTEGER
-        );
-
-        CREATE TABLE wikipedia (
-            id INTEGER PRIMARY KEY,
-            title TEXT NOT NULL,
-            url TEXT NOT NULL DEFAULT ''
-        );
-
-        CREATE TABLE ukrainian_wiki (
-            id INTEGER PRIMARY KEY,
-            passage_id TEXT NOT NULL UNIQUE,
-            article_slug TEXT NOT NULL,
-            article_title TEXT NOT NULL DEFAULT '',
-            section_path TEXT NOT NULL DEFAULT ''
-        );
-        """
-    )
+    _init_sources_schema(conn)
     conn.execute(
         "INSERT INTO textbook_sections(section_id, source_file, grade, section_title, page_start) VALUES (?, ?, ?, ?, ?)",
         (77, "11-klas-ukrmova-avramenko-2019", 11, "Складне речення", 123),
@@ -212,7 +227,14 @@ def test_unresolvable_entries_are_logged_to_stderr(tmp_path: Path, monkeypatch) 
     from wiki import backfill_source_attribution, source_attribution
 
     db_path = tmp_path / "sources.db"
-    sqlite3.connect(str(db_path)).close()
+    # Schema must exist — `run_backfill` queries it unconditionally.
+    # Empty tables are fine; the test asserts the unresolved path. (#1469)
+    conn = sqlite3.connect(str(db_path))
+    try:
+        _init_sources_schema(conn)
+        conn.commit()
+    finally:
+        conn.close()
     wiki_dir = tmp_path / "wiki"
     article_path = wiki_dir / "pedagogy" / "a1" / "missing.md"
     article_path.parent.mkdir(parents=True)
