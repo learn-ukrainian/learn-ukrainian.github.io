@@ -197,7 +197,15 @@ class ClaudeAdapter:
 
         # Effort (reasoning level) — version-gated. See #1396.
         if effort is not None:
-            effort_supported = bool(cli_version and cli_version >= _EFFORT_MIN_VERSION)
+            # Use the `utils.claude_version.supports_effort` helper so tests
+            # can patch the decision at a single point. Inline version
+            # comparison bypassed the helper and left CI runs (no Claude CLI
+            # installed → cli_version=None) silently dropping --effort even
+            # though the test patched supports_effort=True. Root cause of the
+            # test_claude_adapter_emits_effort_when_supported CI failure on
+            # PR #1474.
+            from utils.claude_version import supports_effort
+            effort_supported = supports_effort(probe_prefix)
             if effort_supported:
                 cmd.extend(["--effort", effort])
             else:
