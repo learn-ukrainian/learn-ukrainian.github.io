@@ -62,55 +62,10 @@ _CHUNK_ROW_RE = re.compile(r"_c(\d+)$")
 _BARE_SECTION_RE = re.compile(r"^S(\d+)$")
 _PUBLISHED_LEVELS = ("a1", "a2", "b1", "b2", "c1", "c2")
 
-KNOWN_DRIFT = {
-    "wiki/pedagogy/a1/food-and-drink.md": {
-        "issue": "#1488",
-        "fragments": ["unresolved registry entry S12 -> external ext-article-1"],
-    },
-    "wiki/pedagogy/a1/hey-friend.md": {
-        "issue": "#1489",
-        "fragments": [
-            "orphan inline ref S2447",
-            "orphan inline ref S3165",
-            "orphan inline ref S3336",
-            "orphan inline ref S4715",
-        ],
-    },
-    "wiki/pedagogy/a1/my-family.md": {
-        "issue": "#1490",
-        "fragments": [
-            "orphan inline ref S2435",
-            "orphan inline ref S2452",
-            "orphan inline ref S3129",
-        ],
-    },
-    "wiki/pedagogy/a1/reading-ukrainian.md": {
-        "issue": "#1491",
-        "fragments": ["unresolved registry entry S12 -> external ext-article-1"],
-    },
-    "wiki/pedagogy/a1/stress-and-melody.md": {
-        "issue": "#1492",
-        "fragments": [
-            "orphan inline ref S606",
-            "orphan inline ref S1503",
-            "orphan inline ref S1548",
-            "orphan inline ref S2298",
-        ],
-    },
-    "wiki/pedagogy/a1/things-have-gender.md": {
-        "issue": "#1493",
-        "fragments": [
-            "malformed registry:",
-            "Unsupported wiki source type: textbook-chunk",
-        ],
-    },
-    "wiki/pedagogy/a1/who-am-i.md": {
-        "issue": "#1494",
-        "fragments": [
-            "unresolved registry entry S8 -> morphological-dictionary VESUM",
-            "unresolved registry entry S9 -> explanatory-dictionary СУМ-11",
-        ],
-    },
+KNOWN_DRIFT: dict[str, dict] = {
+    # All 7 A1 wiki articles previously listed here were fixed (closing
+    # issues #1488-#1494). The invariant now runs strict for the full A1
+    # wiki corpus.
 }
 
 
