@@ -12,6 +12,7 @@ from build import module_memory, v6_build
 from build.convergence_loop import (
     ConvergenceContext,
     MutationSummary,
+    RecoverableValidationError,
     ReviewObservation,
     prioritize_findings,
     run_convergence_loop,
@@ -126,6 +127,53 @@ class Harness:
 class FailingSectionRewriteHarness(Harness):
     def section_rewrite_round(self, _findings, _writer: str) -> MutationSummary:
         raise RuntimeError("section rewrite exploded")
+
+
+class RecoverableSidecarHarness(Harness):
+    """Refresh_sidecars raises RecoverableValidationError the first time a
+    configured strategy fires, succeeds on subsequent calls.
+    """
+
+    def __init__(
+        self,
+        observations: list[ReviewObservation],
+        tmp_path: Path,
+        *,
+        fail_on_strategies: tuple[str, ...] = ("full_rewrite",),
+        validator_findings: tuple[dict, ...] | None = None,
+    ) -> None:
+        super().__init__(observations, tmp_path)
+        self.fail_on = set(fail_on_strategies)
+        self.refresh_calls_by_strategy: dict[str, int] = {}
+        self.validator_findings = validator_findings or (
+            {
+                "dimension": "Plan Adherence",
+                "severity": "critical",
+                "location": "## whole module / vocabulary sidecar",
+                "issue": (
+                    "missing vocabulary: the regenerated vocabulary sidecar is missing "
+                    "required terms: кольори, олівець"
+                ),
+                "fix": (
+                    "Regenerate the module so every required-vocabulary term from the "
+                    "plan appears in the vocabulary YAML."
+                ),
+            },
+        )
+
+    def refresh_sidecars(self, strategy: str) -> bool:
+        self.refresh_calls_by_strategy[strategy] = (
+            self.refresh_calls_by_strategy.get(strategy, 0) + 1
+        )
+        if (
+            strategy in self.fail_on
+            and self.refresh_calls_by_strategy[strategy] == 1
+        ):
+            raise RecoverableValidationError(
+                "plan-sidecar validation failed: missing vocabulary кольори, олівець",
+                findings=list(self.validator_findings),
+            )
+        return True
 
 
 def test_tier_one_patch_fires_on_local_findings(tmp_path: Path) -> None:
@@ -464,7 +512,6 @@ def test_end_to_end_stuck_a1_m1_uses_cached_reviews_without_budget_exhausted(tmp
     cached_reviews = [
         review_dir / "sounds-letters-and-hello-review-r2.md",
         review_dir / "sounds-letters-and-hello-review-r3.md",
-        review_dir / "sounds-letters-and-hello-review-r4.md",
     ]
 
     observations = []
@@ -497,3 +544,174 @@ def test_end_to_end_stuck_a1_m1_uses_cached_reviews_without_budget_exhausted(tmp
 
     assert result.terminal in {"pass", "plan_revision_request"}
     assert result.terminal != "budget_exhausted"
+
+
+def test_recoverable_validation_error_does_not_collapse_budget(tmp_path: Path) -> None:
+    """Sidecar validator raising RecoverableValidationError must not terminate the
+    convergence budget. Its findings become the next iteration's prioritized findings,
+    and the escalation loop continues at a higher tier.
+    """
+    cross_section_finding = _finding(
+        dimension="Exercise Quality",
+        severity="major",
+        location="## Intro and ## Practice",
+        issue="Activity order and vocabulary pacing drift across multiple sections.",
+        fix="Resequence the module.",
+    )
+    harness = RecoverableSidecarHarness(
+        [
+            _observation(score=8.2, findings=[cross_section_finding], content_hash="hash-1"),
+            _observation(score=9.1, findings=[], content_hash="hash-3", passed=True),
+        ],
+        tmp_path,
+        fail_on_strategies=("full_rewrite",),
+    )
+    context = harness.context()
+
+    result = run_convergence_loop(context)
+    memory, _ = module_memory.load_module_memory(
+        context.memory_path,
+        expected_plan_hash="plan-hash",
+        expected_plan_version=1,
+        expected_sources_hash="sources-hash",
+    )
+
+    assert result.terminal == "pass"
+    # The first full_rewrite failed sidecar validation. Loop must have escalated
+    # to another strategy instead of collapsing: either a second full_rewrite or
+    # a writer_swap depending on stall detection.
+    assert harness.full_calls + harness.swap_calls >= 2
+    sidecar_rounds = [
+        entry
+        for entry in memory["history"]
+        if entry.get("reviewer") == "sidecar_validator"
+    ]
+    assert len(sidecar_rounds) == 1
+    assert sidecar_rounds[0]["decision_reason"].startswith("sidecar validation failed")
+    assert sidecar_rounds[0]["tier"] == 3
+    assert "missing_vocab" in {
+        item["error_class"] for item in sidecar_rounds[0]["prioritized_findings"]
+    }
+
+
+def test_recoverable_validation_error_respects_escalation_budget(
+    tmp_path: Path,
+) -> None:
+    """A recoverable validator failure consumes one escalation of the five-attempt
+    budget — it is a legitimate mutation round, not a free retry. This guards against
+    runaway retries when the writer keeps producing sidecar-invalid content: the
+    loop still terminates in bounded time (via plan_revision_request once the stall
+    detector bumps past writer_swap, or via budget_exhausted if it runs out of
+    escalations first).
+    """
+    cross_section_finding = _finding(
+        dimension="Exercise Quality",
+        severity="major",
+        location="## Intro and ## Practice",
+        issue="Activity order and vocabulary pacing drift across multiple sections.",
+        fix="Resequence the module.",
+    )
+
+    class AlwaysFailingSidecarHarness(RecoverableSidecarHarness):
+        def refresh_sidecars(self, strategy: str) -> bool:
+            self.refresh_calls_by_strategy[strategy] = (
+                self.refresh_calls_by_strategy.get(strategy, 0) + 1
+            )
+            raise RecoverableValidationError(
+                "plan-sidecar validation failed: missing vocabulary кольори",
+                findings=list(self.validator_findings),
+            )
+
+    observations = [
+        _observation(score=8.2, findings=[cross_section_finding], content_hash=f"hash-{i}")
+        for i in range(1, 8)
+    ]
+    harness = AlwaysFailingSidecarHarness(observations, tmp_path)
+    context = harness.context()
+
+    result = run_convergence_loop(context)
+    memory, _ = module_memory.load_module_memory(
+        context.memory_path,
+        expected_plan_hash="plan-hash",
+        expected_plan_version=1,
+        expected_sources_hash="sources-hash",
+    )
+
+    assert result.terminal in {"budget_exhausted", "plan_revision_request"}
+    assert len(memory["history"]) <= 1 + context.max_escalations
+    sidecar_rounds = [
+        entry
+        for entry in memory["history"]
+        if entry.get("reviewer") == "sidecar_validator"
+    ]
+    # Every mutation that got as far as refresh_sidecars failed validation
+    assert len(sidecar_rounds) >= 1
+    # No generic-exception round should appear — validator failures are their own path
+    exception_rounds = [
+        entry for entry in memory["history"] if entry.get("decision_reason") == "exception"
+    ]
+    assert exception_rounds == []
+
+
+def test_unrecoverable_runtime_error_still_collapses_budget(tmp_path: Path) -> None:
+    """Generic exceptions (pipeline/tooling failures) should still terminate the
+    budget early with an exception-context entry.
+    """
+    harness = FailingSectionRewriteHarness(
+        [
+            _observation(
+                score=8.4,
+                findings=[
+                    _finding(
+                        dimension="Pedagogical Quality",
+                        severity="major",
+                        location="## Привіт!",
+                        issue="The section teaches one register rule and models the opposite.",
+                        fix="Rewrite that section only.",
+                    )
+                ],
+                content_hash="hash-1",
+            ),
+        ],
+        tmp_path,
+    )
+    context = harness.context()
+
+    result = run_convergence_loop(context)
+    budget_payload = yaml.safe_load(result.artifact_path.read_text("utf-8"))
+
+    assert result.terminal == "budget_exhausted"
+    assert budget_payload["exception"]["type"] == "RuntimeError"
+    assert "section rewrite exploded" in budget_payload["exception"]["message"]
+
+
+def test_budget_exhausted_payload_has_no_exception_for_reviewer_disagreement(
+    tmp_path: Path,
+) -> None:
+    """When budget exhausts through legitimate reviewer disagreement (no
+    exceptions raised), the terminal payload must not claim an exception fired.
+    """
+    observations = [
+        _observation(
+            score=8.0,
+            findings=[
+                _finding(
+                    dimension="Exercise Quality",
+                    severity="major",
+                    location=f"## Section {index} and ## Practice",
+                    issue=f"Activity order drift variant {index}.",
+                    fix="Resequence the module.",
+                )
+            ],
+            content_hash=f"hash-{index}",
+        )
+        for index in range(1, 8)
+    ]
+    harness = Harness(observations, tmp_path)
+
+    result = run_convergence_loop(harness.context())
+    budget_payload = yaml.safe_load(result.artifact_path.read_text("utf-8"))
+
+    assert result.terminal == "budget_exhausted"
+    assert "exception" not in budget_payload
+    assert len(budget_payload["history"]) == 1 + harness.context().max_escalations

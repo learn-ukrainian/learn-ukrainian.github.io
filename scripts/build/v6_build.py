@@ -82,6 +82,7 @@ from batch_gemini_config import (
 )
 from build.convergence_loop import (
     ConvergenceContext,
+    RecoverableValidationError,
     ReviewObservation,
     run_convergence_loop,
 )
@@ -9267,6 +9268,28 @@ def _required_vocab_terms(plan: dict) -> set[str]:
     return {item for item in normalized if item}
 
 
+_CONTRACT_VIOLATION_TO_FINDING = {
+    "WORD_BUDGET": {
+        "dimension": "Plan Adherence",
+        "severity": "critical",
+        "location": "## whole module / word count",
+        "fix": "Regenerate the module so the word count meets the plan's minimum budget.",
+    },
+    "VOCAB_TARGETS": {
+        "dimension": "Plan Adherence",
+        "severity": "critical",
+        "location": "## whole module / vocabulary pacing",
+        "fix": "Regenerate the module so every required-vocabulary target from the plan is introduced and used.",
+    },
+    "ACTIVITY_ORDER": {
+        "dimension": "Exercise Quality",
+        "severity": "critical",
+        "location": "## whole module / activity order",
+        "fix": "Regenerate the module so the activity order matches the plan's activity_obligations.",
+    },
+}
+
+
 def _validate_regenerated_sidecars(
     *,
     content_path: Path,
@@ -9287,9 +9310,20 @@ def _validate_regenerated_sidecars(
         for item in violations
         if str(item.get("type") or "") in {"WORD_BUDGET", "VOCAB_TARGETS", "ACTIVITY_ORDER"}
     ]
-    if blocking:
-        messages = "; ".join(str(item.get("message") or item.get("type")) for item in blocking)
-        raise RuntimeError(f"plan-sidecar validation failed: {messages}")
+
+    findings: list[dict[str, object]] = []
+    for item in blocking:
+        violation_type = str(item.get("type") or "")
+        template = _CONTRACT_VIOLATION_TO_FINDING.get(violation_type)
+        if template is None:
+            continue
+        message = str(item.get("message") or violation_type)
+        findings.append(
+            {
+                **template,
+                "issue": f"{violation_type.lower().replace('_', ' ')}: {message}",
+            }
+        )
 
     activities_payload = yaml.safe_load(activity_path.read_text("utf-8"))
     present_activity_types = _collect_activity_types(activities_payload)
@@ -9300,9 +9334,21 @@ def _validate_regenerated_sidecars(
     }
     missing_activity_types = sorted(required_activity_types - present_activity_types)
     if missing_activity_types:
-        raise RuntimeError(
-            "plan-sidecar validation failed: missing activity types "
-            + ", ".join(missing_activity_types)
+        findings.append(
+            {
+                "dimension": "Exercise Quality",
+                "severity": "critical",
+                "location": "## whole module / activities sidecar",
+                "issue": (
+                    "activity order: the plan requires activity types "
+                    + ", ".join(missing_activity_types)
+                    + " but the regenerated module does not expose them in activities YAML."
+                ),
+                "fix": (
+                    "Regenerate the module so every required activity type from the plan "
+                    "is present in activities YAML."
+                ),
+            }
         )
 
     vocab_payload = yaml.safe_load(vocab_path.read_text("utf-8"))
@@ -9314,10 +9360,27 @@ def _validate_regenerated_sidecars(
         if term not in present_vocab
     )
     if missing_vocab:
-        raise RuntimeError(
-            "plan-sidecar validation failed: missing vocabulary "
-            + ", ".join(missing_vocab[:8])
+        findings.append(
+            {
+                "dimension": "Plan Adherence",
+                "severity": "critical",
+                "location": "## whole module / vocabulary sidecar",
+                "issue": (
+                    "missing vocabulary: the regenerated vocabulary sidecar is missing required "
+                    "terms: " + ", ".join(missing_vocab[:8])
+                ),
+                "fix": (
+                    "Regenerate the module so every required-vocabulary term from the plan "
+                    "appears in the vocabulary YAML."
+                ),
+            }
         )
+
+    if findings:
+        message = "plan-sidecar validation failed: " + "; ".join(
+            str(item["issue"]) for item in findings
+        )
+        raise RecoverableValidationError(message, findings)
 
 
 def _should_skip_annotate(level: str) -> bool:

@@ -27,6 +27,26 @@ TerminalType = Literal["pass", "plan_revision_request", "budget_exhausted"]
 TierName = Literal["patch", "section_rewrite", "full_rewrite", "writer_swap", "plan_revision_request"]
 
 
+class RecoverableValidationError(Exception):
+    """Raised by writer-output validators (sidecar drift, missing vocab, activity-order
+    mismatch, word-budget miss) when the problem is something a higher-tier escalation
+    could fix. Carries structured findings so the convergence loop can feed them into
+    the next strategy selection instead of collapsing the escalation budget.
+
+    Use for content-shape problems in the *writer's* output. Do NOT use for pipeline
+    or tooling failures (missing plan file, DB unreachable, subprocess crash) — those
+    remain generic exceptions and terminate the loop.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        findings: tuple[dict[str, Any], ...] | list[dict[str, Any]],
+    ) -> None:
+        super().__init__(message)
+        self.findings: tuple[dict[str, Any], ...] = tuple(findings)
+
+
 @dataclass(frozen=True)
 class ReviewObservation:
     passed: bool
@@ -620,6 +640,59 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
                     raise RuntimeError("sidecar refresh failed after writer swap")
                 if context.style_review_after_swap is not None:
                     context.style_review_after_swap(current_writer)
+        except RecoverableValidationError as exc:
+            synthetic_observation = ReviewObservation(
+                passed=False,
+                score=0.0,
+                review_text=f"[validator] {exc}",
+                findings=exc.findings,
+                dim_floor_dimensions=(),
+                content_hash=f"{observation.content_hash}|sidecar_invalid_{escalation}",
+                parsed_scores=(),
+                reviewer="sidecar_validator",
+                writer_model_version=current_writer,
+                reviewer_model_version="sidecar_validator",
+                artifacts={},
+            )
+            previous_findings = prioritized_findings
+            prioritized_findings = prioritize_findings(
+                synthetic_observation,
+                growth_log_path=context.growth_log_path,
+            )
+            _learn_constraints(
+                memory,
+                slug=context.slug,
+                previous_findings=previous_findings,
+                current_findings=prioritized_findings,
+                round_num=len(rounds) + 1,
+                strategy=decision.strategy,
+            )
+            round_record = _record_round(
+                memory=memory,
+                observation=synthetic_observation,
+                prioritized_findings=prioritized_findings,
+                attempt=len(rounds) + 1,
+                strategy=decision.strategy,
+                writer=current_writer,
+                decision_reason=f"sidecar validation failed: {exc}",
+                mutation=mutation,
+                started_at=attempt_started_at,
+                wall_clock_s=time.monotonic() - attempt_started_monotonic,
+            )
+            round_record["prioritized_findings"] = list(prioritized_findings)
+            round_record["tier"] = decision.tier
+            rounds.append(round_record)
+            save_module_memory(context.memory_path, memory)
+            previous_round = {
+                "tier": decision.tier,
+                "strategy": decision.strategy,
+                "mutation_count": 0 if mutation is None else mutation.mutation_count,
+                "content_hash": synthetic_observation.content_hash,
+                "prioritized_findings": prioritized_findings,
+                "dim_floor_dimensions": synthetic_observation.dim_floor_dimensions,
+            }
+            observation = synthetic_observation
+            continue
         except Exception as exc:
             exception_context = {
                 "attempt": escalation,
