@@ -173,6 +173,23 @@ class TestFormatSources:
         assert "Grade 7" in result
         assert "Section: Unit 5" in result
 
+    def test_disambiguates_textbook_chunk_id_from_source_citation(self):
+        from wiki.compiler import _format_sources
+
+        sources = [
+            {
+                "chunk_id": "S3931",
+                "source_type": "textbook",
+                "text": "Grammar text.",
+                "grade": 7,
+                "section_title": "Unit 5",
+            },
+        ]
+        result = _format_sources(sources)
+        assert "internal ref: `3931`" in result
+        assert "cite this source as `[S1]`" in result
+        assert "Chunk ID: `S3931`" not in result
+
     def test_empty_sources(self):
         from wiki.compiler import _format_sources
 
