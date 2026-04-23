@@ -41,10 +41,13 @@ Your content will be scored on these 7 dimensions (see GEMINI.md for details):
 
 | Tool | When | Example |
 |------|------|---------|
+| `search_sources` | Preferred unified retrieval across textbooks, literary, Wikipedia, external, and ukrainian_wiki | `search_sources("{TOPIC_KEYWORDS}", track="a1")` |
 | `search_text` | Find textbook pedagogy | `search_text("{TOPIC_KEYWORDS}", grade={TEXTBOOK_GRADE})` |
 | `verify_words` | Check words exist in VESUM | `verify_words(["книга", "великий"])` |
 | `verify_lemma` | Get inflected forms | `verify_lemma("книга")` |
 | `query_pravopys` | Spelling/grammar rules | `query_pravopys("апостроф")` |
+
+Use `search_text` only when you explicitly want textbook-only scoping.
 
 ### What the Learner Already Knows
 
