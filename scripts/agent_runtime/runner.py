@@ -29,6 +29,7 @@ from __future__ import annotations
 import contextlib
 import importlib
 import os
+import shutil
 import signal
 import subprocess
 import time
@@ -66,10 +67,49 @@ from .watchdog import (
 # fast enough that stall detection fires within 1s of the threshold, slow
 # enough that we don't burn CPU in the wait loop.
 _POLL_INTERVAL_S = 1.0
+_SHIMS_DIR = Path(__file__).resolve().parent / "shims"
 
 # In-process cache of instantiated adapters. Adapters are stateless so we
 # can reuse one instance across all invocations of the same agent.
 _ADAPTER_CACHE: dict[str, AgentAdapter] = {}
+
+
+def _merge_guard_enabled(*, mode: str, env: dict[str, str]) -> bool:
+    """Return whether merge/approve/push-to-main operations must be blocked."""
+    if env.get("AGENT_ALLOW_MERGE") == "1":
+        return False
+    if env.get("AGENT_NO_MERGE") == "1":
+        return True
+    return mode == "danger"
+
+
+def _apply_merge_guard(*, mode: str, env: dict[str, str]) -> dict[str, str]:
+    """Prepend gh/git shims and stamp env vars when merge guard is active."""
+    if not _merge_guard_enabled(mode=mode, env=env):
+        return env
+
+    guarded_env = dict(env)
+    original_path = guarded_env.get("PATH", "")
+    guarded_env["AGENT_NO_MERGE"] = "1"
+    guarded_env["AGENT_ORIGINAL_PATH"] = original_path
+
+    real_gh = shutil.which("gh", path=original_path) if original_path else None
+    if real_gh:
+        guarded_env["AGENT_REAL_GH"] = real_gh
+    else:
+        guarded_env.pop("AGENT_REAL_GH", None)
+
+    real_git = shutil.which("git", path=original_path) if original_path else None
+    if real_git:
+        guarded_env["AGENT_REAL_GIT"] = real_git
+    else:
+        guarded_env.pop("AGENT_REAL_GIT", None)
+
+    shim_path = str(_SHIMS_DIR)
+    guarded_env["PATH"] = (
+        f"{shim_path}{os.pathsep}{original_path}" if original_path else shim_path
+    )
+    return guarded_env
 
 
 def _kill_process_tree(proc: subprocess.Popen) -> None:
@@ -363,6 +403,7 @@ def _execute_invocation_plan(
     env = {**os.environ, **plan.env_overrides}
     for key in plan.env_unsets:
         env.pop(key, None)
+    env = _apply_merge_guard(mode=mode, env=env)
 
     start_time = time.monotonic()
     proc: subprocess.Popen | None = None

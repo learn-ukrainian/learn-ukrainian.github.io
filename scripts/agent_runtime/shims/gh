@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+_deny() {
+  cat >&2 <<'EOF'
+error: agent invoked with AGENT_NO_MERGE=1 cannot merge or approve PRs.
+       User reviews and merges. See INCIDENT #1403.
+EOF
+  exit 1
+}
+
+_real_gh() {
+  if [[ -n "${AGENT_REAL_GH:-}" ]]; then
+    printf '%s\n' "$AGENT_REAL_GH"
+    return 0
+  fi
+
+  local shim_dir
+  shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  local path_entry
+  IFS=':' read -r -a _path_entries <<< "${AGENT_ORIGINAL_PATH:-${PATH:-}}"
+  for path_entry in "${_path_entries[@]}"; do
+    [[ -z "$path_entry" || "$path_entry" == "$shim_dir" ]] && continue
+    if [[ -x "$path_entry/gh" ]]; then
+      printf '%s\n' "$path_entry/gh"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+_blocks_gh_command() {
+  local cmd="$1"
+  shift
+
+  case "$cmd" in
+    pr)
+      [[ "${1:-}" == "merge" ]] && return 0
+      if [[ "${1:-}" == "review" ]]; then
+        shift
+        shift || true
+        local arg
+        for arg in "$@"; do
+          [[ "$arg" == "--approve" || "$arg" == "-a" ]] && return 0
+        done
+      fi
+      ;;
+    api)
+      local joined="$*"
+      if [[ "$joined" == *"/pulls/"*"/merge"* ]]; then
+        return 0
+      fi
+      if [[ "$joined" == *"mergePullRequest"* || "$joined" == *"enablePullRequestAutoMerge"* ]]; then
+        return 0
+      fi
+      if [[ "$joined" == *"/pulls/"*"/reviews"* ]] && [[ "$joined" == *"APPROVE"* ]]; then
+        return 0
+      fi
+      if [[ "$joined" == *"PullRequestReview"* ]] && [[ "$joined" == *"APPROVE"* ]]; then
+        return 0
+      fi
+      ;;
+  esac
+
+  return 1
+}
+
+if [[ "${AGENT_NO_MERGE:-}" == "1" ]] && _blocks_gh_command "${1:-}" "${@:2}"; then
+  _deny
+fi
+
+real_gh="$(_real_gh)" || {
+  echo "error: could not locate the real gh binary behind the agent shim." >&2
+  exit 127
+}
+
+exec "$real_gh" "$@"
