@@ -1,6 +1,7 @@
 """Tests for wiki compiler — prompt building, source formatting, index generation."""
 
 import os
+import sqlite3
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -9,6 +10,112 @@ import pytest
 
 _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(_project_root, "scripts"))
+
+
+@pytest.fixture
+def attribution_db(tmp_path, monkeypatch):
+    from wiki import source_attribution
+
+    db_path = tmp_path / "sources.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.executescript(
+        """
+        CREATE TABLE textbook_sections (
+            section_id INTEGER PRIMARY KEY,
+            source_file TEXT NOT NULL,
+            grade INTEGER NOT NULL,
+            section_title TEXT NOT NULL,
+            page_start INTEGER
+        );
+
+        CREATE TABLE literary_texts (
+            id INTEGER PRIMARY KEY,
+            chunk_id TEXT NOT NULL DEFAULT '',
+            title TEXT NOT NULL DEFAULT '',
+            source_file TEXT NOT NULL DEFAULT '',
+            author TEXT DEFAULT '',
+            work TEXT DEFAULT ''
+        );
+
+        CREATE TABLE external_articles (
+            id INTEGER PRIMARY KEY,
+            chunk_id TEXT NOT NULL DEFAULT '',
+            url TEXT NOT NULL DEFAULT '',
+            title TEXT NOT NULL DEFAULT '',
+            source_file TEXT NOT NULL DEFAULT '',
+            domain TEXT DEFAULT '',
+            video_id TEXT DEFAULT '',
+            chunk_start_ts INTEGER,
+            chunk_end_ts INTEGER
+        );
+
+        CREATE TABLE wikipedia (
+            id INTEGER PRIMARY KEY,
+            title TEXT NOT NULL,
+            url TEXT NOT NULL DEFAULT ''
+        );
+
+        CREATE TABLE ukrainian_wiki (
+            id INTEGER PRIMARY KEY,
+            passage_id TEXT NOT NULL UNIQUE,
+            article_slug TEXT NOT NULL,
+            article_title TEXT NOT NULL DEFAULT '',
+            section_path TEXT NOT NULL DEFAULT ''
+        );
+        """
+    )
+    conn.executemany(
+        "INSERT INTO textbook_sections(section_id, source_file, grade, section_title, page_start) VALUES (?, ?, ?, ?, ?)",
+        [
+            (1, "11-klas-ukrmova-avramenko-2019", 11, "Topic 1", 101),
+            (2, "11-klas-ukrmova-avramenko-2019", 11, "Topic 2", 102),
+            (3, "11-klas-ukrmova-avramenko-2019", 11, "Topic 3", 103),
+            (4, "11-klas-ukrmova-avramenko-2019", 11, "Topic 4", 104),
+            (5, "11-klas-ukrmova-avramenko-2019", 11, "Topic 5", 105),
+            (77, "11-klas-ukrmova-avramenko-2019", 11, "Complex syntax", 123),
+        ],
+    )
+    conn.execute(
+        """
+        INSERT INTO literary_texts(id, chunk_id, title, source_file, author, work)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        (12, "4f2a9abc_c0012", "Енеїда, уривок", "eneida", "Іван Котляревський", "Енеїда"),
+    )
+    conn.execute(
+        """
+        INSERT INTO external_articles(
+            id, chunk_id, url, title, source_file, domain, video_id, chunk_start_ts, chunk_end_ts
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            1,
+            "ext-ulp-yt-001",
+            "https://www.youtube.com/watch?v=abc123",
+            "Podcast episode",
+            "ulp_youtube",
+            "youtube.com",
+            "abc123",
+            15,
+            29,
+        ),
+    )
+    conn.execute(
+        "INSERT INTO wikipedia(id, title, url) VALUES (?, ?, ?)",
+        (1, "Українська мова", "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0_%D0%BC%D0%BE%D0%B2%D0%B0"),
+    )
+    conn.execute(
+        """
+        INSERT INTO ukrainian_wiki(id, passage_id, article_slug, article_title, section_path)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (1, "uw-1", "academic-writing", "Academic Writing", "Style / Evidence"),
+    )
+    conn.commit()
+    conn.close()
+
+    monkeypatch.setattr(source_attribution, "DEFAULT_DB_PATH", db_path)
+    return db_path
 
 
 # ── Tests: _format_sources ───────────────────────────────────────
@@ -374,6 +481,118 @@ class TestCompileArticleSkipLogic:
         assert "generated_by_model: gemini-3-flash-preview" in written
         mark_compiled.assert_called_once()
         assert mark_compiled.call_args.kwargs["model"] == "gemini-3-flash-preview"
+
+    def test_compile_builds_rich_sources_registry_without_unknown_types(self, tmp_path, attribution_db):
+        from wiki.compiler import compile_article
+        from wiki.sources_schema import load_sources_registry
+
+        prompts_dir = tmp_path / "prompts"
+        prompts_dir.mkdir()
+        (prompts_dir / "compile_article.md").write_text(
+            "Prompt: {topic} {slug} {domain} {tracks} {sources} {source_ids} {date}"
+        )
+        wiki_dir = tmp_path / "wiki"
+
+        with patch("wiki.compiler.PROMPTS_DIR", prompts_dir), \
+             patch("wiki.compiler.WIKI_DIR", wiki_dir), \
+             patch("wiki.compiler.is_compiled", return_value=False), \
+             patch("wiki.compiler.mark_compiled"), \
+             patch(
+                 "wiki.compiler._call_gemini",
+                 return_value="# Title\n\nOne [S1]. Two [S2]. Three [S3]. Four [S4]. Five [S5].\n",
+             ):
+            result = compile_article(
+                topic="Test",
+                slug="test",
+                domain="grammar/b2",
+                sources=[
+                    {"chunk_id": "S77", "text": "text", "corpus": "textbook_sections"},
+                    {"chunk_id": "4f2a9abc_c0012", "text": "text", "corpus": "modern_literary"},
+                    {"chunk_id": "ext-ulp-yt-001", "text": "text", "corpus": "external"},
+                    {"title": "Українська мова", "text": "text", "corpus": "wikipedia", "source_type": "wikipedia"},
+                    {"chunk_id": "uw-1", "text": "text", "corpus": "ukrainian_wiki"},
+                ],
+            )
+
+        registry = load_sources_registry(result.with_suffix(".sources.yaml"))
+        assert [entry.type for entry in registry.sources] == [
+            "textbook",
+            "literary",
+            "external",
+            "wikipedia",
+            "ukrainian_wiki",
+        ]
+        assert all(entry.type != "unknown" for entry in registry.sources)
+        assert [entry.file for entry in registry.sources] == [
+            "11-klas-ukrmova-avramenko-2019_s0077",
+            "eneida_c0012",
+            "https://www.youtube.com/watch?v=abc123&t=15s",
+            "wikipedia/Українська мова",
+            "ukrainian_wiki/academic-writing_Style-Evidence",
+        ]
+        assert registry.sources[2].url == "https://www.youtube.com/watch?v=abc123&t=15s"
+        assert registry.sources[2].video_id == "abc123"
+        assert registry.sources[4].section_path == "Style / Evidence"
+
+    def test_compile_preserves_s1_to_s5_textbook_section_attribution(self, tmp_path, attribution_db):
+        from wiki.compiler import compile_article
+        from wiki.sources_schema import load_sources_registry
+
+        prompts_dir = tmp_path / "prompts"
+        prompts_dir.mkdir()
+        (prompts_dir / "compile_article.md").write_text(
+            "Prompt: {topic} {slug} {domain} {tracks} {sources} {source_ids} {date}"
+        )
+        wiki_dir = tmp_path / "wiki"
+
+        with patch("wiki.compiler.PROMPTS_DIR", prompts_dir), \
+             patch("wiki.compiler.WIKI_DIR", wiki_dir), \
+             patch("wiki.compiler.is_compiled", return_value=False), \
+             patch("wiki.compiler.mark_compiled"), \
+             patch(
+                 "wiki.compiler._call_gemini",
+                 return_value="# Title\n\n[S1][S2][S3][S4][S5]\n",
+             ):
+            result = compile_article(
+                topic="Test",
+                slug="textbook-only",
+                domain="grammar/b2",
+                sources=[
+                    {"chunk_id": "S1", "text": "text", "corpus": "textbook_sections"},
+                    {"chunk_id": "S2", "text": "text", "corpus": "textbook_sections"},
+                    {"chunk_id": "S3", "text": "text", "corpus": "textbook_sections"},
+                    {"chunk_id": "S4", "text": "text", "corpus": "textbook_sections"},
+                    {"chunk_id": "S5", "text": "text", "corpus": "textbook_sections"},
+                ],
+            )
+
+        registry = load_sources_registry(result.with_suffix(".sources.yaml"))
+        assert [entry.id for entry in registry.sources] == ["S1", "S2", "S3", "S4", "S5"]
+        assert [entry.file for entry in registry.sources] == [
+            "11-klas-ukrmova-avramenko-2019_s0001",
+            "11-klas-ukrmova-avramenko-2019_s0002",
+            "11-klas-ukrmova-avramenko-2019_s0003",
+            "11-klas-ukrmova-avramenko-2019_s0004",
+            "11-klas-ukrmova-avramenko-2019_s0005",
+        ]
+        assert all(entry.type == "textbook" for entry in registry.sources)
+
+    def test_inject_generated_by_model_dedupes_existing_line(self):
+        from wiki.compiler import _inject_generated_by_model
+
+        article = (
+            "# Demo\n\n"
+            "<!-- wiki-meta\n"
+            "slug: demo\n"
+            "compiled: 2026-04-23\n"
+            "generated_by_model: unknown\n"
+            "-->\n"
+        )
+
+        updated = _inject_generated_by_model(article, model_used="gemini-3.1-pro-preview")
+
+        assert updated.count("generated_by_model:") == 1
+        assert "generated_by_model: gemini-3.1-pro-preview" in updated
 
 
 class TestCompileCommand:
