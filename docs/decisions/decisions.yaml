@@ -116,3 +116,34 @@ decisions:
         rejected_because: "Requires API key, lower rate limits than Pro subscription"
     superseded_by: null
     depends_on: []
+
+  - id: dec-007
+    status: active
+    date: "2026-04-24"
+    expires: "2027-04-23"
+    scope: pipeline
+    title: "Enforce dec-001 at code level — no LLM regeneration during review"
+    reasoning: >
+      ADR-007 enforces dec-001 at the code level. All in-loop rewrite
+      mechanisms removed: tier strategies (section_rewrite, full_rewrite,
+      writer_swap), the reviewer-emitted <rewrite-block> protocol, the
+      WORD_BUDGET auto-heal, and ~400 LOC of rewrite-block infrastructure.
+      Convergence ladder collapses to two strategies — patch and
+      plan_revision_request terminal. Empirical re-validation: a1/colors
+      smoke (2026-04-23) reproduced the 9.6→8.4 degradation pattern that
+      drove dec-001, with full_rewrite reintroducing the same flag-color
+      hallucination the <fixes> block had already corrected. Longer expiry
+      (12 months) because the underlying policy has been re-validated twice
+      on independent evidence; reintroducing rewrites requires NEW empirical
+      evidence that FROM-SCRATCH rewrites do not degrade content.
+    evidence: "ADR-007 (docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.md), PR-A #1500, PR-B #1499, PR-C #1506, PR-D #1509, PR-F #1508, closer #1456, a1/colors smoke 2026-04-23"
+    alternatives:
+      - option: "REVERT — accept rewrites with documented constraints"
+        rejected_because: "No new empirical data in favour; 9.6→8.4 degradation re-demonstrated on a1/colors 2026-04-23"
+      - option: "Keep section_rewrite only (kill full_rewrite + writer_swap)"
+        rejected_because: "Same LLM-regeneration class; partial kill leaves drift surface intact"
+      - option: "Stub the rewrite tiers instead of deleting"
+        rejected_because: "Stubs invite revival; structural invariant test (PR-F #1508) needs hard absence"
+    superseded_by: null
+    depends_on:
+      - dec-001

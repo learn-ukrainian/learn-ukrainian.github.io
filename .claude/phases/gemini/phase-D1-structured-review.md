@@ -115,16 +115,17 @@ You have access to RAG tools for linguistic verification. **Use them actively** 
 
 ### Textbook Cross-Reference
 
+- **`mcp__sources__search_sources`**: **PREFERRED** unified source search across textbooks, literary works, Wikipedia, external articles, and the ukrainian_wiki pedagogy corpus. Use this as the default cross-check for grammar claims and pedagogy.
 - **`mcp__sources__search_text`**: Search Ukrainian school textbooks (1.2K+ chunks) for grammar explanations, vocabulary usage, and pedagogical approaches. Use this to verify grammar rules stated in the content.
 - **`mcp__sources__search_images`**: Search textbook illustrations for visual aids that could enhance the content.
 - **`mcp__sources__search_literary`**: Search primary literary sources for quote verification.
 
-**When to cross-reference**: (a) Grammar rule claims — verify they match textbook explanations, (b) cultural claims in callout boxes, (c) example sentences that seem unnatural — check if textbooks use similar patterns.
+**When to cross-reference**: (a) Grammar rule claims — start with `mcp__sources__search_sources`, (b) cultural claims in callout boxes, (c) example sentences that seem unnatural — compare against authentic Ukrainian-source usage. Use `mcp__sources__search_text` only when you need textbook-only scoping.
 
 ### Verification Protocol
 
 1. For each word flagged ❌ in pre-scan: call `mcp__sources__verify_word` to confirm/dismiss
-2. For grammar explanations: call `mcp__sources__search_text` with the grammar topic to verify accuracy
+2. For grammar explanations: call `mcp__sources__search_sources` first; fall back to `mcp__sources__search_text` only if you need textbook-only scope
 3. For suspicious Russianisms: call `mcp__sources__verify_word` on the suspect word AND its Ukrainian alternative
 4. Report your RAG findings in the review — cite tool results as evidence
 

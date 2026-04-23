@@ -1,6 +1,6 @@
 # ADR-007: Kill the rewrite strategies — enforce reviewer-as-fixer parity
 
-**Status**: APPROVED 2026-04-23 by Krisztian K. (Y/Y/Y on Open Questions). Flips to ACCEPTED when P2-A (#1454) merges and PR-E lands per the Migration Plan gating.
+**Status**: ACCEPTED 2026-04-24 (flipped after P2-A #1454 + PR-A #1500, PR-B #1499, PR-C #1506, PR-D #1509, PR-F #1508 all merged).
 **Date**: 2026-04-23
 **Deciders**: Engineering (Krisztian K. — signed off 2026-04-23)
 **Related**: EPIC #1451 (Phase 2-C), closer #1456, pipeline rule `claude_extensions/rules/pipeline.md`, decision `dec-001` (reviewer-as-fixer, active since 2026-03-24)

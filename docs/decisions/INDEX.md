@@ -11,3 +11,4 @@ Staleness check: `.venv/bin/python scripts/check_decisions.py`
 | dec-003 | 2026-04-03 | 2026-07-03 | pipeline | active | Cap review fix rounds at 4 with degradation detection |
 | dec-004 | 2026-03-28 | 2026-06-28 | architecture | active | Bare slug filenames, no number prefixes |
 | dec-005 | 2026-04-03 | 2026-07-03 | tooling | active | Keep gemini-cli, fix dispatch retry logic |
+| dec-007 | 2026-04-24 | 2027-04-23 | pipeline | active | Enforce dec-001 at code level — no LLM regeneration during review (ADR-007) |
