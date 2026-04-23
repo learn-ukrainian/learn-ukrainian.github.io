@@ -81,6 +81,7 @@ from batch_gemini_config import (
     TIMEOUT_WRITE,
     TIMEOUT_WRITE_NO_TOOLS,
 )
+from build.alignment_manifest import compose_manifest, stamp_artifact, validate_stamped_artifact
 from build.convergence_loop import (
     ConvergenceContext,
     RecoverableValidationError,
@@ -252,7 +253,19 @@ def _read_v6_state(level: str, slug: str) -> dict:
 
 def _write_v6_state_atomic(state_path: Path, state: dict) -> None:
     """Write state.json atomically via temp file + os.replace()."""
-    write_json_atomic(state_path, state, indent=2, ensure_ascii=False)
+    stamped_state = dict(state)
+    if state_path.name == "state.json" and state_path.parent.parent.name == "orchestration":
+        level = state_path.parent.parent.parent.name
+        slug = state_path.parent.name
+        stamped_state = stamp_artifact(stamped_state, _current_alignment_manifest(level, slug))
+    write_json_atomic(state_path, stamped_state, indent=2, ensure_ascii=False)
+
+
+def _current_alignment_manifest(level: str, slug: str) -> dict:
+    return compose_manifest(
+        level=level,
+        slug=slug,
+    )
 
 
 def _handle_rate_limit_backoff(raw: str, attempt: int, max_attempts: int, phase: str) -> bool:
@@ -3202,10 +3215,23 @@ def _ensure_contract_artifacts(
     log_creation: bool = False,
 ) -> tuple[dict, dict]:
     """Load or build contract + wiki excerpt artifacts for a module."""
+    current_manifest = _current_alignment_manifest(level, slug)
     contract_path = _contract_path(level, slug)
     excerpts_path = _wiki_excerpts_path(level, slug)
     if contract_path.exists() and excerpts_path.exists():
-        return _load_yaml_artifact(contract_path), _load_yaml_artifact(excerpts_path)
+        contract = _load_yaml_artifact(contract_path)
+        excerpts = _load_yaml_artifact(excerpts_path)
+        contract_fresh, contract_mismatches = validate_stamped_artifact(contract, current_manifest)
+        excerpts_fresh, excerpts_mismatches = validate_stamped_artifact(excerpts, current_manifest)
+        if contract_fresh and excerpts_fresh:
+            if log_creation:
+                _log("  ♻️  Contract/wiki sidecars fresh — reusing cached artifacts")
+            return contract, excerpts
+        _log(
+            "  ♻️  Rebuilding contract/excerpts — stale sidecar "
+            f"(contract mismatches: {contract_mismatches}, "
+            f"excerpts mismatches: {excerpts_mismatches})"
+        )
 
     plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
     if not plan_path.exists():
@@ -3229,6 +3255,8 @@ def _ensure_contract_artifacts(
         slug=slug,
         module_num=module_num,
     )
+    contract = stamp_artifact(contract, current_manifest)
+    excerpts = stamp_artifact(excerpts, current_manifest)
     _save_yaml_artifact(contract_path, contract)
     _save_yaml_artifact(excerpts_path, excerpts)
 
@@ -3266,7 +3294,10 @@ def _save_style_review_advice_to_contract(level: str, slug: str, blocking_issues
         return
 
     contract["style_review_advice"] = advice
-    _save_yaml_artifact(contract_path, contract)
+    _save_yaml_artifact(
+        contract_path,
+        stamp_artifact(contract, _current_alignment_manifest(level, slug)),
+    )
 
 
 def _format_contract_prompt_artifacts(

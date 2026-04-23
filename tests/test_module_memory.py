@@ -4,63 +4,123 @@ import sqlite3
 import sys
 from pathlib import Path
 
+import yaml
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from build import module_memory
+from build.alignment_manifest import manifest_hash
+
+
+def _manifest(label: str) -> dict[str, object]:
+    return {
+        "plan_hash": f"plan-{label}",
+        "sources_hash": f"sources-{label}",
+        "template_hashes": {"writer": f"template-{label}"},
+        "canonical_anchor_hash": f"anchors-{label}",
+        "tokenizer_version": f"tokenizer-{label}",
+        "threshold_snapshot": {"level_config": {"words": label}, "review_target_score": 8.0},
+        "decisions_subset": [("dec-001", label)],
+    }
 
 
 def test_schema_round_trip(tmp_path: Path) -> None:
     path = tmp_path / "module-memory.yaml"
+    current_manifest = _manifest("current")
     payload = {
-        "plan_hash": "plan-a",
         "plan_version": 3,
-        "sources_hash": "sources-a",
         "constraints": [{"id": "c_001", "status": "active"}],
         "history": [{"attempt": 1, "strategy": "write"}],
         "events": [{"type": "seed"}],
     }
 
-    module_memory.save_module_memory(path, payload)
+    module_memory.save_module_memory(path, payload, current_manifest=current_manifest)
     loaded, invalidated = module_memory.load_module_memory(
         path,
-        expected_plan_hash="plan-a",
+        current_manifest=current_manifest,
         expected_plan_version=3,
-        expected_sources_hash="sources-a",
     )
+    saved = yaml.safe_load(path.read_text("utf-8"))
 
     assert invalidated is False
-    assert loaded["plan_hash"] == "plan-a"
+    assert loaded["alignment_manifest_hash"] == manifest_hash(current_manifest)
     assert loaded["constraints"] == payload["constraints"]
     assert loaded["history"] == payload["history"]
+    assert "plan_hash" not in saved
+    assert "sources_hash" not in saved
+    assert saved["alignment_manifest"]["composite_hash"] == manifest_hash(current_manifest)
 
 
-def test_plan_hash_invalidation_clears_constraints_keeps_history(tmp_path: Path) -> None:
+def test_alignment_manifest_invalidation_clears_constraints_keeps_history(tmp_path: Path) -> None:
     path = tmp_path / "module-memory.yaml"
+    original_manifest = _manifest("before")
     module_memory.save_module_memory(
         path,
         {
-            "plan_hash": "old-plan",
             "plan_version": 1,
-            "sources_hash": "sources-a",
             "constraints": [{"id": "c_001", "status": "active"}],
             "history": [{"attempt": 1, "strategy": "write"}],
         },
+        current_manifest=original_manifest,
     )
 
+    updated_manifest = _manifest("after")
     loaded, invalidated = module_memory.load_module_memory(
         path,
-        expected_plan_hash="new-plan",
+        current_manifest=updated_manifest,
         expected_plan_version=2,
-        expected_sources_hash="sources-b",
     )
 
     assert invalidated is True
     assert loaded["constraints"] == []
     assert loaded["history"] == [{"attempt": 1, "strategy": "write"}]
-    assert loaded["plan_hash"] == "new-plan"
-    assert loaded["sources_hash"] == "sources-b"
-    assert loaded["events"][-1]["type"] == "plan_hash_invalidation"
+    assert loaded["alignment_manifest_hash"] == manifest_hash(updated_manifest)
+    assert loaded["events"][-1]["type"] == "alignment_manifest_invalidation"
+    assert loaded["events"][-1]["previous_hash"] == manifest_hash(original_manifest)
+    assert loaded["events"][-1]["current_hash"] == manifest_hash(updated_manifest)
+
+
+def test_legacy_plan_hash_file_migrates_and_invalidates_on_first_read(
+    tmp_path: Path,
+    caplog,
+) -> None:
+    path = tmp_path / "module-memory.yaml"
+    path.write_text(
+        yaml.safe_dump(
+            {
+                "plan_hash": "legacy-plan",
+                "plan_version": 4,
+                "sources_hash": "legacy-sources",
+                "constraints": [{"id": "c_001", "status": "active"}],
+                "history": [{"attempt": 1, "strategy": "write"}],
+                "events": [{"type": "seed"}],
+            },
+            sort_keys=False,
+            allow_unicode=True,
+        ),
+        "utf-8",
+    )
+
+    current_manifest = _manifest("legacy-current")
+    with caplog.at_level("INFO"):
+        loaded, invalidated = module_memory.load_module_memory(
+            path,
+            current_manifest=current_manifest,
+            expected_plan_version=4,
+        )
+    saved = yaml.safe_load(path.read_text("utf-8"))
+
+    assert invalidated is True
+    assert loaded["constraints"] == []
+    assert loaded["history"] == [{"attempt": 1, "strategy": "write"}]
+    assert loaded["events"][-1]["type"] == "alignment_manifest_migration_invalidation"
+    assert loaded["alignment_manifest_hash"] == manifest_hash(current_manifest)
+    assert "alignment_manifest_hash" in saved
+    assert "plan_hash" not in saved
+    assert "sources_hash" not in saved
+    assert saved["alignment_manifest"]["composite_hash"] == manifest_hash(current_manifest)
+    assert "Migrating legacy module memory without alignment_manifest_hash" in caplog.text
 
 
 def test_reset_memory_wipes_file(tmp_path: Path) -> None:
