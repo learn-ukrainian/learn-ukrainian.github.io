@@ -40,6 +40,10 @@ Chunk ID: `{chunk_id}`
 
 {sources}
 
+{citation_discipline}
+
+{canonical_anchors}
+
 ## Що є граматичним нарисом
 
 Це НЕ урок. Це **довідник для автора-письменника**, що охоплює:

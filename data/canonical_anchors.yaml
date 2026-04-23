@@ -1,0 +1,324 @@
+# Canonical Ukrainian Anchors — Shared Fact Registry
+#
+# Decolonization-critical facts that must NEVER be paraphrased or
+# approximated by LLM writers. Both the module pipeline (v6_build.py)
+# and the wiki compiler (scripts/wiki/compile.py) consume this file.
+#
+# Consumers:
+#   - Writer prompts — injected as a locked-strings block; writer
+#     MUST use the `correct` form verbatim when the topic matches.
+#   - Reviewers (factual_accuracy / factual / honesty) — emit a
+#     REJECT verdict if any `forbidden` form appears in output.
+#   - Mechanical validators — post-write regex scan for `forbidden`
+#     variants; strip or flag to `<!-- VERIFY -->` before review.
+#
+# Rule: a learner using these modules as their first contact with
+# Ukrainian must never learn a Russian-imperial or Soviet-residual
+# form as "the standard Ukrainian". This registry is the floor.
+#
+# Coverage policy: anchors are added when they have (a) state-
+# constitutional / dictionary authority AND (b) a known LLM failure
+# mode producing a decolonization-harmful alternative. Not every
+# Ukrainian fact belongs here — only ones where LLM drift carries
+# real decolonization risk.
+#
+# Sources cited per anchor use the repo's corpus IDs where possible
+# (VESUM, СУМ-11, Правопис 2019, textbook author+grade+page).
+
+version: "1.0.0"
+last_updated: "2026-04-23"
+
+anchors:
+
+  # ═══════════════════════════════════════════════════════════════
+  # NATIONAL SYMBOLS
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: flag_ukraine
+    topic: "Ukrainian national flag"
+    topic_uk: "Прапор України"
+    correct: "синьо-жовтий"
+    correct_alternates:
+      - "синьо-жовтий прапор"
+      - "Державний Прапор України — синьо-жовтий"
+    forbidden:
+      - pattern: "блакитно-жовт"
+        reason: "Soviet-era diminishing framing; blue-for-flag is «синій», not «блакитний»"
+      - pattern: "«блакитний»[^.]{0,40}прапор"
+        reason: "Miscategorizes the flag color; canonical since 1992 state act is «синій»"
+      - pattern: "прапор[^.]{0,60}«блакитний»"
+        reason: "Same miscategorization, reverse order"
+    authority:
+      - "Constitutional Act Jan–Feb 1992 defining state symbols"
+      - "Grade 5 Zabolotnyi 2023 p.41 — 5-klas-ukrmova-zabolotnyi-2023_s0042"
+      - "Grade 11 Hlibovska 2024 p.222 — 11-klas-istoriya-ukr-hlibovska-2024_s0407"
+      - "uk.wikipedia Прапор_України"
+    note: >
+      СУМ-11 defines «блакитний» as "небесно-голубого кольору; голубий"
+      (light sky blue), NOT the flag blue. The flag's «синій» is the
+      saturated blue of the state symbol. Teaching "блакитний-жовтий"
+      to learners imprints the Soviet diminishing register instead of
+      the state-constitutional form.
+
+  - id: trident
+    topic: "Ukrainian state emblem"
+    topic_uk: "Малий Державний Герб України"
+    correct: "Тризуб"
+    correct_alternates:
+      - "тризуб Володимира Великого"
+      - "знак княжої держави Володимира"
+    forbidden:
+      - pattern: "герб.*двоголов"
+        reason: "Двоголовий orел is the Russian imperial symbol, not Ukrainian"
+    authority:
+      - "Constitutional Act Feb 1992"
+      - "Grade 11 Hlibovska 2024"
+
+  - id: anthem
+    topic: "Ukrainian national anthem"
+    topic_uk: "Державний Гімн України"
+    correct: "Ще не вмерла України і слава, і воля"
+    correct_alternates:
+      - "Ще не вмерла України"
+      - "Ще не вмерла Україна"
+    forbidden: []
+    authority:
+      - "Павло Чубинський (слова), Михайло Вербицький (музика)"
+      - "Constitutional Act Feb 1992 (музична редакція)"
+
+  # ═══════════════════════════════════════════════════════════════
+  # GEOGRAPHY + STATE
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: capital
+    topic: "Capital of Ukraine"
+    topic_uk: "Столиця України"
+    correct: "Київ"
+    correct_alternates: []
+    forbidden:
+      - pattern: "\\bKiev\\b"
+        reason: "Kiev is the Russian-imperial romanization; Kyiv is the Ukrainian form (official English since 2018)"
+    authority:
+      - "Constitutional, state-usage"
+      - "Associated Press Stylebook 2019+ (official romanization)"
+
+  - id: currency
+    topic: "Ukrainian currency"
+    topic_uk: "Національна валюта України"
+    correct: "гривня"
+    correct_alternates:
+      - "українська гривня"
+      - "грн"
+    forbidden:
+      - pattern: "\\bрубль\\b"
+        reason: "Рубль is the Russian/Soviet currency, not Ukrainian"
+    authority:
+      - "Національний банк України"
+
+  - id: language_self_name
+    topic: "Name of the Ukrainian language (in Ukrainian)"
+    topic_uk: "Назва української мови"
+    correct: "українська мова"
+    correct_alternates:
+      - "рідна мова (context: Ukrainian speaker's L1)"
+    forbidden:
+      - pattern: "малоросійськ(а|ою) мов"
+        reason: "Russian-imperial designation; banned pejorative"
+    authority:
+      - "Constitutional Art. 10"
+
+  # ═══════════════════════════════════════════════════════════════
+  # LANGUAGE-NORMATIVE PAIRS (high-frequency L2 traps)
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: greeting_hello_formal
+    topic: "Formal greeting (hello)"
+    topic_uk: "Формальне вітання"
+    correct: "Добрий день"
+    correct_alternates:
+      - "Вітаю"
+      - "Доброго дня"
+      - "Доброго ранку"
+      - "Добрий вечір"
+    forbidden:
+      - pattern: "\\bЗдрастуйте\\b"
+        reason: "Прямий русизм (рос. здравствуйте); VESUM класифікує як розмовне"
+      - pattern: "\\bЗдравствуйте\\b"
+        reason: "Russian word, not Ukrainian"
+    authority:
+      - "VESUM, СУМ-11"
+
+  - id: farewell_goodbye
+    topic: "Goodbye (neutral + informal)"
+    topic_uk: "Прощання"
+    correct: "До побачення"
+    correct_alternates:
+      - "Бувай (informal)"
+      - "На все добре"
+    forbidden:
+      - pattern: "\\bПока\\b"
+        reason: "Рос. запозичення; нейтральний варіант — «До побачення»"
+    authority:
+      - "VESUM (незмінне розмовне)"
+
+  - id: father_family
+    topic: "Father (in family context)"
+    topic_uk: "Батько / тато"
+    correct: "тато"
+    correct_alternates:
+      - "батько (formal)"
+    forbidden:
+      - pattern: "«папа»\\s*\\(у родині\\)"
+        reason: "Русизм; СУМ-11 подає «папа» лише як «Глава католицької церкви»"
+    authority:
+      - "СУМ-11"
+
+  - id: surname_name_term
+    topic: "Surname (word for)"
+    topic_uk: "Прізвище"
+    correct: "прізвище"
+    correct_alternates: []
+    forbidden:
+      - pattern: "\\bфамілі[яю]\\b"
+        reason: "СУМ-11 позначає «фамілія» як розм./заст./діал.; нормативне — прізвище"
+    authority:
+      - "СУМ-11"
+
+  # ═══════════════════════════════════════════════════════════════
+  # L2 CALQUES (English structural transfer)
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: name_introduction
+    topic: "Introducing one's name"
+    topic_uk: "Представлення імені"
+    correct: "Мене звати [ім'я]"
+    correct_alternates:
+      - "Мене звуть [ім'я]"
+    forbidden:
+      - pattern: "Моє ім'я є\\s"
+        reason: "Калька з англ. My name is X; українська модель безособова"
+    authority:
+      - "VESUM: звати/звуть; Grade 6 textbook канонічна модель"
+
+  - id: copula_present_tense
+    topic: "Copula in present tense (not used in Ukrainian)"
+    topic_uk: "Дієслово-зв'язка в теперішньому часі"
+    correct: "Я студент"
+    correct_alternates:
+      - "Я з України"
+      - "Він лікар"
+    forbidden:
+      - pattern: "Я є студент\\b"
+        reason: "Форсоване копула «є» за англ. I am a student; українська в теперішньому копулу опускає"
+    authority:
+      - "Українська граматика: опущення зв'язки в present"
+
+  - id: age_model
+    topic: "Stating age"
+    topic_uk: "Вказівка віку"
+    correct: "Мені [N] років"
+    correct_alternates:
+      - "Мені виповнилося [N] років"
+    forbidden:
+      - pattern: "Я маю\\s+\\d+\\s+років"
+        reason: "Калька рос. Мне N лет + англ. I have N years; українська — датив особи + кількість"
+    authority:
+      - "Українська граматика: dat+acc age model"
+
+  # ═══════════════════════════════════════════════════════════════
+  # HISTORICAL + CULTURAL (decolonization sensitive)
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: holodomor_dates
+    topic: "Holodomor (dates)"
+    topic_uk: "Голодомор"
+    correct: "1932–1933"
+    correct_alternates:
+      - "1932-1933"
+      - "Голодомор 1932–1933 років"
+    forbidden:
+      - pattern: "Holodomor.*1930s(?!\\s*–\\s*1933)"
+        reason: "Decolonization-critical date; must not be approximated as 'the 1930s'"
+    authority:
+      - "State Archives of Ukraine; Holodomor Museum"
+
+  - id: independence_date
+    topic: "Ukrainian independence (modern)"
+    topic_uk: "День Незалежності України"
+    correct: "24 серпня 1991"
+    correct_alternates:
+      - "Акт проголошення незалежності України (24 серпня 1991)"
+    forbidden: []
+    authority:
+      - "Акт проголошення незалежності, Верховна Рада УРСР, 24.08.1991"
+
+  # ═══════════════════════════════════════════════════════════════
+  # CURRENT STATE FIGURES (require update when changed)
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: current_president
+    topic: "Current President of Ukraine"
+    topic_uk: "Президент України (станом на 2026)"
+    correct: "Володимир Зеленський"
+    correct_alternates:
+      - "Президент Володимир Зеленський"
+    forbidden: []
+    update_policy: "MUST review after any presidential election"
+    last_verified: "2026-04-23"
+
+  - id: current_pm
+    topic: "Current Prime Minister of Ukraine"
+    topic_uk: "Прем'єр-міністр України (станом на 2026)"
+    correct: "Юлія Свириденко"
+    correct_alternates:
+      - "Прем'єрка Юлія Свириденко"
+    forbidden:
+      - pattern: "Юлі[яю]\\s+Тимошенко"
+        reason: "Not the current PM; avoid positive-framing references in persona/role-model contexts (user guidance 2026)"
+    update_policy: "MUST review after any PM change"
+    last_verified: "2026-04-23"
+
+  # ═══════════════════════════════════════════════════════════════
+  # LITERARY CANON (who counts as Ukrainian canon)
+  # ═══════════════════════════════════════════════════════════════
+
+  - id: ukrainian_literary_canon_safe
+    topic: "Safe Ukrainian literary references (uncontested identity)"
+    topic_uk: "Безперечно український літературний канон"
+    correct: "Тарас Шевченко, Іван Франко, Леся Українка, Василь Стус, Ліна Костенко, Оксана Забужко, Юрій Андрухович, Сергій Жадан, Валер'ян Підмогильний"
+    correct_alternates: []
+    forbidden:
+      - pattern: "Михайл[оа]\\s+Булгаков.*(український|Ukrainian)\\s+(письменник|канон|literature)"
+        reason: "Born in Kyiv but wrote in Russian, Russian-imperial ideology; White Guard portrayed Ukrainian forces as bandits; removed from Ukrainian canon since 2022"
+      - pattern: "Анн[ау]\\s+Ахматов.*(українськ|Ukrainian)"
+        reason: "Russian-imperial cultural figure with biographical Ukrainian ties; not Ukrainian canon"
+    authority:
+      - "Ukrainian Ministry of Culture post-2022 de-canonization decisions"
+      - "User guidance 2026-04-18 (memory/MEMORY.md Fact Corrections)"
+
+# ═══════════════════════════════════════════════════════════════════
+# USAGE
+# ═══════════════════════════════════════════════════════════════════
+#
+# Python:
+#     from pathlib import Path
+#     import yaml
+#     anchors = yaml.safe_load(
+#         Path("data/canonical_anchors.yaml").read_text(encoding="utf-8")
+#     )["anchors"]
+#
+# Writer prompt injection (Ukrainian text block):
+#     for each anchor with a `forbidden` list → emit a table row:
+#         "Topic={topic_uk}; MUST use={correct}; FORBIDDEN={forbidden[].pattern}"
+#     Injected as a `{CANONICAL_ANCHORS}` placeholder.
+#
+# Reviewer prompt injection:
+#     Same table, but phrased as "flag as REJECT if any forbidden
+#     pattern appears in the article body".
+#
+# Mechanical validator:
+#     for each anchor:
+#         for each forbidden.pattern (regex):
+#             match in article_text → record violation (location + reason)
+#     Violations → strip or replace with <!-- VERIFY: reason --> before
+#     review runs.

@@ -190,6 +190,21 @@ def _build_prompt(*, topic: str, slug: str, domain: str,
     tracks_str = ", ".join(tracks) or "general"
     source_ids_str = ", ".join(source_ids[:20])
 
+    # Writer-discipline injection (2026-04-23, post-#1431 v2):
+    # - {citation_discipline} tells the writer exactly how many [S*] IDs
+    #   are legal (bounded by actual retrieval count — prevents [S6+]
+    #   hallucinations in a 5-chunk retrieval)
+    # - {canonical_anchors} lists decolonization-critical forbidden forms
+    #   (e.g. «блакитний-жовтий» for the flag) that the writer must never
+    #   produce, rendered as a Ukrainian table
+    # See scripts/wiki/discipline.py for the implementation.
+    from .discipline import (
+        render_canonical_anchors_for_writer,
+        render_citation_discipline_block,
+    )
+    citation_discipline = render_citation_discipline_block(len(sources))
+    canonical_anchors = render_canonical_anchors_for_writer()
+
     prompt = template
     prompt = prompt.replace("{topic}", topic)
     prompt = prompt.replace("{slug}", slug)
@@ -199,6 +214,8 @@ def _build_prompt(*, topic: str, slug: str, domain: str,
     prompt = prompt.replace("{source_ids}", source_ids_str)
     prompt = prompt.replace("{date}", date)
     prompt = prompt.replace("{generated_by_model}", generated_by_model)
+    prompt = prompt.replace("{citation_discipline}", citation_discipline)
+    prompt = prompt.replace("{canonical_anchors}", canonical_anchors)
     return prompt
 
 

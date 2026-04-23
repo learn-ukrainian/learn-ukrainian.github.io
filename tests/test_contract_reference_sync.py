@@ -235,3 +235,95 @@ def test_v6_build_injects_immersion_rule_into_reviewer_replacements() -> None:
         "Expected {IMMERSION_RULE} in both writer and reviewer replacement "
         f"dicts; found {occurrences} occurrence(s)."
     )
+
+
+# ═══════════════════════════════════════════════════════════════════
+# §7a canonical anchors pin-tests — 2026-04-23
+# ═══════════════════════════════════════════════════════════════════
+
+
+def test_contract_carries_section_7a_canonical_anchors() -> None:
+    """The shared contract must name §7a — the canonical-anchors
+    contract. This is the layer that forbids decolonization-harmful
+    forms (e.g. «блакитно-жовтий» for the Ukrainian flag) and it's
+    referenced by writer, Factual, Honesty, and Language reviewers.
+    If anyone drops §7a from the contract, all four prompts become
+    under-specified."""
+    text = CONTRACT_PATH.read_text("utf-8")
+    assert "§7a" in text or "7a " in text, (
+        "Contract missing §7a canonical-anchors section. This is "
+        "load-bearing for decolonization — see data/canonical_anchors.yaml."
+    )
+    assert "canonical_anchors.yaml" in text, (
+        "Contract §7a must reference the shared registry at "
+        "data/canonical_anchors.yaml."
+    )
+
+
+def test_writer_prompt_carries_canonical_anchors_placeholder() -> None:
+    """Writer prompt must inject the Ukrainian-language anchors block
+    before drafting begins. Prevents the «блакитний»-for-flag class of
+    hallucination that GH #1431 v2 surfaced on a1/colors."""
+    text = WRITER_PROMPT_PATH.read_text("utf-8")
+    assert "{CANONICAL_ANCHORS}" in text, (
+        "Writer prompt missing {CANONICAL_ANCHORS} placeholder. "
+        "Contract §7a requires the anchor block to reach the writer."
+    )
+
+
+@pytest.mark.parametrize("dim", ["factual", "honesty", "language"])
+def test_reviewer_template_carries_canonical_anchors_placeholder(dim: str) -> None:
+    """Factual + Honesty + Language reviewers each need the reviewer-
+    flavored canonical anchors block so they emit REJECT on any
+    forbidden-pattern match."""
+    template = _reviewer_template(dim)
+    text = template.read_text("utf-8")
+    assert "{CANONICAL_ANCHORS_REVIEWER}" in text, (
+        f"Reviewer template for {dim!r} missing "
+        "{CANONICAL_ANCHORS_REVIEWER} placeholder. Contract §7a "
+        "requires this dim to REJECT on anchor violations."
+    )
+
+
+def test_v6_build_injects_canonical_anchors_replacements() -> None:
+    """v6_build.py replacements dicts (writer + reviewer) must invoke
+    _build_canonical_anchors_replacements so the two keys resolve at
+    prompt-build time. Without this, the placeholder literal leaks
+    into the prompt and the discipline rules are silently dropped."""
+    text = CHUNK_BUILDER_PATH.read_text("utf-8")
+    assert "_build_canonical_anchors_replacements" in text, (
+        "v6_build.py must import and call _build_canonical_anchors_replacements."
+    )
+    # The helper must be called from at least the writer AND reviewer
+    # replacements blocks — counting `**_build_canonical_anchors_replacements`
+    # occurrences catches the case where someone calls it once but forgets
+    # the other side.
+    splat_occurrences = text.count("**_build_canonical_anchors_replacements()")
+    assert splat_occurrences >= 2, (
+        "Expected **_build_canonical_anchors_replacements() call in both "
+        f"writer and reviewer replacements dicts; found {splat_occurrences}."
+    )
+
+
+def test_canonical_anchors_registry_exists_and_has_required_keys() -> None:
+    """Sanity check: the registry file itself is present and has the
+    shape all downstream code assumes. Without this, any test that
+    touches the helper will fail for a confusing reason later."""
+    import yaml as _yaml
+
+    registry_path = REPO_ROOT / "data" / "canonical_anchors.yaml"
+    assert registry_path.exists(), (
+        f"Canonical anchors registry missing at {registry_path}"
+    )
+    data = _yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+    assert isinstance(data, dict) and "anchors" in data, (
+        "Registry must have top-level 'anchors' key"
+    )
+    assert isinstance(data["anchors"], list) and data["anchors"], (
+        "Registry must have a non-empty anchors list"
+    )
+    # Every anchor needs id + topic_uk + correct for downstream renderers.
+    for anchor in data["anchors"]:
+        assert {"id", "topic_uk", "correct"}.issubset(anchor), (
+            f"Anchor missing required keys: {anchor}"
+        )

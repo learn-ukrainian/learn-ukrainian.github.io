@@ -29,6 +29,16 @@ Use these sources in this order when relevant:
 
 Apply the project rules on Russianisms, Surzhyk, calques, and paronyms.
 
+## Canonical anchors — max 6.0 triggers (contract §7a, §7)
+
+The block below lists decolonization-critical forbidden forms. For the
+**Language** dim, a match against any of these patterns caps the score
+at 6.0/10 (same rule as §7 Russianisms). Cite the exact matched text
+and emit a `<fixes>` block replacing the forbidden form with the
+canonical one.
+
+{CANONICAL_ANCHORS_REVIEWER}
+
 ## Module Under Review
 
 **Module:** {MODULE_NUM}: {TOPIC_TITLE} ({LEVEL}, {PHASE})

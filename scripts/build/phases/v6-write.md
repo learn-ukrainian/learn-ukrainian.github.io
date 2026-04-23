@@ -309,6 +309,17 @@ Each section should follow the word budget specified. The total must reach {WORD
 - **Zero paronyms**: тактична≠тактовна, ефектний≠ефективний — use the right word, not a similar-sounding one
 - **Natural Ukrainian**: Write how a Ukrainian teacher would explain this to a student. Not robotic, not textbook-dry, not overly casual.
 
+### Canonical Anchors (decolonization-critical — contract §7a)
+
+Block below lists Ukrainian facts with state/dictionary authority where LLM drift
+produces decolonization-harmful alternatives. Use the `correct` form verbatim.
+Never paraphrase these anchors. Reviewer REJECTs any forbidden-pattern match;
+post-write a mechanical validator also scans for these patterns. See
+`scripts/build/contracts/module-contract.md` §7a for policy, and
+`data/canonical_anchors.yaml` for the full registry.
+
+{CANONICAL_ANCHORS}
+
 ## Ukrainian politeness-formula register (CRITICAL)
 
 Do not interchange these fixed phrases. They are context-locked:
