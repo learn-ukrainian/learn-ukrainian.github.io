@@ -155,94 +155,6 @@ def test_apply_review_rewrite_blocks_rewrites_only_target_section(tmp_path: Path
     assert "Old practice." not in updated
 
 
-def test_apply_contract_word_budget_rewrites_targets_only_budget_blockers(
-    tmp_path: Path, monkeypatch
-) -> None:
-    level = "a1"
-    slug = "word-budget-autoheal"
-    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
-    content_path = curriculum_root / level / f"{slug}.md"
-    content_path.parent.mkdir(parents=True, exist_ok=True)
-    content_path.write_text(
-        "## Intro\nОдне коротке речення.\n\n"
-        "## Practice\nТут уже достатньо слів для перевірки.\n",
-        "utf-8",
-    )
-
-    calls: list[tuple[str, str]] = []
-
-    def fake_rewrite(*args, **kwargs):
-        calls.append((kwargs["section_name"], kwargs["directive"]))
-        return True
-
-    monkeypatch.setattr(v6_build, "_rewrite_block_section", fake_rewrite)
-
-    ok, count = v6_build._apply_contract_word_budget_rewrites(
-        content_path,
-        level=level,
-        module_num=1,
-        slug=slug,
-        writer="gemini",
-        contract={
-            "section_word_budgets": {
-                "Intro": {"target": 100, "min": 90, "max": 110},
-                "Practice": {"target": 100, "min": 90, "max": 110},
-            }
-        },
-        contract_violations=[
-            {
-                "type": "WORD_BUDGET",
-                "severity": "ERROR",
-                "section": "Intro",
-                "message": "Section 'Intro' has 10 words; contract minimum is 90",
-            }
-        ],
-    )
-
-    assert ok is True
-    assert count == 1
-    assert calls[0][0] == "Intro"
-    assert "Issue type: WORD_BUDGET" in calls[0][1]
-    assert "Contract minimum: 90" in calls[0][1]
-    assert "Contract target: 100" in calls[0][1]
-    assert "Add at least" in calls[0][1]
-
-
-def test_apply_contract_word_budget_rewrites_skips_mixed_violation_sets(
-    tmp_path: Path, monkeypatch
-) -> None:
-    content_path = tmp_path / "module.md"
-    content_path.write_text("## Intro\nКороткий текст.\n", "utf-8")
-
-    monkeypatch.setattr(v6_build, "_rewrite_block_section", lambda *args, **kwargs: True)
-
-    ok, count = v6_build._apply_contract_word_budget_rewrites(
-        content_path,
-        level="a1",
-        module_num=1,
-        slug="mixed-violations",
-        writer="gemini",
-        contract={"section_word_budgets": {"Intro": {"target": 100, "min": 90, "max": 110}}},
-        contract_violations=[
-            {
-                "type": "WORD_BUDGET",
-                "severity": "ERROR",
-                "section": "Intro",
-                "message": "Section 'Intro' has 10 words; contract minimum is 90",
-            },
-            {
-                "type": "ACTIVITY_MISSING",
-                "severity": "ERROR",
-                "section": "Intro",
-                "message": "Missing required activity marker.",
-            },
-        ],
-    )
-
-    assert ok is False
-    assert count == 0
-
-
 def test_rewrite_block_section_emits_slim_prompt_manifest(tmp_path: Path, monkeypatch) -> None:
     level = "a1"
     slug = "rewrite-prompt-audit"
@@ -666,9 +578,19 @@ def test_main_clears_stale_terminal_after_review_pass(
     assert (orch_dir / "plan_revision_request.yaml").exists() is False
 
 
-def test_run_review_heal_loop_triggers_word_budget_autoheal(tmp_path: Path, monkeypatch) -> None:
+def test_run_review_heal_loop_word_budget_error_no_longer_triggers_autoheal(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """ADR-007 PR-C: WORD_BUDGET ERROR no longer auto-heals via section regeneration.
+
+    With the M5 auto-heal removed, an unrepairable WORD_BUDGET ERROR must
+    surface as ``contract_blocking`` on the round state and prevent the
+    loop from declaring ``pass``. The reviewer's ``insert_after:`` repair
+    path is the only remaining mechanism; if the reviewer emits none, the
+    round stays blocked and the loop plateaus (downstream → terminal).
+    """
     level = "a1"
-    slug = "review-word-budget"
+    slug = "review-word-budget-no-heal"
     curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
     content_path = curriculum_root / level / f"{slug}.md"
     content_path.parent.mkdir(parents=True, exist_ok=True)
@@ -681,66 +603,42 @@ def test_run_review_heal_loop_triggers_word_budget_autoheal(tmp_path: Path, monk
     packet_path.write_text("packet", "utf-8")
 
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    # Every round: reviewer reports PASS (score 9.3) but contract-compliance
+    # still emits a WORD_BUDGET ERROR. Before PR-C the heal would mutate
+    # the content and the follow-up round cleared; now the violation sticks
+    # and ``contract_blocking`` keeps the loop from returning outcome=pass.
     review_rounds = iter(
         [
-            (False, 9.1, "## Verdict: REVISE\n<fixes></fixes>\n"),
+            (True, 9.3, "## Verdict: PASS\n"),
             (True, 9.3, "## Verdict: PASS\n"),
         ]
     )
-
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
     monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
-
-    verify_calls = {"count": 0}
-
-    def fake_verify(*args, **kwargs):
-        verify_calls["count"] += 1
-        return "complete"
-
-    monkeypatch.setattr(v6_build, "step_verify", fake_verify)
+    monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: "complete")
     monkeypatch.setattr(
         v6_build,
         "_ensure_contract_artifacts",
         lambda *args, **kwargs: (
-            {
-                "section_word_budgets": {
-                    "Intro": {"target": 100, "min": 90, "max": 110},
-                    "Practice": {"target": 100, "min": 90, "max": 110},
-                }
-            },
+            {"section_word_budgets": {"Intro": {"target": 100, "min": 90, "max": 110}}},
             {},
         ),
     )
-
-    review_passes = iter(
-        [
-            [
-                {
-                    "type": "WORD_BUDGET",
-                    "severity": "ERROR",
-                    "section": "Intro",
-                    "message": "Section 'Intro' has 10 words; contract minimum is 90",
-                }
-            ],
-            [],
-            [],
-        ]
-    )
-
+    word_budget_violation = {
+        "type": "WORD_BUDGET",
+        "severity": "ERROR",
+        "section": "Intro",
+        "message": "Section 'Intro' has 10 words; contract minimum is 90",
+    }
     monkeypatch.setattr(
         "audit.checks.contract_compliance.check_contract_compliance",
-        lambda *args, **kwargs: next(review_passes),
+        lambda *args, **kwargs: [word_budget_violation],
     )
-
-    autoheal_calls: list[dict] = []
-
-    def fake_word_budget_autoheal(*args, **kwargs):
-        autoheal_calls.append(kwargs)
-        return (len(autoheal_calls) == 1), (1 if len(autoheal_calls) == 1 else 0)
-
-    monkeypatch.setattr(v6_build, "_apply_contract_word_budget_rewrites", fake_word_budget_autoheal)
     monkeypatch.setattr(v6_build, "_save_contract_compliance", lambda *args, **kwargs: None)
+
+    # Make sure even dead-code lookups can't silently resurrect the heal path.
+    assert not hasattr(v6_build, "_apply_contract_word_budget_rewrites")
 
     result = v6_build._run_review_heal_loop(
         content_path,
@@ -752,11 +650,12 @@ def test_run_review_heal_loop_triggers_word_budget_autoheal(tmp_path: Path, monk
         max_rounds=2,
     )
 
-    assert result.outcome == "pass"
-    assert len(autoheal_calls) >= 1
-    assert autoheal_calls[0]["writer"] == "gemini"
-    assert autoheal_calls[0]["contract_violations"][0]["type"] == "WORD_BUDGET"
-    assert verify_calls["count"] == 1
+    # Without the heal, contract_blocking remains True and the loop exits
+    # as plateau (max_rounds hit with non-passing state). A downstream
+    # terminal emitter would then write plan_revision_request.yaml.
+    assert result.outcome == "plateau"
+    assert result.rounds[-1].contract_blocking is True
+    assert result.rounds[-1].contract_violations[0]["type"] == "WORD_BUDGET"
 
 
 _HEAL_LOOP_DIMENSIONS = (
@@ -822,11 +721,6 @@ def _setup_heal_loop_fixture(tmp_path: Path, monkeypatch, slug: str) -> Path:
     monkeypatch.setattr(
         "audit.checks.contract_compliance.check_contract_compliance",
         lambda *args, **kwargs: [],
-    )
-    monkeypatch.setattr(
-        v6_build,
-        "_apply_contract_word_budget_rewrites",
-        lambda *args, **kwargs: (False, 0),
     )
     monkeypatch.setattr(v6_build, "_save_contract_compliance", lambda *args, **kwargs: None)
     return content_path
@@ -1172,49 +1066,6 @@ def test_review_loop_confirmation_triggers_on_two_small_deltas_plateau(
 
     assert result.outcome == "pass"
     assert result.rounds[-1].score == 9.7
-
-
-def test_review_loop_confirmation_triggers_on_word_budget_rewrite_only(
-    tmp_path: Path, monkeypatch
-) -> None:
-    """Bug #1316 Bug B — word_budget_rewrite alone must trigger confirmation.
-
-    The three mutation paths are independent: main fixes, rewrite blocks,
-    and word-budget rewrites. A round where ONLY the word-budget rewrite
-    applied still changes content and still invalidates the pre-fix
-    review score, so confirmation must run.
-    """
-    content_path = _setup_heal_loop_fixture(tmp_path, monkeypatch, slug="conf-word-budget")
-
-    review_rounds = iter(
-        [
-            (False, 9.0, "## Verdict: REVISE\n"),
-            (False, 9.1, "## Verdict: REVISE\n"),
-            (True, 9.5, _fake_review_text(10, "PASS")),  # confirmation
-        ]
-    )
-    monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
-    monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
-    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
-    # Only word-budget rewrite applies a mutation.
-    monkeypatch.setattr(
-        v6_build,
-        "_apply_contract_word_budget_rewrites",
-        lambda *args, **kwargs: (True, 1),
-    )
-
-    result = v6_build._run_review_heal_loop(
-        content_path,
-        level="a1",
-        module_num=1,
-        slug="conf-word-budget",
-        writer="gemini",
-        reviewer_override="codex-tools",
-        max_rounds=2,
-    )
-
-    assert result.outcome == "pass"
-    assert result.rounds[-1].score == 9.5
 
 
 def test_review_loop_confirmation_pass_blocked_by_contract_errors(
