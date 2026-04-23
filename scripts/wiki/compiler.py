@@ -8,6 +8,7 @@ import contextlib
 import os
 import re
 import shutil
+import sys
 import tempfile
 import time
 from pathlib import Path
@@ -38,6 +39,9 @@ GEMINI_CLI = shutil.which("gemini") or "gemini"
 _PARENT_ENV = os.environ.copy()
 _PARENT_ENV["GEMINI_SESSION"] = "1"
 WIKI_META_RE = re.compile(r"<!--\s*wiki-meta\b(?P<body>.*?)-->", re.DOTALL)
+_MCP_WARNING_PREFIX_RE = re.compile(
+    r"^MCP issues detected\. Run /mcp list for status\."
+)
 
 
 def compile_article(
@@ -122,6 +126,14 @@ def compile_article(
     fence_match = re.match(r"^```\w*\n(.*?)```\s*$", response.strip(), re.DOTALL)
     if fence_match:
         response = fence_match.group(1)
+    response, stripped_noise_labels = _strip_known_output_noise(response)
+    if stripped_noise_labels:
+        labels = ", ".join(sorted(stripped_noise_labels))
+        print(
+            f"⚠️  stripped {labels} line from {slug}",
+            file=sys.stderr,
+            flush=True,
+        )
     response = _inject_generated_by_model(response, model_used=model_used)
 
     # Validate response
@@ -224,6 +236,28 @@ def _normalize_generated_by_model(model_used: str | None) -> str:
     return (model_used or "").strip() or "unknown"
 
 
+def _strip_known_output_noise(article_text: str) -> tuple[str, set[str]]:
+    """Drop known Gemini CLI noise lines before writing article markdown."""
+    cleaned: list[str] = []
+    stripped_labels: set[str] = set()
+
+    for line in article_text.splitlines(keepends=True):
+        line_body = line.rstrip("\r\n")
+        line_ending = line[len(line_body):]
+        candidate = line_body.lstrip()
+        match = _MCP_WARNING_PREFIX_RE.match(candidate)
+        if not match:
+            cleaned.append(line)
+            continue
+
+        stripped_labels.add("MCP-warning")
+        remainder = candidate[match.end():].lstrip()
+        if remainder:
+            cleaned.append(remainder + line_ending)
+
+    return "".join(cleaned), stripped_labels
+
+
 def _inject_generated_by_model(article_text: str, *, model_used: str | None) -> str:
     """Write the actual successful Gemini rung into the wiki-meta block."""
     match = WIKI_META_RE.search(article_text)
@@ -235,16 +269,16 @@ def _inject_generated_by_model(article_text: str, *, model_used: str | None) -> 
     lines = [line.rstrip() for line in body.splitlines()]
     lines = [line for line in lines if not line.strip().startswith("generated_by_model:")]
     updated: list[str] = []
-    inserted = False
+    wrote_generated_by_model = False
 
     for line in lines:
         stripped = line.strip()
         updated.append(line)
-        if stripped.startswith("compiled:"):
+        if stripped.startswith("compiled:") and not wrote_generated_by_model:
             updated.append(f"generated_by_model: {model}")
-            inserted = True
+            wrote_generated_by_model = True
 
-    if not inserted:
+    if not wrote_generated_by_model:
         updated.append(f"generated_by_model: {model}")
 
     rendered = "<!-- wiki-meta\n" + "\n".join(updated) + "\n-->"
