@@ -331,9 +331,16 @@ def _format_sources(sources: list[dict]) -> str:
         header = " | ".join(header_parts) if header_parts else f"Source {i}"
         chunk_id = chunk.get("chunk_id", "")
         text = _clean_chunk_text(chunk)
+        # Strip the textbook S-prefix so the internal chunk reference cannot
+        # be mistaken for the [S1]..[SN] source citation format in prose.
+        display_ref = (
+            chunk_id.removeprefix("S")
+            if str(chunk.get("source_type")) == "textbook"
+            else chunk_id
+        )
 
         parts.append(f"### Source {i}: {header}\n"
-                     f"Chunk ID: `{chunk_id}`\n\n"
+                     f"(internal ref: `{display_ref}` — cite this source as `[S{i}]`)\n\n"
                      f"{text}")
 
     return "\n\n---\n\n".join(parts)
