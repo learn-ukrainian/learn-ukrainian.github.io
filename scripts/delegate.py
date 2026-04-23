@@ -161,13 +161,215 @@ def _normalize_worktree_path(raw_path: str) -> Path:
     return path.resolve()
 
 
+# ---------------------------------------------------------------------------
+# Worktree lifecycle — create, validate, reuse
+# ---------------------------------------------------------------------------
+#
+# The four failure classes below drove a design change from "silent-reuse
+# existing directory" to "validate before reuse, raise a specific error
+# otherwise." Silent reuse is how #1473 shipped a stub alignment_manifest.py
+# as a real PR: the dispatched worktree already existed on a stale branch
+# and delegate.py inherited that state. Each exception carries the exact
+# remediation command in its message so operators can unblock without
+# digging.
+
+class WorktreeBranchMismatch(RuntimeError):
+    """Existing worktree is on a branch other than the expected dispatch branch."""
+
+
+class WorktreeDirty(RuntimeError):
+    """Existing worktree has uncommitted changes; refuse to reuse."""
+
+
+class WorktreeStaleBase(RuntimeError):
+    """Existing worktree is behind origin/<base> and the fast-forward rebase failed."""
+
+
+def _normalize_task_id(agent: str, task_id: str) -> str:
+    """Strip a leading ``{agent}-`` or ``{agent}/`` from task_id.
+
+    Shared by :func:`_derive_worktree_branch` and :func:`_auto_worktree_path`
+    so the branch name and the dispatch/ subtree path land in sync even
+    when the caller accidentally prefixed the agent name (our own tools
+    often do — task-ids like ``codex-1472-foo`` are common).
+    """
+    for prefix in (f"{agent}-", f"{agent}/"):
+        if task_id.startswith(prefix):
+            return task_id[len(prefix):]
+    return task_id
+
+
 def _derive_worktree_branch(agent: str, task_id: str) -> str:
-    """Derive a git-safe branch name for a delegated worktree."""
-    safe_task = re.sub(r"[^A-Za-z0-9._/-]+", "-", task_id).strip("./-")
+    """Derive a git-safe branch name for a delegated worktree.
+
+    Normalizes task_id first so ``codex-1472-foo`` produces
+    ``codex/1472-foo`` rather than ``codex/codex-1472-foo``.
+    """
+    normalized = _normalize_task_id(agent, task_id)
+    safe_task = re.sub(r"[^A-Za-z0-9._/-]+", "-", normalized).strip("./-")
     safe_task = re.sub(r"/{2,}", "/", safe_task)
     if not safe_task:
         safe_task = "task"
     return f"{agent}/{safe_task}"
+
+
+def _auto_worktree_path(agent: str, task_id: str) -> Path:
+    """Default worktree path for a fresh dispatch: ``.worktrees/dispatch/{agent}/{task}/``."""
+    normalized = _normalize_task_id(agent, task_id)
+    # Slashes are fine in branch names but not in a single path component,
+    # so flatten them here (task_id ``foo/bar`` → path ``foo-bar``).
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "-", normalized).strip("./-") or "task"
+    return _REPO_ROOT / ".worktrees" / "dispatch" / agent / safe
+
+
+def _classify_worktree_layout(path: Path | str | None) -> str | None:
+    """Return "dispatch" (new subtree), "flat" (old), "external", or None."""
+    if path is None:
+        return None
+    p = Path(path)
+    try:
+        rel = p.resolve().relative_to(_REPO_ROOT)
+    except ValueError:
+        return "external"
+    parts = rel.parts
+    if parts and parts[0] == ".worktrees":
+        if len(parts) >= 4 and parts[1] == "dispatch":
+            return "dispatch"
+        if len(parts) >= 2:
+            return "flat"
+    return None
+
+
+def _fetch_base(base: str) -> bool:
+    """Fetch ``origin/{base}``. Returns True iff the remote ref is resolvable."""
+    proc = subprocess.run(
+        ["git", "fetch", "origin", base],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        return False
+    verify = subprocess.run(
+        ["git", "rev-parse", "--verify", f"origin/{base}"],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return verify.returncode == 0
+
+
+def _resolve_sha(path: Path, ref: str = "HEAD") -> str | None:
+    """Return the commit SHA at ``ref`` in ``path``, or None if unresolvable."""
+    proc = subprocess.run(
+        ["git", "rev-parse", ref],
+        cwd=path,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        return None
+    sha = (proc.stdout or "").strip()
+    return sha or None
+
+
+def _validate_existing_worktree(
+    *, path: Path, expected_branch: str, base: str,
+) -> bool:
+    """Validate a reused worktree. Returns True if a rebase occurred.
+
+    Raises :class:`WorktreeBranchMismatch`, :class:`WorktreeDirty`, or
+    :class:`WorktreeStaleBase` on the respective failure mode. The
+    checks skip silently when the path isn't a real git worktree (e.g.
+    a tmp_path fixture) — those cases either fail at the first real git
+    operation later or were never on the dispatch path to begin with.
+    """
+    # 1. Branch check.
+    branch_proc = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        cwd=path,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if branch_proc.returncode != 0:
+        # Not a git worktree (e.g. test tmp dir). Don't treat as an error —
+        # the caller may be a test fixture, and real dispatch paths will
+        # surface the issue on the next git op.
+        return False
+    actual_branch = (branch_proc.stdout or "").strip()
+    if actual_branch and actual_branch != expected_branch:
+        raise WorktreeBranchMismatch(
+            f"worktree at {path} is on branch {actual_branch!r}, expected "
+            f"{expected_branch!r}. Remove it and retry:\n"
+            f"    git worktree remove {path}"
+        )
+
+    # 2. Dirty check.
+    status_proc = subprocess.run(
+        ["git", "status", "--porcelain"],
+        cwd=path,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    dirty_output = (status_proc.stdout or "").strip()
+    if dirty_output:
+        first_files = [line[3:] for line in dirty_output.splitlines()[:3]]
+        raise WorktreeDirty(
+            f"worktree at {path} has uncommitted changes "
+            f"(first {len(first_files)}): {first_files}. "
+            f"Commit, stash, or remove the worktree before reuse."
+        )
+
+    # 3. Stale-base check. Refresh origin/{base} first; ignore fetch failure
+    # (we'll use whatever ref is locally available and warn instead of hard-
+    # failing offline).
+    _fetch_base(base)
+    count_proc = subprocess.run(
+        ["git", "rev-list", "--count", f"HEAD..origin/{base}"],
+        cwd=path,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if count_proc.returncode != 0:
+        # origin/{base} unresolvable (offline / no remote). Nothing to do.
+        return False
+    try:
+        behind = int((count_proc.stdout or "0").strip())
+    except ValueError:
+        behind = 0
+    if behind == 0:
+        return False
+
+    print(
+        f"⚠️  worktree {path} is {behind} commit(s) behind origin/{base}; "
+        f"attempting fast-forward rebase",
+        file=sys.stderr,
+    )
+    rebase_proc = subprocess.run(
+        ["git", "rebase", f"origin/{base}"],
+        cwd=path,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if rebase_proc.returncode != 0:
+        # Clean up so the worktree isn't left mid-rebase.
+        subprocess.run(
+            ["git", "rebase", "--abort"],
+            cwd=path, capture_output=True, text=True, check=False,
+        )
+        raise WorktreeStaleBase(
+            f"worktree at {path} is {behind} commit(s) behind origin/{base} "
+            f"and rebase failed. Resolve manually or remove:\n"
+            f"    git worktree remove {path}"
+        )
+    return True
 
 
 def _ensure_worktree(
@@ -175,18 +377,59 @@ def _ensure_worktree(
     agent: str,
     task_id: str,
     raw_path: str,
-) -> tuple[Path, str]:
-    """Return a ready worktree path, creating it if needed."""
+    base: str = "main",
+) -> tuple[Path, str, dict[str, Any]]:
+    """Return a ready worktree path, creating or validating as needed.
+
+    The telemetry dict (third tuple element) carries:
+    - ``base_sha``: the SHA the worktree was branched from (or is currently
+      sitting on, if reused).
+    - ``rebased``: whether :func:`_validate_existing_worktree` advanced the
+      reused worktree.
+    - ``layout``: ``"dispatch"`` or ``"flat"``.
+    - ``reused``: whether the path already existed and was validated rather
+      than created.
+    """
     worktree_path = _normalize_worktree_path(raw_path)
     branch = _derive_worktree_branch(agent, task_id)
+    layout = _classify_worktree_layout(worktree_path)
+    telemetry: dict[str, Any] = {
+        "base_sha": None,
+        "rebased": False,
+        "layout": layout,
+        "reused": False,
+    }
 
     if worktree_path.exists():
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
-        return worktree_path, branch
+        telemetry["reused"] = True
+        telemetry["rebased"] = _validate_existing_worktree(
+            path=worktree_path, expected_branch=branch, base=base,
+        )
+        telemetry["base_sha"] = _resolve_sha(worktree_path)
+        return worktree_path, branch, telemetry
+
+    # Fix 1 (#1476): fetch origin/{base} and branch from the remote ref,
+    # not the local one. Local `main` drifts the moment a PR merges while
+    # a dispatch is queued — this is the stale-base footgun Codex
+    # diagnosed in bridge msg #431 (2026-04-23).
+    if _fetch_base(base):
+        worktree_base_ref = f"origin/{base}"
+    else:
+        print(
+            f"⚠️  `git fetch origin {base}` failed or origin/{base} is "
+            f"unresolvable; falling back to local {base}. This worktree "
+            f"may be branched from a stale tip.",
+            file=sys.stderr,
+        )
+        worktree_base_ref = base
+
+    # Ensure parent dirs exist for the dispatch/ subtree layout.
+    worktree_path.parent.mkdir(parents=True, exist_ok=True)
 
     proc = subprocess.run(
-        ["git", "worktree", "add", "-b", branch, str(worktree_path), "main"],
+        ["git", "worktree", "add", "-b", branch, str(worktree_path), worktree_base_ref],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
@@ -195,7 +438,8 @@ def _ensure_worktree(
     if proc.returncode != 0:
         stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
         raise RuntimeError(stderr)
-    return worktree_path, branch
+    telemetry["base_sha"] = _resolve_sha(worktree_path)
+    return worktree_path, branch, telemetry
 
 
 def _augment_prompt_with_worktree(prompt: str, worktree_path: Path | None) -> str:
@@ -361,6 +605,26 @@ def _run_worker(
     )
 
     final_state = _read_state(state_path) or {}
+
+    # Fix 5 (#1476 AC 5): dispatch-finish telemetry — record whether the
+    # worktree exited dirty so follow-up reviewers can see at a glance
+    # that the dispatched agent left uncommitted changes behind.
+    dirty_on_exit: bool | None = None
+    worktree_path = final_state.get("worktree_path")
+    if worktree_path:
+        try:
+            status_proc = subprocess.run(
+                ["git", "status", "--porcelain"],
+                cwd=worktree_path,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if status_proc.returncode == 0:
+                dirty_on_exit = bool((status_proc.stdout or "").strip())
+        except OSError:
+            dirty_on_exit = None
+
     final_state.update({
         "status": final_status,
         "finished_at": datetime.now(UTC).isoformat(),
@@ -369,6 +633,7 @@ def _run_worker(
         "result_file": result_file,
         "stderr_excerpt": stderr_excerpt,
         "returncode": returncode,
+        "worktree_dirty_on_exit": dirty_on_exit,
     })
     _write_state_atomic(state_path, final_state)
 
@@ -432,12 +697,22 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     worktree_path: Path | None = None
     worktree_branch: str | None = None
+    worktree_telemetry: dict[str, Any] = {}
     if worktree_arg:
+        # Fix 4 (#1476): the sentinel ``auto`` (from bare ``--worktree``)
+        # resolves to ``.worktrees/dispatch/{agent}/{task}/``. Explicit
+        # paths remain unchanged for back-compat with in-flight dispatches.
+        resolved_raw = (
+            str(_auto_worktree_path(args.agent, task_id))
+            if worktree_arg == "auto"
+            else worktree_arg
+        )
         try:
-            worktree_path, worktree_branch = _ensure_worktree(
+            worktree_path, worktree_branch, worktree_telemetry = _ensure_worktree(
                 agent=args.agent,
                 task_id=task_id,
-                raw_path=worktree_arg,
+                raw_path=resolved_raw,
+                base=getattr(args, "base", None) or "main",
             )
         except (ValueError, RuntimeError) as exc:
             print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)
@@ -449,6 +724,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # Write initial state BEFORE forking so a fast caller can see it.
     # pid is filled in by the worker once it starts; for now we record
     # the parent PID as a placeholder (overwritten by worker).
+    worktree_layout = worktree_telemetry.get("layout") if worktree_path else None
     initial_state = {
         "task_id": task_id,
         "agent": args.agent,
@@ -459,6 +735,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "cwd": cwd,
         "worktree_path": str(worktree_path) if worktree_path else None,
         "worktree_branch": worktree_branch,
+        "worktree_base_sha": worktree_telemetry.get("base_sha"),
+        "worktree_base": getattr(args, "base", None) or ("main" if worktree_path else None),
+        "worktree_rebased": bool(worktree_telemetry.get("rebased")),
+        "worktree_reused": bool(worktree_telemetry.get("reused")),
+        "worktree_layout": worktree_layout,
         "pid": None,  # worker fills this
         "status": "spawning",
         "started_at": datetime.now(UTC).isoformat(),
@@ -471,6 +752,25 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "returncode": None,
     }
     _write_state_atomic(state_path, initial_state)
+
+    # Fix 5 (#1476 AC 5) — dispatch-start telemetry.
+    if worktree_path:
+        print(
+            f"🌲 dispatch {task_id}: branch={worktree_branch} "
+            f"base_sha={worktree_telemetry.get('base_sha') or '?'} "
+            f"path={worktree_path} layout={worktree_layout}"
+            + (" [rebased]" if worktree_telemetry.get("rebased") else "")
+            + (" [reused]" if worktree_telemetry.get("reused") else ""),
+            file=sys.stderr,
+        )
+        if worktree_layout == "flat":
+            print(
+                f"⚠️  task {task_id!r} is using the DEPRECATED flat worktree "
+                f"layout ({worktree_path}). New dispatches should use "
+                f"`--worktree` (bare) to land in "
+                f".worktrees/dispatch/{{agent}}/{{task}}/.",
+                file=sys.stderr,
+            )
 
     # Fork a detached subprocess that runs this same script with
     # --worker. We use Popen rather than os.fork for portability.
@@ -627,6 +927,20 @@ def cmd_status(args: argparse.Namespace) -> int:
         except (ValueError, TypeError):
             pass
 
+    # Fix 4 (#1476): backfill worktree_layout for tasks persisted before
+    # the field existed, and warn about flat-layout worktrees.
+    if state.get("worktree_path") and not state.get("worktree_layout"):
+        state["worktree_layout"] = _classify_worktree_layout(
+            state.get("worktree_path"),
+        )
+    if state.get("worktree_layout") == "flat":
+        print(
+            f"⚠️  task {args.task_id!r} uses the DEPRECATED flat worktree "
+            f"layout ({state.get('worktree_path')}). New dispatches should "
+            f"use the `.worktrees/dispatch/{{agent}}/{{task}}/` subtree.",
+            file=sys.stderr,
+        )
+
     print(json.dumps(state, indent=2, default=str))
     return 0
 
@@ -754,6 +1068,7 @@ def cmd_cancel(args: argparse.Namespace) -> int:
 def cmd_list(args: argparse.Namespace) -> int:
     _TASKS_DIR.mkdir(parents=True, exist_ok=True)
     tasks: list[dict[str, Any]] = []
+    flat_tasks: list[str] = []
     for state_file in sorted(_TASKS_DIR.glob("*.json")):
         state = _read_state(state_file)
         if state is None:
@@ -765,6 +1080,13 @@ def cmd_list(args: argparse.Namespace) -> int:
                 state["status"] = "crashed"
         if args.status and state.get("status") != args.status:
             continue
+        # Fix 4 (#1476): classify worktree layout so operators can see at
+        # a glance which tasks are on the deprecated flat path.
+        layout = state.get("worktree_layout") or _classify_worktree_layout(
+            state.get("worktree_path"),
+        )
+        if layout == "flat":
+            flat_tasks.append(str(state.get("task_id")))
         tasks.append(
             {
                 "task_id": state.get("task_id"),
@@ -772,9 +1094,20 @@ def cmd_list(args: argparse.Namespace) -> int:
                 "status": state.get("status"),
                 "started_at": state.get("started_at"),
                 "duration_s": state.get("duration_s"),
+                "worktree_path": state.get("worktree_path"),
+                "worktree_layout": layout,
             }
         )
     print(json.dumps(tasks, indent=2, default=str))
+    if flat_tasks:
+        print(
+            f"⚠️  {len(flat_tasks)} task(s) use the DEPRECATED flat worktree "
+            f"layout: {flat_tasks[:5]}"
+            + (" …" if len(flat_tasks) > 5 else "")
+            + ". New dispatches should use "
+            "`.worktrees/dispatch/{agent}/{task}/`.",
+            file=sys.stderr,
+        )
     return 0
 
 
@@ -858,8 +1191,25 @@ def build_parser() -> argparse.ArgumentParser:
                    help="Working directory for the worker (default: repo root)")
     d.add_argument(
         "--worktree",
+        nargs="?",
+        const="auto",
         default=None,
-        help="Run inside this git worktree (created on demand, required for --mode danger)",
+        help=(
+            "Run inside this git worktree (created on demand, required for "
+            "--mode danger). Pass `--worktree PATH` to use a specific path "
+            "(back-compat with existing `.worktrees/{agent}-{task}/` "
+            "layout), or `--worktree` alone to auto-derive the new default "
+            "`.worktrees/dispatch/{agent}/{task}/`."
+        ),
+    )
+    d.add_argument(
+        "--base",
+        default="main",
+        help=(
+            "Base branch to fetch and branch the worktree from "
+            "(default: main). The worktree is branched from "
+            "origin/{base}, not local {base}."
+        ),
     )
     d.add_argument(
         "--allow-merge",
