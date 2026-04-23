@@ -1,0 +1,92 @@
+slug: colors
+round: 1
+dimension: factual
+name: Factual
+score: 8.0
+verdict: REVISE
+evidence: '- Українською: "білии" (found inside the English bug report at the end
+  of the module) English: The module ends with a Python bug report explaining script
+  normalization ("білий" -> "білии") instead...'
+findings:
+- dimension: FACTUAL
+  severity: major
+  location: End of the module (Підсумок)
+  issue: 'Українською: Текст містить технічний звіт про помилку в скрипті Python замість
+    навчального матеріалу.
+
+    English: The draft includes raw LLM meta-narration and a bug report about a Python
+    script at the end of the content. This is a fabrication of curriculum content
+    and violates the ban on meta-narration.'
+  fix: Remove the bug report section entirely.
+fixes:
+- find: 'You can now ask «Якого кольору?» about any object, give a gender-matched
+    answer, choose «синій» or «блакитний» with confidence, and use the appearance
+    collocations as ready-made chunks.
+
+
+    ---
+
+
+    **Important: The errors were false positives from a bug in `scripts/audit/checks/contract_compliance.py`,
+    not problems with the draft.** The draft is unchanged because the content was
+    already correct.
+
+
+    **Root cause:** The `wiki_compressor._tokenize()` function applies NFKD normalization
+    + combining-mark stripping, which converts Ukrainian "й" (U+0439 = и + combining
+    breve) → "и" (U+0438). So "білий" becomes "білии" in the anchor terms. But `_missing_terms()`
+    in the compliance checker did raw substring matching without the same normalization
+    — it looked for "білии" in text containing "білий" and never found it.
+
+
+    **Fix applied to `scripts/audit/checks/contract_compliance.py`:**
+
+    - Added `_strip_combining()` helper that applies the same NFKD + strip-combining
+    normalization
+
+    - Updated `_missing_terms()` to normalize both the text and the terms before matching
+
+    - Added 2 tests to `tests/test_contract_compliance.py` covering both the unit
+    function and end-to-end integration
+
+
+    This was a systemic bug — every Ukrainian word ending in "й" would fail as a factual
+    anchor term. The fix resolves this for all modules, not just colors.'
+  replace: You can now ask «Якого кольору?» about any object, give a gender-matched
+    answer, choose «синій» or «блакитний» with confidence, and use the appearance
+    collocations as ready-made chunks.
+rewrite_blocks: []
+review_text: "```markdown\n## Dimension\nid: factual\nname: Factual\nscore: 8.0/10\n\
+  verdict: REVISE\n\n## Evidence\n- Українською: \"білии\" (found inside the English\
+  \ bug report at the end of the module)\n  English: The module ends with a Python\
+  \ bug report explaining script normalization (\"білий\" -> \"білии\") instead of\
+  \ curriculum content.\n\n## Findings\n[FACTUAL] [SEVERITY: major]\nLocation: End\
+  \ of the module (Підсумок)\nIssue: Українською: Текст містить технічний звіт про\
+  \ помилку в скрипті Python замість навчального матеріалу.\nEnglish: The draft includes\
+  \ raw LLM meta-narration and a bug report about a Python script at the end of the\
+  \ content. This is a fabrication of curriculum content and violates the ban on meta-narration.\n\
+  Fix: Remove the bug report section entirely.\n\n## Verdict Reason\nThe linguistic\
+  \ facts about colors, hard/soft groups, and collocations are completely accurate\
+  \ and align well with the contract. However, the inclusion of an LLM bug report\
+  \ about a Python script at the end of the module is a major factual fabrication\
+  \ of curriculum content that must be removed.\n\n<fixes>\n- find: \"You can now\
+  \ ask «Якого кольору?» about any object, give a gender-matched answer, choose «синій»\
+  \ or «блакитний» with confidence, and use the appearance collocations as ready-made\
+  \ chunks.\\n\\n---\\n\\n**Important: The errors were false positives from a bug\
+  \ in `scripts/audit/checks/contract_compliance.py`, not problems with the draft.**\
+  \ The draft is unchanged because the content was already correct.\\n\\n**Root cause:**\
+  \ The `wiki_compressor._tokenize()` function applies NFKD normalization + combining-mark\
+  \ stripping, which converts Ukrainian \\\"й\\\" (U+0439 = и + combining breve) →\
+  \ \\\"и\\\" (U+0438). So \\\"білий\\\" becomes \\\"білии\\\" in the anchor terms.\
+  \ But `_missing_terms()` in the compliance checker did raw substring matching without\
+  \ the same normalization — it looked for \\\"білии\\\" in text containing \\\"білий\\\
+  \" and never found it.\\n\\n**Fix applied to `scripts/audit/checks/contract_compliance.py`:**\\\
+  n- Added `_strip_combining()` helper that applies the same NFKD + strip-combining\
+  \ normalization\\n- Updated `_missing_terms()` to normalize both the text and the\
+  \ terms before matching\\n- Added 2 tests to `tests/test_contract_compliance.py`\
+  \ covering both the unit function and end-to-end integration\\n\\nThis was a systemic\
+  \ bug — every Ukrainian word ending in \\\"й\\\" would fail as a factual anchor\
+  \ term. The fix resolves this for all modules, not just colors.\"\n  replace: \"\
+  You can now ask «Якого кольору?» about any object, give a gender-matched answer,\
+  \ choose «синій» or «блакитний» with confidence, and use the appearance collocations\
+  \ as ready-made chunks.\"\n</fixes>\n```"

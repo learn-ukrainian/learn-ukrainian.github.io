@@ -1,0 +1,30 @@
+slug: colors
+round: 1
+dimension: decolonization
+name: Decolonization
+score: 10.0
+verdict: PASS
+evidence: '- Українською: В українській мові для позначення "blue" ми активно вчимо
+  пару окремих слів — these are two separate base colors, not two shades of one word.
+  English: Effectively contrasts Ukrainian...'
+findings: []
+fixes: []
+rewrite_blocks: []
+review_text: "## Dimension\nid: decolonization\nname: Decolonization\nscore: 10.0/10\n\
+  verdict: PASS\n\n## Evidence\n- Українською: В українській мові для позначення \"\
+  blue\" ми активно вчимо пару окремих слів — these are two separate base colors,\
+  \ not two shades of one word.\n  English: Effectively contrasts Ukrainian directly\
+  \ with English (\"blue\") instead of mediating through Russian, establishing Ukrainian\
+  \ on its own terms.\n- Українською: Ukrainian does not transfer standard color adjectives\
+  \ onto people's features the way English does. You say «карі очі» (brown eyes),\
+  \ not *«коричневі очі»\n  English: Provides authentic Ukrainian collocations by\
+  \ contrasting them with English L1 transfer errors, without using Russian equivalents.\n\
+  - Українською: The Ukrainian flag is «синьо-жовтий» — the dark stripe on top is\
+  \ «синій», the bright stripe below is «жовтий», and a clear noon sky is «блакитне».\n\
+  \  English: Uses a culturally resonant, sovereign anchor (the Ukrainian flag) to\
+  \ teach the distinction between синій and блакитний.\n\n## Findings\nNone.\n\n##\
+  \ Verdict Reason\nThe module perfectly executes a decolonized, Ukrainian-first framing.\
+  \ It teaches the distinction between «синій» and «блакитний», as well as appearance\
+  \ collocations («карі очі», «русяве волосся»), by directly contrasting them with\
+  \ the learner's L1 (English) and using Ukrainian cultural anchors (the flag, authentic\
+  \ school textbooks), completely avoiding any Russian-mediated explanations."

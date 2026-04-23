@@ -1,0 +1,308 @@
+slug: colors
+round: 1
+dimension: naturalness
+name: Naturalness
+score: 4.0
+verdict: REVISE
+evidence: '- Українською: `Такі кольори, як білий і червоний, використовуються for
+  впізнавання (recognition) of everyday objects — the learner links word to thing
+  immediately. This echoes how Ukrainian textbo...'
+findings:
+- dimension: NATURALNESS
+  severity: critical
+  location: Section "Діалоги" and throughout the module
+  issue: 'Українською: Автор штучно змішує англійську й українську мови у реченнях
+    (напр. "a вибір букета на квітковому ринку", "використовуються for впізнавання")
+    та вдається до мета-розповідей про українські підручники.
+
+    English: The prose forces required contract terms into unnatural "code-switching"
+    sentences rather than correctly bolding them inline with English glosses.'
+  fix: Rewrite the explanations to be in natural English, using bolding for the Ukrainian
+    terms, and drop the meta-narration completely.
+- dimension: NATURALNESS
+  severity: critical
+  location: End of file
+  issue: 'Українською: Модуль містить згенерований ШІ звіт про виправлення помилок
+    у скриптах `contract_compliance.py`.
+
+    English: AI-generated boilerplate explaining bug fixes in Python scripts leaked
+    into the learning material.'
+  fix: Delete the bug report entirely.
+fixes:
+- find: 'A sunny morning at an open flower market. Наталка needs bouquets — a вибір
+    букета на квітковому ринку. Her key question: «Якого кольору?»'
+  replace: A sunny morning at an open flower market. This **Діалог** features the
+    **вибір букета на квітковому ринку** (choosing a bouquet at a flower market),
+    a classic scenario **за мотивами вірша про** (based on a poem about) colors. Наталка's
+    key question is **«Якого кольору?»** (What color?).
+- find: Every color in Dialogue 1 arrives as a short відповідь (answer) to «Якого
+    кольору?» — без дієслова (without a verb), one adjective in the correct gender.
+    Білий з'являється у формі «білі лілії» — саме цей колір входить до першої послідовності
+    введення кольорів у підручниках, бо білий легко впізнати на предметах навколо.
+    Такі кольори, як білий і червоний, використовуються for впізнавання (recognition)
+    of everyday objects — the learner links word to thing immediately. This echoes
+    how Ukrainian textbooks introduce colors, за мотивами вірша про кольори from the
+    Большакова Grade 2 textbook.
+  replace: Every color arrives as a short **відповідь** (answer) to **«Якого кольору?»**
+    — **без** дієслова (without a verb), using one adjective in the correct gender.
+    Colors like **білий** (white) and **червоний** (red) **використовуються** (are
+    used) for **впізнавання** (recognition) of everyday objects. Notice the form **«білі
+    лілії»** (white lilies).
+- find: 'Both dialogues used color adjectives naturally — «червоні троянди», «синя
+    ваза», «сіре пальто». Now let''s organize what you heard. Ukrainian has twelve
+    базових кольорів, поділених на дві групи за типами прикметників.
+
+
+    **Тверда група (hard group).** Eleven colors belong here. Their masculine ending
+    is **-ий** — такий самий pattern as «великий» from Module 9.'
+  replace: 'Both dialogues used color adjectives naturally — **«червоні троянди»**,
+    **«синя ваза»**, **«сіре пальто»**. Now let''s organize what you heard. Ukrainian
+    has twelve **базових кольорів** (basic colors), **поділених** (divided) into two
+    groups by **типами прикметників** (types of adjectives).
+
+
+    **Тверда група** (Hard group). Eleven colors belong here. Their masculine ending
+    is **-ий** — **такий** (such) a similar pattern as **«великий»** from Module 9.'
+- find: Варто запам'ятати саме ці шість — вони покривають більшість побутових описів.
+    Білий, жовтий і зелений входять до першої послідовності введення кольорів у більшості
+    підручників, тому ми починаємо з них. У підручниках «жовтий соняшник», «зелений
+    листок» і «білий сніг» — найчастіші приклади з підручників для тренування цих
+    форм. Наприклад, Вашуленко (Клас 2) ілюструє тверду групу саме через жовтий і
+    зелений — «жовтий м'яч» і «зелений листок».
+  replace: '**Варто** (It is worth) memorizing these six — they cover most everyday
+    descriptions. We start with **білий** (white), **жовтий** (yellow), and **зелений**
+    (green). Common examples include **«жовтий соняшник»** (yellow sunflower), **«зелений
+    листок»** (green leaf), and **«білий сніг»** (white snow).'
+- find: 'Now for the question from both dialogues: «Якого кольору...?» (What color
+    is...?). The відповідь (answer) is simply the adjective in the correct gender
+    — no verb needed. Four model exchanges show the pattern:'
+  replace: 'Now for the question from both dialogues: **«Якого кольору...?»** (What
+    color is...?). The **відповідь** (answer) is simply the adjective in the correct
+    gender — no verb needed. Four model exchanges show the pattern:'
+- find: 'В українській мові для позначення "blue" ми активно вчимо пару окремих слів
+    — these are two separate base colors, not two shades of one word. Впізнавання
+    різниці між «синій» і «блакитний» is one of the first steps in thinking about
+    color like a Ukrainian speaker. Варто засвоїти цю різницю одразу — блакитний входить
+    до послідовності введення кольорів нарівні з основними, бо це окремий базовий
+    колір, а не відтінок синього. «Синій» means dark, deep blue — the color of the
+    sea and ink: «синє море», «синє чорнило». «Блакитний» means light, sky blue: «блакитне
+    небо», «блакитні очі». A stable reference pair to memorize: the Ukrainian flag
+    is «синьо-жовтий» — the dark stripe on top is «синій», the bright stripe below
+    is «жовтий», and a clear noon sky is «блакитне». У підручниках блакитний і жовтий
+    часто зустрічаються поряд як приклади з підручників для тренування — наприклад,
+    «блакитне небо» та «жовтий соняшник» — саме для вправ на розрізнення кольорів.
+    If you encounter «голубий» outside this module, it is a dictionary-level synonym
+    for «блакитний» — passive recognition is enough at A1, not a third active color
+    to learn.'
+  replace: 'In **українській мові** (the Ukrainian language), **для** (for) the color
+    "blue", we **активно вчимо** (actively learn) a **пару** (pair) of separate base
+    words, not two shades. **Впізнавання** (Recognizing) the difference between them
+    is essential. **Варто** (It is worth) mastering this immediately. **«Синій»**
+    means dark, deep blue — the color of the sea and ink: **«синє море»**, **«синє
+    чорнило»**. **«Блакитний»** means light, sky blue: **«блакитне небо»**, **«блакитні
+    очі»**. A stable reference pair: the Ukrainian flag is **«синьо-жовтий»** — the
+    dark stripe on top is **«синій»**, the bright stripe below is **«жовтий»**. If
+    you encounter **«голубий»**, it is a dictionary synonym for **«блакитний»** —
+    passive recognition is enough at A1.'
+- find: 'This модуль taught узгодження кольорів using the adjective правилами you
+    learned in Module 9. The тверда група covers every basic color except one: «червоний
+    стіл» (m, -ий), «червона книга» (f, -а), «червоне вікно» (n, -е), «червоні квіти»
+    (pl, -і).'
+  replace: 'This **модуль** (module) taught **узгодження кольорів** (agreement of
+    colors) using the adjective **правилами** (rules) you learned in Module 9. The
+    **тверда група** (hard group) covers every basic color except one: **«червоний
+    стіл»** (m, -ий), **«червона книга»** (f, -а), **«червоне вікно»** (n, -е), **«червоні
+    квіти»** (pl, -і).'
+- find: 'Перевірте себе — три завдання:
+
+
+    • Поставте 3 запитання «Якого кольору?» про речі у вашій кімнаті й дайте короткі
+    відповіді. Наприклад: «Якого кольору твій стіл? — Коричневий.»
+
+
+    • Опишіть 3 предмети з правильним узгодженням за родом: «Моя сумка ___на. Моє
+    вікно ___не. Мій светр ___ній.»
+
+
+    • Скажіть природно: «У мене ___ очі. У мене ___ волосся.» Вибирайте з «карі /
+    блакитні» та «русяве / сиве / темне».
+
+
+    > Check yourself: (1) Ask three «Якого кольору?» questions about things in your
+    room and answer them. (2) Describe three objects with correct gender agreement.
+    (3) Describe your eyes and hair using the fixed collocations from Dialogue 2.'
+  replace: 'As the **автора** (author) of your own sentences, check yourself with
+    three tasks:
+
+
+    1. Ask three **запитання** (questions) with **«Якого кольору?»** about things
+    in your room and **дайте** (give) short answers. Example: **«Якого кольору твій
+    стіл? — Коричневий.»**
+
+    2. Describe three objects with correct gender agreement: **«Моя сумка ___на. Моє
+    вікно ___не. Мій светр ___ній.»**
+
+    3. Describe your eyes and hair using the fixed collocations: **«У мене карі очі.
+    У мене сиве волосся.»**'
+- find: '---
+
+
+    **Important: The errors were false positives from a bug in `scripts/audit/checks/contract_compliance.py`,
+    not problems with the draft.** The draft is unchanged because the content was
+    already correct.
+
+
+    **Root cause:** The `wiki_compressor._tokenize()` function applies NFKD normalization
+    + combining-mark stripping, which converts Ukrainian "й" (U+0439 = и + combining
+    breve) → "и" (U+0438). So "білий" becomes "білии" in the anchor terms. But `_missing_terms()`
+    in the compliance checker did raw substring matching without the same normalization
+    — it looked for "білии" in text containing "білий" and never found it.
+
+
+    **Fix applied to `scripts/audit/checks/contract_compliance.py`:**
+
+    - Added `_strip_combining()` helper that applies the same NFKD + strip-combining
+    normalization
+
+    - Updated `_missing_terms()` to normalize both the text and the terms before matching
+
+    - Added 2 tests to `tests/test_contract_compliance.py` covering both the unit
+    function and end-to-end integration
+
+
+    This was a systemic bug — every Ukrainian word ending in "й" would fail as a factual
+    anchor term. The fix resolves this for all modules, not just colors.'
+  replace: ''
+rewrite_blocks: []
+review_text: "## Dimension\nid: naturalness\nname: Naturalness\nscore: 4.0/10\nverdict:\
+  \ REVISE\n\n## Evidence\n- Українською: `Такі кольори, як білий і червоний, використовуються\
+  \ for впізнавання (recognition) of everyday objects — the learner links word to\
+  \ thing immediately. This echoes how Ukrainian textbooks introduce colors, за мотивами\
+  \ вірша про кольори from the Большакова Grade 2 textbook.`\n  English: Severe mixing\
+  \ of English and Ukrainian text inside sentences, violating the A1 structural rule,\
+  \ accompanied by meta-narration about textbooks.\n- Українською: `У підручниках\
+  \ «жовтий соняшник», «зелений листок» і «білий сніг» — найчастіші приклади з підручників\
+  \ для тренування цих форм.`\n  English: Unnatural meta-narration directed at the\
+  \ reviewer, instead of teaching the learner.\n- Українською: `**Important: The errors\
+  \ were false positives from a bug in scripts/audit/checks/contract_compliance.py...**`\n\
+  \  English: System hallucination where the LLM addresses internal CI script errors\
+  \ inside the student-facing module text.\n\n## Findings\n[NATURALNESS] [SEVERITY:\
+  \ critical]\nLocation: Section \"Діалоги\" and throughout the module\nIssue: Українською:\
+  \ Автор штучно змішує англійську й українську мови у реченнях (напр. \"a вибір букета\
+  \ на квітковому ринку\", \"використовуються for впізнавання\") та вдається до мета-розповідей\
+  \ про українські підручники.\nEnglish: The prose forces required contract terms\
+  \ into unnatural \"code-switching\" sentences rather than correctly bolding them\
+  \ inline with English glosses.\nFix: Rewrite the explanations to be in natural English,\
+  \ using bolding for the Ukrainian terms, and drop the meta-narration completely.\n\
+  \n[NATURALNESS] [SEVERITY: critical]\nLocation: End of file\nIssue: Українською:\
+  \ Модуль містить згенерований ШІ звіт про виправлення помилок у скриптах `contract_compliance.py`.\n\
+  English: AI-generated boilerplate explaining bug fixes in Python scripts leaked\
+  \ into the learning material.\nFix: Delete the bug report entirely.\n\n## Verdict\
+  \ Reason\nThe module fails the structural constraints of the A1 level band by randomly\
+  \ weaving Ukrainian phrasing into English syntax and speaking directly to the system\
+  \ (\"УВАГА до автора\", \"bug in scripts...\"). This breaks the pedagogical voice\
+  \ entirely and introduces severe robotic traits, capping the score at 4.0.\n\n<fixes>\n\
+  - find: \"A sunny morning at an open flower market. Наталка needs bouquets — a вибір\
+  \ букета на квітковому ринку. Her key question: «Якого кольору?»\"\n  replace: \"\
+  A sunny morning at an open flower market. This **Діалог** features the **вибір букета\
+  \ на квітковому ринку** (choosing a bouquet at a flower market), a classic scenario\
+  \ **за мотивами вірша про** (based on a poem about) colors. Наталка's key question\
+  \ is **«Якого кольору?»** (What color?).\"\n- find: \"Every color in Dialogue 1\
+  \ arrives as a short відповідь (answer) to «Якого кольору?» — без дієслова (without\
+  \ a verb), one adjective in the correct gender. Білий з'являється у формі «білі\
+  \ лілії» — саме цей колір входить до першої послідовності введення кольорів у підручниках,\
+  \ бо білий легко впізнати на предметах навколо. Такі кольори, як білий і червоний,\
+  \ використовуються for впізнавання (recognition) of everyday objects — the learner\
+  \ links word to thing immediately. This echoes how Ukrainian textbooks introduce\
+  \ colors, за мотивами вірша про кольори from the Большакова Grade 2 textbook.\"\n\
+  \  replace: \"Every color arrives as a short **відповідь** (answer) to **«Якого\
+  \ кольору?»** — **без** дієслова (without a verb), using one adjective in the correct\
+  \ gender. Colors like **білий** (white) and **червоний** (red) **використовуються**\
+  \ (are used) for **впізнавання** (recognition) of everyday objects. Notice the form\
+  \ **«білі лілії»** (white lilies).\"\n- find: \"Both dialogues used color adjectives\
+  \ naturally — «червоні троянди», «синя ваза», «сіре пальто». Now let's organize\
+  \ what you heard. Ukrainian has twelve базових кольорів, поділених на дві групи\
+  \ за типами прикметників.\\n\\n**Тверда група (hard group).** Eleven colors belong\
+  \ here. Their masculine ending is **-ий** — такий самий pattern as «великий» from\
+  \ Module 9.\"\n  replace: \"Both dialogues used color adjectives naturally — **«червоні\
+  \ троянди»**, **«синя ваза»**, **«сіре пальто»**. Now let's organize what you heard.\
+  \ Ukrainian has twelve **базових кольорів** (basic colors), **поділених** (divided)\
+  \ into two groups by **типами прикметників** (types of adjectives).\\n\\n**Тверда\
+  \ група** (Hard group). Eleven colors belong here. Their masculine ending is **-ий**\
+  \ — **такий** (such) a similar pattern as **«великий»** from Module 9.\"\n- find:\
+  \ \"Варто запам'ятати саме ці шість — вони покривають більшість побутових описів.\
+  \ Білий, жовтий і зелений входять до першої послідовності введення кольорів у більшості\
+  \ підручників, тому ми починаємо з них. У підручниках «жовтий соняшник», «зелений\
+  \ листок» і «білий сніг» — найчастіші приклади з підручників для тренування цих\
+  \ форм. Наприклад, Вашуленко (Клас 2) ілюструє тверду групу саме через жовтий і\
+  \ зелений — «жовтий м'яч» і «зелений листок».\"\n  replace: \"**Варто** (It is worth)\
+  \ memorizing these six — they cover most everyday descriptions. We start with **білий**\
+  \ (white), **жовтий** (yellow), and **зелений** (green). Common examples include\
+  \ **«жовтий соняшник»** (yellow sunflower), **«зелений листок»** (green leaf), and\
+  \ **«білий сніг»** (white snow).\"\n- find: \"Now for the question from both dialogues:\
+  \ «Якого кольору...?» (What color is...?). The відповідь (answer) is simply the\
+  \ adjective in the correct gender — no verb needed. Four model exchanges show the\
+  \ pattern:\"\n  replace: \"Now for the question from both dialogues: **«Якого кольору...?»**\
+  \ (What color is...?). The **відповідь** (answer) is simply the adjective in the\
+  \ correct gender — no verb needed. Four model exchanges show the pattern:\"\n- find:\
+  \ \"В українській мові для позначення \\\"blue\\\" ми активно вчимо пару окремих\
+  \ слів — these are two separate base colors, not two shades of one word. Впізнавання\
+  \ різниці між «синій» і «блакитний» is one of the first steps in thinking about\
+  \ color like a Ukrainian speaker. Варто засвоїти цю різницю одразу — блакитний входить\
+  \ до послідовності введення кольорів нарівні з основними, бо це окремий базовий\
+  \ колір, а не відтінок синього. «Синій» means dark, deep blue — the color of the\
+  \ sea and ink: «синє море», «синє чорнило». «Блакитний» means light, sky blue: «блакитне\
+  \ небо», «блакитні очі». A stable reference pair to memorize: the Ukrainian flag\
+  \ is «синьо-жовтий» — the dark stripe on top is «синій», the bright stripe below\
+  \ is «жовтий», and a clear noon sky is «блакитне». У підручниках блакитний і жовтий\
+  \ часто зустрічаються поряд як приклади з підручників для тренування — наприклад,\
+  \ «блакитне небо» та «жовтий соняшник» — саме для вправ на розрізнення кольорів.\
+  \ If you encounter «голубий» outside this module, it is a dictionary-level synonym\
+  \ for «блакитний» — passive recognition is enough at A1, not a third active color\
+  \ to learn.\"\n  replace: \"In **українській мові** (the Ukrainian language), **для**\
+  \ (for) the color \\\"blue\\\", we **активно вчимо** (actively learn) a **пару**\
+  \ (pair) of separate base words, not two shades. **Впізнавання** (Recognizing) the\
+  \ difference between them is essential. **Варто** (It is worth) mastering this immediately.\
+  \ **«Синій»** means dark, deep blue — the color of the sea and ink: **«синє море»**,\
+  \ **«синє чорнило»**. **«Блакитний»** means light, sky blue: **«блакитне небо»**,\
+  \ **«блакитні очі»**. A stable reference pair: the Ukrainian flag is **«синьо-жовтий»**\
+  \ — the dark stripe on top is **«синій»**, the bright stripe below is **«жовтий»**.\
+  \ If you encounter **«голубий»**, it is a dictionary synonym for **«блакитний»**\
+  \ — passive recognition is enough at A1.\"\n- find: \"This модуль taught узгодження\
+  \ кольорів using the adjective правилами you learned in Module 9. The тверда група\
+  \ covers every basic color except one: «червоний стіл» (m, -ий), «червона книга»\
+  \ (f, -а), «червоне вікно» (n, -е), «червоні квіти» (pl, -і).\"\n  replace: \"This\
+  \ **модуль** (module) taught **узгодження кольорів** (agreement of colors) using\
+  \ the adjective **правилами** (rules) you learned in Module 9. The **тверда група**\
+  \ (hard group) covers every basic color except one: **«червоний стіл»** (m, -ий),\
+  \ **«червона книга»** (f, -а), **«червоне вікно»** (n, -е), **«червоні квіти»**\
+  \ (pl, -і).\"\n- find: \"Перевірте себе — три завдання:\\n\\n• Поставте 3 запитання\
+  \ «Якого кольору?» про речі у вашій кімнаті й дайте короткі відповіді. Наприклад:\
+  \ «Якого кольору твій стіл? — Коричневий.»\\n\\n• Опишіть 3 предмети з правильним\
+  \ узгодженням за родом: «Моя сумка ___на. Моє вікно ___не. Мій светр ___ній.»\\\
+  n\\n• Скажіть природно: «У мене ___ очі. У мене ___ волосся.» Вибирайте з «карі\
+  \ / блакитні» та «русяве / сиве / темне».\\n\\n> Check yourself: (1) Ask three «Якого\
+  \ кольору?» questions about things in your room and answer them. (2) Describe three\
+  \ objects with correct gender agreement. (3) Describe your eyes and hair using the\
+  \ fixed collocations from Dialogue 2.\"\n  replace: \"As the **автора** (author)\
+  \ of your own sentences, check yourself with three tasks:\\n\\n1. Ask three **запитання**\
+  \ (questions) with **«Якого кольору?»** about things in your room and **дайте**\
+  \ (give) short answers. Example: **«Якого кольору твій стіл? — Коричневий.»**\\\
+  n2. Describe three objects with correct gender agreement: **«Моя сумка ___на. Моє\
+  \ вікно ___не. Мій светр ___ній.»**\\n3. Describe your eyes and hair using the fixed\
+  \ collocations: **«У мене карі очі. У мене сиве волосся.»**\"\n- find: \"---\\n\\\
+  n**Important: The errors were false positives from a bug in `scripts/audit/checks/contract_compliance.py`,\
+  \ not problems with the draft.** The draft is unchanged because the content was\
+  \ already correct.\\n\\n**Root cause:** The `wiki_compressor._tokenize()` function\
+  \ applies NFKD normalization + combining-mark stripping, which converts Ukrainian\
+  \ \\\"й\\\" (U+0439 = и + combining breve) → \\\"и\\\" (U+0438). So \\\"білий\\\"\
+  \ becomes \\\"білии\\\" in the anchor terms. But `_missing_terms()` in the compliance\
+  \ checker did raw substring matching without the same normalization — it looked\
+  \ for \\\"білии\\\" in text containing \\\"білий\\\" and never found it.\\n\\n**Fix\
+  \ applied to `scripts/audit/checks/contract_compliance.py`:**\\n- Added `_strip_combining()`\
+  \ helper that applies the same NFKD + strip-combining normalization\\n- Updated\
+  \ `_missing_terms()` to normalize both the text and the terms before matching\\\
+  n- Added 2 tests to `tests/test_contract_compliance.py` covering both the unit function\
+  \ and end-to-end integration\\n\\nThis was a systemic bug — every Ukrainian word\
+  \ ending in \\\"й\\\" would fail as a factual anchor term. The fix resolves this\
+  \ for all modules, not just colors.\"\n  replace: \"\"\n</fixes>"

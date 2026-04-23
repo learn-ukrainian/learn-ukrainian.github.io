@@ -1,0 +1,27 @@
+slug: colors
+round: 1
+dimension: dialogue
+name: Dialogue
+score: 10.0
+verdict: PASS
+evidence: '- Українською: «— **Наталка:** Добрий день! *(Good day!)* / — **Продавець:**
+  Добрий день! Будь ласка, дивіться. *(Good day! Please, look around.)*» English:
+  Includes natural turn-taking and common...'
+findings: []
+fixes: []
+rewrite_blocks: []
+review_text: "```markdown\n## Dimension\nid: dialogue\nname: Dialogue\nscore: 10.0/10\n\
+  verdict: PASS\n\n## Evidence\n- Українською: «— **Наталка:** Добрий день! *(Good\
+  \ day!)* / — **Продавець:** Добрий день! Будь ласка, дивіться. *(Good day! Please,\
+  \ look around.)*»\n  English: Includes natural turn-taking and common conversational\
+  \ phrasing.\n- Українською: «— **Ліза:** Подивися в шафу. Ось чорна сукня. / — **Дмитро:**\
+  \ Гарна! А якого кольору цей светр?»\n  English: Transitions the drill-like color\
+  \ questions into a functional, situational scenario matching the contract's required\
+  \ settings.\n- Українською: «— **Ліза:** У неї карі очі й русяве волосся.»\n  English:\
+  \ Perfectly integrates the required fixed collocations for physical descriptions\
+  \ into the dialogue flow.\n\n## Findings\nNone.\n\n## Verdict Reason\nThe dialogues\
+  \ excellently fulfill the module contract. They feature named speakers, integrate\
+  \ required grammatical functions (`Якого кольору?`, noun-adjective gender agreement,\
+  \ appearance collocations), and incorporate authentic turn-taking phrases (Добрий\
+  \ день, будь ласка, дякую, гарного дня) without degrading into a sterile drill format.\n\
+  ```"
