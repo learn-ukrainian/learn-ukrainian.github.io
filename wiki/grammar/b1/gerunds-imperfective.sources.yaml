@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S694
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0694
+  type: textbook
+  title: § 78. ДІЄПРИСЛІВНИК
+  page: 194
+  grade: 10
 - id: S2
-  file: S3847
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3847
+  type: textbook
+  title: § 55. Вид і час дієприслівників
+  page: 126
+  grade: 7
 - id: S3
-  file: S3924
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3924
+  type: textbook
+  title: § 19. Дієприслівник як особлива форма діє слова
+  page: 111
+  grade: 7
 - id: S4
-  file: S685
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0685
+  type: textbook
+  title: § 72. Види дієслів
+  page: 181
+  grade: 10
 - id: S5
-  file: S3926
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3926
+  type: textbook
+  title: § 21. Вид і час дієприслівників
+  page: 121
+  grade: 7
 - id: S6
-  file: S1209
-  type: unknown
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1209
+  type: textbook
+  title: Дієслово. Дієслівні форми § 8
+  page: 39
+  grade: 11
 - id: S7
-  file: S1147
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1147
+  type: textbook
+  title: § 15. ДІЄСЛОВО ТА ЙОГО ФОРМИ
+  page: 45
+  grade: 11
 - id: S8
-  file: S3910
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3910
+  type: textbook
+  title: § 7. Види діє слова
+  page: 33
+  grade: 7
 - id: S10
-  file: S3845
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3845
+  type: textbook
+  title: § 53. Дієприслівник як особлива форма дієслова
+  page: 120
+  grade: 7

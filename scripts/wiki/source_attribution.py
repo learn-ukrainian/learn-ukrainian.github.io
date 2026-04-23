@@ -29,6 +29,13 @@ _CORPUS_ALIASES = {
     "wiki": "wikipedia",
     "ukrainian_wiki": "ukrainian_wiki",
 }
+_LOOKUP_QUERIES = {
+    "textbooks": ("SELECT 1 FROM textbooks WHERE chunk_id = ? LIMIT 1", lambda chunk_id: (chunk_id,)),
+    "literary_texts": ("SELECT 1 FROM literary_texts WHERE chunk_id = ? LIMIT 1", lambda chunk_id: (chunk_id,)),
+    "external_articles": ("SELECT 1 FROM external_articles WHERE chunk_id = ? LIMIT 1", lambda chunk_id: (chunk_id,)),
+    "wikipedia": ("SELECT 1 FROM wikipedia WHERE title = ? LIMIT 1", lambda chunk_id: (chunk_id,)),
+    "ukrainian_wiki": ("SELECT 1 FROM ukrainian_wiki WHERE passage_id = ? LIMIT 1", lambda chunk_id: (chunk_id,)),
+}
 
 
 def resolve_chunk_attribution(chunk_id: str, corpus: str) -> dict:
@@ -45,22 +52,9 @@ def resolve_chunk_attribution(chunk_id: str, corpus: str) -> dict:
         }
 
     try:
-        with sqlite3.connect(str(DEFAULT_DB_PATH)) as conn:
+        with sqlite3.connect(str(_effective_db_path())) as conn:
             conn.row_factory = sqlite3.Row
-            if normalized_corpus == "textbook_sections":
-                attribution = _resolve_textbook_section(conn, raw_chunk_id)
-            elif normalized_corpus == "textbooks":
-                attribution = _resolve_textbook_chunk(conn, raw_chunk_id)
-            elif normalized_corpus == "literary_texts":
-                attribution = _resolve_literary_chunk(conn, raw_chunk_id)
-            elif normalized_corpus == "external_articles":
-                attribution = _resolve_external_chunk(conn, raw_chunk_id)
-            elif normalized_corpus == "wikipedia":
-                attribution = _resolve_wikipedia_chunk(conn, raw_chunk_id)
-            elif normalized_corpus == "ukrainian_wiki":
-                attribution = _resolve_ukrainian_wiki_chunk(conn, raw_chunk_id)
-            else:
-                attribution = None
+            attribution = _resolve_chunk_attribution_with_conn(conn, raw_chunk_id, normalized_corpus)
     except sqlite3.Error:
         attribution = None
 
@@ -73,6 +67,77 @@ def resolve_chunk_attribution(chunk_id: str, corpus: str) -> dict:
         "type": _infer_source_type(normalized_file),
         "title": raw_chunk_id,
     }
+
+
+def resolve_chunk_attribution_any_corpus(chunk_id: str) -> tuple[str, dict] | None:
+    """Resolve a chunk id by probing all supported corpora in a stable order."""
+    raw_chunk_id = str(chunk_id or "").strip()
+    if not raw_chunk_id:
+        return None
+
+    try:
+        with connect_sources_db() as conn:
+            return resolve_chunk_attribution_any_corpus_with_conn(conn, raw_chunk_id)
+    except sqlite3.Error:
+        return None
+
+    return None
+
+
+def resolve_chunk_attribution_any_corpus_with_conn(
+    conn: sqlite3.Connection,
+    chunk_id: str,
+) -> tuple[str, dict] | None:
+    """Resolve a chunk id by probing all supported corpora on an existing connection."""
+    raw_chunk_id = str(chunk_id or "").strip()
+    if not raw_chunk_id:
+        return None
+
+    for corpus in _candidate_corpora(conn, raw_chunk_id):
+        attribution = _resolve_chunk_attribution_with_conn(conn, raw_chunk_id, corpus)
+        if attribution is not None:
+            return corpus, attribution
+    return None
+
+
+def _resolve_chunk_attribution_with_conn(
+    conn: sqlite3.Connection,
+    chunk_id: str,
+    normalized_corpus: str,
+) -> dict | None:
+    if normalized_corpus == "textbook_sections":
+        return _resolve_textbook_section(conn, chunk_id)
+    if normalized_corpus == "textbooks":
+        return _resolve_textbook_chunk(conn, chunk_id)
+    if normalized_corpus == "literary_texts":
+        return _resolve_literary_chunk(conn, chunk_id)
+    if normalized_corpus == "external_articles":
+        return _resolve_external_chunk(conn, chunk_id)
+    if normalized_corpus == "wikipedia":
+        return _resolve_wikipedia_chunk(conn, chunk_id)
+    if normalized_corpus == "ukrainian_wiki":
+        return _resolve_ukrainian_wiki_chunk(conn, chunk_id)
+    return None
+
+
+def _candidate_corpora(conn: sqlite3.Connection, chunk_id: str) -> list[str]:
+    candidates: list[str] = []
+    section_id = _parse_section_id(chunk_id)
+    if section_id is not None:
+        section_row = conn.execute(
+            "SELECT 1 FROM textbook_sections WHERE section_id = ? LIMIT 1",
+            (section_id,),
+        ).fetchone()
+        if section_row is not None:
+            candidates.append("textbook_sections")
+
+    for corpus in ("textbooks", "literary_texts", "external_articles", "wikipedia", "ukrainian_wiki"):
+        query, params_factory = _LOOKUP_QUERIES[corpus]
+        row = conn.execute(query, params_factory(chunk_id)).fetchone()
+        if row is not None:
+            candidates.append(corpus)
+
+    return candidates
 
 
 def _resolve_textbook_section(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
@@ -294,3 +359,23 @@ def _maybe_int(value: object) -> int | None:
 def _maybe_text(value: object) -> str | None:
     text = str(value or "").strip()
     return text or None
+
+
+def _effective_db_path() -> Path:
+    db_path = DEFAULT_DB_PATH
+    if db_path.exists() and db_path.stat().st_size > 0:
+        return db_path
+
+    if PROJECT_ROOT.parent.name == ".worktrees":
+        fallback = PROJECT_ROOT.parent.parent / "data" / db_path.name
+        if fallback.exists() and fallback.stat().st_size > 0:
+            return fallback
+
+    return db_path
+
+
+def connect_sources_db() -> sqlite3.Connection:
+    """Open a sources DB connection, preferring the populated main-checkout DB in worktrees."""
+    conn = sqlite3.connect(str(_effective_db_path()))
+    conn.row_factory = sqlite3.Row
+    return conn

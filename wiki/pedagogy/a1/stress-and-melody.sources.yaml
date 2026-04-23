@@ -2,23 +2,45 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S527
-  type: unknown
+  file: 10-klas-ukrmova-glazova-2018_s0527
+  type: textbook
+  title: § 20. Словорозрізнювальний наголос
+  page: 79
+  grade: 10
 - id: S2
-  file: S286
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0286
+  type: textbook
+  title: Ці принципи є лише орієнтирами в наголошуванні слів. Складність полягає передусім
+  page: 81
+  grade: 10
 - id: S3
-  file: S1548
-  type: unknown
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1548
+  type: textbook
+  title: НАГОЛОС НАВЧАЮСЯ ПРАВИЛЬНО НАГОЛОШУВАТИ СЛОВА
+  page: 14
+  grade: 2
 - id: S4
-  file: S606
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0606
+  type: textbook
+  title: § 23. ІНТОНАЦІЙНІ ОСОБЛИВОСТІ УКРАЇНСЬКОГО МОВЛЕННЯ. НАГОЛОС В УКРАЇНСЬКІЙ
+    МОВІ
+  page: 68
+  grade: 10
 - id: S5
-  file: S2298
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2298
+  type: textbook
+  title: § 23. Не відкладаймо важливе на потім
+  page: 66
+  grade: 5
 - id: S6
-  file: S1503
-  type: unknown
+  file: 2-klas-ukrmova-kravcova-2019-1_s1503
+  type: textbook
+  title: СКЛАД. ПОДІЛ СЛІВ НА СКЛАДИ
+  page: 13
+  grade: 2
 - id: S8
-  file: S3696
-  type: unknown
+  file: 7-klas-ukrlit-zabolotnyi-2024_s3696
+  type: textbook
+  title: ВСТУП ВСТУП
+  page: 6
+  grade: 7

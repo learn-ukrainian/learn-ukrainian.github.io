@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3312
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3312
+  type: textbook
+  title: § 9. Написання префіксів ПРЕ-, ПРИ-, ПРІ
+  page: 54
+  grade: 6
 - id: S2
-  file: S1765
-  type: unknown
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1765
+  type: textbook
+  title: З’юрмитися — зібратися юрмою, скупчитися
+  page: 92
+  grade: 3
 - id: S3
-  file: S3310
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3310
+  type: textbook
+  title: § 7. Написання префіксів З-, ЗІ-, С
+  page: 49
+  grade: 6
 - id: S4
-  file: S352
-  type: unknown
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0352
+  type: textbook
+  title: Орфографічна норма (p. 100)
+  page: 100
+  grade: 10
 - id: S5
-  file: S3315
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3315
+  type: textbook
+  title: § 12. Антонімічні префікси й суфікси
+  page: 68
+  grade: 6
 - id: S6
-  file: S3796
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3796
+  type: textbook
+  title: Б. Розберіть за будовою виділені слова
+  page: 26
+  grade: 7
 - id: S8
-  file: S3311
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3311
+  type: textbook
+  title: § 8. Написання префіксів РОЗ-, БЕЗ
+  page: 51
+  grade: 6

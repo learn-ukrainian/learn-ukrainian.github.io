@@ -2,14 +2,26 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1274
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1274
+  type: textbook
+  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ ОЗНАЧАЛЬНИМИ
+  page: 178
+  grade: 11
 - id: S2
-  file: S5178
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
+  type: textbook
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
 - id: S3
-  file: S4701
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4701
+  type: textbook
+  title: ДРУГОРЯДНІ ЧЛЕНИ РЕЧЕННЯ
+  page: 78
+  grade: 8
 - id: S4
-  file: S693
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0693
+  type: textbook
+  title: § 77. Дієприкметниковий зворот. Безособові форми на -но, -то
+  page: 193
+  grade: 10

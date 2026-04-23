@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3910
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3910
+  type: textbook
+  title: § 7. Види діє слова
+  page: 33
+  grade: 7
 - id: S2
-  file: S320
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0320
+  type: textbook
+  title: ПРАКТИЧНА РИТОРИКА (p. 196)
+  page: 196
+  grade: 10
 - id: S3
-  file: S370
-  type: unknown
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0370
+  type: textbook
+  title: ПОЛЕМІЧНІ ПРИЙОМИ
+  page: 181
+  grade: 10
 - id: S4
-  file: S789
-  type: unknown
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0789
+  type: textbook
+  title: ПОЛЕМІЧНІ ПРИЙОМИ
+  page: 181
+  grade: 10
 - id: S5
-  file: S3278
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3278
+  type: textbook
+  title: § 85. Переваги й можливості спілкування
+  page: 216
+  grade: 6
 - id: S8
-  file: S550
-  type: unknown
+  file: 10-klas-ukrmova-glazova-2018_s0550
+  type: textbook
+  title: § 45. Закінчення іменників чоловічого роду
+  page: 190
+  grade: 10
 - id: S9
-  file: S3952
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3952
+  type: textbook
+  title: Розділ 7 ЧАСТКА. МОВЛЕННЄВИЙ ПРОСТІР
+  page: 241
+  grade: 7

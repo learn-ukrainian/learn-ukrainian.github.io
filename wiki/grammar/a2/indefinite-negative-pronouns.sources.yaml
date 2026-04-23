@@ -2,32 +2,62 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3199
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3199
+  type: textbook
+  title: § 75. –76. Творення заперечних та неозначених
+  page: 178
+  grade: 6
 - id: S2
-  file: S3400
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3400
+  type: textbook
+  title: § 61. ЗАПЕРЕЧНІ Й НЕОЗНАЧЕНІ
+  page: 203
+  grade: 6
 - id: S3
-  file: S3206
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3206
+  type: textbook
+  title: § 84. –85. Написання неозначених і заперечних
+  page: 189
+  grade: 6
 - id: S4
-  file: S3271
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3271
+  type: textbook
+  title: § 68. Готовність до нових викликів
+  page: 181
+  grade: 6
 - id: S5
-  file: S3951
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3951
+  type: textbook
+  title: § 38. Правопис часток із різними частинами мови
+  page: 228
+  grade: 7
 - id: S6
-  file: S677
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0677
+  type: textbook
+  title: § 64. Займенник
+  page: 161
+  grade: 10
 - id: S7
-  file: S3950
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3950
+  type: textbook
+  title: § 37. Види часток
+  page: 224
+  grade: 7
 - id: S8
-  file: S3198
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3198
+  type: textbook
+  title: § 74. Розряди займенників
+  page: 175
+  grade: 6
 - id: S9
-  file: S3109
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3109
+  type: textbook
+  title: § 98. Уживання займенника ви
+  page: 193
+  grade: 6
 - id: S10
-  file: S3106
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3106
+  type: textbook
+  title: § 94. Відмінювання займен­ників. Приставний н у формах особових займенників
+  page: 185
+  grade: 6

@@ -2,29 +2,57 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1262
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1262
+  type: textbook
+  title: Українська мова належить до мов із вільним порядком слів. Порядок слів
+  page: 110
+  grade: 11
 - id: S2
-  file: S1160
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1160
+  type: textbook
+  title: § 28. –29. ПОРЯДОК СЛІВ У РЕЧЕННІ. ПРОСТЕ УСКЛАДНЕНЕ
+  page: 91
+  grade: 11
 - id: S3
-  file: S4717
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4717
+  type: textbook
+  title: РЕЧЕННЯ З ВІДОКРЕМЛЕНИМИ ЧЛЕНАМИ
+  page: 194
+  grade: 8
 - id: S4
-  file: S4584
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4584
+  type: textbook
+  title: § 26. –27. Речення поширені та непоширені. Порядок слів у реченні. Логічний
+    наголос
+  page: 62
+  grade: 8
 - id: S5
-  file: S4567
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4567
+  type: textbook
+  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 41)
+  page: 41
+  grade: 8
 - id: S6
-  file: S2244
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2244
+  type: textbook
+  title: § 64. –65. Речення, його граматична основа
+  page: 147
+  grade: 5
 - id: S7
-  file: S2469
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2469
+  type: textbook
+  title: § 54. Наголос
+  page: 155
+  grade: 5
 - id: S8
-  file: S2217
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2217
+  type: textbook
+  title: § 38. –39. Наголос. Орфоепічна помилка
+  page: 89
+  grade: 5
 - id: S10
-  file: S2249
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2249
+  type: textbook
+  title: § 67. Другорядні члени речення. Додаток
+  page: 153
+  grade: 5

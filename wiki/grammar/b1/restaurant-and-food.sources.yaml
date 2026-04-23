@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2397
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2397
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Кома між частинами складного речення
+  page: 237
+  grade: 5
 - id: S2
-  file: S3335
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3335
+  type: textbook
+  title: § 27. Відмінки іменників
+  page: 138
+  grade: 6
 - id: S3
-  file: S1154
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1154
+  type: textbook
+  title: § 22. –23. УЖИВАННЯ ПРИЙМЕННИКІВ
+  page: 71
+  grade: 11
 - id: S4
-  file: S689
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0689
+  type: textbook
+  title: § 75. Стан дієслова. Перехідні й неперехідні дієслова
+  page: 187
+  grade: 10
 - id: S5
-  file: S3255
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3255
+  type: textbook
+  title: РІД ІМЕННИКІВ
+  page: 68
+  grade: 6
 - id: S6
-  file: S1914
-  type: unknown
+  file: 4-klas-ukrmova-zaharijchuk_s1914
+  type: textbook
+  title: ІМЕННИК
+  page: 48
+  grade: 4
 - id: S7
-  file: S4598
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4598
+  type: textbook
+  title: § 34. –35
+  page: 77
+  grade: 8

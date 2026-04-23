@@ -2,11 +2,17 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2256
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2256
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 162)
+  page: 162
+  grade: 5
 - id: S2
-  file: S2511
-  type: unknown
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2511
+  type: textbook
+  title: Варіант Б. Складіть і запишіть мінітекст (3–4 речення) зі словом
+  page: 26
+  grade: 5
 - id: S4
   file: ext-article-0
   type: external

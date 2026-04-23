@@ -2,8 +2,14 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3866
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3866
+  type: textbook
+  title: § 75. Прийменник як службова частина мови
+  page: 166
+  grade: 7
 - id: S2
-  file: S2520
-  type: unknown
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2520
+  type: textbook
+  title: ІІ. З одним утвореним словосполученням (на вибір) складіть і запишіть
+  page: 114
+  grade: 5

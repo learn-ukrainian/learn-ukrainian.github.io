@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S5034
-  type: unknown
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5034
+  type: textbook
+  title: Синтаксис. Пунктуація. ПОВТОРЕННЯ
+  page: 52
+  grade: 9
 - id: S2
-  file: S1270
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1270
+  type: textbook
+  title: СКЛАДНОСУРЯДНІ РЕЧЕННЯ
+  page: 161
+  grade: 11
 - id: S3
-  file: S5080
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5080
+  type: textbook
+  title: СМИСЛОВІ ЗВ’ЯЗКИ МІЖ КОМПОНЕНТАМИ
+  page: 33
+  grade: 9
 - id: S4
-  file: S5171
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5171
+  type: textbook
+  title: Складносурядне речення (p. 53)
+  page: 53
+  grade: 9
 - id: S5
-  file: S3943
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3943
+  type: textbook
+  title: § 32. Сполучники сурядности й підрядности
+  page: 198
+  grade: 7
 - id: S6
-  file: S5174
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5174
+  type: textbook
+  title: Складносурядне речення (p. 69)
+  page: 69
+  grade: 9
 - id: S7
-  file: S5048
-  type: unknown
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5048
+  type: textbook
+  title: Розвиток мовлення. СПОСТЕРЕЖЕННЯ
+  page: 100
+  grade: 9

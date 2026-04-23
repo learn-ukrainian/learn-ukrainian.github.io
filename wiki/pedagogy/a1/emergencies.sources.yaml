@@ -2,23 +2,41 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3825
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3825
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 83)
+  page: 83
+  grade: 7
 - id: S2
-  file: S3284
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3284
+  type: textbook
+  title: § 96. Зміст моїх емоцій
+  page: 240
+  grade: 6
 - id: S3
-  file: S2387
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2387
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Види речень за метою висловлення
+  page: 203
+  grade: 5
 - id: S4
-  file: S1141
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1141
+  type: textbook
+  title: § 8. ПРИКМЕТНИК. ВІДМІНКОВІ ЗАКІНЧЕННЯ ПРИКМЕТНИКІВ
+  page: 24
+  grade: 11
 - id: S5
-  file: S2289
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2289
+  type: textbook
+  title: § 3. Книжка — ключ до успіху
+  page: 12
+  grade: 5
 - id: S6
-  file: S2374
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2374
+  type: textbook
+  title: Фонетика. Графіка. Орфоепія. Орфографія. Правила вживання апострофа
+  page: 159
+  grade: 5
 - id: S7
   file: ext-article-0
   type: external

@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3939
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3939
+  type: textbook
+  title: § 30. Особливості вживання прийменників
+  page: 181
+  grade: 7
 - id: S2
-  file: S3866
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3866
+  type: textbook
+  title: § 75. Прийменник як службова частина мови
+  page: 166
+  grade: 7
 - id: S3
-  file: S698
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0698
+  type: textbook
+  title: § 82. Прийменник
+  page: 205
+  grade: 10
 - id: S4
-  file: S3935
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3935
+  type: textbook
+  title: § 27. Прийменник як службова частина мови
+  page: 166
+  grade: 7
 - id: S5
-  file: S1154
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1154
+  type: textbook
+  title: § 22. –23. УЖИВАННЯ ПРИЙМЕННИКІВ
+  page: 71
+  grade: 11
 - id: S8
-  file: S3164
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3164
+  type: textbook
+  title: § 38. Відмінки іменників
+  page: 94
+  grade: 6
 - id: S9
-  file: S2390
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2390
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Додаток
+  page: 213
+  grade: 5

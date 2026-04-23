@@ -2,29 +2,59 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2330
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2330
+  type: textbook
+  title: § 27. Повторення вивченого з графіки в 1–4 класах. Особливості української
+    графіки
+  page: 254
+  grade: 5
 - id: S2
-  file: S1822
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1822
+  type: textbook
+  title: Прикметник............................................... 63
+  page: 143
+  grade: 4
 - id: S4
-  file: S3289
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3289
+  type: textbook
+  title: § 50. Ступені порівняння якісних прикметників, творення їх .................
+    129
+  page: 256
+  grade: 6
 - id: S5
-  file: S5070
-  type: unknown
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5070
+  type: textbook
+  title: § 1. Розвиток української мови.......................................................................................................4
+  page: 158
+  grade: 9
 - id: S6
-  file: S3413
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3413
+  type: textbook
+  title: § 53. Відмінювання кількісних числівників
+  page: 253
+  grade: 6
 - id: S7
-  file: S2300
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2300
+  type: textbook
+  title: § 34. Мої плани на зиму
+  page: 101
+  grade: 5
 - id: S8
-  file: S3122
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3122
+  type: textbook
+  title: § 99. –100. Написання заперечних і неозначених займенників . . . 194
+  page: 223
+  grade: 6
 - id: S9
-  file: S3115
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3115
+  type: textbook
+  title: § 1. Милозвучність української мови . . . . . . . . . . . . . . . . . . .
+    . . . . . 4
+  page: 220
+  grade: 6
 - id: S10
-  file: S3021
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3021
+  type: textbook
+  title: УКРАЇНСЬКА
+  page: 1
+  grade: 6

@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3084
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3084
+  type: textbook
+  title: § 70. Творення прикметників
+  page: 137
+  grade: 6
 - id: S3
-  file: S3401
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3401
+  type: textbook
+  title: § 62. ПРИСВІЙНІ ЗАЙМЕННИКИ
+  page: 207
+  grade: 6
 - id: S4
-  file: S3081
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3081
+  type: textbook
+  title: § 66. Повні й короткі форми прикметників
+  page: 131
+  grade: 6
 - id: S5
-  file: S3387
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3387
+  type: textbook
+  title: § 27. ВІДМІНИ Й ГРУПИ
+  page: 95
+  grade: 6
 - id: S7
-  file: S673
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0673
+  type: textbook
+  title: § 60. Прикметник як частина мови
+  page: 151
+  grade: 10
 - id: S8
-  file: S1417
-  type: unknown
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1417
+  type: textbook
+  title: Ìорôологічна норма (p. 25)
+  page: 25
+  grade: 11
 - id: S10
-  file: S3350
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3350
+  type: textbook
+  title: § 40. Групи прикметників за значенням
+  page: 190
+  grade: 6

@@ -2,32 +2,62 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3912
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3912
+  type: textbook
+  title: § 9. Часи діє слова
+  page: 41
+  grade: 7
 - id: S2
-  file: S3031
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3031
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 22)
+  page: 22
+  grade: 6
 - id: S3
-  file: S3926
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3926
+  type: textbook
+  title: § 21. Вид і час дієприслівників
+  page: 121
+  grade: 7
 - id: S4
-  file: S3277
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3277
+  type: textbook
+  title: § 82. Бути найкращими у своїй царині
+  page: 209
+  grade: 6
 - id: S5
-  file: S4555
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4555
+  type: textbook
+  title: § 9. Написання не з різними частинами мови
+  page: 23
+  grade: 8
 - id: S6
-  file: S3105
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3105
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 180)
+  page: 180
+  grade: 6
 - id: S7
-  file: S1137
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1137
+  type: textbook
+  title: § 2. –3. ЗАСОБИ МОВНОГО ВИРАЖЕННЯ ПРОМОВИ
+  page: 10
+  grade: 11
 - id: S8
-  file: S3865
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3865
+  type: textbook
+  title: § 74. Службові частини мови (загальні ознаки)
+  page: 164
+  grade: 7
 - id: S9
-  file: S1186
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1186
+  type: textbook
+  title: § 52. СИНТАКСИЧНІ ОДИНИЦІ В РІЗНИХ СТИЛЯХ
+  page: 186
+  grade: 11
 - id: S10
-  file: S4650
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4650
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 143)
+  page: 143
+  grade: 8

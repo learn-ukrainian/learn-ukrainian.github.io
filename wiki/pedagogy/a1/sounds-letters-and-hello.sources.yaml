@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2464
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2464
+  type: textbook
+  title: § 46. 47. Звуки мови і звуки мовлення
+  page: 140
+  grade: 5
 - id: S2
-  file: S2368
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2368
+  type: textbook
+  title: Фонетика. Графіка. Орфоепія. Орфографія. Позначення звуків на письмі . Алфавіт
+  page: 129
+  grade: 5
 - id: S3
-  file: S2360
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2360
+  type: textbook
+  title: Фонетика. Графіка. Орфоепія. Орфографія. Транскрипція
+  page: 107
+  grade: 5
 - id: S4
-  file: S2298
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2298
+  type: textbook
+  title: § 23. Не відкладаймо важливе на потім
+  page: 66
+  grade: 5
 - id: S5
-  file: S1797
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1797
+  type: textbook
+  title: ЗВУКИ І БУКВИ. СКЛАД. НАГОЛОС. ЗВУКО-БУКВЕНИЙ СКЛАД СЛІВ
+  page: 4
+  grade: 4
 - id: S6
-  file: S584
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0584
+  type: textbook
+  title: § 13. Класифікація голосних звуків. Звук мовлення і фонема
+  page: 41
+  grade: 10
 - id: S7
-  file: S2516
-  type: unknown
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2516
+  type: textbook
+  title: ІІІ. Випишіть із перших чотирьох слів та вимовте спочатку дзвінкі при
+  page: 83
+  grade: 5

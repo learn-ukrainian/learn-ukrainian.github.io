@@ -2,20 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3336
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3336
+  type: textbook
+  title: § 28. Кличний відмінок
+  page: 140
+  grade: 6
 - id: S2
-  file: S4715
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4715
+  type: textbook
+  title: РЕЧЕННЯ ІЗ ЗВЕРТАННЯМИ,
+  page: 176
+  grade: 8
 - id: S3
-  file: S2390
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2390
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Додаток
+  page: 213
+  grade: 5
 - id: S4
-  file: S2396
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2396
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Складне речення
+  page: 232
+  grade: 5
 - id: S5
-  file: S2524
-  type: unknown
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2524
+  type: textbook
+  title: Варіант Б. Складіть і запишіть текст повідомлення для бабусі або
+  page: 195
+  grade: 5
 - id: S6
-  file: S3165
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3165
+  type: textbook
+  title: § 39. Кличний відмінок іменників
+  page: 100
+  grade: 6

@@ -2,20 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3154
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3154
+  type: textbook
+  title: § 29. Рід іменників
+  page: 73
+  grade: 6
 - id: S2
-  file: S2427
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2427
+  type: textbook
+  title: § 8. Частини мови. Іменники, що означають назви
+  page: 32
+  grade: 5
 - id: S3
-  file: S14
-  type: unknown
+  file: 1-klas-bukvar-bolshakova-2018-1_s0014
+  type: textbook
+  title: М’ЯКИЙ ПРИГОЛОСНИЙ ЗВУК [й]
+  page: 61
+  grade: 1
 - id: S4
-  file: S3151
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3151
+  type: textbook
+  title: § 26. Іменник. Значення, граматичні ознаки,
+  page: 65
+  grade: 6
 - id: S5
-  file: S3371
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3371
+  type: textbook
+  title: § 54. Розряди займенників за значенням та особливості відмінювання
+  page: 255
+  grade: 6
 - id: S6
-  file: S2428
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2428
+  type: textbook
+  title: § 9. Прикметник. Роль прикметників у тексті
+  page: 35
+  grade: 5

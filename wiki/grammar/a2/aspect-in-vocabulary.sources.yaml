@@ -2,26 +2,50 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S685
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0685
+  type: textbook
+  title: § 72. Види дієслів
+  page: 181
+  grade: 10
 - id: S3
-  file: S3309
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3309
+  type: textbook
+  title: § 6. Корінь, суфікс, префікс
+  page: 45
+  grade: 6
 - id: S4
-  file: S3213
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3213
+  type: textbook
+  title: § 93. Доконаний і недоконаний вид дієслова
+  page: 202
+  grade: 6
 - id: S5
-  file: S1765
-  type: unknown
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1765
+  type: textbook
+  title: З’юрмитися — зібратися юрмою, скупчитися
+  page: 92
+  grade: 3
 - id: S6
-  file: S3812
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3812
+  type: textbook
+  title: § 24. Неозначена форма дієслова
+  page: 56
+  grade: 7
 - id: S7
-  file: S1901
-  type: unknown
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1901
+  type: textbook
+  title: ДІЄСЛОВО
+  page: 101
+  grade: 4
 - id: S8
-  file: S3912
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3912
+  type: textbook
+  title: § 9. Часи діє слова
+  page: 41
+  grade: 7
 - id: S9
-  file: S1240
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1240
+  type: textbook
+  title: ДЕРЖАВНИЙ ГІМН УКРАЇНИ
+  page: 3
+  grade: 11

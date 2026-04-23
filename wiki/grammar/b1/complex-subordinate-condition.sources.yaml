@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S5181
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5181
+  type: textbook
+  title: Складнопiдрядне речення (p. 113)
+  page: 113
+  grade: 9
 - id: S2
-  file: S5242
-  type: unknown
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5242
+  type: textbook
+  title: Складнопiдрядне речення (p. 113)
+  page: 113
+  grade: 9
 - id: S3
-  file: S5119
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5119
+  type: textbook
+  title: ЗРАЗОК УСНОГО РОЗБОРУ (p. 143)
+  page: 143
+  grade: 9
 - id: S4
-  file: S5039
-  type: unknown
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5039
+  type: textbook
+  title: § 17. Складнопідрядне речення, його будова
+  page: 62
+  grade: 9
 - id: S5
-  file: S1273
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1273
+  type: textbook
+  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
+  page: 173
+  grade: 11
 - id: S6
-  file: S5179
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5179
+  type: textbook
+  title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
+  page: 108
+  grade: 9
 - id: S7
-  file: S5240
-  type: unknown
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5240
+  type: textbook
+  title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
+  page: 108
+  grade: 9
 - id: S8
-  file: S5098
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5098
+  type: textbook
+  title: II. Колективно складіть невеликий усний роздум «Кожному мила рідна сто­
+  page: 95
+  grade: 9
 - id: S9
-  file: S5177
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5177
+  type: textbook
+  title: § 14. СКЛАДНОПІДРЯДНЕ РЕЧЕННЯ ТА ЙОГО ОЗНАКИ
+  page: 78
+  grade: 9

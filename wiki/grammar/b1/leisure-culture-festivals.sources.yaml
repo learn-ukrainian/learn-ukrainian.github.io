@@ -2,26 +2,50 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3384
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3384
+  type: textbook
+  title: Морфологiя та орфографiя
+  page: 77
+  grade: 6
 - id: S2
-  file: S3331
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3331
+  type: textbook
+  title: Розділ 5. Іменник
+  page: 118
+  grade: 6
 - id: S3
-  file: S3262
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3262
+  type: textbook
+  title: § 48. Зимова естетика
+  page: 125
+  grade: 6
 - id: S5
-  file: S2795
-  type: unknown
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2795
+  type: textbook
+  title: НАРОДНІ КАЛЕНДАРНО-ОБРЯДОВІ ПІСНІ (p. 17)
+  page: 17
+  grade: 6
 - id: S6
-  file: S2797
-  type: unknown
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2797
+  type: textbook
+  title: НАРОДНІ КАЛЕНДАРНО-ОБРЯДОВІ ПІСНІ (p. 19)
+  page: 19
+  grade: 6
 - id: S8
-  file: S2709
-  type: unknown
+  file: 6-klas-ukrlit-avramenko-2023_s2709
+  type: textbook
+  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 10)
+  page: 10
+  grade: 6
 - id: S9
-  file: S557
-  type: unknown
+  file: 10-klas-ukrmova-glazova-2018_s0557
+  type: textbook
+  title: Істори5зми (лінгв.) — слова, що вийшли
+  page: 217
+  grade: 10
 - id: S10
-  file: S1870
-  type: unknown
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1870
+  type: textbook
+  title: § 8. Головні та другорядні
+  page: 25
+  grade: 4

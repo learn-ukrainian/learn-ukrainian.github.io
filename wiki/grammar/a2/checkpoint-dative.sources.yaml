@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1800
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1800
+  type: textbook
+  title: РОЗРІЗНЕННЯ ДАВАЛЬНОГО І МІСЦЕВОГО ВІДМІНКІВ )
+  page: 48
+  grade: 4
 - id: S2
-  file: S3387
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3387
+  type: textbook
+  title: § 27. ВІДМІНИ Й ГРУПИ
+  page: 95
+  grade: 6
 - id: S3
-  file: S1925
-  type: unknown
+  file: 4-klas-ukrmova-zaharijchuk_s1925
+  type: textbook
+  title: СЛОВО. ЗНАЧЕННЯ СЛОВА
+  page: 188
+  grade: 4
 - id: S4
-  file: S3164
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3164
+  type: textbook
+  title: § 38. Відмінки іменників
+  page: 94
+  grade: 6
 - id: S5
-  file: S361
-  type: unknown
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0361
+  type: textbook
+  title: Морфологічна норма (p. 158)
+  page: 158
+  grade: 10
 - id: S6
-  file: S780
-  type: unknown
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0780
+  type: textbook
+  title: Морфологічна норма (p. 158)
+  page: 158
+  grade: 10
 - id: S7
-  file: S1801
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1801
+  type: textbook
+  title: Крок 2. Розглянь таблицю відмінювання іменників. У яких імен­
+  page: 53
+  grade: 4
 - id: S8
-  file: S1821
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1821
+  type: textbook
+  title: ПОВТОРЕННЯ
+  page: 141
+  grade: 4
 - id: S9
-  file: S595
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0595
+  type: textbook
+  title: ФОНЕТИКА УКРАЇНСЬКОЇ ЛІТЕРАТУРНОЇ МОВИ (p. 52)
+  page: 52
+  grade: 10

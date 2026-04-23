@@ -2,11 +2,20 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2433
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2433
+  type: textbook
+  title: § 13. Прислівник
+  page: 46
+  grade: 5
 - id: S2
-  file: S4697
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4697
+  type: textbook
+  title: Види словосполучень за будовою. ПРОСТІ
+  page: 44
+  grade: 8
 - id: S3
-  file: S2387
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2387
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Види речень за метою висловлення
+  page: 203
+  grade: 5

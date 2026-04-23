@@ -2,32 +2,64 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2218
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2218
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 92)
+  page: 92
+  grade: 5
 - id: S2
-  file: S3046
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3046
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 53)
+  page: 53
+  grade: 6
 - id: S3
-  file: S709
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0709
+  type: textbook
+  title: ТЕМА 5. ПОНЯТТЯ ПРО ТЕКСТ ЯК ПРОДУКТ МОВЛЕННЄВОЇ ДІЯЛЬНОСТІ. ТЕКСТОУТВОРЮВАЛЬНІ
+    КАТЕГОРІЇ. ЗАКОНОМІРНОСТІ ПОБУДОВИ ТЕКСТУ. Текст живе лише стикаючись
+  page: 225
+  grade: 10
 - id: S4
-  file: S1866
-  type: unknown
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1866
+  type: textbook
+  title: ЯК БУДУЮТЬ ТЕКСТИ
+  page: 14
+  grade: 4
 - id: S5
-  file: S1234
-  type: unknown
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1234
+  type: textbook
+  title: § 43. Стилістичні особливості засобів словотвору
+  page: 189
+  grade: 11
 - id: S6
-  file: S4541
-  type: unknown
+  file: 8-klas-ukrlit-zabolotnyi-2025_s4541
+  type: textbook
+  title: Розділ 5. ХУДОЖНІ ТВОРИ
+  page: 307
+  grade: 8
 - id: S7
-  file: S1283
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1283
+  type: textbook
+  title: Стельмах). Ваш конспект
+  page: 223
+  grade: 11
 - id: S8
-  file: S2284
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2284
+  type: textbook
+  title: § 61. Подвоєння букв на позначення подовжених
+  page: 206
+  grade: 5
 - id: S9
-  file: S1282
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1282
+  type: textbook
+  title: ІІ Напишіть реферат на тему «Історія українського правопису». У про
+  page: 221
+  grade: 11
 - id: S10
-  file: S3115
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3115
+  type: textbook
+  title: § 1. Милозвучність української мови . . . . . . . . . . . . . . . . . . .
+    . . . . . 4
+  page: 220
+  grade: 6

@@ -2,26 +2,50 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3381
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3381
+  type: textbook
+  title: § 16. ОСНОВНІ СПОСОБИ СЛОВОТВОРЕННЯ
+  page: 57
+  grade: 6
 - id: S2
-  file: S694
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0694
+  type: textbook
+  title: § 78. ДІЄПРИСЛІВНИК
+  page: 194
+  grade: 10
 - id: S4
-  file: S3258
-  type: unknown
+  file: 6-klas-ukrmova-golub-2023_s3258
+  type: textbook
+  title: § 35. Як розумно витрачати,
+  page: 91
+  grade: 6
 - id: S6
-  file: S690
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0690
+  type: textbook
+  title: § 76. Дієприкметник
+  page: 189
+  grade: 10
 - id: S7
-  file: S537
-  type: unknown
+  file: 10-klas-ukrmova-glazova-2018_s0537
+  type: textbook
+  title: § 31. Правопис суфіксів
+  page: 134
+  grade: 10
 - id: S8
-  file: S285
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0285
+  type: textbook
+  title: Основні правила наголошування слів. СПОСТЕРЕЖЕННЯ
+  page: 81
+  grade: 10
 - id: S9
-  file: S686
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0686
+  type: textbook
+  title: § 73. Часи дієслів, їх творення
+  page: 183
+  grade: 10
 - id: S10
-  file: S3832
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3832
+  type: textbook
+  title: § 42. Активні й пасивні дієприкметники
+  page: 98
+  grade: 7

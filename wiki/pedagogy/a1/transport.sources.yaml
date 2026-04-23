@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2388
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2388
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Види речень за емоційним забарвленням
+  page: 206
+  grade: 5
 - id: S2
-  file: S1731
-  type: unknown
+  file: 3-klas-ukrainska-mova-savchuk-2020-2_s1731
+  type: textbook
+  title: ЛІТЕРАТУРНІ КАЗКИ УКРАЇНСЬКИХ І ЗАРУБІЖНИХ ПИСЬМЕННИКІВ
+  page: 77
+  grade: 3
 - id: S4
-  file: S2436
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2436
+  type: textbook
+  title: § 16. Речення. Види речень за метою висловлюван
+  page: 57
+  grade: 5
 - id: S5
-  file: S3158
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3158
+  type: textbook
+  title: § 32. Число іменників
+  page: 80
+  grade: 6
 - id: S6
-  file: S2445
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2445
+  type: textbook
+  title: § 25. Навчальний діалог
+  page: 82
+  grade: 5
 - id: S7
-  file: S3058
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3058
+  type: textbook
+  title: § 43. Рід іменників. Іменники спільного роду
+  page: 85
+  grade: 6
 - id: S8
-  file: S1427
-  type: unknown
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1427
+  type: textbook
+  title: Синтаксична норма (p. 68)
+  page: 68
+  grade: 11

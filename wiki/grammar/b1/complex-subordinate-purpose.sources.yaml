@@ -2,20 +2,40 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S5090
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5090
+  type: textbook
+  title: Розв’яжіть мовну задачу. Дев’ятикласники наводили приклади складнопідрядних
+    речень
+  page: 80
+  grade: 9
 - id: S2
-  file: S3945
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3945
+  type: textbook
+  title: § 34. Розрізнення сполучників й однозвучних слів
+  page: 206
+  grade: 7
 - id: S3
-  file: S1273
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1273
+  type: textbook
+  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
+  page: 173
+  grade: 11
 - id: S4
-  file: S5181
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5181
+  type: textbook
+  title: Складнопiдрядне речення (p. 113)
+  page: 113
+  grade: 9
 - id: S6
-  file: S1275
-  type: unknown
+  file: 11-klas-ukrajinska-mova-voron-2019_s1275
+  type: textbook
+  title: Розв’яжіть мовну задачу. Старшокласники наводили приклади складнопідрядних
+    речень із
+  page: 185
+  grade: 11
 - id: S7
-  file: S5179
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5179
+  type: textbook
+  title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
+  page: 108
+  grade: 9

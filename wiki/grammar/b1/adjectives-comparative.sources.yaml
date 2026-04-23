@@ -2,26 +2,50 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3931
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3931
+  type: textbook
+  title: § 24. Ступені порівняння прислівників
+  page: 143
+  grade: 7
 - id: S2
-  file: S3175
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3175
+  type: textbook
+  title: § 49. Ступені порівняння прикметників
+  page: 123
+  grade: 6
 - id: S3
-  file: S3079
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3079
+  type: textbook
+  title: § 63. –64. Ступені порівняння якісних прикметників
+  page: 125
+  grade: 6
 - id: S5
-  file: S1142
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1142
+  type: textbook
+  title: § 9. –10. СТУПЕНІ ПОРІВНЯННЯ ПРИКМЕТНИКІВ
+  page: 29
+  grade: 11
 - id: S6
-  file: S1204
-  type: unknown
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1204
+  type: textbook
+  title: Прислівник. Ступені порівняння прислівників § 4
+  page: 23
+  grade: 11
 - id: S7
-  file: S3351
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3351
+  type: textbook
+  title: § 41. Ступені порівняння якісних прикметників
+  page: 196
+  grade: 6
 - id: S8
-  file: S674
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0674
+  type: textbook
+  title: § 61. Ступені порівняння якісних прикметників
+  page: 155
+  grade: 10
 - id: S9
-  file: S1419
-  type: unknown
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1419
+  type: textbook
+  title: Ìорôологічна норма (p. 30)
+  page: 30
+  grade: 11

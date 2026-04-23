@@ -2,44 +2,54 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2445
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2445
+  type: textbook
+  title: § 25. Навчальний діалог
+  page: 82
+  grade: 5
 - id: S2
-  file: S3371
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3371
+  type: textbook
+  title: § 54. Розряди займенників за значенням та особливості відмінювання
+  page: 255
+  grade: 6
 - id: S3
-  file: S2452
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2452
+  type: textbook
+  title: § 33. Діалог. Тире при діалозі
+  page: 107
+  grade: 5
 - id: S4
-  file: S3024
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3024
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 8)
+  page: 8
+  grade: 6
 - id: S5
-  file: S1917
-  type: unknown
+  file: 4-klas-ukrmova-zaharijchuk_s1917
+  type: textbook
+  title: ЗАЙМЕННИК
+  page: 118
+  grade: 4
 - id: S7
-  file: S2498
-  type: unknown
-# Dictionary / corpus authorities added 2026-04-23 review-and-lock pass.
-# Cited inline for every claim in the "Типові помилки L2" Surzhyk table,
-# the feminitive callout in Крок 6 + Декол. #5, and the VESUM-backed
-# vocabulary table entries.
+  file: 5-klas-ukrmova-uhor-2022-1_s2498
+  type: textbook
+  title: § 91. Змінювання і творення слів
+  page: 225
+  grade: 5
 - id: S8
   file: VESUM
   type: morphological-dictionary
-  notes: >-
-    VESUM (409K lemmas, 6.7M forms). Authoritative check for "does this
-    Ukrainian word-form exist?" Queried via `mcp__sources__verify_word`
-    and `mcp__sources__verify_words`. In this wiki supports: every
-    right-column Surzhyk replacement (тато, дружина, лікар/лікарка,
-    вибачте, пробачте, дякую, спасибі, теж, також, інженерка, вчителька,
-    програмістка, авторка, студентка) and every left-column absence
-    proof (жена, врач, ізвиніть, спасібо, тоже, очень all NOT FOUND).
+  notes: 'VESUM (409K lemmas, 6.7M forms). Authoritative check for "does this Ukrainian
+    word-form exist?" Queried via `mcp__sources__verify_word` and `mcp__sources__verify_words`.
+    In this wiki supports: every right-column Surzhyk replacement (тато, дружина,
+    лікар/лікарка, вибачте, пробачте, дякую, спасибі, теж, також, інженерка, вчителька,
+    програмістка, авторка, студентка) and every left-column absence proof (жена, врач,
+    ізвиніть, спасібо, тоже, очень all NOT FOUND).'
 - id: S9
   file: СУМ-11
   type: explanatory-dictionary
-  notes: >-
-    СУМ-11 (127K entries). Authoritative for Ukrainian word semantics.
-    Queried via `mcp__sources__search_definitions`. In this wiki
-    supports: (1) `папа` = "pope" only (not "father") — so the Surzhyk
-    table's first row is grounded in a semantic gap, not merely a
-    spelling variant; (2) `тато` = colloquial synonym of `батько`.
+  notes: 'СУМ-11 (127K entries). Authoritative for Ukrainian word semantics. Queried
+    via `mcp__sources__search_definitions`. In this wiki supports: (1) `папа` = "pope"
+    only (not "father") — so the Surzhyk table''s first row is grounded in a semantic
+    gap, not merely a spelling variant; (2) `тато` = colloquial synonym of `батько`.'

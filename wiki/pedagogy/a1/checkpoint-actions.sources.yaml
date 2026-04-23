@@ -2,26 +2,48 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S684
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0684
+  type: textbook
+  title: § 71. Дві основи дієслова. Поділ дієслів на діє відміни. Словозміна дієслів
+    i та ii дієвідміни
+  page: 179
+  grade: 10
 - id: S3
-  file: S3822
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3822
+  type: textbook
+  title: § 33. Відмінювання дієслів бути, їсти, дати та дієслів з основою на -вісти
+  page: 76
+  grade: 7
 - id: S4
-  file: S2302
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2302
+  type: textbook
+  title: Присудок — головний член речення,
+  page: 108
+  grade: 5
 - id: S5
-  file: S685
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0685
+  type: textbook
+  title: § 72. Види дієслів
+  page: 181
+  grade: 10
 - id: S7
-  file: S3913
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3913
+  type: textbook
+  title: § 10. Дієвідмінювання дієслів
+  page: 55
+  grade: 7
 - id: S8
-  file: S3823
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3823
+  type: textbook
+  title: § 34. Дієслова І та ІІ дієвідміни
+  page: 78
+  grade: 7
 - id: S9
-  file: S3218
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3218
+  type: textbook
+  title: § 98. Дієвідмінювання дієслів теперішнього
+  page: 212
+  grade: 6
 - id: S11
   file: ext-article-0
   type: external

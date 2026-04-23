@@ -2,5 +2,8 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1800
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1800
+  type: textbook
+  title: РОЗРІЗНЕННЯ ДАВАЛЬНОГО І МІСЦЕВОГО ВІДМІНКІВ )
+  page: 48
+  grade: 4

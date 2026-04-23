@@ -2,23 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1800
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1800
+  type: textbook
+  title: РОЗРІЗНЕННЯ ДАВАЛЬНОГО І МІСЦЕВОГО ВІДМІНКІВ )
+  page: 48
+  grade: 4
 - id: S2
-  file: S3371
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3371
+  type: textbook
+  title: § 54. Розряди займенників за значенням та особливості відмінювання
+  page: 255
+  grade: 6
 - id: S3
-  file: S1807
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1807
+  type: textbook
+  title: ( ЗАЙМЕННИК. ОСОБОВІ ЗАЙМЕННИКИ
+  page: 88
+  grade: 4
 - id: S4
-  file: S4598
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4598
+  type: textbook
+  title: § 34. –35
+  page: 77
+  grade: 8
 - id: S5
-  file: S3336
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3336
+  type: textbook
+  title: § 28. Кличний відмінок
+  page: 140
+  grade: 6
 - id: S6
-  file: S3164
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3164
+  type: textbook
+  title: § 38. Відмінки іменників
+  page: 94
+  grade: 6
 - id: S7
-  file: S1887
-  type: unknown
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1887
+  type: textbook
+  title: § 34. Займенники 2­ї особи
+  page: 110
+  grade: 4

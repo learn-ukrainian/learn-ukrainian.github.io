@@ -2,17 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3217
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3217
+  type: textbook
+  title: § 97. Майбутній час дієслів
+  page: 210
+  grade: 6
 - id: S2
-  file: S3912
-  type: unknown
+  file: 7-klas-ukrmova-litvinova-2024_s3912
+  type: textbook
+  title: § 9. Часи діє слова
+  page: 41
+  grade: 7
 - id: S3
-  file: S1580
-  type: unknown
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1580
+  type: textbook
+  title: Ивйщ1і| Пригадайте назви днів тижня. Послідовно запишіть їх
+  page: 83
+  grade: 2
 - id: S7
-  file: S1767
-  type: unknown
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1767
+  type: textbook
+  title: Вивчи три прислів’я напам’ять. Запиши їх із пам’яті. Звір свій запис
+  page: 155
+  grade: 3
 - id: S8
-  file: S2417
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2417
+  type: textbook
+  title: § 3. Види мовленнєвої діяльності (аудіювання,
+  page: 13
+  grade: 5

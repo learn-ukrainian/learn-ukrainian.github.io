@@ -2,26 +2,47 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S670
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0670
+  type: textbook
+  title: § 57. Категорія роду іменників
+  page: 143
+  grade: 10
 - id: S2
-  file: S1801
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1801
+  type: textbook
+  title: Крок 2. Розглянь таблицю відмінювання іменників. У яких імен­
+  page: 53
+  grade: 4
 - id: S3
-  file: S3164
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3164
+  type: textbook
+  title: § 38. Відмінки іменників
+  page: 94
+  grade: 6
 - id: S4
-  file: S365
-  type: unknown
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0365
+  type: textbook
+  title: Морфологічна норма (p. 163)
+  page: 163
+  grade: 10
 - id: S5
-  file: S1144
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1144
+  type: textbook
+  title: Числівник. Складні випадки узгодження числівника
+  page: 35
+  grade: 11
 - id: S6
-  file: S1873
-  type: unknown
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1873
+  type: textbook
+  title: § 12. Відмінювання іменників
+  page: 37
+  grade: 4
 - id: S7
-  file: S1207
-  type: unknown
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1207
+  type: textbook
+  title: Числівник. Складні випадки узгодження числівників з іменниками § 6
+  page: 31
+  grade: 11
 - id: S8
   file: ext-article-0
   type: external

@@ -2,20 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3164
-  type: unknown
+  file: 6-klas-ukrmova-betsa-2023_s3164
+  type: textbook
+  title: § 38. Відмінки іменників
+  page: 94
+  grade: 6
 - id: S2
-  file: S3393
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3393
+  type: textbook
+  title: § 40. ГРУПИ ПРИКМЕТНИКІВ ЗА ЗНАЧЕННЯМ
+  page: 133
+  grade: 6
 - id: S3
-  file: S2302
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2302
+  type: textbook
+  title: Присудок — головний член речення,
+  page: 108
+  grade: 5
 - id: S4
-  file: S2428
-  type: unknown
+  file: 5-klas-ukrmova-uhor-2022-1_s2428
+  type: textbook
+  title: § 9. Прикметник. Роль прикметників у тексті
+  page: 35
+  grade: 5
 - id: S5
-  file: S3079
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3079
+  type: textbook
+  title: § 63. –64. Ступені порівняння якісних прикметників
+  page: 125
+  grade: 6
 - id: S6
-  file: S1803
-  type: unknown
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1803
+  type: textbook
+  title: Крок 4. Зроби висновок, користуючись схемою
+  page: 67
+  grade: 4

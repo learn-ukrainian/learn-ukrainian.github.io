@@ -2,29 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S4734
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4734
+  type: textbook
+  title: ТЕМА 11. ПОВÒОÐÅÍÍß ВÈВ×ÅÍОÃО. ПРО ОФІЦІЙНО-ДІЛОВИЙ СТИЛЬ МОВЛЕННЯ
+  page: 260
+  grade: 8
 - id: S2
-  file: S4634
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4634
+  type: textbook
+  title: § 58. ПИСЬМОВЕ
+  page: 125
+  grade: 8
 - id: S3
-  file: S711
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0711
+  type: textbook
+  title: Тема 7. Поняття про стилістичну систему української мови
+  page: 231
+  grade: 10
 - id: S4
-  file: S3031
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3031
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 22)
+  page: 22
+  grade: 6
 - id: S6
-  file: S5131
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5131
+  type: textbook
+  title: II. Перекладіть текст українською мовою і запишіть. Зробіть морфологічний
+  page: 189
+  grade: 9
 - id: S7
-  file: S3862
-  type: unknown
+  file: 7-klas-ukrmova-avramenko-2024_s3862
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 155)
+  page: 155
+  grade: 7
 - id: S8
-  file: S5043
-  type: unknown
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5043
+  type: textbook
+  title: § 23. Ділові папери. Автобіографія
+  page: 84
+  grade: 9
 - id: S9
-  file: S5132
-  type: unknown
+  file: 9-klas-ukrajinska-mova-voron-2017_s5132
+  type: textbook
+  title: Заяву пишуть від руки і в одному примірнику. Стандартом
+  page: 190
+  grade: 9
 - id: S10
-  file: S1455
-  type: unknown
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1455
+  type: textbook
+  title: "Коцюбинський). \x9Bрикметники"
+  page: 188
+  grade: 11

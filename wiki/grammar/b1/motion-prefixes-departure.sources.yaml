@@ -2,20 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1765
-  type: unknown
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1765
+  type: textbook
+  title: З’юрмитися — зібратися юрмою, скупчитися
+  page: 92
+  grade: 3
 - id: S2
-  file: S1154
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1154
+  type: textbook
+  title: § 22. –23. УЖИВАННЯ ПРИЙМЕННИКІВ
+  page: 71
+  grade: 11
 - id: S3
-  file: S3315
-  type: unknown
+  file: 6-klas-ukrmova-litvinova-2023_s3315
+  type: textbook
+  title: § 12. Антонімічні префікси й суфікси
+  page: 68
+  grade: 6
 - id: S5
-  file: S1658
-  type: unknown
+  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1658
+  type: textbook
+  title: ДІЄСЛОВА-АНТОНІМИ, ДІЄСЛОВА-СИНОНІМИ, ДІЄСЛОВА З ПРЯМИМ І ПЕРЕНОСНИМ ЗНАЧЕННЯМ
+  page: 95
+  grade: 3
 - id: S6
-  file: S1901
-  type: unknown
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1901
+  type: textbook
+  title: ДІЄСЛОВО
+  page: 101
+  grade: 4
 - id: S8
-  file: S1767
-  type: unknown
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1767
+  type: textbook
+  title: Вивчи три прислів’я напам’ять. Запиши їх із пам’яті. Звір свій запис
+  page: 155
+  grade: 3

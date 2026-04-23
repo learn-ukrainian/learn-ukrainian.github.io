@@ -2,26 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S2328
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2328
+  type: textbook
+  title: § 91. Побутові проблеми
+  page: 248
+  grade: 5
 - id: S2
-  file: S316
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0316
+  type: textbook
+  title: ПРАКТИЧНА РИТОРИКА СПОСТЕРЕЖЕННЯ (p. 190)
+  page: 190
+  grade: 10
 - id: S3
-  file: S369
-  type: unknown
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0369
+  type: textbook
+  title: Підсумуйте сказане. 2. Уважно послухайте виступи однокласників (однокласниць).
+    Звер
+  page: 180
+  grade: 10
 - id: S5
-  file: S2337
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2337
+  type: textbook
+  title: Вступ. Українська мова в житті українців. Українська мова в житті українців.
+    ЯК НАПИСАТИ ТЕКСТ-РОЗДУМ
+  page: 18
+  grade: 5
 - id: S6
-  file: S3105
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3105
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 180)
+  page: 180
+  grade: 6
 - id: S7
-  file: S313
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0313
+  type: textbook
+  title: Суперечка як вид комунікації. Правила ведення суперечки
+  page: 185
+  grade: 10
 - id: S8
-  file: S363
-  type: unknown
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0363
+  type: textbook
+  title: Морфологічна норма (p. 160)
+  page: 160
+  grade: 10
 - id: S10
-  file: S318
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0318
+  type: textbook
+  title: ПРАКТИЧНА РИТОРИКА СПОСТЕРЕЖЕННЯ (p. 194)
+  page: 194
+  grade: 10

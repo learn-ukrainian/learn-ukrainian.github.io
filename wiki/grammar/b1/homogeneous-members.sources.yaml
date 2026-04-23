@@ -2,32 +2,62 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1167
-  type: unknown
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1167
+  type: textbook
+  title: § 35. –36. ОДНОРІДНІ ЧЛЕНИ РЕЧЕННЯ
+  page: 114
+  grade: 11
 - id: S2
-  file: S4712
-  type: unknown
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4712
+  type: textbook
+  title: РЕЧЕННЯ З ОДНОРІДНИМИ ЧЛЕНАМИ
+  page: 149
+  grade: 8
 - id: S3
-  file: S2257
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2257
+  type: textbook
+  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 164)
+  page: 164
+  grade: 5
 - id: S4
-  file: S4637
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4637
+  type: textbook
+  title: § 59. –60
+  page: 127
+  grade: 8
 - id: S5
-  file: S2393
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2393
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Речення з однорідними членами
+  page: 223
+  grade: 5
 - id: S6
-  file: S4639
-  type: unknown
+  file: 8-klas-ukrmova-avramenko-2025_s4639
+  type: textbook
+  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 129)
+  page: 129
+  grade: 8
 - id: S7
-  file: S2260
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2260
+  type: textbook
+  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 168)
+  page: 168
+  grade: 5
 - id: S8
-  file: S2258
-  type: unknown
+  file: 5-klas-ukrmova-avramenko-2022_s2258
+  type: textbook
+  title: § 71. –72. Однорідні члени речення. Кома між однорідними членами
+  page: 165
+  grade: 5
 - id: S9
-  file: S2394
-  type: unknown
+  file: 5-klas-ukrmova-litvinova-2022_s2394
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Кома між однорідними членами речення
+  page: 227
+  grade: 5
 - id: S10
-  file: S2304
-  type: unknown
+  file: 5-klas-ukrmova-golub-2022_s2304
+  type: textbook
+  title: Мої досягнення сьогодні — це … . Мені важливо було дізна
+  page: 124
+  grade: 5

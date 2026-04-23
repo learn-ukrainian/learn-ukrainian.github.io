@@ -2,17 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3065
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3065
+  type: textbook
+  title: § 50. Відмінювання іменників ІІ відміни
+  page: 99
+  grade: 6
 - id: S2
-  file: S3389
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3389
+  type: textbook
+  title: § 30. ЗАКІНЧЕННЯ ІМЕННИКІВ ЧОЛОВІЧОГО
+  page: 106
+  grade: 6
 - id: S4
-  file: S3387
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3387
+  type: textbook
+  title: § 27. ВІДМІНИ Й ГРУПИ
+  page: 95
+  grade: 6
 - id: S5
-  file: S3388
-  type: unknown
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3388
+  type: textbook
+  title: § 29. ВІДМІНЮВАННЯ ІМЕННИКІВ
+  page: 102
+  grade: 6
 - id: S6
-  file: S550
-  type: unknown
+  file: 10-klas-ukrmova-glazova-2018_s0550
+  type: textbook
+  title: § 45. Закінчення іменників чоловічого роду
+  page: 190
+  grade: 10

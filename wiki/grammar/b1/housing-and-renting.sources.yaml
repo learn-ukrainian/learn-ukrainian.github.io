@@ -2,26 +2,49 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S3067
-  type: unknown
+  file: 6-klas-ukrmova-avramenko-2023_s3067
+  type: textbook
+  title: § 51. Букви -а (-я), -у (-ю) у закінченнях родового відмінка однини іменників...
+    2. Поставте іменники у форму родового відмінка однини (усно). Аргумен
+  page: 101
+  grade: 6
 - id: S2
-  file: S614
-  type: unknown
+  file: 10-klas-ukrmova-karaman-2018_s0614
+  type: textbook
+  title: § 30. Складоподіл і правила переносу слів з рядка в рядок. Графічне скорочення
+    слів
+  page: 83
+  grade: 10
 - id: S3
-  file: S1761
-  type: unknown
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1761
+  type: textbook
+  title: Книжки треба шанувати. Не можна
+  page: 35
+  grade: 3
 - id: S4
-  file: S286
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0286
+  type: textbook
+  title: Ці принципи є лише орієнтирами в наголошуванні слів. Складність полягає передусім
+  page: 81
+  grade: 10
 - id: S5
-  file: S1914
-  type: unknown
+  file: 4-klas-ukrmova-zaharijchuk_s1914
+  type: textbook
+  title: ІМЕННИК
+  page: 48
+  grade: 4
 - id: S6
-  file: S5205
-  type: unknown
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5205
+  type: textbook
+  title: § 37. ОРФОГРАФІЯ
+  page: 208
+  grade: 9
 - id: S7
-  file: S323
-  type: unknown
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0323
+  type: textbook
+  title: Короткий словник наголосів. КОРОТКИЙ СЛОВНИК НАГОЛОСІВ
+  page: 202
+  grade: 10
 - id: S8
   file: ext-ulp_youtube-76
   type: external

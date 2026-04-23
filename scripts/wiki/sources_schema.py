@@ -22,8 +22,10 @@ import yaml
 
 SOURCE_TYPES = {
     "dictionary",
+    "explanatory-dictionary",
     "external",
     "literary",
+    "morphological-dictionary",
     "pravopys",
     "textbook",
     "ukrainian_wiki",
@@ -53,6 +55,7 @@ class WikiSourceEntry:
     grade: int | None = None
     author: str | None = None
     section_path: str | None = None
+    notes: str | None = None
     preserved_from_meta: bool = False
 
     def __post_init__(self) -> None:
@@ -84,6 +87,7 @@ class WikiSourceEntry:
             "grade",
             "author",
             "section_path",
+            "notes",
         ):
             value = getattr(self, field_name)
             if value is not None:
@@ -136,6 +140,7 @@ def load_sources_registry(path: Path) -> WikiSourcesRegistry:
             grade=_optional_int(item.get("grade")),
             author=_optional_str(item.get("author")),
             section_path=_optional_str(item.get("section_path")),
+            notes=_optional_str(item.get("notes")),
             preserved_from_meta=bool(item.get("preserved_from_meta", False)),
         )
         for item in raw_sources
@@ -150,7 +155,22 @@ def save_sources_registry(
     article_path: Path | None = None,
 ) -> None:
     """Write a sources registry with a short human-readable header."""
-    article_target = article_path or path.with_suffix(".md")
+    path.write_text(
+        serialize_sources_registry(registry, article_path=article_path, registry_path=path),
+        encoding="utf-8",
+    )
+
+
+def serialize_sources_registry(
+    registry: WikiSourcesRegistry,
+    *,
+    article_path: Path | None = None,
+    registry_path: Path | None = None,
+) -> str:
+    """Render a sources registry with the canonical header and key order."""
+    article_target = article_path or (registry_path.with_suffix(".md") if registry_path is not None else None)
+    if article_target is None:
+        raise ValueError("article_path or registry_path is required to serialize a wiki sources registry")
     article_ref = article_target.as_posix()
     if "wiki" in article_target.parts:
         article_ref = Path(*article_target.parts[article_target.parts.index("wiki"):]).as_posix()
@@ -165,7 +185,7 @@ def save_sources_registry(
         f"# Source registry for {article_ref}\n"
         "# Referenced inline as [S1], [S2], ...\n"
     )
-    path.write_text(header + body, encoding="utf-8")
+    return header + body
 
 
 def assign_source_ids(

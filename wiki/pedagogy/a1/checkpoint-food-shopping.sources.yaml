@@ -2,5 +2,8 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: S1766
-  type: unknown
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
+  type: textbook
+  title: Навчаюся розрізняти іменники — назви істот і неістот
+  page: 104
+  grade: 3
