@@ -8,14 +8,24 @@ Implements the sampling strategy:
 """
 
 import hashlib
+import sys
+from pathlib import Path
 from typing import Any
+
+# Ensure scripts/ is importable (matches the pattern used elsewhere in audit/).
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from common.thresholds import REVIEW_PASS_FLOOR
 
 # Constants
 SENSITIVE_TAGS = {
     'politics', 'war', 'religion', 'history', 'ideology', 'gender',
     'controversial', 'policy', 'identity'
 }
-NATURALNESS_THRESHOLD = 8.0  # Modules below this score get Tier 2
+# Modules scoring below the reviewer pass floor get Tier 2 (LLM-verified).
+# Shares the constant with the review pipeline so the risk-escalation
+# threshold tracks any future shift in reviewer calibration.
+NATURALNESS_THRESHOLD = REVIEW_PASS_FLOOR
 SAMPLE_RATE = 0.20  # 20% sampling for Tier 3
 
 def determine_tier(module_data: dict[str, Any]) -> str:

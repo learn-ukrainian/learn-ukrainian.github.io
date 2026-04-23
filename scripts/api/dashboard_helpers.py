@@ -18,6 +18,7 @@ from .config import CURRICULUM_ROOT, LEVELS, SEMINAR_TRACK_IDS
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from audit.status_cache import get_source_paths, read_status
+from common.thresholds import REVIEW_PASS_FLOOR
 from research_quality import assess_research_compat, find_research_path, get_rubric
 
 from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict
@@ -187,9 +188,9 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
         except Exception:
             pass
 
-    # Shippable = audit PASS + review >= 8.0
+    # Shippable = audit PASS + review >= REVIEW_PASS_FLOOR
     r_score = review_info["review_score"]
-    is_shippable = overall_status == "pass" and r_score is not None and r_score >= 8.0
+    is_shippable = overall_status == "pass" and r_score is not None and r_score >= REVIEW_PASS_FLOOR
 
     return {
         "slug": slug, "num": num, "pipeline_version": pipeline_version,

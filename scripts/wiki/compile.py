@@ -75,6 +75,7 @@ def _ts() -> str:
     """Compact HH:MM:SS timestamp for log lines."""
     return datetime.now().strftime("%H:%M:%S")
 
+from common.thresholds import REVIEW_PASS_FLOOR
 from wiki.compiler import compile_article, update_index
 from wiki.config import ALL_TRACKS, CURRICULUM_DIR, TRACK_DOMAINS, WIKI_DIR
 from wiki.context import strip_meta
@@ -787,19 +788,16 @@ def _review_article(article_path: Path, track: str, slug: str) -> None:
     log_event(track, slug, "review_round", round=1,
               score=score, **{k: v for k, v in scores.items() if k != "overall"})
 
-    # Pass criteria: every individual dimension ≥ 8.0 AND overall ≥ 8.0.
-    # The per-dimension floor catches the "one bad dimension hidden by a
-    # strong total" failure mode (Codex's A1 macro-report finding).
-    # Overall ≥ 8.0 is a lower bound — if every dim is ≥ 8.0 the overall
-    # is always ≥ 8.0 by construction, so the overall gate mostly guards
-    # against parse failures where the reviewer reports a sub-8 overall
-    # while emitting inflated dim scores. Matches the project's documented
-    # 8.0 minimum pass (docs/.../non-negotiable-rules.md §2).
-    DIMENSION_FLOOR = 8.0
-    OVERALL_PASS = 8.0
+    # Pass criteria: every individual dimension ≥ REVIEW_PASS_FLOOR AND
+    # overall ≥ REVIEW_PASS_FLOOR. The per-dimension floor catches the
+    # "one bad dimension hidden by a strong total" failure mode (Codex's
+    # A1 macro-report finding). Overall is a lower bound — if every dim
+    # is ≥ floor, overall is always ≥ floor by construction; the overall
+    # gate mostly guards against parse failures where the reviewer
+    # reports a sub-floor overall while emitting inflated dim scores.
     DIMENSIONS = ("factual", "language", "decolonization", "completeness", "actionable")
-    failing_dims = [d for d in DIMENSIONS if scores.get(d, 0) < DIMENSION_FLOOR]
-    overall_ok = score >= OVERALL_PASS
+    failing_dims = [d for d in DIMENSIONS if scores.get(d, 0) < REVIEW_PASS_FLOOR]
+    overall_ok = score >= REVIEW_PASS_FLOOR
 
     if overall_ok and not failing_dims:
         log_event(track, slug, "review_pass", score=score, rounds=1)
@@ -810,9 +808,9 @@ def _review_article(article_path: Path, track: str, slug: str) -> None:
     # Build failure reason for logs + user visibility.
     fail_reasons = []
     if not overall_ok:
-        fail_reasons.append(f"overall {score} < {OVERALL_PASS}")
+        fail_reasons.append(f"overall {score} < {REVIEW_PASS_FLOOR}")
     for d in failing_dims:
-        fail_reasons.append(f"{d} {scores.get(d, 0)} < {DIMENSION_FLOOR}")
+        fail_reasons.append(f"{d} {scores.get(d, 0)} < {REVIEW_PASS_FLOOR}")
     fail_reason = "; ".join(fail_reasons)
 
     review_summary = _extract_review_summary(review_text)

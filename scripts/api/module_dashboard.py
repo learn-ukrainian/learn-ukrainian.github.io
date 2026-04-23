@@ -24,6 +24,7 @@ CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from audit.status_cache import get_source_paths, read_status
+from common.thresholds import REVIEW_PASS_FLOOR
 
 
 def _load_curriculum_order(level: str) -> list[str]:
@@ -122,14 +123,14 @@ def dashboard(level: str, failing_only: bool = False, first_n: int = 0) -> int:
             audit_status = "NO DATA"
             blocking = []
 
-        # A module is only shippable if audit PASS + review ≥ 8.0
+        # A module is only shippable if audit PASS + review ≥ REVIEW_PASS_FLOOR
         review_num = None
         if review_score and review_score not in ("PASS", "FAIL"):
             with contextlib.suppress(ValueError):
                 review_num = float(review_score)
 
-        if review_num is not None and review_num < 8.0:
-            blocking.append(f"review: {review_num}/10 (need ≥8)")
+        if review_num is not None and review_num < REVIEW_PASS_FLOOR:
+            blocking.append(f"review: {review_num}/10 (need ≥{int(REVIEW_PASS_FLOOR)})")
         elif review_score is None or review_score == "-":
             blocking.append("review: not completed")
 

@@ -27,6 +27,7 @@ from pathlib import Path
 # Ensure scripts/ is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
+from common.thresholds import REVIEW_PASS_FLOOR
 from slug_utils import review_path as _review_path
 from slug_utils import to_bare_slug
 
@@ -105,8 +106,8 @@ def check_score_uniformity(review_content: str) -> list[dict]:
     """
     Flag reviews where all dimension scores are uniformly high.
 
-    If stdev < 0.5 AND mean >= 8.0, the reviewer likely isn't evaluating
-    each dimension independently.
+    If stdev < 0.5 AND mean >= REVIEW_PASS_FLOOR, the reviewer likely
+    isn't evaluating each dimension independently.
 
     Severity: warning only (genuinely good modules can have uniform scores).
     """
@@ -119,7 +120,7 @@ def check_score_uniformity(review_content: str) -> list[dict]:
     mean = statistics.mean(scores)
     stdev = statistics.stdev(scores) if len(scores) > 1 else 0.0
 
-    if stdev < 0.5 and mean >= 8.0:
+    if stdev < 0.5 and mean >= REVIEW_PASS_FLOOR:
         violations.append({
             'type': 'UNIFORM_HIGH_SCORES',
             'severity': 'warning',

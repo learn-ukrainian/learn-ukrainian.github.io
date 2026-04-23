@@ -29,6 +29,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from audit.config import get_naturalness_min_score
+from common.thresholds import REVIEW_PASS_FLOOR, STYLE_REVIEW_DIMENSION_FLOOR
 from slug_utils import review_path as _review_path
 from slug_utils import to_bare_slug
 
@@ -528,8 +529,8 @@ def _check_praise_only_citations(content: str, citations: list[str], fix_prompt:
     }]
 
 
-_STYLE_REVIEW_DIMENSION_FLOOR = 8.5
-_V6_REVIEW_MIN_SCORE = 8.0
+_STYLE_REVIEW_DIMENSION_FLOOR = STYLE_REVIEW_DIMENSION_FLOOR
+_V6_REVIEW_MIN_SCORE = REVIEW_PASS_FLOOR
 _STYLE_REVIEW_DIMENSIONS = {
     'pragmatic_authenticity': 'Pragmatic authenticity',
     'stylistic_consistency': 'Stylistic consistency',

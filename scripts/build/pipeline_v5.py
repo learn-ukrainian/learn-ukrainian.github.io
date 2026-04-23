@@ -36,7 +36,6 @@ sys.path.insert(0, str(SCRIPTS_DIR))
 # ---------------------------------------------------------------------------
 # Imports from pipeline_lib (shared utilities — never duplicated)
 # ---------------------------------------------------------------------------
-
 import pipeline_lib
 from batch_gemini_config import (
     CLAUDE_MODEL_CORE_ACTIVITIES,
@@ -49,6 +48,7 @@ from batch_gemini_config import (
     PROJECT_ROOT,
     SEMINAR_TRACKS,
 )
+from common.thresholds import STYLE_REVIEW_TARGET
 from pipeline_lib import (
     ModuleContext,
     _dispatch_prompt,
@@ -3925,7 +3925,7 @@ def phase_review_gemini(ctx: ModuleContext, state: dict) -> bool:
         # Check if all review issues were resolved by inline fixes (#975)
         _review_score = merged.scores.get("overall", 10)
         _n_issues = len(merged.issues or [])
-        if n_fixes >= _n_issues or _review_score >= 9.0:
+        if n_fixes >= _n_issues or _review_score >= STYLE_REVIEW_TARGET:
             # All issues fixed or score high enough — done
             _post_fix_passed, _post_fix_output = run_verify(ctx.paths["md"])
             log(f"  review-gemini: PASS (inline fixes resolved review issues — {n_fixes} fix(es), post-fix audit: {'PASS' if _post_fix_passed else 'FAIL'})")
