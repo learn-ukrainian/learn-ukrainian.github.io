@@ -51,6 +51,10 @@ Chunk ID: `{chunk_id}`
 
 {sources}
 
+{citation_discipline}
+
+{canonical_anchors}
+
 ## Вимоги до статті
 
 ### Мова

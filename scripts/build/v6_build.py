@@ -1009,6 +1009,42 @@ def _get_immersion_target_short(level: str, module_num: int) -> str:
         return "60-90%+ Ukrainian"
 
 
+def _build_canonical_anchors_replacements() -> dict[str, str]:
+    """Return writer + reviewer canonical-anchor blocks as prompt placeholders.
+
+    Both keys are always populated so writer and reviewer templates can
+    reference whichever side they need. Caches on first call (anchors
+    registry is static per-process).
+
+    Failure mode: if the registry is missing or malformed, returns empty
+    strings and emits a warning to stderr — does NOT hard-fail the build,
+    because an older level/stage that never depended on canonical anchors
+    should still be able to run. Factual/Honesty reviewers will degrade
+    to "no anchor REJECT triggers" but everything else continues.
+    """
+    try:
+        sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+        from wiki.discipline import (
+            render_canonical_anchors_for_reviewer,
+            render_canonical_anchors_for_writer,
+        )
+        return {
+            "{CANONICAL_ANCHORS}": render_canonical_anchors_for_writer(),
+            "{CANONICAL_ANCHORS_REVIEWER}": render_canonical_anchors_for_reviewer(),
+        }
+    except Exception as exc:
+        import sys as _sys
+        print(
+            f"⚠️  Could not load canonical anchors for prompt injection: "
+            f"{type(exc).__name__}: {exc}",
+            file=_sys.stderr,
+        )
+        return {
+            "{CANONICAL_ANCHORS}": "",
+            "{CANONICAL_ANCHORS_REVIEWER}": "",
+        }
+
+
 def _build_salad_phase_placeholders(level: str, module_num: int) -> dict[str, str]:
     """Resolve SALAD_* placeholders from the paragraph-language phase config.
 
@@ -4569,6 +4605,7 @@ def step_write(level: str, module_num: int, slug: str,
         "{IMMERSION_RULE}": get_immersion_rule(level, module_num),
         "{IMMERSION_TARGET_SHORT}": _get_immersion_target_short(level, module_num),
         **_build_salad_phase_placeholders(level, module_num),
+        **_build_canonical_anchors_replacements(),
         "{PEDAGOGICAL_CONSTRAINTS}": get_pedagogical_constraints(level, module_num, plan),
         "{LEVEL_CONSTRAINTS}": get_level_constraints(level, plan),
         "{VOCABULARY_HINTS}": "\n".join(vocab_lines),
@@ -7519,6 +7556,7 @@ def step_review(content_path: Path, level: str, module_num: int,
         "{GENERATED_CONTENT}": generated_content_literal,
         "{IMMERSION_RULE}": _get_immersion_rule_for_review(level, module_num),
         "{IMMERSION_TARGET_SHORT}": _get_immersion_target_short(level, module_num),
+        **_build_canonical_anchors_replacements(),
     }
 
     monitor_context = _build_monitor_prompt_context(level, slug)

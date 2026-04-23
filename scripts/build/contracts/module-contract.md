@@ -233,6 +233,55 @@ in quoted examples:
 
 Reviewer on Language dim: any hit = max 6.0/10.
 
+## §7a Canonical anchors contract — decolonization-critical facts
+
+**Authority:** `data/canonical_anchors.yaml` (shared registry used by
+both the module pipeline and the wiki compiler; loaded via
+`scripts/wiki/discipline.py::load_canonical_anchors`).
+
+A finite, enumerated set of Ukrainian facts carry state-constitutional
+or dictionary authority AND have known LLM failure modes producing
+decolonization-harmful alternatives. The registry lists each anchor
+with:
+
+- `topic_uk` — what the anchor is about (e.g. "Прапор України")
+- `correct` — the canonical form the writer MUST use verbatim (e.g.
+  "синьо-жовтий")
+- `forbidden[].pattern` — regex(es) for known drift forms the writer
+  MUST NOT produce (e.g. "блакитно-жовт" for the flag)
+- `forbidden[].reason` — decolonization rationale for the rejection
+- `authority` — where the canonical form comes from
+
+**Writer side.** When the module touches a topic covered by an anchor,
+the writer must use the `correct` form verbatim. Never paraphrase an
+anchor. Never invent alternates. The writer prompt injects a
+Ukrainian-language table of all forbidden patterns with rationales
+before drafting begins.
+
+**Reviewer side.** The **Factual** and **Honesty** dims REJECT any
+module containing a forbidden-pattern match. The **Language** dim
+treats a forbidden match as max-6.0 (same as §7 Russianisms). Each
+reviewer sees the registry rendered as a "REJECT if matched" list in
+English.
+
+**Mechanical enforcement.** After writer output is produced, a
+deterministic pass runs `run_discipline_checks` and records any
+violations as a `discipline_repair` log event. Anchor violations get
+`<!-- VERIFY: ... -->` markers inserted next to the offending phrase
+so downstream audits and human review surface them without the
+surrounding sentence collapsing.
+
+**Update policy.** Anchors with a `last_verified` field (current
+president, current PM) must be re-verified on any state-figure change.
+Other anchors (flag, anthem, trident, orthographic pairs) are stable
+and do not expire.
+
+**Scope.** This contract applies only to anchors explicitly listed in
+the registry. It is not a license to reject any Ukrainian form the
+reviewer personally disagrees with — the registry is the authoritative
+floor. If a Ukrainian fact is wrong but not in the registry, file a
+registry PR; do not REJECT the module on that basis.
+
 ## §8 Per-dim reviewer scope
 
 Each per-dim reviewer scores ONE dimension, using ONLY that

@@ -356,6 +356,22 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
 
     if result:
         if not dry_run:
+            # Mechanical discipline pass — runs BEFORE index update so that
+            # invented citations and forbidden canonical-anchor forms never
+            # reach the index or the reader. Strip-and-flag pattern:
+            # citations > source_count are stripped (they're just noise);
+            # anchor hits get a <!-- VERIFY --> marker inserted so reviewer
+            # and downstream audits see them. See scripts/wiki/discipline.py.
+            t_stage = time.monotonic()
+            print("  🔒 Running mechanical discipline checks...", flush=True)
+            _run_discipline_checks_and_repair(
+                article_path=result,
+                track=track,
+                slug=slug,
+                source_count=len(all_chunks),
+            )
+            print(f"    ✓ discipline in {time.monotonic() - t_stage:.1f}s", flush=True)
+
             t_stage = time.monotonic()
             print("  📑 Updating index + logging event...", flush=True)
             update_index()
@@ -374,6 +390,96 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
             print(f"    ✓ dim-review in {time.monotonic() - t_stage:.1f}s", flush=True)
         return True
     return dry_run  # dry_run returns None but isn't a failure
+
+
+def _run_discipline_checks_and_repair(
+    *, article_path: Path, track: str, slug: str, source_count: int
+) -> None:
+    """Post-compile mechanical-discipline pass.
+
+    Checks two things without spending an LLM call:
+
+    1. Invented citations — `[SX]` where X > source_count. These get
+       stripped from the article body. They cannot resolve to any real
+       corpus chunk (see #1434 / #1435 — a bare-ID leak at the compiler
+       level was one layer; this catches the writer-level hallucination
+       that *produces* the bare IDs in the first place).
+
+    2. Canonical anchors — forbidden decolonization-harmful forms like
+       «блакитно-жовтий» for the Ukrainian flag. These get a trailing
+       `<!-- VERIFY: ... -->` marker; we do NOT auto-strip because the
+       surrounding sentence may collapse. Reviewer + human-audit will
+       see the marker.
+
+    Emits a structured `discipline_result` log event with the count of
+    violations and stripped IDs, so build-logs can surface the issue
+    even if no human is watching live.
+
+    Non-fatal. If the registry is missing or regex fails, logs the
+    error and returns — the compile proceeds.
+    """
+    from wiki.discipline import (
+        flag_anchor_violations,
+        run_discipline_checks,
+        strip_invented_citations,
+    )
+
+    try:
+        original = article_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        print(f"    ⚠️  Could not read {article_path} for discipline check: {exc}")
+        return
+
+    try:
+        report = run_discipline_checks(original, source_count)
+    except Exception as exc:
+        print(f"    ⚠️  Discipline check failed (non-fatal): {exc}")
+        log_event(
+            track, slug, "discipline_error",
+            error=f"{type(exc).__name__}: {exc}",
+        )
+        return
+
+    if report.clean:
+        print("    ✓ discipline clean (0 citation, 0 anchor violations)")
+        log_event(track, slug, "discipline_pass", sources=source_count)
+        return
+
+    # Repair pass.
+    repaired = original
+    stripped_ids: list[str] = []
+    if report.citations:
+        repaired, stripped_ids = strip_invented_citations(repaired, source_count)
+        unique_stripped = sorted(set(stripped_ids))
+        print(
+            f"    🧹 Stripped {len(stripped_ids)} invented citation(s): "
+            f"{', '.join(unique_stripped)}"
+        )
+        for violation in report.citations[:3]:  # cap log noise
+            print(f"       · [{violation.cited_id}] context: «{violation.context}»")
+
+    if report.anchors:
+        repaired = flag_anchor_violations(repaired, report.anchors)
+        print(
+            f"    🚩 Flagged {len(report.anchors)} canonical-anchor violation(s) "
+            "with <!-- VERIFY --> markers"
+        )
+        for violation in report.anchors[:3]:
+            print(
+                f"       · {violation.anchor_id} — «{violation.matched_text}» "
+                f"(expected «{violation.correct_form}»)"
+            )
+
+    if repaired != original:
+        article_path.write_text(repaired, encoding="utf-8")
+
+    log_event(
+        track, slug, "discipline_repair",
+        citation_violations=len(report.citations),
+        anchor_violations=len(report.anchors),
+        stripped_ids=stripped_ids,
+        sources=source_count,
+    )
 
 
 def _compiled_article_is_ready(track: str, slug: str) -> bool:
