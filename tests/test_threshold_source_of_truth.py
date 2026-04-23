@@ -65,8 +65,8 @@ _THRESHOLD_CONTEXT_WORDS: tuple[str, ...] = (
 _FLOAT_LITERAL_ALLOWLIST: tuple[tuple[str, re.Pattern[str]], ...] = (
     # scoring/report.py display heuristic: "show criteria below 9" —
     # not a pipeline pass/fail threshold, belongs to a separate scoring
-    # domain.
-    ("scoring/report.py", re.compile(r"^if score < 9\.0:$")),
+    # domain. One regex covers both occurrences (lines 205 and 400 in
+    # current main — content-based match is line-number-agnostic).
     ("scoring/report.py", re.compile(r"^if score < 9\.0:$")),
     # review_validation.py gaming-detection heuristic: if ALL dims scored
     # ≥9 without substantive issues → suspicious. Independent of
@@ -79,8 +79,8 @@ _FLOAT_LITERAL_ALLOWLIST: tuple[tuple[str, re.Pattern[str]], ...] = (
     # value when a content-quality metric fails (e.g., zero [!quote]
     # blocks → cap at 6.0). They are cap values, not pipeline
     # pass/fail gates, and the specific numbers encode per-criterion
-    # penalties chosen for the scoring rubric.
-    ("scoring/caps.py", re.compile(r"^max_score=6\.0,$")),
+    # penalties chosen for the scoring rubric. One regex covers both
+    # caps-definition sites.
     ("scoring/caps.py", re.compile(r"^max_score=6\.0,$")),
     # v6_build.py docstring in a long help message — mentions the default
     # --review-threshold CLI default (9.0). The actual CLI default is
