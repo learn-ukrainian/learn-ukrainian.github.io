@@ -1,0 +1,70 @@
+# things-have-gender (L2-UK-EN A1/M08) — LOCKED review
+
+- **File reviewed:** `wiki/pedagogy/a1/things-have-gender.md`
+- **Review date:** 2026-04-23
+- **Reviewer:** claude-opus-4-7, effort=xhigh (review-and-lock per `docs/best-practices/wiki-plan-review-and-lock.md`)
+- **Rubric:** 5-dimension wiki rubric (factual / language / decolonization / completeness / actionable), target ≥9 on each. Template applied: `at-the-cafe` (PR #1412) and `who-am-i` (PR #1436) — this pair is the next slug in the overnight scale batch 1.
+- **Prior state:** No formal wiki review existed (wiki last compiled 2026-04-21 by Gemini 2.5 Pro). Fresh review + lock in one round, plus Codex adversarial review (see PR body).
+- **Fixes applied:** see branch `claude/scale-things-have-gender-review-and-lock` (commit `9c4088c1da` — wiki pass; subsequent commits for plan pass).
+
+## Gaps identified on intake (vs. the locked at-the-cafe + who-am-i template)
+
+1. **No Surzhyk / calque / gender-flip table** (`Типові помилки L2`). The topic "noun gender" is THE most Russian-imperial-contamination-prone slice at A1 — the learner's mental model for gender is already shaped by Russian, and a dozen common Ukrainian nouns carry a different gender than their Russian cognates (`біль`, `степ`, `розпис`, `насип`, `літопис`, `дріб`, `кір`, `ярмарок` are all m in Ukrainian but f in Russian; `путь` is f in Ukrainian but m in Russian). The wiki had zero learner-facing defenses for this beyond a one-sentence mention in decolonization #3 — and the concrete example given there (`собака`) was incoherent (both languages treat it as feminine).
+2. **Decolonization #3 contained a logically broken example.** "укр. `собака` (ж.р.) vs рос. `собака` (ж.р., але в розмовній мові може бути «пёс» — ч.р.)" — the parenthetical does not support the gender-flip thesis because both languages say собака is f. Reviewer replaced with a VESUM-verified flip list and cross-ref to the new Типові помилки L2 section.
+3. **Step 3 mislabeling.** The wiki listed `тато` as an "-а-exception" for masculine animates, but `тато` ends in `-о`. Trivial factual error, fixed to "іменників чоловічого роду на `-о` та `-а` для істот (`тато`, `дядько`, `Микола`)" — semantics over formal ending.
+4. **Vocabulary not in the locked-template format.** The locked peers (at-the-cafe, who-am-i) use `Українською | Англійською | Рівень | Джерело` — writer gets glosses + per-entry provenance. things-have-gender only had `Частина мови | Слово | Рід | Рівень` with no glosses and no source column. Fixed: full table rewrite matching who-am-i shape (`Українською | Англійською | Рід | Рівень | Джерело`), every entry VESUM-cited via new [S7], every textbook-sourced entry also carrying its original [S1-S6] citation.
+5. **Chunk guidance missing.** The locked peer pins `велику каву` / `Тут, будь ласка` / `Мене звати + Ім'я` as indivisible chunks, preventing premature grammar teaching. things-have-gender had no equivalent note, creating risk that the writer would over-teach full adjective declension (hard / soft group split), genitive, plural agreement, or full possessive-pronoun paradigm at A1 just because all three genders of every item were visible in the wiki's agreement examples.
+6. **Feminitives addressed but not cited.** Decolonization #4 listed `лікар – лікарка` etc. but didn't say *why* this is a decolonization point (Russian has no productive feminitive for most professions) or cite VESUM for the feminitive forms' normativeness. Upgraded with the "Russian `врач`, `инженер`, `программист`" contrast + explicit VESUM citation, mirroring the who-am-i template's decolonization #5.
+7. **`sources.yaml` had all six entries marked `type: unknown`** — weak traceability, and no dictionary authorities present. Fixed: per-entry `type: textbook-chunk` with notes + new S7 (VESUM) + S8 (СУМ-11) dictionary authorities, citation notes explicitly enumerating what the wiki pulls from each.
+8. **Missing `lifecycle` / `last_reviewed` / `reviewed_by` in wiki-meta.**
+
+## Fixes applied
+
+1. Added new **Типові помилки L2 (Common L2 Errors — gender-flip trap for Russian-background learners)** section with nine rows. Every row has evidence column citing VESUM [S7] form/paradigm AND VESUM absence of the Russian counterpart (`боль`, `степь`, `роспись`, `насыпь`, `летопись`, `дробь`, `корь`, `ярмарка` — all NOT FOUND in batch-verify). First row (`біль`) additionally carries СУМ-11 [S8] `БІЛЬ¹, бо́лю, ч.` headword citation, disambiguating from the separate feminine textile sense (`БІЛЬ²`).
+2. Rewrote **Декол. #3** to name the risk clearly ("учень … автоматично перенесе рід російського слова") and link forward to the Типові помилки L2 table, replacing the incoherent `собака` example.
+3. Strengthened **Декол. #4** (feminitives) with the Russian-lacks-feminitives contrast + VESUM citation + A1-appropriate practical framing ("на A1 достатньо навчити учня-жінку правильно називати свою професію").
+4. Fixed **Крок 3** exception-list wording: `-о та -а для істот` (not just `-а`), reflecting the actual data.
+5. Rewrote **Словниковий мінімум** into the five-column `Українською | Англійською | Рід | Рівень | Джерело` table (44 entries grouped into: object nouns, person nouns, feminitives, adjectives, pronouns), every entry VESUM-cited; added two feminitive pairs as primary person-noun examples.
+6. Added **writer-note after vocabulary** pinning five chunks (`мій стіл`, `моя ручка`, `моє вікно`, `велике яблуко`, `синє море`) as indivisible, explicitly listing what NOT to teach at A1 (full adjective declension, hard/soft group split, plural agreement, full possessive paradigm).
+7. Added new **Exercise 5** in "Приклади з підручників" that drills all five of the most likely L2 gender-flip pronoun-pick errors (`біль`, `степ`, `літопис`, `ярмарок`, `кір`) in minimal sentences; mirrors who-am-i's Exercise 5 pattern.
+8. Added `last_reviewed: 2026-04-23`, `lifecycle: locked`, `reviewed_by: claude-opus-4-7-xhigh` to wiki-meta block.
+9. Extended `wiki/pedagogy/a1/things-have-gender.sources.yaml` with: (a) `type: textbook-chunk` annotations + in-scope usage notes on S1–S6; (b) new **S7 (VESUM)** and **S8 (СУМ-11)** dictionary authorities with citation notes enumerating exactly which wiki claims each supports.
+
+## Dimension scores
+
+| # | Dimension | Score | Evidence |
+|---|-----------|-------|----------|
+| 1 | Factual accuracy | **9/10** | Every S1–S6 textbook citation preserved; every new factual claim backed by VESUM (`mcp__sources__verify_word` / `verify_words` / `verify_lemma`) and СУМ-11 (`mcp__sources__search_definitions`). Every gender-flip row has independent evidence (Ukrainian form present in VESUM with masculine/feminine paradigm + Russian counterpart absent from VESUM). Step-3 exception list fixed. `біль`-as-masculine-pain-sense is verified via СУМ-11's explicit `БІЛЬ¹, бо́лю, ч.` headword. The one residual soft spot is that the wiki does not cite a primary textbook chunk for the specific *L2-error framing* of gender flips (the L1 textbook corpus is silent on L2 didactics) — acknowledged inline via "для довідки" framing on the Russian column. |
+| 2 | Ukrainian language quality | **9/10** | Zero Russianisms / Surzhyk in instructional prose (homoglyph scan: clean — no Latin-in-Cyrillic tokens). No `приймати X` calque, no `Давайте + 1pl`, no `шо`, no `очень`, no `тоже`. Ukrainian grammatical terminology used correctly throughout (`займенникова підстановка`, `присвійний займенник`, `узгодження за родом`, `відмінок`) — all terms VESUM-verified. The new Типові помилки L2 section *explicitly shows* the 9 gender-flip pairs and names the direction of contamination ("учень, який знає російську, автоматично надасть їм рос. рід, що буде неправильним в українській"). |
+| 3 | Decolonization | **9/10** | Existing 4-point section preserved; #3 (gender flip) rewritten to be evidentially coherent; #4 (feminitives) upgraded with VESUM citation + Russian-lacks-productive-feminitive-morphology framing. Gender-flip table names Russian as the source of the contamination risk in every row — teaching the asymmetry rather than hiding it. The wording is careful: "для довідки" signals the Russian column is diagnostic, not authoritative. Feminitives framed as "основний варіант для жінки" — not as "alternative" or "option", which itself is a subtle decolonization act. |
+| 4 | Completeness | **9/10** | Gap 1 (Типові помилки L2) closed via new section + Exercise 5. Gap 4 (vocabulary table format) closed via rewrite with VESUM citations + feminitive pairs. Gap 5 (chunk guidance) closed via writer-note. Gap 6 (feminitive decolonization framing) closed in Декол. #4. Gap 2 (incoherent example) fixed. Gap 3 (`тато` mislabeling) fixed. A writer using this wiki now has explicit guidance on: the three genders + the pronoun-substitution test, the safe-majority ending patterns + the animate-masculine exceptions (`тато`, `дядько`, `Микола`), adjective-agreement chunks, feminitive pairs, the gender-flip trap for Russian-background learners, and five liftable textbook exercises plus one L2-specific drill. |
+| 5 | Actionable guidance | **9/10** | All four original exercises from the textbook corpus preserved (Grades 1, 5, 6 chunks `S14`, `S2428`, `S3151`, `S3154`) — writer can lift verbatim. New Exercise 5 gives five liftable minimal-context sentences drilling the gender-flip principle. Writer-note after vocabulary enumerates five indivisible chunks (no adjective declension, no hard/soft group, no plural agreement, no possessive paradigm) so the writer cannot over-teach. Типові помилки L2 "Педагогічна порада" block tells the writer explicitly to pick 1–2 pairs (`біль`/`степ`) for A1 and leave the rest as reference — preventing over-scoping to a 9-row drill the learner won't retain at this level. |
+
+**Overall: 9/10 — LOCKED.**
+
+## What "LOCKED" means for this artifact
+
+- All 5 dimensions at ≥9.
+- All eight intake gaps are closed.
+- Every new vocabulary item and every gender-flip row's Ukrainian form is VESUM-verified; every gender-flip row's Russian counterpart is VESUM-absent (both sides of the evidence).
+- The one semantic claim that could not be sourced to VESUM alone (`біль` = "pain" as masculine, vs. `біль` = "flax/textile" as feminine — same spelling, different gender/meaning) is grounded in СУМ-11's `БІЛЬ¹` headword.
+- Meta block carries `lifecycle: locked` + `reviewed_by` + `last_reviewed`.
+- Sources sidecar carries per-entry `type` annotations and full notes on what each source supports, removing the pre-pass "type: unknown" ambiguity.
+- This wiki is cleared as a clean input for the module build of L2-UK-EN A1/M08.
+
+## Unlock triggers
+
+This LOCKED state should be revisited if any of the following happen:
+
+1. The module build (`a1-008`) surfaces a gap the wiki did not anticipate — file as an issue, do a fresh review round, republish with incremented `last_reviewed`.
+2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags a gender assignment in the new table or in the main vocabulary — authoritative override of the dictionary-based verification.
+3. The `culture/decolonization/surzhyk-and-russianisms` wiki (once created) re-frames the gender-flip question or the feminitive-decolonization point in a way that contradicts this table.
+4. VESUM / СУМ-11 updates retire or re-label any of the cited forms (in particular: if `путь` as feminine is re-categorized, or if any of the nine masculine gender-flip nouns gains a feminine variant paradigm).
+5. The wiki–plan drift check flags a new mismatch between this wiki's content and the locked plan (`curriculum/l2-uk-en/plans/a1/things-have-gender.yaml`).
+
+## Residual non-blockers (documented, not blocking)
+
+- `собака` is mentioned in the old decolonization #3 only as an example that was factually incoherent and was removed from the example list. Both Ukrainian and Russian treat `собака` as feminine (VESUM confirms Ukrainian has both `f` and `m` animate paradigms — a dual-gender noun driven by referent sex — but the default is f). The wiki no longer implies a gender-flip for this word; if a future native-speaker reviewer wants a dual-gender teaching moment, they can add `собака` with the dual-gender framing in a later pass.
+- `путь` as feminine in Ukrainian is literary/bookish — it is flagged in the table as "книжне" and the wiki directs the writer to use `шлях` (m) / `дорога` (f) at A1 instead. VESUM only gives the feminine paradigm, matching the choice. Content-review concern, not a wiki concern.
+- The gender-flip table is longer (9 rows) than an A1 writer is expected to use in a single module (the "Педагогічна порада" block says 2–3 pairs). This is intentional: the wiki is a *pedagogical brief*, not a *lesson script* — it gives the writer the full bench so the writer (or the content-review pass) picks the A1-appropriate subset. If the next module-build surfaces this as over-scoping, the unlock trigger #1 covers it.
+- Exercise 5 uses `кір` (measles) which is disease-vocabulary beyond typical A1 scope. The writer-advice block says "на A1 достатньо 2–3 пари (`біль`, `степ`, плюс одна на вибір)" and leaves `кір` implicitly in the "на вибір" / reference tier; acceptable as a bench option, not a required drill.
