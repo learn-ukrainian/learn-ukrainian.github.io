@@ -58,35 +58,36 @@ _THRESHOLD_CONTEXT_WORDS: tuple[str, ...] = (
     "naturalness_min", "naturalness_threshold",
 )
 
-# Precise per-line allow-list for legitimate non-threshold float literals
-# that happen to look like thresholds. Each entry is (relative_posix_path,
-# line_number) — keep this short; prefer migrating over extending.
-_FLOAT_LITERAL_ALLOWLIST: frozenset[tuple[str, int]] = frozenset({
+# Precise content-based allow-list for legitimate non-threshold float
+# literals that happen to look like thresholds. Each entry is
+# (relative_posix_path, compiled_regex) matched against ``line.strip()``.
+# Keep this short; prefer migrating over extending.
+_FLOAT_LITERAL_ALLOWLIST: tuple[tuple[str, re.Pattern[str]], ...] = (
     # scoring/report.py display heuristic: "show criteria below 9" —
     # not a pipeline pass/fail threshold, belongs to a separate scoring
     # domain.
-    ("scoring/report.py", 205),
-    ("scoring/report.py", 400),
+    ("scoring/report.py", re.compile(r"^if score < 9\.0:$")),
+    ("scoring/report.py", re.compile(r"^if score < 9\.0:$")),
     # review_validation.py gaming-detection heuristic: if ALL dims scored
     # ≥9 without substantive issues → suspicious. Independent of
     # STYLE_REVIEW_TARGET (they share the number by coincidence).
-    ("audit/checks/review_validation.py", 487),
+    (
+        "audit/checks/review_validation.py",
+        re.compile(r"^if min_score >= 9\.0 and not has_real_issues:$"),
+    ),
     # scoring/caps.py max_score= entries: these CAP a track's score at a
     # value when a content-quality metric fails (e.g., zero [!quote]
     # blocks → cap at 6.0). They are cap values, not pipeline
     # pass/fail gates, and the specific numbers encode per-criterion
     # penalties chosen for the scoring rubric.
-    ("scoring/caps.py", 61),
-    ("scoring/caps.py", 105),
+    ("scoring/caps.py", re.compile(r"^max_score=6\.0,$")),
+    ("scoring/caps.py", re.compile(r"^max_score=6\.0,$")),
     # v6_build.py docstring in a long help message — mentions the default
     # --review-threshold CLI default (9.0). The actual CLI default is
     # wired via argparse reading REVIEW_TARGET_SCORE, not this literal.
-    # Line shifted 2767→2766 by ADR-007 PR-B's rewrite-block protocol
-    # deletion; then 2766→2758 by ADR-007 PR-D's rewrite-infrastructure
-    # helper deletion. Follow-up: make this allowlist line-number-agnostic
-    # (content-based match) — filed as #1507.
-    ("build/v6_build.py", 2758),
-})
+    # Content-based match (#1507) so future line shifts don't break CI.
+    ("build/v6_build.py", re.compile(r"review_threshold \(default 9\.0\)")),
+)
 
 # Files excluded from the scan entirely (archived / generated / legacy).
 _EXCLUDED_DIRS: tuple[str, ...] = (
@@ -122,6 +123,18 @@ def _module_level_name_assignments(tree: ast.Module) -> list[tuple[str, int]]:
         elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
             results.append((node.target.id, node.lineno))
     return results
+
+
+def _matching_allowlist_patterns(
+    rel_path: str,
+    stripped_line: str,
+) -> list[re.Pattern[str]]:
+    """Return allowlist regexes that match this stripped line in this file."""
+    return [
+        pat
+        for path, pat in _FLOAT_LITERAL_ALLOWLIST
+        if rel_path == path and pat.search(stripped_line)
+    ]
 
 
 def test_no_canonical_name_redeclared_outside_thresholds() -> None:
@@ -188,7 +201,8 @@ def test_no_threshold_float_literals_in_threshold_context() -> None:
         rel = path.relative_to(SCRIPTS_ROOT).as_posix()
         lines = path.read_text("utf-8").splitlines()
         for idx, line in enumerate(lines, start=1):
-            if (rel, idx) in _FLOAT_LITERAL_ALLOWLIST:
+            stripped_line = line.strip()
+            if _matching_allowlist_patterns(rel, stripped_line):
                 continue
             # Quick literal presence filter.
             stripped = line.split("#", 1)[0]  # strip line comments
@@ -210,8 +224,33 @@ def test_no_threshold_float_literals_in_threshold_context() -> None:
         + "\n".join(offenders)
         + "\n\nFix: import REVIEW_PASS_FLOOR / STYLE_REVIEW_TARGET / etc. "
         "from scripts.common.thresholds, or — if the value is genuinely "
-        "unrelated — add (path, lineno) to _FLOAT_LITERAL_ALLOWLIST with a "
-        "one-line justification."
+        "unrelated — add (path, regex_pattern) to "
+        "_FLOAT_LITERAL_ALLOWLIST with a one-line justification."
+    )
+
+
+def test_allowlist_does_not_match_unrelated_lines(tmp_path: Path) -> None:
+    """A ``9.0`` in an unrelated location must still trigger the gate.
+
+    Regression for #1507: content-based allowlist must not swallow new
+    occurrences just because they live in an allowlisted file.
+    """
+    del tmp_path  # test exercises the predicate directly
+
+    fake_line = "CHECK_THRESHOLD = 9.0  # unrelated constant"
+    allowlisted_paths = {path for path, _pat in _FLOAT_LITERAL_ALLOWLIST}
+    matches = {
+        path: _matching_allowlist_patterns(path, fake_line)
+        for path in allowlisted_paths
+    }
+    matched = {
+        path: [pat.pattern for pat in pats]
+        for path, pats in matches.items()
+        if pats
+    }
+    assert not matched, (
+        "Allowlist regex is too permissive — matched an unrelated line: "
+        f"{fake_line!r}. Tighten the pattern(s): {matched}"
     )
 
 
