@@ -317,6 +317,8 @@ def _search_sections_fts5(
             **ranked,
             "text": meta["full_text"],
             "chunk_id": f"S{meta['section_id']}",
+            "corpus": "textbook_sections",
+            "unit_key": f"textbook_sections:S{meta['section_id']}",
             "title": meta["section_title"],
             "source_type": "textbook",
         })
