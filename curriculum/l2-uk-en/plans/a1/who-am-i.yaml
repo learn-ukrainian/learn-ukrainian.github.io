@@ -2,7 +2,21 @@ module: a1-005
 level: A1
 sequence: 5
 slug: who-am-i
-version: 1.1.1
+version: '1.2.0'
+lifecycle: locked
+reviewed_at: '2026-04-23T00:00:00Z'
+reviewed_by: claude-opus-4-7-xhigh-who-am-i
+review_notes: >-
+  Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md
+  (rubric template from PR #1412, at-the-cafe). See PR body for the full
+  plan-side findings (pragmatic / Russianism / calque / contradiction /
+  references / wiki-alignment) and wiki/.reviews/pedagogy/a1/who-am-i-review-LOCKED.md
+  for the wiki-side report. Plan brought into alignment with the locked
+  wiki: echo-question pattern (А тебе? / А вас?) reinforced without
+  `А у тебе?` (#1392 Defect 2 avoidance); Dialogue 3 split into an
+  explicit two-speaker exchange; Surzhyk drill added as fill-in activity
+  (mirrors wiki "Типові помилки L2" table); feminitives called out as
+  primary form for female speakers; wiki back-reference added.
 title: Хто я?
 subtitle: Мене звати... — ваша перша справжня розмова
 focus: vocabulary
@@ -14,6 +28,8 @@ objectives:
 - Використовувати конструкцію з часткою «це» для ідентифікації предметів і людей
 - Вміти ставити запитання «Як тебе/вас звати?» та відповідати на нього формально і неформально
 - Розуміти структуру українського речення без дієслова-зв'язки «бути» (Я — студент)
+- Переадресовувати питання співрозмовникові еховим патерном `А тебе?` / `А вас?` (БЕЗ форми `А у тебе?`, яка викликає граматику родового відмінка з прийменником)
+- Вибирати нормативну форму на противагу типовому русизму/суржику теми «знайомство» (тато, а не папа; дружина, а не жена; лікар/лікарка, а не врач; вибачте, а не ізвиніть; дякую/спасибі, а не спасібо; теж/також, а не тоже; фемінітив, а не чоловічий генерик для жінки)
 dialogue_situations:
 - setting: Кімната відпочинку в хостелі — два туристи з рюкзаками вперше зустрічаються
   speakers:
@@ -31,12 +47,13 @@ content_outline:
   points:
   - 'Діалог 1 — У хостелі (неформальний, за зразком Anna Ep3): — Привіт! Як тебе звати? — Мене звати Марко. А тебе? — Мене звати Олена. Звідки ти? — Я з Канади. А ти? — Я з України. — Дуже приємно!'
   - 'Діалог 2 — На конференції (формальний, за зразком Anna Ep3-4): — Добрий день! Як вас звати? — Мене звати Петро. Дуже приємно! — Мені також! Ви з України? — Так, я з Києва.'
-  - 'Діалог 3 — Представлення когось іншого: Це Андрій. Він зі Львова. Він — інженер. А це Оксана. Вона з Одеси. Вона — лікарка.'
+  - 'Діалог 3 — Представлення когось іншого (обов''язково ДВА СПІВРОЗМОВНИКИ, не монолог). — Це Андрій. Він зі Львова. — Дуже приємно. А це хто? — А це Оксана. Вона з Одеси. Вона — лікарка. Завдання автора: чергувати репліки між двома мовцями; питання `А це хто?` переводить фокус на другу особу. УВАГА: для жінки обов''язково використовуйте фемінітив (`лікарка`, не `лікар`).'
 - section: Мене звати...
   words: 250
   points:
   - 'За зразком Anna Ep3: Конструкція «Мене звати...» є безособовою. В українській мові для представлення себе дієслово-зв''язка «є» не потрібне. Питання: Як тебе звати? (неформально) / Як вас звати? (формально). Про інших: Як його звати? / Як її звати?.'
   - 'Приємно познайомитись: Дуже приємно! або Приємно познайомитись! Ця фраза звучить ПІСЛЯ обміну іменами.'
+  - 'Еховий патерн «відлуння» (обов''язковий у Діалозі 1 і 2): після того, як А назвала ім''я, Б відповідає `А тебе?` (неформально) або `А вас?` (формально). НЕ використовувати форму `А у тебе?` — вона тягне за собою родовий відмінок з прийменником `у`, який на А1 ще не вивчається (див. wiki «Крок 1»; уникнення патерну #1392 Defect 2).'
 - section: Це...
   words: 200
   points:
@@ -49,7 +66,7 @@ content_outline:
   words: 150
   points:
   - 'У теперішньому часі дієслово-зв''язка «є» пропускається. Підмет — Іменник: Я — студент. Він — лікар. Вона — вчителька. Тире (—) позначає місце, де в інших мовах стояло б дієслово «бути».'
-  - 'Національності (називний відмінок, без дієслова): українець / українка, американець / американка, канадієць / канадка. Професії: студент/студентка, вчитель/вчителька, лікар/лікарка, програміст/програмістка.'
+  - 'Національності (називний відмінок, без дієслова): українець / українка, американець / американка, канадієць / канадка. Професії: студент/студентка, вчитель/вчителька, лікар/лікарка, програміст/програмістка, інженер/інженерка, авторка. УВАГА до автора: для жінки ПОДАВАТИ ФЕМІНІТИВ як основну форму (`Оксана — лікарка`, не `Оксана — лікар`). Російська мова фемінітивів системно не має; українська — має. Усі перелічені жіночі форми перевірено у VESUM. Див. wiki «Крок 6» + «Деколонізаційні застереження» пункт 5.'
 - section: Звідки?
   words: 200
   points:
@@ -80,12 +97,19 @@ vocabulary_hints:
   - вони (they)
   - програміст, програмістка (programmer m/f)
   - інженер, інженерка (engineer m/f)
+  - авторка (author — feminitive)
   - звідки (where from)
-  - друг (friend, male)
+  - друг, подруга (friend m/f)
   - його (his — doesn't change)
   - її (her — doesn't change)
   - Канада (Canada)
   - Німеччина (Germany)
+  - тато (dad — native form, NOT `папа`)
+  - дружина (wife — native form, NOT `жена`)
+  - дякую / спасибі (thank you — native forms, NOT `спасібо`)
+  - вибачте / пробачте (excuse me — native forms, NOT `ізвиніть`)
+  - теж / також (also — native forms, NOT `тоже`)
+  - А тебе? / А вас? (echo-reciprocal — chunk, NOT `А у тебе?`)
 activity_hints:
 - type: fill-in
   focus: 'Доповніть розповідь про себе: Мене звати..., Я з..., Я —...'
@@ -99,6 +123,16 @@ activity_hints:
 - type: fill-in
   focus: Доповніть діалог правильними фразами
   items: 6
+- type: fill-in
+  focus: 'Типові суржикові пари теми «знайомство» — оберіть нормативну українську форму (див. wiki "Типові помилки L2")'
+  items:
+  - 'Мого {папу|тата} звати Петро.'
+  - 'Це моя {жена|дружина} Марія.'
+  - '{Ізвиніть|Вибачте}, як вас звати?'
+  - '{Спасібо|Дякую}, дуже приємно!'
+  - 'Мені {тоже|теж} приємно.'
+  - 'Оксана — {інженер|інженерка}.'
+  - 'Це мій {врач|лікар}.'
 connects_to:
 - a1-006 (Моя родина)
 prerequisites:
@@ -121,3 +155,17 @@ references:
 - title: ULP Season 1, Episode 8 — Jobs and Professions
   url: https://www.ukrainianlessons.com/episode8/
   notes: Лексика на позначення професій із формами чоловічого та жіночого роду.
+- title: 'Wiki: pedagogy/a1/who-am-i (LOCKED 2026-04-23)'
+  notes: 'Authoritative pedagogical brief — see Крок 1 (echo pattern `А тебе?` + `А у тебе?` avoidance), Крок 6 (feminitives), Декол. point #5 (feminitives as decolonization), та розділ "Типові помилки L2" (7 introductions-specific Surzhyk pairs).'
+changelog:
+- version: '1.2.0'
+  date: '2026-04-23'
+  changes:
+  - 'Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md (rubric from PR #1412, at-the-cafe template).'
+  - 'Added lifecycle markers (lifecycle/reviewed_at/reviewed_by/review_notes).'
+  - 'Aligned with locked wiki: echo-question pattern (А тебе? / А вас?) made explicit in "Мене звати..." section; `А у тебе?` explicitly forbidden (#1392 Defect 2 avoidance).'
+  - 'Split Діалог 3 from single-speaker monologue to explicit two-speaker exchange (addresses module-build r1 finding on mono-speaker dialogue).'
+  - 'Added feminitive directive to "Я — студент" section (Оксана — лікарка, NOT лікар) + called out as decolonization per wiki Крок 6 + Декол. #5.'
+  - 'Added Surzhyk drill as new fill-in activity (7 items: папа/тато, жена/дружина, ізвиніть/вибачте, спасібо/дякую, тоже/теж, інженер/інженерка, врач/лікар) — mirrors wiki "Типові помилки L2" table.'
+  - 'Extended `recommended` vocabulary with native-form counterparts (тато, дружина, дякую/спасибі, вибачте/пробачте, теж/також, А тебе?/А вас?, авторка, подруга).'
+  - 'Added wiki back-reference in references: section.'
