@@ -2,7 +2,24 @@ module: a1-007
 level: A1
 sequence: 7
 slug: checkpoint-first-contact
-version: '1.1.4'
+version: '1.2.1'
+lifecycle: locked
+reviewed_at: '2026-04-23T09:43:24Z'
+reviewed_by: claude-opus-4-7-xhigh-scale-batch-1
+review_notes: >-
+  Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md,
+  following the at-the-cafe (#1412 / PR #1415) template. Wiki-side report:
+  wiki/.reviews/pedagogy/a1/checkpoint-first-contact-review-LOCKED.md
+  (5-dim scores 9/9/9/9/9). Plan-side findings addressed: (1) pragmatic
+  register mismatch — `setting` reframed from formal conference to peer-
+  to-peer language-meetup so that ти-register and family-topic content
+  cohere with the monologue examples; (2) integration vocabulary added
+  (професія, національність, знайомство, походження, Вітаю, Дуже
+  приємно, Мені теж) to hook wiki Step 6; (3) new fill-in activity
+  drilling the wiki "Типові помилки L2" Surzhyk / calque pairs (7
+  items, A1.1-specific); (4) back-reference to locked wiki added to
+  references; (5) author-note warning against Surzhyk forms
+  (папа/фамілія/Я є студент/Я маю N років) in Діалог section.
 title: 'Підсумок: Перший контакт'
 subtitle: Чи вмієте ви читати, вітатися та розповідати про себе?
 focus: review
@@ -15,11 +32,11 @@ objectives:
 - Самостійно оцінювати знання звуків, літер, привітань та фраз для знайомства
 - Поєднувати всі навички рівня A1.1 у зв'язному мовленні
 dialogue_situations:
-- setting: Перерва на каву під час конференції — двоє спеціалістів знайомляться між сесіями
+- setting: 'Перший день мовних курсів — двоє студентів знайомляться під час перерви: розповідають про себе, родину і майбутню професію (ти-регістр, рівноправний студентський контекст).'
   speakers:
-  - Богдан (engineer from Dnipro)
-  - Соломія (teacher from Ternopil)
-  motivation: 'Закріплення: ім''я, походження, професія, родина — повна розповідь про себе'
+  - Богдан (студент із Дніпра, майбутній інженер)
+  - Соломія (студентка з Тернополя, майбутня вчителька)
+  motivation: 'Закріплення: ім''я, прізвище, походження, професія, родина — повна розповідь про себе у ти-регістрі. УВАГА до автора: рівноправний студентський контекст обрано навмисно — він природно мотивує і ти-регістр, і розмову про родину (на конференції професіоналів родинна лексика не є доречною темою знайомства).'
 content_outline:
 - section: Що ми знаємо?
   words: 200
@@ -29,7 +46,7 @@ content_outline:
   words: 250
   points:
   - 'Короткий український текст (8-10 речень) з використанням ТІЛЬКИ лексики з модулів №1–6. Жодних нових слів. Учень читає вголос. Зміст: Людина розповідає про себе, описує родину, згадує професії, каже, звідки вона родом.'
-  - 'За зразком оглядового епізоду Anna Ep10 "Я і моя сім''я".'
+  - 'За зразком оглядового епізоду Анни (ULP, епізод 10) «Я і моя сім''я».'
 - section: Граматика
   words: 200
   points:
@@ -37,8 +54,9 @@ content_outline:
 - section: Діалог
   words: 400
   points:
-  - 'Повне знайомство — комплексний діалог, що поєднує ВСЕ з рівня A1.1. Ситуація: зустріч із новою людиною. Повний цикл: привітання → ім''я → походження → професія → родина → показ фотографій → прощання. Якщо учень розуміє та може відтворити цей діалог, рівень A1.1 пройдено.'
-  - 'Зв''язний монолог: власна розповідь учня про себе. Привіт! Мене звати [ім''я]. Я [національність]. Я — [професія]. Моя мама — [професія]. Мій тато — [професія]. У мене є [родина]. Це випускна промова рівня A1.1.'
+  - 'Повне знайомство — комплексний діалог, що поєднує ВСЕ з рівня A1.1. Ситуація: зустріч із новою людиною у рівноправному студентському контексті (мовні курси, студентське орієнтування). Повний цикл: привітання → ім''я → прізвище → походження → професія → родина → прощання. Якщо учень розуміє та може відтворити цей діалог, рівень A1.1 пройдено.'
+  - 'Зв''язний монолог: власна розповідь учня про себе. Привіт! Мене звати [ім''я]. Моє прізвище [прізвище]. Я з [країна]. Я [національність]. Я — [професія]. Моя мама — [професія]. Мій тато — [професія]. У мене є [родина]. Дуже приємно познайомитися! Це випускна промова рівня A1.1.'
+  - 'УВАГА до автора (типові помилки L2 для A1.1 — див. вікі-статтю, розділ «Типові помилки L2»): НЕ використовуйте `папа` у значенні "батько" (нормативне: `тато`); НЕ використовуйте `фамілія` (нормативне: `прізвище`); НЕ використовуйте кальку `Моє ім''я є Іван` (нормативне: `Мене звати Іван`); НЕ використовуйте форсоване `Я є студент` (нормативне: `Я студент`); НЕ використовуйте кальку `Я маю 25 років` (нормативне: `Мені 25 років`); НЕ використовуйте `Здрастуйте` / `Пока` (нормативні привітання та прощання: `Добрий день` / `До побачення`). Тримайте ти-регістр до кінця діалогу — НЕ змішуйте з Ви.'
 - section: Підсумок
   words: 150
   points:
@@ -48,7 +66,15 @@ vocabulary_hints:
   - All vocabulary from №1–6 is recycled — no new required words
   recommended:
   - ім'я (first name)
-  - прізвище (surname)
+  - прізвище (surname — standard; NOT the Surzhyk `фамілія`)
+  - знайомство (acquaintance / introduction)
+  - професія (profession / occupation)
+  - національність (nationality / ethnicity)
+  - походження (origin)
+  - Вітаю (hello / greeting — neutral; also "congratulations" in other contexts)
+  - Дуже приємно (very nice to meet you — greeting closure)
+  - Мені теж (me too — reciprocal acknowledgement after Дуже приємно)
+  - тато (dad — standard; NOT the Russianism `папа`)
 activity_hints:
 - type: quiz
   focus: 'Комплексне повторення: звуки, літери, привітання, родина'
@@ -59,6 +85,16 @@ activity_hints:
 - type: match-up
   focus: З'єднати запитання з відповідями (Як звати? → Мене звати...)
   items: 8
+- type: fill-in
+  focus: 'Типові помилки A1.1 — оберіть нормативну форму (див. wiki "Типові помилки L2")'
+  items:
+  - '{Добрий день|Здрастуйте}! Мене звати Оксана.'
+  - Мій {тато|папа} — інженер.
+  - '{Мене звати Іван|Моє ім''я є Іван}.'
+  - Я {студент|є студент}.
+  - '{Мені 25 років|Я маю 25 років}.'
+  - Як твоє {прізвище|фамілія}?
+  - — Дякую! — Будь ласка. — {До побачення|Пока}!
 connects_to:
 - a1-008 (Речі мають рід)
 prerequisites:
@@ -71,3 +107,20 @@ references:
 - title: ULP Season 1, Episode 10 — Review 1-9
   url: https://www.ukrainianlessons.com/episode10/
   notes: Зразок зв'язної розповіді про себе для закріплення від Анни.
+- title: 'Wiki: pedagogy/a1/checkpoint-first-contact (LOCKED 2026-04-23)'
+  notes: 'Authoritative pedagogical brief — see Крок 6 (чекпойнт-інтеграція A1.1) and "Типові помилки L2" (A1.1 self-introduction Surzhyk / calque table). The Діалог and Підсумок sections in this plan are hooks into those wiki sections.'
+changelog:
+- version: '1.2.1'
+  date: '2026-04-23'
+  changes:
+  - 'Address AC-3 cross-agent (Codex) adversarial-review findings: BLOCKER — removed 6 Latin-in-Ukrainian-prose tokens flagged as #1392 D1/D7 drift (`peer-to-peer` ×3 → `рівноправний студентський контекст`; `student from Dnipro` / `student from Ternopil` → `студент із Дніпра` / `студентка з Тернополя`; `Anna Ep10` → `Анни (ULP, епізод 10)`). MEDIUM — disambiguated at-the-cafe template provenance (#1412 issue / PR #1415). MEDIUM — LOCKED review now contains explicit #1392 D1–D7 systemic-defect scan. NIT — residual non-blockers in LOCKED review documents why the 8th wiki Surzhyk row (`Я із Росії`) is intentionally not mirrored in the drill activity.'
+- version: '1.2.0'
+  date: '2026-04-23'
+  changes:
+  - 'Review-and-lock pass (scale batch 1, per docs/best-practices/wiki-plan-review-and-lock.md, #1412 at-the-cafe template — landed as PR #1415).'
+  - 'Reframed dialogue_situations[0].setting from formal conference (Ви-register, professional first-meeting) to peer-to-peer language-meetup (ти-register, student context) — resolves pragmatic mismatch between setting and the ти-register Привіт!-monologue in Діалог section, and makes family-topic content situationally coherent.'
+  - 'Added integration vocabulary_hints.recommended (знайомство, професія, національність, походження, Вітаю, Дуже приємно, Мені теж, тато) to hook locked wiki Step 6.'
+  - 'Added new fill-in activity "Типові помилки A1.1" mirroring locked wiki "Типові помилки L2" table (7 A1.1-specific Surzhyk / calque pairs).'
+  - 'Added author-note in Діалог section listing 6 forbidden Surzhyk / calque forms + ти-register consistency warning.'
+  - 'Added back-reference to locked wiki in references.'
+  - 'Added lifecycle markers (lifecycle / reviewed_at / reviewed_by / review_notes) per docs/best-practices/wiki-plan-review-and-lock.md.'
