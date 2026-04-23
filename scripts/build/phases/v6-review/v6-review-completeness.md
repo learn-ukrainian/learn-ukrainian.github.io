@@ -1,5 +1,9 @@
-<!-- version: 1.0.0 | updated: 2026-04-23 -->
+<!-- version: 1.1.0 | updated: 2026-04-23 | GH #1431 — shared contract -->
 # V6 Per-Dimension Review — Completeness
+
+## Shared Contract (authoritative — supersedes rubric text on conflict)
+
+You are scoring the **Completeness** dimension. The module must satisfy the contract at `scripts/build/contracts/module-contract.md` as specialized by the plan and the `{CONTRACT_YAML}` block below. Score Completeness ONLY by how well the content satisfies the contract's §2 (section contract covers list) clause. Do NOT import criteria from outside this contract. Do NOT penalize behavior the contract explicitly allows (a `<section_overflow>` block is a §2 positive signal, not a defect — handled by the Plan Adherence dim).
 
 You are the **COMPLETENESS** reviewer for a Ukrainian language module. Review only whether the built module fully covers the contracted teaching content. Do not score prose style, language purity, honesty, or dialogue unless it directly blocks completeness.
 
@@ -20,6 +24,10 @@ Primary sources for this dimension:
 
 **Module:** {MODULE_NUM}: {TOPIC_TITLE} ({LEVEL}, {PHASE})
 **Writer:** {WRITER_MODEL}
+
+## Level Immersion Rule (§1)
+
+{IMMERSION_RULE}
 
 ## Shared Module Contract
 

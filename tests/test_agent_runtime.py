@@ -17,6 +17,8 @@ Issue: #1184
 """
 from __future__ import annotations
 
+import os
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -25,6 +27,8 @@ from unittest.mock import patch
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+
+_TEST_PYTHON = str(Path(__file__).resolve().parent.parent / ".venv" / "bin" / "python")
 
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
@@ -1717,7 +1721,6 @@ def test_stderr_streamer_drains_large_volume_without_hanging():
     hang instead of exiting in milliseconds.
     """
     import subprocess as _sp
-    import sys as _sys
 
     # Child writes 2000 lines of 100 chars each to stderr, then exits.
     child_code = (
@@ -1727,7 +1730,7 @@ def test_stderr_streamer_drains_large_volume_without_hanging():
         "sys.stderr.flush()\n"
     )
     proc = _sp.Popen(
-        [_sys.executable, "-c", child_code],
+        [_TEST_PYTHON, "-c", child_code],
         stdout=_sp.PIPE,
         stderr=_sp.PIPE,
         text=True,
@@ -1773,11 +1776,10 @@ def test_stop_watchdog_unblocks_stdout_streamer():
     ever regress, this test will catch it.
     """
     import subprocess as _sp
-    import sys as _sys
 
     # A quiet subprocess that will sit silent forever (well, 30s)
     proc = _sp.Popen(
-        [_sys.executable, "-c", "import time; time.sleep(30)"],
+        [_TEST_PYTHON, "-c", "import time; time.sleep(30)"],
         stdout=_sp.PIPE,
         stderr=_sp.PIPE,
         text=True,
@@ -2665,3 +2667,159 @@ def test_invoke_applies_env_unsets_to_subprocess(tmp_path):
     assert "GOOGLE_API_KEY" not in env
     assert "GOOGLE_GENERATIVE_AI_API_KEY" not in env
     assert "GOOGLE_APPLICATION_CREDENTIALS" not in env
+
+
+def test_invoke_danger_wraps_path_with_merge_shims(tmp_path):
+    """Danger-mode subprocesses must get the gh/git merge guard by default."""
+    from unittest.mock import MagicMock
+
+    from agent_runtime import runner as runner_mod
+
+    mock_proc = MagicMock()
+    mock_proc.poll = MagicMock(return_value=0)
+    mock_proc.returncode = 0
+    mock_proc.stdin = MagicMock()
+    mock_proc.stderr = MagicMock()
+    mock_proc.stderr.readline = MagicMock(return_value="")
+    mock_proc.stderr.close = MagicMock()
+    mock_proc.stdout = MagicMock()
+    mock_proc.stdout.readline = MagicMock(return_value="")
+    mock_proc.stdout.close = MagicMock()
+    mock_proc.pid = 12345
+
+    mock_popen = MagicMock(return_value=mock_proc)
+
+    with patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ), patch(
+        "agent_runtime.runner.subprocess.Popen", mock_popen,
+    ), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ):
+        invoke(
+            "codex",
+            "hello",
+            mode="danger",
+            cwd=tmp_path,
+            task_id="danger-no-merge",
+            entrypoint="delegate",
+        )
+
+    env = mock_popen.call_args.kwargs["env"]
+    assert env.get("AGENT_NO_MERGE") == "1"
+    assert env.get("PATH", "").split(":")[0] == str(runner_mod._SHIMS_DIR)
+    assert env.get("AGENT_REAL_GH")
+    assert env.get("AGENT_REAL_GIT")
+
+
+def test_invoke_danger_respects_agent_allow_merge_opt_in(tmp_path):
+    """Explicit AGENT_ALLOW_MERGE=1 must disable the default danger guard."""
+    from unittest.mock import MagicMock
+
+    from agent_runtime import runner as runner_mod
+
+    mock_proc = MagicMock()
+    mock_proc.poll = MagicMock(return_value=0)
+    mock_proc.returncode = 0
+    mock_proc.stdin = MagicMock()
+    mock_proc.stderr = MagicMock()
+    mock_proc.stderr.readline = MagicMock(return_value="")
+    mock_proc.stderr.close = MagicMock()
+    mock_proc.stdout = MagicMock()
+    mock_proc.stdout.readline = MagicMock(return_value="")
+    mock_proc.stdout.close = MagicMock()
+    mock_proc.pid = 12345
+
+    mock_popen = MagicMock(return_value=mock_proc)
+
+    with patch.dict("os.environ", {"AGENT_ALLOW_MERGE": "1"}, clear=False), patch(
+        "agent_runtime.runner.has_headroom", return_value=(True, ""),
+    ), patch(
+        "agent_runtime.runner.write_record",
+    ), patch(
+        "agent_runtime.runner.subprocess.Popen", mock_popen,
+    ), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ):
+        invoke(
+            "codex",
+            "hello",
+            mode="danger",
+            cwd=tmp_path,
+            task_id="danger-merge-allowed",
+            entrypoint="delegate",
+        )
+
+    env = mock_popen.call_args.kwargs["env"]
+    assert env.get("AGENT_NO_MERGE") != "1"
+    assert env.get("PATH", "").split(":")[0] != str(runner_mod._SHIMS_DIR)
+
+
+def test_gh_shim_blocks_pr_merge_without_opt_in(tmp_path):
+    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    fake_gh = tmp_path / "real-gh"
+    fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
+    fake_gh.chmod(0o755)
+
+    proc = subprocess.run(
+        [str(shim), "pr", "merge", "1234"],
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GH": str(fake_gh),
+            "PATH": os.environ.get("PATH", ""),
+        },
+        check=False,
+    )
+
+    assert proc.returncode != 0
+    assert "cannot merge or approve PRs" in proc.stderr
+    assert "#1403" in proc.stderr
+
+
+def test_gh_shim_allows_pr_merge_with_opt_in(tmp_path):
+    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    fake_gh = tmp_path / "real-gh"
+    fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
+    fake_gh.chmod(0o755)
+
+    proc = subprocess.run(
+        [str(shim), "pr", "merge", "1234"],
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_ALLOW_MERGE": "1",
+            "AGENT_REAL_GH": str(fake_gh),
+            "PATH": os.environ.get("PATH", ""),
+        },
+        check=False,
+    )
+
+    assert proc.returncode == 0
+    assert proc.stdout.strip() == "real-gh pr merge 1234"
+
+
+def test_git_shim_blocks_push_to_main_without_opt_in(tmp_path):
+    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "git"
+    fake_git = tmp_path / "real-git"
+    fake_git.write_text("#!/usr/bin/env bash\nprintf 'real-git %s\\n' \"$*\"\n")
+    fake_git.chmod(0o755)
+
+    proc = subprocess.run(
+        [str(shim), "push", "origin", "main"],
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GIT": str(fake_git),
+            "PATH": os.environ.get("PATH", ""),
+        },
+        check=False,
+    )
+
+    assert proc.returncode != 0
+    assert "cannot push directly to main" in proc.stderr
+    assert "#1403" in proc.stderr

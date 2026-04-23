@@ -40,6 +40,10 @@ Chunk ID: `{chunk_id}`
 
 {sources}
 
+{citation_discipline}
+
+{canonical_anchors}
+
 ## Що є методичним нарисом
 
 Це НЕ урок. Це **методичний посібник для автора-письменника**. Нарис пояснює:

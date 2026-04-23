@@ -92,3 +92,29 @@ ANY time you design a review prompt, content-quality rubric, or content evaluato
 - Cite the source hierarchy
 
 If you find yourself writing a single-pass multi-dim review prompt that takes a weighted average — **STOP**. That's the old pattern. The user has explicitly rejected it.
+
+## Calibration moderation — 2026-04-23 (user-approved after #1431 evidence)
+
+Round-1 smoke of `a1/colors` after all infrastructure blockers landed (#1421, #1427, #1430) failed MIN ≥ 8 on three prose-quality dimensions for a reason the strict persona could not detect on its own: **the reviewer was calibrated too harshly against the level contract**. Specifically:
+
+- **Naturalness / Engagement-axis miscalibration.** Scored 3/10 on phrases "You have learned...", "Now it's time...", "Let's review..." — these are standard textbook-teacher register, not LLM-filler. Bolshakova, Zakharyjchuk, Vashulenko, Avramenko use them. Pattern-matching "LLM-tell" heuristics from training data punished human-normal pedagogy.
+- **Actionable / Pedagogical-axis miscalibration.** Scored 4/10 on "English meta-exposition dominates" — but the level contract for `a1-m07-14` is 10–38 % Ukrainian, i.e. English-dominant explanatory prose is contractually correct at A1 early bands.
+- **Blanket "Ukrainian-first explanations are preferred" clauses.** Several reviewer templates carried this line. Correct at B1+. Wrong at A1/A2 early bands where English carries the scaffolding by policy.
+
+**User-approved moderation applied to `scripts/build/phases/v6-review/*.md` on 2026-04-23:**
+
+1. Every per-dim reviewer template now references `scripts/build/contracts/module-contract.md` as the shared contract. Reviewers score ONLY clauses of that contract; they may NOT import criteria from outside it.
+2. `{IMMERSION_RULE}` is injected into every per-dim reviewer prompt (previously only the writer saw it). The reviewer knows the band-specific scaffolding rule at score time.
+3. The §4 allow-list is an explicit literal in the Naturalness reviewer: `"You have learned...", "Now it's time to...", "Let's review...", "In this module...", "By the end...", "Here's how to...", "Try this now...", "Notice that...", "Look at...", "Read aloud..."`. The reviewer MUST NOT penalize these when anchored to a specific Ukrainian teaching point.
+4. The §4 block-list restricts the strict tone to VACUOUS filler: "Great job!", generic praise, empty transitions without Ukrainian anchor, padding without teaching, repeated boilerplate across sections.
+5. The Actionable reviewer is explicitly told: at A1 early bands (10–38 % Ukrainian), English-dominant scaffolding is contractually correct. Do not score down for "English meta-exposition" or "English lecture-prose dominates" at A1. Score <8 only for abstract/vague advice WITHOUT Ukrainian anchors.
+6. The blanket "Ukrainian-first explanations are preferred" line was removed from Language, Dialogue, Factual, and Decolonization reviewers and replaced with "scaffolding language follows the level band" — scaffolding is a §1 issue handled by Naturalness/Actionable, not by these dims.
+
+**What is NOT moderated (still strict):**
+
+- Zero-tolerance on Russianisms / Surzhyk / calques / paronyms (Language dim hard cap at 6.0/10).
+- Zero-tolerance on fabricated examples without VERIFY (Honesty dim hard cap at 5.0/10).
+- Zero-tolerance on drill-style dialogue masquerading as conversation (Dialogue dim hard cap at 6.0/10).
+- Per-dim MIN-score gate at 8.0/10 remains (user policy 2026-04-23).
+
+**Authority chain:** GH #1431 scope revision comment → `docs/bug-autopsies/2026-04-23-writer-and-reviewer-calibration.md` → `scripts/build/contracts/module-contract.md` §4 + §1 → per-dim reviewer templates. Any future change must walk this chain and update all four.

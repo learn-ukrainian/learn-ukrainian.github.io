@@ -15,7 +15,7 @@ sources:
 from __future__ import annotations
 
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import yaml
@@ -26,8 +26,10 @@ SOURCE_TYPES = {
     "literary",
     "pravopys",
     "textbook",
+    "ukrainian_wiki",
     "unknown",
     "wiki",
+    "wikipedia",
 }
 _ID_RE = re.compile(r"^S([1-9]\d*)$")
 _SHORT_CITATION_BODY_RE = re.compile(r"\[([^\[\]]+)\]")
@@ -41,6 +43,16 @@ class WikiSourceEntry:
     id: str
     file: str
     type: str
+    title: str | None = None
+    url: str | None = None
+    domain: str | None = None
+    video_id: str | None = None
+    ts_start: int | None = None
+    ts_end: int | None = None
+    page: int | None = None
+    grade: int | None = None
+    author: str | None = None
+    section_path: str | None = None
     preserved_from_meta: bool = False
 
     def __post_init__(self) -> None:
@@ -56,11 +68,26 @@ class WikiSourceEntry:
         return int(self.id[1:])
 
     def to_dict(self) -> dict:
-        data = {
+        data: dict[str, object] = {
             "id": self.id,
             "file": self.file,
             "type": self.type,
         }
+        for field_name in (
+            "title",
+            "url",
+            "domain",
+            "video_id",
+            "ts_start",
+            "ts_end",
+            "page",
+            "grade",
+            "author",
+            "section_path",
+        ):
+            value = getattr(self, field_name)
+            if value is not None:
+                data[field_name] = value
         if self.preserved_from_meta:
             data["preserved_from_meta"] = True
         return data
@@ -99,6 +126,16 @@ def load_sources_registry(path: Path) -> WikiSourcesRegistry:
             id=str(item["id"]),
             file=normalize_source_filename(str(item["file"])),
             type=str(item.get("type") or _infer_source_type(str(item["file"]))),
+            title=_optional_str(item.get("title")),
+            url=_optional_str(item.get("url")),
+            domain=_optional_str(item.get("domain")),
+            video_id=_optional_str(item.get("video_id")),
+            ts_start=_optional_int(item.get("ts_start")),
+            ts_end=_optional_int(item.get("ts_end")),
+            page=_optional_int(item.get("page")),
+            grade=_optional_int(item.get("grade")),
+            author=_optional_str(item.get("author")),
+            section_path=_optional_str(item.get("section_path")),
             preserved_from_meta=bool(item.get("preserved_from_meta", False)),
         )
         for item in raw_sources
@@ -159,8 +196,8 @@ def assign_source_ids(
             continue
         if file_name in seen_now or entry.preserved_from_meta:
             ordered.append(
-                WikiSourceEntry(
-                    id=entry.id,
+                replace(
+                    entry,
                     file=file_name,
                     type=entry.type or _infer_source_type(file_name),
                     preserved_from_meta=entry.preserved_from_meta or file_name in preserved_from_meta,
@@ -176,8 +213,8 @@ def assign_source_ids(
         existing_entry = existing_by_file.get(file_name)
         if existing_entry is not None:
             ordered.append(
-                WikiSourceEntry(
-                    id=existing_entry.id,
+                replace(
+                    existing_entry,
                     file=file_name,
                     type=existing_entry.type or _infer_source_type(file_name),
                     preserved_from_meta=existing_entry.preserved_from_meta or file_name in preserved_from_meta,
@@ -253,8 +290,10 @@ def _infer_source_type(filename: str) -> str:
         return "unknown"
     if _TEXTBOOK_RE.match(lower):
         return "textbook"
-    if lower.startswith(("ext-wikipedia-", "wikipedia-", "wiki-")) or "wikipedia" in lower:
-        return "wiki"
+    if lower.startswith("ukrainian_wiki/") or lower.startswith("ukrainian-wiki/"):
+        return "ukrainian_wiki"
+    if lower.startswith(("ext-wikipedia-", "wikipedia-", "wikipedia/")) or "wikipedia" in lower:
+        return "wikipedia"
     if any(token in lower for token in ("pravopys", "orthograph")):
         return "pravopys"
     if lower.startswith("ext-") or lower.startswith("http://") or lower.startswith("https://"):
@@ -281,3 +320,17 @@ def _infer_source_type(filename: str) -> str:
 
 def _sort_sources(sources: list[WikiSourceEntry]) -> list[WikiSourceEntry]:
     return sorted(sources, key=lambda entry: entry.ordinal)
+
+
+def _optional_str(value: object) -> str | None:
+    text = str(value or "").strip()
+    return text or None
+
+
+def _optional_int(value: object) -> int | None:
+    if value in (None, ""):
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None

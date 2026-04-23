@@ -16,7 +16,9 @@ from pathlib import Path
 from ai_llm.fallback import CallResult, call_gemini_with_fallback, visible_sleep
 
 from .config import GEMINI_MODEL, PROMPTS_DIR, TRACK_DOMAINS, WIKI_DIR
+from .source_attribution import resolve_chunk_attribution
 from .sources_schema import (
+    WikiSourceEntry,
     WikiSourcesRegistry,
     assign_source_ids,
     extract_short_citation_ids,
@@ -200,6 +202,21 @@ def _build_prompt(*, topic: str, slug: str, domain: str,
     tracks_str = ", ".join(tracks) or "general"
     source_ids_str = ", ".join(source_ids[:20])
 
+    # Writer-discipline injection (2026-04-23, post-#1431 v2):
+    # - {citation_discipline} tells the writer exactly how many [S*] IDs
+    #   are legal (bounded by actual retrieval count — prevents [S6+]
+    #   hallucinations in a 5-chunk retrieval)
+    # - {canonical_anchors} lists decolonization-critical forbidden forms
+    #   (e.g. «блакитний-жовтий» for the flag) that the writer must never
+    #   produce, rendered as a Ukrainian table
+    # See scripts/wiki/discipline.py for the implementation.
+    from .discipline import (
+        render_canonical_anchors_for_writer,
+        render_citation_discipline_block,
+    )
+    citation_discipline = render_citation_discipline_block(len(sources))
+    canonical_anchors = render_canonical_anchors_for_writer()
+
     prompt = template
     prompt = prompt.replace("{topic}", topic)
     prompt = prompt.replace("{slug}", slug)
@@ -209,6 +226,8 @@ def _build_prompt(*, topic: str, slug: str, domain: str,
     prompt = prompt.replace("{source_ids}", source_ids_str)
     prompt = prompt.replace("{date}", date)
     prompt = prompt.replace("{generated_by_model}", generated_by_model)
+    prompt = prompt.replace("{citation_discipline}", citation_discipline)
+    prompt = prompt.replace("{canonical_anchors}", canonical_anchors)
     return prompt
 
 
@@ -248,17 +267,12 @@ def _inject_generated_by_model(article_text: str, *, model_used: str | None) -> 
     model = _normalize_generated_by_model(model_used)
     body = match.group("body").strip()
     lines = [line.rstrip() for line in body.splitlines()]
+    lines = [line for line in lines if not line.strip().startswith("generated_by_model:")]
     updated: list[str] = []
     wrote_generated_by_model = False
 
     for line in lines:
         stripped = line.strip()
-        if stripped.startswith("generated_by_model:"):
-            if wrote_generated_by_model:
-                continue
-            updated.append(f"generated_by_model: {model}")
-            wrote_generated_by_model = True
-            continue
         updated.append(line)
         if stripped.startswith("compiled:") and not wrote_generated_by_model:
             updated.append(f"generated_by_model: {model}")
@@ -350,16 +364,25 @@ def _build_sources_registry(
     S1/S6/S8 that never end up in the YAML. (Surfaced 2026-04-18 when
     the 45k→60k cap bump changed the chunk selection.)
     """
-    source_files: list[str] = []
+    attributed_sources: list[dict[str, object]] = []
     seen: set[str] = set()
     for source in sources:
-        chunk_id = normalize_source_filename(str(source.get("chunk_id", "")))
-        if not chunk_id or chunk_id in seen:
+        corpus = str(source.get("corpus") or source.get("source_type") or "").strip()
+        chunk_id = str(
+            source.get("chunk_id")
+            or source.get("title")
+            or source.get("parent_key")
+            or source.get("source_file")
+            or ""
+        ).strip()
+        attribution = resolve_chunk_attribution(chunk_id, corpus)
+        file_name = normalize_source_filename(str(attribution.get("file", "")))
+        if not file_name or file_name in seen:
             continue
-        source_files.append(chunk_id)
-        seen.add(chunk_id)
+        attributed_sources.append({**attribution, "file": file_name})
+        seen.add(file_name)
 
-    if not source_files:
+    if not attributed_sources:
         return None
 
     registry_path = registry_path_for(article_path)
@@ -368,7 +391,32 @@ def _build_sources_registry(
         if force
         else load_sources_registry(registry_path)
     )
-    registry = assign_source_ids(source_files, existing=existing_registry)
+    assigned_registry = assign_source_ids(
+        [str(source["file"]) for source in attributed_sources],
+        existing=existing_registry,
+    )
+    assigned_by_file = assigned_registry.by_file()
+    registry = WikiSourcesRegistry(
+        sources=[
+            WikiSourceEntry(
+                id=assigned_by_file[str(source["file"])].id,
+                file=str(source["file"]),
+                type=str(source.get("type") or "unknown"),
+                title=_optional_text(source.get("title")),
+                url=_optional_text(source.get("url")),
+                domain=_optional_text(source.get("domain")),
+                video_id=_optional_text(source.get("video_id")),
+                ts_start=_optional_int(source.get("ts_start")),
+                ts_end=_optional_int(source.get("ts_end")),
+                page=_optional_int(source.get("page")),
+                grade=_optional_int(source.get("grade")),
+                author=_optional_text(source.get("author")),
+                section_path=_optional_text(source.get("section_path")),
+                preserved_from_meta=assigned_by_file[str(source["file"])].preserved_from_meta,
+            )
+            for source in attributed_sources
+        ]
+    )
     cited_ids = set(extract_short_citation_ids(article_text))
     if cited_ids:
         registry = WikiSourcesRegistry(
@@ -486,6 +534,20 @@ def _clean_chunk_text(chunk: dict) -> str:
     cleaned = "\n".join(lines).strip()
     cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
     return cleaned
+
+
+def _optional_text(value: object) -> str | None:
+    text = str(value or "").strip()
+    return text or None
+
+
+def _optional_int(value: object) -> int | None:
+    if value in (None, ""):
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def _recover_from_session(before_ts: float, prompt_fingerprint: str = "") -> str | None:
