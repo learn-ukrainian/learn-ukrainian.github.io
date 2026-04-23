@@ -15,11 +15,11 @@ Issue: #849
 from __future__ import annotations
 
 import re
-import unicodedata
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
+from common.text_utils import strip_ukrainian_stress
 
 # ---------------------------------------------------------------------------
 # Data structures
@@ -54,7 +54,7 @@ class PlanAdherenceResult:
 
 def _strip_stress(text: str) -> str:
     """Remove combining acute accents (stress marks) from text."""
-    return unicodedata.normalize("NFD", text).replace("\u0301", "")
+    return strip_ukrainian_stress(text)
 
 
 def _load_plan(plan_path: Path) -> dict | None:

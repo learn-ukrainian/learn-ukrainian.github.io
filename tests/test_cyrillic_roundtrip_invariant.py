@@ -117,19 +117,19 @@ INVENTORY = {
         "coverage": "roundtrip",
         "path": "scripts/wiki/context.py",
         "needle": "def _normalize_text(",
-        "notes": "Identity-safe on clean lowercase words; currently xfailed for #1487.",
+        "notes": "Identity-safe on clean lowercase words after the #1487 NFC recompose fix.",
     },
     "audit.checks.plan_adherence._strip_stress": {
         "coverage": "roundtrip",
         "path": "scripts/audit/checks/plan_adherence.py",
         "needle": "def _strip_stress(",
-        "notes": "Should be identity on non-stressed text; currently xfailed for #1487.",
+        "notes": "Identity-safe on non-stressed text after the #1487 NFC recompose fix.",
     },
     "audit.checks.grammar._strip_stress": {
         "coverage": "roundtrip",
         "path": "scripts/audit/checks/grammar.py",
         "needle": "def _strip_stress(",
-        "notes": "Should be identity on non-stressed text; currently xfailed for #1487.",
+        "notes": "Identity-safe on non-stressed text after the #1487 NFC recompose fix.",
     },
     "audit.check_plan._dialogue_tokens": {
         "coverage": "exempt",
@@ -291,15 +291,6 @@ ROUND_TRIPPERS = [
 ]
 
 KNOWN_XFAILS = {
-    ("wiki.context._normalize_text", "iotation_y_short_word"): FOLLOWUP_ISSUE,
-    ("wiki.context._normalize_text", "iotation_yi_words"): FOLLOWUP_ISSUE,
-    ("audit.checks.plan_adherence._strip_stress", "iotation_y_short_word"): FOLLOWUP_ISSUE,
-    ("audit.checks.plan_adherence._strip_stress", "iotation_yi_words"): FOLLOWUP_ISSUE,
-    ("audit.checks.plan_adherence._strip_stress", "iotation_phrase_ascii"): FOLLOWUP_ISSUE,
-    ("audit.checks.grammar._strip_stress", "iotation_y_short_word"): FOLLOWUP_ISSUE,
-    ("audit.checks.grammar._strip_stress", "iotation_yi_words"): FOLLOWUP_ISSUE,
-    ("audit.checks.grammar._strip_stress", "iotation_phrase_ascii"): FOLLOWUP_ISSUE,
-    ("rag.rag_batch_verify.tokenize_all_ukrainian", "stress_acute"): FOLLOWUP_ISSUE,
 }
 
 

@@ -6,8 +6,9 @@ and case government rules based on CEFR level.
 """
 
 import re
-import unicodedata
 from typing import Any
+
+from common.text_utils import strip_ukrainian_stress
 
 from ..cleaners import extract_ukrainian_sentences
 from ..config import (
@@ -34,7 +35,7 @@ def _resolve_constraints(level_code: str) -> dict[str, Any]:
 
 def _strip_stress(s: str) -> str:
     """Strip combining acute accent (U+0301) — stress marks break \\w regex matching."""
-    return unicodedata.normalize('NFD', s).replace('\u0301', '')
+    return strip_ukrainian_stress(s)
 
 
 def is_fixed_phrase(match: str, text: str, phrase_set: set) -> bool:
@@ -281,4 +282,3 @@ def check_case_government(content: str, level_code: str) -> list[dict]:
                 })
 
     return violations
-
