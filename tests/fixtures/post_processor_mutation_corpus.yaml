@@ -1,0 +1,63 @@
+cases:
+  - id: plain_ascii_prose
+    text: |
+      This is simple prose with no LLM artifacts.
+    notes: "Identity-safe baseline. No post-processor should mutate this."
+
+  - id: iotation_y_short_phrase
+    text: "мій син — йому п'ять років"
+    notes: "Original #1448 class: й + ASCII apostrophe. Must not be decomposed."
+
+  - id: iotation_yi
+    text: "україна їжа йому"
+    notes: "ї (U+0457) and й (U+0439) clean forms."
+
+  - id: soft_sign
+    text: "день, сіль, осінь"
+    notes: "Soft sign coverage."
+
+  - id: compound_hyphenated
+    text: "по-українськи, де-не-де, жовто-блакитний"
+    notes: "Hyphenated compounds."
+
+  - id: stressed_already
+    text: "мо́ва — це кни́га"
+    notes: "Pre-stressed text. Stress annotator skips; post-processor would strip marks."
+
+  - id: plain_ukrainian_sentence
+    text: "Привіт, світе! Це українська мова."
+    notes: "Clean Ukrainian sentence; stress annotator may add marks."
+
+  - id: llm_duplicate_summary
+    text: |
+      Main prose content.
+
+      ## Summary
+      First summary text.
+
+      ## Summary
+      Second summary duplicate.
+    notes: "_post_process_content should keep first summary and strip second."
+
+  - id: llm_content_notes_meta
+    text: |
+      **The main prose.**
+
+      **Content notes:** this is a meta-section that should be stripped.
+    notes: "_post_process_content strips Content notes meta-section."
+
+  - id: llm_motivational_closer
+    text: "You have learned a lot. By mastering these concepts, you will succeed. Good work."
+    notes: "_post_process_content strips motivational closers."
+
+  - id: mdx_tab_marker
+    text: |
+      Main lesson prose.
+
+      <!-- TAB:Словник -->
+      vocabulary section
+    notes: "TAB markers should be stripped from .md source (live only in published .mdx)."
+
+  - id: empty_text
+    text: ""
+    notes: "Empty input — all post-processors must be identity on empty."
