@@ -318,7 +318,11 @@ def _search_sections_fts5(
             "text": meta["full_text"],
             "chunk_id": f"S{meta['section_id']}",
             "corpus": "textbook_sections",
-            "unit_key": f"textbook_sections:S{meta['section_id']}",
+            # Do NOT set "unit_key" here — the dispatcher computes it
+            # downstream without the "S" prefix to match the embedding
+            # manifest's seeded keys (`textbook_sections:{id}`). Setting
+            # it here with the S-prefix would shadow the correct value
+            # and break dense rerank lookup. See #1466 regression fix.
             "title": meta["section_title"],
             "source_type": "textbook",
         })

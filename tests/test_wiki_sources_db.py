@@ -162,7 +162,13 @@ def test_search_sections_fts5_emits_textbook_sections_corpus(textbook_sections_d
 
     assert results
     assert results[0].get("corpus") == "textbook_sections"
-    assert results[0].get("unit_key") == "textbook_sections:S101"
+    # NOTE: `unit_key` is intentionally NOT set by `_search_sections_fts5` —
+    # it is computed by the dispatcher (`_dispatch_corpus_search`) as
+    # `f"textbook_sections:{section_id}"` WITHOUT the "S" prefix, to match
+    # the format used when seeding the embedding manifest. Setting it here
+    # with an "S"-prefixed form would shadow the dispatcher's value and
+    # break dense rerank lookup (regression caught on #1466 CI).
+    assert results[0].get("unit_key") is None
 
 
 def test_search_sections_fts5_results_route_to_textbook_attribution(textbook_sections_db) -> None:
