@@ -11,6 +11,28 @@ def test_style_review_advisory_flow(tmp_path, monkeypatch):
     curriculum_root.mkdir(parents=True)
     (curriculum_root / level).mkdir(parents=True)
 
+    # Advisory-path contract stamping now composes the alignment manifest, so the test
+    # needs the same plan fixture that write/review path tests already seed under tmp_path.
+    plan_path = curriculum_root / "plans" / level / f"{slug}.yaml"
+    plan_path.parent.mkdir(parents=True)
+    plan_path.write_text(
+        yaml.safe_dump(
+            {
+                "module": 1,
+                "slug": slug,
+                "level": level,
+                "sequence": 1,
+                "title": "Style advisory",
+                "phase": "A1.1",
+                "word_target": 200,
+                "content_outline": [{"title": "Intro", "summary": "Test outline."}],
+            },
+            sort_keys=False,
+            allow_unicode=True,
+        ),
+        "utf-8",
+    )
+
     # Setup mock contract
     contract_path = curriculum_root / level / "orchestration" / slug / "contract.yaml"
     contract_path.parent.mkdir(parents=True)
