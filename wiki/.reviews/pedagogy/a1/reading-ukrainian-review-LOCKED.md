@@ -39,6 +39,17 @@ This LOCKED state should be revisited if any of the following happen:
 5. VESUM / СУМ-11 updates retire or re-label any cited form (especially the minimal-pair set or the Ґ-word list).
 6. Ukrainian Правопис 2019 revisions to transfer rules (Крок 7) — unlikely, as these rules are deep in the orthography tradition.
 
+## Cross-agent adversarial review (AC-3)
+
+Codex was asked (via `ai_agent_bridge/ask-codex`, task `reading-ukrainian-adv-review`) to apply the same 5 risk vectors from the #1412 adversarial review. Findings:
+
+- **BLOCKER addressed.** Row 8 of "Типові помилки L2" conflated СКЛАДОПОДІЛ (syllable analysis) with ПЕРЕНЕСЕННЯ (line-transfer orthography). The original text called `о-гі-рок` the correct answer, which is syllabification-correct but line-transfer-forbidden (single-letter `о-` cannot stand alone at line-end). Fix: rewrote row 8 to explicitly distinguish the two; added the three transfer rules (single-syllable words not transferred; single letter never isolated; `ь`/`й`/`'` stay with previous letter). Exercise 5's огірок-answer updated to match.
+- **MEDIUM addressed.** Plan `vocabulary_hints` now carries an `author_note:` mirroring the wiki's writer-note — pins all vocab as phonetic-practice vehicles only, not declension/conjugation material until module №18. Closes the drift where a writer reading the plan alone could have missed the wiki's boundary.
+- **MEDIUM (operational, not fixed in this PR).** Lifecycle fields (`lifecycle`, `reviewed_at`, `reviewed_by`, `review_notes`) are accepted by `module-plan.schema.json` (additionalProperties: true) and silently ignored by `validate_plans.py`. They are **not** yet exercised by audit/build downstream — the downstream coverage of these fields remains an ecosystem concern tracked against EPIC #1365, not something this PR can close. Flagged as a residual non-blocker per the #1412 precedent.
+- **NIT addressed.** Changelog entry now accurately describes duplicate-key YAML behaviour as parser-dependent (PyYAML `safe_load` does last-key-wins), not "first-occurrence-wins" as originally stated.
+- **Codex verified:** no framing contradictions against the locked sibling wiki `sounds-letters-and-hello` on Ь / apostrophe / iotated / `Ї` / `Щ` / ДЖ-ДЗ — the two wikis reinforce rather than conflict, as designed.
+- **VESUM audit limitation:** Codex could not independently verify VESUM hits for the 42 words from this sandbox (no MCP access to `mcp__sources__verify_words` from Codex bridge session; `data/vesum.db` not mounted in worktree). The verification stands on Claude's batch results (see PR body) and on the `stань`, `лань`, `моїй`, `ґедзь`, `радниця` confirmations captured in the verify_words batch before committing. If this becomes a recurring bridge blocker, follow-up issue: expose VESUM MCP tools in Codex bridge context.
+
 ## Residual non-blockers (documented, not blocking)
 
 - **Overlap with `sounds-letters-and-hello`.** Rows 4, 5, 6, 7 of the new Типові помилки L2 table (iotated after consonant; `Ї`; `Щ`; ДЖ/ДЗ) touch the same phenomena as rows 2–6 of the `sounds-letters-and-hello` L2-errors table. This is INTENTIONAL framing: `sounds-letters` targets sound-production in isolation; `reading-ukrainian` targets decoding-from-print. The two wikis reinforce each other rather than contradict — the wiki's intro paragraph to the table names this explicitly ("Overlap with `pedagogy/a1/sounds-letters-and-hello` is intentional"). A future consolidation (e.g. shared `culture/decolonization/l2-phonetic-errors` wiki) could dedupe but is out of scope for A1 lock.

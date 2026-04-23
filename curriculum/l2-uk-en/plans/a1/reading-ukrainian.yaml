@@ -56,6 +56,14 @@ content_outline:
   points:
   - 'Самоперевірка: Як порахувати склади в українському слові? Назвіть 6 голосних звуків. Назвіть 4 йотовані голосні літери. Що робить Ь? Що робить апостроф? Прочитайте це слово: бібліотека — скільки в ньому складів?'
 vocabulary_hints:
+  author_note: >-
+    На А1 у цьому модулі всі слова (required + recommended) подаються як
+    носії фонетичної практики — склади, наголос, йотовані, `ь`, апостроф,
+    ДЖ/ДЗ, Ї, Щ. НЕ вводьте відмінкові парадигми, дієвідміну чи ступені
+    порівняння — відмінки починаються з модуля №18 (знахідний). Кожне
+    слово тут має одну словоформу, яку учень читає вголос і діагностує
+    за таблицею «Типові помилки L2» (див. locked wiki, розділ після
+    Словникового мінімуму).
   required:
   - яблуко (apple) — Я at word start = [йа]
   - молоко (milk) — 3 syllables, all simple vowels
@@ -95,7 +103,7 @@ activity_hints:
   - борщ: '`Щ` → [ш]: [борш] замість [боршч]'
   - джміль: '`ДЖ` як два звуки: [д]-[жміль] замість [джміль]'
   - молоко: 'Читання по літерах замість по складах'
-  - огірок: 'Неправильне членування на склади при переносі (`о-гі-рок`, не `о-гірок`)'
+  - огірок: 'Сплутування СКЛАДОПОДІЛУ з ПЕРЕНЕСЕННЯМ (складоподіл `о-гі-рок`; перенесення `огі-рок`, бо одна літера `о-` не може стояти окремо в рядку)'
 connects_to:
 - a1-003 (Особливі знаки)
 prerequisites:
@@ -132,4 +140,4 @@ changelog:
   - 'Review-and-lock pass. Added lifecycle markers (lifecycle/reviewed_at/reviewed_by/review_notes) per docs/best-practices/wiki-plan-review-and-lock.md.'
   - 'Added new match-up activity: reading-specific L2 error drill (8 items, mirrors wiki "Типові помилки L2" table — closes the wiki-plan drift on reading errors).'
   - 'Consolidated `references:` block: added Вашуленко, Кравцова textbook entries and back-references to both locked sibling wikis (reading-ukrainian + sounds-letters-and-hello). Previous bottom-of-file `references:` had only 3 Большакова/Захарійчук entries.'
-  - 'Removed duplicate `references:` block at end of file (was a pre-existing inconsistency — YAML takes the first occurrence; the tail duplicate was silently ignored).'
+  - 'Removed duplicate `references:` block at end of file (was a pre-existing inconsistency — duplicate YAML keys are unsafe and parser-dependent; PyYAML silently takes last-key-wins, which meant only the 3-entry tail block was reaching `validate_plans.py`, hiding the earlier block). The consolidated single block now carries all 7 entries.'
