@@ -1,4 +1,4 @@
-"""Tests for contract-first prompt plumbing, block rewrites, and escalation."""
+"""Tests for contract-first prompt plumbing, rewrite helpers, and escalation."""
 
 from __future__ import annotations
 
@@ -107,52 +107,6 @@ def test_step_write_emits_contract_and_excerpts(tmp_path: Path, monkeypatch) -> 
     assert "[BEGIN MODULE CONTRACT LITERAL" in captured["prompt"]
     assert "[BEGIN SECTION WIKI EXCERPTS LITERAL" in captured["prompt"]
 
-
-def test_apply_review_rewrite_blocks_rewrites_only_target_section(tmp_path: Path, monkeypatch) -> None:
-    level = "a1"
-    slug = "rewrite-flow"
-    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
-    (curriculum_root / level / "orchestration" / slug).mkdir(parents=True, exist_ok=True)
-    _write_plan(curriculum_root, level, slug)
-    content_path = curriculum_root / level / f"{slug}.md"
-    content_path.parent.mkdir(parents=True, exist_ok=True)
-    content_path.write_text(
-        "## Intro\nOld intro.\n\n## Practice\nOld practice.\n",
-        "utf-8",
-    )
-    (curriculum_root / level / "orchestration" / slug / "skeleton.md").write_text(
-        "## Intro (~100 words)\n- P1 (~100 words): intro\n\n## Practice (~100 words)\n- P1 (~100 words): practice\n",
-        "utf-8",
-    )
-    packet_path = tmp_path / "packet.md"
-    packet_path.write_text(
-        "### Вікі: pedagogy/a1/rewrite-flow.md\n\n## Overview\n\nзвук і літера classroom Вчитель Учень привіт добре.\n",
-        "utf-8",
-    )
-
-    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
-    v6_build._ensure_contract_artifacts(level, 1, slug, packet_path, log_creation=False)
-    monkeypatch.setattr(
-        v6_build,
-        "_dispatch_rewrite_prompt",
-        lambda *args, **kwargs: (True, "## Practice\nRewritten practice with Вчитель Учень привіт добре.\n"),
-    )
-
-    ok, count = v6_build._apply_review_rewrite_blocks(
-        '<rewrite-block section="Practice">Fix the dialogue.</rewrite-block>',
-        content_path,
-        level=level,
-        module_num=1,
-        slug=slug,
-        writer="gemini",
-    )
-
-    updated = content_path.read_text("utf-8")
-    assert ok is True
-    assert count == 1
-    assert "Old intro." in updated
-    assert "Rewritten practice" in updated
-    assert "Old practice." not in updated
 
 
 def test_rewrite_block_section_emits_slim_prompt_manifest(tmp_path: Path, monkeypatch) -> None:
@@ -615,7 +569,6 @@ def test_run_review_heal_loop_word_budget_error_no_longer_triggers_autoheal(
     )
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
-    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
     monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: "complete")
     monkeypatch.setattr(
         v6_build,
@@ -759,7 +712,6 @@ def test_review_loop_runs_confirmation_review_when_mutations_happened(
     monkeypatch.setattr(v6_build, "step_review", fake_step_review)
     # Simulate a fix applier that actually mutates content in both rounds.
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
-    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
 
     result = v6_build._run_review_heal_loop(
         content_path,
@@ -807,7 +759,6 @@ def test_review_loop_confirmation_review_keeps_plateau_when_still_failing(
     )
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
-    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
 
     result = v6_build._run_review_heal_loop(
         content_path,
@@ -847,7 +798,6 @@ def test_review_loop_ignores_malformed_confirmation_review(
     )
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
-    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
 
     result = v6_build._run_review_heal_loop(
         content_path,
@@ -892,7 +842,6 @@ def test_review_loop_rejects_verdict_only_confirmation(
     )
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
-    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
 
     result = v6_build._run_review_heal_loop(
         content_path,
@@ -950,7 +899,6 @@ def test_review_loop_rejects_truncated_score_table(
     )
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
-    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
 
     result = v6_build._run_review_heal_loop(
         content_path,
@@ -1008,7 +956,6 @@ def test_review_loop_rejects_duplicated_dimension_table(
     )
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
-    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
 
     result = v6_build._run_review_heal_loop(
         content_path,
@@ -1052,7 +999,6 @@ def test_review_loop_confirmation_triggers_on_two_small_deltas_plateau(
     )
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
-    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
 
     result = v6_build._run_review_heal_loop(
         content_path,
@@ -1106,7 +1052,6 @@ def test_review_loop_confirmation_pass_blocked_by_contract_errors(
     )
     monkeypatch.setattr(v6_build, "step_review", lambda *args, **kwargs: next(review_rounds))
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (True, 1))
-    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
 
     result = v6_build._run_review_heal_loop(
         content_path,
@@ -1156,7 +1101,6 @@ def test_review_loop_skips_confirmation_when_no_mutations(
     monkeypatch.setattr(v6_build, "step_review", counting_step_review)
     # No mutations in any round.
     monkeypatch.setattr(v6_build, "_apply_review_fixes", lambda *args, **kwargs: (False, 0))
-    monkeypatch.setattr(v6_build, "_apply_review_rewrite_blocks", lambda *args, **kwargs: (False, 0))
 
     result = v6_build._run_review_heal_loop(
         content_path,

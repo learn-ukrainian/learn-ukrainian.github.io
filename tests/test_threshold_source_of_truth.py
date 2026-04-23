@@ -81,7 +81,10 @@ _FLOAT_LITERAL_ALLOWLIST: frozenset[tuple[str, int]] = frozenset({
     # v6_build.py docstring in a long help message — mentions the default
     # --review-threshold CLI default (9.0). The actual CLI default is
     # wired via argparse reading REVIEW_TARGET_SCORE, not this literal.
-    ("build/v6_build.py", 2767),
+    # Line shifted 2767→2766 by ADR-007 PR-B's rewrite-block protocol
+    # deletion. Follow-up: make this allowlist line-number-agnostic
+    # (content-based match) — filed as #1507.
+    ("build/v6_build.py", 2766),
 })
 
 # Files excluded from the scan entirely (archived / generated / legacy).
