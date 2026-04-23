@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+_deny() {
+  cat >&2 <<'EOF'
+error: agent invoked with AGENT_NO_MERGE=1 cannot push directly to main.
+       User reviews and merges. See INCIDENT #1403.
+EOF
+  exit 1
+}
+
+_real_git() {
+  if [[ -n "${AGENT_REAL_GIT:-}" ]]; then
+    printf '%s\n' "$AGENT_REAL_GIT"
+    return 0
+  fi
+
+  local shim_dir
+  shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  local path_entry
+  IFS=':' read -r -a _path_entries <<< "${AGENT_ORIGINAL_PATH:-${PATH:-}}"
+  for path_entry in "${_path_entries[@]}"; do
+    [[ -z "$path_entry" || "$path_entry" == "$shim_dir" ]] && continue
+    if [[ -x "$path_entry/git" ]]; then
+      printf '%s\n' "$path_entry/git"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+_is_main_refspec() {
+  local token="${1#+}"
+
+  [[ "$token" == "main" || "$token" == "refs/heads/main" ]] && return 0
+  [[ "$token" == *":main" || "$token" == *":refs/heads/main" ]] && return 0
+  [[ "$token" == "main:"* || "$token" == "refs/heads/main:"* ]] && return 0
+
+  return 1
+}
+
+_blocks_git_push() {
+  [[ "${1:-}" == "push" ]] || return 1
+  shift
+
+  local arg
+  for arg in "$@"; do
+    [[ "$arg" == "--" ]] && continue
+    [[ "$arg" == -* ]] && continue
+    _is_main_refspec "$arg" && return 0
+  done
+
+  return 1
+}
+
+if [[ "${AGENT_NO_MERGE:-}" == "1" ]] && _blocks_git_push "$@"; then
+  _deny
+fi
+
+real_git="$(_real_git)" || {
+  echo "error: could not locate the real git binary behind the agent shim." >&2
+  exit 127
+}
+
+exec "$real_git" "$@"

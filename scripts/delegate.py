@@ -13,6 +13,7 @@ CLI:
     # Fire a task. Returns immediately with the task-id.
     delegate.py dispatch --agent codex --task-id my-task \
         --prompt "do the thing" [--mode workspace-write] [--model gpt-5.4]
+        [--allow-merge]
 
     # Check status without blocking.
     delegate.py status my-task
@@ -453,6 +454,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "agent": args.agent,
         "model": args.model,
         "effort": getattr(args, "effort", None),
+        "allow_merge": bool(getattr(args, "allow_merge", False)),
         "mode": args.mode,
         "cwd": cwd,
         "worktree_path": str(worktree_path) if worktree_path else None,
@@ -474,15 +476,10 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # --worker. We use Popen rather than os.fork for portability.
     #
     # Python interpreter: the project rule (non-negotiable-rules.md)
-    # is to always use .venv/bin/python, never a bare `python` or
-    # whatever sys.executable happens to be. sys.executable only
-    # points at the venv interpreter IF the parent was launched from
-    # the venv, which isn't guaranteed when delegate.py is called
-    # from other contexts. Resolve the venv python explicitly;
-    # fall back to sys.executable only as a last resort. Codex
-    # 2026-04-10 audit finding.
+    # is to always use .venv/bin/python. delegate.py follows that rule
+    # strictly.
     venv_python = _REPO_ROOT / ".venv" / "bin" / "python"
-    python_bin = str(venv_python) if venv_python.exists() else sys.executable
+    python_bin = str(venv_python)
     cmd = [
         python_bin,
         str(Path(__file__).resolve()),
@@ -517,6 +514,12 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # explicit rather than implicit. Callers that want to scrub
     # secrets from the worker's env can override this here.
     worker_env = os.environ.copy()
+    if getattr(args, "allow_merge", False):
+        worker_env.pop("AGENT_NO_MERGE", None)
+        worker_env["AGENT_ALLOW_MERGE"] = "1"
+    else:
+        worker_env["AGENT_NO_MERGE"] = "1"
+        worker_env.pop("AGENT_ALLOW_MERGE", None)
     try:
         try:
             proc = subprocess.Popen(
@@ -808,6 +811,7 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id review-123 --prompt-file prompt.md --mode workspace-write --cwd .\n"
+            "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id pr-123 --prompt-file brief.md --mode danger --worktree .worktrees/codex-pr-123\n"
             "  .venv/bin/python scripts/delegate.py wait review-123 --timeout 600\n"
             "  .venv/bin/python scripts/delegate.py list --status running\n\n"
             "Outputs:\n"
@@ -856,6 +860,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--worktree",
         default=None,
         help="Run inside this git worktree (created on demand, required for --mode danger)",
+    )
+    d.add_argument(
+        "--allow-merge",
+        action="store_true",
+        help=(
+            "Opt in to allow PR approval/merge and pushes to main inside the "
+            "delegated subprocess. Default is off: AGENT_NO_MERGE=1 is set."
+        ),
     )
     d.add_argument("--hard-timeout", type=int, default=3600,
                    help="Max wall-clock seconds for the worker (default: 3600)")

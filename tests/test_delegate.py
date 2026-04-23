@@ -603,6 +603,94 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, monkeypatch, ca
     assert "issue-1383-smoke" in captured.out
 
 
+def test_dispatch_defaults_worker_env_to_no_merge(tmp_tasks_dir, monkeypatch):
+    import argparse
+
+    recorded: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24680
+        stdin = _FakeStdin()
+
+    def fake_popen(*args, **kwargs):
+        recorded["env"] = kwargs.get("env", {})
+        return _FakeProc()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="read-only-no-merge",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    env = recorded["env"]
+    assert env["AGENT_NO_MERGE"] == "1"
+    assert "AGENT_ALLOW_MERGE" not in env
+
+
+def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypatch):
+    import argparse
+
+    recorded: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 13579
+        stdin = _FakeStdin()
+
+    def fake_popen(*args, **kwargs):
+        recorded["env"] = kwargs.get("env", {})
+        return _FakeProc()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="danger-merge-opt-in",
+        prompt="test",
+        prompt_file=None,
+        mode="danger",
+        model=None,
+        cwd=None,
+        worktree=str(tmp_tasks_dir / "wt"),
+        hard_timeout=3600,
+        allow_merge=True,
+    )
+
+    (tmp_tasks_dir / "wt").mkdir(parents=True)
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    env = recorded["env"]
+    assert env.get("AGENT_NO_MERGE") != "1"
+    assert env["AGENT_ALLOW_MERGE"] == "1"
+
+
 def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path, monkeypatch):
     import argparse
 
