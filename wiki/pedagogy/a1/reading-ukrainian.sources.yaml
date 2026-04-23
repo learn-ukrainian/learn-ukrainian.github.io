@@ -50,5 +50,8 @@ sources:
   page: 94
   grade: 5
 - id: S12
-  file: ext-article-1
-  type: external
+  file: 2-klas-ukrmova-bolshakova-2019-1_s1479
+  type: textbook
+  title: Апостроф — правила вживання
+  page: 57
+  grade: 2

@@ -37,9 +37,6 @@ sources:
   title: Вірш. Заголовок. Головна думка. Театралізуємо
   page: 50
   grade: 2
-- id: S12
-  file: ext-article-1
-  type: external
 - id: S13
   file: ext-ulp_youtube-255
   type: external
