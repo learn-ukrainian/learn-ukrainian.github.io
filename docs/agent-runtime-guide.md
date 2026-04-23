@@ -133,6 +133,74 @@ points:
   and raises `RateLimitedError` before burning a quota slot on a
   known-rate-limited call.
 
+## Dispatch worktree layout (#1476)
+
+`delegate.py dispatch --worktree ...` creates the dispatched agent a
+private git worktree so its writes are isolated from the main checkout.
+Two layouts are currently supported:
+
+| Layout | Path | Status | Triggered by |
+|---|---|---|---|
+| **dispatch subtree** (new) | `.worktrees/dispatch/{agent}/{task}/` | **default** for new dispatches | `--worktree` (bare, no path) |
+| flat (legacy) | `.worktrees/{agent}-{task}/` | deprecated, still accepted | `--worktree <explicit-path>` under `.worktrees/` |
+| custom | anywhere you point it | accepted | `--worktree <explicit-path>` anywhere |
+
+`delegate.py list` and `delegate.py status` print a deprecation notice
+when they encounter a flat-layout worktree.
+
+Two non-dispatch worktrees live alongside these and are **out of scope**
+for delegate lifecycle — don't prune or rename:
+- `.worktrees/codex-interactive/` — the persistent interactive session
+  from `start-codex.sh` (detached HEAD, symlinks to `.venv`, `data/`,
+  `starlight/node_modules`).
+- Any operator-created `.worktrees/*` that predates the dispatch layout.
+
+### Stale-base safety (the actual #1476 bug)
+
+Before creating or reusing a worktree, `delegate.py` runs
+`git fetch origin <base>` and branches from `origin/<base>`, not local
+`<base>`. The local ref drifts the moment a PR merges while a dispatch
+is queued — the resulting worktree would miss any commits landed in the
+gap. This is what shipped PRs #1473 and #1474 against stale tips
+(2026-04-23).
+
+When a worktree is reused, it is validated:
+1. **Branch match** — must be on the expected derived branch
+   (`{agent}/{task_normalized}`). Mismatch → `WorktreeBranchMismatch`.
+2. **Clean tree** — no uncommitted changes. Dirty → `WorktreeDirty`.
+3. **Base freshness** — at most 0 commits behind `origin/<base>`; if
+   behind, attempt `git rebase origin/<base>` and raise
+   `WorktreeStaleBase` if that fails.
+
+Offline fallback: if `git fetch` fails (no network, no remote), delegate
+warns on stderr and branches from the local ref. Pin the `--base` flag
+to override the default `main`.
+
+### Branch-name normalization (Fix 2 of #1476)
+
+Task-ids that already include the agent name (our common convention:
+`codex-1472-foo`) don't produce doubled-prefix branch names. The
+normalizer strips a leading `{agent}-` or `{agent}/` before prefixing:
+
+| Agent | Task-id | Branch |
+|---|---|---|
+| codex | `codex-1472-foo` | `codex/1472-foo` |
+| codex | `codex/1472-foo` | `codex/1472-foo` |
+| codex | `1472-foo` | `codex/1472-foo` |
+| codex | `random-name` | `codex/random-name` (no strip — `random` ≠ `codex`) |
+| claude | `claude-bar` | `claude/bar` |
+
+### Dispatch telemetry (Fix 5 of #1476)
+
+The state file at `batch_state/tasks/<task-id>.json` now carries:
+- `worktree_path`, `worktree_branch`, `worktree_layout` (`flat` | `dispatch` | `external`)
+- `worktree_base`, `worktree_base_sha` — resolved at dispatch start
+- `worktree_rebased`, `worktree_reused` — reuse-path telemetry
+- `worktree_dirty_on_exit` — whether the agent left uncommitted changes
+
+`delegate.py list` surfaces `worktree_layout`; `delegate.py status`
+prints a deprecation notice for flat-layout tasks.
+
 ## Common mistakes
 
 - **Writing new subprocess logic outside the runtime.** If you're
@@ -182,7 +250,8 @@ Run them all: `.venv/bin/python -m pytest tests/test_agent_runtime.py tests/test
 
 ---
 
-*Last updated: 2026-04-10 (Phase 1 foundation complete). When behavior
-changes, update this guide in the same commit. This file is also
-auto-loaded into Gemini and Codex prompts via the bridge — keep it
-accurate.*
+*Last updated: 2026-04-23 (#1476 dispatch hardening: fetch-before-branch,
+reuse validation, branch normalization, dispatch/ subtree layout).
+When behavior changes, update this guide in the same commit. This file
+is also auto-loaded into Gemini and Codex prompts via the bridge — keep
+it accurate.*

@@ -548,6 +548,46 @@ def test_dispatch_rejects_danger_without_worktree(tmp_tasks_dir, capsys):
     assert "--worktree" in captured.err
 
 
+def _make_run_stub(
+    *,
+    rev_parse_verify_ok: bool = True,
+    rev_parse_head_sha: str = "abc1234",
+    status_porcelain: str = "",
+    rev_list_count: str = "0",
+    abbrev_ref: str = "",
+    rebase_ok: bool = True,
+):
+    """Helper: build a fake subprocess.run that understands the git commands
+    _ensure_worktree/_validate_existing_worktree issue. Returns ``(calls, fn)``.
+    """
+    calls: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        if cmd[:2] == ["git", "fetch"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "rev-parse"]:
+            if "--verify" in cmd:
+                rc = 0 if rev_parse_verify_ok else 1
+                out = rev_parse_head_sha if rc == 0 else ""
+                return subprocess.CompletedProcess(cmd, rc, out, "")
+            if "--abbrev-ref" in cmd:
+                return subprocess.CompletedProcess(cmd, 0, abbrev_ref, "")
+            return subprocess.CompletedProcess(cmd, 0, rev_parse_head_sha, "")
+        if cmd[:2] == ["git", "status"]:
+            return subprocess.CompletedProcess(cmd, 0, status_porcelain, "")
+        if cmd[:2] == ["git", "rev-list"]:
+            return subprocess.CompletedProcess(cmd, 0, rev_list_count, "")
+        if cmd[:3] == ["git", "worktree", "add"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "rebase"]:
+            rc = 0 if rebase_ok else 1
+            return subprocess.CompletedProcess(cmd, rc, "", "")
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    return calls, fake_run
+
+
 def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, monkeypatch, capsys):
     import argparse
 
@@ -564,12 +604,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, monkeypatch, ca
         pid = 24680
         stdin = _FakeStdin()
 
-    calls: list[list[str]] = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append(cmd)
-        assert cmd[:5] == ["git", "worktree", "add", "-b", "codex/issue-1383-smoke"]
-        return subprocess.CompletedProcess(cmd, 0, "", "")
+    calls, fake_run = _make_run_stub(rev_parse_head_sha="deadbeef")
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
@@ -583,6 +618,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, monkeypatch, ca
         model=None,
         cwd=None,
         worktree=".worktrees/codex-1383",
+        base="main",
         hard_timeout=3600,
     )
 
@@ -596,9 +632,18 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, monkeypatch, ca
     assert state["worktree_path"].endswith(".worktrees/codex-1383")
     assert state["cwd"].endswith(".worktrees/codex-1383")
     assert state["pid"] == 24680
+    assert state["worktree_base_sha"] == "deadbeef"
+    assert state["worktree_reused"] is False
     assert "delegate worktree" in recorded_prompt["text"]
     assert ".worktrees/codex-1383" in recorded_prompt["text"]
-    assert len(calls) == 1
+    # At minimum: git fetch + git rev-parse --verify + git worktree add + git rev-parse HEAD.
+    assert any(c[:3] == ["git", "worktree", "add"] for c in calls)
+    assert any(c[:2] == ["git", "fetch"] for c in calls)
+    # Fix 1: the worktree add MUST branch from origin/main, not local main.
+    add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
+    assert add_cmd[-1] == "origin/main", (
+        f"worktree must be created from origin/main, got base={add_cmd[-1]!r}"
+    )
     captured = capsys.readouterr()
     assert "issue-1383-smoke" in captured.out
 
@@ -666,6 +711,8 @@ def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypat
         recorded["env"] = kwargs.get("env", {})
         return _FakeProc()
 
+    _, fake_run = _make_run_stub()
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
 
     args = argparse.Namespace(
@@ -677,6 +724,7 @@ def test_dispatch_allow_merge_opt_in_updates_worker_env(tmp_tasks_dir, monkeypat
         model=None,
         cwd=None,
         worktree=str(tmp_tasks_dir / "wt"),
+        base="main",
         hard_timeout=3600,
         allow_merge=True,
     )
@@ -708,11 +756,22 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
         pid = 13579
         stdin = _FakeStdin()
 
-    monkeypatch.setattr(
-        delegate.subprocess,
-        "run",
-        lambda *a, **k: pytest.fail("git worktree add should not run for an existing path"),
+    # Allow the validation calls (rev-parse, status, rev-list, fetch) to
+    # run but refuse `git worktree add` — that's what "without_git_add"
+    # is asserting. Validation returns "clean, matching, up-to-date" so
+    # the reuse path succeeds.
+    _, base_stub = _make_run_stub(
+        abbrev_ref="gemini/existing-worktree",
+        status_porcelain="",
+        rev_list_count="0",
     )
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:3] == ["git", "worktree", "add"]:
+            pytest.fail("git worktree add should not run for an existing path")
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
 
     args = argparse.Namespace(
@@ -724,6 +783,7 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
         model=None,
         cwd=None,
         worktree=str(worktree),
+        base="main",
         hard_timeout=3600,
     )
 
@@ -733,6 +793,7 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
     state = delegate._read_state(delegate._state_path("existing-worktree"))
     assert state["worktree_path"] == str(worktree.resolve())
     assert state["cwd"] == str(worktree.resolve())
+    assert state["worktree_reused"] is True
 
 
 # ---------------------------------------------------------------------------
@@ -773,3 +834,365 @@ def test_list_flips_dead_running_to_crashed(tmp_tasks_dir, capsys):
     tasks = json.loads(captured.out)
     assert len(tasks) == 1
     assert tasks[0]["status"] == "crashed"
+
+
+# ---------------------------------------------------------------------------
+# #1476 — Fix 1: fetch-before-branch (stale-base footgun)
+# ---------------------------------------------------------------------------
+
+def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Fix 1 (#1476): _ensure_worktree must fetch origin and branch from
+    origin/main, not local main. This is the regression that caused #1473
+    and #1474 to ship against stale tips.
+    """
+    target = tmp_path / "fresh-worktree"
+
+    calls, fake_run = _make_run_stub(rev_parse_head_sha="sha-from-origin")
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    path, branch, telemetry = delegate._ensure_worktree(
+        agent="codex",
+        task_id="1476-branches-from-origin",
+        raw_path=str(target),
+        base="main",
+    )
+
+    assert path == target.resolve()
+    assert branch == "codex/1476-branches-from-origin"
+    # Fetch is called before the add.
+    fetch_calls = [c for c in calls if c[:2] == ["git", "fetch"]]
+    add_calls = [c for c in calls if c[:3] == ["git", "worktree", "add"]]
+    assert fetch_calls, "must fetch origin/main before branching"
+    assert fetch_calls[0] == ["git", "fetch", "origin", "main"]
+    assert add_calls, "must invoke git worktree add"
+    assert add_calls[0][-1] == "origin/main", (
+        "must branch from origin/main, not local main"
+    )
+    assert telemetry["base_sha"] == "sha-from-origin"
+    assert telemetry["reused"] is False
+
+
+def test_ensure_worktree_falls_back_when_fetch_fails(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """Fix 1 (#1476): offline/no-remote scenarios fall back to local
+    base rather than hard-failing. A warning is logged on stderr.
+    """
+    target = tmp_path / "offline-worktree"
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "fetch"]:
+            return subprocess.CompletedProcess(cmd, 1, "", "fatal: unable to access")
+        if cmd[:2] == ["git", "rev-parse"] and "--verify" in cmd:
+            return subprocess.CompletedProcess(cmd, 1, "", "")
+        if cmd[:3] == ["git", "worktree", "add"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "rev-parse"]:
+            return subprocess.CompletedProcess(cmd, 0, "localsha", "")
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    _, branch, _ = delegate._ensure_worktree(
+        agent="codex",
+        task_id="1476-offline",
+        raw_path=str(target),
+        base="main",
+    )
+    assert branch == "codex/1476-offline"
+    captured = capsys.readouterr()
+    assert (
+        ("fetch" in captured.err and "fallback" in captured.err.lower())
+        or "stale" in captured.err.lower()
+    )
+
+
+# ---------------------------------------------------------------------------
+# #1476 — Fix 2: branch-name normalization
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize(
+    "agent, task_id, expected_branch",
+    [
+        # The doubled-prefix bug from #1472: task_id starts with the agent name.
+        ("codex", "codex-1472-postmortem-must-change", "codex/1472-postmortem-must-change"),
+        # Slash-separator variant.
+        ("codex", "codex/1472-slash-variant", "codex/1472-slash-variant"),
+        # Already-clean task_id: no change expected.
+        ("codex", "1472-no-prefix", "codex/1472-no-prefix"),
+        # Non-codex agents.
+        ("claude", "claude-foo", "claude/foo"),
+        ("gemini", "gemini-bar", "gemini/bar"),
+        # Agent name is a substring, not a prefix — must NOT strip.
+        ("codex", "random-name", "codex/random-name"),
+        ("codex", "codexy-is-not-a-prefix", "codex/codexy-is-not-a-prefix"),
+    ],
+)
+def test_derive_branch_strips_agent_prefix(agent, task_id, expected_branch):
+    """Fix 2 (#1476): derived branch must never contain a doubled prefix
+    like `codex/codex-…`."""
+    assert delegate._derive_worktree_branch(agent, task_id) == expected_branch
+
+
+def test_derive_branch_never_doubles_prefix_across_agents():
+    """Fix 2 (#1476): for any agent × any reasonable task_id, the derived
+    branch must not start with `{agent}/{agent}-` or `{agent}/{agent}/`."""
+    for agent in ("codex", "claude", "gemini"):
+        for task_id in (
+            f"{agent}-123-foo",
+            f"{agent}/456-bar",
+            "789-no-prefix",
+            f"prefix-{agent}-mid",
+        ):
+            branch = delegate._derive_worktree_branch(agent, task_id)
+            assert not branch.startswith(f"{agent}/{agent}-"), (
+                f"doubled prefix for agent={agent} task={task_id}: {branch}"
+            )
+            assert not branch.startswith(f"{agent}/{agent}/"), (
+                f"doubled prefix for agent={agent} task={task_id}: {branch}"
+            )
+
+
+# ---------------------------------------------------------------------------
+# #1476 — Fix 3: worktree-reuse validation
+# ---------------------------------------------------------------------------
+
+def test_ensure_worktree_reuse_dirty_raises(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Fix 3 (#1476): a dirty existing worktree must raise WorktreeDirty
+    rather than being silently reused. Silent reuse is how #1473 shipped
+    a stub alignment_manifest.py to a PR."""
+    wt = tmp_path / "dirty-worktree"
+    wt.mkdir()
+
+    _, fake_run = _make_run_stub(
+        abbrev_ref="codex/1476-dirty-task",
+        status_porcelain=" M scripts/foo.py\n?? scripts/bar.py\n",
+    )
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    with pytest.raises(delegate.WorktreeDirty, match="uncommitted"):
+        delegate._ensure_worktree(
+            agent="codex",
+            task_id="1476-dirty-task",
+            raw_path=str(wt),
+            base="main",
+        )
+
+
+def test_ensure_worktree_reuse_wrong_branch_raises(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Fix 3 (#1476): an existing worktree on a different branch must
+    raise WorktreeBranchMismatch, with the expected remediation command
+    in the message."""
+    wt = tmp_path / "mismatched-worktree"
+    wt.mkdir()
+
+    _, fake_run = _make_run_stub(abbrev_ref="codex/some-other-branch")
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    with pytest.raises(delegate.WorktreeBranchMismatch) as exc_info:
+        delegate._ensure_worktree(
+            agent="codex",
+            task_id="1476-mismatched",
+            raw_path=str(wt),
+            base="main",
+        )
+    assert "codex/some-other-branch" in str(exc_info.value)
+    assert "codex/1476-mismatched" in str(exc_info.value)
+    assert "git worktree remove" in str(exc_info.value)
+
+
+def test_ensure_worktree_reuse_stale_base_rebases(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """Fix 3 (#1476): a clean worktree behind origin/main is automatically
+    rebased. The reuse path succeeds and telemetry records ``rebased=True``."""
+    wt = tmp_path / "stale-worktree"
+    wt.mkdir()
+
+    _, fake_run = _make_run_stub(
+        abbrev_ref="codex/1476-stale-task",
+        status_porcelain="",
+        rev_list_count="3",
+        rev_parse_head_sha="rebased-head-sha",
+        rebase_ok=True,
+    )
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    path, branch, telemetry = delegate._ensure_worktree(
+        agent="codex",
+        task_id="1476-stale-task",
+        raw_path=str(wt),
+        base="main",
+    )
+    assert path == wt.resolve()
+    assert branch == "codex/1476-stale-task"
+    assert telemetry["rebased"] is True
+    assert telemetry["reused"] is True
+    assert telemetry["base_sha"] == "rebased-head-sha"
+    captured = capsys.readouterr()
+    assert "behind origin/main" in captured.err
+
+
+def test_ensure_worktree_reuse_stale_base_rebase_fail_raises(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Fix 3 (#1476): if the fast-forward rebase fails (e.g. conflicts),
+    _ensure_worktree must raise WorktreeStaleBase, aborting the rebase
+    so the worktree is left in a usable state."""
+    wt = tmp_path / "stale-conflict-worktree"
+    wt.mkdir()
+
+    abort_calls: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "fetch"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:3] == ["git", "rev-parse", "--verify"]:
+            return subprocess.CompletedProcess(cmd, 0, "originsha", "")
+        if cmd[:3] == ["git", "rev-parse", "--abbrev-ref"]:
+            return subprocess.CompletedProcess(cmd, 0, "codex/1476-conflict-task", "")
+        if cmd[:2] == ["git", "status"]:
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        if cmd[:2] == ["git", "rev-list"]:
+            return subprocess.CompletedProcess(cmd, 0, "5", "")
+        if cmd[:2] == ["git", "rebase"]:
+            if cmd[-1] == "--abort":
+                abort_calls.append(list(cmd))
+                return subprocess.CompletedProcess(cmd, 0, "", "")
+            return subprocess.CompletedProcess(cmd, 1, "", "CONFLICT")
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    with pytest.raises(delegate.WorktreeStaleBase, match="rebase failed"):
+        delegate._ensure_worktree(
+            agent="codex",
+            task_id="1476-conflict-task",
+            raw_path=str(wt),
+            base="main",
+        )
+    # Must abort so the worktree isn't left mid-rebase.
+    assert any(c[:2] == ["git", "rebase"] and "--abort" in c for c in abort_calls), (
+        "rebase must be aborted on failure"
+    )
+
+
+# ---------------------------------------------------------------------------
+# #1476 — Fix 4: dispatch/ subtree layout
+# ---------------------------------------------------------------------------
+
+def test_auto_worktree_path_is_dispatch_subtree():
+    """Fix 4 (#1476): the auto-derived default worktree path is under
+    .worktrees/dispatch/{agent}/{task_normalized}/."""
+    path = delegate._auto_worktree_path("codex", "codex-1476-delegate-hardening")
+    parts = path.parts[-4:]
+    assert parts == (".worktrees", "dispatch", "codex", "1476-delegate-hardening")
+
+
+def test_classify_worktree_layout_distinguishes_flat_and_dispatch(tmp_path):
+    """Fix 4 (#1476): layout classifier tells flat from dispatch paths,
+    so list/status can emit deprecation messages."""
+    repo = delegate._REPO_ROOT
+    assert delegate._classify_worktree_layout(
+        repo / ".worktrees" / "codex-1453-sidecar-freshness",
+    ) == "flat"
+    assert delegate._classify_worktree_layout(
+        repo / ".worktrees" / "dispatch" / "codex" / "1476",
+    ) == "dispatch"
+    assert delegate._classify_worktree_layout(None) is None
+    assert delegate._classify_worktree_layout(tmp_path / "anywhere-else") in (
+        "external", None,
+    )
+
+
+def test_new_dispatch_uses_dispatch_subtree(tmp_tasks_dir, monkeypatch, capsys):
+    """Fix 4 (#1476): a fresh dispatch with `--worktree` (bare — no path)
+    lands in `.worktrees/dispatch/{agent}/{task}/`, the new default."""
+    import argparse
+
+    class _FakeStdin:
+        def write(self, _data): pass
+        def close(self): pass
+
+    class _FakeProc:
+        pid = 54321
+        stdin = _FakeStdin()
+
+    _, fake_run = _make_run_stub()
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
+
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="codex-1476-auto-path",
+        prompt="test",
+        prompt_file=None,
+        mode="danger",
+        model=None,
+        cwd=None,
+        worktree="auto",  # sentinel from bare `--worktree`
+        base="main",
+        hard_timeout=3600,
+        allow_merge=False,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("codex-1476-auto-path"))
+    assert state is not None
+    wt = Path(state["worktree_path"])
+    assert wt.parts[-4:] == (".worktrees", "dispatch", "codex", "1476-auto-path")
+    assert state["worktree_branch"] == "codex/1476-auto-path"
+    assert state["worktree_layout"] == "dispatch"
+
+
+def test_list_and_status_walk_both_layouts(tmp_tasks_dir, tmp_path, capsys, monkeypatch):
+    """Fix 4 (#1476): both the deprecated flat layout and the new dispatch
+    subtree layout must surface in `list`, and flat-layout tasks emit
+    a deprecation notice."""
+    repo = delegate._REPO_ROOT
+    flat_path = repo / ".worktrees" / "codex-1453-sidecar-freshness"
+    dispatch_path = repo / ".worktrees" / "dispatch" / "codex" / "1476-new"
+
+    delegate._write_state_atomic(delegate._state_path("flat-task"), {
+        "task_id": "flat-task",
+        "agent": "codex",
+        "status": "done",
+        "worktree_path": str(flat_path),
+    })
+    delegate._write_state_atomic(delegate._state_path("new-task"), {
+        "task_id": "new-task",
+        "agent": "codex",
+        "status": "done",
+        "worktree_path": str(dispatch_path),
+    })
+
+    import argparse
+    args = argparse.Namespace(status=None)
+    delegate.cmd_list(args)
+    captured = capsys.readouterr()
+    tasks = json.loads(captured.out)
+    task_map = {t["task_id"]: t for t in tasks}
+    assert "flat-task" in task_map
+    assert "new-task" in task_map
+    assert task_map["flat-task"]["worktree_layout"] == "flat"
+    assert task_map["new-task"]["worktree_layout"] == "dispatch"
+    # Deprecation notice surfaces on stderr for the flat-layout task.
+    assert "DEPRECATED" in captured.err or "deprecated" in captured.err.lower()
+    assert "flat-task" in captured.err
+
+
+def test_status_warns_on_flat_layout(tmp_tasks_dir, capsys):
+    """Fix 4 (#1476): `status` for a flat-layout task must print a
+    deprecation notice in addition to the JSON state."""
+    repo = delegate._REPO_ROOT
+    flat_path = repo / ".worktrees" / "codex-old-thing"
+    delegate._write_state_atomic(delegate._state_path("flat-status"), {
+        "task_id": "flat-status",
+        "agent": "codex",
+        "status": "done",
+        "worktree_path": str(flat_path),
+    })
+
+    import argparse
+    args = argparse.Namespace(task_id="flat-status")
+    delegate.cmd_status(args)
+    captured = capsys.readouterr()
+    state = json.loads(captured.out)
+    assert state["worktree_layout"] == "flat"
+    assert "flat" in captured.err.lower() or "deprecated" in captured.err.lower()
