@@ -21,7 +21,7 @@ serves a condensed, hash-cached version. See `workflow.md` rule.
 | Task ID | Agent | What | Hard timeout |
 |---|---|---|---|
 | `claude-1431-v2-shared-contract` | Claude opus 4.7 xhigh | Shared contract (writer+reviewer sync) + smoke a1/colors build | 14400s |
-| `scale-who-am-i-review-and-lock` | Claude opus 4.7 xhigh | A1 slug review-and-lock | 5400s |
+| `scale-checkpoint-first-contact-review-and-lock` | Claude opus 4.7 xhigh | A1 slug review-and-lock | 5400s |
 | `codex-1434-compiler-attribution` | Codex gpt-5.4 high | **BLOCKER** — fix bare-chunk-ID leak in sources.yaml. User waiting. | 5400s |
 | `scale-special-signs-review-and-lock` | Codex gpt-5.4 high | A1 slug review-and-lock | 5400s |
 
@@ -91,7 +91,7 @@ sed "s/colors/$NEXT/g" .worktree-briefs/scale-colors-review-and-lock.md > ".work
 | `bg8h7qwl3` | #1434 compiler fix | Verify AC → merge → dispatch #1435 backfill + refill codex slot |
 | `bovx985hn` | special-signs lock | Merge PR → dispatch next from codex queue |
 | `bpup3xgm7` | #1431 v2 contract+smoke | Read result → merge or write infeasibility brief |
-| `bn6xofur7` | who-am-i lock | Merge PR → dispatch next A1 slug (Claude) |
+| `bq7bwd0rx` | checkpoint-first-contact lock | Merge PR → dispatch next A1 slug (Claude) |
 
 Monitor timeout = 1h; re-arm with same watch command if still running.
 
@@ -125,13 +125,13 @@ Every `[S*]` entry must have real attribution:
 
 When #1434 merges → dispatch #1435 (backfill for ~227 existing wikis).
 
-## PRs merged this session (9)
+## PRs merged this session (12)
 
-1422 (my-day lock), 1423 (hey-friend lock), 1424 (shopping lock),
-1425 (holidays lock), 1426 (auth test fix), 1427 (ukrainian_wiki
-embeddings), 1428 (auth test fix 2), 1421 (per-dim reviewer),
+1421 (per-dim reviewer), 1422 (my-day lock), 1423 (hey-friend lock),
+1424 (shopping lock), 1425 (holidays lock), 1426 (auth test fix 1),
+1427 (ukrainian_wiki embeddings), 1428 (auth test fix 2),
 1430 (convergence budget fix), 1432 (reading-ukrainian lock),
-1433 (stress-and-melody lock).
+1433 (stress-and-melody lock), 1436 (who-am-i lock).
 
 ## Open issues that matter
 
@@ -147,11 +147,14 @@ embeddings), 1428 (auth test fix 2), 1421 (per-dim reviewer),
 
 ## A1 lock state
 
-**11/55 locked.** 2 in flight will bring it to 13.
+**12/55 locked.** 2 in flight will bring it to 14.
 
 Locked: at-the-cafe, food-and-drink, my-family, sounds-letters-and-hello,
 colors, my-day, hey-friend, shopping, holidays, reading-ukrainian,
-stress-and-melody.
+stress-and-melody, who-am-i.
+
+In flight: special-signs (Codex), checkpoint-first-contact (Claude).
+Next in order after those: things-have-gender, what-is-it-like, how-many.
 
 Count live: `grep -l "lifecycle: locked" curriculum/l2-uk-en/plans/a1/*.yaml | wc -l`
 
