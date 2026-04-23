@@ -1,0 +1,32 @@
+session_path: ''
+phase: write-chunk-01
+prompt_chars: 9298
+response_chars: 2060
+prompt_words: 1331
+response_words: 341
+sections:
+- name: preamble
+  start: 0
+  length: 808
+  fraction: 0.0869
+- name: header
+  start: 808
+  length: 415
+  fraction: 0.0446
+- name: skeleton
+  start: 1223
+  length: 7899
+  fraction: 0.8495
+- name: output_spec
+  start: 9122
+  length: 176
+  fraction: 0.0189
+large_sections:
+- skeleton
+directives_total: 9
+directives_covered: 8
+directives_missed:
+- kind: must
+  text: Full module rewrite required.
+  covered: false
+  coverage_note: 0/4 keywords (0%)

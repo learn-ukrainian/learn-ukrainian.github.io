@@ -1,0 +1,24 @@
+phase: write-chunk
+section: Діалоги
+section_index: 0
+total_sections: 4
+components:
+- persona
+- section_skeleton
+- section_contract
+- section_wiki_excerpts
+- paragraph_language_rule
+- section_rules
+- dialogue_formatting
+- required_vocab_checklist
+- forbidden_words
+metrics:
+  prompt_chars: 9102
+  prompt_words: 1303
+  contract_chars: 2093
+  excerpt_chars: 2076
+  previous_summary_chars: 0
+flags:
+  includes_dialogue_formatting: true
+  includes_vocab_checklist: true
+  includes_previous_summary: false

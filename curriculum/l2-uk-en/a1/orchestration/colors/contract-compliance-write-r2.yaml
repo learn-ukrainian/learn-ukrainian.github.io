@@ -1,0 +1,28 @@
+attempt: 2
+label: write
+violations:
+- type: FACTUAL_ANCHOR
+  severity: ERROR
+  section: Діалоги
+  message: 'Section ''Діалоги'' misses factual anchor terms [''білии''] from pedagogy/a1/colors.md
+    :: Послідовність введення'
+- type: FACTUAL_ANCHOR
+  severity: ERROR
+  section: Кольори
+  message: 'Section ''Кольори'' misses factual anchor terms [''білии''] from pedagogy/a1/colors.md
+    :: Послідовність введення'
+- type: FACTUAL_ANCHOR
+  severity: ERROR
+  section: Кольори
+  message: 'Section ''Кольори'' misses factual anchor terms [''жовтии'', ''зелении'']
+    from pedagogy/a1/colors.md :: Приклади з підручників'
+- type: FACTUAL_ANCHOR
+  severity: ERROR
+  section: Синій ≠ блакитний
+  message: 'Section ''Синій ≠ блакитний'' misses factual anchor terms [''блакитнии'']
+    from pedagogy/a1/colors.md :: Послідовність введення'
+- type: FACTUAL_ANCHOR
+  severity: ERROR
+  section: Синій ≠ блакитний
+  message: 'Section ''Синій ≠ блакитний'' misses factual anchor terms [''блакитнии'',
+    ''жовтии''] from pedagogy/a1/colors.md :: Приклади з підручників'

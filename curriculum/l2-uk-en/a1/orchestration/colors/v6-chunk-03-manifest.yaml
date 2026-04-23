@@ -1,0 +1,24 @@
+phase: write-chunk
+section: Синій ≠ блакитний
+section_index: 2
+total_sections: 4
+components:
+- persona
+- section_skeleton
+- section_contract
+- section_wiki_excerpts
+- previous_sections_summary
+- paragraph_language_rule
+- section_rules
+- required_vocab_checklist
+- forbidden_words
+metrics:
+  prompt_chars: 10942
+  prompt_words: 1588
+  contract_chars: 1211
+  excerpt_chars: 2074
+  previous_summary_chars: 3219
+flags:
+  includes_dialogue_formatting: false
+  includes_vocab_checklist: true
+  includes_previous_summary: true

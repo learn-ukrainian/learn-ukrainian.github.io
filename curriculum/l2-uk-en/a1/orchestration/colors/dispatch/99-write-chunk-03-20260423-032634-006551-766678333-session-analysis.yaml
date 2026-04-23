@@ -1,0 +1,40 @@
+session_path: ''
+phase: write-chunk-03
+prompt_chars: 10916
+response_chars: 2087
+prompt_words: 1588
+response_words: 319
+sections:
+- name: header
+  start: 0
+  length: 425
+  fraction: 0.0389
+- name: skeleton
+  start: 425
+  length: 1643
+  fraction: 0.1505
+- name: prior_summary
+  start: 2068
+  length: 8662
+  fraction: 0.7935
+- name: output_spec
+  start: 10730
+  length: 186
+  fraction: 0.017
+large_sections:
+- prior_summary
+directives_total: 15
+directives_covered: 12
+directives_missed:
+- kind: inject_activity
+  text: group-sort-hard-soft
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: quiz-what-color
+  covered: false
+  coverage_note: marker missing
+- kind: inject_activity
+  text: fill-in-agreement
+  covered: false
+  coverage_note: marker missing

@@ -1,0 +1,440 @@
+version: '1.0'
+module: colors
+level: a1
+inline:
+- id: quiz-what-color
+  type: quiz
+  instruction: Read the dialogues and choose the correct answer to **Якого кольору...?**
+  items:
+  - question: Якого кольору троянди в Наталки?
+    options:
+    - червоні
+    - жовті
+    - білі
+    - сині
+    correct: 0
+  - question: Якого кольору лілії на ринку?
+    options:
+    - білі
+    - чорні
+    - зелені
+    - сірі
+    correct: 0
+  - question: Якого кольору соняшники, які подобаються Наталці?
+    options:
+    - жовті
+    - червоні
+    - блакитні
+    - рожеві
+    correct: 0
+  - question: Якого кольору ваза для квітів?
+    options:
+    - синя
+    - червона
+    - біла
+    - зелена
+    correct: 0
+  - question: Якого кольору сукня Лізи?
+    options:
+    - чорна
+    - біла
+    - сіра
+    - червона
+    correct: 0
+  - question: Якого кольору светр Лізи?
+    options:
+    - білий
+    - чорний
+    - коричневий
+    - сірий
+    correct: 0
+  - question: Якого кольору пальто Лізи?
+    options:
+    - сіре
+    - біле
+    - чорне
+    - зелене
+    correct: 0
+  - question: Якого кольору черевики?
+    options:
+    - коричневі
+    - чорні
+    - білі
+    - сірі
+    correct: 0
+  title: Read the dialogues and choose the correct answer to **Якого кольору...?**
+- id: fill-in-agreement
+  type: fill-in
+  instruction: Choose the correct color ending to match the noun's gender.
+  items:
+  - sentence: Це ____ сукня.
+    answer: червона
+    options:
+    - червоний
+    - червона
+    - червоне
+  - sentence: Це ____ светр.
+    answer: білий
+    options:
+    - білий
+    - біла
+    - біле
+  - sentence: Це ____ пальто.
+    answer: сіре
+    options:
+    - сірий
+    - сіра
+    - сіре
+  - sentence: Це ____ вікно.
+    answer: синє
+    options:
+    - синій
+    - синя
+    - синє
+  - sentence: Це ____ ваза.
+    answer: синя
+    options:
+    - синій
+    - синя
+    - синє
+  - sentence: Це ____ черевики.
+    answer: коричневі
+    options:
+    - коричневий
+    - коричнева
+    - коричневі
+  - sentence: Це ____ книга.
+    answer: чорна
+    options:
+    - чорний
+    - чорна
+    - чорні
+  - sentence: Це ____ стіл.
+    answer: жовтий
+    options:
+    - жовтий
+    - жовта
+    - жовте
+  - sentence: Це ____ яблуко.
+    answer: зелене
+    options:
+    - зелений
+    - зелена
+    - зелене
+  - sentence: Це ____ олівець.
+    answer: червоний
+    options:
+    - червоний
+    - червона
+    - червоне
+  title: Choose the correct color ending to match the noun's gender.
+- id: quiz-blue-shades
+  type: quiz
+  instruction: 'Choose the correct shade of blue: **синій** (dark) or **блакитний**
+    (light).'
+  items:
+  - question: Український прапор — ____-жовтий.
+    options:
+    - синьо
+    - блакитно
+    - темно
+    - світло
+    correct: 0
+  - question: Колір вечірнього неба (evening sky) — це...
+    options:
+    - синій
+    - блакитний
+    - білий
+    - сірий
+    correct: 0
+  - question: Колір ясного денного неба (clear afternoon sky) — це...
+    options:
+    - блакитний
+    - синій
+    - зелений
+    - чорний
+    correct: 0
+  - question: Колір глибокого моря (deep sea) — це...
+    options:
+    - синій
+    - блакитний
+    - червоний
+    - жовтий
+    correct: 0
+  - question: Колір мілкого озера (shallow lake) — це...
+    options:
+    - блакитний
+    - синій
+    - чорний
+    - коричневий
+    correct: 0
+  - question: Англійське 'dark blue' перекладається як...
+    options:
+    - синій
+    - блакитний
+    - сірий
+    - темний
+    correct: 0
+  title: 'Choose the correct shade of blue: **синій** (dark) or **блакитний** (light).'
+- id: match-up-appearance
+  type: match-up
+  instruction: Match the natural Ukrainian expression with its English meaning.
+  pairs:
+  - left: карі очі
+    right: brown eyes
+  - left: русяве волосся
+    right: light-brown hair
+  - left: сиве волосся
+    right: grey hair
+  - left: чорна сукня
+    right: black dress
+  - left: білий светр
+    right: white sweater
+  - left: коричневі черевики
+    right: brown shoes
+  title: Match the natural Ukrainian expression with its English meaning.
+workbook:
+- id: wb-anagram
+  type: anagram
+  instruction: Unscramble the letters to form Ukrainian color words.
+  items:
+  - letters:
+    - ч
+    - е
+    - р
+    - в
+    - о
+    - н
+    - и
+    - й
+    answer: червоний
+  - letters:
+    - ж
+    - о
+    - в
+    - т
+    - и
+    - й
+    answer: жовтий
+  - letters:
+    - з
+    - е
+    - л
+    - е
+    - н
+    - и
+    - й
+    answer: зелений
+  - letters:
+    - с
+    - и
+    - н
+    - і
+    - й
+    answer: синій
+  - letters:
+    - б
+    - і
+    - л
+    - и
+    - й
+    answer: білий
+  - letters:
+    - ч
+    - о
+    - р
+    - н
+    - и
+    - й
+    answer: чорний
+  - letters:
+    - с
+    - і
+    - р
+    - и
+    - й
+    answer: сірий
+  title: Unscramble the letters to form Ukrainian color words.
+- id: wb-unjumble
+  type: unjumble
+  instruction: Put the words in the correct order to form sentences from the dialogue.
+  items:
+  - words:
+    - сукня?
+    - Якого
+    - кольору
+    - ця
+    correct_order:
+    - Якого
+    - кольору
+    - ця
+    - сукня?
+  - words:
+    - мене
+    - карі
+    - У
+    - очі.
+    correct_order:
+    - У
+    - мене
+    - карі
+    - очі.
+  - words:
+    - русяве
+    - неї
+    - У
+    - волосся.
+    correct_order:
+    - У
+    - неї
+    - русяве
+    - волосся.
+  - words:
+    - мені
+    - вдягнути?
+    - Що
+    correct_order:
+    - Що
+    - мені
+    - вдягнути?
+  - words:
+    - вазу.
+    - у
+    - синю
+    - І
+    correct_order:
+    - І
+    - у
+    - синю
+    - вазу.
+  - words:
+    - подобаються
+    - жовті
+    - Мені
+    - соняшники.
+    correct_order:
+    - Мені
+    - подобаються
+    - жовті
+    - соняшники.
+  title: Put the words in the correct order to form sentences from the dialogue.
+- id: wb-true-false
+  type: true-false
+  instruction: Read the statements about Ukrainian colors. Are they **правда** (true)
+    or **ні** (false)?
+  items:
+  - statement: «Синій» means light blue.
+    correct: false
+    explanation: «Синій» is dark blue. Light blue is «блакитний».
+  - statement: For brown eyes, you should say «коричневі очі».
+    correct: false
+    explanation: The correct fixed phrase for brown eyes is «карі очі».
+  - statement: «Русяве волосся» means light-brown or blondish hair.
+    correct: true
+    explanation: This is the natural Ukrainian word for this hair color.
+  - statement: «Синій» is the only color in the soft group at A1.
+    correct: true
+    explanation: It takes the soft endings -ій, -я, -є, -і.
+  - statement: To say 'dark green', you say «темно-зелений».
+    correct: true
+    explanation: Compound shades are built with a hyphen.
+  - statement: «Білий» belongs to the soft group.
+    correct: false
+    explanation: «Білий» belongs to the hard group, ending in -ий.
+  title: Read the statements about Ukrainian colors. Are they **правда** (true) or
+    **ні**
+- id: wb-fill-in-shades
+  type: fill-in
+  instruction: Complete the sentences with the correct color words.
+  items:
+  - sentence: Український прапор — синьо-____.
+    answer: жовтий
+    options:
+    - жовтий
+    - білий
+    - червоний
+  - sentence: У неї ____ очі.
+    answer: карі
+    options:
+    - карі
+    - коричневі
+    - чорні
+  - sentence: У нього ____ волосся.
+    answer: сиве
+    options:
+    - сіре
+    - сиве
+    - біле
+  - sentence: Вона має ____ волосся.
+    answer: русяве
+    options:
+    - русяве
+    - жовте
+    - коричневе
+  - sentence: Небо сьогодні світло-____.
+    answer: блакитне
+    options:
+    - блакитне
+    - синє
+    - чорне
+  - sentence: Я хочу темно-____ сукню.
+    answer: синю
+    options:
+    - синю
+    - блакитну
+    - кару
+  title: Complete the sentences with the correct color words.
+- id: wb-group-sort-genders
+  type: group-sort
+  instruction: Sort the color adjectives by their gender and number endings.
+  groups:
+  - label: Чоловічий рід (-ий / -ій)
+    items:
+    - червоний
+    - жовтий
+    - синій
+    - білий
+    - коричневий
+    - чорний
+  - label: Жіночий рід (-а / -я)
+    items:
+    - чорна
+    - сіра
+    - синя
+    - зелена
+    - біла
+    - червона
+  - label: Середній рід (-е / -є)
+    items:
+    - червоне
+    - жовте
+    - синє
+    - біле
+    - чорне
+    - сіре
+  - label: Множина (-і)
+    items:
+    - чорні
+    - сірі
+    - сині
+    - зелені
+    - білі
+    - жовті
+  title: Sort the color adjectives by their gender and number endings.
+- id: wb-match-up-translations
+  type: match-up
+  instruction: Match the English colors to their Ukrainian translations.
+  pairs:
+  - left: pink
+    right: рожевий
+  - left: purple
+    right: фіолетовий
+  - left: orange
+    right: помаранчевий
+  - left: brown
+    right: коричневий
+  - left: grey
+    right: сірий
+  - left: white
+    right: білий
+  title: Match the English colors to their Ukrainian translations.
