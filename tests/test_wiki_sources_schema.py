@@ -44,7 +44,8 @@ def test_assign_source_ids_is_stable_across_reruns() -> None:
         ("11-klas-ukrmova-avramenko-2019_s0075", "textbook"),
         ("11-клас-istoriya-ukr-galimov-2024_s0238", "textbook"),
         ("ext-ulp_youtube-19", "external"),
-        ("ext-wikipedia-kyiv", "wiki"),
+        ("ext-wikipedia-kyiv", "wikipedia"),
+        ("ukrainian_wiki/academic-writing_root", "ukrainian_wiki"),
         ("pravopys-2019-paragraph-42", "pravopys"),
         ("sum11-слово", "dictionary"),
         ("feaa5fa7_c3124", "literary"),
@@ -110,8 +111,13 @@ def test_registry_round_trip(tmp_path: Path) -> None:
             WikiSourceEntry(id="S1", file="11-klas-istoriya-ukr-galimov-2024_s0238", type="textbook"),
             WikiSourceEntry(
                 id="S2",
-                file="ext-ulp_youtube-19",
+                file="https://www.youtube.com/watch?v=abc123&t=15s",
                 type="external",
+                title="Podcast episode",
+                url="https://www.youtube.com/watch?v=abc123&t=15s",
+                video_id="abc123",
+                ts_start=15,
+                ts_end=29,
                 preserved_from_meta=True,
             ),
         ]
@@ -122,6 +128,10 @@ def test_registry_round_trip(tmp_path: Path) -> None:
 
     assert [(entry.id, entry.file, entry.type, entry.preserved_from_meta) for entry in loaded.sources] == [
         ("S1", "11-klas-istoriya-ukr-galimov-2024_s0238", "textbook", False),
-        ("S2", "ext-ulp_youtube-19", "external", True),
+        ("S2", "https://www.youtube.com/watch?v=abc123&t=15s", "external", True),
     ]
+    assert loaded.sources[1].title == "Podcast episode"
+    assert loaded.sources[1].video_id == "abc123"
+    assert loaded.sources[1].ts_start == 15
+    assert loaded.sources[1].ts_end == 29
     assert path.read_text(encoding="utf-8").startswith("# Source registry for wiki/periods/afhanistan.md")
