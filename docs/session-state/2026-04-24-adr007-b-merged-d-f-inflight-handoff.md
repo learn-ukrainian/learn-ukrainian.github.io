@@ -174,3 +174,82 @@ ls -lt docs/session-state/*.md | head -5
 ---
 
 *Generated 2026-04-24 ~00:35 CET, while PR-D and PR-F dispatches still finishing push+PR. Next session's Claude: merge PR-D + PR-F when green, fire PR-E, stay in Claude-heavy cadence.*
+
+---
+
+## Seminar wiki prioritization (post-C1 decision, discussed 00:50 CET)
+
+> **Don't repeat my mistake this session:** before answering "what seminar
+> wikis next" questions, **check the wiki disk tree first**. I preached
+> abstractly without checking and user correctly called it out. State of
+> the tree matters.
+
+### What's ALREADY on disk (live, not theoretical)
+
+```
+wiki/
+├── pedagogy/a1/           # core track pedagogy
+├── grammar/{a2,b1,b2}/    # core grammar (C1 being finished per user)
+├── academic/c1/           # C1 academic skills — includes checkpoint-folk-culture.md
+├── linguistics/oes/       # OES seminar
+├── literature/works/      # LIT seminar (partial)
+├── periods/               # HIST-adjacent (trypillian-civilization)
+├── figures/               # HIST-adjacent (knyahynia-olha)
+└── .reviews/folk/genres/  # FOLK wikis actively building — r1/r2/r3/r4 review iterations
+    └── bohatyri-illiya-dobrynia, bylyny-kyivskoho-tsyklu, dumy-lytsarski
+```
+
+`wiki/.state/` has `build.log.jsonl` + `progress.db` + `progress.yaml` —
+the wiki build pipeline is actively running with state tracking. Folk
+is mid-wave.
+
+### What's MISSING from the 6-track seminar set
+
+- **LIT** — partial (literary works + folk genres cover most)
+- **OES** — covered (linguistics/oes)
+- **HIST / ISTORIO** — partial (periods + figures, but inventory sparse)
+- **BIO** — zero wiki coverage
+- **RUTH** — zero wiki coverage
+
+### Recommended next (in order)
+
+**After C1 wikis finish, before starting anything new, pick a Gemini
+budget direction from this ranked list:**
+
+1. **RUTH** — zero coverage today, and Ruthenian/Old Ukrainian material
+   is the highest decolonization-yield-per-wiki because nothing else in
+   the corpus covers it and the native framing differs most sharply
+   from Russian-canon framings. Start here if quality-per-token is the
+   optimization.
+2. **BIO** — zero coverage, most gap. Start here if even track coverage
+   is the optimization.
+3. **Expand HIST/ISTORIO inventory** — fill out `periods/` and `figures/`.
+   Medium value; fills real gaps.
+4. **Let folk finish first** — it's mid-review-loop (r4 on some topics).
+   Don't switch Gemini off mid-stream.
+
+### Do NOT do
+
+- Fire "3-module pilot to see what comes out" — already done, folk is
+  the proof. Pipeline works, review loop iterates, output lands.
+- Treat seminar wikis as a separate-engineering effort — they run on the
+  same `scripts/wiki/compile.py` + `scripts/wiki/review.py` (post-#1503
+  per-dim MIN). No prep needed.
+
+### Budget posture (user-stated 00:45 CET)
+
+Seminar wiki building runs on the **Gemini subscription budget**, not
+Claude/Codex tokens. Runs in parallel with A1–C2 module work. Does NOT
+compete with the Claude-heavy-through-Monday directive. Don't confuse
+the two budgets when planning.
+
+The real bottleneck on seminar wikis is the **native Ukrainian reviewer
+time** (per memory #0D: ~12–15h total, front-loaded) — that bottleneck
+applies equally to folk, RUTH, BIO, etc. Seminar wikis likely carry a
+*higher* review burden per wiki than grammar (fact-check dates, names,
+decolonization framing), so 15h goes faster on seminar content than on
+grammar.
+
+---
+
+*Amended 2026-04-24 ~00:55 CET with seminar-wiki state + RUTH/BIO next-pick rationale. User going offline — handoff must stand alone for fresh session.*
