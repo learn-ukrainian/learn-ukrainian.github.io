@@ -2,7 +2,24 @@ module: a1-008
 level: A1
 sequence: 8
 slug: things-have-gender
-version: '1.1.3'
+version: '1.2.0'
+lifecycle: locked
+reviewed_at: '2026-04-23T00:00:00Z'
+reviewed_by: claude-opus-4-7-xhigh-things-have-gender
+review_notes: >-
+  Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md
+  (rubric template from PR #1412 `at-the-cafe` + PR #1436 `who-am-i`). See
+  PR body for the full plan-side findings (pragmatic / Russianism / calque /
+  contradiction / references / wiki-alignment) and
+  wiki/.reviews/pedagogy/a1/things-have-gender-review-LOCKED.md for the
+  wiki-side report. Plan brought into alignment with the locked wiki:
+  (1) gender-flip objective added (`біль` ч.р. / `степ` ч.р. as demo pairs);
+  (2) feminitive pairs (`вчителька`, `лікарка`) added as recommended vocab
+  to mirror wiki Декол. #4; (3) gender-flip drill added as new quiz
+  activity_hint mirroring wiki "Типові помилки L2" table + Exercise 5;
+  (4) chunk-guidance writer-note in content_outline (`мій стіл / моя ручка
+  / моє вікно / велике яблуко / синє море` as indivisible chunks);
+  (5) wiki back-reference added.
 title: Речі мають рід
 subtitle: він, вона, воно — кожен іменник має рід
 focus: grammar
@@ -14,6 +31,8 @@ objectives:
 - Розпізнавати рід за закінченнями слів (приголосний = ч, -а/-я = ж, -о/-е = с)
 - Називати понад 20 поширених предметів із правильним родом
 - Використовувати конструкцію "У мене є" з предметами (розширення теми родини з модуля модуль №6)
+- Свідомо не переносити рід з російської — вміти застосувати український тест `він/вона/воно` на двох демонстраційних парах (`біль` ч.р. vs рос. `боль` ж.р.; `степ` ч.р. vs рос. `степь` ж.р.)
+- Використовувати фемінітив як основну форму професії для жінки (`вчителька`, `лікарка`) — а не узагальнений чоловічий варіант
 dialogue_situations:
 - setting: 'Вдома або під час відеодзвінка з демонстрацією кімнати. Учні вказують на повсякденні предмети та вживають із ними слова він/вона/воно: стіл, книга, вікно, лампа, ліжко, телефон, а також кілька знайомих домашніх улюбленців чи речей, як-от кіт та дзеркало.'
   speakers:
@@ -40,6 +59,7 @@ content_outline:
   words: 300
   points:
   - 'Визначення роду в 3 кроки: 1. Скажіть він/вона/воно з іменником — що підходить? 2. Перевірте закінчення — приголосний? -а/-я? -о/-е? 3. Використовуйте правильний присвійний займенник — мій/моя/моє. Самоперевірка: Якого роду слово "стіл"? Якого роду слово "книга"? А як щодо "вікно"? Скажіть українською, що у вас є стілець.'
+  - 'УВАГА до автора: (а) на A1 подавати `мій стіл / моя ручка / моє вікно / велике яблуко / синє море` як неподільні чанки — НЕ пояснювати повну парадигму відмінювання прикметників, тверду/м''яку групу, узгодження у множині чи відмінювання присвійних займенників. (б) Дві демонстраційні пари гендерного «перекидання» з російської (`біль` ч.р., `степ` ч.р.) подати як міні-підказку в кінці модуля, не як окрему вправу; детальну таблицю див. wiki розділ "Типові помилки L2". (в) Для професій (`вчителька`, `лікарка`) використовувати фемінітив як основну форму, коли мова про жінку, — не «Вона — лікар».'
 vocabulary_hints:
   required:
   - стіл (table, m)
@@ -61,6 +81,10 @@ vocabulary_hints:
   - ключ (key, m)
   - фото (photo, n)
   - стіна (wall, f)
+  - вчителька / учителька (teacher, f — feminitive, VESUM-verified; mirror of вчитель / учитель m)
+  - лікарка (doctor, f — feminitive, VESUM-verified; mirror of лікар m)
+  - біль (pain, m — demo pair for gender-flip: ж.р. in Russian; wiki "Типові помилки L2")
+  - степ (steppe, m — demo pair for gender-flip: ж.р. in Russian; wiki "Типові помилки L2")
 activity_hints:
 - type: group-sort
   focus: Розподіліть предмети за родами (чоловічий/жіночий/середній)
@@ -74,6 +98,12 @@ activity_hints:
 - type: quiz
   focus: Який рід? Подивіться на закінчення.
   items: 6
+- type: quiz
+  focus: >-
+    Рід не як у російській — оберіть український займенник (він / вона / воно).
+    Віддзеркалює wiki "Типові помилки L2" + Приклад 5. Усі правильні відповіді
+    перевірено в VESUM. На A1 достатньо 2-3 пари (`біль`, `степ` + одна на вибір).
+  items: 4
 connects_to:
 - a1-009 (Яке воно?)
 prerequisites:
@@ -82,6 +112,8 @@ grammar:
 - 'Рід іменників: чоловічий (він, мій), жіночий (вона, моя), середній (воно, моє)'
 - 'Визначення роду за закінченням: приголосний=ч, -а/-я=ж, -о/-е=с'
 - 'Конструкція "У мене є", розширена на предмети (з теми родини у модулі №6)'
+- 'Принцип «рід визначає українська мова»: якщо російський відповідник має інший рід, український тест він/вона/воно все одно вирішує (демо: біль ч.р., степ ч.р.)'
+- 'Фемінітиви як основна форма назви професії для жінки: вчителька, лікарка (НЕ «Вона — вчитель»)'
 register: розмовний
 references:
 - title: Пономарова Grade 3, p.86
@@ -91,3 +123,30 @@ references:
 - title: ULP Season 1, Episode 6 — Gender naturally through family
   url: https://www.ukrainianlessons.com/episode6/
   notes: Рід природно випливає з уже вивчених присвійних займенників.
+- title: 'Wiki: pedagogy/a1/things-have-gender (LOCKED 2026-04-23)'
+  notes: >-
+    Authoritative pedagogical brief — see the four-step sequence (Крок 1-4),
+    the animate-masculine exceptions block (`тато`, `дядько`, `Микола`), the
+    Словниковий мінімум table (VESUM-cited), the "Типові помилки L2" gender-flip
+    table (9 rows, every pair evidenced by VESUM presence of the Ukrainian form
+    + VESUM absence of the Russian counterpart), the feminitive decolonization
+    point (#4), and Приклад 5 (gender-flip drill). The writer-note block pinning
+    `мій стіл` / `моя ручка` / `моє вікно` / `велике яблуко` / `синє море` as
+    indivisible chunks is load-bearing — do NOT teach adjective declension,
+    hard/soft group, or plural agreement at this level.
+changelog:
+- version: '1.2.0'
+  date: '2026-04-23'
+  changes:
+  - 'Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md.'
+  - 'Added lifecycle markers (lifecycle / reviewed_at / reviewed_by / review_notes) matching at-the-cafe (#1412) and who-am-i (#1436) convention.'
+  - 'Added two objectives: (a) gender-flip awareness with `біль` ч.р. / `степ` ч.р. as demo pairs; (b) feminitive as primary form for female professions.'
+  - 'Added feminitive pairs `вчителька / учителька`, `лікарка` plus gender-flip demo words `біль`, `степ` to recommended vocabulary_hints — mirrors locked wiki Декол. #4 and "Типові помилки L2" table.'
+  - 'Added two grammar items: (a) principle "рід визначає українська мова" + demo pairs; (b) feminitive as primary form. Each mapped to new objectives.'
+  - 'Added fifth activity_hint (gender-flip quiz, 4 items) mirroring wiki Приклад 5.'
+  - 'Added writer-note point in section "Підсумок": five indivisible chunks (`мій стіл` etc.); gender-flip pairs handled as micro-tip not standalone drill; feminitive-first rule for professions.'
+  - 'Added wiki back-reference to references list.'
+- version: '1.1.3'
+  date: '2026-03 (pre-lock)'
+  changes:
+  - 'Pre-lock: three iterations from batch-audit. Not tracked in this changelog beyond the 1.2.0 lock.'
