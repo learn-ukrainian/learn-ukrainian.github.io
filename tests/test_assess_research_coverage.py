@@ -8,6 +8,9 @@ from unittest.mock import patch
 
 import pytest
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
+VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from assess_research import _coverage_for_track
@@ -73,8 +76,8 @@ class TestCoverageCliIntegration:
     def test_coverage_json_is_valid(self):
         """--coverage --json produces valid JSON with expected structure."""
         result = subprocess.run(
-            [sys.executable, "scripts/assess_research.py", "a1", "--coverage", "--json"],
-            capture_output=True, text=True, timeout=30,
+            [str(VENV_PYTHON), str(REPO_ROOT / "scripts/assess_research.py"), "a1", "--coverage", "--json"],
+            capture_output=True, text=True, timeout=30, cwd=REPO_ROOT,
         )
         assert result.returncode == 0
         data = json.loads(result.stdout)
@@ -93,16 +96,16 @@ class TestCoverageCliIntegration:
         particular coverage snapshot.
         """
         probe = subprocess.run(
-            [sys.executable, "scripts/assess_research.py", "a1", "--coverage", "--json"],
-            capture_output=True, text=True, timeout=30,
+            [str(VENV_PYTHON), str(REPO_ROOT / "scripts/assess_research.py"), "a1", "--coverage", "--json"],
+            capture_output=True, text=True, timeout=30, cwd=REPO_ROOT,
         )
         assert probe.returncode == 0
         data = json.loads(probe.stdout)
         expected_rc = 0 if not data.get("gaps") else 1
 
         strict = subprocess.run(
-            [sys.executable, "scripts/assess_research.py", "a1", "--coverage", "--strict"],
-            capture_output=True, text=True, timeout=30,
+            [str(VENV_PYTHON), str(REPO_ROOT / "scripts/assess_research.py"), "a1", "--coverage", "--strict"],
+            capture_output=True, text=True, timeout=30, cwd=REPO_ROOT,
         )
         assert strict.returncode == expected_rc, (
             f"--strict exited {strict.returncode} with "
@@ -112,8 +115,8 @@ class TestCoverageCliIntegration:
     def test_all_coverage_json(self):
         """--all --coverage --json produces valid JSON."""
         result = subprocess.run(
-            [sys.executable, "scripts/assess_research.py", "--all", "--coverage", "--json"],
-            capture_output=True, text=True, timeout=30,
+            [str(VENV_PYTHON), str(REPO_ROOT / "scripts/assess_research.py"), "--all", "--coverage", "--json"],
+            capture_output=True, text=True, timeout=30, cwd=REPO_ROOT,
         )
         assert result.returncode == 0
         data = json.loads(result.stdout)

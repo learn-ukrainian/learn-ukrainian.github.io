@@ -7,11 +7,12 @@ Scrapes texts organized into waves 5-10 by source page category.
 """
 
 import subprocess
-import sys
 import time
 from pathlib import Path
 
 BASE = "http://izbornyk.org.ua"
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 
 # ══════════════════════════════════════════════════════════════════════
 # Wave 5: Old Ukrainian Literature (inoldlit.htm)
@@ -347,7 +348,7 @@ def scrape_text(text: dict, wave_num: int, dry_run: bool = False) -> int:
         return 0
 
     cmd = [
-        sys.executable, "scripts/rag/scrape_litopys.py",
+        str(VENV_PYTHON), str(PROJECT_ROOT / "scripts" / "rag" / "scrape_litopys.py"),
         "--url", text["url"],
         "--work", text["work"],
         "--author", text["author"],

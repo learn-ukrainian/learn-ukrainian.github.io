@@ -33,6 +33,8 @@ from ._db import get_db, get_session, set_session
 from ._messaging import acknowledge, send_message
 from ._prompts import build_claude_prompt
 
+VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
+
 
 def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query",
                data: str | None = None, new_session: bool = False,
@@ -278,7 +280,7 @@ def _launch_claude_background(msg, message_id, new_session):
 
     try:
         bridge_cmd = [
-            sys.executable, str(Path(__file__).parent / "__main__.py"),
+            str(VENV_PYTHON), str(Path(__file__).parent / "__main__.py"),
             "process-claude", str(message_id),
             "--no-timeout"
         ]

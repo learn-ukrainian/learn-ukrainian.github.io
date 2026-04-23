@@ -42,6 +42,8 @@ from yaml_activities import (
     ActivityParser,
 )
 
+VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+
 
 def detect_pipeline_info(level_dir: Path, slug: str) -> tuple[str | None, str | None]:
     """Detect pipeline version and build status from orchestration dir.
@@ -578,7 +580,7 @@ def main():
         print('\n' + '=' * 50)
         print('Running MDX validation...\n')
         import subprocess
-        validate_args = [sys.executable, str(SCRIPT_DIR / 'validate_mdx.py'), lang_pair]
+        validate_args = [str(VENV_PYTHON), str(SCRIPT_DIR / 'validate_mdx.py'), lang_pair]
         if target_level:
             validate_args.append(target_level)
         if target_module:
