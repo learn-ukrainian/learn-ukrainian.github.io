@@ -27,6 +27,35 @@ sys.path.insert(0, os.path.join(_project_root, "scripts"))
 from wiki.source_attribution import connect_sources_db, resolve_chunk_attribution_any_corpus_with_conn
 from wiki.sources_schema import extract_short_citation_ids, load_sources_registry
 
+
+def _sources_db_has_required_tables() -> bool:
+    """Return True if sources.db is populated enough for this invariant.
+
+    CI doesn't ship sources.db (it's a large generated data file, not
+    committed), so these tests can only run in environments with a
+    populated DB — e.g. a developer's main checkout after ingestion.
+    We check for the ``textbook_sections`` table specifically because
+    every resolution path in this test ultimately hits it.
+    """
+    try:
+        with connect_sources_db() as conn:
+            row = conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='textbook_sections' LIMIT 1"
+            ).fetchone()
+            return row is not None
+    except sqlite3.Error:
+        return False
+
+
+if not _sources_db_has_required_tables():
+    pytest.skip(
+        "sources.db not populated in this environment (CI-normal); "
+        "citation resolution invariant requires a full DB. "
+        "Run locally after ingestion to exercise this test.",
+        allow_module_level=True,
+    )
+
+
 _SOURCES_SECTION_BLOCK_RE = re.compile(r"^## Джерела.*?(?=^## |\Z)", re.MULTILINE | re.DOTALL)
 _TEXTBOOK_SECTION_RE = re.compile(r"_s(\d+)$")
 _CHUNK_ROW_RE = re.compile(r"_c(\d+)$")
