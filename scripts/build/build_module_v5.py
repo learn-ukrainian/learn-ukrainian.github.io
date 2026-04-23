@@ -158,7 +158,7 @@ def preflight(args: argparse.Namespace) -> ModuleContext:
 
     # Per-phase Claude model
     _is_seminar = ctx.track in SEMINAR_TRACKS or ctx.track in PRO_TRACKS
-    _default_gen_model = "claude-opus-4-6" if _is_seminar else CLAUDE_MODEL_ACTIVITIES
+    _default_gen_model = "claude-opus-4-7" if _is_seminar else CLAUDE_MODEL_ACTIVITIES
     ctx.claude_model_A = getattr(args, "claude_model_A", None) or _default_gen_model  # type: ignore[attr-defined]
     ctx.claude_model_B = getattr(args, "claude_model_B", None) or CLAUDE_MODEL_CONTENT  # type: ignore[attr-defined]
     ctx.claude_model_C = getattr(args, "claude_model_C", None) or _default_gen_model  # type: ignore[attr-defined]
@@ -524,11 +524,11 @@ def main() -> int:
     parser.add_argument("--claude-model-A", type=str, default=None, dest="claude_model_A",
                         help="Claude model for research")
     parser.add_argument("--claude-model-B", type=str, default=None, dest="claude_model_B",
-                        help="Claude model for content (default: claude-opus-4-6)")
+                        help="Claude model for content (default: claude-opus-4-7)")
     parser.add_argument("--claude-model-C", type=str, default=None, dest="claude_model_C",
                         help="Claude model for activities")
     parser.add_argument("--claude-model-D", type=str, default=None, dest="claude_model_D",
-                        help="Claude model for review (default: claude-opus-4-6)")
+                        help="Claude model for review (default: claude-opus-4-7)")
 
     # Tuning
     parser.add_argument("--stop-before", type=str, default=None, dest="stop_before",

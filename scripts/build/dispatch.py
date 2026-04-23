@@ -251,6 +251,7 @@ def _save_dispatch_log(
     agent: str,
     *,
     model: str | None = None,
+    effort: str | None = None,
     prompt_chars: int = 0,
     response_chars: int = 0,
     stderr: str = "",
@@ -283,6 +284,7 @@ def _save_dispatch_log(
         "phase": phase,
         "agent": agent,
         "model": model,
+        "effort": effort,
         "ok": ok,
         "returncode": returncode,
         "prompt_chars": prompt_chars,
@@ -368,9 +370,8 @@ def dispatch_agent(
     Returns:
         (success, stdout_text)
 
-    Migration note: Codex and Gemini branches are routed through
-    ``scripts.agent_runtime.runner.invoke()`` (Phase 3 of #1184).
-    Claude branch remains on the legacy subprocess path until Phase 5.
+    Migration note: Codex, Gemini, and Claude are all routed through
+    ``scripts.agent_runtime.runner.invoke()``.
     """
     is_gemini = agent.startswith("gemini")
     is_gemma_local = agent.startswith("gemma-local")
@@ -467,6 +468,7 @@ def _dispatch_claude_via_runtime(
         else None
     )
 
+    claude_effort = "xhigh"
     t0 = time.monotonic()
     call_start = datetime.now().astimezone()
     try:
@@ -483,6 +485,7 @@ def _dispatch_claude_via_runtime(
             tool_config=tool_config,
             entrypoint="dispatch",
             hard_timeout=timeout,
+            effort=claude_effort,  # postmortem 2026-04-23: pin explicitly, never inherit default
             # Stall budget is generous: Gemini/Claude CAN reasonably go
             # silent for 5+ minutes during long reasoning bursts (especially
             # skeleton + review phases). 600s = 10 min. The liveness-file
@@ -497,6 +500,7 @@ def _dispatch_claude_via_runtime(
         _save_dispatch_log(
             orch_dir, phase, agent_label,
             model=model,
+            effort=claude_effort,
             prompt_chars=len(prompt),
             response_chars=len(result.response),
             stderr=result.stderr_excerpt or "",
@@ -514,6 +518,7 @@ def _dispatch_claude_via_runtime(
         _save_dispatch_log(
             orch_dir, phase, agent_label,
             model=model,
+            effort=claude_effort,
             prompt_chars=len(prompt), response_chars=0,
             stderr=f"RateLimitedError: {exc}", returncode=None,
             duration_s=elapsed, ok=False, prompt=prompt,
@@ -525,6 +530,7 @@ def _dispatch_claude_via_runtime(
         _save_dispatch_log(
             orch_dir, phase, agent_label,
             model=model,
+            effort=claude_effort,
             prompt_chars=len(prompt), response_chars=0,
             stderr=f"{type(exc).__name__}: {exc}", returncode=None,
             duration_s=elapsed, ok=False, prompt=prompt,

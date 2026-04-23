@@ -74,6 +74,22 @@ def _clear_state():
     _reset_rate_limit_cache_for_tests()
 
 
+@pytest.fixture(autouse=True)
+def _stub_claude_cli_version_gate(monkeypatch, request):
+    """Keep Claude adapter tests deterministic unless a test probes the gate."""
+    from agent_runtime.adapters import claude as claude_adapter_mod
+
+    claude_adapter_mod._probe_claude_cli_version.cache_clear()
+    if request.node.name != "test_claude_adapter_rejects_old_cli_version":
+        monkeypatch.setattr(
+            claude_adapter_mod,
+            "_ensure_supported_claude_cli_version",
+            lambda _cmd_prefix: (2, 1, 116),
+        )
+    yield
+    claude_adapter_mod._probe_claude_cli_version.cache_clear()
+
+
 # ---------------------------------------------------------------------------
 # Registry + adapter loading
 # ---------------------------------------------------------------------------
@@ -2310,6 +2326,7 @@ def test_gemini_liveness_paths_missing_dir_returns_empty(tmp_path, monkeypatch):
 def test_claude_adapter_attributes():
     adapter = ClaudeAdapter()
     assert adapter.name == "claude"
+    assert adapter.default_model == "claude-opus-4-7"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 
@@ -2446,6 +2463,33 @@ def test_claude_adapter_no_bare_when_session_id_passed(tmp_path, monkeypatch):
     )
     assert "--bare" not in plan.cmd
     assert "--resume" in plan.cmd
+
+
+def test_claude_adapter_rejects_old_cli_version(tmp_path):
+    from agent_runtime.adapters import claude as claude_adapter_mod
+
+    claude_adapter_mod._probe_claude_cli_version.cache_clear()
+    adapter = ClaudeAdapter()
+    with patch(
+        "agent_runtime.adapters.claude.subprocess.run",
+        return_value=subprocess.CompletedProcess(
+            args=["claude", "--version"],
+            returncode=0,
+            stdout="2.1.115\n",
+            stderr="",
+        ),
+    ):
+        with pytest.raises(RuntimeError, match=r"Claude CLI < 2\.1\.116"):
+            adapter.build_invocation(
+                prompt="hello",
+                mode="read-only",
+                cwd=tmp_path,
+                model=None,
+                task_id=None,
+                session_id=None,
+                tool_config={"cmd_prefix": ["claude"]},
+            )
+    claude_adapter_mod._probe_claude_cli_version.cache_clear()
 
 
 def test_claude_parse_response_success():

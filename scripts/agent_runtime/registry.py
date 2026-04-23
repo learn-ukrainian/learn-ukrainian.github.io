@@ -50,7 +50,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "claude": {
         "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
-        "default_model": "claude-opus-4-6",
+        "default_model": "claude-opus-4-7",
         "cost_tier": "high",
         "capabilities": frozenset({
             "architecture",

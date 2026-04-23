@@ -955,7 +955,7 @@ def _rescore_post_fix(ctx: ModuleContext) -> None:
 
         ok, raw = dispatch_claude_phase(
             prompt_path, "Post-fix scoring",
-            model="claude-opus-4-6", timeout=300,
+            model="claude-opus-4-7", timeout=300,
         )
         prompt_path.unlink(missing_ok=True)
 
@@ -981,7 +981,7 @@ def _rescore_post_fix(ctx: ModuleContext) -> None:
         review_text = review_path.read_text("utf-8")
         post_fix_section = (
             f"\n\n---\n\n## Post-Fix Re-Score (automated)\n\n"
-            f"**Scored by:** claude-opus-4-6 (on fixed content)\n"
+            f"**Scored by:** claude-opus-4-7 (on fixed content)\n"
             f"**Overall Score:** {overall}/10\n"
             f"**Verdict:** {verdict}\n\n"
             f"| Dimension | Score |\n|-----------|-------|\n"
