@@ -69,9 +69,30 @@ _DIALOGUE_SECTION_KEYWORDS = {
 }
 
 
+#: Combining marks that form part of Cyrillic letters (NOT stress marks).
+#: Under NFKD decomposition:
+#:   й (U+0439) → и (U+0438) + U+0306 combining short-stroke
+#:   ї (U+0457) → і (U+0456) + U+0308 combining diaeresis
+#:   Й (U+0419) → И (U+0418) + U+0306
+#:   Ї (U+0407) → І (U+0406) + U+0308
+#: If we drop these combiners the tokens get CORRUPTED: "білий" → "білии",
+#: "країна" → "краина", "жовтий" → "жовтии". The contract-compliance
+#: check then fails because the registered anchor term ("білий") never
+#: matches the tokenizer-normalized form. Preserve these combiners, then
+#: recompose via NFC so the Cyrillic letter comes back as a single
+#: codepoint. Other combiners (e.g. acute stress U+0301 on vowels) are
+#: still stripped — that's the intent of normalization for matching.
+_CYRILLIC_LETTER_COMBINERS: frozenset[str] = frozenset({"̆", "̈"})
+
+
 def _tokenize(text: str) -> set[str]:
     normalized = unicodedata.normalize("NFKD", text or "")
-    text = "".join(ch for ch in normalized if not unicodedata.combining(ch))
+    kept: list[str] = []
+    for ch in normalized:
+        if unicodedata.combining(ch) and ch not in _CYRILLIC_LETTER_COMBINERS:
+            continue
+        kept.append(ch)
+    text = unicodedata.normalize("NFC", "".join(kept))
     text = re.sub(r"[-_/.:]+", " ", text)
     return {
         token.lower()
