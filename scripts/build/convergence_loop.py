@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 import yaml
+from build.alignment_manifest import compose_manifest
 from build.finding_normalizer import normalize_findings
 from build.finding_topology import classify_topology
 from build.module_memory import (
@@ -493,11 +494,16 @@ def _persistent_finding_payload(
 
 
 def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
+    current_manifest = compose_manifest(
+        level=context.level,
+        slug=context.slug,
+    )
     memory, _invalidated = load_module_memory(
         context.memory_path,
         expected_plan_hash=context.plan_hash,
         expected_plan_version=context.plan_version,
         expected_sources_hash=context.sources_hash,
+        current_manifest=current_manifest,
     )
     current_writer = context.writer
     attempted_tiers: set[int] = set()
@@ -530,7 +536,7 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
     round_record["prioritized_findings"] = list(prioritized_findings)
     round_record["tier"] = 0
     rounds.append(round_record)
-    save_module_memory(context.memory_path, memory)
+    save_module_memory(context.memory_path, memory, current_manifest=current_manifest)
     if observation.passed:
         return ConvergenceRunResult(
             terminal="pass",
@@ -682,7 +688,7 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
             round_record["prioritized_findings"] = list(prioritized_findings)
             round_record["tier"] = decision.tier
             rounds.append(round_record)
-            save_module_memory(context.memory_path, memory)
+            save_module_memory(context.memory_path, memory, current_manifest=current_manifest)
             previous_round = {
                 "tier": decision.tier,
                 "strategy": decision.strategy,
@@ -715,7 +721,7 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
             round_record["prioritized_findings"] = list(decision.prioritized_findings)
             round_record["tier"] = decision.tier
             rounds.append(round_record)
-            save_module_memory(context.memory_path, memory)
+            save_module_memory(context.memory_path, memory, current_manifest=current_manifest)
             break
 
         previous_round = {
@@ -756,7 +762,7 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
         round_record["prioritized_findings"] = list(prioritized_findings)
         round_record["tier"] = decision.tier
         rounds.append(round_record)
-        save_module_memory(context.memory_path, memory)
+        save_module_memory(context.memory_path, memory, current_manifest=current_manifest)
 
         if observation.passed:
             return ConvergenceRunResult(

@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 import yaml
+from build.alignment_manifest import manifest_hash, stamp_artifact
 
 PLAN_LEVEL_ERROR_CLASSES = {
     "vocab_density",
@@ -33,6 +35,8 @@ WRITER_ADDRESSABLE_ERROR_CLASSES = {
     "surzhyk",
     "word_budget",
 }
+
+logger = logging.getLogger(__name__)
 
 
 def module_memory_path(curriculum_root: Path, level: str, slug: str) -> Path:
@@ -77,14 +81,12 @@ def _write_yaml_atomic(path: Path, data: Any) -> None:
 
 def _default_memory(
     *,
-    plan_hash: str | None = None,
+    alignment_manifest_hash: str | None = None,
     plan_version: int | None = None,
-    sources_hash: str | None = None,
 ) -> dict[str, Any]:
     return {
-        "plan_hash": plan_hash or "",
+        "alignment_manifest_hash": alignment_manifest_hash or "",
         "plan_version": int(plan_version or 0),
-        "sources_hash": sources_hash or "",
         "constraints": [],
         "history": [],
         "events": [],
@@ -270,6 +272,7 @@ def load_module_memory(
     expected_plan_hash: str | None = None,
     expected_plan_version: int | None = None,
     expected_sources_hash: str | None = None,
+    current_manifest: dict[str, Any] | None = None,
     reset: bool = False,
 ) -> tuple[dict[str, Any], bool]:
     if reset:
@@ -281,55 +284,82 @@ def load_module_memory(
     else:
         memory = {}
 
+    stored_hash = str(memory.get("alignment_manifest_hash") or "")
+    current_hash = manifest_hash(current_manifest) if current_manifest is not None else ""
     merged = _default_memory(
-        plan_hash=memory.get("plan_hash"),
+        alignment_manifest_hash=stored_hash,
         plan_version=memory.get("plan_version"),
-        sources_hash=memory.get("sources_hash"),
     )
     merged["constraints"] = list(memory.get("constraints") or [])
     merged["history"] = list(memory.get("history") or [])
     merged["events"] = list(memory.get("events") or [])
 
     invalidated = False
-    if (
-        expected_plan_hash
-        and merged["plan_hash"]
-        and merged["plan_hash"] != expected_plan_hash
-    ):
+    legacy_payload = bool(current_hash) and not stored_hash and bool(
+        memory.get("plan_hash") or memory.get("sources_hash")
+    )
+    if legacy_payload:
+        invalidated = True
+        merged["constraints"] = []
+        logger.info(
+            "Migrating legacy module memory without alignment_manifest_hash at %s; invalidating constraints",
+            path,
+        )
+        merged["events"].append(
+            {
+                "type": "alignment_manifest_migration_invalidation",
+                "ts": datetime.now(tz=UTC).isoformat(),
+                "previous_plan_hash": str(memory.get("plan_hash") or ""),
+                "previous_sources_hash": str(memory.get("sources_hash") or ""),
+                "current_hash": current_hash,
+            }
+        )
+    elif current_hash and stored_hash and stored_hash != current_hash:
         invalidated = True
         merged["constraints"] = []
         merged["events"].append(
             {
-                "type": "plan_hash_invalidation",
+                "type": "alignment_manifest_invalidation",
                 "ts": datetime.now(tz=UTC).isoformat(),
-                "previous_plan_hash": merged["plan_hash"],
-                "current_plan_hash": expected_plan_hash,
+                "previous_hash": stored_hash,
+                "current_hash": current_hash,
             }
         )
 
-    if expected_plan_hash is not None:
-        merged["plan_hash"] = expected_plan_hash
+    if current_hash:
+        merged["alignment_manifest_hash"] = current_hash
     if expected_plan_version is not None:
         merged["plan_version"] = int(expected_plan_version)
-    if expected_sources_hash is not None:
-        merged["sources_hash"] = expected_sources_hash
 
-    if not path.exists() or invalidated:
-        save_module_memory(path, merged)
+    if (
+        not path.exists()
+        or invalidated
+        or (current_hash and stored_hash != current_hash)
+    ):
+        save_module_memory(path, merged, current_manifest=current_manifest)
 
     return merged, invalidated
 
 
-def save_module_memory(path: Path, memory: dict[str, Any]) -> None:
+def save_module_memory(
+    path: Path,
+    memory: dict[str, Any],
+    *,
+    current_manifest: dict[str, Any] | None = None,
+) -> None:
     normalized = _default_memory(
-        plan_hash=str(memory.get("plan_hash") or ""),
+        alignment_manifest_hash=(
+            manifest_hash(current_manifest)
+            if current_manifest is not None
+            else str(memory.get("alignment_manifest_hash") or "")
+        ),
         plan_version=int(memory.get("plan_version") or 0),
-        sources_hash=str(memory.get("sources_hash") or ""),
     )
     normalized["constraints"] = list(memory.get("constraints") or [])
     normalized["history"] = list(memory.get("history") or [])
     normalized["events"] = list(memory.get("events") or [])
-    _write_yaml_atomic(path, normalized)
+    payload = stamp_artifact(normalized, current_manifest) if current_manifest is not None else normalized
+    _write_yaml_atomic(path, payload)
 
 
 def append_history(memory: dict[str, Any], entry: dict[str, Any]) -> dict[str, Any]:

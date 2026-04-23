@@ -13,11 +13,14 @@ SCRIPTS_DIR = Path(__file__).resolve().parent.parent / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from build import v6_build
+from build.alignment_manifest import manifest_hash
 
 
 def test_save_v6_state_uses_atomic_replace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    current_manifest = {"plan_hash": "state-atomic"}
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build, "_current_alignment_manifest", lambda level, slug: current_manifest)
     plan_path = curriculum_root / "plans" / "a2" / "a2-bridge.yaml"
     plan_path.parent.mkdir(parents=True, exist_ok=True)
     plan_path.write_text("module: a2-bridge\nlevel: A2\ncontent_outline: []\n", "utf-8")
@@ -38,6 +41,7 @@ def test_save_v6_state_uses_atomic_replace(tmp_path: Path, monkeypatch: pytest.M
 
     assert state["mode"] == "v6"
     assert state["phases"]["check"]["status"] == "complete"
+    assert state["alignment_manifest"]["composite_hash"] == manifest_hash(current_manifest)
     assert replace_calls == [(replace_calls[0][0], state_path)]
     assert replace_calls[0][0].parent == state_path.parent
     assert replace_calls[0][0].suffix == ".tmp"
@@ -49,7 +53,9 @@ def test_save_v6_state_stores_plan_hash_for_tracked_writer_phases(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    current_manifest = {"plan_hash": "state-write"}
     monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(v6_build, "_current_alignment_manifest", lambda level, slug: current_manifest)
 
     plan_path = curriculum_root / "plans" / "a2" / "a2-bridge.yaml"
     plan_path.parent.mkdir(parents=True, exist_ok=True)
@@ -64,6 +70,7 @@ def test_save_v6_state_stores_plan_hash_for_tracked_writer_phases(
 
     assert state["phases"]["write"]["status"] == "complete"
     assert state["phases"]["write"]["plan_hash"] == v6_build._current_plan_hash("a2", "a2-bridge")
+    assert state["alignment_manifest"]["composite_hash"] == manifest_hash(current_manifest)
 
 
 def test_save_v6_state_raises_on_corrupt_existing_state(

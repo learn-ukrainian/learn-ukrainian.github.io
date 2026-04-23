@@ -3,11 +3,13 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
+import build.convergence_loop as convergence_loop
 from build import module_memory, v6_build
 from build.convergence_loop import (
     ConvergenceContext,
@@ -18,6 +20,15 @@ from build.convergence_loop import (
     run_convergence_loop,
 )
 from build.module_memory import module_memory_path
+
+
+@pytest.fixture(autouse=True)
+def stub_alignment_manifest(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        convergence_loop,
+        "compose_manifest",
+        lambda *, level, slug: {"level": level, "slug": slug},
+    )
 
 
 def _finding(

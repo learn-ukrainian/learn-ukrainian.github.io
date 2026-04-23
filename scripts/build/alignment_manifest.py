@@ -6,9 +6,11 @@ import ast
 import copy
 import functools
 import hashlib
+import inspect
 import json
 import re
 import sqlite3
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -18,22 +20,135 @@ from build.phases import wiki_compressor
 
 from audit import config as audit_config
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
-SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
-CANONICAL_ANCHORS_PATH = PROJECT_ROOT / "data" / "canonical_anchors.yaml"
-DECISIONS_PATH = PROJECT_ROOT / "docs" / "decisions" / "decisions.yaml"
-PHASE_TEMPLATES_ROOT = PROJECT_ROOT / "scripts" / "build" / "phases"
-CLAUDE_PHASES_ROOT = PROJECT_ROOT / ".claude" / "phases" / "claude"
-GEMINI_PHASES_ROOT = PROJECT_ROOT / ".gemini" / "phases" / "gemini"
-V6_BUILD_PATH = PROJECT_ROOT / "scripts" / "build" / "v6_build.py"
-
 _ACTIVE_DECISION_SCOPES = {"pipeline", "architecture"}
 _TEMPLATE_KEY_RE = re.compile(r"[^A-Za-z0-9]+")
+_PATH_ATTRS = {
+    "PROJECT_ROOT",
+    "CURRICULUM_ROOT",
+    "SOURCES_DB_PATH",
+    "CANONICAL_ANCHORS_PATH",
+    "DECISIONS_PATH",
+    "PHASE_TEMPLATES_ROOT",
+    "CLAUDE_PHASES_ROOT",
+    "GEMINI_PHASES_ROOT",
+    "V6_BUILD_PATH",
+}
+
+
+def _default_project_root() -> Path:
+    return Path(__file__).resolve().parents[2]
+
+
+def _default_v6_build_path() -> Path:
+    return _default_project_root() / "scripts" / "build" / "v6_build.py"
+
+
+def _static_default_attr(name: str) -> Any:
+    if name == "PROJECT_ROOT":
+        return _default_project_root()
+    if name == "CURRICULUM_ROOT":
+        return _default_project_root() / "curriculum" / "l2-uk-en"
+    if name == "SOURCES_DB_PATH":
+        return _default_project_root() / "data" / "sources.db"
+    if name == "CANONICAL_ANCHORS_PATH":
+        return _default_project_root() / "data" / "canonical_anchors.yaml"
+    if name == "DECISIONS_PATH":
+        return _default_project_root() / "docs" / "decisions" / "decisions.yaml"
+    if name == "PHASE_TEMPLATES_ROOT":
+        return _default_project_root() / "scripts" / "build" / "phases"
+    if name == "CLAUDE_PHASES_ROOT":
+        return _default_project_root() / ".claude" / "phases" / "claude"
+    if name == "GEMINI_PHASES_ROOT":
+        return _default_project_root() / ".gemini" / "phases" / "gemini"
+    if name == "V6_BUILD_PATH":
+        return _default_v6_build_path()
+    raise AttributeError(f"module 'alignment_manifest' has no attribute {name!r}")
+
+
+def _v6_build_module() -> Any | None:
+    v6_build_path = _default_v6_build_path().resolve()
+
+    frame = inspect.currentframe()
+    while frame is not None:
+        frame = frame.f_back
+        if frame is None:
+            break
+        module_file = frame.f_globals.get("__file__")
+        if module_file is None:
+            continue
+        if Path(module_file).resolve() != v6_build_path:
+            continue
+        module_name = frame.f_globals.get("__name__")
+        module = sys.modules.get(str(module_name))
+        if module is not None:
+            return module
+
+    for module_name in ("build.v6_build", "scripts.build.v6_build", "v6_build"):
+        module = sys.modules.get(module_name)
+        if module is not None:
+            return module
+
+    for module in sys.modules.values():
+        module_file = getattr(module, "__file__", None)
+        if module_file is not None and Path(module_file).resolve() == v6_build_path:
+            return module
+    return None
+
+
+def _resolve_attr(name: str) -> Any:
+    v6_build = _v6_build_module()
+
+    if name == "PROJECT_ROOT":
+        root = getattr(v6_build, "PROJECT_ROOT", None) if v6_build is not None else None
+        return Path(root) if root is not None else _default_project_root()
+    if name == "CURRICULUM_ROOT":
+        root = getattr(v6_build, "CURRICULUM_ROOT", None) if v6_build is not None else None
+        return Path(root) if root is not None else _resolve_attr("PROJECT_ROOT") / "curriculum" / "l2-uk-en"
+    if name == "SOURCES_DB_PATH":
+        return _resolve_attr("PROJECT_ROOT") / "data" / "sources.db"
+    if name == "CANONICAL_ANCHORS_PATH":
+        return _resolve_attr("PROJECT_ROOT") / "data" / "canonical_anchors.yaml"
+    if name == "DECISIONS_PATH":
+        return _resolve_attr("PROJECT_ROOT") / "docs" / "decisions" / "decisions.yaml"
+    if name == "PHASE_TEMPLATES_ROOT":
+        root = getattr(v6_build, "PHASES_DIR", None) if v6_build is not None else None
+        return (
+            Path(root)
+            if root is not None
+            else _resolve_attr("PROJECT_ROOT") / "scripts" / "build" / "phases"
+        )
+    if name == "CLAUDE_PHASES_ROOT":
+        return _resolve_attr("PROJECT_ROOT") / ".claude" / "phases" / "claude"
+    if name == "GEMINI_PHASES_ROOT":
+        return _resolve_attr("PROJECT_ROOT") / ".gemini" / "phases" / "gemini"
+    if name == "V6_BUILD_PATH":
+        module_file = getattr(v6_build, "__file__", None) if v6_build is not None else None
+        return (
+            Path(module_file).resolve()
+            if module_file is not None
+            else _default_v6_build_path()
+        )
+    if name == "REVIEW_TARGET_SCORE":
+        return _review_target_score()
+    raise AttributeError(f"module 'alignment_manifest' has no attribute {name!r}")
+
+
+def _module_attr(name: str) -> Any:
+    if name in globals():
+        value = globals()[name]
+        if name in _PATH_ATTRS and value == _static_default_attr(name):
+            return _resolve_attr(name)
+        return value
+    return _resolve_attr(name)
 
 
 def _load_v6_build_constant(name: str) -> Any:
-    module = ast.parse(V6_BUILD_PATH.read_text("utf-8"))
+    v6_build = _v6_build_module()
+    if v6_build is not None and hasattr(v6_build, name):
+        return getattr(v6_build, name)
+
+    v6_build_path = _module_attr("V6_BUILD_PATH")
+    module = ast.parse(v6_build_path.read_text("utf-8"))
     for node in module.body:
         if isinstance(node, ast.Assign):
             targets = [target for target in node.targets if isinstance(target, ast.Name)]
@@ -46,7 +161,7 @@ def _load_v6_build_constant(name: str) -> Any:
             and node.value is not None
         ):
             return ast.literal_eval(node.value)
-    raise RuntimeError(f"Could not load {name} from {V6_BUILD_PATH}")
+    raise RuntimeError(f"Could not load {name} from {v6_build_path}")
 
 
 @functools.lru_cache(maxsize=1)
@@ -66,17 +181,13 @@ def _review_target_score() -> float:
 def __getattr__(name: str) -> Any:
     """PEP 562 module-level lazy attribute.
 
-    Preserves the `alignment_manifest.REVIEW_TARGET_SCORE` access
-    shape used by `tests/test_alignment_manifest.py::manifest_fixture`
-    (which monkeypatches this value to test threshold-change
-    invalidation). First real access triggers `_review_target_score()`
-    and caches the result as a real module attribute, so subsequent
-    accesses — including `monkeypatch.setattr` — see a normal attribute.
+    Preserves the `alignment_manifest.<CONST>` access shape used by
+    tests without pinning repo paths at import time. Callers that
+    monkeypatch this module still override the returned values by
+    assigning real module attributes.
     """
-    if name == "REVIEW_TARGET_SCORE":
-        value = _review_target_score()
-        globals()[name] = value
-        return value
+    if name in _PATH_ATTRS or name == "REVIEW_TARGET_SCORE":
+        return _resolve_attr(name)
     raise AttributeError(f"module 'alignment_manifest' has no attribute {name!r}")
 
 
@@ -108,7 +219,7 @@ def _plan_path(level: str, slug: str) -> Path:
     # Canonicalize `level` so callers can pass "A1" or "B2-Pro" without
     # breaking on case-sensitive filesystems. Flagged by gemini-review on
     # PR #1468.
-    return CURRICULUM_ROOT / "plans" / level.lower() / f"{slug}.yaml"
+    return _module_attr("CURRICULUM_ROOT") / "plans" / level.lower() / f"{slug}.yaml"
 
 
 def _canonical_plan_hash(level: str, slug: str) -> str:
@@ -154,13 +265,14 @@ def _sqlite_table_snapshot(connection: sqlite3.Connection, table_name: str) -> d
 
 
 def _sources_hash() -> str:
-    if not SOURCES_DB_PATH.exists():
+    sources_db_path = _module_attr("SOURCES_DB_PATH")
+    if not sources_db_path.exists():
         return _sha256_bytes(_stable_json_bytes(()))
 
     # `Path.as_uri()` produces a cross-platform-safe `file://…` URI;
     # raw f-string interpolation leaks backslashes on Windows. Flagged
     # by gemini-review on PR #1468.
-    db_uri = f"{SOURCES_DB_PATH.as_uri()}?mode=ro"
+    db_uri = f"{sources_db_path.as_uri()}?mode=ro"
     with sqlite3.connect(db_uri, uri=True) as connection:
         manifest_rows = tuple(
             _sqlite_table_snapshot(connection, table_name)
@@ -196,19 +308,34 @@ def _template_hashes_from_root(
 def _template_hashes() -> dict[str, str]:
     template_hashes: dict[str, str] = {}
     template_hashes.update(
-        _template_hashes_from_root(CLAUDE_PHASES_ROOT, prefix="claude", include_all_files=True)
+        _template_hashes_from_root(
+            _module_attr("CLAUDE_PHASES_ROOT"),
+            prefix="claude",
+            include_all_files=True,
+        )
     )
     template_hashes.update(
-        _template_hashes_from_root(GEMINI_PHASES_ROOT, prefix="gemini", include_all_files=True)
+        _template_hashes_from_root(
+            _module_attr("GEMINI_PHASES_ROOT"),
+            prefix="gemini",
+            include_all_files=True,
+        )
     )
     template_hashes.update(
-        _template_hashes_from_root(PHASE_TEMPLATES_ROOT, prefix="", include_all_files=False)
+        _template_hashes_from_root(
+            _module_attr("PHASE_TEMPLATES_ROOT"),
+            prefix="",
+            include_all_files=False,
+        )
     )
     return dict(sorted(template_hashes.items()))
 
 
 def _canonical_anchor_hash() -> str:
-    return _sha256_bytes(CANONICAL_ANCHORS_PATH.read_bytes())
+    canonical_anchors_path = _module_attr("CANONICAL_ANCHORS_PATH")
+    if not canonical_anchors_path.exists():
+        return _sha256_bytes(b"")
+    return _sha256_bytes(canonical_anchors_path.read_bytes())
 
 
 def _resolve_level_config_key(level: str) -> str:
@@ -226,15 +353,16 @@ def _threshold_snapshot(level: str) -> dict[str, Any]:
         # Access the module attribute (not the `_review_target_score()`
         # function directly) so tests can `monkeypatch.setattr` the
         # value. See `__getattr__` / `_review_target_score` docstrings.
-        "review_target_score": REVIEW_TARGET_SCORE,
+        "review_target_score": _module_attr("REVIEW_TARGET_SCORE"),
     }
 
 
 def _decisions_subset() -> list[tuple[str, str]]:
-    if not DECISIONS_PATH.exists():
+    decisions_path = _module_attr("DECISIONS_PATH")
+    if not decisions_path.exists():
         return []
 
-    payload = yaml.safe_load(DECISIONS_PATH.read_text("utf-8")) or {}
+    payload = yaml.safe_load(decisions_path.read_text("utf-8")) or {}
     decisions = payload.get("decisions") or []
     subset = [
         (str(decision["id"]), str(decision["status"]))
