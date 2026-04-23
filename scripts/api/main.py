@@ -15,6 +15,7 @@ import os
 import socket
 import subprocess
 from collections.abc import Awaitable, Callable
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from pathlib import Path
@@ -184,6 +185,16 @@ ORIENT_SECTION_SOURCES: dict[str, str] = {
 }
 
 ORIENT_SECTION_HARD_TIMEOUT_S = 5.0
+
+# Orient sync collectors use a dedicated executor instead of the loop's
+# shared default pool. This isolates cheap orient reads from unrelated
+# ``asyncio.to_thread()`` backlog elsewhere in the process, which was
+# causing false ``section_timeout_0.1s`` fallbacks for ``runtime`` under
+# the hard-timeout test path on loaded CI runners.
+_ORIENT_SYNC_EXECUTOR = ThreadPoolExecutor(
+    max_workers=8,
+    thread_name_prefix="orient-sync",
+)
 
 
 def _parse_iso_datetime(value: str | None) -> datetime | None:
@@ -488,8 +499,12 @@ async def _cached_orient_section(
                 timeout=ORIENT_SECTION_HARD_TIMEOUT_S,
             )
         else:
+            loop = asyncio.get_running_loop()
             value = await asyncio.wait_for(
-                asyncio.to_thread(collector),  # type: ignore[arg-type]
+                loop.run_in_executor(
+                    _ORIENT_SYNC_EXECUTOR,
+                    collector,  # type: ignore[arg-type]
+                ),
                 timeout=ORIENT_SECTION_HARD_TIMEOUT_S,
             )
     except TimeoutError:

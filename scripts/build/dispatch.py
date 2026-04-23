@@ -671,6 +671,7 @@ def _dispatch_via_runtime(
             return False, "", str(exc), elapsed, None
 
     if is_gemini:
+        from agent_runtime.adapters.gemini import resolve_gemini_auth_mode
         from agent_runtime.errors import (
             AgentStalledError,
             AgentTimeoutError,
@@ -681,6 +682,8 @@ def _dispatch_via_runtime(
         from batch_gemini_config import CASCADE_PER_CALL_MAX_S
 
         per_call_cap = cascade_per_call_max_s or CASCADE_PER_CALL_MAX_S
+        resolved_auth_mode = resolve_gemini_auth_mode()
+        allowed_auth_modes = ("oauth",) if resolved_auth_mode == "subscription" else ("api",)
 
         def _gemini_attempt_runner(
             rung,
@@ -820,6 +823,7 @@ def _dispatch_via_runtime(
             attempt_runner=_gemini_attempt_runner,
             logger=_log,
             sleep_fn=lambda seconds, reason: visible_sleep(seconds, reason, logger=_log),
+            allowed_auth_modes=allowed_auth_modes,
         )
         if ladder_result.ok:
             return True, ladder_result.response_text or ""

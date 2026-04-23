@@ -10,9 +10,6 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from wiki.discipline import (
-    AnchorViolation,
-    CitationViolation,
-    DisciplineReport,
     flag_anchor_violations,
     load_canonical_anchors,
     render_canonical_anchors_for_reviewer,
@@ -23,7 +20,6 @@ from wiki.discipline import (
     validate_canonical_anchors,
     validate_citation_bound,
 )
-
 
 # ═══════════════════════════════════════════════════════════════════
 # Citation bound

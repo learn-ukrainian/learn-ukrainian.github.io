@@ -25,6 +25,16 @@ def _isolate_usage_log(tmp_path):
     with patch("agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
         yield
 
+
+@pytest.fixture(autouse=True)
+def _isolate_gemini_auth_state(monkeypatch, tmp_path):
+    """Keep dispatch tests hermetic from shell env + repo-local cooldown files."""
+    monkeypatch.delenv("GEMINI_AUTH_MODE", raising=False)
+    monkeypatch.setenv(
+        "LU_GEMINI_COOLDOWN_PATH",
+        str(tmp_path / "gemini-cooldown.json"),
+    )
+
 # ---------------------------------------------------------------------------
 # Tool constants
 # ---------------------------------------------------------------------------
@@ -257,7 +267,7 @@ class TestDispatchAgent:
         assert call_kwargs["mode"] == "workspace-write"
         assert call_kwargs["model"] == "gemini-test"
         assert call_kwargs["entrypoint"] == "dispatch"
-        assert call_kwargs["tool_config"] == {"auth_mode": "api"}
+        assert call_kwargs["tool_config"] == {"auth_mode": "subscription"}
 
     @patch("build.dispatch._log")
     @patch("agent_runtime.runner.invoke")
@@ -329,8 +339,11 @@ class TestDispatchAgent:
         first_call = mock_invoke.call_args_list[0].kwargs
         second_call = mock_invoke.call_args_list[1].kwargs
         assert first_call["model"] == "gemini-3.1-pro-preview"
-        assert second_call["model"] == "gemini-3.1-pro-preview"
-        assert first_call["tool_config"] == {"mcp_server_names": ["rag"], "auth_mode": "api"}
+        assert second_call["model"] == "gemini-3-flash-preview"
+        assert first_call["tool_config"] == {
+            "mcp_server_names": ["rag"],
+            "auth_mode": "subscription",
+        }
         assert second_call["tool_config"] == {
             "mcp_server_names": ["rag"],
             "auth_mode": "subscription",

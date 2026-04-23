@@ -30,7 +30,9 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
     {
         "task_id": str,
         "agent": str,
-        "model": str | None,
+        "model": str,
+        "effort": str,
+        "cli_version": str,
         "mode": str,
         "pid": int,
         "status": "running" | "done" | "failed" | "rate_limited" | "crashed",
@@ -527,6 +529,7 @@ def _run_worker(
         RateLimitedError,
     )
     from agent_runtime.runner import invoke as runtime_invoke
+    from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
     state_path = _state_path(task_id)
 
@@ -536,6 +539,15 @@ def _run_worker(
     state = _read_state(state_path) or {}
     state["pid"] = os.getpid()
     state["status"] = "running"
+    if "cli_version" not in state:
+        start_telemetry = resolve_dispatch_start_telemetry(
+            agent_name=agent,
+            requested_model=model,
+            requested_effort=effort,
+        )
+        state.setdefault("model", start_telemetry.model)
+        state.setdefault("effort", start_telemetry.effort)
+        state.setdefault("cli_version", start_telemetry.cli_version)
     _write_state_atomic(state_path, state)
 
     cwd = Path(cwd_str)
@@ -545,6 +557,7 @@ def _run_worker(
     response = ""
     returncode: int | None = None
     rate_limited = False
+    result = None
 
     cancelled = False
     try:
@@ -626,6 +639,9 @@ def _run_worker(
             dirty_on_exit = None
 
     final_state.update({
+        "model": getattr(result, "model", final_state.get("model")),
+        "effort": getattr(result, "effort", final_state.get("effort")),
+        "cli_version": getattr(result, "cli_version", final_state.get("cli_version")),
         "status": final_status,
         "finished_at": datetime.now(UTC).isoformat(),
         "duration_s": round(duration_s, 3),
@@ -646,6 +662,9 @@ def _run_worker(
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately with the task-id."""
+    sys.path.insert(0, str(_REPO_ROOT / "scripts"))
+    from agent_runtime.telemetry import resolve_dispatch_start_telemetry
+
     task_id = args.task_id
     state_path = _state_path(task_id)
     worktree_arg = getattr(args, "worktree", None)
@@ -720,6 +739,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
     prompt = _augment_prompt_with_worktree(prompt, worktree_path)
+    start_telemetry = resolve_dispatch_start_telemetry(
+        agent_name=args.agent,
+        requested_model=args.model,
+        requested_effort=getattr(args, "effort", None),
+    )
 
     # Write initial state BEFORE forking so a fast caller can see it.
     # pid is filled in by the worker once it starts; for now we record
@@ -728,8 +752,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     initial_state = {
         "task_id": task_id,
         "agent": args.agent,
-        "model": args.model,
-        "effort": getattr(args, "effort", None),
+        "model": start_telemetry.model,
+        "effort": start_telemetry.effort,
+        "cli_version": start_telemetry.cli_version,
         "allow_merge": bool(getattr(args, "allow_merge", False)),
         "mode": args.mode,
         "cwd": cwd,
@@ -1091,6 +1116,9 @@ def cmd_list(args: argparse.Namespace) -> int:
             {
                 "task_id": state.get("task_id"),
                 "agent": state.get("agent"),
+                "model": state.get("model"),
+                "effort": state.get("effort"),
+                "cli_version": state.get("cli_version"),
                 "status": state.get("status"),
                 "started_at": state.get("started_at"),
                 "duration_s": state.get("duration_s"),

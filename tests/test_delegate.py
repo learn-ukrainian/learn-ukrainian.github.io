@@ -333,6 +333,55 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
     assert "failed to spawn" in captured.err
 
 
+def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir):
+    """Dispatch should persist model/effort/cli_version immediately."""
+    import argparse
+
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="telemetry-dispatch",
+        prompt="test",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=None,
+        hard_timeout=3600,
+        allow_merge=False,
+        effort=None,
+    )
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 12345
+        stdin = _FakeStdin()
+
+    telemetry = type(
+        "_Telemetry",
+        (),
+        {"model": "gpt-5.5", "effort": "high", "cli_version": "0.123.0"},
+    )()
+
+    with patch(
+        "agent_runtime.telemetry.resolve_dispatch_start_telemetry",
+        return_value=telemetry,
+    ), patch("delegate.subprocess.Popen", return_value=_FakeProc()):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("telemetry-dispatch"))
+    assert state is not None
+    assert state["model"] == "gpt-5.5"
+    assert state["effort"] == "high"
+    assert state["cli_version"] == "0.123.0"
+
+
 def test_cancel_refuses_terminal_status(tmp_tasks_dir, capsys):
     """Regression (Codex 2026-04-10 audit): cmd_cancel must refuse to
     signal a PID whose task is already in a terminal state. The OS may
@@ -523,6 +572,52 @@ def test_dispatch_allows_new_task_when_prior_crashed(tmp_tasks_dir, capsys):
         "parent MUST write Popen child's PID into state file immediately "
         "after spawn, before the worker gets a chance to run"
     )
+
+
+def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
+    """Worker completion should backfill runtime-resolved telemetry fields."""
+    state_path = delegate._state_path("worker-telemetry")
+    delegate._write_state_atomic(state_path, {
+        "task_id": "worker-telemetry",
+        "model": "unknown",
+        "effort": "unknown",
+        "cli_version": "unknown",
+    })
+
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "claude-opus-4-6",
+            "effort": "xhigh",
+            "cli_version": "2.1.89",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result):
+        rc = delegate._run_worker(
+            task_id="worker-telemetry",
+            agent="claude",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+        )
+
+    assert rc == 0
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["model"] == "claude-opus-4-6"
+    assert state["effort"] == "xhigh"
+    assert state["cli_version"] == "2.1.89"
 
 
 def test_dispatch_rejects_danger_without_worktree(tmp_tasks_dir, capsys):

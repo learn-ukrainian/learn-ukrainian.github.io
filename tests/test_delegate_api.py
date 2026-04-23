@@ -27,7 +27,9 @@ def _task_payload(task_id: str, **overrides) -> dict:
     payload = {
         "task_id": task_id,
         "agent": "codex",
-        "model": None,
+        "model": "gpt-5.5",
+        "effort": "high",
+        "cli_version": "0.123.0",
         "mode": "workspace-write",
         "cwd": "/tmp/repo",
         "pid": 12345,
@@ -58,6 +60,9 @@ def test_tasks_lists_state_files(tmp_path, monkeypatch):
     assert data["total"] == 2
     assert data["tasks"][0]["task_id"] == "second"
     assert data["tasks"][1]["task_id"] == "first"
+    assert data["tasks"][0]["model"] == "gpt-5.5"
+    assert data["tasks"][0]["effort"] == "high"
+    assert data["tasks"][0]["cli_version"] == "0.123.0"
 
 
 def test_tasks_status_filter(tmp_path, monkeypatch):

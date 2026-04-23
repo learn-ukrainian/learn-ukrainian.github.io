@@ -92,6 +92,9 @@ def list_delegate_tasks(
             rows.append({
                 "task_id": task.get("task_id") or path.stem,
                 "agent": task.get("agent"),
+                "model": task.get("model"),
+                "effort": task.get("effort"),
+                "cli_version": task.get("cli_version"),
                 "status": derived_status,
                 "started_at": task.get("started_at"),
                 "duration_s": task.get("duration_s"),

@@ -54,6 +54,7 @@ from .errors import (
 )
 from .registry import AGENTS, get_agent_entry
 from .result import ParseResult, Result
+from .telemetry import InvocationTelemetry, resolve_invocation_telemetry
 from .usage import has_headroom, write_record
 from .watchdog import (
     WatchdogState,
@@ -86,7 +87,9 @@ def _merge_guard_enabled(*, mode: str, env: dict[str, str]) -> bool:
 def _apply_merge_guard(*, mode: str, env: dict[str, str]) -> dict[str, str]:
     """Prepend gh/git shims and stamp env vars when merge guard is active."""
     if not _merge_guard_enabled(mode=mode, env=env):
-        return env
+        unguarded_env = dict(env)
+        unguarded_env.pop("AGENT_NO_MERGE", None)
+        return unguarded_env
 
     guarded_env = dict(env)
     original_path = guarded_env.get("PATH", "")
@@ -572,12 +575,14 @@ def _invoke_gemini_with_fallback(
     effort: str | None = None,
 ) -> Result:
     """Run Gemini through the shared model/auth fallback ladder."""
+    last_telemetry: InvocationTelemetry | None = None
 
     def _attempt_runner(
         rung: GeminiRung,
         _attempt_index: int,
         timeout_s: int | None,
     ) -> AttemptOutcome:
+        nonlocal last_telemetry
         attempt_tool_config = _build_gemini_attempt_tool_config(tool_config, rung)
         plan = adapter.build_invocation(
             prompt=prompt,
@@ -588,6 +593,12 @@ def _invoke_gemini_with_fallback(
             session_id=session_id,
             tool_config=attempt_tool_config,
             effort=effort,
+        )
+        last_telemetry = resolve_invocation_telemetry(
+            agent_name=agent_name,
+            plan=plan,
+            requested_model=rung.model,
+            requested_effort=effort,
         )
         execution = _execute_invocation_plan(
             agent_name=agent_name,
@@ -656,12 +667,17 @@ def _invoke_gemini_with_fallback(
     # Failure-path usage records should attribute the last rung we actually ran,
     # not the caller's preferred model.
     record_model = (
-        call_result.model_used
+        (last_telemetry.model if last_telemetry is not None else None)
+        or call_result.model_used
         or (
             last_attempt_record.model
             if last_attempt_record and last_attempt_record.model
             else model
         )
+    )
+    record_effort = last_telemetry.effort if last_telemetry is not None else "unknown"
+    record_cli_version = (
+        last_telemetry.cli_version if last_telemetry is not None else "unknown"
     )
     stderr_excerpt = (
         (last_attempt_record.note if last_attempt_record and last_attempt_record.note else None)
@@ -696,6 +712,8 @@ def _invoke_gemini_with_fallback(
             agent=agent_name,
             model=record_model,
             mode=mode,
+            effort=record_effort,
+            cli_version=record_cli_version,
             response=response_text,
             stderr_excerpt=stderr_excerpt,
             duration_s=call_result.elapsed_s,
@@ -779,6 +797,8 @@ def _invoke_gemini_with_fallback(
         agent=agent_name,
         model=record_model,
         mode=mode,
+        effort=record_effort,
+        cli_version=record_cli_version,
         response="",
         stderr_excerpt=stderr_excerpt,
         duration_s=call_result.elapsed_s,
@@ -933,6 +953,13 @@ def invoke(
         effort=effort,
     )
 
+    telemetry = resolve_invocation_telemetry(
+        agent_name=agent_name,
+        plan=plan,
+        requested_model=effective_model,
+        requested_effort=effort,
+    )
+
     execution = _execute_invocation_plan(
         agent_name=agent_name,
         adapter=adapter,
@@ -985,7 +1012,7 @@ def invoke(
     record = _build_usage_record(
         agent=agent_name,
         entrypoint=entrypoint,
-        model=effective_model,
+        model=telemetry.model,
         mode=mode,
         task_id=task_id,
         cwd=effective_cwd,
@@ -1005,15 +1032,17 @@ def invoke(
     if parse.rate_limited:
         raise RateLimitedError(
             agent_name,
-            effective_model,
+            telemetry.model,
             reason=(parse.stderr_excerpt or "")[:200],
         )
 
     return Result(
         ok=parse.ok,
         agent=agent_name,
-        model=effective_model,
+        model=telemetry.model,
         mode=mode,
+        effort=telemetry.effort,
+        cli_version=telemetry.cli_version,
         response=parse.response,
         stderr_excerpt=parse.stderr_excerpt,
         duration_s=execution.duration_s,
