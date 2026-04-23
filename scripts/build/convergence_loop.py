@@ -1,4 +1,4 @@
-"""Convergent review loop with tiered escalation and honest terminals."""
+"""Convergent review loop with deterministic fixes and honest terminals."""
 
 from __future__ import annotations
 
@@ -25,14 +25,13 @@ from build.module_memory import (
 )
 
 TerminalType = Literal["pass", "plan_revision_request", "budget_exhausted"]
-TierName = Literal["patch", "section_rewrite", "full_rewrite", "writer_swap", "plan_revision_request"]
+TierName = Literal["patch", "plan_revision_request"]
 
 
 class RecoverableValidationError(Exception):
     """Raised by writer-output validators (sidecar drift, missing vocab, activity-order
-    mismatch, word-budget miss) when the problem is something a higher-tier escalation
-    could fix. Carries structured findings so the convergence loop can feed them into
-    the next strategy selection instead of collapsing the escalation budget.
+    mismatch, word-budget miss) with structured findings for the next strategy
+    selection instead of collapsing the convergence budget immediately.
 
     Use for content-shape problems in the *writer's* output. Do NOT use for pipeline
     or tooling failures (missing plan file, DB unreachable, subprocess crash) — those
@@ -93,10 +92,7 @@ class ConvergenceRunResult:
 
 ReviewCallback = Callable[[str], ReviewObservation]
 PatchCallback = Callable[[ReviewObservation], MutationSummary]
-RewriteCallback = Callable[[tuple[dict[str, Any], ...], str], MutationSummary]
-WriterSwapCallback = Callable[[tuple[dict[str, Any], ...], str], tuple[str | None, MutationSummary]]
 RefreshCallback = Callable[[str], bool]
-StyleReviewCallback = Callable[[str], None]
 
 
 @dataclass
@@ -106,9 +102,6 @@ class ConvergenceContext:
     writer: str
     review_round: ReviewCallback
     patch_round: PatchCallback
-    section_rewrite_round: RewriteCallback
-    full_rewrite_round: RewriteCallback
-    writer_swap_round: WriterSwapCallback
     refresh_sidecars: RefreshCallback
     memory_path: Path
     terminal_dir: Path
@@ -116,9 +109,7 @@ class ConvergenceContext:
     plan_hash: str
     plan_version: int
     sources_hash: str
-    reviewer_matrix_enforced: bool = False
     growth_log_path: Path | None = None
-    style_review_after_swap: StyleReviewCallback | None = None
     max_escalations: int = 5
 
 
@@ -208,8 +199,6 @@ def select_strategy(
     observation: ReviewObservation,
     prioritized_findings: tuple[dict[str, Any], ...],
     previous_round: dict[str, Any] | None,
-    attempted_tiers: set[int],
-    full_rewrite_targets: set[str],
 ) -> ConvergenceDecision:
     if not prioritized_findings:
         return ConvergenceDecision(
@@ -220,31 +209,14 @@ def select_strategy(
         )
 
     topologies = {item["topology"] for item in prioritized_findings}
-    top_ids = set(_top_ids(prioritized_findings))
     candidate_tier = 5
     candidate_strategy: TierName = "plan_revision_request"
-    candidate_reason = "defaulted to human plan revision"
+    candidate_reason = "findings require human plan revision"
 
     if observation.patch_available and topologies == {"local_to_prose"}:
         candidate_tier = 1
         candidate_strategy = "patch"
         candidate_reason = "all findings are local prose edits and reviewer emitted deterministic fixes"
-    elif topologies <= {"local_to_prose", "section_local"}:
-        candidate_tier = 2
-        candidate_strategy = "section_rewrite"
-        candidate_reason = "findings are confined to local prose or a single section"
-    elif "plan_level" in topologies and 3 in attempted_tiers:
-        candidate_tier = 5
-        candidate_strategy = "plan_revision_request"
-        candidate_reason = "plan-level finding persisted after a full rewrite"
-    elif top_ids - full_rewrite_targets:
-        candidate_tier = 3
-        candidate_strategy = "full_rewrite"
-        candidate_reason = "cross-section findings require a full module regeneration"
-    elif 4 not in attempted_tiers:
-        candidate_tier = 4
-        candidate_strategy = "writer_swap"
-        candidate_reason = "full rewrite already targeted the top findings without convergence"
 
     signals = _stall_signals(previous_round, {
         "strategy": previous_round.get("strategy") if previous_round else "write",
@@ -253,15 +225,9 @@ def select_strategy(
         "prioritized_findings": prioritized_findings,
         "dim_floor_dimensions": observation.dim_floor_dimensions,
     })
-    if previous_round and signals and candidate_tier < 5:
-        candidate_tier = max(candidate_tier, int(previous_round.get("tier") or 0) + 1)
-        candidate_strategy = {
-            1: "patch",
-            2: "section_rewrite",
-            3: "full_rewrite",
-            4: "writer_swap",
-            5: "plan_revision_request",
-        }[candidate_tier]
+    if previous_round and signals and candidate_strategy == "patch":
+        candidate_tier = 5
+        candidate_strategy = "plan_revision_request"
         candidate_reason = f"stall detected ({', '.join(signals)})"
 
     return ConvergenceDecision(
@@ -506,8 +472,6 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
         current_manifest=current_manifest,
     )
     current_writer = context.writer
-    attempted_tiers: set[int] = set()
-    full_rewrite_targets: set[str] = set()
     rounds: list[dict[str, Any]] = []
     trace: list[dict[str, Any]] = []
     previous_round: dict[str, Any] | None = None
@@ -552,10 +516,7 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
             observation=observation,
             prioritized_findings=prioritized_findings,
             previous_round=previous_round,
-            attempted_tiers=attempted_tiers,
-            full_rewrite_targets=full_rewrite_targets,
         )
-        attempted_tiers.add(decision.tier)
         trace.append(
             {
                 "attempt": escalation,
@@ -600,52 +561,8 @@ def run_convergence_loop(context: ConvergenceContext) -> ConvergenceRunResult:
         try:
             if decision.strategy == "patch":
                 mutation = context.patch_round(observation)
-            elif decision.strategy == "section_rewrite":
-                mutation = context.section_rewrite_round(decision.prioritized_findings, current_writer)
                 if mutation.changed and not context.refresh_sidecars(decision.strategy):
-                    raise RuntimeError("sidecar refresh failed after section rewrite")
-            elif decision.strategy == "full_rewrite":
-                full_rewrite_targets.update(_top_ids(decision.prioritized_findings))
-                mutation = context.full_rewrite_round(decision.prioritized_findings, current_writer)
-                if mutation.changed and not context.refresh_sidecars(decision.strategy):
-                    raise RuntimeError("sidecar refresh failed after full rewrite")
-            elif decision.strategy == "writer_swap":
-                new_writer, mutation = context.writer_swap_round(decision.prioritized_findings, current_writer)
-                if not new_writer:
-                    artifact_path = context.terminal_dir / "plan_revision_request.yaml"
-                    finding_payload = _persistent_finding_payload(
-                        decision.prioritized_findings,
-                        summary="writer swap unavailable under reviewer matrix",
-                    )
-                    payload = {
-                        "level": context.level,
-                        "slug": context.slug,
-                        "attempts": escalation,
-                        "trace": trace,
-                        **finding_payload,
-                    }
-                    _write_terminal_artifact(artifact_path, payload)
-                    _append_stuck_module(
-                        context.stuck_modules_path,
-                        {
-                            "level": context.level,
-                            "slug": context.slug,
-                            "terminal": "plan_revision_request",
-                            "artifact": str(artifact_path),
-                        },
-                    )
-                    return ConvergenceRunResult(
-                        terminal="plan_revision_request",
-                        rounds=tuple(rounds),
-                        trace=tuple(trace),
-                        writer=current_writer,
-                        artifact_path=artifact_path,
-                    )
-                current_writer = new_writer
-                if mutation.changed and not context.refresh_sidecars(decision.strategy):
-                    raise RuntimeError("sidecar refresh failed after writer swap")
-                if context.style_review_after_swap is not None:
-                    context.style_review_after_swap(current_writer)
+                    raise RuntimeError("sidecar refresh failed after patch")
         except RecoverableValidationError as exc:
             synthetic_observation = ReviewObservation(
                 passed=False,
