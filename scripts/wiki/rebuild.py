@@ -41,11 +41,14 @@ track starts. On Ctrl-C mid-track:
    `compile.py` on it. `compile.py::is_compiled` skips already-done
    articles within the track. Nothing is re-done.
 
-### Shadow-mode guarantee
+### Review gating
 
-Every track is invoked with `--dim-review` (shadow mode by default).
-Reports land in `wiki/.reviews/<domain>/<slug>.json`. Never blocks the
-pipeline. See `docs/design/dimensional-review.md` §8.
+Every track is invoked with `--review` (per-dim + MIN aggregation,
+post-#1455). Reports land in `wiki/.reviews/<domain>/<slug>.json` with
+the driving ``failing_dim`` named when ``min_score`` is below
+:data:`scripts.common.thresholds.REVIEW_PASS_FLOOR`. Review failures
+emit a ``review_fail`` event but do not abort the outer rebuild — the
+batch continues; operators triage failed articles from the JSON report.
 """
 from __future__ import annotations
 
@@ -275,17 +278,18 @@ def _sigint_handler(signum, frame) -> None:
 
 
 def _run_compile(task: TaskState, *, dry_run: bool = False) -> int:
-    """Invoke `compile.py --track X [--slug Y|--all] --dim-review`.
+    """Invoke ``compile.py --track X [--slug Y|--all] --review``.
 
     Returns the subprocess exit code. Kills cleanly on SIGINT.
-    `compile.py` handles per-article resume via `is_compiled()`, so
+    ``compile.py`` handles per-article resume via ``is_compiled()``, so
     re-invoking on the same track is idempotent — already-compiled
-    articles are skipped.
+    articles are skipped. ``--review`` runs the per-dim + MIN orchestrator
+    (post-#1455 — the legacy single-call weighted-average path is gone).
     """
     cmd = [
         ".venv/bin/python", "scripts/wiki/compile.py",
         "--track", task.track,
-        "--dim-review",
+        "--review",
     ]
     if task.slug:
         cmd.extend(["--slug", task.slug])

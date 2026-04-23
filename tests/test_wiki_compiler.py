@@ -781,10 +781,12 @@ class TestCompileCommand:
             force=False,
             dry_run=False,
             review=False,
-            dim_review=False,
         )
 
-    def test_dim_review_flag_runs_shadow_review_and_writes_report(self):
+    def test_review_flag_delegates_to_review_article(self):
+        """``--review`` must route through the per-dim orchestrator
+        wrapper (_review_article); there is no longer a separate
+        ``--dim-review`` path (post-#1455)."""
         from wiki.compile import cmd_compile_one
 
         article_path = Path("wiki/pedagogy/a1/demo.md")
@@ -794,14 +796,14 @@ class TestCompileCommand:
              patch("wiki.compile.enrich_sources", return_value=[{"chunk_id": "c1", "text": "text"}]), \
              patch("wiki.compile._slug_to_topic", return_value="Demo"), \
              patch("wiki.compile.compile_article", return_value=article_path), \
-             patch("wiki.compile._dim_review_article") as dim_review, \
+             patch("wiki.compile._review_article") as review, \
              patch("wiki.compile.update_index"), \
              patch("wiki.compile.log_event"), \
              patch("wiki.state.is_compiled", return_value=False):
-            ok = cmd_compile_one("a1", "demo", dim_review=True)
+            ok = cmd_compile_one("a1", "demo", review=True)
 
         assert ok is True
-        dim_review.assert_called_once_with(article_path, "a1", "demo")
+        review.assert_called_once_with(article_path, "a1", "demo")
 
     def test_cmd_compile_one_force_recompile_strips_mcp_warning_for_academic_writing(
         self, tmp_path, capsys
@@ -852,32 +854,6 @@ class TestCompileCommand:
         captured = capsys.readouterr()
         assert "stripped MCP-warning line from academic-writing" in captured.err
 
-    def test_build_review_prompt_includes_sources_registry(self, tmp_path):
-        from wiki.compile import _build_review_prompt
-
-        wiki_dir = tmp_path / "wiki"
-        article_dir = wiki_dir / "periods"
-        article_dir.mkdir(parents=True)
-        (article_dir / "kyivan-rus.sources.yaml").write_text(
-            "sources:\n"
-            "  - id: S1\n"
-            "    file: feaa5fa7_c0001\n"
-            "    type: literary\n",
-            encoding="utf-8",
-        )
-
-        with patch("wiki.compile.WIKI_DIR", wiki_dir), \
-             patch("wiki.compile._get_domain", return_value="periods"):
-            prompt = _build_review_prompt(
-                "<!-- wiki-meta\nslug: kyivan-rus\n-->\n\n# Title\n\nText [S1].",
-                "article",
-                "hist",
-                "kyivan-rus",
-                "r1",
-            )
-
-        assert "## Sources registry" in prompt
-        assert "id: S1" in prompt
 
 
 # ── Tests: update_index ──────────────────────────────────────────
@@ -938,100 +914,6 @@ class TestUpdateIndex:
 
         # No index created when no articles
         assert not (wiki_dir / "index.md").exists()
-
-
-# ── Tests: _parse_review_scores ────────────────────────────────
-
-
-def _overall(text: str) -> float:
-    """Helper: parse overall score from review text."""
-    from wiki.compile import _parse_review_scores
-    return _parse_review_scores(text)["overall"]
-
-
-class TestParseReviewScore:
-    """Tests for decimal score parsing — the critical bug that prevented 9/10."""
-
-    def test_integer_score(self):
-        assert _overall("**Overall: 9/10**") == 9.0
-
-    def test_decimal_score(self):
-        assert _overall("**Overall: 8.8/10**") == 8.8
-
-    def test_decimal_score_95(self):
-        assert _overall("**Overall: 9.5/10**") == 9.5
-
-    def test_score_with_dimensions(self):
-        """The overall score should be picked, not a dimension score."""
-        text = (
-            "1. **Factual: 9/10** — good\n"
-            "2. **Language: 9/10** — clean\n"
-            "3. **Decolonization: 10/10** — perfect\n"
-            "4. **Completeness: 7/10** — gaps\n"
-            "5. **Actionable: 9/10** — good\n\n"
-            "**Overall: 8.8/10**"
-        )
-        assert _overall(text) == 8.8
-
-    def test_score_variant_formats(self):
-        assert _overall("Score: 7.5/10") == 7.5
-        assert _overall("Verdict: **9/10**") == 9.0
-        assert _overall("Підсумок: 8/10") == 8.0
-
-    def test_fallback_last_score(self):
-        """When no 'overall' label exists, take the last score."""
-        assert _overall("Factual: 9/10\nLanguage: 8/10\n\n7.5/10") == 7.5
-
-    def test_no_score_returns_zero(self):
-        assert _overall("No scores here.") == 0.0
-
-    def test_ten_out_of_ten(self):
-        assert _overall("**Overall: 10/10**") == 10.0
-
-
-# ── Tests: _parse_review_scores (dimension parsing) ───────────
-
-
-class TestParseReviewScores:
-    """Tests for full dimension score parsing."""
-
-    def test_all_dimensions_parsed(self):
-        from wiki.compile import _parse_review_scores
-        text = (
-            "1. **Factual: 9/10** — evidence\n"
-            "2. **Language: 8.5/10** — clean\n"
-            "3. **Decolonization: 10/10** — perfect\n"
-            "4. **Completeness: 7/10** — gaps\n"
-            "5. **Actionable: 9/10** — useful\n\n"
-            "**Overall: 8.7/10**"
-        )
-        scores = _parse_review_scores(text)
-        assert scores["factual"] == 9.0
-        assert scores["language"] == 8.5
-        assert scores["decolonization"] == 10.0
-        assert scores["completeness"] == 7.0
-        assert scores["actionable"] == 9.0
-        assert scores["overall"] == 8.7
-
-    def test_missing_dimensions_default_zero(self):
-        from wiki.compile import _parse_review_scores
-        scores = _parse_review_scores("**Overall: 8/10**")
-        assert scores["factual"] == 0.0
-        assert scores["overall"] == 8.0
-
-    def test_overall_independent_of_dimensions(self):
-        """Overall is parsed from explicit label, not averaged."""
-        from wiki.compile import _parse_review_scores
-        text = (
-            "Factual: 10/10\n"
-            "Language: 10/10\n"
-            "Decolonization: 10/10\n"
-            "Completeness: 10/10\n"
-            "Actionable: 10/10\n\n"
-            "**Overall: 9/10**"  # Reviewer chose lower overall
-        )
-        scores = _parse_review_scores(text)
-        assert scores["overall"] == 9.0  # Not 10
 
 
 # ── Tests: log_event / read_log ─────────────────────────────────
