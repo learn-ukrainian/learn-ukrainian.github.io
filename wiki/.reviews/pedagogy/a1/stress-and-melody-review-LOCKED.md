@@ -1,0 +1,45 @@
+# stress-and-melody (L2-UK-EN A1/M04) — LOCKED review
+
+- **File reviewed:** `wiki/pedagogy/a1/stress-and-melody.md`
+- **Review date:** 2026-04-23
+- **Reviewer:** claude-opus-4-7, effort=xhigh (adversarial self-review, post-fix)
+- **Rubric:** 5-dimension wiki rubric (factual / language / decolonization / completeness / actionable), target ≥9 on each. See `docs/best-practices/wiki-plan-review-and-lock.md` for the full rubric and procedure.
+- **Prior state:** No prior review file on disk — this is the first structured pass. Intake scan identified: (a) misplaced stress mark `весн´яний` (should be `весня́ний`); (b) no coverage of L2-typical stress-transfer errors (R-L1 carryover `но́вий`, `оди́ннадцять`; English first-syllable intuition for feminine `-ія` names); (c) Крок 5 «Мелодика речення» had only two intonation categories and no concrete example sentences; (d) inconsistent numeral stress presentation (`сí́мдесят` with stem stress vs. `вісімдеся́т` with ending stress) presented as normative; (e) wiki-meta missing `last_reviewed` / `lifecycle` / `reviewed_by` markers.
+- **Fixes applied:** This PR — see the diff against `wiki/pedagogy/a1/stress-and-melody.md`.
+
+## Dimension scores
+
+| # | Dimension | Score | Evidence |
+|---|-----------|-------|----------|
+| 1 | Factual accuracy | **9/10** | Every claim sourced via `[S1]`–`[S8]` (sidecar `stress-and-melody.sources.yaml`). All stress annotations in the vocab list and in the new «Типові помилки L2» table cross-verified against the `ukrainian-word-stress` dictionary (2.7M form-level stress entries): `одина́дцять`, `чотирна́дцять`, `нови́й`, `стари́й`, `весня́ний`, `голова́/гóлови`, `верба́/вéрби`, `земля́/зéмлі`, `тарі́лка/тарілки́`, `кни́жка/книжки́`, `пі́сня/пісні́`, `Марі́я`. Numeral 50–90 normative stress (`сімдеся́т`, `вісімдеся́т`, `дев'яно́сто`) reconciled to the ending-stress pattern per Горох / `ukrainian-word-stress`; colloquial stem-stressed variant explicitly labelled as non-A1. The one remaining soft spot: the classic homograph-pair `мука́` (flour) / `му́ка` (torment) — СУМ-11 only carries `МУ́КА` as "torment" while `мука́` for flour is historically attested (Грінченко 1907 lists `борошно → 1) Мука`) but modern preferred is `борошно`. Kept as pedagogical stress-pair since it matches the plan and is the canonical Ukrainian-school example; the plan lists it identically (`мука і мука`). |
+| 2 | Ukrainian language quality | **9/10** | Zero Russianisms in instructional prose. The wiki uses standard literary Ukrainian throughout: `наголос` (not *ударение*), `склад` (not *слог*), `розповідне / питальне / спонукальне / окличне` (the full native typology of sentences), `мелодика речення` (standard linguistic term, SUM-11 confirmed), `пом'якшений приголосний` (not *мягкий согласный*). The new «Типові помилки L2» table explicitly names Russian stress transfer (`но́вый → но́вий`, `ста́рый → ста́рий`, `оди́ннадцать → оди́ннадцять`) as the wrong side of the contrast, cross-verified in `ukrainian-word-stress`. Combining-acute vs. precomposed-acute mix was audited and normalised — no double-combining-accent artefacts remain (`python -c` homoglyph + doubled-acute scan passes clean). |
+| 3 | Decolonization | **9/10** | Four decolonization points framed as positive Ukrainian properties: (1) forbids «українське *и* — це щось середнє між російським *ы* та *и*» framing explicitly; (2) insists on Ukrainian intonation contours on Ukrainian source material (poetry, songs, modern speech) rather than comparison with Russian; (3) reframes shared Slavic roots as common inheritance, not Russian loans; (4) celebrates softening-before-`і`, милозвучність, у/в and і/й alternation as self-sufficient Ukrainian features. The new «Типові помилки L2» table is careful: it names Russian as the source of the L1 transfer error (required to teach the negative case), but does not frame Ukrainian stress as "unlike Russian" — it simply states the Ukrainian norm and flags the incorrect transferred pattern. This matches the at-the-cafe LOCKED convention of naming Russian as calque source when teaching against it. |
+| 4 | Completeness | **9/10** | The prior implicit gaps (a)–(d) are closed: (a) stress-mark typo `весн´яний → весня́ний` fixed and the entire vocab list re-audited; (b) new «Типові помилки L2 (наголос)» section with 6 verified error rows covering numerals, adjective-ending transfer, mobile-stress plural, meaning-distinguishing stress pairs, `-ія` name stress, and 50–90 numeral stress; (c) Крок 5 expanded from 2 to 4 intonation models with minimal-pair example sentences (*Це кава.* / *Це кава?* / *Що це?* / *Як гарно!*); added explicit rule for WH-questions (falling, with a note on the conversational exception `Як справи?`); (d) numeral-stress inconsistency resolved. Sequence Крок 1 → Крок 5 now covers: syllable → stress placement → written mark → functional role (meaning-distinguishing + form-distinguishing) → sentence melody. Writer has the full pedagogical arc without having to invent a section. |
+| 5 | Actionable guidance | **9/10** | Every pedagogical claim paired with a concrete drill the writer can lift: Крок 2 physical syllable test (palm under chin); Крок 4 high-contrast semantic pairs (за́мок / замо́к, о́рган / орга́н); Крок 5 sentence pairs identical-lexicon-different-melody (*Це кава.* ↘ / *Це кава?* ↗); 4 textbook-sourced exercises with specific chunk IDs (`S1503`, `S1548`, `S606`, `S2298`); the new L2-error table has a "Примітка" column with the concrete rule + extension set per row. The writer-note after the L2 table pins the teaching scope («лише пари однина ↔ наз. мн., як заучуване протиставлення, не як правило») — prevents the writer from over-teaching inflection paradigms at A1. No "teach it well" generic advice. |
+
+**Overall: 9/10 — LOCKED.**
+
+## What "LOCKED" means for this artifact
+
+- All 5 dimensions at ≥9.
+- Every new stress annotation in the wiki is verified against either VESUM (`data/vesum.db`) for form existence or `ukrainian-word-stress` (2.7M-form stress dictionary) for stress placement.
+- Every row in the new «Типові помилки L2 (наголос)» table has a documented authority: `ukrainian-word-stress` for stress placement, SUM-11 for meaning disambiguation (мука/атлас/орган/замок).
+- Meta block carries `lifecycle: locked` + `reviewed_by: claude-opus-4-7-xhigh` + `last_reviewed: 2026-04-23`.
+- This wiki is cleared as a clean input for the A1 scale batch module build (per `docs/architecture/a8-canary-protocol.md` and EPIC #1365 Phase 2 Track A).
+
+## Unlock triggers
+
+Revisit this LOCKED state if any of the following happen:
+
+1. The module build (stress-and-melody A1/M04) surfaces a phonetic/prosodic drill gap the wiki did not anticipate — file as an issue, fresh review round, republish with incremented `last_reviewed`.
+2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags any stress annotation, L2-error row, or intonation model — authoritative override of the dictionary-based verification.
+3. `ukrainian-word-stress` or VESUM updates retire or re-label any of the cited forms, in particular the numeral 50–90 ending-stress normative forms.
+4. A revision of the broader "free-stress + mobile-stress" pedagogy framing in Ukrainian primary education (unlikely — Заболотний / Авраменко / Большакова all converge on this).
+5. The paired decolonization wiki on stress/phonology changes the framing in a way that contradicts Декол. #1–4 here.
+
+## Residual non-blockers (documented, not blocking)
+
+- The homograph pair `мука́` (flour) / `му́ка` (torment) kept as pedagogical stress-pair because it matches the paired plan (`content_outline[0].points[1]: "мука і мука"`) and is the canonical Ukrainian-school example. СУМ-11 only carries `МУ́КА` (torment) as a headword; `мука́` for flour is historically attested (Грінченко 1907) but the modern preferred term is `борошно`. A native-speaker reviewer may prefer to swap `мука́/му́ка` for a less-contested pair; writer can treat this as a minimal-stress-pair drill without claiming either word is the everyday noun for bakery flour.
+- The `-ія` name stress is explicitly flagged as variable (`Ната́лія`/`Наталі́я`, `Софі́я`/`Со́фія`) rather than rule-governed — the writer-guidance is "verify each name individually". This is correct (there is no single Ukrainian rule) but means the wiki does not hand the writer a name-stress shortcut.
+- Декол. Point 4 mentions `милозвучність` via у/в and і/й alternation as an example of a uniquely Ukrainian feature. The stress-and-melody module doesn't drill that directly (it belongs in `sounds-letters-and-hello` and possibly a future `euphony` wiki). Non-blocking: a brief mention motivates the decolonization principle without demanding in-module coverage.
+- The wiki does not yet include a stress-annotation note about how to GENERATE stress marks in the learner-facing module (e.g. the build pipeline's stress-annotation pass via `ukrainian-word-stress`). This is an integration concern, not a pedagogy concern — belongs in the module build spec, not this wiki.
