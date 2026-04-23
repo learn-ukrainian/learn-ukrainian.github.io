@@ -1,0 +1,52 @@
+cases:
+  - id: iotation_y_short_word
+    text: "мій"
+    notes: "Lowercase clean word with й (U+0439). Safe identity case for normalizers."
+
+  - id: iotation_yi_words
+    text: "україна їжа йому"
+    notes: "Lowercase clean words with ї (U+0457) and й (U+0439)."
+
+  - id: iotation_phrase_ascii
+    text: "мій син — йому п'ять років"
+    notes: "Original #1448 class: clean lowercase phrase with й plus ASCII apostrophe."
+
+  - id: apostrophe_ascii
+    text: "п'ять, сім'я, бур'ян"
+    notes: "ASCII apostrophe baseline. Identity-safe for helpers that only lowercase or strip stress."
+
+  - id: apostrophe_modifier_letter
+    text: "пʼять, сімʼя, бурʼян"
+    notes: "U+02BC modifier letter apostrophe. Wild-type Ukrainian form that must survive tokenizers."
+
+  - id: apostrophe_right_single_quote
+    text: "п’ять, сім’я"
+    notes: "U+2019 right single quotation mark. Must survive ordered tokenizers."
+
+  - id: soft_sign
+    text: "день, сіль, осінь"
+    notes: "Soft sign coverage."
+
+  - id: mixed_scripts
+    text: "київ vs kyiv, харків vs kharkiv"
+    notes: "Cyrillic and Latin lookalikes must stay in their original script."
+
+  - id: stress_acute
+    text: "мо́ва, кни́га, украї́нська"
+    notes: "Combining acute stress marks (U+0301)."
+
+  - id: em_dash_nbsp
+    text: "— це мова   тараса"
+    notes: "Leading em dash + NBSP (U+00A0). Identity-safe only for non-collapsing paths."
+
+  - id: compound_hyphenated
+    text: "по-українськи, де-не-де, жовто-блакитний"
+    notes: "Hyphenated compounds."
+
+  - id: numbers_with_ukrainian
+    text: "у 1991 р., xx ст., грн."
+    notes: "Abbreviations and numeric context."
+
+  - id: emoji_passthrough
+    text: "привіт! 🇺🇦 слава україні!"
+    notes: "Emoji passthrough around Cyrillic text."
