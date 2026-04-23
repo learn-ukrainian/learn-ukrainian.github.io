@@ -2,7 +2,26 @@ module: a1-004
 level: A1
 sequence: 4
 slug: stress-and-melody
-version: '1.1.2'
+version: '1.2.0'
+lifecycle: locked
+reviewed_at: '2026-04-23T00:00:00Z'
+reviewed_by: claude-opus-4-7-xhigh-stress-and-melody
+review_notes: >-
+  Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md.
+  Wiki locked to 9/10 on all 5 dimensions
+  (wiki/.reviews/pedagogy/a1/stress-and-melody-review-LOCKED.md).
+  Plan findings: (1) internal contradiction between grammar item 3
+  "питальна ↗" and grammar item 4 "питальні слова не потребують висхідної
+  інтонації" — tightened item 3 to "питання без питального слова (так/ні) ↗";
+  (2) Читаємо вголос dialogue marked `Як справи? ↗` which contradicts
+  the plan's own WH-question rule — normalised to `↘` with an author-note
+  about the conversational-register exception; (3) typo `з модуля модуль №1`
+  → `з модуля №1`; (4) added stress-transfer-error fill-in activity
+  mirroring the new wiki "Типові помилки L2 (наголос)" table; (5) added
+  `мука / борошно` writer-note to disambiguate the homograph pair's
+  pedagogical role vs. the modern standard term for "flour"; (6) wiki
+  back-reference added to references. See PR body for full findings +
+  fixes.
 title: Наголос і мелодика
 subtitle: Наголос змінює значення, інтонація змінює намір
 focus: phonetics
@@ -33,7 +52,7 @@ content_outline:
   points:
   - 'Читання багатоскладових слів із правильним наголосом: у-кра-їн-ська, фо-то-гра-фі-я, ві-дпо-чи-нок. Метод: розділити на склади → знайти наголошений склад → прочитати у природному темпі.'
   - 'Практика читання наголошених слів — читати вголос із правильним наголосом: Ки-їв, мо-ло-ко, ран-ок, ка-ва, во-да, зи-ма, у-кра-їн-ська. Знайдіть наголошений склад, а потім прочитайте все слово в природному темпі.'
-  - 'Практика діалогів з використанням вітань з модуля модуль №1: — Привіт! ↘ — Привіт! Як справи? ↗ — Добре! А у тебе? ↗ — Добре! ↘ Застосовуйте інтонаційні моделі до вже вивчених привітань.'
+  - 'Практика діалогів з використанням вітань з модуля №1: — Привіт! ↘ — Привіт! Як справи? ↘ — Добре! А у тебе? ↗ — Добре! ↘ Застосовуйте інтонаційні моделі до вже вивчених привітань. УВАГА до автора: `Як справи?` містить питальне слово `як`, тому за правилом має спадну інтонацію. У живому розмовному мовленні ця фраза часто звучить з висхідною (фатична функція), але для A1 подаємо нормативний спадний контур, щоб учень закріпив правило WH-питань.'
 - section: Підсумок
   words: 250
   points:
@@ -41,16 +60,22 @@ content_outline:
 vocabulary_hints:
   required:
   - наголос (stress/accent)
-  - замок (castle)
-  - замок (lock)
+  - за́мок (castle — stress on first syllable)
+  - замо́к (lock — stress on last syllable)
   - кава (coffee)
   - вода (water)
   - столиця (capital)
   recommended:
-  - мука (flour)
+  - му́ка (torment — stress on first syllable; pairs with мука́ as stress-distinction
+    drill)
+  - мука́ (flour — stress on last syllable; historically attested but modern standard
+    is `борошно`; present as stress-pair contrast, not as the everyday noun for
+    bakery flour)
   - ранок (morning)
   - метро (metro)
   - фотографія (photograph)
+  - одина́дцять (eleven — stress on `-на-`; classic L2 stress-transfer target)
+  - чотирна́дцять (fourteen — stress on `-на-`; classic L2 stress-transfer target)
 activity_hints:
 - type: quiz
   focus: Де наголос? Виберіть правильний склад.
@@ -64,6 +89,9 @@ activity_hints:
 - type: fill-in
   focus: 'Поставте правильний розділовий знак: Це кава_ Де метро_ Як гарно_'
   items: 6
+- type: fill-in
+  focus: 'Типові L2-помилки наголосу — оберіть нормативну форму (див. wiki "Типові помилки L2 (наголос)"). Формат: ліворуч наголос зі стемовим/першоскладовим переносом, праворуч нормативний український наголос.'
+  items: 6
 connects_to:
 - a1-005 (Хто я?)
 prerequisites:
@@ -71,8 +99,8 @@ prerequisites:
 grammar:
 - Вільний наголос
 - Пари слів, значення яких залежить від наголосу
-- 'Три інтонаційні моделі: розповідна ↘, питальна ↗, оклична ↘↘'
-- Питальні слова не потребують висхідної інтонації
+- 'Три інтонаційні моделі: розповідна ↘, питання без питального слова (так/ні) ↗, оклична ↘↘'
+- Питальні речення з питальним словом (хто/що/де/коли/як) мають спадну інтонацію, як і розповідні
 register: розмовний
 references:
 - title: Заболотний Grade 5, p.73
@@ -82,3 +110,33 @@ references:
 - title: ULP Season 1, Episode 5 — Pronunciation Trainer
   url: https://www.ukrainianlessons.com/episode5/
   notes: Практика наголосу з числівниками.
+- title: 'Wiki: pedagogy/a1/stress-and-melody (LOCKED 2026-04-23)'
+  notes: 'Authoritative pedagogical brief — see Крок 5 (четвертна інтонаційна типологія
+    з прикладовими реченнями) and "Типові помилки L2 (наголос)" (R-L1 + англ. stress-transfer
+    drill).'
+changelog:
+- version: '1.2.0'
+  date: '2026-04-23'
+  changes:
+  - 'Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md.
+    Added lifecycle markers (lifecycle / reviewed_at / reviewed_by / review_notes)
+    per the convention.'
+  - 'Fixed internal contradiction in grammar[]: tightened "Три інтонаційні моделі:
+    розповідна ↘, питальна ↗, оклична ↘↘" → "…питання без питального слова (так/ні)
+    ↗…" (matches the WH-question falling-intonation rule stated elsewhere in the
+    plan and in the locked wiki).'
+  - 'Fixed intonation inconsistency in Читаємо вголос: `Як справи? ↗` → `Як справи?
+    ↘` (applies the plan''s own WH-question rule). Added author-note explaining
+    the conversational-register exception so the writer does not silently invert
+    back to the "natural" rising contour.'
+  - 'Fixed typo: "з модуля модуль №1" → "з модуля №1".'
+  - 'Added stress-transfer-error fill-in activity (6 items) mirroring the new wiki
+    "Типові помилки L2 (наголос)" table — covers numerals, adjective ending-stress,
+    mobile plural, homograph pairs.'
+  - 'Annotated meaning-distinguishing stress pairs directly in vocabulary_hints
+    (за́мок / замо́к with stress marks; му́ка / мука́ with a note that мука́ is
+    a stress-pair drill target, not the modern everyday term for flour — `борошно`
+    is the preferred standard).'
+  - 'Added одина́дцять / чотирна́дцять to recommended vocabulary as canonical
+    L2 stress-transfer targets.'
+  - 'Added wiki back-reference to references: (LOCKED 2026-04-23).'
