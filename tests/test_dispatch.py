@@ -257,7 +257,7 @@ class TestDispatchAgent:
         assert call_kwargs["mode"] == "workspace-write"
         assert call_kwargs["model"] == "gemini-test"
         assert call_kwargs["entrypoint"] == "dispatch"
-        assert call_kwargs["tool_config"] == {"auth_mode": "api"}
+        assert call_kwargs["tool_config"] == {"auth_mode": "subscription"}
 
     @patch("build.dispatch._log")
     @patch("agent_runtime.runner.invoke")
@@ -329,8 +329,11 @@ class TestDispatchAgent:
         first_call = mock_invoke.call_args_list[0].kwargs
         second_call = mock_invoke.call_args_list[1].kwargs
         assert first_call["model"] == "gemini-3.1-pro-preview"
-        assert second_call["model"] == "gemini-3.1-pro-preview"
-        assert first_call["tool_config"] == {"mcp_server_names": ["rag"], "auth_mode": "api"}
+        assert second_call["model"] == "gemini-3-flash-preview"
+        assert first_call["tool_config"] == {
+            "mcp_server_names": ["rag"],
+            "auth_mode": "subscription",
+        }
         assert second_call["tool_config"] == {
             "mcp_server_names": ["rag"],
             "auth_mode": "subscription",

@@ -74,6 +74,10 @@ class Result:
         stalled: True iff the failure was stall detection firing.
             Distinguishes "agent went silent" from "agent hit wall clock."
         returncode: Subprocess exit code, or None if killed before exit.
+        effort: Actual effort / reasoning level applied, or "unknown" if the
+            runtime could not resolve it without guessing.
+        cli_version: Version string from ``<agent> --version``, cached per
+            process by the telemetry helpers. "unknown" on probe failure.
         usage_record: The exact dict written to batch_state/api_usage/. Callers
             can log or aggregate this. Follows the schema in design doc § 4.5.
     """
@@ -88,4 +92,6 @@ class Result:
     rate_limited: bool
     stalled: bool
     returncode: int | None
+    effort: str = "unknown"
+    cli_version: str = "unknown"
     usage_record: dict[str, Any] = field(default_factory=dict)
