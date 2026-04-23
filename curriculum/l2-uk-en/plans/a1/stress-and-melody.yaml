@@ -38,7 +38,7 @@ content_outline:
   words: 350
   points:
   - 'Заболотний, 5 клас, с. 73: Українська мова має 38 звуків, і наголос визначає, який склад вимовляється голосніше та довше. Наголос є ВІЛЬНИМ — він може падати на будь-який склад і РУХОМИМ — може переміщуватися між формами одного слова. Це відрізняє його від французької (завжди на останньому) чи чеської (завжди на першому).'
-  - 'Наголос змінює значення — реальні пари слів, які зустрінуться учням: замок і замок, мука і мука, атлас і атлас. Неправильний наголос = неправильне слово. Ось чому позначки наголосу є важливими.'
+  - 'Наголос змінює значення — реальні пари слів, які зустрінуться учням: за́мок (castle) / замо́к (lock), а́тлас (atlas) / атла́с (satin), о́рган (organ of the body) / орга́н (musical instrument), сі́м''я (family) / сім''я́ (seed). Неправильний наголос = неправильне слово. Ось чому позначки наголосу є важливими. (Примітка до автора: пара `му́ка / мука́` — не подавати як "torment/flour"; модерна словникова норма для "flour" — `борошно`.)'
   - 'На письмі позначки наголосу ('') ставляться в підручниках і словниках, але НЕ у звичайних українських текстах. Учням завжди слід перевіряти наголос на goroh.pp.ua, якщо є сумніви.'
   - 'Поширені моделі для початківців: Перший склад: мама, тато, ранок, кава, книга. Останній склад: вода, зима, рука, метро, кафе. Короткого шляху немає — потрібно вивчати наголос для кожного слова окремо.'
 - section: Інтонація
@@ -66,11 +66,11 @@ vocabulary_hints:
   - вода (water)
   - столиця (capital)
   recommended:
-  - му́ка (torment — stress on first syllable; pairs with мука́ as stress-distinction
+  - а́тлас (atlas — stress on first syllable; pairs with атла́с for meaning-distinguishing
     drill)
-  - мука́ (flour — stress on last syllable; historically attested but modern standard
-    is `борошно`; present as stress-pair contrast, not as the everyday noun for
-    bakery flour)
+  - атла́с (satin — stress on last syllable; pairs with а́тлас)
+  - о́рган (organ of the body — stress on first syllable; pairs with орга́н)
+  - орга́н (musical instrument — stress on last syllable; pairs with о́рган)
   - ранок (morning)
   - метро (metro)
   - фотографія (photograph)
@@ -90,8 +90,14 @@ activity_hints:
   focus: 'Поставте правильний розділовий знак: Це кава_ Де метро_ Як гарно_'
   items: 6
 - type: fill-in
-  focus: 'Типові L2-помилки наголосу — оберіть нормативну форму (див. wiki "Типові помилки L2 (наголос)"). Формат: ліворуч наголос зі стемовим/першоскладовим переносом, праворуч нормативний український наголос.'
-  items: 6
+  focus: 'Типові L2-помилки наголосу — оберіть нормативну форму (див. wiki "Типові помилки L2 (наголос)"). Формат: `слово {нормативний_наголос|помилковий_наголос}`.'
+  items:
+  - Це моя {нови́й|но́вий} комп''ютер. (adjective ending-stress, R-L1 transfer)
+  - Мій дідусь {стари́й|ста́рий}. (adjective ending-stress, R-L1 transfer)
+  - У мене в руці {одина́дцять|оди́ннадцять} гривень. (numeral — stress on `-на-`)
+  - Я вивчив {чотирна́дцять|чоти́рнадцять} нових слів. (numeral — stress on `-на-`)
+  - У мене болять {гóлови|голови́}. (plural — mobile stress, plural is stem-stressed)
+  - Мене звати {Марі́я|Ма́рія}. (feminine -ія name — stress on `-і-`)
 connects_to:
 - a1-005 (Хто я?)
 prerequisites:
@@ -111,9 +117,9 @@ references:
   url: https://www.ukrainianlessons.com/episode5/
   notes: Практика наголосу з числівниками.
 - title: 'Wiki: pedagogy/a1/stress-and-melody (LOCKED 2026-04-23)'
-  notes: 'Authoritative pedagogical brief — see Крок 5 (четвертна інтонаційна типологія
-    з прикладовими реченнями) and "Типові помилки L2 (наголос)" (R-L1 + англ. stress-transfer
-    drill).'
+  notes: 'Authoritative pedagogical brief — see Крок 5 (чотири базові інтонаційні
+    контури з прикладовими реченнями) and "Типові помилки L2 (наголос)" (R-L1 +
+    англ. stress-transfer drill).'
 changelog:
 - version: '1.2.0'
   date: '2026-04-23'
@@ -134,9 +140,11 @@ changelog:
     "Типові помилки L2 (наголос)" table — covers numerals, adjective ending-stress,
     mobile plural, homograph pairs.'
   - 'Annotated meaning-distinguishing stress pairs directly in vocabulary_hints
-    (за́мок / замо́к with stress marks; му́ка / мука́ with a note that мука́ is
-    a stress-pair drill target, not the modern everyday term for flour — `борошно`
-    is the preferred standard).'
+    (за́мок / замо́к, а́тлас / атла́с, о́рган / орга́н — all with stress marks
+    and English glosses). Dropped the disputed `мука́ / му́ка` flour/torment pair
+    from vocabulary_hints; a note in content_outline[0].points[1] flags that the
+    modern standard term for flour is `борошно` so the writer does not silently
+    teach a dialectal form.'
   - 'Added одина́дцять / чотирна́дцять to recommended vocabulary as canonical
     L2 stress-transfer targets.'
   - 'Added wiki back-reference to references: (LOCKED 2026-04-23).'
