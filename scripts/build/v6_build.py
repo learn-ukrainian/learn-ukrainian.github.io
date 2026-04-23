@@ -3965,6 +3965,15 @@ You are {persona_desc}, writing ONE SECTION of a Ukrainian language module. Writ
 **Section to write:** {section_name}
 **Word target for this section:** about {word_target} words. Hitting the minimum matters more than staying short; do not undershoot this section.
 
+## Shared Contract (authoritative — GH #1431)
+
+Your job is to satisfy the module contract at `scripts/build/contracts/module-contract.md` as specialized by the plan and the contract YAML below. The per-dimension reviewer will score you ONLY against that contract. Key clauses that apply to this section:
+
+- **§2 Section contract** — cover every contracted item for THIS section. If the word budget cannot fit them at readable density, emit a `<section_overflow>` block at end of section (do NOT silently defer to the next section — that is the Round-1 `a1/colors` Section 2 defect).
+- **§3 Dialogue contract** — if this section has dialogue or the plan lists `dialogue_acts` for it, call `mcp__sources__search_sources` FIRST with a Ukrainian query biased toward the scenario, and anchor on top corpus hits. Do NOT invent Ukrainian dialogue from scratch.
+- **§4 Pedagogical voice** — "You have learned...", "Now it's time...", "Let's review..." are ALLOWED when anchored to a specific Ukrainian teaching point. Only vacuous filler ("Great job!", empty transitions without Ukrainian anchor) is banned.
+- **§5 Honesty** — `<!-- VERIFY: claim -->` is a positive signal, not a failure.
+
 ---
 
 ## Section Skeleton (follow this exactly)
@@ -4021,6 +4030,29 @@ Continue naturally from where the previous section ended. Do not re-introduce co
   > — **Оксана:** Привіт! *(Hi!)*
   > — **Степан:** Добрий день! *(Good day!)*
   > — **Оксана:** Як справи? *(How are you?)*
+
+## Dialogue retrieval mandate (contract §3)
+
+Before drafting the Ukrainian dialogue, call `mcp__sources__search_sources` with a Ukrainian query biased toward THIS dialogue's scenario (take the situation + function from the contract's `dialogue_acts` — e.g. `"діалог на квітковому ринку кольори"` for a flower-market colour scene). Use the top 2–3 hits from `textbook_sections` or `ukrainian_wiki` as anchors — match register, re-use common turn-taking phrases (Добрий день, Дякую, Будь ласка, Скажіть, будь ласка, …). If the search returns zero usable hits, emit a `<!-- VERIFY: dialogue not corpus-grounded, search returned no A1 matches -->` marker against the dialogue. Invented Ukrainian dialogue without corpus anchoring was the Round-1 Dialogue-dim failure.
+
+"""
+
+    # Section overflow protocol (contract §2) — every section may need this
+    section_prompt += """## Section overflow protocol (contract §2)
+
+Every item in this section's contracted covers list MUST appear in this section's prose. Do NOT silently defer items to a later section — that is the Round-1 `a1/colors` Section 2 defect (promised 12 colors, delivered 6 + синій). If the word budget cannot fit every contracted item at readable density, emit a structured overflow block at the end of the section:
+
+```
+<section_overflow>
+section: "{section_name}"
+reason: "why the budget cannot fit every item at readable density"
+items_needing_more_budget:
+  - "contract item that needed more budget"
+proposed_budget_delta: "+XX words"
+</section_overflow>
+```
+
+The convergence loop treats `<section_overflow>` as a plan-revision signal, not a review failure. Silent deferral IS a failure.
 
 """
 
@@ -7471,6 +7503,8 @@ def step_review(content_path: Path, level: str, module_num: int,
     generated_content_literal = _format_prompt_literal_block(
         "Generated Module Content", generated_content, language="markdown",
     )
+    from pipeline.config_tables import get_immersion_rule as _get_immersion_rule_for_review
+
     replacements = {
         "{MODULE_NUM}": str(module_num),
         "{TOPIC_TITLE}": plan.get("title", slug),
@@ -7483,6 +7517,8 @@ def step_review(content_path: Path, level: str, module_num: int,
         "{CONTRACT_YAML}": contract_content,
         "{SECTION_WIKI_EXCERPTS}": excerpt_content,
         "{GENERATED_CONTENT}": generated_content_literal,
+        "{IMMERSION_RULE}": _get_immersion_rule_for_review(level, module_num),
+        "{IMMERSION_TARGET_SHORT}": _get_immersion_target_short(level, module_num),
     }
 
     monitor_context = _build_monitor_prompt_context(level, slug)
