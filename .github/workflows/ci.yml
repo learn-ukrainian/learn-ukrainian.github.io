@@ -7,11 +7,13 @@ on:
       - 'requirements*.txt'
       - 'requirements.lock'
       - 'scripts/**/*.py'
+      - 'scripts/check_rules_deployment.sh'
       - 'tests/**/*.py'
       - 'pyproject.toml'
-      - 'claude_extensions/phases/**/*.md'
-      - 'claude_extensions/skills/**/*.md'
-      - 'gemini_extensions/skills/**/*.md'
+      - 'claude_extensions/rules/**'
+      - 'gemini_extensions/**'
+      - '.claude/rules/**'
+      - '.gemini/**'
       - 'starlight/**'
   pull_request:
     paths:
@@ -19,11 +21,13 @@ on:
       - 'requirements*.txt'
       - 'requirements.lock'
       - 'scripts/**/*.py'
+      - 'scripts/check_rules_deployment.sh'
       - 'tests/**/*.py'
       - 'pyproject.toml'
-      - 'claude_extensions/phases/**/*.md'
-      - 'claude_extensions/skills/**/*.md'
-      - 'gemini_extensions/skills/**/*.md'
+      - 'claude_extensions/rules/**'
+      - 'gemini_extensions/**'
+      - '.claude/rules/**'
+      - '.gemini/**'
       - 'starlight/**'
   workflow_dispatch:
 
@@ -139,6 +143,15 @@ jobs:
 
       - name: Lint prompt templates
         run: python scripts/lint/lint_prompts.py
+
+  rules-deployment-invariant:
+    name: Rules Deployment Invariant
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Check deployed mirrors are in sync
+        run: bash scripts/check_rules_deployment.sh
 
   scripts-root-guard:
     name: No new root scripts
