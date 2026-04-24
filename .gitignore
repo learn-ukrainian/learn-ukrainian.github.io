@@ -198,9 +198,6 @@ data/corpus_audit/*
 !data/corpus_audit/draft_tickets/*.md
 
 
-# Plan backup files from scripts/tools/update_plan_activities.py (#1148)
-curriculum/l2-uk-en/plans/*/*.yaml.bak
-
 .gemini/
 
 # SQLite WAL/SHM sidecars — same exclusion as the .db files themselves.

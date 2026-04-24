@@ -1,0 +1,230 @@
+module: a1-001
+level: A1
+sequence: 1
+slug: sounds-letters-and-hello
+version: '1.6.0'
+lifecycle: locked
+reviewed_at: '2026-04-23T00:00:00Z'
+reviewed_by: claude-opus-4-7-xhigh-1412-sounds-letters-and-hello
+review_notes: >-
+  Review-and-lock pass per the #1412 rubric template
+  (docs/best-practices/wiki-plan-review-and-lock.md). Plan-side findings:
+  (a) context-blind reciprocal `А у тебе?` mandated for a name-exchange
+  in dialogue_situations[1] — fixed to the context-appropriate `А тебе?`
+  (elliptical for `А тебе як звати?`); (b) no Russianisms in plan prose
+  (scan clean — uses synthetic imperative `Прочитаймо`, no `Давайте`,
+  no `приймати` calques); (c) no calques in vocabulary_hints (all
+  VESUM-verified); (d) no plan-internal contradictions (word_target
+  sum 300+250+250+250+150 = 1200); (e) added back-reference to LOCKED
+  wiki in references[]. Paired wiki is LOCKED at 9/10 across all 5
+  dimensions (wiki/.reviews/pedagogy/a1/sounds-letters-and-hello-review-LOCKED.md).
+title: Звуки, літери та привіт
+subtitle: 33 літери, 38 звуків, Привіт!
+focus: phonetics
+pedagogy: PPP
+phase: A1.1 [Звуки, літери та перший контакт]
+word_target: 1200
+objectives:
+- Розуміти різницю між звуками та літерами — базову відмінність в українській фонетиці
+- Розрізняти дві групи звуків — голосні та приголосні — та способи їх творення
+- Знати, чому в українській мові 33 літери, але 38 звуків, і які літери позначають кілька звуків
+- Ознайомитися з українською абеткою через відео Анни Огойко — почути кожен звук, побачити кожну літеру
+- Навчитися вітатися та відповідати на привітання, використовуючи повний набір формул (Привіт / Добрий день / Доброго ранку / Добрий вечір / До побачення)
+- Засвоїти принцип милозвучності (у/в, і/й) та значущість наголосу як орієнтиру для правильної вимови — зокрема чистої ненаголошеної `[о]`
+- Ідентифікувати типові L2-помилки вимови (оглушення кінцевого дзвінкого, плутання `[и]`/`[і]`, редукція ненаголошеного `[о]`) і проходити профілактичні вправи
+dialogue_situations:
+- setting: Перший урок української мови — вчитель вітає учнів, учні відповідають і практикують базовий обмін фразами Привіт/Добрий день
+  speakers:
+  - Вчитель
+  - Учні
+  motivation: 'Практика вітальних фраз: Привіт! Добрий день! Як справи? Добре.'
+- setting: 'Двоє нових однокласників зустрічаються в коридорі перед першим уроком української мови та знайомляться. ОБОВ''ЯЗКОВО використовувати імена для реплік (Марко:..., Софія:...), обмінятися іменами та використати взаємне «А тебе?» (елептично від «А тебе як звати?»). НЕ вживати «А у тебе?» — це контекстно-сліпа репліка (конструкція `у тебе` не поєднується з дієсловом `звати когось`).'
+  speakers:
+  - Марко
+  - Софія
+  motivation: Привіт! Як тебе звати? Мене звати... А тебе? — перше соціальне використання вивчених звуків із коректним прагматичним реципрокалом для обміну іменами
+content_outline:
+- section: Звуки і літери
+  words: 300
+  points:
+  - 'Золоте правило з підручника Заболотного, 5 клас, стор. 83: «Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо». Ми чуємо і вимовляємо звуки. Ми бачимо і пишемо літери (букви). Це НЕ одне й те саме. Літера — це символ на папері. Звук — це те, що вимовляє рот. Це розрізнення є основою української фонетики — українські вчителі відпрацьовують його з 1 класу.'
+  - 'В українській мові 33 літери, але 38 звуків. Чому так? Деякі літери позначають два звуки (Я, Ю, Є, Ї в певних позиціях). Одна літера (Ь) взагалі не позначає звуку — вона лише пом''якшує попередній приголосний. Літвінова, 5 клас, стор. 130 запитує: Чи можна говорити «голосна літера»? Відповідь: ні! Звуки бувають голосні або приголосні, а не літери. Літери лише позначають звуки.'
+  - 'Український алфавіт (абетка): усі 33 літери по порядку. Кожна літера має свою назву. На відміну від англійської, український правопис переважно фонетичний — те, що ви бачите, те (здебільшого) і чуєте. Жодних "німих" літер, жодних несподіваних вимов. Щойно ви вивчите звуки, ви зможете прочитати будь-яке слово.'
+- section: Голосні звуки
+  words: 250
+  points:
+  - 'Большакова, 1 клас, стор. 24 навчає голосним через вірш: «Голосні почуєш в пісні, і у темному у лісі, і коли дивуєшся, і коли милуєшся. Легко вимовляються, весело співаються!» Голосні звуки утворюються лише за допомогою голосу — повітря вільно проходить через рот без жодних перешкод. Ви можете їх проспівати. Їх можна прокричати через поле.'
+  - '6 голосних звуків: [а], [о], [у], [е], [и], [і]. Але 10 голосних літер: А, О, У, Е, И, І, Я, Ю, Є, Ї. Інші чотири (Я, Ю, Є, Ї) є йотованими — вони можуть позначати два звуки. Усі деталі — у модулі №2. Наразі: кожне українське слово має хоча б один голосний звук. Голосні — це серце кожного складу.'
+  - 'Позначення Захарійчук, 1 клас, стор. 13: голосні звуки позначаються [•] у звукових моделях. Практика сприйняття голосних: мА-мА (два [а]), мО-лО-кО (три [о]), У-ля (одне [у]). Відео Анни Огойко для кожної голосної літери — дивіться, слухайте, повторюйте.'
+- section: Приголосні звуки
+  words: 250
+  points:
+  - 'Большакова, 1 клас, стор. 24: «Приголосні деренчать і тихенько шелестять, голосно свистять і шиплять». Приголосні звуки утворюються за допомогою голосу і шуму або лише шуму. Ваші губи, зуби або язик створюють перешкоду. Неможливо проспівати чистий приголосний — спробуйте проспівати [к] або [п].'
+  - '32 приголосних звуки з 22 приголосних літер. Деякі приголосні утворюють пари: тверді і м''які. Захарійчук, 1 клас, стор. 15: тверді звуки позначаються [–], м''які позначаються [=]. Цього поділу на тверді та м''які немає в англійській мові — це суто слов''янська особливість.'
+  - 'Приголосні літери для вивчення через відео Анни Огойко: М, Н, С, К, Л, Р, Б, В, Д, П, Т, Г, Ґ, З, Ж, Ш, Х, Й, Ч, Щ, Ц, Ф. Кожне відео показує літеру, демонструє звук і наводить приклади слів. Особливість: літера Ґ позначає твердий звук [g], тоді як Г — це фарингальний [ɦ]. Щ завжди дорівнює двом звукам [шч]. Ь (м''який знак) не має звуку — він пом''якшує попередній приголосний.'
+- section: Привіт!
+  words: 250
+  points:
+  - 'Ваша перша розмова українською. На основі епізоду 1 ULP Анни Огойко. Привіт! (неформально, для друзів, родини, однолітків). Як справи? Відповіді: Добре. Чудово. Нормально. А у тебе? (реципрокал для обміну станом — правильно з «у тебе», бо «у мене все добре» → «а у тебе?»).'
+  - 'Повний набір формальних та прощальних формул (за wiki Крок 8 — подавати як неподільні чанки): `Добрий день!` [до́брий де́нь], `Доброго ранку!` [до́брого ра́нку], `Добрий вечір!` [до́брий ве́чір] — вітання; `До побачення!` [до поба́чення], `На все добре!` [на все́ до́бре] — прощання. Ключова вимова: наголос (`[´]`) позначати в кожному чанку; у слові `Доброго` ненаголошений `[о]` НЕ редукувати до `[а]` (деколонізаційний пункт — див. wiki Декол. #5). Кінцеве `-нь` у `день` — приклад м''якого `[н′]` зі знаком `ь`.'
+  - 'Рада тебе бачити! (каже жінка) / Радий тебе бачити! (каже чоловік) — Радий/рада зустрічі! В українській мові є родові форми — жінки кажуть «рада», чоловіки — «радий». Це ваше перше знайомство з граматичним родом. Це стане великою темою, починаючи з модуля №8.'
+  - 'Прочитаймо «Привіт» по літерах — ваш перший звуковий аналіз: П [п] приголосний + р [р] приголосний + и [и] голосний + в [в] приголосний + і [і] голосний + т [т] приголосний. Два голосні, чотири приголосні. Кожен тип звука, який ви вивчили в цьому модулі, з''являється в цьому єдиному слові.'
+- section: Підсумок
+  words: 150
+  points:
+  - 'Запитання для самоперевірки: Скільки літер в українській абетці? (33) Скільки звуків? (38) Чому вони відрізняються? Що таке голосні? Що таке приголосні? Чи можна сказати «голосна літера»? (Ні — голосні бувають звуки, а не літери!) Що означає «Привіт»? Як ви відповісте на «Як справи?»'
+vocabulary_hints:
+  required:
+  - звук (sound)
+  - літера (letter)
+  - голосний (vowel sound)
+  - приголосний (consonant sound)
+  - привіт (hi, informal — chunk)
+  - Добрий день (Good day / Hello — formal chunk, stress `До́брий де́нь`)
+  - Доброго ранку (Good morning — chunk, unstressed `[о]` stays clean)
+  - Добрий вечір (Good evening — chunk)
+  - До побачення (Goodbye — chunk)
+  - як справи (how are you — chunk)
+  - добре (fine, good)
+  - чудово (great, wonderful)
+  - мама (mother)
+  - молоко (milk)
+  recommended:
+  - нормально (okay)
+  - На все добре (All the best — farewell chunk)
+  - Радий тебе бачити (Glad [m] to see you — chunk)
+  - Рада тебе бачити (Glad [f] to see you — chunk)
+  - тато (father)
+  - око (eye)
+  - дім (house)
+  - ніс (nose)
+  - сон (dream)
+activity_hints:
+- type: quiz
+  focus: 'Розрізняй звуки та літери. Приклади питань: Що ми чуємо і вимовляємо? → звуки | Що ми бачимо і пишемо? → літери | Скільки літер в абетці? → 33 | Скільки звуків в українській мові? → 38 | Чи можна говорити «голосна літера»? → Ні, голосний — це звук, не літера.'
+  items: 6
+- type: match-up
+  focus: 'З''єднай українські літери зі звуками, які вони позначають — за схемою Захарійчук «Бачу... Чую...». Пари: А ↔ [а], О ↔ [о], У ↔ [у], М ↔ [м], К ↔ [к], Н ↔ [н]. Саме так вчаться українські першокласники: бачать літеру (бачу), чують звук (чую).'
+  items: 6
+- type: fill-in
+  focus: 'Доповни базовий діалог-привітання. — {Привіт}! Як {справи}? / — {Добре}. А у {тебе}? / — {Чудово}. Варіанти: Привіт / справи / Добре / тебе / Чудово / Нормально.'
+  items: 4
+- type: group-sort
+  focus: 'Розподіли українські звуки на Голосні та Приголосні. Голосні: [а], [о], [у], [е], [и], [і]. Приголосні: [к], [м], [т], [в], [н], [р], [с], [х].'
+  items: 8
+- type: letter-grid
+  focus: 'Інтерактивна таблиця абетки, що показує всі 33 українські літери. Кожна картка: велика/мала літера, ключове слово з емодзі, кольорове розрізнення голосних/приголосних. Голосні літери виділені іншим кольором, ніж приголосні. Ь позначено як особливий (без звуку).'
+  items: 33
+- type: watch-and-repeat
+  focus: 'Практика вимови з відео Анни Огойко. Голосні: А (hvB3VpcR3ZE), У (VB1O6PmtYRU), Е (KFlsroBW0dk), И (W-1rCu0indE), І (Z9TH0H4ShGo). Приголосні: М (Ez95H4ibuJo), Н (vNUfiKHPYaU), С (7UsFBgSL91E), К (J7sGEI4-xJo), Л (v6-3Xg52Buk), Р (fMGsQ5KPQgg). Кожен пункт: відео YouTube + літера + ключове слово + позначення звука.'
+  items: 11
+- type: fill-in
+  focus: 'Типові помилки L2 — оберіть правильну форму (дзеркалить wiki «Типові помилки L2»). Фокус: оглушення дзвінких у кінці слова (не оглушувати!), розрізнення `[и]`/`[і]`, чиста ненаголошена `[о]`.'
+  items:
+  - 'Він купив {гриб|грип} у лісі — великий і червоний. (дзвінкий `б` у кінці слова)'
+  - 'Це {казка|каска} для дітей — з принцесою і драконом. (дзвінкий `з` перед глухим `к`)'
+  - 'У лісі живе руда {лис|ліс}. (розрізнення `[и]` / `[і]`)'
+  - 'На столі великий {дим|дім} з картону. (розрізнення `[и]` / `[і]`)'
+  - 'Діти п''ють {молоко|малако} щоранку. (ненаголошене `[о]` не редукується — проти російської інтерференції)'
+  - 'Він живе в {корова|корова́} (уваж. наголос на останнім складі). (наголос — орієнтир на ліву форму як норму)'
+- type: quiz
+  focus: 'Звуки vs літери — застосування термінології з Методичного підходу (милозвучність, наголос). Питання: Що таке милозвучність? → природне уникання важких скупчень приголосних (у/в, і/й). Навіщо позначати наголос? → український наголос вільний і рухомий, може розрізняти значення (за́мок/замо́к).'
+  items: 4
+connects_to:
+- a1-002 (Читаємо українською)
+prerequisites: []
+grammar:
+- Звуки проти літер — 33 літери, 38 звуків. 'Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо.'
+- Голосні (6 звуків, 10 літер) — лише голос, немає перешкод, можна співати
+- Приголосні (32 звуки, 22 літери) — голос + шум або лише шум, є перешкода
+- 'Чому 38 > 33: йотовані голосні (Я, Ю, Є, Ї), тверді/м''які пари, Ь (без звуку)'
+- Звуковий аналіз — визначення голосних і приголосних у слові
+- 'Привітання як неподільні лексичні чанки: Привіт / Добрий день / Доброго ранку / Добрий вечір / До побачення / На все добре; родова пара Радий/Рада тебе бачити'
+- 'Милозвучність: чергування у/в та і/й залежно від звукового оточення (після голосного → в/й; після приголосного → у/і) — за wiki Методичний підхід'
+- 'Наголос як носій значення: за́мок/замо́к, бра́ти/брати́; кожне нове слово з позначкою наголосу (`[´]`); ненаголошене `[о]` не редукується до `[а]` (вирізняється від російської)'
+register: розмовний
+references:
+- title: Большакова, буквар 1 клас, стор. 24
+  notes: Голосні/приголосні вивчаються через вірші. «Голосні почуєш в пісні.» «Приголосні деренчать.»
+- title: Захарійчук, буквар 1 клас (НУШ 2025), стор. 13
+  notes: 'Позначення звуків: [•] для голосних, [–] для приголосних, [=] для м''яких приголосних.'
+- title: Заболотний 5 клас, стор. 83
+  notes: '«Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо.» 33 букви, 38 звуків.'
+- title: Літвінова 5 клас, стор. 130
+  notes: '«Чи можна говорити «голосна літера»? Чому?» — педагогічне запитання про звуки та літери.'
+- title: ULP Season 1, Episode 1 — Informal Greetings
+  url: https://www.ukrainianlessons.com/episode1/
+  notes: Привіт, Як справи?, моделі відповідей.
+- title: 'Wiki: pedagogy/a1/sounds-letters-and-hello (LOCKED 2026-04-23)'
+  notes: 'Authoritative pedagogical brief — див. Крок 8 (привітання як чанки), Типові помилки L2 (6 помилок + кінестетичні тести), Методичний підхід (милозвучність, наголос).'
+pronunciation_videos:
+  credit: Anna Ohoiko — Ukrainian Lessons
+  overview: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  playlist: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+  vowels:
+    А: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    О: null
+    У: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    Е: https://www.youtube.com/watch?v=KFlsroBW0dk
+    И: https://www.youtube.com/watch?v=W-1rCu0indE
+    І: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+  consonants:
+    М: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    Л: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    Н: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    С: https://www.youtube.com/watch?v=7UsFBgSL91E
+    К: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    Р: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    Б: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    В: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    Д: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    П: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    Т: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    Г: https://www.youtube.com/watch?v=gVnclpSI0DU
+    Ґ: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+    З: https://www.youtube.com/watch?v=BhASNxitC1A
+    Ж: https://www.youtube.com/watch?v=dIrGVcqPwqM
+    Ш: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    Х: https://www.youtube.com/watch?v=vpr58zJSJKc
+    Й: https://www.youtube.com/watch?v=aq0cjB90s3w
+    Ч: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    Щ: https://www.youtube.com/watch?v=QmBLieIuf6Q
+    Ц: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    Ф: https://www.youtube.com/watch?v=haHRsFFZRQI
+  special:
+    Я: https://www.youtube.com/watch?v=yhSAf41LX8I
+    Ю: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    Є: https://www.youtube.com/watch?v=O0bwRyyBQSc
+    Ь: https://www.youtube.com/watch?v=cJlal8XKBxo
+    Ї: https://www.youtube.com/watch?v=UcjdjQXhAY8
+plan_fixes:
+- version: 1.5.1
+  date: '2026-04-17'
+  trigger: Cultural overstatement of Ґ, dialogue formatting failures, and beat parsing
+    issues with single quotes.
+  changes:
+  - replace content_outline[0].points[0] — Replace single quotes with guillemets to
+    fix teaching beats parsing.
+  - replace content_outline[0].points[1] — Remove single quotes around the pedagogical
+    question to fix parsing.
+  - replace content_outline[1].points[0] — Replace single quotes to fix 'Голосні'
+    beat parsing.
+  - replace content_outline[2].points[0] — Replace single quotes to fix 'Приголосні'
+    beat parsing.
+  - replace content_outline[2].points[2] — Remove "uniquely Ukrainian" claim for Ґ
+    to address cultural accuracy complaint.
+  - replace content_outline[4].points[0] — Replace single quotes to fix beat parsing.
+  - replace dialogue_situations[1].setting — Force writer to use named speakers instead
+    of em dashes and include the required greeting.
+  - replace dialogue_situations[1].motivation — Update motivation to explicitly include
+    the reciprocal greeting pattern.
+changelog:
+- version: '1.6.0'
+  date: '2026-04-23'
+  changes:
+  - 'Review-and-lock pass per the #1412 rubric template (`docs/best-practices/wiki-plan-review-and-lock.md`). Paired wiki locked at 9/10.'
+  - 'Fixed context-blind reciprocal `А у тебе?` in dialogue_situations[1] (name-exchange context) — replaced with `А тебе?` (elliptical for `А тебе як звати?`). Per #1392 Defect 2. `А у тебе?` retained in content_outline[3].points[0] for the `Як справи? → Добре. А у тебе?` exchange, where the `у тебе` construction IS contextually correct (state exchange, not name exchange).'
+  - 'Added lifecycle markers (lifecycle/reviewed_at/reviewed_by/review_notes) per the convention documented in `docs/best-practices/wiki-plan-review-and-lock.md`.'
+  - 'Added back-reference to LOCKED wiki (`wiki/pedagogy/a1/sounds-letters-and-hello.md`) in references[].'
+  - 'Added wiki-plan hooks (closes cross-agent BLOCKER): (a) expanded content_outline[3] with formal greeting set (Добрий день / Доброго ранку / Добрий вечір / До побачення / На все добре) matching wiki Крок 8; (b) added two new activity_hints — fill-in mirroring the 6 rows of wiki "Типові помилки L2" table, and quiz on милозвучність + наголос; (c) added grammar items for милозвучність (у/в, і/й) and наголос as meaning-maker; (d) extended vocabulary_hints with greeting chunks; (e) extended objectives to cover милозвучність/наголос and L2-error prevention.'
+  - 'Adversarial scan clean: no Russianisms in plan prose (synthetic `Прочитаймо`, no `Давайте`); no calques in vocabulary_hints (all VESUM-verified); no plan-internal contradictions (word_target sum 1200 = 300+250+250+250+150).'

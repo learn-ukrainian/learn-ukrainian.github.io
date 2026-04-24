@@ -2,23 +2,17 @@ module: a1-002
 level: A1
 sequence: 2
 slug: reading-ukrainian
-version: '1.3.0'
+version: 1.3.1
 lifecycle: locked
 reviewed_at: '2026-04-23T00:00:00Z'
 reviewed_by: claude-opus-4-7-xhigh-reading-ukrainian
-review_notes: >-
-  Review-and-lock pass for A1 scale batch input. See
-  wiki/.reviews/pedagogy/a1/reading-ukrainian-review-LOCKED.md for the
-  wiki-side report (5-dim, all ≥9); see PR body for the plan-side
-  findings (pragmatic / Russianism / calque / contradiction /
-  references / cross-pair drift). The plan was brought into alignment
-  with the locked wiki by (a) adding a reading-specific L2 error-drill
-  activity that mirrors the wiki's new "Типові помилки L2" table, (b)
-  adding a `references:` block with a back-reference to the locked
-  wiki, (c) adding lifecycle markers per
-  docs/best-practices/wiki-plan-review-and-lock.md. No Russianisms,
-  calques, or homoglyphs detected in plan prose; Latin-in-Cyrillic
-  homoglyph scan is clean.
+review_notes: Review-and-lock pass for A1 scale batch input. See wiki/.reviews/pedagogy/a1/reading-ukrainian-review-LOCKED.md
+  for the wiki-side report (5-dim, all ≥9); see PR body for the plan-side findings (pragmatic / Russianism
+  / calque / contradiction / references / cross-pair drift). The plan was brought into alignment with
+  the locked wiki by (a) adding a reading-specific L2 error-drill activity that mirrors the wiki's new
+  "Типові помилки L2" table, (b) adding a `references:` block with a back-reference to the locked wiki,
+  (c) adding lifecycle markers per docs/best-practices/wiki-plan-review-and-lock.md. No Russianisms, calques,
+  or homoglyphs detected in plan prose; Latin-in-Cyrillic homoglyph scan is clean.
 title: Читаємо українською
 subtitle: Від літер до слів та речень
 focus: phonetics
@@ -34,35 +28,54 @@ content_outline:
 - section: Склади
   words: 250
   points:
-  - 'Большакова, 1 клас, стор. 25: «У слові стільки складів, скільки голосних звуків.» Порахуй голосні — дізнаєшся кількість складів. Це правило ніколи не порушується. ма-ма (2 голосні = 2 склади), мо-ло-ко (3 голосні = 3 склади), банк (1 голосна = 1 склад).'
-  - 'Як українські діти вчаться читати — складові ланцюжки: Починаємо з пари приголосний + голосний: М → ма, мо, му, ми. Потім навпаки: ам, ом, ум. Далі будуємо слова: ма-ма, мо-ло-ко. Це підхід "знизу вгору": звук → склад → слово. (Захарійчук 1 клас, стор. 46; Большакова 1 клас, стор. 25)'
-  - 'Звуковий аналіз слова (Большакова стор. 29): 1) Визначаю голосні звуки 2) Ділю слово на склади 3) Ставлю наголос 4) Позначаю приголосні звуки. Тест із підборіддям для підрахунку складів (Кравцова 2 клас, стор. 13): покладіть долоню під підборіддя, скажіть слово — кожен дотик підборіддя = один склад.'
-  - 'Українська система позначення звуків (Захарійчук стор. 15): [●] голосний, [—] твердий приголосний, [=] м''який приголосний. Цього вчиться кожна українська дитина в 1 класі.'
+  - 'Большакова, 1 клас, стор. 25: «У слові стільки складів, скільки голосних звуків.» Порахуй голосні
+    — дізнаєшся кількість складів. Це правило ніколи не порушується. ма-ма (2 голосні = 2 склади), мо-ло-ко
+    (3 голосні = 3 склади), банк (1 голосна = 1 склад).'
+  - 'Як українські діти вчаться читати — складові ланцюжки: Починаємо з пари приголосний + голосний: М
+    → ма, мо, му, ми. Потім навпаки: ам, ом, ум. Далі будуємо слова: ма-ма, мо-ло-ко. Це підхід "знизу
+    вгору": звук → склад → слово. (Захарійчук 1 клас, стор. 46; Большакова 1 клас, стор. 25)'
+  - 'Звуковий аналіз слова (Большакова стор. 29): 1) Визначаю голосні звуки 2) Ділю слово на склади 3)
+    Ставлю наголос 4) Позначаю приголосні звуки. Тест із підборіддям для підрахунку складів (Кравцова
+    2 клас, стор. 13): покладіть долоню під підборіддя, скажіть слово — кожен дотик підборіддя = один
+    склад.'
+  - 'Українська система позначення звуків (Захарійчук стор. 15): [●] голосний, [—] твердий приголосний,
+    [=] м''який приголосний. Цього вчиться кожна українська дитина в 1 класі.'
 - section: Голосні літери
   words: 300
   points:
-  - 'Повторення з модуля №1: 6 звуків, 10 літер. Тепер розберемо всі 10 окремо. Прості голосні (один звук кожна): А [а], О [о], У [у], Е [е], И [и], І [і]. Кожна позначає ОДИН стабільний звук — жодних сюрпризів.'
-  - 'Йотовані голосні (два звуки або пом''якшення): Я = [йа] на початку слова (яблуко) або після голосного (моя). Після приголосного: пом''якшує його + [а] (пісня — Н пом''якшений). Ю = [йу] або пом''якшення + [у]. Є = [йе] або пом''якшення + [е]. Ї = ЗАВЖДИ [йі] — ніколи не пом''якшує. Лише на початку слова, після голосного або після апострофа. Унікальна для української мови.'
-  - 'Критичні мінімальні пари: И проти І: кит проти кіт, дим проти дім. Послухайте відео Анни з правильною вимовою кожного з них — різниця тонка, але вона змінює значення.'
+  - 'Повторення з модуля №1: 6 звуків, 10 літер. Тепер розберемо всі 10 окремо. Прості голосні (один звук
+    кожна): А [а], О [о], У [у], Е [е], И [и], І [і]. Кожна позначає ОДИН стабільний звук — жодних сюрпризів.'
+  - 'Йотовані голосні (два звуки або пом''якшення): Я = [йа] на початку слова (яблуко) або після голосного
+    (моя). Після приголосного: пом''якшує його + [а] (пісня — Н пом''якшений). Ю = [йу] або пом''якшення
+    + [у]. Є = [йе] або пом''якшення + [е]. Ї = ЗАВЖДИ [йі] — ніколи не пом''якшує. Лише на початку слова,
+    після голосного або після апострофа. Унікальна для української мови.'
+  - 'Критичні мінімальні пари: И проти І: кит проти кіт, дим проти дім. Послухайте відео Анни з правильною
+    вимовою кожного з них — різниця тонка, але вона змінює значення.'
 - section: Читання слів
   words: 500
   points:
-  - 'Застосовуйте складові ланцюжки до реальних слів. Не читайте по літерах — читайте по складах. Використовуйте звуковий аналіз: спочатку знайдіть голосні, поділіть на склади, потім об''єднайте. Приклад: книга — знайдіть голосні И, А → кни-га → прочитайте.'
-  - 'Поступове ускладнення за українською класифікацією: односкладові (1 склад): дім, сон, ліс, дуб, хліб. двоскладові (2 склади): ма-ма, та-то, во-да, ру-ка, ха-та, ка-ша. трискладові (3 склади): ап-те-ка, мо-ло-ко, лю-ди-на, ву-ли-ця. багатоскладові (4+ склади): у-ні-вер-си-тет, біб-лі-о-те-ка, фо-то-гра-фі-я.'
-  - 'Назви українських міст як практика читання: Ки-їв, Льві-в, О-де-са, Хар-ків, Дні-про, Пол-та-ва. Зверніть увагу на різну кількість складів та їхню структуру.'
-  - 'Особливі буквосполучення, на які слід звернути увагу (анонс для модуля №3): Щ — це завжди [шч] — що, ще. Ь не має звуку — він пом''якшує: день, сіль, кінь. Апостроф розділяє: сім''я, м''ясо, п''ять. Вони будуть детально розібрані у модулі №3.'
+  - 'Застосовуйте складові ланцюжки до реальних слів. Не читайте по літерах — читайте по складах. Використовуйте
+    звуковий аналіз: спочатку знайдіть голосні, поділіть на склади, потім об''єднайте. Приклад: книга
+    — знайдіть голосні И, А → кни-га → прочитайте.'
+  - 'Поступове ускладнення за українською класифікацією: односкладові (1 склад): дім, сон, ліс, дуб, хліб.
+    двоскладові (2 склади): ма-ма, та-то, во-да, ру-ка, ха-та, ка-ша. трискладові (3 склади): ап-те-ка,
+    мо-ло-ко, лю-ди-на, ву-ли-ця. багатоскладові (4+ склади): у-ні-вер-си-тет, біб-лі-о-те-ка, фо-то-гра-фі-я.'
+  - 'Назви українських міст як практика читання: Ки-їв, Льві-в, О-де-са, Хар-ків, Дні-про, Пол-та-ва.
+    Зверніть увагу на різну кількість складів та їхню структуру.'
+  - 'Особливі буквосполучення, на які слід звернути увагу (анонс для модуля №3): Щ — це завжди [шч] —
+    що, ще. Ь не має звуку — він пом''якшує: день, сіль, кінь. Апостроф розділяє: сім''я, м''ясо, п''ять.
+    Вони будуть детально розібрані у модулі №3.'
 - section: Підсумок
   words: 150
   points:
-  - 'Самоперевірка: Як порахувати склади в українському слові? Назвіть 6 голосних звуків. Назвіть 4 йотовані голосні літери. Що робить Ь? Що робить апостроф? Прочитайте це слово: бібліотека — скільки в ньому складів?'
+  - 'Самоперевірка: Як порахувати склади в українському слові? Назвіть 6 голосних звуків. Назвіть 4 йотовані
+    голосні літери. Що робить Ь? Що робить апостроф? Прочитайте це слово: бібліотека — скільки в ньому
+    складів?'
 vocabulary_hints:
-  author_note: >-
-    На А1 у цьому модулі всі слова (required + recommended) подаються як
-    носії фонетичної практики — склади, наголос, йотовані, `ь`, апостроф,
-    ДЖ/ДЗ, Ї, Щ. НЕ вводьте відмінкові парадигми, дієвідміну чи ступені
-    порівняння — відмінки починаються з модуля №18 (знахідний). Кожне
-    слово тут має одну словоформу, яку учень читає вголос і діагностує
-    за таблицею «Типові помилки L2» (див. locked wiki, розділ після
+  author_note: На А1 у цьому модулі всі слова (required + recommended) подаються як носії фонетичної практики
+    — склади, наголос, йотовані, `ь`, апостроф, ДЖ/ДЗ, Ї, Щ. НЕ вводьте відмінкові парадигми, дієвідміну
+    чи ступені порівняння — відмінки починаються з модуля №18 (знахідний). Кожне слово тут має одну словоформу,
+    яку учень читає вголос і діагностує за таблицею «Типові помилки L2» (див. locked wiki, розділ після
     Словникового мінімуму).
   required:
   - яблуко (apple) — Я at word start = [йа]
@@ -82,7 +95,7 @@ activity_hints:
   focus: 'Поділи слова на склади: мо-ло-ко, ап-те-ка, у-ні-вер-си-тет'
   items: 8
 - type: count-syllables
-  focus: 'Порахуй склади — скільки голосних, стільки й складів'
+  focus: Порахуй склади — скільки голосних, стільки й складів
   items: 8
 - type: match-up
   focus: 'З''єднай йотовані голосні з їхніми звуковими компонентами: Я=[й]+[а]'
@@ -91,19 +104,21 @@ activity_hints:
   focus: Прочитай слово і вибери його значення
   items: 6
 - type: odd-one-out
-  focus: 'Яке слово зайве? — за кількістю складів (односкладове серед двоскладових)'
+  focus: Яке слово зайве? — за кількістю складів (односкладове серед двоскладових)
   items: 6
 - type: match-up
-  focus: 'Типові помилки L2 при читанні (mirror wiki "Типові помилки L2" table). З''єднайте слово з типом помилки, яку воно перевіряє.'
+  focus: Типові помилки L2 при читанні (mirror wiki "Типові помилки L2" table). З'єднайте слово з типом
+    помилки, яку воно перевіряє.
   items:
   - день: 'Ігнорування м''якого знака: [ден] замість [ден′]'
-  - сім'я: 'Злиття через апостроф: [сіма] замість [сімйа́]'
-  - дякую: 'Йотована після приголосного: [дйакуйу] замість [д''а́куйу]'
-  - Україна: '`Ї` → [і]: [Украіна] замість [Украйі́на]'
+  - сім'я: 'Злиття через апостроф: [сіма] замість [сімйа]'
+  - дякую: 'Йотована після приголосного: [дйакуйу] замість [д''акуйу]'
+  - Україна: '`Ї` → [і]: [Украіна] замість [Украйіна]'
   - борщ: '`Щ` → [ш]: [борш] замість [боршч]'
   - джміль: '`ДЖ` як два звуки: [д]-[жміль] замість [джміль]'
-  - молоко: 'Читання по літерах замість по складах'
-  - огірок: 'Сплутування СКЛАДОПОДІЛУ з ПЕРЕНЕСЕННЯМ (складоподіл `о-гі-рок`; перенесення `огі-рок`, бо одна літера `о-` не може стояти окремо в рядку)'
+  - молоко: Читання по літерах замість по складах
+  - огірок: Сплутування СКЛАДОПОДІЛУ з ПЕРЕНЕСЕННЯМ (складоподіл `о-гі-рок`; перенесення `огі-рок`, бо
+      одна літера `о-` не може стояти окремо в рядку)
 connects_to:
 - a1-003 (Особливі знаки)
 prerequisites:
@@ -126,18 +141,35 @@ references:
 - title: Захарійчук 1 клас (НУШ 2025), стор. 13-15
   notes: 'Позначення звуків: [•] для голосних, [–] для приголосних, [=] для м''яких.'
 - title: Вашуленко, Українська мова 2 клас, стор. 23-27
-  notes: 'Правила переносу, наголос як носій значення (сі́м''я/сім''я́, о́бід/обі́д), йотовані голосні.'
+  notes: Правила переносу, наголос як носій значення (сім'я/сім'я, обід/обід), йотовані голосні.
 - title: Кравцова, Українська мова 2 клас, стор. 13
-  notes: 'Кінестетичний тест «долоня під підборіддям» для підрахунку складів.'
+  notes: Кінестетичний тест «долоня під підборіддям» для підрахунку складів.
 - title: 'Wiki: pedagogy/a1/reading-ukrainian (LOCKED 2026-04-23)'
-  notes: 'Authoritative pedagogical brief — see Кроки 1–7 (sequencing), "Типові помилки L2" (reading-specific decoding errors — 8 rows), and Приклад 5 (partner-diagnostic drill closing the loop).'
+  notes: Authoritative pedagogical brief — see Кроки 1–7 (sequencing), "Типові помилки L2" (reading-specific
+    decoding errors — 8 rows), and Приклад 5 (partner-diagnostic drill closing the loop).
 - title: 'Wiki: pedagogy/a1/sounds-letters-and-hello (LOCKED 2026-04-23)'
-  notes: 'Sibling wiki for sound-production; this wiki (reading-ukrainian) targets the decoding-from-print slice — intentional overlap on Ь/apostrophe/iotated/Щ/ДЖ/ДЗ, deliberate distinction in framing (production vs. decoding).'
+  notes: Sibling wiki for sound-production; this wiki (reading-ukrainian) targets the decoding-from-print
+    slice — intentional overlap on Ь/apostrophe/iotated/Щ/ДЖ/ДЗ, deliberate distinction in framing (production
+    vs. decoding).
 changelog:
-- version: '1.3.0'
+- version: 1.3.0
   date: '2026-04-23'
   changes:
-  - 'Review-and-lock pass. Added lifecycle markers (lifecycle/reviewed_at/reviewed_by/review_notes) per docs/best-practices/wiki-plan-review-and-lock.md.'
-  - 'Added new match-up activity: reading-specific L2 error drill (8 items, mirrors wiki "Типові помилки L2" table — closes the wiki-plan drift on reading errors).'
-  - 'Consolidated `references:` block: added Вашуленко, Кравцова textbook entries and back-references to both locked sibling wikis (reading-ukrainian + sounds-letters-and-hello). Previous bottom-of-file `references:` had only 3 Большакова/Захарійчук entries.'
-  - 'Removed duplicate `references:` block at end of file (was a pre-existing inconsistency — duplicate YAML keys are unsafe and parser-dependent; PyYAML silently takes last-key-wins, which meant only the 3-entry tail block was reaching `validate_plans.py`, hiding the earlier block). The consolidated single block now carries all 7 entries.'
+  - Review-and-lock pass. Added lifecycle markers (lifecycle/reviewed_at/reviewed_by/review_notes) per
+    docs/best-practices/wiki-plan-review-and-lock.md.
+  - 'Added new match-up activity: reading-specific L2 error drill (8 items, mirrors wiki "Типові помилки
+    L2" table — closes the wiki-plan drift on reading errors).'
+  - 'Consolidated `references:` block: added Вашуленко, Кравцова textbook entries and back-references
+    to both locked sibling wikis (reading-ukrainian + sounds-letters-and-hello). Previous bottom-of-file
+    `references:` had only 3 Большакова/Захарійчук entries.'
+  - Removed duplicate `references:` block at end of file (was a pre-existing inconsistency — duplicate
+    YAML keys are unsafe and parser-dependent; PyYAML silently takes last-key-wins, which meant only the
+    3-entry tail block was reaching `validate_plans.py`, hiding the earlier block). The consolidated single
+    block now carries all 7 entries.
+plan_fixes:
+- version: 1.3.1
+  date: '2026-04-24'
+  trigger: Plan check rejected U+0301 combining acute stress marks in 7 place(s). Pipeline adds stress
+    marks deterministically AFTER review; plans must be stress-free.
+  changes:
+  - strip U+0301 from all string values (7 removals)
