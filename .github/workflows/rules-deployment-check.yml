@@ -1,0 +1,49 @@
+name: Rules Deployment Check
+
+on:
+  push:
+    paths:
+      - '.github/workflows/rules-deployment-check.yml'
+      - 'scripts/deploy_prompts.sh'
+      - 'scripts/check_rules_deployment.sh'
+      - 'scripts/lint_prompts.py'
+      - 'scripts/lint/**/*.py'
+      - 'claude_extensions/**'
+      - 'gemini_extensions/**'
+      - 'tests/test_deploy_script_idempotency.py'
+  pull_request:
+    paths:
+      - '.github/workflows/rules-deployment-check.yml'
+      - 'scripts/deploy_prompts.sh'
+      - 'scripts/check_rules_deployment.sh'
+      - 'scripts/lint_prompts.py'
+      - 'scripts/lint/**/*.py'
+      - 'claude_extensions/**'
+      - 'gemini_extensions/**'
+      - 'tests/test_deploy_script_idempotency.py'
+  workflow_dispatch:
+
+jobs:
+  verify-rules-deployment:
+    name: Verify Deploy Script Idempotency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+
+      - name: Create local test venv
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install pytest
+
+      - name: Verify deploy script is idempotent (rules/prompts sync)
+        run: |
+          bash scripts/deploy_prompts.sh
+          bash scripts/check_rules_deployment.sh
+
+      - name: Regression tests for deploy drift check
+        run: .venv/bin/python -m pytest tests/test_deploy_script_idempotency.py -v
