@@ -26,8 +26,8 @@ Usage:
     .venv/bin/python scripts/build/v6_build.py b1 1 --skeleton    # force skeleton
     .venv/bin/python scripts/build/v6_build.py b1 1 --no-skeleton # skip skeleton
     .venv/bin/python scripts/build/v6_build.py a1 1 --step write  # run single step
-    .venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini  # default
-    .venv/bin/python scripts/build/v6_build.py a1 1 --writer claude
+    .venv/bin/python scripts/build/v6_build.py a1 1 --writer claude-tools  # default (2026-04-23)
+    .venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini-tools  # research/exercises
     .venv/bin/python scripts/build/v6_build.py a1 1 --resume       # resume from last completed phase
     .venv/bin/python scripts/build/v6_build.py a1 1 --range 14     # batch (skips complete, rebuilds partial)
     .venv/bin/python scripts/build/v6_build.py a1 1 --range 14 --resume  # batch + resume partial modules
@@ -5657,15 +5657,30 @@ def _determine_reviewer(
     writer: str,
     reviewer_override: str | None,
 ) -> tuple[str, str] | None:
-    """Resolve the reviewer family and agent id for review passes."""
+    """Resolve the reviewer family and agent id for review passes.
+
+    Policy (2026-04-23 PM, see MEMORY "REVIEWER POLICY"):
+    - Codex is the primary pipeline reviewer — use codex-tools unless
+      the writer is also in the Codex family (self-review forbidden).
+    - Gemini self-review OFF. Gemini is never the default reviewer.
+    - When the writer IS Codex, fall back to claude-tools (the only
+      non-Codex, non-Gemini family).
+
+    The previous logic routed claude-writers to gemini-tools, which
+    contradicted the 2026-04-23 policy shift — fixed under #1527.
+    """
     if reviewer_override:
         return get_family(reviewer_override).name, reviewer_override
 
-    if writer in ("claude", "claude-tools"):
-        return get_family("gemini-tools").name, "gemini-tools"
-    if writer in ("gemini", "gemini-tools"):
-        return get_family("codex-tools").name, "codex-tools"
-    return get_family("gemini-tools").name, "gemini-tools"
+    writer_family = get_family(writer).name
+    codex_family = get_family("codex-tools").name
+
+    # Primary reviewer: codex-tools (current policy).
+    if writer_family != codex_family:
+        return codex_family, "codex-tools"
+
+    # Fallback when codex writes — Gemini is off by policy, so Claude reviews.
+    return get_family("claude-tools").name, "claude-tools"
 
 
 def _build_review_tools_section(reviewer: str) -> str:
