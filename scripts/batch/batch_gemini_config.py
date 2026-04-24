@@ -48,7 +48,10 @@ FALLBACK_MODEL = "auto"                              # Let gemini-cli route when
 # block) were hitting the old 900s ceiling while still healthy. Raised
 # to 1h for reviewers; stall_timeout keeps genuinely-hung subprocesses
 # from lingering.
-TIMEOUT_SKELETON = 300
+TIMEOUT_SKELETON = 600  # Was 300; bumped 2026-04-24 after a1/sounds-letters-
+                        # and-hello skeleton on Opus 4.7 @ xhigh with a 51K-char
+                        # prompt hit the old ceiling. 600s matches peer
+                        # phase timeouts (TIMEOUT_PRE_VERIFY, TIMEOUT_VOCAB).
 TIMEOUT_WRITE = 900
 TIMEOUT_WRITE_NO_TOOLS = 600
 TIMEOUT_VOCAB = 600

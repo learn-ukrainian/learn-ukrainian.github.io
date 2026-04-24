@@ -3728,13 +3728,21 @@ def step_skeleton(level: str, module_num: int, slug: str,
         yaml.safe_dump(skeleton_manifest, sort_keys=False, allow_unicode=True), "utf-8",
     )
 
-    # Dispatch to writer — skeleton is structure planning, fast model sufficient
+    # Dispatch to writer. Skeleton IS a writing step — its structure feeds
+    # straight into the content write phase, so writer quality matters. Use
+    # `family.thinking` (Opus 4.7 for Claude). Rationale:
+    #   - Anthropic 2026-04-23 postmortem flagged sonnet-4-6 as the most-
+    #     affected model during the regression window. #1474 bumped the
+    #     thinking tier to 4-7 but left the fast tier on 4-6.
+    #   - 51K-char skeleton prompts (observed 2026-04-24 a1/sounds-letters-
+    #     and-hello fire) time out sonnet at 300s before it can complete.
+    #   - Pre-verify keeps .fast (genuinely structured YAML output).
     from build.dispatch import dispatch_agent as _dispatch
 
     family = get_family(writer)
     ok, raw = _dispatch(
         prompt, agent=family.name, phase="skeleton", orch_dir=orch_dir, timeout=TIMEOUT_SKELETON,
-        model=family.fast,
+        model=family.thinking,
     )
 
     if not ok or not raw:
