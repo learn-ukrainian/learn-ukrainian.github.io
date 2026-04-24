@@ -1,4 +1,4 @@
-<!-- version: 2.3.1 | updated: 2026-04-24 | #1538 review: Я positional rule (й+а vs palatalization) + VERIFY-in-YAML must be inside a field value -->
+<!-- version: 2.4.0 | updated: 2026-04-24 | pacing-plan no longer primes "Section N:" labels — use verbatim Ukrainian plan titles; adds explicit H2 heading rule to kill SECTION_ORDER retries (observed on a1/1 2026-04-24 rebuild) -->
 # V6 Writing Prompt — Module Content Generation
 
 ## Shared Contract (read first — supersedes rule text below on conflict)
@@ -43,17 +43,21 @@ Write the full prose content for module **{MODULE_NUM}: {TOPIC_TITLE}** ({LEVEL}
 
 Before writing any content, output a `<pacing_plan>` block only if no Skeleton block appears later in this prompt. Evaluate each section from the plan and commit to a word budget. This prevents frontloading early sections and rushing later ones.
 
+Use the exact Ukrainian section titles from the plan as the quoted labels — do **not** invent `Section 1`, `Section 2`, `Part N`, or any English/numeric prefix. The pacing plan is a scratchpad; the labels you write here must be verbatim the H2 headings you'll write below.
+
 ```
 <pacing_plan>
-Section 1 "Title": ~XXX words — [1-sentence content focus]
-Section 2 "Title": ~XXX words — [1-sentence content focus]
+"<verbatim-ukrainian-title-from-plan-1>": ~XXX words — [1-sentence content focus]
+"<verbatim-ukrainian-title-from-plan-2>": ~XXX words — [1-sentence content focus]
 ...
-Summary: ~150 words
+"{SUMMARY_HEADING}": ~150 words
 Total: {WORD_TARGET}+ words
 </pacing_plan>
 ```
 
 Then begin writing the module content. Follow your own pacing plan — each section must hit its word budget (±10%). If a Skeleton block appears later in this prompt, do NOT output `<pacing_plan>` and start directly with the first H2 heading.
+
+**H2 heading rule (strict — enforced by deterministic contract check).** Every `## H2` in the module body MUST match the plan's section title verbatim. No `## Section 1: <title>`, no `## Part N: <title>`, no `## Step N: <title>`, no numbering, no English label — just `## <ukrainian title>`. The contract checker compares H2 titles to plan titles by exact string match. Any prefix or suffix fails `SECTION_ORDER` and cascades into `MISSING_SECTION` + `TEACHING_BEATS` violations. This is a frequent write-phase failure — emitting `## Section 1: Звуки і літери` instead of `## Звуки і літери` wastes 2–3 write retries per module.
 
 ---
 

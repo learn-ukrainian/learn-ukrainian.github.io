@@ -12,6 +12,8 @@ on:
       - 'claude_extensions/phases/**/*.md'
       - 'claude_extensions/skills/**/*.md'
       - 'gemini_extensions/skills/**/*.md'
+      - 'scripts/build/phases/**/*.md'
+      - 'scripts/build/contracts/**/*.md'
       - 'starlight/**'
   pull_request:
     paths:
@@ -24,6 +26,8 @@ on:
       - 'claude_extensions/phases/**/*.md'
       - 'claude_extensions/skills/**/*.md'
       - 'gemini_extensions/skills/**/*.md'
+      - 'scripts/build/phases/**/*.md'
+      - 'scripts/build/contracts/**/*.md'
       - 'starlight/**'
   workflow_dispatch:
 
