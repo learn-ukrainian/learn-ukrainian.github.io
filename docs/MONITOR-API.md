@@ -1004,6 +1004,63 @@ Newest usage records from today's runtime logs, newest first.
 }
 ```
 
+## Tool Timing Telemetry — `/api/telemetry/`
+
+### `POST /api/telemetry/tool-timings`
+
+Ingests one Claude Code `PostToolUse` or `PostToolUseFailure` timing event.
+The local hook sends these events asynchronously, so Monitor API outages do
+not block tool execution.
+
+```bash
+curl -s -X POST http://localhost:8765/api/telemetry/tool-timings \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "ts": "2026-04-25T00:12:34.567Z",
+    "tool_name": "Bash",
+    "duration_ms": 142,
+    "tool_use_id": "toolu_123",
+    "session_id": "sess-1",
+    "failed": false
+  }'
+```
+
+Response:
+```json
+{"ok": true}
+```
+
+Validation notes:
+- `duration_ms` must be `>= 0`
+- `tool_name`, `duration_ms`, and `ts` are required
+- malformed payloads return FastAPI/Pydantic `422`
+
+### `GET /api/telemetry/tool-timings?window=1h&tool=Bash`
+
+Returns per-tool counts, latency percentiles, mean duration, and failure
+counts for a bounded time window. Supported windows: `5m`, `15m`, `1h`,
+`6h`, `24h`, `7d`. Results are sorted by `count` descending.
+
+```bash
+curl -s 'http://localhost:8765/api/telemetry/tool-timings?window=1h' | jq
+curl -s 'http://localhost:8765/api/telemetry/tool-timings?window=24h&tool=Bash' | jq
+```
+
+Response:
+```json
+[
+  {
+    "tool_name": "Bash",
+    "count": 124,
+    "p50_ms": 85,
+    "p95_ms": 412,
+    "p99_ms": 1850,
+    "mean_ms": 142,
+    "failure_count": 3
+  }
+]
+```
+
 ## Delegation — `/api/delegate/`
 
 ### `GET /api/delegate/tasks?status=&limit=50`

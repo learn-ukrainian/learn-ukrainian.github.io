@@ -63,6 +63,7 @@ from .session_router import router as session_router
 from .site_router import router as site_router
 from .state_helpers import cache_get, cache_invalidate, cache_set
 from .state_router import router as state_router
+from .telemetry_router import router as telemetry_router
 from .wiki_router import router as wiki_router
 from .worktrees_router import router as worktrees_router
 
@@ -132,6 +133,7 @@ app.include_router(runtime_router, prefix="/api/runtime")
 app.include_router(session_router, prefix="/api/session", tags=["session"])
 app.include_router(site_router, prefix="/api/site", tags=["site"])
 app.include_router(state_router, prefix="/api/state")
+app.include_router(telemetry_router)
 app.include_router(wiki_router, prefix="/api/wiki", tags=["wiki"])
 app.include_router(worktrees_router, prefix="/api/worktrees", tags=["worktrees"])
 
