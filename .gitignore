@@ -198,6 +198,9 @@ data/corpus_audit/*
 !data/corpus_audit/draft_tickets/*.md
 
 
+# Plan backup files from scripts/tools/update_plan_activities.py (#1148)
+curriculum/l2-uk-en/plans/*/*.yaml.bak
+
 .gemini/
 
 # SQLite WAL/SHM sidecars — same exclusion as the .db files themselves.
@@ -206,3 +209,10 @@ data/*.db-wal
 
 # Alona's teaching material (large, local-only, IP-sensitive)
 data/alona-lessons/
+
+# Dispatch briefs — historical prompts for codex/claude/gemini delegations.
+# Each brief is consumed once, producing a PR; keeping them in the repo just
+# pollutes the working tree across sessions. See #1518 session for the
+# rationale.
+.worktree-briefs/
+
