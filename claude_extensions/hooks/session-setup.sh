@@ -127,6 +127,15 @@ if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/audit/ch
   fi
 fi
 
+# 10c. Check postmortem hygiene (sister to decisions + ADRs). Process:
+# docs/best-practices/postmortem-management.md.
+if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/audit/check_postmortems.py" ]; then
+  POSTMORTEM_REPORT=$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/audit/check_postmortems.py" --quiet 2>/dev/null)
+  if [ -n "$POSTMORTEM_REPORT" ]; then
+    ISSUES+=("Postmortem hygiene: $POSTMORTEM_REPORT — see docs/best-practices/postmortem-management.md")
+  fi
+fi
+
 # 11. Open GH issues summary
 if command -v gh >/dev/null 2>&1; then
   OPEN_ISSUES=$(gh issue list --state open --json number,title,labels --limit 10 2>/dev/null)

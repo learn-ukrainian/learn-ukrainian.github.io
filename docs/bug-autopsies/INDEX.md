@@ -2,6 +2,7 @@
 
 One-liner per bug. Grep for symptoms or categories to find relevant detail files.
 
+<!-- INDEX-START -->
 | Date | Issue | Category | Summary |
 |------|-------|----------|---------|
 | 2026-04-05 | #1150 | score-parsing | Wiki review loop stuck at 8/10 — regex `(\d+)` can't match decimal scores like `8.8/10` |
@@ -12,3 +13,4 @@ One-liner per bug. Grep for symptoms or categories to find relevant detail files
 | 2026-04-23 | EPIC | alignment-contracts | Sidecar cache reuse without hash check (`v6_build.py:3207`) — stale contract.yaml/wiki-excerpts.yaml silently consumed after plan/template/tokenizer change |
 | 2026-04-23 | EPIC | alignment-contracts | `module_memory` sources_hash updated silently — corpus/rule changes land but old learned constraints persist (`module_memory.py:293-316`) |
 | 2026-04-23 | EPIC | alignment-contracts | Rule-after-incident governance pattern — rules added post-incident are advisory, not CI-enforced; live contradiction between "no-rewrite" decision and `convergence_loop.py` rewrite strategies |
+<!-- INDEX-END -->
