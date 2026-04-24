@@ -86,7 +86,9 @@ from build.convergence_loop import (
     ConvergenceContext,
     RecoverableValidationError,
     ReviewObservation,
+    collect_reviewer_ghost_findings,
     run_convergence_loop,
+    tag_reviewer_ghosts,
 )
 from build.convergence_loop import (
     MutationSummary as ConvergenceMutationSummary,
@@ -8585,6 +8587,73 @@ def _structured_dim_floor_dimensions(parsed_scores: list[dict]) -> tuple[str, ..
     return tuple(floor_dimensions)
 
 
+def _extract_round_num(review_path: Path) -> int:
+    """Derive the 1-indexed round number from a versioned review filename.
+
+    Examples: ``foo-review-r3.md`` → 3, ``foo-review.md`` → 1. Falls back to 1
+    when no ``-r<N>`` suffix is present (unversioned first-round write).
+    """
+    match = re.search(r"-r(\d+)\.md$", review_path.name)
+    if match:
+        return int(match.group(1))
+    return 1
+
+
+def _write_reviewer_ghost_bundle(
+    *,
+    level: str,
+    slug: str,
+    round_num: int,
+    reviewer_agent: str,
+    ghost_findings: tuple[dict, ...],
+    content_sha256: str,
+) -> Path:
+    """Persist a ghost-finding bundle for one review round.
+
+    The bundle survives even when convergence escalates to plan_revision_request
+    (it is written BEFORE the terminal step) so the reviewer-hallucination
+    signal is never lost to a dead-letter branch. Returns the written path for
+    the caller to surface in telemetry.
+    """
+    review_dir = CURRICULUM_ROOT / level / "review"
+    review_dir.mkdir(parents=True, exist_ok=True)
+    bundle_path = review_dir / f"{slug}-ghost-review-r{round_num}.yaml"
+
+    dims = {str(item.get("dimension") or "unknown") for item in ghost_findings}
+    top_dim = next(iter(dims)) if len(dims) == 1 else "mixed"
+
+    entries: list[dict] = []
+    for item in ghost_findings:
+        raw_fix = item.get("raw_fix") or {}
+        entries.append(
+            {
+                "finding_id": str(item.get("normalized_id") or ""),
+                "dimension": str(item.get("dimension") or "unknown"),
+                "severity": str(item.get("effective_severity") or item.get("severity") or "unknown"),
+                "location": str(item.get("location") or ""),
+                "issue": str(item.get("issue") or ""),
+                "reviewer_find_anchor": str(item.get("reviewer_find_anchor") or ""),
+                "anchor_validation": str(item.get("anchor_validation") or ""),
+                "raw_fix": dict(raw_fix) if isinstance(raw_fix, dict) else {},
+            }
+        )
+
+    payload = {
+        "slug": slug,
+        "round": round_num,
+        "dimension": top_dim,
+        "reviewer_agent": reviewer_agent,
+        "ghost_findings": entries,
+        "content_sha256": content_sha256,
+        "generated_at": datetime.now(tz=UTC).isoformat(),
+    }
+    bundle_path.write_text(
+        yaml.safe_dump(payload, sort_keys=False, allow_unicode=True),
+        "utf-8",
+    )
+    return bundle_path
+
+
 def _convergence_review_observation(
     *,
     content_path: Path,
@@ -8626,7 +8695,7 @@ def _convergence_review_observation(
         content_bytes = b""
     module_content = content_bytes.decode("utf-8", errors="replace")
     content_hash = hashlib.sha256(content_bytes).hexdigest()
-    return ReviewObservation(
+    observation = ReviewObservation(
         passed=parsed.passed or passed,
         score=parsed.score or score,
         review_text=review_text,
@@ -8645,6 +8714,34 @@ def _convergence_review_observation(
         parsed_fixes=parsed_fixes,
         module_content=module_content,
     )
+    # GH #1529 P3: reviewer ghost-finding routing. Detect findings whose
+    # <fixes> anchor was hallucinated (not in current content) and persist a
+    # bundle BEFORE the convergence loop runs its terminal-decision step, so
+    # the ghost signal is retained even if convergence escalates to
+    # plan_revision_request. The original findings list is left intact —
+    # reviewer emitted them, audit trail keeps them visible.
+    growth_log_path = PROJECT_ROOT / "scripts" / "build" / "finding-normalizer-growth.yaml"
+    ghost_findings = collect_reviewer_ghost_findings(
+        observation, growth_log_path=growth_log_path
+    )
+    if ghost_findings:
+        round_num = _extract_round_num(latest_review)
+        try:
+            _write_reviewer_ghost_bundle(
+                level=level,
+                slug=slug,
+                round_num=round_num,
+                reviewer_agent=reviewer,
+                ghost_findings=ghost_findings,
+                content_sha256=content_hash,
+            )
+        except OSError as exc:
+            # Bundle write failure must not derail the convergence loop — the
+            # ghost data still lives on the returned observation for in-process
+            # callers. Surface as a warning so operators notice.
+            _log(f"⚠️  reviewer-ghost bundle write failed: {exc}")
+        observation = tag_reviewer_ghosts(observation, growth_log_path=growth_log_path)
+    return observation
 
 
 def _run_convergence_loop(

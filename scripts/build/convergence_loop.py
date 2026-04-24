@@ -5,8 +5,8 @@ from __future__ import annotations
 import hashlib
 import time
 import traceback
-from collections.abc import Callable
-from dataclasses import dataclass, field
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
@@ -23,10 +23,23 @@ from build.module_memory import (
     save_module_memory,
     upsert_constraint,
 )
-from build.patchability import classify_patchability, compute_anchor_validation
+from build.patchability import (
+    classify_patchability,
+    compute_anchor_validation,
+    validate_fix_anchors,
+)
 
 TerminalType = Literal["pass", "plan_revision_request", "budget_exhausted"]
 TierName = Literal["patch", "plan_revision_request"]
+
+# Single source of truth for the "ghost-finding" patchability status.
+# GH #1529 P3 surfaces reviewer-emitted findings whose <fixes> anchor does not
+# exist in current content — the reviewer hallucinated the text it claimed to
+# quote. The predicate already tags these as anchor_missing (see
+# build/patchability.py); this constant lets downstream callers (v6_build
+# bundle writer, reviewer_ghosts_router) match the status without duplicating
+# the string literal across files.
+REVIEWER_GHOST_PATCHABILITY_STATUS: Literal["anchor_missing"] = "anchor_missing"
 
 
 class RecoverableValidationError(Exception):
@@ -72,6 +85,19 @@ class ReviewObservation:
     # emitted zero fixes" → "no_fixes" status. Do NOT collapse () → None.
     parsed_fixes: tuple[dict[str, Any], ...] | None = None
     module_content: str | None = None
+    # GH #1529 P3: reviewer ghost-findings — entries copied here when the
+    # reviewer-emitted <fixes> anchor is not present in module_content. The
+    # bundle writer (v6_build._write_reviewer_ghost_bundle) and the API
+    # endpoint (/api/state/reviewer-ghosts) consume this directly so ghost
+    # findings stay visible even if convergence escalates to plan_revision.
+    # Primary ``findings`` list is NOT trimmed — reviewer still emitted the
+    # finding, audit trail keeps it visible there too.
+    reviewer_ghost_findings: tuple[dict[str, Any], ...] = ()
+
+    @property
+    def has_reviewer_ghosts(self) -> bool:
+        """Convenience flag: True iff at least one ghost finding was tagged."""
+        return bool(self.reviewer_ghost_findings)
 
 
 @dataclass(frozen=True)
@@ -191,6 +217,117 @@ def _normalize_observation(
             ),
         )
     )
+
+
+def _fix_anchor_text(fix: dict[str, Any]) -> str:
+    """Return the anchor string used by ``_apply_review_fixes`` to locate the fix.
+
+    Mirrors dispatch order in ``patchability._has_valid_anchor``: insert_after
+    is checked FIRST because ``_apply_review_fixes`` uses it in preference to
+    ``find`` when both keys are present.
+    """
+    if "insert_after" in fix and "text" in fix:
+        return str(fix.get("insert_after") or "")
+    if "find" in fix and "replace" in fix:
+        return str(fix.get("find") or "")
+    return ""
+
+
+def _best_match_invalid_fix(
+    finding: dict[str, Any],
+    invalid_fixes: Sequence[dict[str, Any]],
+) -> dict[str, Any] | None:
+    """Heuristically pair a ghost finding with the invalid fix it most likely refers to.
+
+    Reviewer output format does not link findings to ``<fixes>`` entries by ID,
+    so we match by substring: if the invalid fix's anchor text appears in the
+    finding's ``fix`` or ``issue`` prose, assume they are paired. Falls back to
+    the first invalid fix when no content overlap is found, so the bundle still
+    attaches a concrete ``raw_fix`` for audit.
+    """
+    if not invalid_fixes:
+        return None
+    fix_text = str(finding.get("fix") or "").lower()
+    issue_text = str(finding.get("issue") or "").lower()
+    for fix in invalid_fixes:
+        anchor = _fix_anchor_text(fix).lower()
+        if not anchor:
+            continue
+        probe = anchor[:60]
+        if probe and (probe in fix_text or probe in issue_text):
+            return fix
+    return invalid_fixes[0]
+
+
+def collect_reviewer_ghost_findings(
+    observation: ReviewObservation,
+    *,
+    growth_log_path: Path | None = None,
+    normalized: Sequence[dict[str, Any]] | None = None,
+) -> tuple[dict[str, Any], ...]:
+    """Build the ghost-finding tuple for an observation.
+
+    A ghost finding is a reviewer-emitted finding whose patchability status
+    resolves to :data:`REVIEWER_GHOST_PATCHABILITY_STATUS` — i.e. the anchor
+    text the reviewer "quoted" cannot be located in current module content.
+
+    Each returned dict preserves the normalized finding fields and adds three
+    bundle-writer affordances:
+      * ``reviewer_find_anchor`` — the non-existent string
+      * ``anchor_validation`` — always :data:`REVIEWER_GHOST_PATCHABILITY_STATUS`
+      * ``raw_fix`` — the full reviewer-emitted fix dict that failed validation
+
+    Pass ``normalized`` when the caller already ran ``_normalize_observation``
+    to avoid a second normalization pass. Otherwise the helper normalizes
+    internally using ``growth_log_path``.
+    """
+    if not observation.parsed_fixes or not observation.module_content:
+        return ()
+    _valid, invalid_fixes = validate_fix_anchors(
+        observation.parsed_fixes, observation.module_content
+    )
+    if not invalid_fixes:
+        return ()
+    findings = (
+        tuple(normalized)
+        if normalized is not None
+        else _normalize_observation(observation, growth_log_path=growth_log_path)
+    )
+    ghosts: list[dict[str, Any]] = []
+    for item in findings:
+        if item.get("patchability") != REVIEWER_GHOST_PATCHABILITY_STATUS:
+            continue
+        matched_fix = _best_match_invalid_fix(item, invalid_fixes)
+        anchor = _fix_anchor_text(matched_fix) if matched_fix else ""
+        ghosts.append(
+            {
+                **item,
+                "reviewer_find_anchor": anchor,
+                "anchor_validation": REVIEWER_GHOST_PATCHABILITY_STATUS,
+                "raw_fix": dict(matched_fix) if matched_fix else {},
+            }
+        )
+    return tuple(ghosts)
+
+
+def tag_reviewer_ghosts(
+    observation: ReviewObservation,
+    *,
+    growth_log_path: Path | None = None,
+) -> ReviewObservation:
+    """Return a copy of ``observation`` with ``reviewer_ghost_findings`` populated.
+
+    Returns the input observation unchanged when no ghosts are detected so the
+    common no-ghost path is zero-cost beyond the anchor scan. Callers who also
+    need the normalized findings should call ``collect_reviewer_ghost_findings``
+    and ``prioritize_findings`` directly to share one normalization pass.
+    """
+    ghosts = collect_reviewer_ghost_findings(
+        observation, growth_log_path=growth_log_path
+    )
+    if not ghosts:
+        return observation
+    return replace(observation, reviewer_ghost_findings=ghosts)
 
 
 def _top_ids(findings: tuple[dict[str, Any], ...], limit: int = 3) -> tuple[str, ...]:
