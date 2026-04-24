@@ -192,8 +192,17 @@ def _normalize_observation(
         # anchor_missing, no_fixes, and not_evaluated all leave the classifier's
         # output intact — preserves plan_revision_request routing for genuine
         # plan defects and for reviewer-side anchor bugs.
+        #
+        # NOTE (GH #1526 item 1): ``batch_patch_ok`` is an OBSERVATION-LEVEL
+        # signal — it proves every fix in the reviewer's <fixes> block has a
+        # valid anchor, not that THIS specific finding has a corresponding
+        # fix. We accept the batch-level signal as best-effort routing until
+        # per-finding patchability ships (reviewer emits
+        # ``<fix_for_finding id=...>``). The worst case — 2 fixes for 3
+        # findings — is caught by ``_stall_signals`` (top3_overlap /
+        # hard_floor_persisted) on the next round and escalates cleanly.
         effective_topology = classifier_topology
-        if patchability_status == "patch_ok" and classifier_topology != "local_to_prose":
+        if patchability_status == "batch_patch_ok" and classifier_topology != "local_to_prose":
             effective_topology = "local_to_prose"
         severity = "critical" if item["dimension"] in floor_dimensions else item["severity"]
         results.append(

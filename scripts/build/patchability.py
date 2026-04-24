@@ -4,6 +4,32 @@ Introduced 2026-04-24 (GH #1525 P0) to replace fragile location-string heuristic
 in ``finding_topology.py`` as the ONLY signal that decides whether a reviewer
 finding can be patched deterministically.
 
+## Scope: this is a BATCH-LEVEL predicate (GH #1526 item 1)
+
+**Read this before adding a new caller.** The predicate operates at
+**observation level** — it validates a `<fixes>` block as a whole, not each
+finding against its "own" fix. Reviewer output does not link findings to
+specific fixes (no `fix_for_finding id=...` contract today); every fix is
+anonymous within the block. Consequence:
+
+- ``batch_patch_ok`` means "every fix in the reviewer's `<fixes>` block has
+  an anchor present in current content", NOT "this finding has a
+  corresponding fix that applies cleanly".
+- If the reviewer emits 2 fixes for 3 findings, all 3 non-plan findings
+  share the ``batch_patch_ok`` status. The apply step
+  (``_apply_review_fixes``) applies only the 2 matching fixes; the third
+  finding's content defect persists and gets re-flagged next round, where
+  the stall detector (``convergence_loop._stall_signals``) catches it
+  (``top3_overlap`` or ``hard_floor_persisted``) and escalates to
+  ``plan_revision_request``. So the asymmetry costs at most one extra
+  round; it never silently ships a defect.
+
+A per-finding upgrade — reviewer prompts emitting
+``<fix_for_finding id="...">`` blocks so the predicate can map 1:1 — is
+tracked in GH #1526 item 1 (Path A). Deferred until empirical evidence of
+false-positive patchability classification shows up in production; until
+then the batch-level semantic is the conservative right call.
+
 ## Why this exists
 
 ``convergence_loop.select_strategy`` gates the ``patch`` tier on
@@ -18,7 +44,7 @@ findings that point at ``INJECT_ACTIVITY`` markers — the classifier defaults t
 
 ## The predicate (3-part, deterministic)
 
-A finding is "validated patchable" iff ALL three hold:
+A finding is "batch-patchable" iff ALL three hold:
 
 1. ``parsed_fixes`` is non-empty (reviewer actually emitted ``<fixes>``)
 2. **Every** fix's anchor (``find`` or ``insert_after``) string is present in
@@ -43,6 +69,8 @@ LLM during review. We only fix the ROUTING around the existing deterministic
 applied instead of being black-holed because the location wording failed a
 fragile heuristic.
 
+This is also NOT a per-finding patchability check — see "Scope" above.
+
 Cross-agent consensus: architecture thread ``8aaa5760a2814e1192dac1b61b1b4098``.
 """
 
@@ -53,7 +81,11 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 PatchabilityStatus = Literal[
-    "patch_ok",            # all 3 predicate parts hold — override to local_to_prose
+    # NOTE: ``batch_patch_ok`` (not ``patch_ok``) because this status is
+    # derived from OBSERVATION-level validation of the whole ``<fixes>``
+    # block, not from per-finding matching. See module docstring "Scope"
+    # section. GH #1526 item 1 renamed from ``patch_ok`` on 2026-04-24.
+    "batch_patch_ok",      # all 3 predicate parts hold — override to local_to_prose
     "no_fixes",            # reviewer emitted no <fixes> block at all
     "anchor_missing",      # at least one fix has find-string NOT present in content
     "plan_level_hardstop", # finding.plan_level is True — ADR-007 plan-revision path
@@ -64,6 +96,12 @@ PatchabilityStatus = Literal[
 @dataclass(frozen=True)
 class AnchorValidation:
     """Observation-level result of validating every fix's anchor against content.
+
+    This dataclass, and the ``batch_patch_ok`` status derived from it, are
+    OBSERVATION-SCOPED — they describe the reviewer's ``<fixes>`` block as a
+    whole, not individual findings. Every non-plan finding in the same
+    observation shares the same ``AnchorValidation`` result. See the module
+    docstring "Scope" section (GH #1526 item 1) for why.
 
     Computed once per review round, then passed to ``classify_patchability``
     for each finding. Avoids the O(findings × fixes) substring scans that
@@ -97,9 +135,9 @@ def _has_valid_anchor(fix: dict[str, Any], content: str) -> bool:
     Dispatch order MUST mirror ``_apply_review_fixes`` at v6_build.py:8180 —
     apply checks ``insert_after`` FIRST and continues past ``find`` when both
     keys are present. A validator that checks ``find`` first would mark a
-    mixed-shape fix ``patch_ok`` on a valid ``find`` anchor while the apply
-    step uses a missing ``insert_after`` anchor and silently skips the fix
-    (false positive in the "validated patchability" contract).
+    mixed-shape fix ``batch_patch_ok`` on a valid ``find`` anchor while the
+    apply step uses a missing ``insert_after`` anchor and silently skips the
+    fix (false positive in the batch-patchability contract).
     """
     if "insert_after" in fix and "text" in fix:
         anchor = fix.get("insert_after")
@@ -167,8 +205,14 @@ def classify_patchability(
     the status to decide whether to override the topology classifier's output
     for this finding:
 
-    - ``patch_ok`` → override topology to ``local_to_prose``
+    - ``batch_patch_ok`` → override topology to ``local_to_prose``
     - everything else → leave topology as-is (classifier-determined)
+
+    The only per-finding signal consumed here is ``plan_level`` — plan-level
+    findings hardstop regardless of batch-level anchor validity. All other
+    findings share the status derived from the observation-level
+    ``AnchorValidation``; see the module docstring "Scope" section for why
+    this is batch-level and not per-finding.
 
     ``reason`` is a human-readable one-liner suitable for telemetry / JSONL
     event emission.
@@ -204,6 +248,7 @@ def classify_patchability(
             f"{anchor_validation.invalid} of {anchor_validation.total} fix anchors not present in content (could be stale review, normalization asymmetry, or reviewer-side anchor bug)",
         )
     return (
-        "patch_ok",
-        f"all {anchor_validation.valid} fix anchors validated against current content",
+        "batch_patch_ok",
+        f"all {anchor_validation.valid} fix anchors validated against current content "
+        f"(batch-level: does NOT prove 1:1 mapping to this finding; see GH #1526)",
     )

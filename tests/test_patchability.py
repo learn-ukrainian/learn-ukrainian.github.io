@@ -6,14 +6,16 @@ Invariants:
    plan defects.
 2. Legacy callers (no fixes, no content) get ``not_evaluated`` — old heuristic
    path stays intact.
-3. ``patch_ok`` fires only when ALL fixes have anchors present in content.
+3. ``batch_patch_ok`` fires only when ALL fixes have anchors present in content.
    A partial set is ``anchor_missing`` (reviewer saw stale text → don't trust
-   the batch).
+   the batch). The status is OBSERVATION-SCOPED (GH #1526 item 1) — it
+   describes the ``<fixes>`` block as a whole, not the individual finding.
 4. ``compute_anchor_validation`` runs ONCE per observation; ``classify_patchability``
    consumes the result per finding without rescanning.
 5. Golden fixture derived from a1/sounds-letters-and-hello R1 (the module
    that surfaced this bug): all 9 findings across 3 failing dims must route
-   to ``patch_ok`` under the new predicate so the pipeline re-fire converges.
+   to ``batch_patch_ok`` under the new predicate so the pipeline re-fire
+   converges.
 """
 from __future__ import annotations
 
@@ -160,10 +162,10 @@ def test_anchor_missing_when_all_fix_anchors_absent() -> None:
     assert "2 of 2" in reason
 
 
-# ---------- patch_ok: the unlock condition ----------
+# ---------- batch_patch_ok: the unlock condition ----------
 
 
-def test_patch_ok_when_all_anchors_validate_and_not_plan_level() -> None:
+def test_batch_patch_ok_when_all_anchors_validate_and_not_plan_level() -> None:
     finding = {"plan_level": False, "error_class": "notation_error"}
     content = "Hear **він** (it) in **ґанок** (porch)."
     fixes = [
@@ -174,17 +176,20 @@ def test_patch_ok_when_all_anchors_validate_and_not_plan_level() -> None:
     ]
     validation = compute_anchor_validation(fixes, content)
     status, reason = classify_patchability(finding, anchor_validation=validation)
-    assert status == "patch_ok"
+    assert status == "batch_patch_ok"
     assert "1 fix anchors validated" in reason
+    # GH #1526 item 1: the reason must surface the batch-level caveat so
+    # readers don't misread ``batch_patch_ok`` as a per-finding guarantee.
+    assert "batch-level" in reason
 
 
-def test_patch_ok_with_insert_after_directive() -> None:
+def test_batch_patch_ok_with_insert_after_directive() -> None:
     finding = {"plan_level": False, "error_class": "word_budget"}
     content = "Section 1 content.\n\nSection 2 content."
     fixes = [{"insert_after": "Section 1 content.", "text": " Added sentence."}]
     validation = compute_anchor_validation(fixes, content)
     status, _ = classify_patchability(finding, anchor_validation=validation)
-    assert status == "patch_ok"
+    assert status == "batch_patch_ok"
 
 
 # ---------- dispatch-order parity with _apply_review_fixes ----------
@@ -197,8 +202,8 @@ def test_mixed_shape_fix_validates_insert_after_first() -> None:
     ``_apply_review_fixes`` (v6_build.py:8180) dispatches ``insert_after``
     BEFORE ``find``. If our validator checked ``find`` first, a fix with a
     valid ``find`` anchor but a missing ``insert_after`` anchor would be
-    marked ``patch_ok`` even though the apply step silently skips it — a
-    false positive in the "validated patchability" contract.
+    marked ``batch_patch_ok`` even though the apply step silently skips it
+    — a false positive in the batch-patchability contract.
     """
     content = "the find-anchor is present but insert_after is missing"
     mixed_fix = [
@@ -322,7 +327,7 @@ def test_legacy_observation_without_p0_fields_reports_not_evaluated() -> None:
 
 def test_pilot_sounds_letters_and_hello_r1_all_findings_route_to_patch() -> None:
     """Every real finding from a1/sounds-letters-and-hello R1 must route to
-    patch_ok under the new predicate.
+    batch_patch_ok under the new predicate.
 
     This module's R1 review emitted 9 concrete find/replace pairs across
     Honesty/Factual/Plan_Adherence. Under the old heuristic topology classifier,
@@ -395,7 +400,7 @@ def test_pilot_sounds_letters_and_hello_r1_all_findings_route_to_patch() -> None
     assert validation == AnchorValidation(evaluated=True, total=9, valid=9, invalid=0)
     for finding in findings:
         status, _ = classify_patchability(finding, anchor_validation=validation)
-        assert status == "patch_ok", (
-            f"Finding {finding} should route to patch_ok with all 9 anchor-valid "
+        assert status == "batch_patch_ok", (
+            f"Finding {finding} should route to batch_patch_ok with all 9 anchor-valid "
             f"fixes present in content; got {status!r}"
         )
