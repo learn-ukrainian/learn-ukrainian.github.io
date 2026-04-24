@@ -5651,11 +5651,22 @@ def _build_review_aggregate_payload(
     results: list[PerDimensionReviewResult],
     content_filename: str,
 ) -> dict:
-    """Build the aggregate YAML payload for a review round."""
+    """Build the aggregate YAML payload for a review round.
+
+    GH #1526 item 2: the payload field used to be called ``fixes_applied`` but
+    was populated from ``result.fixes`` — the reviewer's PROPOSED fixes, before
+    any apply-step ran. This was a lie: aggregate YAMLs would report
+    ``fixes_applied.count=5`` while the real apply loop landed zero patches
+    (convergence_loop escalated to plan_revision_request before
+    ``_apply_review_fixes`` fired). Renamed to ``fixes_available`` (truth:
+    these are the fixes the reviewer emitted; applying them is a downstream
+    step). The new ``fixes_applied`` field is populated post-apply by
+    ``_update_aggregate_with_applied_fixes`` and starts empty here.
+    """
     scores = []
     dim_scores = {}
     findings = []
-    fixes_applied = []
+    fixes_available = []
     for spec in REVIEW_DIMENSIONS:
         result = next(item for item in results if item.dimension_id == spec["id"])
         dim_scores[result.dimension_id] = round(result.score, 1)
@@ -5670,7 +5681,7 @@ def _build_review_aggregate_payload(
         )
         findings.extend(dict(item) for item in result.findings)
         if result.fixes:
-            fixes_applied.append(
+            fixes_available.append(
                 {
                     "dim": result.dimension_id,
                     "count": len(result.fixes),
@@ -5689,9 +5700,61 @@ def _build_review_aggregate_payload(
         "dim_scores": dim_scores,
         "scores": scores,
         "findings": _dedupe_yaml_items(findings),
-        "fixes_applied": fixes_applied,
+        "fixes_available": fixes_available,
+        "fixes_applied": [],
         "passed": verdict == "PASS",
     }
+
+
+def _update_aggregate_with_applied_fixes(
+    *,
+    level: str,
+    slug: str,
+    round_num: int | None,
+    applied_count: int,
+    content_filename: str,
+) -> None:
+    """Write the actual apply-count back into the aggregate YAML post-apply.
+
+    GH #1526 item 2: the aggregate YAML's ``fixes_applied`` field used to be
+    populated (pre-apply) from the reviewer's proposed fix count — a lie,
+    since the apply step could skip every fix (invalid anchors) or be bypassed
+    entirely (convergence escalated to plan_revision_request before
+    ``_apply_review_fixes`` ran). Now the aggregate writer emits
+    ``fixes_applied: []`` at review time; after the apply step runs, this
+    helper rewrites the file with the real landed count. ``fixes_available``
+    keeps the proposed count for auditability.
+
+    ``round_num=None`` means "latest round" — we glob the versioned aggregates
+    to find it, matching how ``step_review`` tracks rounds.
+    """
+    review_dir = CURRICULUM_ROOT / level / "review"
+    if not review_dir.exists():
+        return
+    if round_num is None:
+        candidates = list(review_dir.glob(f"{slug}-review-aggregate-r*.yaml"))
+        if not candidates:
+            return
+        round_num = max(_versioned_round_number(p) for p in candidates)
+    versioned_path = review_dir / f"{slug}-review-aggregate-r{round_num}.yaml"
+    if not versioned_path.exists():
+        return
+    try:
+        payload = yaml.safe_load(versioned_path.read_text("utf-8"))
+    except yaml.YAMLError:
+        return
+    if not isinstance(payload, dict):
+        return
+    payload["fixes_applied"] = [
+        {
+            "count": applied_count,
+            "files": [content_filename],
+        }
+    ]
+    dumped = yaml.safe_dump(payload, sort_keys=False, allow_unicode=True)
+    versioned_path.write_text(dumped, "utf-8")
+    # Keep the unversioned alias in sync.
+    (review_dir / f"{slug}-review-aggregate.yaml").write_text(dumped, "utf-8")
 
 
 def _determine_reviewer(
@@ -8898,6 +8961,18 @@ def _run_convergence_loop(
             level=level,
             slug=slug,
         )
+        # GH #1526 item 2: write the real apply count back into the aggregate
+        # YAML so ``fixes_applied`` matches what actually landed, not what the
+        # reviewer proposed (``fixes_available``). Zero-count case still
+        # overwrites so audit trail reads "apply fired, nothing landed"
+        # instead of the default empty list (apply never ran).
+        _update_aggregate_with_applied_fixes(
+            level=level,
+            slug=slug,
+            round_num=None,
+            applied_count=count,
+            content_filename=content_path.name,
+        )
         return ConvergenceMutationSummary(
             changed=applied,
             mutation_count=count,
@@ -8999,6 +9074,17 @@ def _run_review_heal_loop(
             content_path,
             level=level,
             slug=slug,
+        )
+        # GH #1526 item 2: record the honest apply count in the aggregate YAML
+        # (``fixes_applied``). ``fixes_available`` already carries the
+        # reviewer's proposed count; this step closes the gap between proposed
+        # and landed so downstream readers can tell them apart.
+        _update_aggregate_with_applied_fixes(
+            level=level,
+            slug=slug,
+            round_num=round_index,
+            applied_count=fix_count,
+            content_filename=content_path.name,
         )
         if fixes_applied:
             _log(f"\n🔧 Applied {fix_count} deterministic fix(es) from R{round_index}")

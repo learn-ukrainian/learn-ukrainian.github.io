@@ -531,3 +531,188 @@ def test_budget_exhausted_payload_has_no_exception_for_reviewer_disagreement(
     assert result.terminal == "budget_exhausted"
     assert "exception" not in budget_payload
     assert len(budget_payload["history"]) == 1 + harness.context().max_escalations
+
+
+# ---------- GH #1526 item 2 regression: apply fixes before tier-5 escalation ----------
+
+
+def test_mixed_topology_with_valid_fixes_routes_to_patch_not_plan_revision() -> None:
+    """GH #1526 item 2 regression: the pre-fix ``select_strategy`` gated the
+    patch tier on ``topologies == {"local_to_prose"}`` — set equality, so any
+    sibling finding with a non-prose classifier topology (e.g. Plan Adherence
+    with a cross-section location) collapsed the WHOLE observation to tier-5
+    ``plan_revision_request`` even though the reviewer emitted anchor-valid
+    ``<fixes>`` for the non-plan findings. Empirical trigger:
+    a1/sounds-letters-and-hello 2026-04-24 — 24 findings across 8 dims, zero
+    plan_level, 5 Factual fixes with byte-exact anchors, zero applied.
+
+    The test replays that scenario: partial-valid batch (so the patchability
+    override used to collapse to ``anchor_missing`` under old batch-atomic
+    semantics; findings kept their raw classifier topologies; mixed-topology
+    set tripped the equality gate). With the item 2 loosening, partial-valid
+    batches are ``batch_patch_ok`` and override to ``local_to_prose``, and
+    the ``_has_applicable_review_fix`` belt-and-suspenders predicate covers
+    any residual cases. Result: ``tier=1, strategy="patch"``.
+    """
+    from build.convergence_loop import select_strategy
+
+    # Partial-valid batch: valid anchors for 2 non-plan findings + 1
+    # hallucinated anchor. Under old logic this marked EVERY finding
+    # ``anchor_missing`` (batch-atomic), which suppressed the override and
+    # left classifier topologies in place — the bug trigger.
+    module_content = (
+        "Ukrainian has 32 consonant sounds drawn from 22 **літер** (letters).\n"
+        "Take these openers and farewells as indivisible chunks.\n"
+        "<!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->\n"
+    )
+    parsed_fixes = (
+        {
+            "find": "Ukrainian has 32 consonant sounds drawn from 22 **літер** (letters).",
+            "replace": "Ukrainian has 32 consonant sounds drawn from 22 consonant **літери** (letters).",
+        },
+        {
+            "find": "<!-- INJECT_ACTIVITY: quiz-sounds-vs-letters -->",
+            "replace": "",
+        },
+        # Hallucinated anchor — reviewer quoted text that is not present.
+        {
+            "find": "этот текст отсутствует в модуле",
+            "replace": "irrelevant",
+        },
+    )
+    # Mixed classifier topologies: one local-to-prose (has "paragraph"),
+    # one activity_order (which the classifier does NOT map to
+    # local_to_prose by default).
+    observation = ReviewObservation(
+        passed=False,
+        score=5.8,
+        review_text="(synthetic)",
+        findings=(
+            _finding(
+                dimension="Factual Accuracy",
+                severity="major",
+                location="## Intro / paragraph 1",
+                issue="Mislabels the consonant-sound count.",
+                fix="Correct the inventory claim.",
+            ),
+            _finding(
+                dimension="Completeness",
+                severity="major",
+                location="INJECT_ACTIVITY marker block",
+                issue="Activity marker order diverges from the contract.",
+                fix="Reorder the activity markers.",
+            ),
+        ),
+        dim_floor_dimensions=(),
+        content_hash="hash-mixed-topo",
+        patch_available=True,
+        parsed_fixes=parsed_fixes,
+        module_content=module_content,
+        reviewer="claude",
+        writer_model_version="gemini-3.1-pro-preview",
+        reviewer_model_version="claude-opus-4-6",
+    )
+    prioritized = prioritize_findings(observation, growth_log_path=None)
+
+    # Precondition: no plan_level findings.
+    assert not any(item.get("plan_level") for item in prioritized)
+
+    decision = select_strategy(
+        observation=observation,
+        prioritized_findings=prioritized,
+        previous_round=None,
+    )
+
+    assert decision.strategy == "patch", (
+        f"mixed-topology observation with partial-valid reviewer fixes must "
+        f"route to patch tier; got strategy={decision.strategy!r} "
+        f"(reason: {decision.reason})"
+    )
+    assert decision.tier == 1
+
+
+def test_plan_level_finding_still_escalates_even_with_valid_fixes() -> None:
+    """Safety rail: a single plan_level finding in the batch forces
+    ``plan_revision_request`` regardless of how many fix anchors validate.
+    ADR-007 keeps the plan-edit path authoritative for genuine plan defects.
+    """
+    from build.convergence_loop import select_strategy
+
+    module_content = "Ukrainian is a separate language with its own history."
+    parsed_fixes = (
+        {
+            "find": "Ukrainian is a separate language with its own history.",
+            "replace": "Ukrainian is a living language with its own literary canon.",
+        },
+    )
+    observation = ReviewObservation(
+        passed=False,
+        score=5.0,
+        review_text="(synthetic)",
+        findings=(
+            _finding(
+                dimension="Plan Adherence",
+                severity="major",
+                location="## whole module",
+                issue="Vocabulary density is too dense for the level contract.",
+                fix="Reduce the vocabulary density per plan.",
+            ),
+        ),
+        dim_floor_dimensions=(),
+        content_hash="hash-plan-level",
+        patch_available=True,
+        parsed_fixes=parsed_fixes,
+        module_content=module_content,
+        reviewer="claude",
+        writer_model_version="gemini-3.1-pro-preview",
+        reviewer_model_version="claude-opus-4-6",
+    )
+    prioritized = prioritize_findings(observation, growth_log_path=None)
+    assert any(item.get("plan_level") for item in prioritized)
+
+    decision = select_strategy(
+        observation=observation,
+        prioritized_findings=prioritized,
+        previous_round=None,
+    )
+    assert decision.strategy == "plan_revision_request"
+    assert decision.tier == 5
+
+
+def test_has_applicable_review_fix_detects_partial_valid_batch() -> None:
+    """GH #1526 item 2 helper: ``_has_applicable_review_fix`` returns True
+    whenever the observation carries ≥1 anchor-valid fix — matching the
+    loosened batch semantics in patchability.py. Partial-valid batches
+    (some invalid anchors in the batch) still return True.
+    """
+    from build.convergence_loop import _has_applicable_review_fix
+
+    content = "the valid anchor lives here"
+    observation_valid = ReviewObservation(
+        passed=False, score=5.0, review_text="",
+        findings=(), dim_floor_dimensions=(), content_hash="h1",
+        patch_available=True,
+        parsed_fixes=(
+            {"find": "the valid anchor", "replace": "replacement"},
+            {"find": "nonexistent anchor", "replace": "x"},  # invalid sibling
+        ),
+        module_content=content,
+    )
+    assert _has_applicable_review_fix(observation_valid) is True
+
+    observation_all_invalid = ReviewObservation(
+        passed=False, score=5.0, review_text="",
+        findings=(), dim_floor_dimensions=(), content_hash="h2",
+        patch_available=True,
+        parsed_fixes=({"find": "ghost anchor", "replace": "x"},),
+        module_content=content,
+    )
+    assert _has_applicable_review_fix(observation_all_invalid) is False
+
+    observation_legacy = ReviewObservation(
+        passed=False, score=5.0, review_text="",
+        findings=(), dim_floor_dimensions=(), content_hash="h3",
+        patch_available=False,
+        # parsed_fixes + module_content default to None — legacy caller path
+    )
+    assert _has_applicable_review_fix(observation_legacy) is False

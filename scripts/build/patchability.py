@@ -12,9 +12,13 @@ finding against its "own" fix. Reviewer output does not link findings to
 specific fixes (no `fix_for_finding id=...` contract today); every fix is
 anonymous within the block. Consequence:
 
-- ``batch_patch_ok`` means "every fix in the reviewer's `<fixes>` block has
-  an anchor present in current content", NOT "this finding has a
-  corresponding fix that applies cleanly".
+- ``batch_patch_ok`` means "at least one fix in the reviewer's `<fixes>`
+  block has an anchor present in current content", NOT "this finding has a
+  corresponding fix that applies cleanly". See GH #1526 item 2 — the
+  predicate was loosened from "all anchors valid" to "at least one anchor
+  valid" on 2026-04-24 after a1/sounds-letters-and-hello R1 proved that
+  batch-atomic invalidation was black-holing legitimate fixes whenever any
+  sibling fix had a hallucinated anchor.
 - If the reviewer emits 2 fixes for 3 findings, all 3 non-plan findings
   share the ``batch_patch_ok`` status. The apply step
   (``_apply_review_fixes``) applies only the 2 matching fixes; the third
@@ -47,10 +51,13 @@ findings that point at ``INJECT_ACTIVITY`` markers — the classifier defaults t
 A finding is "batch-patchable" iff ALL three hold:
 
 1. ``parsed_fixes`` is non-empty (reviewer actually emitted ``<fixes>``)
-2. **Every** fix's anchor (``find`` or ``insert_after``) string is present in
-   the current module content. Not a subset — every one. A partial-anchor set
-   means the reviewer saw a stale version of the text, so the fixes are not
-   trustworthy as a batch.
+2. **At least one** fix's anchor (``find`` or ``insert_after``) string is
+   present in the current module content. Partial-anchor sets are accepted:
+   the valid fixes apply via ``_apply_review_fixes``, the invalid ones get
+   skipped and logged to the ghost bundle (``anchor_validation.invalid`` and
+   ``reviewer_ghost_findings``) for audit. ``anchor_missing`` is reserved
+   for the fully-hallucinated case (zero valid anchors) — reviewer saw a
+   completely stale version, nothing to trust.
 3. The finding itself is NOT ``plan_level`` (``finding_normalizer`` already
    labels plan-contradiction / vocab-density / pedagogical-sequence /
    scenario-grammar-misalignment at the source). Plan-level findings keep the
@@ -85,9 +92,9 @@ PatchabilityStatus = Literal[
     # derived from OBSERVATION-level validation of the whole ``<fixes>``
     # block, not from per-finding matching. See module docstring "Scope"
     # section. GH #1526 item 1 renamed from ``patch_ok`` on 2026-04-24.
-    "batch_patch_ok",      # all 3 predicate parts hold — override to local_to_prose
+    "batch_patch_ok",      # at least one fix has valid anchor — override to local_to_prose
     "no_fixes",            # reviewer emitted no <fixes> block at all
-    "anchor_missing",      # at least one fix has find-string NOT present in content
+    "anchor_missing",      # ALL fix anchors absent from content (fully hallucinated batch)
     "plan_level_hardstop", # finding.plan_level is True — ADR-007 plan-revision path
     "not_evaluated",       # caller did not supply content/fixes — legacy code path
 ]
@@ -242,10 +249,26 @@ def classify_patchability(
             "no_fixes",
             "reviewer emitted no <fixes> block — nothing to patch",
         )
-    if anchor_validation.invalid > 0:
+    # GH #1526 item 2: loosened from batch-atomic to at-least-one-valid. A
+    # partial-valid batch still routes to patch — the valid fixes apply, the
+    # invalid ones get skipped (and surface via the reviewer-ghost bundle).
+    # ``anchor_missing`` is reserved for the fully-hallucinated case where
+    # the reviewer saw a completely stale module; nothing in the batch is
+    # trustworthy and we escalate to plan_revision_request.
+    if anchor_validation.valid == 0:
         return (
             "anchor_missing",
-            f"{anchor_validation.invalid} of {anchor_validation.total} fix anchors not present in content (could be stale review, normalization asymmetry, or reviewer-side anchor bug)",
+            f"all {anchor_validation.invalid} fix anchors absent from content "
+            f"(fully hallucinated batch — could be stale review, normalization asymmetry, "
+            f"or reviewer-side anchor bug)",
+        )
+    if anchor_validation.invalid > 0:
+        return (
+            "batch_patch_ok",
+            f"{anchor_validation.valid} of {anchor_validation.total} fix anchors validated "
+            f"against current content; {anchor_validation.invalid} invalid anchor(s) will be "
+            f"logged as ghost warnings (batch-level: does NOT prove 1:1 mapping to this "
+            f"finding; see GH #1526)",
         )
     return (
         "batch_patch_ok",

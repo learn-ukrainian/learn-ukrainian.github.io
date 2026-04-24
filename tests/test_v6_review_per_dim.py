@@ -195,7 +195,10 @@ def test_step_review_fans_out_aggregates_min_and_collects_all_fixes(
     assert aggregate["verdict_score"] == 6.5
     assert aggregate["weighted_average"] > aggregate["verdict_score"]
     assert aggregate["dim_scores"]["language"] == 6.5
-    assert len(aggregate["fixes_applied"]) == 2
+    # GH #1526 item 2: proposed fixes now live under ``fixes_available``;
+    # ``fixes_applied`` starts empty and is populated by the post-apply step.
+    assert len(aggregate["fixes_available"]) == 2
+    assert aggregate["fixes_applied"] == []
 
     for spec in v6_build.REVIEW_DIMENSIONS:
         assert (review_dir / f"{slug}-review-{spec['id']}.yaml").exists()
@@ -249,3 +252,128 @@ def test_review_validation_prefers_aggregate_verdict_score(tmp_path: Path) -> No
     )
     violations = review_validation.check_v6_review_validity(str(module_file), "A1", "sample")
     assert not any(item["type"] == "STRUCTURED_REVIEW_BELOW_THRESHOLD" for item in violations)
+
+
+# ---------- GH #1526 item 2: fixes_applied honesty ----------
+
+
+def _per_dim_result(
+    *,
+    dim_id: str,
+    dim_name: str,
+    score: float,
+    fixes: list[dict] | None = None,
+    findings: list[dict] | None = None,
+) -> v6_build.PerDimensionReviewResult:
+    return v6_build.PerDimensionReviewResult(
+        dimension_id=dim_id,
+        dimension_name=dim_name,
+        score=score,
+        verdict="PASS" if score >= 8.0 else "REVISE",
+        evidence="synthetic evidence",
+        review_text=f"score: {score:.1f}/10\nverdict: {'PASS' if score >= 8.0 else 'REVISE'}",
+        findings=tuple(findings or ()),
+        fixes=tuple(fixes or ()),
+    )
+
+
+def test_aggregate_payload_starts_with_empty_fixes_applied_and_populates_available() -> None:
+    """Regression guard: the aggregate-YAML builder must NOT populate
+    ``fixes_applied`` from the reviewer's proposed fix count. Before GH #1526
+    item 2 the payload field ``fixes_applied`` carried proposed counts, which
+    was a lie because the apply step may not run (convergence escalated to
+    plan_revision_request before ``_apply_review_fixes`` fired) or every fix
+    may be skipped (bad anchors). Now:
+
+      * ``fixes_available`` holds the reviewer's proposed fix counts (truth:
+        these were emitted by the reviewer; applying is a separate step).
+      * ``fixes_applied`` starts as ``[]`` and is populated post-apply by
+        ``_update_aggregate_with_applied_fixes``.
+    """
+    results = [
+        _per_dim_result(
+            dim_id=spec["id"],
+            dim_name=spec["label"],
+            score=9.0 if spec["id"] != "factual" else 6.5,
+            fixes=(
+                [{"find": "x", "replace": "y"}] * 5
+                if spec["id"] == "factual"
+                else []
+            ),
+        )
+        for spec in v6_build.REVIEW_DIMENSIONS
+    ]
+    payload = v6_build._build_review_aggregate_payload(
+        slug="sample",
+        round_num=1,
+        verdict="REVISE",
+        verdict_score=6.5,
+        weighted_average=8.5,
+        results=results,
+        content_filename="sample.md",
+    )
+    # Proposed fixes → fixes_available, not fixes_applied.
+    assert payload["fixes_applied"] == []
+    assert len(payload["fixes_available"]) == 1
+    assert payload["fixes_available"][0]["dim"] == "factual"
+    assert payload["fixes_available"][0]["count"] == 5
+
+
+def test_update_aggregate_with_applied_fixes_rewrites_count_post_apply(
+    tmp_path: Path, monkeypatch,
+) -> None:
+    """The post-apply helper rewrites ``fixes_applied`` with the real landed
+    count — independent of how many fixes the reviewer proposed in
+    ``fixes_available``. Covers the a1/1 2026-04-24 empirical case:
+    5 proposed, 0 landed (because convergence escalated before apply).
+    """
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    level = "a1"
+    slug = "sample"
+    review_dir = curriculum_root / level / "review"
+    review_dir.mkdir(parents=True, exist_ok=True)
+
+    initial_payload = {
+        "slug": slug,
+        "round": 1,
+        "verdict": "REVISE",
+        "verdict_score": 6.5,
+        "weighted_average": 8.5,
+        "scores": [],
+        "findings": [],
+        "fixes_available": [{"dim": "factual", "count": 5, "files": ["sample.md"]}],
+        "fixes_applied": [],
+        "passed": False,
+    }
+    dumped = yaml.safe_dump(initial_payload, sort_keys=False, allow_unicode=True)
+    (review_dir / f"{slug}-review-aggregate-r1.yaml").write_text(dumped, "utf-8")
+    (review_dir / f"{slug}-review-aggregate.yaml").write_text(dumped, "utf-8")
+
+    monkeypatch.setattr(v6_build, "CURRICULUM_ROOT", curriculum_root)
+
+    # Case 1: apply landed zero fixes (the a1/1 empirical case).
+    v6_build._update_aggregate_with_applied_fixes(
+        level=level,
+        slug=slug,
+        round_num=1,
+        applied_count=0,
+        content_filename="sample.md",
+    )
+    after_zero = yaml.safe_load((review_dir / f"{slug}-review-aggregate-r1.yaml").read_text("utf-8"))
+    assert after_zero["fixes_applied"] == [{"count": 0, "files": ["sample.md"]}]
+    # fixes_available unchanged — reviewer's proposal count is preserved.
+    assert after_zero["fixes_available"] == [{"dim": "factual", "count": 5, "files": ["sample.md"]}]
+
+    # Case 2: apply landed 3 fixes — honest count lands in fixes_applied.
+    v6_build._update_aggregate_with_applied_fixes(
+        level=level,
+        slug=slug,
+        round_num=1,
+        applied_count=3,
+        content_filename="sample.md",
+    )
+    after_three = yaml.safe_load((review_dir / f"{slug}-review-aggregate-r1.yaml").read_text("utf-8"))
+    assert after_three["fixes_applied"] == [{"count": 3, "files": ["sample.md"]}]
+    # Unversioned alias stays in sync.
+    unversioned = yaml.safe_load((review_dir / f"{slug}-review-aggregate.yaml").read_text("utf-8"))
+    assert unversioned["fixes_applied"] == [{"count": 3, "files": ["sample.md"]}]
