@@ -68,7 +68,7 @@ def _write_state(curriculum_root: Path, slug: str, *, tracked_hash: str) -> None
         phase: {"status": "complete", "ts": "2026-04-10T00:00:00+00:00"}
         for phase in v6_build._ALL_PHASES
     }
-    for phase in ("skeleton", "write", "exercises", "annotate", "verify"):
+    for phase in ("skeleton", "write", "honesty-annotate", "exercises", "annotate", "verify"):
         phases[phase]["plan_hash"] = tracked_hash
 
     orch_dir = curriculum_root / "b1" / "orchestration" / slug
@@ -157,6 +157,7 @@ def test_resume_plan_detects_plan_hash_drift_and_invalidates_from_earliest_write
         "skeleton",
         "pre-verify",
         "write",
+        "honesty-annotate",
         "exercises",
         "activities",
         "repair",
@@ -190,6 +191,7 @@ def test_resume_publish_expands_to_full_pipeline_when_writer_phase_is_stale(
     state_path = curriculum_root / "b1" / "orchestration" / slug / "state.json"
     state = json.loads(state_path.read_text("utf-8"))
     state["phases"]["write"]["plan_hash"] = "older-hash"
+    state["phases"]["honesty-annotate"]["plan_hash"] = "older-hash"
     state["phases"]["exercises"]["plan_hash"] = "older-hash"
     state["phases"]["annotate"]["plan_hash"] = "older-hash"
     state["phases"]["verify"]["plan_hash"] = "older-hash"

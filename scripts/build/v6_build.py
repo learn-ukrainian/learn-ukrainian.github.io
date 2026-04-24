@@ -1288,7 +1288,7 @@ def _normalize_v6_phase_status(result: object, *, phase: str) -> V6_PHASE_STATUS
 # stable public name. They must stay in sync (which is free — they're
 # the same list object).
 _ALL_PHASES = [
-    "check", "research", "skeleton", "pre-verify", "write",
+    "check", "research", "skeleton", "pre-verify", "write", "honesty-annotate",
     "exercises", "activities", "repair", "verify-exercises", "annotate",
     "vocab", "enrich", "verify", "review", "review-style", "stress", "publish", "audit",
 ]
@@ -1297,6 +1297,7 @@ _PHASE_SATISFIED_STATUSES = {"complete", "skipped"}
 _PLAN_HASH_STALE_PHASES = tuple(phase for phase in PLAN_HASH_PHASES if phase in {
     "skeleton",
     "write",
+    "honesty-annotate",
     "exercises",
     "annotate",
     "verify",
@@ -1308,7 +1309,7 @@ _PLAN_HASH_DRIFT_REASON = (
 )
 _PLAN_HASH_WARN_MESSAGE = (
     "WARN: Plan version changed since write phase — marking "
-    "skeleton/write/exercises/annotate/verify as stale"
+    "skeleton/write/honesty-annotate/exercises/annotate/verify as stale"
 )
 _PLAN_HASH_ABORT_MESSAGE = (
     "Plan changed since last write — re-run from skeleton to rebuild with updated plan"
@@ -1324,6 +1325,7 @@ PHASE_LABELS: dict[str, str] = {
     "skeleton": "Skeleton",
     "pre-verify": "Pre-verify",
     "write": "Write content",
+    "honesty-annotate": "Honesty annotate",
     "exercises": "Exercises",
     "activities": "Activities",
     "repair": "Repair",
@@ -6317,6 +6319,34 @@ def step_annotate(content_path: Path) -> V6_PHASE_STATUS:
         return "degraded"
 
 
+def step_honesty_annotate(content_path: Path, level: str, slug: str, orch_dir: Path) -> bool:
+    """Step 5a: Insert deterministic VERIFY markers for precise claims."""
+    _log(f"\n{'='*60}")
+    _log("  Step 5a: HONESTY ANNOTATE — VERIFY markers")
+    _log(f"{'='*60}")
+
+    if not content_path or not content_path.exists():
+        _log("  ❌ No content file")
+        return False
+
+    try:
+        from build.phases.honesty_annotator import annotate_content
+
+        content = content_path.read_text("utf-8")
+        annotated_content, annotation_log = annotate_content(content)
+        content_path.write_text(annotated_content, "utf-8")
+        orch_dir.mkdir(parents=True, exist_ok=True)
+        (orch_dir / "honesty-annotations.json").write_text(
+            json.dumps(annotation_log, indent=2, ensure_ascii=False) + "\n",
+            "utf-8",
+        )
+        _log(f"  ✅ Added VERIFY markers to {len(annotation_log)} line(s)")
+        return True
+    except Exception as e:
+        _log(f"  ❌ Honesty annotation failed: {e}")
+        return False
+
+
 def step_vocab(content_path: Path, level: str, module_num: int,
                slug: str, writer: str = "claude") -> Path | None:
     """Step 5c: Generate vocabulary YAML from the module content.
@@ -9212,6 +9242,9 @@ def _rerun_write_after_plan_patch(
     if content_path is not None:
         _post_process_content(content_path)
         _save_v6_state(level, slug, "write")
+        orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+        if step_honesty_annotate(content_path, level, slug, orch_dir):
+            _save_v6_state(level, slug, "honesty-annotate")
         _save_v6_state(level, slug, "annotate")
     return content_path
 
@@ -9403,6 +9436,11 @@ def _refresh_post_patch_sidecars(
     """Refresh content-derived sidecars after any prose regeneration."""
     _log("\n♻️ Refreshing full sidecar chain after prose regeneration")
     _post_process_content(content_path)
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    if step_honesty_annotate(content_path, level, slug, orch_dir):
+        _save_v6_state(level, slug, "honesty-annotate")
+    else:
+        return False
     if _should_skip_annotate(level):
         _save_v6_state(level, slug, "annotate", status="skipped")
     else:
@@ -10245,7 +10283,7 @@ def main():
                         help="Default: claude-tools (2026-04-23: switched from gemini-tools after #1431 v2 showed Gemini factual-hallucination on decolonization-critical facts — e.g. writing «блакитний» instead of «синій» for the Ukrainian flag. Opus has stronger factual adherence + less Russian-imperial training-data contamination. *-tools = with verification access during writing via MCP/shell)")
     parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools", "codex", "codex-tools"], default=None,
                         help="Override reviewer. Default: cross-agent (opposite of writer)")
-    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "exercises", "activities", "repair", "verify-exercises", "annotate", "enrich", "verify", "review", "review-style", "publish", "audit", "all"],
+    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "honesty-annotate", "exercises", "activities", "repair", "verify-exercises", "annotate", "enrich", "verify", "review", "review-style", "publish", "audit", "all"],
                         default="all",
                         help="Stop after this phase or run the full pipeline (default: all).")
     skeleton_group = parser.add_mutually_exclusive_group()
@@ -10720,6 +10758,25 @@ def main():
             _emit_phase_done("write", _phase_start)
         elif content_path is None:
             content_path = CURRICULUM_ROOT / args.level / f"{slug}.md"
+
+        # Step 5a: HONESTY ANNOTATE — deterministic VERIFY markers
+        if steps in ("all", "honesty-annotate") and "honesty-annotate" not in completed_phases:
+            if not content_path or not content_path.exists():
+                _log("\n❌ Build FAILED — no content file exists (write step failed)")
+                _emit_module_failed(
+                    "honesty-annotate",
+                    "Build FAILED — no content file exists (write step failed)",
+                )
+                sys.exit(1)
+            _phase_start = time.monotonic()
+            orch_dir = CURRICULUM_ROOT / args.level / "orchestration" / slug
+            honesty_ok = step_honesty_annotate(content_path, args.level, slug, orch_dir)
+            honesty_status: V6_PHASE_STATUS = "complete" if honesty_ok else "failed"
+            _save_v6_state(args.level, slug, "honesty-annotate", status=honesty_status)
+            _emit_phase_done("honesty-annotate", _phase_start, status=honesty_status)
+            if not honesty_ok:
+                _emit_module_failed("honesty-annotate", "Build FAILED at Step 5a (honesty annotate)")
+                sys.exit(1)
 
         # Step 5b: EXERCISES — legacy fallback (skip in full pipeline, ACTIVITIES replaces it)
         if steps == "exercises" and "exercises" not in completed_phases:

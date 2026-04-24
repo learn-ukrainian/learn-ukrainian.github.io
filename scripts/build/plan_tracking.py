@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-PLAN_HASH_PHASES = ("skeleton", "write", "exercises", "annotate", "verify")
+PLAN_HASH_PHASES = ("skeleton", "write", "honesty-annotate", "exercises", "annotate", "verify")
 PLAN_DRIFT_GUARD_STEPS = {"review", "publish", "audit"}
 _PHASE_SATISFIED_STATUSES = {"complete", "skipped"}
 _PHASE_TS_FUDGE_SECONDS = 1.0
