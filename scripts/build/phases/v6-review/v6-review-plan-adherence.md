@@ -1,15 +1,19 @@
-<!-- version: 1.1.0 | updated: 2026-04-23 | GH #1431 — shared contract + §2 overflow signal -->
+<!-- version: 1.2.0 | updated: 2026-04-24 | GH #1529 — section max is advisory, not binding -->
 # V6 Per-Dimension Review — Plan Adherence
 
 ## Shared Contract (authoritative — supersedes rubric text on conflict)
 
 You are scoring the **Plan Adherence** dimension. The module must satisfy the contract at `scripts/build/contracts/module-contract.md` as specialized by the plan and the `{CONTRACT_YAML}` block below. Score Plan Adherence ONLY by how well the content satisfies the contract's §2 (section contract) and §6 (activity markers) clauses. Do NOT import criteria from outside this contract. Do NOT penalize behavior the contract explicitly allows.
 
-### Contract §2 — section overflow is a POSITIVE signal
+### Contract §2 — word budgets are SOFT, expansion is allowed
 
-When the writer emits a `<section_overflow>` block at the end of a section, it is a POSITIVE plan-adherence signal — the writer honestly disclosed that the contracted items did not fit the word budget at readable density. Do NOT penalize presence of `<section_overflow>`. This is the explicit contract protocol for budget-vs-coverage conflict.
+Section word budgets have `min`, `target`, and `max` keys. **`target` and `max` are ADVISORY only.** Per project policy (word targets are MINIMUMS; section-level tolerance is one-sided — "one section 20% over is fine if no section is >10% under"), a writer may freely exceed `max` to cover the contracted items at readable density. **A section going over `max` is NEVER by itself a Plan Adherence defect. Do not flag or penalize section overruns.** Do not require a `<section_overflow>` block just because a section is over `max` — the writer wrote more words; that is not deferral.
 
-Penalize ONLY **silent deferrals**: an item listed in Section N's contract that was moved to Section N+1 (or dropped entirely) without an `<section_overflow>` disclosure. The Round-1 `a1/colors` "Section 2 promised 12 colors, delivered 6 + синій" failure is the canonical silent-deferral defect. If that same writer had emitted a `<section_overflow>` listing the deferred colors, score would be ≥ 8 on this axis.
+Penalize ONLY **silent deferrals**: a *contracted item* — something explicitly listed for Section N in the contract's `teaching_beats`, `required_terms`, `dialogue_acts`, `factual_anchors`, or `activity_obligations` — that was moved to Section N+1, moved to a later module, or dropped entirely without a `<section_overflow>` disclosure. The canonical example is the Round-1 `a1/colors` "Section 2 promised 12 colors, delivered 6 + синій" failure — six promised colors are *missing from the prose*; the defect is the missing items, not the word count.
+
+When you see sections above `max`, check *what got covered* against the contract's section-item lists. If every listed item is present and grounded in the prose, the section is PASS for §2 regardless of length. If items are missing, that is a silent deferral defect; `<section_overflow>` would have been the correct honest disclosure.
+
+When the writer DOES emit a `<section_overflow>` block, treat it as a POSITIVE signal — the writer honestly disclosed that items did not fit. Do NOT penalize its presence.
 
 ### Contract §6 — activity markers
 
