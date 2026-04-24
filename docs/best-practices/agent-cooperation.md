@@ -65,6 +65,12 @@ invoked through `scripts/agent_runtime/runner.invoke()`. This applies to:
 
 Full guide: [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md).
 
+### Claude Code version gotchas (affects `delegate.py dispatch --agent claude`)
+
+- **CC 2.1.119+: `--print` mode honors subagent `tools:` / `disallowedTools:` frontmatter.** Previously print mode ignored those restrictions — they only applied in interactive subagent invocations. Our dispatched-Claude pattern (`delegate.py dispatch --agent claude` → `claude -p ...`) now enforces them. Current subagents (`claude_extensions/agents/curriculum-maintainer.md`) declare `tools: "*"` so dispatches are unaffected today. **But** any new subagent that restricts tools will apply those restrictions in dispatch mode. Don't declare `tools: [Read, Grep]` on a subagent you plan to dispatch unless that limit is intentional for dispatched runs too.
+- **CC 2.1.119+: `--agent <name>` honors agent definition's `permissionMode` for built-in agents.** We pass `--mode danger` explicitly on every dispatch, so this is a no-op for us. Don't remove the explicit `--mode danger` and expect the agent definition to carry it — not every dispatch target is a built-in agent.
+- **CC 2.1.119+: `Agent` tool with `isolation: "worktree"` no longer reuses stale worktrees from prior sessions.** Until this fix we avoided the built-in Agent-tool isolation and hand-rolled `git worktree add` (see `.claude/rules/delegate-must-use-worktree.md`). The hand-rolled pattern is still correct — it survives across sessions, shows up in `git worktree list`, and matches our dispatch conventions — but the Agent-tool built-in is now a safe alternative for short-lived, same-session isolation.
+
 ### Direct dispatch (ask-gemini / ask-codex)
 For requests needing immediate response:
 ```bash
