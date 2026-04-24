@@ -32,6 +32,7 @@ from build.plan_tracking import (
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 PHASE_ORDER = [
     "check", "research", "skeleton", "pre-verify", "write",
+    "honesty-annotate",
     "exercises", "activities", "repair", "verify-exercises", "annotate",
     "vocab", "enrich", "verify", "review", "stress", "publish", "audit",
 ]

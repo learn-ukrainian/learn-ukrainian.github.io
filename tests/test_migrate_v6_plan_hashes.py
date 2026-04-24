@@ -64,7 +64,7 @@ def test_migration_backfills_plan_hashes_and_marks_stale_when_plan_is_newer(
     result = migrate_plan_hashes.migrate_state_file(state_path, apply=True)
 
     assert result is not None
-    assert result["backfilled_phases"] == 5
+    assert result["backfilled_phases"] == 6
     assert result["stale_modules"] == 1
     updated = json.loads(state_path.read_text("utf-8"))
     assert updated["phases"]["skeleton"]["plan_hash"]
