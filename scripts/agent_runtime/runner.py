@@ -371,8 +371,33 @@ def _resolve_gemini_ladder_auth_modes(tool_config: dict | None) -> tuple[str, ..
 
 
 def _gemini_per_rung_timeout(prompt: str, hard_timeout: int) -> int:
-    """Match direct-call Gemini rung budgeting while honoring caller caps."""
-    return max(1, min(hard_timeout, 300 + len(prompt) // 500, 900))
+    """Return the per-rung budget for the Gemini fallback ladder.
+
+    Honors the caller's ``hard_timeout`` without additional ceilings.
+
+    Pre-2026-04-24: the rung budget was
+    ``min(hard_timeout, 300 + len(prompt)//500, 900)``. The 900s cap
+    silently overrode the caller's ``hard_timeout``, so even after
+    production LLM-dispatch timeouts were unified to 24h in
+    ``scripts/batch/batch_gemini_config.py``, production Gemini calls
+    were still being killed at 15 min. Codex caught this in the
+    2026-04-24 architecture discussion (bridge thread 0f94b8c0):
+    "the 24h watchdog direction is right, but the tree still contains
+    10-15 minute production kill paths."
+
+    The prompt-size heuristic is gone too. Its original purpose was
+    "don't wait too long on rung 1 before falling over to rung 2,"
+    but rungs fall over on ERRORS (rate limit, auth, model-unavailable)
+    which surface fast, NOT on successful-but-slow work. Capping slow-
+    but-productive work was the same anti-pattern as the phase-level
+    short timeouts this discussion already removed. See the file-level
+    header comment in batch_gemini_config.py for the full design story.
+
+    ``prompt`` is retained in the signature for backward compatibility
+    with callers that pass it but is no longer read.
+    """
+    _ = prompt
+    return max(1, hard_timeout)
 
 
 def _build_gemini_attempt_tool_config(
@@ -821,7 +846,11 @@ def invoke(
     session_id: str | None = None,
     tool_config: dict | None = None,
     entrypoint: str = "runtime",
-    hard_timeout: int = 3600,
+    hard_timeout: int = 86400,  # 24h — last-resort leak guard, NOT a
+                                 # tuning knob for expected runtime. See
+                                 # the header comment in
+                                 # scripts/batch/batch_gemini_config.py
+                                 # for the full design rationale.
     stall_timeout: int = 180,  # accepted but ignored; see docstring
     effort: str | None = None,
 ) -> Result:

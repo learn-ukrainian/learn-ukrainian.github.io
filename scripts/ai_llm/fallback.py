@@ -415,7 +415,14 @@ def call_gemini_with_fallback(
     recover_response: Callable[[float, str], str | None] | None = None,
 ) -> CallResult:
     """Call the Gemini CLI through the shared rung ladder."""
-    effective_timeout = per_rung_timeout_s or min(300 + len(prompt) // 500, 900)
+    # Default-timeout changed 2026-04-24 from `min(300 + len//500, 900)` to
+    # 1 day. The 900s ceiling was a hidden override on the production 24h
+    # hard_timeout policy set in scripts/batch/batch_gemini_config.py —
+    # flagged by Codex + Gemini in bridge architecture thread 0f94b8c0.
+    # If a caller really wants a shorter budget (e.g. a liveness probe),
+    # they pass `per_rung_timeout_s=300` explicitly; no silent clamp here.
+    _ONE_DAY = 24 * 60 * 60
+    effective_timeout = per_rung_timeout_s or _ONE_DAY
     workdir = cwd or Path.cwd()
     emit = logger or print
 

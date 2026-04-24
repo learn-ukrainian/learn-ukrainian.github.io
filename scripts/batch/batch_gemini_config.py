@@ -29,52 +29,80 @@ FLASH_LITE_MODEL = "gemini-3.1-flash-lite-preview"   # Fast structured output: s
 GEMINI_REVIEW_MODEL = PRO_MODEL                      # Review needs Pro for strict schema + linguistic analysis
 FALLBACK_MODEL = "auto"                              # Let gemini-cli route when a model is unavailable
 
-# Timeouts (seconds) — one place to tune for all pipeline steps.
+# Timeouts (seconds) — the hard_timeout ceiling for LLM-dispatch steps.
 #
-# Semantics (dispatch.py sets both `hard_timeout=TIMEOUT` and
-# `stall_timeout=min(600, TIMEOUT)`):
+# Semantics — IMPORTANT, rewritten 2026-04-24 to match post-#1184 reality:
 #
-#   - ``hard_timeout`` is a wall-clock SAFETY CEILING. A healthy-but-slow
-#     process that keeps emitting liveness signals (stdout stream, rollout
-#     file updates for Codex, session file for Gemini) will still be killed
-#     at this limit. Size it generously — better to let a productive run
-#     finish than to chop it mid-fix-generation.
-#   - ``stall_timeout`` (10 min, computed from the value here) is the real
-#     liveness kill: if no signal for 10 min, the adapter considers the
-#     subprocess hung and kills it. This is the tight primary guard.
+#   - ``hard_timeout`` is the ONLY kill signal the watchdog honors
+#     (scripts/agent_runtime/watchdog.py:294-332). Stall detection was
+#     deleted on 2026-04-10 after four documented per-CLI failure modes
+#     proved it unreliable (Gemini block-buffers stdout, Codex state-file
+#     moves across versions, mtime fires only at startup, each CLI has
+#     a different convention). Chasing them was whack-a-mole with no
+#     ground truth.
+#   - ``stall_timeout`` is still accepted by the runner signature for
+#     backward compat but IGNORED by ``should_kill``. Do not rely on it.
 #
-# Long-running reviews on Ukrainian modules (Codex-tools flagging 20+
-# Russianisms / calques / register issues and generating a full <fixes>
-# block) were hitting the old 900s ceiling while still healthy. Raised
-# to 1h for reviewers; stall_timeout keeps genuinely-hung subprocesses
-# from lingering.
-TIMEOUT_SKELETON = 600  # Was 300; bumped 2026-04-24 after a1/sounds-letters-
-                        # and-hello skeleton on Opus 4.7 @ xhigh with a 51K-char
-                        # prompt hit the old ceiling. 600s matches peer
-                        # phase timeouts (TIMEOUT_PRE_VERIFY, TIMEOUT_VOCAB).
-TIMEOUT_WRITE = 900
-TIMEOUT_WRITE_NO_TOOLS = 600
-TIMEOUT_VOCAB = 600
-TIMEOUT_ACTIVITIES = 900
-TIMEOUT_REVIEW_GEMINI_PROBE = 300
-TIMEOUT_REVIEW_CLAUDE = 3600           # 1h — reviewers routinely generate
-                                       # large <fixes> blocks; rely on the
-                                       # 600s stall_timeout for real liveness
-TIMEOUT_PRE_VERIFY = 600
-TIMEOUT_ANNOTATE = 600
-TIMEOUT_PUBLISH = 600
+# ---
+# The hard_timeout is NOT a tuning knob for expected phase duration. It
+# is a last-ditch "this process must have hung" ceiling — nothing less.
+#
+# Design evolution across this file (documented for the next engineer):
+#
+#   1. Original (pre-#1184): tight per-phase hard_timeouts made sense
+#      because stall_timeout did the real work of catching stuck runs.
+#   2. Post-#1184 (stall detection deleted): tight per-phase timeouts
+#      became an anti-pattern — the clock was firing on healthy-but-slow
+#      LLM work before any observability could intervene. User flagged
+#      this 2026-04-24 ("what if it needs more time and you kill it...
+#      really poor design").
+#   3. Intermediate fix (same day): unified to 3600s / 1h as the ceiling.
+#      User pushed back again: "we must not kill after 1h if it is
+#      active. we have seen long running processes" — i.e. they have
+#      observed real productive LLM work exceeding 1h, especially on
+#      seminar-track reviews and heavy Opus reasoning.
+#   4. Current (THIS change): 24h ceiling for all LLM-dispatch phases.
+#      The ceiling exists as a last-resort safety for truly-pathological
+#      runaway processes (CLI bug, infinite retry loop). In normal
+#      operation it will never fire. External observability does the
+#      real monitoring:
+#        - Monitor tool (v6_build.py JSONL events — one line per phase)
+#        - /api/delegate/active (last-activity timestamp per dispatch)
+#        - Per-CLI session files (~/.codex/sessions/YYYY/MM/DD/rollout-*,
+#          ~/.gemini/tmp/learn-ukrainian/chats/session-*.json,
+#          ~/.claude/projects/<proj>/*.jsonl)
+#      These tell the human operator "is this dispatch productive?"
+#      The ceiling is there so a bug can't leak a subprocess forever.
+#
+# One exception: TIMEOUT_REVIEW_GEMINI_PROBE is a genuine liveness probe
+# ("is the Gemini API alive?"), not an LLM reasoning task. 300s for that.
+
+_ONE_HOUR = 3600
+_ONE_DAY = 24 * _ONE_HOUR
+
+TIMEOUT_SKELETON = _ONE_DAY
+TIMEOUT_WRITE = _ONE_DAY
+TIMEOUT_WRITE_NO_TOOLS = _ONE_DAY
+TIMEOUT_VOCAB = _ONE_DAY
+TIMEOUT_ACTIVITIES = _ONE_DAY
+TIMEOUT_REVIEW_GEMINI_PROBE = 300  # Genuine probe — "is Gemini API alive"
+TIMEOUT_REVIEW_CLAUDE = _ONE_DAY
+TIMEOUT_PRE_VERIFY = _ONE_DAY
+TIMEOUT_ANNOTATE = _ONE_DAY
+TIMEOUT_PUBLISH = _ONE_DAY
 
 # Per-call cap inside the cascade fallback loop. The dispatcher chains
-# model fallbacks (pro → auto) and retries; each individual subprocess
-# call is capped here so no single hung gemini-cli can eat the whole
-# step timeout. If a call hits this cap, the session-file recovery in
-# the Gemini adapter (runner.py → gemini.py) still tries to salvage
-# partial output from ~/.gemini/tmp/<project>/chats/session-*.json
-# before the dispatcher falls back to the next model.
+# model fallbacks (pro → auto) and retries; this value is the per-call
+# hard_timeout the fallback rungs inherit.
 #
-# 600s matches the slowest observed successful Pro call (~9 min) plus
-# headroom, without blowing through the overall step budget.
-CASCADE_PER_CALL_MAX_S = 600
+# Aligned to _ONE_DAY on 2026-04-24 (was 600s) for the same reason the
+# phase timeouts above were unified: rungs fall over on ERRORS (rate
+# limit, auth, model-unavailable) which surface fast. There is no
+# correctness win to capping a slow-but-productive Pro call at 10 min —
+# it just kills work the user wanted. See bridge architecture discussion
+# thread 0f94b8c0 (Codex + Gemini both flagged this as a hidden ceiling
+# silently overriding the 24h policy).
+CASCADE_PER_CALL_MAX_S = _ONE_DAY
 
 # Model Tiering — Claude (used by build_module_v5.py --use-claude phases)
 # Change these to switch models across the entire pipeline without touching CLI flags.
