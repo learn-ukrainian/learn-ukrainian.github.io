@@ -83,7 +83,7 @@ def test_dry_run_does_not_write(tmp_path: Path, monkeypatch, capsys) -> None:
     assert state_path.read_text("utf-8") == original
     output = capsys.readouterr().out
     assert "DRY RUN a1/demo" in output
-    assert "updated 5 phase records" in output
+    assert "updated 6 phase records" in output
 
 
 def test_migration_populates_missing_hashes(tmp_path: Path, monkeypatch) -> None:
@@ -98,7 +98,7 @@ def test_migration_populates_missing_hashes(tmp_path: Path, monkeypatch) -> None
     result = migrate.migrate_state_file(state_path)
 
     assert result is not None
-    assert result.updated_phase_records == 5
+    assert result.updated_phase_records == 6
     assert result.stale_phase_records == 0
 
     current_hash = migrate.plan_hash(plan_path)
