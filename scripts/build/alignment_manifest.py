@@ -249,6 +249,28 @@ def _canonical_plan_hash(level: str, slug: str) -> str:
     return _sha256_bytes(canonical_yaml.encode("utf-8"))
 
 
+# FTS5 creates these shadow tables for every virtual table `<name>`:
+#   <name>_data, <name>_idx, <name>_content, <name>_docsize, <name>_config
+# They must be excluded from the manifest for TWO reasons (#1517):
+#   1. Correctness: `_idx` and `_config` are declared WITHOUT ROWID, so
+#      `SELECT MAX(rowid)` raises "no such column: rowid" and crashes every
+#      build. The shadow tables pass the `PRAGMA index_list` filter below
+#      because their PRIMARY KEYs register as implicit indexes.
+#   2. Stability: segids, pgnos, and serialized segment blobs inside the
+#      shadow tables are SQLite-internal bookkeeping that differs across
+#      identical content rebuilds (after VACUUM, `INSERT … INTO …('optimize')`,
+#      or re-ingest). Hashing them would produce a non-deterministic manifest.
+# The virtual table itself (e.g. `literary_fts`) answers the rowid query
+# correctly and IS included — its rowid tracks content identity.
+_FTS5_SHADOW_SUFFIXES: tuple[str, ...] = (
+    "_data",
+    "_idx",
+    "_content",
+    "_docsize",
+    "_config",
+)
+
+
 def _sqlite_indexed_table_names(connection: sqlite3.Connection) -> tuple[str, ...]:
     rows = connection.execute(
         """
@@ -258,18 +280,37 @@ def _sqlite_indexed_table_names(connection: sqlite3.Connection) -> tuple[str, ..
           AND name NOT LIKE 'sqlite_%'
         """
     ).fetchall()
-    names: list[str] = []
+
+    # Pass 1: identify virtual tables so we can recognize their shadows.
+    virtual_table_names: set[str] = set()
     for name, sql in rows:
-        table_name = str(name)
         table_sql = str(sql or "")
-        has_explicit_index = bool(
-            connection.execute(f'PRAGMA index_list("{table_name}")').fetchall()
-        )
         # Substring `"VIRTUAL TABLE"` would false-positive on a table
         # named e.g. `my_virtual_table_data`. Match the DDL prefix instead.
         # Flagged by gemini-review on PR #1468.
+        if table_sql.upper().lstrip().startswith("CREATE VIRTUAL TABLE"):
+            virtual_table_names.add(str(name))
+
+    shadow_names: set[str] = {
+        f"{vt}{suffix}"
+        for vt in virtual_table_names
+        for suffix in _FTS5_SHADOW_SUFFIXES
+    }
+
+    # Pass 2: keep virtual tables and any regular table with an explicit
+    # index, BUT subtract FTS5 shadows — see the block comment above for
+    # why we must exclude them even though they pass the index filter.
+    names: list[str] = []
+    for name, sql in rows:
+        table_name = str(name)
+        if table_name in shadow_names:
+            continue
+        table_sql = str(sql or "")
         is_virtual_table = table_sql.upper().lstrip().startswith("CREATE VIRTUAL TABLE")
-        if has_explicit_index or is_virtual_table:
+        has_explicit_index = bool(
+            connection.execute(f'PRAGMA index_list("{table_name}")').fetchall()
+        )
+        if is_virtual_table or has_explicit_index:
             names.append(table_name)
     return tuple(sorted(names))
 

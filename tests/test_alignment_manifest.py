@@ -267,3 +267,98 @@ def test_validate_reports_specific_mismatch(manifest_fixture: dict[str, Path]) -
         False,
         ("plan_hash",),
     )
+
+
+# --- Regression coverage for #1517: FTS5 shadow tables ----------------------
+#
+# Before the fix, `_sources_hash` crashed on any real `sources.db` because
+# SQLite FTS5 virtual tables create 5 shadow tables (`_data`, `_idx`,
+# `_content`, `_docsize`, `_config`) — two of which are declared
+# `WITHOUT ROWID` and therefore can't answer `SELECT MAX(rowid)`. The
+# shadow tables also carry non-deterministic internal state (segids, pgnos)
+# that would make the hash flaky even if the rowid query succeeded. These
+# tests freeze that contract: shadows out, the virtual table in.
+
+
+def _build_sources_db_with_fts5(path: Path) -> None:
+    """Materialize a DB that reproduces the failure mode of the real
+    sources.db — a content-backed FTS5 virtual table with the full set of
+    shadow tables SQLite auto-creates."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with sqlite3.connect(path) as connection:
+        connection.execute(
+            "CREATE TABLE source_chunks (id INTEGER PRIMARY KEY, body TEXT NOT NULL)"
+        )
+        connection.execute(
+            "CREATE INDEX idx_source_chunks_body ON source_chunks(body)"
+        )
+        connection.execute(
+            "CREATE VIRTUAL TABLE source_chunks_fts USING fts5(body, "
+            "content='source_chunks', content_rowid='id')"
+        )
+        connection.execute(
+            "INSERT INTO source_chunks(body) VALUES (?)",
+            ("first row",),
+        )
+        connection.execute(
+            "INSERT INTO source_chunks_fts(rowid, body) "
+            "SELECT id, body FROM source_chunks"
+        )
+        connection.commit()
+
+
+def test_fts5_shadow_tables_excluded_from_name_enumeration(tmp_path: Path) -> None:
+    """_sqlite_indexed_table_names keeps the virtual table and drops all
+    five FTS5 shadow tables (prevents the `no such column: rowid` crash
+    and guards against hashing non-deterministic segment state)."""
+    db_path = tmp_path / "sources.db"
+    _build_sources_db_with_fts5(db_path)
+
+    with sqlite3.connect(f"{db_path.as_uri()}?mode=ro", uri=True) as connection:
+        names = alignment_manifest._sqlite_indexed_table_names(connection)
+
+    assert "source_chunks" in names
+    assert "source_chunks_fts" in names
+    for suffix in ("_data", "_idx", "_content", "_docsize", "_config"):
+        assert f"source_chunks_fts{suffix}" not in names, (
+            f"FTS5 shadow table source_chunks_fts{suffix} must be excluded"
+        )
+
+
+def test_sources_hash_runs_clean_against_fts5_db(
+    manifest_fixture: dict[str, Path],
+) -> None:
+    """Full end-to-end: a DB that includes an FTS5 virtual table must not
+    crash `_sources_hash`. Prior to #1517 this raised
+    `sqlite3.OperationalError: no such column: rowid`."""
+    # Replace the plain fixture DB with one that exercises FTS5 shadows.
+    sources_db_path = manifest_fixture["sources_db_path"]
+    sources_db_path.unlink()
+    _build_sources_db_with_fts5(sources_db_path)
+
+    # Must not raise. Must return a valid sha256 hex digest.
+    digest = alignment_manifest._sources_hash()
+    assert isinstance(digest, str)
+    assert len(digest) == 64
+    int(digest, 16)  # raises ValueError if not hex
+
+
+def test_fts5_sources_hash_is_stable_across_rebuilds(tmp_path: Path, monkeypatch) -> None:
+    """Two independently-built DBs containing identical FTS5 content must
+    yield identical `_sources_hash` values. This would fail before #1517
+    because `*_data` / `*_idx` shadow tables carry segment IDs that differ
+    across separate `INSERT INTO fts(body)` operations."""
+    db_a = tmp_path / "a" / "sources.db"
+    db_b = tmp_path / "b" / "sources.db"
+    _build_sources_db_with_fts5(db_a)
+    _build_sources_db_with_fts5(db_b)
+
+    monkeypatch.setattr(alignment_manifest, "SOURCES_DB_PATH", db_a)
+    hash_a = alignment_manifest._sources_hash()
+    monkeypatch.setattr(alignment_manifest, "SOURCES_DB_PATH", db_b)
+    hash_b = alignment_manifest._sources_hash()
+
+    assert hash_a == hash_b, (
+        "Identical FTS5 content produced different manifest hashes — "
+        "shadow-table segment state is leaking into the hash."
+    )
