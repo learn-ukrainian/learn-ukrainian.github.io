@@ -34,7 +34,13 @@ objectives:
 - Розрізняти займенники цей (близько) та той (далеко)
 - Свідомо уникати типових L2-помилок у вживанні вказівних — copula-drop (`Це стіл`, не `Це є стіл`), узгодження роду і відмінка (`цю книгу`, не `цей книгу`), омонімія `та` займ./спол. (перелік через `і`, не `та`); 5-пунктна діагностична міні-вправа дзеркалить wiki «Типові помилки L2»
 dialogue_situations:
-- setting: У магазині електроніки — порівняння телефонів, ноутбуків і навушників на різних полицях. Цей телефон (поруч) порівняно з той ноутбук (ген там). Ця камера порівняно з та. Це радіо порівняно з те.
+- setting: >-
+    У магазині електроніки — порівняння телефонів, ноутбуків і навушників
+    на різних полицях. Учитель показує пари: `цей телефон` (поруч) ↔
+    `той ноутбук` (ген там), `ця камера` ↔ `та камера`, `це радіо` ↔
+    `те радіо`. Протиставлення «близько–далеко» дає природній контекст
+    для вказівних `цей/ця/це ↔ той/та/те` у називному відмінку (без
+    непрямих відмінків після прийменника `з` — для них див. Крок 5 wiki).
   speakers:
   - Ірина
   - Консультант
@@ -53,7 +59,7 @@ content_outline:
 - section: Той, та, те
   words: 300
   points:
-  - 'Той/та/те = той, що далі, або згаданий раніше: Той стіл. Та книга. Те вікно. Контраст: Цей стілець новий, а той — старий. Застереження: слово "та" також означає сполучник (як і/й). Контекст робить це зрозумілим: мама та тато порівняно з та книга.'
+  - 'Той/та/те = той, що далі, або згаданий раніше: Той стіл. Та книга. Те вікно. Контраст: Цей стілець новий, а той — старий. Застереження: слово "та" також означає сполучник (як і/й). Контекст розрізняє: у «мама та тато» — `та` = сполучник «і/й»; у «та книга» — `та` = вказівний займенник ж.р. Детальніше про двозначність і стилістичний вибір `і` замість другого `та` у переліку див. wiki «Типові помилки L2» row 5.'
   - 'Практичне використання — вказування та вибір: Який стіл? — Цей чи той? Яка сумка? — Ця червона чи та синя? Яке вікно? — Це велике чи те маленьке? Зверніть увагу: "Це" як вказівний займенник (це вікно) і "це" як "це є" (Це вікно). Контекст усе прояснює.'
 - section: Підсумок
   words: 300
@@ -124,8 +130,9 @@ activity_hints:
     - 'Що этот? — Этот стіл.'
     answer: 'Що це? — Це стіл.'
   - question: >-
-      Омонімія `та` (займ. ж.р. vs спол. і/й). Знайти помилку: «У кімнаті
-      є та книга та ручка.»
+      Омонімія `та` (займ. ж.р. vs спол. і/й) — стилістична двозначність,
+      НЕ граматична помилка. Виберіть ОДНОЗНАЧНИЙ варіант (такий, що
+      допускає лише одне прочитання):
     options:
     - 'У кімнаті є та книга та ручка.'
     - 'У кімнаті є та книга і ручка.'
@@ -178,4 +185,5 @@ changelog:
   - 'Added fifth activity_hint (L2-errors quiz, 5 enumerated items one-to-one with wiki «Типові помилки L2» five rows) — satisfies rubric AC-3 drift check.'
   - 'Extended `vocabulary_hints.required` with `ці` / `ті` (plural demonstratives, Крок 4 of wiki); extended `recommended` with emphatic `оцей/оця/оце` and `отой/ота/ото` (passive recognition at A1, VESUM-verified as normative; mirrors wiki Декол. #4).'
   - 'Added wiki back-reference to references list.'
-  - '`даний` explicitly excluded from vocabulary_hints with an inline NOTE tying to wiki Декол. #5 (kancelyarism / рос.-amplified calque for `цей`).'
+  - '`даний` explicitly excluded from vocabulary_hints with an inline NOTE tying to wiki Декол. #5 (register choice: official/bookish vs. A1 conversational).'
+  - 'Post-Codex-adversarial-review tightening: (a) `dialogue_situations[0].setting` rewritten — removed ungrammatical prepositional phrases (`з той ноутбук` etc. would require оруд. в.); setting now uses nominal contrast pairs `цей↔той / ця↔та / це↔те` with explicit note that непрямі відмінки після `з` belong to wiki Крок 5; (b) content_outline Крок 3 — `та`-homonymy example rewritten from bad `порівняно з та книга` to clean contrast `мама та тато` (conjunction) vs. `та книга` (demonstrative); (c) activity_hints[5] question 5 reframed from "знайти помилку" to "виберіть ОДНОЗНАЧНИЙ варіант" — `та книга та ручка` is formally admissible, the drill now asks for ambiguity-avoidance, not grammar correction; (d) wiki-side L2-errors table row 5 and Декол. #5 similarly softened — full details in wiki/.reviews/pedagogy/a1/this-and-that-review-LOCKED.md "Post-Codex-adversarial-review fixes" block.'

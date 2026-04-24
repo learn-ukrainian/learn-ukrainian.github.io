@@ -71,14 +71,20 @@ sources:
   type: explanatory-dictionary
   notes: >-
     СУМ-11 (127K entries). Authoritative for Ukrainian word semantics.
-    Queried via `mcp__sources__search_definitions`. In this wiki supports:
-    (1) the `даний` semantic claim in Декол. #5 — СУМ-11 gives `ДА́НИЙ, а, е`
-    with primary sense "1. Дієпр. пас. мин. ч. до дати" (given, provided)
-    and secondary sense "2. у знач. прикм. Цей, наявний" confirming that
-    the "this" usage is lexically attested but belongs to a bookish /
-    official register, not to A1 everyday speech; (2) the `наглий`
-    reference reserved for a broader false-friend note at higher levels
-    (СУМ-11 confirms наглий = "раптовий" — this sense lies outside the
-    this-and-that A1 scope and is deliberately not surfaced in the wiki
-    body). Cross-cited with VESUM [S5] wherever a gender or POS claim
+    Queried via `mcp__sources__search_definitions`. In this wiki supports
+    Декол. #5's register guidance on `даний`: СУМ-11 gives `ДА́НИЙ, а, е`
+    with sense-1 "Дієпр. пас. мин. ч. до дати" (participle of "give" —
+    given, provided) and sense-2 "у знач. прикм. Цей, наявний"
+    (adjectival "this, extant"). The review's framing is deliberately
+    restricted to the **register** point that sense-2 belongs to the
+    official / bookish register (evidence: СУМ-11 lists this sense second
+    and without a "розм." label that would mark it conversational),
+    whereas A1 conversational Ukrainian uses `цей/ця/це`. The review
+    does NOT claim СУМ-11 marks sense-2 as a Russian-era calque —
+    Codex's adversarial review correctly flagged that stronger framing
+    as over-reach beyond what the dictionary directly evidences. The
+    `наглий` reference is reserved for a broader false-friend note at
+    higher levels (СУМ-11 confirms наглий = "раптовий") — outside the
+    this-and-that A1 scope and deliberately not surfaced in the wiki
+    body. Cross-cited with VESUM [S5] wherever a gender or POS claim
     would otherwise be under-evidenced.
