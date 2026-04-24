@@ -149,8 +149,14 @@ def test_multi_sentence_line_marker_attaches_to_middle_sentence() -> None:
     assert log[0]["matches"] == ["42%"]
 
 
-def test_current_sounds_letters_fixture_would_gain_markers() -> None:
-    fixture = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "a1" / "sounds-letters-and-hello.md"
+def test_pre_phase_a_sample_would_gain_markers() -> None:
+    """Regression fixture: captured a1/sounds-letters-and-hello.md content
+    from the pre-Phase-A pipeline (origin/main @ 2955c0925e). This content
+    is the exact kind of precise-claim-heavy prose the annotator exists to
+    catch. Uses a STABLE snapshot rather than the live curriculum file
+    because the live file is regenerated on every --force rebuild and
+    random-ish variation in regenerated content made this test flaky."""
+    fixture = PROJECT_ROOT / "tests" / "fixtures" / "honesty_annotator_pre_phase_a_sample.md"
     content = fixture.read_text("utf-8")
     annotated, log = annotate_content(content)
     assert annotated != content

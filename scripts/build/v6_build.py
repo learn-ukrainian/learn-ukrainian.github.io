@@ -124,6 +124,42 @@ REVIEW_REJECT_SCORE = REVIEW_REJECT_FLOOR
 STYLE_REVIEW_TARGET_SCORE = STYLE_REVIEW_TARGET
 MONITOR_API_BASE_URL = os.getenv("MONITOR_API_BASE_URL", "http://localhost:8765").rstrip("/")
 MONITOR_PROMPT_TIMEOUT_S = 2.0
+# Per-dimension review dispatcher concurrency cap. Before this cap existed,
+# all 9 dims fired simultaneously — fine for throughput but rude to the
+# provider and prone to rate-limit cascades. Default 3 = 3 waves of 3,
+# roughly matches a single dim's wall-clock so the review phase stays
+# responsive. Override via env var or --review-concurrency N.
+REVIEW_DIMENSION_CONCURRENCY_DEFAULT = 3
+REVIEW_DIMENSION_CONCURRENCY = max(
+    1, int(os.getenv("REVIEW_DIMENSION_CONCURRENCY", str(REVIEW_DIMENSION_CONCURRENCY_DEFAULT)))
+)
+
+
+def resolve_review_concurrency(
+    cli_value: int | None,
+    *,
+    env_value: str | None = None,
+    num_dimensions: int | None = None,
+) -> int:
+    """Resolve effective per-dim review concurrency.
+
+    Precedence: CLI flag > env var > default 3. Always clamped to
+    [1, num_dimensions]. Extracted so tests can pin behavior without
+    monkey-patching global state.
+    """
+    max_dims = num_dimensions if num_dimensions is not None else len(REVIEW_DIMENSIONS)
+    if cli_value is not None:
+        raw = cli_value
+    else:
+        env_raw = env_value if env_value is not None else os.getenv("REVIEW_DIMENSION_CONCURRENCY")
+        if env_raw is None or env_raw.strip() == "":
+            raw = REVIEW_DIMENSION_CONCURRENCY_DEFAULT
+        else:
+            try:
+                raw = int(env_raw)
+            except ValueError:
+                raw = REVIEW_DIMENSION_CONCURRENCY_DEFAULT
+    return max(1, min(max_dims, raw))
 STYLE_REVIEW_DIMENSION_LABELS = {
     "pragmatic_authenticity": "Pragmatic authenticity",
     "stylistic_consistency": "Stylistic consistency",
@@ -7750,8 +7786,13 @@ def step_review(content_path: Path, level: str, module_num: int,
         )
 
     results_by_id: dict[str, PerDimensionReviewResult] = {}
+    effective_concurrency = min(len(REVIEW_DIMENSIONS), max(1, REVIEW_DIMENSION_CONCURRENCY))
+    _log(
+        f"  ⏩ Dispatching {len(REVIEW_DIMENSIONS)} dim reviews "
+        f"(concurrency={effective_concurrency})"
+    )
     try:
-        with ThreadPoolExecutor(max_workers=len(REVIEW_DIMENSIONS)) as executor:
+        with ThreadPoolExecutor(max_workers=effective_concurrency) as executor:
             future_map = {
                 executor.submit(_run_dimension_review, spec): spec
                 for spec in REVIEW_DIMENSIONS
@@ -10299,6 +10340,17 @@ def main():
                         help=argparse.SUPPRESS)
     parser.add_argument("--review-threshold", type=float, default=REVIEW_TARGET_SCORE,
                         help="Batch review skip threshold: rerun review when latest score is below this value")
+    parser.add_argument(
+        "--review-concurrency", type=int, default=None, metavar="N",
+        help=(
+            f"Max parallel per-dimension review dispatches (default: "
+            f"REVIEW_DIMENSION_CONCURRENCY env var or 3). Each of the "
+            f"{len(REVIEW_DIMENSIONS)} review dims is an independent reviewer "
+            f"call; lower concurrency = gentler on the provider + less rate-limit "
+            f"risk, higher = faster review phase. Clamped to "
+            f"[1, {len(REVIEW_DIMENSIONS)}]."
+        ),
+    )
     parser.add_argument("--force-publish", action="store_true",
                         help="Publish even if audit gates still fail after heal (not recommended)")
     parser.add_argument("--force", action="store_true",
@@ -10309,6 +10361,12 @@ def main():
     parser.add_argument("--reset-memory", action="store_true",
                         help="Also wipe orchestration/module-memory.yaml before rebuilding.")
     args = parser.parse_args()
+
+    # Apply --review-concurrency override BEFORE any review dispatch.
+    # Resolution precedence: CLI flag > REVIEW_DIMENSION_CONCURRENCY env > default 3.
+    if args.review_concurrency is not None:
+        global REVIEW_DIMENSION_CONCURRENCY
+        REVIEW_DIMENSION_CONCURRENCY = resolve_review_concurrency(args.review_concurrency)
 
     # --range: build multiple modules sequentially
     import subprocess as _subprocess
@@ -10367,6 +10425,11 @@ def main():
                          for item in ("--invalidate-phase", phase)
                      ],
                      *(["--reviewer", args.reviewer] if args.reviewer else []),
+                     *(
+                         ["--review-concurrency", str(args.review_concurrency)]
+                         if args.review_concurrency is not None
+                         else []
+                     ),
                      *(["--skeleton"] if getattr(args, "skeleton", False) else []),
                      *(["--no-skeleton"] if getattr(args, "no_skeleton", False) else []),
                      *(["--no-chunk"] if args.no_chunk else []),
