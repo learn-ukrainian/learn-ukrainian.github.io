@@ -3,25 +3,88 @@
 sources:
 - id: S1
   file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1807
-  type: textbook
+  type: textbook-chunk
   title: ( ЗАЙМЕННИК. ОСОБОВІ ЗАЙМЕННИКИ
   page: 88
   grade: 4
+  notes: >-
+    Підручник для 4 класу. Базовий тест «іменник → займенник» (вказування
+    на предмет через особовий займенник він/вона/воно) — основа для
+    переходу до вказівних цей/ця/це. Ground для Кроків 1-2 та вправ 1-2.
 - id: S2
   file: 5-klas-ukrmova-uhor-2022-1_s2427
-  type: textbook
+  type: textbook-chunk
   title: § 8. Частини мови. Іменники, що означають назви
   page: 32
   grade: 5
+  notes: >-
+    Підручник для 5 класу. Таблична репрезентація роду іменника та
+    вказівних/присвійних займенників (`він-мій-цей` / `вона-моя-ця` /
+    `воно-моє-це`). Ground для Кроку 2 та вправи 3 (діалог).
 - id: S3
   file: 6-klas-ukrmova-litvinova-2023_s3371
-  type: textbook
+  type: textbook-chunk
   title: § 54. Розряди займенників за значенням та особливості відмінювання
   page: 255
   grade: 6
+  notes: >-
+    Підручник для 6 класу. Повні таблиці відмінювання займенників
+    (включно з вказівними). На A1 не вживаємо повні парадигми, але
+    це джерело підтверджує факультативне подання найчастотніших
+    форм непрямих відмінків у Кроці 5.
 - id: S4
   file: 6-klas-ukrmova-zabolotnyi-2020_s3399
-  type: textbook
+  type: textbook-chunk
   title: § 58. ЗАЙМЕННИК ЯК ЧАСТИНА МОВИ
   page: 192
   grade: 6
+  notes: >-
+    Підручник для 6 класу. Концептуальне введення категорії займенника
+    + трансформаційна вправа «два речення в одне через `який` + `цей/той`».
+    Ground для вправи 4.
+# Dictionary / corpus authorities added 2026-04-24 review-and-lock pass
+# (template: at-the-cafe PR #1412, who-am-i PR #1436, things-have-gender
+# PR `claude/scale-things-have-gender-review-and-lock`). Cited inline for
+# every claim in the new "Типові помилки L2" section, the rebuilt
+# vocabulary table, and the strengthened decolonization points #4-5.
+- id: S5
+  file: VESUM
+  type: morphological-dictionary
+  notes: >-
+    VESUM (409K lemmas, 6.7M forms). Authoritative check for "does this
+    Ukrainian word-form exist as a normative entry, and what POS/gender
+    does it carry?". Queried via `mcp__sources__verify_word`,
+    `mcp__sources__verify_words`, `mcp__sources__verify_lemma`. In this
+    wiki supports: (1) every vocabulary table entry (цей/ця/це, той/та/те,
+    оцей-ряд, отой-ряд, ці/ті, ось, тут, там, чи + усі іменники та
+    прикметники); (2) the "Типові помилки L2" table's Ukrainian forms
+    (including `цю` as feminine accusative of `цей`); (3) the Russian
+    counterpart NOT FOUND evidence for row 4 (`этот`, `эта`, `это`,
+    `эти`, `тот`, `какой`); (4) the same-form-different-function note
+    on `та / то / те` (Ukrainian conjunction/particle/pronoun vs.
+    Russian demonstrative homography). Scope note: "VESUM NOT FOUND"
+    means absence from VESUM as a normative entry; external dictionaries
+    may record нестандартне / покруч forms separately, which is recorded
+    usage rather than normativity.
+- id: S6
+  file: СУМ-11
+  type: explanatory-dictionary
+  notes: >-
+    СУМ-11 (127K entries). Authoritative for Ukrainian word semantics.
+    Queried via `mcp__sources__search_definitions`. In this wiki supports
+    Декол. #5's register guidance on `даний`: СУМ-11 gives `ДА́НИЙ, а, е`
+    with sense-1 "Дієпр. пас. мин. ч. до дати" (participle of "give" —
+    given, provided) and sense-2 "у знач. прикм. Цей, наявний"
+    (adjectival "this, extant"). The review's framing is deliberately
+    restricted to the **register** point that sense-2 belongs to the
+    official / bookish register (evidence: СУМ-11 lists this sense second
+    and without a "розм." label that would mark it conversational),
+    whereas A1 conversational Ukrainian uses `цей/ця/це`. The review
+    does NOT claim СУМ-11 marks sense-2 as a Russian-era calque —
+    Codex's adversarial review correctly flagged that stronger framing
+    as over-reach beyond what the dictionary directly evidences. The
+    `наглий` reference is reserved for a broader false-friend note at
+    higher levels (СУМ-11 confirms наглий = "раптовий") — outside the
+    this-and-that A1 scope and deliberately not surfaced in the wiki
+    body. Cross-cited with VESUM [S5] wherever a gender or POS claim
+    would otherwise be under-evidenced.
