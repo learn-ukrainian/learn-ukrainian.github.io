@@ -56,7 +56,7 @@ Adding a new agent is now a single-file change: create `scripts/agent_runtime/ad
 **Positive**:
 - ONE place to fix subprocess bugs. The stderr pipe backpressure fix, the Codex post-completion hang detector, and the hard-timeout kill logic all live in `watchdog.py` and benefit every agent.
 - Usage logging is automatic. Every `runner.invoke` call produces a usage JSONL record without the caller doing anything.
-- Rate-limit headroom tracking is cross-agent. `has_headroom("codex", "gpt-5.4")` works identically for `("gemini", "gemini-3.1-pro-preview")` or any new adapter.
+- Rate-limit headroom tracking is cross-agent. `has_headroom("codex", "gpt-5.5")` works identically for `("gemini", "gemini-3.1-pro-preview")` or any new adapter.
 - Adding a new agent (future Codex version, Claude 5, etc.) is one-file work.
 - The 80-test `tests/test_agent_runtime.py` suite covers the runtime itself; each adapter has targeted tests for its parse logic.
 

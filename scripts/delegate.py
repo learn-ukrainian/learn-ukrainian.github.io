@@ -12,7 +12,7 @@ CLI:
 
     # Fire a task. Returns immediately with the task-id.
     delegate.py dispatch --agent codex --task-id my-task \
-        --prompt "do the thing" [--mode workspace-write] [--model gpt-5.4]
+        --prompt "do the thing" [--mode workspace-write] [--model gpt-5.5]
         [--allow-merge]
 
     # Check status without blocking.
@@ -1200,7 +1200,7 @@ def build_parser() -> argparse.ArgumentParser:
                    choices=["read-only", "workspace-write", "danger"],
                    help="Runtime mode (default: read-only). Use danger only with --worktree.")
     d.add_argument("--model", default=None,
-                   help="Optional model override, e.g. gpt-5.4 or gemini-3.1-pro-preview.")
+                   help="Optional model override, e.g. gpt-5.5 or gemini-3.1-pro-preview.")
     d.add_argument(
         "--effort",
         default=None,

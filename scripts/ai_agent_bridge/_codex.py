@@ -135,7 +135,7 @@ def has_codex_headroom(model: str | None = None) -> tuple[bool, str]:
     """Return whether Codex has quota headroom for a new bridge call."""
     from agent_runtime.usage import has_headroom
 
-    effective_model = model or "gpt-5.4"
+    effective_model = model or "gpt-5.5"
     return has_headroom("codex", effective_model)
 
 

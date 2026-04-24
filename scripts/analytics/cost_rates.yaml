@@ -1,4 +1,4 @@
-# Last updated 2026-04-10 — refresh when agents rev
+# Last updated 2026-04-24 — refresh when agents rev
 # Source: public pricing pages
 claude-sonnet-4.6:
   input: 3.00
@@ -12,7 +12,10 @@ gemini-3.1-pro-preview:
 gemini-2.5-flash:
   input: 0.30
   output: 2.50
-gpt-5.4:
+gpt-5.4:  # retained for historical cost queries on pre-2026-04-24 dispatches
+  input: 10.00
+  output: 40.00
+gpt-5.5:  # 2026-04-24 default; using gpt-5.4 rates as placeholder — refresh when OpenAI publishes
   input: 10.00
   output: 40.00
 default:  # unknown model → use default, warn in report

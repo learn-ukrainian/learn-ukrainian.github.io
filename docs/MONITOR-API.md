@@ -978,14 +978,14 @@ Aggregated usage counts from `batch_state/api_usage/usage_*.jsonl`.
 }
 ```
 
-### `GET /api/runtime/headroom?agent=codex&model=gpt-5.4`
+### `GET /api/runtime/headroom?agent=codex&model=gpt-5.5`
 
 Quota gate for one `(agent, model)` pair.
 
 ```json
 {
   "agent": "codex",
-  "model": "gpt-5.4",
+  "model": "gpt-5.5",
   "has_headroom": true,
   "reason": ""
 }

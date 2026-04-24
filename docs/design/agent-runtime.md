@@ -181,7 +181,7 @@ class Result:
 AGENTS: dict[str, dict] = {
     "codex": {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
-        "default_model": "gpt-5.4",
+        "default_model": "gpt-5.5",
         "cost_tier": "medium",
         "capabilities": {"code_writing", "code_review", "debugging", "adversarial_review"},
         "cli_available": True,
@@ -236,7 +236,7 @@ The existing `/api/batch/usage` endpoint (`scripts/api/main.py:152`) already rea
   "entrypoint": "bridge",
   "task_id": "issue-1183",
   "cwd": "/Users/.../learn-ukrainian",
-  "model": "gpt-5.4",
+  "model": "gpt-5.5",
   "mode": "read-only",
   "session_id": "abc123..." ,
   "duration_s": 42.1,
@@ -278,7 +278,7 @@ def has_headroom(agent: str, model: str) -> tuple[bool, str]:
     Returns (ok, reason). Checks the last 5h of records for (agent, model)
     across all entrypoints. Returns (False, "rate_limited 1h 22m ago") if
     any rate_limit entry within 5h. Scoped by (agent, model), not just
-    agent — so a rate limit on gpt-5.4 doesn't block gpt-5.4-mini.
+    agent — so a rate limit on gpt-5.5 doesn't block gpt-5.5-mini.
     """
 ```
 

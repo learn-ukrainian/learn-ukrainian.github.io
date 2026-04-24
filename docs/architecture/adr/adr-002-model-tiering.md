@@ -35,7 +35,7 @@ Each v6 phase gets its own default model, configurable via `scripts/build/batch_
 
 The Pro → Flash fallback cascade is automatic: if Pro rate-limits, the runtime tries Flash, then Flash-Lite. The fallback chain is defined in `batch_gemini_config.get_fallback_chain()`.
 
-Codex (`gpt-5.4`) is NOT in the writer rotation; it's used for code review and infrastructure tasks via `scripts/ai_agent_bridge/ask-codex` and `scripts/delegate.py`, never for content.
+Codex (`gpt-5.5`) is NOT in the writer rotation; it's used for code review and infrastructure tasks via `scripts/ai_agent_bridge/ask-codex` and `scripts/delegate.py`, never for content.
 
 ## Alternatives considered
 

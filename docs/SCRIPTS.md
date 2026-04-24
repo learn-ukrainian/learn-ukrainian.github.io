@@ -788,7 +788,7 @@ Fire a single query at one agent. Each recipient has its own model flag and defa
 | Recipient | Flag | Recommended value |
 |---|---|---|
 | Gemini | `--model`, `--auth` | `gemini-3.1-pro-preview`, `subscription` |
-| Codex | `--model` | omit unless overriding (defaults to `gpt-5.4` via runtime config) |
+| Codex | `--model` | omit unless overriding (defaults to `gpt-5.5` via runtime config) |
 | Claude | `--to-model` | omit (auto-selects per active session); override only when routing to a specific Opus/Sonnet tier |
 
 ```bash
@@ -891,7 +891,7 @@ ab codex-usage --window 5h
 ab codex-usage --window 24h --entrypoint bridge --json
 ```
 
-Reads recent `batch_state/api_usage/usage_codex-*.jsonl` records, groups by outcome and entrypoint, lists recent rate-limit events, and reports whether `gpt-5.4` currently has bridge headroom.
+Reads recent `batch_state/api_usage/usage_codex-*.jsonl` records, groups by outcome and entrypoint, lists recent rate-limit events, and reports whether `gpt-5.5` currently has bridge headroom.
 
 ### Legacy message broker
 

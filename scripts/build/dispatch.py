@@ -390,7 +390,7 @@ def dispatch_agent(
         elif is_gemma_local:
             model = "mlx-community/gemma-4-e4b-it-4bit"
         elif is_codex:
-            model = "gpt-5.4"
+            model = "gpt-5.5"
         else:
             from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
             model = CLAUDE_MODEL_CORE_CONTENT

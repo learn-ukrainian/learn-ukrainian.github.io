@@ -89,7 +89,7 @@ class AgentAdapter(Protocol):
         name: Registry key. Matches the key in ``registry.AGENTS``. Examples:
             ``"codex"``, ``"claude"``, ``"gemini"``, ``"grok"``.
         default_model: Model string passed to the CLI when the caller
-            doesn't specify one. Example: ``"gpt-5.4"`` for Codex.
+            doesn't specify one. Example: ``"gpt-5.5"`` for Codex.
         supported_modes: Subset of ``{"read-only", "workspace-write", "danger"}``.
             The runner rejects invocations requesting a mode not in this set.
     """
