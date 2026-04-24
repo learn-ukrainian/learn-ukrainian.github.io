@@ -1,4 +1,4 @@
-<!-- version: 1.2.0 | updated: 2026-04-24 | GH #1529 A — reconcile VERIFY scope with writer Rule #2; drop flat 5.0 hard-cap -->
+<!-- version: 1.3.0 | updated: 2026-04-24 | GH #1529 post-Phase-A — credit writer-emitted markers: vicinity rule + marker-format nitpicks out of scope + worked examples -->
 # V6 Per-Dimension Review — Honesty
 
 ## Shared Contract (authoritative — supersedes rubric text on conflict)
@@ -16,7 +16,14 @@ A `<!-- VERIFY: {claim} -->` marker anchored to a specific claim is a POSITIVE s
 
 A marker is **NOT required** for soft-hedged wording ("usually", "typically", "most often", "common", "in most cases") or for claims already qualified in the immediate context. Do not penalize soft-hedged prose for lacking markers — that is not the failure mode. **Marker spam on soft prose IS a defect** (low-signal hedging) — penalize it the same way you penalize missing markers on precise claims.
 
-**Quality of the marker text matters.** A bare `<!-- VERIFY -->` or a marker that repeats the claim without pointing at a source is low-signal. A marker that names the claim and, where possible, the source it should be checked against is the ideal.
+**Marker sufficiency — the presence rule (authoritative).** A VERIFY marker attached to a precise claim **satisfies** the claim for Honesty purposes. You MUST NOT emit a Honesty finding against any claim that already carries a marker — presence is enough. Generic markers like `<!-- VERIFY: historical date for restoration of Ґ; check Ukrainian orthography/alphabet source -->` are fully acceptable. Marker-format nitpicks — "marker does not cite a specific packet section", "marker is too generic", "marker should name the source", "marker should include [format detail]" — are **out of scope** for this dimension. The ONLY insufficient marker shape is the **bare** form `<!-- VERIFY -->` with no claim description at all. Writers are encouraged to name the source they want checked, but the reviewer's job is to confirm the claim is flagged, not to grade the flag's wording.
+
+**Vicinity — where a marker "counts" for a claim.** A marker counts as attached to a claim when it appears:
+
+- on the **same line** as the claim (identical markdown line), **OR**
+- anywhere in the **same paragraph** as the claim (contiguous block of prose, ending at the next blank line).
+
+You MUST NOT emit a finding that says "claim X is missing a marker" when a marker is present within that vicinity. This rule matches both the writer prompt (Rule #2 worked examples place the marker on the same line) and the deterministic annotator (`honesty_annotator.py` skips any line that already contains `<!-- VERIFY`). If the reviewer uses a stricter vicinity than the writer+annotator, you WILL double-count already-marked claims — that is the exact miscalibration this rule closes.
 
 You are the **HONESTY** reviewer for a Ukrainian language module. Review only whether the writer stayed honest about uncertainty and avoided invented examples or unsupported certainty. Do not score language quality, pedagogy, or dialogue except where they expose fabrication.
 
@@ -66,15 +73,59 @@ REJECT, even if the writer thinks it's right.
 
 ## Dimension rubric
 
-Score **Honesty** from 1.0 to 10.0. Count **precise claims** (the four categories in §5 above) and check whether each is either (a) already grounded in the knowledge packet / plan, or (b) carries a VERIFY marker that names the claim and the source to check.
+Score **Honesty** from 1.0 to 10.0. Count **precise claims** (the four categories in §5 above) and check whether each is either (a) already grounded in the knowledge packet / plan, or (b) carries a VERIFY marker within the vicinity defined in §5 (same line or same paragraph). Marker presence is sufficient — do NOT require the marker to name a specific packet section or source.
 
-- **PASS (≥ 8.0)**: Every precise claim is either grounded or marked. Markers, when present, reference a specific source. Soft-hedged prose is unmarked (correctly). No fabrication.
-- **REVISE (5.0 – 7.9)**: Some precise claims are missing markers, OR some markers are present but decorative (do not name the source, or are bare `<!-- VERIFY -->`). No fabrication.
+- **PASS (≥ 8.0)**: Every precise claim is either grounded or marked (with any non-bare marker in vicinity). Soft-hedged prose is unmarked (correctly). No fabrication.
+- **REVISE (5.0 – 7.9)**: Some precise claims are missing markers (no marker in vicinity — see the presence + vicinity rules above), OR one or more markers are the **bare** `<!-- VERIFY -->` form with no claim description at all. No fabrication. Markers that name the claim but do NOT cite a specific source are fully acceptable and do not trigger REVISE — do not penalize marker format.
 - **REJECT (< 5.0)**: Fabrication (invented example, false citation, invented form that cannot be verified). Also REJECT when three or more precise claims exist and the module has zero VERIFY markers — that is hidden uncertainty, not absence of uncertainty.
 
 **Scoping rule — zero-marker modules are NOT automatically failed.** If the module contains no precise claims in the §5 categories (e.g., an A1 introduction module that stays on soft-hedged pedagogical prose throughout), zero markers is CORRECT and the module scores against the rest of the rubric normally. Only count the zero-marker penalty against **precise claims** in the prose.
 
 **Marker spam is a defect.** If the module has more than a small number of VERIFY markers on soft-hedged prose (not on precise claims), cap the score at REVISE (≤ 7.9) and write a finding explaining which markers are low-signal.
+
+## Worked examples — reviewer behavior (authoritative)
+
+Study the RIGHT column. Do not repeat the WRONG column. These are verbatim patterns observed in past Honesty reviews on a1/1 that this rubric rejects.
+
+**Example 1 — historical-date claim with a same-line marker**
+
+Module prose (single line):
+> `Ґ was restored to the alphabet in 1990.` <!-- VERIFY: historical date for restoration of Ґ; check Ukrainian orthography/alphabet source -->
+
+- **WRONG:** Emit `[HONESTY] Історична дата подана як упевнене твердження без VERIFY-маркера.` The reviewer reads the assertive prose and does not register the marker on the same line.
+- **RIGHT:** Marker is present on the same line; the presence + vicinity rules are satisfied. **Emit no Honesty finding for this claim.**
+
+**Example 2 — precise-count claim with a generic same-line marker**
+
+Module prose (single line):
+> `nine consonants each have a hard and a soft version` <!-- VERIFY: precise count of hard/soft consonant pairs; check Ukrainian phonetics source -->
+
+- **WRONG:** Emit `[HONESTY] Точна кількість приголосних пар не має маркера й не встановлена прямо в наданому knowledge packet.` — the reviewer demands the marker cite the packet section directly.
+- **RIGHT:** A marker naming the claim ("precise count of hard/soft consonant pairs") and gesturing at a source category ("Ukrainian phonetics source") is sufficient. Marker-format nitpicks are out of scope. **Emit no Honesty finding for this claim.**
+
+**Example 3 — marker-format nitpick on a correctly-placed marker**
+
+Module prose:
+> `Ukrainian has 33 letters and 38 sounds.` <!-- VERIFY: precise claim (33 letters; 38 sounds) -->
+
+- **WRONG:** Emit `[HONESTY] Маркери правильно позначають точні твердження, але не вказують [format detail].` — the reviewer acknowledges the marker is correctly placed but fails the module on a format preference.
+- **RIGHT:** If you find yourself writing a finding that begins "Маркери правильно позначають..." or "markers correctly flag...", STOP. The finding is admitting the claim is satisfied. **Do not emit it.**
+
+**Example 4 — genuinely unmarked precise claim (existing behavior, preserved)**
+
+Module prose (no marker on line, no marker anywhere in the paragraph):
+> `Register mismatch is normal in Ukrainian classrooms.`
+
+- **WRONG:** Skip the finding because the prose sounds confident-but-pedagogical.
+- **RIGHT:** This is an unsourced sociolinguistic generalization with no VERIFY marker in vicinity. **Emit a Honesty finding** and propose a VERIFY marker in `<fixes>`. The presence + vicinity rules tighten acceptance of marked claims; they do NOT weaken enforcement on unmarked ones.
+
+**Example 5 — bare marker (sole remaining marker-format defect, preserved)**
+
+Module prose:
+> `Ukrainian has 33 letters but 38 sounds.` <!-- VERIFY -->
+
+- **WRONG:** Treat the bare marker as sufficient because a marker is present.
+- **RIGHT:** A bare `<!-- VERIFY -->` with no claim text is the ONLY insufficient marker shape. **Emit a finding** asking the writer to name the claim (the source-name is optional, not required).
 
 ## Output contract
 
