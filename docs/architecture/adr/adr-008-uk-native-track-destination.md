@@ -1,6 +1,9 @@
 # ADR-008 — Draft — UK-Native Track Destination & Naming
 
 > **Status:** DRAFT — awaiting Krisztian decision 2026-04-21
+> **Date:** 2026-04-21
+> **Deciders:** Krisztian, Claude, Codex
+> **Related:** EPIC #1365, `docs/session-state/2026-04-21-evening-strategic-audit.md`, `docs/plans/jiggly-soaring-forest.md`
 > **Context:** EPIC #1365 A.11/A.12 Ukrainian-canonical pilot hit the
 > problem that built UK A1/A2 lessons overwrote the English-track
 > destination (`starlight/src/content/docs/a1/`) when published.

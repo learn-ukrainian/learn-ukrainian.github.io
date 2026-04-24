@@ -113,6 +113,20 @@ if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/check_de
   fi
 fi
 
+# 10b. Check ADR hygiene (sister to check_decisions). Process + rationale:
+# docs/best-practices/adr-management.md.
+if [ -f "$PROJECT_DIR/.venv/bin/python" ] && [ -f "$PROJECT_DIR/scripts/audit/check_adrs.py" ]; then
+  ADR_REPORT=$("$PROJECT_DIR/.venv/bin/python" "$PROJECT_DIR/scripts/audit/check_adrs.py" --quiet 2>/dev/null)
+  ADR_EXIT=$?
+  if [ "$ADR_EXIT" -ge 2 ] && [ -n "$ADR_REPORT" ]; then
+    # Errors (missing required fields, broken supersede chains, numbering
+    # duplicates) should surface as blocking ISSUES.
+    ISSUES+=("ADR hygiene: $ADR_REPORT — see docs/best-practices/adr-management.md")
+  elif [ -n "$ADR_REPORT" ]; then
+    INFO+=("ADR hygiene: $ADR_REPORT")
+  fi
+fi
+
 # 11. Open GH issues summary
 if command -v gh >/dev/null 2>&1; then
   OPEN_ISSUES=$(gh issue list --state open --json number,title,labels --limit 10 2>/dev/null)
