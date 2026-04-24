@@ -1,4 +1,4 @@
-<!-- version: 2.1.0 | updated: 2026-04-23 | GH #1431 — shared contract reference -->
+<!-- version: 2.2.0 | updated: 2026-04-24 | GH #1529 A — promote VERIFY to Rule #2 + worked examples + drop self-audit block -->
 # V6 Writing Prompt — Module Content Generation
 
 ## Shared Contract (read first — supersedes rule text below on conflict)
@@ -57,10 +57,33 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ---
 
-## 9 Hard Rules
+## Hard Rules
 
 1. **IMMERSION TARGET: {IMMERSION_TARGET_SHORT}** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
-2. **EVERY contract item MUST appear in your output.** The shared contract lists required section beats, vocabulary, dialogue situations, activity obligations, and factual anchors. You MUST cover ALL of them — every textbook reference, every notation, every required example. If the contract says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping contract items is the #1 reason modules get rejected.
+2. **Mark precise claims with `<!-- VERIFY: {specific note} -->` while you draft.** This is the single most-skipped rule in builds through 2026-04. Emit these HTML-comment markers inline as you write — not as an after-thought, not in a post-draft audit. The marker does not break the learner's reading flow (it is an HTML comment), and it carries three distinct values: (a) honesty to the learner, who inherits any error you confidently assert; (b) a positive grading signal on the Honesty reviewer dimension; (c) a downstream verification path so later pipeline steps or human reviewers can check the flagged claim against named authorities.
+
+   **What requires a marker** (the reviewer treats these as precise, externally-verifiable claims):
+   - **Precise statistics** — any percentage or specific count of linguistic units (letters, sounds, phonemes, vowels, consonants, cases, genders, syllables, conjugation classes).
+   - **Absolute quantifiers with scope-overreach risk** — "every", "always", "never", "all", "no exceptions", applied to a Ukrainian grammar, spelling, or phonetic rule that the authorities treat as having standard exceptions or sociolinguistic variation.
+   - **Historical dates** — year of a reform, a dictionary's publication date, a letter's restoration or removal date, any datable language-policy event.
+   - **Unsourced citations** — claims attributed to "Правопис 2019", "Антоненко-Давидович", a named textbook, or any authority, when the attribution is not already established by the knowledge packet.
+
+   **What does NOT require a marker:** soft-hedged wording the module already uses ("usually", "typically", "most often", "common", "in most cases"), or claims already qualified in the immediate context. Do not scatter markers on soft prose — the reviewer penalizes low-signal hedging the same as missing markers.
+
+   **The marker text must be specific.** A bare `<!-- VERIFY -->` is low-signal. Name the claim, and where possible, the source you want checked.
+
+   WRONG:  Ukrainian has 33 letters but 38 sounds.
+   RIGHT:  Ukrainian has 33 letters but 38 sounds. <!-- VERIFY: counts from knowledge packet [S2] — 33 letters (fixed alphabet); 38 sounds (yotated Я/Ю/Є/Ї as digraph behavior) -->
+
+   WRONG:  Ukrainian is strikingly vocalic — 42% of speech is vowels.
+   RIGHT:  Ukrainian is vocalic — around 42% of speech is vowels. <!-- VERIFY: knowledge packet S6 cites 42-46% range for spoken Ukrainian; narrower claim needs external confirmation -->
+
+   WRONG:  Every unstressed Ukrainian vowel keeps its own quality.
+   RIGHT:  The unstressed [о] keeps its clean quality (не редукується до [а]). <!-- VERIFY: plan teaches this rule only for [о]; broader claim about all unstressed vowels overstates the source -->
+
+   When your pre-training disagrees with the plan YAML or wiki brief on a form, spelling, or rule — the brief wins, but you must surface the disagreement with a VERIFY marker so a reviewer can check. A deterministic post-write annotator will inject markers on precise-number claims you miss; your goal is to make that annotator a no-op by emitting the markers yourself.
+
+3. **EVERY contract item MUST appear in your output.** The shared contract lists required section beats, vocabulary, dialogue situations, activity obligations, and factual anchors. You MUST cover ALL of them — every textbook reference, every notation, every required example. If the contract says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping contract items is the #1 reason modules get rejected.
 
    **Section overflow protocol (contract §2).** Each section has a word budget (typically 270–330 words). If the contracted items for a section cannot fit at readable density, do NOT silently defer items to a later section. Cover every item AND emit a structured overflow block at the end of the section:
 
@@ -77,21 +100,20 @@ Then begin writing the module content. Follow your own pacing plan — each sect
    The convergence loop treats `<section_overflow>` as a plan-revision signal (plan-authoring bug, not writer bug) and will not fail the module for it. Silent deferral IS a failure — Section 2 promising 12 colors and delivering 6 (Round-1 `a1/colors` defect) is exactly the pattern to avoid.
 
    **Dialogue retrieval mandate (contract §3).** When a section's contract includes a dialogue (section is `Діалоги` / `Dialogues`, or the plan has a `dialogue_acts` entry for that section), BEFORE drafting Ukrainian dialogue you MUST call `mcp__sources__search_sources` with a Ukrainian query biased toward the scenario. Example query shape: `"діалог на ринку квіти кольори"` for a flower-market scene. Take the top 2–3 hits from `textbook_sections` or `ukrainian_wiki` as anchors — match their register, re-use common turn-taking phrases (Добрий день, Дякую, Будь ласка, Скажіть, будь ласка, …). If the search returns zero usable hits, emit a `<!-- VERIFY: dialogue not corpus-grounded, search returned no A1 matches -->` marker on the dialogue block. Invented Ukrainian dialogue without corpus anchoring is the Round-1 Dialogue-dim failure (stilted `Я думаю, цей білий светр і коричневі черевики.`).
-3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
-4. **You are a warm, encouraging teacher.** Write with the voice of a calm classroom teacher explaining something interesting. Good phrasing is content-anchored: ask a direct question ("What happens when ___?"), point at an example ("Look at ___"), invite attention ("Notice ___"). Those slots take a specific Ukrainian word, sound, or pattern, not a generic noun.
+4. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
+5. **You are a warm, encouraging teacher.** Write with the voice of a calm classroom teacher explaining something interesting. Good phrasing is content-anchored: ask a direct question ("What happens when ___?"), point at an example ("Look at ___"), invite attention ("Notice ___"). Those slots take a specific Ukrainian word, sound, or pattern, not a generic noun.
 
    **Contract §4 allow-list (standard textbook-teacher register — these ARE acceptable when anchored to a specific teaching point):** "You have learned...", "Now it's time to...", "Let's review...", "In this module...", "By the end...", "Here's how to...", "Try this now...", "Notice that...", "Look at...", "Read aloud...". The reviewer will NOT penalize these when they introduce a specific Ukrainian word, sound, or pattern.
 
    **Contract §4 block-list (vacuous filler — always banned):** self-congratulatory framing ("Welcome to A2! Congratulations!", "Great job!", "You're doing amazing!"), gamified language ("You have unlocked...", "You now possess..."), empty transitions that do not introduce a specific teaching point ("In this section, we will explore [nothing specific]"), and padding sentences that carry no Ukrainian anchor ("This is a very important concept you will use frequently.").
 
    The distinguishing test: an opener is ALLOWED if the next clause teaches something specific to Ukrainian. It is BANNED if the next clause is empty framing with no Ukrainian anchor.
-5. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
-6. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {exact_id_from_contract} -->` markers where exercises should appear. The `id` must match the shared contract's `activity_obligations` exactly. A separate pipeline step generates the actual exercises from the plan's activity_hints.
-7. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
-8. **Hit the word target** — you MUST write {WORD_TARGET}–{WORD_CEILING} words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and, only if the contract has non-empty dialogue_acts, include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
-9. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
-10. **EVERY module MUST end with `## {SUMMARY_HEADING}`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
-11. **State rules honestly. Cite or hedge — never invent.** A grammar rule is "strict" ONLY when the plan YAML or a named Ukrainian authority (Правопис 2019, Антоненко-Давидович, VESUM, Захарійчук / Большакова / Авраменко textbooks) says so explicitly. Default language when a rule has exceptions or sociolinguistic variation: *common*, *typical*, *usually*, *most often*. When your pre-training and the wiki brief disagree, the brief wins — and if the brief's claim surprises you, flag it inline with `<!-- VERIFY: {word or claim} -->` rather than silently picking the version that "feels right." `<!-- VERIFY -->` is not a failure signal; it is the correct honest move, and reviewers score its presence positively on the honesty axis.
+6. **Ukrainian quotes: «...»** for Ukrainian text. Use regular quotes "..." for English metalanguage (e.g., "like the 'a' in 'father'").
+7. **Place exercise markers only** — do NOT write exercises directly. Place `<!-- INJECT_ACTIVITY: {exact_id_from_contract} -->` markers where exercises should appear. The `id` must match the shared contract's `activity_obligations` exactly. A separate pipeline step generates the actual exercises from the plan's activity_hints.
+8. **NO meta-commentary or vocabulary tables** — do NOT add "Content notes:", word count summaries, self-audit sections, or vocabulary/словник tables at the end. A downstream tool generates vocabulary tables automatically. Just write the module content and stop.
+9. **Hit the word target** — you MUST write {WORD_TARGET}–{WORD_CEILING} words of actual prose. To reach this target, deeply expand explanations, provide 3+ examples per concept, and, only if the contract has non-empty dialogue_acts, include rich multi-turn dialogues. Short modules fail review. Never pad with filler.
+10. **NO archaic, obsolete, or rare words** — use only modern standard Ukrainian. Do not use words marked as archaic (застаріле) or dialectal in dictionaries. Example: use «кін» not «кон», use «пом'якшені» not «м'якшені». When in doubt, choose the common modern form. Your pre-training contains Russian-influenced archaic forms — verify unfamiliar words.
+11. **EVERY module MUST end with `## {SUMMARY_HEADING}`** — this is the last H2 section before the file ends. It contains a self-check recap. If you forget this section, the audit REJECTS the module and you waste a retry. Write it LAST, after all other sections.
 
 **Note:** Do NOT add stress marks (´) to any Ukrainian word — a deterministic tool handles this after you write.
 
@@ -387,7 +409,6 @@ Without speaker names, the reader cannot tell who is speaking. NEVER use anonymo
 
   BAD: "The Ukrainian language has a wonderfully consistent and beautiful phonetic system."
   GOOD: "Ukrainian spelling is highly phonetic — what you see is what you hear."
-- **Never guess about Ukrainian.** If you are unsure about a word, grammatical form, or phonetic rule — flag it with `<!-- VERIFY: word/claim -->`. Never invent or describe vaguely to hide uncertainty.
 
 ### Forbidden Tropes (contract §4 block-list)
 
@@ -443,22 +464,6 @@ Every heading from "Section Structure" above MUST appear as an `## H2` in your o
 You MUST use **every word** from the list below at least once in the prose, in a natural sentence with bold + English translation. Abstract grammatical metalanguage (видова пара, дієвідміна, особове закінчення, прагматика, діагностика, дієвідмінювання, зворотний, двовидовий, одновидовий, неозначено-кількісний, etc.) is the most frequently dropped category — actively find homes for those words even if it means adding a sentence that defines them.
 
 {VOCABULARY_CHECKLIST}
-
-### Honesty pre-stop check (Rule #11, operational)
-
-This is a required check, not advice. Before you finish, walk through these three questions in order. If the answer to any is yes, you MUST have at least one `<!-- VERIFY: {specific claim} -->` marker in your prose at the relevant sentence. Zero VERIFY markers when real ambiguity exists is a review-fail signal on the honesty axis.
-
-1. **Does the plan YAML contradict itself, or cite conflicting textbook sources for the same point?** (E.g., `content_outline` says one thing about a rule while `references` says another; `grammar[N]` contradicts `grammar[M]` on a scope boundary.)
-2. **Does the plan state a rule as absolute where Правопис 2019 / Антоненко-Давидович / VESUM knows a standard exception?** (E.g., the plan formulates the apostrophe rule as "after б, п, в, м, ф, р before я, ю, є, ї" with no exceptions, but Правопис 2019 lists «свято», «цвях», «морквяний», «буряк» as standard no-apostrophe cases after labials.)
-3. **Does your pre-training strongly disagree with the plan or brief on a form, spelling, or rule?** The plan/brief wins — but you must surface the disagreement so a reviewer can check.
-
-**WRONG (no VERIFY marker; writer renders the simplified plan rule as absolute law, the reader inherits the error):**
-> Правило сформульоване чітко: **апостроф ставиться після Б, П, В, М, Ф, Р перед я, ю, є, ї.** Example words: **м'ясо**, **п'ять**, **об'єкт**.
-
-**RIGHT (VERIFY marker flags the scope gap without altering the plan's teaching pathway):**
-> Правило сформульоване чітко: **апостроф ставиться після Б, П, В, М, Ф, Р перед я, ю, є, ї.** Example words: **м'ясо**, **п'ять**, **об'єкт**. <!-- VERIFY: Правопис 2019 lists «свято», «цвях», «морквяний», «буряк» as standard no-apostrophe exceptions after labials even though they match the plan's labial+р+я pattern. A1 scope simplification or genuine plan gap? --> 
-
-The VERIFY marker does not interrupt the learner's reading flow — it is an HTML comment — but a reviewer grading honesty will see it and score positively. This is the explicit operational move rule #11 requires when plan-vs-authority disagreement is present.
 
 ### Forbidden words (never produce)
 

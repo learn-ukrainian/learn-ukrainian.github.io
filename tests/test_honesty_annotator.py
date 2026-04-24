@@ -116,6 +116,39 @@ def test_mixed_content_appends_exactly_three_markers() -> None:
     assert len(log) == 3
 
 
+def test_multi_sentence_line_marker_attaches_to_matching_first_sentence() -> None:
+    annotated, log = annotate_content(
+        "Ukrainian has 33 letters. Кави я люблю вранці."
+    )
+    assert annotated == (
+        "Ukrainian has 33 letters. <!-- VERIFY: precise claim (33 letters) --> "
+        "Кави я люблю вранці."
+    )
+    assert log[0]["matches"] == ["33 letters"]
+
+
+def test_multi_sentence_line_marker_attaches_to_matching_second_sentence() -> None:
+    annotated, log = annotate_content(
+        "Кави я люблю вранці. Ukrainian has 38 sounds."
+    )
+    assert annotated == (
+        "Кави я люблю вранці. Ukrainian has 38 sounds."
+        " <!-- VERIFY: precise claim (38 sounds) -->"
+    )
+    assert log[0]["matches"] == ["38 sounds"]
+
+
+def test_multi_sentence_line_marker_attaches_to_middle_sentence() -> None:
+    annotated, log = annotate_content(
+        "First sentence. Ukrainian has 42% vowels. Third sentence."
+    )
+    assert annotated == (
+        "First sentence. Ukrainian has 42% vowels."
+        " <!-- VERIFY: precise claim (42%) --> Third sentence."
+    )
+    assert log[0]["matches"] == ["42%"]
+
+
 def test_current_sounds_letters_fixture_would_gain_markers() -> None:
     fixture = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "a1" / "sounds-letters-and-hello.md"
     content = fixture.read_text("utf-8")

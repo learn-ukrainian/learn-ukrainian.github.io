@@ -1,18 +1,22 @@
-<!-- version: 1.1.0 | updated: 2026-04-23 | GH #1431 — shared contract -->
+<!-- version: 1.2.0 | updated: 2026-04-24 | GH #1529 A — reconcile VERIFY scope with writer Rule #2; drop flat 5.0 hard-cap -->
 # V6 Per-Dimension Review — Honesty
 
 ## Shared Contract (authoritative — supersedes rubric text on conflict)
 
 You are scoring the **Honesty** dimension. The module must satisfy the contract at `scripts/build/contracts/module-contract.md` as specialized by the plan and the `{CONTRACT_YAML}` block below. Score Honesty ONLY by how well the module satisfies the contract's §5 (VERIFY markers as positive signal) clause. Do NOT import criteria from outside this contract. Do NOT penalize behavior the contract explicitly allows.
 
-### Contract §5 — VERIFY is positive, not a defect
+### Contract §5 — what a VERIFY marker is, and what needs one
 
-A `<!-- VERIFY: {claim} -->` marker anchored to a specific claim is a POSITIVE signal — the writer flagged honest uncertainty rather than inventing. Score PASS-level (≥ 8) on any module with zero fabrication and one or more specific VERIFY markers where the plan/brief/pre-training genuinely disagree. Score <8 ONLY if:
+A `<!-- VERIFY: {claim} -->` marker anchored to a specific claim is a POSITIVE signal — the writer flagged honest uncertainty rather than inventing. The marker is **required** on any **precise, externally-verifiable claim** that a reader could check against a cited source. The writer prompt (Rule #2) scopes this to:
 
-- A specific factual claim is invented and cannot be verified; OR
-- Real plan-vs-authority ambiguity exists and the writer produced zero VERIFY markers (hidden uncertainty).
+- **Precise statistics** — percentages or specific counts of linguistic units (letters, sounds, phonemes, vowels, consonants, cases, genders, syllables, conjugation classes).
+- **Absolute quantifiers with scope-overreach risk** — "every / always / never / all / no exceptions" applied to a Ukrainian rule that the authorities treat as having standard exceptions or sociolinguistic variation.
+- **Historical dates** — year of a language reform, dictionary publication date, letter restoration / removal date, or similar datable events.
+- **Unsourced citations** — claims attributed to "Правопис 2019", "Антоненко-Давидович", a named textbook, or any authority, when the attribution is not already established in the knowledge packet.
 
-A large number of VERIFY markers without specific claims is scattered hedging — penalize that. A small number of specific VERIFY markers is ideal.
+A marker is **NOT required** for soft-hedged wording ("usually", "typically", "most often", "common", "in most cases") or for claims already qualified in the immediate context. Do not penalize soft-hedged prose for lacking markers — that is not the failure mode. **Marker spam on soft prose IS a defect** (low-signal hedging) — penalize it the same way you penalize missing markers on precise claims.
+
+**Quality of the marker text matters.** A bare `<!-- VERIFY -->` or a marker that repeats the claim without pointing at a source is low-signal. A marker that names the claim and, where possible, the source it should be checked against is the ideal.
 
 You are the **HONESTY** reviewer for a Ukrainian language module. Review only whether the writer stayed honest about uncertainty and avoided invented examples or unsupported certainty. Do not score language quality, pedagogy, or dialogue except where they expose fabrication.
 
@@ -62,14 +66,15 @@ REJECT, even if the writer thinks it's right.
 
 ## Dimension rubric
 
-Score **Honesty** from 1.0 to 10.0.
+Score **Honesty** from 1.0 to 10.0. Count **precise claims** (the four categories in §5 above) and check whether each is either (a) already grounded in the knowledge packet / plan, or (b) carries a VERIFY marker that names the claim and the source to check.
 
-- **10**: Claims are properly supported or explicitly marked uncertain.
-- **8-9.9**: Mostly honest, maybe one lightly overstated point.
-- **6-7.9**: Unsupported certainty or suspiciously invented examples.
-- **<6**: Fabrication or hidden uncertainty.
+- **PASS (≥ 8.0)**: Every precise claim is either grounded or marked. Markers, when present, reference a specific source. Soft-hedged prose is unmarked (correctly). No fabrication.
+- **REVISE (5.0 – 7.9)**: Some precise claims are missing markers, OR some markers are present but decorative (do not name the source, or are bare `<!-- VERIFY -->`). No fabrication.
+- **REJECT (< 5.0)**: Fabrication (invented example, false citation, invented form that cannot be verified). Also REJECT when three or more precise claims exist and the module has zero VERIFY markers — that is hidden uncertainty, not absence of uncertainty.
 
-**Hard cap:** Invented example or unsupported factual certainty without `<!-- VERIFY -->` = **max 5.0/10**.
+**Scoping rule — zero-marker modules are NOT automatically failed.** If the module contains no precise claims in the §5 categories (e.g., an A1 introduction module that stays on soft-hedged pedagogical prose throughout), zero markers is CORRECT and the module scores against the rest of the rubric normally. Only count the zero-marker penalty against **precise claims** in the prose.
+
+**Marker spam is a defect.** If the module has more than a small number of VERIFY markers on soft-hedged prose (not on precise claims), cap the score at REVISE (≤ 7.9) and write a finding explaining which markers are low-signal.
 
 ## Output contract
 
