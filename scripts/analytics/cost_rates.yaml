@@ -15,9 +15,12 @@ gemini-2.5-flash:
 gpt-5.4:  # retained for historical cost queries on pre-2026-04-24 dispatches
   input: 10.00
   output: 40.00
-gpt-5.5:  # 2026-04-24 default; using gpt-5.4 rates as placeholder — refresh when OpenAI publishes
+gpt-5.5:  # 2026-04-24 thinking-tier default; using gpt-5.4 rates as placeholder — refresh when OpenAI publishes
   input: 10.00
   output: 40.00
+gpt-5.4-mini:  # fast-tier default (skeleton/activities/vocab in CODEX_FAMILY)
+  input: 2.50
+  output: 10.00
 default:  # unknown model → use default, warn in report
   input: 5.00
   output: 20.00

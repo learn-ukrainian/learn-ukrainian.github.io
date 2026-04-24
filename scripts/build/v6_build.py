@@ -720,7 +720,7 @@ class ModelFamily:
 
     name: str           # "claude", "gemini", or "codex"
     thinking: str       # opus / pro / gpt-5.5 — for write and review
-    fast: str           # sonnet / flash / gpt-5.5 — for skeleton, activities, vocab
+    fast: str           # sonnet / flash / gpt-5.4-mini — for skeleton, activities, vocab
     tool_prefix: str    # "mcp__rag__" (Claude), "mcp_rag_" (Gemini), "" (Codex)
 
 
@@ -846,7 +846,7 @@ GEMINI_FAMILY = ModelFamily(
 CODEX_FAMILY = ModelFamily(
     name="codex",
     thinking="gpt-5.5",
-    fast="gpt-5.5",
+    fast="gpt-5.4-mini",
     # Codex uses shell commands for verification instead of MCP JSON-RPC.
     # Tool instructions are loaded from scripts/tools/codex_tool_instructions.md
     # and injected into the prompt. No tool_prefix needed.
