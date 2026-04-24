@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import asyncio
 import fnmatch
+import json
 import os
 import shlex
 import subprocess
@@ -27,6 +28,7 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter
+from pydantic import BaseModel
 
 from .config import PROJECT_ROOT
 
@@ -47,6 +49,34 @@ BUCKET_NAMES = (
 
 _GIT_TIMEOUT_S = 2.0
 _GIT_ENV_KEYS = ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX", "GIT_COMMON_DIR")
+
+
+class StaleBranch(BaseModel):
+    name: str
+    upstream_gone: bool
+    fully_merged_to_main: bool
+    last_commit_sha: str
+    last_commit_date: str
+    committer: str
+
+
+class Worktree(BaseModel):
+    path: str
+    branch: str
+    clean: bool | None = None
+    upstream_gone: bool | None = None
+    fully_merged_to_main: bool | None = None
+    disk_bytes: int | None = None
+    reason: str
+
+
+class CleanupReport(BaseModel):
+    stale_branches: list[StaleBranch]
+    removable_worktrees: list[Worktree]
+    protected_worktrees: list[Worktree]
+    total_reclaimable_bytes: int
+    computed_at: str
+    performance_ms: float
 
 
 def _git_invocation(args: list[str], cwd: Path) -> list[str]:
@@ -110,6 +140,261 @@ def _run_git(
 
 def _isoformat_z(value: datetime) -> str:
     return value.astimezone(UTC).isoformat().replace("+00:00", "Z")
+
+
+def _list_local_branches(cwd: Path) -> list[dict[str, Any]]:
+    code, stdout, _stderr = _run_git(
+        [
+            "for-each-ref",
+            "--format=%(refname:short)%00%(upstream:short)%00%(upstream:track)"
+            "%00%(objectname:short)%00%(committerdate:unix)%00%(committername)",
+            "refs/heads",
+        ],
+        cwd=cwd,
+    )
+    if code != 0:
+        return []
+
+    branches: list[dict[str, Any]] = []
+    for line in stdout.splitlines():
+        parts = line.split("\x00")
+        if len(parts) != 6:
+            continue
+        name, upstream, upstream_track, sha, timestamp, committer = parts
+        try:
+            committed_at = datetime.fromtimestamp(int(timestamp), UTC)
+            last_commit_date = _isoformat_z(committed_at)
+        except (OSError, ValueError):
+            last_commit_date = ""
+        branches.append({
+            "name": name,
+            "upstream_gone": bool(upstream and "gone" in upstream_track.lower()),
+            "last_commit_sha": sha,
+            "last_commit_date": last_commit_date,
+            "committer": committer,
+        })
+    return branches
+
+
+def _list_worktrees(cwd: Path) -> list[dict[str, Any]]:
+    code, stdout, _stderr = _run_git(["worktree", "list", "--porcelain"], cwd=cwd)
+    if code != 0:
+        return []
+
+    worktrees: list[dict[str, Any]] = []
+    current: dict[str, Any] = {}
+    for line in stdout.splitlines():
+        if not line.strip():
+            if current:
+                worktrees.append(current)
+                current = {}
+            continue
+
+        key, _, value = line.partition(" ")
+        if key == "worktree":
+            current["path"] = value
+        elif key == "HEAD":
+            current["head"] = value
+        elif key == "branch":
+            current["branch"] = value.removeprefix("refs/heads/")
+        elif key == "detached":
+            current["branch"] = "(detached HEAD)"
+            current["detached"] = True
+        elif key in {"locked", "prunable"}:
+            current[key] = value or True
+
+    if current:
+        worktrees.append(current)
+    return worktrees
+
+
+def _is_branch_merged_to_main(branch: str, cwd: Path) -> bool:
+    code, stdout, _stderr = _run_git(["cherry", "main", branch], cwd=cwd)
+    if code == 0:
+        lines = [line.strip() for line in stdout.splitlines() if line.strip()]
+        return all(line.startswith("-") for line in lines)
+
+    code, stdout, _stderr = _run_git(["branch", "--merged", "main", "--format=%(refname:short)"], cwd=cwd)
+    if code != 0:
+        return False
+    return branch in {line.strip() for line in stdout.splitlines() if line.strip()}
+
+
+def _is_worktree_clean(path: Path, cwd: Path) -> bool:
+    del cwd
+    code, stdout, _stderr = _run_git(["status", "--porcelain"], cwd=path)
+    return code == 0 and not stdout.strip()
+
+
+def _disk_bytes(path: Path) -> int | None:
+    try:
+        proc = subprocess.run(
+            ["du", "-sk", str(path)],
+            capture_output=True,
+            text=True,
+            timeout=_GIT_TIMEOUT_S,
+            check=False,
+        )
+    except (subprocess.TimeoutExpired, FileNotFoundError, PermissionError, OSError):
+        return None
+    if proc.returncode != 0:
+        return None
+    first = proc.stdout.split(maxsplit=1)[0] if proc.stdout.split() else ""
+    try:
+        return int(first) * 1024
+    except ValueError:
+        return None
+
+
+def _active_task_ids(project_root: Path | None = None) -> set[str]:
+    tasks_dir = (project_root or PROJECT_ROOT) / "batch_state" / "tasks"
+    active: set[str] = set()
+    try:
+        task_files = list(tasks_dir.glob("*.json"))
+    except OSError:
+        return active
+
+    for path in task_files:
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if payload.get("status") != "running":
+            continue
+        active.add(path.stem)
+        task_id = payload.get("task_id")
+        if isinstance(task_id, str) and task_id:
+            active.add(task_id)
+    return active
+
+
+def _is_protected(
+    path: Path,
+    branch: str,
+    active_task_ids: set[str],
+    project_root: Path | None = None,
+) -> tuple[bool, str | None]:
+    root = project_root or PROJECT_ROOT
+    try:
+        if path.resolve() == root.resolve():
+            return True, "primary checkout"
+    except OSError:
+        pass
+
+    normalized = path.as_posix()
+    if "interactive" in normalized:
+        return True, "interactive session (contains 'interactive' in path)"
+
+    parts = path.parts
+    for idx in range(len(parts) - 2):
+        if parts[idx] == ".worktrees" and parts[idx + 1] == "dispatch":
+            task_id = parts[idx + 3] if len(parts) > idx + 3 else path.name
+            if task_id in active_task_ids or path.name in active_task_ids:
+                return True, "active dispatch (matches .worktrees/dispatch/**)"
+    return False, None
+
+
+def _display_worktree_path(path: Path, project_root: Path) -> str:
+    try:
+        if path.resolve() == project_root.resolve():
+            return str(path)
+    except OSError:
+        pass
+    try:
+        return path.relative_to(project_root).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def _worktree_reason(upstream_gone: bool, fully_merged_to_main: bool, clean: bool) -> str:
+    reasons: list[str] = []
+    if upstream_gone:
+        reasons.append("upstream gone")
+    if fully_merged_to_main:
+        reasons.append("fully merged to main")
+    if clean:
+        reasons.append("working tree clean")
+    return ", ".join(reasons)
+
+
+def compute_git_cleanup(project_root: Path | None = None) -> CleanupReport:
+    if project_root is None:
+        project_root = PROJECT_ROOT
+
+    started = time.perf_counter()
+    computed_at = _isoformat_z(datetime.now(UTC))
+    branches = _list_local_branches(project_root)
+    worktrees = _list_worktrees(project_root)
+    checked_out_branches = {
+        record["branch"]
+        for record in worktrees
+        if record.get("branch") and record.get("branch") != "(detached HEAD)"
+    }
+
+    branch_state: dict[str, dict[str, Any]] = {}
+    stale_branches: list[StaleBranch] = []
+    for branch in branches:
+        name = branch["name"]
+        fully_merged = _is_branch_merged_to_main(name, project_root)
+        state = {**branch, "fully_merged_to_main": fully_merged}
+        branch_state[name] = state
+
+        if name == "main" or name.startswith("origin/") or name in checked_out_branches:
+            continue
+        if branch["upstream_gone"] or fully_merged:
+            stale_branches.append(StaleBranch(**state))
+
+    active_task_ids = _active_task_ids(project_root)
+    removable_worktrees: list[Worktree] = []
+    protected_worktrees: list[Worktree] = []
+    for record in worktrees:
+        raw_path = record.get("path")
+        if not raw_path:
+            continue
+        path = Path(raw_path)
+        branch = record.get("branch") or "(detached HEAD)"
+        display_path = _display_worktree_path(path, project_root)
+
+        protected, reason = _is_protected(path, branch, active_task_ids, project_root)
+        if protected:
+            protected_worktrees.append(Worktree(path=display_path, branch=branch, reason=reason or "protected"))
+            continue
+
+        state = branch_state.get(branch)
+        if state is None:
+            continue
+        upstream_gone = bool(state["upstream_gone"])
+        fully_merged = bool(state["fully_merged_to_main"])
+        if not (upstream_gone or fully_merged):
+            continue
+        clean = _is_worktree_clean(path, project_root)
+        if not clean:
+            continue
+
+        disk_bytes = _disk_bytes(path)
+        removable_worktrees.append(
+            Worktree(
+                path=display_path,
+                branch=branch,
+                clean=clean,
+                upstream_gone=upstream_gone,
+                fully_merged_to_main=fully_merged,
+                disk_bytes=disk_bytes,
+                reason=_worktree_reason(upstream_gone, fully_merged, clean),
+            )
+        )
+
+    total_reclaimable_bytes = sum(
+        item.disk_bytes for item in removable_worktrees if item.disk_bytes is not None
+    )
+    return CleanupReport(
+        stale_branches=stale_branches,
+        removable_worktrees=removable_worktrees,
+        protected_worktrees=protected_worktrees,
+        total_reclaimable_bytes=total_reclaimable_bytes,
+        computed_at=computed_at,
+        performance_ms=round((time.perf_counter() - started) * 1000, 2),
+    )
 
 
 def _parse_status(stdout: str) -> list[StatusEntry]:
@@ -446,3 +731,9 @@ def compute_git_hygiene(project_root: Path | None = None) -> dict[str, Any]:
 async def git_hygiene():
     """Classify current working-tree drift into actionable buckets."""
     return await asyncio.to_thread(compute_git_hygiene)
+
+
+@router.get("/cleanup", response_model=CleanupReport, response_model_exclude_none=True)
+async def git_cleanup() -> CleanupReport:
+    """Classify stale branches and removable worktrees without changing git state."""
+    return await asyncio.to_thread(compute_git_cleanup)

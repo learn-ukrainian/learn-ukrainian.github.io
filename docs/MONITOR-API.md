@@ -1570,6 +1570,79 @@ Response:
 }
 ```
 
+### Git cleanup (`GET /api/git/cleanup`)
+
+Read-only git rot report for stale local branches and worktrees that are
+safe candidates for manual removal. The endpoint only classifies state;
+it never runs `git branch -d`, `git worktree remove`, `rm`, or any other
+destructive cleanup command.
+
+```bash
+curl -s http://localhost:8765/api/git/cleanup | python3 -m json.tool
+```
+
+Response:
+
+```json
+{
+  "stale_branches": [
+    {
+      "name": "codex/1234-old-branch",
+      "upstream_gone": true,
+      "fully_merged_to_main": false,
+      "last_commit_sha": "abc1234",
+      "last_commit_date": "2026-04-12T14:22:00Z",
+      "committer": "Codex Worker"
+    }
+  ],
+  "removable_worktrees": [
+    {
+      "path": ".worktrees/dispatch/codex/foo",
+      "branch": "codex/foo",
+      "clean": true,
+      "upstream_gone": true,
+      "fully_merged_to_main": false,
+      "disk_bytes": 240000000,
+      "reason": "upstream gone, working tree clean"
+    }
+  ],
+  "protected_worktrees": [
+    {
+      "path": "/Users/you/projects/learn-ukrainian",
+      "branch": "main",
+      "reason": "primary checkout"
+    },
+    {
+      "path": ".worktrees/codex-interactive",
+      "branch": "(detached HEAD)",
+      "reason": "interactive session (contains 'interactive' in path)"
+    }
+  ],
+  "total_reclaimable_bytes": 1234567890,
+  "computed_at": "2026-04-25T00:15:30Z",
+  "performance_ms": 342.5
+}
+```
+
+Branch classification:
+
+- A local branch is stale when its upstream tracking branch is gone, or
+  when all commits are already present on `main`.
+- `main`, `origin/*`, and branches currently checked out in any worktree
+  are never returned in `stale_branches`.
+
+Worktree classification:
+
+- A worktree is removable only when its branch is merged to `main` or
+  has a gone upstream, `git status --porcelain` is empty in that
+  worktree, and no protection rule applies.
+- Protected worktrees are the primary checkout, paths containing
+  `interactive`, and active dispatch worktrees under
+  `.worktrees/dispatch/**` whose `batch_state/tasks/*.json` state has
+  `status: "running"`.
+- `disk_bytes` comes from portable `du -sk` output. If `du` cannot read
+  a worktree, `disk_bytes` is `null` and the total ignores that entry.
+
 ### Force-preview — `GET /api/artifacts/{track}/{slug}/force-preview`
 
 Exact list of files `v6_build.py {track} {num} --force` would delete,
