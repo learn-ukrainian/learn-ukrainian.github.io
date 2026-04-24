@@ -154,6 +154,27 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
+- word: Доброго ранку!
+  definition: ввічливе ранкове вітання
+  expression: true
+  additional: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Добрий вечір!
+  definition: ввічливе вечірнє вітання
+  expression: true
+  additional: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: До побачення!
+  definition: прощальна фраза при завершенні зустрічі або розмови
+  expression: true
+  additional: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: А у тебе?
   definition: зустрічне неформальне запитання для підтримання розмови
   expression: true
