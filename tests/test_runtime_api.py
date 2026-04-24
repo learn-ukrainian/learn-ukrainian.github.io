@@ -33,7 +33,7 @@ def test_agents_endpoint_returns_known_adapters():
     assert {"claude", "gemini", "codex"} <= names
     codex = next(agent for agent in agents if agent["name"] == "codex")
     assert codex["binary"] == "codex"
-    assert codex["default_model"] == "gpt-5.4"
+    assert codex["default_model"] == "gpt-5.5"
 
 
 def test_usage_aggregates_by_agent(tmp_path, monkeypatch):
@@ -48,7 +48,7 @@ def test_usage_aggregates_by_agent(tmp_path, monkeypatch):
                 "ts": _iso(today - timedelta(minutes=4)),
                 "agent": "codex",
                 "entrypoint": "dispatch",
-                "model": "gpt-5.4",
+                "model": "gpt-5.5",
                 "duration_s": 10.5,
                 "outcome": "ok",
             },
@@ -56,7 +56,7 @@ def test_usage_aggregates_by_agent(tmp_path, monkeypatch):
                 "ts": _iso(today - timedelta(minutes=3)),
                 "agent": "codex",
                 "entrypoint": "dispatch",
-                "model": "gpt-5.4",
+                "model": "gpt-5.5",
                 "duration_s": 4.0,
                 "outcome": "error",
             },
@@ -106,7 +106,7 @@ def test_recent_limits_results(tmp_path, monkeypatch):
                 "ts": _iso(now - timedelta(minutes=3)),
                 "agent": "codex",
                 "entrypoint": "dispatch",
-                "model": "gpt-5.4",
+                "model": "gpt-5.5",
                 "outcome": "ok",
                 "duration_s": 9.0,
             },
@@ -114,7 +114,7 @@ def test_recent_limits_results(tmp_path, monkeypatch):
                 "ts": _iso(now - timedelta(minutes=1)),
                 "agent": "codex",
                 "entrypoint": "dispatch",
-                "model": "gpt-5.4",
+                "model": "gpt-5.5",
                 "outcome": "timeout",
                 "duration_s": 12.0,
             },
