@@ -8598,14 +8598,27 @@ def _convergence_review_observation(
     versioned_reviews = sorted(review_dir.glob(f"{slug}-review-r*.md"))
     latest_review = versioned_reviews[-1] if versioned_reviews else review_dir / f"{slug}-review.md"
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    # GH #1525 P0: populate parsed_fixes + module_content so that
+    # convergence_loop._normalize_observation can evaluate the validated-
+    # patchability predicate and override the fuzzy location-heuristic
+    # classifier for findings whose fix anchors match the current content.
+    # Single read for both content and hash — _content_sha256 would re-read
+    # the same file otherwise.
+    parsed_fixes = tuple(_parse_review_fixes(review_text))
+    try:
+        content_bytes = content_path.read_bytes()
+    except OSError:
+        content_bytes = b""
+    module_content = content_bytes.decode("utf-8", errors="replace")
+    content_hash = hashlib.sha256(content_bytes).hexdigest()
     return ReviewObservation(
         passed=parsed.passed or passed,
         score=parsed.score or score,
         review_text=review_text,
         findings=findings,
         dim_floor_dimensions=_structured_dim_floor_dimensions(parsed.parsed_scores),
-        content_hash=_content_sha256(content_path),
-        patch_available=bool(_parse_review_fixes(review_text)),
+        content_hash=content_hash,
+        patch_available=bool(parsed_fixes),
         parsed_scores=tuple(parsed.parsed_scores),
         reviewer=reviewer,
         writer_model_version=get_family(writer).thinking,
@@ -8614,6 +8627,8 @@ def _convergence_review_observation(
             "review_path": str(latest_review),
             "prompt_path": str(orch_dir / "v6-review-prompt.md"),
         },
+        parsed_fixes=parsed_fixes,
+        module_content=module_content,
     )
 
 

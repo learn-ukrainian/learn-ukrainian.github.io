@@ -23,6 +23,7 @@ from build.module_memory import (
     save_module_memory,
     upsert_constraint,
 )
+from build.patchability import classify_patchability, compute_anchor_validation
 
 TerminalType = Literal["pass", "plan_revision_request", "budget_exhausted"]
 TierName = Literal["patch", "plan_revision_request"]
@@ -63,6 +64,14 @@ class ReviewObservation:
     artifacts: dict[str, str] = field(default_factory=dict)
     input_tokens: int | None = None
     output_tokens: int | None = None
+    # GH #1525 P0: validated-patchability predicate inputs. Callers that
+    # populate both (real observations from v6_build) get the predicate.
+    # Legacy callers that leave defaults (None) get "not_evaluated" — topology
+    # classifier drives routing alone, preserving pre-P0 behavior.
+    # An empty TUPLE (not None) means "observation was populated; reviewer
+    # emitted zero fixes" → "no_fixes" status. Do NOT collapse () → None.
+    parsed_fixes: tuple[dict[str, Any], ...] | None = None
+    module_content: str | None = None
 
 
 @dataclass(frozen=True)
@@ -138,10 +147,39 @@ def _normalize_observation(
     normalized = normalize_findings(list(observation.findings), growth_log_path=growth_log_path)
     results = []
     floor_dimensions = set(observation.dim_floor_dimensions)
+    # GH #1525 P0: validated-patchability predicate. Anchor validation runs
+    # ONCE per observation (O(fixes) substring scans total) rather than per
+    # finding (O(findings × fixes)). See build/patchability.py.
+    # Pass parsed_fixes as-is — empty tuple MUST propagate as "no_fixes",
+    # not collapse to None (which would be "not_evaluated"). None sentinel
+    # is reserved for legacy callers that didn't populate the field.
+    anchor_validation = compute_anchor_validation(
+        observation.parsed_fixes,
+        observation.module_content,
+    )
     for item in normalized:
-        topology = classify_topology(item)
+        classifier_topology = classify_topology(item)
+        patchability_status, patchability_reason = classify_patchability(
+            item, anchor_validation=anchor_validation
+        )
+        # Override ONLY when the predicate fully validates. Plan-level hardstop,
+        # anchor_missing, no_fixes, and not_evaluated all leave the classifier's
+        # output intact — preserves plan_revision_request routing for genuine
+        # plan defects and for reviewer-side anchor bugs.
+        effective_topology = classifier_topology
+        if patchability_status == "patch_ok" and classifier_topology != "local_to_prose":
+            effective_topology = "local_to_prose"
         severity = "critical" if item["dimension"] in floor_dimensions else item["severity"]
-        results.append({**item, "topology": topology, "effective_severity": severity})
+        results.append(
+            {
+                **item,
+                "topology": effective_topology,
+                "topology_classifier_output": classifier_topology,
+                "patchability": patchability_status,
+                "patchability_reason": patchability_reason,
+                "effective_severity": severity,
+            }
+        )
     return tuple(
         sorted(
             results,
