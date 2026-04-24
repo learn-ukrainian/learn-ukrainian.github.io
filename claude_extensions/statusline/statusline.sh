@@ -2,7 +2,8 @@
 # Claude Code statusline — learn-ukrainian project.
 #
 # Reads Claude Code status JSON from stdin and renders:
-#   [MODEL] cwd-basename [wt:worktree-name] (branch*) [ctx: N%] [5h: N%] [7d: N%]
+#   [MODEL] cwd-basename [wt:worktree-name] (branch*) [ctx: N%]
+#   [effort: level] [think] [5h: N%] [7d: N%]
 #
 # Segments:
 #   [MODEL]        .model.display_name, omitted if missing
@@ -12,6 +13,10 @@
 #   [ctx: N%]      .context_window.used_percentage — color-coded:
 #                    green <50, yellow 50–79, red 80+. Omitted until the
 #                    first API call populates the field.
+#   [effort: ...]  .effort.level — low/medium default, high/xhigh bold,
+#                    max red. Omitted for pre-2.1.119 clients.
+#   [think]        .thinking.enabled — emitted only when true. Omitted for
+#                    pre-2.1.119 clients.
 #   [5h: N%]       .rate_limits.five_hour.used_percentage — subscription
 #                    budget. Only shown when elevated (60%+ yellow, 80%+ red).
 #                    Stays silent while healthy — no noise in normal use.
@@ -28,6 +33,8 @@
 # Graceful degradation:
 #   - If `jq` is not installed, script exits silently (empty status line).
 #   - Any missing / null JSON field is dropped from output silently.
+#   - Claude Code <2.1.119 does not provide effort/thinking fields; those
+#     segments are omitted silently.
 #   - If any git op fails, branch segment is omitted.
 #
 # Design notes:
@@ -44,7 +51,7 @@ set -u
 
 command -v jq >/dev/null 2>&1 || exit 0
 
-input=$(cat)
+input=$(</dev/stdin)
 # printf '%s' "$input" > /tmp/.statusline-input.json  # debug
 
 json_get() {
@@ -89,6 +96,22 @@ if [ -n "$ctx_pct" ]; then
   fi
 fi
 
+# Effort level
+effort_seg=""
+effort_level=$(json_get '.effort.level')
+if [ -n "$effort_level" ]; then
+  case "$effort_level" in
+    high|xhigh) effort_seg="\033[1m[effort: ${effort_level}]\033[0m" ;;
+    max)        effort_seg="\033[31m[effort: ${effort_level}]\033[0m" ;;
+    *)          effort_seg="[effort: ${effort_level}]" ;;
+  esac
+fi
+
+# Thinking mode
+thinking_seg=""
+thinking_enabled=$(json_get '.thinking.enabled')
+[ "$thinking_enabled" = "true" ] && thinking_seg="[think]"
+
 # Rate-limit segment helper — only surface when elevated (60%+).
 # Accepts a label (e.g. "5h", "7d") and a jq path, returns coloured
 # segment on stdout or empty string.
@@ -113,6 +136,8 @@ parts+=("$cwd_name")
 [ -n "$wt_seg" ]     && parts+=("$wt_seg")
 [ -n "$branch_seg" ] && parts+=("$branch_seg")
 [ -n "$ctx_seg" ]    && parts+=("$ctx_seg")
+[ -n "$effort_seg" ] && parts+=("$effort_seg")
+[ -n "$thinking_seg" ] && parts+=("$thinking_seg")
 [ -n "$rl5h_seg" ]   && parts+=("$rl5h_seg")
 [ -n "$rl7d_seg" ]   && parts+=("$rl7d_seg")
 
