@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 573
-**Total words:** 1,176,622
+**Total articles:** 575
+**Total words:** 1,180,932
 
 ## Academic
 
@@ -251,6 +251,7 @@ Auto-generated index of compiled wiki articles.
 - [Біографія: Петро Сагайдачний: Гетьман-Державник](figures/petro-sahaidachny.md) (1,753 words)
 - [Біографія: Дід Панас: Казкар нації](figures/petro-veskliaov.md) (1,887 words)
 - [Біографія: Пилип Орлик: Автор першої української конституції](figures/pylyp-orlyk.md) (2,042 words)
+- [Біографія: Роксолана: Від рабині до султанші](figures/roksolana.md) (2,312 words)
 
 ## Folk
 
@@ -266,6 +267,7 @@ Auto-generated index of compiled wiki articles.
 - [Український фольклор: Історичні перекази: Пам'ять про минуле](folk/prose/istorychni-perekazy.md) (1,940 words)
 - [Український фольклор: Народні анекдоти та небилиці: Сміхова культура](folk/prose/narodni-anekdoty.md) (2,164 words)
 - [Український фольклор: Народні балади: Трагізм і доля](folk/prose/narodni-balady.md) (2,163 words)
+- [Український фольклор: Народні легенди та народне християнство](folk/prose/narodni-lehendy.md) (1,998 words)
 - [Український фольклор: Колядки та щедрівки та міф про створення світу](folk/ritual/koliadky-shchedrivky.md) (2,126 words)
 - [Український фольклор: Купальські пісні та магія літнього сонцестояння](folk/ritual/kupalski-pisni.md) (1,981 words)
 - [Український фольклор: Голосіння: Поетика скорботи та плачі](folk/tradition/holosinnya.md) (2,066 words)
