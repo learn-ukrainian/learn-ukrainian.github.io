@@ -1368,6 +1368,7 @@ PHASE_LABELS: dict[str, str] = {
     "verify-exercises": "Verify exercises",
     "annotate": "Annotate",
     "vocab": "Vocabulary",
+    "vocab-check": "Vocabulary coverage check",
     "enrich": "Enrich",
     "verify": "Verify content",
     "review": "Review",
@@ -6486,6 +6487,59 @@ def step_vocab(content_path: Path, level: str, module_num: int,
     return vocab_path
 
 
+def step_vocab_coverage(level: str, module_num: int, slug: str) -> bool:
+    """Validate required plan vocabulary coverage in the generated словник YAML."""
+    _log(f"\n{'='*60}")
+    _log("  Step 5c-check: VOCAB-CHECK — Required plan terms in словник")
+    _log(f"{'='*60}")
+
+    from build.phases.vocab_coverage import check_vocab_coverage
+
+    plan_path = _plan_path(level, slug)
+    vocab_path = CURRICULUM_ROOT / level / "vocabulary" / f"{slug}.yaml"
+    if plan_path is None or not plan_path.exists():
+        raise FileNotFoundError(f"Plan not found: {plan_path}")
+    if not vocab_path.exists():
+        raise FileNotFoundError(f"Vocabulary YAML not found: {vocab_path}")
+
+    result = check_vocab_coverage(plan_path, vocab_path)
+    if result.passed:
+        _log(f"  ✅ Vocabulary coverage passed ({len(result.present_mapping)} required term(s))")
+        return True
+
+    finding = {
+        "dimension": "Plan Adherence",
+        "severity": "critical",
+        "location": "vocabulary YAML",
+        "issue": (
+            "missing required vocabulary terms from plan.vocabulary_hints.required: "
+            + ", ".join(result.missing_terms)
+        ),
+        "fix": (
+            "Regenerate the module so every required-vocabulary term from the plan "
+            "appears in the vocabulary YAML."
+        ),
+        "missing_terms": list(result.missing_terms),
+        "present_mapping": result.present_mapping,
+    }
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    finding_path = orch_dir / "vocab-coverage-findings.yaml"
+    finding_path.write_text(
+        yaml.safe_dump(
+            {"phase": "vocab-check", "findings": [finding]},
+            sort_keys=False,
+            allow_unicode=True,
+        ),
+        "utf-8",
+    )
+
+    _log("  ❌ Vocabulary coverage failed")
+    _log(f"     Missing terms: {', '.join(result.missing_terms)}")
+    _log(f"     Structured finding: {finding_path}")
+    return False
+
+
 def _extract_verify_flags(content: str) -> list[dict]:
     """Extract <!-- VERIFY: ... --> flags from writer content.
 
@@ -10298,21 +10352,27 @@ def main():
 
     parser = argparse.ArgumentParser(
         description=(
-            "Build curriculum modules through the v6 pipeline.\n"
-            "Use it for end-to-end module orchestration; do not use it for isolated wiki/article maintenance."
+            "Validate every plan.vocabulary_hints.required term is present in the generated словник YAML.\n"
+            "Also builds curriculum modules through the v6 pipeline for end-to-end module orchestration."
         ),
         epilog=(
             "Examples:\n"
             "  .venv/bin/python scripts/build/v6_build.py a1 7\n"
+            "  .venv/bin/python scripts/build/v6_build.py a1 1 --step vocab-check\n"
             "  .venv/bin/python scripts/build/v6_build.py a2 3 --step review --reviewer codex\n"
             "  .venv/bin/python scripts/build/v6_build.py b1 1 --range 4 --resume\n\n"
             "Outputs:\n"
             "  Writes module markdown, sidecars, orchestration state, review/audit artifacts, and published outputs.\n\n"
             "Exit codes:\n"
-            "  0 on successful build; non-zero on CLI misuse or any failed phase.\n\n"
+            "  0 on successful build/check.\n"
+            "  1 on missing vocabulary terms or any failed phase.\n"
+            "  2 on pipeline error for --step vocab-check.\n\n"
             "Related:\n"
             "  Docs: docs/SCRIPTS.md\n"
             "  Issue: #1379\n"
+            "  Plan contract: scripts/build/contracts/module-contract.md\n"
+            "  Postmortem: #1529\n"
+            "  PR: vocab-YAML coverage pre-review gate\n"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -10324,7 +10384,7 @@ def main():
                         help="Default: claude-tools (2026-04-23: switched from gemini-tools after #1431 v2 showed Gemini factual-hallucination on decolonization-critical facts — e.g. writing «блакитний» instead of «синій» for the Ukrainian flag. Opus has stronger factual adherence + less Russian-imperial training-data contamination. *-tools = with verification access during writing via MCP/shell)")
     parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools", "codex", "codex-tools"], default=None,
                         help="Override reviewer. Default: cross-agent (opposite of writer)")
-    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "honesty-annotate", "exercises", "activities", "repair", "verify-exercises", "annotate", "enrich", "verify", "review", "review-style", "publish", "audit", "all"],
+    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "honesty-annotate", "exercises", "activities", "repair", "verify-exercises", "annotate", "vocab-check", "enrich", "verify", "review", "review-style", "publish", "audit", "all"],
                         default="all",
                         help="Stop after this phase or run the full pipeline (default: all).")
     skeleton_group = parser.add_mutually_exclusive_group()
@@ -10616,7 +10676,7 @@ def main():
                 return False
 
         # Pre-flight: check MCP server is running (VESUM, dictionaries, textbooks via SQLite)
-        if "tools" in args.writer:
+        if "tools" in args.writer and steps != "vocab-check":
             import urllib.request
             try:
                 resp = urllib.request.urlopen("http://127.0.0.1:8766/health", timeout=3)
@@ -10821,6 +10881,21 @@ def main():
             _emit_phase_done("write", _phase_start)
         elif content_path is None:
             content_path = CURRICULUM_ROOT / args.level / f"{slug}.md"
+
+        if steps == "vocab-check":
+            _phase_start = time.monotonic()
+            try:
+                vocab_check_ok = step_vocab_coverage(args.level, args.module, slug)
+            except Exception as exc:
+                _log(f"\n❌ Vocab coverage pipeline error: {exc}")
+                _emit_module_failed("vocab-check", f"pipeline error: {exc}")
+                sys.exit(2)
+            if not vocab_check_ok:
+                _emit_phase_done("vocab-check", _phase_start, status="failed")
+                _emit_module_failed("vocab-check", "missing required vocabulary terms")
+                sys.exit(1)
+            _emit_phase_done("vocab-check", _phase_start)
+            return True
 
         # Step 5a: HONESTY ANNOTATE — deterministic VERIFY markers
         if steps in ("all", "honesty-annotate") and "honesty-annotate" not in completed_phases:
