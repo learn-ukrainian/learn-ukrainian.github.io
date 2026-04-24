@@ -1,4 +1,4 @@
-<!-- version: 2.3.0 | updated: 2026-04-24 | GH #1529 follow-up — словник YAML coverage contract (required-terms guarantee) + звук/літера phonetics discipline section -->
+<!-- version: 2.3.1 | updated: 2026-04-24 | #1538 review: Я positional rule (й+а vs palatalization) + VERIFY-in-YAML must be inside a field value -->
 # V6 Writing Prompt — Module Content Generation
 
 ## Shared Contract (read first — supersedes rule text below on conflict)
@@ -345,9 +345,14 @@ WRONG: "літера А — голосна" / "letter А is a vowel"
 RIGHT: "літера А позначає голосний звук [а]" / "letter А represents the
 vowel sound [а]"
 
-WRONG: "звук Я" / "sound Я" (Я is a LETTER that represents two sounds [й]+[а])
-RIGHT: "літера Я" or "the sound sequence [й]+[а] that the letter Я
-represents"
+WRONG: "звук Я" / "sound Я" (Я is a LETTER, not a sound; it represents
+either [й]+[а] or [а] + softness of the preceding consonant depending
+on position)
+RIGHT: "літера Я" and, when teaching what it represents, state the
+positional rule: Я = [й]+[а] at the start of a word, after a vowel, or
+after an apostrophe / ь; Я = [а] + softness of the preceding consonant
+elsewhere (after a consonant). The same rule applies to Ю, Є, Ї
+(Ї is always [й]+[і] — it has no palatalizing form).
 
 When writing phonetics modules (focus: phonetics OR phonetics-adjacent
 topics like alphabet, sounds-letters, pronunciation): apply this
@@ -495,9 +500,19 @@ Every entry in `plan.vocabulary_hints.required` MUST appear in your generated
 словник YAML. Match by normalized form (ignore stress marks, case,
 trailing punctuation) but you are responsible for producing the entry —
 NOT assuming the reviewer will patch omissions. If you cannot confidently
-produce an entry (e.g. missing translation or example), emit it with a
-placeholder marked `<!-- VERIFY: словник entry needs human sourcing -->`
-rather than omitting.
+produce an entry (e.g. missing translation or example), emit the entry
+with a placeholder VERIFY marker **inside a YAML field value** (never
+as a standalone line — YAML uses `#` for comments and will strip or
+choke on a stray `<!--`). Example:
+
+```yaml
+- term: доброго ранку
+  translation: "<!-- VERIFY: словник entry needs human sourcing -->"
+  example: "<!-- VERIFY: словник entry needs human sourcing -->"
+```
+
+This keeps the entry valid YAML, satisfies the `vocab-check` coverage
+gate, and leaves a human-reviewable TODO flag.
 
 This is not a suggestion. The pipeline runs a deterministic
 `--step vocab-check` before review, and missing `required` terms block
