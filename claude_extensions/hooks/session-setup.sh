@@ -124,7 +124,30 @@ $ISSUE_LIST")
   fi
 fi
 
-# 12. Session handoff — load docs/session-state/current.md if present.
+# 12. Git hygiene — warn if too many dirty files accumulated.
+# See docs/best-practices/git-hygiene.md for policy.
+# Exempt paths (wiki/**, data/corpus_audit/draft_tickets/) can be legitimately
+# dirty during parallel builds; everything else is drift.
+if command -v git >/dev/null 2>&1 && [ -d "$PROJECT_DIR/.git" ]; then
+  HYGIENE_THRESHOLD_WARN=5
+  HYGIENE_THRESHOLD_ISSUE=20
+
+  # Count dirty files NOT matched by any exemption pattern. Keep this
+  # in sync with docs/best-practices/git-hygiene.md § "Exemption paths".
+  DIRTY_NONEXEMPT=$(
+    git -C "$PROJECT_DIR" status --short 2>/dev/null \
+      | grep -vE ' (wiki/|data/corpus_audit/draft_tickets/)' \
+      | wc -l | tr -d ' '
+  )
+
+  if [ "$DIRTY_NONEXEMPT" -gt "$HYGIENE_THRESHOLD_ISSUE" ]; then
+    ISSUES+=("GIT HYGIENE: $DIRTY_NONEXEMPT dirty files outside exempt paths (threshold: $HYGIENE_THRESHOLD_ISSUE). Triage BEFORE starting work — see docs/best-practices/git-hygiene.md. Often these are stale-behind-main drift; \`git checkout HEAD -- <file>\` fixes each one.")
+  elif [ "$DIRTY_NONEXEMPT" -gt "$HYGIENE_THRESHOLD_WARN" ]; then
+    INFO+=("Git hygiene: $DIRTY_NONEXEMPT dirty files outside exempt paths. Under the issue threshold ($HYGIENE_THRESHOLD_ISSUE) but worth inspecting with \`git status --short | grep -vE ' (wiki/|data/corpus_audit/draft_tickets/)'\`. Policy: docs/best-practices/git-hygiene.md.")
+  fi
+fi
+
+# 13. Session handoff — load docs/session-state/current.md if present.
 # This is the zero-touch rehydrate: the previous session's context-monitor.sh
 # (or user-written handoff) landed in that file. Pull it in verbatim so
 # Claude never has to be told "read current.md first."

@@ -31,6 +31,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 | Agent cooperation | [`agent-cooperation.md`](docs/best-practices/agent-cooperation.md) |
 | Issue tracking | [`issue-tracking.md`](docs/best-practices/issue-tracking.md) |
 | Gitflow | [`gitflow.md`](docs/best-practices/gitflow.md) |
+| Git hygiene (dirty-tree policy) | [`git-hygiene.md`](docs/best-practices/git-hygiene.md) |
 | Audit standards | [`audit-standards.md`](docs/best-practices/audit-standards.md) |
 | Vocabulary & activities | [`vocabulary-activity-standards.md`](docs/best-practices/vocabulary-activity-standards.md) |
 | Activity pedagogy (level→type matrix) | [`activity-pedagogy.md`](docs/best-practices/activity-pedagogy.md) |
