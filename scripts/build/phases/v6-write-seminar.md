@@ -13,18 +13,22 @@ Write the full prose content for seminar module **{MODULE_NUM}: {TOPIC_TITLE}** 
 
 ## Step 1: Pacing Plan (output this FIRST)
 
-Before writing any content, output a `<pacing_plan>` block:
+Before writing any content, output a `<pacing_plan>` block.
+
+Use the exact Ukrainian section titles from the plan as the quoted labels — do **not** invent `Section 1`, `Section 2`, `Part N`, or any English/numeric prefix. The pacing plan is a scratchpad; the labels here must be verbatim the H2 headings you'll write below.
 
 ```
 <pacing_plan>
-Section 1 "Title": ~XXX words — [1-sentence content focus]
-Section 2 "Title": ~XXX words — [1-sentence content focus]
+"<verbatim-ukrainian-title-from-plan-1>": ~XXX words — [1-sentence content focus]
+"<verbatim-ukrainian-title-from-plan-2>": ~XXX words — [1-sentence content focus]
 ...
 Total: {WORD_TARGET}+ words
 </pacing_plan>
 ```
 
 Then begin writing. Follow your own pacing plan.
+
+**H2 heading rule (strict).** Every `## H2` in the module body MUST match the plan's section title verbatim — no `## Section 1: <title>`, no `## Part N: <title>`, no numbering, no English label. The contract checker compares H2 titles to plan titles by exact string match.
 
 ---
 
