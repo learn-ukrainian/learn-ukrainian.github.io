@@ -346,11 +346,21 @@ def test_prompt_hash_is_deterministic_for_same_prompt_across_runs(tmp_path: Path
 
 
 def test_end_to_end_stuck_a1_m1_uses_cached_reviews_without_budget_exhausted(tmp_path: Path) -> None:
+    # This test reads live curriculum artifacts that can be reset by operators
+    # between builds (see GH #1525 handoff). Skip when the fixtures are absent
+    # rather than fail — the preconditional absence is orthogonal to what the
+    # test asserts. Follow-up: move fixtures into tests/fixtures/ (#1526).
     review_dir = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "a1" / "review"
     cached_reviews = [
         review_dir / "sounds-letters-and-hello-review-r2.md",
         review_dir / "sounds-letters-and-hello-review-r3.md",
     ]
+    missing = [p for p in cached_reviews if not p.exists()]
+    if missing:
+        pytest.skip(
+            "cached review fixtures absent (module was reset to pre-R2 state): "
+            + ", ".join(p.name for p in missing)
+        )
 
     observations = []
     for index, review_path in enumerate(cached_reviews, start=1):

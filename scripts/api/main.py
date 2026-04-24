@@ -53,6 +53,7 @@ from .gold_router import router as gold_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .rag_router import router as rag_router
+from .reviewer_ghosts_router import router as reviewer_ghosts_router
 from .rules_router import router as rules_router
 from .runtime_router import router as runtime_router
 from .session_router import router as session_router
@@ -114,6 +115,13 @@ app.include_router(build_events_router, prefix="/api/build/events")
 app.include_router(images_router, prefix="/api/images")
 app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
 app.include_router(rag_router, prefix="/api/rag")
+# GH #1529 P3 — reviewer-ghost telemetry nested under /api/state so clients
+# can discover it alongside the other state-query endpoints.
+app.include_router(
+    reviewer_ghosts_router,
+    prefix="/api/state/reviewer-ghosts",
+    tags=["reviewer-ghosts"],
+)
 app.include_router(rules_router, prefix="/api/rules", tags=["rules"])
 app.include_router(runtime_router, prefix="/api/runtime")
 app.include_router(session_router, prefix="/api/session", tags=["session"])
