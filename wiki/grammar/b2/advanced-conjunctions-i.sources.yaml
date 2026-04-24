@@ -1,0 +1,63 @@
+# Source registry for wiki/grammar/b2/advanced-conjunctions-i.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrmova-zabolotnyi-2017_s0197
+  type: textbook
+  title: Сторінка 141
+  grade: 9
+  author: zabolotnyi
+- id: S2
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0197
+  type: textbook
+  title: Сторінка 141
+  grade: 9
+  author: zabolotnij
+- id: S3
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0357
+  type: textbook
+  title: Сторінка 230
+  grade: 11
+  author: zabolotnyi
+- id: S4
+  file: 7-klas-ukrmova-litvinova-2024_s0199
+  type: textbook
+  title: Сторінка 195
+  grade: 7
+  author: litvinova
+- id: S6
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5034
+  type: textbook
+  title: Синтаксис. Пунктуація. ПОВТОРЕННЯ
+  page: 52
+  grade: 9
+- id: S7
+  file: 5-klas-ukrmova-avramenko-2022_s2266
+  type: textbook
+  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 178)
+  page: 178
+  grade: 5
+- id: S8
+  file: 7-klas-ukrmova-litvinova-2024_s3943
+  type: textbook
+  title: § 32. Сполучники сурядности й підрядности
+  page: 198
+  grade: 7
+- id: S9
+  file: 11-klas-ukrajinska-mova-voron-2019_s1292
+  type: textbook
+  title: § 22. Другорядні члени речення. Складні випадки кваліфікації
+  page: 270
+  grade: 11
+- id: S10
+  file: 9-klas-ukrajinska-mova-voron-2017_s5080
+  type: textbook
+  title: СМИСЛОВІ ЗВ’ЯЗКИ МІЖ КОМПОНЕНТАМИ
+  page: 33
+  grade: 9
+- id: S11
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5171
+  type: textbook
+  title: Складносурядне речення (p. 53)
+  page: 53
+  grade: 9

@@ -1,0 +1,83 @@
+# Source registry for wiki/academic/c1/traditional-clothing.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 5-klas-istoriya-schupak-2022_s0042
+  type: textbook
+  title: Сторінка 44
+  grade: 5
+  author: schupak
+- id: S2
+  file: 10-klas-ukrajinska-literatura-avramenko-2018_s0005
+  type: textbook
+  title: Сторінка 5
+  grade: 10
+  author: avramenko
+- id: S3
+  file: 8-klas-ukrmova-avramenko-2025_s0005
+  type: textbook
+  title: Сторінка 5
+  grade: 8
+  author: avramenko
+- id: S4
+  file: 5-klas-istoriya-schupak-2022_s0184
+  type: textbook
+  title: Сторінка 183
+  grade: 5
+  author: schupak
+- id: S5
+  file: 8-klas-istoria-ukr-schupak-2025_s0014
+  type: textbook
+  title: Сторінка 12
+  grade: 8
+  author: schupak
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c0231
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave7-istkult-t1-kyivska-rus_c0526
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S8
+  file: wave7-istkult-t2-xiii-xvii_c0229
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c0250
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c0490
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S11
+  file: wave7-istkult-t2-xiii-xvii_c0249
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S12
+  file: wave7-thompson-trubadury_c0035
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S13
+  file: wave7-istkult-t1-kyivska-rus_c0547
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S14
+  file: wave7-istkult-t2-xiii-xvii_c0248
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S15
+  file: wave10-shevchenko-tvory-t1_c0072
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.

@@ -1,0 +1,40 @@
+# Source registry for wiki/figures/iov-boretskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-istoria-ukr-galimov-2025_s4015
+  type: textbook
+  title: § 14. Козацтво і православна церква. Реформи Петра Могили. Києво-Могилянський
+    колегіум
+  page: 99
+  grade: 8
+- id: S2
+  file: wave7-shcherbak-kozatstvo_c0272
+  type: literary
+  title: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0100
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S6
+  file: wave7-shcherbak-kozatstvo_c0294
+  type: literary
+  title: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.
+- id: S7
+  file: wave5-suspilna-dumka-xvi-xvii_c0151
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S8
+  file: wave5-suspilna-dumka-xvi-xvii_c0155
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S10
+  file: wave7-shcherbak-kozatstvo_c0299
+  type: literary
+  title: 'Щербак — Українське козацтво: формування соціального стану'
+  author: Щербак В.

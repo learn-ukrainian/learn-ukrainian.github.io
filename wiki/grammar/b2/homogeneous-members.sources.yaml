@@ -1,0 +1,81 @@
+# Source registry for wiki/grammar/b2/homogeneous-members.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 5-klas-ukrmova-litvinova-2022_s0228
+  type: textbook
+  title: Сторінка 223
+  grade: 5
+  author: litvinova
+- id: S2
+  file: 11-klas-ukrajinska-mova-voron-2019_s0203
+  type: textbook
+  title: Сторінка 136
+  grade: 11
+  author: voron
+- id: S3
+  file: 5-klas-ukrmova-golub-2022_s0121
+  type: textbook
+  title: Сторінка 122
+  grade: 5
+  author: golub
+- id: S4
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0171
+  type: textbook
+  title: Сторінка 149
+  grade: 8
+  author: zabolotnyi
+- id: S5
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0157
+  type: textbook
+  title: Сторінка 115
+  grade: 11
+  author: avramenko
+- id: S6
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4712
+  type: textbook
+  title: РЕЧЕННЯ З ОДНОРІДНИМИ ЧЛЕНАМИ
+  page: 149
+  grade: 8
+- id: S7
+  file: 5-klas-ukrmova-litvinova-2022_s2393
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Речення з однорідними членами
+  page: 223
+  grade: 5
+- id: S8
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1167
+  type: textbook
+  title: § 35. –36. ОДНОРІДНІ ЧЛЕНИ РЕЧЕННЯ
+  page: 114
+  grade: 11
+- id: S9
+  file: 8-klas-ukrmova-avramenko-2025_s4639
+  type: textbook
+  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 129)
+  page: 129
+  grade: 8
+- id: S10
+  file: 8-klas-ukrmova-avramenko-2025_s4637
+  type: textbook
+  title: § 59. –60
+  page: 127
+  grade: 8
+- id: S12
+  file: 5-klas-ukrmova-avramenko-2022_s2257
+  type: textbook
+  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 164)
+  page: 164
+  grade: 5
+- id: S13
+  file: 5-klas-ukrmova-avramenko-2022_s2260
+  type: textbook
+  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 168)
+  page: 168
+  grade: 5
+- id: S15
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1870
+  type: textbook
+  title: § 8. Головні та другорядні
+  page: 25
+  grade: 4

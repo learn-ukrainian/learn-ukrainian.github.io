@@ -1,0 +1,45 @@
+# Source registry for wiki/grammar/b2/tekhnolohii-ta-shi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrmova-zabolotnyi-2024_s0047
+  type: textbook
+  title: Сторінка 48
+  grade: 7
+  author: zabolotnyi
+- id: S3
+  file: 7-klas-ukrmova-litvinova-2024_s0184
+  type: textbook
+  title: Сторінка 180
+  grade: 7
+  author: litvinova
+- id: S4
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0288
+  type: textbook
+  title: Сторінка 200
+  grade: 11
+  author: glazova
+- id: S5
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0289
+  type: textbook
+  title: Сторінка 201
+  grade: 11
+  author: glazova
+- id: S6
+  file: 7-klas-ukrmova-litvinova-2024_s3905
+  type: textbook
+  title: § 2. Повторення вивченого в 6 класі
+  page: 17
+  grade: 7
+- id: S7
+  file: 10-klas-ukrmova-karaman-2018_s0717
+  type: textbook
+  title: ТЕМА 11. ЧИТАННЯ НАУКОВОЇ, НАУКОВО-ПОПУЛЯРНОЇ СТАТТІ,. ДОВІДКОВОЇ ЛІТЕРАТУРИ
+  page: 242
+  grade: 10
+- id: S8
+  file: 7-klas-ukrmova-avramenko-2024_s3845
+  type: textbook
+  title: § 53. Дієприслівник як особлива форма дієслова
+  page: 120
+  grade: 7

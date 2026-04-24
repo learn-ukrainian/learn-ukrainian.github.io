@@ -1,0 +1,63 @@
+# Source registry for wiki/academic/c1/asyndetic-semantics.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-mova-voron-2019_s0303
+  type: textbook
+  title: Сторінка 197
+  grade: 11
+  author: voron
+- id: S2
+  file: 9-klas-ukrmova-zabolotnyi-2017_s0211
+  type: textbook
+  title: Сторінка 151
+  grade: 9
+  author: zabolotnyi
+- id: S3
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0211
+  type: textbook
+  title: Сторінка 151
+  grade: 9
+  author: zabolotnij
+- id: S4
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0158
+  type: textbook
+  title: Сторінка 106
+  grade: 9
+  author: avramenko
+- id: S5
+  file: 9-klas-ukrajinska-mova-voron-2017_s0148
+  type: textbook
+  title: Сторінка 113
+  grade: 9
+  author: voron
+- id: S6
+  file: wave9-pravopys-2015_c0165
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S7
+  file: wave9-pravopys-2015_c0163
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0089
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave9-pravopys-2015_c0162
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S14
+  file: wave9-pravopys-2015_c0166
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S15
+  file: wave9-pravopys-2015_c0159
+  type: literary
+  title: Український правопис 2015
+  author: НАН України

@@ -1,0 +1,34 @@
+# Source registry for wiki/figures/ivan-mazepa.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S3
+  file: wave4-ohloblyn-mazepa_c0044
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+- id: S4
+  file: wave6-krman-shchodennyk_c0003
+  type: literary
+  title: Даніел Крман — Подорожній щоденник (1708-1709)
+  author: Крман Д.
+- id: S5
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0571
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S6
+  file: wave7-matskiv-mazepa-dzherela_c0406
+  type: literary
+  title: Мацьків — Гетьман Мазепа в західньоєвропейських джерелах
+  author: Мацьків Т.
+- id: S7
+  file: wave4-ohloblyn-mazepa_c0669
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+- id: S8
+  file: 8-klas-istoria-ukr-hlibovska-2025_s4164
+  type: textbook
+  title: § 37. ГЕТЬМАНЩИНА
+  page: 93
+  grade: 8

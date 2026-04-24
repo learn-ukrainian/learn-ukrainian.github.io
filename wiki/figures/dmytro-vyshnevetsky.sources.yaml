@@ -1,0 +1,43 @@
+# Source registry for wiki/figures/dmytro-vyshnevetsky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-holobutsky-zaporizhzhia_c0171
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S2
+  file: wave7-holobutsky-zaporizhzhia_c0181
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S3
+  file: wave7-holobutsky-zaporizhzhia_c0183
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S4
+  file: wave7-holobutsky-zaporizhzhia_c0184
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S5
+  file: ukrlib-kulish_c0069
+  type: literary
+  title: Пантелеймон Куліш. Байда князь Вишневецький
+  author: Куліш П.
+- id: S6
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t1_c0273
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 1: До половини XVII століття'
+  author: Дорошенко Д.
+- id: S7
+  file: ukrlib-kulish_c0000
+  type: literary
+  title: Пантелеймон Куліш. Байда князь Вишневецький
+  author: Куліш П.
+- id: S8
+  file: https://www.youtube.com/watch?v=8FyZ5HRc-SI
+  type: external
+  title: 'Від козаків до королів: Вишнівець. Українські палаци. Золота доба (ENG SUBS)'
+  url: https://www.youtube.com/watch?v=8FyZ5HRc-SI

@@ -1,0 +1,78 @@
+# Source registry for wiki/academic/c1/kozatski-lehendy.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-ukrlit-avramenko-2025_s0117
+  type: textbook
+  title: Сторінка 68
+  grade: 8
+  author: avramenko
+- id: S2
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0428
+  type: textbook
+  title: Сторінка 233
+  grade: 10
+  author: borzenko
+- id: S3
+  file: 5-klas-ukrlit-avramenko-2022_s0036
+  type: textbook
+  title: Сторінка 35
+  grade: 5
+  author: avramenko
+- id: S4
+  file: 8-klas-istoria-ukr-galimov-2025_s0242
+  type: textbook
+  title: Сторінка 148
+  grade: 8
+  author: galimov
+- id: S5
+  file: 7-klas-ukrmova-avramenko-2024_s0123
+  type: textbook
+  title: Сторінка 110
+  grade: 7
+  author: avramenko
+- id: S6
+  file: wave7-holobutsky-zaporizhzhia_c0711
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S7
+  file: wave11-hrushevsky-iur-t6_c0013
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S8
+  file: грушевський-історія-україни-руси-т5_c0025
+  type: literary
+  title: Грушевський — Історія України-Руси, т.5
+  author: Грушевський М.
+- id: S10
+  file: wave10-shevchenkivsky-slovnyk_c2310
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S11
+  file: wave7-popovych-narys-kultury_c0428
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S12
+  file: wave4-hrushevsky-iur-t7-10_c0345
+  type: literary
+  title: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+- id: S13
+  file: wave7-holobutsky-zaporizhzhia_c0095
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S14
+  file: wave8-ukr-lit-entsyklopediia_c3555
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S15
+  file: wave7-kohut-tsentralizm_c0197
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.

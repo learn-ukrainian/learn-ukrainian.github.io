@@ -1,0 +1,19 @@
+# Source registry for wiki/figures/borys-paton.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-istoriya-ukr-gisem-2024_s0916
+  type: textbook
+  title: Патон. Розроблені вченими
+  page: 85
+  grade: 11
+- id: S2
+  file: wave7-popovych-narys-kultury_c1148
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S3
+  file: wave7-ukrxx-derzhavnist_c0004
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив

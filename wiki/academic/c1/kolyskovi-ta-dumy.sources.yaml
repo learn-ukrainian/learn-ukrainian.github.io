@@ -1,0 +1,66 @@
+# Source registry for wiki/academic/c1/kolyskovi-ta-dumy.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: 6-klas-ukrlit-avramenko-2023_s0027
+  type: textbook
+  title: Сторінка 27
+  grade: 6
+  author: avramenko
+- id: S4
+  file: 2-klas-ukrmova-vashulenko-2019-2_s0038
+  type: textbook
+  title: Сторінка 40
+  grade: 2
+  author: vashulenko
+- id: S5
+  file: 6-klas-ukrlit-avramenko-2023_s0026
+  type: textbook
+  title: Сторінка 26
+  grade: 6
+  author: avramenko
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c0629
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c1980
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave4-chyzhevsky-istoriia-lit_c0563
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S10
+  file: wave8-hensiorsky-gvl-mova_c0255
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S11
+  file: ukrlib-kalynets_c0006
+  type: literary
+  title: Ігор Калинець. Королівна і Граф Мурмирчинський
+  author: Калинець І.
+- id: S12
+  file: wave4-chyzhevsky-istoriia-lit_c0568
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S13
+  file: wave7-entsyklopediia-ukrainoznavstva_c0622
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S14
+  file: wave8-ukr-lit-entsyklopediia_c3589
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S15
+  file: wave4-chyzhevsky-istoriia-lit_c0593
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.

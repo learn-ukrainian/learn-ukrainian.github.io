@@ -1,0 +1,62 @@
+# Source registry for wiki/academic/c1/ukrainska-arkhitektura.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-istoria-ukr-galimov-2025_s0364
+  type: textbook
+  title: Сторінка 223
+  grade: 8
+  author: galimov
+- id: S3
+  file: 8-klas-istoria-ukr-hlibovska-2025_s0075
+  type: textbook
+  title: Сторінка 29
+  grade: 8
+  author: hlibovska
+- id: S4
+  file: 8-klas-istoria-ukr-galimov-2025_s0124
+  type: textbook
+  title: Сторінка 77
+  grade: 8
+  author: galimov
+- id: S5
+  file: 7-klas-ukrmova-litvinova-2024_s0049
+  type: textbook
+  title: Сторінка 45
+  grade: 7
+  author: litvinova
+- id: S8
+  file: wave8-chyzhevsky-baroko_c0428
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S9
+  file: wave7-antonovych-kultura_c0411
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S10
+  file: wave7-krypyakevych-istkult_c0847
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S12
+  file: wave7-popovych-narys-kultury_c0840
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S13
+  file: wave7-entsyklopediia-ukrainoznavstva_c2107
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S14
+  file: wave7-antonovych-kultura_c0952
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S15
+  file: wave7-antonovych-kultura_c0362
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.

@@ -1,0 +1,41 @@
+# Source registry for wiki/academic/c1/digital-communication.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: 8-klas-ukrmova-avramenko-2025_s0080
+  type: textbook
+  title: Сторінка 66
+  grade: 8
+  author: avramenko
+- id: S3
+  file: 8-klas-istoriya-ukr-gisem-2021_s0003
+  type: textbook
+  title: Сторінка 3
+  grade: 8
+  author: gisem
+- id: S5
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0321
+  type: textbook
+  title: Сторінка 206
+  grade: 11
+  author: zabolotnyi
+- id: S6
+  file: wave4-ukrainska-mova-encyclopedia_c0138
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S7
+  file: wave7-ukrxx-derzhavnist_c0416
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0206
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c2287
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

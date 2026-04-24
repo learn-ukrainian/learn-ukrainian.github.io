@@ -1,0 +1,64 @@
+# Source registry for wiki/grammar/b2/emphasis-and-inversion.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S3
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0266
+  type: textbook
+  title: Сторінка 187
+  grade: 11
+  author: avramenko
+- id: S4
+  file: 8-klas-ukrmova-avramenko-2025_s0077
+  type: textbook
+  title: Сторінка 64
+  grade: 8
+  author: avramenko
+- id: S6
+  file: 11-klas-ukrajinska-mova-voron-2019_s1262
+  type: textbook
+  title: Українська мова належить до мов із вільним порядком слів. Порядок слів
+  page: 110
+  grade: 11
+- id: S7
+  file: 7-klas-ukrmova-avramenko-2024_s3877
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 187)
+  page: 187
+  grade: 7
+- id: S11
+  file: 10-klas-ukrmova-glazova-2018_s0559
+  type: textbook
+  title: § 15. Поняття милозвучності. Чергування у–в, і–й як засіб милозвучності .
+    . . . . . . . . . . . . . . . . . . . . . . . . .68
+  page: 221
+  grade: 10
+- id: S12
+  file: 10-klas-ukrmova-karaman-2018_s0663
+  type: textbook
+  title: § 53. Стилістичне використання засобів словотвору
+  page: 135
+  grade: 10
+- id: S13
+  file: 8-klas-ukrmova-avramenko-2025_s4584
+  type: textbook
+  title: § 26. –27. Речення поширені та непоширені. Порядок слів у реченні. Логічний
+    наголос
+  page: 62
+  grade: 8
+- id: S14
+  file: 7-klas-ukrmova-litvinova-2024_s3950
+  type: textbook
+  title: § 37. Види часток
+  page: 224
+  grade: 7
+- id: S15
+  file: 10-klas-ukrmova-karaman-2018_s0606
+  type: textbook
+  title: § 23. ІНТОНАЦІЙНІ ОСОБЛИВОСТІ УКРАЇНСЬКОГО МОВЛЕННЯ. НАГОЛОС В УКРАЇНСЬКІЙ
+    МОВІ
+  page: 68
+  grade: 10
+- id: S16
+  file: ext-article-0
+  type: external
+  title: ext-article-0

@@ -1,0 +1,54 @@
+# Source registry for wiki/folk/genres/bylyny-kyivskoho-tsyklu.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S4
+  file: 7-klas-istoria-ukr-galimov-2024_s0009
+  type: textbook
+  title: Сторінка 7
+  grade: 7
+  author: galimov
+- id: S6
+  file: wave4-chyzhevsky-istoriia-lit_c0161
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S7
+  file: wave7-istkult-t1-kyivska-rus_c0154
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S8
+  file: wave7-antonovych-kultura_c0635
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S10
+  file: wave7-popovych-narys-kultury_c0176
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S11
+  file: wave8-ukr-lit-entsyklopediia_c0544
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S12
+  file: wave12-hrushevsky-iu-odnotom_c0001
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S13
+  file: wave7-entsyklopediia-ukrainoznavstva_c0620
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S14
+  file: wave7-istkult-t2-xiii-xvii_c0618
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S15
+  file: wave7-dzyuba-pavlenko-litopys-kultury_c0010
+  type: literary
+  title: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
+  author: Дзюба О.

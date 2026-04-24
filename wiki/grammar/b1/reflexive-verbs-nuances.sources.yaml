@@ -1,0 +1,52 @@
+# Source registry for wiki/grammar/b1/reflexive-verbs-nuances.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrmova-karaman-2018_s0683
+  type: textbook
+  title: § 70. ДІЄСЛОВО ЯК ЧАСТИНА МОВИ. ФОРМИ ДІЄСЛОВА. ЗМІНИ ЗВУ
+  page: 176
+  grade: 10
+- id: S2
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1816
+  type: textbook
+  title: Недарма в Стародавній Греції судову справу частенько... (вигра­
+  page: 112
+  grade: 4
+- id: S3
+  file: 7-klas-ukrmova-litvinova-2024_s3910
+  type: textbook
+  title: § 7. Види діє слова
+  page: 33
+  grade: 7
+- id: S4
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1148
+  type: textbook
+  title: § 16. ДІЄСЛІВНІ ЗАКІНЧЕННЯ
+  page: 50
+  grade: 11
+- id: S5
+  file: 10-klas-ukrmova-karaman-2018_s0684
+  type: textbook
+  title: § 71. Дві основи дієслова. Поділ дієслів на діє відміни. Словозміна дієслів
+    i та ii дієвідміни
+  page: 179
+  grade: 10
+- id: S6
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1892
+  type: textbook
+  title: § 44. Правопис ненаголошених особових
+  page: 141
+  grade: 4
+- id: S7
+  file: 7-klas-ukrmova-avramenko-2024_s3817
+  type: textbook
+  title: § 29. Минулий час дієслів
+  page: 66
+  grade: 7
+- id: S9
+  file: 4-klas-ukrmova-zaharijchuk_s1921
+  type: textbook
+  title: М инулий час. Зміню вання дієслів минулого
+  page: 146
+  grade: 4

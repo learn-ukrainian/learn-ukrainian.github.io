@@ -1,0 +1,72 @@
+# Source registry for wiki/academic/c1/praktyka-1-narodna-kultura.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrlit-zabolotnyi-2024_s0009
+  type: textbook
+  title: Сторінка 10
+  grade: 7
+  author: zabolotnyi
+- id: S2
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0006
+  type: textbook
+  title: Сторінка 6
+  grade: 9
+  author: avramenko
+- id: S4
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s0025
+  type: textbook
+  title: Сторінка 19
+  grade: 9
+  author: mishhenko
+- id: S5
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0207
+  type: textbook
+  title: Сторінка 148
+  grade: 11
+  author: avramenko
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c5172
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave7-istkult-t2-xiii-xvii_c0342
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S8
+  file: wave7-istkult-t2-xiii-xvii_c0008
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0010
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave4-hrushevsky-istlit_c0532
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S12
+  file: wave7-popovych-narys-kultury_c0008
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S13
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0037
+  type: literary
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+- id: S14
+  file: wave7-antonovych-kultura_c0793
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S15
+  file: wave7-antonovych-kultura_c0029
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.

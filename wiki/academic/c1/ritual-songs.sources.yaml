@@ -1,0 +1,77 @@
+# Source registry for wiki/academic/c1/ritual-songs.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 6-klas-ukrlit-zabolotnyi-2023_s0008
+  type: textbook
+  title: Сторінка 9
+  grade: 6
+  author: zabolotnyi
+- id: S3
+  file: 6-klas-ukrlit-avramenko-2023_s0009
+  type: textbook
+  title: Сторінка 9
+  grade: 6
+  author: avramenko
+- id: S4
+  file: 2-klas-ukrmova-kravcova-2019-2_s0060
+  type: textbook
+  title: Сторінка 62
+  grade: 2
+  author: kravcova
+- id: S5
+  file: 6-klas-ukrlit-zabolotnyi-2023_s0024
+  type: textbook
+  title: Сторінка 25
+  grade: 6
+  author: zabolotnyi
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c0594
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0595
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave7-krypyakevych-istkult_c0279
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S9
+  file: wave7-antonovych-kultura_c0036
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S10
+  file: wave7-antonovych-kultura_c0633
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S11
+  file: wave7-entsyklopediia-ukrainoznavstva_c0518
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S12
+  file: wave7-entsyklopediia-ukrainoznavstva_c0596
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S13
+  file: wave8-ukr-lit-entsyklopediia_c0949
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S14
+  file: wave7-antonovych-kultura_c0634
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S15
+  file: wave7-krypyakevych-istkult_c0280
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.

@@ -1,0 +1,77 @@
+# Source registry for wiki/academic/c1/speaking-practice.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 2-klas-ukrmova-bolshakova-2019-1_s0006
+  type: textbook
+  title: Сторінка 5
+  grade: 2
+  author: bolshakova
+- id: S2
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0209
+  type: textbook
+  title: Сторінка 136
+  grade: 9
+  author: avramenko
+- id: S4
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0294
+  type: textbook
+  title: Сторінка 205
+  grade: 11
+  author: glazova
+- id: S5
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0283
+  type: textbook
+  title: Сторінка 198
+  grade: 11
+  author: avramenko
+- id: S6
+  file: wave7-dzyuba-internatsionalizm_c0278
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+- id: S7
+  file: wave7-istkult-t2-xiii-xvii_c1451
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S8
+  file: wave8-masliuk-poetyky-rytoryky_c0281
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S9
+  file: wave7-lytvynov-renesans-humanizm_c0155
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+- id: S10
+  file: wave7-antonovych-kultura_c0015
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S11
+  file: wave7-lytvynov-renesans-humanizm_c0221
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+- id: S12
+  file: wave8-hrabovych-do-istoriyi_c0002
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S13
+  file: wave4-ukrainska-mova-encyclopedia_c0090
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S14
+  file: wave9-pravopys-2015_c0063
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S15
+  file: wave8-ukr-lit-entsyklopediia_c0003
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

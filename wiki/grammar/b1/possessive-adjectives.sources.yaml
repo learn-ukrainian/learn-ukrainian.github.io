@@ -7,6 +7,12 @@ sources:
   title: § 70. Творення прикметників
   page: 137
   grade: 6
+- id: S2
+  file: 10-klas-ukrmova-karaman-2018_s0677
+  type: textbook
+  title: § 64. Займенник
+  page: 161
+  grade: 10
 - id: S3
   file: 6-klas-ukrmova-zabolotnyi-2020_s3401
   type: textbook
@@ -24,6 +30,12 @@ sources:
   type: textbook
   title: § 27. ВІДМІНИ Й ГРУПИ
   page: 95
+  grade: 6
+- id: S6
+  file: 6-klas-ukrmova-litvinova-2023_s3355
+  type: textbook
+  title: § 44. Творення прикметників. Написання -Н- і -НН- у прикметниках
+  page: 209
   grade: 6
 - id: S7
   file: 10-klas-ukrmova-karaman-2018_s0673

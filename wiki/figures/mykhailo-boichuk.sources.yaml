@@ -1,0 +1,23 @@
+# Source registry for wiki/figures/mykhailo-boichuk.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-krypyakevych-istkult_c0841
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S2
+  file: wave7-antonovych-kultura_c0583
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S3
+  file: wave7-popovych-narys-kultury_c0998
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S4
+  file: wikipedia/Монументалізм
+  type: wikipedia
+  title: Монументалізм
+  url: https://uk.wikipedia.org/wiki/%D0%9C%D0%BE%D0%BD%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%B0%D0%BB%D1%96%D0%B7%D0%BC

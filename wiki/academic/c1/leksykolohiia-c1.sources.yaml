@@ -1,0 +1,83 @@
+# Source registry for wiki/academic/c1/leksykolohiia-c1.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrmova-karaman-2018_s0488
+  type: textbook
+  title: Сторінка 270
+  grade: 10
+  author: karaman
+- id: S2
+  file: 10-klas-ukrmova-glazova-2018_s0086
+  type: textbook
+  title: Сторінка 59
+  grade: 10
+  author: glazova
+- id: S3
+  file: 5-klas-ukrmova-litvinova-2022_s0031
+  type: textbook
+  title: Сторінка 26
+  grade: 5
+  author: litvinova
+- id: S4
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0218
+  type: textbook
+  title: Сторінка 155
+  grade: 11
+  author: avramenko
+- id: S5
+  file: 10-klas-ukrmova-glazova-2018_s0310
+  type: textbook
+  title: Сторінка 221
+  grade: 10
+  author: glazova
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c4290
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c4294
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave9-ohiyenko-ist-lit-movy_c0292
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S9
+  file: wave9-ohiyenko-ist-lit-movy_c0096
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S10
+  file: wave4-ukrainska-mova-encyclopedia_c0117
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S11
+  file: wave9-rusanivsky-ist-lit-movy_c0137
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S12
+  file: wave9-rusanivsky-ist-lit-movy_c0116
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S13
+  file: wave9-ohiyenko-ist-lit-movy_c0345
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S14
+  file: wave8-ukr-lit-entsyklopediia_c4418
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S15
+  file: wave8-ukr-lit-entsyklopediia_c4089
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

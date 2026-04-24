@@ -1,0 +1,59 @@
+# Source registry for wiki/academic/c1/vyshyvanka.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 6-klas-istoriia-shchupak-2023_s0127
+  type: textbook
+  title: Сторінка 125
+  grade: 6
+  author: shchupak
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c0686
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0689
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave7-istkult-t2-xiii-xvii_c0244
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c0250
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c0231
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S11
+  file: wave7-entsyklopediia-ukrainoznavstva_c0663
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S12
+  file: wave7-popovych-narys-kultury_c0053
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S13
+  file: wave7-entsyklopediia-ukrainoznavstva_c0724
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S14
+  file: wave7-entsyklopediia-ukrainoznavstva_c0690
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S15
+  file: wave8-ukr-lit-entsyklopediia_c5172
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

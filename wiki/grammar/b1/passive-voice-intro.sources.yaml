@@ -37,6 +37,12 @@ sources:
   title: СПІЛКУВАННЯ (p. 191)
   page: 191
   grade: 10
+- id: S9
+  file: 9-klas-ukrajinska-mova-voron-2017_s5143
+  type: textbook
+  title: РОЗБІР ДІЄСЛОВА ЯК ЧАСТИНИ МОВИ ПОСЛІДОВНІСТЬ РОЗБОРУ
+  page: 224
+  grade: 9
 - id: S10
   file: 7-klas-ukrmova-litvinova-2024_s3916
   type: textbook

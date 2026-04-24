@@ -1,0 +1,83 @@
+# Source registry for wiki/academic/c1/political-system.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-istoriya-ukr-gisem-2024_s0313
+  type: textbook
+  title: Сторінка 175
+  grade: 11
+  author: gisem
+- id: S2
+  file: 11-klas-istoriya-ukr-gisem-2024_s0333
+  type: textbook
+  title: Сторінка 188
+  grade: 11
+  author: gisem
+- id: S3
+  file: 8-klas-istoria-ukr-schupak-2025_s0003
+  type: textbook
+  title: Сторінка 4
+  grade: 8
+  author: schupak
+- id: S4
+  file: 10-klas-ukrmova-karaman-2018_s0004
+  type: textbook
+  title: Сторінка 5
+  grade: 10
+  author: karaman
+- id: S5
+  file: 11-klas-istoriya-ukr-gisem-2024_s0334
+  type: textbook
+  title: Сторінка 188
+  grade: 11
+  author: gisem
+- id: S6
+  file: wave7-ukrxx-derzhavnist_c0376
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S7
+  file: wave7-ukrxx-derzhavnist_c0094
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S8
+  file: wave7-ukrxx-derzhavnist_c0343
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S9
+  file: wave7-ukrxx-derzhavnist_c0355
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S10
+  file: wave7-ukrxx-derzhavnist_c0369
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S11
+  file: wave7-ukrxx-derzhavnist_c0375
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S12
+  file: wave7-ukrxx-derzhavnist_c0374
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S13
+  file: wave7-yushkov-feodalizm_c0300
+  type: literary
+  title: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму
+  author: Юшков С.
+- id: S14
+  file: wave7-ukrxx-derzhavnist_c0361
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S15
+  file: wave7-lytvynov-renesans-humanizm_c0415
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.

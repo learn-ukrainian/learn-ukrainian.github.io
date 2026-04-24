@@ -15,11 +15,11 @@ sources:
   page: 100
   grade: 10
 - id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0608
+  file: 6-klas-ukrmova-golub-2023_s3268
   type: textbook
-  title: Українська графіка. Українська орфографія
-  page: 74
-  grade: 10
+  title: § 59. Як не стати марнотратами
+  page: 155
+  grade: 6
 - id: S4
   file: 10-klas-ukrmova-glazova-2018_s0539
   type: textbook
@@ -27,8 +27,8 @@ sources:
   page: 141
   grade: 10
 - id: S5
-  file: 10-klas-ukrajinska-mova-avramenko-2018_s0295
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0373
   type: textbook
-  title: Правила перенесення слів. Графічні скорочення. СПОСТЕРЕЖЕННЯ
-  page: 117
+  title: § 25. Урок розвитку мовлення. Есе на актуальну тему. . . . . . . . . . 97
+  page: 191
   grade: 10

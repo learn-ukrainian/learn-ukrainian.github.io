@@ -1,0 +1,51 @@
+# Source registry for wiki/grammar/b2/detached-members.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0261
+  type: textbook
+  title: Сторінка 215
+  grade: 8
+  author: zabolotnyi
+- id: S3
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0146
+  type: textbook
+  title: Сторінка 103
+  grade: 11
+  author: zabolotnyi
+- id: S5
+  file: 8-klas-ukrmova-avramenko-2025_s0196
+  type: textbook
+  title: Сторінка 147
+  grade: 8
+  author: avramenko
+- id: S6
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4717
+  type: textbook
+  title: РЕЧЕННЯ З ВІДОКРЕМЛЕНИМИ ЧЛЕНАМИ
+  page: 194
+  grade: 8
+- id: S7
+  file: 8-klas-ukrmova-avramenko-2025_s4669
+  type: textbook
+  title: § 77. Відокремлені додатки
+  page: 164
+  grade: 8
+- id: S8
+  file: 11-klas-ukrajinska-mova-voron-2019_s1268
+  type: textbook
+  title: § 27. За яких спільних умов відокремлюються другорядні
+  page: 146
+  grade: 11
+- id: S9
+  file: 8-klas-ukrmova-avramenko-2025_s4663
+  type: textbook
+  title: § 74. –75
+  page: 157
+  grade: 8
+- id: S13
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1169
+  type: textbook
+  title: § 39. ВІДОКРЕМЛЕНІ ОБСТАВИНИ
+  page: 125
+  grade: 11

@@ -1,0 +1,8 @@
+# Source registry for wiki/figures/oleksandr-bohomazov.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-popovych-narys-kultury_c0846
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.

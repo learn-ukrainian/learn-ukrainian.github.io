@@ -1,0 +1,61 @@
+# Source registry for wiki/academic/c1/dialects-of-ukrainian.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrmova-karaman-2018_s0063
+  type: textbook
+  title: Сторінка 35
+  grade: 10
+  author: karaman
+- id: S2
+  file: 10-klas-ukrmova-karaman-2018_s0054
+  type: textbook
+  title: Сторінка 30
+  grade: 10
+  author: karaman
+- id: S3
+  file: 10-klas-ukrmova-glazova-2018_s0109
+  type: textbook
+  title: Сторінка 77
+  grade: 10
+  author: glazova
+- id: S6
+  file: wave4-ukrainska-mova-encyclopedia_c0104
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c1985
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0111
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0108
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S11
+  file: wave4-ukrainska-mova-encyclopedia_c0113
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S12
+  file: wave8-ukr-lit-entsyklopediia_c1983
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S13
+  file: wave8-ukr-lit-entsyklopediia_c5412
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S15
+  file: wave8-ukr-lit-entsyklopediia_c1984
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

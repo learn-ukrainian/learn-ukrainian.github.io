@@ -1,0 +1,14 @@
+# Source registry for wiki/figures/ivan-puliui.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 6-klas-ukrmova-litvinova-2023_s3326
+  type: textbook
+  title: '§ 20. Самостійні частини мови: загальна характеристика'
+  page: 109
+  grade: 6
+- id: S2
+  file: wikipedia/Іларіон (Огієнко)
+  type: wikipedia
+  title: Іларіон (Огієнко)
+  url: https://uk.wikipedia.org/wiki/%D0%86%D0%BB%D0%B0%D1%80%D1%96%D0%BE%D0%BD%20%28%D0%9E%D0%B3%D1%96%D1%94%D0%BD%D0%BA%D0%BE%29

@@ -1,0 +1,29 @@
+# Source registry for wiki/figures/kniaz-sviatoslav.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-istoria-ukr-pometun-2024_s3558
+  type: textbook
+  title: § 5. Князь Святослав і його походи
+  page: 38
+  grade: 7
+- id: S2
+  file: wave11-hrushevsky-iur-t6_c0850
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S3
+  file: wave4-hrushevsky-iur-t1_c0770
+  type: literary
+  title: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+- id: S4
+  file: wave0-pvl-yaremenko_c0021
+  type: literary
+  title: Повість временних літ (переклад Яременка)
+  author: Нестор
+- id: S7
+  file: wikipedia/Київська Русь
+  type: wikipedia
+  title: Київська Русь
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B0%20%D0%A0%D1%83%D1%81%D1%8C

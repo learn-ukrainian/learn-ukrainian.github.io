@@ -1,0 +1,47 @@
+# Source registry for wiki/folk/genres/dumy-lytsarski.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrlit-zabolotnyi-2024_s0105
+  type: textbook
+  title: Сторінка 70
+  grade: 7
+  author: zabolotnyi
+- id: S3
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0212
+  type: textbook
+  title: Сторінка 126
+  grade: 11
+  author: avramenko
+- id: S4
+  file: 8-klas-istoria-ukr-galimov-2025_s0206
+  type: textbook
+  title: Сторінка 127
+  grade: 8
+  author: galimov
+- id: S5
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0429
+  type: textbook
+  title: Сторінка 226
+  grade: 11
+  author: borzenko
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c2296
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wikipedia/Дума
+  type: wikipedia
+  title: Дума
+  url: https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BC%D0%B0
+- id: S8
+  file: wikipedia/Середньовічна література
+  type: wikipedia
+  title: Середньовічна література
+  url: https://uk.wikipedia.org/wiki/%D0%A1%D0%B5%D1%80%D0%B5%D0%B4%D0%BD%D1%8C%D0%BE%D0%B2%D1%96%D1%87%D0%BD%D0%B0%20%D0%BB%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%B0
+- id: S9
+  file: wikipedia/Іван Підкова (поема)
+  type: wikipedia
+  title: Іван Підкова (поема)
+  url: https://uk.wikipedia.org/wiki/%D0%86%D0%B2%D0%B0%D0%BD%20%D0%9F%D1%96%D0%B4%D0%BA%D0%BE%D0%B2%D0%B0%20%28%D0%BF%D0%BE%D0%B5%D0%BC%D0%B0%29

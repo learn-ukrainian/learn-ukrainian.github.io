@@ -49,12 +49,6 @@ sources:
   title: Вивчи три прислів’я напам’ять. Запиши їх із пам’яті. Звір свій запис
   page: 155
   grade: 3
-- id: S9
-  file: 5-klas-ukrmova-avramenko-2022_s2281
-  type: textbook
-  title: КОРОТКИЙ СЛОВНИК НАГОЛОСІВ
-  page: 201
-  grade: 5
 - id: S10
   file: 4-klas-ukrmova-zaharijchuk_s1921
   type: textbook

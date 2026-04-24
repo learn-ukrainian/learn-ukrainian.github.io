@@ -1,0 +1,36 @@
+# Source registry for wiki/figures/alla-horska.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1384
+  type: textbook
+  title: Літературне «шістдесятництво» . Василь Стус  199
+  page: 199
+  grade: 11
+- id: S2
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1023
+  type: textbook
+  title: Олександр Довженко. Світлина
+  page: 94
+  grade: 11
+- id: S3
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s1116
+  type: textbook
+  title: ВОЄННЕ ЛИХОЛІТТЯ (p. 182)
+  page: 182
+  grade: 11
+- id: S4
+  file: wave7-ukrxx-derzhavnist_c0126
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S5
+  file: wikipedia/Зарецький Олексій Вікторович
+  type: wikipedia
+  title: Зарецький Олексій Вікторович
+  url: https://uk.wikipedia.org/wiki/%D0%97%D0%B0%D1%80%D0%B5%D1%86%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D1%96%D0%B9%20%D0%92%D1%96%D0%BA%D1%82%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87
+- id: S6
+  file: wikipedia/Музей шістдесятництва
+  type: wikipedia
+  title: Музей шістдесятництва
+  url: https://uk.wikipedia.org/wiki/%D0%9C%D1%83%D0%B7%D0%B5%D0%B9%20%D1%88%D1%96%D1%81%D1%82%D0%B4%D0%B5%D1%81%D1%8F%D1%82%D0%BD%D0%B8%D1%86%D1%82%D0%B2%D0%B0

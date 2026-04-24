@@ -37,10 +37,19 @@ sources:
   title: § 91. Змінювання і творення слів
   page: 225
   grade: 5
-# VESUM (S8) and СУМ-11 (S9) were removed 2026-04-24 (issue #1494).
-# Dictionary authorities (morphological-dictionary, explanatory-dictionary)
-# are not currently addressable to a concrete sources.db row via the
-# committed registry shape — the citation resolution invariant returns
-# False for them. References in prose converted to inline-text form
-# ("VESUM", "СУМ-11"). Structural dictionary-citation support tracked
-# as a separate infra issue.
+- id: S8
+  file: VESUM
+  type: morphological-dictionary
+  notes: 'VESUM (409K lemmas, 6.7M forms). Authoritative check for "does this Ukrainian
+    word-form exist?" Queried via `mcp__sources__verify_word` and `mcp__sources__verify_words`.
+    In this wiki supports: every right-column Surzhyk replacement (тато, дружина,
+    лікар/лікарка, вибачте, пробачте, дякую, спасибі, теж, також, інженерка, вчителька,
+    програмістка, авторка, студентка) and every left-column absence proof (жена, врач,
+    ізвиніть, спасібо, тоже, очень all NOT FOUND).'
+- id: S9
+  file: СУМ-11
+  type: explanatory-dictionary
+  notes: 'СУМ-11 (127K entries). Authoritative for Ukrainian word semantics. Queried
+    via `mcp__sources__search_definitions`. In this wiki supports: (1) `папа` = "pope"
+    only (not "father") — so the Surzhyk table''s first row is grounded in a semantic
+    gap, not merely a spelling variant; (2) `тато` = colloquial synonym of `батько`.'

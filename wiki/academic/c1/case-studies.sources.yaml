@@ -1,0 +1,77 @@
+# Source registry for wiki/academic/c1/case-studies.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrmova-litvinova-2024_s0067
+  type: textbook
+  title: Сторінка 63
+  grade: 7
+  author: litvinova
+- id: S2
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0298
+  type: textbook
+  title: Сторінка 207
+  grade: 11
+  author: avramenko
+- id: S3
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0050
+  type: textbook
+  title: Сторінка 37
+  grade: 10
+  author: zabolotnyi
+- id: S5
+  file: 6-klas-ukrmova-avramenko-2023_s0243
+  type: textbook
+  title: Сторінка 226
+  grade: 6
+  author: avramenko
+- id: S6
+  file: wave4-nimchuk-movoznavstvo_c0001
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S7
+  file: wave7-istkult-t2-xiii-xvii_c0361
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0234
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0209
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave8-masliuk-poetyky-rytoryky_c0285
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S11
+  file: wave9-shevelov-fonolohiia_c0039
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S12
+  file: wave7-popovych-narys-kultury_c0013
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S13
+  file: wave7-ukrxx-derzhavnist_c0362
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S14
+  file: wave7-thompson-trubadury_c0007
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S15
+  file: wave7-popovych-narys-kultury_c0683
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.

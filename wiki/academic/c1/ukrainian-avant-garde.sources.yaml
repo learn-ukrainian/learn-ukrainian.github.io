@@ -1,0 +1,56 @@
+# Source registry for wiki/academic/c1/ukrainian-avant-garde.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0053
+  type: textbook
+  title: Сторінка 33
+  grade: 9
+  author: gisem
+- id: S2
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0002
+  type: textbook
+  title: Сторінка 3
+  grade: 11
+  author: borzenko
+- id: S4
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0026
+  type: textbook
+  title: Сторінка 13
+  grade: 11
+  author: borzenko
+- id: S6
+  file: wave7-popovych-narys-kultury_c0846
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S7
+  file: wave7-popovych-narys-kultury_c0844
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c0036
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave7-popovych-narys-kultury_c0997
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S11
+  file: wave7-krypyakevych-istkult_c0881
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S12
+  file: wave7-entsyklopediia-ukrainoznavstva_c2135
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S15
+  file: wave8-hrabovych-do-istoriyi_c0356
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

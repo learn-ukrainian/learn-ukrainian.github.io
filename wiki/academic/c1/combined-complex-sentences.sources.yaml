@@ -1,0 +1,77 @@
+# Source registry for wiki/academic/c1/combined-complex-sentences.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-mova-voron-2017_s0180
+  type: textbook
+  title: Сторінка 137
+  grade: 9
+  author: voron
+- id: S2
+  file: 11-klas-ukrajinska-mova-voron-2019_s0298
+  type: textbook
+  title: Сторінка 194
+  grade: 11
+  author: voron
+- id: S3
+  file: 9-klas-ukrmova-zabolotnyi-2017_s0265
+  type: textbook
+  title: Сторінка 184
+  grade: 9
+  author: zabolotnyi
+- id: S4
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0265
+  type: textbook
+  title: Сторінка 184
+  grade: 9
+  author: zabolotnij
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c0793
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0848
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave9-pravopys-2015_c0166
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S9
+  file: wave9-pravopys-2015_c0165
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S10
+  file: wave9-pravopys-2015_c0163
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S11
+  file: wave7-entsyklopediia-ukrainoznavstva_c0790
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S12
+  file: wave4-ukrainska-mova-encyclopedia_c0075
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S13
+  file: wave4-nimchuk-movoznavstvo_c0125
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S14
+  file: wave4-ukrainska-mova-encyclopedia_c0089
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S15
+  file: wave9-pravopys-2015_c0162
+  type: literary
+  title: Український правопис 2015
+  author: НАН України

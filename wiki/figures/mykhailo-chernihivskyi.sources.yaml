@@ -1,0 +1,38 @@
+# Source registry for wiki/figures/mykhailo-chernihivskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-voitovych-dynasty_c0166
+  type: literary
+  title: Войтович — Князівські династії Східної Європи
+  author: Войтович Л.
+- id: S2
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0089
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S3
+  file: wave4-hrushevsky-istlit-t2_c0151
+  type: literary
+  title: Грушевський — Історія української літератури, т.2
+  author: Грушевський М.
+- id: S5
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0090
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c0578
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: https://www.youtube.com/watch?v=sxGATYewyV8
+  type: external
+  title: Навіщо московитам рештки наших правителів? Реальна історія з Акімом Галімовим
+  url: https://www.youtube.com/watch?v=sxGATYewyV8
+- id: S8
+  file: wikipedia/Ігор Ольгович
+  type: wikipedia
+  title: Ігор Ольгович
+  url: https://uk.wikipedia.org/wiki/%D0%86%D0%B3%D0%BE%D1%80%20%D0%9E%D0%BB%D1%8C%D0%B3%D0%BE%D0%B2%D0%B8%D1%87

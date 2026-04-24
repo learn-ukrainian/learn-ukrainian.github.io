@@ -1,0 +1,64 @@
+# Source registry for wiki/grammar/b2/aspect-nuances-imperative-infinitive.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0072
+  type: textbook
+  title: Сторінка 55
+  grade: 11
+  author: avramenko
+- id: S2
+  file: 10-klas-ukrmova-karaman-2018_s0328
+  type: textbook
+  title: Сторінка 185
+  grade: 10
+  author: karaman
+- id: S3
+  file: 7-klas-ukrmova-avramenko-2024_s0093
+  type: textbook
+  title: Сторінка 85
+  grade: 7
+  author: avramenko
+- id: S6
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1149
+  type: textbook
+  title: § 17. НАКАЗОВИЙ СПОСІБ ДІЄСЛОВА
+  page: 54
+  grade: 11
+- id: S7
+  file: 10-klas-ukrmova-karaman-2018_s0688
+  type: textbook
+  title: § 74. Способи дієслів
+  page: 185
+  grade: 10
+- id: S8
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1211
+  type: textbook
+  title: § 9. Паралельні форми вираження наказового
+  page: 46
+  grade: 11
+- id: S9
+  file: 10-klas-ukrmova-karaman-2018_s0684
+  type: textbook
+  title: § 71. Дві основи дієслова. Поділ дієслів на діє відміни. Словозміна дієслів
+    i та ii дієвідміни
+  page: 179
+  grade: 10
+- id: S11
+  file: 7-klas-ukrmova-litvinova-2024_s3911
+  type: textbook
+  title: '§ 8. Спосіб діє слова: загальна характеристика'
+  page: 38
+  grade: 7
+- id: S14
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1188
+  type: textbook
+  title: § 55. –56. ДІАЛОГІЧНІ ЖАНРИ
+  page: 194
+  grade: 11
+- id: S15
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1312
+  type: textbook
+  title: Модернізм . Євген Плужник  37
+  page: 37
+  grade: 11

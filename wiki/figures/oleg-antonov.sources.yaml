@@ -1,0 +1,23 @@
+# Source registry for wiki/figures/oleg-antonov.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-popovych-narys-kultury_c1143
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S2
+  file: wave9-ohiyenko-ist-lit-movy_c0359
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S3
+  file: https://www.youtube.com/watch?v=J7h5XQ8lKgo
+  type: external
+  title: 'Михайло Драгоманов: геній і вигнанець'
+  url: https://www.youtube.com/watch?v=J7h5XQ8lKgo
+- id: S4
+  file: wikipedia/Кирило-Мефодіївське товариство
+  type: wikipedia
+  title: Кирило-Мефодіївське товариство
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%80%D0%B8%D0%BB%D0%BE-%D0%9C%D0%B5%D1%84%D0%BE%D0%B4%D1%96%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B5%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B8%D1%81%D1%82%D0%B2%D0%BE

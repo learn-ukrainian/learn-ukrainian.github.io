@@ -1,0 +1,51 @@
+# Source registry for wiki/grammar/b2/active-participles-past.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: 10-klas-ukrmova-karaman-2018_s0336
+  type: textbook
+  title: Сторінка 189
+  grade: 10
+  author: karaman
+- id: S4
+  file: 7-klas-ukrmova-litvinova-2024_s0095
+  type: textbook
+  title: Сторінка 91
+  grade: 7
+  author: litvinova
+- id: S6
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1150
+  type: textbook
+  title: § 18. АКТИВНІ Й ПАСИВНІ ДІЄПРИКМЕТНИКИ
+  page: 58
+  grade: 11
+- id: S7
+  file: 7-klas-ukrmova-avramenko-2024_s3832
+  type: textbook
+  title: § 42. Активні й пасивні дієприкметники
+  page: 98
+  grade: 7
+- id: S8
+  file: 7-klas-ukrmova-litvinova-2024_s3921
+  type: textbook
+  title: § 17. Активні й пасивні дієприкметники
+  page: 90
+  grade: 7
+- id: S10
+  file: 10-klas-ukrmova-karaman-2018_s0690
+  type: textbook
+  title: § 76. Дієприкметник
+  page: 189
+  grade: 10
+- id: S12
+  file: 7-klas-ukrmova-avramenko-2024_s3833
+  type: textbook
+  title: § 43. Творення активних дієприкметників
+  page: 100
+  grade: 7
+- id: S14
+  file: 7-klas-ukrmova-avramenko-2024_s3831
+  type: textbook
+  title: § 41. Дієприкметник як форма дієслова
+  page: 96
+  grade: 7

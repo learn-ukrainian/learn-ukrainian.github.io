@@ -1,0 +1,81 @@
+# Source registry for wiki/grammar/b2/professional-reports-basics.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-mova-voron-2019_s0219
+  type: textbook
+  title: Сторінка 145
+  grade: 11
+  author: voron
+- id: S2
+  file: 10-klas-ukrmova-karaman-2018_s0428
+  type: textbook
+  title: Сторінка 241
+  grade: 10
+  author: karaman
+- id: S3
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s0001
+  type: textbook
+  title: Сторінка 3
+  grade: 3
+  author: vashulenko
+- id: S4
+  file: 8-klas-ukrmova-avramenko-2025_s0186
+  type: textbook
+  title: Сторінка 138
+  grade: 8
+  author: avramenko
+- id: S5
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0282
+  type: textbook
+  title: Сторінка 230
+  grade: 8
+  author: zabolotnyi
+- id: S6
+  file: 10-klas-ukrmova-karaman-2018_s0665
+  type: textbook
+  title: УКРАЇНСЬКА МОРФОЛОГІЯ
+  page: 138
+  grade: 10
+- id: S7
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1454
+  type: textbook
+  title: Стилістична норма
+  page: 182
+  grade: 11
+- id: S8
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5198
+  type: textbook
+  title: Їх може подарувати лише батьківщина й дитинство. А ще
+  page: 191
+  grade: 9
+- id: S9
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0265
+  type: textbook
+  title: 'Види есе: вільне та формальне1 есе. Вид есе'
+  page: 44
+  grade: 10
+- id: S10
+  file: 5-klas-ukrmova-litvinova-2022_s2341
+  type: textbook
+  title: Лексикологія. Лексичне значення слова
+  page: 27
+  grade: 5
+- id: S11
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1234
+  type: textbook
+  title: § 43. Стилістичні особливості засобів словотвору
+  page: 189
+  grade: 11
+- id: S12
+  file: 10-klas-ukrmova-karaman-2018_s0705
+  type: textbook
+  title: ПРИЧИНИ КОМУНІКАТИВНИХ НЕВДАЧ
+  page: 219
+  grade: 10
+- id: S13
+  file: 10-klas-ukrmova-karaman-2018_s0712
+  type: textbook
+  title: ТЕМА 8. РОЗМОВНИЙ СТИЛЬ, СФЕРА ЙОГО ВИКОРИСТАННЯ,. ПРИЗНАЧЕННЯ, ОСНОВНІ ОЗНАКИ
+  page: 234
+  grade: 10

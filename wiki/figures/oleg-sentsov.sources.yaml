@@ -1,0 +1,23 @@
+# Source registry for wiki/figures/oleg-sentsov.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-olzhych_c0002
+  type: literary
+  title: Олег Ольжич. Життя та творчість Олега Ольжича
+  author: Ольжич О.
+- id: S2
+  file: wikipedia/Найкраща книга Форуму видавців
+  type: wikipedia
+  title: Найкраща книга Форуму видавців
+  url: https://uk.wikipedia.org/wiki/%D0%9D%D0%B0%D0%B9%D0%BA%D1%80%D0%B0%D1%89%D0%B0%20%D0%BA%D0%BD%D0%B8%D0%B3%D0%B0%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D1%83%20%D0%B2%D0%B8%D0%B4%D0%B0%D0%B2%D1%86%D1%96%D0%B2
+- id: S3
+  file: wikipedia/Російська пропаганда
+  type: wikipedia
+  title: Російська пропаганда
+  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D1%81%D1%96%D0%B9%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BF%D1%80%D0%BE%D0%BF%D0%B0%D0%B3%D0%B0%D0%BD%D0%B4%D0%B0
+- id: S4
+  file: wikipedia/Театр під час війни (2022–2024)
+  type: wikipedia
+  title: Театр під час війни (2022–2024)
+  url: https://uk.wikipedia.org/wiki/%D0%A2%D0%B5%D0%B0%D1%82%D1%80%20%D0%BF%D1%96%D0%B4%20%D1%87%D0%B0%D1%81%20%D0%B2%D1%96%D0%B9%D0%BD%D0%B8%20%282022%E2%80%932024%29

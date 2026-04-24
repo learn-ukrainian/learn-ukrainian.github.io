@@ -13,6 +13,12 @@ sources:
   title: § 30. ЗАКІНЧЕННЯ ІМЕННИКІВ ЧОЛОВІЧОГО
   page: 106
   grade: 6
+- id: S3
+  file: 6-klas-ukrmova-litvinova-2023_s3337
+  type: textbook
+  title: § 29. Відміни та групи іменників
+  page: 143
+  grade: 6
 - id: S4
   file: 6-klas-ukrmova-zabolotnyi-2020_s3387
   type: textbook

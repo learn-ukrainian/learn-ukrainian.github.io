@@ -1,0 +1,78 @@
+# Source registry for wiki/academic/c1/thesis-development.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrmova-karaman-2018_s0462
+  type: textbook
+  title: Сторінка 258
+  grade: 10
+  author: karaman
+- id: S2
+  file: 10-klas-ukrmova-karaman-2018_s0424
+  type: textbook
+  title: Сторінка 239
+  grade: 10
+  author: karaman
+- id: S3
+  file: 11-klas-ukrajinska-mova-voron-2019_s0320
+  type: textbook
+  title: Сторінка 207
+  grade: 11
+  author: voron
+- id: S4
+  file: 10-klas-ukrmova-karaman-2018_s0498
+  type: textbook
+  title: Сторінка 271
+  grade: 10
+  author: karaman
+- id: S5
+  file: 11-klas-ukrajinska-mova-voron-2019_s0085
+  type: textbook
+  title: Сторінка 60
+  grade: 11
+  author: voron
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c1451
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: ukrlib-franko_c0071
+  type: literary
+  title: Іван Франко. Літературно-критичні статті
+  author: Франко І.
+- id: S8
+  file: wave4-nimchuk-movoznavstvo_c0002
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c5169
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0336
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S11
+  file: wave8-hrabovych-do-istoriyi_c0519
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S12
+  file: wave8-fdm-biobibliohrafichnyi_c0158
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S14
+  file: wave7-istkult-t2-xiii-xvii_c1489
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S15
+  file: wave7-antonovych-vybrani_c0078
+  type: literary
+  title: Антонович — Вибрані праці
+  author: Антонович В.

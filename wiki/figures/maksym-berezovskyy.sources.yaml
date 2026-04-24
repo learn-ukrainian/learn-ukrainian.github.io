@@ -1,0 +1,19 @@
+# Source registry for wiki/figures/maksym-berezovskyy.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5203
+  type: textbook
+  title: § 36. МОВНІ АСПЕКТИ ВИВЧЕННЯ РЕЧЕННЯ
+  page: 202
+  grade: 9
+- id: S3
+  file: wave7-popovych-narys-kultury_c0439
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S4
+  file: wave7-antonovych-kultura_c0631
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.

@@ -1,0 +1,83 @@
+# Source registry for wiki/academic/c1/morfolohichni-stylistychni-zasoby.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0268
+  type: textbook
+  title: Сторінка 177
+  grade: 11
+  author: zabolotnyi
+- id: S2
+  file: 10-klas-ukrmova-karaman-2018_s0490
+  type: textbook
+  title: Сторінка 270
+  grade: 10
+  author: karaman
+- id: S3
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0298
+  type: textbook
+  title: Сторінка 207
+  grade: 11
+  author: avramenko
+- id: S4
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0300
+  type: textbook
+  title: Сторінка 194
+  grade: 11
+  author: zabolotnyi
+- id: S5
+  file: 10-klas-ukrmova-karaman-2018_s0492
+  type: textbook
+  title: Сторінка 270
+  grade: 10
+  author: karaman
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c0774
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0773
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave8-hensiorsky-gvl-mova_c0276
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0123
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c0782
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S11
+  file: wave8-masliuk-poetyky-rytoryky_c0126
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S12
+  file: wave4-ukrainska-mova-encyclopedia_c0137
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S13
+  file: wave4-ukrainska-mova-encyclopedia_c0073
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S14
+  file: wave7-entsyklopediia-ukrainoznavstva_c0775
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S15
+  file: wave4-ukrainska-mova-encyclopedia_c0206
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.

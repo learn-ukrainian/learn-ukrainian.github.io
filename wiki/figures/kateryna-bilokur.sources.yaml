@@ -1,0 +1,13 @@
+# Source registry for wiki/figures/kateryna-bilokur.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wikipedia/Світогляд українського бароко
+  type: wikipedia
+  title: Світогляд українського бароко
+  url: https://uk.wikipedia.org/wiki/%D0%A1%D0%B2%D1%96%D1%82%D0%BE%D0%B3%D0%BB%D1%8F%D0%B4%20%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE%20%D0%B1%D0%B0%D1%80%D0%BE%D0%BA%D0%BE
+- id: S2
+  file: wikipedia/Мистецтво
+  type: wikipedia
+  title: Мистецтво
+  url: https://uk.wikipedia.org/wiki/%D0%9C%D0%B8%D1%81%D1%82%D0%B5%D1%86%D1%82%D0%B2%D0%BE

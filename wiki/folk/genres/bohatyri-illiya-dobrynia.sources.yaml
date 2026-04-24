@@ -1,0 +1,55 @@
+# Source registry for wiki/folk/genres/bohatyri-illiya-dobrynia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-ukrlit-avramenko-2025_s0045
+  type: textbook
+  title: Сторінка 28
+  grade: 8
+  author: avramenko
+- id: S3
+  file: 8-klas-ukrlit-avramenko-2025_s0039
+  type: textbook
+  title: Сторінка 23
+  grade: 8
+  author: avramenko
+- id: S6
+  file: wave7-dzyuba-pavlenko-litopys-kultury_c0011
+  type: literary
+  title: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
+  author: Дзюба О.
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0620
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave7-istkult-t1-kyivska-rus_c0154
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S9
+  file: wave4-hrushevsky-istlit_c0541
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S10
+  file: wave12-hrushevsky-iu-odnotom_c0546
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S11
+  file: wikipedia/Три богатирі
+  type: wikipedia
+  title: Три богатирі
+  url: https://uk.wikipedia.org/wiki/%D0%A2%D1%80%D0%B8%20%D0%B1%D0%BE%D0%B3%D0%B0%D1%82%D0%B8%D1%80%D1%96
+- id: S12
+  file: wikipedia/Богатир
+  type: wikipedia
+  title: Богатир
+  url: https://uk.wikipedia.org/wiki/%D0%91%D0%BE%D0%B3%D0%B0%D1%82%D0%B8%D1%80
+- id: S13
+  file: wikipedia/Ілля Муромець
+  type: wikipedia
+  title: Ілля Муромець
+  url: https://uk.wikipedia.org/wiki/%D0%86%D0%BB%D0%BB%D1%8F%20%D0%9C%D1%83%D1%80%D0%BE%D0%BC%D0%B5%D1%86%D1%8C

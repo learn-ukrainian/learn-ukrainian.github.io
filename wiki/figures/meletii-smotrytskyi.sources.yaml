@@ -1,0 +1,43 @@
+# Source registry for wiki/figures/meletii-smotrytskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave2-smotrytsky-gramatyka_c0115
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S3
+  file: wave7-popovych-narys-kultury_c0292
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S4
+  file: wave9-skhidnoslov-hramatyky_c0008
+  type: literary
+  title: Східнослов'янські граматики XVI-XVII ст. (статті)
+  author: Колектив
+- id: S5
+  file: wave2-smotrytsky-gramatyka_c0000
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S6
+  file: wave7-krypyakevych-istkult_c0370
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S7
+  file: wave9-skhidnoslov-hramatyky_c0022
+  type: literary
+  title: Східнослов'янські граматики XVI-XVII ст. (статті)
+  author: Колектив
+- id: S8
+  file: wave7-istkult-t2-xiii-xvii_c1396
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
+  file: wave4-nimchuk-movoznavstvo_c0245
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.

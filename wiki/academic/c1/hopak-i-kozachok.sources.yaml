@@ -1,0 +1,72 @@
+# Source registry for wiki/academic/c1/hopak-i-kozachok.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrmova-karaman-2018_s0458
+  type: textbook
+  title: Сторінка 256
+  grade: 10
+  author: karaman
+- id: S2
+  file: 6-klas-ukrlit-kovalenko-2023_s0111
+  type: textbook
+  title: Сторінка 112
+  grade: 6
+  author: kovalenko
+- id: S4
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0112
+  type: textbook
+  title: Сторінка 114
+  grade: 4
+  author: ponomarova
+- id: S5
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0235
+  type: textbook
+  title: Сторінка 142
+  grade: 11
+  author: avramenko
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c2272
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: ukrlib-nechuy_c0040
+  type: literary
+  title: Іван Нечуй-Левицький. Українські гумористи та штукарі
+  author: Нечуй-Левицький І.
+- id: S8
+  file: ukrlib-vyshnya_c0002
+  type: literary
+  title: Остап Вишня. Василь Іванович
+  author: Вишня О.
+- id: S9
+  file: ukrlib-vyshnya_c0009
+  type: literary
+  title: Остап Вишня. Велікі ростіть
+  author: Вишня О.
+- id: S10
+  file: wave4-hrushevsky-istlit_c0035
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S12
+  file: wave7-holobutsky-zaporizhzhia_c0095
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S13
+  file: wave7-entsyklopediia-ukrainoznavstva_c2273
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S14
+  file: wave7-entsyklopediia-ukrainoznavstva_c2271
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S15
+  file: ukrlib-kotlyarevsky_c0143
+  type: literary
+  title: Іван Котляревський. Енеїда
+  author: Котляревський І.

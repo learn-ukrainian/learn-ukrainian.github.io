@@ -1,0 +1,70 @@
+# Source registry for wiki/grammar/b2/phrases-word-combinations.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-mova-voron-2019_s0149
+  type: textbook
+  title: Сторінка 101
+  grade: 11
+  author: voron
+- id: S2
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0043
+  type: textbook
+  title: Сторінка 42
+  grade: 8
+  author: zabolotnyi
+- id: S3
+  file: 5-klas-ukrmova-zabolotnyi-2023_s0152
+  type: textbook
+  title: Сторінка 154
+  grade: 5
+  author: zabolotnyi
+- id: S6
+  file: 8-klas-ukrmova-avramenko-2025_s4560
+  type: textbook
+  title: § 13. Словосполучення і речення як одиниці синтаксису. Ознаки словосполучення
+  page: 32
+  grade: 8
+- id: S7
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4696
+  type: textbook
+  title: СИНТАКСИС. ПУНКТУАЦІЯ
+  page: 42
+  grade: 8
+- id: S8
+  file: 5-klas-ukrmova-litvinova-2022_s2383
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Словосполучення
+  page: 189
+  grade: 5
+- id: S10
+  file: 9-klas-ukrajinska-mova-voron-2017_s5146
+  type: textbook
+  title: РОЗБІР ВИГУКУ ЯК ЧАСТИНИ м о в и ПОСЛІДОВНІСТЬ РОЗБОРУ
+  page: 227
+  grade: 9
+- id: S11
+  file: 5-klas-ukrmova-golub-2022_s2330
+  type: textbook
+  title: § 27. Повторення вивченого з графіки в 1–4 класах. Особливості української
+    графіки
+  page: 254
+  grade: 5
+- id: S12
+  file: 8-klas-ukrmova-avramenko-2025_s4565
+  type: textbook
+  title: § 15. –16
+  page: 39
+  grade: 8
+- id: S13
+  file: 9-klas-ukrajinska-mova-voron-2017_s5094
+  type: textbook
+  title: Мовний РОЗБІР. СИНТАКСИЧНИЙ РОЗБІР СКЛАДНОПІДРЯДНОГО РЕЧЕННЯ
+  page: 88
+  grade: 9
+- id: S15
+  file: 10-klas-ukrmova-glazova-2018_s0526
+  type: textbook
+  title: Варіантне наголошування слів в українській мові. Діалектний наголос § 19
+  page: 77
+  grade: 10

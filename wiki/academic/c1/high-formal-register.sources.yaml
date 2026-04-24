@@ -1,0 +1,67 @@
+# Source registry for wiki/academic/c1/high-formal-register.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0322
+  type: textbook
+  title: Сторінка 260
+  grade: 8
+  author: zabolotnyi
+- id: S2
+  file: 8-klas-ukrmova-avramenko-2025_s0166
+  type: textbook
+  title: Сторінка 125
+  grade: 8
+  author: avramenko
+- id: S3
+  file: 10-klas-ukrmova-karaman-2018_s0408
+  type: textbook
+  title: Сторінка 231
+  grade: 10
+  author: karaman
+- id: S5
+  file: 8-klas-ukrmova-avramenko-2025_s0104
+  type: textbook
+  title: Сторінка 81
+  grade: 8
+  author: avramenko
+- id: S6
+  file: wave4-ukrainska-mova-encyclopedia_c0138
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave9-rusanivsky-ist-lit-movy_c0082
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S10
+  file: wave9-shevelov-fonolohiia_c0116
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S11
+  file: wave9-shevelov-fonolohiia_c0117
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S12
+  file: wave4-ukrainska-mova-encyclopedia_c0209
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S13
+  file: wave4-chyzhevsky-istoriia-lit_c0439
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S14
+  file: wave8-hrabovych-do-istoriyi_c0660
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S15
+  file: wave9-rusanivsky-ist-lit-movy_c0339
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.

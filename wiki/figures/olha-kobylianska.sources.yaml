@@ -1,0 +1,25 @@
+# Source registry for wiki/figures/olha-kobylianska.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0453
+  type: textbook
+  title: Ольга Кобилянська  157
+  page: 157
+  grade: 10
+- id: S2
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0457
+  type: textbook
+  title: Ольга Кобилянська. Повість «Людина»  165
+  page: 165
+  grade: 10
+- id: S3
+  file: wave7-krypyakevych-istkult_c0603
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S5
+  file: wikipedia/Земля (повість)
+  type: wikipedia
+  title: Земля (повість)
+  url: https://uk.wikipedia.org/wiki/%D0%97%D0%B5%D0%BC%D0%BB%D1%8F%20%28%D0%BF%D0%BE%D0%B2%D1%96%D1%81%D1%82%D1%8C%29

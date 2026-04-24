@@ -1,0 +1,64 @@
+# Source registry for wiki/grammar/b2/stylistic-connectors.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrmova-zabolotnyi-2017_s0197
+  type: textbook
+  title: Сторінка 141
+  grade: 9
+  author: zabolotnyi
+- id: S2
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0197
+  type: textbook
+  title: Сторінка 141
+  grade: 9
+  author: zabolotnij
+- id: S4
+  file: 5-klas-ukrmova-avramenko-2022_s0014
+  type: textbook
+  title: Сторінка 14
+  grade: 5
+  author: avramenko
+- id: S6
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
+  type: textbook
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
+- id: S7
+  file: 7-klas-ukrmova-avramenko-2024_s3870
+  type: textbook
+  title: § 79. Сполучник як службова частина мови
+  page: 174
+  grade: 7
+- id: S8
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1183
+  type: textbook
+  title: § 50. СТИЛІСТИЧНІ ЗАСОБИ СЛОВОТВОРУ
+  page: 177
+  grade: 11
+- id: S9
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1196
+  type: textbook
+  title: § 45. Стилістичне використання синонімів, антонімів і паронімів. . . . .
+    . . . . . . . . . . . . . 154
+  page: 207
+  grade: 11
+- id: S10
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5162
+  type: textbook
+  title: Синтаксис. Пунктуацiя
+  page: 25
+  grade: 9
+- id: S12
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5168
+  type: textbook
+  title: § 9. СКЛАДНЕ РЕЧЕННЯ ТА ЙОГО ОЗНАКИ
+  page: 48
+  grade: 9
+- id: S13
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5229
+  type: textbook
+  title: § 9. СКЛАДНЕ РЕЧЕННЯ ТА ЙОГО ОЗНАКИ
+  page: 48
+  grade: 9

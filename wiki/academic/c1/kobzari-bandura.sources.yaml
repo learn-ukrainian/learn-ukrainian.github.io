@@ -1,0 +1,44 @@
+# Source registry for wiki/academic/c1/kobzari-bandura.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-ukrlit-avramenko-2025_s0108
+  type: textbook
+  title: Сторінка 62
+  grade: 8
+  author: avramenko
+- id: S6
+  file: wave7-popovych-narys-kultury_c0316
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c3492
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave7-antonovych-kultura_c0657
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c2296
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave10-shevchenkivsky-slovnyk_c0889
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S13
+  file: wave9-ohiyenko-ist-lit-movy_c0000
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S14
+  file: wave7-antonovych-kultura_c0655
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.

@@ -7,6 +7,12 @@ sources:
   title: Мовні норми
   page: 15
   grade: 10
+- id: S2
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0755
+  type: textbook
+  title: Мовні норми
+  page: 15
+  grade: 10
 - id: S3
   file: 8-klas-ukrmova-zabolotnyi-2025_s4694
   type: textbook
@@ -31,9 +37,3 @@ sources:
   title: Мова як суспільне явище. Українська мова в Україні
   page: 6
   grade: 10
-- id: S7
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1021
-  type: textbook
-  title: ОСОБЛИВОСТІ СОЦІАЛЬНОЇ ПОЛІТИКИ. ПОВСЯКДЕННЕ ЖИТТЯ. АНТИРЕЛІГІЙНІ. КАМПАНІЇ
-  page: 88
-  grade: 11

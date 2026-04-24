@@ -1,0 +1,23 @@
+# Source registry for wiki/figures/panteleimon-kulish.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0052
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave8-fdm-biobibliohrafichnyi_c0092
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c4079
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wikipedia/Куліш Пантелеймон Олександрович
+  type: wikipedia
+  title: Куліш Пантелеймон Олександрович
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D1%83%D0%BB%D1%96%D1%88%20%D0%9F%D0%B0%D0%BD%D1%82%D0%B5%D0%BB%D0%B5%D0%B9%D0%BC%D0%BE%D0%BD%20%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D0%B8%D1%87

@@ -7,6 +7,12 @@ sources:
   title: § 16. ОСНОВНІ СПОСОБИ СЛОВОТВОРЕННЯ
   page: 57
   grade: 6
+- id: S2
+  file: 6-klas-ukrmova-avramenko-2023_s3084
+  type: textbook
+  title: § 70. Творення прикметників
+  page: 137
+  grade: 6
 - id: S3
   file: 11-klas-ukrajinska-mova-avramenko-2019_s1183
   type: textbook
@@ -36,4 +42,10 @@ sources:
   type: textbook
   title: § 15. Основні способи словотворення
   page: 80
+  grade: 6
+- id: S9
+  file: 6-klas-ukrmova-golub-2023_s3248
+  type: textbook
+  title: § 17. Сила любові
+  page: 43
   grade: 6

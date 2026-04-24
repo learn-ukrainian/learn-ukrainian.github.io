@@ -1,0 +1,70 @@
+# Source registry for wiki/grammar/b2/syntactic-stylistic-devices.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S3
+  file: 11-klas-ukrajinska-mova-voron-2019_s0243
+  type: textbook
+  title: Сторінка 160
+  grade: 11
+  author: voron
+- id: S4
+  file: 10-klas-ukrmova-glazova-2018_s0233
+  type: textbook
+  title: Сторінка 168
+  grade: 10
+  author: glazova
+- id: S5
+  file: 5-klas-ukrmova-litvinova-2022_s0280
+  type: textbook
+  title: Сторінка 275
+  grade: 5
+  author: litvinova
+- id: S6
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1186
+  type: textbook
+  title: § 52. СИНТАКСИЧНІ ОДИНИЦІ В РІЗНИХ СТИЛЯХ
+  page: 186
+  grade: 11
+- id: S8
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1212
+  type: textbook
+  title: § 12. Синтаксична помилка
+  page: 55
+  grade: 11
+- id: S9
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4977
+  type: textbook
+  title: ЛІТЕРАТУРОЗНАВЧИЙ СЛОВНИК
+  page: 330
+  grade: 9
+- id: S10
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1238
+  type: textbook
+  title: Пунктогра5ма (лінгв.) — оформлення речення або його частини за допомо
+  page: 216
+  grade: 11
+- id: S11
+  file: 4-klas-ukrmova-zaharijchuk_s1926
+  type: textbook
+  title: ПРИКМЕТНИК
+  page: 189
+  grade: 4
+- id: S12
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1151
+  type: textbook
+  title: § 19. –20. СИНТАКСИЧНА НОРМА. СКЛАДНІ ВИПАДКИ
+  page: 62
+  grade: 11
+- id: S13
+  file: 8-klas-ukrmova-avramenko-2025_s4577
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 53)
+  page: 53
+  grade: 8
+- id: S14
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1196
+  type: textbook
+  title: § 45. Стилістичне використання синонімів, антонімів і паронімів. . . . .
+    . . . . . . . . . . . . . 154
+  page: 207
+  grade: 11

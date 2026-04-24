@@ -1,0 +1,57 @@
+# Source registry for wiki/grammar/b2/parenthetical-expressions.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S3
+  file: 5-klas-ukrmova-zabolotnyi-2023_s0193
+  type: textbook
+  title: Сторінка 195
+  grade: 5
+  author: zabolotnyi
+- id: S4
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0261
+  type: textbook
+  title: Сторінка 215
+  grade: 8
+  author: zabolotnyi
+- id: S6
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2524
+  type: textbook
+  title: Варіант Б. Складіть і запишіть текст повідомлення для бабусі або
+  page: 195
+  grade: 5
+- id: S7
+  file: 8-klas-ukrmova-avramenko-2025_s4647
+  type: textbook
+  title: § 65. –66
+  page: 139
+  grade: 8
+- id: S8
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1221
+  type: textbook
+  title: § 28. Розділові знаки у простих реченнях,
+  page: 124
+  grade: 11
+- id: S9
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1166
+  type: textbook
+  title: § 34. ВСТАВНІ КОНСТРУКЦІЇ
+  page: 109
+  grade: 11
+- id: S10
+  file: 11-klas-ukrajinska-mova-voron-2019_s1266
+  type: textbook
+  title: § 25. Що спільного між звертаннями і вставними словами? 154
+  page: 131
+  grade: 11
+- id: S11
+  file: 5-klas-ukrmova-avramenko-2022_s2265
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 174)
+  page: 174
+  grade: 5
+- id: S12
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4696
+  type: textbook
+  title: СИНТАКСИС. ПУНКТУАЦІЯ
+  page: 42
+  grade: 8

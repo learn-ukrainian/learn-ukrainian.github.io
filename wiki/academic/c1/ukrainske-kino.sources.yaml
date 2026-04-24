@@ -1,0 +1,71 @@
+# Source registry for wiki/academic/c1/ukrainske-kino.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0106
+  type: textbook
+  title: Сторінка 68
+  grade: 11
+  author: avramenko
+- id: S3
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0420
+  type: textbook
+  title: Сторінка 254
+  grade: 11
+  author: avramenko
+- id: S5
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0271
+  type: textbook
+  title: Сторінка 165
+  grade: 11
+  author: avramenko
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c3410
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: ukrlib-honchar_c0016
+  type: literary
+  title: Олесь Гончар. Довженків світ
+  author: Гончар О.
+- id: S8
+  file: wave7-antonovych-kultura_c0000
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S9
+  file: wave8-chyzhevsky-baroko_c0020
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S10
+  file: wave7-ukrxx-derzhavnist_c0126
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S11
+  file: wave7-popovych-narys-kultury_c1050
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S12
+  file: ukrlib-yanovsky_c0011
+  type: literary
+  title: Юрій Яновський. Голлівуд на березі Чорного моря
+  author: Яновський Ю.
+- id: S13
+  file: ukrlib-bazhan_c0026
+  type: literary
+  title: Микола Бажан. Майстер залізної троянди
+  author: Бажан М.
+- id: S14
+  file: wave7-popovych-narys-kultury_c1032
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S15
+  file: ukrlib-khvylovy_c0031
+  type: literary
+  title: Микола Хвильовий. Думки проти течії
+  author: Хвильовий М.

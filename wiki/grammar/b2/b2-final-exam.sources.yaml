@@ -1,0 +1,63 @@
+# Source registry for wiki/grammar/b2/b2-final-exam.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S3
+  file: 5-klas-ukrmova-litvinova-2022_s0261
+  type: textbook
+  title: Сторінка 256
+  grade: 5
+  author: litvinova
+- id: S5
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0357
+  type: textbook
+  title: Сторінка 289
+  grade: 8
+  author: zabolotnyi
+- id: S6
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5209
+  type: textbook
+  title: Уроки розвитку мовлення (p. 220)
+  page: 220
+  grade: 9
+- id: S9
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1238
+  type: textbook
+  title: Пунктогра5ма (лінгв.) — оформлення речення або його частини за допомо
+  page: 216
+  grade: 11
+- id: S10
+  file: 6-klas-ukrmova-avramenko-2023_s3021
+  type: textbook
+  title: УКРАЇНСЬКА
+  page: 1
+  grade: 6
+- id: S11
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3956
+  type: textbook
+  title: ОЛЕКСАНДР ЗАБОЛОТНИЙ ВІКТОР ЗАБОЛОТНИЙ
+  page: 1
+  grade: 7
+- id: S12
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3385
+  type: textbook
+  title: § 22. ІМЕННИК ЯК ЧАСТИНА МОВИ
+  page: 79
+  grade: 6
+- id: S13
+  file: 10-klas-ukrmova-karaman-2018_s0668
+  type: textbook
+  title: § 56. Іменник
+  page: 141
+  grade: 10
+- id: S14
+  file: 6-klas-ukrmova-golub-2023_s3292
+  type: textbook
+  title: ВАШІ МОВНІ ОБОВ’ЯЗКИ
+  page: 257
+  grade: 6
+- id: S15
+  file: 5-klas-ukrmova-avramenko-2022_s2175
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 10)
+  page: 10
+  grade: 5

@@ -1,0 +1,27 @@
+# Source registry for wiki/grammar/b2/reflexive-passive.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrmova-karaman-2018_s0315
+  type: textbook
+  title: Сторінка 176
+  grade: 10
+  author: karaman
+- id: S2
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0137
+  type: textbook
+  title: Сторінка 96
+  grade: 11
+  author: glazova
+- id: S6
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1157
+  type: textbook
+  title: § 25. ПАСИВНІ КОНСТРУКЦІЇ
+  page: 81
+  grade: 11
+- id: S11
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1216
+  type: textbook
+  title: Для позначення часу дії прийменники по — в (у) так само відрізняються
+  page: 84
+  grade: 11

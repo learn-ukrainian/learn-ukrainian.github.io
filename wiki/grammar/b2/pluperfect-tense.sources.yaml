@@ -1,0 +1,56 @@
+# Source registry for wiki/grammar/b2/pluperfect-tense.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: 6-klas-istoriia-shchupak-2023_s0125
+  type: textbook
+  title: Сторінка 123
+  grade: 6
+  author: shchupak
+- id: S8
+  file: 10-klas-ukrmova-karaman-2018_s0686
+  type: textbook
+  title: § 73. Часи дієслів, їх творення
+  page: 183
+  grade: 10
+- id: S9
+  file: 7-klas-ukrmova-litvinova-2024_s3912
+  type: textbook
+  title: § 9. Часи діє слова
+  page: 41
+  grade: 7
+- id: S10
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1902
+  type: textbook
+  title: 'Неозначена форма: … . Минулий час: … . Теперішній'
+  page: 107
+  grade: 4
+- id: S11
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1457
+  type: textbook
+  title: І. Випиɲіть споɱатку складнопідрядні реɱення а потім ± ɛезсполуɱникові. Ви
+  page: 193
+  grade: 11
+- id: S12
+  file: wave7-entsyklopediia-ukrainoznavstva_c0786
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S13
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5157
+  type: textbook
+  title: Повторення вивченого (p. 13)
+  page: 13
+  grade: 9
+- id: S14
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5218
+  type: textbook
+  title: Повторення вивченого (p. 13)
+  page: 13
+  grade: 9
+- id: S15
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1891
+  type: textbook
+  title: § 39. Змінювання дієслів за часами
+  page: 122
+  grade: 4

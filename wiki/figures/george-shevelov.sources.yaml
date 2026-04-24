@@ -1,0 +1,8 @@
+# Source registry for wiki/figures/george-shevelov.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wikipedia/Шевельов Юрій Володимирович
+  type: wikipedia
+  title: Шевельов Юрій Володимирович
+  url: https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D0%B5%D0%BB%D1%8C%D0%BE%D0%B2%20%D0%AE%D1%80%D1%96%D0%B9%20%D0%92%D0%BE%D0%BB%D0%BE%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B8%D1%87

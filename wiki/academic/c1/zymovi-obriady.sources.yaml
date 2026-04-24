@@ -1,0 +1,49 @@
+# Source registry for wiki/academic/c1/zymovi-obriady.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S3
+  file: 6-klas-ukrlit-avramenko-2023_s0018
+  type: textbook
+  title: Сторінка 18
+  grade: 6
+  author: avramenko
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0600
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave7-istkult-t2-xiii-xvii_c0296
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c0328
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: wave4-hrushevsky-istlit_c0255
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S12
+  file: wave7-entsyklopediia-ukrainoznavstva_c0596
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S13
+  file: wave7-istkult-t2-xiii-xvii_c0326
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S14
+  file: wave7-istkult-t2-xiii-xvii_c0612
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S15
+  file: wave7-istkult-t2-xiii-xvii_c0131
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив

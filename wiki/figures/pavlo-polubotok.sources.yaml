@@ -1,0 +1,37 @@
+# Source registry for wiki/figures/pavlo-polubotok.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-istoria-ukr-galimov-2025_s4087
+  type: textbook
+  title: Розділ IV. Козацька Україна наприкінці 50‑х рр. XVII — на початку XVIII ст.
+    212
+  page: 212
+  grade: 8
+- id: S2
+  file: 8-klas-istoriya-ukr-gisem-2021_s4346
+  type: textbook
+  title: § 27. Посилення колоніальної політики Російської імперії. Ліквідація гетьманату
+    155
+  page: 155
+  grade: 8
+- id: S6
+  file: wave4-ohloblyn-mazepa_c0297
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c1062
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave10-shevchenko-tvory-t1_c0421
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S9
+  file: https://www.youtube.com/watch?v=O-elv188ZEE
+  type: external
+  title: Скарб, про який говорила вся Україна! Чи є тут правда?
+  url: https://www.youtube.com/watch?v=O-elv188ZEE

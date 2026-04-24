@@ -1,0 +1,81 @@
+# Source registry for wiki/grammar/b2/numeral-declension-compound-numbers.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 6-klas-ukrmova-litvinova-2023_s0234
+  type: textbook
+  title: Сторінка 227
+  grade: 6
+  author: litvinova
+- id: S3
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0046
+  type: textbook
+  title: Сторінка 35
+  grade: 11
+  author: glazova
+- id: S4
+  file: 6-klas-ukrmova-litvinova-2023_s0235
+  type: textbook
+  title: Сторінка 228
+  grade: 6
+  author: litvinova
+- id: S5
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0053
+  type: textbook
+  title: Сторінка 37
+  grade: 11
+  author: avramenko
+- id: S6
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3397
+  type: textbook
+  title: § 55. ВІДМІНЮВАННЯ ТА НАПИСАННЯ
+  page: 179
+  grade: 6
+- id: S7
+  file: 10-klas-ukrmova-karaman-2018_s0682
+  type: textbook
+  title: § 68. Відмінювання числівників
+  page: 171
+  grade: 10
+- id: S8
+  file: 6-klas-ukrmova-litvinova-2023_s3363
+  type: textbook
+  title: § 49. Розряди числівників за будовою
+  page: 227
+  grade: 6
+- id: S9
+  file: 6-klas-ukrmova-avramenko-2023_s3094
+  type: textbook
+  title: § 80. –81. Відмінювання числівників на позначення цілих чисел
+  page: 157
+  grade: 6
+- id: S10
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1145
+  type: textbook
+  title: § 12. –13. ВІДМІНЮВАННЯ ЧИСЛІВНИКІВ
+  page: 37
+  grade: 11
+- id: S11
+  file: 10-klas-ukrmova-karaman-2018_s0679
+  type: textbook
+  title: § 66. Числівник як частина мови
+  page: 167
+  grade: 10
+- id: S12
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1144
+  type: textbook
+  title: Числівник. Складні випадки узгодження числівника
+  page: 35
+  grade: 11
+- id: S13
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1143
+  type: textbook
+  title: § 11. ЧИСЛІВНИК. СКЛАДНІ ВИПАДКИ УЗГОДЖЕННЯ
+  page: 34
+  grade: 11
+- id: S15
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1208
+  type: textbook
+  title: § 7. Складні ви5 падки відмінювання числівників
+  page: 33
+  grade: 11

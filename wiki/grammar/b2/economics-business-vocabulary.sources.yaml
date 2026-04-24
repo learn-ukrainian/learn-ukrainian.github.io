@@ -1,0 +1,66 @@
+# Source registry for wiki/grammar/b2/economics-business-vocabulary.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S3
+  file: 8-klas-ukrmova-avramenko-2025_s0146
+  type: textbook
+  title: Сторінка 112
+  grade: 8
+  author: avramenko
+- id: S5
+  file: 10-klas-ukrmova-karaman-2018_s0049
+  type: textbook
+  title: Сторінка 28
+  grade: 10
+  author: karaman
+- id: S6
+  file: 11-klas-istoriya-ukr-gisem-2024_s0959
+  type: textbook
+  title: § 24. Економічний розвиток України в 1992—2005 рр. 201
+  page: 203
+  grade: 11
+- id: S7
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1229
+  type: textbook
+  title: § 40. Стилістичне забарвлення лексики. Книжна й розмовна лексика. Оцінна
+    лексика
+  page: 169
+  grade: 11
+- id: S9
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4713
+  type: textbook
+  title: Немає їй ні кінця ні краю (П. Перебийніс). 8. Надворі хмариться чи
+  page: 155
+  grade: 8
+- id: S10
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1065
+  type: textbook
+  title: CУСПІЛЬНО-ПОЛІТИЧНЕ ТА СОЦІАЛЬНО ЕКОНОМІЧНЕ СТАНОВИЩЕ УКРАЇНИ
+  page: 291
+  grade: 11
+- id: S11
+  file: wave7-ukrxx-derzhavnist_c0403
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S12
+  file: 11-klas-istoriya-ukr-gisem-2024_s0897
+  type: textbook
+  title: § 3. Внутрішньополітична та економічна ситуація в урСр
+  page: 19
+  grade: 11
+- id: S13
+  file: wave7-dzyuba-internatsionalizm_c0319
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+- id: S14
+  file: wave7-ukrxx-derzhavnist_c0405
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S15
+  file: wave7-ukrxx-derzhavnist_c0404
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив

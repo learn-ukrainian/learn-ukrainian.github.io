@@ -1,0 +1,49 @@
+# Source registry for wiki/folk/tradition/holosinnya.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S4
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0092
+  type: textbook
+  title: Сторінка 67
+  grade: 11
+  author: glazova
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c0591
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0593
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wikipedia/Голосіння
+  type: wikipedia
+  title: Голосіння
+  url: https://uk.wikipedia.org/wiki/%D0%93%D0%BE%D0%BB%D0%BE%D1%81%D1%96%D0%BD%D0%BD%D1%8F
+- id: S9
+  file: wave4-hrushevsky-istlit_c0215
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S10
+  file: wave12-hrushevsky-iu-odnotom_c0220
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S11
+  file: wave4-hrushevsky-istlit_c0212
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S13
+  file: wave8-ukr-lit-entsyklopediia_c2592
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S14
+  file: wave7-entsyklopediia-ukrainoznavstva_c0592
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

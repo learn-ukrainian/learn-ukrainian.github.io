@@ -1,0 +1,14 @@
+# Source registry for wiki/figures/andrii-chaikovskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrlit-mishhenko-2015_s3650
+  type: textbook
+  title: розділ 2. АНДРІЙ ЧАЙКОВСЬКИЙ
+  page: 78
+  grade: 7
+- id: S5
+  file: wave5-humanisty-vidrodzennia_c0013
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія

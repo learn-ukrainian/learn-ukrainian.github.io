@@ -1,0 +1,83 @@
+# Source registry for wiki/academic/c1/literature-review.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0281
+  type: textbook
+  title: Сторінка 197
+  grade: 11
+  author: avramenko
+- id: S2
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0437
+  type: textbook
+  title: Сторінка 331
+  grade: 9
+  author: avramenko
+- id: S3
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0283
+  type: textbook
+  title: Сторінка 198
+  grade: 11
+  author: avramenko
+- id: S4
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0018
+  type: textbook
+  title: Сторінка 10
+  grade: 10
+  author: borzenko
+- id: S5
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0336
+  type: textbook
+  title: Сторінка 215
+  grade: 11
+  author: zabolotnyi
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c1935
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0006
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave4-ohloblyn-mazepa_c0036
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+- id: S9
+  file: wave8-isaievych-knyhovydannia_c0005
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S10
+  file: wave7-heroes-ukr-kultura_c0009
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S11
+  file: wave7-lytvynov-renesans-humanizm_c0259
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+- id: S12
+  file: wave7-thompson-trubadury_c0021
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S13
+  file: wave8-isaievych-knyhovydannia_c0573
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S14
+  file: wave8-chyzhevsky-baroko_c0290
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S15
+  file: wave8-hensiorsky-gvl-mova_c0172
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.

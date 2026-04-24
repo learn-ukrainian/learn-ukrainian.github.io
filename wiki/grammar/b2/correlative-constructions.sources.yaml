@@ -1,0 +1,15 @@
+# Source registry for wiki/grammar/b2/correlative-constructions.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S6
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
+  type: textbook
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
+- id: S8
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5034
+  type: textbook
+  title: Синтаксис. Пунктуація. ПОВТОРЕННЯ
+  page: 52
+  grade: 9

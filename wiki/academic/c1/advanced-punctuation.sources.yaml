@@ -1,0 +1,77 @@
+# Source registry for wiki/academic/c1/advanced-punctuation.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-mova-voron-2019_s0243
+  type: textbook
+  title: Сторінка 160
+  grade: 11
+  author: voron
+- id: S2
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0296
+  type: textbook
+  title: Сторінка 206
+  grade: 11
+  author: avramenko
+- id: S4
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0261
+  type: textbook
+  title: Сторінка 215
+  grade: 8
+  author: zabolotnyi
+- id: S5
+  file: 5-klas-ukrmova-litvinova-2022_s0238
+  type: textbook
+  title: Сторінка 233
+  grade: 5
+  author: litvinova
+- id: S6
+  file: wave4-ukrainska-mova-encyclopedia_c0089
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S7
+  file: wave9-pravopys-2015_c0003
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S8
+  file: wave9-pravopys-2015_c0173
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S9
+  file: wave9-pravopys-2015_c0008
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S10
+  file: wave9-pravopys-2015_c0175
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S11
+  file: wave9-pravopys-2015_c0177
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S12
+  file: wave4-nimchuk-movoznavstvo_c0125
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S13
+  file: wave9-pravopys-2015_c0159
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S14
+  file: wave9-pravopys-2015_c0162
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S15
+  file: wave9-pravopys-2015_c0170
+  type: literary
+  title: Український правопис 2015
+  author: НАН України

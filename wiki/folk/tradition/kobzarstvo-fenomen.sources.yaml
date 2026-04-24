@@ -1,0 +1,32 @@
+# Source registry for wiki/folk/tradition/kobzarstvo-fenomen.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-ukrlit-avramenko-2025_s0108
+  type: textbook
+  title: Сторінка 62
+  grade: 8
+  author: avramenko
+- id: S2
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s0368
+  type: textbook
+  title: Сторінка 215
+  grade: 9
+  author: mishhenko
+- id: S4
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s0038
+  type: textbook
+  title: Сторінка 40
+  grade: 4
+  author: varzatska
+- id: S5
+  file: 2-klas-ukrmova-vashulenko-2019-1_s0049
+  type: textbook
+  title: Сторінка 51
+  grade: 2
+  author: vashulenko
+- id: S6
+  file: wikipedia/Кобзар
+  type: wikipedia
+  title: Кобзар
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80

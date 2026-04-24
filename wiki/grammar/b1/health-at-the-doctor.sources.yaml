@@ -1,0 +1,33 @@
+# Source registry for wiki/grammar/b1/health-at-the-doctor.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0278
+  type: textbook
+  title: ПРАКТИЧНА РИТОРИКА СПОСТЕРЕЖЕННЯ (p. 68)
+  page: 68
+  grade: 10
+- id: S2
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0337
+  type: textbook
+  title: § 4. СЛОВО І КОНТЕКСТ. СЛОВОВЖИВАННЯ
+  page: 18
+  grade: 10
+- id: S4
+  file: 4-klas-ukrmova-zaharijchuk_s1908
+  type: textbook
+  title: Бèло — давній сигнальний інструмент, виготовлений
+  page: 8
+  grade: 4
+- id: S6
+  file: 7-klas-ukrmova-avramenko-2024_s3830
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 92)
+  page: 92
+  grade: 7
+- id: S7
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3385
+  type: textbook
+  title: § 22. ІМЕННИК ЯК ЧАСТИНА МОВИ
+  page: 79
+  grade: 6

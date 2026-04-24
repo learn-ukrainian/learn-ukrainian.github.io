@@ -1,0 +1,75 @@
+# Source registry for wiki/grammar/b2/proverbs-work-wisdom-character.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 5-klas-ukrlit-avramenko-2022_s0030
+  type: textbook
+  title: Сторінка 29
+  grade: 5
+  author: avramenko
+- id: S2
+  file: 3-klas-ukrainska-mova-savchenko-2020-2_s0055
+  type: textbook
+  title: Сторінка 56
+  grade: 3
+  author: savchenko
+- id: S3
+  file: 5-klas-ukrlit-zabolotnyi-2022_s0034
+  type: textbook
+  title: Сторінка 31
+  grade: 5
+  author: zabolotnyi
+- id: S4
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0143
+  type: textbook
+  title: Сторінка 128
+  grade: 8
+  author: zabolotnyi
+- id: S6
+  file: 5-klas-ukrmova-litvinova-2022_s2355
+  type: textbook
+  title: Фразеологія. Різновиди фразеологічних одиниць
+  page: 96
+  grade: 5
+- id: S7
+  file: 5-klas-ukrlit-zabolotnyi-2022_s1996
+  type: textbook
+  title: НЕВИЧЕРПНІ ДЖЕРЕЛА МУДРОСТІ (p. 34)
+  page: 34
+  grade: 5
+- id: S9
+  file: 8-klas-ukrmova-avramenko-2025_s4616
+  type: textbook
+  title: § 45. Узагальнено-особові речення
+  page: 100
+  grade: 8
+- id: S10
+  file: 8-klas-ukrlit-zabolotnyi-2025_s4513
+  type: textbook
+  title: ЗÉРНА ІСТИНИ В БАЙКАХ І ГУМОРЕСКАХ (p. 227)
+  page: 227
+  grade: 8
+- id: S11
+  file: 5-klas-ukrmova-golub-2022_s2302
+  type: textbook
+  title: Присудок — головний член речення,
+  page: 108
+  grade: 5
+- id: S13
+  file: 11-klas-ukrajinska-mova-voron-2019_s1267
+  type: textbook
+  title: ІІ «Навчання без роздумів марне». Складіть невеликий усний
+  page: 142
+  grade: 11
+- id: S14
+  file: 3-klas-ukrainska-mova-savchenko-2020-2_s1680
+  type: textbook
+  title: Народні пісні мають форму вірша. За змістом вони
+  page: 52
+  grade: 3
+- id: S15
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4929
+  type: textbook
+  title: УСНА НАРОДНА ТВОРЧІСТЬ РОДИННО-ПОБУТОВІ ПІСНІ
+  page: 5
+  grade: 9

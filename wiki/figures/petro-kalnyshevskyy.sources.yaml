@@ -1,0 +1,50 @@
+# Source registry for wiki/figures/petro-kalnyshevskyy.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-kohut-tsentralizm_c0255
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S2
+  file: wave7-holobutsky-zaporizhzhia_c0704
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S3
+  file: wave7-holobutsky-zaporizhzhia_c0703
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S4
+  file: wave7-holobutsky-zaporizhzhia_c0706
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S5
+  file: wave7-holobutsky-zaporizhzhia_c0702
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S6
+  file: 8-klas-istoriya-ukr-gisem-2021_s4351
+  type: textbook
+  title: § 29. Південна Україна. Ліквідація Запорозької Січі 163
+  page: 163
+  grade: 8
+- id: S8
+  file: 8-klas-istoria-ukr-galimov-2025_s4106
+  type: textbook
+  title: Штурм Хаджибея. Художник П. Пархет. 1954 р. Корогва
+  page: 241
+  grade: 8
+- id: S9
+  file: wikipedia/Історія Російської імперії
+  type: wikipedia
+  title: Історія Російської імперії
+  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D1%96%D1%8F%20%D0%A0%D0%BE%D1%81%D1%96%D0%B9%D1%81%D1%8C%D0%BA%D0%BE%D1%97%20%D1%96%D0%BC%D0%BF%D0%B5%D1%80%D1%96%D1%97
+- id: S10
+  file: wave7-holobutsky-zaporizhzhia_c0092
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.

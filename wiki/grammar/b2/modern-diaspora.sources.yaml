@@ -1,0 +1,45 @@
+# Source registry for wiki/grammar/b2/modern-diaspora.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 5-klas-istoriya-schupak-2022_s0183
+  type: textbook
+  title: Сторінка 182
+  grade: 5
+  author: schupak
+- id: S2
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s0555
+  type: textbook
+  title: Сторінка 304
+  grade: 11
+  author: hlibovska
+- id: S3
+  file: 6-klas-istoriia-shchupak-2023_s0244
+  type: textbook
+  title: Сторінка 240
+  grade: 6
+  author: shchupak
+- id: S6
+  file: 11-klas-ukrajinska-mova-voron-2019_s1244
+  type: textbook
+  title: ІІ «Уява охоплює весь світ». Складіть усний роздум за другим
+  page: 17
+  grade: 11
+- id: S8
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1062
+  type: textbook
+  title: Прапор СНД. ПРАКТИЧНА РОБОТА № 5
+  page: 270
+  grade: 11
+- id: S9
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1065
+  type: textbook
+  title: CУСПІЛЬНО-ПОЛІТИЧНЕ ТА СОЦІАЛЬНО ЕКОНОМІЧНЕ СТАНОВИЩЕ УКРАЇНИ
+  page: 291
+  grade: 11
+- id: S10
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0177
+  type: textbook
+  title: Геополітика — політологічна концеп
+  page: 235
+  grade: 10

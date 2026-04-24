@@ -13,6 +13,12 @@ sources:
   title: § 5. Інфінітив
   page: 29
   grade: 7
+- id: S3
+  file: 5-klas-ukrmova-golub-2022_s2304
+  type: textbook
+  title: Мої досягнення сьогодні — це … . Мені важливо було дізна
+  page: 124
+  grade: 5
 - id: S4
   file: 6-klas-ukrmova-litvinova-2023_s3323
   type: textbook
@@ -26,9 +32,33 @@ sources:
     ТЕКСТУ
   page: 245
   grade: 8
+- id: S6
+  file: 9-klas-ukrajinska-mova-voron-2017_s5100
+  type: textbook
+  title: Мовний РОЗБІР. СИНТАКСИЧНИЙ РОЗБІР СКЛАДНОПІДРЯДНОГО
+  page: 99
+  grade: 9
+- id: S7
+  file: 3-klas-ukrainska-mova-savchuk-2020-2_s1731
+  type: textbook
+  title: ЛІТЕРАТУРНІ КАЗКИ УКРАЇНСЬКИХ І ЗАРУБІЖНИХ ПИСЬМЕННИКІВ
+  page: 77
+  grade: 3
+- id: S8
+  file: https://www.youtube.com/watch?v=xRPqZ8i7kxs
+  type: external
+  title: ULP 3-97 Плани на зимові канікули –  Plans for winter holidays + Future tense
+    of the verbs of motion
+  url: https://www.youtube.com/watch?v=xRPqZ8i7kxs
 - id: S9
   file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0356
   type: textbook
   title: Морфологічна норма (p. 144)
   page: 144
   grade: 10
+- id: S10
+  file: 6-klas-ukrmova-golub-2023_s3243
+  type: textbook
+  title: § 5. Цінувати себе — це важливо
+  page: 14
+  grade: 6

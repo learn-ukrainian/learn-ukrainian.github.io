@@ -1,0 +1,57 @@
+# Source registry for wiki/grammar/b2/capstone-prezentatsiya.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-mova-voron-2019_s0048
+  type: textbook
+  title: Сторінка 34
+  grade: 11
+  author: voron
+- id: S2
+  file: 11-klas-ukrajinska-mova-voron-2019_s0243
+  type: textbook
+  title: Сторінка 160
+  grade: 11
+  author: voron
+- id: S3
+  file: 11-klas-ukrajinska-mova-voron-2019_s0219
+  type: textbook
+  title: Сторінка 145
+  grade: 11
+  author: voron
+- id: S4
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0169
+  type: textbook
+  title: Сторінка 120
+  grade: 11
+  author: glazova
+- id: S7
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0277
+  type: textbook
+  title: ПРАКТИЧНА РИТОРИКА (p. 64)
+  page: 64
+  grade: 10
+- id: S8
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1213
+  type: textbook
+  title: Риторичні фігури. Риторичне запитання, риторичне звертання
+  page: 67
+  grade: 11
+- id: S9
+  file: 11-klas-ukrajinska-mova-voron-2019_s1247
+  type: textbook
+  title: Нема просто слова. Воно або прокляття або
+  page: 33
+  grade: 11
+- id: S10
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0345
+  type: textbook
+  title: Практична риторика (p. 62)
+  page: 62
+  grade: 10
+- id: S11
+  file: 10-klas-ukrmova-glazova-2018_s0529
+  type: textbook
+  title: Текст як одиниця спілкування. Етапи підготовки тексту виступу
+  page: 83
+  grade: 10

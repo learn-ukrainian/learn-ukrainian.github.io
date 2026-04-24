@@ -1,0 +1,77 @@
+# Source registry for wiki/academic/c1/podillia-ta-volyn.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-istoria-ukr-galimov-2025_s0003
+  type: textbook
+  title: Сторінка 4
+  grade: 8
+  author: galimov
+- id: S3
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s0070
+  type: textbook
+  title: Сторінка 45
+  grade: 9
+  author: mishhenko
+- id: S4
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0360
+  type: textbook
+  title: Сторінка 188
+  grade: 10
+  author: gisem
+- id: S5
+  file: 10-klas-ukrmova-karaman-2018_s0149
+  type: textbook
+  title: Сторінка 84
+  grade: 10
+  author: karaman
+- id: S6
+  file: wave9-shevelov-fonolohiia_c0042
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S7
+  file: wave7-istkult-t2-xiii-xvii_c0035
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S8
+  file: wave7-istkult-t2-xiii-xvii_c0036
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
+  file: wave7-popovych-narys-kultury_c0012
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S10
+  file: wave8-isaievych-knyhovydannia_c0112
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S11
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t1_c0022
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 1: До половини XVII століття'
+  author: Дорошенко Д.
+- id: S12
+  file: wave9-rusanivsky-ist-lit-movy_c0063
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S13
+  file: wave8-isaievych-knyhovydannia_c0005
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S14
+  file: wave7-popovych-narys-kultury_c1180
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S15
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0537
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.

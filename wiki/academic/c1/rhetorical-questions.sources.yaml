@@ -1,0 +1,68 @@
+# Source registry for wiki/academic/c1/rhetorical-questions.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-mova-voron-2019_s0219
+  type: textbook
+  title: Сторінка 145
+  grade: 11
+  author: voron
+- id: S2
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  type: textbook
+  title: Сторінка 55
+  grade: 10
+  author: gisem
+- id: S3
+  file: 11-klas-ukrajinska-mova-voron-2019_s0048
+  type: textbook
+  title: Сторінка 34
+  grade: 11
+  author: voron
+- id: S4
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0092
+  type: textbook
+  title: Сторінка 67
+  grade: 11
+  author: glazova
+- id: S5
+  file: 10-klas-ukrmova-karaman-2018_s0474
+  type: textbook
+  title: Сторінка 264
+  grade: 10
+  author: karaman
+- id: S6
+  file: wave10-shevchenkivsky-slovnyk_c1721
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S7
+  file: wave8-masliuk-poetyky-rytoryky_c0135
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S8
+  file: wave8-masliuk-poetyky-rytoryky_c0089
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c1451
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c1081
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S11
+  file: wave8-chyzhevsky-baroko_c0402
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S14
+  file: wave8-masliuk-poetyky-rytoryky_c0148
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.

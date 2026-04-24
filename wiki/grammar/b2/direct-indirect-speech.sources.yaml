@@ -1,0 +1,81 @@
+# Source registry for wiki/grammar/b2/direct-indirect-speech.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-mova-voron-2017_s0278
+  type: textbook
+  title: Сторінка 214
+  grade: 9
+  author: voron
+- id: S2
+  file: 11-klas-ukrajinska-mova-voron-2019_s0346
+  type: textbook
+  title: Сторінка 223
+  grade: 11
+  author: voron
+- id: S3
+  file: 11-klas-ukrajinska-mova-voron-2019_s0345
+  type: textbook
+  title: Сторінка 223
+  grade: 11
+  author: voron
+- id: S4
+  file: 11-klas-ukrajinska-mova-voron-2019_s0343
+  type: textbook
+  title: Сторінка 221
+  grade: 11
+  author: voron
+- id: S5
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0030
+  type: textbook
+  title: Сторінка 21
+  grade: 9
+  author: avramenko
+- id: S6
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5163
+  type: textbook
+  title: § 4. ПРЯМА МОВА
+  page: 26
+  grade: 9
+- id: S7
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5224
+  type: textbook
+  title: § 4. ПРЯМА МОВА
+  page: 26
+  grade: 9
+- id: S8
+  file: 9-klas-ukrajinska-mova-voron-2017_s5138
+  type: textbook
+  title: СПОСОБИ ПЕРЕДАЧІ ЧУЖОГО МОВЛЕННЯ
+  page: 214
+  grade: 9
+- id: S11
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5026
+  type: textbook
+  title: § 7. Непряма мова
+  page: 26
+  grade: 9
+- id: S12
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5165
+  type: textbook
+  title: § 6. ЦИТАТА ЯК СПОСІБ ПЕРЕДАЧІ
+  page: 34
+  grade: 9
+- id: S13
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5226
+  type: textbook
+  title: § 6. ЦИТАТА ЯК СПОСІБ ПЕРЕДАЧІ
+  page: 34
+  grade: 9
+- id: S14
+  file: 5-klas-ukrmova-litvinova-2022_s2398
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Пряма мова . Розділові знаки в реченнях
+  page: 241
+  grade: 5
+- id: S15
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5164
+  type: textbook
+  title: Пряма й непряма мова (p. 27)
+  page: 27
+  grade: 9

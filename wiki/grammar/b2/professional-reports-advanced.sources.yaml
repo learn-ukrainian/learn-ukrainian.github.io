@@ -1,0 +1,45 @@
+# Source registry for wiki/grammar/b2/professional-reports-advanced.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S3
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0169
+  type: textbook
+  title: Сторінка 120
+  grade: 11
+  author: glazova
+- id: S6
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4734
+  type: textbook
+  title: ТЕМА 11. ПОВÒОÐÅÍÍß ВÈВ×ÅÍОÃО. ПРО ОФІЦІЙНО-ДІЛОВИЙ СТИЛЬ МОВЛЕННЯ
+  page: 260
+  grade: 8
+- id: S7
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4748
+  type: textbook
+  title: Тема 10. Особливості будови опису місцевості. Стислий письмовий
+  page: 291
+  grade: 8
+- id: S9
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1454
+  type: textbook
+  title: Стилістична норма
+  page: 182
+  grade: 11
+- id: S10
+  file: 6-klas-ukrmova-avramenko-2023_s3031
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 22)
+  page: 22
+  grade: 6
+- id: S11
+  file: 7-klas-ukrmova-avramenko-2024_s3791
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 17)
+  page: 17
+  grade: 7
+- id: S13
+  file: 9-klas-ukrajinska-mova-voron-2017_s5131
+  type: textbook
+  title: II. Перекладіть текст українською мовою і запишіть. Зробіть морфологічний
+  page: 189
+  grade: 9

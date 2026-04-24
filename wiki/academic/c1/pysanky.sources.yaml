@@ -1,0 +1,38 @@
+# Source registry for wiki/academic/c1/pysanky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c0686
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0716
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S9
+  file: wave7-popovych-narys-kultury_c0058
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S10
+  file: wave7-antonovych-kultura_c0602
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S11
+  file: wave7-popovych-narys-kultury_c0059
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S14
+  file: wave8-ukr-lit-entsyklopediia_c4294
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S15
+  file: wave7-entsyklopediia-ukrainoznavstva_c0726
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

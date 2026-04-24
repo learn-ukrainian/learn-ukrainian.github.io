@@ -1,0 +1,64 @@
+# Source registry for wiki/grammar/b1/people-and-relationships.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrmova-avramenko-2024_s3835
+  type: textbook
+  title: § 45. ОСОБЛИВОСТІ БУДОВИ ОПИСУ
+  page: 103
+  grade: 7
+- id: S2
+  file: 7-klas-ukrmova-avramenko-2024_s3836
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 104)
+  page: 104
+  grade: 7
+- id: S3
+  file: 5-klas-ukrlit-zabolotnyi-2022_s2148
+  type: textbook
+  title: КНИЖКА ВЧИТЬ, ЯК У СВІТІ ЖИТЬ (p. 182)
+  page: 182
+  grade: 5
+- id: S4
+  file: 7-klas-ukrmova-avramenko-2024_s3840
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 109)
+  page: 109
+  grade: 7
+- id: S5
+  file: 7-klas-ukrmova-avramenko-2024_s3844
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 117)
+  page: 117
+  grade: 7
+- id: S6
+  file: 7-klas-ukrmova-avramenko-2024_s3854
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 141)
+  page: 141
+  grade: 7
+- id: S7
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0268
+  type: textbook
+  title: Особистість мовця. Вимоги до оратора. СПОСТЕРЕЖЕННЯ
+  page: 51
+  grade: 10
+- id: S8
+  file: 5-klas-ukrmova-avramenko-2022_s2210
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 71)
+  page: 71
+  grade: 5
+- id: S9
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1231
+  type: textbook
+  title: Стилістичне забарвлення лексики. Книжна й розмовна лексика. Оцінна лексика
+    § 40
+  page: 171
+  grade: 11
+- id: S10
+  file: 6-klas-ukrmova-litvinova-2023_s3329
+  type: textbook
+  title: Розділ 5
+  page: 116
+  grade: 6

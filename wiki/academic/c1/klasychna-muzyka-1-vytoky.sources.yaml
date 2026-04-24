@@ -1,0 +1,66 @@
+# Source registry for wiki/academic/c1/klasychna-muzyka-1-vytoky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0484
+  type: textbook
+  title: Сторінка 267
+  grade: 9
+  author: gisem
+- id: S4
+  file: 8-klas-istoria-ukr-galimov-2025_s0370
+  type: textbook
+  title: Сторінка 227
+  grade: 8
+  author: galimov
+- id: S5
+  file: 7-klas-istoria-ukr-pometun-2024_s0136
+  type: textbook
+  title: Сторінка 112
+  grade: 7
+  author: pometun
+- id: S6
+  file: wave7-popovych-narys-kultury_c0439
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c2226
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave7-entsyklopediia-ukrainoznavstva_c2237
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S9
+  file: wave7-entsyklopediia-ukrainoznavstva_c2258
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S10
+  file: wave7-popovych-narys-kultury_c0440
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S12
+  file: wave7-antonovych-kultura_c0679
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S13
+  file: wave7-ohiyenko-tserka_c0328
+  type: literary
+  title: Огієнко — Українська церква
+  author: Огієнко І.
+- id: S14
+  file: wave7-antonovych-kultura_c0668
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S15
+  file: wave7-popovych-narys-kultury_c0411
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.

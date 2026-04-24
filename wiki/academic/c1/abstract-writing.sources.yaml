@@ -1,0 +1,78 @@
+# Source registry for wiki/academic/c1/abstract-writing.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrmova-karaman-2018_s0451
+  type: textbook
+  title: Сторінка 253
+  grade: 10
+  author: karaman
+- id: S2
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0256
+  type: textbook
+  title: Сторінка 179
+  grade: 11
+  author: glazova
+- id: S3
+  file: 10-klas-ukrmova-glazova-2018_s0086
+  type: textbook
+  title: Сторінка 59
+  grade: 10
+  author: glazova
+- id: S4
+  file: 10-klas-ukrmova-karaman-2018_s0455
+  type: textbook
+  title: Сторінка 255
+  grade: 10
+  author: karaman
+- id: S5
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0283
+  type: textbook
+  title: Сторінка 198
+  grade: 11
+  author: avramenko
+- id: S6
+  file: wave4-ukrainska-mova-encyclopedia_c0077
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c0242
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0134
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0180
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c2287
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S12
+  file: wave8-ukr-lit-entsyklopediia_c4089
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S13
+  file: wave8-hrabovych-do-istoriyi_c0600
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S14
+  file: wave8-hrabovych-do-istoriyi_c0667
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S15
+  file: wave8-masliuk-poetyky-rytoryky_c0170
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.

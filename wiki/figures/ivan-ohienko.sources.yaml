@@ -1,0 +1,18 @@
+# Source registry for wiki/figures/ivan-ohienko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ohdruk-istoriia-drukarstva_c0032
+  type: literary
+  title: Огієнко — Історія українського друкарства (1925)
+  author: Огієнко І.
+- id: S2
+  file: wave9-ohiyenko-ist-lit-movy_c0026
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S3
+  file: wave8-ohdruk-istoriia-drukarstva_c0004
+  type: literary
+  title: Огієнко — Історія українського друкарства (1925)
+  author: Огієнко І.

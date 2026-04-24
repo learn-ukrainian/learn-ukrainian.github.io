@@ -1,0 +1,67 @@
+# Source registry for wiki/academic/c1/essay-writing-practice.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0314
+  type: textbook
+  title: Сторінка 202
+  grade: 11
+  author: zabolotnyi
+- id: S2
+  file: 7-klas-ukrmova-litvinova-2024_s0190
+  type: textbook
+  title: Сторінка 186
+  grade: 7
+  author: litvinova
+- id: S3
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0209
+  type: textbook
+  title: Сторінка 136
+  grade: 9
+  author: avramenko
+- id: S4
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0509
+  type: textbook
+  title: Сторінка 281
+  grade: 9
+  author: gisem
+- id: S6
+  file: wave8-masliuk-poetyky-rytoryky_c0094
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S7
+  file: wave10-shevchenko-tvory-t1_c0081
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S8
+  file: wave8-masliuk-poetyky-rytoryky_c0151
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c3970
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave9-shevelov-fonolohiia_c0098
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S12
+  file: wave8-masliuk-poetyky-rytoryky_c0088
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S13
+  file: wave7-ukrxx-derzhavnist_c0362
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S15
+  file: wave7-istkult-t2-xiii-xvii_c1103
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив

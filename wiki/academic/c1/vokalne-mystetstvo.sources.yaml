@@ -1,0 +1,76 @@
+# Source registry for wiki/academic/c1/vokalne-mystetstvo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrmova-karaman-2018_s0215
+  type: textbook
+  title: Сторінка 120
+  grade: 10
+  author: karaman
+- id: S2
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0196
+  type: textbook
+  title: Сторінка 135
+  grade: 11
+  author: zabolotnyi
+- id: S3
+  file: 11-klas-ukrajinska-mova-glazova-2019_s0020
+  type: textbook
+  title: Сторінка 16
+  grade: 11
+  author: glazova
+- id: S5
+  file: 4-klas-ukrmova-zaharijchuk_s0133
+  type: textbook
+  title: Сторінка 134
+  grade: 4
+- id: S6
+  file: wave7-antonovych-kultura_c0627
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S7
+  file: wave7-popovych-narys-kultury_c0738
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S8
+  file: wave7-antonovych-kultura_c0625
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S9
+  file: wave7-antonovych-kultura_c0631
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S10
+  file: wave4-hrushevsky-istlit_c0035
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S11
+  file: wave12-hrushevsky-iu-odnotom_c0040
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S12
+  file: wave7-antonovych-kultura_c0624
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S13
+  file: wave7-istkult-t2-xiii-xvii_c0872
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S14
+  file: wave7-antonovych-kultura_c0676
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S15
+  file: wave7-entsyklopediia-ukrainoznavstva_c2246
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

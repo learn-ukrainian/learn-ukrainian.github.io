@@ -1,0 +1,58 @@
+# Source registry for wiki/folk/genres/dumy-sotsialno-pobutovi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrajinska-literatura-avramenko-2018_s0077
+  type: textbook
+  title: Сторінка 42
+  grade: 10
+  author: avramenko
+- id: S2
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0231
+  type: textbook
+  title: Сторінка 164
+  grade: 11
+  author: avramenko
+- id: S3
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0145
+  type: textbook
+  title: Сторінка 106
+  grade: 11
+  author: avramenko
+- id: S4
+  file: 6-klas-ukrmova-golub-2023_s0107
+  type: textbook
+  title: Сторінка 105
+  grade: 6
+  author: golub
+- id: S5
+  file: 4-klas-ukrmova-zaharijchuk_s0192
+  type: textbook
+  title: Сторінка 190
+  grade: 4
+- id: S6
+  file: 7-klas-ukrlit-zabolotnyi-2024_s3702
+  type: textbook
+  title: Розділ 1. ОЙ НА ГОРІ ТА ЖЕНЦІ ЖНУТЬ
+  page: 12
+  grade: 7
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0622
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wikipedia/Втеча трьох братів з Азова
+  type: wikipedia
+  title: Втеча трьох братів з Азова
+  url: https://uk.wikipedia.org/wiki/%D0%92%D1%82%D0%B5%D1%87%D0%B0%20%D1%82%D1%80%D1%8C%D0%BE%D1%85%20%D0%B1%D1%80%D0%B0%D1%82%D1%96%D0%B2%20%D0%B7%20%D0%90%D0%B7%D0%BE%D0%B2%D0%B0
+- id: S9
+  file: wikipedia/Дума
+  type: wikipedia
+  title: Дума
+  url: https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BC%D0%B0
+- id: S10
+  file: wikipedia/Українські соціально-побутові пісні
+  type: wikipedia
+  title: Українські соціально-побутові пісні
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96%20%D1%81%D0%BE%D1%86%D1%96%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE-%D0%BF%D0%BE%D0%B1%D1%83%D1%82%D0%BE%D0%B2%D1%96%20%D0%BF%D1%96%D1%81%D0%BD%D1%96

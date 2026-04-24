@@ -1,0 +1,71 @@
+# Source registry for wiki/academic/c1/practice-ii-article-critique.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0100
+  type: textbook
+  title: Сторінка 55
+  grade: 10
+  author: gisem
+- id: S3
+  file: 7-klas-ukrmova-litvinova-2024_s0067
+  type: textbook
+  title: Сторінка 63
+  grade: 7
+  author: litvinova
+- id: S5
+  file: 10-klas-ukrmova-karaman-2018_s0499
+  type: textbook
+  title: Сторінка 271
+  grade: 10
+  author: karaman
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c3970
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: ukrlib-samchuk_c0152
+  type: literary
+  title: Улас Самчук. Плянета Ді-Пі
+  author: Самчук У.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0122
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c1935
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave9-skhidnoslov-hramatyky_c0013
+  type: literary
+  title: Східнослов'янські граматики XVI-XVII ст. (статті)
+  author: Колектив
+- id: S11
+  file: wave8-ukr-lit-entsyklopediia_c3957
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S12
+  file: wave8-fdm-biobibliohrafichnyi_c0142
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S13
+  file: wave11-hrushevsky-iur-t6_c1028
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S14
+  file: wave4-hrushevsky-iur-t1_c0948
+  type: literary
+  title: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+- id: S15
+  file: wave8-ukr-lit-entsyklopediia_c5176
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

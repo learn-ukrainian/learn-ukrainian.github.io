@@ -1,0 +1,64 @@
+# Source registry for wiki/grammar/b1/simplification-consonants.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 5-klas-ukrmova-litvinova-2022_s2379
+  type: textbook
+  title: Фонетика. Графіка. Орфоепія. Орфографія. Спрощення в групах приголосних
+  page: 180
+  grade: 5
+- id: S2
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0291
+  type: textbook
+  title: § 32. СПРОЩЕННЯ ПРИГОЛОСНИХ
+  page: 101
+  grade: 10
+- id: S3
+  file: 10-klas-ukrmova-glazova-2018_s0536
+  type: textbook
+  title: § 28. Спрощення в групах приголосних
+  page: 119
+  grade: 10
+- id: S4
+  file: 5-klas-ukrmova-avramenko-2022_s2223
+  type: textbook
+  title: § 47. Спрощення в групах приголосних
+  page: 109
+  grade: 5
+- id: S5
+  file: 10-klas-ukrmova-karaman-2018_s0592
+  type: textbook
+  title: § 16. Подовження, спрощення в групах приголосних. Приставні приголосні. Метатеза
+  page: 49
+  grade: 10
+- id: S6
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0351
+  type: textbook
+  title: § 26. ЧЕРГУВАННЯ ЗВУКІВ. СПРОЩЕННЯ. ЗМІНИ
+  page: 99
+  grade: 10
+- id: S7
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0770
+  type: textbook
+  title: § 26. ЧЕРГУВАННЯ ЗВУКІВ. СПРОЩЕННЯ. ЗМІНИ
+  page: 99
+  grade: 10
+- id: S8
+  file: 10-klas-ukrmova-karaman-2018_s0599
+  type: textbook
+  title: § 19. Основні випадки чергування у–в, і–й, з–із–зі (зо). Милозвучність української
+    мови
+  page: 57
+  grade: 10
+- id: S9
+  file: 5-klas-ukrmova-avramenko-2022_s2219
+  type: textbook
+  title: § 41. ВИМОВА ГОЛОСНИХ ЗВУКІВ
+  page: 94
+  grade: 5
+- id: S10
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1822
+  type: textbook
+  title: Прикметник............................................... 63
+  page: 143
+  grade: 4

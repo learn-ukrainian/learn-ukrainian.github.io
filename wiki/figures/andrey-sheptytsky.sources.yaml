@@ -1,0 +1,24 @@
+# Source registry for wiki/figures/andrey-sheptytsky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-istoria-ukr-galimov-2025_s4094
+  type: textbook
+  title: § 30. Церковне життя в другій половині XVII — першій половині XVIII ст. 217
+  page: 217
+  grade: 8
+- id: S2
+  file: wave4-hrushevsky-iur-t7-10_c0854
+  type: literary
+  title: Грушевський — Історія України-Руси, т.7-10
+  author: Грушевський М.
+- id: S3
+  file: wave7-antonovych-kultura_c0322
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S4
+  file: wikipedia/Андрей (Шептицький)
+  type: wikipedia
+  title: Андрей (Шептицький)
+  url: https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D0%B4%D1%80%D0%B5%D0%B9%20%28%D0%A8%D0%B5%D0%BF%D1%82%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9%29

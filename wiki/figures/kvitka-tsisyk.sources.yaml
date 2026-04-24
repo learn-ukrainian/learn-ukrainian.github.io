@@ -1,0 +1,21 @@
+# Source registry for wiki/figures/kvitka-tsisyk.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2785
+  type: textbook
+  title: ПІСНЯ В ЖИТТІ УКРАЇНЦІВ (p. 7)
+  page: 7
+  grade: 6
+- id: S2
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2782
+  type: textbook
+  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ ПІСЕННІ СКАРБИ
+  page: 4
+  grade: 6
+- id: S3
+  file: https://www.youtube.com/watch?v=xW9WBgMtSqA
+  type: external
+  title: ULP 6-240 | Квітка Цісик — голос України за океаном | Ukrainian Lessons Podcast
+    Season 6
+  url: https://www.youtube.com/watch?v=xW9WBgMtSqA

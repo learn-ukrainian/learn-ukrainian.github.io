@@ -1,0 +1,13 @@
+# Source registry for wiki/figures/liudmyla-starytska.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0011
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S2
+  file: wave7-kohut-tsentralizm_c0409
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.

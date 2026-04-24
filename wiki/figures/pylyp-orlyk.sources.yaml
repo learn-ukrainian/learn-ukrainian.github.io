@@ -1,0 +1,29 @@
+# Source registry for wiki/figures/pylyp-orlyk.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-istoriya-ukr-gisem-2021_s4337
+  type: textbook
+  title: § 25. Участь Гетьманщини в Північній війні. Конституція П. Орлика 141
+  page: 141
+  grade: 8
+- id: S2
+  file: wikisource-орлик_c050
+  type: literary
+  title: Конституція Пилипа Орлика
+  author: Орлик Пилип
+- id: S3
+  file: wave4-ohloblyn-mazepa_c0546
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+- id: S4
+  file: https://www.youtube.com/watch?v=_8w0QOO9h8M
+  type: external
+  title: 'Пилип Орлик: гетьман на фрілансі'
+  url: https://www.youtube.com/watch?v=_8w0QOO9h8M
+- id: S5
+  file: wikipedia/Пилип Орлик
+  type: wikipedia
+  title: Пилип Орлик
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D0%B8%D0%BB%D0%B8%D0%BF%20%D0%9E%D1%80%D0%BB%D0%B8%D0%BA

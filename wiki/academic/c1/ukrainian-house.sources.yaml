@@ -1,0 +1,60 @@
+# Source registry for wiki/academic/c1/ukrainian-house.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-istoria-ukr-pometun-2024_s0250
+  type: textbook
+  title: Сторінка 202
+  grade: 7
+  author: pometun
+- id: S2
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0523
+  type: textbook
+  title: Сторінка 287
+  grade: 9
+  author: gisem
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c0219
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave7-istkult-t2-xiii-xvii_c0225
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S8
+  file: wave7-krypyakevych-istkult_c0788
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c0216
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c0214
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S11
+  file: wave7-istkult-t2-xiii-xvii_c0215
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S12
+  file: wave7-istkult-t2-xiii-xvii_c0217
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S13
+  file: wave7-istkult-t2-xiii-xvii_c0224
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S14
+  file: wave7-istkult-t1-kyivska-rus_c0525
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив

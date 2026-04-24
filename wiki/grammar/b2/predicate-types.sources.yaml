@@ -1,0 +1,51 @@
+# Source registry for wiki/grammar/b2/predicate-types.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0060
+  type: textbook
+  title: Сторінка 58
+  grade: 8
+  author: zabolotnyi
+- id: S2
+  file: 5-klas-ukrmova-golub-2022_s0107
+  type: textbook
+  title: Сторінка 108
+  grade: 5
+  author: golub
+- id: S4
+  file: 5-klas-ukrmova-zabolotnyi-2023_s0161
+  type: textbook
+  title: Сторінка 163
+  grade: 5
+  author: zabolotnyi
+- id: S7
+  file: 8-klas-ukrmova-avramenko-2025_s4574
+  type: textbook
+  title: § 20. –21
+  page: 49
+  grade: 8
+- id: S8
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5157
+  type: textbook
+  title: Повторення вивченого (p. 13)
+  page: 13
+  grade: 9
+- id: S11
+  file: 11-klas-ukrajinska-mova-voron-2019_s1263
+  type: textbook
+  title: ІІ «Я хочу сказати своє слово». Складіть власний асоціативний ряд
+  page: 113
+  grade: 11
+- id: S12
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1219
+  type: textbook
+  title: § 25. Правила будови складних речень
+  page: 109
+  grade: 11
+- id: S13
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1158
+  type: textbook
+  title: § 26. –27. НЕПОВНІ Й ОДНОСКЛАДНІ РЕЧЕННЯ
+  page: 85
+  grade: 11

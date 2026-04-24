@@ -1,0 +1,57 @@
+# Source registry for wiki/academic/c1/one-member-sentences-c1.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-mova-voron-2019_s0243
+  type: textbook
+  title: Сторінка 160
+  grade: 11
+  author: voron
+- id: S2
+  file: 8-klas-ukrmova-zabolotnyi-2025_s0144
+  type: textbook
+  title: Сторінка 128
+  grade: 8
+  author: zabolotnyi
+- id: S4
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0300
+  type: textbook
+  title: Сторінка 194
+  grade: 11
+  author: zabolotnyi
+- id: S5
+  file: 9-klas-ukrmova-zabolotnyi-2017_s0197
+  type: textbook
+  title: Сторінка 141
+  grade: 9
+  author: zabolotnyi
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c5169
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0790
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c4290
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S13
+  file: wave10-shevchenkivsky-slovnyk_c1571
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S14
+  file: wave7-entsyklopediia-ukrainoznavstva_c0813
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S15
+  file: wave7-thompson-trubadury_c0093
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.

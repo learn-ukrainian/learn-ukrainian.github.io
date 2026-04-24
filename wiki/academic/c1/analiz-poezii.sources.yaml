@@ -1,0 +1,77 @@
+# Source registry for wiki/academic/c1/analiz-poezii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 4-klas-ukrayinska-mova-savchenko-2021-2_s0099
+  type: textbook
+  title: Сторінка 100
+  grade: 4
+  author: savchenko
+- id: S2
+  file: 7-klas-ukrlit-avramenko-2024_s0103
+  type: textbook
+  title: Сторінка 82
+  grade: 7
+  author: avramenko
+- id: S3
+  file: 11-klas-ukrlit-borzenko-2019-prof_s0377
+  type: textbook
+  title: Сторінка 198
+  grade: 11
+  author: borzenko
+- id: S4
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0433
+  type: textbook
+  title: Сторінка 329
+  grade: 9
+  author: avramenko
+- id: S6
+  file: wave8-masliuk-poetyky-rytoryky_c0051
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S7
+  file: wave8-masliuk-poetyky-rytoryky_c0076
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S8
+  file: wave8-masliuk-poetyky-rytoryky_c0055
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c5017
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-masliuk-poetyky-rytoryky_c0054
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S11
+  file: wave8-masliuk-poetyky-rytoryky_c0068
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S12
+  file: wave8-ukr-lit-entsyklopediia_c1126
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S13
+  file: wave8-masliuk-poetyky-rytoryky_c0052
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S14
+  file: wave8-ukr-lit-entsyklopediia_c1121
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S15
+  file: wave8-masliuk-poetyky-rytoryky_c0284
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.

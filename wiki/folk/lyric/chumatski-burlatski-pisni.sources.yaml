@@ -1,0 +1,75 @@
+# Source registry for wiki/folk/lyric/chumatski-burlatski-pisni.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrlit-avramenko-2024_s0019
+  type: textbook
+  title: Сторінка 18
+  grade: 7
+  author: avramenko
+- id: S2
+  file: 7-klas-ukrlit-zabolotnyi-2024_s0010
+  type: textbook
+  title: Сторінка 11
+  grade: 7
+  author: zabolotnyi
+- id: S4
+  file: 7-klas-ukrlit-zabolotnyi-2024_s0017
+  type: textbook
+  title: Сторінка 16
+  grade: 7
+  author: zabolotnyi
+- id: S5
+  file: 7-klas-ukrlit-zabolotnyi-2024_s0018
+  type: textbook
+  title: Сторінка 17
+  grade: 7
+  author: zabolotnyi
+- id: S6
+  file: 7-klas-ukrlit-zabolotnyi-2024_s3701
+  type: textbook
+  title: Розділ 1. НАРОДНА ТВОРЧІСТЬ
+  page: 11
+  grade: 7
+- id: S7
+  file: wikipedia/Українські соціально-побутові пісні
+  type: wikipedia
+  title: Українські соціально-побутові пісні
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96%20%D1%81%D0%BE%D1%86%D1%96%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE-%D0%BF%D0%BE%D0%B1%D1%83%D1%82%D0%BE%D0%B2%D1%96%20%D0%BF%D1%96%D1%81%D0%BD%D1%96
+- id: S8
+  file: 7-klas-ukrlit-avramenko-2024_s3599
+  type: textbook
+  title: Народнопісенна лірика. Суспільно-побутові пісні. Козацькі пісні
+  page: 12
+  grade: 7
+- id: S9
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0188
+  type: literary
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c3557
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S11
+  file: wave10-shevchenko-tvory-t1_c0426
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S12
+  file: wave8-ukr-lit-entsyklopediia_c2605
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S13
+  file: wikipedia/Українська музика
+  type: wikipedia
+  title: Українська музика
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BC%D1%83%D0%B7%D0%B8%D0%BA%D0%B0
+- id: S14
+  file: 7-klas-ukrlit-zabolotnyi-2024_s3705
+  type: textbook
+  title: Розділ 1. ОЙ НА ГОРІ ТА ЖЕНЦІ ЖНУТЬ. Чумацькі пісні
+  page: 16
+  grade: 7

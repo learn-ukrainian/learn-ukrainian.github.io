@@ -1,0 +1,67 @@
+# Source registry for wiki/academic/c1/complex-sentence-practice.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-mova-voron-2017_s0180
+  type: textbook
+  title: Сторінка 137
+  grade: 9
+  author: voron
+- id: S2
+  file: 11-klas-ukrajinska-mova-voron-2019_s0243
+  type: textbook
+  title: Сторінка 160
+  grade: 11
+  author: voron
+- id: S3
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0245
+  type: textbook
+  title: Сторінка 158
+  grade: 9
+  author: avramenko
+- id: S5
+  file: 11-klas-ukrajinska-mova-voron-2019_s0415
+  type: textbook
+  title: Сторінка 270
+  grade: 11
+  author: voron
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c0790
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave4-ukrainska-mova-encyclopedia_c0073
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c5169
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0075
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c0792
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S12
+  file: wave9-pravopys-2015_c0162
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S13
+  file: wave9-pravopys-2015_c0163
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S14
+  file: wave9-pravopys-2015_c0165
+  type: literary
+  title: Український правопис 2015
+  author: НАН України

@@ -1,0 +1,65 @@
+# Source registry for wiki/academic/c1/history-of-language.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: 10-klas-ukrmova-karaman-2018_s0030
+  type: textbook
+  title: Сторінка 18
+  grade: 10
+  author: karaman
+- id: S5
+  file: 10-klas-ukrmova-karaman-2018_s0170
+  type: textbook
+  title: Сторінка 96
+  grade: 10
+  author: karaman
+- id: S6
+  file: wave9-shevelov-fonolohiia_c0002
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S7
+  file: wave4-ukrainska-mova-encyclopedia_c0047
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S8
+  file: wave9-ohiyenko-ist-lit-movy_c0000
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S9
+  file: wave4-nimchuk-movoznavstvo_c0013
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S10
+  file: wave9-shevelov-fonolohiia_c0187
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S11
+  file: wave4-nimchuk-movoznavstvo_c0148
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S12
+  file: wave9-rusanivsky-ist-lit-movy_c0002
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S13
+  file: wave7-istkult-t2-xiii-xvii_c0361
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S14
+  file: wave4-ukrainska-mova-encyclopedia_c0177
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S15
+  file: wave7-entsyklopediia-ukrainoznavstva_c0822
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

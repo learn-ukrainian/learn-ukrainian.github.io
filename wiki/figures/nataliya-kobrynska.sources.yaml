@@ -1,0 +1,29 @@
+# Source registry for wiki/figures/nataliya-kobrynska.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-krypyakevych-istkult_c0604
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c3505
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: ukrlib-kobrynska_c0001
+  type: literary
+  title: Наталія Кобринська. Біографія Наталії Кобринської
+  author: Кобринська Н.
+- id: S4
+  file: https://www.youtube.com/watch?v=m74Wi1I-NxA
+  type: external
+  title: ULP 6-236 | Наталія Кобринська — мама українського фемінізму | Ukrainian
+    Lessons Podcast Season 6
+  url: https://www.youtube.com/watch?v=m74Wi1I-NxA
+- id: S5
+  file: wikipedia/Кобринська Наталія Іванівна
+  type: wikipedia
+  title: Кобринська Наталія Іванівна
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%B1%D1%80%D0%B8%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%9D%D0%B0%D1%82%D0%B0%D0%BB%D1%96%D1%8F%20%D0%86%D0%B2%D0%B0%D0%BD%D1%96%D0%B2%D0%BD%D0%B0

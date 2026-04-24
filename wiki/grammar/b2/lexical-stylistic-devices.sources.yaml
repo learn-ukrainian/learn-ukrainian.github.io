@@ -1,0 +1,64 @@
+# Source registry for wiki/grammar/b2/lexical-stylistic-devices.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S3
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0021
+  type: textbook
+  title: Сторінка 15
+  grade: 11
+  author: avramenko
+- id: S5
+  file: 5-klas-ukrlit-avramenko-2022_s0132
+  type: textbook
+  title: Сторінка 125
+  grade: 5
+  author: avramenko
+- id: S6
+  file: 7-klas-ukrlit-zabolotnyi-2024_s3779
+  type: textbook
+  title: Розділ 4. ПІДНЯТИСЯ НАД БУДЕННІСТЮ. ХУДОЖНІ ЗАСОБИ
+  page: 291
+  grade: 7
+- id: S7
+  file: 5-klas-ukrlit-zabolotnyi-2022_s2171
+  type: textbook
+  title: ФОЛЬКЛОР (УСНА НАРОДНА ТВОРЧІСТЬ)
+  page: 209
+  grade: 5
+- id: S8
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1416
+  type: textbook
+  title: Практична риторика (p. 6)
+  page: 6
+  grade: 11
+- id: S9
+  file: 8-klas-ukrmova-avramenko-2025_s4640
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 131)
+  page: 131
+  grade: 8
+- id: S10
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1137
+  type: textbook
+  title: § 2. –3. ЗАСОБИ МОВНОГО ВИРАЖЕННЯ ПРОМОВИ
+  page: 10
+  grade: 11
+- id: S11
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1202
+  type: textbook
+  title: Засоби мовного вираження промови. Тропи
+  page: 15
+  grade: 11
+- id: S12
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1138
+  type: textbook
+  title: § 4. –5. ТРОП ЯК ЗАСІБ МОВНОГО ВИРАЖЕННЯ
+  page: 14
+  grade: 11
+- id: S13
+  file: 10-klas-ukrmova-karaman-2018_s0619
+  type: textbook
+  title: § 33. Багатозначні й однозначні слова. Пряме і переносне значення. Омоніми.
+    Пароніми
+  page: 89
+  grade: 10

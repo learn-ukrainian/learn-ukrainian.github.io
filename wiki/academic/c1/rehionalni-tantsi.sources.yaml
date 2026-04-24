@@ -1,0 +1,54 @@
+# Source registry for wiki/academic/c1/rehionalni-tantsi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrmova-karaman-2018_s0458
+  type: textbook
+  title: Сторінка 256
+  grade: 10
+  author: karaman
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c2273
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave7-popovych-narys-kultury_c0318
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c3605
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c4418
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c0631
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S11
+  file: wave7-entsyklopediia-ukrainoznavstva_c2278
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S12
+  file: wave7-entsyklopediia-ukrainoznavstva_c0651
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S14
+  file: wave7-entsyklopediia-ukrainoznavstva_c2270
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S15
+  file: wave7-istkult-t2-xiii-xvii_c0131
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив

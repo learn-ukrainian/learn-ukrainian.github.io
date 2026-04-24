@@ -1,0 +1,49 @@
+# Source registry for wiki/figures/mykhailo-drahomanov.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-popovych-narys-kultury_c0778
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S2
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4860
+  type: textbook
+  title: Розділ IV. Наступ на українську культуру в 1875—
+  page: 154
+  grade: 9
+- id: S3
+  file: wave7-hrinchenko-drahomanov_c0028
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S4
+  file: wave7-ukrxx-derzhavnist_c0013
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S5
+  file: wave7-hrinchenko-drahomanov_c0006
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S7
+  file: wave7-ukrxx-derzhavnist_c0090
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S8
+  file: wave7-ukrxx-derzhavnist_c0157
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S9
+  file: wave7-hrinchenko-drahomanov_c0004
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0295
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

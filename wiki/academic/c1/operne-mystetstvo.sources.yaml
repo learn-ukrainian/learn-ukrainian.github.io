@@ -1,0 +1,43 @@
+# Source registry for wiki/academic/c1/operne-mystetstvo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S6
+  file: wave7-antonovych-kultura_c0688
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S7
+  file: wave10-shevchenkivsky-slovnyk_c2308
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S8
+  file: wave7-antonovych-kultura_c0631
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S9
+  file: wave7-antonovych-kultura_c0679
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S10
+  file: wave9-rusanivsky-ist-lit-movy_c0003
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S11
+  file: wave7-popovych-narys-kultury_c0737
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S12
+  file: wave5-dramaturhiia-xix_c0001
+  type: literary
+  title: Українська драматургія першої половини XIX ст.
+  author: Антологія
+- id: S15
+  file: wave7-popovych-narys-kultury_c0755
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.

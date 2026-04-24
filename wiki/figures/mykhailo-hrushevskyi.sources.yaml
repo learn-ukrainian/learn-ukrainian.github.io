@@ -1,0 +1,43 @@
+# Source registry for wiki/figures/mykhailo-hrushevskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave11-hrushevsky-iur-t6_c1031
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S2
+  file: wave4-hrushevsky-iur-t1_c0951
+  type: literary
+  title: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+- id: S3
+  file: wave7-ukrxx-derzhavnist_c0033
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S4
+  file: wave4-hrushevsky-istlit_c0010
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S6
+  file: https://www.youtube.com/watch?v=aZohRL1mMA4
+  type: external
+  title: 'Михайло Грушевський: батя української історії'
+  url: https://www.youtube.com/watch?v=aZohRL1mMA4
+- id: S7
+  file: wave11-hrushevsky-iur-t6_c1083
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S9
+  file: wave7-popovych-narys-kultury_c0808
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S10
+  file: wave11-hrushevsky-iur-t6_c0988
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.

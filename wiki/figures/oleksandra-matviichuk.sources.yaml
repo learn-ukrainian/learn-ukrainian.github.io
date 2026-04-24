@@ -1,0 +1,18 @@
+# Source registry for wiki/figures/oleksandra-matviichuk.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wikipedia/Фемінізм
+  type: wikipedia
+  title: Фемінізм
+  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%B5%D0%BC%D1%96%D0%BD%D1%96%D0%B7%D0%BC
+- id: S2
+  file: wikipedia/Права жінок
+  type: wikipedia
+  title: Права жінок
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B0%D0%B2%D0%B0%20%D0%B6%D1%96%D0%BD%D0%BE%D0%BA
+- id: S3
+  file: wikipedia/Правова культура
+  type: wikipedia
+  title: Правова культура
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B0%D0%B2%D0%BE%D0%B2%D0%B0%20%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D0%B0

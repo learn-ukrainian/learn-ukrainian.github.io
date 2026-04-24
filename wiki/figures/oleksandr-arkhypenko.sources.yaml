@@ -1,0 +1,34 @@
+# Source registry for wiki/figures/oleksandr-arkhypenko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave10-shevchenkivsky-slovnyk_c0111
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S2
+  file: wave7-krypyakevych-istkult_c0880
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S3
+  file: wave7-antonovych-kultura_c0463
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S5
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4920
+  type: textbook
+  title: Шевченка для музею в Чернігові. Українські митці випробували свої
+  page: 271
+  grade: 9
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c0036
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave7-popovych-narys-kultury_c0844
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.

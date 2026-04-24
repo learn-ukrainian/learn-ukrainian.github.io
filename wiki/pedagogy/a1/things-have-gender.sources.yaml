@@ -3,46 +3,77 @@
 sources:
 - id: S1
   file: S3154
-  type: textbook
+  type: textbook-chunk
   notes: >-
     Підручник для 6 класу. Таблиці закінчень за родами та класифікаційна
     вправа (`Розподіліть іменники за родами`). Ground for the endings
     rubric (Крок 3) та першої вправи з підручників.
 - id: S2
   file: S2427
-  type: textbook
+  type: textbook-chunk
   notes: >-
     Підручник для 5 класу. Основи категорії роду, тест займенниковою
     підстановкою, презентація присвійних `мій/моя/моє`.
 - id: S3
   file: S14
-  type: textbook
+  type: textbook-chunk
   notes: >-
     Підручник для 1 класу. Візуальне узгодження прикметник ↔ іменник
     через питання «Який? Яка? Яке? Які?». Джерело для вправи 4 і
     ілюстрація «інтуїтивного» входу в тему роду.
 - id: S4
   file: S3151
-  type: textbook
+  type: textbook-chunk
   notes: >-
     Підручник для 6 класу. Вправа на заміну іменника особовим
     займенником 3 особи однини — canonical drill for the gender test.
 - id: S5
   file: S3371
-  type: textbook
+  type: textbook-chunk
   notes: >-
     Підручник (5–6 клас). Поглиблення тесту `він/вона/воно` + вступ до
     узгодження прикметника з іменником за родом.
 - id: S6
   file: S2428
-  type: textbook
+  type: textbook-chunk
   notes: >-
     Підручник для 5 класу. Вправа на добір прикметника у потрібній
     формі до іменника (узгодження). Ground for exercise 2.
-# VESUM (S7) and СУМ-11 (S8) were removed 2026-04-24 (issue #1493).
-# Dictionary authorities (morphological-dictionary, explanatory-dictionary)
-# are not currently addressable to a concrete sources.db row via the
-# committed registry shape — the citation resolution invariant returns
-# False for them. References in prose converted to inline-text form
-# ("VESUM", "СУМ-11"). Structural dictionary-citation support tracked
-# as a separate infra issue.
+# Dictionary / corpus authorities added 2026-04-23 review-and-lock pass
+# (template: at-the-cafe PR #1412, who-am-i PR #1436). Cited inline for
+# every claim in the "Типові помилки L2" gender-flip table, the vocabulary
+# table's VESUM-backed entries, and the decolonization section's
+# feminitive + gender-flip points.
+- id: S7
+  file: VESUM
+  type: morphological-dictionary
+  notes: >-
+    VESUM (409K lemmas, 6.7M forms). Authoritative check for "does this
+    Ukrainian word-form exist as a normative entry, and what gender does
+    it carry?". Queried via `mcp__sources__verify_word`,
+    `mcp__sources__verify_words`, `mcp__sources__verify_lemma`. In this
+    wiki supports: (1) the five rows of the gender-flip table (біль,
+    степ, розпис, літопис — all verified m; путь — verified f);
+    (2) VESUM-primary-paradigm absence of the Russian counterparts
+    (боль, степь, роспись, летопись — all NOT FOUND); (3) every
+    vocabulary table entry; (4) every feminitive (учителька /
+    вчителька, лікарка, інженерка, програмістка, авторка, журналістка,
+    письменниця, президентка). Scope note: "VESUM NOT FOUND" means the
+    form is absent from VESUM as a normative entry. External resources
+    (Goroh, «Словники України») may separately list some forms as
+    нестандартне / покруч — that is recorded usage, not normativity.
+    Wiki language was tightened to "відсутня як основна парадигма" in
+    the Codex-adversarial-review follow-up (2026-04-23) to close this
+    nuance. Table was also shrunk 9 → 5 rows to satisfy rubric AC-3
+    (every wiki row must have a plan-side activity hook).
+- id: S8
+  file: СУМ-11
+  type: explanatory-dictionary
+  notes: >-
+    СУМ-11 (127K entries). Authoritative for Ukrainian word semantics.
+    Queried via `mcp__sources__search_definitions`. In this wiki
+    supports the headword-level gender claim for `біль`: СУМ-11 lists
+    `БІЛЬ¹, бо́лю, ч.` (masculine, "feeling of physical suffering"),
+    disambiguating from the separate feminine textile/flax sense
+    (`БІЛЬ²`). Also confirms `СТЕП, у, ч.` (masculine, "great treeless
+    plain"). Used to back the gender-flip table's evidence column.

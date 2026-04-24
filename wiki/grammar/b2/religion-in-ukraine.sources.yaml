@@ -1,0 +1,57 @@
+# Source registry for wiki/grammar/b2/religion-in-ukraine.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-istoria-ukr-pometun-2024_s0008
+  type: textbook
+  title: Сторінка 8
+  grade: 7
+  author: pometun
+- id: S2
+  file: 8-klas-istoria-ukr-schupak-2025_s0058
+  type: textbook
+  title: Сторінка 44
+  grade: 8
+  author: schupak
+- id: S3
+  file: 10-klas-ukrmova-karaman-2018_s0440
+  type: textbook
+  title: Сторінка 247
+  grade: 10
+  author: karaman
+- id: S4
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s0070
+  type: textbook
+  title: Сторінка 45
+  grade: 9
+  author: mishhenko
+- id: S6
+  file: 8-klas-istoria-ukr-galimov-2025_s3997
+  type: textbook
+  title: § 9. Церковне життя
+  page: 58
+  grade: 8
+- id: S7
+  file: 8-klas-istoria-ukr-schupak-2025_s4191
+  type: textbook
+  title: РОЗДІЛ 1. Церковні та релігійні проблеми
+  page: 39
+  grade: 8
+- id: S9
+  file: 11-klas-istoriya-ukr-gisem-2024_s0970
+  type: textbook
+  title: § 28. культурне та релігійне життя
+  page: 230
+  grade: 11
+- id: S10
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4918
+  type: textbook
+  title: § 33. українське образотворче мистецтво та архітектура
+  page: 269
+  grade: 9
+- id: S11
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1067
+  type: textbook
+  title: Дуже вдячний вам за це». Імпровізований концерт
+  page: 308
+  grade: 11

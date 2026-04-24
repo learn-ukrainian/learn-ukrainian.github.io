@@ -1,0 +1,83 @@
+# Source registry for wiki/academic/c1/review.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-mova-voron-2019_s0370
+  type: textbook
+  title: Сторінка 240
+  grade: 11
+  author: voron
+- id: S2
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0209
+  type: textbook
+  title: Сторінка 136
+  grade: 9
+  author: avramenko
+- id: S3
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0368
+  type: textbook
+  title: Сторінка 239
+  grade: 11
+  author: zabolotnyi
+- id: S4
+  file: 11-klas-ukrajinska-mova-voron-2019_s0369
+  type: textbook
+  title: Сторінка 239
+  grade: 11
+  author: voron
+- id: S5
+  file: 10-klas-ukrmova-glazova-2018_s0318
+  type: textbook
+  title: Сторінка 223
+  grade: 10
+  author: glazova
+- id: S6
+  file: wave4-ukrainska-mova-encyclopedia_c0205
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c5177
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0077
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave4-hrushevsky-istlit_c0035
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S10
+  file: wave12-hrushevsky-iu-odnotom_c0040
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S11
+  file: wave4-ukrainska-mova-encyclopedia_c0180
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S12
+  file: wave9-shevelov-fonolohiia_c0117
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S13
+  file: wave8-hensiorsky-gvl-mova_c0255
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S14
+  file: wave4-ukrainska-mova-encyclopedia_c0237
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S15
+  file: wave8-hensiorsky-gvl-mova_c0254
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.

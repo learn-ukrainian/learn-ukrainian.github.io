@@ -1,0 +1,68 @@
+# Source registry for wiki/grammar/b2/third-person-plural-passive.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S5
+  file: 4-klas-ukrmova-zaharijchuk_s0154
+  type: textbook
+  title: Сторінка 155
+  grade: 4
+- id: S6
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1157
+  type: textbook
+  title: § 25. ПАСИВНІ КОНСТРУКЦІЇ
+  page: 81
+  grade: 11
+- id: S7
+  file: 8-klas-ukrmova-avramenko-2025_s4612
+  type: textbook
+  title: § 42. –43. Означено-особові та неозначено-особові речення
+  page: 94
+  grade: 8
+- id: S8
+  file: 7-klas-ukrmova-litvinova-2024_s3921
+  type: textbook
+  title: § 17. Активні й пасивні дієприкметники
+  page: 90
+  grade: 7
+- id: S9
+  file: 5-klas-ukrmova-golub-2022_s2302
+  type: textbook
+  title: Присудок — головний член речення,
+  page: 108
+  grade: 5
+- id: S10
+  file: 4-klas-ukrmova-zaharijchuk_s1922
+  type: textbook
+  title: М айбутній час. Зміню вання дієслів
+  page: 150
+  grade: 4
+- id: S11
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1217
+  type: textbook
+  title: § 22. Синтаксичні конструкції
+  page: 97
+  grade: 11
+- id: S12
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1193
+  type: textbook
+  title: § 15. Дієслово та його форми. . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 45
+  page: 206
+  grade: 11
+- id: S13
+  file: wave7-entsyklopediia-ukrainoznavstva_c0790
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S14
+  file: 6-klas-ukrmova-litvinova-2023_s3336
+  type: textbook
+  title: § 28. Кличний відмінок
+  page: 140
+  grade: 6
+- id: S15
+  file: 7-klas-ukrmova-avramenko-2024_s3842
+  type: textbook
+  title: § 50. Написання не з дієприкметниками
+  page: 114
+  grade: 7

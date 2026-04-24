@@ -1,0 +1,29 @@
+# Source registry for wiki/figures/nestor-litopysets.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-hrushevsky-istlit-t2_c0157
+  type: literary
+  title: Грушевський — Історія української літератури, т.2
+  author: Грушевський М.
+- id: S2
+  file: wave6-synopsis-1674_c0084
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S3
+  file: 5-klas-ukrlit-avramenko-2022_s1955
+  type: textbook
+  title: Розділ 3. ВІД КАЗКИ ДО КНИГИ БУТТЯ
+  page: 144
+  grade: 5
+- id: S4
+  file: wave6-synopsis-1674_c0101
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S5
+  file: wave7-popovych-narys-kultury_c0182
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.

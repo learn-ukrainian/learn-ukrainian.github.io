@@ -1,0 +1,13 @@
+# Source registry for wiki/figures/iryna-vilde.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c1085
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c1084
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

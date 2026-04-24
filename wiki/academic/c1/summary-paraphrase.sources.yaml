@@ -1,0 +1,73 @@
+# Source registry for wiki/academic/c1/summary-paraphrase.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0209
+  type: textbook
+  title: Сторінка 136
+  grade: 9
+  author: avramenko
+- id: S2
+  file: 9-klas-ukrajinska-mova-voron-2017_s0111
+  type: textbook
+  title: Сторінка 87
+  grade: 9
+  author: voron
+- id: S3
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s0042
+  type: textbook
+  title: Сторінка 29
+  grade: 9
+  author: avramenko
+- id: S4
+  file: 7-klas-ukrmova-litvinova-2024_s0196
+  type: textbook
+  title: Сторінка 192
+  grade: 7
+  author: litvinova
+- id: S5
+  file: 11-klas-ukrmova-zabolotnyi-2019_s0314
+  type: textbook
+  title: Сторінка 202
+  grade: 11
+  author: zabolotnyi
+- id: S6
+  file: wave9-shevelov-fonolohiia_c0115
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c3970
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c1450
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S11
+  file: wave4-ukrainska-mova-encyclopedia_c0180
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S12
+  file: wave4-ukrainska-mova-encyclopedia_c0237
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S13
+  file: wave7-lytvynov-renesans-humanizm_c0122
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+- id: S14
+  file: wave9-rusanivsky-ist-lit-movy_c0005
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S15
+  file: wave7-istkult-t2-xiii-xvii_c1411
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
