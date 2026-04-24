@@ -2,7 +2,25 @@ module: a1-012
 level: A1
 sequence: 12
 slug: this-and-that
-version: '1.1.2'
+version: '1.2.0'
+lifecycle: locked
+reviewed_at: '2026-04-24T00:00:00Z'
+reviewed_by: claude-opus-4-7-xhigh-this-and-that
+review_notes: >-
+  Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md
+  (rubric template from PR #1412 `at-the-cafe` + PR #1436 `who-am-i` +
+  `things-have-gender` LOCKED). See PR body for the full plan-side findings
+  (pragmatic / Russianism / calque / contradiction / references /
+  wiki-alignment) and wiki/.reviews/pedagogy/a1/this-and-that-review-LOCKED.md
+  for the wiki-side report. Plan brought into alignment with the locked wiki:
+  (1) new objective on conscious avoidance of L2 errors (copula-drop /
+  agreement / code-switching / омонімія `та`) mirroring wiki Типові помилки L2
+  5-row table; (2) new grammar item on gender-AND-case agreement (чанк `цю
+  книгу` як Зн. в. ж.р.); (3) new activity_hints[5] — L2-errors quiz with
+  5 enumerated items one-to-one with wiki rows (AC-3 drift check); (4) wiki
+  back-reference added to references; (5) recommended vocab extended with
+  emphatic оцей/отой (passive recognition, A2-active). `даний` is explicitly
+  NOT added as vocab — wiki Декол. #5 frames it as kancelyarism to avoid at A1.
 title: Це і те
 subtitle: Цей стіл, та книга — вказуємо на предмети
 focus: grammar
@@ -14,6 +32,7 @@ objectives:
 - Вказувати на предмети та називати їх, використовуючи вказівні займенники та іменники з модулів №8–10
 - Поєднувати вказівні займенники з прикметниками та кольорами (цей великий червоний стіл)
 - Розрізняти займенники цей (близько) та той (далеко)
+- Свідомо уникати типових L2-помилок у вживанні вказівних — copula-drop (`Це стіл`, не `Це є стіл`), узгодження роду і відмінка (`цю книгу`, не `цей книгу`), омонімія `та` займ./спол. (перелік через `і`, не `та`); 5-пунктна діагностична міні-вправа дзеркалить wiki «Типові помилки L2»
 dialogue_situations:
 - setting: У магазині електроніки — порівняння телефонів, ноутбуків і навушників на різних полицях. Цей телефон (поруч) порівняно з той ноутбук (ген там). Ця камера порівняно з та. Це радіо порівняно з те.
   speakers:
@@ -43,13 +62,20 @@ content_outline:
 vocabulary_hints:
   required:
   - цей, ця, це (this — m/f/n)
+  - ці (these — plural, all genders)
   - той, та, те (that — m/f/n)
+  - ті (those — plural, all genders)
   - чи (or — in questions)
   recommended:
   - ось (here is, look — pointing word)
   - там (there)
   - тут (here)
   - він, вона, воно (review from модуль №8 — used for reference)
+  - оцей, оця, оце (this — emphatic "саме цей"; passive recognition at A1, VESUM-verified)
+  - отой, ота, ото (that — emphatic "отой, далі"; passive recognition at A1, VESUM-verified)
+# NOTE: `даний` is intentionally NOT in vocabulary_hints. Wiki Декол. #5
+# frames `даний` as kancelyarism (СУМ-11 primary sense: "given, provided")
+# overused as "this" under рос. `данный` influence. A1 normative = `цей`.
 activity_hints:
 - type: quiz
   focus: Цей, ця чи це? Виберіть правильний вказівний займенник для кожного іменника.
@@ -63,6 +89,48 @@ activity_hints:
 - type: quiz
   focus: Той, та чи те? Вкажіть на предмет, що знаходиться далеко.
   items: 6
+- type: quiz
+  focus: >-
+    L2-помилки — впізнати та виправити. Дзеркалить п'ять рядків wiki
+    «Типові помилки L2» + Приклад 5 один-до-одного (AC-3 drift check).
+    Активно відпрацьовуємо перші два (copula-drop + agreement); рядки 3-5
+    — пасивні pointer-drill (позначити тип помилки). Усі правильні відповіді
+    перевірено у VESUM.
+  items:
+  - question: 'Copula-drop. Знайти помилку: «Це є цікава книга.»'
+    options:
+    - 'Це є цікава книга.'
+    - 'Це цікава книга.'
+    - 'Це цікаве книга.'
+    answer: 'Це цікава книга.'
+  - question: 'Agreement Зн. в. ж.р. Знайти помилку: «Я хочу купити цей сумку.»'
+    options:
+    - 'Я хочу купити цей сумку.'
+    - 'Я хочу купити цю сумку.'
+    - 'Я хочу купити це сумку.'
+    answer: 'Я хочу купити цю сумку.'
+  - question: >-
+      Gender-flip — cross-reference до `things-have-gender`. Знайти помилку:
+      «Ця біль у спині сильна.»
+    options:
+    - 'Ця біль у спині сильна.'
+    - 'Цей біль у спині сильний.'
+    - 'Це біль у спині сильне.'
+    answer: 'Цей біль у спині сильний.'
+  - question: 'Code-switching. Знайти помилку: «Что это? — Это стіл.»'
+    options:
+    - 'Что это? — Это стіл.'
+    - 'Що це? — Це стіл.'
+    - 'Що этот? — Этот стіл.'
+    answer: 'Що це? — Це стіл.'
+  - question: >-
+      Омонімія `та` (займ. ж.р. vs спол. і/й). Знайти помилку: «У кімнаті
+      є та книга та ручка.»
+    options:
+    - 'У кімнаті є та книга та ручка.'
+    - 'У кімнаті є та книга і ручка.'
+    - 'У кімнаті є ця книга ця ручка.'
+    answer: 'У кімнаті є та книга і ручка.'
 connects_to:
 - a1-013 (Багато речей)
 prerequisites:
@@ -72,9 +140,42 @@ grammar:
 - Модель узгодження в роді збігається із займенниками мій/який
 - Порядок слів вказівний займенник + прикметник + іменник
 - Займенник та порівняно зі сполучником та — розрізнення за контекстом
+- >-
+  Вказівний узгоджується з іменником не лише в роді, але й у відмінку
+  (чанк `цю книгу` = Зн. в. ж.р.; `цього олівця` = Р. в. ч.р., факультативно
+  в Кроці 5 wiki). На A1 подавати саме як фіксовані чанки для пасивного
+  впізнання, не як повну парадигму відмінювання — дзеркалить wiki «Типові
+  помилки L2» row 2 (agreement failure) та чанк-політику в писарській
+  примітці після словникового мінімуму.
 register: розмовний
 references:
 - title: Заболотний Grade 6, p.210
   notes: Вказівні займенники цей, той змінюються за родами, числами, відмінками.
 - title: Літвінова Grade 6, p.273
   notes: Повна таблиця відмінювання займенника той — на рівні A1 використовуємо лише називний відмінок.
+- title: 'Wiki: pedagogy/a1/this-and-that (LOCKED 2026-04-24)'
+  notes: >-
+    Authoritative pedagogical brief — see the five-step sequence (Крок 1-5),
+    the Словниковий мінімум table (25 entries, VESUM-cited), the new «Типові
+    помилки L2» table (5 rows: copula-drop / agreement / gender-flip
+    cross-ref / code-switching / омонімія `та`), the decolonization points
+    (#4 emphatic `оцей-ряд` / `отой-ряд` — питомо Ukrainian; #5 `цей` over
+    `даний` as register choice), the chunk-writer-note pinning `цей стіл /
+    ця книга / це вікно / той будинок / та вулиця / те дерево / цю книгу /
+    цього олівця` as indivisible chunks, and Приклад 5 (L2-errors drill
+    one-to-one with activity_hints[5] items). The writer-note block
+    enumerates four NOT-to-teach items (повна парадигма, `той-` root
+    alternation, тверда/м'яка adjective group, multi-case plural) — do
+    NOT introduce these at A1.
+changelog:
+- version: '1.2.0'
+  date: '2026-04-24'
+  changes:
+  - 'Review-and-lock pass per docs/best-practices/wiki-plan-review-and-lock.md (rubric templates: at-the-cafe #1412, who-am-i #1436, things-have-gender).'
+  - 'Added lifecycle markers (lifecycle / reviewed_at / reviewed_by / review_notes).'
+  - 'Added objective on conscious L2-error avoidance (copula-drop / agreement / омонімія `та`) mirroring wiki «Типові помилки L2» 5-row table.'
+  - 'Added grammar item on gender-AND-case agreement with chunk examples (`цю книгу`, `цього олівця`), pinned to wiki writer-note.'
+  - 'Added fifth activity_hint (L2-errors quiz, 5 enumerated items one-to-one with wiki «Типові помилки L2» five rows) — satisfies rubric AC-3 drift check.'
+  - 'Extended `vocabulary_hints.required` with `ці` / `ті` (plural demonstratives, Крок 4 of wiki); extended `recommended` with emphatic `оцей/оця/оце` and `отой/ота/ото` (passive recognition at A1, VESUM-verified as normative; mirrors wiki Декол. #4).'
+  - 'Added wiki back-reference to references list.'
+  - '`даний` explicitly excluded from vocabulary_hints with an inline NOTE tying to wiki Декол. #5 (kancelyarism / рос.-amplified calque for `цей`).'
