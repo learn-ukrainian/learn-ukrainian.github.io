@@ -51,6 +51,8 @@ from .decisions_router import router as decisions_router
 from .delegate_router import router as delegate_router
 from .git_hygiene_router import router as git_hygiene_router
 from .gold_router import router as gold_router
+from .governance_router import collect_governance_summary
+from .governance_router import router as governance_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .rag_router import router as rag_router
@@ -113,6 +115,7 @@ app.include_router(decisions_router, prefix="/api/decisions", tags=["decisions"]
 app.include_router(delegate_router, prefix="/api/delegate")
 app.include_router(git_hygiene_router, prefix="/api/git", tags=["git"])
 app.include_router(gold_router, prefix="/api/gold")
+app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])
 app.include_router(build_events_router, prefix="/api/build/events")
 app.include_router(images_router, prefix="/api/images")
 app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
@@ -179,6 +182,7 @@ ORIENT_SECTION_TTLS: dict[str, float] = {
     "runtime": 60.0,
     "delegate": 30.0,
     "wiki": 120.0,
+    "governance": 120.0,
     "health": 15.0,
     "session_hints": 60.0,
 }
@@ -190,6 +194,7 @@ ORIENT_SECTION_SOURCES: dict[str, str] = {
     "runtime": "fs",
     "delegate": "fs",
     "wiki": "fs",
+    "governance": "fs",
     "health": "probe",
     "session_hints": "fs",
 }
@@ -399,6 +404,10 @@ def _collect_wiki_orient_data() -> dict:
     return {"by_track": by_track}
 
 
+def _collect_governance_orient_data() -> dict[str, int]:
+    return collect_governance_summary()
+
+
 def _port_open(host: str, port: int, timeout_s: float) -> bool:
     try:
         with socket.create_connection((host, port), timeout=timeout_s):
@@ -559,6 +568,7 @@ async def orient(fresh: bool = False):
         (runtime_info, runtime_meta),
         (delegate_info, delegate_meta),
         (wiki_info, wiki_meta),
+        (governance_info, governance_meta),
         (health_info, health_meta),
         (session_hints, session_hints_meta),
     ) = await asyncio.gather(
@@ -577,6 +587,18 @@ async def orient(fresh: bool = False):
             {"active_count": 0, "recent": []},
         ),
         _cached_orient_section("wiki", _collect_wiki_orient_data, {"by_track": {}}),
+        _cached_orient_section(
+            "governance",
+            _collect_governance_orient_data,
+            {
+                "decisions_total": 0,
+                "decisions_stale": 0,
+                "decisions_approaching_expiry": 0,
+                "adrs_total": 0,
+                "adrs_warnings": 0,
+                "adrs_errors": 0,
+            },
+        ),
         _cached_orient_section("health", _collect_health_orient_data, {"api": True}),
         _cached_orient_section("session_hints", _collect_session_hints_orient_data, []),
     )
@@ -588,6 +610,7 @@ async def orient(fresh: bool = False):
         "runtime": runtime_meta,
         "delegate": delegate_meta,
         "wiki": wiki_meta,
+        "governance": {**governance_meta, **governance_info},
         "health": health_meta,
         "session_hints": session_hints_meta,
     }
@@ -615,6 +638,7 @@ async def orient(fresh: bool = False):
         "runtime": runtime_info,
         "delegate": delegate_info,
         "wiki": wiki_info,
+        "governance": governance_info,
         "health": health_info,
         "session_hints": session_hints,
         "meta": section_metas,
