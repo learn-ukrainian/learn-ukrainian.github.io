@@ -1,4 +1,4 @@
-"""Tests for the validated-patchability predicate (GH #1525 P0).
+"""Tests for the validated-patchability predicate (GH #1525 P0, GH #1526 item 2).
 
 Invariants:
 1. Plan-level findings ALWAYS return ``plan_level_hardstop`` regardless of fixes
@@ -6,10 +6,13 @@ Invariants:
    plan defects.
 2. Legacy callers (no fixes, no content) get ``not_evaluated`` — old heuristic
    path stays intact.
-3. ``batch_patch_ok`` fires only when ALL fixes have anchors present in content.
-   A partial set is ``anchor_missing`` (reviewer saw stale text → don't trust
-   the batch). The status is OBSERVATION-SCOPED (GH #1526 item 1) — it
-   describes the ``<fixes>`` block as a whole, not the individual finding.
+3. ``batch_patch_ok`` fires when AT LEAST ONE fix has a valid anchor (GH #1526
+   item 2 loosening). A partial-valid set used to return ``anchor_missing``
+   — the batch-atomic behavior was black-holing legitimate fixes whenever one
+   unrelated fix had a bad anchor. ``anchor_missing`` is now reserved for the
+   fully-hallucinated case (zero valid anchors). The status is
+   OBSERVATION-SCOPED (GH #1526 item 1) — it describes the ``<fixes>`` block
+   as a whole, not the individual finding.
 4. ``compute_anchor_validation`` runs ONCE per observation; ``classify_patchability``
    consumes the result per finding without rescanning.
 5. Golden fixture derived from a1/sounds-letters-and-hello R1 (the module
@@ -135,10 +138,13 @@ def test_no_fixes_when_reviewer_emitted_empty_block() -> None:
     assert "nothing to patch" in reason
 
 
-# ---------- anchor_missing: stale reviewer text ----------
+# ---------- partial-valid batches still route to patch (GH #1526 item 2) ----------
 
 
-def test_anchor_missing_when_any_fix_anchor_absent() -> None:
+def test_partial_valid_batch_routes_to_patch_ok() -> None:
+    """GH #1526 item 2: at-least-one-valid-anchor flips status to
+    ``batch_patch_ok``. Old batch-atomic semantics returned ``anchor_missing``
+    here, which black-holed the valid fix into plan_revision_request."""
     finding = {"plan_level": False, "error_class": "notation_error"}
     content = "real module content is here"
     fixes = [
@@ -147,9 +153,12 @@ def test_anchor_missing_when_any_fix_anchor_absent() -> None:
     ]
     validation = compute_anchor_validation(fixes, content)
     status, reason = classify_patchability(finding, anchor_validation=validation)
-    assert status == "anchor_missing"
+    assert status == "batch_patch_ok"
     assert "1 of 2" in reason
-    assert "not present in content" in reason
+    assert "invalid anchor" in reason  # the warning note
+
+
+# ---------- anchor_missing: fully hallucinated batch ----------
 
 
 def test_anchor_missing_when_all_fix_anchors_absent() -> None:
@@ -159,7 +168,7 @@ def test_anchor_missing_when_all_fix_anchors_absent() -> None:
     validation = compute_anchor_validation(fixes, content)
     status, reason = classify_patchability(finding, anchor_validation=validation)
     assert status == "anchor_missing"
-    assert "2 of 2" in reason
+    assert "2 fix anchors absent" in reason
 
 
 # ---------- batch_patch_ok: the unlock condition ----------

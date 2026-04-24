@@ -242,30 +242,37 @@ def _fix_anchor_text(fix: dict[str, Any]) -> str:
     return ""
 
 
-def _best_match_invalid_fix(
-    finding: dict[str, Any],
-    invalid_fixes: Sequence[dict[str, Any]],
+def _best_match_finding_for_fix(
+    fix: dict[str, Any],
+    candidate_findings: Sequence[dict[str, Any]],
 ) -> dict[str, Any] | None:
-    """Heuristically pair a ghost finding with the invalid fix it most likely refers to.
+    """Heuristically pair an invalid fix with the non-plan finding it most
+    likely refers to. Iterating fixes first (GH #1526 item 2 ghost
+    collection) — after the patchability predicate was loosened in
+    item 2, non-plan findings no longer carry a per-finding ``anchor_missing``
+    status in the partial-valid case, so the ghost collector has to start
+    from invalid fixes rather than from findings.
 
-    Reviewer output format does not link findings to ``<fixes>`` entries by ID,
-    so we match by substring: if the invalid fix's anchor text appears in the
-    finding's ``fix`` or ``issue`` prose, assume they are paired. Falls back to
-    the first invalid fix when no content overlap is found, so the bundle still
-    attaches a concrete ``raw_fix`` for audit.
+    Reviewer output does not link fixes to findings by ID, so match by
+    substring: the invalid fix's anchor text (or issue wording overlap) is
+    checked against the finding's ``fix`` / ``issue`` prose. Falls back to
+    the first candidate finding when no content overlap is found, so every
+    invalid fix still produces a ghost entry for audit.
     """
-    if not invalid_fixes:
+    if not candidate_findings:
         return None
-    fix_text = str(finding.get("fix") or "").lower()
-    issue_text = str(finding.get("issue") or "").lower()
-    for fix in invalid_fixes:
-        anchor = _fix_anchor_text(fix).lower()
-        if not anchor:
-            continue
-        probe = anchor[:60]
-        if probe and (probe in fix_text or probe in issue_text):
-            return fix
-    return invalid_fixes[0]
+    anchor = _fix_anchor_text(fix).lower()
+    if not anchor:
+        return candidate_findings[0]
+    probe = anchor[:60]
+    if not probe:
+        return candidate_findings[0]
+    for finding in candidate_findings:
+        fix_text = str(finding.get("fix") or "").lower()
+        issue_text = str(finding.get("issue") or "").lower()
+        if probe in fix_text or probe in issue_text:
+            return finding
+    return candidate_findings[0]
 
 
 def collect_reviewer_ghost_findings(
@@ -276,9 +283,16 @@ def collect_reviewer_ghost_findings(
 ) -> tuple[dict[str, Any], ...]:
     """Build the ghost-finding tuple for an observation.
 
-    A ghost finding is a reviewer-emitted finding whose patchability status
-    resolves to :data:`REVIEWER_GHOST_PATCHABILITY_STATUS` — i.e. the anchor
-    text the reviewer "quoted" cannot be located in current module content.
+    A ghost finding represents a reviewer-emitted ``<fixes>`` entry whose
+    anchor text cannot be located in current module content. Under the
+    GH #1526 item 2 loosening, the patchability status on a non-plan
+    finding is ``batch_patch_ok`` even when SOME sibling fixes are
+    invalid — so we can't filter findings by ``patchability ==
+    anchor_missing`` the way the pre-#1526 code did. Instead we iterate
+    over the invalid fixes themselves and match each back to a non-plan
+    finding via substring heuristic. This means every invalid fix
+    produces a ghost entry for audit regardless of whether the
+    observation routed to patch or plan_revision.
 
     Each returned dict preserves the normalized finding fields and adds three
     bundle-writer affordances:
@@ -302,18 +316,25 @@ def collect_reviewer_ghost_findings(
         if normalized is not None
         else _normalize_observation(observation, growth_log_path=growth_log_path)
     )
+    non_plan_findings = tuple(
+        item
+        for item in findings
+        if item.get("patchability") != "plan_level_hardstop"
+    )
+    if not non_plan_findings:
+        return ()
     ghosts: list[dict[str, Any]] = []
-    for item in findings:
-        if item.get("patchability") != REVIEWER_GHOST_PATCHABILITY_STATUS:
+    for invalid_fix in invalid_fixes:
+        matched_finding = _best_match_finding_for_fix(invalid_fix, non_plan_findings)
+        if matched_finding is None:
             continue
-        matched_fix = _best_match_invalid_fix(item, invalid_fixes)
-        anchor = _fix_anchor_text(matched_fix) if matched_fix else ""
+        anchor = _fix_anchor_text(invalid_fix)
         ghosts.append(
             {
-                **item,
+                **matched_finding,
                 "reviewer_find_anchor": anchor,
                 "anchor_validation": REVIEWER_GHOST_PATCHABILITY_STATUS,
-                "raw_fix": dict(matched_fix) if matched_fix else {},
+                "raw_fix": dict(invalid_fix),
             }
         )
     return tuple(ghosts)
@@ -378,6 +399,26 @@ def prioritize_findings(
     return _normalize_observation(observation, growth_log_path=growth_log_path)
 
 
+def _has_applicable_review_fix(observation: ReviewObservation) -> bool:
+    """True iff the reviewer emitted at least one fix with a valid anchor.
+
+    GH #1526 item 2: the old ``topologies == {"local_to_prose"}`` gate in
+    ``select_strategy`` used set-equality, so any non-prose topology in the
+    batch (e.g. Plan-Adherence with a ``cross_section`` location string)
+    collapsed the whole observation to ``plan_revision_request`` even when
+    the reviewer's ``<fixes>`` block had clean find/replace pairs for the
+    non-plan findings. This helper checks the ground truth: does the
+    reviewer's own batch have anchor-valid fixes we can apply?
+    """
+    if not observation.parsed_fixes or observation.module_content is None:
+        return False
+    valid, _invalid = validate_fix_anchors(
+        observation.parsed_fixes,
+        observation.module_content,
+    )
+    return bool(valid)
+
+
 def select_strategy(
     *,
     observation: ReviewObservation,
@@ -393,14 +434,38 @@ def select_strategy(
         )
 
     topologies = {item["topology"] for item in prioritized_findings}
+    has_plan_level = any(
+        item.get("plan_level") or item.get("topology") == "plan_level"
+        for item in prioritized_findings
+    )
     candidate_tier = 5
     candidate_strategy: TierName = "plan_revision_request"
     candidate_reason = "findings require human plan revision"
 
-    if observation.patch_available and topologies == {"local_to_prose"}:
+    # GH #1526 item 2: apply the patch tier whenever the reviewer emitted
+    # deterministic fixes with valid anchors AND no finding is plan-level,
+    # regardless of whether cross_section / plan-adherence topologies appear
+    # in the sibling set. The old ``topologies == {"local_to_prose"}``
+    # equality gate routed honest patch-able batches to
+    # plan_revision_request whenever one sibling finding had a cross-section
+    # location, black-holing the reviewer's <fixes>. Empirical trigger:
+    # a1/sounds-letters-and-hello 2026-04-24 — 24 findings, 0 plan_level,
+    # 5 Factual fixes with byte-exact anchors, zero applied.
+    if observation.patch_available and not has_plan_level and (
+        topologies == {"local_to_prose"} or _has_applicable_review_fix(observation)
+    ):
         candidate_tier = 1
         candidate_strategy = "patch"
-        candidate_reason = "all findings are local prose edits and reviewer emitted deterministic fixes"
+        if topologies == {"local_to_prose"}:
+            candidate_reason = (
+                "all findings are local prose edits and reviewer emitted "
+                "deterministic fixes"
+            )
+        else:
+            candidate_reason = (
+                "reviewer emitted at least one deterministic fix with a valid "
+                "anchor and no finding is plan-level"
+            )
 
     signals = _stall_signals(previous_round, {
         "strategy": previous_round.get("strategy") if previous_round else "write",

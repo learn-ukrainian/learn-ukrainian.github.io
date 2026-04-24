@@ -68,16 +68,21 @@ def _observation(
 
 def test_ghost_tagging_separates_ghost_from_hardstop_finding() -> None:
     """Observation with one plan-level finding (hardstop) and one non-plan
-    finding whose fix anchor is missing → only the non-plan finding is a
-    ghost; the plan-level finding keeps its ``plan_level_hardstop`` route
-    and is NOT copied into the ghost tuple. Original ``findings`` list is
-    left unchanged (reviewer emitted both; audit keeps them visible).
+    finding in a partial-valid batch → the non-plan finding routes to
+    ``batch_patch_ok`` (GH #1526 item 2: ≥1 valid anchor unblocks the
+    patch tier), the plan-level finding keeps ``plan_level_hardstop``, and
+    the invalid fix still surfaces as a ghost (so the audit trail captures
+    the reviewer hallucination even though the routing no longer blocks
+    on it). Original ``findings`` list is left unchanged (reviewer emitted
+    both; audit keeps them visible).
     """
     content = "Module prose that contains **мама** → [– • – •] — two sounds."
     # One plan-level finding (vocab_density) + one non-plan (notation_error).
-    # The <fixes> block has one valid anchor + one hallucinated anchor. Under
-    # current batch-level predicate: non-plan finding → anchor_missing (ghost);
-    # plan-level finding → plan_level_hardstop (not ghost).
+    # The <fixes> block has one valid anchor + one hallucinated anchor.
+    # GH #1526 item 2: non-plan finding → batch_patch_ok (partial-valid
+    # batches route to patch); plan-level finding → plan_level_hardstop.
+    # The ghost bundle still captures the invalid fix by iterating invalid
+    # fixes rather than filtering findings.
     findings = (
         _finding(
             dimension="Plan Adherence",
@@ -110,16 +115,18 @@ def test_ghost_tagging_separates_ghost_from_hardstop_finding() -> None:
 
     prioritized = prioritize_findings(observation, growth_log_path=None)
     statuses = {item["dimension"]: item["patchability"] for item in prioritized}
-    # Non-plan → anchor_missing (ghost). Plan-level → plan_level_hardstop.
-    assert statuses["factual_accuracy"] == REVIEWER_GHOST_PATCHABILITY_STATUS
+    # Non-plan → batch_patch_ok (≥1 valid anchor). Plan-level → plan_level_hardstop.
+    assert statuses["factual_accuracy"] == "batch_patch_ok"
     assert statuses["plan_adherence"] == "plan_level_hardstop"
 
     ghosts = collect_reviewer_ghost_findings(observation)
     assert len(ghosts) == 1
     ghost = ghosts[0]
+    # Ghost collection matches the invalid fix back to the non-plan finding —
+    # the plan-level finding is excluded (it has its own hardstop route).
     assert ghost["dimension"] == "factual_accuracy"
     assert ghost["anchor_validation"] == REVIEWER_GHOST_PATCHABILITY_STATUS
-    # reviewer_find_anchor matches one of the invalid fixes' find text.
+    # reviewer_find_anchor matches the invalid fix's find text.
     assert "мама" in ghost["reviewer_find_anchor"]
     assert "two [а] sounds" in ghost["reviewer_find_anchor"]
     # raw_fix is the full invalid fix dict.
