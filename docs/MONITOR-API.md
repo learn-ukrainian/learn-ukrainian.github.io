@@ -1450,6 +1450,69 @@ never 500.
 }
 ```
 
+### Git hygiene — `GET /api/git/hygiene`
+
+Classifies current working-tree dirty files into actionable cleanup
+buckets. Exemption paths are loaded from
+`docs/best-practices/git-hygiene.md`; exempt files do not count toward
+`dirty_total`.
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/git/hygiene` | Dirty-file taxonomy, remediation hints, and hygiene health |
+
+```bash
+curl -s http://localhost:8765/api/git/hygiene | python3 -m json.tool
+```
+
+Response:
+
+```json
+{
+  "generated_at": "2026-04-24T06:50:00Z",
+  "dirty_total": 6,
+  "exempt": {"wiki": 1, "draft_tickets": 1, "gitignored": 0, "other": 0, "total": 2},
+  "buckets": {
+    "stale_behind_main": {"count": 1, "files": ["stale.py"]},
+    "real_wip": {"count": 1, "files": ["wip.py"]},
+    "untracked_unexempted": {"count": 1, "files": ["scratch/todo.txt"]},
+    "intentional_deletions": {
+      "count": 3,
+      "files": ["feature/remove/a.txt", "feature/remove/b.txt", "feature/remove/c.txt"],
+      "pattern": "feature/remove/*"
+    }
+  },
+  "suggestions": [
+    {
+      "action": "restore_to_head",
+      "rationale": "pre-merge content; main moved past these files",
+      "files": ["stale.py"],
+      "command": "git checkout HEAD -- stale.py"
+    },
+    {
+      "action": "stash_wip",
+      "rationale": "local definitions or decorators need a stash or commit, not restore",
+      "files": ["wip.py"],
+      "command": "git stash push -m git-hygiene-wip -- wip.py"
+    },
+    {
+      "action": "gitignore_pattern",
+      "pattern": "scratch/",
+      "rationale": "untracked files are neither ignored nor policy-exempt",
+      "files": ["scratch/todo.txt"]
+    },
+    {
+      "action": "commit_deletions",
+      "rationale": "coherent deletion cluster with no modified or untracked files in the same subtree",
+      "pattern": "feature/remove/*",
+      "files": ["feature/remove/a.txt", "feature/remove/b.txt", "feature/remove/c.txt"]
+    }
+  ],
+  "health": "dirty",
+  "performance_ms": 42.5
+}
+```
+
 ### Force-preview — `GET /api/artifacts/{track}/{slug}/force-preview`
 
 Exact list of files `v6_build.py {track} {num} --force` would delete,
