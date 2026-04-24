@@ -9,9 +9,13 @@ on:
       - 'scripts/**/*.py'
       - 'tests/**/*.py'
       - 'pyproject.toml'
-      - 'claude_extensions/phases/**/*.md'
-      - 'claude_extensions/skills/**/*.md'
-      - 'gemini_extensions/skills/**/*.md'
+      # Widened from per-subdir globs (phases, skills) to the whole tree so
+      # changes to hooks, statusline, rules, commands, etc. also trigger CI
+      # and satisfy the required `Test (pytest)` branch-protection check.
+      # Prior recurrence: #1544 widened for scripts/build/phases/**/*.md,
+      # #1546 widened for claude_extensions/** after statusline PR blocked.
+      - 'claude_extensions/**'
+      - 'gemini_extensions/**'
       - 'scripts/build/phases/**/*.md'
       - 'scripts/build/contracts/**/*.md'
       - 'starlight/**'
@@ -23,9 +27,9 @@ on:
       - 'scripts/**/*.py'
       - 'tests/**/*.py'
       - 'pyproject.toml'
-      - 'claude_extensions/phases/**/*.md'
-      - 'claude_extensions/skills/**/*.md'
-      - 'gemini_extensions/skills/**/*.md'
+      # See note on `push:` above — widened 2026-04-24 (#1546).
+      - 'claude_extensions/**'
+      - 'gemini_extensions/**'
       - 'scripts/build/phases/**/*.md'
       - 'scripts/build/contracts/**/*.md'
       - 'starlight/**'
