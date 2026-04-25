@@ -26,14 +26,16 @@ def test_audit_ranges_delegate_to_shared_config():
 def test_pipeline_rule_map_is_derived_from_shared_config():
     assert IMMERSION_RULES["a2-bridge"] == get_immersion_rule("a2", 1)
     assert IMMERSION_RULES["a2-m21-50"] == get_immersion_rule("a2", 30)
-    assert IMMERSION_RULES["b1-m01-05"] == get_immersion_rule("b1", 3)
+    assert all(key != f"b1-{'m01'}-05" for key in IMMERSION_RULES)
+    assert IMMERSION_RULES["b1-core"] == get_immersion_rule("b1", 3)
     assert IMMERSION_RULES["b1-core"] == get_immersion_rule("b1", 10)
 
 
-def test_b1_early_and_core_rules_differ():
+def test_b1_uses_single_full_ukrainian_band():
     early = get_immersion_rule("b1", 3)
     core = get_immersion_rule("b1", 10)
 
-    assert "TARGET: 75-100% Ukrainian." in early
-    assert "TARGET: 85-100% Ukrainian." in core
-    assert early != core
+    assert get_immersion_range("b1", 3) == (100, 100)
+    assert get_immersion_range("b1", 10) == (100, 100)
+    assert "Full Ukrainian immersion. No English in module body." in early
+    assert early == core
