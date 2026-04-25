@@ -1,0 +1,11 @@
+{
+  "outcome": "FAIL",
+  "module_done_emitted": false,
+  "audit_reached": false,
+  "reason": "Terminal failure during Step 5e ACTIVITIES before audit/status generation.",
+  "terminal_error": {
+    "type": "FileNotFoundError",
+    "missing_path": "curriculum/l2-uk-en/plans/a1/sounds-letters-and-hello.yaml"
+  },
+  "build_command": ".venv/bin/python -u scripts/build/v6_build.py a1 1 --force --writer codex-tools --reviewer claude-tools"
+}
