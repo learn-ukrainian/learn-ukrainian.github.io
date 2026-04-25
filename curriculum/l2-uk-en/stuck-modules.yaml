@@ -1,8 +1,0 @@
-- level: a1
-  slug: sounds-letters-and-hello
-  terminal: budget_exhausted
-  artifact: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/a1/orchestration/sounds-letters-and-hello/budget_exhausted.yaml
-- level: a1
-  slug: colors
-  terminal: plan_revision_request
-  artifact: /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/claude-fix-convergence-budget/curriculum/l2-uk-en/a1/orchestration/colors/plan_revision_request.yaml

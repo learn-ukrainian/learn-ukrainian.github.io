@@ -1,11 +1,27 @@
 # Salvage Manifest — Curriculum Reboot (#1577)
 
-> **Status: DRAFT — written 2026-04-25, awaiting user + 3-agent confirmation.**
+> **Status: FINAL — committed 2026-04-25 evening with all 3-agent decisions executed.**
 > Phase 1 of EPIC #1577. This doc inventories every artifact in the repo
 > and every open GitHub issue with its disposition under the reboot.
 >
 > Three buckets for artifacts: `keep` / `source-only` / `discard`.
 > Four buckets for issues: `reboot-blocker` / `mvp-deferred` / `backlog` / `close-stale`.
+>
+> ## Resolutions executed (2026-04-25 evening)
+>
+> All four §3 open questions resolved:
+>
+> - **Q1 (Codex):** Issue #1197 (Pre-launch infrastructure) moved from `mvp-deferred` to `reboot-blocker` — analytics/CI/auto-deploy precede launch per MASTER-PLAN.
+> - **Q2 (Codex):** Issue #705 (Vocab progression audit) moved from `reboot-blocker` to `backlog` — script is analytics over generated output, Phase 8/QG-era not pre-generation critical.
+> - **Q3 (Gemini):** Bulk legacy curriculum outputs DISCARDED. ~7,800 files removed from `curriculum/l2-uk-en/{a1,a2,b1,b2,c1,c2}/` and corresponding `starlight/src/content/docs/{level}/`. User's manual a1/1 patches QUARANTINED in `testbed/reference/a1/1/` as evaluator golden target.
+> - **Q4 (unanimous):** Personal-name scrub EXECUTED. 31 files scrubbed (13 wiki LOCKED, 8 design docs/ADRs, tests, scripts), 3 pre-reboot session-state files deleted. Generic dialogue uses preserved (already going away with bulk discard).
+>
+> ## Final issue label distribution after Q1+Q2 corrections
+>
+> - `reboot-blocker`: **20** (was 19; #1197 added)
+> - `mvp-deferred`: **35** (was 36; #1197 removed)
+> - `backlog`: **7** (was 6; #705 added)
+> - EPIC + Phase sub-issues: **3** (#1577, #1578, #1579)
 
 ---
 
