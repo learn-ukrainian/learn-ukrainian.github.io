@@ -10,7 +10,12 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from wiki.embedding_manifest import EmbeddingManifest, UnitSpecInput, append_shard
+from wiki.embedding_manifest import (
+    LEGACY_SHIPPED_CONFIG,
+    EmbeddingManifest,
+    UnitSpecInput,
+    append_shard,
+)
 
 from wiki import dense_rerank, sources_db
 
@@ -238,45 +243,50 @@ def _seed_multi_corpus(conn: sqlite3.Connection, manifest_path: Path) -> None:
             corpus="textbook_sections",
             vectors=textbook_vectors,
             unit_specs=[
-                UnitSpecInput(f"textbook_sections:{idx}", f"tb-{idx}", f"sha-tb-{idx}", "model")
+                UnitSpecInput(f"textbook_sections:{idx}", f"tb-{idx}", f"sha-tb-{idx}")
                 for idx in range(1, 5)
             ],
+            encoder_config=LEGACY_SHIPPED_CONFIG,
         )
         append_shard(
             manifest,
             corpus="modern_literary",
             vectors=modern_vectors,
             unit_specs=[
-                UnitSpecInput(f"modern_literary:mod-{idx}", f"work_{chr(96 + idx)}", f"sha-mod-{idx}", "model")
+                UnitSpecInput(f"modern_literary:mod-{idx}", f"work_{chr(96 + idx)}", f"sha-mod-{idx}")
                 for idx in range(1, 5)
             ],
+            encoder_config=LEGACY_SHIPPED_CONFIG,
         )
         append_shard(
             manifest,
             corpus="archaic_literary",
             vectors=archaic_vectors,
             unit_specs=[
-                UnitSpecInput(f"archaic_literary:arc-{idx}", f"work_{chr(100 + idx)}", f"sha-arc-{idx}", "model")
+                UnitSpecInput(f"archaic_literary:arc-{idx}", f"work_{chr(100 + idx)}", f"sha-arc-{idx}")
                 for idx in range(1, 5)
             ],
+            encoder_config=LEGACY_SHIPPED_CONFIG,
         )
         append_shard(
             manifest,
             corpus="external",
             vectors=external_vectors,
             unit_specs=[
-                UnitSpecInput(f"external:ext-{idx}", f"ext-{idx}", f"sha-ext-{idx}", "model")
+                UnitSpecInput(f"external:ext-{idx}", f"ext-{idx}", f"sha-ext-{idx}")
                 for idx in range(1, 5)
             ],
+            encoder_config=LEGACY_SHIPPED_CONFIG,
         )
         append_shard(
             manifest,
             corpus="wikipedia",
             vectors=wikipedia_vectors,
             unit_specs=[
-                UnitSpecInput(f"wikipedia:{title}:chunk_0", title, f"sha-{title}", "model")
+                UnitSpecInput(f"wikipedia:{title}:chunk_0", title, f"sha-{title}")
                 for title in ("WikiTop", "WikiTwo", "WikiThree", "WikiFour")
             ],
+            encoder_config=LEGACY_SHIPPED_CONFIG,
         )
     finally:
         manifest.close()
@@ -347,10 +357,11 @@ def test_neighbor_expansion_groups_adjacent_literary_chunks(tmp_path: Path, monk
             corpus="modern_literary",
             vectors=np.stack([_vec(0.2), _vec(0.95), _vec(0.25)], axis=0),
             unit_specs=[
-                UnitSpecInput("modern_literary:n-1", "neighbor_work", "sha-1", "model"),
-                UnitSpecInput("modern_literary:n-2", "neighbor_work", "sha-2", "model"),
-                UnitSpecInput("modern_literary:n-3", "neighbor_work", "sha-3", "model"),
+                UnitSpecInput("modern_literary:n-1", "neighbor_work", "sha-1"),
+                UnitSpecInput("modern_literary:n-2", "neighbor_work", "sha-2"),
+                UnitSpecInput("modern_literary:n-3", "neighbor_work", "sha-3"),
             ],
+            encoder_config=LEGACY_SHIPPED_CONFIG,
         )
     finally:
         manifest.close()
@@ -404,9 +415,10 @@ def test_search_sources_respects_track_char_cap(tmp_path: Path, monkeypatch: pyt
             corpus="textbook_sections",
             vectors=np.stack([_vec(0.9), _vec(0.8)], axis=0),
             unit_specs=[
-                UnitSpecInput("textbook_sections:1", "tb-a", "sha-a", "model"),
-                UnitSpecInput("textbook_sections:2", "tb-b", "sha-b", "model"),
+                UnitSpecInput("textbook_sections:1", "tb-a", "sha-a"),
+                UnitSpecInput("textbook_sections:2", "tb-b", "sha-b"),
             ],
+            encoder_config=LEGACY_SHIPPED_CONFIG,
         )
     finally:
         manifest.close()

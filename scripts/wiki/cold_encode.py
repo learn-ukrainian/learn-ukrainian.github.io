@@ -16,6 +16,7 @@ if __package__ in {None, ""}:
         DEFAULT_MANIFEST_DB,
         SUPPORTED_CORPORA,
         cold_encode_corpus,
+        current_encoder_config,
         load_corpus_units,
     )
     from wiki.embedding_manifest import EmbeddingManifest, filter_new_or_changed
@@ -25,6 +26,7 @@ else:
         DEFAULT_MANIFEST_DB,
         SUPPORTED_CORPORA,
         cold_encode_corpus,
+        current_encoder_config,
         load_corpus_units,
     )
     from .embedding_manifest import EmbeddingManifest, filter_new_or_changed
@@ -49,6 +51,7 @@ def _dry_run_summary(corpus: str, *, db_path: Path, manifest_db: Path) -> dict:
             manifest,
             corpus=corpus,
             candidates=[(unit.unit_key, unit.text_sha256) for unit in units],
+            expected_config=current_encoder_config(corpus),
         )
         return {
             "event": "dry_run",

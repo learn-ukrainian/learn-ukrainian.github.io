@@ -19,9 +19,11 @@ from typing import Any
 import numpy as np
 from numpy.typing import NDArray
 
+from .chunking import chunk_text, policy_for
 from .config import PROJECT_ROOT
 from .embedding_manifest import (
     EmbeddingManifest,
+    EncoderConfig,
     UnitSpecInput,
     append_shard,
     filter_new_or_changed,
@@ -32,8 +34,33 @@ from .thermal import nsprocessinfo_thermal_state
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_MANIFEST_DB = PROJECT_ROOT / "data" / "embeddings" / "manifest.db"
 DEFAULT_MODEL_ID = "bge-m3-mlx-fp16"
+DEFAULT_POOLING_MODE = "cls"
 QUERY_MAX_LENGTH = 512
 INDEX_MAX_LENGTH = 512
+
+
+def current_encoder_config(corpus: str) -> EncoderConfig:
+    """Build the ``EncoderConfig`` that the runtime is currently using
+    for ``corpus``.
+
+    The ``chunk_policy_version`` is pulled from the chunking registry
+    (``wiki.chunking.CHUNKING_POLICIES``), so per-corpus chunker
+    changes invalidate that corpus's manifest entries automatically.
+    Unknown corpora raise ``KeyError`` — registration is required.
+
+    Until #1553 step 5 bumps ``INDEX_MAX_LENGTH`` past 512, the
+    model + max-length + pooling tuple stays at the #1348 shipped
+    values and only the chunk_policy_version field shifts when the
+    chunker changes (paragraph-aware policies replace the legacy
+    "no chunking" stamp on textbook / external / wikipedia).
+    """
+
+    return EncoderConfig(
+        model=DEFAULT_MODEL_ID,
+        index_max_length=INDEX_MAX_LENGTH,
+        chunk_policy_version=policy_for(corpus).version_id,
+        pooling_mode=DEFAULT_POOLING_MODE,
+    )
 MAX_BATCH_ROWS = 16
 MAX_BATCH_TOKENS = 4096
 LITERARY_SHARD_LIMIT = 5000
@@ -160,6 +187,33 @@ def _now_utc_iso() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
 
+def _suppress_misleading_tokenizer_warning() -> None:
+    """Filter HuggingFace's "sequence length is longer than the
+    specified maximum" warning at the logger level (#1553 step 4).
+
+    The warning is emitted from
+    ``transformers.tokenization_utils_base`` BEFORE truncation
+    actually runs. Every code path that calls the tokenizer
+    explicitly passes ``truncation=True, max_length=...``, so the
+    warning is a false alarm — but it still scares future readers
+    of build logs into thinking the encoder will crash.
+
+    Filter only the one specific warning at the transformers
+    tokenization logger; do not suppress real warnings.
+    """
+
+    import logging
+
+    class _SilenceLengthWarning(logging.Filter):
+        def filter(self, record: logging.LogRecord) -> bool:
+            return "Token indices sequence length is longer" not in record.getMessage()
+
+    logger = logging.getLogger("transformers.tokenization_utils_base")
+    # Idempotent: don't add the filter twice on re-import.
+    if not any(isinstance(f, _SilenceLengthWarning) for f in logger.filters):
+        logger.addFilter(_SilenceLengthWarning())
+
+
 def _get_tokenizer():
     global _TOKENIZER
     if _TOKENIZER is not None:
@@ -169,6 +223,7 @@ def _get_tokenizer():
         if _TOKENIZER is None:
             from transformers import AutoTokenizer
 
+            _suppress_misleading_tokenizer_warning()
             _TOKENIZER = AutoTokenizer.from_pretrained("BAAI/bge-m3", use_fast=True)
     return _TOKENIZER
 
@@ -653,41 +708,16 @@ def _iter_external_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
         )
 
 
-def chunk_wikipedia_article(
-    title: str,
-    text: str,
-    *,
-    chunk_tokens: int = 450,
-    overlap_tokens: int = 50,
-) -> list[dict[str, Any]]:
-    tokenizer = _get_tokenizer()
-    token_ids = tokenizer.encode(text, add_special_tokens=False, truncation=False)
-    if not token_ids:
-        return []
-
-    chunks: list[dict[str, Any]] = []
-    start = 0
-    chunk_index = 0
-    step = max(1, chunk_tokens - overlap_tokens)
-    while start < len(token_ids):
-        end = min(len(token_ids), start + chunk_tokens)
-        chunk_text = tokenizer.decode(token_ids[start:end], skip_special_tokens=True).strip()
-        if chunk_text:
-            chunks.append(
-                {
-                    "chunk_index": chunk_index,
-                    "text": chunk_text,
-                    "unit_key": f"wikipedia:{title}:chunk_{chunk_index}",
-                }
-            )
-        if end >= len(token_ids):
-            break
-        start += step
-        chunk_index += 1
-    return chunks
-
-
 def _iter_wikipedia_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
+    """Yield one ``CorpusUnit`` per Wikipedia article.
+
+    Pre-#1553 this iterator inlined a token-window chunker
+    (``chunk_wikipedia_article``, 450t/50t). Step 1 of #1553 moves
+    chunking out to ``wiki.chunking`` so the policy is uniform across
+    all corpora and applied centrally inside ``load_corpus_units``.
+    The iterator now yields whole articles; the chunker splits them.
+    """
+
     conn.row_factory = sqlite3.Row
     rows = conn.execute(
         """
@@ -698,20 +728,18 @@ def _iter_wikipedia_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
     ).fetchall()
     for row in rows:
         title = str(row["title"] or "")
-        for chunk in chunk_wikipedia_article(title, str(row["text"] or "")):
-            text = str(chunk["text"])
-            yield CorpusUnit(
-                unit_key=str(chunk["unit_key"]),
-                corpus="wikipedia",
-                parent_key=title,
-                text=text,
-                text_sha256=text_sha256(text),
-                metadata={
-                    "title": title,
-                    "url": str(row["url"] or ""),
-                    "chunk_index": int(chunk["chunk_index"]),
-                },
-            )
+        text = str(row["text"] or "")
+        yield CorpusUnit(
+            unit_key=f"wikipedia:{title}",
+            corpus="wikipedia",
+            parent_key=title,
+            text=text,
+            text_sha256=text_sha256(text),
+            metadata={
+                "title": title,
+                "url": str(row["url"] or ""),
+            },
+        )
 
 
 def _iter_ukrainian_wiki_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
@@ -766,15 +794,128 @@ CORPUS_UNIT_LOADERS: dict[str, Callable[[sqlite3.Connection], Iterator[CorpusUni
 
 
 def load_corpus_units(corpus: str, *, db_path: Path = DEFAULT_DB_PATH) -> list[CorpusUnit]:
+    """Load all units for ``corpus``, applying the central chunking
+    policy from ``wiki.chunking``.
+
+    Pre-#1553 this returned whatever the iterator yielded. Step 1
+    centralizes chunking: each raw unit is fed to ``chunk_text``,
+    which respects the ``ChunkingPolicy`` for ``corpus``. NO_CHUNK
+    policies pass units through unchanged (preserves the existing
+    ingest-chunked behavior of literary / ukrainian_wiki). Active
+    policies emit ``unit_key:chunk_N`` sub-units with
+    ``chunk_index`` / ``chunk_count`` / ``parent_unit_key`` metadata
+    so post-rerank parent expansion can group siblings back together.
+    """
+
     loader = CORPUS_UNIT_LOADERS.get(corpus)
     if loader is None:
         raise ValueError(f"unsupported corpus: {corpus}")
 
+    policy = policy_for(corpus)
+    tokenizer = _get_tokenizer()
+
     conn = sqlite3.connect(str(db_path))
     try:
-        return list(loader(conn))
+        units: list[CorpusUnit] = []
+        for raw_unit in loader(conn):
+            for piece in chunk_text(raw_unit.text, policy=policy, tokenizer=tokenizer):
+                if not piece.text:
+                    continue
+                # NO_CHUNK / single-chunk: yield original unit
+                # unchanged (one-piece-with-chunk_index-0 contract).
+                if not piece.extra_metadata:
+                    if piece.text == raw_unit.text:
+                        units.append(raw_unit)
+                    else:
+                        units.append(_with_text(raw_unit, piece.text))
+                    continue
+                # Active policy: synthesize a sub-unit.
+                metadata = {
+                    **raw_unit.metadata,
+                    "parent_unit_key": raw_unit.unit_key,
+                    **piece.extra_metadata,
+                }
+                units.append(
+                    CorpusUnit(
+                        unit_key=f"{raw_unit.unit_key}:chunk_{piece.chunk_index}",
+                        corpus=raw_unit.corpus,
+                        parent_key=raw_unit.parent_key or raw_unit.unit_key,
+                        text=piece.text,
+                        text_sha256=text_sha256(piece.text),
+                        metadata=metadata,
+                    )
+                )
+        return units
     finally:
         conn.close()
+
+
+def _assert_units_fit_index_window(
+    units: list[CorpusUnit],
+    *,
+    corpus: str,
+    max_length: int | None = None,
+) -> None:
+    """Validator gate (#1553 step 3): no post-chunk unit may exceed
+    ``INDEX_MAX_LENGTH`` tokens.
+
+    Pre-#1553 the tokenizer emitted a 22,174 > 8192 warning during
+    a live build because un-chunked textbook sections fed straight
+    into a 512-token encoder window. The chunker added in step 1
+    is supposed to prevent that, but a misconfigured policy (e.g.
+    ``target_tokens=2000`` while ``INDEX_MAX_LENGTH=512``) would
+    silently re-introduce the bug. This gate makes the failure
+    loud at encode time instead of buried in tokenizer stderr.
+
+    Skipped silently if a corpus has units > max_length AND its
+    chunking policy says ``target_tokens == 0`` (no-chunk policy
+    intentionally accepts whatever the source row length is — that
+    behavior is preserved for the literary corpora where re-chunking
+    would invalidate 137K vectors for marginal gain).
+    """
+
+    cap = INDEX_MAX_LENGTH if max_length is None else max_length
+    policy = policy_for(corpus)
+    if policy.target_tokens == 0:
+        # NO_CHUNK policy: tolerate >cap units. The encoder will
+        # truncate per its own ``truncation=True`` setting, which is
+        # the intended behavior for these pre-chunked corpora.
+        return
+
+    tokenizer = _get_tokenizer()
+    over = []
+    for unit in units:
+        token_count = len(
+            tokenizer.encode(unit.text, add_special_tokens=False, truncation=False)
+        )
+        if token_count > cap:
+            over.append((unit.unit_key, token_count))
+            if len(over) >= 5:
+                break
+
+    if over:
+        examples = ", ".join(f"{key} ({count}t)" for key, count in over)
+        raise ValueError(
+            f"chunking policy {policy.version_id!r} for corpus {corpus!r} "
+            f"emitted {len(over)}+ units exceeding INDEX_MAX_LENGTH={cap}. "
+            f"Examples: {examples}. Either bump INDEX_MAX_LENGTH or lower "
+            f"the policy's target_tokens (and its version_id)."
+        )
+
+
+def _with_text(unit: CorpusUnit, text: str) -> CorpusUnit:
+    """Return a copy of ``unit`` with replaced ``text`` and recomputed
+    ``text_sha256``. Used when a NO_CHUNK policy emits stripped text
+    that differs from the original by whitespace only."""
+
+    return CorpusUnit(
+        unit_key=unit.unit_key,
+        corpus=unit.corpus,
+        parent_key=unit.parent_key,
+        text=text,
+        text_sha256=text_sha256(text),
+        metadata=unit.metadata,
+    )
 
 
 def _chunked(items: Sequence[CorpusUnit], size: int) -> Iterator[list[CorpusUnit]]:
@@ -815,12 +956,15 @@ def cold_encode_corpus(
 
     started = time.perf_counter()
     units = load_corpus_units(corpus, db_path=db_path)
+    _assert_units_fit_index_window(units, corpus=corpus)
     manifest = EmbeddingManifest(manifest_db)
+    encoder_config = current_encoder_config(corpus)
     try:
         new_keys, stale_keys = filter_new_or_changed(
             manifest,
             corpus=corpus,
             candidates=[(unit.unit_key, unit.text_sha256) for unit in units],
+            expected_config=encoder_config,
         )
         pending_keys = set(new_keys) | set(stale_keys)
 
@@ -865,10 +1009,10 @@ def cold_encode_corpus(
                         unit_key=unit.unit_key,
                         parent_key=unit.parent_key,
                         text_sha256=unit.text_sha256,
-                        model=DEFAULT_MODEL_ID,
                     )
                     for unit in group
                 ],
+                encoder_config=encoder_config,
             )
             invalidate_corpus_index(corpus, manifest_db=manifest_db)
             written += 1

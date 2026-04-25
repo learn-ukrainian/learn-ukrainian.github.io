@@ -24,7 +24,8 @@ from pathlib import Path
 import yaml
 
 from .channels import rank_external_hits
-from .dense_rerank import chunk_wikipedia_article, rerank_candidates, rerank_sections
+from .chunking import chunk_text, policy_for
+from .dense_rerank import _get_tokenizer, rerank_candidates, rerank_sections
 from .query_builder import build_query_buckets
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -470,24 +471,36 @@ def _search_external_candidates(
         (fts_query, candidate_k),
     ).fetchall()
 
-    return [
-        {
-            "unit_key": f"external:{row['chunk_id'] or row['id']}",
-            "corpus": "external",
-            "source_type": "external",
-            "chunk_id": str(row["chunk_id"] or ""),
-            "title": str(row["title"] or ""),
-            "text": str(row["text"] or ""),
-            "full_text": str(row["text"] or ""),
-            "source_file": str(row["source_file"] or ""),
-            "parent_key": str(row["source_file"] or ""),
-            "url": str(row["url"] or ""),
-            "source_name": str(row["domain"] or row["source_file"] or ""),
-            "speaker": str(row["speaker"] or ""),
-            "fts_score": float(row["rank"] or 0.0),
-        }
-        for row in rows
-    ]
+    candidates: list[dict] = []
+    policy = policy_for("external")
+    tokenizer = _get_tokenizer()
+    for row in rows:
+        parent_id = str(row["chunk_id"] or row["id"])
+        full_text = str(row["text"] or "")
+        for piece in chunk_text(full_text, policy=policy, tokenizer=tokenizer):
+            unit_key = (
+                f"external:{parent_id}:chunk_{piece.chunk_index}"
+                if piece.extra_metadata
+                else f"external:{parent_id}"
+            )
+            candidates.append({
+                "unit_key": unit_key,
+                "corpus": "external",
+                "source_type": "external",
+                "chunk_id": str(row["chunk_id"] or ""),
+                "title": str(row["title"] or ""),
+                "text": piece.text,
+                "full_text": piece.text,
+                "source_file": str(row["source_file"] or ""),
+                "parent_key": str(row["source_file"] or ""),
+                "url": str(row["url"] or ""),
+                "source_name": str(row["domain"] or row["source_file"] or ""),
+                "speaker": str(row["speaker"] or ""),
+                "chunk_index": piece.chunk_index,
+                "parent_unit_key": f"external:{parent_id}",
+                "fts_score": float(row["rank"] or 0.0),
+            })
+    return candidates
 
 
 def _search_wikipedia_candidates(
@@ -523,20 +536,28 @@ def _search_wikipedia_candidates(
     ).fetchall()
 
     candidates: list[dict] = []
+    policy = policy_for("wikipedia")
+    tokenizer = _get_tokenizer()
     for row in rows:
         title = str(row["title"] or "")
-        for chunk in chunk_wikipedia_article(title, str(row["text"] or "")):
+        full_text = str(row["text"] or "")
+        for piece in chunk_text(full_text, policy=policy, tokenizer=tokenizer):
+            unit_key = (
+                f"wikipedia:{title}:chunk_{piece.chunk_index}"
+                if piece.extra_metadata
+                else f"wikipedia:{title}"
+            )
             candidates.append(
                 {
-                    "unit_key": str(chunk["unit_key"]),
+                    "unit_key": unit_key,
                     "corpus": "wikipedia",
                     "source_type": "wikipedia",
                     "title": title,
-                    "text": str(chunk["text"]),
-                    "full_text": str(chunk["text"]),
+                    "text": piece.text,
+                    "full_text": piece.text,
                     "parent_key": title,
                     "url": str(row["url"] or ""),
-                    "chunk_index": int(chunk["chunk_index"]),
+                    "chunk_index": piece.chunk_index,
                     "source_name": "Wikipedia",
                     "fts_score": float(row["rank"] or 0.0),
                 }
@@ -629,6 +650,66 @@ def _search_ukrainian_wiki_candidates(
     ]
 
 
+def _expand_to_chunk_candidates(
+    parent_candidates: list[dict],
+    *,
+    corpus: str,
+    parent_id_field: str,
+    text_field: str = "text",
+) -> list[dict]:
+    """Fan out each parent-level candidate into chunk-level
+    candidates whose ``unit_key``s match the manifest written by
+    ``load_corpus_units``.
+
+    Each input candidate's ``parent_id_field`` (e.g. ``section_id``)
+    plus the corpus name forms the parent unit_key; the chunker
+    appends ``:chunk_N`` only when the policy actually splits the
+    text into multiple pieces. Single-chunk pieces preserve the
+    original parent unit_key so short sections / articles stay
+    identifiable by their natural id.
+
+    Codex review (msg #459): textbook and external candidate paths
+    were emitting parent ``unit_key``s after step 1 chunked the
+    manifest entries — every chunked unit got a dense rerank miss
+    + zero score. This helper fixes that uniformly.
+    """
+
+    policy = policy_for(corpus)
+    tokenizer = _get_tokenizer()
+    expanded: list[dict] = []
+    for parent in parent_candidates:
+        parent_id_value = parent.get(parent_id_field)
+        if parent_id_value is None:
+            continue
+        parent_unit_key = f"{corpus}:{parent_id_value}"
+        full_text = str(parent.get(text_field, "") or "")
+        if not full_text:
+            continue
+        pieces = list(chunk_text(full_text, policy=policy, tokenizer=tokenizer))
+        if not pieces:
+            continue
+        for piece in pieces:
+            unit_key = (
+                f"{parent_unit_key}:chunk_{piece.chunk_index}"
+                if piece.extra_metadata
+                else parent_unit_key
+            )
+            expanded.append({
+                **parent,
+                "corpus": corpus,
+                "unit_key": unit_key,
+                "parent_unit_key": parent_unit_key,
+                "parent_key": str(parent.get("source_file") or parent.get("parent_key", "")),
+                "text": piece.text,
+                "full_text": piece.text,
+                "chunk_index": piece.chunk_index,
+                "fts_score": float(
+                    parent.get("fts_score") or parent.get("best_rank", 0.0) or 0.0
+                ),
+            })
+    return expanded
+
+
 def _dispatch_corpus_search(
     corpus: str,
     *,
@@ -639,18 +720,23 @@ def _dispatch_corpus_search(
     candidate_k_per_corpus: int,
 ) -> list[dict]:
     if corpus == "textbook_sections":
-        candidates = _search_sections_fts5(
+        section_candidates = _search_sections_fts5(
             bucket_a_phrases,
             bucket_b_keywords,
             track=track,
             max_sections=candidate_k_per_corpus,
             max_chunk_candidates=max(candidate_k_per_corpus * 4, candidate_k_per_corpus),
         )
-        for candidate in candidates:
-            candidate["corpus"] = corpus
-            candidate["unit_key"] = candidate.get("unit_key") or f"textbook_sections:{int(candidate['section_id'])}"
-            candidate["parent_key"] = str(candidate.get("source_file", ""))
-            candidate["fts_score"] = float(candidate.get("best_rank", 0.0) or 0.0)
+        # Each FTS5-matched section's full_text is fanned out into
+        # chunk-level candidates whose unit_keys match the manifest
+        # entries written by load_corpus_units. Without this, the
+        # dense rerank lookup misses every chunked section's
+        # sub-units and zeroes out the score (Codex msg #459).
+        candidates = _expand_to_chunk_candidates(
+            section_candidates,
+            corpus="textbook_sections",
+            parent_id_field="section_id",
+        )
     elif corpus in {"modern_literary", "archaic_literary"}:
         candidates = _search_literary_candidates(
             bucket_a_phrases,
@@ -748,16 +834,27 @@ def _expand_wikipedia_neighbors(match: dict) -> dict:
     if row is None:
         return match
 
-    chunks = chunk_wikipedia_article(title, str(row["text"] or ""))
+    pieces = list(
+        chunk_text(
+            str(row["text"] or ""),
+            policy=policy_for("wikipedia"),
+            tokenizer=_get_tokenizer(),
+        )
+    )
     chunk_index = int(match.get("chunk_index", 0))
-    context = chunks[max(0, chunk_index - 1):chunk_index + 2]
+    context = pieces[max(0, chunk_index - 1):chunk_index + 2]
     if not context:
         return match
 
     return {
         **match,
-        "full_text": "\n\n".join(str(chunk["text"]) for chunk in context),
-        "context_unit_keys": [str(chunk["unit_key"]) for chunk in context],
+        "full_text": "\n\n".join(piece.text for piece in context),
+        "context_unit_keys": [
+            f"wikipedia:{title}:chunk_{piece.chunk_index}"
+            if piece.extra_metadata
+            else f"wikipedia:{title}"
+            for piece in context
+        ],
     }
 
 
