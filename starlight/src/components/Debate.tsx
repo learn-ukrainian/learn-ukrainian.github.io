@@ -4,21 +4,73 @@ import ActivityHelp from './ActivityHelp';
 import { parseMarkdown } from './utils';
 
 interface Position {
+  /**
+   * @schemaDescription Name value consumed by this component.
+   * @ukrainianText true
+   */
   name: string;
+  /**
+   * @schemaDescription Proponents value consumed by this component.
+   * @ukrainianText true
+   */
   proponents: string;
+  /**
+   * @schemaDescription Argument value consumed by this component.
+   * @ukrainianText true
+   */
   argument: string;
+  /**
+   * @schemaDescription Evidence value consumed by this component.
+   * @ukrainianText true
+   */
   evidence?: string[];
+  /**
+   * @schemaDescription Weaknesses value consumed by this component.
+   * @ukrainianText true
+   */
   weaknesses?: string[];
 }
 
 interface DebateProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Debate Question value consumed by this component.
+   * @ukrainianText true
+   */
   debateQuestion: string;
+  /**
+   * @schemaDescription Historical Context value consumed by this component.
+   * @ukrainianText true
+   */
   historicalContext?: string;
+  /**
+   * @schemaDescription Positions value consumed by this component.
+   * @ukrainianText true
+   */
   positions: Position[];
+  /**
+   * @schemaDescription Analysis Tasks value consumed by this component.
+   * @ukrainianText true
+   */
   analysisTasks?: string[];
+  /**
+   * @schemaDescription Model Analysis value consumed by this component.
+   * @ukrainianText true
+   */
   modelAnalysis?: string;
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

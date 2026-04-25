@@ -1,14 +1,38 @@
 import React, { useState } from 'react';
 
 interface FlashcardData {
+  /**
+   * @schemaDescription Front value consumed by this component.
+   * @ukrainianText true
+   */
   front: string;
+  /**
+   * @schemaDescription Back value consumed by this component.
+   * @ukrainianText true
+   */
   back: string;
+  /**
+   * @schemaDescription Subtitle value consumed by this component.
+   * @ukrainianText true
+   */
   subtitle?: string;
+  /**
+   * @schemaDescription Tag value consumed by this component.
+   * @ukrainianText true
+   */
   tag?: string;
+  /**
+   * @schemaDescription Tag Color value consumed by this component.
+   * @ukrainianText false
+   */
   tagColor?: string;
 }
 
 interface FlashcardDeckProps {
+  /**
+   * @schemaDescription Cards value consumed by this component.
+   * @ukrainianText true
+   */
   cards: FlashcardData[];
 }
 

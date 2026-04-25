@@ -4,20 +4,68 @@ import ActivityHelp from './ActivityHelp';
 import { parseMarkdown } from './utils';
 
 interface Feature {
+  /**
+   * @schemaDescription Feature Name value consumed by this component.
+   * @ukrainianText true
+   */
   featureName: string;
+  /**
+   * @schemaDescription Value A value consumed by this component.
+   * @ukrainianText true
+   */
   valueA: string;
+  /**
+   * @schemaDescription Value B value consumed by this component.
+   * @ukrainianText true
+   */
   valueB: string;
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
   explanation: string;
 }
 
 interface DialectComparisonProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Text A value consumed by this component.
+   * @ukrainianText maybe
+   */
   textA: string;
+  /**
+   * @schemaDescription Text B value consumed by this component.
+   * @ukrainianText maybe
+   */
   textB: string;
+  /**
+   * @schemaDescription Label A value consumed by this component.
+   * @ukrainianText false
+   */
   labelA?: string;
+  /**
+   * @schemaDescription Label B value consumed by this component.
+   * @ukrainianText false
+   */
   labelB?: string;
+  /**
+   * @schemaDescription Features value consumed by this component.
+   * @ukrainianText true
+   */
   features: Feature[];
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

@@ -4,16 +4,52 @@ import ActivityHelp from './ActivityHelp';
 import { parseMarkdown } from './utils';
 
 interface ReadingProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Context value consumed by this component.
+   * @ukrainianText true
+   */
   context?: string;
+  /**
+   * @schemaDescription Text passage shown to the learner.
+   * @ukrainianText true
+   */
   text?: string;  // Seminar: inline primary source text
+  /**
+   * @schemaDescription Source value consumed by this component.
+   * @ukrainianText false
+   */
   source?: string;  // Seminar: attribution (e.g., 'Тарас Шевченко (1845)')
   resource?: {
+    /**
+     * @schemaDescription Type value consumed by this component.
+     * @ukrainianText false
+     */
     type?: string;
+    /**
+     * @schemaDescription External URL for the embedded or linked resource.
+     * @ukrainianText false
+     */
     url?: string;
+    /**
+     * @schemaDescription Display title shown above the component.
+     * @ukrainianText true
+     */
     title?: string;
   };
+  /**
+   * @schemaDescription Tasks value consumed by this component.
+   * @ukrainianText true
+   */
   tasks: string[];
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

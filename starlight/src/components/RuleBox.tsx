@@ -1,8 +1,20 @@
 import React from 'react';
 
 interface RuleBoxProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Icon value consumed by this component.
+   * @ukrainianText false
+   */
   icon?: string;
+  /**
+   * @schemaDescription Nested MDX content rendered inside the component.
+   * @ukrainianText false
+   */
   children: React.ReactNode;
 }
 

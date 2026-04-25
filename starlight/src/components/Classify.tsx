@@ -4,15 +4,46 @@ import directStyles from './Direct.module.css';
 import { shuffle } from './utils';
 
 interface ClassifyCategory {
+  /**
+   * @schemaDescription Short label for a UI or source item.
+   * @ukrainianText true
+   */
   label: string;
+  /**
+   * @schemaDescription Symbol Hint value consumed by this component.
+   * @ukrainianText true
+   */
   symbolHint?: string;
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items: string[];
 }
 
+/**
+ * @deprecated Deprecated; subsumed by group-sort.
+ */
 interface ClassifyProps {
+  /**
+   * @schemaDescription Categories value consumed by this component.
+   * @ukrainianText true
+   */
   categories: ClassifyCategory[];
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title?: string;
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

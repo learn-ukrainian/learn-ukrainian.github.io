@@ -4,10 +4,30 @@ import ActivityHelp from './ActivityHelp';
 import { parseMarkdown } from './utils';
 
 interface AuthorialIntentProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Excerpt value consumed by this component.
+   * @ukrainianText true
+   */
   excerpt: string;
+  /**
+   * @schemaDescription Array of questions rendered by the component.
+   * @ukrainianText true
+   */
   questions: string[];
+  /**
+   * @schemaDescription Model answer for review or self-check.
+   * @ukrainianText true
+   */
   modelAnswer: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

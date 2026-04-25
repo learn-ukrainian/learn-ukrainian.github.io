@@ -4,9 +4,25 @@ import { parseMarkdown } from './utils';
 import ActivityHelp from './ActivityHelp';
 
 interface TrueFalseQuestionProps {
+  /**
+   * @schemaDescription Statement the learner marks true or false.
+   * @ukrainianText true
+   */
   statement: string;
+  /**
+   * @schemaDescription Is True value consumed by this component.
+   * @ukrainianText false
+   */
   isTrue: boolean;
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
   explanation?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 
@@ -68,14 +84,38 @@ export function TrueFalseQuestion({ statement, isTrue, explanation, isUkrainian 
 }
 
 interface TrueFalseItem {
+  /**
+   * @schemaDescription Statement the learner marks true or false.
+   * @ukrainianText true
+   */
   statement: string;
+  /**
+   * @schemaDescription Is True value consumed by this component.
+   * @ukrainianText false
+   */
   isTrue: boolean;
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
   explanation?: string;
 }
 
 interface TrueFalseProps {
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items: TrueFalseItem[];
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

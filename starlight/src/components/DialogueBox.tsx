@@ -2,14 +2,38 @@ import React from 'react';
 import directStyles from './Direct.module.css';
 
 interface DialogueExchange {
+  /**
+   * @schemaDescription Speaker value consumed by this component.
+   * @ukrainianText true
+   */
   speaker: string;
+  /**
+   * @schemaDescription Text passage shown to the learner.
+   * @ukrainianText true
+   */
   text: string;
+  /**
+   * @schemaDescription Emoji value consumed by this component.
+   * @ukrainianText false
+   */
   emoji?: string;
 }
 
 interface DialogueBoxProps {
+  /**
+   * @schemaDescription Exchanges value consumed by this component.
+   * @ukrainianText true
+   */
   exchanges: DialogueExchange[];
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

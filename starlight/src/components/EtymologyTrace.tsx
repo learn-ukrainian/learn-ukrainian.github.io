@@ -4,15 +4,43 @@ import ActivityHelp from './ActivityHelp';
 import { parseMarkdown } from './utils';
 
 interface EtymologyItem {
+  /**
+   * @schemaDescription Ukrainian word shown to the learner.
+   * @ukrainianText true
+   */
   word: string;
+  /**
+   * @schemaDescription Modern value consumed by this component.
+   * @ukrainianText true
+   */
   modern: string;
+  /**
+   * @schemaDescription Evolution value consumed by this component.
+   * @ukrainianText true
+   */
   evolution: string;
 }
 
 interface EtymologyTraceProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items: EtymologyItem[];
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

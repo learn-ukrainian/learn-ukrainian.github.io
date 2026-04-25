@@ -4,14 +4,46 @@ import ActivityHelp from './ActivityHelp';
 import { parseMarkdown } from './utils';
 
 interface CriticalAnalysisProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Context value consumed by this component.
+   * @ukrainianText true
+   */
   context?: string;
+  /**
+   * @schemaDescription Question value consumed by this component.
+   * @ukrainianText true
+   */
   question?: string;
+  /**
+   * @schemaDescription Model answer for review or self-check.
+   * @ukrainianText true
+   */
   modelAnswer?: string;
   // Seminar mode fields
+  /**
+   * @schemaDescription Target Text value consumed by this component.
+   * @ukrainianText true
+   */
   targetText?: string;
+  /**
+   * @schemaDescription Array of questions rendered by the component.
+   * @ukrainianText true
+   */
   questions?: string[];
+  /**
+   * @schemaDescription Model answers for review or self-check.
+   * @ukrainianText true
+   */
   modelAnswers?: string[];
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

@@ -16,8 +16,20 @@ function getChipColor(text: string, index: number): string {
 }
 
 interface FillInQuestionProps {
+  /**
+   * @schemaDescription Sentence shown to the learner.
+   * @ukrainianText true
+   */
   sentence: string;
+  /**
+   * @schemaDescription Correct answer used for validation and feedback.
+   * @ukrainianText true
+   */
   answer: string;
+  /**
+   * @schemaDescription Answer options shown to the learner.
+   * @ukrainianText true
+   */
   options?: string[];
 }
 
@@ -133,14 +145,38 @@ export function FillInQuestion({ sentence, answer, options = [] }: FillInQuestio
 }
 
 interface FillInItem {
+  /**
+   * @schemaDescription Sentence shown to the learner.
+   * @ukrainianText true
+   */
   sentence: string;
+  /**
+   * @schemaDescription Correct answer used for validation and feedback.
+   * @ukrainianText true
+   */
   answer: string;
+  /**
+   * @schemaDescription Answer options shown to the learner.
+   * @ukrainianText true
+   */
   options?: string[];
 }
 
 interface FillInProps {
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items: FillInItem[];
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

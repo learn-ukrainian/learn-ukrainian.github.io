@@ -1,0 +1,2050 @@
+schema_version: "1.0"
+generator_version: "1.0.0"
+generated_from:
+  components_dir: starlight/src/components/{*.tsx, *.astro}
+  components_sha256: 99c48b8fa082924310cdac58f2973805d521b6a734751daf610b0cf75cedfa2f
+  config_tables_sha256: 281df19989601f0312fb944fec0a8fb4ec3cb7275de338d8d158e042705a2c8a
+  lesson_contract_sha256: 89bd2db9731bdc5d811cd6b166d9e7d1e250e08f1e01a9120127593c78223727
+components:
+  Anagram:
+    tab: activities
+    level_scope:
+    - a1
+    activity_type: anagram
+    placement: workbook
+    props:
+      required: []
+      optional:
+      - name: items
+        type: AnagramItem[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: children
+        type: jsx
+        description: Nested MDX content rendered inside the component.
+        ukrainian_text: 'false'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      AnagramItem:
+      - name: scrambled
+        type: string
+        description: Scrambled value consumed by this component.
+        ukrainian_text: 'true'
+      - name: answer
+        type: string
+        description: Correct answer used for validation and feedback.
+        ukrainian_text: 'true'
+      - name: hint
+        type: string
+        description: Hint value consumed by this component.
+        ukrainian_text: 'true'
+    example:
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  AuthorialIntent:
+    tab: activities
+    level_scope:
+    - c2
+    - bio
+    - lit
+    activity_type: authorial-intent
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: excerpt
+        type: string
+        description: Excerpt value consumed by this component.
+        ukrainian_text: 'true'
+      - name: questions
+        type: string[]
+        description: Array of questions rendered by the component.
+        ukrainian_text: 'true'
+      - name: modelAnswer
+        type: string
+        description: Model answer for review or self-check.
+        ukrainian_text: 'true'
+      optional:
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example:
+      title: Приклад
+      excerpt: Приклад
+      questions:
+      - Приклад
+      modelAnswer: Приклад
+    deprecated: false
+    deprecation_reason: null
+  Classify:
+    tab: activities
+    level_scope: []
+    activity_type: classify
+    placement: n/a
+    props:
+      required:
+      - name: categories
+        type: ClassifyCategory[]
+        description: Categories value consumed by this component.
+        ukrainian_text: 'true'
+      optional:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      ClassifyCategory:
+      - name: label
+        type: string
+        description: Short label for a UI or source item.
+        ukrainian_text: 'true'
+      - name: symbolHint
+        type: string
+        description: Symbol Hint value consumed by this component.
+        ukrainian_text: 'true'
+      - name: items
+        type: string[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+    example:
+      categories:
+      - <ClassifyCategory>
+      title: Приклад
+      instruction: Приклад
+    deprecated: true
+    deprecation_reason: Deprecated; subsumed by group-sort.
+  Cloze:
+    tab: activities
+    level_scope:
+    - a2
+    - b1
+    - b2
+    - c1
+    - c2
+    - b2-pro
+    - c1-pro
+    activity_type: cloze
+    placement: workbook
+    props:
+      required: []
+      optional:
+      - name: passage
+        type: string
+        description: Passage value consumed by this component.
+        ukrainian_text: 'true'
+      - name: blanks
+        type: ClozeBlank[]
+        description: Blanks value consumed by this component.
+        ukrainian_text: 'true'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: children
+        type: jsx
+        description: Nested MDX content rendered inside the component.
+        ukrainian_text: 'false'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      ClozeBlank:
+      - name: index
+        type: number
+        description: Index value consumed by this component.
+        ukrainian_text: 'false'
+      - name: options
+        type: string[]
+        description: Answer options shown to the learner.
+        ukrainian_text: 'true'
+      - name: answer
+        type: string
+        description: Correct answer used for validation and feedback.
+        ukrainian_text: 'true'
+    example:
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  ComparativeStudy:
+    tab: activities
+    level_scope:
+    - c1
+    - c2
+    - hist
+    - bio
+    - istorio
+    - lit
+    - c1-pro
+    - oes
+    - ruth
+    activity_type: comparative-study
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      optional:
+      - name: content
+        type: string
+        description: Content value consumed by this component.
+        ukrainian_text: 'true'
+      - name: task
+        type: string
+        description: Task value consumed by this component.
+        ukrainian_text: 'true'
+      - name: modelAnswer
+        type: string
+        description: Model answer for review or self-check.
+        ukrainian_text: 'true'
+      - name: itemsToCompare
+        type: string[]
+        description: Items To Compare value consumed by this component.
+        ukrainian_text: 'true'
+      - name: criteria
+        type: string[]
+        description: Criteria value consumed by this component.
+        ukrainian_text: 'true'
+      - name: prompt
+        type: string
+        description: Prompt shown to guide the learner response.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example:
+      title: Приклад
+    deprecated: false
+    deprecation_reason: null
+  CountSyllables:
+    tab: activities
+    level_scope:
+    - a1
+    activity_type: count-syllables
+    placement: both
+    props:
+      required:
+      - name: items
+        type: CountSyllablesItem[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: maxCount
+        type: number
+        description: Max Count value consumed by this component.
+        ukrainian_text: 'false'
+    nested_types:
+      CountSyllablesItem:
+      - name: word
+        type: string
+        description: Ukrainian word shown to the learner.
+        ukrainian_text: 'true'
+      - name: correct
+        type: number
+        description: Correct value consumed by this component.
+        ukrainian_text: 'false'
+      - name: translation
+        type: string
+        description: English translation or gloss.
+        ukrainian_text: 'true'
+    example:
+      items:
+      - <CountSyllablesItem>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  CriticalAnalysis:
+    tab: activities
+    level_scope:
+    - c1
+    - c2
+    - hist
+    - bio
+    - istorio
+    - lit
+    - c1-pro
+    - oes
+    - ruth
+    activity_type: critical-analysis
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      optional:
+      - name: context
+        type: string
+        description: Context value consumed by this component.
+        ukrainian_text: 'true'
+      - name: question
+        type: string
+        description: Question value consumed by this component.
+        ukrainian_text: 'true'
+      - name: modelAnswer
+        type: string
+        description: Model answer for review or self-check.
+        ukrainian_text: 'true'
+      - name: targetText
+        type: string
+        description: Target Text value consumed by this component.
+        ukrainian_text: 'true'
+      - name: questions
+        type: string[]
+        description: Array of questions rendered by the component.
+        ukrainian_text: 'true'
+      - name: modelAnswers
+        type: string[]
+        description: Model answers for review or self-check.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example:
+      title: Приклад
+    deprecated: false
+    deprecation_reason: null
+  Debate:
+    tab: activities
+    level_scope:
+    - c2
+    - lit
+    activity_type: debate
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: debateQuestion
+        type: string
+        description: Debate Question value consumed by this component.
+        ukrainian_text: 'true'
+      - name: positions
+        type: Position[]
+        description: Positions value consumed by this component.
+        ukrainian_text: 'true'
+      optional:
+      - name: historicalContext
+        type: string
+        description: Historical Context value consumed by this component.
+        ukrainian_text: 'true'
+      - name: analysisTasks
+        type: string[]
+        description: Analysis Tasks value consumed by this component.
+        ukrainian_text: 'true'
+      - name: modelAnalysis
+        type: string
+        description: Model Analysis value consumed by this component.
+        ukrainian_text: 'true'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      Position:
+      - name: name
+        type: string
+        description: Name value consumed by this component.
+        ukrainian_text: 'true'
+      - name: proponents
+        type: string
+        description: Proponents value consumed by this component.
+        ukrainian_text: 'true'
+      - name: argument
+        type: string
+        description: Argument value consumed by this component.
+        ukrainian_text: 'true'
+      - name: evidence
+        type: string[]
+        description: Evidence value consumed by this component.
+        ukrainian_text: 'true'
+      - name: weaknesses
+        type: string[]
+        description: Weaknesses value consumed by this component.
+        ukrainian_text: 'true'
+    example:
+      title: Приклад
+      debateQuestion: Приклад
+      positions:
+      - <Position>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  DialectComparison:
+    tab: activities
+    level_scope:
+    - ruth
+    activity_type: dialect-comparison
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: textA
+        type: string
+        description: Text A value consumed by this component.
+        ukrainian_text: maybe
+      - name: textB
+        type: string
+        description: Text B value consumed by this component.
+        ukrainian_text: maybe
+      - name: features
+        type: Feature[]
+        description: Features value consumed by this component.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: labelA
+        type: string
+        description: Label A value consumed by this component.
+        ukrainian_text: 'false'
+      - name: labelB
+        type: string
+        description: Label B value consumed by this component.
+        ukrainian_text: 'false'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      Feature:
+      - name: featureName
+        type: string
+        description: Feature Name value consumed by this component.
+        ukrainian_text: 'true'
+      - name: valueA
+        type: string
+        description: Value A value consumed by this component.
+        ukrainian_text: 'true'
+      - name: valueB
+        type: string
+        description: Value B value consumed by this component.
+        ukrainian_text: 'true'
+      - name: explanation
+        type: string
+        description: Feedback explanation shown after the learner answers.
+        ukrainian_text: 'true'
+    example:
+      title: Приклад
+      textA: Приклад
+      textB: Приклад
+      features:
+      - <Feature>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  DialogueBox:
+    tab: lesson
+    level_scope: &id001
+    - a1
+    - a2
+    - b1
+    - b2
+    - c1
+    - c2
+    - hist
+    - bio
+    - istorio
+    - lit
+    - b2-pro
+    - c1-pro
+    - oes
+    - ruth
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: exchanges
+        type: DialogueExchange[]
+        description: Exchanges value consumed by this component.
+        ukrainian_text: 'true'
+      optional:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      DialogueExchange:
+      - name: speaker
+        type: string
+        description: Speaker value consumed by this component.
+        ukrainian_text: 'true'
+      - name: text
+        type: string
+        description: Text passage shown to the learner.
+        ukrainian_text: 'true'
+      - name: emoji
+        type: string
+        description: Emoji value consumed by this component.
+        ukrainian_text: 'false'
+    example:
+      exchanges:
+      - <DialogueExchange>
+      title: Приклад
+    deprecated: false
+    deprecation_reason: null
+  DivideWords:
+    tab: activities
+    level_scope:
+    - a1
+    activity_type: divide-words
+    placement: both
+    props:
+      required:
+      - name: items
+        type: DivideWordsItem[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+    nested_types:
+      DivideWordsItem:
+      - name: word
+        type: string
+        description: Ukrainian word shown to the learner.
+        ukrainian_text: 'true'
+      - name: answer
+        type: string
+        description: Correct answer used for validation and feedback.
+        ukrainian_text: 'true'
+      - name: hint
+        type: string
+        description: Hint value consumed by this component.
+        ukrainian_text: 'true'
+    example:
+      items:
+      - <DivideWordsItem>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  ErrorCorrection:
+    tab: activities
+    level_scope:
+    - a1
+    - a2
+    - b1
+    - b2
+    - c1
+    - c2
+    - b2-pro
+    - c1-pro
+    activity_type: error-correction
+    placement: both
+    props:
+      required: []
+      optional:
+      - name: items
+        type: ErrorCorrectionItemData[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+      - name: children
+        type: jsx
+        description: Nested MDX content rendered inside the component.
+        ukrainian_text: 'false'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      ErrorCorrectionItemData:
+      - name: sentence
+        type: string
+        description: Sentence shown to the learner.
+        ukrainian_text: 'true'
+      - name: errorWord
+        type: string | null
+        description: Error Word value consumed by this component.
+        ukrainian_text: 'true'
+      - name: correctForm
+        type: string
+        description: Correct Form value consumed by this component.
+        ukrainian_text: 'true'
+      - name: options
+        type: string[]
+        description: Answer options shown to the learner.
+        ukrainian_text: 'true'
+      - name: explanation
+        type: string
+        description: Feedback explanation shown after the learner answers.
+        ukrainian_text: 'true'
+    example:
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  EssayResponse:
+    tab: activities
+    level_scope:
+    - b1
+    - b2
+    - c1
+    - c2
+    - hist
+    - bio
+    - istorio
+    - lit
+    - b2-pro
+    - c1-pro
+    - oes
+    - ruth
+    activity_type: essay-response
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: prompt
+        type: string
+        description: Prompt shown to guide the learner response.
+        ukrainian_text: 'true'
+      optional:
+      - name: modelAnswer
+        type: string
+        description: Model answer for review or self-check.
+        ukrainian_text: 'true'
+      - name: rubric
+        type: string
+        description: Evaluation rubric for the response.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example:
+      title: Приклад
+      prompt: Приклад
+    deprecated: false
+    deprecation_reason: null
+  EtymologyTrace:
+    tab: activities
+    level_scope:
+    - c1
+    - c2
+    - oes
+    - ruth
+    activity_type: etymology-trace
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: items
+        type: EtymologyItem[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      EtymologyItem:
+      - name: word
+        type: string
+        description: Ukrainian word shown to the learner.
+        ukrainian_text: 'true'
+      - name: modern
+        type: string
+        description: Modern value consumed by this component.
+        ukrainian_text: 'true'
+      - name: evolution
+        type: string
+        description: Evolution value consumed by this component.
+        ukrainian_text: 'true'
+    example:
+      title: Приклад
+      items:
+      - <EtymologyItem>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  FillIn:
+    tab: activities
+    level_scope:
+    - a1
+    - a2
+    - b1
+    - b2
+    - c1
+    - c2
+    - hist
+    - bio
+    - istorio
+    - lit
+    - b2-pro
+    - c1-pro
+    - oes
+    - ruth
+    activity_type: fill-in
+    placement: both
+    props:
+      required:
+      - name: items
+        type: FillInItem[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      FillInItem:
+      - name: sentence
+        type: string
+        description: Sentence shown to the learner.
+        ukrainian_text: 'true'
+      - name: answer
+        type: string
+        description: Correct answer used for validation and feedback.
+        ukrainian_text: 'true'
+      - name: options
+        type: string[]
+        description: Answer options shown to the learner.
+        ukrainian_text: 'true'
+    example:
+      items:
+      - <FillInItem>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  FlashcardDeck:
+    tab: vocabulary
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: cards
+        type: FlashcardData[]
+        description: Cards value consumed by this component.
+        ukrainian_text: 'true'
+      optional: []
+    nested_types:
+      FlashcardData:
+      - name: front
+        type: string
+        description: Front value consumed by this component.
+        ukrainian_text: 'true'
+      - name: back
+        type: string
+        description: Back value consumed by this component.
+        ukrainian_text: 'true'
+      - name: subtitle
+        type: string
+        description: Subtitle value consumed by this component.
+        ukrainian_text: 'true'
+      - name: tag
+        type: string
+        description: Tag value consumed by this component.
+        ukrainian_text: 'true'
+      - name: tagColor
+        type: string
+        description: Tag Color value consumed by this component.
+        ukrainian_text: 'false'
+    example:
+      cards:
+      - <FlashcardData>
+    deprecated: false
+    deprecation_reason: null
+  GrammarIdentify:
+    tab: activities
+    level_scope:
+    - b1
+    - b2
+    - c1
+    - c2
+    - b2-pro
+    - c1-pro
+    - oes
+    - ruth
+    activity_type: grammar-identify
+    placement: both
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: items
+        type: GrammarItem[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      GrammarItem:
+      - name: text
+        type: string
+        description: Text passage shown to the learner.
+        ukrainian_text: 'true'
+      - name: form
+        type: string
+        description: Form value consumed by this component.
+        ukrainian_text: 'true'
+      - name: answer
+        type: string
+        description: Correct answer used for validation and feedback.
+        ukrainian_text: 'true'
+    example:
+      title: Приклад
+      items:
+      - <GrammarItem>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  GroupSort:
+    tab: activities
+    level_scope:
+    - a1
+    - a2
+    - b1
+    - b2
+    - b2-pro
+    activity_type: group-sort
+    placement: both
+    props:
+      required:
+      - name: groups
+        type: '{ [key: string]: string[] }'
+        description: Groups value consumed by this component.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example:
+      groups: {}
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  HighlightMorphemes:
+    tab: activities
+    level_scope:
+    - b1
+    - b2
+    - c1
+    - c2
+    - b2-pro
+    - c1-pro
+    - oes
+    - ruth
+    activity_type: highlight-morphemes
+    placement: both
+    props:
+      required:
+      - name: children
+        type: jsx
+        description: Nested MDX content rendered inside the component.
+        ukrainian_text: 'false'
+      optional:
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example:
+      children: <p>Приклад вмісту.</p>
+    deprecated: false
+    deprecation_reason: null
+  ImageToLetter:
+    tab: activities
+    level_scope:
+    - a1
+    activity_type: image-to-letter
+    placement: inline
+    props:
+      required:
+      - name: items
+        type: ImageToLetterItem[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+      optional:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      ImageToLetterItem:
+      - name: emoji
+        type: string
+        description: Emoji value consumed by this component.
+        ukrainian_text: 'false'
+      - name: answer
+        type: string
+        description: Correct answer used for validation and feedback.
+        ukrainian_text: 'true'
+      - name: distractors
+        type: string[]
+        description: Distractors value consumed by this component.
+        ukrainian_text: 'false'
+      - name: note
+        type: string
+        description: Note value consumed by this component.
+        ukrainian_text: 'false'
+    example:
+      items:
+      - <ImageToLetterItem>
+      title: Приклад
+    deprecated: false
+    deprecation_reason: null
+  LetterGrid:
+    tab: activities
+    level_scope:
+    - a1
+    activity_type: letter-grid
+    placement: inline
+    props:
+      required:
+      - name: letters
+        type: LetterEntry[]
+        description: Letters value consumed by this component.
+        ukrainian_text: 'true'
+      optional:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+    nested_types:
+      LetterEntry:
+      - name: upper
+        type: string
+        description: Upper value consumed by this component.
+        ukrainian_text: 'true'
+      - name: lower
+        type: string
+        description: Lower value consumed by this component.
+        ukrainian_text: 'true'
+      - name: emoji
+        type: string
+        description: Emoji value consumed by this component.
+        ukrainian_text: 'false'
+      - name: key_word
+        type: string
+        description: Key word value consumed by this component.
+        ukrainian_text: 'true'
+      - name: note
+        type: string
+        description: Note value consumed by this component.
+        ukrainian_text: 'false'
+      - name: sound_type
+        type: string
+        description: Sound type value consumed by this component.
+        ukrainian_text: 'false'
+    example:
+      letters:
+      - <LetterEntry>
+      title: Приклад
+    deprecated: false
+    deprecation_reason: null
+  MarkTheWords:
+    tab: activities
+    level_scope:
+    - a2
+    - b1
+    - b2
+    - c1
+    - c2
+    - hist
+    - bio
+    - istorio
+    - lit
+    - b2-pro
+    - c1-pro
+    - oes
+    - ruth
+    activity_type: mark-the-words
+    placement: both
+    props:
+      required:
+      - name: children
+        type: jsx
+        description: Nested MDX content rendered inside the component.
+        ukrainian_text: 'false'
+      optional:
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example:
+      children: <p>Приклад вмісту.</p>
+    deprecated: false
+    deprecation_reason: null
+  MatchUp:
+    tab: activities
+    level_scope:
+    - a1
+    - a2
+    - b1
+    - b2
+    - c1
+    - hist
+    - bio
+    - istorio
+    - lit
+    - b2-pro
+    - c1-pro
+    activity_type: match-up
+    placement: both
+    props:
+      required:
+      - name: pairs
+        type: MatchPair[]
+        description: Pairs value consumed by this component.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      MatchPair:
+      - name: left
+        type: string
+        description: Left value consumed by this component.
+        ukrainian_text: 'true'
+      - name: right
+        type: string
+        description: Right value consumed by this component.
+        ukrainian_text: 'true'
+    example:
+      pairs:
+      - <MatchPair>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  MythBuster:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: claim
+        type: string
+        description: Claim value consumed by this component.
+        ukrainian_text: 'true'
+      - name: truth
+        type: string
+        description: Truth value consumed by this component.
+        ukrainian_text: 'true'
+      optional:
+      - name: claimSource
+        type: string
+        description: Claim Source value consumed by this component.
+        ukrainian_text: 'false'
+      - name: truthSource
+        type: string
+        description: Truth Source value consumed by this component.
+        ukrainian_text: 'false'
+    nested_types: {}
+    example:
+      claim: Приклад
+      truth: Приклад
+    deprecated: false
+    deprecation_reason: null
+  Observe:
+    tab: activities
+    level_scope:
+    - a1
+    - a2
+    activity_type: observe
+    placement: both
+    props:
+      required: []
+      optional:
+      - name: examples
+        type: string[]
+        description: Examples value consumed by this component.
+        ukrainian_text: 'true'
+      - name: prompt
+        type: string
+        description: Prompt shown to guide the learner response.
+        ukrainian_text: 'true'
+      - name: children
+        type: jsx
+        description: Nested MDX content rendered inside the component.
+        ukrainian_text: 'false'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example: {}
+    deprecated: false
+    deprecation_reason: null
+  OddOneOut:
+    tab: activities
+    level_scope:
+    - a1
+    - a2
+    - b1
+    activity_type: odd-one-out
+    placement: both
+    props:
+      required:
+      - name: items
+        type: '{ /** * @schemaDescription Words shown to the learner. * @ukrainianText true */ words: string[]; /** * @schemaDescription Correct value consumed by this component. * @ukrainianText false */ correct: number; /** * @schemaDescription Feedback explanation shown after the learner answers. * @ukrainianText true */ explanation: string; }[]'
+        description: items prop.
+        ukrainian_text: 'false'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+    nested_types: {}
+    example:
+      items:
+      - {}
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  Order:
+    tab: activities
+    level_scope:
+    - a1
+    - a2
+    - b1
+    activity_type: order
+    placement: both
+    props:
+      required:
+      - name: items
+        type: string[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+      - name: correct_order
+        type: number[]
+        description: Zero-based order indices for the correct sequence.
+        ukrainian_text: 'false'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example:
+      items:
+      - Приклад
+      correct_order:
+      - 1
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  PaleographyAnalysis:
+    tab: activities
+    level_scope:
+    - oes
+    - ruth
+    activity_type: paleography-analysis
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: imageUrl
+        type: string
+        description: Image Url value consumed by this component.
+        ukrainian_text: 'false'
+      - name: hotspots
+        type: Hotspot[]
+        description: Hotspots value consumed by this component.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: options
+        type: string[]
+        description: Answer options shown to the learner.
+        ukrainian_text: 'false'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      Hotspot:
+      - name: x
+        type: number
+        description: X value consumed by this component.
+        ukrainian_text: 'false'
+      - name: y
+        type: number
+        description: Y value consumed by this component.
+        ukrainian_text: 'false'
+      - name: label
+        type: string
+        description: Short label for a UI or source item.
+        ukrainian_text: 'true'
+      - name: explanation
+        type: string
+        description: Feedback explanation shown after the learner answers.
+        ukrainian_text: 'true'
+    example:
+      title: Приклад
+      imageUrl: Приклад
+      hotspots:
+      - <Hotspot>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  PhraseTable:
+    tab: vocabulary
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: groups
+        type: PhraseGroup[]
+        description: Groups value consumed by this component.
+        ukrainian_text: 'true'
+      optional:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      PhraseGroup:
+      - name: function
+        type: string
+        description: Function value consumed by this component.
+        ukrainian_text: 'true'
+      - name: phrases
+        type: Phrase[]
+        description: Phrases value consumed by this component.
+        ukrainian_text: 'true'
+    example:
+      groups:
+      - <PhraseGroup>
+      title: Приклад
+    deprecated: false
+    deprecation_reason: null
+  PickSyllables:
+    tab: activities
+    level_scope:
+    - a1
+    activity_type: pick-syllables
+    placement: both
+    props:
+      required:
+      - name: syllables
+        type: string[]
+        description: Syllables value consumed by this component.
+        ukrainian_text: 'true'
+      - name: correctIndices
+        type: number[]
+        description: Zero-based indices of all correct choices.
+        ukrainian_text: 'false'
+      - name: category
+        type: string
+        description: Category label used by the activity.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: explanation
+        type: string
+        description: Feedback explanation shown after the learner answers.
+        ukrainian_text: 'true'
+    nested_types: {}
+    example:
+      syllables:
+      - Приклад
+      correctIndices:
+      - 1
+      category: Приклад
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  Quiz:
+    tab: activities
+    level_scope:
+    - a1
+    - a2
+    - b1
+    - b2
+    - c1
+    - c2
+    - hist
+    - bio
+    - istorio
+    - lit
+    - b2-pro
+    - c1-pro
+    - oes
+    - ruth
+    activity_type: quiz
+    placement: both
+    props:
+      required: []
+      optional:
+      - name: questions
+        type: QuizQuestionItem[]
+        description: Array of questions rendered by the component.
+        ukrainian_text: 'true'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: children
+        type: jsx
+        description: Nested MDX content rendered inside the component.
+        ukrainian_text: 'false'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      QuizQuestionItem:
+      - name: question
+        type: string
+        description: Question value consumed by this component.
+        ukrainian_text: 'true'
+      - name: options
+        type: '{ text: string; correct: boolean }[]'
+        description: Answer options shown to the learner.
+        ukrainian_text: 'true'
+    example:
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  ReadingActivity:
+    tab: activities
+    level_scope:
+    - b2
+    - c1
+    - c2
+    - hist
+    - bio
+    - istorio
+    - lit
+    - b2-pro
+    - c1-pro
+    - oes
+    - ruth
+    activity_type: reading
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: tasks
+        type: string[]
+        description: Tasks value consumed by this component.
+        ukrainian_text: 'true'
+      optional:
+      - name: context
+        type: string
+        description: Context value consumed by this component.
+        ukrainian_text: 'true'
+      - name: text
+        type: string
+        description: Text passage shown to the learner.
+        ukrainian_text: 'true'
+      - name: source
+        type: string
+        description: Source value consumed by this component.
+        ukrainian_text: 'false'
+      - name: resource
+        type: '{ /** * @schemaDescription Type value consumed by this component. * @ukrainianText false */ type?: string; /** * @schemaDescription External URL for the embedded or linked resource. * @ukrainianText false */ url?: string; /** * @schemaDescription Display title shown above the component. * @ukrainianText true */ title?: string; }'
+        description: resource prop.
+        ukrainian_text: 'false'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example:
+      title: Приклад
+      tasks:
+      - Приклад
+    deprecated: false
+    deprecation_reason: null
+  RuleBox:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: children
+        type: jsx
+        description: Nested MDX content rendered inside the component.
+        ukrainian_text: 'false'
+      optional:
+      - name: icon
+        type: string
+        description: Icon value consumed by this component.
+        ukrainian_text: 'false'
+    nested_types: {}
+    example:
+      title: Приклад
+      children: <p>Приклад вмісту.</p>
+    deprecated: false
+    deprecation_reason: null
+  Select:
+    tab: activities
+    level_scope: []
+    activity_type: select
+    placement: n/a
+    props:
+      required: []
+      optional:
+      - name: questions
+        type: GeneratorSelectQuestion[]
+        description: Array of questions rendered by the component.
+        ukrainian_text: 'true'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: children
+        type: jsx
+        description: Nested MDX content rendered inside the component.
+        ukrainian_text: 'false'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      GeneratorSelectQuestion:
+      - name: question
+        type: string
+        description: Question value consumed by this component.
+        ukrainian_text: 'true'
+      - name: options
+        type: '{ text: string; correct: boolean }[]'
+        description: Answer options shown to the learner.
+        ukrainian_text: 'true'
+      - name: explanation
+        type: string
+        description: Feedback explanation shown after the learner answers.
+        ukrainian_text: 'true'
+    example:
+      instruction: Приклад
+    deprecated: true
+    deprecation_reason: Deprecated; subsumed by mark-the-words.
+  SourceBox:
+    tab: resources
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'false'
+      - name: quote
+        type: string
+        description: Quoted source excerpt preserved in its source language.
+        ukrainian_text: maybe
+      - name: citation
+        type: string
+        description: Citation metadata preserved verbatim.
+        ukrainian_text: 'false'
+      optional:
+      - name: children
+        type: jsx
+        description: Nested MDX content rendered inside the component.
+        ukrainian_text: 'false'
+    nested_types: {}
+    example:
+      title: Приклад
+      quote: Приклад
+      citation: Приклад
+    deprecated: false
+    deprecation_reason: null
+  SourceEvaluation:
+    tab: activities
+    level_scope:
+    - hist
+    - bio
+    - istorio
+    activity_type: source-evaluation
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: sourceText
+        type: string
+        description: Source Text value consumed by this component.
+        ukrainian_text: maybe
+      optional:
+      - name: sourceMetadata
+        type: SourceMetadata
+        description: Source Metadata value consumed by this component.
+        ukrainian_text: 'false'
+      - name: evaluationCriteria
+        type: string[]
+        description: Evaluation Criteria value consumed by this component.
+        ukrainian_text: 'true'
+      - name: guidingQuestions
+        type: string[]
+        description: Guiding Questions value consumed by this component.
+        ukrainian_text: 'true'
+      - name: modelEvaluation
+        type: string
+        description: Model Evaluation value consumed by this component.
+        ukrainian_text: 'true'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      SourceMetadata:
+      - name: author
+        type: string
+        description: Author value consumed by this component.
+        ukrainian_text: 'false'
+      - name: date
+        type: string
+        description: Date value consumed by this component.
+        ukrainian_text: 'false'
+      - name: type
+        type: string
+        description: Type value consumed by this component.
+        ukrainian_text: 'false'
+      - name: context
+        type: string
+        description: Context value consumed by this component.
+        ukrainian_text: 'true'
+    example:
+      title: Приклад
+      sourceText: Приклад
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  Transcription:
+    tab: activities
+    level_scope:
+    - oes
+    - ruth
+    activity_type: transcription
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: original
+        type: string
+        description: Original value consumed by this component.
+        ukrainian_text: maybe
+      - name: answer
+        type: string
+        description: Correct answer used for validation and feedback.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: hints
+        type: string[]
+        description: Hints value consumed by this component.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types: {}
+    example:
+      title: Приклад
+      original: Приклад
+      answer: Приклад
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  Translate:
+    tab: activities
+    level_scope:
+    - a1
+    - a2
+    - b1
+    - b2
+    - c1
+    - b2-pro
+    - c1-pro
+    activity_type: translate
+    placement: workbook
+    props:
+      required: []
+      optional:
+      - name: questions
+        type: GeneratorTranslateQuestion[]
+        description: Array of questions rendered by the component.
+        ukrainian_text: 'true'
+      - name: direction
+        type: '''to-uk'' | ''to-en'''
+        description: Direction value consumed by this component.
+        ukrainian_text: 'false'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: children
+        type: jsx
+        description: Nested MDX content rendered inside the component.
+        ukrainian_text: 'false'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      GeneratorTranslateQuestion:
+      - name: source
+        type: string
+        description: Source value consumed by this component.
+        ukrainian_text: 'false'
+      - name: options
+        type: '{ text: string; correct: boolean }[]'
+        description: Answer options shown to the learner.
+        ukrainian_text: 'true'
+      - name: explanation
+        type: string
+        description: Feedback explanation shown after the learner answers.
+        ukrainian_text: 'true'
+    example:
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  TranslationCritique:
+    tab: activities
+    level_scope:
+    - b2
+    - c1
+    - c2
+    - lit
+    - b2-pro
+    - c1-pro
+    activity_type: translation-critique
+    placement: workbook
+    props:
+      required:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: original
+        type: string
+        description: Original value consumed by this component.
+        ukrainian_text: maybe
+      - name: translations
+        type: Translation[]
+        description: Translations value consumed by this component.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: focusPoints
+        type: string[]
+        description: Focus Points value consumed by this component.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      Translation:
+      - name: translator
+        type: string
+        description: Translator value consumed by this component.
+        ukrainian_text: 'true'
+      - name: text
+        type: string
+        description: Text passage shown to the learner.
+        ukrainian_text: 'true'
+      - name: accuracyScore
+        type: number
+        description: Accuracy Score value consumed by this component.
+        ukrainian_text: 'false'
+      - name: notes
+        type: string
+        description: Notes value consumed by this component.
+        ukrainian_text: 'false'
+    example:
+      title: Приклад
+      original: Приклад
+      translations:
+      - <Translation>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  TrueFalse:
+    tab: activities
+    level_scope:
+    - a1
+    - a2
+    - b1
+    - b2
+    - hist
+    - bio
+    - istorio
+    - lit
+    - b2-pro
+    - oes
+    - ruth
+    activity_type: true-false
+    placement: both
+    props:
+      required:
+      - name: items
+        type: TrueFalseItem[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+      optional:
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      TrueFalseItem:
+      - name: statement
+        type: string
+        description: Statement the learner marks true or false.
+        ukrainian_text: 'true'
+      - name: isTrue
+        type: boolean
+        description: Is True value consumed by this component.
+        ukrainian_text: 'false'
+      - name: explanation
+        type: string
+        description: Feedback explanation shown after the learner answers.
+        ukrainian_text: 'true'
+    example:
+      items:
+      - <TrueFalseItem>
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  Unjumble:
+    tab: activities
+    level_scope:
+    - a1
+    - a2
+    - b1
+    activity_type: unjumble
+    placement: both
+    props:
+      required: []
+      optional:
+      - name: items
+        type: UnjumbleItem[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+      - name: instruction
+        type: string
+        description: Instruction shown to the learner above the activity.
+        ukrainian_text: 'true'
+      - name: children
+        type: jsx
+        description: Nested MDX content rendered inside the component.
+        ukrainian_text: 'false'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      UnjumbleItem:
+      - name: words
+        type: string
+        description: Words shown to the learner.
+        ukrainian_text: 'true'
+      - name: jumbled
+        type: string
+        description: Jumbled value consumed by this component.
+        ukrainian_text: 'true'
+      - name: answer
+        type: string
+        description: Correct answer used for validation and feedback.
+        ukrainian_text: 'true'
+      - name: hint
+        type: string
+        description: Hint value consumed by this component.
+        ukrainian_text: 'true'
+    example:
+      instruction: Приклад
+    deprecated: false
+    deprecation_reason: null
+  VocabCard:
+    tab: vocabulary
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: words
+        type: VocabEntry[]
+        description: Words shown to the learner.
+        ukrainian_text: 'true'
+      optional:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      VocabEntry:
+      - name: word
+        type: string
+        description: Ukrainian word shown to the learner.
+        ukrainian_text: 'true'
+      - name: emoji
+        type: string
+        description: Emoji value consumed by this component.
+        ukrainian_text: 'false'
+      - name: image_url
+        type: string | null
+        description: Image url value consumed by this component.
+        ukrainian_text: 'false'
+      - name: pronunciation_video
+        type: string
+        description: Pronunciation video value consumed by this component.
+        ukrainian_text: 'false'
+      - name: examples
+        type: string[]
+        description: Examples value consumed by this component.
+        ukrainian_text: 'true'
+      - name: category
+        type: string
+        description: Category label used by the activity.
+        ukrainian_text: 'true'
+      - name: question
+        type: string
+        description: Question value consumed by this component.
+        ukrainian_text: 'true'
+    example:
+      words:
+      - <VocabEntry>
+      title: Приклад
+    deprecated: false
+    deprecation_reason: null
+  WatchAndRepeat:
+    tab: activities
+    level_scope:
+    - a1
+    activity_type: watch-and-repeat
+    placement: inline
+    props:
+      required:
+      - name: items
+        type: WatchAndRepeatItem[]
+        description: Array of activity items rendered by the component.
+        ukrainian_text: 'true'
+      optional:
+      - name: title
+        type: string
+        description: Display title shown above the component.
+        ukrainian_text: 'true'
+      - name: isUkrainian
+        type: boolean
+        description: UI language flag for Ukrainian labels and feedback.
+        ukrainian_text: 'false'
+        default: false
+    nested_types:
+      WatchAndRepeatItem:
+      - name: video
+        type: string
+        description: Video value consumed by this component.
+        ukrainian_text: 'false'
+      - name: letter
+        type: string
+        description: Letter value consumed by this component.
+        ukrainian_text: 'false'
+      - name: word
+        type: string
+        description: Ukrainian word shown to the learner.
+        ukrainian_text: 'true'
+      - name: note
+        type: string
+        description: Note value consumed by this component.
+        ukrainian_text: 'false'
+    example:
+      items:
+      - <WatchAndRepeatItem>
+      title: Приклад
+    deprecated: false
+    deprecation_reason: null
+  YouTubeVideo:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required: []
+      optional:
+      - name: url
+        type: string
+        description: External URL for the embedded or linked resource.
+        ukrainian_text: 'false'
+      - name: id
+        type: string
+        description: External media identifier.
+        ukrainian_text: 'false'
+      - name: label
+        type: string
+        description: Short label for a UI or source item.
+        ukrainian_text: 'true'
+    nested_types: {}
+    example: {}
+    deprecated: false
+    deprecation_reason: null

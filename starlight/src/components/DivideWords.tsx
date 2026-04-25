@@ -2,13 +2,33 @@ import React, { useState } from 'react';
 import styles from './Activities.module.css';
 
 interface DivideWordsItem {
+  /**
+   * @schemaDescription Ukrainian word shown to the learner.
+   * @ukrainianText true
+   */
   word: string;
+  /**
+   * @schemaDescription Correct answer used for validation and feedback.
+   * @ukrainianText true
+   */
   answer: string; // correct division, e.g. "мо-ло-ко"
+  /**
+   * @schemaDescription Hint value consumed by this component.
+   * @ukrainianText true
+   */
   hint?: string;
 }
 
 interface DivideWordsProps {
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items: DivideWordsItem[];
 }
 

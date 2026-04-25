@@ -117,3 +117,11 @@ repos:
         language: system
         pass_filenames: false
         stages: [pre-commit]
+
+      - id: lesson-schema-drift
+        name: lesson schema drift gate
+        entry: bash -c '.venv/bin/python scripts/build/generate_lesson_schema.py && git diff --exit-code docs/lesson-schema.yaml'
+        language: system
+        pass_filenames: false
+        files: ^(starlight/src/components/.*\.(tsx|astro)|scripts/pipeline/config_tables\.py|docs/lesson-contract\.md)$
+        stages: [pre-commit]

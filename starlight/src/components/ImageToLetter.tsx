@@ -4,15 +4,43 @@ import directStyles from './Direct.module.css';
 import { shuffle } from './utils';
 
 interface ImageToLetterItem {
+  /**
+   * @schemaDescription Emoji value consumed by this component.
+   * @ukrainianText false
+   */
   emoji: string;
+  /**
+   * @schemaDescription Correct answer used for validation and feedback.
+   * @ukrainianText true
+   */
   answer: string;
+  /**
+   * @schemaDescription Distractors value consumed by this component.
+   * @ukrainianText false
+   */
   distractors: string[];
+  /**
+   * @schemaDescription Note value consumed by this component.
+   * @ukrainianText false
+   */
   note?: string;
 }
 
 interface ImageToLetterProps {
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items: ImageToLetterItem[];
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

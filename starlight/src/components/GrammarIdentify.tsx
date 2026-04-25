@@ -4,15 +4,43 @@ import ActivityHelp from './ActivityHelp';
 import { parseMarkdown } from './utils';
 
 interface GrammarItem {
+  /**
+   * @schemaDescription Text passage shown to the learner.
+   * @ukrainianText true
+   */
   text: string;
+  /**
+   * @schemaDescription Form value consumed by this component.
+   * @ukrainianText true
+   */
   form: string;
+  /**
+   * @schemaDescription Correct answer used for validation and feedback.
+   * @ukrainianText true
+   */
   answer: string;
 }
 
 interface GrammarIdentifyProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items: GrammarItem[];
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

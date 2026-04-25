@@ -4,18 +4,58 @@ import ActivityHelp from './ActivityHelp';
 import { parseMarkdown } from './utils';
 
 interface Translation {
+  /**
+   * @schemaDescription Translator value consumed by this component.
+   * @ukrainianText true
+   */
   translator: string;
+  /**
+   * @schemaDescription Text passage shown to the learner.
+   * @ukrainianText true
+   */
   text: string;
+  /**
+   * @schemaDescription Accuracy Score value consumed by this component.
+   * @ukrainianText false
+   */
   accuracyScore: number;
+  /**
+   * @schemaDescription Notes value consumed by this component.
+   * @ukrainianText false
+   */
   notes: string;
 }
 
 interface TranslationCritiqueProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Original value consumed by this component.
+   * @ukrainianText maybe
+   */
   original: string;
+  /**
+   * @schemaDescription Translations value consumed by this component.
+   * @ukrainianText true
+   */
   translations: Translation[];
+  /**
+   * @schemaDescription Focus Points value consumed by this component.
+   * @ukrainianText true
+   */
   focusPoints?: string[];
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

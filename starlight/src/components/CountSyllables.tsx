@@ -2,14 +2,38 @@ import React, { useState } from 'react';
 import styles from './Activities.module.css';
 
 interface CountSyllablesItem {
+  /**
+   * @schemaDescription Ukrainian word shown to the learner.
+   * @ukrainianText true
+   */
   word: string;
+  /**
+   * @schemaDescription Correct value consumed by this component.
+   * @ukrainianText false
+   */
   correct: number;
+  /**
+   * @schemaDescription English translation or gloss.
+   * @ukrainianText true
+   */
   translation?: string;
 }
 
 interface CountSyllablesProps {
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items: CountSyllablesItem[];
+  /**
+   * @schemaDescription Max Count value consumed by this component.
+   * @ukrainianText false
+   */
   maxCount?: number;
 }
 

@@ -3,9 +3,25 @@ import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
 
 interface MarkTheWordsActivityProps {
+  /**
+   * @schemaDescription Text passage shown to the learner.
+   * @ukrainianText true
+   */
   text: string;
+  /**
+   * @schemaDescription Correct Words value consumed by this component.
+   * @ukrainianText true
+   */
   correctWords: string[];
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 
@@ -154,7 +170,15 @@ export function MarkTheWordsActivity({ text, correctWords, instruction, isUkrain
 }
 
 interface MarkTheWordsProps {
+  /**
+   * @schemaDescription Nested MDX content rendered inside the component.
+   * @ukrainianText false
+   */
   children: React.ReactNode;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 
