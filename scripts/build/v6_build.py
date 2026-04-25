@@ -6937,7 +6937,11 @@ def _activity_pre_validation_findings(
     return findings, payload
 
 
-def step_activity_pre_validate(content_path: Path, level: str, slug: str) -> bool:
+def step_activity_pre_validate(
+    content_path: Path,
+    level: str,
+    slug: str,
+) -> tuple[bool, dict[str, object] | None]:
     """Block review when generated activities are ungrounded or miss required vocab."""
     _log(f"\n{'='*60}")
     _log("  Step 5g: ACTIVITY PRE-VALIDATE — Grounding + required vocab")
@@ -6959,13 +6963,43 @@ def step_activity_pre_validate(content_path: Path, level: str, slug: str) -> boo
         for finding in findings:
             _log(f"    - {finding['issue']}")
         _log(f"  → {validation_path}")
-        return False
+        return False, payload or None
     if payload.get("skipped"):
         _log(f"  ⏭️  Activity pre-validation skipped: {payload['reason']}")
     else:
         _log("  ✅ Activity pre-validation passed")
     _log(f"  → {validation_path}")
-    return True
+    return True, payload
+
+
+def _format_activity_prevalidate_feedback(findings: dict[str, object] | None) -> str | None:
+    if not findings:
+        return None
+    ungrounded = [
+        str(u["word"])
+        for u in findings.get("ungrounded_answers", [])
+        if isinstance(u, dict) and u.get("word")
+    ]
+    missing_vocab = [str(w) for w in findings.get("required_vocab_missing", [])]
+    feedback_lines = []
+    if ungrounded:
+        feedback_lines.append(
+            "PRE-VALIDATE FAILED on these activity answers — they are "
+            "NOT in the prose or plan vocabulary, so the learner cannot "
+            "answer them:"
+        )
+        feedback_lines.extend(f"  - {word!r}" for word in ungrounded)
+        feedback_lines.append(
+            "DO NOT use those answers again. Replace with words that "
+            "actually appear in the prose, or drop the activity."
+        )
+    if missing_vocab:
+        feedback_lines.append(
+            "These required vocabulary items have NO activity coverage "
+            "and must each be tested by at least one activity:"
+        )
+        feedback_lines.extend(f"  - {word!r}" for word in missing_vocab)
+    return "\n".join(feedback_lines) if feedback_lines else None
 
 
 def _build_activity_level_context(level: str, module_num: int, plan: dict) -> str:
@@ -7177,6 +7211,7 @@ def _build_pedagogy_patterns(plan: dict, level: str) -> str:
 def step_activities(
     content_path: Path, level: str, module_num: int, slug: str,
     writer: str = "gemini-tools", max_retries: int = 4,
+    ungrounded_feedback: str | None = None,
 ) -> Path | None:
     """Step 5e: Generate structured activity YAML from plan + prose.
 
@@ -7328,6 +7363,7 @@ def step_activities(
         "{FORBIDDEN_ACTIVITY_TYPES}": forbidden_types,
         "{ALLOWED_ACTIVITY_TYPES}": allowed_types,
         "{REQUIRED_TYPES}": required_types,
+        "{UNGROUNDED_FEEDBACK}": ungrounded_feedback or "",
         # Backward compat
         "{ACTIVITY_COUNT_TARGET}": total_target,
         "{PRIORITY_TYPES}": activity_config.get("PRIORITY_TYPES", ""),
@@ -11315,18 +11351,30 @@ def main():
             and "activity-pre-validate" not in completed_phases
         ):
             _phase_start = time.monotonic()
-            prevalidate_ok = step_activity_pre_validate(content_path, args.level, slug)
+            prevalidate_ok, prevalidate_payload = step_activity_pre_validate(
+                content_path,
+                args.level,
+                slug,
+            )
             if not prevalidate_ok and steps in ("all", "activities", "repair"):
                 _log("  🔄 Activity pre-validation failed — regenerating activities once through tier-1 repair")
+                ungrounded_feedback = _format_activity_prevalidate_feedback(
+                    prevalidate_payload,
+                )
                 activity_path = step_activities(
                     content_path, args.level, args.module, slug,
                     writer=args.writer,
+                    ungrounded_feedback=ungrounded_feedback,
                 )
                 if activity_path:
                     _inject_abetka_activities(activity_path, args.level, slug)
                     repair_ok, _needs_regen = step_repair(args.level, args.module, slug)
                     if repair_ok:
-                        prevalidate_ok = step_activity_pre_validate(content_path, args.level, slug)
+                        prevalidate_ok, _prevalidate_payload = step_activity_pre_validate(
+                            content_path,
+                            args.level,
+                            slug,
+                        )
             if not prevalidate_ok:
                 _log("\n❌ Build FAILED at Step 5g (activity pre-validation)")
                 _save_v6_state(args.level, slug, "activity-pre-validate", status="failed")
