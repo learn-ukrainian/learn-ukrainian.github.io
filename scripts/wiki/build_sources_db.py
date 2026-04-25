@@ -49,6 +49,16 @@ EXTERNAL_DIR = PROJECT_ROOT / "data" / "external_articles"
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 LOG_DIR = PROJECT_ROOT / "logs"
 
+# File-size primary guard for `_db_is_populated()` — see #1563.
+# A real populated sources.db is hundreds of MB to a few GB. A
+# `sqlite3.connect()` on a fresh path creates a <1 KB file. Anything
+# above this threshold is treated as populated regardless of whether
+# COUNT(*) queries succeed, because the historical wipe failure mode
+# was: COUNT errored transiently → populated returned False →
+# `db.unlink()` ran without --force. Don't depend on opening sqlite
+# to decide whether the file holds real data.
+MIN_PROTECTED_DB_BYTES = 1 * 1024 * 1024  # 1 MB
+
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     from wiki.extract_sections import DEFAULT_REPORT_PATH, extract_sections
@@ -288,11 +298,46 @@ def _ingest_jsonl(conn: sqlite3.Connection, table: str, jsonl_path: Path,
 
 
 def _db_is_populated(db: Path) -> tuple[bool, int]:
-    """True (plus row count) if the DB exists and has any rows in the
-    main content tables. Returns (False, 0) for missing/empty DBs.
+    """True (plus row count) if the DB exists and has real content.
+
+    File-size primary guard (#1563): if the file is larger than
+    ``MIN_PROTECTED_DB_BYTES`` (1 MB), it is treated as populated even
+    when the COUNT(*) queries fail or return 0. This guards against the
+    failure mode that wiped data/sources.db on 2026-04-25: a transient
+    SQLite error during the count caused this function to return
+    (False, 0), which led `build()` to proceed without `--force` and
+    `db.unlink()` the file. The file-size check is read directly from
+    the filesystem and does not depend on opening sqlite.
+
+    For files <1 MB, fall back to the original COUNT-based logic. A
+    file that small is almost certainly a fresh `sqlite3.connect()`
+    init or corruption — destructive rebuild without `--force` is the
+    intended behavior.
     """
     if not db.exists():
         return False, 0
+
+    # Primary guard: file size. Reading st_size doesn't open sqlite, so
+    # it cannot trigger transient lock or I/O errors that mimic an empty DB.
+    file_size = db.stat().st_size
+    if file_size > MIN_PROTECTED_DB_BYTES:
+        # Big file → real content. Try to count for a useful diagnostic
+        # display, but do NOT let a sqlite error flip the verdict.
+        total = 0
+        try:
+            conn = sqlite3.connect(str(db))
+            for tbl in ("textbooks", "literary_texts", "external_articles"):
+                with contextlib.suppress(sqlite3.OperationalError):
+                    total += conn.execute(f"SELECT COUNT(*) FROM {tbl}").fetchone()[0]
+            conn.close()
+        except sqlite3.Error:
+            # Big file + sqlite error = high suspicion of real content
+            # we just can't query right now. Fail closed: still populated.
+            pass
+        return True, total
+
+    # File too small to plausibly hold real corpora. Trust the count and
+    # treat any sqlite error as "not populated" (legacy behavior).
     try:
         conn = sqlite3.connect(str(db))
         total = 0
@@ -405,7 +450,14 @@ def build(db_path: Path | None = None,
 
     populated, total = _db_is_populated(db)
     if populated and not force:
-        print(f"  ⚠️  {db.name} already populated ({total:,} rows across main tables).")
+        # Use file size as the primary diagnostic — `total` may be 0 when
+        # the file is large but the main-table COUNT query errored
+        # transiently (the #1563 failure mode). File size doesn't lie.
+        size_mb = db.stat().st_size / (1024 * 1024) if db.exists() else 0.0
+        print(
+            f"  ⚠️  {db.name} already populated "
+            f"({size_mb:,.1f} MB on disk, {total:,} rows across main tables)."
+        )
         print("     Refusing to destroy it without --force. Use:")
         print("       .venv/bin/python scripts/wiki/build_sources_db.py --force")
         print("     or add --dry-run to preview what would happen.")
