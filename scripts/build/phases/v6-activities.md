@@ -92,6 +92,10 @@ These words are the module's vocabulary foundation. ALL exercise items must use 
 
 **Grounding rule:** Every Ukrainian word in your exercises must appear either in the prose content or in this vocabulary list. Do NOT invent new words the learner hasn't seen.
 
+<retry-feedback>
+{UNGROUNDED_FEEDBACK}
+</retry-feedback>
+
 <required-vocab-coverage>
 Every entry in the plan's `vocabulary_hints.required` list MUST appear in at least one activity. Coverage is mandatory at 100%.
 
