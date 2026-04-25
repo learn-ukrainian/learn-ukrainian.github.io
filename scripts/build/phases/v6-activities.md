@@ -1,4 +1,4 @@
-<!-- version: 1.3.0 | updated: 2026-04-17 -->
+<!-- version: 1.4.0 | updated: 2026-04-25 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -18,13 +18,25 @@ These are the binding numerical contracts for THIS module. The audit will FAIL i
 | Bucket | Min | Max | Notes |
 |---|---|---|---|
 | Total activities | {TOTAL_TARGET} | {TOTAL_TARGET}+ | inline + workbook combined |
-| Inline (lesson tab) | {INLINE_MIN} | {INLINE_MAX} | one per `<!-- INJECT_ACTIVITY -->` marker, see below |
+| Inline (lesson tab) | {INLINE_MIN} | {INLINE_MAX} | exactly one per `<!-- INJECT_ACTIVITY -->` marker, see below |
 | Workbook (Зошит tab) | {WORKBOOK_MIN} | {WORKBOOK_MAX} | extended practice |
 | Items per activity | {ITEMS_MIN} | — | each activity must have at least {ITEMS_MIN} items (unless its type cap is lower — see Activity Type Reference below) |
 
-**You MUST ship at least {INLINE_MIN} inline activities AND at least {WORKBOOK_MIN} workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+**Inline activity count: exactly {INLINE_MIN}.** The writer placed {INLINE_MIN} injection marker(s), and each marker needs exactly one inline activity with the matching `id`.
 
-**Type diversity is required.** The module (inline + workbook combined) MUST use at least **{MIN_TYPES_UNIQUE}** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level. (If `{MIN_TYPES_UNIQUE}` is `0`, the audit profile for this level does not enforce type diversity — but variety still produces a better lesson, so aim for 4+ types when the workbook allows it.)
+**You MUST ship exactly {INLINE_MIN} inline activities AND at least {WORKBOOK_MIN} workbook activities.** Going under either is a hard failure — the audit gate enforces it and the build will reject your output.
+
+**Type diversity is required.** The module (inline + workbook combined) MUST use at least **{MIN_TYPES_UNIQUE}** distinct activity types — do NOT ship a wall of the same type. As a quality target, quiz + true-false combined should be NO MORE than ~25% of the workbook (i.e. lean on the priority types below, not on easy multiple-choice). Use the `WORKBOOK_PRIORITY_TYPES` list below; those carry the most weight at this level.
+
+<letter-module-exception>
+Plan `letter_module` active: {LETTER_MODULE_ACTIVE}.
+
+If the plan declares `letter_module: true`, the activity-count and type-diversity caps for the level are SOFT — the module may exceed them. Letter modules legitimately need ~33 letter-recognition items plus standard activity types. Do NOT cap below the level of letter coverage required by the plan.
+
+Audit gates must treat `letter_module: true` modules as exempt from activity-count MAX warnings. Unit 4 (audit config sweep) wires this. The activity_count MIN still applies — letter modules cannot have FEWER activities than the level minimum.
+
+Word-count target is UNCHANGED for letter modules. Prose length expectations are level-standard.
+</letter-module-exception>
 
 ---
 
@@ -48,7 +60,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Rule of thumb:** inline = {INLINE_MIN}–{INLINE_MAX} quick checks after key teaching points. Workbook = {WORKBOOK_MIN}–{WORKBOOK_MAX} deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
+**Rule of thumb:** inline = exactly {INLINE_MIN} quick checks after key teaching points. Workbook = {WORKBOOK_MIN}–{WORKBOOK_MAX} deeper practice exercises covering the full topic. **Every inline marker in the prose MUST have a matching inline activity** — that is what determines `INLINE_MIN`, so do NOT skip markers.
 
 ---
 
@@ -80,6 +92,22 @@ These words are the module's vocabulary foundation. ALL exercise items must use 
 
 **Grounding rule:** Every Ukrainian word in your exercises must appear either in the prose content or in this vocabulary list. Do NOT invent new words the learner hasn't seen.
 
+<required-vocab-coverage>
+Every entry in the plan's `vocabulary_hints.required` list MUST appear in at least one activity. Coverage is mandatory at 100%.
+
+At generation time, verify: for each required-vocab item, find at least one activity whose `prompt`, `correct_answer`, or `options` contains the lemma (case-insensitive, after normalization).
+
+If a required-vocab item is not testable within the level's allowed activity types, escalate via `plan_revision_request` rather than silently dropping it.
+</required-vocab-coverage>
+
+<strict-grounding>
+Every activity MUST be answerable from the prose alone. Before emitting an activity, verify:
+1. The activity's correct answer is a lemma, phrase, or fact that appears in the prose (or in standard linguistic knowledge for grammar-mechanics drills).
+2. Any keyword referenced (e.g., names, dates, terms) appears in the prose verbatim or as a clearly inflected form.
+
+If grounding fails, drop the activity rather than emit a context-gap.
+</strict-grounding>
+
 ---
 
 ## Module Content (the prose the learner reads before exercises)
@@ -100,7 +128,7 @@ module: {MODULE_SLUG}
 level: {LEVEL}
 
 # NOTE — these are SHAPE examples. The real targets are at the top of this prompt
-# ({TOTAL_TARGET} total / {INLINE_MIN}–{INLINE_MAX} inline / {WORKBOOK_MIN}–{WORKBOOK_MAX} workbook,
+# ({TOTAL_TARGET} total / exactly {INLINE_MIN} inline / {WORKBOOK_MIN}–{WORKBOOK_MAX} workbook,
 # {ITEMS_MIN}+ items per activity). The shapes below are TRUNCATED for readability;
 # YOUR output MUST hit those minimums.
 
@@ -162,31 +190,11 @@ workbook:
         explanation: "Книга закінчується на -а, отже жіночий рід."
       # ... ≥ {ITEMS_MIN} items total
 
-  - type: error-correction
-    instruction: "Виправте помилку"
-    items:
-      - sentence: "Sentence with error"
-        error: "wrong word"
-        correction: "correct word"
-        error_type: "word"
-        options: ["option1", "option2", "option3"]
-        explanation: "Why it's wrong"
-
   - type: observe
     examples:
       - "example sentence 1"
       - "example sentence 2"
     prompt: "What pattern do you notice?"
-
-  - type: translate
-    instruction: "Оберіть правильний переклад"
-    items:
-      - source: "English phrase"
-        options:
-          - text: "correct Ukrainian"
-            correct: true
-          - text: "wrong Ukrainian"
-            correct: false
 
   - type: anagram
     instruction: "Складіть слово з літер"
@@ -216,15 +224,6 @@ workbook:
     # HINT_IN_ACTIVITY rejects item-level hints because they break
     # activity rendering. Keep unjumble items minimal: words + correct_order.
 
-  - type: error-correction
-    instruction: "Знайдіть і виправте помилку"
-    items:
-      - sentence: "Мені потрібна лікар."
-        error: "потрібна"
-        correction: "потрібен"
-        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
-        options: ["потрібен", "потрібне", "потрібно"]
-        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
@@ -257,11 +256,7 @@ workbook:
 - **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
 - **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
-### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
-- **reading**: Required: id, passage, questions[]
-- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
+{SEMINAR_TYPE_REFERENCE}
 
 ---
 
@@ -285,8 +280,8 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 ## Quality Rules
 
 **ACTIVITY COUNT MINIMUMS (non-negotiable, audit-enforced):**
-- **Total: {TOTAL_TARGET} activities.** Inline: {INLINE_MIN}–{INLINE_MAX}. Workbook: {WORKBOOK_MIN}–{WORKBOOK_MAX}. The audit gate FAILS the module if you ship fewer.
-- **Type diversity: workbook MUST cover ≥5 distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
+- **Total: {TOTAL_TARGET} activities.** Inline: exactly {INLINE_MIN}. Workbook: {WORKBOOK_MIN}–{WORKBOOK_MAX}. The audit gate FAILS the module if you ship fewer.
+- **Type diversity: module MUST cover at least {MIN_TYPES_UNIQUE} distinct activity types.** A wall of quizzes is rejected. Quiz + true-false combined ≤ 25% of workbook.
 - **Match the inline markers exactly.** Every `<!-- INJECT_ACTIVITY: id -->` marker in the prose needs a matching inline activity with that exact id. Skipping markers means the lesson tab is broken.
 
 **ITEM COUNT MINIMUMS (non-negotiable, per-activity):**
@@ -330,16 +325,16 @@ Use these tools to verify your exercise content:
 
 Walk through this checklist explicitly before you start emitting. If ANY box is unchecked, fix it FIRST.
 
-- [ ] My output has **at least {INLINE_MIN}** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
+- [ ] My output has **exactly {INLINE_MIN}** inline activities (one per `<!-- INJECT_ACTIVITY -->` marker).
 - [ ] My output has **at least {WORKBOOK_MIN}** workbook activities.
 - [ ] **Total ≥ {TOTAL_TARGET}.**
 - [ ] **Every** activity has **at least {ITEMS_MIN}** items, pairs, or statements (except types with explicitly lower caps: order=3, observe=2, pick-syllables=4, watch-and-repeat=3, essay-response=1).
-- [ ] The module (inline + workbook combined) uses **at least {MIN_TYPES_UNIQUE} distinct activity types** (or 4+ when {MIN_TYPES_UNIQUE} = 0 and the workbook size allows it). I am NOT shipping a wall of quizzes.
+- [ ] The module (inline + workbook combined) uses **at least {MIN_TYPES_UNIQUE} distinct activity types**. I am NOT shipping a wall of quizzes.
 - [ ] Quiz + true-false combined are roughly ≤25% of the workbook (quality target — lean on `WORKBOOK_PRIORITY_TYPES` instead).
 - [ ] I prioritized types from `WORKBOOK_PRIORITY_TYPES` (heavy practice formats), not just easy-to-write quizzes.
 - [ ] I used ZERO types from `FORBIDDEN_ACTIVITY_TYPES`.
 - [ ] All fill-in items use `____` blanks, NOT `{word}` curly-brace syntax.
-- [ ] My inline count is between {INLINE_MIN} and {INLINE_MAX}. I did NOT create more injection markers than {INLINE_MAX}.
+- [ ] My inline count is exactly {INLINE_MIN}, with one inline activity per prose marker.
 - [ ] Every Ukrainian word in my items appears in the prose or in `PLAN_VOCABULARY`.
 - [ ] At B1+, all instructions are in Ukrainian (no English fallback).
 
