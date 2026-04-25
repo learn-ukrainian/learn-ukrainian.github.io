@@ -79,7 +79,7 @@ A published lesson has 4 tabs in this order:
 
 1. **Урок** (Theory) — narrative prose, RuleBox, callouts, DialogueBox, ReadingActivity, inline activities embedded between sections
 2. **Словник** (Vocabulary) — FlashcardDeck, VocabCard, PhraseTable
-3. **Зошит** (Workbook) — most activity components: Quiz, FillIn, MatchUp, OddOneOut, Order, Classify, GroupSort, ErrorCorrection, Anagram, Cloze, Select, Translate, Unjumble, etc.
+3. **Вправи** (Workbook) — most activity components: Quiz, FillIn, MatchUp, OddOneOut, Order, GroupSort, ErrorCorrection, Anagram, Cloze, Translate, Unjumble, etc. (Tab 3 label corrected from "Зошит" to "Вправи" per `docs/lesson-contract.md` §7 P1; canonical Ukrainian label matches running code at `scripts/generate_mdx/core.py:356`. Classify and Select removed from the list — both are deprecated per `docs/best-practices/activity-pedagogy.md` §2.)
 4. **Ресурси** (Resources) — SourceBox, citations, external links, YouTubeVideo references
 
 55 Starlight components total. The Lesson Contract (Phase 0) enumerates which components live in which tab and the data shape each consumes.

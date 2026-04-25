@@ -1,5 +1,13 @@
-<!-- version: 2.5.1 | updated: 2026-04-25 | phonetics canonical anchor: 33 letters / 38 sounds — hard/soft pairs + Я/Ю/Є/Ї are the joint explanation; ban дж/дз as a third reason (#1550 U9) -->
+<!-- version: 2.6.0 | updated: 2026-04-25 | NORTH_STAR + LESSON_CONTRACT preamble injection (#1578 / EPIC #1577 Phase 0). Phonetics canonical anchor: 33 letters / 38 sounds — hard/soft pairs + Я/Ю/Є/Ї are the joint explanation; ban дж/дз as a third reason (#1550 U9) -->
 # V6 Writing Prompt — Module Content Generation
+
+## North Star (binding — read first, supersedes everything below on conflict)
+
+{NORTH_STAR}
+
+## Lesson Contract (binding — read second, supersedes everything below on conflict)
+
+{LESSON_CONTRACT}
 
 ## Shared Contract (read first — supersedes rule text below on conflict)
 
