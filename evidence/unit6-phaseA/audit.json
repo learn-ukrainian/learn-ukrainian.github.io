@@ -1,0 +1,5 @@
+{
+  "available": false,
+  "reason": "The forced a1/1 build stopped during Step 4 (SKELETON) before audit generation.",
+  "failure": "RuntimeError: Claude CLI < 2.1.116 inherits known quality regressions fixed on 2026-04-23; upgrade @anthropic-ai/claude-cli."
+}
