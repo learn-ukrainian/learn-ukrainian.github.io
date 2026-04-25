@@ -1,4 +1,4 @@
-<!-- version: 1.4.0 | updated: 2026-04-25 -->
+<!-- version: 1.4.1 | updated: 2026-04-25 | example de-poisoning — concrete Ukrainian words in format examples replaced with abstract placeholders to stop the model from copying them into output (#1550 U8) -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -105,6 +105,22 @@ If a required-vocab item is not testable within the level's allowed activity typ
 </required-vocab-coverage>
 
 <strict-grounding>
+<no-example-words>
+The format examples in THIS prompt use placeholder tokens like `<UKR_1>`
+because the activity validator REJECTS any Ukrainian word in your output
+that does not appear in the prose or in `PLAN_VOCABULARY`. NEVER copy a
+Ukrainian word from this prompt's format examples into your activity
+items. The placeholders mark the SHAPE of the data; the words you put
+there must come from the module's prose or the plan's vocabulary list,
+not from this prompt.
+
+If a placeholder cannot be filled with a prose-grounded or
+plan-vocabulary-grounded word for a given activity type at this level,
+DROP the activity and pick a different type from the allowed list. Do
+not fall back to "common A1 words" the model knows — those are exactly
+the words the validator will reject.
+</no-example-words>
+
 Every activity MUST be answerable from the prose alone. Before emitting an activity, verify:
 1. The activity's correct answer is a lemma, phrase, or fact that appears in the prose (or in standard linguistic knowledge for grammar-mechanics drills).
 2. Any keyword referenced (e.g., names, dates, terms) appears in the prose verbatim or as a clearly inflected form.
@@ -139,59 +155,59 @@ level: {LEVEL}
 inline:
   - id: marker-id-here        # MUST match an <!-- INJECT_ACTIVITY: ... --> marker
     type: quiz                 # activity type
-    instruction: "Оберіть правильний варіант"
+    instruction: "<UKR_1> <UKR_2> <UKR_3>"
     items:                     # ← real output: ≥ {ITEMS_MIN} items
-      - question: "_____ стіл"
-        options: ["мій", "моя", "моє", "мої"]
+      - question: "_____ <UKR_1>"
+        options: ["<UKR_2>", "<UKR_3>", "<UKR_4>", "<UKR_5>"]
         correct: 0             # 0-based index
-      - question: "Це ____ книга."
-        options: ["мій", "моя", "моє", "мої"]
+      - question: "<UKR_1> ____ <UKR_2>."
+        options: ["<UKR_3>", "<UKR_4>", "<UKR_5>", "<UKR_6>"]
         correct: 1
       # ... add at least {ITEMS_MIN} items total — never stop at 1-2
 
   - id: another-marker-id
     type: fill-in
-    instruction: "Вставте правильне слово"
+    instruction: "<UKR_1> <UKR_2> <UKR_3>"
     items:                     # ← real output: ≥ {ITEMS_MIN} items
-      - sentence: "Це ____ кімната."
-        answer: "моя"
-        options: ["мій", "моя", "моє"]
-      - sentence: "Це ____ вікно."
-        answer: "моє"
-        options: ["мій", "моя", "моє"]
+      - sentence: "<UKR_1> ____ <UKR_2>."
+        answer: "<UKR_3>"
+        options: ["<UKR_4>", "<UKR_3>", "<UKR_5>"]
+      - sentence: "<UKR_1> ____ <UKR_2>."
+        answer: "<UKR_3>"
+        options: ["<UKR_4>", "<UKR_5>", "<UKR_3>"]
       # ... ≥ {ITEMS_MIN} items total
 
 workbook:
   - id: match-up-vocab
     type: match-up
-    instruction: "З'єднайте пари"
+    instruction: "<UKR_1> <UKR_2>"
     pairs:                     # ← real output: ≥ {ITEMS_MIN} pairs
-      - left: "стіл"
-        right: "він"
-      - left: "книга"
-        right: "вона"
-      - left: "вікно"
-        right: "воно"
+      - left: "<UKR_1>"
+        right: "<UKR_2>"
+      - left: "<UKR_3>"
+        right: "<UKR_4>"
+      - left: "<UKR_5>"
+        right: "<UKR_6>"
       # ... ≥ {ITEMS_MIN} pairs total
 
   - id: group-sort-gender
     type: group-sort
-    instruction: "Розподіліть слова за категоріями"
+    instruction: "<UKR_1> <UKR_2> <UKR_3> <UKR_4>"
     groups:
       - label: "Чоловічий рід"
-        items: ["стіл", "олівець", "будинок"]   # ≥ 3 items per group
+        items: ["<UKR_1>", "<UKR_2>", "<UKR_3>"]   # ≥ 3 items per group
       - label: "Жіночий рід"
-        items: ["книга", "ручка", "школа"]
+        items: ["<UKR_4>", "<UKR_5>", "<UKR_6>"]
       - label: "Середній рід"
-        items: ["вікно", "море", "молоко"]
+        items: ["<UKR_7>", "<UKR_8>", "<UKR_9>"]
 
   - id: true-false-grammar
     type: true-false
-    instruction: "Правда чи ні?"
+    instruction: "<UKR_1> <UKR_2>?"
     items:                     # ← real output: ≥ {ITEMS_MIN} items
-      - statement: "«Книга» — це чоловічий рід."
+      - statement: "«<UKR_1>» — це чоловічий рід."
         correct: false
-        explanation: "Книга закінчується на -а, отже жіночий рід."
+        explanation: "<UKR_1> закінчується на <suffix>, отже жіночий рід."
       # ... ≥ {ITEMS_MIN} items total
 
   - type: observe
@@ -201,29 +217,29 @@ workbook:
     prompt: "What pattern do you notice?"
 
   - type: anagram
-    instruction: "Складіть слово з літер"
+    instruction: "<UKR_1> <UKR_2> <UKR_3> <UKR_4>"
     items:
-      - letters: ["к", "н", "и", "г", "а"]
-        answer: "книга"
+      - letters: ["<LETTER_1>", "<LETTER_2>", "<LETTER_3>", "<LETTER_4>", "<LETTER_5>"]
+        answer: "<UKR_1>"
     # NOTE — do NOT add a `hint:` field to items. The audit rule
     # HINT_IN_ACTIVITY rejects item-level hints because they break
     # activity rendering. Keep items minimal: letters + answer only.
 
   - type: order
-    instruction: "Розставте речення в правильному порядку"
+    instruction: "<UKR_1> <UKR_2> <UKR_3> <UKR_4> <UKR_5>"
     items:                         # Lines displayed SHUFFLED to the learner
-      - "— Служба порятунку, слухаю вас."
-      - "— Допоможіть! Тут пожежа!"
-      - "— Де ви?"
+      - "— <UKR_1> <UKR_2>, <UKR_3> <UKR_4>."
+      - "— <UKR_1>! <UKR_2> <UKR_3>!"
+      - "— <UKR_1> <UKR_2>?"
     correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
 
   - type: unjumble
-    instruction: "Складіть правильне речення зі слів"
+    instruction: "<UKR_1> <UKR_2> <UKR_3> <UKR_4> <UKR_5>"
     items:
-      - words: ["швидку!", "Викличте"]            # Jumbled words
-        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
-      - words: ["потрібен", "Мені", "лікар."]
-        correct_order: ["Мені", "потрібен", "лікар."]
+      - words: ["<UKR_1>!", "<UKR_2>"]            # Jumbled words
+        correct_order: ["<UKR_2>", "<UKR_1>!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["<UKR_1>", "<UKR_2>", "<UKR_3>."]
+        correct_order: ["<UKR_2>", "<UKR_1>", "<UKR_3>."]
     # NOTE — do NOT add a `hint:` field to items. The audit rule
     # HINT_IN_ACTIVITY rejects item-level hints because they break
     # activity rendering. Keep unjumble items minimal: words + correct_order.
@@ -238,7 +254,7 @@ workbook:
 
 ### Core types (use for A1-C2):
 - **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "Це ____ кімната."` with `answer: "моя"`. The validator REJECTS `{word}` format.**
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]. **CRITICAL: use `____` (four underscores) for the blank, NOT `{word}` curly-brace syntax. Example: `sentence: "<UKR_1> ____ <UKR_2>."` with `answer: "<UKR_3>"`. The validator REJECTS `{word}` format.**
 - **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
 - **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
 - **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
@@ -251,10 +267,10 @@ workbook:
 - **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
 
 ### Ukrainian pedagogy types (A1 phonetics/syllables):
-- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Example: word: "молоко", answer: "мо-ло-ко". Do NOT add `hint:` to items — the HINT_IN_ACTIVITY audit rule rejects item-level hints.
-- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
-- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
-- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Example: word: "<UKR_1>", answer: "<syl-1>-<syl-2>-<syl-3>". Do NOT add `hint:` to items — the HINT_IN_ACTIVITY audit rule rejects item-level hints.
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "<UKR_1>", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["<SYL_1>", "<SYL_2>", "<SYL_3>"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["<UKR_1>", "<UKR_2>", "<UKR_3>"], correct: 2, explanation: "<UKR_3> — 3 syllables, rest have 1"
 - **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
 - **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
 - **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
