@@ -118,10 +118,96 @@ All sources live in `data/sources.db`. No vector DB is involved here.
 ### Build Sources Database
 
 ```bash
+# First-time build (no existing DB) — allowed unconditionally
 .venv/bin/python scripts/wiki/build_sources_db.py
+
+# Rebuild an existing populated DB — REQUIRES --force
+.venv/bin/python scripts/wiki/build_sources_db.py --force
+
+# Preview without touching disk
+.venv/bin/python scripts/wiki/build_sources_db.py --dry-run
+
+# Rebuild + wipe the wikipedia API cache too (rare)
+.venv/bin/python scripts/wiki/build_sources_db.py --force --no-preserve-wiki
 ```
 
-Rebuilds the unified SQLite database from textbook, literary, external, Wikipedia, and dictionary inputs.
+Rebuilds the unified SQLite database from textbook, literary, external,
+Wikipedia, and dictionary inputs.
+
+**Safety guards (#1563):**
+
+- The script refuses to destroy a populated DB without `--force`.
+- A populated DB is detected primarily by **file size** (>1 MB),
+  not just by `COUNT(*)` on main tables. This guards against the
+  2026-04-25 wipe pattern, where a transient SQLite error during
+  the count made the script falsely conclude the DB was empty,
+  proceed past the safety check, and `unlink()` a 1.46 GB file.
+- `--dry-run` never mutates filesystem or DB state. Safe even on
+  a populated DB.
+- `--force` rebuilds everything except the `wikipedia` and
+  `wikipedia_negative_cache` tables (snapshot + restore across the
+  rebuild, since refetching costs Wikipedia API budget). Pass
+  `--no-preserve-wiki` to wipe those too.
+
+### Recovery: when `data/sources.db` is empty or corrupt
+
+If `data/sources.db` is found at 0 bytes or with broken schema (the
+2026-04-25 wipe pattern), restore from the Google Drive backup —
+**do NOT run `build_sources_db.py --force`**, that rebuilds from
+JSONL inputs which lack the post-#1427 `ukrainian_wiki` table and
+the post-#1555 chunker policy.
+
+```bash
+# 1) Snapshot whatever is currently on disk (in case the "wipe" was
+#    actually something subtler and we want forensic evidence).
+cp data/sources.db "data/sources.db.bak-$(date +%Y%m%d-%H%M%S)"
+ls -lah data/sources.db data/sources.db.bak-*
+
+# 2) Check the GDrive backup age. Anything <30 days is fine; older
+#    than that means more re-ingest work after restore.
+GDRIVE="$HOME/Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data"
+ls -lah "$GDRIVE/sources.db"
+
+# 3) Restore from backup.
+cp "$GDRIVE/sources.db" data/sources.db
+
+# 4) Verify the restore worked: row counts should be non-trivial.
+sqlite3 data/sources.db "
+  SELECT 'textbooks',         COUNT(*) FROM textbooks UNION ALL
+  SELECT 'literary_texts',    COUNT(*) FROM literary_texts UNION ALL
+  SELECT 'external_articles', COUNT(*) FROM external_articles UNION ALL
+  SELECT 'wikipedia',         COUNT(*) FROM wikipedia UNION ALL
+  SELECT 'ukrainian_wiki',    COUNT(*) FROM ukrainian_wiki;
+"
+
+# 5) Re-ingest any tables that were added AFTER the backup date.
+#    For backups older than 2026-04-23, ukrainian_wiki is missing.
+#    Use the per-subdir loop (NOT `wiki/ --encode` — that command is
+#    broken until #1570 ships, see scripts/wiki/ingest_ukrainian_wiki.py).
+SUBDIRS="wiki/academic/c1 wiki/figures wiki/folk/genres wiki/folk/lyric \
+         wiki/folk/prose wiki/folk/ritual wiki/folk/short-forms wiki/folk/tradition \
+         wiki/grammar/a2 wiki/grammar/b1 wiki/grammar/b2 wiki/historiography \
+         wiki/linguistics/oes wiki/linguistics/ruthenian wiki/literature/works \
+         wiki/pedagogy/a1 wiki/periods"
+for d in $SUBDIRS; do
+  .venv/bin/python scripts/wiki/ingest_ukrainian_wiki.py "$d"
+done
+
+# 6) Re-encode any corpora whose dense embeddings drifted with the
+#    schema. After a fresh backup, this should be a no-op for
+#    textbook_sections / external / wikipedia. After ukrainian_wiki
+#    re-ingest in step 5, it must run for that corpus.
+.venv/bin/python scripts/wiki/cold_encode.py \
+    --corpora textbook_sections,external,wikipedia,ukrainian_wiki --dry-run
+
+# Run without --dry-run for any corpus where new_units > 0.
+.venv/bin/python scripts/wiki/cold_encode.py \
+    --corpora ukrainian_wiki --resume
+
+# 7) Refresh the GDrive backup so the next session starts from a
+#    clean point.
+./scripts/backup-data.sh
+```
 
 ### Fetch Wikipedia Articles
 

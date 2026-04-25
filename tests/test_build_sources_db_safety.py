@@ -118,6 +118,141 @@ class TestDbIsPopulated:
 
 
 # ──────────────────────────────────────────────────────────────────────
+# #1563 file-size primary guard
+# ──────────────────────────────────────────────────────────────────────
+
+
+class TestFileSizeGuard:
+    """Regression tests for the #1563 file-size primary guard.
+
+    On 2026-04-25, data/sources.db was wiped to 0 bytes after running
+    build_sources_db.py without --force. Hypothesized cause: a transient
+    sqlite COUNT error inside _db_is_populated() returned (False, 0)
+    even though the file was a populated 1.46 GB database. The build()
+    function then proceeded past the safety check and ran db.unlink().
+
+    These tests lock in the file-size primary guard: a file larger
+    than MIN_PROTECTED_DB_BYTES is treated as populated regardless of
+    what sqlite says about it.
+    """
+
+    def test_large_file_with_empty_main_tables_is_protected(self, tmp_path):
+        """File >1 MB but main tables empty → populated=True.
+
+        This is the exact failure shape: real sources.db has hundreds
+        of MB of dictionary tables (sum11, vesum-equivalent, etc.) but
+        if textbooks/literary_texts/external_articles ever happen to
+        return 0 (e.g., test data, mid-rebuild state, or a transient
+        lock causing OperationalError → suppress → 0), the file-size
+        guard must keep the verdict at populated.
+        """
+        p = tmp_path / "big_empty_main.db"
+        conn = sqlite3.connect(str(p))
+        conn.executescript("""
+            CREATE TABLE textbooks (id INTEGER PRIMARY KEY);
+            CREATE TABLE literary_texts (id INTEGER PRIMARY KEY);
+            CREATE TABLE external_articles (id INTEGER PRIMARY KEY);
+            CREATE TABLE sum11 (id INTEGER PRIMARY KEY, headword TEXT, definition TEXT);
+        """)
+        # Inflate the file with non-main-table content so it's > 1 MB.
+        # Each row ~2 KB; 1000 rows comfortably exceeds the 1 MB threshold.
+        big_text = "x" * 2048
+        conn.executemany(
+            "INSERT INTO sum11 (headword, definition) VALUES (?, ?)",
+            [(f"word{i}", big_text) for i in range(1000)],
+        )
+        conn.commit()
+        conn.close()
+
+        assert p.stat().st_size > bs.MIN_PROTECTED_DB_BYTES
+        populated, total = bs._db_is_populated(p)
+        assert populated is True, (
+            "file >1 MB must be protected even when main tables are empty "
+            "(the #1563 wipe vector)"
+        )
+        assert total == 0  # diagnostic count is honest; verdict is not gated on it
+
+    def test_large_file_protected_when_sqlite_connect_raises(self, tmp_path, monkeypatch):
+        """File >1 MB but sqlite3.connect() raises → populated=True.
+
+        Defense in depth: if a pathological SQLite state (corrupt header,
+        WAL conflict, file lock) makes connect() raise, we still refuse
+        to destroy a multi-MB file. Original code returned (False, 0)
+        on sqlite3.Error and proceeded to unlink — that is the wipe.
+        """
+        p = tmp_path / "big_unreadable.db"
+        # Write a 2 MB file of arbitrary bytes — connect() will fail to
+        # open it as sqlite (header is wrong).
+        p.write_bytes(b"\x00" * (2 * 1024 * 1024))
+        assert p.stat().st_size > bs.MIN_PROTECTED_DB_BYTES
+
+        # Belt + suspenders: also patch sqlite3.connect to raise even
+        # if the OS magic accepts the file for some reason. Mock with
+        # side_effect avoids unused-arg lint warnings vs a hand-rolled
+        # def _raising_connect(*args, **kwargs).
+        from unittest.mock import MagicMock
+        raising = MagicMock(side_effect=sqlite3.OperationalError("simulated transient lock"))
+        monkeypatch.setattr(bs.sqlite3, "connect", raising)
+
+        populated, total = bs._db_is_populated(p)
+        assert populated is True, (
+            "file >1 MB must be protected even when sqlite errors "
+            "(this is exactly the #1563 wipe vector)"
+        )
+        assert total == 0
+
+    def test_small_corrupt_file_returns_false(self, tmp_path):
+        """File <1 MB + sqlite errors → populated=False (legacy behavior).
+
+        For small files, the file-size guard does not kick in. A file
+        below the threshold is almost certainly a stub from a fresh
+        sqlite3.connect() init (which makes <1 KB files) or an aborted
+        rebuild. Destructive rebuild without --force is the intended
+        behavior here. We don't want the new guard to break the
+        "first-time build, no real DB yet" path.
+        """
+        p = tmp_path / "small_garbage.db"
+        p.write_bytes(b"\x00garbage\x00")  # tiny + invalid sqlite
+        assert p.stat().st_size < bs.MIN_PROTECTED_DB_BYTES
+
+        populated, total = bs._db_is_populated(p)
+        assert populated is False
+        assert total == 0
+
+    def test_refusal_message_reports_file_size(self, tmp_path, capsys):
+        """Refusal print must include the file size, not just the row count.
+
+        Before the #1563 fix, the message said "(N rows across main tables)".
+        That was misleading when the issue was a transient COUNT error
+        producing N=0 on a real DB. Post-fix it must include MB so an
+        operator can immediately tell the file is non-trivially sized.
+        """
+        p = tmp_path / "big_empty_main.db"
+        conn = sqlite3.connect(str(p))
+        conn.executescript("""
+            CREATE TABLE textbooks (id INTEGER PRIMARY KEY);
+            CREATE TABLE literary_texts (id INTEGER PRIMARY KEY);
+            CREATE TABLE external_articles (id INTEGER PRIMARY KEY);
+            CREATE TABLE bulk (id INTEGER PRIMARY KEY, payload TEXT);
+        """)
+        conn.executemany(
+            "INSERT INTO bulk (payload) VALUES (?)",
+            [("x" * 2048,) for _ in range(1000)],
+        )
+        conn.commit()
+        conn.close()
+        assert p.stat().st_size > bs.MIN_PROTECTED_DB_BYTES
+
+        bs.build(db_path=p, force=False)
+        out = capsys.readouterr().out
+        assert "MB on disk" in out, (
+            f"refusal message must report file size, not just row count.\n"
+            f"got: {out}"
+        )
+        assert "--force" in out
+
+
+# ──────────────────────────────────────────────────────────────────────
 # Wikipedia snapshot + restore
 # ──────────────────────────────────────────────────────────────────────
 
