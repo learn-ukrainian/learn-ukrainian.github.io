@@ -1,13 +1,15 @@
-# Current — multi-agent index (2026-04-25)
+# Current — multi-agent index (2026-04-26)
 
-> **TWO concurrent agent sessions are writing handoffs.** This file is
-> a small index. Each agent maintains its OWN date-stamped handoff. Do
-> NOT clobber the other agent's content here.
+> **MULTIPLE concurrent agent sessions are writing handoffs.** This
+> file is a small index. Each agent maintains its OWN date-stamped
+> handoff. Do NOT clobber the other agent's content here.
 
 ## Active threads
 
 | Thread | Latest handoff | Owner |
 |---|---|---|
+| **EPIC #1577 reboot — Phase 0 closed, Phase 2+ driving overnight** | **`docs/session-state/2026-04-26-phase-2-driving-overnight.md`** | **Phase-0 / orchestrator session (this one)** |
+| Wiki rebuild (user-initiated, post-snapshot) | (user-driven, no handoff yet) | user |
 | EPIC #1550 a1/1 verification (Unit 6 A/B) | `docs/session-state/2026-04-25-orchestration-final-with-data.md` | orchestration session |
 | Wiki retrieval overhaul (#1553) | `docs/session-state/2026-04-25-wiki-retrieval-overhaul-1553.md` | wiki agent session |
 | Cold encode complete → next is #1569 | `docs/session-state/2026-04-25-cold-encode-complete.md` | wiki agent session |
