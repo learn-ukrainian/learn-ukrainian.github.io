@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections import Counter
 
 _SECTION_RE = re.compile(r"^##\s+(.+)$", re.MULTILINE)
 _ACTIVITY_RE = re.compile(r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->")
@@ -102,6 +103,24 @@ def _activity_marker_matches(expected: dict, marker: str) -> bool:
         return True
     exp_type = expected.get("type") or ""
     return bool(exp_type) and (marker == exp_type or marker.startswith(exp_type + "-"))
+
+
+def _pop_matching_activity_marker(expected: dict, markers: Counter[str]) -> str | None:
+    exp_id = expected.get("id") or ""
+    if exp_id and markers[exp_id] > 0:
+        markers[exp_id] -= 1
+        return exp_id
+    for marker in sorted(markers):
+        if markers[marker] > 0 and _activity_marker_matches(expected, marker):
+            markers[marker] -= 1
+            return marker
+    return None
+
+
+def _activity_obligation_sort_key(expected: dict) -> tuple[int, str, str]:
+    exp_id = expected.get("id") or ""
+    exp_type = expected.get("type") or ""
+    return (0 if exp_id and not exp_type else 1, exp_type, exp_id)
 
 
 def _missing_terms(text: str, terms: list[str]) -> list[str]:
@@ -221,31 +240,33 @@ def check_contract_compliance(content: str, contract: dict) -> list[dict]:
         if item.get("id") or item.get("type")
     ]
     if expected_entries:
-        if len(markers) < len(expected_entries):
+        obligation_counts = Counter((entry["id"], entry["type"]) for entry in expected_entries)
+        generated_counts = Counter(markers)
+        missing_entries: list[dict] = []
+        for key in sorted(
+            obligation_counts,
+            key=lambda item: _activity_obligation_sort_key({"id": item[0], "type": item[1]}),
+        ):
+            count = obligation_counts[key]
+            expected = {"id": key[0], "type": key[1]}
+            for _ in range(count):
+                match = _pop_matching_activity_marker(expected, generated_counts)
+                if match is None:
+                    missing_entries.append(expected)
+        if missing_entries:
+            missing_labels = [
+                entry.get("id") or entry.get("type") or "(unknown)"
+                for entry in sorted(missing_entries, key=_activity_obligation_sort_key)
+            ]
             violations.append({
                 "type": "ACTIVITY_ORDER",
                 "severity": "ERROR",
                 "section": "(whole module)",
-                "message": f"Only {len(markers)} activity markers found; contract requires {len(expected_entries)}",
+                "message": (
+                    "Missing required activity obligation markers: "
+                    f"{missing_labels[:6]}; found markers {markers[:6]}"
+                ),
             })
-        else:
-            actual_prefix = markers[: len(expected_entries)]
-            failed_positions = [
-                (i + 1, exp, got)
-                for i, (exp, got) in enumerate(zip(expected_entries, actual_prefix, strict=False))
-                if not _activity_marker_matches(exp, got)
-            ]
-            if failed_positions:
-                mismatches = [
-                    f"position {idx} (expected type '{exp.get('id') or exp.get('type')}', found '{got}')"
-                    for idx, exp, got in failed_positions
-                ]
-                violations.append({
-                    "type": "ACTIVITY_ORDER",
-                    "severity": "ERROR",
-                    "section": "(whole module)",
-                    "message": f"Activity order mismatch at {' and '.join(mismatches)}",
-                })
 
     dialogue_acts = contract.get("dialogue_acts") or []
     for item in dialogue_acts:

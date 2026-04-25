@@ -93,6 +93,10 @@ constraints:
 - **Vocabulary scope**: required, recommended, forbidden
 - **Activity requirements**: types, minimums
 
+`activity_obligations` is a SET of required activities, not a sequence.
+The build pipeline checks set-membership; ordering in the plan file is
+purely for human readability.
+
 ### What Plans DON'T Contain
 
 - Pedagogy details (handled by meta)
