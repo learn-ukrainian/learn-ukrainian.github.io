@@ -1,0 +1,14 @@
+{
+  "outcome": "FAIL",
+  "module_done_emitted": false,
+  "audit_ran": false,
+  "reason": "Build failed during Step 4 (SKELETON) before module prose, review, or audit status generation.",
+  "error": "Claude CLI < 2.1.116 inherits known quality regressions fixed on 2026-04-23. Upgrade with: npm install -g @anthropic-ai/claude-cli@latest",
+  "completed_phases": [
+    "check",
+    "research"
+  ],
+  "failed_phase": "skeleton",
+  "build_exit_code": 1,
+  "build_wall_seconds": 1
+}

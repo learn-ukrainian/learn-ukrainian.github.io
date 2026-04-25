@@ -1,0 +1,3 @@
+{"event": "module_start", "ts": "2026-04-25T10:10:18.094292+00:00", "level": "a1", "slug": "sounds-letters-and-hello"}
+{"event": "phase_done", "ts": "2026-04-25T10:10:18.223275+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "check", "duration_s": 0.117, "ok": true, "status": "complete"}
+{"event": "phase_done", "ts": "2026-04-25T10:10:18.291747+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "research", "duration_s": 0.068, "ok": true, "status": "complete"}
