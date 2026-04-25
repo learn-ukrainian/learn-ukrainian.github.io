@@ -1,6 +1,18 @@
 <!-- version: 1.1.0 | updated: 2026-04-23 | GH #1431 — shared contract + level calibration -->
 # V6 Per-Dimension Review — Language
 
+<module-context>
+Learner level: {learner_level}
+Module index: {module_index} of {module_total}
+</module-context>
+
+<stress-marks>
+The prose you receive has had stress marks (U+0301 combining acute)
+removed by the pipeline. Do NOT comment on missing stress marks.
+Stress is added by a deterministic annotator AFTER review.
+Any stress finding will be discarded.
+</stress-marks>
+
 ## Shared Contract (authoritative — supersedes rubric text on conflict)
 
 You are scoring the **Language** dimension. The module must satisfy the contract at `scripts/build/contracts/module-contract.md` as specialized by the plan and the `{CONTRACT_YAML}` block below. Score Language ONLY by how well the Ukrainian in the module satisfies the contract's §7 (forbidden words) clause and the Ukrainian-linguistic-quality rules from the writer prompt (VESUM, Правопис 2019, Антоненко-Давидович). Do NOT import criteria from outside this contract. Do NOT penalize behavior the contract explicitly allows.

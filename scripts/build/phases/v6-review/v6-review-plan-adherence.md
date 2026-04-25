@@ -1,6 +1,18 @@
 <!-- version: 1.2.0 | updated: 2026-04-24 | GH #1529 — section max is advisory, not binding -->
 # V6 Per-Dimension Review — Plan Adherence
 
+<module-context>
+Learner level: {learner_level}
+Module index: {module_index} of {module_total}
+</module-context>
+
+<stress-marks>
+The prose you receive has had stress marks (U+0301 combining acute)
+removed by the pipeline. Do NOT comment on missing stress marks.
+Stress is added by a deterministic annotator AFTER review.
+Any stress finding will be discarded.
+</stress-marks>
+
 ## Shared Contract (authoritative — supersedes rubric text on conflict)
 
 You are scoring the **Plan Adherence** dimension. The module must satisfy the contract at `scripts/build/contracts/module-contract.md` as specialized by the plan and the `{CONTRACT_YAML}` block below. Score Plan Adherence ONLY by how well the content satisfies the contract's §2 (section contract) and §6 (activity markers) clauses. Do NOT import criteria from outside this contract. Do NOT penalize behavior the contract explicitly allows.
