@@ -35,6 +35,18 @@ still authoritative. A ready-to-use helper lives at
 
 ---
 
+### Custom log formatters
+
+Access log formats that reference uvicorn-only fields like
+`%(client_addr)s`, `%(request_line)s`, or `%(status_code)s` must declare
+`"()": "uvicorn.logging.AccessFormatter"` in `scripts/api/logging.json`.
+Python's default `logging.Formatter` does not populate those fields and
+will raise during response logging. See uvicorn's
+[`AccessFormatter`](https://github.com/encode/uvicorn/blob/master/uvicorn/logging.py)
+implementation for the field mapping.
+
+---
+
 ### One-shot orient (unchanged, still useful)
 
 ```bash
