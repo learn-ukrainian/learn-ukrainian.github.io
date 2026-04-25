@@ -1,4 +1,4 @@
-<!-- version: 2.4.0 | updated: 2026-04-24 | pacing-plan no longer primes "Section N:" labels — use verbatim Ukrainian plan titles; adds explicit H2 heading rule to kill SECTION_ORDER retries (observed on a1/1 2026-04-24 rebuild) -->
+<!-- version: 2.5.0 | updated: 2026-04-25 | naturalness register hardening — bans `Українською:` meta-frame, mixed-language clauses, and required-vocab token-drops (Phase B v2 finding, EPIC #1550 U7) -->
 # V6 Writing Prompt — Module Content Generation
 
 ## Shared Contract (read first — supersedes rule text below on conflict)
@@ -334,6 +334,73 @@ Each section should follow the word budget specified. The total must reach {WORD
 - In A1/A2 service dialogues, write a full mini-interaction, not clipped slot-filling turns. A café/shop exchange should usually include: request -> clarifying question or recommendation -> acceptance/refusal -> natural close.
 - In summary sections, avoid worksheet-command openers (`Запам'ятайте`, `Прочитайте й повторіть`) and abstract recap lines (`These verbs express...`). Build the recap from concrete everyday Ukrainian examples first.
 
+### Natural Prose Register (anti-patterns)
+
+Pick ONE matrix language per clause. Bolded Ukrainian terms with
+parenthetical English glosses are the immersion mechanism — robotic
+substitution patterns and meta-frames break the teacher voice and tank
+the Naturalness review dim.
+
+The three patterns below are observed-in-the-wild failures from a1/1
+Phase B v2 (#1550). Each is a hard ban — the WRONG examples are verbatim
+quotes from the failed module's prose; the RIGHT rewrites are the
+reviewer's authored fixes.
+
+#### Banned: `Українською:` meta-frame with inline word-gloss substitution
+
+WRONG (verbatim from a1/1 Phase B v2):
+> Українською: **«голосні»** (vowels) **вимовляються** (are pronounced) **без**
+> (without) перешкоди; this is the main feature of **«голосних»** (vowel sounds).
+
+RIGHT:
+> **«Голосні»** (vowels) are pronounced without any obstruction in the mouth
+> — that free, voiced flow is what makes a sound a vowel.
+
+WHY: The meta-frame plus inline word-by-word substitution reads as a
+glossary lookup, not a teacher explaining a concept. The learner notices
+it as machine-generated. Bold the ONE Ukrainian term at first use, and
+let the English sentence carry the explanation.
+
+#### Banned: mixed-language clauses (matrix-language switches mid-clause)
+
+WRONG-A (verbatim):
+> На відміну від English, keep the answer simple at first…
+
+WRONG-B (verbatim):
+> In **англійській** (English), learners may miss this contrast at first,
+> so listen for it **завжди** (always).
+
+RIGHT-A:
+> Unlike English, keep the answer simple at first…
+
+RIGHT-B:
+> English speakers often miss this hard–soft contrast at first, so train
+> your ear to listen for it on every consonant.
+
+WHY: Жоден український вчитель так не пише. Foreign nouns dropped into a
+clause that uses a different matrix language read as forced.
+A1/A2 clauses pick ONE matrix language; foreign terms appear ONLY as
+bold + parenthetical gloss, never as raw substitution.
+
+#### Banned: required-vocab token-drops
+
+WRONG (verbatim):
+> На відміну від English, keep the answer simple at first: **«голосні»**
+> (vowels) and **«приголосні»** (consonants) are the first **два** (two)
+> sound groups; this is the basic **«відповідь»** (answer) to “what kind
+> of sound is it?”
+
+RIGHT:
+> Unlike English, keep the answer simple at first: **«голосні»** (vowels)
+> and **«приголосні»** (consonants) are the first two sound groups, and
+> that is the basic answer to “what kind of sound is it?”
+
+WHY: `«відповідь»` here carries no teaching weight — it's bolted in to
+satisfy the vocabulary list. Required vocabulary serves the teaching, not
+a count. If a required term cannot earn its place in a sentence, leave it
+for a later section where it can. The Vocabulary checklist is a coverage
+target across the WHOLE module; not every sentence is a coverage slot.
+
 ### Ukrainian Language Quality
 - **Zero Russian**: No ы, э, ё, ъ. No Russian words (кот→кіт, хорошо→добре, конечно→звичайно)
 - **Zero Surzhyk**: No шо→що, чо→чому, тіпа→типу
@@ -490,6 +557,7 @@ If you write any of these patterns, the module will be rejected in review. Note:
 - **The Translator:** "The Ukrainian word for 'cat' is 'кіт'." — instead, present naturally: "A domestic cat is a **кіт**."
 - **The Wall of Text:** 3+ paragraphs of English theory without a single Ukrainian example — every concept must be anchored in immediate Ukrainian examples.
 - **The Filler:** "This is a very important concept that you will use frequently in your daily life." — empty sentences that add words but not meaning. Every sentence must teach something.
+- **The Glossarist:** literal word-by-word substitution under a `Українською:` meta-frame, mixed-language clauses (Ukrainian matrix with raw English noun, or English matrix with raw Ukrainian noun outside a bolded gloss), or any forced bolded-Ukrainian token whose only function is to satisfy a required-vocab list. Required vocabulary serves teaching; it does not buy line-level immersion. See `Natural Prose Register` above for examples and rewrites.
 
 {PEDAGOGICAL_CONSTRAINTS}
 
