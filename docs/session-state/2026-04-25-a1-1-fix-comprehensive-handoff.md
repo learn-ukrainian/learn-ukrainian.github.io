@@ -11,22 +11,6 @@
 > **Goal of next session**: orchestrate 6 dispatched units (4 in parallel, then 1
 > sequential, then verification) to fix all 17 issues. End state: a1/1 + a1/2 +
 > a1/3 all pass `--force` builds end-to-end.
->
-> **Canonical tracking**: EPIC **#1550** has the full 17-item checklist + dispatch
-> plan + the gpt-5.5 writer A/B test. Use the issue (not just this file) for
-> cross-session memory; check items as they land.
-
-## Cold-start order for next session
-
-1. Read this file in full (handoff context)
-2. `gh issue view 1550` — the canonical 17-item EPIC + dispatch plan
-3. Write the 6 brief files at `/tmp/briefs/codex-unit{2,3,5}-*.md` and `/tmp/briefs/claude-unit{1,4}-*.md` per the specs in this doc
-4. Fire Phase 1 dispatches (Unit 1, 2, 3, 5) in parallel — 2 Claude + 2 Codex slots
-5. Background-wait on all 4 with `delegate.py wait`
-6. Review + merge each PR as it lands per MEMORY #0H — `gh pr merge {N} --squash --delete-branch`, cleanup worktree, FF main
-7. After Phase 1 fully merged → fire Unit 4 (Claude, audit config sweep)
-8. After Unit 4 merged → orchestrate Unit 6 (gpt-5.5 writer A/B head-to-head on a1/1, then a1/2 + a1/3 with the winning agent pair)
-9. As each item lands, check it off on EPIC #1550. Close #1550 only when ALL acceptance criteria pass.
 
 ---
 
