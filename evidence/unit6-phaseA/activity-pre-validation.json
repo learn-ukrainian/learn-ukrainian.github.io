@@ -1,0 +1,23 @@
+{
+  "ungrounded_answers": [
+    {
+      "word": "гриб",
+      "exercise_type": "fill-in",
+      "context": "гриб",
+      "role": "answer"
+    },
+    {
+      "word": "казка",
+      "exercise_type": "fill-in",
+      "context": "казка",
+      "role": "answer"
+    },
+    {
+      "word": "лис",
+      "exercise_type": "fill-in",
+      "context": "лис",
+      "role": "answer"
+    }
+  ],
+  "required_vocab_missing": []
+}

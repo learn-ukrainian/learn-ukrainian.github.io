@@ -1,0 +1,156 @@
+{
+  "mode": "v6",
+  "track": "a1",
+  "slug": "sounds-letters-and-hello",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-25T12:24:52.378526+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-25T12:24:52.454034+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-25T12:27:23.042500+00:00",
+      "plan_hash": "470e9c2d67c68dbbcbcf7ed0c114bb4d849b689406086f607952bcdd66420287"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-25T12:28:43.187762+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-25T12:37:38.639244+00:00",
+      "plan_hash": "470e9c2d67c68dbbcbcf7ed0c114bb4d849b689406086f607952bcdd66420287"
+    },
+    "honesty-annotate": {
+      "status": "complete",
+      "ts": "2026-04-25T12:37:38.668290+00:00",
+      "plan_hash": "470e9c2d67c68dbbcbcf7ed0c114bb4d849b689406086f607952bcdd66420287"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-25T12:37:38.694214+00:00",
+      "plan_hash": "470e9c2d67c68dbbcbcf7ed0c114bb4d849b689406086f607952bcdd66420287"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-25T13:11:10.860510+00:00"
+    },
+    "repair": {
+      "status": "complete",
+      "ts": "2026-04-25T12:52:04.100282+00:00"
+    },
+    "activity-pre-validate": {
+      "status": "failed",
+      "ts": "2026-04-25T13:11:11.150692+00:00"
+    }
+  },
+  "alignment_manifest": {
+    "composite_hash": "13f43cec23f8d54a58f54892f082a2b74f8a2600291b7656a2ebd4e85e1fa79e",
+    "composed_at": "2026-04-25T13:11:11+00:00",
+    "components": {
+      "plan_hash": "ca304e2e99ceb5a3679ca69cdce16f965647ab14a4c0bafe0a1753ebdf1fedca",
+      "sources_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "template_hashes": {
+        "golden_dialogues_a1_a1_directions_transport": "5dde2e14c005c9f50edaf1b71bafd44a2bcd0351ee1c55880c1b48c3322eb0f6",
+        "golden_dialogues_a1_a1_routine_flatmate": "f7f22720f94164a0f3ddb8262f2f3da30a44ef65466ee76b796930644272e381",
+        "golden_dialogues_a1_a1_weather_smalltalk": "d905d1342463631a3eb42c986504d0f222fe8ad46230df6417137ac806056154",
+        "v6_activities": "d0e6bf4f327f48b81a87065d569f11de13e33d7291a14e2c61bfa5df928c44f1",
+        "v6_activities_uk": "518d176bd1ef1ea7bc8c5a322456d3c5aed4d328c1efd457f8d633cfc6a45fc9",
+        "v6_enrich_uk": "c71bffc54698578c7c0371e2aa06fd52cee13456a5af6e7cf06d0cac77605831",
+        "v6_pre_verify": "27b058ac95155acb35cc4942fa94ce85a465c25ef9b747f5fae87a95e54c844f",
+        "v6_review": "9b1cd02def0cbdee0417f2beca39b7180a50cf7975991a430106107e7b64af61",
+        "v6_review_style": "65cca846eca29249cbb51a6c7a054139d3e33d78e7a2f31914d7fb992ae0729b",
+        "v6_review_uk": "1fe49a22d3dbe266a7c007f3ea012d93e5747382f6f534ed617f1e8e3c32b56d",
+        "v6_review_v6_review_actionable": "4a755ba8cb83f231aee4daffc9888823a439bfdd786797dfba352ae550c969cd",
+        "v6_review_v6_review_completeness": "9cbb295303a217dfcf149043eec399ff3e8a16e0eceb177d9e50ad8caa51b4f6",
+        "v6_review_v6_review_decolonization": "7e79e96ef0c02743c97d978509f66b5d280086ca243fd9576bc58b01a1bef072",
+        "v6_review_v6_review_dialogue": "702f9bc7206d40e0de25cc508ceffffa5b83f5c10d7b754444b8ebc3b262fa8c",
+        "v6_review_v6_review_factual": "17a453bf93f7bcec5cbfbfdda2f38045ad19270f79f3ba9c6634a79df3467cc7",
+        "v6_review_v6_review_honesty": "5ea7fcb337d47c32f4ace64d7fdfba1121d9c64618c7847f47187be6d1366756",
+        "v6_review_v6_review_language": "b6821a6fa6066f000ddb5c78fb3346824ab0590d4da166345805622f7e5dd52a",
+        "v6_review_v6_review_naturalness": "c2f0df691d9419cee8deb680af757f5b9345b189a2c91b11d538f0192c7ec07e",
+        "v6_review_v6_review_plan_adherence": "f905078b74f55a81d5511a8ed499a3a2f8a032f88f398eb192050e0a8e1a7aa3",
+        "v6_skeleton": "e3e6d1258047f618e06eeeeea7c488cd003998f9f7842a4cf800efb4c11fee23",
+        "v6_vocab": "afe1725328a5fc592d725020b374bb13b26c99f40494fea0c4c683d6aef7ab0f",
+        "v6_vocab_uk": "b717ab72ab964ed81ab8b8a8bac15239c94bb1cfe5544d534352676cfe0640ea",
+        "v6_write": "790ee6a77abbdd6f889b3a1a6987a02fc67c31b13cc41f86616b5f121fb91319",
+        "v6_write_seminar": "df5885b7c704e1057d1c562645af0d95d102cd85a457ea90170afe48bc2231e5",
+        "v6_write_uk": "e9cd5597d331c249f33b6fcd93abf54df6ff3f29e1d0adef4b6f4c3d4915390f"
+      },
+      "canonical_anchor_hash": "58682461c8584cdb6190c1dae6fc6dbc166280d9ea4c768acbc2452e26a20229",
+      "tokenizer_version": "2026-04-23",
+      "threshold_snapshot": {
+        "level_config": [
+          [
+            "immersion_graduated",
+            true
+          ],
+          [
+            "min_activities",
+            1
+          ],
+          [
+            "min_engagement",
+            0
+          ],
+          [
+            "min_items_per_activity",
+            6
+          ],
+          [
+            "min_types_unique",
+            4
+          ],
+          [
+            "min_vocab",
+            1
+          ],
+          [
+            "priority_types",
+            [
+              "anagram",
+              "classify",
+              "fill-in",
+              "image-to-letter",
+              "match-up",
+              "quiz",
+              "unjumble",
+              "watch-and-repeat"
+            ]
+          ],
+          [
+            "target_words",
+            1200
+          ],
+          [
+            "transliteration_allowed",
+            true
+          ]
+        ],
+        "review_target_score": 8.0
+      },
+      "decisions_subset": [
+        [
+          "dec-001",
+          "active"
+        ],
+        [
+          "dec-003",
+          "active"
+        ],
+        [
+          "dec-004",
+          "active"
+        ],
+        [
+          "dec-007",
+          "active"
+        ]
+      ]
+    }
+  }
+}

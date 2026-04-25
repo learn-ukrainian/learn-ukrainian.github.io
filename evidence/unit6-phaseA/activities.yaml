@@ -1,0 +1,811 @@
+version: '1.0'
+module: sounds-letters-and-hello
+level: a1
+inline:
+- id: quiz-sounds-vs-letters
+  type: quiz
+  instruction: Choose the correct answer about Ukrainian sounds and letters.
+  items:
+  - question: What do we HEAR and PRONOUNCE in Ukrainian?
+    options:
+    - Sounds (звуки)
+    - Letters (літери)
+    - The alphabet (абетка)
+    - Syllables (склади)
+    correct: 0
+  - question: What do we SEE and WRITE in Ukrainian?
+    options:
+    - Sounds (звуки)
+    - Letters (літери)
+    - Words (слова)
+    - Sentences (речення)
+    correct: 1
+  - question: How many letters are in the Ukrainian alphabet (абетка)?
+    options:
+    - '26'
+    - '30'
+    - '33'
+    - '38'
+    correct: 2
+  - question: How many sounds does the Ukrainian language have in total?
+    options:
+    - '26'
+    - '33'
+    - '36'
+    - '38'
+    correct: 3
+  - question: Is it correct to say 'голосна літера' (vowel letter) in Ukrainian phonetics?
+    options:
+    - Yes — А, О, У are vowel letters
+    - Yes — any letter can be a vowel
+    - No — only SOUNDS can be vowels or consonants, not letters
+    - No — Ukrainian has no vowel category
+    correct: 2
+  - question: What does the letter Ь (м'який знак / soft sign) represent?
+    options:
+    - A vowel sound [і]
+    - A consonant sound [й]
+    - No sound at all — it softens the previous consonant
+    - Two sounds at once
+    correct: 2
+  title: Choose the correct answer about Ukrainian sounds and letters.
+- id: match-up-letters-to-sounds
+  type: match-up
+  instruction: 'Match each Ukrainian letter to the sound it represents — just as Ukrainian
+    first-graders learn: ''I see the letter (бачу) — I hear the sound (чую)'''
+  pairs:
+  - left: А
+    right: '[а]'
+  - left: О
+    right: '[о]'
+  - left: У
+    right: '[у]'
+  - left: М
+    right: '[м]'
+  - left: К
+    right: '[к]'
+  - left: Н
+    right: '[н]'
+  - left: С
+    right: '[с]'
+  - left: Л
+    right: '[л]'
+  title: Match each Ukrainian letter to the sound it represents — just as Ukrainian
+    first
+- id: fill-in-l2-pronunciation-errors
+  type: fill-in
+  instruction: Choose the correct Ukrainian word — these are common pronunciation
+    mistakes English speakers make.
+  items:
+  - sentence: Він купив ____ у лісі — великий і червоний.
+    answer: гриб
+    options:
+    - гриб
+    - грип
+  - sentence: Це ____ для дітей — з принцесою і драконом.
+    answer: казка
+    options:
+    - казка
+    - каска
+  - sentence: У лісі живе руда ____.
+    answer: лис
+    options:
+    - лис
+    - ліс
+  - sentence: На столі великий ____ з картону.
+    answer: дім
+    options:
+    - дим
+    - дім
+  - sentence: Діти п'ють ____ щоранку.
+    answer: молоко
+    options:
+    - молоко
+    - малако
+  - sentence: — ____ ____!
+    answer: Доброго ранку
+    options:
+    - Доброго ранку
+    - Добрий день
+    - Добрий вечір
+    - До побачення
+  title: Choose the correct Ukrainian word — these are common pronunciation mistakes
+    Engl
+- id: fill-in-greeting-dialogue
+  type: fill-in
+  instruction: Complete the dialogue — choose the correct word for each blank.
+  items:
+  - sentence: — ____! Як справи?
+    answer: Привіт
+    options:
+    - Привіт
+    - До побачення
+    - Добрий вечір
+    - Нормально
+  - sentence: — Як ____?
+    answer: справи
+    options:
+    - справи
+    - звати
+    - добре
+    - тебе
+  - sentence: — ____. А у тебе?
+    answer: Добре
+    options:
+    - Добре
+    - Привіт
+    - До побачення
+    - Доброго ранку
+  - sentence: — А у ____?
+    answer: тебе
+    options:
+    - тебе
+    - мене
+    - справи
+    - добре
+  - sentence: — ____!
+    answer: Чудово
+    options:
+    - Чудово
+    - Нормально
+    - До побачення
+    - Добрий вечір
+  - sentence: — ____, діти!
+    answer: Доброго ранку
+    options:
+    - Доброго ранку
+    - Добрий вечір
+    - До побачення
+    - Як справи
+  title: Complete the dialogue — choose the correct word for each blank.
+- id: quiz-milozvuchnist-and-nagolos
+  type: quiz
+  instruction: Choose the correct answer about Ukrainian sound harmony (милозвучність)
+    and word stress (наголос).
+  items:
+  - question: What is 'милозвучність' (sound harmony) in Ukrainian?
+    options:
+    - The number of vowels in a word
+    - The natural switching between у/в and і/й to avoid hard consonant clusters
+    - A rule about capital letters
+    - The official name of the Ukrainian alphabet
+    correct: 1
+  - question: Why does Ukrainian switch between 'у' and 'в' (e.g., 'у мене' vs 'в
+      Україні')?
+    options:
+    - They have different meanings
+    - Random speaker choice
+    - To create smooth sound flow — avoiding difficult consonant clusters
+    - One is formal, the other informal
+    correct: 2
+  - question: What is 'наголос' (stress) in Ukrainian?
+    options:
+    - The emphasis on one syllable in a word, making it stronger
+    - The soft sign (ь)
+    - A type of vowel sound
+    - The name for the consonant category
+    correct: 0
+  - question: Ukrainian stress can CHANGE the meaning of a word. Which example shows
+      this?
+    options:
+    - мама / мами (same word, different grammatical form)
+    - замок (lock) / замок (castle) — same spelling, different stress, different meaning
+    - добре / чудово (different words, similar meaning)
+    - привіт / до побачення (greeting vs farewell)
+    correct: 1
+  - question: The unstressed [о] in 'Доброго ранку' — what must you NOT do with it?
+    options:
+    - Stress it strongly
+    - Reduce it toward [а] — that sounds Russian, not Ukrainian
+    - Pronounce it at all
+    - Write it in a different position
+    correct: 1
+  - question: The final consonant in 'день' — what makes it special?
+    options:
+    - It is a vowel in disguise
+    - It is silent, like the 'k' in English 'knock'
+    - It is a soft [н′] — softened by the soft sign ь
+    - It is the hardest consonant in Ukrainian
+    correct: 2
+  title: Choose the correct answer about Ukrainian sound harmony (милозвучність) and
+    word
+- type: letter-grid
+  instruction: Голосні — Vowels
+  letters:
+  - upper: А
+    lower: а
+    emoji: 🍍
+    key_word: ананас
+    sound_type: vowel
+  - upper: О
+    lower: о
+    emoji: 👁️
+    key_word: око
+    sound_type: vowel
+  - upper: У
+    lower: у
+    emoji: 🇺🇦
+    key_word: Україна
+    sound_type: vowel
+  - upper: И
+    lower: и
+    emoji: 🐟
+    key_word: риба
+    sound_type: vowel
+  - upper: І
+    lower: і
+    emoji: 🦃
+    key_word: індик
+    sound_type: vowel
+  - upper: Е
+    lower: е
+    emoji: 📺
+    key_word: екран
+    sound_type: vowel
+  - upper: Я
+    lower: я
+    emoji: 🍎
+    key_word: яблуко
+    sound_type: vowel
+  - upper: Ю
+    lower: ю
+    emoji: 🧑
+    key_word: юнак
+    sound_type: vowel
+  - upper: Є
+    lower: є
+    emoji: 🦝
+    key_word: єнот
+    sound_type: vowel
+  - upper: Ї
+    lower: ї
+    emoji: 🦔
+    key_word: їжак
+    sound_type: vowel
+  id: letter-grid-7
+- type: letter-grid
+  instruction: Friendly letters
+  letters:
+  - upper: М
+    lower: м
+    emoji: 🥕
+    key_word: морква
+    sound_type: consonant
+  - upper: К
+    lower: к
+    emoji: 🐱
+    key_word: кіт
+    sound_type: consonant
+  - upper: Т
+    lower: т
+    emoji: 🐯
+    key_word: тигр
+    sound_type: consonant
+  id: letter-grid-8
+- type: letter-grid
+  instruction: False friends!
+  letters:
+  - upper: Н
+    lower: н
+    emoji: ✂️
+    key_word: ножиці
+    sound_type: consonant
+  - upper: С
+    lower: с
+    emoji: 👜
+    key_word: сумка
+    sound_type: consonant
+  - upper: Р
+    lower: р
+    emoji: 🚀
+    key_word: ракета
+    sound_type: consonant
+  - upper: В
+    lower: в
+    emoji: 🐺
+    key_word: вовк
+    sound_type: consonant
+  - upper: Х
+    lower: х
+    emoji: 🍞
+    key_word: хліб
+    sound_type: consonant
+  id: letter-grid-9
+- type: letter-grid
+  instruction: New shapes
+  letters:
+  - upper: Л
+    lower: л
+    emoji: ✈️
+    key_word: літак
+    sound_type: consonant
+  - upper: Б
+    lower: б
+    emoji: 🍌
+    key_word: банан
+    sound_type: consonant
+  - upper: Д
+    lower: д
+    emoji: 🏠
+    key_word: дім
+    sound_type: consonant
+  - upper: П
+    lower: п
+    emoji: 🕷️
+    key_word: павук
+    sound_type: consonant
+  - upper: Г
+    lower: г
+    emoji: ⛰️
+    key_word: гора
+    sound_type: consonant
+  - upper: Ґ
+    lower: ґ
+    emoji: 🚪
+    key_word: ґанок
+    sound_type: consonant
+  - upper: З
+    lower: з
+    emoji: 🦓
+    key_word: зебра
+    sound_type: consonant
+  - upper: Ж
+    lower: ж
+    emoji: 🪲
+    key_word: жук
+    sound_type: consonant
+  - upper: Ш
+    lower: ш
+    emoji: 🧢
+    key_word: шапка
+    sound_type: consonant
+  - upper: Й
+    lower: й
+    emoji: 🥛
+    key_word: йогурт
+    sound_type: consonant
+  - upper: Ч
+    lower: ч
+    emoji: 🐢
+    key_word: черепаха
+    sound_type: consonant
+  - upper: Щ
+    lower: щ
+    emoji: 🪥
+    key_word: щітка
+    sound_type: consonant
+  - upper: Ц
+    lower: ц
+    emoji: 🧅
+    key_word: цибуля
+    sound_type: consonant
+  - upper: Ф
+    lower: ф
+    emoji: 🦩
+    key_word: фламінго
+    sound_type: consonant
+  id: letter-grid-10
+- type: letter-grid
+  instruction: Special letters
+  letters:
+  - upper: Я
+    lower: я
+    emoji: 🍎
+    key_word: яблуко
+    sound_type: vowel
+  - upper: Ю
+    lower: ю
+    emoji: 🧑
+    key_word: юнак
+    sound_type: vowel
+  - upper: Є
+    lower: є
+    emoji: 🦝
+    key_word: єнот
+    sound_type: vowel
+  - upper: Ь
+    lower: ь
+    emoji: 🧂
+    key_word: сіль
+    sound_type: special
+  - upper: Ї
+    lower: ї
+    emoji: 🦔
+    key_word: їжак
+    sound_type: vowel
+  id: letter-grid-11
+- type: watch-and-repeat
+  instruction: 'Watch and repeat: А, М, Л, У, Н, С'
+  items:
+  - video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    letter: А
+    word: ананас
+    note: У нас ананас.
+  - video: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    letter: М
+    word: морква
+    note: Мама сама.
+  - video: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    letter: Л
+    word: літак
+    note: Мала лама.
+  - video: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    letter: У
+    word: Україна
+    note: У нас мул.
+  - video: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    letter: Н
+    word: ножиці
+    note: У нас лан.
+  - video: https://www.youtube.com/watch?v=7UsFBgSL91E
+    letter: С
+    word: сумка
+    note: Сумна мама.
+  id: watch-and-repeat-12
+- type: watch-and-repeat
+  instruction: 'Watch and repeat: К, И, Р, Б, В, Д, І'
+  items:
+  - video: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    letter: К
+    word: кіт
+    note: ''
+  - video: https://www.youtube.com/watch?v=W-1rCu0indE
+    letter: И
+    word: риба
+    note: ''
+  - video: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    letter: Р
+    word: ракета
+    note: ''
+  - video: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    letter: Б
+    word: банан
+    note: ''
+  - video: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    letter: В
+    word: вовк
+    note: ''
+  - video: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    letter: Д
+    word: дім
+    note: ''
+  - video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    letter: І
+    word: індик
+    note: ''
+  id: watch-and-repeat-13
+- type: watch-and-repeat
+  instruction: 'Watch and repeat: П, Т, Г, Ґ, Е, З, Ж, Ш, Х'
+  items:
+  - video: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    letter: П
+    word: павук
+    note: ''
+  - video: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    letter: Т
+    word: тигр
+    note: ''
+  - video: https://www.youtube.com/watch?v=gVnclpSI0DU
+    letter: Г
+    word: гора
+    note: ''
+  - video: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+    letter: Ґ
+    word: ґанок
+    note: ''
+  - video: https://www.youtube.com/watch?v=KFlsroBW0dk
+    letter: Е
+    word: екран
+    note: ''
+  - video: https://www.youtube.com/watch?v=BhASNxitC1A
+    letter: З
+    word: зебра
+    note: ''
+  - video: https://www.youtube.com/watch?v=dIrGVcqPwqM
+    letter: Ж
+    word: жук
+    note: ''
+  - video: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    letter: Ш
+    word: шапка
+    note: ''
+  - video: https://www.youtube.com/watch?v=vpr58zJSJKc
+    letter: Х
+    word: хліб
+    note: ''
+  id: watch-and-repeat-14
+- type: watch-and-repeat
+  instruction: 'Watch and repeat: Й, Ч, Щ, Я, Ю, Є, Ь, Ї, Ц, Ф'
+  items:
+  - video: https://www.youtube.com/watch?v=aq0cjB90s3w
+    letter: Й
+    word: йогурт
+    note: ''
+  - video: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    letter: Ч
+    word: черепаха
+    note: ''
+  - video: https://www.youtube.com/watch?v=QmBLieIuf6Q
+    letter: Щ
+    word: щітка
+    note: ''
+  - video: https://www.youtube.com/watch?v=yhSAf41LX8I
+    letter: Я
+    word: яблуко
+    note: ''
+  - video: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    letter: Ю
+    word: юнак
+    note: ''
+  - video: https://www.youtube.com/watch?v=O0bwRyyBQSc
+    letter: Є
+    word: єнот
+    note: ''
+  - video: https://www.youtube.com/watch?v=cJlal8XKBxo
+    letter: Ь
+    word: сіль
+    note: ''
+  - video: https://www.youtube.com/watch?v=UcjdjQXhAY8
+    letter: Ї
+    word: їжак
+    note: ''
+  - video: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    letter: Ц
+    word: цибуля
+    note: ''
+  - video: https://www.youtube.com/watch?v=haHRsFFZRQI
+    letter: Ф
+    word: фламінго
+    note: ''
+  id: watch-and-repeat-15
+workbook:
+- id: wb-match-up-greetings
+  type: match-up
+  instruction: Match each Ukrainian expression to its English meaning.
+  pairs:
+  - left: Привіт!
+    right: Hi! (informal)
+  - left: Добрий день!
+    right: Good day! / Hello! (formal)
+  - left: Доброго ранку!
+    right: Good morning!
+  - left: Добрий вечір!
+    right: Good evening!
+  - left: До побачення!
+    right: Goodbye!
+  - left: Як справи?
+    right: How are you? / How are things?
+  - left: Чудово!
+    right: Great! / Wonderful!
+  - left: Нормально.
+    right: Fine. / Okay.
+  title: Match each Ukrainian expression to its English meaning.
+- id: wb-group-sort-formal-informal
+  type: group-sort
+  instruction: Sort these expressions — formal (use with teachers and strangers) or
+    informal (use with friends and peers)?
+  groups:
+  - label: Formal (офіційне)
+    items:
+    - Добрий день!
+    - Доброго ранку!
+    - Добрий вечір!
+    - До побачення!
+    - На все добре!
+  - label: Informal (неофіційне)
+    items:
+    - Привіт!
+    - Як справи?
+    - Радий тебе бачити!
+    - Нормально.
+    - А у тебе?
+    - Рада тебе бачити!
+  title: Sort these expressions — formal (use with teachers and strangers) or informal
+    (u
+- id: wb-fill-in-key-facts
+  type: fill-in
+  instruction: Fill in the correct word to complete each statement.
+  items:
+  - sentence: Ukrainian has 33 ____ in its alphabet.
+    answer: літери
+    options:
+    - літери
+    - звуки
+    - слова
+    - склади
+  - sentence: Ukrainian has 38 ____ in total — more than the 33 letters.
+    answer: звуки
+    options:
+    - звуки
+    - літери
+    - слова
+    - абетки
+  - sentence: The letter Ь represents ____ sounds — it only softens the previous consonant.
+    answer: zero
+    options:
+    - zero
+    - one
+    - two
+    - three
+  - sentence: ____ sounds are made with voice only — you can sing them.
+    answer: Голосні
+    options:
+    - Голосні
+    - Приголосні
+    - М'які
+    - Тверді
+  - sentence: ____ sounds are made when lips, teeth, or tongue block the airflow.
+    answer: Приголосні
+    options:
+    - Приголосні
+    - Голосні
+    - Йотовані
+    - Тверді
+  - sentence: The word 'мама' contains ____ vowel sounds.
+    answer: '2'
+    options:
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+  title: Fill in the correct word to complete each statement.
+- id: wb-anagram-vocab
+  type: anagram
+  instruction: Rearrange the letters to spell the Ukrainian word.
+  items:
+  - letters:
+    - а
+    - м
+    - а
+    - м
+    answer: мама
+  - letters:
+    - а
+    - т
+    - т
+    - о
+    answer: тато
+  - letters:
+    - м
+    - і
+    - д
+    answer: дім
+  - letters:
+    - с
+    - о
+    - н
+    answer: сон
+  - letters:
+    - к
+    - о
+    - о
+    answer: око
+  - letters:
+    - к
+    - о
+    - м
+    - о
+    - л
+    - о
+    answer: молоко
+  title: Rearrange the letters to spell the Ukrainian word.
+- id: wb-true-false-phonetics
+  type: true-false
+  instruction: True or false? Read each statement and decide.
+  items:
+  - statement: In Ukrainian, a 'звук' (sound) and a 'літера' (letter) are the same
+      thing.
+    correct: false
+    explanation: They are different. Sounds (звуки) are what we hear and say; letters
+      (літери) are what we see and write.
+  - statement: Ukrainian has more sounds (38) than letters (33).
+    correct: true
+    explanation: Yes — letters Я, Ю, Є, Ї can each represent two sounds in certain
+      positions, and Ь represents no sound at all.
+  - statement: Only sounds — not letters — can be голосні (vowels) or приголосні (consonants).
+    correct: true
+    explanation: Correct. We say 'голосний звук' (vowel sound), not 'голосна літера'
+      (vowel letter).
+  - statement: The soft sign Ь represents a vowel sound similar to [і].
+    correct: false
+    explanation: Ь represents NO sound. Its only job is to soften the consonant before
+      it, as in 'день' where [н] becomes soft [н′].
+  - statement: 'Ukrainian has exactly six vowel sounds: [а], [о], [у], [е], [и], [і].'
+    correct: true
+    explanation: Exactly six vowel sounds, though there are ten vowel letters (the
+      six above plus the йотовані Я, Ю, Є, Ї).
+  - statement: In Ukrainian, the unstressed [о] in 'молоко' reduces toward [а], just
+      like in Russian.
+    correct: false
+    explanation: No — Ukrainian [о] stays full and round even when unstressed. 'Молоко'
+      stays [молоко], NOT [малако].
+  - statement: The greeting 'Привіт!' is correct to use with your Ukrainian teacher.
+    correct: false
+    explanation: Привіт is informal — for friends and peers. With teachers, use the
+      formal greeting 'Добрий день!'.
+  title: True or false? Read each statement and decide.
+- id: wb-count-syllables
+  type: count-syllables
+  instruction: How many syllables does each word have? (Count the vowel sounds — each
+    vowel sound = one syllable.)
+  items:
+  - word: мама
+    correct: 2
+    translation: mum
+  - word: молоко
+    correct: 3
+    translation: milk
+  - word: привіт
+    correct: 2
+    translation: hi
+  - word: яблуко
+    correct: 3
+    translation: apple
+  - word: день
+    correct: 1
+    translation: day
+  - word: тато
+    correct: 2
+    translation: father
+  - word: добре
+    correct: 2
+    translation: good / fine
+  - word: чудово
+    correct: 3
+    translation: great / wonderful
+  title: How many syllables does each word have? (Count the vowel sounds — each vowel
+    sou
+- id: wb-odd-one-out
+  type: odd-one-out
+  instruction: Which word or expression does not belong? Find the odd one out in each
+    group.
+  items:
+  - words:
+    - Привіт!
+    - Добрий день!
+    - Доброго ранку!
+    - Як справи?
+    correct: 3
+    explanation: '''Як справи?'' is a question (how are you?), not a greeting. The
+      other three are greetings.'
+  - words:
+    - '[а]'
+    - '[о]'
+    - '[у]'
+    - '[к]'
+    correct: 3
+    explanation: '[к] is a consonant sound (приголосний). The others — [а], [о], [у]
+      — are all vowel sounds (голосні).'
+  - words:
+    - мама
+    - тато
+    - молоко
+    - привіт
+    correct: 3
+    explanation: '''Привіт'' is a greeting. The other three are nouns naming people
+      or things.'
+  - words:
+    - Добре.
+    - Чудово.
+    - Нормально.
+    - До побачення!
+    correct: 3
+    explanation: '''До побачення!'' is a farewell. The other three are answers to
+      ''Як справи?'''
+  - words:
+    - '[м]'
+    - '[н]'
+    - '[к]'
+    - '[а]'
+    correct: 3
+    explanation: '[а] is a vowel sound (голосний). The others — [м], [н], [к] — are
+      all consonant sounds (приголосні).'
+  - words:
+    - день
+    - сон
+    - ніс
+    - мама
+    correct: 3
+    explanation: '''Мама'' has 2 syllables (2 vowel sounds). The others — день, сон,
+      ніс — each have only 1 syllable.'
+  title: Which word or expression does not belong? Find the odd one out in each group.

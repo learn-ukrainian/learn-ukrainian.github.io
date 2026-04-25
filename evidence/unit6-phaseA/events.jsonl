@@ -1,0 +1,10 @@
+{"event": "module_start", "ts": "2026-04-25T12:24:52.273585+00:00", "level": "a1", "slug": "sounds-letters-and-hello"}
+{"event": "phase_done", "ts": "2026-04-25T12:24:52.409539+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "check", "duration_s": 0.124, "ok": true, "status": "complete"}
+{"event": "phase_done", "ts": "2026-04-25T12:24:52.481042+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "research", "duration_s": 0.071, "ok": true, "status": "complete"}
+{"event": "phase_done", "ts": "2026-04-25T12:27:23.092688+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "skeleton", "duration_s": 150.628, "ok": true, "status": "complete"}
+{"event": "phase_done", "ts": "2026-04-25T12:28:43.219505+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "pre-verify", "duration_s": 80.127, "ok": true, "status": "complete"}
+{"event": "phase_done", "ts": "2026-04-25T12:37:38.666397+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "write", "duration_s": 535.37, "ok": true, "status": "complete"}
+{"event": "phase_done", "ts": "2026-04-25T12:37:38.694117+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "honesty-annotate", "duration_s": 0.028, "ok": true, "status": "complete"}
+{"event": "phase_done", "ts": "2026-04-25T12:52:04.044855+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "activities", "duration_s": 865.337, "ok": true, "status": "complete"}
+{"event": "phase_done", "ts": "2026-04-25T12:52:04.129063+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "repair", "duration_s": 0.084, "ok": true, "status": "complete"}
+{"event": "module_failed", "ts": "2026-04-25T13:11:11.179969+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "activity-pre-validate", "error": "Build FAILED at Step 5g (activity pre-validation)"}
