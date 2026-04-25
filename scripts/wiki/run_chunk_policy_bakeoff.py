@@ -1051,6 +1051,61 @@ def main(argv: list[str] | None = None) -> int:
         lock_fd.close()
 
 
+def _write_outputs(
+    args: argparse.Namespace,
+    cells_results: list[dict[str, Any]],
+    *,
+    partial: bool,
+    drift_lines: list[str] | None = None,
+    drift_passes: bool = True,
+) -> None:
+    """Write markdown + JSON outputs to disk.
+
+    Called incrementally after each cell completes (``partial=True``) so a
+    later-cell crash doesn't wipe completed work, AND once at the end with
+    ``partial=False`` to attach the final drift gate verdict. The 2026-04-25
+    cell-C OOM lesson: always snapshot to disk before the next cell starts.
+    """
+
+    if not cells_results:
+        return
+
+    if drift_lines is None:
+        cell_a = next((c for c in cells_results if c["cell_id"] == "A"), None)
+        if cell_a is not None:
+            drift_passes, drift_lines = cell_a_baseline_drift(
+                cell_a, args.baseline_tolerance
+            )
+        else:
+            drift_lines = ["  Cell A not yet completed — sanity check pending."]
+            drift_passes = True
+
+    md = render_results_markdown(
+        cells_results,
+        sample_size=args.sample_size,
+        tolerance=args.baseline_tolerance,
+        drift_lines=drift_lines,
+        drift_passes=drift_passes,
+    )
+    if partial:
+        md = (
+            f"<!-- PARTIAL: {len(cells_results)} cell(s) of "
+            f"{len(args.cells)} complete -->\n\n" + md
+        )
+
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(md, encoding="utf-8")
+    label = "Partial writeup" if partial else "Writeup"
+    print(f"  ↳ {label}: {args.output}")
+
+    if args.json_output:
+        args.json_output.parent.mkdir(parents=True, exist_ok=True)
+        args.json_output.write_text(
+            json.dumps(cells_results, indent=2, default=str), encoding="utf-8"
+        )
+        print(f"  ↳ JSON: {args.json_output}")
+
+
 def _run(args: argparse.Namespace, queries: list[dict]) -> int:
     by_period = queries_by_period(queries)
     print(f"Bakeoff: cells={args.cells} sample_size={args.sample_size}")
@@ -1080,14 +1135,31 @@ def _run(args: argparse.Namespace, queries: list[dict]) -> int:
     cells_results: list[dict[str, Any]] = []
     for cid in args.cells:
         cell = effective_cells[cid]
-        cell_results = run_cell(
-            cell,
-            encoder=encoder,
-            queries_by_period=by_period,
-            sample_size=args.sample_size,
-            tokenizer=tokenizer,
-        )
-        cells_results.append(cell_results)
+        try:
+            cell_results = run_cell(
+                cell,
+                encoder=encoder,
+                queries_by_period=by_period,
+                sample_size=args.sample_size,
+                tokenizer=tokenizer,
+            )
+            cells_results.append(cell_results)
+        except KeyboardInterrupt:
+            print(f"\n⚠️  Interrupted during cell {cid} — preserving prior cell results")
+            break
+        except Exception as exc:
+            # Cell crashed (OOM, MPS assertion, etc.) — preserve completed
+            # cell data and continue to writeup. Lesson from the 2026-04-25
+            # cell-C OOM that wiped Cell A+B in-memory results when the
+            # writeup was deferred to script-end. Now we ALSO snapshot to
+            # disk after each cell (see incremental write below).
+            print(f"\n💥 Cell {cid} crashed: {type(exc).__name__}: {exc}")
+            print(f"  Continuing with {len(cells_results)} completed cell(s) of {len(args.cells)}")
+            break
+
+        # Incremental snapshot after each cell — protects against later-cell
+        # crashes wiping completed work. (2026-04-25 lesson learned.)
+        _write_outputs(args, cells_results, partial=True)
 
     encoder.unload()
 
@@ -1104,23 +1176,13 @@ def _run(args: argparse.Namespace, queries: list[dict]) -> int:
     for line in drift_lines:
         print(line)
 
-    md = render_results_markdown(
+    _write_outputs(
+        args,
         cells_results,
-        sample_size=args.sample_size,
-        tolerance=args.baseline_tolerance,
+        partial=False,
         drift_lines=drift_lines,
         drift_passes=drift_passes,
     )
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(md, encoding="utf-8")
-    print(f"\nWriteup: {args.output}")
-
-    if args.json_output:
-        args.json_output.parent.mkdir(parents=True, exist_ok=True)
-        args.json_output.write_text(
-            json.dumps(cells_results, indent=2, default=str), encoding="utf-8"
-        )
-        print(f"JSON: {args.json_output}")
 
     if cell_a is not None and not drift_passes:
         print("\n❌ Cell A failed baseline sanity check — exit 1")
