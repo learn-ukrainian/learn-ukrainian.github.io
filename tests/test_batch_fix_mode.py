@@ -750,7 +750,8 @@ class TestSchemaFilterVerification:
             'etymology-trace', 'grammar-identify', 'phonology-lab',
             'grammar-lab', 'parallel-text', 'paleography-analysis',
             'historical-writing', 'register-identify', 'loanword-trace',
-            'comparative-style', 'watch-and-repeat', 'classify',
+            'comparative-style', 'translation-critique',
+            'dialect-comparison', 'watch-and-repeat', 'classify',
             'image-to-letter',
             # A1 activity types added to LEVEL_CONFIG after the test
             # was first written. Kept in sync with priority_types in
@@ -788,7 +789,8 @@ class TestSchemaFilterVerification:
                     'etymology-trace', 'grammar-identify', 'phonology-lab',
                     'grammar-lab', 'parallel-text', 'paleography-analysis',
                     'historical-writing', 'register-identify', 'loanword-trace',
-                    'comparative-style',
+                    'comparative-style', 'translation-critique',
+                    'dialect-comparison',
                 }
                 for atype in ALL_TYPES:
                     if header_text.startswith(atype):

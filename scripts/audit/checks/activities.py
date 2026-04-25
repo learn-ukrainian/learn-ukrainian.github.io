@@ -340,6 +340,8 @@ def check_activity_level_restrictions(content: str, level_code: str, module_num:
         if forbidden in activity_types:
             if is_checkpoint and forbidden in _CHECKPOINT_RELAXED:
                 continue  # Allow in checkpoints
+            if forbidden == 'anagram' and rules.get('anagram_forbidden'):
+                continue  # Specialized anagram rule below emits the canonical violation.
             violations.append({
                 'type': 'LEVEL_RESTRICTION',
                 'issue': f"Activity '{forbidden}' not allowed at {level_code}",

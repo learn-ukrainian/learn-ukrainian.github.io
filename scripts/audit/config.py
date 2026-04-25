@@ -740,7 +740,7 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {
             'quiz', 'match-up', 'fill-in', 'error-correction', 'mark-the-words',
-            'essay-response', 'grammar-identify', 'highlight-morphemes',
+            'essay-response', 'grammar-identify',
         }
     },
     'B1-vocab': {
@@ -826,7 +826,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
+        'priority_types': {'error-correction', 'fill-in', 'cloze', 'grammar-identify'}
     },
     'B2-vocab': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
@@ -852,7 +852,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'unjumble', 'error-correction'}
+        'priority_types': {'fill-in', 'error-correction', 'grammar-identify'}
     },
     'history': {
         # HIST Track: History seminar style
@@ -907,7 +907,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,
         'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'cloze', 'fill-in'}  # Seminar + core
+        'priority_types': {'reading', 'essay-response', 'translation-critique', 'cloze', 'fill-in'}  # Seminar + core
     },
     'B2-synthesis': {
         # Synthesis modules replace checkpoints in B2.3 History (M83, M107, M119, M125, M131)
@@ -921,7 +921,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'reading', 'critical-analysis', 'essay-response', 'cloze'}  # Seminar
+        'priority_types': {'reading', 'translation-critique', 'essay-response', 'cloze'}  # Seminar
     },
     'B2-capstone': {
         'target_words': 4000,  # Raised from 2714 (Mar 2026) — module content needs expansion
@@ -948,7 +948,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
+        'priority_types': {'reading', 'essay-response', 'translation-critique'},
         'essay_min_words': 150,
         'essay_max_words': 300
     },
@@ -1069,7 +1069,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'authorial-intent'}  # Seminar
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'}  # Seminar
     },
     'C1-checkpoint': {
         'target_words': 4000,
@@ -1362,11 +1362,8 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {
             'reading', 'essay-response', 'critical-analysis',
-            # Core OES types (ISSUE-502)
-            'etymology-trace', 'transcription', 'grammar-identify',
-            # New OES types (ISSUE-502)
-            'phonology-lab', 'grammar-lab', 'parallel-text',
-            'paleography-analysis', 'historical-writing', 'loanword-trace',
+            'comparative-study', 'etymology-trace', 'transcription',
+            'grammar-identify', 'paleography-analysis',
         },
         'required_types': {'transcription', 'etymology-trace', 'grammar-identify'},
         'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words', 'group-sort', 'select', 'translate'}
@@ -1386,11 +1383,8 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {
             'reading', 'essay-response', 'critical-analysis',
-            # Core RUTH types (ISSUE-502)
-            'transcription', 'etymology-trace', 'grammar-identify',
-            # New RUTH types (ISSUE-502)
-            'grammar-lab', 'parallel-text', 'paleography-analysis',
-            'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style',
+            'comparative-study', 'transcription', 'etymology-trace',
+            'grammar-identify', 'paleography-analysis', 'dialect-comparison',
         },
         'required_types': {'transcription', 'etymology-trace', 'grammar-identify'},
         'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words', 'group-sort', 'select', 'translate'}

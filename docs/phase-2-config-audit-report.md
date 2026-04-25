@@ -50,12 +50,14 @@ Verdicts:
 | `scripts/audit/config.py:662` | `LEVEL_CONFIG["A1"].priority_types` | Removed `classify` | `DRIFT_FROM_POLICY` | Aligned with deprecated `classify` policy. |
 | `scripts/audit/config.py:678` | `LEVEL_CONFIG["A2"].priority_types` | No `select`/`reading`; includes matrix-valid A2 types | `MATCHES_POLICY` | No change. |
 | `scripts/audit/config.py:731` | B1 `LEVEL_CONFIG` variants | B1 min immersion `100`; priority types exclude forbidden reading/critical-analysis | `DRIFT_FROM_POLICY` | Updated B1 variants to match 100% Ukrainian + B1 activity matrix. |
+| `scripts/audit/config.py:819` | B2/C1/OES/RUTH `LEVEL_CONFIG.priority_types` | Priority types are subsets of their Phase 0 pipeline allowlists | `DRIFT_FROM_POLICY` | Removed out-of-matrix priority types after live matrix alignment. |
 | `scripts/audit/config.py:1445` | `ACTIVITY_RESTRICTIONS["A1"]` | Deprecated/out-of-level types forbidden, including `select`/`classify` | `DRIFT_FROM_POLICY` | Expanded to mirror Phase 0 A1 matrix restrictions. |
 | `scripts/audit/config.py:1457` | `ACTIVITY_RESTRICTIONS["A2"]` | Deprecated/out-of-level types forbidden, including `select`/`classify` | `DRIFT_FROM_POLICY` | Expanded to mirror Phase 0 A2 matrix restrictions. |
 | `scripts/audit/config.py:1470` | `ACTIVITY_RESTRICTIONS["B1"]` | Deprecated/out-of-level types forbidden; `essay-response` allowed | `DRIFT_FROM_POLICY` | Expanded to mirror Phase 0 B1 matrix restrictions. |
 | `scripts/audit/config.py:1584` | `AI_CONTAMINATION_PATTERNS` | Includes Phase 0 examples: "Let's dive in", "In conclusion", "It's important to note", "Buckle up", "Great job!" | `DRIFT_FROM_POLICY` | Added deterministic P5 banlist phrases. |
 | `scripts/audit/config.py:558` | `VALID_ACTIVITY_TYPES` | Still includes deprecated/legacy schema types | `CONTRADICTS_POLICY` | Left for schema cleanup; follow-up #1585 filed. |
 | `scripts/audit/config.py:295` | `ACTIVITY_COMPLEXITY` | Still includes some deprecated/out-of-matrix type-level rules | `CONTRADICTS_POLICY` | Left for schema cleanup; follow-up #1585 filed. |
+| `scripts/audit/checks/activities.py:337` | Anagram level-restriction emission | Specialized anagram rule is the single violation source when `anagram_forbidden` is set | `DRIFT_FROM_POLICY` | Avoided duplicate generic + specialized anagram violations while preserving matrix restrictions. |
 | `scripts/common/thresholds.py:37` | `REVIEW_PASS_FLOOR` | Global `8.0` per-dimension pass floor | `CONTRADICTS_POLICY` | Follow-up #1586 filed because Phase 0 requires per-level per-dimension LLM QG floors. |
 | `scripts/common/thresholds.py:41` | `REVIEW_REJECT_FLOOR` | Global `6.0` hard reject floor | `UNDEFINED_BY_POLICY` | Left unchanged; should be revisited with #1586. |
 | `scripts/common/thresholds.py:44` | `STYLE_REVIEW_TARGET` | `9.0` target | `UNDEFINED_BY_POLICY` | Left unchanged; Phase 0 does not define this number. |
@@ -104,6 +106,7 @@ Verdicts:
 | Phase 0 commit | `de97c45572` is an ancestor of `HEAD`. |
 | B1 stale key search | Required stale-key regex over `scripts/` and `tests/` returned no matches. |
 | Activity matrix parity | Added `tests/test_config_tables.py::TestActivityPedagogyMatrix`; targeted pytest passed. |
+| Audit/pipeline priority parity | `tests/audit/test_config_invariants.py::test_audit_priority_subset_of_pipeline_allowed` passed. |
 | Ruff per Python edit | `ruff check scripts/config.py`, `scripts/audit/config.py`, `scripts/pipeline/config_tables.py`, and changed tests passed. |
 | Requested full pytest target | `.venv/bin/pytest scripts/audit/ scripts/common/ scripts/pipeline/` collected 0 tests and exited with pytest code 5. |
 
