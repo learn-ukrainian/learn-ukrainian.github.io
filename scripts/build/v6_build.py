@@ -6893,6 +6893,19 @@ def _activity_pre_validation_findings(
 
     plan = yaml.safe_load(plan_path.read_text("utf-8")) or {}
     activities = yaml.safe_load(activities_path.read_text("utf-8")) or {}
+    if isinstance(activities, dict):
+        sections = (activities.get("inline"), activities.get("workbook"))
+        has_activity_items = any(isinstance(section, list) and section for section in sections)
+    else:
+        has_activity_items = False
+    if not has_activity_items:
+        return [], {
+            "skipped": True,
+            "reason": "no activities to validate",
+            "activities_type": type(activities).__name__,
+            "ungrounded_answers": [],
+            "required_vocab_missing": [],
+        }
     result = verify_exercises(content_path.read_text("utf-8"), plan, activities=activities)
     missing_vocab = _missing_required_vocab_in_activities(plan, activities)
     if result.ungrounded_answers:
@@ -6947,7 +6960,10 @@ def step_activity_pre_validate(content_path: Path, level: str, slug: str) -> boo
             _log(f"    - {finding['issue']}")
         _log(f"  → {validation_path}")
         return False
-    _log("  ✅ Activity pre-validation passed")
+    if payload.get("skipped"):
+        _log(f"  ⏭️  Activity pre-validation skipped: {payload['reason']}")
+    else:
+        _log("  ✅ Activity pre-validation passed")
     _log(f"  → {validation_path}")
     return True
 
