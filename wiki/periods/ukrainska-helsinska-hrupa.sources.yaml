@@ -1,0 +1,23 @@
+# Source registry for wiki/periods/ukrainska-helsinska-hrupa.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ukrxx-derzhavnist_c0127
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S2
+  file: wave7-ukrxx-derzhavnist_c0126
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S7
+  file: wave7-popovych-narys-kultury_c1126
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S8
+  file: wave9-pivtorak-pokhodzhennia_c0173
+  type: literary
+  title: Півторак — Походження українців, росіян, білорусів та їхніх мов
+  author: Півторак Г.

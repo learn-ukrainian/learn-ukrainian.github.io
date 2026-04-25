@@ -1,0 +1,18 @@
+# Source registry for wiki/historiography/krym-bahatosharovyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://www.youtube.com/watch?v=QHTrT6DGzhM
+  type: external
+  title: ГОЛОВНА ТАЄМНИЦЯ КРИМУ | Історія України від імені Т.Г. Шевченка
+  url: https://www.youtube.com/watch?v=QHTrT6DGzhM
+- id: S2
+  file: wikipedia/Депортація кримських татар
+  type: wikipedia
+  title: Депортація кримських татар
+  url: https://uk.wikipedia.org/wiki/%D0%94%D0%B5%D0%BF%D0%BE%D1%80%D1%82%D0%B0%D1%86%D1%96%D1%8F%20%D0%BA%D1%80%D0%B8%D0%BC%D1%81%D1%8C%D0%BA%D0%B8%D1%85%20%D1%82%D0%B0%D1%82%D0%B0%D1%80
+- id: S3
+  file: wikipedia/Кримські татари
+  type: wikipedia
+  title: Кримські татари
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D1%80%D0%B8%D0%BC%D1%81%D1%8C%D0%BA%D1%96%20%D1%82%D0%B0%D1%82%D0%B0%D1%80%D0%B8

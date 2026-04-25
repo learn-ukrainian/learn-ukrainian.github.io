@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/hryhorii-skovoroda.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-skovoroda-tvory_c0040
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S2
+  file: wave5-skovoroda-tvory_c0654
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S3
+  file: ukrlib-skovoroda_c0003
+  type: literary
+  title: Григорій Сковорода. Життя та творчість Григорія Сковороди
+  author: Сковорода Г.
+- id: S4
+  file: wave5-skovoroda-tvory_c0041
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S5
+  file: wave5-skovoroda-tvory_c0022
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S6
+  file: wave5-skovoroda-tvory_c0056
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S7
+  file: wave5-skovoroda-tvory_c0002
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S8
+  file: wave5-skovoroda-tvory_c0009
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S9
+  file: ukrlib-skovoroda_c0002
+  type: literary
+  title: Григорій Сковорода. Біографія Григорія Сковороди
+  author: Сковорода Г.
+- id: S10
+  file: wave5-skovoroda-tvory_c0033
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.

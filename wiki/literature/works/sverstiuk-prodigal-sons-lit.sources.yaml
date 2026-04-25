@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/sverstiuk-prodigal-sons-lit.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-heroes-ukr-kultura_c0323
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0337
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave5-suspilna-dumka-xvi-xvii_c0137
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S5
+  file: wave12-yakovenko-skhid-zakhid_c0026
+  type: literary
+  title: 'Яковенко — «Україна між Сходом і Заходом»: проекція однієї ідеї (розд. 13-14)'
+  author: Яковенко Н.
+- id: S7
+  file: wave5-suspilna-dumka-xvi-xvii_c0073
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0315
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: wave7-heroes-ukr-kultura_c0020
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив

@@ -1,0 +1,28 @@
+# Source registry for wiki/historiography/halychyna-pid-avstriieyu.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-entsyklopediia-ukrainoznavstva_c1141
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c1498
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave7-krypyakevych-istkult_c0512
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S4
+  file: https://www.youtube.com/watch?v=4L_IUKOc3ow
+  type: external
+  title: Невже українців пробудили поляки? [без реклами]
+  url: https://www.youtube.com/watch?v=4L_IUKOc3ow
+- id: S5
+  file: wikipedia/Емський указ
+  type: wikipedia
+  title: Емський указ
+  url: https://uk.wikipedia.org/wiki/%D0%95%D0%BC%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D1%83%D0%BA%D0%B0%D0%B7

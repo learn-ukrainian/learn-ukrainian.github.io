@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/kozatske-viisko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-suspilna-dumka-xvi-xvii_c0082
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0094
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wave12-velychko-litopys_c0100
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S4
+  file: wave2-velychko_c0098
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S5
+  file: wave6-chevalier-istoriia-viiny_c0140
+  type: literary
+  title: Шевальє — Історія війни козаків проти Польщі (1663)
+  author: Шевальє П.
+- id: S6
+  file: wave11-hrushevsky-iur-t6_c0019
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S7
+  file: грушевський-історія-україни-руси-т5_c0031
+  type: literary
+  title: Грушевський — Історія України-Руси, т.5
+  author: Грушевський М.
+- id: S8
+  file: грушевський-історія-україни-руси-т4_c0040
+  type: literary
+  title: Грушевський — Історія України-Руси, т.4
+  author: Грушевський М.
+- id: S9
+  file: wave12-velychko-litopys_c0560
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S10
+  file: wave2-velychko_c0558
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.

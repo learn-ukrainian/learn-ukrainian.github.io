@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/ludy-rusi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-biletsky-ruska-pravda-tekst_c0008
+  type: literary
+  title: Білецький — Руська Правда й історія її тексту
+  author: Білецький О.
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0137
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wave7-yushkov-feodalizm_c0451
+  type: literary
+  title: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму
+  author: Юшков С.
+- id: S4
+  file: wave5-suspilna-dumka-xvi-xvii_c0083
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S5
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t1_c0084
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 1: До половини XVII століття'
+  author: Дорошенко Д.
+- id: S6
+  file: wave5-yushkov-ruska-pravda_c0000
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S9
+  file: wave6-synopsis-1674_c0203
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S10
+  file: wave5-skovoroda-tvory_c0015
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.

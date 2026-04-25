@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/ukrainski-zemli-u-vkl.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0044
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0040
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0013
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: wave6-sofonovych-khronika_c0080
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S5
+  file: wave6-boplan-opys-ukrainy_c0058
+  type: literary
+  title: Боплан — Опис України (1660)
+  author: Боплан Г.
+- id: S8
+  file: грушевський-історія-україни-руси-т4_c0098
+  type: literary
+  title: Грушевський — Історія України-Руси, т.4
+  author: Грушевський М.
+- id: S9
+  file: wave6-litovsko-biloruski_c1321
+  type: literary
+  title: Литовсько-білоруські літописи та хроніки
+  author: ПСРЛ
+- id: S10
+  file: wave5-suspilna-dumka-xvi-xvii_c0067
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія

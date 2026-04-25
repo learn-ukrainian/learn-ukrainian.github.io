@@ -1,0 +1,48 @@
+# Source registry for wiki/periods/bitva-pid-zhovtymy-vodamy.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-scherer-litopys-malorosiyi_c0154
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+- id: S2
+  file: wave12-velychko-litopys_c0110
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S3
+  file: wave2-velychko_c0108
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S4
+  file: wave6-chevalier-istoriia-viiny_c0008
+  type: literary
+  title: Шевальє — Історія війни козаків проти Польщі (1663)
+  author: Шевальє П.
+- id: S5
+  file: wave12-grabianka-litopys_c0000
+  type: literary
+  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
+  author: Грабянка Г.
+- id: S6
+  file: wave2-hrabianka_c0210
+  type: literary
+  title: Літопис Грабянки
+  author: Грабянка Г.
+- id: S8
+  file: wave5-oldukr-xvii_c0309
+  type: literary
+  title: Українська література XVII ст.
+  author: Антологія
+- id: S9
+  file: wave6-synopsis-1674_c0012
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S10
+  file: wave6-boplan-opys-ukrainy_c0029
+  type: literary
+  title: Боплан — Опис України (1660)
+  author: Боплан Г.

@@ -1,0 +1,28 @@
+# Source registry for wiki/historiography/mazepa-tsykl.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-krman-shchodennyk_c0012
+  type: literary
+  title: Даніел Крман — Подорожній щоденник (1708-1709)
+  author: Крман Д.
+- id: S2
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0567
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S3
+  file: wave4-ohloblyn-mazepa_c0044
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+- id: S4
+  file: wikipedia/Українофобія
+  type: wikipedia
+  title: Українофобія
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%BE%D1%84%D0%BE%D0%B1%D1%96%D1%8F
+- id: S5
+  file: wikipedia/Іван Мазепа
+  type: wikipedia
+  title: Іван Мазепа
+  url: https://uk.wikipedia.org/wiki/%D0%86%D0%B2%D0%B0%D0%BD%20%D0%9C%D0%B0%D0%B7%D0%B5%D0%BF%D0%B0

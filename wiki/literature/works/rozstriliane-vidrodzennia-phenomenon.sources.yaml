@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/rozstriliane-vidrodzennia-phenomenon.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c5061
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave9-rusanivsky-ist-lit-movy_c0392
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0668
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0290
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0162
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0021
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0262
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c5517
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0724
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

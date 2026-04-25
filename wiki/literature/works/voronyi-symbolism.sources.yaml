@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/voronyi-symbolism.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-voronyi_c0002
+  type: literary
+  title: Микола Вороний. Життя та творчість Миколи Вороного
+  author: Вороний М.
+- id: S2
+  file: ukrlib-voronyi_c0007
+  type: literary
+  title: Микола Вороний. Життя та творчість Миколи Вороного
+  author: Вороний М.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0401
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave7-popovych-narys-kultury_c0828
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S5
+  file: ukrlib-voronyi_c0008
+  type: literary
+  title: Микола Вороний. Життя та творчість Миколи Вороного
+  author: Вороний М.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0712
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0054
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave5-velychkovsky_c0046
+  type: literary
+  title: Іван Величковський. Твори
+  author: Величковський І.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c5202
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0728
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

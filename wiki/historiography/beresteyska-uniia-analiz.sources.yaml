@@ -1,0 +1,54 @@
+# Source registry for wiki/historiography/beresteyska-uniia-analiz.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-istoria-ukr-schupak-2025_s4196
+  type: textbook
+  title: РОЗДІЛ 1. Дум.ки істориків
+  page: 49
+  grade: 8
+- id: S2
+  file: 8-klas-istoriya-ukr-gisem-2021_s4250
+  type: textbook
+  title: § 5. Укладення Берестейської церковної унії 25
+  page: 25
+  grade: 8
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0155
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: 8-klas-istoria-ukr-schupak-2025_s4193
+  type: textbook
+  title: РОЗДІЛ 1. Берестейська церковна унія 1596 року
+  page: 45
+  grade: 8
+- id: S5
+  file: 8-klas-istoria-ukr-hlibovska-2025_s4132
+  type: textbook
+  title: § 7. БЕРЕСТЕЙСЬКА ЦЕРКОВНА УНІЯ
+  page: 21
+  grade: 8
+- id: S6
+  file: 8-klas-istoriya-ukr-gisem-2021_s4251
+  type: textbook
+  title: § 5. Укладення Берестейської церковної унії 27
+  page: 27
+  grade: 8
+- id: S7
+  file: wikipedia/Франко Іван Якович
+  type: wikipedia
+  title: Франко Іван Якович
+  url: https://uk.wikipedia.org/wiki/%D0%A4%D1%80%D0%B0%D0%BD%D0%BA%D0%BE%20%D0%86%D0%B2%D0%B0%D0%BD%20%D0%AF%D0%BA%D0%BE%D0%B2%D0%B8%D1%87
+- id: S8
+  file: 8-klas-istoria-ukr-galimov-2025_s4000
+  type: textbook
+  title: § 10. Укладення Берестейської церковної унії
+  page: 65
+  grade: 8
+- id: S10
+  file: wikipedia/Контент-аналіз
+  type: wikipedia
+  title: Контент-аналіз
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82-%D0%B0%D0%BD%D0%B0%D0%BB%D1%96%D0%B7

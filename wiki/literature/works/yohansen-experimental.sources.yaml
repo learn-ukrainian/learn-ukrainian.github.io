@@ -1,0 +1,38 @@
+# Source registry for wiki/literature/works/yohansen-experimental.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-yohansen_c0000
+  type: literary
+  title: Майк Йогансен. Подорож ученого доктора Леонардо
+  author: Йогансен М.
+- id: S2
+  file: ukrlib-yohansen_c0002
+  type: literary
+  title: Майк Йогансен. Біографія Майка Йогансена
+  author: Йогансен М.
+- id: S3
+  file: ukrlib-yohansen_c0015
+  type: literary
+  title: Майк Йогансен. Інтермедії до книги 133 "Літературного Ярмарку"
+  author: Йогансен М.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0054
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: ukrlib-zhadan_c0171
+  type: literary
+  title: Сергій Жадан. Депеш Мод
+  author: Жадан С.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0352
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: ukrlib-yohansen_c0001
+  type: literary
+  title: Майк Йогансен. Біографія Майка Йогансена
+  author: Йогансен М.

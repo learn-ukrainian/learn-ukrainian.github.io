@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/stus-letters-to-son.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-heroes-ukr-kultura_c0320
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0333
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0323
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0322
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave7-heroes-ukr-kultura_c0326
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S6
+  file: wave7-heroes-ukr-kultura_c0337
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S7
+  file: wave7-heroes-ukr-kultura_c0319
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0336
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив

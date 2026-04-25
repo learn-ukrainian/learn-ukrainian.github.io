@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/mykhailo-petrenko-romantyka.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-popovych-narys-kultury_c0530
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S2
+  file: wave4-chyzhevsky-istoriia-lit_c0539
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c1396
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave10-shevchenkivsky-slovnyk_c1595
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S5
+  file: wave5-dovhalevsky-poetyka_c0009
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c4433
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave10-shevchenkivsky-slovnyk_c0679
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S8
+  file: wave4-chyzhevsky-istoriia-lit_c0899
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0609
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave8-chyzhevsky-baroko_c0004
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.

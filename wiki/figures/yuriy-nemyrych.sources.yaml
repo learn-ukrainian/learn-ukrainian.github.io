@@ -1,0 +1,33 @@
+# Source registry for wiki/figures/yuriy-nemyrych.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-fdm-biobibliohrafichnyi_c0120
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S2
+  file: wave8-fdm-biobibliohrafichnyi_c0119
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S4
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t2_c0105
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 2: Від половини XVII століття'
+  author: Дорошенко Д.
+- id: S5
+  file: wave12-velychko-litopys_c0458
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S7
+  file: wikipedia/Листи до братів-хліборобів
+  type: wikipedia
+  title: Листи до братів-хліборобів
+  url: https://uk.wikipedia.org/wiki/%D0%9B%D0%B8%D1%81%D1%82%D0%B8%20%D0%B4%D0%BE%20%D0%B1%D1%80%D0%B0%D1%82%D1%96%D0%B2-%D1%85%D0%BB%D1%96%D0%B1%D0%BE%D1%80%D0%BE%D0%B1%D1%96%D0%B2
+- id: S8
+  file: wikipedia/Російський світ
+  type: wikipedia
+  title: Російський світ
+  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D1%81%D1%96%D0%B9%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D1%81%D0%B2%D1%96%D1%82

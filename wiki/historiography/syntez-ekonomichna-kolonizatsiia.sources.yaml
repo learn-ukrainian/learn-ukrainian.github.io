@@ -1,0 +1,33 @@
+# Source registry for wiki/historiography/syntez-ekonomichna-kolonizatsiia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ukrxx-derzhavnist_c0399
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S2
+  file: wave7-ukrxx-derzhavnist_c0404
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S3
+  file: wave7-ukrxx-derzhavnist_c0401
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S4
+  file: ukrainian_wiki/verbs-group-one_Педагогіка-A1-Verbs-Group-One-Деколонізаційні-застереження
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Verbs Group One'
+  section_path: 'Педагогіка A1: Verbs Group One > Деколонізаційні застереження'
+- id: S5
+  file: wikipedia/Економічна теорія
+  type: wikipedia
+  title: Економічна теорія
+  url: https://uk.wikipedia.org/wiki/%D0%95%D0%BA%D0%BE%D0%BD%D0%BE%D0%BC%D1%96%D1%87%D0%BD%D0%B0%20%D1%82%D0%B5%D0%BE%D1%80%D1%96%D1%8F
+- id: S6
+  file: wikipedia/Контент-аналіз
+  type: wikipedia
+  title: Контент-аналіз
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82-%D0%B0%D0%BD%D0%B0%D0%BB%D1%96%D0%B7

@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/kvitka-language.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-ohiyenko-ist-lit-movy_c0091
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S2
+  file: wave5-skovoroda-tvory_c0079
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S3
+  file: wave8-chyzhevsky-baroko_c0280
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c4692
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave9-rusanivsky-ist-lit-movy_c0330
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S7
+  file: wave4-ukrainska-mova-encyclopedia_c0205
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S8
+  file: wave9-rusanivsky-ist-lit-movy_c0176
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S9
+  file: wave7-istkult-t1-kyivska-rus_c0011
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c1983
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

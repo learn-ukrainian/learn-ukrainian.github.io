@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/language-of-realism.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-rusanivsky-ist-lit-movy_c0352
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0031
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave9-rusanivsky-ist-lit-movy_c0326
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0643
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave9-rusanivsky-ist-lit-movy_c0330
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S6
+  file: wave8-chyzhevsky-baroko_c0280
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S7
+  file: wave9-rusanivsky-ist-lit-movy_c0256
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S8
+  file: wave8-hensiorsky-gvl-mova_c0253
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S9
+  file: wave4-chyzhevsky-istoriia-lit_c0678
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S10
+  file: wave7-hrinchenko-drahomanov_c0035
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.

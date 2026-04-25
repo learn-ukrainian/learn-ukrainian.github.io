@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/kulish-literary-legacy.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0238
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave4-chyzhevsky-istoriia-lit_c0580
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S3
+  file: wave7-popovych-narys-kultury_c0730
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S5
+  file: wave4-chyzhevsky-istoriia-lit_c0911
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S6
+  file: wave7-holobutsky-zaporizhzhia_c0067
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S7
+  file: wave9-ohiyenko-ist-lit-movy_c0000
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S8
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t2_c0532
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 2: Від половини XVII століття'
+  author: Дорошенко Д.
+- id: S9
+  file: wave9-ohiyenko-ist-lit-movy_c0188
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S10
+  file: wave12-samovyd-litopys_c0045
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий

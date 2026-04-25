@@ -1,0 +1,44 @@
+# Source registry for wiki/historiography/zakhid-1994.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1057
+  type: textbook
+  title: Мовою джерела. Витяг із Будапешт
+  page: 257
+  grade: 11
+- id: S2
+  file: 11-klas-istoriya-ukr-gisem-2024_s0969
+  type: textbook
+  title: § 27. Зовнішня політика та міжнародні зв’язки України в 1992—2013 рр. 227
+  page: 229
+  grade: 11
+- id: S3
+  file: 11-klas-istoriya-ukr-galimov-2024_s0867
+  type: textbook
+  title: § 27. Зовнішня політика та міжнародні зв’язки України в 1992—2013 рр. 195
+  page: 197
+  grade: 11
+- id: S4
+  file: 11-klas-istoriya-ukr-gisem-2024_s0964
+  type: textbook
+  title: § 27. Зовнішня політика та міжнародні зв’язки україни
+  page: 218
+  grade: 11
+- id: S5
+  file: wave7-kohut-tsentralizm_c0240
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S6
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S7
+  file: ext-article-1
+  type: external
+  title: ext-article-1
+- id: S8
+  file: ext-article-2
+  type: external
+  title: ext-article-2

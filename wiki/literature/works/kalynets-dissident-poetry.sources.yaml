@@ -1,0 +1,38 @@
+# Source registry for wiki/literature/works/kalynets-dissident-poetry.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-kalynets_c0000
+  type: literary
+  title: Ігор Калинець. Життя та творчість Ігоря Калинця
+  author: Калинець І.
+- id: S2
+  file: wave10-shevchenkivsky-slovnyk_c1595
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S3
+  file: wave7-ukrxx-derzhavnist_c0126
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0500
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave9-rusanivsky-ist-lit-movy_c0488
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S6
+  file: wave5-prokopovych-filosofski_c0671
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S8
+  file: ukrlib-yohansen_c0012
+  type: literary
+  title: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.

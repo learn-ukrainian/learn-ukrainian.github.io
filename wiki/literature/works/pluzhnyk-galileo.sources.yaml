@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/pluzhnyk-galileo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0162
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0159
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0097
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0077
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave10-shevchenkivsky-slovnyk_c0303
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c1024
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave5-dovhalevsky-poetyka_c0007
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c2416
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0070
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c4428
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

@@ -1,0 +1,83 @@
+# Source registry for wiki/folk/short-forms/prykazky-ta-pryslivia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 6-klas-ukrmova-golub-2023_s0262
+  type: textbook
+  title: Сторінка 255
+  grade: 6
+  author: golub
+- id: S2
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s0299
+  type: textbook
+  title: Сторінка 207
+  grade: 11
+  author: avramenko
+- id: S6
+  file: folk-micro-прислів'я-0
+  type: unknown
+  title: folk-micro-прислів'я-0
+- id: S7
+  file: folk-micro-прислів'я-1
+  type: unknown
+  title: folk-micro-прислів'я-1
+- id: S8
+  file: folk-micro-прислів'я-2
+  type: unknown
+  title: folk-micro-прислів'я-2
+- id: S9
+  file: folk-micro-прислів'я-3
+  type: unknown
+  title: folk-micro-прислів'я-3
+- id: S10
+  file: folk-micro-прислів'я-4
+  type: unknown
+  title: folk-micro-прислів'я-4
+- id: S11
+  file: folk-micro-прислів'я-5
+  type: unknown
+  title: folk-micro-прислів'я-5
+- id: S12
+  file: folk-micro-прислів'я-6
+  type: unknown
+  title: folk-micro-прислів'я-6
+- id: S13
+  file: folk-micro-прислів'я-7
+  type: unknown
+  title: folk-micro-прислів'я-7
+- id: S14
+  file: folk-micro-прислів'я-8
+  type: unknown
+  title: folk-micro-прислів'я-8
+- id: S15
+  file: folk-micro-прислів'я-9
+  type: unknown
+  title: folk-micro-прислів'я-9
+- id: S16
+  file: 5-klas-ukrmova-litvinova-2022_s2355
+  type: textbook
+  title: Фразеологія. Різновиди фразеологічних одиниць
+  page: 96
+  grade: 5
+- id: S17
+  file: 5-klas-ukrlit-zabolotnyi-2022_s1993
+  type: textbook
+  title: ПРИСЛІВ’Я ТА ПРИКАЗКИ ПРИСЛІВ’Я ТА ПРИКАЗКИ
+  page: 31
+  grade: 5
+- id: S18
+  file: https://uk.wikipedia.org/wiki/Фразеологія
+  type: external
+  title: Фразеологія — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Фразеологія
+  domain: uk.wikipedia.org
+- id: S19
+  file: wikipedia/Прислів'я
+  type: wikipedia
+  title: Прислів'я
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%B8%D1%81%D0%BB%D1%96%D0%B2%27%D1%8F
+- id: S20
+  file: wikipedia/Фольклористичні терміни
+  type: wikipedia
+  title: Фольклористичні терміни
+  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%BE%D0%BB%D1%8C%D0%BA%D0%BB%D0%BE%D1%80%D0%B8%D1%81%D1%82%D0%B8%D1%87%D0%BD%D1%96%20%D1%82%D0%B5%D1%80%D0%BC%D1%96%D0%BD%D0%B8

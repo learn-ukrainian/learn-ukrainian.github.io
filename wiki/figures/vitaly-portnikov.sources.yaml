@@ -1,0 +1,18 @@
+# Source registry for wiki/figures/vitaly-portnikov.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wikipedia/Газета
+  type: wikipedia
+  title: Газета
+  url: https://uk.wikipedia.org/wiki/%D0%93%D0%B0%D0%B7%D0%B5%D1%82%D0%B0
+- id: S2
+  file: wikipedia/Контент-аналіз
+  type: wikipedia
+  title: Контент-аналіз
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82-%D0%B0%D0%BD%D0%B0%D0%BB%D1%96%D0%B7
+- id: S3
+  file: wikipedia/Літературна журналістика
+  type: wikipedia
+  title: Літературна журналістика
+  url: https://uk.wikipedia.org/wiki/%D0%9B%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%BD%D0%B0%20%D0%B6%D1%83%D1%80%D0%BD%D0%B0%D0%BB%D1%96%D1%81%D1%82%D0%B8%D0%BA%D0%B0

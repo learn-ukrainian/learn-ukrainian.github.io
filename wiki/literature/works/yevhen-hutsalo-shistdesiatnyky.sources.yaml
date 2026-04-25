@@ -1,0 +1,38 @@
+# Source registry for wiki/literature/works/yevhen-hutsalo-shistdesiatnyky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-skovoroda-tvory_c0079
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S2
+  file: wave5-dovhalevsky-poetyka_c0003
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S3
+  file: wave8-masliuk-poetyky-rytoryky_c0282
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S4
+  file: wave5-prokopovych-filosofski_c0207
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S6
+  file: wave5-dovhalevsky-poetyka_c0027
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c1767
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c1905
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

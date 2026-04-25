@@ -1,0 +1,28 @@
+# Source registry for wiki/figures/yuriy-lvovych.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-krypyakevych-gvk_c0155
+  type: literary
+  title: Крип'якевич — Галицько-Волинське князівство
+  author: Крип'якевич І.
+- id: S2
+  file: wave7-krypyakevych-gvk_c0138
+  type: literary
+  title: Крип'якевич — Галицько-Волинське князівство
+  author: Крип'якевич І.
+- id: S3
+  file: wave7-krypyakevych-gvk_c0149
+  type: literary
+  title: Крип'якевич — Галицько-Волинське князівство
+  author: Крип'якевич І.
+- id: S4
+  file: wave7-istkult-t2-xiii-xvii_c0077
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S5
+  file: wikipedia/Юрій Львович
+  type: wikipedia
+  title: Юрій Львович
+  url: https://uk.wikipedia.org/wiki/%D0%AE%D1%80%D1%96%D0%B9%20%D0%9B%D1%8C%D0%B2%D0%BE%D0%B2%D0%B8%D1%87

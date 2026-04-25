@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/sofiya-kyivska.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-synopsis-1674_c0052
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0042
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wave6-synopsis-1674_c0342
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S4
+  file: wave1-pateryk-pechersky_c0026
+  type: literary
+  title: Патерик Києво-Печерський
+  author: Невідомий
+- id: S5
+  file: wave12-paterikon-pecherskyi_c0026
+  type: literary
+  title: Патерик Києво-Печерський (II Касіянівська редакція, 1462)
+  author: Невідомий
+- id: S6
+  file: wave5-suspilna-dumka-xvi-xvii_c0156
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S7
+  file: wave5-suspilna-dumka-xvi-xvii_c0078
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S8
+  file: wave7-istkult-t1-kyivska-rus_c0299
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S9
+  file: wave7-popovych-narys-kultury_c0154
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S10
+  file: wave7-istkult-t1-kyivska-rus_c0398
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив

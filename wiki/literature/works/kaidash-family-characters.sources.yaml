@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/kaidash-family-characters.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c2330
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c3242
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c3643
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave4-chyzhevsky-istoriia-lit_c0014
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c3590
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: ukrlib-franko_c0081
+  type: literary
+  title: Іван Франко. Із секретів поетичної творчості
+  author: Франко І.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c0119
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c2714
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave5-buhoslavsky-borys-hlib_c0013
+  type: literary
+  title: Україно-руські памʼятки про князів Бориса та Гліба
+  author: Бугославський С.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c2933
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

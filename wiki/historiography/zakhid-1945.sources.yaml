@@ -1,0 +1,18 @@
+# Source registry for wiki/historiography/zakhid-1945.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ukrxx-derzhavnist_c0173
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S2
+  file: https://www.youtube.com/watch?v=Lnm6UKVES-k
+  type: external
+  title: Чому Депортація 1944 Була Катастрофою? Злочин СССР Проти Кримських Татар
+  url: https://www.youtube.com/watch?v=Lnm6UKVES-k
+- id: S3
+  file: wikipedia/Великий терор
+  type: wikipedia
+  title: Великий терор
+  url: https://uk.wikipedia.org/wiki/%D0%92%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D0%B9%20%D1%82%D0%B5%D1%80%D0%BE%D1%80

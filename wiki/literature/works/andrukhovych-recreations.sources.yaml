@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/andrukhovych-recreations.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-andrukhovych_c0000
+  type: literary
+  title: Юрій Андрухович. Час і місце, або Моя остання територія
+  author: Андрухович Ю.
+- id: S2
+  file: ukrlib-andrukhovych_c0001
+  type: literary
+  title: Юрій Андрухович. Біографія Юрія Андруховича
+  author: Андрухович Ю.
+- id: S3
+  file: ukrlib-andrukhovych_c0006
+  type: literary
+  title: Юрій Андрухович. Час і місце, або Моя остання територія
+  author: Андрухович Ю.
+- id: S4
+  file: ukrlib-andrukhovych_c0008
+  type: literary
+  title: Юрій Андрухович. Час і місце, або Моя остання територія
+  author: Андрухович Ю.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0416
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: ukrlib-andrukhovych_c0002
+  type: literary
+  title: Юрій Андрухович. Біографія Юрія Андруховича
+  author: Андрухович Ю.
+- id: S7
+  file: wave9-rusanivsky-ist-lit-movy_c0330
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S8
+  file: wave7-popovych-narys-kultury_c0521
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S9
+  file: ukrlib-zhadan_c0171
+  type: literary
+  title: Сергій Жадан. Депеш Мод
+  author: Жадан С.

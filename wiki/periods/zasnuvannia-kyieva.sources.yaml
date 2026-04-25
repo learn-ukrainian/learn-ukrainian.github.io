@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/zasnuvannia-kyieva.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-synopsis-1674_c0407
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S2
+  file: wave6-synopsis-1674_c0406
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S3
+  file: wave6-synopsis-1674_c0065
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S4
+  file: wave6-sofonovych-khronika_c0083
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S6
+  file: wave6-sofonovych-khronika_c0068
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S7
+  file: wave6-sofonovych-khronika_c0067
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S8
+  file: wave7-krypyakevych-istkult_c0333
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S9
+  file: wave6-synopsis-1674_c0405
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий

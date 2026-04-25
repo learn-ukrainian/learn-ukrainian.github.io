@@ -1,0 +1,14 @@
+# Source registry for wiki/historiography/tretia-khvylia-dipivtsi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-istoriya-ukr-galimov-2024_s0803
+  type: textbook
+  title: Біженці — особи, які залишили країни
+  page: 29
+  grade: 11
+- id: S2
+  file: wikipedia/Українська еміграція
+  type: wikipedia
+  title: Українська еміграція
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%B5%D0%BC%D1%96%D0%B3%D1%80%D0%B0%D1%86%D1%96%D1%8F

@@ -1,0 +1,57 @@
+# Source registry for wiki/periods/pomarancheva-revoliutsiia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-suspilna-dumka-xvi-xvii_c0156
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S2
+  file: wave5-prokopovych-filosofski_c0219
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S3
+  file: wave6-boplan-opys-ukrainy_c0014
+  type: literary
+  title: Боплан — Опис України (1660)
+  author: Боплан Г.
+- id: S4
+  file: wave0-samovydets_c0000
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S5
+  file: wave5-suspilna-dumka-xvi-xvii_c0171
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S6
+  file: wave5-prokopovych-filosofski_c0481
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave5-prokopovych-filosofski_c1005
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S8
+  file: wave5-prokopovych-filosofski_c0301
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave12-samovyd-litopys_c0014
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий
+- id: S10
+  file: wave0-samovydets_c0013
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S11
+  file: ext-article-0
+  type: external
+  title: ext-article-0

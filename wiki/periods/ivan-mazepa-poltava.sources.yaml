@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/ivan-mazepa-poltava.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-krman-shchodennyk_c0017
+  type: literary
+  title: Даніел Крман — Подорожній щоденник (1708-1709)
+  author: Крман Д.
+- id: S2
+  file: wikisource-орлик_c005
+  type: literary
+  title: Конституція Пилипа Орлика
+  author: Орлик Пилип
+- id: S3
+  file: wave6-scherer-litopys-malorosiyi_c0093
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+- id: S4
+  file: wave6-scherer-litopys-malorosiyi_c0223
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+- id: S6
+  file: wave6-scherer-litopys-malorosiyi_c0222
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+- id: S7
+  file: wave6-scherer-litopys-malorosiyi_c0224
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+- id: S8
+  file: wave6-krman-shchodennyk_c0042
+  type: literary
+  title: Даніел Крман — Подорожній щоденник (1708-1709)
+  author: Крман Д.
+- id: S9
+  file: wave6-krman-shchodennyk_c0012
+  type: literary
+  title: Даніел Крман — Подорожній щоденник (1708-1709)
+  author: Крман Д.

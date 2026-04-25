@@ -1,0 +1,23 @@
+# Source registry for wiki/literature/works/holoborodko-flying-window.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-holoborodko_c0005
+  type: literary
+  title: Василь Голобородько. Біографія Василя Голобородька
+  author: Голобородько В.
+- id: S2
+  file: ukrlib-holoborodko_c0002
+  type: literary
+  title: Василь Голобородько. Біографія Василя Голобородька
+  author: Голобородько В.
+- id: S3
+  file: wave10-shevchenkivsky-slovnyk_c1597
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0416
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

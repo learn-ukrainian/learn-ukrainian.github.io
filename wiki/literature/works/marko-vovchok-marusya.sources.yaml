@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/marko-vovchok-marusya.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-chyzhevsky-baroko_c0282
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0361
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0162
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0060
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0262
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0097
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0094
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave4-chyzhevsky-istoriia-lit_c0505
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.

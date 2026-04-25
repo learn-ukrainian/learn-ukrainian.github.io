@@ -1,0 +1,28 @@
+# Source registry for wiki/historiography/khreshchennia-spadshchyna.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ohiyenko-tserka_c0000
+  type: literary
+  title: Огієнко — Українська церква
+  author: Огієнко І.
+- id: S2
+  file: wave7-istkult-t1-kyivska-rus_c0114
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S3
+  file: wave7-popovych-narys-kultury_c1190
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S4
+  file: wikipedia/Київська Русь
+  type: wikipedia
+  title: Київська Русь
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B0%20%D0%A0%D1%83%D1%81%D1%8C
+- id: S5
+  file: wikipedia/Українська античність
+  type: wikipedia
+  title: Українська античність
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%B0%D0%BD%D1%82%D0%B8%D1%87%D0%BD%D1%96%D1%81%D1%82%D1%8C

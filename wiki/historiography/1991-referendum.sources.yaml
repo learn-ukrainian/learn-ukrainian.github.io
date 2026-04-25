@@ -1,0 +1,14 @@
+# Source registry for wiki/historiography/1991-referendum.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-dzyuba-internatsionalizm_c0273
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+- id: S2
+  file: https://www.youtube.com/watch?v=EDbRAQGlYuE
+  type: external
+  title: 'ULP 4-124 | Як це було: незалежність України | Ukrainian Lessons Podcast
+    Season 4'
+  url: https://www.youtube.com/watch?v=EDbRAQGlYuE

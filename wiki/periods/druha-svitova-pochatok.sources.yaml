@@ -1,0 +1,18 @@
+# Source registry for wiki/periods/druha-svitova-pochatok.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S6
+  file: wave7-thompson-trubadury_c0396
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S7
+  file: wave7-popovych-narys-kultury_c1037
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S8
+  file: wave7-ukrxx-derzhavnist_c0215
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив

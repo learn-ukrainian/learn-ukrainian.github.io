@@ -1,0 +1,33 @@
+# Source registry for wiki/periods/andrusivske-peremyrya.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-holobutsky-zaporizhzhia_c0569
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S2
+  file: wave12-velychko-litopys_c1674
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S4
+  file: wave12-velychko-litopys_c0734
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S6
+  file: wave5-suspilna-dumka-xvi-xvii_c0123
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S8
+  file: wave12-velychko-litopys_c0732
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S10
+  file: wave12-velychko-litopys_c0729
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.

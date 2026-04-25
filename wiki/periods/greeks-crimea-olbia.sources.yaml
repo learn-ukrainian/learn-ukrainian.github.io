@@ -1,0 +1,48 @@
+# Source registry for wiki/periods/greeks-crimea-olbia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-skovoroda-tvory_c1289
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S2
+  file: wave6-chevalier-istoriia-viiny_c0047
+  type: literary
+  title: Шевальє — Історія війни козаків проти Польщі (1663)
+  author: Шевальє П.
+- id: S3
+  file: wave5-oldukr-xvii_c0243
+  type: literary
+  title: Українська література XVII ст.
+  author: Антологія
+- id: S4
+  file: wave7-krypyakevych-istkult_c0640
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S5
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t1_c0047
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 1: До половини XVII століття'
+  author: Дорошенко Д.
+- id: S7
+  file: wave6-synopsis-1674_c0454
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S8
+  file: wave11-hrushevsky-iur-t6_c0236
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S9
+  file: wave4-hrushevsky-iur-t1_c0156
+  type: literary
+  title: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+- id: S10
+  file: грушевський-історія-україни-руси-т5_c0248
+  type: literary
+  title: Грушевський — Історія України-Руси, т.5
+  author: Грушевський М.

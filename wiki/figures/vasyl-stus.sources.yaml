@@ -1,0 +1,36 @@
+# Source registry for wiki/figures/vasyl-stus.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1383
+  type: textbook
+  title: Літературне «шістдесятництво» . Василь Стус  197
+  page: 197
+  grade: 11
+- id: S2
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s1126
+  type: textbook
+  title: Теорія літератури. СТОЇЧНА УКРАЇНСЬКА ПОЕЗІЯ
+  page: 236
+  grade: 11
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0320
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave7-heroes-ukr-kultura_c0336
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S6
+  file: wave7-heroes-ukr-kultura_c0322
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S7
+  file: https://www.youtube.com/watch?v=TSwedu10xao
+  type: external
+  title: ULP 6-229 | Українська поезія. Василь Стус «Господи, гніву пречистого…» |
+    Ukrainian Lessons Podca...
+  url: https://www.youtube.com/watch?v=TSwedu10xao

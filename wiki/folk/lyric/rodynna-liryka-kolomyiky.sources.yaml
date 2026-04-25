@@ -1,0 +1,52 @@
+# Source registry for wiki/folk/lyric/rodynna-liryka-kolomyiky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrlit-zabolotnyi-2024_s0026
+  type: textbook
+  title: Сторінка 24
+  grade: 7
+  author: zabolotnyi
+- id: S4
+  file: 6-klas-ukrlit-zabolotnyi-2023_s0033
+  type: textbook
+  title: Сторінка 34
+  grade: 6
+  author: zabolotnyi
+- id: S6
+  file: 6-klas-ukrlit-kovalenko-2023_s2756
+  type: textbook
+  title: Вікторія Ковальчук. Дитячі сни. Мила киця. 2008
+  page: 23
+  grade: 6
+- id: S7
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2812
+  type: textbook
+  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 34)
+  page: 34
+  grade: 6
+- id: S8
+  file: wave7-entsyklopediia-ukrainoznavstva_c0629
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c3605
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c0631
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S11
+  file: https://www.youtube.com/watch?v=UZD98q_Vy0E
+  type: external
+  title: Як Виховати Українця? Обовʼязково подивіться! Про Колисковіі
+  url: https://www.youtube.com/watch?v=UZD98q_Vy0E
+- id: S12
+  file: wikipedia/Лірика
+  type: wikipedia
+  title: Лірика
+  url: https://uk.wikipedia.org/wiki/%D0%9B%D1%96%D1%80%D0%B8%D0%BA%D0%B0

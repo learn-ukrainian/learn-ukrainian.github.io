@@ -1,0 +1,55 @@
+# Source registry for wiki/historiography/litopys-velychka.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-velychko-litopys_c0032
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S2
+  file: wave2-velychko_c0030
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S3
+  file: 8-klas-istoria-ukr-hlibovska-2025_s4175
+  type: textbook
+  title: § 50. КОЗАЦЬКІ ЛІТОПИСИ
+  page: 126
+  grade: 8
+- id: S4
+  file: wave6-synopsis-1674_c0049
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S5
+  file: wave8-chyzhevsky-baroko_c0353
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S6
+  file: wave6-rihelman-litopysna-opovid_c0022
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0914
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave4-chyzhevsky-istoriia-lit_c0398
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c0573
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: 5-klas-ukrlit-zabolotnyi-2022_s2075
+  type: textbook
+  title: КНИЖКА ВЧИТЬ, ЯК У СВІТІ ЖИТЬ КНИЖКА ВЧИТЬ, ЯК У СВІТІ ЖИТЬ
+  page: 112
+  grade: 5

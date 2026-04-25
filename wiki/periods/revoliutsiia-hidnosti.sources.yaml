@@ -1,0 +1,48 @@
+# Source registry for wiki/periods/revoliutsiia-hidnosti.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-prokopovych-filosofski_c1299
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S2
+  file: wave5-prokopovych-filosofski_c0038
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S3
+  file: wave6-chevalier-istoriia-viiny_c0138
+  type: literary
+  title: Шевальє — Історія війни козаків проти Польщі (1663)
+  author: Шевальє П.
+- id: S4
+  file: wave6-sofonovych-khronika_c0132
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S6
+  file: wave0-samovydets_c0013
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S7
+  file: wave0-samovydets_c0000
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S8
+  file: wave12-samovyd-litopys_c0044
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий
+- id: S9
+  file: wave0-samovydets_c0043
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S10
+  file: wave12-samovyd-litopys_c0046
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий

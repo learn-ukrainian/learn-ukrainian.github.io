@@ -1,0 +1,56 @@
+# Source registry for wiki/folk/ritual/obzhynkovi-pisni.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 6-klas-ukrlit-kovalenko-2023_s0005
+  type: textbook
+  title: Сторінка 7
+  grade: 6
+  author: kovalenko
+- id: S6
+  file: 6-klas-ukrlit-kovalenko-2023_s2753
+  type: textbook
+  title: ЖНИВАРСЬКІ ПІСНІ
+  page: 7
+  grade: 6
+- id: S7
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2799
+  type: textbook
+  title: НАРОДНІ КАЛЕНДАРНО-ОБРЯДОВІ ПІСНІ (p. 21)
+  page: 21
+  grade: 6
+- id: S8
+  file: wave7-entsyklopediia-ukrainoznavstva_c0595
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S9
+  file: wave4-hrushevsky-istlit_c0316
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S10
+  file: wave12-hrushevsky-iu-odnotom_c0321
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S11
+  file: ukrainian_wiki/nature-and-traditions_Граматика-A2-Пори-року-і-свята-Деколонізаційні-застереження
+  type: ukrainian_wiki
+  title: 'Граматика A2: Пори року і свята'
+  section_path: 'Граматика A2: Пори року і свята > Деколонізаційні застереження'
+- id: S12
+  file: wikipedia/Фольклористичні терміни
+  type: wikipedia
+  title: Фольклористичні терміни
+  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%BE%D0%BB%D1%8C%D0%BA%D0%BB%D0%BE%D1%80%D0%B8%D1%81%D1%82%D0%B8%D1%87%D0%BD%D1%96%20%D1%82%D0%B5%D1%80%D0%BC%D1%96%D0%BD%D0%B8
+- id: S13
+  file: wikipedia/Фольклор
+  type: wikipedia
+  title: Фольклор
+  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%BE%D0%BB%D1%8C%D0%BA%D0%BB%D0%BE%D1%80
+- id: S14
+  file: wikipedia/Слов'янська міфологія
+  type: wikipedia
+  title: Слов'янська міфологія
+  url: https://uk.wikipedia.org/wiki/%D0%A1%D0%BB%D0%BE%D0%B2%27%D1%8F%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BC%D1%96%D1%84%D0%BE%D0%BB%D0%BE%D0%B3%D1%96%D1%8F

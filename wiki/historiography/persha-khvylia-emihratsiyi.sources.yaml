@@ -1,0 +1,19 @@
+# Source registry for wiki/historiography/persha-khvylia-emihratsiyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1011
+  type: textbook
+  title: ПРАКТИЧНА РОБОТА № 1
+  page: 54
+  grade: 11
+- id: S2
+  file: wikipedia/Українська еміграція
+  type: wikipedia
+  title: Українська еміграція
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%B5%D0%BC%D1%96%D0%B3%D1%80%D0%B0%D1%86%D1%96%D1%8F
+- id: S3
+  file: wikipedia/Еміграція з України
+  type: wikipedia
+  title: Еміграція з України
+  url: https://uk.wikipedia.org/wiki/%D0%95%D0%BC%D1%96%D0%B3%D1%80%D0%B0%D1%86%D1%96%D1%8F%20%D0%B7%20%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8

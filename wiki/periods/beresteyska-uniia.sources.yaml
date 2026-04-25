@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/beresteyska-uniia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0045
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave6-chevalier-istoriia-viiny_c0138
+  type: literary
+  title: Шевальє — Історія війни козаків проти Польщі (1663)
+  author: Шевальє П.
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0155
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: wave2-smotrytsky-gramatyka_c0001
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S5
+  file: wave5-suspilna-dumka-xvi-xvii_c0116
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S6
+  file: wave5-suspilna-dumka-xvi-xvii_c0137
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S7
+  file: wave5-suspilna-dumka-xvi-xvii_c0150
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S8
+  file: wave5-suspilna-dumka-xvi-xvii_c0120
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S9
+  file: wave5-suspilna-dumka-xvi-xvii_c0126
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S10
+  file: wave7-lytvynov-renesans-humanizm_c0487
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.

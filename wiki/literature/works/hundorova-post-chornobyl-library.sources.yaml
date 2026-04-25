@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/hundorova-post-chornobyl-library.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-andrukhovych_c0006
+  type: literary
+  title: Юрій Андрухович. Час і місце, або Моя остання територія
+  author: Андрухович Ю.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0005
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave7-thompson-trubadury_c0038
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S4
+  file: ukrlib-andrukhovych_c0000
+  type: literary
+  title: Юрій Андрухович. Час і місце, або Моя остання територія
+  author: Андрухович Ю.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave7-thompson-trubadury_c0086
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S7
+  file: wave7-thompson-trubadury_c0022
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0361
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: ukrlib-andrukhovych_c0002
+  type: literary
+  title: Юрій Андрухович. Час і місце, або Моя остання територія
+  author: Андрухович Ю.
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0162
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

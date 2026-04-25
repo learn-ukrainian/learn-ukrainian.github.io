@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/kost-hordiyenko-sich.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-velychko-litopys_c0679
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S2
+  file: wave2-velychko_c0677
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S3
+  file: wave6-krman-shchodennyk_c0003
+  type: literary
+  title: Даніел Крман — Подорожній щоденник (1708-1709)
+  author: Крман Д.
+- id: S4
+  file: wave12-velychko-litopys_c0729
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S5
+  file: wave2-velychko_c0727
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S6
+  file: wave12-velychko-litopys_c1065
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S7
+  file: wave2-velychko_c1063
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S8
+  file: wave6-rihelman-litopysna-opovid_c0953
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S9
+  file: wave12-velychko-litopys_c0970
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S10
+  file: wave2-velychko_c0968
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.

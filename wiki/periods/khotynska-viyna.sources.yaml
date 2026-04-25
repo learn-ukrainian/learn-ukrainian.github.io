@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/khotynska-viyna.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-suspilna-dumka-xvi-xvii_c0094
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S2
+  file: wave6-sofonovych-khronika_c0075
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S3
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0273
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S4
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0277
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S6
+  file: wave6-rihelman-litopysna-opovid_c0047
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S7
+  file: wave12-velychko-litopys_c0934
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S9
+  file: wave11-hrushevsky-iur-t6_c0024
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S10
+  file: грушевський-історія-україни-руси-т5_c0036
+  type: literary
+  title: Грушевський — Історія України-Руси, т.5
+  author: Грушевський М.

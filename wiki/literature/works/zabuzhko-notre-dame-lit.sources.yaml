@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/zabuzhko-notre-dame-lit.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-heroes-ukr-kultura_c0360
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0008
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: ukrlib-zabuzhko_c0000
+  type: literary
+  title: Оксана Забужко. Життя та творчість Оксани Забужко
+  author: Забужко О.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0094
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0162
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave7-heroes-ukr-kultura_c0361
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0092
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0394
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0713
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

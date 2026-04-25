@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/antonych-urbanism.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c0232
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0712
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave9-rusanivsky-ist-lit-movy_c0440
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S4
+  file: ukrlib-andrukhovych_c0029
+  type: literary
+  title: Юрій Андрухович. Дванадцять обручів
+  author: Андрухович Ю.
+- id: S5
+  file: wave4-chyzhevsky-istoriia-lit_c0620
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c5200
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0416
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0484
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave9-rusanivsky-ist-lit-movy_c0439
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.

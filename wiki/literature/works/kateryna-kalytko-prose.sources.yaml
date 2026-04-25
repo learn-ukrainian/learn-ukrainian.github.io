@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/kateryna-kalytko-prose.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c3692
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c0173
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c2714
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0013
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S6
+  file: wave8-masliuk-poetyky-rytoryky_c0086
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0077
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0076
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c2238
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0564
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

@@ -1,0 +1,24 @@
+# Source registry for wiki/historiography/emskyi-ukaz-tekst.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4858
+  type: textbook
+  title: РОЗДІЛ IV. З емського указу (1876 р.)
+  page: 152
+  grade: 9
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0271
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0249
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wikipedia/Емський указ
+  type: wikipedia
+  title: Емський указ
+  url: https://uk.wikipedia.org/wiki/%D0%95%D0%BC%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D1%83%D0%BA%D0%B0%D0%B7

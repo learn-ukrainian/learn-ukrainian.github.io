@@ -1,0 +1,18 @@
+# Source registry for wiki/historiography/polskyi-pohliad.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ukrxx-derzhavnist_c0179
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S2
+  file: https://www.youtube.com/watch?v=dth04bi-vBw
+  type: external
+  title: Володимир В'ятрович про УПА, Волинь та історичну правду
+  url: https://www.youtube.com/watch?v=dth04bi-vBw
+- id: S3
+  file: wikipedia/Єжи Ґедройць
+  type: wikipedia
+  title: Єжи Ґедройць
+  url: https://uk.wikipedia.org/wiki/%D0%84%D0%B6%D0%B8%20%D2%90%D0%B5%D0%B4%D1%80%D0%BE%D0%B9%D1%86%D1%8C

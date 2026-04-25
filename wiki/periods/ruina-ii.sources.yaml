@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/ruina-ii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0024
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave12-velychko-litopys_c0925
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S3
+  file: wave2-velychko_c0923
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S4
+  file: wave12-grabianka-litopys_c0171
+  type: literary
+  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
+  author: Грабянка Г.
+- id: S5
+  file: wave6-scherer-litopys-malorosiyi_c0202
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+- id: S8
+  file: wave5-oldukr-xvii_c0312
+  type: literary
+  title: Українська література XVII ст.
+  author: Антологія
+- id: S9
+  file: wave12-velychko-litopys_c0902
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S10
+  file: wave2-velychko_c0900
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.

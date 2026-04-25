@@ -1,0 +1,48 @@
+# Source registry for wiki/periods/bratstva-i-osvita.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-isaievych-knyhovydannia_c0118
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0137
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wave7-istkult-t2-xiii-xvii_c1038
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S4
+  file: wave5-suspilna-dumka-xvi-xvii_c0169
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S5
+  file: wave5-humanisty-vidrodzennia_c0003
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S6
+  file: wave5-suspilna-dumka-xvi-xvii_c0166
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S7
+  file: wave11-hrushevsky-iur-t6_c1015
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S9
+  file: wave5-suspilna-dumka-xvi-xvii_c0156
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S10
+  file: wave5-skovoroda-tvory_c0015
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.

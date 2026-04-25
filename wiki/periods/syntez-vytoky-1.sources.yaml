@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/syntez-vytoky-1.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0035
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave6-synopsis-1674_c0050
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S3
+  file: wave6-synopsis-1674_c0052
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S4
+  file: wave5-skovoroda-tvory_c0040
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S5
+  file: wave5-dovhalevsky-poetyka_c0022
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S6
+  file: wave6-synopsis-1674_c0063
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S7
+  file: wave6-synopsis-1674_c0054
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S8
+  file: wave5-humanisty-vidrodzennia_c0012
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S9
+  file: wave6-sofonovych-khronika_c0001
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S10
+  file: wave6-synopsis-1674_c0047
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий

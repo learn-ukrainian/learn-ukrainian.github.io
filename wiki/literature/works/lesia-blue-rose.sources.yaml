@@ -1,0 +1,38 @@
+# Source registry for wiki/literature/works/lesia-blue-rose.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-entsyklopediia-ukrainoznavstva_c2012
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S2
+  file: wave4-chyzhevsky-istoriia-lit_c0702
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S3
+  file: ukrlib-honchar_c0007
+  type: literary
+  title: Олесь Гончар. Наша Леся
+  author: Гончар О.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0728
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0718
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave4-chyzhevsky-istoriia-lit_c0700
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S8
+  file: wave7-popovych-narys-kultury_c0832
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.

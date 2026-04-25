@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/leonid-hlibov.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-rusanivsky-ist-lit-movy_c0313
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S2
+  file: wave7-krypyakevych-istkult_c0527
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c1447
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave5-skovoroda-tvory_c0037
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S5
+  file: ukrlib-vyshnya_c0047
+  type: literary
+  title: Остап Вишня. Літературно-мистецькі усмішки (збірка)
+  author: Вишня О.
+- id: S6
+  file: wave5-dovhalevsky-poetyka_c0216
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S7
+  file: wave12-bajky-xvii-xviii_c0006
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S8
+  file: wave3-bajky-xvii-xviii_c0005
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S9
+  file: wave4-chyzhevsky-istoriia-lit_c0669
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S10
+  file: wave12-bajky-xvii-xviii_c0011
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія

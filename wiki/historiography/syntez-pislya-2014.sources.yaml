@@ -1,0 +1,32 @@
+# Source registry for wiki/historiography/syntez-pislya-2014.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-istoriya-ukr-galimov-2024_s0884
+  type: textbook
+  title: § 31. Внутрішньополітичне становище України у 2014—2019 рр. 241
+  page: 243
+  grade: 11
+- id: S2
+  file: 11-klas-istoriya-ukr-galimov-2024_s0881
+  type: textbook
+  title: § 31. Внутрішньополітичне становище України у 2014—2019 рр. 237
+  page: 239
+  grade: 11
+- id: S3
+  file: 11-klas-istoriya-ukr-galimov-2024_s0882
+  type: textbook
+  title: 2015 р. ДЕКОМУНІЗАЦІЯ
+  page: 239
+  grade: 11
+- id: S4
+  file: https://www.youtube.com/watch?v=o9aqVVIgpaA
+  type: external
+  title: ULP 6-216 | Декомунізація, деколонізація, дерусифікація | Ukrainian Lessons
+    Podcast Season 6
+  url: https://www.youtube.com/watch?v=o9aqVVIgpaA
+- id: S5
+  file: wikipedia/Деколонізація в Україні
+  type: wikipedia
+  title: Деколонізація в Україні
+  url: https://uk.wikipedia.org/wiki/%D0%94%D0%B5%D0%BA%D0%BE%D0%BB%D0%BE%D0%BD%D1%96%D0%B7%D0%B0%D1%86%D1%96%D1%8F%20%D0%B2%20%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%96

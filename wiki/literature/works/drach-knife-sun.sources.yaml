@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/drach-knife-sun.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c2139
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: ukrlib-khvylovy_c0071
+  type: literary
+  title: Микола Хвильовий. Думки проти течії
+  author: Хвильовий М.
+- id: S3
+  file: wave8-chyzhevsky-baroko_c0032
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0162
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0381
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S6
+  file: wave5-skovoroda-tvory_c0079
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0416
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave2-smotrytsky-gramatyka_c0093
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S9
+  file: wave5-velychkovsky_c0046
+  type: literary
+  title: Іван Величковський. Твори
+  author: Величковський І.
+- id: S10
+  file: wave7-antonovych-kultura_c0017
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.

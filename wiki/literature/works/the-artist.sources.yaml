@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/the-artist.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-krypyakevych-istkult_c0806
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S2
+  file: wave10-shevchenkivsky-slovnyk_c1187
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S3
+  file: wave10-shevchenkivsky-slovnyk_c1995
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S5
+  file: wave10-shevchenkivsky-slovnyk_c1395
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S6
+  file: wave10-shevchenkivsky-slovnyk_c1739
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S7
+  file: wave10-shevchenkivsky-slovnyk_c1023
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S9
+  file: wave7-krypyakevych-istkult_c0809
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S10
+  file: wave10-shevchenkivsky-slovnyk_c1625
+  type: literary
+  title: Шевченківський словник
+  author: Колектив

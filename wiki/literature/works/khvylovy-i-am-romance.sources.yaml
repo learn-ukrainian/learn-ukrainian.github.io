@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/khvylovy-i-am-romance.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-popovych-narys-kultury_c0989
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0292
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave9-ohiyenko-ist-lit-movy_c0262
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0294
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave7-popovych-narys-kultury_c0790
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S6
+  file: wave7-heroes-ukr-kultura_c0290
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0271
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: wave7-heroes-ukr-kultura_c0295
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S10
+  file: wave4-chyzhevsky-istoriia-lit_c0630
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.

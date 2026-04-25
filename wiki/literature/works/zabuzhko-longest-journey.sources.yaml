@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/zabuzhko-longest-journey.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-heroes-ukr-kultura_c0360
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S2
+  file: wave1-galytsko-volynskyi_c0253
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S3
+  file: wave1-kyivskyi-litopys_c0628
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S4
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S5
+  file: wave2-velychko_c0048
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c2902
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: ukrlib-zabuzhko_c0000
+  type: literary
+  title: Оксана Забужко. Життя та творчість Оксани Забужко
+  author: Забужко О.
+- id: S8
+  file: wave6-rihelman-litopysna-opovid_c0015
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0048
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave5-buhoslavsky-borys-hlib_c0013
+  type: literary
+  title: Україно-руські памʼятки про князів Бориса та Гліба
+  author: Бугославський С.

@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/sverstiuk-moral-resistance.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0162
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0315
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave8-fdm-biobibliohrafichnyi_c0200
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S5
+  file: wave7-lytvynov-renesans-humanizm_c0123
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0564
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave7-heroes-ukr-kultura_c0255
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0262
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: wave5-velychkovsky_c0057
+  type: literary
+  title: Іван Величковський. Твори
+  author: Величковський І.
+- id: S10
+  file: wave5-skovoroda-tvory_c0045
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.

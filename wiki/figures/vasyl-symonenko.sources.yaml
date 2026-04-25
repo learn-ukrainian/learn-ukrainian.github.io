@@ -1,0 +1,40 @@
+# Source registry for wiki/figures/vasyl-symonenko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-heroes-ukr-kultura_c0259
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0260
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0257
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave7-heroes-ukr-kultura_c0253
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S6
+  file: 7-klas-ukrlit-mishhenko-2015_s3674
+  type: textbook
+  title: розділ 3. ВАСИЛЬ СИМОНЕНКО
+  page: 170
+  grade: 7
+- id: S8
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1358
+  type: textbook
+  title: Літературне «шістдесятництво» . Василь Симоненко  153
+  page: 153
+  grade: 11
+- id: S10
+  file: wave7-heroes-ukr-kultura_c0245
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив

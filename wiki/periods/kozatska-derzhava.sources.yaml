@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/kozatska-derzhava.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-scherer-litopys-malorosiyi_c0035
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+- id: S2
+  file: wikisource-орлик_c025
+  type: literary
+  title: Конституція Пилипа Орлика
+  author: Орлик Пилип
+- id: S3
+  file: wikisource-орлик_c032
+  type: literary
+  title: Конституція Пилипа Орлика
+  author: Орлик Пилип
+- id: S4
+  file: wave12-velychko-litopys_c0005
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S6
+  file: wave12-velychko-litopys_c0496
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S8
+  file: wave7-kohut-tsentralizm_c0063
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S9
+  file: wave5-suspilna-dumka-xvi-xvii_c0027
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c1627
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

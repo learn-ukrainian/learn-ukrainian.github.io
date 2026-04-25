@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/tychyna-tragic-turn.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-stus_c0037
+  type: literary
+  title: Василь Стус. Феномен доби (сходження на Голгофу слави)
+  author: Стус В.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0442
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0417
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0449
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0454
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0421
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: ukrlib-stus_c0006
+  type: literary
+  title: Василь Стус. Феномен доби (сходження на Голгофу слави)
+  author: Стус В.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0466
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0446
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0419
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/rozstriliane-vidrodzennia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-synopsis-1674_c0052
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S2
+  file: wave6-synopsis-1674_c0050
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S3
+  file: wave5-humanisty-vidrodzennia_c0014
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S4
+  file: wave5-humanisty-vidrodzennia_c0002
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S5
+  file: wave5-prokopovych-filosofski_c0099
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S6
+  file: wave5-velychkovsky_c0022
+  type: literary
+  title: Іван Величковський. Твори
+  author: Величковський І.
+- id: S7
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0123
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S8
+  file: wave6-rihelman-litopysna-opovid_c0030
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S9
+  file: wave12-velychko-litopys_c0009
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S10
+  file: wave2-velychko_c0007
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.

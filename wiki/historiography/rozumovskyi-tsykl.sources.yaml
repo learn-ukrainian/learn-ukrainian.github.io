@@ -1,0 +1,24 @@
+# Source registry for wiki/historiography/rozumovskyi-tsykl.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-istoria-ukr-galimov-2025_s4085
+  type: textbook
+  title: § 29. Посилення колоніальної політики Російської імперії. Ліквідація гетьманату
+  page: 209
+  grade: 8
+- id: S2
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t2_c0636
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 2: Від половини XVII століття'
+  author: Дорошенко Д.
+- id: S3
+  file: wave7-kohut-tsentralizm_c0000
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S4
+  file: https://www.youtube.com/watch?v=NVn8OxnPU6o
+  type: external
+  title: 'Розумовські: як козаки імператрицю кохали'
+  url: https://www.youtube.com/watch?v=NVn8OxnPU6o

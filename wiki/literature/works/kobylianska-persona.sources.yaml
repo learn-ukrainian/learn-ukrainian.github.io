@@ -1,0 +1,38 @@
+# Source registry for wiki/literature/works/kobylianska-persona.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-krypyakevych-istkult_c0603
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0054
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0712
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0726
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave7-popovych-narys-kultury_c0822
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0718
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c5522
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

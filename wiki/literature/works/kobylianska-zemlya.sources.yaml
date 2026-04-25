@@ -1,0 +1,23 @@
+# Source registry for wiki/literature/works/kobylianska-zemlya.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-entsyklopediia-ukrainoznavstva_c2001
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0728
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c3498
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave9-ohiyenko-ist-lit-movy_c0240
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.

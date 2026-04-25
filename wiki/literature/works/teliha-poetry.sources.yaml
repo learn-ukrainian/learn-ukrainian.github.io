@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/teliha-poetry.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave10-shevchenkivsky-slovnyk_c1299
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0054
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0106
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0325
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c4294
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0022
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave5-skovoroda-tvory_c0079
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S8
+  file: ukrlib-shevchenko_c0011
+  type: literary
+  title: Тарас Шевченко. Біографія Тараса Шевченка
+  author: Шевченко Т.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0275
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave7-thompson-trubadury_c0019
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.

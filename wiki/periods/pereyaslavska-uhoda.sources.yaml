@@ -1,0 +1,48 @@
+# Source registry for wiki/periods/pereyaslavska-uhoda.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-chevalier-istoriia-viiny_c0016
+  type: literary
+  title: Шевальє — Історія війни козаків проти Польщі (1663)
+  author: Шевальє П.
+- id: S2
+  file: wave6-rihelman-litopysna-opovid_c0953
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0005
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: wave5-humanisty-vidrodzennia_c0150
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S6
+  file: wave6-rihelman-litopysna-opovid_c0050
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S7
+  file: wave7-kohut-tsentralizm_c0010
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S8
+  file: wave7-kohut-tsentralizm_c0094
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S9
+  file: wave7-kohut-tsentralizm_c0093
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S10
+  file: wave12-velychko-litopys_c0036
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.

@@ -1,0 +1,28 @@
+# Source registry for wiki/literature/works/bahrianyi-man-runs.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ukrxx-derzhavnist_c0343
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S2
+  file: ukrlib-bahryanyi_c0000
+  type: literary
+  title: Іван Багряний. Сад Гетсиманський
+  author: Багряний І.
+- id: S3
+  file: wave9-rusanivsky-ist-lit-movy_c0447
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S4
+  file: wave7-ukrxx-derzhavnist_c0344
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S8
+  file: wave4-chyzhevsky-istoriia-lit_c0652
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.

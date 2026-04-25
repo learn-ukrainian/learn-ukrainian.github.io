@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/lesia-cassandra.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c2136
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0054
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0162
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave7-heroes-ukr-kultura_c0339
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S7
+  file: wave7-heroes-ukr-kultura_c0355
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S8
+  file: wave4-chyzhevsky-istoriia-lit_c0659
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S9
+  file: wave5-dovhalevsky-poetyka_c0009
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S10
+  file: wave10-shevchenkivsky-slovnyk_c0303
+  type: literary
+  title: Шевченківський словник
+  author: Колектив

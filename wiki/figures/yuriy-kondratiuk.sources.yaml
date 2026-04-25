@@ -1,0 +1,29 @@
+# Source registry for wiki/figures/yuriy-kondratiuk.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-mova-voron-2017_s5135
+  type: textbook
+  title: Кассилем). 91 руль —кермб
+  page: 203
+  grade: 9
+- id: S2
+  file: wave7-popovych-narys-kultury_c1144
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S3
+  file: wave7-lytvynov-renesans-humanizm_c0083
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+- id: S4
+  file: wave7-ukrxx-derzhavnist_c0113
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S7
+  file: wikipedia/Ціолковський Костянтин Едуардович
+  type: wikipedia
+  title: Ціолковський Костянтин Едуардович
+  url: https://uk.wikipedia.org/wiki/%D0%A6%D1%96%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%9A%D0%BE%D1%81%D1%82%D1%8F%D0%BD%D1%82%D0%B8%D0%BD%20%D0%95%D0%B4%D1%83%D0%B0%D1%80%D0%B4%D0%BE%D0%B2%D0%B8%D1%87

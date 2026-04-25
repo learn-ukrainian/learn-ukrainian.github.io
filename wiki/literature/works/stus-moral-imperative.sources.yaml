@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/stus-moral-imperative.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-heroes-ukr-kultura_c0333
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0320
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0326
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0323
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave7-heroes-ukr-kultura_c0336
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S6
+  file: wave7-heroes-ukr-kultura_c0319
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S7
+  file: wave7-heroes-ukr-kultura_c0312
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0337
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: wave7-heroes-ukr-kultura_c0329
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0564
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

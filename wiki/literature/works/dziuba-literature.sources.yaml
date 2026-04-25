@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/dziuba-literature.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-dzyuba-internatsionalizm_c0000
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+- id: S2
+  file: ukrlib-dziuba_c0004
+  type: literary
+  title: Іван Дзюба. Біографія Івана Дзюби
+  author: Дзюба І.
+- id: S3
+  file: wave7-popovych-narys-kultury_c1124
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S4
+  file: ukrlib-dziuba_c0003
+  type: literary
+  title: Іван Дзюба. Біографія Івана Дзюби
+  author: Дзюба І.
+- id: S5
+  file: wave7-dzyuba-internatsionalizm_c0032
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+- id: S6
+  file: wave7-dzyuba-internatsionalizm_c0351
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+- id: S7
+  file: wave7-dzyuba-internatsionalizm_c0364
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+- id: S8
+  file: ukrlib-dziuba_c0000
+  type: literary
+  title: Іван Дзюба. Біографія Івана Дзюби
+  author: Дзюба І.
+- id: S9
+  file: wave7-ukrxx-derzhavnist_c0122
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S10
+  file: wave7-dzyuba-internatsionalizm_c0360
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.

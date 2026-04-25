@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/kyiv-school-of-poetry.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-dovhalevsky-poetyka_c0009
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S2
+  file: wave12-velychko-litopys_c0019
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S3
+  file: wave2-velychko_c0017
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0475
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: ukrlib-holoborodko_c0005
+  type: literary
+  title: Василь Голобородько. Біографія Василя Голобородька
+  author: Голобородько В.
+- id: S6
+  file: wave8-chyzhevsky-baroko_c0031
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0010
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: ukrlib-holoborodko_c0002
+  type: literary
+  title: Василь Голобородько. Біографія Василя Голобородька
+  author: Голобородько В.
+- id: S10
+  file: wave4-hrushevsky-istlit-t2_c0329
+  type: literary
+  title: Грушевський — Історія української літератури, т.2
+  author: Грушевський М.

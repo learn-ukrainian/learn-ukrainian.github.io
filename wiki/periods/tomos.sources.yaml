@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/tomos.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-suspilna-dumka-xvi-xvii_c0042
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S2
+  file: wave2-smotrytsky-gramatyka_c0001
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0033
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: wave7-antonovych-kultura_c0934
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S5
+  file: wave5-suspilna-dumka-xvi-xvii_c0151
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S6
+  file: wave5-suspilna-dumka-xvi-xvii_c0621
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S7
+  file: wave7-ohiyenko-tserka_c0001
+  type: literary
+  title: Огієнко — Українська церква
+  author: Огієнко І.
+- id: S8
+  file: wave5-suspilna-dumka-xvi-xvii_c0192
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S9
+  file: wave7-ohiyenko-tserka_c0000
+  type: literary
+  title: Огієнко — Українська церква
+  author: Огієнко І.
+- id: S10
+  file: wave6-sofonovych-khronika_c0003
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.

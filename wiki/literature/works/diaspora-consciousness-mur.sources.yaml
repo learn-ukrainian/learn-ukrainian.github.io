@@ -1,0 +1,38 @@
+# Source registry for wiki/literature/works/diaspora-consciousness-mur.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-samchuk_c0050
+  type: literary
+  title: Улас Самчук. Плянета Ді-Пі
+  author: Самчук У.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0162
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: ukrlib-samchuk_c0022
+  type: literary
+  title: Улас Самчук. Плянета Ді-Пі
+  author: Самчук У.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0636
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0485
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0670
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

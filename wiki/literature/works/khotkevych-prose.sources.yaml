@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/khotkevych-prose.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-chyzhevsky-istoriia-lit_c0620
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c1984
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave4-ukrainska-mova-encyclopedia_c0108
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S4
+  file: wave4-ukrainska-mova-encyclopedia_c0110
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0712
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0054
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c5199
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0233
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0000
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0609
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

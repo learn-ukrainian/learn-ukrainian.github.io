@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/mykhailo-stelmakh-shchedryi-vechir.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-hrushevsky-istlit_c0023
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S2
+  file: wave12-hrushevsky-iu-odnotom_c0028
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S3
+  file: wave10-shevchenkivsky-slovnyk_c1667
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S4
+  file: wave9-rusanivsky-ist-lit-movy_c0003
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0272
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave10-shevchenkivsky-slovnyk_c1601
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S7
+  file: ukrlib-samchuk_c0192
+  type: literary
+  title: Улас Самчук. Плянета Ді-Пі
+  author: Самчук У.
+- id: S8
+  file: wave4-chyzhevsky-istoriia-lit_c0660
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S9
+  file: wave5-velychkovsky_c0042
+  type: literary
+  title: Іван Величковський. Твори
+  author: Величковський І.
+- id: S10
+  file: wave5-prokopovych-filosofski_c0671
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.

@@ -1,0 +1,36 @@
+# Source registry for wiki/folk/genres/pokhodzhennia-dum.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0057
+  type: textbook
+  title: Сторінка 49
+  grade: 9
+  author: avramenko
+- id: S2
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0437
+  type: textbook
+  title: Сторінка 331
+  grade: 9
+  author: avramenko
+- id: S4
+  file: 7-klas-ukrmova-avramenko-2024_s0123
+  type: textbook
+  title: Сторінка 110
+  grade: 7
+  author: avramenko
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c0624
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0575
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wikipedia/Дума
+  type: wikipedia
+  title: Дума
+  url: https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BC%D0%B0

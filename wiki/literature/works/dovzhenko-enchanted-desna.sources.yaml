@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/dovzhenko-enchanted-desna.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-popovych-narys-kultury_c1159
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c2051
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c2902
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: ukrlib-vinhranovskyi_c0009
+  type: literary
+  title: Микола Вінграновський. Рік з Довженком
+  author: Вінграновський М.
+- id: S7
+  file: wave12-bajky-xvii-xviii_c0015
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S8
+  file: wave3-bajky-xvii-xviii_c0014
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S9
+  file: wave5-skovoroda-tvory_c0063
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S10
+  file: wave7-heroes-ukr-kultura_c0361
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив

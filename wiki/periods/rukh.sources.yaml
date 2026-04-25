@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/rukh.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-suspilna-dumka-xvi-xvii_c0026
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S2
+  file: wave6-rihelman-litopysna-opovid_c0039
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S3
+  file: wave5-humanisty-vidrodzennia_c0013
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S4
+  file: wave5-humanisty-vidrodzennia_c0003
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S5
+  file: ukrlib-bahryanyi_c0011
+  type: literary
+  title: Іван Багряний. На новий шлях
+  author: Багряний І.
+- id: S6
+  file: wave0-samovydets_c0000
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S7
+  file: wave7-hrinchenko-drahomanov_c0002
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S8
+  file: wave8-fdm-biobibliohrafichnyi_c0111
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S9
+  file: wave6-sofonovych-khronika_c0003
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S10
+  file: wave5-humanisty-vidrodzennia_c0010
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія

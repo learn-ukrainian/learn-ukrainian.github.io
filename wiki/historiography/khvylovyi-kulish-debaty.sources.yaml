@@ -1,0 +1,33 @@
+# Source registry for wiki/historiography/khvylovyi-kulish-debaty.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-entsyklopediia-ukrainoznavstva_c1335
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0272
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave9-ohiyenko-ist-lit-movy_c0262
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0288
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wikipedia/Геть від Москви!
+  type: wikipedia
+  title: Геть від Москви!
+  url: https://uk.wikipedia.org/wiki/%D0%93%D0%B5%D1%82%D1%8C%20%D0%B2%D1%96%D0%B4%20%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B8%21
+- id: S6
+  file: wikipedia/Літературна дискусія 1925–1928
+  type: wikipedia
+  title: Літературна дискусія 1925–1928
+  url: https://uk.wikipedia.org/wiki/%D0%9B%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%BD%D0%B0%20%D0%B4%D0%B8%D1%81%D0%BA%D1%83%D1%81%D1%96%D1%8F%201925%E2%80%931928

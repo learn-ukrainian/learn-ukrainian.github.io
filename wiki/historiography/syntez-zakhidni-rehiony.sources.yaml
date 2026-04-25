@@ -1,0 +1,41 @@
+# Source registry for wiki/historiography/syntez-zakhidni-rehiony.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4910
+  type: textbook
+  title: На початку XX ст. вагомі здобутки українського націо
+  page: 248
+  grade: 9
+- id: S2
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4911
+  type: textbook
+  title: Розділ VII. Узагальнення знань за розділом VІІ
+  page: 252
+  grade: 9
+- id: S3
+  file: 8-klas-istoria-ukr-hlibovska-2025_s4176
+  type: textbook
+  title: Ж Бароко, рококо, готика, класицизм. https://cutt.ly/SeYBJg3H
+  page: 127
+  grade: 8
+- id: S4
+  file: wave6-boplan-opys-ukrainy_c0057
+  type: literary
+  title: Боплан — Опис України (1660)
+  author: Боплан Г.
+- id: S5
+  file: wave7-kohut-tsentralizm_c0008
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S7
+  file: wave7-popovych-narys-kultury_c0713
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S8
+  file: https://www.youtube.com/watch?v=5cfI-HW9sq8
+  type: external
+  title: історія Австро-угорської імперії
+  url: https://www.youtube.com/watch?v=5cfI-HW9sq8

@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/emma-andiyevska-new-york-group.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0484
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0504
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave9-rusanivsky-ist-lit-movy_c0488
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S4
+  file: ukrlib-andiyevska_c0001
+  type: literary
+  title: Емма Андієвська. Біографія Емми Андієвської
+  author: Андієвська Е.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0500
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: ukrlib-andiyevska_c0003
+  type: literary
+  title: Емма Андієвська. Біографія Емми Андієвської
+  author: Андієвська Е.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0038
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0017
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

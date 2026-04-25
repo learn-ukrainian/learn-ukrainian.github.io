@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/mongolska-navala.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ivakin-kyiv-xiii-xvi_c0003
+  type: literary
+  title: Івакін — Історичний розвиток Києва XIII-XVI ст.
+  author: Івакін Г.
+- id: S2
+  file: wave7-ivakin-kyiv-xiii-xvi_c0050
+  type: literary
+  title: Івакін — Історичний розвиток Києва XIII-XVI ст.
+  author: Івакін Г.
+- id: S3
+  file: wave6-synopsis-1674_c0052
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S4
+  file: wave4-voitovych-dynasty_c1078
+  type: literary
+  title: Войтович — Князівські династії Східної Європи
+  author: Войтович Л.
+- id: S5
+  file: wave6-synopsis-1674_c0023
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S6
+  file: wave5-suspilna-dumka-xvi-xvii_c0065
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S7
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0087
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S8
+  file: wave7-ivakin-kyiv-xiii-xvi_c0049
+  type: literary
+  title: Івакін — Історичний розвиток Києва XIII-XVI ст.
+  author: Івакін Г.
+- id: S9
+  file: wave6-synopsis-1674_c0099
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S10
+  file: wave12-samovyd-litopys_c0014
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий

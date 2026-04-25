@@ -1,0 +1,23 @@
+# Source registry for wiki/historiography/bukovyna-mizh-imperiiamy.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ukrxx-derzhavnist_c0233
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S2
+  file: https://www.youtube.com/watch?v=hlwGr7LbWkQ
+  type: external
+  title: '[ІСТОРІЯ СЛІВ] Українські запозичення в румунській мові'
+  url: https://www.youtube.com/watch?v=hlwGr7LbWkQ
+- id: S3
+  file: wikipedia/Історичний міф
+  type: wikipedia
+  title: Історичний міф
+  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D0%B8%D0%B9%20%D0%BC%D1%96%D1%84
+- id: S4
+  file: wikipedia/Історія Європи
+  type: wikipedia
+  title: Історія Європи
+  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D1%96%D1%8F%20%D0%84%D0%B2%D1%80%D0%BE%D0%BF%D0%B8

@@ -1,0 +1,38 @@
+# Source registry for wiki/periods/galytsko-volynska-derzhava.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-galvol-kostruba_c0015
+  type: literary
+  title: ГВЛ (переклад Коструби)
+  author: Коструба Т.
+- id: S2
+  file: wave11-hrushevsky-iur-t6_c1003
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S3
+  file: wave4-hrushevsky-iur-t1_c0923
+  type: literary
+  title: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+- id: S4
+  file: wave5-suspilna-dumka-xvi-xvii_c0027
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S6
+  file: wave6-galvol-kostruba_c0025
+  type: literary
+  title: ГВЛ (переклад Коструби)
+  author: Коструба Т.
+- id: S7
+  file: wave1-galytsko-volynskyi_c0306
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S9
+  file: wave1-galytsko-volynskyi_c0373
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий

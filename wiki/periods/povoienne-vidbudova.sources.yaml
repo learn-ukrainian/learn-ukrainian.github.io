@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/povoienne-vidbudova.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0046
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave7-entsyklopediia-ukrainoznavstva_c2734
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S3
+  file: wave12-samovyd-litopys_c0022
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий
+- id: S4
+  file: wave0-samovydets_c0021
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S5
+  file: wave5-suspilna-dumka-xvi-xvii_c0061
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c0304
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c2855
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave5-prokopovych-filosofski_c0797
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave7-entsyklopediia-ukrainoznavstva_c2854
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0435
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

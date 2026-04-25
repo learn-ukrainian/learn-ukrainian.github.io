@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/krymske-khanstvo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-velychko-litopys_c1178
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S3
+  file: wave6-rihelman-litopysna-opovid_c0029
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S4
+  file: wave6-rihelman-litopysna-opovid_c0946
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S5
+  file: wave6-rihelman-litopysna-opovid_c0032
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S6
+  file: wave6-synopsis-1674_c0047
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S7
+  file: wave12-velychko-litopys_c1174
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S9
+  file: wave11-hrushevsky-iur-t6_c1076
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S10
+  file: wave4-hrushevsky-iur-t1_c0996
+  type: literary
+  title: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.

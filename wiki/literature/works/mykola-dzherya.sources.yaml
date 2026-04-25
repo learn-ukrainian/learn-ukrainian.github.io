@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/mykola-dzherya.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-yohansen_c0118
+  type: literary
+  title: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.
+- id: S2
+  file: wave7-krypyakevych-istkult_c0554
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S3
+  file: wave10-shevchenkivsky-slovnyk_c2093
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S4
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t2_c0516
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 2: Від половини XVII століття'
+  author: Дорошенко Д.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0000
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t2_c0521
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 2: Від половини XVII століття'
+  author: Дорошенко Д.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c5146
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave5-klementiy-zinoviiv_c0279
+  type: literary
+  title: Климентій Зіновіїв. Вірші. Приповісті.
+  author: Зіновіїв К.

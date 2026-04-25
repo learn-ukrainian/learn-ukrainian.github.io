@@ -1,0 +1,39 @@
+# Source registry for wiki/figures/yevhen-pluzhnyk.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1347
+  type: textbook
+  title: У грудні 1934 року М. Куліша заарештували й кинули до Соловецького
+  page: 118
+  grade: 11
+- id: S2
+  file: wave7-entsyklopediia-ukrainoznavstva_c2036
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S3
+  file: wave7-popovych-narys-kultury_c0996
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0713
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave7-entsyklopediia-ukrainoznavstva_c2215
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S6
+  file: wikipedia/Народний Малахій
+  type: wikipedia
+  title: Народний Малахій
+  url: https://uk.wikipedia.org/wiki/%D0%9D%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D0%B8%D0%B9%20%D0%9C%D0%B0%D0%BB%D0%B0%D1%85%D1%96%D0%B9
+- id: S7
+  file: wikipedia/Березіль
+  type: wikipedia
+  title: Березіль
+  url: https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B7%D1%96%D0%BB%D1%8C

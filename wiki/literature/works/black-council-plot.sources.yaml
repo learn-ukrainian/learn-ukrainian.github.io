@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/black-council-plot.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0238
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave4-chyzhevsky-istoriia-lit_c0581
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c4076
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c4722
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave6-sofonovych-khronika_c0005
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S7
+  file: wave7-popovych-narys-kultury_c0730
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0699
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave9-rusanivsky-ist-lit-movy_c0330
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.

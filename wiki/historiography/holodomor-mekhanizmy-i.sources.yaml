@@ -1,0 +1,40 @@
+# Source registry for wiki/historiography/holodomor-mekhanizmy-i.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0178
+  type: textbook
+  title: Суцільна колективізація — політика
+  page: 237
+  grade: 10
+- id: S2
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0141
+  type: textbook
+  title: § 24. —25. Насильницька колективізація та опір їй населення. Голодомор 1932—1933
+    рр. зображувала їх лютими ворогами ра
+  page: 137
+  grade: 10
+- id: S3
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0138
+  type: textbook
+  title: § 24. —25. Насильницька колективізація та опір їй населення. Голодомор 1932—1933
+    рр. ного й нерівномірного розміщення продуктивних сил, посилення центра
+  page: 135
+  grade: 10
+- id: S4
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0146
+  type: textbook
+  title: § 24. —25. Насильницька колективізація та опір їй населення. Голодомор 1932—1933
+    рр. сільського господарства, яке перебувало в хронічній кризі аж до кінця
+  page: 145
+  grade: 10
+- id: S5
+  file: wikipedia/Контент-аналіз
+  type: wikipedia
+  title: Контент-аналіз
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82-%D0%B0%D0%BD%D0%B0%D0%BB%D1%96%D0%B7
+- id: S6
+  file: wikipedia/Бібліографія Голодомору 1932—1933 років
+  type: wikipedia
+  title: Бібліографія Голодомору 1932—1933 років
+  url: https://uk.wikipedia.org/wiki/%D0%91%D1%96%D0%B1%D0%BB%D1%96%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D1%96%D1%8F%20%D0%93%D0%BE%D0%BB%D0%BE%D0%B4%D0%BE%D0%BC%D0%BE%D1%80%D1%83%201932%E2%80%941933%20%D1%80%D0%BE%D0%BA%D1%96%D0%B2

@@ -1,0 +1,13 @@
+# Source registry for wiki/historiography/volyn-pamiat-i-travma.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://www.youtube.com/watch?v=dth04bi-vBw
+  type: external
+  title: Володимир В'ятрович про УПА, Волинь та історичну правду
+  url: https://www.youtube.com/watch?v=dth04bi-vBw
+- id: S2
+  file: wikipedia/Українофобія
+  type: wikipedia
+  title: Українофобія
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%BE%D1%84%D0%BE%D0%B1%D1%96%D1%8F

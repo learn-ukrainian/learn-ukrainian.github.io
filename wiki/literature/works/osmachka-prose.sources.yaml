@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/osmachka-prose.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-osmachka_c0004
+  type: literary
+  title: Тодось Осьмачка. Біографічна довідка Тодося Осьмачки
+  author: Осьмачка Т.
+- id: S2
+  file: ukrlib-osmachka_c0006
+  type: literary
+  title: Тодось Осьмачка. Життя та творчість Тодося Осьмачки
+  author: Осьмачка Т.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0502
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: ukrlib-osmachka_c0001
+  type: literary
+  title: Тодось Осьмачка. Життя та творчість Тодося Осьмачки
+  author: Осьмачка Т.
+- id: S5
+  file: wave5-skovoroda-tvory_c0079
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S6
+  file: wave7-thompson-trubadury_c0000
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S7
+  file: wave12-velychko-litopys_c0044
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S8
+  file: wave2-velychko_c0042
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0022
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

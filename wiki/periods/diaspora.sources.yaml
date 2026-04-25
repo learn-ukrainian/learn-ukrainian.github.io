@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/diaspora.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-suspilna-dumka-xvi-xvii_c0010
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0009
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wave6-synopsis-1674_c0052
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S4
+  file: wave6-galvol-kostruba_c0014
+  type: literary
+  title: ГВЛ (переклад Коструби)
+  author: Коструба Т.
+- id: S5
+  file: wave6-synopsis-1674_c0296
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S6
+  file: wave5-humanisty-vidrodzennia_c0014
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S7
+  file: wave5-suspilna-dumka-xvi-xvii_c0026
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S8
+  file: wave2-smotrytsky-gramatyka_c0001
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S9
+  file: wave6-galvol-kostruba_c0015
+  type: literary
+  title: ГВЛ (переклад Коструби)
+  author: Коструба Т.
+- id: S10
+  file: wave7-dzyuba-internatsionalizm_c0316
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.

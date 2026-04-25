@@ -1,0 +1,38 @@
+# Source registry for wiki/periods/kinets-hetmanshchyny.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0031
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave7-kohut-tsentralizm_c0008
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S3
+  file: wave7-kohut-tsentralizm_c0009
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S4
+  file: wave6-rihelman-litopysna-opovid_c0030
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S7
+  file: wave6-scherer-litopys-malorosiyi_c0003
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+- id: S8
+  file: wave7-kohut-tsentralizm_c0000
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S10
+  file: wave6-scherer-litopys-malorosiyi_c0115
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.

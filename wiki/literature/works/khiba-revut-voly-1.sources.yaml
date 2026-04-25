@@ -1,0 +1,33 @@
+# Source registry for wiki/literature/works/khiba-revut-voly-1.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-krypyakevych-istkult_c0562
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c5045
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave7-krypyakevych-istkult_c0559
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c5049
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave7-hrinchenko-drahomanov_c0207
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S9
+  file: wave4-chyzhevsky-istoriia-lit_c0676
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.

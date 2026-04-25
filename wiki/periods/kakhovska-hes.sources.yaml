@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/kakhovska-hes.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-prokopovych-filosofski_c0579
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S2
+  file: wave5-prokopovych-filosofski_c1154
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S3
+  file: wave5-prokopovych-filosofski_c0847
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S4
+  file: ukrlib-dovzhenko_c0113
+  type: literary
+  title: Олександр Довженко. Щоденник
+  author: Довженко О.
+- id: S7
+  file: wave5-prokopovych-filosofski_c0281
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S8
+  file: wave9-uzhevych-paryzky_c0020
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S9
+  file: wave5-prokopovych-filosofski_c0606
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S10
+  file: wave5-prokopovych-filosofski_c0076
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.

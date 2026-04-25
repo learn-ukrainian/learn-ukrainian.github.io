@@ -1,0 +1,38 @@
+# Source registry for wiki/periods/kozatstvo-vytoky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0946
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0084
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wave6-rihelman-litopysna-opovid_c0037
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S4
+  file: wave6-rihelman-litopysna-opovid_c0034
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S5
+  file: wave6-rihelman-litopysna-opovid_c0948
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S6
+  file: wave11-hrushevsky-iur-t6_c1018
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S8
+  file: wave11-hrushevsky-iur-t6_c1019
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.

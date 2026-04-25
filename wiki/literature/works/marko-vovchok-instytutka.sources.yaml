@@ -1,0 +1,38 @@
+# Source registry for wiki/literature/works/marko-vovchok-instytutka.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-entsyklopediia-ukrainoznavstva_c1975
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S2
+  file: wave4-chyzhevsky-istoriia-lit_c0671
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S3
+  file: wave10-shevchenkivsky-slovnyk_c0372
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S4
+  file: wave7-entsyklopediia-ukrainoznavstva_c1974
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c1157
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c5172
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave7-krypyakevych-istkult_c0523
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.

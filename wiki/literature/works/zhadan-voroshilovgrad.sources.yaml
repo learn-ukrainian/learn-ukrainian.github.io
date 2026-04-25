@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/zhadan-voroshilovgrad.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-zhadan_c0000
+  type: literary
+  title: Сергій Жадан. Депеш Мод
+  author: Жадан С.
+- id: S2
+  file: wave7-thompson-trubadury_c0088
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0515
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave7-thompson-trubadury_c0415
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S5
+  file: wave6-ostrozky-litopys_c0014
+  type: literary
+  title: Львівський та Острозький літописці (1498-1649)
+  author: Невідомий
+- id: S6
+  file: ukrlib-zhadan_c0001
+  type: literary
+  title: Сергій Жадан. Біографія Сергія Жадана
+  author: Жадан С.
+- id: S7
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S8
+  file: wave2-velychko_c0048
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S9
+  file: ukrlib-zhadan_c0172
+  type: literary
+  title: Сергій Жадан. Депеш Мод
+  author: Жадан С.
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0710
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

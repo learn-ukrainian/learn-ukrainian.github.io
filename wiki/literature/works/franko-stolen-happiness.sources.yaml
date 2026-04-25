@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/franko-stolen-happiness.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-chyzhevsky-istoriia-lit_c0620
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave5-dramaturhiia-xix_c0030
+  type: literary
+  title: Українська драматургія першої половини XIX ст.
+  author: Антологія
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c2131
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0070
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave4-chyzhevsky-istoriia-lit_c0685
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c2197
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave7-popovych-narys-kultury_c0790
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c2335
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0182
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

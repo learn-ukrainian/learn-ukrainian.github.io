@@ -1,0 +1,23 @@
+# Source registry for wiki/historiography/pereiaslav-tsykl.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave11-hrushevsky-iur-t6_c1023
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S2
+  file: wave4-hrushevsky-iur-t1_c0943
+  type: literary
+  title: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+- id: S3
+  file: wikipedia/Переяславська рада
+  type: wikipedia
+  title: Переяславська рада
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B5%D1%8F%D1%81%D0%BB%D0%B0%D0%B2%D1%81%D1%8C%D0%BA%D0%B0%20%D1%80%D0%B0%D0%B4%D0%B0
+- id: S4
+  file: wikipedia/Ясь Олексій Васильович
+  type: wikipedia
+  title: Ясь Олексій Васильович
+  url: https://uk.wikipedia.org/wiki/%D0%AF%D1%81%D1%8C%20%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D1%96%D0%B9%20%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C%D0%BE%D0%B2%D0%B8%D1%87

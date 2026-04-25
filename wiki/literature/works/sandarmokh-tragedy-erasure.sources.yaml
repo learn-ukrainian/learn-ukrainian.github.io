@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/sandarmokh-tragedy-erasure.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0712
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0713
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0715
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0005
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0718
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0727
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave7-heroes-ukr-kultura_c0009
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S8
+  file: wave5-velychkovsky_c0022
+  type: literary
+  title: Іван Величковський. Твори
+  author: Величковський І.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0564
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c0035
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив

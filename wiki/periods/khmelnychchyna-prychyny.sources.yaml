@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/khmelnychchyna-prychyny.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0040
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave6-rihelman-litopysna-opovid_c0047
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S3
+  file: wave12-grabianka-litopys_c0001
+  type: literary
+  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
+  author: Грабянка Г.
+- id: S4
+  file: wave5-suspilna-dumka-xvi-xvii_c0123
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S5
+  file: wave11-hrushevsky-iur-t6_c0036
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S8
+  file: wave12-grabianka-litopys_c0005
+  type: literary
+  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
+  author: Грабянка Г.
+- id: S9
+  file: wave5-suspilna-dumka-xvi-xvii_c0010
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S10
+  file: wave5-suspilna-dumka-xvi-xvii_c0025
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія

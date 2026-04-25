@@ -1,0 +1,38 @@
+# Source registry for wiki/periods/koliivshchyna.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: wave5-humanisty-vidrodzennia_c0013
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c1266
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0659
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S6
+  file: wave12-samovyd-litopys_c0022
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий
+- id: S7
+  file: wave0-samovydets_c0021
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S8
+  file: wave7-antonovych-vybrani_c0569
+  type: literary
+  title: Антонович — Вибрані праці
+  author: Антонович В.
+- id: S9
+  file: wave10-shevchenkivsky-slovnyk_c0410
+  type: literary
+  title: Шевченківський словник
+  author: Колектив

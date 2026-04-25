@@ -1,0 +1,24 @@
+# Source registry for wiki/historiography/universaly-unr.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0081
+  type: textbook
+  title: § 8. Перша війна більшовицької Росії з УНР та проголошення незалежності УНР
+  page: 41
+  grade: 10
+- id: S2
+  file: ukrainian_wiki/days-and-months_Педагогіка-A1-Days-And-Months-Деколонізаційні-застереження
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Days And Months'
+  section_path: 'Педагогіка A1: Days And Months > Деколонізаційні застереження'
+- id: S3
+  file: wikipedia/Контент-аналіз
+  type: wikipedia
+  title: Контент-аналіз
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82-%D0%B0%D0%BD%D0%B0%D0%BB%D1%96%D0%B7
+- id: S4
+  file: wikipedia/Листи до братів-хліборобів
+  type: wikipedia
+  title: Листи до братів-хліборобів
+  url: https://uk.wikipedia.org/wiki/%D0%9B%D0%B8%D1%81%D1%82%D0%B8%20%D0%B4%D0%BE%20%D0%B1%D1%80%D0%B0%D1%82%D1%96%D0%B2-%D1%85%D0%BB%D1%96%D0%B1%D0%BE%D1%80%D0%BE%D0%B1%D1%96%D0%B2

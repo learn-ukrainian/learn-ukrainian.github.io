@@ -1,0 +1,53 @@
+# Source registry for wiki/historiography/hramoty-ta-akty.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wikipedia/Київська Русь
+  type: wikipedia
+  title: Київська Русь
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B0%20%D0%A0%D1%83%D1%81%D1%8C
+- id: S2
+  file: wave4-voitovych-dynasty_c0000
+  type: literary
+  title: Войтович — Князівські династії Східної Європи
+  author: Войтович Л.
+- id: S3
+  file: wave7-istkult-t1-kyivska-rus_c0212
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S4
+  file: wave7-ivakin-kyiv-xiii-xvi_c0012
+  type: literary
+  title: Івакін — Історичний розвиток Києва XIII-XVI ст.
+  author: Івакін Г.
+- id: S5
+  file: wikipedia/Руська Правда
+  type: wikipedia
+  title: Руська Правда
+  url: https://uk.wikipedia.org/wiki/%D0%A0%D1%83%D1%81%D1%8C%D0%BA%D0%B0%20%D0%9F%D1%80%D0%B0%D0%B2%D0%B4%D0%B0
+- id: S6
+  file: wikipedia/Руське право
+  type: wikipedia
+  title: Руське право
+  url: https://uk.wikipedia.org/wiki/%D0%A0%D1%83%D1%81%D1%8C%D0%BA%D0%B5%20%D0%BF%D1%80%D0%B0%D0%B2%D0%BE
+- id: S7
+  file: wave7-yushkov-feodalizm_c0009
+  type: literary
+  title: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму
+  author: Юшков С.
+- id: S8
+  file: wave7-istkult-t1-kyivska-rus_c0237
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S9
+  file: wave7-entsyklopediia-ukrainoznavstva_c1588
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S10
+  file: wave7-istkult-t1-kyivska-rus_c0232
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив

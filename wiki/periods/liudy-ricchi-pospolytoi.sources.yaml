@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/liudy-ricchi-pospolytoi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-suspilna-dumka-xvi-xvii_c0083
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S2
+  file: wave6-boplan-opys-ukrainy_c0014
+  type: literary
+  title: Боплан — Опис України (1660)
+  author: Боплан Г.
+- id: S4
+  file: wave2-velychko_c0025
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S5
+  file: wave6-boplan-opys-ukrainy_c0011
+  type: literary
+  title: Боплан — Опис України (1660)
+  author: Боплан Г.
+- id: S6
+  file: wave12-velychko-litopys_c0028
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S8
+  file: wave2-smotrytsky-gramatyka_c0001
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S9
+  file: wave5-suspilna-dumka-xvi-xvii_c0057
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S10
+  file: wave5-suspilna-dumka-xvi-xvii_c0038
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія

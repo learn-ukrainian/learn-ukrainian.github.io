@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/syntez-trahedii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-dovhalevsky-poetyka_c0136
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S2
+  file: wave6-synopsis-1674_c0050
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S3
+  file: wave0-samovydets_c0000
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S4
+  file: wave12-velychko-litopys_c0009
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S5
+  file: wave2-velychko_c0007
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S6
+  file: wave5-suspilna-dumka-xvi-xvii_c0094
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S7
+  file: wave5-klementiy-zinoviiv_c0279
+  type: literary
+  title: Климентій Зіновіїв. Вірші. Приповісті.
+  author: Зіновіїв К.
+- id: S8
+  file: wave6-synopsis-1674_c0055
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S9
+  file: wave6-synopsis-1674_c0009
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S10
+  file: wave6-synopsis-1674_c0063
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий

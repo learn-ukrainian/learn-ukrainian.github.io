@@ -1,0 +1,38 @@
+# Source registry for wiki/periods/danylo-apostol.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0094
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wave6-rihelman-litopysna-opovid_c0763
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S4
+  file: wave7-kohut-tsentralizm_c0008
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S6
+  file: wave7-kohut-tsentralizm_c0101
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S7
+  file: wave5-prokopovych-filosofski_c1309
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave6-scherer-litopys-malorosiyi_c0116
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+- id: S10
+  file: wave12-velychko-litopys_c0462
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.

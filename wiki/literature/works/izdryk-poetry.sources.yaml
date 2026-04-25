@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/izdryk-poetry.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c1390
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0603
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave4-ukrainska-mova-encyclopedia_c0111
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0323
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave5-prokopovych-filosofski_c0086
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S6
+  file: ukrlib-andiyevska_c0001
+  type: literary
+  title: Емма Андієвська. Біографія Емми Андієвської
+  author: Андієвська Е.
+- id: S7
+  file: wave10-shevchenkivsky-slovnyk_c1595
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0609
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave9-rusanivsky-ist-lit-movy_c0256
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S10
+  file: wave5-velychkovsky_c0042
+  type: literary
+  title: Іван Величковський. Твори
+  author: Величковський І.

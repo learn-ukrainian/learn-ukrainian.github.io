@@ -1,0 +1,61 @@
+# Source registry for wiki/folk/ritual/vesilni-pisni.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0501
+  type: textbook
+  title: Сторінка 276
+  grade: 9
+  author: gisem
+- id: S2
+  file: 9-klas-istorija-ukrajini-gisem-2017_s0500
+  type: textbook
+  title: Сторінка 276
+  grade: 9
+  author: gisem
+- id: S5
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0169
+  type: textbook
+  title: Сторінка 134
+  grade: 9
+  author: avramenko
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c0861
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0612
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave7-popovych-narys-kultury_c0085
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S9
+  file: wave4-hrushevsky-istlit_c0389
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S11
+  file: wikipedia/Фольклористичні терміни
+  type: wikipedia
+  title: Фольклористичні терміни
+  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%BE%D0%BB%D1%8C%D0%BA%D0%BB%D0%BE%D1%80%D0%B8%D1%81%D1%82%D0%B8%D1%87%D0%BD%D1%96%20%D1%82%D0%B5%D1%80%D0%BC%D1%96%D0%BD%D0%B8
+- id: S12
+  file: wave7-entsyklopediia-ukrainoznavstva_c0613
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S13
+  file: wave8-ukr-lit-entsyklopediia_c1006
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S14
+  file: wave4-hrushevsky-istlit_c0536
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.

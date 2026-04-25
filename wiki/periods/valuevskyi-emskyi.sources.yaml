@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/valuevskyi-emskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c0890
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0293
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0271
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c2265
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave9-uzhevych-paryzky_c0001
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S6
+  file: wave12-samovyd-litopys_c0046
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий
+- id: S7
+  file: wave0-samovydets_c0045
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S8
+  file: wave7-popovych-narys-kultury_c0699
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0050
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave3-hramoty-xiv_c0312
+  type: literary
+  title: Грамоти XIV ст.
+  author: Різні

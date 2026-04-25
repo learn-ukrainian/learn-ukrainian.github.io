@@ -1,0 +1,38 @@
+# Source registry for wiki/periods/nova-serbiya.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0033
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave6-scherer-litopys-malorosiyi_c0115
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+- id: S3
+  file: wave6-synopsis-1674_c0018
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S4
+  file: wave6-boplan-opys-ukrainy_c0058
+  type: literary
+  title: Боплан — Опис України (1660)
+  author: Боплан Г.
+- id: S6
+  file: wave6-galvol-kostruba_c0006
+  type: literary
+  title: ГВЛ (переклад Коструби)
+  author: Коструба Т.
+- id: S9
+  file: wave6-rihelman-litopysna-opovid_c0030
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S10
+  file: wave7-kohut-tsentralizm_c0008
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.

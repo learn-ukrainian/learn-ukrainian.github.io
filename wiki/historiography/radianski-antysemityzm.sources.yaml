@@ -1,0 +1,24 @@
+# Source registry for wiki/historiography/radianski-antysemityzm.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-istoriya-ukr-gisem-2024_s0926
+  type: textbook
+  title: У 1968 р. один із таких при
+  page: 113
+  grade: 11
+- id: S2
+  file: wave7-dzyuba-internatsionalizm_c0142
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+- id: S4
+  file: wikipedia/Антисемітизм
+  type: wikipedia
+  title: Антисемітизм
+  url: https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%B8%D1%81%D0%B5%D0%BC%D1%96%D1%82%D0%B8%D0%B7%D0%BC
+- id: S5
+  file: wikipedia/Антисемітизм у СРСР
+  type: wikipedia
+  title: Антисемітизм у СРСР
+  url: https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%B8%D1%81%D0%B5%D0%BC%D1%96%D1%82%D0%B8%D0%B7%D0%BC%20%D1%83%20%D0%A1%D0%A0%D0%A1%D0%A0

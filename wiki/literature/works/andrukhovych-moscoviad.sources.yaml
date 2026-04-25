@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/andrukhovych-moscoviad.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0077
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave7-thompson-trubadury_c0230
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0097
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave7-thompson-trubadury_c0009
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S5
+  file: ukrlib-andrukhovych_c0001
+  type: literary
+  title: Юрій Андрухович. Біографія Юрія Андруховича
+  author: Андрухович Ю.
+- id: S6
+  file: ukrlib-khvylovy_c0067
+  type: literary
+  title: Микола Хвильовий. Думки проти течії
+  author: Хвильовий М.
+- id: S7
+  file: ukrlib-andrukhovych_c0003
+  type: literary
+  title: Юрій Андрухович. Біографія Юрія Андруховича
+  author: Андрухович Ю.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0710
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

@@ -1,0 +1,48 @@
+# Source registry for wiki/periods/kniazivski-usobiytsi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-synopsis-1674_c0002
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S2
+  file: wave5-prokopovych-filosofski_c0125
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S3
+  file: wave2-hrabianka_c0016
+  type: literary
+  title: Літопис Грабянки
+  author: Грабянка Г.
+- id: S4
+  file: wave12-grabianka-litopys_c0027
+  type: literary
+  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
+  author: Грабянка Г.
+- id: S6
+  file: wave1-galytsko-volynskyi_c0238
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S7
+  file: wave1-kyivskyi-litopys_c0613
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S8
+  file: wave6-galvol-kostruba_c0032
+  type: literary
+  title: ГВЛ (переклад Коструби)
+  author: Коструба Т.
+- id: S9
+  file: wave6-galvol-kostruba_c0015
+  type: literary
+  title: ГВЛ (переклад Коструби)
+  author: Коструба Т.
+- id: S10
+  file: wave6-galvol-kostruba_c0061
+  type: literary
+  title: ГВЛ (переклад Коструби)
+  author: Коструба Т.

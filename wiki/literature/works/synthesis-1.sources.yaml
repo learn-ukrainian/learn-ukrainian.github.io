@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/synthesis-1.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0105
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0024
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0668
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave4-ukrainska-mova-encyclopedia_c0233
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S5
+  file: wave7-heroes-ukr-kultura_c0325
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c0839
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave7-dzyuba-pavlenko-litopys-kultury_c0001
+  type: literary
+  title: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
+  author: Дзюба О.
+- id: S8
+  file: wave8-chyzhevsky-baroko_c0021
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c1451
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c1426
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив

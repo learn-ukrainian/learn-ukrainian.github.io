@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/hromady.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0037
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave5-prokopovych-filosofski_c0013
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c1678
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave9-uzhevych-paryzky_c0024
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S5
+  file: wave6-synopsis-1674_c0192
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S6
+  file: wave6-synopsis-1674_c0189
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c1102
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave6-synopsis-1674_c0015
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S9
+  file: wave5-suspilna-dumka-xvi-xvii_c0054
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S10
+  file: wave5-prokopovych-filosofski_c0032
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.

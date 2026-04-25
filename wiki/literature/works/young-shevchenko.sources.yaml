@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/young-shevchenko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-heroes-ukr-kultura_c0242
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S2
+  file: wave10-shevchenkivsky-slovnyk_c0888
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S3
+  file: wave4-chyzhevsky-istoriia-lit_c0555
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c3489
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave10-shevchenkivsky-slovnyk_c0883
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S6
+  file: wave10-shevchenkivsky-slovnyk_c1379
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S7
+  file: wave10-konysky-shevchenko-khronika_c0848
+  type: literary
+  title: 'Кониський — Шевченко-Грушівський: Хроніка життя'
+  author: Кониський О.
+- id: S8
+  file: wave7-krypyakevych-istkult_c0479
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S9
+  file: wave10-spohady-pro-shevchenka_c0264
+  type: literary
+  title: Спогади про Шевченка (1982)
+  author: Колектив
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c3490
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

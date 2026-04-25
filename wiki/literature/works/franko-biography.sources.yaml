@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/franko-biography.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-ohiyenko-ist-lit-movy_c0235
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S2
+  file: wave7-entsyklopediia-ukrainoznavstva_c1991
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S3
+  file: wave8-chyzhevsky-filosofiia_c0012
+  type: literary
+  title: Чижевський — Нариси з історії філософії на Україні
+  author: Чижевський Д.
+- id: S4
+  file: wave4-hrushevsky-istlit-t2_c0289
+  type: literary
+  title: Грушевський — Історія української літератури, т.2
+  author: Грушевський М.
+- id: S5
+  file: wave8-fdm-biobibliohrafichnyi_c0175
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0716
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c1164
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0323
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: wave7-popovych-narys-kultury_c0787
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S10
+  file: wave7-krypyakevych-istkult_c0594
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.

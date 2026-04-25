@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/vaplite-literary-avant-garde.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0722
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0294
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0267
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0713
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave9-rusanivsky-ist-lit-movy_c0392
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S6
+  file: wave8-chyzhevsky-baroko_c0400
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S7
+  file: wave4-chyzhevsky-istoriia-lit_c0666
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0290
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: wave5-dovhalevsky-poetyka_c0022
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S10
+  file: wave5-velychkovsky_c0023
+  type: literary
+  title: Іван Величковський. Твори
+  author: Величковський І.

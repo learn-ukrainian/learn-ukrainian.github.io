@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/khvylovy-intro.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-popovych-narys-kultury_c0989
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S2
+  file: wave9-ohiyenko-ist-lit-movy_c0262
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0269
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0719
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave7-heroes-ukr-kultura_c0294
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S7
+  file: wave7-heroes-ukr-kultura_c0290
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: wave7-heroes-ukr-kultura_c0267
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S10
+  file: wave7-heroes-ukr-kultura_c0272
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив

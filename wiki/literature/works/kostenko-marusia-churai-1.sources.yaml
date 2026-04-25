@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/kostenko-marusia-churai-1.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-rusanivsky-ist-lit-movy_c0466
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0344
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0361
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0358
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0036
+  type: literary
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+- id: S6
+  file: wave4-chyzhevsky-istoriia-lit_c0017
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S7
+  file: wave7-heroes-ukr-kultura_c0357
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0343
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c3242
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c3788
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

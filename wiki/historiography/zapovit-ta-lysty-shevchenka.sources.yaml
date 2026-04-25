@@ -1,0 +1,35 @@
+# Source registry for wiki/historiography/zapovit-ta-lysty-shevchenka.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-ukrlit-zabolotnyi-2025_s4501
+  type: textbook
+  title: СИЛА ПОЕТИЧНОГО РЯДКА (p. 205)
+  page: 205
+  grade: 8
+- id: S2
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s5010
+  type: textbook
+  title: НОВА УКРАЇНСЬКА ЛІТЕРАТУРА (p. 210)
+  page: 210
+  grade: 9
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0135
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0235
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wikipedia/Грабович Григорій Юлійович
+  type: wikipedia
+  title: Грабович Григорій Юлійович
+  url: https://uk.wikipedia.org/wiki/%D0%93%D1%80%D0%B0%D0%B1%D0%BE%D0%B2%D0%B8%D1%87%20%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D1%96%D0%B9%20%D0%AE%D0%BB%D1%96%D0%B9%D0%BE%D0%B2%D0%B8%D1%87
+- id: S6
+  file: wikipedia/Погляди Тараса Шевченка
+  type: wikipedia
+  title: Погляди Тараса Шевченка
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D0%B3%D0%BB%D1%8F%D0%B4%D0%B8%20%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0%20%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0

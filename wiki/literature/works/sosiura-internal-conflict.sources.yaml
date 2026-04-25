@@ -1,0 +1,38 @@
+# Source registry for wiki/literature/works/sosiura-internal-conflict.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave10-shevchenkivsky-slovnyk_c1920
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0417
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c4428
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: ukrlib-malaniuk_c0004
+  type: literary
+  title: Євген Маланюк. Життя та творчість Євгена Маланюка
+  author: Маланюк Є.
+- id: S5
+  file: wave7-heroes-ukr-kultura_c0006
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S7
+  file: wave5-velychkovsky_c0042
+  type: literary
+  title: Іван Величковський. Твори
+  author: Величковський І.
+- id: S8
+  file: wave12-yakovenko-skhid-zakhid_c0029
+  type: literary
+  title: 'Яковенко — «Україна між Сходом і Заходом»: проекція однієї ідеї (розд. 13-14)'
+  author: Яковенко Н.

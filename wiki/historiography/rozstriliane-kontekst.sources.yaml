@@ -1,0 +1,19 @@
+# Source registry for wiki/historiography/rozstriliane-kontekst.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-istoriya-ukr-gisem-2024_s0902
+  type: textbook
+  title: § 5. культура україни в повоєнний період
+  page: 42
+  grade: 11
+- id: S2
+  file: https://www.youtube.com/watch?v=5cx7MrG77TY
+  type: external
+  title: 'Ідея Олександрівна: як забороняли українську мову? @ideyaolexandrivna'
+  url: https://www.youtube.com/watch?v=5cx7MrG77TY
+- id: S3
+  file: wikipedia/Розстріляне відродження
+  type: wikipedia
+  title: Розстріляне відродження
+  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D0%B7%D1%81%D1%82%D1%80%D1%96%D0%BB%D1%8F%D0%BD%D0%B5%20%D0%B2%D1%96%D0%B4%D1%80%D0%BE%D0%B4%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F

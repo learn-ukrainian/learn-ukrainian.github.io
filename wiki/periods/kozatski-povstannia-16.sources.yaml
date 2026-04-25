@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/kozatski-povstannia-16.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0040
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0110
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0022
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: wave6-sofonovych-khronika_c0091
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S5
+  file: wave12-samovyd-litopys_c0022
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий
+- id: S6
+  file: wave0-samovydets_c0021
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S7
+  file: wave6-chevalier-istoriia-viiny_c0007
+  type: literary
+  title: Шевальє — Історія війни козаків проти Польщі (1663)
+  author: Шевальє П.
+- id: S8
+  file: wave6-rihelman-litopysna-opovid_c0034
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S9
+  file: wave6-rihelman-litopysna-opovid_c0950
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S10
+  file: wave6-rihelman-litopysna-opovid_c0039
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.

@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/nechuy-levytsky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c5553
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave10-shevchenkivsky-slovnyk_c1352
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0643
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave7-entsyklopediia-ukrainoznavstva_c1982
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S5
+  file: wave9-rusanivsky-ist-lit-movy_c0330
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S6
+  file: wave7-krypyakevych-istkult_c0552
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S8
+  file: wave6-sofonovych-khronika_c0005
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S9
+  file: wave12-velychko-litopys_c0043
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.

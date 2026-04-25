@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/valeriy-shevchuk-dim-na-hori.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-rusanivsky-ist-lit-movy_c0485
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S2
+  file: wave5-skovoroda-tvory_c0079
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S3
+  file: wave8-chyzhevsky-baroko_c0427
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S4
+  file: wave8-chyzhevsky-baroko_c0016
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S5
+  file: wave8-chyzhevsky-baroko_c0274
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S6
+  file: wave9-rusanivsky-ist-lit-movy_c0484
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S7
+  file: wave8-chyzhevsky-baroko_c0032
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S8
+  file: wave8-chyzhevsky-baroko_c0296
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S9
+  file: wave8-masliuk-poetyky-rytoryky_c0154
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S10
+  file: wave5-skovoroda-tvory_c0076
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.

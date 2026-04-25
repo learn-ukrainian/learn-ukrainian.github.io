@@ -1,0 +1,18 @@
+# Source registry for wiki/historiography/pivden-kolonizatsiia-mify.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://www.youtube.com/watch?v=vtJCsxS_Em0
+  type: external
+  title: Вся правда про український Південь!
+  url: https://www.youtube.com/watch?v=vtJCsxS_Em0
+- id: S2
+  file: ukrainian_wiki/where-from_Педагогіка-A1-Where-From-Деколонізаційні-застереження
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Where From'
+  section_path: 'Педагогіка A1: Where From > Деколонізаційні застереження'
+- id: S3
+  file: wikipedia/Історичний міф
+  type: wikipedia
+  title: Історичний міф
+  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D0%B8%D0%B9%20%D0%BC%D1%96%D1%84

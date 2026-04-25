@@ -1,0 +1,48 @@
+# Source registry for wiki/periods/hromadske-suspilstvo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-suspilna-dumka-xvi-xvii_c0082
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S2
+  file: wave5-prokopovych-filosofski_c0232
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S3
+  file: wave5-humanisty-vidrodzennia_c0012
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S4
+  file: wave5-suspilna-dumka-xvi-xvii_c0105
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S5
+  file: wave7-ukrxx-derzhavnist_c0374
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S6
+  file: wave5-humanisty-vidrodzennia_c0007
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S7
+  file: wave7-ukrxx-derzhavnist_c0375
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S9
+  file: wave7-ukrxx-derzhavnist_c0376
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S10
+  file: wave5-humanisty-vidrodzennia_c0113
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія

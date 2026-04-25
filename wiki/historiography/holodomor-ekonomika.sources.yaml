@@ -1,0 +1,13 @@
+# Source registry for wiki/historiography/holodomor-ekonomika.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wikipedia/Бібліографія Голодомору 1932—1933 років
+  type: wikipedia
+  title: Бібліографія Голодомору 1932—1933 років
+  url: https://uk.wikipedia.org/wiki/%D0%91%D1%96%D0%B1%D0%BB%D1%96%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D1%96%D1%8F%20%D0%93%D0%BE%D0%BB%D0%BE%D0%B4%D0%BE%D0%BC%D0%BE%D1%80%D1%83%201932%E2%80%941933%20%D1%80%D0%BE%D0%BA%D1%96%D0%B2
+- id: S2
+  file: wikipedia/Голодомор (1932—1933)
+  type: wikipedia
+  title: Голодомор (1932—1933)
+  url: https://uk.wikipedia.org/wiki/%D0%93%D0%BE%D0%BB%D0%BE%D0%B4%D0%BE%D0%BC%D0%BE%D1%80%20%281932%E2%80%941933%29

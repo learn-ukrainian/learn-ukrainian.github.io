@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/rylsky-liryka.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-rusanivsky-ist-lit-movy_c0397
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c5517
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave7-popovych-narys-kultury_c1168
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S4
+  file: wave10-shevchenkivsky-slovnyk_c1711
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0724
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0416
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0000
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave10-shevchenkivsky-slovnyk_c1709
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c4428
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

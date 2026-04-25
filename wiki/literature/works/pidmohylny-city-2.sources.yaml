@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/pidmohylny-city-2.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-fdm-biobibliohrafichnyi_c0174
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0381
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0290
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave4-chyzhevsky-istoriia-lit_c0620
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c2029
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0564
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave5-dovhalevsky-poetyka_c0205
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c5200
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

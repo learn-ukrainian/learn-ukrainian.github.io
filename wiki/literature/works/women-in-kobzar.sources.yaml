@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/women-in-kobzar.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave10-shevchenkivsky-slovnyk_c1283
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S2
+  file: wave10-shevchenkivsky-slovnyk_c1307
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S3
+  file: wave10-shevchenkivsky-slovnyk_c2093
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S4
+  file: wave10-shevchenkivsky-slovnyk_c1875
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S5
+  file: wave10-shevchenkivsky-slovnyk_c1281
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S6
+  file: wave10-shevchenkivsky-slovnyk_c0830
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0278
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave10-shevchenkivsky-slovnyk_c1972
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S9
+  file: wave10-shevchenkivsky-slovnyk_c1163
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c3242
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

@@ -1,0 +1,20 @@
+# Source registry for wiki/historiography/mekhanizm-kooptatsii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-kohut-tsentralizm_c0008
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S2
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S3
+  file: ext-article-1
+  type: external
+  title: ext-article-1
+- id: S4
+  file: ext-article-2
+  type: external
+  title: ext-article-2

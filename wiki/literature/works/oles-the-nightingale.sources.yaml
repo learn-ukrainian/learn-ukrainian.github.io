@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/oles-the-nightingale.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-rusanivsky-ist-lit-movy_c0396
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0728
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0712
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c5199
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave4-chyzhevsky-istoriia-lit_c0505
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S7
+  file: ukrlib-osmachka_c0001
+  type: literary
+  title: Тодось Осьмачка. Біографія Тодося Осьмачки
+  author: Осьмачка Т.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0668
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

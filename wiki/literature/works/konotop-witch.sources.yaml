@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/konotop-witch.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0611
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave4-ukrainska-mova-encyclopedia_c0169
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S3
+  file: wave4-chyzhevsky-istoriia-lit_c0480
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S4
+  file: ukrlib-kotlyarevsky_c0163
+  type: literary
+  title: Іван Котляревський. Енеїда
+  author: Котляревський І.
+- id: S5
+  file: wave7-krypyakevych-istkult_c0431
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S6
+  file: wave4-chyzhevsky-istoriia-lit_c0877
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S7
+  file: wave5-dramaturhiia-xix_c0030
+  type: literary
+  title: Українська драматургія першої половини XIX ст.
+  author: Антологія
+- id: S8
+  file: wave10-shevchenkivsky-slovnyk_c0264
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S9
+  file: wave5-oldukr-xviii_c0463
+  type: literary
+  title: Українська література XVIII ст.
+  author: Антологія
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c0835
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

@@ -1,0 +1,23 @@
+# Source registry for wiki/literature/works/khiba-revut-voly-style.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c5045
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave7-krypyakevych-istkult_c0559
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S8
+  file: wave7-krypyakevych-istkult_c0562
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c1973
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

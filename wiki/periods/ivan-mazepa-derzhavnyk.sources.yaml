@@ -1,0 +1,48 @@
+# Source registry for wiki/periods/ivan-mazepa-derzhavnyk.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-krman-shchodennyk_c0012
+  type: literary
+  title: Даніел Крман — Подорожній щоденник (1708-1709)
+  author: Крман Д.
+- id: S2
+  file: wave4-ohloblyn-mazepa_c0680
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0008
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: wave7-matskiv-mazepa-dzherela_c0000
+  type: literary
+  title: Мацьків — Гетьман Мазепа в західньоєвропейських джерелах
+  author: Мацьків Т.
+- id: S5
+  file: wave12-velychko-litopys_c0801
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S6
+  file: wave2-velychko_c0799
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S7
+  file: wave4-ohloblyn-mazepa_c0674
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+- id: S8
+  file: wave4-ohloblyn-mazepa_c0808
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+- id: S9
+  file: wave6-rihelman-litopysna-opovid_c0954
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.

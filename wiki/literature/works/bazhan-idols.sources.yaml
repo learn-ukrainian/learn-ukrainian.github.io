@@ -1,0 +1,38 @@
+# Source registry for wiki/literature/works/bazhan-idols.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-bazhan_c0005
+  type: literary
+  title: Микола Бажан. Біографія Миколи Бажана
+  author: Бажан М.
+- id: S2
+  file: ukrlib-bazhan_c0003
+  type: literary
+  title: Микола Бажан. Біографія Миколи Бажана
+  author: Бажан М.
+- id: S3
+  file: wave9-rusanivsky-ist-lit-movy_c0411
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0474
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave5-skovoroda-tvory_c0076
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S8
+  file: ukrlib-bazhan_c0000
+  type: literary
+  title: Микола Бажан. Біографія Миколи Бажана
+  author: Бажан М.
+- id: S10
+  file: wave7-krypyakevych-istkult_c0846
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.

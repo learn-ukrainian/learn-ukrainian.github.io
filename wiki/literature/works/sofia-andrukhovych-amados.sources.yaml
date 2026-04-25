@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/sofia-andrukhovych-amados.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-thompson-trubadury_c0161
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S2
+  file: wave9-rusanivsky-ist-lit-movy_c0003
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S4
+  file: wave5-skovoroda-tvory_c0654
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0139
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0024
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave7-thompson-trubadury_c0230
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S9
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0066
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c2416
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

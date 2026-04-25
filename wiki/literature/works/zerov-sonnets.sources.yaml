@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/zerov-sonnets.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0724
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c2683
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: ukrlib-stus_c0056
+  type: literary
+  title: Василь Стус. Феномен доби (сходження на Голгофу слави)
+  author: Стус В.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c5517
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave5-dovhalevsky-poetyka_c0007
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S6
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0381
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0294
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0011
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S10
+  file: wave5-dovhalevsky-poetyka_c0207
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.

@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/black-council-history.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-chyzhevsky-istoriia-lit_c0581
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S2
+  file: wave7-ukrxx-derzhavnist_c0085
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S3
+  file: wave7-holobutsky-zaporizhzhia_c0562
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0238
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave7-holobutsky-zaporizhzhia_c0563
+  type: literary
+  title: Голобуцький — Запорозьке козацтво
+  author: Голобуцький В.
+- id: S7
+  file: wave7-popovych-narys-kultury_c0730
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S8
+  file: wave9-ohiyenko-ist-lit-movy_c0142
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S9
+  file: wave4-chyzhevsky-istoriia-lit_c0580
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S10
+  file: wave4-chyzhevsky-istoriia-lit_c0913
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.

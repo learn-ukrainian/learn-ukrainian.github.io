@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/deresh-cult.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0010
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave4-chyzhevsky-istoriia-lit_c0020
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0651
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0084
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave8-masliuk-poetyky-rytoryky_c0258
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0521
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0131
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave4-chyzhevsky-istoriia-lit_c0011
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0265
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c3148
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

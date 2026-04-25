@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/olha-sviatoslav.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-synopsis-1674_c0424
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S2
+  file: wave6-synopsis-1674_c0421
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S3
+  file: wave6-synopsis-1674_c0418
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S4
+  file: wave6-synopsis-1674_c0413
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S5
+  file: wave11-hrushevsky-iur-t6_c0850
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S6
+  file: wave4-hrushevsky-iur-t1_c0770
+  type: literary
+  title: Грушевський — Історія України-Руси, т.1
+  author: Грушевський М.
+- id: S7
+  file: wave5-oldukr-xvii_c0504
+  type: literary
+  title: Українська література XVII ст.
+  author: Антологія
+- id: S8
+  file: wave6-synopsis-1674_c0241
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S9
+  file: wave5-oldukr-xvii_c0506
+  type: literary
+  title: Українська література XVII ст.
+  author: Антологія
+- id: S10
+  file: wave6-synopsis-1674_c0015
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий

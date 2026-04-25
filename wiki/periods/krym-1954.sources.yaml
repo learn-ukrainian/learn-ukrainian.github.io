@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/krym-1954.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-velychko-litopys_c1352
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S2
+  file: wave2-velychko_c1350
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S3
+  file: wave6-rihelman-litopysna-opovid_c0046
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S4
+  file: wave5-prokopovych-filosofski_c0490
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S5
+  file: wave7-thompson-trubadury_c0340
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S6
+  file: wave12-velychko-litopys_c0978
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S7
+  file: wave2-velychko_c0976
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S8
+  file: wave12-samovyd-litopys_c0014
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий
+- id: S9
+  file: wave0-samovydets_c0013
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S10
+  file: wave6-scherer-litopys-malorosiyi_c0113
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.

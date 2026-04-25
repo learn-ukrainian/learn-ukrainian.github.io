@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/syntez-revoliutsiia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-sofonovych-khronika_c0005
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S2
+  file: wave6-synopsis-1674_c0050
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0026
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: wave7-entsyklopediia-ukrainoznavstva_c1182
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S5
+  file: wave6-sofonovych-khronika_c0003
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S6
+  file: wave6-synopsis-1674_c0063
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S7
+  file: wave2-smotrytsky-gramatyka_c0001
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S8
+  file: wave5-dovhalevsky-poetyka_c0239
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S9
+  file: wave6-synopsis-1674_c0009
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S10
+  file: wave5-skovoroda-tvory_c0079
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.

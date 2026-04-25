@@ -1,0 +1,29 @@
+# Source registry for wiki/figures/volodymyr-monomakh.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-istoria-ukr-pometun-2024_s3568
+  type: textbook
+  title: § 12. –13. Київське, Чернігівське, Переяславське,
+  page: 90
+  grade: 7
+- id: S2
+  file: wave8-fdm-biobibliohrafichnyi_c0022
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S3
+  file: wave7-istkult-t1-kyivska-rus_c0163
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S4
+  file: https://www.youtube.com/watch?v=OHFICeCZQ8g
+  type: external
+  title: З чого почалася російсько-українська війна? Реальна історія з Акімом Галімовим
+  url: https://www.youtube.com/watch?v=OHFICeCZQ8g
+- id: S5
+  file: wikipedia/Володимир Мономах
+  type: wikipedia
+  title: Володимир Мономах
+  url: https://uk.wikipedia.org/wiki/%D0%92%D0%BE%D0%BB%D0%BE%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%20%D0%9C%D0%BE%D0%BD%D0%BE%D0%BC%D0%B0%D1%85

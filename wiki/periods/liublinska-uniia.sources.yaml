@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/liublinska-uniia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-suspilna-dumka-xvi-xvii_c0013
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0083
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wave6-rihelman-litopysna-opovid_c0044
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S4
+  file: wave6-chevalier-istoriia-viiny_c0135
+  type: literary
+  title: Шевальє — Історія війни козаків проти Польщі (1663)
+  author: Шевальє П.
+- id: S5
+  file: wave11-hrushevsky-iur-t6_c1010
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S7
+  file: wave5-suspilna-dumka-xvi-xvii_c0148
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S8
+  file: wave7-dzyuba-pavlenko-litopys-kultury_c0245
+  type: literary
+  title: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
+  author: Дзюба О.
+- id: S9
+  file: wave11-hrushevsky-iur-t6_c1007
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.

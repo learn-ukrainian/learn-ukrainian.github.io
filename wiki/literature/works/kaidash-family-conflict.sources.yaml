@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/kaidash-family-conflict.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c3695
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave10-shevchenkivsky-slovnyk_c1972
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S3
+  file: wave4-hrushevsky-istlit_c0448
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S4
+  file: wave12-hrushevsky-iu-odnotom_c0453
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S5
+  file: wave5-dramaturhiia-xix_c0030
+  type: literary
+  title: Українська драматургія першої половини XIX ст.
+  author: Антологія
+- id: S7
+  file: wave10-shevchenkivsky-slovnyk_c2093
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c1984
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c3590
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave10-shevchenkivsky-slovnyk_c0546
+  type: literary
+  title: Шевченківський словник
+  author: Колектив

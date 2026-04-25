@@ -1,0 +1,43 @@
+# Source registry for wiki/periods/upa.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-sofonovych-khronika_c0005
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S2
+  file: wave6-chevalier-istoriia-viiny_c0128
+  type: literary
+  title: Шевальє — Історія війни козаків проти Польщі (1663)
+  author: Шевальє П.
+- id: S4
+  file: wave0-samovydets_c0000
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S5
+  file: wave5-prokopovych-filosofski_c0140
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S6
+  file: wave5-prokopovych-filosofski_c0115
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave6-sofonovych-khronika_c0003
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S8
+  file: wave5-prokopovych-filosofski_c0444
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0231
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.

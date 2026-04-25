@@ -1,0 +1,23 @@
+# Source registry for wiki/literature/works/kotsiubynsky-intermezzo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c5199
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave7-entsyklopediia-ukrainoznavstva_c1997
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c1987
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c5196
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

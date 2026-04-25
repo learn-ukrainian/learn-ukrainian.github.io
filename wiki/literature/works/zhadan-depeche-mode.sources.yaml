@@ -1,0 +1,43 @@
+# Source registry for wiki/literature/works/zhadan-depeche-mode.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-zhadan_c0000
+  type: literary
+  title: Сергій Жадан. Депеш Мод
+  author: Жадан С.
+- id: S2
+  file: ukrlib-zhadan_c0170
+  type: literary
+  title: Сергій Жадан. Депеш Мод
+  author: Жадан С.
+- id: S3
+  file: ukrlib-zhadan_c0171
+  type: literary
+  title: Сергій Жадан. Депеш Мод
+  author: Жадан С.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: ukrlib-zhadan_c0173
+  type: literary
+  title: Сергій Жадан. Депеш Мод
+  author: Жадан С.
+- id: S6
+  file: wave8-masliuk-poetyky-rytoryky_c0193
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S7
+  file: wave9-rusanivsky-ist-lit-movy_c0330
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S8
+  file: wave8-masliuk-poetyky-rytoryky_c0182
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.

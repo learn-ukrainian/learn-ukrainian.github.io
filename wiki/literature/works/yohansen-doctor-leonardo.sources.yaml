@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/yohansen-doctor-leonardo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0054
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: ukrlib-yohansen_c0000
+  type: literary
+  title: Майк Йогансен. Подорож ученого доктора Леонардо
+  author: Йогансен М.
+- id: S3
+  file: ukrlib-yohansen_c0015
+  type: literary
+  title: Майк Йогансен. Інтермедії до книги 133 "Літературного Ярмарку"
+  author: Йогансен М.
+- id: S4
+  file: ukrlib-zhadan_c0171
+  type: literary
+  title: Сергій Жадан. Депеш Мод
+  author: Жадан С.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0162
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave12-grabianka-litopys_c0010
+  type: literary
+  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
+  author: Грабянка Г.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0725
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: ukrlib-yohansen_c0019
+  type: literary
+  title: Майк Йогансен. Інтермедії до книги 133 "Літературного Ярмарку"
+  author: Йогансен М.
+- id: S9
+  file: wave5-dramaturhiia-xix_c0030
+  type: literary
+  title: Українська драматургія першої половини XIX ст.
+  author: Антологія
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c2415
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

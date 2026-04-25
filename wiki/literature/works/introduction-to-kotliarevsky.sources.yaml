@@ -2,125 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s0214
-  type: textbook
+  file: wave8-hrabovych-do-istoriyi_c0409
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S2
-  file: 0988b006_c0000
+  file: ukrlib-kotlyarevsky_c0102
   type: literary
+  title: Іван Котляревський. Енеїда
+  author: Котляревський І.
 - id: S3
-  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s0208
-  type: textbook
+  file: wave6-istrus-drach_c0334
+  type: literary
+  title: Історія Русів (переклад Драча)
+  author: Драч І.
 - id: S4
-  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0003
-  type: textbook
+  file: wave7-popovych-narys-kultury_c0518
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
 - id: S5
-  file: 11-klas-ukrlit-borzenko-2019-prof_s0475
-  type: textbook
+  file: ukrlib-honchar_c0011
+  type: literary
+  title: Олесь Гончар. Безсмертний полтавець
+  author: Гончар О.
 - id: S6
-  file: 9-klas-istorija-ukrajini-gisem-2017_s0117
-  type: textbook
+  file: wave8-hrabovych-do-istoriyi_c0603
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave4-chyzhevsky-istoriia-lit_c0445
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S8
+  file: wave4-chyzhevsky-istoriia-lit_c0867
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
 - id: S9
-  file: 9-klas-istorija-ukrajini-burnejko-2017_s0093
-  type: textbook
+  file: wave4-chyzhevsky-istoriia-lit_c0423
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
 - id: S10
-  file: 8-klas-ukrlit-avramenko-2025_s0181
-  type: textbook
-- id: S11
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0005
-  type: textbook
-- id: S12
-  file: 9-klas-ukrmova-zabolotnyi-2017_s0005
-  type: textbook
-- id: S13
-  file: 3588aaff_c0272
+  file: wave4-chyzhevsky-istoriia-lit_c0866
   type: literary
-- id: S14
-  file: 41d0facc_c0280
-  type: literary
-- id: S15
-  file: 3588aaff_c0000
-  type: literary
-- id: S16
-  file: fbf8bdff_c0423
-  type: literary
-- id: S17
-  file: a7d041f7_c0334
-  type: literary
-- id: S19
-  file: a5f3ae7f_c0497
-  type: literary
-- id: S20
-  file: cf05bddd_c0102
-  type: literary
-- id: S21
-  file: 29f7ee6b_c0011
-  type: literary
-- id: S23
-  file: fbf8bdff_c0460
-  type: literary
-- id: S24
-  file: fc2291b5_c0835
-  type: literary
-- id: S25
-  file: fbf8bdff_c0443
-  type: literary
-- id: S26
-  file: 48346587_c0421
-  type: literary
-- id: S27
-  file: 3588aaff_c0281
-  type: literary
-- id: S28
-  file: 68ba0555_c0790
-  type: literary
-- id: S29
-  file: fbf8bdff_c0628
-  type: literary
-- id: S30
-  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0094
-  type: textbook
-- id: S33
-  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s0235
-  type: textbook
-- id: S34
-  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0021
-  type: textbook
-- id: S35
-  file: 10-klas-ukrmova-karaman-2018_s0086
-  type: textbook
-- id: S36
-  file: fbf8bdff_c0867
-  type: literary
-- id: S39
-  file: 3588aaff_c0609
-  type: literary
-- id: S40
-  file: 3588aaff_c0276
-  type: literary
-- id: S42
-  file: fc2291b5_c3830
-  type: literary
-- id: S43
-  file: fc2291b5_c2931
-  type: literary
-- id: S44
-  file: fbf8bdff_c0462
-  type: literary
-- id: S45
-  file: 6890007d_c0488
-  type: literary
-- id: S46
-  file: 3588aaff_c0547
-  type: literary
-- id: S48
-  file: fc2291b5_c4692
-  type: literary
-- id: S49
-  file: fc2291b5_c2932
-  type: literary
-- id: S50
-  file: 10-klas-ukrmova-glazova-2018_s0303
-  type: textbook
-- id: S52
-  file: 3588aaff_c0668
-  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.

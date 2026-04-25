@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/antonenko-davydovych-prose.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-uzhevych-paryzky_c0022
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S2
+  file: wave5-skovoroda-tvory_c0063
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S3
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S4
+  file: wave2-velychko_c0048
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c4089
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave7-thompson-trubadury_c0009
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S9
+  file: wave5-velychkovsky_c0042
+  type: literary
+  title: Іван Величковський. Твори
+  author: Величковський І.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c0231
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

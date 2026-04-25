@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/eneida-war.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-kotlyarevsky_c0105
+  type: literary
+  title: Іван Котляревський. Енеїда
+  author: Котляревський І.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0595
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave9-rusanivsky-ist-lit-movy_c0202
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S4
+  file: ukrlib-kotlyarevsky_c0114
+  type: literary
+  title: Іван Котляревський. Енеїда
+  author: Котляревський І.
+- id: S5
+  file: ukrlib-kotlyarevsky_c0217
+  type: literary
+  title: Іван Котляревський. Енеїда
+  author: Котляревський І.
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c3824
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave10-shevchenko-tvory-t1_c0121
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S9
+  file: ukrlib-honchar_c0011
+  type: literary
+  title: Олесь Гончар. Безсмертний полтавець
+  author: Гончар О.
+- id: S10
+  file: wave7-krypyakevych-istkult_c0421
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.

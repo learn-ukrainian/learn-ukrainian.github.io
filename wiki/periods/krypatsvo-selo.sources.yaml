@@ -1,0 +1,48 @@
+# Source registry for wiki/periods/krypatsvo-selo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-boplan-opys-ukrainy_c0011
+  type: literary
+  title: Боплан — Опис України (1660)
+  author: Боплан Г.
+- id: S2
+  file: wave6-rihelman-litopysna-opovid_c0040
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0084
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: wave0-samovydets_c0021
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c1113
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave6-scherer-litopys-malorosiyi_c0118
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+- id: S8
+  file: wave7-entsyklopediia-ukrainoznavstva_c3025
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S9
+  file: wave12-samovyd-litopys_c0001
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий
+- id: S10
+  file: wave6-rihelman-litopysna-opovid_c0039
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.

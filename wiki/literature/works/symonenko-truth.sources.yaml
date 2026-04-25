@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/symonenko-truth.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-heroes-ukr-kultura_c0262
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0259
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0255
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0258
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave7-heroes-ukr-kultura_c0250
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S6
+  file: wave7-heroes-ukr-kultura_c0263
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S7
+  file: wave7-heroes-ukr-kultura_c0260
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0248
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: wave7-heroes-ukr-kultura_c0264
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S10
+  file: wave9-rusanivsky-ist-lit-movy_c0463
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.

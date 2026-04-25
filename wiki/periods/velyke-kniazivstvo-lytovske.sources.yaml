@@ -1,0 +1,48 @@
+# Source registry for wiki/periods/velyke-kniazivstvo-lytovske.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-suspilna-dumka-xvi-xvii_c0012
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S2
+  file: wave6-sofonovych-khronika_c0004
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0051
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: wave6-synopsis-1674_c0049
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S5
+  file: wave12-samovyd-litopys_c0001
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий
+- id: S7
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t1_c0196
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 1: До половини XVII століття'
+  author: Дорошенко Д.
+- id: S8
+  file: wave5-suspilna-dumka-xvi-xvii_c0072
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S9
+  file: wave7-ivakin-kyiv-xiii-xvi_c0084
+  type: literary
+  title: Івакін — Історичний розвиток Києва XIII-XVI ст.
+  author: Івакін Г.
+- id: S10
+  file: wave6-litovsko-biloruski_c1317
+  type: literary
+  title: Литовсько-білоруські літописи та хроніки
+  author: ПСРЛ

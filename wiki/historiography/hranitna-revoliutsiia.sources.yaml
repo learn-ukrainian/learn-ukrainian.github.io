@@ -1,0 +1,37 @@
+# Source registry for wiki/historiography/hranitna-revoliutsiia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1045
+  type: textbook
+  title: Мовою джерела. Уривок із Декларації про державний суверенітет
+  page: 208
+  grade: 11
+- id: S2
+  file: 4-klas-ukrayinska-mova-savchenko-2021-2_s1844
+  type: textbook
+  title: Брати Капрàнови. НЕЗАЛЕЖНІСТЬ УКРАЇНИ
+  page: 64
+  grade: 4
+- id: S3
+  file: 11-klas-istoriya-ukr-gisem-2024_s0941
+  type: textbook
+  title: За 1990 р. її кількісний склад зменшився
+  page: 158
+  grade: 11
+- id: S4
+  file: 11-klas-istoriya-ukr-galimov-2024_s0845
+  type: textbook
+  title: Відповідь подайте у вигляді тез. Працюємо з хронологією
+  page: 154
+  grade: 11
+- id: S5
+  file: wikipedia/Список учасників Революції на граніті
+  type: wikipedia
+  title: Список учасників Революції на граніті
+  url: https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA%20%D1%83%D1%87%D0%B0%D1%81%D0%BD%D0%B8%D0%BA%D1%96%D0%B2%20%D0%A0%D0%B5%D0%B2%D0%BE%D0%BB%D1%8E%D1%86%D1%96%D1%97%20%D0%BD%D0%B0%20%D0%B3%D1%80%D0%B0%D0%BD%D1%96%D1%82%D1%96
+- id: S6
+  file: wikipedia/Голодомор (1932—1933)
+  type: wikipedia
+  title: Голодомор (1932—1933)
+  url: https://uk.wikipedia.org/wiki/%D0%93%D0%BE%D0%BB%D0%BE%D0%B4%D0%BE%D0%BC%D0%BE%D1%80%20%281932%E2%80%941933%29

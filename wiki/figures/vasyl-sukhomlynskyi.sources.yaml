@@ -1,0 +1,8 @@
+# Source registry for wiki/figures/vasyl-sukhomlynskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wikipedia/Костюк Григорій Силович
+  type: wikipedia
+  title: Костюк Григорій Силович
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D1%81%D1%82%D1%8E%D0%BA%20%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D1%96%D0%B9%20%D0%A1%D0%B8%D0%BB%D0%BE%D0%B2%D0%B8%D1%87

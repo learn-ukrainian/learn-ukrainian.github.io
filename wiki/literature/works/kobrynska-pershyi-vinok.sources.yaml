@@ -1,0 +1,18 @@
+# Source registry for wiki/literature/works/kobrynska-pershyi-vinok.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-krypyakevych-istkult_c0604
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c3505
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: ukrlib-kobrynska_c0001
+  type: literary
+  title: Наталія Кобринська. Біографія Наталії Кобринської
+  author: Кобринська Н.

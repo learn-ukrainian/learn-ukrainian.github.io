@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/andrukhovych-perverzion.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-andrukhovych_c0001
+  type: literary
+  title: Юрій Андрухович. Біографія Юрія Андруховича
+  author: Андрухович Ю.
+- id: S2
+  file: ukrlib-andrukhovych_c0000
+  type: literary
+  title: Юрій Андрухович. Час і місце, або Моя остання територія
+  author: Андрухович Ю.
+- id: S3
+  file: ukrlib-andrukhovych_c0002
+  type: literary
+  title: Юрій Андрухович. Час і місце, або Моя остання територія
+  author: Андрухович Ю.
+- id: S4
+  file: wave5-prokopovych-filosofski_c0712
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S5
+  file: ukrlib-franko_c0081
+  type: literary
+  title: Іван Франко. Із секретів поетичної творчості
+  author: Франко І.
+- id: S6
+  file: ukrlib-yohansen_c0012
+  type: literary
+  title: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.
+- id: S7
+  file: wave7-thompson-trubadury_c0040
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0009
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: wave7-heroes-ukr-kultura_c0515
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив

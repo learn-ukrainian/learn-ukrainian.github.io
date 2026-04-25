@@ -1,0 +1,32 @@
+# Source registry for wiki/historiography/pislya-emsa-halychyna.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4858
+  type: textbook
+  title: РОЗДІЛ IV. З емського указу (1876 р.)
+  page: 152
+  grade: 9
+- id: S2
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4857
+  type: textbook
+  title: § 17. Український національний рух наприкінці 60-х — у 90-х рр. ХІХ ст. ції»
+    (по 1200 сторінок кожний), два томи «Записок Південно-Західного
+  page: 151
+  grade: 9
+- id: S3
+  file: 11-klas-istoriya-ukr-gisem-2024_s0902
+  type: textbook
+  title: § 5. культура україни в повоєнний період
+  page: 42
+  grade: 11
+- id: S4
+  file: wave7-popovych-narys-kultury_c0006
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S5
+  file: wikipedia/Емський указ
+  type: wikipedia
+  title: Емський указ
+  url: https://uk.wikipedia.org/wiki/%D0%95%D0%BC%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D1%83%D0%BA%D0%B0%D0%B7

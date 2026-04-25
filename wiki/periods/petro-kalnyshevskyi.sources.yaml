@@ -1,0 +1,53 @@
+# Source registry for wiki/periods/petro-kalnyshevskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0953
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave12-velychko-litopys_c0679
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S3
+  file: wave2-velychko_c0677
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S4
+  file: wave12-velychko-litopys_c0841
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S5
+  file: wave2-velychko_c0839
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S6
+  file: wave12-velychko-litopys_c0900
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S7
+  file: wave2-velychko_c0898
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S8
+  file: wave5-suspilna-dumka-xvi-xvii_c0096
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S9
+  file: wave7-kohut-tsentralizm_c0255
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S10
+  file: wave12-velychko-litopys_c0729
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.

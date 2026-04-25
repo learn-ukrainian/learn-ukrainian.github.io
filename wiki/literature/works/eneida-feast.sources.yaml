@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/eneida-feast.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-chyzhevsky-istoriia-lit_c0445
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S2
+  file: ukrlib-kotlyarevsky_c0102
+  type: literary
+  title: Іван Котляревський. Енеїда
+  author: Котляревський І.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0600
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave7-krypyakevych-istkult_c0427
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S5
+  file: ukrlib-kotlyarevsky_c0145
+  type: literary
+  title: Іван Котляревський. Енеїда
+  author: Котляревський І.
+- id: S6
+  file: wave4-chyzhevsky-istoriia-lit_c0867
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c3820
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0595
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: ukrlib-kotlyarevsky_c0100
+  type: literary
+  title: Іван Котляревський. Енеїда
+  author: Котляревський І.
+- id: S10
+  file: wave4-hrushevsky-istlit_c0168
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.

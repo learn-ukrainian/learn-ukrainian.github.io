@@ -1,0 +1,28 @@
+# Source registry for wiki/historiography/syntez-kozatski-dzherela.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-entsyklopediia-ukrainoznavstva_c0920
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S2
+  file: wave4-ohloblyn-mazepa_c0052
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+- id: S3
+  file: wave6-sofonovych-khronika_c0001
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c3555
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wikipedia/Гетьманщина
+  type: wikipedia
+  title: Гетьманщина
+  url: https://uk.wikipedia.org/wiki/%D0%93%D0%B5%D1%82%D1%8C%D0%BC%D0%B0%D0%BD%D1%89%D0%B8%D0%BD%D0%B0

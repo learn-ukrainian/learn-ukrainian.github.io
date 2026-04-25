@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/biblical-themes.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-rusanivsky-ist-lit-movy_c0261
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S2
+  file: wave10-shevchenkivsky-slovnyk_c0180
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c0589
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave9-rusanivsky-ist-lit-movy_c0248
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S5
+  file: wave10-shevchenkivsky-slovnyk_c1593
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S6
+  file: wave10-shevchenkivsky-slovnyk_c1660
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S7
+  file: wave10-shevchenkivsky-slovnyk_c1066
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S8
+  file: wave10-shevchenko-dokumenty_c0489
+  type: literary
+  title: 'Шевченко: Документи та матеріали (1982)'
+  author: Колектив
+- id: S9
+  file: wave5-skovoroda-tvory_c0033
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c0587
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

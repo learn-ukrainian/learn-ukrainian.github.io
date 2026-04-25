@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/tychyna-clarinets.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0440
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0730
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0466
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0446
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: ukrlib-stus_c0083
+  type: literary
+  title: Василь Стус. Феномен доби (сходження на Голгофу слави)
+  author: Стус В.
+- id: S6
+  file: ukrlib-yohansen_c0018
+  type: literary
+  title: Майк Йогансен. Елементарні закони версифікації (віршування)
+  author: Йогансен М.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0431
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave7-krypyakevych-istkult_c0625
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0416
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: ukrlib-honchar_c0000
+  type: literary
+  title: Олесь Гончар. Людині гімн
+  author: Гончар О.

@@ -1,0 +1,33 @@
+# Source registry for wiki/periods/pavlo-polubotok.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: wave6-scherer-litopys-malorosiyi_c0234
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.
+- id: S3
+  file: wave7-kohut-tsentralizm_c0362
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S4
+  file: wave6-rihelman-litopysna-opovid_c0052
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S5
+  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t2_c0344
+  type: literary
+  title: 'Дорошенко — Нарис історії України, том 2: Від половини XVII століття'
+  author: Дорошенко Д.
+- id: S6
+  file: wave12-grabianka-litopys_c0004
+  type: literary
+  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
+  author: Грабянка Г.
+- id: S10
+  file: wave6-scherer-litopys-malorosiyi_c0095
+  type: literary
+  title: Шерер — Літопис Малоросії (1788)
+  author: Шерер Ж.

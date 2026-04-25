@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/kateryna-kalytko-poetry.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0417
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave5-prokopovych-filosofski_c0087
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S3
+  file: wave5-dovhalevsky-poetyka_c0014
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S4
+  file: wave9-shevelov-fonolohiia_c0077
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S5
+  file: wave4-chyzhevsky-istoriia-lit_c0503
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S6
+  file: wave5-prokopovych-filosofski_c0085
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0290
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave1-slovo-poetic-translations_c0243
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S9
+  file: wave5-dovhalevsky-poetyka_c0036
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S10
+  file: wave5-oldukr-xvii_c0004
+  type: literary
+  title: Українська література XVII ст.
+  author: Антологія

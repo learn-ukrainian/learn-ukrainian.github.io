@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/matios-sweet-darusia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-matios_c0013
+  type: literary
+  title: Марія Матіос. Солодка Даруся
+  author: Матіос М.
+- id: S3
+  file: wave5-dramaturhiia-xix_c0030
+  type: literary
+  title: Українська драматургія першої половини XIX ст.
+  author: Антологія
+- id: S4
+  file: wave7-istkult-t1-kyivska-rus_c0011
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S5
+  file: wave7-heroes-ukr-kultura_c0361
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0609
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0564
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave12-bajky-xvii-xviii_c0015
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S9
+  file: wave3-bajky-xvii-xviii_c0014
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S10
+  file: ukrlib-matios_c0034
+  type: literary
+  title: Марія Матіос. Солодка Даруся
+  author: Матіос М.

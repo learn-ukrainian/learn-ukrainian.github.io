@@ -1,0 +1,8 @@
+# Source registry for wiki/historiography/holodomor-heohrafiia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wikipedia/Голодомор (1932—1933)
+  type: wikipedia
+  title: Голодомор (1932—1933)
+  url: https://uk.wikipedia.org/wiki/%D0%93%D0%BE%D0%BB%D0%BE%D0%B4%D0%BE%D0%BC%D0%BE%D1%80%20%281932%E2%80%941933%29

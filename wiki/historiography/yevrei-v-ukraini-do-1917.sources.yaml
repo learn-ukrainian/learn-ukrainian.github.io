@@ -1,0 +1,28 @@
+# Source registry for wiki/historiography/yevrei-v-ukraini-do-1917.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-rihelman-litopysna-opovid_c0012
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0018
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0019
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: https://www.youtube.com/watch?v=mjuiCt9mDgA
+  type: external
+  title: 'Симон Петлюра: історія провалу УНР'
+  url: https://www.youtube.com/watch?v=mjuiCt9mDgA
+- id: S5
+  file: wikipedia/Антисемітизм
+  type: wikipedia
+  title: Антисемітизм
+  url: https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%B8%D1%81%D0%B5%D0%BC%D1%96%D1%82%D0%B8%D0%B7%D0%BC

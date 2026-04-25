@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/zabuzhko-museum.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrlib-zabuzhko_c0001
+  type: literary
+  title: Оксана Забужко. Життя та творчість Оксани Забужко
+  author: Забужко О.
+- id: S2
+  file: wave5-dovhalevsky-poetyka_c0010
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S3
+  file: wave5-dovhalevsky-poetyka_c0007
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0360
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave5-skovoroda-tvory_c0079
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S6
+  file: wave7-thompson-trubadury_c0062
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S7
+  file: wave7-thompson-trubadury_c0019
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S8
+  file: wave5-dovhalevsky-poetyka_c0027
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S9
+  file: wave8-masliuk-poetyky-rytoryky_c0154
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S10
+  file: ukrlib-zabuzhko_c0000
+  type: literary
+  title: Оксана Забужко. Життєпис Оксани Забужко
+  author: Забужко О.

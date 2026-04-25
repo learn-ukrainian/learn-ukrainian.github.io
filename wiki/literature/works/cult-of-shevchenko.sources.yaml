@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/cult-of-shevchenko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-heroes-ukr-kultura_c0209
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0135
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0237
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave10-shevchenkivsky-slovnyk_c0258
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S5
+  file: wave7-heroes-ukr-kultura_c0323
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S6
+  file: wave10-konysky-shevchenko-khronika_c0009
+  type: literary
+  title: 'Кониський — Шевченко-Грушівський: Хроніка життя'
+  author: Кониський О.
+- id: S7
+  file: wave10-shevchenkivsky-slovnyk_c0261
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0257
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S9
+  file: wave10-shevchenko-tvory-t1_c0065
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S10
+  file: wave7-heroes-ukr-kultura_c0316
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
