@@ -224,7 +224,7 @@ token scanner fails the build on any hit, even inside dialogue, even
 in quoted examples:
 
 | Russian (FORBIDDEN) | Ukrainian (USE THIS) |
-|---|---|
+| --- | --- |
 | хорошо | добре |
 | конечно | звичайно / певна річ |
 | спасибо | дякую |
@@ -293,7 +293,7 @@ Each per-dim reviewer scores ONE dimension, using ONLY that
 dimension's clauses from this contract:
 
 | Dim | Clauses it scores against |
-|---|---|
+| --- | --- |
 | factual | §5 honesty + factual_anchors in plan YAML |
 | language | §7 forbidden words + Ukrainian linguistic quality (VESUM, Правопис 2019) |
 | decolonization | cultural framing (out of scope for tuning here; current 2026-04-23 scores are 8.8+) |
