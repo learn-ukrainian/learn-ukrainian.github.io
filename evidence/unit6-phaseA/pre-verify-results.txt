@@ -1,0 +1,63 @@
+## VESUM Verification
+
+**Confirmed (52/52 — all words verified):**
+
+- ✅ звук (noun), літера (noun), голосний (adj), приголосний (adj), привіт (noun)
+- ✅ добре (adv), чудово (adv), нормально (adv)
+- ✅ мама (noun), тато (noun), молоко (noun), око (noun), дім (noun), ніс (noun), сон (noun)
+- ✅ добрий (adj), день (noun), доброго (genitive of добрий), ранку (genitive of ранок), вечір (noun), побачення (noun), справи (plural of справа), рада (adj form of радий), радий (adj), бачити (verb), як (adv/conj)
+- ✅ Alphabet keywords: ананас, банан, вода, гора, ґудзик, екран, єнот, жук, зуб, ирій, їжак, йогурт, кіт, лимон, пес, рука, урок, фото, хата, цукор, час, школа, щука, юшка, яблуко
+
+**Not found: none**
+
+**Note on ніс:** VESUM returns both verb нести and noun ніс — the noun form is confirmed. No ambiguity issue for a learner context.
+
+---
+
+## Grammar Rules
+
+- **М'який знак (ь)**: Правопис §26 — «Буквою ь позначаємо на письмі м'якість приголосних звуків.» Applies after д, т, з, с, дз, ц, л, н at end of word/syllable. Canonical examples: кінь, день, палець. Confirms the plan's teaching point that ь carries no sound of its own — it only softens the preceding consonant.
+
+- **Буква Г vs Ґ**: Правопис §5 — Г = глотковий щілинний [ɦ] (fricative, Ukrainian-native); Ґ = hard plosive [g]. Plan correctly teaches this distinction. ґудзик as keyword for Ґ is confirmed as standard.
+
+- **Йотовані літери (Я, Ю, Є, Ї)**: The Правопис does not use the term "йотовані" as a searchable section keyword — this is phonetic/didactic terminology from school grammars (Заболотний, Літвінова), not a formal Правопис category. The plan's claim that these letters can denote two sounds in certain positions is phonetically correct and standard across all Ukrainian school curricula. Acceptable to present as textbook fact without citing a Правопис §number.
+
+- **Приголосні тверді/м'які**: Plan states hard consonants marked [–], soft consonants marked [=] per Захарійчук Gr.1, p.15. This is a didactic notation system (sound-model symbols), not a Правопис rule — no §number applies. Phonetically sound.
+
+---
+
+## Calque Warnings
+
+Checked all greeting/farewell phrases against Антоненко-Давидович:
+
+- **Як справи?** — OK, no calque flag. Natural Ukrainian.
+- **До побачення** — OK, no calque flag. Standard farewell.
+- **Нормально** — OK, no calque flag. Confirmed natural Ukrainian adverb.
+- **Радий/рада тебе бачити** — OK, no calque flag. Idiomatic Ukrainian.
+- **Добрий день / Добрий вечір** — OK, no calque flag. Native Ukrainian greetings (not Russian calques).
+
+No calques detected in any plan phrase. All greeting chunks are clean.
+
+---
+
+## CEFR Check
+
+| Word | PULS Level | vs. A1 Target | Notes |
+|------|-----------|---------------|-------|
+| добре | A1 | ✅ OK | |
+| мама | A1 | ✅ OK | |
+| тато | A1 | ✅ OK | |
+| чудово | A1 | ✅ OK | |
+| нормально | A1 | ✅ OK | |
+| молоко | A1 | ✅ OK | |
+| школа | A1 | ✅ OK | |
+| яблуко | A1 | ✅ OK | |
+| день | A1 | ✅ OK | |
+| вечір | A1 | ✅ OK | |
+| ранок | A1 | ✅ OK | |
+| звук | **A2** | ⚠️ above target | Metalinguistic term; pedagogically essential for a phonetics module — justified exception |
+| літера | **A2** | ⚠️ above target | Same — module IS about letters; introduce as module-specific metalanguage |
+| привіт | not in PULS as interj. | ✅ acceptable | PULS has привітати (A2), but привіт as interjection/chunk is universal A1 in all L2 Ukrainian curricula |
+| сон | **A2** | ⚠️ marginal | Used only as alphabet keyword for С (recognition, not production) — acceptable |
+
+**Summary:** 3 words above strict A1 PULS threshold: **звук, літера, сон**. звук and літера are unavoidable metalinguistic anchors for this exact module (a module about sounds and letters cannot avoid naming them). сон is a passive recognition item only. No substitutions recommended — flag in module intro as "module-specific vocabulary."

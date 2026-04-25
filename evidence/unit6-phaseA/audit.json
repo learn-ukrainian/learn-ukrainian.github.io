@@ -1,0 +1,9 @@
+{
+  "outcome": "FAIL",
+  "not_generated": true,
+  "reason": "Build was interrupted after exceeding the 60-minute wall-clock limit before the audit phase.",
+  "module_done_emitted": false,
+  "last_completed_phase": "write chunk 3/5",
+  "last_started_phase": "write chunk 4/5",
+  "wall_seconds": 3634
+}
