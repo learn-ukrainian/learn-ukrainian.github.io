@@ -22,18 +22,46 @@ from numpy.typing import NDArray
 from .config import PROJECT_ROOT
 from .embedding_manifest import (
     EmbeddingManifest,
+    EncoderConfig,
     UnitSpecInput,
     append_shard,
     filter_new_or_changed,
 )
+from .embedding_manifest_schema import LEGACY_CHUNK_POLICY_VERSION
 from .mlx_bridge import EMBEDDING_DIMS, MLXEncoderBridge
 from .thermal import nsprocessinfo_thermal_state
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 DEFAULT_MANIFEST_DB = PROJECT_ROOT / "data" / "embeddings" / "manifest.db"
 DEFAULT_MODEL_ID = "bge-m3-mlx-fp16"
+DEFAULT_POOLING_MODE = "cls"
 QUERY_MAX_LENGTH = 512
 INDEX_MAX_LENGTH = 512
+
+
+def current_encoder_config(corpus: str) -> EncoderConfig:
+    """Build the ``EncoderConfig`` that the runtime is currently using.
+
+    For #1553 step 0 (this commit) the runtime still produces the
+    shipped #1348 embeddings: model bge-m3-mlx-fp16, INDEX_MAX_LENGTH
+    512, CLS pooling, and the legacy chunk policy (Wikipedia 450/50,
+    other corpora un-chunked). All values come back as
+    ``LEGACY_CHUNK_POLICY_VERSION`` here so freshly-encoded units
+    match pre-existing manifest rows — no spurious re-encode.
+
+    Step 1 (centralized chunker) replaces the legacy policy version
+    with a per-corpus value derived from the chunker registry. The
+    ``corpus`` parameter exists so that change is a single-callsite
+    edit.
+    """
+
+    del corpus  # Reserved for step 1 — see docstring.
+    return EncoderConfig(
+        model=DEFAULT_MODEL_ID,
+        index_max_length=INDEX_MAX_LENGTH,
+        chunk_policy_version=LEGACY_CHUNK_POLICY_VERSION,
+        pooling_mode=DEFAULT_POOLING_MODE,
+    )
 MAX_BATCH_ROWS = 16
 MAX_BATCH_TOKENS = 4096
 LITERARY_SHARD_LIMIT = 5000
@@ -816,11 +844,13 @@ def cold_encode_corpus(
     started = time.perf_counter()
     units = load_corpus_units(corpus, db_path=db_path)
     manifest = EmbeddingManifest(manifest_db)
+    encoder_config = current_encoder_config(corpus)
     try:
         new_keys, stale_keys = filter_new_or_changed(
             manifest,
             corpus=corpus,
             candidates=[(unit.unit_key, unit.text_sha256) for unit in units],
+            expected_config=encoder_config,
         )
         pending_keys = set(new_keys) | set(stale_keys)
 
@@ -865,10 +895,10 @@ def cold_encode_corpus(
                         unit_key=unit.unit_key,
                         parent_key=unit.parent_key,
                         text_sha256=unit.text_sha256,
-                        model=DEFAULT_MODEL_ID,
                     )
                     for unit in group
                 ],
+                encoder_config=encoder_config,
             )
             invalidate_corpus_index(corpus, manifest_db=manifest_db)
             written += 1
