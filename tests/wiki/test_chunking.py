@@ -324,3 +324,76 @@ def test_chunk_text_empty_yields_nothing(tokenizer: FakeTokenizer) -> None:
     policy = ChunkingPolicy(version_id="t:v1", target_tokens=100, overlap_tokens=0)
     assert list(chunk_text("", policy=policy, tokenizer=tokenizer)) == []
     assert list(chunk_text("   ", policy=policy, tokenizer=tokenizer)) == []
+
+
+# --- Validator gate (#1553 step 3) -------------------------------------------
+
+
+def test_validator_raises_when_unit_exceeds_index_max_length(
+    tokenizer: FakeTokenizer,
+) -> None:
+    """The validator gate must reject a corpus whose chunked units
+    still exceed ``INDEX_MAX_LENGTH``. Catches the failure mode where
+    a chunking policy's ``target_tokens`` was bumped without
+    coordinating ``INDEX_MAX_LENGTH`` (or vice versa)."""
+
+    from wiki.dense_rerank import CorpusUnit, _assert_units_fit_index_window
+
+    from wiki import chunking, dense_rerank
+
+    # Synthesize a unit that's clearly over the cap (FakeTokenizer
+    # uses whitespace tokens; 100 words = 100 tokens).
+    too_long = " ".join(f"word{i}" for i in range(100))
+    unit = CorpusUnit(
+        unit_key="test_validator:1",
+        corpus="test_validator",
+        parent_key="parent",
+        text=too_long,
+        text_sha256="sha",
+        metadata={},
+    )
+
+    # Register the test corpus with an active policy so the validator
+    # actually runs (NO_CHUNK policy short-circuits).
+    chunking.CHUNKING_POLICIES["test_validator"] = chunking.ChunkingPolicy(
+        version_id="test_validator:paragraph-aware-450t-o50-v1",
+        target_tokens=450,
+        overlap_tokens=50,
+    )
+    original_get_tokenizer = dense_rerank._get_tokenizer
+    dense_rerank._get_tokenizer = lambda: tokenizer  # type: ignore[assignment]
+
+    try:
+        with pytest.raises(ValueError, match="exceeding INDEX_MAX_LENGTH"):
+            _assert_units_fit_index_window([unit], corpus="test_validator", max_length=50)
+    finally:
+        del chunking.CHUNKING_POLICIES["test_validator"]
+        dense_rerank._get_tokenizer = original_get_tokenizer  # type: ignore[assignment]
+
+
+def test_validator_silent_on_no_chunk_corpus(tokenizer: FakeTokenizer) -> None:
+    """NO_CHUNK corpora must NOT trigger the validator — by design,
+    they accept unit lengths the encoder will truncate. Re-chunking
+    them at index time would invalidate 137K+ vectors."""
+
+    from wiki.dense_rerank import CorpusUnit, _assert_units_fit_index_window
+
+    from wiki import dense_rerank
+
+    too_long = " ".join(f"word{i}" for i in range(100))
+    unit = CorpusUnit(
+        unit_key="modern_literary:1",
+        corpus="modern_literary",
+        parent_key="parent",
+        text=too_long,
+        text_sha256="sha",
+        metadata={},
+    )
+
+    original_get_tokenizer = dense_rerank._get_tokenizer
+    dense_rerank._get_tokenizer = lambda: tokenizer  # type: ignore[assignment]
+    try:
+        # No exception expected — modern_literary uses NO_CHUNK.
+        _assert_units_fit_index_window([unit], corpus="modern_literary", max_length=50)
+    finally:
+        dense_rerank._get_tokenizer = original_get_tokenizer  # type: ignore[assignment]

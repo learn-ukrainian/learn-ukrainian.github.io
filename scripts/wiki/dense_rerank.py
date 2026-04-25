@@ -187,6 +187,33 @@ def _now_utc_iso() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
 
+def _suppress_misleading_tokenizer_warning() -> None:
+    """Filter HuggingFace's "sequence length is longer than the
+    specified maximum" warning at the logger level (#1553 step 4).
+
+    The warning is emitted from
+    ``transformers.tokenization_utils_base`` BEFORE truncation
+    actually runs. Every code path that calls the tokenizer
+    explicitly passes ``truncation=True, max_length=...``, so the
+    warning is a false alarm — but it still scares future readers
+    of build logs into thinking the encoder will crash.
+
+    Filter only the one specific warning at the transformers
+    tokenization logger; do not suppress real warnings.
+    """
+
+    import logging
+
+    class _SilenceLengthWarning(logging.Filter):
+        def filter(self, record: logging.LogRecord) -> bool:
+            return "Token indices sequence length is longer" not in record.getMessage()
+
+    logger = logging.getLogger("transformers.tokenization_utils_base")
+    # Idempotent: don't add the filter twice on re-import.
+    if not any(isinstance(f, _SilenceLengthWarning) for f in logger.filters):
+        logger.addFilter(_SilenceLengthWarning())
+
+
 def _get_tokenizer():
     global _TOKENIZER
     if _TOKENIZER is not None:
@@ -196,6 +223,7 @@ def _get_tokenizer():
         if _TOKENIZER is None:
             from transformers import AutoTokenizer
 
+            _suppress_misleading_tokenizer_warning()
             _TOKENIZER = AutoTokenizer.from_pretrained("BAAI/bge-m3", use_fast=True)
     return _TOKENIZER
 
@@ -822,6 +850,59 @@ def load_corpus_units(corpus: str, *, db_path: Path = DEFAULT_DB_PATH) -> list[C
         conn.close()
 
 
+def _assert_units_fit_index_window(
+    units: list[CorpusUnit],
+    *,
+    corpus: str,
+    max_length: int | None = None,
+) -> None:
+    """Validator gate (#1553 step 3): no post-chunk unit may exceed
+    ``INDEX_MAX_LENGTH`` tokens.
+
+    Pre-#1553 the tokenizer emitted a 22,174 > 8192 warning during
+    a live build because un-chunked textbook sections fed straight
+    into a 512-token encoder window. The chunker added in step 1
+    is supposed to prevent that, but a misconfigured policy (e.g.
+    ``target_tokens=2000`` while ``INDEX_MAX_LENGTH=512``) would
+    silently re-introduce the bug. This gate makes the failure
+    loud at encode time instead of buried in tokenizer stderr.
+
+    Skipped silently if a corpus has units > max_length AND its
+    chunking policy says ``target_tokens == 0`` (no-chunk policy
+    intentionally accepts whatever the source row length is — that
+    behavior is preserved for the literary corpora where re-chunking
+    would invalidate 137K vectors for marginal gain).
+    """
+
+    cap = INDEX_MAX_LENGTH if max_length is None else max_length
+    policy = policy_for(corpus)
+    if policy.target_tokens == 0:
+        # NO_CHUNK policy: tolerate >cap units. The encoder will
+        # truncate per its own ``truncation=True`` setting, which is
+        # the intended behavior for these pre-chunked corpora.
+        return
+
+    tokenizer = _get_tokenizer()
+    over = []
+    for unit in units:
+        token_count = len(
+            tokenizer.encode(unit.text, add_special_tokens=False, truncation=False)
+        )
+        if token_count > cap:
+            over.append((unit.unit_key, token_count))
+            if len(over) >= 5:
+                break
+
+    if over:
+        examples = ", ".join(f"{key} ({count}t)" for key, count in over)
+        raise ValueError(
+            f"chunking policy {policy.version_id!r} for corpus {corpus!r} "
+            f"emitted {len(over)}+ units exceeding INDEX_MAX_LENGTH={cap}. "
+            f"Examples: {examples}. Either bump INDEX_MAX_LENGTH or lower "
+            f"the policy's target_tokens (and its version_id)."
+        )
+
+
 def _with_text(unit: CorpusUnit, text: str) -> CorpusUnit:
     """Return a copy of ``unit`` with replaced ``text`` and recomputed
     ``text_sha256``. Used when a NO_CHUNK policy emits stripped text
@@ -875,6 +956,7 @@ def cold_encode_corpus(
 
     started = time.perf_counter()
     units = load_corpus_units(corpus, db_path=db_path)
+    _assert_units_fit_index_window(units, corpus=corpus)
     manifest = EmbeddingManifest(manifest_db)
     encoder_config = current_encoder_config(corpus)
     try:
