@@ -128,10 +128,14 @@ Don't fire-and-forget. Don't agree silently.
 ### Step 2 (sources_db candidate alignment)
 - [x] _search_wikipedia_candidates uses chunk_text(policy_for("wikipedia"))
 - [x] _expand_wikipedia_neighbors aligned with chunk-level keys
-- [ ] Post-rerank parent expansion for textbook/external (deferred —
-      these corpora's parent expansion logic isn't in sources_db.py
-      candidate path; will be needed if cold-encode tests reveal a
-      gap during step 6)
+- [x] _search_external_candidates emits chunk-level keys (commit ca68517a68)
+- [x] textbook dispatcher uses _expand_to_chunk_candidates helper (ca68517a68)
+- [x] All chunk candidates carry parent_unit_key for parent expansion
+- [ ] Post-rerank parent expansion for textbook/external is mechanically
+      possible via parent_unit_key but not yet wired in sources_db
+      result aggregation. Deferred — will be needed if cold-encode
+      tests during step 6 reveal a gap. Wikipedia precedent at
+      _expand_wikipedia_neighbors shows the pattern.
 
 ### Step 3 (validator gate)
 - [x] _assert_units_fit_index_window() runs in cold_encode_corpus
