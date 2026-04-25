@@ -2,18 +2,58 @@ import React, { useState } from 'react';
 import directStyles from './Direct.module.css';
 
 interface VocabEntry {
+  /**
+   * @schemaDescription Ukrainian word shown to the learner.
+   * @ukrainianText true
+   */
   word: string;
+  /**
+   * @schemaDescription Emoji value consumed by this component.
+   * @ukrainianText false
+   */
   emoji?: string;
+  /**
+   * @schemaDescription Image url value consumed by this component.
+   * @ukrainianText false
+   */
   image_url?: string | null;
+  /**
+   * @schemaDescription Pronunciation video value consumed by this component.
+   * @ukrainianText false
+   */
   pronunciation_video?: string;
+  /**
+   * @schemaDescription Examples value consumed by this component.
+   * @ukrainianText true
+   */
   examples: string[];
+  /**
+   * @schemaDescription Category label used by the activity.
+   * @ukrainianText true
+   */
   category?: string;
+  /**
+   * @schemaDescription Question value consumed by this component.
+   * @ukrainianText true
+   */
   question?: string;
 }
 
 interface VocabCardProps {
+  /**
+   * @schemaDescription Words shown to the learner.
+   * @ukrainianText true
+   */
   words: VocabEntry[];
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

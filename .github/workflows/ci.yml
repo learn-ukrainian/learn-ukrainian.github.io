@@ -18,6 +18,8 @@ on:
       - 'gemini_extensions/**'
       - 'scripts/build/phases/**/*.md'
       - 'scripts/build/contracts/**/*.md'
+      - 'docs/lesson-contract.md'
+      - 'docs/lesson-schema.yaml'
       - 'starlight/**'
   pull_request:
     paths:
@@ -32,6 +34,8 @@ on:
       - 'gemini_extensions/**'
       - 'scripts/build/phases/**/*.md'
       - 'scripts/build/contracts/**/*.md'
+      - 'docs/lesson-contract.md'
+      - 'docs/lesson-schema.yaml'
       - 'starlight/**'
   workflow_dispatch:
 
@@ -206,6 +210,34 @@ jobs:
             exit 1
           fi
           echo "✅ No new root-level scripts"
+
+  lesson-schema-drift:
+    name: Lesson Schema Drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install schema dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install PyYAML
+          npm ci
+
+      - name: Regenerate lesson schema and check drift
+        run: |
+          .venv/bin/python scripts/build/generate_lesson_schema.py
+          git diff --exit-code docs/lesson-schema.yaml
 
   test:
     name: Test (pytest)

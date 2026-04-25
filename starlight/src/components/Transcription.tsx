@@ -23,11 +23,35 @@ const HISTORICAL_CHARS = [
 ];
 
 interface TranscriptionProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Original value consumed by this component.
+   * @ukrainianText maybe
+   */
   original: string;
+  /**
+   * @schemaDescription Correct answer used for validation and feedback.
+   * @ukrainianText true
+   */
   answer: string;
+  /**
+   * @schemaDescription Hints value consumed by this component.
+   * @ukrainianText true
+   */
   hints?: string[];
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

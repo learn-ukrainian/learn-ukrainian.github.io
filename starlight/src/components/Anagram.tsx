@@ -17,9 +17,25 @@ function getLetterColor(letter: string, index: number): string {
 }
 
 interface AnagramQuestionProps {
+  /**
+   * @schemaDescription Scrambled value consumed by this component.
+   * @ukrainianText true
+   */
   scrambled: string;
+  /**
+   * @schemaDescription Correct answer used for validation and feedback.
+   * @ukrainianText true
+   */
   answer: string;
+  /**
+   * @schemaDescription Hint value consumed by this component.
+   * @ukrainianText true
+   */
   hint?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 
@@ -200,15 +216,43 @@ export function AnagramQuestion({ scrambled, answer, hint, isUkrainian }: Anagra
 }
 
 interface AnagramItem {
+  /**
+   * @schemaDescription Scrambled value consumed by this component.
+   * @ukrainianText true
+   */
   scrambled: string;
+  /**
+   * @schemaDescription Correct answer used for validation and feedback.
+   * @ukrainianText true
+   */
   answer: string;
+  /**
+   * @schemaDescription Hint value consumed by this component.
+   * @ukrainianText true
+   */
   hint?: string;
 }
 
 interface AnagramProps {
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items?: AnagramItem[];
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Nested MDX content rendered inside the component.
+   * @ukrainianText false
+   */
   children?: React.ReactNode;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

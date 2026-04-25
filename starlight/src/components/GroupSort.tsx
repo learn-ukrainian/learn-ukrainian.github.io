@@ -16,8 +16,20 @@ function getWordColor(word: string, index: number): string {
 }
 
 interface GroupSortProps {
+  /**
+   * @schemaDescription Groups value consumed by this component.
+   * @ukrainianText true
+   */
   groups: { [key: string]: string[] };
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

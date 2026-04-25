@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
 
 interface YouTubeVideoProps {
+  /**
+   * @schemaDescription External URL for the embedded or linked resource.
+   * @ukrainianText false
+   */
   url?: string;
+  /**
+   * @schemaDescription External media identifier.
+   * @ukrainianText false
+   */
   id?: string;
+  /**
+   * @schemaDescription Short label for a UI or source item.
+   * @ukrainianText true
+   */
   label?: string;
 }
 

@@ -4,10 +4,30 @@ import ActivityHelp from './ActivityHelp';
 import { shuffle } from './utils';
 
 interface SelectQuestionProps {
+  /**
+   * @schemaDescription Question value consumed by this component.
+   * @ukrainianText true
+   */
   question: string;
+  /**
+   * @schemaDescription Answer options shown to the learner.
+   * @ukrainianText true
+   */
   options: string[];
+  /**
+   * @schemaDescription Correct answer strings for multi-select validation.
+   * @ukrainianText true
+   */
   correctAnswers: string[];
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
   explanation?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 
@@ -125,15 +145,46 @@ export function SelectQuestion({ question, options, correctAnswers, explanation,
 
 // Generator format question
 interface GeneratorSelectQuestion {
+  /**
+   * @schemaDescription Question value consumed by this component.
+   * @ukrainianText true
+   */
   question: string;
+  /**
+   * @schemaDescription Answer options shown to the learner.
+   * @ukrainianText true
+   */
   options: Array<{ text: string; correct: boolean }>;
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
   explanation?: string;
 }
 
+/**
+ * @deprecated Deprecated; subsumed by mark-the-words.
+ */
 interface SelectProps {
+  /**
+   * @schemaDescription Array of questions rendered by the component.
+   * @ukrainianText true
+   */
   questions?: GeneratorSelectQuestion[];
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Nested MDX content rendered inside the component.
+   * @ukrainianText false
+   */
   children?: React.ReactNode;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

@@ -4,11 +4,35 @@ import ActivityHelp from './ActivityHelp';
 import { shuffle } from './utils';
 
 interface TranslateItemProps {
+  /**
+   * @schemaDescription Source value consumed by this component.
+   * @ukrainianText false
+   */
   source: string;
+  /**
+   * @schemaDescription Correct answer used for validation and feedback.
+   * @ukrainianText true
+   */
   answer: string;
+  /**
+   * @schemaDescription Alternatives value consumed by this component.
+   * @ukrainianText true
+   */
   alternatives?: string[];
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
   explanation?: string;
+  /**
+   * @schemaDescription Answer options shown to the learner.
+   * @ukrainianText false
+   */
   options?: string[];  // For selection-based (no free typing)
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 
@@ -119,16 +143,48 @@ export function TranslateItem({
 
 // Generator format question
 interface GeneratorTranslateQuestion {
+  /**
+   * @schemaDescription Source value consumed by this component.
+   * @ukrainianText false
+   */
   source: string;
+  /**
+   * @schemaDescription Answer options shown to the learner.
+   * @ukrainianText true
+   */
   options: Array<{ text: string; correct: boolean }>;
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
   explanation?: string;
 }
 
 interface TranslateProps {
+  /**
+   * @schemaDescription Array of questions rendered by the component.
+   * @ukrainianText true
+   */
   questions?: GeneratorTranslateQuestion[];
+  /**
+   * @schemaDescription Direction value consumed by this component.
+   * @ukrainianText false
+   */
   direction?: 'to-uk' | 'to-en';
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Nested MDX content rendered inside the component.
+   * @ukrainianText false
+   */
   children?: React.ReactNode;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

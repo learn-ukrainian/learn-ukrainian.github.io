@@ -2,10 +2,26 @@ import React, { useState } from 'react';
 import styles from './Activities.module.css';
 
 interface OddOneOutProps {
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
   items: {
+    /**
+     * @schemaDescription Words shown to the learner.
+     * @ukrainianText true
+     */
     words: string[];
+    /**
+     * @schemaDescription Correct value consumed by this component.
+     * @ukrainianText false
+     */
     correct: number;
+    /**
+     * @schemaDescription Feedback explanation shown after the learner answers.
+     * @ukrainianText true
+     */
     explanation: string;
   }[];
 }

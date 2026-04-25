@@ -2,10 +2,30 @@ import React, { useState } from 'react';
 import styles from './Activities.module.css';
 
 interface PickSyllablesProps {
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Syllables value consumed by this component.
+   * @ukrainianText true
+   */
   syllables: string[];
+  /**
+   * @schemaDescription Zero-based indices of all correct choices.
+   * @ukrainianText false
+   */
   correctIndices: number[];
+  /**
+   * @schemaDescription Category label used by the activity.
+   * @ukrainianText true
+   */
   category: string; // e.g. "закриті" or "відкриті"
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
   explanation?: string;
 }
 

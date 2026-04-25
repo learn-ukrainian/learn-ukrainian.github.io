@@ -4,18 +4,58 @@ import ActivityHelp from './ActivityHelp';
 import { parseMarkdown } from './utils';
 
 interface Hotspot {
+  /**
+   * @schemaDescription X value consumed by this component.
+   * @ukrainianText false
+   */
   x: number;
+  /**
+   * @schemaDescription Y value consumed by this component.
+   * @ukrainianText false
+   */
   y: number;
+  /**
+   * @schemaDescription Short label for a UI or source item.
+   * @ukrainianText true
+   */
   label: string;
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
   explanation: string;
 }
 
 interface PaleographyAnalysisProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Image Url value consumed by this component.
+   * @ukrainianText false
+   */
   imageUrl: string;
+  /**
+   * @schemaDescription Hotspots value consumed by this component.
+   * @ukrainianText true
+   */
   hotspots: Hotspot[];
+  /**
+   * @schemaDescription Answer options shown to the learner.
+   * @ukrainianText false
+   */
   options?: string[];
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

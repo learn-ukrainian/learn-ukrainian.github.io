@@ -4,9 +4,25 @@ import ActivityHelp from './ActivityHelp';
 import { shuffleNotCorrect } from './utils';
 
 interface OrderProps {
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items: string[];
+  /**
+   * @schemaDescription Zero-based order indices for the correct sequence.
+   * @ukrainianText false
+   */
   correct_order: number[];
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

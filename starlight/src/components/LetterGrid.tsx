@@ -2,16 +2,48 @@ import React from 'react';
 import directStyles from './Direct.module.css';
 
 interface LetterEntry {
+  /**
+   * @schemaDescription Upper value consumed by this component.
+   * @ukrainianText true
+   */
   upper: string;
+  /**
+   * @schemaDescription Lower value consumed by this component.
+   * @ukrainianText true
+   */
   lower: string;
+  /**
+   * @schemaDescription Emoji value consumed by this component.
+   * @ukrainianText false
+   */
   emoji: string;
+  /**
+   * @schemaDescription Key word value consumed by this component.
+   * @ukrainianText true
+   */
   key_word: string;
+  /**
+   * @schemaDescription Note value consumed by this component.
+   * @ukrainianText false
+   */
   note?: string;
+  /**
+   * @schemaDescription Sound type value consumed by this component.
+   * @ukrainianText false
+   */
   sound_type?: string;
 }
 
 interface LetterGridProps {
+  /**
+   * @schemaDescription Letters value consumed by this component.
+   * @ukrainianText true
+   */
   letters: LetterEntry[];
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title?: string;
 }
 

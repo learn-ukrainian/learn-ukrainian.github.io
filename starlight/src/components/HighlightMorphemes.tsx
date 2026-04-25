@@ -3,15 +3,43 @@ import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
 
 interface MorphemeItem {
+  /**
+   * @schemaDescription Ukrainian word shown to the learner.
+   * @ukrainianText true
+   */
   word: string;        // The full word: "прийшов"
+  /**
+   * @schemaDescription Morpheme value consumed by this component.
+   * @ukrainianText true
+   */
   morpheme: string;    // The part to highlight: "при"
+  /**
+   * @schemaDescription Type value consumed by this component.
+   * @ukrainianText false
+   */
   type?: 'prefix' | 'root' | 'suffix';  // Optional classification
 }
 
 interface HighlightMorphemesActivityProps {
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Text passage shown to the learner.
+   * @ukrainianText true
+   */
   text: string;
+  /**
+   * @schemaDescription Morphemes value consumed by this component.
+   * @ukrainianText true
+   */
   morphemes: MorphemeItem[];
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 
@@ -217,7 +245,15 @@ export function HighlightMorphemesActivity({
 }
 
 interface HighlightMorphemesProps {
+  /**
+   * @schemaDescription Nested MDX content rendered inside the component.
+   * @ukrainianText false
+   */
   children: React.ReactNode;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

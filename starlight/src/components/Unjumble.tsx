@@ -16,9 +16,25 @@ function getWordColor(word: string, index: number): string {
 }
 
 interface UnjumbleQuestionProps {
+  /**
+   * @schemaDescription Words shown to the learner.
+   * @ukrainianText true
+   */
   words: string;
+  /**
+   * @schemaDescription Correct answer used for validation and feedback.
+   * @ukrainianText true
+   */
   answer: string;
+  /**
+   * @schemaDescription Hint value consumed by this component.
+   * @ukrainianText true
+   */
   hint?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 
@@ -229,16 +245,48 @@ export function UnjumbleQuestion({ words, answer, hint, isUkrainian }: UnjumbleQ
 }
 
 interface UnjumbleItem {
+  /**
+   * @schemaDescription Words shown to the learner.
+   * @ukrainianText true
+   */
   words?: string;
+  /**
+   * @schemaDescription Jumbled value consumed by this component.
+   * @ukrainianText true
+   */
   jumbled?: string;  // Alternative field name from MDX generator
+  /**
+   * @schemaDescription Correct answer used for validation and feedback.
+   * @ukrainianText true
+   */
   answer: string;
+  /**
+   * @schemaDescription Hint value consumed by this component.
+   * @ukrainianText true
+   */
   hint?: string;
 }
 
 interface UnjumbleProps {
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items?: UnjumbleItem[];
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Nested MDX content rendered inside the component.
+   * @ukrainianText false
+   */
   children?: React.ReactNode;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

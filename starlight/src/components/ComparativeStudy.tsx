@@ -4,14 +4,46 @@ import ActivityHelp from './ActivityHelp';
 import { parseMarkdown } from './utils';
 
 interface ComparativeStudyProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Content value consumed by this component.
+   * @ukrainianText true
+   */
   content?: string; // The comparison table or text (legacy)
+  /**
+   * @schemaDescription Task value consumed by this component.
+   * @ukrainianText true
+   */
   task?: string;
+  /**
+   * @schemaDescription Model answer for review or self-check.
+   * @ukrainianText true
+   */
   modelAnswer?: string;
   // Seminar mode fields
+  /**
+   * @schemaDescription Items To Compare value consumed by this component.
+   * @ukrainianText true
+   */
   itemsToCompare?: string[];
+  /**
+   * @schemaDescription Criteria value consumed by this component.
+   * @ukrainianText true
+   */
   criteria?: string[];
+  /**
+   * @schemaDescription Prompt shown to guide the learner response.
+   * @ukrainianText true
+   */
   prompt?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

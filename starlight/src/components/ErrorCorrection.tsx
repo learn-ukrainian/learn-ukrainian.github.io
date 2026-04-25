@@ -4,11 +4,35 @@ import ActivityHelp from './ActivityHelp';
 import { shuffle } from './utils';
 
 interface ErrorCorrectionItemProps {
+  /**
+   * @schemaDescription Sentence shown to the learner.
+   * @ukrainianText true
+   */
   sentence: string;
+  /**
+   * @schemaDescription Error Word value consumed by this component.
+   * @ukrainianText true
+   */
   errorWord: string | null;  // null = no error
+  /**
+   * @schemaDescription Correct Form value consumed by this component.
+   * @ukrainianText true
+   */
   correctForm: string;
+  /**
+   * @schemaDescription Answer options shown to the learner.
+   * @ukrainianText true
+   */
   options: string[];
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
   explanation: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 
@@ -225,17 +249,53 @@ export function ErrorCorrectionItem({
 }
 
 interface ErrorCorrectionItemData {
+  /**
+   * @schemaDescription Sentence shown to the learner.
+   * @ukrainianText true
+   */
   sentence: string;
+  /**
+   * @schemaDescription Error Word value consumed by this component.
+   * @ukrainianText true
+   */
   errorWord: string | null;
+  /**
+   * @schemaDescription Correct Form value consumed by this component.
+   * @ukrainianText true
+   */
   correctForm: string;
+  /**
+   * @schemaDescription Answer options shown to the learner.
+   * @ukrainianText true
+   */
   options: string[];
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
   explanation: string;
 }
 
 interface ErrorCorrectionProps {
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items?: ErrorCorrectionItemData[];
+  /**
+   * @schemaDescription Nested MDX content rendered inside the component.
+   * @ukrainianText false
+   */
   children?: React.ReactNode;
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

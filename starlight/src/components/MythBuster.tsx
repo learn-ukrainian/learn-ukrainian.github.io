@@ -1,9 +1,25 @@
 import React from 'react';
 
 interface MythBusterProps {
+  /**
+   * @schemaDescription Claim value consumed by this component.
+   * @ukrainianText true
+   */
   claim: string;
+  /**
+   * @schemaDescription Claim Source value consumed by this component.
+   * @ukrainianText false
+   */
   claimSource?: string;
+  /**
+   * @schemaDescription Truth value consumed by this component.
+   * @ukrainianText true
+   */
   truth: string;
+  /**
+   * @schemaDescription Truth Source value consumed by this component.
+   * @ukrainianText false
+   */
   truthSource?: string;
 }
 

@@ -4,20 +4,68 @@ import ActivityHelp from './ActivityHelp';
 import { parseMarkdown } from './utils';
 
 interface SourceMetadata {
+  /**
+   * @schemaDescription Author value consumed by this component.
+   * @ukrainianText false
+   */
   author?: string;
+  /**
+   * @schemaDescription Date value consumed by this component.
+   * @ukrainianText false
+   */
   date?: string;
+  /**
+   * @schemaDescription Type value consumed by this component.
+   * @ukrainianText false
+   */
   type?: string;
+  /**
+   * @schemaDescription Context value consumed by this component.
+   * @ukrainianText true
+   */
   context?: string;
 }
 
 interface SourceEvaluationProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Source Text value consumed by this component.
+   * @ukrainianText maybe
+   */
   sourceText: string;
+  /**
+   * @schemaDescription Source Metadata value consumed by this component.
+   * @ukrainianText false
+   */
   sourceMetadata?: SourceMetadata;
+  /**
+   * @schemaDescription Evaluation Criteria value consumed by this component.
+   * @ukrainianText true
+   */
   evaluationCriteria?: string[];
+  /**
+   * @schemaDescription Guiding Questions value consumed by this component.
+   * @ukrainianText true
+   */
   guidingQuestions?: string[];
+  /**
+   * @schemaDescription Model Evaluation value consumed by this component.
+   * @ukrainianText true
+   */
   modelEvaluation?: string;
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

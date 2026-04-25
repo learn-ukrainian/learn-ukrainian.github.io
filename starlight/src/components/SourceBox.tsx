@@ -1,9 +1,25 @@
 import React from 'react';
 
 interface SourceBoxProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText false
+   */
   title: string;
+  /**
+   * @schemaDescription Quoted source excerpt preserved in its source language.
+   * @ukrainianText maybe
+   */
   quote: string;
+  /**
+   * @schemaDescription Citation metadata preserved verbatim.
+   * @ukrainianText false
+   */
   citation: string;
+  /**
+   * @schemaDescription Nested MDX content rendered inside the component.
+   * @ukrainianText false
+   */
   children?: React.ReactNode;
 }
 

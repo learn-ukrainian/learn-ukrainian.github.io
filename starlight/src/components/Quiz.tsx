@@ -4,10 +4,30 @@ import { parseMarkdown, shuffle } from './utils';
 import ActivityHelp from './ActivityHelp';
 
 interface QuizQuestionProps {
+  /**
+   * @schemaDescription Question value consumed by this component.
+   * @ukrainianText true
+   */
   question: string;
+  /**
+   * @schemaDescription Answer options shown to the learner.
+   * @ukrainianText true
+   */
   options: string[];
+  /**
+   * @schemaDescription Zero-based index of the correct option.
+   * @ukrainianText false
+   */
   correctIndex: number;
+  /**
+   * @schemaDescription Feedback explanation shown after the learner answers.
+   * @ukrainianText true
+   */
   explanation?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 
@@ -71,14 +91,38 @@ export function QuizQuestion({ question, options, correctIndex, explanation, isU
 }
 
 interface QuizQuestionItem {
+  /**
+   * @schemaDescription Question value consumed by this component.
+   * @ukrainianText true
+   */
   question: string;
+  /**
+   * @schemaDescription Answer options shown to the learner.
+   * @ukrainianText true
+   */
   options: Array<{ text: string; correct: boolean }>;
 }
 
 interface QuizProps {
+  /**
+   * @schemaDescription Array of questions rendered by the component.
+   * @ukrainianText true
+   */
   questions?: QuizQuestionItem[];
+  /**
+   * @schemaDescription Instruction shown to the learner above the activity.
+   * @ukrainianText true
+   */
   instruction?: string;
+  /**
+   * @schemaDescription Nested MDX content rendered inside the component.
+   * @ukrainianText false
+   */
   children?: React.ReactNode;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

@@ -3,8 +3,20 @@ import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
 
 interface ObserveProps {
+  /**
+   * @schemaDescription Examples value consumed by this component.
+   * @ukrainianText true
+   */
   examples: string[];
+  /**
+   * @schemaDescription Prompt shown to guide the learner response.
+   * @ukrainianText true
+   */
   prompt?: string;
+  /**
+   * @schemaDescription Nested MDX content rendered inside the component.
+   * @ukrainianText false
+   */
   children?: React.ReactNode;
 }
 
@@ -40,9 +52,25 @@ export function ObserveActivity({ examples, prompt = "What pattern do you notice
 }
 
 interface ObserveBlockProps {
+  /**
+   * @schemaDescription Examples value consumed by this component.
+   * @ukrainianText true
+   */
   examples?: string[];
+  /**
+   * @schemaDescription Prompt shown to guide the learner response.
+   * @ukrainianText true
+   */
   prompt?: string;
+  /**
+   * @schemaDescription Nested MDX content rendered inside the component.
+   * @ukrainianText false
+   */
   children?: React.ReactNode;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

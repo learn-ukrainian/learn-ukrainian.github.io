@@ -3,15 +3,43 @@ import styles from './Activities.module.css';
 import directStyles from './Direct.module.css';
 
 interface WatchAndRepeatItem {
+  /**
+   * @schemaDescription Video value consumed by this component.
+   * @ukrainianText false
+   */
   video: string;
+  /**
+   * @schemaDescription Letter value consumed by this component.
+   * @ukrainianText false
+   */
   letter?: string;
+  /**
+   * @schemaDescription Ukrainian word shown to the learner.
+   * @ukrainianText true
+   */
   word?: string;
+  /**
+   * @schemaDescription Note value consumed by this component.
+   * @ukrainianText false
+   */
   note?: string;
 }
 
 interface WatchAndRepeatProps {
+  /**
+   * @schemaDescription Array of activity items rendered by the component.
+   * @ukrainianText true
+   */
   items: WatchAndRepeatItem[];
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 

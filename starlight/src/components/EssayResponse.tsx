@@ -4,10 +4,30 @@ import ActivityHelp from './ActivityHelp';
 import { parseMarkdown } from './utils';
 
 interface EssayResponseProps {
+  /**
+   * @schemaDescription Display title shown above the component.
+   * @ukrainianText true
+   */
   title: string;
+  /**
+   * @schemaDescription Prompt shown to guide the learner response.
+   * @ukrainianText true
+   */
   prompt: string;
+  /**
+   * @schemaDescription Model answer for review or self-check.
+   * @ukrainianText true
+   */
   modelAnswer?: string;
+  /**
+   * @schemaDescription Evaluation rubric for the response.
+   * @ukrainianText true
+   */
   rubric?: string;
+  /**
+   * @schemaDescription UI language flag for Ukrainian labels and feedback.
+   * @ukrainianText false
+   */
   isUkrainian?: boolean;
 }
 
