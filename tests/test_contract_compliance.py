@@ -199,9 +199,8 @@ def test_activity_order_accepts_descriptive_markers_for_bare_type_contract() -> 
     assert not any(v["type"] == "ACTIVITY_ORDER" for v in violations)
 
 
-def test_activity_order_flags_actual_swap_even_with_descriptive_markers() -> None:
-    """Ensure the prefix-match fix does not lose its ability to detect genuine
-    order mismatches — positions 3 and 4 are swapped here (F,Q,Q,F vs F,Q,F,Q)."""
+def test_activity_order_accepts_swapped_descriptive_markers() -> None:
+    """Activity obligations are a multiset; marker order is incidental."""
     contract = {
         "teaching_beats": {"section_order": [], "sections": []},
         "activity_obligations": [
@@ -219,8 +218,7 @@ def test_activity_order_flags_actual_swap_even_with_descriptive_markers() -> Non
 """
     violations = check_contract_compliance(content, contract)
     order_violations = [v for v in violations if v["type"] == "ACTIVITY_ORDER"]
-    assert len(order_violations) == 1
-    assert "fill-in" in order_violations[0]["message"]
+    assert order_violations == []
 
 
 def test_activity_order_still_honors_exact_id_match() -> None:
@@ -274,10 +272,10 @@ def test_activity_order_reports_single_position_mismatch() -> None:
     violations = check_contract_compliance(content, contract)
     order_violations = [v for v in violations if v["type"] == "ACTIVITY_ORDER"]
     assert len(order_violations) == 1
-    assert order_violations[0]["message"] == "Activity order mismatch at position 2 (expected type 'quiz', found 'match-up')"
+    assert "Missing required activity obligation markers: ['quiz']" in order_violations[0]["message"]
 
 
-def test_activity_order_reports_multi_position_mismatch_ignoring_passed() -> None:
+def test_activity_order_accepts_multi_position_reorder() -> None:
     contract = {
         "activity_obligations": [
             {"type": "fill-in"},
@@ -294,11 +292,7 @@ def test_activity_order_reports_multi_position_mismatch_ignoring_passed() -> Non
 """
     violations = check_contract_compliance(content, contract)
     order_violations = [v for v in violations if v["type"] == "ACTIVITY_ORDER"]
-    assert len(order_violations) == 1
-    assert "position 3 (expected type 'fill-in', found 'quiz-modal-choice')" in order_violations[0]["message"]
-    assert "position 4 (expected type 'quiz', found 'fill-in-combo')" in order_violations[0]["message"]
-    assert "position 1" not in order_violations[0]["message"]
-    assert "position 2" not in order_violations[0]["message"]
+    assert order_violations == []
 
 
 def test_activity_order_reports_length_shortfall() -> None:
@@ -317,7 +311,7 @@ def test_activity_order_reports_length_shortfall() -> None:
     violations = check_contract_compliance(content, contract)
     order_violations = [v for v in violations if v["type"] == "ACTIVITY_ORDER"]
     assert len(order_violations) == 1
-    assert order_violations[0]["message"] == "Only 2 activity markers found; contract requires 4"
+    assert "Missing required activity obligation markers: ['fill-in', 'quiz']" in order_violations[0]["message"]
 
 
 # ====================================================================

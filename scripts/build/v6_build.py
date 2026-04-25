@@ -1951,7 +1951,7 @@ def _parse_review_result(review_text: str) -> ReviewParseResult:
 #
 # The reviewer can score structural/quantitative dimensions based on
 # factual claims that the pipeline already computes deterministically
-# (word count, activity count, activity order, H2 section list). When
+# (word count, activity count, activity obligations, H2 section list). When
 # the reviewer's claim is demonstrably wrong — e.g. "word count is 1163,
 # below the 1200 target" on a module whose deterministic core-content
 # count is actually 1283 — we override that dimension's score with the
@@ -9534,8 +9534,8 @@ _CONTRACT_VIOLATION_TO_FINDING = {
     "ACTIVITY_ORDER": {
         "dimension": "Exercise Quality",
         "severity": "critical",
-        "location": "## whole module / activity order",
-        "fix": "Regenerate the module so the activity order matches the plan's activity_obligations.",
+        "location": "## whole module / activity obligations",
+        "fix": "Regenerate the module so every plan activity_obligation appears at least once.",
     },
 }
 
@@ -9590,7 +9590,7 @@ def _validate_regenerated_sidecars(
                 "severity": "critical",
                 "location": "## whole module / activities sidecar",
                 "issue": (
-                    "activity order: the plan requires activity types "
+                    "activity obligations: the plan requires activity types "
                     + ", ".join(missing_activity_types)
                     + " but the regenerated module does not expose them in activities YAML."
                 ),

@@ -497,11 +497,11 @@ def test_v6_review_prompt_includes_marker_only_dimension_five_rules() -> None:
     prompt_path = SCRIPTS_DIR / "build" / "phases" / "v6-review.md"
     text = prompt_path.read_text("utf-8")
 
-    assert "do markers appear in the SAME ORDER as `activity_obligations`?" in text
+    assert "does every obligation appear at least once as a marker? Order is incidental." in text
     assert "Verify each marker leading token matches the contracted type exactly" in text
-    assert "Order violation or type mismatch = deduct in Dimension 5." in text
+    assert "Missing obligation or type mismatch = deduct in Dimension 5." in text
     assert "If the module contains only INJECT_ACTIVITY markers (no inline DSL exercises)" in text
-    assert "marker count matches activity_obligations count" in text
+    assert "marker count covers activity_obligations" in text
     assert "Do NOT evaluate distractors, answer positions, or item difficulty for marker-only modules." in text
 
 
