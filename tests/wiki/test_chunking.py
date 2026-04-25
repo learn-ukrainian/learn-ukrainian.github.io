@@ -272,6 +272,44 @@ def test_overlap_prepends_trailing_sentences_to_next_chunk(
     )
 
 
+def test_overlap_caps_at_overlap_tokens_when_sentence_too_long(
+    tokenizer: FakeTokenizer,
+) -> None:
+    """If even a single trailing sentence exceeds ``overlap_tokens``,
+    the overlap path must NOT return the whole sentence — that
+    would push downstream chunks past the chunker's target and
+    trip the validator gate (#1553 step 3).
+
+    Codex review (msg #459) flagged this: a 200-token trailing
+    sentence with overlap_tokens=50 would otherwise produce
+    650-token chunks under a 450-target policy. Fix: token-tail
+    fallback when sentence overlap doesn't fit.
+    """
+
+    # Construct a corpus where the LAST sentence is itself longer
+    # than the overlap budget. With target=100 and overlap=20, no
+    # full sentence fits the overlap window.
+    long_sentence = " ".join(f"long{i}" for i in range(50)) + "."
+    para_a = " ".join(f"a{i}" for i in range(40)) + "."
+    para_b = " ".join(f"b{i}" for i in range(40)) + "."
+    text = f"{para_a} {long_sentence}\n\n{para_b}"
+    policy = ChunkingPolicy(version_id="t:v1", target_tokens=100, overlap_tokens=20)
+    chunks = boundary_aware_chunks(text, policy=policy, tokenizer=tokenizer)
+    assert len(chunks) >= 2
+
+    # Critical assertion: every chunk fits within target_tokens +
+    # overlap_tokens. If overlap returns the whole 50-token sentence
+    # the second chunk would be ~90 tokens (overlap) + 40 (para_b)
+    # = 130 tokens, exceeding even (target+overlap=120).
+    for index, chunk in enumerate(chunks):
+        chunk_tokens = len(tokenizer.encode(chunk, add_special_tokens=False, truncation=False))
+        assert chunk_tokens <= policy.target_tokens + policy.overlap_tokens, (
+            f"chunk {index} ({chunk_tokens}t) exceeds target+overlap "
+            f"({policy.target_tokens + policy.overlap_tokens}t); the "
+            f"overlap cap regressed."
+        )
+
+
 def test_overlap_zero_yields_no_duplication(tokenizer: FakeTokenizer) -> None:
     """With overlap=0, adjacent chunks must not share any sentence —
     no duplication, no loss."""

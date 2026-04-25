@@ -403,23 +403,59 @@ def _trailing_sentences_for_overlap(
     target_tokens: int,
     tokenizer: TokenizerProtocol,
 ) -> str:
-    """Pick the trailing sentences of ``text`` that fit within
-    ``target_tokens``. Empty string if no sentence fits."""
+    """Pick a trailing slice of ``text`` that fits within
+    ``target_tokens``. Empty string if no slice fits.
 
+    Strategy: prefer whole trailing sentences whose total fits the
+    budget. If even the LAST sentence on its own exceeds the budget,
+    fall back to a token-tail slice — never return text that exceeds
+    ``target_tokens`` (Codex review msg #459). Without this cap, a
+    200-token trailing sentence would pad a 450-token chunk into
+    650 tokens and the validator gate (#1553 step 3) would reject
+    the encode at runtime.
+    """
+
+    if target_tokens <= 0:
+        return ""
     sentences = split_sentences(text)
     if not sentences:
-        return ""
+        # Single un-broken text — fall back to the token tail directly.
+        return _token_tail(text, target_tokens=target_tokens, tokenizer=tokenizer)
+
     chosen: list[str] = []
     chosen_tokens = 0
     for sentence in reversed(sentences):
         sentence_tokens = _count_tokens(sentence, tokenizer=tokenizer)
-        if chosen_tokens + sentence_tokens > target_tokens and chosen:
+        if chosen and chosen_tokens + sentence_tokens > target_tokens:
             break
+        if not chosen and sentence_tokens > target_tokens:
+            # Last sentence alone exceeds the overlap budget. Take
+            # its token tail rather than returning the whole sentence.
+            return _token_tail(sentence, target_tokens=target_tokens, tokenizer=tokenizer)
         chosen.insert(0, sentence)
         chosen_tokens += sentence_tokens
         if chosen_tokens >= target_tokens:
             break
     return " ".join(chosen)
+
+
+def _token_tail(
+    text: str,
+    *,
+    target_tokens: int,
+    tokenizer: TokenizerProtocol,
+) -> str:
+    """Return the last ``target_tokens`` tokens of ``text`` as
+    decoded text. Used when sentence-based overlap can't fit."""
+
+    if target_tokens <= 0 or not text:
+        return ""
+    decode = getattr(tokenizer, "decode", None)
+    token_ids = tokenizer.encode(text, add_special_tokens=False, truncation=False)
+    if not token_ids or decode is None:
+        return ""
+    tail = token_ids[-target_tokens:]
+    return decode(tail, skip_special_tokens=True).strip()
 
 
 # --- Unit-level chunking integration -----------------------------------------
