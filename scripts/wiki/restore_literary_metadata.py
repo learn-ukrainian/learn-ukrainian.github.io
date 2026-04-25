@@ -11,11 +11,6 @@ import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-GDRIVE_DATA = (
-    Path.home()
-    / "Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com"
-    / "My Drive/Projects/learn-ukrainian-data"
-)
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 
 if __package__ in {None, ""}:
@@ -24,12 +19,14 @@ if __package__ in {None, ""}:
         format_literary_validation_report,
         write_literary_validation_report,
     )
+    from wiki.config import GDRIVE_DATA
     from wiki.sources import build_literary_row
 else:
     from .build_sources_db import (
         format_literary_validation_report,
         write_literary_validation_report,
     )
+    from .config import GDRIVE_DATA
     from .sources import build_literary_row
 
 

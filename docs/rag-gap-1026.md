@@ -148,7 +148,9 @@ Expected output:
 ### Step 2 — sync to Google Drive
 
 ```bash
-GDRIVE="/Users/krisztiankoos/Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data"
+# Resolve GDrive via $LU_GDRIVE_DATA (set in ~/.bash_secrets) or glob.
+# See scripts/wiki/config.py for the canonical helper.
+GDRIVE="${LU_GDRIVE_DATA:-$(ls -d "$HOME/Library/CloudStorage/"GoogleDrive-*/"My Drive/Projects/learn-ukrainian-data" 2>/dev/null | head -1)}"
 rsync -av --include='wave11-*.jsonl' --exclude='*' data/literary_texts/ "$GDRIVE/literary_texts/"
 ```
 

@@ -23,13 +23,40 @@
 
 set -euo pipefail
 
-GDRIVE="/Users/krisztiankoos/Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data"
-SRC="/Users/krisztiankoos/projects/learn-ukrainian/data"
+# Resolve the Google Drive data directory.
+#   1. $LU_GDRIVE_DATA explicit override (set in ~/.bash_secrets)
+#   2. Glob ~/Library/CloudStorage/GoogleDrive-* for the per-user mount
+#      (avoids hardcoding the user's email — wartime contributor risk
+#      per #1577 Phase 1 Q4)
+if [[ -n "${LU_GDRIVE_DATA:-}" ]]; then
+  GDRIVE="$LU_GDRIVE_DATA"
+else
+  GDRIVE=""
+  for mount in "$HOME/Library/CloudStorage/"GoogleDrive-*; do
+    candidate="$mount/My Drive/Projects/learn-ukrainian-data"
+    if [[ -d "$candidate" ]]; then
+      GDRIVE="$candidate"
+      break
+    fi
+  done
+fi
+
+# Resolve script-relative source path so the script works regardless
+# of where it's checked out.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC="$(cd "$SCRIPT_DIR/.." && pwd)/data"
 
 echo "=== Backing up data to Google Drive ==="
 echo "Source: $SRC"
 echo "Target: $GDRIVE"
 echo ""
+
+if [[ -z "$GDRIVE" ]]; then
+  echo "ERROR: cannot resolve Google Drive mount." >&2
+  echo "Set \$LU_GDRIVE_DATA in your environment, or sign in to Google Drive Desktop" >&2
+  echo "and ensure ~/Library/CloudStorage/GoogleDrive-*/My Drive/Projects/learn-ukrainian-data exists." >&2
+  exit 1
+fi
 
 if [[ ! -d "$(dirname "$GDRIVE")" ]]; then
   echo "ERROR: Google Drive for Desktop mount not found at:" >&2

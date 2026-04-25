@@ -967,10 +967,14 @@ def _backup_to_gdrive() -> None:
     """Copy cached external articles to Google Drive, then delete local copies."""
     import shutil
 
-    gdrive_target = Path.home() / (
-        "Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com"
-        "/My Drive/Projects/learn-ukrainian-data/external_articles"
-    )
+    # Resolve the Google Drive root via the central helper so the path
+    # is consistent with the rest of the wiki tools and respects the
+    # LU_GDRIVE_DATA env var. See scripts/wiki/config.py.
+    if __package__ in {None, ""}:
+        from wiki.config import GDRIVE_DATA
+    else:
+        from .config import GDRIVE_DATA
+    gdrive_target = GDRIVE_DATA / "external_articles"
 
     if not CACHE_DIR.exists():
         print("❌ Nothing to back up — data/external_articles/ doesn't exist")

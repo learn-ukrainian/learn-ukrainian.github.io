@@ -40,11 +40,6 @@ from datetime import datetime
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-GDRIVE_DATA = (
-    Path.home()
-    / "Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com"
-    / "My Drive/Projects/learn-ukrainian-data"
-)
 EXTERNAL_DIR = PROJECT_ROOT / "data" / "external_articles"
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 LOG_DIR = PROJECT_ROOT / "logs"
@@ -61,10 +56,12 @@ MIN_PROTECTED_DB_BYTES = 1 * 1024 * 1024  # 1 MB
 
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from wiki.config import GDRIVE_DATA
     from wiki.extract_sections import DEFAULT_REPORT_PATH, extract_sections
     from wiki.sources import build_literary_row
     from wiki.ukrainian_wiki_corpus import ensure_ukrainian_wiki_manifest, ensure_ukrainian_wiki_schema
 else:
+    from .config import GDRIVE_DATA
     from .extract_sections import DEFAULT_REPORT_PATH, extract_sections
     from .sources import build_literary_row
     from .ukrainian_wiki_corpus import ensure_ukrainian_wiki_manifest, ensure_ukrainian_wiki_schema

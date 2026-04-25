@@ -165,7 +165,10 @@ ls -lah data/sources.db data/sources.db.bak-*
 
 # 2) Check the GDrive backup age. Anything <30 days is fine; older
 #    than that means more re-ingest work after restore.
-GDRIVE="$HOME/Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com/My Drive/Projects/learn-ukrainian-data"
+#    Path resolution: $LU_GDRIVE_DATA env var if set, else glob the
+#    per-user GoogleDrive mount. (Email is not hardcoded in committed
+#    code — see #1577 Phase 1 Q4.)
+GDRIVE="${LU_GDRIVE_DATA:-$(ls -d "$HOME/Library/CloudStorage/"GoogleDrive-*/"My Drive/Projects/learn-ukrainian-data" 2>/dev/null | head -1)}"
 ls -lah "$GDRIVE/sources.db"
 
 # 3) Restore from backup.
