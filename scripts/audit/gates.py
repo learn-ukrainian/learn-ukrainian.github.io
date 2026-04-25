@@ -306,7 +306,8 @@ def evaluate_content_heavy(
     activity_count: int,
     content_recall_violations: list,
     min_act: int = 10,
-    max_act: int = 12
+    max_act: int = 12,
+    letter_module: bool = False,
 ) -> GateResult:
     """Evaluate content-heavy module compliance.
 
@@ -318,7 +319,13 @@ def evaluate_content_heavy(
         activity_count: Number of activities in module
         content_recall_violations: List of content recall violations
         min_act: Minimum required activities (default 10)
-        max_act: Maximum allowed activities (default 12)
+        max_act: Soft cap for activities (default 12). Per CLAUDE.md activity
+            counts are MINIMUMS, never maximums — going over emits a soft
+            warning, not a failure. ``letter_module=True`` suppresses even the
+            warning since alphabet modules legitimately need ~33 items.
+        letter_module: When True, the MAX cap is fully relaxed (letter modules
+            need many letter-recognition activities). The MIN floor still
+            applies.
 
     Returns:
         GateResult with content-heavy compliance status
@@ -328,11 +335,16 @@ def evaluate_content_heavy(
 
     issues = []
 
-    # Check activity count
-    if activity_count > max_act:
-        issues.append(f"Too many activities: {activity_count} (target {min_act}-{max_act})")
-    elif activity_count < min_act:
-        issues.append(f"Too few activities: {activity_count} (target {min_act}-{max_act})")
+    # Activity count: MIN is a hard contract; MAX is guidance.
+    # CLAUDE.md treats counts as MINIMUMS — going over the soft cap is a
+    # warning, not a failure. letter_module: true suppresses even the warning.
+    if activity_count < min_act:
+        issues.append(f"Too few activities: {activity_count} (target ≥{min_act})")
+    elif activity_count > max_act and not letter_module:
+        issues.append(
+            f"Activity count {activity_count} exceeds soft cap {max_act}. "
+            "This is a warning, not a failure. CLAUDE.md treats counts as MINIMUMS."
+        )
 
     # Check content recall violations
     recall_count = len([v for v in content_recall_violations if v.get('type') == 'CONTENT_RECALL'])

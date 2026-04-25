@@ -352,12 +352,36 @@ class TestEvaluateContentHeavy:
         assert '10 activities' in result.msg
 
     def test_warn_too_many_activities(self):
+        # Activity counts are MINIMUMS — exceeding the soft cap warns, not fails (#1550 U4).
         result = evaluate_content_heavy(True, 15, [])
         assert result.status == 'WARN'
-        assert 'Too many' in result.msg
+        assert 'soft cap' in result.msg
+        assert 'MINIMUM' in result.msg
 
     def test_warn_too_few_activities(self):
         result = evaluate_content_heavy(True, 5, [])
+        assert result.status == 'WARN'
+        assert 'Too few' in result.msg
+
+    def test_letter_module_suppresses_max_warning(self):
+        """letter_module: true exception class drops the soft-cap warning entirely."""
+        # Without letter_module: 30 activities → soft-cap warning
+        result_normal = evaluate_content_heavy(True, 30, [], min_act=10, max_act=12)
+        assert result_normal.status == 'WARN'
+        assert 'soft cap' in result_normal.msg
+
+        # With letter_module=True: 30 activities → PASS (no warning)
+        result_letter = evaluate_content_heavy(
+            True, 30, [], min_act=10, max_act=12, letter_module=True
+        )
+        assert result_letter.status == 'PASS'
+        assert '30 activities' in result_letter.msg
+
+    def test_letter_module_keeps_min_floor(self):
+        """letter_module exception relaxes MAX cap but not the MIN floor."""
+        result = evaluate_content_heavy(
+            True, 5, [], min_act=10, max_act=12, letter_module=True
+        )
         assert result.status == 'WARN'
         assert 'Too few' in result.msg
 

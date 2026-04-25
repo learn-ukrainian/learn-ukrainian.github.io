@@ -231,8 +231,15 @@ def _report_activity_breakdown(activity_details: list[dict], config: dict | None
     total_acts = len(activity_details)
     min_act = config.get('min_activities', 0) if config else 0
     max_act = config.get('max_activities', min_act + 4) if config else total_acts
-    act_status = '✅' if min_act <= total_acts <= max_act else '❌'
-    lines.append(f"- Total activities: {total_acts} (target: {min_act}-{max_act}) {act_status}")
+    # Activity counts are MINIMUMS per CLAUDE.md — exceeding max_act is a soft
+    # warning, not a failure. Only undershooting min_act is a hard ❌.
+    if total_acts < min_act:
+        act_status = '❌'
+    elif total_acts > max_act:
+        act_status = '⚠️'
+    else:
+        act_status = '✅'
+    lines.append(f"- Total activities: {total_acts} (target: ≥{min_act}, soft cap {max_act}) {act_status}")
 
     if unique_types:
         min_types = config.get('min_types_unique', 2) if config else 2

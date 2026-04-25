@@ -98,12 +98,77 @@ Fix: research phase template explicitly says "section names must match plan exac
 | Metric | Seminar (hist, bio, etc.) | Core (a1-c2) |
 |--------|----------------------------------|--------------|
 | Min activities | 3 | 8 (A1), 10 (A2+) |
-| Max activities | 9 | varies |
+| Max activities | 9 (soft cap) | varies (soft cap) |
 | Required types | reading, essay-response, critical-analysis | varies by level |
 | Forbidden types | match-up, fill-in, cloze, mark-the-words | — |
 | Min items per activity | 1 | varies |
 
 YAML must validate against `schemas/activities-{level}.schema.json`.
+
+### MIN/MAX philosophy (#1550 unit 4)
+
+Activity counts and word counts are **MINIMUMS, never maximums**. The audit
+follows this rule:
+
+| Direction | Behaviour | Example |
+|-----------|-----------|---------|
+| Below MIN floor | Hard `FAIL` | A1 module with 3 activities (floor 4) |
+| At or above MIN | `PASS` | A1 module with 4-15 activities |
+| Above soft MAX cap | `WARN` only | A1 module with 17 activities |
+
+The `*_MAX` keys (`max_activities`, `INLINE_MAX`, `WORKBOOK_MAX`) are
+guidance for the writer — they are *not* hard ceilings. CLAUDE.md is
+explicit: word-count and activity-count targets are MINIMUMS. Going over
+emits a soft warning; the audit does **not** fail the module.
+
+The MIN gates (`min_activities`, `min_types_unique`,
+`min_items_per_activity`, `min_vocab`, word-count target) remain hard
+fails — those are the contracts.
+
+### `letter_module: true` exception class
+
+Plans for alphabet/letter-driven modules (`A1.1` phonetics) may declare
+`letter_module: true` at the top level. When set, the audit:
+
+- **Drops** the activity-count soft `WARN` entirely (letter modules
+  legitimately need ~33 letter-recognition items spread across 4–6
+  activities, so the level cap of 9 doesn't apply).
+- **Keeps** the activity-count MIN floor — letter modules still need at
+  least the level minimum.
+- **Keeps** the word-count target — prose length expectations are
+  level-standard.
+- **Keeps** the type-diversity MIN — letter modules still need 3–4
+  distinct types (image-to-letter, match-up, fill-in, watch-and-repeat).
+
+Wired into `evaluate_content_heavy(..., letter_module=True)` in
+`scripts/audit/gates.py`.
+
+### Two-layer config map
+
+There are two parallel config layers with different consumers:
+
+| Layer | File | Consumer | Canonical for |
+|-------|------|----------|---------------|
+| **Audit** | `scripts/audit/config.py` `LEVEL_CONFIG` | Post-build audit gates | Word target, naturalness min, activity-count MIN, type-diversity MIN, `forbidden_types`, `priority_types`, `required_types`, `allowed_types` |
+| **Pipeline** | `scripts/pipeline/config_tables.py` `ACTIVITY_CONFIGS` | Build-time writer prompt placeholders | `INLINE_MIN`/`INLINE_MAX` (dynamic from injection markers), `TOTAL_TARGET`, prompt-template strings, `INLINE_*`/`WORKBOOK_*` allowed-type partitioning |
+
+For shared concepts (forbidden / allowed / priority type lists), the
+audit layer is canonical; the pipeline layer should reflect those sets
+in its prompt-facing format. Where the two have intentionally drifted
+(e.g. seminar tracks where audit forbids inline drill types but
+pipeline allows them as inline-only checks), the divergence is captured
+in `tests/audit/test_config_invariants.py::_KNOWN_DIVERGENT_LEVELS`.
+
+Cross-layer invariants (enforced by tests):
+
+- Pipeline `ITEMS_MIN` ≥ audit `min_items_per_activity` for the same level.
+- Audit `priority_types` ⊆ pipeline `INLINE_ALLOWED ∪ WORKBOOK_ALLOWED ∪
+  ALLOWED_ACTIVITY_TYPES` (no dead-weight priorities).
+- Pipeline `REQUIRED_TYPES` ⊆ audit `priority_types ∪ required_types`
+  (no force-feeding what audit doesn't even prefer).
+- Within audit: `forbidden_types ∩ (priority_types ∪ required_types ∪
+  allowed_types) == ∅`.
+- Every level has `min_activities > 0` and `min_types_unique >= 2`.
 
 ---
 

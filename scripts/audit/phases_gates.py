@@ -458,10 +458,13 @@ def evaluate_advanced_gates(ctx: AuditContext, state: AuditState) -> None:
 
         min_act = ctx.config.get('min_activities', 10)
         max_act = ctx.config.get('max_activities', min_act + 4)
+        letter_module = bool(
+            ctx.plan_data.get('letter_module') if ctx.plan_data else False
+        )
 
         state.results['content_heavy'] = evaluate_content_heavy(
             is_ch, state.activity_count, content_recall_violations,
-            min_act=min_act, max_act=max_act
+            min_act=min_act, max_act=max_act, letter_module=letter_module
         )
 
     check_transliteration_policy(ctx, state)

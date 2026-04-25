@@ -43,6 +43,11 @@
       "type": "string",
       "description": "Optional English subtitle"
     },
+    "letter_module": {
+      "type": "boolean",
+      "default": false,
+      "description": "Alphabet/letter-driven module exception class. When true, audit gates relax the activity-count MAX soft cap (letter modules legitimately need ~33 letter-recognition items). Word-count target and type-diversity MIN remain enforced. See docs/best-practices/audit-standards.md."
+    },
     "focus": {
       "type": "string",
       "enum": [
