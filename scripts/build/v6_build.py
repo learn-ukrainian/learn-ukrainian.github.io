@@ -105,6 +105,7 @@ from build.plan_tracking import (
     plan_path_for,
 )
 from build.track_constraints import build_writer_constraints_section
+from common.text_utils import strip_ukrainian_stress
 from common.thresholds import (
     REVIEW_PASS_FLOOR,
     REVIEW_REJECT_FLOOR,
@@ -5757,6 +5758,33 @@ def _update_aggregate_with_applied_fixes(
     (review_dir / f"{slug}-review-aggregate.yaml").write_text(dumped, "utf-8")
 
 
+def _resolve_module_total(level: str) -> int:
+    """Count modules for a level from the curriculum manifest.
+
+    Returns 0 if the manifest is missing or the level is absent. Used to
+    inject `{module_total}` into per-dim review prompts so the reviewer
+    knows whether a module sits in the early-stage band (M1-M3) where
+    pedagogical-fit calibration applies (#1550 U1).
+    """
+    manifest = CURRICULUM_ROOT / "curriculum.yaml"
+    if not manifest.exists():
+        return 0
+    data = yaml.safe_load(manifest.read_text("utf-8")) or {}
+    modules = data.get("levels", {}).get(level, {}).get("modules", [])
+    return len(modules) if isinstance(modules, list) else 0
+
+
+def _prepare_reviewer_prose(text: str) -> str:
+    """Strip Ukrainian stress marks (U+0301) from prose before reviewer dispatch.
+
+    The deterministic stress annotator runs AFTER review, so any stress
+    finding the reviewer raises is invalid by construction. Stripping at
+    the dispatcher boundary closes the loophole without touching the
+    canonical content file (#1550 U1).
+    """
+    return strip_ukrainian_stress(text)
+
+
 def _determine_reviewer(
     writer: str,
     reviewer_override: str | None,
@@ -7753,10 +7781,13 @@ def step_review(content_path: Path, level: str, module_num: int,
     else:
         writer_model = "Gemini"
 
+    reviewer_prose = _prepare_reviewer_prose(generated_content)
     generated_content_literal = _format_prompt_literal_block(
-        "Generated Module Content", generated_content, language="markdown",
+        "Generated Module Content", reviewer_prose, language="markdown",
     )
     from pipeline.config_tables import get_immersion_rule as _get_immersion_rule_for_review
+
+    module_total = _resolve_module_total(level)
 
     replacements = {
         "{MODULE_NUM}": str(module_num),
@@ -7772,6 +7803,9 @@ def step_review(content_path: Path, level: str, module_num: int,
         "{GENERATED_CONTENT}": generated_content_literal,
         "{IMMERSION_RULE}": _get_immersion_rule_for_review(level, module_num),
         "{IMMERSION_TARGET_SHORT}": _get_immersion_target_short(level, module_num),
+        "{learner_level}": level.upper(),
+        "{module_index}": str(module_num),
+        "{module_total}": str(module_total),
         **_build_canonical_anchors_replacements(),
     }
 

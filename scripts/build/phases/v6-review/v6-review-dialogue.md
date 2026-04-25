@@ -1,6 +1,29 @@
 <!-- version: 1.1.0 | updated: 2026-04-23 | GH #1431 — shared contract + §3 corpus grounding -->
 # V6 Per-Dimension Review — Dialogue
 
+<module-context>
+Learner level: {learner_level}
+Module index: {module_index} of {module_total}
+</module-context>
+
+<stress-marks>
+The prose you receive has had stress marks (U+0301 combining acute)
+removed by the pipeline. Do NOT comment on missing stress marks.
+Stress is added by a deterministic annotator AFTER review.
+Any stress finding will be discarded.
+</stress-marks>
+
+<pedagogical-stage>
+For {learner_level} M1–M3 (the first 3 modules of a CEFR level),
+score on PEDAGOGICAL FIT, not richness:
+- Greeting exchange + name introduction is the appropriate ceiling.
+- "Привіт! Я Марко. Як тебе звати?" is a 9/10 dialogue at this stage.
+- Do NOT penalize short turns, repeated patterns, or absence of
+  tense variation; the learner has not been taught those yet.
+For {learner_level} M4 and later, evaluate dialogue richness as
+normal.
+</pedagogical-stage>
+
 ## Shared Contract (authoritative — supersedes rubric text on conflict)
 
 You are scoring the **Dialogue** dimension. The module must satisfy the contract at `scripts/build/contracts/module-contract.md` as specialized by the plan and the `{CONTRACT_YAML}` block below. Score Dialogue ONLY by how well the dialogue content satisfies the contract's §3 clause (corpus-grounded when `dialogue_acts` present). Do NOT import criteria from outside this contract. Do NOT penalize behavior the contract explicitly allows.
