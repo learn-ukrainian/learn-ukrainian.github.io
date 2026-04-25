@@ -7,8 +7,10 @@
       "datefmt": "%Y-%m-%dT%H:%M:%S%z"
     },
     "access": {
+      "()": "uvicorn.logging.AccessFormatter",
       "format": "%(asctime)s [ACCESS] %(client_addr)s \"%(request_line)s\" %(status_code)s",
-      "datefmt": "%Y-%m-%dT%H:%M:%S%z"
+      "datefmt": "%Y-%m-%dT%H:%M:%S%z",
+      "use_colors": false
     }
   },
   "handlers": {
