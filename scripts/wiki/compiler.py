@@ -1,7 +1,7 @@
-"""Wiki article compiler — sends source material to Gemini for compilation.
+"""Wiki article compiler — sends source material to a writer for compilation.
 
 This is the core engine: given a topic and source chunks, it builds a prompt,
-calls Gemini, and writes the resulting markdown article to wiki/.
+calls the selected writer, and writes the resulting markdown article to wiki/.
 """
 
 import contextlib
@@ -13,6 +13,8 @@ import tempfile
 import time
 from pathlib import Path
 
+from ai_llm.claude_call import call_claude_with_fallback
+from ai_llm.codex_call import call_codex_with_fallback
 from ai_llm.fallback import CallResult, call_gemini_with_fallback, visible_sleep
 
 from .config import GEMINI_MODEL, PROMPTS_DIR, TRACK_DOMAINS, WIKI_DIR
@@ -42,6 +44,7 @@ WIKI_META_RE = re.compile(r"<!--\s*wiki-meta\b(?P<body>.*?)-->", re.DOTALL)
 _MCP_WARNING_PREFIX_RE = re.compile(
     r"^MCP issues detected\. Run /mcp list for status\."
 )
+WRITER_CHOICES = ("gemini", "claude", "gpt-5.5")
 
 
 def compile_article(
@@ -53,6 +56,7 @@ def compile_article(
     track: str = "",
     force: bool = False,
     dry_run: bool = False,
+    writer: str = "gemini",
 ) -> Path | None:
     """Compile a single wiki article from source material.
 
@@ -63,7 +67,8 @@ def compile_article(
         sources: List of source chunk dicts with 'text', 'chunk_id', etc.
         track: Track name (e.g., "a1", "folk") — selects the prompt template.
         force: Recompile even if already compiled.
-        dry_run: Print prompt but don't call Gemini.
+        dry_run: Print prompt but don't call the writer.
+        writer: Writer agent key: "gemini", "claude", or "gpt-5.5".
 
     Returns:
         Path to the written article, or None on failure.
@@ -105,9 +110,9 @@ def compile_article(
         generated_by_model="unknown",
     )
 
-    # Call Gemini
+    # Call writer
     print(f"  🤖 Compiling {article_key} ({len(sources)} sources)...")
-    call_result = _call_gemini(prompt)
+    call_result = _call_writer(prompt, writer=writer)
     response = (
         call_result.response_text
         if isinstance(call_result, CallResult)
@@ -119,7 +124,7 @@ def compile_article(
         else None
     )
     if not response:
-        print(f"  ❌ Gemini returned empty response for {article_key}")
+        print(f"  ❌ {writer} returned empty response for {article_key}")
         return None
 
     # Strip markdown code fence wrapping (Gemini sometimes wraps: ```markdown\n...\n```)
@@ -624,21 +629,42 @@ def _visible_sleep(seconds: int, reason: str) -> None:
     visible_sleep(seconds, reason, logger=lambda msg: print(msg, flush=True))
 
 
-def _call_gemini(prompt: str, *, max_retries: int = 3) -> CallResult:
-    """Call Gemini CLI through the shared model/auth fallback ladder."""
-    result = call_gemini_with_fallback(
-        prompt,
-        task_name="wiki compiler",
-        preferred_model=GEMINI_MODEL,
-        max_retries=max_retries,
-        gemini_cli=GEMINI_CLI,
-        cwd=Path(__file__).resolve().parents[2],
-        base_env=_PARENT_ENV,
-        logger=lambda msg: print(msg, flush=True),
-        sleep_fn=_visible_sleep,
-        recover_response=_recover_from_session,
-    )
-    return result
+def _call_writer(prompt: str, *, writer: str, max_retries: int = 3) -> CallResult:
+    """Dispatch wiki-compiler prompt to the chosen writer."""
+    if writer == "gemini":
+        return call_gemini_with_fallback(
+            prompt,
+            task_name="wiki compiler",
+            preferred_model=GEMINI_MODEL,
+            max_retries=max_retries,
+            gemini_cli=GEMINI_CLI,
+            cwd=Path(__file__).resolve().parents[2],
+            base_env=_PARENT_ENV,
+            logger=lambda msg: print(msg, flush=True),
+            sleep_fn=_visible_sleep,
+            recover_response=_recover_from_session,
+        )
+    if writer == "claude":
+        return call_claude_with_fallback(
+            prompt,
+            task_name="wiki compiler",
+            max_retries=max_retries,
+            cwd=Path(__file__).resolve().parents[2],
+            base_env=_PARENT_ENV,
+            logger=lambda msg: print(msg, flush=True),
+            sleep_fn=_visible_sleep,
+        )
+    if writer == "gpt-5.5":
+        return call_codex_with_fallback(
+            prompt,
+            task_name="wiki compiler",
+            max_retries=max_retries,
+            cwd=Path(__file__).resolve().parents[2],
+            base_env=_PARENT_ENV,
+            logger=lambda msg: print(msg, flush=True),
+            sleep_fn=_visible_sleep,
+        )
+    raise ValueError(f"Unknown writer: {writer!r}. Use one of {WRITER_CHOICES}")
 
 
 def update_index() -> None:
