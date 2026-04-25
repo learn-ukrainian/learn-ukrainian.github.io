@@ -147,6 +147,44 @@ Don't fire-and-forget. Don't agree silently.
 - [x] Only the specific "Token indices sequence length" message
 - [x] Other warnings still surface
 
+## Rebuild scope decision (2026-04-25 PM, post-merge)
+
+User asked: "would the /tmp wiki logs help decide selective vs full rebuild?"
+
+Logs aren't useful for that — HuggingFace emits the warning ONCE per
+session (silenced after first), so logs only confirm the chunking
+issue was active in every recent batch but not which specific wikis
+were affected.
+
+The `.sources.yaml` files DO answer the question. New script
+`scripts/wiki/list_rebuild_targets.py` enumerates rebuild candidates:
+
+```
+.venv/bin/python scripts/wiki/list_rebuild_targets.py --summary
+# Total wikis with sources.yaml: 1141
+# Rebuild candidates: 754
+#   of which high-priority (>=50% rechunked): 512
+# Skipped (NO_CHUNK only): 387
+```
+
+**Recommendation**: rebuild 754 wikis (66%). Skip the 387 (34%) using
+only literary/ukrainian_wiki/folk — their embeddings are bit-identical
+post step-1 since those corpora keep NO_CHUNK policy. Rebuilding them
+produces the same retrieval and same output modulo Gemini stochasticity.
+
+The 512-wiki "high priority" subset (>=50% re-chunked sources) is for
+incremental rebuilds when budget is tight.
+
+## New tooling shipped on main (post-merge)
+
+- `scripts/wiki/list_rebuild_targets.py` — enumerate step-7 rebuild
+  candidates with `--summary` / `--high-priority` / `--skipped` flags.
+- `scripts/wiki/cleanup_post_rebuild.py` — step 8 vacuum + orphan drop
+  with `--dry-run` for safety.
+- `docs/architecture/2026-04-25-chunk-policy-bakeoff-spec.md` —
+  concrete spec for step 5 implementation, including monkey-patch
+  pattern for cell config overrides and CLI surface.
+
 ## Steps 5-7 (REQUIRE USER'S MAC, deferred to user when back)
 
 ### Step 5: chunk-policy bakeoff
