@@ -38,6 +38,11 @@ The immersion band for the current module sets a quantitative target
 each language. The band rule is injected verbatim into writer and
 reviewer prompts as `{IMMERSION_RULE}`.
 
+At B1 and higher, the band is always 100 % Ukrainian for Tab 1, Tab 3,
+and Tab 4 module body. Tab 2 (`Словник`) is the only sanctioned English
+carve-out: vocabulary translations and idiom/expression notes remain
+English there because they are structural L1 anchors, not body prose.
+
 **Writer side.** Match the band's target and language roles. If the
 band says "English carries the explanation, Ukrainian appears in
 examples / dialogues / vocabulary anchors," do exactly that. Do NOT
@@ -51,7 +56,7 @@ contractually correct, not a defect. Score <8 on a language-related
 dimension ONLY if:
 
 - the module falls OUTSIDE the band's quantitative target (too much
-  Ukrainian at A1, or too little Ukrainian at B1+); OR
+  Ukrainian at A1/A2, or any non-Tab-2 English at B1+); OR
 - Ukrainian examples are translated into English in their anchor role
   (Ukrainian examples must stay Ukrainian at every level); OR
 - scaffolding-language roles are mixed chaotically (paragraphs
@@ -219,7 +224,7 @@ token scanner fails the build on any hit, even inside dialogue, even
 in quoted examples:
 
 | Russian (FORBIDDEN) | Ukrainian (USE THIS) |
-|---|---|
+| --- | --- |
 | хорошо | добре |
 | конечно | звичайно / певна річ |
 | спасибо | дякую |
@@ -288,7 +293,7 @@ Each per-dim reviewer scores ONE dimension, using ONLY that
 dimension's clauses from this contract:
 
 | Dim | Clauses it scores against |
-|---|---|
+| --- | --- |
 | factual | §5 honesty + factual_anchors in plan YAML |
 | language | §7 forbidden words + Ukrainian linguistic quality (VESUM, Правопис 2019) |
 | decolonization | cultural framing (out of scope for tuning here; current 2026-04-23 scores are 8.8+) |

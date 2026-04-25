@@ -10,6 +10,8 @@ from config import get_immersion_range as shared_get_immersion_range
 
 # Proper names and abbreviations whitelisted from VESUM verification.
 # These are valid Ukrainian words that VESUM may not contain (names, acronyms, etc.).
+# Phase 0 North Star P4: this is the seed list. New names may be proposed
+# during builds, but additions land only through reviewer-approved PRs.
 PROPER_NAME_WHITELIST: set[str] = {
     # Common Ukrainian given names (+ common declined forms)
     "Микола", "Олег", "Олена", "Тарас", "Іван", "Марія", "Андрій", "Петро",
@@ -657,7 +659,7 @@ LEVEL_CONFIG = {
         'min_engagement': 0,  # Apr 2026: dropped — review judges callout quality, not mechanical count
         'immersion_graduated': True,
         'transliteration_allowed': True,
-        'priority_types': {'fill-in', 'match-up', 'anagram', 'unjumble', 'quiz', 'watch-and-repeat', 'classify', 'image-to-letter'}
+        'priority_types': {'fill-in', 'match-up', 'anagram', 'unjumble', 'quiz', 'watch-and-repeat', 'image-to-letter'}
     },
     'A2': {
         # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (2000).
@@ -733,10 +735,13 @@ LEVEL_CONFIG = {
         'min_types_unique': 5,         # Apr 2026: 3→5, prevent quiz-wall workbooks (B1 immersion crisis fix)
         'min_vocab': 25,  # Increased for grammar terminology
         'min_engagement': 5,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # 100% Ukrainian immersion (English only in vocab table)
+        'min_immersion': 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
+        'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'quiz', 'match-up', 'fill-in', 'error-correction', 'mark-the-words', 'essay-response', 'critical-analysis'}
+        'priority_types': {
+            'quiz', 'match-up', 'fill-in', 'error-correction', 'mark-the-words',
+            'essay-response', 'grammar-identify',
+        }
     },
     'B1-vocab': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
@@ -745,10 +750,10 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 35,
         'min_engagement': 5,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # 100% Ukrainian immersion (English only in vocab table)
+        'min_immersion': 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
+        'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'reading', 'match-up', 'mark-the-words', 'translate', 'quiz'}  # Added reading
+        'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz', 'group-sort'}
     },
     'B1': {
         # Family target sourced from scripts/common/thresholds.LEVEL_THRESHOLDS (4000).
@@ -759,8 +764,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 5,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # 100% Ukrainian immersion (English only in vocab table)
+        'min_immersion': 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
+        'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
@@ -771,10 +776,10 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 5,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # 100% Ukrainian immersion (English only in vocab table)
+        'min_immersion': 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
+        'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'fill-in', 'match-up', 'quiz'}  # Hybrid: seminar + core
+        'priority_types': {'essay-response', 'fill-in', 'match-up', 'quiz', 'true-false'}
     },
     'B1-skills': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
@@ -783,10 +788,10 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 15,
         'min_engagement': 4,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # 100% Ukrainian immersion
+        'min_immersion': 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
+        'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'cloze', 'fill-in', 'mark-the-words'}  # Hybrid
+        'priority_types': {'essay-response', 'cloze', 'fill-in', 'mark-the-words', 'error-correction'}
     },
     'B1-checkpoint': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
@@ -806,8 +811,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 10,
         'min_engagement': 3,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # 100% Ukrainian immersion
+        'min_immersion': 100,  # B1+ body is 100% Ukrainian; Tab 2 English only.
+        'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
     },
@@ -821,7 +826,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
+        'priority_types': {'error-correction', 'fill-in', 'cloze', 'grammar-identify'}
     },
     'B2-vocab': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
@@ -847,7 +852,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'unjumble', 'error-correction'}
+        'priority_types': {'fill-in', 'error-correction', 'grammar-identify'}
     },
     'history': {
         # HIST Track: History seminar style
@@ -902,7 +907,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,
         'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'cloze', 'fill-in'}  # Seminar + core
+        'priority_types': {'reading', 'essay-response', 'translation-critique', 'cloze', 'fill-in'}  # Seminar + core
     },
     'B2-synthesis': {
         # Synthesis modules replace checkpoints in B2.3 History (M83, M107, M119, M125, M131)
@@ -916,7 +921,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'reading', 'critical-analysis', 'essay-response', 'cloze'}  # Seminar
+        'priority_types': {'reading', 'translation-critique', 'essay-response', 'cloze'}  # Seminar
     },
     'B2-capstone': {
         'target_words': 4000,  # Raised from 2714 (Mar 2026) — module content needs expansion
@@ -943,7 +948,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis'},
+        'priority_types': {'reading', 'essay-response', 'translation-critique'},
         'essay_min_words': 150,
         'essay_max_words': 300
     },
@@ -1064,7 +1069,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'authorial-intent'}  # Seminar
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'}  # Seminar
     },
     'C1-checkpoint': {
         'target_words': 4000,
@@ -1357,11 +1362,8 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {
             'reading', 'essay-response', 'critical-analysis',
-            # Core OES types (ISSUE-502)
-            'etymology-trace', 'transcription', 'grammar-identify',
-            # New OES types (ISSUE-502)
-            'phonology-lab', 'grammar-lab', 'parallel-text',
-            'paleography-analysis', 'historical-writing', 'loanword-trace',
+            'comparative-study', 'etymology-trace', 'transcription',
+            'grammar-identify', 'paleography-analysis',
         },
         'required_types': {'transcription', 'etymology-trace', 'grammar-identify'},
         'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words', 'group-sort', 'select', 'translate'}
@@ -1381,11 +1383,8 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {
             'reading', 'essay-response', 'critical-analysis',
-            # Core RUTH types (ISSUE-502)
-            'transcription', 'etymology-trace', 'grammar-identify',
-            # New RUTH types (ISSUE-502)
-            'grammar-lab', 'parallel-text', 'paleography-analysis',
-            'historical-writing', 'register-identify', 'loanword-trace', 'comparative-style',
+            'comparative-study', 'transcription', 'etymology-trace',
+            'grammar-identify', 'paleography-analysis', 'dialect-comparison',
         },
         'required_types': {'transcription', 'etymology-trace', 'grammar-identify'},
         'forbidden_types': {'quiz', 'match-up', 'fill-in', 'unjumble', 'anagram', 'cloze', 'mark-the-words', 'group-sort', 'select', 'translate'}
@@ -1439,15 +1438,39 @@ LEVEL_CONFIG = {
 # Activity level restrictions
 ACTIVITY_RESTRICTIONS = {
     'A1': {
-        'forbidden': ['cloze', 'mark-the-words', 'select', 'essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'],
+        'forbidden': [
+            'classify', 'mark-the-words', 'cloze', 'grammar-identify',
+            'highlight-morphemes', 'essay-response', 'reading',
+            'critical-analysis', 'translation-critique', 'comparative-study',
+            'source-evaluation', 'authorial-intent', 'debate',
+            'etymology-trace', 'paleography-analysis', 'dialect-comparison',
+            'transcription', 'select',
+        ],
         'anagram_limit': 10
     },
     'A2': {
-        'forbidden': ['essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'],
+        'forbidden': [
+            'image-to-letter', 'letter-grid', 'watch-and-repeat',
+            'divide-words', 'count-syllables', 'pick-syllables', 'anagram',
+            'classify', 'grammar-identify', 'highlight-morphemes',
+            'essay-response', 'reading', 'critical-analysis',
+            'translation-critique', 'comparative-study', 'source-evaluation',
+            'authorial-intent', 'debate', 'etymology-trace',
+            'paleography-analysis', 'dialect-comparison', 'transcription',
+            'select',
+        ],
         'anagram_forbidden': True
     },
     'B1': {
-        'forbidden': ['essay-response', 'critical-analysis', 'comparative-study', 'authorial-intent'],
+        'forbidden': [
+            'image-to-letter', 'letter-grid', 'watch-and-repeat',
+            'divide-words', 'count-syllables', 'pick-syllables', 'anagram',
+            'observe', 'phrase-table', 'classify', 'reading',
+            'critical-analysis', 'translation-critique', 'comparative-study',
+            'source-evaluation', 'authorial-intent', 'debate',
+            'etymology-trace', 'paleography-analysis', 'dialect-comparison',
+            'transcription', 'select',
+        ],
         'anagram_forbidden': True
     },
     'B2': {'forbidden': [], 'anagram_forbidden': True},
@@ -1553,6 +1576,11 @@ REQUIRED_METADATA = [
 
 # AI contamination patterns to detect
 AI_CONTAMINATION_PATTERNS = [
+    r"Let's dive in",
+    r"In conclusion",
+    r"It's important to note",
+    r"Buckle up",
+    r"Great job!",
     r"Let's say",
     r"context suggests",
     r"Usually '.*' here",

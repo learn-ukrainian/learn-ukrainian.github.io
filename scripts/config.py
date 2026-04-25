@@ -30,12 +30,12 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
     "b1": {
         "model": FLASH_MODEL,
         "persona": "The Storyteller",
-        "immersion_range": [0.85, 1.0],
+        "immersion_range": [1.0, 1.0],
     },
     "b2": {
         "model": FLASH_MODEL,
         "persona": "The Urbanist",
-        "immersion_range": [0.95, 1.0],
+        "immersion_range": [1.0, 1.0],
     },
     "c1": {
         "model": PRO_MODEL,
@@ -52,7 +52,7 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
     "hist": {
         "model": PRO_MODEL,
         "persona": "The Decolonizer",
-        "immersion_range": [0.95, 1.0],
+        "immersion_range": [1.0, 1.0],
     },
     "istorio": {
         "model": PRO_MODEL,
@@ -121,17 +121,17 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
     "ruth": {
         "model": PRO_MODEL,
         "persona": "The Baroque Scholar",
-        "immersion_range": [0.97, 1.0],
+        "immersion_range": [1.0, 1.0],
     },
     "oes": {
         "model": PRO_MODEL,
         "persona": "The Paleographer",
-        "immersion_range": [0.97, 1.0],
+        "immersion_range": [1.0, 1.0],
     },
     "b2-pro": {
         "model": PRO_MODEL,
         "persona": "The Professional Coach",
-        "immersion_range": [0.95, 1.0],
+        "immersion_range": [1.0, 1.0],
     },
     "c1-pro": {
         "model": PRO_MODEL,
@@ -384,41 +384,14 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
     ),
     "b1": (
         {
-            "key": "b1-m01-05",
-            "max_module": 5,
-            "min_pct": 75,
-            "max_pct": 100,
-            "rule": (
-                "TARGET: 75-100% Ukrainian. This is the B1 entry band continuing from late A2.\n"
-                "LANGUAGE ROLES:\n"
-                "- THEORY & EXPLANATION: Ukrainian by default. Explain grammar in clear Ukrainian using Ukrainian linguistic terms.\n"
-                "- EXAMPLES & NARRATIVE: 100% Ukrainian.\n"
-                "- DIALOGUES: 100% Ukrainian. No inline English glosses.\n"
-                "- RESCUE ENGLISH: Occasional rescue notes are allowed only when absolutely necessary for first-use abstraction. Keep them minimal.\n"
-                "- STRUCTURAL RULE: Ukrainian is the default language of the module. English is a rare support tool, not a parallel track.\n"
-                "FORBIDDEN: mirrored paragraph translations or English blockquotes after Ukrainian prose.\n"
-                "Ukrainian sentences max 30 words."
-            ),
-        },
-        {
             "key": "b1-core",
             "max_module": 10_000,
-            "min_pct": 85,
+            "min_pct": 100,
             "max_pct": 100,
             "rule": (
-                "TARGET: 85-100% Ukrainian.\n"
-                "LANGUAGE ROLES:\n"
-                "- THEORY & EXPLANATION: Ukrainian prose. Explain grammar in Ukrainian using Ukrainian linguistic terms (дієслово, відмінок, недоконаний вид).\n"
-                "- EXAMPLES & NARRATIVE: 100% Ukrainian.\n"
-                "- DIALOGUES: 100% Ukrainian. No inline English glosses.\n"
-                "- METALANGUAGE: For abstract grammar terms, you may provide ONE parenthetical English translation on first use only, "
-                "for example `**видова пара** (aspectual pair)`. Subsequent uses must be Ukrainian only.\n"
-                "HARD STRUCTURAL RULES:\n"
-                "- FORBIDDEN: English translation blockquotes after Ukrainian paragraphs.\n"
-                "- FORBIDDEN: mirrored English paragraphs translating Ukrainian prose.\n"
-                "- FORBIDDEN: long English scaffolding in the main body. If a rescue note is genuinely required, keep it brief and exceptional.\n"
-                "B1 is Ukrainian by default. English appears only as occasional rescue support, never as the main teaching language.\n"
-                "Ukrainian sentences max 30 words."
+                "Full Ukrainian immersion. No English in module body. "
+                "Tab 2 (Словник) keeps L1 translations and idiom/expression "
+                "explanations as the only English. Sentences max 30 words."
             ),
         },
     ),
@@ -426,9 +399,13 @@ IMMERSION_POLICIES: dict[str, tuple[dict[str, Any], ...]] = {
         {
             "key": "b2+",
             "max_module": 10_000,
-            "min_pct": 95,
+            "min_pct": 100,
             "max_pct": 100,
-            "rule": "Full Ukrainian immersion. No English except technical terminology. Sentences max 35 words.",
+            "rule": (
+                "Full Ukrainian immersion. No English in module body. "
+                "Tab 2 (Словник) keeps L1 translations and idiom/expression "
+                "explanations as the only English. Sentences max 35 words."
+            ),
         },
     ),
 }
