@@ -75,7 +75,7 @@ def _ts() -> str:
     """Compact HH:MM:SS timestamp for log lines."""
     return datetime.now().strftime("%H:%M:%S")
 
-from wiki.compiler import compile_article, update_index
+from wiki.compiler import WRITER_CHOICES, compile_article, update_index
 from wiki.config import ALL_TRACKS, CURRICULUM_DIR, TRACK_DOMAINS, WIKI_DIR
 from wiki.enrichment import enrich_sources
 from wiki.sources import (
@@ -301,7 +301,8 @@ def cmd_list(track: str) -> None:
 
 
 def cmd_compile_one(track: str, slug: str, *, force: bool = False,
-                    dry_run: bool = False, review: bool = False) -> bool:
+                    dry_run: bool = False, review: bool = False,
+                    writer: str = "gemini") -> bool:
     """Compile a single wiki article from a discovery file.
 
     ``review``: run the per-dim review orchestrator (independent model
@@ -349,6 +350,7 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
         track=track,
         force=force or is_compiled(article_key),
         dry_run=dry_run,
+        writer=writer,
     )
     print(f"    ✓ compile_article in {time.monotonic() - t_stage:.1f}s", flush=True)
 
@@ -626,7 +628,7 @@ def cmd_review_existing(track: str, *, slug: str | None = None,
 
 def cmd_compile_all(track: str, *, limit: int | None = None,
                     force: bool = False, dry_run: bool = False,
-                    review: bool = False) -> None:
+                    review: bool = False, writer: str = "gemini") -> None:
     """Compile all articles for a track."""
     slugs = list_discovery_slugs(track)
     if not slugs:
@@ -663,7 +665,7 @@ def cmd_compile_all(track: str, *, limit: int | None = None,
             result = cmd_compile_one(
                 track, slug,
                 force=force, dry_run=dry_run,
-                review=review,
+                review=review, writer=writer,
             )
         except KeyboardInterrupt:
             # Explicit interrupt — stop the whole batch but leave state clean
@@ -850,7 +852,19 @@ def main() -> None:
     parser.add_argument("--force", action="store_true",
                         help="Recompile even if article + valid sidecar already exist")
     parser.add_argument("--dry-run", action="store_true",
-                        help="Print the assembled prompt without calling Gemini")
+                        help="Print the assembled prompt without calling the writer")
+    parser.add_argument(
+        "--writer",
+        choices=WRITER_CHOICES,
+        default="gemini",
+        help=(
+            "Writer agent to use for compilation. Default: gemini (subscription, "
+            "unlimited budget). Use 'claude' for cultural/decolonization-sensitive "
+            "tracks (literature, figures, periods, historiography, folk). Use "
+            "'gpt-5.5' for mechanical/structural content (grammar, academic, "
+            "pedagogy)."
+        ),
+    )
     parser.add_argument("--review", action="store_true",
                         help="Run per-dim + MIN review after compile "
                              "(strict persona, independent model calls, "
@@ -888,7 +902,7 @@ def main() -> None:
         success = cmd_compile_one(
             args.track, args.slug,
             force=args.force, dry_run=args.dry_run,
-            review=args.review,
+            review=args.review, writer=args.writer,
         )
         sys.exit(0 if success else 1)
 
@@ -896,7 +910,7 @@ def main() -> None:
         cmd_compile_all(
             args.track,
             limit=args.limit, force=args.force, dry_run=args.dry_run,
-            review=args.review,
+            review=args.review, writer=args.writer,
         )
         return
 

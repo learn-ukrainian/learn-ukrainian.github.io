@@ -406,7 +406,7 @@ class TestCompileArticleSkipLogic:
              patch("wiki.compiler.WIKI_DIR", wiki_dir), \
              patch("wiki.compiler.is_compiled", return_value=False), \
              patch("wiki.compiler.mark_compiled"), \
-             patch("wiki.compiler._call_gemini", return_value="# Title\n\nSentence [S1].\n"):
+             patch("wiki.compiler._call_writer", return_value="# Title\n\nSentence [S1].\n"):
             result = compile_article(
                 topic="Test",
                 slug="test",
@@ -433,7 +433,7 @@ class TestCompileArticleSkipLogic:
              patch("wiki.compiler.WIKI_DIR", wiki_dir), \
              patch("wiki.compiler.is_compiled", return_value=False), \
              patch("wiki.compiler.mark_compiled") as mark_compiled, \
-             patch("wiki.compiler._call_gemini", return_value="# Title\n\nSentence [S1].\n"), \
+             patch("wiki.compiler._call_writer", return_value="# Title\n\nSentence [S1].\n"), \
              patch("wiki.compiler.save_sources_registry", side_effect=OSError("disk full")):
             with pytest.raises(OSError, match="disk full"):
                 compile_article(
@@ -485,7 +485,7 @@ class TestCompileArticleSkipLogic:
              patch("wiki.compiler.WIKI_DIR", wiki_dir), \
              patch("wiki.compiler.is_compiled", return_value=False), \
              patch("wiki.compiler.mark_compiled") as mark_compiled, \
-             patch("wiki.compiler._call_gemini", return_value=call_result):
+             patch("wiki.compiler._call_writer", return_value=call_result):
             result = compile_article(
                 topic="Test",
                 slug="test",
@@ -518,7 +518,7 @@ class TestCompileArticleSkipLogic:
              patch("wiki.compiler.WIKI_DIR", wiki_dir), \
              patch("wiki.compiler.is_compiled", return_value=False), \
              patch("wiki.compiler.mark_compiled"), \
-             patch("wiki.compiler._call_gemini", return_value=noisy_response):
+             patch("wiki.compiler._call_writer", return_value=noisy_response):
             result = compile_article(
                 topic="Академічне письмо",
                 slug="academic-writing",
@@ -560,7 +560,7 @@ class TestCompileArticleSkipLogic:
              patch("wiki.compiler.WIKI_DIR", wiki_dir), \
              patch("wiki.compiler.is_compiled", return_value=False), \
              patch("wiki.compiler.mark_compiled"), \
-             patch("wiki.compiler._call_gemini", return_value=response):
+             patch("wiki.compiler._call_writer", return_value=response):
             result = compile_article(
                 topic="Test",
                 slug="test",
@@ -588,7 +588,7 @@ class TestCompileArticleSkipLogic:
              patch("wiki.compiler.WIKI_DIR", wiki_dir), \
              patch("wiki.compiler.is_compiled", return_value=False), \
              patch("wiki.compiler.mark_compiled"), \
-             patch("wiki.compiler._call_gemini", return_value=clean_response):
+             patch("wiki.compiler._call_writer", return_value=clean_response):
             result = compile_article(
                 topic="Test",
                 slug="clean",
@@ -616,7 +616,7 @@ class TestCompileArticleSkipLogic:
              patch("wiki.compiler.is_compiled", return_value=False), \
              patch("wiki.compiler.mark_compiled"), \
              patch(
-                 "wiki.compiler._call_gemini",
+                 "wiki.compiler._call_writer",
                  return_value="# Title\n\nOne [S1]. Two [S2]. Three [S3]. Four [S4]. Five [S5].\n",
              ):
             result = compile_article(
@@ -668,7 +668,7 @@ class TestCompileArticleSkipLogic:
              patch("wiki.compiler.is_compiled", return_value=False), \
              patch("wiki.compiler.mark_compiled"), \
              patch(
-                 "wiki.compiler._call_gemini",
+                 "wiki.compiler._call_writer",
                  return_value="# Title\n\n[S1][S2][S3][S4][S5]\n",
              ):
             result = compile_article(
@@ -781,6 +781,7 @@ class TestCompileCommand:
             force=False,
             dry_run=False,
             review=False,
+            writer="gemini",
         )
 
     def test_review_flag_delegates_to_review_article(self):
@@ -842,7 +843,7 @@ class TestCompileCommand:
              patch("wiki.compiler.WIKI_DIR", wiki_dir), \
              patch("wiki.compile.WIKI_DIR", wiki_dir), \
              patch("wiki.compiler.mark_compiled"), \
-             patch("wiki.compiler._call_gemini", return_value=noisy_response):
+             patch("wiki.compiler._call_writer", return_value=noisy_response):
             ok = cmd_compile_one("b2", "academic-writing", force=True)
 
         assert ok is True
