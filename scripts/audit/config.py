@@ -633,7 +633,7 @@ LEVEL_CONFIG = {
         'target_words': LEVEL_THRESHOLDS['A1'].target_words,
         'min_activities': 0,   # Mar 2026: dropped — quality over quantity, LLM decides count (#969)
         'min_items_per_activity': 6,  # Standard: 6 items minimum per activity
-        'min_types_unique': 0,  # Mar 2026: dropped with min_activities
+        'min_types_unique': 4,  # Apr 2026: activity prompt needs a positive floor; A1 letter modules use 3-4 types
         'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
         'min_engagement': 0,  # Apr 2026: dropped — review judges callout quality, not mechanical count
         'immersion_graduated': True,

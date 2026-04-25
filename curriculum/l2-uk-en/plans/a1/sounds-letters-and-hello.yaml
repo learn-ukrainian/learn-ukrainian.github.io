@@ -2,7 +2,7 @@ module: a1-001
 level: A1
 sequence: 1
 slug: sounds-letters-and-hello
-version: 1.6.1
+version: 1.6.2
 lifecycle: locked
 reviewed_at: '2026-04-23T00:00:00Z'
 reviewed_by: claude-opus-4-7-xhigh-1412-sounds-letters-and-hello
@@ -18,6 +18,7 @@ subtitle: 33 літери, 38 звуків, Привіт!
 focus: phonetics
 pedagogy: PPP
 phase: A1.1 [Звуки, літери та перший контакт]
+letter_module: true
 word_target: 1200
 objectives:
 - Розуміти різницю між звуками та літерами — базову відмінність в українській фонетиці
@@ -137,6 +138,72 @@ vocabulary_hints:
   - дім (house)
   - ніс (nose)
   - сон (dream)
+  - word: А
+    key_word: ананас
+  - word: Б
+    key_word: банан
+  - word: В
+    key_word: вода
+  - word: Г
+    key_word: гора
+  - word: Ґ
+    key_word: ґудзик
+  - word: Д
+    key_word: дім
+  - word: Е
+    key_word: екран
+  - word: Є
+    key_word: єнот
+  - word: Ж
+    key_word: жук
+  - word: З
+    key_word: зуб
+  - word: И
+    key_word: ирій
+  - word: І
+    key_word: ім'я
+  - word: Ї
+    key_word: їжак
+  - word: Й
+    key_word: йогурт
+  - word: К
+    key_word: кіт
+  - word: Л
+    key_word: лимон
+  - word: М
+    key_word: мама
+  - word: Н
+    key_word: ніс
+  - word: О
+    key_word: око
+  - word: П
+    key_word: пес
+  - word: Р
+    key_word: рука
+  - word: С
+    key_word: сон
+  - word: Т
+    key_word: тато
+  - word: У
+    key_word: урок
+  - word: Ф
+    key_word: фото
+  - word: Х
+    key_word: хата
+  - word: Ц
+    key_word: цукор
+  - word: Ч
+    key_word: час
+  - word: Ш
+    key_word: школа
+  - word: Щ
+    key_word: щука
+  - word: Ь
+    key_word: день
+  - word: Ю
+    key_word: юшка
+  - word: Я
+    key_word: яблуко
 activity_hints:
 - type: quiz
   focus: 'Розрізняй звуки та літери. Приклади питань: Що ми чуємо і вимовляємо? → звуки | Що ми бачимо
@@ -279,6 +346,12 @@ plan_fixes:
     marks deterministically AFTER review; plans must be stress-free.
   changes:
   - strip U+0301 from all string values (18 removals)
+- version: 1.6.2
+  date: '2026-04-25'
+  ref: '#1550'
+  trigger: Activity grid needs explicit alphabet vocab coverage for letter-module activity generation.
+  changes:
+  - add letter_module flag and 33 alphabet entries with key_word examples for required activity coverage
 changelog:
 - version: 1.6.0
   date: '2026-04-23'

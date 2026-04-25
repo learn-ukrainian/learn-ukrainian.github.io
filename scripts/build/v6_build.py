@@ -1326,7 +1326,7 @@ def _normalize_v6_phase_status(result: object, *, phase: str) -> V6_PHASE_STATUS
 # the same list object).
 _ALL_PHASES = [
     "check", "research", "skeleton", "pre-verify", "write", "honesty-annotate",
-    "exercises", "activities", "repair", "verify-exercises", "annotate",
+    "exercises", "activities", "repair", "activity-pre-validate", "verify-exercises", "annotate",
     "vocab", "enrich", "verify", "review", "review-style", "stress", "publish", "audit",
 ]
 PHASES = _ALL_PHASES
@@ -1366,6 +1366,7 @@ PHASE_LABELS: dict[str, str] = {
     "exercises": "Exercises",
     "activities": "Activities",
     "repair": "Repair",
+    "activity-pre-validate": "Activity pre-validation",
     "verify-exercises": "Verify exercises",
     "annotate": "Annotate",
     "vocab": "Vocabulary",
@@ -6817,6 +6818,140 @@ def _check_activity_semantics(data: dict) -> list[str]:
     return errors
 
 
+_SEMINAR_ACTIVITY_TRACKS = {"hist", "bio", "lit", "istorio", "oes", "ruth"}
+
+
+def _format_seminar_type_reference(level: str, plan: dict) -> str:
+    lowered = level.lower()
+    if not (
+        lowered in _SEMINAR_ACTIVITY_TRACKS
+        or lowered.startswith("lit-")
+        or str(plan.get("pedagogy") or "").lower() == "seminar"
+    ):
+        return ""
+    return "\n".join(
+        (
+            "### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):",
+            "- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]",
+            "- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]",
+            "- **reading**: Required: id, passage, questions[]",
+            "- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]",
+        )
+    )
+
+
+def _normalize_activity_match_text(value: str) -> str:
+    value = value.replace("\u0301", "").lower()
+    value = re.sub(r"[^\w\s'ʼіїєґ-]+", " ", value, flags=re.UNICODE)
+    return re.sub(r"\s+", " ", value).strip()
+
+
+def _iter_activity_strings(value: object):
+    if isinstance(value, str):
+        yield value
+    elif isinstance(value, dict):
+        for item in value.values():
+            yield from _iter_activity_strings(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from _iter_activity_strings(item)
+
+
+def _missing_required_vocab_in_activities(plan: dict, activities: object) -> list[str]:
+    required_terms = sorted(_required_vocab_terms(plan))
+    if not required_terms:
+        return []
+    activity_text = _normalize_activity_match_text(
+        " ".join(_iter_activity_strings(activities))
+    )
+    return [
+        term for term in required_terms
+        if _normalize_activity_match_text(term) not in activity_text
+    ]
+
+
+def _activity_pre_validation_findings(
+    *,
+    content_path: Path,
+    level: str,
+    slug: str,
+) -> tuple[list[dict[str, object]], dict[str, object]]:
+    from build.exercise_verify import verify_exercises
+
+    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
+    activities_path = CURRICULUM_ROOT / level / "activities" / f"{slug}.yaml"
+    findings: list[dict[str, object]] = []
+    if not plan_path.exists() or not activities_path.exists():
+        missing = plan_path if not plan_path.exists() else activities_path
+        return ([{
+            "dimension": "Exercise Quality",
+            "severity": "critical",
+            "location": "## whole module / activity pre-validation",
+            "issue": f"activity pre-validation could not find required file: {missing}",
+            "fix": "Regenerate activities after restoring required inputs.",
+        }], {})
+
+    plan = yaml.safe_load(plan_path.read_text("utf-8")) or {}
+    activities = yaml.safe_load(activities_path.read_text("utf-8")) or {}
+    result = verify_exercises(content_path.read_text("utf-8"), plan, activities=activities)
+    missing_vocab = _missing_required_vocab_in_activities(plan, activities)
+    if result.ungrounded_answers:
+        sample = ", ".join(
+            str(item.get("word") or "") for item in result.ungrounded_answers[:8]
+        )
+        findings.append({
+            "dimension": "Exercise Quality",
+            "severity": "critical",
+            "location": "## whole module / activities sidecar",
+            "issue": (
+                "activity grounding failed before review: answer word(s) "
+                f"not grounded in prose or plan vocabulary: {sample}"
+            ),
+            "fix": "Regenerate or repair activities so every answer is grounded.",
+        })
+    if missing_vocab:
+        findings.append({
+            "dimension": "Plan Adherence",
+            "severity": "critical",
+            "location": "## whole module / activities sidecar",
+            "issue": (
+                "required vocabulary coverage failed before review: missing "
+                + ", ".join(missing_vocab[:12])
+            ),
+            "fix": "Regenerate activities so every vocabulary_hints.required term appears in an activity.",
+        })
+    payload = {"ungrounded_answers": result.ungrounded_answers, "required_vocab_missing": missing_vocab}
+    return findings, payload
+
+
+def step_activity_pre_validate(content_path: Path, level: str, slug: str) -> bool:
+    """Block review when generated activities are ungrounded or miss required vocab."""
+    _log(f"\n{'='*60}")
+    _log("  Step 5g: ACTIVITY PRE-VALIDATE — Grounding + required vocab")
+    _log(f"{'='*60}")
+    findings, payload = _activity_pre_validation_findings(
+        content_path=content_path,
+        level=level,
+        slug=slug,
+    )
+    orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
+    orch_dir.mkdir(parents=True, exist_ok=True)
+    validation_path = orch_dir / "activity-pre-validation.json"
+    validation_path.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False),
+        "utf-8",
+    )
+    if findings:
+        _log("  ❌ Activity pre-validation failed")
+        for finding in findings:
+            _log(f"    - {finding['issue']}")
+        _log(f"  → {validation_path}")
+        return False
+    _log("  ✅ Activity pre-validation passed")
+    _log(f"  → {validation_path}")
+    return True
+
+
 def _build_activity_level_context(level: str, module_num: int, plan: dict) -> str:
     """Build level-aware context for the activity generator.
 
@@ -7073,6 +7208,7 @@ def step_activities(
     injection_markers = re.findall(
         r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->", module_content
     )
+    marker_count = len(injection_markers)
     if injection_markers:
         markers_text = "\n".join(f"- `<!-- INJECT_ACTIVITY: {m} -->`" for m in injection_markers)
     else:
@@ -7123,12 +7259,12 @@ def step_activities(
         from audit.config import get_level_config as _get_audit_cfg
         _module_focus = plan.get("focus") or plan.get("module_focus")
         _audit_profile = _get_audit_cfg(level.upper(), _module_focus)
-        min_types_unique = str(_audit_profile.get("min_types_unique", 0))
+        min_types_floor = int(_audit_profile.get("min_types_unique", 0) or 0)
+        min_types_unique = str(max(1, min_types_floor))
     except Exception:
-        min_types_unique = "0"
+        min_types_unique = "1"
     total_target = activity_config.get("TOTAL_TARGET", activity_config.get("ACTIVITY_COUNT_TARGET", "12"))
-    inline_min = activity_config.get("INLINE_MIN", "4")
-    inline_max = activity_config.get("INLINE_MAX", "6")
+    inline_min = inline_max = str(marker_count)
     workbook_min = activity_config.get("WORKBOOK_MIN", str(int(total_target) - int(inline_min)))
     workbook_max = activity_config.get("WORKBOOK_MAX", str(int(total_target) + 4))
     inline_allowed = activity_config.get("INLINE_ALLOWED_TYPES", activity_config.get("ALLOWED_ACTIVITY_TYPES", ""))
@@ -7140,6 +7276,8 @@ def step_activities(
     forbidden_types = activity_config.get("FORBIDDEN_ACTIVITY_TYPES", "")
     allowed_types = activity_config.get("ALLOWED_ACTIVITY_TYPES", "")
     required_types = activity_config.get("REQUIRED_TYPES", "")
+    letter_module_active = "true" if bool(plan.get("letter_module")) else "false"
+    seminar_type_reference = _format_seminar_type_reference(level, plan)
 
     # Fill template
     prompt = template
@@ -7155,6 +7293,8 @@ def step_activities(
         "{TOOL_INSTRUCTIONS}": tool_instructions,
         "{LEVEL_CONTEXT}": level_context,
         "{PEDAGOGY_PATTERNS}": pedagogy_patterns,
+        "{LETTER_MODULE_ACTIVE}": letter_module_active,
+        "{SEMINAR_TYPE_REFERENCE}": seminar_type_reference,
         "{ITEM_MINIMUMS_TABLE}": item_minimums_table,
         # New inline/workbook split placeholders (preferred)
         "{TOTAL_TARGET}": total_target,
@@ -9686,6 +9826,17 @@ def _refresh_post_patch_sidecars(
         if _needs_regen:
             _log("  ⚠️  Activities still below minimum after regen — continuing to audit")
     _save_v6_state(level, slug, "repair")
+    prevalidate_findings, _prevalidate_payload = _activity_pre_validation_findings(
+        content_path=content_path,
+        level=level,
+        slug=slug,
+    )
+    if prevalidate_findings:
+        message = "activity pre-validation failed after sidecar refresh: " + "; ".join(
+            str(item["issue"]) for item in prevalidate_findings
+        )
+        raise RecoverableValidationError(message, prevalidate_findings)
+    _save_v6_state(level, slug, "activity-pre-validate")
 
     verify_status = _normalize_v6_phase_status(
         step_verify(content_path, level, module_num),
@@ -10504,7 +10655,7 @@ def main():
                         help="Default: claude-tools (2026-04-23: switched from gemini-tools after #1431 v2 showed Gemini factual-hallucination on decolonization-critical facts — e.g. writing «блакитний» instead of «синій» for the Ukrainian flag. Opus has stronger factual adherence + less Russian-imperial training-data contamination. *-tools = with verification access during writing via MCP/shell)")
     parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools", "codex", "codex-tools"], default=None,
                         help="Override reviewer. Default: cross-agent (opposite of writer)")
-    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "honesty-annotate", "exercises", "activities", "repair", "verify-exercises", "annotate", "vocab-check", "enrich", "verify", "review", "review-style", "publish", "audit", "all"],
+    parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "honesty-annotate", "exercises", "activities", "repair", "activity-pre-validate", "verify-exercises", "annotate", "vocab-check", "enrich", "verify", "review", "review-style", "publish", "audit", "all"],
                         default="all",
                         help="Stop after this phase or run the full pipeline (default: all).")
     skeleton_group = parser.add_mutually_exclusive_group()
@@ -11141,6 +11292,35 @@ def main():
 
             _save_v6_state(args.level, slug, "repair")
             _emit_phase_done("repair", _phase_start)
+
+        # Step 5g: ACTIVITY PRE-VALIDATE — blocking grounding + vocab coverage
+        if (
+            steps in ("all", "activities", "repair", "activity-pre-validate")
+            and "activity-pre-validate" not in completed_phases
+        ):
+            _phase_start = time.monotonic()
+            prevalidate_ok = step_activity_pre_validate(content_path, args.level, slug)
+            if not prevalidate_ok and steps in ("all", "activities", "repair"):
+                _log("  🔄 Activity pre-validation failed — regenerating activities once through tier-1 repair")
+                activity_path = step_activities(
+                    content_path, args.level, args.module, slug,
+                    writer=args.writer,
+                )
+                if activity_path:
+                    _inject_abetka_activities(activity_path, args.level, slug)
+                    repair_ok, _needs_regen = step_repair(args.level, args.module, slug)
+                    if repair_ok:
+                        prevalidate_ok = step_activity_pre_validate(content_path, args.level, slug)
+            if not prevalidate_ok:
+                _log("\n❌ Build FAILED at Step 5g (activity pre-validation)")
+                _save_v6_state(args.level, slug, "activity-pre-validate", status="failed")
+                _emit_module_failed(
+                    "activity-pre-validate",
+                    "Build FAILED at Step 5g (activity pre-validation)",
+                )
+                sys.exit(1)
+            _save_v6_state(args.level, slug, "activity-pre-validate")
+            _emit_phase_done("activity-pre-validate", _phase_start)
 
         # Step 5d: VERIFY EXERCISES — grounding check (informational, non-blocking)
         if steps in ("all", "exercises", "verify-exercises") and "verify-exercises" not in completed_phases:
