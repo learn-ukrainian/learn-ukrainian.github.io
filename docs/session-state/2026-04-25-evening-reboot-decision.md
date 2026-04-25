@@ -122,6 +122,43 @@ The four questions:
 6. Apply any consensus changes to manifest, commit
 7. Begin Phase 0 — North Star draft (with Codex + Gemini)
 
+## Phase 1 EXECUTED — closed at session end
+
+After the handoff above was first written, the session continued through
+Phase 1 work (per user direction "you will work all night and organize"):
+
+### Q1+Q2 label corrections
+- #1197 (Pre-launch infrastructure) moved from `mvp-deferred` → `reboot-blocker` (Codex's call)
+- #705 (Vocab progression audit A1→C2) moved from `reboot-blocker` → `backlog` (Codex's call)
+
+### Q3 — bulk legacy discard
+- ~7,800 files removed from `curriculum/l2-uk-en/{a1,a2,b1,b2,c1,c2}/` and `starlight/src/content/docs/{level}/`
+- a1/1 manual patches quarantined to `testbed/reference/a1/1/` (gitignore exception added: `!/testbed/reference/`)
+- Orphan top-level `activities/` dir (29 files, V6-era) removed
+- `curriculum/l2-uk-en/stuck-modules.yaml` (V6 tracking) removed
+
+### Q4 — personal-name scrub
+- 13 wiki LOCKED review files: "(Teacher X / Teacher Y)" → "(native-speaker reviewer)"
+- 8 design docs / ADRs / scripts: line-by-line scrub
+- 3 pre-reboot session-state files DELETED (V6 history, no forward value, most exposure)
+- `tests/test_human_eval_tracker.py`: fixture rename ReviewerA/ReviewerB
+- 4 newly-found refs scrubbed (.gitignore comment, miyklas-resources, agent-channels context, etc.)
+- Public Ukrainian creators preserved (Anna Ohoiko, textbook authors, academic publishers)
+- Generic dialogue uses of common Ukrainian first names preserved
+
+### Final state
+- 8 commits on main this session: salvage manifest draft → handoff doc → personal-name audit → personal-name scrub → testbed quarantine → bulk discard → manifest FINAL → dispatch briefs preserved
+- Phase 1 sub-issue #1579 CLOSED with completion comment
+- Final issue label distribution: 20 reboot-blocker / 35 mvp-deferred / 7 backlog / 3 EPIC-level
+
+### Working tree state at handoff time
+- ~870 files still dirty: mostly Gemini's wiki cron (new wiki figures + modified wiki articles), corpus_audit reports, current.md, finding-normalizer-growth.yaml, plus a backup of sources.db. None of these block Phase 0; the wiki cron's new figures are part of corpus salvage.
+- The user's previous-session orchestration-final*.md handoffs are untouched (not in my scope).
+
+### Phase 0 starts here
+The user starts Phase 0 by commissioning the North Star + Lesson Contract draft.
+Three-agent collaboration: Claude drafts, Codex + Gemini review, all three sign off.
+
 ## Anti-checklist (next session)
 
 1. **NO solo Claude decisions on architecture.** Always consult Codex + Gemini via `ab discuss` or `ab post`.
