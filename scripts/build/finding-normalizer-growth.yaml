@@ -46,3 +46,434 @@
     the teach-then-practice flow required for A1.
   fix: Rewrite these sections in concise, Ukrainian-first pedagogy with examples leading
     the explanation, not the other way around.
+- dimension: factual
+  location: Голосні звуки / “42–46% of spoken speech is vowel sound.”
+  issue: "Українською: Точний відсоток не підтверджено в контракті або наданих джерелах.\
+    \  \nEnglish: Unsupported numerical claim."
+  fix: Remove the percentage.
+- dimension: naturalness
+  location: Звуки і літери / “That is a real gift.”
+  issue: 'Українською: Це порожній підбадьорювальний коментар без навчального змісту;
+    близько до §4 padding.'
+  fix: “That lets you pronounce new Ukrainian words before you know their meaning.”
+- dimension: naturalness
+  location: Привіт! / “every sound type from this module lives inside one word.”
+  issue: 'Українською: Персоніфікація “lives inside” звучить прикрашено й трохи машинно.'
+  fix: “this one word contains both types of sounds from the module.”
+- dimension: language
+  location: Section "Приголосні звуки" / `Hear він (it) in ґанок (porch).`
+  issue: 'Українською: `він`
+
+    English: Hallucinated Ukrainian word inserted into English instruction. The word
+    **він** means "he/it", but has no linguistic reason to appear here as a label
+    for the sound [g].'
+  fix: '`Hear it in ґанок (porch).`'
+- dimension: naturalness
+  location: Звуки і літери / Приголосні звуки
+  issue: 'Українською: Over-aggressive inline code-switching fractures the English
+    grammatical structure.
+
+    English: Since English carries the explanation in this level band (A1.1), the
+    English sentence structure must remain intact. Introducing Ukrainian terms as
+    parentheticals or appositives is natural; substituting structural components of
+    an English sentence with Ukrainian phrases creates a stuttering, Yoda-like reading
+    experience (e.g., "a Slavic feature that в **англійській** (in English) is absent").'
+  fix: Adjust the code-switched phrases to maintain English grammatical integrity.
+- dimension: naturalness
+  location: Приголосні звуки
+  issue: 'Українською: "drawn from 22 **літер** (letters)"
+
+    English: Clunky use of the Ukrainian genitive plural ("літер") reacting to the
+    English preposition "from". When introducing a base Ukrainian term alongside an
+    English number, use the nominative form in parentheses.'
+  fix: '"drawn from 22 letters (**літери**)"'
+- dimension: honesty
+  location: Голосні звуки
+  issue: 'Українською: 42–46% of spoken speech is vowel sound
+
+    English: The writer injected a specific statistical claim not present in the provided
+    wiki excerpts or contract. While factually true, asserting external knowledge
+    without a `<!-- VERIFY -->` marker violates the honesty rule against unsupported
+    factual certainty.'
+  fix: Add a `<!-- VERIFY -->` marker to the statistical claim.
+- dimension: honesty
+  location: Приголосні звуки
+  issue: 'Українською: restored to the alphabet in 1990 after Soviet suppression
+
+    English: The writer injected a specific historical fact about the letter Ґ that
+    was not in the source material. It must be flagged with a `<!-- VERIFY -->` marker.'
+  fix: Add a `<!-- VERIFY -->` marker to the historical claim.
+- dimension: honesty
+  location: Приголосні звуки (tip block)
+  issue: 'Українською: Hear **він** (it) in **ґанок** (porch).
+
+    English: The writer invented a nonsensical example. It attempted to say "Hear
+    it [the sound] in ґанок", but literally translated "it" to "**він** (it)" as if
+    teaching the word "він", which makes no sense in this context. This is a direct
+    result of unsupported invention.'
+  fix: Remove the hallucinated "**він** (it)" translation.
+- dimension: factual
+  location: Приголосні звуки / “each **літера** (letter) can stand for a hard or soft
+    sound”
+  issue: 'Українською: Не кожна приголосна літера має тверду й м’яку пару. Contract
+    says only some consonants form hard/soft pairs.'
+  fix: Say “Some consonants form hard/soft pairs.”
+- dimension: language
+  location: Приголосні звуки / “Hear **він** (it) in **ґанок** (porch).”
+  issue: 'Українською: **він** means “he,” not “it,” and it is not a sound contained
+    in **ґанок**. This teaches a wrong Ukrainian lexical item inside a pronunciation
+    note.
+
+    English: Replace the stray pronoun with the intended letter/sound.'
+  fix: “Hear **ґ** in **ґанок** (porch).”
+- dimension: naturalness
+  location: Приголосні звуки / “Hear **він** (it) in **ґанок** (porch).”
+  issue: "Українською: Фраза звучить механічно й незрозуміло: **він** тут не потрібне,\
+    \ а “it” не пояснює звук природно.  \nEnglish: The sentence reads like a generation\
+    \ artifact."
+  fix: “Hear the hard [g] in **ґанок** (porch).”
+- dimension: naturalness
+  location: Звуки і літери / “That is a real gift.”
+  issue: "Українською: Це звучить як порожня підбадьорювальна вставка без нового навчального\
+    \ змісту.  \nEnglish: Mild filler under §4."
+  fix: “That makes first reading practice more predictable.”
+- dimension: honesty
+  location: Голосні звуки / `Ukrainian is strikingly vocalic — 42–46% of spoken speech
+    is vowel sound.`
+  issue: 'Українською: Точний відсоток не підтверджений контрактом або wiki excerpts
+    і поданий без `<!-- VERIFY -->`.
+
+    English: Unsupported precision triggers the honesty hard cap.'
+  fix: 'Remove the statistic or add a specific `<!-- VERIFY: source for 42–46% vowel
+    share in spoken Ukrainian -->`.'
+- dimension: honesty
+  location: Приголосні звуки / `each **літера** (letter) can stand for a hard or soft
+    sound`
+  issue: 'Українською: План каже “деякі приголосні утворюють пари,” а не кожна літера.
+
+    English: Overgeneralized from the plan.'
+  fix: Replace with “Some consonant letters form hard/soft pairs.”
+- dimension: factual
+  location: '`Приголосні звуки` / “found in a small specific list”'
+  issue: 'Українською: Ґ справді позначає [g], але “small specific list” подає надто
+    вузьке й потенційно хибне обмеження.'
+  fix: Say it appears in words such as the listed examples.
+- dimension: factual
+  location: '`Підсумок` / “never for a teacher or a stranger”'
+  issue: 'Українською: “Привіт” є неформальним, але “never” надмірно абсолютне. Контракт
+    каже “для друзів, родини, однолітків”, не універсальну заборону.'
+  fix: Use “not the default” instead.
+- dimension: naturalness
+  location: Звуки і літери / “The Ukrainian **алфавіт**...”
+  issue: "Українською: Речення звучить як механічне вшивання українських слів **від**,\
+    \ **на відміну від**, **відповідь** у англійський синтаксис. Це не контрольований\
+    \ український чанк, а keyword-stuffing.  \nEnglish: The code-switching is unnatural\
+    \ and looks generated."
+  fix: Replace with natural English scaffolding and keep only the needed Ukrainian
+    anchors.
+- dimension: honesty
+  location: Приголосні звуки / “Nine pairs...”
+  issue: 'Українською: “Nine pairs plus the always-soft [й] give the full set” is
+    a precise consonant-inventory claim not present in the contract and not safely
+    verified here.
+
+    English: The contract says consonants form hard/soft pairs, but does not authorize
+    this exact count/explanation.'
+  fix: Mark with VERIFY or remove the exact “nine pairs” claim.
+- dimension: factual
+  location: Звуки і літери / “Three things explain the gap between 33 letters and
+    38 sounds...”
+  issue: "Українською: пояснення не відповідає scope lock: головний механізм “тверді/м’які\
+    \ пари” пропущено, а `дж`/`дз` подано як одну з трьох причин різниці 38 > 33.\
+    \  \nEnglish: This teaches a different mechanism from the contract."
+  fix: Replace with the contract-aligned explanation.
+- dimension: factual
+  location: Приголосні звуки / “softens the **літера** (letter) before it”
+  issue: 'Українською: Ь пом’якшує попередній приголосний звук, не літеру.'
+  fix: Change to “preceding consonant sound.”
+- dimension: naturalness
+  location: 'Приголосні звуки / “Try the falsification test: sing a pure [к], or [п].”'
+  issue: "Українською: Формулювання надто академічне для A1; учитель природніше сказав\
+    \ би “quick test” або “try this.”  \nEnglish: “Falsification test” breaks the\
+    \ otherwise clear classroom tone."
+  fix: '“Try a quick test: try to sing a pure [к] or [п].”'
+- dimension: honesty
+  location: '`Приголосні звуки` / `**Ґ** was restored to the alphabet in 1990.`'
+  issue: 'Українською: Історична дата подана як упевнене твердження без VERIFY-маркера.
+
+    English: Historical dates are explicitly in §5 scope.'
+  fix: Add a VERIFY marker naming the claim and the source to check.
+- dimension: honesty
+  location: '`Приголосні звуки` / `nine consonants each have a hard and a soft version`'
+  issue: 'Українською: Точна кількість приголосних пар не має маркера й не встановлена
+    прямо в наданому knowledge packet.
+
+    English: This is a precise count of linguistic units.'
+  fix: Add a source-bearing VERIFY marker or soften/remove the count.
+- dimension: dialogue
+  location: '`Class opening — teacher greets formally, students respond informally.`
+    / `**Учні:** Привіт!`'
+  issue: "Українською: Учні хором відповідають учителеві `Привіт!` після `Добрий день!`;\
+    \ це звучить як навчальна підстановка, а не як природна класна ситуація.  \nEnglish:\
+    \ Students would more naturally answer the teacher with `Добрий день!`; `Привіт!`\
+    \ can be practiced in the peer dialogue."
+  fix: Change the class response to `Добрий день!`.
+- dimension: factual
+  location: Звуки і літери / “sound-inventory runs larger...” and Підсумок / “Чому
+    звуків більше...”
+  issue: 'Українською: The module gives **дж/дз as a cause** of 38 sounds > 33 letters.
+    That is backwards for the stated explanation: digraphs use two letters for one
+    sound. The contract’s reason set is йотовані letters, hard/soft consonant pairs,
+    and ь marking softness without sound.'
+  fix: Replace the digraph-as-cause explanation with hard/soft consonant pairs; keep
+    дж/дз only as a separate digraph note.
+- dimension: factual
+  location: Привіт! / “мама і тато ... uses і after a consonant”
+  issue: 'Українською: **мама** ends in a vowel, not a consonant, and the contract
+    states after vowel → **в/й**, after consonant → **у/і**.'
+  fix: Use **мама й тато** for after-vowel **й**, and add **брат і сестра** for after-consonant
+    **і**.
+- dimension: factual
+  location: Приголосні звуки / “Г is a soft, voiced fricative...”
+  issue: 'Українською: Calling **Г** “soft” is misleading in a section that teaches
+    hard/soft consonants; **г** is not being taught here as a palatalized soft-pair
+    consonant.'
+  fix: Describe **Г** as [ɦ] without “soft,” and **Ґ** as [g] without “hard” unless
+    explicitly contrasting plosive/fricative.
+- dimension: factual
+  location: Голосні звуки / “Україна carries four vowels in a row”
+  issue: 'Українською: **Україна** has four vowel sounds/letters across the word,
+    but not “in a row.”'
+  fix: Say it contains four vowel sounds across the word.
+- dimension: language
+  location: Привіт! / “The pairs **у / в** and **і / й** alternate...”
+  issue: 'Українською: **«мама і тато»** is a poor example for the rule being taught,
+    because **мама** ends in a vowel. The project’s own euphony materials use **«мама
+    й тато»** after a vowel.
+
+    English: This teaches the wrong і/й alternation pattern.'
+  fix: Replace **«мама і тато»** with **«мама й тато»**, and update the explanation
+    to “uses **й** after a vowel.”
+- dimension: decolonization
+  location: Привіт! / “sound Ukrainian rather than filtered through a Russian speaker's
+    ear”
+  issue: 'Українською: образ “Russian speaker''s ear” зайво повертає рамку до російського
+    слухача.
+
+    English: The module should frame the target as Ukrainian pronunciation, not as
+    escape from a Russian listener’s filter.'
+  fix: Replace with Ukrainian-positive pronunciation framing.
+- dimension: completeness
+  location: '`## Звуки і літери` / “You will meet all 33 letters of the Ukrainian
+    alphabet in the grid below.”'
+  issue: "Українською: Contract requires “Український алфавіт (абетка): усі 33 літери\
+    \ по порядку. Кожна літера має свою назву.” The section does not list the 33 letters\
+    \ in order or give their names; it only defers them to a later grid.  \nEnglish:\
+    \ Silent deferral leaves a contracted section beat incomplete."
+  fix: Add the ordered alphabet with letter names inside this section.
+- dimension: naturalness
+  location: Привіт! / "Ukrainian has a politeness system between sounds, too."
+  issue: 'Українською: Формула "politeness system between sounds" звучить штучно й
+    термінологічно невдало; милозвучність не є "politeness system".
+
+    English: The metaphor feels machine-generated.'
+  fix: '"Ukrainian also cares about how sounds meet."'
+- dimension: honesty
+  location: Приголосні звуки / “nine consonants form pairs of one hard and one soft
+    variety, plus the **завжди** soft sound [й].”
+  issue: "Українською: “nine consonants” — точна кількість мовних одиниць без VERIFY.\
+    \  \nEnglish: Precise count not directly grounded by the packet."
+  fix: Add a VERIFY marker naming the hard/soft-pair claim and source to check.
+- dimension: honesty
+  location: 'Multiple VERIFY markers / “`<!-- VERIFY: precise claim (...) -->`”'
+  issue: "Українською: VERIFY markers name the claim but not the source, so they are\
+    \ lower-signal than required.  \nEnglish: Markers should point to the contract/source\
+    \ anchor or textbook/source to check."
+  fix: Add source names to the marker text.
+- dimension: factual
+  location: Звуки і літери / “sound-inventory runs larger...” and Підсумок / “Чому
+    звуків більше...”
+  issue: 'Українською: The module gives **дж/дз as a cause** of 38 sounds > 33 letters.
+    That is backwards for the stated explanation: digraphs use two letters for one
+    sound. The contract’s reason set is йотовані letters, hard/soft consonant pairs,
+    and ь marking softness without sound.'
+  fix: Replace the digraph-as-cause explanation with hard/soft consonant pairs; keep
+    дж/дз only as a separate digraph note.
+- dimension: factual
+  location: Привіт! / “мама і тато ... uses і after a consonant”
+  issue: 'Українською: **мама** ends in a vowel, not a consonant, and the contract
+    states after vowel → **в/й**, after consonant → **у/і**.'
+  fix: Use **мама й тато** for after-vowel **й**, and add **брат і сестра** for after-consonant
+    **і**.
+- dimension: factual
+  location: Приголосні звуки / “Г is a soft, voiced fricative...”
+  issue: 'Українською: Calling **Г** “soft” is misleading in a section that teaches
+    hard/soft consonants; **г** is not being taught here as a palatalized soft-pair
+    consonant.'
+  fix: Describe **Г** as [ɦ] without “soft,” and **Ґ** as [g] without “hard” unless
+    explicitly contrasting plosive/fricative.
+- dimension: factual
+  location: Голосні звуки / “Україна carries four vowels in a row”
+  issue: 'Українською: **Україна** has four vowel sounds/letters across the word,
+    but not “in a row.”'
+  fix: Say it contains four vowel sounds across the word.
+- dimension: language
+  location: Привіт! / “The pairs **у / в** and **і / й** alternate...”
+  issue: 'Українською: **«мама і тато»** is a poor example for the rule being taught,
+    because **мама** ends in a vowel. The project’s own euphony materials use **«мама
+    й тато»** after a vowel.
+
+    English: This teaches the wrong і/й alternation pattern.'
+  fix: Replace **«мама і тато»** with **«мама й тато»**, and update the explanation
+    to “uses **й** after a vowel.”
+- dimension: decolonization
+  location: Привіт! / “sound Ukrainian rather than filtered through a Russian speaker's
+    ear”
+  issue: 'Українською: образ “Russian speaker''s ear” зайво повертає рамку до російського
+    слухача.
+
+    English: The module should frame the target as Ukrainian pronunciation, not as
+    escape from a Russian listener’s filter.'
+  fix: Replace with Ukrainian-positive pronunciation framing.
+- dimension: completeness
+  location: '`## Звуки і літери` / “You will meet all 33 letters of the Ukrainian
+    alphabet in the grid below.”'
+  issue: "Українською: Contract requires “Український алфавіт (абетка): усі 33 літери\
+    \ по порядку. Кожна літера має свою назву.” The section does not list the 33 letters\
+    \ in order or give their names; it only defers them to a later grid.  \nEnglish:\
+    \ Silent deferral leaves a contracted section beat incomplete."
+  fix: Add the ordered alphabet with letter names inside this section.
+- dimension: naturalness
+  location: Привіт! / "Ukrainian has a politeness system between sounds, too."
+  issue: 'Українською: Формула "politeness system between sounds" звучить штучно й
+    термінологічно невдало; милозвучність не є "politeness system".
+
+    English: The metaphor feels machine-generated.'
+  fix: '"Ukrainian also cares about how sounds meet."'
+- dimension: honesty
+  location: Приголосні звуки / “nine consonants form pairs of one hard and one soft
+    variety, plus the **завжди** soft sound [й].”
+  issue: "Українською: “nine consonants” — точна кількість мовних одиниць без VERIFY.\
+    \  \nEnglish: Precise count not directly grounded by the packet."
+  fix: Add a VERIFY marker naming the hard/soft-pair claim and source to check.
+- dimension: honesty
+  location: 'Multiple VERIFY markers / “`<!-- VERIFY: precise claim (...) -->`”'
+  issue: "Українською: VERIFY markers name the claim but not the source, so they are\
+    \ lower-signal than required.  \nEnglish: Markers should point to the contract/source\
+    \ anchor or textbook/source to check."
+  fix: Add source names to the marker text.
+- dimension: factual
+  location: Звуки і літери / “sound-inventory runs larger...” and Підсумок / “Чому
+    звуків більше...”
+  issue: 'Українською: The module gives **дж/дз as a cause** of 38 sounds > 33 letters.
+    That is backwards for the stated explanation: digraphs use two letters for one
+    sound. The contract’s reason set is йотовані letters, hard/soft consonant pairs,
+    and ь marking softness without sound.'
+  fix: Replace the digraph-as-cause explanation with hard/soft consonant pairs; keep
+    дж/дз only as a separate digraph note.
+- dimension: factual
+  location: Привіт! / “мама і тато ... uses і after a consonant”
+  issue: 'Українською: **мама** ends in a vowel, not a consonant, and the contract
+    states after vowel → **в/й**, after consonant → **у/і**.'
+  fix: Use **мама й тато** for after-vowel **й**, and add **брат і сестра** for after-consonant
+    **і**.
+- dimension: factual
+  location: Приголосні звуки / “Г is a soft, voiced fricative...”
+  issue: 'Українською: Calling **Г** “soft” is misleading in a section that teaches
+    hard/soft consonants; **г** is not being taught here as a palatalized soft-pair
+    consonant.'
+  fix: Describe **Г** as [ɦ] without “soft,” and **Ґ** as [g] without “hard” unless
+    explicitly contrasting plosive/fricative.
+- dimension: factual
+  location: Голосні звуки / “Україна carries four vowels in a row”
+  issue: 'Українською: **Україна** has four vowel sounds/letters across the word,
+    but not “in a row.”'
+  fix: Say it contains four vowel sounds across the word.
+- dimension: language
+  location: Привіт! / “The pairs **у / в** and **і / й** alternate...”
+  issue: 'Українською: **«мама і тато»** is a poor example for the rule being taught,
+    because **мама** ends in a vowel. The project’s own euphony materials use **«мама
+    й тато»** after a vowel.
+
+    English: This teaches the wrong і/й alternation pattern.'
+  fix: Replace **«мама і тато»** with **«мама й тато»**, and update the explanation
+    to “uses **й** after a vowel.”
+- dimension: decolonization
+  location: Привіт! / “sound Ukrainian rather than filtered through a Russian speaker's
+    ear”
+  issue: 'Українською: образ “Russian speaker''s ear” зайво повертає рамку до російського
+    слухача.
+
+    English: The module should frame the target as Ukrainian pronunciation, not as
+    escape from a Russian listener’s filter.'
+  fix: Replace with Ukrainian-positive pronunciation framing.
+- dimension: completeness
+  location: '`## Звуки і літери` / “You will meet all 33 letters of the Ukrainian
+    alphabet in the grid below.”'
+  issue: "Українською: Contract requires “Український алфавіт (абетка): усі 33 літери\
+    \ по порядку. Кожна літера має свою назву.” The section does not list the 33 letters\
+    \ in order or give their names; it only defers them to a later grid.  \nEnglish:\
+    \ Silent deferral leaves a contracted section beat incomplete."
+  fix: Add the ordered alphabet with letter names inside this section.
+- dimension: naturalness
+  location: Привіт! / "Ukrainian has a politeness system between sounds, too."
+  issue: 'Українською: Формула "politeness system between sounds" звучить штучно й
+    термінологічно невдало; милозвучність не є "politeness system".
+
+    English: The metaphor feels machine-generated.'
+  fix: '"Ukrainian also cares about how sounds meet."'
+- dimension: honesty
+  location: Приголосні звуки / “nine consonants form pairs of one hard and one soft
+    variety, plus the **завжди** soft sound [й].”
+  issue: "Українською: “nine consonants” — точна кількість мовних одиниць без VERIFY.\
+    \  \nEnglish: Precise count not directly grounded by the packet."
+  fix: Add a VERIFY marker naming the hard/soft-pair claim and source to check.
+- dimension: honesty
+  location: 'Multiple VERIFY markers / “`<!-- VERIFY: precise claim (...) -->`”'
+  issue: "Українською: VERIFY markers name the claim but not the source, so they are\
+    \ lower-signal than required.  \nEnglish: Markers should point to the contract/source\
+    \ anchor or textbook/source to check."
+  fix: Add source names to the marker text.
+- dimension: naturalness
+  location: 'Голосні звуки / “Use the Ukrainian sound symbols here: Ukrainian has
+    6 vowel **sounds**: **[а], [о], [у], [е], [и], [і]**.”'
+  issue: "Українською: Це звучить як внутрішня редакторська команда, а не як жива\
+    \ навчальна проза.  \nEnglish: The sentence exposes drafting instructions to the\
+    \ learner."
+  fix: Remove the meta-command and state the point directly.
+- dimension: factual
+  location: Привіт! / “**«Доброго ранку!»** — until about 11 a.m.”
+  issue: "Українською: Точна межа “about 11 a.m.” не підтверджена контрактом або наведеними\
+    \ джерелами.  \nEnglish: This is an unsupported cultural/time-use claim."
+  fix: Remove the time cutoff or mark it for verification.
+- dimension: language
+  location: Приголосні звуки / “absent from **англійській** (English)”
+  issue: 'Українською: **англійській** is a bare substantivized adjective dropped
+    into an English frame. It is understandable, but the cleaner Ukrainian anchor
+    is **англійській мові**.
+
+    English: Minor case/ellipsis polish issue in an inline Ukrainian phrase.'
+  fix: '`англійській мові`'
+- dimension: naturalness
+  location: Приголосні звуки / “A **приголосний** (consonant) is the second great
+    category of Ukrainian sounds.”
+  issue: 'Українською: “second great category” звучить урочисто й неприродно для простого
+    A1 пояснення.
+
+    English: Over-grand phrasing for a basic classroom explanation.'
+  fix: “A **приголосний** (consonant) is the other main category of Ukrainian sounds.”
+- dimension: plan_adherence
+  location: '`## Звуки і літери`; plan item: “Український алфавіт (абетка): усі 33
+    літери по порядку. Кожна літера має свою назву.” Module passage: “The Ukrainian
+    **алфавіт** (also called **абетка**) has 33 letters in a fixed order, and each
+    letter has its own name.”'
+  issue: 'Українською: Модуль стверджує, що абетка має фіксований порядок, але не
+    подає всі 33 літери по порядку і не дає назв літер. Це також лишає `letter-grid-alphabet`
+    без попереднього навчання повної абетки.'
+  fix: Add the ordered 33-letter alphabet with letter names in Section 1 before any
+    alphabet activity marker.
+- dimension: exercise_quality
+  location: '## whole module / activities sidecar'
+  issue: 'activity grounding failed before review: answer word(s) not grounded in
+    prose or plan vocabulary: кіт, гора'
+  fix: Regenerate or repair activities so every answer is grounded.
