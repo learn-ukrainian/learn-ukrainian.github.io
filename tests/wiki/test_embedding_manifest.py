@@ -61,6 +61,42 @@ def _unit_inputs(
     ]
 
 
+def test_runtime_default_config_matches_legacy_shipped() -> None:
+    """``current_encoder_config`` must produce ``LEGACY_SHIPPED_CONFIG``
+    on the post-#1553-step-0, pre-#1553-step-1 main branch.
+
+    Why: opening a pre-existing manifest after merging step 0 must
+    NOT mark every existing row as stale (which would force a full
+    re-encode). That only works if the runtime's per-corpus config
+    matches the legacy stamp values applied by the migration. If
+    the runtime drifts (e.g. someone bumps INDEX_MAX_LENGTH in the
+    same commit as a chunker change without bumping the policy
+    version), this test fails loudly.
+
+    Codex review (msg #455): "A small
+    current_encoder_config(...) == LEGACY_SHIPPED_CONFIG test for
+    step 0 would also catch accidental drift between runtime
+    defaults and migration defaults."
+    """
+
+    from wiki.dense_rerank import current_encoder_config
+
+    for corpus in (
+        "textbook_sections",
+        "modern_literary",
+        "archaic_literary",
+        "external",
+        "wikipedia",
+        "ukrainian_wiki",
+    ):
+        assert current_encoder_config(corpus) == LEGACY_SHIPPED_CONFIG, (
+            f"current_encoder_config({corpus!r}) drifted from "
+            f"LEGACY_SHIPPED_CONFIG; this WILL force a full re-encode "
+            f"of corpus {corpus!r} on next open. Either bump "
+            f"chunk_policy_version intentionally or revert the drift."
+        )
+
+
 def test_legacy_shipped_config_matches_schema_defaults() -> None:
     """``LEGACY_SHIPPED_CONFIG`` must mirror the schema-baked defaults.
 
@@ -136,6 +172,156 @@ def test_v2_columns_present_with_legacy_defaults_on_fresh_init(tmp_path: Path) -
     assert columns["index_max_length"] == str(LEGACY_INDEX_MAX_LENGTH)
     assert columns["chunk_policy_version"] == f"'{LEGACY_CHUNK_POLICY_VERSION}'"
     assert columns["pooling_mode"] == f"'{LEGACY_POOLING_MODE}'"
+
+
+def test_partial_v2_schema_migration_completes_missing_columns(tmp_path: Path) -> None:
+    """A manifest stuck mid-migration must finish on next open.
+
+    Real-world: a previous run added one or two of the v2 columns
+    but crashed before adding the rest (or before creating the
+    config index). Opening the file again must complete the work,
+    not bail on a duplicate-column error.
+    """
+
+    db_path = _manifest_path(tmp_path)
+    db_path.parent.mkdir(parents=True)
+
+    legacy_conn = sqlite3.connect(str(db_path))
+    legacy_conn.executescript(
+        """
+        CREATE TABLE embedding_shards (
+            shard_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            corpus TEXT NOT NULL,
+            path TEXT NOT NULL,
+            rows INTEGER NOT NULL,
+            dims INTEGER NOT NULL DEFAULT 1024,
+            dtype TEXT NOT NULL DEFAULT 'float16',
+            committed_at TEXT NOT NULL
+        );
+
+        CREATE TABLE embedding_units (
+            unit_key TEXT PRIMARY KEY,
+            corpus TEXT NOT NULL,
+            parent_key TEXT,
+            text_sha256 TEXT NOT NULL,
+            model TEXT NOT NULL,
+            shard_id INTEGER NOT NULL REFERENCES embedding_shards(shard_id),
+            row_idx INTEGER NOT NULL,
+            deleted INTEGER NOT NULL DEFAULT 0,
+            updated_at TEXT NOT NULL
+        );
+        """
+    )
+    # Only add the FIRST v2 column (simulates partial migration).
+    legacy_conn.execute(
+        f"ALTER TABLE embedding_units ADD COLUMN index_max_length "
+        f"INTEGER NOT NULL DEFAULT {LEGACY_INDEX_MAX_LENGTH}"
+    )
+    legacy_conn.commit()
+    legacy_conn.close()
+
+    # Open with the upgraded code — must complete columns 2+3
+    # without crashing.
+    manifest = _make_manifest(tmp_path)
+    try:
+        # All v2 columns now exist, including the index.
+        conn = sqlite3.connect(str(db_path))
+        column_names = {
+            row[1] for row in conn.execute("PRAGMA table_info(embedding_units)").fetchall()
+        }
+        index_names = {
+            row[1] for row in conn.execute(
+                "SELECT type, name FROM sqlite_master WHERE name = 'idx_embunits_config'"
+            ).fetchall()
+        }
+        conn.close()
+        assert {"index_max_length", "chunk_policy_version", "pooling_mode"} <= column_names
+        assert "idx_embunits_config" in index_names
+    finally:
+        manifest.close()
+
+
+def test_concurrent_migration_does_not_race(tmp_path: Path) -> None:
+    """Two processes opening a v1 manifest simultaneously must not
+    both attempt the same ALTER (would crash with duplicate-column).
+
+    Codex review (msg #455) flagged the v1-locking PRAGMA + ALTER
+    pattern as concurrency-unsafe. Fix wraps schema check + ALTERs
+    in BEGIN IMMEDIATE; the second writer blocks until the first
+    commits, then re-reads PRAGMA and sees the new columns.
+
+    Threads share the SQLite file but each opens its own connection
+    — same race surface as separate processes for this purpose.
+    """
+
+    import threading
+
+    db_path = _manifest_path(tmp_path)
+    db_path.parent.mkdir(parents=True)
+
+    # Pre-create a v1-shaped manifest with a representative row.
+    legacy_conn = sqlite3.connect(str(db_path))
+    legacy_conn.executescript(
+        """
+        CREATE TABLE embedding_shards (
+            shard_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            corpus TEXT NOT NULL,
+            path TEXT NOT NULL,
+            rows INTEGER NOT NULL,
+            dims INTEGER NOT NULL DEFAULT 1024,
+            dtype TEXT NOT NULL DEFAULT 'float16',
+            committed_at TEXT NOT NULL
+        );
+
+        CREATE TABLE embedding_units (
+            unit_key TEXT PRIMARY KEY,
+            corpus TEXT NOT NULL,
+            parent_key TEXT,
+            text_sha256 TEXT NOT NULL,
+            model TEXT NOT NULL,
+            shard_id INTEGER NOT NULL REFERENCES embedding_shards(shard_id),
+            row_idx INTEGER NOT NULL,
+            deleted INTEGER NOT NULL DEFAULT 0,
+            updated_at TEXT NOT NULL
+        );
+        """
+    )
+    legacy_conn.commit()
+    legacy_conn.close()
+
+    barrier = threading.Barrier(parties=4)
+    failures: list[BaseException] = []
+    manifests: list[EmbeddingManifest] = []
+    lock = threading.Lock()
+
+    def opener() -> None:
+        try:
+            barrier.wait()  # release all 4 threads simultaneously
+            m = EmbeddingManifest(db_path)
+            with lock:
+                manifests.append(m)
+        except BaseException as exc:
+            with lock:
+                failures.append(exc)
+
+    threads = [threading.Thread(target=opener) for _ in range(4)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=30)
+
+    for m in manifests:
+        m.close()
+
+    assert not failures, f"concurrent migration raced: {failures!r}"
+
+    # Verify final state: all 3 v2 columns present, manifest queryable.
+    conn = sqlite3.connect(str(db_path))
+    column_names = {
+        row[1] for row in conn.execute("PRAGMA table_info(embedding_units)").fetchall()
+    }
+    conn.close()
+    assert {"index_max_length", "chunk_policy_version", "pooling_mode"} <= column_names
 
 
 def test_v1_to_v2_migration_stamps_legacy_rows(tmp_path: Path) -> None:

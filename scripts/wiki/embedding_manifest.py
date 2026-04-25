@@ -138,27 +138,71 @@ class EmbeddingManifest:
         ``DEFAULT`` clause on each ALTER, so the upgrade is
         non-destructive — old shards stay queryable.
 
-        Idempotent: a no-op once all v2 columns are present.
+        Concurrency: wrapped in ``BEGIN IMMEDIATE`` so two processes
+        that simultaneously open a v1 manifest cannot both observe
+        "v2 columns missing" and race to ALTER (one would get
+        ``duplicate column name``). The first writer takes the
+        reserved lock; the second blocks on ``busy_timeout`` and
+        re-reads PRAGMA after the lock releases — by which point
+        the columns exist and the ALTER loop is a no-op.
+
+        Idempotent: a no-op once all v2 columns are present, even
+        in pathological partial-v2 schemas (e.g. someone added one
+        column manually).
         """
+
+        # Fast path: read PRAGMA without a lock first. If everything
+        # is already v2, skip the immediate transaction entirely so
+        # opens of fully-migrated manifests stay cheap.
+        if self._is_schema_v2():
+            self._conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_embunits_config "
+                "ON embedding_units(unit_key, model, index_max_length, "
+                "chunk_policy_version, pooling_mode)"
+            )
+            return
+
+        # Slow path: take the write lock and re-check under it. Two
+        # processes both arriving here will serialize; the second
+        # finds v2 already in place and exits without ALTERs.
+        self._begin_immediate()
+        try:
+            existing_columns = {
+                row["name"]
+                for row in self._conn.execute(
+                    "PRAGMA table_info(embedding_units)"
+                ).fetchall()
+            }
+            for name, type_, default_sql in V2_COLUMNS:
+                if name in existing_columns:
+                    continue
+                self._conn.execute(
+                    f"ALTER TABLE embedding_units "
+                    f"ADD COLUMN {name} {type_} DEFAULT {default_sql}"
+                )
+            # v2 config-aware index. Created inside the same lock so
+            # it only runs after the columns it references exist.
+            self._conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_embunits_config "
+                "ON embedding_units(unit_key, model, index_max_length, "
+                "chunk_policy_version, pooling_mode)"
+            )
+            self._conn.commit()
+        except Exception:
+            self._rollback_quietly()
+            raise
+
+    def _is_schema_v2(self) -> bool:
+        """Cheap check (no lock) — does ``embedding_units`` already
+        carry every v2 column?"""
 
         existing_columns = {
             row["name"]
-            for row in self._conn.execute("PRAGMA table_info(embedding_units)").fetchall()
+            for row in self._conn.execute(
+                "PRAGMA table_info(embedding_units)"
+            ).fetchall()
         }
-        for name, type_, default_sql in V2_COLUMNS:
-            if name in existing_columns:
-                continue
-            self._conn.execute(
-                f"ALTER TABLE embedding_units "
-                f"ADD COLUMN {name} {type_} DEFAULT {default_sql}"
-            )
-        # v2 config-aware index. Created here (not in the DDL) so it
-        # only runs after the columns it references exist.
-        self._conn.execute(
-            "CREATE INDEX IF NOT EXISTS idx_embunits_config "
-            "ON embedding_units(unit_key, model, index_max_length, "
-            "chunk_policy_version, pooling_mode)"
-        )
+        return all(name in existing_columns for name, _, _ in V2_COLUMNS)
 
     def add_shard(
         self,
