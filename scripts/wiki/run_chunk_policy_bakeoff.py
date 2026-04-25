@@ -671,9 +671,20 @@ def run_cell(
             }
 
             # Free the encoded sub-chunk array before the next period
-            # to keep peak RSS down on the M-series Mac.
+            # to keep peak RSS down on the M-series Mac. Release MPS
+            # workspace explicitly — gc alone leaves it allocated and
+            # the next period's encode tips a 16 GB Mac into OOM.
+            # (Empirical: post-#1562 OOM-reboot 2026-04-25 on cell B
+            # middle_ukrainian after a successful OES.)
             del sub_dense, sub_texts, sub_chunks
             gc.collect()
+            try:
+                import torch
+
+                if torch.backends.mps.is_available():
+                    torch.mps.empty_cache()
+            except Exception:
+                pass
 
     return cell_results
 
@@ -807,6 +818,36 @@ def render_results_markdown(
         "are computed per-emitted-chunk, so sparse is NOT chunk-policy "
         "independent. The policy-pick decision is dense-only, which is the "
         "layer the chunk policy actually controls.\n"
+    )
+    out.append(
+        "5. **OES / Middle-Ukrainian source heterogeneity.** Per user "
+        "feedback (2026-04-25), confirmed by a per-source modern-letter "
+        "audit: literary corpora are a mix of three types — (a) "
+        "true side-by-side bilingual editions (archaic + modern "
+        "translation interleaved, e.g. `wave0-slovo-o-polku` 91%, "
+        "`wave9-tlkovaniye-1431` 83%, `wave1-pvl-lavrentiyivskyi` 78%); "
+        "(b) standalone modern-Ukrainian translations (e.g. "
+        "`wave0-pvl-yaremenko`, `wave6-galvol-kostruba`); (c) pure "
+        "archaic transcripts (e.g. `wave1-pvl-lavrentiyivskyi-"
+        "rozshyfrovka` 0% modern). Cell A embeds each row whole "
+        "regardless of type; cells B/C may split bilingual rows at "
+        "paragraph boundaries that happen to be archaic-modern "
+        "translation pairs, producing language-pure sub-chunks for "
+        "type (a). Any OES/middle Recall@10 *gain* in cells B/C should "
+        "therefore be partially discounted on bilingual sources — it "
+        "may be an artifact of language-purity splits, not boundary-"
+        "aware chunking on its own. Modern textbook Recall@10 is the "
+        "cleaner signal for the policy-pick decision.\n"
+    )
+    out.append(
+        "6. **Hungarian contamination in modern textbooks.** "
+        "`5-klas-ukrmova-uhor-2022-1` (246 rows in `textbooks`, 90 in "
+        "`textbook_sections`) is a Ukrainian-for-Hungarian-speakers "
+        "schoolbook with interleaved Hungarian text. Same `textbooks` "
+        "table feeds every cell, so this is a constant bias that "
+        "subtracts out of cell-vs-cell comparison — but absolute Modern "
+        "Recall@10 numbers may be 1-2 pp lower than they would be on a "
+        "language-pure corpus. Tracked in a separate followup issue.\n"
     )
 
     return "".join(out)
