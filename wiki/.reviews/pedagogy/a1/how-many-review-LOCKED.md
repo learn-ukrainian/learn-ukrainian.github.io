@@ -41,7 +41,7 @@
 This LOCKED state should be revisited if any of the following happen:
 
 1. The built module (how-many A1/M11) surfaces a gap the wiki did not anticipate — file as an issue, do a fresh review round, republish with incremented `last_reviewed` date.
-2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags a left- or right-column item in the L2-errors table — authoritative override of dictionary verification.
+2. A native-speaker reviewer (native-speaker reviewer) flags a left- or right-column item in the L2-errors table — authoritative override of dictionary verification.
 3. The `culture/decolonization/surzhyk-and-russianisms` wiki — referenced from the L2-errors table — changes its framing in a way that contradicts the table's typology.
 4. VESUM / СУМ-11 updates retire or re-label any of the cited forms (esp. `дев'ятдесят` arch/діал tagging or `год` "розм., рідко" label, which were load-bearing for two table rows).
 5. The paired plan drifts away from this wiki's new Step 7 content — e.g. if `гривня` agreement or age expression is subtracted from the plan without a paired wiki update.

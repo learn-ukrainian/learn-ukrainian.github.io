@@ -53,7 +53,7 @@ All right-column tokens in the new «Типові помилки L2» table, all
 This LOCKED state should be revisited if any of the following happen:
 
 1. The module build (hey-friend A1/M42) surfaces a gap the wiki did not anticipate — file as an issue, do a fresh review round, republish with incremented `last_reviewed` date.
-2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags a left- or right-column item in the «Типові помилки L2» table — authoritative override of the dictionary-based verification.
+2. A native-speaker reviewer (native-speaker reviewer) flags a left- or right-column item in the «Типові помилки L2» table — authoritative override of the dictionary-based verification.
 3. The `culture/decolonization/surzhyk-and-russianisms` wiki — which this wiki links to — changes its framing in a way that contradicts this table.
 4. VESUM / СУМ-11 updates retire or re-label any of the cited forms.
 5. The paired plan (`plans/a1/hey-friend.yaml`) is bumped past 1.3.x with content additions that require a new wiki-side hook.

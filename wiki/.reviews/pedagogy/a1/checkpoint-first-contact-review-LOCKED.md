@@ -33,7 +33,7 @@
 This LOCKED state should be revisited if any of the following happen:
 
 1. The module build (checkpoint-first-contact A1/M007) surfaces a gap the wiki did not anticipate — file as an issue, do a fresh review round, republish with incremented `last_reviewed` date.
-2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags a left- or right-column item in the "Типові помилки L2" table — authoritative override of the dictionary-based verification.
+2. A native-speaker reviewer (native-speaker reviewer) flags a left- or right-column item in the "Типові помилки L2" table — authoritative override of the dictionary-based verification.
 3. The `culture/decolonization/surzhyk-and-russianisms` wiki — which this wiki links to — changes its framing in a way that contradicts this table (e.g. re-classifies `спасибі` as neutral, which would affect the general framing of this wiki's note set).
 4. VESUM / СУМ-11 updates retire or re-label any of the cited forms, specifically `фамілія` (if the розм./заст./діал. labelling is changed) or `папа` (if the family sense is added to СУМ-11 as standard).
 5. Phase A1.1 module ordering changes (e.g. the upstream modules #1–#6 are renumbered or split) — the integration step's module-reference list would need updating.

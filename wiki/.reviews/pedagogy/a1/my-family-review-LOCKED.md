@@ -32,7 +32,7 @@
 This LOCKED state should be revisited if any of the following happen:
 
 1. The module build (my-family A1/M06) surfaces a gap the wiki did not anticipate — file as an issue, do a fresh review round, republish with incremented `last_reviewed` date.
-2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags a left- or right-column item in the Surzhyk table — authoritative override of the dictionary-based verification.
+2. A native-speaker reviewer (native-speaker reviewer) flags a left- or right-column item in the Surzhyk table — authoritative override of the dictionary-based verification.
 3. The `culture/decolonization/surzhyk-and-russianisms` wiki — which this wiki links to — changes its framing in a way that contradicts this table.
 4. VESUM / СУМ-11 updates retire or re-label any of the cited forms (particularly: `папа` status, `дядьо` as lemma for `дядя`).
 5. A future recompile silently drops the new sections — the wiki compiler's idempotency vs. the review-locked state is the same recompile-drift risk documented in this file's "Prior state" paragraph. If the meta block's `lifecycle: locked` is preserved but the body shrinks, the wiki is no longer locked in fact even if it claims to be.

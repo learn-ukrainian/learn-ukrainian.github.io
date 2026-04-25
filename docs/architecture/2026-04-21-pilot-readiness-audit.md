@@ -27,7 +27,7 @@
 **A1.** No destination path for Ukrainian-canonical content. Running
 `v6_build.py --step publish` writes to `starlight/src/content/docs/a1/`
 — the English track's URL path. M01 Ukrainian lesson overwrote the
-English M01 before the deeper issue surfaced. **Alona can't review what
+English M01 before the deeper issue surfaced. **the native reviewer can't review what
 she can't access, and we can't publish UK-canonical content without
 clobbering English.**
 
@@ -133,7 +133,7 @@ Different regex class from M##. Needs full-corpus scan.
 **D4.** Plain calques in plan prose. Gemini flagged 5 in 30 samples:
 `Давайте обговоримо`, `кожен день`, `приймати ліки`, `близько від`,
 `зимний`. Extrapolation: ~30 across 183. Needs sweep, but stylistic
-findings need native-reviewer (Alona/Tetiana) confirmation before
+findings need native-reviewer (the native reviewer) confirmation before
 mass-apply.
 
 **D5.** Structural defects (duplicate summaries — `a2-067` pulls from
@@ -184,10 +184,10 @@ per-track, or a "plan revision request" exit when rounds plateau.
 ### F. Architecture decisions needing explicit resolution
 
 **F1.** Review authority model. Who is allowed to ship a module? Pick one:
-- Alona alone (native-speaker canon, pipeline is advisory)
-- Pipeline ≥9 AND Alona sign-off
-- Pipeline ≥8 AND Alona veto window
-- Alona does UK-canonical, pipeline does English-track
+- the native reviewer alone (native-speaker canon, pipeline is advisory)
+- Pipeline ≥9 AND the native reviewer sign-off
+- Pipeline ≥8 AND the native reviewer veto window
+- the native reviewer does UK-canonical, pipeline does English-track
 
 **F2.** Fallback model policy. Pick one:
 - Pro-only for wikis/research (block Flash)
@@ -218,7 +218,7 @@ Mitigations landed today; needs monitoring / budget dashboard.
 
 ## Part 2 — Priority matrix
 
-|  | **P0: Blocks Alona pilot** | **P1: Blocks scale-up** | **P2: Defer** |
+|  | **P0: Blocks the native reviewer pilot** | **P1: Blocks scale-up** | **P2: Defer** |
 |---|---|---|---|
 | **Track arch** | A1 (UK path), A2 (ADR), F3 | | |
 | **Review pipeline** | B1 (heal-patch), B2 (word count), B3 (plan-prose enforcement), B5 (plan-issue verdict) | B4 (cross-agent enforce) | |
@@ -239,7 +239,7 @@ Mitigations landed today; needs monitoring / budget dashboard.
 ### Phase A: Architecture decisions (YOU, not agents)
 Cannot be delegated.
 - **F3/A1**: UK-track destination path — you pick
-- **F1**: review authority — you pick (likely "Alona canonical, pipeline advisory")
+- **F1**: review authority — you pick (likely "the native reviewer canonical, pipeline advisory")
 - **F2**: fallback model policy — you pick
 - **F4**: writer-reviewer matrix for UK — you pick
 
@@ -251,7 +251,7 @@ Depends on Phase A only for F3 path decisions.
 - **D1** (Codex, #1392 running) — Latin M## sweep
 - **D3** (extend Codex brief) — homoglyph scanner
 - **D2** (Gemini) — full context-blind ОБОВ'ЯЗКОВО audit across 183 plans
-- **D4/D7** (Gemini) — calque sweep, needs Alona confirmation before apply
+- **D4/D7** (Gemini) — calque sweep, needs the native reviewer confirmation before apply
 - **D5** (Gemini + Codex) — structural audit for duplicate sections
 - **D6** (Gemini with MCP tools) — Russian contamination audit
 
@@ -276,9 +276,9 @@ Run M01/M08/M38/A2-M02 with:
 - UK-canonical destination (A complete)
 - Patched heal loop + fixed rubric (D complete)
 
-Send to Alona. Her review is canon.
+Send to the native reviewer. Her review is canon.
 
-### Phase F: Scale-up batch (after E + Alona sign-off)
+### Phase F: Scale-up batch (after E + the native reviewer sign-off)
 Full A1 + A2 Ukrainian-canonical build.
 
 ### Phase G: English A1/A2 rebuild (after F, using enriched corpus)
@@ -295,7 +295,7 @@ the whole pipeline.
 | **Claude (me)** | Oversight: filing issues, writing briefs, integrating adversarial review, posting status to GH | Strategic/glue work — no bulk writing |
 | **Codex** | Phase B mechanical (D1, D3, D5), Phase C infrastructure (C1, C4), Phase D (B1-B5) | Deterministic code/regex work where it excels; cross-agent vs Gemini content |
 | **Gemini** | Phase B audit (D2, D4, D6) | Native-language pragmatic judgment (better than Codex for linguistic nuance) |
-| **Alona (Tetiana-backup)** | Confirm D4 calques before mass-apply; final Phase E pilot review | Native speaker, canon for register decisions |
+| **the native reviewer (the native reviewer-backup)** | Confirm D4 calques before mass-apply; final Phase E pilot review | Native speaker, canon for register decisions |
 
 **Claude constraints I commit to:**
 - No bulk content writing. Content = Gemini/Codex.
@@ -315,7 +315,7 @@ the whole pipeline.
 
 4. **UK-track destination decision (F3)** — what are the trade-offs of the 4 options? Which is lowest-risk for a pilot?
 
-5. **Review authority (F1)** — Alona alone vs gated-with-Alona-veto. What have other L2 corpora projects done?
+5. **Review authority (F1)** — the native reviewer alone vs gated-with-the native reviewer-veto. What have other L2 corpora projects done?
 
 6. **Phase B bottleneck** — Gemini auditing all 183 plans for Russian contamination (D6) at ~5s/plan + tool calls = ~30-60 min but will probably need multiple passes. Is there a faster approach?
 

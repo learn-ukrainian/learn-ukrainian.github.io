@@ -20,7 +20,7 @@ produce rich English modules; that's the build reason.
 
 **Secondary purpose:** useful for human Ukrainian-native learners /
 teachers as a by-product. Because the content is real lessons (not
-just a retrieval corpus), it's shareable. Alona reviews it partly to
+just a retrieval corpus), it's shareable. the native reviewer reviews it partly to
 verify corpus quality and partly because it's potentially useful for
 her students.
 
@@ -34,7 +34,7 @@ Where do **Ukrainian-canonical A1/A2 modules** (primarily corpus
 artifacts, secondarily human-readable content) live — filesystem,
 URL, public name — so that:
 
-1. Alona can access them via Starlight-rendered URL during review
+1. the native reviewer can access them via Starlight-rendered URL during review
 2. They NEVER overwrite the English-track at `docs/a1/*.mdx`
 3. They stay addressable during Phases 2-3 (corpus enrichment) and
    beyond if we choose to publish them publicly
@@ -54,7 +54,7 @@ URL, public name — so that:
 | Public name (UK) | Українська як рідна |
 | Public name (EN) | Ukrainian, Native Edition |
 
-**Pros:** Clean separation at framework layer. Alona gets full rendered experience (tabs, widgets). Search can be scoped per collection. Future-proofs for public launch as its own product. URL is honest about the audience.
+**Pros:** Clean separation at framework layer. the native reviewer gets full rendered experience (tabs, widgets). Search can be scoped per collection. Future-proofs for public launch as its own product. URL is honest about the audience.
 
 **Cons:** One-time Astro config work (~1hr). Duplicates some nav infrastructure.
 
@@ -72,18 +72,18 @@ URL, public name — so that:
 
 Separate Astro project entirely (`starlight-native/`).
 **Pros:** Total isolation.
-**Cons:** 2× infrastructure (CI, deploy, dependency updates); Alona navigates two URLs; no real benefit over Option 1.
+**Cons:** 2× infrastructure (CI, deploy, dependency updates); the native reviewer navigates two URLs; no real benefit over Option 1.
 
 ### Option 4: Markdown-only, no render
 
 Raw `.md` in `review-packets/uk-a1/`.
 **Pros:** Minimal infrastructure.
-**Cons:** Alona doesn't see activity widgets, dialogue rendering, stress marks as styled — she'd review prose, not "what learners would see". Today's whole problem was that raw prose wasn't enough.
+**Cons:** the native reviewer doesn't see activity widgets, dialogue rendering, stress marks as styled — she'd review prose, not "what learners would see". Today's whole problem was that raw prose wasn't enough.
 
 ## Recommendation: Option 1
 
 **Reasoning:**
-- Option 4 is out — user said the point is Alona sees what Starlight renders
+- Option 4 is out — user said the point is the native reviewer sees what Starlight renders
 - Option 3 is 2× ops cost for zero gain
 - Option 2 is cheaper in setup but uses filesystem conventions to enforce a track boundary, which is brittle — someone running the wrong command still clobbers
 - Option 1 is the only one where Starlight's own collection boundary gives us hard separation — a UK-pipeline output CANNOT land in the English collection without explicit code changes
@@ -110,7 +110,7 @@ starlight/src/content/
 - Easier cross-referencing in build logs and code
 - Parallel pair-up between UK lesson and English lesson with the same slug — useful for eventual comparison/QA
 
-**Ukrainian title in MDX frontmatter** (what Alona / learners see):
+**Ukrainian title in MDX frontmatter** (what the native reviewer / learners see):
 ```yaml
 ---
 title: "Звуки, літери та привіт"
@@ -205,7 +205,7 @@ The UK content currently clobbered into `docs/a1/sounds-letters-and-hello.mdx`
 
 - **Starlight sidebar index** for `docs-native` needs a separate index page (landing). Reuse English index template, translate.
 - **Search scope** — Starlight's Pagefind may index both collections by default; may need exclusion rule depending on whether we want cross-collection search.
-- **Public launch decision deferred** — this ADR scopes the PATH only. Whether to go public with the native edition once content quality is Alona-approved is a separate later call.
+- **Public launch decision deferred** — this ADR scopes the PATH only. Whether to go public with the native edition once content quality is the native reviewer-approved is a separate later call.
 
 ## Open questions (not blocking this ADR)
 

@@ -60,7 +60,7 @@
 This LOCKED state should be revisited if any of the following happen:
 
 1. The module build (`a1-005`) surfaces a gap the wiki did not anticipate — file as an issue, do a fresh review round, republish with incremented `last_reviewed`.
-2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags a left- or right-column item in the new Surzhyk table — authoritative override of dictionary-based verification.
+2. A native-speaker reviewer (native-speaker reviewer) flags a left- or right-column item in the new Surzhyk table — authoritative override of dictionary-based verification.
 3. The `culture/decolonization/surzhyk-and-russianisms` wiki (once created) re-frames the feminitive question or the `папа` / `жена` / `врач` calques in a way that contradicts this table.
 4. VESUM / СУМ-11 updates retire or re-label any cited form.
 5. The wiki-plan drift check flags a new mismatch between this wiki's content and the locked plan (`curriculum/l2-uk-en/plans/a1/who-am-i.yaml`).

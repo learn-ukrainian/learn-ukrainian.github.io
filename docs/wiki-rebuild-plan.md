@@ -225,7 +225,7 @@ After all phases complete:
 
 3. **Derive real thresholds** (Claude-owned, 2 hrs) — replace `derive_thresholds()` stub with real score-distribution analysis. Per-dim threshold at clean-vs-defective separation point. Commit with `thresholds_calibrated: True`.
 
-4. **Optional: Tetiana spot-check** — hand 2-3 real articles to teacher Tetiana for native-speaker annotation; cross-validate reviewer findings.
+4. **Optional: the native reviewer spot-check** — hand 2-3 real articles to the native reviewer for native-speaker annotation; cross-validate reviewer findings.
 
 5. **Staged hard-gate promotion** — promote in order:
    1. Code gates (already deterministic)

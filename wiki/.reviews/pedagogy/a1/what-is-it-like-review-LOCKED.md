@@ -32,7 +32,7 @@
 
 This LOCKED state should be revisited if any of the following happen:
 
-1. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags a left- or right-column item in the new `Типові помилки L2` table — authoritative override of the dictionary-based verification. Especially the colloquial-vs-Russianism call on `плохий` (СУМ-11 розм.) — a teacher may prefer a stricter framing.
+1. A native-speaker reviewer (native-speaker reviewer) flags a left- or right-column item in the new `Типові помилки L2` table — authoritative override of the dictionary-based verification. Especially the colloquial-vs-Russianism call on `плохий` (СУМ-11 розм.) — a teacher may prefer a stricter framing.
 2. The module build (what-is-it-like A1/M09) surfaces a gap the wiki did not anticipate — file as an issue, do a fresh review round, republish with incremented `last_reviewed` date.
 3. The `culture/decolonization/surzhyk-and-russianisms` wiki — to which this wiki links — changes its framing in a way that contradicts this table.
 4. VESUM / СУМ-11 / Антоненко-Давидович update or re-label any of the cited forms (e.g. if `плохий` is reclassified from `розм.` to `діал.` or vice-versa).

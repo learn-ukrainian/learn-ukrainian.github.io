@@ -166,7 +166,7 @@ The current `v6-review.md` dim 8 covers decolonization at a high level ("never '
 
 **"Zhadan-fit"** is used in ONE specific sub-check at C1+/seminar only: does the module's register sit in the space a Zhadan-reading Ukrainian would recognize as alive? That single sub-check can reference the Холодна Гора calibration artifact. It does NOT drive the A1-B2 evaluation.
 
-**Calibration limit (unchanged):** The reviewer can apply the structural checks above. It cannot judge "this tried to sound like Zhadan and failed in a Ukrainian-native-ear way." Native ear (Tetiana / user) remains the final tonal calibrator. The reviewer is a first-line filter.
+**Calibration limit (unchanged):** The reviewer can apply the structural checks above. It cannot judge "this tried to sound like Zhadan and failed in a Ukrainian-native-ear way." Native ear (the native reviewer / user) remains the final tonal calibrator. The reviewer is a first-line filter.
 
 ## 5.5-legacy (deleted)
 
@@ -181,7 +181,7 @@ The current `v6-review.md` dim 8 covers decolonization at a high level ("never '
 - *Наші без раші* (YouTube) — per user, funny; I haven't verified the register myself. Reference with user or native-speaker calibration.
 - Zhadan's band (*Жадан і Собаки* / *Жадан і ...*) — ska/punk/folk-rock, politically sharp, willing to be silly. The "300 китайців у Будапешті" song (user's example) is a case in point: a Ukrainian writer in Kharkiv seeing Orbán's Hungarian golden-visa scheme clearly enough to turn it into catchy satire. Outward clarity + humor + music, all at once.
 
-**Calibration limit (honest):** The reviewer prompt can encode structural tests — monotone register, missing cultural weight, forced cheerfulness, cheerful-imperial-erasure of the war context, provincial-inward-only framing. It CANNOT catch "this tried to sound like Zhadan and failed in a Ukrainian-native-ear way." That requires a native tonal ear. Teacher Tetiana or the user is the only reliable final calibrator on "did this land." The reviewer is a first-line filter, not a substitute for native judgment.
+**Calibration limit (honest):** The reviewer prompt can encode structural tests — monotone register, missing cultural weight, forced cheerfulness, cheerful-imperial-erasure of the war context, provincial-inward-only framing. It CANNOT catch "this tried to sound like Zhadan and failed in a Ukrainian-native-ear way." That requires a native tonal ear. the native reviewer or the user is the only reliable final calibrator on "did this land." The reviewer is a first-line filter, not a substitute for native judgment.
 
 ## 6. Execution pattern
 
@@ -271,15 +271,15 @@ Expected cost: ~30 min / dim, 4 dims × 4-5 iterations ≈ 20-50 calls total. Tr
 5. **Threshold derivation:** score distributions on clean vs. defective artifacts determine per-dim min score. Threshold set at the separation point where defective artifacts reliably fall below.
 6. **Agent assignment:** highest F1 at acceptable cost wins the dim. Ties broken by cost.
 
-### 7c. Ground truth alternative: Tetiana annotation (small sample)
+### 7c. Ground truth alternative: the native reviewer annotation (small sample)
 
-If user/Tetiana bandwidth permits: have her mark errors independently on 2-3 real Gemini-written wikis. Compare reviewer findings vs her annotations. Provides validation against native-expert judgment, not just our planted taxonomy. Smaller sample, higher signal.
+If user/the native reviewer bandwidth permits: have her mark errors independently on 2-3 real Gemini-written wikis. Compare reviewer findings vs her annotations. Provides validation against native-expert judgment, not just our planted taxonomy. Smaller sample, higher signal.
 
 ### 7d. Budget
 
 - Phase 1: ~50 calls total, ~1 day
 - Phase 2: 5 artifacts × 3 versions × 3 agents × 4 dims × 3 reruns ≈ 540 calls, bounded over 1-2 nights
-- Tetiana validation: 3 artifacts, ~1 week real-world turnaround depending on her schedule
+- the native reviewer validation: 3 artifacts, ~1 week real-world turnaround depending on her schedule
 
 **Do not freeze agent assignments or thresholds before Phase 2 completes.**
 
@@ -327,14 +327,14 @@ Previous version included "run new review on existing compiled wikis, patch wors
 Previous versions of this section had 5 questions — 4 have been resolved by the 2026-04-18 adversarial reviews + consultations. Remaining:
 
 1. **Ukrainian-artifact / English-instruction split: OK permanent or revisit.** Per §2 principle 11, reviewer prompts stay in English until benchmark proves parity. Include this as a dimension of Phase 2 seeded benchmark: run same reviewer prompt in English-instructions-vs-Ukrainian-instructions on the same artifacts. Measure recall/precision delta. If Ukrainian-instructions match English-instructions, we can flip; if gap persists, English-instructions remain permanent.
-2. **Engagement dim level-calibration weights (§5.5 table).** The weights I assigned by level (high/medium/low for each sub-check) are my best guesses informed by config.py A2/B1 simplicity priorities. User or Tetiana should review before freezing — they know the real pedagogical priority curve better than I do.
+2. **Engagement dim level-calibration weights (§5.5 table).** The weights I assigned by level (high/medium/low for each sub-check) are my best guesses informed by config.py A2/B1 simplicity priorities. User or the native reviewer should review before freezing — they know the real pedagogical priority curve better than I do.
 3. **Fix-merger conflict resolution priority rule.** I proposed "linguistic > factual > register > engagement" as tiebreaker when two dims' fixes touch the same span. This is a guess. Real priority should come from user judgment about which kind of error is "worst" to ship.
 4. **Orchestrator availability detection.** Primary+fallback pattern requires detecting when primary is unavailable (rate limit, error, timeout). Needs a clean signal from `scripts/agent_runtime/` — how is availability exposed? Design detail to resolve during Phase 1 Step 2.
 
 ### Resolved by adversarial reviews + consultations (2026-04-18)
 
 - ~~Option A vs B for fix-conflict~~ → Resolved: reviewer-as-fixer per dim + deterministic fix-merger (not a single LLM patcher). §2 principle 5, §6c.
-- ~~Ground-truth source for A/B~~ → Resolved: pilot + seeded benchmark (both), with Tetiana as supplementary validation. §7.
+- ~~Ground-truth source for A/B~~ → Resolved: pilot + seeded benchmark (both), with the native reviewer as supplementary validation. §7.
 - ~~Patcher agent~~ → N/A. No LLM patcher. Fix-merger is deterministic code.
 - ~~Min-score thresholds~~ → Deferred to Phase 2 seeded benchmark data.
 - ~~Cost at scale~~ → Clarified: Codex has no caching in current CLI invocation path; Claude uses prewarm + fan-out pattern; real numbers come from Phase 2 measurement.
@@ -408,7 +408,7 @@ Safe to reference as signals of contemporary Ukrainian humor register:
   - **SECONDARY: *300 китайців у Будапешті* (2010s, rock satire).**
  Five perspectives in under three minutes (tender narrator → grotesque migrant fever-dream of Budapest → cynical Ukrainian smuggler voice → post-arrival criminal economy), hyper-specific proper nouns doing double duty as rhythm and political inventory (Ikarus bus, Мівіна, "майже ще не вживаними польськими гандонами"), the "300" echoing Maoist cultural revolution, and the four-geography gaze (Ukraine / Hungary / China / EU underworld) delivered through rock. The humor is never cheerful; the crooked smile of the exhausted smugglers ("криво посміхаючися кожному китайцю") is the tone. **This is the best concrete sample of "Zhadan register" on the page.** Future prompt writers calibrating the engagement reviewer should re-read it. Not to copy the style into learner modules — the register is wrong for pedagogy — but to remember what "serious + funny + specific + multi-register + outward-looking" actually *sounds like*. Zhadan is the contemporary north-star for this curriculum's engagement taste.
 - **Телебачення Торонто** — satirical YouTube "broadcasting from Toronto" (the name is the joke — ironic remove from performative seriousness). Reference-safe for irreverent contemporary register.
-- **Наші без раші** — per user, funny YouTube. Not yet verified by lead dev; reference with user or Teacher Tetiana calibration.
+- **Наші без раші** — per user, funny YouTube. Not yet verified by lead dev; reference with user or the native reviewer calibration.
 
 ### Outward clarity — a decolonization refinement
 

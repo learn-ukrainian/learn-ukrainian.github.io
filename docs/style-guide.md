@@ -118,7 +118,7 @@ Full rules: `docs/best-practices/vocabulary-activity-standards.md`.
 1. **Check VESUM** first — does this word form actually exist?
 2. **Check goroh.pp.ua** — stress, frequency, historical forms.
 3. **Check Антоненко-Давидович «Як ми говоримо»** — is this a calque?
-4. **Ask a native speaker** — Teacher Tetiana or Teacher Alona on the
+4. **Ask a native speaker** — the native reviewer on the
    project, or post in GH issues.
 5. **Flag, don't invent.** Mark the questionable passage with
    `<!-- VERIFY: <what you're unsure about> -->`. The pipeline strips

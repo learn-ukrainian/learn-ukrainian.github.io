@@ -133,7 +133,7 @@ B1+ and seminar wikis are NOT touched. Rich corpus grounding makes their current
 
 - All 55 modules pass audit (word count, Russianism scan, citation audit, immersion contract)
 - Spot-check review on random 10 modules against textbook grounding
-- Optional: Alona opt-in review on interesting-case queue
+- Optional: the native reviewer opt-in review on interesting-case queue
 
 ### 3C — A2 batch (69 modules)
 
@@ -341,7 +341,7 @@ What we should NOT do:
 | 5 (Phase G rebuild) | Phase 0C winning writer + reviewer |
 | P1, P2, P3 (B1+/seminars) | Phase 0A/0C winners (or separate seminar winner from P2) |
 
-User: approves phase gates, opens Alona's opt-in queue, ships public site.
+User: approves phase gates, opens the native reviewer's opt-in queue, ships public site.
 Claude: orchestrates, files no GH issues without approval, writes briefs, aggregates results.
 
 ---

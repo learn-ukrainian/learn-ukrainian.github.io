@@ -45,7 +45,7 @@ The new 4-tab lesson design exists as disconnected pieces. **The pipeline does N
 - A1.2+: graduated Ukrainian introduction
 
 ### Issues created
-- #1040: Scrape МійКлас grammar (Teacher Alona's find)
+- #1040: Scrape МійКлас grammar (the native reviewer's find)
 - #1041-#1044: Activity System V2 (all closed)
 
 ### Closed: #1031 (Figma — not needed)

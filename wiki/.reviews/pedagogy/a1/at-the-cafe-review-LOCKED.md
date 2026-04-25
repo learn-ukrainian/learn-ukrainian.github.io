@@ -33,7 +33,7 @@
 This LOCKED state should be revisited if any of the following happen:
 
 1. The module build (at-the-cafe A1/M38) surfaces a gap the wiki did not anticipate — file as an issue, do a fresh review round, republish with incremented `last_reviewed` date.
-2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags a left- or right-column item in the Surzhyk table — authoritative override of the dictionary-based verification.
+2. A native-speaker reviewer (native-speaker reviewer) flags a left- or right-column item in the Surzhyk table — authoritative override of the dictionary-based verification.
 3. The `culture/decolonization/surzhyk-and-russianisms` wiki — which this wiki links to — changes its framing in a way that contradicts this table.
 4. VESUM / СУМ-11 updates retire or re-label any of the cited forms.
 

@@ -110,7 +110,7 @@ def _extract_grade_hint(plan: dict) -> int | None:
     return None
 
 
-# Priority textbook authors by grade range (Tetiana-recommended)
+# Priority textbook authors by grade range (the native reviewer-recommended)
 _PRIORITY_AUTHORS_EARLY = {"bolshakova", "vashulenko", "zaharijchuk"}  # Grade 1-2
 _PRIORITY_AUTHORS_LATE = {"zabolotnyi", "avramenko", "litvinova", "golub"}  # Grade 5-11
 
@@ -139,7 +139,7 @@ def _heuristic_score(hit: dict, grade_hint: int | None) -> float:
     """Compute a heuristic boost/penalty for pedagogical relevance (#1098).
 
     Applied after initial retrieval to reorder results by:
-    - Author priority (textbook authors recommended by Teacher Tetiana)
+    - Author priority (textbook authors recommended by the native reviewer)
     - Grade match (prefer chunks from the target grade)
     - Exercise penalty (demote exercise-heavy chunks)
     - Length bonus (longer theory excerpts have more context)

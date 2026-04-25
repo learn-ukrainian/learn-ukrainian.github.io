@@ -33,7 +33,7 @@
 This LOCKED state should be revisited if any of the following happen:
 
 1. The module build (sounds-letters-and-hello A1/M01) surfaces a phonetic drill gap the wiki did not anticipate — file as an issue, fresh review round, republish with incremented `last_reviewed`.
-2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags any minimal-pair, kinesthetic test, or greeting chunk — authoritative override.
+2. A native-speaker reviewer (native-speaker reviewer) flags any minimal-pair, kinesthetic test, or greeting chunk — authoritative override.
 3. The paired `culture/decolonization/surzhyk-and-russianisms` wiki changes its framing in a way that contradicts the Декол. #1–5 points here.
 4. VESUM / СУМ-11 updates retire or re-label any of the cited forms (especially the `[ґ]`-word list or greeting chunks).
 5. A revision of the broader "sound-first vs letter-first" pedagogy consensus in Ukrainian primary education (unlikely — Bukvar tradition is deeply entrenched).

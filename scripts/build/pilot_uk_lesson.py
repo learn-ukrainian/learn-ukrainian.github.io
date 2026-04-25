@@ -18,7 +18,7 @@ import yaml
 REPO = Path(__file__).resolve().parents[2]
 PHASES_DIR = REPO / "scripts" / "build" / "phases"
 PLANS_DIR = REPO / "curriculum" / "l2-uk-en" / "plans"
-OUT_DIR = REPO / "data" / "alona-lessons" / "pilot-output"
+OUT_DIR = REPO / "data" / "native-reviewer-lessons" / "pilot-output"
 
 
 def load_plan(level: str, slug: str) -> dict:
@@ -169,8 +169,8 @@ def main() -> None:
             "  # A2 slug (word_target 2000 instead of 1200)\n"
             "  .venv/bin/python scripts/build/pilot_uk_lesson.py a2 aspect-concept\n\n"
             "Outputs (per run):\n"
-            "  data/alona-lessons/pilot-output/<level>/<slug>.prompt.md  (assembled prompt)\n"
-            "  data/alona-lessons/pilot-output/<level>/<slug>.md         (Gemini output)\n\n"
+            "  data/native-reviewer-lessons/pilot-output/<level>/<slug>.prompt.md  (assembled prompt)\n"
+            "  data/native-reviewer-lessons/pilot-output/<level>/<slug>.md         (Gemini output)\n\n"
             "Exit codes: 0 on success, 1 on Gemini failure or plan not found.\n\n"
             "Related:\n"
             "  scripts/build/phases/v6-write-uk.md  — the prompt template this uses\n"

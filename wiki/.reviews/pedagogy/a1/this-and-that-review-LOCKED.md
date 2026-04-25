@@ -57,7 +57,7 @@
 This LOCKED state should be revisited if any of the following happen:
 
 1. The module build (`a1-012`) surfaces a gap the wiki did not anticipate — file as an issue, do a fresh review round, republish with incremented `last_reviewed`.
-2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags a left- or right-column item in the new Типові помилки L2 table, or the `даний` register claim in Декол. #5, or the chunk-writer-note — authoritative override of dictionary-based verification.
+2. A native-speaker reviewer (native-speaker reviewer) flags a left- or right-column item in the new Типові помилки L2 table, or the `даний` register claim in Декол. #5, or the chunk-writer-note — authoritative override of dictionary-based verification.
 3. The `culture/decolonization/surzhyk-and-russianisms` wiki (once created) re-frames the demonstrative code-switching or the `даний` kancelyarism question in a way that contradicts this table.
 4. VESUM / СУМ-11 updates retire or re-label any cited form (in particular: if `оцей-ряд` or `отой-ряд` is re-labeled as dialectal rather than general-normative, or if `даний` meaning-2 ceases to carry its current unmarked-prikmetnyk label).
 5. The wiki-plan drift check flags a new mismatch between this wiki's content and the locked plan (`curriculum/l2-uk-en/plans/a1/this-and-that.yaml`), especially if the plan subtracts or alters the new L2-errors activity (activity_hints[5]).

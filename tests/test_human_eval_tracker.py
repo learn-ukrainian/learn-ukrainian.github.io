@@ -88,8 +88,8 @@ class TestLoadEvaluations:
     def test_load_single_eval(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmpdir = Path(tmp)
-            self._write_eval(tmpdir, "tetiana-2026-04-10-a1-my-family.yaml", {
-                "reviewer": "Tetiana",
+            self._write_eval(tmpdir, "reviewer-a-2026-04-10-a1-my-family.yaml", {
+                "reviewer": "ReviewerA",
                 "reviewer_role": "native teacher",
                 "evaluated_on": "2026-04-10",
                 "module": {"level": "a1", "slug": "my-family"},
@@ -104,7 +104,7 @@ class TestLoadEvaluations:
             evals = load_evaluations(tmpdir)
             assert len(evals) == 1
             ev = evals[0]
-            assert ev.reviewer == "Tetiana"
+            assert ev.reviewer == "ReviewerA"
             assert ev.level == "a1"
             assert ev.slug == "my-family"
             assert ev.module_id == "a1/my-family"
@@ -165,12 +165,12 @@ class TestBuildSummary:
 
     def test_reviewers_deduped(self):
         evals = [
-            self._make("a", "Tetiana", {d: 8 for d in DIMENSIONS}),
-            self._make("b", "Tetiana", {d: 9 for d in DIMENSIONS}),
-            self._make("c", "Alona", {d: 7 for d in DIMENSIONS}),
+            self._make("a", "ReviewerA", {d: 8 for d in DIMENSIONS}),
+            self._make("b", "ReviewerA", {d: 9 for d in DIMENSIONS}),
+            self._make("c", "ReviewerB", {d: 7 for d in DIMENSIONS}),
         ]
         s = build_summary(evals)
-        assert s["reviewers"] == ["Alona", "Tetiana"]
+        assert s["reviewers"] == ["ReviewerA", "ReviewerB"]
 
     def test_mean_overall_correct(self):
         evals = [
@@ -236,7 +236,7 @@ class TestFormatReport:
     def test_non_empty_report_has_sections(self):
         ev = HumanEval(
             path=Path("/dev/null"),
-            reviewer="Tetiana",
+            reviewer="ReviewerA",
             reviewer_role="native teacher",
             evaluated_on="2026-04-10",
             level="a1",
@@ -248,7 +248,7 @@ class TestFormatReport:
             correlation = compute_correlation([ev])
         text = format_report(summary, correlation)
         assert "HUMAN EVALUATION TRACKER" in text
-        assert "Tetiana" in text
+        assert "ReviewerA" in text
         assert "a1/my-family" in text
         assert "Golden reference" in text
 

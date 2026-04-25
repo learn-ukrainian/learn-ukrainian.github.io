@@ -33,7 +33,7 @@
 Revisit LOCKED state if any of the following happen:
 
 1. The paired module build (a1-025) surfaces a gap the wiki did not anticipate — file as an issue, do a fresh review round, republish with incremented `last_reviewed`.
-2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags a left- or right-column item in the "Типові помилки L2" table — authoritative override of dictionary-based verification.
+2. A native-speaker reviewer (native-speaker reviewer) flags a left- or right-column item in the "Типові помилки L2" table — authoritative override of dictionary-based verification.
 3. The `culture/decolonization/surzhyk-and-russianisms` wiki changes its framing in a way that contradicts this table's pair classifications.
 4. VESUM / СУМ-11 updates retire or re-label any of the cited forms (`брати душ`, `пити ліки`, `сніданок`, `смачний`, `ходімо`).
 5. A subsequent systemic audit (#1392-style) discovers a defect class that would have caught a problem here.

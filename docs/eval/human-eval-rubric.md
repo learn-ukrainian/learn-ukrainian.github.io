@@ -4,7 +4,7 @@
 > same 9 dimensions the LLM reviewers use, so we can measure inter-rater
 > reliability and catch subtle quality drift.
 >
-> **For:** Teacher Tetiana, Teacher Alona, and any native-speaker reviewer.
+> **For:** the native reviewer, the native reviewer, and any native-speaker reviewer.
 > **Time:** 20–30 minutes per module.
 > **Output:** Fill in `docs/eval/evaluations/{reviewer}-{YYYY-MM-DD}-{level}-{slug}.yaml`
 > using the template at the end of this file.
@@ -150,7 +150,7 @@ without condescension? Would a motivated adult enjoy reading it?
 Save to `docs/eval/evaluations/{reviewer}-{YYYY-MM-DD}-{level}-{slug}.yaml`:
 
 ```yaml
-reviewer: "Tetiana"           # your name (or handle)
+reviewer: "the native reviewer"           # your name (or handle)
 reviewer_role: "native teacher"  # native teacher / linguist / learner
 evaluated_on: 2026-04-12      # ISO date
 module:

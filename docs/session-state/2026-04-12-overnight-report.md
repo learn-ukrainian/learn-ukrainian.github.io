@@ -43,7 +43,7 @@ Tonight's main deliverable was unblocking a clean B1/A1/A2 rebuild. That ladder 
 | **#1082** | OPEN | Posted status: 16 test files / 315 tests passing. 4 ACs done, 3 ACs open (a11y, Playwright e2e, CI). Recommended split or close-with-followups. |
 | **#1086** | OPEN (stale note added) | Filed 16+ days ago, zero activity. Recommend close as "wontfix until learners". |
 | **#1087** | OPEN (stale note added) | Same. Auto-deploy was disabled intentionally. Recommend close as "wontfix / deferred". |
-| **#1084** | OPEN (stale note added) | Has some recent activity (2026-04-10). Blocked on human reviewer (Tetiana). Keep open with note. |
+| **#1084** | OPEN (stale note added) | Has some recent activity (2026-04-10). Blocked on human reviewer (the native reviewer). Keep open with note. |
 | **#1191** | OPEN | Cloze 1-based indexing fix — fully specced, 30-min Codex task. **Queued for tonight.** |
 | **#1192** | C.1 ✅ shipped | Phase C epic. C.2 dispatched to Codex while writing this report. |
 | **#1193** | CLOSED | Pyright tech debt cleanup — Codex implementation, Gemini PASS. |

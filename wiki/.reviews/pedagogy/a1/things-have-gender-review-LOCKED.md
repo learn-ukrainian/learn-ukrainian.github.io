@@ -57,7 +57,7 @@
 This LOCKED state should be revisited if any of the following happen:
 
 1. The module build (`a1-008`) surfaces a gap the wiki did not anticipate — file as an issue, do a fresh review round, republish with incremented `last_reviewed`.
-2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags a gender assignment in the new table or in the main vocabulary — authoritative override of the dictionary-based verification.
+2. A native-speaker reviewer (native-speaker reviewer) flags a gender assignment in the new table or in the main vocabulary — authoritative override of the dictionary-based verification.
 3. The `culture/decolonization/surzhyk-and-russianisms` wiki (once created) re-frames the gender-flip question or the feminitive-decolonization point in a way that contradicts this table.
 4. VESUM / СУМ-11 updates retire or re-label any of the cited forms (in particular: if `путь` as feminine is re-categorized, or if any of the nine masculine gender-flip nouns gains a feminine variant paradigm).
 5. The wiki–plan drift check flags a new mismatch between this wiki's content and the locked plan (`curriculum/l2-uk-en/plans/a1/things-have-gender.yaml`).

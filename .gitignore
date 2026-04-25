@@ -204,8 +204,8 @@ data/corpus_audit/*
 data/*.db-shm
 data/*.db-wal
 
-# Alona's teaching material (large, local-only, IP-sensitive)
-data/alona-lessons/
+# the native reviewer's teaching material (large, local-only, IP-sensitive)
+data/native-reviewer-lessons/
 
 # Dispatch briefs — historical prompts for codex/claude/gemini delegations.
 # Each brief is consumed once, producing a PR; keeping them in the repo just

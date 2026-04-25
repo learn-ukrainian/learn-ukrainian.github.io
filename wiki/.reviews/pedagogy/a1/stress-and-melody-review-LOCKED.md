@@ -33,7 +33,7 @@
 Revisit this LOCKED state if any of the following happen:
 
 1. The module build (stress-and-melody A1/M04) surfaces a phonetic/prosodic drill gap the wiki did not anticipate — file as an issue, fresh review round, republish with incremented `last_reviewed`.
-2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags any stress annotation, L2-error row, or intonation model — authoritative override of the dictionary-based verification.
+2. A native-speaker reviewer (native-speaker reviewer) flags any stress annotation, L2-error row, or intonation model — authoritative override of the dictionary-based verification.
 3. `ukrainian-word-stress` or VESUM updates retire or re-label any of the cited forms, in particular the numeral 50–90 ending-stress normative forms.
 4. A revision of the broader "free-stress + mobile-stress" pedagogy framing in Ukrainian primary education (unlikely — Заболотний / Авраменко / Большакова all converge on this).
 5. The paired decolonization wiki on stress/phonology changes the framing in a way that contradicts Декол. #1–4 here.

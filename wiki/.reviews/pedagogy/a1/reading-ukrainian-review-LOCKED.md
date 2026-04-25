@@ -33,7 +33,7 @@
 This LOCKED state should be revisited if any of the following happen:
 
 1. The module build (reading-ukrainian A1/M02) surfaces a reading-specific L2 error that the new table did not anticipate — file as an issue, fresh review round, republish with incremented `last_reviewed`.
-2. A native-speaker reviewer (Teacher Tetiana / Teacher Alona) flags any row in the "Типові помилки L2" table or any drill wordlist — authoritative override of the dictionary-based verification.
+2. A native-speaker reviewer (native-speaker reviewer) flags any row in the "Типові помилки L2" table or any drill wordlist — authoritative override of the dictionary-based verification.
 3. The paired `pedagogy/a1/sounds-letters-and-hello` wiki (LOCKED 2026-04-23) changes its Ь / apostrophe / iotated / Щ / ДЖ-ДЗ framing in a way that contradicts this wiki's Типові помилки L2 table — the two wikis must agree.
 4. The paired `pedagogy/a1/special-signs` wiki (M03, currently unlocked) when locked may introduce a more authoritative Ь / apostrophe treatment — at that point rows 2 and 3 here should be re-reviewed against it.
 5. VESUM / СУМ-11 updates retire or re-label any cited form (especially the minimal-pair set or the Ґ-word list).

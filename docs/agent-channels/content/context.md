@@ -37,4 +37,4 @@ linguistic quality. Pipeline plumbing discussions go in #pipeline.
 
 - **Gemini reviews prose** (adversarial), flags Russianisms, calques, register issues
 - **Claude reviews plans** (architectural fit, level-appropriateness)
-- **Teacher Tetiana** (native speaker) reviews periodic batches manually
+- **the native reviewer** (native speaker) reviews periodic batches manually
