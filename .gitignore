@@ -214,3 +214,15 @@ data/native-reviewer-lessons/
 # rationale.
 .worktree-briefs/
 
+# Database backups (timestamped). The `*.db` blanket above does NOT match
+# `*.db.bak-YYYYMMDD-HHMMSS`. These are local recovery artifacts only —
+# always 100MB+, well over GitHub's hard limit, never belong in version control.
+data/*.db.bak-*
+data/*.db.bak
+
+# Stray top-level diff/patch artifacts left over from ad-hoc work.
+# `patch.diff` shows up when someone exports a quick fix to disk and forgets
+# to clean up. Never belongs in version control.
+/*.diff
+/*.patch
+
