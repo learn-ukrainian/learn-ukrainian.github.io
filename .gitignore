@@ -176,7 +176,8 @@ embed-venv/
 starlight/dist
 starlight/node_modules
 starlight/.astro
-/testbed/
+/testbed/*
+!/testbed/reference/
 data/sum11/
 data/frazeolohichnyi/
 data/ubertext-freq/
