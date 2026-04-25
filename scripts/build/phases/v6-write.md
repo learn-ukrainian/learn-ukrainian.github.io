@@ -1,4 +1,4 @@
-<!-- version: 2.5.0 | updated: 2026-04-25 | naturalness register hardening — bans `Українською:` meta-frame, mixed-language clauses, and required-vocab token-drops (Phase B v2 finding, EPIC #1550 U7) -->
+<!-- version: 2.5.1 | updated: 2026-04-25 | phonetics canonical anchor: 33 letters / 38 sounds — hard/soft pairs + Я/Ю/Є/Ї are the joint explanation; ban дж/дз as a third reason (#1550 U9) -->
 # V6 Writing Prompt — Module Content Generation
 
 ## Shared Contract (read first — supersedes rule text below on conflict)
@@ -436,6 +436,45 @@ topics like alphabet, sounds-letters, pronunciation): apply this
 distinction in every sentence that references either concept. The
 module is teaching this distinction to the learner — the prose MUST
 model it.
+
+### Phonetics canonical anchor: 33 letters vs 38 sounds
+
+When a module teaches the 33-letters / 38-sounds inventory mismatch
+(any module focused on phonetics, alphabet, or sounds-and-letters), the
+explanation has TWO parts and ONLY two parts:
+
+1. **Yotated vowel letters spell two sounds in some positions.** Я, Ю,
+   Є, Ї each represent [й]+vowel at the start of a word, after another
+   vowel, or after an apostrophe / soft sign. Ї is always [й]+[і]; Я,
+   Ю, Є also map to a single vowel sound + softness of the preceding
+   consonant elsewhere.
+
+2. **Many consonants come in hard / soft pairs that share one letter.**
+   The 32 consonant sounds map to 22 consonant letters because letters
+   like Л, Н, С, Т, Д, З, Ц, Р, Л, Н encode both a hard and a soft
+   consonant phoneme; the soft variant surfaces before я/ю/є/ї/і or a
+   soft sign. The Захарійчук Grade 1 textbook tags hard with `[–]` and
+   soft with `[=]`.
+
+These two together explain why 38 sounds > 33 letters. Together they
+add ~8 sound-positions on top of the 33-letter base.
+
+WRONG — never write any of these as the explanation for 38 > 33:
+- "**дж** and **дз** together spell single sounds." (TRUE as a separate
+  digraph fact, FALSE as an explanation for 38 > 33 — two letters
+  mapping to one sound would REDUCE the count, not raise it.)
+- "Soft sign **Ь** adds a sound." (FALSE — Ь spells no sound; it marks
+  softness of the preceding consonant.)
+- "The apostrophe **'** adds a sound." (FALSE — it is an orthographic
+  marker, not a phoneme.)
+
+If you teach дж/дз or the soft sign in the same module, present them as
+SEPARATE orthographic facts (two letters → one digraph sound; Ь = no
+sound, only softens the previous consonant), NOT as reasons for 38 > 33.
+
+The summary / Підсумок of any module that names the 38-vs-33 number
+must give BOTH parts (yotated doubling + hard/soft pairs). Listing only
+the yotated vowels is incomplete and the Factual reviewer will flag it.
 
 ### Canonical Anchors (decolonization-critical — contract §7a)
 
