@@ -2,7 +2,8 @@ module: a1-002
 level: A1
 sequence: 2
 slug: reading-ukrainian
-version: 1.3.1
+version: 1.3.2
+letter_module: true
 lifecycle: locked
 reviewed_at: '2026-04-23T00:00:00Z'
 reviewed_by: claude-opus-4-7-xhigh-reading-ukrainian
@@ -173,3 +174,9 @@ plan_fixes:
     marks deterministically AFTER review; plans must be stress-free.
   changes:
   - strip U+0301 from all string values (7 removals)
+- version: 1.3.2
+  date: '2026-04-25'
+  ref: '#1550'
+  trigger: Letter-driven module needs explicit exception class for activity-count gates and pedagogical-stage reviewer calibration (a1/2 in alphabet/orthography exception class with a1/1 and a1/3).
+  changes:
+  - add letter_module flag (true) — allows higher activity counts for letter-recognition coverage; word-count target unchanged

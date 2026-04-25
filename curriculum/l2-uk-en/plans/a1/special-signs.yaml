@@ -2,7 +2,8 @@ module: a1-003
 level: A1
 sequence: 3
 slug: special-signs
-version: '1.4.0'
+version: '1.4.1'
+letter_module: true
 lifecycle: locked
 reviewed_at: '2026-04-23T09:32:45Z'
 reviewed_by: codex-scale-special-signs
@@ -138,3 +139,9 @@ changelog:
   - 'Added explicit wiki-plan hooks for the locked wiki''s key contrasts: `буряк` / `бур''ян` / `свято` / `цвях`.'
   - 'Added a dedicated transfer block (`Мар''-яна`, `дере-в''яний`, `бур''-ян`, `паль-ці`) and a matching `divide-words` activity.'
   - 'Added an `error-correction` activity that mirrors the wiki "Типові помилки L2" table and a wiki back-reference in references[].'
+- version: '1.4.1'
+  date: '2026-04-25'
+  ref: '#1550'
+  trigger: Letter-driven module needs explicit exception class for activity-count gates and pedagogical-stage reviewer calibration (a1/3 in alphabet/orthography exception class with a1/1 and a1/2).
+  changes:
+  - add letter_module flag (true) — allows higher activity counts for letter-recognition coverage; word-count target unchanged
