@@ -8,6 +8,7 @@ import functools
 import hashlib
 import inspect
 import json
+import logging
 import re
 import sqlite3
 import sys
@@ -20,7 +21,12 @@ from build.phases import wiki_compressor
 
 from audit import config as audit_config
 
+logger = logging.getLogger(__name__)
+
 _ACTIVE_DECISION_SCOPES = {"pipeline", "architecture"}
+_EMPTY_PLAN_SENTINEL = (
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+)
 _TEMPLATE_KEY_RE = re.compile(r"[^A-Za-z0-9]+")
 _PATH_ATTRS = {
     "PROJECT_ROOT",
@@ -244,7 +250,17 @@ def _plan_path(level: str, slug: str) -> Path:
 
 
 def _canonical_plan_hash(level: str, slug: str) -> str:
-    plan_data = yaml.safe_load(_plan_path(level, slug).read_text("utf-8"))
+    path = _plan_path(level, slug)
+    if not path.exists():
+        logger.warning(
+            "alignment_manifest: plan path missing at canonical-hash "
+            "compute time (level=%s slug=%s path=%s) - using empty sentinel",
+            level,
+            slug,
+            path,
+        )
+        return _EMPTY_PLAN_SENTINEL
+    plan_data = yaml.safe_load(path.read_text("utf-8"))
     canonical_yaml = yaml.safe_dump(plan_data, sort_keys=True, allow_unicode=True)
     return _sha256_bytes(canonical_yaml.encode("utf-8"))
 
