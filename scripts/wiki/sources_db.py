@@ -24,7 +24,8 @@ from pathlib import Path
 import yaml
 
 from .channels import rank_external_hits
-from .dense_rerank import chunk_wikipedia_article, rerank_candidates, rerank_sections
+from .chunking import chunk_text, policy_for
+from .dense_rerank import _get_tokenizer, rerank_candidates, rerank_sections
 from .query_builder import build_query_buckets
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -523,20 +524,28 @@ def _search_wikipedia_candidates(
     ).fetchall()
 
     candidates: list[dict] = []
+    policy = policy_for("wikipedia")
+    tokenizer = _get_tokenizer()
     for row in rows:
         title = str(row["title"] or "")
-        for chunk in chunk_wikipedia_article(title, str(row["text"] or "")):
+        full_text = str(row["text"] or "")
+        for piece in chunk_text(full_text, policy=policy, tokenizer=tokenizer):
+            unit_key = (
+                f"wikipedia:{title}:chunk_{piece.chunk_index}"
+                if piece.extra_metadata
+                else f"wikipedia:{title}"
+            )
             candidates.append(
                 {
-                    "unit_key": str(chunk["unit_key"]),
+                    "unit_key": unit_key,
                     "corpus": "wikipedia",
                     "source_type": "wikipedia",
                     "title": title,
-                    "text": str(chunk["text"]),
-                    "full_text": str(chunk["text"]),
+                    "text": piece.text,
+                    "full_text": piece.text,
                     "parent_key": title,
                     "url": str(row["url"] or ""),
-                    "chunk_index": int(chunk["chunk_index"]),
+                    "chunk_index": piece.chunk_index,
                     "source_name": "Wikipedia",
                     "fts_score": float(row["rank"] or 0.0),
                 }
@@ -748,16 +757,27 @@ def _expand_wikipedia_neighbors(match: dict) -> dict:
     if row is None:
         return match
 
-    chunks = chunk_wikipedia_article(title, str(row["text"] or ""))
+    pieces = list(
+        chunk_text(
+            str(row["text"] or ""),
+            policy=policy_for("wikipedia"),
+            tokenizer=_get_tokenizer(),
+        )
+    )
     chunk_index = int(match.get("chunk_index", 0))
-    context = chunks[max(0, chunk_index - 1):chunk_index + 2]
+    context = pieces[max(0, chunk_index - 1):chunk_index + 2]
     if not context:
         return match
 
     return {
         **match,
-        "full_text": "\n\n".join(str(chunk["text"]) for chunk in context),
-        "context_unit_keys": [str(chunk["unit_key"]) for chunk in context],
+        "full_text": "\n\n".join(piece.text for piece in context),
+        "context_unit_keys": [
+            f"wikipedia:{title}:chunk_{piece.chunk_index}"
+            if piece.extra_metadata
+            else f"wikipedia:{title}"
+            for piece in context
+        ],
     }
 
 

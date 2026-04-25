@@ -61,40 +61,60 @@ def _unit_inputs(
     ]
 
 
-def test_runtime_default_config_matches_legacy_shipped() -> None:
-    """``current_encoder_config`` must produce ``LEGACY_SHIPPED_CONFIG``
-    on the post-#1553-step-0, pre-#1553-step-1 main branch.
+def test_runtime_default_config_no_chunk_corpora_match_legacy() -> None:
+    """No-chunk corpora must continue producing
+    ``LEGACY_SHIPPED_CONFIG``-equivalent stamps post-step-1.
 
-    Why: opening a pre-existing manifest after merging step 0 must
-    NOT mark every existing row as stale (which would force a full
-    re-encode). That only works if the runtime's per-corpus config
-    matches the legacy stamp values applied by the migration. If
-    the runtime drifts (e.g. someone bumps INDEX_MAX_LENGTH in the
-    same commit as a chunker change without bumping the policy
-    version), this test fails loudly.
+    ``ukrainian_wiki``, ``modern_literary``, ``archaic_literary`` use
+    ``NO_CHUNK`` policy in #1553 step 1, which keeps the legacy
+    chunk_policy_version. Their existing manifest rows must stay
+    valid — no surprise re-encode of the 137K+ literary vectors.
 
     Codex review (msg #455): "A small
     current_encoder_config(...) == LEGACY_SHIPPED_CONFIG test for
     step 0 would also catch accidental drift between runtime
-    defaults and migration defaults."
+    defaults and migration defaults." Step 1 specializes the test:
+    actively-chunked corpora intentionally drift (they MUST
+    re-encode), but no-chunk corpora must NOT drift.
     """
 
     from wiki.dense_rerank import current_encoder_config
 
-    for corpus in (
-        "textbook_sections",
-        "modern_literary",
-        "archaic_literary",
-        "external",
-        "wikipedia",
-        "ukrainian_wiki",
-    ):
+    for corpus in ("ukrainian_wiki", "modern_literary", "archaic_literary"):
         assert current_encoder_config(corpus) == LEGACY_SHIPPED_CONFIG, (
             f"current_encoder_config({corpus!r}) drifted from "
             f"LEGACY_SHIPPED_CONFIG; this WILL force a full re-encode "
-            f"of corpus {corpus!r} on next open. Either bump "
-            f"chunk_policy_version intentionally or revert the drift."
+            f"of corpus {corpus!r}, which has 100K+ vectors. Either "
+            f"bump chunk_policy_version intentionally or revert the drift."
         )
+
+
+def test_runtime_default_config_actively_chunked_corpora_diverge_from_legacy() -> None:
+    """Actively-chunked corpora MUST diverge from legacy after step 1
+    so their old (un-chunked) embeddings get re-encoded.
+
+    Step 1 introduces a paragraph-aware chunker for ``wikipedia``,
+    ``external``, ``textbook_sections``. Their version_id encodes
+    target/overlap params so any future chunker tweak forces another
+    re-encode. The shape of the version_id is asserted in
+    ``tests/wiki/test_chunking.py``; here we just assert that it
+    is NOT the legacy stamp.
+    """
+
+    from wiki.dense_rerank import current_encoder_config
+
+    for corpus in ("wikipedia", "external", "textbook_sections"):
+        config = current_encoder_config(corpus)
+        assert config.chunk_policy_version != LEGACY_SHIPPED_CONFIG.chunk_policy_version, (
+            f"current_encoder_config({corpus!r}) still uses the legacy "
+            f"chunk_policy_version, which means step 1's chunker change "
+            f"would NOT force a re-encode — wrong direction. Expected "
+            f"a paragraph-aware-* version stamp."
+        )
+        # All other config fields stay legacy until step 5 bumps INDEX_MAX_LENGTH.
+        assert config.model == LEGACY_SHIPPED_CONFIG.model
+        assert config.index_max_length == LEGACY_SHIPPED_CONFIG.index_max_length
+        assert config.pooling_mode == LEGACY_SHIPPED_CONFIG.pooling_mode
 
 
 def test_legacy_shipped_config_matches_schema_defaults() -> None:

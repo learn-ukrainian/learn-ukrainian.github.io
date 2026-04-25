@@ -101,9 +101,16 @@ def _loader(conn: sqlite3.Connection):
 
 
 def _configure(monkeypatch: pytest.MonkeyPatch) -> None:
+    from wiki import chunking
+
     fake_tokenizer = FakeTokenizer()
     fake_encoder = FakeEncoder()
     monkeypatch.setitem(dense_rerank.CORPUS_UNIT_LOADERS, "test_small", _loader)
+    # Register a NO_CHUNK policy for the synthetic test corpus so
+    # ``policy_for("test_small")`` doesn't raise KeyError. This
+    # mirrors what production code requires: every corpus must
+    # register a chunking policy.
+    monkeypatch.setitem(chunking.CHUNKING_POLICIES, "test_small", chunking.NO_CHUNK)
     monkeypatch.setattr(dense_rerank, "_TOKENIZER", fake_tokenizer)
     monkeypatch.setattr(dense_rerank, "_get_tokenizer", lambda: fake_tokenizer)
     monkeypatch.setattr(dense_rerank, "_ENCODER", fake_encoder)
