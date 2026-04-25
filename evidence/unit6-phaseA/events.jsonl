@@ -1,0 +1,5 @@
+{"event": "module_start", "ts": "2026-04-25T14:04:50.773691+00:00", "level": "a1", "slug": "sounds-letters-and-hello"}
+{"event": "phase_done", "ts": "2026-04-25T14:04:51.148339+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "check", "duration_s": 0.164, "ok": true, "status": "complete"}
+{"event": "phase_done", "ts": "2026-04-25T14:04:51.229635+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "research", "duration_s": 0.081, "ok": true, "status": "complete"}
+{"event": "phase_done", "ts": "2026-04-25T14:17:27.132389+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "skeleton", "duration_s": 755.901, "ok": true, "status": "complete"}
+{"event": "phase_done", "ts": "2026-04-25T14:29:08.853651+00:00", "level": "a1", "slug": "sounds-letters-and-hello", "phase": "pre-verify", "duration_s": 701.719, "ok": true, "status": "complete"}
