@@ -1,0 +1,44 @@
+{
+  "outcome": "FAIL",
+  "module": "a1/1",
+  "slug": "sounds-letters-and-hello",
+  "experiment": "Unit 6 Phase B",
+  "writer": "codex-tools",
+  "reviewer": "claude-tools",
+  "build_command": ".venv/bin/python -u scripts/build/v6_build.py a1 1 --force --writer codex-tools --reviewer claude-tools",
+  "module_done_emitted": false,
+  "module_failed": {
+    "phase": "review",
+    "error": "review terminal - plan_revision_request",
+    "ts": "2026-04-25T14:58:07.055418+00:00"
+  },
+  "audit_phase": "not_reached",
+  "audit_gates": "NOT RUN - build terminal-failed during review before audit/status generation",
+  "verify_phase": {
+    "status": "degraded",
+    "vesum": "skipped - data/vesum.db not found",
+    "russicism_scan": "passed",
+    "unresolved_verify_flags": 3
+  },
+  "review": {
+    "rounds_completed": 1,
+    "final_available_round": 1,
+    "overall_score": 6.0,
+    "weighted_average": 8.3,
+    "min_dim_score": 6.0,
+    "min_dim": "naturalness",
+    "verdict": "REVISE",
+    "dim_scores": {
+      "factual": 9.2,
+      "language": 8.8,
+      "decolonization": 9.0,
+      "completeness": 7.5,
+      "actionable": 8.7,
+      "naturalness": 6.0,
+      "plan_adherence": 7.5,
+      "honesty": 9.0,
+      "dialogue": 9.0
+    }
+  },
+  "build_wall_clock_minutes": 53
+}
