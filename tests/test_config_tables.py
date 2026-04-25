@@ -204,3 +204,41 @@ class TestActivityConfigUnrelatedTracks:
         """lit-* tracks route to the 'lit' config — anagram forbidden, not scaffolded."""
         cfg = get_activity_config("lit-essay", 1)
         assert "anagram" in _types(cfg["FORBIDDEN_ACTIVITY_TYPES"])
+
+
+class TestActivityPedagogyMatrix:
+    """Phase 2 guard: live config matches docs/best-practices/activity-pedagogy.md."""
+
+    def _doc_matrix(self) -> tuple[list[str], dict[str, dict[str, str]]]:
+        doc = Path("docs/best-practices/activity-pedagogy.md").read_text()
+        lines = doc.splitlines()
+        header_idx = next(i for i, line in enumerate(lines) if line.startswith("| Type | a1 |"))
+        levels = [cell.strip() for cell in lines[header_idx].strip("|").split("|")][1:]
+        matrix: dict[str, dict[str, str]] = {}
+        for line in lines[header_idx + 2:]:
+            if not line.startswith("|") or line.startswith("|---"):
+                break
+            cells = [cell.strip() for cell in line.strip("|").split("|")]
+            matrix[cells[0]] = dict(zip(levels, cells[1:], strict=True))
+        return levels, matrix
+
+    def test_activity_configs_match_documented_matrix(self):
+        levels, matrix = self._doc_matrix()
+
+        for level in levels:
+            cfg = ACTIVITY_CONFIGS[level]
+            inline = _types(cfg["INLINE_ALLOWED_TYPES"])
+            workbook = _types(cfg["WORKBOOK_ALLOWED_TYPES"])
+            for activity_type, row in matrix.items():
+                expected = row[level]
+                actual = (
+                    "B" if activity_type in inline and activity_type in workbook
+                    else "I" if activity_type in inline
+                    else "W" if activity_type in workbook
+                    else "-"
+                )
+                assert actual == expected, f"{level} {activity_type}: config={actual}, docs={expected}"
+
+    def test_select_forbidden_in_every_activity_config(self):
+        for level, cfg in ACTIVITY_CONFIGS.items():
+            assert "select" in _types(cfg["FORBIDDEN_ACTIVITY_TYPES"]), level
