@@ -12,7 +12,7 @@ import json
 import re
 import sys
 from collections.abc import Callable, Mapping
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
@@ -51,6 +51,45 @@ WRITER_ARTIFACTS = (
     "vocabulary.yaml",
     "resources.yaml",
 )
+WRITER_JSON_ARTIFACTS = (
+    "activities.yaml",
+    "vocabulary.yaml",
+    "resources.yaml",
+)
+
+
+@dataclass(frozen=True, slots=True)
+class JsonArtifactSchema:
+    """Minimal runtime schema for writer JSON artifacts."""
+
+    root_type: type
+    required_item_fields: Mapping[str, type]
+
+
+WRITER_JSON_SCHEMAS: dict[str, JsonArtifactSchema] = {
+    "activities.yaml": JsonArtifactSchema(
+        root_type=list,
+        required_item_fields={
+            "id": str,
+            "type": str,
+        },
+    ),
+    "vocabulary.yaml": JsonArtifactSchema(
+        root_type=list,
+        required_item_fields={
+            "lemma": str,
+            "translation": str,
+            "pos": str,
+            "usage": str,
+        },
+    ),
+    "resources.yaml": JsonArtifactSchema(
+        root_type=list,
+        required_item_fields={
+            "title": str,
+        },
+    ),
+}
 
 QUALITY_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
     "russianisms_clean": (
@@ -245,29 +284,59 @@ def invoke_writer(
     return str(response)
 
 
-def parse_writer_output(output: str) -> dict[str, str]:
-    """Parse a writer response into the four required authoring artifacts."""
+def parse_writer_output_strict_json(output: str) -> dict[str, str]:
+    """Parse writer output with strict JSON for structured artifacts.
+
+    The structured JSON values are serialized back to YAML strings so downstream
+    storage and MDX assembly keep the existing artifact file contracts.
+    """
     artifacts: dict[str, str] = {}
     pending_name: str | None = None
     in_fence = False
     fence_name: str | None = None
+    fence_lang: str | None = None
+    fence_start_line = 0
     fence_lines: list[str] = []
 
-    for line in output.splitlines():
+    for line_no, line in enumerate(output.splitlines(), start=1):
         fence_match = re.match(r"^\s*```(?P<info>.*)$", line)
         if fence_match:
             if not in_fence:
                 info = fence_match.group("info").strip()
                 fence_name = _artifact_name_from_text(info) or pending_name
+                fence_lang = _fence_language(info)
+                fence_start_line = line_no
+                if fence_name is None:
+                    raise LinearPipelineError(
+                        f"Writer output contains unnamed fenced block at line {line_no}"
+                    )
+                if fence_name in artifacts:
+                    raise LinearPipelineError(
+                        f"Writer output contains duplicate artifact block: {fence_name}"
+                    )
+                if fence_name in WRITER_JSON_ARTIFACTS and fence_lang != "json":
+                    got = fence_lang or "<none>"
+                    raise LinearPipelineError(
+                        f"{fence_name} must be fenced as json, got {got} "
+                        f"at line {line_no}"
+                    )
                 in_fence = True
                 fence_lines = []
                 continue
 
-            if fence_name in WRITER_ARTIFACTS:
+            if fence_name == "module.md":
                 artifacts[fence_name] = "\n".join(fence_lines).strip() + "\n"
+            elif fence_name in WRITER_JSON_ARTIFACTS:
+                artifacts[fence_name] = _parse_and_dump_writer_json_artifact(
+                    fence_name,
+                    "\n".join(fence_lines),
+                    fence_start_line + 1,
+                )
             in_fence = False
             fence_name = None
+            fence_lang = None
             pending_name = None
+            fence_start_line = 0
             fence_lines = []
             continue
 
@@ -279,6 +348,11 @@ def parse_writer_output(output: str) -> dict[str, str]:
         if name in WRITER_ARTIFACTS:
             pending_name = name
 
+    if in_fence:
+        raise LinearPipelineError(
+            f"Writer output has an unterminated fenced block for {fence_name}"
+        )
+
     missing = [name for name in WRITER_ARTIFACTS if name not in artifacts]
     extra = sorted(set(artifacts) - set(WRITER_ARTIFACTS))
     if missing or extra:
@@ -287,6 +361,11 @@ def parse_writer_output(output: str) -> dict[str, str]:
             f"missing={missing} extra={extra}"
         )
     return {name: artifacts[name] for name in WRITER_ARTIFACTS}
+
+
+def parse_writer_output(output: str) -> dict[str, str]:
+    """Compatibility wrapper for the strict JSON writer-output parser."""
+    return parse_writer_output_strict_json(output)
 
 
 def write_writer_artifacts(module_dir: Path, artifacts: Mapping[str, str]) -> None:
@@ -515,6 +594,58 @@ def _artifact_name_from_text(text: str) -> str | None:
         if re.search(rf"(?<![\w.-]){re.escape(artifact)}(?![\w.-])", text):
             return artifact
     return None
+
+
+def _fence_language(info: str) -> str | None:
+    token = info.strip().split(maxsplit=1)[0] if info.strip() else ""
+    return token.lower() or None
+
+
+def _parse_and_dump_writer_json_artifact(
+    artifact: str,
+    body: str,
+    content_start_line: int,
+) -> str:
+    try:
+        parsed = json.loads(body)
+    except json.JSONDecodeError as exc:
+        absolute_line = content_start_line + exc.lineno - 1
+        raise LinearPipelineError(
+            f"{artifact} invalid JSON: {exc} "
+            f"(artifact line {exc.lineno}, absolute line {absolute_line}, "
+            f"column {exc.colno})"
+        ) from exc
+
+    _validate_writer_json_artifact(artifact, parsed)
+    return yaml.safe_dump(parsed, allow_unicode=True, sort_keys=False)
+
+
+def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
+    schema = WRITER_JSON_SCHEMAS[artifact]
+    if not isinstance(parsed, schema.root_type):
+        raise LinearPipelineError(
+            f"{artifact} schema validation failed: root must be "
+            f"{schema.root_type.__name__}"
+        )
+    if not isinstance(parsed, list):
+        raise LinearPipelineError(
+            f"{artifact} schema validation failed: root must be a list"
+        )
+
+    for index, item in enumerate(parsed, start=1):
+        if not isinstance(item, dict):
+            raise LinearPipelineError(
+                f"{artifact} schema validation failed: item {index} must be object"
+            )
+        for field, expected_type in schema.required_item_fields.items():
+            value = item.get(field)
+            if not isinstance(value, expected_type) or (
+                expected_type is str and not value.strip()
+            ):
+                raise LinearPipelineError(
+                    f"{artifact} schema validation failed: item {index} "
+                    f"requires {field} as {expected_type.__name__}"
+                )
 
 
 def _strip_outer_code_fence(text: str) -> str:

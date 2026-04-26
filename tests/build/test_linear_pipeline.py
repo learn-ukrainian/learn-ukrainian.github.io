@@ -120,7 +120,50 @@ def test_invoke_writer_rejects_unknown_writer(tmp_path: Path) -> None:
         linear_pipeline.invoke_writer("Write the module.", writer="bogus", cwd=tmp_path)
 
 
-def test_parse_writer_output_extracts_four_fenced_artifacts() -> None:
+def test_parse_writer_output_strict_json() -> None:
+    output = """```markdown file=module.md
+# Мій ранок
+```
+
+```json file=activities.yaml
+[
+  {"id": "act-1", "type": "fill-in", "title": "Додайте -ся"}
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "ранок",
+    "translation": "morning",
+    "pos": "noun",
+    "usage": "Мій ранок простий."
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {
+    "title": "Караман Grade 10, p.176",
+    "notes": "Зворотні дієслова: суфікс -ся означає дію на себе."
+  }
+]
+```
+"""
+
+    artifacts = linear_pipeline.parse_writer_output_strict_json(output)
+
+    assert tuple(artifacts) == linear_pipeline.WRITER_ARTIFACTS
+    assert artifacts["module.md"].startswith("# Мій ранок")
+    assert yaml.safe_load(artifacts["activities.yaml"])[0]["id"] == "act-1"
+    assert yaml.safe_load(artifacts["vocabulary.yaml"])[0]["lemma"] == "ранок"
+    assert yaml.safe_load(artifacts["resources.yaml"])[0]["title"] == (
+        "Караман Grade 10, p.176"
+    )
+
+
+def test_parse_writer_output_rejects_yaml_block() -> None:
     output = """```markdown file=module.md
 # Мій ранок
 ```
@@ -130,21 +173,65 @@ def test_parse_writer_output_extracts_four_fenced_artifacts() -> None:
   type: fill-in
 ```
 
-```yaml file=vocabulary.yaml
-- lemma: ранок
-  translation: morning
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "ранок",
+    "translation": "morning",
+    "pos": "noun",
+    "usage": "Мій ранок простий."
+  }
+]
 ```
 
-```yaml file=resources.yaml
-- title: Караман Grade 10, p.176
+```json file=resources.yaml
+[
+  {"title": "Караман Grade 10, p.176"}
+]
 ```
 """
 
-    artifacts = linear_pipeline.parse_writer_output(output)
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"activities\.yaml must be fenced as json",
+    ):
+        linear_pipeline.parse_writer_output_strict_json(output)
 
-    assert tuple(artifacts) == linear_pipeline.WRITER_ARTIFACTS
-    assert artifacts["module.md"].startswith("# Мій ранок")
-    assert yaml.safe_load(artifacts["activities.yaml"])[0]["id"] == "act-1"
+
+def test_parse_writer_output_rejects_invalid_json() -> None:
+    output = """```markdown file=module.md
+# Мій ранок
+```
+
+```json file=activities.yaml
+[
+  {"id": "act-1", "type": "fill-in",}
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "ранок",
+    "translation": "morning",
+    "pos": "noun",
+    "usage": "Мій ранок простий."
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {"title": "Караман Grade 10, p.176"}
+]
+```
+"""
+
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"activities\.yaml invalid JSON: .*line 2 column",
+    ):
+        linear_pipeline.parse_writer_output_strict_json(output)
 
 
 def test_parse_writer_output_rejects_missing_artifact() -> None:
@@ -154,7 +241,7 @@ def test_parse_writer_output_rejects_missing_artifact() -> None:
 """
 
     with pytest.raises(linear_pipeline.LinearPipelineError, match="missing"):
-        linear_pipeline.parse_writer_output(output)
+        linear_pipeline.parse_writer_output_strict_json(output)
 
 
 def test_parse_review_response_accepts_json_fence() -> None:
