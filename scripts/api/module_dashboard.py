@@ -24,7 +24,7 @@ CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from audit.status_cache import get_source_paths, read_status
-from common.thresholds import REVIEW_PASS_FLOOR
+from common.thresholds import get_level_thresholds
 
 
 def _load_curriculum_order(level: str) -> list[str]:
@@ -97,6 +97,12 @@ def _get_blocking_issues(status: dict) -> list[str]:
     return issues
 
 
+def _review_pass_floor(level: str) -> float:
+    """Single-score dashboard fallback: require the strictest dim floor."""
+    floors = get_level_thresholds(level).review_floors.values()
+    return max(floor.pass_floor for floor in floors)
+
+
 def dashboard(level: str, failing_only: bool = False, first_n: int = 0) -> int:
     """Print the module health dashboard. Returns exit code."""
     slugs = _load_curriculum_order(level)
@@ -123,14 +129,15 @@ def dashboard(level: str, failing_only: bool = False, first_n: int = 0) -> int:
             audit_status = "NO DATA"
             blocking = []
 
-        # A module is only shippable if audit PASS + review ≥ REVIEW_PASS_FLOOR
+        review_pass_floor = _review_pass_floor(level)
+        # Legacy review scores are MIN aggregates, so use the strictest dim floor.
         review_num = None
         if review_score and review_score not in ("PASS", "FAIL"):
             with contextlib.suppress(ValueError):
                 review_num = float(review_score)
 
-        if review_num is not None and review_num < REVIEW_PASS_FLOOR:
-            blocking.append(f"review: {review_num}/10 (need ≥{int(REVIEW_PASS_FLOOR)})")
+        if review_num is not None and review_num < review_pass_floor:
+            blocking.append(f"review: {review_num}/10 (need ≥{review_pass_floor:g})")
         elif review_score is None or review_score == "-":
             blocking.append("review: not completed")
 

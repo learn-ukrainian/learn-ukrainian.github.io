@@ -15,20 +15,27 @@ from typing import Any
 # Ensure scripts/ is importable (matches the pattern used elsewhere in audit/).
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from common.thresholds import REVIEW_PASS_FLOOR
+from common.thresholds import get_level_thresholds
 
 # Constants
 SENSITIVE_TAGS = {
     'politics', 'war', 'religion', 'history', 'ideology', 'gender',
     'controversial', 'policy', 'identity'
 }
-# Modules scoring below the reviewer pass floor get Tier 2 (LLM-verified).
-# Shares the constant with the review pipeline so the risk-escalation
-# threshold tracks any future shift in reviewer calibration.
-NATURALNESS_THRESHOLD = REVIEW_PASS_FLOOR
+# Default fallback for callers that do not yet pass a level code.
+NATURALNESS_THRESHOLD = get_level_thresholds(None).review_floors["naturalness"].pass_floor
 SAMPLE_RATE = 0.20  # 20% sampling for Tier 3
 
-def determine_tier(module_data: dict[str, Any]) -> str:
+
+def get_naturalness_threshold(level_code: str | None = None) -> float:
+    """Return the per-level naturalness floor for sampling escalation."""
+    return get_level_thresholds(level_code).review_floors["naturalness"].pass_floor
+
+
+def determine_tier(
+    module_data: dict[str, Any],
+    level_code: str | None = None,
+) -> str:
     """
     Determine the implied validation tier based on module characteristics.
     Does NOT return the stored tier, but calculates what it *should* be
@@ -40,7 +47,8 @@ def determine_tier(module_data: dict[str, Any]) -> str:
     if isinstance(naturalness, dict):
         score = naturalness.get('score', 10)
 
-    if score < NATURALNESS_THRESHOLD:
+    resolved_level = level_code or module_data.get("level_code") or module_data.get("level")
+    if score < get_naturalness_threshold(resolved_level):
         return 'llm-verified'
 
     # Check sensitive tags
