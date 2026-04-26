@@ -8,6 +8,25 @@ Write the A1 module using the plan and contract below. Produce exactly four
 authoring artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, and
 `resources.yaml`.
 
+Return only these four fenced blocks, in this exact order. Do not add prose
+before, between, or after the blocks.
+
+```markdown file=module.md
+...
+```
+
+```yaml file=activities.yaml
+...
+```
+
+```yaml file=vocabulary.yaml
+...
+```
+
+```yaml file=resources.yaml
+...
+```
+
 ## Module Context
 
 - Level: {LEVEL}

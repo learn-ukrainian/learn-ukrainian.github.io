@@ -45,6 +45,12 @@ WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
 }
+WRITER_ARTIFACTS = (
+    "module.md",
+    "activities.yaml",
+    "vocabulary.yaml",
+    "resources.yaml",
+)
 
 QUALITY_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
     "russianisms_clean": (
@@ -239,6 +245,135 @@ def invoke_writer(
     return str(response)
 
 
+def parse_writer_output(output: str) -> dict[str, str]:
+    """Parse a writer response into the four required authoring artifacts."""
+    artifacts: dict[str, str] = {}
+    pending_name: str | None = None
+    in_fence = False
+    fence_name: str | None = None
+    fence_lines: list[str] = []
+
+    for line in output.splitlines():
+        fence_match = re.match(r"^\s*```(?P<info>.*)$", line)
+        if fence_match:
+            if not in_fence:
+                info = fence_match.group("info").strip()
+                fence_name = _artifact_name_from_text(info) or pending_name
+                in_fence = True
+                fence_lines = []
+                continue
+
+            if fence_name in WRITER_ARTIFACTS:
+                artifacts[fence_name] = "\n".join(fence_lines).strip() + "\n"
+            in_fence = False
+            fence_name = None
+            pending_name = None
+            fence_lines = []
+            continue
+
+        if in_fence:
+            fence_lines.append(line)
+            continue
+
+        name = _artifact_name_from_text(line)
+        if name in WRITER_ARTIFACTS:
+            pending_name = name
+
+    missing = [name for name in WRITER_ARTIFACTS if name not in artifacts]
+    extra = sorted(set(artifacts) - set(WRITER_ARTIFACTS))
+    if missing or extra:
+        raise LinearPipelineError(
+            f"Writer output must contain exactly {WRITER_ARTIFACTS}. "
+            f"missing={missing} extra={extra}"
+        )
+    return {name: artifacts[name] for name in WRITER_ARTIFACTS}
+
+
+def write_writer_artifacts(module_dir: Path, artifacts: Mapping[str, str]) -> None:
+    """Write parsed writer artifacts after validating their basic shapes."""
+    missing = [name for name in WRITER_ARTIFACTS if name not in artifacts]
+    if missing:
+        raise LinearPipelineError(f"Missing writer artifacts: {', '.join(missing)}")
+
+    module_text = str(artifacts["module.md"])
+    if not module_text.strip():
+        raise LinearPipelineError("module.md artifact is empty")
+
+    for name in ("activities.yaml", "vocabulary.yaml", "resources.yaml"):
+        parsed = yaml.safe_load(str(artifacts[name]))
+        if not isinstance(parsed, list):
+            raise LinearPipelineError(f"{name} must be a bare YAML list")
+        if not all(isinstance(item, dict) for item in parsed):
+            raise LinearPipelineError(f"{name} entries must be mappings")
+
+    module_dir.mkdir(parents=True, exist_ok=True)
+    for name in WRITER_ARTIFACTS:
+        (module_dir / name).write_text(str(artifacts[name]), encoding="utf-8")
+
+
+def review_context(
+    plan: Mapping[str, Any],
+    plan_content: str,
+    generated_content: str,
+    dim: str,
+) -> dict[str, str]:
+    """Build context for one independent per-dimension LLM QG prompt."""
+    if dim not in QG_DIMS:
+        raise LinearPipelineError(f"Unknown LLM QG dimension: {dim}")
+    level = str(plan["level"])
+    sequence = int(plan["sequence"])
+    return {
+        "LEVEL": level,
+        "MODULE_NUM": str(sequence),
+        "MODULE_SLUG": str(plan["slug"]),
+        "WORD_TARGET": str(plan["word_target"]),
+        "IMMERSION_RULE": get_immersion_rule(level.lower(), sequence),
+        "CONTRACT_YAML": _contract_yaml(plan),
+        "PLAN_CONTENT": plan_content,
+        "GENERATED_CONTENT": generated_content,
+        "DIM": dim,
+    }
+
+
+def render_review_prompt(
+    plan: Mapping[str, Any],
+    plan_content: str,
+    generated_content: str,
+    dim: str,
+) -> str:
+    return render_phase_prompt(
+        PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-review-dim.md",
+        review_context(plan, plan_content, generated_content, dim),
+    )
+
+
+def parse_review_response(response: str, dim: str) -> dict[str, Any]:
+    """Parse and validate one per-dim LLM QG response."""
+    if dim not in QG_DIMS:
+        raise LinearPipelineError(f"Unknown LLM QG dimension: {dim}")
+
+    payload = _parse_json_or_yaml_mapping(response)
+    if dim in payload and isinstance(payload[dim], Mapping):
+        payload = dict(payload[dim])
+
+    try:
+        score = float(payload["score"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise LinearPipelineError(f"LLM QG response for {dim} has invalid score") from exc
+
+    evidence = payload.get("evidence")
+    verdict = str(payload.get("verdict", "")).upper()
+    entry = {
+        "score": score,
+        "evidence": evidence,
+        "verdict": verdict,
+    }
+    validate_llm_review_report({**_placeholder_review_report(), dim: entry})
+    if verdict not in {"PASS", "REVISE", "REJECT"}:
+        raise LinearPipelineError(f"LLM QG response for {dim} has invalid verdict")
+    return entry
+
+
 def validate_llm_review_report(report: Mapping[str, Any]) -> None:
     """Validate per-dim LLM QG reports before aggregation."""
     dims = set(QG_DIMS)
@@ -269,6 +404,8 @@ def validate_llm_review_report(report: Mapping[str, Any]) -> None:
             )
         if not isinstance(entry.get("verdict"), str) or not entry["verdict"].strip():
             raise LinearPipelineError(f"LLM QG entry for {dim} missing verdict")
+        if entry["verdict"].upper() not in {"PASS", "REVISE", "REJECT"}:
+            raise LinearPipelineError(f"LLM QG entry for {dim} has invalid verdict")
 
 
 def aggregate_llm_review(report: Mapping[str, Any], level_code: str) -> dict[str, Any]:
@@ -371,6 +508,43 @@ def write_json(path: Path, payload: Mapping[str, Any]) -> None:
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+
+def _artifact_name_from_text(text: str) -> str | None:
+    for artifact in WRITER_ARTIFACTS:
+        if re.search(rf"(?<![\w.-]){re.escape(artifact)}(?![\w.-])", text):
+            return artifact
+    return None
+
+
+def _strip_outer_code_fence(text: str) -> str:
+    stripped = text.strip()
+    match = re.match(r"^```(?:json|yaml|yml)?\s*\n(?P<body>.*)\n```\s*$", stripped, re.DOTALL)
+    if match:
+        return match.group("body").strip()
+    return stripped
+
+
+def _parse_json_or_yaml_mapping(text: str) -> dict[str, Any]:
+    body = _strip_outer_code_fence(text)
+    try:
+        parsed = json.loads(body)
+    except json.JSONDecodeError:
+        parsed = yaml.safe_load(body)
+    if not isinstance(parsed, dict):
+        raise LinearPipelineError("LLM QG response must be a JSON/YAML mapping")
+    return parsed
+
+
+def _placeholder_review_report() -> dict[str, dict[str, Any]]:
+    return {
+        dim: {
+            "score": 10.0,
+            "evidence": '"placeholder"',
+            "verdict": "PASS",
+        }
+        for dim in QG_DIMS
+    }
 
 
 def _activity_config(level: str, module_num: int, slug: str | None = None) -> dict[str, str]:

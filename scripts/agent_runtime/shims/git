@@ -10,17 +10,18 @@ EOF
 }
 
 _real_git() {
-  if [[ -n "${AGENT_REAL_GIT:-}" ]]; then
+  local shim_dir
+  shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+  if [[ -n "${AGENT_REAL_GIT:-}" && "${AGENT_REAL_GIT:-}" != "$shim_dir/git" && "${AGENT_REAL_GIT:-}" != */scripts/agent_runtime/shims/git ]]; then
     printf '%s\n' "$AGENT_REAL_GIT"
     return 0
   fi
 
-  local shim_dir
-  shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
   local path_entry
   IFS=':' read -r -a _path_entries <<< "${AGENT_ORIGINAL_PATH:-${PATH:-}}"
   for path_entry in "${_path_entries[@]}"; do
-    [[ -z "$path_entry" || "$path_entry" == "$shim_dir" ]] && continue
+    [[ -z "$path_entry" || "$path_entry" == "$shim_dir" || "$path_entry" == */scripts/agent_runtime/shims ]] && continue
     if [[ -x "$path_entry/git" ]]; then
       printf '%s\n' "$path_entry/git"
       return 0
