@@ -20,10 +20,22 @@ before, between, or after the blocks.
   {
     "id": "act-1",
     "type": "fill-in",
-    "title": "..."
+    "instruction": "Complete each sentence with the best word.",
+    "items": [
+      {
+        "sentence": "Я ____ о сьомій.",
+        "answer": "прокидаюся",
+        "options": ["прокидаюся", "сплю", "йду"]
+      }
+    ]
   }
 ]
 ```
+
+Each activity object MUST carry the props for its declared `type` exactly as
+laid out in the "Activity Component Props" section below. The example above
+is a valid `fill-in`; do not strip the `items` array down to `id/type/title`
+just because the example looks shorter that way.
 
 ```json file=vocabulary.yaml
 [
@@ -82,12 +94,20 @@ inside `module.md`.
 The prose of `module.md` is for a learner who is encountering Ukrainian, not
 for a teacher narrating their own lesson plan. Hold to this register:
 
-- **No English meta-narration.** Do not write phrases like "Welcome to the
-  start of our journey", "In this section we will learn", "Now that you have
-  seen these verbs", "Let's now look at", "Before we move on", or any
-  variant. They burn English words and miss the immersion target. Open each
-  prose section directly with the grammar point in Ukrainian, with a
-  Ukrainian dialogue line, or with the example itself.
+- **No English meta-narration.** Do not write transitional or instructional
+  framing phrases. Specifically forbidden, with no exceptions:
+  - "Welcome to the start of our journey"
+  - "In this section we will learn"
+  - "Now that you have seen these verbs"
+  - "Let's now look at"
+  - "Before we move on"
+  - "Note that…", "Notice that…", "Observe that…", "Observe how…"
+  - "Pay attention to…", "Remember that…", "It is important to…"
+  - Any English sentence that opens with a teacher-facing transition verb
+    ("Let's…", "We will…", "You should now…")
+  Open each prose section directly with the grammar point in Ukrainian,
+  with a Ukrainian dialogue line, with the example itself, or with a
+  one-sentence English statement of the grammar fact (no warm-up).
 - **English is for translation, gloss, and short scaffolds, never for
   framing.** Treat English as a footnote that supports a Ukrainian sentence,
   not as a frame around it.
