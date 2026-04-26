@@ -8,7 +8,8 @@
 
 | Thread | Latest handoff | Owner |
 |---|---|---|
-| **EPIC #1577 reboot — Round 3 diagnostic shipped, decision pending (3.5 vs 4)** | **`docs/session-state/2026-04-26-qg-bugfix-shipped.md`** | **Claude late-evening (this session)** |
+| **EPIC #1577 reboot — Round 3.5 prompt-tighten shipped (#1603); decision pending on user re-run** | **`docs/session-state/2026-04-26-round-3.5-shipped.md`** | **Claude late-evening (this session)** |
+| Predecessor: Round 3 QG bugfixes shipped, decision pending (3.5 vs 4) | `docs/session-state/2026-04-26-qg-bugfix-shipped.md` | Claude late-evening |
 | Predecessor: Phase 4 round 3 dispatched (strict-JSON exemplar) | `docs/session-state/2026-04-26-evening-handoff.md` | Claude evening |
 | Predecessor: autonomous orchestration during user-away window | `docs/session-state/2026-04-26-autonomous-orchestration.md` | Claude midday |
 | Predecessor: overnight wiki rebuild + Phase 4 dispatch | `docs/session-state/2026-04-26-overnight-claude.md` | Claude overnight |
@@ -39,17 +40,22 @@
   standard rc file. Source it manually before `gh` calls.
 - **a1/1 working tree** has user's preserved manual patches. Do NOT
   clobber from any thread.
-- **Main is at `a6b9e7f417`** as of late-evening handoff (2026-04-26).
-  Two Phase 4 PRs merged this session: `3603f11774` (#1598 strict-JSON
-  contract) + `a6b9e7f417` (#1599 QG false-positive fixes).
-- **Phase 4 round 3 dispatch:** completed `worktree_dirty_on_exit:
-  true`. Diagnostic showed 4 of 5 RED gates were Python QG bugs
-  (now fixed). 3 real writer failures remain: chatty over-writing
-  (causes both `plan_sections` over-budget and `immersion 11.72%`),
-  schema-syntax gap (`act-my-morning-4/6/8`), and 3 proper-name
-  whitelist gaps (`Караман`/`Ліна`/`Настя`). **Next decision:**
-  round 3.5 prompt-tighten vs round 4 writer bakeoff. See
-  `2026-04-26-qg-bugfix-shipped.md` for context.
+- **Main is at `9294dedbbe`** as of late-evening handoff (2026-04-26).
+  Three Phase 4 PRs merged this round of sessions: `3603f11774` (#1598
+  strict-JSON), `a6b9e7f417` (#1599 QG false-positive fixes), and
+  `9294dedbbe` (#1603 round 3.5 prompt-tighten).
+- **Phase 4 round 3.5 SHIPPED:** writer prompt now includes anti-meta-
+  narration directives (12+ forbidden phrases), `{COMPONENT_PROPS_SCHEMA}`
+  rendered from `lesson-schema.yaml` per allowed activity type, and 3
+  whitelist additions + 13 declined-form variants. **Next decision:**
+  user runs A1/20 build → if Gemini complies, round 3.5 is canonical
+  config and Phase 5 fan-out begins; if it still produces meta-narration,
+  empirical bakeoff trigger for round 4 (claude-tools vs gemini-tools).
+  See `2026-04-26-round-3.5-shipped.md` for the decision table.
+- **#1604 (NEW)** filed as follow-up: `PhraseTable` (and other
+  vocabulary-tab activities) get `activity_type: null` in
+  `lesson-schema.yaml`. Renderer warns; root cause needs schema-generator
+  fix. Not Phase-4-blocking.
 - **Round-3 failed Gemini exemplar artifacts** preserved in repo
   stash@{0} and stash@{1} (duplicates). `git stash show -p stash@{0}`
   to inspect — needed for round 3.5 prompt-tightening evidence.
