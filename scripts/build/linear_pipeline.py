@@ -8,7 +8,6 @@ any LLM rewrite or regeneration loop.
 
 from __future__ import annotations
 
-import functools
 import json
 import re
 import sys
@@ -404,7 +403,101 @@ def writer_context(plan: Mapping[str, Any], plan_content: str, knowledge_packet:
         "WORKBOOK_ALLOWED_TYPES": activity_config["WORKBOOK_ALLOWED_TYPES"],
         "ACTIVITY_COUNT_TARGET": activity_config["ACTIVITY_COUNT_TARGET"],
         "VOCAB_COUNT_TARGET": activity_config["VOCAB_COUNT_TARGET"],
+        "COMPONENT_PROPS_SCHEMA": _render_component_props_schema(
+            activity_config["ALLOWED_ACTIVITY_TYPES"]
+        ),
     }
+
+
+# Multi-line TSDoc comments embedded in raw type strings would leak into the
+# rendered writer prompt verbatim — `odd-one-out`'s `items` field, for example,
+# carries `{ /** * @schemaDescription Words... */ words: string[]; ... }[]`.
+# That burns tokens and confuses the writer with TypeScript syntax. Strip them
+# before rendering. Generator-side fix tracked in #1604.
+_TSDOC_BLOCK_RE = re.compile(r"/\*\*.*?\*/", re.DOTALL)
+
+
+def _strip_tsdoc(raw_type: str) -> str:
+    """Remove embedded TSDoc comment blocks and collapse runs of whitespace."""
+    cleaned = _TSDOC_BLOCK_RE.sub("", raw_type)
+    return " ".join(cleaned.split()).strip()
+
+
+def _render_component_props_schema(allowed_activity_types: str) -> str:
+    """Render compact required/optional prop spec per allowed activity type.
+
+    Reads ``docs/lesson-schema.yaml`` and emits a writer-facing markdown list,
+    one bullet per allowed activity type, naming the required and optional
+    props plus the nested-item field names. Without this, the writer guesses
+    prop shapes — e.g. it produced ``passage:`` for ``fill-in`` (which the
+    schema says needs ``items: FillInItem[]``) and omitted ``correct_order``
+    on ``order`` activities. The component-prop QG gate then failed late with
+    cryptic errors. Surfacing the contract in the prompt is the cheapest fix
+    that matches what the gate actually checks (#1602, round 3.5).
+
+    The same ``docs/lesson-schema.yaml`` file is the source of truth for both
+    this prompt section and the ``_component_prop_gate`` validator, so the
+    writer can never see a stale contract.
+
+    Allowed types that have no resolvable schema entry (the
+    ``activity_type: null`` drift class — see #1604 for the ``phrase-table``
+    instance) are NOT silently dropped. They emit an explicit
+    ``# WARNING: <type> has no schema entry…`` line so the writer is told
+    not to use them. Failing loudly here would block round 3.5 dispatch on
+    an unrelated generator-side bug; warning + follow-up issue is the right
+    scope for this PR.
+    """
+    allowed = {token.strip() for token in allowed_activity_types.split(",") if token.strip()}
+    schema = load_yaml(PROJECT_ROOT / "docs" / "lesson-schema.yaml")
+    components = schema.get("components", {}) or {}
+    by_type: dict[str, dict[str, Any]] = {}
+    for data in components.values():
+        if not isinstance(data, dict):
+            continue
+        activity_type = data.get("activity_type")
+        if activity_type in allowed:
+            by_type[activity_type] = data
+    unresolved = sorted(allowed - by_type.keys())
+
+    def _format_prop(prop: Mapping[str, Any], nested: Mapping[str, Any]) -> str:
+        name = prop.get("name", "?")
+        ptype = _strip_tsdoc(str(prop.get("type", "")))
+        # Resolve nested-item field names so the writer sees the inner shape
+        # of arrays like FillInItem[] without us having to repeat the whole
+        # schema. Falls back to the raw type string when there's no match.
+        item_type = ptype[:-2] if ptype.endswith("[]") else None
+        if item_type and item_type in nested:
+            fields = ", ".join(
+                str(field.get("name", "?"))
+                for field in nested[item_type]
+                if isinstance(field, dict)
+            )
+            return f"{name} ({ptype}: {fields})" if fields else f"{name} ({ptype})"
+        return f"{name} ({ptype})" if ptype else str(name)
+
+    lines: list[str] = []
+    for activity_type in sorted(by_type):
+        data = by_type[activity_type]
+        props = data.get("props", {}) or {}
+        nested = data.get("nested_types", {}) or {}
+        required = [p for p in (props.get("required", []) or []) if isinstance(p, dict)]
+        optional = [p for p in (props.get("optional", []) or []) if isinstance(p, dict)]
+        req_str = ", ".join(_format_prop(p, nested) for p in required) if required else "—"
+        opt_str = ", ".join(_format_prop(p, nested) for p in optional) if optional else "—"
+        lines.append(f"- {activity_type}:")
+        lines.append(f"    required: {req_str}")
+        lines.append(f"    optional: {opt_str}")
+    for activity_type in unresolved:
+        # Visible to both the writer (via the prompt) and to anyone reading
+        # the rendered output. Keep the wording stable — tests grep for it.
+        lines.append(
+            f"- {activity_type}:  # WARNING: no schema entry in "
+            f"docs/lesson-schema.yaml — DO NOT USE this activity type "
+            f"(see #1604 for the schema-generator drift)"
+        )
+    if not lines:
+        return "(no allowed activity types resolved against lesson-schema.yaml)"
+    return "\n".join(lines)
 
 
 def invoke_writer(
@@ -1070,14 +1163,24 @@ def _vesum_gate(
     }
 
 
-@functools.cache
 def _proper_name_whitelist_lc() -> frozenset[str]:
-    """Lowercase form of `PROPER_NAME_WHITELIST`, computed once.
+    """Lowercase form of `PROPER_NAME_WHITELIST`, computed on every call.
 
     `_vesum_gate` lowercases each surface form before whitelist membership
-    testing, so the whitelist itself must be lowercased once. Cached across
-    calls — the underlying constant doesn't change at runtime. Lazy import
-    keeps `scripts.audit.config` out of the module-import path.
+    testing, so the whitelist itself must be lowercased once per gate run.
+
+    Adversarial review (Gemini, 2026-04-26, PR #1603): an earlier version
+    used `@functools.cache` here. That created a test-isolation hazard —
+    any test that mutated `PROPER_NAME_WHITELIST` (e.g. via
+    `monkeypatch.setattr` or direct `set.add`) would not be observed by
+    pipeline code, because the cache had already snapshotted the original
+    set. The constant is small (~90 entries) and `_vesum_gate` is called
+    at most once per `run_python_qg`, so re-lowercasing on every call costs
+    a few microseconds and is not worth the silent test-flakes the cache
+    caused. If profiling ever shows this is hot, prefer recomputing on
+    a SHA1 of the constant rather than reintroducing `@functools.cache`.
+
+    Lazy import keeps `scripts.audit.config` out of the module-import path.
     """
     from scripts.audit.config import PROPER_NAME_WHITELIST
 

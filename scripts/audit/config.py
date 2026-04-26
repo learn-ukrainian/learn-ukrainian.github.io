@@ -20,6 +20,13 @@ PROPER_NAME_WHITELIST: set[str] = {
     "Максим", "Олександр", "Олександра", "Михайло", "Данило", "Роман", "Сергій",
     "Оля", "Олю", "Аня", "Марта", "Тарасе", "Василько", "Кирилко",
     "Соломійка", "Соломійко", "Мар'яна", "Дар'я", "Лук'ян",
+    # Added 2026-04-26 (round 3.5, #1602): dialogue characters surfaced by
+    # the A1/20 `my-morning` exemplar. `Ліна` / `Настя` are the speakers
+    # in the morning-routine dialogue. Common declined forms included so the
+    # writer can address them in vocative or use them in oblique cases
+    # without re-tripping the VESUM gate (Gemini + Codex review on PR #1603).
+    "Ліна", "Ліни", "Ліні", "Ліну", "Ліною", "Ліно",
+    "Настя", "Насті", "Настю", "Настею", "Насте",
     # Ukrainian cities and regions (+ declined forms)
     "Київ", "Львів", "Одеса", "Харків", "Дніпро", "Запоріжжя", "Полтава",
     "Чернігів", "Суми", "Вінниця", "Тернопіль", "Луцьк", "Рівне", "Ужгород",
@@ -34,6 +41,11 @@ PROPER_NAME_WHITELIST: set[str] = {
     "Котляревський", "Леонтович", "Лисенко",
     "Большакова", "Вашуленко", "Захарійчук", "Кравцова", "Авраменко",
     "Заболотний", "Літвінова", "Білоус",
+    # Added 2026-04-26 (round 3.5, #1602): textbook author cited in the
+    # A1/20 plan references (`Караман Grade 10, p.176`). Common declined
+    # forms included so citations like "За Караманом" or "у Карамана"
+    # don't re-trip the VESUM gate (PR #1603 review).
+    "Караман", "Карамана", "Караманом", "Караману", "Карамані",
     # Common abbreviations and brand names
     "ІТ", "ЗНО", "НМТ", "ЄС", "ООН", "НАТО", "ЗСУ",
     "МійКлас",
