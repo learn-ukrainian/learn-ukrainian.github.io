@@ -2,65 +2,62 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-betsa-2023_s3175
+  file: 6-klas-ukrmova-golub-2023_s3262
   type: textbook
-  title: § 49. Ступені порівняння прикметників
-  page: 123
-  grade: 6
-- id: S2
-  file: 7-klas-ukrmova-avramenko-2024_s3853
-  type: textbook
-  title: § 62. Ступені порівняння прислівників
-  page: 140
-  grade: 7
-- id: S3
-  file: 7-klas-ukrmova-litvinova-2024_s3931
-  type: textbook
-  title: § 24. Ступені порівняння прислівників
-  page: 143
-  grade: 7
-- id: S4
-  file: 6-klas-ukrmova-avramenko-2023_s3079
-  type: textbook
-  title: § 63. –64. Ступені порівняння якісних прикметників
+  title: § 48. Зимова естетика
   page: 125
   grade: 6
-- id: S5
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1805
+- id: S2
+  file: 10-klas-ukrmova-karaman-2018_s0673
   type: textbook
-  title: КрокЗ. Зроби висновок. Порівняй його з правилом
-  page: 72
-  grade: 4
-- id: S6
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1204
+  title: § 60. Прикметник як частина мови
+  page: 151
+  grade: 10
+- id: S3
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3960
   type: textbook
-  title: Прислівник. Ступені порівняння прислівників § 4
-  page: 23
-  grade: 11
-- id: S7
-  file: 7-klas-ukrmova-avramenko-2024_s3792
-  type: textbook
-  title: § 7. Морфологія. Прикметник
-  page: 20
+  title: ПРИГОДИ ЗВИЧАЙНОЇ КАРТОПЛІ
+  page: 145
   grade: 7
-- id: S8
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1142
+- id: S4
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1202
   type: textbook
-  title: § 9. –10. СТУПЕНІ ПОРІВНЯННЯ ПРИКМЕТНИКІВ
-  page: 29
+  title: Засоби мовного вираження промови. Тропи
+  page: 15
   grade: 11
-- id: S9
+- id: S5
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3393
+  type: textbook
+  title: § 40. ГРУПИ ПРИКМЕТНИКІВ ЗА ЗНАЧЕННЯМ
+  page: 133
+  grade: 6
+- id: S6
   file: 6-klas-ukrmova-litvinova-2023_s3351
   type: textbook
   title: § 41. Ступені порівняння якісних прикметників
   page: 196
   grade: 6
-- id: S10
-  file: 10-klas-ukrmova-karaman-2018_s0674
+- id: S7
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1142
   type: textbook
-  title: § 61. Ступені порівняння якісних прикметників
-  page: 155
-  grade: 10
-- id: S12
+  title: § 9. –10. СТУПЕНІ ПОРІВНЯННЯ ПРИКМЕТНИКІВ
+  page: 29
+  grade: 11
+- id: S8
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1204
+  type: textbook
+  title: Прислівник. Ступені порівняння прислівників § 4
+  page: 23
+  grade: 11
+- id: S9
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S10
   file: ext-article-1
   type: external
+  title: ext-article-1
+- id: S11
+  file: ext-article-2
+  type: external
+  title: ext-article-2

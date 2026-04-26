@@ -2,38 +2,26 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3387
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
   type: textbook
-  title: § 27. ВІДМІНИ Й ГРУПИ
-  page: 95
-  grade: 6
+  title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
+  page: 183
+  grade: 7
+- id: S2
+  file: ukrainian_wiki/genitive-prepositions-purpose_Граматика-A2-Для-кого-Без-чого-Біля-чого-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика A2: Для кого? Без чого? Біля чого?'
+  section_path: 'Граматика A2: Для кого? Без чого? Біля чого? > Як це пояснюють у
+    школі'
 - id: S3
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0358
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
   type: textbook
-  title: § 40. ЗАКІНЧЕННЯ ІМЕННИКІВ
-  page: 151
-  grade: 10
-- id: S5
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1548
+  title: Розділ 1. ШОКОЛАД
+  page: 36
+  grade: 4
+- id: S4
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1799
   type: textbook
-  title: НАГОЛОС НАВЧАЮСЯ ПРАВИЛЬНО НАГОЛОШУВАТИ СЛОВА
-  page: 14
-  grade: 2
-- id: S7
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1213
-  type: textbook
-  title: Риторичні фігури. Риторичне запитання, риторичне звертання
-  page: 67
-  grade: 11
-- id: S9
-  file: 5-klas-ukrmova-golub-2022_s2315
-  type: textbook
-  title: 'Довідка: Хто я? Де я живу? Моя сім’я. Мій найкращий'
-  page: 174
-  grade: 5
-- id: S10
-  file: 5-klas-ukrmova-zabolotnyi-2023_s2508
-  type: textbook
-  title: ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО
-  page: 12
-  grade: 5
+  title: РОЛЬ СУФІКСА
+  page: 31
+  grade: 4

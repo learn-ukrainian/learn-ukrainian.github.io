@@ -2,23 +2,54 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 2-klas-ukrmova-vashulenko-2019-1_s0083
+  file: 6-klas-ukrlit-avramenko-2023_s2709
   type: textbook
+  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 10)
+  page: 10
+  grade: 6
 - id: S2
-  file: 2-klas-ukrmova-vashulenko-2019-2_s0065
+  file: 6-klas-ukrmova-litvinova-2023_s3334
   type: textbook
+  title: § 26. Число іменників
+  page: 133
+  grade: 6
 - id: S3
-  file: 2-klas-ukrmova-kravcova-2019-2_s0060
+  file: 6-klas-ukrmova-litvinova-2023_s3332
   type: textbook
+  title: § 24. Велика буква та лапки у власних назвах
+  page: 123
+  grade: 6
 - id: S4
-  file: 1-klas-bukvar-zaharijchuk-2025-1_s0081
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4715
   type: textbook
+  title: РЕЧЕННЯ ІЗ ЗВЕРТАННЯМИ,
+  page: 176
+  grade: 8
 - id: S5
-  file: 2-klas-ukrmova-kravcova-2019-2_s0084
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3385
   type: textbook
+  title: § 22. ІМЕННИК ЯК ЧАСТИНА МОВИ
+  page: 79
+  grade: 6
 - id: S6
-  file: 5-klas-istoriya-schupak-2022_s0153
-  type: textbook
+  file: ext-article-0
+  type: external
+  title: ext-article-0
 - id: S7
-  file: 5-klas-istoriya-schupak-2022_s0151
-  type: textbook
+  file: ext-article-1
+  type: external
+  title: ext-article-1
+- id: S8
+  file: ext-article-2
+  type: external
+  title: ext-article-2
+- id: S9
+  file: ukrainian_wiki/holidays_Педагогіка-A1-Holidays-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Holidays'
+  section_path: 'Педагогіка A1: Holidays > Методичний підхід'
+- id: S10
+  file: ukrainian_wiki/holidays_Педагогіка-A1-Holidays-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Holidays'
+  section_path: 'Педагогіка A1: Holidays > Послідовність введення'

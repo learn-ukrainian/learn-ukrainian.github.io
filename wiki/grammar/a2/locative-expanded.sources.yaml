@@ -2,32 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-betsa-2023_s3164
+  file: 4-klas-ukrmova-zaharijchuk_s1915
   type: textbook
-  title: § 38. Відмінки іменників
-  page: 94
-  grade: 6
-- id: S2
-  file: 10-klas-ukrmova-glazova-2018_s0550
+  title: Г ; . М ; М М «
+  page: 71
+  grade: 4
+- id: S3
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1799
   type: textbook
-  title: § 45. Закінчення іменників чоловічого роду
-  page: 190
-  grade: 10
+  title: РОЛЬ СУФІКСА
+  page: 31
+  grade: 4
 - id: S4
-  file: 5-klas-ukrmova-litvinova-2022_s2390
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
   type: textbook
-  title: Відомості із синтаксису й пунктуації. Додаток
-  page: 213
-  grade: 5
+  title: Навчаюся розрізняти іменники — назви істот і неістот
+  page: 104
+  grade: 3
 - id: S5
-  file: 6-klas-ukrmova-avramenko-2023_s3122
+  file: 6-klas-ukrmova-golub-2023_s3269
   type: textbook
-  title: § 99. –100. Написання заперечних і неозначених займенників . . . 194
-  page: 223
+  title: § 61. Математика і мистецтво поруч
+  page: 166
   grade: 6
 - id: S6
-  file: 6-klas-ukrmova-betsa-2023_s3215
+  file: ukrainian_wiki/genitive-prepositions-direction_Граматика-A2-Куди-До-якого-часу-Повна-парадигма-Позначення-часу-Коли-Доки
+  type: ukrainian_wiki
+  title: 'Граматика A2: Куди? До якого часу?'
+  section_path: 'Граматика A2: Куди? До якого часу? > Повна парадигма > Позначення
+    часу (Коли? Доки?)'
+- id: S7
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0308
   type: textbook
-  title: § 95. Час дієслова. Минулий час
-  page: 206
-  grade: 6
+  title: МОРФОЛОГІЧНА НОРМА СПОСТЕРЕЖЕННЯ (p. 166)
+  page: 166
+  grade: 10

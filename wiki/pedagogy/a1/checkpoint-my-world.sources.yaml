@@ -2,38 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1807
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
   type: textbook
-  title: ( ЗАЙМЕННИК. ОСОБОВІ ЗАЙМЕННИКИ
-  page: 88
-  grade: 4
+  title: Навчаюся розрізняти іменники — назви істот і неістот
+  page: 104
+  grade: 3
 - id: S2
-  file: 10-klas-ukrmova-karaman-2018_s0677
+  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1656
   type: textbook
-  title: § 64. Займенник
-  page: 161
-  grade: 10
+  title: СЛОВА З ПРЕФІКСАМИ З-, С
+  page: 47
+  grade: 3
 - id: S3
-  file: 4-klas-ukrmova-zaharijchuk_s1927
+  file: 6-klas-ukrmova-litvinova-2023_s3371
   type: textbook
-  title: ЧИСЛІВНИК (p. 190)
-  page: 190
-  grade: 4
+  title: § 54. Розряди займенників за значенням та особливості відмінювання
+  page: 255
+  grade: 6
 - id: S4
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3399
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1885
   type: textbook
-  title: § 58. ЗАЙМЕННИК ЯК ЧАСТИНА МОВИ
-  page: 192
-  grade: 6
+  title: § 31. Займенник як частина мови
+  page: 103
+  grade: 4
 - id: S5
-  file: 6-klas-ukrmova-avramenko-2023_s3119
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3402
   type: textbook
-  title: § 54. Особливості написання іменників у кличному відмінку . . . 106
-  page: 222
+  title: ВАРІАНТ Б. Складіть і запишіть невелику розповідь (6–10 ре чень) на тему
+  page: 215
   grade: 6
-- id: S7
-  file: 6-klas-ukrmova-golub-2023_s3270
+- id: S6
+  file: 6-klas-ukrmova-litvinova-2023_s3334
   type: textbook
-  title: § 65. Вчимося на своїх невдачах
-  page: 175
+  title: § 26. Число іменників
+  page: 133
   grade: 6

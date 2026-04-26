@@ -2,38 +2,50 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1898
+  type: textbook
+  title: Постав підкреслені іменники в Ор. в. Познач закінчення
+  page: 53
+  grade: 4
+- id: S2
   file: 4-klas-ukrmova-zaharijchuk_s1926
   type: textbook
   title: ПРИКМЕТНИК
   page: 189
   grade: 4
-- id: S2
-  file: 6-klas-ukrmova-betsa-2023_s3158
-  type: textbook
-  title: § 32. Число іменників
-  page: 80
-  grade: 6
 - id: S3
-  file: 6-klas-ukrmova-betsa-2023_s3192
+  file: 6-klas-ukrmova-litvinova-2023_s3365
   type: textbook
-  title: § 66. Уживання числівників з іменниками
-  page: 164
+  title: § 51. Узгодження числівників з іменниками
+  page: 240
   grade: 6
 - id: S4
-  file: 6-klas-ukrmova-litvinova-2023_s3334
+  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1656
   type: textbook
-  title: § 26. Число іменників
-  page: 133
-  grade: 6
+  title: СЛОВА З ПРЕФІКСАМИ З-, С
+  page: 47
+  grade: 3
 - id: S5
-  file: 5-klas-ukrmova-uhor-2022-1_s2427
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
   type: textbook
-  title: § 8. Частини мови. Іменники, що означають назви
-  page: 32
-  grade: 5
+  title: Навчаюся розрізняти іменники — назви істот і неістот
+  page: 104
+  grade: 3
 - id: S6
-  file: 6-klas-ukrmova-golub-2023_s3258
+  file: 6-klas-ukrmova-golub-2023_s3262
   type: textbook
-  title: § 35. Як розумно витрачати,
-  page: 91
+  title: § 48. Зимова естетика
+  page: 125
   grade: 6
+- id: S7
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
+  type: textbook
+  title: Розділ 1. ШОКОЛАД
+  page: 36
+  grade: 4
+- id: S8
+  file: 4-klas-ukrmova-zaharijchuk_s1915
+  type: textbook
+  title: Г ; . М ; М М «
+  page: 71
+  grade: 4

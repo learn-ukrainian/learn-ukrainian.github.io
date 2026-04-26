@@ -7,36 +7,41 @@ sources:
   title: § 20. Дієприслівниковий зворот
   page: 115
   grade: 7
-- id: S3
-  file: 7-klas-ukrmova-avramenko-2024_s3846
+- id: S2
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4718
   type: textbook
-  title: § 54. Дієприслівниковий зворот. Розділові знаки в реченнях... 2. Перебудуйте
-    речення на ускладнені одиничними дієприслівниками чи
-  page: 122
-  grade: 7
-- id: S4
-  file: 8-klas-ukrmova-avramenko-2025_s4663
-  type: textbook
-  title: § 74. –75
-  page: 157
+  title: Костенко). поширена прикладка стоїть після
+  page: 202
   grade: 8
-- id: S5
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1209
+- id: S3
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4717
   type: textbook
-  title: Дієслово. Дієслівні форми § 8
-  page: 39
+  title: РЕЧЕННЯ З ВІДОКРЕМЛЕНИМИ ЧЛЕНАМИ
+  page: 194
+  grade: 8
+- id: S4
+  file: 7-klas-ukrmova-litvinova-2024_s3920
+  type: textbook
+  title: § 16. Дієприкметниковий зворот
+  page: 85
+  grade: 7
+- id: S5
+  file: 11-klas-ukrajinska-mova-voron-2019_s1268
+  type: textbook
+  title: § 27. За яких спільних умов відокремлюються другорядні
+  page: 146
   grade: 11
 - id: S6
-  file: 11-klas-ukrmova-zabolotnyi-2019_s1442
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1169
   type: textbook
-  title: Пунктуаційна норма (p. 142)
-  page: 142
+  title: § 39. ВІДОКРЕМЛЕНІ ОБСТАВИНИ
+  page: 125
   grade: 11
 - id: S7
-  file: 7-klas-ukrmova-litvinova-2024_s3900
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
   type: textbook
-  title: § 19. Дієприслівник як особлива форма діє слова 108
-  page: 8
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
   grade: 7
 - id: S8
   file: 7-klas-ukrmova-avramenko-2024_s3893
@@ -45,15 +50,3 @@ sources:
     . . . . . . . . . . 102
   page: 216
   grade: 7
-- id: S9
-  file: 10-klas-ukrmova-karaman-2018_s0694
-  type: textbook
-  title: § 78. ДІЄПРИСЛІВНИК
-  page: 194
-  grade: 10
-- id: S10
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1169
-  type: textbook
-  title: § 39. ВІДОКРЕМЛЕНІ ОБСТАВИНИ
-  page: 125
-  grade: 11

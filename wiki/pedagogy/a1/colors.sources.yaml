@@ -2,63 +2,43 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-avramenko-2023_s3079
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3395
   type: textbook
-  title: § 63. –64. Ступені порівняння якісних прикметників
-  page: 125
+  title: § 47. НАПИСАННЯ -Н- І -НН- У ПРИКМЕТНИКАХ
+  page: 154
   grade: 6
 - id: S2
-  file: 5-klas-ukrmova-uhor-2022-1_s2423
-  type: textbook
-  title: § 6. Види мовлення (монологічне і діалогічне; усне
-  page: 24
-  grade: 5
-- id: S3
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1590
-  type: textbook
-  title: НАВЧАЮСЯ РОЗПІЗНАВАТИ РЕЧЕННЯ ЗА ЙОГО ОСНОВНИМИ ОЗНАКАМИ
-  page: 104
-  grade: 2
-- id: S4
-  file: 10-klas-ukrmova-glazova-2018_s0511
-  type: textbook
-  title: Слово і контекст. Залежність значень слова від контексту. Слововживання §
-    5
-  page: 29
-  grade: 10
-- id: S5
-  file: 6-klas-ukrmova-betsa-2023_s3182
-  type: textbook
-  title: § 56. Написання складних прикметників разом
-  page: 140
-  grade: 6
-- id: S6
-  file: 6-klas-ukrmova-betsa-2023_s3172
-  type: textbook
-  title: § 46. Прикметник як частина мови. Значення,
-  page: 114
-  grade: 6
-- id: S7
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1160
-  type: textbook
-  title: § 28. –29. ПОРЯДОК СЛІВ У РЕЧЕННІ. ПРОСТЕ УСКЛАДНЕНЕ
-  page: 91
-  grade: 11
-- id: S8
   file: 6-klas-ukrmova-golub-2023_s3264
   type: textbook
   title: Зразок. Моя сусідка сьогодні невесела (сумна). — Моя сусідка
   page: 143
   grade: 6
-- id: S9
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1573
+- id: S3
+  file: ukrainian_wiki/colors_Педагогіка-A1-Colors-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Colors'
+  section_path: 'Педагогіка A1: Colors > Послідовність введення'
+- id: S4
+  file: 6-klas-ukrmova-golub-2023_s3262
   type: textbook
-  title: Я Відгадайте загадку. Назвіть відгадане слово
-  page: 71
-  grade: 2
-- id: S10
-  file: 6-klas-ukrmova-litvinova-2023_s3351
-  type: textbook
-  title: § 41. Ступені порівняння якісних прикметників
-  page: 196
+  title: § 48. Зимова естетика
+  page: 125
   grade: 6
+- id: S5
+  file: 5-klas-ukrmova-golub-2022_s2318
+  type: textbook
+  title: ІІІ Візьміть у домашній або шкільній бібліотеці книжку. Запишіть
+  page: 188
+  grade: 5
+- id: S6
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S7
+  file: ext-article-1
+  type: external
+  title: ext-article-1
+- id: S8
+  file: ext-article-2
+  type: external
+  title: ext-article-2

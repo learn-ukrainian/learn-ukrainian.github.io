@@ -2,54 +2,42 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 4-klas-ukrmova-zaharijchuk_s1927
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2511
   type: textbook
-  title: ЧИСЛІВНИК (p. 190)
-  page: 190
-  grade: 4
-- id: S2
-  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1892
-  type: textbook
-  title: § 44. Правопис ненаголошених особових
-  page: 141
-  grade: 4
-- id: S3
-  file: 5-klas-ukrmova-zabolotnyi-2023_s2509
-  type: textbook
-  title: Культура мовлення. ПРАВИЛЬНО
-  page: 14
+  title: Варіант Б. Складіть і запишіть мінітекст (3–4 речення) зі словом
+  page: 26
   grade: 5
-- id: S4
-  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1653
+- id: S2
+  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1663
   type: textbook
-  title: ПРАВИЛЬНА ВИМОВА СЛІВ
-  page: 8
+  title: ПОВТОРЕННЯ
+  page: 139
   grade: 3
-- id: S5
+- id: S3
   file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1895
   type: textbook
   title: § 33. Займенники 1-ї особи однини і множини
   page: 159
   grade: 4
+- id: S4
+  file: 4-klas-ukrmova-zaharijchuk_s1927
+  type: textbook
+  title: ЧИСЛІВНИК (p. 190)
+  page: 190
+  grade: 4
+- id: S5
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1822
+  type: textbook
+  title: Прикметник............................................... 63
+  page: 143
+  grade: 4
 - id: S6
-  file: 4-klas-ukrmova-zaharijchuk_s1918
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
   type: textbook
-  title: ДІЄСЛОВО
-  page: 134
-  grade: 4
-- id: S8
-  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1889
-  type: textbook
-  title: § 37. Повторення вивченого про дієслово
-  page: 117
-  grade: 4
-- id: S9
-  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1658
-  type: textbook
-  title: ДІЄСЛОВА-АНТОНІМИ, ДІЄСЛОВА-СИНОНІМИ, ДІЄСЛОВА З ПРЯМИМ І ПЕРЕНОСНИМ ЗНАЧЕННЯМ
-  page: 95
+  title: Навчаюся розрізняти іменники — назви істот і неістот
+  page: 104
   grade: 3
-- id: S10
+- id: S7
   file: 5-klas-ukrmova-zabolotnyi-2023_s2537
   type: textbook
   title: Додаток 3. СЛОВНИЧОК НАГОЛОСІВ

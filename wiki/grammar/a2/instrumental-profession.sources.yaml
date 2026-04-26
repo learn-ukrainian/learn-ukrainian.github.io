@@ -2,32 +2,60 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-ukrmova-golub-2022_s2302
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1801
   type: textbook
-  title: Присудок — головний член речення,
-  page: 108
-  grade: 5
+  title: Крок 2. Розглянь таблицю відмінювання іменників. У яких імен­
+  page: 53
+  grade: 4
 - id: S2
-  file: 6-klas-ukrmova-betsa-2023_s3151
-  type: textbook
-  title: § 26. Іменник. Значення, граматичні ознаки,
-  page: 65
-  grade: 6
+  file: ukrainian_wiki/work-and-food_Граматика-A2-Професії-та-кулінарія-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика A2: Професії та кулінарія'
+  section_path: 'Граматика A2: Професії та кулінарія > Як це пояснюють у школі'
+- id: S3
+  file: ukrainian_wiki/instrumental-profession_Граматика-A2-Я-буду-вчителькою-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика A2: Я буду вчителькою'
+  section_path: 'Граматика A2: Я буду вчителькою > Як це пояснюють у школі'
 - id: S4
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4697
+  type: textbook
+  title: Види словосполучень за будовою. ПРОСТІ
+  page: 44
+  grade: 8
+- id: S5
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1157
+  type: textbook
+  title: § 25. ПАСИВНІ КОНСТРУКЦІЇ
+  page: 81
+  grade: 11
+- id: S7
   file: 6-klas-ukrmova-golub-2023_s3258
   type: textbook
   title: § 35. Як розумно витрачати,
   page: 91
   grade: 6
-- id: S5
-  file: 6-klas-ukrmova-betsa-2023_s3177
+- id: S8
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
   type: textbook
-  title: Цій маленькій дівчинці 5 років. Моєму старшому бра
-  page: 129
-  grade: 6
-- id: S6
-  file: 5-klas-ukrmova-uhor-2022-1_s2437
+  title: Розділ 1. ШОКОЛАД
+  page: 36
+  grade: 4
+- id: S9
+  file: 5-klas-ukrmova-golub-2022_s2302
   type: textbook
-  title: '§ 17. Головні члени речення: підмет і присудок'
-  page: 61
+  title: Присудок — головний член речення,
+  page: 108
   grade: 5
+- id: S10
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S11
+  file: ext-article-1
+  type: external
+  title: ext-article-1
+- id: S12
+  file: ext-article-2
+  type: external
+  title: ext-article-2

@@ -2,32 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  type: textbook
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
+- id: S2
   file: 7-klas-ukrmova-litvinova-2024_s3911
   type: textbook
   title: '§ 8. Спосіб діє слова: загальна характеристика'
   page: 38
   grade: 7
-- id: S2
+- id: S3
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5181
   type: textbook
   title: Складнопiдрядне речення (p. 113)
   page: 113
   grade: 9
-- id: S3
-  file: 9-klas-ukrmova-zabolotnyi-2017_s5242
-  type: textbook
-  title: Складнопiдрядне речення (p. 113)
-  page: 113
-  grade: 9
 - id: S5
-  file: 6-klas-ukrmova-golub-2023_s3284
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
   type: textbook
-  title: § 96. Зміст моїх емоцій
-  page: 240
-  grade: 6
-- id: S8
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5179
+  title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
+  page: 183
+  grade: 7
+- id: S6
+  file: 7-klas-ukrmova-litvinova-2024_s3951
   type: textbook
-  title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
-  page: 108
-  grade: 9
+  title: § 38. Правопис часток із різними частинами мови
+  page: 228
+  grade: 7

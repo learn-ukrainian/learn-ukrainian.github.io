@@ -2,56 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 9-klas-ukrajinska-mova-voron-2017_s5089
+  type: textbook
+  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ МІСЦЯ Й ЧАСУ
+  page: 75
+  grade: 9
+- id: S2
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5181
   type: textbook
   title: Складнопiдрядне речення (p. 113)
   page: 113
   grade: 9
-- id: S2
-  file: 9-klas-ukrmova-zabolotnyi-2017_s5242
-  type: textbook
-  title: Складнопiдрядне речення (p. 113)
-  page: 113
-  grade: 9
-- id: S3
-  file: 9-klas-ukrajinska-mova-voron-2017_s5119
-  type: textbook
-  title: ЗРАЗОК УСНОГО РОЗБОРУ (p. 143)
-  page: 143
-  grade: 9
 - id: S4
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5039
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
   type: textbook
-  title: § 17. Складнопідрядне речення, його будова
-  page: 62
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
   grade: 9
-- id: S5
-  file: 11-klas-ukrajinska-mova-voron-2019_s1273
-  type: textbook
-  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
-  page: 173
-  grade: 11
 - id: S6
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5179
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5029
   type: textbook
-  title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
-  page: 108
+  title: Синтаксис. Пунктуація. СПОСТЕРЕЖЕННЯ
+  page: 32
   grade: 9
 - id: S7
-  file: 9-klas-ukrmova-zabolotnyi-2017_s5240
+  file: 9-klas-ukrajinska-mova-voron-2017_s5084
   type: textbook
-  title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
-  page: 108
+  title: Перекладіть текст українською мовою і запишіть. У складнопідряд­
+  page: 56
   grade: 9
 - id: S8
-  file: 9-klas-ukrajinska-mova-voron-2017_s5098
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5034
   type: textbook
-  title: II. Колективно складіть невеликий усний роздум «Кожному мила рідна сто­
-  page: 95
-  grade: 9
-- id: S9
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5177
-  type: textbook
-  title: § 14. СКЛАДНОПІДРЯДНЕ РЕЧЕННЯ ТА ЙОГО ОЗНАКИ
-  page: 78
+  title: Синтаксис. Пунктуація. ПОВТОРЕННЯ
+  page: 52
   grade: 9

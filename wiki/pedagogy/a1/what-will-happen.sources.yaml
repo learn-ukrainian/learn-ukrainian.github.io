@@ -2,32 +2,49 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-betsa-2023_s3217
-  type: textbook
-  title: § 97. Майбутній час дієслів
-  page: 210
-  grade: 6
-- id: S2
   file: 7-klas-ukrmova-litvinova-2024_s3912
   type: textbook
   title: § 9. Часи діє слова
   page: 41
   grade: 7
+- id: S2
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  type: textbook
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
 - id: S3
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1580
+  file: 7-klas-ukrmova-avramenko-2024_s3819
   type: textbook
-  title: Ивйщ1і| Пригадайте назви днів тижня. Послідовно запишіть їх
-  page: 83
-  grade: 2
+  title: МОРФОЛОГІЯ. ОРФОГРАФІЯ
+  page: 69
+  grade: 7
+- id: S4
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1903
+  type: textbook
+  title: 'Зразок. Класти: однина: 1-ша особа — я клад у ; 2-га осо­'
+  page: 111
+  grade: 4
+- id: S5
+  file: 4-klas-ukrmova-zaharijchuk_s1922
+  type: textbook
+  title: М айбутній час. Зміню вання дієслів
+  page: 150
+  grade: 4
+- id: S6
+  file: ext-article-0
+  type: external
+  title: ext-article-0
 - id: S7
-  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1767
-  type: textbook
-  title: Вивчи три прислів’я напам’ять. Запиши їх із пам’яті. Звір свій запис
-  page: 155
-  grade: 3
+  file: ext-article-1
+  type: external
+  title: ext-article-1
 - id: S8
-  file: 5-klas-ukrmova-uhor-2022-1_s2417
-  type: textbook
-  title: § 3. Види мовленнєвої діяльності (аудіювання,
-  page: 13
-  grade: 5
+  file: ext-article-2
+  type: external
+  title: ext-article-2
+- id: S9
+  file: ukrainian_wiki/my-plans_Педагогіка-A1-My-Plans-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: My Plans'
+  section_path: 'Педагогіка A1: My Plans > Послідовність введення'

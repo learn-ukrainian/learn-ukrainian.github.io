@@ -15,10 +15,10 @@ sources:
   page: 121
   grade: 7
 - id: S3
-  file: 7-klas-ukrmova-litvinova-2024_s3912
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
   type: textbook
-  title: § 9. Часи діє слова
-  page: 41
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
   grade: 7
 - id: S4
   file: 10-klas-ukrmova-karaman-2018_s0686
@@ -27,32 +27,20 @@ sources:
   page: 183
   grade: 10
 - id: S5
-  file: 6-klas-ukrmova-betsa-2023_s3215
+  file: 7-klas-ukrmova-litvinova-2024_s3912
   type: textbook
-  title: § 95. Час дієслова. Минулий час
-  page: 206
-  grade: 6
+  title: § 9. Часи діє слова
+  page: 41
+  grade: 7
 - id: S6
-  file: 10-klas-ukrmova-karaman-2018_s0685
+  file: 7-klas-ukrmova-avramenko-2024_s3832
   type: textbook
-  title: § 72. Види дієслів
-  page: 181
-  grade: 10
+  title: § 42. Активні й пасивні дієприкметники
+  page: 98
+  grade: 7
 - id: S7
-  file: 6-klas-ukrmova-betsa-2023_s3218
+  file: 10-klas-ukrmova-karaman-2018_s0694
   type: textbook
-  title: § 98. Дієвідмінювання дієслів теперішнього
-  page: 212
-  grade: 6
-- id: S8
-  file: 7-klas-ukrmova-avramenko-2024_s3817
-  type: textbook
-  title: § 29. Минулий час дієслів
-  page: 66
-  grade: 7
-- id: S9
-  file: 7-klas-ukrmova-litvinova-2024_s3913
-  type: textbook
-  title: § 10. Дієвідмінювання дієслів
-  page: 55
-  grade: 7
+  title: § 78. ДІЄПРИСЛІВНИК
+  page: 194
+  grade: 10

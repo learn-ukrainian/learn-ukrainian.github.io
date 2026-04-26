@@ -2,17 +2,17 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1815
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1902
   type: textbook
-  title: ( ЗМІНЮВАННЯ ДІЄСЛІВ У МИНУЛОМУ ЧАСІ
-  page: 111
+  title: 'Неозначена форма: … . Минулий час: … . Теперішній'
+  page: 107
   grade: 4
 - id: S2
-  file: 6-klas-ukrmova-betsa-2023_s3215
+  file: 7-klas-ukrmova-litvinova-2024_s3912
   type: textbook
-  title: § 95. Час дієслова. Минулий час
-  page: 206
-  grade: 6
+  title: § 9. Часи діє слова
+  page: 41
+  grade: 7
 - id: S3
   file: 10-klas-ukrmova-karaman-2018_s0686
   type: textbook
@@ -20,20 +20,45 @@ sources:
   page: 183
   grade: 10
 - id: S4
-  file: 4-klas-ukrmova-zaharijchuk_s1921
+  file: 7-klas-ukrmova-avramenko-2024_s3817
   type: textbook
-  title: М инулий час. Зміню вання дієслів минулого
-  page: 146
-  grade: 4
-- id: S5
-  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1902
-  type: textbook
-  title: 'Неозначена форма: … . Минулий час: … . Теперішній'
-  page: 107
-  grade: 4
-- id: S8
-  file: 7-klas-ukrmova-litvinova-2024_s3912
-  type: textbook
-  title: § 9. Часи діє слова
-  page: 41
+  title: § 29. Минулий час дієслів
+  page: 66
   grade: 7
+- id: S5
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  type: textbook
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
+- id: S6
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
+  type: textbook
+  title: Навчаюся розрізняти іменники — назви істот і неістот
+  page: 104
+  grade: 3
+- id: S7
+  file: ukrainian_wiki/my-day_Педагогіка-A1-My-Day-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: My Day'
+  section_path: 'Педагогіка A1: My Day > Послідовність введення'
+- id: S8
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1892
+  type: textbook
+  title: § 44. Правопис ненаголошених особових
+  page: 141
+  grade: 4
+- id: S9
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1891
+  type: textbook
+  title: § 39. Змінювання дієслів за часами
+  page: 122
+  grade: 4
+- id: S10
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S11
+  file: ext-article-1
+  type: external
+  title: ext-article-1

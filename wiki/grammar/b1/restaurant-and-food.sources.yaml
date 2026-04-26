@@ -2,44 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-ukrmova-litvinova-2022_s2397
-  type: textbook
-  title: Відомості із синтаксису й пунктуації. Кома між частинами складного речення
-  page: 237
-  grade: 5
-- id: S2
-  file: 6-klas-ukrmova-litvinova-2023_s3335
-  type: textbook
-  title: § 27. Відмінки іменників
-  page: 138
-  grade: 6
-- id: S3
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1154
-  type: textbook
-  title: § 22. –23. УЖИВАННЯ ПРИЙМЕННИКІВ
-  page: 71
-  grade: 11
-- id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0689
-  type: textbook
-  title: § 75. Стан дієслова. Перехідні й неперехідні дієслова
-  page: 187
-  grade: 10
-- id: S5
-  file: 6-klas-ukrmova-golub-2023_s3255
-  type: textbook
-  title: РІД ІМЕННИКІВ
-  page: 68
-  grade: 6
-- id: S6
   file: 4-klas-ukrmova-zaharijchuk_s1914
   type: textbook
   title: ІМЕННИК
   page: 48
   grade: 4
-- id: S7
-  file: 8-klas-ukrmova-avramenko-2025_s4598
+- id: S2
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
   type: textbook
-  title: § 34. –35
-  page: 77
-  grade: 8
+  title: Розділ 1. ШОКОЛАД
+  page: 36
+  grade: 4
+- id: S3
+  file: 5-klas-ukrmova-litvinova-2022_s2397
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Кома між частинами складного речення
+  page: 237
+  grade: 5
+- id: S4
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3958
+  type: textbook
+  title: ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО
+  page: 11
+  grade: 7
+- id: S5
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  type: textbook
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
+- id: S6
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1799
+  type: textbook
+  title: РОЛЬ СУФІКСА
+  page: 31
+  grade: 4
+- id: S7
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1154
+  type: textbook
+  title: § 22. –23. УЖИВАННЯ ПРИЙМЕННИКІВ
+  page: 71
+  grade: 11

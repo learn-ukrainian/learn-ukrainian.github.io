@@ -2,38 +2,34 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-betsa-2023_s3166
-  type: textbook
-  title: § 40. Розвиток мовлення. Складання діалогів
-  page: 102
-  grade: 6
-- id: S2
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5197
-  type: textbook
-  title: Текст як одиниця мовлення (p. 189)
-  page: 189
-  grade: 9
-- id: S3
-  file: 9-klas-ukrmova-zabolotnyi-2017_s5258
-  type: textbook
-  title: Текст як одиниця мовлення (p. 189)
-  page: 189
-  grade: 9
-- id: S4
   file: 7-klas-ukrmova-litvinova-2024_s3939
   type: textbook
   title: § 30. Особливості вживання прийменників
   page: 181
   grade: 7
-- id: S6
-  file: 9-klas-ukrajinska-mova-voron-2017_s5132
+- id: S2
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5034
   type: textbook
-  title: Заяву пишуть від руки і в одному примірнику. Стандартом
-  page: 190
+  title: Синтаксис. Пунктуація. ПОВТОРЕННЯ
+  page: 52
   grade: 9
-- id: S7
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1137
+- id: S3
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5197
   type: textbook
-  title: § 2. –3. ЗАСОБИ МОВНОГО ВИРАЖЕННЯ ПРОМОВИ
-  page: 10
-  grade: 11
+  title: Текст як одиниця мовлення (p. 189)
+  page: 189
+  grade: 9
+- id: S4
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5258
+  type: textbook
+  title: Текст як одиниця мовлення (p. 189)
+  page: 189
+  grade: 9
+- id: S6
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S8
+  file: ext-article-2
+  type: external
+  title: ext-article-2

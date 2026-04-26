@@ -2,27 +2,33 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-voron-2019_s1273
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
   type: textbook
-  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
-  page: 173
-  grade: 11
-- id: S2
-  file: 11-klas-ukrajinska-mova-voron-2019_s1274
-  type: textbook
-  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ ОЗНАЧАЛЬНИМИ
-  page: 178
-  grade: 11
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
 - id: S3
-  file: 9-klas-ukrajinska-mova-voron-2017_s5089
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5029
   type: textbook
-  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ МІСЦЯ Й ЧАСУ
-  page: 75
+  title: Синтаксис. Пунктуація. СПОСТЕРЕЖЕННЯ
+  page: 32
   grade: 9
 - id: S4
+  file: 9-klas-ukrajinska-mova-voron-2017_s5084
+  type: textbook
+  title: Перекладіть текст українською мовою і запишіть. У складнопідряд­
+  page: 56
+  grade: 9
+- id: S5
   file: 11-klas-ukrajinska-mova-voron-2019_s1275
   type: textbook
   title: Розв’яжіть мовну задачу. Старшокласники наводили приклади складнопідрядних
     речень із
   page: 185
+  grade: 11
+- id: S6
+  file: 11-klas-ukrajinska-mova-voron-2019_s1273
+  type: textbook
+  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
+  page: 173
   grade: 11

@@ -9,50 +9,44 @@ sources:
   page: 236
   grade: 8
 - id: S2
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5051
+  type: textbook
+  title: § 29. Кома та крапка з комою в безсполучниковому
+  page: 103
+  grade: 9
+- id: S3
+  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1656
+  type: textbook
+  title: СЛОВА З ПРЕФІКСАМИ З-, С
+  page: 47
+  grade: 3
+- id: S4
   file: 2-klas-ukrmova-vashulenko-2019-1_s1571
   type: textbook
   title: НАВЧАЮСЯ ВЖИВАТИ ІМЕННИКИ В МОВЛЕННІ
   page: 66
   grade: 2
-- id: S3
-  file: 5-klas-ukrmova-avramenko-2022_s2262
-  type: textbook
-  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 170)
-  page: 170
-  grade: 5
-- id: S4
-  file: 5-klas-ukrmova-zabolotnyi-2023_s2522
-  type: textbook
-  title: ПІДКОРЕННЯ ГОВЕРЛИ
-  page: 166
-  grade: 5
 - id: S5
-  file: 9-klas-ukrajinska-mova-voron-2017_s5081
-  type: textbook
-  title: I. Айвазовский. Море. Коктебель
-  page: 36
-  grade: 9
-- id: S6
-  file: 5-klas-ukrmova-golub-2022_s2294
-  type: textbook
-  title: § 17. Слово кличе в мандри Україною
-  page: 52
-  grade: 5
-- id: S7
   file: 11-klas-ukrmova-zabolotnyi-2019_s1434
   type: textbook
   title: Синтаксична норма (p. 106)
   page: 106
   grade: 11
-- id: S8
-  file: 2-klas-ukrmova-kravcova-2019-2_s1523
+- id: S6
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5029
   type: textbook
-  title: Утвори і прочитай слова. Назви одним словом
+  title: Синтаксис. Пунктуація. СПОСТЕРЕЖЕННЯ
   page: 32
-  grade: 2
-- id: S9
-  file: 2-klas-ukrmova-kravcova-2019-1_s1504
+  grade: 9
+- id: S7
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2522
   type: textbook
-  title: Мама. Тато. Батьківщина. Три дорогих слова для
-  page: 27
-  grade: 2
+  title: ПІДКОРЕННЯ ГОВЕРЛИ
+  page: 166
+  grade: 5
+- id: S8
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2520
+  type: textbook
+  title: ІІ. З одним утвореним словосполученням (на вибір) складіть і запишіть
+  page: 114
+  grade: 5

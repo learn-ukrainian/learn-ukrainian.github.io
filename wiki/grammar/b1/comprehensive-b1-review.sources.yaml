@@ -9,52 +9,51 @@ sources:
   page: 254
   grade: 5
 - id: S2
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1822
-  type: textbook
-  title: Прикметник............................................... 63
-  page: 143
-  grade: 4
-- id: S4
-  file: 6-klas-ukrmova-golub-2023_s3289
-  type: textbook
-  title: § 50. Ступені порівняння якісних прикметників, творення їх .................
-    129
-  page: 256
-  grade: 6
-- id: S5
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5070
-  type: textbook
-  title: § 1. Розвиток української мови.......................................................................................................4
-  page: 158
-  grade: 9
-- id: S6
   file: 6-klas-ukrmova-zabolotnyi-2020_s3413
   type: textbook
   title: § 53. Відмінювання кількісних числівників
   page: 253
   grade: 6
-- id: S7
-  file: 5-klas-ukrmova-golub-2022_s2300
+- id: S3
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1895
   type: textbook
-  title: § 34. Мої плани на зиму
-  page: 101
-  grade: 5
-- id: S8
-  file: 6-klas-ukrmova-avramenko-2023_s3122
+  title: § 33. Займенники 1-ї особи однини і множини
+  page: 159
+  grade: 4
+- id: S4
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3406
   type: textbook
-  title: § 99. –100. Написання заперечних і неозначених займенників . . . 194
-  page: 223
+  title: Тема 10. Розвиток мовлення
+  page: 226
   grade: 6
-- id: S9
+- id: S5
+  file: 7-klas-ukrmova-litvinova-2024_s3955
+  type: textbook
+  title: § 40. Дефіс у вигуках Кома і знак
+  page: 251
+  grade: 7
+- id: S6
   file: 6-klas-ukrmova-avramenko-2023_s3115
   type: textbook
   title: § 1. Милозвучність української мови . . . . . . . . . . . . . . . . . . .
     . . . . . 4
   page: 220
   grade: 6
-- id: S10
-  file: 6-klas-ukrmova-avramenko-2023_s3021
+- id: S7
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1465
   type: textbook
-  title: УКРАЇНСЬКА
-  page: 1
-  grade: 6
+  title: Вибір вітального слова залежить від різних обставин. Уранці ми вико
+  page: 217
+  grade: 11
+- id: S8
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1822
+  type: textbook
+  title: Прикметник............................................... 63
+  page: 143
+  grade: 4
+- id: S9
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3968
+  type: textbook
+  title: ТЕМА 17. АУДІЮВАННЯ
+  page: 269
+  grade: 7

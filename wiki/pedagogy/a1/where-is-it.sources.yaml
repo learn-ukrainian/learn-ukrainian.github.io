@@ -8,14 +8,49 @@ sources:
   page: 37
   grade: 4
 - id: S2
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1800
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1154
   type: textbook
-  title: РОЗРІЗНЕННЯ ДАВАЛЬНОГО І МІСЦЕВОГО ВІДМІНКІВ )
+  title: § 22. –23. УЖИВАННЯ ПРИЙМЕННИКІВ
+  page: 71
+  grade: 11
+- id: S3
+  file: 4-klas-ukrmova-zaharijchuk_s1914
+  type: textbook
+  title: ІМЕННИК
   page: 48
   grade: 4
-- id: S6
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1801
-  type: textbook
-  title: Крок 2. Розглянь таблицю відмінювання іменників. У яких імен­
-  page: 53
-  grade: 4
+- id: S7
+  file: ukrainian_wiki/where-to_Педагогіка-A1-Where-To-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Where To'
+  section_path: 'Педагогіка A1: Where To > Послідовність введення'
+- id: S8
+  file: ukrainian_wiki/where-to_Педагогіка-A1-Where-To-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Where To'
+  section_path: 'Педагогіка A1: Where To > Методичний підхід'
+- id: S9
+  file: ukrainian_wiki/checkpoint-places_Педагогіка-A1-Checkpoint-Places-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Checkpoint Places'
+  section_path: 'Педагогіка A1: Checkpoint Places > Методичний підхід'
+- id: S10
+  file: ukrainian_wiki/where-is-it_Педагогіка-A1-Where-Is-It-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Where Is It'
+  section_path: 'Педагогіка A1: Where Is It > Методичний підхід'
+- id: S11
+  file: ukrainian_wiki/dative-pronouns_Граматика-A2-Мені-тобі-йому-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика A2: Мені, тобі, йому...'
+  section_path: 'Граматика A2: Мені, тобі, йому... > Як це пояснюють у школі'
+- id: S12
+  file: ukrainian_wiki/which-case-when_Граматика-A2-Компас-відмінків-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика A2: Компас відмінків'
+  section_path: 'Граматика A2: Компас відмінків > Як це пояснюють у школі'
+- id: S13
+  file: ukrainian_wiki/my-city_Педагогіка-A1-My-City-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: My City'
+  section_path: 'Педагогіка A1: My City > Методичний підхід'

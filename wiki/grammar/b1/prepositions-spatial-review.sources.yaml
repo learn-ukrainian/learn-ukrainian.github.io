@@ -2,11 +2,11 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrmova-karaman-2018_s0698
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
   type: textbook
-  title: § 82. Прийменник
-  page: 205
-  grade: 10
+  title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
+  page: 183
+  grade: 7
 - id: S2
   file: 7-klas-ukrmova-avramenko-2024_s3866
   type: textbook
@@ -14,32 +14,14 @@ sources:
   page: 166
   grade: 7
 - id: S3
-  file: 7-klas-ukrmova-litvinova-2024_s3939
+  file: 10-klas-ukrmova-karaman-2018_s0698
   type: textbook
-  title: § 30. Особливості вживання прийменників
-  page: 181
-  grade: 7
+  title: § 82. Прийменник
+  page: 205
+  grade: 10
 - id: S4
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1154
-  type: textbook
-  title: § 22. –23. УЖИВАННЯ ПРИЙМЕННИКІВ
-  page: 71
-  grade: 11
-- id: S6
   file: 7-klas-ukrmova-litvinova-2024_s3935
   type: textbook
   title: § 27. Прийменник як службова частина мови
   page: 166
-  grade: 7
-- id: S7
-  file: 7-klas-ukrmova-litvinova-2024_s3937
-  type: textbook
-  title: § 28. Написання похідних прийменників разом, окремо та з дефісом
-  page: 174
-  grade: 7
-- id: S8
-  file: 7-klas-ukrmova-litvinova-2024_s3936
-  type: textbook
-  title: § 28. Написання похідних прийменників
-  page: 173
   grade: 7

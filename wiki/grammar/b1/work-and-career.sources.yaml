@@ -2,38 +2,20 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0336
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
   type: textbook
-  title: Мовні норми
-  page: 15
-  grade: 10
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
 - id: S2
-  file: 10-klas-ukrmova-zabolotnyi-2018_s0755
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
   type: textbook
-  title: Мовні норми
-  page: 15
-  grade: 10
+  title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
+  page: 183
+  grade: 7
 - id: S3
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4694
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0368
   type: textbook
-  title: Входити з тваринами заборонено. 2. Робітниками заасфальтовано
-  page: 36
-  grade: 8
-- id: S4
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5211
-  type: textbook
-  title: Уроки розвитку мовлення (p. 225)
-  page: 225
-  grade: 9
-- id: S5
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1137
-  type: textbook
-  title: § 2. –3. ЗАСОБИ МОВНОГО ВИРАЖЕННЯ ПРОМОВИ
-  page: 10
-  grade: 11
-- id: S6
-  file: 10-klas-ukrmova-karaman-2018_s0566
-  type: textbook
-  title: Мова як суспільне явище. Українська мова в Україні
-  page: 6
+  title: Практична риторика. Суперечка
+  page: 172
   grade: 10

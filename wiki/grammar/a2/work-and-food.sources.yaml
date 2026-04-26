@@ -2,32 +2,55 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1801
+  type: textbook
+  title: Крок 2. Розглянь таблицю відмінювання іменників. У яких імен­
+  page: 53
+  grade: 4
+- id: S2
   file: 9-klas-ukrajinska-mova-voron-2017_s5128
   type: textbook
   title: МОРФОЛОГІЯ. ОРФОГРАФІЯ. ІМЕННИК. ПРИКМЕТНИК
   page: 177
   grade: 9
-- id: S2
+- id: S3
+  file: 6-klas-ukrmova-golub-2023_s3255
+  type: textbook
+  title: РІД ІМЕННИКІВ
+  page: 68
+  grade: 6
+- id: S4
+  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1877
+  type: textbook
+  title: Улюблена пісня Оксани — «Чи я в лузі не калина була» —
+  page: 56
+  grade: 4
+- id: S5
   file: 6-klas-ukrmova-litvinova-2023_s3371
   type: textbook
   title: § 54. Розряди займенників за значенням та особливості відмінювання
   page: 255
   grade: 6
-- id: S3
-  file: 7-klas-ukrmova-avramenko-2024_s3850
+- id: S6
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3391
   type: textbook
-  title: РОЗВИТОК МОВЛЕННЯ (p. 131)
-  page: 131
-  grade: 7
-- id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0698
-  type: textbook
-  title: § 82. Прийменник
-  page: 205
-  grade: 10
-- id: S5
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1188
-  type: textbook
-  title: § 55. –56. ДІАЛОГІЧНІ ЖАНРИ
-  page: 194
-  grade: 11
+  title: § 35. НАПИСАННЯ І ВІДМІНЮВАННЯ ІМЕН
+  page: 119
+  grade: 6
+- id: S7
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S8
+  file: ext-article-1
+  type: external
+  title: ext-article-1
+- id: S9
+  file: ext-article-2
+  type: external
+  title: ext-article-2
+- id: S10
+  file: ukrainian_wiki/work-and-food_Граматика-A2-Професії-та-кулінарія-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика A2: Професії та кулінарія'
+  section_path: 'Граматика A2: Професії та кулінарія > Як це пояснюють у школі'

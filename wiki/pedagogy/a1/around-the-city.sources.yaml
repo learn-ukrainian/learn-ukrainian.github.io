@@ -2,44 +2,59 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-ukrmova-uhor-2022-1_s2445
-  type: textbook
-  title: § 25. Навчальний діалог
-  page: 82
-  grade: 5
+  file: ukrainian_wiki/checkpoint-places_Педагогіка-A1-Checkpoint-Places-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Checkpoint Places'
+  section_path: 'Педагогіка A1: Checkpoint Places > Методичний підхід'
 - id: S2
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3386
+  type: textbook
+  title: § 25. ЧИСЛО ІМЕННИКІВ
+  page: 90
+  grade: 6
+- id: S3
+  file: ukrainian_wiki/where-to_Педагогіка-A1-Where-To-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Where To'
+  section_path: 'Педагогіка A1: Where To > Методичний підхід'
+- id: S4
+  file: ukrainian_wiki/instrumental-prepositions_Граматика-A2-Над-під-між-Повна-парадигма-2-Вказівка-на-напрямок-руху-питання-куди
+  type: ukrainian_wiki
+  title: 'Граматика A2: Над, під, між'
+  section_path: 'Граматика A2: Над, під, між > Повна парадигма > 2. Вказівка на напрямок
+    руху (питання «куди?»)'
+- id: S5
   file: 5-klas-ukrmova-litvinova-2022_s2390
   type: textbook
   title: Відомості із синтаксису й пунктуації. Додаток
   page: 213
   grade: 5
-- id: S3
+- id: S6
   file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1800
   type: textbook
   title: РОЗРІЗНЕННЯ ДАВАЛЬНОГО І МІСЦЕВОГО ВІДМІНКІВ )
   page: 48
   grade: 4
-- id: S4
+- id: S7
+  file: ukrainian_wiki/genitive-prepositions-direction_Граматика-A2-Куди-До-якого-часу-Повна-парадигма
+  type: ukrainian_wiki
+  title: 'Граматика A2: Куди? До якого часу?'
+  section_path: 'Граматика A2: Куди? До якого часу? > Повна парадигма'
+- id: S8
   file: 6-klas-ukrmova-litvinova-2023_s3371
   type: textbook
   title: § 54. Розряди займенників за значенням та особливості відмінювання
   page: 255
   grade: 6
-- id: S5
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4688
-  type: textbook
-  title: РЕЧЕННЯ ЧЛЕНИ РЕЧЕННЯ
-  page: 2
-  grade: 8
-- id: S6
-  file: 6-klas-ukrmova-avramenko-2023_s3061
-  type: textbook
-  title: § 46. Відмінки іменників
-  page: 91
-  grade: 6
-- id: S7
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3956
-  type: textbook
-  title: ОЛЕКСАНДР ЗАБОЛОТНИЙ ВІКТОР ЗАБОЛОТНИЙ
-  page: 1
-  grade: 7
+- id: S9
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S10
+  file: ext-article-1
+  type: external
+  title: ext-article-1
+- id: S11
+  file: ext-article-2
+  type: external
+  title: ext-article-2

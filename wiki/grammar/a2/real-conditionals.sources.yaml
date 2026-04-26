@@ -8,32 +8,30 @@ sources:
   page: 178
   grade: 7
 - id: S2
-  file: 7-klas-ukrmova-litvinova-2024_s3939
-  type: textbook
-  title: § 30. Особливості вживання прийменників
-  page: 181
-  grade: 7
+  file: ukrainian_wiki/real-conditionals_Граматика-A2-Якщо-то-Природні-приклади
+  type: ukrainian_wiki
+  title: 'Граматика A2: Якщо... то...'
+  section_path: 'Граматика A2: Якщо... то... > Природні приклади'
 - id: S3
-  file: 6-klas-ukrmova-betsa-2023_s3228
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
   type: textbook
-  title: § 108. Узгодження дієслів з іменниками
-  page: 231
-  grade: 6
+  title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
+  page: 183
+  grade: 7
 - id: S4
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1153
-  type: textbook
-  title: § 21. СКЛАДНІ ВИПАДКИ СИНТАКСИЧНОГО КЕРУВАННЯ
-  page: 67
-  grade: 11
+  file: ukrainian_wiki/real-conditionals_Граматика-A2-Якщо-то-Повна-парадигма-1-Реальна-умова-Real-Conditional
+  type: ukrainian_wiki
+  title: 'Граматика A2: Якщо... то...'
+  section_path: 'Граматика A2: Якщо... то... > Повна парадигма > 1. Реальна умова
+    (Real Conditional)'
 - id: S5
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1816
-  type: textbook
-  title: Недарма в Стародавній Греції судову справу частенько... (вигра­
-  page: 112
-  grade: 4
+  file: ukrainian_wiki/real-conditionals_Граматика-A2-Якщо-то-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика A2: Якщо... то...'
+  section_path: 'Граматика A2: Якщо... то... > Як це пояснюють у школі'
 - id: S6
-  file: 5-klas-ukrmova-golub-2022_s2300
+  file: 11-klas-ukrajinska-mova-voron-2019_s1266
   type: textbook
-  title: § 34. Мої плани на зиму
-  page: 101
-  grade: 5
+  title: § 25. Що спільного між звертаннями і вставними словами? 154
+  page: 131
+  grade: 11

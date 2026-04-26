@@ -2,17 +2,39 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-ukrmova-avramenko-2022_s2256
-  type: textbook
-  title: РОЗВИТОК МОВЛЕННЯ (p. 162)
-  page: 162
-  grade: 5
-- id: S2
   file: 5-klas-ukrmova-zabolotnyi-2023_s2511
   type: textbook
   title: Варіант Б. Складіть і запишіть мінітекст (3–4 речення) зі словом
   page: 26
   grade: 5
+- id: S2
+  file: ukrainian_wiki/weather_Педагогіка-A1-Weather-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Weather'
+  section_path: 'Педагогіка A1: Weather > Послідовність введення'
+- id: S3
+  file: ukrainian_wiki/weather_Педагогіка-A1-Weather-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Weather'
+  section_path: 'Педагогіка A1: Weather > Методичний підхід'
 - id: S4
+  file: ukrainian_wiki/weather_Педагогіка-A1-Weather-Приклади-з-підручників
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Weather'
+  section_path: 'Педагогіка A1: Weather > Приклади з підручників'
+- id: S5
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4709
+  type: textbook
+  title: ІІ. Запишіть (аудіо) подкаст на одну з поданих тем
+  page: 129
+  grade: 8
+- id: S6
+  file: 3-klas-ukrainska-mova-savchuk-2020-2_s1715
+  type: textbook
+  title: МАТІНКО ПОКРОВО, НАКРИЙ НАШУ ХАТУ ТЕПЛОМ
+  page: 19
+  grade: 3
+- id: S7
   file: ext-article-0
   type: external
+  title: ext-article-0

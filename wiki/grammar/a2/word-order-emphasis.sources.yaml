@@ -2,57 +2,45 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1218
+  type: textbook
+  title: Порядок слів у реченні. Односкладні й неповні речення § 23
+  page: 99
+  grade: 11
+- id: S2
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1429
+  type: textbook
+  title: Синтаксична норма (p. 80)
+  page: 80
+  grade: 11
+- id: S3
   file: 11-klas-ukrajinska-mova-voron-2019_s1262
   type: textbook
   title: Українська мова належить до мов із вільним порядком слів. Порядок слів
   page: 110
   grade: 11
-- id: S2
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1160
-  type: textbook
-  title: § 28. –29. ПОРЯДОК СЛІВ У РЕЧЕННІ. ПРОСТЕ УСКЛАДНЕНЕ
-  page: 91
-  grade: 11
-- id: S3
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4717
-  type: textbook
-  title: РЕЧЕННЯ З ВІДОКРЕМЛЕНИМИ ЧЛЕНАМИ
-  page: 194
-  grade: 8
 - id: S4
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1186
+  type: textbook
+  title: § 52. СИНТАКСИЧНІ ОДИНИЦІ В РІЗНИХ СТИЛЯХ
+  page: 186
+  grade: 11
+- id: S5
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4704
+  type: textbook
+  title: Кащук). 8. І місяць в небі як підкова бездумно котиться у
+  page: 104
+  grade: 8
+- id: S6
   file: 8-klas-ukrmova-avramenko-2025_s4584
   type: textbook
   title: § 26. –27. Речення поширені та непоширені. Порядок слів у реченні. Логічний
     наголос
   page: 62
   grade: 8
-- id: S5
-  file: 8-klas-ukrmova-avramenko-2025_s4567
-  type: textbook
-  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 41)
-  page: 41
-  grade: 8
-- id: S6
-  file: 5-klas-ukrmova-avramenko-2022_s2244
-  type: textbook
-  title: § 64. –65. Речення, його граматична основа
-  page: 147
-  grade: 5
 - id: S7
-  file: 5-klas-ukrmova-uhor-2022-1_s2469
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1160
   type: textbook
-  title: § 54. Наголос
-  page: 155
-  grade: 5
-- id: S8
-  file: 5-klas-ukrmova-avramenko-2022_s2217
-  type: textbook
-  title: § 38. –39. Наголос. Орфоепічна помилка
-  page: 89
-  grade: 5
-- id: S10
-  file: 5-klas-ukrmova-avramenko-2022_s2249
-  type: textbook
-  title: § 67. Другорядні члени речення. Додаток
-  page: 153
-  grade: 5
+  title: § 28. –29. ПОРЯДОК СЛІВ У РЕЧЕННІ. ПРОСТЕ УСКЛАДНЕНЕ
+  page: 91
+  grade: 11

@@ -2,20 +2,27 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5029
+  type: textbook
+  title: Синтаксис. Пунктуація. СПОСТЕРЕЖЕННЯ
+  page: 32
+  grade: 9
+- id: S2
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
   type: textbook
   title: Складнопiдрядне речення (p. 79)
   page: 79
   grade: 9
-- id: S2
-  file: 11-klas-ukrajinska-mova-voron-2019_s1273
-  type: textbook
-  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
-  page: 173
-  grade: 11
 - id: S3
-  file: 7-klas-ukrmova-litvinova-2024_s3943
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5239
   type: textbook
-  title: § 32. Сполучники сурядности й підрядности
-  page: 198
-  grade: 7
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
+- id: S4
+  file: 11-klas-ukrajinska-mova-voron-2019_s1275
+  type: textbook
+  title: Розв’яжіть мовну задачу. Старшокласники наводили приклади складнопідрядних
+    речень із
+  page: 185
+  grade: 11

@@ -2,44 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 7-klas-ukrmova-avramenko-2024_s3793
-  type: textbook
-  title: § 8. Морфологія. Числівник
-  page: 22
-  grade: 7
-- id: S2
-  file: 7-klas-ukrmova-avramenko-2024_s3830
-  type: textbook
-  title: РОЗВИТОК МОВЛЕННЯ (p. 92)
-  page: 92
-  grade: 7
-- id: S3
-  file: 6-klas-ukrmova-golub-2023_s3268
-  type: textbook
-  title: § 59. Як не стати марнотратами
-  page: 155
-  grade: 6
-- id: S4
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3385
-  type: textbook
-  title: § 22. ІМЕННИК ЯК ЧАСТИНА МОВИ
-  page: 79
-  grade: 6
-- id: S5
   file: 6-klas-ukrmova-golub-2023_s3267
   type: textbook
   title: § 58. Твоє здоров’я — найвища цінність
   page: 152
   grade: 6
+- id: S2
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3397
+  type: textbook
+  title: § 55. ВІДМІНЮВАННЯ ТА НАПИСАННЯ
+  page: 179
+  grade: 6
+- id: S3
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1799
+  type: textbook
+  title: РОЛЬ СУФІКСА
+  page: 31
+  grade: 4
+- id: S4
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
+  type: textbook
+  title: Розділ 1. ШОКОЛАД
+  page: 36
+  grade: 4
+- id: S5
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3958
+  type: textbook
+  title: ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО
+  page: 11
+  grade: 7
 - id: S6
-  file: 6-klas-ukrmova-betsa-2023_s3147
+  file: 7-klas-ukrmova-avramenko-2024_s3830
   type: textbook
-  title: § 22. Пряма і непряма мова
-  page: 54
-  grade: 6
+  title: РОЗВИТОК МОВЛЕННЯ (p. 92)
+  page: 92
+  grade: 7
 - id: S7
-  file: 6-klas-ukrmova-betsa-2023_s3227
+  file: 6-klas-ukrmova-golub-2023_s3268
   type: textbook
-  title: § 107. Спостереження за узгодженням
-  page: 230
+  title: § 59. Як не стати марнотратами
+  page: 155
   grade: 6
+- id: S8
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S10
+  file: ext-article-2
+  type: external
+  title: ext-article-2

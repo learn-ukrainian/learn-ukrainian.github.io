@@ -2,38 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1765
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2511
   type: textbook
-  title: З’юрмитися — зібратися юрмою, скупчитися
-  page: 92
-  grade: 3
+  title: Варіант Б. Складіть і запишіть мінітекст (3–4 речення) зі словом
+  page: 26
+  grade: 5
 - id: S2
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1798
+  type: textbook
+  title: УЗАГАЛЬНЕННЯ ВИВЧЕНОГО
+  page: 21
+  grade: 4
+- id: S3
   file: 11-klas-ukrajinska-mova-avramenko-2019_s1154
   type: textbook
   title: § 22. –23. УЖИВАННЯ ПРИЙМЕННИКІВ
   page: 71
   grade: 11
-- id: S3
-  file: 6-klas-ukrmova-litvinova-2023_s3315
+- id: S4
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1765
   type: textbook
-  title: § 12. Антонімічні префікси й суфікси
-  page: 68
-  grade: 6
+  title: З’юрмитися — зібратися юрмою, скупчитися
+  page: 92
+  grade: 3
 - id: S5
-  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1658
+  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1655
   type: textbook
-  title: ДІЄСЛОВА-АНТОНІМИ, ДІЄСЛОВА-СИНОНІМИ, ДІЄСЛОВА З ПРЯМИМ І ПЕРЕНОСНИМ ЗНАЧЕННЯМ
-  page: 95
+  title: Ненаголошені звуки [е] чи [и] в корені слова — це орфограма
+  page: 34
   grade: 3
 - id: S6
-  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1901
+  file: 3-klas-ukrainska-mova-ponomarova-2020-1_s1665
   type: textbook
-  title: ДІЄСЛОВО
-  page: 101
-  grade: 4
-- id: S8
-  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1767
-  type: textbook
-  title: Вивчи три прислів’я напам’ять. Запиши їх із пам’яті. Звір свій запис
-  page: 155
+  title: Розділ 1. Пригадую знання
+  page: 4
   grade: 3
+- id: S7
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  type: textbook
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7

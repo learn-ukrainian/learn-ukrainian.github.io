@@ -9,50 +9,39 @@ sources:
   page: 179
   grade: 10
 - id: S2
-  file: 6-klas-ukrmova-betsa-2023_s3218
+  file: 7-klas-ukrmova-avramenko-2024_s3822
   type: textbook
-  title: § 98. Дієвідмінювання дієслів теперішнього
-  page: 212
-  grade: 6
-- id: S3
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1148
+  title: § 33. Відмінювання дієслів бути, їсти, дати та дієслів з основою на -вісти
+  page: 76
+  grade: 7
+- id: S4
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
   type: textbook
-  title: § 16. ДІЄСЛІВНІ ЗАКІНЧЕННЯ
-  page: 50
-  grade: 11
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
 - id: S5
-  file: 7-klas-ukrmova-avramenko-2024_s3823
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4691
   type: textbook
-  title: § 34. Дієслова І та ІІ дієвідміни
-  page: 78
-  grade: 7
+  title: ЧАСТИНИ МОВИ У СВІТІ
+  page: 12
+  grade: 8
 - id: S6
-  file: 7-klas-ukrmova-litvinova-2024_s3913
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1903
   type: textbook
-  title: § 10. Дієвідмінювання дієслів
-  page: 55
-  grade: 7
-- id: S7
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1813
-  type: textbook
-  title: Читаєте — що ви робите? — 2-га особа множини
-  page: 107
+  title: 'Зразок. Класти: однина: 1-ша особа — я клад у ; 2-га осо­'
+  page: 111
   grade: 4
 - id: S9
-  file: 6-klas-ukrmova-betsa-2023_s3211
-  type: textbook
-  title: § 90. –91. Неозначена та особова форми дієслова
-  page: 199
-  grade: 6
-- id: S10
-  file: 10-klas-ukrmova-karaman-2018_s0685
-  type: textbook
-  title: § 72. Види дієслів
-  page: 181
-  grade: 10
-- id: S12
   file: ext-article-1
   type: external
-- id: S13
+  title: ext-article-1
+- id: S10
   file: ext-article-2
   type: external
+  title: ext-article-2
+- id: S12
+  file: ukrainian_wiki/verbs-group-one_Педагогіка-A1-Verbs-Group-One-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Verbs Group One'
+  section_path: 'Педагогіка A1: Verbs Group One > Методичний підхід'

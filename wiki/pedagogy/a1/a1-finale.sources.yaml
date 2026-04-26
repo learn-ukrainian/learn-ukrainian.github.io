@@ -2,20 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 5-klas-istoriya-schupak-2022_s1933
+  type: textbook
+  title: § 12. Розгадайте ребус і поміркуйте,
+  page: 67
+  grade: 5
+- id: S2
+  file: ukrainian_wiki/a1-finale_Педагогіка-A1-A1-Finale-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: A1 Finale'
+  section_path: 'Педагогіка A1: A1 Finale > Послідовність введення'
+- id: S3
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4697
+  type: textbook
+  title: Види словосполучень за будовою. ПРОСТІ
+  page: 44
+  grade: 8
+- id: S4
   file: 7-klas-ukrmova-litvinova-2024_s3912
   type: textbook
   title: § 9. Часи діє слова
   page: 41
   grade: 7
-- id: S3
+- id: S5
+  file: ukrainian_wiki/my-day_Педагогіка-A1-My-Day-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: My Day'
+  section_path: 'Педагогіка A1: My Day > Послідовність введення'
+- id: S6
+  file: ukrainian_wiki/shopping_Педагогіка-A1-Shopping-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Shopping'
+  section_path: 'Педагогіка A1: Shopping > Послідовність введення'
+- id: S7
   file: 10-klas-ukrajinska-mova-avramenko-2018_s0279
   type: textbook
   title: § 21. –22. СТРАТЕГІЯ І ТАКТИКА МОВЛЕННЄВОЇ ПОВЕДІНКИ
   page: 68
   grade: 10
-- id: S6
-  file: 7-klas-ukrmova-litvinova-2024_s3908
+- id: S8
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4713
   type: textbook
-  title: § 5. Інфінітив
-  page: 29
-  grade: 7
+  title: Немає їй ні кінця ні краю (П. Перебийніс). 8. Надворі хмариться чи
+  page: 155
+  grade: 8
+- id: S9
+  file: ukrainian_wiki/a1-finale_Педагогіка-A1-A1-Finale-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: A1 Finale'
+  section_path: 'Педагогіка A1: A1 Finale > Методичний підхід'

@@ -2,28 +2,28 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3964
+  type: textbook
+  title: ТЕМА 7
+  page: 248
+  grade: 7
+- id: S2
   file: 7-klas-ukrmova-avramenko-2024_s3835
   type: textbook
   title: § 45. ОСОБЛИВОСТІ БУДОВИ ОПИСУ
   page: 103
   grade: 7
-- id: S2
+- id: S3
   file: 7-klas-ukrmova-avramenko-2024_s3836
   type: textbook
   title: РОЗВИТОК МОВЛЕННЯ (p. 104)
   page: 104
   grade: 7
-- id: S3
+- id: S4
   file: 7-klas-ukrmova-avramenko-2024_s3840
   type: textbook
   title: РОЗВИТОК МОВЛЕННЯ (p. 109)
   page: 109
-  grade: 7
-- id: S4
-  file: 7-klas-ukrmova-avramenko-2024_s3844
-  type: textbook
-  title: РОЗВИТОК МОВЛЕННЯ (p. 117)
-  page: 117
   grade: 7
 - id: S5
   file: 5-klas-ukrmova-golub-2022_s2302
@@ -31,21 +31,3 @@ sources:
   title: Присудок — головний член речення,
   page: 108
   grade: 5
-- id: S6
-  file: 7-klas-ukrmova-litvinova-2024_s3919
-  type: textbook
-  title: § 15. Дієприкметник як особлива форма діє слова
-  page: 80
-  grade: 7
-- id: S9
-  file: 6-klas-ukrmova-betsa-2023_s3132
-  type: textbook
-  title: Змалку я навчаюсь у музичній школі — граю на гітарі
-  page: 27
-  grade: 6
-- id: S10
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1189
-  type: textbook
-  title: § 57. –58. ОЦІНЮВАЛЬНІ ЖАНРИ
-  page: 197
-  grade: 11

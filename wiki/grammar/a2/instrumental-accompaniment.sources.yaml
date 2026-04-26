@@ -2,16 +2,16 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-betsa-2023_s3164
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1801
   type: textbook
-  title: § 38. Відмінки іменників
-  page: 94
-  grade: 6
+  title: Крок 2. Розглянь таблицю відмінювання іменників. У яких імен­
+  page: 53
+  grade: 4
 - id: S2
-  file: 4-klas-ukrmova-zaharijchuk_s1915
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1897
   type: textbook
-  title: Г ; . М ; М М «
-  page: 71
+  title: Н. в., ж. р., одн
+  page: 47
   grade: 4
 - id: S3
   file: 6-klas-ukrmova-litvinova-2023_s3341
@@ -19,3 +19,35 @@ sources:
   title: § 33. Відмінювання іменників ІV відміни
   page: 165
   grade: 6
+- id: S4
+  file: 4-klas-ukrmova-zaharijchuk_s1914
+  type: textbook
+  title: ІМЕННИК
+  page: 48
+  grade: 4
+- id: S5
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3388
+  type: textbook
+  title: § 29. ВІДМІНЮВАННЯ ІМЕННИКІВ
+  page: 102
+  grade: 6
+- id: S6
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0308
+  type: textbook
+  title: МОРФОЛОГІЧНА НОРМА СПОСТЕРЕЖЕННЯ (p. 166)
+  page: 166
+  grade: 10
+- id: S7
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0365
+  type: textbook
+  title: Морфологічна норма (p. 163)
+  page: 163
+  grade: 10
+- id: S9
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S10
+  file: ext-article-1
+  type: external
+  title: ext-article-1

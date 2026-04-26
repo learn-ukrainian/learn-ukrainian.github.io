@@ -2,16 +2,16 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 4-klas-ukrmova-zaharijchuk_s1908
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5025
   type: textbook
-  title: Бèло — давній сигнальний інструмент, виготовлений
-  page: 8
-  grade: 4
+  title: Синтаксис. Пунктуація
+  page: 22
+  grade: 9
 - id: S2
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3385
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3377
   type: textbook
-  title: § 22. ІМЕННИК ЯК ЧАСТИНА МОВИ
-  page: 79
+  title: Лексикологiя. Фразеологiя
+  page: 18
   grade: 6
 - id: S3
   file: 10-klas-ukrajinska-mova-avramenko-2018_s0253
@@ -19,18 +19,34 @@ sources:
   title: Усі ми знаємо фразеологізм бити байдики й чудово розуміємо його зміст. Близькими
   page: 11
   grade: 10
-- id: S4
-  file: 10-klas-ukrajinska-mova-avramenko-2018_s0258
-  type: textbook
-  title: Слова власне українські й запозичені. СПОСТЕРЕЖЕННЯ
-  page: 23
-  grade: 10
-- id: S5
-  file: 5-klas-ukrmova-uhor-2022-1_s2461
-  type: textbook
-  title: § 42. Лексика за походженням
-  page: 132
-  grade: 5
+- id: S7
+  file: ukrainian_wiki/emergencies_Педагогіка-A1-Emergencies-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Emergencies'
+  section_path: 'Педагогіка A1: Emergencies > Послідовність введення'
 - id: S8
-  file: ext-article-1
-  type: external
+  file: ukrainian_wiki/shopping-and-health_Граматика-A2-На-ринку-та-у-лікаря-Природні-приклади-Група-1-Позначення-кількості-та-покупки-Група-2-Опис-симптомів-та-стану-здоров-я
+  type: ukrainian_wiki
+  title: 'Граматика A2: На ринку та у лікаря'
+  section_path: 'Граматика A2: На ринку та у лікаря > Природні приклади > Група 1:
+    Позначення кількості та покупки > Група 2: Опис симптомів та стану здоров''я'
+- id: S9
+  file: ukrainian_wiki/health-at-the-doctor_Граматика-B1-Здоров-я-і-медицина-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика B1: Здоров''я і медицина'
+  section_path: 'Граматика B1: Здоров''я і медицина > Як це пояснюють у школі'
+- id: S10
+  file: ukrainian_wiki/health_Педагогіка-A1-Health-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Health'
+  section_path: 'Педагогіка A1: Health > Методичний підхід'
+- id: S11
+  file: ukrainian_wiki/shopping-and-health_Граматика-A2-На-ринку-та-у-лікаря-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика A2: На ринку та у лікаря'
+  section_path: 'Граматика A2: На ринку та у лікаря > Як це пояснюють у школі'
+- id: S12
+  file: ukrainian_wiki/health_Педагогіка-A1-Health-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Health'
+  section_path: 'Педагогіка A1: Health > Послідовність введення'

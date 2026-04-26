@@ -8,44 +8,50 @@ sources:
   page: 95
   grade: 6
 - id: S2
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3388
-  type: textbook
-  title: § 29. ВІДМІНЮВАННЯ ІМЕННИКІВ
-  page: 102
-  grade: 6
-- id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0672
-  type: textbook
-  title: § 59. Відмінювання іменників
-  page: 147
-  grade: 10
-- id: S4
-  file: 10-klas-ukrajinska-mova-avramenko-2018_s0308
-  type: textbook
-  title: МОРФОЛОГІЧНА НОРМА СПОСТЕРЕЖЕННЯ (p. 166)
-  page: 166
-  grade: 10
-- id: S5
-  file: 6-klas-ukrmova-litvinova-2023_s3338
-  type: textbook
-  title: § 30. Відмінювання іменників І відміни
-  page: 148
-  grade: 6
-- id: S6
   file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0359
   type: textbook
   title: Морфологічна норма (p. 152)
   page: 152
   grade: 10
-- id: S8
+- id: S3
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0778
+  type: textbook
+  title: Морфологічна норма (p. 152)
+  page: 152
+  grade: 10
+- id: S4
+  file: 6-klas-ukrmova-golub-2023_s3255
+  type: textbook
+  title: РІД ІМЕННИКІВ
+  page: 68
+  grade: 6
+- id: S5
+  file: 10-klas-ukrmova-karaman-2018_s0672
+  type: textbook
+  title: § 59. Відмінювання іменників
+  page: 147
+  grade: 10
+- id: S6
   file: 6-klas-ukrmova-litvinova-2023_s3337
   type: textbook
   title: § 29. Відміни та групи іменників
   page: 143
   grade: 6
-- id: S10
-  file: 6-klas-ukrmova-litvinova-2023_s3341
+- id: S7
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3388
   type: textbook
-  title: § 33. Відмінювання іменників ІV відміни
-  page: 165
+  title: § 29. ВІДМІНЮВАННЯ ІМЕННИКІВ
+  page: 102
+  grade: 6
+- id: S8
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0308
+  type: textbook
+  title: МОРФОЛОГІЧНА НОРМА СПОСТЕРЕЖЕННЯ (p. 166)
+  page: 166
+  grade: 10
+- id: S9
+  file: 6-klas-ukrmova-litvinova-2023_s3338
+  type: textbook
+  title: § 30. Відмінювання іменників І відміни
+  page: 148
   grade: 6

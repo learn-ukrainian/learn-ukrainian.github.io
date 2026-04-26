@@ -7,33 +7,45 @@ sources:
   title: § 4. ПРЯМА МОВА
   page: 26
   grade: 9
-- id: S3
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5026
+- id: S2
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5224
   type: textbook
-  title: § 7. Непряма мова
+  title: § 4. ПРЯМА МОВА
   page: 26
   grade: 9
+- id: S3
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5162
+  type: textbook
+  title: Синтаксис. Пунктуацiя
+  page: 25
+  grade: 9
+- id: S4
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5166
+  type: textbook
+  title: Пряма й непряма мова (p. 37)
+  page: 37
+  grade: 9
+- id: S5
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5227
+  type: textbook
+  title: Пряма й непряма мова (p. 37)
+  page: 37
+  grade: 9
 - id: S6
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1174
-  type: textbook
-  title: § 43. РОЗДІЛОВІ ЗНАКИ ПРИ ПРЯМІЙ МОВІ
-  page: 144
-  grade: 11
-- id: S7
-  file: 5-klas-ukrmova-litvinova-2022_s2398
-  type: textbook
-  title: Відомості із синтаксису й пунктуації. Пряма мова . Розділові знаки в реченнях
-  page: 241
-  grade: 5
-- id: S8
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5164
   type: textbook
   title: Пряма й непряма мова (p. 27)
   page: 27
   grade: 9
-- id: S10
-  file: 5-klas-ukrmova-avramenko-2022_s2270
+- id: S7
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5225
   type: textbook
-  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 182)
-  page: 182
-  grade: 5
+  title: Пряма й непряма мова (p. 27)
+  page: 27
+  grade: 9
+- id: S8
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1451
+  type: textbook
+  title: Пунктуаційна норма (p. 164)
+  page: 164
+  grade: 11

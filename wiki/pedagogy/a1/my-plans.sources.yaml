@@ -8,38 +8,42 @@ sources:
   page: 83
   grade: 2
 - id: S2
-  file: 8-klas-ukrmova-avramenko-2025_s4607
-  type: textbook
-  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 87)
-  page: 87
-  grade: 8
+  file: ukrainian_wiki/my-plans_Педагогіка-A1-My-Plans-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: My Plans'
+  section_path: 'Педагогіка A1: My Plans > Послідовність введення'
 - id: S3
-  file: 6-klas-ukrmova-avramenko-2023_s3101
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
   type: textbook
-  title: § 88. Правильне вживання числівників на позначення дат і часу
-  page: 173
-  grade: 6
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
 - id: S4
-  file: 5-klas-ukrmova-uhor-2022-1_s2417
-  type: textbook
-  title: § 3. Види мовленнєвої діяльності (аудіювання,
-  page: 13
-  grade: 5
-- id: S5
   file: 7-klas-ukrmova-litvinova-2024_s3912
   type: textbook
   title: § 9. Часи діє слова
   page: 41
   grade: 7
+- id: S5
+  file: ukrainian_wiki/checkpoint-time-nature_Педагогіка-A1-Checkpoint-Time-Nature-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Checkpoint Time Nature'
+  section_path: 'Педагогіка A1: Checkpoint Time Nature > Методичний підхід'
+- id: S6
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
+  type: textbook
+  title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
+  page: 183
+  grade: 7
 - id: S7
-  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1767
+  file: 5-klas-ukrmova-golub-2022_s2300
   type: textbook
-  title: Вивчи три прислів’я напам’ять. Запиши їх із пам’яті. Звір свій запис
-  page: 155
-  grade: 3
-- id: S9
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1597
+  title: § 34. Мої плани на зиму
+  page: 101
+  grade: 5
+- id: S8
+  file: 8-klas-ukrmova-avramenko-2025_s4558
   type: textbook
-  title: НАВЧАЮСЯ ПОШИРЮВАТИ РЕЧЕННЯ СЛОВАМИ ЗА ПОДАНИМИ ПИТАННЯМИ
-  page: 117
-  grade: 2
+  title: РОЗВИТОК МОВЛЕННЯ (p. 29)
+  page: 29
+  grade: 8

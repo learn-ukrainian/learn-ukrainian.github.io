@@ -2,50 +2,61 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1146
+  type: textbook
+  title: § 14. СПОСТЕРЕЖЕННЯ
+  page: 41
+  grade: 11
+- id: S2
+  file: ukrainian_wiki/my-day_Педагогіка-A1-My-Day-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: My Day'
+  section_path: 'Педагогіка A1: My Day > Послідовність введення'
+- id: S3
+  file: ukrainian_wiki/my-plans_Педагогіка-A1-My-Plans-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: My Plans'
+  section_path: 'Педагогіка A1: My Plans > Послідовність введення'
+- id: S4
   file: 2-klas-ukrmova-vashulenko-2019-1_s1580
   type: textbook
   title: Ивйщ1і| Пригадайте назви днів тижня. Послідовно запишіть їх
   page: 83
   grade: 2
-- id: S2
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1597
+- id: S5
+  file: ukrainian_wiki/my-plans_Педагогіка-A1-My-Plans-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: My Plans'
+  section_path: 'Педагогіка A1: My Plans > Методичний підхід'
+- id: S6
+  file: 6-klas-ukrmova-litvinova-2023_s3366
   type: textbook
-  title: НАВЧАЮСЯ ПОШИРЮВАТИ РЕЧЕННЯ СЛОВАМИ ЗА ПОДАНИМИ ПИТАННЯМИ
-  page: 117
-  grade: 2
-- id: S3
-  file: 5-klas-ukrmova-uhor-2022-1_s2417
-  type: textbook
-  title: § 3. Види мовленнєвої діяльності (аудіювання,
-  page: 13
-  grade: 5
-- id: S4
-  file: 7-klas-ukrmova-litvinova-2024_s3912
-  type: textbook
-  title: § 9. Часи діє слова
-  page: 41
-  grade: 7
-- id: S7
-  file: 6-klas-ukrmova-betsa-2023_s3219
-  type: textbook
-  title: § 99. Чергування приголосних під час
-  page: 214
+  title: § 52. Правильне вживання числівників на позначення дат і часу
+  page: 245
   grade: 6
+- id: S7
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
+  type: textbook
+  title: Розділ 1. ШОКОЛАД
+  page: 36
+  grade: 4
 - id: S8
-  file: 8-klas-ukrmova-avramenko-2025_s4550
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3397
   type: textbook
-  title: § 4. Дієслово та його форми
-  page: 13
-  grade: 8
+  title: § 55. ВІДМІНЮВАННЯ ТА НАПИСАННЯ
+  page: 179
+  grade: 6
 - id: S9
-  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1767
+  file: 6-klas-ukrmova-golub-2023_s3269
   type: textbook
-  title: Вивчи три прислів’я напам’ять. Запиши їх із пам’яті. Звір свій запис
-  page: 155
-  grade: 3
+  title: § 61. Математика і мистецтво поруч
+  page: 166
+  grade: 6
 - id: S10
-  file: 8-klas-ukrmova-avramenko-2025_s4627
-  type: textbook
-  title: § 54. –55
-  page: 117
-  grade: 8
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S11
+  file: ext-article-1
+  type: external
+  title: ext-article-1

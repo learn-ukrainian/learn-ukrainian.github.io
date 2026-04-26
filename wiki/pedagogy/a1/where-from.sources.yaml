@@ -2,56 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1566
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
   type: textbook
-  title: РОЗРІЗНЯЮ СЛОВА, ЯКІ ВІДПОВІДАЮТЬ
-  page: 50
-  grade: 2
+  title: Навчаюся розрізняти іменники — назви істот і неістот
+  page: 104
+  grade: 3
 - id: S2
+  file: 2-klas-ukrmova-bolshakova-2019-2_s1489
+  type: textbook
+  title: Досліджуємо медіа. Дитячий журнал
+  page: 14
+  grade: 2
+- id: S3
+  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1656
+  type: textbook
+  title: СЛОВА З ПРЕФІКСАМИ З-, С
+  page: 47
+  grade: 3
+- id: S4
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0289
+  type: textbook
+  title: Орфографічна норма. СПОСТЕРЕЖЕННЯ
+  page: 90
+  grade: 10
+- id: S5
+  file: 7-klas-istoria-ukr-galimov-2024_s3498
+  type: textbook
+  title: § 22. Сільське господарство. Ремесло й торгівля. Міста, магдебурзьке право
+  page: 180
+  grade: 7
+- id: S6
   file: 5-klas-ukrmova-avramenko-2022_s2215
   type: textbook
   title: § 34. –35. Позначення звуків мовлення на письмі. Алфавіт
   page: 81
   grade: 5
-- id: S3
-  file: 5-klas-ukrmova-uhor-2022-1_s2416
-  type: textbook
-  title: § 2. Розвиток мовлення
-  page: 10
-  grade: 5
-- id: S5
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1554
-  type: textbook
-  title: АЛФАВІТ НАВЧАЮСЯ РОЗТАШОВУВАТИ СЛОВА ЗА АЛФАВІТОМ
-  page: 26
-  grade: 2
-- id: S6
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5186
-  type: textbook
-  title: ГОВОРІМО ПРАВИЛЬНО УНИКАЙМО ЗАЙВОГО СЛОВА
-  page: 134
-  grade: 9
 - id: S7
-  file: 9-klas-ukrmova-zabolotnyi-2017_s5247
+  file: 2-klas-ukrmova-vashulenko-2019-1_s1566
   type: textbook
-  title: ГОВОРІМО ПРАВИЛЬНО УНИКАЙМО ЗАЙВОГО СЛОВА
-  page: 134
-  grade: 9
+  title: РОЗРІЗНЯЮ СЛОВА, ЯКІ ВІДПОВІДАЮТЬ
+  page: 50
+  grade: 2
 - id: S8
-  file: 5-klas-ukrmova-uhor-2022-1_s2415
-  type: textbook
-  title: § 1. Державна мова та інші мови світу
-  page: 5
-  grade: 5
+  file: ext-article-0
+  type: external
+  title: ext-article-0
 - id: S9
-  file: 10-klas-ukrajinska-mova-avramenko-2018_s0319
-  type: textbook
-  title: Полемічні прийоми. Мистецтво відповідати на запитання
-  page: 195
-  grade: 10
+  file: ext-article-1
+  type: external
+  title: ext-article-1
 - id: S10
-  file: 7-klas-ukrmova-avramenko-2024_s3809
-  type: textbook
-  title: РОЗВИТОК МОВЛЕННЯ (p. 49)
-  page: 49
-  grade: 7
+  file: ext-article-2
+  type: external
+  title: ext-article-2

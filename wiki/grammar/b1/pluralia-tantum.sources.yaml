@@ -2,10 +2,10 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-golub-2023_s3258
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3389
   type: textbook
-  title: § 35. Як розумно витрачати,
-  page: 91
+  title: § 30. ЗАКІНЧЕННЯ ІМЕННИКІВ ЧОЛОВІЧОГО
+  page: 106
   grade: 6
 - id: S2
   file: 6-klas-ukrmova-litvinova-2023_s3342
@@ -14,44 +14,32 @@ sources:
   page: 167
   grade: 6
 - id: S3
-  file: 6-klas-ukrmova-avramenko-2023_s3071
+  file: 10-klas-ukrmova-glazova-2018_s0549
   type: textbook
-  title: § 55. Відмінювання іменників, що мають форму тільки множини
-  page: 109
-  grade: 6
-- id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0672
-  type: textbook
-  title: § 59. Відмінювання іменників
-  page: 147
+  title: Рід іменників. Паралельні родові форми § 40
+  page: 177
   grade: 10
-- id: S5
+- id: S4
   file: 10-klas-ukrmova-karaman-2018_s0671
   type: textbook
   title: § 58. Категорія числа іменників
   page: 145
   grade: 10
-- id: S6
-  file: 6-klas-ukrmova-litvinova-2023_s3338
+- id: S5
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0365
   type: textbook
-  title: § 30. Відмінювання іменників І відміни
-  page: 148
-  grade: 6
+  title: Морфологічна норма (p. 163)
+  page: 163
+  grade: 10
 - id: S7
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3387
+  file: 6-klas-ukrmova-avramenko-2023_s3071
   type: textbook
-  title: § 27. ВІДМІНИ Й ГРУПИ
-  page: 95
+  title: § 55. Відмінювання іменників, що мають форму тільки множини
+  page: 109
   grade: 6
 - id: S8
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3388
+  file: 6-klas-ukrmova-golub-2023_s3258
   type: textbook
-  title: § 29. ВІДМІНЮВАННЯ ІМЕННИКІВ
-  page: 102
+  title: § 35. Як розумно витрачати,
+  page: 91
   grade: 6
-- id: S9
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1143
-  type: textbook
-  title: § 11. ЧИСЛІВНИК. СКЛАДНІ ВИПАДКИ УЗГОДЖЕННЯ
-  page: 34
-  grade: 11

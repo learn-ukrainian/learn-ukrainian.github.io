@@ -2,17 +2,17 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrmova-karaman-2018_s0658
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2511
   type: textbook
-  title: МОРФЕМІКА І СЛОВОТВІР (p. 130)
-  page: 130
-  grade: 10
+  title: Варіант Б. Складіть і запишіть мінітекст (3–4 речення) зі словом
+  page: 26
+  grade: 5
 - id: S2
-  file: 7-klas-ukrmova-avramenko-2024_s3849
+  file: 6-klas-ukrmova-golub-2023_s3246
   type: textbook
-  title: § 57. Написання не з дієприслівниками
-  page: 130
-  grade: 7
+  title: § 12. Славетні українці
+  page: 29
+  grade: 6
 - id: S3
   file: 5-klas-ukrmova-zabolotnyi-2023_s2520
   type: textbook
@@ -20,8 +20,14 @@ sources:
   page: 114
   grade: 5
 - id: S4
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4717
+  file: 10-klas-ukrmova-glazova-2018_s0536
   type: textbook
-  title: РЕЧЕННЯ З ВІДОКРЕМЛЕНИМИ ЧЛЕНАМИ
-  page: 194
-  grade: 8
+  title: § 28. Спрощення в групах приголосних
+  page: 119
+  grade: 10
+- id: S5
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  type: textbook
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7

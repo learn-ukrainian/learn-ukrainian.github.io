@@ -2,50 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrmova-karaman-2018_s0670
+  file: 10-klas-ukrmova-glazova-2018_s0550
   type: textbook
-  title: § 57. Категорія роду іменників
-  page: 143
+  title: § 45. Закінчення іменників чоловічого роду
+  page: 190
   grade: 10
 - id: S2
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1801
+  file: 10-klas-ukrmova-karaman-2018_s0668
   type: textbook
-  title: Крок 2. Розглянь таблицю відмінювання іменників. У яких імен­
-  page: 53
-  grade: 4
-- id: S3
-  file: 6-klas-ukrmova-betsa-2023_s3164
-  type: textbook
-  title: § 38. Відмінки іменників
-  page: 94
-  grade: 6
-- id: S4
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0365
-  type: textbook
-  title: Морфологічна норма (p. 163)
-  page: 163
+  title: § 56. Іменник
+  page: 141
   grade: 10
+- id: S3
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
+  type: textbook
+  title: Навчаюся розрізняти іменники — назви істот і неістот
+  page: 104
+  grade: 3
+- id: S4
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3386
+  type: textbook
+  title: § 25. ЧИСЛО ІМЕННИКІВ
+  page: 90
+  grade: 6
 - id: S5
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1144
+  file: 6-klas-ukrmova-litvinova-2023_s3330
   type: textbook
-  title: Числівник. Складні випадки узгодження числівника
-  page: 35
-  grade: 11
+  title: § 23. Іменник як частина мови
+  page: 117
+  grade: 6
 - id: S6
-  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1873
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0308
   type: textbook
-  title: § 12. Відмінювання іменників
-  page: 37
-  grade: 4
+  title: МОРФОЛОГІЧНА НОРМА СПОСТЕРЕЖЕННЯ (p. 166)
+  page: 166
+  grade: 10
 - id: S7
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1207
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1799
   type: textbook
-  title: Числівник. Складні випадки узгодження числівників з іменниками § 6
+  title: РОЛЬ СУФІКСА
   page: 31
-  grade: 11
+  grade: 4
 - id: S8
   file: ext-article-0
   type: external
+  title: ext-article-0
+- id: S9
+  file: ext-article-1
+  type: external
+  title: ext-article-1
 - id: S10
   file: ext-article-2
   type: external
+  title: ext-article-2

@@ -2,27 +2,45 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 6-klas-ukrmova-golub-2023_s3262
+  type: textbook
+  title: § 48. Зимова естетика
+  page: 125
+  grade: 6
+- id: S2
   file: 10-klas-ukrmova-karaman-2018_s0675
   type: textbook
   title: § 62. Повні і короткі форми прикметників, стягнені і нестягнені форми повних
     прикметників
   page: 157
   grade: 10
-- id: S2
-  file: 6-klas-ukrmova-avramenko-2023_s3081
-  type: textbook
-  title: § 66. Повні й короткі форми прикметників
-  page: 131
-  grade: 6
 - id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0673
-  type: textbook
-  title: § 60. Прикметник як частина мови
-  page: 151
-  grade: 10
-- id: S4
   file: 6-klas-ukrmova-zabolotnyi-2020_s3393
   type: textbook
   title: § 40. ГРУПИ ПРИКМЕТНИКІВ ЗА ЗНАЧЕННЯМ
   page: 133
   grade: 6
+- id: S4
+  file: 10-klas-ukrmova-karaman-2018_s0674
+  type: textbook
+  title: § 61. Ступені порівняння якісних прикметників
+  page: 155
+  grade: 10
+- id: S5
+  file: 6-klas-ukrmova-avramenko-2023_s3081
+  type: textbook
+  title: § 66. Повні й короткі форми прикметників
+  page: 131
+  grade: 6
+- id: S6
+  file: 6-klas-ukrmova-avramenko-2023_s3080
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 128)
+  page: 128
+  grade: 6
+- id: S7
+  file: 10-klas-ukrmova-karaman-2018_s0673
+  type: textbook
+  title: § 60. Прикметник як частина мови
+  page: 151
+  grade: 10

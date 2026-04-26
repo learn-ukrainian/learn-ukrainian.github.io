@@ -2,44 +2,59 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-ukrmova-uhor-2022-1_s2464
-  type: textbook
-  title: § 46. 47. Звуки мови і звуки мовлення
-  page: 140
-  grade: 5
+  file: ukrainian_wiki/complex-subordinate-object_Звуки-і-літери-Привіт
+  type: ukrainian_wiki
+  title: Звуки і літери
+  section_path: Звуки і літери > Привіт!
 - id: S2
+  file: ukrainian_wiki/figurative-motion_Звуки-і-літери
+  type: ukrainian_wiki
+  title: Звуки і літери
+  section_path: Звуки і літери
+- id: S3
+  file: 5-klas-ukrmova-avramenko-2022_s2211
+  type: textbook
+  title: § 30. –31. Звуки мови та звуки мовлення. Голосні й приголосні звуки
+  page: 73
+  grade: 5
+- id: S4
   file: 5-klas-ukrmova-litvinova-2022_s2368
   type: textbook
   title: Фонетика. Графіка. Орфоепія. Орфографія. Позначення звуків на письмі . Алфавіт
   page: 129
   grade: 5
-- id: S3
-  file: 5-klas-ukrmova-litvinova-2022_s2360
-  type: textbook
-  title: Фонетика. Графіка. Орфоепія. Орфографія. Транскрипція
-  page: 107
-  grade: 5
-- id: S4
-  file: 5-klas-ukrmova-golub-2022_s2298
-  type: textbook
-  title: § 23. Не відкладаймо важливе на потім
-  page: 66
-  grade: 5
 - id: S5
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1797
+  file: 5-klas-ukrmova-litvinova-2022_s2363
   type: textbook
-  title: ЗВУКИ І БУКВИ. СКЛАД. НАГОЛОС. ЗВУКО-БУКВЕНИЙ СКЛАД СЛІВ
-  page: 4
-  grade: 4
-- id: S6
-  file: 10-klas-ukrmova-karaman-2018_s0584
-  type: textbook
-  title: § 13. Класифікація голосних звуків. Звук мовлення і фонема
-  page: 41
-  grade: 10
-- id: S7
-  file: 5-klas-ukrmova-zabolotnyi-2023_s2516
-  type: textbook
-  title: ІІІ. Випишіть із перших чотирьох слів та вимовте спочатку дзвінкі при
-  page: 83
+  title: Фонетика. Графіка. Орфоепія. Орфографія. Голосні наголошені й ненаголошені
+  page: 114
   grade: 5
+- id: S6
+  file: ukrainian_wiki/complex-subordinate-object_Звуки-і-літери
+  type: ukrainian_wiki
+  title: Звуки і літери
+  section_path: Звуки і літери
+- id: S7
+  file: ukrainian_wiki/figurative-motion_Звуки-і-літери-Привіт
+  type: ukrainian_wiki
+  title: Звуки і літери
+  section_path: Звуки і літери > Привіт!
+- id: S8
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2515
+  type: textbook
+  title: Фонетика. Графіка
+  page: 74
+  grade: 5
+- id: S9
+  file: ukrainian_wiki/figurative-motion_Звуки-і-літери-Голосні-звуки
+  type: ukrainian_wiki
+  title: Звуки і літери
+  section_path: Звуки і літери > Голосні звуки
+- id: S10
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S11
+  file: ext-article-1
+  type: external
+  title: ext-article-1

@@ -2,18 +2,24 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 7-klas-ukrmova-litvinova-2024_s3939
-  type: textbook
-  title: § 30. Особливості вживання прийменників
-  page: 181
-  grade: 7
-- id: S2
   file: 6-klas-ukrmova-litvinova-2023_s3371
   type: textbook
   title: § 54. Розряди займенників за значенням та особливості відмінювання
   page: 255
   grade: 6
+- id: S2
+  file: 7-klas-ukrmova-litvinova-2024_s3939
+  type: textbook
+  title: § 30. Особливості вживання прийменників
+  page: 181
+  grade: 7
 - id: S3
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1143
+  type: textbook
+  title: § 11. ЧИСЛІВНИК. СКЛАДНІ ВИПАДКИ УЗГОДЖЕННЯ
+  page: 34
+  grade: 11
+- id: S4
   file: 6-klas-ukrmova-golub-2023_s3289
   type: textbook
   title: § 50. Ступені порівняння якісних прикметників, творення їх .................
@@ -21,38 +27,20 @@ sources:
   page: 256
   grade: 6
 - id: S5
-  file: 7-klas-ukrmova-avramenko-2024_s3866
+  file: 6-klas-ukrmova-golub-2023_s3255
   type: textbook
-  title: § 75. Прийменник як службова частина мови
-  page: 166
-  grade: 7
+  title: РІД ІМЕННИКІВ
+  page: 68
+  grade: 6
 - id: S6
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1144
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
   type: textbook
-  title: Числівник. Складні випадки узгодження числівника
-  page: 35
-  grade: 11
+  title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
+  page: 183
+  grade: 7
 - id: S7
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1143
+  file: 6-klas-ukrmova-golub-2023_s3268
   type: textbook
-  title: § 11. ЧИСЛІВНИК. СКЛАДНІ ВИПАДКИ УЗГОДЖЕННЯ
-  page: 34
-  grade: 11
-- id: S8
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3402
-  type: textbook
-  title: ВАРІАНТ Б. Складіть і запишіть невелику розповідь (6–10 ре чень) на тему
-  page: 215
+  title: § 59. Як не стати марнотратами
+  page: 155
   grade: 6
-- id: S9
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3399
-  type: textbook
-  title: § 58. ЗАЙМЕННИК ЯК ЧАСТИНА МОВИ
-  page: 192
-  grade: 6
-- id: S10
-  file: 5-klas-ukrmova-golub-2022_s2313
-  type: textbook
-  title: § 55. Самооцінка важлива
-  page: 158
-  grade: 5

@@ -2,41 +2,41 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-ukrmova-zabolotnyi-2023_s2513
-  type: textbook
-  title: ІІ. Виконайте завдання до тексту
-  page: 70
-  grade: 5
-- id: S2
-  file: 5-klas-ukrmova-golub-2022_s2313
-  type: textbook
-  title: § 55. Самооцінка важлива
-  page: 158
-  grade: 5
-- id: S3
-  file: 5-klas-ukrmova-litvinova-2022_s2410
-  type: textbook
-  title: Повторення. Синтаксис. Пунктуація
-  page: 266
-  grade: 5
-- id: S4
-  file: 5-klas-ukrmova-litvinova-2022_s2402
-  type: textbook
-  title: Відомості із синтаксису й пунктуації. Підсумковий тест
-  page: 254
-  grade: 5
-- id: S5
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3402
-  type: textbook
-  title: ВАРІАНТ Б. Складіть і запишіть невелику розповідь (6–10 ре чень) на тему
-  page: 215
-  grade: 6
-- id: S6
   file: 5-klas-ukrmova-golub-2022_s2314
   type: textbook
   title: Залишайся вірним / вірною своїм цінностям. Не зраджуй
   page: 160
   grade: 5
+- id: S2
+  file: 5-klas-ukrmova-litvinova-2022_s2402
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Підсумковий тест
+  page: 254
+  grade: 5
+- id: S3
+  file: 6-klas-ukrmova-golub-2023_s3278
+  type: textbook
+  title: § 85. Переваги й можливості спілкування
+  page: 216
+  grade: 6
+- id: S4
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1179
+  type: textbook
+  title: § 47. СТИЛІСТИЧНЕ ЗАБАРВЛЕННЯ ЛЕКСИКИ. КНИЖНА Й РОЗМОВНА ЛЕКСИКА
+  page: 163
+  grade: 11
+- id: S5
+  file: 5-klas-ukrmova-litvinova-2022_s2410
+  type: textbook
+  title: Повторення. Синтаксис. Пунктуація
+  page: 266
+  grade: 5
+- id: S6
+  file: 6-klas-ukrmova-litvinova-2023_s3327
+  type: textbook
+  title: § 21. Службові частини мови
+  page: 110
+  grade: 6
 - id: S7
   file: 6-klas-ukrmova-golub-2023_s3292
   type: textbook
@@ -44,20 +44,20 @@ sources:
   page: 257
   grade: 6
 - id: S8
-  file: 5-klas-ukrmova-litvinova-2022_s2409
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5025
   type: textbook
-  title: Повторення. Орфографія . Графіка
-  page: 265
-  grade: 5
+  title: Синтаксис. Пунктуація
+  page: 22
+  grade: 9
 - id: S9
-  file: 5-klas-ukrmova-avramenko-2022_s2244
+  file: 5-klas-ukrmova-golub-2022_s2313
   type: textbook
-  title: § 64. –65. Речення, його граматична основа
-  page: 147
+  title: § 55. Самооцінка важлива
+  page: 158
   grade: 5
 - id: S10
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1157
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2513
   type: textbook
-  title: § 25. ПАСИВНІ КОНСТРУКЦІЇ
-  page: 81
-  grade: 11
+  title: ІІ. Виконайте завдання до тексту
+  page: 70
+  grade: 5

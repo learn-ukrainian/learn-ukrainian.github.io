@@ -2,56 +2,53 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-ukrmova-uhor-2022-1_s2419
-  type: textbook
-  title: ІІ. Дайте відповіді на запитання повними реченнями
-  page: 18
-  grade: 5
-- id: S2
-  file: 5-klas-ukrmova-uhor-2022-1_s2418
-  type: textbook
-  title: § 4. Навчальне читання
-  page: 17
-  grade: 5
-- id: S3
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3384
-  type: textbook
-  title: Морфологiя та орфографiя
-  page: 77
-  grade: 6
-- id: S4
-  file: 5-klas-ukrmova-uhor-2022-1_s2421
-  type: textbook
-  title: § 5. Найважливіші вимоги до культури мовлення
-  page: 20
-  grade: 5
-- id: S5
-  file: 10-klas-ukrmova-karaman-2018_s0632
-  type: textbook
-  title: ЛЕКСИКОЛОГІЯ (p. 102)
-  page: 102
-  grade: 10
-- id: S6
   file: 6-klas-ukrmova-litvinova-2023_s3334
   type: textbook
   title: § 26. Число іменників
   page: 133
   grade: 6
-- id: S7
-  file: 6-klas-ukrlit-zabolotnyi-2023_s2796
+- id: S2
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
   type: textbook
-  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 18)
-  page: 18
+  title: Розділ 1. ШОКОЛАД
+  page: 36
+  grade: 4
+- id: S3
+  file: ukrainian_wiki/nature-and-traditions_Граматика-A2-Пори-року-і-свята-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика A2: Пори року і свята'
+  section_path: 'Граматика A2: Пори року і свята > Як це пояснюють у школі'
+- id: S4
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3384
+  type: textbook
+  title: Морфологiя та орфографiя
+  page: 77
   grade: 6
-- id: S8
+- id: S5
   file: 6-klas-ukrlit-avramenko-2023_s2707
   type: textbook
   title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 6)
   page: 6
   grade: 6
-- id: S9
-  file: 6-klas-ukrlit-avramenko-2023_s2709
+- id: S6
+  file: 6-klas-ukrmova-golub-2023_s3242
   type: textbook
-  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 10)
-  page: 10
+  title: § 3. Музика — універсальна мова людства
+  page: 9
   grade: 6
+- id: S7
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3960
+  type: textbook
+  title: ПРИГОДИ ЗВИЧАЙНОЇ КАРТОПЛІ
+  page: 145
+  grade: 7
+- id: S8
+  file: 4-klas-ukrmova-zaharijchuk_s1915
+  type: textbook
+  title: Г ; . М ; М М «
+  page: 71
+  grade: 4
+- id: S9
+  file: ext-article-0
+  type: external
+  title: ext-article-0

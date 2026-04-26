@@ -7,12 +7,18 @@ sources:
   title: § 21. Вид і час дієприслівників
   page: 121
   grade: 7
-- id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0685
+- id: S2
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
   type: textbook
-  title: § 72. Види дієслів
-  page: 181
-  grade: 10
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
+- id: S3
+  file: 7-klas-ukrmova-avramenko-2024_s3847
+  type: textbook
+  title: § 55. Вид і час дієприслівників
+  page: 126
+  grade: 7
 - id: S4
   file: 10-klas-ukrmova-karaman-2018_s0694
   type: textbook
@@ -20,38 +26,8 @@ sources:
   page: 194
   grade: 10
 - id: S5
-  file: 7-klas-ukrmova-litvinova-2024_s3924
+  file: 10-klas-ukrmova-karaman-2018_s0685
   type: textbook
-  title: § 19. Дієприслівник як особлива форма діє слова
-  page: 111
-  grade: 7
-- id: S6
-  file: 9-klas-ukrajinska-mova-voron-2017_s5130
-  type: textbook
-  title: ДІЄСЛОВО, ЙОГО ОСОБЛИВІ ФОРМИ. ПРИСЛІВНИК
-  page: 186
-  grade: 9
-- id: S7
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1147
-  type: textbook
-  title: § 15. ДІЄСЛОВО ТА ЙОГО ФОРМИ
-  page: 45
-  grade: 11
-- id: S8
-  file: 7-klas-ukrmova-litvinova-2024_s3912
-  type: textbook
-  title: § 9. Часи діє слова
-  page: 41
-  grade: 7
-- id: S9
-  file: 7-klas-ukrmova-litvinova-2024_s3927
-  type: textbook
-  title: § 22. Правопис дієприслівників
-  page: 125
-  grade: 7
-- id: S10
-  file: 7-klas-ukrmova-litvinova-2024_s3923
-  type: textbook
-  title: Розділ 3. ДІЄПРИСЛІВНИК
-  page: 110
-  grade: 7
+  title: § 72. Види дієслів
+  page: 181
+  grade: 10

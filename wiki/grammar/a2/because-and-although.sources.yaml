@@ -2,56 +2,75 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-ukrajinska-mova-voron-2017_s5092
-  type: textbook
-  title: Підрядне допустове речення (рос. придаточное уступительное)
-  page: 83
-  grade: 9
-- id: S2
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5179
   type: textbook
   title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
   page: 108
   grade: 9
-- id: S3
+- id: S2
   file: 9-klas-ukrmova-zabolotnyi-2017_s5240
   type: textbook
   title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
   page: 108
   grade: 9
+- id: S3
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5181
+  type: textbook
+  title: Складнопiдрядне речення (p. 113)
+  page: 113
+  grade: 9
 - id: S4
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5242
+  type: textbook
+  title: Складнопiдрядне речення (p. 113)
+  page: 113
+  grade: 9
+- id: S5
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5029
+  type: textbook
+  title: Синтаксис. Пунктуація. СПОСТЕРЕЖЕННЯ
+  page: 32
+  grade: 9
+- id: S6
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
+  type: textbook
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
+- id: S7
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5239
+  type: textbook
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
+- id: S8
+  file: 11-klas-ukrajinska-mova-voron-2019_s1275
+  type: textbook
+  title: Розв’яжіть мовну задачу. Старшокласники наводили приклади складнопідрядних
+    речень із
+  page: 185
+  grade: 11
+- id: S9
   file: 9-klas-ukrajinska-mova-avramenko-2017_s5034
   type: textbook
   title: Синтаксис. Пунктуація. ПОВТОРЕННЯ
   page: 52
   grade: 9
-- id: S5
-  file: 11-klas-ukrajinska-mova-voron-2019_s1273
-  type: textbook
-  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
-  page: 173
-  grade: 11
-- id: S6
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5168
-  type: textbook
-  title: § 9. СКЛАДНЕ РЕЧЕННЯ ТА ЙОГО ОЗНАКИ
-  page: 48
-  grade: 9
-- id: S8
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5055
-  type: textbook
-  title: § 32. СкладнЕ речення з різними видами зв’язку
-  page: 112
-  grade: 9
-- id: S9
-  file: 5-klas-ukrmova-uhor-2022-1_s2449
-  type: textbook
-  title: § 30. Складне речення. Загальне поняття
-  page: 98
-  grade: 5
 - id: S10
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5162
+  file: 7-klas-ukrmova-avramenko-2024_s3870
   type: textbook
-  title: Синтаксис. Пунктуацiя
-  page: 25
-  grade: 9
+  title: § 79. Сполучник як службова частина мови
+  page: 174
+  grade: 7
+- id: S11
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S12
+  file: ext-article-1
+  type: external
+  title: ext-article-1
+- id: S13
+  file: ext-article-2
+  type: external
+  title: ext-article-2

@@ -2,15 +2,15 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4705
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3393
   type: textbook
-  title: Культура мовлення. ЩО РАНІШЕ, ТО ЛІПШЕ
-  page: 115
-  grade: 8
+  title: § 40. ГРУПИ ПРИКМЕТНИКІВ ЗА ЗНАЧЕННЯМ
+  page: 133
+  grade: 6
 - id: S2
-  file: 6-klas-ukrmova-avramenko-2023_s3079
+  file: 6-klas-ukrmova-golub-2023_s3262
   type: textbook
-  title: § 63. –64. Ступені порівняння якісних прикметників
+  title: § 48. Зимова естетика
   page: 125
   grade: 6
 - id: S3
@@ -20,32 +20,20 @@ sources:
   page: 29
   grade: 11
 - id: S4
-  file: 7-klas-ukrmova-litvinova-2024_s3931
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3960
   type: textbook
-  title: § 24. Ступені порівняння прислівників
-  page: 143
+  title: ПРИГОДИ ЗВИЧАЙНОЇ КАРТОПЛІ
+  page: 145
   grade: 7
 - id: S5
-  file: 6-klas-ukrmova-litvinova-2023_s3351
+  file: 6-klas-ukrmova-avramenko-2023_s3079
   type: textbook
-  title: § 41. Ступені порівняння якісних прикметників
-  page: 196
+  title: § 63. –64. Ступені порівняння якісних прикметників
+  page: 125
   grade: 6
 - id: S6
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3393
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3958
   type: textbook
-  title: § 40. ГРУПИ ПРИКМЕТНИКІВ ЗА ЗНАЧЕННЯМ
-  page: 133
-  grade: 6
-- id: S8
-  file: 10-klas-ukrmova-karaman-2018_s0674
-  type: textbook
-  title: § 61. Ступені порівняння якісних прикметників
-  page: 155
-  grade: 10
-- id: S10
-  file: 5-klas-ukrmova-avramenko-2022_s2173
-  type: textbook
-  title: § 1. Прочитавши діалог між покупцем і продавчинею, виконайте завдання
-  page: 7
-  grade: 5
+  title: ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО
+  page: 11
+  grade: 7

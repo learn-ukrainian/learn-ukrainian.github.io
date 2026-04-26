@@ -8,20 +8,26 @@ sources:
   page: 79
   grade: 9
 - id: S2
-  file: 11-klas-ukrajinska-mova-voron-2019_s1273
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5239
   type: textbook
-  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
-  page: 173
-  grade: 11
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
 - id: S3
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5039
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5029
   type: textbook
-  title: § 17. Складнопідрядне речення, його будова
-  page: 62
+  title: Синтаксис. Пунктуація. СПОСТЕРЕЖЕННЯ
+  page: 32
   grade: 9
 - id: S4
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5177
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5184
   type: textbook
-  title: § 14. СКЛАДНОПІДРЯДНЕ РЕЧЕННЯ ТА ЙОГО ОЗНАКИ
-  page: 78
+  title: Складнопiдрядне речення (p. 129)
+  page: 129
+  grade: 9
+- id: S5
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5245
+  type: textbook
+  title: Складнопiдрядне речення (p. 129)
+  page: 129
   grade: 9

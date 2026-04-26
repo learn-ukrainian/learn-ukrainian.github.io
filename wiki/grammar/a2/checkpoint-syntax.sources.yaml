@@ -2,17 +2,17 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1219
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
   type: textbook
-  title: § 25. Правила будови складних речень
-  page: 109
-  grade: 11
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
 - id: S2
-  file: 11-klas-ukrajinska-mova-voron-2019_s1273
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5239
   type: textbook
-  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
-  page: 173
-  grade: 11
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
 - id: S3
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5181
   type: textbook
@@ -20,14 +20,32 @@ sources:
   page: 113
   grade: 9
 - id: S4
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5169
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5242
   type: textbook
-  title: Складне речення. ВИДИ СКЛАДНИХ РЕЧЕНЬ
-  page: 49
+  title: Складнопiдрядне речення (p. 113)
+  page: 113
   grade: 9
 - id: S5
-  file: 9-klas-ukrmova-zabolotnyi-2017_s5230
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5029
   type: textbook
-  title: Складне речення. ВИДИ СКЛАДНИХ РЕЧЕНЬ
-  page: 49
+  title: Синтаксис. Пунктуація. СПОСТЕРЕЖЕННЯ
+  page: 32
+  grade: 9
+- id: S6
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1219
+  type: textbook
+  title: § 25. Правила будови складних речень
+  page: 109
+  grade: 11
+- id: S7
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5168
+  type: textbook
+  title: § 9. СКЛАДНЕ РЕЧЕННЯ ТА ЙОГО ОЗНАКИ
+  page: 48
+  grade: 9
+- id: S8
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5229
+  type: textbook
+  title: § 9. СКЛАДНЕ РЕЧЕННЯ ТА ЙОГО ОЗНАКИ
+  page: 48
   grade: 9

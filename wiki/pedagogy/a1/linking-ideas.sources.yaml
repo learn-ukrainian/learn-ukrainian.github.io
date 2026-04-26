@@ -2,8 +2,49 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
+  file: 7-klas-ukrmova-avramenko-2024_s3873
   type: textbook
-  title: Складнопiдрядне речення (p. 79)
-  page: 79
+  title: РОЗВИТОК МОВЛЕННЯ (p. 179)
+  page: 179
+  grade: 7
+- id: S2
+  file: 7-klas-ukrmova-avramenko-2024_s3871
+  type: textbook
+  title: § 80. Сполучники сурядності та підрядності
+  page: 176
+  grade: 7
+- id: S3
+  file: ukrainian_wiki/complex-subordinate-reason_Граматика-B1-Речення-причини-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика B1: Речення причини'
+  section_path: 'Граматика B1: Речення причини > Як це пояснюють у школі'
+- id: S4
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
+  type: textbook
+  title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
+  page: 183
+  grade: 7
+- id: S5
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5179
+  type: textbook
+  title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
+  page: 108
+  grade: 9
+- id: S6
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5240
+  type: textbook
+  title: § 20. СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ
+  page: 108
+  grade: 9
+- id: S7
+  file: 7-klas-ukrmova-avramenko-2024_s3870
+  type: textbook
+  title: § 79. Сполучник як службова частина мови
+  page: 174
+  grade: 7
+- id: S8
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5029
+  type: textbook
+  title: Синтаксис. Пунктуація. СПОСТЕРЕЖЕННЯ
+  page: 32
   grade: 9

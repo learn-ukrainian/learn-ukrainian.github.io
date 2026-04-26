@@ -1,39 +1,42 @@
 # Source registry for wiki/grammar/a2/dative-verbs.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S2
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1807
+- id: S1
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1799
   type: textbook
-  title: ( ЗАЙМЕННИК. ОСОБОВІ ЗАЙМЕННИКИ
-  page: 88
+  title: РОЛЬ СУФІКСА
+  page: 31
   grade: 4
 - id: S3
-  file: 6-klas-ukrmova-betsa-2023_s3164
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3386
   type: textbook
-  title: § 38. Відмінки іменників
-  page: 94
+  title: § 25. ЧИСЛО ІМЕННИКІВ
+  page: 90
   grade: 6
+- id: S4
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1212
+  type: textbook
+  title: § 12. Синтаксична помилка
+  page: 55
+  grade: 11
 - id: S5
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4709
-  type: textbook
-  title: ІІ. Запишіть (аудіо) подкаст на одну з поданих тем
-  page: 129
-  grade: 8
+  file: ukrainian_wiki/dative-verbs_Граматика-A2-Допомагати-дякувати-дзвонити-Повна-парадигма
+  type: ukrainian_wiki
+  title: 'Граматика A2: Допомагати, дякувати, дзвонити'
+  section_path: 'Граматика A2: Допомагати, дякувати, дзвонити > Повна парадигма'
 - id: S6
-  file: 4-klas-ukrayinska-mova-varzatska-2021-1_s1887
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
   type: textbook
-  title: § 34. Займенники 2­ї особи
-  page: 110
-  grade: 4
+  title: Навчаюся розрізняти іменники — назви істот і неістот
+  page: 104
+  grade: 3
 - id: S7
-  file: 10-klas-ukrajinska-mova-avramenko-2018_s0320
-  type: textbook
-  title: ПРАКТИЧНА РИТОРИКА (p. 196)
-  page: 196
-  grade: 10
-- id: S8
   file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0361
   type: textbook
   title: Морфологічна норма (p. 158)
   page: 158
   grade: 10
+- id: S8
+  file: ext-article-0
+  type: external
+  title: ext-article-0

@@ -2,59 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-ukrmova-uhor-2022-1_s2423
-  type: textbook
-  title: § 6. Види мовлення (монологічне і діалогічне; усне
-  page: 24
-  grade: 5
-- id: S2
   file: 9-klas-ukrajinska-mova-avramenko-2017_s5020
   type: textbook
   title: § 2. Граматична основа. Односкладне
   page: 9
   grade: 9
+- id: S2
+  file: 4-klas-ukrmova-zaharijchuk_s1914
+  type: textbook
+  title: ІМЕННИК
+  page: 48
+  grade: 4
 - id: S3
+  file: 2-klas-ukrmova-bolshakova-2019-2_s1490
+  type: textbook
+  title: Тема і головна думка. Заголовок. Передбачення за заголов
+  page: 36
+  grade: 2
+- id: S4
   file: 7-klas-ukrmova-avramenko-2024_s3850
   type: textbook
   title: РОЗВИТОК МОВЛЕННЯ (p. 131)
   page: 131
   grade: 7
-- id: S4
+- id: S5
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3958
+  type: textbook
+  title: ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО
+  page: 11
+  grade: 7
+- id: S6
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1419
+  type: textbook
+  title: Ìорôологічна норма (p. 30)
+  page: 30
+  grade: 11
+- id: S7
   file: 5-klas-ukrmova-litvinova-2022_s2397
   type: textbook
   title: Відомості із синтаксису й пунктуації. Кома між частинами складного речення
   page: 237
   grade: 5
-- id: S6
-  file: 5-klas-ukrmova-litvinova-2022_s2396
-  type: textbook
-  title: Відомості із синтаксису й пунктуації. Складне речення
-  page: 232
-  grade: 5
 - id: S8
-  file: 2-klas-ukrmova-bolshakova-2019-1_s1478
-  type: textbook
-  title: Вірш. Заголовок. Головна думка. Театралізуємо
-  page: 50
-  grade: 2
-- id: S12
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S9
   file: ext-article-1
   type: external
-- id: S13
-  file: ext-ulp_youtube-255
+  title: ext-article-1
+- id: S10
+  file: ext-article-2
   type: external
-- id: S14
-  file: ext-ulp_youtube-291
-  type: external
-- id: S15
-  file: ext-ulp_youtube-292
-  type: external
-- id: S16
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s0014
-  type: textbook
-- id: S17
-  file: 7-klas-ukrmova-zabolotnyi-2024_s0017
-  type: textbook
-- id: S18
-  file: ext-ulp_youtube-84
-  type: external
+  title: ext-article-2

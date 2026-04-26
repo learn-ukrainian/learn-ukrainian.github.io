@@ -2,32 +2,36 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-betsa-2023_s3148
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3406
   type: textbook
-  title: § 23. Розвиток мовлення
-  page: 56
+  title: Тема 10. Розвиток мовлення
+  page: 226
   grade: 6
 - id: S2
-  file: 4-klas-ukrmova-zaharijchuk_s1916
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
   type: textbook
-  title: ЧИСЛІВНИК (p. 110)
-  page: 110
+  title: Розділ 1. ШОКОЛАД
+  page: 36
   grade: 4
 - id: S3
+  file: ukrainian_wiki/home-and-daily-life_Граматика-A2-Мій-дім-мій-день-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика A2: Мій дім, мій день'
+  section_path: 'Граматика A2: Мій дім, мій день > Як це пояснюють у школі'
+- id: S4
   file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1902
   type: textbook
   title: 'Неозначена форма: … . Минулий час: … . Теперішній'
   page: 107
   grade: 4
-- id: S4
-  file: 5-klas-ukrmova-litvinova-2022_s2390
-  type: textbook
-  title: Відомості із синтаксису й пунктуації. Додаток
-  page: 213
-  grade: 5
+- id: S5
+  file: ukrainian_wiki/housing-and-renting_Граматика-B1-Житло-і-оренда-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика B1: Житло і оренда'
+  section_path: 'Граматика B1: Житло і оренда > Як це пояснюють у школі'
 - id: S6
-  file: 7-klas-istoria-ukr-hlibovska-2024_s3526
+  file: 4-klas-ukrmova-zaharijchuk_s1914
   type: textbook
-  title: Поверх сорочки одягали спідницю. Знатні жінки носили довгі
-  page: 32
-  grade: 7
+  title: ІМЕННИК
+  page: 48
+  grade: 4

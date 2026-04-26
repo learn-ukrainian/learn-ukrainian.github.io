@@ -2,44 +2,42 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 7-klas-ukrmova-litvinova-2024_s3939
-  type: textbook
-  title: § 30. Особливості вживання прийменників
-  page: 181
-  grade: 7
-- id: S2
-  file: 7-klas-ukrmova-avramenko-2024_s3866
-  type: textbook
-  title: § 75. Прийменник як службова частина мови
-  page: 166
-  grade: 7
-- id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0698
-  type: textbook
-  title: § 82. Прийменник
-  page: 205
-  grade: 10
-- id: S4
   file: 7-klas-ukrmova-litvinova-2024_s3935
   type: textbook
   title: § 27. Прийменник як службова частина мови
   page: 166
   grade: 7
+- id: S2
+  file: ukrainian_wiki/instrumental-prepositions_Граматика-A2-Над-під-між-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика A2: Над, під, між'
+  section_path: 'Граматика A2: Над, під, між > Як це пояснюють у школі'
+- id: S3
+  file: ukrainian_wiki/instrumental-nuances_Граматика-B1-Орудний-відмінок-деталі-Частотність-і-пріоритети
+  type: ukrainian_wiki
+  title: 'Граматика B1: Орудний відмінок (деталі)'
+  section_path: 'Граматика B1: Орудний відмінок (деталі) > Частотність і пріоритети'
+- id: S4
+  file: ukrainian_wiki/instrumental-prepositions_Граматика-A2-Над-під-між-Повна-парадигма-1-Вказівка-на-місцезнаходження-питання-де
+  type: ukrainian_wiki
+  title: 'Граматика A2: Над, під, між'
+  section_path: 'Граматика A2: Над, під, між > Повна парадигма > 1. Вказівка на місцезнаходження
+    (питання «де?»)'
 - id: S5
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1154
+  file: 7-klas-ukrmova-litvinova-2024_s3939
   type: textbook
-  title: § 22. –23. УЖИВАННЯ ПРИЙМЕННИКІВ
-  page: 71
-  grade: 11
+  title: § 30. Особливості вживання прийменників
+  page: 181
+  grade: 7
+- id: S7
+  file: 7-klas-ukrmova-avramenko-2024_s3866
+  type: textbook
+  title: § 75. Прийменник як службова частина мови
+  page: 166
+  grade: 7
 - id: S8
-  file: 6-klas-ukrmova-betsa-2023_s3164
+  file: 10-klas-ukrmova-karaman-2018_s0698
   type: textbook
-  title: § 38. Відмінки іменників
-  page: 94
-  grade: 6
-- id: S9
-  file: 5-klas-ukrmova-litvinova-2022_s2390
-  type: textbook
-  title: Відомості із синтаксису й пунктуації. Додаток
-  page: 213
-  grade: 5
+  title: § 82. Прийменник
+  page: 205
+  grade: 10

@@ -2,32 +2,37 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/my-story_Педагогіка-A1-My-Story-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: My Story'
+  section_path: 'Педагогіка A1: My Story > Послідовність введення'
+- id: S2
+  file: 7-klas-ukrmova-litvinova-2024_s3912
+  type: textbook
+  title: § 9. Часи діє слова
+  page: 41
+  grade: 7
+- id: S3
+  file: 5-klas-ukrmova-golub-2022_s2314
+  type: textbook
+  title: Залишайся вірним / вірною своїм цінностям. Не зраджуй
+  page: 160
+  grade: 5
+- id: S4
   file: 5-klas-istoriya-schupak-2022_s1930
   type: textbook
   title: ВСТУП
   page: 7
   grade: 5
-- id: S2
-  file: 5-klas-ukrmova-uhor-2022-1_s2417
-  type: textbook
-  title: § 3. Види мовленнєвої діяльності (аудіювання,
-  page: 13
-  grade: 5
-- id: S3
-  file: 6-klas-ukrmova-betsa-2023_s3166
-  type: textbook
-  title: § 40. Розвиток мовлення. Складання діалогів
-  page: 102
-  grade: 6
-- id: S4
-  file: 10-klas-ukrajinska-mova-avramenko-2018_s0256
-  type: textbook
-  title: Лексичне значення слова. Лексична помилка
-  page: 21
-  grade: 10
 - id: S5
-  file: 2-klas-ukrmova-bolshakova-2019-2_s1488
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
   type: textbook
-  title: Хто що виготовляє? Запиши слова за зразком. Доповни ряди
-  page: 13
-  grade: 2
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
+- id: S6
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
+  type: textbook
+  title: Розділ 1. ШОКОЛАД
+  page: 36
+  grade: 4

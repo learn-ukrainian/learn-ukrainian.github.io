@@ -13,42 +13,29 @@ sources:
   title: СКЛАД. ПОДІЛ СЛІВ НА СКЛАДИ
   page: 13
   grade: 2
-- id: S3
+- id: S4
   file: 5-klas-ukrmova-litvinova-2022_s2368
   type: textbook
   title: Фонетика. Графіка. Орфоепія. Орфографія. Позначення звуків на письмі . Алфавіт
   page: 129
   grade: 5
-- id: S4
-  file: 2-klas-ukrmova-kravcova-2019-1_s1502
-  type: textbook
-  title: ГОЛОСНІ ТА ПРИГОЛОСНІ ЗВУКИ
-  page: 9
-  grade: 2
 - id: S5
-  file: 10-klas-ukrmova-karaman-2018_s0584
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2515
   type: textbook
-  title: § 13. Класифікація голосних звуків. Звук мовлення і фонема
-  page: 41
-  grade: 10
-- id: S6
-  file: 5-klas-ukrmova-uhor-2022-1_s2464
-  type: textbook
-  title: § 46. 47. Звуки мови і звуки мовлення
-  page: 140
+  title: Фонетика. Графіка
+  page: 74
   grade: 5
 - id: S7
-  file: 5-klas-ukrmova-uhor-2022-1_s2467
-  type: textbook
-  title: § 50. Звукове значення букв я, ю, є, ї, щ
-  page: 148
-  grade: 5
-- id: S9
-  file: 5-klas-ukrmova-avramenko-2022_s2219
-  type: textbook
-  title: § 41. ВИМОВА ГОЛОСНИХ ЗВУКІВ
-  page: 94
-  grade: 5
-- id: S12
   file: ext-article-1
   type: external
+  title: ext-article-1
+- id: S9
+  file: ukrainian_wiki/figurative-motion_Звуки-і-літери-Голосні-звуки
+  type: ukrainian_wiki
+  title: Звуки і літери
+  section_path: Звуки і літери > Голосні звуки
+- id: S10
+  file: ukrainian_wiki/complex-subordinate-object_Звуки-і-літери-Голосні-звуки
+  type: ukrainian_wiki
+  title: Звуки і літери
+  section_path: Звуки і літери > Голосні звуки

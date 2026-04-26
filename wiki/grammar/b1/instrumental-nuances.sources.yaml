@@ -8,44 +8,20 @@ sources:
   page: 166
   grade: 7
 - id: S2
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1170
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4697
   type: textbook
-  title: Відокремлені обставини. КУЛЬТУРА СЛОВА
-  page: 129
-  grade: 11
-- id: S3
-  file: 6-klas-ukrmova-litvinova-2023_s3338
-  type: textbook
-  title: § 30. Відмінювання іменників І відміни
-  page: 148
-  grade: 6
-- id: S4
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1807
-  type: textbook
-  title: ( ЗАЙМЕННИК. ОСОБОВІ ЗАЙМЕННИКИ
-  page: 88
-  grade: 4
-- id: S5
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1152
-  type: textbook
-  title: Синтаксична норма. Складні випадки синтаксичного узгодження
-  page: 63
-  grade: 11
-- id: S6
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4718
-  type: textbook
-  title: Костенко). поширена прикладка стоїть після
-  page: 202
+  title: Види словосполучень за будовою. ПРОСТІ
+  page: 44
   grade: 8
-- id: S7
-  file: 6-klas-ukrmova-litvinova-2023_s3342
+- id: S4
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1465
   type: textbook
-  title: § 34. Відмінювання іменників, що мають форму лише множини
-  page: 167
-  grade: 6
-- id: S8
-  file: 7-klas-ukrmova-litvinova-2024_s3911
+  title: Вибір вітального слова залежить від різних обставин. Уранці ми вико
+  page: 217
+  grade: 11
+- id: S5
+  file: 4-klas-ukrmova-zaharijchuk_s1914
   type: textbook
-  title: '§ 8. Спосіб діє слова: загальна характеристика'
-  page: 38
-  grade: 7
+  title: ІМЕННИК
+  page: 48
+  grade: 4

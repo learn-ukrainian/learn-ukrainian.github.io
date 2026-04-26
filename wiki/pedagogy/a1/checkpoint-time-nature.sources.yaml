@@ -2,44 +2,61 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 4-klas-ukrmova-zaharijchuk_s1924
+  type: textbook
+  title: ПОВТОРЕННЯ ВИВЧЕНОГО
+  page: 180
+  grade: 4
+- id: S2
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1899
+  type: textbook
+  title: Снігобородьки! Вони — з (неве
+  page: 73
+  grade: 4
+- id: S3
+  file: 10-klas-ukrmova-karaman-2018_s0673
+  type: textbook
+  title: § 60. Прикметник як частина мови
+  page: 151
+  grade: 10
+- id: S4
   file: 5-klas-ukrmova-golub-2022_s2300
   type: textbook
   title: § 34. Мої плани на зиму
   page: 101
   grade: 5
-- id: S2
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1597
+- id: S5
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1146
   type: textbook
-  title: НАВЧАЮСЯ ПОШИРЮВАТИ РЕЧЕННЯ СЛОВАМИ ЗА ПОДАНИМИ ПИТАННЯМИ
-  page: 117
-  grade: 2
-- id: S3
-  file: 7-klas-ukrmova-litvinova-2024_s3939
+  title: § 14. СПОСТЕРЕЖЕННЯ
+  page: 41
+  grade: 11
+- id: S6
+  file: 8-klas-ukrmova-avramenko-2025_s4558
   type: textbook
-  title: § 30. Особливості вживання прийменників
-  page: 181
-  grade: 7
-- id: S4
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1564
-  type: textbook
-  title: СЛОВА — НАЗВИ. (ІМЕННИКИ)
-  page: 46
-  grade: 2
+  title: РОЗВИТОК МОВЛЕННЯ (p. 29)
+  page: 29
+  grade: 8
 - id: S7
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1580
+  file: 5-klas-ukrmova-avramenko-2022_s2201
   type: textbook
-  title: Ивйщ1і| Пригадайте назви днів тижня. Послідовно запишіть їх
-  page: 83
-  grade: 2
-- id: S8
-  file: 2-klas-ukrmova-kravcova-2019-1_s1507
-  type: textbook
-  title: СПОСТЕРЕЖЕННЯ ЗА ЗНАЧЕННЯМ СЛОВА
-  page: 48
-  grade: 2
-- id: S9
-  file: 5-klas-ukrmova-uhor-2022-1_s2459
-  type: textbook
-  title: § 40. Етимологія (походження) слова
-  page: 128
+  title: РОЗВИТОК МОВЛЕННЯ (p. 56)
+  page: 56
   grade: 5
+- id: S8
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S9
+  file: ext-article-1
+  type: external
+  title: ext-article-1
+- id: S10
+  file: ext-article-2
+  type: external
+  title: ext-article-2
+- id: S11
+  file: ukrainian_wiki/nature-and-traditions_Граматика-A2-Пори-року-і-свята-Повна-парадигма-Пори-року-Seasons
+  type: ukrainian_wiki
+  title: 'Граматика A2: Пори року і свята'
+  section_path: 'Граматика A2: Пори року і свята > Повна парадигма > Пори року (Seasons)'

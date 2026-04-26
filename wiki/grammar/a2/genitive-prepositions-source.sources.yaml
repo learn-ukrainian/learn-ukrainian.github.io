@@ -2,14 +2,31 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
+  type: textbook
+  title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
+  page: 183
+  grade: 7
+- id: S2
   file: 7-klas-ukrmova-avramenko-2024_s3866
   type: textbook
   title: § 75. Прийменник як службова частина мови
   page: 166
   grade: 7
-- id: S2
+- id: S3
   file: 5-klas-ukrmova-zabolotnyi-2023_s2520
   type: textbook
   title: ІІ. З одним утвореним словосполученням (на вибір) складіть і запишіть
   page: 114
   grade: 5
+- id: S4
+  file: ukrainian_wiki/genitive-prepositions-source_Граматика-A2-Звідки-ти-З-чого-це-зроблено-Природні-приклади
+  type: ukrainian_wiki
+  title: 'Граматика A2: Звідки ти? З чого це зроблено?'
+  section_path: 'Граматика A2: Звідки ти? З чого це зроблено? > Природні приклади'
+- id: S5
+  file: ukrainian_wiki/genitive-prepositions-source_Граматика-A2-Звідки-ти-З-чого-це-зроблено-Повна-парадигма-Вживання-прийменників-з-із-зі-зо
+  type: ukrainian_wiki
+  title: 'Граматика A2: Звідки ти? З чого це зроблено?'
+  section_path: 'Граматика A2: Звідки ти? З чого це зроблено? > Повна парадигма >
+    Вживання прийменників `з`, `із`, `зі (зо)`'

@@ -2,17 +2,16 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 7-klas-ukrmova-avramenko-2024_s3825
-  type: textbook
-  title: РОЗВИТОК МОВЛЕННЯ (p. 83)
-  page: 83
-  grade: 7
+  file: ukrainian_wiki/emergencies_Педагогіка-A1-Emergencies-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Emergencies'
+  section_path: 'Педагогіка A1: Emergencies > Послідовність введення'
 - id: S2
-  file: 6-klas-ukrmova-golub-2023_s3284
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3958
   type: textbook
-  title: § 96. Зміст моїх емоцій
-  page: 240
-  grade: 6
+  title: ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО
+  page: 11
+  grade: 7
 - id: S3
   file: 5-klas-ukrmova-litvinova-2022_s2387
   type: textbook
@@ -20,23 +19,29 @@ sources:
   page: 203
   grade: 5
 - id: S4
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1141
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1427
   type: textbook
-  title: § 8. ПРИКМЕТНИК. ВІДМІНКОВІ ЗАКІНЧЕННЯ ПРИКМЕТНИКІВ
-  page: 24
+  title: Синтаксична норма (p. 68)
+  page: 68
   grade: 11
 - id: S5
-  file: 5-klas-ukrmova-golub-2022_s2289
+  file: 7-klas-ukrmova-avramenko-2024_s3825
   type: textbook
-  title: § 3. Книжка — ключ до успіху
-  page: 12
-  grade: 5
+  title: РОЗВИТОК МОВЛЕННЯ (p. 83)
+  page: 83
+  grade: 7
 - id: S6
-  file: 5-klas-ukrmova-litvinova-2022_s2374
-  type: textbook
-  title: Фонетика. Графіка. Орфоепія. Орфографія. Правила вживання апострофа
-  page: 159
-  grade: 5
+  file: ukrainian_wiki/shopping-and-health_Граматика-A2-На-ринку-та-у-лікаря-Деколонізаційні-застереження
+  type: ukrainian_wiki
+  title: 'Граматика A2: На ринку та у лікаря'
+  section_path: 'Граматика A2: На ринку та у лікаря > Деколонізаційні застереження'
 - id: S7
+  file: 6-klas-ukrmova-golub-2023_s3284
+  type: textbook
+  title: § 96. Зміст моїх емоцій
+  page: 240
+  grade: 6
+- id: S8
   file: ext-article-0
   type: external
+  title: ext-article-0

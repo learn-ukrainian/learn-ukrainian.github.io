@@ -2,47 +2,55 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/questions_Педагогіка-A1-Questions-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Questions'
+  section_path: 'Педагогіка A1: Questions > Послідовність введення'
+- id: S2
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
+  type: textbook
+  title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
+  page: 183
+  grade: 7
+- id: S3
+  file: 6-klas-ukrmova-avramenko-2023_s3109
+  type: textbook
+  title: § 98. Уживання займенника ви
+  page: 193
+  grade: 6
+- id: S4
   file: 7-klas-ukrmova-litvinova-2024_s3951
   type: textbook
   title: § 38. Правопис часток із різними частинами мови
   page: 228
   grade: 7
-- id: S2
-  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1653
-  type: textbook
-  title: ПРАВИЛЬНА ВИМОВА СЛІВ
-  page: 8
-  grade: 3
-- id: S3
-  file: 6-klas-ukrmova-betsa-2023_s3224
-  type: textbook
-  title: § 105. Не з дієсловами
-  page: 224
-  grade: 6
-- id: S4
-  file: 5-klas-ukrmova-golub-2022_s2302
-  type: textbook
-  title: Присудок — головний член речення,
-  page: 108
-  grade: 5
 - id: S5
-  file: 6-klas-ukrmova-betsa-2023_s3206
+  file: 6-klas-ukrmova-golub-2023_s3270
   type: textbook
-  title: § 84. –85. Написання неозначених і заперечних
-  page: 189
-  grade: 6
-- id: S6
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1594
-  type: textbook
-  title: НАВЧАЮСЯ СКЛАДАТИ РОЗПОВІДНІ, ПИТАЛЬНІ І СПОНУКАЛЬНІ РЕЧЕННЯ
-  page: 112
-  grade: 2
-- id: S7
-  file: 6-klas-ukrmova-betsa-2023_s3198
-  type: textbook
-  title: § 74. Розряди займенників
+  title: § 65. Вчимося на своїх невдачах
   page: 175
   grade: 6
+- id: S6
+  file: 7-klas-ukrmova-litvinova-2024_s3917
+  type: textbook
+  title: § 14. Способи творення діє слів Правопис діє слів
+  page: 70
+  grade: 7
+- id: S7
+  file: 7-klas-ukrmova-avramenko-2024_s3860
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 151)
+  page: 151
+  grade: 7
+- id: S8
+  file: ext-article-0
+  type: external
+  title: ext-article-0
 - id: S9
   file: ext-article-1
   type: external
+  title: ext-article-1
+- id: S10
+  file: ext-article-2
+  type: external
+  title: ext-article-2

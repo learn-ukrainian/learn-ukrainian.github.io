@@ -8,42 +8,48 @@ sources:
     i та ii дієвідміни
   page: 179
   grade: 10
-- id: S3
-  file: 7-klas-ukrmova-avramenko-2024_s3822
+- id: S2
+  file: 4-klas-ukrmova-zaharijchuk_s1922
   type: textbook
-  title: § 33. Відмінювання дієслів бути, їсти, дати та дієслів з основою на -вісти
-  page: 76
+  title: М айбутній час. Зміню вання дієслів
+  page: 150
+  grade: 4
+- id: S3
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  type: textbook
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
   grade: 7
 - id: S4
-  file: 5-klas-ukrmova-golub-2022_s2302
+  file: 10-klas-ukrmova-karaman-2018_s0683
   type: textbook
-  title: Присудок — головний член речення,
-  page: 108
-  grade: 5
-- id: S5
-  file: 10-klas-ukrmova-karaman-2018_s0685
-  type: textbook
-  title: § 72. Види дієслів
-  page: 181
+  title: § 70. ДІЄСЛОВО ЯК ЧАСТИНА МОВИ. ФОРМИ ДІЄСЛОВА. ЗМІНИ ЗВУ
+  page: 176
   grade: 10
-- id: S7
+- id: S5
   file: 7-klas-ukrmova-litvinova-2024_s3913
   type: textbook
   title: § 10. Дієвідмінювання дієслів
   page: 55
   grade: 7
+- id: S6
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1148
+  type: textbook
+  title: § 16. ДІЄСЛІВНІ ЗАКІНЧЕННЯ
+  page: 50
+  grade: 11
+- id: S7
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
+  type: textbook
+  title: Навчаюся розрізняти іменники — назви істот і неістот
+  page: 104
+  grade: 3
 - id: S8
-  file: 7-klas-ukrmova-avramenko-2024_s3823
-  type: textbook
-  title: § 34. Дієслова І та ІІ дієвідміни
-  page: 78
-  grade: 7
+  file: ukrainian_wiki/verbs-group-one_Педагогіка-A1-Verbs-Group-One-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Verbs Group One'
+  section_path: 'Педагогіка A1: Verbs Group One > Послідовність введення'
 - id: S9
-  file: 6-klas-ukrmova-betsa-2023_s3218
-  type: textbook
-  title: § 98. Дієвідмінювання дієслів теперішнього
-  page: 212
-  grade: 6
-- id: S11
   file: ext-article-0
   type: external
+  title: ext-article-0

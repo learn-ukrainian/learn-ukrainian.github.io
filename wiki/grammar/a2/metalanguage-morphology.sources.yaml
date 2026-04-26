@@ -8,50 +8,49 @@ sources:
   page: 76
   grade: 6
 - id: S2
-  file: 6-klas-ukrmova-betsa-2023_s3149
-  type: textbook
-  title: § 24. Морфологія як розділ науки про мову
-  page: 59
-  grade: 6
-- id: S3
-  file: 10-klas-ukrajinska-mova-avramenko-2018_s0301
-  type: textbook
-  title: МОРФОЛОГІЧНА НОРМА СПОСТЕРЕЖЕННЯ (p. 152)
-  page: 152
-  grade: 10
-- id: S4
-  file: 5-klas-ukrmova-zabolotnyi-2023_s2513
-  type: textbook
-  title: ІІ. Виконайте завдання до тексту
-  page: 70
-  grade: 5
-- id: S5
-  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1764
-  type: textbook
-  title: БУДОВА СЛОВА
-  page: 59
-  grade: 3
-- id: S6
-  file: 7-klas-ukrmova-avramenko-2024_s3781
-  type: textbook
-  title: Самостійні частини мови. ЧАСТИНИ МОВИ (МОРФОЛОГІЯ)
-  page: 2
-  grade: 7
-- id: S7
   file: 6-klas-ukrmova-litvinova-2023_s3324
   type: textbook
   title: § 19. Загальна характеристика частин мови
   page: 105
   grade: 6
-- id: S8
-  file: 5-klas-ukrmova-uhor-2022-1_s2493
+- id: S3
+  file: 5-klas-ukrmova-avramenko-2022_s2201
   type: textbook
-  title: § 86. Розбір слова за будовою
-  page: 214
+  title: РОЗВИТОК МОВЛЕННЯ (p. 56)
+  page: 56
   grade: 5
-- id: S9
-  file: 8-klas-ukrmova-avramenko-2025_s4548
+- id: S4
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0301
   type: textbook
-  title: ПОВТОРЕННЯ ТА УЗАГАЛЬНЕННЯ ВИВЧЕНОГО
-  page: 11
-  grade: 8
+  title: МОРФОЛОГІЧНА НОРМА СПОСТЕРЕЖЕННЯ (p. 152)
+  page: 152
+  grade: 10
+- id: S5
+  file: ukrainian_wiki/metalanguage-morphology_Граматика-A2-Морфологія-Повна-парадигма
+  type: ukrainian_wiki
+  title: 'Граматика A2: Морфологія'
+  section_path: 'Граматика A2: Морфологія > Повна парадигма'
+- id: S6
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2511
+  type: textbook
+  title: Варіант Б. Складіть і запишіть мінітекст (3–4 речення) зі словом
+  page: 26
+  grade: 5
+- id: S7
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2513
+  type: textbook
+  title: ІІ. Виконайте завдання до тексту
+  page: 70
+  grade: 5
+- id: S8
+  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1663
+  type: textbook
+  title: ПОВТОРЕННЯ
+  page: 139
+  grade: 3
+- id: S9
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1764
+  type: textbook
+  title: БУДОВА СЛОВА
+  page: 59
+  grade: 3

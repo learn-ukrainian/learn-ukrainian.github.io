@@ -2,56 +2,45 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-avramenko-2023_s3084
+  file: 6-klas-ukrmova-avramenko-2023_s3083
   type: textbook
-  title: § 70. Творення прикметників
-  page: 137
+  title: РОЗВИТОК МОВЛЕННЯ (p. 134)
+  page: 134
   grade: 6
 - id: S2
-  file: 10-klas-ukrmova-karaman-2018_s0677
+  file: 10-klas-ukrmova-karaman-2018_s0675
   type: textbook
-  title: § 64. Займенник
-  page: 161
+  title: § 62. Повні і короткі форми прикметників, стягнені і нестягнені форми повних
+    прикметників
+  page: 157
   grade: 10
 - id: S3
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3401
-  type: textbook
-  title: § 62. ПРИСВІЙНІ ЗАЙМЕННИКИ
-  page: 207
-  grade: 6
-- id: S4
-  file: 6-klas-ukrmova-avramenko-2023_s3081
-  type: textbook
-  title: § 66. Повні й короткі форми прикметників
-  page: 131
-  grade: 6
-- id: S5
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3387
-  type: textbook
-  title: § 27. ВІДМІНИ Й ГРУПИ
-  page: 95
-  grade: 6
-- id: S6
-  file: 6-klas-ukrmova-litvinova-2023_s3355
-  type: textbook
-  title: § 44. Творення прикметників. Написання -Н- і -НН- у прикметниках
-  page: 209
-  grade: 6
-- id: S7
-  file: 10-klas-ukrmova-karaman-2018_s0673
-  type: textbook
-  title: § 60. Прикметник як частина мови
-  page: 151
-  grade: 10
-- id: S8
-  file: 11-klas-ukrmova-zabolotnyi-2019_s1417
-  type: textbook
-  title: Ìорôологічна норма (p. 25)
-  page: 25
-  grade: 11
-- id: S10
   file: 6-klas-ukrmova-litvinova-2023_s3350
   type: textbook
   title: § 40. Групи прикметників за значенням
   page: 190
+  grade: 6
+- id: S4
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1141
+  type: textbook
+  title: § 8. ПРИКМЕТНИК. ВІДМІНКОВІ ЗАКІНЧЕННЯ ПРИКМЕТНИКІВ
+  page: 24
+  grade: 11
+- id: S5
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3393
+  type: textbook
+  title: § 40. ГРУПИ ПРИКМЕТНИКІВ ЗА ЗНАЧЕННЯМ
+  page: 133
+  grade: 6
+- id: S6
+  file: 6-klas-ukrmova-golub-2023_s3261
+  type: textbook
+  title: Помилки природні для людини. На них не варто напрошува
+  page: 121
+  grade: 6
+- id: S7
+  file: 6-klas-ukrmova-avramenko-2023_s3084
+  type: textbook
+  title: § 70. Творення прикметників
+  page: 137
   grade: 6

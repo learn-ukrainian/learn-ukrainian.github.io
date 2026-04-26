@@ -2,26 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-voron-2019_s1274
-  type: textbook
-  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ З ПІДРЯДНИМИ ОЗНАЧАЛЬНИМИ
-  page: 178
-  grade: 11
-- id: S2
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
   type: textbook
   title: Складнопiдрядне речення (p. 79)
   page: 79
   grade: 9
+- id: S2
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5239
+  type: textbook
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
+  grade: 9
 - id: S3
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4701
+  file: 11-klas-ukrajinska-mova-voron-2019_s1273
   type: textbook
-  title: ДРУГОРЯДНІ ЧЛЕНИ РЕЧЕННЯ
-  page: 78
-  grade: 8
+  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
+  page: 173
+  grade: 11
 - id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0693
+  file: 9-klas-ukrajinska-mova-voron-2017_s5084
   type: textbook
-  title: § 77. Дієприкметниковий зворот. Безособові форми на -но, -то
-  page: 193
-  grade: 10
+  title: Перекладіть текст українською мовою і запишіть. У складнопідряд­
+  page: 56
+  grade: 9
+- id: S5
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5029
+  type: textbook
+  title: Синтаксис. Пунктуація. СПОСТЕРЕЖЕННЯ
+  page: 32
+  grade: 9
+- id: S6
+  file: 6-klas-ukrmova-litvinova-2023_s3371
+  type: textbook
+  title: § 54. Розряди займенників за значенням та особливості відмінювання
+  page: 255
+  grade: 6

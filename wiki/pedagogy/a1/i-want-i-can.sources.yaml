@@ -1,50 +1,41 @@
 # Source registry for wiki/pedagogy/a1/i-want-i-can.md
 # Referenced inline as [S1], [S2], ...
 sources:
+- id: S1
+  file: ukrainian_wiki/i-want-i-can_Педагогіка-A1-I-Want-I-Can-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: I Want I Can'
+  section_path: 'Педагогіка A1: I Want I Can > Методичний підхід'
 - id: S2
+  file: ukrainian_wiki/i-eat-i-drink_Педагогіка-A1-I-Eat-I-Drink-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: I Eat I Drink'
+  section_path: 'Педагогіка A1: I Eat I Drink > Послідовність введення'
+- id: S3
   file: 10-klas-ukrmova-karaman-2018_s0686
   type: textbook
   title: § 73. Часи дієслів, їх творення
   page: 183
   grade: 10
-- id: S3
-  file: 7-klas-ukrmova-avramenko-2024_s3822
-  type: textbook
-  title: § 33. Відмінювання дієслів бути, їсти, дати та дієслів з основою на -вісти
-  page: 76
-  grade: 7
 - id: S4
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  type: textbook
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
+- id: S5
   file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1814
   type: textbook
   title: ( ЗМІНЮВАННЯ ДІЄСЛІВ У МАЙБУТНЬОМУ ЧАСІ
   page: 108
   grade: 4
-- id: S5
-  file: 6-klas-ukrmova-betsa-2023_s3220
-  type: textbook
-  title: § 100. Способи дієслів (дійсний, умовний,
-  page: 216
-  grade: 6
 - id: S6
-  file: 6-klas-ukrmova-betsa-2023_s3218
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1903
   type: textbook
-  title: § 98. Дієвідмінювання дієслів теперішнього
-  page: 212
-  grade: 6
+  title: 'Зразок. Класти: однина: 1-ша особа — я клад у ; 2-га осо­'
+  page: 111
+  grade: 4
 - id: S8
-  file: 6-klas-ukrmova-betsa-2023_s3210
-  type: textbook
-  title: § 89. Форми дієслова
-  page: 197
-  grade: 6
-- id: S9
-  file: 10-klas-ukrmova-karaman-2018_s0684
-  type: textbook
-  title: § 71. Дві основи дієслова. Поділ дієслів на діє відміни. Словозміна дієслів
-    i та ii дієвідміни
-  page: 179
-  grade: 10
-- id: S10
   file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1657
   type: textbook
   title: ДІЄСЛОВО

@@ -2,38 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5166
+  type: textbook
+  title: Пряма й непряма мова (p. 37)
+  page: 37
+  grade: 9
+- id: S2
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5227
+  type: textbook
+  title: Пряма й непряма мова (p. 37)
+  page: 37
+  grade: 9
+- id: S3
+  file: ukrainian_wiki/purpose-clauses_Граматика-A2-Щоб-зрозуміти-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика A2: Щоб зрозуміти...'
+  section_path: 'Граматика A2: Щоб зрозуміти... > Як це пояснюють у школі'
+- id: S4
+  file: ukrainian_wiki/purpose-clauses_Граматика-A2-Щоб-зрозуміти-Повна-парадигма-1-Щоб-для-передачі-спонукання-непряма-мова
+  type: ukrainian_wiki
+  title: 'Граматика A2: Щоб зрозуміти...'
+  section_path: 'Граматика A2: Щоб зрозуміти... > Повна парадигма > 1. `Щоб` для передачі
+    спонукання (непряма мова)'
+- id: S5
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5163
   type: textbook
   title: § 4. ПРЯМА МОВА
   page: 26
   grade: 9
-- id: S3
-  file: 6-klas-ukrmova-betsa-2023_s3147
+- id: S6
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5224
   type: textbook
-  title: § 22. Пряма і непряма мова
-  page: 54
-  grade: 6
-- id: S4
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5026
-  type: textbook
-  title: § 7. Непряма мова
+  title: § 4. ПРЯМА МОВА
   page: 26
   grade: 9
-- id: S6
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5164
+- id: S7
+  file: ukrainian_wiki/purpose-clauses_Граматика-A2-Щоб-зрозуміти-Частотність-і-пріоритети
+  type: ukrainian_wiki
+  title: 'Граматика A2: Щоб зрозуміти...'
+  section_path: 'Граматика A2: Щоб зрозуміти... > Частотність і пріоритети'
+- id: S8
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0272
   type: textbook
-  title: Пряма й непряма мова (p. 27)
-  page: 27
-  grade: 9
+  title: ПРАКТИЧНА РИТОРИКА СПОСТЕРЕЖЕННЯ (p. 56)
+  page: 56
+  grade: 10
 - id: S9
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5162
-  type: textbook
-  title: Синтаксис. Пунктуацiя
-  page: 25
-  grade: 9
+  file: ext-article-0
+  type: external
+  title: ext-article-0
 - id: S10
-  file: 9-klas-ukrmova-zabolotnyi-2017_s5223
-  type: textbook
-  title: Синтаксис. Пунктуацiя
-  page: 25
-  grade: 9
+  file: ext-article-1
+  type: external
+  title: ext-article-1

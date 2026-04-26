@@ -2,32 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-betsa-2023_s3202
-  type: textbook
-  title: § 79. Присвійні, вказівні, означальні
-  page: 182
-  grade: 6
-- id: S2
   file: 6-klas-ukrmova-zabolotnyi-2020_s3401
   type: textbook
   title: § 62. ПРИСВІЙНІ ЗАЙМЕННИКИ
   page: 207
   grade: 6
+- id: S2
+  file: 4-klas-ukrmova-zaharijchuk_s1915
+  type: textbook
+  title: Г ; . М ; М М «
+  page: 71
+  grade: 4
 - id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0677
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1899
   type: textbook
-  title: § 64. Займенник
-  page: 161
-  grade: 10
+  title: Снігобородьки! Вони — з (неве
+  page: 73
+  grade: 4
 - id: S4
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1804
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
   type: textbook
-  title: Називний відмінок однини чоловічого роду — це початкова
-  page: 69
+  title: Навчаюся розрізняти іменники — назви істот і неістот
+  page: 104
+  grade: 3
+- id: S5
+  file: 3-klas-ukrainska-mova-kravtsova-2020-1_s1656
+  type: textbook
+  title: СЛОВА З ПРЕФІКСАМИ З-, С
+  page: 47
+  grade: 3
+- id: S6
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1898
+  type: textbook
+  title: Постав підкреслені іменники в Ор. в. Познач закінчення
+  page: 53
   grade: 4
 - id: S7
-  file: 6-klas-ukrmova-avramenko-2023_s3107
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1141
   type: textbook
-  title: § 95. –96. Відмінювання займенників (продовження)
-  page: 187
-  grade: 6
+  title: § 8. ПРИКМЕТНИК. ВІДМІНКОВІ ЗАКІНЧЕННЯ ПРИКМЕТНИКІВ
+  page: 24
+  grade: 11

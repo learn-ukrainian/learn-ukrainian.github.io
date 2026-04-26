@@ -2,63 +2,39 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-betsa-2023_s3219
+  file: 10-klas-ukrmova-glazova-2018_s0534
   type: textbook
-  title: § 99. Чергування приголосних під час
-  page: 214
-  grade: 6
-- id: S2
-  file: 7-klas-ukrmova-litvinova-2024_s3926
-  type: textbook
-  title: § 21. Вид і час дієприслівників
-  page: 121
-  grade: 7
-- id: S3
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1148
-  type: textbook
-  title: § 16. ДІЄСЛІВНІ ЗАКІНЧЕННЯ
-  page: 50
-  grade: 11
-- id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0684
-  type: textbook
-  title: § 71. Дві основи дієслова. Поділ дієслів на діє відміни. Словозміна дієслів
-    i та ii дієвідміни
-  page: 179
+  title: Степовичка). Чи належить до загальнолюдських цінностей людська гідність?
+    Чому ви так ду
+  page: 100
   grade: 10
-- id: S5
+- id: S2
   file: 10-klas-ukrmova-karaman-2018_s0595
   type: textbook
   title: ФОНЕТИКА УКРАЇНСЬКОЇ ЛІТЕРАТУРНОЇ МОВИ (p. 52)
   page: 52
   grade: 10
-- id: S6
-  file: 6-klas-ukrmova-betsa-2023_s3213
+- id: S3
+  file: 7-klas-ukrmova-avramenko-2024_s3812
   type: textbook
-  title: § 93. Доконаний і недоконаний вид дієслова
-  page: 202
-  grade: 6
-- id: S7
-  file: 10-klas-ukrmova-karaman-2018_s0685
-  type: textbook
-  title: § 72. Види дієслів
-  page: 181
-  grade: 10
-- id: S8
-  file: 7-klas-ukrmova-litvinova-2024_s3913
-  type: textbook
-  title: § 10. Дієвідмінювання дієслів
-  page: 55
+  title: § 24. Неозначена форма дієслова
+  page: 56
   grade: 7
-- id: S9
-  file: 6-klas-ukrmova-betsa-2023_s3222
+- id: S4
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2520
   type: textbook
-  title: § 103. Способи творення дієслів. Розбір дієслова
-  page: 221
-  grade: 6
-- id: S10
-  file: 7-klas-ukrmova-avramenko-2024_s3823
+  title: ІІ. З одним утвореним словосполученням (на вибір) складіть і запишіть
+  page: 114
+  grade: 5
+- id: S5
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
   type: textbook
-  title: § 34. Дієслова І та ІІ дієвідміни
-  page: 78
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
+- id: S6
+  file: 7-klas-ukrmova-litvinova-2024_s3926
+  type: textbook
+  title: § 21. Вид і час дієприслівників
+  page: 121
   grade: 7

@@ -2,51 +2,55 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-betsa-2023_s3211
-  type: textbook
-  title: § 90. –91. Неозначена та особова форми дієслова
-  page: 199
-  grade: 6
+  file: ukrainian_wiki/dozvillia-i-khobi_Граматика-A2-Чим-ти-захоплюєшся-Дозвілля-та-хобі-Повна-парадигма-2-Керування-Знахідним-відмінком-Accusative-Case
+  type: ukrainian_wiki
+  title: 'Граматика A2: Чим ти захоплюєшся? Дозвілля та хобі'
+  section_path: 'Граматика A2: Чим ти захоплюєшся? Дозвілля та хобі > Повна парадигма
+    > 2. Керування Знахідним відмінком (Accusative Case)'
 - id: S2
-  file: 7-klas-ukrmova-litvinova-2024_s3908
-  type: textbook
-  title: § 5. Інфінітив
-  page: 29
-  grade: 7
+  file: ukrainian_wiki/what-i-like_Педагогіка-A1-What-I-Like-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: What I Like'
+  section_path: 'Педагогіка A1: What I Like > Методичний підхід'
 - id: S3
-  file: 5-klas-ukrmova-uhor-2022-1_s2434
-  type: textbook
-  title: § 14. Службові частини мови. Прийменник
-  page: 49
-  grade: 5
+  file: ukrainian_wiki/what-i-like_Педагогіка-A1-What-I-Like-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: What I Like'
+  section_path: 'Педагогіка A1: What I Like > Послідовність введення'
 - id: S4
-  file: 5-klas-ukrmova-zabolotnyi-2023_s2530
+  file: ukrainian_wiki/dozvillia-i-khobi_Граматика-A2-Чим-ти-захоплюєшся-Дозвілля-та-хобі-Деколонізаційні-застереження
+  type: ukrainian_wiki
+  title: 'Граматика A2: Чим ти захоплюєшся? Дозвілля та хобі'
+  section_path: 'Граматика A2: Чим ти захоплюєшся? Дозвілля та хобі > Деколонізаційні
+    застереження'
+- id: S5
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1757
   type: textbook
-  title: ТЕМА 2. ПРАВИЛА СПІЛКУВАННЯ. МОНОЛОГІЧНЕ ТА ДІАЛОГІЧНЕ СПІЛКУВАННЯ
-  page: 220
-  grade: 5
+  title: ЩО Я ЛЮБЛЮ
+  page: 5
+  grade: 3
+- id: S6
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1231
+  type: textbook
+  title: Стилістичне забарвлення лексики. Книжна й розмовна лексика. Оцінна лексика
+    § 40
+  page: 171
+  grade: 11
 - id: S7
-  file: 5-klas-ukrmova-litvinova-2022_s2388
+  file: 2-klas-ukrmova-bolshakova-2019-1_s1467
   type: textbook
-  title: Відомості із синтаксису й пунктуації. Види речень за емоційним забарвленням
-  page: 206
-  grade: 5
+  title: розділ 2. Звуки і букви
+  page: 3
+  grade: 2
 - id: S8
-  file: 10-klas-ukrmova-karaman-2018_s0684
+  file: 3-klas-ukrainska-mova-ponomarova-2020-1_s1665
   type: textbook
-  title: § 71. Дві основи дієслова. Поділ дієслів на діє відміни. Словозміна дієслів
-    i та ii дієвідміни
-  page: 179
-  grade: 10
+  title: Розділ 1. Пригадую знання
+  page: 4
+  grade: 3
 - id: S9
-  file: 5-klas-ukrmova-golub-2022_s2291
+  file: 10-klas-ukrmova-karaman-2018_s0683
   type: textbook
-  title: ІІ Зверніть увагу на «слово дня». Що воно означає? Чи можете
-  page: 29
-  grade: 5
-- id: S10
-  file: 6-klas-ukrmova-betsa-2023_s3149
-  type: textbook
-  title: § 24. Морфологія як розділ науки про мову
-  page: 59
-  grade: 6
+  title: § 70. ДІЄСЛОВО ЯК ЧАСТИНА МОВИ. ФОРМИ ДІЄСЛОВА. ЗМІНИ ЗВУ
+  page: 176
+  grade: 10

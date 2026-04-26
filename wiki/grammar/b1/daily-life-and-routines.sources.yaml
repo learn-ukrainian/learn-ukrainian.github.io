@@ -2,62 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 7-klas-ukrmova-litvinova-2024_s3912
-  type: textbook
-  title: § 9. Часи діє слова
-  page: 41
-  grade: 7
-- id: S2
-  file: 6-klas-ukrmova-avramenko-2023_s3031
-  type: textbook
-  title: РОЗВИТОК МОВЛЕННЯ (p. 22)
-  page: 22
-  grade: 6
-- id: S3
-  file: 7-klas-ukrmova-litvinova-2024_s3926
-  type: textbook
-  title: § 21. Вид і час дієприслівників
-  page: 121
-  grade: 7
-- id: S4
-  file: 6-klas-ukrmova-golub-2023_s3277
-  type: textbook
-  title: § 82. Бути найкращими у своїй царині
-  page: 209
-  grade: 6
-- id: S5
-  file: 8-klas-ukrmova-avramenko-2025_s4555
-  type: textbook
-  title: § 9. Написання не з різними частинами мови
-  page: 23
-  grade: 8
-- id: S6
-  file: 6-klas-ukrmova-avramenko-2023_s3105
-  type: textbook
-  title: РОЗВИТОК МОВЛЕННЯ (p. 180)
-  page: 180
-  grade: 6
-- id: S7
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1137
-  type: textbook
-  title: § 2. –3. ЗАСОБИ МОВНОГО ВИРАЖЕННЯ ПРОМОВИ
-  page: 10
-  grade: 11
-- id: S8
-  file: 7-klas-ukrmova-avramenko-2024_s3865
-  type: textbook
-  title: § 74. Службові частини мови (загальні ознаки)
-  page: 164
-  grade: 7
-- id: S9
   file: 11-klas-ukrajinska-mova-avramenko-2019_s1186
   type: textbook
   title: § 52. СИНТАКСИЧНІ ОДИНИЦІ В РІЗНИХ СТИЛЯХ
   page: 186
   grade: 11
-- id: S10
-  file: 8-klas-ukrmova-avramenko-2025_s4650
+- id: S2
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5025
   type: textbook
-  title: РОЗВИТОК МОВЛЕННЯ (p. 143)
-  page: 143
-  grade: 8
+  title: Синтаксис. Пунктуація
+  page: 22
+  grade: 9
+- id: S3
+  file: 7-klas-ukrmova-avramenko-2024_s3811
+  type: textbook
+  title: § 23. Форми дієслова
+  page: 54
+  grade: 7
+- id: S4
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
+  type: textbook
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
+- id: S5
+  file: 7-klas-ukrmova-litvinova-2024_s3912
+  type: textbook
+  title: § 9. Часи діє слова
+  page: 41
+  grade: 7
+- id: S6
+  file: 11-klas-ukrajinska-mova-voron-2019_s1261
+  type: textbook
+  title: Ігорович. Про цього давньоруського
+  page: 97
+  grade: 11

@@ -8,32 +8,56 @@ sources:
   page: 99
   grade: 6
 - id: S2
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3389
-  type: textbook
-  title: § 30. ЗАКІНЧЕННЯ ІМЕННИКІВ ЧОЛОВІЧОГО
-  page: 106
-  grade: 6
-- id: S3
-  file: 6-klas-ukrmova-litvinova-2023_s3337
-  type: textbook
-  title: § 29. Відміни та групи іменників
-  page: 143
-  grade: 6
-- id: S4
   file: 6-klas-ukrmova-zabolotnyi-2020_s3387
   type: textbook
   title: § 27. ВІДМІНИ Й ГРУПИ
   page: 95
   grade: 6
+- id: S3
+  file: 6-klas-ukrmova-litvinova-2023_s3339
+  type: textbook
+  title: § 31. Відмінювання іменників ІІ відміни
+  page: 152
+  grade: 6
+- id: S4
+  file: 4-klas-ukrmova-zaharijchuk_s1914
+  type: textbook
+  title: ІМЕННИК
+  page: 48
+  grade: 4
 - id: S5
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1801
+  type: textbook
+  title: Крок 2. Розглянь таблицю відмінювання іменників. У яких імен­
+  page: 53
+  grade: 4
+- id: S6
   file: 6-klas-ukrmova-zabolotnyi-2020_s3388
   type: textbook
   title: § 29. ВІДМІНЮВАННЯ ІМЕННИКІВ
   page: 102
   grade: 6
-- id: S6
+- id: S7
   file: 10-klas-ukrmova-glazova-2018_s0550
   type: textbook
   title: § 45. Закінчення іменників чоловічого роду
   page: 190
   grade: 10
+- id: S8
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0308
+  type: textbook
+  title: МОРФОЛОГІЧНА НОРМА СПОСТЕРЕЖЕННЯ (p. 166)
+  page: 166
+  grade: 10
+- id: S9
+  file: 10-klas-ukrmova-glazova-2018_s0549
+  type: textbook
+  title: Рід іменників. Паралельні родові форми § 40
+  page: 177
+  grade: 10
+- id: S10
+  file: 6-klas-ukrmova-golub-2023_s3255
+  type: textbook
+  title: РІД ІМЕННИКІВ
+  page: 68
+  grade: 6

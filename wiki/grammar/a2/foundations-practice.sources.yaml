@@ -2,56 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1421
+  type: textbook
+  title: Ìорôологічна норма (p. 48)
+  page: 48
+  grade: 11
+- id: S2
   file: 10-klas-ukrmova-karaman-2018_s0685
   type: textbook
   title: § 72. Види дієслів
   page: 181
   grade: 10
-- id: S2
-  file: 6-klas-ukrmova-betsa-2023_s3213
-  type: textbook
-  title: § 93. Доконаний і недоконаний вид дієслова
-  page: 202
-  grade: 6
 - id: S3
-  file: 7-klas-ukrmova-avramenko-2024_s3847
-  type: textbook
-  title: § 55. Вид і час дієприслівників
-  page: 126
-  grade: 7
-- id: S4
-  file: 2-klas-ukrmova-vashulenko-2019-1_s1580
-  type: textbook
-  title: Ивйщ1і| Пригадайте назви днів тижня. Послідовно запишіть їх
-  page: 83
-  grade: 2
-- id: S5
-  file: 2-klas-ukrmova-kravcova-2019-1_s1510
-  type: textbook
-  title: СЛОВА, ЯКІ НАЗИВАЮТЬ ДІЇ ПРЕДМЕТІВ (ДІЄСЛОВА)
-  page: 83
-  grade: 2
-- id: S6
-  file: 5-klas-ukrmova-golub-2022_s2300
-  type: textbook
-  title: § 34. Мої плани на зиму
-  page: 101
-  grade: 5
-- id: S7
   file: 7-klas-ukrmova-avramenko-2024_s3812
   type: textbook
   title: § 24. Неозначена форма дієслова
   page: 56
   grade: 7
-- id: S8
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4694
+- id: S4
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
   type: textbook
-  title: Входити з тваринами заборонено. 2. Робітниками заасфальтовано
-  page: 36
-  grade: 8
-- id: S10
-  file: 7-klas-ukrmova-avramenko-2024_s3819
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
+- id: S5
+  file: 7-klas-ukrmova-avramenko-2024_s3847
   type: textbook
-  title: МОРФОЛОГІЯ. ОРФОГРАФІЯ
-  page: 69
+  title: § 55. Вид і час дієприслівників
+  page: 126
   grade: 7

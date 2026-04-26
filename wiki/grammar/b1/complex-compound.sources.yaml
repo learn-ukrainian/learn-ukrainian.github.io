@@ -2,44 +2,56 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5034
-  type: textbook
-  title: Синтаксис. Пунктуація. ПОВТОРЕННЯ
-  page: 52
-  grade: 9
-- id: S2
   file: 11-klas-ukrajinska-mova-voron-2019_s1270
   type: textbook
   title: СКЛАДНОСУРЯДНІ РЕЧЕННЯ
   page: 161
   grade: 11
+- id: S2
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5029
+  type: textbook
+  title: Синтаксис. Пунктуація. СПОСТЕРЕЖЕННЯ
+  page: 32
+  grade: 9
 - id: S3
-  file: 9-klas-ukrajinska-mova-voron-2017_s5080
-  type: textbook
-  title: СМИСЛОВІ ЗВ’ЯЗКИ МІЖ КОМПОНЕНТАМИ
-  page: 33
-  grade: 9
-- id: S4
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5171
-  type: textbook
-  title: Складносурядне речення (p. 53)
-  page: 53
-  grade: 9
-- id: S5
-  file: 7-klas-ukrmova-litvinova-2024_s3943
-  type: textbook
-  title: § 32. Сполучники сурядности й підрядности
-  page: 198
-  grade: 7
-- id: S6
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5174
   type: textbook
   title: Складносурядне речення (p. 69)
   page: 69
   grade: 9
-- id: S7
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5048
+- id: S5
+  file: 9-klas-ukrajinska-mova-voron-2017_s5080
   type: textbook
-  title: Розвиток мовлення. СПОСТЕРЕЖЕННЯ
-  page: 100
+  title: СМИСЛОВІ ЗВ’ЯЗКИ МІЖ КОМПОНЕНТАМИ
+  page: 33
+  grade: 9
+- id: S6
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5034
+  type: textbook
+  title: Синтаксис. Пунктуація. ПОВТОРЕННЯ
+  page: 52
+  grade: 9
+- id: S7
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
+  type: textbook
+  title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
+  page: 183
+  grade: 7
+- id: S8
+  file: 9-klas-ukrajinska-mova-voron-2017_s5082
+  type: textbook
+  title: Стара школа мала цілу систему покарань. Близькозвучне до назви
+  page: 44
+  grade: 9
+- id: S9
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5187
+  type: textbook
+  title: § 24. БЕЗСПОЛУЧНИКОВЕ СКЛАДНЕ РЕЧЕННЯ
+  page: 136
+  grade: 9
+- id: S10
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5248
+  type: textbook
+  title: § 24. БЕЗСПОЛУЧНИКОВЕ СКЛАДНЕ РЕЧЕННЯ
+  page: 136
   grade: 9

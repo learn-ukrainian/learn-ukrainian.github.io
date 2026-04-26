@@ -2,33 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrajinska-mova-avramenko-2018_s0328
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3380
   type: textbook
-  title: § 28. Орфографія. Ненаголошені голосні е, и ...........................................................................
-    85
-  page: 207
-  grade: 10
+  title: Словотвiр. Орфографiя
+  page: 55
+  grade: 6
 - id: S2
+  file: 6-klas-ukrmova-golub-2023_s3249
+  type: textbook
+  title: § 18. Мовна картина мого світу
+  page: 45
+  grade: 6
+- id: S3
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0295
+  type: textbook
+  title: Правила перенесення слів. Графічні скорочення. СПОСТЕРЕЖЕННЯ
+  page: 117
+  grade: 10
+- id: S4
   file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0352
   type: textbook
   title: Орфографічна норма (p. 100)
   page: 100
   grade: 10
-- id: S3
-  file: 6-klas-ukrmova-golub-2023_s3268
+- id: S5
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0771
   type: textbook
-  title: § 59. Як не стати марнотратами
-  page: 155
-  grade: 6
-- id: S4
+  title: Орфографічна норма (p. 100)
+  page: 100
+  grade: 10
+- id: S6
+  file: 10-klas-ukrmova-karaman-2018_s0608
+  type: textbook
+  title: Українська графіка. Українська орфографія
+  page: 74
+  grade: 10
+- id: S7
   file: 10-klas-ukrmova-glazova-2018_s0539
   type: textbook
   title: § 33. Правила перенесення слів із рядка в рядок
   page: 141
-  grade: 10
-- id: S5
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0373
-  type: textbook
-  title: § 25. Урок розвитку мовлення. Есе на актуальну тему. . . . . . . . . . 97
-  page: 191
   grade: 10

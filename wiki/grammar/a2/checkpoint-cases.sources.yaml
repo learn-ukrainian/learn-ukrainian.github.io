@@ -2,56 +2,40 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 6-klas-ukrmova-golub-2023_s3255
+  type: textbook
+  title: РІД ІМЕННИКІВ
+  page: 68
+  grade: 6
+- id: S2
+  file: 4-klas-ukrmova-zaharijchuk_s1914
+  type: textbook
+  title: ІМЕННИК
+  page: 48
+  grade: 4
+- id: S3
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
+  type: textbook
+  title: Розділ 1. ШОКОЛАД
+  page: 36
+  grade: 4
+- id: S4
   file: 6-klas-ukrmova-litvinova-2023_s3337
   type: textbook
   title: § 29. Відміни та групи іменників
   page: 143
   grade: 6
-- id: S2
-  file: 6-klas-ukrmova-litvinova-2023_s3335
-  type: textbook
-  title: § 27. Відмінки іменників
-  page: 138
-  grade: 6
-- id: S4
-  file: 4-klas-ukrmova-zaharijchuk_s1926
-  type: textbook
-  title: ПРИКМЕТНИК
-  page: 189
-  grade: 4
 - id: S5
-  file: 6-klas-ukrmova-betsa-2023_s3164
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1766
   type: textbook
-  title: § 38. Відмінки іменників
-  page: 94
-  grade: 6
+  title: Навчаюся розрізняти іменники — назви істот і неістот
+  page: 104
+  grade: 3
 - id: S6
-  file: 6-klas-ukrmova-avramenko-2023_s3070
-  type: textbook
-  title: § 54. Особливості написання іменників у кличному відмінку
-  page: 107
-  grade: 6
+  file: ext-article-0
+  type: external
+  title: ext-article-0
 - id: S7
-  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1800
-  type: textbook
-  title: РОЗРІЗНЕННЯ ДАВАЛЬНОГО І МІСЦЕВОГО ВІДМІНКІВ )
-  page: 48
-  grade: 4
-- id: S8
-  file: 6-klas-ukrmova-litvinova-2023_s3342
-  type: textbook
-  title: § 34. Відмінювання іменників, що мають форму лише множини
-  page: 167
-  grade: 6
-- id: S9
-  file: 6-klas-ukrmova-avramenko-2023_s3064
-  type: textbook
-  title: § 49. Відмінювання іменників І відміни
-  page: 97
-  grade: 6
-- id: S10
-  file: 4-klas-ukrmova-zaharijchuk_s1917
-  type: textbook
-  title: ЗАЙМЕННИК
-  page: 118
-  grade: 4
+  file: ext-article-1
+  type: external
+  title: ext-article-1

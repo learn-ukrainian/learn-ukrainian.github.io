@@ -2,56 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5185
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1799
   type: textbook
-  title: УЖИВАННЯ ПРИЙМЕННИКІВ
-  page: 133
-  grade: 9
+  title: РОЛЬ СУФІКСА
+  page: 31
+  grade: 4
 - id: S2
-  file: 8-klas-ukrmova-avramenko-2025_s4598
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3961
   type: textbook
-  title: § 34. –35
-  page: 77
-  grade: 8
-- id: S3
-  file: 7-klas-ukrmova-litvinova-2024_s3937
-  type: textbook
-  title: § 28. Написання похідних прийменників разом, окремо та з дефісом
-  page: 174
+  title: ЗВІДКИ РОДОМ ПРИСЛІВНИКИ
+  page: 183
   grade: 7
+- id: S3
+  file: 7-klas-ukrmova-avramenko-2024_s3866
+  type: textbook
+  title: § 75. Прийменник як службова частина мови
+  page: 166
+  grade: 7
+- id: S4
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1215
+  type: textbook
+  title: § 18. Словосполучення з прийменником по
+  page: 84
+  grade: 11
 - id: S5
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
+  type: textbook
+  title: Розділ 1. ШОКОЛАД
+  page: 36
+  grade: 4
+- id: S6
   file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1800
   type: textbook
   title: РОЗРІЗНЕННЯ ДАВАЛЬНОГО І МІСЦЕВОГО ВІДМІНКІВ )
   page: 48
   grade: 4
-- id: S6
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3956
-  type: textbook
-  title: ОЛЕКСАНДР ЗАБОЛОТНИЙ ВІКТОР ЗАБОЛОТНИЙ
-  page: 1
-  grade: 7
 - id: S7
-  file: 7-klas-ukrmova-litvinova-2024_s3935
+  file: 7-klas-ukrmova-litvinova-2024_s3937
   type: textbook
-  title: § 27. Прийменник як службова частина мови
-  page: 166
+  title: § 28. Написання похідних прийменників разом, окремо та з дефісом
+  page: 174
   grade: 7
-- id: S8
-  file: 5-klas-ukrmova-uhor-2022-1_s2434
-  type: textbook
-  title: § 14. Службові частини мови. Прийменник
-  page: 49
-  grade: 5
-- id: S9
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1154
-  type: textbook
-  title: § 22. –23. УЖИВАННЯ ПРИЙМЕННИКІВ
-  page: 71
-  grade: 11
-- id: S10
-  file: 6-klas-ukrmova-betsa-2023_s3164
-  type: textbook
-  title: § 38. Відмінки іменників
-  page: 94
-  grade: 6

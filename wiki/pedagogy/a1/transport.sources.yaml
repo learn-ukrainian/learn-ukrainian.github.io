@@ -2,44 +2,39 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 10-klas-ukrmova-karaman-2018_s0689
+  type: textbook
+  title: § 75. Стан дієслова. Перехідні й неперехідні дієслова
+  page: 187
+  grade: 10
+- id: S2
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1213
+  type: textbook
+  title: Риторичні фігури. Риторичне запитання, риторичне звертання
+  page: 67
+  grade: 11
+- id: S3
   file: 5-klas-ukrmova-litvinova-2022_s2388
   type: textbook
   title: Відомості із синтаксису й пунктуації. Види речень за емоційним забарвленням
   page: 206
   grade: 5
-- id: S2
-  file: 3-klas-ukrainska-mova-savchuk-2020-2_s1731
-  type: textbook
-  title: ЛІТЕРАТУРНІ КАЗКИ УКРАЇНСЬКИХ І ЗАРУБІЖНИХ ПИСЬМЕННИКІВ
-  page: 77
-  grade: 3
 - id: S4
-  file: 5-klas-ukrmova-uhor-2022-1_s2436
-  type: textbook
-  title: § 16. Речення. Види речень за метою висловлюван
-  page: 57
-  grade: 5
-- id: S5
-  file: 6-klas-ukrmova-betsa-2023_s3158
-  type: textbook
-  title: § 32. Число іменників
-  page: 80
-  grade: 6
-- id: S6
-  file: 5-klas-ukrmova-uhor-2022-1_s2445
-  type: textbook
-  title: § 25. Навчальний діалог
-  page: 82
-  grade: 5
+  file: ext-article-0
+  type: external
+  title: ext-article-0
 - id: S7
-  file: 6-klas-ukrmova-avramenko-2023_s3058
-  type: textbook
-  title: § 43. Рід іменників. Іменники спільного роду
-  page: 85
-  grade: 6
+  file: ukrainian_wiki/transport_Педагогіка-A1-Transport-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Transport'
+  section_path: 'Педагогіка A1: Transport > Методичний підхід'
 - id: S8
-  file: 11-klas-ukrmova-zabolotnyi-2019_s1427
-  type: textbook
-  title: Синтаксична норма (p. 68)
-  page: 68
-  grade: 11
+  file: ukrainian_wiki/transport_Педагогіка-A1-Transport-Послідовність-введення
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Transport'
+  section_path: 'Педагогіка A1: Transport > Послідовність введення'
+- id: S9
+  file: ukrainian_wiki/traveling-ukraine_Граматика-B1-Подорож-Україною-Як-це-пояснюють-у-школі
+  type: ukrainian_wiki
+  title: 'Граматика B1: Подорож Україною'
+  section_path: 'Граматика B1: Подорож Україною > Як це пояснюють у школі'

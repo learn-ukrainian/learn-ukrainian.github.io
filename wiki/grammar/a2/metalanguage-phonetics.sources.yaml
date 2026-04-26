@@ -8,10 +8,10 @@ sources:
   page: 152
   grade: 9
 - id: S2
-  file: 5-klas-ukrmova-uhor-2022-1_s2464
+  file: 5-klas-ukrmova-golub-2022_s2298
   type: textbook
-  title: § 46. 47. Звуки мови і звуки мовлення
-  page: 140
+  title: § 23. Не відкладаймо важливе на потім
+  page: 66
   grade: 5
 - id: S3
   file: 5-klas-ukrmova-litvinova-2022_s2367
@@ -21,26 +21,26 @@ sources:
   page: 126
   grade: 5
 - id: S4
-  file: 5-klas-ukrmova-golub-2022_s2298
+  file: 10-klas-ukrmova-karaman-2018_s0584
   type: textbook
-  title: § 23. Не відкладаймо важливе на потім
-  page: 66
-  grade: 5
+  title: § 13. Класифікація голосних звуків. Звук мовлення і фонема
+  page: 41
+  grade: 10
 - id: S5
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2518
+  type: textbook
+  title: ОРФОГРАМА
+  page: 92
+  grade: 5
+- id: S6
   file: 5-klas-ukrmova-zabolotnyi-2023_s2515
   type: textbook
   title: Фонетика. Графіка
   page: 74
   grade: 5
-- id: S6
+- id: S7
   file: 5-klas-ukrmova-litvinova-2022_s2363
   type: textbook
   title: Фонетика. Графіка. Орфоепія. Орфографія. Голосні наголошені й ненаголошені
   page: 114
-  grade: 5
-- id: S7
-  file: 5-klas-ukrmova-litvinova-2022_s2360
-  type: textbook
-  title: Фонетика. Графіка. Орфоепія. Орфографія. Транскрипція
-  page: 107
   grade: 5

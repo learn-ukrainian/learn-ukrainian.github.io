@@ -14,32 +14,32 @@ sources:
   page: 124
   grade: 11
 - id: S3
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4715
+  type: textbook
+  title: РЕЧЕННЯ ІЗ ЗВЕРТАННЯМИ,
+  page: 176
+  grade: 8
+- id: S4
   file: 8-klas-ukrmova-avramenko-2025_s4647
   type: textbook
   title: § 65. –66
   page: 139
   grade: 8
-- id: S4
+- id: S5
+  file: 9-klas-ukrajinska-mova-voron-2017_s5136
+  type: textbook
+  title: СИНТАКСИС І ПУНКТУАЦІЯ СЛОВОСПОЛУЧЕННЯ
+  page: 206
+  grade: 9
+- id: S6
   file: 11-klas-ukrajinska-mova-voron-2019_s1266
   type: textbook
   title: § 25. Що спільного між звертаннями і вставними словами? 154
   page: 131
   grade: 11
-- id: S5
-  file: 5-klas-ukrmova-avramenko-2022_s2265
-  type: textbook
-  title: РОЗВИТОК МОВЛЕННЯ (p. 174)
-  page: 174
-  grade: 5
-- id: S6
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5159
-  type: textbook
-  title: Повторення вивченого (p. 17)
-  page: 17
-  grade: 9
 - id: S7
-  file: 5-klas-ukrmova-avramenko-2022_s2260
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1166
   type: textbook
-  title: СИНТАКСИС І ПУНКТУАЦІЯ (p. 168)
-  page: 168
-  grade: 5
+  title: § 34. ВСТАВНІ КОНСТРУКЦІЇ
+  page: 109
+  grade: 11

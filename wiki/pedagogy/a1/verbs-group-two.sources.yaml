@@ -2,11 +2,11 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-betsa-2023_s3218
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
   type: textbook
-  title: § 98. Дієвідмінювання дієслів теперішнього
-  page: 212
-  grade: 6
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
+  grade: 7
 - id: S2
   file: 10-klas-ukrmova-karaman-2018_s0684
   type: textbook
@@ -15,10 +15,10 @@ sources:
   page: 179
   grade: 10
 - id: S3
-  file: 7-klas-ukrmova-avramenko-2024_s3823
+  file: 7-klas-ukrmova-avramenko-2024_s3822
   type: textbook
-  title: § 34. Дієслова І та ІІ дієвідміни
-  page: 78
+  title: § 33. Відмінювання дієслів бути, їсти, дати та дієслів з основою на -вісти
+  page: 76
   grade: 7
 - id: S4
   file: 7-klas-ukrmova-litvinova-2024_s3913
@@ -33,20 +33,20 @@ sources:
   page: 50
   grade: 11
 - id: S6
-  file: 6-klas-ukrmova-betsa-2023_s3219
-  type: textbook
-  title: § 99. Чергування приголосних під час
-  page: 214
-  grade: 6
+  file: ukrainian_wiki/verbs-group-two_Педагогіка-A1-Verbs-Group-Two-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Verbs Group Two'
+  section_path: 'Педагогіка A1: Verbs Group Two > Методичний підхід'
+- id: S7
+  file: ukrainian_wiki/verbs-group-one_Педагогіка-A1-Verbs-Group-One-Методичний-підхід
+  type: ukrainian_wiki
+  title: 'Педагогіка A1: Verbs Group One'
+  section_path: 'Педагогіка A1: Verbs Group One > Методичний підхід'
+- id: S8
+  file: ext-article-0
+  type: external
+  title: ext-article-0
 - id: S9
-  file: 4-klas-ukrmova-zaharijchuk_s1922
-  type: textbook
-  title: М айбутній час. Зміню вання дієслів
-  page: 150
-  grade: 4
-- id: S10
-  file: 7-klas-ukrmova-avramenko-2024_s3822
-  type: textbook
-  title: § 33. Відмінювання дієслів бути, їсти, дати та дієслів з основою на -вісти
-  page: 76
-  grade: 7
+  file: ext-article-1
+  type: external
+  title: ext-article-1

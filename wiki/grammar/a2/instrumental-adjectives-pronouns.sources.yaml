@@ -2,26 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-betsa-2023_s3202
+  file: 4-klas-ukrmova-zaharijchuk_s1915
   type: textbook
-  title: § 79. Присвійні, вказівні, означальні
-  page: 182
-  grade: 6
+  title: Г ; . М ; М М «
+  page: 71
+  grade: 4
 - id: S2
-  file: 6-klas-ukrmova-litvinova-2023_s3371
+  file: 6-klas-ukrmova-golub-2023_s3262
   type: textbook
-  title: § 54. Розряди займенників за значенням та особливості відмінювання
-  page: 255
+  title: § 48. Зимова естетика
+  page: 125
   grade: 6
 - id: S3
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3401
+  file: 4-klas-ukrmova-zaharijchuk_s1914
   type: textbook
-  title: § 62. ПРИСВІЙНІ ЗАЙМЕННИКИ
-  page: 207
-  grade: 6
+  title: ІМЕННИК
+  page: 48
+  grade: 4
 - id: S4
-  file: 6-klas-ukrmova-betsa-2023_s3164
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1801
   type: textbook
-  title: § 38. Відмінки іменників
-  page: 94
-  grade: 6
+  title: Крок 2. Розглянь таблицю відмінювання іменників. У яких імен­
+  page: 53
+  grade: 4
+- id: S5
+  file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s1898
+  type: textbook
+  title: Постав підкреслені іменники в Ор. в. Познач закінчення
+  page: 53
+  grade: 4
+- id: S6
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1199
+  type: textbook
+  title: Морфологічна норма
+  page: 9
+  grade: 11

@@ -2,45 +2,39 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5174
+  type: textbook
+  title: Складносурядне речення (p. 69)
+  page: 69
+  grade: 9
+- id: S3
   file: 11-klas-ukrajinska-mova-voron-2019_s1293
   type: textbook
   title: § 36. Безсполучникові складні речення.......................................................
     195
   page: 270
   grade: 11
-- id: S2
-  file: 11-klas-ukrajinska-mova-voron-2019_s1273
+- id: S4
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5184
   type: textbook
-  title: СКЛАДНОПІДРЯДНІ РЕЧЕННЯ
-  page: 173
-  grade: 11
-- id: S3
+  title: Складнопiдрядне речення (p. 129)
+  page: 129
+  grade: 9
+- id: S6
+  file: 9-klas-ukrajinska-mova-voron-2017_s5100
+  type: textbook
+  title: Мовний РОЗБІР. СИНТАКСИЧНИЙ РОЗБІР СКЛАДНОПІДРЯДНОГО
+  page: 99
+  grade: 9
+- id: S7
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5162
   type: textbook
   title: Синтаксис. Пунктуацiя
   page: 25
   grade: 9
-- id: S4
-  file: 9-klas-ukrmova-zabolotnyi-2017_s5223
+- id: S9
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5187
   type: textbook
-  title: Синтаксис. Пунктуацiя
-  page: 25
-  grade: 9
-- id: S5
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5181
-  type: textbook
-  title: Складнопiдрядне речення (p. 113)
-  page: 113
-  grade: 9
-- id: S7
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5171
-  type: textbook
-  title: Складносурядне речення (p. 53)
-  page: 53
-  grade: 9
-- id: S8
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5163
-  type: textbook
-  title: § 4. ПРЯМА МОВА
-  page: 26
+  title: § 24. БЕЗСПОЛУЧНИКОВЕ СКЛАДНЕ РЕЧЕННЯ
+  page: 136
   grade: 9
