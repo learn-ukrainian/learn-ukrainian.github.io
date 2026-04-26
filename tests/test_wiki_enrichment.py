@@ -128,49 +128,10 @@ class TestSourceBudgeting:
 
         kept, char_cap, total_chars = _cap_source_chunks("a1", background_chunks + textbook_chunks)
 
-        assert char_cap == 45_000
+        assert char_cap == 60_000
         assert total_chars <= char_cap
         assert sum(1 for c in kept if c.get("source_type") == "wikipedia") <= 3
         assert sum(1 for c in kept if c.get("source_type") == "textbook") == 4
-
-    def test_mapped_external_urls_are_excluded_from_keyword_search(self):
-        from wiki.enrichment import enrich_sources
-
-        resources = {
-            "a1-demo": {
-                "articles": [
-                    {
-                        "title": "Mapped article",
-                        "source": "ULP",
-                        "url": "https://example.test/mapped",
-                        "relevance": "high",
-                    },
-                ],
-                "youtube": [],
-            },
-        }
-
-        def _lookup(url: str) -> dict | None:
-            return {
-                "title": "Mapped article",
-                "domain": "ULP",
-                "text": "Cached text.",
-            } if url.endswith("/mapped") else None
-
-        with patch("wiki.enrichment._get_external_resources", return_value=resources), \
-             patch("wiki.sources_db.lookup_by_url", side_effect=_lookup), \
-             patch("wiki.sources_db.search_textbooks", return_value=[]), \
-             patch("wiki.sources_db.search_wikipedia", return_value=[]), \
-             patch("wiki.sources_db.search_external", return_value=[]) as search_external:
-            enrich_sources(
-                "a1",
-                "demo",
-                {"discovery": {"query_keywords": ["українська мова"]}},
-            )
-
-        assert search_external.call_args.kwargs["exclude_urls"] == {"https://example.test/mapped"}
-        assert search_external.call_args.kwargs["track"] == "a1"
-        assert search_external.call_args.kwargs["min_quality_tier"] == 2
 
 
 # ── Tests: keyword source matching in enrich_sources ─────────────

@@ -224,7 +224,7 @@ class TestWikisourceChunkText:
 
 class TestSplitIntoSections:
     def setup_method(self):
-        from extract_text import split_into_sections
+        from scripts.rag.extract_text import split_into_sections
         self.split_into_sections = split_into_sections
 
     def test_no_headings(self):
@@ -256,7 +256,7 @@ class TestSplitIntoSections:
 
 class TestEstimateTokens:
     def setup_method(self):
-        from extract_text import estimate_tokens
+        from scripts.rag.extract_text import estimate_tokens
         self.estimate_tokens = estimate_tokens
 
     def test_empty(self):
@@ -272,7 +272,7 @@ class TestEstimateTokens:
 
 class TestCheckQuality:
     def setup_method(self):
-        from extract_text import check_quality
+        from scripts.rag.extract_text import check_quality
         self.check_quality = check_quality
 
     def test_empty_text(self):
