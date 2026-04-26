@@ -89,6 +89,18 @@ _FLOAT_LITERAL_ALLOWLIST: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("build/v6_build.py", re.compile(r"review_threshold \(default 9\.0\)")),
 )
 
+# REVIEW_PASS_FLOOR remains valid only for legacy V6, wiki single-score
+# review, and dashboard surfaces that still consume legacy single scores.
+_REVIEW_PASS_FLOOR_IMPORT_ALLOWLIST: frozenset[str] = frozenset({
+    "audit/checks/review_gaming.py",
+    "audit/checks/review_validation.py",
+    "build/v6_build.py",
+    "wiki/review.py",
+    "api/dashboard_helpers.py",
+    "api/dashboard_router.py",
+    "api/state_compute.py",
+})
+
 # Files excluded from the scan entirely (archived / generated / legacy).
 _EXCLUDED_DIRS: tuple[str, ...] = (
     "__pycache__",
@@ -158,6 +170,39 @@ def test_no_canonical_name_redeclared_outside_thresholds() -> None:
 
     assert not offenders, (
         "Canonical threshold names must live only in scripts/common/thresholds.py.\n"
+        + "\n".join(offenders)
+    )
+
+
+def test_review_pass_floor_imports_are_legacy_allowlisted() -> None:
+    """New module QG callers must use per-level per-dim review_floors.
+
+    ``REVIEW_PASS_FLOOR`` is retained for legacy V6 and single-score wiki /
+    dashboard review. A new import of the global floor is a schema regression.
+    """
+    offenders: list[str] = []
+    for path in _iter_python_files():
+        if path.resolve() == SOURCE_OF_TRUTH.resolve():
+            continue
+        rel = path.relative_to(SCRIPTS_ROOT).as_posix()
+        try:
+            tree = ast.parse(path.read_text("utf-8"))
+        except SyntaxError:
+            continue
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.ImportFrom):
+                continue
+            if node.module not in {"common.thresholds", "scripts.common.thresholds"}:
+                continue
+            if (
+                any(alias.name == "REVIEW_PASS_FLOOR" for alias in node.names)
+                and rel not in _REVIEW_PASS_FLOOR_IMPORT_ALLOWLIST
+            ):
+                offenders.append(f"{rel}:{node.lineno} imports REVIEW_PASS_FLOOR")
+
+    assert not offenders, (
+        "New callers must use LevelThresholds.review_floors or aggregate_review(); "
+        "REVIEW_PASS_FLOOR imports are legacy-only.\n"
         + "\n".join(offenders)
     )
 
