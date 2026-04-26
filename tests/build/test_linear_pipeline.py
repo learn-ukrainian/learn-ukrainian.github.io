@@ -244,6 +244,174 @@ def test_parse_writer_output_rejects_missing_artifact() -> None:
         linear_pipeline.parse_writer_output_strict_json(output)
 
 
+def test_parse_writer_output_rejects_nan_and_infinity() -> None:
+    """Strict-JSON contract rejects `NaN` / `Infinity` / `-Infinity` tokens.
+
+    Adversarial review (Codex gpt-5.5, 2026-04-26): Python's `json.loads`
+    accepts these by default; without `parse_constant=`, they would round-
+    trip through `yaml.safe_dump` as `.nan` / `.inf`, leaking non-portable
+    YAML into the artifact files. RFC 8259 forbids these tokens.
+    """
+    output = """```markdown file=module.md
+# Мій ранок
+```
+
+```json file=activities.yaml
+[
+  {"id": "act-1", "type": "fill-in", "score": NaN}
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "ранок",
+    "translation": "morning",
+    "pos": "noun",
+    "usage": "Мій ранок простий."
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {"title": "Караман Grade 10, p.176"}
+]
+```
+"""
+
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"activities\.yaml invalid JSON.*NaN",
+    ):
+        linear_pipeline.parse_writer_output_strict_json(output)
+
+
+def test_parse_writer_output_rejects_extra_fields_in_vocabulary() -> None:
+    """Schema strict-extra-keys rejects hallucinated fields in vocabulary.yaml.
+
+    Adversarial review (Gemini + Codex, 2026-04-26): without strict extra-
+    key rejection, an LLM that hallucinates `{"lemma": ..., "kek": "..."}`
+    would silently leak `kek` into the YAML artifact. The vocabulary schema
+    has a tight allowlist; unknown keys must fail.
+    """
+    output = """```markdown file=module.md
+# Мій ранок
+```
+
+```json file=activities.yaml
+[
+  {"id": "act-1", "type": "fill-in"}
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "ранок",
+    "translation": "morning",
+    "pos": "noun",
+    "usage": "Мій ранок простий.",
+    "kek": "hallucinated field"
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {"title": "Караман Grade 10, p.176"}
+]
+```
+"""
+
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"vocabulary\.yaml.*unexpected fields \['kek'\]",
+    ):
+        linear_pipeline.parse_writer_output_strict_json(output)
+
+
+def test_parse_writer_output_rejects_label_vs_fence_name_mismatch() -> None:
+    """A label line + fence info that disagree must fail loud, not silently pick one.
+
+    Adversarial review (Codex gpt-5.5, 2026-04-26): if the writer emits a
+    plain `activities.yaml` label line followed by a fence with
+    `file=vocabulary.yaml`, the prior code silently let the fence info
+    override `pending_name`, recording content under the wrong artifact
+    and surfacing a confusing "missing artifact" error downstream. Now
+    we detect the mismatch at the source.
+    """
+    output = """```markdown file=module.md
+# Мій ранок
+```
+
+activities.yaml
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "ранок",
+    "translation": "morning",
+    "pos": "noun",
+    "usage": "Мій ранок простий."
+  }
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "ранок",
+    "translation": "morning",
+    "pos": "noun",
+    "usage": "Мій ранок простий."
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {"title": "Караман Grade 10, p.176"}
+]
+```
+"""
+
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"mismatched artifact label and fence name.*activities\.yaml.*vocabulary\.yaml",
+    ):
+        linear_pipeline.parse_writer_output_strict_json(output)
+
+
+def test_validate_writer_json_artifact_error_messages_include_actual_value() -> None:
+    """Schema validation errors must include the actual value/type for redispatch.
+
+    Adversarial review (Gemini + Codex, 2026-04-26): the prior error
+    `requires {field} as str` didn't say what was actually present (None?
+    int? empty string?). The corrective redispatch needs that context to
+    correct the writer.
+    """
+    # Wrong type: lemma is int instead of str.
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"requires lemma as str, got int \(123\)",
+    ):
+        linear_pipeline._validate_writer_json_artifact(
+            "vocabulary.yaml",
+            [{"lemma": 123, "translation": "x", "pos": "n", "usage": "y"}],
+        )
+
+    # Empty string: now reports the non-empty constraint separately.
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"requires lemma as a non-empty string",
+    ):
+        linear_pipeline._validate_writer_json_artifact(
+            "vocabulary.yaml",
+            [{"lemma": "   ", "translation": "x", "pos": "n", "usage": "y"}],
+        )
+
+
 def test_parse_review_response_accepts_json_fence() -> None:
     response = """```json
 {"score": 9.2, "evidence": "\\"Мій ранок простий.\\"", "verdict": "PASS"}
