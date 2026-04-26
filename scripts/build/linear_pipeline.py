@@ -8,6 +8,7 @@ any LLM rewrite or regeneration loop.
 
 from __future__ import annotations
 
+import functools
 import json
 import re
 import sys
@@ -183,6 +184,105 @@ _WORD_RE = re.compile(r"[A-Za-zА-ЯІЇЄҐа-яіїєґ][A-Za-zА-ЯІЇЄҐа
 _UK_WORD_RE = re.compile(r"[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ-]*")
 _INJECT_RE = re.compile(r"<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->")
 _HEADING_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
+
+# Metalinguistic content that must be stripped before VESUM lookup:
+# phonetic transcriptions like [с':а] and inline code in backticks contain
+# fragments of words and IPA-ish notation, not whole VESUM-checkable lemmas.
+_FENCED_CODE_RE = re.compile(r"```.*?```", re.DOTALL)
+_INLINE_CODE_RE = re.compile(r"`[^`]*`")
+
+# Phonetic-style brackets like `[с':а]`. The negative lookahead `(?!\()`
+# protects Markdown link syntax `[text](url)` — Markdown link text is
+# followed by `(`, phonetic transcriptions are not. Without this, link text
+# would be stripped and any misspellings inside `[слово](url)` would be
+# hidden from VESUM.
+_BRACKETS_RE = re.compile(r"\[[^\]\n]*\](?!\()")
+
+# Fill-in blank syntax: passages like `Я вмиваю{ся}. Ти одягаєш{ться}.` mark
+# the blank students fill in. Restricted to Ukrainian-letter-only content so
+# we don't accidentally strip JSX object literals like
+# `{ speaker: "Ліна", text: "Коли ти прокидаєшся?" }` (which would hide
+# misspellings in dialogue text from VESUM).
+_BRACES_RE = re.compile(r"\{[А-ЯІЇЄҐа-яіїєґ'ʼ]{1,12}\}")
+
+# Hyphen-prefixed morpheme notation: `-ться`, `-шся`, `-юся` — the conjugation
+# ending labels Ukrainian grammar texts use when discussing suffixes. The
+# explicit lookbehind requires the char before `-` to NOT be a Ukrainian or
+# Latin letter or digit — i.e., the hyphen must sit at a non-linguistic
+# boundary (markdown `*`/`_`, paren, whitespace, line start). This protects
+# legitimate hyphenated compounds like `темно-синій` (preceded by `о`) while
+# stripping morpheme labels in `**-шся**` and `__-шся__` (markdown bold). We
+# don't use Python's `\B` because `_` is a word character there, which would
+# make `__-шся__` un-strippable.
+_MORPHEME_FRAGMENT_RE = re.compile(
+    r"(?<![А-ЯІЇЄҐа-яіїєґ'ʼA-Za-z0-9])-[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ]*"
+)
+
+# JSX self-closing or paired component blocks. Treated as one structural unit
+# in `_immersion_gate`'s long-sentence detection so prop arrays like
+# `<DialogueBox lines={[{text: "..."}]}/>` aren't read as a single 50-word
+# Ukrainian sentence. The inner-content alternation `[^<]|<(?![A-Z/])` allows
+# `>` inside props (`condition={count > 0}`) but stops at any nested
+# capitalized JSX tag.
+#
+# Known limits — regex cannot fully parse JSX:
+#   1. Nested same-name components (`<Box><Box/></Box>`) leave a residual
+#      outer wrapper; the inner self-close eats the rest.
+#   2. Literal `<Capital>` inside a string prop (`text="Press <Enter>"`) or
+#      JSX comments (`{/* <X/> */}`) abort the non-greedy match early.
+# These are documented and tested as known shortcomings. A proper JSX
+# tokenizer would replace this regex; for the QG gate's purpose (avoiding
+# false-positive long-sentence flags) the regex catches the dominant case
+# (single-component dialogue/exercise blocks).
+_JSX_BLOCK_RE = re.compile(
+    r"<[A-Z][A-Za-z0-9]*(?:[^<]|<(?![A-Z/]))*?(?:/>|</[A-Z][A-Za-z0-9]*>)",
+    re.DOTALL,
+)
+
+# Capture the Ukrainian-bearing string values from JSX prop expressions
+# (`text: "..."`, `text="..."`). Used by `_immersion_gate` to give credit for
+# Ukrainian inside dialogue components without counting JSX prop KEYS or
+# English translation strings as English tokens.
+_JSX_STRING_VALUE_RE = re.compile(r'"([^"\n]*)"')
+
+# Sentence boundaries for the immersion gate's long-sentence check: end-of-
+# sentence punctuation (including Ukrainian `…`, `‼`, `⁇`, `⁈`, `⁉`) or a
+# markdown bullet/numbered-list marker (`* `, `- `, `1. `). The bullet-marker
+# alternations match start-of-string OR after a newline, so a list at the
+# very top of the body (e.g., immediately after frontmatter) is recognized
+# as a sentence boundary.
+_SENTENCE_SPLIT_RE = re.compile(
+    r"[.!?…‼⁇⁈⁉]+(?:\s+|$)|(?:\n|^)\s*[*\-]\s+|(?:\n|^)\s*\d+\.\s+",
+    re.MULTILINE,
+)
+
+# Activity field whose value is intentionally misspelled — students correct it.
+# Excluded from VESUM lookup.
+_ERROR_CORRECTION_TYPE = "error-correction"
+_ERROR_CORRECTION_INTENTIONAL_FIELD = "error"
+
+# String fields whose values are user-facing prose (subject to AI-slop checks).
+# YAML structural keys like `correction:` and `correctAnswer:` are deliberately
+# excluded — those are schema field names, not prose.
+_PROSE_VALUE_FIELDS = frozenset(
+    {
+        "instruction",
+        "title",
+        "subtitle",
+        "passage",
+        "statement",
+        "prompt",
+        "question",
+        "sentence",
+        "translation",
+        "source",
+        "target",
+        "usage",
+        "notes",
+        "summary",
+        "description",
+    }
+)
 
 
 class LinearPipelineError(RuntimeError):
@@ -588,10 +688,21 @@ def run_python_qg(
         ]
     )
 
+    # AI slop and VESUM walk artifacts structurally so YAML schema field names
+    # like `correction:` (in error-correction activities) and intentional
+    # misspellings in `error:` fields don't trigger false positives.
+    prose_text = _extract_prose_text(module_text, activities, vocabulary, resources)
+
     gates: dict[str, Any] = {
         "word_count": _word_count_gate(module_text, int(plan["word_target"])),
         "plan_sections": _section_gate(module_text, plan),
-        "vesum_verified": _vesum_gate(text_for_quality, verify_words_fn),
+        "vesum_verified": _vesum_gate(
+            module_text=module_text,
+            activities=activities,
+            vocabulary=vocabulary,
+            resources=resources,
+            verify_words_fn=verify_words_fn,
+        ),
         "citations_resolve": _citation_gate(resources, plan),
         "immersion": _immersion_gate(module_text, plan),
         "inject_activity_ids": _inject_activity_gate(module_text, activities),
@@ -601,7 +712,7 @@ def run_python_qg(
             int(plan["sequence"]),
             str(plan["slug"]),
         ),
-        "ai_slop_clean": _ai_slop_gate(text_for_quality),
+        "ai_slop_clean": _ai_slop_gate(prose_text),
         "component_props": _component_prop_gate(activities),
         "mdx_render": {"passed": None, "message": "Run after publish stage"},
     }
@@ -893,35 +1004,214 @@ def _extract_section_text(text: str, title: str) -> str:
 
 
 def _vesum_gate(
-    text: str,
+    *,
+    module_text: str,
+    activities: list[dict[str, Any]],
+    vocabulary: list[dict[str, Any]],
+    resources: list[dict[str, Any]],
     verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None,
 ) -> dict[str, Any]:
-    from scripts.audit.config import PROPER_NAME_WHITELIST, VESUM_MIN_WORD_LENGTH
+    """Verify Ukrainian words against VESUM, walking artifacts structurally.
 
-    words = sorted(
+    Three classes of false positives are deliberately excluded:
+
+    1. **Phonetic transcriptions and inline code** — `[с':а]`, `[ц':а]`, and
+       backticked fragments like `` `вмиваєс':а` `` are metalinguistic notation
+       (parts of words, IPA-ish symbols), not VESUM lemmas.
+    2. **Intentional misspellings in `error-correction` activities** — the
+       `error:` field of an `error-correction` activity contains the typo the
+       student must fix (e.g. `прокидаєштся`). Verifying it would always fail.
+    3. **Sentence-initial capitalization** — VESUM is case-sensitive, so
+       `Спочатку` (capitalized first word) returns no matches even though
+       `спочатку` does. Lookup is performed in lowercase; the report keeps
+       original casing for evidence.
+    """
+    from scripts.audit.config import VESUM_MIN_WORD_LENGTH
+
+    text = _build_vesum_text(module_text, activities, vocabulary, resources)
+
+    # Pair each surface form with its lowercase lookup key once, so subsequent
+    # whitelist + missing computations don't re-`.lower()` repeatedly.
+    surface_pairs = sorted(
         {
-            word.strip("-'ʼ")
-            for word in _UK_WORD_RE.findall(text)
-            if len(word.strip("-'ʼ")) >= VESUM_MIN_WORD_LENGTH
+            (word, word.lower())
+            for raw in _UK_WORD_RE.findall(text)
+            for word in [raw.strip("-'ʼ")]
+            if len(word) >= VESUM_MIN_WORD_LENGTH
         }
     )
-    unchecked = [word for word in words if word not in PROPER_NAME_WHITELIST]
+    whitelist_lc = _proper_name_whitelist_lc()
+    unchecked_pairs = [
+        (surface, lower)
+        for surface, lower in surface_pairs
+        if lower not in whitelist_lc
+    ]
     if verify_words_fn is None:
         from scripts.rag.query import verify_words as verify_words_fn
 
+    # VESUM is case-sensitive — lowercase before lookup so sentence-initial
+    # words like "Спочатку" match the lemma "спочатку".
+    lookup_words = sorted({lower for _surface, lower in unchecked_pairs})
     try:
-        verified = verify_words_fn(unchecked)
+        verified = verify_words_fn(lookup_words)
     except Exception as exc:
-        return {"passed": False, "error": str(exc), "checked": len(unchecked)}
+        return {"passed": False, "error": str(exc), "checked": len(unchecked_pairs)}
 
-    missing = sorted(word for word, matches in verified.items() if not matches)
+    missing_lc = {word for word, matches in verified.items() if not matches}
+    missing = sorted(
+        {surface for surface, lower in unchecked_pairs if lower in missing_lc}
+    )
     return {
         "passed": not missing,
-        "checked": len(unchecked),
-        "whitelisted": len(words) - len(unchecked),
+        "checked": len(unchecked_pairs),
+        "whitelisted": len(surface_pairs) - len(unchecked_pairs),
         "missing": missing[:100],
         "missing_count": len(missing),
     }
+
+
+@functools.cache
+def _proper_name_whitelist_lc() -> frozenset[str]:
+    """Lowercase form of `PROPER_NAME_WHITELIST`, computed once.
+
+    `_vesum_gate` lowercases each surface form before whitelist membership
+    testing, so the whitelist itself must be lowercased once. Cached across
+    calls — the underlying constant doesn't change at runtime. Lazy import
+    keeps `scripts.audit.config` out of the module-import path.
+    """
+    from scripts.audit.config import PROPER_NAME_WHITELIST
+
+    return frozenset(name.lower() for name in PROPER_NAME_WHITELIST)
+
+
+def _walk_artifact_strings(
+    node: Any,
+    *,
+    keep: Callable[[str | None, str], str | None],
+    skip_subtree_keys: frozenset[str] = frozenset(),
+) -> list[str]:
+    """Recursively collect string leaves from a YAML-like tree.
+
+    Two-level inclusion control:
+
+    - `skip_subtree_keys`: dict keys whose entire VALUE subtree (string OR
+      nested dict/list) should be excluded. Used to drop intentional
+      misspellings stored under `error:` in `error-correction` activities,
+      so a future schema like `error: { text: "...", note: "..." }` would
+      still be entirely excluded — not just the top-level string.
+    - `keep(parent_key, string_value)`: leaf-level predicate, called for
+      every string leaf NOT skipped by the subtree filter. Returns the
+      string to include, or `None` to drop.
+
+    Used to build the VESUM and AI-slop text blobs over
+    `activities`/`vocabulary`/`resources` with different inclusion rules.
+    """
+    out: list[str] = []
+
+    def _walk(value: Any, parent_key: str | None) -> None:
+        if isinstance(value, dict):
+            for key, child in value.items():
+                if key in skip_subtree_keys:
+                    continue
+                _walk(child, key)
+        elif isinstance(value, list):
+            for item in value:
+                _walk(item, parent_key)
+        elif isinstance(value, str):
+            chunk = keep(parent_key, value)
+            if chunk is not None:
+                out.append(chunk)
+
+    _walk(node, None)
+    return out
+
+
+def _strip_metalinguistic(text: str) -> str:
+    """Strip phonetic transcriptions, code, blank syntax, and morpheme labels.
+
+    Four categories of metalinguistic content are removed before VESUM lookup:
+
+    - `[...]` — phonetic notation like `[с':а]`, `[ц':а]`
+    - `` `...` `` and ` ``` ... ``` ` — inline/fenced code
+    - `{...}` — fill-in blank syntax like `Я вмиваю{ся}. Він прокидає{ться}.`
+    - `\\B-морфема` — hyphen-prefixed conjugation labels like `**-шся**`,
+      `**-ться**`. The `\\B` lookbehind protects legitimate hyphenated
+      compounds (`темно-синій`) where the char before `-` is a word char.
+
+    Used by the VESUM gate to avoid false positives on fragments that aren't
+    VESUM-checkable lemmas.
+    """
+    text = _FENCED_CODE_RE.sub(" ", text)
+    text = _INLINE_CODE_RE.sub(" ", text)
+    text = _BRACKETS_RE.sub(" ", text)
+    text = _BRACES_RE.sub(" ", text)
+    text = _MORPHEME_FRAGMENT_RE.sub(" ", text)
+    return text
+
+
+def _build_vesum_text(
+    module_text: str,
+    activities: list[dict[str, Any]],
+    vocabulary: list[dict[str, Any]],
+    resources: list[dict[str, Any]],
+) -> str:
+    """Compose the text blob that VESUM verifies, with structural exclusions."""
+    parts = [_strip_metalinguistic(module_text)]
+    for activity in activities:
+        parts.append(_strip_metalinguistic(_activity_vesum_text(activity)))
+    for entry in vocabulary:
+        if isinstance(entry, dict):
+            parts.append(_strip_metalinguistic(str(entry.get("lemma", ""))))
+            parts.append(_strip_metalinguistic(str(entry.get("usage", ""))))
+    for entry in resources:
+        if isinstance(entry, dict):
+            parts.append(_strip_metalinguistic(str(entry.get("title", ""))))
+            parts.append(_strip_metalinguistic(str(entry.get("notes", ""))))
+    return "\n".join(part for part in parts if part)
+
+
+def _activity_vesum_text(activity: dict[str, Any]) -> str:
+    """Walk an activity's string values, excluding intentional-error fields.
+
+    For `error-correction` activities, the `error:` field holds the typo the
+    student must fix; verifying it against VESUM would always fail. The skip
+    is at the dict (subtree) level so even a future nested shape like
+    `error: { text: "...", note: "..." }` would be entirely excluded.
+    """
+    if activity.get("type") == _ERROR_CORRECTION_TYPE:
+        skip_subtree = frozenset({_ERROR_CORRECTION_INTENTIONAL_FIELD})
+    else:
+        skip_subtree = frozenset()
+
+    def keep(_parent_key: str | None, value: str) -> str | None:
+        return value
+
+    return "\n".join(
+        _walk_artifact_strings(activity, keep=keep, skip_subtree_keys=skip_subtree)
+    )
+
+
+def _extract_prose_text(
+    module_text: str,
+    activities: list[dict[str, Any]],
+    vocabulary: list[dict[str, Any]],
+    resources: list[dict[str, Any]],
+) -> str:
+    """Concatenate user-facing prose strings for AI-slop pattern checks.
+
+    Slop patterns target English chatter (e.g., "Welcome", "Buckle up",
+    "Correction:"). They run on `module.md` plus the prose-bearing values of
+    activities/vocab/resources — not on the YAML field NAMES, which include
+    legitimate schema keys like `correction:` (in `error-correction`
+    activities) that would otherwise produce false positives.
+    """
+    def keep(parent_key: str | None, value: str) -> str | None:
+        return value if parent_key in _PROSE_VALUE_FIELDS else None
+
+    parts = [module_text]
+    for source in (activities, vocabulary, resources):
+        parts.extend(_walk_artifact_strings(source, keep=keep))
+    return "\n".join(parts)
 
 
 def _quality_fields(text: str) -> dict[str, dict[str, Any]]:
@@ -944,16 +1234,40 @@ def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> 
 
 
 def _immersion_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Check Ukrainian immersion ratio + flag overly long Ukrainian sentences.
+
+    Both the percent calculation AND the long-sentence check operate on a
+    JSX-stripped view of the body. Without that, prop KEYS (`speaker`,
+    `text`, `translation`) and English translation strings inside dialogue
+    components are counted as English tokens, deflating the immersion
+    percentage. To still credit Ukrainian-bearing dialogue text, we
+    separately extract string values from JSX (`text="..."` / `text: "..."`)
+    and add their tokens back. Net effect: only learner-facing Ukrainian
+    text inside JSX counts toward immersion, structural prop syntax doesn't.
+
+    The long-sentence check splits on Ukrainian-aware sentence punctuation
+    (`. ! ? … ‼ ⁇ ⁈ ⁉`) and markdown list-item starts (`* `, `- `, `1. `,
+    including at start-of-string) so bullet items render as separate
+    sentences instead of one giant joined run.
+    """
     level = str(plan["level"]).lower()
     sequence = int(plan["sequence"])
     min_pct, max_pct = get_immersion_range(level, sequence)
     body = _strip_frontmatter_and_headings(_strip_comments(text))
-    tokens = _WORD_RE.findall(body)
+
+    body_no_jsx = _JSX_BLOCK_RE.sub(" ", body)
+    jsx_string_props: list[str] = []
+    for jsx_block in _JSX_BLOCK_RE.findall(body):
+        jsx_string_props.extend(_JSX_STRING_VALUE_RE.findall(jsx_block))
+    counted_text = "\n".join([body_no_jsx, *jsx_string_props])
+
+    tokens = _WORD_RE.findall(counted_text)
     uk_tokens = [token for token in tokens if _UK_WORD_RE.search(token)]
     pct = round((len(uk_tokens) / len(tokens) * 100), 2) if tokens else 0.0
+
     long_sentences = [
         sentence.strip()
-        for sentence in re.split(r"[.!?]\s+", body)
+        for sentence in _SENTENCE_SPLIT_RE.split(body_no_jsx)
         if len(_UK_WORD_RE.findall(sentence)) > 10
     ]
     return {

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -460,7 +461,8 @@ def test_aggregate_llm_review_requires_quoted_evidence() -> None:
         linear_pipeline.aggregate_llm_review(report, "A1")
 
 
-def test_run_python_qg_passes_structural_fixture(tmp_path: Path) -> None:
+def _passing_qg_fixture(tmp_path: Path) -> tuple[Path, Path, Callable]:
+    """Build a minimal but green QG fixture; tests then mutate one artifact."""
     plan_path = tmp_path / "plan.yaml"
     module_dir = tmp_path / "my-morning"
     module_dir.mkdir()
@@ -517,10 +519,615 @@ def test_run_python_qg_passes_structural_fixture(tmp_path: Path) -> None:
     def fake_verify(words: list[str]) -> dict[str, list[dict]]:
         return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
 
+    return module_dir, plan_path, fake_verify
+
+
+def test_ai_slop_gate_ignores_correction_field_in_error_correction_activity(
+    tmp_path: Path,
+) -> None:
+    """The `correction:` YAML field name in error-correction activities is not slop.
+
+    Round 3 (2026-04-26) failed `ai_slop_clean` because the `\\bCorrection:`
+    contamination pattern (case-insensitive) matched the `correction:` field
+    name in act-my-morning-9. That field is part of the schema, not prose.
+    """
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
+    _write_yaml(
+        module_dir / "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "fill-in",
+                "title": "Додайте -ся",
+                "items": [
+                    {
+                        "sentence": "Я вмиваю__.",
+                        "answer": "ся",
+                        "options": ["ся", "ти", "ми"],
+                    }
+                ],
+            },
+            {
+                "id": "act-2",
+                "type": "error-correction",
+                "title": "Знайдіть помилку",
+                "sentences": [
+                    {
+                        "error": "Ти прокидаєштся о сьомій.",
+                        "correction": "Ти прокидаєшся о сьомій.",
+                        "translation": "You wake up at seven.",
+                    }
+                ],
+            },
+        ],
+    )
+
     report = linear_pipeline.run_python_qg(
-        module_dir,
-        plan_path,
-        verify_words_fn=fake_verify,
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    assert report["gates"]["ai_slop_clean"]["passed"] is True
+    assert report["gates"]["ai_slop_clean"]["hits"] == []
+
+
+def test_vesum_gate_lowercases_before_lookup(tmp_path: Path) -> None:
+    """Sentence-initial Ukrainian words must match VESUM lemmas.
+
+    VESUM stores lemmas in lowercase. Before this fix, `Спочатку` (capital С,
+    sentence-initial) returned 0 matches even though `спочатку` exists.
+    """
+    module_dir, plan_path, _ = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "## Діалоги\n\nСпочатку я **прокидаюся**, потім вмиваюся.",
+        encoding="utf-8",
+    )
+
+    received: list[list[str]] = []
+
+    def lc_only_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {
+            word: [{"lemma": word, "pos": "x", "tags": ""}] if word == word.lower() else []
+            for word in words
+        }
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=lc_only_verify
+    )
+
+    # All forwarded lookups are lowercase.
+    assert received and all(word == word.lower() for word in received[0])
+    assert report["gates"]["vesum_verified"]["passed"] is True
+
+
+def test_vesum_gate_strips_phonetic_transcriptions_in_brackets(tmp_path: Path) -> None:
+    """Phonetic notation in `[...]` must NOT be tokenized for VESUM lookup."""
+    module_dir, plan_path, _fake_verify = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "\n".join(
+            [
+                "## Діалоги",
+                "",
+                "Pronounce **вмивається** as [ц':а] and **вмиваєшся** as [с':а].",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    received: list[list[str]] = []
+
+    def capturing_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=capturing_verify
+    )
+
+    forwarded = received[0]
+    # Bracket fragments must not appear in the VESUM lookup set.
+    for fragment in ("ц':а", "с':а", "ц", "т''с''а"):
+        assert fragment not in forwarded, (
+            f"phonetic fragment {fragment!r} leaked into VESUM lookup: {forwarded}"
+        )
+
+
+def test_vesum_gate_strips_hyphen_prefix_morpheme_notation(tmp_path: Path) -> None:
+    """Conjugation suffix labels like `-шся`, `-ться` are morpheme notation.
+
+    Ukrainian grammar texts conventionally write conjugation endings with a
+    leading hyphen (compare English `-tion`, `-ness`). These fragments are
+    not VESUM lemmas and must be excluded from lookup. Legitimate hyphenated
+    compounds like `темно-синій` (preceded by a word character) stay intact.
+    """
+    module_dir, plan_path, _fake_verify = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "\n".join(
+            [
+                "## Діалоги",
+                "",
+                "The ending **-шся** sounds like [с':а]. The ending **-ться**",
+                "sounds like [ц':а]. Compare with the legitimate compound",
+                "**темно-синій** which has both halves as real words.",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    received: list[list[str]] = []
+
+    def capturing_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=capturing_verify
+    )
+
+    forwarded = received[0]
+    # Morpheme-notation fragments are stripped.
+    for fragment in ("шся", "ться"):
+        assert fragment not in forwarded, (
+            f"morpheme fragment {fragment!r} leaked into VESUM lookup: {forwarded}"
+        )
+    # The compound `темно-синій` survives intact (one match — the word regex
+    # allows internal hyphens in word characters).
+    assert "темно-синій" in forwarded
+
+
+def test_vesum_gate_strips_fill_in_blank_syntax(tmp_path: Path) -> None:
+    """Fill-in passages with `{ся}`, `{ться}` blank markers are not lemmas.
+
+    The fill-in activity passage syntax `Я вмиваю{ся}. Він прокидає{ться}.`
+    marks the blanks the student fills in. The content inside `{...}` is a
+    suffix fragment, not a VESUM-checkable word.
+    """
+    module_dir, plan_path, _fake_verify = _passing_qg_fixture(tmp_path)
+    _write_yaml(
+        module_dir / "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "fill-in",
+                "title": "Додайте -ся",
+                "passage": "Я вмиваю{ся}. Ти одягаєш{ся}. Він прокидає{ться}. Ми збираємо{ся}.",
+            }
+        ],
+    )
+
+    received: list[list[str]] = []
+
+    def capturing_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=capturing_verify
+    )
+
+    forwarded = received[0]
+    for fragment in ("ся", "ться"):
+        assert fragment not in forwarded, (
+            f"fill-in blank fragment {fragment!r} leaked into VESUM lookup: "
+            f"{forwarded}"
+        )
+    # The verb stems around the blanks (вмиваю, одягаєш, etc.) ARE checked.
+    assert "вмиваю" in forwarded
+    assert "прокидає" in forwarded
+
+
+def test_vesum_gate_skips_error_field_of_error_correction_activity(
+    tmp_path: Path,
+) -> None:
+    """Intentional misspellings in `error:` fields must not be VESUM-checked.
+
+    The `error-correction` activity type stores the typo students must fix in
+    the `error:` field. Verifying that against VESUM would always fail.
+    """
+    module_dir, plan_path, _ = _passing_qg_fixture(tmp_path)
+    _write_yaml(
+        module_dir / "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "error-correction",
+                "title": "Знайдіть помилку",
+                "sentences": [
+                    {
+                        "error": "Ти прокидаєштся о сьомій.",
+                        "correction": "Ти прокидаєшся о сьомій.",
+                        "translation": "You wake up at seven.",
+                    }
+                ],
+            }
+        ],
+    )
+
+    received: list[list[str]] = []
+
+    def capturing_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=capturing_verify
+    )
+
+    # The intentionally-misspelled token (lowercased) is excluded.
+    forwarded = received[0]
+    assert "прокидаєштся" not in forwarded, (
+        f"intentional typo leaked into VESUM lookup: {forwarded}"
+    )
+    # The correction (well-formed) IS verified.
+    assert "прокидаєшся" in forwarded
+
+
+def test_vesum_gate_preserves_markdown_link_text(tmp_path: Path) -> None:
+    """Markdown link text `[слово](url)` must reach VESUM, not be stripped.
+
+    Adversarial review (Gemini, 2026-04-26): a too-broad `[...]` strip would
+    consume the link text portion and hide misspellings inside `[слово](url)`
+    from VESUM. Phonetic-bracket strip is now narrowed to short, no-space
+    content so Markdown links survive intact.
+    """
+    module_dir, plan_path, _fake_verify = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "## Діалоги\n\nПрочитай статтю на [Вікіпедії](https://uk.wikipedia.org).",
+        encoding="utf-8",
+    )
+
+    received: list[list[str]] = []
+
+    def capturing_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=capturing_verify
+    )
+
+    forwarded = received[0]
+    # The link text "Вікіпедії" must reach VESUM (lowercased).
+    assert "вікіпедії" in forwarded, (
+        f"Markdown link text was stripped — would hide misspellings: {forwarded}"
+    )
+
+
+def test_vesum_gate_preserves_jsx_object_literal_strings(tmp_path: Path) -> None:
+    """JSX object literals `{ speaker: "Ліна", text: "..." }` must survive `_BRACES_RE`.
+
+    Adversarial review (Codex, 2026-04-26): a too-broad `{...}` strip would
+    consume JSX object rows along with their Ukrainian text, hiding
+    misspellings in dialogue components from VESUM. Brace strip is now
+    narrowed to fill-in-shape content (Ukrainian-letter-only).
+    """
+    module_dir, plan_path, _fake_verify = _passing_qg_fixture(tmp_path)
+    # A bare JSX object row outside a full component (in case the JSX block
+    # regex doesn't consume it) — its Ukrainian text must reach VESUM.
+    (module_dir / "module.md").write_text(
+        '## Діалоги\n\nПриклад: { speaker: "Ліна", text: "Прокидаюся рано." }',
+        encoding="utf-8",
+    )
+
+    received: list[list[str]] = []
+
+    def capturing_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=capturing_verify
+    )
+
+    forwarded = received[0]
+    for word in ("ліна", "прокидаюся", "рано"):
+        assert word in forwarded, (
+            f"JSX object literal was stripped — would hide misspellings: "
+            f"missing {word!r} in {forwarded}"
+        )
+
+
+def test_vesum_gate_strips_morpheme_fragment_with_underscore_bold(
+    tmp_path: Path,
+) -> None:
+    """Underscore-bold `__-шся__` must strip the morpheme fragment.
+
+    Adversarial review (Gemini, 2026-04-26): the original `\\B` lookbehind
+    failed when the hyphen was preceded by `_` because Python treats `_` as
+    a word character. The morpheme regex now uses an explicit lookbehind
+    that excludes Ukrainian + Latin letters + digits + underscore.
+    """
+    module_dir, plan_path, _fake_verify = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "## Діалоги\n\nThe ending __-шся__ sounds like [с':а].",
+        encoding="utf-8",
+    )
+
+    received: list[list[str]] = []
+
+    def capturing_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=capturing_verify
+    )
+
+    forwarded = received[0]
+    assert "шся" not in forwarded, (
+        f"morpheme fragment leaked despite underscore-bold context: {forwarded}"
+    )
+
+
+def test_vesum_gate_skips_nested_error_subtree_in_error_correction(
+    tmp_path: Path,
+) -> None:
+    """Future schema `error: { text: "...", note: "..." }` must still skip the typo.
+
+    Adversarial review (Gemini + Codex, 2026-04-26): the leaf-level skip
+    predicate would let a nested `error:` subtree through (parent_key would
+    be `text` or `note`, not `error`). The walker now skips the entire
+    `error:` subtree, regardless of nesting.
+    """
+    module_dir, plan_path, _fake_verify = _passing_qg_fixture(tmp_path)
+    _write_yaml(
+        module_dir / "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "error-correction",
+                "title": "Знайдіть помилку",
+                "sentences": [
+                    {
+                        "error": {
+                            "text": "Ти прокидаєштся о сьомій.",
+                            "note": "Зверніть увагу на закінчення.",
+                        },
+                        "correction": "Ти прокидаєшся о сьомій.",
+                        "translation": "You wake up at seven.",
+                    }
+                ],
+            }
+        ],
+    )
+
+    received: list[list[str]] = []
+
+    def capturing_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=capturing_verify
+    )
+
+    forwarded = received[0]
+    assert "прокидаєштся" not in forwarded, (
+        f"intentional typo leaked from nested error: subtree: {forwarded}"
+    )
+
+
+def test_immersion_gate_recognizes_unicode_sentence_boundaries(
+    tmp_path: Path,
+) -> None:
+    """Ukrainian dialogue punctuation `…`, `‼`, `⁇` must split sentences.
+
+    Adversarial review (Codex, 2026-04-26): without these, a Ukrainian run
+    like "Так… Потім вмиваюся… І одягаюся… Нарешті йду." was treated as one
+    long sentence, producing a false long-sentence flag.
+    """
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "## Діалоги\n\n"
+        "Так… Потім вмиваюся… І одягаюся… Нарешті йду на роботу.",
+        encoding="utf-8",
+    )
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    # Without the `…` boundary, all 4 short sentences would join into one
+    # 12-Ukrainian-word run, exceeding the >10 threshold.
+    assert report["gates"]["immersion"]["long_ukrainian_sentences"] == [], (
+        f"Ukrainian ellipsis was not treated as sentence boundary: "
+        f"{report['gates']['immersion']['long_ukrainian_sentences']}"
+    )
+
+
+def test_immersion_gate_credits_ukrainian_in_jsx_text_props(tmp_path: Path) -> None:
+    """JSX `text="..."` Ukrainian content counts; prop keys do NOT count.
+
+    Adversarial review (Gemini + Codex, 2026-04-26): raw-body tokenization
+    counted English JSX prop keys (`speaker`, `text`, `translation`) and
+    English translation strings as English tokens, deflating the immersion
+    percentage. Now the JSX block is stripped from the body, then string-
+    valued Ukrainian inside JSX is added back via `_JSX_STRING_VALUE_RE`.
+    """
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
+    # Body has English meta-narration prose AND a DialogueBox with Ukrainian
+    # `text:` props. Without the fix, English prop keys + English
+    # translations would dominate. With the fix, only learner-facing
+    # Ukrainian inside JSX adds to the count.
+    (module_dir / "module.md").write_text(
+        "\n".join(
+            [
+                "## Діалоги",
+                "",
+                "<DialogueBox",
+                "  characters={{}}",
+                "  lines={[",
+                '    { speaker: "Ліна", text: "Прокидаюся рано і вмиваюся." },',
+                '    { speaker: "Настя", text: "А я снідаю і йду на роботу." },',
+                "  ]}",
+                "/>",
+                "",
+                "<!-- INJECT_ACTIVITY: act-1 -->",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    pct = report["gates"]["immersion"]["pct"]
+    # The body has effectively no English prose (one heading, one comment).
+    # All counted tokens come from Ukrainian dialogue text. Prop keys
+    # (`speaker`, `text`, `lines`, `characters`) are excluded; English
+    # translations are absent. Immersion should be high (>50%).
+    assert pct > 50.0, (
+        f"JSX-extracted Ukrainian gave a too-low immersion pct: {pct}%; "
+        "prop keys may still be counted as English tokens"
+    )
+
+
+def test_immersion_gate_strips_jsx_blocks_with_gt_in_prop_expressions(
+    tmp_path: Path,
+) -> None:
+    """JSX prop expressions like `condition={count > 0}` must not break the strip.
+
+    Regression guard for the gemini-code-assist review of PR #1599: the
+    initial `_JSX_BLOCK_RE` used `[^<>]` for inner content, which terminated
+    the match at the first standalone `>` inside a prop expression. That
+    would re-introduce the long-sentence false positive this PR fixes.
+    """
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "\n".join(
+            [
+                "## Діалоги",
+                "",
+                "<DialogueBox",
+                "  condition={count > 0}",
+                "  lines={[",
+                '    { text: "Коли ти прокидаєшся?" },',
+                '    { text: "Я прокидаюся о сьомій." },',
+                '    { text: "Що ти робиш потім?" },',
+                '    { text: "Вмиваюся, одягаюся і снідаю." },',
+                '    { text: "А коли ти йдеш на роботу?" },',
+                '    { text: "О восьмій." },',
+                "  ]}",
+                "/>",
+                "",
+                "<!-- INJECT_ACTIVITY: act-1 -->",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    assert report["gates"]["immersion"]["long_ukrainian_sentences"] == [], (
+        "JSX with `>` in a prop expression broke the regex strip and the "
+        "DialogueBox lines were re-read as one giant sentence: "
+        f"{report['gates']['immersion']['long_ukrainian_sentences']}"
+    )
+
+
+def test_immersion_gate_recognizes_start_of_string_bullets(tmp_path: Path) -> None:
+    """A bullet list at the very start of body content is a sentence boundary.
+
+    Regression guard for the gemini-code-assist review of PR #1599: the
+    initial `sentence_split_re` required `\\n` before bullet markers, which
+    miscategorized list items appearing immediately after frontmatter strip
+    (no preceding newline). The split now anchors `(?:\\n|^)` so start-of-
+    string bullets are recognized.
+    """
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
+    # Module body opens directly with a bullet list of long Ukrainian
+    # sentences. Each bullet IS a separate sentence — must not be conflated.
+    (module_dir / "module.md").write_text(
+        "\n".join(
+            [
+                "## Діалоги",
+                "",
+                "* Спочатку я **прокидаюся** о сьомій. Потім вмиваюся.",
+                "* Потім я **одягаюся** і снідаю. Нарешті я йду на роботу.",
+                "",
+                "<!-- INJECT_ACTIVITY: act-1 -->",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    # Each individual bullet contains <10 Ukrainian words — neither should
+    # trip the long-sentence rule. If `^`-anchor were absent, the two bullets
+    # plus their surrounding text might join into one >10-word run.
+    assert report["gates"]["immersion"]["long_ukrainian_sentences"] == [], (
+        f"start-of-string bullets joined into a long sentence: "
+        f"{report['gates']['immersion']['long_ukrainian_sentences']}"
+    )
+
+
+def test_immersion_gate_strips_jsx_blocks_before_long_sentence_check(
+    tmp_path: Path,
+) -> None:
+    """A `<DialogueBox lines=[...]/>` is one structural element, not one sentence.
+
+    Round 3 (2026-04-26) failed `immersion.long_ukrainian_sentences` because
+    the entire DialogueBox JSX prop array (10+ Ukrainian lines) was read as a
+    single sentence. JSX must be stripped before sentence-boundary parsing.
+    """
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "\n".join(
+            [
+                "## Діалоги",
+                "",
+                "Listen to **Ліна** and **Настя** talk about their morning routine.",
+                "Pay attention to verbs ending in **-ся** and copy the pattern.",
+                "",
+                "<DialogueBox",
+                '  characters={{ "Ліна": "Ліна", "Настя": "Настя" }}',
+                "  lines={[",
+                '    { speaker: "Ліна", text: "Коли ти прокидаєшся?", translation: "When?" },',
+                '    { speaker: "Настя", text: "Я прокидаюся о сьомій.", translation: "Seven." },',
+                '    { speaker: "Ліна", text: "Що ти робиш потім?", translation: "Then what?" },',
+                '    { speaker: "Настя", text: "Вмиваюся, одягаюся і снідаю.", translation: "Routine." },',
+                '    { speaker: "Ліна", text: "А коли ти йдеш на роботу?", translation: "When?" },',
+                '    { speaker: "Настя", text: "О восьмій.", translation: "At eight." }',
+                "  ]}",
+                "/>",
+                "",
+                "<!-- INJECT_ACTIVITY: act-1 -->",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    immersion = report["gates"]["immersion"]
+    # The dialogue text inside JSX still counts toward the percent (Ukrainian
+    # tokens were tokenized from the raw body), but the JSX block is no longer
+    # treated as one giant sentence.
+    assert immersion["long_ukrainian_sentences"] == [], (
+        f"JSX block was incorrectly read as a long sentence: "
+        f"{immersion['long_ukrainian_sentences']}"
+    )
+
+
+def test_run_python_qg_passes_structural_fixture(tmp_path: Path) -> None:
+    """Smoke test: the baseline `_passing_qg_fixture` produces a green report.
+
+    Acts as the canary for run_python_qg. If a future change breaks the basic
+    happy-path module shape, this test surfaces it before any of the targeted
+    bugfix tests run.
+    """
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
     )
 
     assert report["gates"]["passed"] is True
