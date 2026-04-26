@@ -77,6 +77,28 @@ inside `module.md`.
 {CONTRACT_YAML}
 ```
 
+## Tone and immersion (mandatory)
+
+The prose of `module.md` is for a learner who is encountering Ukrainian, not
+for a teacher narrating their own lesson plan. Hold to this register:
+
+- **No English meta-narration.** Do not write phrases like "Welcome to the
+  start of our journey", "In this section we will learn", "Now that you have
+  seen these verbs", "Let's now look at", "Before we move on", or any
+  variant. They burn English words and miss the immersion target. Open each
+  prose section directly with the grammar point in Ukrainian, with a
+  Ukrainian dialogue line, or with the example itself.
+- **English is for translation, gloss, and short scaffolds, never for
+  framing.** Treat English as a footnote that supports a Ukrainian sentence,
+  not as a frame around it.
+- **Honor the immersion ratio in the "Immersion Rule" section above.** It
+  is not a target to approach asymptotically; over-writing in English is
+  the single biggest failure mode of this prompt. Write less English, not
+  more Ukrainian.
+- **Section length is bounded by the contract YAML.** If you find yourself
+  expanding an English bridge sentence, cut it instead. Word budgets are
+  authoritative.
+
 ## Activity Types
 
 Allowed: {ALLOWED_ACTIVITY_TYPES}
@@ -90,6 +112,23 @@ Workbook allowed: {WORKBOOK_ALLOWED_TYPES}
 Activity count target: {ACTIVITY_COUNT_TARGET}
 
 Vocabulary count target: {VOCAB_COUNT_TARGET}
+
+## Activity Component Props (mandatory)
+
+Each activity object in `activities.yaml` MUST carry the props for its
+declared `type` exactly as specified below. The build's `component_props`
+gate compares these against `docs/lesson-schema.yaml` and fails the build
+on any missing required prop. Do not invent prop names; do not borrow a
+prop name from a different activity type (for example, `fill-in` requires
+`items: FillInItem[]` — do not substitute `passage:`).
+
+```
+{COMPONENT_PROPS_SCHEMA}
+```
+
+For nested array item types (e.g. `FillInItem[]`), include the listed
+fields on every item. For numeric arrays like `correct_order: number[]`,
+indices are zero-based.
 
 ## Plan
 

@@ -404,7 +404,70 @@ def writer_context(plan: Mapping[str, Any], plan_content: str, knowledge_packet:
         "WORKBOOK_ALLOWED_TYPES": activity_config["WORKBOOK_ALLOWED_TYPES"],
         "ACTIVITY_COUNT_TARGET": activity_config["ACTIVITY_COUNT_TARGET"],
         "VOCAB_COUNT_TARGET": activity_config["VOCAB_COUNT_TARGET"],
+        "COMPONENT_PROPS_SCHEMA": _render_component_props_schema(
+            activity_config["ALLOWED_ACTIVITY_TYPES"]
+        ),
     }
+
+
+def _render_component_props_schema(allowed_activity_types: str) -> str:
+    """Render compact required/optional prop spec per allowed activity type.
+
+    Reads ``docs/lesson-schema.yaml`` and emits a writer-facing markdown list,
+    one bullet per allowed activity type, naming the required and optional
+    props plus the nested-item field names. Without this, the writer guesses
+    prop shapes — e.g. it produced ``passage:`` for ``fill-in`` (which the
+    schema says needs ``items: FillInItem[]``) and omitted ``correct_order``
+    on ``order`` activities. The component-prop QG gate then failed late with
+    cryptic errors. Surfacing the contract in the prompt is the cheapest fix
+    that matches what the gate actually checks (#1602, round 3.5).
+
+    The same ``docs/lesson-schema.yaml`` file is the source of truth for both
+    this prompt section and the ``_component_prop_gate`` validator, so the
+    writer can never see a stale contract.
+    """
+    allowed = {token.strip() for token in allowed_activity_types.split(",") if token.strip()}
+    schema = load_yaml(PROJECT_ROOT / "docs" / "lesson-schema.yaml")
+    components = schema.get("components", {}) or {}
+    by_type: dict[str, dict[str, Any]] = {}
+    for data in components.values():
+        if not isinstance(data, dict):
+            continue
+        activity_type = data.get("activity_type")
+        if activity_type in allowed:
+            by_type[activity_type] = data
+
+    def _format_prop(prop: Mapping[str, Any], nested: Mapping[str, Any]) -> str:
+        name = prop.get("name", "?")
+        ptype = prop.get("type", "")
+        # Resolve nested-item field names so the writer sees the inner shape
+        # of arrays like FillInItem[] without us having to repeat the whole
+        # schema. Falls back to the raw type string when there's no match.
+        item_type = ptype[:-2] if ptype.endswith("[]") else None
+        if item_type and item_type in nested:
+            fields = ", ".join(
+                str(field.get("name", "?"))
+                for field in nested[item_type]
+                if isinstance(field, dict)
+            )
+            return f"{name} ({ptype}: {fields})" if fields else f"{name} ({ptype})"
+        return f"{name} ({ptype})" if ptype else str(name)
+
+    lines: list[str] = []
+    for activity_type in sorted(by_type):
+        data = by_type[activity_type]
+        props = data.get("props", {}) or {}
+        nested = data.get("nested_types", {}) or {}
+        required = [p for p in (props.get("required", []) or []) if isinstance(p, dict)]
+        optional = [p for p in (props.get("optional", []) or []) if isinstance(p, dict)]
+        req_str = ", ".join(_format_prop(p, nested) for p in required) if required else "—"
+        opt_str = ", ".join(_format_prop(p, nested) for p in optional) if optional else "—"
+        lines.append(f"- {activity_type}:")
+        lines.append(f"    required: {req_str}")
+        lines.append(f"    optional: {opt_str}")
+    if not lines:
+        return "(no allowed activity types resolved against lesson-schema.yaml)"
+    return "\n".join(lines)
 
 
 def invoke_writer(
