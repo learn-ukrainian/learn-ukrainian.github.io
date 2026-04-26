@@ -8,6 +8,7 @@ any LLM rewrite or regeneration loop.
 
 from __future__ import annotations
 
+import functools
 import json
 import re
 import sys
@@ -209,10 +210,22 @@ _MORPHEME_FRAGMENT_RE = re.compile(
 # JSX self-closing or paired component blocks. Treated as one structural unit
 # in `_immersion_gate`'s long-sentence detection so prop arrays like
 # `<DialogueBox lines={[{text: "..."}]}/>` aren't read as a single 50-word
-# Ukrainian sentence.
+# Ukrainian sentence. Inner content allows raw `>` characters (legitimate in
+# props like `condition={count > 0}`) — termination is anchored to the literal
+# `/>` self-close or `</Component>` paired close.
 _JSX_BLOCK_RE = re.compile(
-    r"<[A-Z][A-Za-z0-9]*(?:[^<>]|<(?![A-Z/]))*?(?:/>|</[A-Z][A-Za-z0-9]*>)",
+    r"<[A-Z][A-Za-z0-9]*(?:[^<]|<(?![A-Z/]))*?(?:/>|</[A-Z][A-Za-z0-9]*>)",
     re.DOTALL,
+)
+
+# Sentence boundaries for the immersion gate's long-sentence check: end-of-
+# sentence punctuation, OR a markdown bullet/numbered-list marker (`* `, `- `,
+# `1. `). The bullet-marker alternations match start-of-string OR after a
+# newline, so a list at the very top of the body (e.g., immediately after
+# frontmatter) is recognized as a sentence boundary.
+_SENTENCE_SPLIT_RE = re.compile(
+    r"[.!?]\s+|(?:\n|^)\s*[*\-]\s+|(?:\n|^)\s*\d+\.\s+",
+    re.MULTILINE,
 )
 
 # Activity field whose value is intentionally misspelled — students correct it.
@@ -985,39 +998,94 @@ def _vesum_gate(
        `спочатку` does. Lookup is performed in lowercase; the report keeps
        original casing for evidence.
     """
-    from scripts.audit.config import PROPER_NAME_WHITELIST, VESUM_MIN_WORD_LENGTH
+    from scripts.audit.config import VESUM_MIN_WORD_LENGTH
 
     text = _build_vesum_text(module_text, activities, vocabulary, resources)
 
-    words = sorted(
+    # Pair each surface form with its lowercase lookup key once, so subsequent
+    # whitelist + missing computations don't re-`.lower()` repeatedly.
+    surface_pairs = sorted(
         {
-            word.strip("-'ʼ")
-            for word in _UK_WORD_RE.findall(text)
-            if len(word.strip("-'ʼ")) >= VESUM_MIN_WORD_LENGTH
+            (word, word.lower())
+            for raw in _UK_WORD_RE.findall(text)
+            for word in [raw.strip("-'ʼ")]
+            if len(word) >= VESUM_MIN_WORD_LENGTH
         }
     )
-    whitelist_lc = {name.lower() for name in PROPER_NAME_WHITELIST}
-    unchecked = [word for word in words if word.lower() not in whitelist_lc]
+    whitelist_lc = _proper_name_whitelist_lc()
+    unchecked_pairs = [
+        (surface, lower)
+        for surface, lower in surface_pairs
+        if lower not in whitelist_lc
+    ]
     if verify_words_fn is None:
         from scripts.rag.query import verify_words as verify_words_fn
 
     # VESUM is case-sensitive — lowercase before lookup so sentence-initial
     # words like "Спочатку" match the lemma "спочатку".
-    lookup_words = sorted({word.lower() for word in unchecked})
+    lookup_words = sorted({lower for _surface, lower in unchecked_pairs})
     try:
         verified = verify_words_fn(lookup_words)
     except Exception as exc:
-        return {"passed": False, "error": str(exc), "checked": len(unchecked)}
+        return {"passed": False, "error": str(exc), "checked": len(unchecked_pairs)}
 
     missing_lc = {word for word, matches in verified.items() if not matches}
-    missing = sorted({word for word in unchecked if word.lower() in missing_lc})
+    missing = sorted(
+        {surface for surface, lower in unchecked_pairs if lower in missing_lc}
+    )
     return {
         "passed": not missing,
-        "checked": len(unchecked),
-        "whitelisted": len(words) - len(unchecked),
+        "checked": len(unchecked_pairs),
+        "whitelisted": len(surface_pairs) - len(unchecked_pairs),
         "missing": missing[:100],
         "missing_count": len(missing),
     }
+
+
+@functools.cache
+def _proper_name_whitelist_lc() -> frozenset[str]:
+    """Lowercase form of `PROPER_NAME_WHITELIST`, computed once.
+
+    `_vesum_gate` lowercases each surface form before whitelist membership
+    testing, so the whitelist itself must be lowercased once. Cached across
+    calls — the underlying constant doesn't change at runtime. Lazy import
+    keeps `scripts.audit.config` out of the module-import path.
+    """
+    from scripts.audit.config import PROPER_NAME_WHITELIST
+
+    return frozenset(name.lower() for name in PROPER_NAME_WHITELIST)
+
+
+def _walk_artifact_strings(
+    node: Any,
+    *,
+    keep: Callable[[str | None, str], str | None],
+) -> list[str]:
+    """Recursively collect string leaves from a YAML-like tree.
+
+    For each `(parent_key, string_value)` pair encountered, calls `keep` and
+    appends its return when non-None. Used to build the VESUM and AI-slop
+    text blobs over `activities`/`vocabulary`/`resources` with different
+    inclusion rules. Predicate operates at the leaf level — to skip an entire
+    subtree (e.g., `error:` field of error-correction), the caller must
+    pre-filter at the dict level instead.
+    """
+    out: list[str] = []
+
+    def _walk(value: Any, parent_key: str | None) -> None:
+        if isinstance(value, dict):
+            for key, child in value.items():
+                _walk(child, key)
+        elif isinstance(value, list):
+            for item in value:
+                _walk(item, parent_key)
+        elif isinstance(value, str):
+            chunk = keep(parent_key, value)
+            if chunk is not None:
+                out.append(chunk)
+
+    _walk(node, None)
+    return out
 
 
 def _strip_metalinguistic(text: str) -> str:
@@ -1067,27 +1135,18 @@ def _build_vesum_text(
 def _activity_vesum_text(activity: dict[str, Any]) -> str:
     """Walk an activity's string values, excluding intentional-error fields.
 
-    For `error-correction` activities, the `error:` field is the typo the
-    student is asked to fix; verifying it against VESUM would always fail.
-    All other string values participate in the lookup.
+    For `error-correction` activities, the `error:` field holds the typo the
+    student must fix; verifying it against VESUM would always fail. All other
+    string values participate in the lookup.
     """
-    skip_error = activity.get("type") == _ERROR_CORRECTION_TYPE
-    chunks: list[str] = []
+    skip_error_field = activity.get("type") == _ERROR_CORRECTION_TYPE
 
-    def _walk(node: Any) -> None:
-        if isinstance(node, dict):
-            for key, value in node.items():
-                if skip_error and key == _ERROR_CORRECTION_INTENTIONAL_FIELD:
-                    continue
-                _walk(value)
-        elif isinstance(node, list):
-            for item in node:
-                _walk(item)
-        elif isinstance(node, str):
-            chunks.append(node)
+    def keep(parent_key: str | None, value: str) -> str | None:
+        if skip_error_field and parent_key == _ERROR_CORRECTION_INTENTIONAL_FIELD:
+            return None
+        return value
 
-    _walk(activity)
-    return "\n".join(chunks)
+    return "\n".join(_walk_artifact_strings(activity, keep=keep))
 
 
 def _extract_prose_text(
@@ -1104,21 +1163,12 @@ def _extract_prose_text(
     legitimate schema keys like `correction:` (in `error-correction`
     activities) that would otherwise produce false positives.
     """
+    def keep(parent_key: str | None, value: str) -> str | None:
+        return value if parent_key in _PROSE_VALUE_FIELDS else None
+
     parts = [module_text]
-
-    def _walk(node: Any) -> None:
-        if isinstance(node, dict):
-            for key, value in node.items():
-                if key in _PROSE_VALUE_FIELDS and isinstance(value, str):
-                    parts.append(value)
-                else:
-                    _walk(value)
-        elif isinstance(node, list):
-            for item in node:
-                _walk(item)
-
     for source in (activities, vocabulary, resources):
-        _walk(source)
+        parts.extend(_walk_artifact_strings(source, keep=keep))
     return "\n".join(parts)
 
 
@@ -1161,10 +1211,9 @@ def _immersion_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
     pct = round((len(uk_tokens) / len(tokens) * 100), 2) if tokens else 0.0
 
     body_for_sentences = _JSX_BLOCK_RE.sub(" ", body)
-    sentence_split_re = re.compile(r"[.!?]\s+|\n\s*[*\-]\s+|\n\s*\d+\.\s+")
     long_sentences = [
         sentence.strip()
-        for sentence in sentence_split_re.split(body_for_sentences)
+        for sentence in _SENTENCE_SPLIT_RE.split(body_for_sentences)
         if len(_UK_WORD_RE.findall(sentence)) > 10
     ]
     return {

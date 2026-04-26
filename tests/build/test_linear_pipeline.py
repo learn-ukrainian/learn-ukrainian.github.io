@@ -762,6 +762,90 @@ def test_vesum_gate_skips_error_field_of_error_correction_activity(
     assert "прокидаєшся" in forwarded
 
 
+def test_immersion_gate_strips_jsx_blocks_with_gt_in_prop_expressions(
+    tmp_path: Path,
+) -> None:
+    """JSX prop expressions like `condition={count > 0}` must not break the strip.
+
+    Regression guard for the gemini-code-assist review of PR #1599: the
+    initial `_JSX_BLOCK_RE` used `[^<>]` for inner content, which terminated
+    the match at the first standalone `>` inside a prop expression. That
+    would re-introduce the long-sentence false positive this PR fixes.
+    """
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "\n".join(
+            [
+                "## Діалоги",
+                "",
+                "<DialogueBox",
+                "  condition={count > 0}",
+                "  lines={[",
+                '    { text: "Коли ти прокидаєшся?" },',
+                '    { text: "Я прокидаюся о сьомій." },',
+                '    { text: "Що ти робиш потім?" },',
+                '    { text: "Вмиваюся, одягаюся і снідаю." },',
+                '    { text: "А коли ти йдеш на роботу?" },',
+                '    { text: "О восьмій." },',
+                "  ]}",
+                "/>",
+                "",
+                "<!-- INJECT_ACTIVITY: act-1 -->",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    assert report["gates"]["immersion"]["long_ukrainian_sentences"] == [], (
+        "JSX with `>` in a prop expression broke the regex strip and the "
+        "DialogueBox lines were re-read as one giant sentence: "
+        f"{report['gates']['immersion']['long_ukrainian_sentences']}"
+    )
+
+
+def test_immersion_gate_recognizes_start_of_string_bullets(tmp_path: Path) -> None:
+    """A bullet list at the very start of body content is a sentence boundary.
+
+    Regression guard for the gemini-code-assist review of PR #1599: the
+    initial `sentence_split_re` required `\\n` before bullet markers, which
+    miscategorized list items appearing immediately after frontmatter strip
+    (no preceding newline). The split now anchors `(?:\\n|^)` so start-of-
+    string bullets are recognized.
+    """
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
+    # Module body opens directly with a bullet list of long Ukrainian
+    # sentences. Each bullet IS a separate sentence — must not be conflated.
+    (module_dir / "module.md").write_text(
+        "\n".join(
+            [
+                "## Діалоги",
+                "",
+                "* Спочатку я **прокидаюся** о сьомій. Потім вмиваюся.",
+                "* Потім я **одягаюся** і снідаю. Нарешті я йду на роботу.",
+                "",
+                "<!-- INJECT_ACTIVITY: act-1 -->",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    # Each individual bullet contains <10 Ukrainian words — neither should
+    # trip the long-sentence rule. If `^`-anchor were absent, the two bullets
+    # plus their surrounding text might join into one >10-word run.
+    assert report["gates"]["immersion"]["long_ukrainian_sentences"] == [], (
+        f"start-of-string bullets joined into a long sentence: "
+        f"{report['gates']['immersion']['long_ukrainian_sentences']}"
+    )
+
+
 def test_immersion_gate_strips_jsx_blocks_before_long_sentence_check(
     tmp_path: Path,
 ) -> None:
@@ -813,66 +897,16 @@ def test_immersion_gate_strips_jsx_blocks_before_long_sentence_check(
 
 
 def test_run_python_qg_passes_structural_fixture(tmp_path: Path) -> None:
-    plan_path = tmp_path / "plan.yaml"
-    module_dir = tmp_path / "my-morning"
-    module_dir.mkdir()
-    _write_yaml(plan_path, _small_plan())
-    (module_dir / "module.md").write_text(
-        "\n".join(
-            [
-                "# Мій ранок",
-                "",
-                "## Діалоги",
-                "",
-                "This morning pattern is simple and concrete for careful adult",
-                "learners. Use **прокидаюся**, **вмиваюся**, **одягаюся**,",
-                "and **снідаю** before breakfast today clearly.",
-                "",
-                "<!-- INJECT_ACTIVITY: act-1 -->",
-            ]
-        ),
-        encoding="utf-8",
-    )
-    _write_yaml(
-        module_dir / "activities.yaml",
-        [
-            {
-                "id": "act-1",
-                "type": "fill-in",
-                "title": "Додайте -ся",
-                "items": [
-                    {
-                        "sentence": "Я вмиваю__.",
-                        "answer": "ся",
-                        "options": ["ся", "ти", "ми"],
-                    }
-                ],
-            }
-        ],
-    )
-    _write_yaml(
-        module_dir / "vocabulary.yaml",
-        [
-            {
-                "lemma": "прокидатися",
-                "translation": "to wake up",
-                "pos": "verb",
-                "usage": "Я прокидаюся.",
-            }
-        ],
-    )
-    _write_yaml(
-        module_dir / "resources.yaml",
-        [{"title": "Караман Grade 10, p.176", "source_ref": "Караман Grade 10, p.176"}],
-    )
+    """Smoke test: the baseline `_passing_qg_fixture` produces a green report.
 
-    def fake_verify(words: list[str]) -> dict[str, list[dict]]:
-        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+    Acts as the canary for run_python_qg. If a future change breaks the basic
+    happy-path module shape, this test surfaces it before any of the targeted
+    bugfix tests run.
+    """
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
 
     report = linear_pipeline.run_python_qg(
-        module_dir,
-        plan_path,
-        verify_words_fn=fake_verify,
+        module_dir, plan_path, verify_words_fn=fake_verify
     )
 
     assert report["gates"]["passed"] is True
