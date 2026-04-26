@@ -51,11 +51,6 @@ WRITER_ARTIFACTS = (
     "vocabulary.yaml",
     "resources.yaml",
 )
-WRITER_JSON_ARTIFACTS = (
-    "activities.yaml",
-    "vocabulary.yaml",
-    "resources.yaml",
-)
 
 
 @dataclass(frozen=True, slots=True)
@@ -66,6 +61,10 @@ class JsonArtifactSchema:
     required_item_fields: Mapping[str, type]
 
 
+# Single source of truth for which artifacts use strict JSON: the keys of
+# this map. `WRITER_JSON_ARTIFACTS` (a tuple of those keys, used downstream
+# in `parse_writer_output_strict_json`) is derived below to keep the two
+# constants from drifting out of sync.
 WRITER_JSON_SCHEMAS: dict[str, JsonArtifactSchema] = {
     "activities.yaml": JsonArtifactSchema(
         root_type=list,
@@ -90,6 +89,7 @@ WRITER_JSON_SCHEMAS: dict[str, JsonArtifactSchema] = {
         },
     ),
 }
+WRITER_JSON_ARTIFACTS: tuple[str, ...] = tuple(WRITER_JSON_SCHEMAS)
 
 QUALITY_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
     "russianisms_clean": (
@@ -627,10 +627,14 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
             f"{artifact} schema validation failed: root must be "
             f"{schema.root_type.__name__}"
         )
-    if not isinstance(parsed, list):
-        raise LinearPipelineError(
-            f"{artifact} schema validation failed: root must be a list"
-        )
+
+    # The downstream item-iteration assumes a list. All current schemas
+    # specify `root_type=list`; if a future schema uses a different root
+    # (e.g. `dict`), this function needs a different iteration strategy.
+    assert isinstance(parsed, list), (
+        f"validator for {artifact!r} expects list root; "
+        f"add per-root-type handling if {schema.root_type.__name__} is added"
+    )
 
     for index, item in enumerate(parsed, start=1):
         if not isinstance(item, dict):
