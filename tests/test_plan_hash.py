@@ -194,7 +194,7 @@ def test_resume_reruns_stale_phase(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(v6_build.ModuleBuildLock, "acquire", lambda self: True)
     monkeypatch.setattr(v6_build.ModuleBuildLock, "release", lambda self: None)
     monkeypatch.setattr(v6_build, "_run_pre_build_gate", lambda *args, **kwargs: True)
-    monkeypatch.setattr(v6_build, "_ensure_contract_artifacts", lambda *args, **kwargs: None)
+    monkeypatch.setattr(v6_build, "_ensure_contract_artifacts", lambda *args, **kwargs: ({}, {}))
     monkeypatch.setattr(orch_index, "generate_index", lambda *args, **kwargs: None)
 
     calls: list[str] = []
@@ -242,20 +242,24 @@ def test_resume_reruns_stale_phase(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(v6_build, "_post_process_content", lambda *args, **kwargs: 0)
     monkeypatch.setattr(v6_build, "step_vocab", fake_vocab)
     monkeypatch.setattr(v6_build, "step_verify", lambda *args, **kwargs: True)
+    from build.convergence_loop import (
+        ConvergenceRunResult,
+    )
+
     monkeypatch.setattr(
         v6_build,
-        "_run_review_heal_loop",
-        lambda *args, **kwargs: v6_build.ReviewLoopRunResult(
-            outcome="pass",
+        "_run_convergence_loop",
+        lambda *args, **kwargs: ConvergenceRunResult(
+            terminal="pass",
             rounds=(
-                v6_build.ReviewRoundState(
-                    round_num=1,
-                    passed=True,
-                    score=9.5,
-                    review_text="## Verdict: PASS\n",
-                    contract_violations=(),
-                ),
+                {
+                    "round_num": 1,
+                    "writer": "codex",
+                    "score_overall": 9.5,
+                },
             ),
+            trace=(),
+            writer="codex",
         ),
     )
     monkeypatch.setattr(v6_build, "step_review_style", lambda *args, **kwargs: (True, 9.4, "phase: review-style\n"))

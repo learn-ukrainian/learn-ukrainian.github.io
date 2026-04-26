@@ -109,7 +109,7 @@ def test_claude_entry_has_bridge_only_resume_policy():
 def test_load_adapter_codex():
     adapter = _load_adapter("codex")
     assert adapter.name == "codex"
-    assert adapter.default_model == "gpt-5.4"
+    assert adapter.default_model == "gpt-5.5"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 

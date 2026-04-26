@@ -161,6 +161,7 @@ def test_resume_plan_detects_plan_hash_drift_and_invalidates_from_earliest_write
         "exercises",
         "activities",
         "repair",
+        "activity-pre-validate",
         "verify-exercises",
         "annotate",
         "vocab",
