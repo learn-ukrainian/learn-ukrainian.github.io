@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -458,6 +459,357 @@ def test_aggregate_llm_review_requires_quoted_evidence() -> None:
 
     with pytest.raises(linear_pipeline.LinearPipelineError, match="quoted excerpt"):
         linear_pipeline.aggregate_llm_review(report, "A1")
+
+
+def _passing_qg_fixture(tmp_path: Path) -> tuple[Path, Path, Callable]:
+    """Build a minimal but green QG fixture; tests then mutate one artifact."""
+    plan_path = tmp_path / "plan.yaml"
+    module_dir = tmp_path / "my-morning"
+    module_dir.mkdir()
+    _write_yaml(plan_path, _small_plan())
+    (module_dir / "module.md").write_text(
+        "\n".join(
+            [
+                "# Мій ранок",
+                "",
+                "## Діалоги",
+                "",
+                "This morning pattern is simple and concrete for careful adult",
+                "learners. Use **прокидаюся**, **вмиваюся**, **одягаюся**,",
+                "and **снідаю** before breakfast today clearly.",
+                "",
+                "<!-- INJECT_ACTIVITY: act-1 -->",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    _write_yaml(
+        module_dir / "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "fill-in",
+                "title": "Додайте -ся",
+                "items": [
+                    {
+                        "sentence": "Я вмиваю__.",
+                        "answer": "ся",
+                        "options": ["ся", "ти", "ми"],
+                    }
+                ],
+            }
+        ],
+    )
+    _write_yaml(
+        module_dir / "vocabulary.yaml",
+        [
+            {
+                "lemma": "прокидатися",
+                "translation": "to wake up",
+                "pos": "verb",
+                "usage": "Я прокидаюся.",
+            }
+        ],
+    )
+    _write_yaml(
+        module_dir / "resources.yaml",
+        [{"title": "Караман Grade 10, p.176", "source_ref": "Караман Grade 10, p.176"}],
+    )
+
+    def fake_verify(words: list[str]) -> dict[str, list[dict]]:
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    return module_dir, plan_path, fake_verify
+
+
+def test_ai_slop_gate_ignores_correction_field_in_error_correction_activity(
+    tmp_path: Path,
+) -> None:
+    """The `correction:` YAML field name in error-correction activities is not slop.
+
+    Round 3 (2026-04-26) failed `ai_slop_clean` because the `\\bCorrection:`
+    contamination pattern (case-insensitive) matched the `correction:` field
+    name in act-my-morning-9. That field is part of the schema, not prose.
+    """
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
+    _write_yaml(
+        module_dir / "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "fill-in",
+                "title": "Додайте -ся",
+                "items": [
+                    {
+                        "sentence": "Я вмиваю__.",
+                        "answer": "ся",
+                        "options": ["ся", "ти", "ми"],
+                    }
+                ],
+            },
+            {
+                "id": "act-2",
+                "type": "error-correction",
+                "title": "Знайдіть помилку",
+                "sentences": [
+                    {
+                        "error": "Ти прокидаєштся о сьомій.",
+                        "correction": "Ти прокидаєшся о сьомій.",
+                        "translation": "You wake up at seven.",
+                    }
+                ],
+            },
+        ],
+    )
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    assert report["gates"]["ai_slop_clean"]["passed"] is True
+    assert report["gates"]["ai_slop_clean"]["hits"] == []
+
+
+def test_vesum_gate_lowercases_before_lookup(tmp_path: Path) -> None:
+    """Sentence-initial Ukrainian words must match VESUM lemmas.
+
+    VESUM stores lemmas in lowercase. Before this fix, `Спочатку` (capital С,
+    sentence-initial) returned 0 matches even though `спочатку` exists.
+    """
+    module_dir, plan_path, _ = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "## Діалоги\n\nСпочатку я **прокидаюся**, потім вмиваюся.",
+        encoding="utf-8",
+    )
+
+    received: list[list[str]] = []
+
+    def lc_only_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {
+            word: [{"lemma": word, "pos": "x", "tags": ""}] if word == word.lower() else []
+            for word in words
+        }
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=lc_only_verify
+    )
+
+    # All forwarded lookups are lowercase.
+    assert received and all(word == word.lower() for word in received[0])
+    assert report["gates"]["vesum_verified"]["passed"] is True
+
+
+def test_vesum_gate_strips_phonetic_transcriptions_in_brackets(tmp_path: Path) -> None:
+    """Phonetic notation in `[...]` must NOT be tokenized for VESUM lookup."""
+    module_dir, plan_path, _fake_verify = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "\n".join(
+            [
+                "## Діалоги",
+                "",
+                "Pronounce **вмивається** as [ц':а] and **вмиваєшся** as [с':а].",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    received: list[list[str]] = []
+
+    def capturing_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=capturing_verify
+    )
+
+    forwarded = received[0]
+    # Bracket fragments must not appear in the VESUM lookup set.
+    for fragment in ("ц':а", "с':а", "ц", "т''с''а"):
+        assert fragment not in forwarded, (
+            f"phonetic fragment {fragment!r} leaked into VESUM lookup: {forwarded}"
+        )
+
+
+def test_vesum_gate_strips_hyphen_prefix_morpheme_notation(tmp_path: Path) -> None:
+    """Conjugation suffix labels like `-шся`, `-ться` are morpheme notation.
+
+    Ukrainian grammar texts conventionally write conjugation endings with a
+    leading hyphen (compare English `-tion`, `-ness`). These fragments are
+    not VESUM lemmas and must be excluded from lookup. Legitimate hyphenated
+    compounds like `темно-синій` (preceded by a word character) stay intact.
+    """
+    module_dir, plan_path, _fake_verify = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "\n".join(
+            [
+                "## Діалоги",
+                "",
+                "The ending **-шся** sounds like [с':а]. The ending **-ться**",
+                "sounds like [ц':а]. Compare with the legitimate compound",
+                "**темно-синій** which has both halves as real words.",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    received: list[list[str]] = []
+
+    def capturing_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=capturing_verify
+    )
+
+    forwarded = received[0]
+    # Morpheme-notation fragments are stripped.
+    for fragment in ("шся", "ться"):
+        assert fragment not in forwarded, (
+            f"morpheme fragment {fragment!r} leaked into VESUM lookup: {forwarded}"
+        )
+    # The compound `темно-синій` survives intact (one match — the word regex
+    # allows internal hyphens in word characters).
+    assert "темно-синій" in forwarded
+
+
+def test_vesum_gate_strips_fill_in_blank_syntax(tmp_path: Path) -> None:
+    """Fill-in passages with `{ся}`, `{ться}` blank markers are not lemmas.
+
+    The fill-in activity passage syntax `Я вмиваю{ся}. Він прокидає{ться}.`
+    marks the blanks the student fills in. The content inside `{...}` is a
+    suffix fragment, not a VESUM-checkable word.
+    """
+    module_dir, plan_path, _fake_verify = _passing_qg_fixture(tmp_path)
+    _write_yaml(
+        module_dir / "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "fill-in",
+                "title": "Додайте -ся",
+                "passage": "Я вмиваю{ся}. Ти одягаєш{ся}. Він прокидає{ться}. Ми збираємо{ся}.",
+            }
+        ],
+    )
+
+    received: list[list[str]] = []
+
+    def capturing_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=capturing_verify
+    )
+
+    forwarded = received[0]
+    for fragment in ("ся", "ться"):
+        assert fragment not in forwarded, (
+            f"fill-in blank fragment {fragment!r} leaked into VESUM lookup: "
+            f"{forwarded}"
+        )
+    # The verb stems around the blanks (вмиваю, одягаєш, etc.) ARE checked.
+    assert "вмиваю" in forwarded
+    assert "прокидає" in forwarded
+
+
+def test_vesum_gate_skips_error_field_of_error_correction_activity(
+    tmp_path: Path,
+) -> None:
+    """Intentional misspellings in `error:` fields must not be VESUM-checked.
+
+    The `error-correction` activity type stores the typo students must fix in
+    the `error:` field. Verifying that against VESUM would always fail.
+    """
+    module_dir, plan_path, _ = _passing_qg_fixture(tmp_path)
+    _write_yaml(
+        module_dir / "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "error-correction",
+                "title": "Знайдіть помилку",
+                "sentences": [
+                    {
+                        "error": "Ти прокидаєштся о сьомій.",
+                        "correction": "Ти прокидаєшся о сьомій.",
+                        "translation": "You wake up at seven.",
+                    }
+                ],
+            }
+        ],
+    )
+
+    received: list[list[str]] = []
+
+    def capturing_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        return {word: [{"lemma": word, "pos": "x", "tags": ""}] for word in words}
+
+    linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=capturing_verify
+    )
+
+    # The intentionally-misspelled token (lowercased) is excluded.
+    forwarded = received[0]
+    assert "прокидаєштся" not in forwarded, (
+        f"intentional typo leaked into VESUM lookup: {forwarded}"
+    )
+    # The correction (well-formed) IS verified.
+    assert "прокидаєшся" in forwarded
+
+
+def test_immersion_gate_strips_jsx_blocks_before_long_sentence_check(
+    tmp_path: Path,
+) -> None:
+    """A `<DialogueBox lines=[...]/>` is one structural element, not one sentence.
+
+    Round 3 (2026-04-26) failed `immersion.long_ukrainian_sentences` because
+    the entire DialogueBox JSX prop array (10+ Ukrainian lines) was read as a
+    single sentence. JSX must be stripped before sentence-boundary parsing.
+    """
+    module_dir, plan_path, fake_verify = _passing_qg_fixture(tmp_path)
+    (module_dir / "module.md").write_text(
+        "\n".join(
+            [
+                "## Діалоги",
+                "",
+                "Listen to **Ліна** and **Настя** talk about their morning routine.",
+                "Pay attention to verbs ending in **-ся** and copy the pattern.",
+                "",
+                "<DialogueBox",
+                '  characters={{ "Ліна": "Ліна", "Настя": "Настя" }}',
+                "  lines={[",
+                '    { speaker: "Ліна", text: "Коли ти прокидаєшся?", translation: "When?" },',
+                '    { speaker: "Настя", text: "Я прокидаюся о сьомій.", translation: "Seven." },',
+                '    { speaker: "Ліна", text: "Що ти робиш потім?", translation: "Then what?" },',
+                '    { speaker: "Настя", text: "Вмиваюся, одягаюся і снідаю.", translation: "Routine." },',
+                '    { speaker: "Ліна", text: "А коли ти йдеш на роботу?", translation: "When?" },',
+                '    { speaker: "Настя", text: "О восьмій.", translation: "At eight." }',
+                "  ]}",
+                "/>",
+                "",
+                "<!-- INJECT_ACTIVITY: act-1 -->",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    immersion = report["gates"]["immersion"]
+    # The dialogue text inside JSX still counts toward the percent (Ukrainian
+    # tokens were tokenized from the raw body), but the JSX block is no longer
+    # treated as one giant sentence.
+    assert immersion["long_ukrainian_sentences"] == [], (
+        f"JSX block was incorrectly read as a long sentence: "
+        f"{immersion['long_ukrainian_sentences']}"
+    )
 
 
 def test_run_python_qg_passes_structural_fixture(tmp_path: Path) -> None:

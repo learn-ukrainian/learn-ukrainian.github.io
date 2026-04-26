@@ -184,6 +184,65 @@ _UK_WORD_RE = re.compile(r"[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїє
 _INJECT_RE = re.compile(r"<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->")
 _HEADING_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 
+# Metalinguistic content that must be stripped before VESUM lookup:
+# phonetic transcriptions like [с':а] and inline code in backticks contain
+# fragments of words and IPA-ish notation, not whole VESUM-checkable lemmas.
+_FENCED_CODE_RE = re.compile(r"```.*?```", re.DOTALL)
+_INLINE_CODE_RE = re.compile(r"`[^`]*`")
+_BRACKETS_RE = re.compile(r"\[[^\]\n]*\]")
+
+# Fill-in blank syntax: passages like `Я вмиваю{ся}. Ти одягаєш{ся}.` mark the
+# blank students fill in. The content inside `{...}` is a fragment (typically
+# a suffix), not a VESUM-checkable lemma.
+_BRACES_RE = re.compile(r"\{[^}\n]*\}")
+
+# Hyphen-prefixed morpheme notation: `-ться`, `-шся`, `-юся` — the conjugation
+# ending labels Ukrainian grammar texts use when discussing suffixes. The
+# preceding lookbehind `\B` ensures legitimate hyphenated compounds like
+# `темно-синій` (where the char before `-` is a Ukrainian letter, hence \b)
+# are NOT stripped; only fragments where the hyphen is at a non-word boundary
+# (e.g., after `*`, `(`, ` `) match.
+_MORPHEME_FRAGMENT_RE = re.compile(
+    r"\B-[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ]*"
+)
+
+# JSX self-closing or paired component blocks. Treated as one structural unit
+# in `_immersion_gate`'s long-sentence detection so prop arrays like
+# `<DialogueBox lines={[{text: "..."}]}/>` aren't read as a single 50-word
+# Ukrainian sentence.
+_JSX_BLOCK_RE = re.compile(
+    r"<[A-Z][A-Za-z0-9]*(?:[^<>]|<(?![A-Z/]))*?(?:/>|</[A-Z][A-Za-z0-9]*>)",
+    re.DOTALL,
+)
+
+# Activity field whose value is intentionally misspelled — students correct it.
+# Excluded from VESUM lookup.
+_ERROR_CORRECTION_TYPE = "error-correction"
+_ERROR_CORRECTION_INTENTIONAL_FIELD = "error"
+
+# String fields whose values are user-facing prose (subject to AI-slop checks).
+# YAML structural keys like `correction:` and `correctAnswer:` are deliberately
+# excluded — those are schema field names, not prose.
+_PROSE_VALUE_FIELDS = frozenset(
+    {
+        "instruction",
+        "title",
+        "subtitle",
+        "passage",
+        "statement",
+        "prompt",
+        "question",
+        "sentence",
+        "translation",
+        "source",
+        "target",
+        "usage",
+        "notes",
+        "summary",
+        "description",
+    }
+)
+
 
 class LinearPipelineError(RuntimeError):
     """Raised when a linear pipeline stage fails fast."""
@@ -588,10 +647,21 @@ def run_python_qg(
         ]
     )
 
+    # AI slop and VESUM walk artifacts structurally so YAML schema field names
+    # like `correction:` (in error-correction activities) and intentional
+    # misspellings in `error:` fields don't trigger false positives.
+    prose_text = _extract_prose_text(module_text, activities, vocabulary, resources)
+
     gates: dict[str, Any] = {
         "word_count": _word_count_gate(module_text, int(plan["word_target"])),
         "plan_sections": _section_gate(module_text, plan),
-        "vesum_verified": _vesum_gate(text_for_quality, verify_words_fn),
+        "vesum_verified": _vesum_gate(
+            module_text=module_text,
+            activities=activities,
+            vocabulary=vocabulary,
+            resources=resources,
+            verify_words_fn=verify_words_fn,
+        ),
         "citations_resolve": _citation_gate(resources, plan),
         "immersion": _immersion_gate(module_text, plan),
         "inject_activity_ids": _inject_activity_gate(module_text, activities),
@@ -601,7 +671,7 @@ def run_python_qg(
             int(plan["sequence"]),
             str(plan["slug"]),
         ),
-        "ai_slop_clean": _ai_slop_gate(text_for_quality),
+        "ai_slop_clean": _ai_slop_gate(prose_text),
         "component_props": _component_prop_gate(activities),
         "mdx_render": {"passed": None, "message": "Run after publish stage"},
     }
@@ -893,10 +963,31 @@ def _extract_section_text(text: str, title: str) -> str:
 
 
 def _vesum_gate(
-    text: str,
+    *,
+    module_text: str,
+    activities: list[dict[str, Any]],
+    vocabulary: list[dict[str, Any]],
+    resources: list[dict[str, Any]],
     verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None,
 ) -> dict[str, Any]:
+    """Verify Ukrainian words against VESUM, walking artifacts structurally.
+
+    Three classes of false positives are deliberately excluded:
+
+    1. **Phonetic transcriptions and inline code** — `[с':а]`, `[ц':а]`, and
+       backticked fragments like `` `вмиваєс':а` `` are metalinguistic notation
+       (parts of words, IPA-ish symbols), not VESUM lemmas.
+    2. **Intentional misspellings in `error-correction` activities** — the
+       `error:` field of an `error-correction` activity contains the typo the
+       student must fix (e.g. `прокидаєштся`). Verifying it would always fail.
+    3. **Sentence-initial capitalization** — VESUM is case-sensitive, so
+       `Спочатку` (capitalized first word) returns no matches even though
+       `спочатку` does. Lookup is performed in lowercase; the report keeps
+       original casing for evidence.
+    """
     from scripts.audit.config import PROPER_NAME_WHITELIST, VESUM_MIN_WORD_LENGTH
+
+    text = _build_vesum_text(module_text, activities, vocabulary, resources)
 
     words = sorted(
         {
@@ -905,16 +996,21 @@ def _vesum_gate(
             if len(word.strip("-'ʼ")) >= VESUM_MIN_WORD_LENGTH
         }
     )
-    unchecked = [word for word in words if word not in PROPER_NAME_WHITELIST]
+    whitelist_lc = {name.lower() for name in PROPER_NAME_WHITELIST}
+    unchecked = [word for word in words if word.lower() not in whitelist_lc]
     if verify_words_fn is None:
         from scripts.rag.query import verify_words as verify_words_fn
 
+    # VESUM is case-sensitive — lowercase before lookup so sentence-initial
+    # words like "Спочатку" match the lemma "спочатку".
+    lookup_words = sorted({word.lower() for word in unchecked})
     try:
-        verified = verify_words_fn(unchecked)
+        verified = verify_words_fn(lookup_words)
     except Exception as exc:
         return {"passed": False, "error": str(exc), "checked": len(unchecked)}
 
-    missing = sorted(word for word, matches in verified.items() if not matches)
+    missing_lc = {word for word, matches in verified.items() if not matches}
+    missing = sorted({word for word in unchecked if word.lower() in missing_lc})
     return {
         "passed": not missing,
         "checked": len(unchecked),
@@ -922,6 +1018,108 @@ def _vesum_gate(
         "missing": missing[:100],
         "missing_count": len(missing),
     }
+
+
+def _strip_metalinguistic(text: str) -> str:
+    """Strip phonetic transcriptions, code, blank syntax, and morpheme labels.
+
+    Four categories of metalinguistic content are removed before VESUM lookup:
+
+    - `[...]` — phonetic notation like `[с':а]`, `[ц':а]`
+    - `` `...` `` and ` ``` ... ``` ` — inline/fenced code
+    - `{...}` — fill-in blank syntax like `Я вмиваю{ся}. Він прокидає{ться}.`
+    - `\\B-морфема` — hyphen-prefixed conjugation labels like `**-шся**`,
+      `**-ться**`. The `\\B` lookbehind protects legitimate hyphenated
+      compounds (`темно-синій`) where the char before `-` is a word char.
+
+    Used by the VESUM gate to avoid false positives on fragments that aren't
+    VESUM-checkable lemmas.
+    """
+    text = _FENCED_CODE_RE.sub(" ", text)
+    text = _INLINE_CODE_RE.sub(" ", text)
+    text = _BRACKETS_RE.sub(" ", text)
+    text = _BRACES_RE.sub(" ", text)
+    text = _MORPHEME_FRAGMENT_RE.sub(" ", text)
+    return text
+
+
+def _build_vesum_text(
+    module_text: str,
+    activities: list[dict[str, Any]],
+    vocabulary: list[dict[str, Any]],
+    resources: list[dict[str, Any]],
+) -> str:
+    """Compose the text blob that VESUM verifies, with structural exclusions."""
+    parts = [_strip_metalinguistic(module_text)]
+    for activity in activities:
+        parts.append(_strip_metalinguistic(_activity_vesum_text(activity)))
+    for entry in vocabulary:
+        if isinstance(entry, dict):
+            parts.append(_strip_metalinguistic(str(entry.get("lemma", ""))))
+            parts.append(_strip_metalinguistic(str(entry.get("usage", ""))))
+    for entry in resources:
+        if isinstance(entry, dict):
+            parts.append(_strip_metalinguistic(str(entry.get("title", ""))))
+            parts.append(_strip_metalinguistic(str(entry.get("notes", ""))))
+    return "\n".join(part for part in parts if part)
+
+
+def _activity_vesum_text(activity: dict[str, Any]) -> str:
+    """Walk an activity's string values, excluding intentional-error fields.
+
+    For `error-correction` activities, the `error:` field is the typo the
+    student is asked to fix; verifying it against VESUM would always fail.
+    All other string values participate in the lookup.
+    """
+    skip_error = activity.get("type") == _ERROR_CORRECTION_TYPE
+    chunks: list[str] = []
+
+    def _walk(node: Any) -> None:
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if skip_error and key == _ERROR_CORRECTION_INTENTIONAL_FIELD:
+                    continue
+                _walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                _walk(item)
+        elif isinstance(node, str):
+            chunks.append(node)
+
+    _walk(activity)
+    return "\n".join(chunks)
+
+
+def _extract_prose_text(
+    module_text: str,
+    activities: list[dict[str, Any]],
+    vocabulary: list[dict[str, Any]],
+    resources: list[dict[str, Any]],
+) -> str:
+    """Concatenate user-facing prose strings for AI-slop pattern checks.
+
+    Slop patterns target English chatter (e.g., "Welcome", "Buckle up",
+    "Correction:"). They run on `module.md` plus the prose-bearing values of
+    activities/vocab/resources — not on the YAML field NAMES, which include
+    legitimate schema keys like `correction:` (in `error-correction`
+    activities) that would otherwise produce false positives.
+    """
+    parts = [module_text]
+
+    def _walk(node: Any) -> None:
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key in _PROSE_VALUE_FIELDS and isinstance(value, str):
+                    parts.append(value)
+                else:
+                    _walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                _walk(item)
+
+    for source in (activities, vocabulary, resources):
+        _walk(source)
+    return "\n".join(parts)
 
 
 def _quality_fields(text: str) -> dict[str, dict[str, Any]]:
@@ -944,6 +1142,16 @@ def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> 
 
 
 def _immersion_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Check Ukrainian immersion ratio + flag overly long Ukrainian sentences.
+
+    The percent calculation includes JSX prop content (so Ukrainian text inside
+    a `<DialogueBox lines=[...]/>` counts toward immersion). The long-sentence
+    check, however, strips JSX components first — without that, a dialogue
+    component with N lines is read as ONE sentence with N×words Ukrainian
+    tokens, producing a false positive every time. The check also splits on
+    markdown list-item starts (`* `, `- `, `1. `) so bullet items render as
+    separate sentences instead of one giant joined run.
+    """
     level = str(plan["level"]).lower()
     sequence = int(plan["sequence"])
     min_pct, max_pct = get_immersion_range(level, sequence)
@@ -951,9 +1159,12 @@ def _immersion_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
     tokens = _WORD_RE.findall(body)
     uk_tokens = [token for token in tokens if _UK_WORD_RE.search(token)]
     pct = round((len(uk_tokens) / len(tokens) * 100), 2) if tokens else 0.0
+
+    body_for_sentences = _JSX_BLOCK_RE.sub(" ", body)
+    sentence_split_re = re.compile(r"[.!?]\s+|\n\s*[*\-]\s+|\n\s*\d+\.\s+")
     long_sentences = [
         sentence.strip()
-        for sentence in re.split(r"[.!?]\s+", body)
+        for sentence in sentence_split_re.split(body_for_sentences)
         if len(_UK_WORD_RE.findall(sentence)) > 10
     ]
     return {
