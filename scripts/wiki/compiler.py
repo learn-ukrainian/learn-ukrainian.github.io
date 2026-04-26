@@ -75,6 +75,11 @@ def compile_article(
     """
     article_key = f"{domain}/{slug}"
 
+    # Deduplicate by file attribution before the prompt is built (#1591).
+    # Writer and registry-builder must see the same source set or body
+    # citations and registry IDs go out of alignment.
+    sources = _dedup_sources_by_attribution(sources)
+
     if dry_run:
         prompt = _build_prompt(
             topic=topic,
@@ -351,6 +356,39 @@ def _format_sources(sources: list[dict]) -> str:
     return "\n\n---\n\n".join(parts)
 
 
+def _dedup_sources_by_attribution(sources: list[dict]) -> list[dict]:
+    """Deduplicate source chunks by resolved file attribution.
+
+    Multiple chunks from the same source file collapse to the first
+    occurrence, preserving prompt-position order. Returns a new list; does not
+    mutate input.
+
+    This must run before ``_format_sources`` / ``_build_prompt`` so the writer
+    sees the same source set the registry builder later sees. Without this,
+    the writer cites positional [S1]..[SN] over the pre-dedup list while the
+    registry holds renumbered S1..SM IDs over the post-dedup list, leaving body
+    citations pointing to wrong or nonexistent registry entries. See #1591.
+    """
+    seen: set[str] = set()
+    deduped: list[dict] = []
+    for source in sources:
+        corpus = str(source.get("corpus") or source.get("source_type") or "").strip()
+        chunk_id = str(
+            source.get("chunk_id")
+            or source.get("title")
+            or source.get("parent_key")
+            or source.get("source_file")
+            or ""
+        ).strip()
+        attribution = resolve_chunk_attribution(chunk_id, corpus)
+        file_name = normalize_source_filename(str(attribution.get("file", "")))
+        if not file_name or file_name in seen:
+            continue
+        seen.add(file_name)
+        deduped.append(source)
+    return deduped
+
+
 def _build_sources_registry(
     article_path: Path,
     sources: list[dict],
@@ -379,6 +417,9 @@ def _build_sources_registry(
     attributed_sources: list[dict[str, object]] = []
     seen: set[str] = set()
     for source in sources:
+        # Primary dedup now happens at compile_article entry before prompt
+        # construction. Keep this guard for future call sites that might bypass
+        # that path.
         corpus = str(source.get("corpus") or source.get("source_type") or "").strip()
         chunk_id = str(
             source.get("chunk_id")
