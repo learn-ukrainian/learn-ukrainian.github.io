@@ -1,10 +1,18 @@
 # Learn Ukrainian — System Architecture
 
 > Last updated: 2026-03-15 | Issue: #892
+>
+> ⚠️ **LEGACY V5/V6-ERA DOC.** This document predates the EPIC #1577 reboot and describes the V5/V6 pipeline + the "Gemini builds → Claude reviews" agent paradigm, both of which are being replaced. Reboot-era authority lives in:
+> - [`docs/north-star.md`](../north-star.md) — what we're building and why
+> - [`docs/lesson-contract.md`](../lesson-contract.md) — what artifacts the pipeline must produce
+> - [`docs/decisions/2026-04-26-reboot-agent-responsibilities.md`](../decisions/2026-04-26-reboot-agent-responsibilities.md) — agent-role assignments (writer TBD, reviewer = Codex, wiki = Gemini)
+> - [`scripts/build/linear_pipeline.py`](../../scripts/build/linear_pipeline.py) — the new pipeline (Phase 4 in flight, PR #1594)
+>
+> Read this doc only for V5/V6 historical context. Specific lines below that hardcode "Gemini builds → Claude reviews" are V5/V6 paradigm and are NOT current reboot policy.
 
 ## Overview
 
-Learn Ukrainian is an AI-powered content factory that generates Ukrainian language learning materials. Two AI agents (Gemini builds, Claude reviews) produce curriculum content through a deterministic pipeline with quality gates and adversarial cross-review.
+Learn Ukrainian is an AI-powered content factory that generates Ukrainian language learning materials. **In the V5/V6 era covered by this doc**, two AI agents (Gemini builds, Claude reviews) produced curriculum content through a deterministic pipeline with quality gates and adversarial cross-review. **In the reboot**, the writer is TBD (decided at Phase 5+ approach), the reviewer is Codex, and an LLM still never reviews its own work.
 
 **Scale**: ~1700 modules across 23 tracks, ~143K LOC in `scripts/`, 25 JSON schemas.
 
@@ -93,7 +101,7 @@ plans/{level}/{slug}.yaml    →  Source of truth (reviewed before lock)
 └─────────────────────────┘        └─────────────────────────┘
 ```
 
-**Rule**: An LLM must NEVER review its own work. Gemini builds → Claude reviews.
+**Rule (V5/V6 era)**: An LLM must NEVER review its own work. Gemini builds → Claude reviews. **Reboot-era equivalent**: same constraint, different agents — writer-of-the-moment builds → Codex reviews. See [`docs/decisions/2026-04-26-reboot-agent-responsibilities.md`](../decisions/2026-04-26-reboot-agent-responsibilities.md).
 
 ### Cooperation Tooling
 
@@ -187,7 +195,7 @@ L1-agnostic Ukrainian. Separate schemas, no English.
 4. **Split build** — Content and activities are separate phases (default)
 5. **Activities after validate** — Grounded in validated content
 6. **Review sees everything** — Content + activities + vocabulary
-7. **Cross-agent review** — Gemini builds, Claude reviews, never self-review
+7. **Cross-agent review** — V5/V6: Gemini builds, Claude reviews. Reboot: writer TBD, Codex reviews. Never self-review either way.
 8. **Preflight auto-fix** — Fix prompt contradictions before wasting a build
 9. **Learner state injection** — Gemini knows what the student knows
 10. **Builder notes** — Structured handoff from Gemini to Claude

@@ -26,7 +26,7 @@ Usage:
     .venv/bin/python scripts/build/v6_build.py b1 1 --skeleton    # force skeleton
     .venv/bin/python scripts/build/v6_build.py b1 1 --no-skeleton # skip skeleton
     .venv/bin/python scripts/build/v6_build.py a1 1 --step write  # run single step
-    .venv/bin/python scripts/build/v6_build.py a1 1 --writer claude-tools  # default (2026-04-23)
+    .venv/bin/python scripts/build/v6_build.py a1 1 --writer claude-tools  # V6-LEGACY default (2026-04-23). Reboot: NOT YET DECIDED — see docs/decisions/2026-04-26-reboot-agent-responsibilities.md §3.
     .venv/bin/python scripts/build/v6_build.py a1 1 --writer gemini-tools  # research/exercises
     .venv/bin/python scripts/build/v6_build.py a1 1 --resume       # resume from last completed phase
     .venv/bin/python scripts/build/v6_build.py a1 1 --range 14     # batch (skips complete, rebuilds partial)
@@ -10704,7 +10704,7 @@ def main():
     parser.add_argument("--range", type=int, default=None, metavar="END",
                         help="Build modules from MODULE to END (inclusive). E.g., a1 7 --range 14")
     parser.add_argument("--writer", choices=["gemini", "gemini-tools", "claude", "claude-tools", "codex", "codex-tools"], default="claude-tools",
-                        help="Default: claude-tools (2026-04-23: switched from gemini-tools after #1431 v2 showed Gemini factual-hallucination on decolonization-critical facts — e.g. writing «блакитний» instead of «синій» for the Ukrainian flag. Opus has stronger factual adherence + less Russian-imperial training-data contamination. *-tools = with verification access during writing via MCP/shell)")
+                        help="V6-LEGACY default: claude-tools (2026-04-23: switched from gemini-tools after #1431 v2 showed Gemini factual-hallucination on decolonization-critical facts — e.g. writing «блакитний» instead of «синій» for the Ukrainian flag. Opus has stronger factual adherence + less Russian-imperial training-data contamination. *-tools = with verification access during writing via MCP/shell). REBOOT (EPIC #1577) does NOT inherit this default — module writer for the reboot is NOT YET DECIDED, see docs/decisions/2026-04-26-reboot-agent-responsibilities.md §3.")
     parser.add_argument("--reviewer", choices=["gemini", "gemini-tools", "claude", "claude-tools", "codex", "codex-tools"], default=None,
                         help="Override reviewer. Default: cross-agent (opposite of writer)")
     parser.add_argument("--step", choices=["check", "research", "pre-verify", "skeleton", "write", "honesty-annotate", "exercises", "activities", "repair", "activity-pre-validate", "verify-exercises", "annotate", "vocab-check", "enrich", "verify", "review", "review-style", "publish", "audit", "all"],
