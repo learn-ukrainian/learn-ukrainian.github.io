@@ -120,6 +120,57 @@ def test_invoke_writer_rejects_unknown_writer(tmp_path: Path) -> None:
         linear_pipeline.invoke_writer("Write the module.", writer="bogus", cwd=tmp_path)
 
 
+def test_parse_writer_output_extracts_four_fenced_artifacts() -> None:
+    output = """```markdown file=module.md
+# Мій ранок
+```
+
+```yaml file=activities.yaml
+- id: act-1
+  type: fill-in
+```
+
+```yaml file=vocabulary.yaml
+- lemma: ранок
+  translation: morning
+```
+
+```yaml file=resources.yaml
+- title: Караман Grade 10, p.176
+```
+"""
+
+    artifacts = linear_pipeline.parse_writer_output(output)
+
+    assert tuple(artifacts) == linear_pipeline.WRITER_ARTIFACTS
+    assert artifacts["module.md"].startswith("# Мій ранок")
+    assert yaml.safe_load(artifacts["activities.yaml"])[0]["id"] == "act-1"
+
+
+def test_parse_writer_output_rejects_missing_artifact() -> None:
+    output = """```markdown file=module.md
+# Мій ранок
+```
+"""
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="missing"):
+        linear_pipeline.parse_writer_output(output)
+
+
+def test_parse_review_response_accepts_json_fence() -> None:
+    response = """```json
+{"score": 9.2, "evidence": "\\"Мій ранок простий.\\"", "verdict": "PASS"}
+```"""
+
+    parsed = linear_pipeline.parse_review_response(response, "pedagogical")
+
+    assert parsed == {
+        "score": 9.2,
+        "evidence": '"Мій ранок простий."',
+        "verdict": "PASS",
+    }
+
+
 def test_aggregate_llm_review_requires_exact_qg_dims() -> None:
     report = {
         dim: {

@@ -28,7 +28,16 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-_TEST_PYTHON = str(Path(__file__).resolve().parent.parent / ".venv" / "bin" / "python")
+_TEST_PYTHON = sys.executable
+"""Python interpreter for subprocess tests.
+
+Use the interpreter currently running the tests (via ``sys.executable``)
+rather than hardcoding ``<repo>/.venv/bin/python``. The hardcoded path
+fails in delegated worktrees (created by ``scripts/delegate.py``) which
+don't have a per-worktree ``.venv``. ``sys.executable`` always resolves
+to whatever python is running pytest — so tests work in the main
+checkout (uses repo's ``.venv``) AND in delegated worktrees (uses the
+parent venv passed in through pytest's invocation)."""
 
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
@@ -109,7 +118,7 @@ def test_claude_entry_has_bridge_only_resume_policy():
 def test_load_adapter_codex():
     adapter = _load_adapter("codex")
     assert adapter.name == "codex"
-    assert adapter.default_model == "gpt-5.4"
+    assert adapter.default_model == "gpt-5.5"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 
@@ -236,13 +245,13 @@ def test_codex_adapter_build_invocation_workspace_write(tmp_path):
         prompt="hello",
         mode="workspace-write",
         cwd=tmp_path,
-        model="gpt-5.4-mini",
+        model="gpt-5.5-mini",
         task_id=None,
         session_id=None,
         tool_config=None,
     )
     assert "--full-auto" in plan.cmd
-    assert "gpt-5.4-mini" in plan.cmd  # model override honored
+    assert "gpt-5.5-mini" in plan.cmd  # model override honored
 
 
 def test_codex_adapter_mcp_tool_config(tmp_path):
@@ -498,7 +507,7 @@ def test_codex_parse_response_signaled_exit_is_never_rate_limit(tmp_path):
         "OpenAI Codex v0.118.0 (research preview)\n"
         "--------\n"
         "workdir: /foo\n"
-        "model: gpt-5.4\n"
+        "model: gpt-5.5\n"
         "--------\n"
         "user\n"
         "Review our rate-limit handling code. We had a usage limit\n"
@@ -953,7 +962,7 @@ def test_codex_parse_response_nested_divider_in_prompt_not_rate_limit(tmp_path):
         "OpenAI Codex v0.118.0 (research preview)\n"
         "--------\n"
         "workdir: /foo\n"
-        "model: gpt-5.4\n"
+        "model: gpt-5.5\n"
         "--------\n"
         "user\n"
         "Review our rate-limit handling code. Example:\n"
@@ -1007,7 +1016,7 @@ def test_codex_parse_response_failed_call_with_prompt_echo_not_rate_limit(tmp_pa
         "OpenAI Codex v0.118.0 (research preview)\n"
         "--------\n"
         "workdir: /Users/foo/project\n"
-        "model: gpt-5.4\n"
+        "model: gpt-5.5\n"
         "--------\n"
         "user\n"
         "Please review our rate-limit handling. We had a usage limit reached\n"
@@ -1049,7 +1058,7 @@ def test_codex_parse_response_prompt_echo_is_not_rate_limit(tmp_path):
         "OpenAI Codex v0.118.0 (research preview)\n"
         "--------\n"
         "workdir: /Users/foo/project\n"
-        "model: gpt-5.4\n"
+        "model: gpt-5.5\n"
         "provider: openai\n"
         "approval: never\n"
         "sandbox: read-only\n"
@@ -2756,6 +2765,33 @@ def test_invoke_danger_wraps_path_with_merge_shims(tmp_path):
     assert env.get("PATH", "").split(":")[0] == str(runner_mod._SHIMS_DIR)
     assert env.get("AGENT_REAL_GH")
     assert env.get("AGENT_REAL_GIT")
+
+
+def test_merge_guard_nested_env_ignores_existing_shim_paths(tmp_path):
+    """Nested guarded invocations must not recurse through the guard shims."""
+    from agent_runtime import runner as runner_mod
+
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_git = fake_bin / "git"
+    fake_gh = fake_bin / "gh"
+    fake_git.write_text("#!/usr/bin/env bash\nprintf 'real git\\n'\n")
+    fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real gh\\n'\n")
+    fake_git.chmod(0o755)
+    fake_gh.chmod(0o755)
+
+    env = {
+        "AGENT_NO_MERGE": "1",
+        "AGENT_REAL_GIT": str(runner_mod._SHIMS_DIR / "git"),
+        "AGENT_REAL_GH": str(runner_mod._SHIMS_DIR / "gh"),
+        "AGENT_ORIGINAL_PATH": os.pathsep.join([str(runner_mod._SHIMS_DIR), str(fake_bin)]),
+        "PATH": os.pathsep.join([str(runner_mod._SHIMS_DIR), str(fake_bin)]),
+    }
+
+    guarded = runner_mod._apply_merge_guard(mode="danger", env=env)
+
+    assert guarded["AGENT_REAL_GIT"] == str(fake_git)
+    assert guarded["AGENT_REAL_GH"] == str(fake_gh)
 
 
 def test_invoke_danger_respects_agent_allow_merge_opt_in(tmp_path):

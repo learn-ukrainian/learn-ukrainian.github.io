@@ -75,6 +75,28 @@ _SHIMS_DIR = Path(__file__).resolve().parent / "shims"
 _ADAPTER_CACHE: dict[str, AgentAdapter] = {}
 
 
+def _is_agent_runtime_shim(path: str | None) -> bool:
+    if not path:
+        return False
+    candidate = Path(path)
+    return (
+        len(candidate.parts) >= 3
+        and candidate.parts[-3:] == ("agent_runtime", "shims", candidate.name)
+    )
+
+
+def _resolve_real_binary(binary: str, *, original_path: str) -> str | None:
+    for path_entry in original_path.split(os.pathsep):
+        if not path_entry:
+            continue
+        candidate = Path(path_entry) / binary
+        if _is_agent_runtime_shim(str(candidate)):
+            continue
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return str(candidate)
+    return shutil.which(binary, path=original_path)
+
+
 def _merge_guard_enabled(*, mode: str, env: dict[str, str]) -> bool:
     """Return whether merge/approve/push-to-main operations must be blocked."""
     if env.get("AGENT_ALLOW_MERGE") == "1":
@@ -96,13 +118,13 @@ def _apply_merge_guard(*, mode: str, env: dict[str, str]) -> dict[str, str]:
     guarded_env["AGENT_NO_MERGE"] = "1"
     guarded_env["AGENT_ORIGINAL_PATH"] = original_path
 
-    real_gh = shutil.which("gh", path=original_path) if original_path else None
+    real_gh = _resolve_real_binary("gh", original_path=original_path) if original_path else None
     if real_gh:
         guarded_env["AGENT_REAL_GH"] = real_gh
     else:
         guarded_env.pop("AGENT_REAL_GH", None)
 
-    real_git = shutil.which("git", path=original_path) if original_path else None
+    real_git = _resolve_real_binary("git", original_path=original_path) if original_path else None
     if real_git:
         guarded_env["AGENT_REAL_GIT"] = real_git
     else:
