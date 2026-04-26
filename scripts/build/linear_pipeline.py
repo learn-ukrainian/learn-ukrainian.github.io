@@ -190,41 +190,69 @@ _HEADING_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 # fragments of words and IPA-ish notation, not whole VESUM-checkable lemmas.
 _FENCED_CODE_RE = re.compile(r"```.*?```", re.DOTALL)
 _INLINE_CODE_RE = re.compile(r"`[^`]*`")
-_BRACKETS_RE = re.compile(r"\[[^\]\n]*\]")
 
-# Fill-in blank syntax: passages like `Я вмиваю{ся}. Ти одягаєш{ся}.` mark the
-# blank students fill in. The content inside `{...}` is a fragment (typically
-# a suffix), not a VESUM-checkable lemma.
-_BRACES_RE = re.compile(r"\{[^}\n]*\}")
+# Phonetic-style brackets like `[с':а]`. The negative lookahead `(?!\()`
+# protects Markdown link syntax `[text](url)` — Markdown link text is
+# followed by `(`, phonetic transcriptions are not. Without this, link text
+# would be stripped and any misspellings inside `[слово](url)` would be
+# hidden from VESUM.
+_BRACKETS_RE = re.compile(r"\[[^\]\n]*\](?!\()")
+
+# Fill-in blank syntax: passages like `Я вмиваю{ся}. Ти одягаєш{ться}.` mark
+# the blank students fill in. Restricted to Ukrainian-letter-only content so
+# we don't accidentally strip JSX object literals like
+# `{ speaker: "Ліна", text: "Коли ти прокидаєшся?" }` (which would hide
+# misspellings in dialogue text from VESUM).
+_BRACES_RE = re.compile(r"\{[А-ЯІЇЄҐа-яіїєґ'ʼ]{1,12}\}")
 
 # Hyphen-prefixed morpheme notation: `-ться`, `-шся`, `-юся` — the conjugation
 # ending labels Ukrainian grammar texts use when discussing suffixes. The
-# preceding lookbehind `\B` ensures legitimate hyphenated compounds like
-# `темно-синій` (where the char before `-` is a Ukrainian letter, hence \b)
-# are NOT stripped; only fragments where the hyphen is at a non-word boundary
-# (e.g., after `*`, `(`, ` `) match.
+# explicit lookbehind requires the char before `-` to NOT be a Ukrainian or
+# Latin letter or digit — i.e., the hyphen must sit at a non-linguistic
+# boundary (markdown `*`/`_`, paren, whitespace, line start). This protects
+# legitimate hyphenated compounds like `темно-синій` (preceded by `о`) while
+# stripping morpheme labels in `**-шся**` and `__-шся__` (markdown bold). We
+# don't use Python's `\B` because `_` is a word character there, which would
+# make `__-шся__` un-strippable.
 _MORPHEME_FRAGMENT_RE = re.compile(
-    r"\B-[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ]*"
+    r"(?<![А-ЯІЇЄҐа-яіїєґ'ʼA-Za-z0-9])-[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ]*"
 )
 
 # JSX self-closing or paired component blocks. Treated as one structural unit
 # in `_immersion_gate`'s long-sentence detection so prop arrays like
 # `<DialogueBox lines={[{text: "..."}]}/>` aren't read as a single 50-word
-# Ukrainian sentence. Inner content allows raw `>` characters (legitimate in
-# props like `condition={count > 0}`) — termination is anchored to the literal
-# `/>` self-close or `</Component>` paired close.
+# Ukrainian sentence. The inner-content alternation `[^<]|<(?![A-Z/])` allows
+# `>` inside props (`condition={count > 0}`) but stops at any nested
+# capitalized JSX tag.
+#
+# Known limits — regex cannot fully parse JSX:
+#   1. Nested same-name components (`<Box><Box/></Box>`) leave a residual
+#      outer wrapper; the inner self-close eats the rest.
+#   2. Literal `<Capital>` inside a string prop (`text="Press <Enter>"`) or
+#      JSX comments (`{/* <X/> */}`) abort the non-greedy match early.
+# These are documented and tested as known shortcomings. A proper JSX
+# tokenizer would replace this regex; for the QG gate's purpose (avoiding
+# false-positive long-sentence flags) the regex catches the dominant case
+# (single-component dialogue/exercise blocks).
 _JSX_BLOCK_RE = re.compile(
     r"<[A-Z][A-Za-z0-9]*(?:[^<]|<(?![A-Z/]))*?(?:/>|</[A-Z][A-Za-z0-9]*>)",
     re.DOTALL,
 )
 
+# Capture the Ukrainian-bearing string values from JSX prop expressions
+# (`text: "..."`, `text="..."`). Used by `_immersion_gate` to give credit for
+# Ukrainian inside dialogue components without counting JSX prop KEYS or
+# English translation strings as English tokens.
+_JSX_STRING_VALUE_RE = re.compile(r'"([^"\n]*)"')
+
 # Sentence boundaries for the immersion gate's long-sentence check: end-of-
-# sentence punctuation, OR a markdown bullet/numbered-list marker (`* `, `- `,
-# `1. `). The bullet-marker alternations match start-of-string OR after a
-# newline, so a list at the very top of the body (e.g., immediately after
-# frontmatter) is recognized as a sentence boundary.
+# sentence punctuation (including Ukrainian `…`, `‼`, `⁇`, `⁈`, `⁉`) or a
+# markdown bullet/numbered-list marker (`* `, `- `, `1. `). The bullet-marker
+# alternations match start-of-string OR after a newline, so a list at the
+# very top of the body (e.g., immediately after frontmatter) is recognized
+# as a sentence boundary.
 _SENTENCE_SPLIT_RE = re.compile(
-    r"[.!?]\s+|(?:\n|^)\s*[*\-]\s+|(?:\n|^)\s*\d+\.\s+",
+    r"[.!?…‼⁇⁈⁉]+(?:\s+|$)|(?:\n|^)\s*[*\-]\s+|(?:\n|^)\s*\d+\.\s+",
     re.MULTILINE,
 )
 
@@ -1060,21 +1088,31 @@ def _walk_artifact_strings(
     node: Any,
     *,
     keep: Callable[[str | None, str], str | None],
+    skip_subtree_keys: frozenset[str] = frozenset(),
 ) -> list[str]:
     """Recursively collect string leaves from a YAML-like tree.
 
-    For each `(parent_key, string_value)` pair encountered, calls `keep` and
-    appends its return when non-None. Used to build the VESUM and AI-slop
-    text blobs over `activities`/`vocabulary`/`resources` with different
-    inclusion rules. Predicate operates at the leaf level — to skip an entire
-    subtree (e.g., `error:` field of error-correction), the caller must
-    pre-filter at the dict level instead.
+    Two-level inclusion control:
+
+    - `skip_subtree_keys`: dict keys whose entire VALUE subtree (string OR
+      nested dict/list) should be excluded. Used to drop intentional
+      misspellings stored under `error:` in `error-correction` activities,
+      so a future schema like `error: { text: "...", note: "..." }` would
+      still be entirely excluded — not just the top-level string.
+    - `keep(parent_key, string_value)`: leaf-level predicate, called for
+      every string leaf NOT skipped by the subtree filter. Returns the
+      string to include, or `None` to drop.
+
+    Used to build the VESUM and AI-slop text blobs over
+    `activities`/`vocabulary`/`resources` with different inclusion rules.
     """
     out: list[str] = []
 
     def _walk(value: Any, parent_key: str | None) -> None:
         if isinstance(value, dict):
             for key, child in value.items():
+                if key in skip_subtree_keys:
+                    continue
                 _walk(child, key)
         elif isinstance(value, list):
             for item in value:
@@ -1136,17 +1174,21 @@ def _activity_vesum_text(activity: dict[str, Any]) -> str:
     """Walk an activity's string values, excluding intentional-error fields.
 
     For `error-correction` activities, the `error:` field holds the typo the
-    student must fix; verifying it against VESUM would always fail. All other
-    string values participate in the lookup.
+    student must fix; verifying it against VESUM would always fail. The skip
+    is at the dict (subtree) level so even a future nested shape like
+    `error: { text: "...", note: "..." }` would be entirely excluded.
     """
-    skip_error_field = activity.get("type") == _ERROR_CORRECTION_TYPE
+    if activity.get("type") == _ERROR_CORRECTION_TYPE:
+        skip_subtree = frozenset({_ERROR_CORRECTION_INTENTIONAL_FIELD})
+    else:
+        skip_subtree = frozenset()
 
-    def keep(parent_key: str | None, value: str) -> str | None:
-        if skip_error_field and parent_key == _ERROR_CORRECTION_INTENTIONAL_FIELD:
-            return None
+    def keep(_parent_key: str | None, value: str) -> str | None:
         return value
 
-    return "\n".join(_walk_artifact_strings(activity, keep=keep))
+    return "\n".join(
+        _walk_artifact_strings(activity, keep=keep, skip_subtree_keys=skip_subtree)
+    )
 
 
 def _extract_prose_text(
@@ -1194,26 +1236,38 @@ def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> 
 def _immersion_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
     """Check Ukrainian immersion ratio + flag overly long Ukrainian sentences.
 
-    The percent calculation includes JSX prop content (so Ukrainian text inside
-    a `<DialogueBox lines=[...]/>` counts toward immersion). The long-sentence
-    check, however, strips JSX components first — without that, a dialogue
-    component with N lines is read as ONE sentence with N×words Ukrainian
-    tokens, producing a false positive every time. The check also splits on
-    markdown list-item starts (`* `, `- `, `1. `) so bullet items render as
-    separate sentences instead of one giant joined run.
+    Both the percent calculation AND the long-sentence check operate on a
+    JSX-stripped view of the body. Without that, prop KEYS (`speaker`,
+    `text`, `translation`) and English translation strings inside dialogue
+    components are counted as English tokens, deflating the immersion
+    percentage. To still credit Ukrainian-bearing dialogue text, we
+    separately extract string values from JSX (`text="..."` / `text: "..."`)
+    and add their tokens back. Net effect: only learner-facing Ukrainian
+    text inside JSX counts toward immersion, structural prop syntax doesn't.
+
+    The long-sentence check splits on Ukrainian-aware sentence punctuation
+    (`. ! ? … ‼ ⁇ ⁈ ⁉`) and markdown list-item starts (`* `, `- `, `1. `,
+    including at start-of-string) so bullet items render as separate
+    sentences instead of one giant joined run.
     """
     level = str(plan["level"]).lower()
     sequence = int(plan["sequence"])
     min_pct, max_pct = get_immersion_range(level, sequence)
     body = _strip_frontmatter_and_headings(_strip_comments(text))
-    tokens = _WORD_RE.findall(body)
+
+    body_no_jsx = _JSX_BLOCK_RE.sub(" ", body)
+    jsx_string_props: list[str] = []
+    for jsx_block in _JSX_BLOCK_RE.findall(body):
+        jsx_string_props.extend(_JSX_STRING_VALUE_RE.findall(jsx_block))
+    counted_text = "\n".join([body_no_jsx, *jsx_string_props])
+
+    tokens = _WORD_RE.findall(counted_text)
     uk_tokens = [token for token in tokens if _UK_WORD_RE.search(token)]
     pct = round((len(uk_tokens) / len(tokens) * 100), 2) if tokens else 0.0
 
-    body_for_sentences = _JSX_BLOCK_RE.sub(" ", body)
     long_sentences = [
         sentence.strip()
-        for sentence in _SENTENCE_SPLIT_RE.split(body_for_sentences)
+        for sentence in _SENTENCE_SPLIT_RE.split(body_no_jsx)
         if len(_UK_WORD_RE.findall(sentence)) > 10
     ]
     return {
