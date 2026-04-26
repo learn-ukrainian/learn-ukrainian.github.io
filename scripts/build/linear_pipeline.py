@@ -12,7 +12,7 @@ import json
 import re
 import sys
 from collections.abc import Callable, Mapping
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
@@ -51,6 +51,102 @@ WRITER_ARTIFACTS = (
     "vocabulary.yaml",
     "resources.yaml",
 )
+
+
+@dataclass(frozen=True, slots=True)
+class JsonArtifactSchema:
+    """Minimal runtime schema for writer JSON artifacts.
+
+    Two extra-key policies are supported via `optional_item_fields`:
+
+    - Tight schemas (vocabulary, resources): list every legitimate field in
+      `required_item_fields` + `optional_item_fields`. Any other key is
+      treated as a hallucinated field and rejected — without this, a writer
+      that emits `{"lemma": ..., "translation": ..., "kek": "..."}` would
+      silently leak `kek` into the artifact.
+    - Polymorphic schemas (activities): the per-type schema (fields used by
+      `fill-in` vs `quiz` vs `error-correction` etc.) is enforced later by
+      `_component_prop_gate` against `docs/lesson-schema.yaml`. The parser-
+      level schema here lists only the fields common to all activity types
+      and leaves `optional_item_fields` permissive enough to accept any of
+      the known per-type fields, so type-specific keys aren't mis-flagged
+      as hallucinated.
+    """
+
+    root_type: type
+    required_item_fields: Mapping[str, type]
+    optional_item_fields: frozenset[str] = frozenset()
+
+
+# Single source of truth for which artifacts use strict JSON: the keys of
+# this map. `WRITER_JSON_ARTIFACTS` (a tuple of those keys, used downstream
+# in `parse_writer_output_strict_json`) is derived below to keep the two
+# constants from drifting out of sync.
+WRITER_JSON_SCHEMAS: dict[str, JsonArtifactSchema] = {
+    "activities.yaml": JsonArtifactSchema(
+        root_type=list,
+        required_item_fields={
+            "id": str,
+            "type": str,
+        },
+        # Polymorphic — per-activity-type fields enforced by
+        # `_component_prop_gate` against `docs/lesson-schema.yaml`. This
+        # set lists fields known to appear in some activity type so the
+        # strict-extra-keys gate doesn't misfire on legitimate per-type
+        # content. New activity types may need additions here.
+        optional_item_fields=frozenset({
+            "title",
+            "instruction",
+            "items",
+            "passage",
+            "sentences",
+            "questions",
+            "options",
+            "pairs",
+            "prompt",
+            "answer",
+            "statement",
+            "question",
+            "isCorrect",
+            "correctAnswer",
+            "correct_order",
+            "source",
+            "target",
+            "sentence",
+            "translation",
+            "error",
+            "correction",
+            "note",
+            "hints",
+            "tags",
+        }),
+    ),
+    "vocabulary.yaml": JsonArtifactSchema(
+        root_type=list,
+        required_item_fields={
+            "lemma": str,
+            "translation": str,
+            "pos": str,
+            "usage": str,
+        },
+        optional_item_fields=frozenset({"notes", "examples", "tags"}),
+    ),
+    "resources.yaml": JsonArtifactSchema(
+        root_type=list,
+        required_item_fields={
+            "title": str,
+        },
+        optional_item_fields=frozenset({
+            "notes",
+            "source_ref",
+            "packet_chunk_id",
+            "url",
+            "section",
+            "page",
+        }),
+    ),
+}
+WRITER_JSON_ARTIFACTS: tuple[str, ...] = tuple(WRITER_JSON_SCHEMAS)
 
 QUALITY_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
     "russianisms_clean": (
@@ -245,29 +341,71 @@ def invoke_writer(
     return str(response)
 
 
-def parse_writer_output(output: str) -> dict[str, str]:
-    """Parse a writer response into the four required authoring artifacts."""
+def parse_writer_output_strict_json(output: str) -> dict[str, str]:
+    """Parse writer output with strict JSON for structured artifacts.
+
+    The structured JSON values are serialized back to YAML strings so downstream
+    storage and MDX assembly keep the existing artifact file contracts.
+    """
     artifacts: dict[str, str] = {}
     pending_name: str | None = None
     in_fence = False
     fence_name: str | None = None
+    fence_lang: str | None = None
+    fence_start_line = 0
     fence_lines: list[str] = []
 
-    for line in output.splitlines():
+    for line_no, line in enumerate(output.splitlines(), start=1):
         fence_match = re.match(r"^\s*```(?P<info>.*)$", line)
         if fence_match:
             if not in_fence:
                 info = fence_match.group("info").strip()
-                fence_name = _artifact_name_from_text(info) or pending_name
+                info_name = _artifact_name_from_text(info)
+                # Detect label-vs-fence-name mismatches. If a preceding label
+                # line said "activities.yaml" but the fence info string says
+                # "file=vocabulary.yaml", silently picking one would land
+                # content under the wrong artifact and produce a confusing
+                # downstream "missing artifact" error. Fail loud instead.
+                if info_name and pending_name and info_name != pending_name:
+                    raise LinearPipelineError(
+                        f"Writer output has mismatched artifact label and "
+                        f"fence name at line {line_no}: label={pending_name!r} "
+                        f"but fence info has {info_name!r}"
+                    )
+                fence_name = info_name or pending_name
+                fence_lang = _fence_language(info)
+                fence_start_line = line_no
+                if fence_name is None:
+                    raise LinearPipelineError(
+                        f"Writer output contains unnamed fenced block at line {line_no}"
+                    )
+                if fence_name in artifacts:
+                    raise LinearPipelineError(
+                        f"Writer output contains duplicate artifact block: {fence_name}"
+                    )
+                if fence_name in WRITER_JSON_ARTIFACTS and fence_lang != "json":
+                    got = fence_lang or "<none>"
+                    raise LinearPipelineError(
+                        f"{fence_name} must be fenced as json, got {got} "
+                        f"at line {line_no}"
+                    )
                 in_fence = True
                 fence_lines = []
                 continue
 
-            if fence_name in WRITER_ARTIFACTS:
+            if fence_name == "module.md":
                 artifacts[fence_name] = "\n".join(fence_lines).strip() + "\n"
+            elif fence_name in WRITER_JSON_ARTIFACTS:
+                artifacts[fence_name] = _parse_and_dump_writer_json_artifact(
+                    fence_name,
+                    "\n".join(fence_lines),
+                    fence_start_line + 1,
+                )
             in_fence = False
             fence_name = None
+            fence_lang = None
             pending_name = None
+            fence_start_line = 0
             fence_lines = []
             continue
 
@@ -279,6 +417,11 @@ def parse_writer_output(output: str) -> dict[str, str]:
         if name in WRITER_ARTIFACTS:
             pending_name = name
 
+    if in_fence:
+        raise LinearPipelineError(
+            f"Writer output has an unterminated fenced block for {fence_name}"
+        )
+
     missing = [name for name in WRITER_ARTIFACTS if name not in artifacts]
     extra = sorted(set(artifacts) - set(WRITER_ARTIFACTS))
     if missing or extra:
@@ -287,6 +430,11 @@ def parse_writer_output(output: str) -> dict[str, str]:
             f"missing={missing} extra={extra}"
         )
     return {name: artifacts[name] for name in WRITER_ARTIFACTS}
+
+
+def parse_writer_output(output: str) -> dict[str, str]:
+    """Compatibility wrapper for the strict JSON writer-output parser."""
+    return parse_writer_output_strict_json(output)
 
 
 def write_writer_artifacts(module_dir: Path, artifacts: Mapping[str, str]) -> None:
@@ -515,6 +663,98 @@ def _artifact_name_from_text(text: str) -> str | None:
         if re.search(rf"(?<![\w.-]){re.escape(artifact)}(?![\w.-])", text):
             return artifact
     return None
+
+
+def _fence_language(info: str) -> str | None:
+    token = info.strip().split(maxsplit=1)[0] if info.strip() else ""
+    return token.lower() or None
+
+
+def _reject_non_strict_json_constant(token: str) -> Any:
+    """`json.loads` parse_constant hook that rejects `NaN`/`Infinity`.
+
+    Python's `json.loads` accepts `NaN`, `Infinity`, and `-Infinity` by
+    default — RFC 8259 forbids these tokens. Without this hook, those
+    values would round-trip through `yaml.safe_dump` as `.nan`/`.inf`,
+    leaking non-portable YAML into the artifact files. The strict-JSON
+    contract demands fail-fast on any non-conformant token.
+    """
+    raise ValueError(f"non-strict-JSON token: {token!r} (NaN/Infinity not allowed)")
+
+
+def _parse_and_dump_writer_json_artifact(
+    artifact: str,
+    body: str,
+    content_start_line: int,
+) -> str:
+    try:
+        parsed = json.loads(body, parse_constant=_reject_non_strict_json_constant)
+    except json.JSONDecodeError as exc:
+        absolute_line = content_start_line + exc.lineno - 1
+        raise LinearPipelineError(
+            f"{artifact} invalid JSON: {exc} "
+            f"(artifact line {exc.lineno}, absolute line {absolute_line}, "
+            f"column {exc.colno})"
+        ) from exc
+    except ValueError as exc:
+        raise LinearPipelineError(f"{artifact} invalid JSON: {exc}") from exc
+
+    _validate_writer_json_artifact(artifact, parsed)
+    return yaml.safe_dump(parsed, allow_unicode=True, sort_keys=False)
+
+
+def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
+    schema = WRITER_JSON_SCHEMAS[artifact]
+    if not isinstance(parsed, schema.root_type):
+        raise LinearPipelineError(
+            f"{artifact} schema validation failed: root must be "
+            f"{schema.root_type.__name__}, got {type(parsed).__name__}"
+        )
+
+    # The downstream item-iteration assumes a list. All current schemas
+    # specify `root_type=list`; if a future schema uses a different root
+    # (e.g. `dict`), this function needs a different iteration strategy.
+    assert isinstance(parsed, list), (
+        f"validator for {artifact!r} expects list root; "
+        f"add per-root-type handling if {schema.root_type.__name__} is added"
+    )
+
+    allowed_fields = set(schema.required_item_fields) | schema.optional_item_fields
+    for index, item in enumerate(parsed, start=1):
+        if not isinstance(item, dict):
+            raise LinearPipelineError(
+                f"{artifact} schema validation failed: item {index} must be "
+                f"object, got {type(item).__name__}"
+            )
+
+        # Reject hallucinated fields. Without this, a writer that emits
+        # `{"lemma": ..., "translation": ..., "kek": "..."}` for vocabulary
+        # would silently leak `kek` into the YAML artifact even though the
+        # schema doesn't define it. The error message lists the unexpected
+        # keys so the corrective redispatch has actionable context.
+        extra_keys = sorted(set(item) - allowed_fields)
+        if extra_keys:
+            raise LinearPipelineError(
+                f"{artifact} schema validation failed: item {index} has "
+                f"unexpected fields {extra_keys}; allowed: {sorted(allowed_fields)}"
+            )
+
+        for field, expected_type in schema.required_item_fields.items():
+            value = item.get(field)
+            if not isinstance(value, expected_type):
+                raise LinearPipelineError(
+                    f"{artifact} schema validation failed: item {index} "
+                    f"requires {field} as {expected_type.__name__}, "
+                    f"got {type(value).__name__} ({value!r})"
+                )
+            # String fields must be non-empty after whitespace strip — an
+            # empty `id` or `lemma` is meaningless downstream. Reported
+            # separately from type errors so the redispatch context is clear.
+            if isinstance(value, str) and not value.strip():
+                raise LinearPipelineError(
+                    f"{artifact} schema validation failed: item {index} "
+                    f"requires {field} as a non-empty string (got empty/whitespace)"
+                )
 
 
 def _strip_outer_code_fence(text: str) -> str:

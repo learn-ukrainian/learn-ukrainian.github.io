@@ -15,17 +15,48 @@ before, between, or after the blocks.
 ...
 ```
 
-```yaml file=activities.yaml
-...
+```json file=activities.yaml
+[
+  {
+    "id": "act-1",
+    "type": "fill-in",
+    "title": "..."
+  }
+]
 ```
 
-```yaml file=vocabulary.yaml
-...
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "прокидатися",
+    "translation": "to wake up",
+    "pos": "verb",
+    "usage": "Я прокидаюся о сьомій."
+  }
+]
 ```
 
-```yaml file=resources.yaml
-...
+```json file=resources.yaml
+[
+  {
+    "title": "Караман Grade 10, p.176",
+    "notes": "Зворотні дієслова: суфікс -ся означає дію, спрямовану на себе."
+  }
+]
 ```
+
+## Output format (strict)
+
+Emit `activities.yaml`, `vocabulary.yaml`, and `resources.yaml` as separate
+fenced JSON code blocks labeled with the language `json`. Exactly one JSON
+block per structured artifact. Do not include trailing commas. Do not include
+comments. Do not mix YAML or prose into JSON blocks. The pipeline uses
+`json.loads` and fails the build on any parse error.
+
+`module.md` itself stays Markdown. Only the three structured-data blocks move
+to JSON. The pipeline serializes those parsed JSON values to YAML for storage.
+Use `json` fences only for these three structured artifacts; do not fence prose
+inside `module.md`.
 
 ## Module Context
 
