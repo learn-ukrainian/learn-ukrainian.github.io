@@ -96,6 +96,34 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 
 
+def _main_checkout_root(repo_root: Path = _REPO_ROOT) -> Path:
+    """Return the primary checkout root that owns the shared .git dir."""
+    git_path = repo_root / ".git"
+    if git_path.is_dir():
+        return repo_root
+    if not git_path.is_file():
+        return repo_root
+
+    try:
+        first_line = git_path.read_text().splitlines()[0]
+    except (IndexError, OSError):
+        return repo_root
+    prefix = "gitdir:"
+    if not first_line.startswith(prefix):
+        return repo_root
+
+    git_dir = Path(first_line[len(prefix):].strip())
+    if not git_dir.is_absolute():
+        git_dir = repo_root / git_dir
+    git_dir = git_dir.resolve()
+    if git_dir.parent.name != "worktrees":
+        return repo_root
+    common_git_dir = git_dir.parent.parent
+    if common_git_dir.name != ".git":
+        return repo_root
+    return common_git_dir.parent
+
+
 # ---------------------------------------------------------------------------
 # State file helpers
 # ---------------------------------------------------------------------------
@@ -374,6 +402,38 @@ def _validate_existing_worktree(
     return True
 
 
+def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
+    """Symlink heavy generated data files into a delegated worktree.
+
+    Worktrees omit gitignored DBs such as data/vesum.db, but Python quality
+    gates open them relative to the running checkout. Use symlinks so each
+    delegated worktree sees the same local data without copying multi-GB files.
+    """
+    for relative_path in ("data/vesum.db", "data/sources.db"):
+        source = main_repo_root / relative_path
+        if not source.exists():
+            print(
+                f"⚠️  skipping worktree data link for missing {source}",
+                file=sys.stderr,
+            )
+            continue
+
+        target = worktree_path / relative_path
+        if target.exists() or target.is_symlink():
+            continue
+
+        if target.parent.exists() and not target.parent.is_dir():
+            print(
+                f"⚠️  skipping worktree data link because {target.parent} "
+                "is not a directory",
+                file=sys.stderr,
+            )
+            continue
+
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.symlink_to(source.resolve())
+
+
 def _ensure_worktree(
     *,
     agent: str,
@@ -410,6 +470,9 @@ def _ensure_worktree(
             path=worktree_path, expected_branch=branch, base=base,
         )
         telemetry["base_sha"] = _resolve_sha(worktree_path)
+        # Reused worktrees may predate this provisioning hook; the helper is
+        # idempotent and never clobbers existing files.
+        _provision_data_symlinks(worktree_path, _main_checkout_root())
         return worktree_path, branch, telemetry
 
     # Fix 1 (#1476): fetch origin/{base} and branch from the remote ref,
@@ -440,6 +503,7 @@ def _ensure_worktree(
     if proc.returncode != 0:
         stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
         raise RuntimeError(stderr)
+    _provision_data_symlinks(worktree_path, _main_checkout_root())
     telemetry["base_sha"] = _resolve_sha(worktree_path)
     return worktree_path, branch, telemetry
 
