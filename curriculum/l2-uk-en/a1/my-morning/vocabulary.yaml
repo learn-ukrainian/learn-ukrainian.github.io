@@ -1,0 +1,104 @@
+- lemma: прокидатися
+  translation: to wake up
+  pos: verb
+  ipa: ""
+  usage: "Я прокидаюся о сьомій."
+- lemma: вмиватися
+  translation: to wash oneself
+  pos: verb
+  ipa: ""
+  usage: "Потім я вмиваюся."
+- lemma: одягатися
+  translation: to get dressed
+  pos: verb
+  ipa: ""
+  usage: "Я одягаюся швидко."
+- lemma: снідати
+  translation: to have breakfast
+  pos: verb
+  ipa: ""
+  usage: "Після цього я снідаю."
+- lemma: йти
+  translation: to go
+  pos: verb
+  ipa: ""
+  usage: "Я йду на роботу."
+- lemma: спочатку
+  translation: first
+  pos: adv
+  ipa: ""
+  usage: "Спочатку я прокидаюся."
+- lemma: потім
+  translation: then
+  pos: adv
+  ipa: ""
+  usage: "Потім я вмиваюся."
+- lemma: після цього
+  translation: after that
+  pos: phrase
+  ipa: ""
+  usage: "Після цього я снідаю."
+- lemma: нарешті
+  translation: finally
+  pos: adv
+  ipa: ""
+  usage: "Нарешті я йду."
+- lemma: збиратися
+  translation: to get ready
+  pos: verb
+  ipa: ""
+  usage: "Я збираюся вранці."
+- lemma: повертатися
+  translation: to return
+  pos: verb
+  ipa: ""
+  usage: "Я повертаюся додому."
+- lemma: навчатися
+  translation: to study
+  pos: verb
+  ipa: ""
+  usage: "Я навчаюся вранці."
+- lemma: поспішати
+  translation: to hurry
+  pos: verb
+  ipa: ""
+  usage: "Я не поспішаю."
+- lemma: вранці
+  translation: in the morning
+  pos: adv
+  ipa: ""
+  usage: "Вранці я снідаю."
+- lemma: пізно
+  translation: late
+  pos: adv
+  ipa: ""
+  usage: "У суботу я прокидаюся пізно."
+- lemma: робота
+  translation: work
+  pos: noun
+  gender: f
+  ipa: ""
+  usage: "Я йду на роботу."
+- lemma: субота
+  translation: Saturday
+  pos: noun
+  gender: f
+  ipa: ""
+  usage: "У суботу я не поспішаю."
+- lemma: кава
+  translation: coffee
+  pos: noun
+  gender: f
+  ipa: ""
+  usage: "Я п'ю каву."
+- lemma: рутина
+  translation: routine
+  pos: noun
+  gender: f
+  ipa: ""
+  usage: "Моя рутина проста."
+- lemma: сьома
+  translation: seven o'clock
+  pos: numeral
+  ipa: ""
+  usage: "Я прокидаюся о сьомій."
