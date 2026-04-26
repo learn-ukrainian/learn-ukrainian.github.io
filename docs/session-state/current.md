@@ -8,7 +8,8 @@
 
 | Thread | Latest handoff | Owner |
 |---|---|---|
-| **EPIC #1577 reboot — Round 3.5 prompt-tighten shipped (#1603); decision pending on user re-run** | **`docs/session-state/2026-04-26-round-3.5-shipped.md`** | **Claude late-evening (this session)** |
+| **EPIC #1577 reboot — Session close: round 3.5 fully shipped + cleaned; decision pending on user re-run** | **`docs/session-state/2026-04-26-session-close.md`** | **Claude late-evening (this session)** |
+| Predecessor (full round-3.5 detail): Round 3.5 prompt-tighten shipped (#1603) | `docs/session-state/2026-04-26-round-3.5-shipped.md` | Claude late-evening |
 | Predecessor: Round 3 QG bugfixes shipped, decision pending (3.5 vs 4) | `docs/session-state/2026-04-26-qg-bugfix-shipped.md` | Claude late-evening |
 | Predecessor: Phase 4 round 3 dispatched (strict-JSON exemplar) | `docs/session-state/2026-04-26-evening-handoff.md` | Claude evening |
 | Predecessor: autonomous orchestration during user-away window | `docs/session-state/2026-04-26-autonomous-orchestration.md` | Claude midday |
