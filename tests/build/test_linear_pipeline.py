@@ -76,6 +76,50 @@ def test_render_phase_prompt_fills_registered_tokens() -> None:
     assert "TARGET: 15-35% Ukrainian." in rendered
 
 
+@pytest.mark.parametrize(
+    ("writer", "agent_name"),
+    [
+        ("claude-tools", "claude"),
+        ("gemini-tools", "gemini"),
+    ],
+)
+def test_invoke_writer_routes_supported_writers(
+    tmp_path: Path,
+    writer: str,
+    agent_name: str,
+) -> None:
+    calls = []
+
+    class Result:
+        response = "writer output"
+
+    def fake_invoker(agent: str, prompt: str, **kwargs: object) -> Result:
+        calls.append((agent, prompt, kwargs))
+        return Result()
+
+    response = linear_pipeline.invoke_writer(
+        "Write the module.",
+        writer=writer,
+        cwd=tmp_path,
+        invoker=fake_invoker,
+    )
+
+    assert response == "writer output"
+    assert calls[0][0] == agent_name
+    assert calls[0][1] == "Write the module."
+    assert calls[0][2]["mode"] == "workspace-write"
+    assert calls[0][2]["cwd"] == tmp_path
+    assert calls[0][2]["entrypoint"] == "dispatch"
+    assert calls[0][2]["model"] == linear_pipeline.WRITER_DEFAULTS[writer]["model"]
+    assert calls[0][2]["effort"] == linear_pipeline.WRITER_DEFAULTS[writer]["effort"]
+    assert calls[0][2]["tool_config"] == {"output_format": "text"}
+
+
+def test_invoke_writer_rejects_unknown_writer(tmp_path: Path) -> None:
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="Unknown writer"):
+        linear_pipeline.invoke_writer("Write the module.", writer="bogus", cwd=tmp_path)
+
+
 def test_aggregate_llm_review_requires_exact_qg_dims() -> None:
     report = {
         dim: {

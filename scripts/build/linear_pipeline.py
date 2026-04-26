@@ -40,6 +40,12 @@ PLAN_REQUIRED_KEYS = {
     "references",
 }
 
+WRITER_CHOICES = ("claude-tools", "gemini-tools")
+WRITER_DEFAULTS: dict[str, dict[str, str]] = {
+    "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
+    "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
+}
+
 QUALITY_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
     "russianisms_clean": (
         r"\bпожалуйста\b",
@@ -201,23 +207,30 @@ def writer_context(plan: Mapping[str, Any], plan_content: str, knowledge_packet:
 
 def invoke_writer(
     prompt: str,
+    writer: str,
     *,
     cwd: Path = PROJECT_ROOT,
     invoker: Callable[..., Any] | None = None,
 ) -> str:
-    """Call the configured Claude writer through the universal agent runtime."""
+    """Call the selected writer through the universal agent runtime."""
+    if writer not in WRITER_CHOICES:
+        raise LinearPipelineError(
+            f"Unknown writer {writer!r}; expected one of {WRITER_CHOICES}"
+        )
     if invoker is None:
         from scripts.agent_runtime.runner import invoke as invoker
 
+    defaults = WRITER_DEFAULTS[writer]
+    agent_name = writer.split("-", 1)[0]
     result = invoker(
-        "claude",
+        agent_name,
         prompt,
         mode="workspace-write",
         cwd=cwd,
-        model="claude-opus-4-7",
+        model=defaults["model"],
         task_id="phase-4-a1-20-writer",
         entrypoint="dispatch",
-        effort="xhigh",
+        effort=defaults["effort"],
         tool_config={"output_format": "text"},
     )
     response = getattr(result, "response", None)
