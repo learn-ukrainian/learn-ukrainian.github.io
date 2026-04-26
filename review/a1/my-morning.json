@@ -1,0 +1,18 @@
+{
+  "module": "a1-020",
+  "level": "A1",
+  "slug": "my-morning",
+  "pipeline": "linear-phase-4",
+  "status": "blocked",
+  "blocker": "LLM QG was not run in this worktree session; no live Claude reviewer call was made.",
+  "required_dimensions": [
+    "pedagogical",
+    "naturalness",
+    "decolonization",
+    "engagement",
+    "tone"
+  ],
+  "dimensions": null,
+  "aggregate": null,
+  "note": "This file is an explicit non-pass placeholder. A shippable review JSON must contain exactly the five QG_DIMS entries with score, quoted evidence, and verdict, then an aggregate ReviewVerdict."
+}

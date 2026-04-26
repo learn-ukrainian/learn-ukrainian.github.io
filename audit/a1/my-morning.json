@@ -1,0 +1,115 @@
+{
+  "module": "a1-020",
+  "level": "A1",
+  "slug": "my-morning",
+  "pipeline": "linear-phase-4",
+  "gates": {
+    "word_count": {
+      "passed": true,
+      "count": 1205,
+      "target": 1200
+    },
+    "plan_sections": {
+      "passed": true,
+      "missing_headings": [],
+      "word_budgets": [
+        {
+          "section": "Діалоги",
+          "count": 289,
+          "min": 270,
+          "max": 330,
+          "passed": true
+        },
+        {
+          "section": "Дієслова на -ся",
+          "count": 297,
+          "min": 270,
+          "max": 330,
+          "passed": true
+        },
+        {
+          "section": "Мій ранок",
+          "count": 305,
+          "min": 270,
+          "max": 330,
+          "passed": true
+        },
+        {
+          "section": "Підсумок",
+          "count": 294,
+          "min": 270,
+          "max": 330,
+          "passed": true
+        }
+      ]
+    },
+    "vesum_verified": {
+      "passed": false,
+      "error": "VESUM database not found at /Users/krisztiankoos/projects/learn-ukrainian/.worktrees/codex-phase-4-a1-20-exemplar/data/vesum.db. Run: .venv/bin/python scripts/rag/import_vesum.py",
+      "checked": 112
+    },
+    "citations_resolve": {
+      "passed": true,
+      "unknown": []
+    },
+    "immersion": {
+      "passed": true,
+      "pct": 24.05,
+      "min_pct": 15,
+      "max_pct": 35,
+      "policy": "a1-m15-24",
+      "long_ukrainian_sentences": []
+    },
+    "inject_activity_ids": {
+      "passed": true,
+      "injected": [
+        "morning-sequence-fill",
+        "reflexive-or-not-quiz",
+        "order-the-morning",
+        "write-your-morning"
+      ],
+      "missing": [],
+      "unused": []
+    },
+    "activity_types": {
+      "passed": true,
+      "types": [
+        "fill-in",
+        "quiz",
+        "fill-in",
+        "fill-in"
+      ],
+      "disallowed": [],
+      "forbidden": []
+    },
+    "ai_slop_clean": {
+      "passed": true,
+      "hits": []
+    },
+    "component_props": {
+      "passed": true,
+      "errors": []
+    },
+    "mdx_render": {
+      "passed": true,
+      "message": "scripts/build/mdx_validate.py passed for starlight/src/content/docs/a1/my-morning.mdx"
+    },
+    "russianisms_clean": {
+      "passed": true,
+      "hits": []
+    },
+    "surzhyk_clean": {
+      "passed": true,
+      "hits": []
+    },
+    "calques_clean": {
+      "passed": true,
+      "hits": []
+    },
+    "paronym_clean": {
+      "passed": true,
+      "hits": []
+    },
+    "passed": false
+  }
+}

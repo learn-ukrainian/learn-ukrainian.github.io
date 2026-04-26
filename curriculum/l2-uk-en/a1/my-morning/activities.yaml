@@ -1,0 +1,122 @@
+- id: morning-sequence-fill
+  type: fill-in
+  title: Ранкова послідовність
+  instruction: Complete each morning sentence with the best word.
+  items:
+    - sentence: "Спочатку я ____."
+      answer: "прокидаюся"
+      options: ["прокидаюся", "йду", "після цього"]
+    - sentence: "Потім я ____."
+      answer: "вмиваюся"
+      options: ["вмиваюся", "о сьомій", "робота"]
+    - sentence: "Після цього я ____."
+      answer: "одягаюся"
+      options: ["одягаюся", "спочатку", "ти"]
+    - sentence: "Нарешті я ____ на роботу."
+      answer: "йду"
+      options: ["йду", "вмиваюся", "пізно"]
+    - sentence: "У суботу я не ____."
+      answer: "поспішаю"
+      options: ["поспішаю", "о восьмій", "після"]
+    - sentence: "Вранці я ____ каву."
+      answer: "п'ю"
+      options: ["п'ю", "прокидаюся", "нарешті"]
+- id: reflexive-or-not-quiz
+  type: quiz
+  title: Зворотне чи ні?
+  instruction: Choose the natural verb for each sentence.
+  items:
+    - question: "Я ____ о сьомій."
+      options:
+        - text: "прокидаюся"
+          correct: true
+        - text: "прокидаю"
+          correct: false
+        - text: "прокидаєшся"
+          correct: false
+    - question: "Я ____ каву."
+      options:
+        - text: "п'ю"
+          correct: true
+        - text: "п'юся"
+          correct: false
+        - text: "п'єшся"
+          correct: false
+    - question: "Ти ____ вранці?"
+      options:
+        - text: "вмиваєшся"
+          correct: true
+        - text: "вмиваюся"
+          correct: false
+        - text: "вмивається"
+          correct: false
+    - question: "Вона ____ на роботу."
+      options:
+        - text: "йде"
+          correct: true
+        - text: "йдеться"
+          correct: false
+        - text: "йдеш"
+          correct: false
+    - question: "Він ____ швидко."
+      options:
+        - text: "одягається"
+          correct: true
+        - text: "одягаєшся"
+          correct: false
+        - text: "одягаюся"
+          correct: false
+    - question: "Я ____ вранці."
+      options:
+        - text: "снідаю"
+          correct: true
+        - text: "снідаюся"
+          correct: false
+        - text: "снідаєшся"
+          correct: false
+- id: order-the-morning
+  type: fill-in
+  title: Порядок ранку
+  instruction: Choose the sequence word that fits the sentence.
+  items:
+    - sentence: "____ я прокидаюся."
+      answer: "Спочатку"
+      options: ["Спочатку", "Нарешті", "Після цього"]
+    - sentence: "____ я вмиваюся."
+      answer: "Потім"
+      options: ["Потім", "О сьомій", "Робота"]
+    - sentence: "____ я снідаю."
+      answer: "Після цього"
+      options: ["Після цього", "Ти", "Вранці"]
+    - sentence: "____ я йду на роботу."
+      answer: "Нарешті"
+      options: ["Нарешті", "Прокидаюся", "Кава"]
+    - sentence: "____ я п'ю каву."
+      answer: "Потім"
+      options: ["Потім", "Йду", "Одягаюся"]
+    - sentence: "____ я не поспішаю."
+      answer: "У суботу"
+      options: ["У суботу", "Йти", "Після"]
+- id: write-your-morning
+  type: fill-in
+  title: Мій ранок у трьох реченнях
+  instruction: Complete the short personal routine.
+  items:
+    - sentence: "Спочатку я ____ о сьомій."
+      answer: "прокидаюся"
+      options: ["прокидаюся", "снідаю", "йду"]
+    - sentence: "Потім я ____ і ____."
+      answer: "вмиваюся; одягаюся"
+      options: ["вмиваюся; одягаюся", "йду; пізно", "після; нарешті"]
+    - sentence: "Нарешті я ____."
+      answer: "йду"
+      options: ["йду", "одягаюся", "прокидаюся"]
+    - sentence: "Після цього я ____."
+      answer: "снідаю"
+      options: ["снідаю", "спочатку", "пізно"]
+    - sentence: "У суботу я ____ пізно."
+      answer: "прокидаюся"
+      options: ["прокидаюся", "йду", "п'ю"]
+    - sentence: "Вранці я не ____."
+      answer: "поспішаю"
+      options: ["поспішаю", "потім", "нарешті"]
