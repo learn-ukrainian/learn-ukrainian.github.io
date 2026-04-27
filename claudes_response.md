@@ -1,55 +1,42 @@
-### Migration logic
+Adversarial review complete. The bot and simplify panel missed several critical edge cases where the new regexes and walkers will fail on valid syntax.
 
-1. **Failure recovery path (the 680-unknown-entry bug).**
-PARTIAL. The `preserve_from_meta` guard prevents reruns from dropping sources, but a critical failure mode remains if the `.sources.yaml` registry is lost/deleted while the `.md` file still contains migrated `[S1]` tags. `load_sources_registry` returns an empty list, so legacy citations still in the text (e.g. `(Source 5: ext-foo)`) are assigned IDs starting from `S1`. This newly assigned `[S1]` silently hijacks the pre-existing `[S1]` tags in the prose, causing silent content corruption.
-Evidence: `scripts/wiki/migrate_sources.py:180` (loads empty registry) and `scripts/wiki/sources_schema.py:155` (starts `next_id` at 1).
+### CRITICAL
 
-2. **Idempotence on fresh runs.**
-AGREE. A dry-run followed by a real run, or consecutive real runs, leave identical states. `_ordered_inline_files` is empty on a second run, and `assign_source_ids` deterministically propagates `existing.sources`. No hidden ordering dependencies exist because it iterates over the sorted existing registry.
-Evidence: `scripts/wiki/migrate_sources.py:307` (`render_diff` safely uses `.preview.sources.yaml`) and `scripts/wiki/sources_schema.py:133` (preserves existing ordered entries).
+**1. `_BRACKETS_RE` destroys Markdown link text, blinding VESUM**
+- **File/Line:** `scripts/build/linear_pipeline.py:97`
+- **Issue:** `\[[^\]\n]*\]` matches the text portion of `[Українське слово](https://...)` and strips it. You lose valid words from the VESUM check. If a writer typos a word inside a markdown link, the gate will falsely pass because the word was hidden.
+- **Fix:** Add a negative lookahead to protect markdown links: `r"\[[^\]\n]*\](?!\()"` or restrict to phonetic characters.
 
-3. **Citation-order preservation.**
-AGREE. The migration strictly maps 1:1 based on the first unique filename seen in the text, assigning `[S1]`, `[S2]`, etc. It consolidates by filename and completely ignores the legacy `Source N` number for ordering.
-Evidence: `scripts/wiki/migrate_sources.py:339` (`_ordered_inline_files` collects by appearance top-to-bottom) and `scripts/wiki/sources_schema.py:155` (`next_id` increments per new unique file).
+**2. `_JSX_BLOCK_RE` fails entirely if `<Capital>` appears anywhere inside**
+- **File/Line:** `scripts/build/linear_pipeline.py:118`
+- **Issue:** `(?:[^<]|<(?![A-Z/]))*?` stops matching if it hits `<` followed by a capital letter. If a prop string or comment contains a literal like `text="Press <Enter>"` or `{/* <Component> */}`, the `<(?![A-Z/])` lookahead fails. The non-greedy `*?` aborts, the whole JSX block match fails, and the block remains in the text, triggering the long-sentence false positive.
+- **Fix:** Regex cannot robustly parse JSX. A safer heuristic is `r"<[A-Z].*?(?:/>|</[A-Z][A-Za-z0-9]*>)"` with `re.DOTALL` (though nested tags still break it). Alternatively, specifically strip `lines={[...]}` array blocks since that's the primary cause of long sentences.
 
-4. **Cyrillic-contamination handling.**
-AGREE. The migration automatically dedupes Cyrillic/Latin variants because all files pass through `normalize_source_filename`, which explicitly normalizes the Cyrillic `клас` prefix to Latin `klas`.
-Evidence: `scripts/wiki/sources_schema.py:236` (`re.sub(r"^(\d+)-клас-", r"\1-klas-", value, flags=re.IGNORECASE)`).
+**3. Immersion % heavily penalizes JSX schema keys**
+- **File/Line:** `scripts/build/linear_pipeline.py:968`
+- **Issue:** The token calculation runs on the raw `body` (*before* JSX strip). Every JSX prop key (`speaker`, `text`, `translation`) and English translation string inside a `DialogueBox` is counted as an English token. A standard dialogue block will severely dilute the Ukrainian percentage, likely dropping it below `min_pct` and causing false failures.
+- **Fix:** Calculate the percentage on `body_for_sentences` (with JSX stripped) OR explicitly extract and count only the Ukrainian prose values from the JSX.
 
-5. **Legacy sources preservation.**
-AGREE. All uncited sources from `wiki-meta` survive in the sibling registry. They are correctly captured in a `preserved_from_meta` set, passed to `assign_source_ids` where they receive `preserved_from_meta=True`, and are kept in the final registry loop.
-Evidence: `scripts/wiki/migrate_sources.py:190` (creates `preserved_from_meta` set) and `scripts/wiki/migrate_sources.py:245` (keeps sources where `entry.preserved_from_meta` is True).
+### IMPORTANT
 
-### Schema + consumer integration
+**4. `_MORPHEME_FRAGMENT_RE` fails if surrounded by underscores**
+- **File/Line:** `scripts/build/linear_pipeline.py:108`
+- **Issue:** `\B` asserts no word boundary. In Python, `_` is a word character. If the writer uses underscores for markdown bold/italic (e.g., `__-шся__`), there *is* a word boundary between `_` and `-`. `\B` fails, the fragment is not stripped, and VESUM throws a false positive.
+- **Fix:** Use an explicit lookbehind instead of `\B`: `r"(?<![А-ЯІЇЄҐа-яіїєґ'ʼa-zA-Z0-9_])-[А-Я...]"`.
 
-6. **`get_wiki_context(include_sources_registry=False)` default.**
-DISAGREE. Production module-build callers like `v6_build.py` do not pass this flag, so it defaults to `False`. This makes the registry completely invisible to writers, who only see opaque `[S1]` tags. This is unacceptable, as writers (especially for seminar tracks) need provenance to accurately attribute claims to scholars or primary sources.
-Evidence: `scripts/wiki/context.py:66` (default `False`) and `scripts/build/v6_build.py:2714` (calls `get_wiki_context` without `include_sources_registry=True`).
+**5. `_walk_artifact_strings` forgets dict context, breaking future schemas**
+- **File/Line:** `scripts/build/linear_pipeline.py:813`
+- **Issue:** `skip_error_field` checks `if parent_key == "error"`. If the schema evolves to allow nested dicts like `error: { "text": "typo" }`, the walker recurses, `parent_key` becomes `"text"`, and it fails to skip the typo, leaking it to VESUM.
+- **Fix:** Filter at the dict level before recursing: `if skip_error_field and key == _ERROR_CORRECTION_INTENTIONAL_FIELD: continue`.
 
-7. **Strip-meta correctness.**
-DISAGREE. The `strip_meta` regex uses `.*?` with `re.DOTALL`. If a `wiki-meta` comment is unclosed (e.g., missing `-->`), it will greedily consume all prose up to the NEXT `-->` anywhere in the document (such as a `<!-- VERIFY -->` comment), causing silent content loss.
-Evidence: `scripts/wiki/context.py:249` (`re.sub(r"<!--\s*wiki-meta\b.*?-->", "", content, flags=re.DOTALL)`).
+### NIT
 
-8. **Registry validation.**
-AGREE. `validate_sources_registry` correctly finds orphans and missing entries. However, during production compilation, it only prints warnings to the console and acts as a silent pass without failing the build.
-Evidence: `scripts/wiki/compiler.py:246` (`issues = validate_sources_registry...`) and `scripts/wiki/compiler.py:248` (only prints `⚠️ Sources registry validation issues:`).
+**6. `@functools.cache` on whitelist lowercasing breaks test isolation**
+- **File/Line:** `scripts/build/linear_pipeline.py:781`
+- **Issue:** If a test dynamically patches `PROPER_NAME_WHITELIST` after the cache is primed, the new names won't be respected by other tests running in the same process.
+- **Fix:** Tests mutating the whitelist should call `_proper_name_whitelist_lc.cache_clear()`.
 
-### Production readiness
-
-9. **Downstream impact.**
-AGREE. There is no downstream breakage. `textbook_refs.py` has been safely updated to check the sibling registry first via `load_sources_registry`, and falls back to regex extraction from the legacy `wiki-meta` block if the registry doesn't have chunks.
-Evidence: `scripts/build/textbook_refs.py:100` (`registry = load_sources_registry...`) and `scripts/build/textbook_refs.py:108` (fallback `meta_match = re.search(...)`).
-
-10. **Backward compat.**
-AGREE. The consumer handles old pre-migration articles gracefully. `load_sources_registry` returns an empty list if `.sources.yaml` is missing, `strip_meta` removes the `wiki-meta` block, and the old inline citations remain visible in the prose without crashing.
-Evidence: `scripts/wiki/sources_schema.py:92` (returns empty registry if path doesn't exist).
-
-### Critical bugs only
-
-11. **List any bug that would cause data loss, silent content corruption, or a downstream consumer to break.**
-- **Silent Content Loss (Unclosed Meta):** `strip_meta` regex `r"<!--\s*wiki-meta\b.*?-->"` with `re.DOTALL` will silently delete all prose up to the next `-->` (e.g., `<!-- VERIFY -->`) if the `wiki-meta` block is missing its closing tag.
-- **Silent Content Corruption (Lost Registry Rerun):** If `.sources.yaml` is deleted but the `.md` has `[S1]` tags, rerunning `migrate_sources.py` will assign `[S1]` to the first remaining legacy citation, silently hijacking the existing `[S1]` tags in the text to point to the wrong source.
-- **Opaque Provenance (Consumer Integration):** `get_wiki_context(include_sources_registry=False)` hides source mappings from the LLM writers in `v6_build.py`, making it impossible for them to accurately attribute claims to specific scholars/primary sources.
-
-**Overall Verdict:** BLOCK MERGE.
-The critical bugs, specifically the greedy `strip_meta` regex causing silent content loss and the opacity of provenance to writers, must be patched before this can be safely utilized in production.
+**7. `_BRACES_RE` leaves trailing braces on nested structures**
+- **File/Line:** `scripts/build/linear_pipeline.py:100`
+- **Issue:** It matches up to the *first* `}`. On `{{ ... }}`, it leaves a trailing `}`. Harmless for VESUM, but leaves messy artifacts.
+- **Fix:** Constrain to word characters for fill-ins: `r"\{[А-ЯІЇЄҐа-яіїєґ'ʼ]+\}"`.

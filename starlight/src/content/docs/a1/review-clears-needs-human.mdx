@@ -1,0 +1,52 @@
+---
+title: "Contract Flow"
+sidebar:
+  order: 1
+  label: "01. Contract Flow"
+pipeline: v6
+build_status: draft
+---
+
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Intro
+приві́т до́бре classroom
+
+## Practice
+У́чень.
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові слова — Required words
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **привіт** |  | ім. | ч. |
+| **добре** |  | присл. |  |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "привіт", back: "", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "добре", back: "", subtitle: "присл." }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+:::note
+Розши́рені впра́ви для цього́ уро́ку ще в розро́бці.
+
+Advanced exercises for this module are in development. Check back soon!
+:::
+
+</TabItem>
+<TabItem label="Ресурси">
+
+_Ресурси будуть додані пізніше._
+
+</TabItem>
+</Tabs>
