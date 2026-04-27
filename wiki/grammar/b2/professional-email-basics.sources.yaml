@@ -2,62 +2,38 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-ukrmova-zabolotnyi-2025_s0344
-  type: textbook
-  title: Сторінка 277
-  grade: 8
-  author: zabolotnyi
-- id: S3
-  file: 8-klas-ukrmova-avramenko-2025_s0166
-  type: textbook
-  title: Сторінка 125
-  grade: 8
-  author: avramenko
-- id: S6
   file: 8-klas-ukrmova-avramenko-2025_s4601
   type: textbook
   title: § 36. УСНИЙ ДІАЛОГ
   page: 81
   grade: 8
-- id: S7
+- id: S2
   file: 10-klas-ukrmova-karaman-2018_s0727
   type: textbook
   title: ТЕМА 22. ЕЛЕКТРОННИЙ ЛИСТ. СМС-ПОВІДОМЛЕННЯ. Пишіть листи і надсилайте вчасно,
   page: 262
   grade: 10
-- id: S8
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4741
-  type: textbook
-  title: ТЕМА 19. ВИДИ ДІЛОВИХ ЛИСТІВ. ЛИСТ-ЗАПРОШЕННЯ, ЛИСТ-ПОВІДОМЛЕННЯ
-  page: 277
-  grade: 8
-- id: S9
-  file: 10-klas-ukrmova-karaman-2018_s0720
-  type: textbook
-  title: МИСТЕЦТВО ПИСАТИ ЛИСТИ
-  page: 246
-  grade: 10
-- id: S10
-  file: 8-klas-ukrmova-avramenko-2025_s4650
-  type: textbook
-  title: РОЗВИТОК МОВЛЕННЯ (p. 143)
-  page: 143
-  grade: 8
-- id: S12
+- id: S3
   file: 11-klas-ukrajinska-mova-avramenko-2019_s1188
   type: textbook
   title: § 55. –56. ДІАЛОГІЧНІ ЖАНРИ
   page: 194
   grade: 11
-- id: S13
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4737
+- id: S4
+  file: 6-klas-ukrmova-golub-2023_s3281
   type: textbook
-  title: ТЕМА 11. ПАМ’ЯТКА
-  page: 267
+  title: § 91. Нащо мені друзі
+  page: 228
+  grade: 6
+- id: S5
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4741
+  type: textbook
+  title: ТЕМА 19. ВИДИ ДІЛОВИХ ЛИСТІВ. ЛИСТ-ЗАПРОШЕННЯ, ЛИСТ-ПОВІДОМЛЕННЯ
+  page: 277
   grade: 8
-- id: S14
-  file: 11-klas-ukrmova-zabolotnyi-2019_s1461
+- id: S6
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4734
   type: textbook
-  title: Практична риторика (p. 207)
-  page: 207
-  grade: 11
+  title: ТЕМА 11. ПОВÒОÐÅÍÍß ВÈВ×ÅÍОÃО. ПРО ОФІЦІЙНО-ДІЛОВИЙ СТИЛЬ МОВЛЕННЯ
+  page: 260
+  grade: 8

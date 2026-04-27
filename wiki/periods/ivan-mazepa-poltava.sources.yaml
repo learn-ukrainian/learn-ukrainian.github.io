@@ -21,6 +21,11 @@ sources:
   type: literary
   title: Шерер — Літопис Малоросії (1788)
   author: Шерер Ж.
+- id: S5
+  file: wave6-krman-shchodennyk_c0044
+  type: literary
+  title: Даніел Крман — Подорожній щоденник (1708-1709)
+  author: Крман Д.
 - id: S6
   file: wave6-scherer-litopys-malorosiyi_c0222
   type: literary
@@ -41,3 +46,8 @@ sources:
   type: literary
   title: Даніел Крман — Подорожній щоденник (1708-1709)
   author: Крман Д.
+- id: S10
+  file: wave5-suspilna-dumka-xvi-xvii_c0008
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія

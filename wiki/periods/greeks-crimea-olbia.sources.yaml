@@ -6,11 +6,6 @@ sources:
   type: literary
   title: Григорій Сковорода. Повне зібрання творів
   author: Сковорода Г.
-- id: S2
-  file: wave6-chevalier-istoriia-viiny_c0047
-  type: literary
-  title: Шевальє — Історія війни козаків проти Польщі (1663)
-  author: Шевальє П.
 - id: S3
   file: wave5-oldukr-xvii_c0243
   type: literary
@@ -35,14 +30,4 @@ sources:
   file: wave11-hrushevsky-iur-t6_c0236
   type: literary
   title: Грушевський — Історія України-Руси, том 6
-  author: Грушевський М.
-- id: S9
-  file: wave4-hrushevsky-iur-t1_c0156
-  type: literary
-  title: Грушевський — Історія України-Руси, т.1
-  author: Грушевський М.
-- id: S10
-  file: грушевський-історія-україни-руси-т5_c0248
-  type: literary
-  title: Грушевський — Історія України-Руси, т.5
   author: Грушевський М.

@@ -31,23 +31,8 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S7
-  file: wave5-velychkovsky_c0042
-  type: literary
-  title: Іван Величковський. Твори
-  author: Величковський І.
 - id: S8
   file: wave8-ukr-lit-entsyklopediia_c4660
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S9
-  file: wave1-galytsko-volynskyi_c0253
-  type: literary
-  title: Галицько-Волинський літопис
-  author: Невідомий
-- id: S10
-  file: wave1-kyivskyi-litopys_c0628
-  type: literary
-  title: Київський літопис
-  author: Невідомий

@@ -16,11 +16,11 @@ sources:
   type: literary
   title: Самійло Величко. Літопис (1648-1700)
   author: Величко С.
-- id: S4
-  file: wave2-velychko_c0048
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0182
   type: literary
-  title: Літопис Величка
-  author: Величко С.В.
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S6
   file: wave8-ukr-lit-entsyklopediia_c4089
   type: literary
@@ -36,11 +36,6 @@ sources:
   type: literary
   title: Томпсон — Трубадури імперії
   author: Томпсон Е.
-- id: S9
-  file: wave5-velychkovsky_c0042
-  type: literary
-  title: Іван Величковський. Твори
-  author: Величковський І.
 - id: S10
   file: wave8-ukr-lit-entsyklopediia_c0231
   type: literary

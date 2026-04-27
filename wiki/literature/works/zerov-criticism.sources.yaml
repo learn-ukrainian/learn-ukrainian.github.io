@@ -31,11 +31,21 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0553
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S8
   file: wave4-chyzhevsky-istoriia-lit_c0020
   type: literary
   title: Чижевський — Історія української літератури
   author: Чижевський Д.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0417
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S10
   file: wave8-ukr-lit-entsyklopediia_c2683
   type: literary

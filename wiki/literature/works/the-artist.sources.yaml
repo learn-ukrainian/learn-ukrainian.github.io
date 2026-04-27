@@ -31,6 +31,11 @@ sources:
   type: literary
   title: Шевченківський словник
   author: Колектив
+- id: S8
+  file: wave10-shevchenkivsky-slovnyk_c0038
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
 - id: S9
   file: wave7-krypyakevych-istkult_c0809
   type: literary

@@ -26,28 +26,8 @@ sources:
   type: literary
   title: Русанівський — Історія укр. літ. мови
   author: Русанівський В.
-- id: S6
-  file: wave8-hrabovych-do-istoriyi_c0712
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
-- id: S7
-  file: wave8-ukr-lit-entsyklopediia_c5172
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
 - id: S8
   file: wave7-entsyklopediia-ukrainoznavstva_c1996
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S9
-  file: wave9-rusanivsky-ist-lit-movy_c0392
-  type: literary
-  title: Русанівський — Історія укр. літ. мови
-  author: Русанівський В.
-- id: S10
-  file: wave5-skovoroda-tvory_c0048
-  type: literary
-  title: Григорій Сковорода. Повне зібрання творів
-  author: Сковорода Г.

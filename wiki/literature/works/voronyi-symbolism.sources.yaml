@@ -21,11 +21,6 @@ sources:
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S5
-  file: ukrlib-voronyi_c0008
-  type: literary
-  title: Микола Вороний. Життя та творчість Миколи Вороного
-  author: Вороний М.
 - id: S6
   file: wave8-hrabovych-do-istoriyi_c0712
   type: literary

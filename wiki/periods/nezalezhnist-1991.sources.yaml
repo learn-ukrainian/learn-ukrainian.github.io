@@ -1,6 +1,21 @@
 # Source registry for wiki/periods/nezalezhnist-1991.md
 # Referenced inline as [S1], [S2], ...
 sources:
+- id: S1
+  file: wave5-suspilna-dumka-xvi-xvii_c0010
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0009
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wave6-sofonovych-khronika_c0003
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
 - id: S4
   file: wave7-ukrxx-derzhavnist_c0004
   type: literary
@@ -11,6 +26,11 @@ sources:
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
+- id: S6
+  file: wave5-suspilna-dumka-xvi-xvii_c0094
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
 - id: S7
   file: wave5-suspilna-dumka-xvi-xvii_c0026
   type: literary
@@ -21,6 +41,11 @@ sources:
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
+- id: S9
+  file: wave5-suspilna-dumka-xvi-xvii_c0014
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
 - id: S10
   file: wave7-ukrxx-derzhavnist_c0024
   type: literary

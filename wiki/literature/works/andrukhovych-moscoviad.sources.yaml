@@ -26,11 +26,6 @@ sources:
   type: literary
   title: Юрій Андрухович. Біографія Юрія Андруховича
   author: Андрухович Ю.
-- id: S6
-  file: ukrlib-khvylovy_c0067
-  type: literary
-  title: Микола Хвильовий. Думки проти течії
-  author: Хвильовий М.
 - id: S7
   file: ukrlib-andrukhovych_c0003
   type: literary

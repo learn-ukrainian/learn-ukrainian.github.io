@@ -6,11 +6,6 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S2
-  file: wave5-velychkovsky_c0046
-  type: literary
-  title: Іван Величковський. Твори
-  author: Величковський І.
 - id: S3
   file: wave8-ukr-lit-entsyklopediia_c4747
   type: literary
@@ -21,33 +16,13 @@ sources:
   type: literary
   title: Шевченківський словник
   author: Колектив
-- id: S5
-  file: wave12-pvl-yaremenko_c0377
-  type: literary
-  title: Повість врем'яних літ (переклад В. Яременка)
-  author: Нестор
 - id: S6
   file: wave7-heroes-ukr-kultura_c0205
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
-- id: S7
-  file: wave7-heroes-ukr-kultura_c0374
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
-- id: S8
-  file: wave8-chyzhevsky-baroko_c0030
-  type: literary
-  title: Чижевський — Українське літературне бароко
-  author: Чижевський Д.
 - id: S9
   file: wave7-heroes-ukr-kultura_c0391
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
-- id: S10
-  file: wave5-dovhalevsky-poetyka_c0007
-  type: literary
-  title: Митрофан Довгалевський. Поетика.
-  author: Довгалевський М.

@@ -1,0 +1,28 @@
+# Source registry for wiki/grammar/b2/news-analysis.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1219
+  type: textbook
+  title: § 25. Правила будови складних речень
+  page: 109
+  grade: 11
+- id: S2
+  file: 7-klas-ukrmova-avramenko-2024_s3877
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 187)
+  page: 187
+  grade: 7
+- id: S3
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4724
+  type: textbook
+  title: ІІ. Напишіть текст-розповідь у розмовному або художньому стилі (5–6 речень)
+    на тему
+  page: 236
+  grade: 8
+- id: S4
+  file: 11-klas-ukrajinska-mova-voron-2019_s1252
+  type: textbook
+  title: МАНЕРА СПОРУ СОКРАТА
+  page: 58
+  grade: 11

@@ -2,82 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-voron-2019_s0343
-  type: textbook
-  title: Сторінка 221
-  grade: 11
-  author: voron
-- id: S2
-  file: 10-klas-ukrmova-karaman-2018_s0420
-  type: textbook
-  title: Сторінка 238
-  grade: 10
-  author: karaman
-- id: S3
-  file: 6-klas-ukrmova-avramenko-2023_s0243
-  type: textbook
-  title: Сторінка 226
-  grade: 6
-  author: avramenko
-- id: S4
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s0298
-  type: textbook
-  title: Сторінка 207
-  grade: 11
-  author: avramenko
-- id: S5
-  file: 11-klas-ukrajinska-mova-glazova-2019_s0329
-  type: textbook
-  title: Сторінка 222
-  grade: 11
-  author: glazova
-- id: S6
   file: wave8-ukr-lit-entsyklopediia_c2933
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S7
+- id: S2
   file: wave10-shevchenkivsky-slovnyk_c0757
   type: literary
   title: Шевченківський словник
   author: Колектив
-- id: S8
-  file: wave8-masliuk-poetyky-rytoryky_c0144
-  type: literary
-  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
-  author: Маслюк В.
-- id: S9
-  file: ukrlib-kotlyarevsky_c0113
-  type: literary
-  title: Іван Котляревський. Енеїда
-  author: Котляревський І.
-- id: S10
-  file: wave10-shevchenkivsky-slovnyk_c1807
-  type: literary
-  title: Шевченківський словник
-  author: Колектив
-- id: S11
-  file: wave8-masliuk-poetyky-rytoryky_c0286
-  type: literary
-  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
-  author: Маслюк В.
-- id: S12
+- id: S3
   file: wave4-ukrainska-mova-encyclopedia_c0169
   type: literary
   title: Українська мова — Енциклопедія
   author: Русанівський В.М. та ін.
-- id: S13
-  file: wave8-masliuk-poetyky-rytoryky_c0111
+- id: S4
+  file: wave8-masliuk-poetyky-rytoryky_c0144
   type: literary
   title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
   author: Маслюк В.
-- id: S14
+- id: S5
   file: wave8-ukr-lit-entsyklopediia_c1738
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S15
-  file: wave8-hrabovych-do-istoriyi_c0595
+- id: S6
+  file: wave4-ukrainska-mova-encyclopedia_c0206
   type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S7
+  file: wave10-shevchenkivsky-slovnyk_c1807
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S8
+  file: wave8-masliuk-poetyky-rytoryky_c0111
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0154
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c4292
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

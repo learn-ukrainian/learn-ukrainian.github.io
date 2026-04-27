@@ -1,0 +1,21 @@
+# Source registry for wiki/grammar/b2/kupivlia-i-servisy.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0333
+  type: textbook
+  title: І. Складіть (не користуючись словником) словникові статті до одного з поданих
+  page: 10
+  grade: 10
+- id: S3
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1427
+  type: textbook
+  title: Синтаксична норма (p. 68)
+  page: 68
+  grade: 11
+- id: S5
+  file: 7-klas-ukrmova-litvinova-2024_s3904
+  type: textbook
+  title: § 1. Мовні обов’язки українців та українок
+  page: 12
+  grade: 7

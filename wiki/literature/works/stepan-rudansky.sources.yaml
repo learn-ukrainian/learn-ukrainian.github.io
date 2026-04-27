@@ -31,11 +31,6 @@ sources:
   type: literary
   title: Чижевський — Історія української літератури
   author: Чижевський Д.
-- id: S8
-  file: wave5-skovoroda-tvory_c0079
-  type: literary
-  title: Григорій Сковорода. Повне зібрання творів
-  author: Сковорода Г.
 - id: S9
   file: wave9-ohiyenko-ist-lit-movy_c0206
   type: literary

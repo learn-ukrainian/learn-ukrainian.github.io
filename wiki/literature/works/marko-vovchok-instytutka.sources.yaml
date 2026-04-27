@@ -31,6 +31,11 @@ sources:
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
+- id: S9
+  file: wave5-dramaturhiia-xix_c0030
+  type: literary
+  title: Українська драматургія першої половини XIX ст.
+  author: Антологія
 - id: S10
   file: wave7-krypyakevych-istkult_c0523
   type: literary

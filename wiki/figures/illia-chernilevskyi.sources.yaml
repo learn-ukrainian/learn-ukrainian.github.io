@@ -2,33 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/illia-chernilevskyi_Біографія-Ілля-Чернілевський-Основний-зміст-Роль-мистецтва-у-подоланні-історичних-травм
+  type: ukrainian_wiki
+  title: 'Біографія: Ілля Чернілевський'
+  section_path: 'Біографія: Ілля Чернілевський > Основний зміст > Роль мистецтва у
+    подоланні історичних травм'
+- id: S2
+  file: ukrainian_wiki/syntez-rozstriliane_Історіографія-Розстріляне-відродження-як-культурний-геноцид-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Розстріляне відродження як культурний геноцид'
+  section_path: 'Історіографія: Розстріляне відродження як культурний геноцид > Короткий
+    зміст'
+- id: S3
+  file: ukrainian_wiki/illia-chernilevskyi_Біографія-Ілля-Чернілевський-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Ілля Чернілевський'
+  section_path: 'Біографія: Ілля Чернілевський > Деколонізаційна перспектива'
+- id: S4
   file: 11-klas-istoriya-ukr-gisem-2024_s0902
   type: textbook
   title: § 5. культура україни в повоєнний період
   page: 42
   grade: 11
-- id: S2
-  file: wave7-heroes-ukr-kultura_c0294
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
-- id: S3
-  file: wave7-istkult-t2-xiii-xvii_c0008
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
-- id: S4
+- id: S5
+  file: ukrainian_wiki/illia-chernilevskyi_Біографія-Ілля-Чернілевський-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Ілля Чернілевський'
+  section_path: 'Біографія: Ілля Чернілевський > Короткий зміст'
+- id: S6
+  file: ukrainian_wiki/illia-chernilevskyi_Біографія-Ілля-Чернілевський-Основний-зміст-Світоглядна-трансформація-відмова-від-російської-мови
+  type: ukrainian_wiki
+  title: 'Біографія: Ілля Чернілевський'
+  section_path: 'Біографія: Ілля Чернілевський > Основний зміст > Світоглядна трансформація:
+    відмова від російської мови'
+- id: S7
   file: wikipedia/Дронь Артур Віталійович
   type: wikipedia
   title: Дронь Артур Віталійович
   url: https://uk.wikipedia.org/wiki/%D0%94%D1%80%D0%BE%D0%BD%D1%8C%20%D0%90%D1%80%D1%82%D1%83%D1%80%20%D0%92%D1%96%D1%82%D0%B0%D0%BB%D1%96%D0%B9%D0%BE%D0%B2%D0%B8%D1%87
-- id: S5
-  file: wikipedia/Чернілевський Ілля Станіславович
-  type: wikipedia
-  title: Чернілевський Ілля Станіславович
-  url: https://uk.wikipedia.org/wiki/%D0%A7%D0%B5%D1%80%D0%BD%D1%96%D0%BB%D0%B5%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%86%D0%BB%D0%BB%D1%8F%20%D0%A1%D1%82%D0%B0%D0%BD%D1%96%D1%81%D0%BB%D0%B0%D0%B2%D0%BE%D0%B2%D0%B8%D1%87
-- id: S6
-  file: wikipedia/Літературна дискусія 1925–1928
-  type: wikipedia
-  title: Літературна дискусія 1925–1928
-  url: https://uk.wikipedia.org/wiki/%D0%9B%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%BD%D0%B0%20%D0%B4%D0%B8%D1%81%D0%BA%D1%83%D1%81%D1%96%D1%8F%201925%E2%80%931928
+- id: S8
+  file: ukrainian_wiki/continuity-of-cultural-genocide_Історіографія-Тяглість-культурного-геноциду-в-Україні-1937-vs-2022-Основний-зміст-Історіографічний-вимір-та-збереження-пам-яті
+  type: ukrainian_wiki
+  title: 'Історіографія: Тяглість культурного геноциду в Україні (1937 vs 2022)'
+  section_path: 'Історіографія: Тяглість культурного геноциду в Україні (1937 vs 2022)
+    > Основний зміст > Історіографічний вимір та збереження пам''яті'
+- id: S9
+  file: wave7-heroes-ukr-kultura_c0294
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив

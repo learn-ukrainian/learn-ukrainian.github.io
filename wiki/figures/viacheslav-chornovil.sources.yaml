@@ -2,12 +2,24 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1040
+  file: 11-klas-ukrajinska-mova-voron-2019_s1255
   type: textbook
-  title: Причому унікальні націоналісти. Без мови, без
-  page: 190
+  title: Метод вивчення риторики був таким. Студентів вчили створювати
+  page: 75
   grade: 11
 - id: S2
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1027
+  type: textbook
+  title: ДИСИДЕНТСЬКИЙ РУХ ДРУГОЇ ПОЛОВИНИ 1960-Х – ПЕРШОЇ ПОЛОВИНИ 1970-Х РОКІВ
+  page: 125
+  grade: 11
+- id: S3
+  file: ukrainian_wiki/viacheslav-chornovil_Біографія-В-ячеслав-Чорновіл-Незламний-правозахисник-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: В''ячеслав Чорновіл: Незламний правозахисник'
+  section_path: 'Біографія: В''ячеслав Чорновіл: Незламний правозахисник > Короткий
+    зміст'
+- id: S4
   file: wikipedia/Чорновіл В'ячеслав Максимович
   type: wikipedia
   title: Чорновіл В'ячеслав Максимович

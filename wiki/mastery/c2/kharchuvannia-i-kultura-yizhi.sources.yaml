@@ -1,0 +1,43 @@
+# Source registry for wiki/mastery/c2/kharchuvannia-i-kultura-yizhi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-istkult-t2-xiii-xvii_c0251
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S2
+  file: wave8-chyzhevsky-baroko_c0401
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S3
+  file: wave7-istkult-t2-xiii-xvii_c0255
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0270
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave12-yakovenko-skhid-zakhid_c0036
+  type: literary
+  title: 'Яковенко — «Україна між Сходом і Заходом»: проекція однієї ідеї (розд. 13-14)'
+  author: Яковенко Н.
+- id: S7
+  file: wave7-antonovych-kultura_c0014
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S8
+  file: wave7-antonovych-kultura_c0033
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S10
+  file: wave7-antonovych-kultura_c0021
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.

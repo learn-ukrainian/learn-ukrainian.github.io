@@ -2,13 +2,43 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wave7-dzyuba-internatsionalizm_c0273
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
+  file: 5-klas-istoriya-schupak-2022_s1930
+  type: textbook
+  title: ВСТУП
+  page: 7
+  grade: 5
 - id: S2
+  file: 11-klas-istoriya-ukr-gisem-2024_s0942
+  type: textbook
+  title: § 20. проголошення україною незалежності
+  page: 164
+  grade: 11
+- id: S3
+  file: 11-klas-istoriya-ukr-galimov-2024_s0843
+  type: textbook
+  title: § 18. —19. Зростання громадської активності українського суспільства
+  page: 145
+  grade: 11
+- id: S4
+  file: 11-klas-istoriya-ukr-gisem-2024_s0946
+  type: textbook
+  title: Розділ V. Розвиток України як незалежної держави
+  page: 176
+  grade: 11
+- id: S5
+  file: https://www.youtube.com/watch?v=PFdyKX3TlHY
+  type: external
+  title: ULP 5-188 | Шкільна освіта в Україні | Ukrainian Lessons Podcast Season 5
+  url: https://www.youtube.com/watch?v=PFdyKX3TlHY
+- id: S6
   file: https://www.youtube.com/watch?v=EDbRAQGlYuE
   type: external
   title: 'ULP 4-124 | Як це було: незалежність України | Ukrainian Lessons Podcast
     Season 4'
   url: https://www.youtube.com/watch?v=EDbRAQGlYuE
+- id: S7
+  file: 11-klas-istoriya-ukr-gisem-2024_s0939
+  type: textbook
+  title: § 18. —19. Зростання громадської активності
+  page: 151
+  grade: 11

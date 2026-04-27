@@ -1,0 +1,48 @@
+# Source registry for wiki/mastery/c2/intertextuality.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0085
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave8-masliuk-poetyky-rytoryky_c0000
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c2593
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0009
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave7-thompson-trubadury_c0414
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S6
+  file: wave9-skhidnoslov-hramatyky_c0051
+  type: literary
+  title: Східнослов'янські граматики XVI-XVII ст. (статті)
+  author: Колектив
+- id: S7
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0131
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c2597
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: ukrlib-yohansen_c0088
+  type: literary
+  title: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.

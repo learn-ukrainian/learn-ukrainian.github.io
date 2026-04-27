@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/ekonomika-i-dobrobut.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ukrxx-derzhavnist_c0403
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S2
+  file: wave7-ukrxx-derzhavnist_c0399
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S3
+  file: wave7-ukrxx-derzhavnist_c0401
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S4
+  file: wave7-ukrxx-derzhavnist_c0406
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S5
+  file: wave7-ukrxx-derzhavnist_c0409
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S6
+  file: wave7-ukrxx-derzhavnist_c0402
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S7
+  file: wave7-ukrxx-derzhavnist_c0408
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S8
+  file: wave7-istkult-t2-xiii-xvii_c0361
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
+  file: wave4-hrushevsky-iur-t2-3_c3362
+  type: literary
+  title: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c2731
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

@@ -1,11 +1,21 @@
 # Source registry for wiki/periods/koliivshchyna.md
 # Referenced inline as [S1], [S2], ...
 sources:
+- id: S1
+  file: wave1-slovo-poetic-translations_c0259
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
 - id: S2
   file: wave5-humanisty-vidrodzennia_c0013
   type: literary
   title: Українські гуманісти епохи Відродження
   author: Антологія
+- id: S3
+  file: wave6-synopsis-1674_c0055
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
 - id: S4
   file: wave8-ukr-lit-entsyklopediia_c1266
   type: literary
@@ -20,11 +30,6 @@ sources:
   file: wave12-samovyd-litopys_c0022
   type: literary
   title: Літопис Самовидця (1648-1702)
-  author: Невідомий
-- id: S7
-  file: wave0-samovydets_c0021
-  type: literary
-  title: Літопис Самовидця
   author: Невідомий
 - id: S8
   file: wave7-antonovych-vybrani_c0569

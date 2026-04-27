@@ -2,45 +2,35 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4970
-  type: textbook
-  title: МАРКО ВОВЧОК
-  page: 293
-  grade: 9
+  file: ukrainian_wiki/marko-vovchok_Біографія-Марко-Вовчок-Голос-пригноблених-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Марко Вовчок: Голос пригноблених'
+  section_path: 'Біографія: Марко Вовчок: Голос пригноблених > Деколонізаційна перспектива'
 - id: S2
-  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4972
-  type: textbook
-  title: Основна думка повісті «Інститутка». У повісті виражено ідею
-  page: 311
-  grade: 9
-- id: S3
   file: wave4-chyzhevsky-istoriia-lit_c0671
   type: literary
   title: Чижевський — Історія української літератури
   author: Чижевський Д.
-- id: S4
-  file: wave7-entsyklopediia-ukrainoznavstva_c1975
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S5
-  file: wave8-ukr-lit-entsyklopediia_c1157
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S6
-  file: ukrlib-franko_c0077
-  type: literary
-  title: Іван Франко. Літературно-критичні статті
-  author: Франко І.
-- id: S7
-  file: wave7-thompson-trubadury_c0415
-  type: literary
-  title: Томпсон — Трубадури імперії
-  author: Томпсон Е.
-- id: S8
+- id: S3
   file: https://www.youtube.com/watch?v=AdAXToMsBUc
   type: external
   title: ULP 6-234 | Марко Вовчок — фатальна жінка української літератури | Ukrainian
     Lessons Podcast Seas...
   url: https://www.youtube.com/watch?v=AdAXToMsBUc
+- id: S4
+  file: ukrainian_wiki/marko-vovchok_Біографія-Марко-Вовчок-Голос-пригноблених-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Марко Вовчок: Голос пригноблених'
+  section_path: 'Біографія: Марко Вовчок: Голос пригноблених > Короткий зміст'
+- id: S5
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s5012
+  type: textbook
+  title: НОВА УКРАЇНСЬКА ЛІТЕРАТУРА (p. 212)
+  page: 212
+  grade: 9
+- id: S6
+  file: ukrainian_wiki/marko-vovchok_Біографія-Марко-Вовчок-Голос-пригноблених-Основний-зміст-1-Формування-ідентичності-від-Орловщини-до-українського-фольклору
+  type: ukrainian_wiki
+  title: 'Біографія: Марко Вовчок: Голос пригноблених'
+  section_path: 'Біографія: Марко Вовчок: Голос пригноблених > Основний зміст > 1.
+    Формування ідентичності: від Орловщини до українського фольклору'

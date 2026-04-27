@@ -1,0 +1,48 @@
+# Source registry for wiki/academic/c1/davalnyi-vidminok-systema.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-nimchuk-movoznavstvo_c0333
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S2
+  file: wave4-nimchuk-movoznavstvo_c0037
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S3
+  file: wave9-pravopys-2015_c0092
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S4
+  file: wave4-nimchuk-movoznavstvo_c0283
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S5
+  file: wave4-nimchuk-movoznavstvo_c0334
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S7
+  file: wave4-nimchuk-movoznavstvo_c0221
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0168
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave7-entsyklopediia-ukrainoznavstva_c0790
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S10
+  file: wave9-pravopys-2015_c0087
+  type: literary
+  title: Український правопис 2015
+  author: НАН України

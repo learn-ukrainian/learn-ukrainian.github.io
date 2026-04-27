@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/c2-4-practice.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-entsyklopediia-ukrainoznavstva_c0773
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S2
+  file: wave10-shevchenkivsky-slovnyk_c1599
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S3
+  file: wave10-shevchenkivsky-slovnyk_c1721
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0138
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave8-hensiorsky-gvl-mova_c0002
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S6
+  file: wave5-skovoroda-tvory_c0078
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S7
+  file: wave5-prokopovych-filosofski_c0326
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S8
+  file: wave7-istkult-t2-xiii-xvii_c0391
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
+  file: wave5-prokopovych-filosofski_c0378
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0658
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

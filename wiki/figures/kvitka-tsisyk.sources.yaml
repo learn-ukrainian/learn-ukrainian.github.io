@@ -2,20 +2,43 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrlit-zabolotnyi-2023_s2785
-  type: textbook
-  title: ПІСНЯ В ЖИТТІ УКРАЇНЦІВ (p. 7)
-  page: 7
-  grade: 6
+  file: ukrainian_wiki/kvitka-tsisyk_Біографія-Квітка-Цісик-Голос-української-діаспори-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Квітка Цісик: Голос української діаспори'
+  section_path: 'Біографія: Квітка Цісик: Голос української діаспори > Короткий зміст'
 - id: S2
-  file: 6-klas-ukrlit-zabolotnyi-2023_s2782
+  file: 11-klas-istoriya-ukr-gisem-2024_s0932
   type: textbook
-  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ ПІСЕННІ СКАРБИ
-  page: 4
-  grade: 6
+  title: Розділ IV. Відновлення державної незалежності України, її роль у розпаді
+    СРСР
+  page: 140
+  grade: 11
 - id: S3
+  file: ukrainian_wiki/kvitka-tsisyk_Біографія-Квітка-Цісик-Голос-української-діаспори-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Квітка Цісик: Голос української діаспори'
+  section_path: 'Біографія: Квітка Цісик: Голос української діаспори > Деколонізаційна
+    перспектива'
+- id: S4
+  file: ukrainian_wiki/kvitka-tsisyk_Біографія-Квітка-Цісик-Голос-української-діаспори-Основний-зміст-Альбоми-Квітка-та-Два-кольори-збереження-традиції
+  type: ukrainian_wiki
+  title: 'Біографія: Квітка Цісик: Голос української діаспори'
+  section_path: 'Біографія: Квітка Цісик: Голос української діаспори > Основний зміст
+    > Альбоми «Квітка» та «Два кольори»: збереження традиції'
+- id: S5
   file: https://www.youtube.com/watch?v=xW9WBgMtSqA
   type: external
   title: ULP 6-240 | Квітка Цісик — голос України за океаном | Ukrainian Lessons Podcast
     Season 6
   url: https://www.youtube.com/watch?v=xW9WBgMtSqA
+- id: S6
+  file: 11-klas-istoriya-ukr-galimov-2024_s0843
+  type: textbook
+  title: § 18. —19. Зростання громадської активності українського суспільства
+  page: 145
+  grade: 11
+- id: S7
+  file: ukrainian_wiki/kvitka-tsisyk_Біографія-Квітка-Цісик-Голос-української-діаспори-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Біографія: Квітка Цісик: Голос української діаспори'
+  section_path: 'Біографія: Квітка Цісик: Голос української діаспори > Мовні зразки'

@@ -2,60 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-glazova-2019_s0235
-  type: textbook
-  title: Сторінка 167
-  grade: 11
-  author: glazova
-- id: S3
-  file: 11-klas-ukrmova-zabolotnyi-2019_s0094
-  type: textbook
-  title: Сторінка 70
-  grade: 11
-  author: zabolotnyi
-- id: S4
-  file: 6-klas-ukrlit-kovalenko-2023_s0024
-  type: textbook
-  title: Сторінка 25
-  grade: 6
-  author: kovalenko
-- id: S6
-  file: wave6-deflise-etnohrafichnyi_c0020
-  type: literary
-  title: Де ля Фліз — Етнографічний опис (1854)
-  author: Де ля Фліз Д.
-- id: S7
-  file: wave7-krypyakevych-istkult_c0073
-  type: literary
-  title: Крип'якевич — Історія української культури (1937)
-  author: Крип'якевич І.
-- id: S8
-  file: wave7-entsyklopediia-ukrainoznavstva_c0577
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S9
   file: wave7-entsyklopediia-ukrainoznavstva_c3065
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S10
-  file: wave7-istkult-t2-xiii-xvii_c0349
+- id: S2
+  file: wave7-entsyklopediia-ukrainoznavstva_c0590
   type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
+  title: Енциклопедія українознавства
   author: Колектив
-- id: S13
-  file: ukrlib-kotlyarevsky_c0196
+- id: S3
+  file: wave6-deflise-etnohrafichnyi_c0020
   type: literary
-  title: Іван Котляревський. Енеїда
-  author: Котляревський І.
-- id: S14
+  title: Де ля Фліз — Етнографічний опис (1854)
+  author: Де ля Фліз Д.
+- id: S4
+  file: wave4-hrushevsky-istlit_c0530
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S5
+  file: wave12-hrushevsky-iu-odnotom_c0535
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S6
+  file: wave4-hrushevsky-istlit_c0162
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S7
+  file: wave12-hrushevsky-iu-odnotom_c0167
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c5416
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave7-entsyklopediia-ukrainoznavstva_c0589
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S10
   file: wave9-ohiyenko-ist-lit-movy_c0000
   type: literary
   title: Огієнко — Історія української літературної мови (1949)
   author: Огієнко І.
-- id: S15
-  file: wave7-istkult-t1-kyivska-rus_c0152
-  type: literary
-  title: Історія української культури. Т.1. Київська Русь
-  author: Колектив

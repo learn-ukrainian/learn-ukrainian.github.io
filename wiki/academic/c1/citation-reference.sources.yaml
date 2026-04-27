@@ -2,71 +2,42 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-golub-2023_s0218
-  type: textbook
-  title: Сторінка 215
-  grade: 6
-  author: golub
-- id: S2
-  file: 5-klas-ukrmova-golub-2022_s0187
-  type: textbook
-  title: Сторінка 188
-  grade: 5
-  author: golub
-- id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0499
-  type: textbook
-  title: Сторінка 271
-  grade: 10
-  author: karaman
-- id: S4
-  file: 6-klas-ukrmova-golub-2023_s0217
-  type: textbook
-  title: Сторінка 214
-  grade: 6
-  author: golub
-- id: S6
   file: wave4-ohloblyn-mazepa_c0036
   type: literary
   title: Оглоблін — Гетьман Мазепа та його доба
   author: Оглоблін О.
-- id: S8
-  file: wave4-voitovych-dynasty_c0000
-  type: literary
-  title: Войтович — Князівські династії Східної Європи
-  author: Войтович Л.
-- id: S9
-  file: wave4-ukrainska-mova-encyclopedia_c0094
-  type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
-- id: S10
-  file: wave10-shevchenkivsky-slovnyk_c1600
-  type: literary
-  title: Шевченківський словник
-  author: Колектив
-- id: S11
-  file: wave9-rusanivsky-ist-lit-movy_c0339
-  type: literary
-  title: Русанівський — Історія укр. літ. мови
-  author: Русанівський В.
-- id: S12
-  file: wave7-popovych-narys-kultury_c0021
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S13
-  file: wave9-pravopys-2015_c0118
-  type: literary
-  title: Український правопис 2015
-  author: НАН України
-- id: S14
+- id: S2
   file: wave12-yakovenko-skhid-zakhid_c0028
   type: literary
   title: 'Яковенко — «Україна між Сходом і Заходом»: проекція однієї ідеї (розд. 13-14)'
   author: Яковенко Н.
-- id: S15
-  file: wave7-lytvynov-renesans-humanizm_c0122
+- id: S3
+  file: wave7-istkult-t2-xiii-xvii_c0361
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S6
+  file: wave7-lytvynov-renesans-humanizm_c0235
   type: literary
   title: Литвинов — Ренесансний гуманізм в Україні
   author: Литвинов В.
+- id: S7
+  file: wave8-masliuk-poetyky-rytoryky_c0130
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S8
+  file: wave8-fdm-biobibliohrafichnyi_c0177
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0207
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave7-antonovych-kultura_c0021
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.

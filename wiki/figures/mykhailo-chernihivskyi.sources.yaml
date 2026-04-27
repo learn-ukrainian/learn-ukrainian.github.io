@@ -2,37 +2,42 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wave4-voitovych-dynasty_c0166
-  type: literary
-  title: Войтович — Князівські династії Східної Європи
-  author: Войтович Л.
+  file: ukrainian_wiki/mykhailo-chernigivskyi_Історія-України-Михайло-Чернігівський-Опір-Орді-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історія України: Михайло Чернігівський: Опір Орді'
+  section_path: 'Історія України: Михайло Чернігівський: Опір Орді > Короткий зміст'
 - id: S2
-  file: wave7-nalyvaiko-ochyma-zakhodu_c0089
-  type: literary
-  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
-  author: Наливайко Д.
+  file: ukrainian_wiki/mykhailo-chernihivskyi_Біографія-Михайло-Чернігівський-Князь-мученик-Основний-зміст-Ідеологічне-привласнення-спадщини-Московським-царством
+  type: ukrainian_wiki
+  title: 'Біографія: Михайло Чернігівський: Князь-мученик'
+  section_path: 'Біографія: Михайло Чернігівський: Князь-мученик > Основний зміст
+    > Ідеологічне привласнення спадщини Московським царством'
 - id: S3
-  file: wave4-hrushevsky-istlit-t2_c0151
-  type: literary
-  title: Грушевський — Історія української літератури, т.2
-  author: Грушевський М.
-- id: S5
-  file: wave7-nalyvaiko-ochyma-zakhodu_c0090
-  type: literary
-  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
-  author: Наливайко Д.
+  file: ukrainian_wiki/mykhailo-chernihivskyi_Біографія-Михайло-Чернігівський-Князь-мученик-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Михайло Чернігівський: Князь-мученик'
+  section_path: 'Біографія: Михайло Чернігівський: Князь-мученик > Деколонізаційна
+    перспектива'
+- id: S4
+  file: ukrainian_wiki/mykhailo-chernigivskyi_Історія-України-Михайло-Чернігівський-Опір-Орді-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історія України: Михайло Чернігівський: Опір Орді'
+  section_path: 'Історія України: Михайло Чернігівський: Опір Орді > Деколонізаційна
+    перспектива'
 - id: S6
-  file: wave7-istkult-t2-xiii-xvii_c0578
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
+  file: 7-klas-istoria-ukr-galimov-2024_s3455
+  type: textbook
+  title: § 12. Політичне дроблення Русі. Розвиток Київського і Чернігівського князівств
+  page: 90
+  grade: 7
 - id: S7
-  file: https://www.youtube.com/watch?v=sxGATYewyV8
-  type: external
-  title: Навіщо московитам рештки наших правителів? Реальна історія з Акімом Галімовим
-  url: https://www.youtube.com/watch?v=sxGATYewyV8
+  file: ukrainian_wiki/mykhailo-chernigivskyi_Історія-України-Михайло-Чернігівський-Опір-Орді-Основний-зміст-Агіографічна-традиція-та-ідеологічне-значення-подвигу
+  type: ukrainian_wiki
+  title: 'Історія України: Михайло Чернігівський: Опір Орді'
+  section_path: 'Історія України: Михайло Чернігівський: Опір Орді > Основний зміст
+    > Агіографічна традиція та ідеологічне значення подвигу'
 - id: S8
-  file: wikipedia/Ігор Ольгович
-  type: wikipedia
-  title: Ігор Ольгович
-  url: https://uk.wikipedia.org/wiki/%D0%86%D0%B3%D0%BE%D1%80%20%D0%9E%D0%BB%D1%8C%D0%B3%D0%BE%D0%B2%D0%B8%D1%87
+  file: ukrainian_wiki/mykhailo-chernihivskyi_Біографія-Михайло-Чернігівський-Князь-мученик-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Михайло Чернігівський: Князь-мученик'
+  section_path: 'Біографія: Михайло Чернігівський: Князь-мученик > Короткий зміст'

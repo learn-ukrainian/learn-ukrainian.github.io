@@ -2,62 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s0467
-  type: textbook
-  title: Сторінка 256
-  grade: 11
-  author: hlibovska
-- id: S2
-  file: 11-klas-istoriya-ukr-gisem-2024_s0510
-  type: textbook
-  title: Сторінка 294
-  grade: 11
-  author: gisem
-- id: S3
-  file: 11-klas-istoriya-ukr-gisem-2024_s0402
-  type: textbook
-  title: Сторінка 229
-  grade: 11
-  author: gisem
-- id: S4
-  file: 11-klas-istoriya-ukr-galimov-2024_s0474
-  type: textbook
-  title: Сторінка 261
-  grade: 11
-  author: galimov
-- id: S5
-  file: 11-klas-istoriya-ukr-gisem-2024_s0009
-  type: textbook
-  title: Сторінка 7
-  grade: 11
-  author: gisem
-- id: S7
   file: wave7-ukrxx-derzhavnist_c0001
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
-- id: S9
+- id: S2
   file: wave7-ukrxx-derzhavnist_c0140
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
-- id: S10
-  file: wave7-ivakin-kyiv-xiii-xvi_c0046
+- id: S3
+  file: wave7-istkult-t2-xiii-xvii_c1467
   type: literary
-  title: Івакін — Історичний розвиток Києва XIII-XVI ст.
-  author: Івакін Г.
-- id: S12
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S4
+  file: wave7-ukrxx-derzhavnist_c0204
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S5
   file: wave7-ukrxx-derzhavnist_c0248
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
-- id: S13
-  file: wave7-ukrxx-derzhavnist_c0445
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c0035
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c1651
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave7-ukrxx-derzhavnist_c0338
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
-- id: S14
-  file: wave7-ukrxx-derzhavnist_c0375
+- id: S9
+  file: wave7-ukrxx-derzhavnist_c0197
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S10
+  file: wave7-ukrxx-derzhavnist_c0263
   type: literary
   title: Українська державність у XX столітті
   author: Колектив

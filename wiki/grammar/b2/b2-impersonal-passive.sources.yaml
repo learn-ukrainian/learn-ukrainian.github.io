@@ -2,54 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-ukrmova-avramenko-2025_s0132
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
   type: textbook
-  title: Сторінка 103
-  grade: 8
-  author: avramenko
-- id: S2
-  file: 11-klas-ukrmova-zabolotnyi-2019_s0294
-  type: textbook
-  title: Сторінка 191
-  grade: 11
-  author: zabolotnyi
-- id: S5
-  file: 7-klas-ukrmova-litvinova-2024_s0072
-  type: textbook
-  title: Сторінка 68
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
   grade: 7
-  author: litvinova
-- id: S6
+- id: S2
   file: 11-klas-ukrajinska-mova-avramenko-2019_s1157
   type: textbook
   title: § 25. ПАСИВНІ КОНСТРУКЦІЇ
   page: 81
   grade: 11
-- id: S7
+- id: S3
+  file: 7-klas-ukrmova-avramenko-2024_s3842
+  type: textbook
+  title: § 50. Написання не з дієприкметниками
+  page: 114
+  grade: 7
+- id: S4
   file: 11-klas-ukrajinska-mova-glazova-2019_s1217
   type: textbook
   title: § 22. Синтаксичні конструкції
   page: 97
   grade: 11
-- id: S9
-  file: 7-klas-ukrmova-litvinova-2024_s3916
+- id: S5
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1147
   type: textbook
-  title: § 13. Безособові діє слова Діє слівні форми на -но, -то
-  page: 66
-  grade: 7
-- id: S10
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4734
-  type: textbook
-  title: ТЕМА 11. ПОВÒОÐÅÍÍß ВÈВ×ÅÍОÃО. ПРО ОФІЦІЙНО-ДІЛОВИЙ СТИЛЬ МОВЛЕННЯ
-  page: 260
-  grade: 8
-- id: S14
-  file: wave7-entsyklopediia-ukrainoznavstva_c0790
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S15
-  file: wave4-ukrainska-mova-encyclopedia_c0135
-  type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
+  title: § 15. ДІЄСЛОВО ТА ЙОГО ФОРМИ
+  page: 45
+  grade: 11

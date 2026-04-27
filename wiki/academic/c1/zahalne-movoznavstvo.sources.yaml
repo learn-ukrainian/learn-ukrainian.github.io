@@ -2,65 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrmova-karaman-2018_s0483
-  type: textbook
-  title: Сторінка 269
-  grade: 10
-  author: karaman
+  file: wave7-istkult-t2-xiii-xvii_c0361
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
 - id: S2
-  file: 2-klas-ukrmova-bolshakova-2019-1_s0009
-  type: textbook
-  title: Сторінка 8
-  grade: 2
-  author: bolshakova
-- id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0004
-  type: textbook
-  title: Сторінка 5
-  grade: 10
-  author: karaman
-- id: S6
-  file: wave4-ukrainska-mova-encyclopedia_c0205
+  file: wave4-nimchuk-movoznavstvo_c0001
   type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
-- id: S7
-  file: wave8-ukr-lit-entsyklopediia_c5179
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S8
-  file: wave8-ukr-lit-entsyklopediia_c5176
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S9
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S3
   file: wave8-ukr-lit-entsyklopediia_c4294
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S10
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c5176
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c5179
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave4-nimchuk-movoznavstvo_c0012
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S7
   file: wave9-ohiyenko-ist-lit-movy_c0334
   type: literary
   title: Огієнко — Історія української літературної мови (1949)
   author: Огієнко І.
-- id: S11
-  file: wave7-popovych-narys-kultury_c0729
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S12
-  file: wave4-ukrainska-mova-encyclopedia_c0047
-  type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
-- id: S13
-  file: wave8-ukr-lit-entsyklopediia_c5170
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S15
+- id: S8
   file: wave9-pivtorak-pokhodzhennia_c0003
   type: literary
   title: Півторак — Походження українців, росіян, білорусів та їхніх мов
   author: Півторак Г.
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0047
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave9-ohiyenko-ist-lit-movy_c0330
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.

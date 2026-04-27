@@ -2,37 +2,41 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/ekonomika-imperii_Історіографія-Економіка-імперії-Україна-як-житниця-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Економіка імперії: Україна як житниця'
+  section_path: 'Історіографія: Економіка імперії: Україна як житниця > Короткий зміст'
+- id: S2
+  file: ukrainian_wiki/povoienne-vidbudova_Історія-України-Повоєнна-відбудова-та-її-наслідки-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історія України: Повоєнна відбудова та її наслідки'
+  section_path: 'Історія України: Повоєнна відбудова та її наслідки > Деколонізаційна
+    перспектива'
+- id: S3
+  file: ukrainian_wiki/ekonomika-imperii_Історіографія-Економіка-імперії-Україна-як-житниця-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Економіка імперії: Україна як житниця'
+  section_path: 'Історіографія: Економіка імперії: Україна як житниця > Деколонізаційна
+    перспектива'
+- id: S4
+  file: ukrainian_wiki/ekonomika-imperii_Історіографія-Економіка-імперії-Україна-як-житниця-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Історіографія: Економіка імперії: Україна як житниця'
+  section_path: 'Історіографія: Економіка імперії: Україна як житниця > Мовні зразки'
+- id: S5
   file: wave7-entsyklopediia-ukrainoznavstva_c1117
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S2
-  file: wave7-dzyuba-internatsionalizm_c0147
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
-- id: S3
-  file: wave7-ukrxx-derzhavnist_c0405
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S4
-  file: wave7-ukrxx-derzhavnist_c0409
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S5
-  file: wave7-ukrxx-derzhavnist_c0401
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
 - id: S6
-  file: wikipedia/Колоніальна політика
-  type: wikipedia
-  title: Колоніальна політика
-  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BB%D0%BE%D0%BD%D1%96%D0%B0%D0%BB%D1%8C%D0%BD%D0%B0%20%D0%BF%D0%BE%D0%BB%D1%96%D1%82%D0%B8%D0%BA%D0%B0
+  file: ukrainian_wiki/ekonomika-imperii_Історіографія-Економіка-імперії-Україна-як-житниця-Основний-зміст-Спадщина-імперської-економіки-у-незалежній-Україні
+  type: ukrainian_wiki
+  title: 'Історіографія: Економіка імперії: Україна як житниця'
+  section_path: 'Історіографія: Економіка імперії: Україна як житниця > Основний зміст
+    > Спадщина імперської економіки у незалежній Україні'
 - id: S7
-  file: wikipedia/Російсько-українська війна (з 2014)
-  type: wikipedia
-  title: Російсько-українська війна (з 2014)
-  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D1%81%D1%96%D0%B9%D1%81%D1%8C%D0%BA%D0%BE-%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%B2%D1%96%D0%B9%D0%BD%D0%B0%20%28%D0%B7%202014%29
+  file: 9-klas-istorija-ukrajini-burnejko-2017_s4752
+  type: textbook
+  title: Встóп. Уêраїнсьêі землі
+  page: 8
+  grade: 9

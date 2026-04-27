@@ -31,6 +31,11 @@ sources:
   type: literary
   title: Емма Андієвська. Біографія Емми Андієвської
   author: Андієвська Е.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0712
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S8
   file: wave8-hrabovych-do-istoriyi_c0038
   type: literary

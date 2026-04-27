@@ -2,26 +2,51 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4934
+  type: textbook
+  title: ПАМ’ЯТКИ ОРИГІНАЛЬНОЇ ЛІТЕРАТУРИ КНЯЖОЇ РУСІ-УКРАЇНИ
+  page: 37
+  grade: 9
+- id: S2
   file: wave4-hrushevsky-istlit-t2_c0172
   type: literary
   title: Грушевський — Історія української літератури, т.2
   author: Грушевський М.
-- id: S2
-  file: wave12-hrushevsky-iu-odnotom_c0001
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
 - id: S3
-  file: wave7-dzyuba-pavlenko-litopys-kultury_c0096
-  type: literary
-  title: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
-  author: Дзюба О.
+  file: https://www.youtube.com/watch?v=Vk1lroWfoxM
+  type: external
+  title: КНЯГИНЯ ОЛЬГА. Реальна історія [БЕЗ РЕКЛАМИ]
+  url: https://www.youtube.com/watch?v=Vk1lroWfoxM
 - id: S4
+  file: ukrainian_wiki/povist-mynulykh-lit-ii_Історіографія-Повість-минулих-літ-II-Ключові-фрагменти-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Повість минулих літ II: Ключові фрагменти'
+  section_path: 'Історіографія: Повість минулих літ II: Ключові фрагменти > Короткий
+    зміст'
+- id: S5
+  file: ukrainian_wiki/povist-mynulykh-lit-ii_Історіографія-Повість-минулих-літ-II-Ключові-фрагменти-Основний-зміст-3-Покликання-варягів-Історіографічна-дискусія
+  type: ukrainian_wiki
+  title: 'Історіографія: Повість минулих літ II: Ключові фрагменти'
+  section_path: 'Історіографія: Повість минулих літ II: Ключові фрагменти > Основний
+    зміст > 3. «Покликання варягів»: Історіографічна дискусія'
+- id: S6
+  file: ukrainian_wiki/povist-mynulykh-lit-ii_Історіографія-Повість-минулих-літ-II-Ключові-фрагменти-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Повість минулих літ II: Ключові фрагменти'
+  section_path: 'Історіографія: Повість минулих літ II: Ключові фрагменти > Деколонізаційна
+    перспектива'
+- id: S7
+  file: ukrainian_wiki/povist-mynulykh-lit-i_Історіографія-Повість-минулих-літ-I-Джерело-чи-інструмент-влади-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Повість минулих літ I: Джерело чи інструмент влади?'
+  section_path: 'Історіографія: Повість минулих літ I: Джерело чи інструмент влади?
+    > Деколонізаційна перспектива'
+- id: S8
   file: wikipedia/Українська античність
   type: wikipedia
   title: Українська античність
   url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%B0%D0%BD%D1%82%D0%B8%D1%87%D0%BD%D1%96%D1%81%D1%82%D1%8C
-- id: S5
+- id: S9
   file: wikipedia/Покликання варягів
   type: wikipedia
   title: Покликання варягів

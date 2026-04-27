@@ -2,63 +2,59 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 4-klas-ukrmova-zaharijchuk_s0009
-  type: textbook
-  title: Сторінка 10
-  grade: 4
+  file: wave4-ukrainska-mova-encyclopedia_c0205
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
 - id: S2
-  file: 11-klas-ukrajinska-mova-voron-2019_s0346
-  type: textbook
-  title: Сторінка 223
-  grade: 11
-  author: voron
+  file: wave4-ukrainska-mova-encyclopedia_c0234
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
 - id: S3
-  file: 11-klas-ukrajinska-mova-voron-2019_s0327
-  type: textbook
-  title: Сторінка 212
-  grade: 11
-  author: voron
-- id: S4
-  file: 11-klas-ukrajinska-mova-voron-2019_s0343
-  type: textbook
-  title: Сторінка 221
-  grade: 11
-  author: voron
-- id: S5
-  file: 10-klas-ukrmova-karaman-2018_s0383
-  type: textbook
-  title: Сторінка 218
-  grade: 10
-  author: karaman
-- id: S6
-  file: wave7-popovych-narys-kultury_c0009
+  file: wave7-istkult-t1-kyivska-rus_c0011
   type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S8
-  file: wave8-ukr-lit-entsyklopediia_c4089
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
+  title: Історія української культури. Т.1. Київська Русь
   author: Колектив
-- id: S10
-  file: ukrlib-khvylovy_c0038
+- id: S4
+  file: wave4-ukrainska-mova-encyclopedia_c0138
   type: literary
-  title: Микола Хвильовий. Думки проти течії
-  author: Хвильовий М.
-- id: S11
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c0361
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave4-ukrainska-mova-encyclopedia_c0180
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S8
+  file: wave7-ukrxx-derzhavnist_c0004
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S9
   file: wave7-dzyuba-internatsionalizm_c0197
   type: literary
   title: Дзюба — Інтернаціоналізм чи русифікація?
   author: Дзюба І.
-- id: S16
+- id: S10
+  file: wave7-heroes-ukr-kultura_c0315
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S11
   file: ext-article-0
   type: external
   title: ext-article-0
-- id: S17
+- id: S12
   file: ext-article-1
   type: external
   title: ext-article-1
-- id: S18
+- id: S13
   file: ext-article-2
   type: external
   title: ext-article-2

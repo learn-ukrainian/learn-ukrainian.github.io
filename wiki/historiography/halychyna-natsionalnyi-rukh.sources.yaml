@@ -2,53 +2,57 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4869
+  type: textbook
+  title: РОЗДІЛ V
+  page: 170
+  grade: 9
+- id: S2
+  file: ukrainian_wiki/halychyna-natsionalnyi-rukh_Історіографія-Галицький-національний-рух-битва-за-ідентичність-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Галицький національний рух: битва за ідентичність'
+  section_path: 'Історіографія: Галицький національний рух: битва за ідентичність
+    > Деколонізаційна перспектива'
+- id: S3
+  file: ukrainian_wiki/ivan-franko_Біографія-Іван-Франко-Каменяр-Основний-зміст-Політичне-лідерство-і-творення-модерної-нації
+  type: ukrainian_wiki
+  title: 'Біографія: Іван Франко: Каменяр'
+  section_path: 'Біографія: Іван Франко: Каменяр > Основний зміст > Політичне лідерство
+    і творення модерної нації'
+- id: S4
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4904
+  type: textbook
+  title: РОЗДІЛ VII
+  page: 238
+  grade: 9
+- id: S5
   file: wave7-entsyklopediia-ukrainoznavstva_c1144
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S2
-  file: wave7-drahomanov-vybrani_c0918
-  type: literary
-  title: Драгоманов — Вибрані праці
-  author: Драгоманов М.
-- id: S3
-  file: wave7-hrinchenko-drahomanov_c0295
-  type: literary
-  title: Грінченко-Драгоманов — Діалоги про українську національну справу
-  author: Грінченко Б.
-- id: S4
-  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t2_c0566
-  type: literary
-  title: 'Дорошенко — Нарис історії України, том 2: Від половини XVII століття'
-  author: Дорошенко Д.
-- id: S5
-  file: wave9-ohiyenko-ist-lit-movy_c0226
-  type: literary
-  title: Огієнко — Історія української літературної мови (1949)
-  author: Огієнко І.
 - id: S6
   file: wikipedia/Історична наука в Україні
   type: wikipedia
   title: Історична наука в Україні
   url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D0%B0%20%D0%BD%D0%B0%D1%83%D0%BA%D0%B0%20%D0%B2%20%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%96
 - id: S7
-  file: wave7-hrinchenko-drahomanov_c0284
+  file: ukrainian_wiki/halychyna-natsionalnyi-rukh_Історіографія-Галицький-національний-рух-битва-за-ідентичність-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Історіографія: Галицький національний рух: битва за ідентичність'
+  section_path: 'Історіографія: Галицький національний рух: битва за ідентичність
+    > Мовні зразки'
+- id: S8
+  file: wave7-drahomanov-vybrani_c0918
+  type: literary
+  title: Драгоманов — Вибрані праці
+  author: Драгоманов М.
+- id: S9
+  file: wave7-hrinchenko-drahomanov_c0295
   type: literary
   title: Грінченко-Драгоманов — Діалоги про українську національну справу
   author: Грінченко Б.
-- id: S8
-  file: 9-klas-istorija-ukrajini-gisem-2017_s4910
-  type: textbook
-  title: На початку XX ст. вагомі здобутки українського націо
-  page: 248
-  grade: 9
-- id: S9
-  file: wikipedia/Назарук Осип Тадейович
-  type: wikipedia
-  title: Назарук Осип Тадейович
-  url: https://uk.wikipedia.org/wiki/%D0%9D%D0%B0%D0%B7%D0%B0%D1%80%D1%83%D0%BA%20%D0%9E%D1%81%D0%B8%D0%BF%20%D0%A2%D0%B0%D0%B4%D0%B5%D0%B9%D0%BE%D0%B2%D0%B8%D1%87
 - id: S10
-  file: wikipedia/Сучасна українська мова
+  file: wikipedia/Про історичну єдність росіян та українців
   type: wikipedia
-  title: Сучасна українська мова
-  url: https://uk.wikipedia.org/wiki/%D0%A1%D1%83%D1%87%D0%B0%D1%81%D0%BD%D0%B0%20%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BC%D0%BE%D0%B2%D0%B0
+  title: Про історичну єдність росіян та українців
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%BE%20%D1%96%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D1%83%20%D1%94%D0%B4%D0%BD%D1%96%D1%81%D1%82%D1%8C%20%D1%80%D0%BE%D1%81%D1%96%D1%8F%D0%BD%20%D1%82%D0%B0%20%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%86%D1%96%D0%B2

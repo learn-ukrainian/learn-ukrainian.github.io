@@ -11,11 +11,6 @@ sources:
   type: literary
   title: Синопсис. Київ, 1674
   author: Невідомий
-- id: S3
-  file: wave6-rihelman-litopysna-opovid_c0046
-  type: literary
-  title: Рігельман — Літописна оповідь про Малу Росію
-  author: Рігельман О.
 - id: S4
   file: wave6-rihelman-litopysna-opovid_c0035
   type: literary

@@ -1,0 +1,38 @@
+# Source registry for wiki/academic/c1/kupivlia-ta-posluhy.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hensiorsky-gvl-mova_c0253
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S2
+  file: wave7-entsyklopediia-ukrainoznavstva_c1653
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S3
+  file: wave4-ukrainska-mova-encyclopedia_c0237
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S5
+  file: ukrlib-samchuk_c0154
+  type: literary
+  title: Улас Самчук. Юність Василя Шеремети
+  author: Самчук У.
+- id: S6
+  file: wave4-chyzhevsky-istoriia-lit_c0325
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c2907
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c2972
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

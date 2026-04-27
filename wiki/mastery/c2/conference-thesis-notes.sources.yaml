@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/conference-thesis-notes.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave10-shevchenkivsky-slovnyk_c2289
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c3970
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave12-yakovenko-skhid-zakhid_c0044
+  type: literary
+  title: 'Яковенко — «Україна між Сходом і Заходом»: проекція однієї ідеї (розд. 13-14)'
+  author: Яковенко Н.
+- id: S4
+  file: wave7-antonovych-kultura_c0771
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S5
+  file: wave9-shevelov-fonolohiia_c0116
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S6
+  file: wave10-shevchenko-tvory-t1_c0641
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S7
+  file: wave7-ukrxx-derzhavnist_c0399
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S8
+  file: wave9-ohiyenko-ist-lit-movy_c0041
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c5452
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave10-shevchenkivsky-slovnyk_c2009
+  type: literary
+  title: Шевченківський словник
+  author: Колектив

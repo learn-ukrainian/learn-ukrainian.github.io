@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/individual-voice-ii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c2810
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-hensiorsky-gvl-mova_c0253
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0009
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c2283
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave5-skovoroda-tvory_c0079
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c5178
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave7-istkult-t2-xiii-xvii_c1490
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S8
+  file: wave8-chyzhevsky-skovoroda_c0293
+  type: literary
+  title: Чижевський — Філософія Сковороди
+  author: Чижевський Д.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c4089
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c0036
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

@@ -2,71 +2,37 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-ukrlit-zabolotnyi-2022_s0286
-  type: textbook
-  title: Сторінка 209
-  grade: 5
-  author: zabolotnyi
-- id: S2
-  file: 11-klas-ukrajinska-mova-glazova-2019_s0020
-  type: textbook
-  title: Сторінка 16
-  grade: 11
-  author: glazova
-- id: S3
-  file: 7-klas-ukrlit-zabolotnyi-2024_s0442
-  type: textbook
-  title: Сторінка 291
-  grade: 7
-  author: zabolotnyi
-- id: S4
-  file: 8-klas-ukrmova-zabolotnyi-2025_s0256
-  type: textbook
-  title: Сторінка 212
-  grade: 8
-  author: zabolotnyi
-- id: S6
   file: wave8-ukr-lit-entsyklopediia_c5005
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S8
-  file: wave8-ukr-lit-entsyklopediia_c2721
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c0174
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S9
-  file: wave8-masliuk-poetyky-rytoryky_c0139
-  type: literary
-  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
-  author: Маслюк В.
-- id: S10
-  file: wave8-masliuk-poetyky-rytoryky_c0138
-  type: literary
-  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
-  author: Маслюк В.
-- id: S11
-  file: wave10-shevchenkivsky-slovnyk_c2053
+- id: S4
+  file: wave10-shevchenkivsky-slovnyk_c1163
   type: literary
   title: Шевченківський словник
   author: Колектив
-- id: S12
+- id: S5
   file: wave8-hrabovych-do-istoriyi_c0553
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S13
-  file: wave4-chyzhevsky-istoriia-lit_c0663
+- id: S7
+  file: wave8-masliuk-poetyky-rytoryky_c0139
   type: literary
-  title: Чижевський — Історія української літератури
-  author: Чижевський Д.
-- id: S14
-  file: wave9-rusanivsky-ist-lit-movy_c0469
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S8
+  file: wave8-hensiorsky-gvl-mova_c0255
   type: literary
-  title: Русанівський — Історія укр. літ. мови
-  author: Русанівський В.
-- id: S15
-  file: wave10-shevchenkivsky-slovnyk_c1597
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c2721
   type: literary
-  title: Шевченківський словник
+  title: Українська літературна енциклопедія (1988-1995)
   author: Колектив

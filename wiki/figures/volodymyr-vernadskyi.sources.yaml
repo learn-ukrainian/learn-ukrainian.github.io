@@ -2,42 +2,47 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/volodymyr-vernadskyi_Біографія-Володимир-Вернадський-Ноосфера-та-компроміс-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Володимир Вернадський: Ноосфера та компроміс'
+  section_path: 'Біографія: Володимир Вернадський: Ноосфера та компроміс > Короткий
+    зміст'
+- id: S2
+  file: 9-klas-ukrajinska-mova-voron-2017_s5082
+  type: textbook
+  title: Стара школа мала цілу систему покарань. Близькозвучне до назви
+  page: 44
+  grade: 9
+- id: S3
+  file: ukrainian_wiki/volodymyr-vernadskyi_Біографія-Володимир-Вернадський-Ноосфера-та-компроміс-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Володимир Вернадський: Ноосфера та компроміс'
+  section_path: 'Біографія: Володимир Вернадський: Ноосфера та компроміс > Деколонізаційна
+    перспектива'
+- id: S4
   file: wave7-popovych-narys-kultury_c0866
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S3
+- id: S5
+  file: ukrainian_wiki/volodymyr-vernadskyi_Біографія-Володимир-Вернадський-Ноосфера-та-компроміс-Основний-зміст-Філософія-науки-від-живої-речовини-до-ноосфери
+  type: ukrainian_wiki
+  title: 'Біографія: Володимир Вернадський: Ноосфера та компроміс'
+  section_path: 'Біографія: Володимир Вернадський: Ноосфера та компроміс > Основний
+    зміст > Філософія науки: від живої речовини до ноосфери'
+- id: S7
   file: wave7-popovych-narys-kultury_c0865
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S4
+- id: S8
   file: wave8-fdm-biobibliohrafichnyi_c0232
   type: literary
   title: Філософська думка в Україні — біобібліографічний словник
   author: Колектив
-- id: S5
-  file: wave7-popovych-narys-kultury_c0924
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S6
-  file: wave7-popovych-narys-kultury_c0868
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S7
-  file: wave12-hrushevsky-iu-odnotom_c0016
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
 - id: S9
-  file: wave7-ukrxx-derzhavnist_c0095
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S10
-  file: wave7-ukrxx-derzhavnist_c0332
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
+  file: ukrainian_wiki/volodymyr-vernadskyi_Біографія-Володимир-Вернадський-Ноосфера-та-компроміс-Основний-зміст-Заснування-Української-Академії-Наук-дискусії-та-візії
+  type: ukrainian_wiki
+  title: 'Біографія: Володимир Вернадський: Ноосфера та компроміс'
+  section_path: 'Біографія: Володимир Вернадський: Ноосфера та компроміс > Основний
+    зміст > Заснування Української Академії Наук: дискусії та візії'

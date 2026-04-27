@@ -1,43 +1,49 @@
 # Source registry for wiki/grammar/b2/secondary-sentence-members.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S6
-  file: 11-klas-ukrajinska-mova-voron-2019_s1292
+- id: S1
+  file: 8-klas-ukrmova-onatiy-2025_s4685
   type: textbook
-  title: § 22. Другорядні члени речення. Складні випадки кваліфікації
-  page: 270
-  grade: 11
-- id: S7
+  title: ВАМ МОЖНА ЗНЕЖИРЕНИЙ —’ дЬ
+  page: 2
+  grade: 8
+- id: S2
   file: 11-klas-ukrajinska-mova-voron-2019_s1265
   type: textbook
   title: § 22. Які труднощі виникають при кваліфікації (розмежуванні)
   page: 117
   grade: 11
-- id: S8
+- id: S3
+  file: 11-klas-ukrajinska-mova-voron-2019_s1292
+  type: textbook
+  title: § 22. Другорядні члени речення. Складні випадки кваліфікації
+  page: 270
+  grade: 11
+- id: S5
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2522
+  type: textbook
+  title: ПІДКОРЕННЯ ГОВЕРЛИ
+  page: 166
+  grade: 5
+- id: S6
+  file: 5-klas-ukrmova-golub-2022_s2303
+  type: textbook
+  title: § 39. Повага до людини, її гідності
+  page: 116
+  grade: 5
+- id: S7
   file: 8-klas-ukrmova-zabolotnyi-2025_s4688
   type: textbook
   title: РЕЧЕННЯ ЧЛЕНИ РЕЧЕННЯ
   page: 2
   grade: 8
-- id: S9
+- id: S8
   file: 8-klas-ukrmova-avramenko-2025_s4583
   type: textbook
   title: § 26. –27
   page: 61
   grade: 8
-- id: S11
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4701
-  type: textbook
-  title: ДРУГОРЯДНІ ЧЛЕНИ РЕЧЕННЯ
-  page: 78
-  grade: 8
-- id: S13
-  file: 5-klas-ukrmova-avramenko-2022_s2254
-  type: textbook
-  title: § 69. Другорядні члени речення. Означення
-  page: 159
-  grade: 5
-- id: S14
+- id: S9
   file: 5-klas-ukrmova-litvinova-2022_s2389
   type: textbook
   title: Відомості із синтаксису й пунктуації. Другорядні члени речення

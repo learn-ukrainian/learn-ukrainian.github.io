@@ -25,72 +25,97 @@ sources:
   title: Сторінка 134
   grade: 3
   author: kravtsova
-- id: S6
-  file: folk-micro-загадки-0
-  type: unknown
-  title: folk-micro-загадки-0
-- id: S7
-  file: folk-micro-загадки-1
-  type: unknown
-  title: folk-micro-загадки-1
-- id: S8
-  file: folk-micro-загадки-2
-  type: unknown
-  title: folk-micro-загадки-2
-- id: S9
-  file: folk-micro-загадки-3
-  type: unknown
-  title: folk-micro-загадки-3
-- id: S11
-  file: folk-micro-загадки-5
-  type: unknown
-  title: folk-micro-загадки-5
-- id: S12
-  file: folk-micro-загадки-6
-  type: unknown
-  title: folk-micro-загадки-6
-- id: S13
-  file: folk-micro-загадки-7
-  type: unknown
-  title: folk-micro-загадки-7
-- id: S14
-  file: folk-micro-загадки-8
-  type: unknown
-  title: folk-micro-загадки-8
-- id: S16
-  file: 3-klas-ukrainska-mova-savchenko-2020-2_s1681
+- id: S5
+  file: 4-klas-ukrayinska-mova-savchenko-2021-2_s0107
   type: textbook
-  title: Зàгадка — це цікава задача. Вона має форму питаль
-  page: 57
-  grade: 3
-- id: S17
+  title: Сторінка 108
+  grade: 4
+  author: savchenko
+- id: S6
+  file: ukrainian_wiki/zahadky_Український-фольклор-Загадки-та-метафоричне-бачення-світу-Основний-зміст-Когнітивні-механізми-від-побуту-до-космосу
+  type: ukrainian_wiki
+  title: 'Український фольклор: Загадки та метафоричне бачення світу'
+  section_path: 'Український фольклор: Загадки та метафоричне бачення світу > Основний
+    зміст > Когнітивні механізми: від побуту до космосу'
+- id: S7
+  file: ukrainian_wiki/zahadky_Український-фольклор-Загадки-та-метафоричне-бачення-світу-Основний-зміст-Жанрова-природа-та-структура-народної-загадки
+  type: ukrainian_wiki
+  title: 'Український фольклор: Загадки та метафоричне бачення світу'
+  section_path: 'Український фольклор: Загадки та метафоричне бачення світу > Основний
+    зміст > Жанрова природа та структура народної загадки'
+- id: S8
+  file: 6-klas-ukrmova-golub-2023_s3276
+  type: textbook
+  title: І. Нацбанк випустив першу пам’ятну медаль міст-героїв
+  page: 200
+  grade: 6
+- id: S9
+  file: 5-klas-ukrlit-avramenko-2022_s1943
+  type: textbook
+  title: Розділ 1. МИСТЕЦЬКИЙ СПАДОК НАЩАДКАМ
+  page: 4
+  grade: 5
+- id: S10
+  file: ukrainian_wiki/zahadky_Український-фольклор-Загадки-та-метафоричне-бачення-світу-Основний-зміст-Дидактика-та-сучасне-функціонування
+  type: ukrainian_wiki
+  title: 'Український фольклор: Загадки та метафоричне бачення світу'
+  section_path: 'Український фольклор: Загадки та метафоричне бачення світу > Основний
+    зміст > Дидактика та сучасне функціонування'
+- id: S11
+  file: ukrainian_wiki/zahadky_Український-фольклор-Загадки-та-метафоричне-бачення-світу-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Український фольклор: Загадки та метафоричне бачення світу'
+  section_path: 'Український фольклор: Загадки та метафоричне бачення світу > Короткий
+    зміст'
+- id: S12
+  file: ukrainian_wiki/rusalni-pisni_Український-фольклор-Русальні-пісні-Троїцький-цикл-та-духи-природи-Основний-зміст-Поетика-і-мотиви-русальних-пісень
+  type: ukrainian_wiki
+  title: 'Український фольклор: Русальні пісні: Троїцький цикл та духи природи'
+  section_path: 'Український фольклор: Русальні пісні: Троїцький цикл та духи природи
+    > Основний зміст > Поетика і мотиви русальних пісень'
+- id: S13
   file: 5-klas-ukrlit-zabolotnyi-2022_s1992
   type: textbook
   title: НЕВИЧЕРПНІ ДЖЕРЕЛА МУДРОСТІ (p. 30)
   page: 30
   grade: 5
+- id: S14
+  file: folk-micro-загадки-0
+  type: unknown
+  title: folk-micro-загадки-0
+- id: S15
+  file: folk-micro-загадки-1
+  type: unknown
+  title: folk-micro-загадки-1
+- id: S16
+  file: folk-micro-загадки-2
+  type: unknown
+  title: folk-micro-загадки-2
+- id: S17
+  file: folk-micro-загадки-3
+  type: unknown
+  title: folk-micro-загадки-3
 - id: S18
-  file: wave5-dovhalevsky-poetyka_c0174
-  type: literary
-  title: Митрофан Довгалевський. Поетика.
-  author: Довгалевський М.
+  file: folk-micro-загадки-4
+  type: unknown
+  title: folk-micro-загадки-4
 - id: S19
-  file: wave8-masliuk-poetyky-rytoryky_c0243
-  type: literary
-  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
-  author: Маслюк В.
+  file: folk-micro-загадки-5
+  type: unknown
+  title: folk-micro-загадки-5
 - id: S20
-  file: wave5-dovhalevsky-poetyka_c0179
-  type: literary
-  title: Митрофан Довгалевський. Поетика.
-  author: Довгалевський М.
+  file: folk-micro-загадки-6
+  type: unknown
+  title: folk-micro-загадки-6
 - id: S21
-  file: wave8-ukr-lit-entsyklopediia_c2538
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
+  file: folk-micro-загадки-7
+  type: unknown
+  title: folk-micro-загадки-7
 - id: S22
-  file: wikipedia/Когнітивна лінгвістика
-  type: wikipedia
-  title: Когнітивна лінгвістика
-  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%B3%D0%BD%D1%96%D1%82%D0%B8%D0%B2%D0%BD%D0%B0%20%D0%BB%D1%96%D0%BD%D0%B3%D0%B2%D1%96%D1%81%D1%82%D0%B8%D0%BA%D0%B0
+  file: folk-micro-загадки-8
+  type: unknown
+  title: folk-micro-загадки-8
+- id: S23
+  file: folk-micro-загадки-9
+  type: unknown
+  title: folk-micro-загадки-9

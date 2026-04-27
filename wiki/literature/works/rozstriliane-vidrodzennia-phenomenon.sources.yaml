@@ -41,6 +41,11 @@ sources:
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
+- id: S9
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0013
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
 - id: S10
   file: wave8-hrabovych-do-istoriyi_c0724
   type: literary

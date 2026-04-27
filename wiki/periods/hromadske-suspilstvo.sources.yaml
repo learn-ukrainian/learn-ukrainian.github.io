@@ -36,6 +36,11 @@ sources:
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
+- id: S8
+  file: wave5-prokopovych-filosofski_c0512
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
 - id: S9
   file: wave7-ukrxx-derzhavnist_c0376
   type: literary

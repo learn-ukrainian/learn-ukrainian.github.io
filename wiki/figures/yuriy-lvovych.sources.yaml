@@ -2,27 +2,59 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wave7-krypyakevych-gvk_c0155
-  type: literary
-  title: Крип'якевич — Галицько-Волинське князівство
-  author: Крип'якевич І.
-- id: S2
-  file: wave7-krypyakevych-gvk_c0138
-  type: literary
-  title: Крип'якевич — Галицько-Волинське князівство
-  author: Крип'якевич І.
-- id: S3
-  file: wave7-krypyakevych-gvk_c0149
-  type: literary
-  title: Крип'якевич — Галицько-Волинське князівство
-  author: Крип'якевич І.
-- id: S4
-  file: wave7-istkult-t2-xiii-xvii_c0077
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
-- id: S5
   file: wikipedia/Юрій Львович
   type: wikipedia
   title: Юрій Львович
   url: https://uk.wikipedia.org/wiki/%D0%AE%D1%80%D1%96%D0%B9%20%D0%9B%D1%8C%D0%B2%D0%BE%D0%B2%D0%B8%D1%87
+- id: S2
+  file: ukrainian_wiki/yuriy-lvovych_Біографія-Юрій-I-Львович-Останній-Король-Русі-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Юрій I Львович — Останній Король Русі'
+  section_path: 'Біографія: Юрій I Львович — Останній Король Русі > Короткий зміст'
+- id: S3
+  file: 7-klas-istoria-ukr-pometun-2024_s3581
+  type: textbook
+  title: § 20. Волинсько-Галицька держава за нащадків
+  page: 138
+  grade: 7
+- id: S4
+  file: ukrainian_wiki/yuriy-lvovych_Біографія-Юрій-I-Львович-Останній-Король-Русі-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Юрій I Львович — Останній Король Русі'
+  section_path: 'Біографія: Юрій I Львович — Останній Король Русі > Деколонізаційна
+    перспектива'
+- id: S5
+  file: 7-klas-istoria-ukr-hlibovska-2024_s3536
+  type: textbook
+  title: Князь проводив активну зовнішню політику. Йому вдалося
+  page: 64
+  grade: 7
+- id: S6
+  file: 7-klas-istoria-ukr-galimov-2024_s3480
+  type: textbook
+  title: § 17. Королівство Руське за наступників короля Данила
+  page: 136
+  grade: 7
+- id: S7
+  file: ukrainian_wiki/yuriy-lvovych_Біографія-Юрій-I-Львович-Останній-Король-Русі-Основний-зміст-Символіка-геральдика-та-державні-інсигнії
+  type: ukrainian_wiki
+  title: 'Біографія: Юрій I Львович — Останній Король Русі'
+  section_path: 'Біографія: Юрій I Львович — Останній Король Русі > Основний зміст
+    > Символіка, геральдика та державні інсигнії'
+- id: S8
+  file: 7-klas-istoria-ukr-pometun-2024_s3576
+  type: textbook
+  title: Розділ 4. ВОЛИНЬ І ГАЛИЧИНА КІНЦЯ ХІІ —. СЕРЕДИНИ ХІІІ ст
+  page: 117
+  grade: 7
+- id: S9
+  file: ukrainian_wiki/yuriy-lvovych_Біографія-Юрій-I-Львович-Останній-Король-Русі-Основний-зміст-Об-єднання-земель-та-утвердження-королівської-влади
+  type: ukrainian_wiki
+  title: 'Біографія: Юрій I Львович — Останній Король Русі'
+  section_path: 'Біографія: Юрій I Львович — Останній Король Русі > Основний зміст
+    > Об’єднання земель та утвердження королівської влади'
+- id: S10
+  file: wave7-krypyakevych-gvk_c0155
+  type: literary
+  title: Крип'якевич — Галицько-Волинське князівство
+  author: Крип'якевич І.

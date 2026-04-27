@@ -21,6 +21,16 @@ sources:
   type: literary
   title: Олександр Довженко. Щоденник
   author: Довженко О.
+- id: S5
+  file: wave5-prokopovych-filosofski_c0974
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S6
+  file: wave5-prokopovych-filosofski_c1005
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
 - id: S7
   file: wave5-prokopovych-filosofski_c0281
   type: literary

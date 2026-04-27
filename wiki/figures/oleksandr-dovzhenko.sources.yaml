@@ -2,28 +2,40 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 9-klas-ukrajinska-mova-voron-2017_s5126
+  type: textbook
+  title: Розвиток МОВЛЕННЯ. ПЕРЕКАЗ ТЕКСТУ ХУДОЖНЬОГО СТИЛЮ
+  page: 169
+  grade: 9
+- id: S2
   file: 11-klas-ukrlit-borzenko-2019-prof_s1349
   type: textbook
   title: Воєнне лихоліття . Олександр Довженко  131
   page: 131
   grade: 11
-- id: S2
+- id: S3
   file: 11-klas-ukrajinska-literatura-avramenko-2019_s1109
   type: textbook
   title: ВОЄННЕ ЛИХОЛІТТЯ (p. 166)
   page: 166
   grade: 11
-- id: S3
-  file: ukrlib-honchar_c0016
-  type: literary
-  title: Олесь Гончар. Довженків світ
-  author: Гончар О.
 - id: S4
-  file: wave7-entsyklopediia-ukrainoznavstva_c2291
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
+  file: https://www.youtube.com/watch?v=bYdQSRS_rYA
+  type: external
+  title: ULP 4-159 | Олександр Довженко ― новатор кіно | Ukrainian Lessons Podcast
+    Season 4
+  url: https://www.youtube.com/watch?v=bYdQSRS_rYA
 - id: S5
+  file: ukrainian_wiki/oleksandr-dovzhenko_Біографія-Олександр-Довженко-Трагедія-генія-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Олександр Довженко: Трагедія генія'
+  section_path: 'Біографія: Олександр Довженко: Трагедія генія > Короткий зміст'
+- id: S6
+  file: ukrainian_wiki/oleksandr-dovzhenko_Біографія-Олександр-Довженко-Трагедія-генія-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Олександр Довженко: Трагедія генія'
+  section_path: 'Біографія: Олександр Довженко: Трагедія генія > Деколонізаційна перспектива'
+- id: S7
   file: wikipedia/Довженко Олександр Петрович
   type: wikipedia
   title: Довженко Олександр Петрович

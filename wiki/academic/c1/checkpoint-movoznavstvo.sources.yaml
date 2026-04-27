@@ -1,60 +1,53 @@
 # Source registry for wiki/academic/c1/checkpoint-movoznavstvo.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S3
-  file: 8-klas-ukrmova-avramenko-2025_s0186
-  type: textbook
-  title: Сторінка 138
-  grade: 8
-  author: avramenko
-- id: S4
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0050
-  type: textbook
-  title: Сторінка 37
-  grade: 10
-  author: zabolotnij
-- id: S6
+- id: S1
   file: wave4-ukrainska-mova-encyclopedia_c0205
   type: literary
   title: Українська мова — Енциклопедія
   author: Русанівський В.М. та ін.
-- id: S7
+- id: S2
+  file: wave4-ukrainska-mova-encyclopedia_c0207
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c4089
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
   file: wave4-ukrainska-mova-encyclopedia_c0206
   type: literary
   title: Українська мова — Енциклопедія
   author: Русанівський В.М. та ін.
-- id: S8
-  file: wave8-hrabovych-do-istoriyi_c0010
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
-- id: S9
-  file: wave4-ukrainska-mova-encyclopedia_c0154
-  type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
-- id: S10
-  file: wave8-ukr-lit-entsyklopediia_c4417
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c4294
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S11
+- id: S6
   file: wave9-ohiyenko-ist-lit-movy_c0334
   type: literary
   title: Огієнко — Історія української літературної мови (1949)
   author: Огієнко І.
-- id: S12
-  file: wave8-hrabovych-do-istoriyi_c0016
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
-- id: S13
+- id: S7
   file: wave8-ukr-lit-entsyklopediia_c5179
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S15
-  file: wave8-hrabovych-do-istoriyi_c0629
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0234
   type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0237
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c5176
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

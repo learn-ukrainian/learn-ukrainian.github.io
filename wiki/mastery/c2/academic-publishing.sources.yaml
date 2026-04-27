@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/academic-publishing.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c3970
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c0063
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c0003
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c1031
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave9-ohiyenko-ist-lit-movy_c0041
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c4521
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0001
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave7-thompson-trubadury_c0001
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c4522
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave7-antonovych-kultura_c0054
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.

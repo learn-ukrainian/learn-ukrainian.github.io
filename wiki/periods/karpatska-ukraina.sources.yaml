@@ -26,21 +26,11 @@ sources:
   type: literary
   title: Ґренджа-Донський — Щастя і горе Карпатської України
   author: Ґренджа-Донський В.
-- id: S6
-  file: wave6-scherer-litopys-malorosiyi_c0003
-  type: literary
-  title: Шерер — Літопис Малоросії (1788)
-  author: Шерер Ж.
 - id: S7
   file: wave6-scherer-litopys-malorosiyi_c0006
   type: literary
   title: Шерер — Літопис Малоросії (1788)
   author: Шерер Ж.
-- id: S8
-  file: wave6-sofonovych-khronika_c0003
-  type: literary
-  title: Феодосій Софонович. Хроніка з літописців стародавніх
-  author: Софонович Ф.
 - id: S9
   file: wave6-rihelman-litopysna-opovid_c0020
   type: literary

@@ -2,37 +2,46 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/povist-mynulykh-lit-i_Історіографія-Повість-минулих-літ-I-Джерело-чи-інструмент-влади-Основний-зміст-Компілятивна-природа-джерела-фольклор-та-географія
+  type: ukrainian_wiki
+  title: 'Історіографія: Повість минулих літ I: Джерело чи інструмент влади?'
+  section_path: 'Історіографія: Повість минулих літ I: Джерело чи інструмент влади?
+    > Основний зміст > Компілятивна природа: джерела, фольклор та географія'
+- id: S2
   file: wave7-istkult-t1-kyivska-rus_c0007
   type: literary
   title: Історія української культури. Т.1. Київська Русь
   author: Колектив
-- id: S2
+- id: S3
+  file: ukrainian_wiki/povist-mynulykh-lit-i_Історіографія-Повість-минулих-літ-I-Джерело-чи-інструмент-влади-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Повість минулих літ I: Джерело чи інструмент влади?'
+  section_path: 'Історіографія: Повість минулих літ I: Джерело чи інструмент влади?
+    > Короткий зміст'
+- id: S4
+  file: ukrainian_wiki/povist-mynulykh-lit-i_Історіографія-Повість-минулих-літ-I-Джерело-чи-інструмент-влади-Основний-зміст-Від-наївної-довіри-до-критичного-текстологічного-аналізу
+  type: ukrainian_wiki
+  title: 'Історіографія: Повість минулих літ I: Джерело чи інструмент влади?'
+  section_path: 'Історіографія: Повість минулих літ I: Джерело чи інструмент влади?
+    > Основний зміст > Від наївної довіри до критичного текстологічного аналізу'
+- id: S5
   file: wikipedia/Іпатіївський літопис
   type: wikipedia
   title: Іпатіївський літопис
   url: https://uk.wikipedia.org/wiki/%D0%86%D0%BF%D0%B0%D1%82%D1%96%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%BB%D1%96%D1%82%D0%BE%D0%BF%D0%B8%D1%81
-- id: S3
+- id: S7
   file: wave1-galytsko-volynskyi_c0547
   type: literary
   title: Галицько-Волинський літопис
   author: Невідомий
-- id: S4
-  file: wave1-kyivskyi-litopys_c0922
-  type: literary
-  title: Київський літопис
-  author: Невідомий
-- id: S5
+- id: S9
+  file: ukrainian_wiki/povist-mynulykh-lit-i_Історіографія-Повість-минулих-літ-I-Джерело-чи-інструмент-влади-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Повість минулих літ I: Джерело чи інструмент влади?'
+  section_path: 'Історіографія: Повість минулих літ I: Джерело чи інструмент влади?
+    > Деколонізаційна перспектива'
+- id: S10
   file: wave4-hrushevsky-istlit-t2_c0157
   type: literary
   title: Грушевський — Історія української літератури, т.2
   author: Грушевський М.
-- id: S7
-  file: wave7-istkult-t1-kyivska-rus_c0157
-  type: literary
-  title: Історія української культури. Т.1. Київська Русь
-  author: Колектив
-- id: S8
-  file: wave7-krypyakevych-istkult_c0331
-  type: literary
-  title: Крип'якевич — Історія української культури (1937)
-  author: Крип'якевич І.

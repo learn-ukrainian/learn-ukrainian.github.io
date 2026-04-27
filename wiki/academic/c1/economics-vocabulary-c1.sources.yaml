@@ -2,72 +2,37 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-glazova-2019_s0241
-  type: textbook
-  title: Сторінка 170
-  grade: 11
-  author: glazova
-- id: S2
-  file: 11-klas-ukrajinska-mova-glazova-2019_s0332
-  type: textbook
-  title: Сторінка 223
-  grade: 11
-  author: glazova
-- id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0499
-  type: textbook
-  title: Сторінка 271
-  grade: 10
-  author: karaman
-- id: S4
-  file: 7-klas-ukrmova-litvinova-2024_s0067
-  type: textbook
-  title: Сторінка 63
-  grade: 7
-  author: litvinova
-- id: S5
-  file: 11-klas-ukrlit-borzenko-2019-prof_s0119
-  type: textbook
-  title: Сторінка 65
-  grade: 11
-  author: borzenko
-- id: S6
-  file: wave7-ukrxx-derzhavnist_c0402
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S7
-  file: wave7-dzyuba-internatsionalizm_c0319
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
-- id: S8
   file: wave7-ukrxx-derzhavnist_c0403
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
-- id: S10
-  file: wave7-ukrxx-derzhavnist_c0401
+- id: S2
+  file: wave7-ukrxx-derzhavnist_c0409
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
-- id: S11
+- id: S3
   file: wave7-ukrxx-derzhavnist_c0407
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
-- id: S12
-  file: wave7-antonovych-kultura_c0738
-  type: literary
-  title: Українська культура (лекції за ред. Антоновича)
-  author: Антонович Д.
-- id: S13
+- id: S5
   file: wave7-ukrxx-derzhavnist_c0404
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
-- id: S15
-  file: wave7-popovych-narys-kultury_c0857
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c2731
   type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave7-ukrxx-derzhavnist_c0400
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0436
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив

@@ -2,44 +2,48 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1039
-  type: textbook
-  title: РОЗГОРТАННЯ НАЦІОНАЛЬНОГО РУХУ В УКРАЇНІ
-  page: 185
-  grade: 11
+  file: ukrainian_wiki/myroslav-marynovych_Біографія-Мирослав-Маринович-Совість-нації-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Мирослав Маринович: Совість нації'
+  section_path: 'Біографія: Мирослав Маринович: Совість нації > Короткий зміст'
 - id: S2
+  file: ukrainian_wiki/myroslav-marynovych_Біографія-Мирослав-Маринович-Совість-нації-Основний-зміст-Історичні-та-економічні-передумови-опору
+  type: ukrainian_wiki
+  title: 'Біографія: Мирослав Маринович: Совість нації'
+  section_path: 'Біографія: Мирослав Маринович: Совість нації > Основний зміст > Історичні
+    та економічні передумови опору'
+- id: S3
+  file: ukrainian_wiki/ukrainska-helsinska-hrupa_Історія-України-Українська-Гельсінська-група-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історія України: Українська Гельсінська група'
+  section_path: 'Історія України: Українська Гельсінська група > Деколонізаційна перспектива'
+- id: S5
+  file: wave7-ukrxx-derzhavnist_c0126
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S6
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1028
+  type: textbook
+  title: УКРАЇНСЬКА ГРОМАДСЬКА ГРУПА СПРИЯННЯ ВИКОНАННЮ
+  page: 132
+  grade: 11
+- id: S7
+  file: 11-klas-istoriya-ukr-gisem-2024_s0921
+  type: textbook
+  title: розділ III. україна в період системної кризи Союзу радянських Соціалістичних
+    республік
+  page: 100
+  grade: 11
+- id: S8
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1027
+  type: textbook
+  title: ДИСИДЕНТСЬКИЙ РУХ ДРУГОЇ ПОЛОВИНИ 1960-Х – ПЕРШОЇ ПОЛОВИНИ 1970-Х РОКІВ
+  page: 125
+  grade: 11
+- id: S9
   file: 11-klas-istoriya-ukr-hlibovska-2024_s1029
   type: textbook
   title: Мовою джерела. Із повідомлення про створення Української громад
   page: 136
   grade: 11
-- id: S4
-  file: wave7-ukrxx-derzhavnist_c0126
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S5
-  file: wave7-ukrxx-derzhavnist_c0139
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S6
-  file: wave7-popovych-narys-kultury_c1126
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S7
-  file: wikipedia/Українська Радянська Соціалістична Республіка
-  type: wikipedia
-  title: Українська Радянська Соціалістична Республіка
-  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%A0%D0%B0%D0%B4%D1%8F%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%A1%D0%BE%D1%86%D1%96%D0%B0%D0%BB%D1%96%D1%81%D1%82%D0%B8%D1%87%D0%BD%D0%B0%20%D0%A0%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D1%96%D0%BA%D0%B0
-- id: S8
-  file: wikipedia/Українська Гельсінська група
-  type: wikipedia
-  title: Українська Гельсінська група
-  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%93%D0%B5%D0%BB%D1%8C%D1%81%D1%96%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%B3%D1%80%D1%83%D0%BF%D0%B0
-- id: S9
-  file: wikipedia/Українська Гельсінська спілка
-  type: wikipedia
-  title: Українська Гельсінська спілка
-  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%93%D0%B5%D0%BB%D1%8C%D1%81%D1%96%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D1%81%D0%BF%D1%96%D0%BB%D0%BA%D0%B0

@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/capstone-topic-selection.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-ohloblyn-mazepa_c0036
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+- id: S2
+  file: wave7-thompson-trubadury_c0021
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0023
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0024
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0519
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave7-voloshyn-vybrani_c0027
+  type: literary
+  title: Волошин — Вибрані твори
+  author: Волошин А.
+- id: S7
+  file: wave5-prokopovych-filosofski_c0692
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S8
+  file: wave9-ohiyenko-ist-lit-movy_c0017
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0355
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave7-ivakin-kyiv-xiii-xvi_c0024
+  type: literary
+  title: Івакін — Історичний розвиток Києва XIII-XVI ст.
+  author: Івакін Г.

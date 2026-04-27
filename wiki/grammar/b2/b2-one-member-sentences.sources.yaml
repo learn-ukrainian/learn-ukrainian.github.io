@@ -2,73 +2,54 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-ukrmova-avramenko-2025_s0117
-  type: textbook
-  title: Сторінка 91
-  grade: 8
-  author: avramenko
-- id: S3
-  file: 8-klas-ukrmova-zabolotnyi-2025_s0131
-  type: textbook
-  title: Сторінка 118
-  grade: 8
-  author: zabolotnyi
-- id: S6
   file: 8-klas-ukrmova-avramenko-2025_s4611
   type: textbook
   title: § 41. ТИПИ ОДНОСКЛАДНИХ РЕЧЕНЬ
   page: 91
   grade: 8
-- id: S7
-  file: 8-klas-ukrmova-avramenko-2025_s4612
-  type: textbook
-  title: § 42. –43. Означено-особові та неозначено-особові речення
-  page: 94
-  grade: 8
-- id: S8
-  file: 8-klas-ukrmova-avramenko-2025_s4620
-  type: textbook
-  title: Зауважте! Називні речення не бувають питальними й спонукальними. Вони можуть
-    бути части
-  page: 105
-  grade: 8
-- id: S9
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4709
-  type: textbook
-  title: ІІ. Запишіть (аудіо) подкаст на одну з поданих тем
-  page: 129
-  grade: 8
-- id: S10
-  file: 5-klas-ukrmova-litvinova-2022_s2386
-  type: textbook
-  title: Відомості із синтаксису й пунктуації. Речення з одним головним членом
-  page: 199
-  grade: 5
-- id: S11
-  file: 9-klas-ukrajinska-mova-voron-2017_s5136
-  type: textbook
-  title: СИНТАКСИС І ПУНКТУАЦІЯ СЛОВОСПОЛУЧЕННЯ
-  page: 206
-  grade: 9
-- id: S12
+- id: S2
   file: 8-klas-ukrmova-zabolotnyi-2025_s4707
   type: textbook
   title: ОДНОСКЛАДНЕ РЕЧЕННЯ ПОВНЕ І НЕПОВНЕ РЕЧЕННЯ
   page: 117
   grade: 8
-- id: S14
+- id: S3
   file: 11-klas-ukrajinska-mova-avramenko-2019_s1158
   type: textbook
   title: § 26. –27. НЕПОВНІ Й ОДНОСКЛАДНІ РЕЧЕННЯ
   page: 85
   grade: 11
-- id: S15
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4710
+- id: S4
+  file: 8-klas-ukrmova-avramenko-2025_s4615
   type: textbook
-  title: ІІ. Поясніть лексичне значення слова кампанія. Доберіть до цього слова паронім
-  page: 134
+  title: РОЗВИТОК МОВЛЕННЯ (p. 98)
+  page: 98
   grade: 8
-- id: S16
+- id: S5
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4709
+  type: textbook
+  title: ІІ. Запишіть (аудіо) подкаст на одну з поданих тем
+  page: 129
+  grade: 8
+- id: S6
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1429
+  type: textbook
+  title: Синтаксична норма (p. 80)
+  page: 80
+  grade: 11
+- id: S7
+  file: 8-klas-ukrmova-avramenko-2025_s4618
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 102)
+  page: 102
+  grade: 8
+- id: S8
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5157
+  type: textbook
+  title: Повторення вивченого (p. 13)
+  page: 13
+  grade: 9
+- id: S9
   file: ext-article-0
   type: external
   title: ext-article-0

@@ -14,39 +14,47 @@ sources:
   grade: 6
   author: zabolotnyi
 - id: S6
-  file: 6-klas-ukrlit-kovalenko-2023_s2756
-  type: textbook
-  title: Вікторія Ковальчук. Дитячі сни. Мила киця. 2008
-  page: 23
-  grade: 6
+  file: ukrainian_wiki/rodynna-liryka-kolomyiky_Український-фольклор-Родинна-лірика-та-коломийки-Інтимний-голос-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Український фольклор: Родинна лірика та коломийки: Інтимний голос'
+  section_path: 'Український фольклор: Родинна лірика та коломийки: Інтимний голос
+    > Короткий зміст'
 - id: S7
-  file: 6-klas-ukrlit-zabolotnyi-2023_s2812
-  type: textbook
-  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 34)
-  page: 34
-  grade: 6
+  file: ukrainian_wiki/rodynna-liryka-kolomyiky_Український-фольклор-Родинна-лірика-та-коломийки-Інтимний-голос-Основний-зміст-Колискові-пісні-магія-материнського-слова
+  type: ukrainian_wiki
+  title: 'Український фольклор: Родинна лірика та коломийки: Інтимний голос'
+  section_path: 'Український фольклор: Родинна лірика та коломийки: Інтимний голос
+    > Основний зміст > Колискові пісні: магія материнського слова'
 - id: S8
-  file: wave7-entsyklopediia-ukrainoznavstva_c0629
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
+  file: ukrainian_wiki/rodynna-liryka-kolomyiky_Український-фольклор-Родинна-лірика-та-коломийки-Інтимний-голос-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Український фольклор: Родинна лірика та коломийки: Інтимний голос'
+  section_path: 'Український фольклор: Родинна лірика та коломийки: Інтимний голос
+    > Деколонізаційна перспектива'
 - id: S9
-  file: wave8-ukr-lit-entsyklopediia_c3605
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
+  file: 7-klas-ukrlit-mishhenko-2015_s3636
+  type: textbook
+  title: розділ 1. ЛІТЕРАТУРНА П’ЯТИХВИЛИНКА
+  page: 14
+  grade: 7
 - id: S10
-  file: wave7-entsyklopediia-ukrainoznavstva_c0631
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
+  file: 7-klas-ukrlit-mishhenko-2015_s3693
+  type: textbook
+  title: розділ 4. СЛОВНИК ЕРУДИТА
+  page: 257
+  grade: 7
 - id: S11
-  file: https://www.youtube.com/watch?v=UZD98q_Vy0E
-  type: external
-  title: Як Виховати Українця? Обовʼязково подивіться! Про Колисковіі
-  url: https://www.youtube.com/watch?v=UZD98q_Vy0E
-- id: S12
   file: wikipedia/Лірика
   type: wikipedia
   title: Лірика
   url: https://uk.wikipedia.org/wiki/%D0%9B%D1%96%D1%80%D0%B8%D0%BA%D0%B0
+- id: S12
+  file: wave7-entsyklopediia-ukrainoznavstva_c0629
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S13
+  file: https://www.youtube.com/watch?v=UZD98q_Vy0E
+  type: external
+  title: Як Виховати Українця? Обовʼязково подивіться! Про Колисковіі
+  url: https://www.youtube.com/watch?v=UZD98q_Vy0E

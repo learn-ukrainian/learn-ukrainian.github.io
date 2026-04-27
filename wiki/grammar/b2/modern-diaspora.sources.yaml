@@ -2,44 +2,44 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 5-klas-istoriya-schupak-2022_s0183
+  file: 5-klas-istoriya-schupak-2022_s1940
   type: textbook
-  title: Сторінка 182
+  title: § 30. Як ви розумієте значення поняття «правила поведінки»? Чи дово
+  page: 170
   grade: 5
-  author: schupak
 - id: S2
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s0555
+  file: 11-klas-istoriya-ukr-galimov-2024_s0889
   type: textbook
-  title: Сторінка 304
+  title: § 33. Широкомасштабне вторгнення Російської Федерації в Україну
+  page: 251
   grade: 11
-  author: hlibovska
 - id: S3
-  file: 6-klas-istoriia-shchupak-2023_s0244
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1055
   type: textbook
-  title: Сторінка 240
-  grade: 6
-  author: shchupak
-- id: S6
+  title: СОЦІАЛЬНА СТРУКТУРА УКРАЇНСЬКОГО СУСПІЛЬСТВА. ПОВСЯКДЕННЯ
+  page: 249
+  grade: 11
+- id: S4
   file: 11-klas-ukrajinska-mova-voron-2019_s1244
   type: textbook
   title: ІІ «Уява охоплює весь світ». Складіть усний роздум за другим
   page: 17
   grade: 11
-- id: S8
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1062
+- id: S5
+  file: 11-klas-istoriya-ukr-gisem-2024_s0986
   type: textbook
-  title: Прапор СНД. ПРАКТИЧНА РОБОТА № 5
-  page: 270
+  title: § 33. Широкомасштабне вторгнення російської Федерації в україну
+  page: 283
   grade: 11
-- id: S9
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1065
+- id: S6
+  file: 11-klas-istoriya-ukr-gisem-2024_s0892
   type: textbook
-  title: CУСПІЛЬНО-ПОЛІТИЧНЕ ТА СОЦІАЛЬНО ЕКОНОМІЧНЕ СТАНОВИЩЕ УКРАЇНИ
-  page: 291
+  title: § 1. Повторення. Вступ
+  page: 6
   grade: 11
-- id: S10
-  file: 10-klas-istorija-ukrajiny-gisem-2018_s0177
+- id: S7
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1067
   type: textbook
-  title: Геополітика — політологічна концеп
-  page: 235
-  grade: 10
+  title: Дуже вдячний вам за це». Імпровізований концерт
+  page: 308
+  grade: 11

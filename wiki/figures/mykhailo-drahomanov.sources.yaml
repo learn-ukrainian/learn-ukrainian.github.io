@@ -7,43 +7,47 @@ sources:
   title: Попович — Нарис історії культури України
   author: Попович М.
 - id: S2
+  file: ukrainian_wiki/mykhailo-drahomanov_Біографія-Михайло-Драгоманов-Архітектор-європейської-України-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Михайло Драгоманов: Архітектор європейської України'
+  section_path: 'Біографія: Михайло Драгоманов: Архітектор європейської України >
+    Деколонізаційна перспектива'
+- id: S3
+  file: ukrainian_wiki/mykhailo-drahomanov_Біографія-Михайло-Драгоманов-Архітектор-європейської-України-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Михайло Драгоманов: Архітектор європейської України'
+  section_path: 'Біографія: Михайло Драгоманов: Архітектор європейської України >
+    Короткий зміст'
+- id: S4
+  file: wave7-hrinchenko-drahomanov_c0028
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S5
   file: 9-klas-istorija-ukrajini-gisem-2017_s4860
   type: textbook
   title: Розділ IV. Наступ на українську культуру в 1875—
   page: 154
   grade: 9
-- id: S3
-  file: wave7-hrinchenko-drahomanov_c0028
-  type: literary
-  title: Грінченко-Драгоманов — Діалоги про українську національну справу
-  author: Грінченко Б.
-- id: S4
+- id: S6
   file: wave7-ukrxx-derzhavnist_c0013
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
-- id: S5
+- id: S7
+  file: https://www.youtube.com/watch?v=J7h5XQ8lKgo
+  type: external
+  title: 'Михайло Драгоманов: геній і вигнанець'
+  url: https://www.youtube.com/watch?v=J7h5XQ8lKgo
+- id: S8
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4859
+  type: textbook
+  title: § 17. український національний рух наприкінці 60-х — у 90-х рр. ХІХ ст. умовах
+    київські громадівці й далі опікувалися справами культури, підтри
+  page: 153
+  grade: 9
+- id: S9
   file: wave7-hrinchenko-drahomanov_c0006
   type: literary
   title: Грінченко-Драгоманов — Діалоги про українську національну справу
   author: Грінченко Б.
-- id: S7
-  file: wave7-ukrxx-derzhavnist_c0090
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S8
-  file: wave7-ukrxx-derzhavnist_c0157
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S9
-  file: wave7-hrinchenko-drahomanov_c0004
-  type: literary
-  title: Грінченко-Драгоманов — Діалоги про українську національну справу
-  author: Грінченко Б.
-- id: S10
-  file: wave8-hrabovych-do-istoriyi_c0295
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.

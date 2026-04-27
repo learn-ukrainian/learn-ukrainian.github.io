@@ -2,22 +2,45 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wave4-ukrainska-mova-encyclopedia_c0023
-  type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
+  file: wikipedia/Харківська лінгвістична школа
+  type: wikipedia
+  title: Харківська лінгвістична школа
+  url: https://uk.wikipedia.org/wiki/%D0%A5%D0%B0%D1%80%D0%BA%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BB%D1%96%D0%BD%D0%B3%D0%B2%D1%96%D1%81%D1%82%D0%B8%D1%87%D0%BD%D0%B0%20%D1%88%D0%BA%D0%BE%D0%BB%D0%B0
 - id: S2
-  file: wave8-fdm-biobibliohrafichnyi_c0138
-  type: literary
-  title: Філософська думка в Україні — біобібліографічний словник
-  author: Колектив
+  file: 11-klas-ukrajinska-mova-voron-2019_s1245
+  type: textbook
+  title: На початку ХІХ ст. в Галичині Іван Могильницький створив
+  page: 23
+  grade: 11
 - id: S3
-  file: wave8-chyzhevsky-filosofiia_c0246
-  type: literary
-  title: Чижевський — Нариси з історії філософії на Україні
-  author: Чижевський Д.
-- id: S4
   file: wikipedia/Потебня Олександр Опанасович
   type: wikipedia
   title: Потебня Олександр Опанасович
   url: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D1%82%D0%B5%D0%B1%D0%BD%D1%8F%20%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%20%D0%9E%D0%BF%D0%B0%D0%BD%D0%B0%D1%81%D0%BE%D0%B2%D0%B8%D1%87
+- id: S4
+  file: wave4-ukrainska-mova-encyclopedia_c0023
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S5
+  file: wave8-fdm-biobibliohrafichnyi_c0138
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S6
+  file: ukrainian_wiki/oleksander-potebnya_Олександр-Потебня-Філософ-мови-та-творець-лінгвістичної-поетики-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Олександр Потебня: Філософ мови та творець лінгвістичної поетики'
+  section_path: 'Олександр Потебня: Філософ мови та творець лінгвістичної поетики
+    > Короткий зміст'
+- id: S7
+  file: wave8-chyzhevsky-filosofiia_c0246
+  type: literary
+  title: Чижевський — Нариси з історії філософії на Україні
+  author: Чижевський Д.
+- id: S8
+  file: ukrainian_wiki/oleksander-potebnya_Олександр-Потебня-Філософ-мови-та-творець-лінгвістичної-поетики-Основний-зміст-Філософія-мови-Енергеія-та-внутрішня-форма-слова
+  type: ukrainian_wiki
+  title: 'Олександр Потебня: Філософ мови та творець лінгвістичної поетики'
+  section_path: 'Олександр Потебня: Філософ мови та творець лінгвістичної поетики
+    > Основний зміст > Філософія мови: Енергеія та внутрішня форма слова'

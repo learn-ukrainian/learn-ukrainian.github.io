@@ -21,6 +21,11 @@ sources:
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c4485
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
 - id: S7
   file: wave7-hrinchenko-drahomanov_c0207
   type: literary

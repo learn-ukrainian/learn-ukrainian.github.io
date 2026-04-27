@@ -1,68 +1,27 @@
 # Source registry for wiki/grammar/b2/law-justice-vocabulary.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0483
-  type: textbook
-  title: Сторінка 269
-  grade: 10
-  author: karaman
-- id: S6
-  file: 10-klas-ukrmova-karaman-2018_s0565
-  type: textbook
-  title: § 1. Мова як знакова система і суспільне явище. Мова і держава
-  page: 5
-  grade: 10
-- id: S7
+- id: S1
   file: 11-klas-ukrajinska-mova-voron-2019_s1257
   type: textbook
   title: Судове красномовство виникло в Давній Греції як апології — про
   page: 86
   grade: 11
-- id: S8
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4689
-  type: textbook
-  title: СТИЛІ МОВЛЕННЯ
-  page: 4
-  grade: 8
-- id: S9
+- id: S2
   file: 5-klas-istoriya-schupak-2022_s1940
   type: textbook
   title: § 30. Як ви розумієте значення поняття «правила поведінки»? Чи дово
   page: 170
   grade: 5
-- id: S10
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4734
+- id: S3
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1050
   type: textbook
-  title: ТЕМА 11. ПОВÒОÐÅÍÍß ВÈВ×ÅÍОÃО. ПРО ОФІЦІЙНО-ДІЛОВИЙ СТИЛЬ МОВЛЕННЯ
-  page: 260
-  grade: 8
-- id: S11
-  file: 7-klas-ukrmova-zabolotnyi-2024_s3956
-  type: textbook
-  title: ОЛЕКСАНДР ЗАБОЛОТНИЙ ВІКТОР ЗАБОЛОТНИЙ
-  page: 1
-  grade: 7
-- id: S12
-  file: 11-klas-istoriya-ukr-galimov-2024_s0884
-  type: textbook
-  title: § 31. Внутрішньополітичне становище України у 2014—2019 рр. 241
-  page: 243
+  title: ДЕРЖАВОТВОРЧІ ПРОЦЕСИ В УКРАЇНІ
+  page: 222
   grade: 11
-- id: S13
-  file: wave4-ukrainska-mova-encyclopedia_c0143
-  type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
-- id: S14
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1065
+- id: S4
+  file: 6-klas-istoriia-shchupak-2023_s2566
   type: textbook
-  title: CУСПІЛЬНО-ПОЛІТИЧНЕ ТА СОЦІАЛЬНО ЕКОНОМІЧНЕ СТАНОВИЩЕ УКРАЇНИ
-  page: 291
-  grade: 11
-- id: S15
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1236
-  type: textbook
-  title: Кільцева композиція — спо
-  page: 214
-  grade: 11
+  title: ЗАПИТАННЯ І ЗАВДАННЯ (p. 182)
+  page: 182
+  grade: 6

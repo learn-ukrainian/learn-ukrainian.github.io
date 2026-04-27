@@ -1,62 +1,49 @@
 # Source registry for wiki/grammar/b2/complex-syntax-ellipsis-parcelling.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S4
-  file: 9-klas-ukrajinska-mova-voron-2017_s0031
+- id: S1
+  file: 11-klas-ukrajinska-mova-voron-2019_s1284
   type: textbook
-  title: Сторінка 28
-  grade: 9
-  author: voron
-- id: S5
-  file: 8-klas-ukrmova-zabolotnyi-2025_s0043
-  type: textbook
-  title: Сторінка 42
-  grade: 8
-  author: zabolotnyi
-- id: S6
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1212
-  type: textbook
-  title: § 12. Синтаксична помилка
-  page: 55
+  title: ДІАЛОГ, РОЗДІЛОВІ ЗНАКИ ПРИ ДІАЛОЗІ
+  page: 224
   grade: 11
+- id: S2
+  file: 10-klas-ukrmova-karaman-2018_s0663
+  type: textbook
+  title: § 53. Стилістичне використання засобів словотвору
+  page: 135
+  grade: 10
+- id: S3
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1219
+  type: textbook
+  title: § 25. Правила будови складних речень
+  page: 109
+  grade: 11
+- id: S4
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1225
+  type: textbook
+  title: § 33. Тире у складному реченні
+  page: 141
+  grade: 11
+- id: S5
+  file: 7-klas-ukrlit-mishhenko-2015_s3693
+  type: textbook
+  title: розділ 4. СЛОВНИК ЕРУДИТА
+  page: 257
+  grade: 7
+- id: S6
+  file: 10-klas-ukrmova-karaman-2018_s0703
+  type: textbook
+  title: Мовленнєве спілкування. Стилістика і культура мовлення
+  page: 216
+  grade: 10
 - id: S7
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5171
   type: textbook
   title: Складносурядне речення (p. 53)
   page: 53
   grade: 9
-- id: S9
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1186
-  type: textbook
-  title: § 52. СИНТАКСИЧНІ ОДИНИЦІ В РІЗНИХ СТИЛЯХ
-  page: 186
-  grade: 11
-- id: S10
-  file: 10-klas-ukrmova-karaman-2018_s0709
-  type: textbook
-  title: ТЕМА 5. ПОНЯТТЯ ПРО ТЕКСТ ЯК ПРОДУКТ МОВЛЕННЄВОЇ ДІЯЛЬНОСТІ. ТЕКСТОУТВОРЮВАЛЬНІ
-    КАТЕГОРІЇ. ЗАКОНОМІРНОСТІ ПОБУДОВИ ТЕКСТУ. Текст живе лише стикаючись
-  page: 225
-  grade: 10
-- id: S11
-  file: 11-klas-ukrajinska-mova-voron-2019_s1262
-  type: textbook
-  title: Українська мова належить до мов із вільним порядком слів. Порядок слів
-  page: 110
-  grade: 11
-- id: S12
-  file: 7-klas-ukrmova-avramenko-2024_s3897
-  type: textbook
-  title: ГРУПИ ЛЕКСИКИ (ЛЕКСИКОЛОГІЯ)
-  page: 220
-  grade: 7
-- id: S13
-  file: wave10-shevchenkivsky-slovnyk_c1599
-  type: literary
-  title: Шевченківський словник
-  author: Колектив
-- id: S14
-  file: wave8-masliuk-poetyky-rytoryky_c0096
-  type: literary
-  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
-  author: Маслюк В.
+- id: S8
+  file: ext-article-0
+  type: external
+  title: ext-article-0

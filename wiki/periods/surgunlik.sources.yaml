@@ -6,6 +6,11 @@ sources:
   type: literary
   title: Самійло Величко. Літопис (1648-1700)
   author: Величко С.
+- id: S2
+  file: wave2-velychko_c0791
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
 - id: S3
   file: wave12-velychko-litopys_c0271
   type: literary
@@ -36,3 +41,13 @@ sources:
   type: literary
   title: Історія української культури. Т.2. XIII-XVII ст.
   author: Колектив
+- id: S9
+  file: wave12-velychko-litopys_c0009
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S10
+  file: wave2-velychko_c0007
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.

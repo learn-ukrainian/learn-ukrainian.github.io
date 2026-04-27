@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/capstone-defense.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-ukrainska-mova-encyclopedia_c0206
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S2
+  file: wave8-masliuk-poetyky-rytoryky_c0285
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S3
+  file: wave7-popovych-narys-kultury_c0169
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S4
+  file: wave7-dzyuba-internatsionalizm_c0051
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+- id: S5
+  file: wave10-shevchenko-tvory-t1_c0072
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S6
+  file: wave10-shevchenkivsky-slovnyk_c0546
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S7
+  file: wave9-ohiyenko-ist-lit-movy_c0332
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S8
+  file: wave5-prokopovych-filosofski_c0701
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave8-masliuk-poetyky-rytoryky_c0173
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0024
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

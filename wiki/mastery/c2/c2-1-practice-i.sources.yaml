@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/c2-1-practice-i.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-masliuk-poetyky-rytoryky_c0086
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S2
+  file: wave4-ukrainska-mova-encyclopedia_c0117
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S3
+  file: wave9-pravopys-2015_c0048
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S4
+  file: wave8-hensiorsky-gvl-mova_c0255
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S5
+  file: wave8-hensiorsky-gvl-mova_c0253
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S6
+  file: wave5-prokopovych-filosofski_c0675
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave4-ukrainska-mova-encyclopedia_c0237
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S8
+  file: wave8-hensiorsky-gvl-mova_c0030
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S9
+  file: wave4-chyzhevsky-istoriia-lit_c0173
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S10
+  file: wave9-rusanivsky-ist-lit-movy_c0491
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.

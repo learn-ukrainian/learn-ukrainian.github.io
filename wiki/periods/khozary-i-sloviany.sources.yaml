@@ -1,6 +1,16 @@
 # Source registry for wiki/periods/khozary-i-sloviany.md
 # Referenced inline as [S1], [S2], ...
 sources:
+- id: S1
+  file: wave7-dvornik-sloviany_c0002
+  type: literary
+  title: Дворнік — Слов'яни в Європейській історії та цивілізації
+  author: Дворнік Ф.
+- id: S2
+  file: wave9-uzhevych-paryzky_c0026
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
 - id: S3
   file: wave7-ohiyenko-tserka_c0053
   type: literary
@@ -36,8 +46,3 @@ sources:
   type: literary
   title: Українські гуманісти епохи Відродження
   author: Антологія
-- id: S10
-  file: wave12-velychko-litopys_c0133
-  type: literary
-  title: Самійло Величко. Літопис (1648-1700)
-  author: Величко С.

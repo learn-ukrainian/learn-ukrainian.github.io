@@ -12,32 +12,41 @@ sources:
   title: Грушевський — Історія України-Руси, т.1
   author: Грушевський М.
 - id: S3
+  file: ukrainian_wiki/mykhailo-hrushevskyi_Михайло-Грушевський-Історик-політик-та-архітектор-української-ідентичності-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Михайло Грушевський: Історик, політик та архітектор української ідентичності'
+  section_path: 'Михайло Грушевський: Історик, політик та архітектор української ідентичності
+    > Короткий зміст'
+- id: S5
+  file: 9-klas-ukrajinska-mova-voron-2017_s5094
+  type: textbook
+  title: Мовний РОЗБІР. СИНТАКСИЧНИЙ РОЗБІР СКЛАДНОПІДРЯДНОГО РЕЧЕННЯ
+  page: 88
+  grade: 9
+- id: S6
   file: wave7-ukrxx-derzhavnist_c0033
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
-- id: S4
+- id: S7
   file: wave4-hrushevsky-istlit_c0010
   type: literary
   title: Грушевський — Історія української літератури
   author: Грушевський М.
-- id: S6
-  file: https://www.youtube.com/watch?v=aZohRL1mMA4
-  type: external
-  title: 'Михайло Грушевський: батя української історії'
-  url: https://www.youtube.com/watch?v=aZohRL1mMA4
-- id: S7
-  file: wave11-hrushevsky-iur-t6_c1083
+- id: S8
+  file: wave12-hrushevsky-iu-odnotom_c0015
   type: literary
-  title: Грушевський — Історія України-Руси, том 6
+  title: Грушевський — Історія України (однотомник)
   author: Грушевський М.
 - id: S9
-  file: wave7-popovych-narys-kultury_c0808
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
+  file: ukrainian_wiki/mykhailo-hrushevskyi_Михайло-Грушевський-Історик-політик-та-архітектор-української-ідентичності-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Михайло Грушевський: Історик, політик та архітектор української ідентичності'
+  section_path: 'Михайло Грушевський: Історик, політик та архітектор української ідентичності
+    > Мовні зразки'
 - id: S10
-  file: wave11-hrushevsky-iur-t6_c0988
-  type: literary
-  title: Грушевський — Історія України-Руси, том 6
-  author: Грушевський М.
+  file: https://www.youtube.com/watch?v=U4CTRLXwtU8
+  type: external
+  title: ULP 6-237 | Михайло Грушевський — великий історик України | Ukrainian Lessons
+    Podcast Season 6
+  url: https://www.youtube.com/watch?v=U4CTRLXwtU8

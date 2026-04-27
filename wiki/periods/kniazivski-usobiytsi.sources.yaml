@@ -21,15 +21,15 @@ sources:
   type: literary
   title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
   author: Грабянка Г.
+- id: S5
+  file: wave5-suspilna-dumka-xvi-xvii_c0085
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
 - id: S6
   file: wave1-galytsko-volynskyi_c0238
   type: literary
   title: Галицько-Волинський літопис
-  author: Невідомий
-- id: S7
-  file: wave1-kyivskyi-litopys_c0613
-  type: literary
-  title: Київський літопис
   author: Невідомий
 - id: S8
   file: wave6-galvol-kostruba_c0032

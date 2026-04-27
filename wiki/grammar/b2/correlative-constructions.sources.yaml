@@ -1,15 +1,33 @@
 # Source registry for wiki/grammar/b2/correlative-constructions.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S6
+- id: S1
+  file: 9-klas-ukrajinska-mova-voron-2017_s5083
+  type: textbook
+  title: СКЛАДНОПІДРЯДНЕ РЕЧЕННЯ. БУДОВА СКЛАДНОПІДРЯДНОГО. РЕЧЕННЯ І ЗАСОБИ ЗВ’ЯЗКУ
+  page: 51
+  grade: 9
+- id: S2
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
   type: textbook
   title: Складнопiдрядне речення (p. 79)
   page: 79
   grade: 9
-- id: S8
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s5034
+- id: S3
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5239
   type: textbook
-  title: Синтаксис. Пунктуація. ПОВТОРЕННЯ
-  page: 52
+  title: Складнопiдрядне речення (p. 79)
+  page: 79
   grade: 9
+- id: S4
+  file: 9-klas-ukrajinska-mova-voron-2017_s5100
+  type: textbook
+  title: Мовний РОЗБІР. СИНТАКСИЧНИЙ РОЗБІР СКЛАДНОПІДРЯДНОГО
+  page: 99
+  grade: 9
+- id: S5
+  file: 5-klas-ukrmova-litvinova-2022_s2396
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Складне речення
+  page: 232
+  grade: 5

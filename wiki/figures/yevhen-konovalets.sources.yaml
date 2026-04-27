@@ -2,37 +2,45 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wave7-ukrxx-derzhavnist_c0117
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
+  file: ukrainian_wiki/yevhen-konovalets_Біографія-Євген-Коновалець-Полковник-і-організатор-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Євген Коновалець: Полковник і організатор'
+  section_path: 'Біографія: Євген Коновалець: Полковник і організатор > Короткий зміст'
 - id: S2
-  file: wave7-entsyklopediia-ukrainoznavstva_c1365
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
+  file: ukrainian_wiki/yevhen-konovalets_Біографія-Євген-Коновалець-Полковник-і-організатор-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Євген Коновалець: Полковник і організатор'
+  section_path: 'Біографія: Євген Коновалець: Полковник і організатор > Деколонізаційна
+    перспектива'
 - id: S3
-  file: wave7-popovych-narys-kultury_c1010
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
+  file: ukrainian_wiki/yevhen-konovalets_Біографія-Євген-Коновалець-Полковник-і-організатор-Основний-зміст-Від-Української-військової-організації-до-створення-ОУН
+  type: ukrainian_wiki
+  title: 'Біографія: Євген Коновалець: Полковник і організатор'
+  section_path: 'Біографія: Євген Коновалець: Полковник і організатор > Основний зміст
+    > Від Української військової організації до створення ОУН'
 - id: S4
-  file: wave7-ukrxx-derzhavnist_c0276
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S5
-  file: wave7-popovych-narys-kultury_c1123
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S6
   file: https://www.youtube.com/watch?v=fsccUcwpddo
   type: external
   title: 'Євген Коновалець: історія засновника ОУН'
   url: https://www.youtube.com/watch?v=fsccUcwpddo
-- id: S7
+- id: S5
+  file: wave7-ukrxx-derzhavnist_c0117
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S6
   file: wikipedia/Січові Стрільці
   type: wikipedia
   title: Січові Стрільці
   url: https://uk.wikipedia.org/wiki/%D0%A1%D1%96%D1%87%D0%BE%D0%B2%D1%96%20%D0%A1%D1%82%D1%80%D1%96%D0%BB%D1%8C%D1%86%D1%96
+- id: S7
+  file: ukrainian_wiki/yevhen-konovalets_Біографія-Євген-Коновалець-Полковник-і-організатор-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Біографія: Євген Коновалець: Полковник і організатор'
+  section_path: 'Біографія: Євген Коновалець: Полковник і організатор > Мовні зразки'
+- id: S8
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0155
+  type: textbook
+  title: § 28. Українські землі у складі Другої Речі Посполитої
+  page: 161
+  grade: 10

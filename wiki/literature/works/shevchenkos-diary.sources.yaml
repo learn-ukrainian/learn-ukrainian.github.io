@@ -6,6 +6,11 @@ sources:
   type: literary
   title: Шевченківський словник
   author: Колектив
+- id: S2
+  file: wave10-shevchenko-tvory-t1_c0075
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
 - id: S3
   file: wave10-shevchenko-tvory-t1_c0007
   type: literary
@@ -31,8 +36,3 @@ sources:
   type: literary
   title: Костомаров — Слов'янська міфологія
   author: Костомаров М.
-- id: S10
-  file: wave7-hrinchenko-drahomanov_c0012
-  type: literary
-  title: Грінченко-Драгоманов — Діалоги про українську національну справу
-  author: Грінченко Б.

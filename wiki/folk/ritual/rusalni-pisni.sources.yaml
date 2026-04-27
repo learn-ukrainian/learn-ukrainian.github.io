@@ -19,45 +19,62 @@ sources:
   title: Сторінка 16
   grade: 6
   author: zabolotnyi
+- id: S4
+  file: 6-klas-ukrlit-zabolotnyi-2023_s0291
+  type: textbook
+  title: Сторінка 286
+  grade: 6
+  author: zabolotnyi
 - id: S6
+  file: ukrainian_wiki/rusalni-pisni_Український-фольклор-Русальні-пісні-Троїцький-цикл-та-духи-природи-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Український фольклор: Русальні пісні: Троїцький цикл та духи природи'
+  section_path: 'Український фольклор: Русальні пісні: Троїцький цикл та духи природи
+    > Короткий зміст'
+- id: S7
+  file: ukrainian_wiki/rusalni-pisni_Український-фольклор-Русальні-пісні-Троїцький-цикл-та-духи-природи-Основний-зміст-Поетика-і-мотиви-русальних-пісень
+  type: ukrainian_wiki
+  title: 'Український фольклор: Русальні пісні: Троїцький цикл та духи природи'
+  section_path: 'Український фольклор: Русальні пісні: Троїцький цикл та духи природи
+    > Основний зміст > Поетика і мотиви русальних пісень'
+- id: S8
   file: 6-klas-ukrlit-zabolotnyi-2023_s2792
   type: textbook
   title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ КАЛЕНДАРНО-ОБРЯДОВІ ПІСНІ ЛІТНЬОГО ЦИКЛУ
   page: 14
   grade: 6
-- id: S8
+- id: S9
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2795
+  type: textbook
+  title: НАРОДНІ КАЛЕНДАРНО-ОБРЯДОВІ ПІСНІ (p. 17)
+  page: 17
+  grade: 6
+- id: S10
+  file: 6-klas-ukrlit-avramenko-2023_s2711
+  type: textbook
+  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 24)
+  page: 24
+  grade: 6
+- id: S11
+  file: 6-klas-ukrlit-avramenko-2023_s2707
+  type: textbook
+  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 6)
+  page: 6
+  grade: 6
+- id: S12
   file: wave7-entsyklopediia-ukrainoznavstva_c0529
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S9
-  file: 6-klas-ukrlit-zabolotnyi-2023_s2794
-  type: textbook
-  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 16)
-  page: 16
-  grade: 6
-- id: S10
-  file: wave4-hrushevsky-istlit_c0305
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S11
-  file: wave12-hrushevsky-iu-odnotom_c0310
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
-- id: S12
-  file: wikipedia/Мавка
-  type: wikipedia
-  title: Мавка
-  url: https://uk.wikipedia.org/wiki/%D0%9C%D0%B0%D0%B2%D0%BA%D0%B0
 - id: S13
-  file: wave7-kostomarov-slovyanska-mifolohiia_c0032
-  type: literary
-  title: Костомаров — Слов'янська міфологія
-  author: Костомаров М.
+  file: ukrainian_wiki/rusalni-pisni_Український-фольклор-Русальні-пісні-Троїцький-цикл-та-духи-природи-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Український фольклор: Русальні пісні: Троїцький цикл та духи природи'
+  section_path: 'Український фольклор: Русальні пісні: Троїцький цикл та духи природи
+    > Мовні зразки'
 - id: S14
-  file: wikipedia/Колесса Філарет Михайлович
-  type: wikipedia
-  title: Колесса Філарет Михайлович
-  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BB%D0%B5%D1%81%D1%81%D0%B0%20%D0%A4%D1%96%D0%BB%D0%B0%D1%80%D0%B5%D1%82%20%D0%9C%D0%B8%D1%85%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D0%B8%D1%87
+  file: ukrainian_wiki/the-ballads_Українська-література-Балади-Між-світами-та-жанрами-Основний-зміст-Поетика-символіка-та-демонологія-в-баладному-тексті
+  type: ukrainian_wiki
+  title: 'Українська література: Балади: Між світами та жанрами'
+  section_path: 'Українська література: Балади: Між світами та жанрами > Основний
+    зміст > Поетика, символіка та демонологія в баладному тексті'

@@ -1,33 +1,69 @@
 # Source registry for wiki/folk/prose/narodni-lehendy.md
 # Referenced inline as [S1], [S2], ...
 sources:
+- id: S2
+  file: 5-klas-ukrlit-avramenko-2022_s0309
+  type: textbook
+  title: Сторінка 284
+  grade: 5
+  author: avramenko
+- id: S3
+  file: 6-klas-istoriia-shchupak-2023_s0006
+  type: textbook
+  title: Сторінка 7
+  grade: 6
+  author: shchupak
 - id: S6
+  file: ukrainian_wiki/narodni-lehendy_Український-фольклор-Народні-легенди-та-народне-християнство-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Український фольклор: Народні легенди та народне християнство'
+  section_path: 'Український фольклор: Народні легенди та народне християнство > Короткий
+    зміст'
+- id: S7
   file: wave4-hrushevsky-istlit_c0162
   type: literary
   title: Грушевський — Історія української літератури
   author: Грушевський М.
-- id: S7
+- id: S8
   file: wave12-hrushevsky-iu-odnotom_c0167
   type: literary
   title: Грушевський — Історія України (однотомник)
   author: Грушевський М.
-- id: S8
-  file: wave7-entsyklopediia-ukrainoznavstva_c1906
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
 - id: S9
-  file: wave4-hrushevsky-istlit_c0322
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
+  file: ukrainian_wiki/narodni-lehendy_Український-фольклор-Народні-легенди-та-народне-християнство-Основний-зміст-Від-механічного-двоєвір-я-до-органічного-синкретизму
+  type: ukrainian_wiki
+  title: 'Український фольклор: Народні легенди та народне християнство'
+  section_path: 'Український фольклор: Народні легенди та народне християнство > Основний
+    зміст > Від механічного «двоєвір''я» до органічного синкретизму'
 - id: S10
-  file: wikipedia/Народне християнство
-  type: wikipedia
-  title: Народне християнство
-  url: https://uk.wikipedia.org/wiki/%D0%9D%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D0%B5%20%D1%85%D1%80%D0%B8%D1%81%D1%82%D0%B8%D1%8F%D0%BD%D1%81%D1%82%D0%B2%D0%BE
-- id: S11
   file: wikipedia/Слов'янська міфологія
   type: wikipedia
   title: Слов'янська міфологія
   url: https://uk.wikipedia.org/wiki/%D0%A1%D0%BB%D0%BE%D0%B2%27%D1%8F%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BC%D1%96%D1%84%D0%BE%D0%BB%D0%BE%D0%B3%D1%96%D1%8F
+- id: S11
+  file: ukrainian_wiki/narodni-lehendy_Український-фольклор-Народні-легенди-та-народне-християнство-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Український фольклор: Народні легенди та народне християнство'
+  section_path: 'Український фольклор: Народні легенди та народне християнство > Мовні
+    зразки'
+- id: S12
+  file: ukrainian_wiki/narodni-lehendy_Український-фольклор-Народні-легенди-та-народне-християнство-Основний-зміст-Еволюція-та-вплив-апокрифічної-літератури
+  type: ukrainian_wiki
+  title: 'Український фольклор: Народні легенди та народне християнство'
+  section_path: 'Український фольклор: Народні легенди та народне християнство > Основний
+    зміст > Еволюція та вплив апокрифічної літератури'
+- id: S13
+  file: wikipedia/Народне християнство
+  type: wikipedia
+  title: Народне християнство
+  url: https://uk.wikipedia.org/wiki/%D0%9D%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D0%B5%20%D1%85%D1%80%D0%B8%D1%81%D1%82%D0%B8%D1%8F%D0%BD%D1%81%D1%82%D0%B2%D0%BE
+- id: S14
+  file: wikipedia/Двовір'я
+  type: wikipedia
+  title: Двовір'я
+  url: https://uk.wikipedia.org/wiki/%D0%94%D0%B2%D0%BE%D0%B2%D1%96%D1%80%27%D1%8F
+- id: S15
+  file: ukrainian_wiki/narodna-mifolohiia_Академічна-C1-Народна-міфологія-Академічний-контекст
+  type: ukrainian_wiki
+  title: 'Академічна C1: Народна міфологія'
+  section_path: 'Академічна C1: Народна міфологія > Академічний контекст'

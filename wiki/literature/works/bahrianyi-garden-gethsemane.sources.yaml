@@ -31,23 +31,8 @@ sources:
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
-- id: S7
-  file: wave8-fdm-biobibliohrafichnyi_c0212
-  type: literary
-  title: Філософська думка в Україні — біобібліографічний словник
-  author: Колектив
-- id: S8
-  file: wave5-skovoroda-tvory_c0063
-  type: literary
-  title: Григорій Сковорода. Повне зібрання творів
-  author: Сковорода Г.
 - id: S9
   file: wave4-chyzhevsky-istoriia-lit_c0620
   type: literary
   title: Чижевський — Історія української літератури
   author: Чижевський Д.
-- id: S10
-  file: wave5-dovhalevsky-poetyka_c0037
-  type: literary
-  title: Митрофан Довгалевський. Поетика.
-  author: Довгалевський М.

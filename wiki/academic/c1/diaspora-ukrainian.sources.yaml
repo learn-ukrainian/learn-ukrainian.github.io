@@ -2,65 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-istoriia-shchupak-2023_s0244
-  type: textbook
-  title: Сторінка 240
-  grade: 6
-  author: shchupak
-- id: S2
-  file: 10-klas-istorija-ukrajiny-gisem-2018_s0358
-  type: textbook
-  title: Сторінка 187
-  grade: 10
-  author: gisem
-- id: S4
-  file: 11-klas-istoriya-ukr-galimov-2024_s0049
-  type: textbook
-  title: Сторінка 29
-  grade: 11
-  author: galimov
-- id: S6
-  file: wave8-hrabovych-do-istoriyi_c0041
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
-- id: S7
-  file: wave4-ukrainska-mova-encyclopedia_c0180
-  type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
-- id: S8
-  file: wave7-istkult-t2-xiii-xvii_c0032
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
-- id: S9
-  file: wave9-ohiyenko-ist-lit-movy_c0001
-  type: literary
-  title: Огієнко — Історія української літературної мови (1949)
-  author: Огієнко І.
-- id: S10
-  file: wave7-antonovych-kultura_c0001
-  type: literary
-  title: Українська культура (лекції за ред. Антоновича)
-  author: Антонович Д.
-- id: S11
   file: wave9-ohiyenko-ist-lit-movy_c0027
   type: literary
   title: Огієнко — Історія української літературної мови (1949)
   author: Огієнко І.
-- id: S12
+- id: S2
+  file: wave9-rusanivsky-ist-lit-movy_c0003
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S3
+  file: wave7-istkult-t2-xiii-xvii_c0032
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S4
+  file: wave9-ohiyenko-ist-lit-movy_c0001
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S5
+  file: wave4-ukrainska-mova-encyclopedia_c0180
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S6
+  file: wave9-rusanivsky-ist-lit-movy_c0436
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S7
+  file: wave9-ohiyenko-ist-lit-movy_c0002
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S8
+  file: wave9-ohiyenko-ist-lit-movy_c0000
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S9
+  file: wave8-hensiorsky-gvl-mova_c0252
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S10
   file: wave7-nalyvaiko-ochyma-zakhodu_c0009
   type: literary
   title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
   author: Наливайко Д.
-- id: S14
-  file: wave7-antonovych-kultura_c0785
-  type: literary
-  title: Українська культура (лекції за ред. Антоновича)
-  author: Антонович Д.
-- id: S15
-  file: wave9-ohiyenko-ist-lit-movy_c0040
-  type: literary
-  title: Огієнко — Історія української літературної мови (1949)
-  author: Огієнко І.

@@ -1,0 +1,48 @@
+# Source registry for wiki/mastery/c2/contemporary-literature.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0262
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave4-chyzhevsky-istoriia-lit_c0930
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S3
+  file: wave7-ukrxx-derzhavnist_c0356
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S5
+  file: wave7-ukrxx-derzhavnist_c0354
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S6
+  file: wave7-heroes-ukr-kultura_c0360
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S7
+  file: ukrlib-voronyi_c0008
+  type: literary
+  title: Микола Вороний. Життя та творчість Миколи Вороного
+  author: Вороний М.
+- id: S8
+  file: ukrlib-shevchenko_c0011
+  type: literary
+  title: Тарас Шевченко. Біографія Тараса Шевченка
+  author: Шевченко Т.
+- id: S9
+  file: wave8-ohdruk-istoriia-drukarstva_c0024
+  type: literary
+  title: Огієнко — Історія українського друкарства (1925)
+  author: Огієнко І.
+- id: S10
+  file: ukrlib-andrukhovych_c0000
+  type: literary
+  title: Юрій Андрухович. Час і місце, або Моя остання територія
+  author: Андрухович Ю.

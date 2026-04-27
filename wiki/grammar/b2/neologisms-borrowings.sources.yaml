@@ -1,65 +1,41 @@
 # Source registry for wiki/grammar/b2/neologisms-borrowings.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S3
-  file: 10-klas-ukrmova-glazova-2018_s0310
+- id: S1
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1231
   type: textbook
-  title: Сторінка 221
-  grade: 10
-  author: glazova
-- id: S6
-  file: 7-klas-ukrmova-avramenko-2024_s3808
-  type: textbook
-  title: § 20. Лексичні помилки (практично)
-  page: 48
-  grade: 7
-- id: S7
-  file: 10-klas-ukrmova-karaman-2018_s0630
-  type: textbook
-  title: СПІЛКУВАННЯ (p. 100)
-  page: 100
-  grade: 10
-- id: S8
+  title: Стилістичне забарвлення лексики. Книжна й розмовна лексика. Оцінна лексика
+    § 40
+  page: 171
+  grade: 11
+- id: S2
   file: 11-klas-ukrajinska-mova-avramenko-2019_s1180
   type: textbook
   title: § 48. СТИЛІСТИЧНА РОЛЬ НЕОЛОГІЗМІВ І ЗАСТАРІЛОЇ ЛЕКСИКИ
   page: 168
   grade: 11
-- id: S9
-  file: 10-klas-ukrmova-glazova-2018_s0503
+- id: S3
+  file: 11-klas-ukrajinska-mova-voron-2019_s1244
   type: textbook
-  title: § 1. Лексикографія. Сучасні лексикографічні
-  page: 4
-  grade: 10
-- id: S10
+  title: ІІ «Уява охоплює весь світ». Складіть усний роздум за другим
+  page: 17
+  grade: 11
+- id: S4
   file: 10-klas-ukrajinska-mova-avramenko-2018_s0258
   type: textbook
   title: Слова власне українські й запозичені. СПОСТЕРЕЖЕННЯ
   page: 23
   grade: 10
-- id: S11
-  file: 10-klas-ukrmova-glazova-2018_s0512
+- id: S6
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1178
   type: textbook
-  title: Слова власне українські й запозичені. Виправдані й небажані запозичення §
-    6
-  page: 33
-  grade: 10
-- id: S12
-  file: 10-klas-ukrajinska-mova-avramenko-2018_s0298
+  title: § 46. СТИЛІСТИЧНІ ОСОБЛИВОСТІ СЛІВ ІНШОМОВНОГО
+  page: 159
+  grade: 11
+- id: S7
+  file: 10-klas-ukrmova-karaman-2018_s0631
   type: textbook
-  title: Написання слів іншомовного походження. КУЛЬТУРА СЛОВА
-  page: 131
-  grade: 10
-- id: S13
-  file: 10-klas-ukrmova-karaman-2018_s0654
-  type: textbook
-  title: МОРФЕМІКА І СЛОВОТВІР (p. 126)
-  page: 126
-  grade: 10
-- id: S14
-  file: 10-klas-ukrmova-karaman-2018_s0643
-  type: textbook
-  title: § 42. ДЖЕРЕЛА УКРАЇНСЬКОЇ ФРАЗЕОЛОГІЇ. НАЦІОНАЛЬНА СПЕЦИФІКА УКРАЇНСЬКОЇ
-    ФРАЗЕОЛОГІЇ
-  page: 112
+  title: § 37. Загальновживані слова. Діалект изми. Лінгвокультуреми. Етнографізми.
+    Топоніми
+  page: 101
   grade: 10

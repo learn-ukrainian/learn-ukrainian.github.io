@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/c2-1-practice-ii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-ukrainska-mova-encyclopedia_c0206
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c5169
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave4-chyzhevsky-istoriia-lit_c0505
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c4089
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave7-popovych-narys-kultury_c0729
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S6
+  file: wave5-prokopovych-filosofski_c0674
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave7-ukrxx-derzhavnist_c0362
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S8
+  file: wave10-shevchenko-tvory-t1_c0081
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S9
+  file: wave5-prokopovych-filosofski_c0667
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S10
+  file: wave5-prokopovych-filosofski_c0082
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.

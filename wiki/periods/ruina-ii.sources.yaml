@@ -26,6 +26,11 @@ sources:
   type: literary
   title: Шерер — Літопис Малоросії (1788)
   author: Шерер Ж.
+- id: S6
+  file: wave5-suspilna-dumka-xvi-xvii_c0006
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
 - id: S8
   file: wave5-oldukr-xvii_c0312
   type: literary

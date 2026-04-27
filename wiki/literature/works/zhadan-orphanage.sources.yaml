@@ -6,11 +6,21 @@ sources:
   type: literary
   title: Сергій Жадан. Депеш Мод
   author: Жадан С.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0322
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S3
   file: wave8-hrabovych-do-istoriyi_c0209
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
+- id: S4
+  file: wave9-rusanivsky-ist-lit-movy_c0392
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
 - id: S5
   file: wave8-hrabovych-do-istoriyi_c0031
   type: literary

@@ -1,6 +1,11 @@
 # Source registry for wiki/literature/works/vinhranovskyi-prose.md
 # Referenced inline as [S1], [S2], ...
 sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0000
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S2
   file: wave8-hrabovych-do-istoriyi_c0054
   type: literary

@@ -1,0 +1,43 @@
+# Source registry for wiki/mastery/c2/final-review-ii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: wave4-ukrainska-mova-encyclopedia_c0072
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S3
+  file: wave4-nimchuk-movoznavstvo_c0079
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S5
+  file: wave10-shevchenkivsky-slovnyk_c1599
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S6
+  file: wave8-hensiorsky-gvl-mova_c0253
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S7
+  file: wave4-ukrainska-mova-encyclopedia_c0075
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S8
+  file: wave9-pravopys-2015_c0173
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S9
+  file: wave7-entsyklopediia-ukrainoznavstva_c0793
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c0848
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

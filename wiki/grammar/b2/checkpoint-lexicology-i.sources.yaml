@@ -1,0 +1,46 @@
+# Source registry for wiki/grammar/b2/checkpoint-lexicology-i.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0259
+  type: textbook
+  title: Лексичні та фразеологічні синоніми, антоніми... СПОСТЕРЕЖЕННЯ
+  page: 27
+  grade: 10
+- id: S2
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1232
+  type: textbook
+  title: § 42. Стилістичне забарвлення фразеологізмів
+  page: 185
+  grade: 11
+- id: S3
+  file: 10-klas-ukrmova-karaman-2018_s0641
+  type: textbook
+  title: § 41. ФРАЗЕОЛОГІЧНІ ОДИНИЦІ УКРАЇНСЬКОЇ МОВИ
+  page: 110
+  grade: 10
+- id: S4
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0340
+  type: textbook
+  title: Лексична норма (p. 33)
+  page: 33
+  grade: 10
+- id: S5
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0759
+  type: textbook
+  title: Лексична норма (p. 33)
+  page: 33
+  grade: 10
+- id: S6
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3377
+  type: textbook
+  title: Лексикологiя. Фразеологiя
+  page: 18
+  grade: 6
+- id: S7
+  file: 10-klas-ukrmova-glazova-2018_s0514
+  type: textbook
+  title: Лексичні й фразеологічні синоніми. Синонімічне багатство української мови
+    § 7
+  page: 37
+  grade: 10

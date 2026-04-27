@@ -6,11 +6,6 @@ sources:
   type: literary
   title: Грушевський — Історія української літератури
   author: Грушевський М.
-- id: S2
-  file: wave12-hrushevsky-iu-odnotom_c0040
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
 - id: S3
   file: wave8-hrabovych-do-istoriyi_c0724
   type: literary
@@ -31,21 +26,6 @@ sources:
   type: literary
   title: Русанівський — Історія укр. літ. мови
   author: Русанівський В.
-- id: S7
-  file: wave5-dovhalevsky-poetyka_c0007
-  type: literary
-  title: Митрофан Довгалевський. Поетика.
-  author: Довгалевський М.
-- id: S8
-  file: wave5-prokopovych-filosofski_c0085
-  type: literary
-  title: Феофан Прокопович. Філософські твори
-  author: Прокопович Ф.
-- id: S9
-  file: wave5-dovhalevsky-poetyka_c0042
-  type: literary
-  title: Митрофан Довгалевський. Поетика.
-  author: Довгалевський М.
 - id: S10
   file: wave8-hrabovych-do-istoriyi_c0416
   type: literary

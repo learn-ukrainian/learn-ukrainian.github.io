@@ -41,6 +41,11 @@ sources:
   type: literary
   title: Літопис Величка
   author: Величко С.В.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0331
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S10
   file: wave8-masliuk-poetyky-rytoryky_c0235
   type: literary

@@ -2,49 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/semen-hulak-artemovskyy_Біографія-Семен-Гулак-Артемовський-Творець-першої-української-опери-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Семен Гулак-Артемовський: Творець першої української опери'
+  section_path: 'Біографія: Семен Гулак-Артемовський: Творець першої української опери
+    > Короткий зміст'
+- id: S2
   file: wave10-spohady-pro-shevchenka_c0256
   type: literary
   title: Спогади про Шевченка (1982)
   author: Колектив
-- id: S2
+- id: S3
+  file: ukrainian_wiki/semen-hulak-artemovskyy_Біографія-Семен-Гулак-Артемовський-Творець-першої-української-опери-Основний-зміст-Тріумф-і-заборона-Запорожець-за-Дунаєм
+  type: ukrainian_wiki
+  title: 'Біографія: Семен Гулак-Артемовський: Творець першої української опери'
+  section_path: 'Біографія: Семен Гулак-Артемовський: Творець першої української опери
+    > Основний зміст > Тріумф і заборона: «Запорожець за Дунаєм»'
+- id: S4
   file: wave7-entsyklopediia-ukrainoznavstva_c2242
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S3
+- id: S5
+  file: ukrainian_wiki/semen-hulak-artemovskyy_Біографія-Семен-Гулак-Артемовський-Творець-першої-української-опери-Основний-зміст-Історичне-тло-та-формування-музичної-традиції
+  type: ukrainian_wiki
+  title: 'Біографія: Семен Гулак-Артемовський: Творець першої української опери'
+  section_path: 'Біографія: Семен Гулак-Артемовський: Творець першої української опери
+    > Основний зміст > Історичне тло та формування музичної традиції'
+- id: S6
   file: wave7-antonovych-kultura_c0674
   type: literary
   title: Українська культура (лекції за ред. Антоновича)
   author: Антонович Д.
-- id: S4
+- id: S7
   file: wave7-popovych-narys-kultury_c0737
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S5
-  file: wikipedia/Українська музика
-  type: wikipedia
-  title: Українська музика
-  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BC%D1%83%D0%B7%D0%B8%D0%BA%D0%B0
-- id: S6
-  file: 9-klas-istorija-ukrajini-gisem-2017_s4917
-  type: textbook
-  title: § 32. Українська література, театр, музика в другій половині XIX — на початку
-    XX ст. На західноукраїнських землях український
-  page: 267
-  grade: 9
-- id: S8
-  file: wave10-shevchenkivsky-slovnyk_c0501
-  type: literary
-  title: Шевченківський словник
-  author: Колектив
 - id: S9
-  file: wave8-ukr-lit-entsyklopediia_c1728
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1216
+  type: textbook
+  title: Для позначення часу дії прийменники по — в (у) так само відрізняються
+  page: 84
+  grade: 11
 - id: S10
-  file: wikipedia/У неділю рано…
-  type: wikipedia
-  title: У неділю рано…
-  url: https://uk.wikipedia.org/wiki/%D0%A3%20%D0%BD%D0%B5%D0%B4%D1%96%D0%BB%D1%8E%20%D1%80%D0%B0%D0%BD%D0%BE%E2%80%A6
+  file: ukrainian_wiki/semen-hulak-artemovskyy_Біографія-Семен-Гулак-Артемовський-Творець-першої-української-опери-Основний-зміст-Багатогранність-спадщини-та-історичне-значення
+  type: ukrainian_wiki
+  title: 'Біографія: Семен Гулак-Артемовський: Творець першої української опери'
+  section_path: 'Біографія: Семен Гулак-Артемовський: Творець першої української опери
+    > Основний зміст > Багатогранність спадщини та історичне значення'

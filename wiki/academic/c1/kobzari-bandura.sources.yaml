@@ -2,43 +2,47 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-ukrlit-avramenko-2025_s0108
-  type: textbook
-  title: Сторінка 62
-  grade: 8
-  author: avramenko
-- id: S6
-  file: wave7-popovych-narys-kultury_c0316
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S7
-  file: wave8-ukr-lit-entsyklopediia_c3492
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S8
   file: wave7-antonovych-kultura_c0657
   type: literary
   title: Українська культура (лекції за ред. Антоновича)
   author: Антонович Д.
-- id: S9
-  file: wave8-ukr-lit-entsyklopediia_c2296
+- id: S2
+  file: wave10-shevchenko-tvory-t1_c0072
   type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S10
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S3
   file: wave10-shevchenkivsky-slovnyk_c0889
   type: literary
   title: Шевченківський словник
   author: Колектив
-- id: S13
-  file: wave9-ohiyenko-ist-lit-movy_c0000
+- id: S4
+  file: wave7-istkult-t2-xiii-xvii_c1451
   type: literary
-  title: Огієнко — Історія української літературної мови (1949)
-  author: Огієнко І.
-- id: S14
-  file: wave7-antonovych-kultura_c0655
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S5
+  file: wave7-istkult-t2-xiii-xvii_c0020
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c2296
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0353
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave7-antonovych-kultura_c0646
   type: literary
   title: Українська культура (лекції за ред. Антоновича)
   author: Антонович Д.
+- id: S9
+  file: wave7-istkult-t1-kyivska-rus_c0286
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив

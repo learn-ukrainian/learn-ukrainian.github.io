@@ -21,6 +21,11 @@ sources:
   type: literary
   title: Суспільно-політична думка XVI-XVII ст.
   author: Антологія
+- id: S7
+  file: wave6-sofonovych-khronika_c0001
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
 - id: S8
   file: wave12-velychko-litopys_c0732
   type: literary

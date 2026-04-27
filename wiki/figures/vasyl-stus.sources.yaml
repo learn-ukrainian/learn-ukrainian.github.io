@@ -2,35 +2,36 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/vasyl-stus_Біографія-Василь-Стус-Вертикальне-стояння-духу-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Василь Стус: Вертикальне стояння духу'
+  section_path: 'Біографія: Василь Стус: Вертикальне стояння духу > Короткий зміст'
+- id: S2
   file: 11-klas-ukrlit-borzenko-2019-prof_s1383
   type: textbook
   title: Літературне «шістдесятництво» . Василь Стус  197
   page: 197
   grade: 11
-- id: S2
+- id: S3
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1381
+  type: textbook
+  title: Літературне «шістдесятництво» . Василь Стус  195
+  page: 195
+  grade: 11
+- id: S4
   file: 11-klas-ukrajinska-literatura-avramenko-2019_s1126
   type: textbook
   title: Теорія літератури. СТОЇЧНА УКРАЇНСЬКА ПОЕЗІЯ
   page: 236
   grade: 11
-- id: S4
-  file: wave7-heroes-ukr-kultura_c0320
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
 - id: S5
-  file: wave7-heroes-ukr-kultura_c0336
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
+  file: wikipedia/Стус Василь Семенович
+  type: wikipedia
+  title: Стус Василь Семенович
+  url: https://uk.wikipedia.org/wiki/%D0%A1%D1%82%D1%83%D1%81%20%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C%20%D0%A1%D0%B5%D0%BC%D0%B5%D0%BD%D0%BE%D0%B2%D0%B8%D1%87
 - id: S6
-  file: wave7-heroes-ukr-kultura_c0322
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
-- id: S7
-  file: https://www.youtube.com/watch?v=TSwedu10xao
-  type: external
-  title: ULP 6-229 | Українська поезія. Василь Стус «Господи, гніву пречистого…» |
-    Ukrainian Lessons Podca...
-  url: https://www.youtube.com/watch?v=TSwedu10xao
+  file: ukrainian_wiki/vasyl-stus_Біографія-Василь-Стус-Вертикальне-стояння-духу-Основний-зміст-Екзистенціалізм-та-особливості-поетичного-стилю
+  type: ukrainian_wiki
+  title: 'Біографія: Василь Стус: Вертикальне стояння духу'
+  section_path: 'Біографія: Василь Стус: Вертикальне стояння духу > Основний зміст
+    > Екзистенціалізм та особливості поетичного стилю'

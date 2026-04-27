@@ -26,10 +26,10 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S6
-  file: wave8-ukr-lit-entsyklopediia_c2714
+- id: S7
+  file: wave10-shevchenkivsky-slovnyk_c1942
   type: literary
-  title: Українська літературна енциклопедія (1988-1995)
+  title: Шевченківський словник
   author: Колектив
 - id: S8
   file: wave7-popovych-narys-kultury_c1032

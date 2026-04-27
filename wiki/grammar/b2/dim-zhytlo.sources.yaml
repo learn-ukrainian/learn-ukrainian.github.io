@@ -1,0 +1,46 @@
+# Source registry for wiki/grammar/b2/dim-zhytlo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 8-klas-ukrmova-avramenko-2025_s4602
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 82)
+  page: 82
+  grade: 8
+- id: S2
+  file: 6-klas-ukrmova-golub-2023_s3255
+  type: textbook
+  title: РІД ІМЕННИКІВ
+  page: 68
+  grade: 6
+- id: S3
+  file: 6-klas-ukrmova-golub-2023_s3258
+  type: textbook
+  title: § 35. Як розумно витрачати,
+  page: 91
+  grade: 6
+- id: S4
+  file: 6-klas-ukrmova-golub-2023_s3284
+  type: textbook
+  title: § 96. Зміст моїх емоцій
+  page: 240
+  grade: 6
+- id: S5
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1140
+  type: textbook
+  title: § 6. –7. РИТОРИЧНІ ФІГУРИ
+  page: 19
+  grade: 11
+- id: S6
+  file: 6-klas-ukrmova-avramenko-2023_s3067
+  type: textbook
+  title: § 51. Букви -а (-я), -у (-ю) у закінченнях родового відмінка однини іменників...
+    2. Поставте іменники у форму родового відмінка однини (усно). Аргумен
+  page: 101
+  grade: 6
+- id: S7
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1452
+  type: textbook
+  title: Проɱитаɣте текст. Які зорові та слухові оɛрази постаɸть у ваɲіɣ
+  page: 175
+  grade: 11

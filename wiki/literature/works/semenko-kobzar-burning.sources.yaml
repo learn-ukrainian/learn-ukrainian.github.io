@@ -1,11 +1,6 @@
 # Source registry for wiki/literature/works/semenko-kobzar-burning.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S1
-  file: ukrlib-semenko_c0003
-  type: literary
-  title: Михайль Семенко. Біографія Михайля Семенка
-  author: Семенко М.
 - id: S2
   file: ukrlib-semenko_c0001
   type: literary
@@ -31,11 +26,6 @@ sources:
   type: literary
   title: Михайль Семенко. Біографія Михайля Семенка
   author: Семенко М.
-- id: S7
-  file: wave8-hrabovych-do-istoriyi_c0713
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
 - id: S8
   file: wave8-hrabovych-do-istoriyi_c0086
   type: literary

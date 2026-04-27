@@ -1,66 +1,48 @@
 # Source registry for wiki/academic/c1/honcharstvo-ta-rizbyarstvo.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S2
-  file: 9-klas-istorija-ukrajini-gisem-2017_s0039
-  type: textbook
-  title: Сторінка 25
-  grade: 9
-  author: gisem
-- id: S3
-  file: 11-klas-ukrajinska-mova-voron-2019_s0007
-  type: textbook
-  title: Сторінка 8
-  grade: 11
-  author: voron
-- id: S4
-  file: 7-klas-ukrlit-avramenko-2024_s0007
-  type: textbook
-  title: Сторінка 8
-  grade: 7
-  author: avramenko
-- id: S6
+- id: S1
   file: wave7-krypyakevych-istkult_c0799
   type: literary
   title: Крип'якевич — Історія української культури (1937)
   author: Крип'якевич І.
-- id: S7
-  file: wave7-istkult-t2-xiii-xvii_c1259
+- id: S2
+  file: wave7-istkult-t2-xiii-xvii_c0564
   type: literary
   title: Історія української культури. Т.2. XIII-XVII ст.
   author: Колектив
-- id: S8
-  file: wave7-istkult-t2-xiii-xvii_c1256
+- id: S3
+  file: wave7-entsyklopediia-ukrainoznavstva_c0701
   type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
+  title: Енциклопедія українознавства
   author: Колектив
-- id: S9
+- id: S4
   file: wave7-istkult-t2-xiii-xvii_c1257
   type: literary
   title: Історія української культури. Т.2. XIII-XVII ст.
   author: Колектив
-- id: S10
+- id: S5
   file: wave7-entsyklopediia-ukrainoznavstva_c0458
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S11
-  file: wave7-istkult-t2-xiii-xvii_c1258
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c0664
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0696
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave7-istkult-t1-kyivska-rus_c0436
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c0131
   type: literary
   title: Історія української культури. Т.2. XIII-XVII ст.
   author: Колектив
-- id: S12
-  file: wave4-hrushevsky-istlit_c0035
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S13
-  file: wave12-hrushevsky-iu-odnotom_c0040
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
-- id: S15
-  file: wave7-krypyakevych-istkult_c0145
-  type: literary
-  title: Крип'якевич — Історія української культури (1937)
-  author: Крип'якевич І.

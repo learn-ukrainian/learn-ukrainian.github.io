@@ -1,6 +1,11 @@
 # Source registry for wiki/periods/mykhailo-chernigivskyi.md
 # Referenced inline as [S1], [S2], ...
 sources:
+- id: S1
+  file: wave6-sofonovych-khronika_c0104
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
 - id: S2
   file: wave7-istkult-t2-xiii-xvii_c0578
   type: literary
@@ -18,6 +23,11 @@ sources:
   author: Невідомий
 - id: S5
   file: wave6-synopsis-1674_c0002
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S6
+  file: wave6-synopsis-1674_c0427
   type: literary
   title: Синопсис. Київ, 1674
   author: Невідомий

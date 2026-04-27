@@ -26,13 +26,18 @@ sources:
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
-- id: S7
-  file: wave5-velychkovsky_c0042
+- id: S6
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0036
   type: literary
-  title: Іван Величковський. Твори
-  author: Величковський І.
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
 - id: S8
   file: wave12-yakovenko-skhid-zakhid_c0029
   type: literary
   title: 'Яковенко — «Україна між Сходом і Заходом»: проекція однієї ідеї (розд. 13-14)'
   author: Яковенко Н.
+- id: S9
+  file: wave7-heroes-ukr-kultura_c0020
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив

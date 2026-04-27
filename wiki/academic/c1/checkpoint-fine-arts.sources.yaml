@@ -1,0 +1,38 @@
+# Source registry for wiki/academic/c1/checkpoint-fine-arts.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-antonovych-kultura_c0030
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S2
+  file: wave7-istkult-t2-xiii-xvii_c0609
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S3
+  file: wave4-hrushevsky-istlit_c0035
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S7
+  file: wave7-antonovych-kultura_c0631
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S8
+  file: ukrlib-pidmohylny_c0218
+  type: literary
+  title: Валер'ян Підмогильний. Місто
+  author: Підмогильний В.
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c1382
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: wave8-chyzhevsky-baroko_c0028
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.

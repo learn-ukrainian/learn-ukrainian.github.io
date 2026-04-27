@@ -2,47 +2,51 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/kyievo-pecherskyi-pateryk_Історіографія-Києво-Печерський-патерик-Історія-чи-Агіографія-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Києво-Печерський патерик: Історія чи Агіографія?'
+  section_path: 'Історіографія: Києво-Печерський патерик: Історія чи Агіографія? >
+    Короткий зміст'
+- id: S2
+  file: ukrainian_wiki/kyievo-pecherskyi-pateryk_Історіографія-Києво-Печерський-патерик-Історія-чи-Агіографія-Основний-зміст-Жанрова-специфіка-між-каноном-та-реальністю
+  type: ukrainian_wiki
+  title: 'Історіографія: Києво-Печерський патерик: Історія чи Агіографія?'
+  section_path: 'Історіографія: Києво-Печерський патерик: Історія чи Агіографія? >
+    Основний зміст > Жанрова специфіка: між каноном та реальністю'
+- id: S3
   file: wave8-ukr-lit-entsyklopediia_c3326
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S2
+- id: S4
+  file: ukrainian_wiki/kyievo-pecherskyi-pateryk_Історіографія-Києво-Печерський-патерик-Історія-чи-Агіографія-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Історіографія: Києво-Печерський патерик: Історія чи Агіографія?'
+  section_path: 'Історіографія: Києво-Печерський патерик: Історія чи Агіографія? >
+    Мовні зразки'
+- id: S5
   file: wave8-ukr-lit-entsyklopediia_c2459
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S3
+- id: S6
   file: wave7-dzyuba-pavlenko-litopys-kultury_c0142
   type: literary
   title: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
   author: Дзюба О.
-- id: S4
+- id: S7
   file: wave7-entsyklopediia-ukrainoznavstva_c1914
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S5
+- id: S8
   file: wave7-istkult-t1-kyivska-rus_c0176
   type: literary
   title: Історія української культури. Т.1. Київська Русь
   author: Колектив
-- id: S6
-  file: wave6-synopsis-1674_c0078
-  type: literary
-  title: Синопсис. Київ, 1674
-  author: Невідомий
-- id: S7
-  file: wave8-ukr-lit-entsyklopediia_c2458
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S8
-  file: wave6-synopsis-1674_c0026
-  type: literary
-  title: Синопсис. Київ, 1674
-  author: Невідомий
-- id: S10
-  file: wave6-synopsis-1674_c0049
-  type: literary
-  title: Синопсис. Київ, 1674
-  author: Невідомий
+- id: S9
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4934
+  type: textbook
+  title: ПАМ’ЯТКИ ОРИГІНАЛЬНОЇ ЛІТЕРАТУРИ КНЯЖОЇ РУСІ-УКРАЇНИ
+  page: 37
+  grade: 9

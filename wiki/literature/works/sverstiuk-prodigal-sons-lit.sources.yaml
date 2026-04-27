@@ -16,16 +16,16 @@ sources:
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
-- id: S4
-  file: wave5-suspilna-dumka-xvi-xvii_c0137
-  type: literary
-  title: Суспільно-політична думка XVI-XVII ст.
-  author: Антологія
 - id: S5
   file: wave12-yakovenko-skhid-zakhid_c0026
   type: literary
   title: 'Яковенко — «Україна між Сходом і Заходом»: проекція однієї ідеї (розд. 13-14)'
   author: Яковенко Н.
+- id: S6
+  file: wave7-heroes-ukr-kultura_c0135
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
 - id: S7
   file: wave5-suspilna-dumka-xvi-xvii_c0073
   type: literary
@@ -36,8 +36,8 @@ sources:
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
-- id: S9
-  file: wave7-heroes-ukr-kultura_c0020
+- id: S10
+  file: wave10-shevchenkivsky-slovnyk_c1299
   type: literary
-  title: Героїчне та знаменитості в українській культурі
+  title: Шевченківський словник
   author: Колектив

@@ -31,11 +31,6 @@ sources:
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S8
-  file: wave8-ukr-lit-entsyklopediia_c3242
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
 - id: S9
   file: ukrlib-honchar_c0008
   type: literary

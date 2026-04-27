@@ -16,6 +16,11 @@ sources:
   type: literary
   title: Чижевський — Українське літературне бароко
   author: Чижевський Д.
+- id: S4
+  file: wave9-ohiyenko-ist-lit-movy_c0000
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
 - id: S5
   file: wave8-ukr-lit-entsyklopediia_c4692
   type: literary

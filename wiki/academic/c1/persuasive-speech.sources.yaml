@@ -2,82 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrmova-glazova-2018_s0062
-  type: textbook
-  title: Сторінка 46
-  grade: 10
-  author: glazova
+  file: wave8-masliuk-poetyky-rytoryky_c0148
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
 - id: S2
-  file: 11-klas-ukrajinska-mova-voron-2019_s0058
-  type: textbook
-  title: Сторінка 41
-  grade: 11
-  author: voron
+  file: wave8-masliuk-poetyky-rytoryky_c0135
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
 - id: S3
-  file: 11-klas-ukrajinska-mova-voron-2019_s0053
-  type: textbook
-  title: Сторінка 38
-  grade: 11
-  author: voron
-- id: S4
-  file: 10-klas-ukrmova-glazova-2018_s0233
-  type: textbook
-  title: Сторінка 168
-  grade: 10
-  author: glazova
-- id: S5
-  file: 5-klas-ukrmova-golub-2022_s0247
-  type: textbook
-  title: Сторінка 248
-  grade: 5
-  author: golub
-- id: S6
   file: wave8-masliuk-poetyky-rytoryky_c0282
   type: literary
   title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
   author: Маслюк В.
-- id: S7
-  file: wave7-entsyklopediia-ukrainoznavstva_c0791
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S8
-  file: wave8-masliuk-poetyky-rytoryky_c0151
+- id: S4
+  file: wave8-masliuk-poetyky-rytoryky_c0137
   type: literary
   title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
   author: Маслюк В.
-- id: S9
-  file: wave10-shevchenkivsky-slovnyk_c0546
+- id: S5
+  file: wave8-masliuk-poetyky-rytoryky_c0088
   type: literary
-  title: Шевченківський словник
-  author: Колектив
-- id: S10
-  file: wave10-shevchenkivsky-slovnyk_c1721
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S6
+  file: wave8-masliuk-poetyky-rytoryky_c0147
   type: literary
-  title: Шевченківський словник
-  author: Колектив
-- id: S11
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S7
+  file: wave8-masliuk-poetyky-rytoryky_c0000
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S8
   file: wave8-hrabovych-do-istoriyi_c0614
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S12
-  file: wave8-masliuk-poetyky-rytoryky_c0173
-  type: literary
-  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
-  author: Маслюк В.
-- id: S13
-  file: wave8-ukr-lit-entsyklopediia_c2722
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c3692
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S14
-  file: wave7-lytvynov-renesans-humanizm_c0152
-  type: literary
-  title: Литвинов — Ренесансний гуманізм в Україні
-  author: Литвинов В.
-- id: S15
-  file: wave8-masliuk-poetyky-rytoryky_c0094
+- id: S10
+  file: wave8-masliuk-poetyky-rytoryky_c0043
   type: literary
   title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
   author: Маслюк В.

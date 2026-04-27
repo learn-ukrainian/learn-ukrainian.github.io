@@ -26,6 +26,16 @@ sources:
   type: literary
   title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
   author: Грабянка Г.
+- id: S7
+  file: wave5-prokopovych-filosofski_c0118
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave6-rihelman-litopysna-opovid_c0953
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
 - id: S10
   file: wave6-scherer-litopys-malorosiyi_c0095
   type: literary

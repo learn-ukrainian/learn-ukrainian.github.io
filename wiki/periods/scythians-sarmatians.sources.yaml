@@ -26,11 +26,6 @@ sources:
   type: literary
   title: Феофан Прокопович. Філософські твори
   author: Прокопович Ф.
-- id: S6
-  file: wave5-velychkovsky_c0022
-  type: literary
-  title: Іван Величковський. Твори
-  author: Величковський І.
 - id: S7
   file: ukrlib-kostenko_c0011
   type: literary

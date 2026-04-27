@@ -2,35 +2,41 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrlit-borzenko-2018-prof_s0001
-  type: textbook
-  title: Сторінка 3
-  grade: 10
-  author: borzenko
-- id: S3
-  file: 8-klas-ukrlit-avramenko-2025_s0367
-  type: textbook
-  title: Сторінка 207
-  grade: 8
-  author: avramenko
-- id: S4
-  file: 8-klas-ukrlit-zabolotnyi-2025_s0003
-  type: textbook
-  title: Сторінка 4
-  grade: 8
-  author: zabolotnyi
-- id: S6
   file: 9-klas-istorija-ukrajini-gisem-2017_s4918
   type: textbook
   title: § 33. українське образотворче мистецтво та архітектура
   page: 269
   grade: 9
-- id: S7
+- id: S2
   file: 7-klas-ukrlit-avramenko-2024_s3597
   type: textbook
   title: ВСТУП
   page: 9
   grade: 7
+- id: S3
+  file: 7-klas-ukrlit-zabolotnyi-2024_s3696
+  type: textbook
+  title: ВСТУП ВСТУП
+  page: 6
+  grade: 7
+- id: S5
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4928
+  type: textbook
+  title: ВСТУП РОЛЬ І МІСЦЕ ХУДОЖНЬОЇ ЛІТЕРАТУРИ
+  page: 3
+  grade: 9
+- id: S6
+  file: 5-klas-ukrlit-zabolotnyi-2022_s1967
+  type: textbook
+  title: ХУДОЖНЯ ЛІТЕРАТУРА ЯК МИСТЕЦТВО СЛОВА
+  page: 5
+  grade: 5
+- id: S7
+  file: 5-klas-istoriya-schupak-2022_s1941
+  type: textbook
+  title: § 32. На основі вашого життєвого досвіду,
+  page: 184
+  grade: 5
 - id: S8
   file: 11-klas-ukrajinska-literatura-avramenko-2019_s1128
   type: textbook
@@ -38,44 +44,8 @@ sources:
   page: 240
   grade: 11
 - id: S9
-  file: 5-klas-ukrlit-zabolotnyi-2022_s1968
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s4979
   type: textbook
-  title: НЕВИЧЕРПНІ ДЖЕРЕЛА МУДРОСТІ ОБРАЗНЕ СЛОВО
-  page: 6
-  grade: 5
-- id: S10
-  file: 7-klas-ukrlit-zabolotnyi-2024_s3697
-  type: textbook
-  title: ФУНКЦІЇ ХУДОЖНЬОЇ ЛІТЕРАТУРИ (p. 7)
-  page: 7
-  grade: 7
-- id: S11
-  file: 7-klas-ukrlit-zabolotnyi-2024_s3696
-  type: textbook
-  title: ВСТУП ВСТУП
-  page: 6
-  grade: 7
-- id: S12
-  file: 8-klas-istoria-ukr-hlibovska-2025_s4134
-  type: textbook
-  title: § 9. ОСВІТА, КНИГОДРУКУВАННЯ
-  page: 26
-  grade: 8
-- id: S13
-  file: 5-klas-ukrlit-zabolotnyi-2022_s1967
-  type: textbook
-  title: ХУДОЖНЯ ЛІТЕРАТУРА ЯК МИСТЕЦТВО СЛОВА
-  page: 5
-  grade: 5
-- id: S14
-  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4928
-  type: textbook
-  title: ВСТУП РОЛЬ І МІСЦЕ ХУДОЖНЬОЇ ЛІТЕРАТУРИ
-  page: 3
-  grade: 9
-- id: S15
-  file: 8-klas-ukrlit-avramenko-2025_s4369
-  type: textbook
-  title: ХУДОЖНІЙ ТВІР В ІСТОРИКО-КУЛЬТУРНОМУ КОНТЕКСТІ ДОБИ
+  title: ВСТУП
   page: 4
-  grade: 8
+  grade: 9

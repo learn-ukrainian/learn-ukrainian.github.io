@@ -1,59 +1,51 @@
 # Source registry for wiki/grammar/b2/set-expressions-combined.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S6
-  file: 10-klas-ukrmova-glazova-2018_s0518
+- id: S1
+  file: 5-klas-ukrmova-litvinova-2022_s2383
   type: textbook
-  title: § 13. Уживання слів у фразеологізмах відповідно
-  page: 58
-  grade: 10
-- id: S8
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1233
-  type: textbook
-  title: Стилістичне забарвлення фразеологізмів. Виражальні можливості фразеологізмів
-    § 42
-  page: 187
-  grade: 11
-- id: S9
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1232
-  type: textbook
-  title: § 42. Стилістичне забарвлення фразеологізмів
-  page: 185
-  grade: 11
-- id: S10
-  file: 5-klas-ukrmova-litvinova-2022_s2354
-  type: textbook
-  title: Фразеологія. Фразеологізми
-  page: 88
+  title: Відомості із синтаксису й пунктуації. Словосполучення
+  page: 189
   grade: 5
-- id: S11
+- id: S2
+  file: 10-klas-ukrmova-karaman-2018_s0641
+  type: textbook
+  title: § 41. ФРАЗЕОЛОГІЧНІ ОДИНИЦІ УКРАЇНСЬКОЇ МОВИ
+  page: 110
+  grade: 10
+- id: S3
+  file: 5-klas-ukrmova-litvinova-2022_s2357
+  type: textbook
+  title: Фразеологія. Підсумовуємо й узагальнюємо
+  page: 102
+  grade: 5
+- id: S4
   file: 6-klas-ukrmova-zabolotnyi-2020_s3378
   type: textbook
   title: § 8. ЗАГАЛЬНОВЖИВАНІ Й СТИЛІСТИЧНО
   page: 31
   grade: 6
-- id: S12
-  file: 10-klas-ukrmova-karaman-2018_s0649
+- id: S5
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1797
   type: textbook
-  title: ФРАЗЕОЛОГІЯ (p. 118)
-  page: 118
-  grade: 10
-- id: S13
-  file: 10-klas-ukrmova-karaman-2018_s0650
+  title: ЗВУКИ І БУКВИ. СКЛАД. НАГОЛОС. ЗВУКО-БУКВЕНИЙ СКЛАД СЛІВ
+  page: 4
+  grade: 4
+- id: S6
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2521
   type: textbook
-  title: § 46. Фразеологія наукова, публіцистична, офіційно-ділова. Фразеологізми
-    з професійної мови
-  page: 119
-  grade: 10
-- id: S14
-  file: 10-klas-ukrajinska-mova-avramenko-2018_s0262
-  type: textbook
-  title: Основні групи фразеологізмів... роззявити рота —
-  page: 39
-  grade: 10
-- id: S15
-  file: 5-klas-ukrmova-golub-2022_s2297
-  type: textbook
-  title: § 20. Життя як найвища людська цінність
-  page: 58
+  title: ЗВУКИ, ЯКІ КВАКАЮТЬ
+  page: 153
   grade: 5
+- id: S7
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1179
+  type: textbook
+  title: § 47. СТИЛІСТИЧНЕ ЗАБАРВЛЕННЯ ЛЕКСИКИ. КНИЖНА Й РОЗМОВНА ЛЕКСИКА
+  page: 163
+  grade: 11
+- id: S8
+  file: 8-klas-ukrmova-onatiy-2025_s4685
+  type: textbook
+  title: ВАМ МОЖНА ЗНЕЖИРЕНИЙ —’ дЬ
+  page: 2
+  grade: 8

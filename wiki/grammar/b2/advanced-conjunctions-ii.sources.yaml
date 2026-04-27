@@ -2,44 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-voron-2019_s0243
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5184
   type: textbook
-  title: Сторінка 160
-  grade: 11
-  author: voron
-- id: S2
-  file: 8-klas-ukrmova-zabolotnyi-2025_s0025
-  type: textbook
-  title: Сторінка 25
-  grade: 8
-  author: zabolotnyi
-- id: S4
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s0197
-  type: textbook
-  title: Сторінка 141
+  title: Складнопiдрядне речення (p. 129)
+  page: 129
   grade: 9
-  author: zabolotnij
-- id: S6
+- id: S3
   file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5178
   type: textbook
   title: Складнопiдрядне речення (p. 79)
   page: 79
   grade: 9
-- id: S7
-  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5181
+- id: S5
+  file: 9-klas-ukrajinska-mova-voron-2017_s5100
   type: textbook
-  title: Складнопiдрядне речення (p. 113)
-  page: 113
+  title: Мовний РОЗБІР. СИНТАКСИЧНИЙ РОЗБІР СКЛАДНОПІДРЯДНОГО
+  page: 99
   grade: 9
-- id: S8
-  file: 7-klas-ukrmova-litvinova-2024_s3944
+- id: S6
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5029
   type: textbook
-  title: § 33. Написання сполучників
-  page: 202
-  grade: 7
-- id: S9
-  file: 7-klas-ukrmova-litvinova-2024_s3942
+  title: Синтаксис. Пунктуація. СПОСТЕРЕЖЕННЯ
+  page: 32
+  grade: 9
+- id: S7
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5162
   type: textbook
-  title: § 31. Сполучник як службова частина мови
-  page: 194
-  grade: 7
+  title: Синтаксис. Пунктуацiя
+  page: 25
+  grade: 9

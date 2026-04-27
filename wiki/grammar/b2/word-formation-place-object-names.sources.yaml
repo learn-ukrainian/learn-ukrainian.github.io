@@ -1,63 +1,45 @@
 # Source registry for wiki/grammar/b2/word-formation-place-object-names.md
 # Referenced inline as [S1], [S2], ...
 sources:
+- id: S1
+  file: 6-klas-ukrmova-golub-2023_s3258
+  type: textbook
+  title: § 35. Як розумно витрачати,
+  page: 91
+  grade: 6
+- id: S2
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2511
+  type: textbook
+  title: Варіант Б. Складіть і запишіть мінітекст (3–4 речення) зі словом
+  page: 26
+  grade: 5
+- id: S3
+  file: 3-klas-ukrainska-mova-vashulenko-2020-1_s1765
+  type: textbook
+  title: З’юрмитися — зібратися юрмою, скупчитися
+  page: 92
+  grade: 3
 - id: S4
-  file: 6-klas-ukrmova-golub-2023_s0034
+  file: 6-klas-ukrmova-golub-2023_s3263
   type: textbook
-  title: Сторінка 35
+  title: § 53. Мова і комп’ютер
+  page: 138
   grade: 6
-  author: golub
+- id: S5
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3380
+  type: textbook
+  title: Словотвiр. Орфографiя
+  page: 55
+  grade: 6
 - id: S6
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3381
-  type: textbook
-  title: § 16. ОСНОВНІ СПОСОБИ СЛОВОТВОРЕННЯ
-  page: 57
-  grade: 6
-- id: S7
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3390
-  type: textbook
-  title: § 34. БУКВИ Е, И, І В СУФІКСАХ ІМЕННИКІВ
-  page: 117
-  grade: 6
-- id: S8
   file: 11-klas-ukrajinska-mova-avramenko-2019_s1183
   type: textbook
   title: § 50. СТИЛІСТИЧНІ ЗАСОБИ СЛОВОТВОРУ
   page: 177
   grade: 11
-- id: S9
-  file: 5-klas-ukrmova-avramenko-2022_s2206
-  type: textbook
-  title: § 27. Суфікс
-  page: 67
-  grade: 5
-- id: S10
-  file: 6-klas-ukrmova-litvinova-2023_s3313
-  type: textbook
-  title: § 10. Правила написання букв Е, И, І в іменникових суфіксах
-  page: 57
-  grade: 6
-- id: S11
+- id: S7
   file: 6-klas-ukrmova-litvinova-2023_s3321
   type: textbook
   title: § 17. Зміни приголосних при словотворенні
   page: 96
-  grade: 6
-- id: S12
-  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0352
-  type: textbook
-  title: Орфографічна норма (p. 100)
-  page: 100
-  grade: 10
-- id: S14
-  file: 6-klas-ukrmova-litvinova-2023_s3314
-  type: textbook
-  title: § 11. Букви Е, О, И в прикметникових суфіксах
-  page: 62
-  grade: 6
-- id: S15
-  file: 6-klas-ukrmova-avramenko-2023_s3066
-  type: textbook
-  title: Цирк — перед­
-  page: 99
   grade: 6

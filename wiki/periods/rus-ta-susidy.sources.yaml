@@ -6,6 +6,11 @@ sources:
   type: literary
   title: Галицько-Волинський літопис
   author: Невідомий
+- id: S2
+  file: wave1-kyivskyi-litopys_c0632
+  type: literary
+  title: Київський літопис
+  author: Невідомий
 - id: S3
   file: wave6-synopsis-1674_c0187
   type: literary
@@ -41,3 +46,8 @@ sources:
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
+- id: S10
+  file: wave12-samovyd-litopys_c0001
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий

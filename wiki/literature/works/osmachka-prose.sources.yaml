@@ -31,11 +31,6 @@ sources:
   type: literary
   title: Томпсон — Трубадури імперії
   author: Томпсон Е.
-- id: S7
-  file: wave12-velychko-litopys_c0044
-  type: literary
-  title: Самійло Величко. Літопис (1648-1700)
-  author: Величко С.
 - id: S8
   file: wave2-velychko_c0042
   type: literary

@@ -48,7 +48,7 @@ Usage:
 
 Tracks: a1, a2, b1, b2, c1, c2, folk, hist, bio, istorio, lit, lit-essay,
         lit-war, lit-hist-fic, lit-youth, lit-fantastika, lit-humor, lit-drama,
-        lit-doc, lit-crimea, oes, ruth
+        oes, ruth
 """
 
 import argparse
@@ -728,8 +728,8 @@ def _get_domain(track: str, slug: str) -> str:
         "lit-fantastika": "literature/works",
         "lit-humor": "literature/works",
         "lit-drama": "literature/works",
-        "lit-doc": "literature/works",
-        "lit-crimea": "literature/works",
+        # lit-doc and lit-crimea were merged into other lit-* tracks; no longer
+        # exist in curriculum.yaml. Removed from compile config 2026-04-27.
         "oes": "linguistics/oes",
         "ruth": "linguistics/ruthenian",
     }
@@ -776,7 +776,7 @@ def _slug_to_topic(slug: str, track: str, sources_info: dict | None = None) -> s
         "lit-humor": "Гумор і сатира",
         "lit-youth": "Література для молоді",
         "lit-drama": "Українська драматургія",
-        # lit-doc, lit-crimea: not in curriculum.yaml yet
+        # lit-doc, lit-crimea: merged into other lit-* tracks (no longer in curriculum.yaml).
         "oes": "Давньоруська мова",
         "ruth": "Руська (староукраїнська) мова",
     }

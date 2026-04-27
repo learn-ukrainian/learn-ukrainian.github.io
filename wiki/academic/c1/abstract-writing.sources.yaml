@@ -2,77 +2,47 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrmova-karaman-2018_s0451
-  type: textbook
-  title: Сторінка 253
-  grade: 10
-  author: karaman
-- id: S2
-  file: 11-klas-ukrajinska-mova-glazova-2019_s0256
-  type: textbook
-  title: Сторінка 179
-  grade: 11
-  author: glazova
-- id: S3
-  file: 10-klas-ukrmova-glazova-2018_s0086
-  type: textbook
-  title: Сторінка 59
-  grade: 10
-  author: glazova
-- id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0455
-  type: textbook
-  title: Сторінка 255
-  grade: 10
-  author: karaman
-- id: S5
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s0283
-  type: textbook
-  title: Сторінка 198
-  grade: 11
-  author: avramenko
-- id: S6
-  file: wave4-ukrainska-mova-encyclopedia_c0077
-  type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
-- id: S7
-  file: wave8-ukr-lit-entsyklopediia_c0242
+  file: wave8-ukr-lit-entsyklopediia_c3657
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-isaievych-knyhovydannia_c0402
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S3
+  file: wave4-hrushevsky-istlit_c0029
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S4
+  file: wave12-hrushevsky-iu-odnotom_c0034
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S5
+  file: wave7-popovych-narys-kultury_c0007
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S7
+  file: wave8-fdm-biobibliohrafichnyi_c0197
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
   author: Колектив
 - id: S8
-  file: wave4-ukrainska-mova-encyclopedia_c0134
+  file: wave8-isaievych-knyhovydannia_c0056
   type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
 - id: S9
-  file: wave4-ukrainska-mova-encyclopedia_c0180
+  file: wave8-ukr-lit-entsyklopediia_c5452
   type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
 - id: S10
-  file: wave8-ukr-lit-entsyklopediia_c2287
+  file: wave7-istkult-t2-xiii-xvii_c1401
   type: literary
-  title: Українська літературна енциклопедія (1988-1995)
+  title: Історія української культури. Т.2. XIII-XVII ст.
   author: Колектив
-- id: S12
-  file: wave8-ukr-lit-entsyklopediia_c4089
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S13
-  file: wave8-hrabovych-do-istoriyi_c0600
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
-- id: S14
-  file: wave8-hrabovych-do-istoriyi_c0667
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
-- id: S15
-  file: wave8-masliuk-poetyky-rytoryky_c0170
-  type: literary
-  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
-  author: Маслюк В.

@@ -2,49 +2,41 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/knyahynia-olha_Біографія-Княгиня-Ольга-Архітекторка-держави-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Княгиня Ольга: Архітекторка держави'
+  section_path: 'Біографія: Княгиня Ольга: Архітекторка держави > Деколонізаційна
+    перспектива'
+- id: S2
+  file: 7-klas-istoria-ukr-pometun-2024_s3554
+  type: textbook
+  title: Розділ 1. ВИНИКНЕННЯ ТА СТАНОВЛЕННЯ. КИЇВСЬКОЇ ДЕРЖАВИ
+  page: 15
+  grade: 7
+- id: S3
   file: 7-klas-istoria-ukr-galimov-2024_s3433
   type: textbook
   title: § 5. Русь за князювання Ольги та Святослава
   page: 32
   grade: 7
-- id: S2
-  file: 7-klas-istoria-ukr-pometun-2024_s3557
-  type: textbook
-  title: § 4. Князювання Ігоря та Ольги
-  page: 30
-  grade: 7
-- id: S3
-  file: wave4-hrushevsky-istlit-t2_c0202
-  type: literary
-  title: Грушевський — Історія української літератури, т.2
-  author: Грушевський М.
 - id: S4
-  file: wave6-synopsis-1674_c0424
-  type: literary
-  title: Синопсис. Київ, 1674
-  author: Невідомий
+  file: https://www.youtube.com/watch?v=vUd9ZmvXHHU
+  type: external
+  title: ULP 6-231 | Княгиня Ольга — хитра правителька Русі | Ukrainian Lessons Podcast
+    Season 6
+  url: https://www.youtube.com/watch?v=vUd9ZmvXHHU
 - id: S5
-  file: wikipedia/Київська Русь
-  type: wikipedia
-  title: Київська Русь
-  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B0%20%D0%A0%D1%83%D1%81%D1%8C
+  file: ukrainian_wiki/knyahynia-olha_Біографія-Княгиня-Ольга-Архітекторка-держави-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Княгиня Ольга: Архітекторка держави'
+  section_path: 'Біографія: Княгиня Ольга: Архітекторка держави > Короткий зміст'
 - id: S6
-  file: wave6-synopsis-1674_c0421
-  type: literary
-  title: Синопсис. Київ, 1674
-  author: Невідомий
-- id: S8
-  file: wave5-oldukr-xvii_c0506
-  type: literary
-  title: Українська література XVII ст.
-  author: Антологія
-- id: S9
-  file: wave6-synopsis-1674_c0418
-  type: literary
-  title: Синопсис. Київ, 1674
-  author: Невідомий
-- id: S10
-  file: wave7-ohiyenko-tserka_c0030
-  type: literary
-  title: Огієнко — Українська церква
-  author: Огієнко І.
+  file: ukrainian_wiki/knyahynia-olha_Біографія-Княгиня-Ольга-Архітекторка-держави-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Біографія: Княгиня Ольга: Архітекторка держави'
+  section_path: 'Біографія: Княгиня Ольга: Архітекторка держави > Мовні зразки'
+- id: S7
+  file: https://www.youtube.com/watch?v=GxdZAhusOA0
+  type: external
+  title: 'княгиня Ольга: жінка головнокомандувач'
+  url: https://www.youtube.com/watch?v=GxdZAhusOA0

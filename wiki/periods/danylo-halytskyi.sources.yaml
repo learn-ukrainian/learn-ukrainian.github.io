@@ -16,11 +16,6 @@ sources:
   type: literary
   title: Київський літопис
   author: Невідомий
-- id: S4
-  file: wave6-sofonovych-khronika_c0001
-  type: literary
-  title: Феодосій Софонович. Хроніка з літописців стародавніх
-  author: Софонович Ф.
 - id: S5
   file: wave12-ipatskyj-litopys_c0001
   type: literary

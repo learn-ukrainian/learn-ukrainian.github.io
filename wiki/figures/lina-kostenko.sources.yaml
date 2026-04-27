@@ -2,47 +2,49 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/lina-kostenko_Біографія-Ліна-Костенко-Совість-і-голос-епохи-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Ліна Костенко: Совість і голос епохи'
+  section_path: 'Біографія: Ліна Костенко: Совість і голос епохи > Короткий зміст'
+- id: S2
+  file: ukrainian_wiki/lina-kostenko_Біографія-Ліна-Костенко-Совість-і-голос-епохи-Основний-зміст-1-Формування-особистості-та-конфлікт-із-тоталітарною-системою
+  type: ukrainian_wiki
+  title: 'Біографія: Ліна Костенко: Совість і голос епохи'
+  section_path: 'Біографія: Ліна Костенко: Совість і голос епохи > Основний зміст
+    > 1. Формування особистості та конфлікт із тоталітарною системою'
+- id: S3
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1380
+  type: textbook
+  title: Літературне «шістдесятництво» . Ліна Костенко . «Маруся Чурай»  193
+  page: 193
+  grade: 11
+- id: S4
   file: 11-klas-ukrlit-borzenko-2019-prof_s1377
   type: textbook
   title: Літературне «шістдесятництво». Ліна Костенко  187
   page: 187
   grade: 11
-- id: S2
+- id: S5
   file: 11-klas-ukrlit-borzenko-2019-prof_s1374
   type: textbook
   title: Літературне «шістдесятництво» . Ліна Костенко  181
   page: 181
   grade: 11
-- id: S3
-  file: wikipedia/Львівський андеграунд
-  type: wikipedia
-  title: Львівський андеграунд
-  url: https://uk.wikipedia.org/wiki/%D0%9B%D1%8C%D0%B2%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%B0%D0%BD%D0%B4%D0%B5%D0%B3%D1%80%D0%B0%D1%83%D0%BD%D0%B4
-- id: S4
-  file: 11-klas-ukrlit-borzenko-2019-prof_s1376
-  type: textbook
-  title: Літературне «шістдесятництво» . Ліна Костенко  185
-  page: 185
-  grade: 11
-- id: S5
-  file: wave7-heroes-ukr-kultura_c0361
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
 - id: S6
-  file: 11-klas-ukrajinska-literatura-avramenko-2019_s1124
-  type: textbook
-  title: Теорія літератури. МИТЕЦЬ І СУСПІЛЬСТВО
-  page: 216
-  grade: 11
+  file: ukrainian_wiki/lina-kostenko_Біографія-Ліна-Костенко-Совість-і-голос-епохи-Основний-зміст-5-Рецепція-творчості-від-підпільного-спротиву-до-національного-канону
+  type: ukrainian_wiki
+  title: 'Біографія: Ліна Костенко: Совість і голос епохи'
+  section_path: 'Біографія: Ліна Костенко: Совість і голос епохи > Основний зміст
+    > 5. Рецепція творчості: від підпільного спротиву до національного канону'
 - id: S7
-  file: https://www.youtube.com/watch?v=FRgkF9PPrZw
-  type: external
-  title: ULP 6-230 | Українська поезія. Ліна Костенко «Страшні слова, коли вони мовчать»
-    | Ukrainian Lesso...
-  url: https://www.youtube.com/watch?v=FRgkF9PPrZw
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1373
+  type: textbook
+  title: Літературне «шістдесятництво» . Ліна Костенко  179
+  page: 179
+  grade: 11
 - id: S8
-  file: wave7-heroes-ukr-kultura_c0358
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
+  file: ukrainian_wiki/lina-kostenko_Біографія-Ліна-Костенко-Совість-і-голос-епохи-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Ліна Костенко: Совість і голос епохи'
+  section_path: 'Біографія: Ліна Костенко: Совість і голос епохи > Деколонізаційна
+    перспектива'

@@ -1,0 +1,53 @@
+# Source registry for wiki/academic/c1/mistsia-ta-urbanistyka.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-entsyklopediia-ukrainoznavstva_c0391
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S2
+  file: wave7-istkult-t2-xiii-xvii_c0793
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S3
+  file: wave7-istkult-t2-xiii-xvii_c0492
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S4
+  file: wave7-istkult-t2-xiii-xvii_c0001
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c4418
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave7-kohut-tsentralizm_c0074
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c2107
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave7-istkult-t1-kyivska-rus_c0301
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S9
+  file: грушевський-історія-україни-руси-т5_c0006
+  type: literary
+  title: Грушевський — Історія України-Руси, т.5
+  author: Грушевський М.
+- id: S10
+  file: грушевський-історія-україни-руси-т4_c0015
+  type: literary
+  title: Грушевський — Історія України-Руси, т.4
+  author: Грушевський М.

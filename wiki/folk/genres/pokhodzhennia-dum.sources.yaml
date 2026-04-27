@@ -1,24 +1,6 @@
 # Source registry for wiki/folk/genres/pokhodzhennia-dum.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S1
-  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0057
-  type: textbook
-  title: Сторінка 49
-  grade: 9
-  author: avramenko
-- id: S2
-  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0437
-  type: textbook
-  title: Сторінка 331
-  grade: 9
-  author: avramenko
-- id: S4
-  file: 7-klas-ukrmova-avramenko-2024_s0123
-  type: textbook
-  title: Сторінка 110
-  grade: 7
-  author: avramenko
 - id: S6
   file: wave7-entsyklopediia-ukrainoznavstva_c0624
   type: literary
@@ -30,7 +12,24 @@ sources:
   title: Грабович — До історії української літератури
   author: Грабович Г.
 - id: S8
+  file: ukrainian_wiki/pokhodzhennia-dum_Український-фольклор-Походження-та-специфіка-козацьких-дум-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Український фольклор: Походження та специфіка козацьких дум'
+  section_path: 'Український фольклор: Походження та специфіка козацьких дум > Короткий
+    зміст'
+- id: S9
+  file: ukrainian_wiki/pokhodzhennia-dum_Український-фольклор-Походження-та-специфіка-козацьких-дум-Основний-зміст-Генеза-та-історичне-тло-козацького-епосу
+  type: ukrainian_wiki
+  title: 'Український фольклор: Походження та специфіка козацьких дум'
+  section_path: 'Український фольклор: Походження та специфіка козацьких дум > Основний
+    зміст > Генеза та історичне тло козацького епосу'
+- id: S10
   file: wikipedia/Дума
   type: wikipedia
   title: Дума
   url: https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BC%D0%B0
+- id: S11
+  file: wikipedia/Фольклористичні терміни
+  type: wikipedia
+  title: Фольклористичні терміни
+  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%BE%D0%BB%D1%8C%D0%BA%D0%BB%D0%BE%D1%80%D0%B8%D1%81%D1%82%D0%B8%D1%87%D0%BD%D1%96%20%D1%82%D0%B5%D1%80%D0%BC%D1%96%D0%BD%D0%B8

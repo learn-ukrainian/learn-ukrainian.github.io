@@ -41,11 +41,6 @@ sources:
   type: literary
   title: Галицько-Волинський літопис
   author: Невідомий
-- id: S9
-  file: wave1-kyivskyi-litopys_c0628
-  type: literary
-  title: Київський літопис
-  author: Невідомий
 - id: S10
   file: wave8-hensiorsky-gvl-mova_c0281
   type: literary

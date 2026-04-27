@@ -16,11 +16,6 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S4
-  file: wave8-hrabovych-do-istoriyi_c0446
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
 - id: S5
   file: ukrlib-stus_c0083
   type: literary
@@ -31,11 +26,6 @@ sources:
   type: literary
   title: Майк Йогансен. Елементарні закони версифікації (віршування)
   author: Йогансен М.
-- id: S7
-  file: wave8-hrabovych-do-istoriyi_c0431
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
 - id: S8
   file: wave7-krypyakevych-istkult_c0625
   type: literary

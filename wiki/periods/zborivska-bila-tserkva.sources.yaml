@@ -6,6 +6,11 @@ sources:
   type: literary
   title: Літопис Грабянки
   author: Грабянка Г.
+- id: S2
+  file: wave12-grabianka-litopys_c0221
+  type: literary
+  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
+  author: Грабянка Г.
 - id: S3
   file: wave6-chevalier-istoriia-viiny_c0011
   type: literary
@@ -21,11 +26,21 @@ sources:
   type: literary
   title: Самійло Величко. Літопис (1648-1700)
   author: Величко С.
+- id: S7
+  file: wave2-velychko_c0197
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
 - id: S8
   file: wave12-velychko-litopys_c0161
   type: literary
   title: Самійло Величко. Літопис (1648-1700)
   author: Величко С.
+- id: S9
+  file: wave2-velychko_c0159
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
 - id: S10
   file: wave6-chevalier-istoriia-viiny_c0095
   type: literary

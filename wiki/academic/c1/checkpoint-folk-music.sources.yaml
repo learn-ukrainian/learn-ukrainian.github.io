@@ -1,0 +1,43 @@
+# Source registry for wiki/academic/c1/checkpoint-folk-music.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-istkult-t2-xiii-xvii_c0609
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c5420
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave7-antonovych-kultura_c0036
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S4
+  file: wave7-entsyklopediia-ukrainoznavstva_c0664
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c3588
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave7-krypyakevych-istkult_c0799
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S8
+  file: wave7-entsyklopediia-ukrainoznavstva_c2269
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S9
+  file: wave7-entsyklopediia-ukrainoznavstva_c0012
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

@@ -2,21 +2,34 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1389
+  type: textbook
+  title: Література «соціалісти÷ного реалізму»  207
+  page: 207
+  grade: 11
+- id: S2
   file: wave7-nalyvaiko-ochyma-zakhodu_c0308
   type: literary
   title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
   author: Наливайко Д.
-- id: S2
-  file: wave7-nalyvaiko-ochyma-zakhodu_c0315
-  type: literary
-  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
-  author: Наливайко Д.
 - id: S3
-  file: wave7-nalyvaiko-ochyma-zakhodu_c0303
-  type: literary
-  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
-  author: Наливайко Д.
+  file: https://www.youtube.com/watch?v=256wyn7BZ8k
+  type: external
+  title: 'Роксолана: історія величного століття'
+  url: https://www.youtube.com/watch?v=256wyn7BZ8k
 - id: S4
+  file: ukrainian_wiki/roksolana_Біографія-Роксолана-Від-рабині-до-султанші-Основний-зміст-Трансформація-османського-двору-дипломатія-та-меценатство
+  type: ukrainian_wiki
+  title: 'Біографія: Роксолана: Від рабині до султанші'
+  section_path: 'Біографія: Роксолана: Від рабині до султанші > Основний зміст > Трансформація
+    османського двору: дипломатія та меценатство'
+- id: S5
+  file: ukrainian_wiki/roksolana_Біографія-Роксолана-Від-рабині-до-султанші-Основний-зміст-Каталізатор-європейської-класицистичної-трагедії
+  type: ukrainian_wiki
+  title: 'Біографія: Роксолана: Від рабині до султанші'
+  section_path: 'Біографія: Роксолана: Від рабині до султанші > Основний зміст > Каталізатор
+    європейської класицистичної трагедії'
+- id: S6
   file: wikipedia/Роксолана
   type: wikipedia
   title: Роксолана

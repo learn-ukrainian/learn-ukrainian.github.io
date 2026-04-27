@@ -14,42 +14,57 @@ sources:
   grade: 8
   author: avramenko
 - id: S6
-  file: wave7-dzyuba-pavlenko-litopys-kultury_c0011
-  type: literary
-  title: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
-  author: Дзюба О.
+  file: ukrainian_wiki/bohatyri-illiya-dobrynia_Український-фольклор-Богатирський-епос-Ілля-Муромець-та-Добриня-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Український фольклор: Богатирський епос: Ілля Муромець та Добриня'
+  section_path: 'Український фольклор: Богатирський епос: Ілля Муромець та Добриня
+    > Короткий зміст'
 - id: S7
-  file: wave7-entsyklopediia-ukrainoznavstva_c0620
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
+  file: ukrainian_wiki/bohatyri-illiya-dobrynia_Український-фольклор-Богатирський-епос-Ілля-Муромець-та-Добриня-Основний-зміст-Втрата-прямої-традиції-та-інтеграція-в-український-фольклор
+  type: ukrainian_wiki
+  title: 'Український фольклор: Богатирський епос: Ілля Муромець та Добриня'
+  section_path: 'Український фольклор: Богатирський епос: Ілля Муромець та Добриня
+    > Основний зміст > Втрата прямої традиції та інтеграція в український фольклор'
 - id: S8
-  file: wave7-istkult-t1-kyivska-rus_c0154
-  type: literary
-  title: Історія української культури. Т.1. Київська Русь
-  author: Колектив
-- id: S9
-  file: wave4-hrushevsky-istlit_c0541
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S10
-  file: wave12-hrushevsky-iu-odnotom_c0546
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
-- id: S11
   file: wikipedia/Три богатирі
   type: wikipedia
   title: Три богатирі
   url: https://uk.wikipedia.org/wiki/%D0%A2%D1%80%D0%B8%20%D0%B1%D0%BE%D0%B3%D0%B0%D1%82%D0%B8%D1%80%D1%96
+- id: S9
+  file: ukrainian_wiki/bohatyri-illiya-dobrynia_Український-фольклор-Богатирський-епос-Ілля-Муромець-та-Добриня-Основний-зміст-Галерея-епічних-героїв-Ілля-Муромець-Добриня-та-Альоша-Попович
+  type: ukrainian_wiki
+  title: 'Український фольклор: Богатирський епос: Ілля Муромець та Добриня'
+  section_path: 'Український фольклор: Богатирський епос: Ілля Муромець та Добриня
+    > Основний зміст > Галерея епічних героїв: Ілля Муромець, Добриня та Альоша Попович'
+- id: S10
+  file: ukrainian_wiki/bohatyri-illiya-dobrynia_Український-фольклор-Богатирський-епос-Ілля-Муромець-та-Добриня-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Український фольклор: Богатирський епос: Ілля Муромець та Добриня'
+  section_path: 'Український фольклор: Богатирський епос: Ілля Муромець та Добриня
+    > Деколонізаційна перспектива'
+- id: S11
+  file: wave7-dzyuba-pavlenko-litopys-kultury_c0011
+  type: literary
+  title: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
+  author: Дзюба О.
 - id: S12
-  file: wikipedia/Богатир
-  type: wikipedia
-  title: Богатир
-  url: https://uk.wikipedia.org/wiki/%D0%91%D0%BE%D0%B3%D0%B0%D1%82%D0%B8%D1%80
+  file: wave7-entsyklopediia-ukrainoznavstva_c0620
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
 - id: S13
+  file: wave7-istkult-t1-kyivska-rus_c0154
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S14
   file: wikipedia/Ілля Муромець
   type: wikipedia
   title: Ілля Муромець
   url: https://uk.wikipedia.org/wiki/%D0%86%D0%BB%D0%BB%D1%8F%20%D0%9C%D1%83%D1%80%D0%BE%D0%BC%D0%B5%D1%86%D1%8C
+- id: S15
+  file: 8-klas-ukrlit-avramenko-2025_s4375
+  type: textbook
+  title: Теорія літератури. РУСЬ, ЇЇ КУЛЬТУРА ТА ПИСЬМЕНСТВО
+  page: 22
+  grade: 8

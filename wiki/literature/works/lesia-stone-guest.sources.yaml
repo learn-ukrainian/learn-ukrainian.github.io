@@ -36,6 +36,11 @@ sources:
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0361
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
 - id: S9
   file: wave7-entsyklopediia-ukrainoznavstva_c1991
   type: literary

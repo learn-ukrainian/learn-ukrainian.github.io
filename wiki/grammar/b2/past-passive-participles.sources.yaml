@@ -1,63 +1,33 @@
 # Source registry for wiki/grammar/b2/past-passive-participles.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S2
-  file: 7-klas-ukrmova-litvinova-2024_s0095
+- id: S1
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3959
   type: textbook
-  title: Сторінка 91
+  title: МЕРЕЖЕВИЙ ЕТИКЕТ
+  page: 49
   grade: 7
-  author: litvinova
+- id: S2
+  file: 7-klas-ukrmova-avramenko-2024_s3833
+  type: textbook
+  title: § 43. Творення активних дієприкметників
+  page: 100
+  grade: 7
 - id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0336
-  type: textbook
-  title: Сторінка 189
-  grade: 10
-  author: karaman
-- id: S5
-  file: 11-klas-ukrmova-zabolotnyi-2019_s0078
-  type: textbook
-  title: Сторінка 57
-  grade: 11
-  author: zabolotnyi
-- id: S7
   file: 7-klas-ukrmova-litvinova-2024_s3921
   type: textbook
   title: § 17. Активні й пасивні дієприкметники
   page: 90
   grade: 7
-- id: S8
-  file: 11-klas-ukrmova-zabolotnyi-2019_s1423
+- id: S4
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1211
   type: textbook
-  title: Ìорôологічна норма (p. 57)
-  page: 57
+  title: § 9. Паралельні форми вираження наказового
+  page: 46
   grade: 11
-- id: S9
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1150
+- id: S5
+  file: 7-klas-ukrmova-avramenko-2024_s3832
   type: textbook
-  title: § 18. АКТИВНІ Й ПАСИВНІ ДІЄПРИКМЕТНИКИ
-  page: 58
-  grade: 11
-- id: S10
-  file: 10-klas-ukrmova-karaman-2018_s0692
-  type: textbook
-  title: СПІЛКУВАННЯ (p. 191)
-  page: 191
-  grade: 10
-- id: S11
-  file: 7-klas-ukrmova-litvinova-2024_s3919
-  type: textbook
-  title: § 15. Дієприкметник як особлива форма діє слова
-  page: 80
+  title: § 42. Активні й пасивні дієприкметники
+  page: 98
   grade: 7
-- id: S12
-  file: 7-klas-ukrmova-litvinova-2024_s3922
-  type: textbook
-  title: § 18. Правопис дієприкметників
-  page: 100
-  grade: 7
-- id: S15
-  file: 10-klas-ukrmova-karaman-2018_s0690
-  type: textbook
-  title: § 76. Дієприкметник
-  page: 189
-  grade: 10

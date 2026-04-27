@@ -1,72 +1,48 @@
 # Source registry for wiki/academic/c1/obrazotvorche-mystetstvo-2.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S2
-  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0010
-  type: textbook
-  title: Сторінка 8
-  grade: 11
-  author: avramenko
-- id: S3
-  file: 9-klas-istorija-ukrajini-gisem-2017_s0039
-  type: textbook
-  title: Сторінка 25
-  grade: 9
-  author: gisem
-- id: S4
-  file: 10-klas-istorija-ukrajiny-gisem-2018_s0201
-  type: textbook
-  title: Сторінка 106
-  grade: 10
-  author: gisem
-- id: S5
-  file: 10-klas-ukrlit-borzenko-2018-prof_s0270
-  type: textbook
-  title: Сторінка 145
-  grade: 10
-  author: borzenko
-- id: S6
+- id: S1
   file: wave7-krypyakevych-istkult_c0841
   type: literary
   title: Крип'якевич — Історія української культури (1937)
   author: Крип'якевич І.
-- id: S7
-  file: wave7-entsyklopediia-ukrainoznavstva_c2135
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S8
+- id: S2
   file: wave7-krypyakevych-istkult_c0881
   type: literary
   title: Крип'якевич — Історія української культури (1937)
   author: Крип'якевич І.
-- id: S9
-  file: wave7-popovych-narys-kultury_c0998
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S10
+- id: S3
   file: wave7-popovych-narys-kultury_c0846
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S11
-  file: wave7-entsyklopediia-ukrainoznavstva_c2136
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S12
-  file: wave7-popovych-narys-kultury_c0845
+- id: S5
+  file: wave7-popovych-narys-kultury_c0998
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S13
+- id: S6
+  file: wave7-popovych-narys-kultury_c0844
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S7
+  file: wave7-antonovych-kultura_c0525
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S8
+  file: wave7-entsyklopediia-ukrainoznavstva_c2135
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S9
   file: wave7-antonovych-kultura_c0013
   type: literary
   title: Українська культура (лекції за ред. Антоновича)
   author: Антонович Д.
-- id: S15
-  file: wave7-krypyakevych-istkult_c0823
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c2136
   type: literary
-  title: Крип'якевич — Історія української культури (1937)
-  author: Крип'якевич І.
+  title: Енциклопедія українознавства
+  author: Колектив

@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/capstone-research-project.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-hrushevsky-istlit_c0035
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S2
+  file: wave12-hrushevsky-iu-odnotom_c0040
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S3
+  file: wave5-dovhalevsky-poetyka_c0262
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c1935
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave7-heroes-ukr-kultura_c0008
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S6
+  file: wave5-prokopovych-filosofski_c0699
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave5-prokopovych-filosofski_c0689
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S8
+  file: wave5-prokopovych-filosofski_c0243
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave10-shevchenkivsky-slovnyk_c0606
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S10
+  file: wave7-popovych-narys-kultury_c0013
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.

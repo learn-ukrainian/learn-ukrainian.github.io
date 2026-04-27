@@ -2,52 +2,42 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 4-klas-ukrmova-zaharijchuk_s0108
-  type: textbook
-  title: Сторінка 109
-  grade: 4
-- id: S6
-  file: wave8-ukr-lit-entsyklopediia_c4529
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S7
   file: wave8-masliuk-poetyky-rytoryky_c0146
   type: literary
   title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
   author: Маслюк В.
-- id: S8
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c4529
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
   file: wave8-ukr-lit-entsyklopediia_c1429
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S9
-  file: wave4-chyzhevsky-istoriia-lit_c0014
+- id: S4
+  file: wave10-shevchenkivsky-slovnyk_c0437
   type: literary
-  title: Чижевський — Історія української літератури
-  author: Чижевський Д.
-- id: S10
+  title: Шевченківський словник
+  author: Колектив
+- id: S7
   file: wave4-chyzhevsky-istoriia-lit_c0663
   type: literary
   title: Чижевський — Історія української літератури
   author: Чижевський Д.
-- id: S11
+- id: S8
+  file: wave8-hensiorsky-gvl-mova_c0276
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S9
   file: wave8-ukr-lit-entsyklopediia_c4447
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S12
+- id: S10
   file: wave8-ukr-lit-entsyklopediia_c3653
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S14
-  file: wave4-chyzhevsky-istoriia-lit_c0070
-  type: literary
-  title: Чижевський — Історія української літератури
-  author: Чижевський Д.
-- id: S15
-  file: wave8-chyzhevsky-baroko_c0362
-  type: literary
-  title: Чижевський — Українське літературне бароко
-  author: Чижевський Д.

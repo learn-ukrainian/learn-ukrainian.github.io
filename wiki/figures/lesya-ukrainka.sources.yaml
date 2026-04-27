@@ -2,27 +2,33 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrlit-borzenko-2018-prof_s0460
-  type: textbook
-  title: Леся Українка  169
-  page: 169
-  grade: 10
-- id: S2
   file: wave7-popovych-narys-kultury_c0836
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S3
+- id: S2
   file: ukrlib-honchar_c0007
   type: literary
   title: Олесь Гончар. Наша Леся
   author: Гончар О.
-- id: S4
+- id: S3
   file: https://www.youtube.com/watch?v=stJstN_APrA
   type: external
   title: 'Леся Українка: історія культової письменниці'
   url: https://www.youtube.com/watch?v=stJstN_APrA
+- id: S4
+  file: ukrainian_wiki/lesya-ukrainka_Біографія-Леся-Українка-Прометей-української-літератури-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Леся Українка: Прометей української літератури'
+  section_path: 'Біографія: Леся Українка: Прометей української літератури > Короткий
+    зміст'
 - id: S5
+  file: ukrainian_wiki/lesia-cassandra_Українська-література-Драматична-поема-Кассандра-Основний-зміст-Нова-парадигма-української-жіночості-від-безталанної-до-візіонерки
+  type: ukrainian_wiki
+  title: 'Українська література: Драматична поема "Кассандра"'
+  section_path: 'Українська література: Драматична поема "Кассандра" > Основний зміст
+    > Нова парадигма української жіночості: від "безталанної" до візіонерки'
+- id: S6
   file: wikipedia/Леся Українка
   type: wikipedia
   title: Леся Українка

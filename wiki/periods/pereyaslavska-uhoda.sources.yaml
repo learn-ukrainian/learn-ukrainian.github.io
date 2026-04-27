@@ -16,11 +16,6 @@ sources:
   type: literary
   title: Суспільно-політична думка XVI-XVII ст.
   author: Антологія
-- id: S4
-  file: wave5-humanisty-vidrodzennia_c0150
-  type: literary
-  title: Українські гуманісти епохи Відродження
-  author: Антологія
 - id: S6
   file: wave6-rihelman-litopysna-opovid_c0050
   type: literary

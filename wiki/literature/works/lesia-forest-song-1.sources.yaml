@@ -16,11 +16,11 @@ sources:
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S4
-  file: wave9-rusanivsky-ist-lit-movy_c0468
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0712
   type: literary
-  title: Русанівський — Історія укр. літ. мови
-  author: Русанівський В.
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S6
   file: wave8-hrabovych-do-istoriyi_c0653
   type: literary

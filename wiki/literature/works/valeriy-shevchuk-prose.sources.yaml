@@ -26,11 +26,21 @@ sources:
   type: literary
   title: Чижевський — Українське літературне бароко
   author: Чижевський Д.
+- id: S6
+  file: wave5-prokopovych-filosofski_c0098
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
 - id: S7
   file: wave8-isaievych-knyhovydannia_c0573
   type: literary
   title: Ісаєвич — Українське книговидання
   author: Ісаєвич Я.
+- id: S9
+  file: wave5-skovoroda-tvory_c0080
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
 - id: S10
   file: wave8-chyzhevsky-baroko_c0379
   type: literary

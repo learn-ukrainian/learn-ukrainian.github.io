@@ -6,11 +6,6 @@ sources:
   type: literary
   title: Літопис Самовидця (1648-1702)
   author: Невідомий
-- id: S2
-  file: wave0-samovydets_c0050
-  type: literary
-  title: Літопис Самовидця
-  author: Невідомий
 - id: S3
   file: wave6-galvol-kostruba_c0011
   type: literary

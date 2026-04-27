@@ -2,70 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0074
-  type: textbook
-  title: Сторінка 62
-  grade: 9
-  author: avramenko
-- id: S2
-  file: 9-klas-istorija-ukrajini-burnejko-2017_s0373
-  type: textbook
-  title: Сторінка 256
-  grade: 9
-  author: burnejko
-- id: S4
-  file: 8-klas-istoria-ukr-hlibovska-2025_s0077
-  type: textbook
-  title: Сторінка 30
-  grade: 8
-  author: hlibovska
-- id: S6
   file: wave5-dramaturhiia-xix_c0004
   type: literary
   title: Українська драматургія першої половини XIX ст.
   author: Антологія
-- id: S7
+- id: S2
   file: wave8-ukr-lit-entsyklopediia_c2135
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S8
+- id: S3
+  file: wave7-entsyklopediia-ukrainoznavstva_c2167
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S4
   file: wave7-entsyklopediia-ukrainoznavstva_c2188
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S9
-  file: wave8-ukr-lit-entsyklopediia_c2131
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S10
-  file: wave7-antonovych-kultura_c0736
+- id: S5
+  file: wave7-antonovych-kultura_c0695
   type: literary
   title: Українська культура (лекції за ред. Антоновича)
   author: Антонович Д.
-- id: S11
-  file: wave7-antonovych-kultura_c0714
-  type: literary
-  title: Українська культура (лекції за ред. Антоновича)
-  author: Антонович Д.
-- id: S12
+- id: S6
   file: wave7-antonovych-kultura_c0696
   type: literary
   title: Українська культура (лекції за ред. Антоновича)
   author: Антонович Д.
-- id: S13
+- id: S7
   file: wave7-entsyklopediia-ukrainoznavstva_c2162
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S14
-  file: wave7-entsyklopediia-ukrainoznavstva_c2206
+- id: S8
+  file: wave7-antonovych-kultura_c0714
   type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S15
-  file: wave7-entsyklopediia-ukrainoznavstva_c2203
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S9
+  file: wave7-antonovych-kultura_c0690
   type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S10
+  file: wave8-chyzhevsky-baroko_c0329
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.

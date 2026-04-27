@@ -109,7 +109,7 @@ TRACK_DOMAINS: dict[str, list[str]] = {
     "lit-fantastika": ["literature/works", "figures"],
     "lit-humor": ["literature/works", "figures"],
     "lit-drama": ["literature/works", "figures"],
-    # lit-doc and lit-crimea: not in curriculum.yaml yet — add when official
+    # lit-doc and lit-crimea were merged into other lit-* tracks; not in curriculum.yaml.
     "oes": ["linguistics/oes", "periods"],
     "ruth": ["linguistics/ruthenian", "periods"],
 }
@@ -149,7 +149,8 @@ ALL_TRACKS = [
     "lit", "lit-essay", "lit-war", "lit-hist-fic", "lit-youth",
     "lit-fantastika", "lit-humor", "lit-drama",
     "oes", "ruth",
-    # NOT included: lit-doc, lit-crimea (plans exist but not in curriculum.yaml yet)
+    # NOT included: lit-doc, lit-crimea (merged into other lit-* tracks; no longer
+    #   in curriculum.yaml). Stale discovery dirs may still exist on disk.
     # NOT included: b2-pro, c1-pro (professional tracks, no wiki needed)
 ]
 

@@ -2,41 +2,46 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-istoria-ukr-galimov-2025_s4064
-  type: textbook
-  title: Розділ IV. Козацька Україна наприкінці 50‑х рр. XVII — на початку XVIII ст.
-    176
-  page: 176
-  grade: 8
+  file: ukrainian_wiki/ivan-sirko_Історія-України-Іван-Сірко-Легендарний-кошовий-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історія України: Іван Сірко: Легендарний кошовий'
+  section_path: 'Історія України: Іван Сірко: Легендарний кошовий > Короткий зміст'
 - id: S2
-  file: 8-klas-ukrlit-avramenko-2025_s4393
-  type: textbook
-  title: ЛІТЕРАТУРА КОЗАЦЬКОЇ УКРАЇНИ (p. 78)
-  page: 78
-  grade: 8
+  file: ukrainian_wiki/ivan-sirko_Історія-України-Іван-Сірко-Легендарний-кошовий-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історія України: Іван Сірко: Легендарний кошовий'
+  section_path: 'Історія України: Іван Сірко: Легендарний кошовий > Деколонізаційна
+    перспектива'
 - id: S3
-  file: 8-klas-istoria-ukr-hlibovska-2025_s4163
+  file: 8-klas-ukrlit-zabolotnyi-2025_s4435
   type: textbook
-  title: Ключові події життя. До 1663 року. Учасник козацької революції середини XVII
-  page: 92
+  title: НА СТРУНАХ КОБЗИ, ЛІРИ І БАНДУРИ (p. 11)
+  page: 11
   grade: 8
 - id: S4
+  file: ukrainian_wiki/ivan-mykolaichuk_Біографія-Іван-Миколайчук-Душа-українського-кіно-Основний-зміст-Формування-культу-національного-лідера-та-його-суспільна-рецепція
+  type: ukrainian_wiki
+  title: 'Біографія: Іван Миколайчук: Душа українського кіно'
+  section_path: 'Біографія: Іван Миколайчук: Душа українського кіно > Основний зміст
+    > Формування культу національного лідера та його суспільна рецепція'
+- id: S5
+  file: 8-klas-ukrlit-avramenko-2025_s4395
+  type: textbook
+  title: ЛІТЕРАТУРА КОЗАЦЬКОЇ УКРАЇНИ (p. 88)
+  page: 88
+  grade: 8
+- id: S6
   file: wave7-heroes-ukr-kultura_c0120
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
-- id: S5
-  file: wave7-nalyvaiko-ochyma-zakhodu_c0506
-  type: literary
-  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
-  author: Наливайко Д.
-- id: S6
-  file: wave7-holobutsky-zaporizhzhia_c0590
-  type: literary
-  title: Голобуцький — Запорозьке козацтво
-  author: Голобуцький В.
 - id: S7
   file: https://www.youtube.com/watch?v=u1ypWO1IR_Q
   type: external
   title: Правда Про Легендарного Отамана | Історія України від імені Т.Г. Шевченка
   url: https://www.youtube.com/watch?v=u1ypWO1IR_Q
+- id: S9
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0506
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.

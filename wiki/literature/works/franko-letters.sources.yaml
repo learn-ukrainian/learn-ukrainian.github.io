@@ -21,6 +21,11 @@ sources:
   type: literary
   title: Драгоманов — Вибрані праці
   author: Драгоманов М.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0564
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S7
   file: wave8-hrabovych-do-istoriyi_c0021
   type: literary

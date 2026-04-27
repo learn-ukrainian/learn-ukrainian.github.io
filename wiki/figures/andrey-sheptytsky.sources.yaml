@@ -2,21 +2,23 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 8-klas-istoria-ukr-galimov-2025_s4094
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4910
   type: textbook
-  title: § 30. Церковне життя в другій половині XVII — першій половині XVIII ст. 217
-  page: 217
-  grade: 8
+  title: На початку XX ст. вагомі здобутки українського націо
+  page: 248
+  grade: 9
 - id: S2
-  file: wave4-hrushevsky-iur-t7-10_c0854
-  type: literary
-  title: Грушевський — Історія України-Руси, т.7-10
-  author: Грушевський М.
+  file: ukrainian_wiki/andrey-sheptytsky_Біографія-Митрополит-Андрей-Шептицький-Пастир-і-рятівник-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Митрополит Андрей Шептицький: Пастир і рятівник'
+  section_path: 'Біографія: Митрополит Андрей Шептицький: Пастир і рятівник > Короткий
+    зміст'
 - id: S3
-  file: wave7-antonovych-kultura_c0322
-  type: literary
-  title: Українська культура (лекції за ред. Антоновича)
-  author: Антонович Д.
+  file: ukrainian_wiki/andrey-sheptytsky_Біографія-Митрополит-Андрей-Шептицький-Пастир-і-рятівник-Основний-зміст-Державотворча-візія-екуменізм-та-культурне-меценатство
+  type: ukrainian_wiki
+  title: 'Біографія: Митрополит Андрей Шептицький: Пастир і рятівник'
+  section_path: 'Біографія: Митрополит Андрей Шептицький: Пастир і рятівник > Основний
+    зміст > Державотворча візія, екуменізм та культурне меценатство'
 - id: S4
   file: wikipedia/Андрей (Шептицький)
   type: wikipedia

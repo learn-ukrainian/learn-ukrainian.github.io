@@ -2,71 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-istorija-ukrajini-gisem-2017_s0509
-  type: textbook
-  title: Сторінка 281
-  grade: 9
-  author: gisem
-- id: S2
-  file: 11-klas-ukrajinska-mova-voron-2019_s0219
-  type: textbook
-  title: Сторінка 145
-  grade: 11
-  author: voron
-- id: S3
-  file: 9-klas-ukrajinska-mova-voron-2017_s0184
-  type: textbook
-  title: Сторінка 140
-  grade: 9
-  author: voron
-- id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0397
-  type: textbook
-  title: Сторінка 225
-  grade: 10
-  author: karaman
-- id: S6
   file: wave7-istkult-t2-xiii-xvii_c1451
   type: literary
   title: Історія української культури. Т.2. XIII-XVII ст.
   author: Колектив
-- id: S7
-  file: ukrlib-antonych_c0063
-  type: literary
-  title: Богдан-Ігор Антонич. На другому березі
-  author: Антонич Б.-І.
-- id: S9
-  file: wave8-hrabovych-do-istoriyi_c0023
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0111
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S10
+- id: S3
   file: wave8-hrabovych-do-istoriyi_c0528
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S11
+- id: S4
   file: wave8-hrabovych-do-istoriyi_c0657
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S12
-  file: wave8-chyzhevsky-baroko_c0080
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0568
   type: literary
-  title: Чижевський — Українське літературне бароко
-  author: Чижевський Д.
-- id: S13
-  file: ukrlib-khvylovy_c0020
-  type: literary
-  title: Микола Хвильовий. Україна чи Малоросія?
-  author: Хвильовий М.
-- id: S14
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
   file: wave7-heroes-ukr-kultura_c0011
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
-- id: S15
-  file: wave4-ohloblyn-mazepa_c0045
+- id: S7
+  file: wave8-isaievych-knyhovydannia_c0004
   type: literary
-  title: Оглоблін — Гетьман Мазепа та його доба
-  author: Оглоблін О.
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S8
+  file: ukrlib-khvylovy_c0020
+  type: literary
+  title: Микола Хвильовий. Україна чи Малоросія?
+  author: Хвильовий М.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0655
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: ukrlib-khvylovy_c0004
+  type: literary
+  title: Микола Хвильовий. Думки проти течії
+  author: Хвильовий М.

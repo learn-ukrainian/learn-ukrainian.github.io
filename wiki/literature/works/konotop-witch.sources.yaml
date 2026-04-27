@@ -36,16 +36,6 @@ sources:
   type: literary
   title: Українська драматургія першої половини XIX ст.
   author: Антологія
-- id: S8
-  file: wave10-shevchenkivsky-slovnyk_c0264
-  type: literary
-  title: Шевченківський словник
-  author: Колектив
-- id: S9
-  file: wave5-oldukr-xviii_c0463
-  type: literary
-  title: Українська література XVIII ст.
-  author: Антологія
 - id: S10
   file: wave8-ukr-lit-entsyklopediia_c0835
   type: literary

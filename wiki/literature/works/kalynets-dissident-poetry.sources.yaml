@@ -31,6 +31,11 @@ sources:
   type: literary
   title: Феофан Прокопович. Філософські твори
   author: Прокопович Ф.
+- id: S7
+  file: wave7-heroes-ukr-kultura_c0262
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
 - id: S8
   file: ukrlib-yohansen_c0012
   type: literary

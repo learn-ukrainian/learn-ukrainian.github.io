@@ -1,0 +1,38 @@
+# Source registry for wiki/academic/c1/checkpoint-folk-traditions.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-entsyklopediia-ukrainoznavstva_c0012
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S3
+  file: wave7-entsyklopediia-ukrainoznavstva_c0011
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S5
+  file: wave4-hrushevsky-istlit_c0532
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S7
+  file: wave7-istkult-t2-xiii-xvii_c0342
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S8
+  file: wave7-istkult-t2-xiii-xvii_c0343
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
+  file: wave7-krypyakevych-gvk_c0190
+  type: literary
+  title: Крип'якевич — Галицько-Волинське князівство
+  author: Крип'якевич І.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c5172
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

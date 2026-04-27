@@ -1,61 +1,55 @@
 # Source registry for wiki/academic/c1/halychyna.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S3
-  file: 8-klas-istoriya-ukr-gisem-2021_s0344
-  type: textbook
-  title: Сторінка 176
-  grade: 8
-  author: gisem
-- id: S4
-  file: 9-klas-istorija-ukrajini-gisem-2017_s0310
-  type: textbook
-  title: Сторінка 172
-  grade: 9
-  author: gisem
-- id: S5
-  file: 6-klas-ukrmova-golub-2023_s0047
-  type: textbook
-  title: Сторінка 46
-  grade: 6
-  author: golub
-- id: S6
+- id: S1
   file: wave8-isaievych-knyhovydannia_c0113
   type: literary
   title: Ісаєвич — Українське книговидання
   author: Ісаєвич Я.
-- id: S8
+- id: S2
   file: wave12-yakovenko-skhid-zakhid_c0041
   type: literary
   title: 'Яковенко — «Україна між Сходом і Заходом»: проекція однієї ідеї (розд. 13-14)'
   author: Яковенко Н.
-- id: S9
-  file: wave8-hensiorsky-gvl-mova_c0000
+- id: S3
+  file: wave7-istkult-t2-xiii-xvii_c0001
   type: literary
-  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
-  author: Генсьорський А.
-- id: S10
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S4
   file: wave7-popovych-narys-kultury_c0004
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S11
-  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t1_c0230
+- id: S5
+  file: wave8-fdm-biobibliohrafichnyi_c0103
   type: literary
-  title: 'Дорошенко — Нарис історії України, том 1: До половини XVII століття'
-  author: Дорошенко Д.
-- id: S12
-  file: wave4-chyzhevsky-istoriia-lit_c0684
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c1512
   type: literary
-  title: Чижевський — Історія української літератури
-  author: Чижевський Д.
-- id: S13
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave7-istkult-t2-xiii-xvii_c0807
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
   file: wave4-chyzhevsky-istoriia-lit_c0279
   type: literary
   title: Чижевський — Історія української літератури
   author: Чижевський Д.
-- id: S15
-  file: wave7-ukrxx-derzhavnist_c0140
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
+- id: S11
+  file: ext-article-0
+  type: external
+  title: ext-article-0
+- id: S12
+  file: ext-article-1
+  type: external
+  title: ext-article-1
+- id: S13
+  file: ext-article-2
+  type: external
+  title: ext-article-2

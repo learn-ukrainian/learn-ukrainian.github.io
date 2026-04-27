@@ -11,11 +11,6 @@ sources:
   type: literary
   title: Чижевський — Історія української літератури
   author: Чижевський Д.
-- id: S3
-  file: wave5-dramaturhiia-xix_c0007
-  type: literary
-  title: Українська драматургія першої половини XIX ст.
-  author: Антологія
 - id: S4
   file: wave8-hrabovych-do-istoriyi_c0030
   type: literary
@@ -26,18 +21,13 @@ sources:
   type: literary
   title: Крип'якевич — Історія української культури (1937)
   author: Крип'якевич І.
-- id: S6
-  file: wave7-voloshyn-vybrani_c0042
-  type: literary
-  title: Волошин — Вибрані твори
-  author: Волошин А.
 - id: S7
   file: wave8-hrabovych-do-istoriyi_c0672
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S10
-  file: wave4-chyzhevsky-istoriia-lit_c0494
+- id: S8
+  file: wave4-chyzhevsky-istoriia-lit_c0493
   type: literary
   title: Чижевський — Історія української літератури
   author: Чижевський Д.

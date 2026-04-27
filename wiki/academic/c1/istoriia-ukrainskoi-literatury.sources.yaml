@@ -2,71 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrlit-borzenko-2018-prof_s0001
-  type: textbook
-  title: Сторінка 3
-  grade: 10
-  author: borzenko
-- id: S2
-  file: 10-klas-ukrajinska-literatura-avramenko-2018_s0002
-  type: textbook
-  title: Сторінка 3
-  grade: 10
-  author: avramenko
-- id: S3
-  file: 10-klas-ukrlit-borzenko-2018-prof_s0139
-  type: textbook
-  title: Сторінка 75
-  grade: 10
-  author: borzenko
-- id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0399
-  type: textbook
-  title: Сторінка 226
-  grade: 10
-  author: karaman
-- id: S6
   file: wave4-chyzhevsky-istoriia-lit_c0023
   type: literary
   title: Чижевський — Історія української літератури
   author: Чижевський Д.
-- id: S7
-  file: wave4-chyzhevsky-istoriia-lit_c0508
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0027
   type: literary
-  title: Чижевський — Історія української літератури
-  author: Чижевський Д.
-- id: S8
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
   file: wave8-hrabovych-do-istoriyi_c0555
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S9
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0668
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave8-chyzhevsky-baroko_c0400
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S6
+  file: wave8-chyzhevsky-baroko_c0014
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S7
   file: wave8-hrabovych-do-istoriyi_c0669
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S11
-  file: wave4-chyzhevsky-istoriia-lit_c0932
-  type: literary
-  title: Чижевський — Історія української літератури
-  author: Чижевський Д.
-- id: S12
-  file: wave8-chyzhevsky-baroko_c0010
-  type: literary
-  title: Чижевський — Українське літературне бароко
-  author: Чижевський Д.
-- id: S13
-  file: wave8-chyzhevsky-baroko_c0008
-  type: literary
-  title: Чижевський — Українське літературне бароко
-  author: Чижевський Д.
-- id: S14
-  file: wave8-hrabovych-do-istoriyi_c0653
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0021
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S15
-  file: wave12-hrushevsky-iu-odnotom_c0032
+- id: S9
+  file: wave4-chyzhevsky-istoriia-lit_c0512
   type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S10
+  file: wave8-chyzhevsky-baroko_c0397
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.

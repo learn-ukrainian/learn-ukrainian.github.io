@@ -1,0 +1,39 @@
+# Source registry for wiki/grammar/b2/checkpoint-syntax-i.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-mova-voron-2017_s5136
+  type: textbook
+  title: СИНТАКСИС І ПУНКТУАЦІЯ СЛОВОСПОЛУЧЕННЯ
+  page: 206
+  grade: 9
+- id: S2
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4696
+  type: textbook
+  title: СИНТАКСИС. ПУНКТУАЦІЯ
+  page: 42
+  grade: 8
+- id: S3
+  file: 11-klas-ukrajinska-mova-voron-2019_s1292
+  type: textbook
+  title: § 22. Другорядні члени речення. Складні випадки кваліфікації
+  page: 270
+  grade: 11
+- id: S4
+  file: 8-klas-ukrmova-onatiy-2025_s4685
+  type: textbook
+  title: ВАМ МОЖНА ЗНЕЖИРЕНИЙ —’ дЬ
+  page: 2
+  grade: 8
+- id: S5
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4746
+  type: textbook
+  title: Додаток 4. СЛОВНИЧОК СИНОНІМІВ
+  page: 286
+  grade: 8
+- id: S6
+  file: 11-klas-ukrajinska-mova-voron-2019_s1261
+  type: textbook
+  title: Ігорович. Про цього давньоруського
+  page: 97
+  grade: 11

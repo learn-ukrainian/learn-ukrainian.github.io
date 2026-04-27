@@ -2,55 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-istorija-ukrajini-gisem-2017_s0053
-  type: textbook
-  title: Сторінка 33
-  grade: 9
-  author: gisem
-- id: S2
-  file: 11-klas-ukrlit-borzenko-2019-prof_s0002
-  type: textbook
-  title: Сторінка 3
-  grade: 11
-  author: borzenko
-- id: S4
-  file: 11-klas-ukrlit-borzenko-2019-prof_s0026
-  type: textbook
-  title: Сторінка 13
-  grade: 11
-  author: borzenko
-- id: S6
   file: wave7-popovych-narys-kultury_c0846
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S7
-  file: wave7-popovych-narys-kultury_c0844
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S9
-  file: wave8-ukr-lit-entsyklopediia_c0036
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S10
-  file: wave7-popovych-narys-kultury_c0997
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S11
+- id: S2
   file: wave7-krypyakevych-istkult_c0881
   type: literary
   title: Крип'якевич — Історія української культури (1937)
   author: Крип'якевич І.
-- id: S12
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c0036
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave7-antonovych-kultura_c0355
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S5
+  file: wave7-popovych-narys-kultury_c0844
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c5061
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave7-popovych-narys-kultury_c0997
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S8
+  file: wave8-chyzhevsky-baroko_c0404
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S9
+  file: wave7-hrinchenko-drahomanov_c0002
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S10
   file: wave7-entsyklopediia-ukrainoznavstva_c2135
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S15
-  file: wave8-hrabovych-do-istoriyi_c0356
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.

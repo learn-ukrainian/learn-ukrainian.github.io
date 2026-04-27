@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/capstone-revision.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave10-shevchenko-tvory-t1_c0642
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0609
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c0174
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave1-galytsko-volynskyi_c0253
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S5
+  file: wave10-shevchenkivsky-slovnyk_c2010
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c1450
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave4-ukrainska-mova-encyclopedia_c0228
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S8
+  file: wave9-ohiyenko-ist-lit-movy_c0041
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S9
+  file: wave5-prokopovych-filosofski_c0004
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S10
+  file: wave8-ohdruk-istoriia-drukarstva_c0026
+  type: literary
+  title: Огієнко — Історія українського друкарства (1925)
+  author: Огієнко І.

@@ -2,49 +2,59 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: wave7-kohut-tsentralizm_c0079
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S2
   file: 8-klas-istoria-ukr-galimov-2025_s4094
   type: textbook
   title: § 30. Церковне життя в другій половині XVII — першій половині XVIII ст. 217
   page: 217
   grade: 8
-- id: S2
-  file: wave7-kohut-tsentralizm_c0079
-  type: literary
-  title: Когут — Російський централізм і українська автономія
-  author: Когут З.
+- id: S3
+  file: ukrainian_wiki/sylvestr-kosiv_Біографія-Сильвестр-Косів-Митрополит-у-буремну-епоху-Основний-зміст-Історичний-та-канонічний-контекст-Київської-митрополії
+  type: ukrainian_wiki
+  title: 'Біографія: Сильвестр Косів: Митрополит у буремну епоху'
+  section_path: 'Біографія: Сильвестр Косів: Митрополит у буремну епоху > Основний
+    зміст > Історичний та канонічний контекст Київської митрополії'
 - id: S4
+  file: ukrainian_wiki/sylvestr-kosiv_Біографія-Сильвестр-Косів-Митрополит-у-буремну-епоху-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Сильвестр Косів: Митрополит у буремну епоху'
+  section_path: 'Біографія: Сильвестр Косів: Митрополит у буремну епоху > Короткий
+    зміст'
+- id: S5
+  file: ukrainian_wiki/sylvestr-kosiv_Біографія-Сильвестр-Косів-Митрополит-у-буремну-епоху-Основний-зміст-Відкритий-конфлікт-із-московськими-воєводами
+  type: ukrainian_wiki
+  title: 'Біографія: Сильвестр Косів: Митрополит у буремну епоху'
+  section_path: 'Біографія: Сильвестр Косів: Митрополит у буремну епоху > Основний
+    зміст > Відкритий конфлікт із московськими воєводами'
+- id: S6
+  file: wave7-ohiyenko-tserka_c0001
+  type: literary
+  title: Огієнко — Українська церква
+  author: Огієнко І.
+- id: S7
+  file: ukrainian_wiki/pomarancheva-revoliutsiia_Історія-України-Помаранчева-революція-Основний-зміст-Релігійна-полеміка-та-виклики-суспільного-розколу
+  type: ukrainian_wiki
+  title: 'Історія України: Помаранчева революція'
+  section_path: 'Історія України: Помаранчева революція > Основний зміст > Релігійна
+    полеміка та виклики суспільного розколу'
+- id: S8
+  file: ukrainian_wiki/sylvestr-kosiv_Біографія-Сильвестр-Косів-Митрополит-у-буремну-епоху-Основний-зміст-Переяславська-рада-та-спротив-московській-присязі
+  type: ukrainian_wiki
+  title: 'Біографія: Сильвестр Косів: Митрополит у буремну епоху'
+  section_path: 'Біографія: Сильвестр Косів: Митрополит у буремну епоху > Основний
+    зміст > Переяславська рада та спротив московській присязі'
+- id: S9
+  file: ukrainian_wiki/sylvestr-kosiv_Біографія-Сильвестр-Косів-Митрополит-у-буремну-епоху-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Сильвестр Косів: Митрополит у буремну епоху'
+  section_path: 'Біографія: Сильвестр Косів: Митрополит у буремну епоху > Деколонізаційна
+    перспектива'
+- id: S10
   file: wave7-ohiyenko-tserka_c0212
   type: literary
   title: Огієнко — Українська церква
   author: Огієнко І.
-- id: S5
-  file: 8-klas-istoria-ukr-galimov-2025_s4088
-  type: textbook
-  title: § 30. Церковне життя в другій половині XVII — першій половині XVIII ст. 213
-  page: 213
-  grade: 8
-- id: S6
-  file: wave5-suspilna-dumka-xvi-xvii_c0155
-  type: literary
-  title: Суспільно-політична думка XVI-XVII ст.
-  author: Антологія
-- id: S7
-  file: wave7-kohut-tsentralizm_c0219
-  type: literary
-  title: Когут — Російський централізм і українська автономія
-  author: Когут З.
-- id: S8
-  file: wave7-kohut-tsentralizm_c0250
-  type: literary
-  title: Когут — Російський централізм і українська автономія
-  author: Когут З.
-- id: S9
-  file: wave7-kohut-tsentralizm_c0078
-  type: literary
-  title: Когут — Російський централізм і українська автономія
-  author: Когут З.
-- id: S10
-  file: wave5-suspilna-dumka-xvi-xvii_c0042
-  type: literary
-  title: Суспільно-політична думка XVI-XVII ст.
-  author: Антологія

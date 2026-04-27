@@ -26,16 +26,6 @@ sources:
   type: literary
   title: Другий (Волинський) статут ВКЛ 1566 року
   author: ВКЛ
-- id: S6
-  file: wave1-kyivskyi-litopys_c0627
-  type: literary
-  title: Київський літопис
-  author: Невідомий
-- id: S7
-  file: wave1-galytsko-volynskyi_c0252
-  type: literary
-  title: Галицько-Волинський літопис
-  author: Невідомий
 - id: S8
   file: wave2-smotrytsky-gramatyka_c0094
   type: literary

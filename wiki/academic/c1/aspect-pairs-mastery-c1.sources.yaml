@@ -1,0 +1,53 @@
+# Source registry for wiki/academic/c1/aspect-pairs-mastery-c1.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-nimchuk-movoznavstvo_c0194
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S2
+  file: wave4-nimchuk-movoznavstvo_c0204
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S3
+  file: wave4-nimchuk-movoznavstvo_c0197
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S4
+  file: wave4-ukrainska-mova-encyclopedia_c0127
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S5
+  file: wave4-nimchuk-movoznavstvo_c0104
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S6
+  file: wave9-pravopys-2015_c0117
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S7
+  file: wave4-nimchuk-movoznavstvo_c0135
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S8
+  file: wave4-nimchuk-movoznavstvo_c0208
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0122
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave9-skhidnoslov-hramatyky_c0014
+  type: literary
+  title: Східнослов'янські граматики XVI-XVII ст. (статті)
+  author: Колектив

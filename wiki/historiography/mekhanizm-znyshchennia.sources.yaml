@@ -2,23 +2,41 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-istoriya-ukr-gisem-2024_s0892
-  type: textbook
-  title: § 1. Повторення. Вступ
-  page: 6
-  grade: 11
+  file: ukrainian_wiki/mekhanizm-znyshchennia_Історіографія-Механізм-знищення-1930-1937-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Механізм знищення (1930–1937)'
+  section_path: 'Історіографія: Механізм знищення (1930–1937) > Короткий зміст'
 - id: S2
+  file: ukrainian_wiki/mekhanizm-znyshchennia_Історіографія-Механізм-знищення-1930-1937-Основний-зміст-Теоретико-методологічні-засади-дослідження-механізмів-терору
+  type: ukrainian_wiki
+  title: 'Історіографія: Механізм знищення (1930–1937)'
+  section_path: 'Історіографія: Механізм знищення (1930–1937) > Основний зміст > Теоретико-методологічні
+    засади дослідження механізмів терору'
+- id: S3
+  file: ukrainian_wiki/mekhanizm-znyshchennia_Історіографія-Механізм-знищення-1930-1937-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Механізм знищення (1930–1937)'
+  section_path: 'Історіографія: Механізм знищення (1930–1937) > Деколонізаційна перспектива'
+- id: S4
   file: wikipedia/Бібліографія Голодомору 1932—1933 років
   type: wikipedia
   title: Бібліографія Голодомору 1932—1933 років
   url: https://uk.wikipedia.org/wiki/%D0%91%D1%96%D0%B1%D0%BB%D1%96%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D1%96%D1%8F%20%D0%93%D0%BE%D0%BB%D0%BE%D0%B4%D0%BE%D0%BC%D0%BE%D1%80%D1%83%201932%E2%80%941933%20%D1%80%D0%BE%D0%BA%D1%96%D0%B2
-- id: S3
-  file: wikipedia/Геноцид
-  type: wikipedia
-  title: Геноцид
-  url: https://uk.wikipedia.org/wiki/%D0%93%D0%B5%D0%BD%D0%BE%D1%86%D0%B8%D0%B4
-- id: S4
-  file: wikipedia/Голодомор (1932—1933)
-  type: wikipedia
-  title: Голодомор (1932—1933)
-  url: https://uk.wikipedia.org/wiki/%D0%93%D0%BE%D0%BB%D0%BE%D0%B4%D0%BE%D0%BC%D0%BE%D1%80%20%281932%E2%80%941933%29
+- id: S5
+  file: ukrainian_wiki/mekhanizm-znyshchennia_Історіографія-Механізм-знищення-1930-1937-Основний-зміст-Юридично-правова-кваліфікація-злочинів-режиму
+  type: ukrainian_wiki
+  title: 'Історіографія: Механізм знищення (1930–1937)'
+  section_path: 'Історіографія: Механізм знищення (1930–1937) > Основний зміст > Юридично-правова
+    кваліфікація злочинів режиму'
+- id: S6
+  file: ukrainian_wiki/holodomor-mekhanizm_Історія-України-Голодомор-I-Механізм-Основний-зміст-Імперська-історіографія-як-ідеологічне-підґрунтя-терору
+  type: ukrainian_wiki
+  title: 'Історія України: Голодомор I: Механізм'
+  section_path: 'Історія України: Голодомор I: Механізм > Основний зміст > Імперська
+    історіографія як ідеологічне підґрунтя терору'
+- id: S7
+  file: 5-klas-istoriya-schupak-2022_s1930
+  type: textbook
+  title: ВСТУП
+  page: 7
+  grade: 5

@@ -6,6 +6,11 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S3
   file: wave7-heroes-ukr-kultura_c0315
   type: literary

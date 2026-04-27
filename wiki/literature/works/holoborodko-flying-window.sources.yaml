@@ -16,6 +16,31 @@ sources:
   type: literary
   title: Шевченківський словник
   author: Колектив
+- id: S4
+  file: wave10-shevchenkivsky-slovnyk_c1469
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S5
+  file: wave5-dovhalevsky-poetyka_c0013
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c1390
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave5-dovhalevsky-poetyka_c0000
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S9
+  file: wave5-velychkovsky_c0042
+  type: literary
+  title: Іван Величковський. Твори
+  author: Величковський І.
 - id: S10
   file: wave8-hrabovych-do-istoriyi_c0416
   type: literary

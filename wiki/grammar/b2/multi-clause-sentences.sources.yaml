@@ -2,36 +2,42 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-voron-2019_s0298
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5162
   type: textbook
-  title: Сторінка 194
-  grade: 11
-  author: voron
+  title: Синтаксис. Пунктуацiя
+  page: 25
+  grade: 9
 - id: S2
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s0245
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5223
   type: textbook
-  title: Сторінка 158
+  title: Синтаксис. Пунктуацiя
+  page: 25
   grade: 9
-  author: avramenko
 - id: S3
-  file: 11-klas-ukrajinska-mova-voron-2019_s0243
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5173
   type: textbook
-  title: Сторінка 160
-  grade: 11
-  author: voron
-- id: S4
-  file: 9-klas-ukrmova-zabolotnyi-2017_s0172
-  type: textbook
-  title: Сторінка 124
+  title: § 13. УЗАГАЛЬНЕННЯ ВИВЧЕНОГО З ТЕМИ
+  page: 68
   grade: 9
-  author: zabolotnyi
-- id: S6
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1219
+- id: S5
+  file: 9-klas-ukrajinska-mova-voron-2017_s5119
   type: textbook
-  title: § 25. Правила будови складних речень
-  page: 109
-  grade: 11
-- id: S7
+  title: ЗРАЗОК УСНОГО РОЗБОРУ (p. 143)
+  page: 143
+  grade: 9
+- id: S6
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5194
+  type: textbook
+  title: Рiзнi види зв’язку (p. 174)
+  page: 174
+  grade: 9
+- id: S8
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5187
+  type: textbook
+  title: § 24. БЕЗСПОЛУЧНИКОВЕ СКЛАДНЕ РЕЧЕННЯ
+  page: 136
+  grade: 9
+- id: S9
   file: ext-article-0
   type: external
   title: ext-article-0

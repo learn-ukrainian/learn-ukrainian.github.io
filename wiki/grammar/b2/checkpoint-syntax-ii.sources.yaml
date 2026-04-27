@@ -1,0 +1,33 @@
+# Source registry for wiki/grammar/b2/checkpoint-syntax-ii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 5-klas-ukrmova-litvinova-2022_s2403
+  type: textbook
+  title: Відомості із синтаксису й пунктуації. Підсумовуємо й узагальнюємо
+  page: 256
+  grade: 5
+- id: S2
+  file: 9-klas-ukrajinska-mova-avramenko-2017_s5056
+  type: textbook
+  title: Світ навколо нас. КУЛЬТУРА СЛОВА
+  page: 115
+  grade: 9
+- id: S3
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5173
+  type: textbook
+  title: § 13. УЗАГАЛЬНЕННЯ ВИВЧЕНОГО З ТЕМИ
+  page: 68
+  grade: 9
+- id: S4
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5234
+  type: textbook
+  title: § 13. УЗАГАЛЬНЕННЯ ВИВЧЕНОГО З ТЕМИ
+  page: 68
+  grade: 9
+- id: S5
+  file: 11-klas-ukrajinska-mova-voron-2019_s1261
+  type: textbook
+  title: Ігорович. Про цього давньоруського
+  page: 97
+  grade: 11

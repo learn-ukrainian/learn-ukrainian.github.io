@@ -21,11 +21,6 @@ sources:
   type: literary
   title: Феофан Прокопович. Філософські твори
   author: Прокопович Ф.
-- id: S5
-  file: wave5-prokopovych-filosofski_c0118
-  type: literary
-  title: Феофан Прокопович. Філософські твори
-  author: Прокопович Ф.
 - id: S6
   file: wave6-rihelman-litopysna-opovid_c0020
   type: literary

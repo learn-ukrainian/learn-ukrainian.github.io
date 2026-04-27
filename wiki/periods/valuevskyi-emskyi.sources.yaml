@@ -21,21 +21,6 @@ sources:
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S5
-  file: wave9-uzhevych-paryzky_c0001
-  type: literary
-  title: Ужевич — Паризький рукопис (переклад 1970)
-  author: Ужевич І.
-- id: S6
-  file: wave12-samovyd-litopys_c0046
-  type: literary
-  title: Літопис Самовидця (1648-1702)
-  author: Невідомий
-- id: S7
-  file: wave0-samovydets_c0045
-  type: literary
-  title: Літопис Самовидця
-  author: Невідомий
 - id: S8
   file: wave7-popovych-narys-kultury_c0699
   type: literary
@@ -46,8 +31,3 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S10
-  file: wave3-hramoty-xiv_c0312
-  type: literary
-  title: Грамоти XIV ст.
-  author: Різні

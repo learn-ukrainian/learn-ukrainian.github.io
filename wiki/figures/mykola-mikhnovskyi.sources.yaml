@@ -2,27 +2,39 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-istorija-ukrajini-gisem-2017_s4889
-  type: textbook
-  title: РОЗДІЛ VI. Із брошури М. Міхновського «Самостійна Україна»
-  page: 212
-  grade: 9
-- id: S2
   file: wave7-ukrxx-derzhavnist_c0054
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
-- id: S3
+- id: S2
   file: wave8-fdm-biobibliohrafichnyi_c0112
   type: literary
   title: Філософська думка в Україні — біобібліографічний словник
   author: Колектив
+- id: S3
+  file: https://www.youtube.com/watch?v=ICPeZwPzsYw
+  type: external
+  title: 'Микола Міхновський: творець самостійної України'
+  url: https://www.youtube.com/watch?v=ICPeZwPzsYw
 - id: S4
-  file: wave8-fdm-biobibliohrafichnyi_c0111
-  type: literary
-  title: Філософська думка в Україні — біобібліографічний словник
-  author: Колектив
+  file: ukrainian_wiki/mykola-mikhnovskyi_Біографія-Микола-Міхновський-Ідеолог-самостійництва-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Міхновський: Ідеолог самостійництва'
+  section_path: 'Біографія: Микола Міхновський: Ідеолог самостійництва > Деколонізаційна
+    перспектива'
 - id: S5
+  file: ukrainian_wiki/mykola-mikhnovskyi_Біографія-Микола-Міхновський-Ідеолог-самостійництва-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Міхновський: Ідеолог самостійництва'
+  section_path: 'Біографія: Микола Міхновський: Ідеолог самостійництва > Короткий
+    зміст'
+- id: S6
+  file: ukrainian_wiki/mykola-mikhnovskyi_Біографія-Микола-Міхновський-Ідеолог-самостійництва-Основний-зміст-Філософія-націоналізму-протистояння-з-лоялізмом
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Міхновський: Ідеолог самостійництва'
+  section_path: 'Біографія: Микола Міхновський: Ідеолог самостійництва > Основний
+    зміст > Філософія націоналізму: протистояння з лоялізмом'
+- id: S7
   file: wikipedia/Самостійна Україна (брошура)
   type: wikipedia
   title: Самостійна Україна (брошура)

@@ -21,18 +21,8 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S6
-  file: wave8-hrabovych-do-istoriyi_c0718
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
 - id: S7
   file: wave4-chyzhevsky-istoriia-lit_c0700
   type: literary
   title: Чижевський — Історія української літератури
   author: Чижевський Д.
-- id: S8
-  file: wave7-popovych-narys-kultury_c0832
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.

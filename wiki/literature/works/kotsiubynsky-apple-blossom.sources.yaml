@@ -6,6 +6,11 @@ sources:
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
+- id: S2
+  file: ukrlib-khvylovy_c0073
+  type: literary
+  title: Микола Хвильовий. Думки проти течії
+  author: Хвильовий М.
 - id: S3
   file: wave9-rusanivsky-ist-lit-movy_c0370
   type: literary

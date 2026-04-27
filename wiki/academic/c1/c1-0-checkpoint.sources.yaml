@@ -1,0 +1,48 @@
+# Source registry for wiki/academic/c1/c1-0-checkpoint.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c5177
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c0242
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave9-shevelov-fonolohiia_c0004
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S5
+  file: wave7-popovych-narys-kultury_c0169
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S6
+  file: wave4-ukrainska-mova-encyclopedia_c0117
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S7
+  file: wave9-ohiyenko-ist-lit-movy_c0001
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0118
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave8-biletsky-ruska-pravda-tekst_c0027
+  type: literary
+  title: Білецький — Руська Правда й історія її тексту
+  author: Білецький О.
+- id: S10
+  file: wave4-voitovych-dynasty_c0001
+  type: literary
+  title: Войтович — Князівські династії Східної Європи
+  author: Войтович Л.

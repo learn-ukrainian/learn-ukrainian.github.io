@@ -36,6 +36,11 @@ sources:
   type: literary
   title: Синопсис. Київ, 1674
   author: Невідомий
+- id: S8
+  file: wave5-buhoslavsky-borys-hlib_c0001
+  type: literary
+  title: Україно-руські памʼятки про князів Бориса та Гліба
+  author: Бугославський С.
 - id: S9
   file: wave4-ohloblyn-mazepa_c0684
   type: literary

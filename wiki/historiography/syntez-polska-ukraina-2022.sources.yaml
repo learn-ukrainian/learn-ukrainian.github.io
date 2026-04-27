@@ -2,12 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: https://www.youtube.com/watch?v=rntSFMf5ySc
+  type: external
+  title: КЛІМКІН ПРО ВОЛИНСЬКУ ТРАГЕДІЮ
+  url: https://www.youtube.com/watch?v=rntSFMf5ySc
+- id: S2
   file: https://www.youtube.com/watch?v=BRCXYuq5GbQ
   type: external
   title: ЯК ГОВОРИТИ З ПОЛЯКАМИ ПРО ІСТОРІЮ? | Історія України від імені Т.Г. Шевченка
   url: https://www.youtube.com/watch?v=BRCXYuq5GbQ
-- id: S2
-  file: wikipedia/Українофобія
-  type: wikipedia
-  title: Українофобія
-  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%BE%D1%84%D0%BE%D0%B1%D1%96%D1%8F
+- id: S3
+  file: https://www.youtube.com/watch?v=I30q5FqG5h8
+  type: external
+  title: Головний фактор, про який усі забули! Україна та Польща у 90-х (Napisy PL)
+  url: https://www.youtube.com/watch?v=I30q5FqG5h8
+- id: S4
+  file: ukrainian_wiki/syntez-polska-ukraina-2022_Історіографія-Синтез-2022-Історичний-перелом-у-польсько-українських-відносинах-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Синтез: 2022 — Історичний перелом у польсько-українських
+    відносинах'
+  section_path: 'Історіографія: Синтез: 2022 — Історичний перелом у польсько-українських
+    відносинах > Короткий зміст'
+- id: S5
+  file: ukrainian_wiki/syntez-polska-ukraina-2022_Історіографія-Синтез-2022-Історичний-перелом-у-польсько-українських-відносинах-Основний-зміст-Перелом-2022-року-від-історичних-суперечок-до-екзистенційного-союзу
+  type: ukrainian_wiki
+  title: 'Історіографія: Синтез: 2022 — Історичний перелом у польсько-українських
+    відносинах'
+  section_path: 'Історіографія: Синтез: 2022 — Історичний перелом у польсько-українських
+    відносинах > Основний зміст > Перелом 2022 року: від історичних суперечок до екзистенційного
+    союзу'

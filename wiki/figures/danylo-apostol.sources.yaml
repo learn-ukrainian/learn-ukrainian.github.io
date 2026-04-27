@@ -2,51 +2,47 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: wikipedia/Глухівський період
+  type: wikipedia
+  title: Глухівський період
+  url: https://uk.wikipedia.org/wiki/%D0%93%D0%BB%D1%83%D1%85%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%BF%D0%B5%D1%80%D1%96%D0%BE%D0%B4
+- id: S2
+  file: 8-klas-istoria-ukr-galimov-2025_s4103
+  type: textbook
+  title: § 32. Спроби збереження автономії та реформування Гетьманщини
+  page: 231
+  grade: 8
+- id: S3
   file: 8-klas-istoria-ukr-hlibovska-2025_s4171
   type: textbook
   title: § 43. ВІДНОВЛЕННЯ ГЕТЬМАНСТВА. ДАНИЛО АПОСТОЛ. КИРИЛО РОЗУМОВСЬКИЙ
   page: 106
   grade: 8
-- id: S2
-  file: wikipedia/Глухівський період
-  type: wikipedia
-  title: Глухівський період
-  url: https://uk.wikipedia.org/wiki/%D0%93%D0%BB%D1%83%D1%85%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%BF%D0%B5%D1%80%D1%96%D0%BE%D0%B4
-- id: S3
-  file: 8-klas-istoria-ukr-schupak-2025_s4229
-  type: textbook
-  title: УКРАЇНСЬКІ ЗЕМЛІ у 20-90-х роках XVIII ст. РОЗДІЛ 5
-  page: 201
-  grade: 8
 - id: S4
+  file: 8-klas-istoria-ukr-schupak-2025_s4228
+  type: textbook
+  title: Розділ 5
+  page: 196
+  grade: 8
+- id: S5
   file: 8-klas-istoria-ukr-galimov-2025_s4102
   type: textbook
   title: Розділ V. Розподіл українських земель між імперіями
   page: 230
   grade: 8
-- id: S5
+- id: S6
   file: wave13-doroshenko-narys-istoriyi-ukrayiny-t2_c0332
   type: literary
   title: 'Дорошенко — Нарис історії України, том 2: Від половини XVII століття'
   author: Дорошенко Д.
-- id: S6
+- id: S7
+  file: 8-klas-istoria-ukr-schupak-2025_s4229
+  type: textbook
+  title: УКРАЇНСЬКІ ЗЕМЛІ у 20-90-х роках XVIII ст. РОЗДІЛ 5
+  page: 201
+  grade: 8
+- id: S8
   file: wave7-entsyklopediia-ukrainoznavstva_c1064
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S8
-  file: 8-klas-istoria-ukr-hlibovska-2025_s4172
-  type: textbook
-  title: Освіта. Випускник Києво
-  page: 106
-  grade: 8
-- id: S9
-  file: wave7-kohut-tsentralizm_c0100
-  type: literary
-  title: Когут — Російський централізм і українська автономія
-  author: Когут З.
-- id: S10
-  file: wave13-doroshenko-narys-istoriyi-ukrayiny-t2_c0337
-  type: literary
-  title: 'Дорошенко — Нарис історії України, том 2: Від половини XVII століття'
-  author: Дорошенко Д.

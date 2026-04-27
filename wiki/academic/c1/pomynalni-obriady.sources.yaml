@@ -2,61 +2,37 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-istoriya-gisem-2023_s0032
-  type: textbook
-  title: Сторінка 27
-  grade: 6
-  author: gisem
+  file: wave7-entsyklopediia-ukrainoznavstva_c0592
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
 - id: S2
-  file: 6-klas-istoriia-shchupak-2023_s0006
-  type: textbook
-  title: Сторінка 7
-  grade: 6
-  author: shchupak
-- id: S3
-  file: 6-klas-istoriia-shchupak-2023_s0072
-  type: textbook
-  title: Сторінка 71
-  grade: 6
-  author: shchupak
+  file: wave11-hrushevsky-iur-t6_c0632
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
 - id: S5
-  file: 6-klas-istoriia-shchupak-2023_s0070
-  type: textbook
-  title: Сторінка 69
-  grade: 6
-  author: shchupak
-- id: S6
   file: wave4-hrushevsky-istlit_c0297
   type: literary
   title: Грушевський — Історія української літератури
   author: Грушевський М.
 - id: S7
-  file: wave12-hrushevsky-iu-odnotom_c0302
+  file: wave7-istkult-t2-xiii-xvii_c0001
   type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
 - id: S8
-  file: wave4-hrushevsky-istlit_c0277
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S10
-  file: wave7-entsyklopediia-ukrainoznavstva_c0568
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S11
-  file: wave7-entsyklopediia-ukrainoznavstva_c0592
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S13
-  file: wave7-popovych-narys-kultury_c0076
+  file: wave7-popovych-narys-kultury_c0086
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S14
-  file: wave7-popovych-narys-kultury_c0147
+- id: S9
+  file: wave7-entsyklopediia-ukrainoznavstva_c2998
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S10
+  file: wave7-popovych-narys-kultury_c0242
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.

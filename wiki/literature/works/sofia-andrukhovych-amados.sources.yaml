@@ -11,6 +11,11 @@ sources:
   type: literary
   title: Русанівський — Історія укр. літ. мови
   author: Русанівський В.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0000
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S4
   file: wave5-skovoroda-tvory_c0654
   type: literary
@@ -28,6 +33,11 @@ sources:
   author: Грабович Г.
 - id: S7
   file: wave7-thompson-trubadury_c0230
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S8
+  file: wave7-thompson-trubadury_c0000
   type: literary
   title: Томпсон — Трубадури імперії
   author: Томпсон Е.

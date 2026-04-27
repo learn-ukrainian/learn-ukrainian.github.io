@@ -11,11 +11,6 @@ sources:
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S3
-  file: wave8-fdm-biobibliohrafichnyi_c0241
-  type: literary
-  title: Філософська думка в Україні — біобібліографічний словник
-  author: Колектив
 - id: S4
   file: wave9-rusanivsky-ist-lit-movy_c0372
   type: literary
@@ -31,6 +26,11 @@ sources:
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
+- id: S8
+  file: wave5-prokopovych-filosofski_c0138
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
 - id: S9
   file: wave8-hrabovych-do-istoriyi_c0086
   type: literary

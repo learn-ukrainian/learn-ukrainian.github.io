@@ -1,0 +1,38 @@
+# Source registry for wiki/mastery/c2/creative-writing-prose.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c2714
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-masliuk-poetyky-rytoryky_c0048
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c2721
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave10-shevchenkivsky-slovnyk_c1972
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c3658
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave9-rusanivsky-ist-lit-movy_c0459
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c1905
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

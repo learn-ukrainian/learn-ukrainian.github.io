@@ -2,40 +2,55 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-istorija-ukrajini-gisem-2017_s4910
-  type: textbook
-  title: На початку XX ст. вагомі здобутки українського націо
-  page: 248
-  grade: 9
+  file: ukrainian_wiki/donbas-industrializatsiia_Історіографія-Донбас-ідентичність-псевдосепаратизм-та-зіткнення-наративів-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Донбас — ідентичність, псевдосепаратизм та зіткнення наративів'
+  section_path: 'Історіографія: Донбас — ідентичність, псевдосепаратизм та зіткнення
+    наративів > Короткий зміст'
 - id: S2
-  file: 9-klas-istorija-ukrajini-gisem-2017_s4911
-  type: textbook
-  title: Розділ VII. Узагальнення знань за розділом VІІ
-  page: 252
-  grade: 9
+  file: ukrainian_wiki/syntez-zakhidni-rehiony_Історіографія-Синтез-Західні-землі-Історичні-траєкторії-та-сучасні-наративи-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Синтез: Західні землі — Історичні траєкторії та сучасні наративи'
+  section_path: 'Історіографія: Синтез: Західні землі — Історичні траєкторії та сучасні
+    наративи > Короткий зміст'
 - id: S3
-  file: 8-klas-istoria-ukr-hlibovska-2025_s4176
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4883
   type: textbook
-  title: Ж Бароко, рококо, готика, класицизм. https://cutt.ly/SeYBJg3H
-  page: 127
-  grade: 8
+  title: Василія Великого. Останнє відіграло значну роль у призупиненні політики денаціоналіза
+  page: 196
+  grade: 9
 - id: S4
+  file: 8-klas-istoria-ukr-schupak-2025_s4228
+  type: textbook
+  title: Розділ 5
+  page: 196
+  grade: 8
+- id: S5
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4906
+  type: textbook
+  title: § 28. —29. суспільно-політичне життя на західноукраїнських землях на початку
+    XX ст. 1
+  page: 241
+  grade: 9
+- id: S6
   file: wave6-boplan-opys-ukrainy_c0057
   type: literary
   title: Боплан — Опис України (1660)
   author: Боплан Г.
-- id: S5
+- id: S7
   file: wave7-kohut-tsentralizm_c0008
   type: literary
   title: Когут — Російський централізм і українська автономія
   author: Когут З.
-- id: S7
-  file: wave7-popovych-narys-kultury_c0713
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
 - id: S8
-  file: https://www.youtube.com/watch?v=5cfI-HW9sq8
-  type: external
-  title: історія Австро-угорської імперії
-  url: https://www.youtube.com/watch?v=5cfI-HW9sq8
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4812
+  type: textbook
+  title: § 5. Початок українського національного відродження
+  page: 33
+  grade: 9
+- id: S9
+  file: 8-klas-istoria-ukr-hlibovska-2025_s4174
+  type: textbook
+  title: § 45. ПІДКОРЕННЯ РОСІЙСЬКОЮ ІМПЕРІЄЮ
+  page: 112
+  grade: 8

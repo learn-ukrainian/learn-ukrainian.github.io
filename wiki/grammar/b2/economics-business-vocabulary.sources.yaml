@@ -1,66 +1,45 @@
 # Source registry for wiki/grammar/b2/economics-business-vocabulary.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S3
-  file: 8-klas-ukrmova-avramenko-2025_s0146
+- id: S1
+  file: 8-klas-ukrmova-avramenko-2025_s4586
   type: textbook
-  title: Сторінка 112
+  title: РОЗВИТОК МОВЛЕННЯ (p. 65)
+  page: 65
   grade: 8
-  author: avramenko
-- id: S5
-  file: 10-klas-ukrmova-karaman-2018_s0049
+- id: S2
+  file: 10-klas-ukrmova-karaman-2018_s0673
   type: textbook
-  title: Сторінка 28
+  title: § 60. Прикметник як частина мови
+  page: 151
   grade: 10
-  author: karaman
-- id: S6
-  file: 11-klas-istoriya-ukr-gisem-2024_s0959
+- id: S3
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0349
   type: textbook
-  title: § 24. Економічний розвиток України в 1992—2005 рр. 201
-  page: 203
-  grade: 11
-- id: S7
-  file: 11-klas-ukrajinska-mova-glazova-2019_s1229
+  title: Орфографічна норма (p. 89)
+  page: 89
+  grade: 10
+- id: S4
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0768
   type: textbook
-  title: § 40. Стилістичне забарвлення лексики. Книжна й розмовна лексика. Оцінна
-    лексика
-  page: 169
-  grade: 11
-- id: S9
-  file: 8-klas-ukrmova-zabolotnyi-2025_s4713
-  type: textbook
-  title: Немає їй ні кінця ні краю (П. Перебийніс). 8. Надворі хмариться чи
-  page: 155
-  grade: 8
-- id: S10
+  title: Орфографічна норма (p. 89)
+  page: 89
+  grade: 10
+- id: S5
   file: 11-klas-istoriya-ukr-hlibovska-2024_s1065
   type: textbook
   title: CУСПІЛЬНО-ПОЛІТИЧНЕ ТА СОЦІАЛЬНО ЕКОНОМІЧНЕ СТАНОВИЩЕ УКРАЇНИ
   page: 291
   grade: 11
-- id: S11
-  file: wave7-ukrxx-derzhavnist_c0403
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S12
-  file: 11-klas-istoriya-ukr-gisem-2024_s0897
+- id: S6
+  file: 11-klas-istoriya-ukr-gisem-2024_s0956
   type: textbook
-  title: § 3. Внутрішньополітична та економічна ситуація в урСр
-  page: 19
+  title: § 24. Економічний розвиток України в 1992—2005 рр. 197
+  page: 199
   grade: 11
-- id: S13
-  file: wave7-dzyuba-internatsionalizm_c0319
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
-- id: S14
-  file: wave7-ukrxx-derzhavnist_c0405
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S15
-  file: wave7-ukrxx-derzhavnist_c0404
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
+- id: S7
+  file: 11-klas-istoriya-ukr-gisem-2024_s0934
+  type: textbook
+  title: Початок політичних реформ. Поступово керів
+  page: 141
+  grade: 11

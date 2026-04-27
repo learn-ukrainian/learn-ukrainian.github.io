@@ -2,23 +2,34 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-literatura-avramenko-2019_s1096
-  type: textbook
-  title: МОДЕРНА ДРАМАТУРГІЯ (p. 116)
-  page: 116
-  grade: 11
+  file: ukrainian_wiki/les-kurbas_Біографія-Лесь-Курбас-Реформатор-театру-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Лесь Курбас: Реформатор театру'
+  section_path: 'Біографія: Лесь Курбас: Реформатор театру > Короткий зміст'
 - id: S2
-  file: wave7-entsyklopediia-ukrainoznavstva_c2206
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
+  file: ukrainian_wiki/les-kurbas_Біографія-Лесь-Курбас-Реформатор-театру-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Лесь Курбас: Реформатор театру'
+  section_path: 'Біографія: Лесь Курбас: Реформатор театру > Деколонізаційна перспектива'
 - id: S3
-  file: wave10-shevchenkivsky-slovnyk_c0986
-  type: literary
-  title: Шевченківський словник
-  author: Колектив
+  file: ukrainian_wiki/teatralne-mystetstvo-2_Академічна-C1-Театральне-мистецтво-II-Основний-зміст-2-Авангард-і-синтетичний-театр-Леся-Курбаса
+  type: ukrainian_wiki
+  title: 'Академічна C1: Театральне мистецтво II'
+  section_path: 'Академічна C1: Театральне мистецтво II > Основний зміст > 2. Авангард
+    і синтетичний театр Леся Курбаса'
 - id: S5
+  file: 9-klas-ukrajinska-mova-voron-2017_s5121
+  type: textbook
+  title: ФОНЕТИКА. ОРФОЕПІЯ. ГРАФІКА. ОРФОГРАФІЯ
+  page: 152
+  grade: 9
+- id: S6
   file: wikipedia/Березіль
   type: wikipedia
   title: Березіль
   url: https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B7%D1%96%D0%BB%D1%8C
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c2206
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

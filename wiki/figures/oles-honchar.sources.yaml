@@ -2,12 +2,51 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrlib-honchar_c0000
-  type: literary
-  title: Олесь Гончар. Собор
-  author: Гончар О.
+  file: ukrainian_wiki/honchar-banners_Українська-література-Олесь-Гончар-Собор-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Олесь Гончар: «Собор»'
+  section_path: 'Українська література: Олесь Гончар: «Собор» > Короткий зміст'
 - id: S2
+  file: ukrainian_wiki/honchar-cathedral_Українська-література-Собор-Олесь-Гончар-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Собор (Олесь Гончар)'
+  section_path: 'Українська література: Собор (Олесь Гончар) > Короткий зміст'
+- id: S3
+  file: ukrainian_wiki/oles-honchar_Біографія-Олесь-Гончар-Собор-як-акт-духовної-непокори-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Олесь Гончар: «Собор» як акт духовної непокори'
+  section_path: 'Біографія: Олесь Гончар: «Собор» як акт духовної непокори > Короткий
+    зміст'
+- id: S4
   file: wikipedia/Собор (роман, Гончар)
   type: wikipedia
   title: Собор (роман, Гончар)
   url: https://uk.wikipedia.org/wiki/%D0%A1%D0%BE%D0%B1%D0%BE%D1%80%20%28%D1%80%D0%BE%D0%BC%D0%B0%D0%BD%2C%20%D0%93%D0%BE%D0%BD%D1%87%D0%B0%D1%80%29
+- id: S5
+  file: ukrainian_wiki/liubomyr-huzar_Біографія-Любомир-Гузар-Моральний-авторитет-нації-Основний-зміст-5-Соборність-і-боротьба-проти-тоталітарного-безпам-ятства
+  type: ukrainian_wiki
+  title: 'Біографія: Любомир Гузар: Моральний авторитет нації'
+  section_path: 'Біографія: Любомир Гузар: Моральний авторитет нації > Основний зміст
+    > 5. Соборність і боротьба проти тоталітарного безпам''ятства'
+- id: S6
+  file: ukrainian_wiki/oles-honchar_Біографія-Олесь-Гончар-Собор-як-акт-духовної-непокори-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Олесь Гончар: «Собор» як акт духовної непокори'
+  section_path: 'Біографія: Олесь Гончар: «Собор» як акт духовної непокори > Деколонізаційна
+    перспектива'
+- id: S7
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1034
+  type: textbook
+  title: Мовою джерела. Авіаконструктор Олег Антонов про перспективи
+  page: 161
+  grade: 11
+- id: S8
+  file: ukrlib-honchar_c0000
+  type: literary
+  title: Олесь Гончар. Собор
+  author: Гончар О.
+- id: S9
+  file: wikipedia/Гончар Олесь Терентійович
+  type: wikipedia
+  title: Гончар Олесь Терентійович
+  url: https://uk.wikipedia.org/wiki/%D0%93%D0%BE%D0%BD%D1%87%D0%B0%D1%80%20%D0%9E%D0%BB%D0%B5%D1%81%D1%8C%20%D0%A2%D0%B5%D1%80%D0%B5%D0%BD%D1%82%D1%96%D0%B9%D0%BE%D0%B2%D0%B8%D1%87

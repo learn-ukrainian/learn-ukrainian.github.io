@@ -2,52 +2,55 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wikipedia/Київська Русь
-  type: wikipedia
-  title: Київська Русь
-  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B0%20%D0%A0%D1%83%D1%81%D1%8C
+  file: ukrainian_wiki/hramoty-ta-akty_Історіографія-Грамоти-та-акти-Княжі-документи-Основний-зміст-Історіографія-та-дослідження-правових-пам-яток
+  type: ukrainian_wiki
+  title: 'Історіографія: Грамоти та акти: Княжі документи'
+  section_path: 'Історіографія: Грамоти та акти: Княжі документи > Основний зміст
+    > Історіографія та дослідження правових пам''яток'
 - id: S2
+  file: ukrainian_wiki/hramoty-ta-akty_Історіографія-Грамоти-та-акти-Княжі-документи-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Грамоти та акти: Княжі документи'
+  section_path: 'Історіографія: Грамоти та акти: Княжі документи > Короткий зміст'
+- id: S3
   file: wave4-voitovych-dynasty_c0000
   type: literary
   title: Войтович — Князівські династії Східної Європи
   author: Войтович Л.
-- id: S3
+- id: S4
   file: wave7-istkult-t1-kyivska-rus_c0212
   type: literary
   title: Історія української культури. Т.1. Київська Русь
   author: Колектив
-- id: S4
+- id: S5
+  file: 7-klas-istoria-ukr-galimov-2024_s3452
+  type: textbook
+  title: § 11. Культура Русі
+  page: 81
+  grade: 7
+- id: S6
+  file: ukrainian_wiki/hramoty-ta-akty_Історіографія-Грамоти-та-акти-Княжі-документи-Основний-зміст-Джерельна-база-та-класифікація-пам-яток-права
+  type: ukrainian_wiki
+  title: 'Історіографія: Грамоти та акти: Княжі документи'
+  section_path: 'Історіографія: Грамоти та акти: Княжі документи > Основний зміст
+    > Джерельна база та класифікація пам''яток права'
+- id: S7
   file: wave7-ivakin-kyiv-xiii-xvi_c0012
   type: literary
   title: Івакін — Історичний розвиток Києва XIII-XVI ст.
   author: Івакін Г.
-- id: S5
+- id: S8
+  file: wikipedia/Кирилична українська рукописна писемність XI—XVII століть
+  type: wikipedia
+  title: Кирилична українська рукописна писемність XI—XVII століть
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%80%D0%B8%D0%BB%D0%B8%D1%87%D0%BD%D0%B0%20%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D1%80%D1%83%D0%BA%D0%BE%D0%BF%D0%B8%D1%81%D0%BD%D0%B0%20%D0%BF%D0%B8%D1%81%D0%B5%D0%BC%D0%BD%D1%96%D1%81%D1%82%D1%8C%20XI%E2%80%94XVII%20%D1%81%D1%82%D0%BE%D0%BB%D1%96%D1%82%D1%8C
+- id: S9
+  file: https://www.youtube.com/watch?v=yCWPRoWaTpE
+  type: external
+  title: '"Історія Мови" – про що цей канал?'
+  url: https://www.youtube.com/watch?v=yCWPRoWaTpE
+- id: S10
   file: wikipedia/Руська Правда
   type: wikipedia
   title: Руська Правда
   url: https://uk.wikipedia.org/wiki/%D0%A0%D1%83%D1%81%D1%8C%D0%BA%D0%B0%20%D0%9F%D1%80%D0%B0%D0%B2%D0%B4%D0%B0
-- id: S6
-  file: wikipedia/Руське право
-  type: wikipedia
-  title: Руське право
-  url: https://uk.wikipedia.org/wiki/%D0%A0%D1%83%D1%81%D1%8C%D0%BA%D0%B5%20%D0%BF%D1%80%D0%B0%D0%B2%D0%BE
-- id: S7
-  file: wave7-yushkov-feodalizm_c0009
-  type: literary
-  title: Юшков — Нариси з історії виникнення і початкового розвитку феодалізму
-  author: Юшков С.
-- id: S8
-  file: wave7-istkult-t1-kyivska-rus_c0237
-  type: literary
-  title: Історія української культури. Т.1. Київська Русь
-  author: Колектив
-- id: S9
-  file: wave7-entsyklopediia-ukrainoznavstva_c1588
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S10
-  file: wave7-istkult-t1-kyivska-rus_c0232
-  type: literary
-  title: Історія української культури. Т.1. Київська Русь
-  author: Колектив

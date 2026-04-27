@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/c2-certification-preparation.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-ukrainska-mova-encyclopedia_c0121
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S2
+  file: wave8-ohdruk-istoriia-drukarstva_c0024
+  type: literary
+  title: Огієнко — Історія українського друкарства (1925)
+  author: Огієнко І.
+- id: S3
+  file: wave9-ohiyenko-ist-lit-movy_c0048
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S4
+  file: wave10-shevchenkivsky-slovnyk_c1599
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S5
+  file: wave5-prokopovych-filosofski_c0384
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c0008
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c2722
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave4-chyzhevsky-istoriia-lit_c0418
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S9
+  file: wave7-ukrxx-derzhavnist_c0403
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S10
+  file: wave2-fedorovych-bukvar_c0007
+  type: literary
+  title: Федорович — Буквар (1574)
+  author: Федорович І.

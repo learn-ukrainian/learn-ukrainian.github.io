@@ -2,72 +2,47 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-glazova-2019_s0327
-  type: textbook
-  title: Сторінка 222
-  grade: 11
-  author: glazova
-- id: S2
-  file: 10-klas-ukrmova-karaman-2018_s0329
-  type: textbook
-  title: Сторінка 185
-  grade: 10
-  author: karaman
-- id: S3
-  file: 2-klas-ukrmova-kravcova-2019-1_s0138
-  type: textbook
-  title: Сторінка 128
-  grade: 2
-  author: kravcova
-- id: S4
-  file: 8-klas-ukrmova-zabolotnyi-2025_s0256
-  type: textbook
-  title: Сторінка 212
-  grade: 8
-  author: zabolotnyi
-- id: S5
-  file: 10-klas-ukrmova-karaman-2018_s0122
-  type: textbook
-  title: Сторінка 68
-  grade: 10
-  author: karaman
-- id: S7
   file: wave4-nimchuk-movoznavstvo_c0219
   type: literary
   title: Німчук — Мовознавство на Україні XIV-XVII ст.
   author: Німчук В.
-- id: S8
+- id: S2
+  file: wave7-entsyklopediia-ukrainoznavstva_c0772
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S3
+  file: wave10-shevchenkivsky-slovnyk_c1599
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S4
   file: wave7-entsyklopediia-ukrainoznavstva_c0791
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S9
-  file: wave9-skhidnoslov-hramatyky_c0029
-  type: literary
-  title: Східнослов'янські граматики XVI-XVII ст. (статті)
-  author: Колектив
-- id: S10
-  file: wave7-entsyklopediia-ukrainoznavstva_c0813
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S11
-  file: wave9-rusanivsky-ist-lit-movy_c0101
-  type: literary
-  title: Русанівський — Історія укр. літ. мови
-  author: Русанівський В.
-- id: S12
-  file: wave4-ukrainska-mova-encyclopedia_c0108
-  type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
-- id: S14
-  file: wave8-ukr-lit-entsyklopediia_c2420
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S15
+- id: S5
   file: ukrlib-yohansen_c0016
   type: literary
   title: Майк Йогансен. Як будується оповідання
   author: Йогансен М.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0165
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0071
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0108
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave4-ukrainska-mova-encyclopedia_c0110
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.

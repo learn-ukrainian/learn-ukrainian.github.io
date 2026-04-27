@@ -2,62 +2,32 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrmova-glazova-2018_s0318
-  type: textbook
-  title: Сторінка 223
-  grade: 10
-  author: glazova
-- id: S2
-  file: 9-klas-ukrajinska-mova-avramenko-2017_s0209
-  type: textbook
-  title: Сторінка 136
-  grade: 9
-  author: avramenko
+  file: wave8-hrabovych-do-istoriyi_c0004
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S3
-  file: 9-klas-ukrajinska-mova-voron-2017_s0110
-  type: textbook
-  title: Сторінка 87
-  grade: 9
-  author: voron
-- id: S4
-  file: 5-klas-ukrmova-golub-2022_s0242
-  type: textbook
-  title: Сторінка 243
-  grade: 5
-  author: golub
+  file: wave8-ukr-lit-entsyklopediia_c2420
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
 - id: S5
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s0277
-  type: textbook
-  title: Сторінка 194
-  grade: 11
-  author: avramenko
-- id: S7
-  file: wave7-ukrxx-derzhavnist_c0343
+  file: wave7-ukrxx-derzhavnist_c0417
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
 - id: S8
+  file: wave7-istkult-t2-xiii-xvii_c0145
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
   file: wave8-hrabovych-do-istoriyi_c0701
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
 - id: S10
-  file: wave7-thompson-trubadury_c0021
+  file: wave8-fdm-biobibliohrafichnyi_c0136
   type: literary
-  title: Томпсон — Трубадури імперії
-  author: Томпсон Е.
-- id: S11
-  file: wave8-chyzhevsky-skovoroda_c0034
-  type: literary
-  title: Чижевський — Філософія Сковороди
-  author: Чижевський Д.
-- id: S12
-  file: wave7-istkult-t2-xiii-xvii_c0032
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
+  title: Філософська думка в Україні — біобібліографічний словник
   author: Колектив
-- id: S13
-  file: wave4-hrushevsky-istlit_c0029
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.

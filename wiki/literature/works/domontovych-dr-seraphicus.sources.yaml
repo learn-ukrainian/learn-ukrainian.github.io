@@ -11,8 +11,38 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
+- id: S4
+  file: wave8-fdm-biobibliohrafichnyi_c0041
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S5
+  file: wave5-skovoroda-tvory_c0079
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S6
+  file: wave4-hrushevsky-istlit_c0035
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S7
+  file: wave12-hrushevsky-iu-odnotom_c0040
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
 - id: S8
   file: wave7-heroes-ukr-kultura_c0255
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
+- id: S9
+  file: wave8-masliuk-poetyky-rytoryky_c0154
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S10
+  file: wave5-dovhalevsky-poetyka_c0020
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.

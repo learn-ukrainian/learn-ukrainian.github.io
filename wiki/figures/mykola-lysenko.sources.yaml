@@ -2,32 +2,50 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/klasychna-muzyka-2-natsionalna-shkola_Академічна-C1-Класична-музика-II-Національна-школа-Основний-зміст-Переломне-значення-творчості-Миколи-Лисенка
+  type: ukrainian_wiki
+  title: 'Академічна C1: Класична музика II — Національна школа'
+  section_path: 'Академічна C1: Класична музика II — Національна школа > Основний
+    зміст > Переломне значення творчості Миколи Лисенка'
+- id: S2
+  file: ukrainian_wiki/mykola-lysenko_Біографія-Микола-Лисенко-Батько-української-музики-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Лисенко: Батько української музики'
+  section_path: 'Біографія: Микола Лисенко: Батько української музики > Мовні зразки'
+- id: S3
+  file: ukrainian_wiki/mykola-lysenko_Біографія-Микола-Лисенко-Батько-української-музики-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Лисенко: Батько української музики'
+  section_path: 'Біографія: Микола Лисенко: Батько української музики > Короткий зміст'
+- id: S4
+  file: ukrainian_wiki/klasychna-muzyka-1-vytoky_Академічна-C1-Класична-музика-I-Витоки-Наукові-дискусії
+  type: ukrainian_wiki
+  title: 'Академічна C1: Класична музика I — Витоки'
+  section_path: 'Академічна C1: Класична музика I — Витоки > Наукові дискусії'
+- id: S5
   file: wave7-entsyklopediia-ukrainoznavstva_c2244
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S2
+- id: S6
   file: wave7-antonovych-kultura_c0678
   type: literary
   title: Українська культура (лекції за ред. Антоновича)
   author: Антонович Д.
-- id: S3
+- id: S7
+  file: ukrainian_wiki/mykola-lysenko_Біографія-Микола-Лисенко-Батько-української-музики-Основний-зміст-Історичне-значення-та-демаркація-української-музики
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Лисенко: Батько української музики'
+  section_path: 'Біографія: Микола Лисенко: Батько української музики > Основний зміст
+    > Історичне значення та демаркація української музики'
+- id: S8
+  file: ukrainian_wiki/mykola-lysenko_Біографія-Микола-Лисенко-Батько-української-музики-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Лисенко: Батько української музики'
+  section_path: 'Біографія: Микола Лисенко: Батько української музики > Деколонізаційна
+    перспектива'
+- id: S9
   file: wave8-ukr-lit-entsyklopediia_c4373
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S4
-  file: wave10-shevchenkivsky-slovnyk_c1040
-  type: literary
-  title: Шевченківський словник
-  author: Колектив
-- id: S5
-  file: wave7-antonovych-kultura_c0679
-  type: literary
-  title: Українська культура (лекції за ред. Антоновича)
-  author: Антонович Д.
-- id: S6
-  file: wave7-antonovych-kultura_c0684
-  type: literary
-  title: Українська культура (лекції за ред. Антоновича)
-  author: Антонович Д.

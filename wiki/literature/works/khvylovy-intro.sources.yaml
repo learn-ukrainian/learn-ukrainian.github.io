@@ -16,11 +16,6 @@ sources:
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
-- id: S4
-  file: wave8-hrabovych-do-istoriyi_c0719
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
 - id: S5
   file: wave7-heroes-ukr-kultura_c0294
   type: literary
@@ -28,6 +23,11 @@ sources:
   author: Колектив
 - id: S7
   file: wave7-heroes-ukr-kultura_c0290
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S8
+  file: wave7-heroes-ukr-kultura_c0289
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив

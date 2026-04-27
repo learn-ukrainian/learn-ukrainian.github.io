@@ -2,23 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/radianski-antysemityzm_Історіографія-Радянський-антисемітизм-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Радянський антисемітизм'
+  section_path: 'Історіографія: Радянський антисемітизм > Короткий зміст'
+- id: S2
+  file: wikipedia/Антисемітизм у СРСР
+  type: wikipedia
+  title: Антисемітизм у СРСР
+  url: https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%B8%D1%81%D0%B5%D0%BC%D1%96%D1%82%D0%B8%D0%B7%D0%BC%20%D1%83%20%D0%A1%D0%A0%D0%A1%D0%A0
+- id: S3
+  file: wave7-dzyuba-internatsionalizm_c0142
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+- id: S5
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1037
+  type: textbook
+  title: ПРАКТИЧНА РОБОТА № 3
+  page: 170
+  grade: 11
+- id: S6
+  file: ukrainian_wiki/radianski-antysemityzm_Історіографія-Радянський-антисемітизм-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Радянський антисемітизм'
+  section_path: 'Історіографія: Радянський антисемітизм > Деколонізаційна перспектива'
+- id: S7
+  file: ukrainian_wiki/radianski-antysemityzm_Історіографія-Радянський-антисемітизм-Основний-зміст-Двоякість-радянської-політики-та-події-1920-1930-х-років
+  type: ukrainian_wiki
+  title: 'Історіографія: Радянський антисемітизм'
+  section_path: 'Історіографія: Радянський антисемітизм > Основний зміст > Двоякість
+    радянської політики та події 1920–1930-х років'
+- id: S8
+  file: 11-klas-istoriya-ukr-gisem-2024_s0902
+  type: textbook
+  title: § 5. культура україни в повоєнний період
+  page: 42
+  grade: 11
+- id: S9
+  file: 11-klas-istoriya-ukr-galimov-2024_s0808
+  type: textbook
+  title: § 5. Культура України в повоєнний період
+  page: 43
+  grade: 11
+- id: S10
   file: 11-klas-istoriya-ukr-gisem-2024_s0926
   type: textbook
   title: У 1968 р. один із таких при
   page: 113
   grade: 11
-- id: S2
-  file: wave7-dzyuba-internatsionalizm_c0142
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
-- id: S4
-  file: wikipedia/Антисемітизм
-  type: wikipedia
-  title: Антисемітизм
-  url: https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%B8%D1%81%D0%B5%D0%BC%D1%96%D1%82%D0%B8%D0%B7%D0%BC
-- id: S5
-  file: wikipedia/Антисемітизм у СРСР
-  type: wikipedia
-  title: Антисемітизм у СРСР
-  url: https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D1%82%D0%B8%D1%81%D0%B5%D0%BC%D1%96%D1%82%D0%B8%D0%B7%D0%BC%20%D1%83%20%D0%A1%D0%A0%D0%A1%D0%A0

@@ -2,42 +2,51 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/meletii-smotrytskyi_Біографія-Мелетій-Смотрицький-Творець-граматики-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Мелетій Смотрицький: Творець граматики'
+  section_path: 'Біографія: Мелетій Смотрицький: Творець граматики > Короткий зміст'
+- id: S2
   file: wave2-smotrytsky-gramatyka_c0115
   type: literary
   title: Смотрицький — Граматіки Словенскія (1619)
   author: Смотрицький М.
 - id: S3
+  file: ukrainian_wiki/meletii-smotrytskyi_Біографія-Мелетій-Смотрицький-Творець-граматики-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Мелетій Смотрицький: Творець граматики'
+  section_path: 'Біографія: Мелетій Смотрицький: Творець граматики > Деколонізаційна
+    перспектива'
+- id: S4
+  file: wikipedia/Граматика Мелетія Смотрицького
+  type: wikipedia
+  title: Граматика Мелетія Смотрицького
+  url: https://uk.wikipedia.org/wiki/%D0%93%D1%80%D0%B0%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0%20%D0%9C%D0%B5%D0%BB%D0%B5%D1%82%D1%96%D1%8F%20%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%BE%D0%B3%D0%BE
+- id: S5
+  file: ukrainian_wiki/beresteyska-uniia_Історія-України-Берестейська-унія-Церковний-розкол-Основний-зміст-Культурно-освітній-вимір-та-мовне-питання
+  type: ukrainian_wiki
+  title: 'Історія України: Берестейська унія: Церковний розкол'
+  section_path: 'Історія України: Берестейська унія: Церковний розкол > Основний зміст
+    > Культурно-освітній вимір та мовне питання'
+- id: S6
+  file: ukrainian_wiki/administrative-reform_Руська-староукраїнська-мова-Адміністративна-реформа-Основний-зміст-Кодифікація-граматичної-норми-від-книжної-до-живої-мови
+  type: ukrainian_wiki
+  title: 'Руська (староукраїнська) мова: Адміністративна реформа'
+  section_path: 'Руська (староукраїнська) мова: Адміністративна реформа > Основний
+    зміст > Кодифікація граматичної норми: від книжної до живої мови'
+- id: S7
   file: wave7-popovych-narys-kultury_c0292
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S4
+- id: S8
   file: wave9-skhidnoslov-hramatyky_c0008
   type: literary
   title: Східнослов'янські граматики XVI-XVII ст. (статті)
   author: Колектив
-- id: S5
-  file: wave2-smotrytsky-gramatyka_c0000
-  type: literary
-  title: Смотрицький — Граматіки Словенскія (1619)
-  author: Смотрицький М.
-- id: S6
-  file: wave7-krypyakevych-istkult_c0370
-  type: literary
-  title: Крип'якевич — Історія української культури (1937)
-  author: Крип'якевич І.
-- id: S7
-  file: wave9-skhidnoslov-hramatyky_c0022
-  type: literary
-  title: Східнослов'янські граматики XVI-XVII ст. (статті)
-  author: Колектив
-- id: S8
-  file: wave7-istkult-t2-xiii-xvii_c1396
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
-- id: S9
-  file: wave4-nimchuk-movoznavstvo_c0245
-  type: literary
-  title: Німчук — Мовознавство на Україні XIV-XVII ст.
-  author: Німчук В.
+- id: S10
+  file: ukrainian_wiki/meletii-smotrytskyi_Біографія-Мелетій-Смотрицький-Творець-граматики-Основний-зміст-Кодифікація-словенороської-норми-та-вплив-на-літературну-мову
+  type: ukrainian_wiki
+  title: 'Біографія: Мелетій Смотрицький: Творець граматики'
+  section_path: 'Біографія: Мелетій Смотрицький: Творець граматики > Основний зміст
+    > Кодифікація словенороської норми та вплив на літературну мову'

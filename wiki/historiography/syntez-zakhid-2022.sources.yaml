@@ -2,17 +2,51 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wikipedia/Контент-аналіз
-  type: wikipedia
-  title: Контент-аналіз
-  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D1%82-%D0%B0%D0%BD%D0%B0%D0%BB%D1%96%D0%B7
+  file: 11-klas-istoriya-ukr-galimov-2024_s0889
+  type: textbook
+  title: § 33. Широкомасштабне вторгнення Російської Федерації в Україну
+  page: 251
+  grade: 11
 - id: S2
-  file: wikipedia/Російсько-українська війна (з 2014)
-  type: wikipedia
-  title: Російсько-українська війна (з 2014)
-  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D1%81%D1%96%D0%B9%D1%81%D1%8C%D0%BA%D0%BE-%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%B2%D1%96%D0%B9%D0%BD%D0%B0%20%28%D0%B7%202014%29
+  file: 11-klas-istoriya-ukr-gisem-2024_s0986
+  type: textbook
+  title: § 33. Широкомасштабне вторгнення російської Федерації в україну
+  page: 283
+  grade: 11
 - id: S3
+  file: 11-klas-istoriya-ukr-galimov-2024_s0879
+  type: textbook
+  title: § 30. Початок війни Росії проти України
+  page: 225
+  grade: 11
+- id: S4
+  file: ukrainian_wiki/syntez-zakhid-2022_Історіографія-Синтез-2022-Зміна-парадигми-Основний-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Синтез: 2022 — Зміна парадигми?'
+  section_path: 'Історіографія: Синтез: 2022 — Зміна парадигми? > Основний зміст'
+- id: S5
+  file: ukrainian_wiki/syntez-zakhid-2022_Історіографія-Синтез-2022-Зміна-парадигми-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Синтез: 2022 — Зміна парадигми?'
+  section_path: 'Історіографія: Синтез: 2022 — Зміна парадигми? > Короткий зміст'
+- id: S6
+  file: ukrainian_wiki/syntez-zakhid-2022_Історіографія-Синтез-2022-Зміна-парадигми-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Синтез: 2022 — Зміна парадигми?'
+  section_path: 'Історіографія: Синтез: 2022 — Зміна парадигми? > Деколонізаційна
+    перспектива'
+- id: S7
   file: wikipedia/Війна на сході України
   type: wikipedia
   title: Війна на сході України
   url: https://uk.wikipedia.org/wiki/%D0%92%D1%96%D0%B9%D0%BD%D0%B0%20%D0%BD%D0%B0%20%D1%81%D1%85%D0%BE%D0%B4%D1%96%20%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8
+- id: S8
+  file: wikipedia/Російсько-українська війна (з 2014)
+  type: wikipedia
+  title: Російсько-українська війна (з 2014)
+  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D1%81%D1%96%D0%B9%D1%81%D1%8C%D0%BA%D0%BE-%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%B2%D1%96%D0%B9%D0%BD%D0%B0%20%28%D0%B7%202014%29
+- id: S9
+  file: wikipedia/Про історичну єдність росіян та українців
+  type: wikipedia
+  title: Про історичну єдність росіян та українців
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%BE%20%D1%96%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D1%83%20%D1%94%D0%B4%D0%BD%D1%96%D1%81%D1%82%D1%8C%20%D1%80%D0%BE%D1%81%D1%96%D1%8F%D0%BD%20%D1%82%D0%B0%20%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%86%D1%96%D0%B2

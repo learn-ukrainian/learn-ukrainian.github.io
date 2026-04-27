@@ -31,6 +31,11 @@ sources:
   type: literary
   title: Огієнко — Історія української літературної мови (1949)
   author: Огієнко І.
+- id: S8
+  file: wave4-nimchuk-movoznavstvo_c0012
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
 - id: S9
   file: wave4-chyzhevsky-istoriia-lit_c0681
   type: literary

@@ -1,0 +1,33 @@
+# Source registry for wiki/grammar/b2/questions-deliberative-rhetorical.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0368
+  type: textbook
+  title: Практична риторика. Суперечка
+  page: 172
+  grade: 10
+- id: S3
+  file: 11-klas-ukrajinska-mova-voron-2019_s1267
+  type: textbook
+  title: ІІ «Навчання без роздумів марне». Складіть невеликий усний
+  page: 142
+  grade: 11
+- id: S4
+  file: 5-klas-ukrmova-golub-2022_s2327
+  type: textbook
+  title: § 84. Плекай у собі допитливість
+  page: 232
+  grade: 5
+- id: S5
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0341
+  type: textbook
+  title: § 9. РИТОРИКА ЯК МИСТЕЦТВО,
+  page: 43
+  grade: 10
+- id: S7
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0345
+  type: textbook
+  title: Практична риторика (p. 62)
+  page: 62
+  grade: 10

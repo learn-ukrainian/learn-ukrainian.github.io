@@ -6,11 +6,6 @@ sources:
   type: literary
   title: Улас Самчук. Життя та творчість Уласа Самчука
   author: Самчук У.
-- id: S2
-  file: wave8-hrabovych-do-istoriyi_c0435
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
 - id: S4
   file: wave8-ukr-lit-entsyklopediia_c0174
   type: literary
@@ -26,11 +21,6 @@ sources:
   type: literary
   title: Улас Самчук. Дермань
   author: Самчук У.
-- id: S9
-  file: wave7-lytvynov-renesans-humanizm_c0259
-  type: literary
-  title: Литвинов — Ренесансний гуманізм в Україні
-  author: Литвинов В.
 - id: S10
   file: ukrlib-samchuk_c0005
   type: literary

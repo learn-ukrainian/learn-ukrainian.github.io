@@ -2,27 +2,39 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1025
-  type: textbook
-  title: ПРАКТИЧНА РОБОТА № 2
-  page: 108
-  grade: 11
+  file: ukrainian_wiki/pislya-stalina-shistdesiatnyky_Історіографія-Після-Сталіна-Шістдесятники-Основний-зміст-Історіографічні-оцінки-руху-та-поколіннєва-динаміка
+  type: ukrainian_wiki
+  title: 'Історіографія: Після Сталіна: Шістдесятники'
+  section_path: 'Історіографія: Після Сталіна: Шістдесятники > Основний зміст > Історіографічні
+    оцінки руху та поколіннєва динаміка'
 - id: S2
-  file: wave7-ukrxx-derzhavnist_c0126
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
+  file: 11-klas-istoriya-ukr-gisem-2024_s0905
+  type: textbook
+  title: Розділ ІІ. Україна в умовах десталінізації
+  page: 58
+  grade: 11
 - id: S3
-  file: wave12-yakovenko-skhid-zakhid_c0037
-  type: literary
-  title: 'Яковенко — «Україна між Сходом і Заходом»: проекція однієї ідеї (розд. 13-14)'
-  author: Яковенко Н.
-- id: S4
   file: wikipedia/Музей шістдесятництва
   type: wikipedia
   title: Музей шістдесятництва
   url: https://uk.wikipedia.org/wiki/%D0%9C%D1%83%D0%B7%D0%B5%D0%B9%20%D1%88%D1%96%D1%81%D1%82%D0%B4%D0%B5%D1%81%D1%8F%D1%82%D0%BD%D0%B8%D1%86%D1%82%D0%B2%D0%B0
+- id: S4
+  file: 11-klas-istoriya-ukr-galimov-2024_s0813
+  type: textbook
+  title: Розділ ІІ. Україна в умовах десталінізації
+  page: 58
+  grade: 11
 - id: S5
+  file: ukrainian_wiki/pislya-stalina-shistdesiatnyky_Історіографія-Після-Сталіна-Шістдесятники-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Після Сталіна: Шістдесятники'
+  section_path: 'Історіографія: Після Сталіна: Шістдесятники > Деколонізаційна перспектива'
+- id: S6
+  file: wave7-ukrxx-derzhavnist_c0126
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S7
   file: wikipedia/Сучасна українська література
   type: wikipedia
   title: Сучасна українська література

@@ -2,16 +2,27 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: https://www.youtube.com/watch?v=QHTrT6DGzhM
+  file: https://www.youtube.com/watch?v=tFiY0Gps1bU
   type: external
-  title: ГОЛОВНА ТАЄМНИЦЯ КРИМУ | Історія України від імені Т.Г. Шевченка
-  url: https://www.youtube.com/watch?v=QHTrT6DGzhM
+  title: 'ULP 6-218 | Про Крим. Частина 2: Коротка історія Криму | Ukrainian Lessons
+    Podcast Season 6'
+  url: https://www.youtube.com/watch?v=tFiY0Gps1bU
 - id: S2
+  file: ukrainian_wiki/krym-bahatosharovyi_Історіографія-Крим-Багатошарова-історія-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Крим: Багатошарова історія'
+  section_path: 'Історіографія: Крим: Багатошарова історія > Короткий зміст'
+- id: S3
+  file: ukrainian_wiki/krym-bahatosharovyi_Історіографія-Крим-Багатошарова-історія-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Крим: Багатошарова історія'
+  section_path: 'Історіографія: Крим: Багатошарова історія > Деколонізаційна перспектива'
+- id: S4
   file: wikipedia/Депортація кримських татар
   type: wikipedia
   title: Депортація кримських татар
   url: https://uk.wikipedia.org/wiki/%D0%94%D0%B5%D0%BF%D0%BE%D1%80%D1%82%D0%B0%D1%86%D1%96%D1%8F%20%D0%BA%D1%80%D0%B8%D0%BC%D1%81%D1%8C%D0%BA%D0%B8%D1%85%20%D1%82%D0%B0%D1%82%D0%B0%D1%80
-- id: S3
+- id: S5
   file: wikipedia/Кримські татари
   type: wikipedia
   title: Кримські татари

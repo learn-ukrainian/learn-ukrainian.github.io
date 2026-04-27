@@ -26,11 +26,6 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S6
-  file: wave12-grabianka-litopys_c0010
-  type: literary
-  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
-  author: Грабянка Г.
 - id: S7
   file: wave8-hrabovych-do-istoriyi_c0725
   type: literary

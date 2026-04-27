@@ -21,11 +21,6 @@ sources:
   type: literary
   title: Чижевський — Українське літературне бароко
   author: Чижевський Д.
-- id: S5
-  file: wave8-chyzhevsky-baroko_c0274
-  type: literary
-  title: Чижевський — Українське літературне бароко
-  author: Чижевський Д.
 - id: S6
   file: wave9-rusanivsky-ist-lit-movy_c0484
   type: literary
@@ -33,11 +28,6 @@ sources:
   author: Русанівський В.
 - id: S7
   file: wave8-chyzhevsky-baroko_c0032
-  type: literary
-  title: Чижевський — Українське літературне бароко
-  author: Чижевський Д.
-- id: S8
-  file: wave8-chyzhevsky-baroko_c0296
   type: literary
   title: Чижевський — Українське літературне бароко
   author: Чижевський Д.

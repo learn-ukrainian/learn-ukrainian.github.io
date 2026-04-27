@@ -41,11 +41,6 @@ sources:
   type: literary
   title: Самійло Величко. Літопис (1648-1700)
   author: Величко С.
-- id: S9
-  file: wave2-velychko_c1098
-  type: literary
-  title: Літопис Величка
-  author: Величко С.В.
 - id: S10
   file: wave12-velychko-litopys_c0864
   type: literary

@@ -2,11 +2,33 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wave12-hrushevsky-iu-odnotom_c0518
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
+  file: 5-klas-istoriya-schupak-2022_s1937
+  type: textbook
+  title: § 16. Розтлумачте значення слів істо
+  page: 92
+  grade: 5
 - id: S2
+  file: ukrainian_wiki/vira-kholodna_Біографія-Віра-Холодна-Королева-німого-кіно-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Віра Холодна: Королева німого кіно'
+  section_path: 'Біографія: Віра Холодна: Королева німого кіно > Короткий зміст'
+- id: S3
+  file: ukrainian_wiki/vira-kholodna_Біографія-Віра-Холодна-Королева-німого-кіно-Основний-зміст-Відсутність-біографічних-даних-та-концепція-кінематографічного-міфу
+  type: ukrainian_wiki
+  title: 'Біографія: Віра Холодна: Королева німого кіно'
+  section_path: 'Біографія: Віра Холодна: Королева німого кіно > Основний зміст >
+    Відсутність біографічних даних та концепція кінематографічного міфу'
+- id: S4
+  file: ukrainian_wiki/vira-kholodna_Біографія-Віра-Холодна-Королева-німого-кіно-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Віра Холодна: Королева німого кіно'
+  section_path: 'Біографія: Віра Холодна: Королева німого кіно > Деколонізаційна перспектива'
+- id: S5
+  file: wikipedia/Російський світ
+  type: wikipedia
+  title: Російський світ
+  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D1%81%D1%96%D0%B9%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D1%81%D0%B2%D1%96%D1%82
+- id: S6
   file: wikipedia/Історичний міф
   type: wikipedia
   title: Історичний міф

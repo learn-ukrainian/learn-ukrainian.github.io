@@ -2,82 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-istorija-ukrajini-gisem-2017_s0509
-  type: textbook
-  title: Сторінка 281
-  grade: 9
-  author: gisem
-- id: S2
-  file: 10-klas-ukrmova-karaman-2018_s0462
-  type: textbook
-  title: Сторінка 258
-  grade: 10
-  author: karaman
-- id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0428
-  type: textbook
-  title: Сторінка 241
-  grade: 10
-  author: karaman
-- id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0408
-  type: textbook
-  title: Сторінка 231
-  grade: 10
-  author: karaman
-- id: S5
-  file: 11-klas-ukrajinska-mova-voron-2019_s0219
-  type: textbook
-  title: Сторінка 145
-  grade: 11
-  author: voron
-- id: S6
-  file: wave4-ukrainska-mova-encyclopedia_c0077
-  type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
-- id: S7
   file: wave7-popovych-narys-kultury_c1148
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S8
-  file: wave9-rusanivsky-ist-lit-movy_c0009
+- id: S2
+  file: wave7-istkult-t2-xiii-xvii_c0627
   type: literary
-  title: Русанівський — Історія укр. літ. мови
-  author: Русанівський В.
-- id: S9
-  file: wave8-ukr-lit-entsyklopediia_c4290
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
+  title: Історія української культури. Т.2. XIII-XVII ст.
   author: Колектив
-- id: S10
-  file: wave7-antonovych-vybrani_c0074
-  type: literary
-  title: Антонович — Вибрані праці
-  author: Антонович В.
-- id: S11
+- id: S3
   file: wave8-isaievych-knyhovydannia_c0058
   type: literary
   title: Ісаєвич — Українське книговидання
   author: Ісаєвич Я.
-- id: S12
-  file: wave11-hrushevsky-iur-t6_c1028
-  type: literary
-  title: Грушевський — Історія України-Руси, том 6
-  author: Грушевський М.
-- id: S13
-  file: wave4-hrushevsky-iur-t1_c0948
-  type: literary
-  title: Грушевський — Історія України-Руси, т.1
-  author: Грушевський М.
-- id: S14
-  file: wave7-lytvynov-renesans-humanizm_c0178
-  type: literary
-  title: Литвинов — Ренесансний гуманізм в Україні
-  author: Литвинов В.
-- id: S15
+- id: S4
   file: wave8-chyzhevsky-baroko_c0590
   type: literary
   title: Чижевський — Українське літературне бароко
   author: Чижевський Д.
+- id: S5
+  file: wave9-rusanivsky-ist-lit-movy_c0009
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S6
+  file: wave7-lytvynov-renesans-humanizm_c0178
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+- id: S7
+  file: wave7-istkult-t2-xiii-xvii_c1421
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S8
+  file: wave7-popovych-narys-kultury_c0336
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S9
+  file: wave7-popovych-narys-kultury_c1146
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S10
+  file: wave4-voitovych-dynasty_c0859
+  type: literary
+  title: Войтович — Князівські династії Східної Європи
+  author: Войтович Л.

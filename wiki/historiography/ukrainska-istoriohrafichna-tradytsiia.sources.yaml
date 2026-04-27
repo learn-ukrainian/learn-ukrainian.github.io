@@ -11,18 +11,25 @@ sources:
   type: literary
   title: Грушевський — Історія України-Руси, т.1
   author: Грушевський М.
-- id: S3
-  file: wave7-entsyklopediia-ukrainoznavstva_c0917
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
+- id: S4
+  file: ukrainian_wiki/syntez-serednovichni-dzherela_Історіографія-Синтез-та-методи-роботи-з-середньовічними-джерелами-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Синтез та методи роботи з середньовічними джерелами'
+  section_path: 'Історіографія: Синтез та методи роботи з середньовічними джерелами
+    > Короткий зміст'
 - id: S5
-  file: wikipedia/Українська історіографія
-  type: wikipedia
-  title: Українська історіографія
-  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D1%96%D1%81%D1%82%D0%BE%D1%80%D1%96%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D1%96%D1%8F
+  file: ukrainian_wiki/ukrainska-istoriohrafichna-tradytsiia_Історіографія-Українська-історіографічна-традиція-Основний-зміст-Еволюція-та-періодизація-Від-антикваризму-до-державництва
+  type: ukrainian_wiki
+  title: 'Історіографія: Українська історіографічна традиція'
+  section_path: 'Історіографія: Українська історіографічна традиція > Основний зміст
+    > Еволюція та періодизація: Від антикваризму до державництва'
 - id: S6
   file: wikipedia/Історична наука в Україні
   type: wikipedia
   title: Історична наука в Україні
   url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D0%B0%20%D0%BD%D0%B0%D1%83%D0%BA%D0%B0%20%D0%B2%20%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%96
+- id: S7
+  file: wikipedia/Українська історіографія
+  type: wikipedia
+  title: Українська історіографія
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D1%96%D1%81%D1%82%D0%BE%D1%80%D1%96%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D1%96%D1%8F

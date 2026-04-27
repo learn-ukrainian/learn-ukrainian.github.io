@@ -26,6 +26,16 @@ sources:
   type: literary
   title: Грушевський — Історія України-Руси, том 6
   author: Грушевський М.
+- id: S6
+  file: грушевський-історія-україни-руси-т5_c0048
+  type: literary
+  title: Грушевський — Історія України-Руси, т.5
+  author: Грушевський М.
+- id: S7
+  file: грушевський-історія-україни-руси-т4_c0057
+  type: literary
+  title: Грушевський — Історія України-Руси, т.4
+  author: Грушевський М.
 - id: S8
   file: wave12-grabianka-litopys_c0005
   type: literary

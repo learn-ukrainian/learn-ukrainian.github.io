@@ -2,32 +2,43 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wave7-popovych-narys-kultury_c0996
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S2
-  file: wave7-entsyklopediia-ukrainoznavstva_c2215
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
+  file: ukrainian_wiki/mykola-zerov_Біографія-Микола-Куліш-Трагедія-автора-комедій-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Куліш: Трагедія автора комедій'
+  section_path: 'Біографія: Микола Куліш: Трагедія автора комедій > Короткий зміст'
 - id: S3
-  file: wave8-ukr-lit-entsyklopediia_c4120
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
+  file: ukrainian_wiki/hryhorii-kosynka_Біографія-Микола-Куліш-Драматург-на-роздоріжжі-ідентичностей-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Куліш: Драматург на роздоріжжі ідентичностей'
+  section_path: 'Біографія: Микола Куліш: Драматург на роздоріжжі ідентичностей >
+    Деколонізаційна перспектива'
 - id: S4
-  file: wave7-entsyklopediia-ukrainoznavstva_c2208
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
+  file: ukrainian_wiki/oleksa-slisarenko_Біографія-Микола-Куліш-Трагедія-національного-драматурга-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Куліш: Трагедія національного драматурга'
+  section_path: 'Біографія: Микола Куліш: Трагедія національного драматурга > Короткий
+    зміст'
 - id: S5
-  file: wikipedia/Березіль
-  type: wikipedia
-  title: Березіль
-  url: https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B7%D1%96%D0%BB%D1%8C
+  file: ukrainian_wiki/mykola-kulish_Біографія-Микола-Куліш-Геній-українського-театру-Основний-зміст-Творчий-тандем-із-Лесем-Курбасом-і-театром-Березіль
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Куліш: Геній українського театру'
+  section_path: 'Біографія: Микола Куліш: Геній українського театру > Основний зміст
+    > Творчий тандем із Лесем Курбасом і театром «Березіль»'
 - id: S6
-  file: wikipedia/Народний Малахій
-  type: wikipedia
-  title: Народний Малахій
-  url: https://uk.wikipedia.org/wiki/%D0%9D%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D0%B8%D0%B9%20%D0%9C%D0%B0%D0%BB%D0%B0%D1%85%D1%96%D0%B9
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1346
+  type: textbook
+  title: Модерна драматургія  117
+  page: 117
+  grade: 11
+- id: S7
+  file: ukrainian_wiki/valerian-pidmohylnyi_Біографія-Микола-Куліш-Драматургія-мовного-розколу-Основний-зміст-Театральний-синтез-тріада-Куліш-Курбас-Меллер
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Куліш: Драматургія мовного розколу'
+  section_path: 'Біографія: Микола Куліш: Драматургія мовного розколу > Основний зміст
+    > Театральний синтез: тріада Куліш — Курбас — Меллер'
+- id: S8
+  file: ukrainian_wiki/mykola-zerov_Біографія-Микола-Куліш-Трагедія-автора-комедій-Основний-зміст-Протистояння-театральних-систем-та-розгром-українського-авангарду
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Куліш: Трагедія автора комедій'
+  section_path: 'Біографія: Микола Куліш: Трагедія автора комедій > Основний зміст
+    > Протистояння театральних систем та розгром українського авангарду'

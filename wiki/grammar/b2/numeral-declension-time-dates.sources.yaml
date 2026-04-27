@@ -1,58 +1,39 @@
 # Source registry for wiki/grammar/b2/numeral-declension-time-dates.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S2
-  file: 6-klas-ukrmova-litvinova-2023_s0011
-  type: textbook
-  title: Сторінка 5
-  grade: 6
-  author: litvinova
-- id: S4
-  file: 6-klas-ukrmova-litvinova-2023_s0244
-  type: textbook
-  title: Сторінка 237
-  grade: 6
-  author: litvinova
-- id: S6
+- id: S1
   file: 6-klas-ukrmova-zabolotnyi-2020_s3397
   type: textbook
   title: § 55. ВІДМІНЮВАННЯ ТА НАПИСАННЯ
   page: 179
   grade: 6
-- id: S7
-  file: 6-klas-ukrmova-litvinova-2023_s3366
+- id: S2
+  file: 6-klas-ukrmova-golub-2023_s3269
   type: textbook
-  title: § 52. Правильне вживання числівників на позначення дат і часу
-  page: 245
+  title: § 61. Математика і мистецтво поруч
+  page: 166
   grade: 6
-- id: S8
-  file: 10-klas-ukrmova-karaman-2018_s0682
-  type: textbook
-  title: § 68. Відмінювання числівників
-  page: 171
-  grade: 10
-- id: S9
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s1145
-  type: textbook
-  title: § 12. –13. ВІДМІНЮВАННЯ ЧИСЛІВНИКІВ
-  page: 37
-  grade: 11
-- id: S10
-  file: 6-klas-ukrmova-litvinova-2023_s3301
-  type: textbook
-  title: § 47. Числівник як частина мови . . . . . . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . . . . . . . . . . . 221
-  page: 5
-  grade: 6
-- id: S11
+- id: S3
   file: 6-klas-ukrmova-golub-2023_s3268
   type: textbook
   title: § 59. Як не стати марнотратами
   page: 155
   grade: 6
-- id: S12
-  file: 6-klas-ukrmova-zabolotnyi-2020_s3396
+- id: S4
+  file: 10-klas-ukrmova-karaman-2018_s0682
   type: textbook
-  title: § 51. ЧИСЛІВНИК ЯК ЧАСТИНА МОВИ
-  page: 164
+  title: § 68. Відмінювання числівників
+  page: 171
+  grade: 10
+- id: S6
+  file: 6-klas-ukrmova-litvinova-2023_s3364
+  type: textbook
+  title: § 50. Відмінювання числівників
+  page: 230
+  grade: 6
+- id: S8
+  file: 6-klas-ukrmova-avramenko-2023_s3093
+  type: textbook
+  title: § 79. Розряди кількісних числівників
+  page: 155
   grade: 6

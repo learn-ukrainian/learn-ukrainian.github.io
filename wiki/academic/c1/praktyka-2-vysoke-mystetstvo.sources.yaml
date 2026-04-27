@@ -2,65 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-ukrlit-borzenko-2018-prof_s0139
-  type: textbook
-  title: Сторінка 75
-  grade: 10
-  author: borzenko
+  file: wave8-masliuk-poetyky-rytoryky_c0006
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
 - id: S2
-  file: 8-klas-istoriya-ukr-gisem-2021_s0360
-  type: textbook
-  title: Сторінка 184
-  grade: 8
-  author: gisem
-- id: S5
-  file: 8-klas-istoria-ukr-galimov-2025_s0356
-  type: textbook
-  title: Сторінка 218
-  grade: 8
-  author: galimov
-- id: S6
-  file: wave7-dzyuba-pavlenko-litopys-kultury_c0001
+  file: ukrlib-yohansen_c0124
   type: literary
-  title: Дзюба, Павленко — Літопис культурного життя X-XVII ст.
-  author: Дзюба О.
-- id: S7
-  file: wave8-hrabovych-do-istoriyi_c0041
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
-- id: S8
-  file: wave7-istkult-t2-xiii-xvii_c0023
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
-- id: S9
-  file: wave4-ukrainska-mova-encyclopedia_c0205
-  type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
-- id: S10
-  file: wave7-ukrxx-derzhavnist_c0005
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S11
+  title: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.
+- id: S3
   file: wave7-istkult-t2-xiii-xvii_c0008
   type: literary
   title: Історія української культури. Т.2. XIII-XVII ст.
   author: Колектив
-- id: S12
-  file: wave8-ukr-lit-entsyklopediia_c4089
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S13
+- id: S4
   file: wave7-antonovych-kultura_c0619
   type: literary
   title: Українська культура (лекції за ред. Антоновича)
   author: Антонович Д.
-- id: S15
-  file: wave7-istkult-t2-xiii-xvii_c0011
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0041
   type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave7-antonovych-kultura_c0004
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c5174
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0237
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave7-istkult-t1-kyivska-rus_c0436
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S10
+  file: ukrlib-khvylovy_c0047
+  type: literary
+  title: Микола Хвильовий. Думки проти течії
+  author: Хвильовий М.

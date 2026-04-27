@@ -1,44 +1,27 @@
 # Source registry for wiki/academic/c1/balet-i-tanets.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S4
-  file: 9-klas-ukrajinska-literatura-avramenko-2017_s0014
-  type: textbook
-  title: Сторінка 14
-  grade: 9
-  author: avramenko
-- id: S5
-  file: 10-klas-ukrmova-karaman-2018_s0458
-  type: textbook
-  title: Сторінка 256
-  grade: 10
-  author: karaman
-- id: S6
-  file: wave7-entsyklopediia-ukrainoznavstva_c2277
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S7
+- id: S1
   file: wave7-entsyklopediia-ukrainoznavstva_c2278
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S8
-  file: wave8-masliuk-poetyky-rytoryky_c0006
+- id: S2
+  file: wave7-entsyklopediia-ukrainoznavstva_c2277
   type: literary
-  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
-  author: Маслюк В.
-- id: S9
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S3
+  file: wave7-entsyklopediia-ukrainoznavstva_c2275
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S4
   file: wave7-entsyklopediia-ukrainoznavstva_c2269
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S13
-  file: ukrlib-yanovsky_c0012
-  type: literary
-  title: Юрій Яновський. Майстер корабля
-  author: Яновський Ю.
-- id: S15
+- id: S7
   file: wave7-antonovych-kultura_c0688
   type: literary
   title: Українська культура (лекції за ред. Антоновича)

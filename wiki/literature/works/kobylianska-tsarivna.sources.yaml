@@ -11,8 +11,18 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0712
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S4
   file: wave8-hrabovych-do-istoriyi_c0054
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0000
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
@@ -26,3 +36,13 @@ sources:
   type: literary
   title: Русанівський — Історія укр. літ. мови
   author: Русанівський В.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0730
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave7-entsyklopediia-ukrainoznavstva_c2006
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

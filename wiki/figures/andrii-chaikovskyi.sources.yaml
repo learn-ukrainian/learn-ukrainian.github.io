@@ -2,13 +2,41 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/andrii-chaikovskyi_Біографія-Андрій-Чайковський-Адвокат-нації-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Андрій Чайковський: Адвокат нації'
+  section_path: 'Біографія: Андрій Чайковський: Адвокат нації > Деколонізаційна перспектива'
+- id: S2
+  file: ukrainian_wiki/andrii-chaikovskyi_Біографія-Андрій-Чайковський-Адвокат-нації-Основний-зміст-Правнича-практика-та-державотворча-діяльність
+  type: ukrainian_wiki
+  title: 'Біографія: Андрій Чайковський: Адвокат нації'
+  section_path: 'Біографія: Андрій Чайковський: Адвокат нації > Основний зміст > Правнича
+    практика та державотворча діяльність'
+- id: S3
+  file: wave7-ukrxx-derzhavnist_c0005
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S4
+  file: ukrainian_wiki/andrii-chaikovskyi_Біографія-Андрій-Чайковський-Адвокат-нації-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Андрій Чайковський: Адвокат нації'
+  section_path: 'Біографія: Андрій Чайковський: Адвокат нації > Короткий зміст'
+- id: S5
+  file: 7-klas-ukrlit-avramenko-2024_s3605
+  type: textbook
+  title: ІСТОРИЧНЕ МИНУЛЕ УКРАЇНИ (p. 55)
+  page: 55
+  grade: 7
+- id: S6
   file: 7-klas-ukrlit-mishhenko-2015_s3650
   type: textbook
   title: розділ 2. АНДРІЙ ЧАЙКОВСЬКИЙ
   page: 78
   grade: 7
-- id: S5
-  file: wave5-humanisty-vidrodzennia_c0013
-  type: literary
-  title: Українські гуманісти епохи Відродження
-  author: Антологія
+- id: S7
+  file: ukrainian_wiki/andrii-chaikovskyi_Біографія-Андрій-Чайковський-Адвокат-нації-Основний-зміст-Літературна-місія-белетризація-української-історії
+  type: ukrainian_wiki
+  title: 'Біографія: Андрій Чайковський: Адвокат нації'
+  section_path: 'Біографія: Андрій Чайковський: Адвокат нації > Основний зміст > Літературна
+    місія: белетризація української історії'

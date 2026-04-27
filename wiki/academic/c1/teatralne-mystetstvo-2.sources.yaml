@@ -2,66 +2,47 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-istorija-ukrajini-burnejko-2017_s0373
-  type: textbook
-  title: Сторінка 256
-  grade: 9
-  author: burnejko
-- id: S2
-  file: 11-klas-ukrlit-borzenko-2019-prof_s0419
-  type: textbook
-  title: Сторінка 220
-  grade: 11
-  author: borzenko
-- id: S3
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s0014
-  type: textbook
-  title: Сторінка 10
-  grade: 11
-  author: avramenko
-- id: S4
-  file: 10-klas-ukrlit-borzenko-2018-prof_s0014
-  type: textbook
-  title: Сторінка 7
-  grade: 10
-  author: borzenko
-- id: S6
   file: wave7-entsyklopediia-ukrainoznavstva_c2206
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S7
-  file: wave7-antonovych-kultura_c0736
-  type: literary
-  title: Українська культура (лекції за ред. Антоновича)
-  author: Антонович Д.
-- id: S8
-  file: wave8-ukr-lit-entsyklopediia_c4119
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S10
-  file: wave7-antonovych-kultura_c0715
-  type: literary
-  title: Українська культура (лекції за ред. Антоновича)
-  author: Антонович Д.
-- id: S11
+- id: S2
   file: wave7-entsyklopediia-ukrainoznavstva_c2208
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S12
+- id: S3
+  file: wave7-antonovych-kultura_c0736
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S4
+  file: wave7-antonovych-kultura_c0697
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S5
+  file: wave7-entsyklopediia-ukrainoznavstva_c2205
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S6
+  file: ukrlib-vyshnya_c0006
+  type: literary
+  title: Остап Вишня. Мистецькі силуети
+  author: Вишня О.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c4120
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave10-shevchenkivsky-slovnyk_c0986
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S10
   file: wave7-popovych-narys-kultury_c1173
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S13
-  file: wave7-antonovych-kultura_c0696
-  type: literary
-  title: Українська культура (лекції за ред. Антоновича)
-  author: Антонович Д.
-- id: S14
-  file: wave7-entsyklopediia-ukrainoznavstva_c2210
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив

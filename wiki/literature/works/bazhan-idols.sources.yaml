@@ -31,6 +31,11 @@ sources:
   type: literary
   title: Микола Бажан. Біографія Миколи Бажана
   author: Бажан М.
+- id: S9
+  file: wave7-krypyakevych-istkult_c0856
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
 - id: S10
   file: wave7-krypyakevych-istkult_c0846
   type: literary

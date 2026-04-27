@@ -26,6 +26,11 @@ sources:
   type: literary
   title: Суспільно-політична думка XVI-XVII ст.
   author: Антологія
+- id: S6
+  file: wave6-galvol-kostruba_c0005
+  type: literary
+  title: ГВЛ (переклад Коструби)
+  author: Коструба Т.
 - id: S7
   file: wave6-synopsis-1674_c0047
   type: literary

@@ -2,32 +2,41 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/hreko-katolytska-tserkva_Історіографія-Греко-католицька-церква-Між-Сходом-і-Заходом-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Греко-католицька церква: Між Сходом і Заходом'
+  section_path: 'Історіографія: Греко-католицька церква: Між Сходом і Заходом > Короткий
+    зміст'
+- id: S2
+  file: ukrainian_wiki/hreko-katolytska-tserkva_Історіографія-Греко-католицька-церква-Між-Сходом-і-Заходом-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Греко-католицька церква: Між Сходом і Заходом'
+  section_path: 'Історіографія: Греко-католицька церква: Між Сходом і Заходом > Деколонізаційна
+    перспектива'
+- id: S3
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4910
+  type: textbook
+  title: На початку XX ст. вагомі здобутки українського націо
+  page: 248
+  grade: 9
+- id: S4
+  file: ukrainian_wiki/syntez-relihiina-identychnist_Історіографія-Синтез-Релігія-і-національна-ідентичність-Основний-зміст-Українська-Греко-Католицька-Церква-як-головне-забороло-ідентичності
+  type: ukrainian_wiki
+  title: 'Історіографія: Синтез: Релігія і національна ідентичність'
+  section_path: 'Історіографія: Синтез: Релігія і національна ідентичність > Основний
+    зміст > Українська Греко-Католицька Церква як головне забороло ідентичності'
+- id: S6
   file: wave7-entsyklopediia-ukrainoznavstva_c1462
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S2
+- id: S7
   file: wave7-entsyklopediia-ukrainoznavstva_c1543
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S3
+- id: S9
   file: wave9-rusanivsky-ist-lit-movy_c0330
   type: literary
   title: Русанівський — Історія укр. літ. мови
   author: Русанівський В.
-- id: S4
-  file: wikipedia/Андрей (Шептицький)
-  type: wikipedia
-  title: Андрей (Шептицький)
-  url: https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D0%B4%D1%80%D0%B5%D0%B9%20%28%D0%A8%D0%B5%D0%BF%D1%82%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9%29
-- id: S7
-  file: wikipedia/Костельник Гавриїл Федорович
-  type: wikipedia
-  title: Костельник Гавриїл Федорович
-  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D1%81%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%B8%D0%BA%20%D0%93%D0%B0%D0%B2%D1%80%D0%B8%D1%97%D0%BB%20%D0%A4%D0%B5%D0%B4%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87
-- id: S8
-  file: wave7-holobutsky-zaporizhzhia_c0269
-  type: literary
-  title: Голобуцький — Запорозьке козацтво
-  author: Голобуцький В.

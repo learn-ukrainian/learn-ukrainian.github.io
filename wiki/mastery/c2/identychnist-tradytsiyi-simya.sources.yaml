@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/identychnist-tradytsiyi-simya.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-dzyuba-internatsionalizm_c0327
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+- id: S2
+  file: wave7-istkult-t2-xiii-xvii_c0040
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c2804
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave7-ukrxx-derzhavnist_c0378
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S5
+  file: wave7-popovych-narys-kultury_c0008
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c0035
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave7-ukrxx-derzhavnist_c0399
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S8
+  file: wave7-thompson-trubadury_c0032
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c0006
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c0257
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив

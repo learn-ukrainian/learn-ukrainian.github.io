@@ -2,18 +2,66 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/rozstriliane-kontekst_Історіографія-Розстріляне-відродження-та-соціокультурний-контекст-1920-х-1950-х-років-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Розстріляне відродження та соціокультурний контекст 1920-х
+    – 1950-х років'
+  section_path: 'Історіографія: Розстріляне відродження та соціокультурний контекст
+    1920-х – 1950-х років > Короткий зміст'
+- id: S2
+  file: ukrainian_wiki/syntez-rozstriliane_Історіографія-Розстріляне-відродження-як-культурний-геноцид-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Розстріляне відродження як культурний геноцид'
+  section_path: 'Історіографія: Розстріляне відродження як культурний геноцид > Короткий
+    зміст'
+- id: S3
+  file: ukrainian_wiki/rozstriliane-kontekst_Історіографія-Розстріляне-відродження-та-соціокультурний-контекст-1920-х-1950-х-років-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Розстріляне відродження та соціокультурний контекст 1920-х
+    – 1950-х років'
+  section_path: 'Історіографія: Розстріляне відродження та соціокультурний контекст
+    1920-х – 1950-х років > Деколонізаційна перспектива'
+- id: S4
+  file: https://www.youtube.com/watch?v=5cx7MrG77TY
+  type: external
+  title: 'Ідея Олександрівна: як забороняли українську мову? @ideyaolexandrivna'
+  url: https://www.youtube.com/watch?v=5cx7MrG77TY
+- id: S5
+  file: ukrainian_wiki/syntez-rozstriliane_Історіографія-Розстріляне-відродження-як-культурний-геноцид-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Розстріляне відродження як культурний геноцид'
+  section_path: 'Історіографія: Розстріляне відродження як культурний геноцид > Деколонізаційна
+    перспектива'
+- id: S6
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1298
+  type: textbook
+  title: Вступ  11
+  page: 11
+  grade: 11
+- id: S7
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s1133
+  type: textbook
+  title: 'Моренець В. Сучасна українська лірика: модель жанру // Сучасність. — 1996.
+    —'
+  page: 248
+  grade: 11
+- id: S8
   file: 11-klas-istoriya-ukr-gisem-2024_s0902
   type: textbook
   title: § 5. культура україни в повоєнний період
   page: 42
   grade: 11
-- id: S2
-  file: https://www.youtube.com/watch?v=5cx7MrG77TY
-  type: external
-  title: 'Ідея Олександрівна: як забороняли українську мову? @ideyaolexandrivna'
-  url: https://www.youtube.com/watch?v=5cx7MrG77TY
-- id: S3
-  file: wikipedia/Розстріляне відродження
-  type: wikipedia
-  title: Розстріляне відродження
-  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D0%B7%D1%81%D1%82%D1%80%D1%96%D0%BB%D1%8F%D0%BD%D0%B5%20%D0%B2%D1%96%D0%B4%D1%80%D0%BE%D0%B4%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F
+- id: S9
+  file: 10-klas-istorija-ukrajiny-gisem-2018_s0149
+  type: textbook
+  title: § 27. Національно-культурне життя радянської України
+  page: 153
+  grade: 10
+- id: S10
+  file: ukrainian_wiki/rozstriliane-kontekst_Історіографія-Розстріляне-відродження-та-соціокультурний-контекст-1920-х-1950-х-років-Основний-зміст-3-Культурний-розквіт-та-механізми-великого-терору
+  type: ukrainian_wiki
+  title: 'Історіографія: Розстріляне відродження та соціокультурний контекст 1920-х
+    – 1950-х років'
+  section_path: 'Історіографія: Розстріляне відродження та соціокультурний контекст
+    1920-х – 1950-х років > Основний зміст > 3. Культурний розквіт та механізми великого
+    терору'

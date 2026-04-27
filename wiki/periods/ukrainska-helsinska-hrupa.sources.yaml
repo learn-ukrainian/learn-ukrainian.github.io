@@ -11,6 +11,16 @@ sources:
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
+- id: S4
+  file: wave6-sofonovych-khronika_c0003
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S6
+  file: wave5-humanisty-vidrodzennia_c0011
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
 - id: S7
   file: wave7-popovych-narys-kultury_c1126
   type: literary

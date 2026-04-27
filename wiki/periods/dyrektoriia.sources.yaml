@@ -16,6 +16,11 @@ sources:
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
+- id: S6
+  file: wave6-sofonovych-khronika_c0091
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
 - id: S7
   file: wave12-velychko-litopys_c0537
   type: literary

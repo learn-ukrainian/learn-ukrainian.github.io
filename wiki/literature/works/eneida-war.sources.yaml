@@ -36,6 +36,11 @@ sources:
   type: literary
   title: Шевченко — Повне зібрання творів, т.1
   author: Шевченко Т.
+- id: S8
+  file: wave10-shevchenko-tvory-t1_c0675
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
 - id: S9
   file: ukrlib-honchar_c0011
   type: literary

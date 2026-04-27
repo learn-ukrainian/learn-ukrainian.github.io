@@ -2,72 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 6-klas-ukrmova-avramenko-2023_s0243
-  type: textbook
-  title: Сторінка 226
-  grade: 6
-  author: avramenko
-- id: S2
-  file: 8-klas-ukrmova-avramenko-2025_s0132
-  type: textbook
-  title: Сторінка 103
-  grade: 8
-  author: avramenko
-- id: S3
-  file: 11-klas-ukrmova-zabolotnyi-2019_s0289
-  type: textbook
-  title: Сторінка 189
-  grade: 11
-  author: zabolotnyi
-- id: S4
-  file: 11-klas-ukrmova-zabolotnyi-2019_s0277
-  type: textbook
-  title: Сторінка 182
-  grade: 11
-  author: zabolotnyi
-- id: S5
-  file: 10-klas-ukrmova-karaman-2018_s0408
-  type: textbook
-  title: Сторінка 231
-  grade: 10
-  author: karaman
-- id: S6
-  file: wave8-hensiorsky-gvl-mova_c0253
+  file: wave8-hensiorsky-gvl-mova_c0255
   type: literary
   title: Генсьорський — ГВЛ лексичні та стилістичні особливості
   author: Генсьорський А.
-- id: S8
+- id: S2
   file: wave4-ukrainska-mova-encyclopedia_c0077
   type: literary
   title: Українська мова — Енциклопедія
   author: Русанівський В.М. та ін.
-- id: S9
-  file: wave4-ukrainska-mova-encyclopedia_c0134
+- id: S3
+  file: wave8-masliuk-poetyky-rytoryky_c0289
   type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
-- id: S10
-  file: ukrlib-yohansen_c0014
-  type: literary
-  title: Майк Йогансен. Як будується оповідання
-  author: Йогансен М.
-- id: S11
-  file: wave8-hensiorsky-gvl-mova_c0254
-  type: literary
-  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
-  author: Генсьорський А.
-- id: S12
-  file: wave8-ukr-lit-entsyklopediia_c4417
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c4089
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S14
+- id: S5
   file: wave4-ukrainska-mova-encyclopedia_c0209
   type: literary
   title: Українська мова — Енциклопедія
   author: Русанівський В.М. та ін.
-- id: S15
-  file: wave4-ukrainska-mova-encyclopedia_c0102
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0400
   type: literary
-  title: Українська мова — Енциклопедія
-  author: Русанівський В.М. та ін.
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-hensiorsky-gvl-mova_c0276
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c4429
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c2721
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c1451
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив

@@ -26,6 +26,11 @@ sources:
   type: literary
   title: Голобуцький — Запорозьке козацтво
   author: Голобуцький В.
+- id: S6
+  file: wave7-ukrxx-derzhavnist_c0084
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
 - id: S7
   file: wave7-popovych-narys-kultury_c0730
   type: literary

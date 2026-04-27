@@ -1,0 +1,47 @@
+# Source registry for wiki/grammar/b2/checkpoint-lexicology-ii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 5-klas-ukrmova-litvinova-2022_s2353
+  type: textbook
+  title: Лексикологія. Підсумовуємо й узагальнюємо
+  page: 86
+  grade: 5
+- id: S2
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2537
+  type: textbook
+  title: Додаток 3. СЛОВНИЧОК НАГОЛОСІВ
+  page: 240
+  grade: 5
+- id: S3
+  file: 10-klas-ukrmova-karaman-2018_s0737
+  type: textbook
+  title: § 27. Уживання великої літери. Лапки у власних назвах . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . .78
+  page: 269
+  grade: 10
+- id: S4
+  file: 5-klas-ukrmova-golub-2022_s2328
+  type: textbook
+  title: § 91. Побутові проблеми
+  page: 248
+  grade: 5
+- id: S5
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3377
+  type: textbook
+  title: Лексикологiя. Фразеологiя
+  page: 18
+  grade: 6
+- id: S6
+  file: 10-klas-ukrmova-glazova-2018_s0517
+  type: textbook
+  title: § 12. Основні групи фразеологізмів. Багатозначність,
+  page: 55
+  grade: 10
+- id: S7
+  file: 10-klas-ukrmova-glazova-2018_s0558
+  type: textbook
+  title: Го5лий коро5ль — крилатий вислів; уживаєть
+  page: 219
+  grade: 10

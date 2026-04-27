@@ -2,77 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 9-klas-istorija-ukrajini-gisem-2017_s0185
-  type: textbook
-  title: Сторінка 102
-  grade: 9
-  author: gisem
-- id: S2
-  file: 7-klas-istoria-ukr-pometun-2024_s0253
-  type: textbook
-  title: Сторінка 204
-  grade: 7
-  author: pometun
-- id: S3
-  file: 10-klas-ukrmova-karaman-2018_s0483
-  type: textbook
-  title: Сторінка 269
-  grade: 10
-  author: karaman
-- id: S4
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s0299
-  type: textbook
-  title: Сторінка 207
-  grade: 11
-  author: avramenko
-- id: S5
-  file: 11-klas-istoriya-ukr-gisem-2024_s0423
-  type: textbook
-  title: Сторінка 242
-  grade: 11
-  author: gisem
-- id: S6
-  file: wave7-istkult-t2-xiii-xvii_c0256
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
-- id: S7
-  file: wave7-istkult-t2-xiii-xvii_c0251
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
-- id: S8
   file: wave7-istkult-t2-xiii-xvii_c0255
   type: literary
   title: Історія української культури. Т.2. XIII-XVII ст.
   author: Колектив
-- id: S9
+- id: S2
+  file: wave7-istkult-t2-xiii-xvii_c0251
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S3
+  file: wave7-istkult-t2-xiii-xvii_c0256
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S4
   file: wave7-entsyklopediia-ukrainoznavstva_c0471
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S10
-  file: wave4-hrushevsky-istlit_c0257
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S12
+- id: S5
   file: wave7-istkult-t2-xiii-xvii_c0252
   type: literary
   title: Історія української культури. Т.2. XIII-XVII ст.
   author: Колектив
-- id: S13
+- id: S6
   file: wave7-popovych-narys-kultury_c0385
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S14
-  file: ukrlib-kotlyarevsky_c0153
+- id: S7
+  file: wave7-istkult-t2-xiii-xvii_c0254
   type: literary
-  title: Іван Котляревський. Енеїда
-  author: Котляревський І.
-- id: S15
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S8
+  file: wave7-popovych-narys-kultury_c0006
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S9
   file: wave7-entsyklopediia-ukrainoznavstva_c0512
   type: literary
   title: Енциклопедія українознавства
+  author: Колектив
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c0000
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
   author: Колектив

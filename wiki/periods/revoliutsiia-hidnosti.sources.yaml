@@ -21,6 +21,11 @@ sources:
   type: literary
   title: Феодосій Софонович. Хроніка з літописців стародавніх
   author: Софонович Ф.
+- id: S5
+  file: wave12-samovyd-litopys_c0014
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий
 - id: S6
   file: wave0-samovydets_c0013
   type: literary

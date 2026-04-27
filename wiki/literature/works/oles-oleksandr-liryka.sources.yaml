@@ -26,11 +26,11 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S8
-  file: wave8-masliuk-poetyky-rytoryky_c0070
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0004
   type: literary
-  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
-  author: Маслюк В.
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S9
   file: ukrlib-stus_c0007
   type: literary

@@ -21,23 +21,8 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S5
-  file: wave5-dovhalevsky-poetyka_c0027
-  type: literary
-  title: Митрофан Довгалевський. Поетика.
-  author: Довгалевський М.
 - id: S6
   file: wave8-ukr-lit-entsyklopediia_c5004
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S7
-  file: wave8-hrabovych-do-istoriyi_c0269
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
-- id: S8
-  file: wave9-skhidnoslov-hramatyky_c0049
-  type: literary
-  title: Східнослов'янські граматики XVI-XVII ст. (статті)
   author: Колектив

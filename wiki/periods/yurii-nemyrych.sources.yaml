@@ -21,16 +21,31 @@ sources:
   type: literary
   title: Літопис Величка
   author: Величко С.В.
+- id: S5
+  file: wave6-synopsis-1674_c0002
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
 - id: S6
   file: wave12-velychko-litopys_c0428
   type: literary
   title: Самійло Величко. Літопис (1648-1700)
   author: Величко С.
+- id: S7
+  file: wave2-velychko_c0426
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
 - id: S8
   file: wave12-velychko-litopys_c0400
   type: literary
   title: Самійло Величко. Літопис (1648-1700)
   author: Величко С.
+- id: S9
+  file: wave2-velychko_c0398
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
 - id: S10
   file: wave5-suspilna-dumka-xvi-xvii_c0799
   type: literary

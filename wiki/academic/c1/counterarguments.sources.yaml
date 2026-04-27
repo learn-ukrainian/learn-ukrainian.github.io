@@ -1,72 +1,43 @@
 # Source registry for wiki/academic/c1/counterarguments.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S1
-  file: 11-klas-ukrajinska-mova-voron-2019_s0085
-  type: textbook
-  title: Сторінка 60
-  grade: 11
-  author: voron
 - id: S2
-  file: 11-klas-ukrajinska-mova-voron-2019_s0082
-  type: textbook
-  title: Сторінка 58
-  grade: 11
-  author: voron
-- id: S4
-  file: 10-klas-ukrmova-karaman-2018_s0474
-  type: textbook
-  title: Сторінка 264
-  grade: 10
-  author: karaman
-- id: S5
-  file: 5-klas-ukrmova-golub-2022_s0247
-  type: textbook
-  title: Сторінка 248
-  grade: 5
-  author: golub
-- id: S6
   file: wave7-antonovych-kultura_c0015
   type: literary
   title: Українська культура (лекції за ред. Антоновича)
   author: Антонович Д.
-- id: S7
-  file: wave4-chyzhevsky-istoriia-lit_c0314
-  type: literary
-  title: Чижевський — Історія української літератури
-  author: Чижевський Д.
-- id: S8
-  file: ukrlib-khvylovy_c0022
-  type: literary
-  title: Микола Хвильовий. Думки проти течії
-  author: Хвильовий М.
-- id: S9
+- id: S4
   file: wave7-lytvynov-renesans-humanizm_c0161
   type: literary
   title: Литвинов — Ренесансний гуманізм в Україні
   author: Литвинов В.
-- id: S10
-  file: wave7-popovych-narys-kultury_c0010
+- id: S5
+  file: ukrlib-franko_c0071
   type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
-- id: S11
-  file: wave8-hrabovych-do-istoriyi_c0342
+  title: Іван Франко. Літературно-критичні статті
+  author: Франко І.
+- id: S6
+  file: wave8-hensiorsky-gvl-mova_c0255
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0566
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S12
+- id: S8
   file: wave7-heroes-ukr-kultura_c0315
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
-- id: S14
-  file: wave7-heroes-ukr-kultura_c0280
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0235
   type: literary
-  title: Героїчне та знаменитості в українській культурі
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave10-shevchenkivsky-slovnyk_c1599
+  type: literary
+  title: Шевченківський словник
   author: Колектив
-- id: S15
-  file: wave7-hrinchenko-drahomanov_c0029
-  type: literary
-  title: Грінченко-Драгоманов — Діалоги про українську національну справу
-  author: Грінченко Б.

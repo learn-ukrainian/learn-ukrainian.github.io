@@ -58,10 +58,13 @@ CREATE TABLE IF NOT EXISTS wikipedia_negative_cache (
 );
 """
 
-# Seminar tracks that benefit from Wikipedia
+# Seminar tracks that benefit from Wikipedia.
+# Source of truth: curriculum/l2-uk-en/curriculum.yaml. Keep aligned with
+# scripts/wiki/config.py:ALL_TRACKS. lit-doc and lit-crimea were merged into
+# other lit-* tracks and are no longer separate tracks.
 SEMINAR_TRACKS = ["folk", "hist", "bio", "istorio", "lit", "oes", "ruth",
                   "lit-essay", "lit-war", "lit-hist-fic", "lit-youth",
-                  "lit-fantastika", "lit-humor", "lit-drama", "lit-doc", "lit-crimea"]
+                  "lit-fantastika", "lit-humor", "lit-drama"]
 
 # Section-header prefixes that indicate a pedagogical heading, not a real
 # Wikipedia topic. Content_outline sections with these prefixes get filtered

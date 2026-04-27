@@ -2,33 +2,43 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wave7-entsyklopediia-ukrainoznavstva_c2199
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
+  file: ukrainian_wiki/marko-kropyvnytskyi_Марко-Кропивницький-Батько-чи-диктатор-українського-театру-Основний-зміст-Новаторська-режисура-та-акторський-метод
+  type: ukrainian_wiki
+  title: 'Марко Кропивницький: Батько чи диктатор українського театру?'
+  section_path: 'Марко Кропивницький: Батько чи диктатор українського театру? > Основний
+    зміст > Новаторська режисура та акторський метод'
 - id: S2
-  file: wave8-ukr-lit-entsyklopediia_c2131
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
+  file: ukrainian_wiki/marko-kropyvnytskyi_Марко-Кропивницький-Батько-чи-диктатор-українського-театру-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Марко Кропивницький: Батько чи диктатор українського театру?'
+  section_path: 'Марко Кропивницький: Батько чи диктатор українського театру? > Деколонізаційна
+    перспектива'
 - id: S3
-  file: wave7-antonovych-kultura_c0727
-  type: literary
-  title: Українська культура (лекції за ред. Антоновича)
-  author: Антонович Д.
+  file: ukrainian_wiki/marko-kropyvnytskyi_Марко-Кропивницький-Батько-чи-диктатор-українського-театру-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Марко Кропивницький: Батько чи диктатор українського театру?'
+  section_path: 'Марко Кропивницький: Батько чи диктатор українського театру? > Короткий
+    зміст'
 - id: S4
-  file: wave10-shevchenkivsky-slovnyk_c0970
-  type: literary
-  title: Шевченківський словник
-  author: Колектив
-- id: S5
-  file: wave8-ukr-lit-entsyklopediia_c3988
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S6
   file: https://www.youtube.com/watch?v=gJcripu2ZRY
   type: external
   title: ULP 6-235 | Марко Кропивницький і театр корифеїв | Ukrainian Lessons Podcast
     Season 6
   url: https://www.youtube.com/watch?v=gJcripu2ZRY
+- id: S5
+  file: ukrainian_wiki/teatralne-mystetstvo-1_Академічна-C1-Театральне-мистецтво-I-Основний-зміст-3-Епоха-корифеїв-професіоналізація-та-реалізм
+  type: ukrainian_wiki
+  title: 'Академічна C1: Театральне мистецтво I'
+  section_path: 'Академічна C1: Театральне мистецтво I > Основний зміст > 3. Епоха
+    корифеїв: професіоналізація та реалізм'
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c2199
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0396
+  type: textbook
+  title: Недаром в таку годину — аби неділя або яке
+  page: 47
+  grade: 10

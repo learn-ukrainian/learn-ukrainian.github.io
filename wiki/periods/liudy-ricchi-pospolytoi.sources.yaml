@@ -11,11 +11,11 @@ sources:
   type: literary
   title: Боплан — Опис України (1660)
   author: Боплан Г.
-- id: S4
-  file: wave2-velychko_c0025
+- id: S3
+  file: wave12-velychko-litopys_c0027
   type: literary
-  title: Літопис Величка
-  author: Величко С.В.
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
 - id: S5
   file: wave6-boplan-opys-ukrainy_c0011
   type: literary

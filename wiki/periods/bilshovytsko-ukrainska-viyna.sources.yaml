@@ -1,10 +1,20 @@
 # Source registry for wiki/periods/bilshovytsko-ukrainska-viyna.md
 # Referenced inline as [S1], [S2], ...
 sources:
+- id: S1
+  file: wave6-sofonovych-khronika_c0003
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
 - id: S2
   file: wave12-samovyd-litopys_c0022
   type: literary
   title: Літопис Самовидця (1648-1702)
+  author: Невідомий
+- id: S3
+  file: wave0-samovydets_c0021
+  type: literary
+  title: Літопис Самовидця
   author: Невідомий
 - id: S4
   file: wave0-samovydets_c0000
@@ -16,6 +26,16 @@ sources:
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
+- id: S8
+  file: wave6-chevalier-istoriia-viiny_c0128
+  type: literary
+  title: Шевальє — Історія війни козаків проти Польщі (1663)
+  author: Шевальє П.
+- id: S9
+  file: wave6-chevalier-istoriia-viiny_c0019
+  type: literary
+  title: Шевальє — Історія війни козаків проти Польщі (1663)
+  author: Шевальє П.
 - id: S10
   file: wave7-nalyvaiko-ochyma-zakhodu_c0377
   type: literary

@@ -41,11 +41,6 @@ sources:
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
-- id: S9
-  file: wave10-shevchenkivsky-slovnyk_c1595
-  type: literary
-  title: Шевченківський словник
-  author: Колектив
 - id: S10
   file: wave7-heroes-ukr-kultura_c0257
   type: literary

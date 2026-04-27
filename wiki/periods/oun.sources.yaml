@@ -6,6 +6,11 @@ sources:
   type: literary
   title: Суспільно-політична думка XVI-XVII ст.
   author: Антологія
+- id: S2
+  file: wave6-sofonovych-khronika_c0005
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
 - id: S3
   file: wave5-prokopovych-filosofski_c0230
   type: literary
@@ -21,11 +26,21 @@ sources:
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
+- id: S6
+  file: wave0-samovydets_c0000
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
 - id: S7
   file: wave7-popovych-narys-kultury_c1010
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
+- id: S8
+  file: wave6-sofonovych-khronika_c0003
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
 - id: S9
   file: wave7-dzyuba-internatsionalizm_c0326
   type: literary

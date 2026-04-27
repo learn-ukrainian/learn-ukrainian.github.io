@@ -2,12 +2,41 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: 11-klas-istoriya-ukr-gisem-2024_s0899
+  type: textbook
+  title: § 4. Політика радянізації («совєтізації») та репресії західних областей УРСР
+  page: 31
+  grade: 11
+- id: S2
+  file: https://www.youtube.com/watch?v=z0I76Eg9p_0
+  type: external
+  title: 'Данило Яневський: про Шухевича і не тільки @DanyloYanevsky'
+  url: https://www.youtube.com/watch?v=z0I76Eg9p_0
+- id: S3
+  file: ukrainian_wiki/roman-shukhevych_Біографія-Роман-Шухевич-Головний-командир-УПА-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Роман Шухевич: Головний командир УПА'
+  section_path: 'Біографія: Роман Шухевич: Головний командир УПА > Короткий зміст'
+- id: S4
+  file: ukrainian_wiki/roman-shukhevych_Біографія-Роман-Шухевич-Головний-командир-УПА-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Роман Шухевич: Головний командир УПА'
+  section_path: 'Біографія: Роман Шухевич: Головний командир УПА > Деколонізаційна
+    перспектива'
+- id: S5
+  file: ukrainian_wiki/roman-shukhevych_Біографія-Роман-Шухевич-Головний-командир-УПА-Основний-зміст-Інформаційна-війна-міфи-та-спростування
+  type: ukrainian_wiki
+  title: 'Біографія: Роман Шухевич: Головний командир УПА'
+  section_path: 'Біографія: Роман Шухевич: Головний командир УПА > Основний зміст
+    > Інформаційна війна: міфи та спростування'
+- id: S6
+  file: ukrainian_wiki/roman-shukhevych_Біографія-Роман-Шухевич-Головний-командир-УПА-Основний-зміст-Збройний-спротив-радянській-окупації-та-репресіям
+  type: ukrainian_wiki
+  title: 'Біографія: Роман Шухевич: Головний командир УПА'
+  section_path: 'Біографія: Роман Шухевич: Головний командир УПА > Основний зміст
+    > Збройний спротив радянській окупації та репресіям'
+- id: S7
   file: wikipedia/Українська повстанська армія
   type: wikipedia
   title: Українська повстанська армія
   url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BF%D0%BE%D0%B2%D1%81%D1%82%D0%B0%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%B0%D1%80%D0%BC%D1%96%D1%8F
-- id: S2
-  file: wikipedia/Волинь
-  type: wikipedia
-  title: Волинь
-  url: https://uk.wikipedia.org/wiki/%D0%92%D0%BE%D0%BB%D0%B8%D0%BD%D1%8C

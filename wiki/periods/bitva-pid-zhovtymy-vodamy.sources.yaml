@@ -21,11 +21,6 @@ sources:
   type: literary
   title: Шевальє — Історія війни козаків проти Польщі (1663)
   author: Шевальє П.
-- id: S5
-  file: wave12-grabianka-litopys_c0000
-  type: literary
-  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
-  author: Грабянка Г.
 - id: S6
   file: wave2-hrabianka_c0210
   type: literary
@@ -36,13 +31,3 @@ sources:
   type: literary
   title: Українська література XVII ст.
   author: Антологія
-- id: S9
-  file: wave6-synopsis-1674_c0012
-  type: literary
-  title: Синопсис. Київ, 1674
-  author: Невідомий
-- id: S10
-  file: wave6-boplan-opys-ukrainy_c0029
-  type: literary
-  title: Боплан — Опис України (1660)
-  author: Боплан Г.

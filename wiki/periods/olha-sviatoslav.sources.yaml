@@ -26,11 +26,6 @@ sources:
   type: literary
   title: Грушевський — Історія України-Руси, том 6
   author: Грушевський М.
-- id: S6
-  file: wave4-hrushevsky-iur-t1_c0770
-  type: literary
-  title: Грушевський — Історія України-Руси, т.1
-  author: Грушевський М.
 - id: S7
   file: wave5-oldukr-xvii_c0504
   type: literary

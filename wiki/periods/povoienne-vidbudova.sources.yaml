@@ -21,11 +21,6 @@ sources:
   type: literary
   title: Літопис Самовидця
   author: Невідомий
-- id: S5
-  file: wave5-suspilna-dumka-xvi-xvii_c0061
-  type: literary
-  title: Суспільно-політична думка XVI-XVII ст.
-  author: Антологія
 - id: S6
   file: wave7-entsyklopediia-ukrainoznavstva_c0304
   type: literary

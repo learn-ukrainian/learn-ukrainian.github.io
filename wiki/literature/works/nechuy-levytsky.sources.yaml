@@ -31,13 +31,8 @@ sources:
   type: literary
   title: Крип'якевич — Історія української культури (1937)
   author: Крип'якевич І.
-- id: S8
-  file: wave6-sofonovych-khronika_c0005
+- id: S7
+  file: wave10-shevchenkivsky-slovnyk_c2093
   type: literary
-  title: Феодосій Софонович. Хроніка з літописців стародавніх
-  author: Софонович Ф.
-- id: S9
-  file: wave12-velychko-litopys_c0043
-  type: literary
-  title: Самійло Величко. Літопис (1648-1700)
-  author: Величко С.
+  title: Шевченківський словник
+  author: Колектив

@@ -6,11 +6,6 @@ sources:
   type: literary
   title: Українські гуманісти епохи Відродження
   author: Антологія
-- id: S2
-  file: wave12-grabianka-litopys_c0005
-  type: literary
-  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
-  author: Грабянка Г.
 - id: S4
   file: wave6-synopsis-1674_c0050
   type: literary
@@ -26,11 +21,6 @@ sources:
   type: literary
   title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
   author: Грабянка Г.
-- id: S7
-  file: wave0-samovydets_c0000
-  type: literary
-  title: Літопис Самовидця
-  author: Невідомий
 - id: S9
   file: wave6-rihelman-litopysna-opovid_c0035
   type: literary

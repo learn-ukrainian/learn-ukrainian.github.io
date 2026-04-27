@@ -26,11 +26,6 @@ sources:
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S6
-  file: wave7-heroes-ukr-kultura_c0265
-  type: literary
-  title: Героїчне та знаменитості в українській культурі
-  author: Колектив
 - id: S9
   file: wave7-entsyklopediia-ukrainoznavstva_c2025
   type: literary

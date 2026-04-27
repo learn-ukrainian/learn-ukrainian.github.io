@@ -1,0 +1,40 @@
+# Source registry for wiki/grammar/b2/mistsia-i-oriientyry.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2520
+  type: textbook
+  title: ІІ. З одним утвореним словосполученням (на вибір) складіть і запишіть
+  page: 114
+  grade: 5
+- id: S2
+  file: 6-klas-ukrmova-avramenko-2023_s3050
+  type: textbook
+  title: § 33. Зміни приголосних під час творення слів
+  page: 63
+  grade: 6
+- id: S3
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4830
+  type: textbook
+  title: § 11. Культура України. Розвиток театру, музики, ­образо­творчого мистецтва
+    та архітектури
+  page: 89
+  grade: 9
+- id: S4
+  file: 9-klas-ukrajinska-mova-zabolotnij-2017_s5211
+  type: textbook
+  title: Уроки розвитку мовлення (p. 225)
+  page: 225
+  grade: 9
+- id: S5
+  file: 9-klas-ukrmova-zabolotnyi-2017_s5272
+  type: textbook
+  title: Уроки розвитку мовлення (p. 225)
+  page: 225
+  grade: 9
+- id: S6
+  file: 8-klas-ukrmova-avramenko-2025_s4640
+  type: textbook
+  title: РОЗВИТОК МОВЛЕННЯ (p. 131)
+  page: 131
+  grade: 8

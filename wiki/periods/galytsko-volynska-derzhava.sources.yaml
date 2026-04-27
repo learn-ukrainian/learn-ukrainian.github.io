@@ -36,3 +36,8 @@ sources:
   type: literary
   title: Галицько-Волинський літопис
   author: Невідомий
+- id: S10
+  file: wave1-kyivskyi-litopys_c0748
+  type: literary
+  title: Київський літопис
+  author: Невідомий

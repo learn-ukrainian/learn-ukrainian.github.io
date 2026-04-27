@@ -2,12 +2,33 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: https://www.youtube.com/watch?v=LbhlKAOQXGU
+  file: https://www.youtube.com/watch?v=FUN3ChqB_50
   type: external
-  title: 'історія Акту Злуки: УНР feat ЗУНР'
-  url: https://www.youtube.com/watch?v=LbhlKAOQXGU
+  title: ULP 5-177 | День соборності України | Ukrainian Lessons Podcast Season 5
+  url: https://www.youtube.com/watch?v=FUN3ChqB_50
 - id: S2
-  file: wikipedia/Гошуляк Іван Леонідович
+  file: https://www.youtube.com/watch?v=9wdph_Lsvcw
+  type: external
+  title: Реальна історія українського прапору
+  url: https://www.youtube.com/watch?v=9wdph_Lsvcw
+- id: S3
+  file: ukrainian_wiki/akt-zluki_Історіографія-Акт-Злуки-1919-Символ-єдності-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Акт Злуки 1919: Символ єдності'
+  section_path: 'Історіографія: Акт Злуки 1919: Символ єдності > Короткий зміст'
+- id: S4
+  file: ukrainian_wiki/akt-zluki_Історіографія-Акт-Злуки-1919-Символ-єдності-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Історіографія: Акт Злуки 1919: Символ єдності'
+  section_path: 'Історіографія: Акт Злуки 1919: Символ єдності > Мовні зразки'
+- id: S5
+  file: ukrainian_wiki/akt-zluki_Історіографія-Акт-Злуки-1919-Символ-єдності-Основний-зміст-Історіографічне-осмислення-проблеми-праці-Івана-Гошуляка
+  type: ukrainian_wiki
+  title: 'Історіографія: Акт Злуки 1919: Символ єдності'
+  section_path: 'Історіографія: Акт Злуки 1919: Символ єдності > Основний зміст >
+    Історіографічне осмислення проблеми: праці Івана Гошуляка'
+- id: S6
+  file: wikipedia/День Соборності України
   type: wikipedia
-  title: Гошуляк Іван Леонідович
-  url: https://uk.wikipedia.org/wiki/%D0%93%D0%BE%D1%88%D1%83%D0%BB%D1%8F%D0%BA%20%D0%86%D0%B2%D0%B0%D0%BD%20%D0%9B%D0%B5%D0%BE%D0%BD%D1%96%D0%B4%D0%BE%D0%B2%D0%B8%D1%87
+  title: День Соборності України
+  url: https://uk.wikipedia.org/wiki/%D0%94%D0%B5%D0%BD%D1%8C%20%D0%A1%D0%BE%D0%B1%D0%BE%D1%80%D0%BD%D0%BE%D1%81%D1%82%D1%96%20%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8

@@ -2,82 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-mova-voron-2019_s0060
-  type: textbook
-  title: Сторінка 43
-  grade: 11
-  author: voron
+  file: wave8-ukr-lit-entsyklopediia_c2903
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
 - id: S2
-  file: 7-klas-ukrlit-avramenko-2024_s0001
-  type: textbook
-  title: Сторінка 2
-  grade: 7
-  author: avramenko
+  file: wave8-masliuk-poetyky-rytoryky_c0148
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
 - id: S3
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s0266
-  type: textbook
-  title: Сторінка 187
-  grade: 11
-  author: avramenko
+  file: wave8-ukr-lit-entsyklopediia_c5367
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
 - id: S4
-  file: 11-klas-ukrajinska-mova-avramenko-2019_s0217
-  type: textbook
-  title: Сторінка 154
-  grade: 11
-  author: avramenko
-- id: S5
-  file: 11-klas-ukrmova-zabolotnyi-2019_s0300
-  type: textbook
-  title: Сторінка 194
-  grade: 11
-  author: zabolotnyi
-- id: S6
-  file: wave8-ukr-lit-entsyklopediia_c2893
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S7
-  file: wave8-ukr-lit-entsyklopediia_c2649
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S8
-  file: wave4-chyzhevsky-istoriia-lit_c0014
-  type: literary
-  title: Чижевський — Історія української літератури
-  author: Чижевський Д.
-- id: S9
-  file: wave10-shevchenkivsky-slovnyk_c1599
-  type: literary
-  title: Шевченківський словник
-  author: Колектив
-- id: S10
   file: wave10-shevchenkivsky-slovnyk_c1600
   type: literary
   title: Шевченківський словник
   author: Колектив
-- id: S11
-  file: wave10-shevchenkivsky-slovnyk_c1469
+- id: S5
+  file: wave8-masliuk-poetyky-rytoryky_c0212
   type: literary
-  title: Шевченківський словник
-  author: Колектив
-- id: S12
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S6
   file: wave10-shevchenkivsky-slovnyk_c1571
   type: literary
   title: Шевченківський словник
   author: Колектив
-- id: S13
-  file: wave8-hensiorsky-gvl-mova_c0276
+- id: S7
+  file: wave8-masliuk-poetyky-rytoryky_c0086
   type: literary
-  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
-  author: Генсьорський А.
-- id: S14
-  file: wave8-ukr-lit-entsyklopediia_c2721
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S15
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S8
   file: wave8-masliuk-poetyky-rytoryky_c0153
   type: literary
   title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
   author: Маслюк В.
+- id: S9
+  file: wave8-masliuk-poetyky-rytoryky_c0146
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S10
+  file: wave8-hensiorsky-gvl-mova_c0276
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.

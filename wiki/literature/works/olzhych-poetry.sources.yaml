@@ -21,18 +21,8 @@ sources:
   type: literary
   title: Грабович — До історії української літератури
   author: Грабович Г.
-- id: S5
-  file: wave4-chyzhevsky-istoriia-lit_c0497
-  type: literary
-  title: Чижевський — Історія української літератури
-  author: Чижевський Д.
 - id: S6
   file: wave5-dovhalevsky-poetyka_c0014
-  type: literary
-  title: Митрофан Довгалевський. Поетика.
-  author: Довгалевський М.
-- id: S7
-  file: wave5-dovhalevsky-poetyka_c0000
   type: literary
   title: Митрофан Довгалевський. Поетика.
   author: Довгалевський М.

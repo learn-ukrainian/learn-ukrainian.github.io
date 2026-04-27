@@ -1,0 +1,40 @@
+# Source registry for wiki/grammar/b2/tradytsii-i-zvychai.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 6-klas-ukrlit-avramenko-2023_s2709
+  type: textbook
+  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 10)
+  page: 10
+  grade: 6
+- id: S2
+  file: 6-klas-ukrlit-kovalenko-2023_s2758
+  type: textbook
+  title: У робочому зошиті накресли таблицю ЗХД. Запов
+  page: 32
+  grade: 6
+- id: S3
+  file: 6-klas-ukrlit-avramenko-2023_s2707
+  type: textbook
+  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 6)
+  page: 6
+  grade: 6
+- id: S4
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4918
+  type: textbook
+  title: § 33. українське образотворче мистецтво та архітектура
+  page: 269
+  grade: 9
+- id: S5
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4833
+  type: textbook
+  title: § 11. Культура україни. Розвиток театру, музики, образо творчого мистецтва
+    та архітектури
+  page: 95
+  grade: 9
+- id: S7
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
+  type: textbook
+  title: Розділ 1. ШОКОЛАД
+  page: 36
+  grade: 4

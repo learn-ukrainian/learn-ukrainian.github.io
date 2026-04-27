@@ -1,0 +1,39 @@
+# Source registry for wiki/grammar/b2/kharchuvannia-i-kukhnia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrmova-zabolotnyi-2019_s1419
+  type: textbook
+  title: Ìорôологічна норма (p. 30)
+  page: 30
+  grade: 11
+- id: S2
+  file: 7-klas-ukrmova-zabolotnyi-2024_s3964
+  type: textbook
+  title: ТЕМА 7
+  page: 248
+  grade: 7
+- id: S3
+  file: 7-klas-istoria-ukr-pometun-2024_s3584
+  type: textbook
+  title: Розділ 5. РУСЬКІ ЗЕМЛІ В СКЛАДІ СУСІДНІХ ДЕРЖАВ
+  page: 155
+  grade: 7
+- id: S4
+  file: 5-klas-ukrmova-zabolotnyi-2023_s2522
+  type: textbook
+  title: ПІДКОРЕННЯ ГОВЕРЛИ
+  page: 166
+  grade: 5
+- id: S5
+  file: 8-klas-ukrmova-zabolotnyi-2025_s4714
+  type: textbook
+  title: Рильський). 5. Цілує сонце рушники у чистій матери­
+  page: 160
+  grade: 8
+- id: S7
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3374
+  type: textbook
+  title: Повторення вивченого (p. 9)
+  page: 9
+  grade: 6

@@ -46,12 +46,3 @@ sources:
   type: literary
   title: Літопис Самовидця (1648-1702)
   author: Невідомий
-- id: S10
-  file: wave0-samovydets_c0013
-  type: literary
-  title: Літопис Самовидця
-  author: Невідомий
-- id: S11
-  file: ext-article-0
-  type: external
-  title: ext-article-0

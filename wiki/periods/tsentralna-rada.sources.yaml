@@ -11,11 +11,21 @@ sources:
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0082
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
 - id: S6
   file: wave7-ukrxx-derzhavnist_c0313
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
+- id: S7
+  file: wave6-rihelman-litopysna-opovid_c0049
+  type: literary
+  title: Рігельман — Літописна оповідь про Малу Росію
+  author: Рігельман О.
 - id: S8
   file: wave7-entsyklopediia-ukrainoznavstva_c1216
   type: literary
@@ -26,3 +36,8 @@ sources:
   type: literary
   title: Українська державність у XX столітті
   author: Колектив
+- id: S10
+  file: wave7-kohut-tsentralizm_c0000
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.

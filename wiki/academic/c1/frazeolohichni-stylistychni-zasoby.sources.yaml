@@ -1,77 +1,53 @@
 # Source registry for wiki/academic/c1/frazeolohichni-stylistychni-zasoby.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S2
-  file: 11-klas-ukrmova-zabolotnyi-2019_s0268
-  type: textbook
-  title: Сторінка 177
-  grade: 11
-  author: zabolotnyi
-- id: S3
-  file: 11-klas-ukrajinska-mova-glazova-2019_s0265
-  type: textbook
-  title: Сторінка 185
-  grade: 11
-  author: glazova
-- id: S4
-  file: 11-klas-ukrajinska-mova-glazova-2019_s0268
-  type: textbook
-  title: Сторінка 187
-  grade: 11
-  author: glazova
-- id: S5
-  file: 10-klas-ukrmova-karaman-2018_s0211
-  type: textbook
-  title: Сторінка 118
-  grade: 10
-  author: karaman
-- id: S6
-  file: wave8-hensiorsky-gvl-mova_c0171
-  type: literary
-  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
-  author: Генсьорський А.
-- id: S7
-  file: wave8-hensiorsky-gvl-mova_c0253
-  type: literary
-  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
-  author: Генсьорський А.
-- id: S8
-  file: wave8-ukr-lit-entsyklopediia_c2810
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S9
+- id: S1
   file: wave8-hensiorsky-gvl-mova_c0219
   type: literary
   title: Генсьорський — ГВЛ лексичні та стилістичні особливості
   author: Генсьорський А.
-- id: S10
-  file: wave8-ukr-lit-entsyklopediia_c2933
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S11
-  file: wave8-hensiorsky-gvl-mova_c0172
-  type: literary
-  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
-  author: Генсьорський А.
-- id: S12
-  file: wave8-ukr-lit-entsyklopediia_c4418
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S13
-  file: wave8-hensiorsky-gvl-mova_c0276
-  type: literary
-  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
-  author: Генсьорський А.
-- id: S14
+- id: S2
   file: wave8-hensiorsky-gvl-mova_c0173
   type: literary
   title: Генсьорський — ГВЛ лексичні та стилістичні особливості
   author: Генсьорський А.
-- id: S15
+- id: S3
+  file: wave8-hensiorsky-gvl-mova_c0172
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c4418
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave8-hensiorsky-gvl-mova_c0168
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S6
   file: wave8-hensiorsky-gvl-mova_c0182
   type: literary
   title: Генсьорський — ГВЛ лексичні та стилістичні особливості
   author: Генсьорський А.
+- id: S7
+  file: wave8-hensiorsky-gvl-mova_c0205
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c5169
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0108
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave4-ukrainska-mova-encyclopedia_c0110
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.

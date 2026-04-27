@@ -21,16 +21,16 @@ sources:
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
-- id: S5
-  file: wave7-popovych-narys-kultury_c0790
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
 - id: S6
   file: wave7-heroes-ukr-kultura_c0290
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0719
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
 - id: S8
   file: wave7-heroes-ukr-kultura_c0271
   type: literary
@@ -41,8 +41,3 @@ sources:
   type: literary
   title: Героїчне та знаменитості в українській культурі
   author: Колектив
-- id: S10
-  file: wave4-chyzhevsky-istoriia-lit_c0630
-  type: literary
-  title: Чижевський — Історія української літератури
-  author: Чижевський Д.

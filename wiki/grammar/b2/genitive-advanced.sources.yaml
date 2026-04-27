@@ -1,0 +1,45 @@
+# Source registry for wiki/grammar/b2/genitive-advanced.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrmova-avramenko-2024_s3866
+  type: textbook
+  title: § 75. Прийменник як службова частина мови
+  page: 166
+  grade: 7
+- id: S2
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0309
+  type: textbook
+  title: МОРФОЛОГІЧНА НОРМА (p. 168)
+  page: 168
+  grade: 10
+- id: S3
+  file: 4-klas-ukrayinska-mova-kravtsova-2021-1_s1801
+  type: textbook
+  title: Крок 2. Розглянь таблицю відмінювання іменників. У яких імен­
+  page: 53
+  grade: 4
+- id: S4
+  file: 11-klas-ukrajinska-mova-avramenko-2019_s1141
+  type: textbook
+  title: § 8. ПРИКМЕТНИК. ВІДМІНКОВІ ЗАКІНЧЕННЯ ПРИКМЕТНИКІВ
+  page: 24
+  grade: 11
+- id: S5
+  file: 4-klas-ukrmova-zaharijchuk_s1914
+  type: textbook
+  title: ІМЕННИК
+  page: 48
+  grade: 4
+- id: S6
+  file: 6-klas-ukrmova-zabolotnyi-2020_s3389
+  type: textbook
+  title: § 30. ЗАКІНЧЕННЯ ІМЕННИКІВ ЧОЛОВІЧОГО
+  page: 106
+  grade: 6
+- id: S7
+  file: 4-klas-ukrayinska-mova-ponomarova-2021-1_s1825
+  type: textbook
+  title: Розділ 1. ШОКОЛАД
+  page: 36
+  grade: 4

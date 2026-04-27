@@ -31,18 +31,8 @@ sources:
   type: literary
   title: Чижевський — Історія української літератури
   author: Чижевський Д.
-- id: S7
-  file: wave5-prokopovych-filosofski_c0699
-  type: literary
-  title: Феофан Прокопович. Філософські твори
-  author: Прокопович Ф.
 - id: S8
   file: wave4-hrushevsky-istlit_c0033
   type: literary
   title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S9
-  file: wave12-hrushevsky-iu-odnotom_c0038
-  type: literary
-  title: Грушевський — Історія України (однотомник)
   author: Грушевський М.

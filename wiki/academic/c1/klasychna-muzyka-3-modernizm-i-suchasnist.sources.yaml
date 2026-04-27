@@ -2,71 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 11-klas-ukrajinska-literatura-avramenko-2019_s0404
-  type: textbook
-  title: Сторінка 248
-  grade: 11
-  author: avramenko
-- id: S2
-  file: 10-klas-ukrajinska-literatura-avramenko-2018_s0482
-  type: textbook
-  title: Сторінка 255
-  grade: 10
-  author: avramenko
-- id: S3
-  file: 10-klas-ukrmova-glazova-2018_s0017
-  type: textbook
-  title: Сторінка 13
-  grade: 10
-  author: glazova
-- id: S4
-  file: 10-klas-ukrlit-borzenko-2018-prof_s0239
-  type: textbook
-  title: Сторінка 128
-  grade: 10
-  author: borzenko
-- id: S6
   file: wave7-popovych-narys-kultury_c0846
   type: literary
   title: Попович — Нарис історії культури України
   author: Попович М.
-- id: S7
-  file: wave8-hrabovych-do-istoriyi_c0726
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
-- id: S8
-  file: wave8-hrabovych-do-istoriyi_c0718
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
-- id: S9
-  file: wave8-hrabovych-do-istoriyi_c0728
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
-- id: S10
+- id: S2
   file: wave7-antonovych-kultura_c0631
   type: literary
   title: Українська культура (лекції за ред. Антоновича)
   author: Антонович Д.
-- id: S11
-  file: wave8-hrabovych-do-istoriyi_c0725
-  type: literary
-  title: Грабович — До історії української літератури
-  author: Грабович Г.
-- id: S13
+- id: S3
   file: wave8-ukr-lit-entsyklopediia_c0036
   type: literary
   title: Українська літературна енциклопедія (1988-1995)
   author: Колектив
-- id: S14
-  file: wave7-istkult-t2-xiii-xvii_c1334
+- id: S4
+  file: wave7-istkult-t2-xiii-xvii_c1391
   type: literary
   title: Історія української культури. Т.2. XIII-XVII ст.
   author: Колектив
-- id: S15
-  file: wave7-antonovych-kultura_c0648
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0171
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c1336
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave4-chyzhevsky-istoriia-lit_c0021
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S8
+  file: wave10-shevchenkivsky-slovnyk_c2308
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S9
+  file: wave7-antonovych-kultura_c0676
   type: literary
   title: Українська культура (лекції за ред. Антоновича)
   author: Антонович Д.
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c0872
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив

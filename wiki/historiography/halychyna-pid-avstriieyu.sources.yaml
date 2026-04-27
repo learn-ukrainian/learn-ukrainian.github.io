@@ -2,27 +2,47 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
+  file: ukrainian_wiki/halychyna-pid-avstriieyu_Історіографія-Галичина-під-Австрією-Особлива-доля-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Галичина під Австрією: Особлива доля'
+  section_path: 'Історіографія: Галичина під Австрією: Особлива доля > Короткий зміст'
+- id: S2
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4823
+  type: textbook
+  title: § 9. Європейська революція 1848—1849 рр. на західноукраїнських землях
+  page: 69
+  grade: 9
+- id: S3
+  file: ukrainian_wiki/emskyi-ukaz-tekst_Історіографія-Емський-указ-Анатомія-заборони-Основний-зміст-Формування-соборного-простору-Галичина-як-інтелектуальний-П-ємонт
+  type: ukrainian_wiki
+  title: 'Історіографія: Емський указ: Анатомія заборони'
+  section_path: 'Історіографія: Емський указ: Анатомія заборони > Основний зміст >
+    Формування соборного простору: Галичина як інтелектуальний П''ємонт'
+- id: S4
+  file: https://www.youtube.com/watch?v=SxzJoS_0SbQ
+  type: external
+  title: Як Росія Розхитує Українську Державність? Міф про Глаичину | Історія України
+    від імені Т.Г. Шевченка
+  url: https://www.youtube.com/watch?v=SxzJoS_0SbQ
+- id: S5
+  file: https://www.youtube.com/watch?v=7QhZud2xVrs
+  type: external
+  title: Головна Таємниця Австро-Угорщини | Історія від імені Т.Г. Шевченка
+  url: https://www.youtube.com/watch?v=7QhZud2xVrs
+- id: S6
   file: wave7-entsyklopediia-ukrainoznavstva_c1141
   type: literary
   title: Енциклопедія українознавства
   author: Колектив
-- id: S2
-  file: wave8-ukr-lit-entsyklopediia_c1498
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S3
-  file: wave7-krypyakevych-istkult_c0512
-  type: literary
-  title: Крип'якевич — Історія української культури (1937)
-  author: Крип'якевич І.
-- id: S4
-  file: https://www.youtube.com/watch?v=4L_IUKOc3ow
+- id: S7
+  file: https://www.youtube.com/watch?v=5aPU9vaGdrI
   type: external
-  title: Невже українців пробудили поляки? [без реклами]
-  url: https://www.youtube.com/watch?v=4L_IUKOc3ow
-- id: S5
-  file: wikipedia/Емський указ
-  type: wikipedia
-  title: Емський указ
-  url: https://uk.wikipedia.org/wiki/%D0%95%D0%BC%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D1%83%D0%BA%D0%B0%D0%B7
+  title: ТАЄМНА ОРГАНІЗАЦІЯ, Яка Зберегла Історію України | Історія України від імені
+    Т.Г. Шевченка
+  url: https://www.youtube.com/watch?v=5aPU9vaGdrI
+- id: S8
+  file: 9-klas-istorija-ukrajini-gisem-2017_s4825
+  type: textbook
+  title: Розділ II. Узагальнення знань за розділом II
+  page: 80
+  grade: 9
