@@ -1,0 +1,40 @@
+# Source registry for wiki/literature/works/istoriia-rusiv-forgery-and-genius.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/metodolohiia-dekolonizatsii_Історіографія-Методологія-деколонізації-Український-фронт-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Методологія деколонізації: Український фронт'
+  section_path: 'Історіографія: Методологія деколонізації: Український фронт > Деколонізаційна
+    перспектива'
+- id: S2
+  file: wave8-chyzhevsky-baroko_c0356
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S3
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s4993
+  type: textbook
+  title: ДАВНЯ ЛІТЕРАТУРА (p. 76)
+  page: 76
+  grade: 9
+- id: S4
+  file: wikipedia/Про історичну єдність росіян та українців
+  type: wikipedia
+  title: Про історичну єдність росіян та українців
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%BE%20%D1%96%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D1%83%20%D1%94%D0%B4%D0%BD%D1%96%D1%81%D1%82%D1%8C%20%D1%80%D0%BE%D1%81%D1%96%D1%8F%D0%BD%20%D1%82%D0%B0%20%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%86%D1%96%D0%B2
+- id: S5
+  file: wave6-synopsis-1674_c0048
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S6
+  file: wave4-chyzhevsky-istoriia-lit_c0401
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S7
+  file: wikipedia/Київська Русь
+  type: wikipedia
+  title: Київська Русь
+  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B0%20%D0%A0%D1%83%D1%81%D1%8C

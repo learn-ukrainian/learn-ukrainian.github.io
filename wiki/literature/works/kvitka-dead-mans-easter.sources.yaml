@@ -1,0 +1,59 @@
+# Source registry for wiki/literature/works/kvitka-dead-mans-easter.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wikipedia/Дроздовський Дмитро Ігорович
+  type: wikipedia
+  title: Дроздовський Дмитро Ігорович
+  url: https://uk.wikipedia.org/wiki/%D0%94%D1%80%D0%BE%D0%B7%D0%B4%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE%20%D0%86%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: ukrainian_wiki/mykhailo-stelmakh-shchedryi-vechir_Українська-література-Михайло-Стельмах-Щедрий-вечір-Основний-зміст-Історіографія-деколонізація-та-боротьба-за-суб-єктність-літератури
+  type: ukrainian_wiki
+  title: 'Українська література: Михайло Стельмах: Щедрий вечір'
+  section_path: 'Українська література: Михайло Стельмах: Щедрий вечір > Основний
+    зміст > Історіографія, деколонізація та боротьба за суб''єктність літератури'
+- id: S4
+  file: ukrainian_wiki/stefanyk-novellas_Українська-література-Новели-Василя-Стефаника-та-теоретико-методологічні-виміри-тексту-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література: Новели Василя Стефаника та теоретико-методологічні
+    виміри тексту'
+  section_path: 'Українська література: Новели Василя Стефаника та теоретико-методологічні
+    виміри тексту > Деколонізаційна перспектива'
+- id: S5
+  file: wave12-hrushevsky-iu-odnotom_c0002
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S6
+  file: ukrainian_wiki/metodolohiia-dekolonizatsii_Історіографія-Методологія-деколонізації-Український-фронт-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Методологія деколонізації: Український фронт'
+  section_path: 'Історіографія: Методологія деколонізації: Український фронт > Деколонізаційна
+    перспектива'
+- id: S7
+  file: ukrainian_wiki/irony-sarcasm_Академічна-C1-Іронія-та-сарказм-Тонкощі-змісту-Наукові-дискусії
+  type: ukrainian_wiki
+  title: 'Академічна C1: Іронія та сарказм: Тонкощі змісту'
+  section_path: 'Академічна C1: Іронія та сарказм: Тонкощі змісту > Наукові дискусії'
+- id: S8
+  file: wave8-chyzhevsky-filosofiia_c0003
+  type: literary
+  title: Чижевський — Нариси з історії філософії на Україні
+  author: Чижевський Д.
+- id: S9
+  file: ukrainian_wiki/war-literature-as-movement_Українська-література-Література-як-Опір-Голоси-з-війни-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Література як Опір: Голоси з війни'
+  section_path: 'Українська література: Література як Опір: Голоси з війни > Короткий
+    зміст'
+- id: S10
+  file: https://www.youtube.com/watch?v=17LTgoJ2Mq0
+  type: external
+  title: Чому Рєпін Малював Українців? Про Ріпина з @kulturtrigger | Історія України
+    від імені Т.Г. Шевченка
+  url: https://www.youtube.com/watch?v=17LTgoJ2Mq0

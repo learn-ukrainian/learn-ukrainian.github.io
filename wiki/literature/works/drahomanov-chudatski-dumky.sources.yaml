@@ -1,0 +1,51 @@
+# Source registry for wiki/literature/works/drahomanov-chudatski-dumky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/drahomanov_Історія-України-Михайло-Драгоманов-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історія України: Михайло Драгоманов'
+  section_path: 'Історія України: Михайло Драгоманов > Деколонізаційна перспектива'
+- id: S2
+  file: ukrainian_wiki/mykhailo-drahomanov_Біографія-Михайло-Драгоманов-Архітектор-європейської-України-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Михайло Драгоманов: Архітектор європейської України'
+  section_path: 'Біографія: Михайло Драгоманов: Архітектор європейської України >
+    Деколонізаційна перспектива'
+- id: S3
+  file: wave8-fdm-biobibliohrafichnyi_c0043
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S4
+  file: wave7-hrinchenko-drahomanov_c0006
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S5
+  file: wave7-hrinchenko-drahomanov_c0000
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S6
+  file: https://www.youtube.com/watch?v=J7h5XQ8lKgo
+  type: external
+  title: 'Михайло Драгоманов: геній і вигнанець'
+  url: https://www.youtube.com/watch?v=J7h5XQ8lKgo
+- id: S7
+  file: ukrainian_wiki/mykhailo-drahomanov_Біографія-Михайло-Драгоманов-Архітектор-європейської-України-Основний-зміст-Геополітика-та-бачення-державного-устрою-федералізм-як-інструмент
+  type: ukrainian_wiki
+  title: 'Біографія: Михайло Драгоманов: Архітектор європейської України'
+  section_path: 'Біографія: Михайло Драгоманов: Архітектор європейської України >
+    Основний зміст > Геополітика та бачення державного устрою: федералізм як інструмент'
+- id: S8
+  file: wave7-hrinchenko-drahomanov_c0166
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S9
+  file: ukrainian_wiki/mykhailo-drahomanov_Біографія-Михайло-Драгоманов-Архітектор-європейської-України-Основний-зміст-Полеміка-з-нативістами-література-культура-та-космополітизм
+  type: ukrainian_wiki
+  title: 'Біографія: Михайло Драгоманов: Архітектор європейської України'
+  section_path: 'Біографія: Михайло Драгоманов: Архітектор європейської України >
+    Основний зміст > Полеміка з нативістами: література, культура та «космополітизм»'

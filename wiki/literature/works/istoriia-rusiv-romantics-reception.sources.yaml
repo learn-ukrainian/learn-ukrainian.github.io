@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/istoriia-rusiv-romantics-reception.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-istrus-drach_c0351
+  type: literary
+  title: Історія Русів (переклад Драча)
+  author: Драч І.
+- id: S2
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s4993
+  type: textbook
+  title: ДАВНЯ ЛІТЕРАТУРА (p. 76)
+  page: 76
+  grade: 9
+- id: S3
+  file: wave4-chyzhevsky-istoriia-lit_c0401
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S4
+  file: wave8-chyzhevsky-baroko_c0356
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S5
+  file: ukrainian_wiki/pavlo-polubotok_Історія-України-Павло-Полуботок-Останній-наказний-Основний-зміст-Апокрифічна-спадщина-та-формування-національного-міфу
+  type: ukrainian_wiki
+  title: 'Історія України: Павло Полуботок: Останній наказний'
+  section_path: 'Історія України: Павло Полуботок: Останній наказний > Основний зміст
+    > Апокрифічна спадщина та формування національного міфу'
+- id: S6
+  file: ukrainian_wiki/malorosiia-konstrukt_Історіографія-Конструювання-імперського-міфу-та-заперечення-української-суб-єктності-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Конструювання імперського міфу та заперечення української
+    суб''єктності'
+  section_path: 'Історіографія: Конструювання імперського міфу та заперечення української
+    суб''єктності > Деколонізаційна перспектива'
+- id: S7
+  file: 8-klas-istoria-ukr-schupak-2025_s4228
+  type: textbook
+  title: Розділ 5
+  page: 196
+  grade: 8
+- id: S8
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0037
+  type: literary
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.

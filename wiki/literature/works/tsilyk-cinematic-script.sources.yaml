@@ -1,0 +1,37 @@
+# Source registry for wiki/literature/works/tsilyk-cinematic-script.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1413
+  type: textbook
+  title: Словник термінів і понять  253
+  page: 253
+  grade: 11
+- id: S2
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s1133
+  type: textbook
+  title: 'Моренець В. Сучасна українська лірика: модель жанру // Сучасність. — 1996.
+    —'
+  page: 248
+  grade: 11
+- id: S3
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s1103
+  type: textbook
+  title: ПЕРЛИНИ ЗАХІДНОУКРАЇНСЬКОЇ ЛІТЕРАТУРИ (p. 138)
+  page: 138
+  grade: 11
+- id: S4
+  file: ukrainian_wiki/ukrainske-kino_Академічна-C1-Українське-кіно-Приклади-високого-рівня
+  type: ukrainian_wiki
+  title: 'Академічна C1: Українське кіно'
+  section_path: 'Академічна C1: Українське кіно > Приклади високого рівня'
+- id: S5
+  file: wikipedia/Docudays UA
+  type: wikipedia
+  title: Docudays UA
+  url: https://uk.wikipedia.org/wiki/Docudays%20UA
+- id: S6
+  file: wikipedia/Театр під час війни (2022–2024)
+  type: wikipedia
+  title: Театр під час війни (2022–2024)
+  url: https://uk.wikipedia.org/wiki/%D0%A2%D0%B5%D0%B0%D1%82%D1%80%20%D0%BF%D1%96%D0%B4%20%D1%87%D0%B0%D1%81%20%D0%B2%D1%96%D0%B9%D0%BD%D0%B8%20%282022%E2%80%932024%29

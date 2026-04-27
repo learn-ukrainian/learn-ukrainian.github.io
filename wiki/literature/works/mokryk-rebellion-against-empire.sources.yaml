@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/mokryk-rebellion-against-empire.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/dziuba-internationalism_Українська-література-Інтернаціоналізм-чи-русифікація-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література: Інтернаціоналізм чи русифікація?'
+  section_path: 'Українська література: Інтернаціоналізм чи русифікація? > Деколонізаційна
+    перспектива'
+- id: S2
+  file: wikipedia/Музей шістдесятництва
+  type: wikipedia
+  title: Музей шістдесятництва
+  url: https://uk.wikipedia.org/wiki/%D0%9C%D1%83%D0%B7%D0%B5%D0%B9%20%D1%88%D1%96%D1%81%D1%82%D0%B4%D0%B5%D1%81%D1%8F%D1%82%D0%BD%D0%B8%D1%86%D1%82%D0%B2%D0%B0
+- id: S3
+  file: ukrainian_wiki/shistdesiatnyky_Історія-України-Шістдесятники-Бунт-проти-сірості-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історія України: Шістдесятники: Бунт проти сірості'
+  section_path: 'Історія України: Шістдесятники: Бунт проти сірості > Короткий зміст'
+- id: S4
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1025
+  type: textbook
+  title: ПРАКТИЧНА РОБОТА № 2
+  page: 108
+  grade: 11
+- id: S5
+  file: ukrainian_wiki/shistdesiatnyky_Історія-України-Шістдесятники-Бунт-проти-сірості-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історія України: Шістдесятники: Бунт проти сірості'
+  section_path: 'Історія України: Шістдесятники: Бунт проти сірості > Деколонізаційна
+    перспектива'
+- id: S6
+  file: wave7-popovych-narys-kultury_c1193
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S7
+  file: 11-klas-istoriya-ukr-gisem-2024_s0905
+  type: textbook
+  title: Розділ ІІ. Україна в умовах десталінізації
+  page: 58
+  grade: 11
+- id: S8
+  file: wikipedia/Листи до братів-хліборобів
+  type: wikipedia
+  title: Листи до братів-хліборобів
+  url: https://uk.wikipedia.org/wiki/%D0%9B%D0%B8%D1%81%D1%82%D0%B8%20%D0%B4%D0%BE%20%D0%B1%D1%80%D0%B0%D1%82%D1%96%D0%B2-%D1%85%D0%BB%D1%96%D0%B1%D0%BE%D1%80%D0%BE%D0%B1%D1%96%D0%B2
+- id: S10
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1356
+  type: textbook
+  title: Воєнне лихоліття . Олесь гончар . «щоденник»  149
+  page: 149
+  grade: 11

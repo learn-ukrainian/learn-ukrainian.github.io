@@ -1,0 +1,49 @@
+# Source registry for wiki/literature/works/humor-synthesis.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/eneida-part-1_Українська-література-Енеїда-Сміх-над-Безоднею-Частина-I-Основний-зміст-Жанрова-природа-ірої-комічна-поема-бурлеск-і-травестія
+  type: ukrainian_wiki
+  title: 'Українська література: Енеїда: Сміх над Безоднею (Частина I)'
+  section_path: 'Українська література: Енеїда: Сміх над Безоднею (Частина I) > Основний
+    зміст > Жанрова природа: ірої-комічна поема, бурлеск і травестія'
+- id: S2
+  file: ukrlib-vyshnya_c0006
+  type: literary
+  title: Остап Вишня. Отак і пишу
+  author: Вишня О.
+- id: S3
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s5001
+  type: textbook
+  title: НОВА УКРАЇНСЬКА ЛІТЕРАТУРА (p. 134)
+  page: 134
+  grade: 9
+- id: S4
+  file: ukrainian_wiki/eneida-part-1_Українська-література-Енеїда-Сміх-над-Безоднею-Частина-I-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Енеїда: Сміх над Безоднею (Частина I)'
+  section_path: 'Українська література: Енеїда: Сміх над Безоднею (Частина I) > Короткий
+    зміст'
+- id: S5
+  file: https://www.youtube.com/watch?v=W1H3OxTkx4s
+  type: external
+  title: ULP 6-233 | Іван Котляревський — зачинатель нової української літератури
+    | Ukrainian Lessons Podc...
+  url: https://www.youtube.com/watch?v=W1H3OxTkx4s
+- id: S6
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4942
+  type: textbook
+  title: Образи поеми. Головний герой
+  page: 93
+  grade: 9
+- id: S7
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4941
+  type: textbook
+  title: Низ — глядь, і бачить Евріала,
+  page: 88
+  grade: 9
+- id: S8
+  file: ukrlib-kotlyarevsky_c0102
+  type: literary
+  title: Іван Котляревський. Енеїда
+  author: Котляревський І.

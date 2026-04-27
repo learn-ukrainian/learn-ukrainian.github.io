@@ -1,0 +1,54 @@
+# Source registry for wiki/literature/works/skovoroda-dialogues-theatre.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s4997
+  type: textbook
+  title: ДАВНЯ ЛІТЕРАТУРА (p. 92)
+  page: 92
+  grade: 9
+- id: S2
+  file: wave5-skovoroda-tvory_c0040
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S3
+  file: ukrainian_wiki/domontovych-girl-bear_Українська-література-В-Домонтович-Дівчинка-з-ведмедиком-Основний-зміст-5-Філософська-і-полемічна-тяглість-національної-думки
+  type: ukrainian_wiki
+  title: 'Українська література: В. Домонтович: "Дівчинка з ведмедиком"'
+  section_path: 'Українська література: В. Домонтович: "Дівчинка з ведмедиком" > Основний
+    зміст > 5. Філософська і полемічна тяглість національної думки'
+- id: S4
+  file: wave5-skovoroda-tvory_c0047
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S5
+  file: 11-klas-ukrajinska-mova-voron-2019_s1284
+  type: textbook
+  title: ДІАЛОГ, РОЗДІЛОВІ ЗНАКИ ПРИ ДІАЛОЗІ
+  page: 224
+  grade: 11
+- id: S6
+  file: wave5-skovoroda-tvory_c0041
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S7
+  file: wave5-skovoroda-tvory_c0078
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S8
+  file: wikipedia/Платон
+  type: wikipedia
+  title: Платон
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D0%BB%D0%B0%D1%82%D0%BE%D0%BD
+- id: S9
+  file: ukrainian_wiki/valeriy-shevchuk-dim-na-hori_Українська-література-Валерій-Шевчук-та-роман-Дім-на-горі-у-контексті-національної-традиції-Основний-зміст-Філософський-вимір-перегуки-зі-спадщиною-Григорія-Сковороди
+  type: ukrainian_wiki
+  title: 'Українська література: Валерій Шевчук та роман «Дім на горі» у контексті
+    національної традиції'
+  section_path: 'Українська література: Валерій Шевчук та роман «Дім на горі» у контексті
+    національної традиції > Основний зміст > Філософський вимір: перегуки зі спадщиною
+    Григорія Сковороди'

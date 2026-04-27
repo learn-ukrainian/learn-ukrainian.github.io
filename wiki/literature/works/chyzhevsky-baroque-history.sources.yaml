@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/chyzhevsky-baroque-history.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/istoriia-ukrainskoi-literatury_Академічна-C1-Історія-української-літератури-Деколонізаційні-застереження
+  type: ukrainian_wiki
+  title: 'Академічна C1: Історія української літератури'
+  section_path: 'Академічна C1: Історія української літератури > Деколонізаційні застереження'
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0531
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-chyzhevsky-baroko_c0010
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0547
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave8-chyzhevsky-baroko_c0012
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0022
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-chyzhevsky-baroko_c0003
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0533
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0707
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

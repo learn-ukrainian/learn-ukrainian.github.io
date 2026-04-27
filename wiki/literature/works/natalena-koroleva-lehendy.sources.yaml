@@ -1,0 +1,41 @@
+# Source registry for wiki/literature/works/natalena-koroleva-lehendy.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-istoria-ukr-pometun-2024_s3563
+  type: textbook
+  title: § 9. Культура Русі кінця Х —
+  page: 66
+  grade: 7
+- id: S2
+  file: 7-klas-istoria-ukr-pometun-2024_s3554
+  type: textbook
+  title: Розділ 1. ВИНИКНЕННЯ ТА СТАНОВЛЕННЯ. КИЇВСЬКОЇ ДЕРЖАВИ
+  page: 15
+  grade: 7
+- id: S3
+  file: 5-klas-istoriya-schupak-2022_s1930
+  type: textbook
+  title: ВСТУП
+  page: 7
+  grade: 5
+- id: S4
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0047
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S5
+  file: wikipedia/Українська античність
+  type: wikipedia
+  title: Українська античність
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%B0%D0%BD%D1%82%D0%B8%D1%87%D0%BD%D1%96%D1%81%D1%82%D1%8C
+- id: S6
+  file: wikipedia/Сучасна українська література
+  type: wikipedia
+  title: Сучасна українська література
+  url: https://uk.wikipedia.org/wiki/%D0%A1%D1%83%D1%87%D0%B0%D1%81%D0%BD%D0%B0%20%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BB%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%B0
+- id: S7
+  file: wikipedia/Історичний міф
+  type: wikipedia
+  title: Історичний міф
+  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D0%B8%D0%B9%20%D0%BC%D1%96%D1%84

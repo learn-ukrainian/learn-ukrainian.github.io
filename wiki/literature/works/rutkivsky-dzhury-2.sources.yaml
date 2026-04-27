@@ -1,0 +1,56 @@
+# Source registry for wiki/literature/works/rutkivsky-dzhury-2.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2875
+  type: textbook
+  title: ТВОРИ НА ІСТОРИЧНУ ТЕМАТИКУ (p. 123)
+  page: 123
+  grade: 6
+- id: S2
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2834
+  type: textbook
+  title: ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИГ (p. 82)
+  page: 82
+  grade: 6
+- id: S3
+  file: 6-klas-ukrlit-kovalenko-2023_s2769
+  type: textbook
+  title: А бій у плавнях не вщухав. Хтось із татарських тисяць
+  page: 106
+  grade: 6
+- id: S4
+  file: 6-klas-ukrlit-avramenko-2023_s2719
+  type: textbook
+  title: ПОЕТИЧНИЙ ДИВОСВІТ ЗОРІ Й МІСЯЦЬ
+  page: 64
+  grade: 6
+- id: S5
+  file: 6-klas-ukrlit-avramenko-2023_s2724
+  type: textbook
+  title: ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИЖОК (p. 74)
+  page: 74
+  grade: 6
+- id: S6
+  file: 8-klas-ukrlit-avramenko-2025_s4397
+  type: textbook
+  title: УКРАЇНЦІ ТА КРИМСЬКІ ТАТАРИ (p. 96)
+  page: 96
+  grade: 8
+- id: S7
+  file: https://www.youtube.com/watch?v=bJsrSPyNVs4
+  type: external
+  title: Звідки Прийшли Татари?| Історія України від імені Т.Г. Шевченка
+  url: https://www.youtube.com/watch?v=bJsrSPyNVs4
+- id: S8
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2876
+  type: textbook
+  title: ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИГ (p. 124)
+  page: 124
+  grade: 6
+- id: S9
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2833
+  type: textbook
+  title: ТВОРИ НА ІСТОРИЧНУ ТЕМАТИКУ ТВОРИ НА ІСТОРИЧНУ ТЕМАТИКУ
+  page: 81
+  grade: 6

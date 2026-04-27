@@ -1,0 +1,25 @@
+# Source registry for wiki/literature/works/nezdana-contemporary-women-drama.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/zabuzhko-notre-dame-lit_Українська-література-Оксана-Забужко-та-її-роль-у-сучасному-каноні-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Оксана Забужко та її роль у сучасному каноні'
+  section_path: 'Українська література: Оксана Забужко та її роль у сучасному каноні
+    > Короткий зміст'
+- id: S2
+  file: ukrainian_wiki/zabuzhko-notre-dame-lit_Українська-література-Оксана-Забужко-та-її-роль-у-сучасному-каноні-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Українська література: Оксана Забужко та її роль у сучасному каноні'
+  section_path: 'Українська література: Оксана Забужко та її роль у сучасному каноні
+    > Мовні зразки'
+- id: S3
+  file: wikipedia/Театральність
+  type: wikipedia
+  title: Театральність
+  url: https://uk.wikipedia.org/wiki/%D0%A2%D0%B5%D0%B0%D1%82%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%96%D1%81%D1%82%D1%8C
+- id: S4
+  file: wikipedia/Леся Українка
+  type: wikipedia
+  title: Леся Українка
+  url: https://uk.wikipedia.org/wiki/%D0%9B%D0%B5%D1%81%D1%8F%20%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%BA%D0%B0

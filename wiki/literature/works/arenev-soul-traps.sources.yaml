@@ -1,0 +1,57 @@
+# Source registry for wiki/literature/works/arenev-soul-traps.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-heroes-ukr-kultura_c0325
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0315
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: 11-klas-ukrajinska-mova-glazova-2019_s1209
+  type: textbook
+  title: Дієслово. Дієслівні форми § 8
+  page: 39
+  grade: 11
+- id: S4
+  file: wave7-thompson-trubadury_c0077
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S5
+  file: 11-klas-istoriya-ukr-gisem-2024_s0902
+  type: textbook
+  title: § 5. культура україни в повоєнний період
+  page: 42
+  grade: 11
+- id: S6
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s4993
+  type: textbook
+  title: ДАВНЯ ЛІТЕРАТУРА (p. 76)
+  page: 76
+  grade: 9
+- id: S7
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4928
+  type: textbook
+  title: ВСТУП РОЛЬ І МІСЦЕ ХУДОЖНЬОЇ ЛІТЕРАТУРИ
+  page: 3
+  grade: 9
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0402
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave7-thompson-trubadury_c0229
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S10
+  file: wikipedia/Історичний міф
+  type: wikipedia
+  title: Історичний міф
+  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D0%B8%D0%B9%20%D0%BC%D1%96%D1%84

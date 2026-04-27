@@ -1,0 +1,47 @@
+# Source registry for wiki/literature/works/rosokhovatsky-cyborgs.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4934
+  type: textbook
+  title: ПАМ’ЯТКИ ОРИГІНАЛЬНОЇ ЛІТЕРАТУРИ КНЯЖОЇ РУСІ-УКРАЇНИ
+  page: 37
+  grade: 9
+- id: S2
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1296
+  type: textbook
+  title: Пізнавати себе і світ  7
+  page: 7
+  grade: 11
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0325
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: wave7-heroes-ukr-kultura_c0315
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S5
+  file: wave8-hrabovych-do-istoriyi_c0106
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S6
+  file: ukrainian_wiki/rosiiska-imperialna-istorio_Російська-імперіальна-історіографія-конструювання-міфів-та-колоніальний-дискурс-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Російська імперіальна історіографія: конструювання міфів та колоніальний
+    дискурс'
+  section_path: 'Російська імперіальна історіографія: конструювання міфів та колоніальний
+    дискурс > Деколонізаційна перспектива'
+- id: S7
+  file: wikipedia/Цеков Юрій Іванович
+  type: wikipedia
+  title: Цеков Юрій Іванович
+  url: https://uk.wikipedia.org/wiki/%D0%A6%D0%B5%D0%BA%D0%BE%D0%B2%20%D0%AE%D1%80%D1%96%D0%B9%20%D0%86%D0%B2%D0%B0%D0%BD%D0%BE%D0%B2%D0%B8%D1%87
+- id: S8
+  file: wikipedia/Оповідання братів Стругацьких
+  type: wikipedia
+  title: Оповідання братів Стругацьких
+  url: https://uk.wikipedia.org/wiki/%D0%9E%D0%BF%D0%BE%D0%B2%D1%96%D0%B4%D0%B0%D0%BD%D0%BD%D1%8F%20%D0%B1%D1%80%D0%B0%D1%82%D1%96%D0%B2%20%D0%A1%D1%82%D1%80%D1%83%D0%B3%D0%B0%D1%86%D1%8C%D0%BA%D0%B8%D1%85

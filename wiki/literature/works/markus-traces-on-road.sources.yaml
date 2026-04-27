@@ -1,0 +1,35 @@
+# Source registry for wiki/literature/works/markus-traces-on-road.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s5012
+  type: textbook
+  title: НОВА УКРАЇНСЬКА ЛІТЕРАТУРА (p. 212)
+  page: 212
+  grade: 9
+- id: S2
+  file: ukrainian_wiki/volyn-pamiat-i-travma_Історіографія-Волинь-Пам-ять-і-травма-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Волинь: Пам''ять і травма'
+  section_path: 'Історіографія: Волинь: Пам''ять і травма > Деколонізаційна перспектива'
+- id: S3
+  file: ukrainian_wiki/metodolohiia-dekolonizatsii_Історіографія-Методологія-деколонізації-Український-фронт-Основний-зміст-Практична-деколонізація-в-сучасній-Україні-та-культурний-опір
+  type: ukrainian_wiki
+  title: 'Історіографія: Методологія деколонізації: Український фронт'
+  section_path: 'Історіографія: Методологія деколонізації: Український фронт > Основний
+    зміст > Практична деколонізація в сучасній Україні та культурний опір'
+- id: S4
+  file: ukrainian_wiki/volyn-pamiat-i-travma_Історіографія-Волинь-Пам-ять-і-травма-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Волинь: Пам''ять і травма'
+  section_path: 'Історіографія: Волинь: Пам''ять і травма > Короткий зміст'
+- id: S5
+  file: wikipedia/Літературна журналістика
+  type: wikipedia
+  title: Літературна журналістика
+  url: https://uk.wikipedia.org/wiki/%D0%9B%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%BD%D0%B0%20%D0%B6%D1%83%D1%80%D0%BD%D0%B0%D0%BB%D1%96%D1%81%D1%82%D0%B8%D0%BA%D0%B0
+- id: S6
+  file: wikipedia/Ясь Олексій Васильович
+  type: wikipedia
+  title: Ясь Олексій Васильович
+  url: https://uk.wikipedia.org/wiki/%D0%AF%D1%81%D1%8C%20%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D1%96%D0%B9%20%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C%D0%BE%D0%B2%D0%B8%D1%87

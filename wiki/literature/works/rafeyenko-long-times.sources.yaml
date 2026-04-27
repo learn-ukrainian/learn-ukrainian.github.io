@@ -1,0 +1,45 @@
+# Source registry for wiki/literature/works/rafeyenko-long-times.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0313
+  type: textbook
+  title: Суперечка як вид комунікації. Правила ведення суперечки
+  page: 185
+  grade: 10
+- id: S2
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1405
+  type: textbook
+  title: Су÷асна українська література . Сергій жадан  239
+  page: 239
+  grade: 11
+- id: S3
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s4979
+  type: textbook
+  title: ВСТУП
+  page: 4
+  grade: 9
+- id: S4
+  file: ukrainian_wiki/zhinky-v-revoiuutsiiakh_Історіографія-Жінки-в-революціях-Прихована-історія-Основний-зміст-Українська-історіографія-Деконструкція-наративів
+  type: ukrainian_wiki
+  title: 'Історіографія: Жінки в революціях: Прихована історія'
+  section_path: 'Історіографія: Жінки в революціях: Прихована історія > Основний зміст
+    > Українська історіографія: Деконструкція наративів'
+- id: S5
+  file: ukrainian_wiki/artem-chekh-who-are-you_Українська-література-Артем-Чех-Хто-ти-такий-Пошук-ідентичності-на-війні-та-теоретичні-виміри-літературного-спротиву-Основний-зміст-Стан-джерельної-бази-та-методологічний-підхід
+  type: ukrainian_wiki
+  title: 'Українська література: Артем Чех, «Хто ти такий?»: Пошук ідентичності на
+    війні та теоретичні виміри літературного спротиву'
+  section_path: 'Українська література: Артем Чех, «Хто ти такий?»: Пошук ідентичності
+    на війні та теоретичні виміри літературного спротиву > Основний зміст > Стан джерельної
+    бази та методологічний підхід'
+- id: S6
+  file: ukrainian_wiki/syntez-rehionalna-riznomanitnist_Історіографія-Синтез-Регіональна-різноманітність-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Синтез: Регіональна різноманітність'
+  section_path: 'Історіографія: Синтез: Регіональна різноманітність > Короткий зміст'
+- id: S7
+  file: wikipedia/Дроздовський Дмитро Ігорович
+  type: wikipedia
+  title: Дроздовський Дмитро Ігорович
+  url: https://uk.wikipedia.org/wiki/%D0%94%D1%80%D0%BE%D0%B7%D0%B4%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE%20%D0%86%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87

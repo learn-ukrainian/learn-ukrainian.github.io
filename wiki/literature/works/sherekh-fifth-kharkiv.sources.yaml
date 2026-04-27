@@ -1,0 +1,60 @@
+# Source registry for wiki/literature/works/sherekh-fifth-kharkiv.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1296
+  type: textbook
+  title: Пізнавати себе і світ  7
+  page: 7
+  grade: 11
+- id: S2
+  file: wikipedia/Шевельов Юрій Володимирович
+  type: wikipedia
+  title: Шевельов Юрій Володимирович
+  url: https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D0%B5%D0%BB%D1%8C%D0%BE%D0%B2%20%D0%AE%D1%80%D1%96%D0%B9%20%D0%92%D0%BE%D0%BB%D0%BE%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B8%D1%87
+- id: S3
+  file: ukrainian_wiki/metodolohiia-dekolonizatsii_Історіографія-Методологія-деколонізації-Український-фронт-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Методологія деколонізації: Український фронт'
+  section_path: 'Історіографія: Методологія деколонізації: Український фронт > Деколонізаційна
+    перспектива'
+- id: S4
+  file: ukrainian_wiki/andrukhovych-essays_Українська-література-Есеїстика-Юрія-Андруховича-та-постмодерна-мапа-Центральної-Європи-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література: Есеїстика Юрія Андруховича та постмодерна мапа Центральної
+    Європи'
+  section_path: 'Українська література: Есеїстика Юрія Андруховича та постмодерна
+    мапа Центральної Європи > Деколонізаційна перспектива'
+- id: S5
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0368
+  type: textbook
+  title: Практична риторика. Суперечка
+  page: 172
+  grade: 10
+- id: S6
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0787
+  type: textbook
+  title: Практична риторика. Суперечка
+  page: 172
+  grade: 10
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0017
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0016
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0094
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: 11-klas-istoriya-ukr-gisem-2024_s0902
+  type: textbook
+  title: § 5. культура україни в повоєнний період
+  page: 42
+  grade: 11

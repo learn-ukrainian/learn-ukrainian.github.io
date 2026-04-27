@@ -1,0 +1,47 @@
+# Source registry for wiki/literature/works/shevelov-moscow-maros.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-heroes-ukr-kultura_c0325
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S2
+  file: wave7-thompson-trubadury_c0019
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S3
+  file: ukrainian_wiki/metodolohiia-dekolonizatsii_Історіографія-Методологія-деколонізації-Український-фронт-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Методологія деколонізації: Український фронт'
+  section_path: 'Історіографія: Методологія деколонізації: Український фронт > Деколонізаційна
+    перспектива'
+- id: S4
+  file: ukrainian_wiki/kulturna-rezystentsiia_Історіографія-Культурна-резистенція-та-стратегії-виживання-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Культурна резистенція та стратегії виживання'
+  section_path: 'Історіографія: Культурна резистенція та стратегії виживання > Короткий
+    зміст'
+- id: S5
+  file: ukrainian_wiki/krytyka-dzherel_Історіографія-Критика-джерел-Принципи-та-практика-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Критика джерел: Принципи та практика'
+  section_path: 'Історіографія: Критика джерел: Принципи та практика > Деколонізаційна
+    перспектива'
+- id: S6
+  file: ukrainian_wiki/syntez-ekonomichna-kolonizatsiia_Історіографія-Економічна-деколонізація-Боротьба-наративів-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Економічна деколонізація: Боротьба наративів'
+  section_path: 'Історіографія: Економічна деколонізація: Боротьба наративів > Короткий
+    зміст'
+- id: S7
+  file: wikipedia/Шевельов Юрій Володимирович
+  type: wikipedia
+  title: Шевельов Юрій Володимирович
+  url: https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D0%B5%D0%BB%D1%8C%D0%BE%D0%B2%20%D0%AE%D1%80%D1%96%D0%B9%20%D0%92%D0%BE%D0%BB%D0%BE%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B8%D1%87
+- id: S8
+  file: wikipedia/Російський світ
+  type: wikipedia
+  title: Російський світ
+  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D1%81%D1%96%D0%B9%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D1%81%D0%B2%D1%96%D1%82

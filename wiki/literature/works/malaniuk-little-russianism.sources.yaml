@@ -1,0 +1,38 @@
+# Source registry for wiki/literature/works/malaniuk-little-russianism.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1326
+  type: textbook
+  title: Є. Маланюк описав малоросійство як «іс­
+  page: 64
+  grade: 11
+- id: S2
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1327
+  type: textbook
+  title: Еміграційна література . Євген Маланюк  65
+  page: 65
+  grade: 11
+- id: S3
+  file: ukrainian_wiki/malaniuk-poetry_Українська-література-Євген-Маланюк-Поезія-залізного-імператора-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література: Євген Маланюк: Поезія залізного імператора'
+  section_path: 'Українська література: Євген Маланюк: Поезія залізного імператора
+    > Деколонізаційна перспектива'
+- id: S4
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1325
+  type: textbook
+  title: Еміграційна література . Євген Маланюк  63
+  page: 63
+  grade: 11
+- id: S5
+  file: ukrlib-malaniuk_c0005
+  type: literary
+  title: Євген Маланюк. Малоросійство
+  author: Маланюк Є.
+- id: S6
+  file: ukrainian_wiki/malaniuk-poetry_Українська-література-Євген-Маланюк-Поезія-залізного-імператора-Основний-зміст-Історіософія-Степової-Еллади-та-боротьба-з-малоросійством
+  type: ukrainian_wiki
+  title: 'Українська література: Євген Маланюк: Поезія залізного імператора'
+  section_path: 'Українська література: Євген Маланюк: Поезія залізного імператора
+    > Основний зміст > Історіософія Степової Еллади та боротьба з малоросійством'

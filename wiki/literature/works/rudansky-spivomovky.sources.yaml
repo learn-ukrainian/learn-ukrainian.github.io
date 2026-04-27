@@ -1,0 +1,39 @@
+# Source registry for wiki/literature/works/rudansky-spivomovky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s5012
+  type: textbook
+  title: НОВА УКРАЇНСЬКА ЛІТЕРАТУРА (p. 212)
+  page: 212
+  grade: 9
+- id: S2
+  file: 6-klas-ukrlit-avramenko-2023_s2740
+  type: textbook
+  title: ВІД СМІШНОГО ДО ВЕЛИКОГО (p. 202)
+  page: 202
+  grade: 6
+- id: S3
+  file: ukrainian_wiki/stepan-rudansky_Українська-література-Степан-Руданський-Співомовки-та-гумор-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література: Степан Руданський: Співомовки та гумор'
+  section_path: 'Українська література: Степан Руданський: Співомовки та гумор > Деколонізаційна
+    перспектива'
+- id: S4
+  file: 6-klas-ukrlit-zabolotnyi-2023_s3018
+  type: textbook
+  title: ВІД СМІШНОГО ДО ВЕЛИКОГО (p. 266)
+  page: 266
+  grade: 6
+- id: S5
+  file: ukrainian_wiki/stepan-rudansky_Українська-література-Степан-Руданський-Співомовки-та-гумор-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Степан Руданський: Співомовки та гумор'
+  section_path: 'Українська література: Степан Руданський: Співомовки та гумор > Короткий
+    зміст'
+- id: S6
+  file: ukrainian_wiki/stepan-rudansky_Українська-література-Степан-Руданський-Співомовки-та-гумор-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Українська література: Степан Руданський: Співомовки та гумор'
+  section_path: 'Українська література: Степан Руданський: Співомовки та гумор > Мовні
+    зразки'

@@ -1,0 +1,55 @@
+# Source registry for wiki/literature/works/blyznets-zemlyanyk.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/decolonization-theory-literature_Українська-література-Деколонізація-методологія-та-історична-рецепція-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Деколонізація, методологія та історична рецепція'
+  section_path: 'Українська література: Деколонізація, методологія та історична рецепція
+    > Короткий зміст'
+- id: S2
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4928
+  type: textbook
+  title: ВСТУП РОЛЬ І МІСЦЕ ХУДОЖНЬОЇ ЛІТЕРАТУРИ
+  page: 3
+  grade: 9
+- id: S3
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0376
+  type: textbook
+  title: Література і дійсність  9
+  page: 9
+  grade: 10
+- id: S4
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1296
+  type: textbook
+  title: Пізнавати себе і світ  7
+  page: 7
+  grade: 11
+- id: S5
+  file: ukrainian_wiki/decolonization-theory-literature_Українська-література-Деколонізація-методологія-та-історична-рецепція-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література: Деколонізація, методологія та історична рецепція'
+  section_path: 'Українська література: Деколонізація, методологія та історична рецепція
+    > Деколонізаційна перспектива'
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0054
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: ukrainian_wiki/donbas-industrializatsiia_Історіографія-Донбас-ідентичність-псевдосепаратизм-та-зіткнення-наративів-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Донбас — ідентичність, псевдосепаратизм та зіткнення наративів'
+  section_path: 'Історіографія: Донбас — ідентичність, псевдосепаратизм та зіткнення
+    наративів > Короткий зміст'
+- id: S8
+  file: ukrainian_wiki/decolonization-theory-literature_Українська-література-Деколонізація-методологія-та-історична-рецепція-Основний-зміст-Колоніальна-свідомість-і-потреба-деканонізації
+  type: ukrainian_wiki
+  title: 'Українська література: Деколонізація, методологія та історична рецепція'
+  section_path: 'Українська література: Деколонізація, методологія та історична рецепція
+    > Основний зміст > Колоніальна свідомість і потреба деканонізації'
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0098
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

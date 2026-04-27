@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/bohdan-zholdak-ukry.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4977
+  type: textbook
+  title: ЛІТЕРАТУРОЗНАВЧИЙ СЛОВНИК
+  page: 330
+  grade: 9
+- id: S2
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1396
+  type: textbook
+  title: Су÷асна українська література . ігор Римарук  221
+  page: 221
+  grade: 11
+- id: S3
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1399
+  type: textbook
+  title: Су÷асна українська література . юрій Андрухович  227
+  page: 227
+  grade: 11
+- id: S4
+  file: wikipedia/Дроздовський Дмитро Ігорович
+  type: wikipedia
+  title: Дроздовський Дмитро Ігорович
+  url: https://uk.wikipedia.org/wiki/%D0%94%D1%80%D0%BE%D0%B7%D0%B4%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE%20%D0%86%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87
+- id: S5
+  file: 10-klas-ukrmova-karaman-2018_s0567
+  type: textbook
+  title: § 2. Проблема екології української мови. «Мовний суржик»
+  page: 7
+  grade: 10
+- id: S6
+  file: ukrlib-andrukhovych_c0000
+  type: literary
+  title: Юрій Андрухович. Час і місце, або Моя остання територія
+  author: Андрухович Ю.
+- id: S7
+  file: ukrainian_wiki/surzhyk_Академічна-C1-Суржик-Феномен-змішування-Наукові-дискусії
+  type: ukrainian_wiki
+  title: 'Академічна C1: Суржик: Феномен змішування'
+  section_path: 'Академічна C1: Суржик: Феномен змішування > Наукові дискусії'
+- id: S8
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1395
+  type: textbook
+  title: Су÷асна українська література  219
+  page: 219
+  grade: 11

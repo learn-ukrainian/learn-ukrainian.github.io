@@ -1,0 +1,59 @@
+# Source registry for wiki/literature/works/kotliarevsky-drama-tradition.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/ivan-kotliarevskyi_Іван-Котляревський-Батько-нової-української-літератури-Основний-зміст-Фундатор-українського-театру
+  type: ukrainian_wiki
+  title: 'Іван Котляревський: Батько нової української літератури'
+  section_path: 'Іван Котляревський: Батько нової української літератури > Основний
+    зміст > Фундатор українського театру'
+- id: S2
+  file: wave5-dramaturhiia-xix_c0008
+  type: literary
+  title: Українська драматургія першої половини XIX ст.
+  author: Антологія
+- id: S3
+  file: wave5-dramaturhiia-xix_c0005
+  type: literary
+  title: Українська драматургія першої половини XIX ст.
+  author: Антологія
+- id: S4
+  file: ukrainian_wiki/natalka-poltavka_Українська-література-Наталка-Полтавка-Анатомія-Почуттів-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Наталка Полтавка: Анатомія Почуттів'
+  section_path: 'Українська література: Наталка Полтавка: Анатомія Почуттів > Короткий
+    зміст'
+- id: S5
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s5001
+  type: textbook
+  title: НОВА УКРАЇНСЬКА ЛІТЕРАТУРА (p. 134)
+  page: 134
+  grade: 9
+- id: S6
+  file: 8-klas-ukrlit-avramenko-2025_s4418
+  type: textbook
+  title: 'ПРОЗА ХІХ ст.: ВІД РОМАНТИЗМУ ДО РЕАЛІЗМУ (p. 156)'
+  page: 156
+  grade: 8
+- id: S7
+  file: wave7-krypyakevych-istkult_c0429
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S8
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4944
+  type: textbook
+  title: Сюжет п’єси. В основі сюжету — типовий для європейського
+  page: 114
+  grade: 9
+- id: S9
+  file: ukrainian_wiki/introduction-to-kotliarevsky_Українська-література-Феномен-Івана-Котляревського-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Феномен Івана Котляревського'
+  section_path: 'Українська література: Феномен Івана Котляревського > Короткий зміст'
+- id: S10
+  file: ukrainian_wiki/introduction-to-kotliarevsky_Українська-література-Феномен-Івана-Котляревського-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література: Феномен Івана Котляревського'
+  section_path: 'Українська література: Феномен Івана Котляревського > Деколонізаційна
+    перспектива'

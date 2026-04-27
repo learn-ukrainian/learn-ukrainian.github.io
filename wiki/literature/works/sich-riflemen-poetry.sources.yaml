@@ -1,0 +1,40 @@
+# Source registry for wiki/literature/works/sich-riflemen-poetry.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1324
+  type: textbook
+  title: Еміграційна література . Євген Маланюк  61
+  page: 61
+  grade: 11
+- id: S2
+  file: ukrlib-yohansen_c0012
+  type: literary
+  title: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0007
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: ukrainian_wiki/war-poetry-full-scale_Українська-література-Поезія-повномасштабного-вторгнення-Новий-канон-Основний-зміст-Поетика-епосу-й-трагедії-Історичний-спадок
+  type: ukrainian_wiki
+  title: 'Українська література: Поезія повномасштабного вторгнення: Новий канон'
+  section_path: 'Українська література: Поезія повномасштабного вторгнення: Новий
+    канон > Основний зміст > Поетика епосу й трагедії: Історичний спадок'
+- id: S5
+  file: wikipedia/Художня література
+  type: wikipedia
+  title: Художня література
+  url: https://uk.wikipedia.org/wiki/%D0%A5%D1%83%D0%B4%D0%BE%D0%B6%D0%BD%D1%8F%20%D0%BB%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%B0
+- id: S6
+  file: wikipedia/Поезія
+  type: wikipedia
+  title: Поезія
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D0%B5%D0%B7%D1%96%D1%8F
+- id: S7
+  file: wikipedia/Політична лінгвістика
+  type: wikipedia
+  title: Політична лінгвістика
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D0%BB%D1%96%D1%82%D0%B8%D1%87%D0%BD%D0%B0%20%D0%BB%D1%96%D0%BD%D0%B3%D0%B2%D1%96%D1%81%D1%82%D0%B8%D0%BA%D0%B0

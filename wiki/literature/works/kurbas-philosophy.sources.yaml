@@ -1,0 +1,46 @@
+# Source registry for wiki/literature/works/kurbas-philosophy.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/les-kurbas_Біографія-Лесь-Курбас-Реформатор-театру-Основний-зміст-Театр-Березіль-та-впровадження-філософії-експресіонізму
+  type: ukrainian_wiki
+  title: 'Біографія: Лесь Курбас: Реформатор театру'
+  section_path: 'Біографія: Лесь Курбас: Реформатор театру > Основний зміст > Театр
+    «Березіль» та впровадження філософії експресіонізму'
+- id: S3
+  file: wave7-entsyklopediia-ukrainoznavstva_c2206
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S4
+  file: ukrainian_wiki/teatralne-mystetstvo-2_Академічна-C1-Театральне-мистецтво-II-Основний-зміст-2-Авангард-і-синтетичний-театр-Леся-Курбаса
+  type: ukrainian_wiki
+  title: 'Академічна C1: Театральне мистецтво II'
+  section_path: 'Академічна C1: Театральне мистецтво II > Основний зміст > 2. Авангард
+    і синтетичний театр Леся Курбаса'
+- id: S6
+  file: ukrainian_wiki/les-kurbas_Біографія-Лесь-Курбас-Реформатор-театру-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Біографія: Лесь Курбас: Реформатор театру'
+  section_path: 'Біографія: Лесь Курбас: Реформатор театру > Мовні зразки'
+- id: S7
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1346
+  type: textbook
+  title: Модерна драматургія  117
+  page: 117
+  grade: 11
+- id: S8
+  file: ukrainian_wiki/les-kurbas_Біографія-Лесь-Курбас-Реформатор-театру-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Лесь Курбас: Реформатор театру'
+  section_path: 'Біографія: Лесь Курбас: Реформатор театру > Деколонізаційна перспектива'
+- id: S9
+  file: wikipedia/Березіль
+  type: wikipedia
+  title: Березіль
+  url: https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B7%D1%96%D0%BB%D1%8C
+- id: S10
+  file: ukrainian_wiki/teatralne-mystetstvo-1_Академічна-C1-Театральне-мистецтво-I-Деколонізаційні-застереження
+  type: ukrainian_wiki
+  title: 'Академічна C1: Театральне мистецтво I'
+  section_path: 'Академічна C1: Театральне мистецтво I > Деколонізаційні застереження'

@@ -1,0 +1,60 @@
+# Source registry for wiki/literature/works/plokhy-gates-of-europe.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-yakovenko-skhid-zakhid_c0044
+  type: literary
+  title: 'Яковенко — «Україна між Сходом і Заходом»: проекція однієї ідеї (розд. 13-14)'
+  author: Яковенко Н.
+- id: S2
+  file: ukrainian_wiki/zakhid-2008_Історіографія-Безпековий-вакуум-та-передумови-російської-агресії-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Безпековий вакуум та передумови російської агресії'
+  section_path: 'Історіографія: Безпековий вакуум та передумови російської агресії
+    > Короткий зміст'
+- id: S3
+  file: ukrainian_wiki/serhii-plokhy_Біографія-Сергій-Плохій-Історик-який-пояснив-Україну-світові-Основний-зміст-Стан-джерельної-бази-та-відсутність-біографічних-даних
+  type: ukrainian_wiki
+  title: 'Біографія: Сергій Плохій: Історик, який пояснив Україну світові'
+  section_path: 'Біографія: Сергій Плохій: Історик, який пояснив Україну світові >
+    Основний зміст > Стан джерельної бази та відсутність біографічних даних'
+- id: S4
+  file: ukrainian_wiki/serhii-plokhy_Біографія-Сергій-Плохій-Історик-який-пояснив-Україну-світові-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Сергій Плохій: Історик, який пояснив Україну світові'
+  section_path: 'Біографія: Сергій Плохій: Історик, який пояснив Україну світові >
+    Короткий зміст'
+- id: S5
+  file: https://www.youtube.com/watch?v=_W7TcR9aOWM
+  type: external
+  title: Хто Насправді Живе В Карпатах? | Історія України від імені Т.Г. Шевченка
+  url: https://www.youtube.com/watch?v=_W7TcR9aOWM
+- id: S6
+  file: wikipedia/Українська історіографія
+  type: wikipedia
+  title: Українська історіографія
+  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D1%96%D1%81%D1%82%D0%BE%D1%80%D1%96%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D1%96%D1%8F
+- id: S7
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0368
+  type: textbook
+  title: Практична риторика. Суперечка
+  page: 172
+  grade: 10
+- id: S8
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0787
+  type: textbook
+  title: Практична риторика. Суперечка
+  page: 172
+  grade: 10
+- id: S9
+  file: ukrainian_wiki/zakhid-2008_Історіографія-Безпековий-вакуум-та-передумови-російської-агресії-Основний-зміст-Концептуалізація-російської-агресії-в-сучасній-науці
+  type: ukrainian_wiki
+  title: 'Історіографія: Безпековий вакуум та передумови російської агресії'
+  section_path: 'Історіографія: Безпековий вакуум та передумови російської агресії
+    > Основний зміст > Концептуалізація російської агресії в сучасній науці'
+- id: S10
+  file: 11-klas-istoriya-ukr-gisem-2024_s0986
+  type: textbook
+  title: § 33. Широкомасштабне вторгнення російської Федерації в україну
+  page: 283
+  grade: 11

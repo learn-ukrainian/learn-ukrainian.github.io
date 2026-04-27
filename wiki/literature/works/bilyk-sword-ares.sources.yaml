@@ -1,0 +1,35 @@
+# Source registry for wiki/literature/works/bilyk-sword-ares.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0313
+  type: textbook
+  title: Суперечка як вид комунікації. Правила ведення суперечки
+  page: 185
+  grade: 10
+- id: S2
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0395
+  type: textbook
+  title: Панас Мирний  37
+  page: 37
+  grade: 10
+- id: S3
+  file: wave7-heroes-ukr-kultura_c0325
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S4
+  file: https://www.youtube.com/watch?v=zWeiKj86T8M
+  type: external
+  title: АТТІЛА ЧИ ГАТИЛО? Таємниця Гунів
+  url: https://www.youtube.com/watch?v=zWeiKj86T8M
+- id: S5
+  file: wikipedia/Дроздовський Дмитро Ігорович
+  type: wikipedia
+  title: Дроздовський Дмитро Ігорович
+  url: https://uk.wikipedia.org/wiki/%D0%94%D1%80%D0%BE%D0%B7%D0%B4%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE%20%D0%86%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87
+- id: S6
+  file: wikipedia/Історичний міф
+  type: wikipedia
+  title: Історичний міф
+  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D0%B8%D0%B9%20%D0%BC%D1%96%D1%84

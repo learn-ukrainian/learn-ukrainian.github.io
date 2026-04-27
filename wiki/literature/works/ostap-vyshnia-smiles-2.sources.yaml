@@ -1,0 +1,38 @@
+# Source registry for wiki/literature/works/ostap-vyshnia-smiles-2.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s1095
+  type: textbook
+  title: ПРОЗОВЕ РОЗМАЇТТЯ (p. 98)
+  page: 98
+  grade: 11
+- id: S2
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1343
+  type: textbook
+  title: Прозове розмаїття 1920‑х років . Остап Вишня  111
+  page: 111
+  grade: 11
+- id: S3
+  file: ukrainian_wiki/narodni-anekdoty_Український-фольклор-Народні-анекдоти-та-небилиці-Сміхова-культура-Основний-зміст-Вплив-фольклору-на-авторську-сатиру-феномен-усмішки
+  type: ukrainian_wiki
+  title: 'Український фольклор: Народні анекдоти та небилиці: Сміхова культура'
+  section_path: 'Український фольклор: Народні анекдоти та небилиці: Сміхова культура
+    > Основний зміст > Вплив фольклору на авторську сатиру: феномен «усмішки»'
+- id: S4
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1344
+  type: textbook
+  title: Прозове розмаїття 1920‑х років. Остап Вишня. «Моя автобіографія»  113
+  page: 113
+  grade: 11
+- id: S5
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1345
+  type: textbook
+  title: Прозове розмаїття 1920‑х років . Остап Вишня . «Моя автобіографія»  115
+  page: 115
+  grade: 11
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c1738
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

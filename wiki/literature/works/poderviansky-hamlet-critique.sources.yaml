@@ -1,0 +1,42 @@
+# Source registry for wiki/literature/works/poderviansky-hamlet-critique.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wikipedia/Фольклор
+  type: wikipedia
+  title: Фольклор
+  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%BE%D0%BB%D1%8C%D0%BA%D0%BB%D0%BE%D1%80
+- id: S2
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s5006
+  type: textbook
+  title: НОВА УКРАЇНСЬКА ЛІТЕРАТУРА (p. 168)
+  page: 168
+  grade: 9
+- id: S3
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0319
+  type: textbook
+  title: Полемічні прийоми. Мистецтво відповідати на запитання
+  page: 195
+  grade: 10
+- id: S4
+  file: 5-klas-ukrmova-golub-2022_s2293
+  type: textbook
+  title: § 13. Плани на осінь
+  page: 40
+  grade: 5
+- id: S5
+  file: wave12-ukrainski-intermediyi_c0003
+  type: literary
+  title: Українські інтермедії XVII-XVIII ст.
+  author: Антологія
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c3653
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1399
+  type: textbook
+  title: Су÷асна українська література . юрій Андрухович  227
+  page: 227
+  grade: 11

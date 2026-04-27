@@ -1,0 +1,48 @@
+# Source registry for wiki/literature/works/kotliarevsky-laughter.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/introduction-to-kotliarevsky_Українська-література-Феномен-Івана-Котляревського-Основний-зміст-Передісторія-травестії-та-жанрова-своєрідність
+  type: ukrainian_wiki
+  title: 'Українська література: Феномен Івана Котляревського'
+  section_path: 'Українська література: Феномен Івана Котляревського > Основний зміст
+    > Передісторія травестії та жанрова своєрідність'
+- id: S2
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s5001
+  type: textbook
+  title: НОВА УКРАЇНСЬКА ЛІТЕРАТУРА (p. 134)
+  page: 134
+  grade: 9
+- id: S3
+  file: wave4-chyzhevsky-istoriia-lit_c0445
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S4
+  file: wave7-krypyakevych-istkult_c0427
+  type: literary
+  title: Крип'якевич — Історія української культури (1937)
+  author: Крип'якевич І.
+- id: S5
+  file: wave7-popovych-narys-kultury_c0518
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S6
+  file: ukrainian_wiki/eneida-war_Українська-література-Енеїда-Словник-Війни-Основний-зміст-Травестія-бурлеск-та-культура-сміху
+  type: ukrainian_wiki
+  title: 'Українська література: Енеїда: Словник Війни'
+  section_path: 'Українська література: Енеїда: Словник Війни > Основний зміст > Травестія,
+    бурлеск та культура сміху'
+- id: S7
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4941
+  type: textbook
+  title: Низ — глядь, і бачить Евріала,
+  page: 88
+  grade: 9
+- id: S8
+  file: ukrainian_wiki/eneida-part-1_Українська-література-Енеїда-Сміх-над-Безоднею-Частина-I-Основний-зміст-Жанрова-природа-ірої-комічна-поема-бурлеск-і-травестія
+  type: ukrainian_wiki
+  title: 'Українська література: Енеїда: Сміх над Безоднею (Частина I)'
+  section_path: 'Українська література: Енеїда: Сміх над Безоднею (Частина I) > Основний
+    зміст > Жанрова природа: ірої-комічна поема, бурлеск і травестія'

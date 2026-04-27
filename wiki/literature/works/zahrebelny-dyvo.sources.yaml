@@ -1,0 +1,57 @@
+# Source registry for wiki/literature/works/zahrebelny-dyvo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1342
+  type: textbook
+  title: Прозове розмаїття 1920‑х років . Валер’ян Підмогильний . «Місто»  105
+  page: 105
+  grade: 11
+- id: S2
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1390
+  type: textbook
+  title: Література «соціалісти÷ного реалізму»  209
+  page: 209
+  grade: 11
+- id: S3
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0314
+  type: textbook
+  title: ПРАКТИЧНА РИТОРИКА (p. 186)
+  page: 186
+  grade: 10
+- id: S4
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0313
+  type: textbook
+  title: Суперечка як вид комунікації. Правила ведення суперечки
+  page: 185
+  grade: 10
+- id: S5
+  file: ukrainian_wiki/pivden-kolonizatsiia-mify_Історіографія-Південь-України-Колонізація-та-міфи-Новоросії-Основний-зміст-Теоретичні-засади-історичного-міфотворення
+  type: ukrainian_wiki
+  title: 'Історіографія: Південь України: Колонізація та міфи «Новоросії»'
+  section_path: 'Історіографія: Південь України: Колонізація та міфи «Новоросії» >
+    Основний зміст > Теоретичні засади історичного міфотворення'
+- id: S6
+  file: https://www.youtube.com/watch?v=5nTon_vbTwY
+  type: external
+  title: Головна Таємниця Гоголя? Разом з @kulturtrigger | Історія України від імені
+    Т.Г. Шевченка
+  url: https://www.youtube.com/watch?v=5nTon_vbTwY
+- id: S7
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0395
+  type: textbook
+  title: Панас Мирний  37
+  page: 37
+  grade: 10
+- id: S8
+  file: 5-klas-istoriya-schupak-2022_s1937
+  type: textbook
+  title: § 16. Розтлумачте значення слів істо
+  page: 92
+  grade: 5
+- id: S9
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s4993
+  type: textbook
+  title: ДАВНЯ ЛІТЕРАТУРА (p. 76)
+  page: 76
+  grade: 9

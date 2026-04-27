@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/bachynsky-140-decibels.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0017
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0407
+  type: textbook
+  title: Повторюємо та узагальнюємо  73
+  page: 73
+  grade: 10
+- id: S4
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0376
+  type: textbook
+  title: Література і дійсність  9
+  page: 9
+  grade: 10
+- id: S5
+  file: wikipedia/Дроздовський Дмитро Ігорович
+  type: wikipedia
+  title: Дроздовський Дмитро Ігорович
+  url: https://uk.wikipedia.org/wiki/%D0%94%D1%80%D0%BE%D0%B7%D0%B4%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE%20%D0%86%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0106
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s4979
+  type: textbook
+  title: ВСТУП
+  page: 4
+  grade: 9
+- id: S8
+  file: ukrainian_wiki/the-testament_Українська-література-Заповіт-як-політичний-і-поетичний-маніфест-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література: «Заповіт» як політичний і поетичний маніфест'
+  section_path: 'Українська література: «Заповіт» як політичний і поетичний маніфест
+    > Деколонізаційна перспектива'
+- id: S9
+  file: wikipedia/Процюк Степан Васильович
+  type: wikipedia
+  title: Процюк Степан Васильович
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%BE%D1%86%D1%8E%D0%BA%20%D0%A1%D1%82%D0%B5%D0%BF%D0%B0%D0%BD%20%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C%D0%BE%D0%B2%D0%B8%D1%87
+- id: S10
+  file: https://www.ukrlib.com.ua/
+  type: external
+  title: Бібліотека української літератури УкрЛіб
+  url: https://www.ukrlib.com.ua/
+  domain: ukrlib.com.ua

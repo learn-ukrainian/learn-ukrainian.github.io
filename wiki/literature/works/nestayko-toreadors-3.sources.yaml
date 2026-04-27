@@ -1,0 +1,33 @@
+# Source registry for wiki/literature/works/nestayko-toreadors-3.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrlit-avramenko-2024_s3623
+  type: textbook
+  title: ПРИГОДИ ТА ГУМОР
+  page: 195
+  grade: 7
+- id: S2
+  file: 6-klas-ukrlit-avramenko-2023_s2726
+  type: textbook
+  title: ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИЖОК (p. 106)
+  page: 106
+  grade: 6
+- id: S3
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2918
+  type: textbook
+  title: ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИГ (p. 166)
+  page: 166
+  grade: 6
+- id: S4
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2917
+  type: textbook
+  title: ЗАХОПЛИВИЙ СВІТ ПРИГОДНИЦЬКИХ І ФАНТАСТИЧНИХ ПОВІСТЕЙ (p. 165)
+  page: 165
+  grade: 6
+- id: S5
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2888
+  type: textbook
+  title: ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИГ (p. 136)
+  page: 136
+  grade: 6

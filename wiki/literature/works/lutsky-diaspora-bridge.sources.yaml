@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/lutsky-diaspora-bridge.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0368
+  type: textbook
+  title: Практична риторика. Суперечка
+  page: 172
+  grade: 10
+- id: S2
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0787
+  type: textbook
+  title: Практична риторика. Суперечка
+  page: 172
+  grade: 10
+- id: S3
+  file: 10-klas-ukrmova-glazova-2018_s0546
+  type: textbook
+  title: Ознайомтеся з пам’яткою. Самостійно сформулювавши тему для обгово
+  page: 169
+  grade: 10
+- id: S4
+  file: wave7-istkult-t2-xiii-xvii_c1451
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S5
+  file: ukrainian_wiki/diaspora-connections_Українська-література-поза-межами-Діаспора-рецепція-та-міжкультурні-зв-язки-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література поза межами: Діаспора, рецепція та міжкультурні зв''язки'
+  section_path: 'Українська література поза межами: Діаспора, рецепція та міжкультурні
+    зв''язки > Деколонізаційна перспектива'
+- id: S6
+  file: wikipedia/Дискусія
+  type: wikipedia
+  title: Дискусія
+  url: https://uk.wikipedia.org/wiki/%D0%94%D0%B8%D1%81%D0%BA%D1%83%D1%81%D1%96%D1%8F
+- id: S7
+  file: 10-klas-ukrmova-karaman-2018_s0703
+  type: textbook
+  title: Мовленнєве спілкування. Стилістика і культура мовлення
+  page: 216
+  grade: 10
+- id: S8
+  file: wave7-hrinchenko-drahomanov_c0001
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S9
+  file: wikipedia/Дроздовський Дмитро Ігорович
+  type: wikipedia
+  title: Дроздовський Дмитро Ігорович
+  url: https://uk.wikipedia.org/wiki/%D0%94%D1%80%D0%BE%D0%B7%D0%B4%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE%20%D0%86%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87

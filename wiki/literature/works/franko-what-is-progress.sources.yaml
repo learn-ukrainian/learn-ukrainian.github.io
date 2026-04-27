@@ -1,0 +1,55 @@
+# Source registry for wiki/literature/works/franko-what-is-progress.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/franko-politychni-ese_Історіографія-Політичні-та-філософські-есе-Івана-Франка-Основний-зміст-Концепція-суспільного-поступу
+  type: ukrainian_wiki
+  title: 'Історіографія: Політичні та філософські есе Івана Франка'
+  section_path: 'Історіографія: Політичні та філософські есе Івана Франка > Основний
+    зміст > Концепція суспільного поступу'
+- id: S2
+  file: ukrainian_wiki/franko-politychni-ese_Історіографія-Політичні-та-філософські-есе-Івана-Франка-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Політичні та філософські есе Івана Франка'
+  section_path: 'Історіографія: Політичні та філософські есе Івана Франка > Короткий
+    зміст'
+- id: S3
+  file: wikipedia/Франко Іван Якович
+  type: wikipedia
+  title: Франко Іван Якович
+  url: https://uk.wikipedia.org/wiki/%D0%A4%D1%80%D0%B0%D0%BD%D0%BA%D0%BE%20%D0%86%D0%B2%D0%B0%D0%BD%20%D0%AF%D0%BA%D0%BE%D0%B2%D0%B8%D1%87
+- id: S4
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0368
+  type: textbook
+  title: Практична риторика. Суперечка
+  page: 172
+  grade: 10
+- id: S5
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0787
+  type: textbook
+  title: Практична риторика. Суперечка
+  page: 172
+  grade: 10
+- id: S6
+  file: ukrainian_wiki/franko-letters_Українська-література-Листи-Івана-Франка-Політика-Полеміка-Особисте-Основний-зміст-Полемічне-поле-епохи-Зіткнення-ідей-та-національна-самосвідомість
+  type: ukrainian_wiki
+  title: 'Українська література: Листи Івана Франка: Політика, Полеміка, Особисте'
+  section_path: 'Українська література: Листи Івана Франка: Політика, Полеміка, Особисте
+    > Основний зміст > Полемічне поле епохи: Зіткнення ідей та національна самосвідомість'
+- id: S7
+  file: 10-klas-ukrmova-glazova-2018_s0550
+  type: textbook
+  title: § 45. Закінчення іменників чоловічого роду
+  page: 190
+  grade: 10
+- id: S8
+  file: wikipedia/Неформальна логіка
+  type: wikipedia
+  title: Неформальна логіка
+  url: https://uk.wikipedia.org/wiki/%D0%9D%D0%B5%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D0%BB%D1%8C%D0%BD%D0%B0%20%D0%BB%D0%BE%D0%B3%D1%96%D0%BA%D0%B0
+- id: S9
+  file: ukrainian_wiki/franko-letters_Українська-література-Листи-Івана-Франка-Політика-Полеміка-Особисте-Основний-зміст-Листування-Івана-Франка-та-Михайла-Драгоманова-Діалог-титанів
+  type: ukrainian_wiki
+  title: 'Українська література: Листи Івана Франка: Політика, Полеміка, Особисте'
+  section_path: 'Українська література: Листи Івана Франка: Політика, Полеміка, Особисте
+    > Основний зміст > Листування Івана Франка та Михайла Драгоманова: Діалог титанів'

@@ -1,0 +1,47 @@
+# Source registry for wiki/literature/works/modern-memes-as-folklore.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 9-klas-ukrajinska-literatura-avramenko-2017_s4959
+  type: textbook
+  title: Лише 1857 р. завдяки клопотанню друзів поета звільнили із за
+  page: 196
+  grade: 9
+- id: S2
+  file: wave7-heroes-ukr-kultura_c0325
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c1738
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: ukrainian_wiki/narodni-anekdoty_Український-фольклор-Народні-анекдоти-та-небилиці-Сміхова-культура-Основний-зміст-Перформативний-контекст-фольклорного-гумору
+  type: ukrainian_wiki
+  title: 'Український фольклор: Народні анекдоти та небилиці: Сміхова культура'
+  section_path: 'Український фольклор: Народні анекдоти та небилиці: Сміхова культура
+    > Основний зміст > Перформативний контекст фольклорного гумору'
+- id: S5
+  file: ukrainian_wiki/women-writers-resistance_Українська-література-Письменниці-що-чинять-опір-Література-як-спротив-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Письменниці, що чинять опір: Література як спротив'
+  section_path: 'Українська література: Письменниці, що чинять опір: Література як
+    спротив > Короткий зміст'
+- id: S6
+  file: ukrainian_wiki/hyperbole-litotes_Академічна-C1-Гіпербола-та-літота-Гра-масштабів-Основний-зміст-Роль-гіперболи-та-літоти-у-творенні-комічного-ефекту
+  type: ukrainian_wiki
+  title: 'Академічна C1: Гіпербола та літота: Гра масштабів'
+  section_path: 'Академічна C1: Гіпербола та літота: Гра масштабів > Основний зміст
+    > Роль гіперболи та літоти у творенні комічного ефекту'
+- id: S7
+  file: wikipedia/Історичний міф
+  type: wikipedia
+  title: Історичний міф
+  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D0%B8%D0%B9%20%D0%BC%D1%96%D1%84
+- id: S8
+  file: wikipedia/Фольклор
+  type: wikipedia
+  title: Фольклор
+  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%BE%D0%BB%D1%8C%D0%BA%D0%BB%D0%BE%D1%80

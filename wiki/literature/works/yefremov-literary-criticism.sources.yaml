@@ -1,0 +1,53 @@
+# Source registry for wiki/literature/works/yefremov-literary-criticism.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0712
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave8-hrabovych-do-istoriyi_c0514
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0546
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave4-hrushevsky-istlit_c0026
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S5
+  file: wave12-hrushevsky-iu-odnotom_c0031
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0547
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0521
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0523
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0518
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0019
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

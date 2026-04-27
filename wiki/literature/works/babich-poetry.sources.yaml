@@ -1,0 +1,54 @@
+# Source registry for wiki/literature/works/babich-poetry.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/decolonization-theory-literature_Українська-література-Деколонізація-методологія-та-історична-рецепція-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література: Деколонізація, методологія та історична рецепція'
+  section_path: 'Українська література: Деколонізація, методологія та історична рецепція
+    > Деколонізаційна перспектива'
+- id: S2
+  file: ukrainian_wiki/kateryna-kalytko-poetry_Українська-література-Поезія-як-свідчення-Голос-Катерини-Калитко-Основний-зміст-Голос-Катерини-Калитко-у-контексті-сучасної-поезії
+  type: ukrainian_wiki
+  title: 'Українська література: Поезія як свідчення: Голос Катерини Калитко'
+  section_path: 'Українська література: Поезія як свідчення: Голос Катерини Калитко
+    > Основний зміст > Голос Катерини Калитко у контексті сучасної поезії'
+- id: S3
+  file: ukrainian_wiki/kateryna-kalytko-poetry_Українська-література-Поезія-як-свідчення-Голос-Катерини-Калитко-Основний-зміст-Злам-голосу-культурне-насильство-та-трагедія-ХХ-століття
+  type: ukrainian_wiki
+  title: 'Українська література: Поезія як свідчення: Голос Катерини Калитко'
+  section_path: 'Українська література: Поезія як свідчення: Голос Катерини Калитко
+    > Основний зміст > Злам голосу: культурне насильство та трагедія ХХ століття'
+- id: S4
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s5006
+  type: textbook
+  title: НОВА УКРАЇНСЬКА ЛІТЕРАТУРА (p. 168)
+  page: 168
+  grade: 9
+- id: S5
+  file: ukrainian_wiki/volyn-pamiat-i-travma_Історіографія-Волинь-Пам-ять-і-травма-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Волинь: Пам''ять і травма'
+  section_path: 'Історіографія: Волинь: Пам''ять і травма > Короткий зміст'
+- id: S6
+  file: 7-klas-ukrlit-avramenko-2024_s3605
+  type: textbook
+  title: ІСТОРИЧНЕ МИНУЛЕ УКРАЇНИ (p. 55)
+  page: 55
+  grade: 7
+- id: S7
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s1074
+  type: textbook
+  title: ПОЕТИЧНЕ САМОВИРАЖЕННЯ (p. 18)
+  page: 18
+  grade: 11
+- id: S8
+  file: wikipedia/Ясь Олексій Васильович
+  type: wikipedia
+  title: Ясь Олексій Васильович
+  url: https://uk.wikipedia.org/wiki/%D0%AF%D1%81%D1%8C%20%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D1%96%D0%B9%20%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C%D0%BE%D0%B2%D0%B8%D1%87
+- id: S9
+  file: wave7-heroes-ukr-kultura_c0325
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив

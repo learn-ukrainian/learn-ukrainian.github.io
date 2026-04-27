@@ -1,0 +1,55 @@
+# Source registry for wiki/literature/works/amelina-new-renaissance.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/amelina-renaissance_Українська-література-Вікторія-Амеліна-Архітекторка-Нового-Відродження-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження'
+  section_path: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження
+    > Короткий зміст'
+- id: S2
+  file: ukrainian_wiki/victoria-amelina_Біографія-Вікторія-Амеліна-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Вікторія Амеліна'
+  section_path: 'Біографія: Вікторія Амеліна > Деколонізаційна перспектива'
+- id: S4
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0376
+  type: textbook
+  title: Література і дійсність  9
+  page: 9
+  grade: 10
+- id: S5
+  file: wikipedia/Геноцид
+  type: wikipedia
+  title: Геноцид
+  url: https://uk.wikipedia.org/wiki/%D0%93%D0%B5%D0%BD%D0%BE%D1%86%D0%B8%D0%B4
+- id: S6
+  file: ukrainian_wiki/amelina-renaissance_Українська-література-Вікторія-Амеліна-Архітекторка-Нового-Відродження-Основний-зміст-Жіноче-обличчя-українського-літературного-канону-та-витоки-Нового-Відродження
+  type: ukrainian_wiki
+  title: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження'
+  section_path: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження
+    > Основний зміст > Жіноче обличчя українського літературного канону та витоки
+    Нового Відродження'
+- id: S7
+  file: 11-klas-ukrajinska-literatura-avramenko-2019_s1133
+  type: textbook
+  title: 'Моренець В. Сучасна українська лірика: модель жанру // Сучасність. — 1996.
+    —'
+  page: 248
+  grade: 11
+- id: S8
+  file: ukrainian_wiki/amelina-renaissance_Українська-література-Вікторія-Амеліна-Архітекторка-Нового-Відродження-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження'
+  section_path: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження
+    > Деколонізаційна перспектива'
+- id: S9
+  file: wave8-hrabovych-do-istoriyi_c0037
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S10
+  file: ukrainian_wiki/victoria-amelina_Біографія-Вікторія-Амеліна-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Вікторія Амеліна'
+  section_path: 'Біографія: Вікторія Амеліна > Короткий зміст'

@@ -1,0 +1,37 @@
+# Source registry for wiki/literature/works/karpenko-karyi-theatre.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0398
+  type: textbook
+  title: Іван Карпенко-Карий. Трагікомедія «Мартин Боруля»  57
+  page: 57
+  grade: 10
+- id: S2
+  file: ukrlib-karpenko_karyi_c0007
+  type: literary
+  title: Іван Карпенко-Карий. Життя та творчість Івана Карпенка-Карого
+  author: Карпенко-Карий І.
+- id: S3
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0401
+  type: textbook
+  title: Іван Карпенко-Карий. П’єса «Хазяїн»  63
+  page: 63
+  grade: 10
+- id: S4
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0397
+  type: textbook
+  title: Іван Карпенко-Карий  55
+  page: 55
+  grade: 10
+- id: S5
+  file: 10-klas-ukrajinska-literatura-avramenko-2018_s0203
+  type: textbook
+  title: «ТЕАТР КОРИФЕЇВ» (p. 68)
+  page: 68
+  grade: 10
+- id: S6
+  file: wikipedia/Іван Карпенко-Карий
+  type: wikipedia
+  title: Іван Карпенко-Карий
+  url: https://uk.wikipedia.org/wiki/%D0%86%D0%B2%D0%B0%D0%BD%20%D0%9A%D0%B0%D1%80%D0%BF%D0%B5%D0%BD%D0%BA%D0%BE-%D0%9A%D0%B0%D1%80%D0%B8%D0%B9

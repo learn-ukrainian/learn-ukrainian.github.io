@@ -1,0 +1,25 @@
+# Source registry for wiki/literature/works/andrii-chaikovskyi-za-sestroiu.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrlit-avramenko-2024_s3605
+  type: textbook
+  title: ІСТОРИЧНЕ МИНУЛЕ УКРАЇНИ (p. 55)
+  page: 55
+  grade: 7
+- id: S2
+  file: ukrainian_wiki/andrii-chaikovskyi_Біографія-Андрій-Чайковський-Адвокат-нації-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Андрій Чайковський: Адвокат нації'
+  section_path: 'Біографія: Андрій Чайковський: Адвокат нації > Деколонізаційна перспектива'
+- id: S3
+  file: 10-klas-ukrajinska-mova-avramenko-2018_s0313
+  type: textbook
+  title: Суперечка як вид комунікації. Правила ведення суперечки
+  page: 185
+  grade: 10
+- id: S4
+  file: https://www.youtube.com/watch?v=t4XYPHKnpQA
+  type: external
+  title: ГОЛОВНИЙ МІФ ПРО РУССКІЙ МІР
+  url: https://www.youtube.com/watch?v=t4XYPHKnpQA

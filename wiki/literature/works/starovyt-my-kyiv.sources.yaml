@@ -1,0 +1,44 @@
+# Source registry for wiki/literature/works/starovyt-my-kyiv.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/donbas-industrializatsiia_Історіографія-Донбас-ідентичність-псевдосепаратизм-та-зіткнення-наративів-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Історіографія: Донбас — ідентичність, псевдосепаратизм та зіткнення наративів'
+  section_path: 'Історіографія: Донбас — ідентичність, псевдосепаратизм та зіткнення
+    наративів > Короткий зміст'
+- id: S2
+  file: 9-klas-ukrajinska-literatura-mishhenko-2017_s4993
+  type: textbook
+  title: ДАВНЯ ЛІТЕРАТУРА (p. 76)
+  page: 76
+  grade: 9
+- id: S3
+  file: wikipedia/Історичний міф
+  type: wikipedia
+  title: Історичний міф
+  url: https://uk.wikipedia.org/wiki/%D0%86%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D0%B8%D0%B9%20%D0%BC%D1%96%D1%84
+- id: S4
+  file: 5-klas-istoriya-schupak-2022_s1937
+  type: textbook
+  title: § 16. Розтлумачте значення слів істо
+  page: 92
+  grade: 5
+- id: S5
+  file: 5-klas-istoriya-schupak-2022_s1933
+  type: textbook
+  title: § 12. Розгадайте ребус і поміркуйте,
+  page: 67
+  grade: 5
+- id: S6
+  file: 8-klas-istoria-ukr-schupak-2025_s4227
+  type: textbook
+  title: РОЗДІЛ 4. У цьому стилі побудовані Троїць­
+  page: 189
+  grade: 8
+- id: S7
+  file: ukrainian_wiki/pivden-kolonizatsiia-mify_Історіографія-Південь-України-Колонізація-та-міфи-Новоросії-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Південь України: Колонізація та міфи «Новоросії»'
+  section_path: 'Історіографія: Південь України: Колонізація та міфи «Новоросії» >
+    Деколонізаційна перспектива'

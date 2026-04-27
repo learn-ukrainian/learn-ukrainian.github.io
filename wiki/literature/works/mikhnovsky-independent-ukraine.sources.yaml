@@ -1,0 +1,40 @@
+# Source registry for wiki/literature/works/mikhnovsky-independent-ukraine.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ukrxx-derzhavnist_c0054
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S2
+  file: wave8-fdm-biobibliohrafichnyi_c0112
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S3
+  file: wave7-popovych-narys-kultury_c0820
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S4
+  file: https://www.youtube.com/watch?v=ICPeZwPzsYw
+  type: external
+  title: 'Микола Міхновський: творець самостійної України'
+  url: https://www.youtube.com/watch?v=ICPeZwPzsYw
+- id: S5
+  file: ukrainian_wiki/mykola-mikhnovskyi_Біографія-Микола-Міхновський-Ідеолог-самостійництва-Основний-зміст-Маніфест-Самостійна-Україна-правосуддя-та-історична-тяглість
+  type: ukrainian_wiki
+  title: 'Біографія: Микола Міхновський: Ідеолог самостійництва'
+  section_path: 'Біографія: Микола Міхновський: Ідеолог самостійництва > Основний
+    зміст > Маніфест «Самостійна Україна»: правосуддя та історична тяглість'
+- id: S6
+  file: ukrainian_wiki/rukh_Історія-України-Національно-визвольний-рух-та-еволюція-самосвідомості-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Історія України: Національно-визвольний рух та еволюція самосвідомості'
+  section_path: 'Історія України: Національно-визвольний рух та еволюція самосвідомості
+    > Мовні зразки'
+- id: S7
+  file: wikipedia/Самостійна Україна (брошура)
+  type: wikipedia
+  title: Самостійна Україна (брошура)
+  url: https://uk.wikipedia.org/wiki/%D0%A1%D0%B0%D0%BC%D0%BE%D1%81%D1%82%D1%96%D0%B9%D0%BD%D0%B0%20%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B0%20%28%D0%B1%D1%80%D0%BE%D1%88%D1%83%D1%80%D0%B0%29

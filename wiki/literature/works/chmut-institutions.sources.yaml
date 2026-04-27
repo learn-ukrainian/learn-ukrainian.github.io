@@ -1,0 +1,50 @@
+# Source registry for wiki/literature/works/chmut-institutions.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 10-klas-ukrajinska-mova-zabolotnij-2018_s0368
+  type: textbook
+  title: Практична риторика. Суперечка
+  page: 172
+  grade: 10
+- id: S2
+  file: 10-klas-ukrmova-zabolotnyi-2018_s0787
+  type: textbook
+  title: Практична риторика. Суперечка
+  page: 172
+  grade: 10
+- id: S3
+  file: 11-klas-ukrajinska-mova-voron-2019_s1261
+  type: textbook
+  title: Ігорович. Про цього давньоруського
+  page: 97
+  grade: 11
+- id: S4
+  file: 10-klas-ukrmova-glazova-2018_s0546
+  type: textbook
+  title: Ознайомтеся з пам’яткою. Самостійно сформулювавши тему для обгово
+  page: 169
+  grade: 10
+- id: S5
+  file: https://uk.wikipedia.org/wiki/Синтаксис
+  type: external
+  title: Синтаксис — Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Синтаксис
+  domain: uk.wikipedia.org
+- id: S6
+  file: ukrainian_wiki/lysty-stusa_Історіографія-Листи-Василя-Стуса-Критика-джерела-та-зіткнення-наративів-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Листи Василя Стуса: Критика джерела та зіткнення наративів'
+  section_path: 'Історіографія: Листи Василя Стуса: Критика джерела та зіткнення наративів
+    > Деколонізаційна перспектива'
+- id: S7
+  file: ukrainian_wiki/metodolohiia-dekolonizatsii_Історіографія-Методологія-деколонізації-Український-фронт-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історіографія: Методологія деколонізації: Український фронт'
+  section_path: 'Історіографія: Методологія деколонізації: Український фронт > Деколонізаційна
+    перспектива'
+- id: S8
+  file: wikipedia/Риторика
+  type: wikipedia
+  title: Риторика
+  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BA%D0%B0

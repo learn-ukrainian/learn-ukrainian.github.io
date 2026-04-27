@@ -1,0 +1,49 @@
+# Source registry for wiki/literature/works/voronyna-agent-000.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1395
+  type: textbook
+  title: Су÷асна українська література  219
+  page: 219
+  grade: 11
+- id: S2
+  file: 7-klas-ukrlit-avramenko-2024_s3597
+  type: textbook
+  title: ВСТУП
+  page: 9
+  grade: 7
+- id: S3
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1412
+  type: textbook
+  title: Загальні підсумки  251
+  page: 251
+  grade: 11
+- id: S4
+  file: 6-klas-ukrlit-avramenko-2023_s2726
+  type: textbook
+  title: ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИЖОК (p. 106)
+  page: 106
+  grade: 6
+- id: S5
+  file: 6-klas-ukrlit-avramenko-2023_s2736
+  type: textbook
+  title: ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИЖОК (p. 186)
+  page: 186
+  grade: 6
+- id: S6
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2978
+  type: textbook
+  title: ЖИВИЛЬНІ ДЖЕРЕЛА МУДРИХ КНИГ (p. 226)
+  page: 226
+  grade: 6
+- id: S7
+  file: wikipedia/Дроздовський Дмитро Ігорович
+  type: wikipedia
+  title: Дроздовський Дмитро Ігорович
+  url: https://uk.wikipedia.org/wiki/%D0%94%D1%80%D0%BE%D0%B7%D0%B4%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE%20%D0%86%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87
+- id: S8
+  file: wikipedia/Сучасна українська література
+  type: wikipedia
+  title: Сучасна українська література
+  url: https://uk.wikipedia.org/wiki/%D0%A1%D1%83%D1%87%D0%B0%D1%81%D0%BD%D0%B0%20%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BB%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%B0

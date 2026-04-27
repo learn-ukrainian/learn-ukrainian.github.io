@@ -1,0 +1,41 @@
+# Source registry for wiki/literature/works/ilchenko-cossack-mamai.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1399
+  type: textbook
+  title: Су÷асна українська література . юрій Андрухович  227
+  page: 227
+  grade: 11
+- id: S2
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1396
+  type: textbook
+  title: Су÷асна українська література . ігор Римарук  221
+  page: 221
+  grade: 11
+- id: S3
+  file: 11-klas-ukrlit-borzenko-2019-prof_s1395
+  type: textbook
+  title: Су÷асна українська література  219
+  page: 219
+  grade: 11
+- id: S4
+  file: ukrlib-andrukhovych_c0000
+  type: literary
+  title: Юрій Андрухович. Час і місце, або Моя остання територія
+  author: Андрухович Ю.
+- id: S5
+  file: wikipedia/Постмодернізм
+  type: wikipedia
+  title: Постмодернізм
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D1%81%D1%82%D0%BC%D0%BE%D0%B4%D0%B5%D1%80%D0%BD%D1%96%D0%B7%D0%BC
+- id: S6
+  file: wikipedia/Гончар Олесь Терентійович
+  type: wikipedia
+  title: Гончар Олесь Терентійович
+  url: https://uk.wikipedia.org/wiki/%D0%93%D0%BE%D0%BD%D1%87%D0%B0%D1%80%20%D0%9E%D0%BB%D0%B5%D1%81%D1%8C%20%D0%A2%D0%B5%D1%80%D0%B5%D0%BD%D1%82%D1%96%D0%B9%D0%BE%D0%B2%D0%B8%D1%87
+- id: S7
+  file: wikipedia/Дроздовський Дмитро Ігорович
+  type: wikipedia
+  title: Дроздовський Дмитро Ігорович
+  url: https://uk.wikipedia.org/wiki/%D0%94%D1%80%D0%BE%D0%B7%D0%B4%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9%20%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE%20%D0%86%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87

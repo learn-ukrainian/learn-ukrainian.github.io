@@ -1,0 +1,36 @@
+# Source registry for wiki/literature/works/storozhenko-devil.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrlit-mishhenko-2015_s3667
+  type: textbook
+  title: Розділ 3. ОЛЕКСА СТОРОЖЕНКО
+  page: 142
+  grade: 7
+- id: S3
+  file: wave4-chyzhevsky-istoriia-lit_c0608
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S4
+  file: https://www.youtube.com/watch?v=5nTon_vbTwY
+  type: external
+  title: Головна Таємниця Гоголя? Разом з @kulturtrigger | Історія України від імені
+    Т.Г. Шевченка
+  url: https://www.youtube.com/watch?v=5nTon_vbTwY
+- id: S5
+  file: ukrainian_wiki/amelina-renaissance_Українська-література-Вікторія-Амеліна-Архітекторка-Нового-Відродження-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження'
+  section_path: 'Українська література: Вікторія Амеліна: Архітекторка Нового Відродження
+    > Деколонізаційна перспектива'
+- id: S6
+  file: ukrainian_wiki/irony-sarcasm_Академічна-C1-Іронія-та-сарказм-Тонкощі-змісту-Наукові-дискусії
+  type: ukrainian_wiki
+  title: 'Академічна C1: Іронія та сарказм: Тонкощі змісту'
+  section_path: 'Академічна C1: Іронія та сарказм: Тонкощі змісту > Наукові дискусії'
+- id: S7
+  file: wikipedia/Роман
+  type: wikipedia
+  title: Роман
+  url: https://uk.wikipedia.org/wiki/%D0%A0%D0%BE%D0%BC%D0%B0%D0%BD

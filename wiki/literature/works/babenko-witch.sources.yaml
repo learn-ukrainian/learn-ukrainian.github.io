@@ -1,0 +1,37 @@
+# Source registry for wiki/literature/works/babenko-witch.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 7-klas-ukrlit-zabolotnyi-2024_s3770
+  type: textbook
+  title: ФАНТАСТИКА, МІСТИКА, ПРИГОДИ (p. 233)
+  page: 233
+  grade: 7
+- id: S2
+  file: ukrainian_wiki/zabuzhko-notre-dame-lit_Українська-література-Оксана-Забужко-та-її-роль-у-сучасному-каноні-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Оксана Забужко та її роль у сучасному каноні'
+  section_path: 'Українська література: Оксана Забужко та її роль у сучасному каноні
+    > Короткий зміст'
+- id: S3
+  file: ukrainian_wiki/decolonization-theory-literature_Українська-література-Деколонізація-методологія-та-історична-рецепція-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Українська література: Деколонізація, методологія та історична рецепція'
+  section_path: 'Українська література: Деколонізація, методологія та історична рецепція
+    > Деколонізаційна перспектива'
+- id: S4
+  file: ukrainian_wiki/zabuzhko-notre-dame-lit_Українська-література-Оксана-Забужко-та-її-роль-у-сучасному-каноні-Основний-зміст-Художня-проза-феномен-та-суспільна-рецепція
+  type: ukrainian_wiki
+  title: 'Українська література: Оксана Забужко та її роль у сучасному каноні'
+  section_path: 'Українська література: Оксана Забужко та її роль у сучасному каноні
+    > Основний зміст > Художня проза: феномен та суспільна рецепція'
+- id: S5
+  file: wikipedia/Сучасна українська література
+  type: wikipedia
+  title: Сучасна українська література
+  url: https://uk.wikipedia.org/wiki/%D0%A1%D1%83%D1%87%D0%B0%D1%81%D0%BD%D0%B0%20%D1%83%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D0%B0%20%D0%BB%D1%96%D1%82%D0%B5%D1%80%D0%B0%D1%82%D1%83%D1%80%D0%B0
+- id: S6
+  file: wikipedia/Гендерні дослідження (журнал)
+  type: wikipedia
+  title: Гендерні дослідження (журнал)
+  url: https://uk.wikipedia.org/wiki/%D0%93%D0%B5%D0%BD%D0%B4%D0%B5%D1%80%D0%BD%D1%96%20%D0%B4%D0%BE%D1%81%D0%BB%D1%96%D0%B4%D0%B6%D0%B5%D0%BD%D0%BD%D1%8F%20%28%D0%B6%D1%83%D1%80%D0%BD%D0%B0%D0%BB%29

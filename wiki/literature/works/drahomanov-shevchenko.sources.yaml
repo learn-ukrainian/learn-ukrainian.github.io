@@ -1,0 +1,49 @@
+# Source registry for wiki/literature/works/drahomanov-shevchenko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/mykhailo-drahomanov_Біографія-Михайло-Драгоманов-Архітектор-європейської-України-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Біографія: Михайло Драгоманов: Архітектор європейської України'
+  section_path: 'Біографія: Михайло Драгоманов: Архітектор європейської України >
+    Деколонізаційна перспектива'
+- id: S2
+  file: ukrainian_wiki/drahomanov_Історія-України-Михайло-Драгоманов-Деколонізаційна-перспектива
+  type: ukrainian_wiki
+  title: 'Історія України: Михайло Драгоманов'
+  section_path: 'Історія України: Михайло Драгоманов > Деколонізаційна перспектива'
+- id: S3
+  file: wave8-fdm-biobibliohrafichnyi_c0039
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S4
+  file: wikipedia/Ясь Олексій Васильович
+  type: wikipedia
+  title: Ясь Олексій Васильович
+  url: https://uk.wikipedia.org/wiki/%D0%AF%D1%81%D1%8C%20%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D1%96%D0%B9%20%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C%D0%BE%D0%B2%D0%B8%D1%87
+- id: S5
+  file: https://www.youtube.com/watch?v=J7h5XQ8lKgo
+  type: external
+  title: 'Михайло Драгоманов: геній і вигнанець'
+  url: https://www.youtube.com/watch?v=J7h5XQ8lKgo
+- id: S6
+  file: wave10-konysky-shevchenko-khronika_c0009
+  type: literary
+  title: 'Кониський — Шевченко-Грушівський: Хроніка життя'
+  author: Кониський О.
+- id: S7
+  file: wave7-hrinchenko-drahomanov_c0027
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S8
+  file: https://www.youtube.com/watch?v=ICPeZwPzsYw
+  type: external
+  title: 'Микола Міхновський: творець самостійної України'
+  url: https://www.youtube.com/watch?v=ICPeZwPzsYw
+- id: S9
+  file: wave7-heroes-ukr-kultura_c0054
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив

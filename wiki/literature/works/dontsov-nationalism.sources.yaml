@@ -1,0 +1,57 @@
+# Source registry for wiki/literature/works/dontsov-nationalism.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: ukrainian_wiki/dmytro-dontsov_Біографія-Дмитро-Донцов-Ідеолог-націоналізму-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Біографія: Дмитро Донцов: Ідеолог націоналізму'
+  section_path: 'Біографія: Дмитро Донцов: Ідеолог націоналізму > Короткий зміст'
+- id: S2
+  file: wave7-ukrxx-derzhavnist_c0057
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S3
+  file: wave7-ukrxx-derzhavnist_c0066
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S4
+  file: wave8-fdm-biobibliohrafichnyi_c0041
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S5
+  file: wave8-fdm-biobibliohrafichnyi_c0100
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S6
+  file: wave7-ukrxx-derzhavnist_c0370
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S7
+  file: ukrainian_wiki/oun_Історія-України-Організація-Українських-Націоналістів-Формування-та-ідеологічні-витоки-Основний-зміст-Ідеологічний-фундамент-від-розчарування-до-чинного-націоналізму
+  type: ukrainian_wiki
+  title: 'Історія України: Організація Українських Націоналістів: Формування та ідеологічні
+    витоки'
+  section_path: 'Історія України: Організація Українських Націоналістів: Формування
+    та ідеологічні витоки > Основний зміст > Ідеологічний фундамент: від розчарування
+    до «чинного націоналізму»'
+- id: S8
+  file: wave8-fdm-biobibliohrafichnyi_c0038
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S9
+  file: ukrainian_wiki/dmytro-dontsov_Біографія-Дмитро-Донцов-Ідеолог-націоналізму-Основний-зміст-Вплив-на-молодь-Галичини-та-формування-ОУН
+  type: ukrainian_wiki
+  title: 'Біографія: Дмитро Донцов: Ідеолог націоналізму'
+  section_path: 'Біографія: Дмитро Донцов: Ідеолог націоналізму > Основний зміст >
+    Вплив на молодь Галичини та формування ОУН'
+- id: S10
+  file: wave7-ukrxx-derzhavnist_c0058
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив

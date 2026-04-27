@@ -1,0 +1,50 @@
+# Source registry for wiki/literature/works/nestayko-forest-school.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: 6-klas-ukrlit-kovalenko-2023_s2771
+  type: textbook
+  title: Розділ XIX,
+  page: 132
+  grade: 6
+- id: S2
+  file: 5-klas-ukrlit-zabolotnyi-2022_s2149
+  type: textbook
+  title: ПРИГОДИ ТА ФАНТАСТИКА В СУЧАСНІЙ ПРОЗІ (p. 183)
+  page: 183
+  grade: 5
+- id: S3
+  file: 5-klas-ukrlit-avramenko-2022_s1964
+  type: textbook
+  title: Всеволод Нестайко — майстер пригодницького жанру. Його
+  page: 248
+  grade: 5
+- id: S4
+  file: 6-klas-ukrlit-zabolotnyi-2023_s2887
+  type: textbook
+  title: ЗАХОПЛИВИЙ СВІТ ПРИГОДНИЦЬКИХ І ФАНТАСТИЧНИХ ПОВІСТЕЙ ЗАХОПЛИВИЙ СВІТ ПРИГОДНИЦЬКИХ
+  page: 135
+  grade: 6
+- id: S5
+  file: 7-klas-ukrlit-avramenko-2024_s3623
+  type: textbook
+  title: ПРИГОДИ ТА ГУМОР
+  page: 195
+  grade: 7
+- id: S6
+  file: wave7-heroes-ukr-kultura_c0325
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S7
+  file: 5-klas-ukrlit-zabolotnyi-2022_s2170
+  type: textbook
+  title: КНИЖКА ВЧИТЬ, ЯК У СВІТІ ЖИТЬ (p. 204)
+  page: 204
+  grade: 5
+- id: S8
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0464
+  type: textbook
+  title: Леся Українка. Драма-феєрія «Лісова пісня»  177
+  page: 177
+  grade: 10
