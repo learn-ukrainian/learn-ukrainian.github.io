@@ -3,6 +3,33 @@
 # Validates environment and reports project state.
 # Skips in headless/pipeline mode to avoid adding latency.
 
+# 0. Pyenv-rehash stale-lock cleanup. Runs BEFORE the headless-skip
+#    because every shell startup (including pipeline jobs) hits pyenv
+#    init, and a stale lock costs 60s per Bash invocation.
+#
+#    Background: pyenv-rehash uses `noclobber` to write a 0-byte
+#    sentinel at $PYENV_ROOT/shims/.pyenv-shim. If a rehash gets
+#    killed mid-flight (laptop sleep, overnight session crash,
+#    terminal closure), the sentinel survives and every subsequent
+#    rehash blocks 60s waiting on the lock before giving up. Last
+#    incident: stale sentinel from 2026-04-26 02:56 (overnight
+#    session) made every Claude Bash tool call take 60+ seconds for
+#    two days straight.
+#
+#    Defensive: if the sentinel is older than 1 minute, it is
+#    definitely stale (real rehashes complete in <1s) — delete it.
+#    The 1-minute threshold avoids racing against an active rehash.
+#
+#    Using `find -mmin +1` instead of `stat`: portable across BSD
+#    (macOS) and GNU (Homebrew coreutils) without flag-flavor
+#    detection. `stat -f %m` (BSD) and `stat -c %Y` (GNU) have
+#    incompatible meanings — `find -mmin +1` is the same on both.
+PYENV_SHIM_LOCK="${PYENV_ROOT:-$HOME/.pyenv}/shims/.pyenv-shim"
+if [ -f "$PYENV_SHIM_LOCK" ] && \
+   [ -n "$(find "$PYENV_SHIM_LOCK" -mmin +1 -type f 2>/dev/null)" ]; then
+  rm -f "$PYENV_SHIM_LOCK"
+fi
+
 # Skip in non-interactive (headless) mode
 if [ -n "$CLAUDE_NON_INTERACTIVE" ] || [ -n "$LEARN_UKRAINIAN_PIPELINE" ] || [ -n "$GEMINI_SESSION" ]; then
   exit 0
