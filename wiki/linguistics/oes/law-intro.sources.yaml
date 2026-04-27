@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/law-intro.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-yushkov-ruska-pravda_c0001
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S2
+  file: wave1-galytsko-volynskyi_c0253
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S3
+  file: wave1-kyivskyi-litopys_c0628
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S4
+  file: wave5-yushkov-ruska-pravda_c0000
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S5
+  file: wave5-humanisty-vidrodzennia_c0206
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S6
+  file: wave5-klementiy-zinoviiv_c0041
+  type: literary
+  title: Климентій Зіновіїв. Вірші. Приповісті.
+  author: Зіновіїв К.
+- id: S7
+  file: wave5-suspilna-dumka-xvi-xvii_c0794
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S8
+  file: wave1-kyivskyi-litopys_c0627
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S9
+  file: wave1-galytsko-volynskyi_c0252
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S10
+  file: wave5-humanisty-vidrodzennia_c0040
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія

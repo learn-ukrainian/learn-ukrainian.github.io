@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/oes/trade-rights.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-sofonovych-khronika_c0157
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S2
+  file: wave12-ukrainski-intermediyi_c0167
+  type: literary
+  title: Українські інтермедії XVII-XVIII ст.
+  author: Антологія
+- id: S3
+  file: wave12-bajky-xvii-xviii_c0002
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S4
+  file: wave3-bajky-xvii-xviii_c0001
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S6
+  file: wave5-prokopovych-filosofski_c0071
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave3-bajky-xvii-xviii_c0254
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S8
+  file: wave5-humanisty-vidrodzennia_c0150
+  type: literary
+  title: Українські гуманісти епохи Відродження
+  author: Антологія
+- id: S9
+  file: wave6-boplan-opys-ukrainy_c0061
+  type: literary
+  title: Боплан — Опис України (1660)
+  author: Боплан Г.
+- id: S10
+  file: wave1-galytsko-volynskyi_c0570
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий

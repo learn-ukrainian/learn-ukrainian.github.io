@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/verbs-present-tense.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-uzhevych-paryzky_c0021
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S2
+  file: wave9-uzhevych-paryzky_c0068
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S3
+  file: wave2-smotrytsky-gramatyka_c0065
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S4
+  file: wave2-smotrytsky-gramatyka_c0068
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S5
+  file: wave2-smotrytsky-gramatyka_c0078
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S6
+  file: wave2-smotrytsky-gramatyka_c0062
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S7
+  file: wave9-uzhevych-paryzky_c0052
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S8
+  file: wave9-uzhevych-paryzky_c0020
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S9
+  file: wave2-smotrytsky-gramatyka_c0069
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S10
+  file: wave2-smotrytsky-gramatyka_c0077
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.

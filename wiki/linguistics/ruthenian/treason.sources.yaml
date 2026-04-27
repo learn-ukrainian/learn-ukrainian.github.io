@@ -1,0 +1,43 @@
+# Source registry for wiki/linguistics/ruthenian/treason.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-statut-1566_c0016
+  type: literary
+  title: Другий (Волинський) статут ВКЛ 1566 року
+  author: ВКЛ
+- id: S2
+  file: wave7-statut-1566_c0014
+  type: literary
+  title: Другий (Волинський) статут ВКЛ 1566 року
+  author: ВКЛ
+- id: S3
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S5
+  file: wave5-suspilna-dumka-xvi-xvii_c0048
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S7
+  file: wave3-likarski-poradnyky_c0015
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S8
+  file: wave5-poradnyky-xviii_c0016
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий
+- id: S9
+  file: wave5-yushkov-ruska-pravda_c0000
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S10
+  file: wave5-suspilna-dumka-xvi-xvii_c0026
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія

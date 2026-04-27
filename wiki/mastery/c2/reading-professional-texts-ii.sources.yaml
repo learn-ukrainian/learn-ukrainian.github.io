@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/reading-professional-texts-ii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c4417
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave4-voitovych-dynasty_c0001
+  type: literary
+  title: Войтович — Князівські династії Східної Європи
+  author: Войтович Л.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0163
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c1935
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave4-ukrainska-mova-encyclopedia_c0106
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S6
+  file: wave7-heroes-ukr-kultura_c0008
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S7
+  file: wave7-istkult-t1-kyivska-rus_c0057
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S8
+  file: wave7-thompson-trubadury_c0062
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S9
+  file: wave12-ukrainski-intermediyi_c0166
+  type: literary
+  title: Українські інтермедії XVII-XVIII ст.
+  author: Антологія
+- id: S10
+  file: wave9-rusanivsky-ist-lit-movy_c0082
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.

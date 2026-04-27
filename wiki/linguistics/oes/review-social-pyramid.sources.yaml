@@ -1,0 +1,43 @@
+# Source registry for wiki/linguistics/oes/review-social-pyramid.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-yushkov-ruska-pravda_c0000
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S2
+  file: wave9-uzhevych-paryzky_c0000
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S3
+  file: wave7-statut-1566_c0016
+  type: literary
+  title: Другий (Волинський) статут ВКЛ 1566 року
+  author: ВКЛ
+- id: S4
+  file: wave12-novgorodskyj-litopys-1_c0868
+  type: literary
+  title: Новгородський перший літопис
+  author: Невідомий
+- id: S5
+  file: wave2-smotrytsky-gramatyka_c0105
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S6
+  file: wave12-novgorodskyj-litopys-1_c0001
+  type: literary
+  title: Новгородський перший літопис
+  author: Невідомий
+- id: S7
+  file: wave2-smotrytsky-gramatyka_c0047
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S8
+  file: wave1-galytsko-volynskyi_c0252
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий

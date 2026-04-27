@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/oes/death-of-monomakh.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave1-galytsko-volynskyi_c0253
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S2
+  file: wave1-kyivskyi-litopys_c0628
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S3
+  file: wave1-galytsko-volynskyi_c0547
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S4
+  file: wave1-kyivskyi-litopys_c0922
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S5
+  file: wave5-oldukr-xi-xiii_c0001
+  type: literary
+  title: Українська література XI-XIII ст.
+  author: Антологія
+- id: S6
+  file: wave6-synopsis-1674_c0502
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S7
+  file: wave6-synopsis-1674_c0086
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S8
+  file: wave1-kyivskyi-litopys_c0627
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S10
+  file: wave6-synopsis-1674_c0324
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий

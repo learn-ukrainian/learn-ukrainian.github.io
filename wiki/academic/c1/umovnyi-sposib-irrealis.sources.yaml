@@ -1,0 +1,43 @@
+# Source registry for wiki/academic/c1/umovnyi-sposib-irrealis.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-nimchuk-movoznavstvo_c0140
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S2
+  file: wave4-nimchuk-movoznavstvo_c0205
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S3
+  file: wave4-nimchuk-movoznavstvo_c0322
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S4
+  file: wave9-skhidnoslov-hramatyky_c0031
+  type: literary
+  title: Східнослов'янські граматики XVI-XVII ст. (статті)
+  author: Колектив
+- id: S6
+  file: wave9-pivtorak-pokhodzhennia_c0141
+  type: literary
+  title: Півторак — Походження українців, росіян, білорусів та їхніх мов
+  author: Півторак Г.
+- id: S7
+  file: wave4-nimchuk-movoznavstvo_c0212
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S8
+  file: wave4-nimchuk-movoznavstvo_c0317
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S9
+  file: wave7-entsyklopediia-ukrainoznavstva_c0790
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив

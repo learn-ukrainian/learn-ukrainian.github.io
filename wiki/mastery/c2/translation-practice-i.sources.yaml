@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/translation-practice-i.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-ukrainska-mova-encyclopedia_c0212
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S2
+  file: wave7-dzyuba-internatsionalizm_c0194
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.
+- id: S3
+  file: wave1-galytsko-volynskyi_c0253
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S4
+  file: wave1-kyivskyi-litopys_c0628
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S5
+  file: wave4-ukrainska-mova-encyclopedia_c0211
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S6
+  file: wave4-chyzhevsky-istoriia-lit_c0050
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S7
+  file: wave7-ukrxx-derzhavnist_c0360
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0180
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave7-heroes-ukr-kultura_c0008
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S10
+  file: wave12-pvl-yaremenko_c0402
+  type: literary
+  title: Повість врем'яних літ (переклад В. Яременка)
+  author: Нестор

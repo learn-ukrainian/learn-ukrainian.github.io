@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/ruthenian/womens-rights.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S2
+  file: wave2-velychko_c0048
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S3
+  file: wave5-prokopovych-filosofski_c0691
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S4
+  file: wave5-prokopovych-filosofski_c0741
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S5
+  file: wave5-prokopovych-filosofski_c0712
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S6
+  file: wave1-kyivskyi-litopys_c0627
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S7
+  file: wave1-galytsko-volynskyi_c0252
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S8
+  file: wave5-prokopovych-filosofski_c1315
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave5-prokopovych-filosofski_c0058
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S10
+  file: wave5-prokopovych-filosofski_c0701
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.

@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/ruthenian/fables-kharkiv.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-bajky-xvii-xviii_c0098
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S2
+  file: wave3-bajky-xvii-xviii_c0097
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S3
+  file: wave12-bajky-xvii-xviii_c0097
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S4
+  file: wave3-bajky-xvii-xviii_c0096
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S5
+  file: wave12-bajky-xvii-xviii_c0084
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S6
+  file: wave3-bajky-xvii-xviii_c0083
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S7
+  file: wave3-bajky-xvii-xviii_c0253
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S8
+  file: wave5-skovoroda-tvory_c0081
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S9
+  file: wave12-bajky-xvii-xviii_c0001
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S10
+  file: wave3-bajky-xvii-xviii_c0000
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні

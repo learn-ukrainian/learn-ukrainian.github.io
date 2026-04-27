@@ -1,0 +1,53 @@
+# Source registry for wiki/academic/c1/review-c1-6.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-entsyklopediia-ukrainoznavstva_c0791
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c4417
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave4-nimchuk-movoznavstvo_c0162
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S4
+  file: wave4-chyzhevsky-istoriia-lit_c0932
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S5
+  file: wave4-nimchuk-movoznavstvo_c0033
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S6
+  file: wave7-hrinchenko-drahomanov_c0036
+  type: literary
+  title: Грінченко-Драгоманов — Діалоги про українську національну справу
+  author: Грінченко Б.
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0121
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave8-hensiorsky-gvl-mova_c0000
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S9
+  file: wave4-chyzhevsky-istoriia-lit_c0508
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S10
+  file: wave9-rusanivsky-ist-lit-movy_c0301
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.

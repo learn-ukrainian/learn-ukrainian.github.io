@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/writing-professional-documents-i.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c4294
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave7-entsyklopediia-ukrainoznavstva_c1578
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S3
+  file: wave4-ukrainska-mova-encyclopedia_c0108
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S4
+  file: wave4-ukrainska-mova-encyclopedia_c0110
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c4089
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave12-ukrainski-intermediyi_c0166
+  type: literary
+  title: Українські інтермедії XVII-XVIII ст.
+  author: Антологія
+- id: S7
+  file: wave3-hramoty-xiv_c0000
+  type: literary
+  title: Грамоти XIV ст.
+  author: Різні
+- id: S8
+  file: wave4-hrushevsky-iur-t2-3_c2349
+  type: literary
+  title: Грушевський — Історія України-Руси, т.2-3
+  author: Грушевський М.
+- id: S9
+  file: wave10-shevchenko-tvory-t1_c0079
+  type: literary
+  title: Шевченко — Повне зібрання творів, т.1
+  author: Шевченко Т.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c0290
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

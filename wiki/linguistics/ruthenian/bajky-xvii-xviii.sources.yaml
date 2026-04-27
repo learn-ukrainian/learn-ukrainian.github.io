@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/ruthenian/bajky-xvii-xviii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-bajky-xvii-xviii_c0010
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S2
+  file: wave3-bajky-xvii-xviii_c0009
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S3
+  file: wave5-skovoroda-tvory_c0038
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S4
+  file: wave12-bajky-xvii-xviii_c0021
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S5
+  file: wave3-bajky-xvii-xviii_c0020
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S6
+  file: wave12-bajky-xvii-xviii_c0011
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S7
+  file: wave3-bajky-xvii-xviii_c0010
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S8
+  file: wave12-bajky-xvii-xviii_c0028
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S9
+  file: wave3-bajky-xvii-xviii_c0027
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S10
+  file: wave5-skovoroda-tvory_c0037
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.

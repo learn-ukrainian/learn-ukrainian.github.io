@@ -1,0 +1,48 @@
+# Source registry for wiki/academic/c1/sport-ta-zdorovia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-popovych-narys-kultury_c0007
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S2
+  file: wave7-entsyklopediia-ukrainoznavstva_c0045
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S4
+  file: wave7-entsyklopediia-ukrainoznavstva_c3091
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S5
+  file: wave7-entsyklopediia-ukrainoznavstva_c0053
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S6
+  file: wave7-entsyklopediia-ukrainoznavstva_c3089
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S7
+  file: wave7-lytvynov-renesans-humanizm_c0107
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+- id: S8
+  file: wave7-istkult-t1-kyivska-rus_c0178
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S9
+  file: wave9-pravopys-2015_c0275
+  type: literary
+  title: Український правопис 2015
+  author: НАН України
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0053
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

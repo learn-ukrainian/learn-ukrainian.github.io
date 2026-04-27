@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/ruthenian/orthography-letters.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave3-likarski-poradnyky_c0015
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S2
+  file: wave5-poradnyky-xviii_c0016
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий
+- id: S3
+  file: wave12-samovyd-litopys_c0048
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий
+- id: S4
+  file: wave0-samovydets_c0047
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S5
+  file: wave2-smotrytsky-gramatyka_c0094
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S6
+  file: wave3-likarski-poradnyky_c0012
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S7
+  file: wave5-poradnyky-xviii_c0013
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий
+- id: S8
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S10
+  file: wave9-uzhevych-paryzky_c0029
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.

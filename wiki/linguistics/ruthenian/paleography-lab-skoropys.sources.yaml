@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/ruthenian/paleography-lab-skoropys.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave1-kyivskyi-litopys_c0627
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S2
+  file: wave1-galytsko-volynskyi_c0252
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S3
+  file: wave6-sofonovych-khronika_c0001
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S4
+  file: wave5-buhoslavsky-borys-hlib_c0002
+  type: literary
+  title: Україно-руські памʼятки про князів Бориса та Гліба
+  author: Бугославський С.
+- id: S5
+  file: wave6-boplan-opys-ukrainy_c0017
+  type: literary
+  title: Боплан — Опис України (1660)
+  author: Боплан Г.
+- id: S6
+  file: wave3-likarski-poradnyky_c0015
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S7
+  file: wave5-poradnyky-xviii_c0016
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий
+- id: S8
+  file: wave5-velychkovsky_c0155
+  type: literary
+  title: Іван Величковський. Твори
+  author: Величковський І.
+- id: S9
+  file: wave6-sofonovych-khronika_c0136
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S10
+  file: wave6-sofonovych-khronika_c0039
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.

@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/sociolinguistic-mastery.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-ukrainska-mova-encyclopedia_c0154
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S2
+  file: wave4-ukrainska-mova-encyclopedia_c0106
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S3
+  file: wave9-ohiyenko-ist-lit-movy_c0055
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S4
+  file: wave9-rusanivsky-ist-lit-movy_c0003
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S5
+  file: wave9-rusanivsky-ist-lit-movy_c0005
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c0362
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave8-hrabovych-do-istoriyi_c0669
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S8
+  file: wave8-hrabovych-do-istoriyi_c0168
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0097
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave9-shevelov-fonolohiia_c0268
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.

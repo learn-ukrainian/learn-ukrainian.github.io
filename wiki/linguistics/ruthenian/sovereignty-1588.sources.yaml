@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/ruthenian/sovereignty-1588.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-statut-1566_c0016
+  type: literary
+  title: Другий (Волинський) статут ВКЛ 1566 року
+  author: ВКЛ
+- id: S2
+  file: wave3-likarski-poradnyky_c0015
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S3
+  file: wave5-poradnyky-xviii_c0016
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий
+- id: S4
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S5
+  file: wave2-velychko_c0048
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S6
+  file: wave9-uzhevych-paryzky_c0007
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S7
+  file: wave5-suspilna-dumka-xvi-xvii_c0815
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S8
+  file: wave5-buhoslavsky-borys-hlib_c0002
+  type: literary
+  title: Україно-руські памʼятки про князів Бориса та Гліба
+  author: Бугославський С.
+- id: S9
+  file: wave12-velychko-litopys_c1654
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S10
+  file: wave2-velychko_c1652
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.

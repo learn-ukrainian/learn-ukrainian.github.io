@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/ruthenian/constitution-preamble.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wikisource-орлик_c050
+  type: literary
+  title: Конституція Пилипа Орлика
+  author: Орлик Пилип
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0048
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wikisource-орлик_c049
+  type: literary
+  title: Конституція Пилипа Орлика
+  author: Орлик Пилип
+- id: S4
+  file: wave3-likarski-poradnyky_c0015
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S5
+  file: wave5-poradnyky-xviii_c0016
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий
+- id: S6
+  file: wave12-velychko-litopys_c1651
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S7
+  file: wave2-velychko_c1649
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S8
+  file: wave12-velychko-litopys_c0018
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S9
+  file: wave2-velychko_c0016
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S10
+  file: wave2-smotrytsky-gramatyka_c0094
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.

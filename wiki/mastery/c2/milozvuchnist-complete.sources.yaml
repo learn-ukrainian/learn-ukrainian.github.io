@@ -1,0 +1,48 @@
+# Source registry for wiki/mastery/c2/milozvuchnist-complete.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-shevelov-fonolohiia_c0077
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c5176
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave4-ukrainska-mova-encyclopedia_c0205
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S4
+  file: wave10-shevchenkivsky-slovnyk_c0338
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S5
+  file: wave9-shevelov-fonolohiia_c0115
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c2903
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave10-shevchenkivsky-slovnyk_c2144
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S8
+  file: wave8-hensiorsky-gvl-mova_c0252
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c4294
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

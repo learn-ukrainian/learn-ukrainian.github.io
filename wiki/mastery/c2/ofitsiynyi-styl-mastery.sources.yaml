@@ -1,0 +1,43 @@
+# Source registry for wiki/mastery/c2/ofitsiynyi-styl-mastery.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-ukrainska-mova-encyclopedia_c0138
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S2
+  file: wave9-rusanivsky-ist-lit-movy_c0005
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c4089
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave7-istkult-t2-xiii-xvii_c0365
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S5
+  file: wave9-rusanivsky-ist-lit-movy_c0003
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S8
+  file: wave9-shevelov-fonolohiia_c0268
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0209
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c3478
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

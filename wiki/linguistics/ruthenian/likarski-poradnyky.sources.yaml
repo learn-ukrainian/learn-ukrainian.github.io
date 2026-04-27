@@ -1,0 +1,43 @@
+# Source registry for wiki/linguistics/ruthenian/likarski-poradnyky.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave3-likarski-poradnyky_c0019
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S2
+  file: wave5-poradnyky-xviii_c0020
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий
+- id: S4
+  file: wave5-poradnyky-xviii_c0000
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий
+- id: S5
+  file: wave5-poradnyky-xviii_c0001
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий
+- id: S7
+  file: wave3-likarski-poradnyky_c0001
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S8
+  file: wave3-likarski-poradnyky_c0000
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S9
+  file: wave3-likarski-poradnyky_c0002
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S10
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.

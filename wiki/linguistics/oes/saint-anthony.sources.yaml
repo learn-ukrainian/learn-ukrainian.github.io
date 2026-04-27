@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/saint-anthony.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-synopsis-1674_c0025
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S2
+  file: wave6-synopsis-1674_c0055
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S3
+  file: wave5-oldukr-xiv-xvi_c0000
+  type: literary
+  title: Українська література XIV-XVI ст.
+  author: Антологія
+- id: S4
+  file: wave2-smotrytsky-gramatyka_c0094
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S5
+  file: wave2-fedorovych-bukvar_c0007
+  type: literary
+  title: Федорович — Буквар (1574)
+  author: Федорович І.
+- id: S6
+  file: wave2-smotrytsky-gramatyka_c0096
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S7
+  file: wave1-pateryk-pechersky_c0046
+  type: literary
+  title: Патерик Києво-Печерський
+  author: Невідомий
+- id: S8
+  file: wave12-paterikon-pecherskyi_c0046
+  type: literary
+  title: Патерик Києво-Печерський (II Касіянівська редакція, 1462)
+  author: Невідомий
+- id: S9
+  file: wave2-smotrytsky-gramatyka_c0115
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S10
+  file: wave9-uzhevych-paryzky_c0022
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.

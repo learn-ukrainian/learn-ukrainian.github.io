@@ -1,0 +1,43 @@
+# Source registry for wiki/linguistics/oes/numbers-currency.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave3-hramoty-xiv_c0000
+  type: literary
+  title: Грамоти XIV ст.
+  author: Різні
+- id: S2
+  file: wave5-hramoty-xv_c0000
+  type: literary
+  title: Українські грамоти XV ст.
+  author: Колектив
+- id: S3
+  file: wave2-smotrytsky-gramatyka_c0053
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S4
+  file: wave9-uzhevych-paryzky_c0029
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S5
+  file: wave12-bajky-xvii-xviii_c0002
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S6
+  file: wave3-bajky-xvii-xviii_c0001
+  type: literary
+  title: Байки XVII-XVIII ст.
+  author: Різні
+- id: S8
+  file: wave9-uzhevych-paryzky_c0031
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S9
+  file: wave9-uzhevych-paryzky_c0001
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.

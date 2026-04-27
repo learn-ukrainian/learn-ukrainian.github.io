@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/witnesses-oaths.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave2-smotrytsky-gramatyka_c0107
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S2
+  file: wave9-uzhevych-paryzky_c0029
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S3
+  file: wave2-smotrytsky-gramatyka_c0065
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S4
+  file: wave2-smotrytsky-gramatyka_c0060
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S5
+  file: wave9-rech-zhydovskoho-1282_c0023
+  type: literary
+  title: Речь жидовського язика (1282)
+  author: Невідомий
+- id: S6
+  file: wave2-zyzaniy-leksys_c0017
+  type: literary
+  title: Зизаній — Лексис (1596)
+  author: Зизаній Л.
+- id: S7
+  file: wave9-tlkovaniye-1431_c0021
+  type: literary
+  title: Тлкованіє неудобъ познаваємомъ... (1431)
+  author: Невідомий
+- id: S8
+  file: wave5-oldukr-xvii_c0004
+  type: literary
+  title: Українська література XVII ст.
+  author: Антологія
+- id: S9
+  file: wave2-smotrytsky-gramatyka_c0027
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S10
+  file: wave9-uzhevych-paryzky_c0050
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.

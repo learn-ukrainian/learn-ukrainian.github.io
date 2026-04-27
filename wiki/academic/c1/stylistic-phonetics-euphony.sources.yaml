@@ -1,0 +1,53 @@
+# Source registry for wiki/academic/c1/stylistic-phonetics-euphony.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c2229
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c2649
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave4-hrushevsky-istlit_c0035
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S4
+  file: wave12-hrushevsky-iu-odnotom_c0040
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S5
+  file: wave10-shevchenkivsky-slovnyk_c2144
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c2821
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c2903
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave8-masliuk-poetyky-rytoryky_c0148
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c2650
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-masliuk-poetyky-rytoryky_c0149
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.

@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/inheritance-law.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-yushkov-ruska-pravda_c0000
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S2
+  file: wave1-galytsko-volynskyi_c0253
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S3
+  file: wave1-kyivskyi-litopys_c0628
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S4
+  file: wave9-uzhevych-paryzky_c0078
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S5
+  file: wave5-yushkov-ruska-pravda_c0001
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S6
+  file: wave2-smotrytsky-gramatyka_c0088
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S7
+  file: wave6-boplan-opys-ukrainy_c0017
+  type: literary
+  title: Боплан — Опис України (1660)
+  author: Боплан Г.
+- id: S8
+  file: wave9-uzhevych-paryzky_c0087
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S9
+  file: wave2-smotrytsky-gramatyka_c0048
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S10
+  file: wave6-sofonovych-khronika_c0104
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.

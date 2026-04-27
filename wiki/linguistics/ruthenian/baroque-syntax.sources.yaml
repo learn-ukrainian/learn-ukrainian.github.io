@@ -1,0 +1,38 @@
+# Source registry for wiki/linguistics/ruthenian/baroque-syntax.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave1-galytsko-volynskyi_c0253
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S2
+  file: wave1-kyivskyi-litopys_c0628
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S3
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S5
+  file: wave9-uzhevych-paryzky_c0099
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S6
+  file: wave5-klementiy-zinoviiv_c0041
+  type: literary
+  title: Климентій Зіновіїв. Вірші. Приповісті.
+  author: Зіновіїв К.
+- id: S9
+  file: wave12-grabianka-litopys_c0010
+  type: literary
+  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
+  author: Грабянка Г.
+- id: S10
+  file: wave5-prokopovych-filosofski_c0004
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.

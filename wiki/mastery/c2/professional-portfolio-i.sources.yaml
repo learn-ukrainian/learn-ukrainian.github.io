@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/professional-portfolio-i.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c5177
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-fdm-biobibliohrafichnyi_c0200
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S3
+  file: wave5-prokopovych-filosofski_c0138
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S4
+  file: wave4-ukrainska-mova-encyclopedia_c0205
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S5
+  file: ukrlib-khvylovy_c0070
+  type: literary
+  title: Микола Хвильовий. Думки проти течії
+  author: Хвильовий М.
+- id: S6
+  file: wave4-ukrainska-mova-encyclopedia_c0180
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S7
+  file: wave5-prokopovych-filosofski_c0092
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0106
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave7-antonovych-kultura_c0010
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c4089
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

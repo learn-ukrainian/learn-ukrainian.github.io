@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/text-coherence.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-ukrainska-mova-encyclopedia_c0072
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S2
+  file: wave8-masliuk-poetyky-rytoryky_c0116
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S3
+  file: wave8-ukr-lit-entsyklopediia_c5169
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S4
+  file: wave4-ukrainska-mova-encyclopedia_c0075
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S5
+  file: wave8-masliuk-poetyky-rytoryky_c0086
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c2821
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c4417
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0108
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S9
+  file: wave4-ukrainska-mova-encyclopedia_c0110
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c2721
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

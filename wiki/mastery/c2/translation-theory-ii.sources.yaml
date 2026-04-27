@@ -1,0 +1,48 @@
+# Source registry for wiki/mastery/c2/translation-theory-ii.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0086
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave8-masliuk-poetyky-rytoryky_c0006
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0072
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0554
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave4-ukrainska-mova-encyclopedia_c0211
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S6
+  file: wave8-ukr-lit-entsyklopediia_c4417
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S7
+  file: wave11-hrushevsky-iur-t6_c1015
+  type: literary
+  title: Грушевський — Історія України-Руси, том 6
+  author: Грушевський М.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c2238
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0545
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

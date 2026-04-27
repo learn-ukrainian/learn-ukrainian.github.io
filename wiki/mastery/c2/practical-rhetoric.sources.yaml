@@ -1,0 +1,43 @@
+# Source registry for wiki/mastery/c2/practical-rhetoric.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0479
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c2420
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave5-prokopovych-filosofski_c0089
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S5
+  file: wave5-prokopovych-filosofski_c0326
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c2421
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave7-antonovych-kultura_c0705
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S9
+  file: wave5-prokopovych-filosofski_c0155
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S10
+  file: wave12-slovo-pereklady_c0246
+  type: literary
+  title: 'Слово о полку Ігоревім: переклади і переспіви'
+  author: Антологія

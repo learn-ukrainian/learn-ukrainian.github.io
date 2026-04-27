@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/misto-selo-prostir.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ukrxx-derzhavnist_c0431
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S2
+  file: wave7-ukrxx-derzhavnist_c0399
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S3
+  file: wave7-istkult-t2-xiii-xvii_c0040
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S4
+  file: wave7-ukrxx-derzhavnist_c0004
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S5
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0123
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S6
+  file: wave7-kohut-tsentralizm_c0008
+  type: literary
+  title: Когут — Російський централізм і українська автономія
+  author: Когут З.
+- id: S7
+  file: wave8-chyzhevsky-baroko_c0401
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S8
+  file: wave7-ukrxx-derzhavnist_c0414
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S9
+  file: wave8-isaievych-knyhovydannia_c0123
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c0492
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив

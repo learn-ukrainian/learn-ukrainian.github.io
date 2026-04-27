@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/kyrylo-turovskyi-propovidi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-prokopovych-filosofski_c0088
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S2
+  file: wave1-galytsko-volynskyi_c0252
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S3
+  file: wave1-kyivskyi-litopys_c0627
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S4
+  file: wave5-prokopovych-filosofski_c0185
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S5
+  file: wave5-dovhalevsky-poetyka_c0201
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S6
+  file: wave5-prokopovych-filosofski_c0606
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave5-prokopovych-filosofski_c0087
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S8
+  file: wave5-prokopovych-filosofski_c0326
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave5-prokopovych-filosofski_c0331
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S10
+  file: wave5-prokopovych-filosofski_c0189
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.

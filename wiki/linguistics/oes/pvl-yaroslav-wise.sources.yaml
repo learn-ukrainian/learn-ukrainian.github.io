@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/oes/pvl-yaroslav-wise.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-oldukr-xi-xiii_c0000
+  type: literary
+  title: Українська література XI-XIII ст.
+  author: Антологія
+- id: S2
+  file: wave9-uzhevych-paryzky_c0000
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S3
+  file: wave9-uzhevych-paryzky_c0018
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S5
+  file: wave6-synopsis-1674_c0085
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S6
+  file: wave12-velychko-litopys_c0018
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S7
+  file: wave2-velychko_c0016
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S8
+  file: wave6-synopsis-1674_c0109
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S9
+  file: wave6-sofonovych-khronika_c0116
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S10
+  file: wave1-slovo-poetic-translations_c0197
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні

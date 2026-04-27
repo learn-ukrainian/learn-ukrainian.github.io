@@ -1,0 +1,28 @@
+# Source registry for wiki/linguistics/ruthenian/eyewitness-samovydets.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-samovyd-litopys_c0002
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий
+- id: S2
+  file: wave0-samovydets_c0001
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S4
+  file: wave0-samovydets_c0045
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S7
+  file: wave0-samovydets_c0043
+  type: literary
+  title: Літопис Самовидця
+  author: Невідомий
+- id: S8
+  file: wave12-samovyd-litopys_c0015
+  type: literary
+  title: Літопис Самовидця (1648-1702)
+  author: Невідомий

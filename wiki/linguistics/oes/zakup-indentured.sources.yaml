@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/oes/zakup-indentured.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-novgorodskyj-litopys-1_c0846
+  type: literary
+  title: Новгородський перший літопис
+  author: Невідомий
+- id: S2
+  file: wave5-yushkov-ruska-pravda_c0081
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S3
+  file: wave7-statut-1566_c0016
+  type: literary
+  title: Другий (Волинський) статут ВКЛ 1566 року
+  author: ВКЛ
+- id: S4
+  file: wave5-yushkov-ruska-pravda_c0000
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S5
+  file: wave5-yushkov-ruska-pravda_c0001
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S7
+  file: wave5-yushkov-ruska-pravda_c0014
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S8
+  file: wave5-yushkov-ruska-pravda_c0016
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S9
+  file: wave12-novgorodskyj-litopys-1_c0847
+  type: literary
+  title: Новгородський перший літопис
+  author: Невідомий
+- id: S10
+  file: wave5-suspilna-dumka-xvi-xvii_c0083
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія

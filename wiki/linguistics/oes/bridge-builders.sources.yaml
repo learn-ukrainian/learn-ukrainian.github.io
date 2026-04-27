@@ -1,0 +1,38 @@
+# Source registry for wiki/linguistics/oes/bridge-builders.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-buhoslavsky-borys-hlib_c0001
+  type: literary
+  title: Україно-руські памʼятки про князів Бориса та Гліба
+  author: Бугославський С.
+- id: S3
+  file: wave12-ukrainski-intermediyi_c0167
+  type: literary
+  title: Українські інтермедії XVII-XVIII ст.
+  author: Антологія
+- id: S4
+  file: wave5-yushkov-ruska-pravda_c0000
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S5
+  file: wave5-yushkov-ruska-pravda_c0016
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S6
+  file: wave5-yushkov-ruska-pravda_c0013
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S7
+  file: wave9-uzhevych-paryzky_c0093
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S8
+  file: wave5-buhoslavsky-borys-hlib_c0002
+  type: literary
+  title: Україно-руські памʼятки про князів Бориса та Гліба
+  author: Бугославський С.

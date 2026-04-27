@@ -1,0 +1,38 @@
+# Source registry for wiki/linguistics/ruthenian/uzhevych-hramatyka.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-uzhevych-paryzky_c0017
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S2
+  file: wave9-uzhevych-paryzky_c0026
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S3
+  file: wave9-uzhevych-paryzky_c0024
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S4
+  file: wave9-uzhevych-paryzky_c0003
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S5
+  file: wave9-uzhevych-paryzky_c0029
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S8
+  file: wave9-uzhevych-paryzky_c0013
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S10
+  file: wave9-uzhevych-paryzky_c0018
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.

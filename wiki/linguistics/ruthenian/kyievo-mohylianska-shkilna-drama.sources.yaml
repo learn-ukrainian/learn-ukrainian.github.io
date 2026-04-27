@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/ruthenian/kyievo-mohylianska-shkilna-drama.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-ukrainski-intermediyi_c0037
+  type: literary
+  title: Українські інтермедії XVII-XVIII ст.
+  author: Антологія
+- id: S2
+  file: wave5-prokopovych-filosofski_c0094
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S3
+  file: wave5-dovhalevsky-poetyka_c0009
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S4
+  file: wave5-dovhalevsky-poetyka_c0003
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S5
+  file: wave5-dovhalevsky-poetyka_c0005
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S6
+  file: wave5-dovhalevsky-poetyka_c0027
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S7
+  file: wave5-dovhalevsky-poetyka_c0021
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S8
+  file: wave5-prokopovych-filosofski_c0606
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave5-dovhalevsky-poetyka_c0004
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S10
+  file: wave5-dovhalevsky-poetyka_c0020
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.

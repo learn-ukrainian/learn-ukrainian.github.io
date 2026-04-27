@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/ruthenian/hramoty-xiv.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave3-hramoty-xiv_c0000
+  type: literary
+  title: Грамоти XIV ст.
+  author: Різні
+- id: S2
+  file: wave2-smotrytsky-gramatyka_c0093
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S3
+  file: wave5-hramoty-xv_c0000
+  type: literary
+  title: Українські грамоти XV ст.
+  author: Колектив
+- id: S4
+  file: wave9-uzhevych-paryzky_c0026
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S5
+  file: wave2-smotrytsky-gramatyka_c0094
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S6
+  file: wave3-hramoty-xiv_c0001
+  type: literary
+  title: Грамоти XIV ст.
+  author: Різні
+- id: S7
+  file: wave3-likarski-poradnyky_c0015
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S8
+  file: wave5-poradnyky-xviii_c0016
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий
+- id: S9
+  file: wave2-berynda-leksykon_c0021
+  type: literary
+  title: Беринда — Лексикон словенороський (1627)
+  author: Беринда П.
+- id: S10
+  file: wave1-kyivskyi-litopys_c0627
+  type: literary
+  title: Київський літопис
+  author: Невідомий

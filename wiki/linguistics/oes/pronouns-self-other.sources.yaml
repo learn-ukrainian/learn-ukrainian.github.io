@@ -1,0 +1,38 @@
+# Source registry for wiki/linguistics/oes/pronouns-self-other.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-uzhevych-paryzky_c0000
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S2
+  file: wave2-smotrytsky-gramatyka_c0056
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S3
+  file: wave2-smotrytsky-gramatyka_c0054
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S5
+  file: wave3-hramoty-xiv_c0000
+  type: literary
+  title: Грамоти XIV ст.
+  author: Різні
+- id: S6
+  file: wave9-uzhevych-paryzky_c0047
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S7
+  file: wave2-fedorovych-bukvar_c0007
+  type: literary
+  title: Федорович — Буквар (1574)
+  author: Федорович І.
+- id: S9
+  file: wave9-uzhevych-paryzky_c0034
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.

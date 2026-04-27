@@ -1,0 +1,43 @@
+# Source registry for wiki/linguistics/ruthenian/holy-mountain-athos.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-uzhevych-paryzky_c0029
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S2
+  file: wave5-prokopovych-filosofski_c0362
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0124
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S6
+  file: wave5-suspilna-dumka-xvi-xvii_c0146
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S7
+  file: wave5-suspilna-dumka-xvi-xvii_c0114
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S8
+  file: ukrlib-skovoroda_c0008
+  type: literary
+  title: Григорій Сковорода. Вступні двері до християнської добронравності
+  author: Сковорода Г.
+- id: S9
+  file: wave5-suspilna-dumka-xvi-xvii_c0138
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S10
+  file: wave12-velychko-litopys_c0018
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.

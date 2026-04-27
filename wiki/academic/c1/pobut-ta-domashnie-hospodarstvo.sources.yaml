@@ -1,0 +1,53 @@
+# Source registry for wiki/academic/c1/pobut-ta-domashnie-hospodarstvo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-istkult-t2-xiii-xvii_c0214
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S2
+  file: wave7-popovych-narys-kultury_c1137
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S3
+  file: wave7-entsyklopediia-ukrainoznavstva_c0460
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S4
+  file: wave7-istkult-t2-xiii-xvii_c0219
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S5
+  file: wave7-istkult-t1-kyivska-rus_c0525
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив
+- id: S6
+  file: wave7-istkult-t2-xiii-xvii_c0226
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c4418
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave7-istkult-t2-xiii-xvii_c0000
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c0216
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: wave7-istkult-t1-kyivska-rus_c0506
+  type: literary
+  title: Історія української культури. Т.1. Київська Русь
+  author: Колектив

@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/body-injury-dual.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-yushkov-ruska-pravda_c0000
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S2
+  file: wave5-yushkov-ruska-pravda_c0014
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S3
+  file: wave7-statut-1566_c0016
+  type: literary
+  title: Другий (Волинський) статут ВКЛ 1566 року
+  author: ВКЛ
+- id: S4
+  file: wave9-uzhevych-paryzky_c0000
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S5
+  file: wave9-uzhevych-paryzky_c0050
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S6
+  file: wave2-fedorovych-bukvar_c0005
+  type: literary
+  title: Федорович — Буквар (1574)
+  author: Федорович І.
+- id: S7
+  file: wave9-uzhevych-paryzky_c0048
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S8
+  file: wave9-uzhevych-paryzky_c0099
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S9
+  file: wave2-smotrytsky-gramatyka_c0065
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S10
+  file: wave2-smotrytsky-gramatyka_c0044
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.

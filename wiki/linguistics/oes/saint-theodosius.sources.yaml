@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/saint-theodosius.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave1-pateryk-pechersky_c0041
+  type: literary
+  title: Патерик Києво-Печерський
+  author: Невідомий
+- id: S2
+  file: wave12-paterikon-pecherskyi_c0041
+  type: literary
+  title: Патерик Києво-Печерський (II Касіянівська редакція, 1462)
+  author: Невідомий
+- id: S3
+  file: wave6-synopsis-1674_c0025
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S4
+  file: wave6-synopsis-1674_c0078
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S5
+  file: wave6-synopsis-1674_c0086
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S6
+  file: wave5-oldukr-xi-xiii_c0000
+  type: literary
+  title: Українська література XI-XIII ст.
+  author: Антологія
+- id: S7
+  file: wave1-galytsko-volynskyi_c0700
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S8
+  file: wave1-kyivskyi-litopys_c1075
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S9
+  file: wave1-pateryk-pechersky_c0046
+  type: literary
+  title: Патерик Києво-Печерський
+  author: Невідомий
+- id: S10
+  file: wave12-paterikon-pecherskyi_c0046
+  type: literary
+  title: Патерик Києво-Печерський (II Касіянівська редакція, 1462)
+  author: Невідомий

@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/rus-panegyric.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave1-galytsko-volynskyi_c0253
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S2
+  file: wave1-kyivskyi-litopys_c0628
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S3
+  file: wave9-uzhevych-paryzky_c0099
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S4
+  file: wave9-uzhevych-paryzky_c0018
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S5
+  file: wave6-sofonovych-khronika_c0158
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S6
+  file: wave12-ukrainski-intermediyi_c0167
+  type: literary
+  title: Українські інтермедії XVII-XVIII ст.
+  author: Антологія
+- id: S7
+  file: wave5-buhoslavsky-borys-hlib_c0013
+  type: literary
+  title: Україно-руські памʼятки про князів Бориса та Гліба
+  author: Бугославський С.
+- id: S8
+  file: wave12-velychko-litopys_c0032
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S9
+  file: wave2-velychko_c0030
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S10
+  file: wave1-kyivskyi-litopys_c0627
+  type: literary
+  title: Київський літопис
+  author: Невідомий

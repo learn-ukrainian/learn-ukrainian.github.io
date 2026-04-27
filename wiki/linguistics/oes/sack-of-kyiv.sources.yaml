@@ -1,0 +1,38 @@
+# Source registry for wiki/linguistics/oes/sack-of-kyiv.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-uzhevych-paryzky_c0020
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S2
+  file: wave1-kyivskyi-litopys_c0627
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S3
+  file: wave1-galytsko-volynskyi_c0252
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S4
+  file: wave6-sofonovych-khronika_c0112
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S7
+  file: wave6-ostrozky-litopys_c0014
+  type: literary
+  title: Львівський та Острозький літописці (1498-1649)
+  author: Невідомий
+- id: S9
+  file: wave6-sofonovych-khronika_c0059
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S10
+  file: wave1-slovo-poetic-translations_c0197
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні

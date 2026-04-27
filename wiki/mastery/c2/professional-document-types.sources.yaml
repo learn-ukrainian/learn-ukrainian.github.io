@@ -1,0 +1,48 @@
+# Source registry for wiki/mastery/c2/professional-document-types.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-shevelov-fonolohiia_c0117
+  type: literary
+  title: Шевельов — Історична фонологія української мови
+  author: Шевельов Ю.
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c4417
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave4-ukrainska-mova-encyclopedia_c0237
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S4
+  file: wave8-isaievych-knyhovydannia_c0729
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S5
+  file: wave8-isaievych-knyhovydannia_c0731
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S7
+  file: wave7-matskiv-mazepa-dzherela_c0394
+  type: literary
+  title: Мацьків — Гетьман Мазепа в західньоєвропейських джерелах
+  author: Мацьків Т.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c5169
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c3970
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: ukrlib-bahryanyi_c0010
+  type: literary
+  title: Іван Багряний. На новий шлях
+  author: Багряний І.

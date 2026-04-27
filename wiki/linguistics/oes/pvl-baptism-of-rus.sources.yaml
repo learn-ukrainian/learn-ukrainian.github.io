@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/pvl-baptism-of-rus.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave1-galytsko-volynskyi_c0547
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S2
+  file: wave1-kyivskyi-litopys_c0922
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S3
+  file: wave12-lavrentiivskyj-litopys_c0001
+  type: literary
+  title: Лаврентіївський літопис
+  author: Невідомий
+- id: S4
+  file: wave6-synopsis-1674_c0072
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S5
+  file: wave6-synopsis-1674_c0465
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S6
+  file: wave6-synopsis-1674_c0425
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S7
+  file: wave6-synopsis-1674_c0452
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S8
+  file: wave6-synopsis-1674_c0424
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S9
+  file: wave6-synopsis-1674_c0469
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S10
+  file: wave5-yushkov-ruska-pravda_c0017
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.

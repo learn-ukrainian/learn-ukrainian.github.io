@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/phonology-lab-yers.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-dovhalevsky-poetyka_c0060
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S2
+  file: wave9-uzhevych-paryzky_c0093
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S3
+  file: wave9-verbytsky-bukvar-1627_c0006
+  type: literary
+  title: Тимофій Вербицький — Буквар (Київ, 1627)
+  author: Вербицький Т.
+- id: S4
+  file: wave5-buhoslavsky-borys-hlib_c0013
+  type: literary
+  title: Україно-руські памʼятки про князів Бориса та Гліба
+  author: Бугославський С.
+- id: S5
+  file: wave9-verbytsky-bukvar-1627_c0004
+  type: literary
+  title: Тимофій Вербицький — Буквар (Київ, 1627)
+  author: Вербицький Т.
+- id: S6
+  file: wave6-synopsis-1674_c0412
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S7
+  file: wave5-suspilna-dumka-xvi-xvii_c0815
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S8
+  file: wave6-synopsis-1674_c0425
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S9
+  file: wave12-ukrainska-poeziia-xvi-xvii_c0104
+  type: literary
+  title: Українська поезія. Кінець XVI — середина XVII ст.
+  author: Антологія
+- id: S10
+  file: wave3-poeziya-baroko_c0083
+  type: literary
+  title: Українська поезія XVI-XVII ст.
+  author: Різні

@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/ruthenian/meletiy-smotrytsky-apologia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave2-smotrytsky-gramatyka_c0005
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S2
+  file: wave5-suspilna-dumka-xvi-xvii_c0150
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0154
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: wave5-suspilna-dumka-xvi-xvii_c0149
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S5
+  file: wave5-suspilna-dumka-xvi-xvii_c0151
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S6
+  file: wave2-smotrytsky-gramatyka_c0115
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S7
+  file: wave2-smotrytsky-gramatyka_c0093
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S8
+  file: wave2-smotrytsky-gramatyka_c0000
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S9
+  file: wave2-smotrytsky-gramatyka_c0094
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S10
+  file: wave2-smotrytsky-gramatyka_c0023
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.

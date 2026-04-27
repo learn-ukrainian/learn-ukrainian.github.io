@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/treaty-911-oleg.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-uzhevych-paryzky_c0000
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S2
+  file: wave1-galytsko-volynskyi_c0570
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S3
+  file: wave1-kyivskyi-litopys_c0945
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S4
+  file: wave2-smotrytsky-gramatyka_c0093
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S5
+  file: wave2-smotrytsky-gramatyka_c0104
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S6
+  file: wave2-smotrytsky-gramatyka_c0083
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S7
+  file: wave9-uzhevych-paryzky_c0022
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S8
+  file: wave5-skovoroda-tvory_c1160
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S9
+  file: wave9-uzhevych-paryzky_c0001
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S10
+  file: wave5-prokopovych-filosofski_c0004
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.

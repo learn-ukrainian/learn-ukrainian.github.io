@@ -1,0 +1,43 @@
+# Source registry for wiki/linguistics/oes/verbs-perfect.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave2-smotrytsky-gramatyka_c0077
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S2
+  file: wave2-smotrytsky-gramatyka_c0062
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S3
+  file: wave2-smotrytsky-gramatyka_c0067
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S4
+  file: wave2-smotrytsky-gramatyka_c0061
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S5
+  file: wave9-uzhevych-paryzky_c0021
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S6
+  file: wave2-smotrytsky-gramatyka_c0071
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S7
+  file: wave2-smotrytsky-gramatyka_c0068
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S8
+  file: wave9-uzhevych-paryzky_c0056
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.

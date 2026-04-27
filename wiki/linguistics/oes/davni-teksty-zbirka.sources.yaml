@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/oes/davni-teksty-zbirka.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-oldukr-xviii_c0462
+  type: literary
+  title: Українська література XVIII ст.
+  author: Антологія
+- id: S2
+  file: wave5-oldukr-xi-xiii_c0000
+  type: literary
+  title: Українська література XI-XIII ст.
+  author: Антологія
+- id: S3
+  file: wave12-ukrainska-poeziia-xvi-xvii_c0020
+  type: literary
+  title: Українська поезія. Кінець XVI — середина XVII ст.
+  author: Антологія
+- id: S4
+  file: wave5-buhoslavsky-borys-hlib_c0001
+  type: literary
+  title: Україно-руські памʼятки про князів Бориса та Гліба
+  author: Бугославський С.
+- id: S5
+  file: wave6-sofonovych-khronika_c0159
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S6
+  file: wave2-smotrytsky-gramatyka_c0095
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S7
+  file: wave12-bajky-xvii-xviii_c0002
+  type: literary
+  title: Байки в українській літературі XVII-XVIII ст.
+  author: Антологія
+- id: S9
+  file: wave12-ukrainski-intermediyi_c0166
+  type: literary
+  title: Українські інтермедії XVII-XVIII ст.
+  author: Антологія
+- id: S10
+  file: wave6-synopsis-1674_c0025
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий

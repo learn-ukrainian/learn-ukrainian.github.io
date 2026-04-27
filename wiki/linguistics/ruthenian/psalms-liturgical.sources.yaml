@@ -1,0 +1,38 @@
+# Source registry for wiki/linguistics/ruthenian/psalms-liturgical.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave3-likarski-poradnyky_c0015
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S3
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S5
+  file: wave9-uzhevych-paryzky_c0032
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S6
+  file: wave2-smotrytsky-gramatyka_c0094
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S7
+  file: wave1-pateryk-pechersky_c0126
+  type: literary
+  title: Патерик Києво-Печерський
+  author: Невідомий
+- id: S9
+  file: wave6-krman-shchodennyk_c0073
+  type: literary
+  title: Даніел Крман — Подорожній щоденник (1708-1709)
+  author: Крман Д.
+- id: S10
+  file: wave5-skovoroda-tvory_c0081
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.

@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/suspilstvo-i-hromadyanstvo.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ukrxx-derzhavnist_c0374
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S2
+  file: wave7-ukrxx-derzhavnist_c0005
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S3
+  file: wave7-ukrxx-derzhavnist_c0375
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S4
+  file: wave7-popovych-narys-kultury_c0690
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S5
+  file: wave4-hrushevsky-istlit_c0071
+  type: literary
+  title: Грушевський — Історія української літератури
+  author: Грушевський М.
+- id: S6
+  file: wave12-hrushevsky-iu-odnotom_c0076
+  type: literary
+  title: Грушевський — Історія України (однотомник)
+  author: Грушевський М.
+- id: S7
+  file: wave7-lytvynov-renesans-humanizm_c0581
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+- id: S8
+  file: wave7-ukrxx-derzhavnist_c0094
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S9
+  file: wave7-ukrxx-derzhavnist_c0368
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S10
+  file: wave7-thompson-trubadury_c0024
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.

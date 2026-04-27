@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/oes/sviatoslav-vsevolodovych.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave1-slovo-poetic-translations_c0250
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S2
+  file: wave1-slovo-poetic-translations_c0011
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S3
+  file: wave0-slovo-o-polku_c0010
+  type: literary
+  title: Слово о полку Ігоревім
+  author: Невідомий
+- id: S4
+  file: wave1-slovo-poetic-translations_c0272
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S5
+  file: wave1-slovo-poetic-translations_c0251
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S6
+  file: wave1-slovo-poetic-translations_c0252
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S7
+  file: wave1-slovo-poetic-translations_c0265
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S9
+  file: wave1-slovo-poetic-translations_c0260
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S10
+  file: wave1-slovo-poetic-translations_c0264
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні

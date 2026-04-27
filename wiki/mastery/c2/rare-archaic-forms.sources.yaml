@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/rare-archaic-forms.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-ohiyenko-ist-lit-movy_c0285
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S2
+  file: wave4-ukrainska-mova-encyclopedia_c0147
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S3
+  file: wave4-ukrainska-mova-encyclopedia_c0190
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S4
+  file: wave8-masliuk-poetyky-rytoryky_c0006
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S5
+  file: wave9-skhidnoslov-hramatyky_c0018
+  type: literary
+  title: Східнослов'янські граматики XVI-XVII ст. (статті)
+  author: Колектив
+- id: S6
+  file: wave4-nimchuk-movoznavstvo_c0310
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S7
+  file: wave4-nimchuk-movoznavstvo_c0136
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S8
+  file: wave4-nimchuk-movoznavstvo_c0200
+  type: literary
+  title: Німчук — Мовознавство на Україні XIV-XVII ст.
+  author: Німчук В.
+- id: S9
+  file: wave8-hensiorsky-gvl-mova_c0253
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S10
+  file: wave2-smotrytsky-gramatyka_c0046
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.

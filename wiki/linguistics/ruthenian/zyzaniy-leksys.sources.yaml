@@ -1,0 +1,33 @@
+# Source registry for wiki/linguistics/ruthenian/zyzaniy-leksys.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave2-zyzaniy-leksys_c0000
+  type: literary
+  title: Зизаній — Лексис (1596)
+  author: Зизаній Л.
+- id: S2
+  file: wave9-rech-zhydovskoho-1282_c0016
+  type: literary
+  title: Речь жидовського язика (1282)
+  author: Невідомий
+- id: S4
+  file: wave9-tlkovaniye-1431_c0002
+  type: literary
+  title: Тлкованіє неудобъ познаваємомъ... (1431)
+  author: Невідомий
+- id: S6
+  file: wave9-tlkovaniye-1431_c0001
+  type: literary
+  title: Тлкованіє неудобъ познаваємомъ... (1431)
+  author: Невідомий
+- id: S7
+  file: wave9-rech-zhydovskoho-1282_c0004
+  type: literary
+  title: Речь жидовського язика (1282)
+  author: Невідомий
+- id: S8
+  file: wave9-rech-zhydovskoho-1282_c0025
+  type: literary
+  title: Речь жидовського язика (1282)
+  author: Невідомий

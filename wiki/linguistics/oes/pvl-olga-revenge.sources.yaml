@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/oes/pvl-olga-revenge.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-synopsis-1674_c0425
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S2
+  file: wave6-synopsis-1674_c0538
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S3
+  file: wave2-smotrytsky-gramatyka_c0062
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S4
+  file: wave2-smotrytsky-gramatyka_c0077
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S5
+  file: wave2-smotrytsky-gramatyka_c0061
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S6
+  file: wave2-smotrytsky-gramatyka_c0068
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S7
+  file: wave3-likarski-poradnyky_c0015
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S9
+  file: wave1-slovo-poetic-translations_c0011
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S10
+  file: wave6-synopsis-1674_c0227
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий

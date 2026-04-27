@@ -1,0 +1,43 @@
+# Source registry for wiki/linguistics/oes/slovo-authenticity-debate.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave1-slovo-poetic-translations_c0265
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S2
+  file: wave6-synopsis-1674_c0049
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S3
+  file: wave1-slovo-poetic-translations_c0263
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S4
+  file: wave1-slovo-poetic-translations_c0250
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S5
+  file: wave1-slovo-poetic-translations_c0252
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S8
+  file: wave1-slovo-poetic-translations_c0011
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S9
+  file: wave1-slovo-poetic-translations_c0228
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S10
+  file: wave1-slovo-poetic-translations_c0260
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні

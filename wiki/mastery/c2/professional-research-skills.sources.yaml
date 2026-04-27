@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/professional-research-skills.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-isaievych-knyhovydannia_c0067
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S2
+  file: wave4-ohloblyn-mazepa_c0036
+  type: literary
+  title: Оглоблін — Гетьман Мазепа та його доба
+  author: Оглоблін О.
+- id: S3
+  file: wave8-isaievych-knyhovydannia_c0729
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S4
+  file: wave7-istkult-t2-xiii-xvii_c1451
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c1935
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave8-isaievych-knyhovydannia_c0730
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S7
+  file: wave8-isaievych-knyhovydannia_c0005
+  type: literary
+  title: Ісаєвич — Українське книговидання
+  author: Ісаєвич Я.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c0173
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave4-voitovych-dynasty_c0001
+  type: literary
+  title: Войтович — Князівські династії Східної Європи
+  author: Войтович Л.
+- id: S10
+  file: wave7-lytvynov-renesans-humanizm_c0259
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.

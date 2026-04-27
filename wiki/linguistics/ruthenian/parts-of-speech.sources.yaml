@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/ruthenian/parts-of-speech.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave2-smotrytsky-gramatyka_c0099
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S2
+  file: wave9-uzhevych-paryzky_c0000
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S3
+  file: wave9-uzhevych-paryzky_c0037
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S4
+  file: wave9-tlkovaniye-1431_c0002
+  type: literary
+  title: Тлкованіє неудобъ познаваємомъ... (1431)
+  author: Невідомий
+- id: S5
+  file: wave2-smotrytsky-gramatyka_c0105
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S6
+  file: wave9-uzhevych-paryzky_c0031
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S7
+  file: wave2-smotrytsky-gramatyka_c0094
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S8
+  file: wave2-smotrytsky-gramatyka_c0044
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S9
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.

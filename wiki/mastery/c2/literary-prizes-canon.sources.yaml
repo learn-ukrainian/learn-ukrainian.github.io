@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/literary-prizes-canon.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0636
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave4-chyzhevsky-istoriia-lit_c0021
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S3
+  file: wave8-hrabovych-do-istoriyi_c0394
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S4
+  file: wave8-hrabovych-do-istoriyi_c0661
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S5
+  file: wave8-masliuk-poetyky-rytoryky_c0006
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S6
+  file: wave7-thompson-trubadury_c0188
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S7
+  file: wave4-chyzhevsky-istoriia-lit_c0280
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S8
+  file: wave7-entsyklopediia-ukrainoznavstva_c1807
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c0004
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave10-shevchenkivsky-slovnyk_c2289
+  type: literary
+  title: Шевченківський словник
+  author: Колектив

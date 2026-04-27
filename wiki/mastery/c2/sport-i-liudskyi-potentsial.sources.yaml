@@ -1,0 +1,38 @@
+# Source registry for wiki/mastery/c2/sport-i-liudskyi-potentsial.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-istkult-t2-xiii-xvii_c0008
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S2
+  file: wave8-chyzhevsky-filosofiia_c0008
+  type: literary
+  title: Чижевський — Нариси з історії філософії на Україні
+  author: Чижевський Д.
+- id: S3
+  file: wave7-lytvynov-renesans-humanizm_c0470
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+- id: S4
+  file: wave7-thompson-trubadury_c0035
+  type: literary
+  title: Томпсон — Трубадури імперії
+  author: Томпсон Е.
+- id: S5
+  file: wave7-heroes-ukr-kultura_c0398
+  type: literary
+  title: Героїчне та знаменитості в українській культурі
+  author: Колектив
+- id: S8
+  file: wave8-fdm-biobibliohrafichnyi_c0181
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S10
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0037
+  type: literary
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.

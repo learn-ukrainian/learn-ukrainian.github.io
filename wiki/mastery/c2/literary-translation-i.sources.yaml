@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/literary-translation-i.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-ukr-lit-entsyklopediia_c2238
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S2
+  file: wave8-masliuk-poetyky-rytoryky_c0282
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S3
+  file: wave8-masliuk-poetyky-rytoryky_c0044
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S4
+  file: ukrlib-yohansen_c0014
+  type: literary
+  title: Майк Йогансен. Як будується оповідання
+  author: Йогансен М.
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c1121
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0441
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-fdm-biobibliohrafichnyi_c0135
+  type: literary
+  title: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+- id: S8
+  file: wave8-chyzhevsky-baroko_c0213
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S9
+  file: wave8-ukr-lit-entsyklopediia_c1091
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S10
+  file: wave8-hrabovych-do-istoriyi_c0499
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.

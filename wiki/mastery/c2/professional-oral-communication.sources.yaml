@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/professional-oral-communication.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-ukrainska-mova-encyclopedia_c0206
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S2
+  file: wave5-prokopovych-filosofski_c0326
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S3
+  file: wave7-popovych-narys-kultury_c0007
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S4
+  file: wave5-prokopovych-filosofski_c0155
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S5
+  file: wave4-ukrainska-mova-encyclopedia_c0106
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S6
+  file: wave5-prokopovych-filosofski_c0087
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave8-masliuk-poetyky-rytoryky_c0285
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S8
+  file: wave7-popovych-narys-kultury_c0683
+  type: literary
+  title: Попович — Нарис історії культури України
+  author: Попович М.
+- id: S9
+  file: wave8-chyzhevsky-baroko_c0020
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S10
+  file: wave5-prokopovych-filosofski_c0170
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.

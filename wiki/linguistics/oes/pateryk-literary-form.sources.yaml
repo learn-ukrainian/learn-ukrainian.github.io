@@ -1,0 +1,33 @@
+# Source registry for wiki/linguistics/oes/pateryk-literary-form.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-synopsis-1674_c0025
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S2
+  file: wave5-oldukr-xvii_c0572
+  type: literary
+  title: Українська література XVII ст.
+  author: Антологія
+- id: S4
+  file: wave1-kyivskyi-litopys_c0627
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S6
+  file: wave12-ukrainska-poeziia-xvi-xvii_c0104
+  type: literary
+  title: Українська поезія. Кінець XVI — середина XVII ст.
+  author: Антологія
+- id: S8
+  file: wave6-synopsis-1674_c0024
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S9
+  file: wave6-synopsis-1674_c0078
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий

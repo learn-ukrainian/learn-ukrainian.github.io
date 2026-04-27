@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/ruthenian/vyshensky-epistles.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-uzhevych-paryzky_c0032
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S2
+  file: wave9-uzhevych-paryzky_c0024
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0114
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: wave3-likarski-poradnyky_c0015
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S5
+  file: wave5-poradnyky-xviii_c0016
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий
+- id: S6
+  file: wave9-uzhevych-paryzky_c0022
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S7
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S8
+  file: wave2-velychko_c0048
+  type: literary
+  title: Літопис Величка
+  author: Величко С.В.
+- id: S9
+  file: wave2-berynda-leksykon_c0021
+  type: literary
+  title: Беринда — Лексикон словенороський (1627)
+  author: Беринда П.
+- id: S10
+  file: wave5-skovoroda-tvory_c0077
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.

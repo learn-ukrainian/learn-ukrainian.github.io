@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/ruthenian/criminal-law-murder.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S3
+  file: wave3-likarski-poradnyky_c0015
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S4
+  file: wave5-poradnyky-xviii_c0016
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий
+- id: S5
+  file: wave2-smotrytsky-gramatyka_c0094
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S6
+  file: wave5-yushkov-ruska-pravda_c0001
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S7
+  file: wave5-suspilna-dumka-xvi-xvii_c0786
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S8
+  file: wave5-prokopovych-filosofski_c0326
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave5-dovhalevsky-poetyka_c0084
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S10
+  file: wave5-suspilna-dumka-xvi-xvii_c0168
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія

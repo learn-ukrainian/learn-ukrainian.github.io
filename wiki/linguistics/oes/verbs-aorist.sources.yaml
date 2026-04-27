@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/oes/verbs-aorist.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave2-smotrytsky-gramatyka_c0067
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S2
+  file: wave2-smotrytsky-gramatyka_c0077
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S3
+  file: wave2-smotrytsky-gramatyka_c0066
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S4
+  file: wave9-uzhevych-paryzky_c0021
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S5
+  file: wave2-smotrytsky-gramatyka_c0078
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S6
+  file: wave9-uzhevych-paryzky_c0000
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S7
+  file: wave9-uzhevych-paryzky_c0055
+  type: literary
+  title: Ужевич — Паризький рукопис (переклад 1970)
+  author: Ужевич І.
+- id: S8
+  file: wave2-smotrytsky-gramatyka_c0062
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S10
+  file: wave2-smotrytsky-gramatyka_c0061
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.

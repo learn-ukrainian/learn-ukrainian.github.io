@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/ruthenian/orlyk-latin-comparison.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-prokopovych-filosofski_c0240
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S2
+  file: wave5-prokopovych-filosofski_c0362
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S3
+  file: wave5-dovhalevsky-poetyka_c0249
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S4
+  file: wave5-prokopovych-filosofski_c0711
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S5
+  file: wave5-prokopovych-filosofski_c0169
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S6
+  file: wave5-prokopovych-filosofski_c1316
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave5-prokopovych-filosofski_c0070
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S8
+  file: wave5-prokopovych-filosofski_c0271
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave5-prokopovych-filosofski_c0055
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S10
+  file: wave5-prokopovych-filosofski_c0239
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.

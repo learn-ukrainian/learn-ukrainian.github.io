@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/ruthenian/the-heart.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-prokopovych-filosofski_c0055
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S2
+  file: wave12-velychko-litopys_c0050
+  type: literary
+  title: Самійло Величко. Літопис (1648-1700)
+  author: Величко С.
+- id: S3
+  file: wave5-skovoroda-tvory_c0080
+  type: literary
+  title: Григорій Сковорода. Повне зібрання творів
+  author: Сковорода Г.
+- id: S4
+  file: wave5-prokopovych-filosofski_c1314
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S5
+  file: wave5-prokopovych-filosofski_c0004
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S6
+  file: wave5-prokopovych-filosofski_c0711
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave5-prokopovych-filosofski_c1307
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S8
+  file: wave5-prokopovych-filosofski_c0606
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S10
+  file: wave5-suspilna-dumka-xvi-xvii_c0182
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія

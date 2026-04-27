@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/oes/monomakh-statute-usury.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-yushkov-ruska-pravda_c0000
+  type: literary
+  title: Руська Правда (Юшков)
+  author: Юшков С.
+- id: S2
+  file: wave6-synopsis-1674_c0324
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S3
+  file: wave5-suspilna-dumka-xvi-xvii_c0168
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія
+- id: S4
+  file: wave1-galytsko-volynskyi_c0547
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S5
+  file: wave1-kyivskyi-litopys_c0922
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S6
+  file: wave6-synopsis-1674_c0320
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S7
+  file: wave6-litopys-binvilsky_c0048
+  type: literary
+  title: Літопис Яна Бінвільського
+  author: Невідомий
+- id: S8
+  file: wave5-prokopovych-filosofski_c0244
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave1-galytsko-volynskyi_c0260
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий

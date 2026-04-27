@@ -1,0 +1,48 @@
+# Source registry for wiki/mastery/c2/zovnishnia-polityka-i-diaspora.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-ukrxx-derzhavnist_c0002
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S3
+  file: wave7-ukrxx-derzhavnist_c0332
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S4
+  file: wave7-ukrxx-derzhavnist_c0352
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S5
+  file: wave7-ukrxx-derzhavnist_c0390
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S6
+  file: wave7-ukrxx-derzhavnist_c0386
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S7
+  file: wave7-ukrxx-derzhavnist_c0281
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S8
+  file: wave7-ukrxx-derzhavnist_c0248
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S9
+  file: wave7-antonovych-kultura_c0021
+  type: literary
+  title: Українська культура (лекції за ред. Антоновича)
+  author: Антонович Д.
+- id: S10
+  file: wave5-suspilna-dumka-xvi-xvii_c0083
+  type: literary
+  title: Суспільно-політична думка XVI-XVII ст.
+  author: Антологія

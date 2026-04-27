@@ -2,52 +2,52 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: wave7-dzyuba-internatsionalizm_c0000
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
+  file: ukrainian_wiki/dziuba-literature_Українська-література-Іван-Дзюба-Інтернаціоналізм-чи-русифікація-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Іван Дзюба: Інтернаціоналізм чи русифікація?'
+  section_path: 'Українська література: Іван Дзюба: Інтернаціоналізм чи русифікація?
+    > Короткий зміст'
 - id: S2
+  file: ukrainian_wiki/dziuba-internationalism_Українська-література-Інтернаціоналізм-чи-русифікація-Короткий-зміст
+  type: ukrainian_wiki
+  title: 'Українська література: Інтернаціоналізм чи русифікація?'
+  section_path: 'Українська література: Інтернаціоналізм чи русифікація? > Короткий
+    зміст'
+- id: S3
   file: ukrlib-dziuba_c0004
   type: literary
   title: Іван Дзюба. Біографія Івана Дзюби
   author: Дзюба І.
-- id: S3
-  file: wave7-popovych-narys-kultury_c1124
-  type: literary
-  title: Попович — Нарис історії культури України
-  author: Попович М.
 - id: S4
-  file: wave7-dzyuba-internatsionalizm_c0032
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
+  file: 11-klas-istoriya-ukr-hlibovska-2024_s1027
+  type: textbook
+  title: ДИСИДЕНТСЬКИЙ РУХ ДРУГОЇ ПОЛОВИНИ 1960-Х – ПЕРШОЇ ПОЛОВИНИ 1970-Х РОКІВ
+  page: 125
+  grade: 11
 - id: S5
-  file: wave7-dzyuba-internatsionalizm_c0351
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
+  file: 11-klas-istoriya-ukr-gisem-2024_s0925
+  type: textbook
+  title: § 14. дисидентський рух
+  page: 113
+  grade: 11
 - id: S6
-  file: wave7-dzyuba-internatsionalizm_c0346
+  file: wave7-dzyuba-internatsionalizm_c0017
   type: literary
   title: Дзюба — Інтернаціоналізм чи русифікація?
   author: Дзюба І.
 - id: S7
-  file: wave7-dzyuba-internatsionalizm_c0364
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
+  file: ukrainian_wiki/dziuba-literature_Українська-література-Іван-Дзюба-Інтернаціоналізм-чи-русифікація-Основний-зміст-Еволюція-політичної-думки-та-історична-спадщина
+  type: ukrainian_wiki
+  title: 'Українська література: Іван Дзюба: Інтернаціоналізм чи русифікація?'
+  section_path: 'Українська література: Іван Дзюба: Інтернаціоналізм чи русифікація?
+    > Основний зміст > Еволюція політичної думки та історична спадщина'
 - id: S8
-  file: wave7-dzyuba-internatsionalizm_c0355
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
+  file: ukrainian_wiki/dziuba-internationalism_Українська-література-Інтернаціоналізм-чи-русифікація-Мовні-зразки
+  type: ukrainian_wiki
+  title: 'Українська література: Інтернаціоналізм чи русифікація?'
+  section_path: 'Українська література: Інтернаціоналізм чи русифікація? > Мовні зразки'
 - id: S9
-  file: wave7-dzyuba-internatsionalizm_c0291
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
-- id: S10
-  file: wave7-dzyuba-internatsionalizm_c0177
-  type: literary
-  title: Дзюба — Інтернаціоналізм чи русифікація?
-  author: Дзюба І.
+  file: wikipedia/Інтернаціоналізм чи русифікація?
+  type: wikipedia
+  title: Інтернаціоналізм чи русифікація?
+  url: https://uk.wikipedia.org/wiki/%D0%86%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B0%D1%86%D1%96%D0%BE%D0%BD%D0%B0%D0%BB%D1%96%D0%B7%D0%BC%20%D1%87%D0%B8%20%D1%80%D1%83%D1%81%D0%B8%D1%84%D1%96%D0%BA%D0%B0%D1%86%D1%96%D1%8F%3F

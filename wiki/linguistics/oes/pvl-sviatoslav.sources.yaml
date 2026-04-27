@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/pvl-sviatoslav.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave6-synopsis-1674_c0428
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S2
+  file: wave6-galvol-kostruba_c0013
+  type: literary
+  title: ГВЛ (переклад Коструби)
+  author: Коструба Т.
+- id: S3
+  file: wave6-synopsis-1674_c0500
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S4
+  file: wave2-smotrytsky-gramatyka_c0093
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S5
+  file: wave12-grabianka-litopys_c0010
+  type: literary
+  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
+  author: Грабянка Г.
+- id: S6
+  file: wave1-galytsko-volynskyi_c0547
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S7
+  file: wave1-kyivskyi-litopys_c0922
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S8
+  file: wave6-sofonovych-khronika_c0159
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S9
+  file: wave1-slovo-poetic-translations_c0012
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S10
+  file: wave1-slovo-poetic-translations_c0218
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні

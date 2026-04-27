@@ -1,0 +1,53 @@
+# Source registry for wiki/academic/c1/stylistic-syntax-figures.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-masliuk-poetyky-rytoryky_c0148
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S2
+  file: wave8-masliuk-poetyky-rytoryky_c0147
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S3
+  file: wave8-masliuk-poetyky-rytoryky_c0153
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c2649
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c2821
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave8-masliuk-poetyky-rytoryky_c0151
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S7
+  file: wave10-shevchenkivsky-slovnyk_c1604
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S8
+  file: wave10-shevchenkivsky-slovnyk_c0598
+  type: literary
+  title: Шевченківський словник
+  author: Колектив
+- id: S9
+  file: wave4-chyzhevsky-istoriia-lit_c0014
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c2820
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

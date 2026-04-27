@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/ruthenian/glorifying-host.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave12-grabianka-litopys_c0010
+  type: literary
+  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
+  author: Грабянка Г.
+- id: S2
+  file: wave12-grabianka-litopys_c0000
+  type: literary
+  title: Літопис гадяцького полковника Григорія Грабянки (до 1709)
+  author: Грабянка Г.
+- id: S3
+  file: wave5-buhoslavsky-borys-hlib_c0002
+  type: literary
+  title: Україно-руські памʼятки про князів Бориса та Гліба
+  author: Бугославський С.
+- id: S4
+  file: wave1-kyivskyi-litopys_c0627
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S5
+  file: wave1-galytsko-volynskyi_c0252
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S6
+  file: wave6-synopsis-1674_c0048
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S7
+  file: wave5-oldukr-xvii_c0403
+  type: literary
+  title: Українська література XVII ст.
+  author: Антологія
+- id: S8
+  file: wave3-likarski-poradnyky_c0015
+  type: literary
+  title: Лікарські порадники XVIII ст.
+  author: Невідомий
+- id: S9
+  file: wave5-poradnyky-xviii_c0016
+  type: literary
+  title: Лікарські та господарські порадники XVIII ст.
+  author: Невідомий

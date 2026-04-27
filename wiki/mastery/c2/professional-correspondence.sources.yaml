@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/professional-correspondence.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave4-ukrainska-mova-encyclopedia_c0138
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S2
+  file: wave8-ukr-lit-entsyklopediia_c2287
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S3
+  file: wave8-hensiorsky-gvl-mova_c0253
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S4
+  file: wave9-rusanivsky-ist-lit-movy_c0005
+  type: literary
+  title: Русанівський — Історія укр. літ. мови
+  author: Русанівський В.
+- id: S5
+  file: wave5-prokopovych-filosofski_c0193
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S6
+  file: wave8-hensiorsky-gvl-mova_c0276
+  type: literary
+  title: Генсьорський — ГВЛ лексичні та стилістичні особливості
+  author: Генсьорський А.
+- id: S7
+  file: wave4-ukrainska-mova-encyclopedia_c0206
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S8
+  file: wave8-ukr-lit-entsyklopediia_c4417
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S9
+  file: wave5-prokopovych-filosofski_c0467
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S10
+  file: wave7-istkult-t2-xiii-xvii_c1450
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив

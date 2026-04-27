@@ -1,0 +1,43 @@
+# Source registry for wiki/linguistics/oes/pvl-three-brothers.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave1-galytsko-volynskyi_c0547
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S4
+  file: wave6-synopsis-1674_c0538
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S5
+  file: wave6-sofonovych-khronika_c0105
+  type: literary
+  title: Феодосій Софонович. Хроніка з літописців стародавніх
+  author: Софонович Ф.
+- id: S6
+  file: wave6-synopsis-1674_c0425
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S7
+  file: wave6-synopsis-1674_c0075
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S8
+  file: wave6-synopsis-1674_c0430
+  type: literary
+  title: Синопсис. Київ, 1674
+  author: Невідомий
+- id: S9
+  file: wave1-kyivskyi-litopys_c0368
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S10
+  file: wave6-galvol-kostruba_c0026
+  type: literary
+  title: ГВЛ (переклад Коструби)
+  author: Коструба Т.

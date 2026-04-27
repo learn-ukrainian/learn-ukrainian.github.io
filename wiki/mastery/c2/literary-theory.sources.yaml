@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/literary-theory.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-hrabovych-do-istoriyi_c0653
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S2
+  file: wave8-masliuk-poetyky-rytoryky_c0086
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S3
+  file: wave4-chyzhevsky-istoriia-lit_c0012
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c4501
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c0173
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave8-hrabovych-do-istoriyi_c0209
+  type: literary
+  title: Грабович — До історії української літератури
+  author: Грабович Г.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c4417
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave8-masliuk-poetyky-rytoryky_c0003
+  type: literary
+  title: Маслюк — Латиномовні поетики і риторики XVII-XVIII ст.
+  author: Маслюк В.
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c0023
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: wave8-ukr-lit-entsyklopediia_c2415
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив

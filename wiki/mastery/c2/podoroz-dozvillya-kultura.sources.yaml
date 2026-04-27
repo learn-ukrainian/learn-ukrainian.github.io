@@ -1,0 +1,53 @@
+# Source registry for wiki/mastery/c2/podoroz-dozvillya-kultura.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave8-chyzhevsky-baroko_c0401
+  type: literary
+  title: Чижевський — Українське літературне бароко
+  author: Чижевський Д.
+- id: S2
+  file: wave7-kostomarov-slovyanska-mifolohiia_c0037
+  type: literary
+  title: Костомаров — Слов'янська міфологія
+  author: Костомаров М.
+- id: S3
+  file: wave7-istkult-t2-xiii-xvii_c0037
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S4
+  file: wave7-ukrxx-derzhavnist_c0404
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S5
+  file: wave7-istkult-t2-xiii-xvii_c0006
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S6
+  file: wave7-ukrxx-derzhavnist_c0402
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S7
+  file: wave7-dvornik-sloviany_c0033
+  type: literary
+  title: Дворнік — Слов'яни в Європейській історії та цивілізації
+  author: Дворнік Ф.
+- id: S8
+  file: wave7-nalyvaiko-ochyma-zakhodu_c0118
+  type: literary
+  title: 'Наливайко — Очима Заходу: Рецепція України XI-XVIII ст.'
+  author: Наливайко Д.
+- id: S9
+  file: wave4-chyzhevsky-istoriia-lit_c0279
+  type: literary
+  title: Чижевський — Історія української літератури
+  author: Чижевський Д.
+- id: S10
+  file: wave7-dzyuba-internatsionalizm_c0328
+  type: literary
+  title: Дзюба — Інтернаціоналізм чи русифікація?
+  author: Дзюба І.

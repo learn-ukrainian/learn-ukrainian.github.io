@@ -1,0 +1,43 @@
+# Source registry for wiki/academic/c1/pryroda-ta-ekologiia.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave7-entsyklopediia-ukrainoznavstva_c0238
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S2
+  file: wave7-ukrxx-derzhavnist_c0405
+  type: literary
+  title: Українська державність у XX столітті
+  author: Колектив
+- id: S3
+  file: wave7-lytvynov-renesans-humanizm_c0175
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+- id: S6
+  file: wave7-lytvynov-renesans-humanizm_c0081
+  type: literary
+  title: Литвинов — Ренесансний гуманізм в Україні
+  author: Литвинов В.
+- id: S7
+  file: wave7-entsyklopediia-ukrainoznavstva_c0212
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S8
+  file: wave7-entsyklopediia-ukrainoznavstva_c2850
+  type: literary
+  title: Енциклопедія українознавства
+  author: Колектив
+- id: S9
+  file: wave7-istkult-t2-xiii-xvii_c0343
+  type: literary
+  title: Історія української культури. Т.2. XIII-XVII ст.
+  author: Колектив
+- id: S10
+  file: wave8-chyzhevsky-skovoroda_c0318
+  type: literary
+  title: Чижевський — Філософія Сковороди
+  author: Чижевський Д.

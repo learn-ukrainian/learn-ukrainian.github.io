@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/oes/slovo-first-battle.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave1-slovo-poetic-translations_c0250
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S2
+  file: wave1-slovo-poetic-translations_c0260
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S3
+  file: wave1-slovo-poetic-translations_c0259
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S4
+  file: wave1-slovo-poetic-translations_c0243
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S5
+  file: wave1-slovo-poetic-translations_c0011
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S6
+  file: wave1-slovo-poetic-translations_c0251
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S7
+  file: wave1-slovo-poetic-translations_c0265
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S8
+  file: wave2-smotrytsky-gramatyka_c0077
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S9
+  file: wave1-slovo-poetic-translations_c0263
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S10
+  file: wave1-slovo-poetic-translations_c0228
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні

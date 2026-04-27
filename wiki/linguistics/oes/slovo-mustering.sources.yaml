@@ -1,0 +1,48 @@
+# Source registry for wiki/linguistics/oes/slovo-mustering.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S2
+  file: wave1-slovo-poetic-translations_c0263
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S3
+  file: wave2-berynda-leksykon_c0021
+  type: literary
+  title: Беринда — Лексикон словенороський (1627)
+  author: Беринда П.
+- id: S4
+  file: wave1-slovo-poetic-translations_c0250
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S5
+  file: wave1-slovo-poetic-translations_c0252
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S6
+  file: wave1-slovo-poetic-translations_c0011
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S7
+  file: wave0-slovo-o-polku_c0010
+  type: literary
+  title: Слово о полку Ігоревім
+  author: Невідомий
+- id: S8
+  file: wave2-smotrytsky-gramatyka_c0093
+  type: literary
+  title: Смотрицький — Граматіки Словенскія (1619)
+  author: Смотрицький М.
+- id: S9
+  file: wave1-slovo-poetic-translations_c0228
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні
+- id: S10
+  file: wave1-slovo-poetic-translations_c0262
+  type: literary
+  title: Слово о полку Ігоревім (поетичні переклади)
+  author: Різні

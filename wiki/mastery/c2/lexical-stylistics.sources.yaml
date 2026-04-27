@@ -1,0 +1,48 @@
+# Source registry for wiki/mastery/c2/lexical-stylistics.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave9-ohiyenko-ist-lit-movy_c0291
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S2
+  file: ukrlib-vinhranovskyi_c0008
+  type: literary
+  title: Микола Вінграновський. Біографія Миколи Вінграновського
+  author: Вінграновський М.
+- id: S3
+  file: wave9-ohiyenko-ist-lit-movy_c0290
+  type: literary
+  title: Огієнко — Історія української літературної мови (1949)
+  author: Огієнко І.
+- id: S4
+  file: wave8-ukr-lit-entsyklopediia_c4290
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S5
+  file: wave8-ukr-lit-entsyklopediia_c4294
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S6
+  file: wave4-ukrainska-mova-encyclopedia_c0205
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S7
+  file: wave8-ukr-lit-entsyklopediia_c4418
+  type: literary
+  title: Українська літературна енциклопедія (1988-1995)
+  author: Колектив
+- id: S8
+  file: wave4-ukrainska-mova-encyclopedia_c0209
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.
+- id: S10
+  file: wave4-ukrainska-mova-encyclopedia_c0117
+  type: literary
+  title: Українська мова — Енциклопедія
+  author: Русанівський В.М. та ін.

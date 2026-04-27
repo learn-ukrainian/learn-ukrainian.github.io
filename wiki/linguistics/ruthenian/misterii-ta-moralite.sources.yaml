@@ -1,0 +1,53 @@
+# Source registry for wiki/linguistics/ruthenian/misterii-ta-moralite.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: wave5-prokopovych-filosofski_c0362
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S2
+  file: wave5-oldukr-xvii_c0485
+  type: literary
+  title: Українська література XVII ст.
+  author: Антологія
+- id: S3
+  file: wave1-galytsko-volynskyi_c0253
+  type: literary
+  title: Галицько-Волинський літопис
+  author: Невідомий
+- id: S4
+  file: wave1-kyivskyi-litopys_c0628
+  type: literary
+  title: Київський літопис
+  author: Невідомий
+- id: S5
+  file: wave5-dovhalevsky-poetyka_c0214
+  type: literary
+  title: Митрофан Довгалевський. Поетика.
+  author: Довгалевський М.
+- id: S6
+  file: wave5-prokopovych-filosofski_c0394
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S7
+  file: wave5-prokopovych-filosofski_c0092
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S8
+  file: wave5-prokopovych-filosofski_c0192
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S9
+  file: wave5-prokopovych-filosofski_c0437
+  type: literary
+  title: Феофан Прокопович. Філософські твори
+  author: Прокопович Ф.
+- id: S10
+  file: wave5-buhoslavsky-borys-hlib_c0013
+  type: literary
+  title: Україно-руські памʼятки про князів Бориса та Гліба
+  author: Бугославський С.
