@@ -386,14 +386,18 @@ activities.yaml
         linear_pipeline.parse_writer_output_strict_json(output)
 
 
-def test_activity_type_field_whitelist_sources_lesson_schema() -> None:
-    """The per-type whitelist mirrors `docs/lesson-schema.yaml` for each
-    component with a non-null `activity_type`, plus the universal authoring
-    fields (currently `title`).
+def test_activity_type_field_whitelist_uses_authoring_shape() -> None:
+    """The per-type whitelist holds **authoring YAML** field names (what
+    the writer emits, what `ActivityParser._parse_*` reads), NOT React
+    component prop names from `docs/lesson-schema.yaml`.
 
-    Without this contract the strict-JSON parser and `_component_prop_gate`
-    can drift: one would accept a field the other rejects. Testing a few
-    well-known types pins the loader to the schema shape #1624 fixed.
+    The two diverge for adapter-style activities — quiz authoring `items`
+    becomes component prop `questions`; authorial-intent authoring
+    `text_excerpt` becomes dataclass `excerpt`; many seminar types use
+    snake_case YAML and camelCase props (`model_answer` vs `modelAnswer`).
+    The pre-#1627 loader sourced from `lesson-schema.yaml` — that file
+    describes the COMPONENT side, so the validator was rejecting valid
+    authoring YAML and accepting component-prop typos.
     """
     whitelist = linear_pipeline._activity_type_field_whitelist()
 
@@ -405,15 +409,104 @@ def test_activity_type_field_whitelist_sources_lesson_schema() -> None:
     # PR #1621).
     assert "groups" not in whitelist["fill-in"]
     assert "items" in whitelist["fill-in"]
-    assert "questions" in whitelist["quiz"]
     assert "items" in whitelist["error-correction"]
     assert "items" in whitelist["order"]
     assert "correct_order" in whitelist["order"]
-    # `title` is consumed by the MDX assembler (`### {title}` heading)
-    # for every activity type, even though no React component declares
-    # it as a prop in lesson-schema.yaml.
+
+    # Adapter-rename activities: the AUTHORING-side field name belongs in
+    # the whitelist, NOT the React component prop name. See
+    # `_quiz_to_mdx` / `_authorial_intent_to_mdx` in
+    # scripts/yaml_activities.py for the rename adapters.
+    assert "items" in whitelist["quiz"]  # authoring shape
+    assert "questions" not in whitelist["quiz"]  # component-prop shape
+    assert "items" in whitelist["select"]
+    assert "questions" not in whitelist["select"]
+    assert "items" in whitelist["translate"]
+    assert "questions" not in whitelist["translate"]
+    assert "text_excerpt" in whitelist["authorial-intent"]
+    assert "excerpt" not in whitelist["authorial-intent"]
+    assert "model_answer" in whitelist["essay-response"]  # snake_case
+    assert "modelAnswer" not in whitelist["essay-response"]  # camelCase prop
+    assert "debate_question" in whitelist["debate"]
+    assert "debateQuestion" not in whitelist["debate"]
+    assert "image_url" in whitelist["paleography-analysis"]
+    assert "imageUrl" not in whitelist["paleography-analysis"]
+
+    # `title` and `instruction` are valid authoring fields on every type;
+    # `id` is the universal activity identifier read by the parser.
     for activity_type in ("group-sort", "fill-in", "quiz", "error-correction"):
         assert "title" in whitelist[activity_type]
+        assert "instruction" in whitelist[activity_type]
+        assert "id" in whitelist[activity_type]
+
+
+def test_activity_type_field_whitelist_rejects_react_only_props() -> None:
+    """React component-only props (`children`, `isUkrainian`) appear in
+    `docs/lesson-schema.yaml` because they're rendered by `<Quiz>` etc.,
+    but the writer must NEVER emit them in authoring YAML — the MDX
+    assembler synthesizes them. The pre-#1627 loader accepted them.
+    """
+    whitelist = linear_pipeline._activity_type_field_whitelist()
+    for activity_type in whitelist:
+        assert "children" not in whitelist[activity_type], (
+            f"{activity_type}: `children` is a JSX-only prop, never authored"
+        )
+        assert "isUkrainian" not in whitelist[activity_type], (
+            f"{activity_type}: `isUkrainian` is synthesized by the MDX "
+            "assembler, never authored"
+        )
+
+
+def test_activity_type_field_whitelist_covers_parser_dispatch() -> None:
+    """Drift guard: every activity type the parser dispatches on
+    (`scripts/yaml_activities.py:ActivityParser._parse_activity`) must
+    appear in `_ACTIVITY_AUTHORING_FIELDS`, AND every key in the map
+    must be a type the parser handles OR a type declared in
+    `docs/lesson-schema.yaml` (so the writer is told it's emittable).
+
+    Catches: a new activity type added to the parser without updating
+    the validator (writers would emit it and get rejected with the
+    `unknown activity type` message), and the reverse — a stale map
+    entry that the parser no longer dispatches.
+    """
+    import inspect
+
+    from scripts.yaml_activities import ActivityParser
+
+    whitelist = linear_pipeline._activity_type_field_whitelist()
+
+    # Extract parser dispatch type strings from the literal `parsers = {...}`
+    # dict in `_parse_activity`. Keys look like `'foo-bar': self._parse_foo`
+    # (string, then arrow, then bound-method ref).
+    parser_src = inspect.getsource(ActivityParser._parse_activity)
+    parser_types = set(re.findall(r"^\s*'([a-z][a-z0-9-]*)':\s*self\.", parser_src, re.MULTILINE))
+    assert parser_types, "Failed to extract parser dispatch types — has _parse_activity been refactored?"
+
+    # Every parser-dispatched type has a whitelist entry.
+    missing_in_map = parser_types - set(whitelist)
+    assert not missing_in_map, (
+        f"Activity types parsed but not whitelisted (writers would be "
+        f"rejected with 'unknown activity type'): {sorted(missing_in_map)}"
+    )
+
+    # Every whitelist entry is either a parser-known type OR declared in
+    # `docs/lesson-schema.yaml` (parser silently drops it but writer is
+    # told it's emittable — preserves pre-#1624 behavior of the
+    # lesson-schema-sourced loader, while remaining strict about the
+    # AUTHORING field names per type).
+    schema = yaml.safe_load(
+        (linear_pipeline.PROJECT_ROOT / "docs" / "lesson-schema.yaml").read_text()
+    )
+    schema_types = {
+        data.get("activity_type")
+        for data in (schema.get("components") or {}).values()
+        if isinstance(data, dict) and data.get("activity_type")
+    }
+    stale_in_map = set(whitelist) - parser_types - schema_types
+    assert not stale_in_map, (
+        f"Whitelist entries with no parser dispatch AND no lesson-schema "
+        f"declaration (likely stale): {sorted(stale_in_map)}"
+    )
 
 
 def test_validate_writer_json_artifact_accepts_groups_for_group_sort() -> None:
@@ -511,6 +604,128 @@ def test_validate_writer_json_artifact_accepts_error_correction_items() -> None:
             }
         ],
     )
+
+
+def test_validate_writer_json_artifact_accepts_quiz_items_authoring_shape() -> None:
+    """`quiz` authoring YAML uses `items: [...]` (per
+    `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md`). The MDX adapter
+    `_quiz_to_mdx` renames this to the React component's `questions=`
+    prop. The strict-JSON validator must accept the AUTHORING shape.
+    """
+    linear_pipeline._validate_writer_json_artifact(
+        "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "quiz",
+                "title": "Питання",
+                "items": [
+                    {
+                        "question": "Як справи?",
+                        "options": [
+                            {"text": "Добре", "correct": True},
+                            {"text": "Погано", "correct": False},
+                        ],
+                    }
+                ],
+            }
+        ],
+    )
+
+
+def test_validate_writer_json_artifact_rejects_quiz_questions_component_prop() -> None:
+    """A writer that emits `quiz: {questions: [...]}` is using the
+    React component PROP NAME, not the authoring field name. Pre-#1627
+    the validator (sourced from `lesson-schema.yaml`) silently accepted
+    this AND silently rejected the canonical `items` — producing empty
+    quizzes at render time because `_quiz_to_mdx` reads `activity.items`,
+    not `activity.questions`.
+    """
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"activities\.yaml schema validation failed: item 1 has "
+        r"unexpected fields \['questions'\]; allowed: ",
+    ):
+        linear_pipeline._validate_writer_json_artifact(
+            "activities.yaml",
+            [
+                {
+                    "id": "act-1",
+                    "type": "quiz",
+                    "questions": [{"question": "x", "options": []}],
+                }
+            ],
+        )
+
+
+def test_validate_writer_json_artifact_rejects_authorial_intent_excerpt_dataclass_name() -> None:
+    """`authorial-intent` authoring YAML uses `text_excerpt:` and
+    `prompt:` per `ACTIVITY-SCHEMAS.md` and the activities-base JSON
+    Schema. `_parse_authorial_intent` renames these to the dataclass's
+    `excerpt`/`questions` fields post-parse — so the post-parse name
+    `excerpt` is NOT a valid authoring field. Catches Codex-flagged
+    drift between the parser-output dataclass and the YAML wire format.
+    """
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"unexpected fields \['excerpt'\]",
+    ):
+        linear_pipeline._validate_writer_json_artifact(
+            "activities.yaml",
+            [
+                {
+                    "id": "act-7",
+                    "type": "authorial-intent",
+                    "title": "Авторський задум",
+                    "excerpt": "...",  # WRONG — dataclass field name
+                    "prompt": "Чому автор обрав таку структуру?",
+                    "model_answer": "...",
+                }
+            ],
+        )
+
+
+def test_validate_writer_json_artifact_accepts_authorial_intent_text_excerpt_authoring() -> None:
+    """Counterpart to the rejects-excerpt test: the canonical authoring
+    field `text_excerpt` is what the writer is told to emit, and what
+    `_parse_authorial_intent` reads via `data.get('text_excerpt', '')`.
+    """
+    linear_pipeline._validate_writer_json_artifact(
+        "activities.yaml",
+        [
+            {
+                "id": "act-7",
+                "type": "authorial-intent",
+                "title": "Авторський задум",
+                "text_excerpt": "...",
+                "prompt": "Чому автор обрав таку структуру?",
+                "model_answer": "...",
+            }
+        ],
+    )
+
+
+def test_validate_writer_json_artifact_rejects_camelcase_component_prop_names() -> None:
+    """Many seminar/HIST activities use snake_case authoring fields that
+    `_*_to_mdx` adapters rename to camelCase component props. The
+    pre-#1627 lesson-schema-sourced loader accepted the camelCase names
+    (e.g. `modelAnswer`, `debateQuestion`, `imageUrl`), masking writer
+    errors. This batches a few canonical examples.
+    """
+    cases = [
+        ("essay-response", "modelAnswer"),
+        ("debate", "debateQuestion"),
+        ("paleography-analysis", "imageUrl"),
+    ]
+    for activity_type, bad_field in cases:
+        with pytest.raises(
+            linear_pipeline.LinearPipelineError,
+            match=rf"unexpected fields \['{bad_field}'\]",
+        ):
+            linear_pipeline._validate_writer_json_artifact(
+                "activities.yaml",
+                [{"id": "act-1", "type": activity_type, bad_field: "x"}],
+            )
 
 
 def test_validate_writer_json_artifact_rejects_nonsense_field() -> None:
