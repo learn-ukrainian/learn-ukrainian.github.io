@@ -2001,3 +2001,208 @@ def test_linear_write_prompt_skeleton_example_matches_schema() -> None:
         f"Example activities in linear-write.md fail the component-prop gate "
         f"that runs against real writer output. Errors: {report['errors']}"
     )
+
+
+# ---------------------------------------------------------------------------
+# #1624 round-3: _component_prop_gate must validate AUTHORING shape, not
+# raw component-prop names. Surfaced by Codex re-review of PR #1627.
+# ---------------------------------------------------------------------------
+
+
+def test_component_prop_gate_accepts_authorial_intent_authoring_shape() -> None:
+    """`authorial-intent` requires component props (excerpt, questions,
+    modelAnswer) but the writer emits authoring fields (text_excerpt,
+    prompt, model_answer). The gate must translate via the rename map."""
+    activities = [
+        {
+            "id": "act-1",
+            "type": "authorial-intent",
+            "title": "Розкрити задум автора",
+            "text_excerpt": "У темну нічну годину...",
+            "prompt": "Що автор хоче передати?",
+            "model_answer": "Автор передає тривогу через...",
+        }
+    ]
+    report = linear_pipeline._component_prop_gate(activities)
+    assert report["passed"], f"Expected canonical authoring shape to pass: {report['errors']}"
+
+
+def test_component_prop_gate_rejects_authorial_intent_component_prop_names() -> None:
+    """Mis-authored YAML using component-prop names (`excerpt:`, `questions:`,
+    `modelAnswer:`) instead of authoring fields (`text_excerpt:`, `prompt:`,
+    `model_answer:`) MUST fail the gate. If we accepted both, the parser
+    at `_parse_authorial_intent` would silently produce an empty activity
+    because it reads `text_excerpt:` not `excerpt:`."""
+    activities = [
+        {
+            "id": "act-1",
+            "type": "authorial-intent",
+            "title": "Розкрити задум автора",
+            "excerpt": "...",  # WRONG: dataclass-name, not authoring-name
+            "questions": [{"q": "?"}],  # WRONG: component-prop name
+            "modelAnswer": "...",  # WRONG: camelCase
+        }
+    ]
+    report = linear_pipeline._component_prop_gate(activities)
+    assert not report["passed"]
+    assert any("text_excerpt" in err for err in report["errors"])
+    assert any("prompt" in err for err in report["errors"])
+    assert any("model_answer" in err for err in report["errors"])
+
+
+def test_component_prop_gate_accepts_debate_snake_case_authoring() -> None:
+    """`debate` requires camelCase `debateQuestion`; authoring uses snake_case."""
+    activities = [
+        {
+            "id": "act-1",
+            "type": "debate",
+            "title": "Debate",
+            "debate_question": "Чи був Хмельницький героєм?",
+            "positions": [{"label": "За", "arguments": ["..."]}],
+        }
+    ]
+    report = linear_pipeline._component_prop_gate(activities)
+    assert report["passed"], f"Expected snake_case authoring to pass: {report['errors']}"
+
+
+def test_component_prop_gate_accepts_paleography_imageurl_authoring() -> None:
+    """`paleography-analysis` requires camelCase `imageUrl`; authoring uses
+    snake_case `image_url`."""
+    activities = [
+        {
+            "id": "act-1",
+            "type": "paleography-analysis",
+            "title": "Палеографія",
+            "image_url": "https://example.com/manuscript.jpg",
+            "hotspots": [{"x": 10, "y": 20, "label": "..."}],
+        }
+    ]
+    report = linear_pipeline._component_prop_gate(activities)
+    assert report["passed"], f"Expected snake_case authoring to pass: {report['errors']}"
+
+
+def test_component_prop_gate_accepts_dialect_comparison_snake_case_authoring() -> None:
+    """`dialect-comparison` requires camelCase `textA`/`textB`; authoring
+    uses snake_case `text_a`/`text_b`."""
+    activities = [
+        {
+            "id": "act-1",
+            "type": "dialect-comparison",
+            "title": "Compare",
+            "text_a": "Sample A...",
+            "text_b": "Sample B...",
+            "features": [{"name": "f", "a": "...", "b": "..."}],
+        }
+    ]
+    report = linear_pipeline._component_prop_gate(activities)
+    assert report["passed"], f"Expected snake_case authoring to pass: {report['errors']}"
+
+
+def test_component_prop_gate_accepts_source_evaluation_snake_case_authoring() -> None:
+    """`source-evaluation` requires camelCase `sourceText`; authoring uses
+    snake_case `source_text`."""
+    activities = [
+        {
+            "id": "act-1",
+            "type": "source-evaluation",
+            "title": "Evaluate",
+            "source_text": "Source text content...",
+        }
+    ]
+    report = linear_pipeline._component_prop_gate(activities)
+    assert report["passed"], f"Expected snake_case authoring to pass: {report['errors']}"
+
+
+def test_component_prop_gate_skips_jsx_only_children_prop() -> None:
+    """`mark-the-words` and `highlight-morphemes` require `children` in the
+    React component, but authoring YAML doesn't have a top-level `children:`
+    field — the JSX is rendered from inner content. The gate must skip
+    `children` rather than reporting it as missing."""
+    activities = [
+        {
+            "id": "act-1",
+            "type": "mark-the-words",
+            "title": "Mark",
+            "text": "Sample text",
+            "answers": ["word1", "word2"],
+        },
+        {
+            "id": "act-2",
+            "type": "highlight-morphemes",
+        },
+    ]
+    report = linear_pipeline._component_prop_gate(activities)
+    assert report["passed"], f"Expected JSX-only `children` to be skipped: {report['errors']}"
+
+
+def test_component_prop_gate_still_reports_genuinely_missing_props() -> None:
+    """The rename translation must NOT mask genuinely missing fields. An
+    `authorial-intent` activity missing `text_excerpt` should fail."""
+    activities = [
+        {
+            "id": "act-1",
+            "type": "authorial-intent",
+            "title": "Розкрити задум",
+            # text_excerpt INTENTIONALLY omitted
+            "prompt": "Що автор хоче передати?",
+            "model_answer": "...",
+        }
+    ]
+    report = linear_pipeline._component_prop_gate(activities)
+    assert not report["passed"]
+    assert any("text_excerpt" in err for err in report["errors"])
+
+
+def test_component_to_authoring_renames_cover_known_renames() -> None:
+    """Drift guard: every type in the rename map must also be in the
+    authoring whitelist (so a rename can't reference a type the parser
+    doesn't know about) AND every renamed AUTHORING field name must be in
+    that type's authoring whitelist (so the renamed field can pass strict
+    JSON validation)."""
+    for activity_type, rename_map in linear_pipeline._COMPONENT_TO_AUTHORING_RENAMES.items():
+        assert activity_type in linear_pipeline._ACTIVITY_AUTHORING_FIELDS, (
+            f"_COMPONENT_TO_AUTHORING_RENAMES has type {activity_type!r} "
+            f"that is not in _ACTIVITY_AUTHORING_FIELDS"
+        )
+        allowed = linear_pipeline._ACTIVITY_AUTHORING_FIELDS[activity_type]
+        for component_prop, authoring_field in rename_map.items():
+            assert authoring_field in allowed, (
+                f"Type {activity_type!r}: rename {component_prop!r} -> "
+                f"{authoring_field!r}, but {authoring_field!r} is not in "
+                f"the authoring whitelist for that type"
+            )
+
+
+def test_component_prop_gate_consistent_with_strict_json_parser_for_a1_20() -> None:
+    """End-to-end: an A1/20-shaped activity list (covers the rename-affected
+    types we care about) passes the strict-JSON parser AND the
+    component-prop gate without contradiction."""
+    activities = [
+        {"id": "act-1", "type": "match-up", "title": "Match",
+         "pairs": [{"left": "a", "right": "b"}]},
+        {"id": "act-2", "type": "quiz", "title": "Quiz",
+         "items": [{"question": "?", "options": [{"text": "A", "correct": True}]}]},
+        {"id": "act-3", "type": "fill-in", "title": "Fill",
+         "items": [{"sentence": "Я ____ о сьомій.", "answer": "прокидаюся"}]},
+        {"id": "act-4", "type": "translate", "title": "Translate",
+         "items": [{"source": "I wake up.", "target": "Я прокидаюся."}]},
+        {"id": "act-5", "type": "true-false", "title": "TF",
+         "items": [{"statement": "...", "isCorrect": True}]},
+        {"id": "act-6", "type": "unjumble", "title": "Order words",
+         "items": [{"sentence": "...", "answer": "..."}]},
+        {"id": "act-7", "type": "odd-one-out", "title": "Odd",
+         "items": [{"options": ["a", "b", "c"], "correctAnswer": "c"}]},
+        {"id": "act-8", "type": "order", "title": "Order steps",
+         "items": ["a", "b", "c"], "correct_order": [0, 1, 2]},
+        {"id": "act-9", "type": "error-correction", "title": "Find err",
+         "items": [{"sentence": "Він вмиваєця.", "errorWord": "вмиваєця",
+                    "correctForm": "вмивається", "explanation": "..."}]},
+    ]
+    # First gate: strict-JSON parser
+    linear_pipeline._validate_writer_json_artifact("activities.yaml", activities)
+    # Second gate: component-prop gate
+    report = linear_pipeline._component_prop_gate(activities)
+    assert report["passed"], (
+        f"A1/20 activity list must pass BOTH gates without contradiction. "
+        f"Errors: {report['errors']}"
+    )

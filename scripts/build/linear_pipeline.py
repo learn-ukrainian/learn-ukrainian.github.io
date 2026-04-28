@@ -1078,6 +1078,76 @@ def _activity_type_field_whitelist() -> dict[str, frozenset[str]]:
     return _ACTIVITY_AUTHORING_FIELDS
 
 
+# Per-type aliases mapping React COMPONENT prop names (as declared
+# in `docs/lesson-schema.yaml`) to AUTHORING YAML field names (as
+# emitted by writers and consumed by `scripts/yaml_activities.py`
+# parser methods). Sourced from the `_*_to_mdx` adapters in
+# `yaml_activities.py` — every line of the form
+# `<Component someProp={activity.author_field}>` defines an alias
+# `someProp -> author_field` for that component's activity_type.
+#
+# The default (no entry, or no rename) is identity:
+# component-prop-name == authoring-field-name. Most types match:
+# `<MatchUp pairs={activity.pairs}>` needs no alias because
+# authoring already says `pairs:`.
+#
+# Used by `_component_prop_gate` to translate
+# `lesson-schema.yaml`-declared required props back to the
+# authoring-field name expected in the writer's YAML, so the gate
+# can validate canonical authoring shape rather than the renamed
+# component-prop view.
+#
+# Drift guard: `test_component_to_authoring_renames_cover_known_renames`
+# enforces that every rename-affected type listed here has a
+# matching entry in `_ACTIVITY_AUTHORING_FIELDS` (so a rename
+# entry can never reference a type unknown to the parser).
+_COMPONENT_TO_AUTHORING_RENAMES: dict[str, dict[str, str]] = {
+    # `<AuthorialIntent excerpt={activity.excerpt} questions={...} modelAnswer={activity.model_answer}>`
+    # — `activity.excerpt` is the dataclass field; parser at
+    # `_parse_authorial_intent` reads YAML `text_excerpt:` into it.
+    # `questions` is built from YAML `prompt:` (single value lifted
+    # to a one-element list).
+    "authorial-intent": {
+        "excerpt": "text_excerpt",
+        "questions": "prompt",
+        "modelAnswer": "model_answer",
+    },
+    # `<Debate debateQuestion={activity.debate_question} ... modelAnalysis={activity.model_analysis}>`
+    "debate": {
+        "debateQuestion": "debate_question",
+    },
+    # `<DialectComparison textA={activity.text_a} textB={activity.text_b}>`
+    "dialect-comparison": {
+        "textA": "text_a",
+        "textB": "text_b",
+    },
+    # `<PaleographyAnalysis imageUrl={activity.image_url}>`
+    "paleography-analysis": {
+        "imageUrl": "image_url",
+    },
+    # `<SourceEvaluation sourceText={activity.source_text}>`
+    "source-evaluation": {
+        "sourceText": "source_text",
+    },
+}
+
+
+# JSX-only required props that are RENDERED from activity content
+# (or assembled from non-top-level fields), rather than read from
+# any authoring YAML top-level field. `_component_prop_gate` skips
+# these when checking required props.
+#
+# Example: `mark-the-words` declares `children` as required because
+# the React component receives nested JSX. Authoring YAML has
+# `text:` and `answers:` instead — those are not required by the
+# schema (the gate validates the inner structure separately via
+# strict-JSON parser), so missing `children` in the authoring
+# artifact is correct, not a violation.
+_COMPONENT_PROP_GATE_JSX_ONLY_PROPS: frozenset[str] = frozenset({
+    "children",
+})
+
+
 def _strip_outer_code_fence(text: str) -> str:
     stripped = text.strip()
     match = re.match(r"^```(?:json|yaml|yml)?\s*\n(?P<body>.*)\n```\s*$", stripped, re.DOTALL)
@@ -1549,6 +1619,23 @@ def _ai_slop_gate(text: str) -> dict[str, Any]:
 
 
 def _component_prop_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
+    """Validate authoring activities against component-prop required-prop schema.
+
+    Required props in `docs/lesson-schema.yaml` are React component prop
+    names (e.g. `<AuthorialIntent excerpt={...}>` declares `excerpt` as
+    required). Authoring YAML emitted by writers uses field names that
+    `scripts/yaml_activities.py` parser methods consume — sometimes those
+    are renamed at render time (e.g. `text_excerpt:` in YAML →
+    `activity.excerpt` dataclass field → `<AuthorialIntent excerpt=...>`).
+
+    The gate translates each required component-prop name through
+    `_COMPONENT_TO_AUTHORING_RENAMES` to its authoring-field name (or
+    keeps it unchanged if no rename exists), then checks the authoring
+    activity dict for that field. JSX-only props in
+    `_COMPONENT_PROP_GATE_JSX_ONLY_PROPS` (e.g. `children` for
+    `mark-the-words`) are skipped — they're rendered from non-top-level
+    activity content.
+    """
     schema = load_yaml(PROJECT_ROOT / "docs" / "lesson-schema.yaml")
     components = schema.get("components", {})
     by_type = {
@@ -1563,12 +1650,26 @@ def _component_prop_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
         if component is None:
             errors.append(f"{activity.get('id', '<missing-id>')}: unknown activity type {activity_type}")
             continue
-        required = [
+        required_component_props = [
             prop["name"]
             for prop in component.get("props", {}).get("required", [])
             if isinstance(prop, dict)
         ]
-        missing = [prop for prop in required if prop not in activity]
+        # `activity_type` is non-None here (guarded by `component is None`
+        # check above), but Pyright can't track that across the dict lookup.
+        renames = _COMPONENT_TO_AUTHORING_RENAMES.get(activity_type or "", {})
+        # Translate component-prop names to authoring field names; skip
+        # JSX-only props that aren't represented as top-level YAML fields.
+        # `isinstance(comp_prop, str)` narrows the type for `renames.get`
+        # (required_component_props comes from `prop["name"]` over a
+        # dict[str, Any], so its element type is Any from Pyright's POV).
+        required_authoring_fields: list[str] = [
+            renames.get(comp_prop, comp_prop)
+            for comp_prop in required_component_props
+            if isinstance(comp_prop, str)
+            and comp_prop not in _COMPONENT_PROP_GATE_JSX_ONLY_PROPS
+        ]
+        missing = [field for field in required_authoring_fields if field not in activity]
         if missing:
             errors.append(
                 f"{activity.get('id', '<missing-id>')}: missing required props "
