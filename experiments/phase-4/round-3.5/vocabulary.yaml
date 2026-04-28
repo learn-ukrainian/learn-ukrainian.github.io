@@ -1,0 +1,80 @@
+- lemma: прокидатися
+  translation: to wake up
+  pos: verb
+  usage: Я прокидаюся о сьомій.
+- lemma: вмиватися
+  translation: to wash face/hands
+  pos: verb
+  usage: Я вмиваюся вранці.
+- lemma: одягатися
+  translation: to get dressed
+  pos: verb
+  usage: Я швидко одягаюся.
+- lemma: снідати
+  translation: to have breakfast
+  pos: verb
+  usage: Я снідаю на кухні.
+- lemma: йти
+  translation: to go (irregular)
+  pos: verb
+  usage: Я йду на роботу.
+- lemma: спочатку
+  translation: first, at first
+  pos: adv
+  usage: Спочатку я п'ю воду.
+- lemma: потім
+  translation: then, next
+  pos: adv
+  usage: Потім я вмиваюся.
+- lemma: збиратися
+  translation: to get ready
+  pos: verb
+  usage: Я збираюся на роботу.
+- lemma: повертатися
+  translation: to return
+  pos: verb
+  usage: Я повертаюся о шостій.
+- lemma: навчатися
+  translation: to study/learn
+  pos: verb
+  usage: Я навчаюся вранці.
+- lemma: поспішати
+  translation: to hurry
+  pos: verb
+  usage: Я не поспішаю у суботу.
+- lemma: після цього
+  translation: after this
+  pos: phrase
+  usage: Після цього я снідаю.
+- lemma: нарешті
+  translation: finally
+  pos: adv
+  usage: Нарешті я йду додому.
+- lemma: вранці
+  translation: in the morning
+  pos: adv
+  usage: Я прокидаюся вранці.
+- lemma: пізно
+  translation: late
+  pos: adv
+  usage: У суботу я прокидаюся пізно.
+- lemma: кава
+  translation: coffee
+  pos: noun
+  usage: Я п'ю каву.
+- lemma: робота
+  translation: work/job
+  pos: noun
+  usage: Я йду на роботу.
+- lemma: телефон
+  translation: phone
+  pos: noun
+  usage: Я дивлюся телефон.
+- lemma: субота
+  translation: Saturday
+  pos: noun
+  usage: У суботу я відпочиваю.
+- lemma: вихідний
+  translation: day off / weekend
+  pos: noun
+  usage: Сьогодні вихідний.

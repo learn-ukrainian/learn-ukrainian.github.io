@@ -95,3 +95,83 @@ Diagnostic signal: round 3.5 can now recover from one strict-schema failure,
 but a fresh live Gemini build still fails deterministic content QG and retains
 English meta-narration adjacent to the newly forbidden phrase class. The output
 is not canonical for Phase 5 fan-out.
+
+## Cross-agent adversarial review (added by orchestrator)
+
+Per #0H discipline, parallel adversarial review on PR #1621 by
+Gemini-3.1-pro-preview and Codex-gpt-5.5. Both reviewers agreed on the
+"round-4 bakeoff trigger" verdict. Three significant findings supplement
+the dispatch report:
+
+### Tool-noise findings (gate bugs, NOT writer failures)
+
+1. **`vesum_verified` false positives.** Gemini-reviewer correctly
+   identified that `вмиваєця`, `одягаєся` are intentional `errorWord`
+   values inside the `error-correction` activity (`a1-020-act9`), not
+   bad orthography. The Python QG should skip `errorWord`/`error`
+   fields when running VESUM verification. **Filed as separate issue.**
+
+2. **`groups` whitelist false positive.** The Attempt-1 parser
+   rejection of `groups` was wrong: `groups` IS a legitimate field
+   for the `group-sort` activity type per `docs/lesson-schema.yaml`
+   and `scripts/yaml_activities.py`. The strict-extras gate's
+   `optional_item_fields` whitelist is global, not per-activity-type,
+   so it cannot accept `groups` only for `group-sort`. The corrective
+   redispatch was forced by a whitelist bug, not a real schema
+   violation. Codex-reviewer recommends per-type extra-field
+   validation rather than simply whitelisting `groups` globally.
+   **Filed as separate issue.**
+
+### Writer-discipline findings (genuine round-4 bakeoff signal)
+
+3. **Meta-narration is more pervasive than dispatch reported.** This
+   exemplar report quotes 3 violations; cross-agent review surfaced
+   6+ distinct violations:
+
+   - "Notice how reflexive verbs like **прокидатися** (to wake up)
+     are used alongside non-reflexive verbs..."  *(line 19)*
+   - "On the weekend, the rhythm of the morning changes
+     significantly. The second dialogue highlights the contrast
+     between..."  *(line 19, broader narrative-essay register)*
+   - "One of the most important aspects of these verbs is their
+     pronunciation. Ukrainian phonetics dictates that certain letter
+     combinations transform when spoken..."  *(line 52)*
+   - "This is a crucial rule for achieving a natural-sounding
+     accent."  *(line 52)*
+   - "Understanding this gap between spelling and sound is essential
+     for listening comprehension..."  *(line 59)*
+   - "Without these connectors, a description would simply be a
+     disjointed list of verbs. With them, you can share a coherent
+     experience."  *(line 111)*
+   - "As a final self-check, try to narrate your morning routine out
+     loud... will make your Ukrainian sound much more advanced and
+     fluid."  *(line 119)*
+
+   The forbidden-phrase blacklist catches *literal* patterns; Gemini's
+   meta-narration manifests as full paragraphs that none of the
+   explicit phrases match. **Persona-erasure framing is the round-4
+   recommendation** (per Gemini-reviewer): replace the negative list
+   with a positive "Zero Meta-Narration" constraint such as "Prohibit
+   addressing the reader or commenting on the lesson content."
+
+4. **JSX prop-stuffing.** Gemini routed dialogues through
+   `<DialogueBox>` JSX with `translation` props baked in (`module.md`
+   lines 7–29), bypassing the immersion gate's expectation of
+   markdown-blockquote dialogues. The Codex round-3 hand-draft used
+   plain blockquotes; Gemini's structural shift may game prose/
+   immersion checks via JSX nesting.
+
+### Disposition
+
+- Codex-reviewer flagged a HIGH-severity blocker on the original PR:
+  *"Merging failed, nonpublishable curriculum artifacts would
+  overwrite canonical module files."* Acted on:
+  - `curriculum/l2-uk-en/a1/my-morning/{module.md, activities.yaml,
+    vocabulary.yaml, resources.yaml}` restored to round-3 baseline
+    (`c91ae3bbe1` from #1594) on this branch.
+  - Failed Gemini outputs preserved at
+    `experiments/phase-4/round-3.5/` for evidence with a README
+    explaining the round-4 bakeoff context.
+- Round-4 bakeoff brief, Qdrant infra fragility, VESUM gate
+  error-correction skip, and per-type extra-field validation will
+  each be filed as separate follow-up issues.

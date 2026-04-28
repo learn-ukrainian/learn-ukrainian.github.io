@@ -1,80 +1,104 @@
 - lemma: прокидатися
   translation: to wake up
   pos: verb
-  usage: Я прокидаюся о сьомій.
+  ipa: ""
+  usage: "Я прокидаюся о сьомій."
 - lemma: вмиватися
-  translation: to wash face/hands
+  translation: to wash oneself
   pos: verb
-  usage: Я вмиваюся вранці.
+  ipa: ""
+  usage: "Потім я вмиваюся."
 - lemma: одягатися
   translation: to get dressed
   pos: verb
-  usage: Я швидко одягаюся.
+  ipa: ""
+  usage: "Я одягаюся швидко."
 - lemma: снідати
   translation: to have breakfast
   pos: verb
-  usage: Я снідаю на кухні.
+  ipa: ""
+  usage: "Після цього я снідаю."
 - lemma: йти
-  translation: to go (irregular)
+  translation: to go
   pos: verb
-  usage: Я йду на роботу.
+  ipa: ""
+  usage: "Я йду на роботу."
 - lemma: спочатку
-  translation: first, at first
+  translation: first
   pos: adv
-  usage: Спочатку я п'ю воду.
+  ipa: ""
+  usage: "Спочатку я прокидаюся."
 - lemma: потім
-  translation: then, next
+  translation: then
   pos: adv
-  usage: Потім я вмиваюся.
-- lemma: збиратися
-  translation: to get ready
-  pos: verb
-  usage: Я збираюся на роботу.
-- lemma: повертатися
-  translation: to return
-  pos: verb
-  usage: Я повертаюся о шостій.
-- lemma: навчатися
-  translation: to study/learn
-  pos: verb
-  usage: Я навчаюся вранці.
-- lemma: поспішати
-  translation: to hurry
-  pos: verb
-  usage: Я не поспішаю у суботу.
+  ipa: ""
+  usage: "Потім я вмиваюся."
 - lemma: після цього
-  translation: after this
+  translation: after that
   pos: phrase
-  usage: Після цього я снідаю.
+  ipa: ""
+  usage: "Після цього я снідаю."
 - lemma: нарешті
   translation: finally
   pos: adv
-  usage: Нарешті я йду додому.
+  ipa: ""
+  usage: "Нарешті я йду."
+- lemma: збиратися
+  translation: to get ready
+  pos: verb
+  ipa: ""
+  usage: "Я збираюся вранці."
+- lemma: повертатися
+  translation: to return
+  pos: verb
+  ipa: ""
+  usage: "Я повертаюся додому."
+- lemma: навчатися
+  translation: to study
+  pos: verb
+  ipa: ""
+  usage: "Я навчаюся вранці."
+- lemma: поспішати
+  translation: to hurry
+  pos: verb
+  ipa: ""
+  usage: "Я не поспішаю."
 - lemma: вранці
   translation: in the morning
   pos: adv
-  usage: Я прокидаюся вранці.
+  ipa: ""
+  usage: "Вранці я снідаю."
 - lemma: пізно
   translation: late
   pos: adv
-  usage: У суботу я прокидаюся пізно.
-- lemma: кава
-  translation: coffee
-  pos: noun
-  usage: Я п'ю каву.
+  ipa: ""
+  usage: "У суботу я прокидаюся пізно."
 - lemma: робота
-  translation: work/job
+  translation: work
   pos: noun
-  usage: Я йду на роботу.
-- lemma: телефон
-  translation: phone
-  pos: noun
-  usage: Я дивлюся телефон.
+  gender: f
+  ipa: ""
+  usage: "Я йду на роботу."
 - lemma: субота
   translation: Saturday
   pos: noun
-  usage: У суботу я відпочиваю.
-- lemma: вихідний
-  translation: day off / weekend
+  gender: f
+  ipa: ""
+  usage: "У суботу я не поспішаю."
+- lemma: кава
+  translation: coffee
   pos: noun
-  usage: Сьогодні вихідний.
+  gender: f
+  ipa: ""
+  usage: "Я п'ю каву."
+- lemma: рутина
+  translation: routine
+  pos: noun
+  gender: f
+  ipa: ""
+  usage: "Моя рутина проста."
+- lemma: сьома
+  translation: seven o'clock
+  pos: numeral
+  ipa: ""
+  usage: "Я прокидаюся о сьомій."
