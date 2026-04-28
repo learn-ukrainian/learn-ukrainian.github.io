@@ -181,7 +181,7 @@ def _heuristic_score(hit: dict, grade_hint: int | None) -> float:
 
 
 def _search_rag(query: str, grade: int | None = None,
-                limit: int = 3, allow_degraded: bool = False) -> list[dict]:
+                limit: int = 5, allow_degraded: bool = False) -> list[dict]:
     """Query the RAG textbook index with heuristic reranking (#1098).
 
     Over-fetches 3x candidates, then reranks by pedagogical relevance:
@@ -192,25 +192,29 @@ def _search_rag(query: str, grade: int | None = None,
         # Over-fetch for reranking headroom
         candidates = search_text(query, grade=grade, limit=limit * 3)
     except Exception as e:
+        # Finding 2 (#1625): Boundary correctness for exception types.
+        # We want to fail-fast on Qdrant/network issues but degrade gracefully
+        # on unrelated library bugs or syntax errors.
         import httpx
         try:
             from qdrant_client.http.exceptions import ResponseHandlingException, UnexpectedResponse
+            # Include gRPC errors if they are used
             qdrant_exc = (httpx.RequestError, UnexpectedResponse, ResponseHandlingException, ConnectionError, TimeoutError)
         except ImportError:
             qdrant_exc = (httpx.RequestError, ConnectionError, TimeoutError)
 
-        if isinstance(e, qdrant_exc):
+        if isinstance(e, qdrant_exc) or "qdrant" in str(e).lower():
             if allow_degraded:
-                # RAG server might not be running — degrade gracefully
-                import sys
-                print(f"\n  ⚠️  LOUD WARNING: RAG Qdrant search unreachable for '{query}': {e}\n", file=sys.stderr)
+                print(f"\n  ⚠️  RAG Qdrant search unreachable for '{query}': {e}\n", file=sys.stderr)
                 return []
-            # Fall-through to re-raise as LinearPipelineError in build_packet
-            raise
+            # Fatal: wrap in LinearPipelineError with recovery command
+            raise LinearPipelineError(
+                f"RAG Qdrant search unreachable for {query!r}: {e}\n"
+                f"Start Qdrant: docker-compose -f docker-compose.qdrant.yaml up -d"
+            ) from e
 
-        # Unrelated errors (e.g. library bug, syntax error) degrade gracefully in all modes
-        import sys
-        print(f"\n  ⚠️  LOUD WARNING: RAG search internal error for '{query}': {e}\n", file=sys.stderr)
+        # Truly unrelated: log but don't fail the whole build
+        print(f"\n  ⚠️  RAG search internal error for '{query}': {e}\n", file=sys.stderr)
         return []
 
     if not candidates:
@@ -434,7 +438,8 @@ def _verify_qdrant_liveness() -> None:
         text_stats = stats.get(TEXT_COLLECTION, {})
         if "error" in text_stats:
             raise LinearPipelineError(
-                f"Qdrant collection {TEXT_COLLECTION!r} check failed: {text_stats['error']}"
+                f"Qdrant collection {TEXT_COLLECTION!r} check failed: {text_stats['error']}\n"
+                f"Check Qdrant logs or reindex: .venv/bin/python scripts/rag/ingest.py --all"
             )
         count = text_stats.get("points_count", 0)
         if count == 0:

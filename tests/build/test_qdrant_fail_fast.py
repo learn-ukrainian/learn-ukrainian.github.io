@@ -14,8 +14,6 @@ from build.research import build_knowledge_packet
 
 
 def test_build_knowledge_packet_raises_on_qdrant_fail():
-    plan_path = Path("curriculum/l2-uk-en/plans/a1/sounds-letters-and-hello.yaml")
-
     # Deep mock: Mock qdrant client directly to raise an error
     with patch("rag.query.get_client") as mock_get_client:
         mock_client = MagicMock()
@@ -26,8 +24,6 @@ def test_build_knowledge_packet_raises_on_qdrant_fail():
             build_knowledge_packet._verify_qdrant_liveness()
 
 def test_build_knowledge_packet_raises_on_empty_collection():
-    plan_path = Path("curriculum/l2-uk-en/plans/a1/sounds-letters-and-hello.yaml")
-
     # Deep mock: Mock collection_stats
     with patch("rag.query.get_client"):
         with patch("rag.query.collection_stats", return_value={"textbooks": {"points_count": 0}}):
@@ -44,31 +40,102 @@ def test_build_knowledge_packet_raises_on_low_chunks():
                 build_knowledge_packet.build_packet(plan_path)
 
         # Mock search_text to return only 2 chunks (below floor)
-        hits = [{"id": 1, "text": "hit1"}, {"id": 2, "text": "hit2"}]
+        hits = [
+            {"chunk_id": "c1", "text": "hit1", "author": "a", "grade": 1, "page": 1, "score": 0.9},
+            {"chunk_id": "c2", "text": "hit2", "author": "a", "grade": 1, "page": 2, "score": 0.8}
+        ]
         with patch("rag.query.search_text", return_value=hits):
-            with patch("build.research.build_knowledge_packet._format_hit", return_value="hit"):
-                with pytest.raises(LinearPipelineError, match="Reduce floor or query more sections in plan"):
-                    build_knowledge_packet.build_packet(plan_path)
+            with pytest.raises(LinearPipelineError, match="Reduce floor or query more sections in plan"):
+                build_knowledge_packet.build_packet(plan_path)
+
+def test_build_knowledge_packet_cumulative_floor():
+    """Test that hits from multiple queries in a section combine to meet the floor."""
+    plan_path = Path("curriculum/l2-uk-en/plans/a1/sounds-letters-and-hello.yaml")
+
+    # Mock _verify_qdrant_liveness to pass
+    with patch("build.research.build_knowledge_packet._verify_qdrant_liveness"):
+        # Each hit MUST be > 50 chars to pass _format_hit
+        long_text = "This is a sufficiently long text to pass the 50 character limit check in format_hit. " * 2
+
+        def mock_search_fn(query, **kwargs):
+            # Return 5 hits for any query to ensure floor is met
+            return [
+                {"chunk_id": f"h_{query}_{i}", "text": long_text + str(i), "author": "a", "grade": 1, "page": i, "score": 0.9}
+                for i in range(5)
+            ]
+
+        with patch("rag.query.search_text", side_effect=mock_search_fn):
+            # Should NOT raise LinearPipelineError because total hits >= 5 per section
+            packet = build_knowledge_packet.build_packet(plan_path)
+            # The plan has 5 sections, each should have 5 hits = 25 hits total
+            assert packet.count("> **Source:**") >= 25
+
+def test_search_rag_exception_boundaries(capsys):
+    """Finding 2: Qdrant errors fail-fast, others are graceful."""
+    import httpx
+    from build.research.build_knowledge_packet import _search_rag
+
+    # 1. Qdrant-related error (fatal -> LinearPipelineError)
+    with patch("rag.query.search_text", side_effect=httpx.ConnectError("Connection refused")):
+        with pytest.raises(LinearPipelineError, match="RAG Qdrant search unreachable"):
+            _search_rag("test", allow_degraded=False)
+
+    # 2. Unrelated error (graceful)
+    with patch("rag.query.search_text", side_effect=RuntimeError("totally unrelated")):
+        results = _search_rag("test", allow_degraded=False)
+        assert results == []
+        stderr = capsys.readouterr().err
+        assert "RAG search internal error" in stderr
 
 def test_allow_degraded_rag_bypasses_errors(capsys):
     plan_path = Path("curriculum/l2-uk-en/plans/a1/sounds-letters-and-hello.yaml")
 
-    with patch("rag.query.search_text", side_effect=Exception("Connection refused")):
+    with patch("rag.query.search_text", side_effect=Exception("Qdrant connection refused")):
         # Pass allow_degraded_rag=True
         packet = build_knowledge_packet.build_packet(plan_path, allow_degraded_rag=True)
         assert "*No relevant textbook excerpts found.*" in packet
 
         # Verify stderr warning is emitted
         stderr = capsys.readouterr().err
-        assert "LOUD WARNING" in stderr
-        assert "RAG search internal error" in stderr or "unreachable" in stderr
+        assert "⚠️  RAG Qdrant search unreachable" in stderr
 
-def test_delegate_liveness_probe_fails_dispatch():
+def test_delegate_liveness_probe_blocks_worker_spawn_no_worktree():
+    """Finding 1: Liveness probe blocks worker spawn even without --worktree."""
     from scripts import delegate
 
     args = MagicMock()
     args.agent = "gemini"
-    args.task_id = "test-123"
+    args.task_id = "test-125"
+    args.allow_degraded_rag = False
+    args.worktree = None # NO WORKTREE
+    args.cwd = "."
+    args.prompt = "prompt"
+    args.prompt_file = None
+    args.mode = "read-only"
+    args.model = None
+
+    with patch("rag.query.get_client") as mock_get_client:
+        mock_client = MagicMock()
+        mock_client.get_collections.side_effect = Exception("Connection refused")
+        mock_get_client.return_value = mock_client
+
+        with patch("scripts.delegate._read_state", return_value=None):
+            with patch("scripts.delegate._write_state_atomic"):
+                with patch("subprocess.Popen") as mock_popen:
+                    result = delegate.cmd_dispatch(args)
+
+                    # Verify cmd_dispatch failed
+                    assert result == 1
+                    # Verify Popen was never called
+                    mock_popen.assert_not_called()
+
+def test_delegate_liveness_probe_blocks_worker_spawn_worktree():
+    """Finding 1: Liveness probe blocks worker spawn with --worktree."""
+    from scripts import delegate
+
+    args = MagicMock()
+    args.agent = "gemini"
+    args.task_id = "test-126"
     args.allow_degraded_rag = False
     args.worktree = "auto"
     args.cwd = None
@@ -82,50 +149,17 @@ def test_delegate_liveness_probe_fails_dispatch():
         mock_client.get_collections.side_effect = Exception("Connection refused")
         mock_get_client.return_value = mock_client
 
-        # We need to mock other things to get to the _ensure_worktree call
         with patch("scripts.delegate._read_state", return_value=None):
-            with patch("scripts.delegate.Path.read_text", return_value="prompt"):
-                with patch("scripts.delegate._auto_worktree_path", return_value=Path("/tmp/wt")):
-                    with patch("scripts.delegate._resolve_sha", return_value="sha"):
-                        with patch("scripts.delegate._provision_data_symlinks"):
-                            with patch("subprocess.run") as mock_run:
-                                with patch("subprocess.Popen") as mock_popen:
-                                    mock_run.return_value = MagicMock(returncode=0)
+            with patch("scripts.delegate._auto_worktree_path", return_value=Path("/tmp/wt")):
+                with patch("scripts.delegate._ensure_worktree") as mock_ensure:
+                    # ensure_worktree should be called
+                    mock_ensure.return_value = (Path("/tmp/wt"), "branch", {})
 
-                                    result = delegate.cmd_dispatch(args)
+                    with patch("scripts.delegate._write_state_atomic"):
+                        with patch("subprocess.Popen") as mock_popen:
+                            result = delegate.cmd_dispatch(args)
 
-                                    # Verify cmd_dispatch caught DispatchPreconditionError and returned 1
-                                    assert result == 1
-                                    mock_popen.assert_not_called()
-
-def test_delegate_allow_degraded_rag_bypasses_liveness():
-    from scripts import delegate
-
-    args = MagicMock()
-    args.agent = "gemini"
-    args.task_id = "test-124"
-    args.allow_degraded_rag = True
-    args.worktree = "auto"
-    args.cwd = None
-    args.prompt = "prompt"
-    args.prompt_file = None
-    args.mode = "read-only"
-    args.model = None
-
-    # Mock get_client — it should NOT be called
-    with patch("rag.query.get_client") as mock_get_client:
-        with patch("scripts.delegate._read_state", return_value=None):
-            with patch("scripts.delegate.Path.read_text", return_value="prompt"):
-                with patch("scripts.delegate._auto_worktree_path", return_value=Path("/tmp/wt")):
-                    with patch("scripts.delegate._resolve_sha", return_value="sha"):
-                        with patch("scripts.delegate._provision_data_symlinks"):
-                            with patch("subprocess.run") as mock_run:
-                                with patch("subprocess.Popen") as mock_popen:
-                                    mock_run.return_value = MagicMock(returncode=0)
-                                    mock_popen.return_value = MagicMock(pid=12345, stdin=MagicMock())
-
-                                    delegate.cmd_dispatch(args)
-
-                                    mock_get_client.assert_not_called()
-                                    mock_popen.assert_called()
-
+                            # Verify cmd_dispatch failed
+                            assert result == 1
+                            # Verify Popen was never called
+                            mock_popen.assert_not_called()

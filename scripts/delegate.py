@@ -444,7 +444,6 @@ def _provision_qdrant_alive() -> None:
     Prevents burning agent budget on dispatches that will fail at the
     knowledge-packet phase due to unreachable infra.
     """
-    import sys
     from pathlib import Path
 
     # Add scripts to path to import RAG tools
@@ -463,7 +462,10 @@ def _provision_qdrant_alive() -> None:
         stats = collection_stats()
         text_stats = stats.get(TEXT_COLLECTION, {})
         if "error" in text_stats:
-            raise DispatchPreconditionError(f"Qdrant collection {TEXT_COLLECTION!r} check failed: {text_stats['error']}")
+            raise DispatchPreconditionError(
+                f"Qdrant collection {TEXT_COLLECTION!r} check failed: {text_stats['error']}\n"
+                f"Check Qdrant logs or reindex: .venv/bin/python scripts/rag/ingest.py --all"
+            )
         count = text_stats.get("points_count", 0)
         if count == 0:
             raise DispatchPreconditionError(
@@ -520,8 +522,6 @@ def _ensure_worktree(
         # Reused worktrees may predate this provisioning hook; the helper is
         # idempotent and never clobbers existing files.
         _provision_data_symlinks(worktree_path, _main_checkout_root())
-        if not allow_degraded_rag:
-            _provision_qdrant_alive()
         return worktree_path, branch, telemetry
 
     # Fix 1 (#1476): fetch origin/{base} and branch from the remote ref,
@@ -553,8 +553,6 @@ def _ensure_worktree(
         stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
         raise RuntimeError(stderr)
     _provision_data_symlinks(worktree_path, _main_checkout_root())
-    if not allow_degraded_rag:
-        _provision_qdrant_alive()
 
     telemetry["base_sha"] = _resolve_sha(worktree_path)
     return worktree_path, branch, telemetry
@@ -782,6 +780,18 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
     task_id = args.task_id
+
+    # Finding 1 (#1625): Probe liveness for ALL dispatch modes (cwd, worktree, danger)
+    # BEFORE any initial state write or worker spawn.
+    if not getattr(args, "allow_degraded_rag", False):
+        try:
+            _provision_qdrant_alive()
+        except DispatchPreconditionError as e:
+            print(f"❌ {e}", file=sys.stderr)
+            return 1
+        except Exception:
+            # Re-raise unexpected issues
+            raise
     state_path = _state_path(task_id)
     worktree_arg = getattr(args, "worktree", None)
 
@@ -913,16 +923,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 f".worktrees/dispatch/{{agent}}/{{task}}/.",
                 file=sys.stderr,
             )
-
-    if not getattr(args, "allow_degraded_rag", False):
-        try:
-            _provision_qdrant_alive()
-        except DispatchPreconditionError as e:
-            print(f"❌ {e}", file=sys.stderr)
-            return 1
-        except Exception:
-            # Re-raise unexpected issues
-            raise
 
     # Fork a detached subprocess that runs this same script with
     # --worker. We use Popen rather than os.fork for portability.
