@@ -57,25 +57,33 @@ WRITER_ARTIFACTS = (
 class JsonArtifactSchema:
     """Minimal runtime schema for writer JSON artifacts.
 
-    Two extra-key policies are supported via `optional_item_fields`:
+    Two extra-key policies are supported:
 
     - Tight schemas (vocabulary, resources): list every legitimate field in
       `required_item_fields` + `optional_item_fields`. Any other key is
       treated as a hallucinated field and rejected — without this, a writer
       that emits `{"lemma": ..., "translation": ..., "kek": "..."}` would
       silently leak `kek` into the artifact.
-    - Polymorphic schemas (activities): the per-type schema (fields used by
-      `fill-in` vs `quiz` vs `error-correction` etc.) is enforced later by
-      `_component_prop_gate` against `docs/lesson-schema.yaml`. The parser-
-      level schema here lists only the fields common to all activity types
-      and leaves `optional_item_fields` permissive enough to accept any of
-      the known per-type fields, so type-specific keys aren't mis-flagged
-      as hallucinated.
+    - Polymorphic schemas (activities): set `per_type_extras_authoring=True`.
+      The allowed extra fields for each item are looked up by the item's
+      `type` discriminator in `_ACTIVITY_AUTHORING_FIELDS` (the
+      WRITER-FACING YAML wire format, *not* the React component prop
+      schema). `optional_item_fields` is unused in this mode.
+
+      The split matters because adapter-style activities rename fields
+      between authoring YAML and component props in `_*_to_mdx`
+      (`scripts/yaml_activities.py`). For example: `quiz: {items: [...]}`
+      is the authoring shape, but `<Quiz questions=...>` is the component
+      shape — sourcing the writer-extras gate from `docs/lesson-schema.yaml`
+      (the component side, as #1624 first attempted) would mis-flag the
+      canonical authoring shape and silently accept the
+      empty-quiz-causing component-prop name. See PR #1627 Codex review.
     """
 
     root_type: type
     required_item_fields: Mapping[str, type]
     optional_item_fields: frozenset[str] = frozenset()
+    per_type_extras_authoring: bool = False
 
 
 # Single source of truth for which artifacts use strict JSON: the keys of
@@ -89,37 +97,13 @@ WRITER_JSON_SCHEMAS: dict[str, JsonArtifactSchema] = {
             "id": str,
             "type": str,
         },
-        # Polymorphic — per-activity-type fields enforced by
-        # `_component_prop_gate` against `docs/lesson-schema.yaml`. This
-        # set lists fields known to appear in some activity type so the
-        # strict-extra-keys gate doesn't misfire on legitimate per-type
-        # content. New activity types may need additions here.
-        optional_item_fields=frozenset({
-            "title",
-            "instruction",
-            "items",
-            "passage",
-            "sentences",
-            "questions",
-            "options",
-            "pairs",
-            "prompt",
-            "answer",
-            "statement",
-            "question",
-            "isCorrect",
-            "correctAnswer",
-            "correct_order",
-            "source",
-            "target",
-            "sentence",
-            "translation",
-            "error",
-            "correction",
-            "note",
-            "hints",
-            "tags",
-        }),
+        # Polymorphic — per-activity-type allowed fields come from the
+        # authoring-shape map `_ACTIVITY_AUTHORING_FIELDS`, *not* the
+        # component-prop schema in `docs/lesson-schema.yaml`. The two
+        # diverge for adapter-style activities (e.g. `quiz: {items: ...}`
+        # authoring vs `<Quiz questions=...>` component prop). See
+        # `_validate_writer_json_artifact` and PR #1627.
+        per_type_extras_authoring=True,
     ),
     "vocabulary.yaml": JsonArtifactSchema(
         root_type=list,
@@ -923,13 +907,45 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
         f"add per-root-type handling if {schema.root_type.__name__} is added"
     )
 
-    allowed_fields = set(schema.required_item_fields) | schema.optional_item_fields
+    per_type_fields: dict[str, frozenset[str]] | None = None
+    if schema.per_type_extras_authoring:
+        per_type_fields = _activity_type_field_whitelist()
+
+    static_allowed_fields = (
+        set(schema.required_item_fields) | schema.optional_item_fields
+    )
+    required_field_names = set(schema.required_item_fields)
+
     for index, item in enumerate(parsed, start=1):
         if not isinstance(item, dict):
             raise LinearPipelineError(
                 f"{artifact} schema validation failed: item {index} must be "
                 f"object, got {type(item).__name__}"
             )
+
+        if per_type_fields is None:
+            allowed_fields = static_allowed_fields
+        else:
+            # Polymorphic items: the allowed-field set depends on the `type`
+            # discriminator. Validate `type` early so the extra-keys error
+            # message can name the actual activity type — and so an unknown
+            # type fails with a targeted message instead of a noisy
+            # "unexpected fields [...everything...]" report.
+            activity_type = item.get("type")
+            if not isinstance(activity_type, str) or not activity_type.strip():
+                raise LinearPipelineError(
+                    f"{artifact} schema validation failed: item {index} "
+                    f"requires type as a non-empty string "
+                    f"(got {type(activity_type).__name__}: {activity_type!r})"
+                )
+            type_str = activity_type.strip()
+            if type_str not in per_type_fields:
+                raise LinearPipelineError(
+                    f"{artifact} schema validation failed: item {index} has "
+                    f"unknown activity type {type_str!r}; "
+                    f"known types: {sorted(per_type_fields)}"
+                )
+            allowed_fields = required_field_names | per_type_fields[type_str]
 
         # Reject hallucinated fields. Without this, a writer that emits
         # `{"lemma": ..., "translation": ..., "kek": "..."}` for vocabulary
@@ -959,6 +975,177 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
                     f"{artifact} schema validation failed: item {index} "
                     f"requires {field} as a non-empty string (got empty/whitespace)"
                 )
+
+
+# Per-activity-type allowed top-level fields in the **authoring YAML
+# wire format** (what `ActivityParser._parse_activity` in
+# `scripts/yaml_activities.py` consumes, what writers are told to emit
+# in `claude_extensions/quick-ref/ACTIVITY-SCHEMAS.md` and the per-level
+# `schemas/activities-*.schema.json` JSON Schemas).
+#
+# This is intentionally NOT sourced from `docs/lesson-schema.yaml` —
+# that file describes React component props, which are *renamed* by
+# `_*_to_mdx` adapters in `scripts/yaml_activities.py`:
+#   - quiz authoring `items` → component prop `questions`
+#   - select authoring `items` → component prop `questions`
+#   - translate authoring `items` → component prop `questions`
+#   - authorial-intent authoring `text_excerpt`/`prompt` → dataclass
+#     `excerpt`/`questions`
+#   - many seminar types: snake_case authoring → camelCase component
+#     props (e.g. `model_answer` → `modelAnswer`, `image_url` →
+#     `imageUrl`, `debate_question` → `debateQuestion`)
+# Pre-#1627 the gate sourced from `lesson-schema.yaml` and would have
+# accepted `quiz: {questions: [...]}` (a writer typo of the component
+# prop name) while rejecting the canonical `quiz: {items: [...]}`,
+# silently producing empty quizzes (Codex review on #1627).
+#
+# Drift between this map and the parser is caught by
+# `test_activity_authoring_fields_match_parser_dispatch` —
+# every parser type has a map entry and vice versa.
+# Universal authoring fields valid on every activity type. Sourced from
+# the per-level JSON Schemas (`schemas/activities-*.schema.json`), which
+# uniformly allow `id`/`type`/`title`/`instruction`/`notes` across types.
+_UNIVERSAL_AUTHORING_FIELDS: frozenset[str] = frozenset({
+    "id", "type", "title", "instruction", "notes",
+})
+
+
+def _activity(*type_specific: str) -> frozenset[str]:
+    """Helper: per-type set = universal fields ∪ supplied type-specific extras."""
+    return _UNIVERSAL_AUTHORING_FIELDS | frozenset(type_specific)
+
+
+_ACTIVITY_AUTHORING_FIELDS: dict[str, frozenset[str]] = {
+    # Core L2 question/practice types — items-bearing.
+    "quiz":               _activity("items"),
+    "select":             _activity("items"),
+    "true-false":         _activity("items"),
+    "fill-in":            _activity("items"),
+    "cloze":              _activity("passage", "blanks"),
+    "match-up":           _activity("pairs"),
+    "group-sort":         _activity("groups"),
+    "unjumble":           _activity("items"),
+    "error-correction":   _activity("items"),
+    "mark-the-words":     _activity("text", "answers"),
+    "translate":          _activity("items"),
+    "anagram":            _activity("items"),
+    # Pre-literacy (A1 Cyrillic).
+    "classify":           _activity("categories"),
+    "image-to-letter":    _activity("items"),
+    "watch-and-repeat":   _activity("items"),
+    # Pre-literacy types declared in `docs/lesson-schema.yaml` but with
+    # no `_parse_*` method in `ActivityParser` (silently dropped at
+    # parse time). Listed here to preserve the pre-#1624 behavior of
+    # the old `lesson-schema.yaml`-sourced loader, which accepted them.
+    "count-syllables":    _activity("items", "maxCount"),
+    "divide-words":       _activity("items"),
+    "highlight-morphemes": _activity(),
+    "letter-grid":        _activity("letters"),
+    "observe":            _activity("examples", "prompt"),
+    "odd-one-out":        _activity("items"),
+    "order":              _activity("items", "correct_order"),
+    "pick-syllables":     _activity("syllables", "category", "correctIndices", "explanation"),
+    # Seminar / B2+ analytical types. The fields below cover both
+    # the canonical and legacy authoring shapes that `ActivityParser`
+    # accepts (e.g. `target_text` / `questions` / `model_answers` is
+    # canonical for critical-analysis, `context` / `question` /
+    # `model_answer` is legacy — both are still read).
+    "reading":            _activity("text", "context", "source", "resource", "tasks"),
+    "essay-response":     _activity("source_reading", "prompt", "min_words", "model_answer", "rubric", "peer_review_guidelines"),
+    "critical-analysis":  _activity("source_reading", "target_text", "questions", "model_answers", "context", "question", "model_answer", "focus_points"),
+    "comparative-study":  _activity("source_reading", "items_to_compare", "criteria", "prompt", "model_answer", "source_a", "source_b", "task"),
+    "authorial-intent":   _activity("source_reading", "text_excerpt", "prompt", "techniques_to_identify", "model_answer"),
+    # ISTORIO / HIST.
+    "source-evaluation":  _activity("source_text", "source_metadata", "evaluation_criteria", "guiding_questions", "model_evaluation"),
+    "debate":             _activity("debate_question", "historical_context", "positions", "analysis_tasks", "model_analysis"),
+    # OES / RUTH (historical-Ukrainian linguistic types).
+    "etymology-trace":    _activity("items"),
+    "grammar-identify":   _activity("items"),
+    "transcription":      _activity("original", "answer", "hints"),
+    "paleography-analysis": _activity("image_url", "hotspots", "options"),
+    "dialect-comparison": _activity("text_a", "text_b", "label_a", "label_b", "features"),
+    "translation-critique": _activity("original", "translations", "focus_points"),
+}
+
+
+def _activity_type_field_whitelist() -> dict[str, frozenset[str]]:
+    """Return per-activity-type allowed top-level fields in authoring YAML.
+
+    See `_ACTIVITY_AUTHORING_FIELDS` for source-of-truth notes and the
+    rationale for sourcing from authoring shape rather than from
+    `docs/lesson-schema.yaml` (component-prop side).
+    """
+    return _ACTIVITY_AUTHORING_FIELDS
+
+
+# Per-type aliases mapping React COMPONENT prop names (as declared
+# in `docs/lesson-schema.yaml`) to AUTHORING YAML field names (as
+# emitted by writers and consumed by `scripts/yaml_activities.py`
+# parser methods). Sourced from the `_*_to_mdx` adapters in
+# `yaml_activities.py` — every line of the form
+# `<Component someProp={activity.author_field}>` defines an alias
+# `someProp -> author_field` for that component's activity_type.
+#
+# The default (no entry, or no rename) is identity:
+# component-prop-name == authoring-field-name. Most types match:
+# `<MatchUp pairs={activity.pairs}>` needs no alias because
+# authoring already says `pairs:`.
+#
+# Used by `_component_prop_gate` to translate
+# `lesson-schema.yaml`-declared required props back to the
+# authoring-field name expected in the writer's YAML, so the gate
+# can validate canonical authoring shape rather than the renamed
+# component-prop view.
+#
+# Drift guard: `test_component_to_authoring_renames_cover_known_renames`
+# enforces that every rename-affected type listed here has a
+# matching entry in `_ACTIVITY_AUTHORING_FIELDS` (so a rename
+# entry can never reference a type unknown to the parser).
+_COMPONENT_TO_AUTHORING_RENAMES: dict[str, dict[str, str]] = {
+    # `<AuthorialIntent excerpt={activity.excerpt} questions={...} modelAnswer={activity.model_answer}>`
+    # — `activity.excerpt` is the dataclass field; parser at
+    # `_parse_authorial_intent` reads YAML `text_excerpt:` into it.
+    # `questions` is built from YAML `prompt:` (single value lifted
+    # to a one-element list).
+    "authorial-intent": {
+        "excerpt": "text_excerpt",
+        "questions": "prompt",
+        "modelAnswer": "model_answer",
+    },
+    # `<Debate debateQuestion={activity.debate_question} ... modelAnalysis={activity.model_analysis}>`
+    "debate": {
+        "debateQuestion": "debate_question",
+    },
+    # `<DialectComparison textA={activity.text_a} textB={activity.text_b}>`
+    "dialect-comparison": {
+        "textA": "text_a",
+        "textB": "text_b",
+    },
+    # `<PaleographyAnalysis imageUrl={activity.image_url}>`
+    "paleography-analysis": {
+        "imageUrl": "image_url",
+    },
+    # `<SourceEvaluation sourceText={activity.source_text}>`
+    "source-evaluation": {
+        "sourceText": "source_text",
+    },
+}
+
+
+# JSX-only required props that are RENDERED from activity content
+# (or assembled from non-top-level fields), rather than read from
+# any authoring YAML top-level field. `_component_prop_gate` skips
+# these when checking required props.
+#
+# Example: `mark-the-words` declares `children` as required because
+# the React component receives nested JSX. Authoring YAML has
+# `text:` and `answers:` instead — those are not required by the
+# schema (the gate validates the inner structure separately via
+# strict-JSON parser), so missing `children` in the authoring
+# artifact is correct, not a violation.
+_COMPONENT_PROP_GATE_JSX_ONLY_PROPS: frozenset[str] = frozenset({
+    "children",
+})
 
 
 def _strip_outer_code_fence(text: str) -> str:
@@ -1432,6 +1619,23 @@ def _ai_slop_gate(text: str) -> dict[str, Any]:
 
 
 def _component_prop_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
+    """Validate authoring activities against component-prop required-prop schema.
+
+    Required props in `docs/lesson-schema.yaml` are React component prop
+    names (e.g. `<AuthorialIntent excerpt={...}>` declares `excerpt` as
+    required). Authoring YAML emitted by writers uses field names that
+    `scripts/yaml_activities.py` parser methods consume — sometimes those
+    are renamed at render time (e.g. `text_excerpt:` in YAML →
+    `activity.excerpt` dataclass field → `<AuthorialIntent excerpt=...>`).
+
+    The gate translates each required component-prop name through
+    `_COMPONENT_TO_AUTHORING_RENAMES` to its authoring-field name (or
+    keeps it unchanged if no rename exists), then checks the authoring
+    activity dict for that field. JSX-only props in
+    `_COMPONENT_PROP_GATE_JSX_ONLY_PROPS` (e.g. `children` for
+    `mark-the-words`) are skipped — they're rendered from non-top-level
+    activity content.
+    """
     schema = load_yaml(PROJECT_ROOT / "docs" / "lesson-schema.yaml")
     components = schema.get("components", {})
     by_type = {
@@ -1446,12 +1650,26 @@ def _component_prop_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
         if component is None:
             errors.append(f"{activity.get('id', '<missing-id>')}: unknown activity type {activity_type}")
             continue
-        required = [
+        required_component_props = [
             prop["name"]
             for prop in component.get("props", {}).get("required", [])
             if isinstance(prop, dict)
         ]
-        missing = [prop for prop in required if prop not in activity]
+        # `activity_type` is non-None here (guarded by `component is None`
+        # check above), but Pyright can't track that across the dict lookup.
+        renames = _COMPONENT_TO_AUTHORING_RENAMES.get(activity_type or "", {})
+        # Translate component-prop names to authoring field names; skip
+        # JSX-only props that aren't represented as top-level YAML fields.
+        # `isinstance(comp_prop, str)` narrows the type for `renames.get`
+        # (required_component_props comes from `prop["name"]` over a
+        # dict[str, Any], so its element type is Any from Pyright's POV).
+        required_authoring_fields: list[str] = [
+            renames.get(comp_prop, comp_prop)
+            for comp_prop in required_component_props
+            if isinstance(comp_prop, str)
+            and comp_prop not in _COMPONENT_PROP_GATE_JSX_ONLY_PROPS
+        ]
+        missing = [field for field in required_authoring_fields if field not in activity]
         if missing:
             errors.append(
                 f"{activity.get('id', '<missing-id>')}: missing required props "
