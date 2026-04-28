@@ -1,122 +1,174 @@
-- id: morning-sequence-fill
-  type: fill-in
-  title: Ранкова послідовність
-  instruction: Complete each morning sentence with the best word.
-  items:
-    - sentence: "Спочатку я ____."
-      answer: "прокидаюся"
-      options: ["прокидаюся", "йду", "після цього"]
-    - sentence: "Потім я ____."
-      answer: "вмиваюся"
-      options: ["вмиваюся", "о сьомій", "робота"]
-    - sentence: "Після цього я ____."
-      answer: "одягаюся"
-      options: ["одягаюся", "спочатку", "ти"]
-    - sentence: "Нарешті я ____ на роботу."
-      answer: "йду"
-      options: ["йду", "вмиваюся", "пізно"]
-    - sentence: "У суботу я не ____."
-      answer: "поспішаю"
-      options: ["поспішаю", "о восьмій", "після"]
-    - sentence: "Вранці я ____ каву."
-      answer: "п'ю"
-      options: ["п'ю", "прокидаюся", "нарешті"]
-- id: reflexive-or-not-quiz
+- id: a1-020-act1
+  type: match-up
+  instruction: Match the sequence words with their English meanings.
+  pairs:
+  - left: спочатку
+    right: first
+  - left: потім
+    right: then
+  - left: після цього
+    right: after this
+  - left: нарешті
+    right: finally
+- id: a1-020-act2
   type: quiz
-  title: Зворотне чи ні?
-  instruction: Choose the natural verb for each sentence.
-  items:
-    - question: "Я ____ о сьомій."
-      options:
-        - text: "прокидаюся"
-          correct: true
-        - text: "прокидаю"
-          correct: false
-        - text: "прокидаєшся"
-          correct: false
-    - question: "Я ____ каву."
-      options:
-        - text: "п'ю"
-          correct: true
-        - text: "п'юся"
-          correct: false
-        - text: "п'єшся"
-          correct: false
-    - question: "Ти ____ вранці?"
-      options:
-        - text: "вмиваєшся"
-          correct: true
-        - text: "вмиваюся"
-          correct: false
-        - text: "вмивається"
-          correct: false
-    - question: "Вона ____ на роботу."
-      options:
-        - text: "йде"
-          correct: true
-        - text: "йдеться"
-          correct: false
-        - text: "йдеш"
-          correct: false
-    - question: "Він ____ швидко."
-      options:
-        - text: "одягається"
-          correct: true
-        - text: "одягаєшся"
-          correct: false
-        - text: "одягаюся"
-          correct: false
-    - question: "Я ____ вранці."
-      options:
-        - text: "снідаю"
-          correct: true
-        - text: "снідаюся"
-          correct: false
-        - text: "снідаєшся"
-          correct: false
-- id: order-the-morning
+  instruction: Choose the correct reflexive or non-reflexive verb form.
+  questions:
+  - question: Я (вмиваю / вмиваюся) руки.
+    options:
+    - вмиваю
+    - вмиваюся
+  - question: Мати (одягає / одягається) дитину.
+    options:
+    - одягає
+    - одягається
+  - question: Я (одягаю / одягається) куртку.
+    options:
+    - одягаю
+    - одягається
+  - question: Він (вмиває / вмивається) вранці.
+    options:
+    - вмиває
+    - вмивається
+- id: a1-020-act3
   type: fill-in
-  title: Порядок ранку
-  instruction: Choose the sequence word that fits the sentence.
+  instruction: Complete the reflexive verb endings.
   items:
-    - sentence: "____ я прокидаюся."
-      answer: "Спочатку"
-      options: ["Спочатку", "Нарешті", "Після цього"]
-    - sentence: "____ я вмиваюся."
-      answer: "Потім"
-      options: ["Потім", "О сьомій", "Робота"]
-    - sentence: "____ я снідаю."
-      answer: "Після цього"
-      options: ["Після цього", "Ти", "Вранці"]
-    - sentence: "____ я йду на роботу."
-      answer: "Нарешті"
-      options: ["Нарешті", "Прокидаюся", "Кава"]
-    - sentence: "____ я п'ю каву."
-      answer: "Потім"
-      options: ["Потім", "Йду", "Одягаюся"]
-    - sentence: "____ я не поспішаю."
-      answer: "У суботу"
-      options: ["У суботу", "Йти", "Після"]
-- id: write-your-morning
+  - sentence: Я вмиваю___ .
+    answer: ся
+    options:
+    - ся
+    - шся
+    - ться
+  - sentence: Ти одягає___ .
+    answer: шся
+    options:
+    - ся
+    - шся
+    - ться
+  - sentence: Він прокидає___ .
+    answer: ться
+    options:
+    - ся
+    - шся
+    - ться
+  - sentence: Вона збирає___ .
+    answer: ться
+    options:
+    - ся
+    - шся
+    - ться
+- id: a1-020-act4
+  type: order
+  instruction: Put the morning routine in the logical order.
+  items:
+  - Снідаю.
+  - Прокидаюся.
+  - Йду на роботу.
+  - Вмиваюся і одягаюся.
+  correct_order:
+  - 1
+  - 3
+  - 0
+  - 2
+- id: a1-020-act5
+  type: true-false
+  instruction: Are these grammar statements about reflexive verbs true?
+  items:
+  - statement: The suffix -ся means the action is directed at someone else.
+    isTrue: false
+    explanation: It means the action is directed at the subject self.
+  - statement: The ending -шся is pronounced like a long soft 's'.
+    isTrue: true
+    explanation: This is a key phonetic rule in Ukrainian.
+  - statement: The verb 'йти' is a regular reflexive verb.
+    isTrue: false
+    explanation: '''йти'' is irregular and not reflexive.'
+- id: a1-020-act6
+  type: unjumble
+  instruction: Unjumble the words to form a correct sentence.
+  items:
+  - words:
+    - я
+    - о
+    - сьомій
+    - прокидаюся
+    jumbled:
+    - сьомій
+    - прокидаюся
+    - я
+    - о
+    answer: Я прокидаюся о сьомій.
+    hint: Start with the subject.
+- id: a1-020-act7
+  type: odd-one-out
+  instruction: Find the word that does not belong in the group.
+  items:
+  - words:
+    - вмиватися
+    - одягатися
+    - кава
+    - прокидатися
+    correct: 2
+    explanation: '''кава'' is a noun, others are reflexive verbs.'
+  - words:
+    - потім
+    - спочатку
+    - нарешті
+    - робота
+    correct: 3
+    explanation: '''робота'' is a noun, others are sequence words.'
+- id: a1-020-act8
   type: fill-in
-  title: Мій ранок у трьох реченнях
-  instruction: Complete the short personal routine.
+  instruction: Complete the story about a morning routine.
   items:
-    - sentence: "Спочатку я ____ о сьомій."
-      answer: "прокидаюся"
-      options: ["прокидаюся", "снідаю", "йду"]
-    - sentence: "Потім я ____ і ____."
-      answer: "вмиваюся; одягаюся"
-      options: ["вмиваюся; одягаюся", "йду; пізно", "після; нарешті"]
-    - sentence: "Нарешті я ____."
-      answer: "йду"
-      options: ["йду", "одягаюся", "прокидаюся"]
-    - sentence: "Після цього я ____."
-      answer: "снідаю"
-      options: ["снідаю", "спочатку", "пізно"]
-    - sentence: "У суботу я ____ пізно."
-      answer: "прокидаюся"
-      options: ["прокидаюся", "йду", "п'ю"]
-    - sentence: "Вранці я не ____."
-      answer: "поспішаю"
-      options: ["поспішаю", "потім", "нарешті"]
+  - sentence: Спочатку я ____.
+    answer: прокидаюся
+    options:
+    - прокидаюся
+    - йду
+    - снідаю
+  - sentence: Потім ____ і одягаюся.
+    answer: вмиваюся
+    options:
+    - вмиваюся
+    - п'ю
+    - лежу
+  - sentence: Після цього я ____.
+    answer: снідаю
+    options:
+    - снідаю
+    - вмиваюся
+    - прокидаюся
+  - sentence: Нарешті я ____ на роботу.
+    answer: йду
+    options:
+    - йду
+    - п'ю
+    - вмиваюся
+- id: a1-020-act9
+  type: error-correction
+  instruction: Fix the spelling of the reflexive verb endings.
+  items:
+  - sentence: Він вмиваєця.
+    errorWord: вмиваєця
+    correctForm: вмивається
+    explanation: The correct reflexive ending is -ться.
+  - sentence: Ти одягаєся.
+    errorWord: одягаєся
+    correctForm: одягаєшся
+    explanation: The second person ending must include the 'ш' before -ся.
+- id: a1-020-act10
+  type: translate
+  instruction: Translate the sentences into Ukrainian.
+  questions:
+  - source: I wake up at seven.
+    options:
+    - Я прокидаюся о сьомій.
+    - Я снідаю о сьомій.
+    explanation: '''Прокидатися'' means to wake up.'
+  - source: Finally, I go to work.
+    options:
+    - Нарешті я йду на роботу.
+    - Потім я йду на роботу.
+    explanation: '''Нарешті'' means finally.'
