@@ -449,16 +449,29 @@ def _provision_qdrant_alive() -> None:
         sys.path.insert(0, str(scripts_dir))
 
     try:
-        from rag.query import get_client
+        from rag.config import TEXT_COLLECTION
+        from rag.query import collection_stats, get_client
         client = get_client()
-        # Connection check (ping)
+        # 1. Connection check (ping)
         client.get_collections()
+
+        # 2. Population check (#1625)
+        stats = collection_stats()
+        text_stats = stats.get(TEXT_COLLECTION, {})
+        if "error" in text_stats:
+            raise RuntimeError(f"Qdrant collection {TEXT_COLLECTION!r} check failed: {text_stats['error']}")
+        count = text_stats.get("points_count", 0)
+        if count == 0:
+            raise RuntimeError(
+                f"Qdrant collection {TEXT_COLLECTION!r} is empty. "
+                "Ensure RAG indices are built and data/qdrant/ is populated."
+            )
     except Exception as e:
         # We don't use LinearPipelineError here because delegate.py is a
         # standalone orchestrator, but we match the requested error message.
         print(
-            f"❌ Qdrant on 127.0.0.1:6334 is not reachable. "
-            f"Start it with: ./services.sh start rag\n"
+            f"❌ Qdrant on 127.0.0.1:6334 is not reachable or unpopulated.\n"
+            f"Start it with: docker-compose -f docker-compose.qdrant.yaml up -d\n"
             f"(Original error: {e})",
             file=sys.stderr,
         )
@@ -833,7 +846,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 task_id=task_id,
                 raw_path=resolved_raw,
                 base=getattr(args, "base", None) or "main",
-                allow_degraded_rag=args.allow_degraded_rag,
+                allow_degraded_rag=getattr(args, "allow_degraded_rag", False),
             )
         except (ValueError, RuntimeError) as exc:
             print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)

@@ -194,7 +194,7 @@ def _search_rag(query: str, grade: int | None = None,
     except Exception as e:
         if allow_degraded:
             # RAG server might not be running — degrade gracefully
-            print(f"  ⚠️  RAG search failed for '{query}': {e}")
+            print(f"\n  ⚠️  LOUD WARNING: RAG search failed for '{query}': {e}\n", file=sys.stderr)
             return []
         # Fall-through to re-raise as LinearPipelineError in build_packet
         raise
@@ -408,7 +408,7 @@ def _verify_qdrant_liveness() -> None:
     except Exception as e:
         raise LinearPipelineError(
             "Qdrant on 127.0.0.1:6334 is not reachable. "
-            "Start it with: ./services.sh start rag"
+            "Start it with: docker-compose -f docker-compose.qdrant.yaml up -d"
         ) from e
 
     # 2. Population check

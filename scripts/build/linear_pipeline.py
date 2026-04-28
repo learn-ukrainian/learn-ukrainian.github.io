@@ -1493,6 +1493,11 @@ def main() -> int:
     plan = plan_check(plan_path)
 
     print("🔍 Building knowledge packet...")
+    if args.allow_degraded_rag:
+        print(
+            "  ⚠️  LOUD WARNING: --allow-degraded-rag is ON. Knowledge packet may be thin if RAG fails.",
+            file=sys.stderr,
+        )
     packet = build_knowledge_packet(plan_path, allow_degraded_rag=args.allow_degraded_rag)
 
     print(f"🤖 Invoking writer ({args.writer})...")
