@@ -348,11 +348,11 @@ def plan_check(plan_path: Path) -> dict[str, Any]:
     return plan
 
 
-def build_knowledge_packet(plan_path: Path) -> str:
+def build_knowledge_packet(plan_path: Path, allow_degraded_rag: bool = False) -> str:
     """Retrieve the writer research packet using the existing RAG packet builder."""
     from scripts.build.research.build_knowledge_packet import build_packet
 
-    return build_packet(plan_path)
+    return build_packet(plan_path, allow_degraded_rag=allow_degraded_rag)
 
 
 def render_phase_prompt(template_path: Path, context: Mapping[str, Any]) -> str:
@@ -1472,3 +1472,47 @@ def _strip_frontmatter_and_headings(text: str) -> str:
     return "\n".join(
         line for line in text.splitlines() if not line.lstrip().startswith("#")
     )
+
+
+def main() -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Linear Phase 4 pipeline")
+    parser.add_argument("level", help="Level (e.g., a1)")
+    parser.add_argument("slug", help="Module slug (e.g., my-morning)")
+    parser.add_argument("--writer", choices=WRITER_CHOICES, default="gemini-tools")
+    parser.add_argument(
+        "--allow-degraded-rag",
+        action="store_true",
+        help="Allow thin packets on RAG failure",
+    )
+    args = parser.parse_args()
+
+    plan_path = plan_path_for(args.level, args.slug)
+    print(f"📋 Checking plan: {plan_path}")
+    plan = plan_check(plan_path)
+
+    print("🔍 Building knowledge packet...")
+    packet = build_knowledge_packet(plan_path, allow_degraded_rag=args.allow_degraded_rag)
+
+    print(f"🤖 Invoking writer ({args.writer})...")
+    plan_content = plan_path.read_text(encoding="utf-8")
+    ctx = writer_context(plan, plan_content, packet)
+    prompt_path = PROJECT_ROOT / "scripts/build/phases/linear-write.md"
+    prompt = render_phase_prompt(prompt_path, ctx)
+
+    output = invoke_writer(prompt, args.writer)
+
+    print("📦 Parsing artifacts...")
+    artifacts = parse_writer_output(output)
+
+    module_dir = PROJECT_ROOT / "curriculum" / "l2-uk-en" / args.level / args.slug
+    print(f"💾 Writing artifacts to {module_dir}...")
+    write_writer_artifacts(module_dir, artifacts)
+
+    print("✅ Done!")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

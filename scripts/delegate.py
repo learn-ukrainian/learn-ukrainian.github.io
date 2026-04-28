@@ -434,12 +434,44 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
         target.symlink_to(source.resolve())
 
 
+def _provision_qdrant_alive() -> None:
+    """Fail-fast check for Qdrant liveness before dispatching.
+
+    Prevents burning agent budget on dispatches that will fail at the
+    knowledge-packet phase due to unreachable infra.
+    """
+    import sys
+    from pathlib import Path
+
+    # Add scripts to path to import RAG tools
+    scripts_dir = Path(__file__).resolve().parent
+    if str(scripts_dir) not in sys.path:
+        sys.path.insert(0, str(scripts_dir))
+
+    try:
+        from rag.query import get_client
+        client = get_client()
+        # Connection check (ping)
+        client.get_collections()
+    except Exception as e:
+        # We don't use LinearPipelineError here because delegate.py is a
+        # standalone orchestrator, but we match the requested error message.
+        print(
+            f"❌ Qdrant on 127.0.0.1:6334 is not reachable. "
+            f"Start it with: ./services.sh start rag\n"
+            f"(Original error: {e})",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+
 def _ensure_worktree(
     *,
     agent: str,
     task_id: str,
     raw_path: str,
     base: str = "main",
+    allow_degraded_rag: bool = False,
 ) -> tuple[Path, str, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
 
@@ -473,6 +505,8 @@ def _ensure_worktree(
         # Reused worktrees may predate this provisioning hook; the helper is
         # idempotent and never clobbers existing files.
         _provision_data_symlinks(worktree_path, _main_checkout_root())
+        if not allow_degraded_rag:
+            _provision_qdrant_alive()
         return worktree_path, branch, telemetry
 
     # Fix 1 (#1476): fetch origin/{base} and branch from the remote ref,
@@ -504,6 +538,9 @@ def _ensure_worktree(
         stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
         raise RuntimeError(stderr)
     _provision_data_symlinks(worktree_path, _main_checkout_root())
+    if not allow_degraded_rag:
+        _provision_qdrant_alive()
+
     telemetry["base_sha"] = _resolve_sha(worktree_path)
     return worktree_path, branch, telemetry
 
@@ -796,6 +833,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 task_id=task_id,
                 raw_path=resolved_raw,
                 base=getattr(args, "base", None) or "main",
+                allow_degraded_rag=args.allow_degraded_rag,
             )
         except (ValueError, RuntimeError) as exc:
             print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)
@@ -1278,6 +1316,11 @@ def build_parser() -> argparse.ArgumentParser:
             "wired (gemini-cli does not expose the flag) and is a no-op. "
             "See #1396."
         ),
+    )
+    d.add_argument(
+        "--allow-degraded-rag",
+        action="store_true",
+        help="Allow thin packets on RAG failure (passed to linear_pipeline)",
     )
     d.add_argument("--cwd", default=None,
                    help="Working directory for the worker (default: repo root)")
