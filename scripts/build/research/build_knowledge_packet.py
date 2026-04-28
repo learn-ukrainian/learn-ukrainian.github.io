@@ -192,12 +192,26 @@ def _search_rag(query: str, grade: int | None = None,
         # Over-fetch for reranking headroom
         candidates = search_text(query, grade=grade, limit=limit * 3)
     except Exception as e:
-        if allow_degraded:
-            # RAG server might not be running — degrade gracefully
-            print(f"\n  ⚠️  LOUD WARNING: RAG search failed for '{query}': {e}\n", file=sys.stderr)
-            return []
-        # Fall-through to re-raise as LinearPipelineError in build_packet
-        raise
+        import httpx
+        try:
+            from qdrant_client.http.exceptions import ResponseHandlingException, UnexpectedResponse
+            qdrant_exc = (httpx.RequestError, UnexpectedResponse, ResponseHandlingException, ConnectionError, TimeoutError)
+        except ImportError:
+            qdrant_exc = (httpx.RequestError, ConnectionError, TimeoutError)
+
+        if isinstance(e, qdrant_exc):
+            if allow_degraded:
+                # RAG server might not be running — degrade gracefully
+                import sys
+                print(f"\n  ⚠️  LOUD WARNING: RAG Qdrant search unreachable for '{query}': {e}\n", file=sys.stderr)
+                return []
+            # Fall-through to re-raise as LinearPipelineError in build_packet
+            raise
+
+        # Unrelated errors (e.g. library bug, syntax error) degrade gracefully in all modes
+        import sys
+        print(f"\n  ⚠️  LOUD WARNING: RAG search internal error for '{query}': {e}\n", file=sys.stderr)
+        return []
 
     if not candidates:
         return []
@@ -254,7 +268,8 @@ def _build_section_packet(section: dict, grade_hint: int | None, allow_degraded:
     hits_added = 0
 
     for query in queries:
-        results = _search_rag(query, grade=grade_hint, limit=3, allow_degraded=allow_degraded)
+        needed = 5 - hits_added
+        results = _search_rag(query, grade=grade_hint, limit=needed, allow_degraded=allow_degraded)
         for hit in results:
             chunk_id = hit.get("chunk_id", "")
             if chunk_id in seen_chunks:
@@ -274,12 +289,14 @@ def _build_section_packet(section: dict, grade_hint: int | None, allow_degraded:
     if hits_added == 0:
         if not allow_degraded:
             raise LinearPipelineError(
-                f"Section {title!r} retrieved 0 chunks from RAG (floor: {KNOWLEDGE_PACKET_FLOOR})"
+                f"Section {title!r} retrieved 0 chunks from RAG (floor: {KNOWLEDGE_PACKET_FLOOR}).\n"
+                f"Reduce floor or query more sections in plan."
             )
         lines.append("*No relevant textbook excerpts found.*\n")
     elif hits_added < KNOWLEDGE_PACKET_FLOOR and not allow_degraded:
         raise LinearPipelineError(
-            f"Section {title!r} retrieved only {hits_added} chunks from RAG (floor: {KNOWLEDGE_PACKET_FLOOR})"
+            f"Section {title!r} retrieved only {hits_added} chunks from RAG (floor: {KNOWLEDGE_PACKET_FLOOR}).\n"
+            f"Reduce floor or query more sections in plan."
         )
 
     # Also search for dialogue/situational examples on the topic
@@ -423,7 +440,7 @@ def _verify_qdrant_liveness() -> None:
         if count == 0:
             raise LinearPipelineError(
                 f"Qdrant collection {TEXT_COLLECTION!r} is empty. "
-                "Ensure RAG indices are built and data/qdrant/ is populated."
+                f"Reindex with: .venv/bin/python scripts/rag/ingest.py --all"
             )
     except LinearPipelineError:
         raise

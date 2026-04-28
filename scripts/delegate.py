@@ -215,6 +215,10 @@ class WorktreeStaleBase(RuntimeError):
     """Existing worktree is behind origin/<base> and the fast-forward rebase failed."""
 
 
+class DispatchPreconditionError(RuntimeError):
+    """Raised when environment prerequisites (e.g. Qdrant liveness) fail."""
+
+
 def _normalize_task_id(agent: str, task_id: str) -> str:
     """Strip a leading ``{agent}-`` or ``{agent}/`` from task_id.
 
@@ -459,23 +463,21 @@ def _provision_qdrant_alive() -> None:
         stats = collection_stats()
         text_stats = stats.get(TEXT_COLLECTION, {})
         if "error" in text_stats:
-            raise RuntimeError(f"Qdrant collection {TEXT_COLLECTION!r} check failed: {text_stats['error']}")
+            raise DispatchPreconditionError(f"Qdrant collection {TEXT_COLLECTION!r} check failed: {text_stats['error']}")
         count = text_stats.get("points_count", 0)
         if count == 0:
-            raise RuntimeError(
-                f"Qdrant collection {TEXT_COLLECTION!r} is empty. "
-                "Ensure RAG indices are built and data/qdrant/ is populated."
+            raise DispatchPreconditionError(
+                f"Qdrant collection {TEXT_COLLECTION!r} is empty.\n"
+                f"Reindex with: .venv/bin/python scripts/rag/ingest.py --all"
             )
+    except DispatchPreconditionError:
+        raise
     except Exception as e:
-        # We don't use LinearPipelineError here because delegate.py is a
-        # standalone orchestrator, but we match the requested error message.
-        print(
-            f"❌ Qdrant on 127.0.0.1:6334 is not reachable or unpopulated.\n"
+        raise DispatchPreconditionError(
+            f"Qdrant on 127.0.0.1:6334 is not reachable.\n"
             f"Start it with: docker-compose -f docker-compose.qdrant.yaml up -d\n"
-            f"(Original error: {e})",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+            f"(Original error: {e})"
+        ) from e
 
 
 def _ensure_worktree(
@@ -911,6 +913,16 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 f".worktrees/dispatch/{{agent}}/{{task}}/.",
                 file=sys.stderr,
             )
+
+    if not getattr(args, "allow_degraded_rag", False):
+        try:
+            _provision_qdrant_alive()
+        except DispatchPreconditionError as e:
+            print(f"❌ {e}", file=sys.stderr)
+            return 1
+        except Exception:
+            # Re-raise unexpected issues
+            raise
 
     # Fork a detached subprocess that runs this same script with
     # --worker. We use Popen rather than os.fork for portability.
