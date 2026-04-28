@@ -255,10 +255,10 @@ _SENTENCE_SPLIT_RE = re.compile(
     re.MULTILINE,
 )
 
-# Activity field whose value is intentionally misspelled — students correct it.
-# Excluded from VESUM lookup.
+# Activity fields whose values are intentionally misspelled — students correct
+# them. Excluded from VESUM lookup only for error-correction activities.
 _ERROR_CORRECTION_TYPE = "error-correction"
-_ERROR_CORRECTION_INTENTIONAL_FIELD = "error"
+_ERROR_CORRECTION_INTENTIONAL_FIELDS = frozenset({"error", "errorWord", "error_word"})
 
 # String fields whose values are user-facing prose (subject to AI-slop checks).
 # YAML structural keys like `correction:` and `correctAnswer:` are deliberately
@@ -1111,9 +1111,9 @@ def _vesum_gate(
     1. **Phonetic transcriptions and inline code** — `[с':а]`, `[ц':а]`, and
        backticked fragments like `` `вмиваєс':а` `` are metalinguistic notation
        (parts of words, IPA-ish symbols), not VESUM lemmas.
-    2. **Intentional misspellings in `error-correction` activities** — the
-       `error:` field of an `error-correction` activity contains the typo the
-       student must fix (e.g. `прокидаєштся`). Verifying it would always fail.
+    2. **Intentional misspellings in `error-correction` activities** —
+       `error:`, `errorWord:`, and `error_word:` fields contain the typo the
+       student must fix (e.g. `прокидаєштся`). Verifying them would always fail.
     3. **Sentence-initial capitalization** — VESUM is case-sensitive, so
        `Спочатку` (capitalized first word) returns no matches even though
        `спочатку` does. Lookup is performed in lowercase; the report keeps
@@ -1199,8 +1199,9 @@ def _walk_artifact_strings(
 
     - `skip_subtree_keys`: dict keys whose entire VALUE subtree (string OR
       nested dict/list) should be excluded. Used to drop intentional
-      misspellings stored under `error:` in `error-correction` activities,
-      so a future schema like `error: { text: "...", note: "..." }` would
+      misspellings stored under fields like `error:` or `errorWord:` in
+      `error-correction` activities, so a future schema like
+      `error: { text: "...", note: "..." }` would
       still be entirely excluded — not just the top-level string.
     - `keep(parent_key, string_value)`: leaf-level predicate, called for
       every string leaf NOT skipped by the subtree filter. Returns the
@@ -1276,13 +1277,14 @@ def _build_vesum_text(
 def _activity_vesum_text(activity: dict[str, Any]) -> str:
     """Walk an activity's string values, excluding intentional-error fields.
 
-    For `error-correction` activities, the `error:` field holds the typo the
-    student must fix; verifying it against VESUM would always fail. The skip
-    is at the dict (subtree) level so even a future nested shape like
-    `error: { text: "...", note: "..." }` would be entirely excluded.
+    For `error-correction` activities, fields like `error:` and `errorWord:`
+    hold the typo the student must fix; verifying them against VESUM would
+    always fail. The skip is at the dict (subtree) level so even a future
+    nested shape like `error: { text: "...", note: "..." }` would be entirely
+    excluded.
     """
     if activity.get("type") == _ERROR_CORRECTION_TYPE:
-        skip_subtree = frozenset({_ERROR_CORRECTION_INTENTIONAL_FIELD})
+        skip_subtree = _ERROR_CORRECTION_INTENTIONAL_FIELDS
     else:
         skip_subtree = frozenset()
 

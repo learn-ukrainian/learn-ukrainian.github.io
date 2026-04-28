@@ -764,6 +764,139 @@ def test_vesum_gate_skips_error_field_of_error_correction_activity(
     assert "прокидаєшся" in forwarded
 
 
+def test_vesum_gate_skips_error_word_field_of_error_correction_activity(
+    tmp_path: Path,
+) -> None:
+    """`errorWord` stores a deliberate typo and must not fail VESUM."""
+    module_dir, plan_path, _ = _passing_qg_fixture(tmp_path)
+    _write_yaml(
+        module_dir / "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "error-correction",
+                "title": "Знайдіть помилку",
+                "items": [
+                    {
+                        "sentence": "Він ____ щодня.",
+                        "errorWord": "вмиваєця",
+                        "correctForm": "вмивається",
+                        "explanation": "Потрібна форма -ться.",
+                    },
+                    {
+                        "sentence": "Ти ____ швидко.",
+                        "error_word": "одягаєся",
+                        "correctForm": "одягаєшся",
+                        "explanation": "Потрібна форма -шся.",
+                    }
+                ],
+            }
+        ],
+    )
+
+    received: list[list[str]] = []
+
+    def fake_verify(words: list[str]) -> dict[str, list[dict]]:
+        received.append(list(words))
+        deliberate_errors = {"вмиваєця", "одягаєся"}
+        return {
+            word: []
+            if word in deliberate_errors
+            else [{"lemma": word, "pos": "x", "tags": ""}]
+            for word in words
+        }
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    assert report["gates"]["vesum_verified"]["passed"] is True
+    forwarded = received[0]
+    assert "вмиваєця" not in forwarded
+    assert "одягаєся" not in forwarded
+    assert "вмивається" in forwarded
+    assert "одягаєшся" in forwarded
+
+
+def test_vesum_gate_still_checks_correct_form_in_error_correction_activity(
+    tmp_path: Path,
+) -> None:
+    """`correctForm` is the learner's answer and must stay VESUM-verified."""
+    module_dir, plan_path, _ = _passing_qg_fixture(tmp_path)
+    _write_yaml(
+        module_dir / "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "error-correction",
+                "title": "Знайдіть помилку",
+                "items": [
+                    {
+                        "sentence": "Він ____ щодня.",
+                        "errorWord": "вмиваєця",
+                        "correctForm": "вмиваєцявигадка",
+                        "explanation": "Потрібна форма -ться.",
+                    }
+                ],
+            }
+        ],
+    )
+
+    def fake_verify(words: list[str]) -> dict[str, list[dict]]:
+        return {
+            word: []
+            if word == "вмиваєцявигадка"
+            else [{"lemma": word, "pos": "x", "tags": ""}]
+            for word in words
+        }
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    gate = report["gates"]["vesum_verified"]
+    assert gate["passed"] is False
+    assert gate["missing"] == ["вмиваєцявигадка"]
+
+
+def test_vesum_gate_checks_error_word_outside_error_correction_activity(
+    tmp_path: Path,
+) -> None:
+    """The deliberate-error skip is scoped to error-correction activities."""
+    module_dir, plan_path, _ = _passing_qg_fixture(tmp_path)
+    _write_yaml(
+        module_dir / "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "fill-in",
+                "title": "Додайте -ся",
+                "items": [
+                    {
+                        "sentence": "Він вмивається щодня.",
+                        "answer": "ся",
+                        "errorWord": "вмиваєця",
+                    }
+                ],
+            }
+        ],
+    )
+
+    def fake_verify(words: list[str]) -> dict[str, list[dict]]:
+        return {
+            word: [] if word == "вмиваєця" else [{"lemma": word, "pos": "x", "tags": ""}]
+            for word in words
+        }
+
+    report = linear_pipeline.run_python_qg(
+        module_dir, plan_path, verify_words_fn=fake_verify
+    )
+
+    gate = report["gates"]["vesum_verified"]
+    assert gate["passed"] is False
+    assert gate["missing"] == ["вмиваєця"]
+
+
 def test_vesum_gate_preserves_markdown_link_text(tmp_path: Path) -> None:
     """Markdown link text `[слово](url)` must reach VESUM, not be stripped.
 
