@@ -386,6 +386,185 @@ activities.yaml
         linear_pipeline.parse_writer_output_strict_json(output)
 
 
+def test_activity_type_field_whitelist_sources_lesson_schema() -> None:
+    """The per-type whitelist mirrors `docs/lesson-schema.yaml` for each
+    component with a non-null `activity_type`, plus the universal authoring
+    fields (currently `title`).
+
+    Without this contract the strict-JSON parser and `_component_prop_gate`
+    can drift: one would accept a field the other rejects. Testing a few
+    well-known types pins the loader to the schema shape #1624 fixed.
+    """
+    whitelist = linear_pipeline._activity_type_field_whitelist()
+
+    # `groups` is required for group-sort and must be in its whitelist;
+    # this is the literal regression #1624 fixes (Phase 4 round-3.5 #1620).
+    assert "groups" in whitelist["group-sort"]
+    # ...but must NOT leak into fill-in's whitelist (the wrong fix would
+    # have been to add `groups` globally; see Codex-reviewer finding 4 on
+    # PR #1621).
+    assert "groups" not in whitelist["fill-in"]
+    assert "items" in whitelist["fill-in"]
+    assert "questions" in whitelist["quiz"]
+    assert "items" in whitelist["error-correction"]
+    assert "items" in whitelist["order"]
+    assert "correct_order" in whitelist["order"]
+    # `title` is consumed by the MDX assembler (`### {title}` heading)
+    # for every activity type, even though no React component declares
+    # it as a prop in lesson-schema.yaml.
+    for activity_type in ("group-sort", "fill-in", "quiz", "error-correction"):
+        assert "title" in whitelist[activity_type]
+
+
+def test_validate_writer_json_artifact_accepts_groups_for_group_sort() -> None:
+    """`group-sort` activities legitimately carry a top-level `groups` field
+    per `docs/lesson-schema.yaml` (`required: [{name: groups, ...}]`). The
+    pre-#1624 global whitelist rejected this as a hallucinated field.
+    """
+    linear_pipeline._validate_writer_json_artifact(
+        "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "group-sort",
+                "instruction": "Розсортуйте слова за групами.",
+                "groups": [
+                    {"name": "Фрукти", "items": ["яблуко", "груша"]},
+                    {"name": "Овочі", "items": ["морква", "буряк"]},
+                ],
+            }
+        ],
+    )
+
+
+def test_validate_writer_json_artifact_rejects_groups_on_fill_in() -> None:
+    """`groups` is per-type valid for `group-sort` but NOT for `fill-in`.
+    A simple global whitelist of `groups` would have allowed it on every
+    activity type — that was the wrong fix (Codex-reviewer finding 4 on
+    PR #1621).
+    """
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"activities\.yaml schema validation failed: item 1 has "
+        r"unexpected fields \['groups'\]; allowed: ",
+    ):
+        linear_pipeline._validate_writer_json_artifact(
+            "activities.yaml",
+            [
+                {
+                    "id": "act-1",
+                    "type": "fill-in",
+                    "items": [{"sentence": "x", "answer": "y", "options": ["y"]}],
+                    "groups": [{"name": "Hi", "items": ["x"]}],
+                }
+            ],
+        )
+
+
+def test_validate_writer_json_artifact_accepts_items_for_fill_in() -> None:
+    """`fill-in` activities use `items` as their top-level required prop
+    per `docs/lesson-schema.yaml`. Standard shape, must always pass.
+    """
+    linear_pipeline._validate_writer_json_artifact(
+        "activities.yaml",
+        [
+            {
+                "id": "act-1",
+                "type": "fill-in",
+                "instruction": "Закінчіть речення.",
+                "items": [
+                    {
+                        "sentence": "Я ____ о сьомій.",
+                        "answer": "прокидаюся",
+                        "options": ["прокидаюся", "сплю"],
+                    }
+                ],
+            }
+        ],
+    )
+
+
+def test_validate_writer_json_artifact_accepts_error_correction_items() -> None:
+    """Boundary case for #1623 `_component_prop_gate` work: an
+    `error-correction` activity with the standard items array passes
+    top-level extra-field validation.
+
+    The nested `errorWord`/`correctForm` per item are not visible to this
+    layer (which only checks top-level activity keys); they are governed
+    by `_component_prop_gate` and the lesson-schema's `nested_types`.
+    """
+    linear_pipeline._validate_writer_json_artifact(
+        "activities.yaml",
+        [
+            {
+                "id": "act-9",
+                "type": "error-correction",
+                "instruction": "Виправте помилку.",
+                "items": [
+                    {
+                        "sentence": "Він вмиваєця.",
+                        "errorWord": "вмиваєця",
+                        "correctForm": "вмивається",
+                        "explanation": "Закінчення -ться.",
+                    }
+                ],
+            }
+        ],
+    )
+
+
+def test_validate_writer_json_artifact_rejects_nonsense_field() -> None:
+    """A field that exists in NO activity type's schema must fail with
+    a per-type-aware error message naming the activity type's allowed
+    fields, not the union of every type's fields.
+    """
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"activities\.yaml schema validation failed: item 1 has "
+        r"unexpected fields \['kek'\]; allowed: ",
+    ) as exc_info:
+        linear_pipeline._validate_writer_json_artifact(
+            "activities.yaml",
+            [{"id": "act-1", "type": "fill-in", "kek": "bogus"}],
+        )
+    # The message must list fill-in's allowed fields specifically — not
+    # the union of every activity type's fields.
+    msg = str(exc_info.value)
+    assert "items" in msg  # fill-in's required prop name
+    assert "groups" not in msg  # group-sort's prop, must not leak in
+
+
+def test_validate_writer_json_artifact_rejects_unknown_activity_type() -> None:
+    """A `type` field that isn't declared in `docs/lesson-schema.yaml`
+    fails with a targeted "unknown activity type" message — earlier and
+    more useful than a noisy `unexpected fields [<everything>]` report
+    against an empty allowed-set.
+    """
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"activities\.yaml schema validation failed: item 1 has "
+        r"unknown activity type 'mystery-type'",
+    ):
+        linear_pipeline._validate_writer_json_artifact(
+            "activities.yaml",
+            [{"id": "act-1", "type": "mystery-type"}],
+        )
+
+
+def test_validate_writer_json_artifact_requires_type_for_polymorphic() -> None:
+    """A polymorphic schema cannot resolve allowed fields without `type`;
+    fail with a clear required-field error before extras-checking.
+    """
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"requires type as a non-empty string",
+    ):
+        linear_pipeline._validate_writer_json_artifact(
+            "activities.yaml",
+            [{"id": "act-1", "type": "   "}],
+        )
+
+
 def test_validate_writer_json_artifact_error_messages_include_actual_value() -> None:
     """Schema validation errors must include the actual value/type for redispatch.
 

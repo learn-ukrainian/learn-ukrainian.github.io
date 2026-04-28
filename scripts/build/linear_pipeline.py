@@ -57,25 +57,27 @@ WRITER_ARTIFACTS = (
 class JsonArtifactSchema:
     """Minimal runtime schema for writer JSON artifacts.
 
-    Two extra-key policies are supported via `optional_item_fields`:
+    Two extra-key policies are supported:
 
     - Tight schemas (vocabulary, resources): list every legitimate field in
       `required_item_fields` + `optional_item_fields`. Any other key is
       treated as a hallucinated field and rejected — without this, a writer
       that emits `{"lemma": ..., "translation": ..., "kek": "..."}` would
       silently leak `kek` into the artifact.
-    - Polymorphic schemas (activities): the per-type schema (fields used by
-      `fill-in` vs `quiz` vs `error-correction` etc.) is enforced later by
-      `_component_prop_gate` against `docs/lesson-schema.yaml`. The parser-
-      level schema here lists only the fields common to all activity types
-      and leaves `optional_item_fields` permissive enough to accept any of
-      the known per-type fields, so type-specific keys aren't mis-flagged
-      as hallucinated.
+    - Polymorphic schemas (activities): set
+      `per_type_extras_from_lesson_schema=True`. The allowed extra fields
+      for each item are derived from `docs/lesson-schema.yaml` using the
+      item's `type` discriminator (see `_activity_type_field_whitelist`).
+      `optional_item_fields` is unused in this mode; per-type lookup
+      replaces it. The same `lesson-schema.yaml` is the source of truth
+      for `_component_prop_gate` (required-prop validation), so both gates
+      stay in lockstep with no duplicated whitelist drift.
     """
 
     root_type: type
     required_item_fields: Mapping[str, type]
     optional_item_fields: frozenset[str] = frozenset()
+    per_type_extras_from_lesson_schema: bool = False
 
 
 # Single source of truth for which artifacts use strict JSON: the keys of
@@ -89,37 +91,11 @@ WRITER_JSON_SCHEMAS: dict[str, JsonArtifactSchema] = {
             "id": str,
             "type": str,
         },
-        # Polymorphic — per-activity-type fields enforced by
-        # `_component_prop_gate` against `docs/lesson-schema.yaml`. This
-        # set lists fields known to appear in some activity type so the
-        # strict-extra-keys gate doesn't misfire on legitimate per-type
-        # content. New activity types may need additions here.
-        optional_item_fields=frozenset({
-            "title",
-            "instruction",
-            "items",
-            "passage",
-            "sentences",
-            "questions",
-            "options",
-            "pairs",
-            "prompt",
-            "answer",
-            "statement",
-            "question",
-            "isCorrect",
-            "correctAnswer",
-            "correct_order",
-            "source",
-            "target",
-            "sentence",
-            "translation",
-            "error",
-            "correction",
-            "note",
-            "hints",
-            "tags",
-        }),
+        # Polymorphic — per-activity-type allowed fields are sourced from
+        # `docs/lesson-schema.yaml` via `_activity_type_field_whitelist()`.
+        # `optional_item_fields` is unused in this mode; the per-type
+        # whitelist replaces it. See `_validate_writer_json_artifact`.
+        per_type_extras_from_lesson_schema=True,
     ),
     "vocabulary.yaml": JsonArtifactSchema(
         root_type=list,
@@ -923,13 +899,45 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
         f"add per-root-type handling if {schema.root_type.__name__} is added"
     )
 
-    allowed_fields = set(schema.required_item_fields) | schema.optional_item_fields
+    per_type_fields: dict[str, frozenset[str]] | None = None
+    if schema.per_type_extras_from_lesson_schema:
+        per_type_fields = _activity_type_field_whitelist()
+
+    static_allowed_fields = (
+        set(schema.required_item_fields) | schema.optional_item_fields
+    )
+    required_field_names = set(schema.required_item_fields)
+
     for index, item in enumerate(parsed, start=1):
         if not isinstance(item, dict):
             raise LinearPipelineError(
                 f"{artifact} schema validation failed: item {index} must be "
                 f"object, got {type(item).__name__}"
             )
+
+        if per_type_fields is None:
+            allowed_fields = static_allowed_fields
+        else:
+            # Polymorphic items: the allowed-field set depends on the `type`
+            # discriminator. Validate `type` early so the extra-keys error
+            # message can name the actual activity type — and so an unknown
+            # type fails with a targeted message instead of a noisy
+            # "unexpected fields [...everything...]" report.
+            activity_type = item.get("type")
+            if not isinstance(activity_type, str) or not activity_type.strip():
+                raise LinearPipelineError(
+                    f"{artifact} schema validation failed: item {index} "
+                    f"requires type as a non-empty string "
+                    f"(got {type(activity_type).__name__}: {activity_type!r})"
+                )
+            type_str = activity_type.strip()
+            if type_str not in per_type_fields:
+                raise LinearPipelineError(
+                    f"{artifact} schema validation failed: item {index} has "
+                    f"unknown activity type {type_str!r}; "
+                    f"known types: {sorted(per_type_fields)}"
+                )
+            allowed_fields = required_field_names | per_type_fields[type_str]
 
         # Reject hallucinated fields. Without this, a writer that emits
         # `{"lemma": ..., "translation": ..., "kek": "..."}` for vocabulary
@@ -959,6 +967,51 @@ def _validate_writer_json_artifact(artifact: str, parsed: Any) -> None:
                     f"{artifact} schema validation failed: item {index} "
                     f"requires {field} as a non-empty string (got empty/whitespace)"
                 )
+
+
+# Authoring-level fields accepted on every activity item regardless of
+# its `type`, in addition to the per-type props sourced from
+# `docs/lesson-schema.yaml`. These are NOT React-component props — they
+# are consumed by the MDX assembler before render. Currently:
+#   `title` — used by `_*_to_mdx` in `scripts/yaml_activities.py` to emit
+#             the `### {title}` heading above each activity component.
+# If you find yourself adding more, prefer plumbing the field into
+# `lesson-schema.yaml` instead so the per-type whitelist owns it.
+_UNIVERSAL_ACTIVITY_OPTIONAL_FIELDS: frozenset[str] = frozenset({"title"})
+
+
+def _activity_type_field_whitelist() -> dict[str, frozenset[str]]:
+    """Return per-activity-type allowed top-level fields.
+
+    For each component in `docs/lesson-schema.yaml` with a non-null
+    `activity_type`, returns the union of its `props.required` and
+    `props.optional` names plus `_UNIVERSAL_ACTIVITY_OPTIONAL_FIELDS`.
+
+    The lesson-schema is the same source of truth `_component_prop_gate`
+    uses for required-prop validation; this loader extends it to extra-
+    field validation. Keeping both gates pointed at the same file avoids
+    drift between "what the writer is allowed to emit" and "what the
+    renderer can consume".
+    """
+    schema = load_yaml(PROJECT_ROOT / "docs" / "lesson-schema.yaml")
+    components = schema.get("components", {}) if isinstance(schema, dict) else {}
+    result: dict[str, frozenset[str]] = {}
+    for data in components.values():
+        if not isinstance(data, dict):
+            continue
+        activity_type = data.get("activity_type")
+        if not isinstance(activity_type, str) or not activity_type:
+            continue
+        props = data.get("props", {}) or {}
+        names: set[str] = set(_UNIVERSAL_ACTIVITY_OPTIONAL_FIELDS)
+        for section in ("required", "optional"):
+            for prop in props.get(section, []) or []:
+                if isinstance(prop, dict):
+                    name = prop.get("name")
+                    if isinstance(name, str):
+                        names.add(name)
+        result[activity_type] = frozenset(names)
+    return result
 
 
 def _strip_outer_code_fence(text: str) -> str:
