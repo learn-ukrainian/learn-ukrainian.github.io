@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -20,12 +19,6 @@ from build.research.build_knowledge_packet import (
     _is_exercise_chunk,
     build_packet,
 )
-
-
-@pytest.fixture(autouse=True)
-def mock_qdrant_liveness():
-    with patch("build.research.build_knowledge_packet._verify_qdrant_liveness"):
-        yield
 
 # --- Unit tests ---
 
@@ -194,7 +187,7 @@ def test_heuristic_reranking_reorders_results():
          "score": 0.85, "chunk_id": "c2", "page": "2"},
     ]
 
-    def mock_search(query, grade=None, limit=5, **kwargs):
+    def mock_search(query, grade=None, limit=5):
         return [dict(h) for h in hits]  # Return copies
 
     with _patch("build.research.build_knowledge_packet._search_rag.__wrapped__", mock_search, create=True):
@@ -213,7 +206,7 @@ def test_heuristic_reranking_reorders_results():
 # --- Integration test with mocked RAG ---
 
 
-def _mock_search_text(query, grade=None, limit=5, **kwargs):
+def _mock_search_text(query, grade=None, limit=5):
     """Return fake RAG results for testing."""
     return [
         {
@@ -256,7 +249,7 @@ def test_build_packet_structure(tmp_path):
     plan_path.write_text(yaml.dump(plan, allow_unicode=True), "utf-8")
 
     with patch("build.research.build_knowledge_packet._search_rag", _mock_search_text):
-        result = build_packet(plan_path, allow_degraded_rag=True)
+        result = build_packet(plan_path)
 
     # Check structure
     assert "# Knowledge Packet: Test Module" in result
@@ -292,7 +285,7 @@ def test_build_packet_no_rag(tmp_path):
         raise ConnectionError("RAG not running")
 
     with patch("build.research.build_knowledge_packet._search_rag", _failing_search):
-        result = build_packet(plan_path, allow_degraded_rag=True)
+        result = build_packet(plan_path)
 
     # Should still produce output without crashing
     assert "# Knowledge Packet: Test Module" in result
@@ -341,7 +334,7 @@ def test_build_packet_includes_miyklas_section(tmp_path):
         patch("build.research.build_knowledge_packet._search_rag", _mock_search_text),
         patch("build.miyklas._load_index", return_value=list(_FAKE_MIYKLAS_INDEX)),
     ):
-        result = build_packet(plan_path, allow_degraded_rag=True)
+        result = build_packet(plan_path)
 
     assert "МійКлас Grammar References" in result
     assert "Голосні й приголосні звуки" in result
@@ -373,7 +366,7 @@ def test_build_packet_no_miyklas_when_no_grammar_match(tmp_path):
         patch("build.research.build_knowledge_packet._search_rag", _mock_search_text),
         patch("build.miyklas._load_index", return_value=list(_FAKE_MIYKLAS_INDEX)),
     ):
-        result = build_packet(plan_path, allow_degraded_rag=True)
+        result = build_packet(plan_path)
 
     assert "МійКлас Grammar References" not in result
 
@@ -407,7 +400,7 @@ def test_build_packet_miyklas_failure_graceful(tmp_path):
         patch("build.research.build_knowledge_packet._search_rag", _mock_search_text),
         patch("build.miyklas.build_miyklas_knowledge_section", side_effect=_failing_miyklas),
     ):
-        result = build_packet(plan_path, allow_degraded_rag=True)
+        result = build_packet(plan_path)
 
     # Should still produce a valid packet without МійКлас
     assert "# Knowledge Packet: Test Fallback" in result
@@ -442,7 +435,7 @@ def test_build_packet_miyklas_section_before_footer(tmp_path):
         patch("build.research.build_knowledge_packet._search_rag", _mock_search_text),
         patch("build.miyklas._load_index", return_value=list(_FAKE_MIYKLAS_INDEX)),
     ):
-        result = build_packet(plan_path, allow_degraded_rag=True)
+        result = build_packet(plan_path)
 
     # МійКлас appears after references section and before footer
     miyklas_pos = result.index("МійКлас Grammar References")
