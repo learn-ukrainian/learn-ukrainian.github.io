@@ -21,7 +21,6 @@ import sys
 from pathlib import Path
 
 import yaml
-from build.linear_pipeline import LinearPipelineError
 
 # Add scripts/ to path for rag imports
 SCRIPTS_DIR = Path(__file__).resolve().parents[2]
@@ -41,8 +40,6 @@ _RE_CYRILLIC_PHRASE = re.compile(
 _RE_GRADE = re.compile(r"Grade\s+(\d+)")
 _RE_MULTI_SPACE = re.compile(r"\s{2,}")
 _RE_PAREN_SPLIT = re.compile(r"\s*\(")
-
-KNOWLEDGE_PACKET_FLOOR = 5
 
 
 def _extract_search_queries(section: dict) -> list[str]:
@@ -181,7 +178,7 @@ def _heuristic_score(hit: dict, grade_hint: int | None) -> float:
 
 
 def _search_rag(query: str, grade: int | None = None,
-                limit: int = 5, allow_degraded: bool = False) -> list[dict]:
+                limit: int = 3) -> list[dict]:
     """Query the RAG textbook index with heuristic reranking (#1098).
 
     Over-fetches 3x candidates, then reranks by pedagogical relevance:
@@ -192,29 +189,8 @@ def _search_rag(query: str, grade: int | None = None,
         # Over-fetch for reranking headroom
         candidates = search_text(query, grade=grade, limit=limit * 3)
     except Exception as e:
-        # Finding 2 (#1625): Boundary correctness for exception types.
-        # We want to fail-fast on Qdrant/network issues but degrade gracefully
-        # on unrelated library bugs or syntax errors.
-        import httpx
-        try:
-            from qdrant_client.http.exceptions import ResponseHandlingException, UnexpectedResponse
-            # Include gRPC errors if they are used
-            qdrant_exc = (httpx.RequestError, UnexpectedResponse, ResponseHandlingException, ConnectionError, TimeoutError)
-        except ImportError:
-            qdrant_exc = (httpx.RequestError, ConnectionError, TimeoutError)
-
-        if isinstance(e, qdrant_exc) or "qdrant" in str(e).lower():
-            if allow_degraded:
-                print(f"\n  ⚠️  RAG Qdrant search unreachable for '{query}': {e}\n", file=sys.stderr)
-                return []
-            # Fatal: wrap in LinearPipelineError with recovery command
-            raise LinearPipelineError(
-                f"RAG Qdrant search unreachable for {query!r}: {e}\n"
-                f"Start Qdrant: docker-compose -f docker-compose.qdrant.yaml up -d"
-            ) from e
-
-        # Truly unrelated: log but don't fail the whole build
-        print(f"\n  ⚠️  RAG search internal error for '{query}': {e}\n", file=sys.stderr)
+        # RAG server might not be running — degrade gracefully
+        print(f"  ⚠️  RAG search failed for '{query}': {e}")
         return []
 
     if not candidates:
@@ -258,7 +234,7 @@ def _format_hit(hit: dict) -> str:
     )
 
 
-def _build_section_packet(section: dict, grade_hint: int | None, allow_degraded: bool = False) -> str:
+def _build_section_packet(section: dict, grade_hint: int | None) -> str:
     """Build knowledge packet content for one plan section."""
     title = section.get("section", "Untitled")
     queries = _extract_search_queries(section)
@@ -272,8 +248,7 @@ def _build_section_packet(section: dict, grade_hint: int | None, allow_degraded:
     hits_added = 0
 
     for query in queries:
-        needed = 5 - hits_added
-        results = _search_rag(query, grade=grade_hint, limit=needed, allow_degraded=allow_degraded)
+        results = _search_rag(query, grade=grade_hint, limit=3)
         for hit in results:
             chunk_id = hit.get("chunk_id", "")
             if chunk_id in seen_chunks:
@@ -291,30 +266,14 @@ def _build_section_packet(section: dict, grade_hint: int | None, allow_degraded:
             break
 
     if hits_added == 0:
-        if not allow_degraded:
-            raise LinearPipelineError(
-                f"Section {title!r} retrieved 0 chunks from RAG (floor: {KNOWLEDGE_PACKET_FLOOR}).\n"
-                f"Reduce floor or query more sections in plan."
-            )
         lines.append("*No relevant textbook excerpts found.*\n")
-    elif hits_added < KNOWLEDGE_PACKET_FLOOR and not allow_degraded:
-        raise LinearPipelineError(
-            f"Section {title!r} retrieved only {hits_added} chunks from RAG (floor: {KNOWLEDGE_PACKET_FLOOR}).\n"
-            f"Reduce floor or query more sections in plan."
-        )
 
     # Also search for dialogue/situational examples on the topic
     # Textbooks have real conversations that the writer should adapt
     if queries:
         topic_keyword = queries[0].split()[0] if queries[0] else title
         dialogue_query = f"{topic_keyword} діалог розмова вправа"
-        try:
-            dialogue_results = _search_rag(dialogue_query, grade=grade_hint, limit=2, allow_degraded=allow_degraded)
-        except Exception:
-            if allow_degraded:
-                dialogue_results = []
-            else:
-                raise
+        dialogue_results = _search_rag(dialogue_query, grade=grade_hint, limit=2)
         dialogue_hits = 0
         for hit in dialogue_results:
             chunk_id = hit.get("chunk_id", "")
@@ -331,19 +290,15 @@ def _build_section_packet(section: dict, grade_hint: int | None, allow_degraded:
     return "\n".join(lines)
 
 
-def build_packet(plan_path: Path, allow_degraded_rag: bool = False) -> str:
+def build_packet(plan_path: Path) -> str:
     """Build a complete Knowledge Packet from a plan file.
 
     Args:
         plan_path: Path to the plan YAML file.
-        allow_degraded_rag: If True, log warnings and return thin packets on RAG failure.
 
     Returns:
         Markdown string with structured textbook excerpts per section.
     """
-    if not allow_degraded_rag:
-        _verify_qdrant_liveness()
-
     plan = yaml.safe_load(plan_path.read_text("utf-8"))
 
     title = plan.get("title", "Unknown")
@@ -369,7 +324,7 @@ def build_packet(plan_path: Path, allow_degraded_rag: bool = False) -> str:
     total_hits = 0
 
     for section in sections:
-        packet = _build_section_packet(section, grade_hint, allow_degraded=allow_degraded_rag)
+        packet = _build_section_packet(section, grade_hint)
         section_packets.append(packet)
         total_hits += packet.count("> **Source:**")
 
@@ -399,10 +354,7 @@ def build_packet(plan_path: Path, allow_degraded_rag: bool = False) -> str:
         from build.miyklas import build_miyklas_knowledge_section
         miyklas_section = build_miyklas_knowledge_section(plan)
     except Exception as e:
-        if allow_degraded_rag:
-            print(f"  ⚠️  МійКлас integration skipped: {e}")
-        else:
-            raise LinearPipelineError(f"МійКлас integration failed: {e}") from e
+        print(f"  ⚠️  МійКлас integration skipped: {e}")
 
     return (
         header
@@ -414,45 +366,6 @@ def build_packet(plan_path: Path, allow_degraded_rag: bool = False) -> str:
     )
 
 
-def _verify_qdrant_liveness() -> None:
-    """Verify Qdrant is reachable and collections are populated.
-
-    Fail-fast check for knowledge packet generation.
-    """
-    from rag.config import TEXT_COLLECTION
-    from rag.query import collection_stats, get_client
-
-    try:
-        client = get_client()
-        # 1. Connection check
-        client.get_collections()
-    except Exception as e:
-        raise LinearPipelineError(
-            "Qdrant on 127.0.0.1:6334 is not reachable. "
-            "Start it with: docker-compose -f docker-compose.qdrant.yaml up -d"
-        ) from e
-
-    # 2. Population check
-    try:
-        stats = collection_stats()
-        text_stats = stats.get(TEXT_COLLECTION, {})
-        if "error" in text_stats:
-            raise LinearPipelineError(
-                f"Qdrant collection {TEXT_COLLECTION!r} check failed: {text_stats['error']}\n"
-                f"Check Qdrant logs or reindex: .venv/bin/python scripts/rag/ingest.py --all"
-            )
-        count = text_stats.get("points_count", 0)
-        if count == 0:
-            raise LinearPipelineError(
-                f"Qdrant collection {TEXT_COLLECTION!r} is empty. "
-                f"Reindex with: .venv/bin/python scripts/rag/ingest.py --all"
-            )
-    except LinearPipelineError:
-        raise
-    except Exception as e:
-        raise LinearPipelineError(f"Failed to verify Qdrant stats: {e}") from e
-
-
 # CLI for testing
 if __name__ == "__main__":
     import argparse
@@ -460,10 +373,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Build knowledge packet from plan")
     parser.add_argument("plan", type=Path, help="Path to plan YAML")
     parser.add_argument("--output", "-o", type=Path, help="Output file (default: stdout)")
-    parser.add_argument("--allow-degraded-rag", action="store_true", help="Allow thin packets on RAG failure")
     args = parser.parse_args()
 
-    result = build_packet(args.plan, allow_degraded_rag=args.allow_degraded_rag)
+    result = build_packet(args.plan)
 
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

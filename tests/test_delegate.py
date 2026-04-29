@@ -24,12 +24,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import delegate
 
 
-@pytest.fixture(autouse=True)
-def mock_qdrant_liveness():
-    with patch("delegate._provision_qdrant_alive"):
-        yield
-
-
 @pytest.fixture
 def tmp_tasks_dir(tmp_path, monkeypatch):
     """Redirect delegate._TASKS_DIR to a tmp path so tests don't pollute
@@ -689,11 +683,10 @@ def _make_run_stub(
     return calls, fake_run
 
 
-def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, monkeypatch, capsys):
     import argparse
 
     recorded_prompt: dict[str, str] = {}
-    wt_path = tmp_path / "codex-1383"
 
     class _FakeStdin:
         def write(self, data):
@@ -719,7 +712,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
         mode="danger",
         model=None,
         cwd=None,
-        worktree=str(wt_path),
+        worktree=".worktrees/codex-1383",
         base="main",
         hard_timeout=3600,
     )
@@ -731,13 +724,13 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     assert state is not None
     assert state["status"] == "spawning"
     assert state["worktree_branch"] == "codex/issue-1383-smoke"
-    assert state["worktree_path"] == str(wt_path.resolve())
-    assert state["cwd"] == str(wt_path.resolve())
+    assert state["worktree_path"].endswith(".worktrees/codex-1383")
+    assert state["cwd"].endswith(".worktrees/codex-1383")
     assert state["pid"] == 24680
     assert state["worktree_base_sha"] == "deadbeef"
     assert state["worktree_reused"] is False
     assert "delegate worktree" in recorded_prompt["text"]
-    assert str(wt_path) in recorded_prompt["text"]
+    assert ".worktrees/codex-1383" in recorded_prompt["text"]
     # At minimum: git fetch + git rev-parse --verify + git worktree add + git rev-parse HEAD.
     assert any(c[:3] == ["git", "worktree", "add"] for c in calls)
     assert any(c[:2] == ["git", "fetch"] for c in calls)

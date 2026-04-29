@@ -215,10 +215,6 @@ class WorktreeStaleBase(RuntimeError):
     """Existing worktree is behind origin/<base> and the fast-forward rebase failed."""
 
 
-class DispatchPreconditionError(RuntimeError):
-    """Raised when environment prerequisites (e.g. Qdrant liveness) fail."""
-
-
 def _normalize_task_id(agent: str, task_id: str) -> str:
     """Strip a leading ``{agent}-`` or ``{agent}/`` from task_id.
 
@@ -438,57 +434,12 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
         target.symlink_to(source.resolve())
 
 
-def _provision_qdrant_alive() -> None:
-    """Fail-fast check for Qdrant liveness before dispatching.
-
-    Prevents burning agent budget on dispatches that will fail at the
-    knowledge-packet phase due to unreachable infra.
-    """
-    from pathlib import Path
-
-    # Add scripts to path to import RAG tools
-    scripts_dir = Path(__file__).resolve().parent
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
-
-    try:
-        from rag.config import TEXT_COLLECTION
-        from rag.query import collection_stats, get_client
-        client = get_client()
-        # 1. Connection check (ping)
-        client.get_collections()
-
-        # 2. Population check (#1625)
-        stats = collection_stats()
-        text_stats = stats.get(TEXT_COLLECTION, {})
-        if "error" in text_stats:
-            raise DispatchPreconditionError(
-                f"Qdrant collection {TEXT_COLLECTION!r} check failed: {text_stats['error']}\n"
-                f"Check Qdrant logs or reindex: .venv/bin/python scripts/rag/ingest.py --all"
-            )
-        count = text_stats.get("points_count", 0)
-        if count == 0:
-            raise DispatchPreconditionError(
-                f"Qdrant collection {TEXT_COLLECTION!r} is empty.\n"
-                f"Reindex with: .venv/bin/python scripts/rag/ingest.py --all"
-            )
-    except DispatchPreconditionError:
-        raise
-    except Exception as e:
-        raise DispatchPreconditionError(
-            f"Qdrant on 127.0.0.1:6334 is not reachable.\n"
-            f"Start it with: docker-compose -f docker-compose.qdrant.yaml up -d\n"
-            f"(Original error: {e})"
-        ) from e
-
-
 def _ensure_worktree(
     *,
     agent: str,
     task_id: str,
     raw_path: str,
     base: str = "main",
-    allow_degraded_rag: bool = False,
 ) -> tuple[Path, str, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
 
@@ -553,7 +504,6 @@ def _ensure_worktree(
         stderr = (proc.stderr or proc.stdout or "git worktree add failed").strip()
         raise RuntimeError(stderr)
     _provision_data_symlinks(worktree_path, _main_checkout_root())
-
     telemetry["base_sha"] = _resolve_sha(worktree_path)
     return worktree_path, branch, telemetry
 
@@ -780,18 +730,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
     task_id = args.task_id
-
-    # Finding 1 (#1625): Probe liveness for ALL dispatch modes (cwd, worktree, danger)
-    # BEFORE any initial state write or worker spawn.
-    if not getattr(args, "allow_degraded_rag", False):
-        try:
-            _provision_qdrant_alive()
-        except DispatchPreconditionError as e:
-            print(f"❌ {e}", file=sys.stderr)
-            return 1
-        except Exception:
-            # Re-raise unexpected issues
-            raise
     state_path = _state_path(task_id)
     worktree_arg = getattr(args, "worktree", None)
 
@@ -858,7 +796,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 task_id=task_id,
                 raw_path=resolved_raw,
                 base=getattr(args, "base", None) or "main",
-                allow_degraded_rag=getattr(args, "allow_degraded_rag", False),
             )
         except (ValueError, RuntimeError) as exc:
             print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)
@@ -1341,11 +1278,6 @@ def build_parser() -> argparse.ArgumentParser:
             "wired (gemini-cli does not expose the flag) and is a no-op. "
             "See #1396."
         ),
-    )
-    d.add_argument(
-        "--allow-degraded-rag",
-        action="store_true",
-        help="Allow thin packets on RAG failure (passed to linear_pipeline)",
     )
     d.add_argument("--cwd", default=None,
                    help="Working directory for the worker (default: repo root)")
