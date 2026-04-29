@@ -41,3 +41,32 @@ yt-dlp>=2026.3.17
 
 # Build utilities
 jinja2>=3.1
+
+# ----------------------------------------------------------------------
+# Known-harmless `pip check` warnings (DO NOT CHASE)
+# ----------------------------------------------------------------------
+# After a clean install of requirements-lock.txt (`pip install --no-deps
+# -r requirements-lock.txt`, the pattern CI uses), `pip check` will flag
+# three over-strict UPSTREAM pins. All three are runtime-verified safe:
+#
+#   1. marker-pdf 1.10.2 → anthropic<0.47.0,>=0.46.0 (we have 0.97.0+)
+#      We use marker-pdf only via `extract_markdown_ocr` in
+#      scripts/rag/extract_text.py with default OCR mode. The anthropic
+#      import in marker-pdf is gated by `use_llm=True` which we never
+#      pass. The constraint is dead-letter for our import path.
+#
+#   2. marker-pdf 1.10.2 → regex<2025.0.0,>=2024.4.28 (we have 2026+)
+#      regex API is stable across these versions for marker-pdf's
+#      tokenization usage. Verified at runtime: marker imports clean.
+#
+#   3. pycookiecheat 0.8.0 → cryptography==43.* (we have 47.x)
+#      Used only at scripts/wiki/fetch_external_sources.py:500 for
+#      browser cookie extraction. Verified runtime import works at
+#      cryptography 47. pycookiecheat 0.8.0 IS the latest release —
+#      no upstream fix exists yet.
+#
+# All three packages have NOT released a version that relaxes the pin.
+# The lockfile carries the newer versions because: (a) upstream pins are
+# provably over-strict for our usage; (b) downgrading to satisfy them
+# would revert security/feature bumps in cryptography/anthropic/regex
+# that ARE used elsewhere. Hence `--no-deps` install in CI/local.
