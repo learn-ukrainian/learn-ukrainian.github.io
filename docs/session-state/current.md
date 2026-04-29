@@ -1,22 +1,23 @@
-# Current — multi-agent index (2026-04-28)
+# Current — multi-agent index (2026-04-29)
 
-> **Repo state: CLEAN.** As of session close 2026-04-28, no active agent
-> threads, no in-flight builds, working tree empty, HEAD = origin/main.
-> The "multi-agent concurrent writes" warning that previous current.md
-> versions carried no longer applies — this is now a single-thread
-> baseline. If a future session forks parallel work again, restore the
-> warning.
+> **Repo state: CLEAN.** As of session close 2026-04-29, no active agent
+> threads, no in-flight builds, working tree empty, HEAD = origin/main
+> at `f4df43af06`. The "multi-agent concurrent writes" warning that
+> previous current.md versions carried no longer applies — this is now
+> a single-thread baseline. If a future session forks parallel work
+> again, restore the warning.
 
 ## Latest handoff (read this first)
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **Wiki cleanup + lit-* completion + hygiene flush** | **`docs/session-state/2026-04-28-wiki-cleanup-and-hygiene-flush.md`** | **Closed clean** |
+| **Phase 4 architectural correction + ADR-008 PROPOSED** | **`docs/session-state/2026-04-29-phase-4-architectural-correction-and-adr-008.md`** | **Closed clean — ADR-008 awaits user signoff to flip PROPOSED → ACCEPTED; #1631 wiki migration + #1632 ADR-008 impl pending dispatch** |
 
 ## Predecessor chain (most-recent first)
 
 | Thread | Handoff |
 |---|---|
+| Wiki cleanup + lit-* completion + hygiene flush | `2026-04-28-wiki-cleanup-and-hygiene-flush.md` |
 | EPIC #1577 reboot — Round 3.5 shipped, decision pending on user re-run | `2026-04-26-session-close.md` |
 | Round 3.5 prompt-tighten shipped (#1603) — full detail | `2026-04-26-round-3.5-shipped.md` |
 | Round 3 QG bugfixes shipped (#1599) | `2026-04-26-qg-bugfix-shipped.md` |
@@ -31,8 +32,8 @@
 ## Cold-start protocol
 
 1. Read this index.
-2. Open `2026-04-28-wiki-cleanup-and-hygiene-flush.md` for the latest
-   state and open questions.
+2. Open `2026-04-29-phase-4-architectural-correction-and-adr-008.md` for
+   the latest state and open questions.
 3. If picking up a specific Phase-4 thread, also open the relevant
    predecessor (mostly `2026-04-26-round-3.5-shipped.md` for the round
    3.5 vs 4 decision).
@@ -42,11 +43,36 @@
 
 ## Cross-thread notes (still active)
 
-- **Phase 4 round 3.5 SHIPPED** (`9294dedbbe`, #1603). **Decision
-  pending:** did Gemini comply with the anti-meta-narration directives
-  on a fresh A1/20 build? If yes → 3.5 is canonical, Phase 5 fan-out
-  begins. If no → empirical bakeoff trigger for round 4 (claude-tools
-  vs gemini-tools). See `2026-04-26-round-3.5-shipped.md` decision table.
+- **Phase 4 round 3.5 verification = round-4 bakeoff trigger** —
+  shipped via #1621. Gemini-tools writer fails writer-discipline gates
+  (word_count short, meta-narration bypass via paragraph-level
+  rephrasing, JSX prop-stuffing for immersion gaming). Round-4 bakeoff
+  is filed as **#1622** but blocked on TWO prereqs: **#1631** (wiki
+  migration) and **#1632** (ADR-008 implementation). See
+  `2026-04-29-phase-4-architectural-correction-and-adr-008.md`.
+
+- **ADR-008 PROPOSED on main** (`f4df43af06`, PR #1633). Defines
+  per-gate bounded correction paths under four hard architectural
+  constraints (patch-bounded, full revalidation, pipeline-assisted
+  dictionary, one attempt per gate). Cross-agent reviewed by Gemini +
+  Codex; both REVISE on v1, v2 incorporates their findings. **Awaits
+  user signoff to flip PROPOSED → ACCEPTED.** Implementation tracked
+  at #1632. Refines but does NOT supersede ADR-007.
+
+- **V7 retrieval-layer drift identified** — `linear_pipeline.py` was
+  inadvertently calling V6-era Qdrant path (`scripts/rag/query.py`)
+  instead of V6's wiki path (`_build_wiki_packet` +
+  `compress_wiki_packet`). PR #1628 hardened the deprecated path; PR
+  #1630 reverted it. The real fix is **#1631 wiki migration**: port V6
+  wiki reader into linear_pipeline + use MCP sources for dictionary
+  verification. No Qdrant in the V7 architecture.
+
+- **Three-agent code dispatch pattern validated** (Codex/Claude/Gemini)
+  per user directive 2026-04-28. Empirical signal recorded in the
+  2026-04-29 handoff: Codex fastest one-shot for mechanical fixes;
+  Claude depth + iteration on architectural; Gemini functional but
+  hits rate limits + missing summary on cutoff (orchestrator must
+  reconstruct). Full quality/cost profile in handoff.
 
 - **Wiki rebuild fully landed.** All 8 lit-* tracks complete on main
   (435 articles), all other namespaces (academic, figures, folk,
@@ -72,20 +98,20 @@
 - **`~/.bash_secrets`** is where `GITHUB_TOKEN` lives. Not in any
   standard rc file. Source it manually before `gh` calls.
 
-- **a1/1 working tree** (`.worktrees/verify-a1-1-phaseA-v5`) has
-  user's preserved manual patches. Do NOT clobber.
+- **`experiments/phase-4/round-3.5/`** preserves the failed Gemini
+  round-3.5 outputs as evidence (per Codex REVISE finding 5 on PR
+  #1621). Useful for round-4 bakeoff comparison once #1622 fires.
 
-- **Main is at `aae45828a0`** as of 2026-04-28 session close.
+- **Main is at `f4df43af06`** as of 2026-04-29 session close.
   Sequence of recent main commits worth knowing:
+  - `f4df43af06` docs(adr): ADR-008 PROPOSED (#1633)
+  - `ad54161ec0` revert: Qdrant fail-fast on deprecated path (#1630)
+  - `b5d894d009` feat(qg): per-type extra-field validation (#1627)
+  - `ba90cf16cb` fix(infra): Qdrant fail-fast (#1628 — REVERTED by `ad54161ec0`)
+  - `e0f8db8fb1` fix(qg): VESUM gate skips errorWord (#1626)
+  - `253f3c00c4` feat(phase-4): A1/20 round-3.5 verification (#1621)
+  - `8189a58885` docs(session): handoff after wiki cleanup
   - `aae45828a0` chore(hygiene): clean working tree
-  - `192e5566d4` chore(wiki): complete lit-* rebuild
-  - `01c59ae43e` fix(hooks): pyenv-rehash auto-clean
-  - `1046b5a6e5` chore(wiki): include untracked rebuild artifacts
-  - `b92d82b434` chore(wiki): rebuild snapshot + drop lit-doc/lit-crimea
-  - `1be26297f0` docs(session): close addendum after round 3.5 (#1606)
-  - `9294dedbbe` feat(phase-4): round 3.5 prompt + whitelist (#1603)
-  - `a6b9e7f417` fix(phase-4): QG false-positive fixes (#1599)
-  - `3603f11774` feat(phase-4): strict-JSON writer contract (#1598)
 
 - **#1604 (open):** `PhraseTable` (and other vocabulary-tab activities)
   get `activity_type: null` in `lesson-schema.yaml`. Schema-generator
