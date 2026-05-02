@@ -195,12 +195,38 @@ gh issue view 1577  # active EPIC
 
 ---
 
+## Mid-session update — #1637 V7 CLI gap discovered + Codex dispatched
+
+After #1636 merge: discovered `linear_pipeline.py` has NO `__main__` — it's a pure library, no CLI wrapper. Phase 4 round-3 / round-3.5 used ad-hoc invocations that weren't committed. **POC step 3 ("run V7 on M20") is blocked until a CLI wrapper exists.**
+
+- Filed **#1637** with full spec mirroring v6_build.py's CLI surface.
+- Dispatched Codex (`task_id: codex-1637-v7-cli`, gpt-5.5 high, 90-min hard timeout) at session-end.
+- Brief: `/tmp/brief-1637-v7-cli.md` — ephemeral, but the issue body has equivalent specification.
+- Expected artifact: `scripts/build/v7_build.py` + `tests/build/test_v7_build_e2e.py` + new PR.
+
+### Autonomous actions Claude will take while user is away
+
+1. Monitor `batch_state/tasks/codex-1637-v7-cli.json` for state transition out of `running`.
+2. On completion: read final state, find new PR, fetch CI status.
+3. Dispatch Gemini for adversarial review (subscription, no Anthropic budget).
+4. If CI green + Gemini APPROVE: `gh pr merge {N} --squash --delete-branch` per memory rule #0H.
+5. If REVISE/REJECT or CI failure: file findings on the PR, idle for user.
+6. After merge: clean up worktree, comment on #1637 closure.
+7. **STOP** — POC step 3 (running V7 on M20) requires user-eval, not autonomous execution.
+
+If user returns and #1637 is merged, the executable next step is:
+```bash
+.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer gemini
+```
+Output goes to `curriculum/l2-uk-en/a1/my-morning/`. User then evaluates checkpoint A.
+
 ## Final state
 
-- **2 PRs merged this session** (#1635 confirmed, #1636 in CI as of write time)
-- **3 issues auto-closed** (#1631, #1625, #1629); #1632 pending
+- **2 PRs merged this session** ✅ #1635 (closes #1631 #1625 #1629) + #1636 (closes #1632)
+- **4 issues auto-closed** ✅ #1631, #1625, #1629, #1632
+- **1 NEW issue filed + dispatched** ✅ #1637 (V7 CLI wrapper) — Codex working on it autonomously
 - **#1577 EPIC comment posted + edited** with the canonical M20-anchor-first POC plan
-- **#1622 commented** with supersedance pointer
-- **HEAD = `0c42c13665`** at write time (will advance when #1636 merges)
+- **#1622 commented** with supersedance pointer (kept open as bakeoff-goal reference)
+- **HEAD = `81742658a0`** at write time (or whatever advances when #1637 merges autonomously)
 - **0 dirty files** in main checkout
-- **2 worktrees** still mounted (cleanup deferred to next session per the protocol above)
+- **0 worktrees** mounted in main (cleaned up post-merge); 1 mounted under `.worktrees/codex-1637-v7-cli` (auto-cleanup on PR merge)
