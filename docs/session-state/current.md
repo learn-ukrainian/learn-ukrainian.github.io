@@ -1,22 +1,18 @@
-# Current — multi-agent index (2026-04-30)
+# Current — multi-agent index (2026-05-02)
 
-> **Repo state: CLEAN.** As of session close 2026-04-30, no active agent
-> threads, no in-flight builds, working tree empty, HEAD = origin/main
-> at `143c955c40`. The "multi-agent concurrent writes" warning that
-> previous current.md versions carried no longer applies — this is now
-> a single-thread baseline. If a future session forks parallel work
-> again, restore the warning.
+> **Repo state: ACTIVE AUTONOMOUS RUN.** As of write time 2026-05-02 ~09:40 CET, user is going away for hours. Claude is in coordination-only mode (Anthropic budget hot, <10% weekly remaining for 2 days). #1635 merged; #1636 in CI awaiting merge. POC plan locked at #1577. No in-flight Codex/Gemini dispatches as of write time.
 
 ## Latest handoff (read this first)
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **Dependabot triage + lockfile fixes + UK framing-A clarification** | **`docs/session-state/2026-04-30-dependabot-lockfile-fixes-and-uk-framing-clarification.md`** | **Closed clean — 11 dependabot PRs merged, lockfile coherence fixed, #1634 filed for resolver migration; ADR-008 still PROPOSED awaiting user signoff; #1631 + #1632 still pending dispatch** |
+| **POC plan locked + #1631/#1632 prereqs merged** | **`docs/session-state/2026-05-02-poc-plan-locked-and-prereqs-merged.md`** | **#1635 merged (closes #1631 #1625 #1629); #1636 (closes #1632) CI in flight; M20-anchor-first POC plan posted to #1577 (replaces #1622 1-module bakeoff); pedagogy framing locked: three difficulty inflections + no-neutral-baseline rule** |
 
 ## Predecessor chain (most-recent first)
 
 | Thread | Handoff |
 |---|---|
+| Dependabot triage + lockfile fixes + UK framing-A clarification | `2026-04-30-dependabot-lockfile-fixes-and-uk-framing-clarification.md` |
 | Phase 4 architectural correction + ADR-008 PROPOSED | `2026-04-29-phase-4-architectural-correction-and-adr-008.md` |
 | Wiki cleanup + lit-* completion + hygiene flush | `2026-04-28-wiki-cleanup-and-hygiene-flush.md` |
 | EPIC #1577 reboot — Round 3.5 shipped, decision pending on user re-run | `2026-04-26-session-close.md` |
