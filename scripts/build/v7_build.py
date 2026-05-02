@@ -262,13 +262,22 @@ def main(argv: list[str] | None = None) -> int:
             writer,
             cwd=module_dir,
         )
-        artifacts = linear_pipeline.parse_writer_output(writer_output)
-        linear_pipeline.write_writer_artifacts(module_dir, artifacts)
+        # Save raw writer output + prompt + knowledge packet BEFORE parse so any
+        # parse failure is fully debuggable. Without this, a parse error like
+        # "Writer output contains unnamed fenced block at line 113" leaves
+        # nothing on disk to inspect — the writer_output is held only in memory
+        # and is lost on the LinearPipelineError raise.
+        (module_dir / "writer_output.raw.md").write_text(
+            writer_output,
+            encoding="utf-8",
+        )
+        (module_dir / "writer_prompt.md").write_text(prompt, encoding="utf-8")
         (module_dir / "knowledge_packet.md").write_text(
             knowledge_packet,
             encoding="utf-8",
         )
-        (module_dir / "writer_prompt.md").write_text(prompt, encoding="utf-8")
+        artifacts = linear_pipeline.parse_writer_output(writer_output)
+        linear_pipeline.write_writer_artifacts(module_dir, artifacts)
         _phase_done(phase, started_at, level=level, slug=slug, writer=writer)
 
         phase = "python_qg"
