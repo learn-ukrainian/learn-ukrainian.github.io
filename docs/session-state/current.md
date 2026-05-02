@@ -1,17 +1,18 @@
 # Current — multi-agent index (2026-05-02)
 
-> **Repo state: AUTONOMOUS RUN COMPLETE — IDLE FOR USER.** As of 2026-05-02 ~10:00 CET, autonomous run from the user-away window has fully completed per the handoff plan. **Three PRs landed**: #1635 (wiki+MCP retrieval), #1636 (ADR-008 per-gate correction), #1638 (V7 CLI wrapper). **Five issues closed**: #1631, #1625, #1629, #1632, #1637. Worktrees clean, main at `ebe5f98837`. **POC step 3 is now executable**: `.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer gemini-tools` runs the M20 anchor build. NEXT ACTION REQUIRES USER (POC checkpoint A is a user-eval, not autonomous).
+> **Repo state: ACTIVE — finishing #1639 + #1641.** As of 2026-05-02 ~14:00 CET, two thread arcs shipped today: (1) POC plan locked + V7 prereqs merged, (2) Multi-Agent Deliberation Protocol shipped + agents onboarded + protocol validated by catching its own gaps. Continuing into finishing #1639 ACs 8+10 (agent-runtime prelude, pending-decision validation) and #1641 (CI docs-only PR gap that hit twice today). POC step 3 (M20 anchor build) still on deck pending user "go" signal. Main at `efe1b96d9e`.
 
 ## Latest handoff (read this first)
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **POC plan locked + 3 PRs merged + V7 CLI ready** | **`docs/session-state/2026-05-02-poc-plan-locked-and-prereqs-merged.md`** | **#1635 + #1636 + #1638 ALL MERGED. POC step 3 unblocked. M20-anchor-first POC plan canonical at #1577 comment 4363291518. Pedagogy framing locked: three difficulty inflections + no-neutral-baseline rule + module_type architectural watch (deferred). User-eval checkpoint A pending on M20 build.** |
+| **Multi-Agent Deliberation Protocol shipped + onboarded + validated** | **`docs/session-state/2026-05-02-deliberation-protocol-shipped.md`** | **#1640 + #1642 merged (Codex scope field, Gemini false-consensus override + Claude fence fix). Protocol caught its own structural flaws in round-1 onboarding AND cross-review caught Gemini implementation bug. #1639 ACs 8+10 outstanding. #1641 NEW (CI gap) blocking docs-only PRs.** |
 
 ## Predecessor chain (most-recent first)
 
 | Thread | Handoff |
 |---|---|
+| POC plan locked + #1631/#1632/#1637 prereqs merged | `2026-05-02-poc-plan-locked-and-prereqs-merged.md` |
 | Dependabot triage + lockfile fixes + UK framing-A clarification | `2026-04-30-dependabot-lockfile-fixes-and-uk-framing-clarification.md` |
 | Phase 4 architectural correction + ADR-008 PROPOSED | `2026-04-29-phase-4-architectural-correction-and-adr-008.md` |
 | Wiki cleanup + lit-* completion + hygiene flush | `2026-04-28-wiki-cleanup-and-hygiene-flush.md` |
