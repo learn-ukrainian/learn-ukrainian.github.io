@@ -11,6 +11,7 @@ Scope of the 2026-04-22 repair pass:
 - `CI / Quality Gates (radon)`: evaluate only changed `scripts/**/*.py` files so historic complexity debt on untouched files does not block unrelated PRs.
 - `CI / No new root scripts`: diff only true `scripts/*.py` root files, not nested `scripts/**`.
 - `CI / Test (pytest)`: create a repo-local `.venv` in CI, install from `requirements-lock.txt`, force CPU `torch` wheels on GitHub-hosted Linux, and exclude non-hermetic integration files that require local corpora, generated review/orchestration artifacts, or sidecar tooling (`vesum.db`, `pdfinfo`, `codex`, `embed-venv`) that the runner does not provide.
+- `CI / Test (pytest)`: always emit the required PR check, but skip pytest successfully when only docs-only paths changed.
 
 Verification notes:
 
