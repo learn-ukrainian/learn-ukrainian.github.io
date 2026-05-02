@@ -332,11 +332,214 @@ def plan_check(plan_path: Path) -> dict[str, Any]:
     return plan
 
 
-def build_knowledge_packet(plan_path: Path) -> str:
-    """Retrieve the writer research packet using the existing RAG packet builder."""
-    from scripts.build.research.build_knowledge_packet import build_packet
+def build_knowledge_packet(
+    plan_path: Path | None = None,
+    *,
+    level: str | None = None,
+    slug: str | None = None,
+    plan: Mapping[str, Any] | None = None,
+) -> str:
+    """Build the writer knowledge packet from compiled wiki articles.
 
-    return build_packet(plan_path)
+    The legacy implementation delegated to
+    ``scripts.build.research.build_knowledge_packet`` and Qdrant. V7's source
+    of truth is the compiled wiki plus sibling source registries, so this
+    reader keeps the public return shape as markdown while removing the vector
+    retrieval dependency.
+    """
+    if plan is None:
+        if plan_path is None:
+            if level is None or slug is None:
+                raise LinearPipelineError(
+                    "build_knowledge_packet requires plan_path or level+slug"
+                )
+            plan_path = plan_path_for(level.lower(), slug)
+        plan_data = load_plan(plan_path)
+    else:
+        plan_data = dict(plan)
+
+    validate_plan(plan_data)
+    level_key = str(level or plan_data["level"]).lower()
+    slug_key = str(slug or plan_data["slug"]).strip()
+    if not slug_key:
+        raise LinearPipelineError("Plan slug must be non-empty")
+
+    wiki_packet = _build_wiki_packet(level_key, slug_key)
+
+    from scripts.build.phases.wiki_compressor import compress_wiki_packet
+
+    compressed = compress_wiki_packet(plan_data, wiki_packet)
+    return _render_wiki_knowledge_packet(plan_data, wiki_packet, compressed)
+
+
+def _build_wiki_packet(level: str, slug: str) -> str:
+    """Build raw wiki context from exact module article(s) and source registries."""
+    article_paths = _wiki_article_paths(level, slug)
+    if not article_paths:
+        raise LinearPipelineError(
+            f"No wiki article found for level={level!r}, slug={slug!r}"
+        )
+
+    from wiki.config import WIKI_DIR
+    from wiki.context import strip_meta
+    from wiki.sources_schema import load_sources_registry, registry_path_for
+
+    parts: list[str] = []
+    for article_path in article_paths:
+        rel_path = article_path.relative_to(WIKI_DIR)
+        content = strip_meta(article_path.read_text(encoding="utf-8"))
+        registry = load_sources_registry(registry_path_for(article_path))
+        source_summary = _format_wiki_sources(registry.sources)
+        source_block = f"\n\nSources: {source_summary}" if source_summary else ""
+        parts.append(
+            f"### Вікі: {rel_path}\n\n"
+            f"Article: `wiki/{rel_path}`\n\n"
+            f"{content}{source_block}"
+        )
+
+    body = "\n\n---\n\n".join(parts)
+    return (
+        "<wiki_context>\n"
+        "## Compiled Wiki Knowledge\n\n"
+        "The following project wiki articles provide the authoritative module "
+        "knowledge. They were compiled from textbooks, dictionaries, primary "
+        "sources, external articles, and Ukrainian wiki material. Use their "
+        "sibling `.sources.yaml` registries to resolve inline [S] citations.\n\n"
+        f"{body}\n"
+        "</wiki_context>"
+    )
+
+
+def _wiki_article_paths(level: str, slug: str) -> list[Path]:
+    """Return exact wiki article paths for a level/slug pair."""
+    from wiki.config import TRACK_DOMAINS, TRACK_WRITE_DOMAIN, WIKI_DIR
+
+    domains: list[str] = []
+    write_domain = TRACK_WRITE_DOMAIN.get(level)
+    if write_domain:
+        domains.append(write_domain)
+    domains.extend(TRACK_DOMAINS.get(level, []))
+    domains.append(level)
+
+    seen_domains: set[str] = set()
+    paths: list[Path] = []
+    seen_paths: set[Path] = set()
+    for domain in domains:
+        if not domain or domain in seen_domains:
+            continue
+        seen_domains.add(domain)
+        domain_dir = WIKI_DIR / domain
+        if not domain_dir.exists():
+            continue
+
+        direct = domain_dir / f"{slug}.md"
+        candidates = [direct] if direct.exists() else list(domain_dir.rglob(f"{slug}.md"))
+        for candidate in candidates:
+            if candidate.name == "index.md" or candidate in seen_paths:
+                continue
+            seen_paths.add(candidate)
+            paths.append(candidate)
+    return paths
+
+
+def _format_wiki_sources(sources: list[Any]) -> str:
+    """Render a compact source registry line for prompt inclusion."""
+    entries: list[str] = []
+    for source in sources:
+        details = [f"{source.id}={source.file}", f"type={source.type}"]
+        if source.title:
+            details.append(f"title={source.title}")
+        if source.page is not None:
+            details.append(f"page={source.page}")
+        if source.grade is not None:
+            details.append(f"grade={source.grade}")
+        if source.section_path:
+            details.append(f"section={source.section_path}")
+        entries.append(" (" + "; ".join(details) + ")")
+    return ", ".join(entries)
+
+
+def _render_wiki_knowledge_packet(
+    plan: Mapping[str, Any],
+    wiki_packet: str,
+    compressed: Mapping[str, Any],
+) -> str:
+    """Render raw and compressed wiki context as the writer packet."""
+    lines: list[str] = [
+        f"# Knowledge Packet: {plan['title']}",
+        "",
+        f"**Module:** {plan['module']} | **Level:** {plan['level']} | "
+        f"**Slug:** {plan['slug']}",
+        "**Retrieval:** compiled wiki + MCP sources, no Qdrant",
+        "",
+        "## Targeted Wiki Excerpts by Plan Section",
+        "",
+    ]
+
+    section_excerpts = compressed.get("section_excerpts") or {}
+    for section in plan.get("content_outline") or []:
+        title = str(section.get("section") or "").strip()
+        if not title:
+            continue
+        lines.append(f"### {title}")
+        lines.append("")
+        items = section_excerpts.get(title) or []
+        if not items:
+            lines.append("*No compressed wiki excerpt matched this section.*")
+            lines.append("")
+            continue
+        for item in items:
+            lines.append(f"- **{item['citation']}**")
+            lines.append(f"  {item['excerpt']}")
+            lines.append("")
+
+    anchors = compressed.get("factual_anchors") or []
+    if anchors:
+        lines.extend(["## Factual Anchors", ""])
+        for anchor in anchors:
+            lines.append(
+                f"- **{anchor['section']}** — {anchor['claim']} "
+                f"({anchor['citation']})"
+            )
+        lines.append("")
+
+    lines.extend(
+        [
+            "## MCP Dictionary Verification",
+            "",
+            "Use the canonical `sources` MCP tools for live dictionary checks:",
+            "- `mcp__sources__verify_lemma` for VESUM morphology and inflections.",
+            "- `mcp__sources__search_style_guide` for russianisms, surzhyk, "
+            "calques, and paronym-risk phrases.",
+            "- `mcp__sources__search_definitions` for СУМ-11 definitions and "
+            "usage disambiguation.",
+            "",
+            "Verify suspicious forms before using them in prose, vocabulary, "
+            "activities, or resources. Do not call legacy `scripts.rag` or "
+            "Qdrant retrieval for this packet.",
+            "",
+            "## Full Wiki Context",
+            "",
+            wiki_packet,
+            "",
+            "## Plan References",
+            "",
+        ]
+    )
+    for ref in plan.get("references") or []:
+        title = str(ref.get("title") or "").strip()
+        if not title:
+            continue
+        note = str(ref.get("notes") or "").strip()
+        url = str(ref.get("url") or "").strip()
+        line = f"- **{title}**"
+        if note:
+            line += f": {note}"
+        if url:
+            line += f" ({url})"
+        lines.append(line)
+
+    return "\n".join(lines).rstrip() + "\n"
 
 
 def render_phase_prompt(template_path: Path, context: Mapping[str, Any]) -> str:

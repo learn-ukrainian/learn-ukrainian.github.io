@@ -1,4 +1,9 @@
-"""CLI query tool for the RAG pipeline.
+"""Legacy CLI query tool for the Qdrant-backed RAG pipeline.
+
+Deprecated for module-build knowledge packets by #1631. New V7 linear
+pipeline packet generation reads compiled wiki articles plus sources MCP
+registries in ``scripts.build.linear_pipeline.build_knowledge_packet``.
+This module remains for older API, oneoff, and RAG-specific test consumers.
 
 Usage:
     # Hybrid text search
