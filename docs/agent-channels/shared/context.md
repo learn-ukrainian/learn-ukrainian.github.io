@@ -49,6 +49,23 @@ adversarial review between agents.
 - **Channel bridge (#1190):** `ab channel`, `ab p`, `ab post`, `ab discuss`
 - **GH issues as memory:** reference issue numbers in commits, close when all ACs met
 
+## Multi-agent deliberation protocol (2026-05-02 onward)
+
+`ab discuss` is the tool for design / framing / architecture / pedagogy decisions where any single agent reasoning alone has a known failure mode. **It is NOT a quorum** — Claude/Gemini/Codex have correlated training-data priors (e.g., Russian-imperial framings show up in all three). What it gives us: more angles per decision, adversarial pressure, and a written deliberation record.
+
+**When you (any agent) participate in a discussion:**
+
+- **End your response with `[AGREE]` if you agree with the prior round's converging position.** This short-circuits the discussion. Don't add `[AGREE]` if you have substantive new pushback — say what you'd change, then let the next round resolve.
+- **Surface options with explicit labels** (Option A / Option B / Option C) when you propose alternatives. Don't bury options in prose.
+- **State your rationale, not just your verdict.** "I prefer A because X" is the protocol. "I prefer A" alone is not.
+- **Push back on correlated-prior risks.** If you notice the discussion is converging on a position that smells like a training-data bias (Russian-imperial framing on Ukrainian topics, Western centrism on decolonization, etc.), explicitly flag it — you're the only check.
+
+**When the orchestrator (usually Claude) detects real disagreement OR multi-option output**, they emit a structured **Decision Card** (template in `docs/best-practices/agent-cooperation.md`) and route it to: inline chat (user online) / `docs/decisions/pending/{date}-{slug}.md` (user AFK) / GH issue with `decision-pending` label (multi-week call). User decides → orchestrator executes → file moves to canonical `docs/decisions/{date}-{slug}.md`.
+
+**Pending decisions are BLOCKING.** If `docs/decisions/pending/` is non-empty, do not start new work that could invalidate a pending decision. Surface it first.
+
+Full protocol: [`docs/best-practices/agent-cooperation.md`](../../best-practices/agent-cooperation.md) "Multi-Agent Deliberation" section.
+
 ## Active major workstreams
 
 - **#1190** — channel bridge rewrite (this one)
