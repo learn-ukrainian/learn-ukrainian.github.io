@@ -205,7 +205,20 @@ Most `ab discuss` runs converge with `[AGREE]` — orchestrator just executes th
 **Orchestrator recommendation:** A — {1-3 line rationale weighing the votes against project priors}
 
 **Awaiting:** user override (`go with B because…`) or `go` to proceed with the recommendation
-```
+
+### High-risk-track override (false-consensus failsafe)
+
+When all participating agents share the same underlying bias on a topic (e.g., Russian-imperial framing on Ukrainian topics, Western centrism on decolonization), an `[AGREE]` consensus is NOT a green light. It is exactly when the Decision Card mechanism is most needed and most likely to be bypassed.
+
+For high-risk tracks — **HIST, BIO, ISTORIO, LIT, OES, RUTH** (all decolonization-sensitive seminar tracks where Russian/Soviet-imperial framings are most ingrained in training data) — the orchestrator MUST apply at least one of the following failsafe mechanisms:
+
+- **Mechanism A (Force-emit Decision Card on `[AGREE]`):** If `ab discuss` runs on a topic touching any high-risk track and converges with `[AGREE]`, the orchestrator emits a Decision Card anyway. The question is framed as "agents converged on X — but consensus on this track is suspect; user should sanity-check." The user can quickly approve or override.
+- **Mechanism B (Inject domain-specific bias checklist):** For high-risk tracks, the `ab discuss` prompt is augmented with a short bias checklist explicitly provoking adversarial review on known bias vectors.
+  - *Example for HIST:* "Did you check the proposed framing against canonical decolonized sources? Bulgakov-as-Ukrainian, Gogol-as-Ukrainian, Akhmatova-as-Ukrainian, etc., are the 'Kyiv-born equals Ukrainian writer' trap — flag if you see it. Did you check whether the historical actor is being framed in Russian-imperial categories versus Ukrainian native categories?"
+
+**Recommendation:** Prefer **Mechanism B** (proactive — catches bias during discussion) for any new `ab discuss` on high-risk tracks. Fall back to **Mechanism A** (reactive — emit card on consensus) when no domain-specific checklist exists yet for that track.
+
+**Pattern:** Consensus on high-risk tracks is a SIGNAL TO CHECK, not a signal to proceed.
 
 ### Where Decision Cards land
 
@@ -216,6 +229,8 @@ Three locations depending on user availability:
 | User online, mid-session | Inline in chat reply | Immediate visibility, user can `go` in next message |
 | User AFK, no live session | `docs/decisions/pending/{YYYY-MM-DD}-{slug}.md` | Durable, scannable on return; cold-start protocol checks this dir |
 | Multi-week architectural call | New GH issue with `decision-pending` label + Decision Card as body | Long-lived discussion needs an issue thread, not a markdown file |
+
+Note: High-risk-track Decision Cards (the ones force-emitted by Mechanism A) should ALWAYS be routed inline-or-pending, never silently auto-resolved, even when the user appears online.
 
 Every Decision Card MUST include a `Scope` field. The scope declares exactly which tracks, issues, and paths are blocked by the pending decision and which work can continue independently. If a Decision Card omits scope, agents must use the conservative interpretation that it blocks everything — precisely the failure mode this field is meant to avoid.
 
