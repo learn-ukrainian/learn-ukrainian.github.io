@@ -237,6 +237,55 @@ def test_parse_writer_output_rejects_invalid_json() -> None:
         linear_pipeline.parse_writer_output_strict_json(output)
 
 
+def test_parse_writer_output_rejects_quiz_component_prop_questions() -> None:
+    """Writer artifacts must use authoring shape: quiz uses `items`.
+
+    The M20 POC failure came from a prompt contradiction: the writer saw React
+    component props and emitted `questions`, but the authoring parser consumes
+    `items`.
+    """
+    output = """```markdown file=module.md
+# Мій ранок
+```
+
+```json file=activities.yaml
+[
+  {
+    "id": "act-1",
+    "type": "quiz",
+    "instruction": "Оберіть правильну відповідь.",
+    "questions": [
+      {"question": "Я ____ о сьомій.", "options": ["прокидаюся", "йдеш"]}
+    ]
+  }
+]
+```
+
+```json file=vocabulary.yaml
+[
+  {
+    "lemma": "ранок",
+    "translation": "morning",
+    "pos": "noun",
+    "usage": "Мій ранок простий."
+  }
+]
+```
+
+```json file=resources.yaml
+[
+  {"title": "Караман Grade 10, p.176"}
+]
+```
+"""
+
+    with pytest.raises(
+        linear_pipeline.LinearPipelineError,
+        match=r"activities\.yaml schema validation failed.*unexpected fields.*questions",
+    ):
+        linear_pipeline.parse_writer_output_strict_json(output)
+
+
 def test_parse_writer_output_rejects_missing_artifact() -> None:
     output = """```markdown file=module.md
 # Мій ранок
@@ -1688,11 +1737,12 @@ def test_run_python_qg_passes_structural_fixture(tmp_path: Path) -> None:
 
 
 def test_render_component_props_schema_lists_required_and_optional() -> None:
-    """A1's allowed types must each get a `required:` and `optional:` line.
+    """A1's allowed types must each get authoring required/optional lines.
 
     Round-3 (#1577) failed because the writer guessed `passage:` for `fill-in`
-    and omitted `correct_order` on `order`. Surfacing the lesson-schema prop
-    contract in the writer prompt is the cheapest fix.
+    and omitted `correct_order` on `order`. The POC M20 failure then showed
+    that surfacing React component props misled Gemini into writing
+    `quiz.questions`. The prompt must show authoring fields instead.
     """
     allowed = "fill-in, order, match-up, quiz"
     rendered = linear_pipeline._render_component_props_schema(allowed)
@@ -1703,24 +1753,27 @@ def test_render_component_props_schema_lists_required_and_optional() -> None:
             f"Missing bullet for activity type {activity_type!r} in:\n{rendered}"
         )
 
-    # Required-prop names must appear verbatim — these are the exact keys the
-    # `_component_prop_gate` validator looks up.
+    # Required authoring field names must appear verbatim — these are the exact
+    # keys the writer parser accepts.
     assert "items" in rendered, "FillIn / Order / MatchUp `items` prop missing"
     assert "correct_order" in rendered, (
         "Order `correct_order` prop missing — was the original round-3 failure"
     )
+    quiz_block = rendered.split("- quiz:")[1].split("- ")[0]
+    assert "items" in quiz_block
+    assert "questions" not in quiz_block
 
     # Required and optional must be on different lines so the writer can tell
     # them apart.
-    assert "    required:" in rendered
-    assert "    optional:" in rendered
+    assert "    required authoring fields:" in rendered
+    assert "    optional authoring fields:" in rendered
 
 
 def test_render_component_props_schema_filters_to_allowed_types() -> None:
     """The schema renderer must NOT leak forbidden activity types.
 
     Forbidden types (e.g. `cloze`, `essay-response`, `paleography-analysis`)
-    have their own component-prop schemas in `lesson-schema.yaml`. If the
+    have their own authoring schemas. If the
     renderer doesn't filter, the writer would see them as 'available' and
     reach for them. The filter mirrors `ALLOWED_ACTIVITY_TYPES` exactly.
     """
@@ -1733,24 +1786,6 @@ def test_render_component_props_schema_filters_to_allowed_types() -> None:
     assert "- cloze:" not in rendered
     assert "- essay-response:" not in rendered
     assert "- paleography-analysis:" not in rendered
-
-
-def test_render_component_props_schema_resolves_nested_item_fields() -> None:
-    """Nested array item types like `FillInItem[]` must show their fields.
-
-    The writer needs to know that a `FillInItem` has `sentence`, `answer`,
-    `options` — not just that the prop is `items: FillInItem[]`. Otherwise
-    the prop shape is still ambiguous and we end up where round 3 ended.
-    """
-    rendered = linear_pipeline._render_component_props_schema("fill-in")
-
-    # The nested-type expansion must list the FillInItem fields after the
-    # array type annotation.
-    fill_in_block = rendered.split("- fill-in:")[1].split("- ")[0]
-    for field in ("sentence", "answer", "options"):
-        assert field in fill_in_block, (
-            f"FillInItem field {field!r} missing from rendered fill-in block:\n{fill_in_block}"
-        )
 
 
 def test_writer_context_populates_component_props_schema() -> None:
@@ -1771,7 +1806,7 @@ def test_writer_context_populates_component_props_schema() -> None:
     assert "COMPONENT_PROPS_SCHEMA" in context
     schema_text = context["COMPONENT_PROPS_SCHEMA"]
     assert "- fill-in:" in schema_text
-    assert "    required:" in schema_text
+    assert "    required authoring fields:" in schema_text
 
 
 def test_render_phase_prompt_resolves_component_props_schema() -> None:
@@ -1796,7 +1831,8 @@ def test_render_phase_prompt_resolves_component_props_schema() -> None:
     assert "{COMPONENT_PROPS_SCHEMA}" not in rendered
     # Concrete schema body landed in the prompt where the placeholder was.
     assert "- fill-in:" in rendered
-    assert "    required:" in rendered
+    assert "    required authoring fields:" in rendered
+    assert "quiz`, `select`, and `translate`, use the authoring" in rendered
 
 
 def test_linear_write_prompt_carries_anti_meta_narration_directive() -> None:
@@ -1913,7 +1949,7 @@ def test_render_component_props_schema_warns_on_unresolved_allowed_type() -> Non
     # Each unresolved type gets its own WARNING bullet.
     for unresolved in ("phrase-table", "banana-rama-not-a-real-type"):
         assert f"- {unresolved}:" in rendered
-        assert "# WARNING: no schema entry" in rendered, (
+        assert "# WARNING: no authoring schema entry" in rendered, (
             f"Unresolved type {unresolved!r} did not produce a WARNING line; "
             f"rendered output was:\n{rendered}"
         )
@@ -1923,42 +1959,24 @@ def test_render_component_props_schema_warns_on_unresolved_allowed_type() -> Non
     assert "#1604" in rendered
 
 
-def test_render_component_props_schema_strips_tsdoc_from_raw_types() -> None:
-    """Embedded `/** ... */` blocks must be stripped from raw type strings.
+def test_render_component_props_schema_uses_authoring_shape_not_ts_types() -> None:
+    """The writer prompt must expose authoring fields, not TypeScript props.
 
-    Adversarial review (Gemini + Codex on PR #1603): `odd-one-out`'s
-    `items` field has type `{ /** ... */ words: string[]; ... }[]` —
-    the JSDoc comments leak into the rendered prompt verbatim, burning
-    tokens and confusing the writer with TypeScript syntax. The renderer
-    runs `_strip_tsdoc` on every raw type before formatting.
+    The prompt used to render component prop types from lesson-schema.yaml.
+    That leaked TypeScript/JSDoc details and, worse, component-side names like
+    `questions` that are not valid authoring JSON. It now renders the compact
+    authoring whitelist.
     """
     rendered = linear_pipeline._render_component_props_schema("odd-one-out")
 
     odd_block = rendered.split("- odd-one-out:")[1].split("- ")[0]
-    # No raw TSDoc syntax should leak through.
     assert "/**" not in odd_block, (
         f"TSDoc block leaked into rendered odd-one-out output:\n{odd_block}"
     )
     assert "*/" not in odd_block
     assert "@schemaDescription" not in odd_block
     assert "@ukrainianText" not in odd_block
-    # The cleaned type signature should still mention the inner field names
-    # so the writer knows what to emit.
-    for field in ("words", "correct", "explanation"):
-        assert field in odd_block, (
-            f"Field {field!r} disappeared from cleaned odd-one-out type:\n{odd_block}"
-        )
-
-
-def test_strip_tsdoc_collapses_whitespace() -> None:
-    """`_strip_tsdoc` is the single point that handles raw-type cleanup."""
-    raw = "{ /** * @schemaDescription Foo. */ name: string; /** Bar */ age: number; }[]"
-
-    assert linear_pipeline._strip_tsdoc(raw) == "{ name: string; age: number; }[]"
-    # No-op on already-clean strings.
-    assert linear_pipeline._strip_tsdoc("string[]") == "string[]"
-    # Empty-string safety.
-    assert linear_pipeline._strip_tsdoc("") == ""
+    assert "required authoring fields: id, type, items" in odd_block
 
 
 def test_linear_write_prompt_skeleton_example_matches_schema() -> None:
