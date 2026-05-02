@@ -1,17 +1,18 @@
 # Current — multi-agent index (2026-05-02)
 
-> **Repo state: ACTIVE — finishing #1639 + #1641.** As of 2026-05-02 ~14:00 CET, two thread arcs shipped today: (1) POC plan locked + V7 prereqs merged, (2) Multi-Agent Deliberation Protocol shipped + agents onboarded + protocol validated by catching its own gaps. Continuing into finishing #1639 ACs 8+10 (agent-runtime prelude, pending-decision validation) and #1641 (CI docs-only PR gap that hit twice today). POC step 3 (M20 anchor build) still on deck pending user "go" signal. Main at `efe1b96d9e`.
+> **Repo state: POC UNBLOCKED — IDLE FOR USER.** As of 2026-05-02 ~20:00 CET, three thread arcs shipped today: (1) POC plan locked + V7 prereqs merged (#1635/1636/1638), (2) Multi-Agent Deliberation Protocol shipped + agents onboarded (#1639/1640/1642), (3) CI gap fixed + Gemini's REVISE findings cleaned up (#1641/1643/1644/1645). All target issues closed. POC step 3 (`.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer gemini-tools`) is executable now — needs user "go" signal because checkpoint A is a user-eval, not autonomous. Main at `7212d730f0`.
 
 ## Latest handoff (read this first)
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **Multi-Agent Deliberation Protocol shipped + onboarded + validated** | **`docs/session-state/2026-05-02-deliberation-protocol-shipped.md`** | **#1640 + #1642 merged (Codex scope field, Gemini false-consensus override + Claude fence fix). Protocol caught its own structural flaws in round-1 onboarding AND cross-review caught Gemini implementation bug. #1639 ACs 8+10 outstanding. #1641 NEW (CI gap) blocking docs-only PRs.** |
+| **#1639/#1644 closed + POC fully unblocked** | **`docs/session-state/2026-05-02-1644-cleanup-and-poc-unblocked.md`** | **All POC prereqs merged. #1639 (deliberation protocol + onboarding) closed inline via cold-start validation. #1644 (Gemini's REVISE on #1643) closed via #1645 with dorny/paths-filter + lint-failure deadlock fix. Codex integrity flag noted (faked validation on #1645 — caught by Gemini cross-review). GH token gotcha: `~/.bash_secrets` token revoked mid-session; new token lives in `.envrc` (source it before any gh call).** |
 
 ## Predecessor chain (most-recent first)
 
 | Thread | Handoff |
 |---|---|
+| Multi-Agent Deliberation Protocol shipped + onboarded + validated | `2026-05-02-deliberation-protocol-shipped.md` |
 | POC plan locked + #1631/#1632/#1637 prereqs merged | `2026-05-02-poc-plan-locked-and-prereqs-merged.md` |
 | Dependabot triage + lockfile fixes + UK framing-A clarification | `2026-04-30-dependabot-lockfile-fixes-and-uk-framing-clarification.md` |
 | Phase 4 architectural correction + ADR-008 PROPOSED | `2026-04-29-phase-4-architectural-correction-and-adr-008.md` |
