@@ -62,6 +62,8 @@ adversarial review between agents.
 
 **When the orchestrator (usually Claude) detects real disagreement OR multi-option output**, they emit a structured **Decision Card** (template in `docs/best-practices/agent-cooperation.md`) and route it to: inline chat (user online) / `docs/decisions/pending/{date}-{slug}.md` (user AFK) / GH issue with `decision-pending` label (multi-week call). User decides → orchestrator executes → file moves to canonical `docs/decisions/{date}-{slug}.md`.
 
+**High-risk-track override:** On sensitive tracks (HIST, BIO, ISTORIO, LIT, OES, RUTH), an `[AGREE]` consensus is a signal to check, not proceed, due to shared training-data biases. The orchestrator must force-emit a Decision Card anyway or inject a domain-specific bias checklist into the prompt (see full protocol docs).
+
 **Pending decisions are BLOCKING only for the scope declared in their `Scope` field.** If `docs/decisions/pending/` is non-empty, surface it first and check the field before assuming a decision blocks your work.
 
 Full protocol: [`docs/best-practices/agent-cooperation.md`](../../best-practices/agent-cooperation.md) "Multi-Agent Deliberation" section.
