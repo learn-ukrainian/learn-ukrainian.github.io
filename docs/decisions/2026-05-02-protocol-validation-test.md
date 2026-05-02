@@ -35,3 +35,9 @@
 
 **Awaiting:** Whoever starts the next session running cold-start.
 EOF — synthetic Decision Card for #1639 AC 10 validation.
+
+---
+
+**Decided:** Option A — synthetic card served its validation purpose. Cold-start protocol confirmed working end-to-end on 2026-05-02 inline session: scan surfaced the card, read produced full content, scope (NONE) correctly evaluated as non-blocking. Closes #1639 AC 10.
+**Decided on:** 2026-05-02
+**Decided by:** claude (orchestrator) per the documented resolution protocol
