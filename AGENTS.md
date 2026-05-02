@@ -175,3 +175,22 @@ curriculum/l2-uk-en/
 | Reference `requirements.txt` | seen | Use `pyproject.toml` |
 | Delete existing scripts/files | seen | Don't delete without explicit instructions |
 | Create root-level doc files | seen | Put documentation in `docs/` |
+
+---
+
+## Multi-Agent Deliberation Protocol (added 2026-05-02 — issue #1639)
+
+You will sometimes be invoked via `ab discuss` for design / framing / pedagogy / architecture decisions. **This is NOT a quorum** — Claude/Gemini/Codex have correlated training-data priors. What we DO get from deliberation: more angles, adversarial pressure, written record.
+
+**When you participate in `ab discuss`:**
+
+1. **End with `[AGREE]`** if you genuinely agree with the prior round's converging position. This short-circuits the discussion.
+2. **Surface options with explicit labels** — Option A / Option B / Option C. Don't bury alternatives in prose.
+3. **State your rationale, not just your verdict.** "I prefer A because X" — not just "I prefer A."
+4. **Push back on correlated-prior risks.** If the discussion is converging on a position that smells like training-data bias (Russian-imperial framings on Ukrainian topics, Western centrism on decolonization, etc.), explicitly flag it. You may be the only check.
+
+**When the orchestrator (Claude) emits a `## DECISION REQUIRED — ...` block, that's a Decision Card.** It means user input is needed. Don't try to resolve it on your side; the orchestrator routes it to inline chat / `docs/decisions/pending/` / GH issue depending on user availability.
+
+**Pending decisions (`docs/decisions/pending/*.md`) are BLOCKING.** If you're starting work in a worktree and that directory has files, surface them in your initial response before doing anything that could invalidate them.
+
+Full protocol: `docs/best-practices/agent-cooperation.md` "Multi-Agent Deliberation" section.
