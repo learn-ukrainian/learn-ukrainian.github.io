@@ -28,16 +28,12 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-_TEST_PYTHON = sys.executable
+_TEST_PYTHON = str(Path(__file__).resolve().parent.parent / ".venv" / "bin" / "python")
 """Python interpreter for subprocess tests.
 
-Use the interpreter currently running the tests (via ``sys.executable``)
-rather than hardcoding ``<repo>/.venv/bin/python``. The hardcoded path
-fails in delegated worktrees (created by ``scripts/delegate.py``) which
-don't have a per-worktree ``.venv``. ``sys.executable`` always resolves
-to whatever python is running pytest — so tests work in the main
-checkout (uses repo's ``.venv``) AND in delegated worktrees (uses the
-parent venv passed in through pytest's invocation)."""
+Use the repository-local virtualenv explicitly. Project tooling depends on
+pyenv 3.12.8 plus local packages such as sqlite-vec; inheriting whichever
+interpreter happens to run pytest can miss those dependencies."""
 
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import os
 import subprocess
-import sys
 from pathlib import Path
 
 import yaml
@@ -35,12 +34,10 @@ def _git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProc
 def _project_python() -> str:
     """Return the Python interpreter that should invoke the hook.
 
-    Tests must run both locally (where ``.venv/bin/python`` exists) and on
-    CI (which uses the actions/setup-python runner — no ``.venv``). Using
-    ``sys.executable`` picks up whichever Python is running pytest, so
-    both environments work without special-casing.
+    Use the repository-local virtualenv explicitly so subprocess checks run
+    with the same pyenv-backed dependencies as project scripts.
     """
-    return sys.executable
+    return str(REPO_ROOT / ".venv" / "bin" / "python")
 
 
 def _write_plan(path: Path, version: str, title: str) -> str:
