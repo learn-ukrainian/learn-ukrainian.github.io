@@ -58,6 +58,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from secret_redactor import redact_text, redact_value
+
 from ._config import REPO_ROOT
 from ._db import get_db
 from ._prompts import review_protocol_prefix
@@ -751,6 +753,9 @@ def post(
     _validate_kind(kind)
     for agent in to_agents or []:
         _validate_recipient_agent(agent)
+    body = redact_text(body) or ""
+    attachments = redact_value(attachments)
+    monitor_state_snapshot = redact_value(monitor_state_snapshot)
 
     # B.2: Auto-populate context snapshots if not provided.
     # The "" vs None distinction matters — empty string is an explicit
@@ -979,12 +984,16 @@ def _row_to_message(row) -> dict[str, Any]:
         "from_agent": row["from_agent"],
         "from_model": row["from_model"],
         "kind": row["kind"],
-        "body": row["body"],
-        "attachments": json.loads(row["attachments"]) if row["attachments"] else None,
+        "body": redact_text(row["body"]) or "",
+        "attachments": (
+            redact_value(json.loads(row["attachments"]))
+            if row["attachments"]
+            else None
+        ),
         "context_rev_shared": row["context_rev_shared"],
         "context_rev_channel": row["context_rev_channel"],
         "monitor_state_snapshot": (
-            json.loads(row["monitor_state_snapshot"])
+            redact_value(json.loads(row["monitor_state_snapshot"]))
             if row["monitor_state_snapshot"]
             else None
         ),

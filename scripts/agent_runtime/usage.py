@@ -42,6 +42,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from secret_redactor import redact_text, redact_value
+
 # Rate-limit window in seconds. History:
 #   2026-04-09: 5 hours (way too long; one false 429 nuked 5 hours of build)
 #   2026-04-10: 15 minutes (still blocked actively-responding Gemini for
@@ -119,6 +121,7 @@ def write_record(record: dict[str, Any]) -> None:
     not correctness; losing a record is preferable to crashing the caller.
     """
     try:
+        record = redact_value(record)
         path = _usage_file(record["agent"], record["entrypoint"])
         line = (json.dumps(record, ensure_ascii=False, default=str) + "\n").encode("utf-8")
         fd = os.open(str(path), os.O_APPEND | os.O_CREAT | os.O_WRONLY, 0o644)
@@ -150,8 +153,9 @@ def write_record(record: dict[str, Any]) -> None:
         # call itself already succeeded or failed at this point; we're only
         # trying to persist a telemetry row.
         import sys
+        safe_exc = redact_text(str(exc)) or ""
         print(
-            f"[usage] WARNING: failed to write record: {type(exc).__name__}: {exc}",
+            f"[usage] WARNING: failed to write record: {type(exc).__name__}: {safe_exc}",
             file=sys.stderr,
         )
 

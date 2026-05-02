@@ -226,3 +226,4 @@ data/*.db.bak
 /*.diff
 /*.patch
 
+.envrc

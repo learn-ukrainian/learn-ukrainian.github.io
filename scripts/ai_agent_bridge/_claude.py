@@ -26,6 +26,7 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 from agent_runtime.runner import invoke as runtime_invoke
+from secret_redactor import redact_text
 
 from ._broker import _is_task_locked, _remove_pid_file, _write_pid_file
 from ._config import _PARENT_ENV, CLAUDE_CMD, REPO_ROOT
@@ -317,7 +318,7 @@ def _launch_claude_background(msg, message_id, new_session):
 
 def _handle_claude_error(msg, message_id, stderr):
     """Handle Claude CLI non-zero exit. Returns True (response_sent)."""
-    error_msg = stderr.strip() or "Unknown error"
+    error_msg = redact_text(stderr.strip()) or "Unknown error"
     print(f"\n❌ Claude CLI error: {error_msg[:500]}")
     sys.stdout.flush()
 

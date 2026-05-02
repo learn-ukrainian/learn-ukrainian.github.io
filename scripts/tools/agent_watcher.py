@@ -39,13 +39,18 @@ from pathlib import Path
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from ai_agent_bridge._env import build_agent_env
+
 
 # ---------------------------------------------------------------------------
-# Login shell environment (captures GITHUB_TOKEN, GOOGLE_API_KEY, etc.)
-# Needed because launchd passes a sparse env to daemons.
+# Login shell environment.
+# Needed because launchd passes a sparse env to daemons, but agent children
+# must not inherit shell secrets: they can run `env` and copy output into
+# comments/logs.
 # ---------------------------------------------------------------------------
 def _get_login_env() -> dict:
-    """Capture full login shell env (has GITHUB_TOKEN, GOOGLE_API_KEY, etc.)."""
+    """Capture login shell env, then reduce it to non-secret runtime values."""
     try:
         result = subprocess.run(
             ["bash", "-l", "-c", "env"],
@@ -56,13 +61,10 @@ def _get_login_env() -> dict:
             if "=" in line:
                 k, v = line.split("=", 1)
                 env[k] = v
-        # Ensure our venv Python is first in PATH
-        venv_bin = str(Path(__file__).parent.parent.parent / ".venv" / "bin")
-        env["PATH"] = f"{venv_bin}:{env.get('PATH', '')}"
-        env["PYTHONUNBUFFERED"] = "1"
-        return env
+        repo_root = Path(__file__).parent.parent.parent
+        return build_agent_env(env, repo_root=repo_root)
     except Exception:
-        return os.environ.copy()
+        return build_agent_env(os.environ, repo_root=Path(__file__).parent.parent.parent)
 
 LOGIN_ENV = _get_login_env()
 

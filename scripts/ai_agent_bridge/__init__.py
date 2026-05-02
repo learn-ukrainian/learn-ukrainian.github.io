@@ -17,6 +17,13 @@ Configuration:
 All public functions are re-exported here for backward compatibility.
 """
 
+import sys
+from pathlib import Path
+
+_SCRIPTS_DIR = str(Path(__file__).resolve().parent.parent)
+if _SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPTS_DIR)
+
 # Re-export everything that was previously importable from ai_agent_bridge
 from ._broker import (
     _git_status_snapshot,

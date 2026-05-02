@@ -4,11 +4,14 @@ import re
 import subprocess
 from datetime import UTC, datetime
 
+from secret_redactor import redact_text
+
 from ._config import GH_CHAR_LIMIT
 
 
 def _format_review_chunk(chunk: str, model: str, part_num: int, total_parts: int) -> str:
     """Format a review chunk with part header for GitHub posting."""
+    chunk = redact_text(chunk) or ""
     if total_parts > 1:
         return f"**[Part {part_num}/{total_parts}]** Review ({model})\n\n{chunk}"
     return f"**Review** ({model})\n\n{chunk}"
@@ -36,12 +39,14 @@ def _split_content(content: str, limit: int = GH_CHAR_LIMIT) -> list[str]:
 
 def _gh_comment(issue_num: int, body: str) -> bool:
     """Post a comment on a GitHub issue. Returns True on success."""
+    body = redact_text(body) or ""
     result = subprocess.run(
         ["gh", "issue", "comment", str(issue_num), "-F", "-"],
         input=body, text=True, capture_output=True, timeout=15
     )
     if result.returncode != 0:
-        print(f"⚠️  GitHub comment failed: {result.stderr[:200]}")
+        stderr = redact_text(result.stderr or "") or ""
+        print(f"⚠️  GitHub comment failed: {stderr[:200]}")
         return False
     return True
 
@@ -50,6 +55,7 @@ def _post_review_to_github(task_id: str, content: str, model: str) -> int | None
     """Post review content to a GitHub issue. Returns issue number on success."""
     if not content:
         return None
+    content = redact_text(content) or ""
 
     try:
         from ._messaging import _extract_issue_number
@@ -63,7 +69,8 @@ def _post_review_to_github(task_id: str, content: str, model: str) -> int | None
             # Don't auto-create GH issues for reviews without a target issue.
             # Review artifacts live in orchestration/ folders. GH issues are for
             # work items only. See #970.
-            print(f"   ℹ️  No issue number in task_id '{task_id}' — skipping GH posting (review saved to orchestration/)")
+            safe_task_id = redact_text(task_id) or ""
+            print(f"   ℹ️  No issue number in task_id '{safe_task_id}' — skipping GH posting (review saved to orchestration/)")
             return None
 
     except FileNotFoundError:
@@ -73,7 +80,8 @@ def _post_review_to_github(task_id: str, content: str, model: str) -> int | None
         print("⚠️  GitHub posting timed out — skipping")
         return None
     except Exception as e:
-        print(f"⚠️  GitHub posting failed: {e}")
+        safe_error = redact_text(str(e)) or ""
+        print(f"⚠️  GitHub posting failed: {safe_error}")
         return None
 
 
@@ -89,7 +97,8 @@ def _post_to_existing_issue(issue_num: int, chunks: list[str], model: str, total
 
 def _post_as_new_issue(task_id: str, chunks: list[str], model: str, total_parts: int) -> int | None:
     """Create a new GitHub issue and post review as body + comments."""
-    title = f"Review: {task_id}" if task_id else f"Review: {datetime.now(UTC).isoformat()}"
+    safe_task_id = redact_text(task_id) or ""
+    title = f"Review: {safe_task_id}" if task_id else f"Review: {datetime.now(UTC).isoformat()}"
     first_body = _format_review_chunk(chunks[0], model, 1, total_parts)
 
     # Try with label first, fall back to no label if it doesn't exist
@@ -104,7 +113,8 @@ def _post_as_new_issue(task_id: str, chunks: list[str], model: str, total_parts:
             input=first_body, text=True, capture_output=True, timeout=15
         )
     if result.returncode != 0:
-        print(f"⚠️  GitHub issue creation failed: {result.stderr[:200]}")
+        stderr = redact_text(result.stderr or "") or ""
+        print(f"⚠️  GitHub issue creation failed: {stderr[:200]}")
         return None
 
     # Parse issue number from URL output

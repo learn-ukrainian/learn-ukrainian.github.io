@@ -4,6 +4,8 @@ import os
 import shutil
 from pathlib import Path
 
+from ._env import build_agent_env
+
 # Repo root for path resolution
 REPO_ROOT = Path(
     os.environ.get("AB_REPO_ROOT", str(Path(__file__).parent.parent.parent))
@@ -38,9 +40,10 @@ if not GEMINI_DEFAULT_MODEL:
     except ImportError:
         GEMINI_DEFAULT_MODEL = "gemini-2.0-flash"
 
-# Snapshot environment for passing to detached children
+# Snapshot environment for passing to detached children. Use a narrow env so
+# background bridge processes do not inherit shell tokens that agents can print.
 # Set GEMINI_SESSION so .bashrc disables hostile aliases (eza, bat, zoxide)
-_PARENT_ENV = os.environ.copy()
+_PARENT_ENV = build_agent_env(os.environ, repo_root=REPO_ROOT)
 _PARENT_ENV["GEMINI_SESSION"] = "1"
 _PIPELINE_ENV_KEY = os.environ.get(
     "AB_PIPELINE_ENV_KEY", "LEARN_UKRAINIAN_PIPELINE"

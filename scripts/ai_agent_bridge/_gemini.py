@@ -24,6 +24,7 @@ from agent_runtime.errors import (
 )
 from agent_runtime.runner import invoke as runtime_invoke
 from batch_gemini_config import FALLBACK_MODEL, PRO_MODEL
+from secret_redactor import redact_text
 
 from ._broker import (
     _git_status_snapshot,
@@ -458,7 +459,8 @@ def _handle_gemini_error(stderr, model, attempt, max_retries, base_delay):
             print(f"\n❌ Rate limited after {max_retries} attempts. Giving up.")
             return "stop"
 
-    print(f"\n❌ Gemini CLI error (exit code): {stderr[:500]}")
+    safe_stderr = redact_text(stderr[:500]) or ""
+    print(f"\n❌ Gemini CLI error (exit code): {safe_stderr}")
     sys.stdout.flush()
     return "continue"
 
@@ -502,7 +504,8 @@ def _handle_gemini_429(
     rate_limit_state: dict[str, bool],
 ) -> dict[str, str]:
     """Apply bridge-specific 429 policy: one retry, then one hop to ``auto``."""
-    print(f"\n⏳ Gemini 429 on {model}: {detail}")
+    safe_detail = redact_text(detail) or ""
+    print(f"\n⏳ Gemini 429 on {model}: {safe_detail}")
 
     if model != FALLBACK_MODEL and not rate_limit_state["retried_same_model_429"]:
         rate_limit_state["retried_same_model_429"] = True
@@ -516,7 +519,7 @@ def _handle_gemini_429(
         return {"action": "fallback", "model": FALLBACK_MODEL}
 
     print(f"\n❌ Gemini 429 on {model} with no fallback remaining.")
-    raise RateLimitedError("gemini", model, detail)
+    raise RateLimitedError("gemini", model, safe_detail)
 
 
 def _is_gemini_429_error(stderr: str) -> bool:
