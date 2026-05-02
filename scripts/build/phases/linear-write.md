@@ -133,22 +133,23 @@ Activity count target: {ACTIVITY_COUNT_TARGET}
 
 Vocabulary count target: {VOCAB_COUNT_TARGET}
 
-## Activity Component Props (mandatory)
+## Activity Authoring Fields (mandatory)
 
-Each activity object in `activities.yaml` MUST carry the props for its
-declared `type` exactly as specified below. The build's `component_props`
-gate compares these against `docs/lesson-schema.yaml` and fails the build
-on any missing required prop. Do not invent prop names; do not borrow a
-prop name from a different activity type (for example, `fill-in` requires
-`items: FillInItem[]` — do not substitute `passage:`).
+Each activity object in `activities.yaml` MUST use the authoring field names
+listed below for its declared `type`. These are the JSON/YAML fields consumed
+by `scripts/yaml_activities.py` and checked by the writer parser. They are not
+React component prop names.
+
+Do not invent prop names. Do not borrow a prop name from a different activity
+type. In particular, for `quiz`, `select`, and `translate`, use the authoring
+field `items`; do NOT use the React/component prop name `questions`.
 
 ```
 {COMPONENT_PROPS_SCHEMA}
 ```
 
-For nested array item types (e.g. `FillInItem[]`), include the listed
-fields on every item. For numeric arrays like `correct_order: number[]`,
-indices are zero-based.
+For item-bearing types, include a non-empty `items` array. For numeric arrays
+like `correct_order`, indices are zero-based.
 
 ## Plan
 
