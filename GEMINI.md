@@ -123,6 +123,6 @@ You will sometimes be invoked via `ab discuss` for design / framing / pedagogy /
 
 **When the orchestrator (Claude) emits a `## DECISION REQUIRED — ...` block, that's a Decision Card** routed to inline chat / `docs/decisions/pending/` / GH issue. Don't try to resolve it on Gemini's side.
 
-**Pending decisions (`docs/decisions/pending/*.md`) are BLOCKING.** Surface them before any new work that could invalidate them.
+**Pending decisions (`docs/decisions/pending/*.md`) are BLOCKING only for the scope declared in their `Scope` field.** Surface them before any new work that could invalidate them, and check the field before assuming a decision blocks your work.
 
 Full protocol: `docs/best-practices/agent-cooperation.md` "Multi-Agent Deliberation" section.
