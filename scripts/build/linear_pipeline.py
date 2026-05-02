@@ -52,6 +52,101 @@ WRITER_ARTIFACTS = (
     "resources.yaml",
 )
 
+PYTHON_QG_GATE_ORDER = (
+    "word_count",
+    "plan_sections",
+    "formatting_standards",
+    "vesum_verified",
+    "citations_resolve",
+    "immersion",
+    "inject_activity_ids",
+    "activity_types",
+    "ai_slop_clean",
+    "component_props",
+    "russianisms_clean",
+    "surzhyk_clean",
+    "calques_clean",
+    "paronym_clean",
+)
+WRITER_CORRECTION_GATES = frozenset(
+    {
+        "strict_json_parse",
+        "word_count",
+        "plan_sections",
+        "formatting_standards",
+        "mdx_render",
+    }
+)
+DICTIONARY_CANDIDATE_GATES = frozenset(
+    {
+        "vesum_verified",
+        "russianisms_clean",
+        "surzhyk_clean",
+        "calques_clean",
+        "paronym_clean",
+        "citations_resolve",
+    }
+)
+REVIEWER_FIX_GATES = DICTIONARY_CANDIDATE_GATES | frozenset(
+    {
+        "immersion",
+        "ai_slop_clean",
+    }
+)
+PIPELINE_INSERT_GATES = frozenset({"inject_activity_ids"})
+TERMINAL_ZERO_RETRY_GATES = frozenset(
+    {
+        "component_props",
+        "previously_passed_regression",
+    }
+)
+
+# Deterministic first-pass replacements used to seed reviewer SELECT prompts.
+# The reviewer may select among these candidates but must not invent new ones.
+DICTIONARY_REPLACEMENTS = {
+    "пожалуйста": ("будь ласка", "Антоненко-Давидович / standard Ukrainian usage"),
+    "спасибо": ("дякую", "Антоненко-Давидович / standard Ukrainian usage"),
+    "хорошо": ("добре", "Антоненко-Давидович / standard Ukrainian usage"),
+    "конечно": ("звичайно", "Антоненко-Давидович / standard Ukrainian usage"),
+    "ничего": ("нічого", "Антоненко-Давидович / standard Ukrainian usage"),
+    "сейчас": ("зараз", "Антоненко-Давидович / standard Ukrainian usage"),
+    "тоже": ("також", "Антоненко-Давидович / standard Ukrainian usage"),
+    "здесь": ("тут", "Антоненко-Давидович / standard Ukrainian usage"),
+    "кот": ("кіт", "VESUM-verified Ukrainian equivalent"),
+    "шо": ("що", "Антоненко-Давидович / standard Ukrainian usage"),
+    "канєшно": ("звісно", "Антоненко-Давидович / standard Ukrainian usage"),
+    "счас": ("зараз", "Антоненко-Давидович / standard Ukrainian usage"),
+    "нє": ("ні", "Антоненко-Давидович / standard Ukrainian usage"),
+    "приймати участь": ("брати участь", "Антоненко-Давидович style guide"),
+    "на протязі": ("протягом", "Антоненко-Давидович style guide"),
+    "по крайній мірі": ("принаймні", "Антоненко-Давидович style guide"),
+    "відноситися до": ("стосуватися", "Антоненко-Давидович style guide"),
+    "рахувати що": ("вважати, що", "Антоненко-Давидович style guide"),
+}
+
+
+@dataclass(frozen=True, slots=True)
+class CorrectionCandidate:
+    """Pipeline-proposed replacement candidate for reviewer selection."""
+
+    original: str
+    replacement: str
+    source: str
+    gate: str
+
+
+@dataclass(frozen=True, slots=True)
+class CorrectionContext:
+    """Context passed to ADR-008 correction handlers."""
+
+    gate: str
+    gate_report: Mapping[str, Any]
+    module_dir: Path
+    plan_path: Path
+    qg_report: Mapping[str, Any]
+    candidates: tuple[CorrectionCandidate, ...] = ()
+    prompt: str = ""
+
 
 @dataclass(frozen=True, slots=True)
 class JsonArtifactSchema:
@@ -875,6 +970,91 @@ def render_review_prompt(
     )
 
 
+def render_writer_correction_prompt(
+    *,
+    gate: str,
+    gate_report: Mapping[str, Any],
+    module_text: str,
+) -> str:
+    """Render the ADR-008 patch-bounded writer correction prompt."""
+    return render_phase_prompt(
+        PROJECT_ROOT / "scripts" / "build" / "phases" / "linear-writer-correction.md",
+        {
+            "MODULE_CONTENT": module_text,
+            "CORRECTION_SECTION": yaml.safe_dump(
+                {
+                    "gate": gate,
+                    "diagnostic": dict(gate_report),
+                },
+                allow_unicode=True,
+                sort_keys=False,
+            ).strip(),
+        },
+    )
+
+
+def render_reviewer_correction_prompt(
+    *,
+    gate: str,
+    gate_report: Mapping[str, Any],
+    module_text: str,
+    candidates: tuple[CorrectionCandidate, ...] = (),
+) -> str:
+    """Build a reviewer-as-fixer prompt for one failed Python QG gate."""
+    candidate_rows = [
+        {
+            "original": candidate.original,
+            "replacement": candidate.replacement,
+            "source": candidate.source,
+        }
+        for candidate in candidates
+    ]
+    if candidate_rows:
+        candidate_section = yaml.safe_dump(
+            candidate_rows, allow_unicode=True, sort_keys=False
+        ).strip()
+        reviewer_role = (
+            "Pipeline-proposed candidates are provided below. SELECT from these "
+            "candidates; do not invent replacements."
+        )
+    else:
+        candidate_section = "[]"
+        reviewer_role = (
+            "Emit only local <fixes> find/replace pairs. Do not rewrite sections."
+        )
+    diagnostic = yaml.safe_dump(
+        {
+            "gate": gate,
+            "diagnostic": dict(gate_report),
+        },
+        allow_unicode=True,
+        sort_keys=False,
+    ).strip()
+    return "\n".join(
+        [
+            "# Python QG correction",
+            "",
+            reviewer_role,
+            "Return a single <fixes> block. Use find/replace pairs only.",
+            "",
+            "## Gate diagnostic",
+            "```yaml",
+            diagnostic,
+            "```",
+            "",
+            "## Pipeline-proposed candidates",
+            "```yaml",
+            candidate_section,
+            "```",
+            "",
+            "## Current module.md",
+            "```markdown",
+            module_text,
+            "```",
+        ]
+    )
+
+
 def parse_review_response(response: str, dim: str) -> dict[str, Any]:
     """Parse and validate one per-dim LLM QG response."""
     if dim not in QG_DIMS:
@@ -946,11 +1126,414 @@ def aggregate_llm_review(report: Mapping[str, Any], level_code: str) -> dict[str
     }
 
 
+def run_python_qg_with_corrections(
+    module_dir: Path,
+    plan_path: Path,
+    *,
+    verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
+    qg_runner: Callable[[], dict[str, Any]] | None = None,
+    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None]
+    | None = None,
+    reviewer_corrector: Callable[[CorrectionContext], str | None] | None = None,
+    dictionary_lookup_fn: Callable[[str, str], list[str | Mapping[str, str]]] | None = None,
+    writer: str = "claude-tools",
+    invoker: Callable[..., Any] | None = None,
+) -> dict[str, Any]:
+    """Run Python QG and apply one ADR-008 correction attempt per failed gate.
+
+    This wrapper preserves ``run_python_qg`` as the deterministic gate runner.
+    Corrections are intentionally single-shot. After every correction the full
+    Python QG report is recomputed, and any gate that regresses from PASS to
+    FAIL triggers the ``previously_passed_regression`` terminal meta-gate.
+    """
+    attempts: set[str] = set()
+
+    def _run_qg() -> dict[str, Any]:
+        if qg_runner is not None:
+            return qg_runner()
+        return run_python_qg(
+            module_dir,
+            plan_path,
+            verify_words_fn=verify_words_fn,
+        )
+
+    report = _run_qg()
+    while True:
+        failed_gate = _first_failed_correctable_gate(report)
+        if failed_gate is None:
+            return report
+        if failed_gate in attempts:
+            _annotate_correction_terminal(
+                report,
+                failed_gate,
+                f"{failed_gate} failed after its single ADR-008 correction attempt",
+            )
+            return report
+        attempts.add(failed_gate)
+
+        before = report
+        handled = _apply_python_qg_correction(
+            failed_gate,
+            report,
+            module_dir=module_dir,
+            plan_path=plan_path,
+            writer_corrector=writer_corrector,
+            reviewer_corrector=reviewer_corrector,
+            dictionary_lookup_fn=dictionary_lookup_fn,
+            writer=writer,
+            invoker=invoker,
+        )
+        if not handled:
+            _annotate_correction_terminal(
+                report,
+                failed_gate,
+                f"{failed_gate} has no ADR-008 correction path",
+            )
+            return report
+
+        report = _run_qg()
+        regressions = _previously_passing_regressions(before, report)
+        if regressions:
+            gates = report.setdefault("gates", {})
+            if isinstance(gates, dict):
+                gates["previously_passed_regression"] = {
+                    "passed": False,
+                    "regressions": regressions,
+                }
+                gates["passed"] = False
+            return report
+
+
+def _first_failed_correctable_gate(report: Mapping[str, Any]) -> str | None:
+    gates = report.get("gates")
+    if not isinstance(gates, Mapping):
+        return None
+    for gate in PYTHON_QG_GATE_ORDER:
+        gate_report = gates.get(gate)
+        if isinstance(gate_report, Mapping) and gate_report.get("passed") is False:
+            return gate
+    return None
+
+
+def _annotate_correction_terminal(
+    report: dict[str, Any],
+    gate: str,
+    message: str,
+) -> None:
+    gates = report.setdefault("gates", {})
+    if isinstance(gates, dict):
+        gates["correction_terminal"] = {
+            "passed": False,
+            "gate": gate,
+            "message": message,
+        }
+        gates["passed"] = False
+
+
+def _apply_python_qg_correction(
+    gate: str,
+    qg_report: Mapping[str, Any],
+    *,
+    module_dir: Path,
+    plan_path: Path,
+    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None]
+    | None,
+    reviewer_corrector: Callable[[CorrectionContext], str | None] | None,
+    dictionary_lookup_fn: Callable[[str, str], list[str | Mapping[str, str]]] | None,
+    writer: str,
+    invoker: Callable[..., Any] | None,
+) -> bool:
+    gates = qg_report.get("gates")
+    if not isinstance(gates, Mapping):
+        return False
+    gate_report = gates.get(gate)
+    if not isinstance(gate_report, Mapping):
+        return False
+    if gate in TERMINAL_ZERO_RETRY_GATES:
+        return False
+    if gate in PIPELINE_INSERT_GATES:
+        _apply_activity_id_inserts(module_dir / "module.md", gate_report)
+        return True
+    if gate in WRITER_CORRECTION_GATES:
+        _apply_writer_correction(
+            gate,
+            gate_report,
+            qg_report=qg_report,
+            module_dir=module_dir,
+            plan_path=plan_path,
+            writer_corrector=writer_corrector,
+            writer=writer,
+            invoker=invoker,
+        )
+        return True
+    if gate in REVIEWER_FIX_GATES:
+        candidates = ()
+        if gate in DICTIONARY_CANDIDATE_GATES:
+            candidates = generate_dictionary_candidates(
+                gate,
+                gate_report,
+                qg_report=qg_report,
+                dictionary_lookup_fn=dictionary_lookup_fn,
+            )
+        _apply_reviewer_correction(
+            gate,
+            gate_report,
+            qg_report=qg_report,
+            module_dir=module_dir,
+            plan_path=plan_path,
+            candidates=candidates,
+            reviewer_corrector=reviewer_corrector,
+            invoker=invoker,
+        )
+        return True
+    return False
+
+
+def _apply_writer_correction(
+    gate: str,
+    gate_report: Mapping[str, Any],
+    *,
+    qg_report: Mapping[str, Any],
+    module_dir: Path,
+    plan_path: Path,
+    writer_corrector: Callable[[CorrectionContext], str | Mapping[str, str] | None]
+    | None,
+    writer: str,
+    invoker: Callable[..., Any] | None,
+) -> None:
+    module_text = _read_required(module_dir / "module.md")
+    prompt = render_writer_correction_prompt(
+        gate=gate,
+        gate_report=gate_report,
+        module_text=module_text,
+    )
+    context = CorrectionContext(
+        gate=gate,
+        gate_report=gate_report,
+        module_dir=module_dir,
+        plan_path=plan_path,
+        qg_report=qg_report,
+        prompt=prompt,
+    )
+    if writer_corrector is None:
+        response: str | Mapping[str, str] | None = invoke_writer(
+            prompt,
+            writer=writer,
+            cwd=module_dir,
+            invoker=invoker,
+        )
+    else:
+        response = writer_corrector(context)
+    if isinstance(response, Mapping):
+        write_writer_artifacts(module_dir, response)
+    elif isinstance(response, str) and all(name in response for name in WRITER_ARTIFACTS):
+        write_writer_artifacts(module_dir, parse_writer_output_strict_json(response))
+
+
+def _apply_reviewer_correction(
+    gate: str,
+    gate_report: Mapping[str, Any],
+    *,
+    qg_report: Mapping[str, Any],
+    module_dir: Path,
+    plan_path: Path,
+    candidates: tuple[CorrectionCandidate, ...],
+    reviewer_corrector: Callable[[CorrectionContext], str | None] | None,
+    invoker: Callable[..., Any] | None,
+) -> None:
+    module_path = module_dir / "module.md"
+    module_text = _read_required(module_path)
+    prompt = render_reviewer_correction_prompt(
+        gate=gate,
+        gate_report=gate_report,
+        module_text=module_text,
+        candidates=candidates,
+    )
+    context = CorrectionContext(
+        gate=gate,
+        gate_report=gate_report,
+        module_dir=module_dir,
+        plan_path=plan_path,
+        qg_report=qg_report,
+        candidates=candidates,
+        prompt=prompt,
+    )
+    if reviewer_corrector is None:
+        if invoker is None:
+            from scripts.agent_runtime.runner import invoke as runtime_invoke
+        else:
+            runtime_invoke = invoker
+
+        result = runtime_invoke(
+            "codex-tools",
+            prompt,
+            mode="read-only",
+            cwd=module_dir,
+            task_id=f"linear-python-qg-{gate}-fix",
+            entrypoint="runtime",
+            tool_config={"output_format": "text"},
+        )
+        response = str(getattr(result, "response", "") or "")
+    else:
+        response = reviewer_corrector(context) or ""
+    fixes = _parse_reviewer_fixes(response)
+    if fixes:
+        module_path.write_text(_apply_reviewer_fixes(module_text, fixes), encoding="utf-8")
+
+
+def _apply_activity_id_inserts(module_path: Path, gate_report: Mapping[str, Any]) -> None:
+    unused = [str(activity_id) for activity_id in gate_report.get("unused", [])]
+    if not unused:
+        return
+    text = _read_required(module_path).rstrip()
+    markers = "\n\n".join(f"<!-- INJECT_ACTIVITY: {activity_id} -->" for activity_id in unused)
+    module_path.write_text(f"{text}\n\n{markers}\n", encoding="utf-8")
+
+
+def _parse_reviewer_fixes(review_text: str) -> list[dict[str, str]]:
+    match = re.search(r"<fixes>\s*(.*?)\s*</fixes>", review_text, re.DOTALL)
+    if not match:
+        return []
+    body = match.group(1).strip()
+    try:
+        parsed = yaml.safe_load(body)
+    except yaml.YAMLError:
+        return []
+    if not isinstance(parsed, list):
+        return []
+    fixes: list[dict[str, str]] = []
+    for item in parsed:
+        if not isinstance(item, dict):
+            continue
+        if "insert_after" in item and "text" in item:
+            fixes.append({
+                "insert_after": str(item["insert_after"]),
+                "text": str(item["text"]),
+            })
+        elif "find" in item and "replace" in item:
+            fixes.append({
+                "find": str(item["find"]),
+                "replace": str(item["replace"]),
+            })
+    return fixes
+
+
+def _apply_reviewer_fixes(text: str, fixes: list[dict[str, str]]) -> str:
+    updated = text
+    for fix in fixes:
+        if "insert_after" in fix and "text" in fix:
+            anchor = fix["insert_after"]
+            if anchor in updated:
+                updated = updated.replace(anchor, anchor + fix["text"], 1)
+            continue
+        find = fix.get("find")
+        replace = fix.get("replace")
+        if find and replace is not None and find in updated:
+            updated = updated.replace(find, replace, 1)
+    return updated
+
+
+def _previously_passing_regressions(
+    before: Mapping[str, Any],
+    after: Mapping[str, Any],
+) -> list[str]:
+    before_gates = before.get("gates")
+    after_gates = after.get("gates")
+    if not isinstance(before_gates, Mapping) or not isinstance(after_gates, Mapping):
+        return []
+    regressions = []
+    for gate in PYTHON_QG_GATE_ORDER:
+        before_gate = before_gates.get(gate)
+        after_gate = after_gates.get(gate)
+        if (
+            isinstance(before_gate, Mapping)
+            and isinstance(after_gate, Mapping)
+            and before_gate.get("passed") is True
+            and after_gate.get("passed") is False
+        ):
+            regressions.append(gate)
+    return regressions
+
+
+def generate_dictionary_candidates(
+    gate: str,
+    gate_report: Mapping[str, Any],
+    *,
+    qg_report: Mapping[str, Any] | None = None,
+    dictionary_lookup_fn: Callable[[str, str], list[str | Mapping[str, str]]] | None = None,
+) -> tuple[CorrectionCandidate, ...]:
+    """Generate deterministic candidate replacements before reviewer fixes."""
+    originals: list[str] = []
+    if gate == "vesum_verified":
+        originals.extend(str(item) for item in gate_report.get("missing", []))
+    elif gate == "citations_resolve":
+        originals.extend(str(item) for item in gate_report.get("unknown", []))
+    else:
+        detections = gate_report.get("detections", [])
+        if isinstance(detections, list):
+            originals.extend(
+                str(item.get("text"))
+                for item in detections
+                if isinstance(item, Mapping) and item.get("text")
+            )
+
+    candidates: list[CorrectionCandidate] = []
+    for original in sorted(set(originals)):
+        if dictionary_lookup_fn is not None:
+            for item in dictionary_lookup_fn(gate, original):
+                if isinstance(item, Mapping):
+                    replacement = str(item.get("replacement") or item.get("text") or "")
+                    source = str(item.get("source") or "pipeline lookup")
+                else:
+                    replacement = str(item)
+                    source = "pipeline lookup"
+                if replacement:
+                    candidates.append(
+                        CorrectionCandidate(original, replacement, source, gate)
+                    )
+            continue
+        if gate == "citations_resolve" and qg_report is not None:
+            candidates.extend(_citation_candidates(original, qg_report))
+            continue
+        replacement = DICTIONARY_REPLACEMENTS.get(original.lower())
+        if replacement is not None:
+            candidates.append(
+                CorrectionCandidate(
+                    original=original,
+                    replacement=replacement[0],
+                    source=replacement[1],
+                    gate=gate,
+                )
+            )
+    return tuple(candidates)
+
+
+def _citation_candidates(
+    unknown: str,
+    qg_report: Mapping[str, Any],
+) -> tuple[CorrectionCandidate, ...]:
+    plan_refs = qg_report.get("plan_references", [])
+    candidates = []
+    if isinstance(plan_refs, list):
+        for ref in plan_refs:
+            if isinstance(ref, Mapping) and ref.get("title"):
+                candidates.append(
+                    CorrectionCandidate(
+                        original=unknown,
+                        replacement=str(ref["title"]),
+                        source="sources registry / plan references",
+                        gate="citations_resolve",
+                    )
+                )
+    return tuple(candidates)
+
+
 def run_python_qg(
     module_dir: Path,
     plan_path: Path,
     *,
     verify_words_fn: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
+    gate_observer: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
     """Run deterministic Phase 4 quality gates for one module directory."""
     plan = plan_check(plan_path)
@@ -973,30 +1556,44 @@ def run_python_qg(
     # misspellings in `error:` fields don't trigger false positives.
     prose_text = _extract_prose_text(module_text, activities, vocabulary, resources)
 
-    gates: dict[str, Any] = {
-        "word_count": _word_count_gate(module_text, int(plan["word_target"])),
-        "plan_sections": _section_gate(module_text, plan),
-        "vesum_verified": _vesum_gate(
+    gates: dict[str, Any] = {}
+
+    def record(name: str, report: dict[str, Any]) -> None:
+        if gate_observer is not None:
+            gate_observer(name)
+        gates[name] = report
+
+    record("word_count", _word_count_gate(module_text, int(plan["word_target"])))
+    record("plan_sections", _section_gate(module_text, plan))
+    record("formatting_standards", _formatting_standards_gate(module_text))
+    record(
+        "vesum_verified",
+        _vesum_gate(
             module_text=module_text,
             activities=activities,
             vocabulary=vocabulary,
             resources=resources,
             verify_words_fn=verify_words_fn,
         ),
-        "citations_resolve": _citation_gate(resources, plan),
-        "immersion": _immersion_gate(module_text, plan),
-        "inject_activity_ids": _inject_activity_gate(module_text, activities),
-        "activity_types": _activity_type_gate(
+    )
+    record("citations_resolve", _citation_gate(resources, plan))
+    record("immersion", _immersion_gate(module_text, plan))
+    record("inject_activity_ids", _inject_activity_gate(module_text, activities))
+    record(
+        "activity_types",
+        _activity_type_gate(
             activities,
             str(plan["level"]),
             int(plan["sequence"]),
             str(plan["slug"]),
         ),
-        "ai_slop_clean": _ai_slop_gate(prose_text),
-        "component_props": _component_prop_gate(activities),
-        "mdx_render": {"passed": None, "message": "Run after publish stage"},
-    }
-    gates.update(_quality_fields(text_for_quality))
+    )
+    record("ai_slop_clean", _ai_slop_gate(prose_text))
+    record("component_props", _component_prop_gate(activities))
+    for gate_name, gate_report in _quality_fields(text_for_quality).items():
+        record(gate_name, gate_report)
+    gates["previously_passed_regression"] = {"passed": True, "regressions": []}
+    gates["mdx_render"] = {"passed": None, "message": "Run after publish stage"}
     gates["passed"] = all(
         gate.get("passed") is True
         for key, gate in gates.items()
@@ -1007,6 +1604,7 @@ def run_python_qg(
         "level": plan["level"],
         "slug": plan["slug"],
         "pipeline": "linear-phase-4",
+        "plan_references": plan.get("references", []),
         "gates": gates,
     }
 
@@ -1713,9 +2311,39 @@ def _quality_fields(text: str) -> dict[str, dict[str, Any]]:
     lower = text.lower()
     results = {}
     for field, patterns in QUALITY_FIELD_PATTERNS.items():
-        hits = sorted({pattern for pattern in patterns if re.search(pattern, lower)})
-        results[field] = {"passed": not hits, "hits": hits}
+        detections = []
+        hits = []
+        for pattern in patterns:
+            matches = sorted({match.group(0) for match in re.finditer(pattern, lower)})
+            if matches:
+                hits.append(pattern)
+                detections.extend({"pattern": pattern, "text": match} for match in matches)
+        results[field] = {
+            "passed": not hits,
+            "hits": sorted(hits),
+            "detections": detections,
+        }
     return results
+
+
+def _formatting_standards_gate(text: str) -> dict[str, Any]:
+    """Check markdown callout syntax required by linear module formatting."""
+    malformed_callouts = []
+    for line_no, line in enumerate(text.splitlines(), start=1):
+        if re.search(r"\[![A-Za-z][\w-]*\]", line) and not re.match(
+            r"^\s*>\s*\[![A-Za-z][\w-]*\]", line
+        ):
+            malformed_callouts.append({"line": line_no, "text": line.strip()})
+    missing_mandatory = []
+    if re.search(r"\bmodel[_ -]?answer\b", text, flags=re.IGNORECASE) and not re.search(
+        r"^\s*>\s*\[!model-answer\]", text, flags=re.MULTILINE
+    ):
+        missing_mandatory.append("> [!model-answer]")
+    return {
+        "passed": not malformed_callouts and not missing_mandatory,
+        "malformed_callouts": malformed_callouts,
+        "missing_mandatory_callouts": missing_mandatory,
+    }
 
 
 def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> dict[str, Any]:
