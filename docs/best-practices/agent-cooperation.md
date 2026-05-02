@@ -205,6 +205,7 @@ Most `ab discuss` runs converge with `[AGREE]` — orchestrator just executes th
 **Orchestrator recommendation:** A — {1-3 line rationale weighing the votes against project priors}
 
 **Awaiting:** user override (`go with B because…`) or `go` to proceed with the recommendation
+```
 
 ### High-risk-track override (false-consensus failsafe)
 
