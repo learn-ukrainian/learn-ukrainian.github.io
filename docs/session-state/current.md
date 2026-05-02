@@ -1,12 +1,12 @@
 # Current — multi-agent index (2026-05-02)
 
-> **Repo state: ACTIVE AUTONOMOUS RUN.** As of write time 2026-05-02 ~09:40 CET, user is going away for hours. Claude is in coordination-only mode (Anthropic budget hot, <10% weekly remaining for 2 days). #1635 merged; #1636 in CI awaiting merge. POC plan locked at #1577. No in-flight Codex/Gemini dispatches as of write time.
+> **Repo state: AUTONOMOUS RUN COMPLETE — IDLE FOR USER.** As of 2026-05-02 ~10:00 CET, autonomous run from the user-away window has fully completed per the handoff plan. **Three PRs landed**: #1635 (wiki+MCP retrieval), #1636 (ADR-008 per-gate correction), #1638 (V7 CLI wrapper). **Five issues closed**: #1631, #1625, #1629, #1632, #1637. Worktrees clean, main at `ebe5f98837`. **POC step 3 is now executable**: `.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer gemini-tools` runs the M20 anchor build. NEXT ACTION REQUIRES USER (POC checkpoint A is a user-eval, not autonomous).
 
 ## Latest handoff (read this first)
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **POC plan locked + #1631/#1632 prereqs merged** | **`docs/session-state/2026-05-02-poc-plan-locked-and-prereqs-merged.md`** | **#1635 merged (closes #1631 #1625 #1629); #1636 (closes #1632) CI in flight; M20-anchor-first POC plan posted to #1577 (replaces #1622 1-module bakeoff); pedagogy framing locked: three difficulty inflections + no-neutral-baseline rule** |
+| **POC plan locked + 3 PRs merged + V7 CLI ready** | **`docs/session-state/2026-05-02-poc-plan-locked-and-prereqs-merged.md`** | **#1635 + #1636 + #1638 ALL MERGED. POC step 3 unblocked. M20-anchor-first POC plan canonical at #1577 comment 4363291518. Pedagogy framing locked: three difficulty inflections + no-neutral-baseline rule + module_type architectural watch (deferred). User-eval checkpoint A pending on M20 build.** |
 
 ## Predecessor chain (most-recent first)
 
