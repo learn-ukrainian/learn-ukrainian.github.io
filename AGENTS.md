@@ -191,6 +191,6 @@ You will sometimes be invoked via `ab discuss` for design / framing / pedagogy /
 
 **When the orchestrator (Claude) emits a `## DECISION REQUIRED — ...` block, that's a Decision Card.** It means user input is needed. Don't try to resolve it on your side; the orchestrator routes it to inline chat / `docs/decisions/pending/` / GH issue depending on user availability.
 
-**Pending decisions (`docs/decisions/pending/*.md`) are BLOCKING.** If you're starting work in a worktree and that directory has files, surface them in your initial response before doing anything that could invalidate them.
+**Pending decisions (`docs/decisions/pending/*.md`) are BLOCKING only for the scope declared in their `Scope` field.** If you're starting work in a worktree and that directory has files, surface them in your initial response and check the field before assuming a decision blocks your work.
 
 Full protocol: `docs/best-practices/agent-cooperation.md` "Multi-Agent Deliberation" section.

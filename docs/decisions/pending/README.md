@@ -7,7 +7,7 @@
 
 Decision Cards emitted by the orchestrator (Claude) **when the user is AFK** and a decision needs the user's input before work can proceed. Each file is a single Decision Card surfaced from a multi-agent `ab discuss` deliberation OR from any other point where the orchestrator has hit a real choice that's not its to make.
 
-This directory is **the canonical AFK queue.** Cold-start protocol scans it. Anything in here is BLOCKING — orchestrator must NOT start new work that could invalidate a pending decision.
+This directory is **the canonical AFK queue.** Cold-start protocol scans it. Anything in here is BLOCKING for its declared scope — orchestrator must NOT start new work that could invalidate a pending decision.
 
 ## File naming
 
@@ -26,6 +26,8 @@ Date = when the decision was surfaced, not when it'll be resolved.
 Each file contains exactly one Decision Card per the template in `agent-cooperation.md` ("Decision Card pattern" section). Don't bundle multiple decisions in one file — one card per file makes resolution atomic.
 
 ## When the user decides
+
+Pending decisions block only the work declared in their `Scope` field, not all repository work. Read the field before assuming a pending card blocks unrelated tracks, issues, or paths.
 
 The orchestrator (or the user directly):
 
