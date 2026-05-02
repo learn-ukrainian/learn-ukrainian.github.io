@@ -270,7 +270,15 @@ jobs:
     name: Test (pytest)
     runs-on: ubuntu-latest
     needs: [changes, lint]
-    if: ${{ !cancelled() && needs.changes.result == 'success' && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }}
+    # Per Gemini cross-review on #1644: top-level `if:` MUST NOT exclude
+    # lint=failure cases — Test (pytest) is a required status check; if the
+    # job is skipped because lint failed, the required check never reports
+    # and the PR blocks indefinitely. Use `!cancelled()` so the job always
+    # runs (unless the workflow itself is cancelled). Inner steps below
+    # gate on `needs.changes.outputs.code` and `needs.lint.result` to skip
+    # the pytest body cleanly when not needed; the job still exits success
+    # → required check satisfied.
+    if: '!cancelled()'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         if: needs.changes.outputs.code == 'true'
