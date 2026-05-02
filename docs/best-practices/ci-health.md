@@ -18,3 +18,4 @@ Verification notes:
 - Use a smoke PR after workflow edits to confirm the GitHub-required `CI` checks are green on a normal branch.
 - The required PR checks now scope `Validate YAML Files`, `radon`, and `pytest` toward hermetic validation so unrelated repo debt does not force admin merges on otherwise clean PRs.
 - If `CI / Secret Scanning (gitleaks)` goes red again, verify the pinned TruffleHog action SHA and `.trufflehogignore` patterns before changing policy.
+- Docs-only validation commits should leave non-required CI jobs skipped while the required pytest check succeeds quickly.

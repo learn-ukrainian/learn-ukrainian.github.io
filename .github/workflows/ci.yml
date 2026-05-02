@@ -25,14 +25,44 @@ on:
   # Keep PRs unfiltered so the required `Test (pytest)` check is always emitted.
   # Docs-only PRs otherwise leave branch protection stuck on "expected" (#1641).
   # Earlier path widenings only fixed individual recurrences (#1544, #1546);
-  # the `Test (pytest)` job below now does the path filtering internally.
+  # #1644 moves the anti-whack-a-mole path list into `dorny/paths-filter`:
+  # non-required jobs skip cleanly on docs-only PRs, while `Test (pytest)`
+  # still emits the required check and skips its inner pytest body.
   pull_request:
   workflow_dispatch:
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - '.github/workflows/ci.yml'
+              - 'requirements*.txt'
+              - 'requirements.lock'
+              - 'pyproject.toml'
+              - 'scripts/**/*.py'
+              - 'tests/**/*.py'
+              - 'claude_extensions/**'
+              - 'gemini_extensions/**'
+              - 'scripts/build/phases/**/*.md'
+              - 'scripts/build/contracts/**/*.md'
+              - 'docs/lesson-contract.md'
+              - 'docs/lesson-schema.yaml'
+              - 'starlight/**'
+
   lint:
     name: Lint (ruff)
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -49,7 +79,8 @@ jobs:
   quality-gates:
     name: Quality Gates (radon)
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [changes, lint]
+    if: needs.changes.outputs.code == 'true'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -132,6 +163,8 @@ jobs:
   lint-prompts:
     name: Lint Prompts
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -145,6 +178,8 @@ jobs:
   scripts-root-guard:
     name: No new root scripts
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -204,6 +239,8 @@ jobs:
   lesson-schema-drift:
     name: Lesson Schema Drift
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -232,67 +269,27 @@ jobs:
   test:
     name: Test (pytest)
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [changes, lint]
+    # Per Gemini cross-review on #1644: top-level `if:` MUST NOT exclude
+    # lint=failure cases — Test (pytest) is a required status check; if the
+    # job is skipped because lint failed, the required check never reports
+    # and the PR blocks indefinitely. Use `!cancelled()` so the job always
+    # runs (unless the workflow itself is cancelled). Inner steps below
+    # gate on `needs.changes.outputs.code` and `needs.lint.result` to skip
+    # the pytest body cleanly when not needed; the job still exits success
+    # → required check satisfied.
+    if: '!cancelled()'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0
-
-      - name: Check for code-relevant changes
-        id: code-changes
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            base_sha="${{ github.event.pull_request.base.sha }}"
-            head_sha="${{ github.event.pull_request.head.sha }}"
-          elif [[ "${{ github.event_name }}" == "push" ]]; then
-            base_sha="${{ github.event.before }}"
-            head_sha="${{ github.sha }}"
-          else
-            echo "code=true" >> "$GITHUB_OUTPUT"
-            echo "Running pytest for ${{ github.event_name }}."
-            exit 0
-          fi
-
-          if [[ "$base_sha" =~ ^0+$ ]]; then
-            base_sha="$(git merge-base origin/main "$head_sha")"
-          fi
-
-          mapfile -t changed_files < <(git diff --name-only "$base_sha" "$head_sha")
-
-          code_changed=false
-          for file in "${changed_files[@]}"; do
-            if [[ "$file" == ".github/workflows/ci.yml" \
-              || "$file" =~ ^requirements.*\.txt$ \
-              || "$file" == "requirements.lock" \
-              || "$file" == "pyproject.toml" \
-              || "$file" =~ ^scripts/.*\.py$ \
-              || "$file" =~ ^tests/.*\.py$ \
-              || "$file" =~ ^claude_extensions/ \
-              || "$file" =~ ^gemini_extensions/ \
-              || "$file" =~ ^scripts/build/phases/.*\.md$ \
-              || "$file" =~ ^scripts/build/contracts/.*\.md$ \
-              || "$file" == "docs/lesson-contract.md" \
-              || "$file" == "docs/lesson-schema.yaml" \
-              || "$file" =~ ^starlight/ ]]; then
-              code_changed=true
-              break
-            fi
-          done
-
-          echo "code=$code_changed" >> "$GITHUB_OUTPUT"
-          if [[ "$code_changed" == "true" ]]; then
-            echo "Code-relevant changes detected; pytest will run."
-          else
-            echo "No code-relevant changes detected; pytest will be skipped successfully."
-          fi
+        if: needs.changes.outputs.code == 'true'
 
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-        if: steps.code-changes.outputs.code == 'true'
+        if: needs.changes.outputs.code == 'true'
         with:
           python-version: '3.12'
 
       - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        if: steps.code-changes.outputs.code == 'true'
+        if: needs.changes.outputs.code == 'true'
         with:
           path: ~/.cache/pip
           key: pip-${{ runner.os }}-${{ hashFiles('requirements.txt', 'requirements-lock.txt', 'pyproject.toml') }}
@@ -300,7 +297,7 @@ jobs:
             pip-${{ runner.os }}-
 
       - name: Install dependencies
-        if: steps.code-changes.outputs.code == 'true'
+        if: needs.changes.outputs.code == 'true'
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
@@ -311,7 +308,7 @@ jobs:
             torch==2.11.0 torchvision==0.26.0
 
       - name: Run tests
-        if: steps.code-changes.outputs.code == 'true' && (github.event_name != 'push' || github.ref != 'refs/heads/main')
+        if: needs.changes.outputs.code == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && (github.event_name != 'push' || github.ref != 'refs/heads/main')
         run: |
           common_args=(
             tests/
@@ -338,7 +335,7 @@ jobs:
           .venv/bin/python -m pytest "${common_args[@]}"
 
       - name: Run tests with coverage
-        if: steps.code-changes.outputs.code == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: needs.changes.outputs.code == 'true' && !cancelled() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           # Gradual path: 30 (2025) → 35 (now, 2026-04) → 50 (mid-2026) → 80 on
           # critical paths (dispatch, activity_repair, audit/core). Measured
@@ -380,7 +377,7 @@ jobs:
           .venv/bin/python -m pytest "${common_args[@]}" "${coverage_args[@]}"
 
       - name: Upload coverage
-        if: always() && steps.code-changes.outputs.code == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: always() && needs.changes.outputs.code == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: coverage-report
@@ -389,6 +386,8 @@ jobs:
   frontend:
     name: Frontend (build + vitest)
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -409,6 +408,8 @@ jobs:
   secret-scan:
     name: Secret Scanning (gitleaks)
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
