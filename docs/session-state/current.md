@@ -29,15 +29,10 @@
 ## Cold-start protocol
 
 1. Read this index.
-2. Open `2026-04-30-dependabot-lockfile-fixes-and-uk-framing-clarification.md`
-   for the latest state and open questions.
-3. For Phase-4 thread context (round 4 bakeoff prereqs, ADR-008 status),
-   also open the immediate predecessor `2026-04-29-phase-4-architectural-correction-and-adr-008.md`.
-4. If picking up Phase-4 round-3.5 vs 4 decision history, the canonical
-   prior is `2026-04-26-round-3.5-shipped.md`.
-5. If you create a new handoff, **add a row to the "Latest handoff"
-   table above and shift the previous "Latest" into "Predecessor
-   chain"** — do NOT replace this whole file.
+2. Open the file in the **"Latest handoff"** table above (top row) for current state, in-flight threads, and open questions.
+3. **Check `docs/decisions/pending/`** for any Decision Cards awaiting user input. Pending decisions are BLOCKING — surface them to the user before starting any new work that could invalidate them. Convention: see [`docs/decisions/pending/README.md`](../decisions/pending/README.md) and the "Multi-Agent Deliberation" section of [`docs/best-practices/agent-cooperation.md`](../best-practices/agent-cooperation.md).
+4. If picking up a thread that spans multiple sessions, open the relevant predecessor(s) from the "Predecessor chain" table for context.
+5. If you create a new handoff, **add a row to the "Latest handoff" table above and shift the previous "Latest" into "Predecessor chain"** — do NOT replace this whole file.
 
 ## Cross-thread notes (still active)
 

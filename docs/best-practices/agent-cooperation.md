@@ -133,6 +133,95 @@ mcp__message-broker__send_message(
 
 ---
 
+## Multi-Agent Deliberation (`ab discuss`)
+
+**This section was added 2026-05-02 after recognizing systematic underutilization** of `ab discuss` for design/framing/architecture decisions. We were defaulting to single-shot Gemini reviews and Claude-alone-reasoning where distributed deliberation would have caught more.
+
+### What `ab discuss` is — and isn't
+
+`ab discuss` runs bounded rounds (default 2, max 4) of parallel agent responses on a topic, short-circuiting when all agents end with `[AGREE]`. Transcript lands in the named channel with `parent_id` threading.
+
+**It is NOT a quorum mechanism.** Three agents don't form an independent jury — Claude/Gemini/Codex all trained on overlapping internet corpora and have **correlated blind spots** (e.g., Russian-imperial framings show up in all three model families' priors). Math-voting on agent agreement isn't trustworthy.
+
+**What it actually delivers:**
+- **More angles per decision** — Gemini catches content/citation gaps, Codex catches code edge cases, Claude catches architecture
+- **Adversarial pressure** — agents are prompted to challenge each other, which surfaces hidden assumptions one agent alone wouldn't pressure-test
+- **Documented deliberation** — channel transcript = referenceable context for future sessions, not "trust me, I thought about it"
+
+### When to use which tool
+
+| Use `ab discuss` | Use `ask-gemini` (single-shot) | Don't use either |
+|---|---|---|
+| Architectural trade-offs (e.g., module_type categories, retrieval strategy) | Mechanical PR review with green CI | Trivial fixes (delete leftover file) |
+| Pedagogy/framing decisions (POC scope, anchor choice, decolonization audits) | Adversarial review of a single PR | Implementation tasks (Codex codes alone) |
+| Brief pre-flight before dispatch (catch ambiguities before Codex burns 8 min) | Quick disambiguation question | When the answer is obvious |
+| Cross-agent deadlock (Gemini APPROVE, Codex REVISE on same artifact) | Spot-check an output against a rule | Time-sensitive merge decisions (3-min discussion latency stacks) |
+| Quality review of foundational content (M1-M3 modules, ADRs) | One-off domain question | |
+
+### Budget angle
+
+- `ab discuss --with gemini,codex` (Claude excluded) is FREE for orchestrator — Gemini subscription unmetered, Codex on OpenAI subscription. Use aggressively when Anthropic budget is tight.
+- `ab discuss --with claude,gemini,codex` burns Anthropic per round per Claude turn. Reserve for foundational decisions where Claude's voice as architect/reviewer matters (architecture, pedagogy framing, decision arbitration).
+
+### Concrete example — what we missed today (2026-05-02)
+
+When proposing the POC anchor module, Claude reasoned alone and offered A1/M10 colors as a "neutral steady-state baseline." User had to catch the Russian-imperial-propaganda angle on colors that invalidated "neutral." If we had run:
+
+```bash
+ab discuss content "POC anchor module choice — M10 colors vs M20 my-morning, considering decolonization sensitivity in A1" --with claude,gemini,codex --max-rounds 2
+```
+
+…Gemini or Codex might have surfaced the colors angle independently. The deliberation transcript would also exist as a referenceable record on the `content` channel, not buried in a Claude session that compaction would eventually destroy. **Pattern: when picking among options that touch decolonization, framing, or pedagogy — discuss, don't decide alone.**
+
+### Decision Card pattern (when `ab discuss` surfaces a CHOICE)
+
+Most `ab discuss` runs converge with `[AGREE]` — orchestrator just executes the consensus. But when discussion surfaces **disagreement OR multi-option output**, the orchestrator MUST emit a structured Decision Card so the user can override or approve. Don't bury decisions in transcript noise.
+
+**Template:**
+
+```markdown
+## DECISION REQUIRED — {one-line question}
+
+**Agents:** claude, gemini, codex (R rounds, channel: {name}, thread: {id})
+
+**Options surfaced:**
+- **Option A:** {description}  *(proposed by: gemini)*
+- **Option B:** {description}  *(proposed by: codex)*
+- **Option C:** {description}  *(proposed by: claude)*
+
+**Votes (with 1-line rationale):**
+- claude → A: {rationale}
+- gemini → B: {rationale}
+- codex → A: {rationale}
+
+**Real disagreement (not surface-level):** {what they actually differ on — the underlying assumption gap, not just which letter they picked}
+
+**Orchestrator recommendation:** A — {1-3 line rationale weighing the votes against project priors}
+
+**Awaiting:** user override (`go with B because…`) or `go` to proceed with the recommendation
+```
+
+### Where Decision Cards land
+
+Three locations depending on user availability:
+
+| Situation | Location | Why |
+|---|---|---|
+| User online, mid-session | Inline in chat reply | Immediate visibility, user can `go` in next message |
+| User AFK, no live session | `docs/decisions/pending/{YYYY-MM-DD}-{slug}.md` | Durable, scannable on return; cold-start protocol checks this dir |
+| Multi-week architectural call | New GH issue with `decision-pending` label + Decision Card as body | Long-lived discussion needs an issue thread, not a markdown file |
+
+When the user decides:
+- `pending/` file → moves to `docs/decisions/{date}-{slug}.md` with the chosen option recorded + closed
+- GH issue → updated with chosen option, label flipped from `decision-pending` to `decided`
+- Inline chat → orchestrator simply executes the choice, no further file movement needed
+
+### Cold-start integration
+
+The session-start checklist below now includes `docs/decisions/pending/` as a required scan. If pending decisions exist, the cold-start surface them before the user asks. This closes the "decisions buried in transcripts" gap — pending decisions are first-class state, not deliberation noise.
+
+---
+
 ## Session Start Checklist
 
 **Canonical path (GH #1309):** call the Monitor API. Do not open
@@ -153,6 +242,11 @@ curl -s http://localhost:8765/api/orient
 # 4. Do I have unread channel deliveries?
 curl -s "http://localhost:8765/api/comms/inbox?agent=claude"
 # (agent=gemini / agent=codex for the other workers)
+
+# 5. Are there pending decisions awaiting user input?
+ls docs/decisions/pending/ 2>/dev/null
+# If non-empty: read each, surface to user before any other work.
+# Pending decisions are blocking — don't start new work that may invalidate them.
 ```
 
 Agents running Python should use the SDK instead — one call, caching
