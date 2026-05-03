@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  contents: read
+
 on:
   push:
     paths:
@@ -239,6 +242,9 @@ jobs:
   lesson-schema-drift:
     name: Lesson Schema Drift
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
     needs: changes
     if: needs.changes.outputs.code == 'true'
     steps:
@@ -269,6 +275,9 @@ jobs:
   test:
     name: Test (pytest)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
     needs: [changes, lint]
     # Per Gemini cross-review on #1644: top-level `if:` MUST NOT exclude
     # lint=failure cases — Test (pytest) is a required status check; if the
@@ -386,6 +395,9 @@ jobs:
   frontend:
     name: Frontend (build + vitest)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
     needs: changes
     if: needs.changes.outputs.code == 'true'
     steps:
