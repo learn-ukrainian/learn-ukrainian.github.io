@@ -28,6 +28,7 @@ from typing import Any
 from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 
+from ..path_safety import safe_join
 from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
@@ -65,9 +66,7 @@ def _has_frontmatter(content_path: Path) -> bool:
     return bool(re.match(r"^---\s*\n.*?\n---\s*\n", head, re.DOTALL))
 
 
-def _plan_not_changed_after_build(
-    plan_path: Path, content_path: Path
-) -> bool:
+def _plan_not_changed_after_build(plan_path: Path, content_path: Path) -> bool:
     """True if the plan is not newer than the content file.
 
     If the plan has been edited since the last build, the module needs
@@ -140,16 +139,19 @@ def _compute_artifact_snapshot(track: str, slug: str) -> dict[str, Any]:
     if not cfg:
         return {"error": f"unknown track: {track}"}
 
-    track_dir: Path = CURRICULUM_ROOT / cfg["path"]
+    try:
+        track_dir = safe_join(CURRICULUM_ROOT, cfg["path"])
+        plan_path = safe_join(PLANS_ROOT, track, f"{slug}.yaml")
+    except ValueError:
+        return {"error": f"invalid track/slug: {track}/{slug}"}
     content_path = find_content_file(track_dir, slug)
-    plan_path = PLANS_ROOT / track / f"{slug}.yaml"
 
     # If neither the content file nor the plan exists, the slug is
     # unknown on this track. Return an error sentinel so the HTTP
     # wrapper can 404 — otherwise a typo looks like "all gates
     # false" which is indistinguishable from a known module that's
     # legitimately unshippable (reviewer CONCERN Codex-1 / #1309).
-    if not (content_path and content_path.is_file()) and not plan_path.is_file():
+    if not (content_path and content_path.is_file()) and not (plan_path and plan_path.is_file()):
         return {"error": f"unknown module: {track}/{slug}"}
 
     audit = get_audit_status(track_dir, slug)
@@ -166,7 +168,7 @@ def _compute_artifact_snapshot(track: str, slug: str) -> dict[str, Any]:
         "word_target_met": _word_target_met(audit, word_target),
         "audit_pass": str(audit.get("status") or "").lower() == "pass",
         "final_review_pass": _final_review_approved(final_review),
-        "plan_fresh": bool(content_path) and _plan_not_changed_after_build(plan_path, content_path),
+        "plan_fresh": bool(content_path and plan_path) and _plan_not_changed_after_build(plan_path, content_path),
     }
 
     # ``_compute_shippable`` is the legacy audit+review definition and
@@ -189,12 +191,8 @@ def _compute_artifact_snapshot(track: str, slug: str) -> dict[str, Any]:
         },
         "review": review,
         "final_review": final_review,
-        "content_path": (
-            str(content_path.relative_to(PROJECT_ROOT)) if content_path else None
-        ),
-        "plan_path": (
-            str(plan_path.relative_to(PROJECT_ROOT)) if plan_path.exists() else None
-        ),
+        "content_path": (str(content_path.relative_to(PROJECT_ROOT)) if content_path else None),
+        "plan_path": (str(plan_path.relative_to(PROJECT_ROOT)) if plan_path and plan_path.exists() else None),
     }
 
 
@@ -231,13 +229,15 @@ def _list_ship_ready(track_filter: str | None) -> dict[str, Any]:
             inspected += 1
             snap = _compute_artifact_snapshot(cfg["id"], slug)
             if snap.get("ship_ready"):
-                ship_ready.append({
-                    "track": cfg["id"],
-                    "slug": slug,
-                    "review_score": snap.get("review", {}).get("score"),
-                    "word_count": snap.get("audit", {}).get("word_count"),
-                    "word_target": snap.get("audit", {}).get("word_target"),
-                })
+                ship_ready.append(
+                    {
+                        "track": cfg["id"],
+                        "slug": slug,
+                        "review_score": snap.get("review", {}).get("score"),
+                        "word_count": snap.get("audit", {}).get("word_count"),
+                        "word_target": snap.get("audit", {}).get("word_target"),
+                    }
+                )
 
     return {
         "tracks_scanned": tracks_scanned,
@@ -271,13 +271,18 @@ def _enumerate_force_deletions(track: str, slug: str) -> list[dict[str, Any]]:
     if not cfg:
         return []
 
-    base: Path = CURRICULUM_ROOT / cfg["path"]
-    orch = base / "orchestration" / slug
+    try:
+        base = safe_join(CURRICULUM_ROOT, cfg["path"])
+        orch = safe_join(base, "orchestration", slug)
+    except ValueError:
+        return []
     targets: list[dict[str, Any]] = []
 
-    def _add(path: Path, category: str, reason: str) -> None:
-        if path.exists():
-            targets.append({
+    def _add(path: Path | None, category: str, reason: str) -> None:
+        if not path or not path.exists():
+            return
+        targets.append(
+            {
                 "path": str(path.relative_to(PROJECT_ROOT)),
                 "category": category,
                 "is_dir": path.is_dir(),
@@ -287,25 +292,26 @@ def _enumerate_force_deletions(track: str, slug: str) -> list[dict[str, Any]]:
                     else path.stat().st_size
                 ),
                 "reason": reason,
-            })
+            }
+        )
 
     # Content + activities + vocab (see _clean_build_artifacts:812-819).
-    _add(base / f"{slug}.md", "content", "module markdown")
-    _add(base / "activities" / f"{slug}.yaml", "activities", "activity YAML")
-    _add(base / "vocabulary" / f"{slug}.yaml", "vocabulary", "vocabulary YAML")
+    _add(safe_join(base, f"{slug}.md"), "content", "module markdown")
+    _add(safe_join(base, "activities", f"{slug}.yaml"), "activities", "activity YAML")
+    _add(safe_join(base, "vocabulary", f"{slug}.yaml"), "vocabulary", "vocabulary YAML")
 
     # Review files (see _clean_build_artifacts:822-826).
-    review_dir = base / "review"
+    review_dir = safe_join(base, "review")
     if review_dir.is_dir():
         for f in sorted(review_dir.glob(f"{slug}-review*")):
             _add(f, "review", "review output")
 
     # Audit + status (see _clean_build_artifacts:829-835).
-    _add(base / "audit" / f"{slug}-audit.md", "audit", "audit report")
-    _add(base / "status" / f"{slug}.json", "status", "status cache")
+    _add(safe_join(base, "audit", f"{slug}-audit.md"), "audit", "audit report")
+    _add(safe_join(base, "status", f"{slug}.json"), "status", "status cache")
 
     # Research (see _clean_build_artifacts:838-841).
-    _add(base / "research" / f"{slug}-knowledge-packet.md", "research", "knowledge packet")
+    _add(safe_join(base, "research", f"{slug}-knowledge-packet.md"), "research", "knowledge packet")
 
     # Orchestration artifacts — everything except index.md + friction.yaml
     # (see _clean_build_artifacts:844-854).
@@ -317,7 +323,15 @@ def _enumerate_force_deletions(track: str, slug: str) -> list[dict[str, Any]]:
             _add(f, "orchestration", "pipeline state / prompts / dispatch")
 
     # Published MDX (see _force_reset_module:877-879).
-    mdx = PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / track / f"{slug}.mdx"
+    mdx = safe_join(
+        PROJECT_ROOT,
+        "starlight",
+        "src",
+        "content",
+        "docs",
+        track,
+        f"{slug}.mdx",
+    )
     _add(mdx, "published", "starlight MDX output")
 
     return targets
@@ -358,14 +372,26 @@ async def force_preview(track: str, slug: str):
 
     targets = await asyncio.to_thread(_enumerate_force_deletions, track, slug)
 
-    base = CURRICULUM_ROOT / cfg["path"]
+    try:
+        base = safe_join(CURRICULUM_ROOT, cfg["path"])
+    except ValueError:
+        return JSONResponse(
+            status_code=400,
+            content={"error": f"invalid track path: {track}"},
+        )
     preserved: list[str] = []
-    plan = PLANS_ROOT / track / f"{slug}.yaml"
-    if plan.is_file():
+    try:
+        plan = safe_join(PLANS_ROOT, track, f"{slug}.yaml")
+    except ValueError:
+        plan = None
+    if plan and plan.is_file():
         preserved.append(str(plan.relative_to(PROJECT_ROOT)))
     for keep_name in ("index.md", "friction.yaml"):
-        keep = base / "orchestration" / slug / keep_name
-        if keep.is_file():
+        try:
+            keep = safe_join(base, "orchestration", slug, keep_name)
+        except ValueError:
+            keep = None
+        if keep and keep.is_file():
             preserved.append(str(keep.relative_to(PROJECT_ROOT)))
 
     return {
@@ -435,12 +461,21 @@ def _classify_module_files(track: str, slug: str) -> dict[str, Any]:
     if not cfg:
         return {"error": f"unknown track: {track}"}
 
-    base: Path = CURRICULUM_ROOT / cfg["path"]
-    orch = base / "orchestration" / slug
-    plan_path = PLANS_ROOT / track / f"{slug}.yaml"
-    mdx_path = (
-        PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / track / f"{slug}.mdx"
-    )
+    try:
+        base = safe_join(CURRICULUM_ROOT, cfg["path"])
+        orch = safe_join(base, "orchestration", slug)
+        plan_path = safe_join(PLANS_ROOT, track, f"{slug}.yaml")
+        mdx_path = safe_join(
+            PROJECT_ROOT,
+            "starlight",
+            "src",
+            "content",
+            "docs",
+            track,
+            f"{slug}.mdx",
+        )
+    except ValueError:
+        return {"error": f"invalid track/slug: {track}/{slug}"}
 
     plan_mtime = plan_path.stat().st_mtime if plan_path.is_file() else None
 
@@ -451,17 +486,18 @@ def _classify_module_files(track: str, slug: str) -> dict[str, Any]:
         "stale": [],
     }
 
-    def _record(path: Path, bucket: str) -> None:
-        if not path.exists():
+    def _record(path: Path | None, bucket: str) -> None:
+        if not path or not path.exists():
             return
         is_dir = path.is_dir()
-        size = (
-            sum(p.stat().st_size for p in path.rglob("*") if p.is_file())
-            if is_dir else path.stat().st_size
-        )
-        mtime = path.stat().st_mtime if not is_dir else max(
-            (p.stat().st_mtime for p in path.rglob("*") if p.is_file()),
-            default=path.stat().st_mtime,
+        size = sum(p.stat().st_size for p in path.rglob("*") if p.is_file()) if is_dir else path.stat().st_size
+        mtime = (
+            path.stat().st_mtime
+            if not is_dir
+            else max(
+                (p.stat().st_mtime for p in path.rglob("*") if p.is_file()),
+                default=path.stat().st_mtime,
+            )
         )
         entry = {
             "path": str(path.relative_to(PROJECT_ROOT)),
@@ -480,20 +516,30 @@ def _classify_module_files(track: str, slug: str) -> dict[str, Any]:
     if plan_path.is_file():
         _record(plan_path, "source_of_truth")
     for keep in ("index.md", "friction.yaml"):
-        _record(orch / keep, "source_of_truth")
+        keep_path = safe_join(orch, keep)
+        if keep_path:
+            _record(keep_path, "source_of_truth")
 
     # Generated — the same paths that --force would delete, minus the
     # published MDX which has its own bucket.
-    _record(base / f"{slug}.md", "generated")
-    _record(base / "activities" / f"{slug}.yaml", "generated")
-    _record(base / "vocabulary" / f"{slug}.yaml", "generated")
-    review_dir = base / "review"
+    _record(safe_join(base, f"{slug}.md"), "generated")
+    _record(safe_join(base, "activities", f"{slug}.yaml"), "generated")
+    _record(safe_join(base, "vocabulary", f"{slug}.yaml"), "generated")
+    review_dir = safe_join(base, "review")
+    if not review_dir:
+        return {
+            "track": track,
+            "slug": slug,
+            "counts": {k: 0 for k in ("source_of_truth", "generated", "published", "stale")},
+            "buckets": {k: [] for k in ("source_of_truth", "generated", "published", "stale")},
+            "categories": [{"name": name, "reason": reason} for name, reason in _ARTIFACT_CATEGORIES],
+        }
     if review_dir.is_dir():
         for f in sorted(review_dir.glob(f"{slug}-review*")):
             _record(f, "generated")
-    _record(base / "audit" / f"{slug}-audit.md", "generated")
-    _record(base / "status" / f"{slug}.json", "generated")
-    _record(base / "research" / f"{slug}-knowledge-packet.md", "generated")
+    _record(safe_join(base, "audit", f"{slug}-audit.md"), "generated")
+    _record(safe_join(base, "status", f"{slug}.json"), "generated")
+    _record(safe_join(base, "research", f"{slug}-knowledge-packet.md"), "generated")
     if orch.is_dir():
         keep = {"index.md", "friction.yaml"}
         for f in sorted(orch.iterdir()):
@@ -509,9 +555,7 @@ def _classify_module_files(track: str, slug: str) -> dict[str, Any]:
         "slug": slug,
         "counts": {k: len(v) for k, v in buckets.items()},
         "buckets": buckets,
-        "categories": [
-            {"name": name, "reason": reason} for name, reason in _ARTIFACT_CATEGORIES
-        ],
+        "categories": [{"name": name, "reason": reason} for name, reason in _ARTIFACT_CATEGORIES],
     }
 
 
@@ -557,9 +601,7 @@ def _read_review_file(path: Path) -> dict[str, Any] | None:
         "score": score,
         "verdict": verdict,
         "findings_count": findings,
-        "empty_findings_flag": (
-            findings == 0 and score is not None and score >= 8.5
-        ),
+        "empty_findings_flag": (findings == 0 and score is not None and score >= 8.5),
     }
 
 
@@ -568,8 +610,20 @@ def _review_snapshot(track: str, slug: str) -> dict[str, Any]:
     if not cfg:
         return {"error": f"unknown track: {track}"}
 
-    base: Path = CURRICULUM_ROOT / cfg["path"]
-    review_dir = base / "review"
+    try:
+        base = safe_join(CURRICULUM_ROOT, cfg["path"])
+        review_dir = safe_join(base, "review")
+    except ValueError:
+        return {"error": f"invalid track/slug: {track}/{slug}"}
+    if not review_dir:
+        return {
+            "track": track,
+            "slug": slug,
+            "main_review": None,
+            "final_review": None,
+            "style_review": None,
+            "any_empty_findings_flag": False,
+        }
 
     # Main review = per-module content review. Final review has a
     # DIFFERENT file format (Phase F verdict) parsed by
@@ -588,9 +642,7 @@ def _review_snapshot(track: str, slug: str) -> dict[str, Any]:
                 continue
             main_candidates.append(p)
     main_candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
-    main_review = (
-        _read_review_file(main_candidates[0]) if main_candidates else None
-    )
+    main_review = _read_review_file(main_candidates[0]) if main_candidates else None
 
     # Final review — Phase F approved/revise verdict, separate parser.
     # Surface the parsed summary directly rather than re-parsing the
@@ -598,13 +650,8 @@ def _review_snapshot(track: str, slug: str) -> dict[str, Any]:
     final_review_summary = get_final_review_info(base, slug)
 
     # Style review — separate file, same directory. Empty if absent.
-    style_candidates = (
-        sorted(review_dir.glob(f"{slug}-style-review*.md"))
-        if review_dir.is_dir() else []
-    )
-    style_review = (
-        _read_review_file(style_candidates[-1]) if style_candidates else None
-    )
+    style_candidates = sorted(review_dir.glob(f"{slug}-style-review*.md")) if review_dir.is_dir() else []
+    style_review = _read_review_file(style_candidates[-1]) if style_candidates else None
 
     return {
         "track": track,
@@ -650,28 +697,44 @@ def _state_drift_check(track: str, slug: str) -> dict[str, Any]:
     if not cfg:
         return {"error": f"unknown track: {track}"}
 
-    base: Path = CURRICULUM_ROOT / cfg["path"]
-    orch = base / "orchestration" / slug
+    try:
+        base = safe_join(CURRICULUM_ROOT, cfg["path"])
+        orch = safe_join(base, "orchestration", slug)
+    except ValueError:
+        return {"error": f"invalid track/slug: {track}/{slug}"}
+
     content_path = find_content_file(base, slug)
-    state_path = orch / "state.json"
+    state_path = safe_join(orch, "state.json") if orch else None
     audit = get_audit_status(base, slug)
     final_review = get_final_review_info(base, slug)
-    mdx = (
-        PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / track / f"{slug}.mdx"
-    )
+    try:
+        mdx = safe_join(
+            PROJECT_ROOT,
+            "starlight",
+            "src",
+            "content",
+            "docs",
+            track,
+            f"{slug}.mdx",
+        )
+    except ValueError:
+        mdx = None
 
     drifts: list[dict[str, str]] = []
 
     state_phases: dict[str, Any] = {}
-    if state_path.is_file():
+    if state_path and state_path.is_file():
         try:
             import json
+
             state_phases = (json.loads(state_path.read_text("utf-8")) or {}).get("phases") or {}
         except Exception:
-            drifts.append({
-                "kind": "state_unreadable",
-                "detail": f"{state_path} exists but failed to parse",
-            })
+            drifts.append(
+                {
+                    "kind": "state_unreadable",
+                    "detail": f"{state_path} exists but failed to parse",
+                }
+            )
 
     publish_phase = state_phases.get("publish") if isinstance(state_phases, dict) else None
 
@@ -679,46 +742,59 @@ def _state_drift_check(track: str, slug: str) -> dict[str, Any]:
     if (
         isinstance(publish_phase, dict)
         and publish_phase.get("status") == "complete"
+        and mdx is not None
         and not mdx.is_file()
     ):
-        drifts.append({
-            "kind": "publish_mdx_missing",
-            "detail": "state.json says publish complete but starlight MDX missing",
-        })
+        drifts.append(
+            {
+                "kind": "publish_mdx_missing",
+                "detail": "state.json says publish complete but starlight MDX missing",
+            }
+        )
 
     # mdx exists but state disagrees
-    if mdx.is_file() and not (
-        isinstance(publish_phase, dict) and publish_phase.get("status") == "complete"
+    if (
+        mdx is not None
+        and mdx.is_file()
+        and not (isinstance(publish_phase, dict) and publish_phase.get("status") == "complete")
     ):
-        drifts.append({
-            "kind": "mdx_without_state",
-            "detail": "published MDX on disk but state.json has no publish=complete",
-        })
+        drifts.append(
+            {
+                "kind": "mdx_without_state",
+                "detail": "published MDX on disk but state.json has no publish=complete",
+            }
+        )
 
     # audit says pass but content file missing
-    if str(audit.get("status") or "").lower() == "pass" and not (
-        content_path and content_path.is_file()
-    ):
-        drifts.append({
-            "kind": "audit_passes_without_content",
-            "detail": "status.json pass but no content .md on disk",
-        })
+    if str(audit.get("status") or "").lower() == "pass" and not (content_path and content_path.is_file()):
+        drifts.append(
+            {
+                "kind": "audit_passes_without_content",
+                "detail": "status.json pass but no content .md on disk",
+            }
+        )
 
     # final-review APPROVED but content file missing
-    if final_review and final_review.get("verdict", "").upper() == "PASS" and not (
-        content_path and content_path.is_file()
+    if (
+        final_review
+        and final_review.get("verdict", "").upper() == "PASS"
+        and not (content_path and content_path.is_file())
     ):
-        drifts.append({
-            "kind": "final_review_without_content",
-            "detail": "final review PASS but no content .md on disk",
-        })
+        drifts.append(
+            {
+                "kind": "final_review_without_content",
+                "detail": "final review PASS but no content .md on disk",
+            }
+        )
 
     # content exists but audit never ran
     if content_path and content_path.is_file() and str(audit.get("status") or "") == "not_run":
-        drifts.append({
-            "kind": "content_without_audit",
-            "detail": "content .md exists but audit/status cache missing",
-        })
+        drifts.append(
+            {
+                "kind": "content_without_audit",
+                "detail": "content .md exists but audit/status cache missing",
+            }
+        )
 
     return {
         "track": track,
@@ -726,16 +802,11 @@ def _state_drift_check(track: str, slug: str) -> dict[str, Any]:
         "in_sync": not drifts,
         "drift": drifts,
         "snapshot": {
-            "state_phases": {
-                name: data.get("status") for name, data in state_phases.items()
-                if isinstance(data, dict)
-            },
+            "state_phases": {name: data.get("status") for name, data in state_phases.items() if isinstance(data, dict)},
             "audit_status": audit.get("status"),
-            "final_review_verdict": (
-                final_review.get("verdict") if isinstance(final_review, dict) else None
-            ),
+            "final_review_verdict": (final_review.get("verdict") if isinstance(final_review, dict) else None),
             "content_on_disk": bool(content_path and content_path.is_file()),
-            "mdx_on_disk": mdx.is_file(),
+            "mdx_on_disk": bool(mdx and mdx.is_file()),
         },
     }
 

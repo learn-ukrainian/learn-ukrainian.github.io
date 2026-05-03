@@ -21,6 +21,7 @@ from audit.status_cache import get_source_paths, read_status
 from common.thresholds import REVIEW_PASS_FLOOR
 from research_quality import assess_research_compat, find_research_path, get_rubric
 
+from ..path_safety import safe_join
 from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict
 from .state_helpers import detect_pipeline_version, read_v2_state
 
@@ -66,13 +67,25 @@ def read_yaml_file(path: Path) -> dict | None:
         return None
 
 
+def _safe_join(base: Path, *parts: str | Path) -> Path | None:
+    """Return a safe child path under ``base`` or ``None`` if input is invalid."""
+    try:
+        return safe_join(base, *parts)
+    except ValueError:
+        return None
+
+
 def default_research_info(track_id: str) -> dict:
     """Return a default (empty) research info dict for a track."""
     return {
-        "exists": False, "words": 0, "quality": None,
-        "score": None, "markers": None,
+        "exists": False,
+        "words": 0,
+        "quality": None,
+        "score": None,
+        "markers": None,
         "profile": get_rubric(track_id),
-        "dimensions": None, "gaps": None,
+        "dimensions": None,
+        "gaps": None,
     }
 
 
@@ -102,16 +115,20 @@ def extract_word_count_from_status(result) -> tuple[int, int, int, str | None]:
 def extract_review_info(track_dir: Path, slug: str) -> dict:
     """Extract review score, verdict, and plan review info for a module."""
     info: dict = {
-        "has_review": False, "has_final_review": False,
-        "review_score": None, "review_verdict": None,
-        "has_plan_review": False, "plan_review_verdict": None,
+        "has_review": False,
+        "has_final_review": False,
+        "review_score": None,
+        "review_verdict": None,
+        "has_plan_review": False,
+        "plan_review_verdict": None,
     }
 
-    review_file = track_dir / "review" / f"{slug}-review.md"
-    info["has_review"] = review_file.exists()
-    info["has_final_review"] = (track_dir / "review" / f"{slug}-final-review.md").exists()
+    review_file = _safe_join(track_dir, "review", f"{slug}-review.md")
+    final_review_file = _safe_join(track_dir, "review", f"{slug}-final-review.md")
+    info["has_review"] = bool(review_file and review_file.exists())
+    info["has_final_review"] = bool(final_review_file and final_review_file.exists())
 
-    if info["has_review"]:
+    if review_file and review_file.exists():
         try:
             text = review_file.read_text(errors="replace")
             info["review_score"] = extract_review_score(text)
@@ -119,9 +136,9 @@ def extract_review_info(track_dir: Path, slug: str) -> dict:
         except Exception:
             pass
 
-    plan_review_file = track_dir / "audit" / f"{slug}-plan-review.md"
-    info["has_plan_review"] = plan_review_file.exists()
-    if info["has_plan_review"]:
+    plan_review_file = _safe_join(track_dir, "audit", f"{slug}-plan-review.md")
+    info["has_plan_review"] = bool(plan_review_file and plan_review_file.exists())
+    if plan_review_file and plan_review_file.exists():
         try:
             text = plan_review_file.read_text(errors="replace")
             info["plan_review_verdict"] = extract_plan_verdict(text)
@@ -140,8 +157,8 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
     has_meta = sp.get("meta") and sp["meta"].exists() if sp else False
     has_activities = sp.get("activities") and sp["activities"].exists() if sp else False
     has_vocab = sp.get("vocabulary") and sp["vocabulary"].exists() if sp else False
-    plan_file = plans_dir / f"{slug}.yaml"
-    has_plan = plan_file.exists()
+    plan_file = _safe_join(plans_dir, f"{slug}.yaml")
+    has_plan = bool(plan_file and plan_file.exists())
 
     content_path = sp.get("md") if sp else None
     rp = find_research_path(track_dir, slug)
@@ -149,8 +166,8 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
     if research_info is None:
         research_info = default_research_info(track_id)
 
-    status_file = track_dir / "status" / f"{slug}.json"
-    result = read_status(status_file, source_paths=sp) if status_file.exists() else None
+    status_file = _safe_join(track_dir, "status", f"{slug}.json")
+    result = read_status(status_file, source_paths=sp) if status_file and status_file.exists() else None
 
     overall_status = "missing"
     gates = {}
@@ -164,21 +181,22 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
         md_content = sp["md"].read_text() if sp.get("md") else ""
         word_count = len(md_content.split())
 
-    if word_target == 0 and has_plan:
+    if word_target == 0 and plan_file and plan_file.exists():
         plan_data = read_yaml_file(plan_file)
         word_target = plan_data.get("word_target", 0) if plan_data else 0
 
-    orch_dir = track_dir / "orchestration" / slug
-    orch_exists = orch_dir.exists()
+    orch_dir = _safe_join(track_dir, "orchestration", slug)
+    orch_exists = bool(orch_dir and orch_dir.exists())
     pipeline_version = detect_pipeline_version(orch_dir) if orch_exists else "unbuilt"
     review_info = extract_review_info(track_dir, slug)
     # Friction from friction.yaml (active count only, not glob of all friction files)
     friction_active = 0
     friction_resolved = 0
-    friction_path = orch_dir / "friction.yaml" if orch_exists else None
+    friction_path = _safe_join(orch_dir, "friction.yaml") if orch_exists else None
     if friction_path and friction_path.exists():
         try:
             import yaml
+
             fdata = yaml.safe_load(friction_path.read_text("utf-8"))
             for f in fdata.get("frictions", []) if fdata else []:
                 if f.get("status") == "active":
@@ -193,15 +211,24 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
     is_shippable = overall_status == "pass" and r_score is not None and r_score >= REVIEW_PASS_FLOOR
 
     return {
-        "slug": slug, "num": num, "pipeline_version": pipeline_version,
+        "slug": slug,
+        "num": num,
+        "pipeline_version": pipeline_version,
         "needs_rebuild": pipeline_version != "v6",
-        "status": overall_status, "word_count": word_count, "word_target": word_target,
-        "deferred_count": deferred_count, "gates": gates,
+        "status": overall_status,
+        "word_count": word_count,
+        "word_target": word_target,
+        "deferred_count": deferred_count,
+        "gates": gates,
         "shippable": is_shippable,
         "files": {
-            "plan": has_plan, "meta": has_meta, "lesson": has_md,
-            "activities": has_activities, "vocabulary": has_vocab,
-            "review": review_info["has_review"], "final_review": review_info["has_final_review"],
+            "plan": has_plan,
+            "meta": has_meta,
+            "lesson": has_md,
+            "activities": has_activities,
+            "vocabulary": has_vocab,
+            "review": review_info["has_review"],
+            "final_review": review_info["has_final_review"],
             "plan_review": review_info["has_plan_review"],
         },
         "has_review": review_info["has_review"],
@@ -241,9 +268,7 @@ def compute_track_stats(modules: list, track_id: str) -> dict:
     research_stats: dict = {"total": research_total, "profile": rubric_name}
     if rubric_name:
         for label in ["exemplary", "solid", "adequate", "thin", "stub"]:
-            research_stats[label] = sum(
-                1 for m in modules if m.get("research", {}).get("quality") == label
-            )
+            research_stats[label] = sum(1 for m in modules if m.get("research", {}).get("quality") == label)
     stats["research"] = research_stats
     return stats
 
@@ -257,16 +282,20 @@ def get_orchestration_info(orch_dir: Path) -> dict:
     for f in sorted(orch_dir.iterdir(), key=lambda x: x.stat().st_mtime):
         if f.is_file():
             st = f.stat()
-            phases.append({
-                "file": f.name, "size": st.st_size,
-                "timestamp": datetime.fromtimestamp(st.st_mtime, tz=UTC).isoformat(),
-            })
+            phases.append(
+                {
+                    "file": f.name,
+                    "size": st.st_size,
+                    "timestamp": datetime.fromtimestamp(st.st_mtime, tz=UTC).isoformat(),
+                }
+            )
 
     version = detect_pipeline_version(orch_dir)
     info: dict = {
         "orchestration": phases,
         "friction_count": sum(1 for _ in orch_dir.glob("*friction*")),
-        "pipeline_version": version, "needs_rebuild": version != "v6",
+        "pipeline_version": version,
+        "needs_rebuild": version != "v6",
     }
     if version == "v5":
         v5 = read_v2_state(orch_dir)
@@ -281,8 +310,8 @@ def build_module_summary(track_dir: Path, plans_dir: Path, track_id: str, slug: 
     sp = get_source_paths(track_dir, slug) if track_dir.exists() else {}
     has_md = sp.get("md") and sp["md"].exists() if sp else False
 
-    status_file = track_dir / "status" / f"{slug}.json"
-    result = read_status(status_file, source_paths=sp) if status_file.exists() else None
+    status_file = _safe_join(track_dir, "status", f"{slug}.json")
+    result = read_status(status_file, source_paths=sp) if status_file and status_file.exists() else None
 
     overall_status = "missing"
     if result and result.data:
@@ -290,12 +319,13 @@ def build_module_summary(track_dir: Path, plans_dir: Path, track_id: str, slug: 
     elif has_md:
         overall_status = "unaudited"
 
-    orch_dir = track_dir / "orchestration" / slug
-    pipeline_version = detect_pipeline_version(orch_dir) if orch_dir.exists() else "unbuilt"
+    orch_dir = _safe_join(track_dir, "orchestration", slug)
+    pipeline_version = detect_pipeline_version(orch_dir) if orch_dir and orch_dir.exists() else "unbuilt"
     review_info = extract_review_info(track_dir, slug)
 
     return {
-        "slug": slug, "num": num,
+        "slug": slug,
+        "num": num,
         "status": overall_status,
         "pipeline_version": pipeline_version,
         "has_review": review_info["has_review"],
@@ -322,8 +352,15 @@ def scan_track_summary_cached(track_id: str, track_path: str, manifest_modules: 
 
 def scan_track_summary(track_id: str, track_path: str, manifest_modules: list) -> dict:
     """Lightweight track scan — only status/badges per module, no research or full detail."""
-    track_dir = CURRICULUM_ROOT / track_path
-    plans_dir = CURRICULUM_ROOT / "plans" / track_id
+    track_dir = _safe_join(CURRICULUM_ROOT, track_path)
+    plans_dir = _safe_join(CURRICULUM_ROOT, "plans", track_id)
+    if not track_dir or not plans_dir:
+        return {
+            "track_id": track_id,
+            "track_path": track_path,
+            "module_count": 0,
+            "modules": [],
+        }
 
     modules = [
         build_module_summary(track_dir, plans_dir, track_id, parse_slug(m_entry), idx)
@@ -331,7 +368,8 @@ def scan_track_summary(track_id: str, track_path: str, manifest_modules: list) -
     ]
 
     return {
-        "track_id": track_id, "track_path": track_path,
+        "track_id": track_id,
+        "track_path": track_path,
         "module_count": len(modules),
         "modules": modules,
     }
@@ -339,8 +377,17 @@ def scan_track_summary(track_id: str, track_path: str, manifest_modules: list) -
 
 def scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
     """Scan a single track and return module-level detail."""
-    track_dir = CURRICULUM_ROOT / track_path
-    plans_dir = CURRICULUM_ROOT / "plans" / track_id
+    track_dir = _safe_join(CURRICULUM_ROOT, track_path)
+    plans_dir = _safe_join(CURRICULUM_ROOT, "plans", track_id)
+    if not track_dir or not plans_dir:
+        return {
+            "track_id": track_id,
+            "track_path": track_path,
+            "module_count": 0,
+            "is_seminar": track_id in SEMINAR_TRACK_IDS,
+            "stats": compute_track_stats([], track_id),
+            "modules": [],
+        }
 
     modules = [
         build_module_info(track_dir, plans_dir, track_id, parse_slug(m_entry), idx)
@@ -348,7 +395,8 @@ def scan_track(track_id: str, track_path: str, manifest_modules: list) -> dict:
     ]
 
     return {
-        "track_id": track_id, "track_path": track_path,
+        "track_id": track_id,
+        "track_path": track_path,
         "module_count": len(modules),
         "is_seminar": track_id in SEMINAR_TRACK_IDS,
         "stats": compute_track_stats(modules, track_id),
@@ -380,20 +428,29 @@ def find_active_builds() -> list[dict]:
                 has_phase3 = any("phase-3" in fn for fn in files)
                 has_phase7 = any("phase-7" in fn or "final-review" in fn for fn in files)
                 stage = "hetman" if has_phase3 or has_phase7 else "otaman"
-                active_builds.append({
-                    "slug": module_dir.name, "track": track_dir.name,
-                    "stage": stage, "latest_file": latest_file, "seconds_ago": int(age),
-                })
+                active_builds.append(
+                    {
+                        "slug": module_dir.name,
+                        "track": track_dir.name,
+                        "stage": stage,
+                        "latest_file": latest_file,
+                        "seconds_ago": int(age),
+                    }
+                )
     return active_builds
 
 
 def classify_module_queue(track_id, track_dir, slug, idx, status_file) -> str | None:
     """Classify a module into a queue: 'otaman', 'hetman', 'final_review', or None."""
+    if not status_file:
+        return "otaman"
     if not status_file.exists():
-        md_exists = any(
-            (track_dir / f).exists()
-            for f in [f"{slug}.md", f"{idx + 1:02d}-{slug}.md", f"{idx + 1}-{slug}.md"]
-        )
+        md_names = [
+            f"{slug}.md",
+            f"{idx + 1:02d}-{slug}.md",
+            f"{idx + 1}-{slug}.md",
+        ]
+        md_exists = any((candidate := _safe_join(track_dir, fn)) and candidate.exists() for fn in md_names)
         return None if md_exists else "otaman"
 
     try:
@@ -408,8 +465,8 @@ def classify_module_queue(track_id, track_dir, slug, idx, status_file) -> str | 
             lesson_status = data.get("gates", {}).get("lesson", {}).get("status", "")
             return "otaman" if lesson_status == "fail" else None
         if overall == "pass":
-            review_file = track_dir / "review" / f"{slug}-final-review.md"
-            return "final_review" if not review_file.exists() else None
+            review_file = _safe_join(track_dir, "review", f"{slug}-final-review.md")
+            return "final_review" if not (review_file and review_file.exists()) else None
     except Exception:
         pass
     return None
@@ -426,14 +483,21 @@ def scan_pipeline_queues() -> tuple[list, list, list]:
 
     for level_cfg in LEVELS:
         track_id = level_cfg["id"]
-        track_dir = CURRICULUM_ROOT / level_cfg["path"]
-        status_dir = track_dir / "status"
+        track_dir = _safe_join(CURRICULUM_ROOT, level_cfg["path"])
+        status_dir = _safe_join(track_dir, "status") if track_dir else None
+        if not status_dir:
+            continue
         track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", [])
 
         for idx, m_entry in enumerate(track_modules):
             slug = parse_slug(m_entry)
+            status_file = _safe_join(status_dir, f"{slug}.json")
             classification = classify_module_queue(
-                track_id, track_dir, slug, idx, status_dir / f"{slug}.json",
+                track_id,
+                track_dir,
+                slug,
+                idx,
+                status_file,
             )
             if classification:
                 queue_map[classification].append({"track": track_id, "slug": slug, "num": idx + 1})

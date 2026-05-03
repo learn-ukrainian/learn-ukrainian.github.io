@@ -43,6 +43,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from audit.status_cache import get_source_paths, read_status
 from research_quality import assess_research_compat, find_research_path
 
+from ..path_safety import safe_join
+
 router = APIRouter(tags=["dashboard"])
 
 
@@ -127,13 +129,15 @@ async def research_overview():
                 entry["content_alignment"] = r["content_alignment"]
             mod_research.append(entry)
 
-        tracks.append({
-            "id": track_id,
-            "name": level_cfg["name"],
-            "module_count": track_data["module_count"],
-            "research_stats": rs,
-            "modules": mod_research,
-        })
+        tracks.append(
+            {
+                "id": track_id,
+                "name": level_cfg["name"],
+                "module_count": track_data["module_count"],
+                "research_stats": rs,
+                "modules": mod_research,
+            }
+        )
 
     return {
         "tracks": tracks,
@@ -150,6 +154,8 @@ async def track_summary(track_id: str):
         raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
 
     track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", [])
+    if track_modules is None:
+        track_modules = []
     return scan_track_summary_cached(track_id, level_cfg["path"], track_modules)
 
 
@@ -162,6 +168,8 @@ async def track_detail(track_id: str):
         raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
 
     track_modules = manifest.get("levels", {}).get(track_id, {}).get("modules", [])
+    if track_modules is None:
+        track_modules = []
     return scan_track_cached(track_id, level_cfg["path"], track_modules)
 
 
@@ -172,14 +180,27 @@ async def module_detail(track_id: str, slug: str):
     if not level_cfg:
         raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
 
-    track_dir = CURRICULUM_ROOT / level_cfg["path"]
+    try:
+        track_dir = safe_join(CURRICULUM_ROOT, level_cfg["path"])
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=f"Invalid track path for {track_id}") from exc
     result = {"slug": slug, "track": track_id}
 
-    result["plan"] = read_yaml_file(CURRICULUM_ROOT / "plans" / track_id / f"{slug}.yaml")
-    result["meta"] = read_yaml_file(track_dir / "meta" / f"{slug}.yaml")
+    try:
+        result["plan"] = read_yaml_file(safe_join(CURRICULUM_ROOT, "plans", track_id, f"{slug}.yaml"))
+        result["meta"] = read_yaml_file(safe_join(track_dir, "meta", f"{slug}.yaml"))
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid track/slug: {track_id}/{slug}",
+        ) from exc
 
     sp = get_source_paths(track_dir, slug)
-    status_result = read_status(track_dir / "status" / f"{slug}.json", source_paths=sp)
+    try:
+        status_file = safe_join(track_dir, "status", f"{slug}.json")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=f"Invalid track/slug: {track_id}/{slug}") from exc
+    status_result = read_status(status_file, source_paths=sp)
     result["status"] = status_result.data if status_result else None
     result["status_is_fresh"] = status_result.is_fresh if status_result else None
     result["status_stale_sources"] = status_result.stale_sources if status_result else []
@@ -190,9 +211,7 @@ async def module_detail(track_id: str, slug: str):
         result["lesson"] = {
             "word_count": len(content.split()),
             "sections": sections,
-            "last_modified": datetime.fromtimestamp(
-                md_path.stat().st_mtime, tz=UTC
-            ).isoformat(),
+            "last_modified": datetime.fromtimestamp(md_path.stat().st_mtime, tz=UTC).isoformat(),
         }
     else:
         result["lesson"] = None
@@ -233,11 +252,11 @@ async def module_detail(track_id: str, slug: str):
     result["shippable"] = overall == "pass" and r_score is not None and r_score >= REVIEW_PASS_FLOOR
 
     # Friction from friction.yaml (#970)
-    orch_dir = track_dir / "orchestration" / slug
-    friction_path = orch_dir / "friction.yaml"
+    orch_dir = safe_join(track_dir, "orchestration", slug)
+    friction_path = safe_join(orch_dir, "friction.yaml") if orch_dir else None
     result["friction_active"] = 0
     result["friction_resolved"] = 0
-    if friction_path.exists():
+    if friction_path and friction_path.exists():
         try:
             fdata = yaml.safe_load(friction_path.read_text())
             for f in fdata.get("frictions", []) if fdata else []:
@@ -290,11 +309,13 @@ async def activity_config():
     for act_type in VALID_ACTIVITY_TYPES:
         complexity = ACTIVITY_COMPLEXITY.get(act_type, {})
         available_levels = list(complexity.keys()) if complexity else []
-        types.append({
-            "type": act_type,
-            "available_levels": available_levels,
-            "complexity": complexity,
-        })
+        types.append(
+            {
+                "type": act_type,
+                "available_levels": available_levels,
+                "complexity": complexity,
+            }
+        )
 
     levels = {}
     for level_key, cfg in LEVEL_CONFIG.items():
@@ -402,9 +423,7 @@ async def comms_status():
         SELECT status, COUNT(*) FROM messages
         GROUP BY status
     """)
-    result["delivery_stats"] = {
-        (row[0] or "pending"): row[1] for row in cur.fetchall()
-    }
+    result["delivery_stats"] = {(row[0] or "pending"): row[1] for row in cur.fetchall()}
 
     cur.execute("""
         SELECT id, task_id, from_llm, to_llm, message_type,

@@ -12,15 +12,18 @@ from pathlib import Path
 import yaml
 from fastapi import APIRouter, HTTPException
 
+from ..path_safety import safe_join
 from .config import CURRICULUM_ROOT, PROJECT_ROOT
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 router = APIRouter(tags=["gold"])
 
+
 @router.get("/health")
 async def health():
     return {"status": "ok", "team": "gold"}
+
 
 @router.get("/ground-truth")
 async def ground_truth():
@@ -68,10 +71,7 @@ async def ground_truth():
             except Exception:
                 pass
 
-    return {
-        "modules": result,
-        "last_scan": datetime.now(UTC).isoformat()
-    }
+    return {"modules": result, "last_scan": datetime.now(UTC).isoformat()}
 
 
 @router.get("/union-stats")
@@ -90,7 +90,7 @@ async def union_stats():
         "total_built": 0,
         "total_passed": 0,
         "word_count_estimate": 0,
-        "tracks": {}
+        "tracks": {},
     }
 
     # Plans directory
@@ -103,11 +103,13 @@ async def union_stats():
             "planned_count": 0,
             "built_count": 0,
             "passed_count": 0,
-            "gaps": []
+            "gaps": [],
         }
 
-        track_dir = CURRICULUM_ROOT / track_id
-        plans_dir = plans_root / track_id
+        track_dir = safe_join(CURRICULUM_ROOT, track_id)
+        plans_dir = safe_join(plans_root, track_id)
+        if not track_dir or not plans_dir:
+            continue
 
         for m_entry in track_modules:
             slug = m_entry.split("#")[0].strip() if isinstance(m_entry, str) else str(m_entry)
@@ -115,22 +117,24 @@ async def union_stats():
 
             # 1. Check Plan
             # Try both {slug}.yaml and bare-slug.yaml
-            plan_file = plans_dir / f"{slug}.yaml"
+            plan_file = safe_join(plans_dir, f"{slug}.yaml")
+            if not plan_file:
+                continue
             has_plan = plan_file.exists()
             if has_plan:
                 track_stats["planned_count"] += 1
                 stats["total_planned"] += 1
 
             # 2. Check Build (MD file)
-            md_file = track_dir / f"{slug}.md"
-            has_build = md_file.exists()
+            md_file = safe_join(track_dir, f"{slug}.md")
+            has_build = bool(md_file and md_file.exists())
             if has_build:
                 track_stats["built_count"] += 1
                 stats["total_built"] += 1
 
             # 3. Check Status
-            status_file = track_dir / "status" / f"{slug}.json"
-            has_status = status_file.exists()
+            status_file = safe_join(track_dir, "status", f"{slug}.json")
+            has_status = bool(status_file and status_file.exists())
             if has_status:
                 try:
                     with open(status_file) as f:
@@ -158,8 +162,8 @@ async def union_stats():
 @router.get("/plan-details/{track_id}")
 async def plan_details(track_id: str):
     """Return detailed blueprint info for every module in a track's plan."""
-    plans_dir = CURRICULUM_ROOT / "plans" / track_id
-    if not plans_dir.exists():
+    plans_dir = safe_join(CURRICULUM_ROOT, "plans", track_id)
+    if not plans_dir or not plans_dir.exists():
         return {"error": f"Plans directory not found for {track_id}"}
 
     manifest_path = CURRICULUM_ROOT / "curriculum.yaml"
@@ -171,7 +175,9 @@ async def plan_details(track_id: str):
     details = []
     for m_entry in track_modules:
         slug = m_entry.split("#")[0].strip() if isinstance(m_entry, str) else str(m_entry)
-        plan_file = plans_dir / f"{slug}.yaml"
+        plan_file = safe_join(plans_dir, f"{slug}.yaml")
+        if not plan_file:
+            continue
 
         module_plan = {"slug": slug, "status": "unplanned"}
         if plan_file.exists():
@@ -186,7 +192,7 @@ async def plan_details(track_id: str):
                     "word_target": data.get("word_target", 0),
                     "grammar": data.get("grammar", []),
                     "objectives": data.get("objectives", []),
-                    "pedagogy": data.get("pedagogy", "N/A")
+                    "pedagogy": data.get("pedagogy", "N/A"),
                 }
             except (yaml.YAMLError, OSError):
                 pass
@@ -198,16 +204,12 @@ async def plan_details(track_id: str):
 @router.get("/inspect/{track_id}/{slug}")
 async def inspect_module(track_id: str, slug: str):
     """Deep dive into a specific module's actual file content and its plan."""
-    res = {
-        "slug": slug,
-        "track": track_id,
-        "build": None,
-        "plan": None,
-        "phases": {"current": 0, "status": "pending"}
-    }
+    res = {"slug": slug, "track": track_id, "build": None, "plan": None, "phases": {"current": 0, "status": "pending"}}
 
     # 1. Check Plan
-    plans_file = CURRICULUM_ROOT / "plans" / track_id / f"{slug}.yaml"
+    plans_file = safe_join(CURRICULUM_ROOT, "plans", track_id, f"{slug}.yaml")
+    if not plans_file:
+        return res
     if plans_file.exists():
         try:
             with open(plans_file) as f:
@@ -216,7 +218,9 @@ async def inspect_module(track_id: str, slug: str):
             pass
 
     # 2. Check Build
-    md_path = CURRICULUM_ROOT / track_id / f"{slug}.md"
+    md_path = safe_join(CURRICULUM_ROOT, track_id, f"{slug}.md")
+    if not md_path:
+        return res
     if md_path.exists():
         content = md_path.read_text()
         res["build"] = {
@@ -224,11 +228,13 @@ async def inspect_module(track_id: str, slug: str):
             "sections": content.count("\n## "),
             "callouts": content.count("> [!"),
             "last_modified": datetime.fromtimestamp(md_path.stat().st_mtime, tz=UTC).isoformat(),
-            "snippet": "\n".join(content.splitlines()[:15])
+            "snippet": "\n".join(content.splitlines()[:15]),
         }
 
     # 3. Determine Phase from orchestration
-    orch_dir = CURRICULUM_ROOT / track_id / "orchestration" / slug
+    orch_dir = safe_join(CURRICULUM_ROOT, track_id, "orchestration", slug)
+    if not orch_dir:
+        return res
     if orch_dir.exists():
         phase_files = list(orch_dir.glob("phase-*-output.md"))
         if phase_files:
@@ -243,9 +249,10 @@ async def inspect_module(track_id: str, slug: str):
             res["phases"]["current"] = max_phase
             res["phases"]["status"] = "in-progress"
 
-        if (orch_dir / "phase-6-review.md").exists():
-            res["phases"]["current"] = 6
-            res["phases"]["status"] = "review"
+    phase6_marker = safe_join(orch_dir, "phase-6-review.md")
+    if phase6_marker and phase6_marker.exists():
+        res["phases"]["current"] = 6
+        res["phases"]["status"] = "review"
 
     return res
 
@@ -253,20 +260,22 @@ async def inspect_module(track_id: str, slug: str):
 @router.get("/orchestration/{track_id}/{slug}")
 async def orchestration_history(track_id: str, slug: str):
     """Reconstruct the phase history from the orchestration folder."""
-    orch_dir = CURRICULUM_ROOT / track_id / "orchestration" / slug
-    if not orch_dir.exists():
+    orch_dir = safe_join(CURRICULUM_ROOT, track_id, "orchestration", slug)
+    if not orch_dir or not orch_dir.exists():
         return []
 
     artifacts = []
     # Sort by mtime to get a chronological timeline
     for f in sorted(orch_dir.iterdir(), key=lambda x: x.stat().st_mtime):
         if f.is_file():
-            artifacts.append({
-                "file": f.name,
-                "type": "audit" if "audit" in f.name else ("prompt" if "prompt" in f.name else "output"),
-                "timestamp": datetime.fromtimestamp(f.stat().st_mtime, tz=UTC).isoformat(),
-                "size": f.stat().st_size
-            })
+            artifacts.append(
+                {
+                    "file": f.name,
+                    "type": "audit" if "audit" in f.name else ("prompt" if "prompt" in f.name else "output"),
+                    "timestamp": datetime.fromtimestamp(f.stat().st_mtime, tz=UTC).isoformat(),
+                    "size": f.stat().st_size,
+                }
+            )
     return artifacts
 
 
@@ -296,6 +305,7 @@ async def broker_messages():
     except Exception as e:
         return {"error": str(e)}
 
+
 @router.get("/active-orchestration")
 async def active_orchestration():
     """Scan all orchestration folders for active module builds."""
@@ -319,10 +329,12 @@ async def active_orchestration():
 
             # Active if modified in last 15 mins
             if (datetime.now().timestamp() - latest_mtime) < 900:
-                active.append({
-                    "slug": module_dir.name,
-                    "track": track_dir.name,
-                    "seconds_ago": int(datetime.now().timestamp() - latest_mtime)
-                })
+                active.append(
+                    {
+                        "slug": module_dir.name,
+                        "track": track_dir.name,
+                        "seconds_ago": int(datetime.now().timestamp() - latest_mtime),
+                    }
+                )
 
     return active
