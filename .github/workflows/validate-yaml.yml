@@ -1,5 +1,8 @@
 name: Validate YAML Files
 
+permissions:
+  contents: read
+
 on:
   push:
     paths:
@@ -17,6 +20,9 @@ jobs:
   validate-activities:
     name: Activities & Vocab
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -106,6 +112,9 @@ jobs:
   validate-plans:
     name: Curriculum Plans
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
