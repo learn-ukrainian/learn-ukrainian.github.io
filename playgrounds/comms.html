@@ -313,6 +313,15 @@ function parseTaskId(taskId) {
   return null;
 }
 
+function escapeHtmlAttribute(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 async function showConversation(taskId) {
   if (!taskId) return;
   const res = await fetch(`/api/comms/conversation/${encodeURIComponent(taskId)}`);
@@ -325,8 +334,8 @@ async function showConversation(taskId) {
       <div class="detail-section">
         <h3>Related Module</h3>
         <div class="module-link">
-          <span class="ml-slug">${parsed.slug}</span>
-          <span class="ml-phase">${parsed.phaseKey}</span>
+          <span class="ml-slug">${escapeHtmlAttribute(parsed.slug)}</span>
+          <span class="ml-phase">${escapeHtmlAttribute(parsed.phaseKey)}</span>
         </div>
       </div>
     `;
@@ -349,7 +358,7 @@ async function showConversation(taskId) {
 
   openDetail(`
     <div class="detail-header">
-      <h2>${linkifyGitHub(taskId)}</h2>
+      <h2>${linkifyGitHub(escapeHtmlAttribute(taskId))}</h2>
       <div class="detail-sub">${data.count || 0} messages in thread</div>
     </div>
     ${moduleHtml}
@@ -375,19 +384,24 @@ async function showMessage(msgId) {
 }
 
 function showBuildDetail(track, slug, phase, status, taskId) {
+  const safeTrack = escapeHtmlAttribute(track);
+  const safeSlug = escapeHtmlAttribute(slug);
+  const safePhase = escapeHtmlAttribute(phase);
+  const safeStatus = escapeHtmlAttribute(status);
+  const safeTaskId = escapeHtmlAttribute(taskId);
   let html = `
     <div class="detail-header">
-      <h2>${slug}</h2>
-      <div class="detail-sub">${track} &middot; ${phase} &middot; ${status}</div>
+      <h2>${safeSlug}</h2>
+      <div class="detail-sub">${safeTrack} &middot; ${safePhase} &middot; ${safeStatus}</div>
     </div>
     <div class="detail-section">
       <h3>Module Info</h3>
       <div class="detail-kv">
-        <span class="k">Track</span><span class="v">${track}</span>
-        <span class="k">Slug</span><span class="v">${slug}</span>
-        <span class="k">Phase</span><span class="v">${phase}</span>
-        <span class="k">Status</span><span class="v">${status}</span>
-        <span class="k">Task ID</span><span class="v">${taskId || 'n/a'}</span>
+        <span class="k">Track</span><span class="v">${safeTrack}</span>
+        <span class="k">Slug</span><span class="v">${safeSlug}</span>
+        <span class="k">Phase</span><span class="v">${safePhase}</span>
+        <span class="k">Status</span><span class="v">${safeStatus}</span>
+        <span class="k">Task ID</span><span class="v">${safeTaskId || 'n/a'}</span>
       </div>
     </div>
   `;
@@ -401,8 +415,19 @@ function showBuildDetail(track, slug, phase, status, taskId) {
           const msgsHtml = data.messages.map(m => {
             const typeClass = m.message_type === 'error' ? 'error' : m.message_type === 'response' ? 'response' : 'query';
             const ts = m.timestamp ? new Date(m.timestamp).toLocaleTimeString() : '';
-            const body = (m.preview || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return `<div class="thread-msg ${typeClass}"><div class="tm-header"><span class="tm-from">${m.from_llm||''} &rarr; ${m.to_llm||''}</span><span class="tm-time">#${m.id} &middot; ${ts} &middot; ${m.message_type||''}</span></div><div class="tm-body">${body}</div></div>`;
+            const from = escapeHtmlAttribute(m.from_llm || '');
+            const to = escapeHtmlAttribute(m.to_llm || '');
+            const type = escapeHtmlAttribute(m.message_type || '');
+            const body = escapeHtmlAttribute(m.preview || '');
+            return `
+              <div class="thread-msg ${typeClass}">
+                <div class="tm-header">
+                  <span class="tm-from">${from} &rarr; ${to}</span>
+                  <span class="tm-time">#${escapeHtmlAttribute(m.id)} &middot; ${escapeHtmlAttribute(ts)} &middot; ${type}</span>
+                </div>
+                <div class="tm-body">${body}</div>
+              </div>
+            `;
           }).join('');
           document.getElementById('detail-content').innerHTML += `<div class="detail-section"><h3>Conversation Thread (${data.count})</h3>${msgsHtml}</div>`;
         }
@@ -457,20 +482,33 @@ async function loadLiveActivity() {
     if (building.length === 0) {
       buildEl.innerHTML = '<div class="empty-feed">No active builds detected</div>';
     } else {
-      buildEl.innerHTML = building.map(b => `
-        <div class="feed-item building" onclick="showBuildDetail('${b.track}','${b.slug}','${b.phase}','${b.phase_status}','${b.task_id || ''}')">
-          <div class="fi-top">
-            <span class="fi-track">${b.track}</span>
-            <span class="fi-age">${timeAgo(b.seconds_ago)} ago</span>
+      buildEl.innerHTML = building.map(b => {
+        const track = escapeHtmlAttribute(b.track || '');
+        const slug = escapeHtmlAttribute(b.slug || '');
+        const phase = escapeHtmlAttribute(b.phase || '');
+        const phaseStatus = escapeHtmlAttribute(b.phase_status || '');
+        const taskId = escapeHtmlAttribute(b.task_id || '');
+        const mode = b.mode ? `(${escapeHtmlAttribute(b.mode)})` : '';
+        return `
+          <div class="feed-item building build-row"
+               data-build-track="${track}"
+               data-build-slug="${slug}"
+               data-build-phase="${phase}"
+               data-build-status="${phaseStatus}"
+               data-task-id="${taskId}">
+            <div class="fi-top">
+              <span class="fi-track">${track}</span>
+              <span class="fi-age">${timeAgo(b.seconds_ago)} ago</span>
+            </div>
+            <div class="fi-slug">${slug}</div>
+            <div class="fi-detail">
+              <span class="fi-phase ${phaseClass(b.phase || '')}">${escapeHtmlAttribute(phaseLabel(b.phase || ''))}</span>
+              ${phaseStatus}
+              ${mode}
+            </div>
           </div>
-          <div class="fi-slug">${b.slug}</div>
-          <div class="fi-detail">
-            <span class="fi-phase ${phaseClass(b.phase)}">${phaseLabel(b.phase)}</span>
-            ${b.phase_status}
-            ${b.mode ? '(' + b.mode + ')' : ''}
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     // Recent Completions — research files
@@ -480,16 +518,23 @@ async function loadLiveActivity() {
     if (completions.length === 0) {
       compEl.innerHTML = '<div class="empty-feed">No completions in last hour</div>';
     } else {
-      compEl.innerHTML = completions.map(c => `
-        <div class="feed-item completion" onclick="showConversation('v5-${c.slug}-pA')">
-          <div class="fi-top">
-            <span class="fi-track">${c.track}</span>
-            <span class="fi-age">${timeAgo(c.seconds_ago)} ago</span>
+      compEl.innerHTML = completions.map(c => {
+        const track = escapeHtmlAttribute(c.track || '');
+        const slug = escapeHtmlAttribute(c.slug || '');
+        const type = escapeHtmlAttribute(c.type || '');
+        const sizeKb = escapeHtmlAttribute(c.size_kb ?? '');
+        const taskId = escapeHtmlAttribute(`v5-${c.slug || ''}-pA`);
+        return `
+          <div class="feed-item completion conversation-row" data-task-id="${taskId}">
+            <div class="fi-top">
+              <span class="fi-track">${track}</span>
+              <span class="fi-age">${timeAgo(c.seconds_ago)} ago</span>
+            </div>
+            <div class="fi-slug">${slug}</div>
+            <div class="fi-detail">${type} &middot; ${sizeKb} KB</div>
           </div>
-          <div class="fi-slug">${c.slug}</div>
-          <div class="fi-detail">${c.type} &middot; ${c.size_kb} KB</div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     // Dispatch Feed — recent broker messages
@@ -506,9 +551,9 @@ async function loadLiveActivity() {
         const isFinished = (d.preview || '').includes('finished');
         const isError = d.type === 'error' || (d.preview || '').includes('Error');
         const borderClass = isError ? 'style="border-left-color:var(--red)"' : isFinished ? 'style="border-left-color:var(--green)"' : '';
-        const tid = (d.task_id || '').replace(/'/g, "\\'");
+        const taskId = escapeHtmlAttribute(d.task_id || '');
         return `
-          <div class="feed-item dispatch" ${borderClass} onclick="showConversation('${tid}')">
+          <div class="feed-item dispatch ${taskId ? 'conversation-row' : ''}" ${borderClass} data-task-id="${taskId}">
             <div class="fi-top">
               <span>${d.from} &rarr; ${d.to}</span>
               <span class="fi-age">${timeAgo(d.seconds_ago)} ago</span>
@@ -631,15 +676,15 @@ async function loadZombies() {
       else if (z.type === 'orphan_pid') detail = `PID ${z.pid} (${z.file}) — task: ${z.task_id || 'none'}`;
       else detail = JSON.stringify(z);
 
-      const action = z.message_id
-        ? `<span class="zombie-action" onclick="event.stopPropagation(); ackMsg(${z.message_id})">Ack</span>`
+      const messageId = escapeHtmlAttribute(z.message_id || '');
+      const action = messageId
+        ? `<span class="zombie-action" data-message-id="${messageId}">Ack</span>`
         : '';
 
-      const tid = (z.task_id || '').replace(/'/g, "\\'");
-      const clickHandler = tid ? `onclick="showConversation('${tid}')"` : '';
+      const taskId = escapeHtmlAttribute(z.task_id || '');
 
       return `
-        <div class="zombie-alert ${z.severity}" ${clickHandler} style="${tid ? 'cursor:pointer' : ''}">
+        <div class="zombie-alert ${z.severity} ${taskId ? 'conversation-row' : ''}" data-task-id="${taskId}" style="${taskId ? 'cursor:pointer' : ''}">
           <span class="zombie-type">${z.type}</span>
           <span class="zombie-detail">${detail}</span>
           ${action}
@@ -695,9 +740,9 @@ async function loadMessages() {
 
     document.getElementById('msg-tbody').innerHTML = data.messages.map(m => {
       const age = m.timestamp ? timeAgo(Math.round((Date.now() - new Date(m.timestamp).getTime()) / 1000)) : '';
-      const tid = (m.task_id || '').replace(/'/g, "\\'");
+      const taskId = escapeHtmlAttribute(m.task_id || '');
       return `
-        <tr data-msg-id="${m.id}" data-task-id="${m.task_id || ''}" onclick="showConversation('${tid}')">
+        <tr class="${taskId ? 'conversation-row' : ''}" data-msg-id="${m.id}" data-task-id="${taskId}">
           <td>${m.id}</td>
           <td class="msg-from">${m.from_llm || ''}</td>
           <td>${m.to_llm || ''}</td>
@@ -712,6 +757,38 @@ async function loadMessages() {
     document.getElementById('msg-tbody').innerHTML =
       `<tr><td colspan="7" style="color:var(--red)">Failed: ${e.message}</td></tr>`;
   }
+}
+
+function onConversationRowClick(event) {
+  const target = event.target instanceof Element ? event.target : event.target.parentElement;
+  if (!target) return;
+
+  const action = target.closest('.zombie-action');
+  if (action) {
+    const messageId = action.dataset.messageId || '';
+    if (messageId) ackMsg(messageId);
+    return;
+  }
+
+  const row = target.closest('.conversation-row');
+  const taskId = row ? (row.dataset.taskId || '') : '';
+  if (!taskId) return;
+  showConversation(taskId);
+}
+
+function onBuildRowClick(event) {
+  const target = event.target instanceof Element ? event.target : event.target.parentElement;
+  if (!target) return;
+
+  const row = target.closest('.build-row');
+  if (!row) return;
+  showBuildDetail(
+    row.dataset.buildTrack || '',
+    row.dataset.buildSlug || '',
+    row.dataset.buildPhase || '',
+    row.dataset.buildStatus || '',
+    row.dataset.taskId || ''
+  );
 }
 
 // ========= STATS =========
@@ -769,6 +846,12 @@ async function refreshAll() {
     loadStats(),
   ]);
 }
+
+document.getElementById('feed-building').addEventListener('click', onBuildRowClick);
+document.getElementById('feed-completions').addEventListener('click', onConversationRowClick);
+document.getElementById('feed-dispatches').addEventListener('click', onConversationRowClick);
+document.getElementById('zombie-list').addEventListener('click', onConversationRowClick);
+document.getElementById('msg-tbody').addEventListener('click', onConversationRowClick);
 
 refreshAll();
 setInterval(refreshAll, 15000); // refresh every 15s for live feel
