@@ -199,7 +199,7 @@ gh pr list --state open --base main
 2. **Land #1672 (ЕСУМ vol 1 PoC PR)** — check Codex's segmentation recall audit; if ≥90%, merge. CI tests already fixed by Claude's pushed commit.
 3. **Check #1663 (Antonenko full ingest)** — Gemini was running for ~70 min at handoff; likely finished by morning. Review output PR if opened.
 4. **Pick up #1669 (VESUM arch tag)** — quick win, ~1-2h, internal data exposure only, unblocks the modern-vs-historical guard for V7 prompts later.
-5. **#1658 (rename search_etymology)** + **#1660 (completeness flags)** — both small Phase-1 cleanups, can run in parallel.
+5. **#1658 (rename search_grinchenko_1907)** + **#1660 (completeness flags)** — both small Phase-1 cleanups, can run in parallel.
 6. **#1661 (V7 prompt diffs)** — ready to draft against current MCP; will simplify dramatically after Phase 2 primitives land.
 7. **After codex returns at 11am**: dispatch #1664 (Karavansky), #1665 (Holovashchuk), #1668 (PyMorphy3) via delegate.py.
 

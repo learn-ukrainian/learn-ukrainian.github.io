@@ -43,7 +43,7 @@ All `mcp_rag_*` tools now query SQLite FTS5, not Qdrant. Same tool names, same i
 - `query_pravopys` — Правопис 2019
 - `search_style_guide` — Антоненко-Давидович (calques/Russianisms)
 - `query_cefr_level` — PULS CEFR vocabulary
-- `search_definitions` / `search_etymology` / `search_idioms` / `search_synonyms`
+- `search_definitions` / `search_grinchenko_1907` / `search_idioms` / `search_synonyms`
 
 ### Build Pipeline (v6)
 ```

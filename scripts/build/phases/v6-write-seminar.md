@@ -95,7 +95,7 @@ This curriculum teaches Ukrainian history and culture **on Ukrainian terms**. Ke
 2. **Правопис 2019** — is it spelled correctly?
 3. **Горох** — stress position, frequency
 4. **Антоненко-Давидович** — natural Ukrainian or calque?
-5. **Грінченко** — etymology
+5. **Грінченко** — historical usage (1907)
 
 ---
 

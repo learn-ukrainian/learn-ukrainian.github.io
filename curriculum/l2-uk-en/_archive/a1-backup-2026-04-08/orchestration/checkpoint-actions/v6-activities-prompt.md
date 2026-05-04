@@ -393,7 +393,7 @@ You have access to RAG-powered MCP tools to verify Ukrainian language constructs
 - `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
 - `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
 - `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp__rag__search_grinchenko_1907` — Грінченко (67K entries). Historical forms, etymology.
 - `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
 - `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
 - `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.

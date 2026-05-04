@@ -7,7 +7,7 @@ FTS5 tables (prose search):
 
 Indexed tables (dictionary headword lookup):
 - search_definitions() — СУМ-11
-- search_etymology() — Грінченко
+- search_grinchenko_1907() — Грінченко
 - search_esum() — ЕСУМ etymological dictionary
 - search_idioms() — Фразеологічний
 - search_synonyms() — Ukrajinet WordNet
@@ -1321,7 +1321,7 @@ def search_definitions(word: str, limit: int = 10) -> list[dict]:
     return _dict_lookup("sum11", word, limit)
 
 
-def search_etymology(word: str, limit: int = 10) -> list[dict]:
+def search_grinchenko_1907(word: str, limit: int = 10) -> list[dict]:
     """Look up word in Грінченко (historical dictionary)."""
     return _dict_lookup("grinchenko", word, limit)
 

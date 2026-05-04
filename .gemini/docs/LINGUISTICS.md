@@ -18,7 +18,7 @@ When in doubt, consult in this order:
 2. **Правопис 2019** (`query_pravopys`) — is it spelled correctly?
 3. **Горох** (goroh.pp.ua) — stress position, frequency, synonyms
 4. **Антоненко-Давидович «Як ми говоримо»** (`search_style_guide`) — is this natural Ukrainian or a calque?
-5. **Грінченко «Словарь»** (`search_etymology`) — etymology, original meaning
+5. **Грінченко «Словарь»** (`search_grinchenko_1907`) — etymology, original meaning
 
 **Online fallbacks (if RAG/tools are unavailable):**
 - VESUM: https://vesum.com.ua/

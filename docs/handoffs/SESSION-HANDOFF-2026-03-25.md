@@ -45,7 +45,7 @@
 ### Late Session (after batch build)
 - CLAUDE.md restructured: 214→65 lines, 7 rule files in `.claude/rules/` (3 path-scoped)
 - 9 Qdrant dictionary collections exposed via RAG MCP (506K+ entries)
-  - New tools: search_style_guide, query_cefr_level, search_definitions, search_etymology, search_idioms, search_synonyms, translate_en_uk
+  - New tools: search_style_guide, query_cefr_level, search_definitions, search_grinchenko_1907, search_idioms, search_synonyms, translate_en_uk
 - Writer + reviewer both get MCP tool access (style_guide, CEFR level, definitions)
 - Tool instructions improved: explicit triggers, dictionary tools, batching
 - **RAG server needs restart** to pick up new tools (`services.sh restart rag`)
