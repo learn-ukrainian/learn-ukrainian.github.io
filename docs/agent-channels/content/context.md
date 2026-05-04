@@ -26,16 +26,14 @@ linguistic quality. Pipeline plumbing discussions go in #pipeline.
 | `docs/best-practices/vocabulary-activity-standards.md` | Vocab/activity bar per level |
 | `docs/best-practices/ukrainian-linguistics.md` | Linguistic rules |
 
-## Non-negotiables
+## Non-negotiables (content-channel-specific)
 
-1. **Ukrainian is its own reference.** Authentic Ukrainian academic sources — **VESUM, Правопис 2019, Вихованець, Шевельов, Пономарів, Грінченко, ЕСУМ, СУМ-20, школьные textbooks Заболотний / Авраменко / Большакова / Вашуленко** — are sufficient grounding. Do NOT explain or justify Ukrainian features by comparison to Russian or other Slavic languages — that frame imports the imperial reference even when criticizing Russian. Wrong: *"Ukrainian preserved X while Russian innovated Y."* Right: *"In Ukrainian, X is in paradigm Z, attested in [Ukrainian source]."* Other Slavic languages enter only in HIST / OES / ISTORIO seminars about etymology, lens staying Ukrainian-centered. **This is not a comparative-philology curriculum — it teaches one of the oldest Slavic languages on its own terms.** This rule must be re-asserted in every linguistic channel post because both Claude and Gemini drift to Russian-comparison framing reflexively (training-data prior).
+> **Project-wide Ukrainian linguistic principles** (Ukrainian-as-its-own-reference, Антоненко-Давидович as Russianism specialist authority, terminology hygiene, four-checks model) live in `shared/context.md` and auto-prepend to every post in this channel. Do not duplicate them here — re-read shared if uncertain.
 
-   **Антоненко-Давидович «Як ми говоримо»** is the **canonical authority for Russianism identification and correction** — primary, prominent, non-negotiable in that domain. Use it actively for any suspected Russianism (calque morphology, copied lexicon, Russian-pattern agreement, register Russification): it names the Russianism and gives the Ukrainian alternative. It is **not** a general descriptive grammar source (that's VESUM, Правопис 2019, Вихованець, Шевельов, Пономарів) — different specialty, equally authoritative in its own. The mistake is using Антоненко-Давидович as if it described the language; the equally bad mistake is failing to use it where Russianism work is needed. Same model for Караванський (specialist Russian-Ukrainian lexicon).
-2. **Terminology hygiene.** Use **Old East Slavic** in English and **давньоруська мова** in Ukrainian (with explicit clarification that *руська* refers to Kyivan Rus', not modern Russia). NEVER "Old Russian" / "древнерусский" — those terms presuppose the imperial conclusion.
-3. **No invented Ukrainian.** Every non-trivial form gets verified against VESUM (`mcp__sources__verify_word`).
-4. **Textbook grounding.** Dialogues come from real textbook situations, not invented drills.
-5. **Adult register at A2+.** A2 should NOT coast on A1 simplicity — more turns, more stakes, richer vocabulary.
-6. **Culturally Ukrainian.** No generic ESL settings. Real Kyiv/Lviv/village contexts.
+1. **Textbook grounding.** Dialogues come from real textbook situations (Большакова, Вашуленко for A1-A2; Заболотний, Авраменко for B1+), not invented drills.
+2. **Adult register at A2+.** A2 must NOT coast on A1 simplicity — more turns, more stakes, richer vocabulary, less hand-holding.
+3. **Culturally Ukrainian, not ESL-generic.** Real Kyiv / Lviv / Chernivtsi / village contexts — never anonymized "the city," "the cafe," "Mark and Anna."
+4. **Plans are immutable source of truth.** Plan in `curriculum/l2-uk-en/plans/{level}/{slug}.yaml` defines what the module must contain. Disagreement with the plan = bump the version + backup, never silently mutate.
 
 ## Who reviews what
 

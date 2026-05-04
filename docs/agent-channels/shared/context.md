@@ -33,12 +33,23 @@ adversarial review between agents.
 6. **Cite evidence.** Reviews must cite specific file:line or example output. No vibes-based verdicts.
 7. **Action bias.** When a decision is clear, act. Don't ask procedural permission for already-agreed-upon work.
 
-## Ukrainian linguistic principles (content agents)
+## Ukrainian linguistic principles (every agent on any Ukrainian-language work)
 
-- **Admit uncertainty, never invent.** Flag unverified claims with `<!-- VERIFY -->`. Always check VESUM first.
-- **Four separate checks:** Russianisms, Surzhyk, Calques, Paronyms — four different problems, each with its own fix.
-- **Authority hierarchy:** VESUM → Правопис 2019 → Горох → Антоненко-Давидович → Грінченко
-- **Your pre-training is contaminated by Russian** — always verify Ukrainian forms against local dictionaries.
+1. **Ukrainian is its own reference.** Authentic Ukrainian academic sources — **VESUM, Правопис 2019, Вихованець, Шевельов, Пономарів, Грінченко, ЕСУМ, СУМ-20, school textbooks (Заболотний / Авраменко / Большакова / Вашуленко)** — provide all the grounding curriculum content needs. Do **NOT** explain Ukrainian features by comparison to Russian or other Slavic languages. **Wrong:** *"Ukrainian preserved X while Russian innovated Y."* **Right:** *"In Ukrainian, X is in paradigm Z, attested in [Ukrainian source]."* Other Slavic languages enter only in HIST / OES / ISTORIO seminars about etymology, with the lens staying Ukrainian-centered. This is **not** a comparative-philology curriculum — it teaches one of the oldest Slavic languages on its own terms. Both Claude and Gemini drift to Russian-comparison framing reflexively (training-data prior is order-of-magnitude Russian-shifted); the rule must be re-asserted in every linguistic post.
+
+2. **Антоненко-Давидович «Як ми говоримо»** is the **canonical authority for Russianism identification and correction** — primary, prominent, non-negotiable in that specific domain. Use it actively for any suspected Russianism (calque morphology, copied lexicon, Russian-pattern agreement, register Russification). It is **not** a general descriptive grammar reference (that role is VESUM / Правопис 2019 / Вихованець / Шевельов / Пономарів) — different specialty, both authoritative in their domains. Two failure modes are equally bad: **(a)** misusing Антоненко-Давидович as if it described the language (its methodology is contrastive-corrective, not descriptive); **(b)** failing to use it where Russianism work is needed. Same model applies to Караванський as a specialist Russian-Ukrainian lexicon authority.
+
+3. **Terminology hygiene.** Use **Old East Slavic** in English and **давньоруська мова** in Ukrainian (with explicit clarification that *руська* refers to Kyivan Rus', not modern Russia). NEVER use "Old Russian" / "древнерусский" — those terms presuppose the imperial conclusion that modern Russian is the direct OES descendant, which is empirically wrong (modern Russian has heavy Church Slavonic overlay + Finno-Ugric substrate; Ukrainian preserves more conservative East Slavic morphology).
+
+4. **Admit uncertainty, never invent.** Flag unverified claims with `<!-- VERIFY -->`. Verify Ukrainian forms against VESUM (`mcp__sources__verify_word`) before publishing.
+
+5. **Four separate checks** — these are four distinct problems, each with a distinct corrective resource:
+   - **Russianisms** → Антоненко-Давидович
+   - **Surzhyk** → Правопис 2019, normalization to literary Ukrainian
+   - **Calques** → Антоненко-Давидович
+   - **Paronyms** → specialized paronym dictionaries (Гринчишин/Сербенська)
+
+6. **Pre-training contamination is real and structural.** Russian-language web content over-represents Slavic data in pretraining corpora by an order of magnitude. Reflexive "Slavic comparison" therefore defaults to Russian regardless of intent. Compensate consciously: when about to write a Russian comparison, check whether it's genuinely necessary or just a default. If a default, drop it or substitute Ukrainian-internal evidence.
 
 ## Tooling conventions
 
