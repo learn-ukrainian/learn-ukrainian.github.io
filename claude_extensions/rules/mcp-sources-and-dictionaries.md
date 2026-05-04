@@ -28,6 +28,7 @@ paths:
 > Start with `mcp__sources__search_sources` for general retrieval. Keep `mcp__sources__search_text` for explicit textbook-only scoping when you do not want literary, Wikipedia, external, or `ukrainian_wiki` results mixed in.
 
 ## Dictionary tools (for quality and vocabulary)
+- `mcp__sources__check_russian_shadow` — Detects Russian-pattern morphology (Surzhyk / false forms) in Ukrainian text without ingesting Russian text. Uses `pymorphy3` heuristic modeling.
 - `mcp__sources__search_style_guide` — Антоненко-Давидович (279 entries indexed of ~600+ in source — completion tracked in #1663) — **calques and Russianisms**. HIGH PRIORITY.
 - `mcp__sources__query_cefr_level` — PULS CEFR vocabulary (5.9K words, A1-C1) — check level-appropriateness
 - `mcp__sources__search_definitions` — СУМ-11 (127K entries) — Ukrainian explanatory dictionary. **⚠️ Partially Sovietized for ideological terms** — see "Sovietization caveat" below. Each result row carries `sovietization_risk` (0/1/2) and `sovietization_keywords`.

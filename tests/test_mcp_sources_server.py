@@ -55,7 +55,7 @@ class TestListTools:
             "query_pravopys", "query_cefr_level",
             "search_style_guide", "search_definitions", "search_grinchenko_1907", "search_etymology",
             "search_idioms", "search_synonyms", "translate_en_uk",
-            "search_esum",
+            "search_esum", "check_russian_shadow",
         }
         missing = expected - tool_names
         extra = tool_names - expected
@@ -238,6 +238,28 @@ class TestSSEStateless:
             "without it, SSE clients that skip the initialize handshake "
             "get -32602 errors on every tool call"
         )
+
+class TestCheckRussianShadowHandler:
+    def test_handle_check_russian_shadow(self, server_module):
+        with patch("scripts.rag.query.verify_word") as mock_verify_word:
+            def mock_vesum(w):
+                if w in ["получити", "здача"]:
+                    return []
+                return [{"lemma": w, "pos": "noun", "tags": ""}]
+            mock_verify_word.side_effect = mock_vesum
+
+            args = {"word": "получити", "threshold": 0.7}
+            res = _run(server_module.handle_check_russian_shadow(args))
+
+            assert len(res) == 1
+            data = json.loads(res[0].text)
+            assert data["matches_russian"] is True
+
+            args = {"word": "привіт", "threshold": 0.7}
+            res = _run(server_module.handle_check_russian_shadow(args))
+
+            data = json.loads(res[0].text)
+            assert data["matches_russian"] is False
 
 
 _VESUM_DB = Path(__file__).resolve().parents[1] / "data" / "vesum.db"

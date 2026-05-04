@@ -764,6 +764,28 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"]
             },
         ),
+        Tool(
+            name="check_russian_shadow",
+            description=(
+                "Detects Russian-pattern morphology in Ukrainian text. No Russian text ingested "
+                "— uses pymorphy3 morphological model only."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string",
+                        "description": "The Ukrainian word to check for Russian morphological patterns."
+                    },
+                    "threshold": {
+                        "type": "number",
+                        "description": "Confidence threshold (0.0 to 1.0). Default is 0.7.",
+                        "default": 0.7
+                    }
+                },
+                "required": ["word"]
+            },
+        ),
     ]
 
 
@@ -793,6 +815,27 @@ def _log_tool_call(name: str, arguments: dict[str, Any], response_chars: int = 0
         pass  # Logging must never break tool calls
 
 
+async def handle_check_russian_shadow(args: dict):
+    word = args.get("word", "")
+    threshold = args.get("threshold", 0.7)
+
+    import asyncio
+    import json
+    import os
+    import sys
+
+    # ensure scripts is in path
+    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+
+    from scripts.verification.check_ru_morph import is_russian_pattern
+
+    result = await asyncio.to_thread(is_russian_pattern, word, threshold)
+    from mcp.types import TextContent
+    return [TextContent(type="text", text=json.dumps(result, indent=2, ensure_ascii=False))]
+
+
 @server.call_tool()
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
     """Handle tool calls."""
@@ -809,6 +852,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "get_full_text": lambda: handle_get_full_text(arguments),
             "get_chunk_context": lambda: handle_get_chunk_context(arguments),
             "collection_stats": lambda: handle_collection_stats(arguments),
+            "check_russian_shadow": lambda: handle_check_russian_shadow(arguments),
             "check_modern_form": lambda: handle_check_modern_form(arguments),
             "verify_word": lambda: handle_verify_word(arguments),
             "verify_words": lambda: handle_verify_words(arguments),
