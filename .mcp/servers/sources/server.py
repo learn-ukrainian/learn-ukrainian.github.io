@@ -520,9 +520,16 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="search_definitions",
             description=(
-                "Search СУМ-11 (127K entries) — the authoritative Ukrainian explanatory dictionary. "
-                "Returns definitions, usage examples, and citations in Ukrainian. "
-                "Use to look up exact meanings, check word usage, or find example sentences."
+                "Search СУМ-11 (127K entries) — the authoritative Ukrainian explanatory dictionary "
+                "from 1970–1980. Returns definitions, usage examples, and citations in Ukrainian. "
+                "Use to look up exact meanings, check word usage, or find example sentences. "
+                "**WARNING: СУМ-11 is partially Sovietized for ideologically loaded headwords** "
+                "(ленін*, більшовик*, радянськ*, національний, соціалістичн*, etc.). Each result "
+                "carries `sovietization_risk` (0=clean, 1=keyword-match, 2=high) and "
+                "`sovietization_keywords`. **When `sovietization_risk > 0`, treat the definition "
+                "as potentially Soviet-framed**: do not reproduce verbatim, prefer СУМ-20 (when "
+                "available) or Грінченко for the same headword, or omit and route to neutral "
+                "phrasing. ~5.6% of corpus (7,152 entries) is flagged. Issue: #1659."
             ),
             inputSchema={
                 "type": "object",
@@ -1265,6 +1272,17 @@ async def handle_dict_search(args: dict, collection: str, label: str) -> list[Te
             lines.append(f"- **Headword**: {word}")
         if hit.get("source"):
             lines.append(f"- **Source**: {hit['source']}")
+        # Sovietization flag (СУМ-11 only — issue #1659). Surfaced prominently
+        # so reviewer can decide before reading the definition.
+        risk = hit.get("sovietization_risk")
+        if risk is not None and risk > 0:
+            keywords = hit.get("sovietization_keywords", "")
+            risk_label = "HIGH" if risk == 2 else "present"
+            lines.append(
+                f"- **⚠️ Sovietization risk**: {risk_label} "
+                f"(matched: {keywords or 'unknown'}). "
+                f"Treat definition as potentially Soviet-framed — see #1659."
+            )
         definition = hit.get("definition", hit.get("definitions", ""))
         if definition:
             lines.append(f"- **Definition**: {str(definition)[:500]}")
