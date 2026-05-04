@@ -30,7 +30,7 @@ paths:
 - `mcp__sources__search_style_guide` — Антоненко-Давидович (279 entries indexed of ~600+ in source — completion tracked in #1663) — **calques and Russianisms**. HIGH PRIORITY.
 - `mcp__sources__query_cefr_level` — PULS CEFR vocabulary (5.9K words, A1-C1) — check level-appropriateness
 - `mcp__sources__search_definitions` — СУМ-11 (127K entries) — Ukrainian explanatory dictionary. **⚠️ Partially Sovietized for ideological terms** — see "Sovietization caveat" below. Each result row carries `sovietization_risk` (0/1/2) and `sovietization_keywords`.
-- `mcp__sources__search_etymology` — Грінченко (67K entries) — historical Ukrainian dictionary from 1907. **NOT etymology** despite the tool name — it's lexicographic. True etymology lives in `search_esum` below.
+- `mcp__sources__search_grinchenko_1907` — Грінченко (67K entries) — historical Ukrainian dictionary from 1907. **NOT etymology** despite the tool name — it's lexicographic. True etymology lives in `search_esum` below.
 - `mcp__sources__search_esum` — ЕСУМ etymological dictionary — canonical name for ЕСУМ. PoC scope: vol. 1 (А–Г) only; vols. 2–6 are follow-up (#1662).
 - `mcp__sources__search_idioms` — Фразеологічний (25K entries) — Ukrainian idioms and expressions
 - `mcp__sources__search_synonyms` — Ukrajinet WordNet (122K synsets) — synonyms, antonyms. **⚠️ Synsets are largely auto-translated from Open English WordNet** per upstream README — quality audit pending (#1657 Tier 3).
@@ -57,7 +57,7 @@ Every `search_definitions` result row carries:
 **When `sovietization_risk > 0` for a curriculum-content lookup:**
 
 - Do NOT reproduce the definition verbatim.
-- Prefer Грінченко (`search_etymology`) for the same headword if it has
+- Prefer Грінченко (`search_grinchenko_1907`) for the same headword if it has
   pre-Soviet coverage.
 - After СУМ-20 lands (#1667), prefer that for modern definitional baseline.
 - If neither alternative is available, paraphrase neutrally and flag in
@@ -81,3 +81,4 @@ Audit report at `audit/sum11_sovietization_scan_<DATE>.md`.
 | **Stress dictionary** | 2.7M forms | Word stress for annotation | via `ukrainian-word-stress` |
 
 Source: [bakustarver/ukr-dictionaries-list-opensource](https://github.com/bakustarver/ukr-dictionaries-list-opensource) (СУМ-11, Балла, Фразеологічний)
+kr-dictionaries-list-opensource) (СУМ-11, Балла, Фразеологічний)

@@ -541,17 +541,28 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
-            name="search_etymology",
+            name="search_grinchenko_1907",
             description=(
-                "Search Грінченко dictionary (67K entries) — historical Ukrainian dictionary from 1907. "
-                "Use for etymology, historical word forms, and pre-Soviet Ukrainian usage. "
-                "Helps verify that a word is genuinely Ukrainian (not a Soviet-era import)."
+                "Search Грінченко's «Словарь української мови» (1907). Historical Ukrainian dictionary, 67K headwords. "
+                "Use for pre-Soviet usage attestation; NOT for word origins/etymology — that's a separate concern handled by Tier 2 escalation to ЕСУМ."
             ),
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "query": {"type": "string", "description": "Ukrainian word to look up etymology/historical form"},
+                    "query": {"type": "string", "description": "Ukrainian word to look up historical form/usage"},
                     "limit": {"type": "integer", "description": "Max results (default 3)", "default": 3},
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
+            name="search_etymology",
+            description="DEPRECATED alias for search_grinchenko_1907. Do not use. Will be removed in 30 days.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "Ukrainian word"},
+                    "limit": {"type": "integer", "description": "Max results", "default": 3},
                 },
                 "required": ["query"]
             },
@@ -695,7 +706,8 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "search_style_guide": lambda: handle_dict_search(arguments, "style_guide", "Антоненко-Давидович"),
             "query_cefr_level": lambda: handle_dict_search(arguments, "puls_cefr", "PULS CEFR"),
             "search_definitions": lambda: handle_dict_search(arguments, "sum11", "СУМ-11"),
-            "search_etymology": lambda: handle_dict_search(arguments, "grinchenko_dict", "Грінченко"),
+            "search_grinchenko_1907": lambda: handle_dict_search(arguments, "grinchenko_dict", "Грінченко"),
+            "search_etymology": lambda: handle_deprecated_search_etymology(arguments),
             "search_esum": lambda: handle_search_esum(arguments),
             "search_idioms": lambda: handle_dict_search(arguments, "frazeolohichnyi", "Фразеологічний"),
             "search_synonyms": lambda: handle_dict_search(arguments, "ukrajinet", "Ukrajinet WordNet"),
@@ -1259,6 +1271,16 @@ async def handle_query_pravopys(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text="\n".join(lines))]
 
 
+async def handle_deprecated_search_etymology(args: dict) -> list[TextContent]:
+    """Deprecated alias for search_grinchenko_1907."""
+    _log_tool_call("search_etymology", args, error="DEPRECATED: Use search_grinchenko_1907 instead.")
+    results = await handle_dict_search(args, "grinchenko_dict", "Грінченко")
+    if results and isinstance(results[0], TextContent):
+        warning = "⚠️ **DEPRECATION WARNING:** `search_etymology` is misnamed and deprecated. Use `search_grinchenko_1907` instead. Грінченко is a historical dictionary, NOT an etymological one.\n\n"
+        results[0].text = warning + results[0].text
+    return results
+
+
 async def handle_dict_search(args: dict, collection: str, label: str) -> list[TextContent]:
     """Generic handler for dictionary/reference collection searches — uses SQLite."""
     query = args.get("query", args.get("word", ""))
@@ -1270,7 +1292,7 @@ async def handle_dict_search(args: dict, collection: str, label: str) -> list[Te
         "style_guide": sdb.search_style_guide,
         "puls_cefr": sdb.query_cefr_level,
         "sum11": sdb.search_definitions,
-        "grinchenko_dict": sdb.search_etymology,
+        "grinchenko_dict": sdb.search_grinchenko_1907,
         "frazeolohichnyi": sdb.search_idioms,
         "ukrajinet": sdb.search_synonyms,
         "balla_en_uk": sdb.translate_en_uk,

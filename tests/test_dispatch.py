@@ -49,7 +49,7 @@ class TestToolConstants:
 
     def test_writer_tools_has_new_dictionary_tools(self):
         for tool in ("search_style_guide", "query_cefr_level",
-                      "search_definitions", "search_etymology",
+                      "search_definitions", "search_grinchenko_1907",
                       "search_idioms", "search_synonyms", "translate_en_uk",
                       "query_grac", "query_ulif", "query_r2u"):
             assert f"mcp__rag__{tool}" in CLAUDE_WRITER_TOOLS
@@ -61,7 +61,7 @@ class TestToolConstants:
 
     def test_reviewer_tools_has_quality_tools(self):
         for tool in ("query_cefr_level", "search_definitions",
-                      "search_etymology", "search_idioms",
+                      "search_grinchenko_1907", "search_idioms",
                       "search_synonyms", "query_grac"):
             assert f"mcp__rag__{tool}" in CLAUDE_REVIEWER_TOOLS
 
