@@ -160,38 +160,53 @@ Was 78 at session start, currently 78 (we closed 4 and filed 4):
 
 ## Cold-start protocol for next session
 
+Use the Monitor API per `claude_extensions/rules/workflow.md`. Hash-based
+cache means warm cold-start is ~778 bytes vs 75 KB for direct file reads.
+Do NOT read `CLAUDE.md`, `claude_extensions/rules/*.md`, or
+`docs/session-state/current.md` directly — the API serves those with
+hash caching.
+
 ```bash
 cd /Users/krisztiankoos/projects/learn-ukrainian
-git fetch origin main
-git status -s              # expected empty
-git log --oneline -5
-
-# Source auth
 source ./.envrc
 
-# 1. Check 3 in-flight PRs
+# 1. Bootstrap from Monitor API (cached, condensed)
+curl -s http://localhost:8765/api/state/manifest                  # ~1 KB index
+curl -s http://localhost:8765/api/rules?format=markdown            # only if manifest hash changed
+curl -s http://localhost:8765/api/session/current                  # only if manifest hash changed
+curl -s 'http://localhost:8765/api/orient?fresh=true'              # always-fresh meta + open work
+curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'       # unread agent messages
+
+# (If API server is down, fall back to:
+#    cat docs/session-state/current.md
+#    cat docs/session-state/2026-05-04-evening-multi-dispatch.md  )
+
+# 2. Verify clean main + check the 3 in-flight PRs (one batch call)
+git fetch origin main && git status -s && git log --oneline -3
 for pr in 1674 1675 1678; do
-  gh -R learn-ukrainian/learn-ukrainian.github.io pr view $pr --json state,mergeable,statusCheckRollup --jq '{pr: '$pr', state, mergeable, fails: [.statusCheckRollup[] | select(.conclusion=="FAILURE") | .name]}'
+  gh -R learn-ukrainian/learn-ukrainian.github.io pr view $pr --json state,mergeable,statusCheckRollup \
+    --jq '{pr: '$pr', state, mergeable, fails: [.statusCheckRollup[] | select(.conclusion=="FAILURE") | .name]}'
 done
 
-# 2. If green, merge each:
-gh -R learn-ukrainian/learn-ukrainian.github.io pr merge 1674 --squash --delete-branch
-gh -R learn-ukrainian/learn-ukrainian.github.io pr merge 1675 --squash --delete-branch
-gh -R learn-ukrainian/learn-ukrainian.github.io pr merge 1678 --squash --delete-branch
+# 3. If a PR is green: merge it (Claude merges PRs, not user — memory rule #0H)
+gh -R learn-ukrainian/learn-ukrainian.github.io pr merge $N --squash --delete-branch
 
-# 3. Clean worktrees
-git worktree remove .worktrees/gemini-1669-vesum-arch-tag
-git worktree remove .worktrees/gemini-1668-pymorphy3-ru-shadow
-git worktree remove .worktrees/gemini-1658-rename-grinchenko
-git worktree remove .worktrees/claude-1631-wiki-migration  # already safe to remove
+# 4. After merges, clean worktrees + branches in one shot:
+for wt in gemini-1669-vesum-arch-tag gemini-1668-pymorphy3-ru-shadow \
+          gemini-1658-rename-grinchenko claude-1631-wiki-migration; do
+  git worktree remove ".worktrees/$wt" 2>/dev/null || true
+done
+git worktree prune
+git fetch --prune origin
 
-# 4. Pull + verify
-git pull origin main
-
-# 5. Surface ADR-008 to user (5-min sign-off, unblocks #1632 and the round-4 bakeoff #1622)
-
-# 6. Continue Tier B / Tier C as needed
+# 5. Pull + go
+git pull --rebase origin main
 ```
+
+**First substantive action after bootstrap:** check whether ADR-008 was
+signed off (via `/api/orient`'s decisions section or
+`docs/decisions/`); if not, surface to user. Otherwise pick up Tier C
+or run `gh issue list` for the next Phase 1 item.
 
 ---
 
