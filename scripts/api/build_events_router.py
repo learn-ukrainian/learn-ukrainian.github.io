@@ -10,6 +10,7 @@ from typing import Any
 
 from fastapi import APIRouter, Query
 
+from ..path_safety import safe_join
 from .config import CURRICULUM_ROOT
 
 router = APIRouter(tags=["build-events"])
@@ -120,7 +121,7 @@ def active_build_events(*, level: str | None = None) -> dict[str, Any]:
         ts = _parse_iso_datetime(meta.get("timestamp"))
         if ts is None or ts < cutoff:
             continue
-        state_path = CURRICULUM_ROOT / track / "orchestration" / slug / "state.json"
+        state_path = safe_join(CURRICULUM_ROOT / track / "orchestration" / slug, "state.json")
         state = _read_json(state_path)
         if state is None:
             continue

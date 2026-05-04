@@ -25,6 +25,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from audit.status_cache import get_source_paths, read_status
 from common.thresholds import get_level_thresholds
+from path_safety import safe_join
 
 
 def _load_curriculum_order(level: str) -> list[str]:
@@ -69,7 +70,7 @@ def _extract_review_score(level: str, slug: str) -> str | None:
 
 def _count_frictions(level: str, slug: str) -> tuple[int, int]:
     """Count active and resolved frictions. Returns (active, resolved)."""
-    path = CURRICULUM_ROOT / level / "orchestration" / slug / "friction.yaml"
+    path = safe_join(CURRICULUM_ROOT / level / "orchestration" / slug, "friction.yaml")
     if not path.exists():
         return (0, 0)
     try:

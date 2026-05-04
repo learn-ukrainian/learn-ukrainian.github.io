@@ -27,6 +27,7 @@ from fastapi import APIRouter, Query, Request, Response
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+from ..path_safety import safe_join
 from .config import CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
 
 router = APIRouter(tags=["comms"])
@@ -486,8 +487,19 @@ def _scan_preseed_logs() -> list[dict]:
 
 def _scan_track_progress(track: str) -> dict:
     """Count research files and check running processes for a track."""
-    track_dir = CURRICULUM_ROOT / track
-    research_dir = track_dir / "research"
+    try:
+        track_dir = safe_join(CURRICULUM_ROOT, track)
+        research_dir = safe_join(track_dir, "research")
+    except ValueError:
+        return {
+            "track": track,
+            "total_expected": 0,
+            "research_done": 0,
+            "remaining": 0,
+            "recent_30min": 0,
+            "throughput_per_hour": 0,
+            "last_created": None,
+        }
 
     research_files = []
     if research_dir.exists():
@@ -627,7 +639,10 @@ async def batch_progress_track(track: str):
     tp = await asyncio.to_thread(_scan_track_progress, track)
 
     # Get research file timeline (last 20 files)
-    research_dir = CURRICULUM_ROOT / track / "research"
+    try:
+        research_dir = safe_join(CURRICULUM_ROOT, track, "research")
+    except ValueError:
+        return {**tp, "recent_files": []}
     timeline = []
     if research_dir.exists():
         files = sorted(research_dir.glob("*-research.md"), key=lambda f: f.stat().st_mtime, reverse=True)
@@ -1271,10 +1286,10 @@ async def post_to_channel(name: str, req: ChannelPostRequest, request: Request):
         # Import inside handler so the bridge package isn't a hard
         # dependency for the rest of the API server startup.
         from ai_agent_bridge import _channels as _ch
-    except ImportError as e:
+    except ImportError:
         return JSONResponse(
             status_code=500,
-            content={"error": f"ai_agent_bridge not importable: {e}"},
+            content={"error": "ai_agent_bridge not importable"},
         )
 
     try:
@@ -1289,9 +1304,9 @@ async def post_to_channel(name: str, req: ChannelPostRequest, request: Request):
         )
     except ValueError as e:
         return JSONResponse(status_code=400, content={"error": str(e)})
-    except Exception as e:
+    except Exception:
         return JSONResponse(
-            status_code=500, content={"error": f"post failed: {e}"}
+            status_code=500, content={"error": "post failed"}
         )
 
     return {
@@ -1390,10 +1405,10 @@ def comms_inbox(
     """
     try:
         from scripts.ai_agent_bridge._channels import pending_deliveries_for
-    except ImportError as exc:
+    except ImportError:
         return JSONResponse(
             status_code=500,
-            content={"error": f"channel bridge not importable: {exc}"},
+            content={"error": "channel bridge not importable"},
         )
 
     try:
@@ -1402,10 +1417,10 @@ def comms_inbox(
         # ``_validate_agent`` raises ValueError on unknown agent — treat
         # as 400 so the caller can fix the query, not as 500.
         return JSONResponse(status_code=400, content={"error": str(exc)})
-    except Exception as exc:  # pragma: no cover — defensive
+    except Exception:
         return JSONResponse(
             status_code=500,
-            content={"error": f"bridge query failed: {exc}"},
+            content={"error": "bridge query failed"},
         )
 
     total = len(all_pending)

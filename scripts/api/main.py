@@ -25,6 +25,7 @@ from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconn
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
+from ..path_safety import safe_join
 from . import delegate_router as delegate_api
 from . import runtime_router as runtime_api
 from . import state_router as state_api
@@ -787,10 +788,19 @@ _ALLOWED_IMG_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 _MIME_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp"}
 
 
+def _safe_join(base: Path, *parts: str | Path) -> Path | None:
+    try:
+        return safe_join(base, *parts)
+    except ValueError:
+        return None
+
+
 @app.get("/images/{path:path}")
 async def serve_image(path: str):
     """Serve textbook images with caching. Path relative to data/textbook_images/."""
-    file_path = _IMAGE_DIR / path
+    file_path = _safe_join(_IMAGE_DIR, path)
+    if file_path is None:
+        raise HTTPException(status_code=403, detail="Invalid image path")
     if file_path.suffix.lower() not in _ALLOWED_IMG_EXT:
         raise HTTPException(status_code=403, detail="Forbidden file type")
     if not file_path.exists() or not file_path.is_file():
@@ -813,10 +823,12 @@ async def serve_image(path: str):
 async def serve_static(path: str):
     if not path or path == "/":
         return FileResponse(PLAYGROUNDS_DIR / "index.html")
-    file_path = (PLAYGROUNDS_DIR / path).resolve()
+    file_path = _safe_join(PLAYGROUNDS_DIR, path)
+    if file_path is None:
+        raise HTTPException(status_code=403, detail="Path traversal not allowed")
     playgrounds_root = PLAYGROUNDS_DIR.resolve()
-    # Prevent path traversal — resolved path must stay within playgrounds dir
-    if not file_path.is_relative_to(playgrounds_root):
+    # Keep explicit traversal guard if relative path join bypassed via symlink tricks.
+    if not file_path.resolve().is_relative_to(playgrounds_root):
         raise HTTPException(status_code=403, detail="Path traversal not allowed")
     if file_path.is_file():
         return FileResponse(file_path)

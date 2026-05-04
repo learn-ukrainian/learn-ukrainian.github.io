@@ -1,11 +1,11 @@
 import contextlib
 import json
 import subprocess
-from pathlib import Path
 
 import yaml
 from fastapi import APIRouter, HTTPException
 
+from ..path_safety import safe_join
 from .config import PROJECT_ROOT
 
 router = APIRouter()
@@ -13,10 +13,15 @@ router = APIRouter()
 
 @router.get("/module/{level}/{slug}")
 def get_module_state(level: str, slug: str):
-    track_dir = PROJECT_ROOT / "curriculum" / "l2-uk-en" / level
-    plan_path = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / level / f"{slug}.yaml"
-    state_file = track_dir / "orchestration" / slug / "state.json"
-    status_file = track_dir / "status" / f"{slug}.json"
+    try:
+        track_dir = safe_join(PROJECT_ROOT, "curriculum", "l2-uk-en", level)
+        plan_path = safe_join(track_dir, "plans", f"{slug}.yaml")
+        orchestration_dir = safe_join(track_dir, "orchestration", slug)
+        content_path = safe_join(track_dir, f"{slug}.md")
+        state_file = safe_join(orchestration_dir, "state.json")
+        status_file = safe_join(track_dir, "status", f"{slug}.json")
+    except ValueError:
+        return {"error": "Invalid level/slug"}
 
     state_data = {}
     if state_file.exists():
@@ -35,9 +40,9 @@ def get_module_state(level: str, slug: str):
         "audit_status": status_data.get("overall", {}).get("status", "unknown"),
         "key_paths": {
             "plan": str(plan_path.relative_to(PROJECT_ROOT)) if plan_path.exists() else None,
-            "orchestration_dir": str((track_dir / "orchestration" / slug).relative_to(PROJECT_ROOT)),
-            "content": str((track_dir / f"{slug}.md").relative_to(PROJECT_ROOT))
-            if (track_dir / f"{slug}.md").exists()
+            "orchestration_dir": str(safe_join(track_dir, "orchestration", slug).relative_to(PROJECT_ROOT)),
+            "content": str(content_path.relative_to(PROJECT_ROOT))
+            if content_path.exists()
             else None,
         },
     }
@@ -45,7 +50,11 @@ def get_module_state(level: str, slug: str):
 
 @router.get("/orchestration/{level}/{slug}")
 def get_orchestration(level: str, slug: str):
-    orch_dir = PROJECT_ROOT / "curriculum" / "l2-uk-en" / level / "orchestration" / slug
+    try:
+        track_dir = safe_join(PROJECT_ROOT, "curriculum", "l2-uk-en", level)
+        orch_dir = safe_join(track_dir, "orchestration", slug)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid level/slug") from None
     if not orch_dir.exists():
         raise HTTPException(status_code=404, detail="Orchestration dir not found")
 
@@ -76,7 +85,11 @@ def get_orchestration(level: str, slug: str):
 
 @router.get("/prompt-summary/{level}/{slug}")
 def get_prompt_summary(level: str, slug: str):
-    orch_dir = PROJECT_ROOT / "curriculum" / "l2-uk-en" / level / "orchestration" / slug
+    try:
+        track_dir = safe_join(PROJECT_ROOT, "curriculum", "l2-uk-en", level)
+        orch_dir = safe_join(track_dir, "orchestration", slug)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid level/slug") from None
     if not orch_dir.exists():
         raise HTTPException(status_code=404, detail="Orchestration dir not found")
 

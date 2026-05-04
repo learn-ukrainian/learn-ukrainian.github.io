@@ -30,6 +30,7 @@ import httpx
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse
 
+from ..path_safety import safe_join
 from .config import MESSAGE_DB, PROJECT_ROOT
 
 router = APIRouter(tags=["admin"])
@@ -71,15 +72,6 @@ def _format_bytes(n: int) -> str:
             return f"{n:.1f} {unit}"
         n /= 1024
     return f"{n:.1f} TB"
-
-
-def _safe_within(path: Path, root: Path) -> bool:
-    """Check that resolved path is under root (prevents traversal)."""
-    try:
-        path.resolve().relative_to(root.resolve())
-        return True
-    except ValueError:
-        return False
 
 
 _qdrant_client = httpx.AsyncClient(base_url=QDRANT_URL, timeout=10)
@@ -185,11 +177,11 @@ async def create_qdrant_backup():
             with open(dest, "wb") as f:
                 async for chunk in r.aiter_bytes(chunk_size=65536):
                     f.write(chunk)
-    except Exception as e:
+    except Exception:
         dest.unlink(missing_ok=True)
         return JSONResponse(
             status_code=500,
-            content={"error": f"Failed to download snapshot: {e}"},
+            content={"error": "Failed to download snapshot"},
         )
 
     size = dest.stat().st_size
@@ -245,9 +237,10 @@ async def list_backups():
 @router.delete("/backup/{filename}")
 async def delete_backup(filename: str):
     """Delete a backup file."""
-    path = BACKUP_DIR / filename
-    if not _safe_within(path, BACKUP_DIR):
-        raise HTTPException(status_code=400, detail="Invalid filename")
+    try:
+        path = safe_join(BACKUP_DIR, filename)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid filename") from None
 
     try:
         size = path.stat().st_size
@@ -364,10 +357,10 @@ async def vacuum_broker():
         conn = sqlite3.connect(str(MESSAGE_DB))
         conn.execute("VACUUM")
         conn.close()
-    except Exception as e:
+    except Exception:
         return JSONResponse(
             status_code=500,
-            content={"error": f"VACUUM failed: {e}"},
+            content={"error": "VACUUM failed"},
         )
     size_after = MESSAGE_DB.stat().st_size
 

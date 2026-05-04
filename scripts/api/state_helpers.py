@@ -22,6 +22,7 @@ from pathlib import Path
 
 import yaml
 
+from ..path_safety import safe_join
 from .config import CURRICULUM_ROOT, MESSAGE_DB
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -177,7 +178,10 @@ def get_plan_slugs(track_id: str) -> list[tuple[int, str]]:
                 result.append((i + 1, slug))
         return result
 
-    plan_dir = PLANS_ROOT / track_id
+    try:
+        plan_dir = safe_join(PLANS_ROOT, track_id)
+    except ValueError:
+        return []
     if plan_dir.is_dir():
         plan_files = sorted(plan_dir.glob("*.yaml"))
         return [(i + 1, f.stem) for i, f in enumerate(plan_files)]
@@ -203,7 +207,10 @@ def load_module_state(track: str, slug: str, orch_dir: Path) -> dict:
     Handles V6 state directly (mode='v6'), delegates older legacy states to pipeline.state.
     """
     # V6 state: read directly (pipeline.state only knows v5)
-    state_file = orch_dir / "state.json"
+    try:
+        state_file = safe_join(orch_dir, "state.json")
+    except ValueError:
+        return {"track": track, "slug": slug, "mode": "v5", "phases": {}}
     if state_file.exists():
         try:
             data = json.loads(state_file.read_text())
@@ -224,7 +231,11 @@ def detect_pipeline_version(orch_dir: Path) -> str:
 
     Priority: state.json mode=v6/v5 > state-v3.json > legacy state.json > 'unbuilt'.
     """
-    state_file = orch_dir / "state.json"
+    try:
+        state_file = safe_join(orch_dir, "state.json")
+        state_v3_file = safe_join(orch_dir, "state-v3.json")
+    except ValueError:
+        return "unbuilt"
     if state_file.exists():
         try:
             data = json.loads(state_file.read_text())
@@ -237,7 +248,7 @@ def detect_pipeline_version(orch_dir: Path) -> str:
                 return "unbuilt"
         except Exception:
             pass
-    if (orch_dir / "state-v3.json").exists():
+    if state_v3_file.exists():
         return "v3"
     if state_file.exists():
         try:
@@ -253,7 +264,10 @@ def detect_pipeline_version(orch_dir: Path) -> str:
 
 def read_v3_state(orch_dir: Path) -> dict:
     """Read state-v3.json, return {} if missing or invalid."""
-    state_file = orch_dir / "state-v3.json"
+    try:
+        state_file = safe_join(orch_dir, "state-v3.json")
+    except ValueError:
+        return {}
     if not state_file.exists():
         return {}
     try:
@@ -264,7 +278,10 @@ def read_v3_state(orch_dir: Path) -> dict:
 
 def read_v2_state(orch_dir: Path) -> dict:
     """Read state.json (v2 pipeline), return {} if missing or invalid."""
-    state_file = orch_dir / "state.json"
+    try:
+        state_file = safe_join(orch_dir, "state.json")
+    except ValueError:
+        return {}
     if not state_file.exists():
         return {}
     try:
@@ -326,11 +343,14 @@ def parse_phase_status_from_state(state: dict, phase_name: str) -> dict:
 
 def has_research_file(track_dir: Path, slug: str) -> bool:
     """Return True if a research file exists for this module (V5 or V6 format)."""
-    research_dir = track_dir / "research"
-    return (
-        (research_dir / f"{slug}-research.md").exists()
-        or (research_dir / f"{slug}-knowledge-packet.md").exists()
-    )
+    try:
+        research_dir = safe_join(track_dir, "research")
+        research_file = safe_join(research_dir, f"{slug}-research.md")
+        knowledge_packet = safe_join(research_dir, f"{slug}-knowledge-packet.md")
+    except ValueError:
+        return False
+
+    return research_file.exists() or knowledge_packet.exists()
 
 
 def is_research_done(state: dict, track_dir: Path | None = None, slug: str | None = None) -> bool:
@@ -352,6 +372,11 @@ def is_content_done(state: dict) -> bool:
 
 def find_content_file(track_dir: Path, slug: str) -> Path | None:
     """Find the module content .md file."""
+    try:
+        safe_join(track_dir, f"{slug}.md")
+    except ValueError:
+        return None
+
     for pattern in [f"{slug}.md", f"*-{slug}.md"]:
         matches = list(track_dir.glob(pattern))
         if matches:
@@ -367,7 +392,10 @@ def get_audit_status(track_dir: Path, slug: str) -> dict:
     Staleness guard: if the content file is newer than the status cache,
     the audit result is stale.
     """
-    status_file = track_dir / "status" / f"{slug}.json"
+    try:
+        status_file = safe_join(track_dir, "status", f"{slug}.json")
+    except ValueError:
+        return {"status": "not_run", "word_count": 0, "word_target": 0, "blocking_issues": []}
     if not status_file.exists():
         return {"status": "not_run", "word_count": 0, "word_target": 0, "blocking_issues": []}
     try:
@@ -435,7 +463,10 @@ def get_research_score(track_dir: Path, slug: str, track_id: str) -> int | None:
 
 def get_word_target_from_plan(track_id: str, slug: str) -> int:
     """Try to read word_target from the individual plan YAML file."""
-    plan_file = PLANS_ROOT / track_id / f"{slug}.yaml"
+    try:
+        plan_file = safe_join(PLANS_ROOT, track_id, f"{slug}.yaml")
+    except ValueError:
+        return 0
     if not plan_file.exists():
         return 0
     try:
@@ -508,7 +539,10 @@ def get_broker_messages_for_slug(slug: str, limit: int = 20) -> list[dict]:
 
 def get_final_review_info(track_dir: Path, slug: str) -> dict | None:
     """Parse final review file for verdict and issue count."""
-    review_file = track_dir / "review" / f"{slug}-final-review.md"
+    try:
+        review_file = safe_join(track_dir, "review", f"{slug}-final-review.md")
+    except ValueError:
+        return None
     if not review_file.exists():
         return None
     try:

@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from common.thresholds import REVIEW_PASS_FLOOR
 
+from ..path_safety import safe_join
 from .config import CURRICULUM_ROOT
 from .state_helpers import (
     PLANS_ROOT,
@@ -231,7 +232,7 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
         return {"error": f"Module #{num} not found in track '{track_id}'"}
     _, slug = match
     track_dir = CURRICULUM_ROOT / level_cfg["path"]
-    orch_dir = track_dir / "orchestration" / slug
+    orch_dir = safe_join(track_dir / "orchestration", slug)
 
     version = detect_pipeline_version(orch_dir)
     # Read state once — reuse for phases + consultations (avoids duplicate I/O)

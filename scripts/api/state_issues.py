@@ -7,6 +7,7 @@ review files and audit failures, and issue pattern counting.
 import re
 from datetime import UTC, datetime
 
+from ..path_safety import safe_join
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_helpers import (
     detect_pipeline_version,
@@ -70,7 +71,7 @@ def compute_final_reviews(track_id: str, level_cfg: dict) -> dict:
     for num, slug in plan_slugs:
         info = get_final_review_info(track_dir, slug)
         if info is None:
-            orch_dir = track_dir / "orchestration" / slug
+            orch_dir = safe_join(track_dir / "orchestration", slug)
             version = detect_pipeline_version(orch_dir)
             if _is_ready_for_final_review(orch_dir, version):
                 pending.append({"num": num, "slug": slug})

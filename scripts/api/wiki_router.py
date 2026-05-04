@@ -27,6 +27,8 @@ import wiki.quality_gate as wiki_quality
 import wiki.sources as wiki_sources
 import wiki.state as wiki_state
 
+from ..path_safety import safe_join
+
 router = APIRouter(tags=["wiki"])
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -60,7 +62,14 @@ def _known_tracks() -> list[str]:
 
 
 def _track_exists(track: str) -> bool:
-    return track in _known_tracks() or (CURRICULUM_ROOT / "plans" / track).exists()
+    return track in _known_tracks()
+
+
+def _safe_join(base: Path, *parts: str | Path) -> Path | None:
+    try:
+        return safe_join(base, *parts)
+    except ValueError:
+        return None
 
 
 def _ensure_track_exists(track: str) -> None:
@@ -150,7 +159,7 @@ def _track_status_rows(track: str) -> list[dict[str, Any]]:
 
     for slug in slugs:
         article = _resolve_article(track, slug)
-        article_path = wiki_config.WIKI_DIR / article["path"] if article else None
+        article_path = _safe_join(wiki_config.WIKI_DIR, article["path"]) if article else None
         compiled = bool(article_path and article_path.exists())
         word_count = 0
 
@@ -221,7 +230,18 @@ async def wiki_article(track: str, slug: str):
             "compiled_at": None,
         }
 
-    article_path = wiki_config.WIKI_DIR / article["path"]
+    article_path = _safe_join(wiki_config.WIKI_DIR, article["path"])
+    if article_path is None:
+        return {
+            "track": track,
+            "slug": slug,
+            "compiled": False,
+            "path": None,
+            "word_count": 0,
+            "preview": None,
+            "source_count": source_count,
+            "compiled_at": article.get("compiled_at"),
+        }
     if not article_path.exists():
         return {
             "track": track,

@@ -7,6 +7,7 @@ aggregation. All functions are sync and designed for asyncio.to_thread().
 import json
 from datetime import UTC, datetime
 
+from ..path_safety import safe_join
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
@@ -42,7 +43,7 @@ def compute_build_status_track(track_id: str, level_cfg: dict) -> dict:
     recent_completions = []
 
     for num, slug in plan_slugs:
-        orch_dir = track_dir / "orchestration" / slug
+        orch_dir = safe_join(track_dir / "orchestration", slug)
         version = detect_pipeline_version(orch_dir)
         furthest, running_phase, latest_ts, audit_status = scan_module_phases(orch_dir, version)
 
@@ -129,7 +130,7 @@ def compute_build_status_all() -> dict:
         done = building = failed = 0
 
         for _num, slug in plan_slugs:
-            orch_dir = track_dir / "orchestration" / slug
+            orch_dir = safe_join(track_dir / "orchestration", slug)
             version = detect_pipeline_version(orch_dir)
             _furthest, running_phase, _latest_ts, audit_status = scan_module_phases(orch_dir, version)
             if audit_status == "complete":
@@ -160,7 +161,7 @@ def compute_track_health(track_id: str, level_cfg: dict) -> dict:
     completion_times = []
 
     for num, slug in plan_slugs:
-        b, ct = _check_build_phase(track_dir / "orchestration" / slug)
+        b, ct = _check_build_phase(safe_join(track_dir / "orchestration", slug))
         built += b
         if ct:
             completion_times.append(ct)

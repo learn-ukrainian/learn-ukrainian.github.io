@@ -28,6 +28,7 @@ from datetime import UTC, datetime
 from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 
+from ..path_safety import safe_join
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_build import (
     compute_build_stats,
@@ -124,7 +125,7 @@ async def pipeline_versions(track: str | None = Query(None)):
             track_counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
 
             for num, slug in plan_slugs:
-                orch_dir = track_dir / "orchestration" / slug
+                orch_dir = safe_join(track_dir / "orchestration", slug)
                 version = detect_pipeline_version(orch_dir)
                 if version not in counts:
                     version = "unbuilt"
@@ -170,7 +171,7 @@ async def ready_to_build(track: str | None = Query(None)):
             track_dir = CURRICULUM_ROOT / level_cfg["path"]
 
             for num, slug in plan_slugs:
-                orch_dir = track_dir / "orchestration" / slug
+                orch_dir = safe_join(track_dir / "orchestration", slug)
                 state = load_module_state(track_id, slug, orch_dir)
 
                 if is_research_done(state, track_dir, slug) and not is_content_done(state):
@@ -222,7 +223,7 @@ async def weak_points(
                     issues.append(f"low_words_{word_count}/{word_target}")
 
                 if issues:
-                    orch_dir = track_dir / "orchestration" / slug
+                    orch_dir = safe_join(track_dir / "orchestration", slug)
                     version = detect_pipeline_version(orch_dir)
                     weak.append({
                         "track": track_id, "num": num, "slug": slug,
@@ -251,7 +252,7 @@ async def failing_modules(track: str | None = Query(None)):
             track_dir = CURRICULUM_ROOT / level_cfg["path"]
 
             for num, slug in plan_slugs:
-                orch_dir = track_dir / "orchestration" / slug
+                orch_dir = safe_join(track_dir / "orchestration", slug)
                 version = detect_pipeline_version(orch_dir)
                 audit = get_audit_status(track_dir, slug)
 

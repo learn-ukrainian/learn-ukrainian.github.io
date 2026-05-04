@@ -158,7 +158,9 @@ def main():
     redirected = []
 
     for i, url in enumerate(sorted(unique_urls), 1):
-        if args.skip_youtube and "youtube.com" in url:
+        parsed = urlparse(url)
+        is_youtube = parsed.netloc.endswith("youtube.com") or parsed.netloc == "youtu.be"
+        if args.skip_youtube and is_youtube:
             continue
 
         result = check_url(url)

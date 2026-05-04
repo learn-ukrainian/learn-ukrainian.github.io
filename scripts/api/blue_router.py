@@ -14,6 +14,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Response
 
+from ..path_safety import safe_join
 from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -169,10 +170,13 @@ async def get_audit_status(track_id: str, slug: str, fresh: bool = False):
     Returns structured JSON — no need to parse terminal output.
     """
     bare = to_bare_slug(slug)
-    track_dir = CURRICULUM_ROOT / track_id
-    md_candidates = list(track_dir.glob(f"*{bare}.md")) + list(track_dir.glob(f"{slug}.md"))
-    md_path = md_candidates[0] if md_candidates else track_dir / f"{slug}.md"
-    status_file = track_dir / "status" / f"{bare}.json"
+    try:
+        track_dir = safe_join(CURRICULUM_ROOT, track_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid track/slug") from None
+    md_candidates = list(track_dir.glob(f"*{bare}.md"))
+    md_path = md_candidates[0] if md_candidates else safe_join(track_dir, f"{slug}.md")
+    status_file = safe_join(track_dir, "status", f"{bare}.json")
 
     if fresh:
         if not md_path.exists():
@@ -195,8 +199,8 @@ async def get_audit_status(track_id: str, slug: str, fresh: bool = False):
     try:
         with open(status_file) as f:
             data = json.load(f)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to read status: {e}") from e
+    except Exception:
+        raise HTTPException(status_code=500, detail="Failed to read status") from None
 
     # Surface the most important info at the top level
     overall = data.get("overall", {})
@@ -232,7 +236,7 @@ async def get_activity_errors(track_id: str, slug: str):
       UNJUMBLE_POSSIBLE_OUT_OF_SCOPE_DATIVE
     """
     bare = to_bare_slug(slug)
-    activities_path = CURRICULUM_ROOT / track_id / "activities" / f"{bare}.yaml"
+    activities_path = safe_join(CURRICULUM_ROOT, track_id, "activities", f"{bare}.yaml")
 
     if not activities_path.exists():
         return {"track": track_id, "slug": slug, "error": "No activities file found", "violations": []}
@@ -260,8 +264,8 @@ async def get_activity_errors(track_id: str, slug: str):
             + check_unjumble_runon_answer(activities)
             + check_unjumble_out_of_scope_dative(activities)
         )
-    except Exception as e:
-        return {"track": track_id, "slug": slug, "error": str(e), "violations": []}
+    except Exception:
+        return {"track": track_id, "slug": slug, "error": "Validation failed", "violations": []}
 
     critical = [v for v in violations if v.get("severity") == "critical"]
     warnings = [v for v in violations if v.get("severity") == "warning"]
@@ -293,10 +297,13 @@ async def get_final_review_summary(track_id: str, slug: str):
               checking review file + checking audit log separately.
     """
     bare = to_bare_slug(slug)
-    track_dir = CURRICULUM_ROOT / track_id
+    try:
+        track_dir = safe_join(CURRICULUM_ROOT, track_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid track/slug") from None
 
     # --- 1. Audit status ---
-    status_file = track_dir / "status" / f"{bare}.json"
+    status_file = safe_join(track_dir, "status", f"{bare}.json")
     audit_summary = {"status": "not_audited", "gates": {}, "blocking_issues": []}
     audit_age_seconds = None
 
@@ -322,24 +329,23 @@ async def get_final_review_summary(track_id: str, slug: str):
                     audit_age_seconds = max(0, int((datetime.now(UTC) - last).total_seconds()))
                 except Exception:
                     pass
-        except Exception as e:
-            audit_summary["error"] = str(e)
+        except Exception:
+            audit_summary["error"] = "Failed to load audit status"
 
     # --- 2. File completeness ---
-    md_candidates = list(track_dir.glob(f"*{bare}.md")) + list(track_dir.glob(f"{slug}.md"))
-    md_path = md_candidates[0] if md_candidates else None
+    md_path = safe_join(track_dir, f"{slug}.md")
     files = {
         "lesson": md_path.exists() if md_path else False,
-        "activities": (track_dir / "activities" / f"{bare}.yaml").exists(),
-        "vocabulary": (track_dir / "vocabulary" / f"{bare}.yaml").exists(),
-        "meta": (track_dir / "meta" / f"{bare}.yaml").exists(),
-        "review": (track_dir / "review" / f"{bare}-review.md").exists(),
-        "audit_log": (track_dir / "audit" / f"{bare}-audit.log").exists(),
+        "activities": safe_join(track_dir, "activities", f"{bare}.yaml").exists(),
+        "vocabulary": safe_join(track_dir, "vocabulary", f"{bare}.yaml").exists(),
+        "meta": safe_join(track_dir, "meta", f"{bare}.yaml").exists(),
+        "review": safe_join(track_dir, "review", f"{bare}-review.md").exists(),
+        "audit_log": safe_join(track_dir, "audit", f"{bare}-audit.log").exists(),
     }
 
     # --- 3. Activity structural errors ---
     activity_errors = {"total_violations": 0, "critical_count": 0, "warning_count": 0, "violations": []}
-    activities_path = track_dir / "activities" / f"{bare}.yaml"
+    activities_path = safe_join(track_dir, "activities", f"{bare}.yaml")
     if activities_path.exists():
         try:
             from audit.checks.activity_validation import (
@@ -368,12 +374,12 @@ async def get_final_review_summary(track_id: str, slug: str):
                 "warning_count": sum(1 for v in violations if v.get("severity") == "warning"),
                 "violations": violations,
             }
-        except Exception as e:
-            activity_errors["error"] = str(e)
+        except Exception:
+            activity_errors["error"] = "Failed to parse activities"
 
     # --- 4. Review file validation status ---
     review_status = {"exists": files["review"], "warnings": []}
-    audit_log = track_dir / "audit" / f"{bare}-audit.log"
+    audit_log = safe_join(track_dir, "audit", f"{bare}-audit.log")
     if audit_log.exists():
         log_text = audit_log.read_text()
         if "UNVERIFIED_CITATIONS" in log_text:

@@ -375,8 +375,10 @@ def _search_blog_dbs(level, topic_title, keywords, results, seen_urls, load_blog
             continue
 
         seen_urls.add(url)
-        source = article.get("source", "ukrainianlessons.com")
-        if "dobraforma" in url or "opentext.ku.edu" in url:
+        from urllib.parse import urlparse
+        parsed_url = urlparse(url)
+        domain = parsed_url.netloc
+        if "dobraforma" in domain or "opentext.ku.edu" in domain:
             source = "dobraforma"
 
         entry: dict[str, Any] = {

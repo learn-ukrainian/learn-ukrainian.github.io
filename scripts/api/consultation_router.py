@@ -34,6 +34,8 @@ from .state_helpers import cache_get, cache_set, read_v2_state
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pipeline.consultation import TemplateChange, apply_template_patch
 
+from ..path_safety import safe_join
+
 router = APIRouter(tags=["consultation"])
 
 # Queue directory — same constant as pipeline.consultation
@@ -107,7 +109,10 @@ def _list_queue_with_summaries() -> dict:
 def _get_queue_detail(filename: str) -> tuple[int, dict]:
     """Get detail for a queue file. Returns (status_code, response_dict)."""
     for subdir, status in [(QUEUE_DIR, "pending"), (APPLIED_DIR, "applied"), (REJECTED_DIR, "rejected")]:
-        path = subdir / filename
+        try:
+            path = safe_join(subdir, filename)
+        except ValueError:
+            return 400, {"error": f"Invalid filename: {filename}"}
         if path.exists() and path.is_file():
             data = _parse_queue_file(path)
             if data:
@@ -265,7 +270,10 @@ def _apply_proposal(proposal: dict) -> tuple[bool, int, list[str]]:
 
 def _do_approve(filename: str) -> tuple[int, dict]:
     """Execute approval: validate, patch, move. Returns (status_code, response)."""
-    path = QUEUE_DIR / filename
+    try:
+        path = safe_join(QUEUE_DIR, filename)
+    except ValueError:
+        return 400, {"error": f"Invalid filename: {filename}"}
 
     # Idempotent: already applied
     if (APPLIED_DIR / filename).exists():
@@ -288,7 +296,11 @@ def _do_approve(filename: str) -> tuple[int, dict]:
 
     # Move to applied/ regardless (the proposal was approved even if 0 changes matched)
     APPLIED_DIR.mkdir(parents=True, exist_ok=True)
-    shutil.move(str(path), APPLIED_DIR / filename)
+    try:
+        target = safe_join(APPLIED_DIR, filename)
+    except ValueError:
+        return 500, {"error": f"Invalid filename: {filename}"}
+    shutil.move(str(path), target)
 
     return 200, {
         "status": "approved",
@@ -300,7 +312,10 @@ def _do_approve(filename: str) -> tuple[int, dict]:
 
 def _do_reject(filename: str, reason: str) -> tuple[int, dict]:
     """Execute rejection: optionally annotate, move. Returns (status_code, response)."""
-    path = QUEUE_DIR / filename
+    try:
+        path = safe_join(QUEUE_DIR, filename)
+    except ValueError:
+        return 400, {"error": f"Invalid filename: {filename}"}
 
     # Idempotent: already rejected
     if (REJECTED_DIR / filename).exists():
@@ -322,7 +337,11 @@ def _do_reject(filename: str, reason: str) -> tuple[int, dict]:
                 "utf-8",
             )
 
-    shutil.move(str(path), REJECTED_DIR / filename)
+    try:
+        target = safe_join(REJECTED_DIR, filename)
+    except ValueError:
+        return 500, {"error": f"Invalid filename: {filename}"}
+    shutil.move(str(path), target)
     return 200, {"status": "rejected", "filename": filename, "reason": reason or None}
 
 
@@ -437,7 +456,7 @@ async def get_history(
 @router.get("/history/{track}/{slug}")
 async def get_module_history(track: str, slug: str):
     """Consultation timeline for one module."""
-    orch_dir = CURRICULUM_ROOT / track / "orchestration" / slug
+    orch_dir = safe_join(CURRICULUM_ROOT / track / "orchestration", slug)
     if not orch_dir.is_dir():
         return JSONResponse(
             status_code=404,

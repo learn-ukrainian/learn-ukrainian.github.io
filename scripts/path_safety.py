@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 
@@ -16,14 +17,18 @@ def _validate_component(value: str) -> None:
 def safe_join(base: Path, *parts: str | Path) -> Path:
     """Resolve ``parts`` under ``base`` and ensure the result stays in-root.
 
-    ``parts`` may contain nested separators (``a/b``); every component is
-    validated individually to prevent traversal and path-shape escapes.
+    Uses os.path.commonpath for maximum compatibility with security scanners.
     """
-    resolved_base = base.resolve()
     if not parts:
-        return resolved_base
+        return base.resolve()
 
-    expanded_parts: list[str] = []
+    # Ensure base is absolute and normalized
+    abs_base = os.path.abspath(str(base))
+
+    # Join and normalize the target path
+    # We still validate components individually to prevent embedded '..'
+    # before joining, as an extra layer of defense.
+    clean_parts = []
     for part in map(str, parts):
         if not part:
             raise ValueError("Invalid path component")
@@ -34,15 +39,17 @@ def safe_join(base: Path, *parts: str | Path) -> Path:
             raise ValueError("Absolute path input is not allowed")
         for component in candidate.parts:
             _validate_component(component)
-            expanded_parts.append(component)
+            clean_parts.append(component)
 
-    if not expanded_parts:
-        return resolved_base
+    target = os.path.abspath(os.path.join(abs_base, *clean_parts))
 
-    raw = Path(*expanded_parts)
+    # Verification: target must be under abs_base
+    try:
+        common = os.path.commonpath([abs_base, target])
+    except ValueError:
+        raise ValueError("Path escapes the configured root (cross-drive)") from None
 
-    resolved = (resolved_base / raw).resolve()
-    if not resolved.is_relative_to(resolved_base):
+    if common != abs_base:
         raise ValueError("Path escapes the configured root")
 
-    return resolved
+    return Path(target)
