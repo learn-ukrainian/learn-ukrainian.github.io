@@ -676,29 +676,61 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="query_sum20",
             description=(
-                "Live query СУМ-20 (sum20ua.com) — modern post-Soviet academic "
-                "Ukrainian explanatory dictionary, ULIF NAS Ukraine, 2010–ongoing. "
-                "Coverage: volumes 1–16 only (А–Р); vols 17–20 (С–Я) not yet "
-                "published online. **Per-query live fetch with citation** — does "
-                "NOT bulk-ingest, no DB caching, ULIF copyright notice "
-                "preserved. Use as the **modern definitional baseline** to "
-                "REPLACE Sovietized СУМ-11 entries (#1659): when "
+                "Live query СУМ-20 (Словник української мови у 20 томах) via "
+                "slovnyk.me/dict/newsum — modern post-Soviet academic Ukrainian "
+                "explanatory dictionary, ULIF NAS Ukraine, 2010–ongoing. "
+                "Coverage: volumes 1–16 (А–Р); vols 17–20 (С–Я) not yet "
+                "published online. **Per-query live fetch with citation**, no "
+                "bulk-ingest, no DB caching. Use as the **modern definitional "
+                "baseline** to REPLACE Sovietized СУМ-11 entries (#1659): when "
                 "`search_definitions` returns `sovietization_risk > 0`, fall "
-                "back to `query_sum20` for the same headword. License posture: "
-                "ULIF publishes with copyright but no explicit terms-of-use; "
-                "single-query lookup with attribution is fair use, bulk crawl "
-                "is not. **PARSER CAVEAT: extracted text is currently unreliable** "
-                "— sum20ua.com's search page returns alphabetically adjacent "
-                "entries and the HTML extractor matches the first entry on the "
-                "page, which often is not the queried headword. The URL is "
-                "always correct and authoritative; treat the URL as the source "
-                "of truth and the text as a hint until parser is hardened "
-                "(follow-up issue). Issue: #1667."
+                "back to `query_sum20`. Backed by slovnyk.me's clean per-word "
+                "URLs (replaces the broken sum20ua.com search-page parser). "
+                "License posture: per-query lookup with attribution is fair "
+                "use; bulk crawl is not. Issue: #1667."
             ),
             inputSchema={
                 "type": "object",
                 "properties": {
                     "word": {"type": "string", "description": "Ukrainian headword to look up in СУМ-20 (must be in А–Р range)"},
+                },
+                "required": ["word"]
+            },
+        ),
+        Tool(
+            name="query_slovnyk_me",
+            description=(
+                "Live query slovnyk.me — Ukrainian dictionary aggregator with "
+                "clean per-word URLs. One tool, many dictionaries. Use this "
+                "instead of `query_sum20` when you need access beyond just "
+                "СУМ-20. Per-query live fetch with citation, no bulk crawl, "
+                "no DB caching.\n\n"
+                "Available `dict` values:\n"
+                "- `newsum` — СУМ-20 (modern, 2010–) — DEFAULT for definitions\n"
+                "- `sum` — СУМ-11 (Sovietized, 1970–80) — fallback only\n"
+                "- `antonenko` — Antonenko-Davydovych «Як ми говоримо» — calques + Russianisms\n"
+                "- `karavansky` — Karavansky synonyms (#1664)\n"
+                "- `paronyms` — Ukrainian paronyms dictionary (#1666 alternate)\n"
+                "- `phraseology` — Фразеологічний словник\n"
+                "- `orthography` — Орфографічний словник\n"
+                "- `orthoepy` — Орфоепічний словник\n"
+                "- `vts` — Великий тлумачний словник сучасної мови (alternate modern)\n"
+                "- `ukrlit_ency` — Українська літературна енциклопедія\n"
+                "- `khreshchatyk_lessons` — «Уроки державної мови» (usage column)\n"
+                "- `foreign_melnychuk` — foreign-words dictionary (Мельничук)\n"
+                "- `ukr_rus` / `rus_ukr` / `eng_ukr` — bilinguals\n\n"
+                "License posture: slovnyk.me © notice with no explicit terms; "
+                "per-query lookup with attribution is fair use. Issue: #1667."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {"type": "string", "description": "Ukrainian word to look up"},
+                    "dict": {
+                        "type": "string",
+                        "description": "Dictionary slug (newsum, sum, antonenko, karavansky, paronyms, phraseology, orthography, orthoepy, vts, ukrlit_ency, khreshchatyk_lessons, foreign_melnychuk, ukr_rus, rus_ukr, eng_ukr)",
+                        "default": "newsum",
+                    },
                 },
                 "required": ["word"]
             },
@@ -757,6 +789,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "query_r2u": lambda: handle_query_r2u(arguments),
             "query_e2u": lambda: handle_query_e2u(arguments),
             "query_sum20": lambda: handle_query_sum20(arguments),
+            "query_slovnyk_me": lambda: handle_query_slovnyk_me(arguments),
             "query_pravopys": lambda: handle_query_pravopys(arguments),
             "search_style_guide": lambda: handle_dict_search(arguments, "style_guide", "Антоненко-Давидович"),
             "query_cefr_level": lambda: handle_dict_search(arguments, "puls_cefr", "PULS CEFR"),
@@ -1303,17 +1336,16 @@ async def handle_query_e2u(args: dict) -> list[TextContent]:
 
 
 async def handle_query_sum20(args: dict) -> list[TextContent]:
-    """Live single-query lookup against СУМ-20 (sum20ua.com).
+    """Live single-query lookup of СУМ-20 via slovnyk.me/dict/newsum.
 
-    No bulk fetch, no DB persist. Citation always shown. License posture:
-    ULIF publishes with © notice but no explicit terms-of-use; per-query
-    lookup with attribution is fair use, bulk crawl is not.
-    Issue: #1667.
+    Backed by slovnyk.me's clean per-word URLs (#1677 routes around the
+    broken sum20ua.com search-page parser). Per-query live fetch with
+    citation. NO bulk crawl, NO DB persist. Issue: #1667.
     """
     word = args["word"]
 
-    from rag.source_query import sum_definition
-    result = await asyncio.to_thread(sum_definition, word)
+    from rag.source_query import slovnyk_me_lookup
+    result = await asyncio.to_thread(slovnyk_me_lookup, word, "newsum")
 
     if not result:
         return [TextContent(
@@ -1322,7 +1354,8 @@ async def handle_query_sum20(args: dict) -> list[TextContent]:
                 f"No СУМ-20 entry found for '{word}'. "
                 f"Note: СУМ-20 covers vols 1–16 (А–Р) only — words starting "
                 f"С–Я are not yet published. For СУМ-11 (1970–1980, partially "
-                f"Sovietized) fallback, use `search_definitions`."
+                f"Sovietized) fallback, use `search_definitions` or "
+                f"`query_slovnyk_me(word, dict='sum')`."
             ),
         )]
 
@@ -1331,8 +1364,52 @@ async def handle_query_sum20(args: dict) -> list[TextContent]:
         text=(
             f"**СУМ-20 entry for '{word}'**\n"
             f"**URL**: {result['url']}\n"
-            f"**Source**: © Український мовно-інформаційний фонд НАН України, "
-            f"sum20ua.com\n\n"
+            f"**Source**: {result['dict_label']} (via slovnyk.me — © Slovnyk.me; "
+            f"original © Український мовно-інформаційний фонд НАН України)\n\n"
+            f"{result['text'][:3000]}"
+        ),
+    )]
+
+
+async def handle_query_slovnyk_me(args: dict) -> list[TextContent]:
+    """Live single-query lookup against slovnyk.me — multi-dictionary.
+
+    Per-query live fetch with citation. NO bulk crawl, NO DB persist.
+    License posture: slovnyk.me © notice with no explicit terms;
+    per-query lookup with attribution is fair use. Issue: #1667.
+    """
+    word = args["word"]
+    dict_slug = args.get("dict", "newsum")
+
+    from rag.source_query import SLOVNYK_ME_DICTS, slovnyk_me_lookup
+
+    if dict_slug not in SLOVNYK_ME_DICTS:
+        valid = ", ".join(sorted(SLOVNYK_ME_DICTS.keys()))
+        return [TextContent(
+            type="text",
+            text=(
+                f"Unknown dictionary slug '{dict_slug}'. "
+                f"Valid options: {valid}"
+            ),
+        )]
+
+    result = await asyncio.to_thread(slovnyk_me_lookup, word, dict_slug)
+
+    if not result:
+        return [TextContent(
+            type="text",
+            text=(
+                f"No entry found for '{word}' in slovnyk.me/{dict_slug} "
+                f"({SLOVNYK_ME_DICTS[dict_slug]})."
+            ),
+        )]
+
+    return [TextContent(
+        type="text",
+        text=(
+            f"**{result['dict_label']} — entry for '{word}'**\n"
+            f"**URL**: {result['url']}\n"
+            f"**Source**: slovnyk.me (per-query live fetch, © Slovnyk.me)\n\n"
             f"{result['text'][:3000]}"
         ),
     )]

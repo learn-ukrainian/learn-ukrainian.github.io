@@ -9,7 +9,9 @@ Sources:
   - ULIF (lcorp.ulif.org.ua) — declension/conjugation paradigms
   - r2u (r2u.org.ua) — Russian→Ukrainian translation dictionary
   - pravopys (2019.pravopys.net) — official orthography rules (2019)
-  - SUM-20 (sum20ua.com) — academic dictionary definitions (А–Р only)
+  - slovnyk.me — multi-dictionary aggregator (СУМ-20, СУМ-11, Antonenko-
+    Davydovych, Karavansky synonyms, paronyms, phraseology, orthography,
+    orthoepy, foreign-words, bilinguals)
 
 Usage:
     from rag.source_query import wikipedia_summary, grac_frequency, ulif_paradigm
@@ -848,74 +850,105 @@ def pravopys_lookup(topic: str) -> dict[str, Any] | None:
 
 
 # ══════════════════════════════════════════════════════════════════
-# SUM-20 (sum20ua.com) — Academic Ukrainian dictionary
-# Only covers volumes 1–16 (А–Р)
+# SUM-20 — superseded
+#
+# The legacy sum_definition() pointed at sum20ua.com but its parser
+# matched the wrong entry (sum20ua.com returns search-results pages
+# with alphabetically adjacent words). Replaced 2026-05-04 by
+# slovnyk_me_lookup(word, "newsum") below — slovnyk.me has clean
+# direct-entry URLs for the same СУМ-20 content.
 # ══════════════════════════════════════════════════════════════════
 
-SUM_BASE = "https://sum20ua.com"
+
+# ══════════════════════════════════════════════════════════════════
+# slovnyk.me — multi-dictionary aggregator with clean per-word URLs
+# Hosts СУМ-20, СУМ-11, Antonenko-Davydovych, Karavansky synonyms,
+# paronyms, phraseology, orthography, orthoepy, foreign-words
+# (Мельничук), and Ukrainian↔Russian / Ukrainian↔Polish bilinguals.
+# ══════════════════════════════════════════════════════════════════
+
+SLOVNYK_ME_BASE = "https://slovnyk.me"
+
+# Dictionary slugs slovnyk.me uses in /dict/{slug}/{word} URLs.
+# Confirmed via WebFetch 2026-05-04 from slovnyk.me/dict/newsum and search results page.
+SLOVNYK_ME_DICTS: dict[str, str] = {
+    "newsum": "Словник української мови у 20 томах (2010–) — modern post-Soviet",
+    "sum": "Словник української мови в 11 томах (1970–80) — Sovietized",
+    "antonenko": "«Як ми говоримо» Антоненка-Давидовича — calques + Russianisms",
+    "karavansky": "Синоніми Караванського",
+    "paronyms": "Словник паронімів",
+    "phraseology": "Фразеологічний словник української мови",
+    "orthography": "Орфографічний словник української мови",
+    "orthoepy": "Орфоепічний словник",
+    "vts": "Великий тлумачний словник сучасної мови",
+    "ukrlit_ency": "Українська літературна енциклопедія",
+    "khreshchatyk_lessons": "«Уроки державної мови» з газети «Хрещатик»",
+    "foreign_melnychuk": "Словник іншомовних слів Мельничука",
+    "ukr_rus": "Українсько-російський словник",
+    "rus_ukr": "Російсько-український словник",
+    "eng_ukr": "Англо-український словник",
+}
 
 
-class _SumEntryParser(HTMLParser):
-    """Extract dictionary entry from SUM-20 HTML."""
+def slovnyk_me_lookup(word: str, dict_slug: str = "newsum") -> dict[str, Any] | None:
+    """Look up a word on slovnyk.me in the named dictionary.
 
-    def __init__(self):
-        super().__init__()
-        self._in_entry = False
-        self._entries: list[str] = []
-        self._current = ""
-        self._depth = 0
+    Returns dict with keys: word, dict, url, text (entry body) or None on failure.
 
-    def handle_starttag(self, tag, attrs):
-        attrs_dict = dict(attrs)
-        cls = attrs_dict.get("class", "")
-        if tag == "div" and ("word-entry" in cls or "entry-text" in cls):
-            self._in_entry = True
-            self._current = ""
-            self._depth = 0
-        if self._in_entry:
-            self._depth += 1
+    URL pattern: /dict/{dict_slug}/{url-encoded-word}. Direct entry pages,
+    not search-results — much cleaner than sum20ua.com.
 
-    def handle_endtag(self, tag):
-        if self._in_entry:
-            self._depth -= 1
-            if tag == "div" and self._depth <= 0:
-                self._in_entry = False
-                if self._current.strip():
-                    self._entries.append(self._current.strip())
+    Per-query live fetch with citation. NO bulk crawl. NO DB caching.
+    License posture: slovnyk.me publishes with © notice but no explicit
+    terms-of-use; per-query lookup with attribution is fair use.
 
-    def handle_data(self, data):
-        if self._in_entry:
-            self._current += data
-
-
-def sum_definition(word: str) -> dict[str, Any] | None:
-    """Look up a word in the SUM-20 dictionary.
-
-    Only covers А–Р (volumes 1–16). Returns dict with keys:
-    word, url, text (raw entry text) or None on failure.
-
-    Warning: server is slow and intermittently unreliable.
+    Issue: #1667 (SUM-20 modern definitional baseline).
     """
-    url = f"{SUM_BASE}/Entry/search/{quote(word)}"
+    if dict_slug not in SLOVNYK_ME_DICTS:
+        return None
+
+    url = f"{SLOVNYK_ME_BASE}/dict/{dict_slug}/{quote(word)}"
     try:
         r = _get(url, timeout=20)
         if r.status_code == 404:
             return None
         r.raise_for_status()
-        parser = _SumEntryParser()
-        parser.feed(r.text)
-        if parser._entries:
-            return {"word": word, "url": url, "text": parser._entries[0]}
-        # Fallback: try to extract text near the word
-        # SUM doesn't have consistent CSS classes
-        idx = r.text.lower().find(word.lower())
-        if idx > 0:
-            snippet = r.text[max(0, idx - 200):idx + 500]
-            clean = re.sub(r"<[^>]+>", " ", snippet)
-            clean = re.sub(r"\s+", " ", clean).strip()
-            if clean:
-                return {"word": word, "url": url, "text": clean}
-        return None
+
+        # slovnyk.me uses h1-h3 + body text — no specific entry classes.
+        # Strategy: strip HTML tags, normalize whitespace, return the
+        # window between the <h1> headword and the next major separator.
+        html = r.text
+
+        # Naive but effective: pull text between the first h1 and the
+        # first <footer>/<nav>/<aside> block.
+        body_start = html.find("<h1")
+        if body_start == -1:
+            return None
+
+        # Cut everything before the first content heading
+        body = html[body_start:]
+
+        # Drop after first navigation/footer/aside
+        for stop in ("<footer", "<nav", "<aside", "<!-- end-entry"):
+            stop_idx = body.find(stop)
+            if stop_idx > 0:
+                body = body[:stop_idx]
+                break
+
+        # Strip HTML
+        text = re.sub(r"<[^>]+>", " ", body)
+        text = re.sub(r"\s+", " ", text).strip()
+
+        if not text:
+            return None
+
+        return {
+            "word": word,
+            "dict": dict_slug,
+            "dict_label": SLOVNYK_ME_DICTS[dict_slug],
+            "url": url,
+            "text": text,
+        }
     except requests.RequestException:
         return None
 
