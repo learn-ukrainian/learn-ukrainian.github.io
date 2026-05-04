@@ -241,7 +241,6 @@ class TestIntegrationSmoke:
 
     def test_smoke_check_modern_form_mixed(self, server_module):
         """Test check_modern_form with a word that has both modern and archaic tags."""
-        import json
         result = _run(server_module.handle_check_modern_form({"word": "звір"}))
         data = json.loads(result[0].text)
         assert data["is_modern_codified"] is True

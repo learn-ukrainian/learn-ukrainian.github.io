@@ -1002,6 +1002,13 @@ async def handle_collection_stats(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(stats, indent=2))]
 
 
+def _is_archaic(tags: str | None) -> bool:
+    """Helper to check if 'arch' tag exists in VESUM tag string."""
+    if not tags:
+        return False
+    return "arch" in tags.split(":")
+
+
 async def handle_check_modern_form(args: dict) -> list[TextContent]:
     word = args["word"]
 
@@ -1019,8 +1026,7 @@ async def handle_check_modern_form(args: dict) -> list[TextContent]:
     has_archaic = False
     has_modern = False
     for m in matches:
-        tags = m.get("tags") or ""
-        if "arch" in tags.split(":"):
+        if _is_archaic(m.get("tags")):
             has_archaic = True
         else:
             has_modern = True
@@ -1045,8 +1051,8 @@ async def handle_verify_word(args: dict) -> list[TextContent]:
     lines = [f"'{word}' — {len(matches)} match(es) in VESUM:\n"]
     for m in matches:
         tags = m.get("tags") or ""
-        is_archaic = "arch" in tags.split(":")
-        lines.append(f"- **lemma**: {m.get('lemma')}  |  **pos**: {m.get('pos')}  |  **tags**: `{tags}`  |  **is_archaic**: {is_archaic}")
+        archaic = _is_archaic(tags)
+        lines.append(f"- **lemma**: {m.get('lemma')}  |  **pos**: {m.get('pos')}  |  **tags**: `{tags}`  |  **is_archaic**: {archaic}")
 
     return [TextContent(type="text", text="\n".join(lines))]
 
@@ -1086,10 +1092,10 @@ async def handle_verify_lemma(args: dict) -> list[TextContent]:
     by_pos: dict[str, list] = {}
     has_archaic_forms = False
     for f in forms:
-        tags = f.get("tags") or ""
-        f["is_archaic"] = "arch" in tags.split(":")
-        if f["is_archaic"]:
+        is_archaic = _is_archaic(f.get("tags"))
+        if is_archaic:
             has_archaic_forms = True
+        f["is_archaic"] = is_archaic
         by_pos.setdefault(f.get("pos", "unknown"), []).append(f)
 
     lines = [f"'{lemma}' — {len(forms)} form(s) across {len(by_pos)} POS (has_archaic_forms: {has_archaic_forms}):\n"]
