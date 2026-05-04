@@ -487,10 +487,15 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="search_style_guide",
             description=(
-                "Search Антоненко-Давидович style guide (279 entries). "
+                "Search Антоненко-Давидович «Як ми говоримо» style guide. "
+                "Coverage: 279 of estimated 600+ discussion items (~46% indexed). "
                 "Identifies calques, Russianisms, and unnatural Ukrainian phrasing. "
-                "HIGH PRIORITY for quality — use when unsure if a phrase is natural Ukrainian "
-                "or a Russian calque. Query in Ukrainian (e.g., 'приймати участь', 'вірний')."
+                "HIGH PRIORITY for quality — use when unsure if a phrase is natural "
+                "Ukrainian or a Russian calque. Query in Ukrainian (e.g., 'приймати "
+                "участь', 'вірний'). **Absence of result is NOT evidence of absence "
+                "in source** — 54% of canonical entries are unindexed. For full "
+                "coverage, Tier 2 escalate to "
+                "https://www.ukrlib.com.ua/books/printit.php?tid=4002. Issue: #1663."
             ),
             inputSchema={
                 "type": "object",
@@ -504,9 +509,12 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="query_cefr_level",
             description=(
-                "Look up CEFR level (A1-C1) for a Ukrainian word from the PULS vocabulary database "
-                "(5,939 words). Use to verify vocabulary is level-appropriate for the module being written. "
-                "Query with a single Ukrainian word."
+                "Look up CEFR level (A1-C1) for a Ukrainian word from the PULS "
+                "vocabulary database (puls.peremova.org). Coverage: 5,939 words "
+                "indexed. **Vocabulary list, not pedagogy** — tells you the CEFR "
+                "level a word belongs to but does not tell you how to teach it. "
+                "C2 not covered. Use to verify vocabulary is level-appropriate "
+                "for the module being written. Query with a single Ukrainian word."
             ),
             inputSchema={
                 "type": "object",
@@ -520,16 +528,20 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="search_definitions",
             description=(
-                "Search СУМ-11 (127K entries) — the authoritative Ukrainian explanatory dictionary "
-                "from 1970–1980. Returns definitions, usage examples, and citations in Ukrainian. "
-                "Use to look up exact meanings, check word usage, or find example sentences. "
-                "**WARNING: СУМ-11 is partially Sovietized for ideologically loaded headwords** "
-                "(ленін*, більшовик*, радянськ*, національний, соціалістичн*, etc.). Each result "
-                "carries `sovietization_risk` (0=clean, 1=keyword-match, 2=high) and "
-                "`sovietization_keywords`. **When `sovietization_risk > 0`, treat the definition "
-                "as potentially Soviet-framed**: do not reproduce verbatim, prefer СУМ-20 (when "
-                "available) or Грінченко for the same headword, or omit and route to neutral "
-                "phrasing. ~5.6% of corpus (7,152 entries) is flagged. Issue: #1659."
+                "Search СУМ-11 — Ukrainian explanatory dictionary from 1970–1980. "
+                "Coverage: 127,069 of canonical 127K entries (~100% indexed). "
+                "**Systematic exclusion: proper nouns** — toponyms (Київ, Львів, "
+                "Дніпро, Сибір) and personal names (Шевченко) are NOT covered; "
+                "absence of those is expected, not informative. Returns definitions, "
+                "usage examples, and citations in Ukrainian. "
+                "**WARNING: partially Sovietized for ideologically loaded headwords** "
+                "(ленін*, більшовик*, радянськ*, національний, соціалістичн*, etc.). "
+                "Each result carries `sovietization_risk` (0=clean, 1=keyword-match, "
+                "2=high) and `sovietization_keywords`. When `sovietization_risk > 0`, "
+                "treat as potentially Soviet-framed: do not reproduce verbatim, prefer "
+                "СУМ-20 (#1667, license-blocked) or Грінченко for the same headword, "
+                "or omit and route to neutral phrasing. ~5.6% of corpus (7,152 "
+                "entries) is flagged. Issue: #1659."
             ),
             inputSchema={
                 "type": "object",
@@ -543,9 +555,18 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="search_etymology",
             description=(
-                "Search Грінченко dictionary (67K entries) — historical Ukrainian dictionary from 1907. "
-                "Use for etymology, historical word forms, and pre-Soviet Ukrainian usage. "
-                "Helps verify that a word is genuinely Ukrainian (not a Soviet-era import)."
+                "Search Грінченко «Словарь української мови» (1907) — historical "
+                "Ukrainian lexicographic dictionary. Coverage: 67,275 of canonical "
+                "~67K entries (~100% indexed). **NOT etymology** despite the tool "
+                "name — this is lexicographic (definitions + usage citations), not "
+                "diachronic word-origin analysis. True etymology lives in "
+                "`search_esum` (ЕСУМ, vol 1 А–Г live; vols 2-6 pending #1662). "
+                "**Systematic exclusion: proper nouns** — toponyms (Київ, Львів, "
+                "Дніпро, Сибір) and personal names (Шевченко) are NOT covered. "
+                "Use for pre-Soviet Ukrainian usage attestation: helps verify a "
+                "word is genuinely Ukrainian, not a Soviet-era import. **Tool will "
+                "be renamed to `search_grinchenko_1907` (#1658)** — track the "
+                "deprecation alias warning when it lands."
             ),
             inputSchema={
                 "type": "object",
@@ -579,9 +600,12 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="search_idioms",
             description=(
-                "Search Ukrainian phraseological dictionary (25K entries). "
+                "Search Ukrainian phraseological dictionary (Фразеологічний). "
+                "Coverage: 24,683 of canonical ~25K entries (~99% indexed). "
                 "Find Ukrainian idioms, set expressions, and collocations. "
-                "Use to make dialogues and examples more natural."
+                "Use to make dialogues and examples more natural. Single-source "
+                "dictionary — for cross-validation against another phraseology "
+                "authority, fall back to corpus search via `search_literary`."
             ),
             inputSchema={
                 "type": "object",
@@ -595,9 +619,16 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="search_synonyms",
             description=(
-                "Search Ukrajinet Ukrainian WordNet (122K synsets). "
-                "Find synonyms, antonyms, and semantically related words. "
-                "Use for vocabulary variety and finding the most natural word choice."
+                "Search Ukrajinet Ukrainian WordNet. Coverage: 122,441 synsets "
+                "(matches upstream README). **QUALITY CAVEAT: synsets are largely "
+                "auto-translated from Open English WordNet** — not natively curated "
+                "Ukrainian lexicography. Quality audit pending under EPIC #1657 "
+                "Tier 3. Use for vocabulary variety and rough synonym/antonym "
+                "discovery, but **DO NOT cite as authoritative**: cross-validate "
+                "against `search_definitions` (СУМ-11) or `search_etymology` "
+                "(Грінченко) before treating a synonym as established Ukrainian. "
+                "The 3,360-synset version cited in older docs is the 2023 paper's "
+                "initial release; current production is the auto-MT-expanded set."
             ),
             inputSchema={
                 "type": "object",
@@ -611,8 +642,12 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="translate_en_uk",
             description=(
-                "Search Балла English→Ukrainian dictionary (79K entries). "
-                "Find Ukrainian translations for English words with context."
+                "Search Балла English→Ukrainian dictionary. Coverage: 78,704 of "
+                "canonical ~79K entries (~100% indexed). **One-way only** — UK→EN "
+                "reverse not built. For broader coverage of specialized/modern "
+                "vocabulary, fall back to `query_e2u` (live e2u.org.ua, 331K "
+                "entries). Find Ukrainian translations for English words with "
+                "context."
             ),
             inputSchema={
                 "type": "object",
