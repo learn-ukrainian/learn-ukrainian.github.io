@@ -68,6 +68,35 @@ afternoon). This is a stable hallucination, not a one-off slip.
 - **Орфографічний словник** lists собака as `іменник чоловічого
   або жіночого роду`.
 
+- **Грінченко 1907–09** (`Словник української мови Грінченка`)
+  lists `собака — м. и ж.` (masculine and feminine). This is the
+  load-bearing piece of evidence: Грінченко was published in the
+  Russian Empire as an explicit documentation of pre-Soviet,
+  native, indigenous Ukrainian — deliberately anti-Russification
+  by design. He already codifies both genders **decades before
+  any Soviet Russification effort**. Therefore feminine собака
+  cannot be a Russification; it predates the colonial language
+  policies that would later shape Russian's lexicographic norms.
+  This single attestation falsifies the "feminine = Russianism"
+  theory completely.
+
+- **Six dictionaries on slovnyk.me corroborate:** Орфографічний
+  («чоловічого або жіночого роду»), Орфоепічний («ч. і рідко
+  ж.»), Великий тлумачний словник («ч. і рідше ж.»), СУМ-11
+  («ч. і рідше ж.»), Грінченко («м. и ж.»), and the jargon
+  dictionary («(-и) ж.», feminine in narrow jargon usage). The
+  Український-English dictionary glosses the English: *"dog;
+  hound; bloodhound, sleuth-hound; cur, mongrel"*.
+
+- **The grammatical category is `двородовий іменник`**
+  (dual-gender noun) — the property is `двородовість`, used by
+  Вихованець & Городенська (*Теоретична морфологія української
+  мови*, 2004). Distinct from `спільний рід` (common gender),
+  which is reserved for nouns like *сирота*, *нероба* where
+  gender tracks biological sex of the referent. Собака is the
+  cleaner `двородовість` case — both genders are lexically
+  available regardless of the referent's biological sex.
+
 So the academic Ukrainian lexicographic norm is "masculine primary,
 feminine attested and codified, both standard." Gemini's claim that
 АД flags feminine agreement as a Russianism is **the opposite** of
