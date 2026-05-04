@@ -52,7 +52,7 @@ class TestListTools:
             "query_wikipedia", "query_grac", "query_ulif",
             "query_r2u", "query_e2u", "query_sum20", "query_slovnyk_me",
             "query_pravopys", "query_cefr_level",
-            "search_style_guide", "search_definitions", "search_etymology",
+            "search_style_guide", "search_definitions", "search_grinchenko_1907", "search_etymology",
             "search_idioms", "search_synonyms", "translate_en_uk",
             "search_esum",
         }
@@ -110,6 +110,21 @@ class TestCallToolDispatch:
             mock.return_value = [MagicMock(text="ok")]
             _run(server_module.call_tool("search_sources", {"query": "голосні звуки"}))
             mock.assert_called_once_with({"query": "голосні звуки"})
+
+    def test_search_grinchenko_1907_dispatches(self, server_module):
+        with patch.object(server_module, "handle_dict_search", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("search_grinchenko_1907", {"query": "тест"}))
+            mock.assert_called_once_with({"query": "тест"}, "grinchenko_dict", "Грінченко")
+
+    def test_search_etymology_deprecation_alias(self, server_module):
+        with patch.object(server_module, "handle_dict_search", new_callable=AsyncMock) as mock:
+            mock.return_value = [server_module.TextContent(type="text", text="ok")]
+            result = _run(server_module.call_tool("search_etymology", {"query": "тест"}))
+            mock.assert_called_once_with({"query": "тест"}, "grinchenko_dict", "Грінченко")
+            assert len(result) == 1
+            assert "DEPRECATION WARNING" in result[0].text
+            assert result[0].text.endswith("ok")
 
     def test_handler_exception_returns_error_text(self, server_module):
         with patch.object(server_module, "handle_verify_word", new_callable=AsyncMock) as mock:

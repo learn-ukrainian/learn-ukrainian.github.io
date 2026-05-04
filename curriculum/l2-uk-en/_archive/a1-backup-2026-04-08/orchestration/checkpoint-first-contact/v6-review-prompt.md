@@ -470,7 +470,7 @@ You have MCP tools to VERIFY claims in the content. Use them to cite evidence:
 **Content Quality:**
 - `mcp_rag_query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)
 - `mcp_rag_search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)
-- `mcp_rag_search_etymology` — historical forms, etymology (Грінченко, 67K entries)
+- `mcp_rag_search_grinchenko_1907` — historical forms, etymology (Грінченко, 67K entries)
 - `mcp_rag_search_idioms` — verify idioms are authentic Ukrainian (25K entries)
 - `mcp_rag_search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)
 - `mcp_rag_query_grac` — check collocations and frequency in GRAC corpus (2B tokens)

@@ -21,7 +21,7 @@ These tools are available via MCP (in my native tool definitions). ALWAYS use th
 - `mcp_rag_search_style_guide` — Антоненко-Давидович (279 entries) — **calques and Russianisms**. HIGH PRIORITY.
 - `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words, A1-C1) — check level-appropriateness
 - `mcp_rag_search_definitions` — СУМ-11 (127K entries) — Ukrainian explanatory dictionary
-- `mcp_rag_search_etymology` — Грінченко (67K entries) — historical dictionary, etymology
+- `mcp_rag_search_grinchenko_1907` — Грінченко (67K entries) — historical dictionary, etymology
 - `mcp_rag_search_idioms` — Фразеологічний (25K entries) — Ukrainian idioms and expressions
 - `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets) — synonyms, antonyms
 - `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries) — English→Ukrainian translations

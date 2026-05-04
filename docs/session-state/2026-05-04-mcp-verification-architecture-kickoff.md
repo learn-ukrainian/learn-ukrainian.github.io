@@ -25,7 +25,7 @@ Memory rule **#0I** added: *"DON'T STACK MICRO-DILEMMAS, DECIDE FOR THE USER"* �
 | # | Title | Status |
 |---|---|---|
 | **#1657** | EPIC: MCP verification-layer improvements (3-phase plan) | open, parent of all below |
-| #1658 | [P1] Rename `search_etymology` → `search_grinchenko_1907` | open, not started |
+| #1658 | [P1] Rename `search_grinchenko_1907` → `search_grinchenko_1907` | open, not started |
 | #1659 | [P1] Add `sovietization_risk` flag to СУМ-11 | **PR #1670 open** |
 | #1660 | [P1] Tool descriptions: flag completeness gaps explicitly | open, not started |
 | #1661 | [V7 prompts] Add Tier-1 verification discipline to writer + reviewer prompts | open, not started |
@@ -199,7 +199,7 @@ gh pr list --state open --base main
 2. **Land #1672 (ЕСУМ vol 1 PoC PR)** — check Codex's segmentation recall audit; if ≥90%, merge. CI tests already fixed by Claude's pushed commit.
 3. **Check #1663 (Antonenko full ingest)** — Gemini was running for ~70 min at handoff; likely finished by morning. Review output PR if opened.
 4. **Pick up #1669 (VESUM arch tag)** — quick win, ~1-2h, internal data exposure only, unblocks the modern-vs-historical guard for V7 prompts later.
-5. **#1658 (rename search_etymology)** + **#1660 (completeness flags)** — both small Phase-1 cleanups, can run in parallel.
+5. **#1658 (rename search_grinchenko_1907)** + **#1660 (completeness flags)** — both small Phase-1 cleanups, can run in parallel.
 6. **#1661 (V7 prompt diffs)** — ready to draft against current MCP; will simplify dramatically after Phase 2 primitives land.
 7. **After codex returns at 11am**: dispatch #1664 (Karavansky), #1665 (Holovashchuk), #1668 (PyMorphy3) via delegate.py.
 

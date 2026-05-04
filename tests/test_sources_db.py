@@ -203,10 +203,10 @@ class TestSourcesDb:
         assert len(results) == 1
         assert "Одиниця мови" in results[0]["definition"]
 
-    def test_search_etymology(self, sample_data, monkeypatch):
+    def test_search_grinchenko_1907(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)
-        from wiki.sources_db import search_etymology
-        results = search_etymology("хата")
+        from wiki.sources_db import search_grinchenko_1907
+        results = search_grinchenko_1907("хата")
         assert len(results) == 1
 
     def test_translate_en_uk(self, sample_data, monkeypatch):

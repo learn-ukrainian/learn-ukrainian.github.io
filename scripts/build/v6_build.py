@@ -948,7 +948,7 @@ def _build_tool_instructions(writer: str) -> str:
         f"- `{p}query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is "
         "level-appropriate (A1/A2/B1 etc.).\n"
         f"- `{p}search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.\n"
-        f"- `{p}search_etymology` — Грінченко (67K entries). Historical forms, etymology.\n"
+        f"- `{p}search_grinchenko_1907` — Грінченко (67K entries). Historical forms, etymology.\n"
         f"- `{p}search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.\n"
         f"- `{p}search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.\n"
         f"- `{p}translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.\n"
@@ -5834,7 +5834,7 @@ def _build_review_tools_section(reviewer: str) -> str:
         "**Content Quality:**\n"
         f"- `{p}query_cefr_level` — verify vocabulary is level-appropriate (PULS, 5.9K words)\n"
         f"- `{p}search_definitions` — exact Ukrainian definitions (СУМ-11, 127K entries)\n"
-        f"- `{p}search_etymology` — historical forms, etymology (Грінченко, 67K entries)\n"
+        f"- `{p}search_grinchenko_1907` — pre-Soviet usage attestation, historical forms (Грінченко 1907, 67K headwords)\n"
         f"- `{p}search_idioms` — verify idioms are authentic Ukrainian (25K entries)\n"
         f"- `{p}search_synonyms` — suggest better word choices (Ukrajinet, 122K synsets)\n"
         f"- `{p}query_grac` — check collocations and frequency in GRAC corpus (2B tokens)\n\n"
@@ -11939,3 +11939,4 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(0 if main() is not False else 1)
+it(0 if main() is not False else 1)
