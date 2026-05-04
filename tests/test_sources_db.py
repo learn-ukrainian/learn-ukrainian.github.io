@@ -87,7 +87,7 @@ def sample_data(tmp_path):
         ("ukrajinet", [{"synset_id": "s1", "words": "великий, здоровий, чималий", "text": "великий синонім", "source": "UNet"}]),
         ("wiktionary", [{"word": "кіт", "definitions": "Домашня тварина", "synonyms": "", "antonyms": "", "text": "кіт", "source": "Wikt"}]),
         ("frazeolohichnyi", [{"word": "вода", "definition": "Не розлий вода", "text": "вода — фразеологізм", "source": "Фраз"}]),
-        ("antonenko-davydovych", [{"word": "процент", "section": "Лексика", "text": "Кажіть відсоток", "source": "АД"}]),
+        ("antonenko-davydovych", [{"word": "процент", "word_lower": "процент", "section": "Лексика", "text": "Кажіть відсоток", "source": "АД", "excerpt_full": "повний текст", "page": 1}]),
     ]:
         d = gdrive / name
         d.mkdir(parents=True)

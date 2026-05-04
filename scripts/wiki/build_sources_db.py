@@ -226,9 +226,12 @@ CREATE INDEX IF NOT EXISTS idx_puls_level ON puls_cefr(level);
 CREATE TABLE IF NOT EXISTS style_guide (
     id INTEGER PRIMARY KEY,
     word TEXT NOT NULL,
+    word_lower TEXT,
     section TEXT DEFAULT '',
     text TEXT NOT NULL DEFAULT '',
-    source TEXT DEFAULT ''
+    source TEXT DEFAULT '',
+    excerpt_full TEXT,
+    page INTEGER
 );
 CREATE INDEX IF NOT EXISTS idx_style_word ON style_guide(word COLLATE NOCASE);
 
@@ -617,7 +620,7 @@ def build(db_path: Path | None = None,
     total += _ingest_jsonl(conn, "frazeolohichnyi", gd / "frazeolohichnyi" / "chunks.jsonl",
                            ["word", "definition", "text", "source"], "Фразеологічний")
     total += _ingest_jsonl(conn, "style_guide", gd / "antonenko-davydovych" / "chunks.jsonl",
-                           ["word", "section", "text", "source"], "Антоненко-Давидович")
+                           ["word", "word_lower", "section", "text", "source", "excerpt_full", "page"], "Антоненко-Давидович")
 
     # --- CEFR vocabulary (local) ---
     total += _ingest_jsonl(conn, "puls_cefr", PROJECT_ROOT / "data" / "puls" / "entries.jsonl",

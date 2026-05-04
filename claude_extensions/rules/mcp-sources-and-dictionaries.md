@@ -27,7 +27,7 @@ paths:
 > Start with `mcp__sources__search_sources` for general retrieval. Keep `mcp__sources__search_text` for explicit textbook-only scoping when you do not want literary, Wikipedia, external, or `ukrainian_wiki` results mixed in.
 
 ## Dictionary tools (for quality and vocabulary)
-- `mcp__sources__search_style_guide` — Антоненко-Давидович (279 entries) — **calques and Russianisms**. HIGH PRIORITY.
+- `mcp__sources__search_style_guide` — Антоненко-Давидович (325 entries, full 169-page PDF text) — **calques and Russianisms**. HIGH PRIORITY.
 - `mcp__sources__query_cefr_level` — PULS CEFR vocabulary (5.9K words, A1-C1) — check level-appropriateness
 - `mcp__sources__search_definitions` — СУМ-11 (127K entries) — Ukrainian explanatory dictionary
 - `mcp__sources__search_etymology` — Грінченко (67K entries) — historical dictionary, etymology
@@ -43,7 +43,7 @@ paths:
 | **СУМ-11** | 127K | Ukrainian explanatory (definitions, citations) | `data/sources.db` FTS5 |
 | **Грінченко** | 67K | Historical Ukrainian (1907, etymology) | `data/sources.db` FTS5 |
 | **Балла EN→UK** | 79K | English→Ukrainian translations | `data/sources.db` FTS5 |
-| **Антоненко-Давидович** | 279 | Style guide (calques, Russianisms) | `data/sources.db` FTS5 |
+| **Антоненко-Давидович** | 325 | Style guide (calques, Russianisms) | `data/sources.db` FTS5 |
 | **Фразеологічний** | 25K | Ukrainian idioms and expressions | `data/sources.db` FTS5 |
 | **Stress dictionary** | 2.7M forms | Word stress for annotation | via `ukrainian-word-stress` |
 

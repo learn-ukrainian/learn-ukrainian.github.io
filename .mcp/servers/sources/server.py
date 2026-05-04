@@ -487,7 +487,7 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="search_style_guide",
             description=(
-                "Search Антоненко-Давидович style guide (279 entries). "
+                "Search Антоненко-Давидович style guide (325 entries). "
                 "Identifies calques, Russianisms, and unnatural Ukrainian phrasing. "
                 "HIGH PRIORITY for quality — use when unsure if a phrase is natural Ukrainian "
                 "or a Russian calque. Query in Ukrainian (e.g., 'приймати участь', 'вірний')."
@@ -1268,9 +1268,9 @@ async def handle_dict_search(args: dict, collection: str, label: str) -> list[Te
         definition = hit.get("definition", hit.get("definitions", ""))
         if definition:
             lines.append(f"- **Definition**: {str(definition)[:500]}")
-        text = hit.get("text", "")
+        text = hit.get("excerpt_full", hit.get("text", ""))
         if text and text != definition:
-            lines.append(f"- **Text**: {text[:500]}")
+            lines.append(f"- **Text**: {text}")
         lines.append("")
 
     return [TextContent(type="text", text="\n".join(lines))]

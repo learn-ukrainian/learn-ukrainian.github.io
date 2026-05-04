@@ -1357,7 +1357,34 @@ def query_cefr_level(word: str, limit: int = 5) -> list[dict]:
 
 def search_style_guide(word: str, limit: int = 5) -> list[dict]:
     """Look up calques/Russianisms in Антоненко-Давидович style guide."""
-    return _dict_lookup("style_guide", word, limit)
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return []
+
+    word_lower = word.lower()
+
+    # Try exact match first
+    rows = conn.execute(
+        "SELECT * FROM style_guide WHERE word_lower = ? LIMIT ?",
+        (word_lower, limit),
+    ).fetchall()
+
+    # Try prefix match
+    if not rows:
+        rows = conn.execute(
+            "SELECT * FROM style_guide WHERE word_lower LIKE ? LIMIT ?",
+            (f"%{word_lower}%", limit),
+        ).fetchall()
+
+    # Try full-text match in commentary if still no results
+    if not rows:
+        rows = conn.execute(
+            "SELECT * FROM style_guide WHERE excerpt_full LIKE ? LIMIT ?",
+            (f"%{word_lower}%", limit),
+        ).fetchall()
+
+    return [dict(r) for r in rows]
 
 
 def lookup_by_url(url: str) -> dict | None:
