@@ -378,6 +378,11 @@ def _search_blog_dbs(level, topic_title, keywords, results, seen_urls, load_blog
         from urllib.parse import urlparse
         parsed_url = urlparse(url)
         domain = parsed_url.netloc
+        # Default source = article's stated source, falling back to ukrainianlessons.com.
+        # The "dobraforma" override below is a domain-specific rebrand. Restored after
+        # 9fe99a00a7 dropped the default during an unrelated URL→domain refactor,
+        # causing UnboundLocalError in CI for every non-dobraforma article.
+        source = article.get("source", "ukrainianlessons.com")
         if "dobraforma" in domain or "opentext.ku.edu" in domain:
             source = "dobraforma"
 
