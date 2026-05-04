@@ -49,7 +49,7 @@ Scan the Ukrainian text for errors. Report ONLY problems found — do not echo c
 2. Правопис 2019 — is it spelled correctly? Orthography rules.
 3. Горох — stress position, word frequency, synonyms.
 4. Антоненко-Давидович «Як ми говоримо» — is this natural Ukrainian or a calque/Russicism?
-5. Грінченко «Словарь» — etymology, original meaning.
+5. Грінченко «Словарь» — historical usage, original meaning.
 
 **Online fallbacks (if RAG/tools are unavailable):**
 - VESUM: https://vesum.com.ua/

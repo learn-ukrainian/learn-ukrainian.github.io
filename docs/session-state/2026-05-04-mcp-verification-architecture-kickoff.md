@@ -25,7 +25,7 @@ Memory rule **#0I** added: *"DON'T STACK MICRO-DILEMMAS, DECIDE FOR THE USER"* �
 | # | Title | Status |
 |---|---|---|
 | **#1657** | EPIC: MCP verification-layer improvements (3-phase plan) | open, parent of all below |
-| #1658 | [P1] Rename `search_grinchenko_1907` → `search_grinchenko_1907` | open, not started |
+| #1658 | [P1] Rename `search_etymology` → `search_grinchenko_1907` | open, not started |
 | #1659 | [P1] Add `sovietization_risk` flag to СУМ-11 | **PR #1670 open** |
 | #1660 | [P1] Tool descriptions: flag completeness gaps explicitly | open, not started |
 | #1661 | [V7 prompts] Add Tier-1 verification discipline to writer + reviewer prompts | open, not started |

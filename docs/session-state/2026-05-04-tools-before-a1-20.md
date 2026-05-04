@@ -38,7 +38,7 @@ User stated 2026-05-04 evening: "should we not build the tools first?" Locking t
 | # | What | Effort |
 |---|---|---|
 | #1669 | Surface VESUM `arch` tag — modern-vs-historical discrimination | Internal data exposure only, ~1-2h |
-| #1658 | Rename `search_grinchenko_1907` → `search_grinchenko_1907` | Naming bug fix — Грінченко is NOT etymology, mislabeling fed bad assumptions into prompts |
+| #1658 | Rename `search_etymology` → `search_grinchenko_1907` | Naming bug fix — Грінченко is NOT etymology, mislabeling fed bad assumptions into prompts |
 | #1660 | Flag completeness gaps in tool descriptions | Small docs change |
 | #1668 | PyMorphy3 wrapper for Russian-shadow form detection | No Russian text ingested — wrapper-only design |
 | **#1673** | **Chain-of-thought scaffolding in writer + reviewer prompts** | **User-flagged 2026-05-04 — CoT was supposed to be there and isn't. Writer must reason explicitly through word budget / plan-vocab / register / teaching sequence before drafting. Reviewer must list 2-3 specific evidence quotes per dim before scoring. Pilot on 3 modules before bulk.** |
@@ -98,7 +98,7 @@ User confirmed multiple times this session:
 | # | Title | Tier |
 |---|---|---|
 | #1657 | EPIC: MCP verification-layer improvements (parent of B/C) | parent |
-| #1658 | Rename search_grinchenko_1907 → search_grinchenko_1907 | B |
+| #1658 | Rename search_etymology → search_grinchenko_1907 | B |
 | #1660 | Tool descriptions: completeness gaps | B |
 | #1661 | V7 prompt diffs for Tier-1 verification | D |
 | #1663 | Antonenko full ingest — re-dispatch needed (segmenter broken on prior run, polluted DB rolled back) | C |

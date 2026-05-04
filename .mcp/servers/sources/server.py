@@ -1526,8 +1526,12 @@ async def handle_search_esum(args: dict) -> list[TextContent]:
 
     hits = await asyncio.to_thread(sdb.search_esum, query, volume, limit)
     if not hits:
-        scope = f" volume {volume}" if volume else ""
-        return [TextContent(type="text", text=f"No results in ЕСУМ{scope} for: \"{query}\"")]
+        # Placeholder / hint for unimplemented volumes or missing entries (#1658)
+        hint = {
+            "status": "not_implemented",
+            "hint": f"Tier 2 WebFetch goroh.pp.ua/Етимологія/{query}"
+        }
+        return [TextContent(type="text", text=json.dumps(hint, ensure_ascii=False))]
 
     lines = [f"Found {len(hits)} results in **ЕСУМ** for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):

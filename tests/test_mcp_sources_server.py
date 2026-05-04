@@ -134,6 +134,13 @@ class TestCallToolDispatch:
             assert "RuntimeError" in result[0].text
             assert "test error" in result[0].text
 
+    def test_search_esum_placeholder_hint(self, server_module):
+        with patch("wiki.sources_db.search_esum", return_value=[]):
+            result = _run(server_module.handle_search_esum({"query": "тест"}))
+            assert len(result) == 1
+            assert '"status": "not_implemented"' in result[0].text
+            assert "goroh.pp.ua/Етимологія/тест" in result[0].text
+
 
 class TestVerifyWordHandler:
     """Test verify_word handler formatting."""
