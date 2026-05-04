@@ -170,7 +170,15 @@ class ClaudeAdapter:
         probe_prefix = tuple(cmd)
         cli_version = _ensure_supported_claude_cli_version(probe_prefix)
 
-        cmd.extend(["-p", prompt])
+        cmd.append("-p")
+        # NB: the actual prompt positional is appended at the END below, after a
+        # `--` separator. Reason: Claude CLI uses Commander.js, which parses any
+        # argv starting with `-`/`--` as a flag — even in positional position —
+        # unless preceded by `--` (end-of-options marker). Channel-context
+        # prompts from `ab discuss` start with `--- context: shared (sha256: ...)`
+        # which Commander then treats as `unknown option '---'`. The `--`
+        # separator makes the parser stop interpreting flags. (Bug surfaced
+        # 2026-05-05 during the Claude+Gemini deliberation pilot.)
 
         # --bare: fast path when stateless and API key is set.
         # Disabled if we're resuming/starting a named session (those need
@@ -235,6 +243,10 @@ class ClaudeAdapter:
         # Cache-warmth optimization (CC 2.1.98+)
         if cli_version and cli_version >= _EFFORT_MIN_VERSION:
             cmd.append("--exclude-dynamic-system-prompt-sections")
+
+        # Prompt positional MUST be last, preceded by `--` end-of-options marker.
+        # See comment near `cmd.append("-p")` above for the Commander.js rationale.
+        cmd.extend(["--", prompt])
 
         return InvocationPlan(
             cmd=cmd,
