@@ -51,6 +51,8 @@ adversarial review between agents.
 
 6. **Pre-training contamination is real and structural.** Russian-language web content over-represents Slavic data in pretraining corpora by an order of magnitude. Reflexive "Slavic comparison" therefore defaults to Russian regardless of intent. Compensate consciously: when about to write a Russian comparison, check whether it's genuinely necessary or just a default. If a default, drop it or substitute Ukrainian-internal evidence.
 
+7. **Verify verbatim citations against the source corpus before posting.** Stable, reproducible LLM hallucinations exist for verbatim quotations attributed to recognizable Ukrainian authorities — particularly **Антоненко-Давидович «Як ми говоримо»**, where the model has a strong prior that "AD likely flagged X as Russianism" and will confidently fabricate a fake direct Ukrainian quote consistent with that prior. Before quoting any source verbatim with attribution, run `mcp__sources__search_style_guide` (for АД), `mcp__sources__search_grinchenko_1907` (for Грінченко), `mcp__sources__query_pravopys` (for Правопис 2019), `mcp__sources__verify_lemma` (for VESUM), or `mcp__sources__search_definitions` (for СУМ). If the quoted text is not present in the source corpus, **drop the citation** — paraphrase the substantive point if it's defensible from other evidence, or strike the claim entirely. Known fabrications and their refutations live in `docs/bug-autopsies/agent-hallucination.md` — read that file before citing АД on common Russianism-target lemmas (собака, степ, Сибір, біль, посуд and similar gender-contrast nouns).
+
 ## Tooling conventions
 
 - **Python:** `.venv/bin/python` — never bare `python3` or `python`
