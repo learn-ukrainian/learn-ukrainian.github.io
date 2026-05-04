@@ -8,6 +8,7 @@ FTS5 tables (prose search):
 Indexed tables (dictionary headword lookup):
 - search_definitions() — СУМ-11
 - search_etymology() — Грінченко
+- search_esum() — ЕСУМ etymological dictionary
 - search_idioms() — Фразеологічний
 - search_synonyms() — Ukrajinet WordNet
 - translate_en_uk() — Балла EN→UK
@@ -1323,6 +1324,103 @@ def search_definitions(word: str, limit: int = 10) -> list[dict]:
 def search_etymology(word: str, limit: int = 10) -> list[dict]:
     """Look up word in Грінченко (historical dictionary)."""
     return _dict_lookup("grinchenko", word, limit)
+
+
+def _escape_fts5_phrase(term: str) -> str:
+    """Build a safe FTS5 phrase query for a user-supplied term."""
+    cleaned = term.replace('"', " ").strip()
+    if not cleaned:
+        return ""
+    return f'"{cleaned}"'
+
+
+def _outside_loaded_esum_volume(query: str, volume: int | None) -> bool:
+    """Avoid misleading body-text hits for headwords outside staged volumes."""
+    if volume != 1:
+        return False
+    normalized = query.strip().lower()
+    if not normalized or not normalized.replace("'", "").replace("’", "").isalpha():
+        return False
+    return not normalized.startswith(("а", "б", "в", "г", "ґ"))
+
+
+def _single_loaded_esum_volume(conn: sqlite3.Connection) -> int | None:
+    rows = conn.execute(
+        "SELECT DISTINCT vol FROM esum_etymology_meta ORDER BY vol LIMIT 2"
+    ).fetchall()
+    if len(rows) == 1:
+        return int(rows[0]["vol"])
+    return None
+
+
+def search_esum(query: str, volume: int | None = None, limit: int = 5) -> list[dict]:
+    """Search ЕСУМ etymology entries.
+
+    Exact lemma matches are returned first, followed by FTS5 body matches.
+    Volume can be restricted for staged ingestion; #1662 loads volume 1 only.
+    """
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return []
+
+    if not _table_columns("esum_etymology") or not _table_columns("esum_etymology_meta"):
+        return []
+    loaded_volume = volume if volume is not None else _single_loaded_esum_volume(conn)
+    if _outside_loaded_esum_volume(query, loaded_volume):
+        return []
+
+    limit = max(1, min(limit, 20))
+    params: list[object] = [query]
+    vol_filter = ""
+    if volume is not None:
+        vol_filter = " AND vol = ?"
+        params.append(volume)
+
+    exact_rows = conn.execute(
+        f"""
+        SELECT id AS rowid, lemma, etymology_text, cognates, vol, page, source
+        FROM esum_etymology_meta
+        WHERE lemma = ? COLLATE NOCASE{vol_filter}
+        ORDER BY vol, page, lemma
+        LIMIT ?
+        """,
+        (*params, limit),
+    ).fetchall()
+
+    results = [dict(row) for row in exact_rows]
+    seen = {row["rowid"] for row in results}
+    remaining = limit - len(results)
+    fts_query = _escape_fts5_phrase(query)
+    if remaining <= 0 or not fts_query:
+        return results
+
+    fts_params: list[object] = [fts_query]
+    fts_vol_filter = ""
+    if volume is not None:
+        fts_vol_filter = " AND vol = ?"
+        fts_params.append(volume)
+    fts_params.append(remaining + len(seen))
+
+    fts_rows = conn.execute(
+        f"""
+        SELECT rowid, lemma, etymology_text, cognates, vol, page
+        FROM esum_etymology
+        WHERE esum_etymology MATCH ?{fts_vol_filter}
+        ORDER BY rank
+        LIMIT ?
+        """,
+        tuple(fts_params),
+    ).fetchall()
+    for row in fts_rows:
+        item = dict(row)
+        if item["rowid"] in seen:
+            continue
+        item["source"] = "ЕСУМ"
+        results.append(item)
+        if len(results) >= limit:
+            break
+    return results
 
 
 def translate_en_uk(word: str, limit: int = 10) -> list[dict]:

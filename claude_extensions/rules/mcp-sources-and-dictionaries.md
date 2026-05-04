@@ -30,7 +30,8 @@ paths:
 - `mcp__sources__search_style_guide` — Антоненко-Давидович (279 entries indexed of ~600+ in source — completion tracked in #1663) — **calques and Russianisms**. HIGH PRIORITY.
 - `mcp__sources__query_cefr_level` — PULS CEFR vocabulary (5.9K words, A1-C1) — check level-appropriateness
 - `mcp__sources__search_definitions` — СУМ-11 (127K entries) — Ukrainian explanatory dictionary. **⚠️ Partially Sovietized for ideological terms** — see "Sovietization caveat" below. Each result row carries `sovietization_risk` (0/1/2) and `sovietization_keywords`.
-- `mcp__sources__search_etymology` — Грінченко (67K entries) — historical Ukrainian dictionary from 1907. **NOT etymology** despite the tool name — it's lexicographic. True etymology coverage tracked in #1662 (ЕСУМ ingest).
+- `mcp__sources__search_etymology` — Грінченко (67K entries) — historical Ukrainian dictionary from 1907. **NOT etymology** despite the tool name — it's lexicographic. True etymology lives in `search_esum` below.
+- `mcp__sources__search_esum` — ЕСУМ etymological dictionary — canonical name for ЕСУМ. PoC scope: vol. 1 (А–Г) only; vols. 2–6 are follow-up (#1662).
 - `mcp__sources__search_idioms` — Фразеологічний (25K entries) — Ukrainian idioms and expressions
 - `mcp__sources__search_synonyms` — Ukrajinet WordNet (122K synsets) — synonyms, antonyms. **⚠️ Synsets are largely auto-translated from Open English WordNet** per upstream README — quality audit pending (#1657 Tier 3).
 - `mcp__sources__translate_en_uk` — Балла EN→UK (79K entries) — English→Ukrainian translations. One-way only; UK→EN reverse not yet built.
@@ -73,6 +74,7 @@ Audit report at `audit/sum11_sovietization_scan_<DATE>.md`.
 | **VESUM** | 409K lemmas, 6.7M forms | Morphological (POS, gender, inflections) | `data/vesum.db` (SQLite) |
 | **СУМ-11** | 127K (7,152 flagged Sovietized — #1659) | Ukrainian explanatory (definitions, citations) | `data/sources.db` FTS5 |
 | **Грінченко** | 67K | Historical Ukrainian (1907, etymology) | `data/sources.db` FTS5 |
+| **ЕСУМ** | vol. 1 (А–Г) PoC | Etymological dictionary | `data/sources.db` FTS5 via `search_esum` |
 | **Балла EN→UK** | 79K | English→Ukrainian translations | `data/sources.db` FTS5 |
 | **Антоненко-Давидович** | 279 | Style guide (calques, Russianisms) | `data/sources.db` FTS5 |
 | **Фразеологічний** | 25K | Ukrainian idioms and expressions | `data/sources.db` FTS5 |

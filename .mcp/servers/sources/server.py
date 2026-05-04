@@ -17,7 +17,7 @@ Tools:
     - search_sources, search_text, search_literary, search_external, search_images, get_chunk_context
     - verify_word, verify_words, verify_lemma (VESUM)
     - query_wikipedia, query_pravopys, query_e2u, query_r2u, query_ulif
-    - search_definitions, search_etymology, search_idioms, search_synonyms
+    - search_definitions, search_etymology, search_esum, search_idioms, search_synonyms
     - search_style_guide (Антоненко-Давидович)
     - translate_en_uk (Балла)
 """
@@ -557,6 +557,26 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
+            name="search_esum",
+            description=(
+                "Search ЕСУМ (Етимологічний словник української мови) etymology entries. "
+                "PoC scope: volume 1 only (А–Г); volumes 2–6 are follow-up work. "
+                "Use for Ukrainian word-origin checks and cognate evidence."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "Ukrainian word or etymology term to search"},
+                    "volume": {
+                        "type": "integer",
+                        "description": "Optional ЕСУМ volume filter. This PoC currently supports volume 1.",
+                    },
+                    "limit": {"type": "integer", "description": "Max results (default 5)", "default": 5},
+                },
+                "required": ["query"]
+            },
+        ),
+        Tool(
             name="search_idioms",
             description=(
                 "Search Ukrainian phraseological dictionary (25K entries). "
@@ -676,6 +696,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "query_cefr_level": lambda: handle_dict_search(arguments, "puls_cefr", "PULS CEFR"),
             "search_definitions": lambda: handle_dict_search(arguments, "sum11", "СУМ-11"),
             "search_etymology": lambda: handle_dict_search(arguments, "grinchenko_dict", "Грінченко"),
+            "search_esum": lambda: handle_search_esum(arguments),
             "search_idioms": lambda: handle_dict_search(arguments, "frazeolohichnyi", "Фразеологічний"),
             "search_synonyms": lambda: handle_dict_search(arguments, "ukrajinet", "Ukrajinet WordNet"),
             "translate_en_uk": lambda: handle_dict_search(arguments, "balla_en_uk", "Балла EN→UK"),
@@ -1289,6 +1310,33 @@ async def handle_dict_search(args: dict, collection: str, label: str) -> list[Te
         text = hit.get("text", "")
         if text and text != definition:
             lines.append(f"- **Text**: {text[:500]}")
+        lines.append("")
+
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_search_esum(args: dict) -> list[TextContent]:
+    """Search ЕСУМ entries in sources.db."""
+    query = args.get("query", "")
+    volume = args.get("volume")
+    limit = min(args.get("limit", 5), 10)
+
+    from wiki import sources_db as sdb
+
+    hits = await asyncio.to_thread(sdb.search_esum, query, volume, limit)
+    if not hits:
+        scope = f" volume {volume}" if volume else ""
+        return [TextContent(type="text", text=f"No results in ЕСУМ{scope} for: \"{query}\"")]
+
+    lines = [f"Found {len(hits)} results in **ЕСУМ** for: \"{query}\"\n"]
+    for i, hit in enumerate(hits, 1):
+        lines.append(f"### Result {i}")
+        lines.append(f"- **Lemma**: {hit.get('lemma', '')}")
+        lines.append(f"- **Volume**: {hit.get('vol', '')}")
+        lines.append(f"- **Page**: {hit.get('page', '')}")
+        text = str(hit.get("etymology_text", ""))
+        if text:
+            lines.append(f"- **Etymology**: {text[:800]}")
         lines.append("")
 
     return [TextContent(type="text", text="\n".join(lines))]
