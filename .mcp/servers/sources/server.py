@@ -673,6 +673,36 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"]
             },
         ),
+        Tool(
+            name="query_sum20",
+            description=(
+                "Live query СУМ-20 (sum20ua.com) — modern post-Soviet academic "
+                "Ukrainian explanatory dictionary, ULIF NAS Ukraine, 2010–ongoing. "
+                "Coverage: volumes 1–16 only (А–Р); vols 17–20 (С–Я) not yet "
+                "published online. **Per-query live fetch with citation** — does "
+                "NOT bulk-ingest, no DB caching, ULIF copyright notice "
+                "preserved. Use as the **modern definitional baseline** to "
+                "REPLACE Sovietized СУМ-11 entries (#1659): when "
+                "`search_definitions` returns `sovietization_risk > 0`, fall "
+                "back to `query_sum20` for the same headword. License posture: "
+                "ULIF publishes with copyright but no explicit terms-of-use; "
+                "single-query lookup with attribution is fair use, bulk crawl "
+                "is not. **PARSER CAVEAT: extracted text is currently unreliable** "
+                "— sum20ua.com's search page returns alphabetically adjacent "
+                "entries and the HTML extractor matches the first entry on the "
+                "page, which often is not the queried headword. The URL is "
+                "always correct and authoritative; treat the URL as the source "
+                "of truth and the text as a hint until parser is hardened "
+                "(follow-up issue). Issue: #1667."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {"type": "string", "description": "Ukrainian headword to look up in СУМ-20 (must be in А–Р range)"},
+                },
+                "required": ["word"]
+            },
+        ),
     ]
 
 
@@ -726,6 +756,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "query_ulif": lambda: handle_query_ulif(arguments),
             "query_r2u": lambda: handle_query_r2u(arguments),
             "query_e2u": lambda: handle_query_e2u(arguments),
+            "query_sum20": lambda: handle_query_sum20(arguments),
             "query_pravopys": lambda: handle_query_pravopys(arguments),
             "search_style_guide": lambda: handle_dict_search(arguments, "style_guide", "Антоненко-Давидович"),
             "query_cefr_level": lambda: handle_dict_search(arguments, "puls_cefr", "PULS CEFR"),
@@ -1269,6 +1300,42 @@ async def handle_query_e2u(args: dict) -> list[TextContent]:
     for entry in results[:10]:
         lines.append(f"- **{entry['headword']}**: {entry['translation'][:200]}")
     return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_query_sum20(args: dict) -> list[TextContent]:
+    """Live single-query lookup against СУМ-20 (sum20ua.com).
+
+    No bulk fetch, no DB persist. Citation always shown. License posture:
+    ULIF publishes with © notice but no explicit terms-of-use; per-query
+    lookup with attribution is fair use, bulk crawl is not.
+    Issue: #1667.
+    """
+    word = args["word"]
+
+    from rag.source_query import sum_definition
+    result = await asyncio.to_thread(sum_definition, word)
+
+    if not result:
+        return [TextContent(
+            type="text",
+            text=(
+                f"No СУМ-20 entry found for '{word}'. "
+                f"Note: СУМ-20 covers vols 1–16 (А–Р) only — words starting "
+                f"С–Я are not yet published. For СУМ-11 (1970–1980, partially "
+                f"Sovietized) fallback, use `search_definitions`."
+            ),
+        )]
+
+    return [TextContent(
+        type="text",
+        text=(
+            f"**СУМ-20 entry for '{word}'**\n"
+            f"**URL**: {result['url']}\n"
+            f"**Source**: © Український мовно-інформаційний фонд НАН України, "
+            f"sum20ua.com\n\n"
+            f"{result['text'][:3000]}"
+        ),
+    )]
 
 
 async def handle_query_pravopys(args: dict) -> list[TextContent]:
