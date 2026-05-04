@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sqlite3
 import sys
@@ -34,18 +35,41 @@ def _apply_migration(conn: sqlite3.Connection) -> None:
     conn.executescript(MIGRATION.read_text(encoding="utf-8"))
 
 
+def _ensure_meta_schema(conn: sqlite3.Connection) -> None:
+    columns = {
+        row[1] for row in conn.execute("PRAGMA table_info(esum_etymology_meta)")
+    }
+    if "entry_hash" in columns:
+        return
+    conn.execute("DROP TABLE IF EXISTS esum_etymology_meta")
+    conn.execute("DROP TABLE IF EXISTS esum_etymology")
+    _apply_migration(conn)
+
+
+def _entry_hash(row: dict[str, Any]) -> str:
+    text = str(row["etymology_text"]).encode("utf-8")
+    return hashlib.sha1(text).hexdigest()
+
+
 def load_esum(jsonl: Path, db: Path) -> int:
     rows = _load_jsonl(jsonl)
     conn = sqlite3.connect(str(db))
     try:
         _apply_migration(conn)
+        _ensure_meta_schema(conn)
         with conn:
+            volumes = sorted({int(row["vol"]) for row in rows})
+            placeholders = ",".join("?" for _ in volumes)
+            conn.execute(
+                f"DELETE FROM esum_etymology_meta WHERE vol IN ({placeholders})",
+                volumes,
+            )
             conn.executemany(
                 """
                 INSERT INTO esum_etymology_meta
-                    (lemma, vol, page, etymology_text, cognates, source)
-                VALUES (?, ?, ?, ?, ?, ?)
-                ON CONFLICT(lemma, vol, page) DO UPDATE SET
+                    (lemma, vol, page, entry_hash, etymology_text, cognates, source)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(lemma, vol, page, entry_hash) DO UPDATE SET
                     etymology_text = excluded.etymology_text,
                     cognates = excluded.cognates,
                     source = excluded.source
@@ -55,6 +79,7 @@ def load_esum(jsonl: Path, db: Path) -> int:
                         str(row["lemma"]),
                         int(row["vol"]),
                         int(row["page"]),
+                        _entry_hash(row),
                         str(row["etymology_text"]),
                         json.dumps(row.get("cognates", []), ensure_ascii=False),
                         "ЕСУМ vol. 1",

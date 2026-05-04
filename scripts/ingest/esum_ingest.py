@@ -42,7 +42,7 @@ WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])[-¬]\s*$")
 SPACED_WORD_SPLIT_RE = re.compile(r"(?<=[А-Яа-яІіЇїЄєҐґA-Za-z])\s+[-¬]\s*$")
 SPACE_RE = re.compile(r"[ \t]+")
 ENTRY_PUNCT_RE = re.compile(r"[;—]")
-HEAD_END_RE = re.compile(r"[,;(—]")
+HEAD_END_RE = re.compile(r"[,;(—«]")
 LANG_MARKERS = (
     "псл.",
     "іє.",
@@ -211,6 +211,14 @@ def _looks_like_entry_start(paragraph: str) -> bool:
     return _extract_headword(paragraph) is not None
 
 
+def _looks_like_cross_reference_entry(paragraph: str) -> bool:
+    return (
+        "див." in paragraph
+        and ENTRY_PUNCT_RE.search(paragraph) is not None
+        and _extract_headword(paragraph) is not None
+    )
+
+
 def _looks_like_head_candidate(line: str) -> bool:
     if _is_page_header_fragment(line):
         return False
@@ -224,13 +232,19 @@ def _looks_like_head_candidate(line: str) -> bool:
 
 
 def _looks_like_complete_entry(paragraph: str) -> bool:
-    return len(paragraph) >= 80 and _looks_like_entry_start(paragraph)
+    if len(paragraph) >= 80:
+        return _looks_like_entry_start(paragraph)
+    return _looks_like_cross_reference_entry(paragraph)
 
 
 def _is_page_header_fragment(paragraph: str) -> bool:
     if len(paragraph) > 40:
         return False
     if ENTRY_PUNCT_RE.search(paragraph):
+        return False
+    if paragraph.lower().startswith(("ще ", "див. ", "пор. ")):
+        return False
+    if "," in paragraph or "." in paragraph:
         return False
     return bool(re.match(r"^[\[А-Яа-яІіЇїЄєҐґ'’0-9., ]+$", paragraph))
 
@@ -260,7 +274,11 @@ def parse_esum(text: str, vol: int) -> list[dict[str, object]]:
         if not line:
             after_blank = True
             continue
-        if after_blank and (_looks_like_entry_start(line) or _looks_like_head_candidate(line)):
+        if after_blank and (
+            _looks_like_entry_start(line)
+            or _looks_like_cross_reference_entry(line)
+            or _looks_like_head_candidate(line)
+        ):
             flush_current()
             current_page = page or current_page
             current_parts = [line]

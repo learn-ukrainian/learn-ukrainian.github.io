@@ -12,10 +12,11 @@ CREATE TABLE IF NOT EXISTS esum_etymology_meta (
     lemma TEXT NOT NULL,
     vol INTEGER NOT NULL,
     page INTEGER NOT NULL,
+    entry_hash TEXT NOT NULL DEFAULT '',
     etymology_text TEXT NOT NULL,
     cognates TEXT NOT NULL DEFAULT '[]',
     source TEXT NOT NULL DEFAULT 'ЕСУМ',
-    UNIQUE(lemma, vol, page)
+    UNIQUE(lemma, vol, page, entry_hash)
 );
 
 CREATE INDEX IF NOT EXISTS idx_esum_etymology_meta_lemma
