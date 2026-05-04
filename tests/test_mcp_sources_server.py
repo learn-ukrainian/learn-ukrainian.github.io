@@ -14,6 +14,7 @@ Covers:
 
 import asyncio
 import inspect
+import json
 import sys
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -48,7 +49,7 @@ class TestListTools:
         expected = {
             "search_sources", "search_text", "search_images", "search_literary", "search_external",
             "get_full_text", "get_chunk_context", "collection_stats",
-            "verify_word", "verify_words", "verify_lemma",
+            "verify_word", "verify_words", "verify_lemma", "check_modern_form",
             "query_wikipedia", "query_grac", "query_ulif",
             "query_r2u", "query_e2u", "query_sum20", "query_slovnyk_me",
             "query_pravopys", "query_cefr_level",
@@ -125,6 +126,13 @@ class TestCallToolDispatch:
             assert len(result) == 1
             assert "DEPRECATION WARNING" in result[0].text
             assert result[0].text.endswith("ok")
+
+    def test_check_modern_form_dispatches(self, server_module):
+        with patch.object(server_module, "handle_check_modern_form", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("check_modern_form", {"word": "звір"}))
+            mock.assert_called_once_with({"word": "звір"})
+
 
     def test_handler_exception_returns_error_text(self, server_module):
         with patch.object(server_module, "handle_verify_word", new_callable=AsyncMock) as mock:
@@ -230,3 +238,50 @@ class TestSSEStateless:
             "without it, SSE clients that skip the initialize handshake "
             "get -32602 errors on every tool call"
         )
+
+
+_VESUM_DB = Path(__file__).resolve().parents[1] / "data" / "vesum.db"
+
+
+@pytest.mark.skipif(
+    not _VESUM_DB.exists(),
+    reason="VESUM DB not present in CI sandbox — run locally for smoke coverage",
+)
+class TestIntegrationSmoke:
+    """Smoke tests using real database (no mocks). Skipped when data/vesum.db absent."""
+
+    def test_smoke_verify_word_archaic(self, server_module):
+        """Test verify_word with a word that has an archaic tag."""
+        result = _run(server_module.handle_verify_word({"word": "звір"}))
+        assert "**is_archaic**: True" in result[0].text
+        assert "**is_archaic**: False" in result[0].text  # Because it has modern forms too
+
+    def test_smoke_verify_lemma_archaic(self, server_module):
+        """Test verify_lemma with a lemma that has archaic forms."""
+        result = _run(server_module.handle_verify_lemma({"lemma": "звір"}))
+        assert "has_archaic_forms: True" in result[0].text
+        assert "**is_archaic**: True" in result[0].text
+
+    def test_smoke_check_modern_form_mixed(self, server_module):
+        """Test check_modern_form with a word that has both modern and archaic tags."""
+        result = _run(server_module.handle_check_modern_form({"word": "звір"}))
+        data = json.loads(result[0].text)
+        assert data["is_modern_codified"] is True
+        assert data["has_archaic_form"] is True
+        assert data["has_only_archaic_form"] is False
+
+    def test_smoke_check_modern_form_modern_only(self, server_module):
+        """Test check_modern_form with a modern-only word."""
+        result = _run(server_module.handle_check_modern_form({"word": "Сибір"}))
+        data = json.loads(result[0].text)
+        assert data["is_modern_codified"] is True
+        assert data["has_archaic_form"] is False
+        assert data["has_only_archaic_form"] is False
+
+    def test_smoke_check_modern_form_archaic_only(self, server_module):
+        """Test check_modern_form with an archaic-only word."""
+        result = _run(server_module.handle_check_modern_form({"word": "аби-де"}))
+        data = json.loads(result[0].text)
+        assert data["is_modern_codified"] is False
+        assert data["has_archaic_form"] is True
+        assert data["has_only_archaic_form"] is True
