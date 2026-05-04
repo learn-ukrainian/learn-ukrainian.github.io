@@ -1,17 +1,18 @@
-# Current — multi-agent index (2026-05-02)
+# Current — multi-agent index (2026-05-04)
 
-> **Repo state: POC UNBLOCKED — IDLE FOR USER.** As of 2026-05-02 ~20:00 CET, three thread arcs shipped today: (1) POC plan locked + V7 prereqs merged (#1635/1636/1638), (2) Multi-Agent Deliberation Protocol shipped + agents onboarded (#1639/1640/1642), (3) CI gap fixed + Gemini's REVISE findings cleaned up (#1641/1643/1644/1645). All target issues closed. POC step 3 (`.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer gemini-tools`) is executable now — needs user "go" signal because checkpoint A is a user-eval, not autonomous. Main at `7212d730f0`.
+> **Repo state: MCP VERIFICATION-LAYER ARCHITECTURE KICKED OFF.** As of 2026-05-04 evening, EPIC #1657 (3-phase MCP verification-layer plan) filed plus 12 sibling issues (#1658–#1669). Three Tier-1 ingestion executions kicked off in parallel: Claude inline #1659 СУМ-11 sovietization flag → **PR #1670 OPEN**; Codex web UI #1662 ЕСУМ vol 1 PoC → **PR #1672 OPEN** (Claude pushed CI fixes onto Codex's branch); Gemini dispatch #1663 Antonenko ingest → **FAILED with broken segmenter; production DB polluted then rolled back this session** (see latest handoff). Codex (delegate.py path) out of weekly cap until 2026-05-05 11am CET. Memory rule **#0I added** ("DON'T STACK MICRO-DILEMMAS"). A1/20 build (POC step 3) parked — checkpoint A is user-eval, can run when user is ready.
 
 ## Latest handoff (read this first)
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **#1639/#1644 closed + POC fully unblocked** | **`docs/session-state/2026-05-02-1644-cleanup-and-poc-unblocked.md`** | **All POC prereqs merged. #1639 (deliberation protocol + onboarding) closed inline via cold-start validation. #1644 (Gemini's REVISE on #1643) closed via #1645 with dorny/paths-filter + lint-failure deadlock fix. Codex integrity flag noted (faked validation on #1645 — caught by Gemini cross-review). GH token gotcha: `~/.bash_secrets` token revoked mid-session; new token lives in `.envrc` (source it before any gh call).** |
+| **MCP verification-layer architecture kickoff + Antonenko ingest incident** | **`docs/session-state/2026-05-04-mcp-verification-architecture-kickoff.md`** | **EPIC #1657 + 12 sibling issues filed. PR #1670 open (СУМ-11 sovietization flag, Claude inline). PR #1672 open (ЕСУМ vol 1 PoC, Codex+Claude). Gemini #1663 dispatch FAILED with broken segmenter — polluted production data/sources.db with 1,268 garbage rows in `antonenko_full` table; rolled back this session (backup at `/tmp/sources.db.pre-gemini-1663-rollback-20260504-202324`). Codex out of weekly until 11am tomorrow.** |
 
 ## Predecessor chain (most-recent first)
 
 | Thread | Handoff |
 |---|---|
+| #1639/#1644 closed + POC fully unblocked | `2026-05-02-1644-cleanup-and-poc-unblocked.md` |
 | Multi-Agent Deliberation Protocol shipped + onboarded + validated | `2026-05-02-deliberation-protocol-shipped.md` |
 | POC plan locked + #1631/#1632/#1637 prereqs merged | `2026-05-02-poc-plan-locked-and-prereqs-merged.md` |
 | Dependabot triage + lockfile fixes + UK framing-A clarification | `2026-04-30-dependabot-lockfile-fixes-and-uk-framing-clarification.md` |
