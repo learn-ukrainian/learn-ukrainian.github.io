@@ -18,6 +18,9 @@ torch>=2.6
 
 # NLP / Ukrainian
 pymorphy2>=0.9
+pymorphy3>=2.0
+pymorphy3-dicts-ru
+pymorphy3-dicts-uk
 # tokenize-uk is vendored at scripts/linguistics/tokenize_uk.py (#1318).
 # Intentionally NOT a pip dep — local ABBRS extensions require it.
 ukrainian-word-stress>=1.0
