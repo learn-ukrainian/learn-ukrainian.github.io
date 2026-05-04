@@ -6,12 +6,13 @@
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **Tools-before-A1/20 ordering locked + git cleanup completed** | **`docs/session-state/2026-05-04-tools-before-a1-20.md`** | **3 PRs resolved (#1670 + #1672 merged, #1671 closed). Dirty main committed in 2 coherent commits. All worktrees + stashes + stale branches purged. Tier A→E execution order LOCKED — do NOT run A1/20 until Tier D ships. Two open user-facing questions: (1) ADR-008 PROPOSED → ACCEPTED signoff (5 min), (2) chain-of-thought writer/reviewer prompts NOT implemented yet (user-flagged gap).** |
+| **Multi-dispatch arc + slovnyk.me unblock** | **`docs/session-state/2026-05-04-evening-multi-dispatch.md`** | **3 Gemini PRs in flight, all rebased + mergeable, awaiting CI: #1674 (#1669 VESUM arch), #1675 (#1668 PyMorphy3), #1678 (#1658 Грінченко rename). slovnyk.me wired as multi-dictionary aggregator (replaces broken sum20ua.com path; serves СУМ-20, Karavansky, paronyms, 13 more). #1631 confirmed already-shipped (residuals → #1680). #1660 + #1673 + #1659 closed. CoT scaffolding shipped to writer + reviewer prompts. path_safety dual-import-path bug fixed across 18 files. Open: ADR-008 user signoff, then resume Tier A.** |
 
 ## Predecessor chain (most-recent first)
 
 | Thread | Handoff |
 |---|---|
+| Tools-before-A1/20 ordering locked + git cleanup completed | `2026-05-04-tools-before-a1-20.md` |
 | MCP verification-layer architecture kickoff + Antonenko ingest incident | `2026-05-04-mcp-verification-architecture-kickoff.md` |
 | #1639/#1644 closed + POC fully unblocked | `2026-05-02-1644-cleanup-and-poc-unblocked.md` |
 | Multi-Agent Deliberation Protocol shipped + onboarded + validated | `2026-05-02-deliberation-protocol-shipped.md` |
