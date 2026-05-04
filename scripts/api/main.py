@@ -25,7 +25,11 @@ from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconn
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
-from ..path_safety import safe_join
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
+
 from . import delegate_router as delegate_api
 from . import runtime_router as runtime_api
 from . import state_router as state_api

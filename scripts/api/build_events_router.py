@@ -10,7 +10,11 @@ from typing import Any
 
 from fastapi import APIRouter, Query
 
-from ..path_safety import safe_join
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
+
 from .config import CURRICULUM_ROOT
 
 router = APIRouter(tags=["build-events"])

@@ -25,9 +25,13 @@ from datetime import UTC, datetime
 
 from fastapi import APIRouter, Query, Request, Response
 from fastapi.responses import JSONResponse
+
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
 from pydantic import BaseModel
 
-from ..path_safety import safe_join
 from .config import CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
 
 router = APIRouter(tags=["comms"])

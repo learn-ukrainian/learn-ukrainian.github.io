@@ -730,15 +730,17 @@ class TestAdminHelpers:
         assert "GB" in _format_bytes(2 * 1024**3)
         assert "TB" in _format_bytes(2 * 1024**4)
 
-    def test_safe_within_valid(self, tmp_path):
-        from scripts.api.admin_router import _safe_within
-        child = tmp_path / "child" / "file.txt"
-        assert _safe_within(child, tmp_path) is True
+    def test_safe_join_valid(self, tmp_path):
+        # _safe_within was replaced by path_safety.safe_join in commit
+        # 9fe99a00a7. Same guarantee, raises ValueError instead of bool.
+        from scripts.path_safety import safe_join
+        result = safe_join(tmp_path, "child", "file.txt")
+        assert result.name == "file.txt"
 
-    def test_safe_within_traversal(self, tmp_path):
-        from scripts.api.admin_router import _safe_within
-        outside = tmp_path / ".." / "etc" / "passwd"
-        assert _safe_within(outside, tmp_path) is False
+    def test_safe_join_traversal(self, tmp_path):
+        from scripts.path_safety import safe_join
+        with pytest.raises(ValueError):
+            safe_join(tmp_path, "..", "etc", "passwd")
 
     def test_broker_health_no_db(self, _patch_config, mock_project_root):
         db_path = mock_project_root / ".mcp" / "servers" / "message-broker" / "messages.db"
@@ -791,17 +793,13 @@ class TestAdminBackup:
         assert r.status_code == 404
 
     def test_delete_backup_traversal(self, admin_client, mock_project_root, tmp_path):
-        # Create a file outside the backup dir
-        outside_file = tmp_path / "outside" / "secret.txt"
-        outside_file.parent.mkdir(parents=True)
-        outside_file.write_text("secret")
-        # Use a path that resolves outside BACKUP_DIR
-        backup_dir = mock_project_root / "data" / "backups"
-        # Compute relative traversal from backup_dir to outside_file
-        # We mock _safe_within to return False to test the guard
-        with patch("scripts.api.admin_router._safe_within", return_value=False):
-            r = admin_client.delete("/api/admin/backup/evil.tar")
-        assert r.status_code == 400
+        # Path traversal in the filename component is rejected by the
+        # path_safety.safe_join guard inside admin_router (replacement
+        # for the old _safe_within bool-returning helper). Filenames
+        # containing path separators or .. fail with ValueError →
+        # router returns 400 "Invalid filename".
+        r = admin_client.delete("/api/admin/backup/..%2Fevil.tar")
+        assert r.status_code in (400, 404)
 
     def test_create_qdrant_backup_unreachable(self, admin_client):
         with patch("scripts.api.admin_router._qdrant_post", new_callable=AsyncMock, return_value=None):

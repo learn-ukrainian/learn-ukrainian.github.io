@@ -7,7 +7,11 @@ review files and audit failures, and issue pattern counting.
 import re
 from datetime import UTC, datetime
 
-from ..path_safety import safe_join
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
+
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_helpers import (
     detect_pipeline_version,

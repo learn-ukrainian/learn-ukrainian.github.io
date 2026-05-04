@@ -14,7 +14,11 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Response
 
-from ..path_safety import safe_join
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
+
 from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))

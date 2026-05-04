@@ -7,7 +7,11 @@ aggregation. All functions are sync and designed for asyncio.to_thread().
 import json
 from datetime import UTC, datetime
 
-from ..path_safety import safe_join
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
+
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (

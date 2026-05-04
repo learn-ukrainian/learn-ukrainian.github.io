@@ -27,7 +27,10 @@ import wiki.quality_gate as wiki_quality
 import wiki.sources as wiki_sources
 import wiki.state as wiki_state
 
-from ..path_safety import safe_join
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
 
 router = APIRouter(tags=["wiki"])
 

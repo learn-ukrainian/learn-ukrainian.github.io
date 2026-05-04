@@ -19,9 +19,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from audit.status_cache import get_source_paths, read_status
 from common.thresholds import REVIEW_PASS_FLOOR
+
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
 from research_quality import assess_research_compat, find_research_path, get_rubric
 
-from ..path_safety import safe_join
 from .review_parsing import extract_plan_verdict, extract_review_score, extract_review_verdict
 from .state_helpers import detect_pipeline_version, read_v2_state
 

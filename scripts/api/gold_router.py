@@ -12,7 +12,11 @@ from pathlib import Path
 import yaml
 from fastapi import APIRouter, HTTPException
 
-from ..path_safety import safe_join
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
+
 from .config import CURRICULUM_ROOT, PROJECT_ROOT
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))

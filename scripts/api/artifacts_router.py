@@ -28,7 +28,11 @@ from typing import Any
 from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 
-from ..path_safety import safe_join
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
+
 from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (

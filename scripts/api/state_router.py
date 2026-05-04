@@ -28,7 +28,11 @@ from datetime import UTC, datetime
 from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 
-from ..path_safety import safe_join
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
+
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_build import (
     compute_build_stats,

@@ -25,7 +25,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from audit.status_cache import get_source_paths, read_status
 from common.thresholds import get_level_thresholds
-from path_safety import safe_join
+
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
 
 
 def _load_curriculum_order(level: str) -> list[str]:

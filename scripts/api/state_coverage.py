@@ -8,7 +8,11 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-from ..path_safety import safe_join
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
+
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_helpers import (
     PROFILE_MAP,

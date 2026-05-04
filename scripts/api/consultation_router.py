@@ -32,9 +32,11 @@ from .state_helpers import cache_get, cache_set, read_v2_state
 # Import TemplateChange and apply_template_patch at module level.
 # state_helpers already inserts scripts/ into sys.path, so this import works.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
 from pipeline.consultation import TemplateChange, apply_template_patch
-
-from ..path_safety import safe_join
 
 router = APIRouter(tags=["consultation"])
 

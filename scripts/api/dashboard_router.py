@@ -41,9 +41,12 @@ from .dashboard_helpers import (
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from audit.status_cache import get_source_paths, read_status
-from research_quality import assess_research_compat, find_research_path
 
-from ..path_safety import safe_join
+try:
+    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+except ImportError:
+    from ..path_safety import safe_join  # scripts.api package import (production)
+from research_quality import assess_research_compat, find_research_path
 
 router = APIRouter(tags=["dashboard"])
 
