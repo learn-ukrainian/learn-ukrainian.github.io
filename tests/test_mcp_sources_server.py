@@ -53,6 +53,7 @@ class TestListTools:
             "query_r2u", "query_e2u", "query_pravopys", "query_cefr_level",
             "search_style_guide", "search_definitions", "search_etymology",
             "search_idioms", "search_synonyms", "translate_en_uk",
+            "search_esum",
         }
         missing = expected - tool_names
         extra = tool_names - expected
