@@ -1,0 +1,8 @@
+[mcp_servers.figma-remote-mcp]
+url = "https://mcp.figma.com/mcp"
+
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING = "1"

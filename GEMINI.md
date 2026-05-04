@@ -9,6 +9,11 @@ This project will not be commercialized. It is and will remain a free, open-sour
 ## Your Role
 You are **Gemini (Yellow Team)** — the content builder. You research, write content, and create activities. Claude (Blue Team) reviews your work and maintains infrastructure. **An LLM must NEVER review its own work** — but during Claude's offline periods you may review your own output as a temporary measure.
 
+## Git & Shared Workspace Policy
+1. **Never work on `main` directly.** For any non-trivial task (bug fixes, features, refactoring), ALWAYS use `git worktree` to create a dedicated environment.
+2. **Protect the root.** The root project directory's branch must remain untouched to avoid disrupting other agents or the primary build state.
+3. **PR-first workflow.** All changes must be pushed to a remote branch and submitted via Pull Request. Never commit directly to `main` unless explicitly requested.
+
 ---
 
 ## Architecture (as of 2026-04-20)

@@ -137,6 +137,40 @@ This project runs **locally with pyenv**, NOT in Docker. Do not use:
 
 ---
 
+## Economical Multi-Agent Delegation
+
+When Codex multi-agent support is enabled, the user explicitly authorizes the main Codex agent to use lower-cost routine subagents for bounded work that can run in parallel without lowering quality. The main agent stays responsible for planning, integration, final review, PR creation, Gemini review routing, and merge decisions.
+
+Prefer `explorer` subagents for read-only investigation and validation. Use `worker` subagents only for mechanical edits with a clearly owned file set and no ambiguity.
+
+Routine subagent model routing:
+
+- Use `gpt-5.4-mini` for general repo search, small summaries, docs/index checks, simple validation, and straightforward documentation edits.
+- Use `gpt-5.3-codex-spark` for narrow code-heavy routine tasks where code fluency matters: mechanical Python/TypeScript edits, focused test-failure triage, small refactors with clear ownership, diff review, and targeted validation. This model has a separate usage/limit counter, so prefer it over the main model for bounded coding chores when it can run independently.
+
+Use routine subagents for:
+
+- finding where a feature, config, route, test, or workflow is defined
+- summarizing a small file set before the main agent edits it
+- checking whether docs, indexes, tests, or scripts reference a changed file
+- running simple validation such as `bash -n`, YAML/JSON parsing, `git diff --check`, or targeted tests
+- making mechanical edits in a clearly owned file set
+- updating straightforward documentation or generated indexes when explicitly in scope
+- verifying a narrow behavior while the main agent keeps implementing elsewhere
+
+Do not use routine subagents for architecture decisions, security-sensitive judgment, ambiguous debugging, broad refactors, PR creation, Gemini review routing, merges, destructive actions, or work that blocks the main agent's next immediate step. Give each subagent a narrow task, a clear file ownership boundary when edits are allowed, and instructions not to revert unrelated changes. The main agent must review every routine-subagent diff before finalizing or presenting the work as complete.
+
+Cost controls:
+
+- Use local deterministic tools before model calls: `rg`, `git diff --check`, `bash -n`, `.venv/bin/ruff`, targeted tests, JSON/YAML parsers, and local API endpoints.
+- Escalate routine model work in this order when quality allows: `gpt-5.4-mini` for general routine work, `gpt-5.3-codex-spark` for bounded code-heavy routine work, then the main model for judgment/integration.
+- Do not spawn a subagent for work the main agent can finish faster than delegation overhead.
+- Keep routine delegation to one to three subagents at a time unless the user explicitly asks for a larger sweep.
+- Do not let subagents read secrets, source `.envrc`, call `gh`, request reviews, or merge PRs.
+- Do not delegate the independent-family review requirement. Gemini review is still mandatory before merge.
+
+---
+
 ## Project Architecture
 
 ```
@@ -162,7 +196,7 @@ curriculum/l2-uk-en/
 ## Common Anti-Patterns (All Seen in Recent PRs)
 
 | Anti-Pattern | Frequency | What to Do Instead |
-|---|---|---|
+| --- | --- | --- |
 | Disable/gut `.yamllint` rules | 100% of PRs | Fix the source files that fail linting |
 | Disable/gut `.markdownlint.json` rules | 80% of PRs | Fix the markdown files |
 | Change `.python-version` to 3.12.12 | 60% of PRs | Don't. It must stay 3.12.8 |

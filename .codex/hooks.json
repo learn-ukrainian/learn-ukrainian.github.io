@@ -1,0 +1,54 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/krisztiankoos/projects/learn-ukrainian/.codex/hooks/enforce-venv.sh'",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/krisztiankoos/projects/learn-ukrainian/.codex/hooks/tool-timing.sh'",
+            "timeout": 1
+          },
+          {
+            "type": "command",
+            "command": "'/Users/krisztiankoos/projects/learn-ukrainian/.codex/hooks/context-monitor.sh'",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/krisztiankoos/projects/learn-ukrainian/.codex/hooks/session-setup.sh'",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/krisztiankoos/projects/learn-ukrainian/.codex/hooks/check-gemini-inbox.sh'",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
