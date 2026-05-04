@@ -286,6 +286,24 @@ async def list_tools() -> list[Tool]:
             },
         ),
         Tool(
+            name="check_modern_form",
+            description=(
+                "Check if a Ukrainian word form is a currently-codified modern form or an archaic/historical form. "
+                "This is metadata extraction from VESUM tags, not a separate diachronic analysis. "
+                "Returns JSON with 'is_modern_codified', 'has_archaic_form', and 'has_only_archaic_form' flags."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "word": {
+                        "type": "string",
+                        "description": "Ukrainian word form to check (e.g., 'звір', 'Сибір')"
+                    },
+                },
+                "required": ["word"]
+            },
+        ),
+        Tool(
             name="verify_word",
             description=(
                 "Check if a Ukrainian word form exists in the VESUM morphological dictionary "
@@ -780,6 +798,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "get_full_text": lambda: handle_get_full_text(arguments),
             "get_chunk_context": lambda: handle_get_chunk_context(arguments),
             "collection_stats": lambda: handle_collection_stats(arguments),
+            "check_modern_form": lambda: handle_check_modern_form(arguments),
             "verify_word": lambda: handle_verify_word(arguments),
             "verify_words": lambda: handle_verify_words(arguments),
             "verify_lemma": lambda: handle_verify_lemma(arguments),
@@ -983,6 +1002,42 @@ async def handle_collection_stats(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(stats, indent=2))]
 
 
+def _is_archaic(tags: str | None) -> bool:
+    """Helper to check if 'arch' tag exists in VESUM tag string."""
+    if not tags:
+        return False
+    return "arch" in tags.split(":")
+
+
+async def handle_check_modern_form(args: dict) -> list[TextContent]:
+    word = args["word"]
+
+    from rag.query import verify_word
+    matches = await asyncio.to_thread(verify_word, word, None)
+
+    if not matches:
+        return [TextContent(type="text", text=json.dumps({
+            "is_modern_codified": False,
+            "has_archaic_form": False,
+            "has_only_archaic_form": False,
+            "error": "Word not found in VESUM."
+        }))]
+
+    has_archaic = False
+    has_modern = False
+    for m in matches:
+        if _is_archaic(m.get("tags")):
+            has_archaic = True
+        else:
+            has_modern = True
+
+    return [TextContent(type="text", text=json.dumps({
+        "is_modern_codified": has_modern,
+        "has_archaic_form": has_archaic,
+        "has_only_archaic_form": has_archaic and not has_modern
+    }))]
+
+
 async def handle_verify_word(args: dict) -> list[TextContent]:
     word = args["word"]
     pos_filter = args.get("pos_filter")
@@ -995,7 +1050,9 @@ async def handle_verify_word(args: dict) -> list[TextContent]:
 
     lines = [f"'{word}' — {len(matches)} match(es) in VESUM:\n"]
     for m in matches:
-        lines.append(f"- **lemma**: {m['lemma']}  |  **pos**: {m['pos']}  |  **tags**: `{m['tags']}`")
+        tags = m.get("tags") or ""
+        archaic = _is_archaic(tags)
+        lines.append(f"- **lemma**: {m.get('lemma')}  |  **pos**: {m.get('pos')}  |  **tags**: `{tags}`  |  **is_archaic**: {archaic}")
 
     return [TextContent(type="text", text="\n".join(lines))]
 
@@ -1033,14 +1090,21 @@ async def handle_verify_lemma(args: dict) -> list[TextContent]:
 
     # Group forms by POS for readability
     by_pos: dict[str, list] = {}
+    has_archaic_forms = False
     for f in forms:
-        by_pos.setdefault(f["pos"], []).append(f)
+        is_archaic = _is_archaic(f.get("tags"))
+        if is_archaic:
+            has_archaic_forms = True
+        f["is_archaic"] = is_archaic
+        by_pos.setdefault(f.get("pos", "unknown"), []).append(f)
 
-    lines = [f"'{lemma}' — {len(forms)} form(s) across {len(by_pos)} POS:\n"]
+    lines = [f"'{lemma}' — {len(forms)} form(s) across {len(by_pos)} POS (has_archaic_forms: {has_archaic_forms}):\n"]
     for pos, pos_forms in by_pos.items():
         lines.append(f"### {pos} ({len(pos_forms)} forms)")
         for f in pos_forms:
-            lines.append(f"- {f['word_form']}  |  `{f['tags']}`")
+            tags = f.get("tags") or ""
+            is_archaic = f.get("is_archaic", False)
+            lines.append(f"- {f.get('word_form')}  |  `{tags}`  |  **is_archaic**: {is_archaic}")
         lines.append("")
 
     return [TextContent(type="text", text="\n".join(lines))]
