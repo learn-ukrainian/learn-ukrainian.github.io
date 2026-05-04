@@ -13,4 +13,5 @@ One-liner per bug. Grep for symptoms or categories to find relevant detail files
 | 2026-04-23 | EPIC | alignment-contracts | Sidecar cache reuse without hash check (`v6_build.py:3207`) — stale contract.yaml/wiki-excerpts.yaml silently consumed after plan/template/tokenizer change |
 | 2026-04-23 | EPIC | alignment-contracts | `module_memory` sources_hash updated silently — corpus/rule changes land but old learned constraints persist (`module_memory.py:293-316`) |
 | 2026-04-23 | EPIC | alignment-contracts | Rule-after-incident governance pattern — rules added post-incident are advisory, not CI-enforced; live contradiction between "no-rewrite" decision and `convergence_loop.py` rewrite strategies |
+| 2026-05-05 | #1683 | agent-hallucination | Gemini fabricates verbatim Антоненко-Давидович quote flagging feminine «собака» as Russianism — reproducible across two threads same day, false per VESUM + АД corpus check + СУМ-11 «ч. і рідше ж.» + Мирний 1949 attestation |
 <!-- INDEX-END -->
