@@ -6,12 +6,13 @@
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **MCP verification-layer architecture kickoff + Antonenko ingest incident** | **`docs/session-state/2026-05-04-mcp-verification-architecture-kickoff.md`** | **EPIC #1657 + 12 sibling issues filed. PR #1670 open (СУМ-11 sovietization flag, Claude inline). PR #1672 open (ЕСУМ vol 1 PoC, Codex+Claude). Gemini #1663 dispatch FAILED with broken segmenter — polluted production data/sources.db with 1,268 garbage rows in `antonenko_full` table; rolled back this session (backup at `/tmp/sources.db.pre-gemini-1663-rollback-20260504-202324`). Codex out of weekly until 11am tomorrow.** |
+| **Tools-before-A1/20 ordering locked + git cleanup completed** | **`docs/session-state/2026-05-04-tools-before-a1-20.md`** | **3 PRs resolved (#1670 + #1672 merged, #1671 closed). Dirty main committed in 2 coherent commits. All worktrees + stashes + stale branches purged. Tier A→E execution order LOCKED — do NOT run A1/20 until Tier D ships. Two open user-facing questions: (1) ADR-008 PROPOSED → ACCEPTED signoff (5 min), (2) chain-of-thought writer/reviewer prompts NOT implemented yet (user-flagged gap).** |
 
 ## Predecessor chain (most-recent first)
 
 | Thread | Handoff |
 |---|---|
+| MCP verification-layer architecture kickoff + Antonenko ingest incident | `2026-05-04-mcp-verification-architecture-kickoff.md` |
 | #1639/#1644 closed + POC fully unblocked | `2026-05-02-1644-cleanup-and-poc-unblocked.md` |
 | Multi-Agent Deliberation Protocol shipped + onboarded + validated | `2026-05-02-deliberation-protocol-shipped.md` |
 | POC plan locked + #1631/#1632/#1637 prereqs merged | `2026-05-02-poc-plan-locked-and-prereqs-merged.md` |
