@@ -8,6 +8,43 @@ Write the A1 module using the plan and contract below. Produce exactly four
 authoring artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, and
 `resources.yaml`.
 
+## Reasoning checklist (do this BEFORE drafting — #1673)
+
+Before producing any output, work through these four reasoning steps. If the
+model you are running supports extended thinking (Claude, Gemini, GPT-5.5),
+use the thinking facility for these steps; the output below does not change
+shape, but every section you write must be the result of having reasoned
+through these explicitly. Skipping this is the writer-discipline-gate failure
+mode that bit Phase 4 round 3.5.
+
+1. **Word budget per section.** Read the Contract YAML below. For each
+   contracted section, decide how many of the {WORD_TARGET} words go where.
+   Sections with more contract items need more budget. Verify your
+   allocation sums to {WORD_TARGET}±5%. Sections that drift more than ±10%
+   from their share are a contract violation.
+
+2. **Required plan-vocab terms.** Enumerate the lemmas the Plan requires
+   (vocabulary list, plan.required_terms, contract.required_vocabulary).
+   For each term, decide which section it appears in and what concrete
+   sentence grounds it. A required term that appears in zero sections is a
+   contract violation; a required term that appears only as a translation
+   gloss without a Ukrainian sentence is also insufficient.
+
+3. **Register check.** Re-read the Immersion Rule above. State internally:
+   "I will produce ~{X}% Ukrainian and ~{100-X}% English in module.md." If
+   your draft starts drifting (English bridge sentences expanding, Ukrainian
+   examples shrinking), STOP and rebudget — do not push through.
+
+4. **Teaching sequence.** Re-read the Knowledge Packet below. Each citation
+   [S1], [S2], etc. is a fact you will teach or anchor on. Decide the
+   sequence: which fact comes first, which builds on which, which sections
+   carry which facts. A fact in the packet that maps to no section means
+   either the section needs that fact or the packet was over-fetched —
+   surface either by emitting a `<!-- VERIFY: packet fact [Sn] not used -->`
+   marker.
+
+Only after this reasoning is complete, emit the four fenced blocks below.
+
 Return only these four fenced blocks, in this exact order. Do not add prose
 before, between, or after the blocks.
 
