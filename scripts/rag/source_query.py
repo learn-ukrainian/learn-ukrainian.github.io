@@ -789,18 +789,17 @@ def _extract_pravopys_text(html: str) -> str:
     The site doesn't use consistent CSS classes. We strip navigation,
     scripts, and styles, then extract the remaining body text.
     """
-    # Remove non-content elements
-    text = re.sub(r"<script[^>]*>.*?</script>", "", html, flags=re.DOTALL)
-    text = re.sub(r"<style[^>]*>.*?</style>", "", html, flags=re.DOTALL)
-    text = re.sub(r"<nav[^>]*>.*?</nav>", "", text, flags=re.DOTALL)
-    text = re.sub(r"<header[^>]*>.*?</header>", "", text, flags=re.DOTALL)
-    text = re.sub(r"<footer[^>]*>.*?</footer>", "", text, flags=re.DOTALL)
-    # Convert block elements to newlines
-    text = re.sub(r"<(?:p|li|h[1-6]|div|br)[^>]*>", "\n", text)
-    # Convert HTML entities
-    text = text.replace("&nbsp;", " ").replace("&#x301;", "\u0301")
-    # Strip remaining tags
-    text = re.sub(r"<[^>]+>", "", text)
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(html, "html.parser")
+    for elem in soup(["script", "style", "nav", "header", "footer"]):
+        elem.decompose()
+
+    text = soup.get_text(separator="\n")
+    # BeautifulSoup unescapes standard entities.
+    text = text.replace("\xa0", " ")
+    # Just in case &#x301; didn't unescape:
+    text = text.replace("&#x301;", "\u0301")
+
     text = re.sub(r"\n{3,}", "\n\n", text)
     # Find where the rule content starts (§ or first Cyrillic block)
     match = re.search(r"§\s*\d|(?:Апостроф|Велика|Подвоєння|М.який|Чергування)", text)

@@ -78,7 +78,7 @@ def _parse_sections(content: str) -> list[dict]:
             "title": match.group(1).strip(),
             "normalized_title": _normalize_section_title(match.group(1)),
             "body": body,
-            "word_count": len(re.sub(r"<!--.*?-->", "", body).split()),
+            "word_count": len(re.sub(r"<!--.*?-->", "", body, flags=re.DOTALL).split()),
         })
     return sections
 

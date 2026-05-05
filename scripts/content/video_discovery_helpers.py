@@ -383,7 +383,8 @@ def _search_blog_dbs(level, topic_title, keywords, results, seen_urls, load_blog
         # 9fe99a00a7 dropped the default during an unrelated URL→domain refactor,
         # causing UnboundLocalError in CI for every non-dobraforma article.
         source = article.get("source", "ukrainianlessons.com")
-        if "dobraforma" in domain or "opentext.ku.edu" in domain:
+        domain_lower = domain.lower()
+        if "dobraforma" in domain_lower or domain_lower in {"opentext.ku.edu", "www.opentext.ku.edu"} or domain_lower.endswith(".opentext.ku.edu"):
             source = "dobraforma"
 
         entry: dict[str, Any] = {

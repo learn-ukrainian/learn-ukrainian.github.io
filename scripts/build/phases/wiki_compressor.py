@@ -104,7 +104,7 @@ def _tokenize(text: str) -> set[str]:
 
 
 def _clean_inline_markup(text: str) -> str:
-    text = re.sub(r"<!--.*?-->", "", text)
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
     text = re.sub(r"`([^`]+)`", r"\1", text)
     text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
     return re.sub(r"\s+", " ", text).strip()

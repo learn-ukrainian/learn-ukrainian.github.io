@@ -389,7 +389,10 @@ class TestFormatBlogDiscovery:
              "relevance_score": 0.8, "topics": ["grammar"]},
         ])
         assert "Test" in result
-        assert "https://x.com" in result
+        import re
+        from urllib.parse import urlparse
+        urls = re.findall(r'https?://[^\s)"]+', result)
+        assert any(urlparse(u).netloc == "x.com" for u in urls)
 
 
 # ---------------------------------------------------------------------------

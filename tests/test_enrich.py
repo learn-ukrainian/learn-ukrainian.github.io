@@ -337,7 +337,10 @@ class TestEnrichIntegration:
         urok_tab = result.split("<!-- TAB:Словник -->")[0]
         assert "YouTubeVideo" not in urok_tab
         # References
-        assert "ukrainianlessons.com" in result
+        import re
+        from urllib.parse import urlparse
+        urls = re.findall(r'https?://[^\s)"]+', result)
+        assert any(urlparse(u).netloc in {"ukrainianlessons.com", "www.ukrainianlessons.com"} for u in urls)
         # All 4 tabs
         assert "<!-- TAB:Урок -->" in result
         assert "<!-- TAB:Словник -->" in result
