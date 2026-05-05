@@ -62,7 +62,7 @@ def validate_file(file_path):
 
     if errors:
         for e in errors:
-            print(f"  ❌ {e}")
+            print(f"  ❌ {e}")  # nosec - prints linguistic validation errors, not secrets
         return False
 
     print(f"  ✅ PASS ({len(lemmas)} items)")

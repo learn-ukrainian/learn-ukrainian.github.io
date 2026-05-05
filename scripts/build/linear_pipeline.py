@@ -1579,7 +1579,7 @@ def assemble_mdx(module_dir: Path, output_path: Path, plan_path: Path) -> str:
     )
     mdx = mdx.replace("\n{/**/}\n", "\n")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(mdx, encoding="utf-8")
+    output_path.write_text(mdx, encoding="utf-8")  # nosec - writing curriculum MDX file, not secrets
     return mdx
 
 

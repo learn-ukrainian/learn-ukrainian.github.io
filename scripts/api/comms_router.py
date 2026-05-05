@@ -17,11 +17,15 @@ Endpoints:
 """
 
 import json
+import logging
 import os
 import re
 import sqlite3
 import time
+import uuid
 from datetime import UTC, datetime
+
+logger = logging.getLogger(__name__)
 
 from fastapi import APIRouter, Query, Request, Response
 from fastapi.responses import JSONResponse
@@ -1420,11 +1424,15 @@ def comms_inbox(
     except ValueError as exc:
         # ``_validate_agent`` raises ValueError on unknown agent — treat
         # as 400 so the caller can fix the query, not as 500.
-        return JSONResponse(status_code=400, content={"error": str(exc)})
+        error_id = uuid.uuid4().hex
+        logger.warning(f"Invalid agent in bridge query [{error_id}]: {exc}", exc_info=True)
+        return JSONResponse(status_code=400, content={"error": "invalid agent", "error_id": error_id})
     except Exception:
+        error_id = uuid.uuid4().hex
+        logger.error(f"Bridge query failed [{error_id}]", exc_info=True)
         return JSONResponse(
             status_code=500,
-            content={"error": "bridge query failed"},
+            content={"error": "bridge query failed", "error_id": error_id},
         )
 
     total = len(all_pending)
