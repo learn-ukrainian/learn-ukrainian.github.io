@@ -230,8 +230,16 @@ class ImageReviewHandler(http.server.BaseHTTPRequestHandler):
                 self.send_error(403, "Forbidden path format")
                 return
 
+            # Resolve to canonical absolute path, then verify containment.
+            # Use Path.relative_to() in a try/except — CodeQL's `py/path-injection`
+            # query recognizes this as a path-traversal sanitizer (alert #168).
+            # `is_relative_to()` (Py 3.9+) is logically equivalent but isn't
+            # universally recognized by the CodeQL data-flow query yet.
             img_path = (BASE_DIR / user_path).resolve()
-            if not img_path.is_relative_to(BASE_DIR.resolve()):
+            base_resolved = BASE_DIR.resolve()
+            try:
+                img_path.relative_to(base_resolved)
+            except ValueError:
                 self.send_error(403, "Path traversal attempted")
                 return
 
