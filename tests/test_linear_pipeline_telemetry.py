@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
+
+import pytest
 
 from scripts.build import linear_pipeline
 from scripts.common.thresholds import QG_DIMS
@@ -314,3 +317,22 @@ def test_telemetry_event_schema_is_bounded_and_flat() -> None:
         if event["event"] == "writer_cot_emit":
             assert event["block_chars"] < 1000
             assert set(event["fields_filled"]) <= set(linear_pipeline.PROMPT_ADHERENCE_FIELDS)
+
+
+def test_telemetry_event_sink_appends_jsonl(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    telemetry = tmp_path / "events.jsonl"
+
+    with linear_pipeline.telemetry_event_sink(telemetry):
+        linear_pipeline.emit_event("first", slug="x")
+    with linear_pipeline.telemetry_event_sink(telemetry):
+        linear_pipeline.emit_event("second", slug="x")
+
+    captured = capsys.readouterr()
+    events = [json.loads(line) for line in telemetry.read_text("utf-8").splitlines()]
+
+    assert captured.out == ""
+    assert [event["event"] for event in events] == ["first", "second"]
+    assert all(event["slug"] == "x" for event in events)

@@ -4,11 +4,9 @@
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 import time
 from collections.abc import Mapping
-from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -22,17 +20,13 @@ from scripts.common.thresholds import QG_DIMS
 WRITER_ALIASES = {
     "claude": "claude-tools",
     "gemini": "gemini-tools",
+    "codex": "codex-tools",
 }
 WRITER_CHOICES = (*linear_pipeline.WRITER_CHOICES, *WRITER_ALIASES)
 
 
 def emit_event(event: str, **fields: Any) -> None:
-    payload = {
-        "event": event,
-        "ts": datetime.now(UTC).isoformat(),
-        **fields,
-    }
-    print(json.dumps(payload, ensure_ascii=False, default=str), flush=True)
+    linear_pipeline.emit_event(event, **fields)
 
 
 def _default_module_dir(level: str, slug: str) -> Path:
@@ -42,6 +36,15 @@ def _default_module_dir(level: str, slug: str) -> Path:
 def _resolve_output_dir(raw: str | None, level: str, slug: str) -> Path:
     if raw is None:
         return _default_module_dir(level, slug)
+    path = Path(raw)
+    if not path.is_absolute():
+        path = PROJECT_ROOT / path
+    return path
+
+
+def _resolve_project_path(raw: str | None) -> Path | None:
+    if raw is None:
+        return None
     path = Path(raw)
     if not path.is_absolute():
         path = PROJECT_ROOT / path
@@ -146,9 +149,10 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --dry-run\n"
             "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer gemini-tools\n"
+            "  .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer codex-tools --telemetry-out audit/bakeoff-2026-05-05/gpt55.write.jsonl\n"
             "  .venv/bin/python scripts/build/v7_build.py b1-pro intro --out /tmp/v7-intro\n\n"
             "Outputs:\n"
-            "  Emits JSONL monitor events to stdout. Full builds write the writer "
+            "  Emits JSONL monitor events to stdout, or appends them to --telemetry-out. Full builds write the writer "
             "artifacts, knowledge_packet.md, writer_prompt.md, python_qg.json, "
             "llm_qg.json, and {slug}.mdx under --out or "
             "curriculum/l2-uk-en/{level}/{slug}/. Dry runs do not write files.\n\n"
@@ -184,8 +188,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default="claude-tools",
         help=(
             "Writer backend for the one-shot V7 write phase "
-            "(default: claude-tools; claude/gemini aliases normalize to "
-            "claude-tools/gemini-tools)."
+            "(default: claude-tools; claude/gemini/codex aliases normalize to "
+            "claude-tools/gemini-tools/codex-tools)."
         ),
     )
     parser.add_argument(
@@ -206,11 +210,26 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             "from the repository root."
         ),
     )
+    parser.add_argument(
+        "--telemetry-out",
+        metavar="PATH",
+        default=None,
+        help=(
+            "Append JSONL monitor events to PATH instead of stdout. Relative "
+            "paths resolve from the repository root; default: stdout."
+        ),
+    )
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    telemetry_out = _resolve_project_path(args.telemetry_out)
+    with linear_pipeline.telemetry_event_sink(telemetry_out):
+        return _run(args)
+
+
+def _run(args: argparse.Namespace) -> int:
     level = args.level.lower()
     slug = args.slug
     writer = _normalize_writer(args.writer)

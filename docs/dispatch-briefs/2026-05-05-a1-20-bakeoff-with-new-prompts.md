@@ -38,6 +38,13 @@ If PR #1696 has been merged to main by the time this runs: drop the worktree, ru
 - Plan: `curriculum/l2-uk-en/plans/a1/my-morning.yaml` (verify exists; if missing, the bakeoff is blocked on plan finalization first)
 - Wiki packet: `wiki/.../my-morning/*` (verify exists; if missing, blocked on wiki compile first)
 
+### Prerequisites
+
+- PR [#1704](https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/1704) for #1703 is merged, or this bakeoff is run from its branch/worktree.
+- The harness entry point exists: `scripts/audit/bakeoff_run.py`.
+- The V7 review-only entry point exists: `scripts/build/v7_review.py`.
+- `scripts/build/v7_build.py` supports `--writer codex-tools` and `--telemetry-out`.
+
 ### Writers (3 candidates)
 
 | Writer | Model | Build flag | Tools |
@@ -65,43 +72,11 @@ This enforces no-self-review and surfaces inter-model bias (does Claude over-rat
 From the `claude/1673-1661-cot-tier1-prompts` worktree (or main once merged):
 
 ```bash
-# ── Phase 1: parallel writer runs ──
-
-# Writer A — Gemini
-.venv/bin/python scripts/build/v6_build.py a1 20 --step write --writer gemini-tools
-cp curriculum/l2-uk-en/a1/my-morning.md curriculum/l2-uk-en/a1/my-morning.gemini.md
-
-# Writer B — Claude
-.venv/bin/python scripts/build/v6_build.py a1 20 --step write --writer claude-tools
-cp curriculum/l2-uk-en/a1/my-morning.md curriculum/l2-uk-en/a1/my-morning.claude.md
-
-# Writer C — GPT-5.5
-.venv/bin/python scripts/build/v6_build.py a1 20 --step write --writer codex-tools
-cp curriculum/l2-uk-en/a1/my-morning.md curriculum/l2-uk-en/a1/my-morning.gpt55.md
-
-# ── Phase 2: capture each writer's reasoning trace + tool-call log ──
-
-# v6_build.py emits JSONL events; the relevant events for prompt-adherence audit:
-#   "writer_cot_start"  — CoT block was emitted (good)
-#   "writer_cot_skip"   — CoT block was bypassed (bad — prompt-adherence fail)
-#   "tool_call"         — every MCP call the writer made (verify_words, search_definitions, etc.)
-#
-# If those events do NOT exist yet (V6 telemetry didn't have them), Claude needs
-# to add them as part of the bakeoff harness — see "Implementation deltas" below.
-
-# ── Phase 3: cross-agent review (6 review runs) ──
-
-# Each review writes its scoring + cited-evidence to a JSONL:
-#   audit/bakeoff-2026-05-05/a1-20-{writer}-{reviewer}.review.jsonl
-
-for writer in gemini claude gpt55; do
-  for reviewer in $(echo "gemini claude gpt55" | tr ' ' '\n' | grep -v "$writer"); do
-    .venv/bin/python scripts/build/v6_build.py a1 20 --step review \
-      --content curriculum/l2-uk-en/a1/my-morning.${writer}.md \
-      --reviewer ${reviewer}-tools \
-      --output audit/bakeoff-2026-05-05/a1-20-${writer}-${reviewer}.review.jsonl
-  done
-done
+.venv/bin/python scripts/audit/bakeoff_run.py \
+  --bakeoff-dir audit/bakeoff-2026-05-05 \
+  --level a1 \
+  --slug my-morning \
+  --writers claude-tools,gemini-tools,codex-tools
 ```
 
 ---
@@ -158,17 +133,11 @@ Total prompt-adherence score per agent: sum of writer + reviewer sub-dim scores.
 
 ## Implementation deltas (Claude's prep work BEFORE user runs)
 
-The current `v6_build.py` may NOT emit the prompt-adherence events listed above. Claude needs to:
+PR #1699, PR #1700, and PR #1703 provide the telemetry, aggregation, and runnable V7 harness pieces. Claude needs to:
 
-1. **Verify** — read `scripts/build/v6_build.py` + `scripts/build/phases/*.py` and check whether the JSONL emitter has `writer_cot_start` / `tool_call` / `reviewer_dim_evidence` events.
+1. **Run `bakeoff_run.py` per below** — the harness pre-flights the plan/wiki packet, runs the writer dry-run spike, executes the configured writers, runs the six cross-reviews, and invokes `bakeoff_aggregate.py`.
 
-2. **Add if missing** — small instrumentation diff to the linear pipeline. Each agent's writer/reviewer wrapper emits these events as a side channel. Lands in the bakeoff branch (or main if cleaner).
-
-3. **Build aggregation script** — `scripts/audit/bakeoff_aggregate.py` reads the per-writer `.md` outputs + per-review `.jsonl` files and emits a comparison matrix. Output goes to `audit/bakeoff-2026-05-05/REPORT.md`.
-
-4. **Pre-flight check** — verify `curriculum/l2-uk-en/plans/a1/my-morning.yaml` exists and is finalized; verify wiki packet for module 20 is compiled and current. If either is missing, bakeoff is blocked on those — flag back to user before running.
-
-These prep tasks are sequential dependencies for the bakeoff to produce meaningful data. They're <1 day of Claude inline work or 1 codex dispatch.
+2. **Report harness failures honestly** — if pre-flight, a writer, a reviewer, or aggregation fails, use the harness summary and JSONL files as the source of truth before rerunning with `--resume`.
 
 ---
 
