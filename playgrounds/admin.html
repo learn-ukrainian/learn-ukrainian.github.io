@@ -214,7 +214,7 @@ function activateSection(section) {
   if (link) link.classList.add('active');
   document.getElementById(`section-${section}`).classList.add('active');
   history.replaceState(null, '', `#${section}`);
-  if (!loadedSections.has(section) && sectionLoaders[section]) {
+  if (!loadedSections.has(section) && Object.prototype.hasOwnProperty.call(sectionLoaders, section)) {
     loadedSections.add(section);
     sectionLoaders[section]();
   }
@@ -234,9 +234,10 @@ activateSection(hash || 'health');
 // ── API helpers ─────────────────────────────────────
 
 function escapeHtml(s) {
+  if (!s) return '';
   const el = document.createElement('span');
   el.textContent = s;
-  return el.innerHTML;
+  return el.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 async function apiFetch(path, opts) {

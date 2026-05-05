@@ -1,0 +1,93 @@
+diff --git a/playgrounds/admin.html b/playgrounds/admin.html
+index 4f0c876bce..f870cda039 100644
+--- a/playgrounds/admin.html
++++ b/playgrounds/admin.html
+@@ -214,7 +214,7 @@ function activateSection(section) {
+   if (link) link.classList.add('active');
+   document.getElementById(`section-${section}`).classList.add('active');
+   history.replaceState(null, '', `#${section}`);
+-  if (!loadedSections.has(section) && sectionLoaders[section]) {
++  if (!loadedSections.has(section) && Object.prototype.hasOwnProperty.call(sectionLoaders, section)) {
+     loadedSections.add(section);
+     sectionLoaders[section]();
+   }
+@@ -234,9 +234,10 @@ activateSection(hash || 'health');
+ // ── API helpers ─────────────────────────────────────
+ 
+ function escapeHtml(s) {
++  if (!s) return '';
+   const el = document.createElement('span');
+   el.textContent = s;
+-  return el.innerHTML;
++  return el.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+ }
+ 
+ async function apiFetch(path, opts) {
+diff --git a/playgrounds/image-explorer.html b/playgrounds/image-explorer.html
+index 5a9d807a77..d6f93bbbb7 100644
+--- a/playgrounds/image-explorer.html
++++ b/playgrounds/image-explorer.html
+@@ -699,7 +699,7 @@ async function loadPage() {
+       const [x0, y0, x1, y1] = tb.bbox;
+       textOverlays += `<div class="bbox-overlay bbox-text"
+         style="left:${x0*scale}px;top:${y0*scale}px;width:${(x1-x0)*scale}px;height:${(y1-y0)*scale}px;"
+-        title="${tb.text.substring(0, 100)}"></div>`;
++        title="${escapeHtml(tb.text.substring(0, 100))}"></div>`;
+     });
+ 
+     container.innerHTML = `
+@@ -792,9 +792,10 @@ function buildSearchGradeButtons() {
+ }
+ 
+ function escapeHtml(s) {
++  if (!s) return '';
+   const d = document.createElement('div');
+   d.textContent = s;
+-  return d.innerHTML;
++  return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+ }
+ 
+ async function doSearch() {
+diff --git a/scripts/build/linear_pipeline.py b/scripts/build/linear_pipeline.py
+index 4152d91d46..49d66f3327 100644
+--- a/scripts/build/linear_pipeline.py
++++ b/scripts/build/linear_pipeline.py
+@@ -2634,7 +2634,7 @@ def assemble_mdx(module_dir: Path, output_path: Path, plan_path: Path) -> str:
+     )
+     mdx = mdx.replace("\n{/**/}\n", "\n")
+     output_path.parent.mkdir(parents=True, exist_ok=True)
+-    output_path.write_text(mdx, encoding="utf-8")  # codeql[py/clear-text-storage-sensitive-data] - .mdx curriculum content, never sensitive data
++    output_path.write_text(mdx, encoding="utf-8")  # lgtm[py/clear-text-storage-sensitive-data] - .mdx curriculum content, never sensitive data
+     return mdx
+ 
+ 
+diff --git a/scripts/generate_mdx/core.py b/scripts/generate_mdx/core.py
+index d58198a243..713cf19389 100644
+--- a/scripts/generate_mdx/core.py
++++ b/scripts/generate_mdx/core.py
+@@ -571,7 +571,7 @@ def main():
+ 
+         # Write output
+         output_file = output_dir / f'{mod.slug}.mdx'
+-        output_file.write_text(mdx_content, encoding='utf-8')  # codeql[py/clear-text-storage-sensitive-data] - .mdx curriculum content, never sensitive data
++        output_file.write_text(mdx_content, encoding='utf-8')  # lgtm[py/clear-text-storage-sensitive-data] - .mdx curriculum content, never sensitive data
+ 
+     print('\n\u2705 MDX generation complete!')
+ 
+diff --git a/scripts/tools/image_review_server.py b/scripts/tools/image_review_server.py
+index fc2dee28bb..484e776759 100644
+--- a/scripts/tools/image_review_server.py
++++ b/scripts/tools/image_review_server.py
+@@ -230,7 +230,11 @@ class ImageReviewHandler(http.server.BaseHTTPRequestHandler):
+                 self.send_error(403, "Forbidden path format")
+                 return
+ 
+-            img_path = BASE_DIR / user_path
++            img_path = (BASE_DIR / user_path).resolve()
++            if not str(img_path).startswith(str(BASE_DIR.resolve())):
++                self.send_error(403, "Path traversal attempted")
++                return
++
+             if img_path.exists() and img_path.suffix == ".png":
+                 self.send_response(200)
+                 self.send_header("Content-Type", "image/png")

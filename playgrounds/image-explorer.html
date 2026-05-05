@@ -699,7 +699,7 @@ async function loadPage() {
       const [x0, y0, x1, y1] = tb.bbox;
       textOverlays += `<div class="bbox-overlay bbox-text"
         style="left:${x0*scale}px;top:${y0*scale}px;width:${(x1-x0)*scale}px;height:${(y1-y0)*scale}px;"
-        title="${tb.text.substring(0, 100)}"></div>`;
+        title="${escapeHtml(tb.text.substring(0, 100))}"></div>`;
     });
 
     container.innerHTML = `
@@ -792,9 +792,10 @@ function buildSearchGradeButtons() {
 }
 
 function escapeHtml(s) {
+  if (!s) return '';
   const d = document.createElement('div');
   d.textContent = s;
-  return d.innerHTML;
+  return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 async function doSearch() {

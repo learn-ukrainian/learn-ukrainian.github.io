@@ -5,6 +5,7 @@ Browse to http://localhost:8765 to view images with filtering.
 """
 
 import http.server
+import os.path
 import urllib.parse
 from pathlib import Path
 
@@ -230,7 +231,19 @@ class ImageReviewHandler(http.server.BaseHTTPRequestHandler):
                 self.send_error(403, "Forbidden path format")
                 return
 
-            img_path = BASE_DIR / user_path
+            # Resolve via os.path.realpath, then verify containment with
+            # os.path.commonpath — this is the path-traversal sanitizer that
+            # CodeQL's `py/path-injection` data-flow query reliably recognizes.
+            # We tried pathlib's `is_relative_to()` (alert #168) and
+            # `relative_to()` try/except (alert #169) — neither is recognized
+            # by CodeQL's current Python sanitizer set.
+            candidate = os.path.realpath(os.path.join(str(BASE_DIR), user_path))
+            base_real = os.path.realpath(str(BASE_DIR))
+            if os.path.commonpath([candidate, base_real]) != base_real:
+                self.send_error(403, "Path traversal attempted")
+                return
+            img_path = Path(candidate)
+
             if img_path.exists() and img_path.suffix == ".png":
                 self.send_response(200)
                 self.send_header("Content-Type", "image/png")
