@@ -35,7 +35,7 @@ If PR #1696 has been merged to main by the time this runs: drop the worktree, ru
 - Module number: `20`
 - Slug: `my-morning`
 - Word target: `1200` (per `scripts/audit/config.py`)
-- Plan: `curriculum/l2-uk-en/a1/plans/my-morning.yaml` (verify exists; if missing, the bakeoff is blocked on plan finalization first)
+- Plan: `curriculum/l2-uk-en/plans/a1/my-morning.yaml` (verify exists; if missing, the bakeoff is blocked on plan finalization first)
 - Wiki packet: `wiki/.../my-morning/*` (verify exists; if missing, blocked on wiki compile first)
 
 ### Writers (3 candidates)
@@ -166,7 +166,7 @@ The current `v6_build.py` may NOT emit the prompt-adherence events listed above.
 
 3. **Build aggregation script** — `scripts/audit/bakeoff_aggregate.py` reads the per-writer `.md` outputs + per-review `.jsonl` files and emits a comparison matrix. Output goes to `audit/bakeoff-2026-05-05/REPORT.md`.
 
-4. **Pre-flight check** — verify `curriculum/l2-uk-en/a1/plans/my-morning.yaml` exists and is finalized; verify wiki packet for module 20 is compiled and current. If either is missing, bakeoff is blocked on those — flag back to user before running.
+4. **Pre-flight check** — verify `curriculum/l2-uk-en/plans/a1/my-morning.yaml` exists and is finalized; verify wiki packet for module 20 is compiled and current. If either is missing, bakeoff is blocked on those — flag back to user before running.
 
 These prep tasks are sequential dependencies for the bakeoff to produce meaningful data. They're <1 day of Claude inline work or 1 codex dispatch.
 
