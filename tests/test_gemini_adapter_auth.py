@@ -6,6 +6,8 @@ import sys
 import time
 from pathlib import Path
 
+import pytest
+
 # Repo-root shim (same pattern as other tests in this directory).
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
@@ -59,28 +61,34 @@ class TestNormalizeAuthMode:
         assert _normalize_gemini_auth_mode("🐙") == "auto"
 
 
-# ── resolve_gemini_auth_mode — always-subscription policy (#1416) ─────
+# ── resolve_gemini_auth_mode — API-first policy (#1710) ───────────────
 
 
 class TestResolveAuthMode:
-    """Project policy 2026-04-23 (post-#1416): always subscription unless
-    the user explicitly sets ``GEMINI_AUTH_MODE=api`` for a one-off
-    debugging or fallback run.
-
-    Why: project is permanently non-commercial, user has Ultra OAuth, and
-    conditional resolution caused a macOS Keychain popup loop on every
-    gemini-cli spawn under env-strip. Forcing subscription is the blunt
-    fix the user asked for. One-time Keychain "Always Allow" click,
-    then zero env complexity afterward.
-    """
+    """Project policy 2026-05-05 (#1710): API keys win in auto mode, with
+    subscription/OAuth as fallback. Explicit GEMINI_AUTH_MODE still wins."""
 
     def test_auto_unset_resolves_to_subscription(
         self, tmp_path: Path, monkeypatch
     ) -> None:
-        """No env, no OAuth file on disk — STILL subscription (was: api)."""
+        """No env and no API key still preserves subscription/OAuth behavior."""
         env: dict[str, str] = {}
         monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
         assert resolve_gemini_auth_mode(env, cooldown_active=False) == "subscription"
+
+    def test_auto_with_api_key_resolves_to_api(
+        self, tmp_path: Path, monkeypatch
+    ) -> None:
+        env = {"GEMINI_API_KEY": "secret"}
+        monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
+        assert resolve_gemini_auth_mode(env, cooldown_active=False) == "api"
+
+    def test_auto_with_google_api_key_resolves_to_api(
+        self, tmp_path: Path, monkeypatch
+    ) -> None:
+        env = {"GOOGLE_API_KEY": "secret"}
+        monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
+        assert resolve_gemini_auth_mode(env, cooldown_active=False) == "api"
 
     def test_auto_unset_with_oauth_creds_resolves_to_subscription(
         self, tmp_path: Path, monkeypatch
@@ -95,7 +103,7 @@ class TestResolveAuthMode:
     def test_explicit_auto_resolves_to_subscription(
         self, tmp_path: Path, monkeypatch
     ) -> None:
-        """``auto`` no longer probes disk — always subscription."""
+        """``auto`` without an API key resolves to subscription."""
         env = {"GEMINI_AUTH_MODE": "auto"}
         monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
         assert resolve_gemini_auth_mode(env, cooldown_active=False) == "subscription"
@@ -111,7 +119,7 @@ class TestResolveAuthMode:
     def test_explicit_api_is_the_only_escape_hatch(
         self, tmp_path: Path, monkeypatch
     ) -> None:
-        """Only explicit GEMINI_AUTH_MODE=api still produces api mode."""
+        """Explicit GEMINI_AUTH_MODE=api forces api mode."""
         env = {"GEMINI_AUTH_MODE": "api"}
         (tmp_path / ".gemini").mkdir(parents=True)
         (tmp_path / ".gemini" / "oauth_creds.json").write_text("{}", encoding="utf-8")
@@ -122,7 +130,7 @@ class TestResolveAuthMode:
     def test_invalid_value_degrades_to_subscription(
         self, tmp_path: Path, monkeypatch
     ) -> None:
-        """Garbage env → safe default = subscription, not api."""
+        """Garbage env follows auto mode; without API keys, subscription."""
         env = {"GEMINI_AUTH_MODE": "garbage"}
         monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
         assert resolve_gemini_auth_mode(env, cooldown_active=False) == "subscription"
@@ -134,16 +142,17 @@ class TestResolveAuthMode:
         monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
         assert resolve_gemini_auth_mode(env, cooldown_active=False) == "subscription"
 
-    def test_disk_state_no_longer_consulted(
+    def test_disk_state_does_not_override_api_first_policy(
         self, tmp_path: Path, monkeypatch
     ) -> None:
-        """Disk OAuth state is no longer probed — policy is unconditional."""
+        """Disk OAuth state alone does not choose API; API env keys do."""
         monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
         env: dict[str, str] = {}
         assert resolve_gemini_auth_mode(env) == "subscription"
         (tmp_path / ".gemini").mkdir(parents=True)
         (tmp_path / ".gemini" / "oauth_creds.json").write_text("{}", encoding="utf-8")
         assert resolve_gemini_auth_mode(env) == "subscription"
+        assert resolve_gemini_auth_mode({"GEMINI_API_KEY": "secret"}) == "api"
 
 
 # ── cooldown module ───────────────────────────────────────────────────
@@ -249,7 +258,7 @@ class TestEnvStripWiring:
     disconnect the two.
     """
 
-    def test_adapter_strips_api_keys_when_oauth_creds_present(
+    def test_adapter_preserves_api_keys_when_auto_mode_has_api_key(
         self, tmp_path: Path, monkeypatch
     ) -> None:
         from agent_runtime.adapters.gemini import GeminiAdapter
@@ -257,27 +266,24 @@ class TestEnvStripWiring:
         (tmp_path / ".gemini").mkdir(parents=True)
         (tmp_path / ".gemini" / "oauth_creds.json").write_text("{}", encoding="utf-8")
         monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
-        monkeypatch.setenv("GEMINI_API_KEY", "should-be-stripped")
+        monkeypatch.setenv("GEMINI_API_KEY", "should-be-preserved")
         monkeypatch.delenv("GEMINI_AUTH_MODE", raising=False)
 
         plan = GeminiAdapter().build_invocation(
             prompt="test", mode="read-only", cwd=tmp_path,
             model=None, task_id=None, session_id=None, tool_config=None,
         )
-        assert "GEMINI_API_KEY" in plan.env_unsets, (
-            "Auto mode with OAuth creds present must strip GEMINI_API_KEY — "
-            "otherwise the CLI keeps billing API instead of subscription."
-        )
+        assert plan.env_unsets == ()
 
-    def test_adapter_strips_api_keys_unconditionally_in_auto_mode(
+    def test_adapter_strips_api_keys_when_no_api_key_default_subscription(
         self, tmp_path: Path, monkeypatch
     ) -> None:
-        """Post-#1416 always-subscription policy: env keys stripped even
-        without OAuth creds on disk. Disk state no longer probed."""
+        """Auto mode still falls back to subscription when no API key exists."""
         from agent_runtime.adapters.gemini import GeminiAdapter
 
         monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
-        monkeypatch.setenv("GEMINI_API_KEY", "stripped-by-policy")
+        monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+        monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
         monkeypatch.delenv("GEMINI_AUTH_MODE", raising=False)
 
         plan = GeminiAdapter().build_invocation(
@@ -285,8 +291,8 @@ class TestEnvStripWiring:
             model=None, task_id=None, session_id=None, tool_config=None,
         )
         assert "GEMINI_API_KEY" in plan.env_unsets, (
-            "Always-subscription policy means env keys are stripped "
-            "unconditionally in auto/subscription mode (#1416)."
+            "Subscription fallback must strip API env vars when API mode is "
+            "not selected."
         )
 
     def test_adapter_preserves_api_keys_when_explicit_api(
@@ -298,6 +304,7 @@ class TestEnvStripWiring:
         (tmp_path / ".gemini" / "oauth_creds.json").write_text("{}", encoding="utf-8")
         monkeypatch.setattr("pathlib.Path.home", classmethod(lambda _: tmp_path))
         monkeypatch.setenv("GEMINI_AUTH_MODE", "api")  # explicit wins
+        monkeypatch.setenv("GEMINI_API_KEY", "secret")
 
         plan = GeminiAdapter().build_invocation(
             prompt="test", mode="read-only", cwd=tmp_path,
@@ -307,6 +314,21 @@ class TestEnvStripWiring:
             "Explicit GEMINI_AUTH_MODE=api must not strip keys even "
             "when OAuth creds are present."
         )
+
+    def test_explicit_api_without_api_key_fails_fast(
+        self, tmp_path: Path, monkeypatch
+    ) -> None:
+        from agent_runtime.adapters.gemini import GeminiAdapter
+
+        monkeypatch.setenv("GEMINI_AUTH_MODE", "api")
+        monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+        monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+
+        with pytest.raises(RuntimeError, match="GEMINI_AUTH_MODE=api"):
+            GeminiAdapter().build_invocation(
+                prompt="test", mode="read-only", cwd=tmp_path,
+                model=None, task_id=None, session_id=None, tool_config=None,
+            )
 
 
 # ── Parse-response trips cooldown on real 429 only ────────────────────
@@ -415,8 +437,12 @@ class TestLadderAuthModeFiltering:
     the ~15-min silent hang the user hit at 14:00.
     """
 
-    def test_auto_no_cooldown_includes_both(self) -> None:
-        assert resolve_allowed_auth_modes({}, cooldown_active=False) == ("api", "oauth")
+    def test_auto_no_api_key_uses_oauth_only(self) -> None:
+        assert resolve_allowed_auth_modes({}, cooldown_active=False) == ("oauth",)
+
+    def test_auto_with_api_key_no_cooldown_includes_both(self) -> None:
+        env = {"GEMINI_API_KEY": "secret"}
+        assert resolve_allowed_auth_modes(env, cooldown_active=False) == ("api", "oauth")
 
     def test_auto_with_cooldown_skips_api(self) -> None:
         assert resolve_allowed_auth_modes({}, cooldown_active=True) == ("oauth",)

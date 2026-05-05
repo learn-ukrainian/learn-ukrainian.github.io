@@ -428,6 +428,26 @@ research = _extract_delimiter(output, "===RESEARCH_START===", "===RESEARCH_END==
 
 Never parse Gemini's prose output for structured data.
 
+### Gemini CLI Auth and Prompt Passing
+
+As of 2026-05-05 (#1709/#1710), the runtime invokes Gemini CLI with `-p`
+instead of piping prompts on stdin. Gemini CLI v0.40.1 treats non-TTY stdin as
+REPL input and can ignore or hang on piped prompts. Small prompts are passed
+inline with `-p PROMPT`; prompts over 100K chars use the verified file-reference
+form `-p @PATH`.
+
+For write-mode runtime calls, keep `--approval-mode=yolo` and include
+`--skip-trust`; Gemini CLI v0.40.1 otherwise downgrades approval mode in
+untrusted output directories such as `/tmp` and exits before writing.
+
+Gemini auth precedence is API first, then subscription/OAuth fallback:
+
+- `GEMINI_AUTH_MODE=api` forces API mode.
+- `GEMINI_AUTH_MODE=subscription` or `oauth` forces subscription/OAuth mode and
+  strips Gemini API env vars from the subprocess.
+- With no override, `GEMINI_API_KEY` or `GOOGLE_API_KEY` selects API mode.
+- With no override and no API key, subscription/OAuth remains the default.
+
 ---
 
 ## Escalation
