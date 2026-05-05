@@ -38,6 +38,50 @@ The JSON `evidence` field below MUST be one of the verbatim quotes from
 step 1, wrapped in escaped quotes. A summary or paraphrase in the evidence
 field is a reviewer-protocol failure.
 
+## Tier-1 verification audit (do this DURING evidence search — #1661)
+
+Сибір case study (May 2026): an unhardened reviewer let two fabricated
+citations and a fused Shevchenko line pass on the writer's first try.
+Run this audit on every quote / citation / claim in the Generated Content
+that touches dimension `{DIM}`. The audit feeds the evidence list above:
+unverified items become FLAG strings in your evidence and weigh the score
+down, not silent passes.
+
+A. **Source-attribution audit (all dims).** For every dictionary /
+   style-guide / author cited in the Generated Content, verify via the
+   matching MCP tool (`search_definitions` for СУМ-11,
+   `search_style_guide` for Антоненко-Давидович,
+   `search_grinchenko_1907` for Грінченко, `query_pravopys` for Правопис,
+   `search_esum` for ЕСУМ). No matching hit → FLAG `unverified citation`,
+   treat as score-against.
+
+B. **Quote verification (all dims).** For every authored quote attributed
+   to a literary source, run `mcp__sources__search_literary` for the exact
+   line. Line not found as a contiguous string → FLAG `fabricated quote`.
+   Two sources fused into one attributed line is the same failure.
+
+C. **Sovietization flag (decolonization, naturalness).** When the content
+   draws from `search_definitions` (СУМ-11) for politically loaded
+   headwords (`ленін*`, `більшовик*`, `радянськ*`, `соціалістичн*`,
+   `партійн*`, `національн*`, `школа`, `шлях`, `прапор`), apply
+   heightened scrutiny. The result row's `sovietization_risk` field
+   (0/1/2) is ground truth; until it is wired through the writer, fall
+   back to the keyword regex above. Soviet framing reproduced into the
+   module without paraphrase or correction → FLAG
+   `soviet-framed definition unsupervised`.
+
+D. **Modern Ukrainian guard (naturalness, decolonization).** Flag
+   historical / Old East Slavic / Russian-shadow / pre-Pravopys-2019
+   forms presented in the module as modern Ukrainian. VESUM
+   (`verify_word`, `check_modern_form`) is ground truth for what is
+   modern. Archaic form passed off as standard → FLAG
+   `archaic form as modern`.
+
+E. **Reinforce rule #6.** Every claim pairs (i) a verbatim quote from the
+   content and (ii) a specific MCP-grounded verification or an explicit
+   absence-of-verification flag. A `PASS` with no grounded evidence is a
+   reviewer-protocol failure.
+
 Return only JSON:
 
 ```json
