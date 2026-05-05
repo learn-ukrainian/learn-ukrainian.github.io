@@ -12,7 +12,54 @@ Extensibility:
 """
 
 import re
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+try:
+    from path_safety import safe_join
+except ImportError:
+    from ..path_safety import safe_join
+
+# `safe_join` retained as a module-level export for callers that import
+# it from this module (legacy re-export). Tests don't directly call it
+# from here; the function lives in scripts/path_safety.py.
+_ = safe_join
+
+
+def _resolve_caller_path(candidate: "Path | str | None") -> Path | None:
+    """Resolve a caller-supplied path with normalization, returning None on
+    invalid input.
+
+    **Trust contract.** This module is library code called from admin-
+    controlled CLI scripts and pytest fixtures. Paths arrive from:
+
+      1. ``find_research_path(track_dir, slug)`` where ``track_dir`` is
+         a project-internal constant.
+      2. ``content_path`` / ``discovery_path`` derived in the same way.
+      3. pytest ``tmp_path`` fixtures that legitimately point outside
+         the repo.
+
+    There is no untrusted source of paths in production (no web form,
+    no third-party API ingest). The CodeQL ``py/path-injection`` alert
+    against caller-supplied paths is therefore a false positive in
+    this trust model — it would be a true positive if this function
+    were exposed to untrusted input, which it isn't.
+
+    The previous shape (``safe_join(Path(x).parent, Path(x).name)``)
+    looked like a bound but used the caller-controlled parent as the
+    trusted root, providing no real defence — Codex caught this on
+    review of #1690. Replacing with a normalize-and-return that's
+    honest about the trust contract: the suppression at each call
+    site documents WHY the alert is a false positive rather than
+    pretending the bound is there.
+    """
+    if candidate is None:
+        return None
+    try:
+        return Path(candidate).resolve(strict=False)
+    except (OSError, ValueError):
+        return None
 
 # ==================== RUBRIC REGISTRY ====================
 
@@ -193,7 +240,12 @@ def _parse_discovery(discovery_path: "Path | None") -> dict:
     Returns empty lists on missing/invalid file.
     """
     empty = {"blogs": [], "videos": [], "rag_chunks": [], "rag_literary": []}
-    if discovery_path is None or not discovery_path.exists():
+    if discovery_path is None:
+        return empty
+    discovery_path = _resolve_caller_path(discovery_path)  # codeql[py/path-injection] - admin-only callers; see _resolve_caller_path docstring
+    if discovery_path is None:
+        return empty
+    if not discovery_path.exists():
         return empty
     try:
         import yaml
@@ -881,9 +933,12 @@ def find_research_path(track_dir: Path, slug: str) -> Path | None:
         f"{slug.lstrip('0123456789-')}-research.md",
         f"{slug}-knowledge-packet.md",
     ]:
-        rp = research_dir / candidate
-        if rp.exists():
-            return rp
+        try:
+            rp = safe_join(research_dir, candidate)
+            if rp.exists():
+                return rp
+        except ValueError:
+            pass
     return None
 
 
@@ -994,7 +1049,11 @@ def assess_research_compat(
     Returns None if research file doesn't exist.
     If discovery_path is None, attempts to auto-discover it from the research path.
     """
-    path = Path(path)
+    bounded = _resolve_caller_path(path)  # codeql[py/path-injection] - admin-only callers; see _resolve_caller_path docstring
+    if bounded is None:
+        return None
+    path = bounded
+
     if not path.exists():
         return None
 
@@ -1018,21 +1077,29 @@ def assess_research_compat(
 
     content_text = None
     if content_path:
-        content_path = Path(content_path)
-        if content_path.exists():
-            with contextlib.suppress(Exception):
-                content_text = content_path.read_text(encoding="utf-8")
+        bounded_content = _resolve_caller_path(content_path)  # codeql[py/path-injection] - admin-only callers; see _resolve_caller_path docstring
+        if bounded_content is not None:
+            content_path = bounded_content
+            if content_path.exists():
+                with contextlib.suppress(Exception):
+                    content_text = content_path.read_text(encoding="utf-8")
+        else:
+            content_path = None
 
     # Auto-discover discovery.yaml from research path if not provided
-    disc_path = Path(discovery_path) if discovery_path else None
+    disc_path = None
+    if discovery_path:
+        disc_path = _resolve_caller_path(discovery_path)  # codeql[py/path-injection] - admin-only callers; see _resolve_caller_path docstring
+
     if disc_path is None:
         # research/ is sibling to orchestration/
         # research/{slug}-research.md → orchestration/{slug}/discovery.yaml
         slug = path.stem.replace("-research", "")
-        orch_dir = path.parent.parent / "orchestration" / slug
-        candidate = orch_dir / "discovery.yaml"
-        if candidate.exists():
-            disc_path = candidate
+        with contextlib.suppress(ValueError):
+            orch_dir = safe_join(path.parent.parent, "orchestration", slug)
+            candidate = safe_join(orch_dir, "discovery.yaml")
+            if candidate.exists():
+                disc_path = candidate
 
     result = assess_research(text, track_id, content_text, discovery_path=disc_path)
 
