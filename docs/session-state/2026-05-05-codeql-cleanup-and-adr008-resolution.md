@@ -20,13 +20,13 @@
   2. `3536fdd99d` — my fix: switched 4 `# nosec` → `# codeql[<rule-id>] - <reason>`
   3. `faacc57496` — rebase onto main (no behaviour change)
   4. `68d2ef9c1f` — fix `tests/test_manifest_api.py::test_inbox_400_on_invalid_agent` to match the new generic-error contract (the original Gemini commit's `comms_router.py:1431` change replaced `{"error": str(e)}` with `{"error": "invalid agent", "error_id": ...}` for stack-trace-exposure fix, but the test still expected the old substring "unknown agent")
-  - **State:** CI was failing on the third commit due to the test/contract mismatch above. After commit 4 it should be CLEAN. Awaiting CI re-run + a re-dispatch to Codex for verification of the syntax fix.
+  - **State at handoff write:** CI on commit 4 (`68d2ef9c1f`) was running with pytest still pending and a 2-second `CodeQL` check showing `fail` (likely a status-placeholder rather than a real CodeQL analysis result; CodeQL analyses take minutes, not seconds). Next session should re-check `gh pr checks 1687` after CI settles. If pytest passes and the CodeQL check resolves to a real analysis, the syntax fix should land cleanly. If CodeQL flags a new issue, it's likely the `# codeql[<rule-id>] - <reason>` syntax I introduced isn't recognized by the project's CodeQL config — fall back to repo-level config exclusion in `.github/codeql/codeql-config.yml` for those 4 sites instead of inline suppression.
 
 - **PR #1690** — `gemini/codeql-A-path-injection`. 2 commits on the branch:
   1. Original Gemini commit (10 real safe_join fixes + 1 wrong-syntax `# nosec` + 4 theatrical `safe_join(Path(x).parent, Path(x).name)` calls)
   2. `c06d25dd45` — my fix: switched the `# nosec` to `# codeql[py/path-injection]` AND replaced the 4 theatrical calls with `_resolve_caller_path()` + per-call-site `# codeql[...]` suppressions, with the trust contract documented in the helper's docstring
   - **Important honest-fix note:** I tried the "real bound" of `Path(x).resolve().relative_to(PROJECT_ROOT)` first; it broke pytest fixtures that legitimately pass `tmp_path` outside the repo. That breakage was a useful signal — the function genuinely accepts paths outside any single trusted root because pytest is one of the intended callers. The honest replacement: a normalize-and-trust helper with the trust contract documented, not a manufactured bound.
-  - **State:** Awaiting CI on the rebased commit + a re-dispatch to Codex for verification.
+  - **State at handoff write:** CI on commit `c06d25dd45` cleared all checks (no failures, no pending at the snapshot point shortly before handoff write). Awaiting Codex re-review on the fix. If Codex [AGREE], merge.
 
 ### Cross-review caught real bugs both Claude and the original Gemini missed
 
