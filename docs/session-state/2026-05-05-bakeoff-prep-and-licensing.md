@@ -15,9 +15,7 @@
 
 3. **PR #1696 rebased onto main** (`d65d6b8a62`) — force-pushed to pick up #1699's telemetry. Bakeoff worktree at `.worktrees/dispatch/claude/1673-1661-cot-tier1-prompts/` now has both new V7 prompts AND the new telemetry events. CI re-running on rebased commit at handoff time.
 
-### In flight (CI running)
-
-4. **PR #1700** — `feat(audit): bakeoff_aggregate.py — comparison matrix from telemetry events`. Codex dispatch, ~15-min duration. 1468+/0 across 2 files (`scripts/audit/bakeoff_aggregate.py` + `tests/test_bakeoff_aggregate.py`). Reads per-writer JSONL telemetry + .md outputs, emits `audit/bakeoff-{date}/REPORT.md` with 6 tables (prompt-adherence per writer, prompt-adherence per reviewer, content quality, tool usage, cross-reviewer bias, auto-findings). Tests pass locally. CI pending at handoff — merge once green.
+4. **PR #1700 → main** (`2b09e082af`, merged 09:56:39Z): `feat(audit): bakeoff_aggregate.py — comparison matrix from telemetry events`. Codex dispatch, ~15-min duration. 1468+/0 across 2 files (`scripts/audit/bakeoff_aggregate.py` + `tests/test_bakeoff_aggregate.py`). Reads per-writer JSONL telemetry + .md outputs, emits `audit/bakeoff-{date}/REPORT.md` with 6 tables (prompt-adherence per writer, prompt-adherence per reviewer, content quality, tool usage, cross-reviewer bias, auto-findings). Bakeoff infrastructure complete.
 
 ---
 
@@ -29,12 +27,12 @@ Everything is in place for the user to run the A1/20 bakeoff:
 |---|---|
 | New V7 prompts (#1696's CoT + Tier-1) | ✅ in worktree `.worktrees/dispatch/claude/1673-1661-cot-tier1-prompts/`, rebased onto telemetry |
 | Telemetry events for prompt-adherence scoring | ✅ on main via #1699 (rebased into #1696's worktree) |
-| Aggregator script | 🔄 PR #1700 awaiting CI green; will merge then |
+| Aggregator script | ✅ PR #1700 merged at 09:56:39Z |
 | Plan for `a1/20` | ✅ `curriculum/l2-uk-en/plans/a1/my-morning.yaml` |
 | Wiki packet for `a1/20` | ✅ `wiki/pedagogy/a1/my-morning.md` + `my-morning.sources.yaml` |
 | Build commands documented | ✅ `docs/dispatch-briefs/2026-05-05-a1-20-bakeoff-with-new-prompts.md` |
 
-After #1700 merges, the bakeoff is **fully runnable**. User runs the build commands per the brief; aggregator produces `audit/bakeoff-2026-05-05/REPORT.md`.
+The bakeoff is **fully runnable as of 09:56:39Z**. User runs the build commands per the brief; aggregator produces `audit/bakeoff-2026-05-05/REPORT.md`.
 
 ---
 
@@ -69,12 +67,11 @@ Defensive record is now in `git log` — auditable history of how each source la
 
 ---
 
-## Open + In Flight at handoff write
+## Open at handoff write
 
-- **PR #1700** (aggregator) — CI pending, merge when green. Watcher in background.
-- **PR #1696** (#1673+#1661 prompts) — DRAFT, rebased onto telemetry, CI re-running. User-pilot decision pending per user instruction "we wait" (until bakeoff results inform whether the new prompts actually work).
+- **PR #1696** (#1673+#1661 prompts) — DRAFT, rebased onto telemetry. User-pilot decision pending per user instruction "we wait" (until bakeoff results inform whether the new prompts actually work).
 - **PR #1688** (XSS refactor) — DRAFT, deferred for the day. Workaround documented in predecessor handoff.
-- **3 worktrees alive at handoff:** `claude/1673-1661-cot-tier1-prompts` (PR #1696), `gemini/codeql-D-js-html-xss` (PR #1688), `codex/bakeoff-aggregator` (PR #1700, will be cleaned up post-merge).
+- **2 worktrees alive at handoff:** `claude/1673-1661-cot-tier1-prompts` (PR #1696), `gemini/codeql-D-js-html-xss` (PR #1688).
 
 ---
 
@@ -154,8 +151,8 @@ git branch -D codex/bakeoff-aggregator
 
 ## Statistics
 
-- **PRs merged this half-session:** 1 (#1699) + 1 documentation commit (`976160046a`)
-- **PRs in flight at handoff:** 1 (#1700, CI green imminent)
+- **PRs merged this half-session:** 2 (#1699, #1700) + 1 documentation commit (`976160046a`)
+- **PRs in flight at handoff:** 0
 - **PRs DRAFT awaiting user pilot:** 1 (#1696, rebased + ready)
 - **PRs DRAFT deferred:** 1 (#1688)
 - **Codex dispatches:** 2 (#1699 telemetry, #1700 aggregator) — both successful, both within bumped 75-min hard-timeout
