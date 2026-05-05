@@ -189,6 +189,7 @@ TELEMETRY_MAX_QUOTES = 5
 TELEMETRY_MAX_QUOTE_CHARS = 240
 TELEMETRY_MAX_MAPPING_CHARS = 500
 TELEMETRY_MAX_FAILED_WORDS = 5
+CORRECTION_PREVIEW_CHARS = 200
 _TELEMETRY_EVENT_SINK: Callable[..., None] | None = None
 
 
@@ -953,6 +954,34 @@ def telemetry_event_sink(path: Path | None):
 def _emit(event_sink: Callable[..., None] | None, event: str, **fields: Any) -> None:
     sink = event_sink or emit_event
     sink(event, **fields)
+
+
+def _correction_preview(text: Any, limit: int = CORRECTION_PREVIEW_CHARS) -> str:
+    return str(text or "")[:limit]
+
+
+def _module_ref_from_module_dir(module_dir: Path) -> str | None:
+    match = re.match(r"^(?P<sequence>\d+)-", module_dir.name)
+    if not match:
+        return None
+    return _module_ref(module_dir.parent.name, match.group("sequence"))
+
+
+def _correction_event_fields(
+    *,
+    gate: str,
+    module_dir: Path,
+    plan_path: Path,
+) -> dict[str, str]:
+    fields = {
+        "gate": gate,
+        "module_dir": str(module_dir),
+        "plan_path": str(plan_path),
+    }
+    module = _module_ref_from_module_dir(module_dir)
+    if module is not None:
+        fields["module"] = module
+    return fields
 
 
 def _module_ref(level: str | None, module_num: str | int | None) -> str | None:
@@ -2327,6 +2356,16 @@ def _apply_writer_correction(
         write_writer_artifacts(module_dir, response)
     elif isinstance(response, str) and all(name in response for name in WRITER_ARTIFACTS):
         write_writer_artifacts(module_dir, parse_writer_output_strict_json(response))
+    else:
+        emit_event(
+            "writer_correction_unparseable",
+            **_correction_event_fields(
+                gate=gate,
+                module_dir=module_dir,
+                plan_path=plan_path,
+            ),
+            response_preview=_correction_preview(response),
+        )
 
 
 def _apply_reviewer_correction(
@@ -2378,8 +2417,26 @@ def _apply_reviewer_correction(
     else:
         response = reviewer_corrector(context) or ""
     fixes = _parse_reviewer_fixes(response)
+    if not fixes:
+        emit_event(
+            "reviewer_fixes_unparseable",
+            **_correction_event_fields(
+                gate=gate,
+                module_dir=module_dir,
+                plan_path=plan_path,
+            ),
+            response_preview=_correction_preview(response),
+        )
+        return
+    updated = _apply_reviewer_fixes(
+        module_text,
+        fixes,
+        gate=gate,
+        module_dir=module_dir,
+        plan_path=plan_path,
+    )
     if fixes:
-        module_path.write_text(_apply_reviewer_fixes(module_text, fixes), encoding="utf-8")
+        module_path.write_text(updated, encoding="utf-8")
 
 
 def _apply_activity_id_inserts(module_path: Path, gate_report: Mapping[str, Any]) -> None:
@@ -2419,18 +2476,51 @@ def _parse_reviewer_fixes(review_text: str) -> list[dict[str, str]]:
     return fixes
 
 
-def _apply_reviewer_fixes(text: str, fixes: list[dict[str, str]]) -> str:
+def _apply_reviewer_fixes(
+    text: str,
+    fixes: list[dict[str, str]],
+    *,
+    gate: str | None = None,
+    module_dir: Path | None = None,
+    plan_path: Path | None = None,
+) -> str:
     updated = text
     for fix in fixes:
         if "insert_after" in fix and "text" in fix:
             anchor = fix["insert_after"]
             if anchor in updated:
                 updated = updated.replace(anchor, anchor + fix["text"], 1)
+            else:
+                emit_event(
+                    "reviewer_fixes_anchor_unmatched",
+                    **_correction_event_fields(
+                        gate=gate or "",
+                        module_dir=module_dir,
+                        plan_path=plan_path,
+                    )
+                    if module_dir is not None and plan_path is not None
+                    else {"gate": gate},
+                    anchor_preview=_correction_preview(anchor),
+                    text_preview=_correction_preview(fix["text"]),
+                )
             continue
         find = fix.get("find")
         replace = fix.get("replace")
         if find and replace is not None and find in updated:
             updated = updated.replace(find, replace, 1)
+        elif find:
+            emit_event(
+                "reviewer_fixes_anchor_unmatched",
+                **_correction_event_fields(
+                    gate=gate or "",
+                    module_dir=module_dir,
+                    plan_path=plan_path,
+                )
+                if module_dir is not None and plan_path is not None
+                else {"gate": gate},
+                anchor_preview=_correction_preview(find),
+                text_preview=_correction_preview(replace),
+            )
     return updated
 
 
@@ -3347,12 +3437,20 @@ def _formatting_standards_gate(text: str) -> dict[str, Any]:
     }
 
 
+def _normalize_citation_ref(value: Any) -> str:
+    normalized = re.sub(r"\s+", " ", str(value or "")).strip()
+    return re.sub(r"\bp\.\s+(\d+)\b", r"p.\1", normalized)
+
+
 def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> dict[str, Any]:
-    plan_titles = {str(ref["title"]) for ref in plan.get("references", [])}
+    plan_titles = {
+        _normalize_citation_ref(ref["title"]) for ref in plan.get("references", [])
+    }
     unknown = []
     for resource in resources:
         source_ref = str(resource.get("source_ref") or resource.get("title") or "")
-        if source_ref not in plan_titles and resource.get("packet_chunk_id") is None:
+        normalized_ref = _normalize_citation_ref(source_ref)
+        if normalized_ref not in plan_titles and resource.get("packet_chunk_id") is None:
             unknown.append(source_ref)
     return {"passed": not unknown, "unknown": unknown}
 
