@@ -28,12 +28,17 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-_TEST_PYTHON = str(Path(__file__).resolve().parent.parent / ".venv" / "bin" / "python")
+_VENV_PYTHON = Path(__file__).resolve().parent.parent / ".venv" / "bin" / "python"
+_TEST_PYTHON = str(_VENV_PYTHON) if _VENV_PYTHON.exists() else sys.executable
 """Python interpreter for subprocess tests.
 
-Use the repository-local virtualenv explicitly. Project tooling depends on
-pyenv 3.12.8 plus local packages such as sqlite-vec; inheriting whichever
-interpreter happens to run pytest can miss those dependencies."""
+Prefer the repository-local virtualenv explicitly — project tooling depends
+on pyenv 3.12.8 plus local packages such as sqlite-vec, and inheriting an
+arbitrary system interpreter would miss those dependencies. When the local
+.venv is absent (e.g. running from a `git worktree`, where venvs are not
+materialized), fall back to ``sys.executable``: pytest is invoked via
+``.venv/bin/python -m pytest`` in this project, so ``sys.executable`` is
+the venv interpreter under any normal invocation. (#1685)"""
 
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
@@ -2495,6 +2500,124 @@ def test_claude_adapter_rejects_old_cli_version(tmp_path):
                 tool_config={"cmd_prefix": ["claude"]},
             )
     claude_adapter_mod._probe_claude_cli_version.cache_clear()
+
+
+def test_claude_adapter_default_prefix_prefers_npx_over_local_binary(tmp_path, monkeypatch):
+    """Regression for #1684: default cmd_prefix MUST be npx@latest, not local
+    `claude` binary.
+
+    Pre-#1684, ``shutil.which("claude")`` was preferred. Empirically this
+    let dispatched runs silently drift behind the launcher's npx-managed
+    version (observed 2026-05-05: ~/.local/bin/claude at 2.1.126 vs
+    ``npx @latest`` at 2.1.128). The fix flips the order to match
+    start-claude.sh:120's invariant.
+    """
+    from agent_runtime.adapters import claude as claude_adapter_mod
+
+    def _which(name: str) -> str | None:
+        # Both npx and a local claude exist. The bug was preferring claude.
+        return {
+            "npx": "/usr/local/bin/npx",
+            "claude": "/Users/test/.local/bin/claude",
+        }.get(name)
+
+    monkeypatch.setattr(claude_adapter_mod.shutil, "which", _which)
+
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+
+    # First two argv tokens MUST be the npx invocation, not the local binary.
+    assert plan.cmd[0:2] == ["npx", "@anthropic-ai/claude-code@latest"], (
+        f"Default cmd_prefix should be npx@latest (matches start-claude.sh:120). "
+        f"Got: {plan.cmd[0:2]}"
+    )
+    # And specifically: must NOT be the local claude binary path.
+    assert "/Users/test/.local/bin/claude" not in plan.cmd
+
+
+def test_claude_adapter_default_prefix_falls_back_to_local_when_npx_missing(
+    tmp_path, monkeypatch
+):
+    """When npx is unavailable (e.g. air-gapped CI), the local `claude` binary
+    is the documented last-resort fallback. #1684."""
+    from agent_runtime.adapters import claude as claude_adapter_mod
+
+    def _which(name: str) -> str | None:
+        return {"claude": "/Users/test/.local/bin/claude"}.get(name)
+
+    monkeypatch.setattr(claude_adapter_mod.shutil, "which", _which)
+
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert plan.cmd[0] == "/Users/test/.local/bin/claude"
+    assert "npx" not in plan.cmd
+
+
+def test_claude_adapter_default_prefix_raises_when_neither_present(
+    tmp_path, monkeypatch
+):
+    """If neither npx nor claude is on PATH, fail loudly with a clear error
+    instead of silently producing an empty/broken cmd. #1684."""
+    from agent_runtime.adapters import claude as claude_adapter_mod
+
+    monkeypatch.setattr(
+        claude_adapter_mod.shutil, "which", lambda _name: None
+    )
+
+    adapter = ClaudeAdapter()
+    with pytest.raises(RuntimeError, match=r"neither `npx` nor a `claude` binary"):
+        adapter.build_invocation(
+            prompt="hello",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=None,
+        )
+
+
+def test_claude_adapter_explicit_cmd_prefix_override_unchanged(tmp_path, monkeypatch):
+    """The ``tool_config={"cmd_prefix": [...]}`` override path must remain
+    intact — callers that pass an explicit prefix get it verbatim, regardless
+    of what shutil.which returns. #1684 (preserve existing behavior)."""
+    from agent_runtime.adapters import claude as claude_adapter_mod
+
+    # Even if shutil.which would return npx, an explicit override wins.
+    monkeypatch.setattr(
+        claude_adapter_mod.shutil, "which", lambda _name: "/usr/local/bin/npx"
+    )
+
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"cmd_prefix": ["/explicit/path/to/claude"]},
+    )
+
+    assert plan.cmd[0] == "/explicit/path/to/claude"
+    assert "npx" not in plan.cmd
 
 
 def test_claude_parse_response_success():
