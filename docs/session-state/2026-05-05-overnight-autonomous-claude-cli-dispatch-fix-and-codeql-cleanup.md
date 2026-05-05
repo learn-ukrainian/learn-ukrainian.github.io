@@ -22,11 +22,17 @@ Started fresh after handoff. User added an inline instruction during the session
 - **PR #1686** — `fix(agent-runtime): default Claude adapter to npx@latest, not stale local binary`
   - Branch tip: `25cc04af89` (force-pushed after rebase onto new main with #1693 dropped).
   - State: 2 files only (`scripts/agent_runtime/adapters/claude.py` + `tests/test_agent_runtime.py`); zero `sys.executable` literal anywhere; mergeable per `gh pr view`.
-  - Closes #1684 + #1685. **Awaiting fresh post-rebase Codex `[AGREE]`** in thread `ecfc08bf223f` on channel `reviews` (request posted at handoff close). Codex's three previous blockers all addressed:
+  - Closes #1684 + #1685. Codex's three blockers all addressed:
     1. `sys.executable` runtime fallback violated AGENTS.md:19 → fixed via `git rev-parse --git-common-dir` resolver.
     2. Literal `sys.executable` mention in docstring/error message → reworded to "calling Python interpreter."
     3. Bundled discuss-test fix violated one-PR-one-concern → split out as #1693 (now merged).
-  - **Next session: confirm Codex `[AGREE]`, watch CI on `25cc04af89`, merge with `gh pr merge 1686 --squash --delete-branch`, then `git worktree remove .worktrees/claude-1684-prefer-npx`.**
+  - **Codex posted `[AGREE]` at 00:41:39Z** on the rebased commit (`25cc04af89`), confirming the diff is exactly the 2 expected files, no banned token, and they "won't relitigate the npx-first design unless the rebase changed those files materially" (it didn't).
+  - **CI at handoff: 20/22 passing, 2 pytest jobs pending.** Tests typically finish ~5 min; nothing actionable until they go green.
+  - **Next action (single command once CI green):**
+    ```bash
+    gh pr merge 1686 --squash --delete-branch
+    git worktree remove .worktrees/claude-1684-prefer-npx
+    ```
 
 - **PR #1692** — `feat(reviewer): false-positive Russianism guard for v6-review-language`
   - Closes #1691 (filed this session). Implements handoff queue item #5 (audit reviewer prompts for false-positive Russianism handling).
