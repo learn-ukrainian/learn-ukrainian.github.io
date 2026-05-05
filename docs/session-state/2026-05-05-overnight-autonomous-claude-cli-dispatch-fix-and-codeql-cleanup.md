@@ -12,27 +12,14 @@ Started fresh after handoff. User added an inline instruction during the session
 
 ### Merged this session
 
+- **PR #1686 → main** (commit `329adc790d`): `fix(agent-runtime): default Claude adapter to npx@latest, not stale local binary`. Closes #1684 + #1685. Final state: 22/22 CI checks green, Codex `[AGREE]` on the rebased commit `25cc04af89`. Worktree + branch cleaned up post-merge.
+
 - **PR #1693 → main** (commit `4185c0a33c`): `fix(test): align test_discuss_replies_create_delivered with round-1 short-circuit block`
   - Pre-existing main breakage uncovered while landing #1686. The deliberation-protocol fix `872d8791` from 2026-05-05 added round-1 short-circuit block; this test was not updated to use `--max-rounds 2`.
   - Originally bundled into #1686 as the piggyback that unblocked the worktree pre-commit hook. Codex's third blocker on #1686 flagged the bundling as an AGENTS.md:22 + 121-130 violation (one PR = one concern). Split out into #1693 per Codex's recommendation.
   - 24/25 CI checks pass; 1 advisory `review/review` (Gemini-Dispatch) failure is non-blocking per memory rule #0H.
 
 ### In-flight / merge-ready at handoff time
-
-- **PR #1686** — `fix(agent-runtime): default Claude adapter to npx@latest, not stale local binary`
-  - Branch tip: `25cc04af89` (force-pushed after rebase onto new main with #1693 dropped).
-  - State: 2 files only (`scripts/agent_runtime/adapters/claude.py` + `tests/test_agent_runtime.py`); zero `sys.executable` literal anywhere; mergeable per `gh pr view`.
-  - Closes #1684 + #1685. Codex's three blockers all addressed:
-    1. `sys.executable` runtime fallback violated AGENTS.md:19 → fixed via `git rev-parse --git-common-dir` resolver.
-    2. Literal `sys.executable` mention in docstring/error message → reworded to "calling Python interpreter."
-    3. Bundled discuss-test fix violated one-PR-one-concern → split out as #1693 (now merged).
-  - **Codex posted `[AGREE]` at 00:41:39Z** on the rebased commit (`25cc04af89`), confirming the diff is exactly the 2 expected files, no banned token, and they "won't relitigate the npx-first design unless the rebase changed those files materially" (it didn't).
-  - **CI at handoff: 20/22 passing, 2 pytest jobs pending.** Tests typically finish ~5 min; nothing actionable until they go green.
-  - **Next action (single command once CI green):**
-    ```bash
-    gh pr merge 1686 --squash --delete-branch
-    git worktree remove .worktrees/claude-1684-prefer-npx
-    ```
 
 - **PR #1692** — `feat(reviewer): false-positive Russianism guard for v6-review-language`
   - Closes #1691 (filed this session). Implements handoff queue item #5 (audit reviewer prompts for false-positive Russianism handling).
@@ -161,8 +148,8 @@ gh issue view 1683
 ## Statistics (final)
 
 - **PRs opened by this session:** 7 (#1686, #1687, #1688, #1689, #1690, #1692, #1693)
-- **PRs merged by this session:** 1 (#1693)
-- **PRs in flight at session end:** 6 (#1686 awaiting fresh Codex `[AGREE]` post-rebase; #1687/#1688/#1689/#1690 draft for user security review; #1692 awaiting rebase onto current main + Codex review)
+- **PRs merged by this session:** 2 (#1693, #1686)
+- **PRs in flight at session end:** 5 (#1687/#1688/#1689/#1690 draft for user security review; #1692 awaiting rebase onto current main + Codex review)
 - **Issues filed:** 4 (#1684, #1685, #1691, plus a comment on #1665 reporting Codex's dead-PDF finding) + ADR-008 supersession brief in `docs/decisions/pending/`
 - **Commits to my branches:** 3 commits on #1686 (after rebase: `25cc04af89` is the tip — Claude adapter fix + test_python git-common-dir resolver), 1 commit on #1692 (`70c2abf371`)
 - **Adversarial review cycles:** 3 rounds with Codex on #1686 (3 blockers all addressed), fresh post-rebase request open at session end
