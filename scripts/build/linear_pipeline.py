@@ -12,6 +12,7 @@ import json
 import re
 import sys
 from collections.abc import Callable, Mapping
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -41,10 +42,11 @@ PLAN_REQUIRED_KEYS = {
     "references",
 }
 
-WRITER_CHOICES = ("claude-tools", "gemini-tools")
+WRITER_CHOICES = ("claude-tools", "gemini-tools", "codex-tools")
 WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
+    "codex-tools": {"model": "gpt-5.5", "effort": "high"},
 }
 REVIEWER_CHOICES = ("claude-tools", "gemini-tools", "codex-tools")
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
@@ -187,6 +189,7 @@ TELEMETRY_MAX_QUOTES = 5
 TELEMETRY_MAX_QUOTE_CHARS = 240
 TELEMETRY_MAX_MAPPING_CHARS = 500
 TELEMETRY_MAX_FAILED_WORDS = 5
+_TELEMETRY_EVENT_SINK: Callable[..., None] | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -901,12 +904,50 @@ def render_phase_prompt(template_path: Path, context: Mapping[str, Any]) -> str:
 
 def emit_event(event: str, **fields: Any) -> None:
     """Emit one monitor-friendly JSONL event using the V6 event shape."""
+    if _TELEMETRY_EVENT_SINK is not None:
+        _TELEMETRY_EVENT_SINK(event, **fields)
+        return
     line = json.dumps(
         {"event": event, "ts": datetime.now(UTC).isoformat(), **fields},
         ensure_ascii=False,
         default=str,
     )
     print(line, flush=True)
+
+
+def _make_file_event_sink(path: Path) -> tuple[Callable[..., None], Any]:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    handle = path.open("a", encoding="utf-8")
+
+    def sink(event: str, **fields: Any) -> None:
+        line = json.dumps(
+            {"event": event, "ts": datetime.now(UTC).isoformat(), **fields},
+            ensure_ascii=False,
+            default=str,
+        )
+        handle.write(f"{line}\n")
+        handle.flush()
+
+    return sink, handle
+
+
+@contextmanager
+def telemetry_event_sink(path: Path | None):
+    """Temporarily route JSONL telemetry to ``path`` in append mode."""
+    global _TELEMETRY_EVENT_SINK
+
+    previous = _TELEMETRY_EVENT_SINK
+    sink: Callable[..., None] | None = None
+    handle: Any = None
+    try:
+        if path is not None:
+            sink, handle = _make_file_event_sink(path)
+            _TELEMETRY_EVENT_SINK = sink
+        yield
+    finally:
+        _TELEMETRY_EVENT_SINK = previous
+        if handle is not None:
+            handle.close()
 
 
 def _emit(event_sink: Callable[..., None] | None, event: str, **fields: Any) -> None:
@@ -1397,6 +1438,17 @@ def _render_component_props_schema(allowed_activity_types: str) -> str:
     return "\n".join(lines)
 
 
+def _runtime_tool_config(agent_label: str) -> dict[str, Any]:
+    tool_config: dict[str, Any] = {"output_format": "text"}
+    if agent_label == "codex-tools":
+        from scripts.agent_runtime.tool_config import build_mcp_tool_config
+
+        codex_tools = build_mcp_tool_config("codex", mcp_servers=["sources"])
+        if codex_tools:
+            tool_config.update(codex_tools)
+    return tool_config
+
+
 def invoke_writer(
     prompt: str,
     writer: str,
@@ -1426,7 +1478,7 @@ def invoke_writer(
         task_id="phase-4-a1-20-writer",
         entrypoint="dispatch",
         effort=defaults["effort"],
-        tool_config={"output_format": "text"},
+        tool_config=_runtime_tool_config(writer),
     )
     response = getattr(result, "response", None)
     if not response:
@@ -1797,7 +1849,7 @@ def invoke_reviewer_dim(
         task_id=f"phase-4-review-{dim}",
         entrypoint="dispatch",
         effort=defaults["effort"],
-        tool_config={"output_format": "text"},
+        tool_config=_runtime_tool_config(reviewer),
     )
     response = getattr(result, "response", None)
     if not response:
