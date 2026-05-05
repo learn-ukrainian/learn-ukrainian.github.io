@@ -34,10 +34,11 @@ _VENV_PYTHON = Path(__file__).resolve().parent.parent / ".venv" / "bin" / "pytho
 def _resolve_test_python() -> str:
     """Locate the project virtualenv's Python interpreter.
 
-    AGENTS.md explicitly bans `sys.executable` in code (project rule:
-    `.venv/bin/python` only — sqlite-vec and other deps live in the
-    project venv, not in arbitrary system interpreters). So we resolve
-    to a real `.venv/bin/python` path or fail loudly.
+    AGENTS.md explicitly bans falling back to the calling Python
+    interpreter attribute (project rule: `.venv/bin/python` only —
+    sqlite-vec and other deps live in the project venv, not in
+    arbitrary system interpreters). So we resolve to a real
+    `.venv/bin/python` path or fail loudly.
 
     Resolution order:
       1. **Same-checkout `.venv`** (main case, CI case) — the venv
@@ -51,10 +52,11 @@ def _resolve_test_python() -> str:
          an externally-activated venv outside this repo. Codex flagged
          this as the explicit fallback in PR #1686 review.
       4. **RuntimeError** if none of the above resolves. We fail loud
-         rather than fall through to `sys.executable`, which would
-         silently launch subprocess tests on the wrong interpreter and
-         miss sqlite-vec / other venv-only deps. (#1685; refined per
-         Codex review on #1686 citing AGENTS.md:19, AGENTS.md:53-67.)
+         rather than fall through to the calling-interpreter attribute,
+         which would silently launch subprocess tests on the wrong
+         interpreter and miss sqlite-vec / other venv-only deps.
+         (#1685; refined per Codex review on #1686 citing AGENTS.md:19,
+         AGENTS.md:53-67.)
     """
     if _VENV_PYTHON.exists():
         return str(_VENV_PYTHON)
@@ -87,7 +89,7 @@ def _resolve_test_python() -> str:
         "in the current checkout, in the main checkout (when running from "
         "a git worktree), or via $VIRTUAL_ENV. Run tests via "
         "`.venv/bin/python -m pytest`. AGENTS.md:53-67 forbids falling back "
-        "to sys.executable for subprocess tests."
+        "to the calling Python interpreter for subprocess tests."
     )
 
 
