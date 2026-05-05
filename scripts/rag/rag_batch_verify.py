@@ -273,7 +273,7 @@ def _extract_activity_words(data, words: dict[str, str]) -> None:
 # VESUM verification
 # ---------------------------------------------------------------------------
 
-from rag.query import get_vesum_conn
+from verification.vesum import get_vesum_conn
 
 
 def vesum_batch_lookup(words: list[str], batch_size: int = 500) -> dict[str, list[dict]]:

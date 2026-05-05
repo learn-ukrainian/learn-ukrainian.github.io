@@ -1,9 +1,11 @@
 import sys
 from pprint import pprint
+
 # Assuming scripts directory is in PYTHONPATH or we can just append it
 sys.path.append('.')
 
-from scripts.rag.query import search_text, verify_words
+from scripts.rag.query import search_text
+from scripts.verification.vesum import verify_words
 
 topics = [
     "чергування голосних і о е",
@@ -39,4 +41,3 @@ print("Invalid words:")
 for word in words_to_verify:
     if word not in res or not res[word]:
         print(f"NOT FOUND: {word}")
-

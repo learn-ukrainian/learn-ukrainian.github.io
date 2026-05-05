@@ -464,7 +464,174 @@ def build_knowledge_packet(
     from scripts.build.phases.wiki_compressor import compress_wiki_packet
 
     compressed = compress_wiki_packet(plan_data, wiki_packet)
-    return _render_wiki_knowledge_packet(plan_data, wiki_packet, compressed)
+    dictionary_context = _build_dictionary_context(plan_data)
+    return _render_wiki_knowledge_packet(
+        plan_data,
+        wiki_packet,
+        compressed,
+        dictionary_context,
+    )
+
+
+def _extract_dictionary_lemmas(plan: Mapping[str, Any]) -> list[str]:
+    """Return required vocabulary lemmas for dictionary-context enrichment."""
+    candidates: list[Any] = []
+    required_vocab = plan.get("required_vocab")
+    if isinstance(required_vocab, list):
+        candidates = required_vocab
+    else:
+        vocab_hints = plan.get("vocabulary_hints")
+        if isinstance(vocab_hints, dict):
+            required = vocab_hints.get("required")
+            if isinstance(required, list) and required:
+                candidates = required
+            else:
+                for category in ("recommended", "sight_words"):
+                    items = vocab_hints.get(category)
+                    if isinstance(items, list):
+                        candidates.extend(items)
+        elif isinstance(vocab_hints, list):
+            candidates = vocab_hints
+
+    lemmas: list[str] = []
+    seen: set[str] = set()
+    for item in candidates:
+        lemma = _normalize_vocab_hint(item)
+        if lemma and lemma not in seen:
+            seen.add(lemma)
+            lemmas.append(lemma)
+    return lemmas
+
+
+def _normalize_vocab_hint(item: Any) -> str:
+    """Extract the Ukrainian lemma from a plan vocabulary hint item."""
+    if isinstance(item, Mapping):
+        raw = item.get("lemma") or item.get("word") or item.get("uk") or ""
+    elif isinstance(item, str):
+        raw = item
+    else:
+        return ""
+    text = str(raw).split("(", 1)[0].strip()
+    text = re.split(r"\s+[–—-]\s+", text, maxsplit=1)[0].strip()
+    return text.strip(" \t\r\n,;:.")
+
+
+def _build_dictionary_context(
+    plan: Mapping[str, Any],
+    *,
+    max_chars: int = 6000,
+    definition_chars: int = 200,
+) -> str:
+    """Build compact VESUM + dictionary context for plan vocabulary."""
+    lemmas = _extract_dictionary_lemmas(plan)
+    if not lemmas:
+        return ""
+
+    try:
+        from scripts.verification import vesum as vesum_lookup
+        from wiki import sources_db
+    except Exception as exc:
+        return (
+            "## Dictionary context\n\n"
+            f"*Dictionary context unavailable: {type(exc).__name__}: {exc}*"
+        )
+
+    try:
+        batch_matches = vesum_lookup.verify_words(lemmas)
+    except Exception:
+        batch_matches = {lemma: [] for lemma in lemmas}
+
+    lines = ["## Dictionary context", ""]
+    current_chars = sum(len(line) + 1 for line in lines)
+    for lemma in lemmas:
+        word_matches = batch_matches.get(lemma, [])
+        forms = _safe_lookup(vesum_lookup.verify_lemma, [], lemma)
+        definitions = _safe_lookup(sources_db.search_definitions, [], lemma, limit=1)
+        style_notes = _safe_lookup(sources_db.search_style_guide, [], lemma, limit=1)
+
+        pos = _dictionary_pos_label(word_matches, forms)
+        entry = [
+            f"- **{lemma}** [{pos}]",
+            f"  - VESUM: {_vesum_form_summary(lemma, word_matches, forms)}",
+        ]
+        definition = _dictionary_hit_text(definitions)
+        if definition:
+            entry.append(
+                f"  - Definition: {_truncate_prompt_text(definition, definition_chars)}"
+            )
+        else:
+            entry.append("  - Definition: Not found in SUM-11.")
+
+        style_note = _dictionary_hit_text(style_notes)
+        if style_note:
+            entry.append(
+                f"  - Style note: {_truncate_prompt_text(style_note, definition_chars)}"
+            )
+
+        entry_chars = sum(len(line) + 1 for line in entry)
+        if current_chars + entry_chars <= max_chars:
+            lines.extend(entry)
+            current_chars += entry_chars
+            continue
+
+        short_entry = f"- **{lemma}** [{pos}]"
+        if current_chars + len(short_entry) + 1 <= max_chars:
+            lines.append(short_entry)
+            current_chars += len(short_entry) + 1
+        else:
+            break
+
+    return "\n".join(lines).rstrip()
+
+
+def _safe_lookup(fn: Callable[..., Any], fallback: Any, *args: Any, **kwargs: Any) -> Any:
+    try:
+        return fn(*args, **kwargs)
+    except Exception:
+        return fallback
+
+
+def _dictionary_pos_label(word_matches: list[dict], forms: list[dict]) -> str:
+    values: list[str] = []
+    for item in [*word_matches, *forms]:
+        pos = str(item.get("pos") or "").strip()
+        if pos and pos not in values:
+            values.append(pos)
+    return ", ".join(values) if values else "unknown"
+
+
+def _vesum_form_summary(lemma: str, word_matches: list[dict], forms: list[dict]) -> str:
+    if word_matches:
+        match = word_matches[0]
+        tags = str(match.get("tags") or "").strip()
+        return f"{lemma}" + (f" (`{tags}`)" if tags else "")
+    if forms:
+        form = forms[0]
+        word_form = str(form.get("word_form") or lemma).strip()
+        tags = str(form.get("tags") or "").strip()
+        return f"{word_form}" + (f" (`{tags}`)" if tags else "")
+    return "Not found in VESUM."
+
+
+def _dictionary_hit_text(hits: Any) -> str:
+    if not isinstance(hits, list) or not hits:
+        return ""
+    first = hits[0]
+    if not isinstance(first, Mapping):
+        return str(first)
+    for key in ("definition", "definitions", "text", "note", "notes"):
+        value = first.get(key)
+        if value:
+            return str(value)
+    return ""
+
+
+def _truncate_prompt_text(text: str, max_chars: int) -> str:
+    cleaned = re.sub(r"\s+", " ", text).strip()
+    if len(cleaned) <= max_chars:
+        return cleaned
+    trimmed = cleaned[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:")
+    return f"{trimmed}..."
 
 
 def _build_wiki_packet(level: str, slug: str) -> str:
@@ -558,6 +725,7 @@ def _render_wiki_knowledge_packet(
     plan: Mapping[str, Any],
     wiki_packet: str,
     compressed: Mapping[str, Any],
+    dictionary_context: str = "",
 ) -> str:
     """Render raw and compressed wiki context as the writer packet."""
     lines: list[str] = [
@@ -597,6 +765,9 @@ def _render_wiki_knowledge_packet(
                 f"({anchor['citation']})"
             )
         lines.append("")
+
+    if dictionary_context:
+        lines.extend([dictionary_context, ""])
 
     lines.extend(
         [
@@ -2072,7 +2243,7 @@ def _vesum_gate(
         if lower not in whitelist_lc
     ]
     if verify_words_fn is None:
-        from scripts.rag.query import verify_words as verify_words_fn
+        from scripts.verification.vesum import verify_words as verify_words_fn
 
     # VESUM is case-sensitive — lowercase before lookup so sentence-initial
     # words like "Спочатку" match the lemma "спочатку".

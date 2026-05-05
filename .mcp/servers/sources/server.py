@@ -28,8 +28,13 @@ import sys
 from pathlib import Path
 from typing import Any
 
-# Add scripts/ to path so the rag package is importable
-sys.path.insert(0, str(Path(__file__).resolve().parents[2].parent / "scripts"))
+# Add repo root and scripts/ to path so both scripts.* and legacy top-level
+# packages are importable.
+PROJECT_ROOT = Path(__file__).resolve().parents[2].parent
+SCRIPTS_DIR = PROJECT_ROOT / "scripts"
+for _path in (PROJECT_ROOT, SCRIPTS_DIR):
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
 
 try:
     from mcp.server import Server
@@ -1054,7 +1059,7 @@ def _is_archaic(tags: str | None) -> bool:
 async def handle_check_modern_form(args: dict) -> list[TextContent]:
     word = args["word"]
 
-    from rag.query import verify_word
+    from scripts.verification.vesum import verify_word
     matches = await asyncio.to_thread(verify_word, word, None)
 
     if not matches:
@@ -1084,7 +1089,7 @@ async def handle_verify_word(args: dict) -> list[TextContent]:
     word = args["word"]
     pos_filter = args.get("pos_filter")
 
-    from rag.query import verify_word
+    from scripts.verification.vesum import verify_word
     matches = await asyncio.to_thread(verify_word, word, pos_filter)
 
     if not matches:
@@ -1103,7 +1108,7 @@ async def handle_verify_words(args: dict) -> list[TextContent]:
     words = args["words"]
     pos_filter = args.get("pos_filter")
 
-    from rag.query import verify_words
+    from scripts.verification.vesum import verify_words
     results = await asyncio.to_thread(verify_words, words, pos_filter)
 
     lines = [f"Batch verification: {len(words)} words\n"]
@@ -1124,7 +1129,7 @@ async def handle_verify_words(args: dict) -> list[TextContent]:
 async def handle_verify_lemma(args: dict) -> list[TextContent]:
     lemma = args["lemma"]
 
-    from rag.query import verify_lemma
+    from scripts.verification.vesum import verify_lemma
     forms = await asyncio.to_thread(verify_lemma, lemma)
 
     if not forms:

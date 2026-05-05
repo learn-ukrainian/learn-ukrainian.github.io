@@ -17,7 +17,7 @@ def test_get_ru_confidence():
     conf, lemma = get_ru_confidence("привіт")
     assert conf < 0.5
 
-@patch("scripts.rag.query.verify_word")
+@patch("scripts.verification.vesum.verify_word")
 def test_smoke_cases(mock_verify_word):
     # VESUM mock for smoke cases
     def mock_vesum(word):

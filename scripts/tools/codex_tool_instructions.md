@@ -11,7 +11,7 @@ Batch multiple verifications together to minimize round-trips.
 ```bash
 .venv/bin/python -c "
 import sys; sys.path.insert(0, 'scripts')
-from rag.query import verify_words
+from verification.vesum import verify_words
 results = verify_words(['слово1', 'слово2', 'слово3'])
 for w, matches in results.items():
     if matches:
@@ -26,7 +26,7 @@ for w, matches in results.items():
 ```bash
 .venv/bin/python -c "
 import sys; sys.path.insert(0, 'scripts')
-from rag.query import verify_word
+from verification.vesum import verify_word
 results = verify_word('WORD_HERE')
 if results:
     for m in results:
@@ -41,7 +41,7 @@ else:
 ```bash
 .venv/bin/python -c "
 import sys; sys.path.insert(0, 'scripts')
-from rag.query import verify_lemma
+from verification.vesum import verify_lemma
 forms = verify_lemma('LEMMA_HERE')
 for f in forms[:20]:
     print(f'{f[\"word_form\"]:20s} {f[\"pos\"]:8s} {f[\"tags\"]}')

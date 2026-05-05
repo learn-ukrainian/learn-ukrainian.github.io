@@ -79,9 +79,9 @@ teacher-facing English framing style.
 - The delegated worktree did not contain `.venv/`; a local ignored symlink to
   the main checkout venv was created so commands could use `.venv/bin/python`
   with Python 3.12.8.
-- Local Qdrant on `127.0.0.1:6334` was not running. The knowledge-packet builder
-  degraded by logging RAG connection failures and producing a packet with plan
-  references but no retrieved textbook excerpts.
+- Failure mode: writer cites a vocabulary item that fails MCP verification at
+  review-time. The wiki+MCP knowledge packet is supposed to surface this gap
+  during writing — see `Dictionary context` section in `build_knowledge_packet`.
 - The first Gemini response satisfied fenced-block structure but not the
   activity JSON schema, requiring the one allowed corrective redispatch.
 - The successful redispatch still missed core content gates: minimum word count,
