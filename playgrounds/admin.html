@@ -205,16 +205,21 @@ const sectionLoaders = {
   stats:       () => Promise.all([loadEmbedStats(), loadAnnotationStats()]),
   collections: () => loadCollections(),
 };
+const ALLOWED_SECTIONS = new Set(Object.keys(sectionLoaders));
 const loadedSections = new Set();
 
 function activateSection(section) {
+  if (!ALLOWED_SECTIONS.has(section)) {
+    section = 'health'; // Default fallback
+  }
+
   document.querySelectorAll('.sidebar a').forEach(x => x.classList.remove('active'));
   document.querySelectorAll('.section').forEach(x => x.classList.remove('active'));
   const link = document.querySelector(`.sidebar a[data-section="${section}"]`);
   if (link) link.classList.add('active');
   document.getElementById(`section-${section}`).classList.add('active');
   history.replaceState(null, '', `#${section}`);
-  if (!loadedSections.has(section) && sectionLoaders[section]) {
+  if (!loadedSections.has(section)) {
     loadedSections.add(section);
     sectionLoaders[section]();
   }
@@ -234,9 +239,13 @@ activateSection(hash || 'health');
 // ── API helpers ─────────────────────────────────────
 
 function escapeHtml(s) {
-  const el = document.createElement('span');
-  el.textContent = s;
-  return el.innerHTML;
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 async function apiFetch(path, opts) {

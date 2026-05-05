@@ -683,55 +683,135 @@ async function loadPage() {
     const imgUrl = `${API}/page_render/${currentStem}/${currentPage}.png`;
     const scale = data.scale;
 
-    let imgOverlays = '';
-    let textOverlays = '';
+    container.innerHTML = '';
+    const imgEl = document.createElement('img');
+    imgEl.src = imgUrl;
+    imgEl.onload = function() { this.parentElement.style.width = this.naturalWidth + 'px'; };
+    container.appendChild(imgEl);
 
+    const imgOverlaysEl = document.createElement('div');
+    imgOverlaysEl.id = 'img-overlays';
+    imgOverlaysEl.style.display = showImageOverlay ? '' : 'none';
+    
     data.images.forEach((img, i) => {
       const [x0, y0, x1, y1] = img.bbox;
-      imgOverlays += `<div class="bbox-overlay bbox-img" id="bbox-${i}" data-idx="${i}"
-        style="left:${x0*scale}px;top:${y0*scale}px;width:${(x1-x0)*scale}px;height:${(y1-y0)*scale}px;"
-        onmouseenter="highlightRow(${i})" onmouseleave="unhighlightRow(${i})">
-        <span class="bbox-label">${i+1}</span>
-      </div>`;
+      const d = document.createElement('div');
+      d.className = 'bbox-overlay bbox-img';
+      d.id = `bbox-${i}`;
+      d.dataset.idx = i;
+      d.style.left = `${x0*scale}px`;
+      d.style.top = `${y0*scale}px`;
+      d.style.width = `${(x1-x0)*scale}px`;
+      d.style.height = `${(y1-y0)*scale}px`;
+      d.onmouseenter = () => highlightRow(i);
+      d.onmouseleave = () => unhighlightRow(i);
+      const s = document.createElement('span');
+      s.className = 'bbox-label';
+      s.textContent = i + 1;
+      d.appendChild(s);
+      imgOverlaysEl.appendChild(d);
     });
+    container.appendChild(imgOverlaysEl);
+
+    const textOverlaysEl = document.createElement('div');
+    textOverlaysEl.id = 'text-overlays';
+    textOverlaysEl.style.display = showTextOverlay ? '' : 'none';
 
     data.text_blocks.forEach(tb => {
       const [x0, y0, x1, y1] = tb.bbox;
-      textOverlays += `<div class="bbox-overlay bbox-text"
-        style="left:${x0*scale}px;top:${y0*scale}px;width:${(x1-x0)*scale}px;height:${(y1-y0)*scale}px;"
-        title="${tb.text.substring(0, 100)}"></div>`;
+      const d = document.createElement('div');
+      d.className = 'bbox-overlay bbox-text';
+      d.style.left = `${x0*scale}px`;
+      d.style.top = `${y0*scale}px`;
+      d.style.width = `${(x1-x0)*scale}px`;
+      d.style.height = `${(y1-y0)*scale}px`;
+      d.title = tb.text.substring(0, 100);
+      textOverlaysEl.appendChild(d);
     });
-
-    container.innerHTML = `
-      <img src="${imgUrl}" onload="this.parentElement.style.width=this.naturalWidth+'px'">
-      <div id="img-overlays" style="${showImageOverlay ? '' : 'display:none'}">${imgOverlays}</div>
-      <div id="text-overlays" style="${showTextOverlay ? '' : 'display:none'}">${textOverlays}</div>`;
+    container.appendChild(textOverlaysEl);
 
     // Sidebar: image list
-    let sidebarHtml = `<div style="font-size:12px;color:var(--text2);margin-bottom:8px;">${data.images.length} images, ${data.text_blocks.length} text blocks</div>`;
+    sidebar.innerHTML = '';
+    const sidebarHeader = document.createElement('div');
+    sidebarHeader.style.fontSize = '12px';
+    sidebarHeader.style.color = 'var(--text2)';
+    sidebarHeader.style.marginBottom = '8px';
+    sidebarHeader.textContent = `${data.images.length} images, ${data.text_blocks.length} text blocks`;
+    sidebar.appendChild(sidebarHeader);
 
     data.images.forEach((img, i) => {
       const imgSrc = img.image_path ? `/images/${img.image_path.replace('data/textbook_images/','')}` : '';
-      sidebarHtml += `<div class="page-img-row" id="row-${i}" data-idx="${i}"
-        onmouseenter="highlightBbox(${i})" onmouseleave="unhighlightBbox(${i})"
-        onclick="if(event.target.tagName!=='IMG') highlightBbox(${i})">
-        ${imgSrc ? `<img class="thumb" src="${imgSrc}" onclick="openLightbox('${imgSrc}')" loading="lazy">` : '<div class="thumb-placeholder" style="width:60px;height:45px">?</div>'}
-        <div class="meta">
-          <div class="desc">${img.description_uk || '<span style="color:var(--text3)">no description</span>'}</div>
-          <div class="tags">
-            <span class="tag tag-type">#${i+1}</span>
-            ${tvTag(img.teaching_value)}
-            ${etTag(img.element_type)}
-            <span style="color:var(--text3)">${img.width}x${img.height}</span>
-          </div>
-        </div>
-      </div>`;
+      
+      const row = document.createElement('div');
+      row.className = 'page-img-row';
+      row.id = `row-${i}`;
+      row.dataset.idx = i;
+      row.onmouseenter = () => highlightBbox(i);
+      row.onmouseleave = () => unhighlightBbox(i);
+      row.onclick = (e) => { if(e.target.tagName !== 'IMG') highlightBbox(i); };
+
+      if (imgSrc) {
+        const thumb = document.createElement('img');
+        thumb.className = 'thumb';
+        thumb.src = imgSrc;
+        thumb.onclick = () => openLightbox(imgSrc);
+        thumb.loading = 'lazy';
+        row.appendChild(thumb);
+      } else {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'thumb-placeholder';
+        placeholder.style.width = '60px';
+        placeholder.style.height = '45px';
+        placeholder.textContent = '?';
+        row.appendChild(placeholder);
+      }
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+
+      const desc = document.createElement('div');
+      desc.className = 'desc';
+      if (img.description_uk) {
+        desc.textContent = img.description_uk;
+      } else {
+        const noDesc = document.createElement('span');
+        noDesc.style.color = 'var(--text3)';
+        noDesc.textContent = 'no description';
+        desc.appendChild(noDesc);
+      }
+      meta.appendChild(desc);
+
+      const tags = document.createElement('div');
+      tags.className = 'tags';
+      
+      const tNum = document.createElement('span');
+      tNum.className = 'tag tag-type';
+      tNum.textContent = `#${i+1}`;
+      tags.appendChild(tNum);
+      
+      // Use existing tag functions if they return DOM nodes, but they return strings.
+      // So we use insertAdjacentHTML safely because the data (img.teaching_value) comes from bounded ENUM sets usually, 
+      // but let's just assign innerHTML for tags since they are safe ENUMs.
+      tags.insertAdjacentHTML('beforeend', tvTag(img.teaching_value));
+      tags.insertAdjacentHTML('beforeend', etTag(img.element_type));
+      
+      const dims = document.createElement('span');
+      dims.style.color = 'var(--text3)';
+      dims.textContent = `${img.width}x${img.height}`;
+      tags.appendChild(dims);
+
+      meta.appendChild(tags);
+      row.appendChild(meta);
+      sidebar.appendChild(row);
     });
 
-    sidebar.innerHTML = sidebarHtml;
-
   } catch (e) {
-    container.innerHTML = `<div class="loading-sm" style="color:var(--red)">Error: ${e.message}</div>`;
+    container.innerHTML = '';
+    const err = document.createElement('div');
+    err.className = 'loading-sm';
+    err.style.color = 'var(--red)';
+    err.textContent = `Error: ${e.message}`;
+    container.appendChild(err);
   }
 }
 
@@ -792,9 +872,13 @@ function buildSearchGradeButtons() {
 }
 
 function escapeHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 async function doSearch() {
