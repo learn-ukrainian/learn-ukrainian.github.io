@@ -172,13 +172,12 @@ def _try_load_sources_db():
     return sources_db
 
 
-def _try_load_pravopys():
-    try:
-        from rag.source_query import pravopys_lookup  # type: ignore
-    except ImportError as exc:
-        logger.debug("citation-check: rag.source_query import failed: %s", exc)
-        return None
-    return pravopys_lookup
+# Правопис verifier is intentionally NOT plumbed into the v1 lookup
+# path — see ``_verify_pravopys`` below for the rationale. This stub
+# remains for forward compatibility; do NOT switch it on without first
+# wiring a deterministic, network-free headword verifier.
+def _try_load_pravopys():  # pragma: no cover - deliberate stub
+    return None
 
 
 def _verify_via_lookup(
@@ -356,10 +355,35 @@ def _verify_esum(citation: Citation) -> VerificationResult:
 
 
 def _verify_pravopys(citation: Citation) -> VerificationResult:
-    fn = _try_load_pravopys()
-    return _verify_via_lookup(
-        citation, lookup=fn, source_label="Правопис 2019"
-    )
+    """Правопис 2019 — INTENTIONAL SOFT-SKIP in v1.
+
+    The natural candidate API is ``rag.source_query.pravopys_lookup``,
+    but it has two properties that disqualify it for the bridge's
+    synchronous post-time check:
+
+    1. **Topic→section, not headword→presence.** ``pravopys_lookup``
+       maps a small dict of topical keywords (e.g. "Апостроф") to
+       Правопис section numbers. An unmapped headword (`кав'ярня`,
+       `мітинг`, `собака`) returns ``None``. Treating ``None`` as
+       "headword absent" would false-flag every Правопис mention
+       whose claim isn't one of the indexed topics.
+
+    2. **Live HTTP under the hood.** A mapped topic calls
+       ``pravopys_section`` (`scripts/rag/source_query.py:812`) which
+       does ``requests.get`` against izbornyk.org.ua. ``_channels.post()``
+       runs the verifier synchronously before BEGIN IMMEDIATE — a
+       slow / failing network would stall posts.
+
+    Until a deterministic local Правопис index exists with proper
+    headword lookup, soft-skip every Правопис citation. This matches
+    the behaviour for sources without an automated verifier (VESUM,
+    Шевельов, Вихованець, Пономарів) — citation is detected and
+    counted but never flagged.
+
+    Codex review of #1683 caught this on the first round; see PR
+    #1694's review thread for the full rationale.
+    """
+    return _verify_unknown(citation)
 
 
 def _verify_unknown(citation: Citation) -> VerificationResult:

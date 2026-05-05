@@ -267,6 +267,32 @@ def test_missing_pravopys_soft_skips(monkeypatch):
     assert result.unverified == []
 
 
+def test_pravopys_never_flags_in_v1(monkeypatch):
+    """Regression: Codex review of #1683 caught that the original
+    pravopys verifier (a) used a topic→section helper not a headword
+    lookup, false-flagging unmapped words like ``кав'ярня``, and (b)
+    did synchronous live HTTP via `pravopys_section`. v1 deliberately
+    soft-skips every Правопис citation.
+
+    This regression locks in: even with a callable lookup that returns
+    ``None`` (the topic-not-mapped case), no flag fires. Replace this
+    test with proper Правопис verification logic when a deterministic
+    local verifier ships.
+    """
+    # Even an installable lookup that returns None must not produce a flag.
+    monkeypatch.setattr(cc, "_try_load_pravopys", lambda: lambda topic: None)
+    body = (
+        "Український правопис 2019 §11 рекомендує писати *кав'ярня* "
+        "разом, без апострофа в основі."
+    )
+    result = cc.check_and_annotate(body)
+    flagged_sources = [v.citation.source for v in result.unverified]
+    assert "pravopys_2019" not in flagged_sources
+    # And the citation should still be detected.
+    detected_sources = {c.source for c in result.citations}
+    assert "pravopys_2019" in detected_sources
+
+
 # ─────────────────────────────────────────────────────────────────────
 # Regression — canonical fabrication
 # ─────────────────────────────────────────────────────────────────────
@@ -366,6 +392,35 @@ def test_headword_extraction_handles_missing():
     assert len(citations) == 1
     # No Cyrillic headword in the sentence — gracefully None.
     assert citations[0].headword is None
+
+
+def test_headword_extraction_falls_back_to_pre_citation():
+    """Codex review of #1683 follow-up: when the only Cyrillic
+    headword candidate is BEFORE the citation, extraction should
+    still find it. Post-citation bias is a tiebreaker, not a hard
+    filter.
+
+    Construction: "про *X* пише Антоненко-Давидович" — the headword
+    `X` precedes the citation, no headword follows it. Without
+    pre-citation fallback we would emit ``headword=None`` and lose
+    the verification opportunity.
+    """
+    body = "Про *собака* пише Антоненко-Давидович."
+    citations = cc.detect_citations(body)
+    assert len(citations) == 1
+    assert citations[0].headword == "собака"
+
+
+def test_headword_extraction_post_beats_pre_when_both_exist():
+    """When BOTH pre- and post-citation candidates exist, the
+    post-citation one wins. This is the bias that Codex flagged as
+    "defensible but worth a complementary test" in the #1683 review.
+    """
+    body = "Earlier *вертеп* was mentioned. Антоненко-Давидович пише про *собака*."
+    citations = cc.detect_citations(body)
+    assert len(citations) == 1
+    # *собака* is post-citation; *вертеп* is pre-citation. Post wins.
+    assert citations[0].headword == "собака"
 
 
 # ─────────────────────────────────────────────────────────────────────
