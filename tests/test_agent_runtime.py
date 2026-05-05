@@ -112,6 +112,7 @@ from agent_runtime.runner import (
     _is_temp_file,
     _kill_process_tree,
     _load_adapter,
+    _validate_agent_name,
     invoke,
 )
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
@@ -184,6 +185,33 @@ def test_load_adapter_codex():
 def test_load_adapter_unknown_raises():
     with pytest.raises(AgentUnavailableError, match="not in the registry"):
         _load_adapter("nonexistent")
+
+
+@pytest.mark.parametrize(
+    "agent_name,bare_name",
+    [
+        ("codex-tools", "codex"),
+        ("claude-tools", "claude"),
+        ("gemini-tools", "gemini"),
+    ],
+)
+def test_validate_agent_name_rejects_tools_suffix(agent_name, bare_name):
+    with pytest.raises(ValueError) as excinfo:
+        _validate_agent_name(agent_name)
+
+    message = str(excinfo.value)
+    assert "agent_runtime registry uses bare names" in message
+    assert f"pass {bare_name!r} not {agent_name!r}" in message
+    assert "use tool_config to indicate tools-enabled" in message
+
+
+def test_validate_agent_name_allows_bare_registry_name():
+    _validate_agent_name("codex")
+
+
+def test_invoke_rejects_tools_suffix_before_adapter_load():
+    with pytest.raises(ValueError, match="pass 'codex' not 'codex-tools'"):
+        invoke("codex-tools", "hello", mode="read-only")
 
 
 def test_load_adapter_grok_stub_unavailable():
