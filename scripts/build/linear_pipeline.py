@@ -1579,7 +1579,7 @@ def assemble_mdx(module_dir: Path, output_path: Path, plan_path: Path) -> str:
     )
     mdx = mdx.replace("\n{/**/}\n", "\n")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(mdx, encoding="utf-8")  # lgtm [py/clear-text-storage-sensitive-data] nosec
+    output_path.write_text(mdx, encoding="utf-8")  # codeql[py/clear-text-storage-sensitive-data] - .mdx curriculum content, never sensitive data
     return mdx
 
 
