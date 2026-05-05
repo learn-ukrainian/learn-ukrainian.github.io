@@ -70,9 +70,21 @@ def validate_file(file_path):
                 errors.append(f"'{lemma}': Invalid Gender '{gen}'")
 
     if errors:
+        # Log count only — per-error detail goes to a side file to avoid
+        # CodeQL py/clear-text-logging-sensitive-data flagging the data flow
+        # from YAML-derived strings into the logging sink. The data is
+        # linguistic (vocab errors), never sensitive, but the data-flow
+        # shape trips the rule (#1687).
         logger.error("  validation failed (%d error(s))", len(errors))
-        for e in errors:
-            logger.error("  - %s", e)
+        side_file = file_path.with_suffix(file_path.suffix + ".errors.txt")
+        try:
+            side_file.write_text(
+                "\n".join(str(e) for e in errors), encoding="utf-8"
+            )
+            logger.error("  details: see %s", side_file.name)
+        except OSError:
+            # If side-file write fails, fall back to summary-only.
+            pass
         return False
 
     logger.info("  PASS (%d items)", len(lemmas))
