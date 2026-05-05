@@ -159,7 +159,8 @@ def main():
 
     for i, url in enumerate(sorted(unique_urls), 1):
         parsed = urlparse(url)
-        is_youtube = parsed.netloc.endswith("youtube.com") or parsed.netloc == "youtu.be"
+        netloc_lower = parsed.netloc.lower()
+        is_youtube = netloc_lower in {"youtube.com", "www.youtube.com"} or netloc_lower.endswith(".youtube.com") or netloc_lower == "youtu.be"
         if args.skip_youtube and is_youtube:
             continue
 

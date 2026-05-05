@@ -91,11 +91,12 @@ class TestBuildSkipMask:
         assert text[start:end] == "```some code```"
 
     def test_url_detected(self):
+        from urllib.parse import urlparse
         text = "see https://example.com/path for info"
         ranges = _build_skip_mask(text)
         assert len(ranges) >= 1
         covered = text[ranges[0][0]:ranges[0][1]]
-        assert "https://example.com" in covered
+        assert urlparse(covered).netloc == "example.com"
 
     def test_inline_code_detected(self):
         text = "Use `код` here"

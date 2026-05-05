@@ -11,7 +11,7 @@ _LINGUISTIC_UNIT_RE = re.compile(
     r"sound\w*|letter\w*|vowel\w*|consonant\w*|phoneme\w*|syllable\w*|case\w*|gender\w*)\b",
     re.IGNORECASE,
 )
-_COMMENT_ONLY_RE = re.compile(r"^\s*<!--.*-->\s*$")
+_COMMENT_ONLY_RE = re.compile(r"^\s*<!--.*?-->\s*$", flags=re.DOTALL)
 _SENTENCE_TERMINATOR_RE = re.compile(r"[.!?]\s+")
 
 

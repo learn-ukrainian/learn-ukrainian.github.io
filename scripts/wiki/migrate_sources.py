@@ -684,6 +684,16 @@ def _is_citation_only_body(body: str, files: list[str]) -> bool:
     return not scrubbed.strip()
 
 
+def _has_wikipedia_domain(normalized: str) -> bool:
+    from urllib.parse import urlparse
+    if "http" in normalized:
+        try:
+            netloc = urlparse(normalized).netloc.lower()
+            return netloc == "wikipedia.org" or netloc.endswith(".wikipedia.org")
+        except Exception:
+            pass
+    return False
+
 def _looks_like_source_label(token: str) -> bool:
     normalized = normalize_source_filename(token)
     if not normalized:
@@ -695,7 +705,7 @@ def _looks_like_source_label(token: str) -> bool:
         or _HASH_SOURCE_RE.fullmatch(normalized)
         or normalized.startswith(("Wikipedia:", "wikipedia:", "За ", "Із ", "From "))
         or "/wiki/" in normalized
-        or "wikipedia.org" in normalized
+        or _has_wikipedia_domain(normalized)
         or "-" in normalized
         or "_" in normalized
         or bool(_PERSON_SOURCE_RE.fullmatch(normalized))

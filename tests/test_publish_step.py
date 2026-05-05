@@ -252,7 +252,10 @@ class TestBuildResourcesTabFull:
              patch("build.enrich._PROJECT_ROOT", tmp_path):
             result = _build_resources_tab_full("a1", "test-mod")
             assert "ULP Episode 1" in result
-            assert "https://example.com" in result
+            import re
+            from urllib.parse import urlparse
+            urls = re.findall(r'https?://[^\s)"]+', result)
+            assert any(urlparse(u).netloc == "example.com" for u in urls)
 
     def test_no_plan_falls_back(self, tmp_path):
         """Shows the localized placeholder when no resources exist."""

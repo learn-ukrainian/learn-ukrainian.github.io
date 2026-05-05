@@ -300,7 +300,8 @@ def chunk_text(
 def extract_video_id(url: str) -> str:
     """Extract a stable video/article identifier from a URL."""
     parsed = urlparse(url)
-    if "youtube.com" in parsed.netloc:
+    netloc_lower = parsed.netloc.lower()
+    if netloc_lower in {"youtube.com", "www.youtube.com"} or netloc_lower.endswith(".youtube.com"):
         values = parse_qs(parsed.query).get("v")
         if values:
             return values[0]
