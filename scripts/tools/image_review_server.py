@@ -230,7 +230,11 @@ class ImageReviewHandler(http.server.BaseHTTPRequestHandler):
                 self.send_error(403, "Forbidden path format")
                 return
 
-            img_path = BASE_DIR / user_path
+            img_path = (BASE_DIR / user_path).resolve()
+            if not img_path.is_relative_to(BASE_DIR.resolve()):
+                self.send_error(403, "Path traversal attempted")
+                return
+
             if img_path.exists() and img_path.suffix == ".png":
                 self.send_response(200)
                 self.send_header("Content-Type", "image/png")
