@@ -30,10 +30,11 @@ mode that bit Phase 4 round 3.5.
    contract violation; a required term that appears only as a translation
    gloss without a Ukrainian sentence is also insufficient.
 
-3. **Register check.** Re-read the Immersion Rule above. State internally:
-   "I will produce ~{X}% Ukrainian and ~{100-X}% English in module.md." If
-   your draft starts drifting (English bridge sentences expanding, Ukrainian
-   examples shrinking), STOP and rebudget — do not push through.
+3. **Register check.** Re-read the Immersion Rule above. State internally,
+   filling in the percentages it sets: "I will produce ~X% Ukrainian and
+   ~(100−X)% English in module.md." If your draft starts drifting (English
+   bridge sentences expanding, Ukrainian examples shrinking), STOP and
+   rebudget — do not push through.
 
 4. **Teaching sequence.** Re-read the Knowledge Packet below. Each citation
    [S1], [S2], etc. is a fact you will teach or anchor on. Decide the
@@ -44,6 +45,45 @@ mode that bit Phase 4 round 3.5.
    marker.
 
 Only after this reasoning is complete, emit the four fenced blocks below.
+
+## Tier-1 verification discipline (do this WHILE drafting — #1661)
+
+Сибір case study (May 2026): an unhardened answer shipped two fabricated
+citations (a Грінченко example with no Грінченко entry behind it,
+an Антоненко-Давидович claim with no style-guide entry) and one fused
+Shevchenko line that does not exist as composed. These five checks block
+that failure class. Run each check while drafting, not as a separate pass.
+
+1. **Verify every example word in VESUM.** Every Ukrainian lemma listed as
+   an example, vocabulary entry, or grammar exemplar must confirm via
+   `mcp__sources__verify_words`. Failed verification → OMIT. Do NOT
+   silently substitute a confabulated alternative. If no good substitute,
+   leave the slot empty and emit `<!-- VERIFY: lemma "X" not in VESUM -->`.
+
+2. **Modern Ukrainian only.** Default to post-2019 Pravopys forms. No
+   Old East Slavic, Church Slavonic, Russian-shadow, or pre-Pravopys-2019
+   spellings unless the section is explicitly historical / etymological.
+   Doubt → `mcp__sources__check_modern_form`. Archaic-only → swap or omit.
+
+3. **Source-citation discipline.** Every dictionary / style-guide / author
+   citation MUST be groundable in MCP via the matching tool
+   (`search_definitions` for СУМ-11, `search_style_guide` for
+   Антоненко-Давидович, `search_grinchenko_1907` for Грінченко,
+   `query_pravopys` for Правопис, `search_esum` for ЕСУМ). Cannot ground
+   → do NOT cite. Say "modern Ukrainian standardized form" or rephrase
+   without attribution. Inventing a citation to look authoritative is a
+   hard fail.
+
+4. **Quote attribution discipline.** Every attributed quote must be a
+   contiguous string findable via `mcp__sources__search_literary`. Never
+   fuse two separate sources into one attributed line. Exact line not
+   found → drop the quote or paraphrase without attribution.
+
+5. **End-of-output gate.** Before emitting the four fenced blocks, scan
+   the draft once more: every example word against the verification you
+   ran, every cited source for grounding, every quote for literal corpus
+   presence. OMIT or rewrite anything unverifiable. Shipping unverified
+   output for the reviewer to catch is itself a protocol violation.
 
 Return only these four fenced blocks, in this exact order. Do not add prose
 before, between, or after the blocks.
