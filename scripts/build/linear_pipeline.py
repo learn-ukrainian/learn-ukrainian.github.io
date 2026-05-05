@@ -13,6 +13,7 @@ import re
 import sys
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -44,6 +45,12 @@ WRITER_CHOICES = ("claude-tools", "gemini-tools")
 WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
+}
+REVIEWER_CHOICES = ("claude-tools", "gemini-tools", "codex-tools")
+REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
+    "claude-tools": {"model": "claude-opus-4-7", "effort": "xhigh"},
+    "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
+    "codex-tools": {"model": "gpt-5.5", "effort": "high"},
 }
 WRITER_ARTIFACTS = (
     "module.md",
@@ -123,6 +130,63 @@ DICTIONARY_REPLACEMENTS = {
     "відноситися до": ("стосуватися", "Антоненко-Давидович style guide"),
     "рахувати що": ("вважати, що", "Антоненко-Давидович style guide"),
 }
+
+PROMPT_ADHERENCE_FIELDS: tuple[str, ...] = (
+    "word_budget",
+    "plan_vocab",
+    "register",
+    "teaching_sequence",
+)
+PROMPT_ADHERENCE_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
+    "word_budget": (
+        r"word[_\s-]*budget",
+        r"budget\s+per\s+section",
+    ),
+    "plan_vocab": (
+        r"plan[_\s-]*vocab",
+        r"required[_\s-]*(?:plan[_\s-]*)?vocab",
+        r"required[_\s-]*terms",
+        r"required[_\s-]*vocabulary",
+    ),
+    "register": (
+        r"register",
+        r"immersion",
+        r"ukrainian\s+and\s+english",
+    ),
+    "teaching_sequence": (
+        r"teaching[_\s-]*sequence",
+        r"knowledge\s+packet",
+        r"citation\s+sequence",
+    ),
+}
+WRITER_TOOL_NAMES = frozenset(
+    {
+        "verify_words",
+        "verify_lemma",
+        "search_definitions",
+        "search_definitions_slovnyk",
+        "search_grinchenko_1907",
+        "search_literary",
+        "search_style_guide",
+        "search_idioms",
+        "query_pravopys",
+        "query_wikipedia",
+        "search_text",
+        "check_modern_form",
+    }
+)
+REVIEW_AUDIT_TYPES = frozenset(
+    {
+        "source_attribution",
+        "quote_verification",
+        "sovietization_check",
+        "modern_form_check",
+    }
+)
+TELEMETRY_MAX_QUOTES = 5
+TELEMETRY_MAX_QUOTE_CHARS = 240
+TELEMETRY_MAX_MAPPING_CHARS = 500
+TELEMETRY_MAX_FAILED_WORDS = 5
 
 
 @dataclass(frozen=True, slots=True)
@@ -835,6 +899,442 @@ def render_phase_prompt(template_path: Path, context: Mapping[str, Any]) -> str:
     return rendered
 
 
+def emit_event(event: str, **fields: Any) -> None:
+    """Emit one monitor-friendly JSONL event using the V6 event shape."""
+    line = json.dumps(
+        {"event": event, "ts": datetime.now(UTC).isoformat(), **fields},
+        ensure_ascii=False,
+        default=str,
+    )
+    print(line, flush=True)
+
+
+def _emit(event_sink: Callable[..., None] | None, event: str, **fields: Any) -> None:
+    sink = event_sink or emit_event
+    sink(event, **fields)
+
+
+def _module_ref(level: str | None, module_num: str | int | None) -> str | None:
+    if not level or module_num is None:
+        return None
+    raw_num = str(module_num).strip()
+    if not raw_num:
+        return None
+    try:
+        module_part = str(int(raw_num))
+    except ValueError:
+        module_part = raw_num.lower()
+    return f"{level.strip().lower()}/{module_part}"
+
+
+def _prompt_module_ref(prompt: str) -> str | None:
+    level_match = re.search(r"^\s*-\s*Level:\s*(?P<level>\S+)\s*$", prompt, re.MULTILINE)
+    module_match = re.search(r"^\s*-\s*Module:\s*(?P<module>\S+)\s*$", prompt, re.MULTILINE)
+    if not level_match or not module_match:
+        return None
+    return _module_ref(level_match.group("level"), module_match.group("module"))
+
+
+def _prompt_sections(prompt: str) -> list[str]:
+    match = re.search(
+        r"##\s+Contract YAML\s*```yaml\s*(?P<body>.*?)```",
+        prompt,
+        flags=re.DOTALL | re.IGNORECASE,
+    )
+    if not match:
+        return []
+    try:
+        contract = yaml.safe_load(match.group("body")) or {}
+    except yaml.YAMLError:
+        return []
+    sections = contract.get("sections") if isinstance(contract, Mapping) else None
+    if not isinstance(sections, list):
+        return []
+    titles: list[str] = []
+    for section in sections:
+        if isinstance(section, Mapping):
+            title = str(section.get("title") or section.get("section") or "").strip()
+            if title:
+                titles.append(title)
+    return titles
+
+
+def _clean_telemetry_text(value: Any, max_chars: int = 120) -> str:
+    text = re.sub(r"\s+", " ", str(value)).strip()
+    if len(text) <= max_chars:
+        return text
+    return text[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:") + "..."
+
+
+def _section_key(section: str | None) -> str:
+    if not section:
+        return ""
+    return re.sub(r"\W+", "_", section.casefold()).strip("_")
+
+
+def _reasoning_section_from_body(body: str) -> str | None:
+    match = re.search(r"^\s*section\s*:\s*(?P<section>.+?)\s*$", body, re.MULTILINE | re.IGNORECASE)
+    if not match:
+        return None
+    return match.group("section").strip(" *`\"'")
+
+
+def _reasoning_fields_filled(body: str) -> list[str]:
+    filled: list[str] = []
+    for field in PROMPT_ADHERENCE_FIELDS:
+        patterns = PROMPT_ADHERENCE_FIELD_PATTERNS[field]
+        for pattern in patterns:
+            if re.search(pattern + r".{0,80}\S", body, flags=re.IGNORECASE | re.DOTALL):
+                filled.append(field)
+                break
+    return filled
+
+
+def _extract_plan_reasoning_blocks(output: str) -> list[dict[str, str | None]]:
+    blocks: list[dict[str, str | None]] = []
+    xml_re = re.compile(
+        r"<plan_reasoning(?P<attrs>[^>]*)>(?P<body>.*?)</plan_reasoning>",
+        flags=re.DOTALL | re.IGNORECASE,
+    )
+    for match in xml_re.finditer(output):
+        attrs = match.group("attrs") or ""
+        section_match = re.search(r"\bsection\s*=\s*['\"](?P<section>[^'\"]+)['\"]", attrs)
+        body = match.group("body").strip()
+        section = (
+            section_match.group("section").strip()
+            if section_match
+            else _reasoning_section_from_body(body)
+        )
+        blocks.append({"section": section, "body": body})
+
+    heading_re = re.compile(
+        r"^\s*(?:#{1,6}\s*)?\*{0,2}Section reasoning\*{0,2}\s*:?\s*(?P<section>[^\n]*)$",
+        flags=re.MULTILINE | re.IGNORECASE,
+    )
+    headings = list(heading_re.finditer(output))
+    for index, match in enumerate(headings):
+        start = match.end()
+        end = headings[index + 1].start() if index + 1 < len(headings) else len(output)
+        body = output[start:end].strip()
+        raw_section = match.group("section").strip(" *`:-")
+        blocks.append({
+            "section": raw_section or _reasoning_section_from_body(body),
+            "body": body,
+        })
+    return blocks
+
+
+def _writer_cot_results(output: str, sections: list[str]) -> list[dict[str, Any]]:
+    blocks = _extract_plan_reasoning_blocks(output)
+    by_section: dict[str, list[dict[str, str | None]]] = {}
+    unnamed: list[dict[str, str | None]] = []
+    for block in blocks:
+        key = _section_key(block.get("section"))
+        if key:
+            by_section.setdefault(key, []).append(block)
+        else:
+            unnamed.append(block)
+
+    if not sections and blocks:
+        sections = [
+            str(block.get("section") or f"section_{index}")
+            for index, block in enumerate(blocks, start=1)
+        ]
+
+    results: list[dict[str, Any]] = []
+    for section in sections:
+        key = _section_key(section)
+        block = by_section.get(key, []).pop(0) if by_section.get(key) else None
+        if block is None and unnamed:
+            block = unnamed.pop(0)
+        body = str(block.get("body") or "").strip() if block else ""
+        results.append(
+            {
+                "section": section,
+                "block_present": bool(body),
+                "block_chars": len(body),
+                "fields_filled": _reasoning_fields_filled(body) if body else [],
+            }
+        )
+    return results
+
+
+def _extract_writer_gate(output: str) -> dict[str, Any]:
+    gate_patterns = (
+        r"<(?:writer_)?end_gate[^>]*>(?P<body>.*?)</(?:writer_)?end_gate>",
+        r"<tier1_self_review[^>]*>(?P<body>.*?)</tier1_self_review>",
+        r"<tier_1_self_review[^>]*>(?P<body>.*?)</tier_1_self_review>",
+    )
+    body = ""
+    for pattern in gate_patterns:
+        match = re.search(pattern, output, flags=re.DOTALL | re.IGNORECASE)
+        if match:
+            body = match.group("body").strip()
+            break
+    if not body:
+        heading_re = re.compile(
+            r"^\s*(?:#{1,6}\s*)?\*{0,2}(?:End gate|Tier-1 self-review|Tier 1 self-review)"
+            r"\*{0,2}\s*:?\s*$",
+            flags=re.MULTILINE | re.IGNORECASE,
+        )
+        match = heading_re.search(output)
+        if match:
+            next_heading = re.search(
+                r"^\s*(?:#{1,6}\s+\S|```)",
+                output[match.end():],
+                re.MULTILINE,
+            )
+            end = match.end() + next_heading.start() if next_heading else len(output)
+            body = output[match.end():end].strip()
+
+    if not body:
+        return {"gate_present": False, "gate_actions": [], "removed_count": 0}
+
+    lower = body.casefold()
+    actions: list[str] = []
+    if "rescanned_words" in lower or ("rescan" in lower and any(token in lower for token in ("word", "vocab", "vesum"))):
+        actions.append("rescanned_words")
+    if "rescanned_sources" in lower or ("rescan" in lower and any(token in lower for token in ("source", "citation"))):
+        actions.append("rescanned_sources")
+    if "removed_unverified" in lower or ("removed" in lower and "unverified" in lower):
+        actions.append("removed_unverified")
+
+    removed_count = 0
+    for pattern in (
+        r"\bremoved_count\s*[:=]\s*(?P<count>\d+)",
+        r"\bremoved(?:\s+unverified)?\s*[:=]\s*(?P<count>\d+)",
+        r"\bremoved\s+(?P<count>\d+)\b",
+    ):
+        count_match = re.search(pattern, body, flags=re.IGNORECASE)
+        if count_match:
+            removed_count = int(count_match.group("count"))
+            break
+    return {
+        "gate_present": True,
+        "gate_actions": actions,
+        "removed_count": removed_count,
+    }
+
+
+def _mapping_from_tool_call(call: Any) -> dict[str, Any]:
+    if isinstance(call, Mapping):
+        return dict(call)
+    data: dict[str, Any] = {}
+    for key in (
+        "tool",
+        "tool_name",
+        "name",
+        "args",
+        "arguments",
+        "result",
+        "response",
+        "duration_ms",
+        "duration_s",
+        "section",
+        "dim",
+        "audit_type",
+        "items_checked",
+        "items_failed",
+        "flags_raised",
+    ):
+        if hasattr(call, key):
+            data[key] = getattr(call, key)
+    return data
+
+
+def _runtime_tool_calls(result: Any) -> list[dict[str, Any]]:
+    calls: list[dict[str, Any]] = []
+    for attr in ("tool_calls", "mcp_tool_calls"):
+        value = getattr(result, attr, None)
+        if isinstance(value, list):
+            calls.extend(_mapping_from_tool_call(item) for item in value)
+    usage_record = getattr(result, "usage_record", None)
+    if isinstance(usage_record, Mapping):
+        for key in ("tool_calls", "mcp_tool_calls"):
+            value = usage_record.get(key)
+            if isinstance(value, list):
+                calls.extend(_mapping_from_tool_call(item) for item in value)
+    return calls
+
+
+def _normalize_tool_name(raw_tool: Any) -> str:
+    tool = str(raw_tool or "").strip()
+    if "__" in tool:
+        tool = tool.rsplit("__", 1)[-1]
+    return tool
+
+
+def _tool_duration_ms(call: Mapping[str, Any]) -> int:
+    if isinstance(call.get("duration_ms"), int | float):
+        return max(0, int(call["duration_ms"]))
+    if isinstance(call.get("duration_s"), int | float):
+        return max(0, int(float(call["duration_s"]) * 1000))
+    return 0
+
+
+def _count_arg_items(args: Any) -> int | None:
+    if isinstance(args, list | tuple | set):
+        return len(args)
+    if not isinstance(args, Mapping):
+        return None
+    for key in ("words", "lemmas", "items", "queries"):
+        value = args.get(key)
+        if isinstance(value, list | tuple | set):
+            return len(value)
+    return None
+
+
+def _summarize_tool_args(tool: str, args: Any) -> dict[str, Any]:
+    summary: dict[str, Any] = {}
+    count = _count_arg_items(args)
+    if count is not None:
+        summary["count"] = count
+    if isinstance(args, Mapping):
+        if tool in {"verify_lemma", "check_modern_form"} and args.get("lemma"):
+            summary["lemma"] = _clean_telemetry_text(args["lemma"], 80)
+        elif args.get("word"):
+            summary["word"] = _clean_telemetry_text(args["word"], 80)
+        elif args.get("query"):
+            summary["query_chars"] = len(str(args["query"]))
+        if not summary:
+            summary["keys"] = sorted(str(key) for key in args)[:5]
+    elif not summary and args is not None:
+        summary["type"] = type(args).__name__
+    return summary
+
+
+def _summarize_verify_words_result(result: Any) -> dict[str, Any]:
+    if isinstance(result, Mapping) and {"verified", "failed"} & set(result):
+        failed_words = result.get("failed_words") or []
+        if not isinstance(failed_words, list):
+            failed_words = []
+        return {
+            "verified": int(result.get("verified") or 0),
+            "failed": int(result.get("failed") or 0),
+            "failed_words": [
+                _clean_telemetry_text(word, 80)
+                for word in failed_words[:TELEMETRY_MAX_FAILED_WORDS]
+            ],
+        }
+    if not isinstance(result, Mapping):
+        return _summarize_generic_tool_result(result)
+
+    verified = 0
+    failed_words: list[str] = []
+    for word, matches in result.items():
+        if matches:
+            verified += 1
+        else:
+            failed_words.append(str(word))
+    return {
+        "verified": verified,
+        "failed": len(failed_words),
+        "failed_words": [
+            _clean_telemetry_text(word, 80)
+            for word in failed_words[:TELEMETRY_MAX_FAILED_WORDS]
+        ],
+    }
+
+
+def _summarize_generic_tool_result(result: Any) -> dict[str, Any]:
+    if isinstance(result, Mapping):
+        summary: dict[str, Any] = {}
+        for key in ("verified", "failed", "items_checked", "items_failed"):
+            if isinstance(result.get(key), int | float):
+                summary[key] = int(result[key])
+        flags = result.get("flags_raised")
+        if isinstance(flags, list):
+            summary["flags_raised"] = [
+                _clean_telemetry_text(flag, 120)
+                for flag in flags[:TELEMETRY_MAX_FAILED_WORDS]
+            ]
+        if summary:
+            return summary
+        return {"keys": sorted(str(key) for key in result)[:5]}
+    if isinstance(result, list | tuple | set):
+        return {"count": len(result)}
+    if result is None:
+        return {}
+    return {"text_chars": len(str(result))}
+
+
+def _summarize_tool_result(tool: str, result: Any) -> dict[str, Any]:
+    if tool == "verify_words":
+        return _summarize_verify_words_result(result)
+    return _summarize_generic_tool_result(result)
+
+
+def emit_writer_response_telemetry(
+    output: str,
+    *,
+    writer: str,
+    module: str,
+    sections: list[str],
+    tool_calls: list[Mapping[str, Any]] | None = None,
+    event_sink: Callable[..., None] | None = None,
+) -> dict[str, Any]:
+    """Emit writer-side prompt-adherence and tool-use telemetry."""
+    cot_results = _writer_cot_results(output, sections)
+    for result in cot_results:
+        _emit(
+            event_sink,
+            "writer_cot_emit",
+            writer=writer,
+            module=module,
+            section=result["section"],
+            block_present=result["block_present"],
+            block_chars=result["block_chars"],
+            fields_filled=result["fields_filled"],
+        )
+
+    tool_calls_total = 0
+    verify_words_calls = 0
+    for call in tool_calls or []:
+        tool = _normalize_tool_name(
+            call.get("tool") or call.get("tool_name") or call.get("name")
+        )
+        if tool not in WRITER_TOOL_NAMES:
+            continue
+        args = call.get("args", call.get("arguments", {}))
+        result = call.get("result", call.get("response"))
+        tool_calls_total += 1
+        if tool == "verify_words":
+            verify_words_calls += 1
+        _emit(
+            event_sink,
+            "writer_tool_call",
+            writer=writer,
+            module=module,
+            section=str(call.get("section") or "unknown"),
+            tool=tool,
+            args_summary=_summarize_tool_args(tool, args),
+            result_summary=_summarize_tool_result(tool, result),
+            duration_ms=_tool_duration_ms(call),
+        )
+
+    gate = _extract_writer_gate(output)
+    _emit(
+        event_sink,
+        "writer_end_gate",
+        writer=writer,
+        module=module,
+        gate_present=gate["gate_present"],
+        gate_actions=gate["gate_actions"],
+        removed_count=gate["removed_count"],
+    )
+
+    summary = {
+        "sections_total": len(cot_results),
+        "sections_with_cot": sum(1 for result in cot_results if result["block_present"]),
+        "tool_calls_total": tool_calls_total,
+        "verify_words_calls": verify_words_calls,
+        "end_gate_fired": bool(gate["gate_present"]),
+        "removed_via_gate": int(gate["removed_count"]),
+    }
+    _emit(event_sink, "phase_writer_summary", writer=writer, module=module, **summary)
+    return summary
+
+
 def writer_context(plan: Mapping[str, Any], plan_content: str, knowledge_packet: str) -> dict[str, str]:
     level = str(plan["level"])
     sequence = int(plan["sequence"])
@@ -903,6 +1403,9 @@ def invoke_writer(
     *,
     cwd: Path = PROJECT_ROOT,
     invoker: Callable[..., Any] | None = None,
+    module: str | None = None,
+    sections: list[str] | None = None,
+    event_sink: Callable[..., None] | None = None,
 ) -> str:
     """Call the selected writer through the universal agent runtime."""
     if writer not in WRITER_CHOICES:
@@ -928,7 +1431,19 @@ def invoke_writer(
     response = getattr(result, "response", None)
     if not response:
         raise LinearPipelineError("Writer call returned no response")
-    return str(response)
+    response_text = str(response)
+    module_ref = module or _prompt_module_ref(prompt)
+    section_names = list(sections) if sections is not None else _prompt_sections(prompt)
+    if module_ref and section_names:
+        emit_writer_response_telemetry(
+            response_text,
+            writer=writer,
+            module=module_ref,
+            sections=section_names,
+            tool_calls=_runtime_tool_calls(result),
+            event_sink=event_sink,
+        )
+    return response_text
 
 
 def parse_writer_output_strict_json(output: str) -> dict[str, str]:
@@ -1085,6 +1600,232 @@ def render_review_prompt(
     )
 
 
+def _quote_items_from_text(text: str) -> list[str]:
+    quotes: list[str] = []
+    quote_re = re.compile(
+        r'"(?P<double>[^"\n]{1,500})"|“(?P<curly>[^”\n]{1,500})”|«(?P<guillemets>[^»\n]{1,500})»'
+    )
+    for match in quote_re.finditer(text):
+        quote = match.group("double") or match.group("curly") or match.group("guillemets")
+        if quote:
+            quotes.append(_clean_telemetry_text(quote, TELEMETRY_MAX_QUOTE_CHARS))
+    return quotes
+
+
+def _evidence_quotes_from_payload(payload: Mapping[str, Any]) -> list[str]:
+    raw_quotes = payload.get("evidence_quotes")
+    quotes: list[str] = []
+    if isinstance(raw_quotes, list):
+        quotes.extend(
+            _clean_telemetry_text(item, TELEMETRY_MAX_QUOTE_CHARS)
+            for item in raw_quotes
+            if str(item).strip()
+        )
+
+    evidence = payload.get("evidence")
+    if isinstance(evidence, list):
+        quotes.extend(
+            _clean_telemetry_text(item, TELEMETRY_MAX_QUOTE_CHARS)
+            for item in evidence
+            if str(item).strip()
+        )
+    elif isinstance(evidence, str):
+        quotes.extend(_quote_items_from_text(evidence))
+        if not quotes and evidence.strip():
+            quotes.append(_clean_telemetry_text(evidence, TELEMETRY_MAX_QUOTE_CHARS))
+
+    deduped: list[str] = []
+    seen: set[str] = set()
+    for quote in quotes:
+        if quote and quote not in seen:
+            seen.add(quote)
+            deduped.append(quote)
+        if len(deduped) >= TELEMETRY_MAX_QUOTES:
+            break
+    return deduped
+
+
+def _rubric_mapping_from_payload(payload: Mapping[str, Any]) -> str:
+    for key in ("rubric_mapping", "mapping", "rationale", "rubric_rationale"):
+        value = payload.get(key)
+        if value:
+            return _clean_telemetry_text(value, TELEMETRY_MAX_MAPPING_CHARS)
+    mappings = payload.get("evidence_mapping")
+    if isinstance(mappings, list) and mappings:
+        return _clean_telemetry_text("; ".join(str(item) for item in mappings), TELEMETRY_MAX_MAPPING_CHARS)
+    return ""
+
+
+def emit_reviewer_dim_telemetry(
+    payload: Mapping[str, Any],
+    *,
+    reviewer: str,
+    module: str,
+    writer_under_review: str,
+    dim: str,
+    event_sink: Callable[..., None] | None = None,
+) -> None:
+    """Emit one reviewer_dim_evidence event from a parsed per-dim response."""
+    score = payload.get("score")
+    _emit(
+        event_sink,
+        "reviewer_dim_evidence",
+        reviewer=reviewer,
+        module=module,
+        writer_under_review=writer_under_review,
+        dim=dim,
+        evidence_quotes=_evidence_quotes_from_payload(payload),
+        rubric_mapping=_rubric_mapping_from_payload(payload),
+        score=float(score) if isinstance(score, int | float) else score,
+    )
+
+
+def _audit_type_for_tool(tool: str, explicit: Any = None) -> str:
+    audit_type = str(explicit or "").strip()
+    if audit_type in REVIEW_AUDIT_TYPES:
+        return audit_type
+    if tool in {"search_grinchenko_1907", "search_literary", "search_definitions", "search_definitions_slovnyk"}:
+        return "source_attribution"
+    if tool in {"search_text", "query_wikipedia"}:
+        return "quote_verification"
+    if tool in {"search_style_guide", "search_idioms"}:
+        return "sovietization_check"
+    return "modern_form_check"
+
+
+def _items_checked_for_audit(call: Mapping[str, Any], args: Any, result: Any) -> int:
+    if isinstance(call.get("items_checked"), int | float):
+        return int(call["items_checked"])
+    arg_count = _count_arg_items(args)
+    if arg_count is not None:
+        return arg_count
+    if isinstance(result, Mapping) and isinstance(result.get("items_checked"), int | float):
+        return int(result["items_checked"])
+    if isinstance(result, list | tuple | set):
+        return len(result)
+    return 1
+
+
+def _items_failed_for_audit(call: Mapping[str, Any], result: Any) -> int:
+    if isinstance(call.get("items_failed"), int | float):
+        return int(call["items_failed"])
+    if isinstance(result, Mapping):
+        for key in ("items_failed", "failed"):
+            if isinstance(result.get(key), int | float):
+                return int(result[key])
+    return 0
+
+
+def _flags_for_audit(call: Mapping[str, Any], result: Any) -> list[str]:
+    flags = call.get("flags_raised")
+    if flags is None and isinstance(result, Mapping):
+        flags = result.get("flags_raised") or result.get("flags")
+    if not isinstance(flags, list):
+        return []
+    return [
+        _clean_telemetry_text(flag, 120)
+        for flag in flags[:TELEMETRY_MAX_FAILED_WORDS]
+    ]
+
+
+def emit_reviewer_audit_telemetry(
+    tool_calls: list[Mapping[str, Any]],
+    *,
+    reviewer: str,
+    module: str,
+    writer_under_review: str,
+    dim: str,
+    event_sink: Callable[..., None] | None = None,
+) -> dict[str, int]:
+    """Emit reviewer audit-call telemetry and return roll-up counters."""
+    calls_total = 0
+    flags_total = 0
+    for call in tool_calls:
+        tool = _normalize_tool_name(
+            call.get("tool") or call.get("tool_name") or call.get("name")
+        )
+        if tool not in WRITER_TOOL_NAMES:
+            continue
+        args = call.get("args", call.get("arguments", {}))
+        result = call.get("result", call.get("response"))
+        flags = _flags_for_audit(call, result)
+        calls_total += 1
+        flags_total += len(flags)
+        _emit(
+            event_sink,
+            "reviewer_audit_call",
+            reviewer=reviewer,
+            module=module,
+            writer_under_review=writer_under_review,
+            dim=str(call.get("dim") or dim),
+            audit_type=_audit_type_for_tool(tool, call.get("audit_type")),
+            tool=tool,
+            items_checked=_items_checked_for_audit(call, args, result),
+            items_failed=_items_failed_for_audit(call, result),
+            flags_raised=flags,
+        )
+    return {"audit_calls_total": calls_total, "flags_raised_total": flags_total}
+
+
+def invoke_reviewer_dim(
+    prompt: str,
+    reviewer: str,
+    *,
+    dim: str,
+    writer_under_review: str,
+    cwd: Path = PROJECT_ROOT,
+    invoker: Callable[..., Any] | None = None,
+    module: str | None = None,
+    event_sink: Callable[..., None] | None = None,
+) -> str:
+    """Call one per-dimension reviewer and emit response/audit telemetry."""
+    if reviewer not in REVIEWER_CHOICES:
+        raise LinearPipelineError(
+            f"Unknown reviewer {reviewer!r}; expected one of {REVIEWER_CHOICES}"
+        )
+    if invoker is None:
+        from scripts.agent_runtime.runner import invoke as invoker
+
+    defaults = REVIEWER_DEFAULTS[reviewer]
+    agent_name = reviewer.split("-", 1)[0]
+    result = invoker(
+        agent_name,
+        prompt,
+        mode="read-only",
+        cwd=cwd,
+        model=defaults["model"],
+        task_id=f"phase-4-review-{dim}",
+        entrypoint="dispatch",
+        effort=defaults["effort"],
+        tool_config={"output_format": "text"},
+    )
+    response = getattr(result, "response", None)
+    if not response:
+        raise LinearPipelineError(f"Reviewer call for {dim} returned no response")
+    response_text = str(response)
+    module_ref = module or _prompt_module_ref(prompt)
+    if module_ref:
+        parse_review_response(
+            response_text,
+            dim,
+            reviewer=reviewer,
+            module=module_ref,
+            writer_under_review=writer_under_review,
+            event_sink=event_sink,
+        )
+        tool_calls = _runtime_tool_calls(result)
+        if tool_calls:
+            emit_reviewer_audit_telemetry(
+                tool_calls,
+                reviewer=reviewer,
+                module=module_ref,
+                writer_under_review=writer_under_review,
+                dim=dim,
+                event_sink=event_sink,
+            )
+    return response_text
+
+
 def render_writer_correction_prompt(
     *,
     gate: str,
@@ -1170,7 +1911,15 @@ def render_reviewer_correction_prompt(
     )
 
 
-def parse_review_response(response: str, dim: str) -> dict[str, Any]:
+def parse_review_response(
+    response: str,
+    dim: str,
+    *,
+    reviewer: str | None = None,
+    module: str | None = None,
+    writer_under_review: str | None = None,
+    event_sink: Callable[..., None] | None = None,
+) -> dict[str, Any]:
     """Parse and validate one per-dim LLM QG response."""
     if dim not in QG_DIMS:
         raise LinearPipelineError(f"Unknown LLM QG dimension: {dim}")
@@ -1194,6 +1943,18 @@ def parse_review_response(response: str, dim: str) -> dict[str, Any]:
     validate_llm_review_report({**_placeholder_review_report(), dim: entry})
     if verdict not in {"PASS", "REVISE", "REJECT"}:
         raise LinearPipelineError(f"LLM QG response for {dim} has invalid verdict")
+    if reviewer and module and writer_under_review:
+        telemetry_payload = dict(payload)
+        telemetry_payload.setdefault("score", score)
+        telemetry_payload.setdefault("evidence", evidence)
+        emit_reviewer_dim_telemetry(
+            telemetry_payload,
+            reviewer=reviewer,
+            module=module,
+            writer_under_review=writer_under_review,
+            dim=dim,
+            event_sink=event_sink,
+        )
     return entry
 
 
@@ -1231,10 +1992,81 @@ def validate_llm_review_report(report: Mapping[str, Any]) -> None:
             raise LinearPipelineError(f"LLM QG entry for {dim} has invalid verdict")
 
 
-def aggregate_llm_review(report: Mapping[str, Any], level_code: str) -> dict[str, Any]:
+def _review_weighted_score(scores: Mapping[str, float]) -> float:
+    if not scores:
+        return 0.0
+    return round(sum(float(score) for score in scores.values()) / len(scores), 2)
+
+
+def emit_phase_review_summary(
+    report: Mapping[str, Any],
+    *,
+    reviewer: str,
+    module: str,
+    writer_under_review: str,
+    audit_calls_total: int = 0,
+    flags_raised_total: int = 0,
+    weighted_score: float | None = None,
+    event_sink: Callable[..., None] | None = None,
+) -> dict[str, Any]:
+    """Emit the reviewer phase roll-up event."""
+    scores = {
+        dim: float(report[dim]["score"])
+        for dim in QG_DIMS
+        if isinstance(report.get(dim), Mapping)
+    }
+    dims_with_evidence = 0
+    for dim in QG_DIMS:
+        entry = report.get(dim)
+        if isinstance(entry, Mapping):
+            evidence = entry.get("evidence") or entry.get("evidence_quotes")
+            if evidence:
+                dims_with_evidence += 1
+    summary = {
+        "dims_scored": len(scores),
+        "dims_with_evidence": dims_with_evidence,
+        "audit_calls_total": int(audit_calls_total),
+        "flags_raised_total": int(flags_raised_total),
+        "min_dim_score": min(scores.values()) if scores else None,
+        "weighted_score": weighted_score if weighted_score is not None else _review_weighted_score(scores),
+    }
+    _emit(
+        event_sink,
+        "phase_review_summary",
+        reviewer=reviewer,
+        module=module,
+        writer_under_review=writer_under_review,
+        **summary,
+    )
+    return summary
+
+
+def aggregate_llm_review(
+    report: Mapping[str, Any],
+    level_code: str,
+    *,
+    reviewer: str | None = None,
+    module: str | None = None,
+    writer_under_review: str | None = None,
+    audit_calls_total: int = 0,
+    flags_raised_total: int = 0,
+    event_sink: Callable[..., None] | None = None,
+) -> dict[str, Any]:
     validate_llm_review_report(report)
     scores = {dim: float(report[dim]["score"]) for dim in QG_DIMS}
     verdict = aggregate_review(scores, level_code)
+    weighted_score = _review_weighted_score(scores)
+    if reviewer and module and writer_under_review:
+        emit_phase_review_summary(
+            report,
+            reviewer=reviewer,
+            module=module,
+            writer_under_review=writer_under_review,
+            audit_calls_total=audit_calls_total,
+            flags_raised_total=flags_raised_total,
+            weighted_score=weighted_score,
+            event_sink=event_sink,
+        )
     return {
         "dimensions": {dim: dict(report[dim]) for dim in QG_DIMS},
         "aggregate": asdict(verdict),
