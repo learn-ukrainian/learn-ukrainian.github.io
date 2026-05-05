@@ -5,6 +5,7 @@ Browse to http://localhost:8765 to view images with filtering.
 """
 
 import http.server
+import os.path
 import urllib.parse
 from pathlib import Path
 
@@ -230,18 +231,18 @@ class ImageReviewHandler(http.server.BaseHTTPRequestHandler):
                 self.send_error(403, "Forbidden path format")
                 return
 
-            # Resolve to canonical absolute path, then verify containment.
-            # Use Path.relative_to() in a try/except — CodeQL's `py/path-injection`
-            # query recognizes this as a path-traversal sanitizer (alert #168).
-            # `is_relative_to()` (Py 3.9+) is logically equivalent but isn't
-            # universally recognized by the CodeQL data-flow query yet.
-            img_path = (BASE_DIR / user_path).resolve()
-            base_resolved = BASE_DIR.resolve()
-            try:
-                img_path.relative_to(base_resolved)
-            except ValueError:
+            # Resolve via os.path.realpath, then verify containment with
+            # os.path.commonpath — this is the path-traversal sanitizer that
+            # CodeQL's `py/path-injection` data-flow query reliably recognizes.
+            # We tried pathlib's `is_relative_to()` (alert #168) and
+            # `relative_to()` try/except (alert #169) — neither is recognized
+            # by CodeQL's current Python sanitizer set.
+            candidate = os.path.realpath(os.path.join(str(BASE_DIR), user_path))
+            base_real = os.path.realpath(str(BASE_DIR))
+            if os.path.commonpath([candidate, base_real]) != base_real:
                 self.send_error(403, "Path traversal attempted")
                 return
+            img_path = Path(candidate)
 
             if img_path.exists() and img_path.suffix == ".png":
                 self.send_response(200)
