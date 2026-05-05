@@ -102,10 +102,11 @@ block per structured artifact. Do not include trailing commas. Do not include
 comments. Do not mix YAML or prose into JSON blocks. The pipeline uses
 `json.loads` and fails the build on any parse error.
 
-`module.md` itself stays Markdown. Only the three structured-data blocks move
-to JSON. The pipeline serializes those parsed JSON values to YAML for storage.
-Use `json` fences only for these three structured artifacts; do not fence prose
-inside `module.md`.
+Inside the `module.md` artifact, do NOT use triple backticks (```) for ANY
+purpose — no fenced code, no fenced quote, no fenced text. Use plain paragraphs,
+lists, or tables instead. Triple backticks inside the artifact will be parsed as
+a closing fence and break the artifact boundary. Single backticks for inline code
+spans (e.g., `verify_words`) are fine — only triple backticks are forbidden.
 
 ## Module Context
 
