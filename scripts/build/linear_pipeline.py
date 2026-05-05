@@ -1623,6 +1623,44 @@ def parse_writer_output(output: str) -> dict[str, str]:
     return parse_writer_output_strict_json(output)
 
 
+# Match a single fenced block whose info string identifies module.md, in any
+# of the writer's known fence-info conventions:
+#   ```markdown file=module.md
+#   ```markdown module.md
+#   ```module.md
+# The body capture stops at the next ``` fence terminator. Whitespace before
+# the trailing fence is allowed but content lines are preserved verbatim.
+_MODULE_ONLY_FENCE_RE = re.compile(
+    r"```\s*(?:markdown(?:\s+(?:file=)?module\.md)?|(?:file=)?module\.md)\s*\n"
+    r"(?P<body>.*?)\n```",
+    re.DOTALL,
+)
+
+
+def parse_writer_correction_module_only(response: str) -> str | None:
+    """Extract the patched module.md from a single-fence correction response.
+
+    The patch-bounded writer-correction prompt (`linear-writer-correction.md`)
+    instructs the writer to return EXACTLY one fenced block labeled
+    `module.md`. This parser accepts that format. Returns the module.md body
+    (with one trailing newline) when the response contains exactly one such
+    block, or None if the response has zero or multiple matching blocks.
+
+    Used by `_apply_writer_correction` for gates that only modify module.md
+    (everything in WRITER_CORRECTION_GATES except `strict_json_parse`, which
+    needs all four artifacts re-emitted).
+    """
+    if not isinstance(response, str):
+        return None
+    matches = list(_MODULE_ONLY_FENCE_RE.finditer(response))
+    if len(matches) != 1:
+        return None
+    body = matches[0].group("body").strip()
+    if not body:
+        return None
+    return body + "\n"
+
+
 def write_writer_artifacts(module_dir: Path, artifacts: Mapping[str, str]) -> None:
     """Write parsed writer artifacts after validating their basic shapes."""
     missing = [name for name in WRITER_ARTIFACTS if name not in artifacts]
@@ -2354,18 +2392,29 @@ def _apply_writer_correction(
         response = writer_corrector(context)
     if isinstance(response, Mapping):
         write_writer_artifacts(module_dir, response)
-    elif isinstance(response, str) and all(name in response for name in WRITER_ARTIFACTS):
-        write_writer_artifacts(module_dir, parse_writer_output_strict_json(response))
-    else:
-        emit_event(
-            "writer_correction_unparseable",
-            **_correction_event_fields(
-                gate=gate,
-                module_dir=module_dir,
-                plan_path=plan_path,
-            ),
-            response_preview=_correction_preview(response),
-        )
+        return
+    if isinstance(response, str):
+        # Strict-JSON-parse failures need all 4 artifact blocks back since the
+        # original parse was the failure mode itself. Other gates (word_count,
+        # plan_sections, formatting_standards, mdx_render) are module.md-only
+        # patches per the linear-writer-correction.md output contract.
+        if all(name in response for name in WRITER_ARTIFACTS):
+            write_writer_artifacts(module_dir, parse_writer_output_strict_json(response))
+            return
+        if gate != "strict_json_parse":
+            patched = parse_writer_correction_module_only(response)
+            if patched is not None:
+                (module_dir / "module.md").write_text(patched, encoding="utf-8")
+                return
+    emit_event(
+        "writer_correction_unparseable",
+        **_correction_event_fields(
+            gate=gate,
+            module_dir=module_dir,
+            plan_path=plan_path,
+        ),
+        response_preview=_correction_preview(response),
+    )
 
 
 def _apply_reviewer_correction(
