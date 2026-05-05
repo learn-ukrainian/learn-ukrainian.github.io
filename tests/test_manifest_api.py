@@ -235,4 +235,11 @@ def test_inbox_400_on_invalid_agent(monkeypatch):
 
     resp = client.get("/api/comms/inbox?agent=foobar")
     assert resp.status_code == 400
-    assert "unknown agent" in resp.json()["error"]
+    # Generic error message — the comms router intentionally redacts
+    # internal ValueError text (CodeQL py/stack-trace-exposure fix on
+    # comms_router.py:1431, PR #1687) and surfaces a generic "invalid
+    # agent" string plus a correlation `error_id` instead of leaking
+    # the raised message.
+    body = resp.json()
+    assert body["error"] == "invalid agent"
+    assert "error_id" in body

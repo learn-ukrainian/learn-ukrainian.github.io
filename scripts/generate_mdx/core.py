@@ -571,7 +571,7 @@ def main():
 
         # Write output
         output_file = output_dir / f'{mod.slug}.mdx'
-        output_file.write_text(mdx_content, encoding='utf-8')
+        output_file.write_text(mdx_content, encoding='utf-8')  # codeql[py/clear-text-storage-sensitive-data] - .mdx curriculum content, never sensitive data
 
     print('\n\u2705 MDX generation complete!')
 

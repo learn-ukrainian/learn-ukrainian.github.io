@@ -582,4 +582,17 @@ if __name__ == "__main__":
             plan = {"vocabulary_hints": []}
 
     sandbox = build_sandbox(track, module_num, plan)
-    print(sandbox)
+    # __main__ smoke-test: print a non-sensitive completion line only.
+    # Full sandbox inspection should go through the build_sandbox() API directly,
+    # not the CLI debug-print path. This closes
+    # CodeQL py/clear-text-logging-sensitive-data alert (#1687) at the source
+    # by removing the print of variable-derived YAML-derived data — the alert
+    # was a false positive (sandbox contains curriculum vocabulary, never
+    # credentials), but the data-flow shape tripped the rule, and theatrical
+    # `.replace()` sanitization is not an honest fix.
+    if isinstance(sandbox, dict):
+        vocab_count = len(sandbox.get("vocabulary", []))
+        rules_count = len(sandbox.get("rules", []))
+        print(f"sandbox built: {vocab_count} vocab items, {rules_count} rules")
+    else:
+        print("sandbox built (non-dict result)")

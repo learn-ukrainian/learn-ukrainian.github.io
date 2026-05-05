@@ -3,11 +3,15 @@ Gold Team API router — endpoints for the Gold (Gemini) batch monitor dashboard
 """
 
 import json
+import logging
 
 # Ensure scripts/ is importable
 import sys
+import uuid
 from datetime import UTC, datetime
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 import yaml
 from fastapi import APIRouter, HTTPException
@@ -306,8 +310,10 @@ async def broker_messages():
         rows = [dict(row) for row in cur.fetchall()]
         conn.close()
         return rows
-    except Exception as e:
-        return {"error": str(e)}
+    except Exception:
+        error_id = uuid.uuid4().hex
+        logger.error(f"Failed to fetch gold stream messages [{error_id}]", exc_info=True)
+        return {"error": "internal error", "error_id": error_id}
 
 
 @router.get("/active-orchestration")

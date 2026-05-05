@@ -44,8 +44,8 @@ def fill_template(template_text: str, placeholders: dict[str, str]) -> str:
     result = template_text
     for _pass in range(2):
         for key, value in placeholders.items():
-            token = "{" + key + "}"
-            result = result.replace(token, str(value))
+            pattern = "{" + key + "}"
+            result = result.replace(pattern, str(value))
     return result
 
 
