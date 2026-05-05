@@ -1,10 +1,14 @@
 # ADR-008: Targeted gate-specific correction paths
 
-**Status**: PROPOSED 2026-04-28 (pending implementation; see EPIC linkage below).
-**Date**: 2026-04-28
+**Status**: ACCEPTED 2026-05-05 (implementation shipped via PR #1636 on 2026-05-02; supersession question reviewed 2026-05-05 and resolved KEEP — see "Supersession review" below).
+**Date**: 2026-04-28 (proposed); 2026-05-05 (accepted).
 **Deciders**: Engineering (Krisztian K.) + cross-agent review (Gemini-3.1-pro-preview, Codex-gpt-5.5; broker task `adr-008-review`).
-**Related**: ADR-007 (`docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.md`), EPIC #1577 (curriculum reboot), #1620 (round-3.5 verification surfaced the no-correction-path tension), #1622 (round-4 bakeoff).
+**Related**: ADR-007 (`docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.md`), EPIC #1577 (curriculum reboot), #1620 (round-3.5 verification surfaced the no-correction-path tension), #1622 (round-4 bakeoff), PR #1636 (implementation), `docs/decisions/2026-05-05-adr-008-supersession-resolved-keep.md` (supersession review).
 **Refines**: ADR-007 (does not supersede; preserves all of ADR-007's kills).
+
+## Supersession review (2026-05-05)
+
+After the multi-agent deliberation protocol shipped (commit `872d8376b0`), an open question was whether ADR-008's per-gate correction loop became redundant. Outcome: **KEEP ADR-008 as-is, no scope-down**. Deliberation operates on pre-review channel posts (design / framing / linguistic decisions) and prevents bad CONTENT from reaching the writer; ADR-008 operates on post-write module artifacts and corrects mechanical gate output (word count, VESUM, calques). They live at different layers and address different failure modes — the handoff that suggested supersession conflated layers. Full rationale in `docs/decisions/2026-05-05-adr-008-supersession-resolved-keep.md`.
 
 ---
 

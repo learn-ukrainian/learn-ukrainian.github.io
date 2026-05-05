@@ -1,10 +1,12 @@
-# Pending Decision — ADR-008 supersession-or-keep, given deliberation-as-pre-review
+# Resolved — ADR-008 supersession-or-keep, given deliberation-as-pre-review
 
 > **Type:** Architectural — affects every Phase-5 module build path
 > **Scope:** Pipeline correction architecture (`scripts/build/linear_pipeline.py`); does NOT affect orchestration, content, or curriculum tracks
 > **Authored by:** Claude (overnight autonomous session, 2026-05-05)
-> **For:** Krisztian morning review
-> **Recommendation:** **Keep ADR-008 (DO NOT scope down).** One-sentence why: deliberation prevents bad CONTENT from reaching the reviewer; ADR-008 catches bad MECHANICAL gate output. They operate on different failure modes — removing ADR-008 because deliberation works is a category error.
+> **Resolved:** 2026-05-05, **Option (a) — Keep ADR-008 as-is, status bump PROPOSED → ACCEPTED only.**
+> **Resolution mechanism:** User deferred to Claude's recommendation ("I don't know what is the right answer"); Claude executed (a) on the rationale below.
+> **Outcome:** Status bump applied to `docs/decisions/2026-04-28-targeted-gate-correction-paths.md`. Cross-link added there to this file.
+> **Recommendation rationale (now-applied):** **Keep ADR-008 (DO NOT scope down).** One-sentence why: deliberation prevents bad CONTENT from reaching the reviewer; ADR-008 catches bad MECHANICAL gate output. They operate on different failure modes — removing ADR-008 because deliberation works is a category error.
 
 ---
 
