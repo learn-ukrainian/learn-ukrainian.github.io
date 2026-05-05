@@ -77,6 +77,14 @@ def test_parse_writer_correction_module_only_rejects_empty_body() -> None:
     assert linear_pipeline.parse_writer_correction_module_only(response) is None
 
 
+def test_parse_writer_correction_module_only_rejects_bare_markdown_fence() -> None:
+    """A bare ``markdown`` fence (without module.md label) does NOT qualify.
+    The gate semantics is "this is the patched module.md" — bare markdown
+    might be a knowledge_packet, a draft excerpt, or unrelated content."""
+    response = "```markdown\nsome unrelated markdown content\n```"
+    assert linear_pipeline.parse_writer_correction_module_only(response) is None
+
+
 def test_writer_correction_module_only_writes_patched_module(tmp_path: Path) -> None:
     """End-to-end: a contract-shaped response patches module.md and emits
     no `writer_correction_unparseable` event."""

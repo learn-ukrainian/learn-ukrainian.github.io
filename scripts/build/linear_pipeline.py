@@ -1628,10 +1628,12 @@ def parse_writer_output(output: str) -> dict[str, str]:
 #   ```markdown file=module.md
 #   ```markdown module.md
 #   ```module.md
-# The body capture stops at the next ``` fence terminator. Whitespace before
-# the trailing fence is allowed but content lines are preserved verbatim.
+#   ```file=module.md
+# The module.md label is REQUIRED — a bare ``` markdown ``` fence does not
+# qualify because the gate is "this is the patched module.md", not "any
+# markdown content". The body capture stops at the next ``` fence terminator.
 _MODULE_ONLY_FENCE_RE = re.compile(
-    r"```\s*(?:markdown(?:\s+(?:file=)?module\.md)?|(?:file=)?module\.md)\s*\n"
+    r"```\s*(?:markdown\s+(?:file=)?module\.md|(?:file=)?module\.md)\s*\n"
     r"(?P<body>.*?)\n```",
     re.DOTALL,
 )
