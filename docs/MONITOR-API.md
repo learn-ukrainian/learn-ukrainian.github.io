@@ -1800,6 +1800,37 @@ Practical rule: read `stdout` line-by-line, parse only lines that begin with `{`
 - `module_failed` includes `level`, `slug`, `phase`, and `error`. Error strings are truncated to 200 characters.
 - `batch_start` includes `level` and `total`.
 - `batch_done` includes `level`, `total`, `succeeded`, and `failed`.
+
+### V7 Linear JSONL Events
+
+The V7 linear pipeline emits additive prompt-adherence telemetry to the same
+JSONL stream. Existing V6 event shapes stay unchanged.
+
+- `writer_cot_emit`: one event per contracted section. Includes `writer`,
+  `module`, `section`, `block_present`, `block_chars`, and `fields_filled`.
+- `writer_tool_call`: one event per bounded writer MCP tool call. Includes
+  `writer`, `module`, `section`, `tool`, `args_summary`, `result_summary`,
+  and `duration_ms`.
+- `writer_end_gate`: one event per writer phase. Includes `writer`, `module`,
+  `gate_present`, `gate_actions`, and `removed_count`.
+- `phase_writer_summary`: writer roll-up. Includes `writer`, `module`,
+  `sections_total`, `sections_with_cot`, `tool_calls_total`,
+  `verify_words_calls`, `end_gate_fired`, and `removed_via_gate`.
+- `reviewer_dim_evidence`: one event per reviewer dimension. Includes
+  `reviewer`, `module`, `writer_under_review`, `dim`, `evidence_quotes`,
+  `rubric_mapping`, and `score`.
+- `reviewer_audit_call`: one event per reviewer Tier-1 audit call. Includes
+  `reviewer`, `module`, `writer_under_review`, `dim`, `audit_type`, `tool`,
+  `items_checked`, `items_failed`, and `flags_raised`.
+- `phase_review_summary`: reviewer roll-up. Includes `reviewer`, `module`,
+  `writer_under_review`, `dims_scored`, `dims_with_evidence`,
+  `audit_calls_total`, `flags_raised_total`, `min_dim_score`, and
+  `weighted_score`.
+
+V7 payloads are intentionally bounded: evidence quote arrays are capped at
+five entries, `rubric_mapping` is capped at 500 characters, and tool events
+store summaries rather than full arguments or raw tool results.
+
 - `reviewer_override` (#1321) fires once per deterministic-dimension override applied during a review round. Includes `level`, `slug`, `dim` (int), `name`, `claim` (one of `word_count_below_target`, `activity_count_undercounted`), `reviewer_value` (what the reviewer claimed), `deterministic_value` (what the pipeline measured), and `delta_score` (points added to that dim).
 - `reviewer_saved_by_override` (#1321) fires at most once per review round, only when the cumulative override(s) lifted the module from `passed=False` to `passed=True`. Includes `level`, `slug`, `old_score`, `new_score`.
 - `review_regression_prevented` (#1320) fires when the review-heal loop detects that a post-pass round dropped below the snapshotted score by more than `_REGRESSION_BAND` (0.2) and reverts to the snapshot. Includes `level`, `slug`, `regressed_round`, `regressed_score`, `best_round`, `best_score`.
