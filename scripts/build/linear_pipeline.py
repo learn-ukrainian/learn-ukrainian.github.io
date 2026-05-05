@@ -1623,19 +1623,13 @@ def parse_writer_output(output: str) -> dict[str, str]:
     return parse_writer_output_strict_json(output)
 
 
-# Match a single fenced block whose info string identifies module.md, in any
-# of the writer's known fence-info conventions:
-#   ```markdown file=module.md
-#   ```markdown module.md
-#   ```module.md
-#   ```file=module.md
-# The module.md label is REQUIRED — a bare ``` markdown ``` fence does not
-# qualify because the gate is "this is the patched module.md", not "any
-# markdown content". The body capture stops at the next ``` fence terminator.
-_MODULE_ONLY_FENCE_RE = re.compile(
-    r"```\s*(?:markdown\s+(?:file=)?module\.md|(?:file=)?module\.md)\s*\n"
-    r"(?P<body>.*?)\n```",
-    re.DOTALL,
+# Recognized info strings that identify a fence as the patched module.md.
+# Accepted: ``` ```markdown file=module.md```, ``` ```markdown module.md```,
+#           ``` ```module.md```, ``` ```file=module.md```.
+# The module.md label is REQUIRED — a bare ``` ```markdown``` fence does not
+# qualify because the gate semantics is "this is the patched module.md".
+_MODULE_FENCE_INFO_RE = re.compile(
+    r"\A\s*(?:markdown\s+(?:file=)?module\.md|(?:file=)?module\.md)\s*\Z",
 )
 
 
@@ -1644,20 +1638,41 @@ def parse_writer_correction_module_only(response: str) -> str | None:
 
     The patch-bounded writer-correction prompt (`linear-writer-correction.md`)
     instructs the writer to return EXACTLY one fenced block labeled
-    `module.md`. This parser accepts that format. Returns the module.md body
-    (with one trailing newline) when the response contains exactly one such
-    block, or None if the response has zero or multiple matching blocks.
+    `module.md`, with no leading or trailing prose. This parser accepts that
+    contract and rejects everything else:
 
-    Used by `_apply_writer_correction` for gates that only modify module.md
-    (everything in WRITER_CORRECTION_GATES except `strict_json_parse`, which
-    needs all four artifacts re-emitted).
+    - leading prose before the fence
+    - trailing prose after the fence
+    - multiple fenced blocks (e.g., a strict-json 4-block writer response
+      that incidentally contains a module.md fence)
+    - bare ``` ```markdown``` fences without the module.md label
+    - empty fence body
+
+    Returns the module.md body (with one trailing newline) on the contract
+    match, else None. Used by `_apply_writer_correction` for gates that only
+    modify module.md (everything in WRITER_CORRECTION_GATES except
+    `strict_json_parse`, which needs all four artifacts re-emitted).
     """
     if not isinstance(response, str):
         return None
-    matches = list(_MODULE_ONLY_FENCE_RE.finditer(response))
-    if len(matches) != 1:
+    stripped = response.strip()
+    # Hard guards: the entire response must be one triple-fence block.
+    if not (stripped.startswith("```") and stripped.endswith("```")):
         return None
-    body = matches[0].group("body").strip()
+    # Splitting on the triple-backtick delimiter gives exactly 3 parts when
+    # the response is one fence: ["", fence_content, ""]. More parts → there
+    # are extra fences (i.e., 4-block writer output) or stray ``` characters,
+    # which violates the contract.
+    parts = stripped.split("```")
+    if len(parts) != 3 or parts[0] != "" or parts[2] != "":
+        return None
+    fence_content = parts[1]
+    info_line, sep, body = fence_content.partition("\n")
+    if sep == "":  # No body delimiter — fence is malformed
+        return None
+    if not _MODULE_FENCE_INFO_RE.fullmatch(info_line):
+        return None
+    body = body.strip()
     if not body:
         return None
     return body + "\n"

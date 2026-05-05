@@ -85,6 +85,44 @@ def test_parse_writer_correction_module_only_rejects_bare_markdown_fence() -> No
     assert linear_pipeline.parse_writer_correction_module_only(response) is None
 
 
+def test_parse_writer_correction_module_only_rejects_full_4_block_response() -> None:
+    """A realistic 4-block writer response that happens to contain a
+    module.md fence MUST NOT parse as module-only. The contract is "the
+    entire response is a single fence" — extra fences disqualify it.
+
+    Caught upstream too: ``_apply_writer_correction`` checks
+    ``all(name in response for name in WRITER_ARTIFACTS)`` before reaching
+    the module-only path. But the parser itself must also reject this
+    case so it can be safely called out of context.
+    """
+    full_response = (
+        "```markdown file=module.md\n## Morning\nProse.\n```\n\n"
+        "```json file=activities.yaml\n[]\n```\n\n"
+        "```json file=vocabulary.yaml\n[]\n```\n\n"
+        "```json file=resources.yaml\n[]\n```\n"
+    )
+    assert linear_pipeline.parse_writer_correction_module_only(full_response) is None
+
+
+def test_parse_writer_correction_module_only_rejects_leading_prose() -> None:
+    """Any prose before the fence disqualifies the response — the contract
+    says "that is the entire response"."""
+    response = (
+        "Done. Here is the patched module:\n\n"
+        "```markdown file=module.md\nbody\n```\n"
+    )
+    assert linear_pipeline.parse_writer_correction_module_only(response) is None
+
+
+def test_parse_writer_correction_module_only_rejects_trailing_prose() -> None:
+    """Any prose after the fence disqualifies the response."""
+    response = (
+        "```markdown file=module.md\nbody\n```\n\n"
+        "Word count went from 996 → 1325.\n"
+    )
+    assert linear_pipeline.parse_writer_correction_module_only(response) is None
+
+
 def test_writer_correction_module_only_writes_patched_module(tmp_path: Path) -> None:
     """End-to-end: a contract-shaped response patches module.md and emits
     no `writer_correction_unparseable` event."""
