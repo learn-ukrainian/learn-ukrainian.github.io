@@ -2364,13 +2364,15 @@ def _apply_reviewer_correction(
             runtime_invoke = invoker
 
         result = runtime_invoke(
-            "codex-tools",
+            "codex",
             prompt,
             mode="read-only",
             cwd=module_dir,
+            model=REVIEWER_DEFAULTS["codex-tools"]["model"],
             task_id=f"linear-python-qg-{gate}-fix",
             entrypoint="runtime",
-            tool_config={"output_format": "text"},
+            effort=REVIEWER_DEFAULTS["codex-tools"]["effort"],
+            tool_config=_runtime_tool_config("codex-tools"),
         )
         response = str(getattr(result, "response", "") or "")
     else:

@@ -75,6 +75,18 @@ _SHIMS_DIR = Path(__file__).resolve().parent / "shims"
 _ADAPTER_CACHE: dict[str, AgentAdapter] = {}
 
 
+def _validate_agent_name(agent_name: str) -> None:
+    """Reject legacy public labels before registry lookup."""
+    if agent_name.endswith("-tools") and agent_name not in AGENTS:
+        bare_name = agent_name.removesuffix("-tools")
+        if bare_name in AGENTS:
+            raise ValueError(
+                "agent_runtime registry uses bare names — pass "
+                f"{bare_name!r} not {agent_name!r}; use tool_config to "
+                "indicate tools-enabled"
+            )
+
+
 def _is_agent_runtime_shim(path: str | None) -> bool:
     if not path:
         return False
@@ -932,6 +944,7 @@ def invoke(
         AgentTimeoutError: Wall-clock runtime exceeded hard_timeout.
     """
     # ---------- 1. Resolve adapter ----------
+    _validate_agent_name(agent_name)
     adapter = _load_adapter(agent_name)
 
     # ---------- 2. Validate mode ----------
