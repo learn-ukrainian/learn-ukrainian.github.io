@@ -60,7 +60,7 @@ Score each dimension 1–10. All five must be ≥9 to lock. The thresholds and r
    - **Правопис 2019** (MCP `query_pravopys`) — orthography edge cases
    - **Горох** / stress dictionary — pronunciation
    - **Антоненко-Давидович** (`data/sources.db` `style_guide` table, MCP `search_style_guide`) — is it a calque?
-   - **Грінченко** — historical / etymology
+   - **Грінченко** (MCP `search_grinchenko_1907`) — historical lexicographic evidence; use `search_esum` for true etymology
 4. **If a right-column Surzhyk replacement cannot be verified in at least VESUM + СУМ-11**, do NOT add it — flag with `<!-- VERIFY -->` instead. Hallucinated café vocab breaks the whole drill.
 5. **Emit a LOCKED review file** at `wiki/.reviews/pedagogy/{level}/{slug}-review-LOCKED.md` with:
    - Per-dimension scores with evidence

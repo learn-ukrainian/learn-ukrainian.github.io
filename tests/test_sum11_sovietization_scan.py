@@ -22,6 +22,12 @@ MIGRATION_SQL = (
     / "migrations"
     / "2026-05-04-1659-sum11-sovietization-flag.sql"
 )
+VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
+
+
+def _venv_python() -> Path:
+    assert VENV_PYTHON.exists(), "Expected repo venv at .venv/bin/python"
+    return VENV_PYTHON
 
 
 # Real-content samples lifted from a production DB scan on 2026-05-04.
@@ -175,14 +181,10 @@ def test_classify_entry_branches():
 
 def test_scan_produces_expected_distribution(seeded_db, tmp_path):
     report_path = tmp_path / "report.md"
-    venv_python = REPO_ROOT / ".venv" / "bin" / "python"
-    if not venv_python.exists():
-        # Fall back to whichever python is invoking pytest.
-        venv_python = Path(sys.executable)
 
     result = subprocess.run(
         [
-            str(venv_python),
+            str(_venv_python()),
             str(SCAN_SCRIPT),
             "--db",
             str(seeded_db),
@@ -235,13 +237,10 @@ def test_scan_produces_expected_distribution(seeded_db, tmp_path):
 
 def test_dry_run_does_not_modify_db(seeded_db, tmp_path):
     report_path = tmp_path / "dry_report.md"
-    venv_python = REPO_ROOT / ".venv" / "bin" / "python"
-    if not venv_python.exists():
-        venv_python = Path(sys.executable)
 
     result = subprocess.run(
         [
-            str(venv_python),
+            str(_venv_python()),
             str(SCAN_SCRIPT),
             "--db",
             str(seeded_db),
@@ -268,12 +267,9 @@ def test_dry_run_does_not_modify_db(seeded_db, tmp_path):
 def test_scan_is_idempotent(seeded_db, tmp_path):
     """Re-running the scan twice yields identical flag values."""
     report_path = tmp_path / "report.md"
-    venv_python = REPO_ROOT / ".venv" / "bin" / "python"
-    if not venv_python.exists():
-        venv_python = Path(sys.executable)
 
     cmd = [
-        str(venv_python),
+        str(_venv_python()),
         str(SCAN_SCRIPT),
         "--db",
         str(seeded_db),
