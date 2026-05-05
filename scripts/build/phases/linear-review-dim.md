@@ -34,9 +34,7 @@ trace to verbatim quotes from the content is invalid by definition.
 4. **Final verdict.** Score ≥8 → PASS. Score 6-7.99 → REVISE. Score <6 →
    REJECT.
 
-The JSON `evidence` field below MUST be one of the verbatim quotes from
-step 1, wrapped in escaped quotes. A summary or paraphrase in the evidence
-field is a reviewer-protocol failure.
+The JSON response MUST include `evidence_quotes` with 3 verbatim quotes from step 1 and `rubric_mapping` explaining how each quote maps to `{DIM}` before the score. The `evidence` field MUST be one of those verbatim quotes, wrapped in escaped quotes. A summary or paraphrase in any evidence field is a reviewer-protocol failure.
 
 ## Tier-1 verification audit (do this DURING evidence search — #1661)
 
@@ -70,12 +68,10 @@ C. **Sovietization flag (decolonization, naturalness).** When the content
    module without paraphrase or correction → FLAG
    `soviet-framed definition unsupervised`.
 
-D. **Modern Ukrainian guard (naturalness, decolonization).** Flag
-   historical / Old East Slavic / Russian-shadow / pre-Pravopys-2019
-   forms presented in the module as modern Ukrainian. VESUM
-   (`verify_word`, `check_modern_form`) is ground truth for what is
-   modern. Archaic form passed off as standard → FLAG
-   `archaic form as modern`.
+D. **Modern Ukrainian + heritage-defense audit (naturalness, decolonization).** Flag historical / Old East Slavic / Russian-shadow / pre-Pravopys-2019 forms presented as modern Ukrainian. Also flag the opposite error: authentic Ukrainian archaisms, historisms, or dialectisms mislabeled as Russianism/surzhyk/calque without VESUM/check_modern_form plus historical/etymological/source-context verification. Authentic non-standard forms must carry `[Archaism]`, `[Historism]`, or `[Dialectism]`, a modern standard equivalent, and a brief heritage note. Missing tag/equivalent → FLAG `untagged heritage form`; false Russianism claim → FLAG `heritage form misclassified`.
+
+Reviewers verifying a heritage flag MUST themselves call `mcp__sources__search_heritage` (or `mcp__sources__search_slovnyk_me` for a slovnyk.me-only check) before sustaining or rejecting a heritage claim. A reviewer evidence_quote that asserts heritage status without a tool-grounded citation is a reviewer-protocol failure.
+When reviewing a writer heritage claim, verify that slovnyk.me citations use canonical `dictionary_slug` values from `scripts/wiki/slovnyk_me.py` and that merged `search_heritage` citations name `source_family`, `source`, and `classification` when no `dictionary_slug` is present. If the writer cites no raw tool-result excerpt, or if your own `search_heritage` call returns empty, treat the claim as unresolved rather than accepting a heritage or Russianism label.
 
 E. **Reinforce rule #6.** Every claim pairs (i) a verbatim quote from the
    content and (ii) a specific MCP-grounded verification or an explicit
@@ -85,7 +81,7 @@ E. **Reinforce rule #6.** Every claim pairs (i) a verbatim quote from the
 Return only JSON:
 
 ```json
-{"score": 0.0, "evidence": "\"verbatim quote from the content\"", "verdict": "REVISE"}
+{"score": 0.0, "evidence_quotes": ["verbatim quote 1", "verbatim quote 2", "verbatim quote 3"], "rubric_mapping": "Quote 1: ...; Quote 2: ...; Quote 3: ...", "evidence": "\"verbatim quote from evidence_quotes\"", "verdict": "REVISE"}
 ```
 
 ## Module Context

@@ -8,42 +8,20 @@ Write the A1 module using the plan and contract below. Produce exactly four
 authoring artifacts: `module.md`, `activities.yaml`, `vocabulary.yaml`, and
 `resources.yaml`.
 
-## Reasoning checklist (do this BEFORE drafting — #1673)
+## Mandatory visible verification block (emit BEFORE drafting — #1673/#1661)
 
-Before producing any output, work through these four reasoning steps. If the
-model you are running supports extended thinking (Claude, Gemini, GPT-5.5),
-use the thinking facility for these steps; the output below does not change
-shape, but every section you write must be the result of having reasoned
-through these explicitly. Skipping this is the writer-discipline-gate failure
-mode that bit Phase 4 round 3.5.
+Before the four artifact fences, you MUST emit one `<plan_reasoning section="...">...</plan_reasoning>` block for each contracted section. This is not optional hidden thinking. If any section lacks this visible block, the writer has failed the protocol.
 
-1. **Word budget per section.** Read the Contract YAML below. For each
-   contracted section, decide how many of the {WORD_TARGET} words go where.
-   Sections with more contract items need more budget. Verify your
-   allocation sums to {WORD_TARGET}±5%. Sections that drift more than ±10%
-   from their share are a contract violation.
+Each block MUST contain:
+1. `word_budget`: section word allocation and running total check against `{WORD_TARGET}±5%`.
+2. `plan_vocab`: required plan-vocabulary lemmas used in this section, with the exact Ukrainian sentence that grounds each lemma.
+3. `register`: the immersion ratio from the Immersion Rule and how this section preserves it.
+4. `teaching_sequence`: which Knowledge Packet facts/citations this section uses.
+5. `verification`: explicit Tier-1 checks: VESUM/modern-form check for example words, source-grounding check for dictionary/style claims, quote-contiguity check for attributed quotes, and heritage-defense check for possible archaism/historism/dialectism versus Russianism/surzhyk.
 
-2. **Required plan-vocab terms.** Enumerate the lemmas the Plan requires
-   (vocabulary list, plan.required_terms, contract.required_vocabulary).
-   For each term, decide which section it appears in and what concrete
-   sentence grounds it. A required term that appears in zero sections is a
-   contract violation; a required term that appears only as a translation
-   gloss without a Ukrainian sentence is also insufficient.
+Keep each `<plan_reasoning>` block to 200 words or fewer. Do not use triple backticks inside `<plan_reasoning>` blocks; fenced code belongs only in the four artifact blocks below.
 
-3. **Register check.** Re-read the Immersion Rule above. State internally:
-   "I will produce ~X% Ukrainian and ~(100-X)% English in module.md." If
-   your draft starts drifting (English bridge sentences expanding, Ukrainian
-   examples shrinking), STOP and rebudget — do not push through.
-
-4. **Teaching sequence.** Re-read the Knowledge Packet below. Each citation
-   [S1], [S2], etc. is a fact you will teach or anchor on. Decide the
-   sequence: which fact comes first, which builds on which, which sections
-   carry which facts. A fact in the packet that maps to no section means
-   either the section needs that fact or the packet was over-fetched —
-   surface either by emitting a `<!-- VERIFY: packet fact [Sn] not used -->`
-   marker.
-
-Only after this reasoning is complete, emit the four fenced blocks below.
+Only after all `<plan_reasoning>` blocks are complete and passed may you emit the four fenced artifact blocks.
 
 ## Tier-1 verification discipline (do this WHILE drafting — #1661)
 
@@ -59,10 +37,7 @@ that failure class. Run each check while drafting, not as a separate pass.
    silently substitute a confabulated alternative. If no good substitute,
    leave the slot empty and emit `<!-- VERIFY: lemma "X" not in VESUM -->`.
 
-2. **Modern Ukrainian only.** Default to post-2019 Pravopys forms. No
-   Old East Slavic, Church Slavonic, Russian-shadow, or pre-Pravopys-2019
-   spellings unless the section is explicitly historical / etymological.
-   Doubt → `mcp__sources__check_modern_form`. Archaic-only → swap or omit.
+2. **Modern Ukrainian + heritage-defense discipline.** Default to post-2019 Pravopys standard forms for learner-facing standard Ukrainian. However, NEVER classify a word as Russianism, surzhyk, or calque merely because it is archaic, historical, dialectal, or shares Proto-Slavic roots with Russian. For any non-modern or suspicious form, verify with VESUM/check_modern_form plus available historical/etymological evidence (`search_grinchenko_1907`, `search_esum`, literary/wiki source context). If authentic but non-standard, keep it only when pedagogically required, tag it `[Archaism]`, `[Historism]`, or `[Dialectism]`, give the modern standard equivalent, and briefly state its Ukrainian heritage. If unverified, omit or emit `<!-- VERIFY: heritage status for "X" unresolved -->`.
 
 3. **Source-citation discipline.** Every dictionary / style-guide / author
    citation MUST be groundable in MCP via the matching tool
@@ -72,6 +47,9 @@ that failure class. Run each check while drafting, not as a separate pass.
    → do NOT cite. Say "modern Ukrainian standardized form" or rephrase
    without attribution. Inventing a citation to look authoritative is a
    hard fail.
+
+For heritage defense, route lookups through the canonical MCP tools in this order: (1) `mcp__sources__search_heritage` is the primary entry point — it merges Грінченко 1907, ЕСУМ, slovnyk.me modern/regional dictionaries, and Антоненко-Давидович style warnings, ranking pre-Soviet attestations above modern-only rows. (2) Use `mcp__sources__search_slovnyk_me` only when you specifically need a slovnyk.me single-source result (e.g. СУМ-20 or a regional dictionary not surfaced by `search_heritage`). (3) Standard tools — `check_modern_form` (VESUM), `search_grinchenko_1907`, `search_esum`, literary corpus, and compiled wiki/source citations — remain valid evidence sources alongside the merged heritage tool. Cite the tool name and the dictionary slug in your `<plan_reasoning verification="...">` block. Do not claim heritage verification without naming a concrete tool result.
+For slovnyk.me rows, use only canonical `dictionary_slug` values defined by `scripts/wiki/slovnyk_me.py`, especially heritage slugs `newsum`, `holoskevych`, `obsolete_words`, `bukovina`, `franko`, and `slang_lviv`; for merged `search_heritage` rows without `dictionary_slug`, cite `source_family`, `source`, and `classification`. Include the first 80 characters of the raw tool-result `text` verbatim in `<plan_reasoning>`. If `search_heritage` returns empty, emit `<!-- VERIFY: heritage status for "X" unresolved -->` rather than asserting heritage status.
 
 4. **Quote attribution discipline.** Every attributed quote must be a
    contiguous string findable via `mcp__sources__search_literary`. Never
@@ -84,8 +62,7 @@ that failure class. Run each check while drafting, not as a separate pass.
    presence. OMIT or rewrite anything unverifiable. Shipping unverified
    output for the reviewer to catch is itself a protocol violation.
 
-Return only these four fenced blocks, in this exact order. Do not add prose
-before, between, or after the blocks.
+Return the visible `<plan_reasoning>` blocks first, then exactly these four fenced blocks, in this exact order. Do not add any other prose before, between, or after them.
 
 ```markdown file=module.md
 ...
