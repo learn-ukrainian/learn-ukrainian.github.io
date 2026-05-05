@@ -1,6 +1,8 @@
 import contextlib
 import json
+import logging
 import subprocess
+import uuid
 
 import yaml
 from fastapi import APIRouter, HTTPException
@@ -11,6 +13,8 @@ except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
 from .config import PROJECT_ROOT
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -106,8 +110,10 @@ def get_prompt_summary(level: str, slug: str):
                     "metrics": data.get("metrics", {}) if isinstance(data, dict) else {},
                     "audit": data.get("audit", {}) if isinstance(data, dict) else {},
                 }
-        except Exception as e:
-            manifests[f.name] = {"error": str(e)}
+        except Exception:
+            error_id = uuid.uuid4().hex
+            logger.error(f"Failed to load manifest {f.name} [{error_id}]", exc_info=True)
+            manifests[f.name] = {"error": "internal error", "error_id": error_id}
 
     return {"manifests": manifests}
 

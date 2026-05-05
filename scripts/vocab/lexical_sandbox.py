@@ -582,4 +582,4 @@ if __name__ == "__main__":
             plan = {"vocabulary_hints": []}
 
     sandbox = build_sandbox(track, module_num, plan)
-    print(sandbox)  # nosec - prints the LLM prompt sandbox (curriculum data), not secrets
+    print(sandbox)  # lgtm [py/clear-text-logging-sensitive-data] nosec

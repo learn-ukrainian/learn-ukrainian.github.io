@@ -1310,8 +1310,10 @@ async def post_to_channel(name: str, req: ChannelPostRequest, request: Request):
             correlation_id=req.correlation_id,
             auto_snapshot=req.auto_snapshot,
         )
-    except ValueError as e:
-        return JSONResponse(status_code=400, content={"error": str(e)})
+    except ValueError as exc:
+        error_id = uuid.uuid4().hex
+        logger.warning(f"Validation error in channel post [{error_id}]: {exc}", exc_info=True)
+        return JSONResponse(status_code=400, content={"error": "invalid request", "error_id": error_id})
     except Exception:
         return JSONResponse(
             status_code=500, content={"error": "post failed"}
