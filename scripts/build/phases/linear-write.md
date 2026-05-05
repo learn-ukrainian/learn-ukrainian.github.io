@@ -31,7 +31,7 @@ mode that bit Phase 4 round 3.5.
    gloss without a Ukrainian sentence is also insufficient.
 
 3. **Register check.** Re-read the Immersion Rule above. State internally:
-   "I will produce ~{X}% Ukrainian and ~{100-X}% English in module.md." If
+   "I will produce ~X% Ukrainian and ~(100-X)% English in module.md." If
    your draft starts drifting (English bridge sentences expanding, Ukrainian
    examples shrinking), STOP and rebudget — do not push through.
 
