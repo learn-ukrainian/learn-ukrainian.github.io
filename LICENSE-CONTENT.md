@@ -4,6 +4,27 @@
 
 ---
 
+## Project posture and good-faith use
+
+This project is and will remain a **non-commercial, free, open-source educational resource** dedicated to helping learners of Ukrainian. The maintainer recorded this as a permanent project posture on 2026-04-19 — there is no commercial roadmap, no paid tier, no paywall, no advertising, and no plan to introduce any of the above. CC BY-NC dependencies (and other non-commercial-only sources) are acceptable inputs because the project itself is non-commercial.
+
+Concretely, this means:
+
+1. **Educational purpose only.** Every source we touch is touched for the purpose of teaching Ukrainian as a foreign language to English speakers (and adjacent learner groups), with decolonized pedagogy as a stated goal.
+2. **No revenue, ever.** No ads, no sponsorships, no premium tier, no Patreon, no merch, no licensing-out. If the project ever needs hosting funds, those will be raised transparently and never tied to gating content.
+3. **Good-faith application of fair use.** Where third-party material is used as RAG retrieval context for LLM generation (textbooks, dictionaries, style guides), the use is internal-context-only — never republished verbatim. Fair-use boundaries (≤200 chars per quotation, transformative use, attribution) are documented per source category below.
+4. **Honest-mistake clause.** If a specific quotation, translation, or derivative work in this repository turns out to exceed the bounds we believed applied, that was an unintentional mistake — not an attempt to extract value from someone else's work. Open an issue or contact the maintainer and the offending content will be removed, paraphrased, or attributed within 7 days. The maintainer is reachable through the GitHub repository.
+5. **Source-of-truth tracking.** Every dictionary, textbook, blog, video, and primary text we ingest is listed in this document with our understood license tier. If we add a new source, this file gets updated in the same PR. The historical record is preserved in git so the path of how each source landed in the project is auditable.
+6. **License tiers, in plain language:**
+   - **Public domain** (Shevchenko, Franko, Ukrainka, pre-1924 chronicles, Грінченко 1907, etc.) — quotable in full, attribution courtesy not requirement.
+   - **Free with attribution** (Wikipedia CC BY-SA, Dobra Forma CC, VESUM open-source, free-to-view YouTube transcripts under fair-use educational frame) — usable, MUST cite.
+   - **Fair use** (modern Ukrainian school textbooks, copyrighted dictionaries used as linguistic verification tooling) — internal RAG context only; ≤200-char direct quotations; transformative pedagogical use; never republished verbatim.
+   - **All rights reserved** (commercial paid materials such as the Ukrainian Lessons Podcast paid membership, Anna Ohoiko premium PDFs, Анна-Ohoiko-authored books) — STUDY only by the maintainer for personal language reference, never copied into the repository, notes kept outside the repo (`~/.claude/projects/.../memory/` or gitignored `private-notes/`).
+
+If you are a rights-holder of any source referenced in this document and believe our use exceeds the boundaries we describe, please open a GitHub issue or contact the maintainer directly. The intent is to teach Ukrainian; nothing in this project is intentionally adverse to source authors.
+
+---
+
 ## What this file covers
 
 This content license applies to everything in:
@@ -102,13 +123,19 @@ The following dictionaries are ingested as SQLite FTS5 indices for internal ling
 
 | Dictionary | License / Source | Use |
 |---|---|---|
-| **СУМ-11** | Public domain (Соглашение, Академія наук УРСР 1970-1980) | Definitions |
-| **Грінченко 1907** | Public domain (100+ years old) | Etymology, historical forms |
+| **СУМ-11** | Public domain (Угода, Академія наук УРСР 1970-1980). ⚠️ Soviet-era ideologically framed for ~5.6% of entries (#1659 sovietization scan; risk-flagged at row level so reviewers can paraphrase or substitute). | Definitions (with sovietization-aware paraphrasing) |
+| **Грінченко 1907** | Public domain (100+ years old). Tool prefix renamed to `search_grinchenko_1907` (#1679) for accuracy — this is a historical Ukrainian dictionary, not an etymology dictionary. | Pre-Soviet attestation, historical forms |
+| **ЕСУМ vol 1 (А-Г)** | Academic dictionary, Інститут мовознавства НАН України. PoC scope = vol 1 only (PR #1672, 2026-05-04); vols 2-6 tracked in #1662. Used as RAG retrieval index for etymological context; not redistributed. | Etymology lookup |
+| **slovnyk.me — SUM mirror** (`/dict/sum/`, `/dict/newsum/`, `/dict/linguistic_norm/`) | Per-query fair-use lookup against the public web mirror. Adopted 2026-05-05 as the modern definitional baseline replacement for the discontinued/incomplete СУМ-20 ingestion plan (#1667 superseded). Bulk redistribution NOT performed; queries cached locally for verifier reuse only. | Modern definitional baseline |
 | **VESUM** | [MIT-ish, morphological database](https://github.com/brown-uk/dict_uk) | Lemma verification, POS tagging |
 | **Балла EN→UK** | Historical work (copyright expired) | Translation assistance |
-| **Антоненко-Давидович «Як ми говоримо»** | Copyrighted (Антоненко-Давидович estate). Used under fair-use for linguistic verification; individual style-rule citations in module content are limited to <200 chars. | Calque / Russianism detection |
+| **Антоненко-Давидович «Як ми говоримо»** | Copyrighted (Антоненко-Давидович estate). Used under fair-use for linguistic verification; individual style-rule citations in module content are limited to <200 chars. Currently 279 entries indexed of ~600+ in source; full-text ingestion of the 169-page text tracked in #1663 (open PDF at Internet Archive identifier `hovorymo1970` confirmed live 2026-05-05). | Calque / Russianism detection |
+| **Гринчишин/Сербенська «Словник паронімів української мови» (1986 NBU scan)** | License says "use is for навчальною та науковою некомерційною метою" (educational and scientific non-commercial use). Aligns with project posture. Ingestion via NBU PDF OCR pending (#1666). | Paronym pair verification |
+| **Karavansky «Російсько-український словник складної лексики» (r2u digital edition)** | r2u.org.ua/dicts/karavansky web edition; no API or bulk dump available. Per-query fair-use lookup planned (#1664); not yet ingested. | RU→UK complex lexicon |
+| **Holovashchuk «Словник-довідник з українського літературного слововживання» (2004)** | ISBN 966-00-0350-1, Наукова думка. Original PDF link 404 as of 2026-05-05; ingestion path #1665 awaits an alternative source URL. License tier TBD when source is located. | Modern usage / norm |
 | **Фразеологічний словник** | Copyrighted. Same fair-use boundaries as textbooks. | Idiom verification |
 | **Правопис 2019** | Public (Академія наук України) | Orthography rules |
+| **Ukrajinet WordNet** | 122K synsets; auto-translated from Open English WordNet per upstream README. ⚠️ Quality concern documented (#1657 Tier 3 audit). | Synonym lookup (with caveats) |
 
 ---
 
@@ -136,4 +163,4 @@ For modified derivative works:
 
 Licensing questions go to issues on GitHub or the maintainer directly. The above is a best-effort plain-language summary of the legal position — it is not legal advice. If you need formal permissions or have commercial redistribution questions beyond the standard CC BY-SA 4.0 terms, open an issue and we'll figure it out.
 
-Last updated: 2026-04-11 (#1092)
+Last updated: 2026-05-05 — added good-faith / non-profit-posture section (user-requested defensive documentation), expanded dictionary inventory (ЕСУМ vol 1, slovnyk.me as СУМ-20 supersession, Гринчишин/Сербенська paronyms, Karavansky r2u, Holovashchuk pending, Ukrajinet caveat), noted СУМ-11 sovietization risk + Грінченко rename. Predecessor: 2026-04-11 (#1092).
