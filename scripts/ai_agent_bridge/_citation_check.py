@@ -1,10 +1,21 @@
 """Citation-provenance check for agent-bridge messages.
 
 Detects verbatim quotes attributed to authoritative Ukrainian-language
-sources (Антоненко-Давидович, Грінченко 1907, Правопис 2019, СУМ-11,
-ЕСУМ, VESUM, Шевельов, Вихованець, Пономарів) inside a message body
-and verifies the cited headword exists in the corresponding source
-corpus. If verification fails, the body is annotated with a
+sources inside a message body and verifies the cited headword exists
+in the corresponding source corpus. Sources fall into two tiers:
+
+  - **DB-verified** (flag on absent headword): Антоненко-Давидович,
+    Грінченко 1907, СУМ-11, ЕСУМ. These all have a deterministic local
+    lookup in ``data/sources.db``.
+  - **Detection-only / soft-skip** (citation counted, never flagged):
+    Правопис 2019, VESUM, Шевельов, Вихованець, Пономарів. These have
+    no deterministic local headword verifier yet — Правопис's existing
+    helper is topic→section + does live HTTP, so it would either false-
+    flag or stall posts; VESUM has its own DB but no exposed string-
+    presence query in ``wiki.sources_db``; the rest are author
+    references with no machine-readable corpus indexed.
+
+If verification fails, the body is annotated with a
 ``<!-- CITATION-UNVERIFIED ... -->`` marker — annotate-mode by design,
 not block-mode.
 
@@ -188,9 +199,24 @@ def _verify_via_lookup(
 ) -> VerificationResult:
     """Generic dispatch — call ``lookup(headword)`` and inspect result.
 
-    ``lookup`` signature: ``str -> list | dict | None``. Empty list /
-    falsy result => flag. None => soft-skip ("no extractable headword"
-    or "verifier unavailable").
+    Resolution rules (the contract this function actually implements):
+      - ``lookup is None`` (verifier itself unavailable) → soft-skip.
+      - ``citation.headword`` empty / unextractable → soft-skip.
+      - ``lookup(headword)`` raises → soft-skip with the exception
+        text in ``detail`` (defensive — verifier crashes must not
+        manufacture a flag).
+      - ``lookup(headword)`` returns a falsy value (empty list, dict,
+        ``None``) → **flag as unverified**. Any caller that wants
+        falsy-=-soft-skip semantics MUST wrap their own lookup.
+
+    Codex review of #1683 (PR #1694) flagged the previous wording
+    ("None => soft-skip") as ambiguous: the wrapper used to send a
+    callable returning None for an unmapped Правопис topic, and the
+    previous prose suggested that should soft-skip when in fact the
+    code flags it. The Правопис case is now handled at
+    ``_verify_pravopys`` (which delegates to ``_verify_unknown``);
+    this docstring is tightened so the same trap can't be re-laid
+    by future callers.
     """
     if lookup is None:
         return VerificationResult(
