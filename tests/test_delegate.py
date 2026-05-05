@@ -683,10 +683,11 @@ def _make_run_stub(
     return calls, fake_run
 
 
-def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, monkeypatch, capsys):
+def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     import argparse
 
     recorded_prompt: dict[str, str] = {}
+    worktree_path = tmp_path / ".worktrees" / "codex-1383"
 
     class _FakeStdin:
         def write(self, data):
@@ -712,7 +713,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, monkeypatch, ca
         mode="danger",
         model=None,
         cwd=None,
-        worktree=".worktrees/codex-1383",
+        worktree=str(worktree_path),
         base="main",
         hard_timeout=3600,
     )
