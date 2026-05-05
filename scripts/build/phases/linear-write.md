@@ -62,7 +62,23 @@ For slovnyk.me rows, use only canonical `dictionary_slug` values defined by `scr
    presence. OMIT or rewrite anything unverifiable. Shipping unverified
    output for the reviewer to catch is itself a protocol violation.
 
-Return the visible `<plan_reasoning>` blocks first, then exactly these four fenced blocks, in this exact order. Do not add any other prose before, between, or after them.
+   You MUST record this scan as a visible `<end_gate>...</end_gate>` block
+   AFTER the four artifact fences. Required format:
+
+   ```
+   <end_gate>
+   actions: [rescanned_words, rescanned_sources, removed_unverified]
+   removed_count: N
+   summary: brief description of what was rescanned and what was removed.
+   </end_gate>
+   ```
+
+   Drop any action key that did not apply; `actions: []` is allowed when
+   the rescan removed nothing. Pipeline detects `gate_present=true` only
+   when this block exists. A missing block records `gate_present=false`,
+   and the writer is treated as having skipped the protocol.
+
+Return the visible `<plan_reasoning>` blocks first, then exactly these four fenced blocks in the order below, then the `<end_gate>` block. Do not add any other prose anywhere.
 
 ```markdown file=module.md
 ...

@@ -158,6 +158,24 @@ def test_writer_prompt_has_no_unresolved_placeholders(level: str, slug: str) -> 
 
 
 @pytest.mark.parametrize(("level", "slug"), REFERENCE_PLANS)
+def test_writer_prompt_mandates_end_gate_block(level: str, slug: str) -> None:
+    """#1720 strand 2 — writer prompt must mandate emitting an
+    <end_gate>...</end_gate> block AFTER the four artifact fences. Pipeline
+    parser at linear_pipeline.py:_extract_writer_gate searches the output
+    for this block; missing block → gate_present=false."""
+    rendered = _writer_prompt(level, slug)
+    # The literal block tags must appear in the prompt's example.
+    assert "<end_gate>" in rendered and "</end_gate>" in rendered, (
+        f"Writer end_gate block mandate missing for {level}/{slug}"
+    )
+    # The action keys the parser recognizes must be in the example block.
+    for key in ("rescanned_words", "rescanned_sources", "removed_unverified"):
+        assert key in rendered, (
+            f"Writer end_gate action key {key!r} missing for {level}/{slug}"
+        )
+
+
+@pytest.mark.parametrize(("level", "slug"), REFERENCE_PLANS)
 @pytest.mark.parametrize("dim", QG_DIMS)
 def test_reviewer_prompt_has_cot_block(level: str, slug: str, dim: str) -> None:
     rendered = _reviewer_prompt(level, slug, dim)
