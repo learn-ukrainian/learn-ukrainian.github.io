@@ -171,10 +171,41 @@ cat audit/bakeoff-2026-05-05/REPORT.md | head -100
 ## Statistics
 
 - **PRs merged this session:** 2 (#1719, #1713)
+- **PRs opened in this session (mid-flight):** 1 (#1721 — strands 2+3 of #1720)
 - **PRs closed (superseded):** 1 (#1696)
 - **Issues filed:** 2 (#1718 dirty-tree triage, #1720 bakeoff three-strand blocker)
 - **Codex dispatches:** 2 (Dispatch B prompt strengthening 7.5 min + bakeoff re-run 25 min)
+- **Codex consultations:** 1 (msg 530 — adversarial review of #1721; surfaced regex permissiveness, applied via split-based parser rewrite)
 - **Inline fixes I made on others' PRs:** 2 commits to #1713 (52459eb585, a1b9c42e88) + 1 commit on Dispatch B branch (b6f31d9069 — test/prompt alignment)
 - **CI-failure → fix → re-CI cycles:** 2 (#1719 pytest, #1713 CodeQL — twice)
 - **Bakeoff key result:** visible CoT 0% → 100% emission rate (Q4 win); zero MCP tool calls (theatre); end-gate not detected; correction-pass unparseable
 - **Wall clock to handoff finalization:** ~70 minutes
+
+---
+
+## Mid-session update — strands 2+3 of #1720 (PR #1721)
+
+After writing the initial handoff above, picked up the next priority. Two of the three #1720 strands implemented + open as PR #1721 (`claude/1720-strands-2-3` branch):
+
+**Strand 2 (end_gate block mandate)** — pure prompt fix. The parser at `linear_pipeline.py:_extract_writer_gate` already supported `<end_gate>...</end_gate>` block parsing; the writer prompt just didn't tell the writer to emit one. Added the explicit mandate + format example + parser-recognized action keys (`rescanned_words`, `rescanned_sources`, `removed_unverified`, `removed_count`). Test `test_writer_prompt_mandates_end_gate_block` locks it in.
+
+**Strand 3 (writer-correction contract)** — bigger fix. Old `linear-writer-correction.md` told the writer to "modify in place" but never specified output format; parser expected all 4 artifact blocks; writer responded conversationally → unparseable. Rewrote the prompt to mandate a single fenced `markdown file=module.md` block as the entire response. Added `parse_writer_correction_module_only()` to `linear_pipeline.py` using a split-based parser that enforces "exactly one fence, no leading/trailing prose, no other fences". `_apply_writer_correction` calls the new parser for non-`strict_json_parse` gates; existing 4-block path preserved for `strict_json_parse`.
+
+Codex adversarial review (msg 530) caught my first-iteration regex was permissive — a non-greedy DOTALL regex backtracked across multi-fence content and matched a 4-block response as one big "fence". Replaced with the split-based parser. 11 tests in `test_writer_correction_no_op_diagnostic.py` lock all the negative + positive paths (zero/multi/empty/leading-prose/trailing-prose/bare-markdown/4-block all rejected; positive contract response writes module.md). 112 tests pass overall.
+
+Remaining: **Strand 1 (tool-theatre detection)** — telemetry parser needs to extract tool citations from `<plan_reasoning verification>` blocks AND match them against actual `function_call` events in the writer trace. Bigger surface — left for a follow-up PR.
+
+CI status as of handoff write: #1721 mergeable, no failures, CI re-running on the most recent push.
+
+Once #1721 merges + bakeoff re-runs:
+- Strand 2 acceptance: `gate_present=true` ≥ 1 writer
+- Strand 3 acceptance: ≥ 1 writer publishes final `module.md` → ≥ 1 review runs
+- Strand 1 still 0 (tool calls still 0 unless Strand 1 also lands)
+
+---
+
+## Cleanup also attempted this session (deferred)
+
+CodeQL false-positive dismissal — local `gh` token lacks `code-scanning:write` scope (same 403 as Gemini's CI token had). 8 alerts (#167, #166, #23, #22, #21, #20, #17, #16) need manual UI dismissal OR `gh auth refresh -s code-scanning` (user interaction required). Documented in #1718 follow-up.
+
+Alerts #114, #113 (path-injection in image_review_server.py): should auto-close on next CodeQL scan of main now that #1713's `os.path.commonpath` fix is merged. Same for #19, #18 (Gemini's JS XSS fixes).
