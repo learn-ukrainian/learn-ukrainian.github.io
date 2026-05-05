@@ -89,6 +89,8 @@ def test_call_gemini_with_fallback_rung1_success(tmp_path):
     assert result.auth_mode_used == "api"
     assert len(factory.calls) == 1
     assert factory.calls[0]["cmd"][2] == PRIMARY_GEMINI_MODEL
+    assert factory.calls[0]["cmd"][-2:] == ["-p", "prompt"]
+    assert factory.calls[0]["stdin"] == subprocess.DEVNULL
     assert factory.calls[0]["env"]["GEMINI_API_KEY"] == "secret"
 
 

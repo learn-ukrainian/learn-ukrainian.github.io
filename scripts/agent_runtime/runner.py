@@ -465,7 +465,7 @@ def _execute_invocation_plan(
         try:
             proc = subprocess.Popen(
                 plan.cmd,
-                stdin=subprocess.PIPE if plan.stdin_payload else None,
+                stdin=subprocess.PIPE if plan.stdin_payload else subprocess.DEVNULL,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
@@ -603,6 +603,11 @@ def _execute_invocation_plan(
             if should_delete:
                 with contextlib.suppress(OSError):
                     plan.output_file.unlink()
+
+        cleanup_invocation = getattr(adapter, "cleanup_invocation", None)
+        if cleanup_invocation is not None:
+            with contextlib.suppress(Exception):
+                cleanup_invocation(plan)
 
 
 def _invoke_gemini_with_fallback(

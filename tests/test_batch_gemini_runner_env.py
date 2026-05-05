@@ -116,30 +116,23 @@ def _invoke_with_captured_env(
     return result, popen_capture
 
 
-def test_env_stripped_when_oauth_present(tmp_path, monkeypatch):
+def test_auto_mode_keeps_api_key_even_when_oauth_present(tmp_path, monkeypatch):
     _result, popen_capture = _invoke_with_captured_env(
         tmp_path, monkeypatch, oauth_creds=True,
     )
 
     env = popen_capture.calls[0]["kwargs"]["env"]
-    assert "GEMINI_API_KEY" not in env
-    assert "GOOGLE_API_KEY" not in env
-    assert "GOOGLE_GENERATIVE_AI_API_KEY" not in env
-    assert "GOOGLE_APPLICATION_CREDENTIALS" not in env
+    assert env["GEMINI_API_KEY"] == "test-api-key"
 
 
-def test_env_stripped_when_oauth_absent_under_always_subscription(tmp_path, monkeypatch):
-    """Always-subscription policy (2026-04-23, post-#1416): API-key envs are
-    stripped unconditionally unless the caller explicitly requests
-    ``GEMINI_AUTH_MODE=api``. Whether oauth creds are on disk is irrelevant —
-    the Ultra subscription is the canonical path. See commit 4f0fae3c0b.
-    """
+def test_auto_mode_keeps_api_key_when_oauth_absent(tmp_path, monkeypatch):
+    """API-first policy (#1710): API-key envs are preserved in auto mode."""
     _result, popen_capture = _invoke_with_captured_env(
         tmp_path, monkeypatch, oauth_creds=False,
     )
 
     env = popen_capture.calls[0]["kwargs"]["env"]
-    assert "GEMINI_API_KEY" not in env
+    assert env["GEMINI_API_KEY"] == "test-api-key"
 
 
 def test_explicit_subscription_mode_strips(tmp_path, monkeypatch):
@@ -152,9 +145,7 @@ def test_explicit_subscription_mode_strips(tmp_path, monkeypatch):
 
 
 def test_explicit_api_mode_keeps_env_key(tmp_path, monkeypatch):
-    """Escape hatch: ``GEMINI_AUTH_MODE=api`` is the only way to preserve the
-    API-key env under always-subscription policy. Ensures the opt-out actually
-    works for one-off debug runs."""
+    """Escape hatch: ``GEMINI_AUTH_MODE=api`` forces API mode."""
     _result, popen_capture = _invoke_with_captured_env(
         tmp_path, monkeypatch, oauth_creds=False, auth_mode="api",
     )

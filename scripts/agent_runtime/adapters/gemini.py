@@ -31,10 +31,13 @@ Issue: #1184
 """
 from __future__ import annotations
 
+import contextlib
 import logging
 import os
 import re
 import shutil
+import tempfile
+from collections.abc import Mapping
 from pathlib import Path
 
 from ai_llm.fallback import GEMINI_AUTH_ENV_VARS, is_gemini_rate_limited
@@ -50,6 +53,8 @@ _TRANSIENT_ERROR_PATTERNS = (
 )
 _TRANSIENT_ERROR_RE = re.compile("|".join(_TRANSIENT_ERROR_PATTERNS), re.IGNORECASE)
 _AUTH_MODE_VALUES = frozenset({"auto", "subscription", "api"})
+_INLINE_PROMPT_LIMIT_CHARS = 100_000
+_PROMPT_FILE_PREFIX = "learn-ukrainian-gemini-prompt-"
 
 
 def has_gemini_oauth_credentials(home: Path | None = None) -> bool:
@@ -75,27 +80,55 @@ def resolve_gemini_auth_mode(
 ) -> str:
     """Resolve the effective Gemini auth mode for this invocation.
 
-    Project policy (2026-04-23, post-#1416): **always subscription** unless
-    the user has explicitly set ``GEMINI_AUTH_MODE=api`` for a one-off
-    legitimate API-mode run.
-
-    Why: this project is permanently non-commercial, the user has an Ultra
-    OAuth subscription, and conditional resolution caused a macOS Keychain
-    permission popup loop on every gemini-cli spawn under env-strip (#1416).
-    Forcing subscription is the blunt fix the user asked for — one-time
-    Keychain "Always Allow" click + zero env complexity afterward.
+    Project policy (2026-05-05, #1710): prefer API-key mode when
+    ``GEMINI_API_KEY`` or ``GOOGLE_API_KEY`` is available, then fall back to
+    subscription/OAuth. Explicit ``GEMINI_AUTH_MODE`` remains the escape
+    hatch: ``api`` forces API mode and ``subscription``/``oauth`` forces
+    subscription mode regardless of available keys.
 
     ``cooldown_active`` is retained for call-site compatibility with the
-    earlier API-cooldown design but is now unused.
+    earlier API-cooldown design. When active, auto mode avoids API keys and
+    starts on subscription to preserve the sticky quota fallback behavior.
     """
-    _ = cooldown_active
     source = os.environ if env is None else env
     mode = _normalize_gemini_auth_mode(source.get("GEMINI_AUTH_MODE"))
-    # Honor explicit api opt-out for any caller who genuinely needs API mode
-    # (e.g., debugging a subscription-side bug). Everything else → subscription.
-    if mode == "api":
+    if mode in {"api", "subscription"}:
+        return mode
+    if cooldown_active:
+        return "subscription"
+    if source.get("GEMINI_API_KEY") or source.get("GOOGLE_API_KEY"):
         return "api"
     return "subscription"
+
+
+def _has_gemini_api_key(env: Mapping[str, str]) -> bool:
+    return bool(env.get("GEMINI_API_KEY") or env.get("GOOGLE_API_KEY"))
+
+
+def _prompt_arg_for_cli(prompt: str) -> tuple[str, Path | None]:
+    """Return the ``gemini -p`` argument and optional temp file path."""
+    if len(prompt) <= _INLINE_PROMPT_LIMIT_CHARS:
+        return prompt, None
+
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        prefix=_PROMPT_FILE_PREFIX,
+        suffix=".txt",
+        delete=False,
+    ) as handle:
+        handle.write(prompt)
+        path = Path(handle.name)
+    return f"@{path}", path
+
+
+def _cleanup_prompt_file(path: Path | None) -> None:
+    if path is None:
+        return
+    if not path.name.startswith(_PROMPT_FILE_PREFIX):
+        return
+    with contextlib.suppress(FileNotFoundError):
+        path.unlink()
 
 
 class GeminiAdapter:
@@ -136,6 +169,11 @@ class GeminiAdapter:
         currently a no-op: the ``gemini`` CLI does not expose a reasoning
         effort flag. When set we emit a debug log and proceed without
         modifying the command. Follow-up #1396.
+
+        Gemini CLI v0.40.1 treats stdin as REPL keystrokes in non-TTY
+        contexts, so prompts must be passed with ``-p``. Small prompts are
+        passed inline; prompts over 100K chars use the verified ``-p @PATH``
+        file-reference form, with runner cleanup after the subprocess exits.
         """
         if effort is not None:
             _logger.debug(
@@ -155,6 +193,7 @@ class GeminiAdapter:
         # Gemini CLI has no stricter-than-yolo bypass.
         if mode in ("workspace-write", "danger"):
             cmd.append("--approval-mode=yolo")
+            cmd.append("--skip-trust")
 
         # MCP tool restriction via tool_config.
         if tool_config:
@@ -183,11 +222,24 @@ class GeminiAdapter:
         env_unsets: tuple[str, ...] = ()
         if auth_mode == "subscription":
             env_unsets = GEMINI_AUTH_ENV_VARS
+        elif not _has_gemini_api_key(os.environ):
+            raise RuntimeError(
+                "GEMINI_AUTH_MODE=api selected but neither GEMINI_API_KEY nor "
+                "GOOGLE_API_KEY is set"
+            )
+
+        prompt_arg, prompt_file = _prompt_arg_for_cli(prompt)
+        cmd.extend(["-p", prompt_arg])
+        _logger.debug(
+            "gemini prompt length=%d passed via %s",
+            len(prompt),
+            "file-ref" if prompt_file is not None else "inline",
+        )
 
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
-            stdin_payload=prompt,
+            stdin_payload="",
             output_file=None,  # Gemini writes to stdout only.
             env_overrides={},
             env_unsets=env_unsets,
@@ -195,6 +247,15 @@ class GeminiAdapter:
             # see liveness_signal_paths() docstring — but we compute the
             # real paths lazily there because they depend on cwd.
         )
+
+    def cleanup_invocation(self, plan: InvocationPlan) -> None:
+        """Remove adapter-owned temporary prompt files after a run."""
+        for idx, value in enumerate(plan.cmd):
+            if value != "-p" or idx + 1 >= len(plan.cmd):
+                continue
+            prompt_arg = plan.cmd[idx + 1]
+            if prompt_arg.startswith("@"):
+                _cleanup_prompt_file(Path(prompt_arg[1:]))
 
     def parse_response(
         self,

@@ -1,8 +1,10 @@
 """Shared Gemini fallback ladder for direct CLI and runtime callers."""
 from __future__ import annotations
 
+import contextlib
 import os
 import subprocess
+import tempfile
 import time
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
@@ -23,6 +25,8 @@ GEMINI_AUTH_ENV_VARS = (
     "GOOGLE_GENERATIVE_AI_API_KEY",
     "GOOGLE_APPLICATION_CREDENTIALS",
 )
+_INLINE_PROMPT_LIMIT_CHARS = 100_000
+_PROMPT_FILE_PREFIX = "learn-ukrainian-gemini-prompt-"
 #: Stderr/stdout markers that mean "this rung is not going to answer —
 #: advance to the next rung instead of retrying the same one 3x". Lowercase;
 #: matched via case-insensitive ``in`` on the haystack.
@@ -145,6 +149,10 @@ def build_gemini_ladder(
     return rungs
 
 
+def _has_gemini_api_key(env: Mapping[str, str]) -> bool:
+    return bool(env.get("GEMINI_API_KEY") or env.get("GOOGLE_API_KEY"))
+
+
 def resolve_allowed_auth_modes(
     env: Mapping[str, str] | None = None,
     *,
@@ -156,7 +164,8 @@ def resolve_allowed_auth_modes(
 
     1. ``GEMINI_AUTH_MODE=api``  — API rungs only
     2. ``GEMINI_AUTH_MODE=subscription`` / ``oauth``  — OAuth rungs only
-    3. ``GEMINI_AUTH_MODE=auto`` / unset  — cooldown-aware:
+    3. ``GEMINI_AUTH_MODE=auto`` / unset  — key/cooldown-aware:
+         - no API key ⇒ OAuth only
          - cooldown active ⇒ OAuth only (API key is near-budget, don't burn retries)
          - cooldown inactive ⇒ both modes (API first, OAuth as fallback)
 
@@ -174,6 +183,8 @@ def resolve_allowed_auth_modes(
     if cooldown_active is None:
         from ai_llm.cooldown import is_api_cooldown_active
         cooldown_active = is_api_cooldown_active()
+    if not _has_gemini_api_key(source):
+        return ("oauth",)
     if cooldown_active:
         return ("oauth",)
     return ("api", "oauth")
@@ -196,6 +207,30 @@ def build_gemini_subprocess_env(
         for key in GEMINI_AUTH_ENV_VARS:
             env.pop(key, None)
     return env
+
+
+def _gemini_prompt_arg(prompt: str) -> tuple[str, Path | None]:
+    if len(prompt) <= _INLINE_PROMPT_LIMIT_CHARS:
+        return prompt, None
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        prefix=_PROMPT_FILE_PREFIX,
+        suffix=".txt",
+        delete=False,
+    ) as handle:
+        handle.write(prompt)
+        path = Path(handle.name)
+    return f"@{path}", path
+
+
+def _cleanup_gemini_prompt_file(path: Path | None) -> None:
+    if path is None:
+        return
+    if not path.name.startswith(_PROMPT_FILE_PREFIX):
+        return
+    with contextlib.suppress(FileNotFoundError):
+        path.unlink()
 
 
 def visible_sleep(seconds: int, reason: str, *, logger: Callable[[str], None] | None = None) -> None:
@@ -430,11 +465,20 @@ def call_gemini_with_fallback(
         call_start_wall = time.time()
         call_start_mono = time.monotonic()
         env = build_gemini_subprocess_env(rung.auth_mode, base_env=base_env)
-        cmd = [gemini_cli, "-m", rung.model, "--approval-mode=yolo"]
+        prompt_arg, prompt_file = _gemini_prompt_arg(prompt)
+        cmd = [
+            gemini_cli,
+            "-m",
+            rung.model,
+            "--approval-mode=yolo",
+            "--skip-trust",
+            "-p",
+            prompt_arg,
+        ]
         try:
             proc = subprocess.Popen(
                 cmd,
-                stdin=subprocess.PIPE,
+                stdin=subprocess.DEVNULL,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
@@ -442,7 +486,7 @@ def call_gemini_with_fallback(
                 env=env,
             )
             try:
-                stdout, stderr = proc.communicate(input=prompt, timeout=timeout_s or effective_timeout)
+                stdout, stderr = proc.communicate(timeout=timeout_s or effective_timeout)
             except subprocess.TimeoutExpired:
                 proc.kill()
                 proc.communicate()
@@ -539,6 +583,8 @@ def call_gemini_with_fallback(
                 elapsed_s=time.monotonic() - call_start_mono,
                 stderr_excerpt=f"{type(exc).__name__}: {exc}",
             )
+        finally:
+            _cleanup_gemini_prompt_file(prompt_file)
 
     emit(f"  🤖 Gemini ladder call ({len(prompt):,} prompt chars)...")
     return run_gemini_fallback_ladder(
@@ -550,6 +596,7 @@ def call_gemini_with_fallback(
         attempt_runner=_attempt_runner,
         logger=emit,
         sleep_fn=sleep_fn,
+        allowed_auth_modes=resolve_allowed_auth_modes(base_env),
     )
 
 
