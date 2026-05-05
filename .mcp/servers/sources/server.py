@@ -18,6 +18,7 @@ Tools:
     - verify_word, verify_words, verify_lemma (VESUM)
     - query_wikipedia, query_pravopys, query_e2u, query_r2u, query_ulif
     - search_definitions, search_grinchenko_1907, search_esum, search_idioms, search_synonyms
+    - search_slovnyk_me, search_heritage
     - search_style_guide (Антоненко-Давидович)
     - translate_en_uk (Балла)
 """
@@ -707,8 +708,9 @@ async def list_tools() -> list[Tool]:
                 "`search_definitions` returns `sovietization_risk > 0`, fall "
                 "back to `query_sum20`. Backed by slovnyk.me's clean per-word "
                 "URLs (replaces the broken sum20ua.com search-page parser). "
-                "License posture: per-query lookup with attribution is fair "
-                "use; bulk crawl is not. Issue: #1667."
+                "License posture: per-query lookup with attribution only; "
+                "no bulk crawl and no DB caching. Prefer official ULIF "
+                "routes for authoritative СУМ-20 when available. Issue: #1667."
             ),
             inputSchema={
                 "type": "object",
@@ -729,19 +731,20 @@ async def list_tools() -> list[Tool]:
                 "Available `dict` values:\n"
                 "- `newsum` — СУМ-20 (modern, 2010–) — DEFAULT for definitions\n"
                 "- `sum` — СУМ-11 (Sovietized, 1970–80) — fallback only\n"
-                "- `antonenko` — Antonenko-Davydovych «Як ми говоримо» — calques + Russianisms\n"
-                "- `karavansky` — Karavansky synonyms (#1664)\n"
-                "- `paronyms` — Ukrainian paronyms dictionary (#1666 alternate)\n"
+                "- `davydov` (`antonenko` alias) — Antonenko-Davydovych «Як ми говоримо»\n"
+                "- `synonyms_karavansky` (`karavansky` alias) — Karavansky synonyms\n"
+                "- `franko` — dictionary from Ivan Franko's works\n"
+                "- `slang_lviv` — Lviv regional lexicon\n"
+                "- `holoskevych` — Holoskevych 1929 orthographic dictionary\n"
                 "- `phraseology` — Фразеологічний словник\n"
                 "- `orthography` — Орфографічний словник\n"
                 "- `orthoepy` — Орфоепічний словник\n"
                 "- `vts` — Великий тлумачний словник сучасної мови (alternate modern)\n"
-                "- `ukrlit_ency` — Українська літературна енциклопедія\n"
-                "- `khreshchatyk_lessons` — «Уроки державної мови» (usage column)\n"
                 "- `foreign_melnychuk` — foreign-words dictionary (Мельничук)\n"
-                "- `ukr_rus` / `rus_ukr` / `eng_ukr` — bilinguals\n\n"
-                "License posture: slovnyk.me © notice with no explicit terms; "
-                "per-query lookup with attribution is fair use. Issue: #1667."
+                "- `ukrrus` / `rusukr` / `engukr` — bilinguals\n\n"
+                "License posture: slovnyk.me © notice plus third-party source "
+                "rights; per-query lookup with attribution only, no bulk crawl "
+                "and no DB caching. Issue: #1667."
             ),
             inputSchema={
                 "type": "object",
@@ -749,11 +752,70 @@ async def list_tools() -> list[Tool]:
                     "word": {"type": "string", "description": "Ukrainian word to look up"},
                     "dict": {
                         "type": "string",
-                        "description": "Dictionary slug (newsum, sum, antonenko, karavansky, paronyms, phraseology, orthography, orthoepy, vts, ukrlit_ency, khreshchatyk_lessons, foreign_melnychuk, ukr_rus, rus_ukr, eng_ukr)",
+                        "description": "Dictionary slug (newsum, sum, davydov, synonyms_karavansky, franko, slang_lviv, holoskevych, phraseology, orthography, orthoepy, vts, foreign_melnychuk, ukrrus, rusukr, engukr). Backward aliases antonenko, karavansky, ukr_rus, rus_ukr, eng_ukr are accepted.",
                         "default": "newsum",
                     },
                 },
                 "required": ["word"]
+            },
+        ),
+        Tool(
+            name="search_slovnyk_me",
+            description=(
+                "Search slovnyk.me as a single-source dictionary aggregator. "
+                "Uses curated rows in data/sources.db when present, with optional "
+                "live direct-entry fallback to /dict/{slug}/{word}. Does NOT crawl "
+                "slovnyk.me /search, /terms, or sitemap. Returns dictionary slug, "
+                "source URL, bounded text/snippet, `is_modern`, `is_dialect`, "
+                "`is_russianism`, `sovietization_risk`, and ranking score. Use this "
+                "when a prompt needs slovnyk.me specifically, especially СУМ-20 or "
+                "regional dictionaries. Dictionaries already indexed locally "
+                "(СУМ-11, Грінченко, Антоненко-Давидович, phraseology, EN→UK) "
+                "are blocked here; use their canonical tools. For heritage-defense "
+                "decisions, prefer `search_heritage`."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "Ukrainian headword to look up"},
+                    "dictionaries": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Optional dictionary slugs. Default: curated modern + heritage set.",
+                    },
+                    "limit": {"type": "integer", "description": "Max results (default 5, max 20)", "default": 5},
+                    "live": {
+                        "type": "boolean",
+                        "description": "Allow live direct-entry fallback if local rows are absent. Default: true.",
+                        "default": True,
+                    },
+                },
+                "required": ["query"],
+            },
+        ),
+        Tool(
+            name="search_heritage",
+            description=(
+                "Canonical heritage-defense lookup for distinguishing authentic "
+                "Ukrainian archaisms, historisms, dialectisms, and inherited words "
+                "from Russianisms/surzhyk. Merges existing tools/sources: "
+                "Грінченко 1907, ЕСУМ, slovnyk.me modern/regional dictionaries, "
+                "and Антоненко-Давидович style warnings. Ranks pre-Soviet and "
+                "etymological attestations above modern-only rows, and demotes "
+                "style-guide Russianism warnings rather than dropping them."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "Ukrainian headword to verify"},
+                    "limit": {"type": "integer", "description": "Max merged results (default 8, max 20)", "default": 8},
+                    "include_live_slovnyk": {
+                        "type": "boolean",
+                        "description": "Allow live slovnyk.me direct-entry fallback. Default: true.",
+                        "default": True,
+                    },
+                },
+                "required": ["query"],
             },
         ),
         Tool(
@@ -857,6 +919,8 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "query_sum20": lambda: handle_query_sum20(arguments),
             "query_slovnyk_me": lambda: handle_query_slovnyk_me(arguments),
             "query_pravopys": lambda: handle_query_pravopys(arguments),
+            "search_slovnyk_me": lambda: handle_search_slovnyk_me(arguments),
+            "search_heritage": lambda: handle_search_heritage(arguments),
             "search_style_guide": lambda: handle_dict_search(arguments, "style_guide", "Антоненко-Давидович"),
             "query_cefr_level": lambda: handle_dict_search(arguments, "puls_cefr", "PULS CEFR"),
             "search_definitions": lambda: handle_dict_search(arguments, "sum11", "СУМ-11"),
@@ -1486,15 +1550,16 @@ async def handle_query_slovnyk_me(args: dict) -> list[TextContent]:
     """Live single-query lookup against slovnyk.me — multi-dictionary.
 
     Per-query live fetch with citation. NO bulk crawl, NO DB persist.
-    License posture: slovnyk.me © notice with no explicit terms;
-    per-query lookup with attribution is fair use. Issue: #1667.
+    License posture: slovnyk.me © notice plus third-party source rights;
+    per-query lookup with attribution only. Issue: #1667.
     """
     word = args["word"]
     dict_slug = args.get("dict", "newsum")
 
-    from rag.source_query import SLOVNYK_ME_DICTS, slovnyk_me_lookup
+    from rag.source_query import SLOVNYK_ME_DICTS, resolve_slovnyk_me_dict_slug, slovnyk_me_lookup
 
-    if dict_slug not in SLOVNYK_ME_DICTS:
+    canonical_slug = resolve_slovnyk_me_dict_slug(dict_slug)
+    if canonical_slug not in SLOVNYK_ME_DICTS:
         valid = ", ".join(sorted(SLOVNYK_ME_DICTS.keys()))
         return [TextContent(
             type="text",
@@ -1504,14 +1569,14 @@ async def handle_query_slovnyk_me(args: dict) -> list[TextContent]:
             ),
         )]
 
-    result = await asyncio.to_thread(slovnyk_me_lookup, word, dict_slug)
+    result = await asyncio.to_thread(slovnyk_me_lookup, word, canonical_slug)
 
     if not result:
         return [TextContent(
             type="text",
             text=(
-                f"No entry found for '{word}' in slovnyk.me/{dict_slug} "
-                f"({SLOVNYK_ME_DICTS[dict_slug]})."
+                f"No entry found for '{word}' in slovnyk.me/{canonical_slug} "
+                f"({SLOVNYK_ME_DICTS[canonical_slug]})."
             ),
         )]
 
@@ -1602,6 +1667,102 @@ async def handle_dict_search(args: dict, collection: str, label: str) -> list[Te
             lines.append(f"- **Text**: {text[:500]}")
         lines.append("")
 
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_search_slovnyk_me(args: dict) -> list[TextContent]:
+    """Search slovnyk.me curated rows plus optional live direct-entry fallback."""
+    query = args.get("query", args.get("word", ""))
+    dictionaries = args.get("dictionaries")
+    if dictionaries is not None and not isinstance(dictionaries, list):
+        dictionaries = [str(dictionaries)]
+    limit = min(args.get("limit", 5), 20)
+    live = bool(args.get("live", True))
+
+    from wiki import sources_db as sdb
+
+    hits = await asyncio.to_thread(
+        sdb.search_slovnyk_me,
+        query,
+        limit,
+        dictionaries,
+        live=live,
+    )
+    if not hits:
+        return [TextContent(type="text", text=f"No slovnyk.me results for: \"{query}\"")]
+
+    lines = [f"Found {len(hits)} slovnyk.me result(s) for: \"{query}\"\n"]
+    for i, hit in enumerate(hits, 1):
+        lines.append(f"### Result {i}")
+        lines.append(f"- **Headword**: {hit.get('word', '')}")
+        lines.append(f"- **Dictionary**: {hit.get('dictionary_label', hit.get('dictionary_slug', ''))}")
+        if hit.get("source_url"):
+            lines.append(f"- **URL**: {hit['source_url']}")
+        flags = []
+        if hit.get("is_modern"):
+            flags.append("modern")
+        if hit.get("is_dialect"):
+            flags.append("heritage/regional")
+        if hit.get("is_russianism"):
+            flags.append("possible Russianism/calque")
+        if flags:
+            lines.append(f"- **Flags**: {', '.join(flags)}")
+        risk = int(hit.get("sovietization_risk") or 0)
+        if risk > 0:
+            lines.append(
+                f"- **Sovietization risk**: {risk} "
+                f"({hit.get('sovietization_keywords', '') or 'keywords unknown'})"
+            )
+        snippet = str(hit.get("snippet") or hit.get("text") or "")
+        if snippet:
+            lines.append(f"- **Snippet**: {snippet[:700]}")
+        lines.append(f"- **Score**: {float(hit.get('score', 0.0)):.1f}")
+        lines.append("")
+    return [TextContent(type="text", text="\n".join(lines))]
+
+
+async def handle_search_heritage(args: dict) -> list[TextContent]:
+    """Merge heritage-defense sources for a headword."""
+    query = args.get("query", args.get("word", ""))
+    limit = min(args.get("limit", 8), 20)
+    include_live_slovnyk = bool(args.get("include_live_slovnyk", True))
+
+    from wiki import sources_db as sdb
+
+    hits = await asyncio.to_thread(
+        sdb.search_heritage,
+        query,
+        limit,
+        include_live_slovnyk=include_live_slovnyk,
+    )
+    if not hits:
+        return [TextContent(type="text", text=f"No heritage evidence found for: \"{query}\"")]
+
+    lines = [f"Found {len(hits)} heritage evidence row(s) for: \"{query}\"\n"]
+    for i, hit in enumerate(hits, 1):
+        lines.append(f"### Evidence {i}")
+        lines.append(f"- **Source family**: {hit.get('source_family', '')}")
+        lines.append(f"- **Source**: {hit.get('source', '')}")
+        lines.append(f"- **Headword**: {hit.get('word', '')}")
+        lines.append(f"- **Classification**: {hit.get('classification', '')}")
+        lines.append(f"- **Authentic Ukrainian**: {bool(hit.get('is_authentic_ukrainian'))}")
+        lines.append(f"- **Russianism/calque warning**: {bool(hit.get('is_russianism'))}")
+        if hit.get("url"):
+            lines.append(f"- **URL**: {hit['url']}")
+        tags = hit.get("evidence_tags") or []
+        if tags:
+            lines.append(f"- **Evidence tags**: {', '.join(tags)}")
+        risk = int(hit.get("sovietization_risk") or 0)
+        if risk > 0:
+            lines.append(
+                f"- **Sovietization risk**: {risk} "
+                f"({hit.get('sovietization_keywords', '') or 'keywords unknown'})"
+            )
+        text = str(hit.get("text") or "")
+        if text:
+            lines.append(f"- **Text**: {text[:700]}")
+        lines.append(f"- **Score**: {float(hit.get('score', 0.0)):.1f}")
+        lines.append("")
     return [TextContent(type="text", text="\n".join(lines))]
 
 

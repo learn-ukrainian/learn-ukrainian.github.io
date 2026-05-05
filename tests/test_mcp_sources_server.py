@@ -55,7 +55,7 @@ class TestListTools:
             "query_pravopys", "query_cefr_level",
             "search_style_guide", "search_definitions", "search_grinchenko_1907",
             "search_idioms", "search_synonyms", "translate_en_uk",
-            "search_esum", "check_russian_shadow",
+            "search_esum", "search_slovnyk_me", "search_heritage", "check_russian_shadow",
         }
         missing = expected - tool_names
         extra = tool_names - expected
@@ -117,6 +117,18 @@ class TestCallToolDispatch:
             mock.return_value = [MagicMock(text="ok")]
             _run(server_module.call_tool("search_grinchenko_1907", {"query": "тест"}))
             mock.assert_called_once_with({"query": "тест"}, "grinchenko_dict", "Грінченко")
+
+    def test_search_slovnyk_me_dispatches(self, server_module):
+        with patch.object(server_module, "handle_search_slovnyk_me", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("search_slovnyk_me", {"query": "тест"}))
+            mock.assert_called_once_with({"query": "тест"})
+
+    def test_search_heritage_dispatches(self, server_module):
+        with patch.object(server_module, "handle_search_heritage", new_callable=AsyncMock) as mock:
+            mock.return_value = [MagicMock(text="ok")]
+            _run(server_module.call_tool("search_heritage", {"query": "тест"}))
+            mock.assert_called_once_with({"query": "тест"})
 
     def test_check_modern_form_dispatches(self, server_module):
         with patch.object(server_module, "handle_check_modern_form", new_callable=AsyncMock) as mock:

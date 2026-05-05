@@ -14,6 +14,8 @@ Indexed tables (dictionary headword lookup):
 - translate_en_uk() — Балла EN→UK
 - query_cefr_level() — PULS CEFR
 - search_style_guide() — Антоненко-Давидович
+- search_slovnyk_me() — curated slovnyk.me verification snapshots / live lookup
+- search_heritage() — merged Ukrainian heritage-defense lookup
 - lookup_by_url() — external article URL lookup
 """
 
@@ -24,6 +26,7 @@ from pathlib import Path
 
 import yaml
 
+from . import slovnyk_me
 from .channels import rank_external_hits
 from .chunking import chunk_text, policy_for
 from .dense_rerank import _get_tokenizer, rerank_candidates, rerank_sections
@@ -1456,6 +1459,292 @@ def query_cefr_level(word: str, limit: int = 5) -> list[dict]:
 def search_style_guide(word: str, limit: int = 5) -> list[dict]:
     """Look up calques/Russianisms in Антоненко-Давидович style guide."""
     return _dict_lookup("style_guide", word, limit)
+
+
+def _normalize_slovnyk_row(row: dict, query: str) -> dict:
+    row = dict(row)
+    row["is_modern"] = bool(row.get("is_modern"))
+    row["is_dialect"] = bool(row.get("is_dialect"))
+    row["is_russianism"] = bool(row.get("is_russianism"))
+    row["sovietization_risk"] = int(row.get("sovietization_risk") or 0)
+    row["score"] = float(row.get("score") or slovnyk_me.score_slovnyk_row(row, query))
+    row.setdefault("source", "slovnyk.me")
+    return row
+
+
+def _resolved_slovnyk_dicts(dictionaries: list[str] | tuple[str, ...] | None) -> list[str]:
+    if not dictionaries:
+        return []
+    resolved: list[str] = []
+    for slug in dictionaries:
+        canonical = slovnyk_me.resolve_dict_slug(slug)
+        if canonical in slovnyk_me.OVERLAP_BLOCKED_DICTS:
+            continue
+        if canonical not in resolved:
+            resolved.append(canonical)
+    return resolved
+
+
+def _search_slovnyk_me_db(
+    query: str,
+    *,
+    limit: int,
+    dictionaries: list[str] | tuple[str, ...] | None,
+) -> list[dict]:
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return []
+    if not _table_columns("slovnyk_me_entries"):
+        return []
+
+    variants = slovnyk_me.query_variants(query)
+    normalized_variants = [slovnyk_me.normalize_word(variant) for variant in variants]
+    dicts = _resolved_slovnyk_dicts(dictionaries)
+
+    dict_filter = ""
+    dict_params: list[object] = []
+    if dicts:
+        dict_filter = f" AND dictionary_slug IN ({','.join('?' for _ in dicts)})"
+        dict_params = [*dicts]
+    elif dictionaries:
+        return []
+    else:
+        blocked = tuple(slovnyk_me.OVERLAP_BLOCKED_DICTS)
+        dict_filter = f" AND dictionary_slug NOT IN ({','.join('?' for _ in blocked)})"
+        dict_params = [*blocked]
+
+    seen_ids: set[int] = set()
+    rows: list[dict] = []
+
+    def add_fetched(fetched: list[sqlite3.Row]) -> None:
+        for fetched_row in fetched:
+            item = dict(fetched_row)
+            row_id = int(item["id"])
+            if row_id in seen_ids:
+                continue
+            seen_ids.add(row_id)
+            rows.append(_normalize_slovnyk_row(item, query))
+
+    placeholders = ",".join("?" for _ in normalized_variants)
+    exact = conn.execute(
+        f"""
+        SELECT *
+        FROM slovnyk_me_entries
+        WHERE normalized_word IN ({placeholders}){dict_filter}
+        LIMIT ?
+        """,
+        (*normalized_variants, *dict_params, limit),
+    ).fetchall()
+    add_fetched(exact)
+
+    if len(rows) < limit:
+        prefix_where = " OR ".join("normalized_word LIKE ?" for _ in normalized_variants)
+        prefix_params = [f"{variant}%" for variant in normalized_variants]
+        prefix = conn.execute(
+            f"""
+            SELECT *
+            FROM slovnyk_me_entries
+            WHERE ({prefix_where}){dict_filter}
+            LIMIT ?
+            """,
+            (*prefix_params, *dict_params, limit),
+        ).fetchall()
+        add_fetched(prefix)
+
+    if len(rows) < limit and _table_columns("slovnyk_me_entries_fts"):
+        fts_query = _escape_fts5_phrase(query)
+        if fts_query:
+            try:
+                fts = conn.execute(
+                    f"""
+                    SELECT e.*, bm25(slovnyk_me_entries_fts) AS fts_rank
+                    FROM slovnyk_me_entries_fts
+                    JOIN slovnyk_me_entries e ON e.id = slovnyk_me_entries_fts.rowid
+                    WHERE slovnyk_me_entries_fts MATCH ?{dict_filter}
+                    ORDER BY fts_rank
+                    LIMIT ?
+                    """,
+                    (fts_query, *dict_params, limit),
+                ).fetchall()
+                add_fetched(fts)
+            except sqlite3.OperationalError:
+                pass
+
+    rows.sort(key=lambda row: row["score"], reverse=True)
+    return rows[:limit]
+
+
+def search_slovnyk_me(
+    query: str,
+    limit: int = 10,
+    dictionaries: list[str] | tuple[str, ...] | None = None,
+    *,
+    live: bool = False,
+) -> list[dict]:
+    """Search curated slovnyk.me rows, optionally falling back to live direct pages.
+
+    `live=True` fetches only /dict/{slug}/{word} pages for the explicit query
+    and known variants. It does not call slovnyk.me /search and does not crawl
+    sitemaps.
+    """
+    limit = max(1, min(limit, 20))
+    rows = _search_slovnyk_me_db(query, limit=limit, dictionaries=dictionaries)
+    if len(rows) >= limit or not live:
+        return rows[:limit]
+
+    live_rows = [
+        _normalize_slovnyk_row(row, query)
+        for row in slovnyk_me.fetch_entries(
+            query,
+            dictionaries=dictionaries,
+            limit=limit - len(rows),
+        )
+    ]
+    seen = {
+        (row.get("dictionary_slug", ""), row.get("source_url", ""))
+        for row in rows
+    }
+    for row in live_rows:
+        key = (row.get("dictionary_slug", ""), row.get("source_url", ""))
+        if key not in seen:
+            seen.add(key)
+            rows.append(row)
+    rows.sort(key=lambda row: row["score"], reverse=True)
+    return rows[:limit]
+
+
+def _heritage_text(hit: dict) -> str:
+    return str(
+        hit.get("definition")
+        or hit.get("etymology_text")
+        or hit.get("snippet")
+        or hit.get("text")
+        or ""
+    )
+
+
+def search_heritage(
+    query: str,
+    limit: int = 10,
+    *,
+    include_live_slovnyk: bool = False,
+) -> list[dict]:
+    """Merge heritage-defense evidence for a Ukrainian headword.
+
+    Sources are deliberately kept separate: this calls the existing
+    Грінченко, ЕСУМ, slovnyk.me, and style-guide lookup functions rather
+    than re-ingesting those dictionaries into a combined table.
+    """
+    limit = max(1, min(limit, 20))
+    rows: list[dict] = []
+
+    for hit in search_grinchenko_1907(query, limit=5):
+        text = _heritage_text(hit)
+        rows.append({
+            "query": query,
+            "source_family": "grinchenko",
+            "source": hit.get("source", "Грінченко"),
+            "word": hit.get("word", ""),
+            "text": text,
+            "classification": "pre_soviet_ukrainian_attestation",
+            "is_authentic_ukrainian": True,
+            "is_russianism": False,
+            "is_modern": False,
+            "is_dialect": "діал" in text.lower(),
+            "sovietization_risk": 0,
+            "evidence_tags": ["pre_soviet", "lexicographic"],
+            "score": 96.0,
+        })
+
+    for hit in search_esum(query, limit=5):
+        text = _heritage_text(hit)
+        cognates = str(hit.get("cognates", ""))
+        tags = ["etymology"]
+        score = 92.0
+        if "псл" in text.lower() or "псл" in cognates.lower():
+            tags.append("proto_slavic")
+            score += 5.0
+        rows.append({
+            "query": query,
+            "source_family": "esum",
+            "source": hit.get("source", "ЕСУМ"),
+            "word": hit.get("lemma", ""),
+            "text": text,
+            "classification": "etymological_attestation",
+            "is_authentic_ukrainian": True,
+            "is_russianism": False,
+            "is_modern": False,
+            "is_dialect": False,
+            "sovietization_risk": 0,
+            "evidence_tags": tags,
+            "score": score,
+        })
+
+    for hit in search_slovnyk_me(
+        query,
+        limit=limit,
+        dictionaries=slovnyk_me.HERITAGE_SLOVNYK_ME_DICTS,
+        live=include_live_slovnyk,
+    ):
+        is_russianism = bool(hit.get("is_russianism"))
+        is_dialect = bool(hit.get("is_dialect"))
+        is_modern = bool(hit.get("is_modern"))
+        if is_russianism:
+            classification = "potential_russianism_or_calque"
+            score = 25.0
+        elif is_dialect:
+            classification = "regional_or_historical_ukrainian_attestation"
+            score = 88.0
+        elif is_modern:
+            classification = "modern_ukrainian_attestation"
+            score = 82.0
+        else:
+            classification = "dictionary_attestation"
+            score = 72.0
+        score -= 5.0 * int(hit.get("sovietization_risk") or 0)
+        rows.append({
+            "query": query,
+            "source_family": "slovnyk_me",
+            "source": hit.get("dictionary_label", "slovnyk.me"),
+            "word": hit.get("word", ""),
+            "text": _heritage_text(hit),
+            "url": hit.get("source_url", ""),
+            "classification": classification,
+            "is_authentic_ukrainian": not is_russianism,
+            "is_russianism": is_russianism,
+            "is_modern": is_modern,
+            "is_dialect": is_dialect,
+            "sovietization_risk": int(hit.get("sovietization_risk") or 0),
+            "sovietization_keywords": hit.get("sovietization_keywords", ""),
+            "evidence_tags": [tag for tag, present in {
+                "modern": is_modern,
+                "regional_or_historical": is_dialect,
+                "possible_russianism": is_russianism,
+                "slovnyk_me": True,
+            }.items() if present],
+            "score": score,
+        })
+
+    for hit in search_style_guide(query, limit=3):
+        rows.append({
+            "query": query,
+            "source_family": "style_guide",
+            "source": hit.get("source", "Антоненко-Давидович"),
+            "word": hit.get("word", ""),
+            "text": _heritage_text(hit),
+            "classification": "potential_russianism_or_calque",
+            "is_authentic_ukrainian": False,
+            "is_russianism": True,
+            "is_modern": False,
+            "is_dialect": False,
+            "sovietization_risk": 0,
+            "evidence_tags": ["style_warning", "possible_russianism"],
+            "score": 20.0,
+        })
+
+    rows.sort(key=lambda row: row["score"], reverse=True)
+    return rows[:limit]
 
 
 def lookup_by_url(url: str) -> dict | None:

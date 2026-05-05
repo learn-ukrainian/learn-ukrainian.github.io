@@ -24,6 +24,7 @@ paths:
 - `mcp__sources__search_literary` — primary literary sources (125K chunks — chronicles, poetry, legal texts)
 - `mcp__sources__query_pravopys` — Ukrainian orthography rules (Правопис 2019)
 - `mcp__sources__query_wikipedia` — Ukrainian Wikipedia
+- `mcp__sources__search_heritage` — **canonical heritage-defense lookup** for verifying potential archaisms, historisms, dialectisms, and inherited Ukrainian words against Russianism/surzhyk false positives. Merges Грінченко, ЕСУМ, slovnyk.me, and Антоненко-Давидович evidence.
 
 > Start with `mcp__sources__search_sources` for general retrieval. Keep `mcp__sources__search_text` for explicit textbook-only scoping when you do not want literary, Wikipedia, external, or `ukrainian_wiki` results mixed in.
 
@@ -34,9 +35,33 @@ paths:
 - `mcp__sources__search_definitions` — СУМ-11 (127K entries) — Ukrainian explanatory dictionary. **⚠️ Partially Sovietized for ideological terms** — see "Sovietization caveat" below. Each result row carries `sovietization_risk` (0/1/2) and `sovietization_keywords`.
 - `mcp__sources__search_grinchenko_1907` — Грінченко (67K entries) — historical Ukrainian dictionary from 1907. Use for pre-Soviet usage attestation; **NOT for word origins/etymology** — that's a separate concern handled by `search_esum` below.
 - `mcp__sources__search_esum` — ЕСУМ etymological dictionary — canonical name for ЕСУМ. PoC scope: vol. 1 (А–Г) only; vols. 2–6 are follow-up (#1662). Falls back to a goroh.pp.ua hint if word not found.
+- `mcp__sources__search_slovnyk_me` — slovnyk.me single-source aggregator. Uses curated `sources.db` rows when present and optional live direct-entry `/dict/{slug}/{word}` fallback. Returns URL, dictionary slug, bounded snippet, `is_modern`, `is_dialect`, `is_russianism`, and `sovietization_risk`. Use when slovnyk.me specifically is required; prefer `search_heritage` for archaism-vs-Russianism decisions.
 - `mcp__sources__search_idioms` — Фразеологічний (25K entries) — Ukrainian idioms and expressions
 - `mcp__sources__search_synonyms` — Ukrajinet WordNet (122K synsets) — synonyms, antonyms. **⚠️ Synsets are largely auto-translated from Open English WordNet** per upstream README — quality audit pending (#1657 Tier 3).
 - `mcp__sources__translate_en_uk` — Балла EN→UK (79K entries) — English→Ukrainian translations. One-way only; UK→EN reverse not yet built.
+
+## Heritage defense
+
+Use `mcp__sources__search_heritage` when a word may be an authentic Ukrainian
+archaism, historism, dialectism, regionalism, or contact borrowing rather than a
+Russianism/surzhyk form.
+
+The merger is intentionally conservative:
+
+- Pre-Soviet Грінченко evidence ranks highest.
+- ЕСУМ etymology ranks next, especially with Proto-Slavic cognate markers.
+- slovnyk.me СУМ-20/regional dictionaries provide modern and regional
+  attestation without duplicating the existing Грінченко/ЕСУМ tables.
+- Антоненко-Давидович style-guide hits are included as warnings but demoted;
+  a warning does not erase stronger historical or etymological evidence.
+- slovnyk.me dictionaries that duplicate canonical local tools are blocked in
+  `search_slovnyk_me`: use `search_definitions`, `search_grinchenko_1907`,
+  `search_style_guide`, `search_idioms`, or `translate_en_uk` instead.
+
+For writer/reviewer prompts: call `search_heritage` before rejecting an
+unfamiliar Ukrainian-looking word as Russianism. The load-bearing example is
+`кобета`/`кобіта`: the tool surfaces Lviv/regional and СУМ-20 evidence and keeps
+`is_russianism=false`.
 
 ## Sovietization caveat (СУМ-11) — issue #1659
 
@@ -61,9 +86,14 @@ Every `search_definitions` result row carries:
 - Do NOT reproduce the definition verbatim.
 - Prefer Грінченко (`search_grinchenko_1907`) for the same headword if it has
   pre-Soviet coverage.
-- After СУМ-20 lands (#1667), prefer that for modern definitional baseline.
+- Prefer `search_heritage` for an evidence merge, or `search_slovnyk_me` /
+  slovnyk.me `newsum` (СУМ-20) for a modern definitional baseline.
 - If neither alternative is available, paraphrase neutrally and flag in
   reviewer evidence.
+
+СУМ-20 rows are cleaner on sampled neutral words, but not assumed categorically
+clean. `search_slovnyk_me` applies the same `sovietization_risk` /
+`sovietization_keywords` classifier to slovnyk.me rows.
 
 The scan is reproducible:
 `.venv/bin/python scripts/audit/sum11_sovietization_scan.py --db data/sources.db`.
@@ -77,6 +107,7 @@ Audit report at `audit/sum11_sovietization_scan_<DATE>.md`.
 | **СУМ-11** | 127K (7,152 flagged Sovietized — #1659) | Ukrainian explanatory (definitions, citations) | `data/sources.db` FTS5 |
 | **Грінченко** | 67K | Historical Ukrainian (1907, lexicographic) | `data/sources.db` FTS5 |
 | **ЕСУМ** | vol. 1 (А–Г) PoC | Etymological dictionary | `data/sources.db` FTS5 via `search_esum` |
+| **slovnyk.me** | bounded per-word rows + live direct lookup | Modern/regional dictionary aggregator; no bulk mirror | `data/sources.db` `slovnyk_me_entries` + live `/dict/{slug}/{word}` |
 | **Балла EN→UK** | 79K | English→Ukrainian translations | `data/sources.db` FTS5 |
 | **Антоненко-Давидович** | 279 | Style guide (calques, Russianisms) | `data/sources.db` FTS5 |
 | **Фразеологічний** | 25K | Ukrainian idioms and expressions | `data/sources.db` FTS5 |
