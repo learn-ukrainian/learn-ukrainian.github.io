@@ -28,12 +28,75 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-_TEST_PYTHON = str(Path(__file__).resolve().parent.parent / ".venv" / "bin" / "python")
-"""Python interpreter for subprocess tests.
+_VENV_PYTHON = Path(__file__).resolve().parent.parent / ".venv" / "bin" / "python"
 
-Use the repository-local virtualenv explicitly. Project tooling depends on
-pyenv 3.12.8 plus local packages such as sqlite-vec; inheriting whichever
-interpreter happens to run pytest can miss those dependencies."""
+
+def _resolve_test_python() -> str:
+    """Locate the project virtualenv's Python interpreter.
+
+    AGENTS.md explicitly bans falling back to the calling Python
+    interpreter attribute (project rule: `.venv/bin/python` only —
+    sqlite-vec and other deps live in the project venv, not in
+    arbitrary system interpreters). So we resolve to a real
+    `.venv/bin/python` path or fail loudly.
+
+    Resolution order:
+      1. **Same-checkout `.venv`** (main case, CI case) — the venv
+         materialized at the repo root.
+      2. **Main checkout's `.venv` via git-common-dir** (worktree case)
+         — `git worktree add` does not materialize a per-worktree venv,
+         but the worktree's git common dir points at the main checkout
+         where `.venv/bin/python` does exist. We resolve that path
+         explicitly via `git rev-parse --git-common-dir`.
+      3. **`$VIRTUAL_ENV/bin/python`** if set — handles the rare case of
+         an externally-activated venv outside this repo. Codex flagged
+         this as the explicit fallback in PR #1686 review.
+      4. **RuntimeError** if none of the above resolves. We fail loud
+         rather than fall through to the calling-interpreter attribute,
+         which would silently launch subprocess tests on the wrong
+         interpreter and miss sqlite-vec / other venv-only deps.
+         (#1685; refined per Codex review on #1686 citing AGENTS.md:19,
+         AGENTS.md:53-67.)
+    """
+    if _VENV_PYTHON.exists():
+        return str(_VENV_PYTHON)
+
+    # Worktree case — the worktree's `.venv/bin/python` doesn't exist,
+    # but `git rev-parse --git-common-dir` from inside the worktree
+    # points at `<main-checkout>/.git`, whose parent has the venv.
+    try:
+        common_dir = subprocess.check_output(
+            ["git", "rev-parse", "--git-common-dir"],
+            cwd=Path(__file__).resolve().parent,
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+        if common_dir:
+            main_venv = (Path(common_dir) / ".." / ".venv" / "bin" / "python").resolve()
+            if main_venv.exists():
+                return str(main_venv)
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+        pass
+
+    active_venv = os.environ.get("VIRTUAL_ENV")
+    if active_venv:
+        candidate = Path(active_venv) / "bin" / "python"
+        if candidate.exists():
+            return str(candidate)
+
+    raise RuntimeError(
+        "No project virtualenv Python found. Expected `.venv/bin/python` "
+        "in the current checkout, in the main checkout (when running from "
+        "a git worktree), or via $VIRTUAL_ENV. Run tests via "
+        "`.venv/bin/python -m pytest`. AGENTS.md:53-67 forbids falling back "
+        "to the calling Python interpreter for subprocess tests."
+    )
+
+
+_TEST_PYTHON = _resolve_test_python()
+"""Python interpreter for subprocess tests — `.venv/bin/python` resolved
+via :func:`_resolve_test_python`. See that helper's docstring for the
+full resolution order and rationale (#1685)."""
 
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
@@ -2495,6 +2558,124 @@ def test_claude_adapter_rejects_old_cli_version(tmp_path):
                 tool_config={"cmd_prefix": ["claude"]},
             )
     claude_adapter_mod._probe_claude_cli_version.cache_clear()
+
+
+def test_claude_adapter_default_prefix_prefers_npx_over_local_binary(tmp_path, monkeypatch):
+    """Regression for #1684: default cmd_prefix MUST be npx@latest, not local
+    `claude` binary.
+
+    Pre-#1684, ``shutil.which("claude")`` was preferred. Empirically this
+    let dispatched runs silently drift behind the launcher's npx-managed
+    version (observed 2026-05-05: ~/.local/bin/claude at 2.1.126 vs
+    ``npx @latest`` at 2.1.128). The fix flips the order to match
+    start-claude.sh:120's invariant.
+    """
+    from agent_runtime.adapters import claude as claude_adapter_mod
+
+    def _which(name: str) -> str | None:
+        # Both npx and a local claude exist. The bug was preferring claude.
+        return {
+            "npx": "/usr/local/bin/npx",
+            "claude": "/Users/test/.local/bin/claude",
+        }.get(name)
+
+    monkeypatch.setattr(claude_adapter_mod.shutil, "which", _which)
+
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+
+    # First two argv tokens MUST be the npx invocation, not the local binary.
+    assert plan.cmd[0:2] == ["npx", "@anthropic-ai/claude-code@latest"], (
+        f"Default cmd_prefix should be npx@latest (matches start-claude.sh:120). "
+        f"Got: {plan.cmd[0:2]}"
+    )
+    # And specifically: must NOT be the local claude binary path.
+    assert "/Users/test/.local/bin/claude" not in plan.cmd
+
+
+def test_claude_adapter_default_prefix_falls_back_to_local_when_npx_missing(
+    tmp_path, monkeypatch
+):
+    """When npx is unavailable (e.g. air-gapped CI), the local `claude` binary
+    is the documented last-resort fallback. #1684."""
+    from agent_runtime.adapters import claude as claude_adapter_mod
+
+    def _which(name: str) -> str | None:
+        return {"claude": "/Users/test/.local/bin/claude"}.get(name)
+
+    monkeypatch.setattr(claude_adapter_mod.shutil, "which", _which)
+
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert plan.cmd[0] == "/Users/test/.local/bin/claude"
+    assert "npx" not in plan.cmd
+
+
+def test_claude_adapter_default_prefix_raises_when_neither_present(
+    tmp_path, monkeypatch
+):
+    """If neither npx nor claude is on PATH, fail loudly with a clear error
+    instead of silently producing an empty/broken cmd. #1684."""
+    from agent_runtime.adapters import claude as claude_adapter_mod
+
+    monkeypatch.setattr(
+        claude_adapter_mod.shutil, "which", lambda _name: None
+    )
+
+    adapter = ClaudeAdapter()
+    with pytest.raises(RuntimeError, match=r"neither `npx` nor a `claude` binary"):
+        adapter.build_invocation(
+            prompt="hello",
+            mode="read-only",
+            cwd=tmp_path,
+            model=None,
+            task_id=None,
+            session_id=None,
+            tool_config=None,
+        )
+
+
+def test_claude_adapter_explicit_cmd_prefix_override_unchanged(tmp_path, monkeypatch):
+    """The ``tool_config={"cmd_prefix": [...]}`` override path must remain
+    intact — callers that pass an explicit prefix get it verbatim, regardless
+    of what shutil.which returns. #1684 (preserve existing behavior)."""
+    from agent_runtime.adapters import claude as claude_adapter_mod
+
+    # Even if shutil.which would return npx, an explicit override wins.
+    monkeypatch.setattr(
+        claude_adapter_mod.shutil, "which", lambda _name: "/usr/local/bin/npx"
+    )
+
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"cmd_prefix": ["/explicit/path/to/claude"]},
+    )
+
+    assert plan.cmd[0] == "/explicit/path/to/claude"
+    assert "npx" not in plan.cmd
 
 
 def test_claude_parse_response_success():

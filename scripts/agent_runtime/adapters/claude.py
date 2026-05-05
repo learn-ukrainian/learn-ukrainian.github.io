@@ -156,16 +156,39 @@ class ClaudeAdapter:
         """
         tc: dict[str, Any] = tool_config or {}
 
-        # Command prefix — respect both the packaged npx path and a local
-        # `claude` binary if present. The bridge uses CLAUDE_CMD=["npx", "@anthropic-ai/claude-code@latest"]
-        # as the canonical prefix; we default to the same. Callers can
-        # override by passing ``tool_config={"cmd_prefix": [...]}``.
+        # Command prefix — match start-claude.sh:120's invariant: prefer
+        # ``npx @anthropic-ai/claude-code@latest`` so dispatched runs ride
+        # the same version as the interactive launcher and inherit npm's
+        # cache semantics (avoids stale-binary cache bugs and dropped
+        # prompt caching). The local ``claude`` binary on PATH is the
+        # last-resort fallback only — used when ``npx`` is unavailable
+        # (e.g. air-gapped CI without npm registry access).
+        #
+        # Pre-#1684 history: the order was inverted (local binary first,
+        # npx fallback). On 2026-05-05 that was empirically diagnosed —
+        # ``which claude`` resolved to ~/.local/bin/claude at 2.1.126
+        # while ``npx @latest`` resolved to 2.1.128, so every dispatched
+        # Claude run silently missed the 2.1.128 fixes (subagent
+        # prompt-cache reuse ~3× cache_creation reduction; 1M-context
+        # autocompact false-block fix; --bare >10MB stdin crash fix).
+        #
+        # Callers can still override by passing
+        # ``tool_config={"cmd_prefix": [...]}`` (preserved unchanged).
         cmd_prefix = tc.get("cmd_prefix")
         if cmd_prefix:
             cmd = [cmd_prefix] if isinstance(cmd_prefix, str) else list(cmd_prefix)
+        elif shutil.which("npx"):
+            cmd = ["npx", "@anthropic-ai/claude-code@latest"]
         else:
             claude_bin = shutil.which("claude")
-            cmd = [claude_bin] if claude_bin else ["npx", "@anthropic-ai/claude-code@latest"]
+            if not claude_bin:
+                raise RuntimeError(
+                    "Cannot dispatch Claude Code: neither `npx` nor a "
+                    "`claude` binary was found on PATH. Install Node.js "
+                    "(provides npx) or run "
+                    "`npm install -g @anthropic-ai/claude-code`."
+                )
+            cmd = [claude_bin]
 
         probe_prefix = tuple(cmd)
         cli_version = _ensure_supported_claude_cli_version(probe_prefix)
