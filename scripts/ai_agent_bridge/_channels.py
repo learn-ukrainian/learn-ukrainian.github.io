@@ -724,6 +724,7 @@ def post(
     pre_delivered: bool = False,
     mode: str = "read-only",
     deadline_seconds: int | None = None,
+    verify_citations: bool = True,
 ) -> dict[str, Any]:
     """Create a new channel_messages row + N deliveries rows atomically.
 
@@ -748,6 +749,17 @@ def post(
     deterministically replayable. Callers that want manual control
     (tests, synthetic posts, system announcements) can pass explicit
     values or set ``auto_snapshot=False``.
+
+    **Citation provenance check (#1683):** if ``verify_citations=True``
+    (default) and ``kind in {"post", "reply"}``, the body is run through
+    ``_citation_check.check_and_annotate`` before commit. Verbatim
+    citations to authoritative sources (Антоненко-Давидович, Грінченко,
+    Правопис 2019, СУМ-11, ЕСУМ) are verified against
+    ``data/sources.db``; unverified citations get an inline
+    ``<!-- CITATION-UNVERIFIED ... -->`` annotation. Annotation-mode,
+    not block-mode — the message commits either way. Set
+    ``verify_citations=False`` for synthetic test posts or system kinds
+    where citation verification is not relevant.
     """
     _validate_post_agent(from_agent)
     _validate_kind(kind)
@@ -756,6 +768,36 @@ def post(
     body = redact_text(body) or ""
     attachments = redact_value(attachments)
     monitor_state_snapshot = redact_value(monitor_state_snapshot)
+
+    # Citation-provenance check (#1683). Annotate-mode: never blocks
+    # the post, only appends inline markers for unverified attributions.
+    # Skipped for system/audit kinds where the body is not agent prose.
+    if verify_citations and kind in {"post", "reply"}:
+        try:
+            from . import _citation_check
+            check = _citation_check.check_and_annotate(body)
+            body = check.annotated_body
+            if check.has_unverified:
+                import sys as _sys
+                names = ", ".join(
+                    f"{v.citation.source_label}({v.citation.headword or '?'})"
+                    for v in check.unverified
+                )
+                print(
+                    f"⚠️  channel-bridge: {len(check.unverified)} "
+                    f"unverified citation(s) from {from_agent} → "
+                    f"#{channel}: {names}",
+                    file=_sys.stderr,
+                )
+        except Exception as exc:  # pragma: no cover - defensive
+            # Never fail a post because the verifier broke. Log and
+            # continue with the un-annotated body.
+            import sys as _sys
+            print(
+                f"⚠️  channel-bridge: citation-check raised {type(exc).__name__}: "
+                f"{exc} — committing post without annotation",
+                file=_sys.stderr,
+            )
 
     # B.2: Auto-populate context snapshots if not provided.
     # The "" vs None distinction matters — empty string is an explicit

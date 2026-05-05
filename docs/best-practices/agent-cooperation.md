@@ -244,6 +244,20 @@ When the user decides:
 
 The session-start checklist below now includes `docs/decisions/pending/` as a required scan. If pending decisions exist, the cold-start surface them before the user asks. This closes the "decisions buried in transcripts" gap — pending decisions are first-class state, not deliberation noise.
 
+### Citation provenance check (#1683, shipped 2026-05-05)
+
+The bridge runs a citation-provenance check on every channel post and reply before commit. Verbatim attributions to authoritative sources (Антоненко-Давидович, Грінченко 1907, Правопис 2019, СУМ-11, ЕСУМ) are verified against `data/sources.db`. Unverified citations get an inline `<!-- CITATION-UNVERIFIED ... -->` marker; verified citations and citations to sources without an automated verifier (VESUM, Шевельов, Вихованець, Пономарів) pass through silently.
+
+**Annotate-mode, not block-mode.** The check never refuses a post — it surfaces the doubt. This keeps the cost of a false-positive low (the channel still flows; reviewers see the marker and can dismiss it) and the cost of a true-positive a clear breadcrumb for downstream consumers (reviewer prompts, content modules, students never inherit a forged citation).
+
+**Why this exists.** On 2026-05-05, two `ab discuss` runs hours apart on собака gender produced the same fabricated Антоненко-Давидович citation ("Антоненко-Давидович categorizes feminine собака as a calque/Russianism") in Gemini's reply. АД has no entry on собака per `mcp__sources__search_style_guide`; the model's prior was the bug, not the source. The deliberation-protocol fix (commit `872d8376b0`) blocked round-1 short-circuit so a single round of cross-agent comparison happens — but if a fabrication had survived two rounds of `[AGREE]`, it would have shipped to curriculum. This check closes that gap.
+
+**Detection scope (v1):** verbatim source-name match (with permissive inflection across Cyrillic case endings) + headword extraction from the local window (italicized, code-fenced, quoted, or "іменник X" / "слово X" patterns). Multi-pattern same-source mentions within ~200 chars are de-duplicated to one citation. Out of scope (deferred): fuzzy-match of quoted text against source body content; LLM-based attribution detection; block-mode rejection. The v1 catches outright fabrication where the headword does not exist anywhere in the source corpus.
+
+**Implementation:** `scripts/ai_agent_bridge/_citation_check.py` (detection + verification + annotation). Hook lives in `_channels.py:post()` — controlled by `verify_citations: bool = True` keyword. System/audit kinds (anything other than `post`/`reply`) skip verification automatically.
+
+**Graceful degradation:** the verifier soft-skips if `data/sources.db` is missing (worktree without the data dir, fresh checkout, CI minimal env). Soft-skips never produce flags — they're recorded internally as "verifier unavailable" so a deployment problem cannot manufacture false positives.
+
 ---
 
 ## Session Start Checklist
