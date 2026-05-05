@@ -80,6 +80,8 @@ from pipeline_lib import (
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
+VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+
 MAX_AUDIT_FIX_ITERS_CORE = 3    # Mar 2026: raised from 2 — modules often need 3 passes
 MAX_AUDIT_FIX_ITERS_SEMINAR = 4  # Mar 2026: raised from 3
 MAX_REVIEW_FIX_ITERS = 3        # Mar 2026: raised from 2 — M05 needed 14+2 fixes in 2 iters, still had unresolved
@@ -2886,7 +2888,7 @@ def _validate_run_proofread(ctx: ModuleContext, screen: DScreenResult) -> DScree
     module_num = ctx.module_num if hasattr(ctx, "module_num") else 1
     log(f"  validate: Dispatching Gemini proofread+fix on {ctx.slug}...")
     proofread_cmd = [
-        sys.executable, str(SCRIPTS_DIR / "proofread.py"),
+        str(VENV_PYTHON), str(SCRIPTS_DIR / "proofread.py"),
         ctx.track, str(module_num), "--fix", "--no-mdx",
     ]
     try:
@@ -4070,7 +4072,7 @@ def phase_mdx(ctx: ModuleContext) -> bool:
 
     log("  mdx: Generating MDX...")
     result = subprocess.run(
-        [sys.executable, str(SCRIPTS_DIR / "generate_mdx.py"),
+        [str(VENV_PYTHON), str(SCRIPTS_DIR / "generate_mdx.py"),
          "l2-uk-en", ctx.track, str(ctx.module_num)],
         cwd=str(PROJECT_ROOT), capture_output=True, text=True, timeout=600,
     )

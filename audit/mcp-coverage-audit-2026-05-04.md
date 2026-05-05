@@ -32,7 +32,7 @@ SELECT word FROM sum11 WHERE word IN ('Київ','Львів','Україна','
 |---|---|---|---|---|---|
 | `search_style_guide` | Антоненко-Давидович «Як ми говоримо» | 279 | 600+ | ~46% | INCOMPLETE — issue #1663 tracks full ingest. Re-dispatch needed (segmenter broken on prior run). |
 | `search_definitions` | СУМ-11 (1970–1980) | 127,069 | ~127K | ~100% | Excludes proper nouns (toponyms, person names). 5.6% Sovietized (#1659 flagged). |
-| `search_etymology` | Грінченко (1907) | 67,275 | ~67K | ~100% | Excludes proper nouns. NOT etymology — lexicographic. Renamed `search_grinchenko_1907` in #1658. |
+| `search_grinchenko_1907` | Грінченко (1907) | 67,275 | ~67K | ~100% | Excludes proper nouns. NOT etymology — lexicographic. |
 | `search_esum` | ЕСУМ vol 1 (А–Г) | 1,923 | 6 vols | ~17% by volume, А–Г scope | PoC only. Vols 2-6 follow up. |
 | `search_idioms` | Фразеологічний | 24,683 | ~25K | ~99% | Single-source — cross-validate via `search_literary`. |
 | `search_synonyms` | Ukrajinet WordNet | 122,441 | 122K | 100% by count | **Quality caveat:** auto-MT from English WordNet, not curated. Audit pending #1657 Tier 3. |
@@ -75,7 +75,7 @@ that drops rows is caught before it ships.
 ## Action items shipped this PR
 
 1. Updated tool descriptions in `.mcp/servers/sources/server.py` for
-   `search_style_guide`, `search_definitions`, `search_etymology`,
+   `search_style_guide`, `search_definitions`, `search_grinchenko_1907`,
    `search_idioms`, `search_synonyms`, `translate_en_uk`,
    `query_cefr_level`. Each now states actual indexed count, canonical
    source size, coverage percent, and known systematic exclusions.

@@ -17,7 +17,7 @@ Tools:
     - search_sources, search_text, search_literary, search_external, search_images, get_chunk_context
     - verify_word, verify_words, verify_lemma (VESUM)
     - query_wikipedia, query_pravopys, query_e2u, query_r2u, query_ulif
-    - search_definitions, search_etymology, search_esum, search_idioms, search_synonyms
+    - search_definitions, search_grinchenko_1907, search_esum, search_idioms, search_synonyms
     - search_style_guide (Антоненко-Давидович)
     - translate_en_uk (Балла)
 """
@@ -575,33 +575,20 @@ async def list_tools() -> list[Tool]:
             description=(
                 "Search Грінченко «Словарь української мови» (1907) — historical "
                 "Ukrainian lexicographic dictionary. Coverage: 67,275 of canonical "
-                "~67K entries (~100% indexed). **NOT etymology** despite the legacy "
-                "alias `search_etymology` — this is lexicographic (definitions + "
-                "usage citations), not diachronic word-origin analysis. True "
+                "~67K entries (~100% indexed). **NOT etymology** — this is "
+                "lexicographic (definitions + usage citations), not diachronic "
+                "word-origin analysis. True "
                 "etymology lives in `search_esum` (ЕСУМ, vol 1 А–Г live; vols 2-6 "
                 "pending #1662). **Systematic exclusion: proper nouns** — toponyms "
                 "(Київ, Львів, Дніпро, Сибір) and personal names (Шевченко) are NOT "
                 "covered. Use for pre-Soviet Ukrainian usage attestation: helps "
-                "verify a word is genuinely Ukrainian, not a Soviet-era import. "
-                "Renamed from `search_etymology` 2026-05-04 (#1658)."
+                "verify a word is genuinely Ukrainian, not a Soviet-era import."
             ),
             inputSchema={
                 "type": "object",
                 "properties": {
                     "query": {"type": "string", "description": "Ukrainian word to look up historical form/usage"},
                     "limit": {"type": "integer", "description": "Max results (default 3)", "default": 3},
-                },
-                "required": ["query"]
-            },
-        ),
-        Tool(
-            name="search_etymology",
-            description="DEPRECATED alias for search_grinchenko_1907. Do not use. Will be removed in 30 days.",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "query": {"type": "string", "description": "Ukrainian word"},
-                    "limit": {"type": "integer", "description": "Max results", "default": 3},
                 },
                 "required": ["query"]
             },
@@ -654,7 +641,7 @@ async def list_tools() -> list[Tool]:
                 "Ukrainian lexicography. Quality audit pending under EPIC #1657 "
                 "Tier 3. Use for vocabulary variety and rough synonym/antonym "
                 "discovery, but **DO NOT cite as authoritative**: cross-validate "
-                "against `search_definitions` (СУМ-11) or `search_etymology` "
+                "against `search_definitions` (СУМ-11) or `search_grinchenko_1907` "
                 "(Грінченко) before treating a synonym as established Ukrainian. "
                 "The 3,360-synset version cited in older docs is the 2023 paper's "
                 "initial release; current production is the auto-MT-expanded set."
@@ -869,7 +856,6 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             "query_cefr_level": lambda: handle_dict_search(arguments, "puls_cefr", "PULS CEFR"),
             "search_definitions": lambda: handle_dict_search(arguments, "sum11", "СУМ-11"),
             "search_grinchenko_1907": lambda: handle_dict_search(arguments, "grinchenko_dict", "Грінченко"),
-            "search_etymology": lambda: handle_deprecated_search_etymology(arguments),
             "search_esum": lambda: handle_search_esum(arguments),
             "search_idioms": lambda: handle_dict_search(arguments, "frazeolohichnyi", "Фразеологічний"),
             "search_synonyms": lambda: handle_dict_search(arguments, "ukrajinet", "Ukrajinet WordNet"),
@@ -1556,16 +1542,6 @@ async def handle_query_pravopys(args: dict) -> list[TextContent]:
         result["text"][:3000],
     ]
     return [TextContent(type="text", text="\n".join(lines))]
-
-
-async def handle_deprecated_search_etymology(args: dict) -> list[TextContent]:
-    """Deprecated alias for search_grinchenko_1907."""
-    _log_tool_call("search_etymology", args, error="DEPRECATED: Use search_grinchenko_1907 instead.")
-    results = await handle_dict_search(args, "grinchenko_dict", "Грінченко")
-    if results and isinstance(results[0], TextContent):
-        warning = "⚠️ **DEPRECATION WARNING:** `search_etymology` is misnamed and deprecated. Use `search_grinchenko_1907` instead. Грінченко is a historical dictionary, NOT an etymological one.\n\n"
-        results[0].text = warning + results[0].text
-    return results
 
 
 async def handle_dict_search(args: dict, collection: str, label: str) -> list[TextContent]:
