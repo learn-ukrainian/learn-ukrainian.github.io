@@ -5,7 +5,7 @@
 
 ---
 
-## TL;DR — what shipped this session (4 PRs merged)
+## TL;DR — what shipped this session (5 PRs merged)
 
 ### Merged (in order)
 
@@ -16,6 +16,8 @@
 3. **PR #1690 → main** (`9230a54620`): `fix(security): resolve 11 py/path-injection CodeQL alerts (batch A)`. Last commit from previous session (`c06d25dd45`) — the documented `_resolve_caller_path()` helper replacement for the theatrical `safe_join(Path(x).parent, Path(x).name)` pattern. Merged on solo review per memory rule #0H + green CI + zero open alerts (Codex had the prior REJECT on the theatrical pattern; my fix was specifically for that concern). **Closes batch A.**
 
 4. **PR #1697 → main** (`c3e4444a35`): `chore(mcp): remove search_etymology deprecation alias (#1679)`. Codex dispatch, 53-min duration, 23+/58- across 4 files. Removed alias from MCP server, prompts, and tests. `git grep search_etymology` now only finds historical session-state archives. **Closes #1679.**
+
+5. **PR #1698 → main** (`d48d7aab89`): `refactor(rag): split VESUM out of query.py + wire MCP into wiki packet (#1680)`. Codex dispatch hit `--hard-timeout 3600` (60 min) AT THE END — commit `daddaa180d` was clean and complete (14 files, +470/-136 LOC), but `git push` + `gh pr create` didn't run before timeout. Orchestrator (me) pushed branch + opened PR after verifying the commit's diff matched the brief acceptance criteria. New `scripts/verification/vesum.py` (157 lines) replaces VESUM API in `scripts/rag/query.py`; 8 import sites updated; `build_knowledge_packet` now appends bounded `Dictionary context` section (VESUM lemma/form + SUM-11 def + style note for plan vocab, capped at ~6000 chars); new test `tests/test_wiki_packet_dictionary_context.py` (101 lines). **Closes #1680.**
 
 ### DRAFT (opened, awaits user)
 
@@ -41,9 +43,9 @@
 
   Both comments posted on respective issues. **Both stay open** — ingestion briefs deferred to next round (substantial work; #1663 is mechanical, #1664 needs scrape design).
 
-### In-flight at handoff write (still running)
+### In-flight at handoff write
 
-- **Codex dispatch `1680-vesum-split-mcp-packet`** — running ~55 min as of handoff. Issue #1680 (split VESUM out of `scripts/rag/query.py` + wire MCP into wiki packet — 3 residuals from #1631). Brief: `docs/dispatch-briefs/2026-05-05-1680-vesum-split-and-mcp-wiki-packet.md`. PID 23568. Wait task in background; will notify on completion. **Next session:** check `delegate.py status 1680-vesum-split-mcp-packet` from MAIN checkout (CWD-relative state lookup), inspect the PR if opened, merge if clean.
+(none — all dispatches reached terminal state before handoff write)
 
 ---
 
@@ -57,13 +59,15 @@
 | `1666-slovnyk-paronym-research` | gemini | 5 min | ✅ research done (NBU PDF path) | issue comment |
 | `1673-1661-cot-tier1-prompts` | claude opus-4-7 xhigh | 15 min | ✅ DRAFT PR | #1696 + 55 tests |
 | `1679-search-etymology-removal` | codex | 53 min | ✅ merged | #1697 → `c3e4444a35` |
-| `1680-vesum-split-mcp-packet` | codex | running ~55 min | 🔄 in-flight | TBD |
+| `1680-vesum-split-mcp-packet` | codex | 60 min (hard-timeout) | ⚠️ committed but didn't push; orchestrator opened PR | #1698 → `d48d7aab89` (merged) |
 | `1663-1664-source-research` | gemini | 5 min | ✅ research done (both LIVE) | 2 issue comments |
 | `codeql-D-js-html-xss` (#1688) | gemini | failed dispatch | ⚠️ branch-conflict edge case | deferred |
 
 ---
 
 ## Lessons captured
+
+0. **Codex hard-timeout edge case (NEW).** `--hard-timeout 3600` killed the codex worker AFTER the commit was made but BEFORE `git push` + `gh pr create` could complete. The work is saved in the worktree's commit history, but the orchestrator has to push + open the PR manually. Future: bump default hard-timeout to 4500 (75min) for substantial refactor briefs OR have delegate.py emit a "push your work and open PR NOW" trigger at T-300s (5min before timeout). Filed mentally for #1657 follow-up.
 
 1. **`process-codex` requires int message_id, not channel UUID.** My `ab post reviews` for #1690 re-review never got Codex's response because `process-codex 7d8bcb19...` errored with "invalid int value". Channel posts and the legacy inbox are separate subsystems. For one-shot review requests where you want a synchronous Codex response, use `ask-codex` (legacy inbox) not channel post.
 
@@ -114,23 +118,21 @@ gh issue list --state open --limit 10
 
 ## Ranked next-session priorities
 
-1. **#1680 VESUM split dispatch follow-through** — likely done by next session; review + merge if clean.
+1. **#1696 (#1673+#1661) user pilot decision** — DRAFT PR is ready. Pilot guide spells out 3-module pathway. User judgment: pilot before merge OR merge as-is for A1/20 build.
 
-2. **#1696 (#1673+#1661) user pilot decision** — DRAFT PR is ready. Pilot guide spells out 3-module pathway. User judgment: pilot before merge OR merge as-is for A1/20 build.
+2. **#1688 XSS refactor** — DRAFT PR still open. Workaround the delegate worktree edge case: `git worktree remove --force .worktrees/dispatch/gemini/codeql-D-js-html-xss && git branch -D gemini/codeql-D-js-html-xss && .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id 1688-xss-refactor --worktree --mode danger --base codeql-D-js-html-xss --prompt-file docs/dispatch-briefs/2026-05-05-1688-image-explorer-xss-refactor.md`. Then push to original branch + close-without-merge of original DRAFT.
 
-3. **#1688 XSS refactor** — DRAFT PR still open. Workaround the delegate worktree edge case: `git worktree remove --force .worktrees/dispatch/gemini/codeql-D-js-html-xss && git branch -D gemini/codeql-D-js-html-xss && .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id 1688-xss-refactor --worktree --mode danger --base codeql-D-js-html-xss --prompt-file docs/dispatch-briefs/2026-05-05-1688-image-explorer-xss-refactor.md`. Then push to original branch + close-without-merge of original DRAFT.
+3. **#1666 paronym ingestion brief** — research is done (NBU 1986 PDF OCR path). Write the ingester brief + dispatch Gemini. ~30-60 min of agent time.
 
-4. **#1666 paronym ingestion brief** — research is done (NBU 1986 PDF OCR path). Write the ingester brief + dispatch Gemini. ~30-60 min of agent time.
+4. **#1663 Antonenko-Davydovych ingestion brief** — local PDF + IA backup confirmed. Easy dispatch (mechanical PDF OCR + segmentation). Write brief + dispatch.
 
-5. **#1663 Antonenko-Davydovych ingestion brief** — local PDF + IA backup confirmed. Easy dispatch (mechanical PDF OCR + segmentation). Write brief + dispatch.
+5. **#1664 Karavansky ingestion brief** — HTML scrape required (no API). More complex; design the scraper architecture in the brief (per-page rate-limit, JSONL output, cache layer, idempotent re-runs). Dispatch Gemini or Codex.
 
-6. **#1664 Karavansky ingestion brief** — HTML scrape required (no API). More complex; design the scraper architecture in the brief (per-page rate-limit, JSONL output, cache layer, idempotent re-runs). Dispatch Gemini or Codex.
+6. **#1665 Holovashchuk alternative source** — needs user input on whether to use IA / catalog / slovnyk.me mirror, OR drop the issue.
 
-7. **#1665 Holovashchuk alternative source** — needs user input on whether to use IA / catalog / slovnyk.me mirror, OR drop the issue.
+7. **38 NEW CodeQL alerts** (mentioned in predecessor handoff #6) — group by query class + dispatch in 4-6 batches. After this session, 3 of 4 original CodeQL PRs closed (#1687, #1689, #1690 merged); remaining 38 are different alerts on the security tab.
 
-8. **38 NEW CodeQL alerts** (mentioned in predecessor handoff #6) — group by query class + dispatch in 4-6 batches. After this session, 3 of 4 original CodeQL PRs closed (#1687, #1689, #1690 merged); remaining 38 are different alerts on the security tab.
-
-9. **A1 strategic redirect** (still pending from predecessor handoff) — user redirected to A1 unblock; needs Monitor API state scan + L1-UK corpus bootstrap re-read + ONE concrete A1 proposal. NOT dispatched this session — needs user judgment per memory rule #0A.
+8. **A1 strategic redirect** (still pending from predecessor handoff) — user redirected to A1 unblock; needs Monitor API state scan + L1-UK corpus bootstrap re-read + ONE concrete A1 proposal. NOT dispatched this session — needs user judgment per memory rule #0A.
 
 ---
 
@@ -146,9 +148,9 @@ gh issue list --state open --limit 10
 
 ## Statistics
 
-- **PRs merged:** 4 (#1695, #1687, #1690, #1697) + 1 DRAFT opened (#1696) + 1 DRAFT inherited still open (#1688)
-- **Issues closed:** 2 (#1682, #1679 — auto-closed by PR body)
+- **PRs merged:** 5 (#1695, #1687, #1690, #1697, #1698) + 1 DRAFT opened (#1696) + 1 DRAFT inherited still open (#1688)
+- **Issues closed:** 3 (#1682, #1679, #1680 — auto-closed by PR bodies)
 - **Issues documented (open with new info):** 4 (#1665, #1666, #1663, #1664)
-- **Total dispatches fired:** 9 (4 codex, 4 gemini, 1 claude). 8 succeeded. 1 deferred (codex on #1688 due to worktree edge case).
-- **Wall-clock duration:** ~70 min from "anyquestions?" to handoff write (with #1680 still in-flight at write time)
-- **Inline code I wrote myself:** 1 file (`scripts/validate/validate_vocab_yaml.py` in worktree codeql-B-secrets-exposure) + 1 file (`scripts/vocab/lexical_sandbox.py` in same worktree) for the #1687 rework. Everything else was via dispatch.
+- **Total dispatches fired:** 9 (4 codex, 4 gemini, 1 claude). 8 succeeded. 1 deferred (codex on #1688 due to worktree edge case). 1 hit hard-timeout (#1680) but commit was clean — orchestrator pushed + opened PR.
+- **Wall-clock duration:** ~80 min from "anyquestions?" to final-merge.
+- **Inline code I wrote myself:** 1 file (`scripts/validate/validate_vocab_yaml.py` in worktree codeql-B-secrets-exposure) + 1 file (`scripts/vocab/lexical_sandbox.py` in same worktree) for the #1687 rework. Everything else was via dispatch. Plus the orchestrator-opened PR for #1698 after Codex's timeout.
