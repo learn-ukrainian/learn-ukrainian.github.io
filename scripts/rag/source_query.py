@@ -33,6 +33,14 @@ from urllib.parse import quote
 
 import requests
 
+try:
+    from wiki import slovnyk_me as _slovnyk_me
+except ImportError:  # pragma: no cover - direct package import fallback
+    from scripts.wiki import slovnyk_me as _slovnyk_me
+
+SLOVNYK_ME_DICTS = _slovnyk_me.SLOVNYK_ME_DICTS
+resolve_slovnyk_me_dict_slug = _slovnyk_me.resolve_dict_slug
+
 # ── Shared config ────────────────────────────────────────────────
 
 REQUEST_TIMEOUT = 15
@@ -862,31 +870,11 @@ def pravopys_lookup(topic: str) -> dict[str, Any] | None:
 # ══════════════════════════════════════════════════════════════════
 # slovnyk.me — multi-dictionary aggregator with clean per-word URLs
 # Hosts СУМ-20, СУМ-11, Antonenko-Davydovych, Karavansky synonyms,
-# paronyms, phraseology, orthography, orthoepy, foreign-words
+# phraseology, orthography, orthoepy, foreign-words
 # (Мельничук), and Ukrainian↔Russian / Ukrainian↔Polish bilinguals.
 # ══════════════════════════════════════════════════════════════════
 
 SLOVNYK_ME_BASE = "https://slovnyk.me"
-
-# Dictionary slugs slovnyk.me uses in /dict/{slug}/{word} URLs.
-# Confirmed via WebFetch 2026-05-04 from slovnyk.me/dict/newsum and search results page.
-SLOVNYK_ME_DICTS: dict[str, str] = {
-    "newsum": "Словник української мови у 20 томах (2010–) — modern post-Soviet",
-    "sum": "Словник української мови в 11 томах (1970–80) — Sovietized",
-    "antonenko": "«Як ми говоримо» Антоненка-Давидовича — calques + Russianisms",
-    "karavansky": "Синоніми Караванського",
-    "paronyms": "Словник паронімів",
-    "phraseology": "Фразеологічний словник української мови",
-    "orthography": "Орфографічний словник української мови",
-    "orthoepy": "Орфоепічний словник",
-    "vts": "Великий тлумачний словник сучасної мови",
-    "ukrlit_ency": "Українська літературна енциклопедія",
-    "khreshchatyk_lessons": "«Уроки державної мови» з газети «Хрещатик»",
-    "foreign_melnychuk": "Словник іншомовних слів Мельничука",
-    "ukr_rus": "Українсько-російський словник",
-    "rus_ukr": "Російсько-український словник",
-    "eng_ukr": "Англо-український словник",
-}
 
 
 def slovnyk_me_lookup(word: str, dict_slug: str = "newsum") -> dict[str, Any] | None:
@@ -903,10 +891,11 @@ def slovnyk_me_lookup(word: str, dict_slug: str = "newsum") -> dict[str, Any] | 
 
     Issue: #1667 (SUM-20 modern definitional baseline).
     """
-    if dict_slug not in SLOVNYK_ME_DICTS:
+    canonical_slug = resolve_slovnyk_me_dict_slug(dict_slug)
+    if canonical_slug not in SLOVNYK_ME_DICTS:
         return None
 
-    url = f"{SLOVNYK_ME_BASE}/dict/{dict_slug}/{quote(word)}"
+    url = f"{SLOVNYK_ME_BASE}/dict/{canonical_slug}/{quote(word)}"
     try:
         r = _get(url, timeout=20)
         if r.status_code == 404:
@@ -943,8 +932,8 @@ def slovnyk_me_lookup(word: str, dict_slug: str = "newsum") -> dict[str, Any] | 
 
         return {
             "word": word,
-            "dict": dict_slug,
-            "dict_label": SLOVNYK_ME_DICTS[dict_slug],
+            "dict": canonical_slug,
+            "dict_label": SLOVNYK_ME_DICTS[canonical_slug],
             "url": url,
             "text": text,
         }
