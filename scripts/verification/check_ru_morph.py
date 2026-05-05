@@ -60,7 +60,7 @@ def is_russian_pattern(word: str, threshold: float = 0.7) -> dict:
 
     # Cross-check VESUM: if it's a real Ukrainian lemma, do not flag.
     # We use the existing verify_word from mcp sources/rag logic.
-    from scripts.rag.query import verify_word
+    from scripts.verification.vesum import verify_word
     try:
         vesum_results = verify_word(word)
         if vesum_results:

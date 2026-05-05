@@ -6,8 +6,9 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
-from rag.query import search_dictionary, search_text, verify_words
+from rag.query import search_dictionary, search_text
 from rag.source_query import pravopys_lookup, r2u_translate
+from verification.vesum import verify_words
 
 
 def run_verification():

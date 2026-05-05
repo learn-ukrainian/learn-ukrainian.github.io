@@ -145,20 +145,20 @@ class TestVerifyWordHandler:
     """Test verify_word handler formatting."""
 
     def test_not_found(self, server_module):
-        with patch("rag.query.verify_word", return_value=[]):
+        with patch("scripts.verification.vesum.verify_word", return_value=[]):
             result = _run(server_module.handle_verify_word({"word": "взяйте"}))
             assert "NOT FOUND" in result[0].text
 
     def test_found(self, server_module):
         mock_matches = [{"lemma": "читати", "pos": "verb", "tags": "verb:imperf:impr:s:2"}]
-        with patch("rag.query.verify_word", return_value=mock_matches):
+        with patch("scripts.verification.vesum.verify_word", return_value=mock_matches):
             result = _run(server_module.handle_verify_word({"word": "читай"}))
             assert "читати" in result[0].text
             assert "verb" in result[0].text
             assert "1 match" in result[0].text
 
     def test_passes_pos_filter(self, server_module):
-        with patch("rag.query.verify_word", return_value=[]) as mock:
+        with patch("scripts.verification.vesum.verify_word", return_value=[]) as mock:
             _run(server_module.handle_verify_word({"word": "тест", "pos_filter": "noun"}))
             mock.assert_called_once_with("тест", "noun")
 
@@ -171,7 +171,7 @@ class TestVerifyWordsHandler:
             "стій": [{"lemma": "стояти", "pos": "verb", "tags": "verb:imperf:impr:s:2"}],
             "взяйте": [],
         }
-        with patch("rag.query.verify_words", return_value=mock_results):
+        with patch("scripts.verification.vesum.verify_words", return_value=mock_results):
             result = _run(server_module.handle_verify_words({"words": ["стій", "взяйте"]}))
             text = result[0].text
             assert "Found: 1/2" in text
@@ -232,7 +232,7 @@ class TestSSEStateless:
 
 class TestCheckRussianShadowHandler:
     def test_handle_check_russian_shadow(self, server_module):
-        with patch("scripts.rag.query.verify_word") as mock_verify_word:
+        with patch("scripts.verification.vesum.verify_word") as mock_verify_word:
             def mock_vesum(w):
                 if w in ["получити", "здача"]:
                     return []
