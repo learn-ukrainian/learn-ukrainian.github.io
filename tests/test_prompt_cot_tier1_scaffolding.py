@@ -1,8 +1,10 @@
 """Structural assertions for the V7 writer + reviewer prompts.
 
-Locks two coordinated prompt-discipline features:
-  - #1673 chain-of-thought reasoning checklist (4 numbered steps)
-  - #1661 Tier-1 verification discipline / audit (5 numbered/lettered items)
+Locks three coordinated prompt-discipline features:
+  - #1673 #1696 visible ``<plan_reasoning>`` mandate for the writer (5 keys)
+  - #1673 reviewer CoT reasoning checklist (4 numbered steps)
+  - #1661 #1696 Tier-1 verification discipline / audit (5 numbered/lettered
+    items, with #1696 heritage-defense extensions)
 
 Renders ``linear-write.md`` and ``linear-review-dim.md`` against three
 already-validated reference plans (a1/my-morning, b1/aspect-future-tense,
@@ -33,7 +35,7 @@ REVIEWER_TEMPLATE = (
 )
 
 WRITER_COT_HEADER = (
-    "## Reasoning checklist (do this BEFORE drafting — #1673)"
+    "## Mandatory visible verification block (emit BEFORE drafting — #1673/#1661)"
 )
 WRITER_TIER1_HEADER = (
     "## Tier-1 verification discipline (do this WHILE drafting — #1661)"
@@ -45,9 +47,18 @@ REVIEWER_TIER1_HEADER = (
     "## Tier-1 verification audit (do this DURING evidence search — #1661)"
 )
 
+# The visible <plan_reasoning> block requires these five keys (#1696 Q4).
+WRITER_COT_KEYS = (
+    "word_budget",
+    "plan_vocab",
+    "register",
+    "teaching_sequence",
+    "verification",
+)
+
 WRITER_TIER1_BULLETS = (
     "Verify every example word in VESUM",
-    "Modern Ukrainian only",
+    "Modern Ukrainian + heritage-defense discipline",
     "Source-citation discipline",
     "Quote attribution discipline",
     "End-of-output gate",
@@ -57,7 +68,7 @@ REVIEWER_TIER1_BULLETS = (
     "Source-attribution audit (all dims)",
     "Quote verification (all dims)",
     "Sovietization flag (decolonization, naturalness)",
-    "Modern Ukrainian guard (naturalness, decolonization)",
+    "Modern Ukrainian + heritage-defense audit (naturalness, decolonization)",
     "Reinforce rule #6",
 )
 
@@ -94,10 +105,18 @@ def test_writer_prompt_has_cot_block(level: str, slug: str) -> None:
     assert rendered.count(WRITER_COT_HEADER) == 1, (
         f"Writer CoT header missing or duplicated for {level}/{slug}"
     )
-    for n in (1, 2, 3, 4):
-        assert f"\n{n}. **" in rendered, (
-            f"Writer CoT step {n} marker missing for {level}/{slug}"
+    # The mandatory visible-CoT block (#1696 Q4) requires the writer to emit
+    # <plan_reasoning> blocks containing five named keys. Each key MUST appear
+    # at least once in the rendered prompt's instructions.
+    for key in WRITER_COT_KEYS:
+        assert f"`{key}`" in rendered, (
+            f"Writer visible-CoT key `{key}` missing for {level}/{slug}"
         )
+    # The mandate must explicitly forbid hidden-only thinking: telemetry
+    # detects writer CoT via the visible <plan_reasoning> tag.
+    assert "<plan_reasoning" in rendered, (
+        f"Writer <plan_reasoning> tag mandate missing for {level}/{slug}"
+    )
 
 
 @pytest.mark.parametrize(("level", "slug"), REFERENCE_PLANS)
@@ -121,6 +140,10 @@ def test_writer_prompt_has_tier1_discipline(level: str, slug: str) -> None:
         "search_grinchenko_1907",
         "query_pravopys",
         "search_esum",
+        # #1696 Q7 — heritage-defense routing through canonical MCP tools
+        # (shipped via #1717).
+        "mcp__sources__search_heritage",
+        "mcp__sources__search_slovnyk_me",
     ):
         assert tool in rendered, (
             f"Writer Tier-1 MCP-tool reference missing: {tool!r} for {level}/{slug}"
@@ -165,7 +188,10 @@ def test_reviewer_prompt_has_tier1_audit(level: str, slug: str, dim: str) -> Non
         "unverified citation",
         "fabricated quote",
         "soviet-framed definition unsupervised",
-        "archaic form as modern",
+        # #1696 Q6 — old "archaic form as modern" flag was replaced by the
+        # heritage-defense flag pair (untagged vs misclassified).
+        "untagged heritage form",
+        "heritage form misclassified",
     ):
         assert flag in rendered, (
             f"Reviewer Tier-1 FLAG name missing: {flag!r} for {level}/{slug} dim={dim}"
@@ -181,6 +207,27 @@ def test_reviewer_prompt_has_no_unresolved_placeholders(
     leftover = sorted(set(PLACEHOLDER_RE.findall(rendered)))
     assert not leftover, (
         f"Unresolved placeholders for {level}/{slug} dim={dim}: {leftover}"
+    )
+
+
+@pytest.mark.parametrize(("level", "slug"), REFERENCE_PLANS)
+@pytest.mark.parametrize("dim", QG_DIMS)
+def test_reviewer_prompt_requires_evidence_quotes_array(
+    level: str, slug: str, dim: str
+) -> None:
+    """#1696 Q5 — reviewer per-dim schema must demand 3 verbatim quotes plus
+    a rubric mapping, not a single paraphrasable evidence string."""
+    rendered = _reviewer_prompt(level, slug, dim)
+    assert "evidence_quotes" in rendered, (
+        f"Reviewer evidence_quotes array requirement missing for "
+        f"{level}/{slug} dim={dim}"
+    )
+    assert "rubric_mapping" in rendered, (
+        f"Reviewer rubric_mapping requirement missing for "
+        f"{level}/{slug} dim={dim}"
+    )
+    assert "3 verbatim quotes" in rendered, (
+        f"Reviewer 3-quote mandate missing for {level}/{slug} dim={dim}"
     )
 
 
