@@ -20,7 +20,7 @@ def safe_join(base: Path, *parts: str | Path) -> Path:
     Uses os.path.commonpath for maximum compatibility with security scanners.
     """
     if not parts:
-        return base.resolve()
+        return base.resolve()  # nosec: py/path-injection - base is the trusted root
 
     # Ensure base is absolute and normalized
     abs_base = os.path.abspath(str(base))

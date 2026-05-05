@@ -458,7 +458,13 @@ async def get_history(
 @router.get("/history/{track}/{slug}")
 async def get_module_history(track: str, slug: str):
     """Consultation timeline for one module."""
-    orch_dir = safe_join(CURRICULUM_ROOT / track / "orchestration", slug)
+    try:
+        orch_dir = safe_join(CURRICULUM_ROOT, track, "orchestration", slug)
+    except ValueError:
+        return JSONResponse(
+            status_code=400,
+            content={"error": f"Invalid track or slug: {track}/{slug}"},
+        )
     if not orch_dir.is_dir():
         return JSONResponse(
             status_code=404,

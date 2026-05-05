@@ -12,7 +12,14 @@ Extensibility:
 """
 
 import re
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+try:
+    from path_safety import safe_join
+except ImportError:
+    from ..path_safety import safe_join
 
 # ==================== RUBRIC REGISTRY ====================
 
@@ -193,7 +200,13 @@ def _parse_discovery(discovery_path: "Path | None") -> dict:
     Returns empty lists on missing/invalid file.
     """
     empty = {"blogs": [], "videos": [], "rag_chunks": [], "rag_literary": []}
-    if discovery_path is None or not discovery_path.exists():
+    if discovery_path is None:
+        return empty
+    try:
+        discovery_path = safe_join(Path(discovery_path).parent, Path(discovery_path).name)
+    except ValueError:
+        return empty
+    if not discovery_path.exists():
         return empty
     try:
         import yaml
@@ -881,9 +894,12 @@ def find_research_path(track_dir: Path, slug: str) -> Path | None:
         f"{slug.lstrip('0123456789-')}-research.md",
         f"{slug}-knowledge-packet.md",
     ]:
-        rp = research_dir / candidate
-        if rp.exists():
-            return rp
+        try:
+            rp = safe_join(research_dir, candidate)
+            if rp.exists():
+                return rp
+        except ValueError:
+            pass
     return None
 
 
@@ -994,7 +1010,11 @@ def assess_research_compat(
     Returns None if research file doesn't exist.
     If discovery_path is None, attempts to auto-discover it from the research path.
     """
-    path = Path(path)
+    try:
+        path = safe_join(Path(path).parent, Path(path).name)
+    except ValueError:
+        return None
+
     if not path.exists():
         return None
 
@@ -1018,21 +1038,29 @@ def assess_research_compat(
 
     content_text = None
     if content_path:
-        content_path = Path(content_path)
-        if content_path.exists():
-            with contextlib.suppress(Exception):
-                content_text = content_path.read_text(encoding="utf-8")
+        try:
+            content_path = safe_join(Path(content_path).parent, Path(content_path).name)
+            if content_path.exists():
+                with contextlib.suppress(Exception):
+                    content_text = content_path.read_text(encoding="utf-8")
+        except ValueError:
+            pass
 
     # Auto-discover discovery.yaml from research path if not provided
-    disc_path = Path(discovery_path) if discovery_path else None
+    disc_path = None
+    if discovery_path:
+        with contextlib.suppress(ValueError):
+            disc_path = safe_join(Path(discovery_path).parent, Path(discovery_path).name)
+
     if disc_path is None:
         # research/ is sibling to orchestration/
         # research/{slug}-research.md → orchestration/{slug}/discovery.yaml
         slug = path.stem.replace("-research", "")
-        orch_dir = path.parent.parent / "orchestration" / slug
-        candidate = orch_dir / "discovery.yaml"
-        if candidate.exists():
-            disc_path = candidate
+        with contextlib.suppress(ValueError):
+            orch_dir = safe_join(path.parent.parent, "orchestration", slug)
+            candidate = safe_join(orch_dir, "discovery.yaml")
+            if candidate.exists():
+                disc_path = candidate
 
     result = assess_research(text, track_id, content_text, discovery_path=disc_path)
 

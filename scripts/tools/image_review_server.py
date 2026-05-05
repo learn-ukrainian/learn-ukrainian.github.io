@@ -219,11 +219,18 @@ function clearBad() {{
 
 class ImageReviewHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
+        import re
         parsed = urllib.parse.urlparse(self.path)
 
         if parsed.path.startswith("/image/"):
             # Serve image file
-            img_path = BASE_DIR / urllib.parse.unquote(parsed.path[7:])
+            user_path = urllib.parse.unquote(parsed.path[7:])
+            # Regex allow-list to prevent path injection
+            if not re.fullmatch(r"^data/textbook_images/grade-[a-zA-Z0-9_-]+/[a-zA-Z0-9_.-]+\.png$", user_path):
+                self.send_error(403, "Forbidden path format")
+                return
+
+            img_path = BASE_DIR / user_path
             if img_path.exists() and img_path.suffix == ".png":
                 self.send_response(200)
                 self.send_header("Content-Type", "image/png")
