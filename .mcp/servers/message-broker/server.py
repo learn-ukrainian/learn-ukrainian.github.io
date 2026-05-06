@@ -79,6 +79,24 @@ async def init_db():
         await db.execute("""
             CREATE INDEX IF NOT EXISTS idx_task ON messages(task_id)
         """)
+        await db.execute("""
+            CREATE INDEX IF NOT EXISTS idx_messages_task_id ON messages(task_id, id)
+        """)
+        await db.execute("""
+            CREATE INDEX IF NOT EXISTS idx_messages_acknowledged ON messages(acknowledged, id)
+        """)
+        await db.execute("""
+            CREATE INDEX IF NOT EXISTS idx_messages_message_type ON messages(message_type, id)
+        """)
+        await db.execute("""
+            CREATE INDEX IF NOT EXISTS idx_messages_timestamp ON messages(timestamp)
+        """)
+        await db.execute("""
+            CREATE INDEX IF NOT EXISTS idx_messages_from_llm ON messages(from_llm, id)
+        """)
+        await db.execute("""
+            CREATE INDEX IF NOT EXISTS idx_messages_to_llm ON messages(to_llm, id)
+        """)
         # Migration: add claimed_by/claimed_at to existing tables
         with suppress(Exception):
             await db.execute("ALTER TABLE messages ADD COLUMN claimed_by TEXT")

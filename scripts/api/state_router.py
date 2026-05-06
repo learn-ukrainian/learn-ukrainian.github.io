@@ -199,6 +199,11 @@ async def weak_points(
     limit: int = Query(20, ge=1, le=500),
 ):
     """Modules with quality issues: failing audit, thin research, or low word count."""
+    cache_key = f"weak_points_{track or 'all'}_{min_score}_{limit}"
+    cached = cache_get(cache_key, ttl=60.0)
+    if cached is not None:
+        return cached
+
     def _compute():
         weak = []
         level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
@@ -221,7 +226,7 @@ async def weak_points(
 
                 word_count = audit.get("word_count", 0)
                 word_target = audit.get("word_target", 0)
-                if word_target == 0:
+                if word_target == 0 and word_count > 0:
                     word_target = get_word_target_from_plan(track_id, slug)
                 if word_target > 0 and word_count > 0 and word_count < word_target * 0.8:
                     issues.append(f"low_words_{word_count}/{word_target}")
@@ -240,7 +245,9 @@ async def weak_points(
         weak.sort(key=severity_key)
         return {"count": len(weak), "modules": weak[:limit]}
 
-    return await asyncio.to_thread(_compute)
+    result = await asyncio.to_thread(_compute)
+    cache_set(cache_key, result)
+    return result
 
 
 @router.get("/failing")

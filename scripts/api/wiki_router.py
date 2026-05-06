@@ -19,6 +19,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query
 
 from .config import CURRICULUM_ROOT, LEVELS
+from .state_helpers import cache_get, cache_set
 
 # scripts/wiki is not a package, so we add the scripts/ root to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -113,8 +114,15 @@ def _matches_track_domain(track: str, rel_path: str) -> bool:
     return any(rel_path.startswith(f"{domain}/") for domain in domains)
 
 
-def _resolve_article(track: str, slug: str) -> dict[str, Any] | None:
-    candidates = _list_article_candidates().get(slug, [])
+def _resolve_article(
+    track: str,
+    slug: str,
+    candidates_by_slug: dict[str, list[dict[str, Any]]] | None = None,
+) -> dict[str, Any] | None:
+    article_candidates = (
+        _list_article_candidates() if candidates_by_slug is None else candidates_by_slug
+    )
+    candidates = article_candidates.get(slug, [])
     if not candidates:
         return None
 
@@ -154,14 +162,20 @@ def _source_count(track: str, slug: str) -> int:
     )
 
 
-def _track_status_rows(track: str) -> list[dict[str, Any]]:
+def _track_status_rows(
+    track: str,
+    candidates_by_slug: dict[str, list[dict[str, Any]]] | None = None,
+) -> list[dict[str, Any]]:
     _ensure_track_exists(track)
     slugs = _track_slugs(track)
+    article_candidates = (
+        _list_article_candidates() if candidates_by_slug is None else candidates_by_slug
+    )
     word_cache: dict[Path, dict[str, Any]] = {}
     rows = []
 
     for slug in slugs:
-        article = _resolve_article(track, slug)
+        article = _resolve_article(track, slug, article_candidates)
         article_path = _safe_join(wiki_config.WIKI_DIR, article["path"]) if article else None
         compiled = bool(article_path and article_path.exists())
         word_count = 0
@@ -174,7 +188,7 @@ def _track_status_rows(track: str) -> list[dict[str, Any]]:
             "compiled": compiled,
             "word_count": word_count,
             "compiled_at": article.get("compiled_at") if article else None,
-            "source_count": _source_count(track, slug),
+            "source_count": article.get("source_count") if article else 0,
         })
 
     return rows
@@ -183,14 +197,20 @@ def _track_status_rows(track: str) -> list[dict[str, Any]]:
 @router.get("/status")
 async def wiki_status():
     """Per-track wiki compilation status."""
-    wiki_state.get_status_summary()
+    known_tracks = _known_tracks()
+    cache_key = "wiki_status_" + ",".join(known_tracks)
+    cached = cache_get(cache_key, ttl=60.0)
+    if cached is not None:
+        return cached
+
+    article_candidates = _list_article_candidates()
     tracks = []
 
-    for track in _known_tracks():
+    for track in known_tracks:
         slugs = _track_slugs(track)
         if not slugs:
             continue
-        modules = _track_status_rows(track)
+        modules = _track_status_rows(track, article_candidates)
         total = len(modules)
         compiled = sum(1 for module in modules if module["compiled"])
         total_words = sum(module["word_count"] for module in modules)
@@ -202,13 +222,21 @@ async def wiki_status():
             "total_words": total_words,
         })
 
-    return {"tracks": tracks}
+    result = {"tracks": tracks}
+    cache_set(cache_key, result)
+    return result
 
 
 @router.get("/status/{track}")
 async def wiki_status_track(track: str):
     """Per-module wiki compilation status for one track."""
-    return _track_status_rows(track)
+    cache_key = f"wiki_status_track_{track}_{wiki_config.WIKI_DIR}"
+    cached = cache_get(cache_key, ttl=60.0)
+    if cached is not None:
+        return cached
+    result = _track_status_rows(track)
+    cache_set(cache_key, result)
+    return result
 
 
 @router.get("/article/{track}/{slug}")
@@ -219,7 +247,7 @@ async def wiki_article(track: str, slug: str):
         raise HTTPException(status_code=404, detail=f"Article not found: {track}/{slug}")
 
     article = _resolve_article(track, slug)
-    source_count = _source_count(track, slug)
+    source_count = article.get("source_count") if article else _source_count(track, slug)
 
     if not article:
         return {
