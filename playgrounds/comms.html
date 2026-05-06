@@ -14,10 +14,12 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px; }
 
-.top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; gap: 16px; }
+.top-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
 .top-bar h1 { font-size: 24px; font-weight: 700; }
 .top-bar a { color: var(--text2); text-decoration: none; font-size: 13px; }
 .top-bar a:hover { color: var(--text); }
+.home-link { color: var(--blue) !important; font-weight: 600; white-space: nowrap; }
 .top-bar .refresh-info { font-size: 12px; color: var(--text3); }
 
 /* Health summary bar */
@@ -181,11 +183,13 @@ a.gh-issue:hover { text-decoration: underline; }
 <body>
 
 <div class="top-bar">
-  <h1>Agent Comms</h1>
+  <div class="top-left">
+    <a class="home-link" href="/index.html">&larr; Home</a>
+    <h1>Agent Comms</h1>
+  </div>
   <div style="display:flex;align-items:center;gap:16px;">
     <span class="refresh-info" id="refresh-info">Loading...</span>
     <div style="display:flex;gap:12px;font-size:13px;">
-      <a href="/">Home</a>
       <a href="/channels.html" style="color:var(--green);font-weight:600;">Channels ↗</a>
       <a href="/audit-dashboard.html">Audit</a>
       <a href="/progress.html">Progress</a>
@@ -289,6 +293,12 @@ a.gh-issue:hover { text-decoration: underline; }
 </div>
 
 <script>
+const MESSAGE_LIMIT = 50;
+const CONVERSATION_LIMIT = 100;
+const DISPATCH_LIMIT = 30;
+const FULL_REFRESH_MS = 30000;
+const HEALTH_REFRESH_MS = 15000;
+
 // ========= DETAIL PANEL =========
 function openDetail(html) {
   document.getElementById('detail-content').innerHTML = html;
@@ -324,7 +334,8 @@ function escapeHtmlAttribute(value) {
 
 async function showConversation(taskId) {
   if (!taskId) return;
-  const res = await fetch(`/api/comms/conversation/${encodeURIComponent(taskId)}`);
+  const params = new URLSearchParams({ limit: String(CONVERSATION_LIMIT) });
+  const res = await fetch(`/api/comms/conversation/${encodeURIComponent(taskId)}?${params}`);
   const data = await res.json();
   const parsed = parseTaskId(taskId);
 
@@ -408,7 +419,8 @@ function showBuildDetail(track, slug, phase, status, taskId) {
   openDetail(html);
   // If there's a task_id, also load the conversation thread
   if (taskId) {
-    fetch(`/api/comms/conversation/${encodeURIComponent(taskId)}`)
+    const params = new URLSearchParams({ limit: String(CONVERSATION_LIMIT) });
+    fetch(`/api/comms/conversation/${encodeURIComponent(taskId)}?${params}`)
       .then(r => r.json())
       .then(data => {
         if (data.messages && data.messages.length > 0) {
@@ -472,7 +484,11 @@ function phaseLabel(phase) {
 // ========= LIVE ACTIVITY =========
 async function loadLiveActivity() {
   try {
-    const res = await fetch('/api/comms/live-activity?minutes=30');
+    const params = new URLSearchParams({
+      minutes: '30',
+      limit: String(DISPATCH_LIMIT),
+    });
+    const res = await fetch(`/api/comms/live-activity?${params}`);
     const data = await res.json();
 
     // Building Now — modules with recently updated state
@@ -735,7 +751,8 @@ async function sendMessage() {
 // ========= MESSAGES =========
 async function loadMessages() {
   try {
-    const res = await fetch('/api/comms/messages?limit=50');
+    const params = new URLSearchParams({ limit: String(MESSAGE_LIMIT) });
+    const res = await fetch(`/api/comms/messages?${params}`);
     const data = await res.json();
 
     document.getElementById('msg-tbody').innerHTML = data.messages.map(m => {
@@ -847,6 +864,14 @@ async function refreshAll() {
   ]);
 }
 
+async function refreshHealthOnly() {
+  try {
+    await fetch('/api/comms/health');
+  } catch(e) {
+    console.error('Health refresh failed:', e);
+  }
+}
+
 document.getElementById('feed-building').addEventListener('click', onBuildRowClick);
 document.getElementById('feed-completions').addEventListener('click', onConversationRowClick);
 document.getElementById('feed-dispatches').addEventListener('click', onConversationRowClick);
@@ -854,7 +879,8 @@ document.getElementById('zombie-list').addEventListener('click', onConversationR
 document.getElementById('msg-tbody').addEventListener('click', onConversationRowClick);
 
 refreshAll();
-setInterval(refreshAll, 15000); // refresh every 15s for live feel
+setInterval(refreshHealthOnly, HEALTH_REFRESH_MS);
+setInterval(refreshAll, FULL_REFRESH_MS);
 </script>
 </body>
 </html>

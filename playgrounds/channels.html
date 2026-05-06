@@ -15,8 +15,12 @@
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
 /* Top bar */
-.top-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); flex-shrink: 0; }
+.top-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg2); flex-shrink: 0; }
+.top-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
 .top-bar h1 { font-size: 18px; font-weight: 600; }
+.top-bar a { color: var(--text2); text-decoration: none; font-size: 13px; }
+.top-bar a:hover { color: var(--text); }
+.home-link { color: var(--blue) !important; font-weight: 600; white-space: nowrap; }
 .banner { display: none; background: var(--red); color: white; padding: 8px 24px; font-size: 13px; text-align: center; }
 
 /* Main layout */
@@ -134,7 +138,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Ar
 <div id="error-banner" class="banner"></div>
 
 <div class="top-bar">
-  <h1>Agent Channels <span style="font-weight:400;color:var(--text3);font-size:14px;margin-left:8px;">#1190</span></h1>
+  <div class="top-left">
+    <a class="home-link" href="/index.html">&larr; Home</a>
+    <h1>Agent Channels <span style="font-weight:400;color:var(--text3);font-size:14px;margin-left:8px;">#1190</span></h1>
+  </div>
   <div style="font-size:12px;color:var(--text3);" id="refresh-status">Auto-refresh active</div>
 </div>
 
