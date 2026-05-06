@@ -61,6 +61,31 @@ ab post pipeline "reply" --parent MESSAGE_ID
 ab discuss architecture "should we refactor X?" --with claude,gemini,codex --max-rounds 2
 ```
 
+## Dispatch wrappers
+
+Use these wrappers when the task needs the project-standard model/mode
+assignment enforced by tooling instead of memory.
+
+`ab dispatch-fix <issue-or-task-id> [--brief-file PATH]` dispatches a
+Codex worktree implementation run for "fix this and ship a PR" tasks.
+It hardcodes `delegate.py dispatch --agent codex --mode danger
+--worktree --base origin/main --effort high`, and every generated
+brief includes the commit, push, and PR checklist. If `--brief-file`
+is omitted, the wrapper builds `/tmp/dispatch-fix-<task-id>.md` from
+`gh issue view <issue> --json title,body`.
+
+`ab review-deep <PR-or-path> [--effort xhigh]` dispatches an
+adversarial Claude review run. It hardcodes `--agent claude --mode
+read-only --model claude-opus-4-7 --effort xhigh` unless an explicit
+effort override is passed, then builds a review prompt from either
+`gh pr view` plus `gh pr diff` or the target file/directory contents.
+Use it for blocking logic/security/test review, not for stylistic
+preferences.
+
+Both wrappers support `--dry-run`, which writes the prompt and a
+`batch_state/tasks/<task-id>.json` preview without launching the
+delegate worker.
+
 ## When to use channels vs `ask-*`
 
 | Situation | Use |
