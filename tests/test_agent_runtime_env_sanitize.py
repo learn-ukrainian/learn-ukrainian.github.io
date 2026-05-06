@@ -57,6 +57,7 @@ def test_build_agent_env_passes_only_current_provider_credentials():
         "OPENAI_API_KEY": "sk-openai-fake",
         "CODEX_API_KEY": "codex-key",
         "GITHUB_TOKEN": "ghp_fakegithubtoken",
+        "GH_TOKEN": "ghp_fakeghtoken",
     }
 
     with patch.dict("os.environ", parent_env, clear=True):
@@ -69,20 +70,24 @@ def test_build_agent_env_passes_only_current_provider_credentials():
     assert gemini_env["GOOGLE_API_KEY"] == "google-key"
     assert "ANTHROPIC_API_KEY" not in gemini_env
     assert "OPENAI_API_KEY" not in gemini_env
+    assert "GH_TOKEN" not in gemini_env
 
     assert claude_env["ANTHROPIC_API_KEY"] == "sk-ant-fake"
     assert claude_env["CLAUDE_API_KEY"] == "sk-claude-fake"
+    assert claude_env["GH_TOKEN"] == "ghp_fakeghtoken"
     assert "GEMINI_API_KEY" not in claude_env
     assert "OPENAI_API_KEY" not in claude_env
 
     assert codex_env["OPENAI_API_KEY"] == "sk-openai-fake"
     assert codex_env["CODEX_API_KEY"] == "codex-key"
+    assert codex_env["GH_TOKEN"] == "ghp_fakeghtoken"
     assert "GEMINI_API_KEY" not in codex_env
     assert "ANTHROPIC_API_KEY" not in codex_env
 
     assert "GEMINI_API_KEY" not in bridge_env
     assert "ANTHROPIC_API_KEY" not in bridge_env
     assert "OPENAI_API_KEY" not in bridge_env
+    assert bridge_env["GH_TOKEN"] == "ghp_fakeghtoken"
     assert "GITHUB_TOKEN" not in bridge_env
 
 
@@ -210,6 +215,7 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
         "OPENAI_API_KEY",
         "CODEX_API_KEY",
         "GITHUB_TOKEN",
+        "GH_TOKEN",
     ]
     script = (
         "import json, os; "
@@ -227,6 +233,7 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
         "OPENAI_API_KEY": "sk-openai-fake",
         "CODEX_API_KEY": "codex-key",
         "GITHUB_TOKEN": "ghp_fakegithubtoken",
+        "GH_TOKEN": "ghp_fakeghtoken",
     }
     expected = {
         "gemini": {
@@ -236,10 +243,12 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
         "claude": {
             "ANTHROPIC_API_KEY": "sk-ant-fake",
             "CLAUDE_API_KEY": "sk-claude-fake",
+            "GH_TOKEN": "ghp_fakeghtoken",
         },
         "codex": {
             "OPENAI_API_KEY": "sk-openai-fake",
             "CODEX_API_KEY": "codex-key",
+            "GH_TOKEN": "ghp_fakeghtoken",
         },
     }
 
@@ -268,3 +277,81 @@ def test_runner_smoke_spawns_each_provider_with_only_its_own_key(tmp_path):
 
             assert outcome.parse.ok is True
             assert json.loads(outcome.stdout_text) == expected_env
+
+
+def test_runner_codex_subprocess_gets_gh_token_for_gh_auth_status(tmp_path):
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    gh = bin_dir / "gh"
+    gh.write_text(
+        "#!/bin/sh\n"
+        "if [ \"$1\" = auth ] && [ \"$2\" = status ] && [ -n \"$GH_TOKEN\" ]; then\n"
+        "  exit 0\n"
+        "fi\n"
+        "exit 1\n"
+    )
+    gh.chmod(0o755)
+    script = (
+        "import os, subprocess, sys; "
+        "assert os.environ.get('GH_TOKEN') == 'ghp_fakeghtoken'; "
+        "sys.exit(subprocess.run(['gh', 'auth', 'status']).returncode)"
+    )
+    parent_env = {
+        "PATH": f"{bin_dir}{os.pathsep}{os.environ.get('PATH', '')}",
+        "HOME": str(tmp_path),
+        "GH_TOKEN": "ghp_fakeghtoken",
+    }
+
+    with patch.dict("os.environ", parent_env, clear=True), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ):
+        outcome = _execute_invocation_plan(
+            agent_name="codex",
+            adapter=_SmokeAdapter(),
+            plan=_SmokePlan(cmd=[_TEST_PYTHON, "-c", script], cwd=tmp_path),
+            prompt="gh auth smoke",
+            mode="read-only",
+            cwd=tmp_path,
+            model="smoke-model",
+            task_id="codex-gh-auth-smoke",
+            session_id=None,
+            entrypoint="runtime-test",
+            hard_timeout=10,
+            stall_timeout=10,
+        )
+
+    assert outcome.returncode == 0
+    assert outcome.parse.ok is True
+
+
+def test_runner_gemini_subprocess_does_not_get_gh_token(tmp_path):
+    script = (
+        "import os, sys; "
+        "sys.exit(0 if 'GH_TOKEN' not in os.environ else 1)"
+    )
+    parent_env = {
+        "PATH": os.environ.get("PATH", ""),
+        "HOME": str(tmp_path),
+        "GH_TOKEN": "ghp_fakeghtoken",
+    }
+
+    with patch.dict("os.environ", parent_env, clear=True), patch(
+        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    ):
+        outcome = _execute_invocation_plan(
+            agent_name="gemini",
+            adapter=_SmokeAdapter(),
+            plan=_SmokePlan(cmd=[_TEST_PYTHON, "-c", script], cwd=tmp_path),
+            prompt="gh token absence smoke",
+            mode="read-only",
+            cwd=tmp_path,
+            model="smoke-model",
+            task_id="gemini-no-gh-token-smoke",
+            session_id=None,
+            entrypoint="runtime-test",
+            hard_timeout=10,
+            stall_timeout=10,
+        )
+
+    assert outcome.returncode == 0
+    assert outcome.parse.ok is True
