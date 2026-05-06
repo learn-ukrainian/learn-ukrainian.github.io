@@ -551,11 +551,13 @@ def build_knowledge_packet(
 
     compressed = compress_wiki_packet(plan_data, wiki_packet)
     dictionary_context = _build_dictionary_context(plan_data)
+    textbook_context = _build_textbook_excerpt_context(plan_data, level_key)
     return _render_wiki_knowledge_packet(
         plan_data,
         wiki_packet,
         compressed,
         dictionary_context,
+        textbook_context,
     )
 
 
@@ -720,6 +722,108 @@ def _truncate_prompt_text(text: str, max_chars: int) -> str:
     return f"{trimmed}..."
 
 
+def _plan_topic_query(plan: Mapping[str, Any]) -> str:
+    parts = [
+        str(plan.get("title") or ""),
+        str(plan.get("subtitle") or ""),
+    ]
+    for section in plan.get("content_outline") or []:
+        if isinstance(section, Mapping):
+            parts.append(str(section.get("section") or ""))
+            points = section.get("points")
+            if isinstance(points, list):
+                parts.extend(str(point) for point in points[:3])
+    return " ".join(part.strip() for part in parts if part and part.strip())
+
+
+def _textbook_hit_text(hit: Mapping[str, Any], max_chars: int = 1400) -> str:
+    for key in ("text", "content", "excerpt", "snippet", "body"):
+        value = hit.get(key)
+        if value:
+            return _truncate_prompt_text(str(value), max_chars)
+    return ""
+
+
+def _textbook_hit_label(hit: Mapping[str, Any]) -> str:
+    title = str(hit.get("title") or hit.get("section_title") or "Textbook").strip()
+    details: list[str] = []
+    author = str(hit.get("author") or "").strip()
+    if author and author not in title:
+        details.append(author)
+    grade = hit.get("grade")
+    if grade not in (None, ""):
+        details.append(f"Grade {grade}")
+    page = hit.get("page")
+    if page not in (None, ""):
+        details.append(f"p.{page}")
+    source_file = str(hit.get("source_file") or hit.get("source") or "").strip()
+    if source_file:
+        details.append(source_file)
+    return title + (f" ({', '.join(details)})" if details else "")
+
+
+def _search_textbook_hits(query: str, *, level: str, limit: int = 1) -> list[dict]:
+    try:
+        from wiki.sources_db import search_sources
+    except Exception:
+        return []
+    try:
+        hits = search_sources(query, track=level, limit=max(limit * 4, limit))
+    except Exception:
+        return []
+    textbook_hits = [
+        hit
+        for hit in hits
+        if isinstance(hit, dict)
+        and "textbook" in str(
+            hit.get("source_type") or hit.get("corpus") or hit.get("source") or ""
+        ).casefold()
+    ]
+    if not textbook_hits:
+        textbook_hits = [hit for hit in hits if isinstance(hit, dict)]
+    return textbook_hits[:limit]
+
+
+def _build_textbook_excerpt_context(
+    plan: Mapping[str, Any],
+    level: str,
+) -> str:
+    references = [
+        str(title).strip()
+        for title in extract_plan_reference_titles(plan)
+        if str(title).strip()
+    ]
+    if not references:
+        return ""
+
+    topic_query = _plan_topic_query(plan)
+    lines = ["## Textbook Excerpts (verbatim, must be cited)", ""]
+    found_any = False
+    for title in references:
+        query = f"{title} {topic_query}".strip()
+        hits = _search_textbook_hits(query, level=level, limit=1)
+        lines.append(f"### {title}")
+        lines.append("")
+        if not hits:
+            lines.append("*No textbook excerpt found for this reference.*")
+            lines.append("")
+            continue
+        hit = hits[0]
+        text = _textbook_hit_text(hit)
+        if not text:
+            lines.append("*Textbook search returned metadata without excerpt text.*")
+            lines.append("")
+            continue
+        found_any = True
+        lines.append(f"Source: {_textbook_hit_label(hit)}")
+        lines.append("")
+        for quote_line in text.splitlines():
+            lines.append(f"> {quote_line}")
+        lines.append("")
+
+    return "\n".join(lines).rstrip() if found_any else ""
+
+
 def _build_wiki_packet(level: str, slug: str) -> str:
     """Build raw wiki context from exact module article(s) and source registries."""
     article_paths = _wiki_article_paths(level, slug)
@@ -812,6 +916,7 @@ def _render_wiki_knowledge_packet(
     wiki_packet: str,
     compressed: Mapping[str, Any],
     dictionary_context: str = "",
+    textbook_context: str = "",
 ) -> str:
     """Render raw and compressed wiki context as the writer packet."""
     lines: list[str] = [
@@ -854,6 +959,9 @@ def _render_wiki_knowledge_packet(
 
     if dictionary_context:
         lines.extend([dictionary_context, ""])
+
+    if textbook_context:
+        lines.extend([textbook_context, ""])
 
     lines.extend(
         [
