@@ -18,9 +18,13 @@ string of production incidents. The module now does three things:
    bump broke a different mtime signal; see ``should_kill`` for
    the full story.
 
-3. **Hard-timeout kill** — the ONLY condition the watchdog kills on.
+3. **Hard-timeout kill** — the default kill condition.
    Triggers ``AgentTimeoutError`` when ``now - start_time >
    hard_timeout``. Default hard_timeout is 1h.
+
+Callers may opt in to a separate stdout-silence timeout for workflows where
+the stdout pipe is the protocol liveness signal. It remains disabled by
+default so normal agent dispatch keeps ADR-009's hard-timeout behavior.
 
 Issue: #1184
 """
@@ -58,6 +62,9 @@ class WatchdogState:
         start_time: monotonic timestamp when the subprocess was spawned.
         last_activity: monotonic timestamp of the most recent observed
             activity (stdout line or liveness file mtime bump).
+        last_stdout_activity: monotonic timestamp of the most recent stdout
+            line. Unlike ``last_activity``, stderr and liveness files never
+            update this field.
         stop: Set to True by the main thread when the watchdog should exit.
         stdout_lines: Accumulated stdout lines captured by the streamer.
             The runner reads this on normal termination to build the final
@@ -78,6 +85,7 @@ class WatchdogState:
     """
     start_time: float
     last_activity: float
+    last_stdout_activity: float = 0.0
     stop: bool = False
     stdout_lines: list[str] = field(default_factory=list)
     stderr_lines: list[str] = field(default_factory=list)
@@ -95,6 +103,7 @@ def _stdout_streamer(proc: subprocess.Popen, state: WatchdogState) -> None:
                 break
             state.stdout_lines.append(line)
             state.last_activity = time.monotonic()
+            state.last_stdout_activity = state.last_activity
     except (ValueError, OSError):
         # Pipe closed or subprocess killed. Normal shutdown path.
         pass
@@ -188,7 +197,7 @@ def start_watchdog(
         cleanly after the subprocess terminates.
     """
     now = time.monotonic()
-    state = WatchdogState(start_time=now, last_activity=now)
+    state = WatchdogState(start_time=now, last_activity=now, last_stdout_activity=now)
 
     threads: list[threading.Thread] = []
 
@@ -291,12 +300,20 @@ def stop_watchdog(
         t.join(timeout=timeout)
 
 
-def should_kill(state: WatchdogState, stall_timeout: int, hard_timeout: int) -> str | None:
+def should_kill(
+    state: WatchdogState,
+    stall_timeout: int,
+    hard_timeout: int,
+    *,
+    stdout_silence_timeout: int | None = None,
+) -> str | None:
     """Check if the subprocess should be killed. Returns the kill reason or None.
 
     Returns:
         None if the process should continue running.
         "hard_timeout" if total runtime exceeded hard_timeout.
+        "stdout_silence_timeout" if the caller explicitly enabled stdout
+        silence detection and no stdout line has arrived within that window.
 
     ``stall_timeout`` is accepted for backward compatibility with callers but
     is NOT used as a kill condition. Deleting stall detection from the kill
@@ -329,6 +346,12 @@ def should_kill(state: WatchdogState, stall_timeout: int, hard_timeout: int) -> 
     now = time.monotonic()
     if (now - state.start_time) > hard_timeout:
         return "hard_timeout"
+    if (
+        stdout_silence_timeout is not None
+        and stdout_silence_timeout > 0
+        and (now - state.last_stdout_activity) > stdout_silence_timeout
+    ):
+        return "stdout_silence_timeout"
     return None
 
 

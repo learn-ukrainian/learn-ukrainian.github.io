@@ -175,6 +175,8 @@ def _run_or_report(label: str, argv: Sequence[str]) -> StepResult:
     stderr = result.stderr.strip()
     stdout = result.stdout.strip()
     detail = stderr or stdout or f"exit {result.returncode}"
+    if result.returncode == 124:
+        detail = f"timeout: {detail}"
     print(f"error: {label} failed: {detail}", file=sys.stderr)
     return StepResult(label=label, ok=False, detail=detail, returncode=result.returncode)
 
@@ -468,8 +470,17 @@ def main(argv: Sequence[str] | None = None) -> int:
                 )
             )
 
+    review_writers = writers
+    if writer_results:
+        successful_writer_labels = {
+            result.label.removeprefix("write ")
+            for result in writer_results
+            if result.ok
+        }
+        review_writers = [writer for writer in writers if writer in successful_writer_labels]
+
     if not args.writers_only:
-        for writer in writers:
+        for writer in review_writers:
             for reviewer in writers:
                 if writer == reviewer:
                     continue
@@ -484,8 +495,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                     )
                 )
 
-    if not args.skip_aggregate:
-        aggregate_result = _run_aggregate(bakeoff_dir, writers)
+    if not args.skip_aggregate and review_writers:
+        aggregate_result = _run_aggregate(bakeoff_dir, review_writers)
 
     _print_summary(writer_results, review_results, aggregate_result)
     failures = [result for result in (*writer_results, *review_results) if not result.ok]

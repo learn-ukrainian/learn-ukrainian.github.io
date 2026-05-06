@@ -48,6 +48,7 @@ from ai_llm.fallback import (
 
 from .adapters.base import AgentAdapter
 from .errors import (
+    AgentStalledError,
     AgentTimeoutError,
     AgentUnavailableError,
     RateLimitedError,
@@ -460,6 +461,7 @@ def _execute_invocation_plan(
     entrypoint: str,
     hard_timeout: int,
     stall_timeout: int,
+    stdout_silence_timeout: int | None = None,
 ) -> _ExecutionOutcome:
     """Spawn one plan, run watchdog/parse flow, and return raw execution state."""
     env = {**os.environ, **plan.env_overrides}
@@ -544,7 +546,12 @@ def _execute_invocation_plan(
                 except Exception:
                     pass
 
-            kill_reason = should_kill(watchdog_state, stall_timeout, hard_timeout)
+            kill_reason = should_kill(
+                watchdog_state,
+                stall_timeout,
+                hard_timeout,
+                stdout_silence_timeout=stdout_silence_timeout,
+            )
             if kill_reason is not None:
                 returncode = proc.poll()
                 if returncode is not None:
@@ -636,6 +643,7 @@ def _invoke_gemini_with_fallback(
     entrypoint: str,
     hard_timeout: int,
     stall_timeout: int,
+    stdout_silence_timeout: int | None = None,
     effort: str | None = None,
 ) -> Result:
     """Run Gemini through the shared model/auth fallback ladder."""
@@ -677,8 +685,35 @@ def _invoke_gemini_with_fallback(
             entrypoint=entrypoint,
             hard_timeout=timeout_s or hard_timeout,
             stall_timeout=stall_timeout,
+            stdout_silence_timeout=stdout_silence_timeout,
         )
         parse = execution.parse
+
+        if execution.kill_reason == "stdout_silence_timeout":
+            record = _build_usage_record(
+                agent=agent_name,
+                entrypoint=entrypoint,
+                model=last_telemetry.model if last_telemetry is not None else rung.model,
+                mode=mode,
+                task_id=task_id,
+                cwd=cwd,
+                session_id=session_id,
+                duration_s=execution.duration_s,
+                input_chars=len(prompt),
+                output_chars=len(execution.stdout_text),
+                returncode=execution.returncode,
+                outcome="stalled",
+                rate_limited=False,
+                stalled=True,
+                stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
+                tokens=None,
+            )
+            write_record(record)
+            raise AgentStalledError(
+                agent_name,
+                stdout_silence_timeout or stall_timeout,
+                execution.duration_s,
+            )
 
         if execution.kill_reason == "hard_timeout" and not parse.ok:
             return AttemptOutcome(
@@ -891,6 +926,7 @@ def invoke(
                                  # scripts/batch/batch_gemini_config.py
                                  # for the full design rationale.
     stall_timeout: int = 180,  # accepted but ignored; see docstring
+    stdout_silence_timeout: int | None = None,
     effort: str | None = None,
 ) -> Result:
     """Single entry point for all agent CLI invocations.
@@ -924,6 +960,9 @@ def invoke(
             successful long-running calls were killed as false-positive
             stalls. See watchdog.py::should_kill() docstring for the
             full incident chain. hard_timeout is the only safety net now.
+        stdout_silence_timeout: Optional per-call stdout silence watchdog in
+            seconds. Disabled by default. Use only for protocols where stdout
+            bytes are the authoritative liveness signal.
         effort: Cross-agent reasoning/effort level. First-class peer of
             ``model`` (NOT stuffed into ``tool_config``). Accepted values:
             ``"low" | "medium" | "high" | "xhigh" | "max"``. When ``None``,
@@ -1007,6 +1046,7 @@ def invoke(
             entrypoint=entrypoint,
             hard_timeout=hard_timeout,
             stall_timeout=stall_timeout,
+            stdout_silence_timeout=stdout_silence_timeout,
             effort=effort,
         )
 
@@ -1042,8 +1082,35 @@ def invoke(
         entrypoint=entrypoint,
         hard_timeout=hard_timeout,
         stall_timeout=stall_timeout,
+        stdout_silence_timeout=stdout_silence_timeout,
     )
     parse = execution.parse
+
+    if execution.kill_reason == "stdout_silence_timeout":
+        record = _build_usage_record(
+            agent=agent_name,
+            entrypoint=entrypoint,
+            model=effective_model,
+            mode=mode,
+            task_id=task_id,
+            cwd=effective_cwd,
+            session_id=session_id,
+            duration_s=execution.duration_s,
+            input_chars=len(prompt),
+            output_chars=len(execution.stdout_text),
+            returncode=execution.returncode,
+            outcome="stalled",
+            rate_limited=False,
+            stalled=True,
+            stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
+            tokens=None,
+        )
+        write_record(record)
+        raise AgentStalledError(
+            agent_name,
+            stdout_silence_timeout or stall_timeout,
+            execution.duration_s,
+        )
 
     if execution.kill_reason == "hard_timeout" and not parse.ok:
         record = _build_usage_record(
