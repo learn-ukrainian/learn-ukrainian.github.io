@@ -7,6 +7,7 @@ import json
 import re
 import sqlite3
 import statistics
+import warnings
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -164,6 +165,7 @@ class ArticleIngestResult:
     skipped_chunks: int
     skipped_passages: list[SkippedPassage]
     failure: str | None = None
+    audit_failed: bool = False
 
 
 @dataclass(frozen=True)
@@ -420,6 +422,12 @@ def segment_article_passages(
     return passages
 
 
+def _track_qualified_passage_id(passage: Passage) -> str:
+    if passage.track:
+        return f"{passage.track}/{passage.passage_id}"
+    return passage.passage_id
+
+
 def _chunk_utf8_gate(text: str) -> GateResult:
     try:
         encoded = text.encode("utf-8")
@@ -626,7 +634,7 @@ def _build_insert_payload(
         if not chunk_report.passed:
             skipped.append(
                 SkippedPassage(
-                    passage_id=passage.passage_id,
+                    passage_id=_track_qualified_passage_id(passage),
                     chunk_index=passage.chunk_index,
                     detail="; ".join(result.detail for result in chunk_report.results if not result.passed),
                     gate_report=chunk_report,
@@ -635,7 +643,7 @@ def _build_insert_payload(
             continue
         payload.append(
             (
-                passage.passage_id,
+                _track_qualified_passage_id(passage),
                 passage.article_slug,
                 passage.article_title,
                 passage.article_path,
@@ -660,14 +668,15 @@ def _write_passages(
     conn: sqlite3.Connection,
     *,
     article_slug: str,
+    track: str,
     payload: list[tuple],
 ) -> None:
     ensure_ukrainian_wiki_schema(conn)
     conn.execute("BEGIN")
     try:
         conn.execute(
-            "DELETE FROM ukrainian_wiki WHERE article_slug = ?",
-            (article_slug,),
+            "DELETE FROM ukrainian_wiki WHERE article_slug = ? AND track = ?",
+            (article_slug, track),
         )
         if payload:
             conn.executemany(
@@ -710,16 +719,63 @@ def ingest_article(
 
     conn = sqlite3.connect(str(db_path))
     try:
-        _write_passages(conn, article_slug=article_path.stem, payload=payload)
+        _write_passages(conn, article_slug=article_path.stem, track=_infer_track(article_path), payload=payload)
     finally:
         conn.close()
     return report, len(payload)
 
 
-def _collect_article_paths(path: Path) -> list[Path]:
+def _collect_article_paths(path: Path, *, recursive: bool = False) -> list[Path]:
     if path.is_file():
         return [path]
-    return sorted(candidate for candidate in path.glob("*.md") if candidate.is_file())
+
+    direct_paths = sorted(candidate for candidate in path.glob("*.md") if candidate.is_file())
+    if recursive:
+        return sorted(candidate for candidate in path.rglob("*.md") if candidate.is_file())
+
+    nested_paths = sorted(
+        candidate
+        for candidate in path.rglob("*.md")
+        if candidate.is_file() and candidate.parent != path
+    )
+    index_like_names = {"index.md", "readme.md"}
+    direct_paths_are_indexes = direct_paths and all(candidate.name.lower() in index_like_names for candidate in direct_paths)
+    if nested_paths and (not direct_paths or direct_paths_are_indexes):
+        raise ValueError(
+            f"{_relative_or_absolute(path)} contains markdown articles in subdirectories, "
+            "but directory ingest is non-recursive by default; pass --recursive or ingest a specific article subdirectory"
+        )
+    return direct_paths
+
+
+def _warn_cross_track_slug_collisions(article_paths: list[Path]) -> None:
+    tracks_by_slug: dict[str, set[str]] = {}
+    for article_path in article_paths:
+        tracks_by_slug.setdefault(article_path.stem, set()).add(_infer_track(article_path))
+
+    collisions = {
+        slug: sorted(tracks)
+        for slug, tracks in tracks_by_slug.items()
+        if len(tracks) > 1
+    }
+    if not collisions:
+        return
+
+    details = ", ".join(f"{slug} ({', '.join(tracks)})" for slug, tracks in sorted(collisions.items()))
+    warnings.warn(
+        f"same-slug ukrainian_wiki articles found across tracks; preserving each track separately: {details}",
+        RuntimeWarning,
+        stacklevel=2,
+    )
+
+
+def _admission_failure_detail(report: AdmissionReport) -> str:
+    failed = [
+        f"{result.name}: {result.detail}"
+        for result in report.results
+        if not result.passed
+    ]
+    return "admission gate failed: " + "; ".join(failed)
 
 
 def _suspicious_thresholds(chunk_counts: list[int]) -> tuple[float, float]:
@@ -815,6 +871,7 @@ def write_ingest_report(
     total_inserted = sum(result.inserted_chunks for result in results)
     total_skipped = sum(result.skipped_chunks for result in results)
     failures = [result for result in results if result.failure is not None]
+    audit_failures = [result for result in results if result.audit_failed]
 
     lines = [
         f"# {_report_title(article_root, results)}",
@@ -824,6 +881,7 @@ def write_ingest_report(
         f"- Articles scanned: {len(results)}",
         f"- Articles ingested: {len(completed)}",
         f"- Articles failed: {len(failures)}",
+        f"- Articles audit failed: {len(audit_failures)}",
         f"- Total segmented chunks: {total_segmented}",
         f"- Total chunks ingested: {total_inserted}",
         f"- Total chunks skipped by admission gate: {total_skipped}",
@@ -914,9 +972,12 @@ def ingest_articles(
     min_words: int = DEFAULT_MIN_WORDS,
     max_chars: int = DEFAULT_MAX_CHARS,
     min_chunk_chars: int = DEFAULT_CHUNK_MIN_CHARS,
+    min_vesum_coverage: float = DEFAULT_VESUM_MIN_COVERAGE,
+    recursive: bool = False,
 ) -> list[ArticleIngestResult]:
     migrate_ukrainian_wiki_corpus(db_path=db_path, manifest_db=manifest_db)
-    article_paths = _collect_article_paths(article_root)
+    article_paths = _collect_article_paths(article_root, recursive=recursive)
+    _warn_cross_track_slug_collisions(article_paths)
     conn = sqlite3.connect(str(db_path))
     results: list[ArticleIngestResult] = []
     try:
@@ -926,6 +987,27 @@ def ingest_articles(
             article_title = article_slug.replace("-", " ").title()
             article_track = _infer_track(article_path)
             try:
+                article_report = run_admission_gates(
+                    article_path,
+                    min_vesum_coverage=min_vesum_coverage,
+                )
+                if not article_report.passed:
+                    _write_passages(conn, article_slug=article_slug, track=article_track, payload=[])
+                    results.append(
+                        ArticleIngestResult(
+                            article_slug=article_slug,
+                            article_title=article_title,
+                            article_path=_relative_or_absolute(article_path),
+                            track=article_track,
+                            segmented_chunks=0,
+                            inserted_chunks=0,
+                            skipped_chunks=0,
+                            skipped_passages=[],
+                            failure=_admission_failure_detail(article_report),
+                            audit_failed=True,
+                        )
+                    )
+                    continue
                 passages = segment_article_passages(
                     article_path,
                     track=article_track,
@@ -936,9 +1018,10 @@ def ingest_articles(
                     article_title = passages[0].article_title
                 payload, skipped = _build_insert_payload(
                     passages,
+                    article_report=article_report,
                     min_chunk_chars=min_chunk_chars,
                 )
-                _write_passages(conn, article_slug=article_slug, payload=payload)
+                _write_passages(conn, article_slug=article_slug, track=article_track, payload=payload)
                 results.append(
                     ArticleIngestResult(
                         article_slug=article_slug,
@@ -952,7 +1035,7 @@ def ingest_articles(
                     )
                 )
             except UnicodeDecodeError as exc:
-                _write_passages(conn, article_slug=article_slug, payload=[])
+                _write_passages(conn, article_slug=article_slug, track=article_track, payload=[])
                 results.append(
                     ArticleIngestResult(
                         article_slug=article_slug,
@@ -967,7 +1050,7 @@ def ingest_articles(
                     )
                 )
             except Exception as exc:
-                _write_passages(conn, article_slug=article_slug, payload=[])
+                _write_passages(conn, article_slug=article_slug, track=article_track, payload=[])
                 results.append(
                     ArticleIngestResult(
                         article_slug=article_slug,
@@ -998,6 +1081,8 @@ def _build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  .venv/bin/python scripts/wiki/ingest_ukrainian_wiki.py wiki/pedagogy/a1/hello.md\n"
             "  .venv/bin/python scripts/wiki/ingest_ukrainian_wiki.py wiki/pedagogy/a1 --report-path data/corpus_audit/a1-report.md\n\n"
+            "Directory ingest is non-recursive by default. Use --recursive for top-level wiki trees:\n"
+            "  .venv/bin/python scripts/wiki/ingest_ukrainian_wiki.py wiki --recursive --report-path data/corpus_audit/wiki-report.md\n\n"
             "Outputs:\n"
             "  Inserts passages into data/sources.db, updates the embedding manifest, and writes a markdown ingest report.\n\n"
             "Exit codes:\n"
@@ -1025,7 +1110,12 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--min-chunk-chars", type=int, default=DEFAULT_CHUNK_MIN_CHARS,
                         help=f"Minimum characters for a kept chunk after splitting (default: {DEFAULT_CHUNK_MIN_CHARS}).")
     parser.add_argument("--min-vesum-coverage", type=float, default=DEFAULT_VESUM_MIN_COVERAGE,
-                        help=f"Minimum Vesum/Pravopys coverage ratio for single-article ingest (default: {DEFAULT_VESUM_MIN_COVERAGE}).")
+                        help=f"Minimum Vesum/Pravopys coverage ratio for article admission gates (default: {DEFAULT_VESUM_MIN_COVERAGE}).")
+    parser.add_argument(
+        "--recursive",
+        action="store_true",
+        help="Recursively ingest markdown from subdirectories; directory ingest is non-recursive by default.",
+    )
     parser.add_argument(
         "--encode",
         action="store_true",
@@ -1042,18 +1132,24 @@ def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
     if args.article.is_dir():
-        results = ingest_articles(
-            args.article,
-            db_path=args.db_path,
-            manifest_db=args.manifest_db,
-            report_path=args.report_path,
-            min_words=args.min_words,
-            max_chars=args.max_chars,
-            min_chunk_chars=args.min_chunk_chars,
-        )
+        try:
+            results = ingest_articles(
+                args.article,
+                db_path=args.db_path,
+                manifest_db=args.manifest_db,
+                report_path=args.report_path,
+                min_words=args.min_words,
+                max_chars=args.max_chars,
+                min_chunk_chars=args.min_chunk_chars,
+                min_vesum_coverage=args.min_vesum_coverage,
+                recursive=args.recursive,
+            )
+        except ValueError as exc:
+            parser.exit(1, f"error: {exc}\n")
         summary = {
             "articles_scanned": len(results),
             "articles_failed": sum(1 for result in results if result.failure),
+            "articles_audit_failed": sum(1 for result in results if result.audit_failed),
             "segmented_chunks": sum(result.segmented_chunks for result in results),
             "inserted_chunks": sum(result.inserted_chunks for result in results),
             "skipped_chunks": sum(result.skipped_chunks for result in results),

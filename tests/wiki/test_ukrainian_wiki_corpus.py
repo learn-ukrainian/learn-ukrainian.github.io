@@ -53,6 +53,17 @@ def _install_fake_encoder(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(dense_rerank, "_get_encoder", lambda: fake_encoder)
 
 
+def _stub_article_gates(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        ukrainian_wiki_corpus,
+        "vesum_batch_lookup",
+        lambda words: {word: [{"word": word}] for word in words},
+    )
+    monkeypatch.setattr(ukrainian_wiki_corpus, "check_russicisms", lambda text, file_path="": [])
+    monkeypatch.setattr(ukrainian_wiki_corpus, "pravopys_lookup", lambda term: {"term": term})
+    monkeypatch.setattr(ukrainian_wiki_corpus, "search_style_guide", lambda term: [])
+
+
 def _article_with_registry(
     tmp_path: Path,
     *,
@@ -371,6 +382,7 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    _stub_article_gates(monkeypatch)
     article_dir = tmp_path / "wiki" / "grammar" / "a2"
     _article_with_registry(
         tmp_path,
@@ -482,6 +494,146 @@ def test_batch_ingest_directory_is_idempotent_and_writes_report(
     assert len(results) == 1
     assert results[0]["corpus"] == "ukrainian_wiki"
     assert results[0]["title"] == "Наголос"
+
+
+def test_directory_ingest_rejects_top_level_tree_without_recursive(tmp_path: Path) -> None:
+    wiki_root = tmp_path / "wiki"
+    wiki_root.mkdir()
+    (wiki_root / "index.md").write_text("# Wiki index\n", encoding="utf-8")
+    article_dir = wiki_root / "grammar" / "a1"
+    article_dir.mkdir(parents=True)
+    (article_dir / "hello.md").write_text("# Привіт\n\nПривіт світе.\n", encoding="utf-8")
+
+    with pytest.raises(SystemExit) as exc_info:
+        ukrainian_wiki_corpus.main(
+            [
+                str(wiki_root),
+                "--db-path",
+                str(tmp_path / "sources.db"),
+                "--manifest-db",
+                str(tmp_path / "embeddings" / "manifest.db"),
+            ]
+        )
+
+    assert exc_info.value.code == 1
+
+
+def test_recursive_ingest_preserves_same_slug_articles_across_tracks(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _stub_article_gates(monkeypatch)
+    grammar_root = tmp_path / "wiki" / "grammar"
+    _article_with_registry(
+        tmp_path,
+        slug="checkpoint-syntax",
+        source_dir=("wiki", "grammar", "a2"),
+        text=(
+            "# Синтаксис A2\n\n"
+            "Синтаксис на рівні A2 пояснює простий порядок слів у реченні [S1]. "
+            "Учень бачить підмет, присудок і додаток у коротких прикладах.\n"
+        ),
+    )
+    _article_with_registry(
+        tmp_path,
+        slug="checkpoint-syntax",
+        source_dir=("wiki", "grammar", "b1"),
+        text=(
+            "# Синтаксис B1\n\n"
+            "Синтаксис на рівні B1 додає складні речення та підрядні частини [S1]. "
+            "Учень зіставляє причину, умову і часову послідовність.\n"
+        ),
+    )
+    db_path = tmp_path / "sources.db"
+    manifest_path = tmp_path / "embeddings" / "manifest.db"
+
+    with pytest.warns(RuntimeWarning, match="same-slug"):
+        results = ukrainian_wiki_corpus.ingest_articles(
+            grammar_root,
+            db_path=db_path,
+            manifest_db=manifest_path,
+            report_path=tmp_path / "report.md",
+            min_words=5,
+            max_chars=1000,
+            min_chunk_chars=50,
+            recursive=True,
+        )
+
+    assert len(results) == 2
+    assert all(result.failure is None for result in results)
+
+    conn = sqlite3.connect(db_path)
+    try:
+        rows = conn.execute(
+            """
+            SELECT article_slug, track, passage_id
+            FROM ukrainian_wiki
+            WHERE article_slug = 'checkpoint-syntax'
+            ORDER BY track
+            """
+        ).fetchall()
+    finally:
+        conn.close()
+
+    assert [(row[0], row[1]) for row in rows] == [
+        ("checkpoint-syntax", "a2"),
+        ("checkpoint-syntax", "b1"),
+    ]
+    assert [row[2] for row in rows] == [
+        "a2/checkpoint-syntax:p1-1",
+        "b1/checkpoint-syntax:p1-1",
+    ]
+
+
+def test_bulk_ingest_applies_citation_audit_gate(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _stub_article_gates(monkeypatch)
+    article_dir = tmp_path / "wiki" / "grammar" / "b1"
+    _article_with_registry(
+        tmp_path,
+        slug="bad-citations",
+        source_dir=("wiki", "grammar", "b1"),
+        text=(
+            "# Неповні цитати\n\n"
+            "Ця стаття має джерело в реєстрі, але в тексті немає жодного маркера "
+            "цитування, тому масовий імпорт має відхилити її.\n"
+        ),
+    )
+    db_path = tmp_path / "sources.db"
+    manifest_path = tmp_path / "embeddings" / "manifest.db"
+
+    exit_code = ukrainian_wiki_corpus.main(
+        [
+            str(article_dir),
+            "--db-path",
+            str(db_path),
+            "--manifest-db",
+            str(manifest_path),
+            "--report-path",
+            str(tmp_path / "report.md"),
+            "--min-words",
+            "5",
+            "--max-chars",
+            "1000",
+        ]
+    )
+
+    assert exit_code == 1
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["articles_scanned"] == 1
+    assert summary["articles_failed"] == 1
+    assert summary["articles_audit_failed"] == 1
+
+    conn = sqlite3.connect(db_path)
+    try:
+        stored_count = conn.execute("SELECT COUNT(*) FROM ukrainian_wiki").fetchone()[0]
+    finally:
+        conn.close()
+
+    assert stored_count == 0
 
 
 def test_encode_flag_populates_manifest_units_matching_search_unit_keys(
