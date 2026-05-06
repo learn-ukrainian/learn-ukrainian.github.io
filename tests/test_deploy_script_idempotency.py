@@ -23,6 +23,7 @@ def _copy_repo_subset(target: Path) -> None:
         CHECK_SCRIPT,
         Path("scripts/lint_prompts.py"),
         Path("scripts/lint/lint_prompts.py"),
+        Path("scripts/lint/lint_agent_skills.py"),
     ):
         destination = target / relative_path
         destination.parent.mkdir(parents=True, exist_ok=True)

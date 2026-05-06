@@ -41,7 +41,7 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/python -m pip install --upgrade pip
-          .venv/bin/python -m pip install pytest
+          .venv/bin/python -m pip install pytest pyyaml
 
       - name: Verify deploy script is idempotent (rules/prompts sync)
         run: |
