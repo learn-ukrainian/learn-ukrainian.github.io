@@ -369,6 +369,9 @@ _BRACES_RE = re.compile(r"\{[А-ЯІЇЄҐа-яіїєґ'ʼ]{1,12}\}")
 _MORPHEME_FRAGMENT_RE = re.compile(
     r"(?<![А-ЯІЇЄҐа-яіїєґ'ʼA-Za-z0-9])-[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ]*"
 )
+_STANDALONE_POSTFIX_FRAGMENTS = frozenset(
+    {"ся", "сь", "тся", "тсь", "ться", "шся", "шсь", "чся", "чсь"}
+)
 
 # JSX self-closing or paired component blocks. Treated as one structural unit
 # in `_immersion_gate`'s long-sentence detection so prop arrays like
@@ -3369,8 +3372,7 @@ def _vesum_gate(
     surface_pairs = sorted(
         {
             (word, word.lower())
-            for raw in _UK_WORD_RE.findall(text)
-            for word in [raw.strip("-'ʼ")]
+            for word in _iter_vesum_word_surfaces(text)
             if len(word) >= VESUM_MIN_WORD_LENGTH
         }
     )
@@ -3392,6 +3394,24 @@ def _vesum_gate(
         return {"passed": False, "error": str(exc), "checked": len(unchecked_pairs)}
 
     missing_lc = {word for word, matches in verified.items() if not matches}
+    if missing_lc:
+        original_case_words = sorted(
+            {
+                surface
+                for surface, lower in unchecked_pairs
+                if lower in missing_lc and surface != lower
+            }
+        )
+        try:
+            original_case_verified = verify_words_fn(original_case_words)
+        except Exception as exc:
+            return {"passed": False, "error": str(exc), "checked": len(unchecked_pairs)}
+        resolved_lc = {
+            surface.lower()
+            for surface, matches in original_case_verified.items()
+            if matches
+        }
+        missing_lc -= resolved_lc
     missing = sorted(
         {surface for surface, lower in unchecked_pairs if lower in missing_lc}
     )
@@ -3402,6 +3422,38 @@ def _vesum_gate(
         "missing": missing[:100],
         "missing_count": len(missing),
     }
+
+
+def _iter_vesum_word_surfaces(text: str) -> list[str]:
+    """Extract Ukrainian surface forms that are meaningful VESUM candidates."""
+    words: list[str] = []
+    for match in _UK_WORD_RE.finditer(text):
+        if _touches_blank_marker(text, match.start(), match.end()):
+            continue
+        raw = match.group(0)
+        if _looks_like_elided_notation(text, match.start(), raw):
+            continue
+        word = raw.strip("-'ʼ")
+        if not word:
+            continue
+        if word.lower() in _STANDALONE_POSTFIX_FRAGMENTS:
+            continue
+        words.append(word)
+    return words
+
+
+def _touches_blank_marker(text: str, start: int, end: int) -> bool:
+    """Return true when a regex word is a stem fragment next to `__` blanks."""
+    return (start > 0 and text[start - 1] == "_") or (
+        end < len(text) and text[end] == "_"
+    )
+
+
+def _looks_like_elided_notation(text: str, start: int, raw: str) -> bool:
+    """Skip clipped pronunciation notes like `прокидаюс'`, not quoted words."""
+    return raw.endswith(("'", "ʼ")) and not (
+        start > 0 and text[start - 1] in {"'", "ʼ"}
+    )
 
 
 def _proper_name_whitelist_lc() -> frozenset[str]:
