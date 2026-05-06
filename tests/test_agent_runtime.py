@@ -308,6 +308,23 @@ def test_codex_adapter_build_invocation_read_only(tmp_path):
     assert plan.output_file in plan.liveness_paths
 
 
+def test_codex_adapter_discussion_readonly_sets_env(tmp_path):
+    adapter = CodexAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="test-task",
+        session_id=None,
+        tool_config={"discussion_readonly": True},
+    )
+
+    assert "-s" in plan.cmd
+    assert "read-only" in plan.cmd
+    assert plan.env_overrides == {"AB_DISCUSS_READONLY": "1"}
+
+
 def test_codex_adapter_build_invocation_ignores_session_id(tmp_path):
     """Defensive: Codex adapter MUST ignore session_id even when passed."""
     adapter = CodexAdapter()
@@ -1967,6 +1984,23 @@ def test_gemini_adapter_read_only_no_yolo(tmp_path):
     assert plan.liveness_paths == ()
 
 
+def test_gemini_adapter_discussion_readonly_forces_plan_mode(tmp_path):
+    adapter = GeminiAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"discussion_readonly": True},
+    )
+
+    assert plan.cmd[plan.cmd.index("--approval-mode") + 1] == "plan"
+    assert "--approval-mode=yolo" not in plan.cmd
+    assert plan.env_overrides == {"AB_DISCUSS_READONLY": "1"}
+
+
 def test_gemini_adapter_workspace_write_yolo(tmp_path):
     adapter = GeminiAdapter()
     plan = adapter.build_invocation(
@@ -2442,6 +2476,25 @@ def test_claude_adapter_basic_stateless(tmp_path):
     assert "--session-id" not in plan.cmd
     assert "--output-format" in plan.cmd
     assert plan.stdin_payload == ""  # Claude -p takes prompt as positional
+
+
+def test_claude_adapter_discussion_readonly_uses_plan_tools(tmp_path):
+    adapter = ClaudeAdapter()
+    plan = adapter.build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"discussion_readonly": True},
+    )
+
+    assert "--permission-mode" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--permission-mode") + 1] == "plan"
+    assert "--tools" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--tools") + 1] == "Read,Grep,Glob,LS"
+    assert plan.env_overrides == {"AB_DISCUSS_READONLY": "1"}
 
 
 def test_claude_adapter_resume_existing_session(tmp_path):

@@ -114,6 +114,8 @@ def test_run_inbox_single_thread_single_delivery(mock_invoke):
     assert summary.deliveries_delivered == 1
     assert summary.replies_posted == 1
     assert mock_invoke.call_count == 1
+    assert mock_invoke.call_args.kwargs["mode"] == "read-only"
+    assert mock_invoke.call_args.kwargs["tool_config"]["discussion_readonly"] is True
     delivered = _delivery_rows(str(thread[0]["message_id"]))[0]
     assert delivered["status"] == "delivered"
     messages = _channels.read("topic", thread_id=str(thread[0]["thread_id"]))
@@ -318,7 +320,10 @@ def test_run_inbox_gemini_passes_auth_mode_to_runtime(mock_invoke):
     summary = _inbox.run_inbox("gemini", gemini_auth_mode="subscription")
 
     assert summary.deliveries_delivered == 1
-    assert mock_invoke.call_args.kwargs["tool_config"] == {"auth_mode": "subscription"}
+    assert mock_invoke.call_args.kwargs["tool_config"] == {
+        "auth_mode": "subscription",
+        "discussion_readonly": True,
+    }
 
 
 @patch("ai_agent_bridge._inbox.runtime_invoke")

@@ -47,6 +47,7 @@ from typing import Any
 
 from . import _channels
 from ._channels_watch import watch_channel_events
+from ._config import REPO_ROOT
 
 _PREFLIGHT_FILE_PATH_RE = re.compile(r"[\w/-]+\.py\b")
 _PREFLIGHT_MULTI_STEP_RE = re.compile(
@@ -55,6 +56,7 @@ _PREFLIGHT_MULTI_STEP_RE = re.compile(
 )
 _ALLOWED_DEADLINE_SECONDS = (300, 600, 900, 1200, 1800, 2400, 3000)
 _GEMINI_AUTH_CHOICES = ["auto", "subscription", "api-key", "api"]
+_DISCUSSION_READONLY_TOOL_CONFIG = {"discussion_readonly": True}
 
 
 def _deadline_seconds_arg(raw_value: str) -> int:
@@ -70,6 +72,46 @@ def _deadline_seconds_arg(raw_value: str) -> int:
             + ", ".join(str(value) for value in _ALLOWED_DEADLINE_SECONDS)
         )
     return seconds
+
+
+def _git_output(args: list[str]) -> str:
+    """Run a read-only git command against the bridge repo."""
+    try:
+        result = subprocess.run(
+            ["git", *args],
+            cwd=str(REPO_ROOT),
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+            env={
+                key: value
+                for key, value in os.environ.items()
+                if not key.startswith("GIT_")
+            },
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return ""
+    return result.stdout
+
+
+def _discussion_worktree_snapshot() -> tuple[str, str, str]:
+    """Capture enough git state to detect mutations during a discuss round."""
+    return (
+        _git_output(["status", "--short"]),
+        _git_output(["diff", "--no-ext-diff"]),
+        _git_output(["diff", "--cached", "--no-ext-diff"]),
+    )
+
+
+def _discussion_worktree_changed(before: tuple[str, str, str]) -> tuple[bool, str]:
+    after = _discussion_worktree_snapshot()
+    if after == before:
+        return False, ""
+    status = after[0].strip()
+    if not status:
+        status = "(git diff changed but status output is empty)"
+    return True, status
 
 
 def _post_preflight_warning(*, body: str, mode: str) -> str | None:
@@ -1103,7 +1145,11 @@ def _handle_discuss(args) -> int:
                 agent_name,
                 prompt_text,
                 mode="read-only",
+                cwd=REPO_ROOT,
                 task_id=f"discuss-{correlation_id[:8]}-r{round_idx}-{agent_name}",
+                # TODO(#1701): keep this flag in the sanitized child-env
+                # allowlist when the runner switches to build_agent_env().
+                tool_config=_DISCUSSION_READONLY_TOOL_CONFIG,
                 entrypoint="delegate",
                 hard_timeout=900,
             )
@@ -1163,6 +1209,8 @@ def _handle_discuss(args) -> int:
                 f"same root question in parallel right now — you have NOT "
                 f"seen their replies. Produce your independent first take.\n\n"
                 f"- Be concise but substantive. Cite file:line when relevant.\n"
+                f"- Deliberation is read-only: do not create, modify, delete, "
+                f"stage, commit, or push files.\n"
                 f"- Quote authoritative sources (VESUM, Правопис 2019, etc.) "
                 f"with specific entries; do not paraphrase from memory.\n"
                 f"- End your response with one of:\n"
@@ -1185,6 +1233,8 @@ def _handle_discuss(args) -> int:
                 f"above (they are posted as replies to the root). Compare "
                 f"them to your own prior position and decide.\n\n"
                 f"- Be concise but substantive. Cite file:line when relevant.\n"
+                f"- Deliberation is read-only: do not create, modify, delete, "
+                f"stage, commit, or push files.\n"
                 f"- Push back on any other agent's claim you disagree with — "
                 f"name the agent, quote the claim, give the counter-evidence.\n"
                 f"- End your response with one of:\n"
@@ -1228,6 +1278,7 @@ def _handle_discuss(args) -> int:
         # exits promptly instead of blocking on in-flight invocations
         # (which could be hold for up to hard_timeout=900 seconds).
         responses: dict[str, tuple[str, bool]] = {}
+        pre_round_worktree = _discussion_worktree_snapshot()
         pool = ThreadPoolExecutor(max_workers=len(with_agents))
         try:
             futures = {
@@ -1253,6 +1304,39 @@ def _handle_discuss(args) -> int:
             # cancel_futures is Py3.9+. Tasks already running cannot
             # be cancelled mid-flight, but queued ones will be.
             pool.shutdown(wait=False, cancel_futures=True)
+
+        changed, status_text = _discussion_worktree_changed(pre_round_worktree)
+        if changed:
+            warning = (
+                "🚨 DISCUSSION READ-ONLY VIOLATION\n\n"
+                f"`ab discuss` round {round_idx} changed the git working tree. "
+                "Discussion rounds are analysis-only; filesystem writes must go "
+                "through an explicit execution path such as `delegate.py dispatch`.\n\n"
+                "Current `git status --short`:\n\n"
+                "```text\n"
+                f"{status_text}\n"
+                "```\n\n"
+                "The round is failed and agent replies from this round were not "
+                "accepted."
+            )
+            try:
+                _channels.post(
+                    args.channel,
+                    "user",
+                    warning,
+                    to_agents=None,
+                    parent_id=root_id,
+                    correlation_id=correlation_id,
+                    kind="system",
+                    auto_snapshot=False,
+                )
+            except ValueError as e:
+                print(
+                    f"⚠️  failed to store read-only violation warning: {e}",
+                    file=sys.stderr,
+                )
+            print(warning, file=sys.stderr)
+            return 1
 
         # ── post each response as a reply to root ─────────────────
         # auto_snapshot=False here — the root message captured the

@@ -80,6 +80,15 @@ _SESSION_ID_RE = re.compile(r"session[_-]?id[:=]\s*([0-9a-f-]{8,})", re.IGNORECA
 _EFFORT_MIN_VERSION = (2, 1, 98)
 _MIN_SUPPORTED_CLI_VERSION = (2, 1, 116)
 _POSTMORTEM_URL = "https://www.anthropic.com/engineering/april-23-postmortem"
+_DISCUSS_READONLY_TOOL_CONFIG_KEY = "discussion_readonly"
+
+
+def _discussion_readonly_requested(tool_config: dict | None) -> bool:
+    """Return True when the caller is an ab discuss read-only invocation."""
+    return bool(
+        os.environ.get("AB_DISCUSS_READONLY") == "1"
+        or (tool_config or {}).get(_DISCUSS_READONLY_TOOL_CONFIG_KEY)
+    )
 
 
 @cache
@@ -155,6 +164,9 @@ class ClaudeAdapter:
         are rejected outright due to the 2026-04-23 postmortem gate.
         """
         tc: dict[str, Any] = tool_config or {}
+        discussion_readonly = _discussion_readonly_requested(tool_config)
+        if discussion_readonly and mode != "read-only":
+            raise ValueError("AB_DISCUSS_READONLY requires mode='read-only'")
 
         # Command prefix — match start-claude.sh:120's invariant: prefer
         # ``npx @anthropic-ai/claude-code@latest`` so dispatched runs ride
@@ -250,6 +262,12 @@ class ClaudeAdapter:
         # Output format
         cmd.extend(["--output-format", tc.get("output_format", "text")])
 
+        if discussion_readonly:
+            cmd.extend([
+                "--permission-mode", "plan",
+                "--tools", "Read,Grep,Glob,LS",
+            ])
+
         # Mode-specific flags
         if mode == "danger":
             cmd.append("--dangerously-skip-permissions")
@@ -276,7 +294,7 @@ class ClaudeAdapter:
             cwd=cwd,
             stdin_payload="",  # Claude -p takes prompt as positional arg, not stdin
             output_file=None,
-            env_overrides={},
+            env_overrides={"AB_DISCUSS_READONLY": "1"} if discussion_readonly else {},
             liveness_paths=self._resolve_liveness_paths(cwd),
         )
 
