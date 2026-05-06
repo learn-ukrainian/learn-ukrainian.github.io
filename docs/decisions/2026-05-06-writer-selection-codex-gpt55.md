@@ -1,8 +1,35 @@
-# DECISION REQUIRED — Lock Codex (GPT-5.5 / codex-tools) as the V7 module writer per ADR `2026-04-26-reboot-agent-responsibilities.md` §3?
+# ACCEPTED — Codex (GPT-5.5 / codex-tools) is the V7 module writer (default until next bakeoff signal)
 
+**Status:** ACCEPTED 2026-05-06 (user signoff, conditional on Part B)
 **Surfaced:** 2026-05-06 (overnight, user AFK)
 **Source:** Bakeoff `bakeoff-validation-2026-05-06` — `audit/bakeoff-2026-05-05/REPORT.md` + per-writer JSONLs and python_qg.json
 **ADR clause:** `docs/decisions/2026-04-26-reboot-agent-responsibilities.md` §3 (writer-selection via strict bakeoff)
+
+## Conditions of acceptance (user-stated 2026-05-06 ~13:00 CET)
+
+User said `go` on the writer-lock with TWO HARD CONDITIONS that must hold before A1 batch build kicks off:
+
+1. **Agents can communicate.** Channel infrastructure (`#1190` agent-bridge, channels.html, `ab discuss`) is operational. **Already met as of PR #1732 / PR #1733** — channels.html shipped, `ab discuss` 3-way works post-#1730 yargs fix.
+2. **Codex Desktop can join in.** Multi-UI participation (#1731 Part B ADR, currently PR #1735 round 2). **NOT YET MET** — ADR is PROPOSED with Codex round-3 REVISE in queue. Strand 0 bakeoff (Codex CLI text → Codex Desktop visual aids, Option B from architecture-channel discussion `a18d14b276db`) must run and pass acceptance gate before Strand 1+ implementation.
+
+**Implication:** Codex/codex-tools is THE V7 writer for the prose layer. Codex Desktop is the visual-aid preproduction layer ON TOP of CLI output (Option B). A1/A2/B1 batch build does NOT start until both conditions hold.
+
+## Reframe of the lock language (per architecture-channel discussion convergence)
+
+Not "Codex is the writer forever" — **"Default V7 writer until the next bakeoff signal indicates otherwise."** ADR §3 specifies writer-selection via bakeoff, which is repeatable. Decouple from the Gemini adapter fix (#1708) — fix that independently, allowing future bakeoff retest of all 3 writers.
+
+## Hard guardrails (Gemini's load-bearing condition, accepted)
+
+VESUM verification gate stays HARD and non-negotiable for publication. We cannot rely on prompt constraints alone to prevent Codex from hallucinating Ukrainian morphology. The deterministic VESUM check is the morphology blocker. Full hard-gate suite per the user's gate-philosophy reframe: word_count (HARD min, multi-attempt), VESUM, citations_resolve, language-quality (russianisms/surzhyk/calques/paronyms), structural gates (formatting/inject/component/mdx_render). Per-section budgets + immersion stay advisory.
+
+## Concrete rollback criteria (per Codex's refinement, accepted)
+
+If the next correction-pass on `a1/my-morning` (or the first A1 batch dispatch) emits any of:
+- invented `-ся` forms on non-reflexive verbs
+- wiki-path strings inside `references[]`
+- immersion >35%
+
+→ escalate to a narrower 1-writer prompt-rework cycle BEFORE proceeding to A1 batch build. The lock is conditional on the next correction pass passing those checks; failure triggers prompt-rework, not silently shipping more failures.
 
 ---
 

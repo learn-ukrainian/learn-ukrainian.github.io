@@ -1,17 +1,18 @@
-# Current — multi-agent index (2026-05-04)
+# Current — multi-agent index (2026-05-06)
 
-> **Repo state: MCP VERIFICATION-LAYER ARCHITECTURE KICKED OFF.** As of 2026-05-04 evening, EPIC #1657 (3-phase MCP verification-layer plan) filed plus 12 sibling issues (#1658–#1669). Three Tier-1 ingestion executions kicked off in parallel: Claude inline #1659 СУМ-11 sovietization flag → **PR #1670 OPEN**; Codex web UI #1662 ЕСУМ vol 1 PoC → **PR #1672 OPEN** (Claude pushed CI fixes onto Codex's branch); Gemini dispatch #1663 Antonenko ingest → **FAILED with broken segmenter; production DB polluted then rolled back this session** (see latest handoff). Codex (delegate.py path) out of weekly cap until 2026-05-05 11am CET. Memory rule **#0I added** ("DON'T STACK MICRO-DILEMMAS"). A1/20 build (POC step 3) parked — checkpoint A is user-eval, can run when user is ready.
+> **Repo state: WRITER-LOCK ACCEPTED + 4-WORKER AFTERNOON DISPATCH.** Writer-lock decision (Codex/GPT-5.5/codex-tools as V7 writer) ACCEPTED today with conditions (agents-can-communicate ✅ + Codex-Desktop-can-join ❌ pending). 4 dispatches in flight: 2 Codex (#1736 comms-fix, #1737 API-stability) + 2 Gemini (#1663 Antonenko ingest, #1666 paronyms ingest). Open PR #1735 (multi-UI ADR rounds 1+2; Codex self-review REVISE → round 3 queued). MEMORY.md trimmed 172→122 lines, model-assignment HARD RULE deployed. Issue cleanup pass: 83→20 open. Channels.html shipped + git hygiene PR landed.
 
 ## Latest handoff (read this first)
 
 | Thread | Latest handoff | Status |
 |---|---|---|
-| **Discussion converged + Gemini fix shipped + Decision Card refined; channels.html → Slack-alternative ADR mandated** | **`docs/session-state/2026-05-06-morning-discussion-converged-and-channels-ux.md`** | **Yargs argv-bug fix shipped (#1730) — Gemini participates in `ab discuss` again. 3-way discussion CONVERGED [AGREE] on Option A (lock Codex) with three refinements: (1) VESUM gate stays HARD (Gemini condition), (2) concrete rollback criteria — invented -ся / wiki-path-citations / immersion >35% triggers prompt-rework before A1 batch, (3) reframe lock as "default V7 writer until next bakeoff signal" not permanent. Decision Card NOT updated yet — awaits user `go`. Working-tree changes: gemini.py (yargs fix) + tests + channels.html (date format) + index.html (nav swap) + MEMORY.md (rule #0J). NOT committed. **#1731 NEW: channels.html → Slack-alternative for multi-UI human↔agent collaboration; user mandates 3-agent ADR design before implementation.** Open: #1725 (textbook-grounding, two user reframings), #1730 (yargs upstream tracking), #1731 (Slack-alternative ADR-track), #1708 (Gemini adapter stability — independent track).** |
+| **Channels rollout + ADR cycles + writer-lock ACCEPTED + orchestrator-discipline reset** | **`docs/session-state/2026-05-06-channels-rollout-adr-cycles-and-orchestrator-discipline.md`** | **PR #1732 (channels.html UX overhaul + ADR draft) merged. PR #1733 (git hygiene, 61 stale issues closed) merged. Decision card moved `pending/` → accepted with conditions. PR #1735 (ADR rounds 1+2) open: Gemini AGREE all 6, Codex self-review REVISE 6 NEW findings (Q1↔Q7 contradiction, Q12 schema bug, instance_id concurrency regression, audio underspec) — round-3 queued. 4 dispatches running through 14-20 CET peak window. Dispatch queue at `docs/dispatch-queue/2026-05-06-afternoon.md`. MEMORY.md trimmed + #M0 model-assignment HARD RULE deployed. Strand 0 bakeoff converged on Option B (CLI text → Desktop visual aids).** |
 
 ## Predecessor chain (most-recent first)
 
 | Thread | Handoff |
 |---|---|
+| Discussion converged + Gemini fix shipped + channels-UX deferred (this morning's pre-session) | `2026-05-06-morning-discussion-converged-and-channels-ux.md` |
 | Writer-selection bakeoff: Codex wins; Decision Card pending | `2026-05-06-bakeoff-result-codex-wins-decision-pending.md` |
 | Four fixes merged + bakeoff re-running (mid-state) | `2026-05-06-four-fixes-merged-bakeoff-rerunning.md` |
 | Multi-dispatch arc + slovnyk.me unblock | `2026-05-04-evening-multi-dispatch.md` |
