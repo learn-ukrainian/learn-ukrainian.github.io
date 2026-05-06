@@ -35,6 +35,8 @@ from pipeline.state import is_complete as _phase_complete
 from pipeline.state import load_state as _load_pipeline_state
 from research_quality import assess_research_compat, find_research_path
 
+from .resilience import connect_sqlite
+
 # Canonical phase list for the CURRENT pipeline (v6). Imported from
 # the build module so the API and the pipeline can never drift out of
 # sync. If the import fails (e.g. tests running without the build
@@ -526,7 +528,7 @@ def get_broker_messages_for_slug(slug: str, limit: int = 20) -> list[dict]:
     if not MESSAGE_DB.exists():
         return []
     try:
-        conn = sqlite3.connect(f"file:{MESSAGE_DB}?mode=ro", uri=True)
+        conn = connect_sqlite(f"file:{MESSAGE_DB}?mode=ro", uri=True)
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             "SELECT id, task_id, from_llm, to_llm, message_type, "

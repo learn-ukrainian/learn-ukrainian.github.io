@@ -19,6 +19,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query
 
 from .config import CURRICULUM_ROOT, LEVELS
+from .resilience import connect_sqlite
 from .state_helpers import cache_get, cache_set
 
 # scripts/wiki is not a package, so we add the scripts/ root to sys.path
@@ -92,16 +93,35 @@ def _list_article_candidates() -> dict[str, list[dict[str, Any]]]:
     progress = wiki_state.load_progress().get("articles", {})
     candidates: dict[str, list[dict[str, Any]]] = {}
 
-    for article in wiki_state.list_wiki_articles():
-        rel_path = article["path"]
+    for progress_key, progress_info in progress.items():
+        rel_path = f"{progress_key}.md"
         slug = Path(rel_path).stem
-        progress_key = rel_path.removesuffix(".md")
-        progress_info = progress.get(progress_key, {})
         candidates.setdefault(slug, []).append({
             "path": rel_path,
             "progress_key": progress_key,
             "compiled_at": progress_info.get("compiled_at"),
             "source_count": progress_info.get("source_count"),
+            "word_count": progress_info.get("word_count"),
+        })
+
+    known_paths = {candidate["path"] for rows in candidates.values() for candidate in rows}
+    for md_file in sorted(wiki_config.WIKI_DIR.rglob("*.md")):
+        rel = md_file.relative_to(wiki_config.WIKI_DIR)
+        if any(part.startswith(".") for part in rel.parts):
+            continue
+        if rel.name == "index.md" or rel.name.startswith("."):
+            continue
+        rel_path = str(rel)
+        if rel_path in known_paths:
+            continue
+        slug = rel.stem
+        progress_key = rel_path.removesuffix(".md")
+        candidates.setdefault(slug, []).append({
+            "path": rel_path,
+            "progress_key": progress_key,
+            "compiled_at": None,
+            "source_count": None,
+            "word_count": None,
         })
 
     return candidates
@@ -171,7 +191,6 @@ def _track_status_rows(
     article_candidates = (
         _list_article_candidates() if candidates_by_slug is None else candidates_by_slug
     )
-    word_cache: dict[Path, dict[str, Any]] = {}
     rows = []
 
     for slug in slugs:
@@ -180,8 +199,8 @@ def _track_status_rows(
         compiled = bool(article_path and article_path.exists())
         word_count = 0
 
-        if compiled and article_path is not None:
-            word_count = _read_article_metrics(article_path, word_cache)["word_count"]
+        if compiled:
+            word_count = int(article.get("word_count") or 0)
 
         rows.append({
             "slug": slug,
@@ -332,7 +351,7 @@ async def wiki_sources_inventory():
     tables = []
     total_entries = 0
 
-    with sqlite3.connect(str(SOURCES_DB_PATH)) as conn:
+    with connect_sqlite(str(SOURCES_DB_PATH)) as conn:
         for table_name in _TABLE_NAMES:
             try:
                 row_count = conn.execute(f"SELECT count(*) FROM {table_name}").fetchone()[0]

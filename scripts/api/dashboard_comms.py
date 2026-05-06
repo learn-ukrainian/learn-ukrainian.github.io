@@ -8,6 +8,7 @@ import json
 import sqlite3
 
 from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
+from .resilience import connect_sqlite
 
 WATCHER_PID_FILE = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "watcher.pid"
 WATCHER_LOG_FILE = PROJECT_ROOT / ".mcp" / "servers" / "message-broker" / "watcher.log"
@@ -31,7 +32,7 @@ def get_broker_db():
     """Get a read-only connection to the broker SQLite database."""
     if not MESSAGE_DB.exists():
         return None
-    conn = sqlite3.connect(str(MESSAGE_DB))
+    conn = connect_sqlite(str(MESSAGE_DB))
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -100,7 +101,7 @@ def fetch_broker_messages() -> list[dict]:
     if not db_path.exists():
         return []
     try:
-        conn = sqlite3.connect(str(db_path))
+        conn = connect_sqlite(str(db_path))
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
         cur.execute("""
