@@ -19,6 +19,12 @@ from ._codex import (
 )
 from ._config import GEMINI_DEFAULT_MODEL
 from ._db import get_db
+from ._dispatch_wrappers import (
+    MANDATORY_COMMIT_PUSH_PR_CHECKLIST,
+    REVIEW_DEEP_INSTRUCTIONS,
+    handle_dispatch_fix,
+    handle_review_deep,
+)
 from ._gemini import ask_gemini, converse_gemini, process_and_respond
 from ._messaging import (
     acknowledge,
@@ -538,6 +544,71 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Emit machine-readable JSON instead of text",
     )
 
+    dispatch_fix_parser = subparsers.add_parser(
+        "dispatch-fix",
+        help="Dispatch a Codex worktree fix run with commit/push/PR guardrails",
+        description=(
+            "Dispatch a Codex worktree run using the hardcoded model assignment "
+            "for code changes: Codex, danger mode, worktree, origin/main base, "
+            "high effort."
+        ),
+        epilog=(
+            "Example:\n"
+            "  ab dispatch-fix 1701 --dry-run\n\n"
+            "Mandatory checklist appended to dispatch-fix briefs:\n"
+            f"{MANDATORY_COMMIT_PUSH_PR_CHECKLIST}"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    dispatch_fix_parser.add_argument(
+        "task_id",
+        metavar="issue-or-task-id",
+        help="GitHub issue number or stable task ID to use for delegate.py --task-id.",
+    )
+    dispatch_fix_parser.add_argument(
+        "--brief-file",
+        help="Use an existing brief file instead of generating one from gh issue view.",
+    )
+    dispatch_fix_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Write the prompt/state preview and print the delegate.py command without dispatching.",
+    )
+
+    review_deep_parser = subparsers.add_parser(
+        "review-deep",
+        help="Dispatch an adversarial Claude Opus read-only review run",
+        description=(
+            "Dispatch an adversarial Claude review using the hardcoded model "
+            "assignment for deep design/code review: read-only Opus 4.7, xhigh "
+            "effort by default."
+        ),
+        epilog=(
+            "Example:\n"
+            "  ab review-deep 1740 --dry-run\n"
+            "  ab review-deep scripts/ai_agent_bridge --effort high --dry-run\n\n"
+            "Prompt wrapper:\n"
+            f"{REVIEW_DEEP_INSTRUCTIONS}"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    review_deep_parser.add_argument(
+        "target",
+        metavar="PR-or-path",
+        help="PR number, #PR, file path, or directory path to review.",
+    )
+    review_deep_parser.add_argument(
+        "--effort",
+        default="xhigh",
+        choices=["low", "medium", "high", "xhigh", "max"],
+        help="Claude effort level (default: xhigh).",
+    )
+    review_deep_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Write the prompt/state preview and print the delegate.py command without dispatching.",
+    )
+
     # check-model
     check_model_parser = subparsers.add_parser("check-model", help="Check if a Gemini model is available")
     check_model_parser.add_argument("model", help="Model name")
@@ -611,6 +682,10 @@ def _dispatch_command(args):
         process_all_codex(args.new_session)
     elif args.command == "codex-usage":
         _handle_codex_usage(args)
+    elif args.command == "dispatch-fix":
+        sys.exit(handle_dispatch_fix(args))
+    elif args.command == "review-deep":
+        sys.exit(handle_review_deep(args))
     elif args.command == "check-model":
         ok = check_model(args.model, force=True)
         sys.exit(0 if ok else 1)
