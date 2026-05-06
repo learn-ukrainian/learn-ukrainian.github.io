@@ -73,6 +73,7 @@ PYTHON_QG_GATE_ORDER = (
     "formatting_standards",
     "vesum_verified",
     "citations_resolve",
+    "textbook_grounding",
     "immersion",
     "inject_activity_ids",
     "activity_types",
@@ -200,6 +201,7 @@ TELEMETRY_MAX_QUOTE_CHARS = 240
 TELEMETRY_MAX_MAPPING_CHARS = 500
 TELEMETRY_MAX_FAILED_WORDS = 5
 TELEMETRY_MAX_THEATRE_VIOLATIONS = 25
+TEXTBOOK_GROUNDING_MIN_WORDS = 30
 CORRECTION_PREVIEW_CHARS = 200
 _TELEMETRY_EVENT_SINK: Callable[..., None] | None = None
 
@@ -1423,6 +1425,27 @@ def _summarize_tool_result(tool: str, result: Any) -> dict[str, Any]:
     return _summarize_generic_tool_result(result)
 
 
+def _bounded_result_excerpt(result: Any, max_chars: int = 4000) -> str:
+    texts: list[str] = []
+
+    def walk(value: Any) -> None:
+        if isinstance(value, Mapping):
+            for key, child in value.items():
+                if key in {"text", "content", "excerpt", "snippet", "quote", "body"}:
+                    texts.append(str(child))
+                else:
+                    walk(child)
+        elif isinstance(value, list | tuple):
+            for item in value:
+                walk(item)
+        elif isinstance(value, str):
+            texts.append(value)
+
+    walk(result)
+    excerpt = re.sub(r"\s+", " ", "\n".join(texts)).strip()
+    return excerpt[:max_chars]
+
+
 def emit_writer_response_telemetry(
     output: str,
     *,
@@ -1459,16 +1482,23 @@ def emit_writer_response_telemetry(
         tool_calls_total += 1
         if tool == "verify_words":
             verify_words_calls += 1
+        fields: dict[str, Any] = {
+            "writer": writer,
+            "module": module,
+            "section": str(call.get("section") or "unknown"),
+            "tool": tool,
+            "args_summary": _summarize_tool_args(tool, args),
+            "result_summary": _summarize_tool_result(tool, result),
+            "duration_ms": _tool_duration_ms(call),
+        }
+        if tool == "search_text":
+            excerpt = _bounded_result_excerpt(result)
+            if excerpt:
+                fields["result_excerpt"] = excerpt
         _emit(
             event_sink,
             "writer_tool_call",
-            writer=writer,
-            module=module,
-            section=str(call.get("section") or "unknown"),
-            tool=tool,
-            args_summary=_summarize_tool_args(tool, args),
-            result_summary=_summarize_tool_result(tool, result),
-            duration_ms=_tool_duration_ms(call),
+            **fields,
         )
 
     gate = _extract_writer_gate(output)
@@ -1593,6 +1623,7 @@ def invoke_writer(
     module: str | None = None,
     sections: list[str] | None = None,
     event_sink: Callable[..., None] | None = None,
+    tool_trace_path: Path | None = None,
     stdout_silence_timeout: int | None = None,
 ) -> str:
     """Call the selected writer through the universal agent runtime."""
@@ -1623,13 +1654,20 @@ def invoke_writer(
     response_text = str(response)
     module_ref = module or _prompt_module_ref(prompt)
     section_names = list(sections) if sections is not None else _prompt_sections(prompt)
+    tool_calls = _runtime_tool_calls(result)
+    if tool_trace_path is not None:
+        tool_trace_path.parent.mkdir(parents=True, exist_ok=True)
+        tool_trace_path.write_text(
+            json.dumps(tool_calls, ensure_ascii=False, indent=2, default=str) + "\n",
+            encoding="utf-8",
+        )
     if module_ref and section_names:
         emit_writer_response_telemetry(
             response_text,
             writer=writer,
             module=module_ref,
             sections=section_names,
-            tool_calls=_runtime_tool_calls(result),
+            tool_calls=tool_calls,
             event_sink=event_sink,
         )
     return response_text
@@ -2844,6 +2882,7 @@ def run_python_qg(
         ),
     )
     record("citations_resolve", _citation_gate(resources, plan))
+    record("textbook_grounding", _textbook_grounding_gate(module_text, plan, module_dir))
     record("immersion", _immersion_gate(module_text, plan))
     record("inject_activity_ids", _inject_activity_gate(module_text, activities))
     record(
@@ -3686,6 +3725,204 @@ def _citation_gate(resources: list[dict[str, Any]], plan: Mapping[str, Any]) -> 
         ):
             unknown.append(source_ref)
     return {"passed": not unknown, "unknown": unknown}
+
+
+def _extract_blockquotes(text: str) -> list[str]:
+    quotes: list[str] = []
+    current: list[str] = []
+    for line in text.splitlines():
+        match = re.match(r"^\s*>\s?(?P<body>.*)$", line)
+        if match:
+            current.append(match.group("body"))
+            continue
+        if current:
+            quotes.append("\n".join(current).strip())
+            current = []
+    if current:
+        quotes.append("\n".join(current).strip())
+    return [quote for quote in quotes if quote]
+
+
+def _textbook_match_tokens(text: str) -> list[str]:
+    text = re.sub(r"<!--.*?-->", " ", text, flags=re.DOTALL)
+    text = re.sub(r"\[[^\]]+\]\([^)]+\)", " ", text)
+    text = re.sub(r"[*_`~#>|]", " ", text)
+    return re.findall(r"[0-9A-Za-zА-Яа-яҐґЄєІіЇї'ʼ’-]+", text.casefold())
+
+
+def _contains_textbook_quote(blockquote: str, result_text: str) -> bool:
+    quote_tokens = _textbook_match_tokens(blockquote)
+    if len(quote_tokens) < TEXTBOOK_GROUNDING_MIN_WORDS:
+        return False
+    result_blob = " ".join(_textbook_match_tokens(result_text))
+    if not result_blob:
+        return False
+    for start in range(0, len(quote_tokens) - TEXTBOOK_GROUNDING_MIN_WORDS + 1):
+        window = " ".join(
+            quote_tokens[start : start + TEXTBOOK_GROUNDING_MIN_WORDS]
+        )
+        if window in result_blob:
+            return True
+    return False
+
+
+def _flatten_tool_text(value: Any) -> list[str]:
+    texts: list[str] = []
+
+    def walk(node: Any) -> None:
+        if isinstance(node, Mapping):
+            for child in node.values():
+                walk(child)
+        elif isinstance(node, list | tuple):
+            for item in node:
+                walk(item)
+        elif isinstance(node, str):
+            texts.append(node)
+        elif node is not None:
+            texts.append(str(node))
+
+    walk(value)
+    return texts
+
+
+def _load_jsonl_tool_calls(path: Path) -> list[dict[str, Any]]:
+    calls: list[dict[str, Any]] = []
+    if not path.exists():
+        return calls
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(event, Mapping):
+            continue
+        if event.get("event") != "writer_tool_call":
+            continue
+        call = dict(event)
+        if call.get("result_excerpt") and not call.get("result"):
+            call["result"] = {"text": call["result_excerpt"]}
+        calls.append(call)
+    return calls
+
+
+def _load_writer_tool_calls(module_dir: Path) -> list[dict[str, Any]]:
+    candidates = [
+        module_dir / "writer_tool_calls.json",
+        module_dir / "writer_trace.json",
+        module_dir / "writer_telemetry.jsonl",
+    ]
+    calls: list[dict[str, Any]] = []
+    for path in candidates:
+        if not path.exists():
+            continue
+        if path.suffix == ".jsonl":
+            calls.extend(_load_jsonl_tool_calls(path))
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        if isinstance(data, list):
+            calls.extend(dict(item) for item in data if isinstance(item, Mapping))
+        elif isinstance(data, Mapping):
+            raw_calls = data.get("tool_calls") or data.get("mcp_tool_calls")
+            if isinstance(raw_calls, list):
+                calls.extend(
+                    dict(item) for item in raw_calls if isinstance(item, Mapping)
+                )
+    for path in sorted(module_dir.glob("*.write.jsonl")):
+        calls.extend(_load_jsonl_tool_calls(path))
+    return calls
+
+
+def _call_text_parts(call: Mapping[str, Any]) -> tuple[str, str]:
+    args = call.get("args", call.get("arguments", {}))
+    result = call.get("result", call.get("response", call.get("result_excerpt", "")))
+    query_text = "\n".join(_flatten_tool_text(args))
+    result_text = "\n".join(_flatten_tool_text(result))
+    return query_text, result_text
+
+
+def _reference_matches_search_call(reference_title: str, call: Mapping[str, Any]) -> bool:
+    query_text, result_text = _call_text_parts(call)
+    combined = f"{query_text}\n{result_text}"
+    ref_key = extract_citation_key(reference_title)
+    if ref_key is not None:
+        for candidate in [query_text, result_text, combined]:
+            if extract_citation_key(candidate) == ref_key:
+                return True
+    normalized_ref = _normalize_citation_ref(reference_title).casefold()
+    normalized_combined = _normalize_citation_ref(combined).casefold()
+    return bool(normalized_ref and normalized_ref in normalized_combined)
+
+
+def _textbook_grounding_gate(
+    module_text: str,
+    plan: Mapping[str, Any],
+    module_dir: Path,
+) -> dict[str, Any]:
+    references = [str(title) for title in extract_plan_reference_titles(plan)]
+    if not references:
+        return {
+            "passed": True,
+            "verdict": "PASS",
+            "required": 0,
+            "matched": [],
+            "missing": [],
+            "blockquotes_checked": 0,
+            "search_text_calls": 0,
+        }
+
+    blockquotes = _extract_blockquotes(module_text)
+    long_blockquotes = [
+        quote
+        for quote in blockquotes
+        if len(_textbook_match_tokens(quote)) >= TEXTBOOK_GROUNDING_MIN_WORDS
+    ]
+    search_calls = [
+        call
+        for call in _load_writer_tool_calls(module_dir)
+        if _tool_name_from_call(call) == "search_text"
+    ]
+
+    matched: dict[str, int] = {}
+    for ref in references:
+        ref_calls = [
+            call for call in search_calls if _reference_matches_search_call(ref, call)
+        ]
+        for quote in long_blockquotes:
+            if any(
+                _contains_textbook_quote(quote, _call_text_parts(call)[1])
+                for call in ref_calls
+            ):
+                matched[ref] = len(_textbook_match_tokens(quote))
+                break
+
+    level = str(plan.get("level") or "").casefold()
+    if level == "a1" and not matched:
+        for quote in long_blockquotes:
+            if any(
+                _contains_textbook_quote(quote, _call_text_parts(call)[1])
+                for call in search_calls
+            ):
+                matched[references[0]] = len(_textbook_match_tokens(quote))
+                break
+    required = 1 if level == "a1" else len(references)
+    passed = len(matched) >= required
+    return {
+        "passed": passed,
+        "verdict": "PASS" if passed else "REJECT",
+        "severity": "HARD",
+        "required": required,
+        "matched": sorted(matched),
+        "missing": [ref for ref in references if ref not in matched],
+        "blockquotes_checked": len(blockquotes),
+        "long_blockquotes_checked": len(long_blockquotes),
+        "search_text_calls": len(search_calls),
+        "min_words": TEXTBOOK_GROUNDING_MIN_WORDS,
+    }
 
 
 def _immersion_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:

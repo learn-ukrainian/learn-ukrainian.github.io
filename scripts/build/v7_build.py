@@ -333,6 +333,7 @@ def _run(args: argparse.Namespace) -> int:
             prompt,
             writer,
             cwd=module_dir,
+            tool_trace_path=module_dir / "writer_tool_calls.json",
             stdout_silence_timeout=args.writer_timeout,
         )
         # Save raw writer output + prompt + knowledge packet BEFORE parse so any
