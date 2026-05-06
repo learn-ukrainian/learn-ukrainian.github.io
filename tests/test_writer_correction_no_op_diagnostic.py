@@ -51,6 +51,38 @@ def test_detect_tool_theatre_only_scans_plan_reasoning_blocks() -> None:
     assert linear_pipeline.detect_tool_theatre(writer_output, []) == []
 
 
+def test_detect_tool_theatre_scans_plan_reasoning_attributes() -> None:
+    writer_output = (
+        '<plan_reasoning section="intro" verification="checked with `verify_words`">'
+        "No citation in the body."
+        "</plan_reasoning>"
+    )
+
+    assert linear_pipeline.detect_tool_theatre(writer_output, []) == ["verify_words"]
+
+
+def test_detect_tool_theatre_scans_unbackticked_tool_names() -> None:
+    writer_output = (
+        '<plan_reasoning section="intro">'
+        "Verified using search_heritage."
+        "</plan_reasoning>"
+    )
+
+    assert linear_pipeline.detect_tool_theatre(writer_output, []) == [
+        "search_heritage"
+    ]
+
+
+def test_detect_tool_theatre_ignores_plan_reasoning_inside_fences() -> None:
+    writer_output = (
+        "```markdown file=module.md\n"
+        "<plan_reasoning section=\"example\">`search_heritage`</plan_reasoning>\n"
+        "```\n"
+    )
+
+    assert linear_pipeline.detect_tool_theatre(writer_output, []) == []
+
+
 def test_detect_tool_theatre_handles_multiple_blocks() -> None:
     writer_output = (
         '<plan_reasoning section="intro">`verify_words` checked.</plan_reasoning>\n'
@@ -102,10 +134,13 @@ def test_writer_summary_emits_tool_theatre_event(tmp_path: Path) -> None:
         event for event in events if event["event"] == "phase_writer_summary"
     )
     assert summary["tool_theatre_violations"] == ["search_heritage"]
+    assert summary["tool_theatre_violation_count"] == 1
     assert theatre_event["violations"] == ["search_heritage"]
+    assert theatre_event["violation_count"] == 1
     assert theatre_event["cited_count"] == 2
     assert theatre_event["called_count"] == 1
     assert summary_event["tool_theatre_violations"] == ["search_heritage"]
+    assert summary_event["tool_theatre_violation_count"] == 1
 
 
 def test_writer_correction_unparseable_response_emits_diagnostic(tmp_path: Path) -> None:

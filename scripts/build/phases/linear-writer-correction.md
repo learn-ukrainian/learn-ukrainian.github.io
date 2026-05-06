@@ -56,7 +56,8 @@ as your entire response, no prose around it.
    "verification not performed" so it's auditable.
 
 No third option. Citing the same tools again without calling them = same
-failure, same gate, exhausted retry.
+failure, same gate, exhausted retry. Removing backticks while keeping the
+uncalled tool name in prose is still a citation and still fails.
 
 Verbatim citation rule: every tool name you cite in
 `<plan_reasoning verification>` must correspond to a tool call you actually
