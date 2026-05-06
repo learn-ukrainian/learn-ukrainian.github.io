@@ -11,10 +11,12 @@ from __future__ import annotations
 
 import json
 import os
+import signal
 import subprocess
 import sys
 import time
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 import pytest
@@ -22,6 +24,9 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
+from agent_runtime.adapters.base import InvocationPlan
+from agent_runtime.result import ParseResult
+from agent_runtime.telemetry import InvocationTelemetry
 
 
 @pytest.fixture
@@ -77,7 +82,37 @@ def test_classify_final_status_prioritizes_cancelled_over_other_flags():
         cancelled=True,
         rate_limited=True,
         ok_outcome=True,
+        timed_out=True,
     ) == "cancelled"
+
+
+def test_dispatch_parser_timeout_defaults():
+    args = delegate.build_parser().parse_args([
+        "dispatch",
+        "--agent",
+        "codex",
+        "--task-id",
+        "defaults",
+        "--prompt",
+        "hi",
+    ])
+
+    assert args.hard_timeout == 7200
+    assert args.silence_timeout == 600
+
+
+def test_dispatch_help_documents_timeout_interaction(capsys):
+    parser = delegate.build_parser()
+
+    with pytest.raises(SystemExit) as exc_info:
+        parser.parse_args(["dispatch", "--help"])
+
+    captured = capsys.readouterr()
+    assert exc_info.value.code == 0
+    assert "--hard-timeout" in captured.out
+    assert "--silence-timeout" in captured.out
+    assert "fallback" in captured.out
+    assert "0 disables" in captured.out
 
 
 # ---------------------------------------------------------------------------
@@ -215,6 +250,20 @@ def test_wait_returns_nonzero_on_failed(tmp_tasks_dir, capsys):
     )
     rc = delegate.cmd_wait(args)
     assert rc == 1  # nonzero for any non-done terminal status
+
+
+def test_wait_returns_124_on_task_timeout(tmp_tasks_dir, capsys):
+    path = delegate._state_path("wait-task-timeout")
+    delegate._write_state_atomic(path, {
+        "task_id": "wait-task-timeout",
+        "status": "timeout",
+    })
+    import argparse
+    args = argparse.Namespace(
+        task_id="wait-task-timeout", timeout=0, poll_interval=0.1,
+    )
+    rc = delegate.cmd_wait(args)
+    assert rc == 124
 
 
 def test_wait_timeout_returns_124(tmp_tasks_dir, capsys):
@@ -618,6 +667,160 @@ def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     assert state["model"] == "claude-opus-4-6"
     assert state["effort"] == "xhigh"
     assert state["cli_version"] == "2.1.89"
+
+
+def test_run_worker_silence_timeout_kills_silent_subprocess(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A stdout-silent CLI is SIGKILLed and persisted as status=timeout."""
+    from agent_runtime import runner as runtime_runner
+
+    state_path = delegate._state_path("silent-timeout")
+    returncode_file = tmp_path / "returncode.txt"
+    delegate._write_state_atomic(state_path, {"task_id": "silent-timeout"})
+
+    class SleepingAdapter:
+        name = "claude"
+        default_model = "fixture-model"
+        supported_modes = frozenset({"read-only"})
+
+        def build_invocation(self, **kwargs: Any) -> InvocationPlan:
+            return InvocationPlan(
+                cmd=["/bin/sh", "-c", "sleep 60"],
+                cwd=Path(kwargs["cwd"]),
+            )
+
+        def parse_response(self, *, returncode: int, **_kwargs: Any) -> ParseResult:
+            returncode_file.write_text(str(returncode), encoding="utf-8")
+            return ParseResult(ok=False, response="", stderr_excerpt="")
+
+        def liveness_signal_paths(self, _plan: InvocationPlan) -> tuple[Path, ...]:
+            return ()
+
+    monkeypatch.setattr(runtime_runner, "has_headroom", lambda *_args: (True, ""))
+    monkeypatch.setattr(runtime_runner, "write_record", lambda _record: None)
+    monkeypatch.setattr(
+        runtime_runner,
+        "resolve_invocation_telemetry",
+        lambda **_kwargs: InvocationTelemetry(
+            model="fixture-model",
+            effort="unknown",
+            cli_version="fixture",
+        ),
+    )
+    monkeypatch.setitem(runtime_runner._ADAPTER_CACHE, "claude", SleepingAdapter())
+
+    started = time.monotonic()
+    rc = delegate._run_worker(
+        task_id="silent-timeout",
+        agent="claude",
+        prompt="hi",
+        mode="read-only",
+        cwd_str=str(tmp_path),
+        model=None,
+        hard_timeout=30,
+        silence_timeout=1,
+        effort=None,
+    )
+    elapsed = time.monotonic() - started
+
+    state = delegate._read_state(state_path)
+    events = [
+        json.loads(line)
+        for line in (tmp_tasks_dir / "dispatch_events.jsonl").read_text().splitlines()
+    ]
+
+    assert rc == 1
+    assert elapsed < 6
+    assert int(returncode_file.read_text("utf-8")) == -signal.SIGKILL
+    assert state is not None
+    assert state["status"] == "timeout"
+    assert "stdout_silence_timeout" in (state["stderr_excerpt"] or "")
+    assert events[-1]["event"] == "dispatch_silence_timeout"
+    assert events[-1]["task_id"] == "silent-timeout"
+    assert events[-1]["status"] == "timeout"
+    assert events[-1]["silence_timeout_s"] == 1
+
+
+def test_run_worker_periodic_stdout_avoids_silence_timeout(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Scaled version of the 70-minute case: stdout before each silence window."""
+    from agent_runtime import runner as runtime_runner
+
+    state_path = delegate._state_path("periodic-stdout")
+    delegate._write_state_atomic(state_path, {"task_id": "periodic-stdout"})
+
+    class ChatteringAdapter:
+        name = "claude"
+        default_model = "fixture-model"
+        supported_modes = frozenset({"read-only"})
+
+        def build_invocation(self, **kwargs: Any) -> InvocationPlan:
+            script = (
+                "i=0; "
+                "while [ $i -lt 5 ]; do "
+                "echo tick-$i; "
+                "i=$((i + 1)); "
+                "sleep 0.2; "
+                "done"
+            )
+            return InvocationPlan(
+                cmd=["/bin/sh", "-c", script],
+                cwd=Path(kwargs["cwd"]),
+            )
+
+        def parse_response(
+            self,
+            *,
+            stdout: str,
+            returncode: int,
+            **_kwargs: Any,
+        ) -> ParseResult:
+            return ParseResult(
+                ok=returncode == 0,
+                response=stdout,
+                stderr_excerpt=None,
+            )
+
+        def liveness_signal_paths(self, _plan: InvocationPlan) -> tuple[Path, ...]:
+            return ()
+
+    monkeypatch.setattr(runtime_runner, "has_headroom", lambda *_args: (True, ""))
+    monkeypatch.setattr(runtime_runner, "write_record", lambda _record: None)
+    monkeypatch.setattr(
+        runtime_runner,
+        "resolve_invocation_telemetry",
+        lambda **_kwargs: InvocationTelemetry(
+            model="fixture-model",
+            effort="unknown",
+            cli_version="fixture",
+        ),
+    )
+    monkeypatch.setitem(runtime_runner._ADAPTER_CACHE, "claude", ChatteringAdapter())
+
+    rc = delegate._run_worker(
+        task_id="periodic-stdout",
+        agent="claude",
+        prompt="hi",
+        mode="read-only",
+        cwd_str=str(tmp_path),
+        model=None,
+        hard_timeout=10,
+        silence_timeout=1,
+        effort=None,
+    )
+
+    state = delegate._read_state(state_path)
+    assert rc == 0
+    assert state is not None
+    assert state["status"] == "done"
+    assert state["response_chars"] > 0
+    assert not (tmp_tasks_dir / "dispatch_events.jsonl").exists()
 
 
 def test_dispatch_rejects_danger_without_worktree(tmp_tasks_dir, capsys):

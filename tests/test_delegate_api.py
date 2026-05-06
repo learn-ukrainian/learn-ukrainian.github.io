@@ -80,6 +80,21 @@ def test_tasks_status_filter(tmp_path, monkeypatch):
     assert data["tasks"][0]["status"] == "done"
 
 
+def test_tasks_timeout_status_is_distinct_from_failed(tmp_path, monkeypatch):
+    tasks_dir = tmp_path / "tasks"
+    monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)
+    _write_task(tasks_dir / "timeout.json", _task_payload("timeout", status="timeout"))
+    _write_task(tasks_dir / "failed.json", _task_payload("failed", status="failed"))
+
+    timeout_response = client.get("/api/delegate/tasks?status=timeout")
+    failed_response = client.get("/api/delegate/tasks?status=failed")
+
+    assert timeout_response.status_code == 200
+    assert failed_response.status_code == 200
+    assert [task["task_id"] for task in timeout_response.json()["tasks"]] == ["timeout"]
+    assert [task["task_id"] for task in failed_response.json()["tasks"]] == ["failed"]
+
+
 def test_task_detail_truncates_large_result(tmp_path, monkeypatch):
     tasks_dir = tmp_path / "tasks"
     monkeypatch.setattr(delegate_router, "TASKS_DIR", tasks_dir)

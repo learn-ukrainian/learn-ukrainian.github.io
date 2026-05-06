@@ -35,7 +35,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "cli_version": str,
         "mode": str,
         "pid": int,
-        "status": "running" | "done" | "failed" | "rate_limited" | "crashed",
+        "status": "running" | "done" | "failed" | "timeout" | "rate_limited" | "crashed",
         "started_at": iso-8601 UTC,
         "finished_at": iso-8601 UTC | null,
         "duration_s": float | null,
@@ -154,6 +154,10 @@ def _inject_gh_token_for_agent(worker_env: dict[str, str], agent: str) -> None:
     )
 
 
+DEFAULT_HARD_TIMEOUT_S = 7200
+DEFAULT_SILENCE_TIMEOUT_S = 600
+
+
 def _main_checkout_root(repo_root: Path = _REPO_ROOT) -> Path:
     """Return the primary checkout root that owns the shared .git dir."""
     git_path = repo_root / ".git"
@@ -213,6 +217,32 @@ def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
     tmp = path.with_suffix(f".json.tmp.{os.getpid()}")
     tmp.write_text(json.dumps(state, indent=2, default=str))
     os.replace(tmp, path)
+
+
+def _append_dispatch_event(event: str, **fields: Any) -> None:
+    """Append one delegate JSONL event without making telemetry fatal."""
+    payload = {
+        "ts": datetime.now(UTC).isoformat(),
+        "event": event,
+        **fields,
+    }
+    try:
+        _TASKS_DIR.mkdir(parents=True, exist_ok=True)
+        line = (json.dumps(payload, ensure_ascii=False, default=str) + "\n").encode("utf-8")
+        fd = os.open(
+            str(_TASKS_DIR / "dispatch_events.jsonl"),
+            os.O_APPEND | os.O_CREAT | os.O_WRONLY,
+            0o644,
+        )
+        try:
+            os.write(fd, line)
+        finally:
+            os.close(fd)
+    except OSError as exc:
+        print(
+            f"[delegate] WARNING: failed to write dispatch event: {type(exc).__name__}: {exc}",
+            file=sys.stderr,
+        )
 
 
 def _read_state(path: Path) -> dict[str, Any] | None:
@@ -609,10 +639,13 @@ def _classify_final_status(
     cancelled: bool,
     rate_limited: bool,
     ok_outcome: bool,
+    timed_out: bool = False,
 ) -> str:
     """Map worker outcome flags to the persisted delegate task status."""
     if cancelled:
         return "cancelled"
+    if timed_out:
+        return "timeout"
     if rate_limited:
         return "rate_limited"
     if ok_outcome:
@@ -628,6 +661,7 @@ def _run_worker(
     cwd_str: str,
     model: str | None,
     hard_timeout: int,
+    silence_timeout: int = DEFAULT_SILENCE_TIMEOUT_S,
     effort: str | None = None,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
@@ -647,6 +681,7 @@ def _run_worker(
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.errors import (
         AgentRuntimeError,
+        AgentStalledError,
         AgentTimeoutError,
         RateLimitedError,
     )
@@ -679,10 +714,12 @@ def _run_worker(
     response = ""
     returncode: int | None = None
     rate_limited = False
+    timed_out = False
     result = None
 
     cancelled = False
     try:
+        stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
         result = runtime_invoke(
             agent,
             prompt,
@@ -694,6 +731,7 @@ def _run_worker(
             tool_config=None,
             entrypoint="delegate",
             hard_timeout=hard_timeout,
+            stdout_silence_timeout=stdout_silence_timeout,
             effort=effort,
         )
         ok_outcome = result.ok
@@ -711,6 +749,11 @@ def _run_worker(
     except RateLimitedError as exc:
         rate_limited = True
         stderr_excerpt = str(exc)[:500]
+    except AgentStalledError as exc:
+        timed_out = True
+        stderr_excerpt = (
+            f"stdout_silence_timeout: {exc}"
+        )[:500]
     except AgentTimeoutError as exc:
         stderr_excerpt = f"hard_timeout: {exc}"[:500]
     except AgentRuntimeError as exc:
@@ -737,6 +780,7 @@ def _run_worker(
         cancelled=cancelled,
         rate_limited=rate_limited,
         ok_outcome=ok_outcome,
+        timed_out=timed_out,
     )
 
     final_state = _read_state(state_path) or {}
@@ -775,6 +819,22 @@ def _run_worker(
     })
     _write_state_atomic(state_path, final_state)
 
+    if timed_out:
+        _append_dispatch_event(
+            "dispatch_silence_timeout",
+            task_id=task_id,
+            agent=agent,
+            model=final_state.get("model"),
+            effort=final_state.get("effort"),
+            cwd=str(cwd),
+            pid=final_state.get("pid"),
+            status=final_status,
+            silence_timeout_s=silence_timeout,
+            hard_timeout_s=hard_timeout,
+            duration_s=round(duration_s, 3),
+            stderr_excerpt=stderr_excerpt,
+        )
+
     return 0 if ok_outcome else 1
 
 
@@ -790,6 +850,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     task_id = args.task_id
     state_path = _state_path(task_id)
     worktree_arg = getattr(args, "worktree", None)
+    silence_timeout = getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S)
 
     if args.mode == "danger" and not worktree_arg:
         print(
@@ -887,6 +948,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "worktree_rebased": bool(worktree_telemetry.get("rebased")),
         "worktree_reused": bool(worktree_telemetry.get("reused")),
         "worktree_layout": worktree_layout,
+        "hard_timeout": args.hard_timeout,
+        "silence_timeout": silence_timeout,
         "pid": None,  # worker fills this
         "status": "spawning",
         "started_at": datetime.now(UTC).isoformat(),
@@ -936,6 +999,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "--mode", args.mode,
         "--cwd", cwd,
         "--hard-timeout", str(args.hard_timeout),
+        "--silence-timeout", str(silence_timeout),
     ]
     if args.model:
         cmd.extend(["--model", args.model])
@@ -1098,7 +1162,7 @@ def cmd_status(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 
 _TERMINAL_STATUSES = frozenset(
-    {"done", "failed", "rate_limited", "crashed", "cancelled"}
+    {"done", "failed", "timeout", "rate_limited", "crashed", "cancelled"}
 )
 
 
@@ -1132,6 +1196,8 @@ def cmd_wait(args: argparse.Namespace) -> int:
         if status in _TERMINAL_STATUSES:
             print(json.dumps(state, indent=2, default=str))
             # Exit code: 0 if done, 1 otherwise (failed/crashed/rate_limited)
+            if status == "timeout":
+                return 124
             return 0 if status == "done" else 1
 
         if deadline and time.monotonic() >= deadline:
@@ -1277,6 +1343,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
         cwd_str=args.cwd,
         model=args.model,
         hard_timeout=args.hard_timeout,
+        silence_timeout=args.silence_timeout,
         effort=args.effort,
     )
 
@@ -1300,6 +1367,9 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python scripts/delegate.py list --status running\n\n"
             "Outputs:\n"
             "  Persists task state under batch_state/tasks/ and streams worker output to task-owned logs.\n\n"
+            "Timeouts:\n"
+            "  --hard-timeout is the absolute wall-clock fallback for the worker.\n"
+            "  --silence-timeout kills the agent CLI earlier when no stdout line arrives within the window; 0 disables it.\n\n"
             "Exit codes:\n"
             "  0 on successful command completion; non-zero on CLI misuse or worker/task failures.\n\n"
             "Related:\n"
@@ -1370,8 +1440,27 @@ def build_parser() -> argparse.ArgumentParser:
             "delegated subprocess. Default is off: AGENT_NO_MERGE=1 is set."
         ),
     )
-    d.add_argument("--hard-timeout", type=int, default=3600,
-                   help="Max wall-clock seconds for the worker (default: 3600)")
+    d.add_argument(
+        "--hard-timeout",
+        type=int,
+        default=DEFAULT_HARD_TIMEOUT_S,
+        help=(
+            "Absolute wall-clock seconds for the worker before the runtime "
+            f"hard-kills it (default: {DEFAULT_HARD_TIMEOUT_S}). "
+            "This is a fallback; --silence-timeout catches stdout-silent hangs sooner."
+        ),
+    )
+    d.add_argument(
+        "--silence-timeout",
+        type=int,
+        default=DEFAULT_SILENCE_TIMEOUT_S,
+        help=(
+            "Seconds without a subprocess stdout line before killing the agent "
+            "CLI and marking the task status='timeout' "
+            f"(default: {DEFAULT_SILENCE_TIMEOUT_S}; 0 disables). "
+            "--hard-timeout still applies as the absolute wall-clock fallback."
+        ),
+    )
     d.set_defaults(func=cmd_dispatch)
 
     # status
@@ -1397,7 +1486,7 @@ def build_parser() -> argparse.ArgumentParser:
     l = sub.add_parser("list", help="List tasks (with optional status filter)")
     l.add_argument("--status", default=None,
                    choices=["spawning", "running", "done", "failed",
-                            "rate_limited", "crashed", "cancelled"],
+                            "timeout", "rate_limited", "crashed", "cancelled"],
                    help="Optional status filter, e.g. running or failed.")
     l.set_defaults(func=cmd_list)
 
@@ -1413,7 +1502,8 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         choices=["low", "medium", "high", "xhigh", "max"],
     )
-    wk.add_argument("--hard-timeout", type=int, default=3600)
+    wk.add_argument("--hard-timeout", type=int, default=DEFAULT_HARD_TIMEOUT_S)
+    wk.add_argument("--silence-timeout", type=int, default=DEFAULT_SILENCE_TIMEOUT_S)
     wk.set_defaults(func=cmd_worker)
 
     return p
