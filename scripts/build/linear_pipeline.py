@@ -406,13 +406,15 @@ _JSX_BLOCK_RE = re.compile(
 _JSX_STRING_VALUE_RE = re.compile(r'"([^"\n]*)"')
 
 # Sentence boundaries for the immersion gate's long-sentence check: end-of-
-# sentence punctuation (including Ukrainian `…`, `‼`, `⁇`, `⁈`, `⁉`) or a
-# markdown bullet/numbered-list marker (`* `, `- `, `1. `). The bullet-marker
-# alternations match start-of-string OR after a newline, so a list at the
-# very top of the body (e.g., immediately after frontmatter) is recognized
-# as a sentence boundary.
+# sentence punctuation (including Ukrainian `…`, `‼`, `⁇`, `⁈`, `⁉`) with
+# optional closing markdown/quote marks, markdown hard line breaks, plus
+# markdown structure that makes adjacent lines independent prose units.
+# The zero-width structural branch preserves line markers in the returned
+# chunks and requires re.MULTILINE so `^` anchors each line, including quoted
+# dialogue turns at the top of a body.
 _SENTENCE_SPLIT_RE = re.compile(
-    r"[.!?…‼⁇⁈⁉]+(?:\s+|$)|(?:\n|^)\s*[*\-]\s+|(?:\n|^)\s*\d+\.\s+",
+    r"[.!?…‼⁇⁈⁉]+(?:[*_~\"'»”)\]]{0,4})(?:\s+|$)| {2,}\n+|\n\s*\n+|"
+    r"(?=^[\s«“\"']*(?:[—–-]\s*(?:\*\*)?|\|\s*|[*-]\s+|\d+\.\s+|>\s*|#{1,6}\s+))",
     re.MULTILINE,
 )
 
@@ -3695,16 +3697,19 @@ def _immersion_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
     text inside JSX counts toward immersion, structural prop syntax doesn't.
 
     The long-sentence check splits on Ukrainian-aware sentence punctuation
-    (`. ! ? … ‼ ⁇ ⁈ ⁉`) and markdown list-item starts (`* `, `- `, `1. `,
-    including at start-of-string) so bullet items render as separate
-    sentences instead of one giant joined run.
+    (`. ! ? … ‼ ⁇ ⁈ ⁉`) and markdown structure starts: dialogue dashes,
+    table rows, bullets, numbered list items, blockquotes, and headers. This
+    keeps dialogue turns and table rows from being joined into one giant run.
     """
     level = str(plan["level"]).lower()
     sequence = int(plan["sequence"])
     min_pct, max_pct = get_immersion_range(level, sequence)
-    body = _strip_frontmatter_and_headings(_strip_comments(text))
+    comment_stripped = _strip_comments(text)
+    body = _strip_frontmatter_and_headings(comment_stripped)
+    sentence_body = _strip_frontmatter(comment_stripped)
 
     body_no_jsx = _JSX_BLOCK_RE.sub(" ", body)
+    sentence_body_no_jsx = _JSX_BLOCK_RE.sub(" ", sentence_body)
     jsx_string_props: list[str] = []
     for jsx_block in _JSX_BLOCK_RE.findall(body):
         jsx_string_props.extend(_JSX_STRING_VALUE_RE.findall(jsx_block))
@@ -3714,11 +3719,7 @@ def _immersion_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
     uk_tokens = [token for token in tokens if _UK_WORD_RE.search(token)]
     pct = round((len(uk_tokens) / len(tokens) * 100), 2) if tokens else 0.0
 
-    long_sentences = [
-        sentence.strip()
-        for sentence in _SENTENCE_SPLIT_RE.split(body_no_jsx)
-        if len(_UK_WORD_RE.findall(sentence)) > 10
-    ]
+    long_sentences = _long_ukrainian_sentences(sentence_body_no_jsx)
     return {
         "passed": min_pct <= pct <= max_pct and not long_sentences,
         "pct": pct,
@@ -3727,6 +3728,26 @@ def _immersion_gate(text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
         "policy": get_immersion_policy(level, sequence)["key"],
         "long_ukrainian_sentences": long_sentences[:20],
     }
+
+
+def _split_immersion_sentences(text: str) -> list[str]:
+    """Split prose for the immersion gate's Ukrainian sentence-length check."""
+    text = re.sub(r"(?m)^\s*#{1,6}\s+.*$", "\n", text)
+    sentences = []
+    for sentence in _SENTENCE_SPLIT_RE.split(text):
+        sentence = sentence.strip()
+        if sentence:
+            sentences.append(sentence)
+    return sentences
+
+
+def _long_ukrainian_sentences(text: str) -> list[str]:
+    text = _FENCED_CODE_RE.sub(" ", text)
+    return [
+        sentence
+        for sentence in _split_immersion_sentences(text)
+        if len(_UK_WORD_RE.findall(sentence)) > 10
+    ]
 
 
 def _inject_activity_gate(text: str, activities: list[dict[str, Any]]) -> dict[str, Any]:
@@ -3839,11 +3860,16 @@ def _strip_comments(text: str) -> str:
     return re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
 
 
-def _strip_frontmatter_and_headings(text: str) -> str:
+def _strip_frontmatter(text: str) -> str:
     if text.startswith("---\n"):
         end = text.find("\n---", 4)
         if end >= 0:
             text = text[end + 4 :]
+    return text
+
+
+def _strip_frontmatter_and_headings(text: str) -> str:
+    text = _strip_frontmatter(text)
     return "\n".join(
         line for line in text.splitlines() if not line.lstrip().startswith("#")
     )
